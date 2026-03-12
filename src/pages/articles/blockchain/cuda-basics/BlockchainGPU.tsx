@@ -54,7 +54,35 @@ Stage 3:  [d₀ d₁ d₂ d₃ d₄ d₅ d₆ d₇]  ← 결과
 CUDA 구현:
   - Stage별로 커널 호출 (log n 번)
   - Shared Memory에 중간 결과 저장
-  - Bank conflict 최소화 위해 패딩 사용`}</code>
+  - Bank conflict 최소화 위해 패딩 사용
+  - NTT가 ZK 증명 생성 지연의 ~90% 차지`}</code>
+        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">ECDSA 서명 검증 GPU 가속</h3>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`배치 ECDSA 검증 (이더리움 트랜잭션 검증):
+
+CPU (순차):
+  for tx in block.transactions:
+    verify_ecdsa(tx.signature)  # ~0.1ms per signature
+  → 1000 tx = ~100ms
+
+GPU (병렬):
+  signatures, pubkeys, messages → GPU로 전송
+  batch_verify<<<blocks, threads>>>(sigs, pubs, msgs)
+  → 1000 tx = ~5ms (gECC 프레임워크: ~5.56x 가속)
+
+주요 라이브러리:
+  gECC: NVIDIA A100에서 ECDSA 5.56x 가속
+    → Montgomery 곱셈 최적화, 배치 실행
+  RapidEC (SC'22): 개별 + 배치 ECDSA 병렬화
+    → CPU 대비 수십 배 가속
+  ICICLE (Ingonyama): ZK 가속 전용 CUDA 라이브러리
+    → MSM, NTT, Poseidon 해시 통합
+  GZKP: 최대 48.1x CPU 대비 가속
+
+핵심 도전:
+  모듈러 산술 효율 → GPU의 IMAD (Integer Multiply-Add) 최소화
+  → secp256k1 (이더리움/비트코인 곡선)에 특화된 최적화`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">cuda-samples 주요 예제</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">

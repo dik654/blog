@@ -30,7 +30,19 @@ export default function MemoryModel() {
   1. 트랜잭션 데이터를 Global Memory에 한 번에 전송
   2. 각 블록이 Shared Memory에 필요한 데이터 로드
   3. 레지스터에서 해시/서명 연산 수행
-  4. 결과를 Global Memory에 기록`}</code>
+  4. 결과를 Global Memory에 기록
+
+핵심 성능 병목:
+  ZK 증명의 경우 메모리 대역폭이 병목
+  → RTX 4090: 1,008 GB/s (Global Memory 대역폭)
+  → NTT/MSM은 32-bit 정수 파이프라인 사용
+  → 데이터 의존성으로 명령 수준 병렬성 제한
+
+Warp (32 스레드 단위):
+  하드웨어 수준에서 실제 실행 단위
+  → 같은 warp 내 모든 스레드가 동일 명령 실행 (SIMT)
+  → 분기 발산(branch divergence) → 경로 직렬화 → 성능 저하
+  → 블록체인: 모든 스레드가 동일 연산이므로 분기 없음 = 최적`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">블록체인에서의 GPU 활용 사례</h3>
         <div className="overflow-x-auto">
