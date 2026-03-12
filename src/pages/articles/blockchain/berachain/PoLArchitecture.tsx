@@ -29,29 +29,59 @@ Berachain PoL:
   BGT   = 거버넌스/스테이킹 토큰 (양도 불가, 위임만 가능)
   HONEY = 스테이블코인`}</code>
         </pre>
-        <h3 className="text-xl font-semibold mt-6 mb-3">BeaconKit 모듈 아키텍처</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">PoL 플라이휠</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
-          <code>{`BeaconKit의 Cosmos 모듈 구조:
+          <code>{`PoL 인센티브 순환 구조:
+
+사용자 ──→ DeFi 프로토콜에 유동성 제공 ──→ Reward Vault에 스테이킹
+  ↑                                              │
+  │                                         BGT 보상 수령
+  │                                              │
+  │                                    검증자에게 BGT 위임 (boost)
+  │                                              │
+  │         프로토콜이 검증자에게                    ↓
+  └── 인센티브 ←── Incentive Marketplace ←── 검증자가 블록 제안 시
+                                             BGT를 프로토콜에 배분
+
+핵심: 유동성 제공 → BGT 획득 → 검증자 부스트 → 더 많은 BGT 배출
+     → 프로토콜이 유동성을 유치하기 위해 검증자에게 인센티브 제공
+     → 검증자가 인센티브를 위임자에게 공유`}</code>
+        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">BeaconKit 아키텍처</h3>
+        <p>
+          BeaconKit은 <strong>표준 Cosmos SDK 모듈을 전혀 사용하지 않습니다</strong>.
+          CometBFT만 합의 엔진으로 유지하고, 나머지는 자체 구현입니다.
+          이는 Cosmos SDK 모듈의 결합도(coupling)가 BeaconKit의 설계 목표와 맞지 않았기 때문입니다.
+          직렬화도 Protobuf 대신 이더리움의 <strong>SSZ(Simple Serialize)</strong>를 사용하여
+          EIP-4788(CL 데이터의 EL 검증)을 구현할 수 있었습니다.
+        </p>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`BeaconKit 아키텍처 (Cosmos SDK 모듈 없음!):
 
 ┌────────────────────────────────────────────┐
-│              CometBFT (합의 엔진)           │
+│              CometBFT (합의 엔진만 사용)     │
 ├────────────────────────────────────────────┤
-│  ABCI 레이어                                │
-├────────────┬────────────┬──────────────────┤
-│ x/beacon   │ x/deposit  │ x/reward (PoL)   │
-│ 비콘 상태  │ 예치 처리   │ 보상 배분         │
-│ 관리       │            │                   │
-├────────────┴────────────┴──────────────────┤
-│              Engine API Client              │
+│  ABCI 2.0 미들웨어                          │
+│  ┌──────────────────────────────────────┐  │
+│  │ PrepareProposal → forkchoiceUpdated  │  │
+│  │ ProcessProposal → newPayload         │  │
+│  │ FinalizeBlock   → 상태 확정           │  │
+│  │ Commit          → 다음 블록 준비      │  │
+│  └──────────────────────────────────────┘  │
+│  BeaconKit 자체 구현:                       │
+│  ┌─────────┬──────────┬────────────────┐  │
+│  │ Beacon  │ Deposit  │ State          │  │
+│  │ State   │ Handler  │ Transition     │  │
+│  └─────────┴──────────┴────────────────┘  │
 ├────────────────────────────────────────────┤
-│           EVM (geth/reth/nethermind)        │
+│           Engine API Client                 │
+├────────────────────────────────────────────┤
+│  EVM (수정 없는 원본 클라이언트!)            │
+│  Bera-Geth │ Bera-Reth │ Nethermind │ Besu │
 └────────────────────────────────────────────┘
 
-이더리움 Beacon Chain 스펙 구현:
-  - BeaconState: 검증자 레지스트리, 잔액, 슬래싱 상태
-  - BeaconBlock: EL 페이로드 + BLS 서명 + 검증자 변경
-  - DepositContract: EL의 예치 컨트랙트 이벤트 처리
-  - 슬롯/에폭 구조: 이더리움과 동일한 타이밍 모델`}</code>
+직렬화: SSZ (Protobuf 제거) → EIP-4788 지원
+EIP-4844: Blob 트랜잭션 지원 (proto-danksharding)`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">블록 생명주기 비교</h3>
         <div className="overflow-x-auto">
@@ -92,6 +122,27 @@ Berachain PoL:
             </tbody>
           </table>
         </div>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Optimistic Payload Building</h3>
+        <p>
+          BeaconKit의 핵심 최적화: 검증자들이 <code>ProcessProposal</code>에서
+          이미 StateRoot를 검증하므로 <code>FinalizeBlock</code>은 매우 빠릅니다.
+          현재 블록의 StateRoot가 확정 전에 이미 알려지므로,
+          <strong>다음 실행 페이로드를 미리 빌드</strong>할 수 있습니다.
+          이 최적화로 블록 타임을 <strong>~40% 단축</strong>했습니다.
+        </p>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`Optimistic Payload Building:
+
+이더리움 (순차적):
+  블록 N 제안 → 합의 → FinalizeBlock → StateRoot 확정 → 블록 N+1 빌드 시작
+
+BeaconKit (낙관적):
+  블록 N 제안 → ProcessProposal에서 StateRoot 검증
+                    ↓ (StateRoot 이미 확인됨)
+              블록 N+1 페이로드 빌드 시작 (병렬!)
+                    ↓
+              FinalizeBlock (빠르게 통과) → 블록 N+1 즉시 제안 가능`}</code>
+        </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (beacon-kit 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`beacon-kit/
