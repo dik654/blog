@@ -27,10 +27,16 @@ export default function Overview() {
 │           (다시 Claude API 호출)
 
 핵심 특성:
-  1. 자율적 다단계 실행: 하나의 요청으로 여러 도구를 연쇄 호출
-  2. 컨텍스트 유지: 대화 내 모든 도구 결과가 컨텍스트에 포함
+  1. 자율적 다단계 실행: 평균 21.2회 독립 도구 호출/요청
+  2. 컨텍스트 윈도우: ~200K 토큰 (시스템 오버헤드 후 ~160-170K 사용 가능)
   3. 병렬 도구 호출: 독립적인 도구는 동시에 실행 가능
-  4. 서브에이전트: 복잡한 작업을 하위 에이전트에 위임`}</code>
+  4. 서브에이전트: 최대 7개 동시 실행 (각각 독립 200K 컨텍스트)
+
+세션 저장:
+  ~/.claude/projects/<project>/sessions/<id>/ (JSONL 형식)
+  claude -c: 최근 세션 이어서
+  claude --resume <id>: 특정 세션 복원
+  claude --fork-session: 세션 분기 (원본 유지)`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">다른 코딩 AI와의 비교</h3>
         <div className="overflow-x-auto">

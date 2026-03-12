@@ -61,7 +61,21 @@ export default function ToolsPermissions() {
   - 되돌릴 수 있는 로컬 작업: 자유롭게 실행
   - 공유 시스템에 영향: 사용자 확인 필요
   - 파괴적 작업 (git push --force 등): 항상 경고
-  → "Measure twice, cut once" 철학`}</code>
+  → "Measure twice, cut once" 철학
+
+OS 수준 샌드박싱:
+  macOS: Seatbelt 프레임워크 (v1.0.20부터 기본 활성화)
+    → CWD + /tmp만 쓰기 허용
+  Linux: bubblewrap (bwrap) 기반 격리
+    → 파일시스템 격리 + 네트워크 격리 (프록시)
+
+규칙 시스템:
+  ~/.claude/settings.json (전역)
+  .claude/settings.json (프로젝트)
+  → Allow/Deny 규칙 + glob 패턴
+  → Deny가 항상 우선 (설정 레벨 무관)
+  → 샌드박싱으로 권한 프롬프트 84% 감소
+  → Plan 모드 + Deny 규칙 + 샌드박싱 = 98% 프롬프트 인젝션 방어`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">IDE 통합 & GitHub</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -70,9 +84,16 @@ export default function ToolsPermissions() {
   JetBrains:  IntelliJ/WebStorm 플러그인
   → IDE 내에서 터미널 Claude Code와 동일한 경험
 
-GitHub 통합:
+GitHub 통합 (claude-code-action):
   @claude 멘션으로 PR/이슈에서 직접 사용
   → PR 리뷰, 코드 수정, 이슈 해결 자동화
+
+코드 리뷰 (/code-review):
+  4개 리뷰 에이전트를 병렬 실행
+  → 독립적으로 버그 탐색
+  → 교차 검증으로 false positive 필터링
+  → 신뢰도 ≥80% 이슈만 표면화
+  → false positive 비율 <1%
 
 사용 패턴:
   1. 터미널: claude (대화형)

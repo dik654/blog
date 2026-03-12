@@ -21,7 +21,7 @@ Main Agent (사용자 대화)
 │   용도: 복잡한 멀티스텝 작업 자율 수행
 │
 └── 사용자 정의 에이전트
-    CLAUDE.md에서 정의 가능
+    .claude/agents/my-agent.md 파일로 정의
 
 병렬 실행:
   Main Agent가 독립적인 서브에이전트를 동시에 실행
@@ -34,7 +34,12 @@ Main Agent (사용자 대화)
 백그라운드 에이전트:
   run_in_background=true로 비동기 실행
   → Main Agent는 다른 작업 계속 진행
-  → 완료 시 자동 알림`}</code>
+  → 완료 시 자동 알림
+
+제약:
+  - 서브에이전트는 자신의 서브에이전트를 생성 불가 (무한 재귀 방지)
+  - 부모 ↔ 자식 통신: 프롬프트 문자열 → 최종 메시지 반환만
+  - 최대 7개 동시 실행 → 3개 × 200K = 600K 토큰 컨텍스트 활용`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">컨텍스트 관리</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -44,10 +49,13 @@ Main Agent (사용자 대화)
 해결: 자동 컴팩션 (compaction)
 
 컴팩션 과정:
-  1. 컨텍스트가 한계에 근접
-  2. 이전 메시지를 요약으로 압축
-  3. 핵심 정보만 유지하고 세부 도구 결과 제거
-  4. 압축된 컨텍스트로 대화 계속
+  1. 토큰 사용량이 ~75-92%에 도달하면 자동 트리거
+  2. 대화 히스토리를 핵심 결정/컨텍스트로 요약
+  3. 상세 도구 출력 삭제, 요약만 유지
+  4. 60-80% 토큰 감소 (150K → 30-50K)
+
+주의: 컴팩션은 손실 있음 (lossy)
+  → 특정 파일 경로, 에러 코드, 아키텍처 결정이 소실될 수 있음
 
 → 무한한 대화가 가능 (컨텍스트 윈도우 제한 없음)
 
@@ -92,11 +100,18 @@ Claude Code ←→ MCP Server ←→ 외부 서비스
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`Hooks = 이벤트 기반 커스텀 셸 명령
 
-지원 이벤트:
-  PreToolUse   — 도구 실행 전 (승인/거부/수정)
-  PostToolUse  — 도구 실행 후 (결과 가공)
-  Notification — 알림 이벤트
-  Stop         — 에이전트 응답 완료 후
+18개 라이프사이클 이벤트:
+  SessionStart, UserPromptSubmit,
+  PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure,
+  Notification, SubagentStart, SubagentStop, Stop,
+  TeammateIdle, TaskCompleted, InstructionsLoaded, ConfigChange,
+  WorktreeCreate, WorktreeRemove, PreCompact, SessionEnd
+
+4가지 핸들러 타입:
+  command — 셸 명령 (stdin/stdout/exit code로 통신)
+  http    — URL 엔드포인트에 POST
+  prompt  — 단일 턴 LLM 평가 (Haiku, ok/not-ok 반환)
+  agent   — 서브에이전트 스폰 (최대 50 도구 턴)
 
 설정 예시:
   {
