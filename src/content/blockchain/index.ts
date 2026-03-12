@@ -279,6 +279,29 @@ const blockchain: Category = {
       component: () => import('@/pages/articles/blockchain/filecoin-lotus'),
     },
     {
+      slug: 'ipfs-filecoin-storage',
+      title: 'IPFS & Filecoin 핫 스토리지',
+      subcategory: 'fil-storage',
+      sections: [
+        { id: 'overview', title: 'IPFS & Filecoin 스토리지 개요' },
+        { id: 'ipfs-architecture', title: 'IPFS Kubo 아키텍처' },
+        { id: 'hot-storage', title: 'Filecoin 핫 스토리지 & Boost' },
+        { id: 'references', title: '참고 자료' },
+      ],
+      component: () => import('@/pages/articles/blockchain/ipfs-filecoin-storage'),
+    },
+    {
+      slug: 'filecoin-gpu-proofs',
+      title: 'Filecoin 증명 GPU 가속 (bellperson, sppark)',
+      subcategory: 'gpu',
+      sections: [
+        { id: 'overview', title: '증명 시스템 & GPU 가속 개요' },
+        { id: 'gpu-acceleration', title: 'GPU 가속 라이브러리 & 구현' },
+        { id: 'references', title: '참고 자료' },
+      ],
+      component: () => import('@/pages/articles/blockchain/filecoin-gpu-proofs'),
+    },
+    {
       slug: 'cuda-basics',
       title: 'CUDA 기초 (GPU 병렬처리와 블록체인)',
       subcategory: 'gpu',
