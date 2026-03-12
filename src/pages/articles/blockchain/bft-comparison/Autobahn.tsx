@@ -17,7 +17,8 @@ export default function Autobahn() {
 │          Consensus Layer (Highway)           │
 │  부분 동기 합의 — 저지연 블록 순서 결정       │
 │  → HotStuff 유사 리더 기반 프로토콜           │
-│  → 1.5 RTT 커밋 (fast path)                 │
+│  → Fast path: 3 message delays (1.5 RTT)    │
+│  → Slow path: 5 message delays (2.5 RTT)    │
 └──────────────────┬──────────────────────────┘
                    │ 합의 메시지를 데이터 메시지에 피기백
 ┌──────────────────┴──────────────────────────┐
@@ -52,7 +53,19 @@ Autobahn:
   └── 저지연(Highway) ────────────────────────────── 빠른 복구
       + Lanes 데이터가 이미 전파되어 있음
 
-"Hangover-free" — Blip 이후 즉시 정상 처리량 회복`}</code>
+"Hangover-free" — Blip 이후 즉시 정상 처리량 회복
+
+메시지 지연 비교:
+  PBFT:     5 delays (정상) / View Change O(n³)
+  HotStuff: 7 delays (정상) / View Change O(n) but hangover
+  Autobahn: 3 delays (fast) / 5 delays (slow) / No hangover
+  → Fast path는 모든 BFT 중 가장 낮은 지연!
+
+Seamless Blip Recovery:
+  Lanes(데이터 레이어)가 비동기로 계속 동작하므로
+  Highway(합의)가 잠시 중단되어도 데이터는 이미 전파됨
+  → 복구 시 "밀린 데이터"를 다시 보낼 필요 없음
+  → HotStuff/PBFT의 hangover 문제를 구조적으로 해결`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">Ride-Sharing 최적화</h3>
         <p>

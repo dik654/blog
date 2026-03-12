@@ -38,9 +38,9 @@ export default function Comparison() {
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2 font-medium">커밋 지연</td>
-                <td className="border border-border px-3 py-2">3 RTT</td>
-                <td className="border border-border px-3 py-2">3 RTT (기본)</td>
-                <td className="border border-border px-3 py-2">1.5 RTT (fast)</td>
+                <td className="border border-border px-3 py-2">5 msg delays (2.5 RTT)</td>
+                <td className="border border-border px-3 py-2">7 msg delays (3.5 RTT)</td>
+                <td className="border border-border px-3 py-2">3 msg delays (fast) / 5 (slow)</td>
                 <td className="border border-border px-3 py-2">2 에폭 (~12.8분)</td>
               </tr>
               <tr>
@@ -49,6 +49,13 @@ export default function Comparison() {
                 <td className="border border-border px-3 py-2">즉시</td>
                 <td className="border border-border px-3 py-2">즉시</td>
                 <td className="border border-border px-3 py-2">지연 (2 에폭)</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">Responsiveness</td>
+                <td className="border border-border px-3 py-2">Yes (but O(n³) VC)</td>
+                <td className="border border-border px-3 py-2">Yes + O(n) VC</td>
+                <td className="border border-border px-3 py-2">Yes + No hangover</td>
+                <td className="border border-border px-3 py-2">N/A (확률적)</td>
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2 font-medium">장애 복구</td>

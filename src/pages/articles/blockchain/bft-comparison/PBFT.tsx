@@ -30,7 +30,13 @@ Client    Replica 0    Replica 1    Replica 2    Replica 3
   │            │                │               │           │
   │←──Reply────│←──Reply────────│←──Reply───────│←──Reply───│
 
-통신 복잡도: O(n²) — 모든 노드가 모든 노드에게 메시지 전송`}</code>
+통신 복잡도: O(n²) — 모든 노드가 모든 노드에게 메시지 전송
+메시지 지연: 5 (Request → Pre-Prepare → Prepare → Commit → Reply)
+
+이더리움과 비교:
+  PBFT: 5 message delays, 즉시 최종성
+  이더리움: ~12초(1 slot) 제안 + 2 에폭(~12.8분) 최종화
+  → PBFT는 빠르지만 O(n²)로 확장성 제한`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">View Change (리더 교체)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">

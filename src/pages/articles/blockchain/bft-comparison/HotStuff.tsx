@@ -33,7 +33,21 @@ PBFT와 달리 "Star topology" — 모든 통신이 리더를 경유
   → 하나의 QC(Quorum Certificate)로 전파
 
 PBFT: 모든 노드 → 모든 노드 (O(n²))
-HotStuff: 모든 노드 → 리더 → 모든 노드 (O(n))`}</code>
+HotStuff: 모든 노드 → 리더 → 모든 노드 (O(n))
+
+메시지 지연: 7 (Basic HotStuff)
+  Prepare(2) + Pre-Commit(2) + Commit(2) + Decide(1) = 7 delays
+  → PBFT(5 delays)보다 길지만, 선형 복잡도로 확장성 우월
+
+Responsiveness (응답성):
+  HotStuff는 최초로 "Responsiveness + Linear View Change"를
+  동시에 달성한 프로토콜:
+  - Responsive: 실제 네트워크 지연(δ)에 의해서만 속도 결정
+    (타임아웃 Δ에 의존하지 않음)
+  - 리더가 정상이면 f+1 응답 즉시 다음 단계 진행
+  - PBFT도 responsive하지만 view change가 O(n³)
+  - Tendermint는 O(n²) view change지만 not responsive
+    (Precommit에서 타임아웃 Δ 대기 필요)`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">Chained HotStuff (파이프라이닝)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
