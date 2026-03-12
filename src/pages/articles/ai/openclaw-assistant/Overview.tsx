@@ -9,6 +9,12 @@ export default function Overview() {
           동일한 AI 어시스턴트를 사용할 수 있으며, 자체 디바이스에서 실행됩니다.
           핵심 AI 엔진으로 <strong>Pi Coding Agent SDK</strong>를 임베드하여
           에이전틱 기능(코드 실행, 파일 편집, 웹 검색 등)을 제공합니다.
+          전체 시스템은 <strong>단일 Node.js 프로세스(Gateway)</strong>로 동작하며,
+          서비스 메시나 메시지 브로커 없이 모든 것을 관리합니다.
+        </p>
+        <p>
+          아키텍처의 핵심 철학: <em>&quot;에이전트 루프 자체는 어렵지 않다.
+          채널 정규화, 세션 관리, 메모리 영속성, 스킬 확장성, 보안이 진짜 어려운 문제다.&quot;</em>
         </p>
         <h3 className="text-xl font-semibold mt-6 mb-3">전체 아키텍처</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -48,7 +54,19 @@ export default function Overview() {
 │              Model Provider Layer                    │
 │  OpenAI │ Anthropic │ Google │ Ollama │ 기타         │
 │  → 멀티 프로바이더 지원 & 자동 페일오버              │
-└────────────────────────────────────────────────────┘`}</code>
+└────────────────────────────────────────────────────┘
+
+Gateway 핵심 (src/gateway/server.impl.ts, ~1100줄):
+  시작 단계:
+  1. Config Pipeline — openclaw.json (JSON5) 읽기, 마이그레이션
+  2. Auth & Secrets — 시크릿 해석, CORS, JWT 토큰 관리
+  3. Registry & Methods — RPC 메서드 등록
+
+  WebSocket 바인딩: ws://127.0.0.1:18789 (기본)
+  클라이언트 유형:
+    Operator (CLI, TUI) — 토큰/패스워드 인증
+    Node (macOS/iOS 앱) — 디바이스 페어링 + JWT
+    WebChat — 제한된 메서드 접근`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">Claude Code와의 비교</h3>
         <div className="overflow-x-auto">

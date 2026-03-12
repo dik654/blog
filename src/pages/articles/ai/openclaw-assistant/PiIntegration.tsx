@@ -30,7 +30,18 @@ export default function PiIntegration() {
 의존성 흐름:
   pi-ai → pi-agent-core → pi-coding-agent
                                ↑
-                          OpenClaw이 임베드`}</code>
+                          OpenClaw이 임베드
+
+도구 어댑터 레이어:
+  pi-agent-core의 AgentTool ≠ pi-coding-agent의 ToolDefinition
+  → pi-tool-definition-adapter.ts의 toToolDefinitions()로 브릿지
+  → OpenClaw 정책 필터링, 샌드박스 통합 유지
+
+기본 도구 커스터마이징:
+  Pi 기본:   codingTools (read, bash, edit, write)
+  OpenClaw:  bash → exec/process로 교체
+             read/edit/write → 샌드박스 경로 정책 적용
+             + messaging, browser, canvas, sessions, cron, gateway 도구 추가`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">임베디드 에이전트 실행</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -64,8 +75,21 @@ OpenClaw 접근 (embedded):
 
   4. 세션 영속성:
      → SessionManager가 대화 히스토리 파일로 관리
+     → ~/.openclaw/sessions/{sessionId}.jsonl (JSONL 형식)
      → 브랜칭 & 컴팩션 지원
-     → 채널/DM별 독립 세션`}</code>
+     → 채널/DM별 독립 세션
+
+이벤트 스트림 흐름:
+  agent_start → turn_start → message_start
+    → text_delta... (스트리밍)
+    → tool_execution_start → update → end
+  → message_end → turn_end → agent_end
+
+에이전트 루프 (pi-agent-core):
+  의도적으로 최소화된 설계:
+  LLM 스트리밍 → 도구 호출 확인 (없으면 중단)
+    → 도구 순차 실행 → 결과를 컨텍스트에 추가 → 반복
+  → 명시적 태스크 플래너나 DAG 없음 — LLM이 워크플로우 주도`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">멀티 프로바이더 & 페일오버</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -77,20 +101,32 @@ OpenClaw 접근 (embedded):
   Profile 3: Google Gemini (API 키)
   Profile 4: Ollama (로컬, 무료)
 
-자동 페일오버:
-  요청 → Profile 1 시도 → 실패 (rate limit)
-       → Profile 2 시도 → 실패 (인증 만료)
-       → Profile 3 시도 → 성공!
+자동 페일오버 설정:
+  {
+    "model": {
+      "primary": "anthropic/claude-opus-4-6",
+      "fallbacks": ["anthropic/claude-sonnet-4-5",
+                     "openai/gpt-5", "google/gemini-2-pro"]
+    }
+  }
+  → Rate limit, 장애, 타임아웃 시 자동으로 다음 모델 시도
+  → channels.modelByChannel로 채널별 다른 모델 지정 가능
 
 쿨다운 관리:
   실패한 프로파일은 일정 시간 쿨다운
   → 자동 만료 후 다시 활성화
   → 무한 재시도 방지
 
+프로바이더별 인증:
+  Anthropic: API 키 인증 (권장)
+  OpenAI:    OPENAI_API_KEY 환경 변수
+  Gemini:    키 로테이션 (GEMINI_API_KEYS, KEY_1, KEY_2)
+             + Google CLI 로그인 → auth-profiles.json 저장
+  Ollama:    자동 감지 (127.0.0.1:11434/v1, 인증 불필요)
+
 Model Catalog:
   각 프로바이더의 사용 가능 모델 자동 발견
-  → Ollama: 로컬 모델 자동 감지
-  → OpenAI: API로 모델 목록 조회
+  확장 카탈로그: GLM-5, MiniMax M2.5, Kimi K2.5, Grok 등
   → 사용자가 models.json으로 커스텀 설정 가능`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">커스텀 도구 주입</h3>

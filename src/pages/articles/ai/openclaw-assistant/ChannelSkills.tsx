@@ -37,7 +37,19 @@ export default function ChannelSkills() {
 라우팅 규칙:
   DM:   1:1 대화, 항상 응답
   그룹: 멘션 또는 트리거 단어로 활성화
-  → 채널별 다른 응답 전략 적용 가능`}</code>
+  → 채널별 다른 응답 전략 적용 가능
+
+메시지 처리 6단계:
+  1. Channel Ingress — 플랫폼 원시 이벤트 수신
+  2. 정규화 & 중복 제거 — MsgContext 구조체로 변환
+  3. 접근 제어 — dmPolicy (DM) + groupPolicy (그룹)
+  4. 세션 해석 — 적절한 에이전트 세션으로 라우팅
+  5. 명령/에이전트 처리 — Pi 에이전트 루프 실행
+  6. 응답 전달 — 플랫폼별 리치 메시지로 변환
+
+멀티 에이전트 라우팅:
+  채널/계정/피어별로 격리된 에이전트에 라우팅 가능
+  → 에이전트마다 독립 워크스페이스 + 세션`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">스킬 시스템</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -57,32 +69,64 @@ export default function ChannelSkills() {
   ├── 1password/        # 비밀번호 관리
   └── ...
 
-스킬 설치:
-  openclaw skill install <name>
-  → npm 패키지로 설치
-  → Clawhub에서 커뮤니티 스킬 검색
-
-스킬 구조:
+스킬 구조 (SKILL.md 기반):
   skill/
-  ├── package.json     # 의존성
-  ├── skill.json       # 메타데이터 (이름, 설명, 트리거)
-  └── index.ts         # 진입점 (도구 정의 & 핸들러)
+  ├── SKILL.md         # YAML frontmatter + 마크다운 지침
+  └── (선택) 추가 파일
 
-스킬이 제공하는 것:
-  1. 추가 도구 (에이전트가 사용)
-  2. 커스텀 명령어 (/명령)
-  3. 자동 트리거 (이벤트 기반)
-  4. UI 컴포넌트 (Canvas에 렌더링)`}</code>
+  SKILL.md 예시:
+  ---
+  name: github-review
+  version: 1.0.0
+  requirements: [gh CLI]
+  ---
+  # 지침
+  1. gh pr diff 실행...
+
+스킬 우선순위 (높은 순):
+  1. <workspace>/skills (에이전트별)
+  2. ~/.openclaw/skills (공유/관리)
+  3. 번들된 스킬
+
+ClawHub — 커뮤니티 스킬 레지스트리 (13,729+ 스킬):
+  openclaw skills install/list/search/update/remove
+  → 동적 로드: 설치 후 재시작 없이 다음 턴부터 사용
+  → VirusTotal 연동 스킬 스캐닝 (보안)
+
+시스템 프롬프트 통합:
+  적격 스킬이 XML 목록으로 시스템 프롬프트에 주입
+  → 스킬당 ~24 토큰 (컨텍스트 효율적)
+
+TypeScript 플러그인 (OpenClawPlugin):
+  import { OpenClawPlugin } from '@openclaw/sdk';
+  → name, version, tools[] 정의
+  → 채널, 도구, 라이프사이클 훅 등록 가능
+  → MCP 서버도 표준 도구 레이어로 통합`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">서브에이전트 & 샌드박스</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`서브에이전트 시스템:
 
-Main Agent → Subagent 스폰
-  → 독립 세션으로 실행
-  → 깊이 제한 (무한 재귀 방지)
-  → 타임아웃 관리
-  → 결과를 Main Agent에 반환
+스폰: /subagents spawn 또는 sessions_spawn 도구
+
+깊이 제한 (maxSpawnDepth, 기본: 1):
+  Depth 0 (메인):    전체 도구 접근, 서브에이전트 스폰 가능
+  Depth 1 (오케스트레이터, maxSpawnDepth≥2):
+    → sessions_spawn, subagents, sessions_list 접근
+  Depth 1 (리프, maxSpawnDepth=1):
+    → 세션 도구 없음
+  Depth 2 (리프 워커):
+    → sessions_spawn 항상 거부 — 더 이상 스폰 불가
+
+안전 제어:
+  maxChildrenPerAgent: 5 (기본, 에이전트당 활성 자식 수)
+  캐스케이드 중단: 부모 중단 시 모든 자손 자동 중단
+  자동 아카이브: archiveAfterMinutes (기본: 60)
+  세션 키: subagent:<parentId>:d<depth> (계층 인코딩)
+
+비용 최적화:
+  agents.defaults.subagents.model로 서브에이전트에 저가 모델 지정
+  → 메인은 고품질, 서브에이전트는 효율적 모델
 
 사용 사례:
   "이 PR을 리뷰하고 테스트도 실행해줘"
@@ -92,23 +136,34 @@ Main Agent → Subagent 스폰
     → 결과 종합하여 응답
 
 샌드박스 아키텍처:
-  Docker/Podman 기반 격리 실행 환경
+  Docker/Podman 기반 격리 실행 환경 (opt-in)
+
+  샌드박스 모드 (agents.defaults.sandbox.mode):
+    "all":      모든 세션을 Docker 컨테이너에서 실행
+    "non-main": 그룹/채널 세션만 샌드박스, 메인은 호스트
+    off (기본): 도구를 호스트에서 직접 실행
 
   ┌─────────────────────────────────┐
   │ OpenClaw Gateway (호스트)        │
   │   ↓ Docker API                  │
   │ ┌─────────────────────────────┐ │
   │ │ Sandbox Container           │ │
-  │ │  - 격리된 파일 시스템         │ │
-  │ │  - 제한된 네트워크 접근       │ │
-  │ │  - 시간 제한 (timeout)       │ │
-  │ │  - 리소스 제한 (CPU, 메모리)  │ │
-  │ │  → 코드 실행, 파일 편집      │ │
+  │ │  - 파일시스템 격리            │ │
+  │ │  - 네트워크 격리 (기본 none)  │ │
+  │ │  - CPU/메모리 제한            │ │
+  │ │  - non-root 사용자 실행      │ │
+  │ │  - scope: rw → /workspace   │ │
+  │ │           ro → /agent        │ │
   │ └─────────────────────────────┘ │
   └─────────────────────────────────┘
 
-→ 사용자 코드를 안전하게 실행
-→ 호스트 시스템 보호`}</code>
+  Fail-closed 설계:
+    sandbox 설정인데 런타임 없으면 → 호스트 실행 대신 에러 발생
+  Escape hatch:
+    tools.elevated로 특정 도구만 호스트에서 실행 허용
+  컨테이너 수명:
+    24시간 유휴 또는 7일 경과 시 자동 제거
+    설정 변경 시 자동 재생성 (5분 내 사용 중이면 유지)`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (openclaw 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
