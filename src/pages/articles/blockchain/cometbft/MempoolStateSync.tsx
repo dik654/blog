@@ -18,7 +18,15 @@ export default function MempoolStateSync() {
                    │ (앱이 검증)           │ ClistMempool: 연결 리스트
                    │                      │ 또는
                    ▼                      │ CAT Mempool: Content-Addressable Tx
-              무효 → 거부                  └→ PrepareProposal에서 선택`}</code>
+              무효 → 거부                  └→ PrepareProposal에서 선택
+
+Commit 시 멤풀 동기화:
+  1. 멤풀 Lock (새 TX 수신 차단)
+  2. ABCI 연결 Flush (4개 연결 상태 동기화)
+  3. 커밋된 TX 제거
+  4. 남은 TX를 새 상태에 대해 Re-CheckTx
+  5. 멤풀 Unlock
+  → 이더리움은 블록 import 시 txpool에서 포함된 TX 제거`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">상태 동기화 (State Sync)</h3>
         <p>
@@ -38,7 +46,17 @@ export default function MempoolStateSync() {
 5. 나머지 블록 실행              5. 나머지 블록부터 정상 합의
 
 핵심: 두 방식 모두 "전체 히스토리 리플레이" 없이
-      최신 상태에서 시작할 수 있게 해줌`}</code>
+      최신 상태에서 시작할 수 있게 해줌
+
+State Sync 설정 요구사항:
+  - 신뢰할 수 있는 RPC 서버 (2개 이상 권장)
+  - 신뢰할 수 있는 height + block hash
+  - Trust Period (~unbonding 기간의 2/3)
+  → Light Client로 app hash를 체인에 대해 검증 후 합의 전환
+
+주의: State Sync는 과거 블록을 백필하지 않음
+  → 잘린 히스토리(truncated history)로 시작
+  → 전체 히스토리가 필요하면 Block Sync 사용`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (cometbft 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">

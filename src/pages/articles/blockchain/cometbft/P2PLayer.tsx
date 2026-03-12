@@ -66,7 +66,28 @@ export default function P2PLayer() {
 ├──────────────────────────────────────────┤
 │ Channel 0x70: Evidence Reactor           │
 │  → 이중 서명 증거 전파 (슬래싱 증거)        │
-└──────────────────────────────────────────┘`}</code>
+└──────────────────────────────────────────┘
+
+연결 보안:
+  1. Station-to-Station 프로토콜로 인증된 암호화
+  2. X25519 Diffie-Hellman 키 교환
+  3. chacha20poly1305 대칭 암호화
+  4. 핸드셰이크: 암호화 → CometBFT 버전 협상
+
+Switch (P2P 핵심 컴포넌트):
+  → 모든 Reactor를 관리하고 피어 연결 추적
+  → 각 Reactor가 채널을 등록
+  → Send()(블로킹) / TrySend()(논블로킹) 메시지 전송
+
+Sentry Node 아키텍처 (이더리움 유사):
+  검증자 → PEX 비활성화, persistent peer만 연결
+  센트리 노드 → PEX 활성화, 공개 네트워크 대면
+  (이더리움 검증자의 private peering과 동일 패턴)
+
+Peer Quality:
+  합의 프로토콜에서 유용한 투표/블록 파트 10,000개 수집 시
+  → 해당 피어를 "good"으로 마킹
+  → PEX가 good 피어 우선 발견`}</code>
         </pre>
       </div>
     </section>

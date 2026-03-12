@@ -29,9 +29,19 @@ export default function ConsensusEngine() {
 3. Precommit (최종 커밋 투표)
    ┌─────────────────────────────────────────┐
    │ Polka 확인 → Precommit(block_hash)       │
+   │  → 해당 블록에 "Lock" (이전 Lock 해제)    │
+   │ +2/3 nil Prevote → Unlock               │
    │ +2/3 Precommit → 블록 커밋 (최종성!)      │
    │ 실패 시 → Round R+1로 진행                │
-   └─────────────────────────────────────────┘`}</code>
+   └─────────────────────────────────────────┘
+
+상태 머신:
+  NewHeight → (Propose → Prevote → Precommit)+ → Commit → NewHeight
+  → 한 Height에서 여러 Round가 진행될 수 있음
+  → 타임아웃은 라운드마다 점진적으로 증가
+
+블록 전파: PartSet으로 분할 → LibSwift 기반 Gossip
+  → 대형 블록도 파트 단위로 병렬 전파 가능`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">이더리움 Casper FFG와 비교</h3>
         <div className="overflow-x-auto">
