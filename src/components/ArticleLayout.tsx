@@ -10,16 +10,18 @@ interface Props {
 
 export default function ArticleLayout({ title, sections, children }: Props) {
   return (
-    <div className="flex gap-8">
-      <aside className="hidden w-52 shrink-0 lg:block">
+    <div className="flex">
+      <article className="min-w-0 flex-1">
+        <h1 className="text-3xl font-bold tracking-tight mb-8">{title}</h1>
+        <div>
+          {children}
+        </div>
+      </article>
+      <aside className="hidden w-64 shrink-0 ml-10 xl:block">
         <div className="sticky top-20">
           <TableOfContents sections={sections} />
         </div>
       </aside>
-      <article className="min-w-0 flex-1 prose prose-neutral max-w-none">
-        <h1 className="text-3xl font-bold tracking-tight mb-8">{title}</h1>
-        {children}
-      </article>
     </div>
   );
 }

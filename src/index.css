@@ -2,6 +2,10 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/noto-sans-kr";
+@plugin "@tailwindcss/typography";
+@import "mafs/core.css";
+@import "mafs/font.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -75,7 +79,7 @@
 }
 
 @theme inline {
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: 'Geist Variable', 'Noto Sans KR Variable', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -119,11 +123,40 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
     }
   body {
     @apply bg-background text-foreground;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-wrap: break-word;
+    word-break: keep-all;
     }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+    }
+  img, video, canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    }
+  svg:not([class]) {
+    max-width: 100%;
+    }
+  [style*="transform"] {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+    }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+  pre, code {
+    font-size: 0.875em;
+    overflow-x: auto;
     }
 }

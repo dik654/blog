@@ -1,77 +1,67 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { getCategoryBySlug } from '@/content';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import type { Subcategory } from '@/content';
+import ArticleCard from './category/ArticleCard';
+
+function findSubcategory(subs: Subcategory[], slug: string): Subcategory | null {
+  for (const sub of subs) {
+    if (sub.slug === slug) return sub;
+    if (sub.children) {
+      const found = findSubcategory(sub.children, slug);
+      if (found) return found;
+    }
+  }
+  return null;
+}
 
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
+  const [searchParams] = useSearchParams();
+  const subSlug = searchParams.get('sub');
   const cat = getCategoryBySlug(category ?? '');
-  const [selectedSub, setSelectedSub] = useState<string | null>(null);
 
   if (!cat) {
     return <p className="text-muted-foreground">카테고리를 찾을 수 없습니다.</p>;
   }
 
-  const filteredArticles = selectedSub
-    ? cat.articles.filter((a) => a.subcategory === selectedSub)
+  const activeSub = subSlug ? findSubcategory(cat.subcategories, subSlug) : null;
+  const filtered = activeSub
+    ? cat.articles.filter((a) => a.subcategory === activeSub.slug)
     : cat.articles;
+  const title = activeSub ? activeSub.name : cat.name;
+  const description = activeSub
+    ? `${cat.name} › ${activeSub.name}`
+    : cat.description;
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight mb-1">{cat.name}</h1>
-        <p className="text-muted-foreground">{cat.description}</p>
-      </div>
+    <div className="max-w-4xl">
+      <motion.div
+        key={subSlug ?? 'all'}
+        className="mb-10"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <h1 className="text-2xl font-bold tracking-tight mb-1">{title}</h1>
+        <p className="text-sm text-muted-foreground">
+          {description} &middot; {filtered.length}개의 글
+        </p>
+      </motion.div>
 
-      <div className="flex flex-wrap gap-2 mb-6">
-        <button
-          onClick={() => setSelectedSub(null)}
-          className={cn(
-            'rounded-full border px-3 py-1 text-sm transition-colors cursor-pointer',
-            selectedSub === null
-              ? 'bg-primary text-primary-foreground'
-              : 'hover:bg-accent',
-          )}
-        >
-          전체
-        </button>
-        {cat.subcategories.map((sub) => (
-          <button
-            key={sub.slug}
-            onClick={() => setSelectedSub(sub.slug)}
-            className={cn(
-              'rounded-full border px-3 py-1 text-sm transition-colors cursor-pointer',
-              selectedSub === sub.slug
-                ? 'bg-primary text-primary-foreground'
-                : 'hover:bg-accent',
-            )}
-          >
-            {sub.name}
-          </button>
-        ))}
-      </div>
-
-      <Separator className="mb-6" />
-
-      {filteredArticles.length === 0 ? (
-        <p className="text-sm text-muted-foreground py-8 text-center">
+      {filtered.length === 0 ? (
+        <p className="text-sm text-muted-foreground/60 py-4">
           아직 작성된 글이 없습니다.
         </p>
       ) : (
-        <div className="space-y-3">
-          {filteredArticles.map((article) => (
-            <Link
+        <div className="space-y-2">
+          {filtered.map((article, i) => (
+            <ArticleCard
               key={article.slug}
-              to={`/${cat.slug}/${article.slug}`}
-              className="block rounded-lg border p-4 transition-colors hover:bg-accent/50"
-            >
-              <h3 className="font-medium mb-1">{article.title}</h3>
-              <Badge variant="outline" className="text-xs">
-                {cat.subcategories.find((s) => s.slug === article.subcategory)?.name}
-              </Badge>
-            </Link>
+              article={article}
+              categorySlug={cat.slug}
+              index={i}
+            />
           ))}
         </div>
       )}
