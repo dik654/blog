@@ -1,0 +1,95 @@
+export default function Overview() {
+  return (
+    <section id="overview" className="mb-16 scroll-mt-20">
+      <h2 className="text-2xl font-bold mb-6">OpenClaw 개요</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          OpenClaw은 <strong>개인용 AI 어시스턴트</strong> 오픈소스 프로젝트입니다.
+          WhatsApp, Telegram, Slack, Discord 등 다양한 메시징 채널에서
+          동일한 AI 어시스턴트를 사용할 수 있으며, 자체 디바이스에서 실행됩니다.
+          핵심 AI 엔진으로 <strong>Pi Coding Agent SDK</strong>를 임베드하여
+          에이전틱 기능(코드 실행, 파일 편집, 웹 검색 등)을 제공합니다.
+        </p>
+        <h3 className="text-xl font-semibold mt-6 mb-3">전체 아키텍처</h3>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`OpenClaw 아키텍처:
+
+┌────────────────────────────────────────────────────┐
+│                  메시징 채널들                        │
+│  WhatsApp │ Telegram │ Slack │ Discord │ iMessage   │
+│  Matrix   │ Teams    │ IRC   │ Signal  │ WebChat    │
+└──────────────────────┬─────────────────────────────┘
+                       │ 메시지 수신/발신
+┌──────────────────────┴─────────────────────────────┐
+│              OpenClaw Gateway                        │
+│  ┌─────────────────────────────────────────────┐   │
+│  │ Channel Router                               │   │
+│  │  → 채널별 메시지 정규화                        │   │
+│  │  → 라우팅 (DM, 그룹, 멘션)                    │   │
+│  └─────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────┐   │
+│  │ Pi Embedded Agent                            │   │
+│  │  → createAgentSession() (Pi SDK)             │   │
+│  │  → 시스템 프롬프트 커스터마이징                  │   │
+│  │  → 도구 실행 (코딩, 파일, 웹 등)               │   │
+│  │  → 세션 관리 & 컴팩션                          │   │
+│  └─────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────┐   │
+│  │ Skills Engine                                │   │
+│  │  → 플러그인 시스템 (npm 패키지)                │   │
+│  │  → 내장 스킬 + 커뮤니티 스킬                   │   │
+│  └─────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────┐   │
+│  │ Sandbox (코드 실행)                           │   │
+│  │  → Docker/Podman 컨테이너                     │   │
+│  │  → 격리된 파일 시스템 & 네트워크               │   │
+│  └─────────────────────────────────────────────┘   │
+├────────────────────────────────────────────────────┤
+│              Model Provider Layer                    │
+│  OpenAI │ Anthropic │ Google │ Ollama │ 기타         │
+│  → 멀티 프로바이더 지원 & 자동 페일오버              │
+└────────────────────────────────────────────────────┘`}</code>
+        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Claude Code와의 비교</h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-4 py-2 text-left">특성</th>
+                <th className="border border-border px-4 py-2 text-left">OpenClaw</th>
+                <th className="border border-border px-4 py-2 text-left">Claude Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-border px-4 py-2 font-medium">주 목적</td>
+                <td className="border border-border px-4 py-2">개인 AI 어시스턴트 (범용)</td>
+                <td className="border border-border px-4 py-2">코딩 에이전트 (전문)</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-4 py-2 font-medium">인터페이스</td>
+                <td className="border border-border px-4 py-2">20+ 메시징 채널</td>
+                <td className="border border-border px-4 py-2">터미널 CLI</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-4 py-2 font-medium">AI 엔진</td>
+                <td className="border border-border px-4 py-2">Pi SDK (멀티 프로바이더)</td>
+                <td className="border border-border px-4 py-2">Claude API (Anthropic 전용)</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-4 py-2 font-medium">호스팅</td>
+                <td className="border border-border px-4 py-2">셀프 호스팅 (로컬)</td>
+                <td className="border border-border px-4 py-2">로컬 CLI</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-4 py-2 font-medium">확장성</td>
+                <td className="border border-border px-4 py-2">Skills (플러그인)</td>
+                <td className="border border-border px-4 py-2">MCP 서버</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  );
+}
