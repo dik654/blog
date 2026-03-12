@@ -27,7 +27,53 @@ Omni Octane:
   CometBFT: ABCI FinalizeBlock 호출
   Octane:   engine_forkchoiceUpdatedV3(headHash=new) → 확정
 
-→ ABCI 콜백이 Engine API 호출로 변환되는 "어댑터" 패턴`}</code>
+→ ABCI 콜백이 Engine API 호출로 변환되는 "어댑터" 패턴
+
+핵심 차이 (Ethermint vs Octane):
+  Ethermint: 합의 → 실행 순차 처리 (병목!)
+  Octane:    합의 & 실행 병렬 처리 (동시 진행)
+  → Octane은 Ethermint를 대체하기 위해 설계됨`}</code>
+        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">이중 합의 & 이중 스테이킹</h3>
+        <p>
+          Omni의 Halo 합의 레이어는 <strong>두 가지 합의를 동시에</strong> 수행합니다:
+          Omni EVM 블록 합의와 XBlock(크로스체인 블록) 합의.
+          보안 모델은 <strong>이중 스테이킹</strong>으로, OMNI 토큰 스테이킹과
+          EigenLayer를 통한 <strong>restaked ETH</strong>를 모두 활용합니다.
+        </p>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`Halo의 이중 합의 프로세스:
+
+블록 N 합의 시:
+  1. Omni EVM 합의:
+     - 제안자가 Engine API로 EVM 페이로드 빌드
+     - 페이로드를 CometBFT 트랜잭션으로 래핑
+     - Prevote → Precommit → 커밋
+
+  2. XBlock 합의 (동시 진행):
+     - 검증자들이 연결된 롤업의 Portal Contract 모니터링
+     - 관찰된 크로스체인 이벤트를 XBlock으로 패키징
+     - XBlock 해시에 대해 어테스테이션
+     - 어테스테이션을 합의 블록에 포함
+
+이중 스테이킹:
+  ┌─────────────────────────────────┐
+  │ Omni Staking (Omni EVM)         │
+  │  - OMNI 토큰 직접 스테이킹      │
+  │  - 보상 분배 & 슬래싱           │
+  ├─────────────────────────────────┤
+  │ EigenLayer AVS (Ethereum L1)    │
+  │  - restaked ETH 위임            │
+  │  - EigenLayer 오퍼레이터 활용    │
+  ├─────────────────────────────────┤
+  │ Portal Contracts (각 롤업)      │
+  │  - 검증자 셋 & 투표 파워 동기화  │
+  └─────────────────────────────────┘
+
+이더리움 비교:
+  이더리움: 32 ETH 단일 스테이킹
+  Omni: OMNI + restaked ETH 이중 스테이킹
+  → 이더리움의 경제적 보안을 직접 차용`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">크로스 롤업 메시징 (XMsg)</h3>
         <p>
@@ -51,7 +97,13 @@ Omni XMsg:
   3. 릴레이어가 어테스테이션을 목적지 체인에 제출
   4. 목적지 체인의 portal contract가 검증 & 실행
 
-  → Cosmos IBC와 유사하지만, EVM 롤업 전용으로 최적화`}</code>
+  확인 전략 선택:
+  - "Finalized": 롤업 TX가 L1에 최종화된 후 전달 (~12분, reorg 불가)
+  - "Latest":    L2 시퀀서 포함 즉시 전달 (~5-10초, reorg 가능성)
+
+  → Cosmos IBC와 유사하지만, EVM 롤업 전용으로 최적화
+  → 현재 Ethereum L1, Arbitrum, Optimism, Base 지원
+     (이더리움 생태계 TVL의 90% 이상 커버)`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (omni 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
