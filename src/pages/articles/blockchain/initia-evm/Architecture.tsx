@@ -31,7 +31,20 @@ MiniEVM (Cosmos KVStore 위에 구현):
 장점:
   - Cosmos의 IBC와 EVM이 같은 상태 공간 공유
   - EVM 컨트랙트가 Cosmos 네이티브 토큰에 직접 접근
-  - 트랜잭션이 EVM 호출과 Cosmos 메시지를 혼합 가능`}</code>
+  - 트랜잭션이 EVM 호출과 Cosmos 메시지를 혼합 가능
+
+이중 상태 동기화 문제:
+  Cosmos 네이티브 모듈의 상태 변경은 EVM에 자동 반영 안 됨
+  → Precompile + 저널링으로 해결:
+    1. Precompile이 Cosmos 상태 변경 시 journal entry 기록
+    2. EVM TX revert 시 journal로 Cosmos 상태도 롤백
+    3. RunAtomic 패턴: 에러 감지 시 StateDB 스냅샷으로 복귀
+
+ERC20 이중 표현:
+  ERC20Factory로 생성된 토큰은 동시에 두 형태로 존재:
+  - EVM: ERC20 컨트랙트 상태
+  - Cosmos: 네이티브 denom ("evm/ADDRESS" 형식)
+  → 두 세계를 연결하는 브릿지 역할`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">EVM 실행 흐름</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -50,7 +63,22 @@ MiniEVM (Cosmos KVStore 위에 구현):
 이더리움 비교:
   이더리움: StateDB → EVM → StateDB (직접)
   MiniEVM:  KVStore → StateDB 어댑터 → EVM → 어댑터 → KVStore
-  → 어댑터 레이어가 추가되지만, 동일한 EVM 바이트코드 실행`}</code>
+  → 어댑터 레이어가 추가되지만, 동일한 EVM 바이트코드 실행
+
+가스 처리:
+  SDK의 GasKVStore 메커니즘을 우회
+  → EVM 자체의 opcode 가스 비용으로 추적
+  → 실행 결과에서 가스 소비량 반환
+
+Precompile 카테고리:
+  1. EVM 레거시 (Berlin hardfork 세트)
+  2. Stateless (p256 검증, bech32 주소 변환)
+  3. Stateful (Cosmos bank/staking/governance 접근)
+
+ICosmos 인터페이스:
+  Solidity에서 Cosmos 메시지 실행 가능
+  → IBC 전송, 스테이킹, 거버넌스 투표를 EVM 컨트랙트에서 호출
+  → cross-VM 메시징의 핵심`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (minievm 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">

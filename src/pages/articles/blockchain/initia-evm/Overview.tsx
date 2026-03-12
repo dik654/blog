@@ -40,6 +40,29 @@ export default function Overview() {
   외부 연결: 이더리움 클라이언트 재활용, 하지만 IPC 오버헤드
   내부 임베딩: 낮은 지연, 하지만 EVM 업데이트를 직접 추적해야 함`}</code>
         </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Initia Interwoven Rollup 구조</h3>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`Initia 생태계 구조:
+
+┌─────────────────────────────────────────┐
+│         Initia L1 (Cosmos SDK)          │
+│  합의 + 결산 + IBC 허브                   │
+├─────────────────────────────────────────┤
+│              OPinit Stack               │
+│  (Optimistic Rollup 보안 레이어)         │
+├──────────┬──────────┬───────────────────┤
+│ Minitia  │ Minitia  │ Minitia           │
+│ (EVM)    │ (Wasm)   │ (MoveVM)          │
+│ MiniEVM  │ MiniWasm │ MiniMove          │
+│ ~500ms   │          │                   │
+│ ~10k TPS │          │                   │
+└──────────┴──────────┴───────────────────┘
+
+MiniEVM = EVM 타입 Minitia (Optimistic Rollup L2)
+  - L2에 별도 검증자 불필요 (L1에서 보안 파생)
+  - CometBFT 합의로 빠른 최종성
+  - IBC로 L1 및 다른 Minitia와 통신`}</code>
+        </pre>
       </div>
     </section>
   );
