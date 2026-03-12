@@ -35,6 +35,26 @@ function References() {
           <li>
             <strong>[IPNI]</strong> github.com/ipni — InterPlanetary Network Indexer, cid.contact
           </li>
+          <li>
+            <strong>[Kubo 릴리스]</strong> github.com/ipfs/kubo/releases
+            — Bitswap Broadcast Reduction (0.36), Sweep Provider (0.38), HTTP 검색 기본화 (0.36)
+          </li>
+          <li>
+            <strong>[PDP 소개]</strong> filecoin.io/blog/posts/introducing-proof-of-data-possession-pdp
+            — PDP 챌린지-응답 메커니즘, 160바이트 증명, 가변 컬렉션
+          </li>
+          <li>
+            <strong>[FOC 소개]</strong> filecoin.io/blog/posts/introducing-filecoin-onchain-cloud
+            — 3계층 아키텍처 (PDP + Filecoin Pay + Warm Storage Service)
+          </li>
+          <li>
+            <strong>[FOC 문서]</strong> docs.filecoin.cloud
+            — PDP 개요, FOC 아키텍처, Curio 노드
+          </li>
+          <li>
+            <strong>[Boost 문서]</strong> boost.filecoin.io
+            — LID (YugabyteDB), booster-http/bitswap, Trustless Gateway 사양
+          </li>
         </ul>
       </div>
     </section>

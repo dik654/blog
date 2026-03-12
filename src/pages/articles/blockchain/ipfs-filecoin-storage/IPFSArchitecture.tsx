@@ -67,7 +67,17 @@ export default function IPFSArchitecture() {
   1단계: 연결된 피어에게 WANT_HAVE
   2단계: HAVE 응답한 피어에게 WANT_BLOCK
   3단계: 응답 없으면 DHT Provider 검색
-  → 불필요한 대역폭 소모 최소화`}</code>
+  → 불필요한 대역폭 소모 최소화
+
+최근 개선 (Kubo 0.36+):
+  Broadcast Reduction:
+    → 응답하는 피어만 추적 후 선별 전송
+    → 브로드캐스트 메시지 80-98% 감소
+    → 대역폭 50-95% 절감
+  HTTP 검색 병행 (Kubo 0.35+):
+    → /tls/http provider에 HTTP/2 블록 요청
+    → Bitswap과 HTTP를 동시에 사용
+    → application/vnd.ipld.raw 형식`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">콘텐츠 라우팅 (DHT + IPNI)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -90,6 +100,15 @@ Kubo 라우팅 설정 (Routing.Type):
   "dht":         DHT만 사용
   "none":        라우팅 비활성화
   "custom":      커스텀 라우터
+
+Sweep Provider (Kubo 0.38+):
+  → DHT 발행을 시간에 걸쳐 균등 분산
+  → 대규모 CID 세트에서 조회 97% 감소
+  → 수십만 CID도 메모리 스파이크 없이 처리
+
+Routing V1 HTTP API:
+  → Kubo가 기본 노출, 브라우저 경량 클라이언트 지원
+  → IPIP-476: Delegated Routing DHT Closest Peers API
 
 IPNS (InterPlanetary Name System):
   → 변경 가능한 이름 → 불변 CID 매핑
@@ -127,7 +146,26 @@ IPNS (InterPlanetary Name System):
   원격 핀닝 서비스:
     Pinata, web3.storage, Infura
     → IPFS 핀닝 API 표준 (/api/v0/pin/remote)
-    → 데이터 가용성을 제3자에게 위임`}</code>
+    → 데이터 가용성을 제3자에게 위임
+
+  Filecoin-Backed Pinning Services (FPS):
+    → IPFS 핀닝 API를 노출하면서 Filecoin DSN에 저장
+    → 업로드 즉시 IPFS로 접근 가능 + Filecoin 장기 보존
+
+청크 전략:
+  Fixed-size:    단순, 결정적 경계 (기본 256KB)
+  Content-defined: Rabin/Buzhash, 중복 제거 최적화
+  Balanced DAG:  기본 레이아웃, 빠른 랜덤 접근
+  Trickle DAG:   순차/추가 전용 데이터 최적화
+
+Gateway:
+  Trustless Gateway:
+    → application/vnd.ipld.raw (원시 블록)
+    → application/vnd.ipld.car (CAR 파일)
+    → 클라이언트가 해시로 무결성 검증
+    → NoFetch 모드: 로컬 데이터만 제공
+  libp2p Gateway (Kubo 0.23+ 실험적):
+    → 방화벽/인증서 없이 libp2p로 Gateway 응답`}</code>
         </pre>
       </div>
     </section>

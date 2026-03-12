@@ -43,6 +43,34 @@ function References() {
             <strong>[Groth16]</strong> Groth, &quot;On the Size of Pairing-based Non-interactive Arguments&quot;, EUROCRYPT 2016
             — Groth16 증명 시스템 원문
           </li>
+          <li>
+            <strong>[SDR Spec]</strong> spec.filecoin.io/algorithms/sdr/
+            — 11 레이어, d_drg=6, d_exp=8, Poseidon₁₁ Column Hash (공식 사양)
+          </li>
+          <li>
+            <strong>[Lotus HW 요구사항]</strong> lotus.filecoin.io/storage-providers/get-started/hardware-requirements/
+            — PC2 최소 5GiB VRAM, C2 최소 11GiB, PoSt 10GiB + 3500 CUDA 코어
+          </li>
+          <li>
+            <strong>[pc2_cuda]</strong> github.com/supranational/pc2_cuda
+            — RTX 3090에서 PC2 ~150초 (2.5분) 달성
+          </li>
+          <li>
+            <strong>[SupraSeal]</strong> github.com/supranational/supra_seal
+            — 통합 봉인, SPDK NVMe, 128 섹터 동시 PC1
+          </li>
+          <li>
+            <strong>[Lotus CUDA 설정]</strong> lotus.filecoin.io/tutorials/lotus-miner/cuda/
+            — FFI_USE_CUDA=1, CUDA 11.x+ 권장
+          </li>
+          <li>
+            <strong>[NTT 연구]</strong> eprint.iacr.org/2023/1410
+            — GPU NTT가 증명 런타임 최대 91% 차지, ~50x CPU 대비 가속
+          </li>
+          <li>
+            <strong>[ec-gpu]</strong> github.com/filecoin-project/ec-gpu
+            — GPU 유한체/타원곡선 코드 생성기, bellperson + Neptune에서 사용
+          </li>
         </ul>
       </div>
     </section>

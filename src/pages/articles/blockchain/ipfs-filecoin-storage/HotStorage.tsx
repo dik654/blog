@@ -67,17 +67,24 @@ Boost 핵심 컴포넌트:
 │  └──────────────────────────────────┘  │
 │                                        │
 │  ┌──────────────────────────────────┐  │
-│  │ HTTP Server (boostd-data)        │  │
-│  │  → /piece/{pieceCID} 엔드포인트   │  │
-│  │  → 바이트 범위 요청 지원           │  │
-│  │  → IPFS Gateway 호환              │  │
+│  │ booster-http (검색 서버)          │  │
+│  │  → /piece/ 전체 피스 검색         │  │
+│  │  → /ipfs/ Trustless Gateway      │  │
+│  │  → CAR + raw IPLD 블록 지원      │  │
+│  └──────────────────────────────────┘  │
+│  ┌──────────────────────────────────┐  │
+│  │ booster-bitswap (IPFS 호환)      │  │
+│  │  → Filecoin SP를 IPFS 노드처럼   │  │
+│  │  → 기존 IPFS 노드와 투명하게 교환 │  │
 │  └──────────────────────────────────┘  │
 │                                        │
 │  ┌──────────────────────────────────┐  │
-│  │ Piece Store & Index              │  │
-│  │  → PieceCID → 섹터 위치 매핑      │  │
-│  │  → CID → Piece 내 오프셋 매핑    │  │
-│  │  → LevelDB 기반 인덱스           │  │
+│  │ Local Index Directory (LID)       │  │
+│  │  → 블록별 위치 메타데이터 저장     │  │
+│  │  → LevelDB (소규모) 또는          │  │
+│  │    YugabyteDB (>1PiB, 수만 딜)   │  │
+│  │  → 서브피스 블록 레벨 검색 지원    │  │
+│  │  → 다중 boostd 인스턴스 공유 가능 │  │
 │  └──────────────────────────────────┘  │
 │                                        │
 │  ┌──────────────────────────────────┐  │
@@ -117,11 +124,15 @@ IPFS Trustless Gateway 프로토콜:
   4. CAR 형식으로 데이터 수신
   5. 클라이언트가 CID 해시로 무결성 검증
 
-Saturn (CDN 계층):
-  → Filecoin 위의 L1 CDN 네트워크
-  → 전 세계 엣지 노드가 핫 데이터 캐싱
-  → Provider → Saturn → 최종 사용자
-  → 검색 성능 대폭 개선`}</code>
+Boost vs 레거시 비교:
+  ┌──────────────┬───────────────┬──────────────────┐
+  │ 측면         │ go-fil-markets│ Boost            │
+  ├──────────────┼───────────────┼──────────────────┤
+  │ 전송 프로토콜│ Graphsync만   │ HTTP, Bitswap 등 │
+  │ 딜 관리      │ CLI만         │ Web UI + GraphQL │
+  │ 인덱싱       │ DAG Store     │ LID (YugabyteDB) │
+  │ 확장성       │ 단일 프로세스 │ 다중 인스턴스     │
+  └──────────────┴───────────────┴──────────────────┘`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">FVM 기반 딜 메이킹</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -148,7 +159,65 @@ Filecoin Plus (Fil+):
   → 검증된 클라이언트에게 DataCap 부여
   → DataCap 딜은 10x 저장 보상 승수
   → "유용한 데이터" 저장에 인센티브
-  → Notary 시스템으로 DataCap 분배`}</code>
+  → Notary 시스템으로 DataCap 분배
+
+FVM 현황 (2025):
+  → 5,000+ 고유 컨트랙트, 3.2M+ 트랜잭션
+  → 저장 활용률 ~32% (이전 한 자릿수에서 증가)`}</code>
+        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">PDP (Proof of Data Possession)</h3>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`PDP = 검증 가능한 핫 스토리지의 암호학적 프로토콜
+(PoRep/PoSt 이후 Filecoin의 첫 주요 증명 개발, 2025.5)
+
+핵심 차이:
+  PoRep: 데이터 봉인 필요 → 검색 시 봉인 해제 (수 시간)
+  PDP:   봉인 불필요 → 데이터 즉시 접근 (서브초)
+
+Challenge-Response 메커니즘:
+  1. 클라이언트가 PDP 지원 SP에 파일 업로드
+     → 데이터셋에 추가, PDP 컨트랙트 온체인 생성
+  2. PDP 컨트랙트가 drand 비콘 기반 랜덤 챌린지 생성
+  3. SP가 챌린지 블록의 Merkle 포함 증명 계산
+     → 데이터셋 크기 무관하게 챌린지당 160바이트만 필요
+  4. PDP 컨트랙트가 Merkle 증명을 루트 커밋먼트 대비 검증
+  5. 성공 시 온체인 이벤트 발행 → 결제/서비스 트리거
+
+핵심 특성:
+  → 봉인/해봉 불필요 — 원본 데이터 그대로 유지
+  → 서브초 접근 가능
+  → 가변 컬렉션: 데이터 추가/제거/수정 가능
+  → 경량: 데이터셋 크기와 무관한 160B 증명
+  → 결정적 Merkle 트리, 암호학적 바인딩`}</code>
+        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Filecoin Onchain Cloud (FOC)</h3>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`FOC = Filecoin의 검증 가능한 클라우드 인프라
+(2025.11 Buenos Aires 발표, 2026.1 메인넷)
+
+3계층 아키텍처:
+
+┌────────────────────────────────────────────┐
+│ Service Layer (Warm Storage Service)        │
+│  → 클라이언트 인증, 결제 조율               │
+│  → 가격 책정, 메타데이터 관리               │
+│  → 장애 처리, SP는 Curio 노드 운영          │
+├────────────────────────────────────────────┤
+│ Settlement Layer (Filecoin Pay)             │
+│  → 자동 결제 레일 (토큰 스트리밍)           │
+│  → PDP 증명 성공에 연동된 결제 트리거       │
+│  → 잠금 메커니즘 (클라이언트 이탈 대비)     │
+├────────────────────────────────────────────┤
+│ Verification Layer (PDP)                    │
+│  → 연속적 온체인 저장 검증                  │
+│  → 랜덤 챌린지 + Merkle 증명               │
+└────────────────────────────────────────────┘
+
+추가 서비스:
+  Filecoin Beam: 분산 CDN (저지연 데이터 전송)
+  FilCDN:        Filecoin 전용 CDN (SP 이그레스 비용 보호)
+  Filecoin Pin:  IPFS + Filecoin 브릿지 (핀닝 + PDP 검증)
+  Synapse SDK:   개발자 API (Python/Go 확장 예정)`}</code>
         </pre>
       </div>
     </section>
