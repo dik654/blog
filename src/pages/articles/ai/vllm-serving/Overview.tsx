@@ -35,37 +35,51 @@ export default function Overview() {
 
 vLLM의 해결:
   PagedAttention으로 KV 캐시를 블록 단위로 동적 할당
-  → 메모리 활용률 ~95%+
-  → 동일 GPU로 2-4x 더 많은 요청 동시 처리`}</code>
+  → 메모리 낭비: 20-38% → 4% 미만으로 감소
+  → 동일 GPU로 2-4x 더 많은 요청 동시 처리
+  → HuggingFace 대비 최대 24x 처리량 향상`}</code>
         </pre>
-        <h3 className="text-xl font-semibold mt-6 mb-3">전체 아키텍처</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">V1 멀티프로세스 아키텍처</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
-          <code>{`vLLM 아키텍처:
+          <code>{`vLLM V1 아키텍처 (멀티프로세스):
 
-┌─────────────────────────────────────────────┐
-│          OpenAI-Compatible API Server        │
-│  (FastAPI, /v1/chat/completions 등)          │
-├─────────────────────────────────────────────┤
-│              LLM Engine                      │
-│  ┌────────────────┬────────────────────────┐│
-│  │   Scheduler    │   Block Manager        ││
-│  │  (요청 스케줄링) │  (KV 캐시 블록 관리)    ││
-│  │  - Prefill 큐  │  - 물리 블록 할당       ││
-│  │  - Decode 큐   │  - Block Table 관리     ││
-│  │  - Preemption  │  - Copy-on-Write       ││
-│  └────────────────┴────────────────────────┘│
-├─────────────────────────────────────────────┤
-│              Model Runner                    │
-│  ┌─────────┬──────────┬───────────────────┐│
-│  │ Model   │ Attention│ CUDA Kernels      ││
-│  │ Weights │ Backend  │ (FlashAttention,  ││
-│  │         │          │  FlashInfer,      ││
-│  │         │          │  PagedAttention)  ││
-│  └─────────┴──────────┴───────────────────┘│
-├─────────────────────────────────────────────┤
-│         GPU Worker(s)                        │
-│  단일 GPU 또는 Tensor/Pipeline Parallelism    │
-└─────────────────────────────────────────────┘`}</code>
+┌──────────────────────────────────────────────────┐
+│           API Server Process (FastAPI)            │
+│  /v1/chat/completions, /v1/completions 등         │
+│  → Tokenizer + Detokenizer + 입력 전처리           │
+└──────────────┬───────────────────────────────────┘
+               │ ZeroMQ IPC (비동기 메시지 패싱)
+               ▼
+┌──────────────────────────────────────────────────┐
+│           EngineCore Process                      │
+│  ┌─────────────┬──────────────────────────┐      │
+│  │  Scheduler   │  KV Cache Manager       │      │
+│  │  - Prefill   │  - 블록 할당/해제         │      │
+│  │  - Decode    │  - Prefix Caching (APC)  │      │
+│  │  - Preempt   │  - Hierarchical Cache    │      │
+│  │  - 청크 관리  │    GPU → CPU → Connector │      │
+│  └─────────────┴──────────────────────────┘      │
+└──────────────┬───────────────────────────────────┘
+               │ multiprocessing / CUDA IPC
+               ▼
+┌──────────────────────────────────────────────────┐
+│           GPU Worker Process(es)                  │
+│  ┌──────────┬────────────┬─────────────────┐     │
+│  │ Model    │ Attention   │ CUDA Graphs     │     │
+│  │ Runner   │ Backend     │ PIECEWISE /     │     │
+│  │          │ (Flash 3/4, │ FULL / DECODE   │     │
+│  │          │  FlashInfer,│ → CPU 오버헤드   │     │
+│  │          │  FlashMLA,  │   거의 제거      │     │
+│  │          │  Triton)    │                 │     │
+│  └──────────┴────────────┴─────────────────┘     │
+│  단일 GPU / TP / PP / EP / DP                     │
+└──────────────────────────────────────────────────┘
+
+V0 → V1 개선:
+  - 단일 프로세스 → 멀티프로세스 (ZeroMQ IPC)
+  - API 서버와 엔진 분리 → 독립적 스케일링
+  - V1이 V0 대비 ~1.7x 처리량 향상
+  - 프로세스 간 장애 격리 (한 워커 충돌해도 서버 유지)`}</code>
         </pre>
       </div>
     </section>
