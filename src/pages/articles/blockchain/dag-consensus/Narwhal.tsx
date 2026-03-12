@@ -79,6 +79,34 @@ Certificate (인증서):
             </p>
           </div>
         </div>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Scale-out Worker 아키텍처</h3>
+        <p>
+          Narwhal의 핵심 설계: <strong>데이터 전파와 메타데이터(DAG)를 분리</strong>합니다.
+          DAG vertex에는 트랜잭션 배치의 해시(digest)만 포함하고,
+          실제 데이터는 <strong>Worker</strong> 프로세스가 별도로 전파합니다.
+          Worker를 추가하면 처리량이 선형적으로 증가합니다.
+        </p>
+        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
+          <code>{`Narwhal Primary-Worker 분리:
+
+┌─────────────────────────────────────────────┐
+│ Primary (DAG 관리)                           │
+│  - Certificate 생성 & 검증                   │
+│  - DAG 구축 (vertex = batch digest 참조)     │
+│  - 라운드 진행 관리                           │
+│  → O(n) 통신 — digest만 교환                 │
+├─────────────────────────────────────────────┤
+│ Worker 1        Worker 2        Worker 3     │
+│ (batch 수집)    (batch 수집)    (batch 수집)  │
+│ (데이터 전파)    (데이터 전파)    (데이터 전파)  │
+│  → 대역폭 집약적 작업을 분산                   │
+└─────────────────────────────────────────────┘
+
+이더리움 비교:
+  이더리움: 단일 proposer가 전체 블록 바디를 전파 (병목)
+  Narwhal:  n개 Primary × m개 Worker가 동시에 전파 (병렬)
+  → 벤치마크: 50 검증자에서 ~125k-297k TPS`}</code>
+        </pre>
       </div>
     </section>
   );

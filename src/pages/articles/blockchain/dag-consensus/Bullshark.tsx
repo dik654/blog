@@ -28,8 +28,19 @@ Round 1 (투표)    Round 2 (앵커)    Round 3 (투표)    Round 4 (앵커)
                     │                                 │
               2f+1 참조 = 커밋!                  2f+1 참조 = 커밋!
 
-앵커 선출: 사전에 결정된 리더 스케줄 (라운드 로빈)
-커밋 조건: 다음 라운드에서 2f+1 vertex가 앵커를 참조하면 커밋
+4라운드 "웨이브(Wave)" 구조:
+  Wave = [Round 1] [Round 2] [Round 3] [Round 4]
+          투표      앵커1     투표      앵커2 + 랜덤 코인
+
+  리더 3명/웨이브:
+  - Steady-state 리더 2명 (결정론적, Round 1 & 3)
+    → 동기 환경에서 2라운드 만에 커밋 (저지연)
+  - Fallback 리더 1명 (Round 4에서 공유 랜덤 코인으로 사후 선출)
+    → 비동기 환경에서도 ≥2/3 확률로 커밋 보장
+    → 적대자가 네트워크를 조작해도 사후 선출이라 방어 불가
+
+커밋 조건: f+1 투표(다음 라운드 vertex의 강한 참조)
+View Change: 불필요 — DAG 자체가 동기화 역할
 
 이더리움 비교:
   이더리움 LMD-GHOST: 가장 많은 어테스테이션을 받은 포크 선택
@@ -51,7 +62,14 @@ Round 1 (투표)    Round 2 (앵커)    Round 3 (투표)    Round 4 (앵커)
   Bullshark: vertex 내 순서 = 저자, vertex 간 순서 = 앵커 기반 정렬
 
 장점: 별도의 통신 없이 DAG 구조만으로 합의 달성
-     → "Zero-message overhead" consensus`}</code>
+     → "Zero-message overhead" consensus
+     → 합의 코드 ~200줄 (Narwhal 위에서)
+
+강한 엣지 vs 약한 엣지:
+  강한 엣지: Round r → Round r-1 (투표로 카운트)
+  약한 엣지: Round r → Round r-2 이하 (투표 아님)
+    → 느린 검증자의 vertex도 DAG에 포함시켜 공정성 보장
+    → 이더리움에서 "지연된 어테스테이션"도 포함하는 것과 유사`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 위치 (Sui 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
