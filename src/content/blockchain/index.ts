@@ -12,6 +12,7 @@ const blockchain: Category = {
       children: [
         { slug: 'fund-structures', name: 'Data Structures' },
         { slug: 'fund-consensus', name: 'Consensus' },
+        { slug: 'fund-p2p', name: 'P2P & Storage' },
       ],
     },
     {
@@ -58,7 +59,7 @@ const blockchain: Category = {
         { slug: 'fil-network', name: 'Network' },
       ],
     },
-    { slug: 'gpu', name: 'GPU Computing' },
+
   ],
   articles: [
     {
@@ -349,7 +350,7 @@ const blockchain: Category = {
     {
       slug: 'bittorrent',
       title: 'BitTorrent 아키텍처',
-      subcategory: 'fil-network',
+      subcategory: 'fund-p2p',
       sections: [
         { id: 'overview', title: '개요' },
         { id: 'architecture', title: '아키텍처' },
@@ -456,28 +457,6 @@ const blockchain: Category = {
         { id: 'references', title: '참고 자료' },
       ],
       component: () => import('@/pages/articles/blockchain/ipfs-filecoin-storage'),
-    },
-    {
-      slug: 'filecoin-gpu-proofs',
-      title: 'Filecoin 증명 GPU 가속 (bellperson, sppark)',
-      subcategory: 'gpu',
-      sections: [
-        { id: 'overview', title: '증명 시스템 & GPU 가속 개요' },
-        { id: 'gpu-acceleration', title: 'GPU 가속 라이브러리 & 구현' },
-        { id: 'references', title: '참고 자료' },
-      ],
-      component: () => import('@/pages/articles/blockchain/filecoin-gpu-proofs'),
-    },
-    {
-      slug: 'cuda-basics',
-      title: 'CUDA 기초 (GPU 병렬처리와 블록체인)',
-      subcategory: 'gpu',
-      sections: [
-        { id: 'overview', title: 'CUDA 기초 & 블록체인 활용' },
-        { id: 'memory-model', title: '메모리 계층 & 최적화' },
-        { id: 'blockchain-gpu', title: '블록체인 GPU 가속 실전' },
-      ],
-      component: () => import('@/pages/articles/blockchain/cuda-basics'),
     },
   ],
 };
