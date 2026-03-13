@@ -19,6 +19,22 @@ const blockchain: Category = {
       ],
     },
     {
+      slug: 'cosmos',
+      name: 'Cosmos Ecosystem',
+      children: [
+        { slug: 'cosmos-core', name: 'Core (CometBFT + SDK)' },
+        { slug: 'cosmos-evm', name: 'EVM Integration' },
+      ],
+    },
+    {
+      slug: 'bft-consensus',
+      name: 'BFT Consensus',
+      children: [
+        { slug: 'bft-classical', name: 'Classical BFT' },
+        { slug: 'bft-dag', name: 'DAG-based' },
+      ],
+    },
+    {
       slug: 'filecoin',
       name: 'Filecoin',
       children: [
@@ -27,6 +43,7 @@ const blockchain: Category = {
         { slug: 'fil-network', name: 'Network' },
       ],
     },
+    { slug: 'gpu', name: 'GPU Computing' },
   ],
   articles: [
     {
@@ -171,6 +188,129 @@ const blockchain: Category = {
         { id: 'architecture', title: '아키텍처' },
       ],
       component: () => import('@/pages/articles/filecoin/bittorrent'),
+    },
+    {
+      slug: 'cometbft',
+      title: 'CometBFT 아키텍처 (이더리움 CL과 비교)',
+      subcategory: 'cosmos-core',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'consensus-engine', title: '합의 엔진 (Tendermint BFT)' },
+        { id: 'abci', title: 'ABCI (Engine API 비교)' },
+        { id: 'p2p-layer', title: 'P2P 네트워킹' },
+        { id: 'mempool-statesync', title: '멤풀 & 상태 동기화' },
+      ],
+      component: () => import('@/pages/articles/blockchain/cometbft'),
+    },
+    {
+      slug: 'cosmos-sdk',
+      title: 'Cosmos SDK 아키텍처 (이더리움 EL과 비교)',
+      subcategory: 'cosmos-core',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'module-architecture', title: '모듈 아키텍처 & Keeper 패턴' },
+        { id: 'state-management', title: '상태 관리 (IAVL Tree)' },
+        { id: 'tx-lifecycle', title: '트랜잭션 생명주기 & IBC' },
+      ],
+      component: () => import('@/pages/articles/blockchain/cosmos-sdk'),
+    },
+    {
+      slug: 'omni-octane',
+      title: 'Omni Octane (CometBFT + Engine API)',
+      subcategory: 'cosmos-evm',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'engine-integration', title: 'Engine API 통합 & 크로스체인' },
+      ],
+      component: () => import('@/pages/articles/blockchain/omni-octane'),
+    },
+    {
+      slug: 'initia-evm',
+      title: 'Initia MiniEVM (Cosmos 내장 EVM)',
+      subcategory: 'cosmos-evm',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'architecture', title: 'MiniEVM 내부 아키텍처' },
+      ],
+      component: () => import('@/pages/articles/blockchain/initia-evm'),
+    },
+    {
+      slug: 'berachain',
+      title: 'Berachain BeaconKit (이더리움 CL의 Cosmos 구현)',
+      subcategory: 'cosmos-evm',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'pol-architecture', title: 'Proof of Liquidity & 모듈 구조' },
+      ],
+      component: () => import('@/pages/articles/blockchain/berachain'),
+    },
+    {
+      slug: 'bft-comparison',
+      title: 'BFT 합의 비교 (PBFT → HotStuff → Autobahn)',
+      subcategory: 'bft-classical',
+      sections: [
+        { id: 'overview', title: 'BFT 프로토콜 진화' },
+        { id: 'pbft', title: 'PBFT' },
+        { id: 'hotstuff', title: 'HotStuff' },
+        { id: 'autobahn', title: 'Autobahn' },
+        { id: 'comparison', title: '종합 비교' },
+      ],
+      component: () => import('@/pages/articles/blockchain/bft-comparison'),
+    },
+    {
+      slug: 'dag-consensus',
+      title: 'DAG 기반 합의 (Narwhal & Bullshark)',
+      subcategory: 'bft-dag',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'narwhal', title: 'Narwhal: DAG 기반 멤풀' },
+        { id: 'bullshark', title: 'Bullshark: DAG 순서 결정' },
+      ],
+      component: () => import('@/pages/articles/blockchain/dag-consensus'),
+    },
+    {
+      slug: 'filecoin-lotus',
+      title: 'Filecoin Lotus 아키텍처',
+      subcategory: 'fil-network',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'consensus-proofs', title: '합의 & 저장 증명' },
+      ],
+      component: () => import('@/pages/articles/blockchain/filecoin-lotus'),
+    },
+    {
+      slug: 'ipfs-filecoin-storage',
+      title: 'IPFS & Filecoin 핫 스토리지',
+      subcategory: 'fil-storage',
+      sections: [
+        { id: 'overview', title: 'IPFS & Filecoin 스토리지 개요' },
+        { id: 'ipfs-architecture', title: 'IPFS Kubo 아키텍처' },
+        { id: 'hot-storage', title: 'Filecoin 핫 스토리지 & Boost' },
+        { id: 'references', title: '참고 자료' },
+      ],
+      component: () => import('@/pages/articles/blockchain/ipfs-filecoin-storage'),
+    },
+    {
+      slug: 'filecoin-gpu-proofs',
+      title: 'Filecoin 증명 GPU 가속 (bellperson, sppark)',
+      subcategory: 'gpu',
+      sections: [
+        { id: 'overview', title: '증명 시스템 & GPU 가속 개요' },
+        { id: 'gpu-acceleration', title: 'GPU 가속 라이브러리 & 구현' },
+        { id: 'references', title: '참고 자료' },
+      ],
+      component: () => import('@/pages/articles/blockchain/filecoin-gpu-proofs'),
+    },
+    {
+      slug: 'cuda-basics',
+      title: 'CUDA 기초 (GPU 병렬처리와 블록체인)',
+      subcategory: 'gpu',
+      sections: [
+        { id: 'overview', title: 'CUDA 기초 & 블록체인 활용' },
+        { id: 'memory-model', title: '메모리 계층 & 최적화' },
+        { id: 'blockchain-gpu', title: '블록체인 GPU 가속 실전' },
+      ],
+      component: () => import('@/pages/articles/blockchain/cuda-basics'),
     },
   ],
 };
