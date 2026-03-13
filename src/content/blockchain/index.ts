@@ -7,7 +7,14 @@ const blockchain: Category = {
   description: '블록체인, ZKP 구현, 이더리움, 파일코인 학습 노트',
   subcategories: [
     { slug: 'fundamentals', name: 'Fundamentals' },
-    { slug: 'zkp', name: 'Zero Knowledge Proof' },
+    {
+      slug: 'zkp',
+      name: 'Zero Knowledge Proof',
+      children: [
+        { slug: 'zkp-core', name: 'Core' },
+        { slug: 'zkp-ethereum', name: 'Ethereum (geth ZK)' },
+      ],
+    },
     {
       slug: 'ethereum',
       name: 'Ethereum',
@@ -61,7 +68,7 @@ const blockchain: Category = {
     {
       slug: 'field-arithmetic',
       title: '유한체 산술 구현',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'prime-repr', title: '소수 표현 (u64 limbs)' },
         { id: 'montgomery', title: 'Montgomery 곱셈' },
@@ -73,7 +80,7 @@ const blockchain: Category = {
     {
       slug: 'extension-fields',
       title: '확장체 구현 (Fp2→Fp12)',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'fp2', title: 'Fp2 이차 확장' },
         { id: 'fp6', title: 'Fp6 삼차 확장' },
@@ -84,7 +91,7 @@ const blockchain: Category = {
     {
       slug: 'elliptic-curves',
       title: '타원곡선군 구현',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'g1-curve', title: 'G1 타원곡선군' },
         { id: 'g1-g2-bn254', title: 'G1 + G2 BN254' },
@@ -94,7 +101,7 @@ const blockchain: Category = {
     {
       slug: 'pairing',
       title: 'Optimal Ate Pairing',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'miller-loop', title: 'Miller Loop' },
         { id: 'final-exp', title: 'Final Exponentiation' },
@@ -105,7 +112,7 @@ const blockchain: Category = {
     {
       slug: 'crypto-primitives',
       title: 'ZK 암호 프리미티브',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'poseidon', title: 'Poseidon 해시' },
         { id: 'merkle-commitment', title: 'Merkle Tree & Commitment' },
@@ -118,7 +125,7 @@ const blockchain: Category = {
     {
       slug: 'constraint-systems',
       title: 'R1CS와 QAP',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'r1cs', title: 'R1CS 제약 시스템' },
         { id: 'r1cs-gadgets', title: 'R1CS 가젯' },
@@ -129,7 +136,7 @@ const blockchain: Category = {
     {
       slug: 'groth16',
       title: 'Groth16 증명 시스템',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'trusted-setup', title: 'Trusted Setup' },
         { id: 'prove', title: 'Prove (MSM)' },
@@ -140,7 +147,7 @@ const blockchain: Category = {
     {
       slug: 'plonk',
       title: 'PLONK 증명 시스템',
-      subcategory: 'zkp',
+      subcategory: 'zkp-core',
       sections: [
         { id: 'kzg', title: 'KZG 다항식 Commitment' },
         { id: 'plonkish', title: 'PLONKish Arithmetization' },
