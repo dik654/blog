@@ -1,4 +1,5 @@
 import { CitationBlock } from '../../../../components/ui/citation';
+import GPUPipelineViz from './viz/GPUPipelineViz';
 
 export default function Overview() {
   return (
@@ -11,6 +12,8 @@ export default function Overview() {
           이 증명 생성 과정에서 <strong>GPU 가속</strong>은 필수적이며,
           특히 PC2(Groth16 MSM/NTT)와 C2(Groth16 증명 생성) 단계가 핵심입니다.
         </p>
+        <h3 className="text-xl font-semibold mt-6 mb-3">GPU 파이프라인 시각화</h3>
+        <GPUPipelineViz />
         <h3 className="text-xl font-semibold mt-6 mb-3">섹터 봉인 파이프라인</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`Filecoin 섹터 봉인(Sealing) 파이프라인:
