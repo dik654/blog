@@ -6,7 +6,14 @@ const blockchain: Category = {
   name: 'Blockchain',
   description: '블록체인, ZKP 구현, 이더리움, 파일코인 학습 노트',
   subcategories: [
-    { slug: 'fundamentals', name: 'Fundamentals' },
+    {
+      slug: 'fundamentals',
+      name: 'Fundamentals',
+      children: [
+        { slug: 'fund-structures', name: 'Data Structures' },
+        { slug: 'fund-consensus', name: 'Consensus' },
+      ],
+    },
     {
       slug: 'zkp',
       name: 'Zero Knowledge Proof',
@@ -19,6 +26,7 @@ const blockchain: Category = {
       slug: 'ethereum',
       name: 'Ethereum',
       children: [
+        { slug: 'eth-fundamentals', name: 'Fundamentals' },
         { slug: 'eth-architecture', name: 'Architecture' },
         { slug: 'eth-p2p', name: 'P2P Network' },
         { slug: 'eth-consensus', name: 'Consensus' },
@@ -56,7 +64,7 @@ const blockchain: Category = {
     {
       slug: 'consensus-mechanisms',
       title: '합의 알고리즘 비교',
-      subcategory: 'fundamentals',
+      subcategory: 'fund-consensus',
       sections: [
         { id: 'overview', title: '개요' },
         { id: 'pow', title: 'Proof of Work' },
@@ -64,6 +72,116 @@ const blockchain: Category = {
         { id: 'comparison', title: '비교 분석' },
       ],
       component: () => import('@/pages/articles/blockchain/consensus-mechanisms'),
+    },
+    {
+      slug: 'block-structure',
+      title: '블록 구조와 해시 체인',
+      subcategory: 'fund-structures',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'block-header', title: '블록 헤더 구조' },
+        { id: 'hash-chain', title: '해시 체인과 불변성' },
+      ],
+      component: () => import('@/pages/articles/blockchain/block-structure'),
+    },
+    {
+      slug: 'merkle-tree',
+      title: 'Merkle Tree와 머클 증명',
+      subcategory: 'fund-structures',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'construction', title: '머클 트리 구성' },
+        { id: 'merkle-proof', title: '머클 증명 (SPV)' },
+      ],
+      component: () => import('@/pages/articles/blockchain/merkle-tree'),
+    },
+    {
+      slug: 'merkle-mountain-range',
+      title: 'Merkle Mountain Range (MMR)',
+      subcategory: 'fund-structures',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'mmr-structure', title: 'MMR 구조와 연산' },
+        { id: 'blockchain-usage', title: '블록체인 활용' },
+      ],
+      component: () => import('@/pages/articles/blockchain/merkle-mountain-range'),
+    },
+    {
+      slug: 'verkle-tree',
+      title: 'Verkle Tree (벡터 커밋먼트 트리)',
+      subcategory: 'fund-structures',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'vector-commitment', title: '벡터 커밋먼트와 IPA' },
+        { id: 'comparison', title: 'Merkle vs Verkle 비교' },
+      ],
+      component: () => import('@/pages/articles/blockchain/verkle-tree'),
+    },
+    {
+      slug: 'bloom-filter',
+      title: 'Bloom Filter (확률적 자료구조)',
+      subcategory: 'fund-structures',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'algorithm', title: '알고리즘과 수학적 분석' },
+        { id: 'blockchain-usage', title: '블록체인 활용' },
+      ],
+      component: () => import('@/pages/articles/blockchain/bloom-filter'),
+    },
+    {
+      slug: 'hash-functions',
+      title: '해시 함수와 암호학 기초',
+      subcategory: 'fund-structures',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'sha256-keccak', title: 'SHA-256 & Keccak-256' },
+        { id: 'security', title: '보안 속성과 블록체인 적용' },
+      ],
+      component: () => import('@/pages/articles/blockchain/hash-functions'),
+    },
+    {
+      slug: 'merkle-patricia-trie',
+      title: 'Merkle Patricia Trie (MPT)',
+      subcategory: 'eth-fundamentals',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'trie-structure', title: 'Patricia Trie 구조' },
+        { id: 'state-trie', title: 'State · Transaction · Receipt Trie' },
+      ],
+      component: () => import('@/pages/articles/blockchain/merkle-patricia-trie'),
+    },
+    {
+      slug: 'rlp-encoding',
+      title: 'RLP (Recursive Length Prefix)',
+      subcategory: 'eth-fundamentals',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'encoding-rules', title: '인코딩 규칙' },
+        { id: 'implementation', title: '구현과 활용' },
+      ],
+      component: () => import('@/pages/articles/blockchain/rlp-encoding'),
+    },
+    {
+      slug: 'ssz',
+      title: 'SSZ (Simple Serialize)',
+      subcategory: 'eth-fundamentals',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'serialization', title: '직렬화 규칙' },
+        { id: 'merkleization', title: 'Merkleization과 증명' },
+      ],
+      component: () => import('@/pages/articles/blockchain/ssz'),
+    },
+    {
+      slug: 'verkle-tree-ethereum',
+      title: 'Verkle Tree (이더리움 적용)',
+      subcategory: 'eth-fundamentals',
+      sections: [
+        { id: 'overview', title: '개요' },
+        { id: 'stateless-client', title: 'Stateless Client와 Witness' },
+        { id: 'migration', title: 'MPT → VKT 마이그레이션' },
+      ],
+      component: () => import('@/pages/articles/blockchain/verkle-tree-ethereum'),
     },
     {
       slug: 'field-arithmetic',
