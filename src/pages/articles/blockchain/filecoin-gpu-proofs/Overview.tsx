@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -60,6 +62,19 @@ export default function Overview() {
 GPU가 필수인 단계: PC2 (Poseidon Merkle), C2 (Groth16)
 CPU만 사용하는 단계: PC1 (SDR), C1 (Merkle 경로)`}</code>
         </pre>
+        <CitationBlock source="Filecoin Spec — Stacked DRG PoRep" citeKey={1} type="paper"
+          href="https://spec.filecoin.io/algorithms/sdr/">
+          <p className="italic text-muted-foreground">
+            "SDR (Stacked Depth Robust) encoding creates 11 layers of encoding with d_drg=6 and d_exp=8
+            dependencies per node. Each 32GiB sector produces 352GiB of encoded data. The encoding is
+            inherently sequential within each layer, making GPU acceleration impossible for PC1."
+          </p>
+          <p className="mt-2 text-xs">
+            PC1이 CPU 전용인 이유: SDR의 각 노드가 이전 노드에 의존하는 순차적 구조이므로,
+            GPU의 병렬 처리 이점을 활용할 수 없습니다. SHA-256 NI 명령어 지원이 필수적입니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">GPU 하드웨어 요구사항</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

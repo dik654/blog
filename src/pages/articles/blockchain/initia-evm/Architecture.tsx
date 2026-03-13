@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function Architecture() {
   return (
     <section id="architecture" className="mb-16 scroll-mt-20">
@@ -80,6 +82,11 @@ ICosmos 인터페이스:
   → IBC 전송, 스테이킹, 거버넌스 투표를 EVM 컨트랙트에서 호출
   → cross-VM 메시징의 핵심`}</code>
         </pre>
+
+        <CitationBlock source="Initia OPinit Stack — Optimistic Bridge" citeKey={2} type="paper" href="https://docs.initia.xyz">
+          <p className="italic text-muted-foreground">"OPinit implements an optimistic bridge between L1 and Minitia L2s. The bridge operator submits output proposals to L1, and a challenge period allows any party to dispute invalid state transitions. After the challenge period, the output is finalized and cross-chain messages are executed."</p>
+          <p className="mt-2 text-xs">OPinit은 Optimistic Rollup 방식으로 L1-L2 간 통신을 처리합니다. 출력 제안(output proposal) → 이의 제기 기간(challenge period) → 최종 확정(finalization) 순서로 진행되며, IBC 채널을 통해 메시지를 전달합니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (minievm 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`minievm/
@@ -100,6 +107,26 @@ ICosmos 인터페이스:
     ├── eth.go                # eth_* 메서드
     └── web3.go               # web3_* 메서드`}</code>
         </pre>
+
+        <CitationBlock source="MiniEVM — ICosmos Interface & Cross-VM Interop" citeKey={3} type="code" href="https://github.com/initia-labs/minievm">
+          <pre className="text-xs overflow-x-auto"><code>{`// ICosmos 인터페이스: Solidity에서 Cosmos 메시지 실행
+interface ICosmos {
+    // IBC 전송 실행
+    function execute_cosmos(string calldata msg) external returns (bool);
+    // Cosmos 쿼리 실행
+    function query_cosmos(string calldata path, string calldata req)
+        external returns (string memory);
+    // bech32 주소 변환
+    function to_cosmos_address(address evm_addr)
+        external returns (string memory);
+}
+
+// EVM 컨트랙트에서 Cosmos 스테이킹 호출 예시
+ICosmos(COSMOS_PRECOMPILE).execute_cosmos(
+    '{"@type":"/cosmos.staking.v1beta1.MsgDelegate",...}'
+);`}</code></pre>
+          <p className="mt-2 text-xs">ICosmos 프리컴파일을 통해 EVM 컨트랙트가 Cosmos 네이티브 기능(IBC, 스테이킹, 거버넌스)에 직접 접근할 수 있습니다. 이는 MoveVM과 EVM 간 상호운용성의 핵심 메커니즘입니다.</p>
+        </CitationBlock>
       </div>
     </section>
   );

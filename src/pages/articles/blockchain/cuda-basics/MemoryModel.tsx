@@ -1,9 +1,16 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function MemoryModel() {
   return (
     <section id="memory-model" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">메모리 계층 & 최적화</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-6 mb-3">GPU 메모리 계층</h3>
+
+        <CitationBlock source="NVIDIA CUDA Programming Guide — Memory Hierarchy" citeKey={3} type="paper" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-hierarchy">
+          <p className="italic text-muted-foreground">"CUDA threads may access data from multiple memory spaces during their execution. Each thread has private local memory. Each thread block has shared memory visible to all threads of the block. All threads have access to the same global memory."</p>
+          <p className="mt-2 text-xs">CUDA 메모리 계층은 레지스터(per-thread) &rarr; 공유 메모리(per-block) &rarr; L1/L2 캐시 &rarr; 전역 메모리(global) 순으로 구성됩니다. 접근 속도는 레지스터(~1 cycle)에서 전역 메모리(~400 cycles)까지 수백 배 차이가 나며, 블록체인 GPU 커널 최적화의 핵심은 느린 전역 메모리 접근을 최소화하는 것입니다.</p>
+        </CitationBlock>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`GPU 메모리 계층 (속도 순):
 

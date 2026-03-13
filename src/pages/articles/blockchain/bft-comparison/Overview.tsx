@@ -1,3 +1,5 @@
+import TopologyCompareViz from './viz/TopologyCompareViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -10,6 +12,9 @@ export default function Overview() {
           다른 접근 방식을 취합니다. PBFT → HotStuff → Autobahn으로 이어지는
           진화 과정을 이더리움과 비교하며 살펴봅니다.
         </p>
+
+        <TopologyCompareViz />
+
         <h3 className="text-xl font-semibold mt-6 mb-3">BFT 프로토콜 계보</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`1999: PBFT (Castro & Liskov)

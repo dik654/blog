@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function P2PLayer() {
   return (
     <section id="p2p-layer" className="mb-16 scroll-mt-20">
@@ -9,6 +11,22 @@ export default function P2PLayer() {
           CometBFT는 자체 <strong>멀티플렉스 연결(MConnection)</strong> 기반의
           Gossip 프로토콜을 사용합니다.
         </p>
+        <CitationBlock source="cometbft/p2p/conn/connection.go" citeKey={5} type="code" href="https://github.com/cometbft/cometbft/blob/main/p2p/conn/connection.go">
+          <pre className="text-xs overflow-x-auto"><code>{`// MConnection (multiplex connection) multiplexes N channels
+// over a single TCP connection with authenticated encryption.
+// Each channel has a globally unique ID (byte).
+// Channels are registered at connection creation time.
+type MConnection struct {
+    conn          net.Conn
+    channels      []*channel
+    channelsIdx   map[byte]*channel
+    sendMonitor   *flow.Monitor
+    recvMonitor   *flow.Monitor
+    send          chan struct{}
+    pong          chan struct{}
+}`}</code></pre>
+          <p className="mt-2 text-xs text-muted-foreground">MConnection은 단일 TCP 연결 위에 여러 채널을 멀티플렉싱합니다. 각 Reactor(Consensus, Mempool 등)가 고유 채널 ID로 등록되어 독립적으로 메시지를 송수신합니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">P2P 스택 비교</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

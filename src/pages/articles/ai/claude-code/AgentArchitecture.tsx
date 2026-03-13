@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function AgentArchitecture() {
   return (
     <section id="agent-architecture" className="mb-16 scroll-mt-20">
@@ -133,6 +135,25 @@ Claude Code ←→ MCP Server ←→ 외부 서비스
   - 파일 수정 시 자동 포매팅
   - 커밋 전 테스트 자동 실행`}</code>
         </pre>
+        <CitationBlock source="Claude Code 공식 문서 - Hooks" citeKey={2} type="paper" href="https://docs.anthropic.com/en/docs/claude-code/hooks">
+          <p className="italic text-muted-foreground">"Hooks allow you to execute shell commands at specific points in Claude Code's lifecycle. They enable customizing behavior without modifying the core tool, running validation, formatting, notifications, and more."</p>
+          <p className="mt-2 text-xs">Hooks는 18개 라이프사이클 이벤트와 4가지 핸들러 타입(command, http, prompt, agent)을 제공하여 Claude Code의 동작을 세밀하게 커스터마이징할 수 있습니다.</p>
+        </CitationBlock>
+        <CitationBlock source=".claude/settings.json Hook 설정 예시" citeKey={3} type="code">
+          <pre className="text-xs overflow-x-auto"><code>{`{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "command": "~/scripts/validate-bash.sh"
+    }],
+    "PostToolUse": [{
+      "matcher": "Write",
+      "command": "~/scripts/lint-on-write.sh"
+    }]
+  }
+}`}</code></pre>
+          <p className="mt-2 text-xs">PreToolUse 훅으로 Bash 실행 전 검증, PostToolUse 훅으로 파일 작성 후 자동 린팅을 설정한 예시입니다. matcher로 특정 도구에만 훅을 적용할 수 있습니다.</p>
+        </CitationBlock>
       </div>
     </section>
   );

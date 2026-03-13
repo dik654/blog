@@ -1,3 +1,6 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+import PBFTFlowViz from './viz/PBFTFlowViz';
+
 export default function PBFT() {
   return (
     <section id="pbft" className="mb-16 scroll-mt-20">
@@ -9,35 +12,37 @@ export default function PBFT() {
           실용적 BFT 프로토콜입니다. f개의 비잔틴 노드를 허용하려면
           최소 3f+1개 노드가 필요합니다.
         </p>
+
+        <CitationBlock source="Castro & Liskov, OSDI 1999 — §4" citeKey={1} type="paper"
+          href="https://pmg.csail.mit.edu/papers/osdi99.pdf">
+          <p className="italic text-muted-foreground">
+            "The algorithm works correctly in asynchronous systems like the Internet and it incorporates
+            important optimizations that allow it to perform well so that it can be used in practice."
+          </p>
+          <p className="mt-2 text-xs">
+            PBFT는 이전의 BFT 프로토콜(Rampart, SecureRing)이 동기 네트워크를 가정했던 것과 달리,
+            비동기 환경에서도 safety를 보장한 최초의 실용적 프로토콜입니다.
+            3f+1 노드 요구사항은 비잔틴 장애의 이론적 하한(Dolev-Strong bound)과 일치합니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">3단계 프로토콜</h3>
-        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
-          <code>{`PBFT 메시지 흐름 (n=4, f=1):
 
-Client    Replica 0    Replica 1    Replica 2    Replica 3
-  │       (Primary)
-  │──Request──→│
-  │            │──Pre-Prepare──→│──────────────→│──────────→│
-  │            │                │               │           │
-  │            │←──Prepare──────│←──────────────│←──────────│
-  │            │──Prepare──────→│──────────────→│──────────→│
-  │            │                │               │           │
-  │            │  (2f+1 Prepare 수집 = "prepared" 상태)     │
-  │            │                │               │           │
-  │            │←──Commit───────│←──────────────│←──────────│
-  │            │──Commit───────→│──────────────→│──────────→│
-  │            │                │               │           │
-  │            │  (2f+1 Commit 수집 = "committed" 상태)     │
-  │            │                │               │           │
-  │←──Reply────│←──Reply────────│←──Reply───────│←──Reply───│
+        <PBFTFlowViz />
 
-통신 복잡도: O(n²) — 모든 노드가 모든 노드에게 메시지 전송
-메시지 지연: 5 (Request → Pre-Prepare → Prepare → Commit → Reply)
+        <CitationBlock source="PBFT 논문 Figure 1 — 정상 경로 메시지 패턴" citeKey={2} type="paper"
+          href="https://pmg.csail.mit.edu/papers/osdi99.pdf">
+          <p className="italic text-muted-foreground">
+            "The algorithm requires 3f+1 replicas to tolerate f faults. The three-phase protocol
+            (pre-prepare, prepare, commit) ensures that non-faulty replicas agree on a total order
+            for the execution of requests."
+          </p>
+          <p className="mt-2 text-xs">
+            Pre-Prepare는 요청에 시퀀스 번호를 부여하고, Prepare는 non-faulty replica 간 순서 합의,
+            Commit은 이를 확정합니다. 각 단계에서 2f+1 메시지를 수집해야 다음으로 진행 가능합니다.
+          </p>
+        </CitationBlock>
 
-이더리움과 비교:
-  PBFT: 5 message delays, 즉시 최종성
-  이더리움: ~12초(1 slot) 제안 + 2 에폭(~12.8분) 최종화
-  → PBFT는 빠르지만 O(n²)로 확장성 제한`}</code>
-        </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">View Change (리더 교체)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`PBFT View Change (이더리움의 missed slot과 비교):
@@ -57,6 +62,19 @@ Tendermint (CometBFT):
   → PBFT보다 단순한 view change
   → 통신 복잡도: O(n²)`}</code>
         </pre>
+
+        <CitationBlock source="PBFT 논문 §4.4 View Changes" citeKey={3} type="paper">
+          <p className="italic text-muted-foreground">
+            "A replica suspects the primary is faulty if it hasn't received a valid message from it
+            within a timeout period. It then multicasts a VIEW-CHANGE message for view v+1."
+          </p>
+          <p className="mt-2 text-xs">
+            View Change가 O(n³)인 이유: 새 Primary는 2f+1개의 ViewChange 메시지를 수집해야 하고,
+            각 ViewChange에는 최대 O(n)개의 prepared 인증서가 포함됩니다. 이를 다시 모든 replica에게
+            전송하므로 O(n) × O(n) × O(n) = O(n³)입니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">PBFT의 한계</h3>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-lg border bg-muted/50 p-4">

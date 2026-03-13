@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function Narwhal() {
   return (
     <section id="narwhal" className="mb-16 scroll-mt-20">
@@ -107,6 +109,22 @@ Certificate (인증서):
   Narwhal:  n개 Primary × m개 Worker가 동시에 전파 (병렬)
   → 벤치마크: 50 검증자에서 ~125k-297k TPS`}</code>
         </pre>
+        <CitationBlock source="Danezis et al., &quot;Narwhal and Tusk&quot;, EuroSys 2022" citeKey={1} type="paper" href="https://arxiv.org/abs/2105.11827">
+          <p className="italic text-muted-foreground">"Narwhal can sustain up to 130,000 tx/s... We observe that separating data availability from consensus is a powerful paradigm"</p>
+          <p className="mt-2 text-xs">Narwhal 논문의 핵심 주장 — 데이터 가용성과 합의를 분리하면 처리량이 극대화됩니다. 이더리움의 EL/CL 분리와 유사한 철학입니다.</p>
+        </CitationBlock>
+        <CitationBlock source="sui/narwhal/primary/src/proposer.rs" citeKey={2} type="code" href="https://github.com/MystenLabs/sui/blob/main/narwhal/primary/src/proposer.rs">
+          <pre><code>{`// Vertex 생성 핵심 로직 (proposer.rs)
+let header = Header::V2(HeaderV2 {
+    author: self.authority_id,
+    round,
+    epoch: self.committee.epoch(),
+    created_at: now,
+    payload: self.payload.drain().collect(),
+    parents: self.last_parents.clone(),  // 이전 라운드 Certificate 참조
+});`}</code></pre>
+          <p className="mt-2 text-xs">각 검증자가 매 라운드 vertex(Header)를 생성할 때, 이전 라운드의 Certificate들을 parents로 참조하여 DAG를 구축합니다.</p>
+        </CitationBlock>
       </div>
     </section>
   );

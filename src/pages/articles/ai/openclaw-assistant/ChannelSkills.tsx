@@ -1,3 +1,7 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function ChannelSkills() {
   return (
     <section id="channel-skills" className="mb-16 scroll-mt-20">
@@ -51,6 +55,27 @@ export default function ChannelSkills() {
   채널/계정/피어별로 격리된 에이전트에 라우팅 가능
   → 에이전트마다 독립 워크스페이스 + 세션`}</code>
         </pre>
+        <CitationBlock source="OpenClaw — SKILL.md 형식 & ClawHub" citeKey={4} type="code"
+          href="https://github.com/anthropics/openclaw">
+          <pre className="text-xs overflow-x-auto"><code>{`# SKILL.md 형식 — 스킬 정의
+---
+name: my-skill
+description: "Custom automation skill"
+triggers: ["keyword1", "keyword2"]
+maxSpawnDepth: 2  # 서브에이전트 깊이 제한
+sandbox: docker    # fail-closed 샌드박스
+---
+
+# Instructions
+Use this skill to...
+
+# ClawHub: 13,729+ 커뮤니티 스킬 마켓플레이스`}</code></pre>
+          <p className="mt-2 text-xs text-muted-foreground">
+            SKILL.md는 마크다운 기반 스킬 정의 형식입니다. ClawHub에서 13,729개 이상의
+            커뮤니티 스킬을 배포하며, Docker sandbox를 fail-closed로 운영하여 보안을 보장합니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">스킬 시스템</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`스킬 = OpenClaw의 플러그인 시스템
@@ -103,6 +128,32 @@ TypeScript 플러그인 (OpenClawPlugin):
   → 채널, 도구, 라이프사이클 훅 등록 가능
   → MCP 서버도 표준 도구 레이어로 통합`}</code>
         </pre>
+
+        <CitationBlock source="ClawHub — 커뮤니티 스킬 레지스트리" citeKey={4} type="code"
+          href="https://github.com/openclaw/clawhub">
+          <pre className="text-xs overflow-x-auto"><code>{`# SKILL.md 형식 (스킬의 유일한 필수 파일)
+---
+name: github-review
+version: 1.0.0
+requirements: [gh CLI]
+---
+# 지침
+1. gh pr diff 실행...
+
+# ClawHub 레지스트리: 13,729+ 커뮤니티 스킬
+openclaw skills install <skill-name>
+openclaw skills search <keyword>
+
+# 동적 로드: 설치 후 재시작 없이 다음 턴부터 사용
+# VirusTotal 연동 스킬 스캐닝 (보안)
+# 시스템 프롬프트 주입: 스킬당 ~24 토큰`}</code></pre>
+          <p className="mt-2 text-xs">
+            SKILL.md는 YAML frontmatter + 마크다운 지침으로 구성된 선언적 스킬 포맷입니다.
+            ClawHub에 등록된 13,729+ 스킬은 동적 로드를 지원하여 설치 즉시 사용 가능하며,
+            적격 스킬이 시스템 프롬프트에 XML 목록으로 주입됩니다 (스킬당 약 24 토큰).
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">서브에이전트 & 샌드박스</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`서브에이전트 시스템:
@@ -165,6 +216,20 @@ TypeScript 플러그인 (OpenClawPlugin):
     24시간 유휴 또는 7일 경과 시 자동 제거
     설정 변경 시 자동 재생성 (5분 내 사용 중이면 유지)`}</code>
         </pre>
+
+        <CitationBlock source="Docker Blog — Run OpenClaw Securely in Docker Sandboxes" citeKey={5} type="paper"
+          href="https://docker.com/blog/run-openclaw-securely-in-docker-sandboxes">
+          <p className="italic text-muted-foreground">
+            "Fail-closed design: sandbox 설정인데 Docker 런타임이 없으면 호스트에서 실행하는 대신 에러를 발생시킨다.
+            컨테이너는 network:none 기본값으로 생성되며, non-root 사용자로 실행된다."
+          </p>
+          <p className="mt-2 text-xs">
+            OpenClaw 샌드박스는 fail-closed 원칙을 따릅니다. Docker 런타임이 없으면 호스트 실행으로 폴백하지 않고
+            명시적으로 에러를 발생시킵니다. 컨테이너는 24시간 유휴 또는 7일 경과 시 자동 제거되며,
+            tools.elevated로 특정 도구만 호스트 실행을 허용하는 escape hatch를 제공합니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (openclaw 레포)</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`openclaw/

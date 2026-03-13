@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function ConsensusProofs() {
   return (
     <section id="consensus-proofs" className="mb-16 scroll-mt-20">
@@ -78,6 +80,32 @@ Sealing 세부:
   → CommR (replica hash)을 온체인 제출
   → zk-SNARK로 정확한 실링 수행 증명 (온체인 검증용 압축)`}</code>
         </pre>
+        <CitationBlock source="lotus/storage/pipeline/states_sealing.go" citeKey={2} type="code" href="https://github.com/filecoin-project/lotus/blob/master/storage/pipeline/states_sealing.go">
+          <pre className="text-xs overflow-x-auto"><code>{`// Sealing state machine — 섹터 상태 전이
+func (m *Sealing) handlePacking(ctx statemachine.Context, sector SectorInfo) error {
+    // AddPiece 완료 → PreCommit1으로 전이
+    ...
+}
+
+func (m *Sealing) handlePreCommit1(ctx statemachine.Context, sector SectorInfo) error {
+    // SDR 인코딩 수행 (CPU 집약적, 3-5시간)
+    // storage-proofs-porep → generate_labels()
+    ...
+}
+
+func (m *Sealing) handlePreCommit2(ctx statemachine.Context, sector SectorInfo) error {
+    // Merkle Tree 구축 (GPU 가속: Poseidon 해시)
+    // TreeC + TreeR + TreeD 생성
+    ...
+}
+
+func (m *Sealing) handleSubmitCommit(ctx statemachine.Context, sector SectorInfo) error {
+    // Groth16 증명을 체인에 제출
+    // ProveCommitSector 메시지 전송
+    ...
+}`}</code></pre>
+          <p className="mt-2 text-xs">Lotus의 sealing 파이프라인은 상태 머신으로 구현되어 있으며, 각 단계(Packing → PC1 → PC2 → WaitSeed → Commit → Finalize)가 독립적인 핸들러로 처리됩니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">FVM (Filecoin Virtual Machine)</h3>
         <p>
           FVM은 <strong>WASM 기반 폴리글롯 실행 환경</strong>입니다.

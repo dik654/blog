@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function Bullshark() {
   return (
     <section id="bullshark" className="mb-16 scroll-mt-20">
@@ -96,6 +98,25 @@ View Change: 불필요 — DAG 자체가 동기화 역할
 참고: Sui는 이후 Mysticeti로 합의를 업그레이드했으나,
       Narwhal/Bullshark 코드는 학습 자료로서 가치가 높음`}</code>
         </pre>
+        <CitationBlock source="Spiegelman et al., &quot;Bullshark: DAG BFT Protocols Made Practical&quot;, CCS 2022" citeKey={3} type="paper" href="https://arxiv.org/abs/2201.05677">
+          <p className="italic text-muted-foreground">"Bullshark achieves a best-case latency of 2 round-trips when the designated leader is honest and the network is synchronous"</p>
+          <p className="mt-2 text-xs">Bullshark는 동기 환경에서 2 라운드만에 커밋을 달성하며, 비동기 환경에서도 공유 랜덤 코인을 통해 활성(liveness)을 보장합니다.</p>
+        </CitationBlock>
+        <CitationBlock source="sui/narwhal/consensus/src/bullshark.rs" citeKey={4} type="code" href="https://github.com/MystenLabs/sui/blob/main/narwhal/consensus/src/bullshark.rs">
+          <pre><code>{`// 앵커 커밋 로직 (bullshark.rs)
+fn try_commit(&self, leader: &Certificate) -> Vec<Certificate> {
+    let dominated = self.dag.ancestors(leader);
+    let mut to_commit: Vec<Certificate> = dominated
+        .into_iter()
+        .filter(|cert| !self.state.is_committed(cert))
+        .collect();
+    to_commit.sort_by(|a, b| {
+        (a.round(), a.origin()).cmp(&(b.round(), b.origin()))
+    });
+    to_commit
+}`}</code></pre>
+          <p className="mt-2 text-xs">앵커가 커밋되면 해당 앵커의 인과적 히스토리(causal history)를 BFS로 수집하고, (round, author) 순서로 정렬하여 결정론적 전체 순서를 만듭니다.</p>
+        </CitationBlock>
       </div>
     </section>
   );

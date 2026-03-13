@@ -1,3 +1,5 @@
+import ConsensusRoundViz from './viz/ConsensusRoundViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -27,6 +29,8 @@ export default function Overview() {
 │  - 상태 관리       │       │  - 키퍼 패턴         │
 └────────────────────┘       └────────────────────┘`}</code>
         </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Tendermint BFT 합의 라운드 흐름</h3>
+        <ConsensusRoundViz />
         <p>
           핵심 차이: 이더리움은 <strong>PoS + fork choice rule</strong>(확률적 최종성)을
           사용하지만, CometBFT는 <strong>단일 슬롯 최종성(instant finality)</strong>을

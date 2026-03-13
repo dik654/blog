@@ -1,3 +1,6 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+import AgentLoopViz from './viz/AgentLoopViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -38,6 +41,11 @@ export default function Overview() {
   claude --resume <id>: 특정 세션 복원
   claude --fork-session: 세션 분기 (원본 유지)`}</code>
         </pre>
+        <AgentLoopViz />
+        <CitationBlock source="Claude Code 시스템 프롬프트 (공개)" citeKey={1} type="paper">
+          <p className="italic text-muted-foreground">"You are Claude Code, Anthropic's official CLI for Claude... You are an interactive agent that helps users with software engineering tasks. Use the instructions below and the tools available to you to assist the user."</p>
+          <p className="mt-2 text-xs">공개된 시스템 프롬프트에서 발췌. 평균 21.2회 도구 호출/요청, ~200K 토큰 컨텍스트 윈도우(시스템 오버헤드 후 ~160-170K 사용 가능), 서브에이전트 최대 7개 동시 실행 등의 수치는 시스템 프롬프트와 공식 문서에서 확인된 것입니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">다른 코딩 AI와의 비교</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

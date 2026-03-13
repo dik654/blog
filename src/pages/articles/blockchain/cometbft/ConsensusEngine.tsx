@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function ConsensusEngine() {
   return (
     <section id="consensus-engine" className="mb-16 scroll-mt-20">
@@ -9,6 +11,10 @@ export default function ConsensusEngine() {
           이더리움의 Casper FFG가 2 에폭(epoch) 후 최종성을 달성하는 것과 달리,
           매 블록마다 즉시 최종성을 보장합니다.
         </p>
+        <CitationBlock source="Buchman et al., &quot;The latest gossip on BFT consensus&quot;, 2018" citeKey={1} type="paper" href="https://arxiv.org/abs/1807.04938">
+          <p className="italic text-muted-foreground">"Tendermint guarantees safety — no two correct processes decide differently — and liveness under partial synchrony"</p>
+          <p className="mt-2 text-xs">Tendermint BFT의 핵심 보장: 부분 동기 모델에서 Safety(동일 높이에서 서로 다른 블록 커밋 불가)와 Liveness를 모두 제공합니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">라운드 기반 합의 흐름</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`Height H, Round R:
@@ -43,6 +49,22 @@ export default function ConsensusEngine() {
 블록 전파: PartSet으로 분할 → LibSwift 기반 Gossip
   → 대형 블록도 파트 단위로 병렬 전파 가능`}</code>
         </pre>
+        <CitationBlock source="cometbft/consensus/state.go" citeKey={2} type="code" href="https://github.com/cometbft/cometbft/blob/main/consensus/state.go">
+          <pre className="text-xs overflow-x-auto"><code>{`// State handles execution of the consensus algorithm.
+// It processes votes and proposals, and upon reaching agreement,
+// commits blocks to the chain and executes them against the application.
+type State struct {
+    Height    int64
+    Round     int32
+    Step      RoundStepType  // NewHeight → Propose → Prevote → Precommit → Commit
+    Validators *types.ValidatorSet
+    LockedRound int32
+    LockedBlock *types.Block
+    ValidRound  int32
+    ValidBlock  *types.Block
+}`}</code></pre>
+          <p className="mt-2 text-xs text-muted-foreground">합의 상태 머신의 핵심 구조체. Height/Round/Step으로 현재 합의 진행 상태를 추적하며, LockedBlock은 Polka 달성 후 Lock된 블록을 참조합니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">이더리움 Casper FFG와 비교</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

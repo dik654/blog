@@ -1,3 +1,6 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+import SealingPipelineViz from './viz/SealingPipelineViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -9,6 +12,10 @@ export default function Overview() {
           Filecoin은 <strong>"분산 스토리지 + 검증 가능한 저장 증명"</strong> 플랫폼입니다.
           이더리움의 EL+CL 구조와 비교하면 Lotus는 훨씬 복잡한 다층 아키텍처를 가집니다.
         </p>
+        <CitationBlock source="Filecoin Whitepaper, Protocol Labs 2017" citeKey={1} type="paper" href="https://filecoin.io/filecoin.pdf">
+          <p className="italic text-muted-foreground">"Filecoin employs Expected Consensus, a secret-leader election protocol that yields one or more leaders in each epoch. Leaders extend the chain by creating a Tipset — a set of blocks at the same height."</p>
+          <p className="mt-2 text-xs">Expected Consensus는 VRF 기반 리더 선출로 에폭당 여러 블록을 허용하며, 이는 네트워크 처리량을 높이고 포크를 자연스럽게 처리합니다.</p>
+        </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">이더리움 vs Filecoin 아키텍처</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`이더리움                          Filecoin (Lotus)
@@ -50,6 +57,8 @@ Filecoin만의 고유 레이어:
   Filecoin: 단일 데몬 (모놀리식), 점진적 모듈화 진행 중
   → split-markets (Boost), Curio (차세대 마이너)`}</code>
         </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">섹터 봉인 파이프라인 시각화</h3>
+        <SealingPipelineViz />
       </div>
     </section>
   );

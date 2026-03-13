@@ -1,3 +1,5 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+
 export default function PiIntegration() {
   return (
     <section id="pi-integration" className="mb-16 scroll-mt-20">
@@ -43,6 +45,32 @@ export default function PiIntegration() {
              read/edit/write → 샌드박스 경로 정책 적용
              + messaging, browser, canvas, sessions, cron, gateway 도구 추가`}</code>
         </pre>
+
+        <CitationBlock source="OpenClaw — pi-tool-definition-adapter.ts" citeKey={2} type="code"
+          href="https://github.com/openclaw/openclaw">
+          <pre className="text-xs overflow-x-auto"><code>{`// pi-tool-definition-adapter.ts
+// pi-agent-core의 AgentTool ≠ pi-coding-agent의 ToolDefinition
+// → toToolDefinitions()로 브릿지
+
+export function toToolDefinitions(
+  agentTools: AgentTool[]
+): ToolDefinition[] {
+  return agentTools.map(tool => ({
+    name: tool.name,
+    description: tool.description,
+    inputSchema: tool.parameters,
+    execute: async (input) => tool.run(input),
+  }));
+}
+
+// OpenClaw 정책 필터링, 샌드박스 통합 유지`}</code></pre>
+          <p className="mt-2 text-xs">
+            Pi SDK의 두 레이어(pi-agent-core / pi-coding-agent)는 서로 다른 도구 인터페이스를 사용합니다.
+            toToolDefinitions() 어댑터가 이 차이를 브릿지하면서 OpenClaw의 채널별 정책 필터링과
+            샌드박스 경로 정책을 유지합니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">임베디드 에이전트 실행</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`OpenClaw의 Pi 임베딩 방식:
@@ -129,6 +157,31 @@ Model Catalog:
   확장 카탈로그: GLM-5, MiniMax M2.5, Kimi K2.5, Grok 등
   → 사용자가 models.json으로 커스텀 설정 가능`}</code>
         </pre>
+
+        <CitationBlock source="OpenClaw — 프로바이더 설정 & 모델 카탈로그" citeKey={3} type="code"
+          href="https://github.com/openclaw/openclaw">
+          <pre className="text-xs overflow-x-auto"><code>{`// openclaw.json (JSON5)
+{
+  "model": {
+    "primary": "anthropic/claude-opus-4-6",
+    "fallbacks": [
+      "anthropic/claude-sonnet-4-5",
+      "openai/gpt-5",
+      "google/gemini-2-pro"
+    ]
+  }
+}
+
+// Model Catalog: 각 프로바이더의 사용 가능 모델 자동 발견
+// 확장 카탈로그: GLM-5, MiniMax M2.5, Kimi K2.5, Grok 등`}</code></pre>
+          <p className="mt-2 text-xs">
+            Auth Profile 시스템으로 여러 AI 프로바이더를 동시 지원합니다.
+            Rate limit/장애/타임아웃 시 자동 페일오버로 다음 모델을 시도하며,
+            channels.modelByChannel로 채널별 다른 모델 지정도 가능합니다.
+            실패한 프로파일은 쿨다운 기간 후 자동 재활성화됩니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">커스텀 도구 주입</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`OpenClaw이 Pi 에이전트에 추가하는 도구:

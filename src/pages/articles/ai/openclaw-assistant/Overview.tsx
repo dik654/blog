@@ -1,3 +1,6 @@
+import { CitationBlock } from '../../../../components/ui/citation';
+import GatewayViz from './viz/GatewayViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -16,6 +19,29 @@ export default function Overview() {
           아키텍처의 핵심 철학: <em>&quot;에이전트 루프 자체는 어렵지 않다.
           채널 정규화, 세션 관리, 메모리 영속성, 스킬 확장성, 보안이 진짜 어려운 문제다.&quot;</em>
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">메시지 처리 흐름</h3>
+        <GatewayViz />
+
+        <CitationBlock source="OpenClaw GitHub — Gateway Architecture" citeKey={1} type="code"
+          href="https://github.com/openclaw/openclaw">
+          <pre className="text-xs overflow-x-auto"><code>{`WebSocket 바인딩: ws://127.0.0.1:18789 (기본)
+
+클라이언트 유형:
+  Operator (CLI, TUI) — 토큰/패스워드 인증
+  Node (macOS/iOS 앱) — 디바이스 페어링 + JWT
+  WebChat — 제한된 메서드 접근
+
+단일 Gateway 프로세스가 Config Pipeline, Auth & Secrets,
+Registry & Methods(RPC) 를 순차 초기화한 뒤
+모든 클라이언트 연결을 하나의 WebSocket 서버에서 처리합니다.`}</code></pre>
+          <p className="mt-2 text-xs">
+            OpenClaw Gateway는 server.impl.ts (~1,100줄)에 구현된 단일 Node.js 프로세스입니다.
+            서비스 메시나 메시지 브로커 없이 Config Pipeline → Auth → RPC Registry 순서로 초기화되며,
+            세 종류의 클라이언트(Operator, Node, WebChat)를 각각 다른 인증 방식으로 수용합니다.
+          </p>
+        </CitationBlock>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">전체 아키텍처</h3>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
           <code>{`OpenClaw 아키텍처:
@@ -54,19 +80,7 @@ export default function Overview() {
 │              Model Provider Layer                    │
 │  OpenAI │ Anthropic │ Google │ Ollama │ 기타         │
 │  → 멀티 프로바이더 지원 & 자동 페일오버              │
-└────────────────────────────────────────────────────┘
-
-Gateway 핵심 (src/gateway/server.impl.ts, ~1100줄):
-  시작 단계:
-  1. Config Pipeline — openclaw.json (JSON5) 읽기, 마이그레이션
-  2. Auth & Secrets — 시크릿 해석, CORS, JWT 토큰 관리
-  3. Registry & Methods — RPC 메서드 등록
-
-  WebSocket 바인딩: ws://127.0.0.1:18789 (기본)
-  클라이언트 유형:
-    Operator (CLI, TUI) — 토큰/패스워드 인증
-    Node (macOS/iOS 앱) — 디바이스 페어링 + JWT
-    WebChat — 제한된 메서드 접근`}</code>
+└────────────────────────────────────────────────────┘`}</code>
         </pre>
         <h3 className="text-xl font-semibold mt-6 mb-3">Claude Code와의 비교</h3>
         <div className="overflow-x-auto">

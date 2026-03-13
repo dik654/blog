@@ -1,3 +1,5 @@
+import DAGViz from './viz/DAGViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -33,6 +35,7 @@ DAG 기반 (Narwhal + Bullshark):
   모든 검증자가 매 라운드 동시에 "vertex" 제출
   → 처리량 = n × (단일 노드 처리량)`}</code>
         </pre>
+        <DAGViz />
         <p>
           Narwhal은 <strong>DAG 구축(데이터 가용성)</strong>을 담당하고,
           Bullshark는 <strong>DAG 위에서 전체 순서(total order)</strong>를 결정합니다.
