@@ -84,7 +84,7 @@ ICosmos 인터페이스:
         </pre>
 
         <CitationBlock source="Initia OPinit Stack — Optimistic Bridge" citeKey={2} type="paper" href="https://docs.initia.xyz">
-          <p className="italic text-muted-foreground">"OPinit implements an optimistic bridge between L1 and Minitia L2s. The bridge operator submits output proposals to L1, and a challenge period allows any party to dispute invalid state transitions. After the challenge period, the output is finalized and cross-chain messages are executed."</p>
+          <p className="italic text-foreground/80">"OPinit implements an optimistic bridge between L1 and Minitia L2s. The bridge operator submits output proposals to L1, and a challenge period allows any party to dispute invalid state transitions. After the challenge period, the output is finalized and cross-chain messages are executed."</p>
           <p className="mt-2 text-xs">OPinit은 Optimistic Rollup 방식으로 L1-L2 간 통신을 처리합니다. 출력 제안(output proposal) → 이의 제기 기간(challenge period) → 최종 확정(finalization) 순서로 진행되며, IBC 채널을 통해 메시지를 전달합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (minievm 레포)</h3>

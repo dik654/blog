@@ -124,8 +124,8 @@ export function CitationBlock({ source, citeKey, type = 'paper', children, href 
         `}>
           {citeKey}
         </span>
-        <span className="text-muted-foreground">{icon}</span>
-        <span className={open ? 'text-foreground' : 'text-muted-foreground'}>
+        <span className="text-foreground/60">{icon}</span>
+        <span className={open ? 'text-foreground' : 'text-foreground/60'}>
           {source}
         </span>
         <motion.span

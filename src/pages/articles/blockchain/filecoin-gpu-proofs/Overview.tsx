@@ -67,7 +67,7 @@ CPU만 사용하는 단계: PC1 (SDR), C1 (Merkle 경로)`}</code>
         </pre>
         <CitationBlock source="Filecoin Spec — Stacked DRG PoRep" citeKey={1} type="paper"
           href="https://spec.filecoin.io/algorithms/sdr/">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "SDR (Stacked Depth Robust) encoding creates 11 layers of encoding with d_drg=6 and d_exp=8
             dependencies per node. Each 32GiB sector produces 352GiB of encoded data. The encoding is
             inherently sequential within each layer, making GPU acceleration impossible for PC1."

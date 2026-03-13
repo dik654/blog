@@ -12,7 +12,7 @@ export default function ABCI() {
           ABCI는 합의 엔진과 상태 머신 사이의 통신을 정의합니다.
         </p>
         <CitationBlock source="CometBFT Documentation" citeKey={3} type="paper" href="https://docs.cometbft.com/v0.38/spec/abci/">
-          <p className="italic text-muted-foreground">"ABCI allows BFT replication of applications written in any programming language"</p>
+          <p className="italic text-foreground/80">"ABCI allows BFT replication of applications written in any programming language"</p>
           <p className="mt-2 text-xs">ABCI의 핵심 설계 철학: 합의 엔진과 애플리케이션을 분리하여 어떤 프로그래밍 언어로든 블록체인 애플리케이션을 구현할 수 있게 합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">ABCI 2.0 주요 메서드</h3>

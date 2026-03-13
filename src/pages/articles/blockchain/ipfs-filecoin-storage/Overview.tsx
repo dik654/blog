@@ -12,7 +12,7 @@ export default function Overview() {
           두 프로젝트는 Protocol Labs에서 시작되어 상호 보완적으로 동작합니다.
         </p>
         <CitationBlock source="IPFS Whitepaper, Benet 2014" citeKey={1} type="paper" href="https://ipfs.io/ipfs/QmR7GSQM93Cx5eAg6a6yRzNde1FQv7uL6X1o4k7zrJa3LX/ipfs.draft3.pdf">
-          <p className="italic text-muted-foreground">"IPFS is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files."</p>
+          <p className="italic text-foreground/80">"IPFS is a peer-to-peer distributed file system that seeks to connect all computing devices with the same system of files."</p>
           <p className="mt-2 text-xs">Benet(2014)의 IPFS 백서는 콘텐츠 주소 지정, Merkle DAG, Bitswap 프로토콜, DHT 기반 라우팅 등 IPFS의 핵심 개념을 정의합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">IPFS vs Filecoin 역할 분리</h3>

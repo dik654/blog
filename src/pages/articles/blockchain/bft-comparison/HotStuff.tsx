@@ -14,7 +14,7 @@ export default function HotStuff() {
 
         <CitationBlock source="Yin et al., PODC 2019 — Abstract" citeKey={4} type="paper"
           href="https://arxiv.org/abs/1803.05069">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "We present HotStuff, a leader-based Byzantine fault-tolerant replication protocol for
             the partially synchronous model. Once network communication becomes synchronous, HotStuff
             enables a correct leader to drive the protocol to consensus at the pace of actual (vs. maximum)
@@ -60,7 +60,7 @@ HotStuff: 모든 노드 → 리더 → 모든 노드 (O(n))
         </pre>
 
         <CitationBlock source="HotStuff 논문 §4 — Threshold Signatures" citeKey={5} type="paper">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "The key enabler of linear view change in HotStuff is the use of <strong>threshold signatures</strong>
             to combine n votes into a single compact Quorum Certificate (QC). This QC carries the same
             proof of 2f+1 agreement as PBFT's set of 2f+1 individual signatures, but in O(1) size."

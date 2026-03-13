@@ -17,7 +17,7 @@ export default function PagedAttention() {
 
         <CitationBlock source="PagedAttention 논문 §3 — Algorithm" citeKey={4} type="paper"
           href="https://arxiv.org/abs/2309.06180">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "We partition the KV cache of each sequence into KV blocks. Each block contains the key
             and value vectors for a fixed number of tokens... The blocks are not necessarily stored in
             contiguous space, allowing more flexible memory management as in OS virtual memory."
@@ -99,7 +99,7 @@ Continuous Batching (vLLM):
         </pre>
 
         <CitationBlock source="Yu et al., OSDI 2022 — Orca" citeKey={6} type="paper">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "Orca proposes iteration-level scheduling, where the serving system makes scheduling
             decisions at each generation iteration instead of at the request level. This enables
             continuous batching — requests can join and leave a running batch at any iteration."

@@ -219,7 +219,7 @@ openclaw skills search <keyword>
 
         <CitationBlock source="Docker Blog — Run OpenClaw Securely in Docker Sandboxes" citeKey={5} type="paper"
           href="https://docker.com/blog/run-openclaw-securely-in-docker-sandboxes">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "Fail-closed design: sandbox 설정인데 Docker 런타임이 없으면 호스트에서 실행하는 대신 에러를 발생시킨다.
             컨테이너는 network:none 기본값으로 생성되며, non-root 사용자로 실행된다."
           </p>

@@ -13,7 +13,7 @@ export default function BlockchainGPU() {
         </p>
 
         <CitationBlock source="Pippenger, 'On the evaluation of powers and monomials', 1980" citeKey={4} type="paper">
-          <p className="italic text-muted-foreground">"The Pippenger algorithm reduces multi-scalar multiplication from O(n) group operations to O(n / log n) by partitioning scalars into fixed-size windows and accumulating points into 2^w buckets per window."</p>
+          <p className="italic text-foreground/80">"The Pippenger algorithm reduces multi-scalar multiplication from O(n) group operations to O(n / log n) by partitioning scalars into fixed-size windows and accumulating points into 2^w buckets per window."</p>
           <p className="mt-2 text-xs">Pippenger MSM 알고리즘은 스칼라를 w-bit 윈도우로 분할하고 각 윈도우의 점들을 독립된 버킷에 누적합니다. 버킷 내 합산은 완전 독립적이므로 GPU 병렬화에 이상적이며, ZK 증명(Groth16, PLONK)의 핵심 연산입니다.</p>
         </CitationBlock>
         <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm">
@@ -93,7 +93,7 @@ GPU (병렬):
         </pre>
 
         <CitationBlock source="Tian et al., 'gECC: GPU-accelerated Elliptic Curve Cryptography'" citeKey={5} type="paper">
-          <p className="italic text-muted-foreground">"We present gECC, a GPU-accelerated framework for elliptic curve cryptography that achieves 5.56x speedup for ECDSA verification on NVIDIA A100 GPUs through optimized Montgomery multiplication and batched execution."</p>
+          <p className="italic text-foreground/80">"We present gECC, a GPU-accelerated framework for elliptic curve cryptography that achieves 5.56x speedup for ECDSA verification on NVIDIA A100 GPUs through optimized Montgomery multiplication and batched execution."</p>
           <p className="mt-2 text-xs">gECC는 Montgomery 곱셈을 GPU에 최적화하여 secp256k1 곡선의 ECDSA 검증을 대폭 가속합니다. 블록체인 노드에서 트랜잭션 서명 검증 병목을 해소하는 핵심 기술입니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">cuda-samples 주요 예제</h3>

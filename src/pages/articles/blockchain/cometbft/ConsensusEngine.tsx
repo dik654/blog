@@ -12,7 +12,7 @@ export default function ConsensusEngine() {
           매 블록마다 즉시 최종성을 보장합니다.
         </p>
         <CitationBlock source="Buchman et al., &quot;The latest gossip on BFT consensus&quot;, 2018" citeKey={1} type="paper" href="https://arxiv.org/abs/1807.04938">
-          <p className="italic text-muted-foreground">"Tendermint guarantees safety — no two correct processes decide differently — and liveness under partial synchrony"</p>
+          <p className="italic text-foreground/80">"Tendermint guarantees safety — no two correct processes decide differently — and liveness under partial synchrony"</p>
           <p className="mt-2 text-xs">Tendermint BFT의 핵심 보장: 부분 동기 모델에서 Safety(동일 높이에서 서로 다른 블록 커밋 불가)와 Liveness를 모두 제공합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">라운드 기반 합의 흐름</h3>

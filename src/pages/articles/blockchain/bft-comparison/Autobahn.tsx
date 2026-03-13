@@ -13,7 +13,7 @@ export default function Autobahn() {
         </p>
 
         <CitationBlock source="Müller et al., IEEE S&P 2025 — Abstract" citeKey={7} type="paper">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "Traditional BFT protocols suffer from performance hangovers after network instability (blips),
             while DAG-based protocols avoid hangovers but have higher latency. Autobahn combines the best
             of both: low latency during stability and <strong>seamless recovery</strong> after blips."
@@ -51,7 +51,7 @@ export default function Autobahn() {
         </pre>
 
         <CitationBlock source="Autobahn 논문 §3.2 — Ride-Sharing" citeKey={8} type="paper">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "Ride-sharing embeds consensus protocol messages into data dissemination messages,
             eliminating the need for a separate consensus communication channel. A lane car carrying
             transaction data simultaneously carries the leader's proposal or a replica's vote."

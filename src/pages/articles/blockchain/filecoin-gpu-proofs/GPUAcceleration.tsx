@@ -106,7 +106,7 @@ sppark 의존성 체인:
           → blst (BLS12-381 곡선 어셈블리)`}</code>
         </pre>
         <CitationBlock source="sppark — MSM Benchmarks (BLS12-381)" citeKey={3} type="paper" href="https://github.com/supranational/sppark">
-          <p className="italic text-muted-foreground">"2^26 MSM on NVIDIA A10: ~2.8s (13GB VRAM). GPU MSM achieves ~800x latency reduction compared to single-threaded CPU. GPU NTT provides ~50x acceleration with 3.1x energy efficiency, with NTT accounting for up to 91% of proving runtime at large scales."</p>
+          <p className="italic text-foreground/80">"2^26 MSM on NVIDIA A10: ~2.8s (13GB VRAM). GPU MSM achieves ~800x latency reduction compared to single-threaded CPU. GPU NTT provides ~50x acceleration with 3.1x energy efficiency, with NTT accounting for up to 91% of proving runtime at large scales."</p>
           <p className="mt-2 text-xs">sppark의 Pippenger CUDA MSM은 Z-Prize 대회 레퍼런스 구현으로, bucket accumulation을 GPU 워프 단위로 병렬화하여 CPU 대비 800배 지연 감소를 달성합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">Neptune (Poseidon 해시 GPU)</h3>
@@ -144,7 +144,7 @@ GPU 가속 (Neptune):
   NEPTUNE_DEFAULT_GPU=<UUID> 사용 GPU 선택`}</code>
         </pre>
         <CitationBlock source="Neptune — Poseidon Hash Audit (ADBK Consulting)" citeKey={4} type="paper" href="https://github.com/filecoin-project/neptune">
-          <p className="italic text-muted-foreground">"Neptune's Poseidon implementation has been audited by ADBK Consulting for compliance with the Starkad/Poseidon paper specification. The audit confirmed correct round constant generation, MDS matrix construction, and S-box computation for all supported arities."</p>
+          <p className="italic text-foreground/80">"Neptune's Poseidon implementation has been audited by ADBK Consulting for compliance with the Starkad/Poseidon paper specification. The audit confirmed correct round constant generation, MDS matrix construction, and S-box computation for all supported arities."</p>
           <p className="mt-2 text-xs">Neptune의 Poseidon 해시 구현은 ADBK Consulting의 보안 감사를 통과했으며, ZK 회로에서 SHA-256 대비 ~10x 효율적입니다 (R1CS 제약: ~300 vs ~25,000).</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">rust-fil-proofs 통합</h3>

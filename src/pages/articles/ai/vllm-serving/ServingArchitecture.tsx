@@ -26,7 +26,7 @@ export default function ServingArchitecture() {
 
         <CitationBlock source="Dao et al., NeurIPS 2022 — FlashAttention" citeKey={7} type="paper"
           href="https://arxiv.org/abs/2205.14135">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "We propose FlashAttention, an IO-aware exact attention algorithm that uses tiling to
             reduce the number of memory reads/writes between GPU high bandwidth memory (HBM) and
             GPU on-chip SRAM... FlashAttention trains GPT-2 2.4x faster than a highly optimized
@@ -76,7 +76,7 @@ vLLM 지원 방식:
 
         <CitationBlock source="Li et al., ICML 2024 — EAGLE" citeKey={8} type="paper"
           href="https://arxiv.org/abs/2401.15077">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "EAGLE (Extrapolation Algorithm for Greater Language-model Efficiency) proposes drafting
             at the feature level rather than the token level... EAGLE achieves a speedup ratio of
             2.13x-3.06x across various tasks, significantly outperforming existing methods."

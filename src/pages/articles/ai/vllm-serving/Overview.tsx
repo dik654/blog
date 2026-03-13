@@ -14,7 +14,7 @@ export default function Overview() {
 
         <CitationBlock source="Kwon et al., SOSP 2023 — Abstract" citeKey={1} type="paper"
           href="https://arxiv.org/abs/2309.06180">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "We propose PagedAttention, an attention algorithm inspired by the classical virtual memory
             and paging techniques in operating systems. On top of this, we build vLLM, an LLM serving
             system that achieves (1) near-zero waste in KV cache memory and (2) flexible sharing of
@@ -46,7 +46,7 @@ export default function Overview() {
         </pre>
 
         <CitationBlock source="PagedAttention 논문 §2.2 — Memory Waste" citeKey={2} type="paper">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "Existing systems waste 60%-80% of the KV cache memory due to fragmentation and
             over-reservation. In contrast, PagedAttention reduces the waste to under 4%."
           </p>

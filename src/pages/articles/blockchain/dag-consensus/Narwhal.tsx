@@ -110,7 +110,7 @@ Certificate (인증서):
   → 벤치마크: 50 검증자에서 ~125k-297k TPS`}</code>
         </pre>
         <CitationBlock source="Danezis et al., &quot;Narwhal and Tusk&quot;, EuroSys 2022" citeKey={1} type="paper" href="https://arxiv.org/abs/2105.11827">
-          <p className="italic text-muted-foreground">"Narwhal can sustain up to 130,000 tx/s... We observe that separating data availability from consensus is a powerful paradigm"</p>
+          <p className="italic text-foreground/80">"Narwhal can sustain up to 130,000 tx/s... We observe that separating data availability from consensus is a powerful paradigm"</p>
           <p className="mt-2 text-xs">Narwhal 논문의 핵심 주장 — 데이터 가용성과 합의를 분리하면 처리량이 극대화됩니다. 이더리움의 EL/CL 분리와 유사한 철학입니다.</p>
         </CitationBlock>
         <CitationBlock source="sui/narwhal/primary/src/proposer.rs" citeKey={2} type="code" href="https://github.com/MystenLabs/sui/blob/main/narwhal/primary/src/proposer.rs">

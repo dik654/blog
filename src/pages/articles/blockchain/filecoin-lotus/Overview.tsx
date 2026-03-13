@@ -13,7 +13,7 @@ export default function Overview() {
           이더리움의 EL+CL 구조와 비교하면 Lotus는 훨씬 복잡한 다층 아키텍처를 가집니다.
         </p>
         <CitationBlock source="Filecoin Whitepaper, Protocol Labs 2017" citeKey={1} type="paper" href="https://filecoin.io/filecoin.pdf">
-          <p className="italic text-muted-foreground">"Filecoin employs Expected Consensus, a secret-leader election protocol that yields one or more leaders in each epoch. Leaders extend the chain by creating a Tipset — a set of blocks at the same height."</p>
+          <p className="italic text-foreground/80">"Filecoin employs Expected Consensus, a secret-leader election protocol that yields one or more leaders in each epoch. Leaders extend the chain by creating a Tipset — a set of blocks at the same height."</p>
           <p className="mt-2 text-xs">Expected Consensus는 VRF 기반 리더 선출로 에폭당 여러 블록을 허용하며, 이는 네트워크 처리량을 높이고 포크를 자연스럽게 처리합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">이더리움 vs Filecoin 아키텍처</h3>

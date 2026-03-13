@@ -136,7 +136,7 @@ Claude Code ←→ MCP Server ←→ 외부 서비스
   - 커밋 전 테스트 자동 실행`}</code>
         </pre>
         <CitationBlock source="Claude Code 공식 문서 - Hooks" citeKey={2} type="paper" href="https://docs.anthropic.com/en/docs/claude-code/hooks">
-          <p className="italic text-muted-foreground">"Hooks allow you to execute shell commands at specific points in Claude Code's lifecycle. They enable customizing behavior without modifying the core tool, running validation, formatting, notifications, and more."</p>
+          <p className="italic text-foreground/80">"Hooks allow you to execute shell commands at specific points in Claude Code's lifecycle. They enable customizing behavior without modifying the core tool, running validation, formatting, notifications, and more."</p>
           <p className="mt-2 text-xs">Hooks는 18개 라이프사이클 이벤트와 4가지 핸들러 타입(command, http, prompt, agent)을 제공하여 Claude Code의 동작을 세밀하게 커스터마이징할 수 있습니다.</p>
         </CitationBlock>
         <CitationBlock source=".claude/settings.json Hook 설정 예시" citeKey={3} type="code">

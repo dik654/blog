@@ -15,7 +15,7 @@ export default function Overview() {
         </p>
 
         <CitationBlock source="NVIDIA CUDA C++ Programming Guide" citeKey={1} type="paper" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/">
-          <p className="italic text-muted-foreground">"A kernel is executed in parallel by an array of threads. All threads run the same code. Each thread has an ID that it uses to compute memory addresses and make control decisions. Threads are organized into thread blocks, and blocks are organized into grids."</p>
+          <p className="italic text-foreground/80">"A kernel is executed in parallel by an array of threads. All threads run the same code. Each thread has an ID that it uses to compute memory addresses and make control decisions. Threads are organized into thread blocks, and blocks are organized into grids."</p>
           <p className="mt-2 text-xs">CUDA의 스레드 계층 구조는 Grid &gt; Block &gt; Thread로 구성되며, 각 레벨에서 병렬성을 확보합니다.</p>
         </CitationBlock>
 
@@ -49,7 +49,7 @@ verify_signatures<<<4, 256>>>(transactions, signatures, results);
 // gridDim  = 4      → 4개 블록
 // blockDim = 256    → 블록당 256 스레드
 // 총 1024 스레드가 동시에 서명 검증`}</code></pre>
-          <p className="mt-2 text-xs"><<<grid, block>>> 구문으로 GPU에서 실행할 스레드 구조를 결정합니다. 블록체인에서는 트랜잭션 수에 맞춰 그리드 크기를 설정합니다.</p>
+          <p className="mt-2 text-xs">{'<<<'}grid, block{'>>>'} 구문으로 GPU에서 실행할 스레드 구조를 결정합니다. 블록체인에서는 트랜잭션 수에 맞춰 그리드 크기를 설정합니다.</p>
         </CitationBlock>
       </div>
     </section>

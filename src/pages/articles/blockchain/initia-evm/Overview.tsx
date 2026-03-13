@@ -13,7 +13,7 @@ export default function Overview() {
         </p>
 
         <CitationBlock source="Initia Documentation — Interwoven Rollup" citeKey={1} type="paper" href="https://docs.initia.xyz">
-          <p className="italic text-muted-foreground">"Initia introduces the concept of 'Interwoven Rollups' — an architecture where the L1 serves as a shared security and liquidity layer, while application-specific L2 rollups (Minitias) can choose their execution environment (EVM, MoveVM, or WasmVM) while inheriting L1 security through the OPinit stack."</p>
+          <p className="italic text-foreground/80">"Initia introduces the concept of 'Interwoven Rollups' — an architecture where the L1 serves as a shared security and liquidity layer, while application-specific L2 rollups (Minitias) can choose their execution environment (EVM, MoveVM, or WasmVM) while inheriting L1 security through the OPinit stack."</p>
           <p className="mt-2 text-xs">Initia는 L1이 보안과 유동성을 제공하고, 각 L2(Minitia)가 용도에 맞는 VM을 선택하는 모듈형 아키텍처를 지향합니다. 이를 통해 VM 간 상호운용성과 공유 유동성을 동시에 달성합니다.</p>
         </CitationBlock>
 

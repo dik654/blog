@@ -15,7 +15,7 @@ export default function PBFT() {
 
         <CitationBlock source="Castro & Liskov, OSDI 1999 — §4" citeKey={1} type="paper"
           href="https://pmg.csail.mit.edu/papers/osdi99.pdf">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "The algorithm works correctly in asynchronous systems like the Internet and it incorporates
             important optimizations that allow it to perform well so that it can be used in practice."
           </p>
@@ -32,7 +32,7 @@ export default function PBFT() {
 
         <CitationBlock source="PBFT 논문 Figure 1 — 정상 경로 메시지 패턴" citeKey={2} type="paper"
           href="https://pmg.csail.mit.edu/papers/osdi99.pdf">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "The algorithm requires 3f+1 replicas to tolerate f faults. The three-phase protocol
             (pre-prepare, prepare, commit) ensures that non-faulty replicas agree on a total order
             for the execution of requests."
@@ -64,7 +64,7 @@ Tendermint (CometBFT):
         </pre>
 
         <CitationBlock source="PBFT 논문 §4.4 View Changes" citeKey={3} type="paper">
-          <p className="italic text-muted-foreground">
+          <p className="italic text-foreground/80">
             "A replica suspects the primary is faulty if it hasn't received a valid message from it
             within a timeout period. It then multicasts a VIEW-CHANGE message for view v+1."
           </p>
