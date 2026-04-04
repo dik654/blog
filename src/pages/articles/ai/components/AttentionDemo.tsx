@@ -16,7 +16,7 @@ export default function AttentionDemo() {
 
   return (
     <div className="rounded-lg border p-6">
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-sm text-foreground/75 mb-4">
         토큰을 클릭하면 해당 토큰의 Attention 가중치를 확인할 수 있습니다.
       </p>
       <div className="flex justify-center gap-3 mb-6">
@@ -58,7 +58,7 @@ export default function AttentionDemo() {
                     transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                     style={{ width: 40 }}
                   />
-                  <span className="text-xs font-mono text-muted-foreground">
+                  <span className="text-xs font-mono text-foreground/75">
                     {token}
                   </span>
                   <span className="text-xs font-medium">{w.toFixed(1)}</span>

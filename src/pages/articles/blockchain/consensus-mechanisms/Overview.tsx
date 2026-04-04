@@ -1,11 +1,17 @@
+import ContextViz from './viz/ContextViz';
+import ConsensusOverviewViz from './viz/ConsensusOverviewViz';
+
 export default function Overview() {
   return (
-    <section id="overview">
+    <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-semibold mb-4 scroll-mt-20">개요</h2>
-      <p className="text-muted-foreground leading-7">
-        합의 알고리즘은 분산 네트워크에서 모든 노드가 동일한 상태에 동의하기 위한 메커니즘입니다.
-        블록체인의 보안성과 탈중앙화를 결정하는 핵심 요소입니다.
-      </p>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+        <p>
+          합의 알고리즘 &mdash; 분산 네트워크에서 모든 노드가 동일 상태에 합의하는 메커니즘.
+        </p>
+      </div>
+      <div className="not-prose mb-8"><ContextViz /></div>
+      <div className="not-prose"><ConsensusOverviewViz /></div>
     </section>
   );
 }

@@ -13,7 +13,7 @@ function ModBox({ m, style }: { m: Mod; style?: React.CSSProperties }) {
         {m.items.map(([name, desc]) => (
           <div key={name} className={`rounded border ${m.inner} bg-background/70 dark:bg-background/20 px-2 py-1.5`}>
             <p className="text-[11px] font-medium text-foreground/80 leading-tight">{name}</p>
-            <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{desc}</p>
+            <p className="text-[10px] text-foreground/75 leading-tight mt-0.5">{desc}</p>
           </div>
         ))}
       </div>
@@ -24,11 +24,11 @@ function ModBox({ m, style }: { m: Mod; style?: React.CSSProperties }) {
 function HArrow({ label, dir, style }: { label: string; dir: '→' | '↔'; style?: React.CSSProperties }) {
   return (
     <div className="flex flex-col items-center justify-center px-3 gap-1" style={style}>
-      <span className="text-[11px] text-muted-foreground whitespace-nowrap">{label}</span>
+      <span className="text-[11px] text-foreground/75 whitespace-nowrap">{label}</span>
       <div className="relative w-8 h-3 flex items-center">
         <div className="absolute inset-x-0 h-px bg-border" />
-        <span className="absolute right-0 text-[10px] leading-none text-muted-foreground">▶</span>
-        {dir === '↔' && <span className="absolute left-0 text-[10px] leading-none text-muted-foreground">◀</span>}
+        <span className="absolute right-0 text-[10px] leading-none text-foreground/75">▶</span>
+        {dir === '↔' && <span className="absolute left-0 text-[10px] leading-none text-foreground/75">◀</span>}
       </div>
     </div>
   );
@@ -37,11 +37,11 @@ function HArrow({ label, dir, style }: { label: string; dir: '→' | '↔'; styl
 function VArrow({ label, dir, style }: { label: string; dir: '↓' | '↕'; style?: React.CSSProperties }) {
   return (
     <div className="flex flex-col items-center justify-center py-2 gap-0.5" style={style}>
-      {dir === '↕' && <span className="text-[10px] leading-none text-muted-foreground">▲</span>}
+      {dir === '↕' && <span className="text-[10px] leading-none text-foreground/75">▲</span>}
       <div className="w-px flex-1 min-h-[28px] bg-border" />
-      <span className="text-[11px] text-muted-foreground px-1 text-center leading-tight">{label}</span>
+      <span className="text-[11px] text-foreground/75 px-1 text-center leading-tight">{label}</span>
       <div className="w-px flex-1 min-h-[28px] bg-border" />
-      <span className="text-[10px] leading-none text-muted-foreground">▼</span>
+      <span className="text-[10px] leading-none text-foreground/75">▼</span>
     </div>
   );
 }
@@ -57,9 +57,9 @@ function DiagArrow({ style }: { style?: React.CSSProperties }) {
           </marker>
         </defs>
         <line x1="62" y1="2" x2="4" y2="60" stroke="currentColor" strokeWidth="1.5"
-          strokeDasharray="4,3" markerEnd="url(#arr)" className="text-muted-foreground" />
+          strokeDasharray="4,3" markerEnd="url(#arr)" className="" />
       </svg>
-      <span className="absolute text-[10px] text-muted-foreground/60 whitespace-nowrap rotate-[-43deg] translate-x-1">
+      <span className="absolute text-[10px] text-foreground/75/60 whitespace-nowrap rotate-[-43deg] translate-x-1">
         payload
       </span>
     </div>

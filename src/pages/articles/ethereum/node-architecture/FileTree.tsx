@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FileNode } from './archFileTrees';
+import type { FileNode } from '@/components/code/types';
 import { codeRefs } from './archCodeRefs';
 
 function containsPath(node: FileNode, path: string): boolean {

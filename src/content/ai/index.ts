@@ -1,69 +1,28 @@
 import type { Category } from '../types';
+import { aiArticles } from './articles';
 
 const ai: Category = {
   slug: 'ai',
   name: 'AI',
-  description: '인공지능 관련 학습 노트',
+  description: '인공지능, LLM, 생성 모델, 시계열 분석 학습 노트',
   subcategories: [
-    { slug: 'machine-learning', name: 'Machine Learning' },
-    { slug: 'deep-learning', name: 'Deep Learning' },
+    { slug: 'ai-foundations', name: 'Foundations', description: '신경망 기초, 역전파, 임베딩 등 핵심 이론', icon: '🧠' },
+    { slug: 'ai-nlp', name: 'NLP & Attention', description: 'Transformer, 어텐션 메커니즘, 토큰화', icon: '💬' },
+    { slug: 'ai-vision', name: 'Computer Vision', description: 'CNN, 객체 탐지, 이미지 분류 모델', icon: '👁️' },
+    { slug: 'ai-timeseries', name: 'Time Series', description: '시계열 예측, 이상 탐지, 패턴 분석', icon: '📈' },
+    { slug: 'ai-generative', name: 'Generative Models', description: 'GAN, Diffusion, VAE 등 생성 모델', icon: '🎨' },
     {
-      slug: 'llm',
-      name: 'LLM',
+      slug: 'ai-llm', name: 'LLM', description: 'LLM 이론, 서빙, 활용', icon: '🚀',
       children: [
-        { slug: 'llm-serving', name: 'LLM 서빙' },
-        { slug: 'llm-tools', name: 'LLM 도구' },
+        { slug: 'ai-llm-theory', name: '이론 & 정렬', description: 'RLHF, 해석가능성 등 LLM 핵심 이론' },
+        { slug: 'ai-llm-serving', name: '서빙 & 인프라', description: '추론 최적화, 서빙 아키텍처' },
+        { slug: 'ai-llm-applied', name: '활용', description: '추론 모델 학습, 배포 파이프라인' },
       ],
     },
+    { slug: 'ai-agents', name: 'Agents & Tools', description: 'AI 에이전트, 도구 호출, 워크플로 자동화', icon: '🤖' },
+    { slug: 'ai-from-scratch', name: 'DL 구현 (Rust)', description: 'dezero_rs — 딥러닝 프레임워크를 Rust로 직접 구현', icon: '🦀' },
   ],
-  articles: [
-    {
-      slug: 'transformer-architecture',
-      title: 'Transformer 아키텍처 이해하기',
-      subcategory: 'deep-learning',
-      sections: [
-        { id: 'overview', title: '개요' },
-        { id: 'self-attention', title: 'Self-Attention 메커니즘' },
-        { id: 'multi-head', title: 'Multi-Head Attention' },
-        { id: 'positional-encoding', title: 'Positional Encoding' },
-        { id: 'summary', title: '정리' },
-      ],
-      component: () => import('@/pages/articles/ai/transformer-architecture'),
-    },
-    {
-      slug: 'vllm-serving',
-      title: 'vLLM: 고성능 LLM 서빙 엔진',
-      subcategory: 'llm-serving',
-      sections: [
-        { id: 'overview', title: '개요' },
-        { id: 'paged-attention', title: 'PagedAttention & KV 캐시 관리' },
-        { id: 'serving-architecture', title: '서빙 아키텍처 & 최적화' },
-      ],
-      component: () => import('@/pages/articles/ai/vllm-serving'),
-    },
-    {
-      slug: 'claude-code',
-      title: 'Claude Code: 에이전틱 코딩 도구',
-      subcategory: 'llm-tools',
-      sections: [
-        { id: 'overview', title: '개요' },
-        { id: 'agent-architecture', title: '에이전트 아키텍처' },
-        { id: 'tools-permissions', title: '도구 시스템 & 권한 모델' },
-      ],
-      component: () => import('@/pages/articles/ai/claude-code'),
-    },
-    {
-      slug: 'openclaw-assistant',
-      title: 'OpenClaw: 개인용 AI 어시스턴트',
-      subcategory: 'llm-tools',
-      sections: [
-        { id: 'overview', title: '개요' },
-        { id: 'pi-integration', title: 'Pi SDK 통합 & 에이전트 세션' },
-        { id: 'channel-skills', title: '채널 시스템 & 스킬' },
-      ],
-      component: () => import('@/pages/articles/ai/openclaw-assistant'),
-    },
-  ],
+  articles: aiArticles,
 };
 
 export default ai;

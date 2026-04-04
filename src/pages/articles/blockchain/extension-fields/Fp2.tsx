@@ -1,7 +1,14 @@
+import FieldTowerViz from './viz/FieldTowerViz';
+import TowerFlowViz from './viz/TowerFlowViz';
+import CodePanel from '@/components/ui/code-panel';
+
 export default function Fp2() {
   return (
     <section id="fp2" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Fp2 이차 확장체</h2>
+      <div className="not-prose mb-8"><FieldTowerViz /></div>
+      <h3 className="text-lg font-semibold mb-3">타워 확장 파이프라인</h3>
+      <div className="not-prose mb-8"><TowerFlowViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           BN254 페어링에서 G2의 좌표는 Fp 안에 존재하지 않는다.
@@ -10,11 +17,6 @@ export default function Fp2() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">타워 구조</h3>
-        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm"><code>{`Fp  →  Fp2  →  Fp6  →  Fp12
- │      │       │        └── 페어링 결과 e(P,Q) ∈ Fp12
- │      │       └────────── Fp12를 효율적으로 구성하는 중간 단계
- │      └────────────────── G2 좌표 (Fp2 = Fp[u] / (u²+1))
- └───────────────────────── G1 좌표 + 모든 확장의 기초`}</code></pre>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Karatsuba 곱셈 (4회 → 3회)</h3>
         <p>
@@ -22,14 +24,18 @@ export default function Fp2() {
           <code className="bg-accent px-1.5 py-0.5 rounded text-sm">(a₀+a₁u)(b₀+b₁u) = (a₀b₀−a₁b₁) + (a₀b₁+a₁b₀)u</code>.
           Karatsuba 트릭으로 Fp 곱셈을 4회에서 3회로 줄인다.
         </p>
-        <pre className="bg-accent rounded-lg p-4 overflow-x-auto text-sm"><code>{`pub fn mul(&self, rhs: &Fp2) -> Fp2 {
+        <CodePanel title="Fp2::mul — Karatsuba" code={`pub fn mul(&self, rhs: &Fp2) -> Fp2 {
     let v0 = self.c0 * rhs.c0;  // a₀·b₀
     let v1 = self.c1 * rhs.c1;  // a₁·b₁
     // (a₀+a₁)(b₀+b₁) - v₀ - v₁ = a₀b₁ + a₁b₀
     let c1 = (self.c0 + self.c1) * (rhs.c0 + rhs.c1) - v0 - v1;
     let c0 = v0 - v1;  // u² = -1
     Fp2 { c0, c1 }
-}`}</code></pre>
+}`} defaultOpen annotations={[
+          { lines: [2, 3], color: 'sky', note: '기본 곱셈 2회' },
+          { lines: [5, 5], color: 'emerald', note: 'Karatsuba: 교차항을 1회로 계산' },
+          { lines: [6, 6], color: 'amber', note: 'u² = -1 적용' },
+        ]} />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Conjugate, Norm, Inverse</h3>
         <p>
@@ -47,7 +53,7 @@ export default function Fp2() {
         <p>
           BN254에서{' '}
           <code className="bg-accent px-1.5 py-0.5 rounded text-sm">u^p = −u</code> (p ≡ 3 mod 4)이므로
-          Frobenius(x→x^p)는 conjugate와 동일하다.
+          Frobenius(x→x^p)는 conjugate와 동일하다.<br />
           Frobenius를 2번 적용하면 원래 값으로 돌아오는데, Fp2가 Fp의 <strong>2차</strong> 확장이기 때문이다.
         </p>
       </div>

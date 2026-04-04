@@ -14,7 +14,7 @@ function ThreadBlock({ bx, by, delay }: { bx: number; by: number; delay: number 
       {/* Block border */}
       <rect x={ox} y={oy} width={150} height={110} rx={8}
         fill={`${C.block}11`} stroke={C.block} strokeWidth={1.5} strokeDasharray="4 2" />
-      <text x={ox + 75} y={oy - 6} textAnchor="middle" fontSize={9} fontWeight={600} fill={C.block}>
+      <text x={ox + 75} y={oy - 6} textAnchor="middle" fontSize={10} fontWeight={600} fill={C.block}>
         Block ({bx},{by})
       </text>
 
@@ -31,7 +31,7 @@ function ThreadBlock({ bx, by, delay }: { bx: number; by: number; delay: number 
             >
               <rect x={cx - 10} y={cy - 8} width={20} height={16} rx={3}
                 fill={`${C.thread}22`} stroke={C.thread} strokeWidth={1} />
-              <text x={cx} y={cy + 3} textAnchor="middle" fontSize={6} fill={C.thread}>
+              <text x={cx} y={cy + 3} textAnchor="middle" fontSize={10} fill={C.thread}>
                 {tx},{ty}
               </text>
             </motion.g>
@@ -44,19 +44,19 @@ function ThreadBlock({ bx, by, delay }: { bx: number; by: number; delay: number 
 
 export default function ThreadHierarchyViz() {
   return (
-    <div className="not-prose rounded-xl border bg-muted/20 p-4 mb-6">
-      <p className="text-xs font-semibold text-muted-foreground mb-3 text-center">
+    <div className="not-prose rounded-xl border p-4 mb-6">
+      <p className="text-xs font-semibold text-foreground/75 mb-3 text-center">
         CUDA Thread Hierarchy: Grid &rarr; Block &rarr; Thread
       </p>
-      <svg viewBox="0 0 400 370" className="w-full max-w-[560px] mx-auto" role="img">
+      <svg viewBox="0 0 400 370" className="w-full max-w-2xl mx-auto" role="img">
         {/* Grid border */}
         <motion.rect
           x={5} y={5} width={390} height={360} rx={12}
-          fill={`${C.grid}08`} stroke={C.grid} strokeWidth={2}
+          fill={`${C.grid}08`} stroke={C.grid} strokeWidth={1.5}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
         />
         <motion.text
-          x={200} y={28} textAnchor="middle" fontSize={12} fontWeight={700} fill={C.grid}
+          x={200} y={28} textAnchor="middle" fontSize={12} fontWeight={600} fill={C.grid}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
         >
           Grid (2 x 2 Blocks)
@@ -71,11 +71,11 @@ export default function ThreadHierarchyViz() {
         {/* Legend */}
         <g transform="translate(20, 340)">
           <rect x={0} y={0} width={10} height={10} rx={2} fill={C.grid} opacity={0.6} />
-          <text x={14} y={9} fontSize={8} fill="hsl(var(--muted-foreground))">Grid</text>
+          <text x={14} y={9} fontSize={10} fill="var(--muted-foreground)">Grid</text>
           <rect x={55} y={0} width={10} height={10} rx={2} fill={C.block} opacity={0.6} />
-          <text x={69} y={9} fontSize={8} fill="hsl(var(--muted-foreground))">Block</text>
+          <text x={69} y={9} fontSize={10} fill="var(--muted-foreground)">Block</text>
           <rect x={115} y={0} width={10} height={10} rx={2} fill={C.thread} opacity={0.6} />
-          <text x={129} y={9} fontSize={8} fill="hsl(var(--muted-foreground))">Thread</text>
+          <text x={129} y={9} fontSize={10} fill="var(--muted-foreground)">Thread</text>
         </g>
       </svg>
     </div>

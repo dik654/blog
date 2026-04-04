@@ -6,7 +6,7 @@ export default function PositionalEncodingChart() {
 
   return (
     <div className="rounded-lg border p-6">
-      <p className="text-sm text-muted-foreground mb-3">
+      <p className="text-sm text-foreground/75 mb-3">
         슬라이더로 차원(i)을 변경하면 주파수가 어떻게 변하는지 확인할 수 있습니다.
       </p>
       <div className="flex items-center gap-3 mb-4">
@@ -37,7 +37,7 @@ export default function PositionalEncodingChart() {
           color={Theme.pink}
         />
       </Mafs>
-      <div className="flex justify-center gap-6 mt-3 text-xs text-muted-foreground">
+      <div className="flex justify-center gap-6 mt-3 text-xs text-foreground/75">
         <span className="flex items-center gap-1">
           <span className="inline-block w-3 h-0.5 bg-blue-500 rounded" /> sin (짝수 차원)
         </span>

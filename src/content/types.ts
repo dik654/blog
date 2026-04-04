@@ -15,6 +15,9 @@ export interface Article {
 export interface Subcategory {
   slug: string;
   name: string;
+  description?: string;
+  icon?: string;
+  thumbnail?: () => Promise<{ default: React.ComponentType }>;
   children?: Subcategory[];
 }
 

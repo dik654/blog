@@ -1,0 +1,21 @@
+import StepViz from '@/components/ui/step-viz';
+import { STEPS } from './BeaconAPIVizData';
+import { Step0, Step1, Step2 } from './BeaconAPISteps';
+import { Step3, Step4, Step5 } from './BeaconAPISteps2';
+
+const R = [Step0, Step1, Step2, Step3, Step4, Step5];
+
+export default function BeaconAPIViz() {
+  return (
+    <StepViz steps={STEPS}>
+      {(step) => {
+        const S = R[step];
+        return (
+          <svg viewBox="0 0 420 100" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+            <S />
+          </svg>
+        );
+      }}
+    </StepViz>
+  );
+}

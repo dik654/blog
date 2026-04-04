@@ -13,7 +13,7 @@ export default function MultiHeadDemo() {
 
   return (
     <div className="rounded-lg border p-6">
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-sm text-foreground/75 mb-4">
         각 Head를 선택하면 어떤 관점을 학습하는지 확인할 수 있습니다.
       </p>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-4">
@@ -46,7 +46,7 @@ export default function MultiHeadDemo() {
           <p className="font-medium" style={{ color: heads[activeHead].color }}>
             {heads[activeHead].focus}
           </p>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-foreground/75 mt-1">
             {heads[activeHead].desc}
           </p>
         </motion.div>

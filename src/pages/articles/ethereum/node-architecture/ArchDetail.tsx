@@ -49,7 +49,7 @@ export default function ArchDetail({
                     <code className="text-[11px] bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded font-mono shrink-0">
                       {f.sig}
                     </code>
-                    <span className="text-xs text-muted-foreground pt-0.5">{f.desc}</span>
+                    <span className="text-xs text-foreground/75 pt-0.5">{f.desc}</span>
                   </div>
                 ))}
               </div>
@@ -68,9 +68,9 @@ export default function ArchDetail({
                       onClick={() => onSelect(l.target)}
                       className="text-xs bg-background border rounded px-2 py-0.5 hover:bg-accent transition-colors cursor-pointer flex items-center gap-1"
                     >
-                      <span className="text-muted-foreground">{l.dir}</span>
+                      <span className="">{l.dir}</span>
                       <span className="font-medium">{modules[l.target]?.label ?? l.target}</span>
-                      <span className="text-muted-foreground">({l.via})</span>
+                      <span className="">({l.via})</span>
                     </button>
                   ))}
                 </div>

@@ -5,19 +5,19 @@ const methods = [
   {
     name: 'engine_newPayloadV3/V4',
     direction: 'CL → EL',
-    desc: '실행 페이로드를 EL에 전달하여 트랜잭션 실행 및 상태 루트 검증을 요청합니다.',
+    desc: '실행 페이로드를 EL에 전달 → 트랜잭션 실행 + 상태 루트 검증 요청',
     response: 'PayloadStatus: VALID | INVALID | SYNCING',
   },
   {
     name: 'engine_forkchoiceUpdatedV2/V3',
     direction: 'CL → EL',
-    desc: '포크 초이스 상태를 업데이트하고, 블록 빌딩을 시작하도록 요청합니다.',
+    desc: '포크 초이스 상태 업데이트 + 블록 빌딩 시작 요청',
     response: 'ForkchoiceState + PayloadAttributes (optional)',
   },
   {
     name: 'engine_getPayloadV3/V4/V5',
     direction: 'CL ← EL',
-    desc: 'EL이 구성한 실행 페이로드를 CL이 수신하여 블록에 포함합니다.',
+    desc: 'EL이 구성한 실행 페이로드를 CL이 수신 → 블록에 포함',
     response: 'ExecutionPayload + BlobsBundle + BlockValue',
   },
 ];
@@ -30,9 +30,9 @@ export default function EngineApi() {
       <h2 className="text-2xl font-bold mb-6">Engine API 통신</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          EL과 CL은 <strong>Engine API</strong>(JSON-RPC + JWT 인증)로 통신합니다.
-          CL이 주도적으로 호출하며, EL은 요청에 응답하는 구조입니다.
-          각 메서드를 클릭하면 상세 설명을 볼 수 있습니다.
+          EL/CL — <strong>Engine API</strong>(JSON-RPC + JWT 인증)로 통신.
+          CL이 주도적으로 호출, EL은 요청에 응답하는 구조.
+          각 메서드 클릭 시 상세 설명 표시
         </p>
       </div>
 
@@ -50,7 +50,7 @@ export default function EngineApi() {
           >
             <div className="flex items-center justify-between">
               <code className="text-sm font-bold">{m.name}</code>
-              <span className="text-xs font-mono text-muted-foreground">{m.direction}</span>
+              <span className="text-xs font-mono text-foreground/75">{m.direction}</span>
             </div>
             {active === i && (
               <motion.div
@@ -58,7 +58,7 @@ export default function EngineApi() {
                 animate={{ opacity: 1 }}
                 className="mt-3 space-y-1"
               >
-                <p className="text-xs text-muted-foreground">{m.desc}</p>
+                <p className="text-xs text-foreground/75">{m.desc}</p>
                 <p className="text-xs">
                   <span className="font-semibold">Response:</span>{' '}
                   <code className="bg-accent px-1.5 py-0.5 rounded">{m.response}</code>

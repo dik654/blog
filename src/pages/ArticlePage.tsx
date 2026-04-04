@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
-import { Suspense, lazy, useMemo } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
+import { Suspense, lazy, useMemo, useEffect } from 'react';
 import { getArticle } from '@/content';
 import ArticleLayout from '@/components/ArticleLayout';
 
@@ -10,6 +10,21 @@ export default function ArticlePage() {
   }>();
 
   const result = getArticle(category ?? '', articleSlug ?? '');
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.slice(1);
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) { el.scrollIntoView({ behavior: 'smooth' }); return true; }
+      return false;
+    };
+    if (tryScroll()) return;
+    // lazy 로드 후 재시도
+    const timer = setTimeout(tryScroll, 500);
+    return () => clearTimeout(timer);
+  }, [hash, result]);
 
   const ArticleComponent = useMemo(() => {
     if (!result) return null;
@@ -21,7 +36,7 @@ export default function ArticlePage() {
   }
 
   return (
-    <ArticleLayout title={result.article.title} sections={result.article.sections}>
+    <ArticleLayout title={result.article.title}>
       <Suspense
         fallback={<p className="text-muted-foreground animate-pulse">로딩 중...</p>}
       >

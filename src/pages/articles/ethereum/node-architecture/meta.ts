@@ -43,4 +43,19 @@ export const nodeSections: Section[] = [
       { id: 'transaction-evm', title: '상태 루트 & 저장' },
     ],
   },
+  {
+    id: 'bls-crypto', title: 'BLS 암호학 (서명 & 집계)',
+    subsections: [
+      { id: 'bls-crypto', title: '제네릭 타입 아키텍처' },
+      { id: 'bls-crypto', title: '서명 & 집계 검증' },
+    ],
+  },
+  {
+    id: 'kzg-blob', title: 'KZG 커밋먼트 & Blob (EIP-4844)',
+    subsections: [
+      { id: 'kzg-blob', title: 'KzgCommitment & KzgProof' },
+      { id: 'kzg-blob', title: 'PeerDAS 프로토콜' },
+    ],
+  },
+  { id: 'ssz-types', title: 'SSZ 타입 시스템 & 직렬화' },
 ];

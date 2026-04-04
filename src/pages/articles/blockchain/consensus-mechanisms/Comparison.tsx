@@ -11,7 +11,7 @@ export default function Comparison() {
               <th className="py-3 px-4 text-left font-medium">PoS</th>
             </tr>
           </thead>
-          <tbody className="text-muted-foreground">
+          <tbody>
             <tr className="border-b">
               <td className="py-3 px-4 font-medium text-foreground">에너지 소비</td>
               <td className="py-3 px-4">높음</td>

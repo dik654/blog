@@ -38,8 +38,7 @@ export default function CategoryItem({
         >
           {cat.name}
         </Link>
-        <span className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">{cat.articles.length}</span>
+        <span className="flex items-center">
           <svg
             className={cn(
               'h-3.5 w-3.5 text-muted-foreground transition-transform duration-200',

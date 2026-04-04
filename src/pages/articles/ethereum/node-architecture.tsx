@@ -8,6 +8,9 @@ import BlockLifecycle from './node-architecture/BlockLifecycle';
 import AttestationFinality from './node-architecture/AttestationFinality';
 import SlashingMechanics from './node-architecture/SlashingMechanics';
 import TransactionEVM from './node-architecture/TransactionEVM';
+import BLSCrypto from './node-architecture/BLSCrypto';
+import KZGBlob from './node-architecture/KZGBlob';
+import SSZTypes from './node-architecture/SSZTypes';
 
 const t = (id: string) => nodeSections.find(s => s.id === id)?.title ?? id;
 
@@ -23,6 +26,9 @@ export default function NodeArchitecture() {
       <AttestationFinality title={t('attestation-finality')} />
       <SlashingMechanics title={t('slashing')} />
       <TransactionEVM title={t('transaction-evm')} />
+      <BLSCrypto title={t('bls-crypto')} />
+      <KZGBlob title={t('kzg-blob')} />
+      <SSZTypes title={t('ssz-types')} />
     </>
   );
 }

@@ -2,10 +2,12 @@ export type { Section, Article, Subcategory, Category } from './types';
 
 import ai from './ai';
 import blockchain from './blockchain';
-import ethereum from './ethereum';
-import ismsAml from './isms-aml';
+import crypto from './crypto';
+import p2p from './p2p';
+import gpu from './gpu';
+import tee from './tee';
 
-export const categories = [ai, blockchain, ethereum, ismsAml];
+export const categories = [ai, blockchain, crypto, p2p, gpu, tee];
 
 export function getCategoryBySlug(slug: string) {
   return categories.find((c) => c.slug === slug);

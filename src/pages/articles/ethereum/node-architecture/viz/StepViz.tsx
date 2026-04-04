@@ -14,7 +14,7 @@ export default function StepViz({ steps, children }: Props) {
   const body = typeof cur === 'string' ? undefined : cur.body;
 
   return (
-    <div className="not-prose rounded-xl border bg-muted/20 p-5 mb-6">
+    <div className="not-prose rounded-xl border p-5 mb-6">
       <div className="flex gap-1.5 mb-5">
         {steps.map((_, i) => (
           <div key={i} onClick={() => setStep(i)}
@@ -27,7 +27,7 @@ export default function StepViz({ steps, children }: Props) {
       <div className="mt-4 px-2">
         <p className="text-sm font-semibold text-foreground text-center leading-snug">{label}</p>
         {body && (
-          <p className="text-xs text-muted-foreground mt-3 leading-relaxed border-t border-border/50 pt-3">
+          <p className="text-xs text-foreground/75 mt-3 leading-relaxed border-t border-border/50 pt-3">
             {body}
           </p>
         )}
@@ -37,7 +37,7 @@ export default function StepViz({ steps, children }: Props) {
           className="px-4 py-1.5 text-xs rounded-lg border disabled:opacity-30 hover:bg-accent cursor-pointer transition-colors">
           ← 이전
         </button>
-        <span className="text-xs text-muted-foreground tabular-nums">{step + 1} / {steps.length}</span>
+        <span className="text-xs text-foreground/75 tabular-nums">{step + 1} / {steps.length}</span>
         <button onClick={() => setStep(s => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1}
           className="px-4 py-1.5 text-xs rounded-lg border disabled:opacity-30 hover:bg-accent cursor-pointer transition-colors">
           다음 →

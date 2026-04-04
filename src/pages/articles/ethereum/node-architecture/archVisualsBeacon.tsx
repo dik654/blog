@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+export { BeaconForkChoice, BeaconStore } from './archVisualsBeaconParts';
+
 // step 0: Gossipsub에서 블록 수신
 export function BeaconBlockReceive() {
   return (
     <div className="flex items-center gap-2 text-[10px]">
       <div className="rounded-lg border-2 border-blue-300 bg-blue-50/60 dark:bg-blue-950/20 px-2 py-1.5 text-center shrink-0 text-[9px]">
         <p className="font-bold">libp2p</p>
-        <p className="text-muted-foreground">Gossipsub</p>
+        <p className="">Gossipsub</p>
       </div>
       <motion.span className="text-emerald-500 shrink-0"
         animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 0.5 }}>→</motion.span>
       <div className="flex-1 rounded border border-emerald-300 bg-emerald-50/60 dark:bg-emerald-950/20 px-2 py-1.5 font-mono">
         <p className="text-[9px] text-emerald-700 dark:text-emerald-400 font-bold">SignedBeaconBlock</p>
-        <p className="text-[9px] text-muted-foreground">slot=47,291 · root=0xa3f2…</p>
+        <p className="text-[9px] text-foreground/75">slot=47,291 · root=0xa3f2…</p>
       </div>
     </div>
   );
@@ -34,7 +36,7 @@ export function BeaconProcessBlock() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="space-y-1 text-[10px]">
-      <p className="font-mono text-[9px] text-muted-foreground">process_block()</p>
+      <p className="font-mono text-[9px] text-foreground/75">process_block()</p>
       {checks.map((c, i) => (
         <div key={c.label} className={`flex items-start gap-2 rounded px-2 py-0.5 transition-all duration-300
           ${i < n ? 'text-foreground' : 'text-muted-foreground/40'}`}>
@@ -52,13 +54,13 @@ export function BeaconProcessBlock() {
 // step 2: engine_newPayloadV3 HTTP 요청
 export function BeaconNewPayload() {
   return (
-    <div className="rounded border bg-muted/40 px-3 py-2 font-mono text-[10px] space-y-0.5">
+    <div className="rounded border px-3 py-2 font-mono text-[10px] space-y-0.5">
       <div className="flex gap-2">
         <span className="text-blue-600 font-bold">POST</span>
-        <span className="text-muted-foreground">http://127.0.0.1:8551</span>
+        <span className="">http://127.0.0.1:8551</span>
       </div>
-      <p><span className="text-muted-foreground">method: </span><span className="text-emerald-600 font-bold">engine_newPayloadV3</span></p>
-      <p className="text-[9px] text-muted-foreground">params: [ExecutionPayload, versioned_hashes[], parent_beacon_root]</p>
+      <p><span className="">method: </span><span className="text-emerald-600 font-bold">engine_newPayloadV3</span></p>
+      <p className="text-[9px] text-foreground/75">params: [ExecutionPayload, versioned_hashes[], parent_beacon_root]</p>
     </div>
   );
 }
@@ -70,57 +72,11 @@ export function BeaconValidResponse() {
       <div className="rounded border border-emerald-300 bg-emerald-50/60 dark:bg-emerald-950/20 px-3 py-2">
         <div className="flex items-center gap-2">
           <span className="text-emerald-600 font-bold">VALID ✓</span>
-          <span className="text-muted-foreground text-[9px]">EL → CL 응답</span>
+          <span className="text-foreground/75 text-[9px]">EL → CL 응답</span>
         </div>
-        <p className="text-[9px] text-muted-foreground mt-0.5">stateRoot 일치 + EVM 실행 완료</p>
+        <p className="text-[9px] text-foreground/75 mt-0.5">stateRoot 일치 + EVM 실행 완료</p>
       </div>
-      <p className="text-[9px] text-muted-foreground">↓ fork_choice() 트리거</p>
-    </div>
-  );
-}
-
-// step 4: LMD-GHOST fork choice
-export function BeaconForkChoice() {
-  return (
-    <div className="space-y-1.5 text-[10px]">
-      <div className="flex items-center gap-1 font-mono text-[9px]">
-        <div className="rounded border-2 border-foreground/40 bg-card px-2 py-1 shrink-0">47289</div>
-        <span className="text-muted-foreground">─</span>
-        <div className="flex flex-col gap-1 flex-1">
-          <div className="flex items-center gap-1">
-            <div className="rounded border-2 border-emerald-400 bg-emerald-50/60 dark:bg-emerald-950/20 px-2 py-1 font-bold">47291</div>
-            <div className="text-[8px] space-y-0.5">
-              <p className="text-emerald-600 font-bold font-sans">← HEAD 선택</p>
-              <p className="text-muted-foreground font-sans">어테스테이션 512개</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 opacity-30">
-            <div className="rounded border border-border px-2 py-1">47291'</div>
-            <div className="text-[8px] font-sans">
-              <p className="text-muted-foreground">어테스테이션 8개 → 탈락</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p className="text-[9px] text-muted-foreground">더 많은 검증자가 투표한 블록을 canonical head로 선택</p>
-    </div>
-  );
-}
-
-// step 5: 상태·블록 HotColdDB 기록
-export function BeaconStore() {
-  return (
-    <div className="flex items-center gap-2 text-[10px]">
-      <div className="space-y-1">
-        <div className="rounded border border-emerald-300 bg-emerald-50/60 dark:bg-emerald-950/20 px-2 py-1 font-mono text-[9px]">SignedBeaconBlock</div>
-        <div className="rounded border border-blue-300 bg-blue-50/60 dark:bg-blue-950/20 px-2 py-1 font-mono text-[9px]">BeaconState</div>
-      </div>
-      <motion.span className="text-emerald-500 text-sm"
-        animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 0.6 }}>→</motion.span>
-      <div className="rounded-lg border-2 border-purple-300 bg-purple-50/60 dark:bg-purple-950/20 px-3 py-2 text-center text-[9px]">
-        <p className="font-bold text-purple-700 dark:text-purple-400">Hot DB</p>
-        <p className="text-muted-foreground">LevelDB</p>
-      </div>
+      <p className="text-[9px] text-foreground/75">↓ fork_choice() 트리거</p>
     </div>
   );
 }

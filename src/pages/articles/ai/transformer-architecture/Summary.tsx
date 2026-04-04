@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import EncoderDecoderViz from './viz/EncoderDecoderViz';
 
 const points = [
   'Self-Attention으로 시퀀스 내 모든 토큰 간 관계 계산',
@@ -10,7 +11,8 @@ const points = [
 export default function Summary() {
   return (
     <section id="summary">
-      <h2 className="text-2xl font-semibold mb-4 scroll-mt-20">정리</h2>
+      <h2 className="text-2xl font-semibold mb-4 scroll-mt-20">전체 아키텍처 흐름</h2>
+      <EncoderDecoderViz />
       <div className="rounded-lg border p-4 space-y-3">
         {points.map((text, i) => (
           <motion.div
@@ -24,7 +26,7 @@ export default function Summary() {
             <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
               {i + 1}
             </span>
-            <p className="text-muted-foreground text-sm">{text}</p>
+            <p className="text-foreground/75 text-sm">{text}</p>
           </motion.div>
         ))}
       </div>

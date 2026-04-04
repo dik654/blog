@@ -1,0 +1,41 @@
+import { TABLE_DATA } from './ComparisonData';
+
+export default function Comparison() {
+  return (
+    <section id="comparison" className="mb-16 scroll-mt-20">
+      <h2 className="text-2xl font-bold mb-6">어떤 상황에서 어떤 함수를</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+        <ul>
+          <li><strong>이진 분류 출력층</strong> → Sigmoid (확률 해석)</li>
+          <li><strong>히든 레이어 기본</strong> → ReLU (속도 + 단순)</li>
+          <li><strong>Transformer</strong> → GELU / SwiGLU (최신 LLM 표준)</li>
+          <li><strong>RNN / LSTM</strong> → Tanh (게이트 구조에 적합)</li>
+          <li><strong>GAN</strong> → Leaky ReLU (안정적 학습)</li>
+        </ul>
+      </div>
+      <div className="not-prose overflow-x-auto rounded-xl border mb-6">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b bg-muted/30">
+              {['함수', '범위', '기울기', '장점', '단점', '사용처'].map(h => (
+                <th key={h} className="px-3 py-2 text-left font-semibold">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {TABLE_DATA.map((r, i) => (
+              <tr key={i} className="border-b last:border-0 hover:bg-muted/20">
+                <td className="px-3 py-2 font-medium">{r.name}</td>
+                <td className="px-3 py-2 font-mono">{r.range}</td>
+                <td className="px-3 py-2">{r.gradient}</td>
+                <td className="px-3 py-2">{r.pro}</td>
+                <td className="px-3 py-2">{r.con}</td>
+                <td className="px-3 py-2">{r.usage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}

@@ -1,10 +1,4 @@
-export interface FileNode {
-  name: string;
-  type: 'dir' | 'file';
-  path?: string;     // full path — matches CodeRef.path for files
-  codeKey?: string;  // key in codeRefs → makes file clickable
-  children?: FileNode[];
-}
+import type { FileNode } from '@/components/code/types';
 
 const f = (name: string, path: string, codeKey?: string): FileNode =>
   ({ name, type: 'file', path, codeKey });

@@ -1,65 +1,22 @@
 import { motion } from 'framer-motion';
-import StepViz from '../../../../../components/ui/step-viz';
+import StepViz from '@/components/ui/step-viz';
+import { C, STEPS, ACTORS } from './PBFTFlowVizData';
 
-/* PBFT 3-phase 메시지 흐름 애니메이션 */
+const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.4 };
+const TOP = 20, LIFE_START = 58;
 
-const C = { P: '#6366f1', S: '#0ea5e9', A: '#f59e0b', G: '#10b981' };
-
-const STEPS = [
-  { label: 'Client → Primary: Request 전송', body: 'Client가 Primary(Replica 0)에게 요청을 보냅니다. Primary만이 Pre-Prepare를 시작할 수 있습니다.' },
-  { label: 'Phase 1: Pre-Prepare (Primary → All)', body: 'Primary가 시퀀스 번호를 부여하고 모든 Replica에게 Pre-Prepare 메시지를 브로드캐스트합니다.' },
-  { label: 'Phase 2: Prepare (All ↔ All)', body: '각 Replica가 다른 모든 Replica에게 Prepare 메시지를 전송합니다. O(n²) 메시지. 2f+1 Prepare를 수집하면 "prepared" 상태.' },
-  { label: 'Phase 3: Commit (All ↔ All)', body: '2f+1 Commit 메시지를 수집하면 "committed" 상태. 이 시점에서 Safety가 보장됩니다.' },
-  { label: 'Reply: 모든 Replica → Client', body: 'Client는 f+1개의 동일한 Reply를 받으면 결과를 수용합니다. 총 5 message delays.' },
-];
-
-const NODES = [
-  { x: 65,  y: 30, label: 'C', sub: 'Client', color: C.A },
-  { x: 190, y: 30, label: 'R0', sub: 'Primary', color: C.P },
-  { x: 190, y: 100, label: 'R1', sub: 'Backup', color: C.S },
-  { x: 190, y: 170, label: 'R2', sub: 'Backup', color: C.S },
-  { x: 190, y: 240, label: 'R3', sub: 'Backup', color: C.S },
-];
-
-function Node({ x, y, label, sub, color, dim }: { x: number; y: number; label: string; sub: string; color: string; dim?: boolean }) {
-  return (
-    <g opacity={dim ? 0.3 : 1}>
-      <circle cx={x} cy={y} r={18} fill={`${color}22`} stroke={color} strokeWidth={1.5} />
-      <text x={x} y={y + 1} textAnchor="middle" fontSize={10} fontWeight="700" fill={color}>{label}</text>
-      <text x={x} y={y + 30} textAnchor="middle" fontSize={7} fill="hsl(var(--muted-foreground))">{sub}</text>
-    </g>
-  );
-}
-
-function Arrow({ x1, y1, x2, y2, color, show, delay = 0 }: {
-  x1: number; y1: number; x2: number; y2: number; color: string; show: boolean; delay?: number;
+function Msg({ x1, x2, y, label, color, delay = 0 }: {
+  x1: number; x2: number; y: number; label?: string; color: string; delay?: number;
 }) {
+  const mx = (x1 + x2) / 2;
   return (
-    <motion.line
-      x1={x1} y1={y1} x2={x2} y2={y2}
-      stroke={color} strokeWidth={1.5}
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={show ? { pathLength: 1, opacity: 0.7 } : { pathLength: 0, opacity: 0 }}
-      transition={{ duration: 0.4, delay }}
-    />
-  );
-}
-
-function Broadcast({ fromIdx, toIndices, color, show, step }: {
-  fromIdx: number; toIndices: number[]; color: string; show: boolean; step: number;
-}) {
-  const from = NODES[fromIdx];
-  return (
-    <>
-      {toIndices.map((ti, i) => {
-        const to = NODES[ti];
-        return (
-          <Arrow key={`${step}-${fromIdx}-${ti}`}
-            x1={from.x + 18} y1={from.y} x2={to.x - 18} y2={to.y}
-            color={color} show={show} delay={i * 0.08} />
-        );
-      })}
-    </>
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} transition={{ ...sp, delay }}>
+      <line x1={x1} y1={y} x2={x2} y2={y} stroke={color} strokeWidth={1.5} markerEnd="url(#pf-arr)" />
+      {label && (<>
+        <rect x={mx - 32} y={y - 13} width={64} height={15} rx={3} fill="var(--card)" />
+        <text x={mx} y={y - 3} textAnchor="middle" fontSize={10} fill={color}>{label}</text>
+      </>)}
+    </motion.g>
   );
 }
 
@@ -67,63 +24,67 @@ export default function PBFTFlowViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 340 270" className="w-full max-w-[380px]" style={{ height: 'auto' }}>
-          {/* Phase labels */}
-          {step >= 1 && step <= 3 && (
-            <motion.text x={290} y={135} textAnchor="middle" fontSize={9} fontWeight="600"
-              fill={step === 1 ? C.P : step === 2 ? C.S : C.G}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              {step === 1 ? 'Pre-Prepare' : step === 2 ? 'Prepare' : 'Commit'}
-            </motion.text>
-          )}
-
-          {/* Complexity badge */}
-          {step === 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-              <rect x={260} y={148} width={65} height={20} rx={4} fill="#ef444422" stroke="#ef4444" strokeWidth={1} />
-              <text x={292} y={162} textAnchor="middle" fontSize={8} fontWeight="700" fill="#ef4444">O(n²)</text>
+        <svg viewBox="0 0 460 250" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <defs>
+            <marker id="pf-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6" fill="var(--muted-foreground)" />
+            </marker>
+          </defs>
+          {ACTORS.map((a) => (
+            <line key={`l-${a.label}`} x1={a.x} y1={LIFE_START} x2={a.x} y2={240}
+              stroke={a.color} strokeWidth={0.5} strokeDasharray="3 3" opacity={0.2} />
+          ))}
+          {step >= 0 && <Msg x1={42} x2={128} y={75} label="Request" color={C.A} />}
+          {step >= 1 && (
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} transition={sp}>
+              <line x1={132} y1={100} x2={218} y2={100} stroke={C.P} strokeWidth={1.5} markerEnd="url(#pf-arr)" />
+              <line x1={132} y1={100} x2={308} y2={106} stroke={C.P} strokeWidth={1.5} markerEnd="url(#pf-arr)" />
+              <line x1={132} y1={100} x2={398} y2={112} stroke={C.P} strokeWidth={1.5} markerEnd="url(#pf-arr)" />
+              <rect x={145} y={87} width={80} height={15} rx={3} fill="var(--card)" />
+              <text x={185} y={97} textAnchor="middle" fontSize={10} fill={C.P}>Pre-Prepare</text>
             </motion.g>
           )}
-
-          {/* Nodes */}
-          {NODES.map((n, i) => <Node key={i} {...n} />)}
-
-          {/* Step 0: Client → Primary */}
-          <Arrow x1={83} y1={30} x2={172} y2={30} color={C.A} show={step >= 0} />
-
-          {/* Step 1: Pre-Prepare (Primary → Backups) */}
-          {step >= 1 && (
-            <Broadcast fromIdx={1} toIndices={[2, 3, 4]} color={C.P} show={step >= 1} step={1} />
+          {step >= 2 && (
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={sp}>
+              <rect x={125} y={125} width={280} height={30} rx={5}
+                fill={`${C.S}08`} stroke={C.S} strokeWidth={0.8} strokeDasharray="4 2" />
+              <text x={265} y={144} textAnchor="middle" fontSize={11} fontWeight={600} fill={C.S}>
+                Prepare: All ↔ All
+              </text>
+              <rect x={375} y={126} width={36} height={16} rx={3}
+                fill="#ef444420" stroke="#ef4444" strokeWidth={0.8} />
+              <text x={393} y={137} textAnchor="middle" fontSize={10} fontWeight={700} fill="#ef4444">O(n²)</text>
+            </motion.g>
           )}
-
-          {/* Step 2: Prepare (All-to-All) */}
-          {step >= 2 && [2, 3, 4].map((from, fi) =>
-            [1, 2, 3, 4].filter(t => t !== from).map((to, ti) => (
-              <Arrow key={`p-${from}-${to}`}
-                x1={NODES[from].x + (to < from ? -18 : to === from ? 0 : 18)}
-                y1={NODES[from].y}
-                x2={NODES[to].x + (from < to ? -18 : from === to ? 0 : 18)}
-                y2={NODES[to].y}
-                color={C.S} show={step >= 2} delay={fi * 0.1 + ti * 0.05} />
-            ))
+          {step >= 3 && (
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={sp}>
+              <rect x={125} y={165} width={280} height={30} rx={5}
+                fill={`${C.G}08`} stroke={C.G} strokeWidth={0.8} strokeDasharray="4 2" />
+              <text x={265} y={184} textAnchor="middle" fontSize={11} fontWeight={600} fill={C.G}>
+                Commit: All ↔ All
+              </text>
+            </motion.g>
           )}
-
-          {/* Step 3: Commit — same pattern, green */}
-          {step >= 3 && [1, 2, 3, 4].map((from, fi) =>
-            [1, 2, 3, 4].filter(t => t !== from).map((to, ti) => (
-              <Arrow key={`c-${from}-${to}`}
-                x1={NODES[from].x + 20} y1={NODES[from].y}
-                x2={NODES[to].x + 20} y2={NODES[to].y}
-                color={C.G} show={step >= 3} delay={fi * 0.1 + ti * 0.05} />
-            ))
+          {step >= 4 && (
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={sp}>
+              <line x1={128} y1={210} x2={42} y2={210} stroke={C.G} strokeWidth={1.5} markerEnd="url(#pf-arr)" />
+              <line x1={218} y1={214} x2={42} y2={214} stroke={C.G} strokeWidth={1.2} opacity={0.6} markerEnd="url(#pf-arr)" />
+              <line x1={308} y1={218} x2={42} y2={218} stroke={C.G} strokeWidth={1.2} opacity={0.6} markerEnd="url(#pf-arr)" />
+              <line x1={398} y1={222} x2={42} y2={222} stroke={C.G} strokeWidth={1.2} opacity={0.6} markerEnd="url(#pf-arr)" />
+              <rect x={155} y={201} width={46} height={15} rx={3} fill="var(--card)" />
+              <text x={178} y={211} textAnchor="middle" fontSize={10} fill={C.G}>Reply</text>
+            </motion.g>
           )}
-
-          {/* Step 4: Reply → Client */}
-          {step >= 4 && [1, 2, 3, 4].map((from, i) => (
-            <Arrow key={`r-${from}`}
-              x1={NODES[from].x - 18} y1={NODES[from].y}
-              x2={83} y2={30}
-              color={C.G} show delay={i * 0.1} />
+          {ACTORS.map((a) => (
+            <g key={a.label}>
+              <circle cx={a.x} cy={TOP + 12} r={16} fill="var(--card)" stroke={a.color} strokeWidth={1.5} />
+              <text x={a.x} y={TOP + 16} textAnchor="middle" fontSize={11} fontWeight={700} fill={a.color}>
+                {a.label}
+              </text>
+              <text x={a.x} y={TOP + 34} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
+                {a.sub}
+              </text>
+            </g>
           ))}
         </svg>
       )}
