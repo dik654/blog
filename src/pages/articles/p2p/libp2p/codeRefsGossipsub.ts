@@ -90,7 +90,7 @@ export const gossipsubCodeRefs: Record<string, CodeRef> = {
 }`,
     annotations: [
       { lines: [6, 8], color: 'sky', note: '백오프·IHAVE 카운터 정리' },
-      { lines: [9], color: 'emerald', note: 'IWANT 약속 미이행 피어에 페널티' },
+      { lines: [9, 9], color: 'emerald', note: 'IWANT 약속 미이행 피어에 페널티' },
       { lines: [12, 32], color: 'amber', note: '메시 유지보수: 음수 스코어 제거 → 부족하면 랜덤 추가' },
     ],
   },

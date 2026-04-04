@@ -4,7 +4,7 @@ export const cosmosRefs: Record<string, CodeRef> = {
   'mini-precompile': {
     path: 'minievm/x/evm/precompiles/cosmos/contract.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 38],
     desc: 'CosmosPrecompile — EVM에서 Cosmos 기능 호출. IBC, 쿼리, 주소 변환.',
     code: `// x/evm/precompiles/cosmos/contract.go

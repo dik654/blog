@@ -1,6 +1,6 @@
 import EthCallViz from './viz/EthCallViz';
 import CodePanel from '@/components/ui/code-panel';
-import { evmCode, evmAnnotations } from './codeRefs';
+import { codeRefs } from './codeRefs';
 
 export default function EthCall() {
   return (
@@ -24,7 +24,7 @@ export default function EthCall() {
       </div>
       <div className="not-prose mb-6"><EthCallViz /></div>
       <CodePanel title="evm.rs — ProofDB → revm 실행"
-        code={evmCode} annotations={evmAnnotations} />
+        code={codeRefs['hl-evm-call'].code} annotations={codeRefs['hl-evm-call'].annotations} />
     </section>
   );
 }

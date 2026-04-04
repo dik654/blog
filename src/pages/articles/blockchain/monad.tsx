@@ -22,6 +22,7 @@ export default function MonadArticle() {
         onClose={sidebar.close}
         onNavigate={sidebar.navigate}
         codeRefs={codeRefs}
+        fileTrees={{}}
       />
     </>
   );

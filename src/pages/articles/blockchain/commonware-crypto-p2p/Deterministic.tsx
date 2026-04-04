@@ -14,7 +14,7 @@ export default function Deterministic({ onCodeRef }: Props) {
         <p className="leading-7">
           <strong>p2p::simulated</strong> — 실제 네트워크 없이 가상 환경에서 전체 프로토콜 테스트
           <br />
-          Link { latency, jitter, success_rate }로 현실적 네트워크 모델링
+          Link &#123; latency, jitter, success_rate &#125;로 현실적 네트워크 모델링
           <br />
           progressive filling — max-min 공정 대역폭 할당
         </p>

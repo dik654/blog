@@ -4,7 +4,7 @@ export const contextRefs: Record<string, CodeRef> = {
   'mini-create-evm': {
     path: 'minievm/x/evm/keeper/context.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 30],
     desc: 'CreateEVM — EVM 인스턴스 생성. BlockContext + StateDB + Precompile 조립.',
     code: `// x/evm/keeper/context.go — EVM 인스턴스 생성
@@ -50,7 +50,7 @@ func (k Keeper) CreateEVM(ctx context.Context, caller common.Address,
   'mini-evm-call': {
     path: 'minievm/x/evm/keeper/context.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 34],
     desc: 'EVMCall — EVM 컨트랙트 호출 실행 + 상태 커밋 + 이벤트 발행.',
     code: `// x/evm/keeper/context.go — EVMCall 실행

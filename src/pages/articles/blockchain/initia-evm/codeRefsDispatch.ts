@@ -4,7 +4,7 @@ export const dispatchRefs: Record<string, CodeRef> = {
   'mini-dispatch': {
     path: 'minievm/x/evm/keeper/context.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 28],
     desc: 'dispatchMessage — EVM에서 큐잉된 Cosmos 메시지 실행 + 콜백.',
     code: `// x/evm/keeper/context.go — Cosmos 메시지 디스패치

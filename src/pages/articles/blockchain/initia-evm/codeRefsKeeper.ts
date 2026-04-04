@@ -4,7 +4,7 @@ export const keeperRefs: Record<string, CodeRef> = {
   'mini-keeper': {
     path: 'minievm/x/evm/keeper/keeper.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 30],
     desc: 'EVM Keeper — Cosmos 모듈과 EVM을 연결하는 핵심 구조체.',
     code: `// x/evm/keeper/keeper.go — Keeper 구조체 정의
@@ -49,7 +49,7 @@ type Keeper struct {
   'mini-msg-server': {
     path: 'minievm/x/evm/keeper/msg_server.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 32],
     desc: 'MsgServer — Cosmos TX를 EVM 호출로 변환. Call / Create / Create2.',
     code: `// x/evm/keeper/msg_server.go — MsgServer 구현

@@ -76,7 +76,7 @@ where
     }
 }`,
     annotations: [
-      { lines: [5], color: 'sky', note: '최대 256개 인바운드 스트림 버퍼' },
+      { lines: [5, 5], color: 'sky', note: '최대 256개 인바운드 스트림 버퍼' },
       { lines: [21, 32], color: 'emerald', note: '버퍼 먼저, 없으면 내부 폴링' },
       { lines: [34, 47], color: 'amber', note: 'poll_outbound — 새 아웃바운드 스트림 생성' },
       { lines: [49, 68], color: 'violet', note: '인바운드 스트림 버퍼링 + waker 관리' },

@@ -40,7 +40,7 @@ function Step1() {
     <text x={20} y={44} fontSize={10} fill={C.cons}>Line 1: msg := MustUnmarshal(bz)  // ProposalMessage | VoteMessage</text>
     <motion.text x={20} y={64} fontSize={10} fill={C.cons}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-      Line 2: cs.handleMsg(msgInfo{'{'}Msg: msg, PeerID: src.ID(){'}'})</text>
+      {'Line 2: cs.handleMsg(msgInfo{Msg: msg, PeerID: src.ID()})'}
     </motion.text>
     <motion.text x={20} y={84} fontSize={10} fill="var(--muted-foreground)"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>

@@ -31,10 +31,10 @@ export const gossipsubCodeRefs2: Record<string, CodeRef> = {
     failed_messages: HashMap<PeerId, FailedMessages>,
 }`,
     annotations: [
-      { lines: [12], color: 'sky', note: '토픽별 메시 피어 관리' },
-      { lines: [14], color: 'emerald', note: 'fanout — 구독 없이 발행만 하는 토픽의 피어' },
-      { lines: [18], color: 'amber', note: '최근 메시지 캐시 — IHAVE/IWANT 교환에 사용' },
-      { lines: [20], color: 'violet', note: '피어 스코어링 시스템' },
+      { lines: [12, 12], color: 'sky', note: '토픽별 메시 피어 관리' },
+      { lines: [14, 14], color: 'emerald', note: 'fanout — 구독 없이 발행만 하는 토픽의 피어' },
+      { lines: [18, 18], color: 'amber', note: '최근 메시지 캐시 — IHAVE/IWANT 교환에 사용' },
+      { lines: [20, 20], color: 'violet', note: '피어 스코어링 시스템' },
     ],
   },
 

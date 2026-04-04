@@ -12,7 +12,7 @@ export default function Groth16Verify({ onCodeRef }: { onCodeRef: (key: string, 
           Prover는 오프체인에서 witness를 R1CS → QAP로 변환한 뒤, 증명(A, B, C)을 생성한다.
           <br />
           증명 크기는 192 bytes. 검증 시간은 일정하다(O(1)).
-          <CodeViewButton codeKey="rg-verifier" codeRef={codeRefs['rg-verifier']} onClick={onCodeRef} />
+          <CodeViewButton onClick={() => onCodeRef('rg-verifier', codeRefs['rg-verifier'])} />
         </p>
         <p className="leading-7">
           Verifier는 온체인에서 페어링 검증을 수행한다.

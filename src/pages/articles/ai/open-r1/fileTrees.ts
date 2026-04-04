@@ -1,15 +1,17 @@
-import type { FileTreeNode } from '@/components/code/types';
+import type { FileNode } from '@/components/code/types';
 
-export const openR1Tree: FileTreeNode = {
+export const openR1Tree: FileNode = {
   name: 'open-r1',
+  type: 'dir',
   children: [
     {
       name: 'src/open_r1',
+      type: 'dir',
       children: [
-        { name: 'sft.py' },
-        { name: 'grpo.py' },
-        { name: 'rewards.py' },
-        { name: 'generate.py' },
+        { name: 'sft.py', type: 'file' },
+        { name: 'grpo.py', type: 'file' },
+        { name: 'rewards.py', type: 'file' },
+        { name: 'generate.py', type: 'file' },
       ],
     },
   ],

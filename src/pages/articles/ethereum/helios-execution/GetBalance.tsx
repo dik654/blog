@@ -1,6 +1,6 @@
 import GetBalanceViz from './viz/GetBalanceViz';
 import CodePanel from '@/components/ui/code-panel';
-import { rpcCode, rpcAnnotations } from './codeRefs';
+import { codeRefs } from './codeRefs';
 
 export default function GetBalance() {
   return (
@@ -24,7 +24,7 @@ export default function GetBalance() {
       </div>
       <div className="not-prose mb-6"><GetBalanceViz /></div>
       <CodePanel title="rpc.rs — get_balance()"
-        code={rpcCode} annotations={rpcAnnotations} />
+        code={codeRefs['hl-evm-call'].code} annotations={codeRefs['hl-evm-call'].annotations} />
     </section>
   );
 }

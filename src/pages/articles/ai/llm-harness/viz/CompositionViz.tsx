@@ -46,7 +46,7 @@ export default function CompositionViz() {
             fill={PIPELINE[Math.min(step, PIPELINE.length - 1)].color}
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}>
-            {step < 5 ? STEPS[step].label : ''}
+            {step < 5 ? (typeof STEPS[step] === 'string' ? STEPS[step] : STEPS[step].label) : ''}
           </motion.text>
 
           {/* step 4: retry arrow (fallback) */}

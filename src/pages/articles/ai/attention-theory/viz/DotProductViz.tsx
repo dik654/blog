@@ -20,9 +20,9 @@ export default function DotProductViz() {
         <svg viewBox="0 0 460 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {step === 0 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <VB x={20} y={26} label="s (decoder)" vec={S_VEC} c={C.dot} />
+              <VB x={20} y={26} l="s (decoder)" v={S_VEC} c={C.dot} />
               <text x={100} y={45} fontSize={14} fill={C.dot}>·</text>
-              <VB x={118} y={26} label="h (encoder)" vec={H_VEC} c={C.dot} />
+              <VB x={118} y={26} l="h (encoder)" v={H_VEC} c={C.dot} />
               <text x={198} y={45} fontSize={14} fill={C.dot}>=</text>
               <rect x={212} y={22} width={200} height={44} rx={6}
                 fill={C.dot + '10'} stroke={C.dot} strokeWidth={1.5} />

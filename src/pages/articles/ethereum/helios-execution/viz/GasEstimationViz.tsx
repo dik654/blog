@@ -20,7 +20,7 @@ export default function GasEstimationViz() {
               <g>
                 <rect x={120} y={45} width={240} height={40} rx={8} fill={C.est + '15'} stroke={C.est} strokeWidth={1.5} />
                 <text x={240} y={62} textAnchor="middle" fontSize={11} fontWeight={600} fill={C.est}>eth_estimateGas</text>
-                <text x={240} y={77} textAnchor="middle" fontSize={10} fill={C.est} fillOpacity={0.6}>CallRequest { to, data, value }</text>
+                <text x={240} y={77} textAnchor="middle" fontSize={10} fill={C.est} fillOpacity={0.6}>{'CallRequest { to, data, value }'}</text>
               </g>
             )}
             {step === 1 && (

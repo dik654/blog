@@ -20,6 +20,7 @@ export default function SuiArticle() {
         onClose={sidebar.close}
         onNavigate={sidebar.navigate}
         codeRefs={codeRefs}
+        fileTrees={{}}
       />
     </>
   );

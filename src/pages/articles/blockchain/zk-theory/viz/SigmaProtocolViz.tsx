@@ -1,4 +1,5 @@
-import { motion, type ReactNode } from 'framer-motion';
+import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 import StepViz from '@/components/ui/step-viz';
 
 const C1 = '#6366f1', C2 = '#10b981', C3 = '#f59e0b';

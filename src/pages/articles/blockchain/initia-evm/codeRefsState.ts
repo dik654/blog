@@ -4,7 +4,7 @@ export const stateRefs: Record<string, CodeRef> = {
   'mini-statedb': {
     path: 'minievm/x/evm/state/statedb.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 36],
     desc: 'StateDB — go-ethereum vm.StateDB를 Cosmos KVStore로 구현.',
     code: `// x/evm/state/statedb.go — StateDB 구조체

@@ -12,7 +12,7 @@ export default function Unshield({ onCodeRef }: { onCodeRef: (key: string, ref: 
           <code>unshield()</code>는 shielded 잔액을 일반 ERC-20으로 출금하는 함수다.
           <br />
           ZK 증명으로 Note 소유권을 입증한 뒤, ERC-20 transfer로 토큰을 전송한다.
-          <CodeViewButton codeKey="rg-unshield" codeRef={codeRefs['rg-unshield']} onClick={onCodeRef} />
+          <CodeViewButton onClick={() => onCodeRef('rg-unshield', codeRefs['rg-unshield'])} />
         </p>
         <p className="leading-7">
           출금 시점에 수신 주소(to)와 금액(amount)이 공개된다.

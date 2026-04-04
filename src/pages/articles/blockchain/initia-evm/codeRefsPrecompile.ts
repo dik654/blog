@@ -4,7 +4,7 @@ export const precompileRefs: Record<string, CodeRef> = {
   'mini-precompile-reg': {
     path: 'minievm/x/evm/keeper/precompiles.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 22],
     desc: 'precompiles — 3개 커스텀 프리컴파일 등록 + 이더리움 기본 세트.',
     code: `// x/evm/keeper/precompiles.go — 프리컴파일 등록
@@ -42,7 +42,7 @@ func (k *Keeper) precompiles(rules params.Rules, stateDB types.StateDB,
   'mini-execute-cosmos': {
     path: 'minievm/x/evm/precompiles/cosmos/contract.go',
     lang: 'go',
-    project: 'minievm',
+
     highlight: [1, 30],
     desc: 'execute_cosmos — EVM 컨트랙트에서 Cosmos 메시지 실행.',
     code: `// x/evm/precompiles/cosmos/contract.go — execute_cosmos 처리

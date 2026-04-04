@@ -31,7 +31,7 @@ export default function RailgunArticle() {
         codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef}
         onClose={sidebar.close} onNavigate={sidebar.navigate}
         codeRefs={codeRefs}
-        fileTrees={{ railgun: railgunTree }}
+        fileTrees={{ railgun: { name: 'railgun', type: 'dir' as const, children: railgunTree } }}
         projectMetas={{
           railgun: { id: 'railgun', label: 'RAILGUN · Solidity', badgeClass: 'bg-purple-500/10 border-purple-500 text-purple-700' },
         }}

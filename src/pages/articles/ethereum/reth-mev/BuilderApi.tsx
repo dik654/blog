@@ -57,7 +57,7 @@ export default function BuilderApi({ onCodeRef }: { onCodeRef: (key: string, ref
             exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}
             className="not-prose rounded-lg border border-border/60 bg-background/60 px-5 py-4 mb-6 overflow-hidden">
             <p className="font-semibold text-sm mb-2" style={{ color: sel.color }}>Step {sel.step}: {sel.title}</p>
-            <p className="text-sm text-foreground/80 leading-relaxed">{sel.details}</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">{sel.desc}</p>
           </motion.div>
         )}
       </AnimatePresence>

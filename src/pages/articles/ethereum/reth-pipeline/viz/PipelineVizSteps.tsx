@@ -77,7 +77,7 @@ export function StepBodies() {
         <text x={x + 60} y={30} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">TxRoot: 0x8f2a...</text>
         {/* 대조 기호 */}
         <motion.text x={x + 60} y={46} textAnchor="middle" fontSize={11}
-          fill={C.ok} initial={{ scale: 0 }} animate={{ scale: 1 }}
+          fill={C.done} initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ delay: i * 0.2 + 0.5, type: 'spring' }}>
           ==
         </motion.text>
@@ -89,7 +89,7 @@ export function StepBodies() {
             fill={`${C.body}10`} stroke={C.body} strokeWidth={0.6} />
           <text x={x + 60} y={65} textAnchor="middle" fontSize={10} fill={C.body}>Body: TX₀ TX₁ TX₂</text>
           <text x={x + 60} y={77} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">DeriveSha: 0x8f2a...</text>
-          <motion.text x={x + 60} y={100} textAnchor="middle" fontSize={11} fill={C.ok}
+          <motion.text x={x + 60} y={100} textAnchor="middle" fontSize={11} fill={C.done}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: i * 0.2 + 0.7 }}>✓ 일치</motion.text>
         </motion.g>

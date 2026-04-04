@@ -14,7 +14,7 @@ export default function CoTViz() {
           {COT_ROWS.map((row, i) => {
             const y = 25 + i * 48;
             const active = step === i;
-            const fillW = (row.value / 100) * BAR_W;
+            const fillW = (row.accuracy / 100) * BAR_W;
             return (
               <motion.g key={row.label}
                 animate={{ opacity: active ? 1 : step > i ? 0.5 : 0.25 }}
@@ -40,7 +40,7 @@ export default function CoTViz() {
                   <motion.text x={BAR_X + fillW + 8} y={y + 18}
                     fontSize={10} fontWeight={700} fill={row.color}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    {row.value}%
+                    {row.accuracy}%
                   </motion.text>
                 )}
               </motion.g>

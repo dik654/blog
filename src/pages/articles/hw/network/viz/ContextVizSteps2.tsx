@@ -24,7 +24,7 @@ export function StepRDMA() {
 
 export function StepUseCase() {
   const lines = [
-    { line: '// 워크로드별 네트워크 요구량', c: C.ok, y: 38 },
+    { line: '// 워크로드별 네트워크 요구량', c: '#10b981', y: 38 },
     { line: '블록체인 노드: ~100KB/block → 10G 충분', c: C.eth, y: 58 },
     { line: 'GPU 클러스터:  ~1GB/iter → InfiniBand 필수', c: C.ib, y: 78 },
     { line: 'NVLink:       900 GB/s (GPU 직결, 서버 내부)', c: C.ib, y: 98 },

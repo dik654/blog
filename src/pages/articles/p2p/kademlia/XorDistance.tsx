@@ -51,7 +51,7 @@ func LogDist(a, b ID) int {
 }`} annotations={[
           { lines: [7, 10], color: 'sky', note: '8바이트(64비트)씩 XOR. 같으면 선행0 += 64' },
           { lines: [11, 13], color: 'emerald', note: '차이 발견 시 LeadingZeros64로 정확한 위치' },
-          { lines: [16], color: 'amber', note: '결과: 256 - 공유 프리픽스 길이' },
+          { lines: [16, 16], color: 'amber', note: '결과: 256 - 공유 프리픽스 길이' },
         ]} />
 
         <h3>DistCmp: 거리 비교</h3>

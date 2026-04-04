@@ -12,7 +12,7 @@ export default function Transact({ onCodeRef }: { onCodeRef: (key: string, ref: 
           <code>transact()</code>는 shielded 잔액끼리 전송하는 핵심 함수다.
           <br />
           Alice의 Note를 소비하고, Bob의 새 Note를 생성한다. 전 과정이 ZK 증명으로 보호된다.
-          <CodeViewButton codeKey="rg-transact" codeRef={codeRefs['rg-transact']} onClick={onCodeRef} />
+          <CodeViewButton onClick={() => onCodeRef('rg-transact', codeRefs['rg-transact'])} />
         </p>
         <p className="leading-7">
           내부 흐름: verifyProof → nullifier 기록 → commitment 삽입 → 이벤트 발행.

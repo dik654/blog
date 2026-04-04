@@ -17,7 +17,7 @@ export default function Shield({ onCodeRef }: { onCodeRef: (key: string, ref: Co
           내부 동작은 4단계다. transferFrom → hashCommitment → insertLeaf → emit Shield.
           <br />
           각 단계에서 실제 변수값과 상태 변화를 추적한다.
-          <CodeViewButton codeKey="rg-shield" codeRef={codeRefs['rg-shield']} onClick={onCodeRef} />
+          <CodeViewButton onClick={() => onCodeRef('rg-shield', codeRefs['rg-shield'])} />
         </p>
       </div>
       <div className="not-prose"><ShieldViz /></div>
