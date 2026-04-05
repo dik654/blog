@@ -25,6 +25,45 @@ export default function VirtualRegion({ title }: { title?: string }) {
         </p>
         <CodePanel title="SinglePhaseCoreManager — 가상→물리 Chunking" code={MANAGER_CODE} annotations={managerAnnotations} />
         <CodePanel title="CopyConstraintManager — 전역 등가 제약" code={COPY_MANAGER_CODE} annotations={copyManagerAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Virtual vs Physical Region</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Halo2 two-layer model
+
+// Physical layer (circuit 최종 형태)
+// - Rectangular grid (columns × rows)
+// - Column 간 advice rotation (r_ω)
+// - Selector polynomials
+// - Proof가 실제 작동하는 영역
+
+// Virtual layer (개발자 API)
+// - Linear "context" (시퀀스)
+// - Abstract cell references
+// - Constraint just in order written
+// - Layout은 manager가 자동
+
+// halo2-lib의 Virtual Region
+ctx = Context::new();
+let a = ctx.load_witness(3);
+let b = ctx.load_witness(4);
+let sum = gate.add(&mut ctx, a, b);
+let product = gate.mul(&mut ctx, a, b);
+
+// 내부 동작
+// 1) Context에 cells 순차 저장
+// 2) Manager가 chunk 단위로 physical column에 배치
+// 3) CopyConstraint로 cell 연결
+// 4) 최종 synthesize 시 physical layout 확정
+
+// 장점
+// ✓ 개발자 생산성 증가
+// ✓ Column 수 자동 최적화
+// ✓ Constraint 재사용 최대화
+
+// 단점
+// ✗ Physical layout 제어 어려움
+// ✗ Performance tuning 제한
+// ✗ Debug 복잡도`}</pre>
+
       </div>
     </section>
   );

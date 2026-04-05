@@ -25,6 +25,90 @@ export default function ENSResolution({ onCodeRef: _onCodeRef }: Props) {
         </p>
       </div>
       <div className="not-prose"><ENSResolutionViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">ENS Architecture</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// ENS 2-layer system
+
+// 1) Registry contract
+// Address: 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
+// Maps: node (namehash) → resolver address
+//        + owner + TTL
+
+// 2) Resolver contract (per name)
+// Returns: ETH address, IPFS hash, other records
+// Each name can have custom resolver
+
+// Resolution flow
+// 1) Hash domain name
+node = namehash("vitalik.eth")
+
+// 2) Lookup resolver
+resolver = Registry.resolver(node)
+
+// 3) Query resolver
+address = Resolver.addr(node)
+
+// Namehash algorithm
+function namehash(name):
+    if name == "":
+        return 0x0000...0000 (32 zero bytes)
+
+    labels = name.split(".")
+    node = 0x0000...0000
+
+    for label in reversed(labels):
+        labelhash = keccak256(label)
+        node = keccak256(node || labelhash)
+
+    return node
+
+// Example: "vitalik.eth"
+// 1) labels = ["vitalik", "eth"]
+// 2) Reversed: ["eth", "vitalik"]
+// 3) node1 = keccak256(0x00...00 || keccak256("eth"))
+// 4) node2 = keccak256(node1 || keccak256("vitalik"))
+// 5) return node2`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Kohaku Verified ENS Resolution</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 일반 ENS 조회 (취약)
+async function resolveENS(name) {
+    // RPC에 위임 → 서버가 거짓말 가능
+    return provider.resolveName(name);
+}
+
+// Kohaku 검증된 ENS 조회
+async function resolveENSVerified(name) {
+    const node = namehash(name);
+
+    // 1) Registry.resolver(node)
+    const resolverAddr = await provider.call({
+        to: ENS_REGISTRY,
+        data: encode("resolver(bytes32)", [node]),
+    });
+
+    // 2) Helios가 state proof 검증
+    // - ENS_REGISTRY storage slot 증명
+    // - node → resolver mapping 확인
+
+    // 3) Resolver.addr(node)
+    const address = await provider.call({
+        to: resolverAddr,
+        data: encode("addr(bytes32)", [node]),
+    });
+
+    // 4) Helios가 resolver storage proof 검증
+    return address;
+}
+
+// 검증 보장
+// ✓ Registry mapping 무결성
+// ✓ Resolver storage 무결성
+// ✓ State root는 header에서 Helios가 검증
+// → 서버가 거짓말 못 함`}</pre>
+
+      </div>
     </section>
   );
 }

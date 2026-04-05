@@ -15,6 +15,56 @@ export default function Protocol({ onCodeRef }: { onCodeRef: (key: string, ref: 
           <CodeViewButton onClick={() => onCodeRef('pdp-main', codeRefs['pdp-main'])} />
           <span className="text-[10px] text-muted-foreground self-center">GenerateProof()</span>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">PDP Protocol 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// PDP Protocol:
+
+// Setup:
+// 1. Client splits data (160B chunks)
+// 2. SHA256 per chunk → leaf hashes
+// 3. Build Merkle tree
+// 4. Register root on-chain
+
+// Challenge:
+// 1. DRAND beacon → randomness
+// 2. offset = beacon mod data_size
+// 3. SP reads 160B at offset
+// 4. Generate Merkle proof
+
+// Proof structure:
+// - leaf_data: 160 bytes
+// - leaf_hash: 32 bytes
+// - merkle_path: ~20-30 × 32 bytes
+// - total: ~1 KB
+
+// Verification:
+// 1. SHA256(leaf_data) == leaf_hash
+// 2. replay Merkle path to root
+// 3. compare with registered root
+
+// Gas cost:
+// - ~20 SHA256 ops
+// - <1 MGas per verify
+// - vs PoSt: 100M+ gas
+
+// Frequency:
+// - configurable (per SLA)
+// - typical: hourly / per epoch
+// - statistical guarantee
+// - penalty on failure
+
+// 장점:
+// - cheap verify
+// - no SNARK
+// - industry standard (SHA256)
+// - fast generation`}
+        </pre>
+        <p className="leading-7">
+          PDP: <strong>DRAND challenge → SHA256 + Merkle → verify</strong>.<br />
+          &lt;1 MGas per verify (100x cheaper than PoSt).<br />
+          simple, fast, industry-standard crypto.
+        </p>
       </div>
     </section>
   );

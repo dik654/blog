@@ -23,6 +23,98 @@ export default function WasmRuntime({ onCodeRef }: { onCodeRef: (key: string, re
           <strong>💡 WASM의 장점</strong> — 언어 독립적. Rust, Go, AssemblyScript 등으로<br />
           Actor를 작성 가능. 샌드박스 실행으로 보안성이 높고 결정론적
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">WASM Runtime &amp; Actor Execution</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// FVM Message Execution Flow:
+
+// 1. Message arrival:
+// Message {
+//     to: Address
+//     from: Address
+//     method: MethodNum
+//     params: []byte
+//     gas_limit: uint64
+//     value: TokenAmount
+// }
+
+// 2. Validate:
+// - signature check
+// - nonce check
+// - gas check
+// - balance check
+
+// 3. Load target actor:
+// - lookup to address
+// - load actor state (Code CID)
+// - resolve code → WASM bytecode
+
+// 4. Instantiate WASM:
+// - wasmtime engine
+// - provide host functions (syscalls)
+// - set gas meter
+// - initialize memory
+
+// 5. Execute:
+// instance.invoke(method, params)
+// - runs WASM bytecode
+// - reads/writes via syscalls
+// - accumulates gas cost
+// - returns result or error
+
+// 6. Finalize:
+// - commit state changes if success
+// - rollback if error
+// - charge gas used
+// - refund unused gas
+
+// Syscalls (Host Functions):
+// - ipld_open(cid) → handle
+// - ipld_get(handle, offset) → bytes
+// - ipld_put(data) → cid
+// - send(msg) → receipt
+// - crypto_verify_signature(sig, key, data)
+// - gas_charge(amount)
+// - rand(seed) → bytes
+// - ... many more
+
+// Gas Metering:
+// - WASM instructions: gas per op
+// - memory access: gas per byte
+// - syscalls: gas per call
+// - hash operations: gas per byte
+// - continuously charged
+
+// Determinism:
+// - no floating-point
+// - no wall clock
+// - no randomness (provided via syscall)
+// - no system I/O
+// - reproducible
+
+// Security:
+// - sandboxed (WASM VM isolation)
+// - no direct memory access outside sandbox
+// - gas limits prevent infinite loops
+// - deterministic prevents exploits
+
+// Performance:
+// - wasmtime: near-native speed
+// - JIT compilation
+// - caching compiled code
+// - parallel execution (planned)
+
+// Actor lifecycle:
+// - deployed (code hash registered)
+// - instantiated per call
+// - state persisted via IPLD
+// - upgradeable (network upgrade)`}
+        </pre>
+        <p className="leading-7">
+          WASM Runtime: <strong>wasmtime + syscalls + gas metering</strong>.<br />
+          deterministic + sandboxed + language-agnostic.<br />
+          Rust primary, also Solidity (FEVM), AssemblyScript, Go.
+        </p>
       </div>
     </section>
   );

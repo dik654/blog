@@ -82,6 +82,71 @@ export default function Overview({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">Transport 트레이트</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Noise Protocol Framework</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Noise Protocol Framework (Trevor Perrin)
+// Specification: noiseprotocol.org
+//
+// Design Philosophy:
+//   "Simple, modular, analyzable"
+//
+//   - Pattern-based (N, K, X, XX, IK, KK, ...)
+//   - Composable crypto primitives
+//   - Formally verified patterns
+//   - No certificate complexity
+
+// 지원 Cipher Suites:
+//   DH: 25519, 448
+//   Cipher: ChaChaPoly, AESGCM
+//   Hash: SHA256, SHA512, BLAKE2s, BLAKE2b
+//
+// Protocol name 예:
+//   Noise_XX_25519_ChaChaPoly_SHA256
+//
+//   → XX pattern + X25519 + ChaCha20-Poly1305 + SHA-256
+
+// Patterns (Token Sequences):
+//
+// XX (mutual auth, both reveal identity):
+//   → e              (Initiator's ephemeral)
+//   ← e, ee, s, es   (Responder's + s)
+//   → s, se          (Initiator's s)
+//
+// XK (responder known, Initiator unknown):
+//   → e, es
+//   ← e, ee
+//   → s, se
+//
+// NK (Initiator anonymous):
+//   → e, es
+//   ← e, ee
+//
+// KK (both known, fastest):
+//   → e, es, ss
+//   ← e, ee, se
+
+// Tokens:
+//   e:  ephemeral key generation/exchange
+//   s:  static key transmission
+//   ee: DH(ephemeral, ephemeral)
+//   es: DH(ephemeral, static)
+//   se: DH(static, ephemeral)
+//   ss: DH(static, static)
+
+// 사용 프로젝트:
+//   WireGuard VPN (IK pattern)
+//   libp2p (XX pattern)
+//   Signal (X3DH - inspired)
+//   Slack (Nebula VPN)
+//   Whisper systems
+
+// vs TLS 1.3:
+//   Noise: CA-free, pattern-based
+//   TLS: PKI-based, standardized`}
+        </pre>
+      </div>
     </section>
   );
 }

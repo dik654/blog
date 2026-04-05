@@ -47,6 +47,74 @@ export default function NATTraversal({ title }: { title?: string }) {
           3. 동시 Dial (Simultaneous Open) — NAT 테이블에 아웃바운드 매핑 생성<br />
           4. 직접 연결 성공 → Relay 연결 종료 (지연: ~100ms → {'<'}10ms)
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">libp2p NAT 전략 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p NAT Traversal Stack
+//
+// 3단계 전략:
+//
+// Stage 1: AutoNAT (Detection)
+//   목적: NAT 뒤에 있는지 자가 진단
+//   방법:
+//     - 다른 peer에게 dial 요청
+//     - 관찰된 주소 보고 받음
+//     - Observed address 통계화
+//
+//   결과 상태:
+//     - Public: 직접 접근 가능
+//     - Private: NAT/firewall 뒤
+//     - Unknown: 불확실
+//
+// Stage 2: Circuit Relay v2 (Fallback)
+//   목적: Private peer 간 중계 연결
+//
+//   Reservation model (DoS 방지):
+//     - 각 relay: 최대 128 reservations
+//     - TTL: 120 seconds
+//     - Bandwidth: 128 KiB/s
+//     - Data limit: 2 MiB / connection
+//
+//   Protocol:
+//     /libp2p/circuit/relay/0.2.0/hop
+//     /libp2p/circuit/relay/0.2.0/stop
+//
+// Stage 3: DCUtR (Direct Connection Upgrade)
+//   목적: Relay → Direct 업그레이드
+//
+//   Protocol ID: /libp2p/dcutr
+//
+//   흐름:
+//     A → B (via R): CONNECT (with A's candidates)
+//     B → A (via R): CONNECT (with B's candidates)
+//     Simultaneous TCP/QUIC dial
+//     NAT mapping 동시 생성
+//     Direct connection established
+//
+// 성공률:
+//   - Cone NAT: 90%+
+//   - Port-restricted: 70%+
+//   - Symmetric: 10-20%
+//
+//   실패 시 → Relay 유지 (낮은 QoS)
+
+// 사용 모델:
+//
+// Public node (예: Bootstrap):
+//   - AutoNAT 불필요
+//   - Relay 제공자 가능
+//   - Full connectivity
+//
+// Private node (집 컴퓨터):
+//   - AutoNAT로 자가 진단
+//   - 공개 Relay 사용
+//   - DCUtR로 업그레이드 시도
+//
+// Mobile/VPN:
+//   - 주로 Symmetric NAT
+//   - Relay 지속 필요
+//   - QUIC over UDP 유리`}
+        </pre>
       </div>
     </section>
   );

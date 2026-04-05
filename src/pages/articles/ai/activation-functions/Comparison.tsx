@@ -1,4 +1,5 @@
 import { TABLE_DATA } from './ComparisonData';
+import ActivationDecisionViz from './viz/ActivationDecisionViz';
 
 export default function Comparison() {
   return (
@@ -35,6 +36,21 @@ export default function Comparison() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">실무 선택 + 초기화 매칭</h3>
+        <p>
+          아키텍처·task 기준 선택 + 초기화와의 매칭(He↔ReLU, Xavier↔Sigmoid/Tanh)
+        </p>
+      </div>
+      <ActivationDecisionViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          요약 1: 아키텍처별 <strong>표준 활성화</strong>가 확립 — 실험적 검증됨.<br />
+          요약 2: <strong>초기화와 활성화는 짝</strong> — He init + ReLU, Xavier + Sigmoid.<br />
+          요약 3: 문제 발생 시 <strong>activation 변경</strong>이 첫 번째 디버깅 수단.
+        </p>
       </div>
     </section>
   );

@@ -68,6 +68,111 @@ export default function ZKConnection() {
           이 RS 코드워드에 대한 근접성 테스트가 어떻게 재귀적 접기(folding)로 동작하는지 다룬다
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">STARK에서 RS 코드의 상세 역할</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Reed-Solomon in STARK Systems
+//
+// Philosophy:
+//   "Polynomial degree bound" ↔ "Reed-Solomon codeword"
+//
+//   If f is promised to have degree < d,
+//   then eval(f) on domain D of size n
+//   is a codeword of RS(n, d) code.
+//
+//   Distance of RS(n, d) = n - d + 1 (MDS)
+//
+//   Far from codeword = far from low-degree polynomial
+//   → soundness of proximity test
+
+// Typical STARK parameters:
+//
+//   Trace domain: |H| = 2^k (typically 2^16 - 2^20)
+//   Evaluation domain: |D| = |H| * rho  (rho = 4, 8, or 16)
+//   Code rate: 1/rho  (low rate = more redundancy)
+//   Distance: (1 - 1/rho) * |D|  (asymptotically)
+//
+//   Example (small STARK):
+//     |H| = 2^14, rho = 8
+//     |D| = 2^17 = 131072
+//     rate = 0.125
+//     distance ≈ 114688
+
+// FRI as RS proximity test:
+//
+//   Input: oracle for function f: D → F
+//   Claim: f is close to RS codeword (degree < d)
+//
+//   Protocol (simplified):
+//     Round i:
+//       Verifier sends random lambda_i
+//       Prover sends fold(f, lambda_i) on halved domain
+//
+//     After log(d) rounds:
+//       Final polynomial is constant (degree 0)
+//       Verifier checks consistency
+//
+//   Soundness:
+//     If f is delta-far from codeword,
+//     Verifier rejects with prob >= 1 - (1-delta)^queries
+//     → queries * log(1-delta) suffices
+
+// Blowup factor trade-offs:
+//
+//   rho = 2 (high rate):
+//     + Smaller proof size
+//     + Faster prover
+//     - Weaker soundness (needs more queries)
+//     - Requires conjecture for security beyond Johnson
+//
+//   rho = 8 (common):
+//     Balanced
+//     80-100 bit security with 40-80 queries
+//
+//   rho = 16 or 32 (low rate):
+//     + Strong soundness
+//     + Provable security
+//     - Larger proofs
+//     - Slower prover (more evaluation points)
+
+// Concrete example: Winterfell / Plonky2
+//
+//   Plonky2 (Polygon Zero):
+//     Field: Goldilocks (2^64 - 2^32 + 1)
+//     rho = 1/8
+//     FRI queries: 28-84 depending on security
+//     2-adic subgroup up to 2^32
+//
+//   Winterfell (Facebook):
+//     Configurable blowup factor
+//     Optimized for STARK prover
+//     Assembly-level RS/FRI code
+
+// DEEP-FRI optimization:
+//
+//   Problem: vanilla FRI uses "rho-commit" twice
+//           → ~2x proof size
+//
+//   DEEP-FRI (Ben-Sasson et al.):
+//     Defer quotient/DEEP-ALI into single RS check
+//     ~30% proof size reduction
+//     Used in StarkNet, StarkEx
+
+// Connection to list decoding:
+//
+//   Johnson bound: delta < 1 - sqrt(rho)
+//   Johnson + list decoding:
+//     can have multiple RS codewords nearby
+//
+//   Conjectured bound: delta < 1 - rho - epsilon
+//   Not proven → needs "RS proximity gaps" conjecture
+//
+//   Security proof references:
+//     Ben-Sasson et al. "DEEP-FRI" (2019)
+//     Ben-Sasson et al. "Proximity gaps for RS codes" (2020)`}
+        </pre>
+      </div>
     </section>
   );
 }

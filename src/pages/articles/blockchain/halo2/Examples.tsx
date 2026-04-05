@@ -22,6 +22,52 @@ export default function Examples({ title }: { title?: string }) {
         </p>
         <CodePanel title="ECDSA 서명 검증 — 10단계 파이프라인" code={ECDSA_CODE} annotations={ecdsaAnnotations} />
         <CodePanel title="BN254 Pairing — Miller Loop + Final Exp" code={PAIRING_CODE} annotations={pairingAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">실전 활용 사례</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 1. Axiom: On-chain ZK coprocessor
+// - 블록체인 storage 읽기 증명
+// - Historical block header access
+// - halo2-ecc로 ECDSA verify
+
+// 2. Succinct: SP1 zkVM
+// - Rust program → ZK proof
+// - Precompiles for crypto operations
+
+// 3. Scroll zkEVM
+// - BN254 pairing for recursive SNARK aggregation
+// - halo2 기반
+
+// 4. Taiko: Type-1 zkEVM
+// - Full Ethereum equivalence
+// - halo2 + sp1 hybrid
+
+// 5. Nil Foundation (zkLLVM)
+// - C++ → halo2 circuit
+// - Proof DSL 개발
+
+// halo2 생태계 통계 (2024)
+// - GitHub stars: 4K+ (zcash/halo2)
+// - Forks: ~500
+// - Based projects: 20+
+// - zkEVM market share: ~40%`}</pre>
+
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">인사이트: halo2-ecc의 제약</p>
+          <p>
+            <strong>성능 현실</strong>:<br />
+            - ECDSA 검증: 40-100ms (증명 생성)<br />
+            - Pairing: 500ms-2s<br />
+            - 대량 연산은 여전히 비쌈
+          </p>
+          <p className="mt-2">
+            <strong>최적화 대안</strong>:<br />
+            - Precompiled circuits (재사용)<br />
+            - Recursive aggregation (여러 proof 합침)<br />
+            - Plonky2/Plonky3 (STARKs, 더 빠름)<br />
+            - GPU acceleration (ICICLE, SPPARK)
+          </p>
+        </div>
+
       </div>
     </section>
   );

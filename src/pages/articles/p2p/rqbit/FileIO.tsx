@@ -56,6 +56,84 @@ export default function FileIO({ onCodeRef }: { onCodeRef?: (key: string, ref: C
           upnp 크레이트가 자동 포트 포워딩을 설정하여
           NAT(네트워크 주소 변환) 뒤에서도 외부 피어 연결을 받습니다.
         </p>
+
+        <h3 className="text-lg font-semibold">파일 매핑 전략</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BitTorrent File ↔ Piece Mapping
+//
+// Multi-file torrent 구조:
+//
+//   Pieces: 연속된 바이트 스트림으로 취급
+//
+//   Files:
+//     File 1: 0 ~ size1-1
+//     File 2: size1 ~ size1+size2-1
+//     File N: ...
+//
+//   Piece N → 여러 파일에 걸칠 수 있음
+//
+// Example:
+//   Files: [A.mp4 (3GB), B.srt (20KB), C.mp3 (5MB)]
+//   Piece size: 1MB
+//
+//   Piece 0: A.mp4 [0..1MB]
+//   Piece 1: A.mp4 [1MB..2MB]
+//   ...
+//   Piece 3072: A.mp4 [..끝] + B.srt [처음]
+//   Piece 3073: B.srt [..끝] + C.mp3 [처음]
+//   ...
+
+// Write 시 처리:
+//
+//   piece_idx, offset, data →
+//     piece_start = piece_idx * piece_size
+//     for each file in mapped_files:
+//       if piece_start < file.end:
+//         write to file at (piece_start - file.start)
+//         update byte positions
+
+// Read (streaming) 시:
+//
+//   HTTP Range request: bytes=1000000-2000000
+//     start_piece = 1000000 / piece_size
+//     end_piece = 2000000 / piece_size
+//     wait for all pieces ready
+//     serve bytes from files
+
+// Performance Optimizations:
+//
+// 1. pread/pwrite (positional I/O)
+//    File descriptor 공유 가능
+//    No seek() syscall needed
+//    Thread-safe reads
+//
+// 2. Pre-allocation
+//    fallocate() or sparse files
+//    Fragmentation 방지
+//
+// 3. Zero-copy with mmap (optional)
+//    Read cache 자동 관리
+//    Modified pages auto-writeback
+//
+// 4. Direct I/O (optional)
+//    OS cache 우회
+//    Large file용
+//    관리 까다로움
+
+// FastResume (resume.dat):
+//   - Bitfield 저장
+//   - 파일 체크섬 저장
+//   - 다운로드 위치/개수
+//   - 시작 시 재검증 skip
+//
+//   Checksum 다를 시 → 전체 재검증
+
+// Streaming 지원 (rqbit):
+//   HTTP API: /torrents/{id}/stream/{file_id}
+//   Range request 지원
+//   Sequential download 모드
+//   DLNA/UPnP 연동`}
+        </pre>
       </div>
     </section>
   );

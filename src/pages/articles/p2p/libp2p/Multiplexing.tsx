@@ -55,6 +55,78 @@ export default function Multiplexing({ title }: { title?: string }) {
           </tbody>
         </table>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Multiplexing 개념</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Stream Multiplexing
+//
+// 문제:
+//   TCP 연결 1개당 프로토콜 1개 실행
+//   → 프로토콜 다수면 연결 다수 필요
+//   → 자원 낭비
+//
+// 해결:
+//   단일 연결에 multiple logical streams
+//   각 stream = 독립 프로토콜
+//   공유: bandwidth, connection state
+
+// Stream 특성:
+//   - Bidirectional
+//   - Flow-controlled (backpressure)
+//   - Ordered within stream
+//   - Independent between streams
+//   - Lightweight create/close
+
+// Yamux (Yet another Multiplexer, 2016):
+//   HashiCorp 개발
+//   HTTP/2 inspired
+//
+//   Frame 구조:
+//     Version(1) + Type(1) + Flags(2)
+//     + StreamID(4) + Length(4)
+//     = 12 bytes header
+//
+//   Types:
+//     0 = Data
+//     1 = WindowUpdate
+//     2 = Ping
+//     3 = GoAway
+//
+//   Flags:
+//     SYN (1): 새 stream 요청
+//     ACK (2): 승인
+//     FIN (4): close
+//     RST (8): 강제 close
+
+// Flow Control:
+//   Initial window: 256 KB per stream
+//   Sender: 윈도우만큼만 전송
+//   Receiver: WindowUpdate로 확대
+//   Zero window: backpressure
+//
+// HTTP/2 inspired but:
+//   - Less complex
+//   - No HPACK compression
+//   - No priority (flat)
+//   - Binary frames only
+
+// mplex vs Yamux vs HTTP/2:
+//   ┌─────────┬─────────┬──────────┬────────┐
+//   │         │  mplex  │  Yamux   │ HTTP/2 │
+//   ├─────────┼─────────┼──────────┼────────┤
+//   │ Flow ctl│ No      │ Yes      │ Yes    │
+//   │ Priority│ No      │ No       │ Yes    │
+//   │ Overhead│ 최소    │ 중간     │ 높음   │
+//   │ Status  │deprecated│ 주류     │ 웹 표준│
+//   └─────────┴─────────┴──────────┴────────┘
+
+// QUIC multiplexing:
+//   Transport layer에 내장
+//   No need for separate muxer
+//   libp2p-quic 사용 시 yamux 불필요`}
+        </pre>
+      </div>
     </section>
   );
 }

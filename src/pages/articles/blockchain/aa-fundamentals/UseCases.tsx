@@ -34,6 +34,155 @@ export default function UseCases() {
           Web2 수준의 온보딩 경험을 제공합니다.
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">AA 활용 패턴 구현 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Real-world AA Patterns
+//
+// 1) Passkey / WebAuthn Authentication
+//
+//    Secure Enclave generates P-256 keypair
+//    Private key NEVER leaves device
+//    User signs with Face ID / Touch ID / Windows Hello
+//
+//    validateUserOp():
+//      bytes32 hash = sha256(authenticatorData || sha256(clientData))
+//      (r, s) = decode(signature)
+//      return ecRecover_P256(hash, r, s) == expectedPubKey
+//
+//    Gas cost: ~200K (P-256 precompile RIP-7212 reduces to 20K)
+//
+//    Live: Coinbase Smart Wallet, Safe{Wallet}, OKX
+
+// 2) Session Keys
+//
+//    Problem: DeFi automation requires many signatures
+//    Solution: delegate limited key
+//
+//    struct SessionKey {
+//        address signer;        // temp key
+//        uint48 validAfter;     // start time
+//        uint48 validUntil;     // expiry
+//        address[] targets;     // allowed contracts
+//        bytes4[] selectors;    // allowed functions
+//        uint256 spendLimit;    // max ETH per window
+//    }
+//
+//    validateUserOp():
+//      if (session not expired && target whitelisted):
+//        return ecRecover(hash, sig) == session.signer
+//
+//    Used: Argent X, Zerion, games (e.g., Sequence)
+
+// 3) Batch Operations
+//
+//    function executeBatch(
+//        address[] targets,
+//        uint256[] values,
+//        bytes[] datas
+//    ) external onlyEntryPoint {
+//        for (uint i = 0; i < targets.length; i++) {
+//            (bool ok,) = targets[i].call{value: values[i]}(datas[i]);
+//            require(ok, "batch failed");
+//        }
+//    }
+//
+//    DEX swap example:
+//      1. approve(USDC, router, amount)
+//      2. router.swap(USDC, WETH, amount)
+//    → 1 UserOp, atomic, cheaper gas
+
+// 4) Multi-signature Threshold
+//
+//    struct MultiSig {
+//        address[] owners;
+//        uint256 threshold;  // e.g., 2 of 3
+//    }
+//
+//    validateUserOp():
+//      bytes[] memory sigs = decode(userOp.signature)
+//      uint256 valid = 0
+//      for (sig in sigs):
+//        signer = ecRecover(hash, sig)
+//        if (isOwner[signer]): valid++
+//      return valid >= threshold ? 0 : SIG_VALIDATION_FAILED
+
+// 5) Social Recovery
+//
+//    Guardian system (Argent-style):
+//      struct Wallet {
+//          address owner;
+//          address[] guardians;
+//          uint256 recoveryThreshold;
+//      }
+//
+//      Recovery flow:
+//        1. N guardians sign new_owner message
+//        2. Wait recovery period (e.g., 48h)
+//        3. Owner can veto during waiting period
+//        4. After period: new_owner takes control
+//
+//    Variants:
+//      - Email OTP guardian
+//      - Hardware key guardian
+//      - Recovery by friend (contract)
+//      - zk-guardian (proves knowledge of secret)
+
+// 6) Paymaster Sponsorship
+//
+//    VerifyingPaymaster flow:
+//      1. Frontend sends UserOp to paymaster API
+//      2. Paymaster service signs (op, validUntil, validAfter)
+//      3. Signature added to paymasterAndData
+//      4. On-chain: paymaster verifies signature
+//      5. Paymaster pays gas to EntryPoint
+//
+//    Token Paymaster flow:
+//      1. User pays in USDC (not ETH)
+//      2. Paymaster takes USDC.transferFrom
+//      3. Paymaster pays ETH to EntryPoint
+//      4. Oracle gives USDC/ETH rate
+//
+//    Sponsorship criteria examples:
+//      - Whitelisted addresses (KYC'd users)
+//      - Max N transactions per day
+//      - Specific target contract only (dApp)
+//      - NFT holder gets free tx
+
+// 7) Gas Abstraction (ERC-20 gas)
+//
+//    User has USDC, no ETH:
+//      UserOp.paymasterAndData = TokenPaymaster
+//
+//    Steps:
+//      1. Paymaster locks USDC via transferFrom
+//      2. Paymaster calls EntryPoint with prefund
+//      3. Gas refunded in USDC via postOp
+
+// 8) Programmable Permissions (ERC-7579 modules)
+//
+//    Modular Smart Account standard:
+//      - Validators (signature logic)
+//      - Executors (custom execution)
+//      - Fallback handlers
+//      - Hooks (pre/post execution)
+//
+//    Plug-and-play modules:
+//      Install SocialRecoveryValidator
+//      Install TwoFactorValidator
+//      Install GaslessSessionKeyModule
+//      Install IntentHandler
+
+// Production examples:
+//   - Rhinestone: AA security modules
+//   - Pimlico: bundler + paymaster infra
+//   - Stackup: infra + SDK
+//   - ZeroDev: Kernel modular account
+//   - Biconomy: paymaster platform
+//   - Safe{Core}: enterprise AA`}
+        </pre>
+      </div>
     </section>
   );
 }

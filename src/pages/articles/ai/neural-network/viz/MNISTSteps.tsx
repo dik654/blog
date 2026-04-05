@@ -84,10 +84,10 @@ export function MNISTStep1() {
       })}
       {/* Feature extraction note */}
       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-        <rect x={202} y={layerY + 14} width={80} height={40} rx={5}
+        <rect x={198} y={layerY + 14} width={78} height={40} rx={5}
           fill={`${C.hidden}08`} stroke={C.hidden} strokeWidth={0.8} strokeDasharray="4 3" />
-        <text x={210} y={layerY + 30} fontSize={8} fill={C.hidden} fontWeight="600">특징 추출</text>
-        <text x={210} y={layerY + 44} fontSize={7} fill="var(--muted-foreground)">획 방향, 곡선 패턴</text>
+        <text x={206} y={layerY + 30} fontSize={8} fill={C.hidden} fontWeight="600">특징 추출</text>
+        <text x={206} y={layerY + 44} fontSize={7} fill="var(--muted-foreground)">획 방향, 곡선 패턴</text>
       </motion.g>
     </g>
   );

@@ -40,6 +40,76 @@ export default function DHTImpl({ onCodeRef }: { onCodeRef?: (key: string, ref: 
           정렬: 상태(Good=0, Questionable=1, Unknown=2, Bad=3) 1차 키,
           XOR 거리 2차 키 → 건강한 가까운 노드 우선
         </p>
+
+        <h3 className="text-lg font-semibold">BitTorrent DHT 프로토콜</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BitTorrent DHT (BEP-5, Mainline DHT)
+//
+// Based on Kademlia with torrent-specific extensions
+//
+// RPC Methods:
+//
+// 1. ping
+//    Q: {q: "ping", a: {id: node_id}}
+//    R: {id: responder_id}
+//
+// 2. find_node
+//    Q: {q: "find_node", a: {id, target}}
+//    R: {id, nodes: <compact node info>}
+//
+// 3. get_peers
+//    Q: {q: "get_peers", a: {id, info_hash}}
+//    R: {id, token, values/nodes}
+//    → values: list of peers for info_hash
+//    → nodes: closer nodes if no peers
+//
+// 4. announce_peer
+//    Q: {q: "announce_peer", a: {
+//         id, info_hash, port, token
+//       }}
+//    R: {id}
+//    → Announce that you're downloading
+
+// Node ID:
+//   160-bit (SHA-1 size)
+//   일반적으로 random
+//   권장: 위치 기반 (IP derivable)
+
+// Token System:
+//   DoS 방지용
+//   announce_peer requires valid token
+//   Token obtained from get_peers response
+//   Short-lived (10 minutes)
+//
+//   token = SHA-1(secret || peer_ip)
+
+// Bootstrap Nodes:
+//   router.bittorrent.com:6881
+//   dht.transmissionbt.com:6881
+//   router.utorrent.com:6881
+//   dht.libtorrent.org:25401
+
+// 동작 순서 (torrent download):
+//
+//   1. Extract infohash from .torrent
+//   2. DHT bootstrap
+//   3. Iterative get_peers(infohash)
+//   4. Collect peer IPs
+//   5. Connect to peers via BT wire protocol
+//   6. Announce self when downloading
+//   7. Other peers discover you via DHT
+
+// rqbit 특화:
+//   - BucketTree (dynamic, memory efficient)
+//   - IPv4/IPv6 dual stack
+//   - DashMap for concurrent access
+//   - Tokio async I/O
+//
+// vs libtorrent:
+//   Simpler codebase
+//   Rust safety guarantees
+//   No C++ complexity`}
+        </pre>
       </div>
     </section>
   );

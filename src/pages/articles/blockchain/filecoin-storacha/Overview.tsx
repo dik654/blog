@@ -12,6 +12,42 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
       </div>
       <div className="not-prose"><ContextViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Saturn → Storacha 전환</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Saturn (2022-2023):
+// - Filecoin decentralized CDN
+// - IPFS retrieval
+// - no storage proof
+// - trust-based
+
+// Storacha (2024+):
+// - Saturn + web3.storage 통합
+// - PDP 온체인 증명 추가
+// - trustless hot storage
+// - enterprise-grade
+// - $5.99/TB pricing
+
+// 비교 (hot storage):
+// - AWS S3: $23/TB/mo
+// - Pinata: $20/TB/mo
+// - Storacha: $5.99/TB/mo
+// - 4x cheaper than S3
+
+// Target:
+// - Web3 developers
+// - NFT platforms
+// - dApps needing CDN
+// - video streaming
+// - enterprise clients`}
+        </pre>
+        <p className="leading-7">
+          Storacha = <strong>Saturn + web3.storage + PDP</strong>.<br />
+          $5.99/TB hot storage (S3 대비 4x cheaper).<br />
+          2024 merge, enterprise DSaaS.
+        </p>
+      </div>
     </section>
   );
 }

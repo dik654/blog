@@ -58,6 +58,58 @@ SignatureSize  = 64   // 서명 64바이트
             </tbody>
           </table>
         </div>
+
+        {/* ── 서명 알고리즘 선택 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Validator Key Type 선택</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// CometBFT는 validator별 다른 key type 허용 (theoretical)
+// 실제로는 chain당 단일 type 채택
+
+// 선택 기준:
+// Ed25519 (기본):
+//   + 검증 빠름 (~50μs)
+//   + Batch verification 우수
+//   + Go 표준 라이브러리 성숙
+//   + side-channel 저항성
+//   - 모바일/HW wallet 지원 약함
+
+// Secp256k1:
+//   + Bitcoin/Ethereum 생태계 호환
+//   + HW wallet 광범위 지원 (Ledger, Trezor)
+//   + ECDSA 표준
+//   - 검증 상대적 느림
+//   - Batch 불가 (RFC 표준 없음)
+
+// BLS12-381 (BN254):
+//   + 서명 집계 가능
+//   + ZK proof 호환
+//   + 다중 서명자 scenarios
+//   - 검증 매우 느림 (~2ms)
+//   - 구현 복잡
+//   - Pairing 연산 비쌈
+
+// 실제 사용 현황:
+// - Cosmos Hub, Osmosis: Ed25519 (가장 일반적)
+// - Binance Chain: Secp256k1 (BNB ecosystem)
+// - dYdX: Ed25519 (성능 우선)
+// - Sei: Ed25519
+
+// Vote 서명:
+// - Precommit 서명: validator key
+// - Extension 서명: 동일 key (별도 signature)
+// - LastCommit: 모든 Precommit aggregate
+
+// 서명 throughput 요구사항:
+// 100 validators × 2 phases × 4 message = 800 signatures per block
+// Block time 3s → 267 sig/sec
+// Ed25519 verification: ~50μs × 267 = 13ms (5% of block time)
+// → 충분 여유`}
+        </pre>
+        <p className="leading-7">
+          validator key 선택은 <strong>생태계 + 성능 trade-off</strong>.<br />
+          Ed25519가 default — 빠른 검증 + batch 지원.<br />
+          BLS는 aggregation 강점이지만 검증 비용 큼.
+        </p>
       </div>
     </section>
   );

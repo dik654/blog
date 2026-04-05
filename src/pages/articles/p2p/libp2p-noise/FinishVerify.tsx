@@ -87,6 +87,83 @@ export default function FinishVerify({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">Noise Config</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Transport Mode 전환</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// HandshakeState → TransportState 전환
+//
+// finish() 단계:
+//
+// 1. Handshake 완료 확인
+//    모든 round 완료됨 (XX: 3 rounds)
+//    양쪽 identity 검증됨
+//
+// 2. Split (Noise spec)
+//    Final chaining key에서 2개 cipher key 파생:
+//      k1: Initiator → Responder
+//      k2: Responder → Initiator
+//
+//    // Noise: Split()
+//    k_init_to_resp, k_resp_to_init = HKDF(ck, "", 2*32)
+//
+// 3. CipherState 생성
+//    struct CipherState {
+//        k: 32-byte key
+//        n: uint64 nonce (starts at 0)
+//    }
+//
+// 4. Transport ready
+//    Encrypt: ChaCha20-Poly1305(k, nonce, plaintext, ad)
+//    Decrypt: ChaCha20-Poly1305(k, nonce, ciphertext, ad)
+//    Nonce 증가 per message
+
+// Message Format (Noise Transport):
+//
+//   plaintext
+//   → encrypt_with_ad(k, n, "", plaintext)
+//   → ciphertext || 16-byte auth tag
+//
+//   Length prefix (libp2p):
+//     2 bytes big-endian length
+//     followed by encrypted data
+//
+//   Max message: 65535 bytes (16-bit length)
+
+// 보안 보장:
+//
+//   Confidentiality:
+//     모든 데이터 ChaCha20으로 암호화
+//     관찰자는 plaintext 못 봄
+//
+//   Authenticity:
+//     Poly1305 MAC으로 무결성
+//     변조 감지 (decrypt 실패)
+//
+//   Ordering:
+//     Nonce monotonic 증가
+//     Replay 공격 방지
+//     Out-of-order 감지
+//
+//   Forward Secrecy:
+//     세션 종료 시 key 폐기
+//     Compromise 시 과거 세션 안전
+
+// 실무 고려사항:
+//
+//   Rekey:
+//     nonce overflow 전 rekey
+//     k = HKDF(k, "rekey")
+//
+//   Connection termination:
+//     Wipe keys from memory
+//     Zero all sensitive buffers
+//
+//   Error handling:
+//     Decrypt 실패 → connection 종료
+//     재협상 없음 (보안)`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -24,6 +24,84 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
             <span className="text-[10px] text-muted-foreground self-center">GasEstimate</span>
           </div>
         )}
+
+        {/* ── MessagePool Architecture ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">MessagePool 구조 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// MessagePool 구조 (chain/messagepool/messagepool.go):
+
+type MessagePool struct {
+    lk sync.Mutex
+    closer chan struct{}
+    repubTk *time.Ticker
+    repubTrigger chan struct{}
+    localAddrs map[address.Address]struct{}
+
+    pending map[address.Address]*msgSet
+
+    curTsLk sync.RWMutex
+    curTs *types.TipSet
+
+    cfgLk sync.RWMutex
+    cfg *types.MpoolConfig
+
+    api Provider
+    minGasPrice types.BigInt
+
+    currentSize int
+    pruneTrigger chan struct{}
+    pruneCooldown chan struct{}
+    blsSigCache *lru.Cache
+}
+
+// msgSet per address:
+type msgSet struct {
+    msgs map[uint64]*types.SignedMessage  // nonce → msg
+    nextNonce uint64
+    requiredFunds *stdbig.Int
+}
+
+// Methods:
+// - Add(msg): validate + add to pool
+// - Remove(): when included in block
+// - Select(): miner chooses for block
+// - Prune(): cleanup expired/invalid
+
+// Pool size limits:
+// - MaxFeeCapped = 1024 messages per address
+// - Total: 20000 messages
+// - auto-prune when exceeded
+
+// Message validation:
+// 1. Signature check (BLS/Secp)
+// 2. Nonce check (expected for sender)
+// 3. Gas check (sufficient)
+// 4. Balance check (can pay)
+// 5. Size check (< MaxMessageBytes)
+// 6. Price check (> minGasPrice)
+
+// Gas price sorting:
+// - priority: gas_premium (tip)
+// - higher premium → higher priority
+// - selected by miner for profit maximization
+
+// Replacement policy:
+// - same nonce re-submit 가능
+// - 25% higher gas_premium required
+// - prevents fee manipulation`}
+        </pre>
+        <p className="leading-7">
+          MessagePool: <strong>per-address msgSet + nonce ordering</strong>.<br />
+          gas_premium 기반 priority (miner profit).<br />
+          20000 msg pool limit, auto-prune.
+        </p>
+
+        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
+          <strong>💡 왜 per-address msgSet인가</strong> — nonce ordering.<br />
+          address 당 nonce sequence 관리.<br />
+          nonce gap 감지 + ordered execution.<br />
+          miner가 올바른 순서로 TX 포함.
+        </p>
       </div>
     </section>
   );

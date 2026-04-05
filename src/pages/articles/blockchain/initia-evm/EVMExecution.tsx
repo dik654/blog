@@ -39,6 +39,147 @@ export default function EVMExecution({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">EVM 실행 단계별 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// MiniEVM Transaction Execution Pipeline
+//
+// Entry point: sdk.Handler (Cosmos Msg handler)
+//
+// MsgCall message:
+//   type MsgCall struct {
+//       Sender    string   // bech32 Cosmos address
+//       To        string   // hex EVM address or empty for CREATE
+//       Value     sdk.Int  // native value (uinit)
+//       Input     []byte   // ABI-encoded call data
+//       GasLimit  uint64   // EVM gas limit
+//       GasPrice  sdk.Int  // fee per unit
+//   }
+
+// Step 1: Message routing
+//
+//   Cosmos TX enters MsgServer:
+//     func (k Keeper) Call(ctx, msg *MsgCall) (*MsgCallResponse, error) {
+//         // 1. Validate sender
+//         sender := sdk.MustAccAddressFromBech32(msg.Sender)
+//         evmAddr := cosmosToEVMAddr(sender)
+//
+//         // 2. Call internal execution
+//         return k.executeCall(ctx, evmAddr, msg)
+//     }
+
+// Step 2: AnteHandler (Cosmos-level validation)
+//
+//   Before EVM execution:
+//     - Verify signatures
+//     - Check account exists, has sequence
+//     - Deduct Cosmos-level fees (gas * gasPrice)
+//     - Increment sequence (nonce)
+//
+//   NOTE: EVM internal gas tracking is separate
+//     Cosmos collects fee; EVM runs within gasLimit
+
+// Step 3: StateDB adapter creation
+//
+//   stateDB := NewStateDB(ctx, k.storeKey, k.bankKeeper, k.authKeeper)
+//   // Wraps Cosmos KVStore as go-ethereum StateDB
+//   // Tracks balance, nonce, storage, code
+//   // Supports snapshots for revert
+//
+//   EVM state operations:
+//     stateDB.GetBalance(addr)   -> bank keeper
+//     stateDB.GetCode(addr)      -> KVStore
+//     stateDB.GetState(addr, k)  -> KVStore storage
+//     stateDB.SetState(addr, k, v) -> staged for commit
+
+// Step 4: EVM setup
+//
+//   blockCtx := vm.BlockContext{
+//       CanTransfer: canTransferFunc,
+//       Transfer:    transferFunc,
+//       GetHash:     getHashFunc,
+//       Coinbase:    common.Address{},  // validator reward addr
+//       BlockNumber: big.NewInt(ctx.BlockHeight()),
+//       Time:        big.NewInt(ctx.BlockTime().Unix()),
+//       Difficulty:  big.NewInt(0),       // PoS, no PoW
+//       BaseFee:     big.NewInt(0),       // or from x/feemarket
+//       GasLimit:    ctx.GasMeter().Limit(),
+//   }
+//
+//   txCtx := vm.TxContext{
+//       Origin:   evmAddr,
+//       GasPrice: big.NewInt(gasPrice),
+//   }
+//
+//   evm := vm.NewEVM(blockCtx, txCtx, stateDB, chainConfig, vmConfig)
+//   // Use go-ethereum's EVM interpreter directly
+
+// Step 5: Execution
+//
+//   ret, leftoverGas, err := evm.Call(
+//       vm.AccountRef(evmAddr),  // caller
+//       toAddr,                   // callee
+//       input,                    // call data
+//       gasLimit,                 // gas
+//       value,                    // value
+//   )
+//
+//   EVM interpreter:
+//     - Loads bytecode from stateDB
+//     - Executes opcodes (ADD, MUL, SSTORE, SLOAD, ...)
+//     - Handles internal CALL, DELEGATECALL, CREATE
+//     - Charges gas per opcode
+//     - Tracks refunds (SELFDESTRUCT, SSTORE revert)
+
+// Step 6: State commit
+//
+//   if err != nil:
+//       // EVM execution failed
+//       stateDB.RevertToSnapshot(0)
+//       return error
+//
+//   stateDB.Commit()
+//   // Writes all changes to Cosmos KVStore
+//   // Emits EVM logs as Cosmos events
+
+// Step 7: Response
+//
+//   response := MsgCallResponse{
+//       Ret:       ret,
+//       GasUsed:   gasLimit - leftoverGas,
+//       Logs:      stateDB.Logs(),
+//   }
+//
+//   Cosmos SDK wraps this in TxResult
+//   Included in block, indexed by nodes
+
+// Gas accounting:
+//
+//   Two separate gas meters:
+//     Cosmos GasMeter: tracks block-level gas
+//     EVM gas tracking: per-op EVM gas
+//
+//   Reconciliation:
+//     EVM gasUsed * ? = Cosmos gas consumed
+//     (configurable ratio, typically 1:1)
+//
+//   Gas refund:
+//     EVM refunds (SSTORE revert, SELFDESTRUCT)
+//     Up to max(gasUsed/5, reducedGas) refundable
+//     (EIP-3529 London rules)
+
+// Error handling:
+//
+//   - Out of gas: revert all state changes
+//   - Invalid opcode: revert
+//   - REVERT opcode: revert + error message
+//   - Panic / system error: revert + log for debugging
+//
+//   All handled via stateDB snapshots
+//   Cosmos Msg returns standard error codes`}
+        </pre>
+      </div>
     </section>
   );
 }

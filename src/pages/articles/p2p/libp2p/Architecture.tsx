@@ -46,6 +46,76 @@ export default function Architecture({ title }: { title?: string }) {
           // libp2p-tcp (Transport impl)<br />
           // libp2p-core
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">libp2p 설계 철학</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p: Modular P2P Network Stack
+//
+// 탄생 배경:
+//   IPFS 개발 중 (2015)
+//   → P2P 네트워킹의 복잡성 분리
+//   → 독립 프로젝트로 추출
+//
+// 핵심 철학:
+//
+// 1. Modularity
+//    각 기능이 독립 module
+//    필요한 것만 선택 조합
+//    Transport, Security, Mux, etc.
+//
+// 2. Interoperability
+//    다양한 언어 구현:
+//      - go-libp2p (기준 구현)
+//      - rust-libp2p
+//      - js-libp2p
+//      - py-libp2p
+//      - jvm-libp2p
+//    모두 호환 가능
+//
+// 3. Peer Identity
+//    각 peer = PeerID (public key hash)
+//    self-sovereign identity
+//    no central registry
+//
+// 4. Multiaddress
+//    /ip4/192.0.2.1/tcp/4001/p2p/QmID
+//    Layered address format
+//    Protocol 조합 표현
+//
+// 5. Protocol Negotiation
+//    multistream-select
+//    동적 프로토콜 선택
+//    version 협상
+
+// 사용 프로젝트:
+//   - IPFS, Filecoin (originated)
+//   - Ethereum 2.0 (Beacon Chain)
+//   - Polkadot, Substrate
+//   - NEAR Protocol
+//   - Radicle (P2P git)
+//   - Berty Messenger
+//   - Pulsar
+//   - Celestia
+
+// vs Other P2P frameworks:
+//   ┌─────────┬──────────────────────┐
+//   │ libp2p  │ 표준, 다언어, modular │
+//   │ devp2p  │ Ethereum-specific    │
+//   │ Noise   │ 프로토콜 framework    │
+//   │ QUIC    │ 전송 프로토콜         │
+//   │ Tor     │ Anonymity 중심        │
+//   └─────────┴──────────────────────┘
+
+// 주요 Rust crate:
+//   libp2p = facade
+//   libp2p-core = traits
+//   libp2p-swarm = event loop
+//   libp2p-identity = keys
+//   libp2p-noise = security
+//   libp2p-yamux, libp2p-mplex = mux
+//   libp2p-tcp, libp2p-quic = transport
+//   libp2p-kad, libp2p-gossipsub = protocols`}
+        </pre>
       </div>
     </section>
   );

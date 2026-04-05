@@ -43,6 +43,92 @@ export default function Bitswap({ onCodeRef }: {
           </div>
         )}
         <CodePanel title="블록 수신 핸들러" code={BITSWAP_CODE} annotations={BITSWAP_ANNOTATIONS} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Bitswap 상세 동작</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Bitswap Protocol (IPFS)
+//
+// Core Concepts:
+//   - Block-level exchange (not file-level)
+//   - Wantlist (what I want)
+//   - Haves (what I have)
+//   - Ledger (tit-for-tat fairness)
+//
+// Protocol Messages:
+//
+// WANT_HAVE <cid>:
+//   "Do you have this block?"
+//   Lightweight query (no data transfer)
+//
+// WANT_BLOCK <cid>:
+//   "Send me this block"
+//   Expensive (peer must transfer)
+//
+// HAVE <cid>:
+//   "Yes, I have it"
+//   (response to WANT_HAVE)
+//
+// DONT_HAVE <cid>:
+//   "No, I don't"
+//
+// BLOCK <cid, data>:
+//   Actual block content
+
+// Session-based fetching:
+//   한 DAG 요청 = 1 Session
+//   Session이 related CIDs 추적
+//
+//   왜 session?
+//   - 같은 DAG peer는 근처 block도 가질 확률 큼
+//   - 추가 discovery 불필요
+//   - 반응 빠른 peer 우선순위
+
+// Peer Selection Algorithm:
+//
+//   1. Latency 추적
+//      Peer별 블록 응답 시간 측정
+//
+//   2. Success rate
+//      요청 중 성공 비율
+//
+//   3. Priority ordering
+//      top-k peers 먼저 요청
+//
+//   4. Broadcasting
+//      not found → 다른 peers에 broadcast
+
+// Fairness (Ledger):
+//
+//   각 peer별로:
+//     sent_bytes, received_bytes 추적
+//
+//   Debt ratio = sent / (received + 1)
+//
+//   If ratio too high (너무 많이 보냄):
+//     Slow down responses
+//     Or ignore their requests
+//
+//   Goal: free-rider 방지
+
+// vs BitTorrent:
+//
+// BitTorrent:
+//   - File-centric
+//   - Chokes/unchokes
+//   - Piece bitfield
+//   - Tracker-dependent
+//
+// Bitswap:
+//   - Block-centric (CID)
+//   - Fine-grained (any peer any block)
+//   - DHT-based discovery
+//   - Multiple concurrent sessions
+
+// 개선 방향:
+//   - HTTP-based Bitswap (Trustless gateways)
+//   - Graphsync (DAG-aware, better bandwidth)
+//   - Bitswap 1.2.0 (2022+)`}
+        </pre>
       </div>
       <div className="mt-8"><BitswapFlowViz /></div>
     </section>

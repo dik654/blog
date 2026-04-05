@@ -95,6 +95,83 @@ export default function QuinnIntegration({ onCodeRef }: {
           </div>
         )}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Rust QUIC 생태계</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Rust QUIC Libraries
+//
+// 1. quinn (libp2p choice)
+//    - Pure Rust
+//    - RFC 9000, 9001, 9002 compliant
+//    - Async: tokio, smol
+//    - Active development
+//    - License: Apache 2.0 / MIT
+//
+//    사용자:
+//      - libp2p-quic
+//      - iroh
+//      - rusoto (some parts)
+//
+// 2. quiche (Cloudflare)
+//    - C library with Rust binding
+//    - Used in Cloudflare production
+//    - Good performance
+//    - FFI overhead (Rust binding)
+//
+//    사용자:
+//      - Cloudflare edge
+//      - nginx (via binding)
+//      - curl --http3
+//
+// 3. s2n-quic (AWS)
+//    - AWS production-grade
+//    - Fuzz tested, audited
+//    - Newer (2022)
+//    - Complex integration
+
+// quinn API 구조:
+//
+// Endpoint:
+//   UDP socket + config
+//   Multiple connections
+//
+// Connection:
+//   Established QUIC connection
+//   Multiple streams
+//
+// SendStream/RecvStream:
+//   Unidirectional streams
+//
+// BiStream:
+//   Bidirectional streams
+//
+// Example:
+//   let endpoint = Endpoint::server(config, addr)?;
+//
+//   while let Some(conn) = endpoint.accept().await {
+//       tokio::spawn(async move {
+//           let connection = conn.await?;
+//           let (send, recv) = connection.accept_bi().await?;
+//           // Handle stream
+//       });
+//   }
+
+// libp2p-quic 통합:
+//   Provider 트레이트로 runtime 추상화
+//   - TokioProvider
+//   - (future: async-std, smol)
+//
+// async_mode: tokio feature flag
+//   quinn::TokioRuntime 사용
+//   rustls + quinn = TLS 1.3 QUIC
+
+// libp2p-TLS Extension:
+//   QUIC는 TLS 1.3 cert로 identity
+//   libp2p-TLS: self-signed cert with PeerId
+//   quinn config에 custom verifier 설정`}
+        </pre>
+      </div>
     </section>
   );
 }

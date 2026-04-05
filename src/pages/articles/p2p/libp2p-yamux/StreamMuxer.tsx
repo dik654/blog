@@ -83,6 +83,89 @@ export default function StreamMuxer({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">StreamMuxer 전체 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">StreamMuxer Trait</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p StreamMuxer Trait (Rust)
+//
+// pub trait StreamMuxer {
+//     type Substream: AsyncRead + AsyncWrite;
+//     type Error;
+//
+//     // 1. Inbound stream 수신
+//     fn poll_inbound(
+//         self: Pin<&mut Self>,
+//         cx: &mut Context<'_>,
+//     ) -> Poll<Result<Self::Substream, Self::Error>>;
+//
+//     // 2. Outbound stream 생성
+//     fn poll_outbound(
+//         self: Pin<&mut Self>,
+//         cx: &mut Context<'_>,
+//     ) -> Poll<Result<Self::Substream, Self::Error>>;
+//
+//     // 3. Session-level events
+//     fn poll(
+//         self: Pin<&mut Self>,
+//         cx: &mut Context<'_>,
+//     ) -> Poll<Result<StreamMuxerEvent, Self::Error>>;
+//
+//     // 4. Close
+//     fn poll_close(
+//         self: Pin<&mut Self>,
+//         cx: &mut Context<'_>,
+//     ) -> Poll<Result<(), Self::Error>>;
+// }
+
+// Stream Lifecycle:
+//
+//   1. Create
+//      outbound: poll_outbound → 새 Stream
+//      inbound: poll_inbound → 기존 peer의 요청
+//
+//   2. Use
+//      AsyncRead/AsyncWrite trait
+//      개별 프로토콜이 stream 사용
+//
+//   3. Close
+//      drop 또는 명시적 close
+//      Half-close (FIN) 지원
+
+// Async Design:
+//   Rust async 기반
+//   Pin<&mut Self> for self-referential
+//   Context<'_> + Waker
+//   Backpressure는 자연스럽게 전파
+
+// Stream 실제 사용:
+//
+//   let mut muxer = Yamux::new(...);
+//
+//   // Server: 들어오는 stream 받기
+//   loop {
+//       let stream = poll_inbound(&mut muxer).await?;
+//       handle_protocol(stream);
+//   }
+//
+//   // Client: stream 생성
+//   let stream = poll_outbound(&mut muxer).await?;
+//   stream.write_all(protocol_request).await?;
+//   let response = read_all(stream).await?;
+
+// Event 종류:
+//   Address change (NAT 감지)
+//   Max streams 도달
+//   Protocol errors
+//   Connection closed
+
+// 성능 고려:
+//   Zero-copy: frame 직접 전송
+//   Buffer pooling
+//   Contention 최소화 (stream별 lock)
+//   Epoll/kqueue 기반 async I/O`}
+        </pre>
+      </div>
     </section>
   );
 }

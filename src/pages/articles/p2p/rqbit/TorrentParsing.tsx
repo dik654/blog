@@ -39,6 +39,81 @@ export default function TorrentParsing({ onCodeRef }: { onCodeRef?: (key: string
           Rust 구조체와 Bencode 간 자동 변환을 지원합니다.<br />
           buffers 크레이트의 제로카피 최적화가 대용량 토렌트 파싱 성능을 보장합니다.
         </p>
+
+        <h3 className="text-lg font-semibold">Bencode Format 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Bencode Encoding (BEP-3)
+//
+// 4 Types:
+//
+// 1. Integer:
+//    i<number>e
+//    Examples:
+//      i42e         → 42
+//      i-7e         → -7
+//      i0e          → 0
+//      (no leading zeros, no i-0e)
+//
+// 2. Byte String:
+//    <length>:<bytes>
+//    Examples:
+//      4:spam       → "spam"
+//      0:           → ""
+//      3:abc        → "abc"
+//
+// 3. List:
+//    l<items>e
+//    Examples:
+//      l4:spam4:eggse       → ["spam", "eggs"]
+//      li1ei2ei3ee          → [1, 2, 3]
+//      le                   → []
+//
+// 4. Dictionary:
+//    d<key-value pairs>e
+//    Keys must be byte strings, sorted
+//    Examples:
+//      d3:foo3:bar5:helloi52ee
+//        → {"foo": "bar", "hello": 52}
+
+// .torrent File Structure:
+//
+// d
+//   8:announce <tracker_url>
+//   13:announce-list <list of trackers>
+//   10:created by <client_name>
+//   13:creation date i<timestamp>e
+//   4:info d
+//     6:length i<total_size>e
+//     4:name <torrent_name>
+//     12:piece length i<chunk_size>e
+//     6:pieces <concatenated SHA-1 hashes>
+//     5:files l (multi-file mode)
+//       d
+//         6:length i<file_size>e
+//         4:path l<path_components>e
+//       e
+//     e
+//   e
+// e
+
+// InfoHash Calculation:
+//   info_hash = SHA-1(bencode(info_dict))
+//
+//   → 20-byte identifier
+//   → 토렌트의 고유 ID
+//   → Magnet link의 btih 파라미터
+
+// Magnet Link Format:
+//   magnet:?xt=urn:btih:<infohash>
+//          &dn=<display_name>
+//          &tr=<tracker_url>
+//          &x.pe=<peer_address>
+//
+// InfoHash만으로 metadata 획득 가능:
+//   - DHT에서 peer 찾기
+//   - Peer에서 metadata fetch (BEP-9)
+//   - .torrent 파일 없이 다운로드`}
+        </pre>
       </div>
     </section>
   );

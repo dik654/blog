@@ -45,6 +45,76 @@ export default function Overview() {
           <br />
           CPU 다이 바깥으로 나가는 데이터는 항상 암호화 상태입니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-4">암호화 방식 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 주요 TEE 메모리 암호화 방식
+//
+// ┌──────────┬───────────┬──────────────┬────────────┐
+// │  방식    │  플랫폼   │  알고리즘    │  키 범위   │
+// ├──────────┼───────────┼──────────────┼────────────┤
+// │ SGX EPC  │ Intel     │ AES-CTR+MAC  │ 플랫폼-1개 │
+// │ SEV SME  │ AMD       │ AES-128-XEX  │ 페이지-1개 │
+// │ SEV VM   │ AMD       │ AES-128-XEX  │ VM-1개     │
+// │ SEV-SNP  │ AMD       │ AES-128-XEX+RMP│ VM-1개   │
+// │ TDX      │ Intel     │ AES-XTS-256  │ TD-1개     │
+// │ ARM CCA  │ ARM       │ QARMA/AES    │ Realm-1개  │
+// └──────────┴───────────┴──────────────┴────────────┘
+//
+// 주요 특성:
+//
+// 1. Tweak-based encryption (XEX/XTS)
+//    - 주소가 tweak → 같은 값도 주소마다 다름
+//    - 패턴 분석 방지
+//    - Intel/AMD 표준
+//
+// 2. Per-VM keys
+//    - VM 간 완전한 격리
+//    - 측면 공격 대비
+//    - 핵심 혁신 (2017+)
+//
+// 3. Integrity (MAC)
+//    - SGX: MAC tag per line
+//    - SEV-SNP: RMP (Reverse Map Table)
+//    - TDX: built-in integrity
+//    - 변조 감지 필수
+
+// 물리적 공격 대응:
+//   - DMA: IOMMU + SEV-SNP RMP
+//   - Cold Boot: 전원 cut 시 key 삭제
+//   - Bus probing: 모든 data encrypted
+//   - Chip attack: Secure processor 격리`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-4">성능 오버헤드</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Memory Encryption Performance Cost
+//
+// Latency overhead:
+//   - Cache hit: 0% (cache에 평문)
+//   - Cache miss: 10~30% (DRAM access)
+//   - Write-back: ~20% (encryption)
+//
+// Typical benchmarks (SGX 2018):
+//   - SPEC2006: 5~20% 오버헤드
+//   - DRAM bandwidth: ~70% maintained
+//   - Enclave entry/exit: ~8,000 cycles
+//
+// Modern TDX/SEV-SNP (2023):
+//   - 최적화된 AES-NI 사용
+//   - 일반 워크로드: 2~10% 오버헤드
+//   - DB: 5~15% 오버헤드
+//   - ML inference: 10~25%
+//
+// EPC 크기 제약:
+//   SGX v1: 128~256 MB
+//   SGX v2 (Scalable): 최대 1TB
+//   SEV: VM 전체 (no 제한)
+//   TDX: TD 전체 (no 제한)
+//
+//   작은 EPC → EPC paging → 성능 저하
+//   SGX2/TDX가 이 제약 제거`}
+        </pre>
       </div>
     </section>
   );

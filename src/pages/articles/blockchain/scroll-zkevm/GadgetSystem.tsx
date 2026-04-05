@@ -29,6 +29,39 @@ export default function GadgetSystem() {
         <h3 className="text-lg font-semibold mt-6 mb-3">MulAddGadget</h3>
         <CodePanel title="256비트 곱셈+덧셈" code={MULADD_CODE}
           annotations={mulAddAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Gadget Library의 철학</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Core gadgets (primitives)
+// - IsZeroGadget: x == 0 판별
+// - LtGadget: a < b 비교
+// - CmpGadget: a == b 판별
+// - MulAddWords: 256-bit 산술
+// - RandomLinearCombination: byte array 압축
+
+// Composed gadgets (primitives 조합)
+// - LtWordGadget: 256-bit 비교
+// - MinMaxGadget: min/max 선택
+// - ConstantDivisionGadget: 상수 나누기
+// - PairSelectGadget: 조건 분기
+
+// High-level gadgets
+// - TransferGadget: EVM transfer 로직
+// - CallGadget: call frame 설정
+// - GasCostGadget: 가스 계산
+// - MemoryAddressGadget: 메모리 주소 검증
+
+// Gadget 설계 원칙
+// 1) Single responsibility (하나의 명확한 책임)
+// 2) Constraint minimization (최소 제약)
+// 3) Reusability (여러 opcode에서 사용)
+// 4) Testability (단위 테스트)
+
+// 장점
+// - 140+ opcode를 ~30 gadgets로 구현
+// - 코드 중복 대폭 감소
+// - 버그는 gadget 레벨에서 수정
+// - 새 opcode 추가 용이`}</pre>
+
       </div>
     </section>
   );

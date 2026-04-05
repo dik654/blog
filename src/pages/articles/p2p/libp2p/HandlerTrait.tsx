@@ -78,6 +78,98 @@ export default function HandlerTrait({ title, onCodeRef }: {
           <CodeViewButton onClick={() => onCodeRef('swarm-event', codeRefs['swarm-event'])} />
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">ConnectionHandler 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// ConnectionHandler Trait (Rust)
+//
+// pub trait ConnectionHandler: Send + 'static {
+//     type FromBehaviour: Send + 'static;
+//     type ToBehaviour: Send + 'static;
+//     type InboundProtocol: InboundUpgradeSend;
+//     type OutboundProtocol: OutboundUpgradeSend;
+//     type InboundOpenInfo: Send + 'static;
+//     type OutboundOpenInfo: Send + 'static;
+//
+//     // Advertise 지원 프로토콜
+//     fn listen_protocol(&self) -> SubstreamProtocol<
+//         Self::InboundProtocol,
+//         Self::InboundOpenInfo
+//     >;
+//
+//     // 메인 이벤트 루프
+//     fn poll(&mut self, cx: &mut Context<'_>)
+//         -> Poll<ConnectionHandlerEvent<
+//             Self::OutboundProtocol,
+//             Self::OutboundOpenInfo,
+//             Self::ToBehaviour,
+//         >>;
+//
+//     // Behaviour 이벤트 수신
+//     fn on_behaviour_event(&mut self, event: Self::FromBehaviour);
+//
+//     // Substream 협상 완료/실패 알림
+//     fn on_connection_event(
+//         &mut self,
+//         event: ConnectionEvent<
+//             Self::InboundProtocol,
+//             Self::OutboundProtocol,
+//             Self::InboundOpenInfo,
+//             Self::OutboundOpenInfo,
+//         >,
+//     );
+// }
+
+// Handler vs Behaviour:
+//
+//   Behaviour:
+//     - 모든 peer 관리 (global state)
+//     - Protocol logic (Kademlia routing, etc.)
+//     - Event coordination
+//
+//   Handler:
+//     - 1 peer per connection (local state)
+//     - Substream I/O
+//     - Protocol-specific framing
+//     - Keep-alive decision
+
+// Per-connection example:
+//
+//   Kademlia로 1000 peers 연결 시:
+//     1 Kademlia Behaviour
+//     1000 Kademlia ConnectionHandler instances
+//
+//     Behaviour = routing table, queries
+//     Handler = per-peer RPC state
+
+// Substream Negotiation Flow:
+//
+//   Handler → OutboundSubstreamRequest
+//     protocol: "/ipfs/kad/1.0.0"
+//
+//   Connection::poll():
+//     muxer.poll_outbound() → raw stream
+//     multistream-select("/ipfs/kad/1.0.0")
+//
+//   On success:
+//     FullyNegotiatedOutbound event
+//     Handler gets negotiated stream
+//
+//   Handler.on_connection_event(FullyNegotiated):
+//     start protocol I/O
+//     read/write framed messages
+
+// Keep-Alive:
+//   connection_keep_alive(): bool
+//   true → 유지
+//   false → idle timeout 후 close
+//
+//   Kademlia: query 진행 중만 true
+//   Identify: 항상 false (one-shot)
+//   GossipSub: mesh peer면 true`}
+        </pre>
+      </div>
     </section>
   );
 }

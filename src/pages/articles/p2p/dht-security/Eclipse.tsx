@@ -57,6 +57,89 @@ export default function Eclipse({ onCodeRef }: { onCodeRef?: (key: string, ref: 
           <br />
           세 방어가 겹쳐 작동하여, Eclipse 공격의 성공 확률을 극히 낮춘다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Eclipse 공격 원리와 영향</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Eclipse Attack (Heilman et al. 2015)
+//
+// 정의:
+//   공격자가 victim의 모든 peer를 자기 노드로 대체
+//   → victim이 네트워크 전체를 공격자만 통해 봄
+//
+// 전제:
+//   1. 다수의 IP 주소 필요 (botnet, cloud)
+//   2. Node ID 생성 가능 (PoW 없이)
+//   3. Victim이 공격자 노드에 연결하도록 유도
+//
+// 공격 단계:
+//
+// Step 1: Populate
+//   수많은 fake node를 네트워크에 주입
+//   각각 유효한 ID, 응답 가능한 IP
+//
+// Step 2: Table Pollution
+//   Victim에게 self-introduction 보냄
+//   → Victim의 routing table에 진입 시도
+//
+// Step 3: Displacement
+//   Victim이 peers 교체 시 공격자 선호
+//   (오래된 정직 노드 대체)
+//
+// Step 4: Isolation
+//   Victim의 모든 연결이 공격자
+//   → 네트워크 view 완전 제어
+
+// 영향:
+//
+// Bitcoin에서:
+//   - Double-spending 공격
+//   - Transaction censorship
+//   - Block withholding
+//   - Fake blockchain 주입
+//
+// Ethereum에서:
+//   - State manipulation
+//   - Validator isolation
+//   - Transaction order manipulation
+//
+// IPFS에서:
+//   - Content censorship
+//   - Fake content delivery
+//   - DHT poisoning
+
+// 방어 메커니즘:
+//
+// 1. IP Diversity
+//    /16, /24 subnet limits
+//    같은 ISP 노드 수 제한
+//
+// 2. Node Age Priority
+//    오래된 노드 preference
+//    "Kademlia wisdom"
+//
+// 3. Random Walk Testing
+//    주기적 random peer 교체
+//    Diverse connections 유지
+//
+// 4. Table Rotation
+//    일부 peers 강제 교체
+//    Stuck state 방지
+//
+// 5. Manual Peers
+//    Hardcoded trusted peers
+//    Bootstrap diversity
+
+// Bitcoin Core 방어 (v0.12+):
+//   - IP-based diversity
+//   - Ping/pong timeouts
+//   - Reject unsolicited addresses
+//   - Fee estimation sanity checks
+//
+// Ethereum 방어:
+//   - IP quota (bucket: 2, table: 10 per /24)
+//   - Replacement cache
+//   - Periodic revalidation`}
+        </pre>
       </div>
     </section>
   );

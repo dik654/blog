@@ -49,6 +49,74 @@ export default function Algorithm({ onCodeRef }: { onCodeRef?: (key: string, ref
           수렴 조건: result.entries의 모든 노드에 이미 질의했고(<code>asked</code> 맵),
           진행 중인 고루틴도 0개이면 탐색이 종료된다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Kademlia Iterative Lookup 원리</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Kademlia Lookup Algorithm (Maymounkov & Mazières 2002)
+//
+// 목표: target ID에 가장 가까운 k개 노드 찾기
+//
+// 기본 개념:
+//   - XOR distance metric
+//   - k-buckets (보통 k=16 or k=20)
+//   - Parallel queries (α=3)
+//
+// Algorithm:
+//
+// Input: target ID
+// State:
+//   shortlist = k closest nodes from local table
+//   asked = {}
+//   seen = all nodes in shortlist
+//
+// Loop:
+//   1. From shortlist, pick α unasked nodes
+//   2. Send FIND_NODE(target) to each in parallel
+//   3. Each response: k nodes claiming to be close
+//   4. Update shortlist with new closer nodes
+//   5. If no new closer nodes found → terminate
+//   6. Else → repeat
+//
+// Convergence:
+//   - Each round halves distance on average
+//   - O(log n) rounds to reach target
+//   - n = total nodes in DHT
+
+// Complexity:
+//   Time: O(log n) rounds
+//   Messages: O(k · log n)
+//   Typical: 20 rounds for 10^6 nodes
+
+// Ethereum's implementation:
+//   - α = 3 (concurrency)
+//   - k = 16 (bucket size, "result" size)
+//   - seedCount = 30 (initial DB seeds)
+//   - maxFindnodeFailures = 5
+
+// Parallelism trade-off:
+//   Higher α:
+//     + 더 빠른 수렴
+//     - 더 많은 messages
+//     - network 부하 증가
+//
+//   Lower α:
+//     + 대역폭 효율
+//     - 느린 lookup
+//     - peer churn에 약함
+//
+// α=3이 경험적 sweet spot
+
+// 실전 고려사항:
+//   - Sybil attack 방어 (node ID 검증)
+//   - Eclipse attack 방어 (diverse peers)
+//   - DoS 방어 (query rate limit)
+//   - Timeout 관리 (slow nodes)
+
+// Ethereum discv4/v5 적용:
+//   - Node discovery (이웃 찾기)
+//   - Peer advertisement
+//   - Network bootstrap`}
+        </pre>
       </div>
     </section>
   );

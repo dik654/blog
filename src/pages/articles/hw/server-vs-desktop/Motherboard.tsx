@@ -36,6 +36,96 @@ export default function Motherboard() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Server Motherboard 기능 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// IPMI / BMC (Baseboard Management Controller):
+//
+// 기능:
+// - remote power on/off
+// - remote BIOS access
+// - remote console (KVM over IP)
+// - sensor monitoring (temp, fan, voltage)
+// - event logs
+// - separate network port
+// - works even when CPU is off
+//
+// Use cases:
+// - datacenter management
+// - lights-out operation
+// - crash recovery (no physical access)
+// - firmware updates
+// - hardware diagnostics
+//
+// Standards:
+// - IPMI (Intel): industry standard
+// - iLO (HPE)
+// - iDRAC (Dell)
+// - Supermicro IPMI
+// - Redfish API (modern)
+
+// Dual Socket Systems:
+// - 2 CPUs on single motherboard
+// - NUMA (Non-Uniform Memory Access)
+// - cross-socket interconnect:
+//   - UPI (Intel, 20 GT/s)
+//   - Infinity Fabric (AMD)
+// - doubled resources:
+//   - 192+ cores total
+//   - 12+ TB memory
+//   - 256 PCIe lanes
+//   - memory bandwidth 800+ GB/s
+
+// Quad Socket (rare):
+// - 4 CPUs
+// - SGI UV systems (HP)
+// - massive NUMA machines
+// - 10 TB+ memory
+// - specialized workloads
+
+// PCIe Slot Density:
+// Desktop motherboards:
+// - ATX: 7 slots (but usually 4-5 PCIe)
+// - E-ATX: 8 slots
+// - typically: 2-3 GPU slots
+//
+// Server motherboards:
+// - 1U/2U: 2-6 slots
+// - 4U: 8-16 slots
+// - PLX switches expand
+// - riser cards for density
+
+// PLX/PCIe Switches:
+// - multiplexes PCIe lanes
+// - adds slots
+// - slight latency overhead
+// - enables 8+ GPUs
+// - common in mining rigs
+
+// Hot-swap Components:
+// - drives (front-accessible)
+// - fans (redundant, replaceable)
+// - PSUs (1+1 redundancy)
+// - network modules
+
+// Form factors:
+// - E-ATX: largest desktop
+// - SSI EEB: dual socket
+// - Proprietary: server-specific
+// - 1U/2U/4U: rack-mount heights
+
+// Cost:
+// Desktop motherboard: $150-700
+// Server motherboard: $600-3000+
+// - reliability premium
+// - enterprise support
+// - longer warranty`}
+        </pre>
+        <p className="leading-7">
+          Server motherboard: <strong>IPMI + dual socket + PLX switches</strong>.<br />
+          lights-out operation, 256 PCIe lanes (dual), 8-16 GPU slots.<br />
+          $600-3000+ (desktop $150-700).
+        </p>
       </div>
     </section>
   );

@@ -36,6 +36,153 @@ export default function PoLArchitecture({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Proof of Liquidity 경제 모델</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Proof of Liquidity Economic Model
+//
+// Problem with traditional PoS:
+//   Stakers lock ETH/SOL → earn yield
+//   Capital sits idle (just secures network)
+//   DeFi protocols compete with staking for capital
+//   → Liquidity fragmentation
+//
+// PoL solution:
+//   Liquidity providers EARN consensus power
+//   Capital simultaneously:
+//     - Provides DEX/lending liquidity (productive)
+//     - Secures network (via BGT delegation)
+//   → Unified economic flywheel
+
+// Token roles:
+//
+//   BERA (gas token):
+//     Users pay gas in BERA
+//     Transfers, swaps, normal ERC-20 behavior
+//     Max supply: ~500M
+//
+//   BGT (governance, soulbound):
+//     Earned BY: providing LP, depositing to reward vaults
+//     Soulbound: cannot sell/transfer
+//     Use 1: Delegate to validators (increases their weight)
+//     Use 2: Burn for BERA (1:1 ratio)
+//     Use 3: Governance voting
+//
+//   HONEY (stablecoin):
+//     Overcollateralized stablecoin
+//     Mint by depositing whitelisted assets
+//     Pegged to $1 via BeraBorrowing
+
+// Liquidity flywheel:
+//
+//   Step 1: User LP to BEX pool (BERA/HONEY)
+//           → Pool receives 100 HONEY + 50 BERA
+//
+//   Step 2: User stakes LP tokens in Reward Vault
+//           → Earns BGT at rate set by governance
+//
+//   Step 3: BGT accrues to user's address (soulbound)
+//           → 100 BGT earned over 7 days
+//
+//   Step 4: User delegates BGT to chosen validator
+//           → Validator V has more voting weight
+//
+//   Step 5: Validator V more likely to be block proposer
+//           → Earns block rewards, gas fees
+//
+//   Step 6: Validator V emits BGT to incentivized protocols
+//           → e.g., 50% to BEX, 30% to BEND, 20% to X
+//
+//   Step 7: Protocols distribute these BGT as LP rewards
+//           → Back to Step 1 (more liquidity)
+
+// Validator selection:
+//
+//   Weight(V) = sum of BGT delegated to V
+//
+//   Probability of being proposer = Weight(V) / Total_BGT
+//
+//   Delegation is revocable (epoch boundary)
+//   Bad validators lose delegations fast
+
+// Governance pools (gauges):
+//
+//   BGT holders vote on gauges:
+//     "Which protocols should validators reward?"
+//
+//   Validator then emits BGT per-block to:
+//     - Winning gauges (per vote)
+//     - Proportional to vote weight
+//
+//   Protocols incentivize BGT holders to vote for them
+//     (pay bribes via external rewards, airdrops, etc.)
+//
+//   Similar to Curve's veCRV gauge system
+
+// Comparison with PoS chains:
+//
+//   Ethereum PoS:
+//     Stake = lock ETH in Beacon Chain
+//     Yield = ~4% APR
+//     Capital efficiency: LOW (just sits)
+//
+//   Berachain PoL:
+//     "Stake" = provide DeFi liquidity
+//     Yield = LP fees + BGT rewards
+//     Capital efficiency: HIGH (used in DeFi)
+//
+//   Trade-off:
+//     PoL complexity higher
+//     Risk: BGT volatility affects security
+//     Risk: validator-protocol collusion
+
+// BGT → BERA burn mechanism:
+//
+//   User can: burn X BGT → receive X BERA
+//     Only one way: BGT → BERA (not reverse)
+//
+//   Incentive:
+//     Keep BGT to earn validator rewards
+//     OR cash out via burn → BERA
+//
+//   Economic effect:
+//     BGT supply increases (from emissions)
+//     BERA supply increases when BGT burned
+//     Net BERA inflation tied to BGT emission
+
+// Reward Vaults:
+//
+//   contract RewardVault {
+//     function stake(uint256 amount) // deposit LP tokens
+//     function withdraw(uint256 amount)
+//     function getReward() // claim BGT
+//     function notifyRewardAmount(uint256 reward)
+//   }
+//
+//   Multiple vaults per asset
+//   Each vault incentivized by different protocols
+//   Validators allocate BGT emissions across vaults
+
+// Security assumptions:
+//
+//   Honest majority (BFT): 2/3+ validators honest
+//   Honest capital: 2/3+ of BGT delegated to honest validators
+//
+//   If malicious whale delegates 1/3+ BGT:
+//     → 1/3+ validator weight captured
+//     → Can halt chain (not rewrite)
+//   If 2/3+ BGT malicious:
+//     → Safety violation possible
+
+// Real economic protocols on Berachain:
+//   BEX: DEX (Balancer fork)
+//   BEND: lending market
+//   BERPS: perpetuals
+//   InfraRed: liquid BGT staking
+//   Kodiak: concentrated liquidity`}
+        </pre>
+      </div>
     </section>
   );
 }

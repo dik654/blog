@@ -31,6 +31,66 @@ export default function Overview({ title, onCodeRef }: { title?: string; onCodeR
         <CodePanel title="크레이트 구조 (halo2_proofs/src/)" code={CRATE_CODE} annotations={crateAnnotations} />
         <CodePanel title="Circuit 트레이트 (circuit.rs)" code={CIRCUIT_CODE} annotations={circuitAnnotations} />
         <CodePanel title="열 유형과 레이아웃" code={COLUMN_CODE} annotations={columnAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Halo2의 PLONKish 산술화</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// PLONKish circuit 구조
+// R1CS보다 유연한 제약 시스템
+
+// 회로 = 2차원 그리드 (rows × columns)
+//
+//         Col_0  Col_1  Col_2  Col_3  ...
+// Row_0:    a_0    b_0    c_0    s_0    ...
+// Row_1:    a_1    b_1    c_1    s_1    ...
+// Row_2:    a_2    b_2    c_2    s_2    ...
+// ...
+
+// Column 유형
+// 1) Advice: witness values (prover만 알고 있음)
+// 2) Instance: public inputs
+// 3) Fixed: circuit constant (compile-time)
+// 4) Selector: gate 활성화 비트
+
+// Custom gates
+// gate = polynomial constraint
+// 예: selector_s * (a + b - c) = 0
+//     "s 활성화 시 a+b=c 강제"
+
+// Advantages over R1CS
+// - Higher-degree polynomials (2차 이상)
+// - Multiple constraints per row
+// - Column 간 rotation (a(X) · b(X*ω))
+// - More expressive → smaller circuits`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Halo2 vs PLONK</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Halo2 = PLONK의 implementation + extensions
+
+// PLONK (2019, Gabizon et al.)
+// - Universal trusted setup
+// - Polynomial commitment
+// - Custom gates
+
+// Halo2 (2020, ZCash)
+// - PLONK 기반
+// - Lookup arguments 추가 (Plookup)
+// - Custom gates 확장
+// - Rust 구현 (zcash/halo2)
+
+// 주요 차이점
+// 1) Lookup support (essential for zkEVM)
+//    - Table 기반 검증
+//    - Range check, bytecode 등에 필수
+
+// 2) Flexible proof system
+//    - KZG commitment (기본)
+//    - IPA commitment (trustless alternative)
+//    - 선택 가능
+
+// 3) 생태계
+//    - ZCash Orchard (original)
+//    - Scroll zkEVM
+//    - PSE (Privacy & Scaling Explorations)
+//    - Axiom, Taiko`}</pre>
+
       </div>
     </section>
   );

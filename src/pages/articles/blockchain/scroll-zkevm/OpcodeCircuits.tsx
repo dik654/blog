@@ -26,6 +26,41 @@ export default function OpcodeCircuits() {
         <h3 className="text-lg font-semibold mt-6 mb-3">스토리지 연산</h3>
         <CodePanel title="SLOAD 구현 상세" code={STORAGE_OP_CODE}
           annotations={storageAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">4가지 Opcode 패턴 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Pattern 1: Stack-only (ADD, MUL, SUB, DIV, AND, OR, XOR, ...)
+// - 입력: stack에서 pop
+// - 출력: stack에 push
+// - 메모리·스토리지 접근 없음
+// - 가장 단순, 회로도 작음
+
+// Pattern 2: Memory ops (MLOAD, MSTORE, MSTORE8)
+// - Memory expansion 처리 (gas 계산)
+// - RWTable에 memory read/write 기록
+// - Copy circuit과 연동
+
+// Pattern 3: Storage ops (SLOAD, SSTORE)
+// - MPT circuit으로 state root 변경
+// - Warm/cold access 구분 (EIP-2929)
+// - 가장 비싼 opcode
+
+// Pattern 4: Call/Create (CALL, DELEGATECALL, CREATE, CREATE2)
+// - 새 call frame 생성
+// - Gas forwarding (63/64 rule)
+// - Return data 처리
+// - 가장 복잡한 회로
+
+// 각 패턴별 회로 비용
+// Stack-only: ~100 rows per op
+// Memory: ~200 rows
+// Storage: ~500 rows
+// Call/Create: ~2000+ rows
+
+// 성능 최적화
+// - 자주 쓰이는 opcode (PUSH, ADD, MLOAD) 최적화 우선
+// - Rare opcode (SELFDESTRUCT) 간소화
+// - Lookup으로 common check 재사용`}</pre>
+
       </div>
     </section>
   );

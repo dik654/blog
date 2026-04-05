@@ -159,4 +159,15 @@
     font-size: 0.875em;
     overflow-x: auto;
     }
+  /* prose 내부 pre 가독성 개선 — bg-muted와 대비 확보 */
+  .prose pre {
+    color: var(--foreground) !important;
+  }
+  .prose pre code {
+    color: var(--foreground) !important;
+    background-color: transparent !important;
+  }
+  .prose code {
+    color: var(--foreground);
+  }
 }

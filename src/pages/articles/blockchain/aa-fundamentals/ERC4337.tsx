@@ -49,6 +49,138 @@ export default function ERC4337() {
           검증 단계에서 실패하면 가스가 소비되지 않아 DoS를 방지합니다.
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">ERC-4337 상세 플로우</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// ERC-4337 Detailed Flow
+//
+// 1) User → UserOperation (off-chain):
+//
+//    struct UserOperation {
+//        address sender;            // Smart Account address
+//        uint256 nonce;             // replay protection
+//        bytes initCode;            // factory call for first tx
+//        bytes callData;            // actual operation
+//        uint256 callGasLimit;      // gas for execution
+//        uint256 verificationGasLimit; // gas for validation
+//        uint256 preVerificationGas;   // compensate bundler
+//        uint256 maxFeePerGas;      // EIP-1559 style
+//        uint256 maxPriorityFeePerGas;
+//        bytes paymasterAndData;    // paymaster address + data
+//        bytes signature;           // custom signature
+//    }
+//
+//    hash = keccak256(abi.encode(op)) + chainId + entryPoint
+//    signature = user_signing(hash)
+
+// 2) UserOp → Alt Mempool:
+//
+//    Bundlers listen on dedicated P2P mempool
+//    (not Ethereum base mempool)
+//    Gossip via libp2p / custom JSON-RPC
+
+// 3) Bundler simulates off-chain:
+//
+//    EntryPoint.simulateValidation(op)
+//      → validates account + paymaster
+//      → returns gas estimates
+//      → reverts if invalid
+//
+//    Bundler rejects if:
+//      - Simulation fails
+//      - Validation gas > limit
+//      - Storage access violates rules (ERC-7562)
+
+// 4) Bundler batches + submits:
+//
+//    EntryPoint.handleOps(ops, beneficiary) {
+//      // Phase 1: Verification loop
+//      for op in ops:
+//        account.validateUserOp(op, hash, prefund)
+//        paymaster.validatePaymasterUserOp(op, hash, cost)
+//
+//      // Phase 2: Execution loop
+//      for op in ops:
+//        account.execute(op.callData)
+//        paymaster.postOp(...)
+//
+//      // Phase 3: Pay bundler
+//      transfer gas compensation to beneficiary
+//    }
+
+// 5) Storage access rules (ERC-7562):
+//
+//   Account validation MUST NOT:
+//     - Access other accounts' storage
+//     - Call external contracts beyond whitelisted
+//     - Use GAS, BLOCKHASH, TIMESTAMP opcodes
+//     - Create contracts
+//
+//   Why? Prevents DoS via mass-revert
+//   Bundler must be able to detect invalid ops
+//   before wasting gas on mainnet submission
+
+// 6) Aggregator (optional):
+//
+//   BLS signature aggregation
+//   Merge N signatures into 1
+//   Massive gas savings for validator sets
+//
+//   IAggregator interface:
+//     validateSignatures(ops[], signature)
+//     aggregateSignatures(sigs[]) → bytes
+//     validateUserOpSignature(op) returns (bytes)
+
+// 7) Paymaster types:
+//
+//   VerifyingPaymaster:
+//     - Off-chain signature validation
+//     - Signed by paymaster operator
+//     - Used: Alchemy, Biconomy
+//
+//   TokenPaymaster:
+//     - User pays in ERC-20 (USDC, DAI)
+//     - Oracle for exchange rate
+//
+//   SponsorPaymaster:
+//     - dApp pays for users (onboarding)
+//     - Whitelist or criteria-based
+
+// 8) EntryPoint singleton:
+//
+//   Deployed at same address across all chains
+//   Currently: 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789 (v0.6)
+//             0x0000000071727De22E5E9d8BAf0edAc6f37da032 (v0.7)
+//
+//   Why singleton?
+//     - Gas efficiency (shared validation)
+//     - Consistent UX across wallets
+//     - Central DoS protection
+
+// 9) Gas costs (mainnet):
+//
+//   First UserOp (deploys wallet):
+//     ~200K gas (initCode + validation + exec)
+//
+//   Subsequent UserOp:
+//     ~80K gas
+//
+//   vs EOA tx: 21K gas (pure transfer)
+//
+//   → 4-10x overhead for AA benefits
+//   → L2 deployment makes this trivial
+
+// 10) Production wallets:
+//
+//    Safe{Wallet} Core: ERC-4337 compatible
+//    Coinbase Smart Wallet
+//    Biconomy Smart Account
+//    ZeroDev Kernel
+//    Alchemy Light Account
+//    Etherspot Skandha`}
+        </pre>
+      </div>
     </section>
   );
 }

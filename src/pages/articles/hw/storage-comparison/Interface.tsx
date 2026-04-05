@@ -37,6 +37,107 @@ export default function Interface() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">AHCI vs NVMe 큐 구조 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// AHCI (Advanced Host Controller Interface):
+//
+// Design (2004):
+// - designed for HDDs
+// - 1 queue × 32 commands
+// - register-based communication
+// - high CPU overhead
+// - sequential access optimized
+//
+// Limitations with SSDs:
+// - can't leverage parallelism
+// - queue depth bottleneck
+// - wasted SSD potential
+// - sub-optimal latency
+// - throughput capped
+
+// NVMe Queue Architecture:
+//
+// Admin Queue (setup):
+// - 1 queue pair
+// - management commands
+// - firmware updates
+// - feature configuration
+//
+// I/O Queues (data):
+// - up to 64K queue pairs
+// - each with up to 64K commands
+// - per-CPU dedicated queues
+// - lock-free design
+// - direct PCIe communication
+
+// NVMe Command Path:
+// 1. Application submits I/O
+// 2. OS kernel places in queue
+// 3. Writes to doorbell register
+// 4. SSD controller reads command
+// 5. DMA data transfer
+// 6. Completion notification
+// 7. Interrupt to CPU
+
+// Performance implications:
+//
+// Queue depth scaling:
+// AHCI QD32 max: ~90K IOPS
+// NVMe QD32: ~250K IOPS
+// NVMe QD256: ~1M IOPS
+// NVMe QD4096: ~1.5M IOPS
+
+// Latency breakdown:
+// AHCI:
+// - command processing: 30 μs
+// - CPU overhead: 40 μs
+// - SSD processing: 20 μs
+// - total: ~90 μs
+//
+// NVMe:
+// - command processing: 2 μs
+// - CPU overhead: 5 μs
+// - SSD processing: 10 μs
+// - total: ~17 μs
+
+// CPU efficiency:
+// AHCI: 1 core saturates at 250K IOPS
+// NVMe: 1 core handles 1.5M IOPS
+// 6x more efficient
+
+// Parallel scaling:
+// NVMe scales with CPU cores:
+// - 1 core: 1.5M IOPS
+// - 4 cores: 5M IOPS
+// - 8 cores: 10M IOPS
+// - near-linear scaling
+
+// Modern NVMe features:
+// - ZNS (Zoned Namespaces): sequential-only zones
+// - SGL (Scatter-Gather Lists): efficient DMA
+// - Multi-stream: write hinting
+// - Directives: QoS hints
+// - CMB (Controller Memory Buffer)
+
+// Kernel bypass (SPDK):
+// - user-space NVMe driver
+// - poll-mode (no interrupts)
+// - near-hardware performance
+// - used in storage systems
+
+// NVMe-oF (over Fabrics):
+// - NVMe over network
+// - RDMA (RoCE, iWARP)
+// - TCP
+// - FC
+// - enables disaggregated storage`}
+        </pre>
+        <p className="leading-7">
+          NVMe: <strong>64K queues × 64K commands, per-CPU lock-free</strong>.<br />
+          CPU efficiency 6x, latency 5x lower.<br />
+          ZNS, SGL, NVMe-oF 등 현대 기능.
+        </p>
       </div>
     </section>
   );

@@ -46,6 +46,72 @@ export default function Overview() {
           IPFS는 CID(Content Identifier), BitTorrent는 infohash로 데이터를 식별합니다.
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Content-Addressable Storage (CAS)</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Content-Addressable vs Location-Based
+//
+// Location-based (HTTP/URL):
+//   URL: https://example.com/file.pdf
+//   - 서버 위치 + 경로
+//   - 서버 관리자가 내용 변경 가능
+//   - 서버 다운 시 접근 불가
+//   - 동일 파일이 여러 URL 가능
+//
+// Content-addressable (IPFS):
+//   CID: QmWmyoMoctfbAaiEs2G46gpeUmhqFR3vCRu...
+//   - 내용의 해시
+//   - 변경 = 다른 CID (불변)
+//   - 누구나 호스팅 가능
+//   - 동일 내용 = 동일 CID (자동 dedup)
+
+// CAS의 핵심 특성:
+//
+// 1. Immutability
+//    한번 쓰면 변경 불가
+//    Audit log, version control에 적합
+//
+// 2. Deduplication
+//    같은 내용 = 같은 주소 = 1회만 저장
+//    스토리지 효율
+//
+// 3. Integrity
+//    Verify: hash(content) == address
+//    변조 감지 자동
+//
+// 4. Distribution
+//    누구나 동일 CID로 서빙 가능
+//    CDN-like, no trust needed
+//
+// 5. Privacy
+//    주소 = 해시 = high entropy
+//    Guessing 불가
+
+// 역사:
+//   1991: Content-addressable memory (hardware)
+//   1996: Magnet URIs
+//   2001: BitTorrent (infohash)
+//   2006: Amazon S3 (optional)
+//   2015: IPFS (v1.0)
+//   2021: iroh, Lotus, others
+
+// 응용:
+//   - Decentralized web (IPFS, iroh)
+//   - Container registries (OCI)
+//   - Git (blob storage)
+//   - Backup systems
+//   - Package managers (npm shrinkwrap)
+//   - NFT metadata
+//   - Science data archives
+
+// Trade-offs:
+//   ✓ 불변, 검증 가능, 중복 제거
+//   ✗ "최신 버전" 업데이트 어려움 (IPNS, DNSLink 필요)
+//   ✗ 초기 조회 느림 (해시 알아야)
+//   ✗ Garbage collection 복잡`}
+        </pre>
+      </div>
     </section>
   );
 }

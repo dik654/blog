@@ -32,7 +32,7 @@ export default function HierarchicalFeatureViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 520 165" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 560 165" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Layer headers */}
           {LAYERS.map((l, i) => {
             const x = 10 + i * 130;

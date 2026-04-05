@@ -92,6 +92,77 @@ export default function Overview({ onCodeRef }: {
           </div>
         )}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">libp2p-quic 설계 결정</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p-quic Transport Design
+//
+// Multiaddr 형식:
+//   /ip4/1.2.3.4/udp/4001/quic-v1
+//   /ip4/1.2.3.4/udp/4001/quic-v1/p2p/QmID
+//   /dns4/example.com/udp/4001/quic-v1
+//
+//   quic-v1: RFC 9000 (versioned)
+//   quic: legacy (draft versions)
+
+// Transport Output Type:
+//   TCP: (PeerId, StreamMuxerBox)
+//   QUIC: (PeerId, Connection)
+//
+//   → QUIC Connection은 이미 muxer이므로
+//     StreamMuxerBox 불필요
+//   → 직접 stream create 가능
+
+// 0-RTT vs 1-RTT:
+//
+// libp2p-quic 선택: 1-RTT만
+//
+// 이유:
+//   - 0-RTT는 replay attack 취약
+//   - P2P에서 idempotency 보장 어려움
+//   - 단순성 우선
+//
+// 향후 계획:
+//   - 0-RTT는 specific use case에서만
+//   - Application-level opt-in
+
+// Identity (인증):
+//
+//   TCP+Noise: Noise XX handshake로 identity 교환
+//   QUIC: TLS 1.3 certificate에 libp2p-TLS extension
+//
+//   libp2p-TLS extension:
+//     Self-signed cert
+//     Contains PeerId
+//     Signed by host key
+//
+//   Certificate verification:
+//     Extract PeerId
+//     Verify signature
+//     No CA chain needed (P2P)
+
+// 성능 비교 (typical):
+//
+//   Connection setup:
+//     TCP+Noise+Yamux: ~200ms (3 RTT)
+//     QUIC: ~80ms (1 RTT)
+//     QUIC 0-RTT: ~0ms (0 RTT)
+//
+//   Throughput:
+//     Similar (bandwidth limited)
+//
+//   Mobile/lossy networks:
+//     QUIC 훨씬 유리
+//     (Connection migration + 빠른 recovery)
+
+// 사용 현황:
+//   Ethereum 2.0: TCP+Noise+Yamux (더 안정)
+//   IPFS: TCP + QUIC (dual)
+//   iroh: QUIC 중심
+//   일부 projects QUIC만 (UDP-native)`}
+        </pre>
+      </div>
     </section>
   );
 }

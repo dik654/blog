@@ -78,6 +78,76 @@ export default function KeypairSigning({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">Noise Config 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">X25519 vs Ed25519</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// X25519 vs Ed25519
+//
+// 둘 다 Curve25519 기반이지만 용도 다름
+//
+// Curve25519:
+//   y² = x³ + 486662x² + x  (Montgomery form)
+//   prime: 2^255 - 19
+//   order: 2^252 + 27742317...
+//
+// X25519 (ECDH):
+//   Montgomery ladder 방식
+//   DH 연산 최적화
+//   32-byte public key
+//
+// Ed25519 (EdDSA):
+//   Twisted Edwards form 변환
+//   서명 알고리즘
+//   64-byte signature
+
+// 왜 분리되었나?
+//   - 다른 point representation
+//   - 다른 ops 최적화
+//   - 같은 키 두 용도 사용 시 취약 가능성
+//
+//   Birational isomorphism은 가능:
+//     X25519 key ↔ Ed25519 key
+//   하지만 권장 안 됨
+
+// libp2p에서 두 키 조합:
+//
+// Identity Key (Ed25519 or secp256k1):
+//   - Peer 고유 식별
+//   - PeerID = hash(public key)
+//   - 서명 생성 전용
+//   - 장기 사용
+//
+// Ephemeral DH Key (X25519):
+//   - Session key agreement
+//   - Noise handshake 전용
+//   - 매 connection 갱신
+//   - Forward secrecy 보장
+
+// 서명 대상:
+//   message = "noise-libp2p-static-key:" + DH_public
+//   signature = Ed25519.sign(identity_key, message)
+//
+//   Domain separator "noise-libp2p-static-key:" 이유:
+//     같은 Ed25519 키를 여러 맥락에서 사용 시
+//     cross-protocol 공격 방지
+
+// 검증 시:
+//   DH_public 수신
+//   signature 수신
+//   identity_public 수신
+//
+//   Ed25519.verify(identity_public,
+//                  "noise-libp2p-static-key:" + DH_public,
+//                  signature)
+//   → true면 정당 소유자
+
+// 효과:
+//   "이 X25519 public key의 주인은
+//    이 Ed25519 identity의 소유자다"
+//   → PeerID ↔ ephemeral key 연결`}
+        </pre>
+      </div>
     </section>
   );
 }

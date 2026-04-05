@@ -88,6 +88,67 @@ export default function ENR() {
           { lines: [55, 56], color: 'emerald', note: 'IPv4/IPv6 별도 endpoint predictor' },
           { lines: [61, 61], color: 'amber', note: 'Pong.To를 수집하여 외부 IP 예측' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">ENR 표준 키와 확장</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// ENR Standard Keys (EIP-778)
+//
+// Identity:
+//   "id": identity scheme ("v4")
+//   "secp256k1": compressed public key (33 bytes)
+//
+// Endpoint:
+//   "ip": IPv4 address (4 bytes)
+//   "ip6": IPv6 address (16 bytes)
+//   "tcp": TCP port
+//   "tcp6": TCP port (IPv6)
+//   "udp": UDP port (discovery)
+//   "udp6": UDP port (IPv6)
+
+// Ethereum Extension Keys:
+//   "eth": fork information (EIP-2124)
+//     [[fork_hash, fork_next]]
+//
+//   "attnets": attestation subnets (Eth2)
+//     bitfield of subscribed subnets
+//
+//   "syncnets": sync committee subnets
+//     bitfield
+//
+//   "eth2": Eth2 consensus info
+
+// ENR 인코딩 예:
+//   enr:-Iu4QGm...ABC  (base64url, 자기 참조)
+//
+//   Binary: RLP([sig, seq, k1, v1, k2, v2, ...])
+//   "id": "v4"
+//   "ip": 0x01020304 (1.2.3.4)
+//   "secp256k1": 0x03abc...
+//   "udp": 0x765f (30303)
+
+// Signing Process (v4 scheme):
+//   record_without_sig = RLP([seq, k1, v1, ...])
+//   hash = keccak256(record_without_sig)
+//   signature = ECDSA.sign(priv, hash)
+//   signed_record = RLP([sig, seq, k1, v1, ...])
+
+// Validation:
+//   1. Decode RLP
+//   2. Check "id" field
+//   3. Extract pubkey from "secp256k1"
+//   4. Verify signature over record
+//   5. Check size < 300 bytes
+//   6. Keys must be sorted
+
+// Size limit (300 bytes):
+//   UDP packet safety margin
+//   일반적으로 ~150 bytes 실제 사용
+
+// Distribution:
+//   - DNS (EIP-1459): ENR tree
+//   - Discovery protocol (PING/PONG으로 seq 교환)
+//   - Request on demand (discv5 TALK)`}
+        </pre>
       </div>
     </section>
   );

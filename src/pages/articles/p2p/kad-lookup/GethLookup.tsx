@@ -51,6 +51,72 @@ export default function GethLookup({ onCodeRef }: { onCodeRef?: (key: string, re
           { lines: [10, 12], color: 'emerald', note: '연속 실패 초과 시 퇴출' },
           { lines: [14, 16], color: 'amber', note: '발견된 노드를 테이블에 추가' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">go-ethereum Discovery 구조</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// go-ethereum Discovery (v4) 구현 구조
+//
+// 주요 파일 (p2p/discover/):
+//   common.go - 공통 타입
+//   lookup.go - Iterative lookup
+//   node.go - Node struct
+//   table.go - Routing table
+//   v4_udp.go - UDP protocol
+//   v5_udp.go - v5 protocol
+//
+// 주요 상수:
+//   alpha = 3 (concurrency)
+//   bucketSize = 16 (k)
+//   maxFindnodeFailures = 5
+//   seedCount = 30
+//   seedMaxAge = 5 days
+//   RefreshInterval = 30 min
+//
+// 데이터 구조:
+//
+// Table:
+//   buckets [256]bucket      // XOR log-distance
+//   nursery []*Node          // bootnodes
+//   db *nodeDB              // persistent storage
+//   rand *rand.Rand
+//
+// bucket:
+//   entries []*Node          // 최대 16개
+//   replacements []*Node     // 대기 목록
+//
+// Node:
+//   ID enode.ID
+//   IP net.IP
+//   UDP, TCP uint16
+//   livenessChecks int
+
+// Lookup lifecycle:
+//   1. New lookup with target
+//   2. Pre-populate with local closest
+//   3. Query loop:
+//      - advance() checks if more to query
+//      - startQueries() launches α goroutines
+//      - Each goroutine: FINDNODE + reply
+//   4. Update result list
+//   5. Return when stable
+
+// 핵심 메커니즘:
+//
+// nodesByDistance:
+//   정렬된 노드 리스트 (XOR distance)
+//   sort.Search → O(log n) insertion
+//   maxElems enforces k limit
+//
+// trackRequest:
+//   모든 FINDNODE 성공/실패 추적
+//   실패 → 카운터 증가
+//   maxFindnodeFailures 초과 → evict
+//
+// Table refresh:
+//   30분 주기 (with jitter)
+//   self + 3 random lookups
+//   빈 bucket 자동 채움`}
+        </pre>
       </div>
     </section>
   );

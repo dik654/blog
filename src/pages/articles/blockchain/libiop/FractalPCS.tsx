@@ -30,6 +30,83 @@ export default function FractalPCS() {
             { lines: [6, 12], color: 'sky', note: '전처리 매개변수 설정' },
             { lines: [14, 16], color: 'emerald', note: '인덱스 재사용 및 IVC' },
           ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Holographic IOP 개념</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Holographic IOP (Chiesa et al. 2020)
+//
+// 기존 IOP 한계:
+//   Verifier가 full circuit 알아야 함
+//   O(|Circuit|) verification time
+//   대규모 회로에서 비효율
+//
+// Holographic 해결:
+//   Circuit을 한 번만 "indexing"
+//   Index는 compact representation
+//   Verifier는 O(log |C|)만 처리
+
+// Indexer:
+//   Setup 단계에서 실행
+//   Input: R1CS (A, B, C matrices)
+//   Output: indexed oracles
+//
+//   행렬 분해:
+//     A → (row_a, col_a, val_a) polynomials
+//     B → (row_b, col_b, val_b) polynomials
+//     C → (row_c, col_c, val_c) polynomials
+//
+//   각 polynomial은 sparse matrix representation
+//
+// Prover:
+//   Index + witness → proof
+//
+// Verifier:
+//   Index + proof → accept/reject
+//   O(log |C|) work
+
+// Fractal Benefits:
+//
+// 1. O(log N) verification
+//    대규모 회로에서 critical
+//    L1 on-chain verification 가능
+//
+// 2. Reusable Indexer
+//    동일 circuit + 다양한 inputs
+//    indexer once, prove many times
+//
+// 3. Recursive Composition
+//    IVC (Incrementally Verifiable Computation)
+//    Cycle of curves 불필요
+//    더 간단한 recursion
+//
+// 4. Post-quantum secure
+//    FRI 기반 (hash only)
+//    Transparent setup
+
+// 구성 요소:
+//
+//   R1CS → MLE (multilinear extension)
+//   Lincheck IOP
+//   Sumcheck protocol
+//   FRI commitments
+//   Merkle tree oracles
+
+// 성능 비교:
+//
+//   ┌────────────┬────────────┬──────────┐
+//   │  System    │  Verify    │ Setup    │
+//   ├────────────┼────────────┼──────────┤
+//   │ Groth16    │ O(1)       │ Per-circ │
+//   │ Marlin     │ O(log²N)   │ Universal│
+//   │ Fractal    │ O(log N)   │ Universal│
+//   │ STARKs     │ O(log²N)   │ Transparent│
+//   └────────────┴────────────┴──────────┘
+
+// Research Impact:
+//   - Nova, HyperNova folding schemes 영감
+//   - Recursive SNARKs 발전 기반
+//   - Proof-carrying data 연구`}
+        </pre>
       </div>
     </section>
   );

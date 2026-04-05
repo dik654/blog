@@ -126,6 +126,88 @@ export default function UpgradeChain({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">finish() 서명 검증</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">multistream-select Protocol Negotiation</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// multistream-select Protocol
+//
+// 목적: 양측이 지원하는 protocol 협상
+//
+// Negotiation Flow:
+//
+//   A → B: "/multistream/1.0.0"
+//   B → A: "/multistream/1.0.0"  (OK)
+//
+//   A → B: "/noise" (try)
+//   B → A: "/noise" (accept)
+//     → use Noise
+//
+//   Alternative:
+//   A → B: "/noise"
+//   B → A: "na" (not available)
+//   A → B: "/tls" (fallback)
+//   B → A: "/tls" (accept)
+//     → use TLS
+
+// Length-prefixed messages:
+//   [varint length][protocol string][\\n]
+//
+//   "\\x07/noise\\n" = 8 bytes
+//
+// ls command (list protocols):
+//   A → B: "ls"
+//   B → A: list of supported protocols
+
+// Upgrade Types:
+//
+//   Security upgrade:
+//     Raw TCP → encrypted stream
+//     Noise XX, TLS 1.3
+//
+//   Mux upgrade:
+//     Encrypted stream → multiplexed substreams
+//     Yamux, Mplex
+//
+//   Custom protocols:
+//     multistream negotiate on each substream
+//     Kad, GossipSub, Identify, Ping
+
+// SwarmBuilder Type State Pattern:
+//
+//   Initial:
+//     SwarmBuilder::new(keypair)
+//     → Builder<WithIdentity>
+//
+//   After .with_tcp():
+//     → Builder<WithIdentity, WithTcp>
+//
+//   After .with_noise():
+//     → Builder<WithIdentity, WithTcp, WithSecurity>
+//
+//   After .with_yamux():
+//     → Builder<..., WithMuxer>
+//
+//   After .with_behaviour():
+//     → Builder<..., WithBehaviour>
+//
+//   .build() only available when all set
+//
+//   → Compile-time safety
+//   → Impossible wrong order
+
+// Why Security before Mux?
+//   If Mux first:
+//     Stream headers exposed (plaintext)
+//     Attacker sees protocol negotiation
+//     Timing analysis possible
+//
+//   Security first:
+//     Everything after Noise encrypted
+//     Mux frames, protocol IDs hidden
+//     Only TCP metadata visible (IP, port, size)`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -51,6 +51,47 @@ export default function CFGSection() {
           <span>다양성 높음</span><span>텍스트 충실도 높음</span>
         </div>
       </div>
+
+      <div className="mt-4">
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Classifier-Free Guidance (Ho & Salimans 2022)
+//
+// 문제: 조건부 생성 시 텍스트 충실도 제어 필요
+//
+// 기존 방법 (Classifier Guidance):
+//   ε̂ = ε_θ(x_t, t) - s·∇_x log p(y|x_t)
+//   분류기 필요 → 추가 학습 부담
+//
+// Classifier-Free (간단하고 효과적):
+//   훈련 시: 일정 확률(보통 10%)로 조건 드롭
+//   모델이 조건부/무조건 모두 학습
+//
+// 추론 시:
+//   ε_cond = ε_θ(x_t, t, c)      # 조건부 예측
+//   ε_uncond = ε_θ(x_t, t, ∅)    # 무조건부 예측
+//   ε̂ = ε_uncond + w·(ε_cond - ε_uncond)
+//
+// w = guidance scale
+//   w = 0: 무조건부 생성
+//   w = 1: 표준 조건부 생성
+//   w > 1: 조건 강화 (품질↑, 다양성↓)
+//
+// 직관:
+//   (ε_cond - ε_uncond) = 조건부 방향
+//   w만큼 그 방향으로 "증폭"
+//   텍스트 관련 feature 강조
+
+// 실무:
+//   Stable Diffusion 기본값 w=7.5
+//   Anime: w=9~12
+//   Photorealistic: w=5~7
+//   너무 크면 (>15) 과포화, 아티팩트
+
+// 추가 비용:
+//   매 스텝 UNet 2번 forward (uncond + cond)
+//   → 추론 시간 2배`}
+        </pre>
+      </div>
     </>
   );
 }

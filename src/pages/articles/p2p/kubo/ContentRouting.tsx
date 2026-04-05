@@ -54,6 +54,89 @@ export default function ContentRouting({ onCodeRef }: {
           </div>
         )}
         <CodePanel title="병렬 라우터 조합" code={ROUTING_CODE} annotations={ROUTING_ANNOTATIONS} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Content Routing 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// IPFS Content Routing
+//
+// 질문: "이 CID 누가 가지고 있어?"
+//
+// 3가지 Router:
+//
+// 1. DHT (Kademlia)
+//    - Decentralized
+//    - Public IPFS network
+//    - Slow (수 초 ~ 수십 초)
+//    - Scalable
+//
+// 2. HTTP Delegated Routing
+//    - Centralized (usually)
+//    - Fast (수 밀리초)
+//    - IPNI (InterPlanetary Network Indexer)
+//    - cid.contact, others
+//
+// 3. Bitswap (opportunistic)
+//    - 이미 연결된 peer에게 질문
+//    - WANT_HAVE broadcasts
+//    - Session-based
+//
+// Parallel Strategy (Composer):
+//   모두 동시에 query
+//   첫 응답 반환
+//   → 최소 latency
+
+// DHT Operations:
+//
+// ADD_PROVIDER (내가 보유 알림):
+//   주기적 republish (12 hours)
+//   DHT의 k 가까운 노드에 저장
+//
+// FIND_PROVIDERS (찾기):
+//   Iterative Kademlia lookup
+//   가까운 노드부터 query
+//   Provider 목록 수집
+
+// Provider Records:
+//   (CID, PeerID, expiration)
+//   Signed by provider
+//   TTL: 24 hours
+//   Republish every 12 hours
+
+// IPNI (Network Indexer):
+//   중앙화된 index 서비스
+//   - 빠른 조회
+//   - 대규모 dataset (Filecoin 통합)
+//   - cid.contact (가장 큼)
+//   - AWS Neptune graph DB 기반
+
+// HTTP Delegated Routing:
+//   RFC 9 draft
+//   /routing/v1/providers/{cid}
+//   Returns: ProvidersResponse
+//
+//   장점: 빠름, 경량 클라이언트 친화
+//   단점: 중앙화, trust 필요
+
+// Performance:
+//   DHT: 5-30 seconds typical
+//   HTTP: 50-500ms
+//   Bitswap (connected peers): 50-200ms
+//
+// → Hybrid strategy essential for UX
+
+// Reprovide 시스템:
+//   Daemon이 주기적으로 blocks 재광고
+//   - strategy: "all" (모든 CID)
+//   - strategy: "pinned" (pinned만)
+//   - strategy: "roots" (root만, fast)
+
+// Configuration (Kubo):
+//   Routing.Type: "dht" | "dhtclient" | "dhtserver"
+//                 | "delegated" | "auto" | "autoclient"
+//
+//   "auto": DHT + HTTP delegated
+//   Recommended default`}
+        </pre>
       </div>
       <div className="mt-8"><RoutingFlowViz /></div>
     </section>

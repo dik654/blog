@@ -85,6 +85,78 @@ export default function Overview({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">Yamux Muxer 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Yamux 프로토콜 명세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Yamux v0 Specification (HashiCorp)
+//
+// Frame Format (12-byte header):
+//
+//   Version  (1 byte):  0
+//   Type     (1 byte):  Data/Window/Ping/GoAway
+//   Flags    (2 bytes): SYN/ACK/FIN/RST
+//   StreamID (4 bytes): stream identifier
+//   Length   (4 bytes): body length
+
+// Types:
+//   0 = Data            (stream data)
+//   1 = Window Update   (flow control)
+//   2 = Ping            (keep-alive)
+//   3 = Go Away         (disconnect)
+
+// Flags:
+//   SYN (0x01): new stream
+//   ACK (0x02): acknowledge stream
+//   FIN (0x04): half-close
+//   RST (0x08): force close
+
+// Stream ID Rules:
+//   Odd IDs:  client-initiated
+//   Even IDs: server-initiated
+//   StreamID 0: session-level messages
+
+// Flow Control:
+//
+//   Initial window: 256 KB per stream
+//   Sender: bytes 전송 → window 감소
+//   Receiver: Window Update → window 증가
+//   Zero window: sender 대기 (backpressure)
+//
+//   Why flow control?
+//   - Slow consumer 보호
+//   - Memory bloat 방지
+//   - Fair bandwidth sharing
+
+// Keep-alive:
+//   Ping frames (Type=2)
+//   Sender → ping
+//   Receiver → pong (same payload)
+//   Timeout 시 연결 끊김 감지
+
+// Go Away:
+//   Graceful shutdown
+//   Normal / Protocol Error / Internal Error
+//   모든 new stream 거부
+//   기존 stream은 마저 처리
+
+// libp2p Yamux 특성:
+//   Stream 한계: 8,192 (configurable)
+//   Frame max size: 16MB
+//   Initial window: 256KB
+//   Max pending: 256 streams
+
+// 사용 예:
+//   TCP connection A-B
+//   ├── Stream 1: Kademlia FIND_NODE
+//   ├── Stream 3: GossipSub msg
+//   ├── Stream 5: Identify exchange
+//   └── Stream 7: Custom protocol
+//
+//   각 stream 독립 flow control
+//   한 stream의 slow receiver가 다른 stream 막지 않음`}
+        </pre>
+      </div>
     </section>
   );
 }

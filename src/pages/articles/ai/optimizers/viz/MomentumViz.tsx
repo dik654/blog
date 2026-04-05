@@ -29,7 +29,7 @@ export default function MomentumViz() {
         const showMom = step >= 1;
         const showVel = step === 1 || step === 2;
         return (
-          <svg viewBox="0 0 440 200" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <svg viewBox="0 0 480 200" className="w-full max-w-2xl" style={{ height: 'auto' }}>
             {rings.map((r, i) => (
               <ellipse key={i} cx={CENTER.x} cy={CENTER.y}
                 rx={r * 1.4} ry={r} fill="none"

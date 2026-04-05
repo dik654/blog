@@ -33,6 +33,64 @@ export default function DecoderComputation() {
           학습이 반복되면 x̂가 x에 점점 가까워진다.
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Decoder 구조와 출력 분포</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// VAE Decoder Implementation
+class Decoder(nn.Module):
+    def __init__(self, latent_dim, hidden_dim, output_dim):
+        super().__init__()
+        self.fc1 = nn.Linear(latent_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, z):
+        h = F.relu(self.fc1(z))
+        x_hat = torch.sigmoid(self.fc2(h))  # 0~1 픽셀값
+        return x_hat
+
+// 출력 분포 선택:
+//
+// 1. Bernoulli (이진/이진화 이미지)
+//    p(x|z) = ∏ x̂_i^{x_i} · (1-x̂_i)^{1-x_i}
+//    손실: Binary Cross-Entropy
+//    활성화: sigmoid
+//    MNIST, 이진 이미지에 적합
+//
+// 2. Gaussian (연속 픽셀)
+//    p(x|z) = N(μ(z), σ²·I)
+//    손실: MSE (σ 고정 시)
+//    활성화: linear 또는 sigmoid
+//    일반 이미지에 적합
+//
+// 3. Categorical (컬러 이미지)
+//    p(x|z) = Cat(π_1, ..., π_K) for each pixel
+//    K=256 (8-bit 컬러)
+//    활성화: softmax
+//    PixelVAE 등에서 활용
+
+// 이미지 생성 시 decoder 구조:
+//
+// MNIST:
+//   Linear(20, 400)
+//   ReLU
+//   Linear(400, 784)
+//   Sigmoid → (28, 28) reshape
+//
+// 더 복잡한 이미지 (ConvTranspose):
+//   Linear(latent, 4*4*256)
+//   Reshape(4, 4, 256)
+//   ConvT(256→128, stride=2) → 8×8×128
+//   ConvT(128→64, stride=2)  → 16×16×64
+//   ConvT(64→3, stride=2)    → 32×32×3
+//   Sigmoid (픽셀 정규화)`}
+        </pre>
+        <p className="leading-7">
+          요약 1: Decoder는 <strong>z → 은닉층 → 출력</strong> 단순 구조.<br />
+          요약 2: 출력 분포(Bernoulli/Gaussian/Categorical)가 <strong>loss 함수</strong> 결정.<br />
+          요약 3: 이미지는 <strong>ConvTranspose</strong>로 공간 차원 복원.
+        </p>
+      </div>
     </section>
   );
 }

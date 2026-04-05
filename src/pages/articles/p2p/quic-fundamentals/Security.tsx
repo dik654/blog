@@ -40,6 +40,82 @@ export default function Security() {
           libp2p-quic에서도 quinn+rustls 조합으로 QUIC 보안을 제공합니다.<br />
           두 프로젝트 모두 자체 서명 인증서와 피어 ID 기반 인증을 지원합니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">QUIC Packet Protection</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// QUIC Packet Format & Encryption
+//
+// Packet Structure:
+//   ┌────────────────────────┐
+//   │ Header (일부 암호화됨) │  ← Header Protection
+//   ├────────────────────────┤
+//   │ Packet Number         │  ← Header Protection
+//   ├────────────────────────┤
+//   │ Frames (Payload)      │  ← AEAD Encryption
+//   │ + Auth Tag (16 bytes) │
+//   └────────────────────────┘
+
+// Two Layers of Protection:
+//
+// 1. Payload AEAD (body)
+//    Algorithm: AES-128-GCM / ChaCha20-Poly1305
+//    Key: derived from TLS 1.3
+//    Nonce: packet_number XOR iv
+//    AAD: header bytes
+//
+// 2. Header Protection
+//    Encrypts: Packet Number + flags
+//    Why? Packet number in plaintext
+//         → Traffic analysis
+//         → Reveals connection pattern
+//    Algorithm: AES-ECB (simple sample)
+
+// Encryption Levels (RFC 9001):
+//
+//   Initial:   HKDF from version-specific salt
+//     first packet, includes ClientHello
+//     attacker can recover (not secret)
+//     purpose: DoS 방어
+//
+//   Handshake: TLS handshake keys
+//     handshake messages
+//
+//   1-RTT:     Application data keys
+//     normal data after handshake
+//
+//   0-RTT:     PSK-derived keys
+//     early data resumption
+
+// Key Update:
+//   주기적 key rotation
+//   old_key → new_key via HKDF
+//   Packet header flag signals update
+//   Forward secrecy 강화
+
+// Connection ID:
+//   Source + Destination CID
+//   8-20 bytes (variable)
+//   Connection migration 지원
+//   NAT rebinding 시 유지
+
+// 보안 속성:
+//   ✓ Confidentiality (full encryption)
+//   ✓ Integrity (AEAD tag)
+//   ✓ Forward secrecy (ephemeral keys)
+//   ✓ Anti-replay (packet numbers)
+//   ✓ Identity hiding (header protection)
+
+// 암호 스위트:
+//   TLS_AES_128_GCM_SHA256 (기본)
+//   TLS_AES_256_GCM_SHA384
+//   TLS_CHACHA20_POLY1305_SHA256
+//   TLS_AES_128_CCM_SHA256 (optional)
+
+// Post-quantum 준비:
+//   Kyber-hybrid handshake 연구 중
+//   Google 실험 (2023)
+//   IETF draft 작업 중`}
+        </pre>
       </div>
     </section>
   );

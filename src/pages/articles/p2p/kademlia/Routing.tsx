@@ -54,6 +54,79 @@ export default function Routing({ title, onCodeRef }: { title?: string; onCodeRe
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-8">
         <h3>버킷 스플릿 원리</h3>
         <CodePanel title="거리별 버킷 분포" code={bucketSplitCode} annotations={bucketSplitAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">K-bucket 핵심 메커니즘</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// K-bucket 구조
+//
+// Node ID 공간: 2^n (n=160 SHA-1, 256 SHA-256)
+//
+// 버킷 배열:
+//   bucket[0]: distance ∈ [2^0, 2^1)
+//   bucket[1]: distance ∈ [2^1, 2^2)
+//   bucket[2]: distance ∈ [2^2, 2^3)
+//   ...
+//   bucket[159]: distance ∈ [2^159, 2^160)
+//
+// 각 bucket: 최대 k개 노드 (보통 k=20)
+//
+// XOR distance:
+//   d(A, B) = A XOR B (unsigned integer)
+//   log2(d) → bucket index
+
+// 버킷 업데이트 알고리즘:
+//
+// on node_seen(N):
+//   b = bucket_index(N, self)
+//   if N in bucket[b]:
+//       move_to_tail(N)  // LRU 갱신
+//   elif len(bucket[b]) < k:
+//       append(bucket[b], N)
+//   else:
+//       oldest = bucket[b].head
+//       if PING(oldest) succeeds:
+//           move oldest to tail
+//           drop N
+//       else:
+//           remove oldest
+//           append N
+//
+// 핵심 원리:
+//   "Old node first" - 오래 살아있는 노드 우선
+//   Why? Mickens의 법칙:
+//     "The longer a node has been up,
+//      the more likely it is to still be up."
+
+// 버킷 분할 (Optimization):
+//
+// 단순 구현: 160 buckets 미리 할당 (낭비)
+// 최적화: 하나의 bucket으로 시작
+//   - 가득 차면 split
+//   - 내 ID 포함 subtree만 계속 split
+//   - 메모리 효율
+//
+// Split 조건:
+//   - bucket contains self's prefix
+//   - AND bucket은 가득 참
+//
+// 결과:
+//   - ~log2(N) buckets만 실제 사용
+//   - Memory O(k · log n)
+
+// Bootstrap과 Replacement:
+//
+// Replacement cache:
+//   버킷이 가득 차면 새 노드는 대기
+//   기존 노드 죽으면 승격
+//   버킷당 추가 공간
+
+// 현대 구현:
+//   Bitcoin: k=8
+//   Ethereum discv4/v5: k=16
+//   IPFS: k=20 (표준)
+//   BitTorrent DHT: k=8
+//   Libp2p Kad: k=20`}
+        </pre>
       </div>
     </section>
   );

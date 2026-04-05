@@ -36,6 +36,58 @@ export default function Overview() {
           libp2p에서는 AutoNAT + Circuit Relay v2 + DCUtR 조합을 사용합니다.
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">NAT 분류와 통과 가능성</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// NAT Binding Types (RFC 3489, 5780)
+//
+// ┌──────────────────┬──────────────┬──────────────┐
+// │      타입        │   매핑 동작  │ 홀펀칭 가능  │
+// ├──────────────────┼──────────────┼──────────────┤
+// │ Full Cone        │ 1:1 매핑     │ 가능 (쉬움)  │
+// │ Restricted Cone  │ Source IP 필터│ 가능         │
+// │ Port Restricted  │ IP+Port 필터 │ 가능 (까다)  │
+// │ Symmetric        │ 목적지별 매핑│ 거의 불가    │
+// └──────────────────┴──────────────┴──────────────┘
+//
+// Mapping Behavior:
+//   "동일 source port → 외부 매핑 동일?"
+//
+//   Endpoint-Independent: 같은 매핑 (Cone)
+//   Address-Dependent: 목적지 IP별 다름
+//   Address-Port-Dependent: 목적지 IP+Port별 다름
+//
+// Filtering Behavior:
+//   "누가 보낸 패킷을 받을까?"
+//
+//   Endpoint-Independent: 모든 source 허용
+//   Address-Dependent: 먼저 보낸 IP만
+//   Address-Port-Dependent: 먼저 보낸 IP+Port만
+
+// 현실의 NAT:
+//   Home router: 주로 Full Cone 또는 Restricted
+//   Mobile carrier: Symmetric NAT 흔함
+//   Corporate: Symmetric + strict firewall
+//   Cloud VPC: 정책 따라 다양
+
+// P2P 성공률 (경험적):
+//   Same network: 99%
+//   Both Full Cone: 95%
+//   Full + Restricted: 90%
+//   Both Restricted: 80%
+//   Symmetric + Restricted: 50%
+//   Both Symmetric: 5-10%
+//   → 전체 P2P 성공률: ~70-80%
+//   → TURN/DERP fallback 필수
+
+// CGN (Carrier-Grade NAT):
+//   IPv4 고갈로 ISP 레벨 NAT
+//   이중 NAT 상황
+//   홀 펀칭 더 어려움
+//   → IPv6 전환 권장`}
+        </pre>
+      </div>
     </section>
   );
 }

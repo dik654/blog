@@ -40,6 +40,72 @@ export default function EcallOcall({ onCodeRef }: { onCodeRef: (key: string, ref
           <CodeViewButton onClick={() => onCodeRef('ecall-table', codeRefs['ecall-table'])} />
           <span className="text-[10px] text-muted-foreground self-center">ecall_table_t</span>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">ECALL/OCALL 흐름 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// ECALL 전체 흐름 (Untrusted → Enclave)
+//
+// App (untrusted) side:
+//   1. Call ecall_foo(eid, ...)
+//      ↓ [Edger8r 생성 wrapper]
+//   2. Marshal parameters
+//      - In params: copy 값 to buffer
+//      - Out params: allocate space
+//   3. sgx_ecall(eid, func_idx, &ms_struct)
+//      ↓ [uRTS]
+//   4. Construct trampoline
+//   5. EENTER instruction
+//      ↓ [CPU]
+//   6. Switch to enclave mode
+//      - Load enclave CR registers
+//      - Enter TCS
+//      - Jump to enclave entry point
+//
+// Enclave (trusted) side:
+//   7. sgx_entry() [tRTS]
+//   8. Verify ECALL allowed
+//      - Check ecall_table
+//      - Validate parameters in enclave
+//   9. do_ecall(func_idx, ms_buffer)
+//   10. Call actual ECALL function
+//   11. Return value copy back
+//   12. EEXIT instruction
+//       ↓ [CPU]
+//   13. Return to App
+//
+// Total latency: ~8,000 cycles (EENTER + EEXIT)
+
+// OCALL 흐름 (Enclave → Untrusted):
+//   1. Enclave wants to call printf/fopen/etc.
+//   2. sgx_ocall(func_idx, &ms_struct)
+//   3. Save enclave state (ocall_context)
+//   4. EEXIT to App
+//   5. App identifies OCALL
+//   6. Call actual OCALL function
+//   7. ERESUME to re-enter enclave
+//   8. Restore enclave state
+
+// EDL 예시:
+//   enclave {
+//       trusted {
+//           public int ecall_add(
+//               [in] int* a,
+//               [in, out] int* b
+//           );
+//       };
+//       untrusted {
+//           void ocall_print([in, string] const char* str);
+//       };
+//   };
+
+// Parameter Marshaling 주의:
+//   - [in]: untrusted → trusted (copy in)
+//   - [out]: trusted → untrusted (copy out)
+//   - [in, out]: 양방향
+//   - [user_check]: 검증 안 함 (위험)
+//   - 포인터 참조는 모두 enclave 내부 복사 필요
+//   - 사용자 포인터 직접 역참조 금지`}
+        </pre>
       </div>
     </section>
   );

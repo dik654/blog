@@ -43,6 +43,69 @@ export default function CID() {
           iroh에서는 BLAKE3 해시 기반의 자체 내용 식별자를 사용합니다.<br />
           IPFS Kubo는 CIDv0(base58btc + sha2-256)과 CIDv1을 모두 지원합니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">CID 구조 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// CID (Content Identifier) 구조
+//
+// CIDv0 (legacy):
+//   Qm + base58btc(sha2-256(content))
+//   예: QmWmyoMoctfbAaiEs2G46gpeUmhqFR3vCRuQxr...
+//   - 항상 sha2-256 + base58btc
+//   - 46 characters
+//
+// CIDv1 (current):
+//   multibase || version || multicodec || multihash
+//
+//   example: bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
+//            ^^ multibase prefix (b = base32)
+//              ^^ version (01 = v1)
+//                ^^ multicodec (70 = dag-pb)
+//                  ^^ multihash prefix (1220 = sha2-256, 32 bytes)
+//                      ^^^^^^^ actual hash
+
+// Multibase (인코딩):
+//   b - base32 (lowercase, 기본)
+//   z - base58btc
+//   f - base16 (hex)
+//   B - BASE32UPPER
+//   k - base36
+
+// Multicodec (데이터 형식):
+//   0x55 - raw
+//   0x70 - dag-pb (IPLD protobuf)
+//   0x71 - dag-cbor (IPLD CBOR)
+//   0x0129 - dag-json
+//   0x01 - car (Content Archive)
+
+// Multihash:
+//   code + length + digest
+//   0x12 20 [32 bytes] = sha2-256
+//   0x1b 20 [32 bytes] = keccak-256
+//   0x1e 20 [32 bytes] = blake2b-256
+//   0x1d 20 [32 bytes] = blake2s-256
+//   0x14 20 [32 bytes] = blake3
+
+// CID 생성 예 (JavaScript):
+//   import { CID } from 'multiformats/cid'
+//   import { sha256 } from 'multiformats/hashes/sha2'
+//   import * as dagPb from '@ipld/dag-pb'
+//
+//   const bytes = dagPb.encode(node)
+//   const hash = await sha256.digest(bytes)
+//   const cid = CID.create(1, dagPb.code, hash)
+//   console.log(cid.toString())
+
+// CID v0 → v1 변환:
+//   v0: QmXxx...
+//   v1: bafkxxx... (같은 해시, 다른 표현)
+//
+// 자주 쓰이는 조합:
+//   Raw data: raw + sha2-256
+//   UnixFS: dag-pb + sha2-256
+//   Structured data: dag-cbor + sha2-256
+//   Modern: raw + blake3 (iroh)`}
+        </pre>
       </div>
     </section>
   );

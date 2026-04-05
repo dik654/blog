@@ -59,6 +59,68 @@ export default function LibP2PProtocols({ title, onCodeRef }: {
           { lines: [9, 11], color: 'emerald', note: '2-3단계: 외부 주소 교환' },
           { lines: [13, 15], color: 'amber', note: '4단계: 동시 dial로 NAT 홀 생성' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">libp2p 주요 프로토콜 목록</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p 내장 프로토콜 카탈로그
+//
+// Discovery 계층:
+//   - Kademlia DHT: 노드 탐색, content routing
+//   - mDNS: 로컬 네트워크 발견
+//   - Rendezvous: 중앙 만남의 장소
+//   - Bootstrap: 초기 peer 목록
+//
+// Connectivity 계층:
+//   - Ping: liveness check, RTT 측정
+//   - Identify: peer 정보 교환 (protocols, addrs)
+//   - AutoNAT: NAT 탐지
+//   - Circuit Relay v2: NAT 우회
+//   - DCUtR: Direct Connection Upgrade
+//
+// Pub/Sub 계층:
+//   - GossipSub v1.1: 최신, scored mesh
+//   - FloodSub: 모든 peers에 flood (deprecated)
+//
+// Stream Protocols:
+//   - Yamux: stream multiplexer
+//   - Mplex: simpler muxer (deprecated)
+//   - Noise: encryption handshake
+//   - TLS 1.3: alternative security
+//
+// Transport:
+//   - TCP
+//   - QUIC
+//   - WebSocket, WSS
+//   - WebTransport
+//   - WebRTC
+
+// Protocol ID 규칙:
+//   /libp2p/identify/1.0.0
+//   /libp2p/ping/1.0.0
+//   /libp2p/circuit/relay/0.2.0/hop
+//   /libp2p/dcutr
+//   /meshsub/1.1.0
+//   /kad/1.0.0
+//
+// 다중 버전 지원:
+//   multistream-select로 협상
+//   Upgrade path 자동 선택
+
+// 실제 사용 예 (Ethereum 2.0):
+//   Transport: TCP + Noise + Yamux
+//   Security: Noise XX handshake
+//   Identity: libp2p-identity (secp256k1)
+//   Discovery: discv5 (external)
+//   Pub/Sub: GossipSub v1.1
+//   Kad: libp2p-kad for peer discovery
+
+// IPFS 사용:
+//   Transport: TCP, QUIC, WebTransport
+//   Discovery: Kademlia DHT
+//   Content routing: DHT
+//   Block exchange: Bitswap
+//   Pub/sub: GossipSub`}
+        </pre>
       </div>
     </section>
   );

@@ -29,6 +29,42 @@ export default function WitnessSystem() {
         <h3 className="text-lg font-semibold mt-6 mb-3">ExecStep Witness</h3>
         <CodePanel title="ExecStep — 실행 단계" code={EXEC_STEP_CODE}
           annotations={execStepAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Witness vs Public Input</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// SNARK의 3가지 데이터
+
+// 1) Public Input (모두가 볼 수 있음)
+// - 블록 번호, timestamp
+// - Previous state root, new state root
+// - Transaction root, receipt root
+// - Verifier가 검증 시 확인
+
+// 2) Witness (Prover만 알고 있음)
+// - 모든 opcode 실행 세부
+// - Stack/memory/storage 중간 값
+// - 계산 과정 (carry, remainder 등)
+// - Verifier에 노출 안 됨
+
+// 3) Constraint (제약식)
+// - 회로 자체 (고정)
+// - 공개적 (누구나 검증 가능)
+// - Prover는 constraint 만족하는 witness 찾기
+
+// Zero-Knowledge 속성
+// Prover: "이 블록 실행 정상임 증명"
+// Verifier: "Witness 내용 알 필요 없음"
+// → Private computation, public verification
+
+// zkEVM의 witness 크기
+// - 1 블록 (100 tx): ~10-50 MB
+// - 메모리에 로드 필요
+// - Prover 메모리 요구: 수십 GB
+
+// 최적화
+// - Lazy witness generation
+// - Streaming assignment
+// - GPU-accelerated multi-scalar multiplication`}</pre>
+
       </div>
     </section>
   );

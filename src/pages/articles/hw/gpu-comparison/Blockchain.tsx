@@ -37,6 +37,109 @@ export default function Blockchain() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">블록체인 워크로드별 최적 선택</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 블록체인 워크로드별 병목 분석:
+
+// MSM (Multi-Scalar Multiplication):
+// - Groth16 SNARK 핵심
+// - ~95% time on C2 proving
+// - bandwidth bound
+// - 포인트 × 스칼라 = 많은 memory access
+//
+// Best: H100 (HBM3 3.35 TB/s)
+// Good: A100 (HBM2e 2 TB/s)
+// OK: RTX 5090 (GDDR7 1.8 TB/s)
+// Budget: RTX 4090 (GDDR6X 1 TB/s)
+
+// NTT/FFT (Number Theoretic Transform):
+// - polynomial evaluation
+// - compute bound
+// - many small ops in parallel
+// - CUDA core count matters
+//
+// Best: RTX 5090 (21,760 cores)
+// Good: H100 (16,896 cores)
+// OK: RTX 4090 (16,384 cores)
+// Pro: A100 (6,912 but HBM advantage)
+
+// Filecoin Sealing (C2):
+// - VRAM critical (proving key ~100GB)
+// - compute + memory balanced
+// - batched operations
+//
+// Best: H100 80GB or A100 80GB
+// Workable: A6000 48GB
+// Tight: RTX 4090 24GB (barely)
+
+// ZK-Rollup Proving:
+// - large circuits
+// - need lots of VRAM
+// - long-running proofs
+//
+// Best: H100 80GB (batch)
+// Good: A100 80GB
+// Limit: 24-48GB GPUs (smaller circuits)
+
+// LLM Inference:
+// - model weights in VRAM
+// - batch processing
+// - tensor cores matter
+// - NVLink for scaling
+//
+// Best: H100 SXM + NVLink clusters
+// Good: A100 SXM
+// Budget: RTX 4090 (small models)
+
+// AI Training:
+// - multi-GPU essential
+// - NVLink mandatory
+// - massive compute + memory
+//
+// Best: H100 8x SXM + NVLink Switch
+// Good: A100 SXM clusters
+// Impossible: consumer GPUs
+
+// SHA256 Mining (historical):
+// - power efficiency matters
+// - ASICs dominate
+// - GPUs not competitive
+// - energy cost > revenue
+
+// Cost-effectiveness ratios:
+//
+// Per-dollar compute:
+// - RTX 4090: excellent
+// - A6000: good
+// - A100: moderate
+// - H100: premium pricing
+//
+// Per-watt efficiency:
+// - H100: best efficiency
+// - A100: good
+// - RTX 4090: moderate
+// - RTX 5090: higher TDP
+//
+// Per-GB VRAM:
+// - H100: $312/GB
+// - A100 80GB: $125/GB
+// - A6000: $104/GB
+// - RTX 4090: $83/GB
+
+// Recommendation matrix:
+// Hobbyist: RTX 4090
+// Solo miner: RTX 4090 x2 or A6000
+// Small SP: A6000 x4-8
+// Large SP: A100 80GB cluster
+// Enterprise AI: H100 SXM + NVLink
+// Research lab: H100 + B200 mix`}
+        </pre>
+        <p className="leading-7">
+          Workload-GPU matrix: <strong>MSM → HBM, NTT → cores, Sealing → VRAM</strong>.<br />
+          cost-effective: RTX 4090 ($83/GB VRAM), H100 최고 efficiency.<br />
+          scale-dependent selection: hobbyist → enterprise 다른 tier.
+        </p>
       </div>
     </section>
   );

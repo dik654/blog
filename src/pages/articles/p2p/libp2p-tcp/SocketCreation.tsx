@@ -99,6 +99,75 @@ export default function SocketCreation({ onCodeRef }: {
           </span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Socket Options 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TCP Socket Options (libp2p-tcp)
+//
+// TCP_NODELAY (Nagle 비활성화):
+//
+//   Nagle algorithm (default):
+//     - 작은 패킷 버퍼링
+//     - MSS 크기까지 대기
+//     - 200ms timeout
+//     - HTTP에는 효율적
+//
+//   P2P 문제:
+//     - Gossip messages (수백 bytes)
+//     - 빈번한 양방향 통신
+//     - 200ms lag → 합의 지연
+//
+//   Solution: TCP_NODELAY = true
+//     즉시 전송, 버퍼링 없음
+
+// SO_REUSEADDR:
+//
+//   Default: TIME_WAIT 소켓 2MSL 유지 (~2분)
+//   Problem: 재시작 시 같은 포트 못 씀
+//
+//   With SO_REUSEADDR:
+//     TIME_WAIT 상태 무시
+//     즉시 bind 가능
+//     노드 재시작 시간 단축
+
+// SO_REUSEPORT:
+//
+//   Linux 3.9+ 기능
+//   여러 프로세스/소켓이 같은 포트 bind
+//
+//   P2P 사용 (NAT hole punching):
+//     Listen: 0.0.0.0:30303
+//     Dial outbound: 0.0.0.0:30303 (같은 포트!)
+//     → NAT가 같은 매핑 사용
+//     → External peer가 mapped port 알게됨
+//
+//   보안 주의:
+//     Unix 전용 (Linux, macOS, BSD)
+//     Windows는 SO_REUSEADDR만 지원
+//     Opt-in (PortUse::Reuse)
+
+// IP_BIND_ADDRESS_NO_PORT (Linux):
+//   bind() + connect() 성능 개선
+//   Port 충돌 회피
+//   Connection storms 처리
+
+// TCP_FASTOPEN:
+//   0-RTT TCP handshake (cookie 기반)
+//   libp2p-tcp 아직 미지원
+//   향후 고려
+
+// Non-blocking I/O:
+//   set_nonblocking(true)
+//   async runtime이 poll/epoll/kqueue 사용
+//   Thread blocking 없이 I/O 처리
+//   tokio, async-std, smol 호환
+
+// Socket timeout:
+//   connect_timeout: 기본 60초
+//   SO_KEEPALIVE: dead connection 감지`}
+        </pre>
+      </div>
     </section>
   );
 }

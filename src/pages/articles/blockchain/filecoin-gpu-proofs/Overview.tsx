@@ -61,6 +61,84 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
             </tbody>
           </table>
         </div>
+
+        {/* ── GPU Economics ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">GPU Economics for Filecoin SP</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// GPU Investment for Filecoin SP:
+
+// Hardware costs (2024):
+// - NVIDIA A100 (80GB): $15,000-20,000
+// - NVIDIA A6000 (48GB): $4,500-5,500
+// - NVIDIA RTX 4090 (24GB): $1,500-2,000
+// - AMD MI250 (128GB): $10,000+
+
+// Workload demands:
+// - PC2 (per sector): 30-60 min
+// - C2 (per sector): 30-90 min
+// - WindowPoSt (per partition): 20-30 min
+// - WinningPoSt (if elected): 20-40s
+
+// Sealing throughput:
+// A100 (80GB):
+// - 10-20 sectors/day/GPU (C2 bound)
+// - + WindowPoSt duty
+//
+// A6000:
+// - 5-10 sectors/day/GPU
+// - 3x slower than A100
+//
+// RTX 4090:
+// - 2-5 sectors/day/GPU
+// - budget option
+
+// Revenue per sector:
+// - 32 GiB sector: ~$10-30/year (varies)
+// - network growth impacts
+// - FIL+ verified: 10x reward
+
+// Payback:
+// - Hardware: $30-50K SP setup
+// - Annual revenue: $50-100K (varies)
+// - 1-2 year payback
+// - GPU 5-year lifespan
+
+// GPU supply constraints:
+// - AI/ML competition
+// - H100 shortage (2023-2024)
+// - crypto demand
+// - availability variable
+
+// Cloud alternatives:
+// - AWS (expensive)
+// - Lambda Labs (moderate)
+// - Runpod (budget)
+// - on-premise economics usually better
+
+// Efficiency improvements:
+// - bellperson → SupraSeal: 2-3x
+// - wider adoption
+// - continuous optimization
+// - new GPUs (H100, B200)
+
+// Future:
+// - H100/B200 adoption
+// - ASIC proving (hypothetical)
+// - FPGA options
+// - quantum resistance (later)
+
+// SP operator tips:
+// - start with A6000 (cost-effective)
+// - scale to A100 at volume
+// - monitor GPU utilization
+// - batching critical
+// - multi-GPU workers`}
+        </pre>
+        <p className="leading-7">
+          GPU economics: <strong>A100 $15-20K, 10-20 sectors/day</strong>.<br />
+          1-2 year payback, 5-year lifespan.<br />
+          AI/ML 경쟁으로 H100 품귀, A6000이 cost-effective.
+        </p>
       </div>
     </section>
   );

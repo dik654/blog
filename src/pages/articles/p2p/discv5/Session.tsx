@@ -59,6 +59,84 @@ export default function Session({ onCodeRef }: { onCodeRef: (key: string, ref: C
             이후 같은 노드와는 핸드셰이크 없이 즉시 암호화 메시지를 교환한다.
           </p>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">discv5 세션 암호화 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// discv5 Session Key Derivation
+//
+// 핸드셰이크 완료 시점에 세션 키 도출
+//
+// Input:
+//   ephemeral_privkey: Alice의 임시 개인키 (32 bytes)
+//   peer_static_pubkey: Bob의 정적 공개키 (33 bytes)
+//   alice_node_id, bob_node_id (각 32 bytes)
+//   challenge_data (32 bytes, from WHOAREYOU)
+//
+// Step 1: ECDH Shared Secret
+//   shared = ECDH(ephemeral_priv, peer_pubkey)
+//   → 33-byte compressed point
+//
+// Step 2: HKDF Key Derivation
+//   HKDF(
+//     salt: challenge_data,
+//     ikm: shared,
+//     info: "discovery v5 key agreement"
+//           || initiator_node_id
+//           || recipient_node_id,
+//     length: 32 bytes (= 16 + 16)
+//   )
+//
+//   → split:
+//     initiator_key (16B): A가 B에게 쓸 때 사용
+//     recipient_key (16B): B가 A에게 쓸 때 사용
+//
+// Step 3: Session 저장
+//   cache[(peer_id, addr)] = {
+//     write_key: initiator_key 또는 recipient_key,
+//     read_key: 반대 방향
+//   }
+
+// AES-128-GCM 암호화:
+//
+// Encryption:
+//   nonce = 12 bytes (random or counter)
+//   aad = packet header (96 bytes)
+//   ciphertext, tag = AES_GCM_Encrypt(
+//     key, nonce, plaintext, aad
+//   )
+//
+// Packet format:
+//   [header (96B)][nonce (12B)][ciphertext][tag (16B)]
+//
+// Header includes:
+//   - protocol id
+//   - version
+//   - flag
+//   - nonce
+//   - authdata-size
+//   - authdata
+
+// Session Expiry:
+//   - LRU 캐시 (1024 sessions)
+//   - 용량 초과 시 가장 오래된 것 제거
+//   - 만료된 세션은 재협상
+
+// Rekeying:
+//   - discv5는 명시적 rekey 없음
+//   - 세션 만료 시 자연스럽게 재협상
+//   - nonce 64-bit counter 충분
+
+// 보안 속성:
+//   ✓ Confidentiality (AES-GCM)
+//   ✓ Integrity (GCM auth tag)
+//   ✓ Directional keys (replay 방어)
+//   ✓ Forward secrecy (ephemeral keys)
+//   ✓ Identity authentication (handshake 검증)
+
+// discv4 vs discv5:
+//   discv4: 평문 통신 (signature만)
+//   discv5: 완전 암호화 (session keys)`}
+        </pre>
       </div>
     </section>
   );

@@ -1,4 +1,6 @@
 import GPSMapViz from './viz/GPSMapViz';
+import BackpropEfficiencyViz from './viz/BackpropEfficiencyViz';
+import TrainingLoopViz from './viz/TrainingLoopViz';
 
 export default function Overview() {
   return (
@@ -26,6 +28,31 @@ export default function Overview() {
       </div>
       <div className="not-prose mt-8">
         <GPSMapViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Backpropagation 개념 정리</h3>
+        <p>
+          Backprop = <strong>Chain Rule + Dynamic Programming</strong><br />
+          효율성이 핵심 — naive 방법 대비 수조 배 빠름
+        </p>
+      </div>
+      <BackpropEfficiencyViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-6 mb-3">학습 전체 루프</h3>
+        <p>
+          초기화 → 순전파 → 손실 → 역전파 → 업데이트 → 반복 — 수렴까지 loop
+        </p>
+      </div>
+      <TrainingLoopViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          요약 1: Backprop은 <strong>chain rule + dynamic programming</strong> — 효율성의 핵심.<br />
+          요약 2: <strong>Reverse mode autodiff</strong>가 신경망에 최적.<br />
+          요약 3: <strong>Forward → Loss → Backward → Update</strong> 4단계가 학습의 본질.
+        </p>
       </div>
     </section>
   );

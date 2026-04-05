@@ -44,6 +44,70 @@ export default function Reliability() {
           Ethereum Beacon Chain은 이 스코어링 시스템으로
           악의적 검증자의 메시지를 네트워크 레벨에서 차단합니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Gossip 공격과 방어</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Gossip 프로토콜 공격 벡터
+//
+// 1. Sybil Attack
+//    공격: 많은 가짜 노드 생성 → 네트워크 장악
+//    방어:
+//      - Peer scoring
+//      - IP-based throttling
+//      - Resource-based identity (PoW, PoS)
+//      - Admission control
+//
+// 2. Eclipse Attack
+//    공격: 피해자의 연결 모두 공격자로 변경
+//    방어:
+//      - Diverse peer selection
+//      - Anchor peers
+//      - Random walk
+//
+// 3. Message Flooding
+//    공격: 대량 메시지 발송 → bandwidth 소진
+//    방어:
+//      - Rate limiting per peer
+//      - Message size limits
+//      - Scoring + blacklist
+//
+// 4. Invalid Message Injection
+//    공격: 잘못된 서명/형식 메시지
+//    방어:
+//      - Validator hooks
+//      - Invalid message penalty
+//      - Topic-level validation
+//
+// 5. Censorship
+//    공격: 특정 메시지 전파 차단
+//    방어:
+//      - Redundant paths (gossip)
+//      - Self-healing mesh
+//      - Flood publishing
+
+// Ethereum Beacon Chain 사례:
+//
+//   Slashable offenses:
+//     - Double vote (slashing)
+//     - Surround vote (slashing)
+//     → 메시지 전파 + slashing proof
+//
+//   Spam prevention:
+//     - Per-topic message limits
+//     - Attestation aggregation
+//     - Gossipsub scoring
+//
+//   Network health:
+//     - Mesh diameter 모니터링
+//     - Topic coverage metrics
+//     - Peer diversity checks
+
+// 실무 튜닝:
+//   D (fanout): 성능 vs 대역폭
+//   Heartbeat: 빈도 vs 오버헤드
+//   Scoring weights: false positive vs security
+//   Cache TTL: memory vs dedup efficiency`}
+        </pre>
       </div>
     </section>
   );

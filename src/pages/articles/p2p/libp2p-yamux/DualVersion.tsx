@@ -90,6 +90,92 @@ export default function DualVersion({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">Either 분기 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Protocol Versioning 전략</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Protocol Version Negotiation
+//
+// libp2p multistream-select:
+//   각 protocol version별 ID
+//   /yamux/1.0.0
+//   /yamux/0.12.0
+//   /yamux/0.13.0
+//
+// Negotiation:
+//   A → B: "/multistream/1.0.0"
+//   B → A: "/multistream/1.0.0"
+//   A → B: "/yamux/0.13.0"
+//   B → A: "na" (not supported)
+//   A → B: "/yamux/0.12.0"
+//   B → A: "/yamux/0.12.0" (accepted)
+//   → use yamux 0.12
+
+// 동시 다버전 지원 이유:
+//
+// 1. Gradual rollout
+//    네트워크 전체 동시 업그레이드 불가
+//    일부 peer는 구버전 유지
+//
+// 2. Backwards compatibility
+//    기존 peer와 연결 유지
+//    새 기능 활용 (지원 시)
+//
+// 3. Bug fix rollout
+//    Security patch 빠른 배포
+//    구버전과 호환 유지
+
+// Rust의 Either Pattern:
+//
+// pub enum Either<L, R> {
+//     Left(L),
+//     Right(R),
+// }
+//
+// impl StreamMuxer for Either<A, B>
+// where
+//     A: StreamMuxer,
+//     B: StreamMuxer,
+// {
+//     fn poll_inbound(...) {
+//         match self {
+//             Either::Left(m) => m.poll_inbound(...),
+//             Either::Right(m) => m.poll_inbound(...),
+//         }
+//     }
+// }
+//
+// → Runtime dispatch
+// → Zero-cost abstraction (compile-time monomorphization)
+
+// Alternative patterns:
+//
+// 1. Trait Object (dyn):
+//    Box<dyn StreamMuxer>
+//    - Runtime cost (vtable)
+//    - Type erasure
+//
+// 2. Generic parameter:
+//    Swarm<TMuxer>
+//    - Compile-time, fast
+//    - Separate binaries per version
+//
+// 3. Either enum (chosen):
+//    Enum dispatch
+//    - 한 binary에 여러 versions
+//    - Slight runtime cost
+//    - 가독성 좋음
+
+// Yamux versioning history:
+//   0.10: initial libp2p support
+//   0.11: API improvements
+//   0.12: buffer fixes, current stable
+//   0.13: async改善, new API
+//
+// libp2p는 0.12와 0.13 동시 지원
+// → Deprecation 시 Either 제거`}
+        </pre>
+      </div>
     </section>
   );
 }

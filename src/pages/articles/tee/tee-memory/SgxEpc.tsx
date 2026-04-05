@@ -49,6 +49,57 @@ export default function SgxEpc({ onCodeRef }: Props) {
           <br />
           MAC 불일치 시 #GP 예외 — 변조 감지 보장.
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-4">EPC 페이지 유형</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// EPC Page Types (EPCM의 PT 필드)
+//
+// PT_SECS (0): SGX Enclave Control Structure
+//   - Enclave 메타데이터
+//   - Measurement (MRENCLAVE, MRSIGNER)
+//   - Attributes, ISVPRODID, ISVSVN
+//   - Enclave당 1개
+//
+// PT_REG (1): Regular Page
+//   - 일반 코드/데이터 페이지
+//   - RWX 권한 설정 가능
+//   - 대부분의 enclave 메모리
+//
+// PT_TCS (2): Thread Control Structure
+//   - Enclave 진입점
+//   - 스레드별 1개
+//   - EENTER로 접근
+//
+// PT_VA (3): Version Array
+//   - 페이징 시 nonce 저장
+//   - Anti-replay 보호
+//
+// PT_TRIM (4, SGX2): 트림된 페이지
+// PT_SS_FIRST (5, SGX2): State save area
+// PT_SS_REST (6, SGX2): State save area (rest)
+
+// EPCM 엔트리 구조 (8 bytes):
+//   VALID       : 페이지가 유효한가
+//   R/W/X       : 권한 비트
+//   PT          : 페이지 타입
+//   ENCLAVE_SECS: 소유 enclave (PA)
+//   ADDRESS     : 가상 주소 매핑
+//   BLOCKED     : 퇴거 준비 중인가
+//   PENDING     : SGX2 동적 페이지
+
+// SGX Instructions 요약:
+//   ECREATE: SECS 생성 → enclave 초기화
+//   EADD:    REG/TCS 페이지 추가
+//   EEXTEND: measurement 업데이트
+//   EINIT:   enclave 완성 + measurement 확정
+//   EENTER:  enclave 진입 (TCS 경유)
+//   EEXIT:   enclave 종료
+//   EWBLOCK: 페이지 퇴거 준비
+//   ELDU:    페이지 복원
+//   ERDINFO: 페이지 정보 조회
+//   EMODPR:  권한 수정 (SGX2)
+//   EMODT:   타입 변경 (SGX2)`}
+        </pre>
       </div>
     </section>
   );

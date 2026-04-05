@@ -27,6 +27,55 @@ export default function TableSystem() {
         <h3 className="text-lg font-semibold mt-6 mb-3">전체 테이블 타입</h3>
         <CodePanel title="테이블 타입 요약" code={TABLE_OVERVIEW_CODE}
           annotations={overviewAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">테이블 카탈로그</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// zkEVM 핵심 테이블
+
+// RwTable (Read-Write Table)
+// - 12 columns: (rw_counter, is_write, tag, id, address, field_tag, storage_key, value, value_prev, init_val, committed, revert)
+// - EVM 실행 중 모든 R/W 기록
+// - tag: Start, Memory, Stack, Storage, CallContext, Account, TxLog, TxReceipt, TxRefund
+
+// BytecodeTable
+// - 4 columns: (code_hash, index, value, is_code)
+// - 모든 loaded contract의 bytecode
+// - Code verification의 source of truth
+
+// BlockTable
+// - 3 columns: (tag, index, value)
+// - 현재 블록 정보 (number, timestamp, chainid, coinbase)
+// - Public input으로 제공
+
+// KeccakTable
+// - 4 columns: (is_enabled, input_rlc, input_len, output_rlc)
+// - Keccak hash input/output 쌍
+// - 다른 서브회로들이 lookup
+
+// TxTable
+// - 3 columns: (tag, index, value)
+// - Transaction fields (nonce, gas, to, value, data, sig)
+
+// CopyTable
+// - 9 columns: memcpy, calldatacopy, codecopy, returndatacopy, logdata
+// - Source/destination 관계
+
+// ExpTable
+// - 5 columns: (base_limb0..3, exp, exp_pow)
+// - EXP opcode 전용
+
+// MptTable
+// - 7 columns: state 변경 before/after`}</pre>
+
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">인사이트: Table-first 설계의 힘</p>
+          <p>
+            <strong>전통 SNARK 회로</strong>: 연산이 직접 제약식으로 표현 → 복잡<br />
+            <strong>Table-based zkEVM</strong>: 연산 → table entry → lookup 검증<br />
+            <strong>장점</strong>: 모듈성, 재사용성, lookup argument로 저비용 검증<br />
+            <strong>비용</strong>: Witness generation 복잡 (table assignment)
+          </p>
+        </div>
+
       </div>
     </section>
   );

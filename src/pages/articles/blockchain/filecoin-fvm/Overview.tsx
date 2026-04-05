@@ -21,6 +21,77 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
           <strong>💡 EVM 위에 Solidity로 스토리지 딜 프로그래밍</strong> — FEVM 덕분에<br />
           이더리움 개발자가 Filecoin 위에서 DeFi + 스토리지를 결합한 dApp을 만들 수 있음
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">FVM Architecture 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// FVM (Filecoin Virtual Machine):
+
+// Architecture:
+// - WASM-based runtime (wasmtime)
+// - IPLD state storage
+// - gas-metered execution
+// - deterministic
+// - sandboxed
+
+// Evolution:
+// - 2022: FVM v1 (built-in actors in WASM)
+// - 2023: FEVM (Ethereum compat)
+// - 2024: mature ecosystem
+// - 2025+: production DeFi
+
+// Layer stack:
+// Application (Solidity, Rust, ...)
+//   ↓
+// FEVM (EVM compat)  or  FVM native
+//   ↓
+// WASM bytecode
+//   ↓
+// wasmtime runtime
+//   ↓
+// Host syscalls (ipld_get, ipld_put, ...)
+//   ↓
+// StateTree (HAMT)
+
+// Key differences from EVM:
+// 1. WASM not EVM bytecode
+// 2. State: HAMT not MPT
+// 3. Addresses: 5 types (ID, BLS, Secp, Actor, Delegated)
+// 4. Native tokens: FIL only initially
+// 5. Gas: different pricing
+
+// FEVM (EVM on FVM):
+// - Solidity contracts supported
+// - MetaMask compatible
+// - eth-rpc API
+// - ETH addresses (Delegated f4)
+// - tooling: Hardhat, Foundry, Remix
+
+// FEVM use cases:
+// - port Ethereum DeFi to Filecoin
+// - storage-aware smart contracts
+// - NFT markets with Filecoin storage
+// - data DAOs
+// - retrieval markets
+
+// FVM Native (ref-fvm):
+// - Rust implementation
+// - actors in WASM
+// - more powerful than EVM
+// - direct syscalls
+// - custom cryptography
+
+// Supported languages:
+// - Rust (primary for native)
+// - Solidity (via FEVM)
+// - AssemblyScript
+// - C/C++ (via WASM)
+// - Go (experimental)`}
+        </pre>
+        <p className="leading-7">
+          FVM: <strong>WASM-based + IPLD state + FEVM compat</strong>.<br />
+          FEVM으로 Solidity 지원 — Ethereum tooling 호환.<br />
+          2022 v1 → 2023 FEVM → 2024 mature ecosystem.
+        </p>
       </div>
     </section>
   );

@@ -42,6 +42,91 @@ export default function Config({ onCodeRef }: {
           </div>
         )}
         <CodePanel title="Datastore 설정" code={CONFIG_CODE} annotations={CONFIG_ANNOTATIONS} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Datastore Backend 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Kubo Datastore Backends
+//
+// 1. Flatfs (flat filesystem)
+//    File: one file per block
+//    Path: /datastore/AB/CDEF.data
+//    Hash-sharded directories
+//
+//    장점:
+//      - 운영체제 FS 직접 사용
+//      - 간단, 이식성 높음
+//      - Block당 일대일 매핑
+//
+//    단점:
+//      - 작은 파일 많음 (inode 소비)
+//      - 디스크 공간 오버헤드 (block size)
+//      - 대규모에서 느림
+//
+// 2. Badger (LSM-tree)
+//    Key-value store (GC 필요)
+//    Rust의 sled와 유사
+//
+//    장점:
+//      - 빠른 쓰기
+//      - Compression 내장
+//      - 작은 metadata 오버헤드
+//
+//    단점:
+//      - GC 필요 (주기적)
+//      - Corruption 위험 (잦은 crash 시)
+//
+// 3. LevelDB
+//    Google의 LSM-tree
+//    단순하고 안정적
+//
+//    장점:
+//      - 검증된 안정성
+//      - 예측 가능한 성능
+//
+//    단점:
+//      - Badger보다 느림
+//      - Write amplification
+//
+// 4. Mount (조합)
+//    여러 backend 조합
+//    /blocks → Flatfs
+//    /pins → LevelDB
+//    /datastore → Badger
+
+// Profile 시스템:
+//
+//   server: 고가용 서버용
+//     - HighWater/LowWater 높음
+//     - mDNS 비활성
+//     - GC 빈도 낮음
+//
+//   lowpower: 모바일/IoT
+//     - HighWater 200
+//     - 저전력 모드
+//
+//   local-discovery: 개발/홈
+//     - mDNS 활성
+//     - DHT client mode
+//
+//   flatfs: 간단한 저장
+//     - Flatfs backend
+//
+//   badgerds: 고성능
+//     - Badger backend
+
+// 실무 권장:
+//
+//   Small node (< 10GB):
+//     Flatfs + Local discovery
+//
+//   Medium node (10-100GB):
+//     Badger + server profile
+//
+//   Large node (> 100GB):
+//     Custom Mount setup
+//     SSD for hot data
+//     HDD for cold data`}
+        </pre>
       </div>
       <div className="mt-8"><ConfigViz /></div>
     </section>

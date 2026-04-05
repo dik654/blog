@@ -27,9 +27,9 @@ export function ModuleBox({ x, y, w = 90, h = 48, label, sub, color }: BoxProps)
       {/* 컬러 바를 clipPath 안에서 맨 위에 렌더 — border를 덮음 */}
       <rect x={x} y={y} width={w} height={5} fill={color} opacity={0.85} clipPath={`url(#${clipId})`} />
       <text x={x + w / 2} y={y + h / 2 + (sub ? 0 : 4)} textAnchor="middle"
-        fontSize={10} fontWeight={700} fill="var(--foreground)">{label}</text>
-      {sub && <text x={x + w / 2} y={y + h / 2 + 13} textAnchor="middle"
-        fontSize={7} fill="var(--muted-foreground)">{sub}</text>}
+        fontSize={11} fontWeight={700} fill="var(--foreground)">{label}</text>
+      {sub && <text x={x + w / 2} y={y + h / 2 + 14} textAnchor="middle"
+        fontSize={8.5} fill="var(--muted-foreground)">{sub}</text>}
     </g>
   );
 }
@@ -42,9 +42,9 @@ export function DataBox({ x, y, w = 65, h = 32, label, sub, color }: BoxProps) {
       <rect x={x} y={y} width={w} height={h} rx={h / 2}
         fill={`${color}12`} stroke={color} strokeWidth={1} />
       <text x={x + w / 2} y={y + h / 2 + (sub ? -1 : 4)} textAnchor="middle"
-        fontSize={9} fontWeight={600} fill={color}>{label}</text>
-      {sub && <text x={x + w / 2} y={y + h / 2 + 10} textAnchor="middle"
-        fontSize={6.5} fill="var(--muted-foreground)">{sub}</text>}
+        fontSize={10} fontWeight={600} fill={color}>{label}</text>
+      {sub && <text x={x + w / 2} y={y + h / 2 + 11} textAnchor="middle"
+        fontSize={8} fill="var(--muted-foreground)">{sub}</text>}
     </g>
   );
 }
@@ -62,9 +62,9 @@ export function ActionBox({ x, y, w = 85, h = 38, label, sub, color }: BoxProps)
       <rect x={x} y={y} width={w} height={h} rx={6} fill="transparent" stroke="var(--border)" strokeWidth={0.5} />
       <rect x={x} y={y} width={3.5} height={h} fill={color} clipPath={`url(#${clipId})`} />
       <text x={x + w / 2 + 2} y={y + h / 2 + (sub ? -2 : 4)} textAnchor="middle"
-        fontSize={9} fontWeight={600} fill="var(--foreground)">{label}</text>
-      {sub && <text x={x + w / 2 + 2} y={y + h / 2 + 10} textAnchor="middle"
-        fontSize={7} fill="var(--muted-foreground)">{sub}</text>}
+        fontSize={10} fontWeight={600} fill="var(--foreground)">{label}</text>
+      {sub && <text x={x + w / 2 + 2} y={y + h / 2 + 11} textAnchor="middle"
+        fontSize={8} fill="var(--muted-foreground)">{sub}</text>}
     </g>
   );
 }
@@ -77,11 +77,11 @@ export function StatusBox({ x, y, w = 100, h = 50, label, sub, color, progress =
       <rect x={x} y={y} width={w} height={h} rx={8} fill="var(--card)" />
       <rect x={x} y={y} width={w} height={h} rx={8} fill="transparent" stroke="var(--border)" strokeWidth={0.5} />
       <text x={x + w / 2} y={y + 18} textAnchor="middle"
-        fontSize={9} fontWeight={600} fill="var(--foreground)">{label}</text>
+        fontSize={10} fontWeight={600} fill="var(--foreground)">{label}</text>
       <rect x={x + 10} y={y + 26} width={barW} height={5} rx={2.5} fill="var(--border)" opacity={0.3} />
       <rect x={x + 10} y={y + 26} width={barW * progress} height={5} rx={2.5} fill={color} />
       {sub && <text x={x + w / 2} y={y + 43} textAnchor="middle"
-        fontSize={6.5} fill="var(--muted-foreground)">{sub}</text>}
+        fontSize={8} fill="var(--muted-foreground)">{sub}</text>}
     </g>
   );
 }
@@ -94,9 +94,9 @@ export function AlertBox({ x, y, w = 90, h = 48, label, sub, color }: BoxProps) 
       <rect x={x} y={y} width={w} height={h} rx={8}
         fill={`${color}06`} stroke={color} strokeWidth={0.8} strokeDasharray="4 3" />
       <text x={x + w / 2} y={y + h / 2 + (sub ? -3 : 4)} textAnchor="middle"
-        fontSize={9} fontWeight={600} fill={color}>{label}</text>
-      {sub && <text x={x + w / 2} y={y + h / 2 + 10} textAnchor="middle"
-        fontSize={7} fill={color} opacity={0.7}>{sub}</text>}
+        fontSize={10} fontWeight={600} fill={color}>{label}</text>
+      {sub && <text x={x + w / 2} y={y + h / 2 + 11} textAnchor="middle"
+        fontSize={8} fill={color} opacity={0.7}>{sub}</text>}
     </g>
   );
 }

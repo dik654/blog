@@ -1,6 +1,7 @@
 import CodePanel from '@/components/ui/code-panel';
 import EmbeddingViz from './viz/EmbeddingViz';
 import OneHotDenseViz from './viz/OneHotDenseViz';
+import Word2VecImpactViz from './viz/Word2VecImpactViz';
 import { analogyExampleCode, analogyAnnotations } from './OverviewData';
 
 export default function Overview({ title }: { title?: string }) {
@@ -48,6 +49,22 @@ export default function Overview({ title }: { title?: string }) {
       </div>
       <div className="mt-8">
         <EmbeddingViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Word2Vec의 혁신적 기여</h3>
+        <p>
+          2013년 Tomas Mikolov (Google) — One-hot encoding 시대를 dense vector 시대로 전환<br />
+          4가지 혁신: 분포 가설 실현 · Dense 표현 · 효율적 학습 · 선형 의미 구조
+        </p>
+      </div>
+      <Word2VecImpactViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          요약 1: Word2Vec은 <strong>300차원 dense vector</strong>로 단어 의미 포착 — NLP 혁명.<br />
+          요약 2: <strong>분포 가설</strong>을 신경망으로 실현 — 컨텍스트가 의미 학습.<br />
+          요약 3: <strong>선형 산술</strong>로 의미 관계 표현 — king-man+woman≈queen.
+        </p>
       </div>
     </section>
   );

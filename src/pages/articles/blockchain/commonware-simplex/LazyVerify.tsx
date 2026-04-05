@@ -38,6 +38,187 @@ export default function LazyVerify({ onCodeRef }: { onCodeRef: (key: string, ref
       <div className="not-prose mb-8">
         <LazyVerifyViz onOpenCode={open} />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Lazy Verification 최적화</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Lazy Signature Verification
+//
+// Motivation:
+//
+//   Consensus has many signed messages:
+//     Votes, certificates, proposals
+//     N validators * M views * K messages/view
+//     Easily 10^4 - 10^6 signatures per epoch
+//
+//   Signature verification is expensive:
+//     Ed25519 verify: ~70 us
+//     BLS verify: ~2 ms
+//     At 10^4 signatures: ~0.7 sec (ed25519) / 20 sec (BLS)
+//
+//   Eager verification:
+//     Verify EVERY message on receive
+//     High CPU cost
+//     Many verifications WASTED (quorum not reached)
+//
+//   Lazy verification:
+//     Collect messages without verifying
+//     Verify only when quorum potentially reached
+//     Batch verification if supported
+
+// Batching optimization (Ed25519 specifically):
+//
+//   Single verify: 70 us
+//   Batch verify 100: 1.5 ms total (15 us amortized)
+//   Speedup: ~4-5x
+//
+//   Why? Batch can share intermediate computations
+//   Check N signatures with single exponentiation
+//
+//   Mathematical basis:
+//     Random linear combination of signatures
+//     e(sum(s_i), G) == e(hash, sum(pk_i) * r_i)
+
+// VoteTracker structure:
+//
+//   struct VoteTracker<D> {
+//       notarizes: AttributableMap<Notarize<D>>,
+//       nullifies: AttributableMap<Nullify>,
+//       finalizes: AttributableMap<Finalize<D>>,
+//       verified: bool,
+//   }
+//
+//   AttributableMap ensures:
+//     1 vote per validator (by index)
+//     Easy quorum detection (count entries)
+//
+//   verified flag:
+//     false initially
+//     true after batch verification passes
+
+// Batcher processing loop:
+//
+//   loop {
+//       // 1. Receive votes from network
+//       let (vote, signer) = self.inbox.recv().await;
+//
+//       // 2. Add to unverified pool
+//       self.tracker.add(vote, signer);
+//
+//       // 3. Check if quorum reachable
+//       if self.tracker.count() >= self.threshold {
+//           // 4. Attempt batch verification
+//           let result = self.batch_verify(&self.tracker).await;
+//
+//           match result {
+//               BatchOk => {
+//                   // All signatures valid
+//                   self.tracker.verified = true;
+//                   let cert = self.tracker.aggregate();
+//                   self.emit_certificate(cert).await;
+//               }
+//               BatchFail(bad_signers) => {
+//                   // Some signatures invalid
+//                   for signer in bad_signers {
+//                       self.tracker.remove(signer);
+//                   }
+//                   // Continue collecting...
+//               }
+//           }
+//       }
+//   }
+
+// Batch verification implementation:
+//
+//   fn batch_verify_ed25519(
+//       msgs: &[(Message, Signature, PublicKey)]
+//   ) -> Result<(), Vec<usize>> {
+//       // Pick random scalars r_i
+//       let rs: Vec<Scalar> = random_scalars(msgs.len());
+//
+//       // Verify combined equation
+//       // sum(r_i * s_i) * G ==
+//       //   sum(r_i * R_i) + sum(r_i * c_i * A_i)
+//       //
+//       //   where c_i = H(R_i, A_i, m_i)
+//
+//       if combined_check_passes {
+//           Ok(())
+//       } else {
+//           // If batch fails, fall back to individual
+//           identify_bad_signatures()
+//       }
+//   }
+
+// Short-circuit optimization:
+//
+//   Sometimes Certificate arrives BEFORE all votes!
+//   (peer already aggregated)
+//
+//   fn handle_message(&mut self, msg: Message) {
+//       match msg {
+//           Message::Certificate(cert) => {
+//               // Skip individual vote collection
+//               // Just verify the aggregate signature
+//               if self.verify_certificate(&cert) {
+//                   self.adopt_certificate(cert);
+//               }
+//           }
+//           Message::Notarize(vote) => {
+//               // Normal lazy path
+//               self.tracker.add(vote);
+//               self.maybe_batch_verify();
+//           }
+//       }
+//   }
+//
+//   Result:
+//     Fast forward if certificate ready
+//     Individual votes only if needed
+
+// Network channels:
+//
+//   Separate channels for:
+//     - Vote messages (frequent, small)
+//     - Certificate messages (rare, large)
+//     - Resolver requests (sync)
+//
+//   Prioritization:
+//     Certificates processed first (faster finality)
+//     Votes next (feed batcher)
+//     Resolver last (sync is background)
+
+// Security considerations:
+//
+//   1) DoS protection:
+//      Bounded vote pool size per view
+//      Drop old votes on overflow
+//
+//   2) Invalid signature attacks:
+//      Batch fail → identify bad signer
+//      Can slash malicious validator
+//
+//   3) Replay attacks:
+//      Vote includes view number
+//      Same vote different view = different signature
+//
+//   4) Equivocation:
+//      AttributableMap detects multiple votes
+//      Trigger slashing path
+
+// Performance impact:
+//
+//   With 100 validators, Ed25519:
+//     Eager: 100 verifications per view = 7ms
+//     Lazy (batch 67): 1 batch verify = 1.5ms
+//     Savings: ~5x CPU per view
+//
+//   Over 10,000 views:
+//     Eager: 70 sec CPU
+//     Lazy: 15 sec CPU
+//     55 sec saved per consensus participant`}
+        </pre>
+      </div>
     </section>
   );
 }

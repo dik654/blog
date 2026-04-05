@@ -51,6 +51,53 @@ export default function SevSme({ onCodeRef }: Props) {
           <br />
           암호화(기밀성) + RMP(무결성) = 완전한 메모리 보호.
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-4">SEV 진화 단계</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// AMD SEV 세대별 비교
+//
+// ┌────────────┬──────┬────────┬────────┬──────────────┐
+// │   기술     │ 연도 │ 기밀성 │ 무결성 │    특징      │
+// ├────────────┼──────┼────────┼────────┼──────────────┤
+// │ SME        │ 2016 │   ✓    │   ✗    │ 페이지별 C-bit│
+// │ SEV        │ 2017 │   ✓    │   ✗    │ VM별 VEK     │
+// │ SEV-ES     │ 2018 │   ✓    │   ✗    │ +레지스터 암호│
+// │ SEV-SNP    │ 2020 │   ✓    │   ✓    │ +RMP          │
+// └────────────┴──────┴────────┴────────┴──────────────┘
+//
+// SME (Secure Memory Encryption):
+//   - 시스템 와이드 암호화
+//   - C-bit로 페이지별 선택
+//   - 싱글 키 (plataforma)
+//
+// SEV (Secure Encrypted Virtualization):
+//   - VM마다 다른 키
+//   - ASID로 키 분리
+//   - 하이퍼바이저도 VM 메모리 못 봄
+//
+// SEV-ES (Encrypted State):
+//   - CPU 레지스터 상태도 암호화
+//   - VM exit 시 노출 방지
+//   - VMSA (VM Save Area) 보호
+//
+// SEV-SNP (Secure Nested Paging):
+//   - RMP로 메모리 매핑 검증
+//   - Page remapping attack 방어
+//   - Replay attack 방어
+//   - Interrupt injection 방어
+//   - 가장 강력한 보호
+
+// RMP (Reverse Map Table):
+//   각 시스템 물리 페이지마다 1개 엔트리
+//   - Assigned: 할당된 ASID
+//   - GPA: Guest Physical Address
+//   - Hypervisor: H/G mode
+//   - Validated: 유효성 비트
+//
+//   하이퍼바이저가 mapping 변경 시
+//   → RMP 체크
+//   → 불일치 → #VC 예외`}
+        </pre>
       </div>
     </section>
   );

@@ -51,6 +51,63 @@ export default function StateStorage({ onCodeRef: _onCodeRef }: { onCodeRef: (ke
             </tbody>
           </table>
         </div>
+
+        {/* ── Pruning 전략 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Pruning 전략 — 디스크 관리</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// CometBFT의 두 개 DB + app DB
+// 각각 독립 pruning 정책
+
+// 1. blockstore.db (블록 저장)
+//    - 블록 원본 저장
+//    - 크기: 연간 ~100GB (Cosmos Hub)
+//    - Pruning: 가장 공격적 가능 (재생 가능)
+
+// 2. state.db (consensus state)
+//    - validator sets, params, heights
+//    - 크기: 작음 (~수 GB)
+//    - Pruning: 중간 (validator set history 필요)
+
+// 3. app.db (ABCI app state)
+//    - Cosmos SDK app의 KV store
+//    - IAVL tree (versioned state)
+//    - 크기: 가장 큼 (연간 ~500GB+)
+//    - Pruning: 가장 보수적
+
+// config.toml pruning 설정:
+// [storage]
+// pruning = "default"  // nothing/everything/default/custom
+// pruning_keep_recent = 100       // 최근 100 heights 유지
+// pruning_interval = 10          // 매 10 blocks prune
+
+// 모드별 정책:
+// "nothing": 모든 history 유지 (archive node)
+// "everything": 필요 최소만 (lightest)
+// "default": 일반 (최근 heights 유지)
+// "custom": 사용자 정의
+
+// 메인넷 예시:
+// Cosmos Hub node (~2TB):
+// - blockstore.db: 1.5TB (archive)
+// - state.db: 100GB
+// - app.db (IAVL): 400GB (최근 100K heights)
+
+// Pruning 실행:
+// 1. 매 10 blocks마다 pruning 체크
+// 2. retained_height = current - 100
+// 3. DB에서 < retained_height 데이터 삭제
+// 4. IAVL tree versioning 활용
+
+// 운영 고려사항:
+// - Archive node: 무한 유지 (RPC provider)
+// - Full node: 최근 블록만 (validator)
+// - Pruned node: 최소 state (light client)`}
+        </pre>
+        <p className="leading-7">
+          CometBFT는 <strong>3개 독립 DB</strong> (blockstore/state/app).<br />
+          각각 pruning 정책 설정 가능 → 디스크 운영 유연.<br />
+          validator는 pruning 활성, archive는 전체 유지.
+        </p>
       </div>
     </section>
   );

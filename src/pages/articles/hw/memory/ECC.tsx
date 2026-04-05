@@ -37,6 +37,114 @@ export default function ECC() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">ECC 메모리 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// ECC (Error-Correcting Code) Memory:
+
+// Soft Error 원인:
+// - cosmic rays (alpha particles)
+// - electrical noise
+// - thermal fluctuations
+// - voltage variations
+// - higher altitude = more errors
+
+// Error rates:
+// - ~1 error per GB per year (sea level)
+// - ~10 errors per GB per year (higher altitude)
+// - 1 TB machine: ~1000-10000 errors/year
+// - datacenters: measurable
+
+// SECDED (Single Error Correct, Double Error Detect):
+//
+// Encoding:
+// - 64-bit data + 8-bit parity
+// - Hamming code + parity
+// - 72 bits total per transfer
+//
+// Correction:
+// - 1 bit flipped → corrected automatically
+// - 2 bits flipped → detected, not corrected
+// - 3+ bits → not guaranteed
+//
+// Hardware support:
+// - ECC memory controller in CPU
+// - RAS (Reliability, Availability, Serviceability)
+// - reported via OS
+
+// Advanced ECC:
+// - ChipKill (IBM): full chip failure recovery
+// - Intel SDDC: single device data correction
+// - AMD SEV-SNP: extended protection
+// - DDR5 on-die ECC: DIMM-level
+
+// Corrupted Memory Consequences:
+
+// Ethereum validator:
+// - wrong signature → slashed
+// - bad state → fork invalidated
+// - costs: 32 ETH stake at risk
+//
+// Bitcoin full node:
+// - wrong hash → chain fork
+// - mining wasted work
+// - trust violation
+//
+// Databases:
+// - wrong query results
+// - silent data corruption
+// - backup integrity lost
+//
+// HPC/AI:
+// - wrong training gradients
+// - incorrect ML models
+// - research invalidated
+
+// ECC Performance:
+// - 8 extra bits per 64 = 12.5% overhead
+// - no speed penalty (parallel paths)
+// - slight latency (~1 cycle)
+// - reliability worth it
+
+// ECC Support:
+
+// CPU:
+// - Intel Xeon: all support
+// - Intel Core: some (W-series)
+// - AMD Ryzen: all support (UDIMM)
+// - AMD EPYC: all support
+//
+// Motherboard:
+// - Server chipsets: standard
+// - Workstation: W680, TRX40
+// - Consumer: varies
+//
+// Memory:
+// - look for "ECC" label
+// - Kingston, Micron, Samsung brands
+// - premium over non-ECC
+// - 10-20% more expensive
+
+// When ECC 필요:
+// ✓ Servers (always)
+// ✓ Workstations (recommended)
+// ✓ Blockchain nodes (mandatory)
+// ✓ Databases
+// ✓ AI/ML training
+// ✗ Gaming (unnecessary)
+// ✗ Casual desktop use
+
+// Cost analysis:
+// - ECC premium: ~$10-20/16GB
+// - single error prevented: priceless
+// - data corruption recovery: $$$
+// - downtime: $1000+/hour`}
+        </pre>
+        <p className="leading-7">
+          ECC: <strong>1 bit 자동 정정, 2 bit 감지 (SECDED)</strong>.<br />
+          12.5% bit overhead, no speed penalty.<br />
+          server/blockchain/DB 필수, gaming 불필요.
+        </p>
       </div>
     </section>
   );

@@ -143,7 +143,7 @@ export default function ColdWalletPolicy() {
           동일 장소에 모든 키가 있으면 물리적 강탈이나 자연재해에 취약해진다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-4">콜드 -> 핫 전송 절차</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-4">{'콜드 -> 핫 전송 절차'}</h3>
         <p className="leading-7">
           이용자 출금 요청이 급증하면 핫월렛(Hot Wallet) 잔고가 부족해질 수 있다.
           이때 콜드월렛에서 핫월렛으로 자산을 보충하는 절차가 필요하다.

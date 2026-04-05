@@ -1,4 +1,5 @@
 import TanhViz from './viz/TanhViz';
+import LSTMGateViz from './viz/LSTMGateViz';
 
 export default function Tanh() {
   return (
@@ -28,6 +29,70 @@ export default function Tanh() {
       </div>
       <div className="not-prose my-8">
         <TanhViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Tanh 특성과 Sigmoid 관계</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Hyperbolic Tangent
+//
+// 정의:
+//   tanh(x) = (e^x - e^-x) / (e^x + e^-x)
+//           = sinh(x) / cosh(x)
+//
+// Sigmoid와의 관계:
+//   tanh(x) = 2·σ(2x) - 1
+//
+// 범위:
+//   tanh(x) ∈ (-1, 1)
+//   tanh(-∞) = -1
+//   tanh(0) = 0
+//   tanh(+∞) = 1
+//
+// 미분:
+//   d/dx tanh(x) = 1 - tanh²(x) = sech²(x)
+//
+// 주요 값:
+//   tanh(-2) ≈ -0.964, tanh'(-2) ≈ 0.071
+//   tanh(-1) ≈ -0.762, tanh'(-1) ≈ 0.420
+//   tanh( 0) = 0.000,  tanh'( 0) = 1.000
+//   tanh( 1) ≈ 0.762,  tanh'( 1) ≈ 0.420
+//   tanh( 2) ≈ 0.964,  tanh'( 2) ≈ 0.071
+
+// Sigmoid 대비 장점:
+//
+// 1. Zero-centered output
+//    sigmoid: 출력 ∈ (0,1), 평균 ≈ 0.5
+//    tanh:    출력 ∈ (-1,1), 평균 ≈ 0
+//    → gradient update 방향성 균형
+//
+// 2. 더 큰 최대 기울기
+//    sigmoid'(0) = 0.25
+//    tanh'(0) = 1.00
+//    → 4배 빠른 학습 속도
+//
+// 3. Saturation 범위 비슷
+//    sigmoid: |x| > 5에서 포화
+//    tanh:    |x| > 2에서 포화 (더 빠름)
+//
+// 공통 단점:
+//   Vanishing gradient (포화 영역에서 기울기 ≈ 0)
+//   Exp 계산 필요 (느림)`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">LSTM에서 Tanh 역할</h3>
+        <p>
+          LSTM/GRU에서 <strong>Sigmoid는 gate(0~1 밸브), Tanh는 candidate(−1~1 값)</strong>으로 역할 분담<br />
+          RNN의 tanh는 Transformer(2017) 등장 전까지 시퀀스 모델의 핵심이었음
+        </p>
+      </div>
+      <LSTMGateViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          요약 1: <strong>tanh = 2·sigmoid(2x) - 1</strong> — 수학적으로 동치 변환.<br />
+          요약 2: <strong>zero-centered + 4배 기울기</strong>로 sigmoid보다 우수.<br />
+          요약 3: LSTM/GRU에서 <strong>sigmoid(gate) + tanh(candidate)</strong> 조합 필수.
+        </p>
       </div>
     </section>
   );

@@ -52,6 +52,108 @@ export default function Overview() {
           </p>
         </CitationBlock>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">정렬 기법 비교표</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Alignment 기법 상세 비교
+//
+// ┌──────────┬───────┬──────────┬──────────┬─────────┐
+// │  기법    │모델수 │데이터    │안정성    │효율     │
+// ├──────────┼───────┼──────────┼──────────┼─────────┤
+// │ RLHF     │  4    │ pairwise │ 낮음     │ 낮음    │
+// │ DPO      │  2    │ pairwise │ 중간     │ 중간    │
+// │ IPO      │  2    │ pairwise │ 중간     │ 중간    │
+// │ CAI/RLAIF│  3-4  │ AI-gen   │ 낮음     │ 낮음    │
+// │ ORPO     │  1    │ pairwise │ 높음     │ 높음    │
+// │ KTO      │  2    │ binary   │ 중간     │ 높음    │
+// │ SimPO    │  1    │ pairwise │ 높음     │ 높음    │
+// └──────────┴───────┴──────────┴──────────┴─────────┘
+//
+// 진화 방향:
+//   1. 모델 수 감소 (4 → 1)
+//   2. 데이터 유연성 (binary, AI-gen)
+//   3. 학습 안정성 개선
+//   4. 계산 효율 향상
+
+// 각 기법 핵심:
+//
+// RLHF (2017):
+//   표준이지만 복잡
+//   Actor + Critic + Reward + Reference
+//   PPO 불안정성
+//
+// DPO (2023):
+//   Reward Model 제거
+//   Classification loss
+//   현재 실무 표준
+//
+// CAI (2022):
+//   AI 피드백 도입
+//   확장성 ↑
+//   Anthropic Claude의 기반
+//
+// ORPO (2024):
+//   SFT + 정렬 통합
+//   Reference 불필요
+//   가장 간결
+//
+// KTO (2024):
+//   Binary feedback
+//   행동경제학 영감
+//   실무 데이터 호환`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">실무 선택 가이드</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 언제 무엇을?
+//
+// Research / Benchmark:
+//   → DPO (reproducible, widely adopted)
+//
+// Production, 빠른 반복:
+//   → ORPO (1 step, efficient)
+//
+// 기존 thumbs-up/down 데이터 있음:
+//   → KTO (binary feedback)
+//
+// 인간 라벨링 불가능:
+//   → Constitutional AI / RLAIF
+//
+// 최고 성능 필요, 자원 충분:
+//   → RLHF with careful tuning
+//   또는 iterative DPO (Self-play)
+//
+// 대형 모델 (70B+):
+//   → DPO 또는 RLHF (ORPO 성능 저하)
+
+// Hybrid Approaches (2024):
+//   - SFT → DPO → RLHF (iterative)
+//   - SPPO (Self-Play Preference Optimization)
+//   - Iterative DPO with on-policy data
+//   - Online DPO (real-time updates)
+
+// 평가 지표:
+//   MT-Bench: 다중 턴 대화
+//   AlpacaEval 2.0: 명령 따르기
+//   Arena: 실제 사용자 선호
+//   HH-RLHF: Helpfulness + Harmlessness
+//   MMLU: 지식
+//   TruthfulQA: 사실성
+
+// 2024 오픈소스 예시:
+//   LLaMA-3-Instruct: DPO
+//   Zephyr-7B: DPO
+//   Tulu-2: DPO variants
+//   Mistral-Instruct: DPO
+//   Qwen2-Chat: DPO + PPO hybrid`}
+        </pre>
+        <p className="leading-7">
+          요약 1: <strong>RLHF → DPO → ORPO/KTO</strong>로 복잡도 감소 진화.<br />
+          요약 2: 실무에서는 <strong>DPO가 기본값</strong> — 간단·안정·검증됨.<br />
+          요약 3: 데이터 형태에 따라 <strong>ORPO/KTO/CAI</strong> 선택.
+        </p>
+      </div>
     </section>
   );
 }

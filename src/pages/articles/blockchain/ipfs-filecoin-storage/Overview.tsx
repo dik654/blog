@@ -11,6 +11,85 @@ export default function Overview() {
         </p>
       </div>
       <div className="not-prose"><CIDResolveViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">IPFS &amp; Filecoin 관계</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// IPFS (Content-Addressed File System):
+
+// CID (Content Identifier):
+// - hash of content
+// - deterministic
+// - self-verifying
+// - immutable
+
+// CID structure:
+// <cid-version><multicodec><multihash>
+// - cid-v1: base32 encoded
+// - multicodec: format (dag-cbor, dag-pb)
+// - multihash: sha2-256 typically
+
+// Example:
+// bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
+
+// IPFS vs Traditional:
+// HTTP: location-based (where)
+//   http://example.com/file.txt
+// IPFS: content-based (what)
+//   ipfs://bafybeig...
+
+// IPFS protocols:
+// - Bitswap: block exchange
+// - DHT (Kademlia): content routing
+// - libp2p: network layer
+// - UnixFS: file system format
+// - IPLD: linked data
+
+// Filecoin의 역할:
+// IPFS가 제공 안 하는 것:
+// - economic incentives
+// - storage guarantees
+// - payment mechanisms
+// - persistence assurance
+
+// Filecoin adds:
+// - PoRep / PoSt (cryptographic proofs)
+// - Storage deals (economic)
+// - FIL token (payments)
+// - Slashing (accountability)
+
+// 관계:
+// IPFS = data layer (content addressing)
+// Filecoin = persistence layer (storage economy)
+// 둘 결합 → decentralized storage stack
+
+// Stack:
+// Application
+//   ↓
+// IPFS (content addressing)
+//   ↓
+// Filecoin (storage + payment)
+//   ↓
+// Physical storage
+
+// Use case spectrum:
+// - Pure IPFS: temporary, free tier
+// - IPFS + pinning: semi-permanent
+// - Filecoin cold: long-term archival
+// - Filecoin hot (PDP): frequently accessed
+
+// Compatibility:
+// - IPFS tools work with Filecoin data
+// - CID compatibility across systems
+// - migration path
+// - interoperability`}
+        </pre>
+        <p className="leading-7">
+          IPFS: <strong>content-addressed + immutable CIDs</strong>.<br />
+          Filecoin: IPFS + economic incentives + storage proofs.<br />
+          상호 보완 stack: content addressing + persistence economy.
+        </p>
+      </div>
     </section>
   );
 }

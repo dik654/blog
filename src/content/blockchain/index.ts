@@ -14,6 +14,7 @@ import { polkadotArticles } from './articlesPolkadot';
 import { prysmArticles } from './articlesPrysm';
 import { commonwareArticles } from './articlesCommonware';
 import { zkFromScratchArticles } from './articlesZkFromScratch';
+import { defiArticles } from './articlesDeFi';
 
 const blockchain: Category = {
   slug: 'blockchain',
@@ -36,6 +37,7 @@ const blockchain: Category = {
     ...prysmArticles,
     ...commonwareArticles,
     ...zkFromScratchArticles,
+    ...defiArticles,
   ],
 };
 

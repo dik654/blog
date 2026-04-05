@@ -51,6 +51,86 @@ export default function Overview() {
           </div>
         ))}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Reed-Solomon 역사와 개발</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Reed-Solomon Code History
+//
+// 1960: Irving Reed & Gustave Solomon
+//   MIT Lincoln Lab
+//   "Polynomial codes over certain finite fields"
+//   원 논문은 다항식 평가 관점
+//
+// 1969: Berlekamp algorithm
+//   실용적 decoding 가능
+//
+// 1975: Welch-Berlekamp algorithm
+//   더 효율적 decoding
+//   O(n²) time complexity
+//
+// 1986: Voyager 2 Uranus flyby
+//   NASA가 RS coding 사용
+//   3.2 billion km 떨어진 데이터 복원
+//
+// 1990s: CD/DVD standardization
+//   모든 optical media 표준
+//   CIRC (Cross-Interleaved RS)
+//
+// 2000s: Wireless communications
+//   DVB-T, DAB, 802.11
+//   QR codes (2000)
+//
+// 2018: STARKs (Ben-Sasson et al.)
+//   RS code의 "proximity testing"
+//   FRI protocol 기반
+//   → Modern ZK systems
+
+// 수학적 기반:
+//
+// Reed-Solomon code RS(n, k, d):
+//   n: codeword length
+//   k: message length
+//   d: minimum distance = n - k + 1
+//   → MDS (Maximum Distance Separable)
+//
+// Error correction capability:
+//   t = ⌊(d-1)/2⌋ = ⌊(n-k)/2⌋ errors
+//   Erasure correction: up to n-k erasures
+//
+// Field selection:
+//   RS over F_p where p > n
+//   Common: F_{2^8} (bytes), F_p for p ~ 2^256 (ZK)
+
+// 알고리즘 진화:
+//
+//   Decoding algorithms:
+//     Berlekamp-Massey: O(n²)
+//     Euclidean algorithm: O(n²)
+//     Guruswami-Sudan (list decoding): O(n^4)
+//     Koetter-Vardy: soft decoding
+//
+//   Encoding:
+//     Systematic: easier decoding
+//     Non-systematic: all-polynomial
+
+// 응용별 설정:
+//
+//   CD audio:
+//     RS(32, 28) + RS(28, 24)
+//     Cross-interleaved
+//     Handle 4000+ bit burst errors
+//
+//   QR Code:
+//     Multiple RS codes per block
+//     L (7%), M (15%), Q (25%), H (30%)
+//
+//   Voyager:
+//     RS(255, 223)
+//     Concatenated with convolutional code
+//     Can recover 16 symbol errors`}
+        </pre>
+      </div>
     </section>
   );
 }

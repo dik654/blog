@@ -56,6 +56,82 @@ export default function Algorithms({ title, onCodeRef }: { title?: string; onCod
           { lines: [3, 7], color: 'sky', note: '1시간마다 버킷 새로고침' },
           { lines: [9, 12], color: 'emerald', note: '저장 값 재발행 — 만료 방지' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Kademlia 4 RPC 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Kademlia 4 RPC 프로토콜
+//
+// 1. PING
+//    "노드 살아있는지 확인"
+//    용도:
+//      - Liveness check (버킷 유지)
+//      - NAT keep-alive
+//      - Bootstrap 확인
+//    응답: PONG (보낸 노드 + 자기 ID)
+//
+// 2. STORE (key, value)
+//    "이 값을 저장해줘"
+//    용도:
+//      - DHT value 저장
+//      - Content advertisement
+//    응답: Acknowledgement
+//    저장: 메모리 또는 디스크
+//    TTL: 기본 24시간
+//
+// 3. FIND_NODE (target_id)
+//    "이 ID에 가까운 노드 k개 알려줘"
+//    용도:
+//      - Peer discovery
+//      - Routing table population
+//    응답: k개의 {id, IP, port}
+//    핵심: XOR distance 기반 선택
+//
+// 4. FIND_VALUE (key)
+//    "이 key의 value 또는 가까운 노드"
+//    용도:
+//      - DHT value 조회
+//    응답:
+//      - Value (있으면)
+//      - 가까운 노드 k개 (없으면)
+//    → iterative 조회로 수렴
+
+// 프로토콜 특성:
+//   - UDP 기반 (일반적)
+//   - Stateless messages
+//   - Request ID로 매칭
+//   - Sender ID 포함
+
+// Iterative FIND_NODE 의사코드:
+//   function iterative_find_node(target):
+//       closest = local_routing.k_closest(target)
+//       seen = {self}
+//       queried = {}
+//
+//       while True:
+//           picked = closest.filter(n not in queried)[:α]
+//           if empty(picked): break
+//
+//           responses = parallel_rpc(FIND_NODE, picked, target)
+//           queried.extend(picked)
+//
+//           new_closest = set()
+//           for resp in responses:
+//               for node in resp:
+//                   if node not in seen:
+//                       seen.add(node)
+//                       new_closest.add(node)
+//
+//           closest = top_k(closest ∪ new_closest, target)
+//
+//           if closest unchanged for 1 round: break
+//
+//       return closest
+
+// 복잡도:
+//   Time: O(log n) rounds
+//   Messages per round: α (=3)
+//   Total messages: O(α · log n) ≈ O(log n)`}
+        </pre>
       </div>
     </section>
   );

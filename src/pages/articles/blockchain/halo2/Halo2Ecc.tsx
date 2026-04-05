@@ -22,6 +22,37 @@ export default function Halo2Ecc({ title }: { title?: string }) {
         </p>
         <CodePanel title="halo2-ecc 모듈 계층 구조" code={ECC_MODULE_CODE} annotations={eccModuleAnnotations} />
         <CodePanel title="EcPoint & 점 연산 타입 시스템" code={ECPOINT_CODE} annotations={ecpointAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Non-native Field Arithmetic</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 문제: halo2 native field is BN254 scalar (254-bit prime)
+// 우리가 ECC 연산하려는 field는 secp256k1 (256-bit prime)
+// → 다른 field, "non-native"
+
+// Naive: BN254 내에서 secp256k1 simulate
+// - 각 secp256k1 원소 = BN254 원소 여러 개 (limbs)
+// - 256-bit → 3 limbs of 88-bit each
+
+// Arithmetic operations
+// Addition: limb별 add + carry propagation
+// Multiplication: 3x3 limb multiplication + modular reduction
+// Inversion: Extended Euclidean (매우 비쌈)
+
+// Cost 분석 (secp256k1 point add in BN254 circuit)
+// - Native BN254 add: ~10 constraints
+// - Non-native secp256k1 add: ~2000 constraints
+// → 200x more expensive
+
+// 최적화 기법
+// 1) Barrett reduction
+// 2) Montgomery multiplication
+// 3) Lazy reduction (결과만 reduce)
+// 4) Window method for scalar mult
+
+// 사용 사례
+// - Ethereum signature verification (secp256k1)
+// - Bitcoin integration
+// - Cross-chain verification`}</pre>
+
       </div>
     </section>
   );

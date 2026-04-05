@@ -60,6 +60,90 @@ export default function Applications() {
           ImageNet에서 학습한 범용 시각 피처(엣지, 텍스처, 도형)를 그대로 활용 가능
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">실무 응용 사례 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 1. 의료 영상 분석
+//    - X-ray 병변 검출 (CheXNet, DeepMind)
+//    - MRI/CT 3D CNN으로 종양 탐지
+//    - 피부암 분류 (dermatology)
+//    - 병리 이미지 세포 분석
+//
+// 2. 자율주행
+//    - 카메라 기반 객체 탐지 (YOLO, Tesla FSD)
+//    - Lane detection (도로 차선 인식)
+//    - Semantic segmentation (주행 가능 영역)
+//    - Depth estimation (거리 추정)
+//
+// 3. 제조업
+//    - 품질 검사 (불량품 탐지)
+//    - PCB 결함 검출
+//    - Anomaly detection
+//
+// 4. 보안/감시
+//    - 얼굴 인식 (FaceNet, ArcFace)
+//    - 행동 인식 (action recognition)
+//    - 군중 밀도 추정
+//
+// 5. 농업
+//    - 작물 질병 식별
+//    - 과일 성숙도 판별
+//    - 드론 영상 분석
+//
+// 6. 위성 영상
+//    - 토지 이용 분류
+//    - 재해 피해 평가
+//    - 건물/도로 segmentation`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">전이학습 세부 전략</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Transfer Learning 3가지 전략
+//
+// [전략 1] Feature Extraction (동결)
+//   - 사전학습 모델의 모든 conv층 동결
+//   - 마지막 FC만 새로 학습
+//   - 데이터: 1K~10K 샘플
+//   - 학습 시간: 짧음 (분~시간)
+//
+// [전략 2] Fine-tuning (일부/전체 학습)
+//   - 마지막 몇 층만 학습 (partial)
+//   - 또는 전체 재학습 (full)
+//   - 낮은 learning rate (1e-4 ~ 1e-5)
+//   - 데이터: 10K~100K 샘플
+//
+// [전략 3] Train from Scratch
+//   - 사전학습 가중치 사용 안 함
+//   - 모든 층 랜덤 초기화
+//   - 데이터: 100K+ 샘플
+//   - 학습 시간: 며칠~주
+
+// 도메인별 권장 사전학습 모델:
+//   일반 이미지:       ResNet, EfficientNet, ConvNeXt
+//   의료 영상:         RadImageNet, MedCLIP
+//   위성 영상:         SatMAE, GRN
+//   자율주행:          CLIP-based, DINOv2
+//   작은 데이터:       Self-supervised (MAE, DINO)
+//
+// Domain Adaptation 기법:
+//   - Gradual unfreezing (점진적 해동)
+//   - Discriminative LR (층별 다른 학습률)
+//   - Data augmentation 강화
+//   - Mixup, CutMix 등 regularization
+
+// 배포 최적화:
+//   - 양자화 (FP32 → INT8): 4배 빠름
+//   - Pruning: 파라미터 제거
+//   - Knowledge Distillation: 작은 모델로 증류
+//   - ONNX / TensorRT로 추론 최적화`}
+        </pre>
+        <p className="leading-7">
+          요약 1: CNN은 <strong>의료·자율주행·제조·보안</strong> 등 핵심 산업에서 여전히 주력.<br />
+          요약 2: 전이학습 전략은 <strong>데이터 규모</strong>에 따라 Feature extraction / Fine-tuning / Scratch 선택.<br />
+          요약 3: 배포 단계에서는 <strong>양자화·증류·프루닝</strong>으로 추론 최적화 필수.
+        </p>
+      </div>
     </section>
   );
 }

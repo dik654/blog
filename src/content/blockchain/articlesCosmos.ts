@@ -88,11 +88,6 @@ export const cosmosArticles: Article[] = [
     component: () => import('@/pages/articles/blockchain/berachain'),
   },
   {
-    slug: 'dydx', title: 'dYdX v4 (Cosmos SDK 기반 탈중앙화 거래소)', subcategory: 'cosmos-evm',
-    sections: [{ id: 'overview', title: '개요' }, { id: 'orderbook-architecture', title: '오더북 아키텍처' }, { id: 'matching-engine', title: '매칭 엔진' }, { id: 'cosmos-integration', title: 'Cosmos SDK 통합' }, { id: 'indexer', title: '인덱서' }, { id: 'frontend', title: '프론트엔드' }],
-    component: () => import('@/pages/articles/blockchain/dydx'),
-  },
-  {
     slug: 'evmos', title: 'Evmos / Cosmos EVM', subcategory: 'cosmos-evm',
     sections: [{ id: 'overview', title: '개요' }, { id: 'evm-module', title: 'EVM 모듈 (x/vm)' }, { id: 'revenue-module', title: 'ERC20 & Revenue 모듈' }, { id: 'ibc-integration', title: 'IBC EVM 통합' }],
     component: () => import('@/pages/articles/blockchain/evmos'),

@@ -44,6 +44,96 @@ export default function SentencePiece() {
       <div className="not-prose mt-8">
         <UnigramViz />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Unigram 학습 알고리즘</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Unigram Language Model tokenizer 학습
+// (Kudo 2018, "Subword Regularization")
+//
+// 입력: 코퍼스, 목표 어휘 크기
+// 출력: 서브워드 집합 V, 각 토큰 확률 P(v)
+//
+// Step 1: 초기 어휘 집합 생성 (크게)
+//   - 모든 가능한 서브워드 후보 추출
+//   - 보통 목표 크기의 수십 배 (100만+)
+//   - 예: "internationalization" → "i", "in", "int", ..., "ization"
+//
+// Step 2: EM 알고리즘 (확률 추정)
+//   E-step:
+//     각 단어 x의 best segmentation 찾기
+//     P(segmentation) = ∏ P(x_i)
+//     Viterbi로 가장 확률 높은 분할 선택
+//
+//   M-step:
+//     P(v) = count(v) / total_subword_count
+//     각 토큰의 확률 재추정
+//
+// Step 3: 가지치기 (Pruning)
+//   for each token v in V:
+//     loss_without_v = re-compute corpus likelihood
+//     loss_increase = loss_without_v - current_loss
+//
+//   - loss_increase가 작은 토큰 (덜 중요) 제거
+//   - 상위 (1-η) 비율만 유지 (예: 80%)
+//
+// Step 4: 크기에 도달할 때까지 2~3 반복
+
+// 추론 시:
+//   Viterbi로 확률 최대 분할 찾기 (deterministic)
+//   또는 샘플링 (stochastic — Subword Regularization)`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">SentencePiece 특징</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// SentencePiece의 혁신적 설계
+//
+// 1. Raw text 직접 처리
+//    - 공백도 일반 문자로 취급
+//    - 공백 → "▁" (U+2581) 특수 문자로 변환
+//    - 언어별 전처리(형태소 분석 등) 불필요
+//    - 다국어 모델에 완벽히 적합
+//
+// 2. Reversible (역변환 가능)
+//    tokens = sp.encode("Hello world")
+//    text = sp.decode(tokens)
+//    # text == "Hello world" (정확히 복원)
+//
+// 3. 두 알고리즘 지원
+//    --model_type=bpe       # BPE 모드
+//    --model_type=unigram   # Unigram 모드 (기본)
+//    --model_type=char      # 문자 단위
+//    --model_type=word      # 단어 단위
+//
+// 4. 서브워드 정규화 (훈련 시)
+//    - 샘플링된 분할로 데이터 증강
+//    - "Hello" → ["He","llo"] or ["H","ell","o"] 랜덤
+//    - 모델 robust하게 학습
+
+// 사용 예:
+//   import sentencepiece as spm
+//   spm.SentencePieceTrainer.train(
+//     input='corpus.txt',
+//     model_prefix='mymodel',
+//     vocab_size=32000,
+//     model_type='unigram',
+//     character_coverage=0.9995  # 다국어는 1.0 근처
+//   )
+
+// 채택 모델:
+//   - T5, mT5 (Unigram, 32K/250K)
+//   - ALBERT, XLNet (Unigram, 30K/32K)
+//   - LLaMA, LLaMA-2 (BPE 모드, 32K)
+//   - LLaMA-3 (Tiktoken으로 전환, 128K)
+//   - Gemma (SentencePiece, 256K)
+//   - Mistral, Mixtral (BPE 모드, 32K)`}
+        </pre>
+        <p className="leading-7">
+          요약 1: <strong>Unigram</strong>은 EM 기반 확률 모델 — 큰 어휘에서 손실 적은 토큰부터 제거.<br />
+          요약 2: <strong>SentencePiece</strong>는 공백을 ▁로 바꿔 언어 독립적 처리 — 다국어 표준.<br />
+          요약 3: LLaMA-3는 SentencePiece → Tiktoken 전환, 업계 표준이 Tiktoken 방향으로 수렴 중.
+        </p>
+      </div>
     </section>
   );
 }

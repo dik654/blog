@@ -37,6 +37,76 @@ export default function Overview() {
             { lines: [10, 11], color: 'amber', note: 'R1CS 제약 시스템' },
           ]}
         />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">IOP 개념 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Interactive Oracle Proof (IOP)
+//
+// 정의:
+//   Prover와 Verifier의 interactive protocol
+//   Prover가 "oracle messages" 보냄
+//   Verifier가 oracle을 "query" (특정 위치만)
+//
+// vs PCP (Probabilistically Checkable Proof):
+//   PCP: 단일 static proof
+//     - 전체 proof 저장 + 랜덤 위치 조회
+//     - Constant query complexity
+//   IOP: multi-round interactive
+//     - 여러 oracle messages
+//     - 각각 query 가능
+//     - 훨씬 효율적 (O(log n))
+//
+// vs IP (Interactive Proof):
+//   IP: 메시지 전체 송신
+//   IOP: oracle (일부만 쿼리)
+//   → IOP는 bandwidth 효율적
+
+// IOP → NIZK (Non-interactive):
+//   BCS transform 적용
+//     - Oracle → Merkle tree commit
+//     - Challenges → Fiat-Shamir hash
+//     - Query → Merkle path
+//   → zkSNARK
+
+// 주요 IOP 프로토콜:
+//
+//   Aurora (2019):
+//     FRI based
+//     Proof: O(log² n)
+//     Prover: O(n log n)
+//     Verifier: O(log² n)
+//
+//   Ligero (2017):
+//     Direct LDT
+//     Proof: O(√n)
+//     Prover: O(n log n)
+//     Verifier: O(n)
+//
+//   Fractal (2020):
+//     FRI + recursion
+//     Aurora 개선
+//     Preprocessing SNARK
+//
+//   Marlin (2019):
+//     Preprocessing SNARK
+//     Universal trusted setup
+//
+//   STARKs (Ben-Sasson 2018):
+//     FRI 기반
+//     Transparent setup
+//     Post-quantum secure
+
+// 활용:
+//   Aurora, Ligero: transparent zkSNARK
+//   Fractal: 재귀 증명
+//   STARKs: production systems
+
+// libiop 설계 목적:
+//   Academic reference implementation
+//   Algorithm research
+//   Benchmarking protocols
+//   Production 아님 (slower than optimized)`}
+        </pre>
       </div>
     </section>
   );

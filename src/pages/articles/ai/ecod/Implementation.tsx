@@ -64,6 +64,116 @@ export default function Implementation() {
           </li>
         </ul>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">PyOD 생태계와 ECOD</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// PyOD (Python Outlier Detection) 라이브러리
+//
+// 40+ 알고리즘 통합:
+//   - Statistical: ECOD, COPOD, HBOS
+//   - Proximity-based: KNN, LOF, CBLOF
+//   - Linear: PCA, MCD
+//   - Probabilistic: ABOD, GMM
+//   - Tree-based: IForest
+//   - Neural: AE, VAE, SO-GAAL
+//   - Ensemble: Feature Bagging, LSCP
+//
+// 통합 API:
+//   from pyod.models.{method} import {Method}
+//   clf = Method(contamination=0.1)
+//   clf.fit(X_train)
+//   labels = clf.predict(X_test)
+//   scores = clf.decision_function(X_test)
+
+// Benchmark 기반 선택:
+//
+// ECOD 권장 상황:
+//   ✓ 데이터 크기 크고 (n > 10K)
+//   ✓ 차원 독립적 (또는 상관관계 약함)
+//   ✓ 해석성 중요
+//   ✓ 하이퍼파라미터 튜닝 없이 바로 사용
+//
+// KNN/LOF 권장:
+//   - 국소 밀도 변화 중요
+//   - 데이터 크기 작음 (n < 10K)
+//   - 비선형 경계
+//
+// Isolation Forest 권장:
+//   - 고차원 (d > 50)
+//   - 빠른 학습 필요
+//   - 범용 baseline
+//
+// Autoencoder 권장:
+//   - 이미지, 시퀀스 데이터
+//   - 복잡한 패턴
+//   - 대용량 데이터 보유`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">평가 지표와 실무 주의사항</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 이상 탐지 평가 지표
+//
+// 1. ROC-AUC
+//    - 정상/이상 이진 분류
+//    - threshold 독립
+//    - 0.5~1.0 범위
+//
+// 2. PR-AUC (Precision-Recall)
+//    - 불균형 데이터에 유리
+//    - 이상치 비율 < 5% 일 때 중요
+//
+// 3. Precision@K
+//    - 상위 K개 중 실제 이상치 비율
+//    - 실무에서 중요 (검토 자원 제한)
+//
+// 4. F1-score
+//    - Precision·Recall 조화평균
+//    - 이진 판정 기반
+
+// 실무 체크리스트:
+//
+// [전처리]
+//   - 스케일링 (StandardScaler, MinMaxScaler)
+//   - Categorical → One-hot
+//   - Missing 처리
+//   - Feature engineering
+//
+// [학습]
+//   - contamination 추정 (도메인 지식)
+//   - validation set 분리 (가능하면)
+//   - cross-validation
+//
+// [평가]
+//   - 다양한 임계값 실험
+//   - 여러 알고리즘 앙상블
+//   - 도메인 전문가 검토
+//
+// [배포]
+//   - 드리프트 모니터링
+//   - 주기적 재학습
+//   - alert 시스템 연동
+
+// 앙상블 예시:
+from pyod.models.combination import average
+
+# 여러 모델 훈련
+clfs = [ECOD(), IForest(), KNN()]
+for clf in clfs:
+    clf.fit(X_train)
+
+# 점수 앙상블
+scores = np.zeros(X_test.shape[0])
+for clf in clfs:
+    scores += clf.decision_function(X_test)
+scores /= len(clfs)`}
+        </pre>
+        <p className="leading-7">
+          요약 1: <strong>PyOD</strong>가 Python 이상 탐지 표준 라이브러리 — 40+ 알고리즘.<br />
+          요약 2: ECOD는 <strong>대규모·해석성·no-tuning</strong> 시나리오에 최적.<br />
+          요약 3: 실무에서는 <strong>앙상블 + 드리프트 모니터링</strong>이 중요.
+        </p>
+      </div>
     </section>
   );
 }

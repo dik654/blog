@@ -64,6 +64,58 @@ export default function TdxMktme({ onCodeRef }: Props) {
             </ul>
           </div>
         </div>
+
+        <h3 className="text-xl font-semibold mt-8 mb-4">MKTME 상세 메커니즘</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// MKTME Physical Address Layout
+//
+// Before MKTME (48-bit PA):
+//   [PA 47:0]
+//
+// After MKTME (48-bit PA):
+//   [KeyID bits | Original PA bits]
+//     ↑             ↑
+//   상위 N bits    나머지
+//
+// 예시 (4-bit KeyID):
+//   PA = 0x7000_0000_1000
+//        ↑
+//      KeyID = 7
+//      Real PA = 0x000_0000_1000
+//
+// KeyID 0 = TME (또는 평문)
+// KeyID 1~15 = TDX 용도 또는 일반 암호화
+
+// TDX TD 생성 흐름:
+//   1. TDH_MNG_CREATE (VMM 호출)
+//      → SEAM이 새 KeyID 할당
+//      → Random AES-XTS-256 key 생성
+//
+//   2. TDH_MNG_ADDCX (per page)
+//      → TD 페이지 추가
+//      → SEAM이 MKTME에 키 config
+//      → TD measurement (MRTD) 업데이트
+//
+//   3. TDH_MNG_INIT
+//      → TD initialization 완료
+//      → MRTD 확정
+//
+//   4. TDH_VP_ENTER (VM 진입)
+//      → TD VCPU 실행
+//      → CPU가 자동으로 KeyID 전환
+//
+// 보안 보장:
+//   - KeyID는 SEAM만 할당
+//   - Key 생성 RNG: 하드웨어
+//   - VMM도 key 조회 불가
+//   - TD ↔ Host 간 메모리 공유 명시적 (shared bit)
+
+// Guest Physical Address Bit:
+//   - GPAW (Guest PA Width): 48/52 bit
+//   - Shared bit: 공유 페이지 표시
+//   - Private pages: MKTME 암호화
+//   - Shared pages: 평문 (I/O용)`}
+        </pre>
       </div>
     </section>
   );

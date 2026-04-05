@@ -27,6 +27,72 @@ export default function LinearSoftmax() {
           확률이 1에 가까울수록 Loss → 0, 학습이 잘 된 것
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Output Layer 최적화</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Output Projection & Softmax
+//
+// 입력: decoder output h ∈ R^{d_model}
+// 출력: 다음 토큰 확률 분포 p ∈ R^{vocab_size}
+//
+// Step 1: Linear projection (logits)
+//   logits = h · W_out + b_out
+//   W_out: (d_model, vocab_size)
+//
+//   파라미터 수:
+//     d_model=4096, vocab=32000 → 131M!
+//     전체 파라미터의 큰 부분 차지
+//
+// Step 2: Softmax
+//   p_i = exp(logits_i) / Σ_j exp(logits_j)
+//
+// Step 3: Loss (학습 시)
+//   L = -log(p_target)   # Cross-Entropy
+//
+// Step 4: Generation (추론 시)
+//   next_token = sample(p) 또는 argmax(p)
+
+// Weight Tying:
+//   입력 임베딩 E와 출력 가중치 W_out 공유
+//   W_out = E^T
+//
+//   장점:
+//   - 파라미터 절반 감소
+//   - 임베딩과 출력의 일관성
+//   - 정규화 효과
+//
+//   GPT-2, BERT, LLaMA 모두 채택
+
+// 생성 전략:
+//
+// 1. Greedy (argmax)
+//    deterministic, 보수적
+//
+// 2. Temperature
+//    logits / T 후 softmax
+//    T < 1: sharp, T > 1: flat
+//
+// 3. Top-k Sampling
+//    상위 k개만 유지, 나머지 0
+//
+// 4. Top-p (Nucleus) Sampling
+//    누적 확률 p 내 토큰만 유지
+//
+// 5. Beam Search
+//    top-k 경로 유지 (번역에서 인기)
+
+// Loss 변형:
+//   - Label smoothing: 0.9 true + 0.1 uniform
+//   - Focal loss: 어려운 샘플 강조
+//   - Speculative decoding: 빠른 생성`}
+        </pre>
+        <p className="leading-7">
+          요약 1: 출력은 <strong>Linear → Softmax → Loss/Sampling</strong> 순.<br />
+          요약 2: <strong>Weight tying</strong>으로 임베딩-출력 공유 — 파라미터 절감.<br />
+          요약 3: 생성 시 <strong>temperature·top-k·top-p</strong>로 다양성 조절.
+        </p>
+      </div>
     </section>
   );
 }

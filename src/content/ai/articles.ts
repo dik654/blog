@@ -5,6 +5,7 @@ import { tsArticles } from './articlesTS';
 import { genArticles } from './articlesGen';
 import { agentArticles } from './articlesAgent';
 import { fromScratchArticles } from './articlesFromScratch';
+import { clawCodeArticles } from './articlesClawCode';
 
 export const aiArticles: Article[] = [
   ...dlArticles,
@@ -12,5 +13,6 @@ export const aiArticles: Article[] = [
   ...tsArticles,
   ...genArticles,
   ...agentArticles,
+  ...clawCodeArticles,
   ...fromScratchArticles,
 ];

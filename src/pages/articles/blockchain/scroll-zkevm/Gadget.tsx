@@ -31,6 +31,48 @@ export default function Gadget({ title, onCodeRef }: { title?: string; onCodeRef
         <CodePanel title="ExecutionGadget 트레이트 (execution.rs)" code={GADGET_TRAIT_CODE} annotations={gadgetTraitAnnotations} />
         <CodePanel title="ADD/SUB 가젯 구현 (execution/add_sub.rs)" code={ADD_SUB_CODE} annotations={addSubAnnotations} />
         <CodePanel title="bus-mapping 연계" code={BUS_MAPPING_CODE} annotations={busMappingAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Gadget Pattern — DRY for 140+ Opcodes</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// EVM: 140+ opcodes, 각각 회로 필요
+// Naive: 140+ 개별 회로 → 중복 코드, 버그 위험
+
+// Gadget Pattern 해결
+// 1) Common constraints 추상화
+//    - PC increment
+//    - Stack push/pop
+//    - Gas consumption
+//    - Memory access
+
+// 2) Reusable gadgets
+//    - AddWordsGadget: 256-bit 덧셈
+//    - CmpGadget: 비교 연산
+//    - RangeCheck: 값 범위 검증
+//    - LookupGadget: table lookup
+
+// 3) Opcode-specific gadget
+//    - AddGadget: AddWordsGadget 재사용
+//    - SubGadget: AddGadget 역연산
+//    - MulGadget: AddWordsGadget 반복
+
+// 코드 재사용 예시
+// ADD (opcode 0x01)
+// = Pop x, y → Push x+y → PC+=1 → gas-=3
+// 모든 step이 common gadget으로 구성
+
+// 효과
+// - 코드 중복 1/10로 감소
+// - 버그는 gadget 레벨에서 fix (전파)
+// - 새 opcode 추가 시 기존 gadget 조합`}</pre>
+
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">인사이트: configure vs assign 분리</p>
+          <p>
+            <strong>configure (compile-time)</strong>: 제약식 등록, 회로 구조 정의<br />
+            <strong>assign (runtime)</strong>: 실제 witness 값 할당, 증명 생성<br />
+            둘을 분리하는 이유: 회로 자체는 한 번만 구성 → prove 반복 시 재사용
+          </p>
+        </div>
+
       </div>
     </section>
   );

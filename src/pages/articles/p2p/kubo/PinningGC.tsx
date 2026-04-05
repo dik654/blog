@@ -42,6 +42,91 @@ export default function PinningGC({ onCodeRef }: {
           </div>
         )}
         <CodePanel title="GC Mark-and-Sweep" code={GC_CODE} annotations={GC_ANNOTATIONS} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Mark-and-Sweep GC 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// IPFS Garbage Collection
+//
+// Mark-and-Sweep algorithm (Dijkstra-Lamport 1978):
+//
+//   Phase 1 (Mark):
+//     Root set = {pinned CIDs, MFS root, ...}
+//     colored = {}
+//     for each root:
+//       DFS traverse DAG
+//       Add reached CIDs to colored
+//
+//   Phase 2 (Sweep):
+//     for each block in blockstore:
+//       if block.cid not in colored:
+//         delete block
+
+// Kubo's ColoredSet:
+//   Efficient set representation
+//   Bloom filter + explicit set
+//   Reduces memory during mark phase
+
+// Root Sources:
+//
+//   1. Pinset
+//      User-pinned CIDs (recursive, direct)
+//
+//   2. MFS (Mutable FileSystem)
+//      Files visible via ipfs files API
+//      /ipfs/xxx path roots
+//
+//   3. Bitswap active requests
+//      In-flight blocks
+//
+//   4. Provider records
+//      Announced content
+
+// Pin Types:
+//
+//   Recursive (-r):
+//     Root + all descendants
+//     Default pin type
+//
+//   Direct:
+//     Only this specific block
+//     Doesn't pin children
+//
+//   Indirect:
+//     Child of a recursive pin
+//     Automatically protected
+
+// GC Process:
+//
+//   ipfs repo gc:
+//     1. Lock blockstore (write lock)
+//     2. Collect roots (pins, MFS, etc.)
+//     3. Traverse DAG, mark reachable
+//     4. Sweep unmarked blocks
+//     5. Release lock
+//     6. Return removed CIDs
+
+// Performance:
+//
+//   Time: O(N) where N = total blocks
+//   Memory: O(reachable blocks)
+//   Blocks GC during scan (서비스 영향)
+//
+//   Alternatives:
+//     Concurrent GC (in development)
+//     Reference counting (복잡)
+//     Generation GC (future)
+
+// 실무 팁:
+//   - GC 빈도: 주 1회~월 1회
+//   - 노드 off-peak 시간에 실행
+//   - Datastore 여유 공간 확인
+//   - 중요 content는 pin
+
+// Auto-GC:
+//   Kubo 설정: Datastore.GCPeriod
+//   HighWater 도달 시 자동 GC
+//   Production에서는 수동 실행 권장`}
+        </pre>
       </div>
       <div className="mt-8"><BlockstoreViz /></div>
     </section>

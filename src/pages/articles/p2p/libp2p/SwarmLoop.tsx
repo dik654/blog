@@ -93,6 +93,102 @@ export default function SwarmLoop({ onCodeRef }: {
           <code>Dial</code>이면 <code>transport.dial()</code> 호출.
           <code>NotifyHandler</code>면 pending에 저장한다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Swarm 구조와 이벤트 루프</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p Swarm Architecture
+//
+// pub struct Swarm<TBehaviour: NetworkBehaviour> {
+//     // Transport 조합 (TCP, QUIC 등)
+//     transport: Box<dyn Transport>,
+//
+//     // Network behaviour (app logic)
+//     behaviour: TBehaviour,
+//
+//     // Connection pool (per-peer connections)
+//     pool: Pool<THandler>,
+//
+//     // Listener set
+//     listeners: SmallVec<[Listener; 8]>,
+//
+//     // Local identity
+//     local_peer_id: PeerId,
+//
+//     // Pending events
+//     pending_event: Option<PendingEvent>,
+//     pending_swarm_events: VecDeque<SwarmEvent<...>>,
+// }
+
+// poll_next_event() 구현:
+//
+// fn poll_next_event(self: Pin<&mut Self>,
+//                    cx: &mut Context<'_>)
+//     -> Poll<SwarmEvent<...>>
+// {
+//     loop {
+//         // Pending events 먼저
+//         if let Some(ev) = self.pending_swarm_events.pop_front() {
+//             return Poll::Ready(ev);
+//         }
+//
+//         // Delayed handler notification
+//         if let Some((peer_id, handler_id, event)) =
+//             self.pending_event.take()
+//         {
+//             match self.pool.send_to(peer_id, handler_id, event) {
+//                 Ok(()) => {},
+//                 Err(event) => {
+//                     // re-store for later
+//                     self.pending_event = Some((peer_id, handler_id, event));
+//                     // Can't poll behaviour yet
+//                     continue_behaviour_poll = false;
+//                 }
+//             }
+//         }
+//
+//         // 1. Behaviour (highest priority)
+//         if continue_behaviour_poll {
+//             match self.behaviour.poll(cx) {
+//                 Poll::Ready(to_swarm) => {
+//                     return handle_behaviour_event(to_swarm);
+//                 }
+//                 Poll::Pending => {}
+//             }
+//         }
+//
+//         // 2. Pool (existing connections)
+//         match self.pool.poll(cx) {
+//             Poll::Ready(pool_event) => {
+//                 return handle_pool_event(pool_event);
+//             }
+//             Poll::Pending => {}
+//         }
+//
+//         // 3. Transport (new incoming connections)
+//         match self.transport.poll(cx) {
+//             Poll::Ready(t_event) => {
+//                 return handle_transport_event(t_event);
+//             }
+//             Poll::Pending => {}
+//         }
+//
+//         return Poll::Pending;
+//     }
+// }
+
+// SwarmEvent 타입:
+//   Behaviour(TBehaviour::ToSwarm)
+//   ConnectionEstablished { peer_id, endpoint, ... }
+//   ConnectionClosed { peer_id, cause }
+//   IncomingConnection { local_addr, send_back_addr }
+//   IncomingConnectionError { ... }
+//   OutgoingConnectionError { ... }
+//   NewListenAddr { listener_id, address }
+//   ExpiredListenAddr { listener_id, address }
+//   Dialing { peer_id, connection_id }
+//   ListenerClosed { ... }
+//   ListenerError { ... }`}
+        </pre>
       </div>
     </section>
   );

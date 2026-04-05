@@ -14,7 +14,7 @@ export default function AdamWViz() {
         const t = step === 2 ? 3 : step === 0 ? 1 : 2; // decay 시점
 
         return (
-          <svg viewBox="0 0 440 200" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <svg viewBox="0 0 480 200" className="w-full max-w-2xl" style={{ height: 'auto' }}>
             {/* Y axis */}
             <line x1={LEFT - 10} y1={BASE_Y} x2={LEFT - 10} y2={25}
               stroke={COLORS.axis} strokeWidth={0.6} />

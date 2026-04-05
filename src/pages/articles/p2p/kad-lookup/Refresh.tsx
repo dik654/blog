@@ -63,6 +63,83 @@ export default function Refresh({ onCodeRef }: { onCodeRef?: (key: string, ref: 
           { lines: [7, 7], color: 'emerald', note: '최소 간격 타이머' },
           { lines: [11, 13], color: 'amber', note: '핵심 메서드 요약' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Bootstrap과 Network Healing</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// DHT Bootstrap과 Refresh 메커니즘
+//
+// Bootstrap Problem:
+//   "새 노드가 network에 어떻게 연결?"
+//
+//   초기 상태: peer 0개
+//   필요: 최소 1개 known peer
+//
+// 해결:
+//
+// 1. Hardcoded Bootnodes
+//    - 클라이언트에 내장
+//    - 공개 접근 가능한 노드
+//    - Ethereum mainnet 예:
+//      * enode://..@18.138.108.67:30303 (EF)
+//      * enode://..@3.209.45.79:30303 (Nethermind)
+//      * ...
+//
+// 2. DNS Discovery (EIP-1459)
+//    - DNS TXT records에 ENR 리스트
+//    - enrtree://... URL
+//    - 동적 노드 리스트
+//
+// 3. Persistent DB
+//    - 이전 세션 노드 저장
+//    - 재시작 시 재사용
+//    - seedCount (30), seedMaxAge (5d)
+
+// Self Lookup:
+//   bootstrap 후 첫 작업
+//   Target = own node ID
+//   → 가까운 노드 찾기
+//   → 버킷 채우기
+
+// Random Lookup:
+//   테이블 다양성 확보
+//   random target으로 3회 추가 lookup
+//   → 다양한 distance 범위 커버
+
+// Refresh Cycle:
+//   Timer: 15~30 min (랜덤 jitter)
+//   Jitter 이유:
+//     - 동시 refresh 방지
+//     - Network load 분산
+//     - Thundering herd 방지
+//
+//   Trigger:
+//     - Timer expiry
+//     - Bucket empty
+//     - Lookup failure
+//     - Manual refresh command
+
+// Bucket Management:
+//   Ping-Pong liveness check
+//   Missing node → evict
+//   Replacement list → promote
+
+// Peer Churn Handling:
+//   Ethereum typical churn:
+//     - 노드 수천~수만
+//     - Daily online: ~5000
+//     - Average uptime: 12 hours
+//
+//   Strategy:
+//     - Aggressive refresh
+//     - Diverse bucket population
+//     - DB fallback
+//     - Continuous lookup
+
+// 실패 복구:
+//   Network partition: auto-heal via refresh
+//   Mass disconnect: re-bootstrap
+//   DNS failure: hardcoded fallback`}
+        </pre>
       </div>
     </section>
   );

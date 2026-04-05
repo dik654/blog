@@ -48,6 +48,118 @@ export default function Rack() {
             <li key={it.item}><strong>{it.item}</strong> — {it.desc}</li>
           ))}
         </ul>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Rack &amp; Power Distribution 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Rack Form Factors:
+
+// 19-inch Rack Standard:
+// - width: 19 inches
+// - height: N × U (1U = 1.75")
+// - typical: 42U, 48U, 52U racks
+// - standard EIA-310
+
+// Server heights:
+// 1U (44mm): ~$3-10K
+// - 1-2 GPUs max
+// - dense compute
+// - no full-size GPUs
+// - example: DGX systems are custom
+//
+// 2U (88mm): ~$10-30K
+// - 2-4 GPUs
+// - better cooling
+// - storage servers
+// - example: Supermicro 2124GQ
+//
+// 4U (176mm): ~$20-50K+
+// - 4-10 GPUs possible
+// - full-size GPU support
+// - highest density for GPU
+// - example: Supermicro 4124GO
+//
+// 5U/7U: specialized
+// - max GPU density
+// - custom configs
+
+// Power Distribution Units (PDUs):
+//
+// Basic PDU:
+// - just power outlets
+// - no monitoring
+// - cheap ($200-500)
+//
+// Metered PDU:
+// - outlet-level metering
+// - remote monitoring
+// - $1K-3K per rack
+//
+// Switched PDU:
+// - remote on/off per outlet
+// - power cycling
+// - $2K-5K per rack
+//
+// Smart/Monitored PDU:
+// - environmental sensors
+// - alerts
+// - integration with DCIM
+// - $3K-10K per rack
+
+// UPS Systems:
+//
+// Offline UPS:
+// - switches on power loss
+// - small transient
+// - home/small office
+//
+// Line-Interactive:
+// - voltage regulation
+// - better than offline
+// - medium business
+//
+// Online (Double Conversion):
+// - always runs from inverter
+// - zero transfer time
+// - datacenter standard
+// - expensive
+
+// UPS sizing:
+// - runtime: 5-30 minutes
+// - enough for safe shutdown
+// - or generator startup
+// - 80% load factor
+
+// Generator backup:
+// - diesel or natural gas
+// - 30s-2min startup
+// - days of runtime
+// - datacenter tier III/IV
+
+// Tier classifications:
+// - Tier I: basic
+// - Tier II: redundant components
+// - Tier III: concurrently maintainable
+// - Tier IV: fault tolerant
+// - affects uptime SLA
+
+// Uptime SLA:
+// - Tier I: 99.671% (28h downtime)
+// - Tier II: 99.749% (22h)
+// - Tier III: 99.982% (1.6h)
+// - Tier IV: 99.995% (26min)
+
+// Blockchain SP colo:
+// - Tier III typical
+// - $100-300/month per 1U
+// - $1000+ per month per rack
+// - power costs separate
+// - bandwidth included varies`}
+        </pre>
+        <p className="leading-7">
+          Rack: <strong>1U (dense) → 2U (balanced) → 4U (GPU density)</strong>.<br />
+          Power: PDU (metered/switched) + UPS (online) + generator.<br />
+          Tier III colo $1K+/rack/month (Filecoin SP 표준).
+        </p>
       </div>
     </section>
   );

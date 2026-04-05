@@ -34,6 +34,131 @@ export default function Overview({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Initia MiniEVM 아키텍처</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Initia MiniEVM Overview
+//
+// Initia:
+//   L1 blockchain built for rollup interop
+//   InitiaOS: Cosmos SDK + customizations
+//   Supports multiple VMs: MoveVM, MiniWasm, MiniEVM
+//
+// MiniEVM philosophy:
+//   "EVM as a Cosmos module"
+//   Not a separate chain, not Engine API
+//   Direct integration at module level
+
+// Three EVM integration approaches:
+//
+//   1) Native Ethereum architecture:
+//      Beacon Chain (CL) + Engine API + geth (EL)
+//      Two separate processes, Engine API bridge
+//      Used: Ethereum, Berachain BeaconKit
+//      Pro: maximum compatibility
+//      Con: complex, IBC not native
+//
+//   2) Octane / Decoupled:
+//      CometBFT → Engine API → external geth
+//      ABCI converted to EL protocol
+//      Pro: reuses geth client
+//      Con: IPC overhead, state sync complexity
+//
+//   3) MiniEVM / Embedded:
+//      EVM executed INSIDE Cosmos SDK module
+//      go-ethereum's EVM imported as library
+//      Keeper directly calls evm.Call()
+//      Pro: native IBC integration, single state tree
+//      Con: less compatibility surface
+
+// Why MiniEVM vs other Cosmos EVMs?
+//
+//   Evmos / Cosmos EVM:
+//     Similar module approach
+//     Adds x/vm, x/erc20, x/feemarket, x/precisebank
+//     4 modules, heavier
+//
+//   MiniEVM:
+//     Single x/evm module (lighter)
+//     Reuses Cosmos modules: x/auth, x/bank
+//     Minimalist design
+//     Closer to "EVM precompile" style
+
+// Core components:
+//
+//   x/evm module:
+//     Keeper: manages EVM state
+//     MsgServer: handles EVM calls
+//     StateDB adapter: Cosmos KVStore -> EVM StateDB
+//     Precompiles: Cosmos function exposure
+//
+//   Uses standard Cosmos modules:
+//     x/auth: account sequences (nonces)
+//     x/bank: token balances
+//     x/ibc: cross-chain messaging
+
+// State mapping details:
+//
+//   EVM address ↔ Cosmos address:
+//     hex(20 bytes) <-> bech32 with chain prefix
+//     Bijection established via x/auth
+//
+//   EVM balance:
+//     balance[addr] = bank.GetBalance(addr, denom)
+//     Shared pool with Cosmos tokens
+//
+//   EVM nonce:
+//     nonce[addr] = auth.GetSequence(addr)
+//     Incremented on each EVM tx
+//
+//   EVM storage:
+//     KVStore key: address || slot
+//     KVStore value: 32-byte word
+//     Flat structure (no MPT tree)
+//
+//   EVM code:
+//     KVStore key: codeHash
+//     KVStore value: bytecode
+//     Content-addressed deduplication
+
+// Advantages of single state tree:
+//
+//   No consistency issues between EL and CL state
+//   IBC tokens visible to EVM natively
+//   Staking rewards auto-credited to EVM addresses
+//   Atomic cross-operation (e.g., IBC+ERC20 in one tx)
+
+// Precompile-based Cosmos access:
+//
+//   From Solidity:
+//     interface ICosmos {
+//       function execute_cosmos(string memory msg) external;
+//       function query_cosmos(string memory req) external view returns (string memory);
+//       function to_denom(address token) external view returns (string memory);
+//       function to_erc20(string memory denom) external view returns (address);
+//     }
+//
+//   ICosmos precompile at fixed address
+//   Enables IBC transfers, staking, etc. from contracts
+
+// Use cases:
+//   - Rollup built on Initia (uses MiniEVM)
+//   - EVM dApps with native IBC
+//   - Cross-VM composability (EVM + Move)
+//   - Interoperable stable swaps
+
+// Comparison:
+//
+//                  MiniEVM    Evmos    Berachain
+//   Architecture   Module     Module   Engine API
+//   EVM source     go-eth     go-eth   reth/geth
+//   CL engine      CometBFT   CometBFT BeaconKit
+//   IBC native     Yes        Yes      No (needs bridge)
+//   State tree     Shared     Shared   Separate
+//   Gas model      Cosmos+EVM EIP-1559 Hybrid`}
+        </pre>
+      </div>
     </section>
   );
 }

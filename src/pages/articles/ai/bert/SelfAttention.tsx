@@ -54,6 +54,96 @@ export default function SelfAttention() {
           </div>
         ))}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Multi-Head Attention 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BERT-base Multi-Head Attention
+// H=12 heads, d_model=768, d_k=d_v=64
+//
+// Input: X (seq_len=512, d_model=768)
+//
+// Step 1: 선형 투영으로 Q, K, V 생성 (헤드별 분리)
+//   W_Q, W_K, W_V ∈ R^{768 × 768}
+//
+//   Q = X @ W_Q  → (512, 768)
+//   K = X @ W_K  → (512, 768)
+//   V = X @ W_V  → (512, 768)
+//
+//   reshape & split:
+//   Q → (12 heads, 512, 64)
+//   K → (12 heads, 512, 64)
+//   V → (12 heads, 512, 64)
+//
+// Step 2: 각 헤드마다 Scaled Dot-Product Attention
+//   scores_h = Q_h @ K_h.T  → (512, 512)
+//   scores_h /= sqrt(64) = 8
+//   attn_h = softmax(scores_h)
+//   head_h = attn_h @ V_h  → (512, 64)
+//
+// Step 3: 헤드 결합 및 최종 투영
+//   concat = cat(head_1, ..., head_12)  → (512, 768)
+//   output = concat @ W_O              → (512, 768)
+//
+// 파라미터 수 (per block):
+//   4 × 768 × 768 = 2,359,296 (W_Q, W_K, W_V, W_O)
+//
+// 왜 sqrt(d_k)로 나누나?
+//   - 차원 증가 시 dot product 값이 커짐
+//   - softmax 포화(saturation) 방지
+//   - 기울기 안정화`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Attention 패턴 분석</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BERT Attention 헤드가 학습하는 패턴 (Clark et al. 2019)
+//
+// 1. Syntactic heads (구문론적)
+//    - 주어-동사 일치 감지
+//    - 수식어-피수식어 관계
+//    - 동사-목적어 연결
+//
+// 2. Semantic heads (의미론적)
+//    - 공참조 해소 (coreference)
+//    - 명사구 경계 감지
+//    - 의미 유사성
+//
+// 3. Positional heads (위치 기반)
+//    - 직전/직후 토큰 집중
+//    - 문장 시작/끝 집중
+//    - 고정 거리 토큰 참조
+//
+// 4. Broad heads (전역)
+//    - 문장 전체 요약
+//    - [CLS], [SEP] 강하게 참조
+//
+// 헤드 시각화:
+//   attention weights를 heatmap으로 시각화
+//   bertviz 라이브러리 활용
+
+// 특수 토큰의 attention 패턴:
+//   [CLS] → 모든 토큰 균등 참조 (문장 요약)
+//   [SEP] → 경계 역할, 문장 구분
+//   [MASK] → 주변 컨텍스트 집중
+//
+// 각 토큰의 출력 임베딩:
+//   - 단어 의미 + 문맥 정보 결합
+//   - 같은 단어도 상황에 따라 다른 벡터
+//   - "bank" (강둑) vs "bank" (은행) 구분
+//
+// 예시:
+//   "I went to the bank to deposit money"
+//   → "bank" 벡터는 "money", "deposit" 문맥 반영 → 은행
+//
+//   "I sat by the bank of the river"
+//   → "bank" 벡터는 "river" 문맥 반영 → 강둑`}
+        </pre>
+        <p className="leading-7">
+          요약 1: BERT의 attention은 <strong>12 heads × 12 layers = 144</strong> 병렬 관계 추출기.<br />
+          요약 2: 헤드마다 <strong>구문·의미·위치·전역</strong> 다양한 패턴 학습 — 해석 가능성 연구 활발.<br />
+          요약 3: <strong>Contextualized embedding</strong>으로 word2vec의 한계 돌파 — 문맥 의존 표현.
+        </p>
+      </div>
     </section>
   );
 }

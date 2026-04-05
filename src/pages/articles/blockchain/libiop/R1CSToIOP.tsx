@@ -31,6 +31,78 @@ export default function R1CSToIOP() {
             { lines: [10, 12], color: 'amber', note: 'RS 인코딩 적용' },
             { lines: [15, 15] as [number, number], color: 'violet', note: '머클 트리 커밋' },
           ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">R1CS → Polynomial IOP 변환</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// R1CS (Rank-1 Constraint System)
+//
+// 형태:
+//   A·z ⊙ B·z = C·z
+//
+//   z = (1, x_1, x_2, ..., x_n, w_1, ..., w_m)
+//     z = (public || private || intermediate)
+//
+//   A, B, C ∈ F^{m×(n+m+1)}
+//   ⊙ = element-wise product
+//
+// 각 constraint i:
+//   (Σ A_ij · z_j) × (Σ B_ij · z_j) = Σ C_ij · z_j
+
+// R1CS → Polynomial IOP 변환:
+//
+// Step 1: Lagrange Interpolation
+//   Domain H = {ω^0, ω^1, ..., ω^{m-1}}
+//   (ω = m-th root of unity)
+//
+//   A-vector → polynomial Â(x):
+//     Â(ω^i) = (A·z)_i for all i
+//
+//   Similarly B̂(x), Ĉ(x)
+//
+// Step 2: Multiplication Check
+//   Constraint holds ⟺
+//     Â(x) · B̂(x) = Ĉ(x) mod v_H(x)
+//
+//   where v_H(x) = ∏(x - ω^i)
+//     (vanishing polynomial of H)
+//
+// Step 3: Quotient Polynomial
+//   Define h(x) such that:
+//     Â(x)·B̂(x) - Ĉ(x) = v_H(x) · h(x)
+//
+//   If R1CS satisfied → h(x) exists, low degree
+//   If not → h(x) has high degree (not polynomial)
+//
+// Step 4: Commit via Low-Degree Test
+//   Prover commits Â, B̂, Ĉ, h
+//   Verifier uses FRI or Direct LDT
+//     to check h has low degree
+
+// IOP Protocol Flow:
+//
+//   P sends: commit(Â), commit(B̂), commit(Ĉ), commit(ĥ)
+//   V sends: random point ρ
+//
+//   P sends: Â(ρ), B̂(ρ), Ĉ(ρ), ĥ(ρ)
+//            + opening proofs
+//
+//   V checks:
+//     Â(ρ) · B̂(ρ) - Ĉ(ρ) == v_H(ρ) · ĥ(ρ)
+//     all openings valid
+//     low-degree test passes
+
+// Soundness:
+//   Schwartz-Zippel: 잘못된 경우
+//     prob[검사 통과] ≤ degree / |F|
+//     F = large field (~2^254)
+//     → negligible error
+
+// 실제 구현:
+//   libiop: C++ reference
+//   circom + snarkjs: production
+//   arkworks-rs: Rust
+//   halo2: PLONKish (R1CS 대체)`}
+        </pre>
       </div>
     </section>
   );

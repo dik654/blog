@@ -67,6 +67,94 @@ export default function Heartbeat({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">heartbeat() 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Heartbeat 단계 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// GossipSub Heartbeat Loop
+//
+// 매 1초 실행 (기본):
+//
+// 1. Cleanup
+//    - iasked 카운터 리셋
+//    - backoff 만료 체크
+//    - 오래된 peer info 정리
+//    - dead message 정리
+//
+// 2. Score Update
+//    - peer_score 재계산
+//    - 각 topic의 P1, P2, P3, P4 업데이트
+//    - Score decay 적용
+//
+// 3. Mesh Rebalancing (per topic)
+//
+//    For each subscribed topic:
+//
+//    // Remove low-score peers
+//    bad_peers = [p for p in mesh if p.score < 0]
+//    for p in bad_peers:
+//        remove from mesh[topic]
+//        send PRUNE(topic) to p
+//
+//    // Add new peers if under D_lo
+//    if |mesh[topic]| < D_lo:
+//        need = D - |mesh[topic]|
+//        candidates = [p for p in peers_topic[topic]
+//                      if p not in mesh[topic]
+//                      and p.score >= 0]
+//        new_peers = candidates.shuffle()[:need]
+//        for p in new_peers:
+//            add to mesh[topic]
+//            send GRAFT(topic) to p
+//
+//    // Prune excess peers
+//    if |mesh[topic]| > D_hi:
+//        prune = |mesh[topic]| - D
+//        keep top D by score
+//        PRUNE others
+//
+//    // Opportunistic grafting (v1.1)
+//    if |mesh| >= D_lo and avg_score < threshold:
+//        upgrade slots to higher-score peers
+//
+// 4. Fanout Maintenance
+//    - fanout_ttl 만료된 topic 정리
+//    - 비활성 fanout peers 제거
+//    - 필요시 새 peers 추가
+//
+// 5. Shift mcache
+//    - message cache 슬라이드
+//    - 오래된 메시지 gossip 대상에서 제거
+//    - IDONTWANT cache 갱신
+//
+// 6. Emit Gossip (IHAVE)
+//    For each topic:
+//      recent_msgs = mcache.recent(D_lazy windows)
+//      if recent_msgs empty: continue
+//
+//      // Select gossip targets
+//      candidates = peers_topic[topic]
+//                  - mesh[topic]
+//                  - filter(score >= gossipThreshold)
+//      peers = candidates.shuffle()[:D_lazy]
+//
+//      // Send IHAVE
+//      for peer in peers:
+//          msg_ids = recent_msgs.sample(max_ihave_length)
+//          send IHAVE(topic, msg_ids) to peer
+
+// 성능 고려:
+//   Heartbeat 실행 시간: O(peers × topics)
+//   Ethereum mainnet: ~1000 peers × ~20 topics
+//   = 20K operations per second
+//   CPU: ~5-10% (typical node)
+
+// 튜닝:
+//   heartbeat_interval: 1s (Ethereum)
+//   heartbeat_initial_delay: 5s
+//   heartbeat_ticks: incremented each loop`}
+        </pre>
+      </div>
     </section>
   );
 }

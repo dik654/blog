@@ -26,6 +26,148 @@ export default function Overview() {
         </p>
       </div>
       <div className="mt-8"><ArchViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Proof of SQL 시스템 개요</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Proof of SQL Architecture
+//
+// Developer: Space and Time (SxT)
+// Use case: verifiable database queries
+// Claim: "first sub-second ZK proof for SQL"
+
+// Problem:
+//   Centralized database: trust the provider
+//   On-chain database: gas cost explodes
+//   ZK Rollups: don't support SQL natively
+//
+// Solution:
+//   Run SQL off-chain
+//   Generate proof that query was computed correctly
+//   Verify on-chain in constant/logarithmic time
+
+// Architecture layers:
+//
+//   ┌─────────────────────────────┐
+//   │ SQL Interface (Apache Calcite) │
+//   ├─────────────────────────────┤
+//   │ Query Planner & Optimizer   │
+//   ├─────────────────────────────┤
+//   │ Proof Generation (Rust)     │
+//   ├─────────────────────────────┤
+//   │ Dory Commitment Scheme      │
+//   ├─────────────────────────────┤
+//   │ Blitzar (GPU acceleration)  │
+//   ├─────────────────────────────┤
+//   │ Solidity Verifier (on-chain)│
+//   └─────────────────────────────┘
+
+// Supported SQL operations:
+//
+//   DDL/DML: CREATE, INSERT (provable indexing)
+//   DQL:
+//     SELECT with column projections
+//     WHERE with comparison operators
+//     GROUP BY (aggregations: SUM, COUNT, MIN, MAX)
+//     ORDER BY
+//     INNER/LEFT JOIN
+//     LIMIT / OFFSET
+//
+//   Unsupported (or partial):
+//     Complex subqueries
+//     Recursive CTEs
+//     Some window functions
+//     Full-text search
+
+// Proving model:
+//
+//   Verifier knows:
+//     - Schema of tables (columns, types)
+//     - Commitments to columns (from DB operator)
+//     - Query text
+//     - Claimed result
+//
+//   Prover proves:
+//     1. Result is correct given committed data
+//     2. No rows added/hidden
+//     3. All predicates applied correctly
+//     4. Aggregations computed faithfully
+//
+//   Zero-knowledge:
+//     Individual row values not revealed
+//     Only aggregate result + proof
+
+// Core math:
+//
+//   SQL operation → polynomial identity
+//   Sum-check: verify sum equals claimed value
+//   IPA: verify inner product of committed vectors
+//
+//   Formulas:
+//     SELECT: W_select(x) = projection mask polynomial
+//     WHERE:  W_where(x) = indicator polynomial
+//     SUM:    sum_{i in H} f(i) * W_where(i)
+//     COUNT:  sum_{i in H} W_where(i)
+
+// Commitment scheme: Dory
+//
+//   Transparent setup (no trusted ceremony)
+//   Pairing-based (bilinear)
+//   O(sqrt(n)) commitment size
+//   O(log n) verifier
+//
+//   Column-wise commits:
+//     Each column → Dory commitment
+//     DB operator commits once, updates incrementally
+
+// Verifier on Ethereum:
+//
+//   Solidity contract implements Dory verifier
+//   Pairing checks via EIP-196/197 (BN254 precompile)
+//   Plus Fiat-Shamir challenge derivation
+//   Plus MLE evaluation reconstruction
+//
+//   Gas cost: ~500K-1M gas per query verification
+//   Independent of row count (just log-factor)
+
+// GPU acceleration (Blitzar):
+//
+//   Custom CUDA library by SxT
+//   Specializes in pairing-based MSMs
+//   Multi-scalar multiplication on GPU
+//   10-100x speedup for large DBs
+
+// Use cases:
+//
+//   1. DeFi analytics:
+//      "Prove that this TWAP is correct"
+//      "Prove total supply of token"
+//      "Prove aggregated trade volume"
+//
+//   2. Compliance:
+//      "Prove all transactions passed KYC"
+//      Without revealing individual records
+//
+//   3. Gaming:
+//      "Prove random match outcome is fair"
+//      "Prove leaderboard rankings"
+//
+//   4. Supply chain:
+//      "Prove authenticity of products"
+//      Aggregate over DB queries
+
+// Performance claims:
+//
+//   10M rows query: <1 second proof
+//   100M rows: a few seconds
+//   Verifier: ~200ms constant
+//
+//   Depends heavily on:
+//     - GPU availability
+//     - Query complexity
+//     - Number of tables`}
+        </pre>
+      </div>
     </section>
   );
 }

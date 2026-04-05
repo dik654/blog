@@ -40,6 +40,81 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
 
       <h3 className="text-lg font-semibold mb-3">크레이트 계층 구조</h3>
       <CrateLayerViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">rqbit 아키텍처 특징</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// rqbit - Modern Rust BitTorrent Client
+//
+// Design Goals:
+//   - High performance (Rust async)
+//   - Memory efficient (zero-copy)
+//   - Modular (14 crates)
+//   - Cross-platform (CLI, Desktop, Server)
+//
+// Key Technologies:
+//   - tokio (async runtime)
+//   - DashMap (lock-free concurrent HashMap)
+//   - anyhow/thiserror (error handling)
+//   - serde (serialization)
+//   - axum (HTTP API)
+//   - tauri (desktop app)
+
+// Workspace Structure (14 crates):
+//
+//   Core:
+//     librqbit        - main library
+//     librqbit_core   - core types (Id20, TorrentMetadata)
+//     buffers         - zero-copy buffer management
+//
+//   Networking:
+//     dht             - Kademlia DHT
+//     peer_binary_protocol - peer wire protocol
+//     tracker_comms   - HTTP/UDP trackers
+//     upnp            - UPnP port mapping
+//
+//   Protocol:
+//     bencode         - Bencode serialization
+//     sha1w           - SHA-1 hashing
+//
+//   UI/API:
+//     crates/rqbit    - CLI binary
+//     desktop         - Tauri desktop app
+//     librqbit-upnp-serve - DLNA media server
+//     bencode-editor-webui  - torrent editor
+
+// vs Other BitTorrent Clients:
+//
+//   qBittorrent (C++): feature-rich, mature
+//   Transmission (C): lightweight, widely packaged
+//   Deluge (Python): extensible
+//   WebTorrent (JS): browser-friendly
+//   Leechers (Go): server-focused
+//   rqbit (Rust): modern, performant
+
+// Technical Highlights:
+//
+//   Zero-copy I/O:
+//     Buffer pool with reuse
+//     mmap for file access
+//
+//   Concurrent design:
+//     DashMap for shared state
+//     Actor-like task management
+//     Backpressure handling
+//
+//   BEP Support:
+//     BEP-3: Core protocol
+//     BEP-5: DHT
+//     BEP-6: Fast extension
+//     BEP-9: Metadata exchange
+//     BEP-10: Extension protocol
+//     BEP-11: PEX (peer exchange)
+//     BEP-14: LSD (local discovery)
+//     BEP-15: UDP trackers
+//     BEP-19: WebSeeds`}
+        </pre>
+      </div>
     </section>
   );
 }

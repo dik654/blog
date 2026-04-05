@@ -39,6 +39,50 @@ export default function MempoolStateSync({ onCodeRef: _onCodeRef }: { onCodeRef:
           - 신뢰할 수 있는 RPC 서버 (2개 이상 권장)<br />
           - 신뢰할 수 있는 height + block hash
         </p>
+        {/* ── CList Mempool 구조 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">CList Mempool — 이중 연결 리스트 기반</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// cometbft/mempool/clist_mempool.go
+// Concurrent-safe double-linked list (CList)
+
+type CListMempool struct {
+    mtx   sync.RWMutex
+    config *config.MempoolConfig
+
+    proxyAppConn proxy.AppConnMempool  // ABCI connection
+
+    txs          *clist.CList           // 주 mempool
+    cache        txCache                // 중복 방지 cache
+    txsMap       map[TxKey]*clist.CElement  // fast lookup
+
+    height       int64                  // 현재 블록 높이
+    txBytes      int64                  // 총 bytes
+}
+
+// 동작:
+// 1. TX 수신 → CheckTx (async)
+// 2. pass → CList에 append
+// 3. Gossip → peers에 전파
+// 4. 블록 commit → 포함된 TX 제거
+// 5. Recheck (nonce 등 재검증)
+
+// CList 특성:
+// - concurrent iterator (read during write)
+// - 주기적으로 peer에게 gossip
+// - max size 제한 (~5000 txs)
+
+// 성능:
+// - TX 추가: O(1) (append)
+// - TX 제거: O(1) (linked list)
+// - Iteration: lock-free
+// - Peer gossip: sequence 기반 catch-up`}
+        </pre>
+        <p className="leading-7">
+          CList Mempool이 <strong>concurrent-safe 이중 연결 리스트</strong>.<br />
+          O(1) 추가/제거 + lock-free iterator → 높은 throughput.<br />
+          peer gossip은 sequence 기반 → 효율적 delta 전파.
+        </p>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">코드 구조 (cometbft 레포)</h3>
         <p>
           cometbft/<br />

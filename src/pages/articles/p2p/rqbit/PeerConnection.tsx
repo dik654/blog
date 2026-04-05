@@ -45,6 +45,83 @@ export default function PeerConnection({ onCodeRef }: { onCodeRef?: (key: string
           </ul>
         </div>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">BitTorrent Wire Protocol</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BitTorrent Peer Wire Protocol (BEP-3)
+//
+// Handshake (68 bytes):
+//   1 byte: pstrlen = 19
+//   19 bytes: "BitTorrent protocol"
+//   8 bytes: reserved (extension flags)
+//   20 bytes: info_hash
+//   20 bytes: peer_id
+//
+// After handshake: length-prefixed messages
+//
+//   [4 bytes: length][1 byte: type][payload]
+
+// Message Types:
+//
+//   0: choke        "나는 너에게 block 안 보냄"
+//   1: unchoke      "이제 보낼게"
+//   2: interested   "네 블록 원함"
+//   3: not interested
+//   4: have         "블록 X 가짐"
+//   5: bitfield     "보유 블록 bitmap"
+//   6: request      "블록 X 보내줘"
+//   7: piece        "여기 블록 X"
+//   8: cancel       "X 취소"
+//   9: port         "DHT port 알림"
+//   20: extended    "extension protocol"
+
+// State Machine:
+//
+//   am_choking: 1 (block 안 보냄)
+//   am_interested: 0
+//   peer_choking: 1
+//   peer_interested: 0
+//
+// Initial state: choked, not interested
+// Goal: unchoke + interested on both sides
+
+// Choke/Unchoke Algorithm:
+//
+//   Every 10s: "regular unchoke"
+//     Rank peers by upload speed (leecher)
+//     or download speed (seeder)
+//     Unchoke top 4
+//
+//   Every 30s: "optimistic unchoke"
+//     Random peer unchoked
+//     Explore new peers
+//
+//   → Tit-for-tat fairness
+//   → Reciprocity encouraged
+
+// Piece Selection:
+//
+//   Rarest First:
+//     Prefer rare pieces
+//     Maximize swarm health
+//
+//   Random First Piece:
+//     First piece: random
+//     Get something to share quickly
+//
+//   End Game Mode:
+//     Few pieces left
+//     Request from multiple peers
+//     Cancel on first response
+
+// rqbit 구현:
+//   Tokio async streams per peer
+//   Per-peer task with state
+//   Channel-based coordination
+//   Backpressure via bounded channels`}
+        </pre>
+      </div>
     </section>
   );
 }

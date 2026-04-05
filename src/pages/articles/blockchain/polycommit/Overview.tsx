@@ -37,6 +37,55 @@ export default function Overview({ title }: { title?: string }) {
           streaming_kzg/ # 스트리밍 KZG 구현
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Polynomial Commitment 개념</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Polynomial Commitment Scheme (PCS)
+//
+// 목적: 다항식 p(x)에 대해:
+//   1. 커밋: c = Commit(p)  # 다항식 요약
+//   2. 공개: (x, y) + π     # y = p(x) 증명
+//   3. 검증: Verify(c, x, y, π) → true/false
+//
+// 필요 속성:
+//   - Binding: 같은 c로 두 다른 p 커밋 불가
+//   - Hiding (옵션): c로부터 p 추출 불가
+//   - Succinct: π 작음 (O(1) or O(log n))
+//   - Extractable: π가 있으면 p 복원 가능
+//
+// 활용:
+//   - zkSNARK / zkSTARK 핵심 빌딩 블록
+//   - Vector commitments (배열 커밋)
+//   - Accumulators
+//   - Verifiable computation
+
+// 사용 패턴 예시 (PLONK):
+//   1. Prover: 증인 다항식 w(x) 생성
+//   2. Commit: c_w = PC.Commit(w)
+//   3. Challenge: random point ζ
+//   4. Evaluate: y = w(ζ)
+//   5. Proof: π = PC.Open(w, ζ, y)
+//   6. Verifier: PC.Verify(c_w, ζ, y, π)
+
+// 복잡도 비교:
+//
+// ┌─────────────┬──────────┬──────────┬──────────┐
+// │  Scheme     │ Commit   │ Open     │ Verify   │
+// ├─────────────┼──────────┼──────────┼──────────┤
+// │ KZG10       │ O(n)·MSM │ O(n)     │ O(1)     │
+// │ IPA         │ O(n)     │ O(n)·log │ O(log n) │
+// │ FRI         │ O(n log n)│ O(log²)│ O(log²)  │
+// │ Hyrax       │ O(n)     │ O(√n)    │ O(√n)    │
+// │ Ligero      │ O(n log n)│ O(n)   │ O(√n)    │
+// │ Bulletproofs│ O(n)     │ O(log n) │ O(log n) │
+// └─────────────┴──────────┴──────────┴──────────┘
+
+// Transparent vs Trusted Setup:
+//   Trusted: KZG10, Marlin, Sonic (powers of τ 필요)
+//   Transparent: IPA, FRI, Ligero, Hyrax`}
+        </pre>
+      </div>
     </section>
   );
 }

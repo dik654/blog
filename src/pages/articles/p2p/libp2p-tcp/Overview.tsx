@@ -97,6 +97,71 @@ export default function Overview({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">TCP Transport 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">TCP Transport 구조</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// libp2p-tcp Transport
+//
+// Multiaddr 형식:
+//   /ip4/1.2.3.4/tcp/9000
+//   /ip4/1.2.3.4/tcp/9000/p2p/QmID
+//   /dns4/example.com/tcp/443/wss  (WebSocket over TCP)
+//
+// Key components:
+//
+//   TcpConfig:
+//     nodelay: bool          (TCP_NODELAY 설정)
+//     port_reuse: PortUse    (리사이클링 전략)
+//     backlog: u32           (listen queue 크기)
+//
+//   GenTcpTransport<T: TcpProvider>:
+//     Provider trait으로 runtime 추상화
+//     - TokioTcpProvider
+//     - AsyncStdTcpProvider
+//     - SmolTcpProvider
+//
+//   PortUse enum:
+//     New:   매번 새 ephemeral port
+//     Reuse: listener port 재사용 (NAT hole punching)
+
+// Transport Pipeline:
+//
+//   raw TCP stream
+//       ↓
+//   Security upgrade (Noise XX)
+//       ↓ negotiated cipher keys
+//   Stream muxer upgrade (Yamux)
+//       ↓ multiplexed substreams
+//   (PeerId, StreamMuxerBox)
+//       ↓
+//   Swarm ConnectionPool
+
+// TCP vs QUIC Connection Time:
+//
+//   TCP 3-way: 1 RTT (~50-100ms)
+//   + Noise XX: 2 RTT (~100-200ms)
+//   + Yamux negotiation: 1 RTT (~50-100ms)
+//   = Total: 3-4 RTT (~200-400ms)
+//
+//   QUIC: 1 RTT (~50-100ms) for everything
+//
+// → QUIC 3-4배 빠름, 하지만 TCP는 방화벽 친화
+
+// 배포 시 고려:
+//   TCP: 기본 포트 30303 (Ethereum), 4001 (IPFS)
+//   NAT 뒤: port forwarding 또는 UPnP
+//   Cloud: Security group에 TCP 인바운드 허용
+
+// 주요 Multiaddr protocols:
+//   /ip4, /ip6: IP address
+//   /dns4, /dns6: DNS hostname
+//   /tcp: TCP port
+//   /tls: TLS encryption
+//   /ws, /wss: WebSocket
+//   /p2p: PeerId`}
+        </pre>
+      </div>
     </section>
   );
 }

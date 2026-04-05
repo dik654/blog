@@ -39,6 +39,67 @@ export default function Talk({ onCodeRef }: { onCodeRef: (key: string, ref: Code
           경량 클라이언트가 상태/히스토리/비콘 데이터에 TCP 없이 접근할 수 있다.<br />
           방화벽 환경에서도 유리하다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">TALKREQ 확장 활용 사례</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TALKREQ/TALKRESP 응용 프로토콜
+//
+// discv5는 "멀티플렉싱" 가능한 UDP 채널:
+//   하나의 discv5 연결 위에서
+//   여러 application protocol 실행
+//
+// 장점:
+//   - 방화벽 1포트만 오픈 (UDP)
+//   - NAT 통과 용이
+//   - 이미 있는 세션 재사용
+//   - 디스커버리와 통합
+
+// 주요 프로토콜:
+//
+// 1. Portal Network
+//    Protocol ID: "portal"
+//    Light client 데이터 배포:
+//      - State (state network)
+//      - History (block headers, bodies)
+//      - Beacon (consensus data)
+//
+//    Content lookup via Kademlia DHT
+//    → Ethereum 경량 클라이언트
+//
+// 2. Consensus Layer (Eth2)
+//    Sync committee discovery
+//    Attestation subnet discovery
+//    → 유효한 validator 찾기
+//
+// 3. Execution Layer (Eth1)
+//    Node discovery
+//    ENR 기반 peer selection
+//    Topic-based filtering
+//
+// 4. LibP2P Integration
+//    libp2p이 discv5를 peer discovery로 사용
+//    Kad 기반 peer routing
+
+// 메시지 흐름 예:
+//   Peer A → Peer B:
+//     TALKREQ {
+//       protocol: "portal",
+//       payload: <light client query>
+//     }
+//
+//   Peer B → Peer A:
+//     TALKRESP {
+//       payload: <light client response>
+//     }
+//
+//   → 1 RTT으로 애플리케이션 요청/응답
+
+// 설계 원칙:
+//   - Stateless protocol preferred
+//   - Small payloads (packet limit)
+//   - Independent of discv5 state
+//   - Extensible via protocol ID`}
+        </pre>
       </div>
     </section>
   );

@@ -47,6 +47,61 @@ export default function CodeMemory() {
             </li>
           </ul>
         </div>
+
+        <h3 className="text-xl font-semibold mt-8 mb-4">세 방식 명령어 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Memory Protection Instructions 비교
+//
+// Intel SGX:
+//   EADD    - EPC 페이지 추가 (enclave 구성)
+//   EEXTEND - Measurement 업데이트 (256-byte 단위)
+//   EINIT   - Enclave 완성, SIGSTRUCT 검증
+//   EENTER  - Enclave 진입
+//   EEXIT   - Enclave 종료
+//   EWBLOCK - 페이지 퇴거 준비
+//   ELDU    - 페이지 복원
+//
+// AMD SEV:
+//   LAUNCH_START    - Guest 컨텍스트 초기화
+//   LAUNCH_UPDATE_DATA - 초기 메모리 암호화
+//   LAUNCH_UPDATE_VMSA - VCPU 상태 암호화 (ES)
+//   LAUNCH_MEASURE  - Launch digest 생성
+//   LAUNCH_SECRET   - Secret injection
+//   LAUNCH_FINISH   - Guest 실행 시작
+//   SNP_LAUNCH_START - SNP 초기화
+//   SNP_LAUNCH_UPDATE - SNP 메모리 + RMP
+//   SNP_LAUNCH_FINISH - SNP 실행 시작
+//
+// Intel TDX (SEAMCALL):
+//   TDH.MNG.CREATE     - TD 생성
+//   TDH.MNG.ADDCX      - Control page 추가
+//   TDH.MEM.PAGE.ADD   - 메모리 추가 + 암호화
+//   TDH.MEM.PAGE.AUG   - 추가 페이지 동적 할당
+//   TDH.MR.EXTEND      - Measurement 확장
+//   TDH.MR.FINALIZE    - MRTD 확정
+//   TDH.VP.CREATE      - VCPU 생성
+//   TDH.VP.ENTER       - TD 진입
+//   TDH.VP.RD/WR       - VCPU state 읽기/쓰기
+
+// 보안 강도:
+//   SGX:    EPC만 보호, 128MB 한계
+//   SEV:    VM 전체, 무결성 약함
+//   SEV-SNP: VM 전체 + 무결성 (RMP)
+//   TDX:    TD 전체 + 무결성 (SEAM)
+//
+// 개발 난이도:
+//   SGX:    높음 (enclave 코드 분리)
+//   SEV/TDX: 낮음 (기존 VM 그대로)
+//
+// 성능:
+//   SGX:    EPC paging 병목
+//   SEV/TDX: VM 수준 격리
+//
+// 생태계:
+//   SGX:    Open Enclave, Gramine, SCONE
+//   SEV:    AMD PSP, virtee/libsev
+//   TDX:    Intel TDX Linux kernel`}
+        </pre>
       </div>
     </section>
   );

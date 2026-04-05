@@ -29,6 +29,88 @@ export default function DilithiumVerify({ onCodeRef }: { onCodeRef: (key: string
         </p>
       </div>
       <div className="mt-8"><VerifyDilithiumViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Verify 알고리즘</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Dilithium Verify(pk, message, signature)
+
+function Verify(pk, M, sig):
+    (seed, t_high) = pk
+    (c_tilde, z, h) = sig
+
+    // 1) Bounds check
+    if ||z||_∞ >= γ1 - β:
+        return FAIL
+
+    // 2) Expand public key
+    A = ExpandA(seed)
+    t_high_bits = t_high · 2^d
+
+    // 3) Decode challenge
+    c = H(c_tilde)  // back to polynomial
+
+    // 4) Reconstruct w_high
+    // Key equation: A·z - c·t_high = A·y - c·s2 + c·t_low
+    // With hint, we recover w_high
+    w_recon = A·z - c·t_high_bits
+    w_high_recon = UseHint(h, w_recon, 2γ2)
+
+    // 5) Hash check
+    c_tilde' = H(H(tr || M) || w_high_recon)
+
+    // 6) Compare
+    return (c_tilde == c_tilde')
+
+// Verify cost analysis
+// Matrix-vector mult A·z: ~k·l polynomial mults
+// Dilithium2 (k=l=4): 16 poly mults
+// Each poly mult: ~1500 cycles (with NTT)
+// Total A·z: ~24,000 cycles
+// + hash operations: ~5,000 cycles
+// Total verify: ~30,000 cycles ≈ 10μs on 3GHz CPU
+
+// Sign vs Verify performance
+// Sign: ~500,000 cycles (rejection loop)
+// Verify: ~30,000 cycles
+// Ratio: ~17x faster verify`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">On-chain Verification Gas Cost</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Solidity implementation (no precompile)
+// 예상 gas cost
+
+// Components
+// - Hash (Keccak or SHAKE): ~500 gas each
+// - Polynomial mult (naive): ~150,000 gas
+// - Polynomial mult (NTT in Solidity): ~80,000 gas
+// - Matrix-vector: 16 × poly_mult
+
+// Estimated total
+// Dilithium2 verify: ~2,500,000 gas
+// 비교: ecrecover (precompile) = 3,000 gas
+// → 800x more expensive
+
+// Optimization attempts
+// 1) Precompile (EIP proposal)
+//    - Native implementation → ~50k gas
+//    - 50x improvement
+// 2) Batch verification
+//    - Amortize cost over multiple sigs
+// 3) Off-chain + succinct proof
+//    - ZK proof of valid Dilithium sig
+//    - On-chain: verify ZK proof only
+
+// 현재 상태
+// - No EVM precompile yet
+// - Research implementations exist
+// - 실전 배포 아직 이름 (2024)
+
+// Trade-off
+// - Immediate quantum safety
+// - High gas cost
+// - Large signatures (2.4 KB per tx)`}</pre>
+
+      </div>
     </section>
   );
 }

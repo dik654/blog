@@ -56,6 +56,129 @@ export default function DFT() {
           FFT는 같은 결과를 <Math>{'O(n \\log n) = 8'}</Math>번 연산으로 얻는다
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">DFT 수학적 심층</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Discrete Fourier Transform (DFT)
+//
+// Two interpretations:
+//
+//   (1) Evaluation interpretation:
+//     Polynomial f(x) = a_0 + a_1*x + ... + a_{n-1}*x^{n-1}
+//     Evaluate at n points: 1, w, w^2, ..., w^{n-1}
+//     Result: [f(1), f(w), f(w^2), ..., f(w^{n-1})]
+//
+//   (2) Linear algebra interpretation:
+//     y = W * a  where W[i][j] = w^{i*j}
+//     W is the Vandermonde matrix of unity roots
+//     O(n^2) for direct multiplication
+
+// Vandermonde property:
+//
+//   W * W^H = n * I  (where W^H has w^{-ij})
+//   → W^{-1} = (1/n) * W^H
+//   → DFT is INVERTIBLE
+//
+//   Shannon-Whittaker: n distinct points uniquely
+//   determine a degree-(n-1) polynomial
+
+// Why DFT matrix is full rank:
+//
+//   det(W) = product_{i<j}(w^j - w^i)
+//   Each (w^j - w^i) is nonzero (distinct roots)
+//   → det != 0
+//   → W invertible
+//   → inverse transform exists
+
+// Direct computation (O(n^2)):
+//
+//   for k in 0..n:
+//     y[k] = 0
+//     for j in 0..n:
+//       y[k] += a[j] * w^{k*j mod n}
+//
+//   n^2 mults + n^2 adds
+//   For n = 1M: 10^12 ops, ~1000 sec
+
+// Cooley-Tukey decomposition (O(n log n)):
+//
+//   Split by parity:
+//     f_even(x) = a_0 + a_2*x + a_4*x^2 + ...
+//     f_odd(x)  = a_1 + a_3*x + a_5*x^2 + ...
+//
+//   Then: f(x) = f_even(x^2) + x * f_odd(x^2)
+//
+//   Evaluate at {w^0, ..., w^{n-1}}:
+//     f_even and f_odd need evaluation at
+//       {w^0, w^2, w^4, ...} = {w'^0, w'^1, ...}
+//       where w' = w^2 is primitive (n/2)-root
+//
+//   Recursion:
+//     T(n) = 2*T(n/2) + O(n)
+//         = O(n log n)
+
+// Example evaluation in F_17:
+//
+//   p = 17, n = 4, w = 4
+//     Verify: 4^4 = 256 = 15*17 + 1 ≡ 1 (mod 17) ✓
+//     Verify: 4^2 = 16 ≡ -1 ≠ 1 (mod 17) ✓ (primitive)
+//
+//   W matrix (mod 17):
+//     row 0: [1, 1, 1, 1]
+//     row 1: [1, 4, 16, 13]  (4^1, 4^2, 4^3)
+//     row 2: [1, 16, 1, 16]  (4^2, 4^4=1, 4^6=16)
+//     row 3: [1, 13, 16, 4]  (4^3, 4^6=16, 4^9=4)
+//
+//   Coefficients: a = [1, 2, 3, 4]
+//
+//   Matrix mult:
+//     y_0 = 1*1 + 1*2 + 1*3 + 1*4 = 10
+//     y_1 = 1*1 + 4*2 + 16*3 + 13*4 = 1+8+48+52 = 109 ≡ 7
+//     y_2 = 1*1 + 16*2 + 1*3 + 16*4 = 1+32+3+64 = 100 ≡ 15
+//     y_3 = 1*1 + 13*2 + 16*3 + 4*4 = 1+26+48+16 = 91 ≡ 6
+//
+//   Result: y = [10, 7, 15, 6]
+
+// Parseval's theorem (NTT version):
+//
+//   sum_i a_i * conj(a_i) = (1/n) * sum_k |y_k|^2
+//
+//   In F_p: coefficient norm related to evaluation norm
+//   Used in bounded-error estimates
+
+// Important subtransforms:
+//
+//   Cosine-sine form (real input):
+//     Reduced to 2 DFTs of size n/2
+//     Used in MP3, JPEG compression
+//
+//   Inverse DFT:
+//     Same structure, use w^{-1}, divide by n
+//
+//   Fractional DFT:
+//     Evaluate at {w^0, w^{1/k}, ..., w^{(n-1)/k}}
+//     Used in signal processing
+
+// Efficient algorithms beyond Cooley-Tukey:
+//
+//   1. Stockham algorithm:
+//      No bit-reversal needed
+//      Better for GPU/SIMD
+//
+//   2. Six-step FFT:
+//      Handles very large n
+//      Cache-aware memory access
+//
+//   3. Bluestein's algorithm:
+//      Works for ANY n (not just 2^k)
+//      Uses chirp z-transform
+//
+//   4. Rader's algorithm:
+//      FFT of prime size via number-theoretic trick
+//      Converts to convolution`}
+        </pre>
+      </div>
     </section>
   );
 }

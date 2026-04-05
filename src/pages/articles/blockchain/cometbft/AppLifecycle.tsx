@@ -27,6 +27,72 @@ export default function AppLifecycle({ onCodeRef: _onCodeRef }: { onCodeRef: (ke
         <CodePanel title="ABCI++ 블록 실행 6단계" code={LIFECYCLE_CODE} annotations={LIFECYCLE_ANNOTATIONS} />
         <h3 className="text-xl font-semibold mt-6 mb-3">레거시 vs ABCI++ 비교</h3>
         <CodePanel title="ABCI 진화: 개별 호출 → 통합" code={LEGACY_VS_ABCIPP} annotations={LEGACY_ANNOTATIONS} />
+
+        {/* ── Vote Extension ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Vote Extension — ABCI++ 핵심 기능</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Vote Extension: validator가 Precommit에 임의 데이터 첨부
+// ABCI++ (v0.38+)의 가장 큰 변화
+
+// Extension 용도:
+// 1. Oracle data: validator가 외부 가격 서명
+// 2. MEV-resistant ordering: TX 순서 제안
+// 3. Cross-chain data: 다른 체인 상태 증명
+// 4. Threshold encryption: 암호화된 TX 복호화 share
+
+// Flow:
+// 1. ExtendVote(height) → app이 extension 생성
+// 2. VerifyVoteExtension(ext) → 다른 validator의 ext 검증
+// 3. Vote에 extension 포함 → BLS 서명
+// 4. 다음 블록의 PrepareProposal에서 사용 가능
+
+// 구조:
+type Vote struct {
+    // ... 기존 필드 ...
+    Extension          []byte  // app-specific data
+    ExtensionSignature []byte  // 별도 서명
+}
+
+// ExtendVote (app 구현):
+func (app *MyApp) ExtendVote(
+    req abci.RequestExtendVote,
+) abci.ResponseExtendVote {
+    // 예: 외부 oracle에서 BTC 가격 가져오기
+    btcPrice := app.oracle.GetBTCPrice()
+    data := encode(btcPrice)
+
+    return abci.ResponseExtendVote{
+        VoteExtension: data,
+    }
+}
+
+// VerifyVoteExtension:
+func (app *MyApp) VerifyVoteExtension(
+    req abci.RequestVerifyVoteExtension,
+) abci.ResponseVerifyVoteExtension {
+    btcPrice := decode(req.VoteExtension)
+
+    // sanity check
+    if btcPrice < 10000 || btcPrice > 200000 {
+        return abci.ResponseVerifyVoteExtension{
+            Status: abci.ResponseVerifyVoteExtension_REJECT,
+        }
+    }
+    return abci.ResponseVerifyVoteExtension{
+        Status: abci.ResponseVerifyVoteExtension_ACCEPT,
+    }
+}
+
+// Real-world 사용 (dYdX v4):
+// - orderbook 상태 validator가 투표에 포함
+// - MEV 공격 방어 (cross-validator ordering)
+// - 다음 블록 PrepareProposal에서 통합`}
+        </pre>
+        <p className="leading-7">
+          <strong>Vote Extension</strong>이 ABCI++의 핵심 기능.<br />
+          Oracle, MEV 방어, cross-chain 데이터 등 validator 협력 가능.<br />
+          dYdX v4, Skip MEV 등에서 실전 활용.
+        </p>
       </div>
     </section>
   );

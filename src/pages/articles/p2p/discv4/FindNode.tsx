@@ -88,6 +88,78 @@ export default function FindNode() {
           { lines: [757, 757], color: 'sky', note: 'Target 공개키를 keccak256으로 node ID 변환' },
           { lines: [763, 763], color: 'emerald', note: '12개 도달 시 즉시 전송 후 버퍼 초기화' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">FINDNODE 보안 고려사항</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// FINDNODE RPC Security
+//
+// DDoS Amplification Attack:
+//
+//   FINDNODE: 97 bytes (header) + pubkey (64B) + ts (8B) = ~170 B
+//   Neighbors: up to 1280 bytes × 2 packets = ~2400 B
+//
+//   Amplification ratio: ~14x
+//
+// 악용:
+//   Attacker가 victim IP로 spoofed FINDNODE 전송
+//   → 피해자에게 큰 응답 flooding
+//   → bandwidth 소진
+//
+// 방어: Bond Requirement
+//
+//   FINDNODE 받기 전 반드시 bond 수립
+//   Bond = "최근 PING/PONG 성공"
+//
+//   unbonded 요청 → 무시
+//   → Attacker가 bonded 상태 유지 불가
+//   → Source address spoofing 불가
+
+// Packet 분할:
+//
+//   Max UDP packet: 1280 bytes (discv4)
+//   Node entry: ~90 bytes (IP+port+pubkey)
+//   → 12 nodes per Neighbors packet
+//
+//   bucketSize=16 목표:
+//     12 + 4 = 2 packets
+//     또는
+//     12 + 12 = 2 packets (여유)
+
+// Target Specification:
+//
+// discv4:
+//   Target = pubkey (64 bytes)
+//   node_id = keccak256(pubkey)
+//
+//   공격자 시나리오:
+//     "현재 peer 목록 알려줘"
+//     → 임의 pubkey로 FINDNODE
+//     → peer 구조 파악
+//     → Privacy 위반
+//
+// discv5:
+//   Target = log-distance array
+//   "거리 [253, 254, 255]의 노드 알려줘"
+//   → 대상 공개 안 됨
+//   → 구조 파악 어려움
+//
+//   Privacy 개선
+
+// Implementation Notes:
+//
+//   XOR distance 계산:
+//     dist = node_id_A XOR node_id_B
+//     (256-bit XOR)
+//
+//   Closest-first ordering:
+//     sort by distance to target
+//     return top-k (k=16)
+//
+//   Pending request matching:
+//     Track outstanding FINDNODE
+//     Match response within timeout
+//     Handle duplicates`}
+        </pre>
       </div>
     </section>
   );

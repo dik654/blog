@@ -27,6 +27,97 @@ export default function DilithiumSign({ onCodeRef }: { onCodeRef: (key: string, 
         </p>
       </div>
       <div className="mt-8"><SignViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Sign 알고리즘 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Dilithium Sign(sk, message)
+
+function Sign(sk, M):
+    (seed, tr, s1, s2, t_low) = sk
+
+    // 1) hash of message
+    μ = Hash(tr || M)
+
+    κ = 0
+    loop:
+        κ += 1
+
+        // 2) Sample masking vector
+        ρ' = Hash(seed || μ || κ)
+        y = ExpandMask(ρ', κ)  // short random vector
+
+        // 3) Commit
+        w = A · y
+        w_high = HighBits(w, 2γ2)
+
+        // 4) Challenge
+        c = Hash(μ || w_high)  // sparse polynomial
+
+        // 5) Response
+        z = y + c · s1
+
+        // 6) Rejection sampling (anti-leak)
+        if ||z||_∞ >= γ1 - β:
+            continue  // restart
+
+        // 7) Verify no overflow from s2
+        r = w - c · s2
+        r_low = LowBits(r, 2γ2)
+        if ||r_low||_∞ >= γ2 - β:
+            continue
+
+        // 8) Hint (compression)
+        h = MakeHint(-c·t_low, r)
+
+        // Check hint count
+        if weight(h) > ω:
+            continue
+
+        return (c, z, h)
+
+// 평균 3-7 iteration (typically)
+// Worst case: unbounded (probabilistic)`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">NTT (Number Theoretic Transform)</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Polynomial multiplication 최적화
+// Naive: O(n²)
+// NTT: O(n log n)
+
+// Dilithium에서 모든 polynomial 연산
+// A·s, c·s1, c·s2, etc.
+// R_q = Z_q[X]/(X^n + 1)
+
+// NTT는 FFT의 정수론 버전
+// Primitive n-th root of unity ω ∈ Z_q
+
+// NTT: 계수 → 값 (pointwise)
+// NTT(p) = (p(ω⁰), p(ω¹), ..., p(ωⁿ⁻¹))
+
+// 곱셈
+// Convert to NTT form: a_hat, b_hat
+// Pointwise multiply: c_hat[i] = a_hat[i] * b_hat[i]
+// Inverse NTT: c
+
+// Dilithium2 parameters
+// n = 256, q = 8380417
+// Primitive 512-th root of unity 존재
+// → NTT 가능
+
+// 성능
+// NTT (forward/inverse): ~500 cycles per polynomial
+// Pointwise mult: ~256 mults
+// Total for poly mult: ~1500 cycles
+// vs naive: ~65000 cycles (256²)
+// → 40x speedup
+
+// Implementation tips
+// - Precomputed ω table
+// - Bit-reversal ordering
+// - Montgomery multiplication
+// - AVX2/AVX-512 vectorization`}</pre>
+
+      </div>
     </section>
   );
 }

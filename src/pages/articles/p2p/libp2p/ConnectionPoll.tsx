@@ -69,6 +69,87 @@ export default function ConnectionPoll({ onCodeRef }: {
           협상 성공 시 <code>InboundUpgradeSend</code> 또는 <code>OutboundUpgradeSend</code>를 실행합니다.<br />
           최종적으로 <strong>FullyNegotiatedInbound/Outbound</strong> 이벤트가 Handler에 전달됩니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">poll() 루프 설계 원리</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Connection::poll() 설계 원칙
+//
+// Goal:
+//   "가능한 한 많은 진행을 하나의 wake에서 수행"
+//
+// 8-step priority loop:
+//
+//   loop {
+//       // 1. Timeouts first
+//       if let Some(expired) = check_timeouts() {
+//           notify_handler(expired);
+//           continue;
+//       }
+//
+//       // 2. Handler drives outbound
+//       if let Ready(event) = handler.poll(cx) {
+//           match event {
+//               OutboundSubstreamRequest => {
+//                   queue_for_muxer();
+//                   continue;
+//               }
+//               NotifyBehaviour(e) => return Ready(e);
+//           }
+//       }
+//
+//       // 3-4. Active negotiations
+//       if progress_negotiating_out(cx) { continue; }
+//       if progress_negotiating_in(cx) { continue; }
+//
+//       // 5. Shutdown check
+//       if idle && !keep_alive {
+//           start_shutdown();
+//       }
+//
+//       // 6-8. Muxer events
+//       if let Ready(event) = muxer.poll(cx) {
+//           notify_handler(event);
+//           continue;
+//       }
+//
+//       if has_pending_outbound() {
+//           if let Ready(s) = muxer.poll_outbound(cx) {
+//               start_negotiation(s);
+//               continue;
+//           }
+//       }
+//
+//       if can_accept_inbound() {
+//           if let Ready(s) = muxer.poll_inbound(cx) {
+//               start_negotiation(s);
+//               continue;
+//           }
+//       }
+//
+//       return Pending;
+//   }
+
+// 왜 loop?
+//   - 한 progress가 다음 progress 유발 가능
+//   - 예: Handler 응답 → 새 stream 요청 → muxer 할당
+//   - 단일 wake에서 연쇄 처리
+
+// 왜 continue?
+//   - 전체 loop 재실행
+//   - 우선순위 높은 것 먼저
+//   - Starvation 방지
+//   - Fair scheduling
+
+// 왜 Handler → Muxer 순서?
+//   - Handler가 새 stream 필요 여부 결정
+//   - Muxer는 stream 할당만
+//   - 반대 순서면 빈 할당 가능성
+
+// async_trait 없이 Pin/Future 직접 사용:
+//   - Zero-cost abstraction
+//   - 컴파일 타임 최적화
+//   - 런타임 오버헤드 없음`}
+        </pre>
       </div>
     </section>
   );

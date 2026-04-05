@@ -66,6 +66,54 @@ export default function KeySchedule() {
         </p>
         <CodePanel title="TLS 1.3 Key Schedule — HKDF 파이프라인" code={keyCode}
           annotations={annotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">HKDF와 키 파생 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// HKDF (HMAC-based Key Derivation Function)
+// RFC 5869
+//
+// 2 Functions:
+//
+// HKDF-Extract(salt, IKM) → PRK
+//   PRK = HMAC(salt, IKM)  // Pseudo-Random Key
+//   IKM = Input Keying Material
+//
+// HKDF-Expand(PRK, info, L) → OKM
+//   OKM = T(1) || T(2) || ... || T(N)
+//   T(i) = HMAC(PRK, T(i-1) || info || i)
+//   L = desired output length
+
+// HKDF-Expand-Label (TLS 1.3):
+//   HKDFLabel struct:
+//     length: 2 bytes
+//     label: "tls13 " || protocol_label
+//     context: transcript hash
+//
+//   Derived keys:
+//     "tls13 derived"
+//     "tls13 c hs traffic"
+//     "tls13 s hs traffic"
+//     "tls13 c ap traffic"
+//     "tls13 s ap traffic"
+//     "tls13 res master"
+
+// Traffic Keys per direction:
+//   key  = HKDF-Expand-Label(secret, "key", "", key_length)
+//   iv   = HKDF-Expand-Label(secret, "iv", "", iv_length)
+//   finished = HKDF-Expand-Label(secret, "finished", "", hash_length)
+
+// Per-record nonce:
+//   nonce_i = iv XOR be_to_le(counter_i)
+//   counter incremented per record
+//   → 재사용 없음 (AEAD 요구사항)
+
+// Rekeying (Key Update):
+//   New secret = HKDF-Expand-Label(
+//       old_secret, "traffic upd", "", hash_length
+//   )
+//   → 새 key, iv 파생
+//   → 장기 연결 보호`}
+        </pre>
       </div>
     </section>
   );

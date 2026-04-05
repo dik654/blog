@@ -56,15 +56,33 @@ export const teeNewArticles: Article[] = [
 
   /* ── Intel TDX ── */
   {
-    slug: 'intel-tdx', title: 'Intel TDX: Trust Domain 기밀 VM', subcategory: 'intel-tdx',
-    sections: [{ id: 'overview', title: 'TDX 아키텍처' }, { id: 'td-module', title: 'TD Module & SEAM' }, { id: 'memory', title: '메모리 암호화 (MKTME)' }, { id: 'attestation', title: 'TDX 원격 증명 & Quote' }],
+    slug: 'intel-tdx', title: 'Intel TDX: Trust Domain 기밀 VM (심층 분석)', subcategory: 'intel-tdx',
+    sections: [
+      { id: 'overview', title: 'TDX 아키텍처 & 위협 모델' },
+      { id: 'seam-module', title: 'SEAM 권한 & TD Module' },
+      { id: 'lifecycle-abi', title: 'TD 라이프사이클 & SEAMCALL/TDCALL' },
+      { id: 'memory', title: 'MKTME + Secure EPT' },
+      { id: 'tdvmcall', title: 'TDVMCALL — Host 통신' },
+      { id: 'attestation', title: 'DCAP 증명 파이프라인' },
+      { id: 'partitioning', title: 'TDX Partitioning & Service TDs' },
+      { id: 'attacks', title: '공격 벡터 & 완화' },
+    ],
     component: () => import('@/pages/articles/tee/intel-tdx'),
   },
 
   /* ── ARM CCA ── */
   {
-    slug: 'arm-cca', title: 'ARM CCA: Realm 관리 & 기밀 VM', subcategory: 'arm-cca',
-    sections: [{ id: 'overview', title: 'CCA 아키텍처' }, { id: 'realm', title: 'Realm 생성 & 관리' }, { id: 'rme', title: 'Realm Management Extension' }, { id: 'attestation', title: 'CCA 증명 토큰' }],
+    slug: 'arm-cca', title: 'ARM CCA: Realm Management Architecture (심층 분석)', subcategory: 'arm-cca',
+    sections: [
+      { id: 'overview', title: 'CCA 아키텍처 & 4-World 모델' },
+      { id: 'rme-gpt', title: 'RME & Granule Protection Table' },
+      { id: 'realm-lifecycle', title: 'Realm 생성 & 생명주기' },
+      { id: 'rmi-rsi', title: 'RMI & RSI 인터페이스' },
+      { id: 'tf-rmm', title: 'TF-RMM 구현 분석' },
+      { id: 'stage2-mmu', title: 'Stage-2 MMU & IPA 변환' },
+      { id: 'attestation', title: 'CCA Attestation Token' },
+      { id: 'smmu-dma', title: 'SMMU & DMA 격리' },
+    ],
     component: () => import('@/pages/articles/tee/arm-cca'),
   },
 ];

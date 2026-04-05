@@ -36,6 +36,98 @@ export default function Reliability() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Reliability Features 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 핵심 Reliability Features:
+
+// 1. ECC Memory (Error-Correcting Code):
+// Problem:
+// - cosmic rays flip bits
+// - 1-2 errors per GB per year
+// - large memory = more errors
+// - 4 TB machine: ~4-8 errors/year
+//
+// ECC mechanism:
+// - adds parity bits
+// - Hamming code
+// - SECDED: Single Error Correct, Double Error Detect
+// - corrects single bit errors
+// - detects double bit errors
+//
+// Without ECC:
+// - silent data corruption
+// - random crashes
+// - incorrect computations
+// - blockchain: invalid proofs
+// - databases: corrupted records
+
+// 2. Redundant PSUs:
+// - 2+ PSUs working in parallel
+// - 1+1 config (either alone can power)
+// - hot-swappable
+// - independent power circuits
+// - survives PSU failure
+//
+// Economic math:
+// - single PSU: $150, fails once per 5 years
+// - downtime cost: $1000/hour
+// - redundant PSU: $300, ~0% downtime risk
+// - payback: 1 failure
+
+// 3. Hot-swap Drives:
+// - SAS/SATA/U.2 slots
+// - tool-less removal
+// - RAID rebuild online
+// - no service interruption
+// - critical for 24/7 uptime
+
+// 4. BMC Monitoring:
+// - continuous sensor polling
+// - temperature, voltage, fans
+// - alerts on anomalies
+// - SNMP, email, webhook
+// - datacenter integration
+
+// 5. Thermal Management:
+// - multiple zones
+// - temperature-based fan curves
+// - prevents throttling
+// - predictive maintenance
+// - fan failure redundancy
+
+// 6. Fault Tolerance Stack:
+// L1 (Component): ECC, RAID
+// L2 (System): redundant PSU, hot-swap
+// L3 (Network): dual NICs, LACP
+// L4 (Application): clustering, failover
+// L5 (Geographic): multi-datacenter
+
+// Real-world failure rates (24/7 ops):
+// - HDD: 1-3% annual failure
+// - SSD: 0.5-2% annual failure
+// - PSU: 1-3% annual failure
+// - RAM: 2-6 errors/GB/year
+// - Fan: 3-5% annual failure
+// - CPU: <0.1% annual failure
+
+// MTBF comparisons:
+// Consumer: 50,000-100,000 hours
+// Enterprise: 200,000-1,000,000 hours
+// 2-10x better reliability
+
+// Blockchain impact:
+// - corrupt memory → invalid proof → slashing
+// - PSU failure → missed PoSt → fault fee
+// - disk failure → data loss → termination
+// - each cost: $$$$
+// - server reliability = financial protection`}
+        </pre>
+        <p className="leading-7">
+          Reliability stack: <strong>ECC + redundant PSU + hot-swap + BMC + clustering</strong>.<br />
+          MTBF 2-10x 차이 (50K → 1M hours).<br />
+          blockchain: 1 hardware failure = slashing/termination → 경제적 파국.
+        </p>
       </div>
     </section>
   );

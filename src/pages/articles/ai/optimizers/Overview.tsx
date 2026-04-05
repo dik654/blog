@@ -1,4 +1,5 @@
 import OptimizerViz from './viz/OptimizerViz';
+import OptimizerEvolutionViz from './viz/OptimizerEvolutionViz';
 
 export default function Overview() {
   return (
@@ -24,6 +25,7 @@ export default function Overview() {
       <div className="not-prose mt-8">
         <OptimizerViz />
       </div>
+      <OptimizerEvolutionViz />
     </section>
   );
 }

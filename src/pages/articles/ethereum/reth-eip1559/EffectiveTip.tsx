@@ -16,22 +16,171 @@ export default function EffectiveTip({ onCodeRef }: { onCodeRef: (key: string, r
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
           <code>effective_tip_per_gas()</code>는 TX가 검증자에게 지불하는 실효 팁을 계산한다.<br />
-          공식은 <code>min(max_priority_fee, max_fee - base_fee)</code>다.
-          <br />
-          사용자가 설정한 priority_fee가 여유분(max_fee - base_fee)보다 크면,
-          여유분이 실제 팁이 된다.
+          공식은 <code>min(max_priority_fee, max_fee - base_fee)</code>다.<br />
+          사용자가 설정한 priority_fee가 여유분(max_fee - base_fee)보다 크면, 여유분이 실제 팁이 된다.
         </p>
         <p className="leading-7">
           <code>max_fee &lt; base_fee</code>이면 <code>None</code>을 반환한다.<br />
-          현재 base fee를 감당할 수 없는 TX이므로 블록에 포함될 수 없다.
-          <br />
+          현재 base fee를 감당할 수 없는 TX이므로 블록에 포함될 수 없다.<br />
           이 TX는 TX 풀의 BaseFee 서브풀에서 base fee 하락을 기다린다.
         </p>
         <p className="leading-7">
-          <strong>TX 풀과의 연결:</strong> <code>CoinbaseTipOrdering</code>이 이 함수를 호출하여
-          TX 우선순위를 결정한다.
-          effective_tip이 높을수록 <code>best_transactions()</code> 이터레이터에서 먼저 나오고,
-          PayloadBuilder가 블록에 먼저 포함한다.
+          <strong>TX 풀과의 연결:</strong> <code>CoinbaseTipOrdering</code>이 이 함수를 호출하여 TX 우선순위를 결정한다.<br />
+          effective_tip이 높을수록 <code>best_transactions()</code> 이터레이터에서 먼저 나오고, PayloadBuilder가 블록에 먼저 포함한다.
+        </p>
+
+        {/* ── 구현 코드 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">effective_tip_per_gas — 구현</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`pub fn effective_tip_per_gas(
+    &self,
+    base_fee: Option<u64>,
+) -> Option<u128> {
+    let base_fee = base_fee? as u128;
+    let max_fee_per_gas = self.max_fee_per_gas();
+
+    // max_fee < base_fee → 포함 불가 TX
+    if max_fee_per_gas < base_fee {
+        return None;
+    }
+
+    // max_fee - base_fee = 팁에 할당 가능한 여유분
+    let fee_delta = max_fee_per_gas - base_fee;
+
+    // 실효 팁 = min(사용자 설정 priority_fee, 여유분)
+    Some(min(self.max_priority_fee_per_gas(), fee_delta))
+}
+
+// TX 타입별 처리:
+// - Legacy/2930: max_priority_fee_per_gas() = gas_price
+// - EIP-1559: 사용자가 명시적으로 설정
+// - EIP-4844: 동일한 priority_fee 필드`}
+        </pre>
+        <p className="leading-7">
+          <code>min()</code>의 의미: 사용자가 원하는 팁이 max_fee 예산을 넘어갈 수 없음.<br />
+          예: max_priority=5 gwei, max_fee=40, base_fee=35 → 여유분 5, 실효 팁 min(5,5)=5 gwei.<br />
+          예: max_priority=10 gwei, max_fee=40, base_fee=35 → 여유분 5, 실효 팁 min(10,5)=5 gwei.
+        </p>
+
+        {/* ── Priority fee 경제학 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Priority Fee 경제학</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Priority fee의 역할: 검증자에게 TX 포함 인센티브
+//
+// 한산한 시기 (블록에 빈자리 있음):
+// - priority_fee = 1 gwei도 충분 (검증자는 포기할 이유 없음)
+// - 대부분의 TX가 min(2, delta) = 2 gwei 수준
+//
+// 혼잡한 시기 (블록이 거의 찬 상태):
+// - 검증자가 priority_fee 높은 TX부터 선택
+// - 사용자는 경쟁적으로 priority_fee 입찰
+// - 10 gwei, 20 gwei, 100 gwei도 가능
+// - MEV 영역 (sandwich/front-run): 수백~수천 gwei
+
+// Reth TX 풀의 정렬 기준:
+pub struct CoinbaseTipOrdering<T>(PhantomData<T>);
+
+impl<T: PoolTransaction> TransactionOrdering for CoinbaseTipOrdering<T> {
+    type PriorityValue = u128;  // effective_tip
+
+    fn priority(&self, tx: &Self::Transaction, base_fee: u64) -> Priority<Self::PriorityValue> {
+        match tx.effective_tip_per_gas(Some(base_fee)) {
+            Some(tip) => Priority::Value(tip),  // 정렬 키
+            None => Priority::None,              // 현재 포함 불가
+        }
+    }
+}
+
+// best_transactions() 이터레이터가 priority 내림차순으로 방출
+// PayloadBuilder는 이 순서대로 TX를 블록에 채움
+// → 검증자 수익 최대화`}
+        </pre>
+        <p className="leading-7">
+          priority_fee = 검증자가 받는 <strong>실질 수익</strong>.<br />
+          혼잡 시 사용자 경쟁 → 높은 priority_fee → 검증자 수입 증가.<br />
+          한산 시 낮은 priority_fee로도 포함 가능 → 사용자에게 유리.
+        </p>
+
+        {/* ── 실전 시나리오 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">실전 시나리오 — 3가지 상황</h3>
+        <pre className="bg-muted rameded-lg p-4 text-sm overflow-x-auto">
+{`// 시나리오 1: 일반 사용자, 한산 시간
+// 지갑 설정: max_fee=30, max_priority_fee=2
+// 현재 base_fee=20
+//
+// fee_delta = 30 - 20 = 10
+// effective_tip = min(2, 10) = 2 gwei
+// 총 지불 = 20 (burn) + 2 (tip) = 22 gwei/gas
+// → 지갑이 제안한 priority가 전부 팁으로 쓰임
+
+// 시나리오 2: 혼잡 시간, 경쟁 입찰
+// 지갑 설정: max_fee=150, max_priority_fee=50
+// 현재 base_fee=100
+//
+// fee_delta = 150 - 100 = 50
+// effective_tip = min(50, 50) = 50 gwei
+// 총 지불 = 100 + 50 = 150 gwei/gas
+// → max_fee까지 완전히 소진
+
+// 시나리오 3: base fee 상승으로 여유분 감소
+// 지갑 설정: max_fee=50, max_priority_fee=10
+// 현재 base_fee=48 (갑자기 상승)
+//
+// fee_delta = 50 - 48 = 2
+// effective_tip = min(10, 2) = 2 gwei
+// 총 지불 = 48 + 2 = 50 gwei/gas
+// → 원하는 10 gwei 팁 대신 여유분 2 gwei만 지급
+// → 검증자 우선순위 낮아짐 → 포함 지연 가능
+
+// 시나리오 4: base fee가 max_fee 초과
+// max_fee=30, base_fee=40
+// → effective_tip_per_gas() = None
+// → TX 풀의 BaseFee 서브풀로 이동 (base_fee 하락 대기)`}
+        </pre>
+        <p className="leading-7">
+          실제 TX 팁은 사용자 설정과 현재 시장 가격의 <strong>동적 합의</strong>.<br />
+          max_fee가 여유를 두고 설정되면 혼잡 시에도 TX 포함 가능.<br />
+          지갑들이 "safe/fast/rapid" 옵션으로 max_fee 추천 — 높을수록 포함 속도 ↑ 비용 ↑.
+        </p>
+
+        {/* ── MEV와의 관계 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">MEV와 effective_tip</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// MEV(Maximum Extractable Value) 봇의 TX 포함 전략
+//
+// 1. Sandwich attack:
+//    - 타겟 TX를 앞뒤로 감싸는 2개 TX 필요
+//    - 두 TX 모두 같은 블록에 포함되어야 함
+//    - 높은 priority_fee로 우선순위 확보 (~1000 gwei 이상)
+//
+// 2. Backrunning (Liquidation):
+//    - 특정 TX 직후에 실행 필요
+//    - 수익 큰 기회일수록 높은 priority_fee 입찰
+//
+// 3. Front-running:
+//    - 타겟 TX보다 빠르게 실행
+//    - priority_fee = 타겟 tip + alpha
+
+// 현실 수치 (혼잡 시기):
+// - 일반 TX: 2~5 gwei priority
+// - DeFi 스왑: 10~50 gwei
+// - MEV sandwich: 500~5000 gwei
+// - Flash loan arbitrage: 가변적 (수익의 일정 %)
+
+// Flashbots 도입 이후:
+// - public mempool에서의 priority_fee 경쟁 감소
+// - MEV는 private bundle로 전송 (off-chain 협상)
+// - priority_fee는 안정화 (일반 TX 수준)
+
+// effective_tip의 역할:
+// - TX 풀 정렬 기준 (블록 내 포함 순서)
+// - 사용자의 "속도 의지" 표현
+// - 검증자 수익 결정`}
+        </pre>
+        <p className="leading-7">
+          EIP-1559 이후 priority_fee가 <strong>MEV 경쟁의 주요 도구</strong>로 등장.<br />
+          사용자 간 우선순위 경매가 base_fee 위에서 진행 — 혼잡 상황에서 특히 활발.<br />
+          Flashbots 등 private mempool로 일부 MEV가 공개 시장에서 분리됨.
         </p>
       </div>
 

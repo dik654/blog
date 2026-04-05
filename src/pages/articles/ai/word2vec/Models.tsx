@@ -56,6 +56,125 @@ export default function Models({ title }: { title?: string }) {
       <div className="mt-8">
         <ModelViz />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">CBOW vs Skip-gram 구조 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// CBOW 상세 흐름
+//
+// Input: 컨텍스트 단어들 (window=2)
+//   "The cat [MASK] on the mat"
+//   context = [The, cat, on, the]
+//   target = sat
+//
+// Step 1: 각 컨텍스트 단어 임베딩 조회
+//   v_context = [W[the], W[cat], W[on], W[the]]
+//             shape: (4, 300)
+//
+// Step 2: 평균 (또는 합)
+//   h = mean(v_context)  # (300,)
+//
+// Step 3: 출력 레이어
+//   logits = h @ W'.T  # (V,)
+//
+// Step 4: Softmax & Loss
+//   p = softmax(logits)
+//   loss = -log p[target]
+//
+// 파라미터:
+//   W: (V, D) 입력 임베딩
+//   W': (V, D) 출력 임베딩
+//   V = 어휘 크기, D = 임베딩 차원 (보통 300)
+
+// Skip-gram 상세 흐름
+//
+// Input: 중심 단어
+//   "The cat [sat] on the mat"
+//   target (center) = sat
+//   contexts = [The, cat, on, the, mat]
+//
+// Step 1: 중심 단어 임베딩
+//   h = W[sat]  # (300,)
+//
+// Step 2: 각 컨텍스트 예측
+//   for context_word in contexts:
+//     logits = h @ W'.T  # (V,)
+//     p = softmax(logits)
+//     loss += -log p[context_word]
+//
+// 하나의 (center, context) 쌍 당 1 업데이트
+// window=5면 한 문장에서 10배 더 많은 학습 신호
+
+// 실험 결과 (Mikolov 2013):
+//
+// ┌──────────┬─────────┬──────────┬────────────┐
+// │  모델    │ semantic│ syntactic│  속도      │
+// ├──────────┼─────────┼──────────┼────────────┤
+// │ CBOW     │  60%    │  53%     │  빠름 (5x) │
+// │ Skip-gram│  61%    │  69%     │  느림      │
+// └──────────┴─────────┴──────────┴────────────┘
+//
+// 권장:
+//   - 소규모 데이터: CBOW (빠르고 안정)
+//   - 대규모 데이터: Skip-gram (품질 우수)
+//   - 저빈도 단어 중요: Skip-gram`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Embedding 추출</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 학습 완료 후 임베딩 행렬 활용
+//
+// Word2Vec은 두 개의 행렬을 학습:
+//   W: 입력 임베딩 (center words)
+//   W': 출력 임베딩 (context words)
+//
+// 최종 임베딩 선택:
+//   Option 1: W만 사용 (일반적)
+//   Option 2: W + W' 합산
+//   Option 3: (W + W') / 2 평균
+//
+// 실무에서는 W 사용이 표준
+
+// 임베딩 활용:
+//   vocab = {"king": 0, "queen": 1, "man": 2, "woman": 3, ...}
+//   W.shape  # (V, 300)
+//
+//   king_vec = W[vocab["king"]]  # 300-dim vector
+//   queen_vec = W[vocab["queen"]]
+//
+//   similarity = cosine(king_vec, queen_vec)  # 높음
+//
+//   analogy = W[vocab["king"]] - W[vocab["man"]] + W[vocab["woman"]]
+//   # analogy ≈ W[vocab["queen"]]
+
+// Gensim 라이브러리:
+from gensim.models import Word2Vec
+
+# 학습
+sentences = [["the", "cat", "sat"], ["the", "dog", "ran"]]
+model = Word2Vec(
+    sentences,
+    vector_size=300,   # embedding 차원
+    window=5,           # context window
+    min_count=5,        # 최소 등장 빈도
+    workers=4,          # 병렬
+    sg=1                # 1=Skip-gram, 0=CBOW
+)
+
+# 사용
+king_vec = model.wv["king"]
+similar = model.wv.most_similar("king")
+analogy = model.wv.most_similar(
+    positive=["king", "woman"],
+    negative=["man"]
+)  # [("queen", 0.82), ...]`}
+        </pre>
+        <p className="leading-7">
+          요약 1: <strong>CBOW</strong>는 context → center, <strong>Skip-gram</strong>은 center → context.<br />
+          요약 2: Skip-gram이 <strong>syntactic 태스크</strong>에서 우수, CBOW는 속도 우위.<br />
+          요약 3: 학습 후 <strong>W 행렬</strong>이 최종 단어 임베딩 — 행마다 하나의 단어.
+        </p>
+      </div>
     </section>
   );
 }

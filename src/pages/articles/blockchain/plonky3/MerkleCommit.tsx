@@ -24,6 +24,43 @@ export default function MerkleCommit({ title }: { title?: string }) {
         <h3>MerkleTreeMmcs</h3>
         <CodePanel title="MMCS 커밋 & 배치 오픈" code={MMCS_CODE}
           annotations={MMCS_ANNOTATIONS} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Mixed-Matrix Commitment</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 문제: STARK에서 서로 다른 size의 polynomial 여러 개
+// - Trace polynomials: 2^20 rows
+// - Quotient polynomial: 2^22 rows (extended)
+// - Different heights → separate Merkle trees 비효율
+
+// MMCS 해결책
+// 모든 polynomial을 single unified Merkle tree에 담기
+// - 각 matrix는 자기 height에서 start
+// - 작은 matrix는 "virtual zeros"로 확장
+// - 하나의 root로 모두 커밋
+
+// 구조
+//                 Root
+//              /        \\
+//          Inner        Inner
+//         /      \\    /      \\
+//      Leaf_2^22   ...
+//         |
+//     [matrix 2^22 row]
+
+// 효율성
+// - 하나의 commit operation (root 계산)
+// - Batch opening: 여러 matrix 동시 증명
+// - Single transcript interaction
+
+// Query complexity
+// k queries × log(2^22) hashes per query
+// = k × 22 Poseidon2 hashes
+// Typical k = 60-100
+
+// vs 여러 개 tree 유지 시
+// - 각 tree마다 별도 query
+// - Transcript interaction 증가
+// - 약 2-3x overhead`}</pre>
+
       </div>
     </section>
   );

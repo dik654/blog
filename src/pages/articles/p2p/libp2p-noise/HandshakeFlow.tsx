@@ -76,6 +76,81 @@ export default function HandshakeFlow({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">핸드셰이크 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Noise XX Pattern 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Noise XX Pattern
+//
+// Initiator (I) ↔ Responder (R)
+//
+// Round 1 (I → R): e
+//   Initiator:
+//     Generate ephemeral keypair (e_i)
+//     Send e_i.public
+//   Update hash: h = H(h || e_i.public)
+//
+// Round 2 (R → I): e, ee, s, es
+//   Responder:
+//     Generate ephemeral keypair (e_r)
+//     Compute DH(e_r, e_i) = ee
+//     Compute DH(s_r, e_i) = es
+//     Derive keys from (ee, es)
+//     Encrypt static key + payload
+//   Send: e_r.public || encrypted(s_r.public + payload)
+//
+// Round 3 (I → R): s, se
+//   Initiator:
+//     Decrypt Responder's static key
+//     Verify signature (if in payload)
+//     Compute DH(s_i, e_r) = se
+//     Derive final keys from (ee, es, se)
+//     Encrypt own static key + payload
+//   Send: encrypted(s_i.public + payload)
+
+// Key Derivation:
+//
+//   ck = H("Noise_XX_25519_ChaChaPoly_SHA256")
+//
+//   After each DH:
+//     temp_k = HKDF(ck, DH_output)
+//     ck = new_ck
+//
+//   Final session keys:
+//     k1 = HKDF(ck, "")  // Initiator → Responder
+//     k2 = HKDF(ck, "")  // Responder → Initiator
+
+// Payload Content (libp2p-specific):
+//
+//   protobuf NoiseHandshakePayload {
+//       bytes identity_key = 1;
+//       bytes identity_sig = 2;  // Ed25519(X25519 pub)
+//       bytes data = 3;          // 빈 값
+//   }
+
+// 보안 속성:
+//
+//   Mutual Authentication:
+//     양쪽 identity 공개 + 검증
+//
+//   Forward Secrecy:
+//     Ephemeral keys로 session key 파생
+//     Long-term key 누출해도 과거 세션 안전
+//
+//   KCI Resistance (Key Compromise Impersonation):
+//     I의 장기 키 누출 → R이 I인 척 못 함
+//
+//   Known-key resistance:
+//     Session key 누출 → future 안전
+
+// libp2p 구현 (snow crate 기반 Rust):
+//   HandshakeState::new(...)
+//   loop {
+//     send_message() or receive_message()
+//   }
+//   into_transport_mode()`}
+        </pre>
+      </div>
     </section>
   );
 }

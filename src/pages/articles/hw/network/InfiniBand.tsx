@@ -63,6 +63,121 @@ export default function InfiniBand() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">InfiniBand 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// InfiniBand (IB):
+
+// History:
+// - 1999: IBTA (InfiniBand Trade Association)
+// - 2000s: HPC systems
+// - 2010s: Mellanox dominance
+// - 2019: NVIDIA acquires Mellanox
+// - 2020s: AI cluster standard
+
+// Architecture:
+// - switched fabric
+// - not Ethernet-based
+// - native RDMA
+// - lossless by design
+
+// Key components:
+// 1. HCA (Host Channel Adapter):
+//    - NIC equivalent
+//    - hardware RDMA
+//    - per-server
+//
+// 2. Switch:
+//    - fabric fabric
+//    - low latency (<100 ns)
+//    - cut-through forwarding
+//
+// 3. Cables:
+//    - copper (DAC) or fiber (AOC)
+//    - shorter reach than Ethernet
+//    - expensive but fast
+
+// Speed evolution:
+// - SDR (2003): 10 Gbps
+// - DDR (2005): 20 Gbps
+// - QDR (2008): 40 Gbps
+// - FDR (2011): 56 Gbps
+// - EDR (2014): 100 Gbps
+// - HDR (2018): 200 Gbps
+// - NDR (2022): 400 Gbps
+// - XDR (2024): 800 Gbps
+
+// Performance characteristics:
+// - latency: 300-600 ns switch hop
+// - end-to-end: <1-2 μs
+// - message rate: 200M+ msg/s
+// - overhead: ~3% (vs ~10% Ethernet)
+
+// NVLink vs InfiniBand:
+//
+// NVLink (inside node):
+// - GPU-to-GPU direct
+// - 900 GB/s (H100)
+// - 1.8 TB/s (B200)
+// - very short distance
+// - NVLink Switch for 256-GPU
+
+// InfiniBand (between nodes):
+// - node-to-node
+// - 400-800 Gbps
+// - longer distance (100m+)
+// - scales to 1000s of nodes
+
+// NVIDIA DGX topology:
+// Single DGX H100:
+// - 8× H100 + NVLink
+// - 900 GB/s between GPUs
+// - 4× ConnectX-7 (400G IB)
+//
+// DGX SuperPOD:
+// - 127 DGX H100 (1016 GPUs)
+// - IB fat-tree topology
+// - 400 Gbps per GPU
+// - 100s of IB switches
+
+// Use cases:
+// ✓ AI training (required)
+// ✓ HPC simulations
+// ✓ Financial trading
+// ✓ Scientific computing
+// ✓ Some storage systems
+
+// Alternatives:
+// - Ultra Ethernet (new, 2024)
+// - RoCE v2 (mature)
+// - Slingshot (HPE Cray)
+
+// Cost:
+// - NDR HCA: $2K-3K
+// - 64-port switch: $50K-100K
+// - cables: $300-1000 each
+// - full cluster: $1M+
+// - premium but required for AI
+
+// 2024 state:
+// - InfiniBand NDR standard
+// - XDR rolling out (2024-2025)
+// - Ethernet catching up (800G)
+// - BlueField DPUs (smart NICs)
+// - UEC (Ultra Ethernet Consortium)
+
+// Software stack:
+// - OFED (OpenFabrics Enterprise Distribution)
+// - MOFED (Mellanox OFED)
+// - UCX
+// - NCCL (NVIDIA)
+// - MPI implementations`}
+        </pre>
+        <p className="leading-7">
+          InfiniBand: <strong>HPC/AI interconnect, 400-800 Gbps NDR/XDR</strong>.<br />
+          latency &lt;1μs, 900 GB/s NVLink + 400G IB typical (DGX).<br />
+          AI training 표준, Ultra Ethernet이 2024+ 경쟁.
+        </p>
       </div>
     </section>
   );

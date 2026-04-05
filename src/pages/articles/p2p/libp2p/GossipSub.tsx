@@ -56,6 +56,91 @@ export default function GossipSub({ title }: { title?: string }) {
         </p>
         <CodePanel title="Peer Scoring 파라미터" code={scoringCode}
           annotations={scoringAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">GossipSub 프로토콜 동작</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// GossipSub v1.1 Protocol Details
+//
+// Peer States per Topic:
+//   - Fanout: 구독 안 한 topic, publishing만
+//   - Mesh: subscribed topic의 inner peers
+//   - Gossip: outer peers (metadata만)
+//
+// Mesh Maintenance (per heartbeat, 1s):
+//
+//   1. Prune excess peers
+//      if |mesh| > D_hi: PRUNE random peers
+//
+//   2. Graft new peers
+//      if |mesh| < D_lo: GRAFT from gossip
+//
+//   3. Gossip IHAVE
+//      Recent messages metadata to non-mesh peers
+//
+//   4. Opportunistic grafting (v1.1)
+//      Low-performing mesh peers 교체
+//
+// Control Messages:
+//
+//   GRAFT {topic}
+//     "Add me to your mesh"
+//
+//   PRUNE {topic, peers, backoff}
+//     "Remove me. Try these peers."
+//     backoff: 재시도 대기 시간
+//
+//   IHAVE {topic, [message_ids]}
+//     "I have these messages"
+//
+//   IWANT {[message_ids]}
+//     "Send me these messages"
+
+// Message Flow:
+//
+// Publisher → Mesh peers: full message
+// Mesh peer A → Mesh peer B: full message
+// A → non-mesh peers: IHAVE (via gossip)
+// Receiver → A: IWANT (if interested)
+// A → Receiver: full message
+
+// Duplicate Detection:
+//   seen_cache: LRU with TTL
+//   message_id = hash(from || seqno || data)
+//   TTL: 120 seconds (default)
+
+// Validation Pipeline:
+//   1. Syntax check
+//   2. Signature verification (if signed)
+//   3. Topic subscription check
+//   4. Message validation hook (app-level)
+//   5. Duplicate check
+//   6. Forward to subscribers
+
+// Security (v1.1 additions):
+//   - Peer scoring
+//   - Peer exchange (X discovery)
+//   - Adaptive gossip
+//   - Gossip factor per heartbeat
+
+// Used in Ethereum 2.0:
+//   Topics:
+//     beacon_block
+//     beacon_attestation_{subnet_id}
+//     beacon_aggregate_and_proof
+//     voluntary_exit
+//     proposer_slashing
+//     attester_slashing
+//     sync_committee_contribution_and_proof
+//
+//   Validators: 수십만
+//   Messages: 수천/초
+//   Network: 분 단위 전파
+
+// 타 프로젝트:
+//   Filecoin: market messages
+//   Polkadot: consensus messages
+//   Starknet P2P: tx propagation`}
+        </pre>
       </div>
     </section>
   );

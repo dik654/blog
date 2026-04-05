@@ -26,6 +26,96 @@ export default function ValidateSection({ onCodeRef }: { onCodeRef: (key: string
         </p>
       </div>
       <div className="mt-8"><ValidateViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">PQ Account validateUserOp 구현</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// PQSmartAccount.validateUserOp
+
+function validateUserOp(
+    UserOperation calldata userOp,
+    bytes32 userOpHash,
+    uint256 missingFunds
+) external returns (uint256 validationData) {
+    // 1) Signature 분리 (hybrid: ECDSA 65B || Dilithium 2420B)
+    bytes memory ecdsaSig = userOp.signature[0:65];
+    bytes memory dilithiumSig = userOp.signature[65:];
+
+    // 2) ECDSA 1차 검증 (bundler validation 단계에서 쉬운 필터)
+    address recovered = ECDSA.recover(userOpHash, ecdsaSig);
+    if (recovered != ecdsaOwner) {
+        return SIG_VALIDATION_FAILED;  // 1
+    }
+
+    // 3) Dilithium 본 검증 (PQ 안전성)
+    bool dilithiumValid = DilithiumVerifier.verify(
+        dilithiumPublicKey,
+        userOpHash,
+        dilithiumSig
+    );
+    if (!dilithiumValid) {
+        return SIG_VALIDATION_FAILED;
+    }
+
+    // 4) Prefund (gas 선지불)
+    if (missingFunds > 0) {
+        (bool success,) = payable(msg.sender).call{value: missingFunds}("");
+        require(success, "Prefund failed");
+    }
+
+    // 5) 유효 기간 (optional)
+    // validationData = _packValidationData(valid, validUntil, validAfter)
+
+    return 0;  // success, no time limit
+}
+
+// Hybrid 이점
+// - ECDSA는 빠른 prefilter (3k gas)
+// - Dilithium은 진짜 보안 (2.5M gas)
+// - 둘 다 유효해야 통과 → AND
+// - Classical + Quantum 저항
+// - Gradual migration 가능`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">validationData 인코딩</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// validationData: 256-bit packed value
+// [20B authorizer] [6B validUntil] [6B validAfter]
+
+// authorizer:
+//   0x00...00: success
+//   0x00...01: signature failure
+//   else: paymaster address (if applicable)
+
+// validUntil (6 bytes):
+//   0: no expiration
+//   timestamp: 유효 마감 시간
+
+// validAfter (6 bytes):
+//   0: immediately valid
+//   timestamp: 유효 시작 시간
+
+// Helper function
+function _packValidationData(
+    bool valid,
+    uint48 validUntil,
+    uint48 validAfter
+) internal pure returns (uint256) {
+    return (valid ? 0 : 1) |
+           (uint256(validUntil) << 160) |
+           (uint256(validAfter) << 208);
+}
+
+// EntryPoint가 후속 처리
+// - 현재 block timestamp 확인
+// - timeRange 내인지 검증
+// - 실패 시 revert
+
+// Time-based access control 사용 사례
+// - 예약 실행 (validAfter 설정)
+// - 만료 시간 (validUntil 설정)
+// - Session key (일정 기간만 유효)
+// - Recovery delay (7일 후 활성화)`}</pre>
+
+      </div>
     </section>
   );
 }

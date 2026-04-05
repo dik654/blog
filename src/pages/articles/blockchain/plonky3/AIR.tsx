@@ -27,6 +27,46 @@ export default function AIR({ title, onCodeRef }: { title?: string; onCodeRef?: 
         <CodePanel title="WindowAccess & AirBuilder (air/src/air.rs)" code={windowAccessCode} annotations={windowAnnotations} />
         <CodePanel title="KeccakAir 예시 (keccak-air/src/air.rs)" code={keccakAirCode} annotations={keccakAnnotations} />
         <CodePanel title="제약 평가 → 몫 다항식 (uni-stark)" code={quotientProverCode} annotations={quotientAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">AIR vs R1CS vs PLONKish</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 세 가지 arithmetization 비교
+
+// R1CS (Rank-1 Constraint System)
+// - (A·x) × (B·x) = (C·x)
+// - Matrix form
+// - Groth16, Marlin에 사용
+// - 각 constraint은 rank-1 equation
+
+// PLONKish (Halo2)
+// - Custom gates with rotations
+// - q(X) · gate(X) = 0
+// - Flexible column types
+// - Lookup support
+
+// AIR (Algebraic Intermediate Representation)
+// - Transition system (row by row)
+// - State machine representation
+// - Rotation for "next row" access
+// - Natural for sequential computation
+
+// AIR 예시: Fibonacci
+// Each row: (a, b) where b = next a
+// Transition: a[i+1] = b[i], b[i+1] = a[i] + b[i]
+//
+// Constraints:
+// next.a - current.b = 0       (shift)
+// next.b - current.a - current.b = 0   (fibonacci)
+
+// 적합 use case
+// R1CS: general-purpose circuits
+// PLONKish: lookup-heavy circuits (zkEVM)
+// AIR: state machines (zkVM, hash, permutation)
+
+// Plonky3의 혁신
+// - AIR + logUp lookup 결합
+// - AIR의 간결함 + PLONKish의 lookup
+// - zkVM에 최적`}</pre>
+
       </div>
     </section>
   );

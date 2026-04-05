@@ -95,6 +95,95 @@ export default function HolePunching({ onCodeRef }: {
           </div>
         )}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">UDP vs TCP Hole Punching</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// UDP (QUIC) Hole Punching의 이점
+//
+// TCP Hole Punching 어려움:
+//
+// 1. SYN flood 감지
+//    다수 SYN → IDS 탐지
+//    NAT의 "drop unexpected SYN"
+//
+// 2. 동시 open (TCP)
+//    양쪽 SYN 동시 전송
+//    일부 NAT 지원 안 함
+//    OS 구현 차이
+//
+// 3. Sequence number 조율
+//    SYN-ACK 주고받기
+//    State 복잡
+//
+// 4. TCP handshake timeout
+//    실패 시 OS-level retry
+//    Control 어려움
+//
+// UDP (QUIC) Hole Punching의 장점:
+//
+// 1. Stateless
+//    각 packet 독립적
+//    NAT 매핑만 필요
+//
+// 2. 단순한 packet 교환
+//    A → B: UDP datagram
+//    B → A: UDP datagram
+//    NAT 매핑 성공 → QUIC handshake
+//
+// 3. No TCP state machine
+//    Timeout 제어 쉬움
+//    Retry 유연
+
+// QUIC Hole Punching 프로토콜:
+//
+// Setup (via signaling):
+//   A external addr: 203.0.113.5:40000
+//   B external addr: 198.51.100.10:50000
+//   Both behind NAT
+//
+// Phase 1: Punch
+//   A → B_ext: UDP datagram (random payload)
+//     A NAT: creates mapping A:5000 ↔ B_ext
+//     B NAT: drops (no mapping)
+//
+//   B → A_ext: UDP datagram
+//     B NAT: creates mapping B:6000 ↔ A_ext
+//     A NAT: PASSES (mapping exists!)
+//
+// Phase 2: QUIC Handshake
+//   A ↔ B: normal QUIC handshake
+//   → Direct connection established
+
+// libp2p-quic hole puncher:
+//
+//   pub async fn hole_puncher(
+//       socket: UdpSocket,
+//       remote: SocketAddr,
+//       timeout: Duration,
+//   ) -> Result<()> {
+//       let interval = Duration::from_millis(100);
+//       let start = Instant::now();
+//
+//       while start.elapsed() < timeout {
+//           socket.send_to(b"libp2p-punch", remote).await?;
+//           tokio::time::sleep(interval).await;
+//       }
+//       Ok(())
+//   }
+//
+//   Send packets until:
+//   - Connection established (receiver succeeds)
+//   - Timeout reached
+
+// 성공률:
+//   Cone NAT: ~95%
+//   Port-restricted: ~80%
+//   Symmetric NAT: ~10-20%
+//
+//   Symmetric failure → fall back to relay`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -55,6 +55,86 @@ export default function Gateway({ onCodeRef }: {
           </div>
         )}
         <CodePanel title="게이트웨이 핸들러 등록" code={GATEWAY_CODE} annotations={GATEWAY_ANNOTATIONS} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">IPFS Gateway 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// IPFS HTTP Gateway Types
+//
+// 1. Path Gateway (legacy):
+//    https://ipfs.io/ipfs/<CID>
+//    https://ipfs.io/ipns/<name>
+//    → Same-origin policy issues
+//    → XSS risks (내용 실행 가능)
+//
+// 2. Subdomain Gateway (recommended):
+//    https://<CID>.ipfs.dweb.link
+//    https://<name>.ipns.dweb.link
+//    → Origin isolation per CID
+//    → Better security
+//
+// 3. DNSLink Gateway:
+//    https://example.com (if DNSLink configured)
+//    DNS TXT record: dnslink=/ipfs/<CID>
+//    → Custom domain support
+//    → Browser friendly
+
+// Gateway URL Patterns:
+//
+//   /ipfs/{cid}              - immutable content
+//   /ipfs/{cid}/{path}       - path within DAG
+//   /ipns/{name}             - mutable pointer
+//   /ipns/{name}/{path}
+//   /api/v0/*                - RPC API (HTTP)
+
+// Response Handling:
+//
+//   UnixFS file → HTTP body (stream)
+//   UnixFS directory → HTML listing (or index.html)
+//   Raw block → binary
+//   Dag-json/cbor → JSON/CBOR
+//
+// Headers:
+//   ETag: Content's immutable hash
+//   Cache-Control: public, max-age=29030400
+//   X-Ipfs-Path, X-Ipfs-Roots
+//   Content-Type: auto-detected
+//   Content-Length
+//   Accept-Ranges: bytes
+
+// Streaming (Range Requests):
+//   Video, audio, large files
+//   HTTP Range: bytes=1000000-2000000
+//   Gateway fetches only needed blocks
+//   → Efficient partial download
+
+// Trustless Gateway (draft):
+//   Verifiable responses
+//   Client verifies hash
+//   No trust in gateway needed
+//
+//   Formats:
+//     application/vnd.ipld.raw (raw block)
+//     application/vnd.ipld.car (CAR file)
+//
+//   Client reconstructs + verifies DAG
+
+// Public Gateways:
+//   ipfs.io, cf-ipfs.com
+//   dweb.link
+//   cloudflare-ipfs.com
+//   pinata.cloud, fleek.co
+//   4everland.io, nft.storage
+
+// Self-hosted Gateway:
+//   Kubo daemon (127.0.0.1:8080)
+//   Path: 127.0.0.1:8080/ipfs/<cid>
+//   Custom gateway: custom-domain setup
+
+// Configuration:
+//   Gateway.PublicGateways: domain mapping
+//   Gateway.NoFetch: serve only local blocks
+//   Gateway.DeserializedResponses: 자동 렌더링`}
+        </pre>
       </div>
       <div className="mt-8"><GatewayFlowViz /></div>
     </section>

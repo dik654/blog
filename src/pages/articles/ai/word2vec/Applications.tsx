@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import AnalogyViz from './viz/AnalogyViz';
+import StaticVsContextualViz from './viz/StaticVsContextualViz';
 import {
   cosineSimilarityCode, cosineAnnotations,
   analogyCode, analogyAnnotations,
@@ -43,6 +44,82 @@ export default function Applications({ title }: { title?: string }) {
         <p>
           Word2Vec이 증명한 "분포 가설 → 선형 벡터 공간"이라는 통찰<br />
           오늘날 모든 NLP 시스템의 근간
+        </p>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Static vs Contextual Embedding</h3>
+        <p>
+          "bank"라는 다의어를 통해 비교 — Static은 같은 벡터, Contextual은 맥락마다 다른 벡터<br />
+          진화: Word2Vec(2013) → GloVe → FastText → ELMo(2018) → BERT/GPT → LLM embeddings(2024)
+        </p>
+      </div>
+      <StaticVsContextualViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">임베딩의 실무 응용</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Word/Sentence/Document Embedding 활용
+//
+// 1. 검색 (Semantic Search)
+//    쿼리 임베딩 → vector DB (Pinecone, Weaviate)
+//    cosine similarity top-k 검색
+//    → RAG의 핵심 컴포넌트
+//
+// 2. 분류 (Classification)
+//    임베딩을 feature로 → 분류기
+//    - 감정 분석
+//    - 스팸 필터링
+//    - 의도 분류
+//
+// 3. 클러스터링
+//    K-means, DBSCAN on embeddings
+//    - 문서 그룹화
+//    - 유사 사용자 찾기
+//
+// 4. 추천 시스템
+//    user/item embedding
+//    - Netflix, Amazon, YouTube
+//    - cosine 또는 dot-product score
+//
+// 5. 번역
+//    Cross-lingual embeddings
+//    - mBERT, XLM-R
+//    - zero-shot 번역
+//
+// 6. 이상 탐지
+//    정상 임베딩 분포 학습
+//    → 거리 큰 샘플 = anomaly
+
+// 임베딩 품질 측정:
+//
+// Intrinsic Evaluation:
+//   - Word Similarity (WS353, SimLex)
+//   - Analogy (Google, BATS)
+//   - Visualization (t-SNE, UMAP)
+//
+// Extrinsic Evaluation:
+//   - Downstream task 성능
+//   - 실제 사용 맥락 평가
+//   - GLUE, SuperGLUE benchmarks
+
+// Semantic Search 예시:
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+corpus = ["문서 1", "문서 2", "문서 3"]
+embeddings = model.encode(corpus)  # (3, 384)
+
+query = "검색 쿼리"
+query_emb = model.encode(query)
+
+similarities = cosine_similarity([query_emb], embeddings)
+top_k = similarities.argsort()[-5:][::-1]`}
+        </pre>
+        <p className="leading-7">
+          요약 1: Word2Vec → BERT → LLM embedding으로 <strong>contextual 진화</strong>.<br />
+          요약 2: <strong>검색·분류·추천·RAG</strong> 등 광범위한 응용.<br />
+          요약 3: 현대 NLP 파이프라인의 <strong>첫 단계는 여전히 임베딩</strong>.
         </p>
       </div>
     </section>

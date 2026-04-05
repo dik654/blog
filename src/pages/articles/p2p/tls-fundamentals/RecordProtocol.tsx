@@ -56,6 +56,60 @@ export default function RecordProtocol() {
         </p>
         <CodePanel title="TLS 1.3 레코드 & AEAD 구조" code={recordCode}
           annotations={annotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">AEAD 암호 스위트 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TLS 1.3 AEAD Cipher Suites
+//
+// ┌────────────────────────────────┬──────────┬─────────┐
+// │       Cipher Suite             │ Key Size │  사용   │
+// ├────────────────────────────────┼──────────┼─────────┤
+// │ TLS_AES_128_GCM_SHA256         │ 128 bits │ 기본    │
+// │ TLS_AES_256_GCM_SHA384         │ 256 bits │ 고보안  │
+// │ TLS_CHACHA20_POLY1305_SHA256   │ 256 bits │ 모바일  │
+// │ TLS_AES_128_CCM_SHA256         │ 128 bits │ IoT     │
+// │ TLS_AES_128_CCM_8_SHA256       │ 128 bits │ IoT     │
+// └────────────────────────────────┴──────────┴─────────┘
+
+// AES-GCM:
+//   블록 크기: 128 bits
+//   모드: Counter mode + GHASH
+//   하드웨어 가속: AES-NI (Intel), ARMv8
+//   장점: 빠름, 표준, 병렬 처리
+//
+// ChaCha20-Poly1305:
+//   스트림 암호 + Poly1305 MAC
+//   소프트웨어 빠름 (no HW accel 필요)
+//   모바일, 임베디드 친화적
+//   Google 표준
+
+// AEAD 속성:
+//   ✓ Confidentiality (plaintext 숨김)
+//   ✓ Integrity (변조 감지)
+//   ✓ Authenticity (발신자 인증)
+//   → 한 번에 모두 달성
+
+// Nonce 구성:
+//   12 bytes for AES-GCM, ChaCha20
+//   - 4 bytes: fixed (key 파생)
+//   - 8 bytes: sequence number XOR fixed iv
+//   → Never reuse (security critical)
+
+// Record Protection:
+//   AEAD.Encrypt(
+//       key: traffic_key,
+//       nonce: per_record_nonce,
+//       plaintext: data + content_type + padding,
+//       additional_data: record_header
+//   )
+//   → ciphertext + 16-byte tag
+
+// Padding 전략:
+//   - 고정 크기로 패딩 (e.g., 16-byte blocks)
+//   - 랜덤 크기 패딩 (트래픽 은닉)
+//   - Maximum padding (high security)
+//   → Trade-off: bandwidth vs privacy`}
+        </pre>
       </div>
     </section>
   );

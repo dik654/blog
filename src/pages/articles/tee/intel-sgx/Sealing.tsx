@@ -50,6 +50,69 @@ export default function Sealing({ onCodeRef }: { onCodeRef: (key: string, ref: C
       <div className="not-prose mb-6">
         <PolicyCompareViz />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Sealing 작동 원리</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// SGX Sealing 전체 흐름
+//
+// Sealing (데이터 저장):
+//
+// 1. EGETKEY로 sealing key 파생:
+//    key = HMAC-SHA256(
+//        Root_Seal_Key,
+//        KEY_POLICY ||
+//        MRENCLAVE/MRSIGNER ||
+//        ISVPRODID ||
+//        ISVSVN ||
+//        KEYID (random nonce)
+//    )
+//
+//    Root_Seal_Key: CPU 고유, fuse-burned
+//    KEY_POLICY: MRENCLAVE / MRSIGNER 선택
+//
+// 2. AES-GCM 암호화:
+//    iv = random 12 bytes
+//    ciphertext, tag = AES_GCM_Encrypt(key, iv, plaintext)
+//
+// 3. Seal blob 구성:
+//    [KEYID | MRSIGNER policy | iv | ciphertext | tag]
+//
+// 4. 디스크에 저장
+
+// Unsealing (데이터 복원):
+//
+// 1. Seal blob 읽기
+// 2. KEYID 추출
+// 3. EGETKEY로 같은 키 재파생
+// 4. AES-GCM 복호화 + 검증
+
+// Sealing Policy:
+//
+// MRENCLAVE 정책:
+//   - 정확히 같은 enclave만 복원 가능
+//   - 업데이트하면 키 달라짐 (데이터 유실)
+//   - 최고 보안
+//
+// MRSIGNER 정책:
+//   - 같은 서명자의 enclave면 복원 가능
+//   - 버전 업데이트 가능 (ISVSVN 이상만)
+//   - 실무에서 더 유연
+//
+// CPU-specific Sealing:
+//   - Seal Key는 CPU fuse 기반
+//   - 다른 CPU에서는 복원 불가
+//   - 머신 이동 시 데이터 유실
+//   → KMS/vault로 백업 필요
+
+// 활용 사례:
+//   - 데이터베이스 암호화 키
+//   - 세션 토큰
+//   - 사용자 자격 증명
+//   - ML 모델 가중치
+//   - 블록체인 지갑 키`}
+        </pre>
+      </div>
     </section>
   );
 }

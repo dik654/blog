@@ -23,6 +23,100 @@ export default function BuiltinActors({ onCodeRef }: { onCodeRef: (key: string, 
           <strong>💡 Actor 업그레이드</strong> — 네트워크 업그레이드 시 Built-in Actor를 교체 가능.<br />
           WASM 코드 CID만 변경하면 되므로 하드포크 없이도 로직 업데이트가 가능
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Built-in Actors 전체 목록</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Filecoin Built-in Actors (15+):
+
+// Core System:
+// 0x00 - System: bootstrap
+// 0x01 - Init: creates actors
+// 0x02 - Reward: block rewards
+// 0x03 - Cron: periodic tasks
+
+// Storage System:
+// 0x04 - StoragePower: active miners tracking
+// 0x05 - StorageMarket: deals management
+// 0x06 - VerifiedRegistry: FIL+
+// 0x07 - StorageMinerActor: per-miner state
+// 0x0d - DataCapActor: FIL+ DataCap
+
+// Payment:
+// 0x08 - Multisig: multi-sig accounts
+// 0x09 - PaymentChannel: micropayments
+
+// Accounts:
+// 0x0a - AccountActor: regular accounts
+// 0x0b - Placeholder: pre-registered
+
+// EVM Support (2023+):
+// 0x0e - EAM (EVM Actor Manager)
+// 0x0f - EVMActor: Solidity runtime
+// 0x10 - EthAccount: ETH addresses
+
+// Actor Details:
+
+// StorageMinerActor (0x07):
+// - per storage provider
+// - sector management
+// - PoSt submission
+// - fault handling
+// - deadline tracking
+// - reward claiming
+// - methods: PreCommitSector, ProveCommit,
+//   DeclareFaults, SubmitWindowedPoSt, ...
+
+// StorageMarketActor (0x05):
+// - deal registry
+// - deal validation
+// - payment settlement
+// - slashing
+// - methods: PublishStorageDeals, ActivateDeals,
+//   OnMinerSectorsTerminate, ...
+
+// StoragePowerActor (0x04):
+// - total network power
+// - per-miner power
+// - miner registration
+// - methods: CreateMiner, UpdateClaimedPower,
+//   EnrollCronEvent, ...
+
+// RewardActor (0x02):
+// - block reward calculation
+// - vesting schedules
+// - claiming
+// - methods: AwardBlockReward,
+//   UpdateNetworkKPI, ...
+
+// EAM (0x0e):
+// - deploys EVM contracts
+// - creates Delegated addresses
+// - bytecode deployment
+// - methods: Create, Create2
+
+// EVMActor (0x0f):
+// - Solidity runtime
+// - per contract instance
+// - EVM opcodes
+// - storage (standard Ethereum model)
+
+// Actor Upgrades:
+// - network upgrade → new WASM
+// - state migration (if needed)
+// - Actor CID changes
+// - via FIPs (Filecoin Improvement Proposals)
+
+// Examples of upgrades:
+// - Shark: FEVM introduction (2023)
+// - Hygge: more EVM features
+// - Lightning: optimizations
+// - Dragon: advanced features`}
+        </pre>
+        <p className="leading-7">
+          15+ Built-in Actors: <strong>System, Storage, Market, Power, Reward, EVM</strong>.<br />
+          WASM code CID로 관리 → network upgrade 시 교체.<br />
+          FEVM (EAM + EVMActor)이 Solidity 지원.
+        </p>
       </div>
     </section>
   );

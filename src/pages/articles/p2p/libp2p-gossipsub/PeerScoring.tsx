@@ -87,6 +87,91 @@ export default function PeerScoring({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">메시지 수신 + 스코어 적용</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Peer Scoring Formula</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Peer Score Calculation (GossipSub v1.1)
+//
+// Total score:
+//   S(peer) = topic_weight * topic_score(peer, topic)
+//           + app_specific_score(peer)
+//           + ip_colocation_factor(peer)
+//           + behaviour_penalty(peer)
+//
+// Topic-specific score (per topic):
+//   topic_score = w1·P1 + w2·P2 + w3·P3 + w3b·P3b + w4·P4
+
+// P1: Time in Mesh
+//   메시에 얼마나 오래 있었나
+//   Good behavior reward
+//   Cap: time_in_mesh_cap
+//   Weight: positive (보상)
+//
+// P2: First Message Delivery
+//   처음으로 메시지를 전달한 횟수
+//   Ethereum에서는 초당 가중치
+//   Weight: positive (보상)
+//
+// P3: Mesh Message Delivery
+//   메시 내에서 전달한 메시지 수
+//   Threshold-based
+//   P3b: delivery failures
+//   Weight: positive for P3, negative for P3b
+//
+// P4: Invalid Messages
+//   잘못된 메시지 전송 횟수
+//   Signature 실패, format error 등
+//   Weight: negative (페널티)
+
+// App-specific Score:
+//   애플리케이션 레벨 custom 평가
+//   Ethereum 예:
+//     - 정확한 attestation → 보상
+//     - Slashing 대상 → 페널티
+//
+// IP Colocation:
+//   같은 /24 subnet에 많은 peer → 페널티
+//   Sybil 공격 방어
+
+// Behaviour Penalty:
+//   프로토콜 위반 추적
+//   - Graft flood
+//   - Prune spam
+//   - Unwanted messages
+//   Exponentially weighted
+
+// Thresholds (Ethereum 값):
+//
+//   gossipThreshold: -4000
+//     이하 → ignore gossip (IHAVE)
+//
+//   publishThreshold: -8000
+//     이하 → ignore publish from peer
+//
+//   graylistThreshold: -16000
+//     이하 → ignore ALL RPC
+//     effectively disconnected
+//
+//   acceptPXThreshold: 0
+//     이상 → peer exchange 허용
+//
+//   opportunisticGraftThreshold: 5
+//     이상 → mesh 승격 가능
+
+// Score Decay:
+//   Score는 시간에 따라 감쇠
+//   Good behavior가 과거 bad 덮을 수 있음
+//   Recovery 가능
+
+// 공격 방어:
+//   - Spam → P4 negative
+//   - Lazy peer → P2/P3 low
+//   - Sybil → IP colocation
+//   - Protocol abuse → Behaviour penalty
+//   - Eclipse → peer exchange thresholds`}
+        </pre>
+      </div>
     </section>
   );
 }

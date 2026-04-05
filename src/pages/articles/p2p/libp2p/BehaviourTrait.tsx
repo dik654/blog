@@ -83,6 +83,96 @@ export default function BehaviourTrait({ title, onCodeRef }: {
           <CodeViewButton onClick={() => onCodeRef('from-swarm', codeRefs['from-swarm'])} />
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">NetworkBehaviour Trait 정의</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// NetworkBehaviour Trait (Rust libp2p)
+//
+// pub trait NetworkBehaviour: 'static {
+//     type ConnectionHandler: ConnectionHandler;
+//     type ToSwarm: Send + 'static;
+//
+//     // Connection lifecycle
+//     fn handle_pending_inbound_connection(
+//         &mut self,
+//         connection_id: ConnectionId,
+//         local_addr: &Multiaddr,
+//         remote_addr: &Multiaddr,
+//     ) -> Result<(), ConnectionDenied>;
+//
+//     fn handle_established_inbound_connection(
+//         &mut self,
+//         connection_id: ConnectionId,
+//         peer: PeerId,
+//         local_addr: &Multiaddr,
+//         remote_addr: &Multiaddr,
+//     ) -> Result<Self::ConnectionHandler, ConnectionDenied>;
+//
+//     fn handle_pending_outbound_connection(
+//         &mut self,
+//         connection_id: ConnectionId,
+//         maybe_peer: Option<PeerId>,
+//         addresses: &[Multiaddr],
+//         effective_role: Endpoint,
+//     ) -> Result<Vec<Multiaddr>, ConnectionDenied>;
+//
+//     fn handle_established_outbound_connection(
+//         &mut self,
+//         connection_id: ConnectionId,
+//         peer: PeerId,
+//         addr: &Multiaddr,
+//         role: Endpoint,
+//     ) -> Result<Self::ConnectionHandler, ConnectionDenied>;
+//
+//     // State updates
+//     fn on_swarm_event(&mut self, event: FromSwarm);
+//     fn on_connection_handler_event(
+//         &mut self,
+//         peer_id: PeerId,
+//         connection_id: ConnectionId,
+//         event: THandlerOutEvent<Self>,
+//     );
+//
+//     // Async polling
+//     fn poll(
+//         &mut self,
+//         cx: &mut Context<'_>,
+//     ) -> Poll<ToSwarm<Self::ToSwarm, THandlerInEvent<Self>>>;
+// }
+
+// derive(NetworkBehaviour) 매크로:
+//
+//   #[derive(NetworkBehaviour)]
+//   struct MyBehaviour {
+//       kad: kad::Behaviour<MemoryStore>,
+//       gossip: gossipsub::Behaviour,
+//       identify: identify::Behaviour,
+//   }
+//
+//   // Auto-generated:
+//   enum MyBehaviourEvent {
+//       Kad(kad::Event),
+//       Gossip(gossipsub::Event),
+//       Identify(identify::Event),
+//   }
+//
+//   // 각 sub-behaviour를 순회
+//   // 이벤트를 하나의 enum으로 통합
+//   // ConnectionHandler도 자동 합성
+
+// 특징:
+//   - Composition over inheritance
+//   - 각 protocol은 독립 module
+//   - 운영 시점에 조합 결정
+//   - Type-safe event routing
+
+// Async 설계:
+//   poll() = 논블로킹
+//   Waker 기반 알림
+//   tokio/smol 등 런타임 호환`}
+        </pre>
+      </div>
     </section>
   );
 }

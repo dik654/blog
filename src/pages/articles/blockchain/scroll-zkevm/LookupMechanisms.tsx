@@ -26,6 +26,38 @@ export default function LookupMechanisms() {
         <h3 className="text-lg font-semibold mt-6 mb-3">RW Table Lookup</h3>
         <CodePanel title="stack_pop → RwTable Lookup" code={STACK_LOOKUP_CODE}
           annotations={stackLookupAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Lookup의 수학적 원리</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Plookup protocol (Gabizon, Williamson 2020)
+// "multiset equality"로 lookup 증명
+
+// 목표: (a_1, a_2, ..., a_n)가 table T의 subset임을 증명
+// Naive: O(n×m) constraints (n=lookups, m=table size)
+// Plookup: O(n+m) constraints
+
+// 핵심 아이디어
+// 1) 동적 수열 f 구성 (lookup values)
+// 2) 정적 수열 t (lookup table)
+// 3) 새 수열 s = sort(f ∪ t)
+// 4) "다음 원소가 현재와 같거나 t의 원소" 제약
+
+// Halo2의 개선
+// - Permutation argument 활용
+// - Multi-column lookup 지원
+// - GPU 친화적
+
+// Lookup usage in zkEVM
+// 1) Range check (0 <= x < 256)
+// 2) Bytecode lookup (PC → opcode)
+// 3) Keccak hash verification
+// 4) RwTable access (read/write history)
+// 5) MPT node hashing
+
+// 효과
+// - 복잡한 constraint을 table로 대체
+// - 회로 rows 크게 감소
+// - Verifier cost 동일 (lookup 개수와 무관)`}</pre>
+
       </div>
     </section>
   );

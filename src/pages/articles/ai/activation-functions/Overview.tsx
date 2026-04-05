@@ -1,4 +1,6 @@
 import LinearVsNonlinearViz from './viz/LinearVsNonlinearViz';
+import ActivationRequirementsViz from './viz/ActivationRequirementsViz';
+import ActivationTimelineViz from './viz/ActivationTimelineViz';
 
 export default function Overview() {
   return (
@@ -18,6 +20,30 @@ export default function Overview() {
       </div>
       <div className="not-prose my-8">
         <LinearVsNonlinearViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">활성화 함수 필수 요건</h3>
+        <p>
+          비선형성(필수) + 미분 가능(필수) + 단조성·기울기·계산효율·상한·Zero-centered(선호) 7가지 조건<br />
+          Universal Approximation Theorem: 이 조건 충족 시 임의의 연속 함수 근사 가능
+        </p>
+      </div>
+      <ActivationRequirementsViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-6 mb-3">활성화 함수 진화 타임라인</h3>
+        <p>
+          Step(1943) → Sigmoid(1958) → Tanh(1986) → ReLU(2010, 혁명) → GELU(2016) → SwiGLU(2020)<br />
+          80년 진화 — 각 함수가 이전의 단점을 해결
+        </p>
+      </div>
+      <ActivationTimelineViz />
+        <p className="leading-7">
+          요약 1: <strong>비선형성</strong>이 신경망의 표현력 원천 — Universal Approximation.<br />
+          요약 2: <strong>ReLU의 단순함</strong>이 딥러닝 혁명의 촉매 — 기울기 소실 해결.<br />
+          요약 3: 아키텍처별로 <strong>최적 활성화가 다름</strong> — 실험적 선택 필수.
+        </p>
       </div>
     </section>
   );

@@ -56,6 +56,73 @@ export default function Architectures() {
         </p>
         <CodePanel title="ResNet Skip Connection" code={resnetCode} annotations={resAnnotations} />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">주요 CNN 아키텍처 상세 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// ┌──────────────┬──────┬────────┬────────┬─────────────┐
+// │   모델       │ 연도 │ 층 수  │ 파라미터│ ImageNet Top-1│
+// ├──────────────┼──────┼────────┼────────┼─────────────┤
+// │ LeNet-5      │ 1998 │    7   │   60K  │     N/A     │
+// │ AlexNet      │ 2012 │    8   │   60M  │    57.1%    │
+// │ VGG-16       │ 2014 │   16   │  138M  │    71.3%    │
+// │ VGG-19       │ 2014 │   19   │  143M  │    71.3%    │
+// │ GoogLeNet    │ 2014 │   22   │    7M  │    69.8%    │
+// │ ResNet-50    │ 2015 │   50   │   26M  │    76.0%    │
+// │ ResNet-152   │ 2015 │  152   │   60M  │    77.8%    │
+// │ Inception-v3 │ 2015 │   42   │   24M  │    78.8%    │
+// │ DenseNet-121 │ 2017 │  121   │    8M  │    74.9%    │
+// │ MobileNet-v2 │ 2018 │   53   │  3.5M  │    72.0%    │
+// │ EfficientNet │ 2019 │   B0  |  5.3M  │    77.3%    │
+// │ ConvNeXt-L   │ 2022 │    L   │  198M  │    84.3%    │
+// └──────────────┴──────┴────────┴────────┴─────────────┘
+
+// 핵심 설계 혁신:
+//
+// AlexNet (2012):
+//   - ReLU 활성화 (vs tanh/sigmoid)
+//   - Dropout (FC층 과적합 방지)
+//   - Data Augmentation
+//   - GPU (CUDA) 학습
+//
+// VGGNet (2014):
+//   - 3×3 작은 필터만 사용
+//   - 깊이(16-19층)로 성능 개선
+//   - 단순하고 균일한 구조
+//
+// GoogLeNet / Inception (2014):
+//   - Inception module: 다양한 kernel 병렬
+//   - 1×1 Conv로 채널 차원 축소
+//   - Auxiliary classifier (deep supervision)
+//
+// ResNet (2015):
+//   - Skip connection (잔차 학습)
+//   - BatchNorm 적극 사용
+//   - 152층 학습 성공
+//   - 수식: y = F(x) + x
+//
+// DenseNet (2017):
+//   - 모든 이전 층과 연결
+//   - 특징 재사용 극대화
+//   - 파라미터 효율 우수
+//
+// EfficientNet (2019):
+//   - Compound scaling (depth·width·res 동시)
+//   - NAS로 최적 base 모델 탐색
+//   - MobileNet 기반
+//
+// ConvNeXt (2022):
+//   - Transformer 설계 원리 수입
+//   - 7×7 depthwise conv
+//   - LayerNorm, GELU, AdamW
+//   - ViT와 유사한 성능`}
+        </pre>
+        <p className="leading-7">
+          요약 1: AlexNet → VGG → ResNet → EfficientNet으로 <strong>깊이·효율·정확도</strong> 순차 발전.<br />
+          요약 2: <strong>Skip Connection</strong>이 100층+ 학습을 가능케 한 결정적 혁신.<br />
+          요약 3: 2022년 <strong>ConvNeXt</strong>가 Transformer 설계를 역수입하여 CNN 부활.
+        </p>
+      </div>
     </section>
   );
 }

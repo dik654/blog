@@ -55,6 +55,65 @@ export default function P2PSecurity({ onCodeRef: _onCodeRef }: { onCodeRef: (key
             </tbody>
           </table>
         </div>
+
+        {/* ── Peer Reputation ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Peer Reputation — 악의 피어 차단</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// CometBFT의 peer reputation 관리
+// cometbft/p2p/switch.go
+
+type Switch struct {
+    peers *PeerSet
+    reconnectCh chan Peer
+
+    // Reactor별 상태 tracking
+    reactors map[string]Reactor
+}
+
+// 피어 제재 조건:
+// 1. Invalid message 전송 → immediate ban
+// 2. Consensus violation (잘못된 Vote/Block) → ban
+// 3. Rate limit 초과 → throttle, 반복 시 ban
+// 4. Timeout (no response 60s) → disconnect
+// 5. Wrong chain ID → disconnect (동일 chain 아님)
+
+// StopPeerForError 호출 시나리오:
+// - Decoding error
+// - Signature verification failure
+// - Duplicate/conflicting vote (sig valid but bad)
+// - Evidence 생성 후 bad peer 판정
+
+// 구현:
+func (sw *Switch) StopPeerForError(peer Peer, reason error) {
+    peer.CloseConn()
+
+    // peer list에서 제거
+    sw.peers.Remove(peer.ID())
+
+    // 재연결 시도 차단 (AddrBook)
+    sw.addrBook.MarkBad(peer.Address())
+
+    log.Error("Peer stopped for error",
+        "peer", peer,
+        "err", reason)
+}
+
+// AddrBook ban list:
+// - MarkBad: 1시간 재연결 금지
+// - MarkGood: reputation 회복
+// - 영구 ban은 config로 설정 (신뢰 피어만 연결)
+
+// 공격 방어:
+// - Sybil: max peer 제한 + AddrBook 다양성
+// - DoS: rate limit + auth 체크
+// - Eclipse: 다중 peer 유지 + outbound 연결 우선
+// - MITM: SecretConnection (STS handshake)`}
+        </pre>
+        <p className="leading-7">
+          Peer reputation이 <strong>Switch에서 관리</strong>.<br />
+          consensus violation/rate limit 초과 등 다양한 제재 조건.<br />
+          AddrBook으로 bad peer 영구 차단 (1시간 재연결 금지).
+        </p>
       </div>
     </section>
   );

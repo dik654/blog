@@ -38,6 +38,86 @@ export default function EVMModule({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">x/vm 모듈 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// x/vm Module (EVM on Cosmos SDK)
+//
+// Keeper 구조:
+//
+// type Keeper struct {
+//     storeKey     store.StoreKey
+//     paramstore   paramtypes.Subspace
+//
+//     // External keepers
+//     accountKeeper    types.AccountKeeper
+//     bankKeeper       types.BankKeeper
+//     stakingKeeper    types.StakingKeeper
+//     feeMarketKeeper  types.FeeMarketKeeper
+//
+//     // EVM config
+//     chainID      *big.Int
+//     tracer       string
+//
+//     // Precompiled contracts
+//     customPrecompiles map[common.Address]vm.PrecompiledContract
+// }
+
+// TX Execution Flow:
+//
+// 1. MetaMask → JSON-RPC
+//    eth_sendRawTransaction(signed_tx)
+//
+// 2. JSON-RPC Server
+//    unmarshal Ethereum TX
+//    wrap in Cosmos TX
+//    submit to mempool
+//
+// 3. Ante Handler (Cosmos SDK)
+//    - EthAccountVerificationDecorator
+//    - EthSigVerificationDecorator (ECDSA)
+//    - EthGasConsumeDecorator
+//    - EthIncrementSenderSequenceDecorator
+//    - EIP-1559 fee validation
+//
+// 4. ApplyMessage (keeper.go)
+//    - Create EVM instance
+//    - Configure StateDB
+//    - Execute message
+//    - Return result + logs
+//
+// 5. State Commit
+//    StateDB.Commit() → IAVL tree
+//    Events published
+//    Block finalized
+
+// StateDB Implementation:
+//
+//   stateDB.GetBalance(addr)
+//     → bankKeeper.GetBalance(sdkCtx, addr)
+//
+//   stateDB.SetState(addr, key, value)
+//     → store.Set(prefixKey(addr, key), value)
+//
+//   stateDB.AddLog(log)
+//     → Events.Append(convertLog(log))
+
+// EVM Config:
+//   EvmDenom: "aevmos" (18 decimals)
+//   EnableCreate: true (contract deployment)
+//   EnableCall: true (contract calls)
+//   ExtraEIPs: [3855, 3860, ...] (EIPs enabled)
+
+// Precompiles:
+//   Standard (0x01-0x09): ecrecover, sha256, etc.
+//   Evmos-specific:
+//     - Staking precompile (delegate, undelegate)
+//     - IBC transfer precompile
+//     - Distribution (rewards)
+//     - Bech32 address conversion`}
+        </pre>
+      </div>
     </section>
   );
 }

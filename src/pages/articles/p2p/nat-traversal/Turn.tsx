@@ -41,6 +41,79 @@ export default function Turn() {
           iroh에서는 DERP(Designated Encrypted Relay for Packets) 서버가 TURN 역할을 합니다.<br />
           libp2p에서는 Circuit Relay v2가 동일한 릴레이 기능을 제공합니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">TURN 상세 동작</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TURN Protocol (RFC 5766)
+//
+// Allocation Lifecycle:
+//
+// 1. Allocate
+//    Client → TURN: Allocate Request
+//      + USERNAME, MESSAGE-INTEGRITY
+//    TURN → Client: Allocate Response
+//      + RELAYED-ADDRESS (e.g., relay.example.com:55000)
+//      + LIFETIME (default 600s)
+//
+// 2. CreatePermission
+//    Client → TURN: CreatePermission
+//      + XOR-PEER-ADDRESS (peer's IP)
+//    TURN: adds peer IP to permission list
+//
+// 3. Data Exchange (2 modes):
+//
+//    Mode A: Send/Data indication (no channel)
+//      Client → TURN: Send Indication
+//        + XOR-PEER-ADDRESS, DATA
+//      TURN → Peer: forwards DATA
+//      Peer → TURN: sends directly
+//      TURN → Client: Data Indication
+//        + DATA, XOR-PEER-ADDRESS
+//      + 32 byte overhead per packet
+//
+//    Mode B: Channel Binding
+//      Client → TURN: ChannelBind
+//        + XOR-PEER-ADDRESS, CHANNEL-NUMBER
+//      TURN: channel mapping 생성
+//      Client → TURN: ChannelData
+//        + CHANNEL-NUMBER (4 bytes) + DATA
+//      + only 4 bytes overhead!
+
+// TURN 성능:
+//   Latency: +RTT (client ↔ relay)
+//   Bandwidth: 2x (ingress + egress via relay)
+//   Cost: server bandwidth costs
+//
+//   서버 사용량 예:
+//     1000 peers × 100 KB/s = 100 MB/s
+//     월 ~260 TB transfer
+//     AWS 기준 $23,000+/month
+
+// TURN vs DERP (iroh):
+//
+// TURN:
+//   - UDP 기반
+//   - STUN 확장
+//   - 5-tuple matching
+//
+// DERP:
+//   - HTTPS WebSocket
+//   - Packet forwarding
+//   - Simpler protocol
+//   - Works over TCP (firewall friendly)
+
+// 실무 구현:
+//   coturn: 가장 인기 있는 오픈소스 TURN
+//   Pion: Go implementation
+//   libp2p Circuit Relay v2: p2p 친화적
+//   Cloudflare Calls: SaaS TURN
+
+// 비용 최적화:
+//   - Self-host TURN (EC2, DigitalOcean)
+//   - Fallback only (prefer direct)
+//   - Regional deployment
+//   - Bandwidth limits`}
+        </pre>
       </div>
     </section>
   );

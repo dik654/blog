@@ -33,6 +33,66 @@ export default function EncoderComputation() {
           로그 공간에서 계산하면 어떤 실수값이든 exp로 양수 변환 가능
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Encoder 구조 PyTorch 구현</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// VAE Encoder Implementation
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class Encoder(nn.Module):
+    def __init__(self, input_dim, hidden_dim, latent_dim):
+        super().__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.fc_mu = nn.Linear(hidden_dim, latent_dim)
+        self.fc_logvar = nn.Linear(hidden_dim, latent_dim)
+
+    def forward(self, x):
+        h = F.relu(self.fc1(x))
+        mu = self.fc_mu(h)          # 평균
+        logvar = self.fc_logvar(h)  # 로그 분산
+        return mu, logvar
+
+// MNIST 인코더 예시:
+//   Encoder(784, 400, 20)
+//   - input: 28×28 → 784
+//   - hidden: 400
+//   - latent: 20
+//
+// 두 개의 출력 헤드:
+//   mu: 잠재 분포의 중심
+//   logvar: log(σ²), 분산의 로그
+
+// 왜 log σ²를 쓰는가?
+//
+// 1. 양수 보장
+//    σ² > 0  ⟺  log σ² ∈ R
+//    네트워크는 자유롭게 실수 출력
+//    exp로 σ² 복원
+//
+// 2. 수치 안정성
+//    σ² 직접 출력 시 sigmoid/softplus 필요
+//    기울기 포화 문제
+//    log 공간이 선형 영역
+//
+// 3. 효율적 KL 계산
+//    KL 공식에 log σ²가 그대로 등장
+//    추가 변환 불필요
+
+// 실무 변형:
+//   - Conv Encoder: CNN으로 이미지 처리
+//   - 더 깊은 MLP: 4~6 층
+//   - Dropout, BatchNorm 추가
+//   - GELU 활성화`}
+        </pre>
+        <p className="leading-7">
+          요약 1: Encoder는 <strong>2개 출력 헤드</strong> (μ, log σ²) — 분포 파라미터.<br />
+          요약 2: <strong>log σ²를 출력</strong>하면 양수 제약 자동 해결 + 수치 안정.<br />
+          요약 3: MNIST 표준 설정: <strong>784 → 400 → 20</strong> dimension.
+        </p>
+      </div>
     </section>
   );
 }

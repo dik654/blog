@@ -14,7 +14,7 @@ export default function CNNPipelineViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 540 175" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 540 185" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Step 0-4: Input 6x6 */}
           <text x={54} y={12} textAnchor="middle" fontSize={11} fontWeight={600}
             fill={step === 0 ? 'var(--foreground)' : '#94a3b8'}>입력 (6×6)</text>

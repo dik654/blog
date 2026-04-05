@@ -35,6 +35,46 @@ export default function Opcodes({ onCodeRef }: { onCodeRef: (key: string, ref: C
           <CodeViewButton onClick={() => onCodeRef('op-sload', codeRefs['op-sload'])} />
           <span className="text-[10px] text-muted-foreground self-center">opSload/Sstore 저장소</span>
         </div>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">EIP-2929 — Gas Cost 재편</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// EIP-2929 (Berlin hard fork, 2021)
+// 목적: storage access DoS 방어
+
+// 이전 가격
+// SLOAD: 800 gas
+// BALANCE: 700 gas
+// EXTCODESIZE: 700 gas
+// CALL: 700 gas
+
+// 공격: low-gas로 많은 account 접근
+// 2016 DoS: 1 tx에 수천 SLOAD → 체인 정지
+
+// EIP-2929 해결
+// Cold access (처음 접근): 2100 gas (SLOAD)
+// Warm access (이미 접근): 100 gas (SLOAD)
+
+// Access List tracking
+// accessList = {
+//   accounts: Set<Address>,
+//   storageKeys: Set<(Address, StorageKey)>
+// }
+
+// Warm 조건
+// - Account가 tx 내에서 이미 touched
+// - Storage slot이 이미 accessed
+// - EIP-2930 access list에 미리 선언
+
+// 추가 opcodes
+// - EXTCODESIZE, EXTCODECOPY, EXTCODEHASH: cold 2600, warm 100
+// - BALANCE: cold 2600, warm 100
+// - CALL family: base cost + cold/warm
+// - SELFDESTRUCT: cold 5000 추가
+
+// 영향
+// - Gas 비용 예측 가능
+// - DoS 공격 비용 대폭 증가
+// - Access list tx (EIP-2930)로 pre-warm 가능`}</pre>
+
       </div>
     </section>
   );

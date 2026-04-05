@@ -95,6 +95,71 @@ export default function Overview({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">Behaviour 구조체</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">GossipSub 버전 역사</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// GossipSub Protocol Versions
+//
+// v1.0 (2019):
+//   - Mesh-based pub/sub
+//   - IHAVE/IWANT gossip
+//   - 기본 메시지 전파
+//
+// v1.1 (2020):
+//   - Peer Scoring 시스템
+//   - Adaptive gossip emission
+//   - Sybil/Eclipse 방어
+//   - Ethereum 2.0에서 채택
+//
+// v1.2 (2023):
+//   - IDONTWANT 메시지
+//   - Bandwidth 최적화
+//   - 중복 메시지 감소
+//   - Episub 병합 고려
+
+// 메시지 타입 (5종):
+//   SUBSCRIBE: "이 topic 구독 시작"
+//   UNSUBSCRIBE: "이 topic 해제"
+//   PUBLISH: 실제 메시지 전송
+//   GRAFT: "Mesh에 나 추가해줘"
+//   PRUNE: "Mesh에서 나 제거"
+//
+//   Control:
+//   IHAVE: "이런 메시지 가지고 있어"
+//   IWANT: "그 메시지 나한테도"
+//   IDONTWANT (v1.2): "그거 이미 있으니 보내지마"
+
+// Configuration Constants:
+//
+//   D:      6     (target mesh peers)
+//   D_lo:   4     (minimum mesh)
+//   D_hi:   12    (maximum mesh)
+//   D_lazy: 6     (gossip peers)
+//   D_score:4     (가장 좋은 peers)
+//   D_out:  2     (outbound peers)
+//
+//   heartbeat: 1 second
+//   mcache_len: 5 heartbeats (6s)
+//   mcache_gossip: 3 heartbeats
+//   seen_ttl: 120 seconds
+//   prune_backoff: 1 minute
+
+// Application Examples:
+//
+//   Ethereum 2.0 Beacon Chain:
+//     - beacon_block (블록)
+//     - beacon_attestation_* (증명)
+//     - beacon_aggregate_and_proof
+//     - voluntary_exit
+//     - proposer_slashing
+//     - attester_slashing
+//
+//   Filecoin: storage deals
+//   Polkadot: consensus messages
+//   IPFS PubSub: general purpose`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -74,6 +74,96 @@ export default function PublishFlow({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">publish() 구현</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Publish 흐름 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// GossipSub publish() 실행 흐름
+//
+// Step 1: Message Construction
+//
+//   struct RawMessage {
+//       source: PeerId,
+//       data: Bytes,
+//       sequence_number: u64,
+//       topic: TopicHash,
+//       signature: Option<Vec<u8>>,
+//       key: Option<Vec<u8>>,
+//       validated: bool,
+//   }
+//
+//   message_id = hash(from || seqno || data)
+//
+// Step 2: Validation
+//
+//   - Message size check (max)
+//   - Duplicate check (mcache)
+//   - Signature validation (if signed)
+//   - Topic subscription check
+//
+//   duplicate → drop silently
+//
+// Step 3: Delivery Target Selection
+//
+//   recipients = set()
+//
+//   // Mesh peers (subscribed)
+//   if topic in self.mesh:
+//       recipients += mesh[topic]
+//
+//   // Fanout peers (not subscribed, but publishing)
+//   elif topic in self.fanout:
+//       recipients += fanout[topic]
+//   else:
+//       // Create new fanout
+//       candidates = peers_topic[topic].shuffle()
+//       fanout[topic] = candidates[:D]
+//       recipients += fanout[topic]
+//
+//   // Flood publishing (optional)
+//   if config.flood_publish:
+//       recipients += all_subscribed_peers
+//
+// Step 4: IDONTWANT Broadcast (v1.2)
+//
+//   // Preemptive dedup signal
+//   other_peers = non_mesh_subscribed[topic]
+//   for peer in other_peers:
+//       send IDONTWANT(message_id) to peer
+//
+//   → Peer가 같은 msg 보내지 않음
+//
+// Step 5: Send to Recipients
+//
+//   publish_msg = create_publish_message(topic, data)
+//
+//   for peer in recipients:
+//       send_rpc(peer, publish_msg)
+//
+//   // Update mcache
+//   mcache.put(message_id, raw_message)
+//
+//   // Return
+//   return message_id
+
+// IDONTWANT 효과:
+//   크기: ~50 bytes (tiny)
+//   주 메시지: 수 KB ~ MB
+//   중복 메시지 감소 효과 큼
+//   Ethereum 블록 전파 최적화
+
+// Flood vs Fanout:
+//   flood_publish=true: 모든 subscribed
+//                     높은 신뢰성, 높은 bandwidth
+//   flood_publish=false: fanout만 (D=6)
+//                     기본값, 효율적
+
+// Fanout TTL:
+//   fanout_ttl: 60 seconds
+//   미구독 topic의 fanout 유지 시간
+//   expire 시 해당 topic 정리`}
+        </pre>
+      </div>
     </section>
   );
 }

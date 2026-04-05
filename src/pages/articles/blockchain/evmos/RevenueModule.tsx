@@ -33,6 +33,84 @@ export default function RevenueModule({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">TokenPair 및 양방향 변환</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// x/erc20 Module 상세
+//
+// TokenPair 구조:
+//
+// type TokenPair struct {
+//     Erc20Address  string          // 컨트랙트 주소
+//     Denom         string          // Cosmos denom
+//     Enabled       bool            // 활성 여부
+//     ContractOwner Owner           // OWNER_MODULE or OWNER_EXTERNAL
+// }
+//
+// OwnerType:
+//   OWNER_MODULE: 모듈이 컨트랙트 배포/관리
+//   OWNER_EXTERNAL: 외부 소유자의 ERC20
+
+// Conversion 흐름:
+//
+// Cosmos Coin → ERC20:
+//
+//   사용자 요청: ConvertCoin
+//     denom: "aevmos"
+//     amount: 100 * 10^18
+//     receiver: 0x1234...
+//
+//   모듈 처리:
+//     1. bankKeeper.SendCoinsFromAccountToModule
+//        (escrow user's coins)
+//     2. Find TokenPair(denom)
+//     3. If ContractOwner == MODULE:
+//          evmKeeper.CallEVM(mint, receiver, amount)
+//        Else:
+//          require escrow already held
+//     4. Emit events
+//
+// ERC20 → Cosmos Coin:
+//
+//   사용자 요청: ConvertERC20
+//     erc20_address: 0xABCD...
+//     amount: 100 * 10^18
+//     receiver: evmos1xyz...
+//
+//   모듈 처리:
+//     1. Find TokenPair(erc20_address)
+//     2. If ContractOwner == MODULE:
+//          evmKeeper.CallEVM(burn, sender, amount)
+//        Else:
+//          evmKeeper.CallEVM(transfer, sender, module)
+//     3. bankKeeper.SendCoinsFromModuleToAccount
+//        (release escrowed coins)
+//     4. Emit events
+
+// Precision Handling:
+//   Cosmos: "aevmos" = 10^-18 EVMOS
+//   Ethereum: "wei" = 10^-18 ETH
+//   → 1:1 매핑 가능 (둘 다 18 decimals)
+//
+//   다른 체인:
+//     "uatom" = 10^-6 ATOM
+//     Ethereum expects 18 decimals
+//     → x/precisebank가 해결
+
+// 자동 Token Registration:
+//   Governance proposal로 TokenPair 등록
+//   RegisterCoinProposal: Cosmos Coin 등록
+//   RegisterERC20Proposal: ERC20 등록
+//   → 거버넌스 승인 후 활성화
+
+// Revenue Module (x/revenue):
+//   dApp 개발자 수익 공유 시스템
+//   Contract deployer → % of gas fees
+//   Developer incentive
+//   2024년 deprecated (일부 chain)`}
+        </pre>
+      </div>
     </section>
   );
 }

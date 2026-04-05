@@ -46,6 +46,64 @@ export default function FindNode({ onCodeRef }: { onCodeRef: (key: string, ref: 
           <CodeViewButton onClick={() => onCodeRef('wait-for-nodes', codeRefs['wait-for-nodes'])} />
           <span className="text-[10px] text-muted-foreground self-center">waitForNodes() — 분할 응답 수집</span>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">discv5 vs discv4 차이</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// discv4 vs discv5 비교
+//
+// ┌─────────────────┬──────────┬──────────┐
+// │     기능        │  discv4  │  discv5  │
+// ├─────────────────┼──────────┼──────────┤
+// │ 노드 레코드     │ (IP,ID)  │   ENR    │
+// │ 세션 암호화     │  없음    │  AES-GCM │
+// │ FINDNODE        │ pubkey   │ distances│
+// │ Topic discovery │  없음    │ TALKREQ  │
+// │ Extension proto │  없음    │ 지원     │
+// │ 핸드셰이크      │ Ping/Pong│ WHOAREYOU│
+// │ 공격 방어       │ 약함     │ 강함     │
+// └─────────────────┴──────────┴──────────┘
+
+// ENR (Ethereum Node Record, EIP-778):
+//   Signed record with:
+//     - id: scheme (v4)
+//     - secp256k1: public key
+//     - ip, udp, tcp: endpoints
+//     - eth2: fork info
+//     - attnets, syncnets: subnets
+//     - signature (Ed25519 or secp256k1)
+//
+//   장점:
+//   - Signed (변조 불가)
+//   - Versioned (seq number)
+//   - Extensible (custom fields)
+//   - DNS-friendly (base64 encoded)
+
+// Distance calculation:
+//   node_id_A = keccak256(pubkey_A)
+//   node_id_B = keccak256(pubkey_B)
+//   distance = A XOR B
+//   log_distance = ceil(log2(distance + 1))
+//   range: 0 to 256
+
+// FINDNODE 개선 (privacy):
+//   discv4: "Find nodes near pubkey X"
+//     → 공격자가 대상 알 수 있음
+//
+//   discv5: "Give nodes at distance [253, 254, 255]"
+//     → 대상 공개 안 됨
+//     → 공격자가 구조 파악 어려움
+
+// Response 분할:
+//   Single UDP packet: max 1280 bytes
+//   Multiple ENRs 전송 시 분할
+//   RespCount로 전체 개수 알림
+//   totalNodesResponseLimit = 5
+
+// Bucket refresh:
+//   매 주기(30s)마다 lookup
+//   ENR 유효성 확인 (Ping/Pong)
+//   죽은 노드 제거`}
+        </pre>
       </div>
     </section>
   );

@@ -55,6 +55,52 @@ export default function Overview() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">에이전트 발전 타임라인</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// AI Agent 역사 (2022~2024)
+//
+// 2022.10: ReAct (Princeton + Google)
+//   - Reasoning + Acting 결합
+//   - Tool use의 기초 패러다임
+//
+// 2023.03: LangChain 등장
+//   - 최초의 범용 에이전트 프레임워크
+//   - Tool use 표준화
+//
+// 2023.04: AutoGPT, BabyAGI
+//   - Goal-driven agents
+//   - 자율 작업 수행
+//
+// 2023.06: ReAct + Reflection
+//   - Self-critique 통합
+//   - 오류 수정 능력
+//
+// 2023.10: AutoGen (Microsoft)
+//   - Multi-agent 대화
+//   - Human-in-the-loop
+//
+// 2024.01: LangGraph
+//   - State graph 기반 agent
+//   - Cyclic workflows
+//
+// 2024.03: CrewAI 인기
+//   - Role-based agents
+//   - Team collaboration
+//
+// 2024: Claude Computer Use
+//   - GUI automation
+//   - Claude 3.5 Sonnet 특화
+//
+// 2024: OpenAI Assistants API
+//   - Managed agent service
+//   - Thread + Run 모델
+
+// 3세대 Agent Architecture:
+//   Gen 1 (2022): Single-step tool use
+//   Gen 2 (2023): Multi-step planning (ReAct)
+//   Gen 3 (2024): Multi-agent + long-horizon planning`}
+        </pre>
       </div>
     </section>
   );

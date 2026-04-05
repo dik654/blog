@@ -39,6 +39,82 @@ export default function Streams() {
           libp2p에서는 Yamux 멀티플렉서로 TCP 위 스트림을 구현하지만,
           QUIC 전송 사용 시 별도 멀티플렉서 없이 네이티브 스트림을 활용합니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">QUIC Streams vs TCP</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TCP의 Head-of-Line Blocking 문제
+//
+// TCP: 하나의 byte stream
+//
+//   Application data:
+//     [Request 1][Request 2][Request 3]
+//
+//   TCP segments:
+//     [Seg1][Seg2][Seg3][Seg4][Seg5]
+//
+//   If Seg2 lost:
+//     Seg3, Seg4, Seg5 도착해도 대기
+//     retransmit Seg2 완료 후 전달
+//     → Request 2, 3 delayed
+//
+//   HTTP/2 (TCP) 여전히 이 문제 있음
+
+// QUIC의 Independent Streams
+//
+// QUIC: 여러 독립 스트림
+//
+//   Stream 1: [S1.Seg1][S1.Seg2][S1.Seg3]
+//   Stream 2: [S2.Seg1][S2.Seg2][S2.Seg3]
+//   Stream 3: [S3.Seg1][S3.Seg2][S3.Seg3]
+//
+//   If S1.Seg2 lost:
+//     Stream 1만 대기
+//     Stream 2, 3은 계속 진행
+//     → Full Head-of-Line blocking 해결
+
+// Stream ID Structure:
+//   62-bit variable length integer
+//   Lower 2 bits encode type:
+//     0x00: client-initiated bidirectional
+//     0x01: server-initiated bidirectional
+//     0x02: client-initiated unidirectional
+//     0x03: server-initiated unidirectional
+//
+//   Upper bits: incremented per stream
+
+// Flow Control:
+//
+//   3-level hierarchy:
+//
+//   1. Stream-level
+//      MAX_STREAM_DATA frame
+//      Per-stream receive buffer limit
+//
+//   2. Connection-level
+//      MAX_DATA frame
+//      Total data across all streams
+//
+//   3. Stream count
+//      MAX_STREAMS frame
+//      Max concurrent streams
+//
+// Stream States:
+//   idle → open → half-closed → closed
+//   (sending or receiving)
+
+// 사용 예 (HTTP/3):
+//   Single QUIC connection
+//   Multiple concurrent HTTP requests
+//   Each request = 1 bidirectional stream
+//   → True parallelism
+//   → No head-of-line blocking
+
+// libp2p-quic 활용:
+//   Native QUIC streams
+//   No additional muxer needed
+//   Each protocol = own stream
+//   Kademlia, GossipSub, Identify 병렬`}
+        </pre>
       </div>
     </section>
   );

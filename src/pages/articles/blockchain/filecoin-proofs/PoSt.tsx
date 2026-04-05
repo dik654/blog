@@ -29,6 +29,94 @@ export default function PoSt({ title, onCodeRef }: {
           <br />
           Groth16 회로 내 SHA256 대비 10배 이상 게이트 절약
         </p>
+
+        {/* ── PoSt 상세 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">PoSt 메커니즘 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// PoSt (Proof of SpaceTime):
+
+// WindowPoSt (24h 주기):
+// - 모든 active sectors 대상
+// - partition으로 분할 (~2349 sectors per partition)
+// - 10 random challenges per sector
+// - deadline-based (24h / 48 = 30min windows)
+
+// WindowPoSt 프로세스:
+// 1. deadline 시작 시 challenge 생성
+//    - random drand-based
+//    - per partition
+// 2. each sector에 10 leaf 선택
+// 3. Merkle proof 생성
+//    - open leaves
+//    - sibling hashes
+//    - root verification
+// 4. SNARK proof 생성
+//    - Groth16
+//    - GPU accelerated
+// 5. on-chain submission
+//    - PartitionSubmitWindowedPoSt message
+//    - within deadline
+
+// Skipped sectors:
+// - fault 인식된 sectors
+// - skipped in proof
+// - penalty paid
+// - recovery 가능
+
+// WinningPoSt (leader election):
+// - trigger: VRF election winner
+// - 1 random sector sampled
+// - tight deadline (~40s)
+// - used in block creation
+// - faster proof gen
+
+// Poseidon Hash:
+// - SNARK-friendly hash
+// - BLS12-381 field operations
+// - 3-5x faster than SHA256 in circuit
+// - MDS + S-box design
+// - recent cryptography
+
+// Merkle Tree Types:
+// - base tree (on data)
+// - tree C (on column commitments)
+// - tree T_aux (on tree C)
+// - nested depth ~20-30
+
+// Proof Components:
+// - Merkle path for each challenge
+// - column commitments
+// - replica_id
+// - SNARK wrapping
+
+// On-chain verification:
+// - SNARK verifier in VM
+// - pairing operations
+// - Groth16 verify
+// - batch verification for efficiency
+
+// Fault handling:
+// - missed WindowPoSt
+// - fault fee per epoch
+// - 7-day recovery window
+// - termination penalty if not recovered
+
+// Performance:
+// - WindowPoSt generation: ~30 min per partition
+// - parallel partitions (multiple GPUs)
+// - verification: ~5ms per partition
+// - on-chain cost: moderate gas
+
+// Slashing conditions:
+// - missed PoSt: fault fee
+// - wrong proof: termination
+// - double-signing: termination + slash`}
+        </pre>
+        <p className="leading-7">
+          WindowPoSt (24h) + WinningPoSt (election).<br />
+          <strong>10 challenges per sector</strong>, Merkle + SNARK.<br />
+          Poseidon hash (SNARK-friendly, 3-5x faster than SHA256).
+        </p>
       </div>
     </section>
   );

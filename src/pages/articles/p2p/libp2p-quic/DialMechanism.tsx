@@ -95,6 +95,94 @@ export default function DialMechanism({ onCodeRef }: {
           </div>
         )}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Endpoint Reuse 전략</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// QUIC Endpoint Management
+//
+// Endpoint = single UDP socket
+//   multiplexing multiple connections
+//
+// libp2p-quic 전략:
+//
+// 1. Listener Endpoint (port forward됨)
+//    용도: incoming connections 받음
+//    포트: listen_on() 지정
+//
+//    재사용 조건:
+//      outgoing dial 시 같은 port 사용
+//      → 홀 펀칭에 필수
+//      → NAT 매핑 재활용
+//
+// 2. Dialer Endpoint (ephemeral port)
+//    용도: outbound only
+//    포트: OS 할당 (0)
+//
+//    생성 조건:
+//      - Listener 없을 때
+//      - 같은 address family당 1개
+
+// SocketFamily 분리:
+//   IPv4 dialer Endpoint
+//   IPv6 dialer Endpoint
+//   각각 HashMap에 저장
+
+// eligible_listener() 동작:
+//
+//   fn eligible_listener(&self, addr: &SocketAddr)
+//       -> Option<Arc<Listener<P>>>
+//   {
+//       matching = self.listeners
+//           .filter(|l| l.matches_addr_family(addr))
+//           .collect();
+//
+//       if matching.is_empty():
+//           return None;
+//
+//       // Deterministic selection:
+//       index = hash(addr) % matching.len();
+//       return Some(matching[index]);
+//   }
+//
+//   핵심: 같은 addr → 같은 listener
+//   → 홀 펀칭 symmetry 보장
+
+// Dial 흐름 상세:
+//
+//   fn dial(self, addr: Multiaddr)
+//       -> Result<Connecting>
+//   {
+//       let (socket_addr, peer_id) = parse(addr)?;
+//
+//       // Get or create endpoint
+//       let endpoint = if let Some(listener) =
+//           self.eligible_listener(&socket_addr) {
+//           listener.endpoint.clone()
+//       } else {
+//           let family = SocketFamily::from(&socket_addr);
+//           self.dialer.entry(family)
+//               .or_insert_with(|| create_new_endpoint())
+//               .clone()
+//       };
+//
+//       // Start connection
+//       let connecting = endpoint
+//           .connect_with(self.client_config, socket_addr, "l")?;
+//
+//       Ok(Connecting { ... })
+//   }
+
+// 장점:
+//   - Port 최적화 (listener + dialer 공유)
+//   - NAT-friendly
+//   - 간단한 구조
+//
+// 단점:
+//   - Endpoint 수명 관리 복잡
+//   - Per-family 리소스`}
+        </pre>
+      </div>
     </section>
   );
 }

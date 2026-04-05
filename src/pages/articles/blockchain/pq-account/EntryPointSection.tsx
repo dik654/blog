@@ -24,6 +24,86 @@ export default function EntryPointSection({ onCodeRef }: { onCodeRef: (key: stri
         </p>
       </div>
       <div className="mt-8"><EntryPointViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">handleOps 3단계</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// EntryPoint.handleOps(ops[], beneficiary)
+
+// Phase 1: Validation (verification loop)
+for each userOp in ops:
+    // 1a) Deploy account if needed
+    if userOp.initCode != "":
+        deployAccount(userOp.sender, userOp.initCode)
+
+    // 1b) Account.validateUserOp()
+    //     - signature check
+    //     - nonce check
+    //     - prefund (missing balance 반환)
+    validationData = account.validateUserOp(userOp, hash, missingFunds)
+
+    // 1c) Paymaster.validatePaymasterUserOp() (if used)
+    if userOp.paymasterAndData != "":
+        paymaster.validate(...)
+
+// Phase 2: Execution (execution loop)
+for each userOp in ops:
+    // 2a) Execute callData
+    try account.execute(callData) {
+        opSuccess = true
+    } catch {
+        opSuccess = false
+        // state revert but gas refund X
+    }
+
+    // 2b) Paymaster postOp (if used)
+    if paymaster:
+        paymaster.postOp(opSuccess, actualGasCost)
+
+// Phase 3: Reimbursement
+// EntryPoint → beneficiary.transfer(total_gas * effective_price)
+
+// 장점
+// ✓ Fail-safe: 한 op 실패 다른 op 영향 X
+// ✓ Bundler 보상 보장
+// ✓ Paymaster 비용 통제`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Bundler 경제학</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Bundler 역할
+// - Mempool에서 UserOp 수집
+// - 유효성 simulate
+// - 배치로 묶어 handleOps 제출
+// - MEV 수익 획득 가능
+
+// Simulation 중요성
+// - Bundler는 invalid UserOp으로 혼자 gas 지불 위험
+// - eth_estimateGas + eth_call로 미리 검증
+// - Invalid op 제외
+
+// Reputation system (EIP-4337)
+// - 각 entity (sender, paymaster, factory)에 점수
+// - DoS 공격 시도 → 점수 하락
+// - 일정 점수 이하면 throttle/ban
+
+// MEV opportunities
+// - Ordering within bundle
+// - Censorship (user 우선순위)
+// - Arbitrage embedded
+// - Sandwich attack (공식 비방)
+
+// Known bundlers (2024)
+// - Alchemy Rundler
+// - Stackup
+// - Biconomy
+// - Pimlico
+// - ZeroDev Ultra Relay
+
+// Bundler revenue
+// - transaction fees
+// - MEV profits
+// - Paymaster relationships`}</pre>
+
+      </div>
     </section>
   );
 }

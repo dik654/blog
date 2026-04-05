@@ -71,6 +71,81 @@ export default function Encoding() {
           이 3개의 여분으로 최대 <Math>{'\\lfloor 3/2 \\rfloor = 1'}</Math>개의 오류를 정정할 수 있다
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Systematic vs Non-systematic 인코딩</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Reed-Solomon Encoding Variants
+//
+// 1) Non-systematic (original):
+//
+//    message = [m_0, m_1, ..., m_{k-1}]
+//    f(x) = sum(m_i * x^i)
+//    codeword = [f(a_0), f(a_1), ..., f(a_{n-1})]
+//
+//    장점: 수학적으로 단순
+//    단점: 메시지 추출 시 보간 필요
+//          decoding에서 원본 메시지를 얻으려면
+//          k개 평가점에서 Lagrange 보간을 돌려야 함
+//
+// 2) Systematic encoding:
+//
+//    codeword = [m_0, m_1, ..., m_{k-1}, p_0, p_1, ..., p_{n-k-1}]
+//                   message             parity
+//
+//    메시지가 codeword에 그대로 포함됨
+//    parity symbol만 계산
+//
+//    계산 방법:
+//      G_sys = [I_k | P]  (systematic generator matrix)
+//      codeword = message * G_sys
+//
+//    장점: 에러 없으면 decoding 없이 바로 메시지 추출
+//    단점: 약간 복잡한 encoding
+//
+//    대부분의 실제 시스템: systematic
+//      CD, DVD, QR: systematic
+//      Storage RAID: systematic
+//      ZK STARKs: non-systematic (수학적 이유)
+
+// 3) BCH view (alternative formulation):
+//
+//    c(x) = message(x) * g(x)
+//    where g(x) = product((x - alpha^i)) for i in [1, n-k]
+//
+//    g(x) is the generator polynomial
+//    All codewords are multiples of g(x)
+//    → roots at alpha^1, ..., alpha^{n-k} always
+//
+//    decoding via syndromes:
+//      S_j = received(alpha^j) for j = 1..n-k
+//      if all S_j = 0: no error
+//      else: errors present
+
+// FFT-friendly 평가점:
+//
+//   Standard: x = {0, 1, 2, ..., n-1}  (비효율적)
+//   NTT: x = {1, w, w^2, ..., w^{n-1}}  (n-th root of unity)
+//
+//   FFT encoding:
+//     eval = FFT(message_padded_to_n)
+//     O(n log n) vs O(n*k) naive
+//
+//   STARK field example:
+//     p = 2^64 - 2^32 + 1 (Goldilocks prime)
+//     has large smooth subgroup
+//     → perfect for NTT-based RS encoding
+
+// Systematic RS encoding 단계:
+//
+//   1. message polynomial: m(x) = m_0 + m_1 x + ... + m_{k-1} x^{k-1}
+//   2. shifted polynomial: x^{n-k} * m(x)
+//   3. parity polynomial: r(x) = (x^{n-k} * m(x)) mod g(x)
+//   4. codeword polynomial: c(x) = x^{n-k} * m(x) - r(x)
+//
+//   c(x) is divisible by g(x) AND starts with m_0..m_{k-1}`}
+        </pre>
+      </div>
     </section>
   );
 }

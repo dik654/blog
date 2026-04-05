@@ -64,6 +64,126 @@ export default function R1CS() {
           <li><strong>SHA-256</strong>: ~25,000개 (비트 연산 기반 → 비효율)</li>
         </ul>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">R1CS 구체 예시 및 제약 시스템 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Concrete R1CS Example
+//
+// Problem: Prove knowledge of x such that
+//          x^3 + x + 5 = 35  (solution: x=3)
+//
+// Circuit:
+//   sym_1 = x * x      // x^2
+//   sym_2 = sym_1 * x  // x^3
+//   sym_3 = sym_2 + x  // x^3 + x
+//   out = sym_3 + 5    // x^3 + x + 5
+//
+// Variables: [1, out, x, sym_1, sym_2, sym_3]
+//            [1, 35,  3, 9,     27,    30]
+//
+// Constraints (only multiplications):
+//
+//   Constraint 1: x * x = sym_1
+//     A = [0, 0, 1, 0, 0, 0]  selector for x
+//     B = [0, 0, 1, 0, 0, 0]  selector for x
+//     C = [0, 0, 0, 1, 0, 0]  selector for sym_1
+//
+//   Constraint 2: sym_1 * x = sym_2
+//     A = [0, 0, 0, 1, 0, 0]
+//     B = [0, 0, 1, 0, 0, 0]
+//     C = [0, 0, 0, 0, 1, 0]
+//
+//   Constraint 3: (sym_2 + x) * 1 = sym_3
+//     A = [0, 0, 1, 0, 1, 0]  sym_2 + x
+//     B = [1, 0, 0, 0, 0, 0]  constant 1
+//     C = [0, 0, 0, 0, 0, 1]
+//
+//   Constraint 4: (sym_3 + 5) * 1 = out
+//     A = [5, 0, 0, 0, 0, 1]  sym_3 + 5
+//     B = [1, 0, 0, 0, 0, 0]
+//     C = [0, 1, 0, 0, 0, 0]
+//
+// 4 multiplication gates → 4 constraints
+// Note: addition x + 5 absorbed into A vector
+
+// R1CS variants and alternatives:
+//
+// 1. Plonkish (Plonk's custom gates):
+//    q_L*a + q_R*b + q_M*a*b + q_O*c + q_C = 0
+//    - More flexible than R1CS
+//    - Custom gates reduce count
+//    - Lookup tables: range checks cheap
+//    - Used: Plonky2, Halo2, zkEVM
+//
+// 2. AIR (Algebraic Intermediate Representation):
+//    - Transition polynomial per register
+//    - Boundary constraints at specific rows
+//    - Used: STARKs, Winterfell, Risc0
+//
+// 3. CCS (Customizable Constraint System):
+//    - Generalization of R1CS, Plonkish, AIR
+//    - Higher-degree constraints
+//    - Used: HyperNova, Spartan2
+//
+// 4. R1CS with lookups (Lasso):
+//    - Add lookup arguments
+//    - Range checks, bit ops cheap
+//    - Used: Jolt, Lasso+Nova
+
+// When to use R1CS:
+//
+//   ✓ Groth16 (Zcash Sapling)
+//     - smallest proof (3 group elements)
+//     - circuit-specific trusted setup
+//
+//   ✓ Bulletproofs (range proofs, Monero)
+//     - no trusted setup
+//     - O(log n) proof
+//
+//   ✓ Spartan / SuperSpartan
+//     - sumcheck-based
+//     - no FFT needed
+//
+//   ✗ Modern zkVMs prefer:
+//     - Plonkish (Plonky2, Halo2)
+//     - Custom gates
+//     - Lookup-friendly
+
+// R1CS frameworks:
+//
+//   bellman (Rust, Zcash):
+//     R1CS + Groth16
+//     Original ecosystem
+//
+//   arkworks (Rust):
+//     Generic R1CS traits
+//     Multiple proving systems
+//
+//   circom:
+//     R1CS-first DSL
+//     Bijective to constraints
+//     Used: Tornado Cash, iden3
+//
+//   circomlib:
+//     Standard gadget library
+//     Poseidon, Pedersen, MiMC, ECDSA
+//
+//   gnark (Go):
+//     R1CS frontend
+//     Groth16 + Plonk backend
+//     Used: Consensys, Ethereum research
+
+// R1CS satisfiability (NP-complete):
+//
+//   Given A, B, C matrices (public)
+//   Find witness s such that:
+//     (A*s) circ (B*s) = C*s
+//   where circ = Hadamard product
+//
+//   Subsumes circuit-SAT → NP-complete`}
+        </pre>
+      </div>
     </section>
   );
 }

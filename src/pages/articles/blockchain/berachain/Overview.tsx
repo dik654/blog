@@ -36,6 +36,121 @@ export default function Overview({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Berachain 아키텍처 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Berachain Architecture
+//
+// Foundation:
+//   EVM L1 with Proof of Liquidity (PoL)
+//   Built on BeaconKit (CometBFT + Ethereum spec)
+//   Launch: Mainnet 2025 Q1
+//
+// Key components:
+//   Execution Layer: Reth or Geth (Ethereum clients)
+//   Consensus Layer: BeaconKit (not Prysm/Lighthouse)
+//   Consensus Engine: CometBFT (not Casper FFG)
+//   Economic model: PoL (not PoS)
+
+// Three-token system:
+//
+//   BERA:
+//     Native gas token
+//     Used for: transactions, EVM gas
+//     Transferable
+//     Similar to ETH on Ethereum
+//
+//   BGT (Bera Governance Token):
+//     Soulbound (non-transferable)
+//     Earned via liquidity provision
+//     Used for: delegation to validators, governance
+//     Can only convert TO BERA (burn BGT → mint BERA)
+//     CANNOT convert BERA → BGT
+//
+//   HONEY:
+//     Native stablecoin (overcollateralized)
+//     Minted from whitelisted assets (USDC, pyUSD)
+//     Used in: DEX pools, lending markets
+//     Peg maintained by arbitrage + collateral
+
+// BeaconKit vs other Cosmos EVM:
+//
+//   Evmos / Cronos:
+//     EVM bolted onto Cosmos SDK modules
+//     Account model differs from Ethereum
+//     Custom fee market (x/feemarket)
+//
+//   BeaconKit (Berachain):
+//     True Ethereum architecture
+//     Engine API between CL and EL
+//     Uses geth/reth unchanged
+//     Validator keys: BLS (Ethereum spec)
+//     Withdrawal credentials: Ethereum format
+//     Gasper-equivalent but BFT finality
+
+// Why BeaconKit?
+//
+//   Maximal Ethereum compatibility:
+//     ✓ Same EL client (geth, reth, nethermind)
+//     ✓ Same Engine API (fork choice decoupled)
+//     ✓ Same RPC methods (eth_*)
+//     ✓ Same precompiles
+//     ✓ Same EVM opcodes
+//
+//   Cosmos benefits:
+//     ✓ Instant finality (1 block, not 2 epochs)
+//     ✓ No reorgs (BFT safety)
+//     ✓ IBC compatibility (via future bridges)
+//     ✓ Faster iteration (CometBFT updates)
+
+// Finality comparison:
+//
+//   Ethereum PoS:
+//     - Epoch = 32 slots = ~6.4 min
+//     - Finality = 2 epochs = ~12.8 min
+//     - Can reorg up to finality
+//
+//   Berachain BeaconKit:
+//     - Block time = ~2 sec
+//     - Finality = 1 block (BFT)
+//     - No reorgs possible
+//     - 2/3+ honest validators needed
+
+// Engine API:
+//
+//   Method: engine_forkchoiceUpdatedV3
+//     CL tells EL: "build block on head X"
+//     EL returns: payload_id
+//
+//   Method: engine_getPayloadV3
+//     CL asks: "give me built payload"
+//     EL returns: ExecutionPayload
+//
+//   Method: engine_newPayloadV3
+//     CL asks: "validate this payload"
+//     EL returns: {status: VALID | INVALID}
+//
+//   BeaconKit calls these during:
+//     PrepareProposal → forkchoiceUpdated + getPayload
+//     ProcessProposal → newPayload
+//     FinalizeBlock → forkchoiceUpdated (finalize head)
+
+// Use cases:
+//
+//   1. DeFi primitives:
+//      BEX (native DEX)
+//      BERPS (perpetuals)
+//      BEND (lending)
+//
+//   2. Liquid staking:
+//      Stake BGT derivatives (iBGT, etc.)
+//
+//   3. EVM dApps:
+//      Uniswap, Aave ports
+//      Any Ethereum dApp deploys unchanged`}
+        </pre>
+      </div>
     </section>
   );
 }

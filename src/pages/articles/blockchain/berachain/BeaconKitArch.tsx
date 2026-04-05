@@ -38,6 +38,141 @@ export default function BeaconKitArch({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">BeaconKit ABCI 2.0 + Engine API</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BeaconKit Block Lifecycle (ABCI 2.0)
+//
+// ABCI (Application Blockchain Interface):
+//   CometBFT's boundary between consensus and app
+//   Methods: PrepareProposal, ProcessProposal,
+//            FinalizeBlock, Commit, ExtendVote, etc.
+//
+// BeaconKit role:
+//   ABCI app that wraps Ethereum spec
+//   Translates CometBFT events → Engine API calls
+
+// Proposal phase (only by current leader):
+//
+//   PrepareProposal(height, round, tx_list) {
+//     // 1. Get EL's head block
+//     head = EL.getCanonicalHead()
+//
+//     // 2. Ask EL to build a block
+//     payload_id = EL.forkchoiceUpdated(
+//       head_block_hash = head.hash,
+//       safe_block_hash = head.hash,
+//       finalized_block_hash = last_finalized.hash,
+//       payload_attributes = {
+//         timestamp,
+//         prev_randao: beacon_state.randao_mix,
+//         suggested_fee_recipient: validator_addr,
+//         withdrawals: beacon_state.pending_withdrawals,
+//         parent_beacon_block_root: beacon_block.parent_root,
+//       }
+//     )
+//
+//     // 3. Wait for EL to finish building
+//     payload = EL.getPayload(payload_id)
+//
+//     // 4. Wrap into Cosmos tx
+//     return BeaconBlock{
+//       slot: height,
+//       proposer_index: round_robin_leader(height),
+//       parent_root: prev_beacon_block_root,
+//       body: BeaconBlockBody{
+//         execution_payload: payload,
+//         randao_reveal: sign(epoch),
+//         ...
+//       }
+//     }.marshal_ssz()
+//   }
+
+// Validation phase (all validators):
+//
+//   ProcessProposal(proposed_block) {
+//     // 1. Parse SSZ-encoded block
+//     block = BeaconBlock.unmarshal_ssz(proposed_block)
+//
+//     // 2. Verify beacon state transition
+//     verify_block_signature(block)
+//     verify_randao(block)
+//     verify_slot_proposer(block)
+//
+//     // 3. Verify execution payload via EL
+//     result = EL.newPayload(block.body.execution_payload)
+//     if result.status != VALID: return REJECT
+//
+//     // 4. Verify beacon state root
+//     new_state = apply_block(state, block)
+//     if new_state.hash != block.state_root: return REJECT
+//
+//     return ACCEPT
+//   }
+
+// CometBFT voting rounds:
+//
+//   PrevoteProcess:
+//     Validator signs Prevote(block_id)
+//     Gossip prevote to peers
+//
+//   PrecommitProcess:
+//     If 2/3+ Prevotes seen → Precommit(block_id)
+//     Gossip precommit to peers
+//
+//   CommitProcess:
+//     If 2/3+ Precommits → BLOCK COMMITTED
+
+// Finalization phase:
+//
+//   FinalizeBlock(committed_block) {
+//     // Apply state transition fully
+//     new_state = apply_beacon_block(state, block)
+//
+//     // Tell EL: this block is finalized
+//     EL.forkchoiceUpdated(
+//       head_block_hash = block.body.execution_payload.block_hash,
+//       safe_block_hash = block.body.execution_payload.block_hash,
+//       finalized_block_hash = block.body.execution_payload.block_hash,
+//       payload_attributes = nil
+//     )
+//
+//     // Update beacon state
+//     state = new_state
+//   }
+
+// Optimistic payload building (key optimization):
+//
+//   Traditional flow:
+//     Block N committed → Build payload N+1 → Propose N+1
+//
+//   BeaconKit optimization:
+//     ProcessProposal(N) → validate ✓
+//         → simultaneously ask EL: "start building N+1"
+//     EL builds N+1 while consensus finishes for N
+//     FinalizeBlock(N) → commit
+//     PrepareProposal(N+1) → payload already ready!
+//
+//   Result: ~40% reduction in block time
+//   ~2s block time achievable
+
+// SSZ (Simple Serialize) vs Protobuf:
+//
+//   BeaconKit uses SSZ (Ethereum spec)
+//     - Fixed offsets (no tags)
+//     - Merkleization built-in
+//     - Smaller payloads
+//     - Same hashing as Ethereum
+//
+//   Standard Cosmos uses Protobuf
+//     - Variable-length
+//     - Reflection-based
+//     - Broader tooling
+//
+//   BeaconKit chose SSZ for Ethereum compatibility`}
+        </pre>
+      </div>
     </section>
   );
 }

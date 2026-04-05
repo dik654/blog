@@ -53,6 +53,59 @@ export default function LangChain() {
           노드는 함수, 엣지는 조건부 라우팅<br />
           사이클 지원으로 복잡한 멀티-에이전트 워크플로우 구현 가능
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">LangGraph 상세 구조</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// LangGraph 개념
+//
+// State Graph:
+//   - Nodes: 함수 (LLM call, tool use, ...)
+//   - Edges: 조건부 라우팅
+//   - State: TypedDict, 각 노드 간 전달
+//
+// 예시 (ReAct agent):
+from typing import TypedDict, Annotated
+from langgraph.graph import StateGraph, END
+from langchain_core.messages import BaseMessage
+
+class AgentState(TypedDict):
+    messages: Annotated[list[BaseMessage], add_messages]
+
+def agent_node(state: AgentState):
+    response = llm.invoke(state["messages"])
+    return {"messages": [response]}
+
+def tool_node(state: AgentState):
+    last_msg = state["messages"][-1]
+    tool_calls = last_msg.tool_calls
+    results = [execute_tool(tc) for tc in tool_calls]
+    return {"messages": results}
+
+def should_continue(state: AgentState):
+    last_msg = state["messages"][-1]
+    if last_msg.tool_calls:
+        return "tools"
+    return "end"
+
+workflow = StateGraph(AgentState)
+workflow.add_node("agent", agent_node)
+workflow.add_node("tools", tool_node)
+workflow.set_entry_point("agent")
+workflow.add_conditional_edges(
+    "agent",
+    should_continue,
+    {"tools": "tools", "end": END}
+)
+workflow.add_edge("tools", "agent")  # 사이클!
+app = workflow.compile()
+
+// 고급 기능:
+//   - Checkpointing (대화 저장/복원)
+//   - Human-in-the-loop (인간 승인 단계)
+//   - Streaming (노드별 중간 결과)
+//   - Parallel execution
+//   - Time travel debugging`}
+        </pre>
       </div>
     </section>
   );

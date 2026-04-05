@@ -28,6 +28,17 @@ export const subcategories: Subcategory[] = [
   },
   { slug: 'bft-consensus', name: 'BFT Consensus', description: 'PBFT, HotStuff, DAG 기반 합의 비교', icon: '🗳️' },
   {
+    slug: 'defi',
+    name: 'DeFi',
+    description: 'Decentralized Finance 프로토콜 심층 분석',
+    icon: '🏦',
+    children: [
+      { slug: 'defi-dex', name: 'DEX', description: '탈중앙 거래소 — AMM, 오더북, 파생상품', icon: '🔄' },
+      { slug: 'defi-lending', name: 'Lending', description: '대출·차입 프로토콜', icon: '💰' },
+      { slug: 'defi-stablecoin', name: 'Stablecoin', description: '스테이블코인 메커니즘', icon: '💵' },
+    ],
+  },
+  {
     slug: 'filecoin',
     name: 'Filecoin',
     description: '분산 저장소 블록체인',

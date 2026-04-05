@@ -38,6 +38,41 @@ export default function UNetCodeSection() {
   return (
     <div className="not-prose mt-4">
       <CodePanel title="ResBlock + CrossAttention 구현" code={CODE} annotations={ANNOTATIONS} />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Timestep Embedding 구현
+def timestep_embedding(t, dim=128):
+    """Sinusoidal timestep embedding (like positional encoding)"""
+    half = dim // 2
+    freqs = torch.exp(
+        -math.log(10000) * torch.arange(half, dtype=torch.float32) / half
+    )
+    args = t[:, None].float() * freqs[None]
+    embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
+    return embedding
+
+# t: (B,) timestep
+# emb: (B, dim) embedding
+
+// TimeMLP:
+class TimeEmbedding(nn.Module):
+    def __init__(self, dim, time_dim):
+        super().__init__()
+        self.fc1 = nn.Linear(dim, time_dim)
+        self.fc2 = nn.Linear(time_dim, time_dim)
+
+    def forward(self, t):
+        emb = timestep_embedding(t, self.fc1.in_features)
+        emb = F.silu(self.fc1(emb))
+        return self.fc2(emb)
+
+// 각 ResBlock에 t_emb 주입:
+//   h = conv1(x)
+//   h = h + t_proj(t_emb)  # 시간 조건부
+//   h = conv2(h)
+//   return h + x  # residual`}
+        </pre>
+      </div>
     </div>
   );
 }

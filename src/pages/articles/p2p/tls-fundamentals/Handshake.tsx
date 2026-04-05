@@ -57,6 +57,61 @@ export default function Handshake() {
         </p>
         <CodePanel title="TLS 1.3 핸드셰이크 메시지 흐름" code={handshakeCode}
           annotations={annotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">핸드셰이크 상세 메시지</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TLS 1.3 Handshake Messages
+//
+// ClientHello:
+//   - ProtocolVersion (0x0303 for compat)
+//   - Random (32 bytes)
+//   - LegacySessionId (empty in 1.3)
+//   - CipherSuites (TLS 1.3 suites only)
+//   - Extensions:
+//     * supported_versions (0x0304 = TLS 1.3)
+//     * supported_groups (curves)
+//     * key_share (ECDHE public keys)
+//     * signature_algorithms
+//     * pre_shared_key (for 0-RTT)
+//     * psk_key_exchange_modes
+//     * server_name (SNI)
+//     * application_layer_protocol_negotiation (ALPN)
+//
+// ServerHello:
+//   - Version, Random
+//   - Selected cipher suite
+//   - key_share (server's ECDHE pub key)
+//   - (PSK if resuming)
+//
+// EncryptedExtensions:
+//   - Server config (ALPN, server_name ack)
+//   - All 이후 메시지는 암호화됨
+//
+// Certificate:
+//   - Server의 X.509 인증서 체인
+//   - 암호화됨 (TLS 1.2 대비 개선)
+//
+// CertificateVerify:
+//   - 서버가 핸드셰이크 transcript 서명
+//   - 인증서 소유 증명
+//   - Algorithm: RSA-PSS, ECDSA, EdDSA
+//
+// Finished (both sides):
+//   - HMAC of full transcript
+//   - Handshake integrity check
+
+// Authentication flow:
+//   1. Client gets server cert
+//   2. Client verifies cert chain to trusted CA
+//   3. Client verifies CertificateVerify signature
+//   4. Both sides verify Finished MAC
+//   → Mutual authentication complete
+
+// Mutual TLS (mTLS):
+//   Server sends CertificateRequest
+//   Client responds with own Certificate + CertificateVerify
+//   사용: API security, zero trust networks`}
+        </pre>
       </div>
     </section>
   );

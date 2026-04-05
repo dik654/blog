@@ -64,6 +64,55 @@ export default function Comparison() {
           </div>
         ))}
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">실무 선택 가이드</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Framework 선택 의사결정
+//
+// Q1: 주요 목적?
+//   RAG 시스템         → LlamaIndex
+//   범용 Agent         → LangChain/LangGraph
+//   Multi-agent 팀     → CrewAI
+//   Research 자동화    → AutoGen
+//   Simple prototype   → OpenAI SDK 직접
+//
+// Q2: 규모?
+//   Prototype          → LangChain (빠른 시작)
+//   Production         → LangGraph (state mgmt)
+//   Enterprise         → LangGraph + LangSmith
+//
+// Q3: 팀 스킬?
+//   Python 전문        → LangChain, CrewAI, AutoGen
+//   TypeScript         → LangChain.js, Vercel AI SDK
+//   No-code            → Dify, Flowise
+//
+// Q4: 비용?
+//   Token 최소화       → Manual control (프레임워크 없이)
+//   OpenAI 고정        → OpenAI Assistants
+//   Multi-model        → LangChain (model agnostic)
+
+// 2024 엔터프라이즈 스택:
+//   1. LangChain/LangGraph (agent logic)
+//   2. LangSmith (observability)
+//   3. Vector DB (Pinecone, Weaviate)
+//   4. Model (OpenAI, Anthropic, Azure)
+//   5. Deployment (LangServe, FastAPI)
+
+// 대안 선택지:
+//   - Semantic Kernel (Microsoft, C#/Python)
+//   - Haystack (deepset, RAG 특화)
+//   - DSPy (Stanford, programmatic)
+//   - Phidata (구조화 agent)
+//   - AutoGPT, BabyAGI (역사적)
+
+// 디버깅 & 관찰:
+//   - LangSmith (LangChain)
+//   - Helicone, Langfuse (독립적)
+//   - W&B Weave
+//   - Phoenix (Arize)`}
+        </pre>
+      </div>
     </section>
   );
 }

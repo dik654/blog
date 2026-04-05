@@ -27,6 +27,84 @@ export default function Overview({ onCodeRef }: {
       <div className="not-prose my-8">
         <AptosArchViz />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Aptos 아키텍처 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Aptos Blockchain Architecture
+//
+// History:
+//   2019: Meta/Facebook announces Libra
+//   2020: Rebrand to Diem
+//   2022: Diem project shut down, team spins out:
+//     - Aptos Labs (Diem core → Aptos)
+//     - Mysten Labs (Diem experimental → Sui)
+//   2022-10: Aptos mainnet launch
+//
+// Core innovations from Diem:
+//   - Move language (resource-oriented)
+//   - DiemBFT v4 (HotStuff variant)
+//   - Block-STM (parallel execution)
+//
+// Aptos-specific changes:
+//   - Account model: objects + resource groups
+//   - Gas meter: per-object charge
+//   - Fungible Asset standard (FA) replacing Coin
+//
+// Layered architecture:
+//
+//   ┌─────────────────────────┐
+//   │ Application (Move dApps)│
+//   ├─────────────────────────┤
+//   │ Move VM + Aptos Framework│
+//   ├─────────────────────────┤
+//   │ Execution (Block-STM)   │
+//   ├─────────────────────────┤
+//   │ Consensus (DiemBFT v4)  │
+//   ├─────────────────────────┤
+//   │ Mempool (Quorum Store)  │
+//   ├─────────────────────────┤
+//   │ Storage (Jellyfish MPT) │
+//   └─────────────────────────┘
+//
+// Performance claims (testnet):
+//   ~20K TPS peak
+//   ~500ms time-to-finality
+//   Sub-second block time
+//
+// Competitors:
+//   - Sui (sister chain from Mysten)
+//   - Solana (Sealevel parallel exec)
+//   - Monad (EVM + parallel exec)
+
+// Aptos Framework (aptos-core):
+//
+//   aptos-framework/sources/:
+//     account.move              // account management
+//     coin.move                 // legacy coin standard
+//     fungible_asset.move       // new FA standard
+//     object.move               // object model
+//     staking_contract.move     // staking
+//     aptos_governance.move     // on-chain governance
+//     reconfiguration.move      // epoch change
+
+// Account model (Aptos-specific):
+//
+//   Standard account:
+//     address: 32-byte hex
+//     authentication_key: hash of pubkey
+//     sequence_number: per-account nonce
+//
+//   Resource Account:
+//     Programmatic owner
+//     No private key
+//     Used for dApp-owned resources
+//
+//   Multi-signer transaction:
+//     Transaction can require signers[A, B]
+//     Both must authorize before execution`}
+        </pre>
+      </div>
     </section>
   );
 }

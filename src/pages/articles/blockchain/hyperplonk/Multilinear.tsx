@@ -60,6 +60,147 @@ export default function Multilinear() {
           검증: <Math>{'\\tilde{f}(1,1) = 3+2+1+1 = 7'}</Math> — 원래 함수값과 일치
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">다중선형 확장의 실전 구현</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Multilinear Extension (MLE) - Practical Details
+//
+// Theorem (uniqueness):
+//   For any function f: {0,1}^n → F,
+//   there exists a UNIQUE multilinear polynomial tilde(f)
+//   in F[x_1, ..., x_n] such that:
+//     tilde(f)(b) = f(b) for all b in {0,1}^n
+//
+// Dimension counting:
+//   Monomials in multilinear poly with n vars:
+//     2^n (subsets of {x_1, ..., x_n})
+//   Values in truth table:
+//     2^n (one per boolean input)
+//   → Bijection: f ↔ tilde(f)
+
+// Lagrange interpolation formula:
+//
+//   tilde(f)(x) = sum_{b in {0,1}^n} f(b) * eq(b, x)
+//
+//   where eq(b, x) is the "equality indicator":
+//     eq(b, x) = prod_i (b_i * x_i + (1-b_i)*(1-x_i))
+//
+//   Property:
+//     eq(b, c) = 1 if b == c
+//             = 0 otherwise
+//   (for b, c in {0,1}^n)
+
+// Example (n=2):
+//
+//   f: {00→1, 01→2, 10→3, 11→7}
+//
+//   MLE components:
+//     eq(00, x_1, x_2) = (1-x_1)(1-x_2)
+//     eq(01, x_1, x_2) = (1-x_1)(x_2)
+//     eq(10, x_1, x_2) = (x_1)(1-x_2)
+//     eq(11, x_1, x_2) = (x_1)(x_2)
+//
+//   tilde(f) = 1*(1-x_1)(1-x_2) + 2*(1-x_1)*x_2
+//              + 3*x_1*(1-x_2) + 7*x_1*x_2
+//
+//   Expand:
+//     = 1 - x_1 - x_2 + x_1*x_2
+//     + 2*x_2 - 2*x_1*x_2
+//     + 3*x_1 - 3*x_1*x_2
+//     + 7*x_1*x_2
+//     = 1 + 2*x_1 + x_2 + 3*x_1*x_2 ✓
+
+// MLE evaluation algorithms:
+//
+//   Method 1: Direct formula
+//     Evaluate as sum over {0,1}^n
+//     Cost: O(2^n * n) for single eval
+//     Bad for large n
+//
+//   Method 2: Dynamic programming
+//     Start with values f(b) for all b
+//     Round i: fold variable x_i
+//       new[b'] = old[(b',0)] + (old[(b',1)] - old[(b',0)]) * r_i
+//     End with 1 value
+//     Cost: O(2^n) for single eval
+//
+//   Method 3: Streaming (GKR-style)
+//     Stream boolean hypercube points
+//     Process via sum-check incrementally
+//     Memory: O(2^n) still needed
+
+// Folding interpretation:
+//
+//   Given tilde(f)(x_1, ..., x_n) = MLE of f
+//
+//   Partial evaluation:
+//     g(x_2, ..., x_n) = tilde(f)(r_1, x_2, ..., x_n)
+//
+//   Relation to original:
+//     g = (1-r_1) * tilde(f)(0, x_2, ..., x_n)
+//       + r_1 * tilde(f)(1, x_2, ..., x_n)
+//
+//   This is "folding": convert n-variable to (n-1)-variable
+//   Core operation in sum-check protocol
+
+// Data structure:
+//
+//   struct MLE<F> {
+//       num_vars: usize,
+//       evaluations: Vec<F>,  // 2^num_vars values
+//   }
+//
+//   // Truth table indexed by boolean input
+//   evaluations[bit_vector_to_index(b)] = f(b)
+//
+//   // Evaluation at random point r = (r_1, ..., r_n)
+//   fn evaluate(&self, r: &[F]) -> F {
+//       let mut values = self.evaluations.clone();
+//       for i in 0..self.num_vars {
+//           // Fold variable i
+//           let half = values.len() / 2;
+//           for j in 0..half {
+//               let lo = values[j];
+//               let hi = values[j + half];
+//               values[j] = lo + r[i] * (hi - lo);
+//           }
+//           values.truncate(half);
+//       }
+//       values[0]  // final result
+//   }
+
+// Why multilinear is "enough":
+//
+//   Circuits have n wires
+//   Can index wires by log(n)-bit strings
+//   Wire values → MLE truth table → multilinear poly
+//
+//   Constraint checks become polynomial identities:
+//     For each gate i: (l_i + r_i - o_i) = 0 (if add gate)
+//     → expressed as multilinear in wire indicators
+//
+//   Verification: check polynomial identity at random point
+//   Sum-check enables this in O(log n) rounds
+
+// Arithmetic operations on MLEs:
+//
+//   Addition: (tilde(f) + tilde(g))(x) = tilde(f)(x) + tilde(g)(x)
+//     → pointwise: values[i] = f_vals[i] + g_vals[i]
+//     → O(2^n) time
+//
+//   Multiplication: tilde(f) * tilde(g)
+//     NOT multilinear anymore! Degree 2 in each var
+//     Result has 3^n monomials
+//     → Often NOT computed explicitly
+//     → Used inside sum-check
+//
+//   Equality polynomial:
+//     EQ(x, y) = prod_i (x_i*y_i + (1-x_i)(1-y_i))
+//     multilinear in x and y separately
+//     But degree 2 in joint (x, y)`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -74,6 +74,113 @@ export default function ErrorCorrection() {
           올바른 다항식을 복원한다
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">디코딩 알고리즘 심층</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// RS Decoding Algorithms
+//
+// Problem:
+//   Received r(x) = c(x) + e(x)
+//     c(x): original codeword (unknown)
+//     e(x): error polynomial (sparse, weight <= t)
+//   Goal: recover c(x)
+
+// Step 1: Syndrome computation
+//
+//   S_j = r(alpha^j) = c(alpha^j) + e(alpha^j)
+//                    = 0           + e(alpha^j)
+//                    = e(alpha^j)
+//
+//   Because c(alpha^j) = 0 (codeword definition via BCH)
+//
+//   2t syndromes needed: S_1, S_2, ..., S_{2t}
+
+// Step 2: Error Locator Polynomial
+//
+//   Sigma(x) = product((1 - X_i * x)) for each error
+//     X_i = alpha^{i_j} where i_j is error position
+//
+//   Key equation (Newton's identities):
+//     S_j + Sigma_1 * S_{j-1} + ... + Sigma_v * S_{j-v} = 0
+//     for j = v+1, ..., 2t
+//
+//   This is a linear system in Sigma coefficients.
+
+// Step 3: Berlekamp-Massey (classical)
+//
+//   Iterative algorithm to find minimal LFSR
+//   that generates the syndrome sequence.
+//
+//   Complexity: O(t^2) = O((n-k)^2 / 4)
+//
+//   Pseudocode:
+//     Sigma(x) = 1, B(x) = 1, L = 0, m = 1, b = 1
+//     for r = 0 to 2t - 1:
+//       delta = S_{r+1} + sum(Sigma_i * S_{r+1-i}, i=1..L)
+//       if delta = 0:
+//         m = m + 1
+//       elif 2L <= r:
+//         T = Sigma
+//         Sigma = Sigma - (delta/b) * x^m * B
+//         L = r + 1 - L
+//         B = T, b = delta, m = 1
+//       else:
+//         Sigma = Sigma - (delta/b) * x^m * B
+//         m = m + 1
+
+// Step 4: Chien search
+//
+//   Find roots of Sigma(x) in the field
+//   Brute force: try all n field elements
+//   Root alpha^{-i_j} → error at position i_j
+//
+//   O(n * t) total
+
+// Step 5: Forney's algorithm
+//
+//   Once positions known, compute error values:
+//     Y_i = -X_i^{1-b} * Omega(X_i^{-1}) / Sigma'(X_i^{-1})
+//   where:
+//     Omega(x) = S(x) * Sigma(x) mod x^{2t}
+//     Sigma'(x) = formal derivative
+//     b = 1 typically
+
+// Berlekamp-Welch (alternative, cleaner):
+//
+//   Find polynomials E(x) (error locator), N(x) (numerator)
+//   such that:
+//     N(a_i) = r_i * E(a_i)  for all i
+//     deg(N) < k + t, deg(E) <= t, E monic
+//
+//   Linear system (n equations, n unknowns).
+//   Gaussian elimination: O(n^3)
+//   Optimized: O(n^2)
+//
+//   Then original message polynomial:
+//     m(x) = N(x) / E(x)
+
+// Modern: Guruswami-Sudan list decoding
+//
+//   Go beyond t = (d-1)/2 bound
+//   Returns LIST of up to O(n) candidates
+//   Correct up to n - sqrt(k*n) errors
+//   Complexity: O(n^4) or O(n^2) with tricks
+//
+//   Used in:
+//     - Cryptographic protocols (code-based crypto)
+//     - Deep space with concatenated codes
+
+// Erasure decoding (easier case):
+//
+//   Erasure = KNOWN position, unknown value
+//   Can correct up to n-k erasures (vs (n-k)/2 errors)
+//   Why 2x better? No need to locate, just compute values
+//
+//   Erasure + error:
+//     2*errors + erasures <= n - k`}
+        </pre>
+      </div>
     </section>
   );
 }

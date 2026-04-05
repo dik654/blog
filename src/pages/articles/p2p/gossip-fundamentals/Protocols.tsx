@@ -36,6 +36,58 @@ export default function Protocols() {
         </p>
         <CodePanel title="주요 Gossip 프로토콜" code={swimCode}
           annotations={swimAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">SWIM 프로토콜 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// SWIM Protocol (Gupta et al. 2002)
+// Scalable Weakly-consistent Infection-style Membership
+//
+// 목적: 효율적 failure detection + membership
+//
+// 핵심 아이디어:
+//   직접 heartbeat 대신 random probe
+//   O(N) → O(1) per node
+//
+// 프로토콜 라운드 (매 T초):
+//   1. 랜덤 노드 M 선택
+//   2. M에게 ping (timeout T')
+//   3. Timeout 시 indirect probe:
+//      - K명에게 "M에게 ping-req"
+//      - Anyone reaches M? → alive
+//   4. 모두 실패 → M suspect
+//   5. Suspect timeout (T'') → M dead
+//
+// Piggybacking:
+//   - 멤버십 변경을 일반 메시지에 부착
+//   - 추가 messages 없이 전파
+//   - Event dissemination 효율
+
+// 성능:
+//   - 500 nodes + 10% churn: 거의 0 false positive
+//   - Detection time: 2-3 seconds
+//   - Message overhead: O(log N) per node
+//
+// 활용:
+//   - Consul (HashiCorp)
+//   - Serf
+//   - Cassandra (유사 메커니즘)
+//   - Docker Swarm
+
+// HyParView (2007):
+//   - Active View (small, TCP): 상시 연결
+//   - Passive View (large): 백업
+//   - Shuffle: 주기 교환
+//
+// PlumTree (Leitao 2007):
+//   - Spanning tree 위 broadcast
+//   - Eager: 트리 peers
+//   - Lazy: 다른 peers (IHAVE)
+//   - Tree repair on failure
+
+// 조합:
+//   HyParView + PlumTree = 강력한 overlay
+//   Scuttlebutt, Riak 등에서 활용`}
+        </pre>
       </div>
     </section>
   );

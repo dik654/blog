@@ -59,6 +59,96 @@ export default function Swarm({ title, onCodeRef }: {
             </div>
           ))}
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Swarm 이벤트 루프 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Swarm: libp2p의 중앙 이벤트 루프
+//
+// 역할:
+//   1. Transport에서 connection 관리
+//   2. NetworkBehaviour 이벤트 처리
+//   3. ConnectionHandler 스케줄링
+//   4. 프로토콜 멀티플렉싱
+//
+// 주요 상태:
+//   - Listeners: 수신 대기 주소
+//   - Connections: 활성 peer 연결
+//   - Pending dials: 진행 중 연결 시도
+//   - Behaviours: 등록된 프로토콜들
+
+// 이벤트 타입 (SwarmEvent):
+//   - Behaviour(T): NetworkBehaviour 이벤트
+//   - ConnectionEstablished
+//   - ConnectionClosed
+//   - IncomingConnection
+//   - IncomingConnectionError
+//   - OutgoingConnectionError
+//   - NewListenAddr
+//   - ExpiredListenAddr
+//   - ListenerClosed
+//   - ListenerError
+//   - Dialing
+
+// poll 메서드 (Rust async):
+//   async fn poll(self) -> SwarmEvent<T> {
+//       loop {
+//           // 1. Behaviour 이벤트 poll
+//           match self.behaviour.poll(cx) {
+//               Ready(ev) => return handle_event(ev),
+//               Pending => {}
+//           }
+//
+//           // 2. Connection 이벤트 poll
+//           match self.connections.poll_next(cx) {
+//               Ready(Some(ev)) => return handle(ev),
+//               Ready(None) => break,
+//               Pending => {}
+//           }
+//
+//           // 3. Pending dials 처리
+//           self.process_pending_dials(cx);
+//
+//           return Pending
+//       }
+//   }
+
+// NetworkBehaviour 핵심:
+//   - handle_pending_inbound_connection
+//   - handle_established_inbound_connection
+//   - handle_pending_outbound_connection
+//   - handle_established_outbound_connection
+//   - on_swarm_event (state 변경)
+//   - on_connection_handler_event
+//   - poll (actions 생성)
+
+// 여러 Behaviour 조합:
+//   #[derive(NetworkBehaviour)]
+//   struct MyBehaviour {
+//       kad: kad::Behaviour<MemoryStore>,
+//       gossip: gossipsub::Behaviour,
+//       identify: identify::Behaviour,
+//       ping: ping::Behaviour,
+//   }
+//
+//   → Macro가 poll, events 자동 생성
+//   → Enum으로 이벤트 통합
+
+// Swarm 사용 패턴:
+//   let mut swarm = SwarmBuilder::with_tokio_executor()
+//       .with_tcp(...)
+//       .with_behaviour(|key| MyBehaviour::new(key))
+//       .build();
+//
+//   loop {
+//       match swarm.select_next_some().await {
+//           SwarmEvent::Behaviour(ev) => handle(ev),
+//           SwarmEvent::NewListenAddr { address, .. } => {
+//               println!("Listening on {}", address);
+//           }
+//           _ => {}
+//       }
+//   }`}
+        </pre>
       </div>
     </section>
   );

@@ -57,6 +57,171 @@ export default function TemplateSignal({ title }: { title?: string }) {
           ]}
         />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Template & Signal 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Circom Templates and Signals — Deep Dive
+//
+// Template vs Function (Circom):
+//
+//   Template:
+//     Generates R1CS constraints
+//     Can use signals
+//     Instantiated via 'component'
+//     Reusable circuit pattern
+//
+//   Function:
+//     Pure computation at compile time
+//     Cannot use signals (only vars)
+//     Called directly
+//     Used for parameters, loop bounds
+
+// Template example:
+//
+//   template Bits2Num(n) {
+//       signal input in[n];
+//       signal output out;
+//
+//       var lc = 0;
+//       var e2 = 1;
+//       for (var i = 0; i < n; i++) {
+//           lc += in[i] * e2;
+//           e2 = e2 + e2;
+//       }
+//       out <== lc;
+//   }
+//
+//   component main = Bits2Num(8);
+
+// Signal types:
+//
+//   signal input x;
+//     External value provided by prover
+//     Part of witness
+//
+//   signal input {public} x;
+//     Made public via main component declaration
+//     Verified on-chain
+//
+//   signal output y;
+//     Computed by circuit
+//     Can be referenced by parent component
+//     Often becomes public for parent
+//
+//   signal z;
+//     Intermediate (internal) signal
+//     Used for computation
+//     Not visible outside
+
+// Signal declaration with tags:
+//
+//   signal input {binary} bit;
+//     Tag: adds implicit boolean constraint
+//   signal input {range_4} small;
+//     Tag: adds range check to 4 bits
+//
+//   Tags are enforced through template libraries
+
+// Three assignment operators:
+//
+//   c <== a * b
+//     → assigns c = a*b AND adds constraint: c - a*b = 0
+//     → ALWAYS use for linear/quadratic expressions
+//
+//   c <-- a * b
+//     → assigns c = a*b, NO constraint
+//     → Use when you'll add constraint later
+//     → DANGER: prover can cheat if no constraint follows
+//
+//   c === a * b  (NEW in Circom 2)
+//     → No assignment, just constraint
+//     → c must already be assigned
+//     → Use for extra constraints
+
+// Common anti-pattern:
+//
+//   // WRONG — prover can lie about signal values!
+//   signal output out;
+//   out <-- in / 2;
+//
+//   // CORRECT — force constraint
+//   signal output out;
+//   out <-- in / 2;
+//   in === out * 2;
+//
+//   // OR use divide-safe helper:
+//   signal output out <== in / 2;  // only if in is even
+
+// Component instantiation:
+//
+//   component mult = Multiplier2();
+//   mult.a <== 3;
+//   mult.b <== 7;
+//   x <== mult.c;  // x = 21
+//
+//   Arrays of components:
+//     component gates[32];
+//     for (var i = 0; i < 32; i++) {
+//       gates[i] = XORGate();
+//     }
+
+// Public signals declaration:
+//
+//   component main {public [in, selector]} = MyCircuit();
+//
+//   'in' and 'selector' become public inputs
+//   All other inputs are private (witness)
+//   Outputs are automatically public
+
+// Generic templates:
+//
+//   template Mux(n) {
+//     signal input sel[log2(n)];
+//     signal input in[n];
+//     signal output out;
+//     ...
+//   }
+//
+//   component mux = Mux(8);
+//   log2(8) = 3 selector bits
+
+// Common template patterns:
+//
+//   Comparison:
+//     IsZero, IsEqual, LessThan, GreaterThan
+//
+//   Bit decomposition:
+//     Num2Bits, Bits2Num
+//
+//   Selection:
+//     Switcher, Mux, MultiMux
+//
+//   Hashing:
+//     Poseidon(n_inputs)
+//     MiMCHasher
+//     Sha256(n_bits)
+//
+//   Merkle trees:
+//     MerkleTreeInclusionProof(depth)
+//     SparseMerkleTree
+
+// Constraint vs computation separation:
+//
+//   Constraint: relates signals (R1CS)
+//   Computation: runs at witness generation
+//
+//   Prover runs WASM to compute all signals
+//   Then R1CS constraints are used for proof
+//
+//   Example:
+//     signal input in;
+//     signal output out;
+//     out <-- in * in;       // computation
+//     out === in * in;       // constraint
+//   (or equivalently: out <== in * in)`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -102,6 +102,81 @@ export default function DialListen({ onCodeRef }: {
           <span className="text-[10px] text-muted-foreground self-center">TransportEvent</span>
         </div>
       )}
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Async TCP Operations</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Async TCP Connect/Listen
+//
+// Non-blocking connect() 흐름:
+//
+//   socket = socket(AF_INET, SOCK_STREAM | O_NONBLOCK)
+//   result = connect(socket, addr)
+//
+//   if result == 0:
+//     "즉시 성공" (same host)
+//
+//   elif errno == EINPROGRESS:
+//     "처리 중" (정상)
+//     epoll_wait(socket, EPOLLOUT)
+//     getsockopt(SO_ERROR) 로 결과 확인
+//
+//   else:
+//     진짜 error (connection refused 등)
+
+// Tokio의 TcpSocket::connect:
+//
+//   pub async fn connect(self, addr: SocketAddr)
+//       -> io::Result<TcpStream>
+//   {
+//       let socket = self.inner.connect(addr).await?;
+//       Ok(TcpStream::from_std(socket)?)
+//   }
+//
+//   내부:
+//     - socket2로 connect 시작
+//     - EINPROGRESS → poll 등록
+//     - writable 이벤트 대기
+//     - SO_ERROR 체크
+
+// Listen socket 흐름:
+//
+//   socket()
+//   setsockopt(SO_REUSEADDR, SO_REUSEPORT)
+//   bind(addr)
+//   listen(backlog)
+//   accept() loop (non-blocking)
+
+// IfWatcher (네트워크 인터페이스 감시):
+//
+//   Operating system API:
+//     Linux: netlink (NETLINK_ROUTE)
+//     macOS: kqueue (PF_ROUTE)
+//     Windows: WNetGetConnection
+//
+//   감지 이벤트:
+//     - Interface up/down
+//     - IP address change
+//     - Default gateway change
+//
+//   libp2p 활용:
+//     - WiFi ↔ Mobile 전환
+//     - VPN 연결/해제
+//     - Dual-stack (IPv4/IPv6)
+//     - 자동 주소 업데이트
+
+// Connection lifecycle:
+//
+//   1. dial_socket() → TcpStream
+//   2. security upgrade → NoiseStream
+//   3. muxer upgrade → YamuxMuxer
+//   4. ConnectionPool 등록
+//   5. Behaviours 알림
+//   6. Streams 생성/사용
+//   7. Close (FIN or RST)
+//   8. Pool에서 제거`}
+        </pre>
+      </div>
     </section>
   );
 }

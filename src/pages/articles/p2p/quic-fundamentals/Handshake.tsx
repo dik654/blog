@@ -39,6 +39,76 @@ export default function Handshake() {
         </p>
         <CodePanel title="QUIC 핸드셰이크 흐름" code={handshakeCode}
           annotations={handshakeAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">QUIC vs TCP+TLS 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// QUIC Handshake vs TCP+TLS
+//
+// TCP + TLS 1.3:
+//
+//   Client → SYN →
+//   ← SYN+ACK
+//   → ACK             // TCP 3-way (1 RTT)
+//
+//   → ClientHello
+//   ← ServerHello, Cert, Finished
+//   → Finished        // TLS (1 RTT)
+//
+//   Total: 2 RTT minimum
+//   + DNS resolution (additional)
+//
+// QUIC (RFC 9000):
+//
+//   → Initial(ClientHello)
+//   ← Initial(ServerHello) + Handshake
+//   → Handshake(Finished)
+//   ← Application Data
+//
+//   Total: 1 RTT
+//   (TCP + TLS 통합됨)
+
+// 0-RTT Benefits:
+//
+//   Previous connection saved PSK
+//   → Subsequent connections:
+//   → Application data in first packet
+//   → 0 RTT for known server
+//
+//   Use cases:
+//     API calls
+//     Web page re-loads
+//     Real-time streaming resume
+
+// 주의: 0-RTT replay attack
+//   Attacker capturing 0-RTT data
+//   → Replay 가능
+//   → Idempotent ops만 허용 (GET, not POST)
+//   → Anti-replay tokens (implementation)
+
+// Packet Types (RFC 9000):
+//   Initial: handshake 시작, 평문 일부
+//   Handshake: TLS handshake messages
+//   0-RTT: early data
+//   1-RTT: 일반 application data
+//   Retry: DoS 방어, stateless retry
+//   Version Negotiation
+
+// Performance Impact:
+//   TCP+TLS: 2 RTT = 200ms (typical)
+//   QUIC: 1 RTT = 100ms
+//   0-RTT: 0 RTT = 즉시
+//
+//   Mobile에서 큰 차이 (higher RTT)
+
+// 구현체:
+//   Google QUIC (original)
+//   quinn (Rust) - libp2p-quic
+//   quiche (Rust, Cloudflare)
+//   msquic (C, Microsoft)
+//   google/quiche (C++)
+//   ngtcp2 (C)
+//   nghttp3 (HTTP/3)`}
+        </pre>
       </div>
     </section>
   );

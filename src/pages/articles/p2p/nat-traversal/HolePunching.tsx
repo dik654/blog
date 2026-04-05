@@ -37,6 +37,66 @@ export default function HolePunching() {
           Symmetric NAT에서는 목적지마다 매핑이 달라 홀 펀칭이 실패합니다.<br />
           이 경우 TURN(iroh의 DERP, libp2p의 Circuit Relay)이 유일한 대안입니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Hole Punching 시퀀스 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// UDP Hole Punching 완전 시퀀스
+//
+// 준비:
+//   Peer A: 10.0.0.5:5000 (private)
+//   Peer B: 192.168.1.10:6000 (private)
+//   Signaling: via rendezvous server
+//
+// Phase 1: External address discovery
+//   A → STUN → A_ext: 203.0.113.5:40000
+//   B → STUN → B_ext: 198.51.100.10:50000
+//
+// Phase 2: Signaling (via server)
+//   A → Server: "I want to connect to B. I am A_ext"
+//   Server → B: "A_ext = 203.0.113.5:40000"
+//   Server → A: "B_ext = 198.51.100.10:50000"
+//
+// Phase 3: Simultaneous hole punching
+//   A → B_ext (packet 1):
+//     - A NAT: creates mapping for B_ext
+//     - B NAT: drops (no prior mapping)
+//
+//   B → A_ext (packet 2):
+//     - B NAT: creates mapping for A_ext
+//     - A NAT: PASSES (matches step 1 mapping!)
+//
+//   Now B sees A's packet, responds:
+//   B → A_ext (packet 3): SUCCESS
+//
+// Phase 4: Bi-directional established
+//   A ↔ B direct UDP connection ✓
+
+// 시간 동기화:
+//   동시 전송 필수 (± 500ms 이내)
+//   Server의 timestamp 사용
+//   Retry with exponential backoff
+
+// Failure modes:
+//   1. Symmetric NAT (A or B)
+//      → 다른 목적지 = 다른 매핑
+//      → 예측 불가
+//   2. Strict firewall
+//      → 모든 inbound drop
+//   3. Timing off
+//      → Packet loss on either side
+//   4. NAT timeout
+//      → Keep-alive 필요
+
+// libp2p DCUtR (Direct Connection Upgrade thru Relay):
+//   1. Relay로 초기 연결
+//   2. Connect message with external addrs
+//   3. Simultaneous TCP/UDP dial
+//   4. Upgrade to direct connection
+
+// WebRTC uses similar:
+//   STUN + TURN + ICE = WebRTC NAT traversal
+//   Trickle ICE (incremental candidate exchange)`}
+        </pre>
       </div>
     </section>
   );

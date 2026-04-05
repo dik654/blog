@@ -57,6 +57,148 @@ export default function Overview() {
           </div>
         </div>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">HyperPLONK 배경과 동기</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// HyperPLONK: Plonk with Arithmetics over Boolean Hypercube
+//
+// Paper: "HyperPlonk: Plonk with Linear-Time Prover
+//         and High-Degree Custom Gates"
+// Authors: Binyi Chen, Benedikt Bünz, Dan Boneh, Zhenfei Zhang
+// Year: 2022
+// Venue: EUROCRYPT 2023
+//
+// Problem:
+//   PLONK prover complexity: O(n log n)
+//   Dominated by FFT operations on degree-n polys
+//   FFT hard to parallelize on GPU (dependency chains)
+//
+// Solution:
+//   Replace univariate polys with multilinear polys
+//   Replace FFT with sum-check protocol
+//   O(n) prover complexity (linear time!)
+
+// Polynomial representation comparison:
+//
+//   PLONK (univariate):
+//     Circuit with n gates
+//     Witness polynomial w(X): degree n-1
+//     Domain: H = {1, w, w^2, ..., w^{n-1}} (roots of unity)
+//     FFT needed to:
+//       - interpolate w from evals
+//       - evaluate w at random points
+//       - compute quotient polys
+//
+//   HyperPLONK (multilinear):
+//     Witness multilinear poly f(x_1, ..., x_log n)
+//     Variables: log(n) of them
+//     Domain: {0,1}^log(n) = boolean hypercube
+//     No FFT needed
+//     Evaluation at (0,1)^k point: just lookup
+//     Evaluation at random point: O(n) sum
+
+// Why multilinear is natural for circuits:
+//
+//   n circuit gates indexed 0 to n-1
+//   Each index has log(n) bits
+//   Witness value at gate i:
+//     w[i] = f(bit_decompose(i))
+//
+//   This is EXACTLY the boolean hypercube!
+//   log(n) variables, one per bit position
+
+// Sum-check protocol (1992, Lund-Fortnow-Karloff-Nisan):
+//
+//   Goal: verify sum_{x in {0,1}^k} f(x) = S
+//     where f is multivariate polynomial
+//
+//   Round i:
+//     Prover: sends univariate g_i(X) = partial sum
+//     Verifier: checks g_i(0) + g_i(1) = prev value
+//     Verifier: picks random r_i, asks g_i(r_i)
+//     Continue with (f fixed at x_i = r_i)
+//
+//   After k rounds:
+//     Verifier knows f(r_1, ..., r_k)
+//     One oracle query to f needed
+//
+//   Total communication: O(k*d) where d = degree per var
+//   For multilinear: d = 1 → O(log n) field elements
+
+// Prover linearity:
+//
+//   PLONK prover dominates: NTT O(n log n)
+//   HyperPLONK prover:
+//     - Commitment to multilinear poly: O(n)
+//     - Sum-check rounds: O(n) total
+//     - Opening proof: depends on PCS
+//
+//   Total: O(n) if multilinear PCS is linear-time
+
+// Multilinear PCS options:
+//
+//   1. Dory (Lee, 2021):
+//      - Transparent setup
+//      - O(log n) proof size
+//      - O(log n) verifier
+//      - Pairing-based (like KZG)
+//
+//   2. Zeromorph (Kohrita-Towa, 2023):
+//      - Built on KZG (trusted setup)
+//      - Reduces multilinear to univariate
+//      - O(1) proof size
+//      - Needs log(n) KZG openings
+//
+//   3. Basefold (Zeilberger-Chen-Fisch, 2023):
+//      - Merkle-based, transparent
+//      - No pairings
+//      - O(log^2 n) proof size
+//      - Fast prover
+//
+//   4. Ligero++ / Brakedown:
+//      - Code-based multilinear commit
+//      - O(sqrt(n)) or O(n^0.5+eps) proofs
+//      - Fast prover
+
+// Custom gates in HyperPLONK:
+//
+//   PLONK: gate constraint is degree-2 polynomial
+//   HyperPLONK: can use HIGH-DEGREE custom gates
+//     e.g., degree-5 gate: 5 witness cols → 1 constraint
+//
+//   Enables specialized gates:
+//     - Poseidon hash gate (x^5 S-box)
+//     - ECDSA signature gate
+//     - Range check gate
+//
+//   Reduces constraint count dramatically
+
+// Performance (benchmarks):
+//
+//   PLONK (n = 2^20):
+//     Prover: ~30 sec (FFT-heavy)
+//     Proof: ~700 bytes
+//     Verifier: ~2 ms
+//
+//   HyperPLONK (n = 2^20):
+//     Prover: ~10 sec (linear time)
+//     Proof: ~5 KB
+//     Verifier: ~5 ms
+//
+//   Trade-off: larger proofs for faster prover
+
+// Implementations:
+//   - EspressoSystems/hyperplonk (Rust)
+//   - Basefold implementation (yezhang1338)
+//   - ProtoStar uses multilinear (folding scheme)
+//
+// Used in:
+//   - Espresso sequencer
+//   - Some custom zkEVM designs
+//   - Research-focused implementations`}
+        </pre>
+      </div>
     </section>
   );
 }

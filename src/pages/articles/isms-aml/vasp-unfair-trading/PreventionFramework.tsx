@@ -80,7 +80,7 @@ export default function PreventionFramework() {
             <tbody>
               <tr>
                 <td className="px-3 py-1.5 border-b border-border/30 font-medium">스푸핑</td>
-                <td className="px-3 py-1.5 border-b border-border/30">주문 생존 시간 < N초 + 취소율 > M% + 대량 주문</td>
+                <td className="px-3 py-1.5 border-b border-border/30">{'주문 생존 시간 < N초 + 취소율 > M% + 대량 주문'}</td>
               </tr>
               <tr>
                 <td className="px-3 py-1.5 border-b border-border/30 font-medium">워시 트레이딩</td>

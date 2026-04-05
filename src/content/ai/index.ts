@@ -19,7 +19,17 @@ const ai: Category = {
         { slug: 'ai-llm-applied', name: '활용', description: '추론 모델 학습, 배포 파이프라인' },
       ],
     },
-    { slug: 'ai-agents', name: 'Agents & Tools', description: 'AI 에이전트, 도구 호출, 워크플로 자동화', icon: '🤖' },
+    { slug: 'ai-agents', name: 'Agents & Tools', description: '프롬프트·컨텍스트·MCP·하네스·에이전트 패턴 등 공통 이론', icon: '🤖' },
+    {
+      slug: 'ai-agents-claw', name: 'Claw Code', description: 'Claude Code 하네스의 클린룸 재구현 (Rust)', icon: '🦀',
+      children: [
+        { slug: 'ai-agents-claw-core', name: '코어', description: '하네스 전체 구조, 도구 시스템, 세션, 컨텍스트 압축' },
+        { slug: 'ai-agents-claw-security', name: '보안 & 검증', description: '권한 모델, Bash 검증, 파일 연산 경계' },
+        { slug: 'ai-agents-claw-lifecycle', name: '라이프사이클', description: '워커 부트, 훅 시스템, 플러그인' },
+        { slug: 'ai-agents-claw-infra', name: '인프라 & 통합', description: 'MCP, API 클라이언트, 설정, CLI' },
+        { slug: 'ai-agents-claw-ops', name: '오케스트레이션', description: '정책 엔진, 복구, 태스크, 텔레메트리' },
+      ],
+    },
     { slug: 'ai-from-scratch', name: 'DL 구현 (Rust)', description: 'dezero_rs — 딥러닝 프레임워크를 Rust로 직접 구현', icon: '🦀' },
   ],
   articles: aiArticles,

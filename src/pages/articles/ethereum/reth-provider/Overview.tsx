@@ -29,8 +29,143 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p className="leading-7">
           Reth는 <code>StateProvider</code> trait으로 이 문제를 해결한다.<br />
-          3개 메서드(<code>account</code>, <code>storage</code>, <code>bytecode_by_hash</code>)만 구현하면
-          어떤 저장소든 상태 소스로 사용할 수 있다.
+          3개 메서드(<code>account</code>, <code>storage</code>, <code>bytecode_by_hash</code>)만 구현하면 어떤 저장소든 상태 소스로 사용할 수 있다.
+        </p>
+
+        {/* ── StateProvider trait ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">StateProvider trait — 3개 메서드 추상화</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`pub trait StateProvider: Send + Sync {
+    /// 계정 정보 조회 (nonce, balance, code_hash)
+    /// None이면 계정이 존재하지 않음
+    fn account(&self, address: &Address) -> Result<Option<Account>>;
+
+    /// 스토리지 슬롯 값 조회
+    /// (address, key) 쌍으로 특정 슬롯의 현재 값 반환
+    fn storage(&self, address: &Address, key: &StorageKey)
+        -> Result<Option<StorageValue>>;
+
+    /// 바이트코드 해시로 컨트랙트 코드 조회
+    /// code_hash → Bytecode 매핑
+    fn bytecode_by_hash(&self, hash: &B256) -> Result<Option<Bytecode>>;
+}
+
+// 구현체:
+// - LatestStateProviderRef: MDBX 최신 상태
+// - HistoricalStateProvider: 과거 특정 블록 상태
+// - BundleStateProvider: 인메모리 BundleState
+// - MockStateProvider: 테스트용
+
+// 사용처:
+// - revm의 Database trait (EVM 실행)
+// - RPC eth_getBalance, eth_call, eth_getCode
+// - txpool 검증 (nonce, balance 확인)
+// - MerkleStage (계정 상태 로드)
+
+// 모든 클라이언트는 동일 API 사용
+// → Mock 테스트 자유로움
+// → 저장소 교체 가능 (예: remote RPC를 state source로)`}
+        </pre>
+        <p className="leading-7">
+          <code>StateProvider</code> trait이 <strong>상태 접근의 유일한 인터페이스</strong>.<br />
+          revm, RPC, txpool 등 모든 상위 모듈이 이 3개 메서드만 사용.<br />
+          저장소 구현은 완전히 캡슐화 → EVM 실행 로직과 DB 엔진 분리.
+        </p>
+
+        {/* ── 3계층 위임 흐름 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">조회 위임 — BundleState → MDBX → StaticFiles</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BundleStateProvider의 account() 구현
+impl StateProvider for BundleStateProvider<'_> {
+    fn account(&self, addr: &Address) -> Result<Option<Account>> {
+        // 1. BundleState (메모리) 우선 확인
+        if let Some(bundle_acc) = self.bundle.state.get(addr) {
+            match bundle_acc.info {
+                Some(ref info) => return Ok(Some(info.clone())),
+                None => return Ok(None),  // selfdestruct된 계정
+            }
+        }
+
+        // 2. MDBX (디스크) fallback
+        if let Some(account) = self.db_provider.account(addr)? {
+            return Ok(Some(account));
+        }
+
+        // 3. StaticFiles (고대 데이터) — 계정 상태는 아카이브 안 됨
+        //    (계정 최신 상태는 항상 MDBX에)
+        Ok(None)
+    }
+}
+
+// 조회 순서 이유:
+// - BundleState: 현재 배치의 변경 (hot, ~수 MB)
+// - MDBX: 최신 확정 상태 (warm, ~100 GB)
+// - StaticFiles: 과거 블록 데이터 (cold, ~300 GB)
+//
+// Hot → Warm → Cold 순서 → 캐시 효율 극대화
+
+// 블록 실행 중 typical access pattern:
+// 1. 99% 히트: BundleState (같은 배치 내 반복 읽기)
+// 2. 0.99%: MDBX (최초 접근)
+// 3. 0.01%: StaticFiles (historical query)`}
+        </pre>
+        <p className="leading-7">
+          <strong>3계층 폴백 구조</strong> — hot/warm/cold 순서로 접근.<br />
+          반복 읽기는 BundleState 캐시 히트 → 디스크 I/O 최소화.<br />
+          각 계층의 구현이 <code>StateProvider</code> trait 뒤에 숨겨져 있어 상위 코드 단순화.
+        </p>
+
+        {/* ── latest vs historical ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Latest vs Historical — 2가지 상태 관점</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// LatestStateProviderRef: 현재 상태 (최신 블록)
+pub struct LatestStateProviderRef<'a, TX> {
+    tx: &'a TX,
+    static_file: StaticFileProviderRef<'a>,
+}
+
+impl<TX: DbTx> StateProvider for LatestStateProviderRef<'_, TX> {
+    fn account(&self, addr: &Address) -> Result<Option<Account>> {
+        // PlainAccountState 테이블 직접 조회
+        self.tx.get::<tables::PlainAccountState>(*addr)
+    }
+}
+
+// HistoricalStateProviderRef: 특정 블록 시점 상태
+pub struct HistoricalStateProviderRef<'a, TX> {
+    tx: &'a TX,
+    block_number: BlockNumber,  // 이 블록 기준 상태
+    static_file: StaticFileProviderRef<'a>,
+}
+
+impl<TX: DbTx> StateProvider for HistoricalStateProviderRef<'_, TX> {
+    fn account(&self, addr: &Address) -> Result<Option<Account>> {
+        // 1. 현재 상태 로드
+        let current = self.tx.get::<PlainAccountState>(*addr)?;
+
+        // 2. AccountChangeSets에서 block_number 이후 변경 역적용
+        let changes = self.tx.cursor_read::<AccountChangeSets>()?
+            .walk_range(self.block_number..)?;
+
+        // 3. 변경을 역순 적용하여 block_number 시점 상태 복원
+        let mut account = current;
+        for (_, revert) in changes.into_iter().rev() {
+            if revert.address == *addr {
+                account = revert.previous_info;
+            }
+        }
+        Ok(account)
+    }
+}
+
+// 사용:
+// - Latest: eth_getBalance(addr) — 현재 잔고
+// - Historical: eth_getBalance(addr, block=12345) — 과거 잔고`}
+        </pre>
+        <p className="leading-7">
+          Latest와 Historical이 <strong>같은 trait의 다른 구현</strong>.<br />
+          상위 코드는 구현 교체만으로 "현재" 또는 "과거" 쿼리 자유롭게 전환.<br />
+          RPC의 <code>eth_call</code>이 block parameter에 따라 provider 선택 — 코드 중복 없음.
         </p>
       </div>
 

@@ -28,6 +28,36 @@ export default function ForwardMathSection() {
   return (
     <div className="not-prose mt-4">
       <CodePanel title="Forward Process 수학적 정의" code={CODE} annotations={ANNOTATIONS} />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Noise Schedule 비교
+//
+// Linear Schedule (원본 DDPM):
+//   β_1 = 0.0001, β_T = 0.02, T = 1000
+//   β_t = 0.0001 + (t-1) · (0.02-0.0001)/(T-1)
+//
+//   문제: 초기 스텝에서 노이즈 추가가 너무 빠름
+//         최종 x_T가 "너무 노이즈"
+//
+// Cosine Schedule (Improved DDPM, 2021):
+//   f(t) = cos²(π/2 · (t/T + s) / (1+s))
+//   ᾱ_t = f(t) / f(0)
+//   s = 0.008 (small offset)
+//
+//   장점:
+//   - 초기 노이즈 추가 부드러움
+//   - x_T가 적당히 노이즈
+//   - 품질 개선
+//
+// Sigmoid Schedule (Flow Matching):
+//   더 부드러운 전환
+//
+// 실무 기본값:
+//   Stable Diffusion: linear (학습), DDIM (추론)
+//   GLIDE, Imagen: cosine
+//   최근 연구: 다양한 스케줄 실험 중`}
+        </pre>
+      </div>
     </div>
   );
 }

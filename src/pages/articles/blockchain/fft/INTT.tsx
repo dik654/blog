@@ -48,6 +48,139 @@ export default function INTT() {
           ))}
         </div>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">INTT 수식 유도 및 응용</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Inverse NTT (INTT)
+//
+// Derivation:
+//
+//   NTT:  y = W * a  (evaluate at unity roots)
+//   INTT: a = W^{-1} * y
+//
+//   Claim: W^{-1}[i][j] = (1/n) * w^{-ij}
+//
+//   Proof:
+//     (W * W^{-1})[i][k] = sum_j (w^{ij} * (1/n) * w^{-jk})
+//                       = (1/n) * sum_j w^{j(i-k)}
+//
+//     If i = k: sum = (1/n) * n = 1 (diagonal)
+//     If i != k: sum of n-th roots of unity = 0 (off-diagonal)
+//
+//     So W * W^{-1} = I ✓
+//
+//   This means:
+//     a_j = (1/n) * sum_k y_k * w^{-jk}
+//     → Same structure as forward NTT
+//     → Use w^{-1} instead of w, divide by n
+
+// Key observation:
+//   INTT uses EXACT SAME ALGORITHM as NTT
+//   Just substitute:
+//     w → w^{-1}
+//     Scale result by 1/n
+//
+//   Huge practical benefit: ONE implementation
+//   Used for both forward and inverse
+
+// Computing n^{-1} in F_p:
+//
+//   n^{-1} = n^{p-2} mod p  (Fermat's little theorem)
+//   O(log p) multiplications
+//   Computed once, used n times
+
+// Normalization strategies:
+//
+//   Strategy 1: divide at the end
+//     Perform INTT as forward with w^{-1}
+//     At the very end: a[i] *= n_inv for all i
+//     → 1 extra O(n) pass
+//
+//   Strategy 2: fold into twiddle factors
+//     Use (w^{-1} * n^{-1/k}) instead of w^{-1}
+//     where k = log2(n)
+//     → distributes scaling through butterflies
+//     → Fewer passes, same total ops
+//
+//   Strategy 3: combined with final bit-reversal
+//     If bit-rev needed anyway: integrate
+//     → Near-zero overhead
+
+// Round-trip consistency check:
+//
+//   For any vector a:
+//     INTT(NTT(a)) == a
+//
+//   Verification pattern in test suites:
+//     a = random vector
+//     b = NTT(a)
+//     c = INTT(b)
+//     assert(a == c)  // sanity check
+
+// Applications of INTT:
+//
+//   1. Polynomial multiplication:
+//      c = INTT(NTT(a) pointwise NTT(b))
+//      Final step recovers coefficients
+//
+//   2. Polynomial interpolation:
+//      Given evaluations, get coefficients
+//      INTT is exactly the Lagrange interp
+//      on unity roots
+//
+//   3. Polynomial division:
+//      p(x) / q(x) via inverse
+//      Requires multiple NTT/INTT
+//
+//   4. Convolution:
+//      discrete conv = pointwise mult in freq domain
+//      INTT to return to time domain
+
+// Complexity summary:
+//
+//   NTT:  O(n log n) multiplications
+//   Pointwise mult: O(n) multiplications
+//   INTT: O(n log n) multiplications + O(n) divide
+//
+//   Total poly multiply: 3 FFTs + O(n)
+//                      = O(n log n)
+//
+//   Typical size n = 2^20 to 2^28 in modern ZK
+
+// Batched NTT/INTT:
+//
+//   Multiple independent polys in parallel
+//   GPU: batch size 32-128 fits in shared memory
+//   CPU with SIMD: batch 4-8
+
+// Special case: bit-reverse trick
+//
+//   Forward NTT: natural → bit-rev
+//   Inverse NTT: bit-rev → natural
+//   → If output bit-rev acceptable, skip explicit permutation
+//   → Saves O(n) work
+//
+//   Common pattern in ZK provers:
+//     NTT(coeffs_natural) → evals_bitrev
+//     pointwise ops in bitrev → compat with INTT
+
+// Implementation layers:
+//
+//   High-level (ark-poly):
+//     DensePolynomial<F>::{fft, ifft}
+//     EvaluationDomain<F>::{fft_in_place, ifft_in_place}
+//
+//   Low-level (bellperson, plonk-core):
+//     fn ntt(values: &mut [F], omega: F, log_n: u32)
+//     Cooley-Tukey radix-2 butterflies
+//
+//   Assembly (BLST, IceCream):
+//     Hand-tuned butterfly loops
+//     AVX-512 / NEON intrinsics
+//     ~2-3x faster than Rust intrinsics`}
+        </pre>
+      </div>
     </section>
   );
 }

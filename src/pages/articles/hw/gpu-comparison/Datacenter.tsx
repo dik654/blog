@@ -37,6 +37,108 @@ export default function Datacenter() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Datacenter GPU 상세 분석</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// NVIDIA A100 (2020-):
+// Architecture: Ampere (TSMC 7nm)
+// - 6,912 CUDA cores
+// - 40GB or 80GB HBM2e
+// - 1.55 TB/s or 2.04 TB/s bandwidth
+// - 400W TDP (SXM)
+// - 250W TDP (PCIe)
+// - NVLink 3.0: 600 GB/s
+// - price: $10K-15K
+
+// Form factors:
+// - SXM4: server-specific, direct socket
+// - PCIe: standard slot
+// - HGX: 8-GPU baseboard
+
+// Features:
+// - Multi-Instance GPU (MIG): split into 7 instances
+// - Tensor Cores (3rd gen)
+// - Structural Sparsity
+// - FP16, FP32, TF32, BF16 support
+
+// NVIDIA H100 (2022-):
+// Architecture: Hopper (TSMC 4N)
+// - 16,896 CUDA cores (+144%)
+// - 80GB HBM3
+// - 3.35 TB/s bandwidth (+64%)
+// - 700W TDP (SXM)
+// - NVLink 4.0: 900 GB/s
+// - PCIe 5.0
+// - price: $25K-40K
+
+// H100 innovations:
+// - Transformer Engine (FP8)
+// - NVLink Switch (256-GPU clusters)
+// - DPX Instructions (dynamic programming)
+// - confidential computing
+// - HBM3 (vs HBM2e)
+
+// NVIDIA B200 (2024-):
+// Architecture: Blackwell
+// - 208 billion transistors (2x H100)
+// - 192 GB HBM3e
+// - 8 TB/s bandwidth
+// - 1000W TDP
+// - NVLink 5.0: 1.8 TB/s
+// - dual-die design
+// - price: $50K+ estimated
+
+// NVLink importance:
+// - GPU-to-GPU direct communication
+// - bypass CPU + PCIe
+// - critical for:
+//   - multi-GPU training
+//   - LLM inference (tensor parallelism)
+//   - MSM/NTT aggregation
+//   - parameter sharing
+
+// NVLink speeds evolution:
+// - NVLink 1.0: 160 GB/s (V100)
+// - NVLink 2.0: 300 GB/s (V100)
+// - NVLink 3.0: 600 GB/s (A100)
+// - NVLink 4.0: 900 GB/s (H100)
+// - NVLink 5.0: 1800 GB/s (B200)
+
+// HBM vs GDDR:
+// HBM (High Bandwidth Memory):
+// - stacked 3D
+// - wide interface
+// - near-processor
+// - high bandwidth
+// - expensive
+//
+// GDDR (consumer):
+// - traditional DRAM
+// - traces on PCB
+// - lower bandwidth
+// - cheaper
+// - consumer price
+
+// Server integration:
+// - blower cooling (straight-through)
+// - rack-mountable
+// - IPMI management
+// - ECC memory
+// - redundant power
+// - enterprise drivers
+
+// Use cases (datacenter):
+// - AI training (large models)
+// - LLM inference
+// - Filecoin C2 (professional SP)
+// - ZK-rollup proving
+// - HPC simulations`}
+        </pre>
+        <p className="leading-7">
+          Datacenter: <strong>A100 (80GB HBM2e) → H100 (80GB HBM3) → B200 (192GB HBM3e)</strong>.<br />
+          NVLink 600GB/s → 900GB/s → 1.8TB/s evolution.<br />
+          HBM memory + blower cooling + ECC + enterprise drivers.
+        </p>
       </div>
     </section>
   );

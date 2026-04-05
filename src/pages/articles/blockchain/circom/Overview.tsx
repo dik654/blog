@@ -37,6 +37,126 @@ export default function Overview({ title }: { title?: string }) {
           ]}
         />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Circom 언어 생태계</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Circom Language & Ecosystem
+//
+// History:
+//   2019: iden3 releases Circom 1 (C++ implementation)
+//   2022: Circom 2 (Rust rewrite, major overhaul)
+//   Today: Circom 2.2.x (stable)
+//
+// Maintainer: iden3 (Barcelona-based identity/ZK team)
+// License: GPL-3.0
+// Repo: github.com/iden3/circom
+
+// Key design principles:
+//
+//   1. Circuit-as-code:
+//      Programmer writes circuits like functions
+//      Compiler emits R1CS constraints
+//
+//   2. Non-deterministic computation:
+//      <-- assigns value without adding constraint
+//      <== assigns value AND adds constraint
+//      === adds constraint only (no assignment)
+//
+//   3. Finite field arithmetic:
+//      All math in F_p (default: bn128 scalar field)
+//      p = 21888242871839275222246405745257275088548364400416034343698204186575808495617
+//
+//   4. Explicit witness generation:
+//      Compiler emits WASM/C++ witness calculator
+//      Runs natively, no circuit constraints
+//      Much faster than evaluating constraints
+
+// File types produced:
+//
+//   .r1cs:
+//     Binary R1CS constraint system
+//     Used by snarkjs/rapidSnark for proving
+//
+//   .wasm:
+//     WebAssembly witness calculator
+//     Runs program, computes all signal values
+//
+//   .sym:
+//     Symbol table (signal names ↔ indices)
+//     Useful for debugging
+//
+//   .cpp:
+//     C++ witness calculator (native, faster)
+//     Compile with build script for production
+
+// Typical workflow:
+//
+//   1. Write circuit.circom
+//   2. circom circuit.circom --r1cs --wasm --sym
+//   3. Feed R1CS to Groth16 / PLONK / ...
+//   4. Run WASM on inputs → witness
+//   5. Generate proof with witness + proving key
+//   6. Verify proof with verification key
+
+// Core Circom constructs:
+//
+//   signal: wire in the arithmetic circuit
+//   template: reusable circuit block (like a class)
+//   component: instantiation of a template
+//   var: compile-time variable (not a signal!)
+//   <==: constrain + assign
+//   <--: assign only (non-deterministic)
+//   ===: constrain only
+
+// Variable vs Signal distinction:
+//
+//   var x = 5;
+//     → compile-time constant
+//     → no constraint generated
+//     → disappears from R1CS
+//
+//   signal x;
+//     → runtime signal
+//     → participates in constraints
+//     → visible in R1CS
+
+// Standard library (circomlib):
+//
+//   github.com/iden3/circomlib (200+ templates):
+//
+//   Hash functions:
+//     Poseidon, Pedersen, MiMC, Sha256
+//   Signatures:
+//     EdDSA (Baby Jubjub), ECDSA
+//   Merkle trees:
+//     binary, sparse, LEAN trees
+//   Primitive gadgets:
+//     AliasCheck, Num2Bits, Bits2Num
+//     LessThan, GreaterThan, IsEqual
+//     MultiMux, Switcher
+//   Cryptographic helpers:
+//     AES, SMT proof, Babyjubjub ops
+
+// Production projects built with Circom:
+//
+//   Tornado Cash (mixer, 2019)
+//   Semaphore (anonymous signaling)
+//   MACI (minimum anti-collusion)
+//   Hermez Network (zkRollup)
+//   Iden3 (self-sovereign identity)
+//   RollupNC
+//   Dark Forest (zkSNARK game)
+
+// Limitations:
+//
+//   No native bitwise ops (must Num2Bits first)
+//   No strings or bytes
+//   All values in F_p (overflow risky!)
+//   Tooling weaker than Rust/Go
+//   Signal indexing: O(n log n) worst case`}
+        </pre>
+      </div>
     </section>
   );
 }

@@ -31,6 +31,87 @@ export default function BCSTransform() {
             { lines: [10, 12], color: 'emerald', note: '머클 트리 구조' },
             { lines: [15, 17], color: 'amber', note: '배치 해싱 & 증명 생성' },
           ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">BCS Transform 수학적 배경</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// BCS (Ben-Sasson, Chiesa, Spooner) Transform
+//
+// 목적:
+//   Public-coin IOP → Non-interactive argument
+//
+// vs Fiat-Shamir:
+//   Fiat-Shamir: Sigma protocol → NIZK
+//   BCS: IOP → SNARK (더 복잡)
+//
+// 3가지 핵심 요소:
+//
+// 1. Vector Commitment (oracle 대체)
+//    Oracle의 모든 positions를 한꺼번에 commit
+//    → Merkle tree 사용
+//
+//    Commit:
+//      tree = MerkleTree(oracle_values)
+//      commit = tree.root
+//
+//    Open at position i:
+//      path = tree.path(i)
+//      → verifier가 path 검증
+//
+// 2. Fiat-Shamir (challenge 생성)
+//    Interactive challenges → deterministic
+//
+//    challenge_i = H(
+//      transcript_so_far ||
+//      round_index ||
+//      context
+//    )
+//
+// 3. Proof Bundle
+//    모든 oracle commits
+//    모든 query answers
+//    모든 Merkle paths
+//    → 단일 proof로 묶음
+
+// Security Analysis:
+//
+// Random Oracle Model (ROM):
+//   H를 random oracle로 가정
+//   Computational soundness 보장
+//
+// Soundness error:
+//   IOP soundness × Merkle collision probability
+//   negligible 수준
+//
+// Zero-knowledge:
+//   Simulator가 transcript 위조 가능
+//   (실제 witness 없이)
+
+// 예시 (Aurora + BCS):
+//
+// Prover:
+//   1. 증인 → polynomials
+//   2. Commit polynomials (Merkle trees)
+//   3. Send Merkle roots
+//   4. FS challenges 자체 생성
+//   5. Compute responses
+//   6. Merkle proofs for queries
+//
+// Verifier:
+//   1. Recompute FS challenges
+//   2. Verify Merkle paths
+//   3. Check polynomial consistency
+//   4. Accept/Reject
+
+// 효율성:
+//   Proof size: O(log² n) × hash_size
+//   예: n=2^20, SHA-256
+//     400 × 32 bytes ≈ 12 KB
+//
+// 비교:
+//   Groth16: ~200 bytes (pairing 필수)
+//   BCS-Aurora: ~12 KB (hash only)
+//   BCS는 크지만 transparent + post-quantum`}
+        </pre>
       </div>
     </section>
   );

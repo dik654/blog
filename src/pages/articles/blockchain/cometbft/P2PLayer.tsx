@@ -66,6 +66,60 @@ export default function P2PLayer({ onCodeRef }: { onCodeRef: (key: string, ref: 
           Channel 0x60: State Sync Reactor<br />
           → 상태 스냅샷 동기화
         </p>
+
+        {/* ── Gossip 전략 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">Gossip 전략 — Message Propagation</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// CometBFT Gossip 특징 (libp2p GossipSub와 다름)
+// Channel별 독립적 전파 로직
+
+// 1. Mempool Gossip:
+//    - peer별 별도 goroutine
+//    - last-seen-by-peer 추적 (index)
+//    - new TX → 모든 peer에 방송 (자기 제외)
+//    - Rate limit: 1MB/peer/sec
+
+// 2. Consensus Gossip:
+//    - 매 round마다 새 proposal/votes
+//    - HasVote bitArray로 peer 상태 tracking
+//    - peer가 모르는 vote만 전송 (bandwidth 절약)
+//    - Priority: Proposal > Vote > Heartbeat
+
+// 3. Blockchain Gossip:
+//    - 뒤처진 peer에게 블록 전송
+//    - BlockchainReactor.respondToPeer()
+//    - 한 peer에 연속 블록 전달 (pipelining)
+
+// peer별 상태 tracking:
+type PeerRoundState struct {
+    Height                  int64
+    Round                   int32
+    Step                    RoundStepType
+
+    StartTime               time.Time
+    Proposal                bool              // peer가 proposal 가졌나
+    ProposalBlockPartSetHeader  PartSetHeader
+    ProposalBlockParts      *bits.BitArray
+    ProposalPOLRound        int32
+
+    Prevotes                *bits.BitArray    // peer가 본 prevotes
+    Precommits              *bits.BitArray    // peer가 본 precommits
+    LastCommitRound         int32
+    LastCommit              *bits.BitArray
+    CatchupCommitRound      int32
+    CatchupCommit           *bits.BitArray
+}
+
+// 결과:
+// - 중복 메시지 최소화 (peer 상태 기반)
+// - 빠른 catchup (뒤처진 peer 신속 동기화)
+// - 대역폭 효율 (선택적 전송)`}
+        </pre>
+        <p className="leading-7">
+          CometBFT Gossip은 <strong>peer state tracking 기반</strong>.<br />
+          peer가 본 votes/parts 추적 → 필요한 것만 선택 전송.<br />
+          GossipSub 대비 단순하지만 효율적인 직접 P2P 전파.
+        </p>
       </div>
     </section>
   );

@@ -25,6 +25,91 @@ export default function Overview() {
         </p>
       </div>
       <div className="not-prose mb-8"><OverviewViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Framework vs Anti-Framework</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Framework 철학 (Cosmos SDK, OP Stack)
+// - Opinionated structure
+// - Default consensus, networking, storage
+// - 전체 스택 채택 강제
+// - Customization = fork
+
+// 장점:
+// ✓ Fast start (boilerplate 최소)
+// ✓ Battle-tested defaults
+// ✓ Community support
+
+// 단점:
+// ✗ Coupling (모든 모듈 연결됨)
+// ✗ Fork overhead (upstream merge 어려움)
+// ✗ Flexibility 제한
+
+// Anti-Framework 철학 (Commonware)
+// - Primitive library
+// - Pick and choose
+// - No imposed structure
+// - Composition over inheritance
+
+// 장점:
+// ✓ 정확히 필요한 것만 사용
+// ✓ Fork 불필요 (upgrade 용이)
+// ✓ 새로운 디자인 실험 쉬움
+
+// 단점:
+// ✗ More boilerplate
+// ✗ 통합 디자인 직접 결정
+// ✗ 학습 곡선 가파름
+
+// 영감
+// - Unix philosophy: small, composable tools
+// - Linux kernel: loadable modules
+// - LLVM: pass system`}</pre>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">6 Categories of Primitives</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 1) consensus
+//    - Simplex (BFT consensus, 2 round optimal)
+//    - Alto (HotStuff-style variant)
+//    - Threshold (t-of-n signatures)
+//    - Ordered broadcast protocols
+
+// 2) broadcast
+//    - Reliable broadcast
+//    - Causal broadcast
+//    - Atomic broadcast
+
+// 3) storage
+//    - Journal (append-only log)
+//    - Archive (persistent key-value)
+//    - MMR (Merkle Mountain Range)
+//    - Freezer (compact archival)
+
+// 4) cryptography
+//    - BLS12-381 signatures/aggregation
+//    - Ed25519
+//    - Poseidon hash
+//    - Commitments, MAC
+
+// 5) p2p
+//    - Connection manager
+//    - Peer discovery
+//    - Message routing
+//    - Handshake protocols
+
+// 6) runtime
+//    - Async task spawning
+//    - Timer + clock
+//    - Network primitives
+//    - File I/O
+//    - "OS-like" abstraction
+
+// 사용 예시 조합
+// L1 chain: consensus + storage + p2p + runtime
+// Oracle: broadcast + cryptography + p2p
+// Bridge: consensus + cryptography + storage
+// Each app: 자신의 primitive set`}</pre>
+
+      </div>
     </section>
   );
 }

@@ -35,6 +35,155 @@ export default function Overview() {
           모듈식 크레이트 구조, 타입 안전, Pipeline+Stages 패턴으로 설계<br />
           revm(EVM), MDBX(DB), alloy(프리미티브) 기반
         </p>
+
+        {/* ── 프로젝트 배경 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">프로젝트 배경 — 왜 또 다른 EL 클라이언트인가</h3>
+        <p className="leading-7">
+          이더리움 EL 클라이언트 생태계는 2015~2022년 사이 Geth(Go), Nethermind(C#), Besu(Java), Erigon(Go)으로 성숙.<br />
+          2022년 Paradigm Research가 Reth 프로젝트를 시작한 동기:<br />
+          1. <strong>Rust 생태계 활용</strong> — revm, alloy, reth-mdbx 등 고성능 라이브러리 재사용<br />
+          2. <strong>Erigon 설계 계승</strong> — Staged Sync 패턴은 Erigon이 검증. Rust로 재구현하며 타입 안전성 추가<br />
+          3. <strong>클라이언트 다양성</strong> — Geth 의존도 ~70%를 낮춰 네트워크 견고성 확보<br />
+          4. <strong>모듈성</strong> — "EL을 라이브러리로 사용"하는 L2/커스텀 체인 수요 대응
+        </p>
+
+        {/* ── 크레이트 맵 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">워크스페이스 구조 — ~200개 크레이트</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`reth/crates/
+├── primitives/          # 기본 타입 (Block, Header, Transaction)
+├── primitives-traits/   # 타입 추상화 (BlockHeader, Transaction trait)
+├── chainspec/           # ChainSpec, hardfork, genesis
+├── ethereum-forks/      # EthereumHardfork enum, ForkCondition
+│
+├── storage/
+│   ├── db/              # tables! 매크로, 테이블 스키마
+│   ├── db-api/          # Database trait, Cursor trait
+│   ├── libmdbx-rs/      # MDBX FFI 바인딩
+│   ├── provider/        # StateProvider, HistoricalStateProvider
+│   └── static-file/     # StaticFileProvider (cold storage)
+│
+├── trie/                # MPT(Merkle Patricia Trie) 구현
+├── stages/              # Pipeline + 각 Stage 구현체
+│
+├── net/                 # devp2p 네트워킹
+│   ├── discv5/          # Discovery v5
+│   ├── eth-wire/        # eth/68 프로토콜
+│   └── network/         # NetworkManager
+│
+├── transaction-pool/    # TX 풀
+├── payload/             # Payload builder (CL을 위한 블록 구성)
+├── engine/              # Engine API (CL ↔ EL)
+├── rpc/                 # JSON-RPC 서버
+│
+├── consensus/           # 합의 검증 (Ethereum, Op Stack)
+├── blockchain-tree/     # canonical / non-canonical 체인 관리
+├── exex/                # Execution Extensions (확장 프레임워크)
+├── node/                # NodeBuilder, 컴포넌트 조립
+└── bin/                 # 실행 바이너리 (reth, op-reth)`}
+        </pre>
+        <p className="leading-7">
+          대략 200개 크레이트로 분할 — Rust의 크레이트가 Go의 패키지보다 훨씬 세분화된 단위.<br />
+          각 크레이트는 단일 책임 + 명시적 의존 관계 + 독립 빌드 캐싱.<br />
+          이 분할 덕분에 OP Stack, Scroll 등이 특정 크레이트만 재사용해 자체 L2 EL 구성 가능.
+        </p>
+
+        {/* ── Stack 선택 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">기술 스택 — 4가지 핵심 선택</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 1. revm (EVM)
+//    - Rust 네이티브 EVM, no_std 지원
+//    - Geth EVM 대비 ~2배 빠름
+//    - Hook API로 tracing, simulation 용이
+
+// 2. MDBX (DB)
+//    - B+tree + mmap + MVCC
+//    - Erigon이 입증한 선택
+//    - 페이지 캐시 직접 접근 → zero-copy 읽기
+
+// 3. alloy (primitives & RLP)
+//    - ethers-rs 후계 (Abigen 재설계)
+//    - Address, B256, U256 등 기본 타입
+//    - derive 매크로로 RLP encode/decode 자동화
+
+// 4. reth-mdbx-rs (MDBX 바인딩)
+//    - libmdbx C 라이브러리의 safe Rust 래퍼
+//    - unsafe code는 이 크레이트에 한정
+//    - workspace 전역 unsafe_code = "forbid" 정책`}
+        </pre>
+        <p className="leading-7">
+          4가지 핵심 선택이 Reth 성능의 토대.<br />
+          각 선택이 <strong>기존 검증된 프로젝트의 Rust 버전</strong>을 활용 — 위험 최소화하면서 Rust 장점 획득.<br />
+          unsafe 금지 정책 덕분에 MDBX FFI 외 코드는 전부 안전성 검증됨.
+        </p>
+
+        {/* ── 포지셔닝 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">클라이언트 포지셔닝 — Geth/Erigon 대비</h3>
+        <div className="overflow-x-auto my-4">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-3 py-2 text-left">항목</th>
+                <th className="border border-border px-3 py-2 text-left">Geth</th>
+                <th className="border border-border px-3 py-2 text-left">Erigon</th>
+                <th className="border border-border px-3 py-2 text-left">Reth</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">언어</td>
+                <td className="border border-border px-3 py-2">Go</td>
+                <td className="border border-border px-3 py-2">Go</td>
+                <td className="border border-border px-3 py-2">Rust</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">동기화</td>
+                <td className="border border-border px-3 py-2">순차 블록 처리</td>
+                <td className="border border-border px-3 py-2">Staged Sync</td>
+                <td className="border border-border px-3 py-2">Staged Sync</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">DB</td>
+                <td className="border border-border px-3 py-2">LevelDB/Pebble</td>
+                <td className="border border-border px-3 py-2">MDBX</td>
+                <td className="border border-border px-3 py-2">MDBX</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">초기 동기화</td>
+                <td className="border border-border px-3 py-2">수 일~수 주</td>
+                <td className="border border-border px-3 py-2">~하루</td>
+                <td className="border border-border px-3 py-2">~하루</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">디스크(메인넷 archive)</td>
+                <td className="border border-border px-3 py-2">~2 TB</td>
+                <td className="border border-border px-3 py-2">~3 TB</td>
+                <td className="border border-border px-3 py-2">~2.5 TB</td>
+              </tr>
+              <tr>
+                <td className="border border-border px-3 py-2 font-medium">L2 SDK</td>
+                <td className="border border-border px-3 py-2">제한적</td>
+                <td className="border border-border px-3 py-2">없음</td>
+                <td className="border border-border px-3 py-2">NodeBuilder 패턴</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">💡 Reth의 포지셔닝</p>
+          <p className="mt-2">
+            Reth는 "Erigon의 Rust 버전"이 아니라 "Erigon 설계 + Rust 타입 안전 + L2 SDK"로 요약됨.<br />
+            - Staged Sync는 Erigon에서 검증된 패턴을 계승<br />
+            - Rust 타입 시스템으로 ChainSpec/Table/Cursor 등을 컴파일 타임에 검증<br />
+            - NodeBuilder 패턴으로 OP Stack, Scroll 등 L2가 Reth를 라이브러리로 사용
+          </p>
+          <p className="mt-2">
+            특히 L2 SDK 부분이 차별점 — OP Mainnet, Base, World Chain 등이 reth-optimism으로 운영.<br />
+            "EL 클라이언트 = 라이브러리"라는 관점이 Reth의 구조 설계를 결정.
+          </p>
+        </div>
+
         <h3 className="text-xl font-semibold mt-6 mb-3">심층 분석 아티클</h3>
         <p>기초 → 저장 → 실행 → TX/가스 → 네트워크 → 확장 순서로 읽으면 이해가 쉬움</p>
       </div>

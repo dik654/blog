@@ -75,6 +75,137 @@ export default function R1CSGadgets() {
           ]}
         />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">가젯 라이브러리와 최적화</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// R1CS Gadget Cookbook
+//
+// 1) Range check (0 <= x < 2^n):
+//
+//    Bit decomposition:
+//      x = sum(b_i * 2^i, i=0..n-1)
+//      each b_i: boolean constraint
+//
+//    Cost: n + 1 constraints (n booleans + 1 combine)
+//
+//    Example (n=64):
+//      65 constraints
+//
+//    Optimization: chunked range checks
+//      4-bit chunks: 16 values each
+//      lookup table (Plonkish) → O(n/4) constraints
+
+// 2) Comparison (a < b):
+//
+//    Standard: range check of (b - a - 1)
+//    255 constraints for field element
+//
+//    Better: bit-decompose both, compare bit-by-bit
+//    ~512 constraints but cleaner
+
+// 3) Conditional assignment:
+//
+//    if cond then a else b:
+//      Boolean(cond)
+//      result = cond * a + (1-cond) * b
+//
+//    Cost: 2 constraints (boolean + mux)
+
+// 4) ECDSA signature verification:
+//
+//    Scalar mult on BN254 base field
+//    (foreign-field arithmetic expensive)
+//
+//    Naive: ~1.5M constraints
+//    Optimized: ~400K constraints
+//    With custom gates (Plonkish): ~50K
+//
+//    Tricks:
+//      - Window NAF scalar mult
+//      - Endomorphism (GLV)
+//      - Precomputed tables
+
+// 5) Hash functions comparison:
+//
+//    SHA-256:
+//      - Byte-oriented, not ZK-friendly
+//      - ~25,000 R1CS constraints per block
+//      - Needed for Ethereum/Bitcoin compat
+//
+//    Keccak-256:
+//      - Similar to SHA-3, bit-heavy
+//      - ~150,000 constraints
+//      - Needed for Ethereum state
+//
+//    Poseidon:
+//      - ZK-friendly algebraic hash
+//      - ~250 constraints (t=3, 2 inputs)
+//      - MDS + S-box (x^5 or x^17)
+//      - Used in: Zcash Orchard, Mina, Filecoin
+//
+//    Rescue-Prime:
+//      - Alternating S-box rounds
+//      - ~300 constraints
+//      - Provable security arguments
+//
+//    MiMC:
+//      - Original ZK-friendly hash
+//      - ~600 constraints
+//      - Deprecated in favor of Poseidon
+
+// 6) Merkle proof cost analysis:
+//
+//    Depth 20 Merkle tree:
+//      Per level: Boolean + Mux + Poseidon
+//                 1 + 2 + 250 = 253 constraints
+//      Total: 20 * 253 = 5060 constraints
+//
+//    Depth 32 (Ethereum MPT):
+//      32 * 253 = 8096 constraints
+//
+//    With Plonkish custom gates:
+//      Poseidon: ~40 gates (vs 250)
+//      → 10x reduction
+//
+//    Sparse Merkle Tree proofs:
+//      Fixed depth (256 for full addressing)
+//      256 * 253 = 64,768 constraints
+
+// 7) Circuit composition patterns:
+//
+//    Groth16 (circuit-specific):
+//      Constraints locked per circuit
+//      Can't change without new trusted setup
+//
+//    Plonk (universal):
+//      Single setup, reusable circuits
+//      Circuit described at prove time
+//
+//    Recursive composition (Nova, folding):
+//      Verify previous proof inside circuit
+//      IVC (Incrementally Verifiable Computation)
+//      → constant-size proof for unbounded computation
+
+// 8) Testing gadgets:
+//
+//    Satisfiability test:
+//      Generate valid witness
+//      cs.is_satisfied() → true
+//
+//    Negative test:
+//      Modify witness
+//      cs.is_satisfied() → false
+//
+//    Constraint count assertion:
+//      cs.num_constraints() matches expected
+//
+//    Fuzz test:
+//      Random inputs
+//      Compare native vs circuit output
+//      Catches off-by-one in bit decomposition`}
+        </pre>
+      </div>
     </section>
   );
 }

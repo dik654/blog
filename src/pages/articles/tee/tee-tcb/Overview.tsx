@@ -44,6 +44,88 @@ export default function Overview() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">TCB 크기 수치 비교</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 각 시스템의 TCB 규모 (approximate LOC)
+//
+// ┌────────────────────────┬──────────────┬──────────┐
+// │      시스템            │   TCB 크기   │  대상    │
+// ├────────────────────────┼──────────────┼──────────┤
+// │ Linux kernel (full)    │   30M LOC    │ 전체 OS  │
+// │ Windows NT kernel      │   50M LOC    │ 전체 OS  │
+// │ KVM hypervisor         │   150K LOC   │ 가상화   │
+// │ Xen hypervisor         │   200K LOC   │ 가상화   │
+// ├────────────────────────┼──────────────┼──────────┤
+// │ Intel SGX TCB          │   ~50K LOC   │ Enclave  │
+// │ AMD SEV TCB            │   ~200K LOC  │ VM+fw    │
+// │ Intel TDX TCB          │   ~100K LOC  │ TD+SEAM  │
+// │ ARM TrustZone TCB      │   ~30K LOC   │ Secure OS│
+// │ seL4 microkernel       │   10K LOC    │ 검증됨   │
+// │ Minix3                 │   6K LOC     │ micro    │
+// └────────────────────────┴──────────────┴──────────┘
+
+// Attack Surface Ratio:
+//   Linux: 30,000,000 LOC → 공격 표면 매우 큼
+//   SGX:   50,000 LOC → 600배 감소
+//   seL4:  10,000 LOC → 3,000배 감소 + 정형 검증
+
+// 버그 확률:
+//   Industry average: 1~25 bugs per KLOC
+//   30M LOC × 10 bugs/KLOC = 300,000 potential bugs
+//   50K LOC × 1 bug/KLOC = 50 potential bugs
+//   → 수천 배 검증 가능성 차이
+
+// TEE의 핵심 트레이드오프:
+//   SGX (작은 TCB) vs SEV/TDX (큰 TCB)
+//   - SGX: 코드 재작성 필요
+//   - SEV/TDX: 기존 VM 그대로 (lift & shift)
+//   - Better security vs. Better compatibility`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">TCB 최소화 설계 원칙</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TCB 축소를 위한 설계 원칙
+//
+// 1. Privilege Separation
+//    - 권한 있는 코드와 일반 코드 분리
+//    - Enclave에는 minimal 코드만
+//    - 대부분 로직은 외부로
+//
+// 2. Attack Surface Reduction
+//    - Enclave 경계 최소화
+//    - ECALL/OCALL 인터페이스 제한
+//    - 입력 검증 필수
+//
+// 3. Least Authority Principle
+//    - Enclave는 필요한 권한만
+//    - Tool/capability 기반 설계
+//    - Capability-based security
+//
+// 4. Defense in Depth
+//    - 여러 방어 계층
+//    - Hardware + Firmware + SW
+//    - 한 층 뚫려도 보호
+//
+// 5. Formal Verification
+//    - seL4: 완전 검증된 커널
+//    - Coq, Isabelle 활용
+//    - TCB를 작게 유지 (검증 가능성)
+
+// 실무 관찰:
+//   - SGX TCB: Intel이 관리, closed source
+//   - SEV TCB: AMD PSP 펌웨어
+//   - TDX TCB: SEAM module (signed by Intel)
+//   - → 모두 하드웨어 vendor 신뢰 필요
+//
+// 신뢰 루트:
+//   Root of Trust (RoT)
+//     → ROM / eFuse / Secure Element
+//     → Boot ROM code
+//     → Firmware signature verification
+//     → OS measurement
+//     → Application attestation`}
+        </pre>
       </div>
     </section>
   );

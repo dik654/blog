@@ -56,6 +56,117 @@ export default function Training({ title }: { title?: string }) {
         <h3>구현 최적화 (C 코어)</h3>
         <CodePanel title="C 구현 최적화 기법" code={cOptimizationCode} annotations={cOptimizationAnnotations} />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Negative Sampling 수식 유도</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Negative Sampling (NEG)
+//
+// 원래 Skip-gram 목적 함수:
+//   L = Σ_{(w,c)∈D} log P(c|w)
+//     = Σ log(exp(v_c · v_w) / Σ_{c'∈V} exp(v_c' · v_w))
+//
+//   문제: 분모 Σ_{c'∈V} 계산 비용 O(V)
+//   V = 100만이면 매번 100만 번 연산
+//
+// NEG의 아이디어:
+//   "정답 context vs 랜덤 negative"를 이진 분류
+//
+// 새 목적 함수:
+//   L_neg = log σ(v_c · v_w) + Σ_{i=1..k} E_{w_i ~ P_n}[log σ(-v_wi · v_w)]
+//
+// 해석:
+//   첫 항: (center, real context) 쌍의 확률 최대화
+//   둘째 항: (center, k random words) 쌍의 확률 최소화
+//
+// σ(x) = sigmoid(x) = 1/(1+e^(-x))
+//
+// Noise Distribution P_n:
+//   P_n(w) ∝ freq(w)^(3/4)
+//   - 원 빈도 그대로 쓰면 고빈도 단어만 샘플링
+//   - 0.75 power로 중저빈도 단어 보정
+//   - 실험적으로 최적
+
+// k 값 선택:
+//   small data: k = 10~20
+//   large data: k = 2~5
+//   데이터 많을수록 작은 k로 충분
+
+// 연산 비용 비교:
+//   Softmax: O(V) = O(100K~1M)
+//   NEG(k=5): O(k+1) = O(6)
+//   → 수만 배 빠름!
+
+// Python 구현 (간소화):
+def neg_sampling_loss(center_vec, context_vec, noise_vecs):
+    # center_vec: (D,)
+    # context_vec: (D,)  positive
+    # noise_vecs: (k, D)  negatives
+
+    pos_score = sigmoid(center_vec @ context_vec)
+    neg_scores = sigmoid(-noise_vecs @ center_vec)
+
+    loss = -log(pos_score) - sum(log(neg_scores))
+    return loss`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Hierarchical Softmax 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Hierarchical Softmax (HS)
+//
+// 아이디어: 어휘를 이진 트리로 구조화
+//
+// Huffman Tree 구성:
+//   - 고빈도 단어: 짧은 경로 (root 근처)
+//   - 저빈도 단어: 긴 경로 (깊은 리프)
+//
+// 예시 (4 단어):
+//
+//           [root]
+//          /      \\
+//      [inner]   the  ← 고빈도, 경로 1
+//       /   \\
+//      cat  dog  ← 중빈도, 경로 2
+//              \\
+//               rare  ← 저빈도, 경로 3
+//
+// 각 inner node는 학습 가능한 벡터 θ_n 보유
+//
+// 확률 계산:
+//   P(w) = ∏_{n ∈ path(w)} σ([left or right] · θ_n · v_w)
+//
+//   [left or right]: -1 또는 +1 (경로 방향)
+//
+// 연산 비용:
+//   기존 softmax: O(V)
+//   HS: O(log V)
+//
+//   V = 1M → log(1M) ≈ 20 연산만 필요
+
+// 학습:
+//   각 경로 노드의 θ를 업데이트
+//   Negative Sampling보다 구현 복잡
+//   저빈도 단어 학습에 유리
+//
+// 현대 추세:
+//   - NEG이 더 인기 (구현 간단, 품질 유사)
+//   - HS는 연구 목적이나 특수 케이스에 사용
+
+// Subsampling:
+//   P(w) = 1 - sqrt(t / freq(w))
+//   t = 1e-5 보통
+//
+//   고빈도 단어("the", "of")는 높은 확률로 제외
+//   저빈도 단어는 그대로 학습
+//   → 학습 속도 2~10배 향상
+//   → 품질도 개선 (노이즈 제거)`}
+        </pre>
+        <p className="leading-7">
+          요약 1: <strong>Negative Sampling</strong>이 O(V)→O(k+1)로 수만 배 가속.<br />
+          요약 2: <strong>Hierarchical Softmax</strong>는 이진 트리로 O(log V).<br />
+          요약 3: <strong>Subsampling</strong>으로 고빈도 단어 제외 — 품질·속도 동시 개선.
+        </p>
+      </div>
     </section>
   );
 }

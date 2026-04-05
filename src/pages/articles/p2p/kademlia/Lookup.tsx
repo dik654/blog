@@ -48,6 +48,80 @@ export default function Lookup({ title }: { title?: string }) {
           네트워크가 연결되어 있다면 <code>O(log N)</code> 홉으로
           가장 가까운 노드를 반드시 찾습니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Iterative vs Recursive Lookup</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Iterative vs Recursive Lookup
+//
+// Iterative (Kademlia 선택):
+//
+//   Initiator가 모든 hop 직접 관리
+//
+//   A → FIND(target) → B
+//   B → "여기 k개" → A
+//   A → FIND(target) → C (from B's list)
+//   C → "여기 k개" → A
+//   ... 반복
+//
+//   장점:
+//   ✓ NAT 뒤 노드 지원 (모든 응답이 A에게)
+//   ✓ Parallel queries 쉬움
+//   ✓ Failure handling 명확
+//   ✓ Initiator가 전체 제어
+//
+//   단점:
+//   - Bandwidth: initiator 집중
+//   - Round trip: 각 hop마다 왕복
+
+// Recursive (Chord 등):
+//
+//   Query를 노드 간에 전달
+//
+//   A → FIND(target) → B
+//   B → FIND(target) → C (forward)
+//   C → FIND(target) → D (forward)
+//   D → "found" → A (directly back)
+//
+//   장점:
+//   ✓ 적은 hop (forwarding)
+//   ✓ 총 messages 적음
+//
+//   단점:
+//   - NAT 문제
+//   - 중간 노드 failure handling 어려움
+//   - Parallel 처리 복잡
+
+// Kademlia가 iterative 선택 이유:
+//   - P2P 네트워크: NAT 뒤 노드 많음
+//   - 병렬 조회 간단
+//   - Robustness 우선
+
+// 수렴 조건:
+//
+// 1. 더 가까운 노드 없음
+//    k개 candidates 중
+//    α개 각각 query 후
+//    새로 들어온 노드 모두 더 멈
+//    → 종료
+//
+// 2. K개 모두 응답
+//    Top-k 노드가 모두 응답 완료
+//    → 종료
+//
+// 3. Timeout
+//    Maximum iterations
+//    Safety net
+
+// Latency 계산:
+//   각 iteration: ~100-500ms (RTT)
+//   Log N iterations: N=10^6 → 20 iterations
+//   Typical: 2-10 seconds
+//
+//   대규모 DHT:
+//     IPFS: ~5-30 seconds
+//     Ethereum discv5: ~1-5 seconds
+//     BitTorrent DHT: ~10-60 seconds`}
+        </pre>
       </div>
     </section>
   );

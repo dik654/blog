@@ -26,6 +26,79 @@ export default function Overview() {
       <div className="not-prose mt-8">
         <OverviewViz />
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">오토인코더 기본 구조</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 오토인코더 수학적 정의
+//
+// 인코더:  f: X → Z,   z = f(x; θ_enc)    (차원 축소 매핑)
+// 디코더:  g: Z → X,   x̂ = g(z; θ_dec)   (복원 매핑)
+//
+// 학습 목표:
+//   minimize  E[ ||x - g(f(x))||² ]
+//   (입력과 복원값의 차이 최소화)
+//
+// 주요 구성 요소:
+//   - 입력층 (n차원)
+//   - 인코더 (hidden layers, 점진적 축소)
+//   - 병목층(bottleneck, k차원, k << n)
+//   - 디코더 (hidden layers, 점진적 확장)
+//   - 출력층 (n차원)
+//
+// 예: 이미지 28×28=784차원 → z(10차원) → 784차원
+//
+// 비지도 학습인 이유:
+//   - target = input (라벨 불필요)
+//   - 모델은 "x → x 자신" 매핑을 학습
+//   - 하지만 병목 때문에 완벽 복사 불가
+//   - 결과: 데이터의 압축 표현(latent code) 자동 학습
+
+// 파라미터 개수 예시 (MNIST):
+//   784 → 128 → 64 → 10 → 64 → 128 → 784
+//   ≈ 200K 파라미터
+//
+// 학습 데이터: 입력 x만 있으면 OK
+//   - 라벨링 비용 제로
+//   - 대용량 unlabeled 데이터 활용 가능
+//   - 대규모 사전학습(pretraining)의 기반`}
+        </pre>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">오토인코더 vs 다른 모델</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// 유사 모델과의 비교
+//
+// 1. PCA (Principal Component Analysis)
+//    - 선형 차원 축소 (eigendecomposition)
+//    - Linear Autoencoder와 수학적으로 동일
+//    - 비선형 구조 학습 불가
+//
+// 2. t-SNE / UMAP
+//    - 시각화용 비선형 축소
+//    - 복원 함수 없음 (임베딩만)
+//    - 오토인코더: 복원 가능 + 새 샘플 인코딩 가능
+//
+// 3. VAE (Variational Autoencoder)
+//    - 잠재 공간에 확률 분포 제약
+//    - 생성 모델로 확장
+//    - KL divergence 손실 추가
+//
+// 4. GAN (Generative Adversarial Network)
+//    - 인코더 없음 (random z → 이미지)
+//    - 적대적 학습
+//    - 고품질 생성 특화
+//
+// 5. Diffusion Models
+//    - 노이즈 점진 제거
+//    - 오토인코더 구조 내장 (VAE + denoising)
+//    - Stable Diffusion의 핵심`}
+        </pre>
+        <p className="leading-7">
+          요약 1: 오토인코더는 <strong>x → z → x̂</strong>의 대칭 구조 — 병목층이 핵심 정보 추출 강제.<br />
+          요약 2: <strong>라벨 없이 학습</strong> 가능 — 자기지도 학습의 대표 사례.<br />
+          요약 3: PCA의 비선형 확장, VAE/Diffusion의 모체 — 딥러닝 생성 모델의 기초.
+        </p>
+      </div>
     </section>
   );
 }

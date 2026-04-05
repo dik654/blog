@@ -46,6 +46,50 @@ export default function Overview() {
           TLS 1.3을 이해하면 QUIC의 보안 모델이 자연스럽게 이해 가능.
         </p>
       </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">TLS 역사와 버전별 특징</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// TLS Version History
+//
+// SSL 2.0 (1995, Netscape): 취약점 많음, 폐기
+// SSL 3.0 (1996): POODLE (2014), 폐기
+// TLS 1.0 (1999, RFC 2246): BEAST 공격, 폐기
+// TLS 1.1 (2006, RFC 4346): 주요 개선, 폐기 (2020)
+// TLS 1.2 (2008, RFC 5246): 현재 호환성, 광범위
+// TLS 1.3 (2018, RFC 8446): 현대 표준
+
+// TLS 1.3 주요 개선:
+//   - 1-RTT handshake (TLS 1.2 대비 RTT 절반)
+//   - 0-RTT resumption (PSK)
+//   - Legacy cipher 제거
+//   - Key exchange 강제 ephemeral (FS)
+//   - ServerHello 이후 모든 것 암호화
+
+// 제거된 cipher suites (TLS 1.3):
+//   ✗ RC4 (스트림 암호, 취약)
+//   ✗ 3DES (구식)
+//   ✗ SHA-1 MAC
+//   ✗ CBC 모드 (BEAST, POODLE, Lucky13)
+//   ✗ Static RSA key exchange (no FS)
+//   ✗ Static DH key exchange
+//   ✗ Export-grade crypto
+//   ✗ Compression (CRIME)
+//   ✗ Renegotiation
+
+// 허용되는 것:
+//   ✓ AES-GCM, ChaCha20-Poly1305 (AEAD)
+//   ✓ ECDHE (forward secrecy)
+//   ✓ RSA signatures, ECDSA, EdDSA
+
+// 브라우저 지원:
+//   Chrome 70 (2018)
+//   Firefox 63 (2018)
+//   Safari 12.1 (2019)
+//   Edge 79 (2020)
+//   → 2024: 95%+ 지원`}
+        </pre>
+      </div>
     </section>
   );
 }

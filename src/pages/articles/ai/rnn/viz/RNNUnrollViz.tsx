@@ -11,7 +11,7 @@ export default function RNNUnrollViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 480 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 500 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           <defs>
             <marker id="arr-h" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={5} markerHeight={5} orient="auto">
               <path d="M0,0 L10,5 L0,10 Z" fill={HIDDEN_C} />

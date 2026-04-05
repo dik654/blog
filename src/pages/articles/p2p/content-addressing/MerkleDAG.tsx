@@ -41,6 +41,78 @@ export default function MerkleDAG() {
           IPFS Kubo는 UnixFS(dag-pb)로 파일을 Merkle DAG로 청킹합니다.<br />
           iroh는 BLAKE3 기반 해시 트리로 유사한 구조를 사용합니다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Merkle DAG 실무</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// IPFS UnixFS Chunking
+//
+// 파일 청킹 전략:
+//
+// 1. Fixed-size chunks (기본)
+//    256 KB 또는 1 MB
+//    - 단순, 예측 가능
+//    - 같은 파일 → 같은 CIDs
+//
+// 2. Rabin fingerprinting
+//    Content-defined chunking
+//    - Sliding window hash
+//    - 중간 삽입/삭제에 내성
+//    - 다른 파일 간 dedup 가능
+//
+// 3. Buzhash
+//    더 빠른 rolling hash
+//    - Rabin 대안
+//
+// DAG 구조:
+//
+// Small file (< 256KB):
+//   single node with raw content
+//
+// Large file:
+//         Root DAG
+//        /  |  |  \\
+//    [chunk1] [chunk2] [chunk3] ...
+//
+//   또는 balanced tree:
+//         Root
+//        /    \\
+//    Sub1    Sub2
+//    /  \\    /  \\
+//   C1  C2  C3  C4
+
+// Directory 구조:
+//   UnixFS directory = dag-pb node
+//   각 link = (name, CID, size)
+//
+// Filesystem 예:
+//   /docs
+//     /readme.md → bafkXXX
+//     /tutorial
+//       /intro.md → bafkYYY
+//       /advanced.md → bafkZZZ
+
+// 변경 시 업데이트:
+//   1. advanced.md 변경
+//   2. 새 CID 생성
+//   3. tutorial 디렉토리 CID 변경
+//   4. /docs 디렉토리 CID 변경
+//   5. Root CID 변경
+//
+//   → 변경된 path만 새 CID
+//   → 다른 파일 CID는 그대로 (dedup)
+
+// iroh BLAKE3 Bao:
+//   Binary tree Merkle structure
+//   4KB chunks
+//   BLAKE3 parallel hashing
+//   Streaming verification
+//
+// Git 비교:
+//   Git blob = file content hash
+//   Git tree = directory node
+//   Git commit = top node with metadata
+//   → Git은 Merkle DAG의 초기 실용 사례`}
+        </pre>
       </div>
     </section>
   );

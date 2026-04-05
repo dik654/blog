@@ -39,6 +39,105 @@ export default function E1S() {
             </tbody>
           </table>
         </div>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">E1.S/E3.S 상세</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// EDSFF (Enterprise & Datacenter SSD Form Factor):
+
+// E1.S (Enterprise 1 Short):
+// - 31.5mm wide × 111.49mm long
+// - thickness options: 5.9mm, 8mm, 9.5mm, 15mm, 25mm
+// - hot-swap
+// - front-access
+// - EDSFF SFF-TA-1006 standard
+
+// E1.L (Enterprise 1 Long):
+// - same width
+// - 318.75mm long
+// - higher capacity
+// - ruler form factor
+
+// E3.S / E3.L (Enterprise 3):
+// - 76mm wide
+// - 104-142mm long
+// - 7.5mm-25mm thickness
+// - successor standard
+// - more capacity
+
+// 주요 장점:
+//
+// 1. Density:
+// - 1U: up to 32 × E1.S
+// - vs U.2: ~10 in 1U
+// - 3x density advantage
+//
+// 2. Thermal:
+// - thin profile (5.9mm option)
+// - optimal airflow paths
+// - better cooling
+// - sustained performance
+//
+// 3. Serviceability:
+// - tool-less
+// - indicator LEDs
+// - hot-swap
+// - enterprise-grade
+//
+// 4. Power:
+// - adjustable power
+// - per-drive budgeting
+// - sleep states
+// - efficient cooling
+
+// 5. Future-proof:
+// - PCIe 5.0 ready
+// - CXL support (future)
+// - designed for NVMe-oF
+// - adopted by Meta, Microsoft, Google
+
+// Adoption:
+// - 2019: spec released
+// - 2021: first products (Samsung PM9A3)
+// - 2023: widespread in hyperscalers
+// - 2024: enterprise mainstream
+
+// OCP (Open Compute Project):
+// - Meta's hardware initiative
+// - open standards
+// - EDSFF supported
+// - designed for cloud datacenters
+
+// Form factor comparison:
+// M.2 2280: ~2.8K mm² (board area)
+// U.2: ~3.6K mm² (enclosure)
+// E1.S: ~3.5K mm²
+// E1.L: ~10K mm² (high capacity)
+
+// Cost trends:
+// - initial: premium pricing
+// - 2024: approaching U.2 parity
+// - 2025: expected to be cheaper
+// - economies of scale
+
+// Use cases:
+// ✓ Hyperscaler datacenters
+// ✓ Dense storage servers
+// ✓ NVMe-oF fabrics
+// ✓ HPC scratch
+// ✓ Filecoin SP (next-gen)
+
+// Future (2025+):
+// - E3.S primary standard
+// - PCIe 5.0 mainstream
+// - CXL integration
+// - 30-60 TB single drive
+// - $100/TB target`}
+        </pre>
+        <p className="leading-7">
+          E1.S/E3.S: <strong>EDSFF standard, 1U density 32 drives</strong>.<br />
+          hyperscaler 표준 (Meta OCP, Microsoft, Google).<br />
+          2019 spec → 2024 mainstream → 2025+ E3.S 주류.
+        </p>
       </div>
     </section>
   );

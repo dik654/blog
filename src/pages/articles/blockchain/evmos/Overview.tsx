@@ -39,6 +39,83 @@ export default function Overview({ onCodeRef }: Props) {
           </div>
         )}
       </StepViz>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3">Cosmos EVM 아키텍처</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Evmos / Cosmos EVM Stack
+//
+// Goal:
+//   "Ethereum smart contracts on Cosmos SDK chains"
+//
+// Architecture Layers:
+//
+//   User Applications (dApps, wallets)
+//     ↓ JSON-RPC (eth_* methods)
+//   JSON-RPC Server
+//     ↓ Cosmos TX wrap
+//   Cosmos SDK Baseapp
+//     ↓
+//   Cosmos Modules (x/vm, x/erc20, x/feemarket)
+//     ↓
+//   EVM (go-ethereum fork)
+//     ↓
+//   IAVL Tree (Cosmos state)
+
+// 4 Core Modules:
+//
+// 1. x/vm (EVM execution)
+//    - ApplyMessage() → EVM 실행
+//    - StateDB for EVM state
+//    - Ethereum-compatible opcodes
+//    - Gas metering
+//
+// 2. x/feemarket (EIP-1559)
+//    - Base fee calculation
+//    - Dynamic gas pricing
+//    - Block utilization tracking
+//    - Priority fees
+//
+// 3. x/erc20 (Token bridging)
+//    - TokenPair mappings
+//    - Cosmos Coin ↔ ERC20
+//    - IBC 호환 자동 변환
+//    - Mint/Burn on conversion
+//
+// 4. x/precisebank (Precision)
+//    - Cosmos: 6 decimals default
+//    - Ethereum: 18 decimals
+//    - Integer + fraction split
+//    - Accurate micro-transfers
+
+// vs Pure Ethereum:
+//
+//   Evmos 장점:
+//   ✓ IBC 호환성 (Cosmos ecosystem)
+//   ✓ Fast finality (Tendermint BFT)
+//   ✓ Low fees
+//   ✓ Cross-chain native
+//
+//   Evmos 단점:
+//   ✗ Lower TPS than Solana
+//   ✗ Smaller ecosystem than Ethereum
+//   ✗ Validators set 제한적
+
+// 주요 체인 with Cosmos EVM:
+//   - Evmos (original)
+//   - Berachain
+//   - Canto
+//   - Kava
+//   - Cronos
+//   - Injective
+
+// JSON-RPC Compatibility:
+//   eth_getBalance, eth_sendTransaction
+//   eth_call, eth_estimateGas
+//   eth_getBlockByNumber
+//   MetaMask, Hardhat, Remix 호환`}
+        </pre>
+      </div>
     </section>
   );
 }

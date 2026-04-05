@@ -75,6 +75,76 @@ export default function Handshake() {
           { lines: [246, 248], color: 'sky', note: 'Pong.ReplyTok == ping hash 비교' },
           { lines: [250, 250], color: 'emerald', note: 'IP tracker에 접촉 기록' },
         ]} />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Bond 메커니즘과 NAT 탐지</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`// Bond Establishment
+//
+// 정의:
+//   Bond = "recently verified two-way communication"
+//
+// Bonded 판정:
+//   last_pong_received_from(peer) < 24 hours
+//
+// 생성 방법:
+//   1. A → B: PING (A가 B의 addr 알고)
+//   2. B → A: PONG (A의 addr 확인됨)
+//      OR
+//   1. A → B: PING
+//   2. B → A: PING (B도 A로 검증)
+//   3. A → B: PONG
+//   4. B → A: PONG
+//
+//   양방향 검증 필수
+
+// 왜 bond 필요?
+//
+// IP Spoofing 방지:
+//   공격자 C가 victim V의 IP로 spoofing
+//   → unbonded FINDNODE to B
+//   → B가 V에게 Neighbors 전송 (큰 패킷)
+//   → V 대역폭 소진
+//
+// Bond requirement → 이 공격 차단
+//   - PING 먼저
+//   - 실제 주소만 PONG 받음
+//   - spoofed IP는 PONG 못 받음
+//   - 진짜 bond 수립 실패
+
+// NAT Traversal via Pong.To:
+//
+// Pong.To 필드:
+//   Bob가 본 Alice의 IP:Port
+//   Alice가 NAT 뒤에 있으면:
+//     Internal: 192.168.1.10:30303
+//     External: 203.0.113.5:40000 (Bob의 관점)
+//   Bob → Alice: Pong { to: 203.0.113.5:40000 }
+//
+// Alice가 여러 Bob으로부터 수집:
+//   → IPTracker에 축적
+//   → 10+ 진술 시 외부 IP 확신
+//   → ENR 업데이트
+//
+// → Self-discovery mechanism
+// → STUN 불필요 (P2P 네트워크 자체 활용)
+
+// Failure Tracking:
+//
+//   db.FindFails(peer): 연속 실패 횟수
+//   maxFindnodeFailures = 5
+//
+//   초과 시:
+//     - Re-bond 시도
+//     - 재실패 시 peer 제거
+//     - Routing table 정리
+
+// 주요 상수:
+//   bondExpiration = 24 hours
+//   respTimeout = 500ms
+//   expiration = 20 seconds (packet TTL)
+//   maxFindnodeFailures = 5
+//   ntpFailureThreshold = 32`}
+        </pre>
       </div>
     </section>
   );

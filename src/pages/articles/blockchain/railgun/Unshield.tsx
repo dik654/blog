@@ -22,6 +22,49 @@ export default function Unshield({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
       </div>
       <div className="not-prose"><UnshieldViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Unshield Privacy Analysis</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Unshield 시 공개되는 정보
+
+// ✗ 공개 (onchain, 누구나 볼 수 있음)
+// - Recipient address (to)
+// - Token address
+// - Amount
+// - Nullifier (one-time)
+// - Tx sender (gas payer)
+
+// ✓ 여전히 비공개
+// - 어떤 commitment와 연결되는지
+// - 원래 shield된 시점
+// - 중간 거래 이력
+// - Sender와 recipient의 연관성
+
+// 의의
+// Tornado Cash 대비 장점:
+// - Arbitrary amount (denomination lock 없음)
+// - Transaction timing 분산 가능
+// - 중간 private transfer 가능
+
+// 실전 privacy 개선 테크닉
+// 1) Time delay
+//    - Shield 후 수시간~수일 대기
+//    - Deanon 방지
+
+// 2) Amount randomization
+//    - 정확한 값 대신 약간 다른 값
+//    - Pattern matching 방어
+
+// 3) Multi-hop
+//    - Shield → Transfer → Transfer → Unshield
+//    - Graph analysis 복잡화
+
+// 4) Broadcaster 이용
+//    - Gas cost도 private (tx sender ≠ recipient)
+//    - 완벽한 익명성`}</pre>
+
+      </div>
     </section>
   );
 }

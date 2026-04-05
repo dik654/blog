@@ -23,6 +23,39 @@ export default function ConstraintSystem({ title }: { title?: string }) {
         </p>
         <CodePanel title="FlexGate — Vertical Gate Strategy" code={FLEX_GATE_CODE} annotations={flexGateAnnotations} />
         <CodePanel title="RangeGate — Lookup 기반 범위 검사" code={RANGE_GATE_CODE} annotations={rangeGateAnnotations} />
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Gate 설계 원리</h3>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Halo2 custom gate 수학
+// q(X) · constraint_polynomial(X) = 0 (for all X in evaluation domain)
+
+// FlexGate의 우아함
+// 하나의 제약식으로 여러 연산 표현
+// q_selector * (a + b*c - d) = 0
+
+// 용법별 witness 할당
+// ADD(x, y): a=x, b=1, c=y, d=x+y
+//   → 0·1 + 1·y - (x+y) = y - x - y = -x ?
+//   잠깐, 다시:
+//   제약식: a + b*c = d
+//   ADD: 0 + 1·y - (x+y)는 계산 오류
+//   실제 용법: a=x, b=y, c=1, d=x+y
+//   → x + y·1 = x+y ✓
+
+// MUL(x, y): a=0, b=x, c=y, d=x·y
+//   → 0 + x·y = x·y ✓
+
+// MULADD(x, y, z): a=z, b=x, c=y, d=x·y+z
+//   → z + x·y = x·y+z ✓
+
+// 하나의 제약식 → 3가지 연산 가능
+// → Constraint 수 감소 → prove 시간 단축
+
+// RangeGate의 lookup
+// "이 value가 [0, 2^16)에 있음" 증명
+// Naive: 16 bit decomposition (16 constraints)
+// Lookup: table [0, 2^16) 미리 만들어두고 lookup (1 constraint)
+// Poseidon 등과 결합하여 효율 극대화`}</pre>
+
       </div>
     </section>
   );
