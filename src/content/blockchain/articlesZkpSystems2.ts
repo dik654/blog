@@ -50,7 +50,11 @@ export const zkpSystems2Articles: Article[] = [
     subcategory: 'zkp-nova-concept',
     sections: [
       { id: 'overview', title: '개요 & IVC 폴딩 구조' },
+      { id: 'relaxed-r1cs', title: 'Relaxed R1CS — 폴딩 가능한 형태' },
       { id: 'nifs', title: 'NIFS & prove_step (실제 구현)' },
+      { id: 'recursive-circuit', title: 'NovaAugmentedCircuit — 재귀 검증 회로' },
+      { id: 'spartan', title: 'Spartan 압축 SNARK — 최종 단계' },
+      { id: 'use-cases', title: '활용 & 비교 (Halo2 누적, ProtoStar)' },
     ],
     component: () => import('@/pages/articles/blockchain/nova'),
   },
