@@ -24,32 +24,29 @@ export default function AtokenDebt() {
         <h3 className="text-xl font-semibold mt-8 mb-3">Scaled Balance — 인덱스 기반 회계</h3>
 
         <ScaledBalanceCalcViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// aToken의 핵심 아이디어
-// 저장: scaled balance (이자 빼고)
-// 조회: scaled × current_index / RAY (이자 포함)
-
-// mint 시
-function mint(address user, uint256 amount, uint256 index) external {
-    uint256 amountScaled = amount.rayDiv(index);
-    _mint(user, amountScaled);
-}
-
-// balanceOf 시
-function balanceOf(address user) public view override returns (uint256) {
-    uint256 scaledBalance = super.balanceOf(user);
-    uint256 index = POOL.getReserveNormalizedIncome(UNDERLYING_ASSET_ADDRESS);
-    return scaledBalance.rayMul(index);
-}
-
-// 예시
-시점 t0: user 예치 1000 USDC, index = 1.0 (RAY 스케일)
-  저장: scaledBalance = 1000 / 1.0 = 1000
-
-시점 t1 (1년 후): index = 1.05 (5% 이자 누적)
-  balanceOf() = 1000 × 1.05 = 1050 USDC
-
-// 사용자가 한 일: 아무것도 없음!
-// 이자가 자동 복리로 쌓임`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">Scaled Balance — 핵심 패턴</p>
+          <div className="grid gap-2 sm:grid-cols-2 mb-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">mint() — 저장</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                <code>amountScaled = amount.rayDiv(index)</code> — 이자 제외한 원금 비율만 저장
+              </p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">balanceOf() — 조회</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                <code>scaledBalance.rayMul(index)</code> — 현재 index 곱하면 이자 포함 잔액
+              </p>
+            </div>
+          </div>
+          <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">예시</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              t0: 1000 USDC 예치, index=1.0 → scaledBalance=1000 / t1(1년 후): index=1.05 → <code>balanceOf()=1050</code> — 사용자 행동 없이 이자 자동 누적
+            </p>
+          </div>
+        </div>
         <p>
           <strong>rebase 대신 scaled balance</strong>: 가스 절감 + 전송 단순화<br />
           <strong>모든 사용자에게 같은 index 적용</strong> — O(1) 이자 계산<br />
@@ -59,27 +56,20 @@ function balanceOf(address user) public view override returns (uint256) {
         <h3 className="text-xl font-semibold mt-8 mb-3">liquidityIndex 업데이트</h3>
 
         <LiquidityIndexViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Reserve 상태 업데이트 시
-function updateState(DataTypes.ReserveData storage reserve) internal {
-    uint256 previousLiquidityIndex = reserve.liquidityIndex;
-    uint256 currentLiquidityRate = reserve.currentLiquidityRate;
-    uint256 timeElapsed = block.timestamp - reserve.lastUpdateTimestamp;
-
-    if (currentLiquidityRate == 0) return;
-
-    // 복리 계산 (Taylor approximation)
-    uint256 cumulatedLiquidityInterest = MathUtils.calculateLinearInterest(
-        currentLiquidityRate, reserve.lastUpdateTimestamp
-    );
-
-    uint256 newLiquidityIndex = cumulatedLiquidityInterest.rayMul(previousLiquidityIndex);
-    reserve.liquidityIndex = newLiquidityIndex;
-}
-
-function calculateLinearInterest(uint256 rate, uint40 lastUpdate) internal view returns (uint256) {
-    uint256 timeDelta = block.timestamp - lastUpdate;
-    return (rate * timeDelta / SECONDS_PER_YEAR) + RAY;
-}`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 my-4">
+          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">updateState() — 인덱스 갱신</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>calculateLinearInterest(rate, lastUpdate)</code>로 누적 이자 계산 → <code>newIndex = cumulated.rayMul(prevIndex)</code> 저장
+            </p>
+          </div>
+          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">calculateLinearInterest()</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>(rate * timeDelta / SECONDS_PER_YEAR) + RAY</code> — 단기간 선형 근사 (복리와 거의 동일), 상호작용마다 갱신으로 복리 실현
+            </p>
+          </div>
+        </div>
         <p>
           <strong>linear interest</strong>: 사용자 상호작용 사이에는 선형 누적<br />
           단기간은 복리와 거의 동일 — 연속 복리 Taylor 근사<br />
@@ -89,26 +79,20 @@ function calculateLinearInterest(uint256 rate, uint40 lastUpdate) internal view 
         <h3 className="text-xl font-semibold mt-8 mb-3">VariableDebtToken — 변동 금리 부채</h3>
 
         <VariableDebtTokenViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Debt Token: 차입 증명서 (음의 aToken 같은 개념)
-// Non-transferable — 부채는 양도 불가
-
-contract VariableDebtToken is DebtTokenBase {
-    function mint(address user, address onBehalfOf, uint256 amount, uint256 index)
-        external override onlyPool returns (bool, uint256) {
-        uint256 amountScaled = amount.rayDiv(index);
-        _mint(onBehalfOf, amountScaled);
-        return (scaledBalanceOf(onBehalfOf) == amountScaled, totalSupply);
-    }
-
-    function balanceOf(address user) public view override returns (uint256) {
-        uint256 scaledBalance = scaledBalanceOf(user);
-        if (scaledBalance == 0) return 0;
-
-        // 차입 이자 복리 적용
-        uint256 index = POOL.getReserveNormalizedVariableDebt(_underlyingAsset);
-        return scaledBalance.rayMul(index);
-    }
-}`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 my-4">
+          <div className="rounded-lg border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-3">
+            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 mb-1">VariableDebtToken.mint()</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>amountScaled = amount.rayDiv(index)</code> → <code>_mint(onBehalfOf, amountScaled)</code> — aToken과 동일 구조, Non-transferable (부채 양도 불가)
+            </p>
+          </div>
+          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">VariableDebtToken.balanceOf()</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>getReserveNormalizedVariableDebt()</code>로 index 조회 → <code>scaledBalance.rayMul(index)</code> — 이자 방향 반대 (부채 증가 = 사용자 불리)
+            </p>
+          </div>
+        </div>
         <p>
           <strong>구조는 aToken과 동일</strong>: scaled balance + index 누적<br />
           차이: 이자 방향 반대 (부채 증가 = 사용자 불리)<br />
@@ -118,26 +102,32 @@ contract VariableDebtToken is DebtTokenBase {
         <h3 className="text-xl font-semibold mt-8 mb-3">variableBorrowIndex</h3>
 
         <LinearVsCompoundViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 차입 이자 index는 복리 계산 (예치보다 엄격)
-function calculateCompoundedInterest(
-    uint256 rate,
-    uint40 lastUpdate
-) internal view returns (uint256) {
-    uint256 timeDelta = block.timestamp - lastUpdate;
-    if (timeDelta == 0) return RAY;
-
-    // Compounded: (1 + rate/year)^(timeDelta/year) 근사
-    uint256 expMinusOne = timeDelta - 1;
-    uint256 expMinusTwo = timeDelta > 2 ? timeDelta - 2 : 0;
-
-    uint256 basePowerTwo = rate.rayMul(rate) / (SECONDS_PER_YEAR * SECONDS_PER_YEAR);
-    uint256 basePowerThree = basePowerTwo.rayMul(rate) / SECONDS_PER_YEAR;
-
-    uint256 secondTerm = timeDelta * expMinusOne * basePowerTwo / 2;
-    uint256 thirdTerm = timeDelta * expMinusOne * expMinusTwo * basePowerThree / 6;
-
-    return RAY + (rate * timeDelta / SECONDS_PER_YEAR) + secondTerm + thirdTerm;
-}`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">calculateCompoundedInterest() — Taylor 3차 근사</p>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">1차항</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                <code>rate * timeDelta / SECONDS_PER_YEAR</code> — 선형 이자
+              </p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">2차항</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                <code>timeDelta * (t-1) * rate^2 / 2</code> — 복리 보정
+              </p>
+            </div>
+            <div className="rounded border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-2">
+              <p className="text-xs font-semibold text-violet-600 dark:text-violet-400">3차항</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                <code>timeDelta * (t-1) * (t-2) * rate^3 / 6</code> — 정밀 근사
+              </p>
+            </div>
+          </div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+            예치는 linear, 차입은 compound → 프로토콜에 수수료 누적 (차입자에게 불리한 방향)
+          </p>
+        </div>
         <p>
           <strong>Compound interest Taylor 3차 근사</strong>: e^x ≈ 1 + x + x²/2 + x³/6<br />
           차입자에게 불리한 방향 — 정확한 복리 적용<br />
@@ -147,21 +137,26 @@ function calculateCompoundedInterest(
         <h3 className="text-xl font-semibold mt-8 mb-3">이자 spread — 프로토콜 수익</h3>
 
         <SpreadProfitViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 간단한 숫자 예시
-현재 USDC 풀:
-- 예치자 이자: 3.5% APY
-- 차입자 이자: 5.0% APY
-- Spread: 1.5% → 프로토콜 treasury로
-
-// 계산
-Total interest paid by borrowers = 5.0% × total_borrowed
-Total interest to lenders = 3.5% × total_deposited
-Spread = (5.0% × borrowed) - (3.5% × deposited)
-
-// Reserve Factor: spread의 일부를 treasury로
-reserveFactor = 10%  // 10% goes to treasury
-To treasury: 1.5% × 10% = 0.15%
-To lenders: spread - treasury portion`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">이자 Spread 예시 — USDC 풀</p>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">예치자</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">이자: <strong>3.5% APY</strong></p>
+            </div>
+            <div className="rounded border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-2">
+              <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">차입자</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">이자: <strong>5.0% APY</strong></p>
+            </div>
+            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">Spread</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300"><strong>1.5%</strong> → treasury로</p>
+            </div>
+          </div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+            Reserve Factor 10%: spread 중 0.15%가 treasury로 / 나머지 예치자 분배
+          </p>
+        </div>
         <p>
           <strong>Spread + Reserve Factor</strong>: Aave의 주요 수익원<br />
           Utilization 높으면 spread ↑ — 차입 수요 반영<br />

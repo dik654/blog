@@ -1,7 +1,12 @@
+import WalletArchitectureViz from './viz/WalletArchitectureViz';
+import ColdToHotTransferViz from './viz/ColdToHotTransferViz';
+import ExternalCustodyViz from './viz/ExternalCustodyViz';
+
 export default function WalletArchitecture() {
   return (
     <section id="wallet-architecture" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">지갑 구조와 보관 정책</h2>
+      <WalletArchitectureViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-4">콜드월렛: 오프라인 격리 보관</h3>
         <p className="leading-7">
@@ -69,6 +74,8 @@ export default function WalletArchitecture() {
           시장 급등으로 핫월렛 잔고의 원화 가치가 상승하면 비율이 깨질 수 있으므로, 자동 모니터링 알림을 구축하는 것이 실무적으로 필수다.
         </p>
 
+        <ColdToHotTransferViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">콜드-핫 전송 절차</h3>
         <p className="leading-7">
           콜드월렛에서 핫월렛으로 자산을 옮기는 것은 가장 민감한 운영 행위 중 하나다.
@@ -110,6 +117,8 @@ export default function WalletArchitecture() {
           <br />
           정기적(월 1회 이상) 또는 수시로 이 증명을 공개하여 이용자 신뢰를 확보한다.
         </p>
+
+        <ExternalCustodyViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">외부 수탁 시 준수 사항</h3>
         <p className="leading-7">

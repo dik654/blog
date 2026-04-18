@@ -18,177 +18,206 @@ export default function SessionControl() {
           <code>SessionController</code>는 Session의 <strong>생성·일시정지·재개·종료·영속화</strong>를 담당<br />
           Session이 "데이터 컨테이너"라면, Controller는 "생명주기 상태 머신"
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct SessionController {
-    pub state: SessionState,
-    pub store: Arc<Mutex<SessionStore>>,
-    pub persistence: Option<Arc<dyn SessionPersistence>>,
-}
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-2">SessionController 필드</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="rounded border bg-muted/50 p-2">
+                <code className="text-xs">state: SessionState</code>
+                <p className="text-[11px] text-muted-foreground mt-1">현재 상태 (6가지)</p>
+              </div>
+              <div className="rounded border bg-muted/50 p-2">
+                <code className="text-xs">store: Arc&lt;Mutex&lt;SessionStore&gt;&gt;</code>
+                <p className="text-[11px] text-muted-foreground mt-1">멀티스레드 안전 세션 저장소</p>
+              </div>
+              <div className="rounded border bg-muted/50 p-2">
+                <code className="text-xs">persistence: Option&lt;...&gt;</code>
+                <p className="text-[11px] text-muted-foreground mt-1">디스크 영속화 (선택)</p>
+              </div>
+            </div>
+          </div>
 
-pub enum SessionState {
-    Initializing,  // 시작 중
-    Active,        // 대화 진행
-    Paused,        // 일시정지 (사용자 키 입력 대기)
-    Compacting,    // 압축 중
-    Terminating,   // 종료 중
-    Terminated,    // 종료 완료
-}`}</pre>
-        <p>
-          <strong>6가지 상태</strong>: Initializing → Active ⇄ Paused ⇄ Compacting → Terminating → Terminated<br />
-          <code>Arc&lt;Mutex&lt;SessionStore&gt;&gt;</code>: 세션 저장소 공유 접근 (멀티스레드 안전)<br />
-          <code>Option&lt;dyn SessionPersistence&gt;</code>: 디스크 영속화 (선택 — 메모리 전용 모드도 지원)
-        </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            <div className="rounded-lg border bg-card p-2 text-center">
+              <p className="text-xs font-semibold text-gray-500">Initializing</p>
+              <p className="text-[11px] text-muted-foreground">시작 중</p>
+            </div>
+            <div className="rounded-lg border-2 border-green-500/50 bg-green-50 dark:bg-green-950/20 p-2 text-center">
+              <p className="text-xs font-semibold text-green-700 dark:text-green-400">Active</p>
+              <p className="text-[11px] text-muted-foreground">대화 진행</p>
+            </div>
+            <div className="rounded-lg border-2 border-amber-500/50 bg-amber-50 dark:bg-amber-950/20 p-2 text-center">
+              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">Paused</p>
+              <p className="text-[11px] text-muted-foreground">일시정지</p>
+            </div>
+            <div className="rounded-lg border-2 border-blue-500/50 bg-blue-50 dark:bg-blue-950/20 p-2 text-center">
+              <p className="text-xs font-semibold text-blue-700 dark:text-blue-400">Compacting</p>
+              <p className="text-[11px] text-muted-foreground">압축 중</p>
+            </div>
+            <div className="rounded-lg border bg-card p-2 text-center">
+              <p className="text-xs font-semibold text-orange-600 dark:text-orange-400">Terminating</p>
+              <p className="text-[11px] text-muted-foreground">종료 중</p>
+            </div>
+            <div className="rounded-lg border-2 border-red-500/50 bg-red-50 dark:bg-red-950/20 p-2 text-center">
+              <p className="text-xs font-semibold text-red-700 dark:text-red-400">Terminated</p>
+              <p className="text-[11px] text-muted-foreground">종료 완료</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">상태 전이 규칙</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 허용된 상태 전이
-impl SessionController {
-    pub fn transition(&mut self, target: SessionState) -> Result<()> {
-        let allowed = match (&self.state, &target) {
-            (SessionState::Initializing, SessionState::Active)     => true,
-            (SessionState::Active,       SessionState::Paused)     => true,
-            (SessionState::Active,       SessionState::Compacting) => true,
-            (SessionState::Active,       SessionState::Terminating)=> true,
-            (SessionState::Paused,       SessionState::Active)     => true,
-            (SessionState::Paused,       SessionState::Terminating)=> true,
-            (SessionState::Compacting,   SessionState::Active)     => true,
-            (SessionState::Terminating,  SessionState::Terminated) => true,
-            _ => false,
-        };
-
-        if !allowed {
-            return Err(anyhow!("invalid transition: {:?} → {:?}", self.state, target));
-        }
-
-        self.state = target;
-        self.emit_state_change();
-        Ok(())
-    }
-}`}</pre>
-        <p>
-          <strong>8개 허용 전이</strong>만 정의 — 나머지는 모두 거부<br />
-          불가한 전이 예: Terminated → Active (부활 불가), Compacting → Paused (압축 중 일시정지 금지)<br />
-          잘못된 전이 시도 시 <strong>즉시 에러</strong> — 상태 머신 불변성 보장
-        </p>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-3"><code className="text-xs">transition(target)</code> — 8개 허용 전이</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-gray-500 shrink-0">Initializing</span><span className="text-muted-foreground">→</span><span className="text-green-600 dark:text-green-400">Active</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-green-600 dark:text-green-400 shrink-0">Active</span><span className="text-muted-foreground">→</span><span className="text-amber-600 dark:text-amber-400">Paused</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-green-600 dark:text-green-400 shrink-0">Active</span><span className="text-muted-foreground">→</span><span className="text-blue-600 dark:text-blue-400">Compacting</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-green-600 dark:text-green-400 shrink-0">Active</span><span className="text-muted-foreground">→</span><span className="text-orange-600 dark:text-orange-400">Terminating</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-amber-600 dark:text-amber-400 shrink-0">Paused</span><span className="text-muted-foreground">→</span><span className="text-green-600 dark:text-green-400">Active</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-amber-600 dark:text-amber-400 shrink-0">Paused</span><span className="text-muted-foreground">→</span><span className="text-orange-600 dark:text-orange-400">Terminating</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-blue-600 dark:text-blue-400 shrink-0">Compacting</span><span className="text-muted-foreground">→</span><span className="text-green-600 dark:text-green-400">Active</span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded bg-muted/50 p-1.5">
+                <span className="text-orange-600 dark:text-orange-400 shrink-0">Terminating</span><span className="text-muted-foreground">→</span><span className="text-red-600 dark:text-red-400">Terminated</span>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              나머지는 모두 거부. 불가 예: <span className="text-red-600 dark:text-red-400">Terminated</span> → Active (부활 불가), <span className="text-blue-600 dark:text-blue-400">Compacting</span> → Paused (압축 중 정지 금지). 잘못된 전이 시 즉시 에러 — 상태 머신 불변성 보장
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">pause() &amp; resume() — 일시정지 메커니즘</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl SessionController {
-    pub async fn pause(&mut self) -> Result<()> {
-        self.transition(SessionState::Paused)?;
-
-        // 진행 중인 API 호출 취소
-        if let Some(handle) = self.current_api_call.take() {
-            handle.abort();
-        }
-
-        // 영속화 (메모리 → 디스크)
-        if let Some(p) = &self.persistence {
-            p.save(&self.current_session()).await?;
-        }
-        Ok(())
-    }
-
-    pub async fn resume(&mut self) -> Result<()> {
-        self.transition(SessionState::Active)?;
-        // API 호출을 재개할 필요는 없음 — 사용자가 다음 입력을 하면 자동 재개
-        Ok(())
-    }
-}`}</pre>
-        <p>
-          <strong>Pause 3단계</strong>: 상태 전이 → API 호출 취소 → 디스크 저장<br />
-          <code>handle.abort()</code>: tokio task를 즉시 취소 — 진행 중인 스트리밍 중단<br />
-          Pause 중에도 Session은 메모리 유지 — Terminated와 다름
-        </p>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-2"><code className="text-xs">pause()</code> — 3단계</p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">1</span>
+                <p className="text-xs"><code className="text-[11px]">transition(Paused)</code> — 상태 전이</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">2</span>
+                <p className="text-xs"><code className="text-[11px]">handle.abort()</code> — 진행 중 API 호출 취소</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">3</span>
+                <p className="text-xs"><code className="text-[11px]">persistence.save()</code> — 메모리 → 디스크</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Pause 중에도 Session은 메모리 유지 — Terminated와 다름</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-2"><code className="text-xs">resume()</code> — 1단계</p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-xs font-bold text-green-600 dark:text-green-400 shrink-0 mt-0.5">1</span>
+                <p className="text-xs"><code className="text-[11px]">transition(Active)</code> — 상태 전이</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">API 호출 재개 불필요 — 사용자 다음 입력 시 자동 재개</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">영속화 — SessionPersistence 트레이트</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[async_trait]
-pub trait SessionPersistence: Send + Sync {
-    async fn save(&self, session: &Session) -> Result<()>;
-    async fn load(&self, id: &SessionId) -> Result<Session>;
-    async fn list(&self) -> Result<Vec<SessionSummary>>;
-    async fn delete(&self, id: &SessionId) -> Result<()>;
-}
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-2">SessionPersistence 트레이트 — 4개 메서드</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="rounded border bg-muted/50 p-2 text-center">
+                <code className="text-xs font-semibold">save()</code>
+                <p className="text-[11px] text-muted-foreground mt-1">세션 → 디스크</p>
+              </div>
+              <div className="rounded border bg-muted/50 p-2 text-center">
+                <code className="text-xs font-semibold">load()</code>
+                <p className="text-[11px] text-muted-foreground mt-1">디스크 → 세션</p>
+              </div>
+              <div className="rounded border bg-muted/50 p-2 text-center">
+                <code className="text-xs font-semibold">list()</code>
+                <p className="text-[11px] text-muted-foreground mt-1">전체 세션 요약</p>
+              </div>
+              <div className="rounded border bg-muted/50 p-2 text-center">
+                <code className="text-xs font-semibold">delete()</code>
+                <p className="text-[11px] text-muted-foreground mt-1">세션 삭제</p>
+              </div>
+            </div>
+          </div>
 
-// 구현체 예시: FilePersistence (JSON on disk)
-pub struct FilePersistence {
-    base_dir: PathBuf,  // ~/.claw/sessions/
-}
-
-#[async_trait]
-impl SessionPersistence for FilePersistence {
-    async fn save(&self, session: &Session) -> Result<()> {
-        let path = self.base_dir.join(format!("{}.json", session.id));
-        let json = serde_json::to_vec_pretty(session)?;
-        tokio::fs::write(path, json).await?;
-        Ok(())
-    }
-    // ... 나머지 4개 메서드
-}`}</pre>
-        <p>
-          <strong>트레이트 기반 추상화</strong>: FilePersistence(JSON), SqlitePersistence, RedisPersistence 등 구현 가능<br />
-          기본 구현은 <strong>FilePersistence</strong> — <code>~/.claw/sessions/&lt;id&gt;.json</code> 형식으로 저장<br />
-          JSON 직렬화: <code>serde_json::to_vec_pretty()</code> — 사람이 읽을 수 있는 포맷
-        </p>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-2">기본 구현: FilePersistence</p>
+            <div className="flex items-start gap-3">
+              <div className="text-xs space-y-1">
+                <p>저장 경로: <code className="text-[11px]">~/.claw/sessions/&lt;id&gt;.json</code></p>
+                <p>직렬화: <code className="text-[11px]">serde_json::to_vec_pretty()</code> — 사람이 읽을 수 있는 포맷</p>
+                <p className="text-muted-foreground">다른 구현체: SqlitePersistence, RedisPersistence 등 가능</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">세션 재개 흐름 — resume-from-disk</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// CLI: claw resume <session-id>
-pub async fn resume_from_disk(
-    session_id: &SessionId,
-    persistence: Arc<dyn SessionPersistence>,
-) -> Result<SessionController> {
-    // 1) 디스크에서 Session 로드
-    let session = persistence.load(session_id).await?;
-
-    // 2) SessionController 재생성
-    let mut controller = SessionController {
-        state: SessionState::Initializing,
-        store: Arc::new(Mutex::new(SessionStore::with(session))),
-        persistence: Some(persistence),
-    };
-
-    // 3) 워크스페이스 경로 검증
-    let ws = &controller.current_session().workspace_root;
-    if !ws.is_dir() {
-        return Err(anyhow!("workspace not found: {:?}", ws));
-    }
-
-    // 4) Initializing → Active 전이
-    controller.transition(SessionState::Active)?;
-    Ok(controller)
-}`}</pre>
-        <p>
-          <strong>재개 4단계</strong>: 로드 → Controller 생성 → 워크스페이스 검증 → Active 전이<br />
-          <strong>워크스페이스 검증 필요 이유</strong>: Session 저장 이후 디렉토리가 삭제·이동됐을 수 있음<br />
-          워크스페이스 없으면 <code>read_file</code>/<code>bash</code> 등 모든 도구가 실패 — 사전 차단
-        </p>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-3"><code className="text-xs">resume_from_disk(session_id)</code> — 재개 4단계</p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 shrink-0 mt-0.5">1</span>
+                <div><p className="text-xs font-semibold">디스크에서 Session 로드</p><p className="text-[11px] text-muted-foreground"><code className="text-[11px]">persistence.load(session_id)</code></p></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 shrink-0 mt-0.5">2</span>
+                <div><p className="text-xs font-semibold">SessionController 재생성</p><p className="text-[11px] text-muted-foreground">state: <code className="text-[11px]">Initializing</code>, store + persistence 설정</p></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-amber-50 dark:bg-amber-950/30 p-2">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">3</span>
+                <div><p className="text-xs font-semibold">워크스페이스 경로 검증</p><p className="text-[11px] text-muted-foreground"><code className="text-[11px]">ws.is_dir()</code> — 삭제·이동됐으면 에러. 없으면 모든 도구 실패하므로 사전 차단</p></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-green-600 dark:text-green-400 shrink-0 mt-0.5">4</span>
+                <div><p className="text-xs font-semibold">Initializing → Active 전이</p><p className="text-[11px] text-muted-foreground"><code className="text-[11px]">transition(SessionState::Active)</code></p></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">종료 흐름 — graceful shutdown</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl SessionController {
-    pub async fn terminate(&mut self) -> Result<()> {
-        self.transition(SessionState::Terminating)?;
-
-        // 1) 진행 중인 도구 호출 완료 대기 (최대 5초)
-        tokio::time::timeout(
-            Duration::from_secs(5),
-            self.wait_for_pending_tools(),
-        ).await.ok();
-
-        // 2) 최종 영속화
-        if let Some(p) = &self.persistence {
-            p.save(&self.current_session()).await?;
-        }
-
-        // 3) 텔레메트리 플러시
-        self.telemetry.flush().await?;
-
-        // 4) 종료 상태 전이
-        self.transition(SessionState::Terminated)?;
-        Ok(())
-    }
-}`}</pre>
-        <p>
-          <strong>graceful shutdown 4단계</strong>: 도구 완료 대기 → 영속화 → 텔레메트리 플러시 → 전이<br />
-          5초 타임아웃: 무한정 기다리지 않음 — CI 환경에서 hang 방지<br />
-          텔레메트리 플러시: 세션 메트릭을 로그·원격 서버에 전송
-        </p>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-sm font-semibold mb-3"><code className="text-xs">terminate()</code> — graceful shutdown 4단계</p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-orange-600 dark:text-orange-400 shrink-0 mt-0.5">1</span>
+                <div><p className="text-xs font-semibold">도구 호출 완료 대기</p><p className="text-[11px] text-muted-foreground"><code className="text-[11px]">timeout(5s, wait_for_pending_tools())</code> — 무한정 대기 방지</p></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-orange-600 dark:text-orange-400 shrink-0 mt-0.5">2</span>
+                <div><p className="text-xs font-semibold">최종 영속화</p><p className="text-[11px] text-muted-foreground"><code className="text-[11px]">persistence.save()</code> — 마지막 상태 디스크에 기록</p></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-orange-600 dark:text-orange-400 shrink-0 mt-0.5">3</span>
+                <div><p className="text-xs font-semibold">텔레메트리 플러시</p><p className="text-[11px] text-muted-foreground">세션 메트릭을 로그·원격 서버에 전송</p></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="text-xs font-bold text-red-600 dark:text-red-400 shrink-0 mt-0.5">4</span>
+                <div><p className="text-xs font-semibold">Terminated 전이</p><p className="text-[11px] text-muted-foreground"><code className="text-[11px]">transition(SessionState::Terminated)</code></p></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 명시적 상태 머신의 디버깅 장점</p>

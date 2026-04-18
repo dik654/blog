@@ -32,56 +32,28 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── ExEx 프레임워크 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ExEx 프레임워크 — 노드 내부 확장</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ExEx 함수 시그니처
-pub type ExExFuture = dyn Future<Output = eyre::Result<()>> + Send;
-
-// ExExContext: 이벤트 수신 + 제어
-pub struct ExExContext<Node> {
-    /// 블록 이벤트 스트림 (async receiver)
-    pub notifications: Receiver<ExExNotification>,
-
-    /// ExEx → 노드로 이벤트 전송 (완료 알림 등)
-    pub events: Sender<ExExEvent>,
-
-    /// 노드 컴포넌트 접근
-    pub provider: Node::Provider,
-    pub pool: Node::Pool,
-    pub network: Node::Network,
-
-    /// 설정
-    pub config: NodeConfig,
-    pub exex_id: String,
-}
-
-// ExEx 등록 예시:
-async fn my_exex(ctx: ExExContext) -> eyre::Result<()> {
-    while let Some(notification) = ctx.notifications.recv().await {
-        match notification {
-            ExExNotification::ChainCommitted { new } => {
-                // 새 블록들 처리
-                for block in new.blocks() {
-                    index_block(block).await?;
-                }
-                // 완료 시그널 → 이 높이까지 prune 허용
-                ctx.events.send(ExExEvent::FinishedHeight(
-                    new.tip().number
-                )).await?;
-            }
-            _ => {}
-        }
-    }
-    Ok(())
-}
-
-// 노드 빌더에 등록:
-NodeBuilder::new(config)
-    .with_types::<EthereumNode>()
-    .with_components(EthComponents::default())
-    .install_exex("my-indexer", |ctx| Box::pin(my_exex(ctx)))
-    .launch()
-    .await?`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">ExExContext 구조체</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>notifications: Receiver&lt;ExExNotification&gt;</code> — 이벤트 스트림</span>
+              <span><code>events: Sender&lt;ExExEvent&gt;</code> — 노드로 완료 알림</span>
+              <span><code>provider: Node::Provider</code> — 상태 조회</span>
+              <span><code>pool: Node::Pool</code> — TX pool 접근</span>
+              <span><code>network: Node::Network</code> — 네트워크 접근</span>
+              <span><code>config: NodeConfig</code>, <code>exex_id: String</code></span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">ExEx 등록 패턴</p>
+            <p className="text-sm text-foreground/80 mb-1">
+              async 함수가 <code>ExExContext</code>를 받아 <code>notifications</code> 스트림 순회. 완료 시 <code>ExExEvent::FinishedHeight</code> 전송.
+            </p>
+            <p className="text-sm text-foreground/70">
+              등록: <code>NodeBuilder::new(config).install_exex("name", |ctx| Box::pin(my_exex(ctx))).launch()</code>
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ExExContext</code>가 <strong>ExEx의 모든 인터페이스</strong>.<br />
           이벤트 수신 + provider/pool/network 접근 + 제어 채널 통합.<br />
@@ -90,42 +62,24 @@ NodeBuilder::new(config)
 
         {/* ── 설계 모티베이션 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ExEx vs 외부 인덱서 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 방법 1: 외부 인덱서 (전통적)
-// ┌─────────┐  RPC/WS  ┌──────────┐  DB  ┌────────┐
-// │  Reth   │  →→→→→→  │  Indexer │ →→→→ │ Custom │
-// │  (full) │          │  Service │      │   DB   │
-// └─────────┘          └──────────┘      └────────┘
-//
-// 문제:
-// - 2개 프로세스 관리 (운영 복잡성)
-// - 네트워크 latency (localhost도 수 ms)
-// - 재연결 로직
-// - 블록 이벤트 유실 가능성 (backpressure)
-// - 중복 데이터 보관
-
-// 방법 2: ExEx (Reth 내부)
-// ┌────────────────────────┐
-// │  Reth node             │
-// │  ┌─────────────────┐   │
-// │  │  ExEx indexer   │   │
-// │  │  (in-process)   │   │
-// │  └─────────────────┘   │
-// └────────────────────────┘
-//
-// 이점:
-// - 단일 프로세스 (운영 단순)
-// - zero-copy 이벤트 전달 (micro-sec)
-// - 연결 관리 불필요
-// - 블록 이벤트 보장 (no loss)
-// - provider 직접 접근 (state query 빠름)
-
-// 실제 ExEx 사례:
-// - Helios light client indexer
-// - Gnosis Safe TX 추적기
-// - Rollup sequencer (OP, Scroll)
-// - MEV Searcher bots`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+              <p className="text-xs font-bold text-red-400 mb-2">외부 인덱서 (전통적)</p>
+              <p className="text-sm text-foreground/80">Reth → RPC/WS → Indexer → Custom DB. 2개 프로세스 관리, 네트워크 latency(localhost도 수 ms), 재연결 로직, 이벤트 유실 가능.</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">ExEx (Reth 내부)</p>
+              <p className="text-sm text-foreground/80">단일 프로세스. zero-copy 이벤트 전달(micro-sec). 연결 관리 불필요. 블록 이벤트 보장(no loss). provider 직접 접근.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">Helios indexer</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">Gnosis Safe 추적기</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">OP/Scroll sequencer</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">MEV Searcher bot</div>
+          </div>
+        </div>
         <p className="leading-7">
           ExEx의 핵심 가치: <strong>같은 프로세스</strong>.<br />
           네트워크 latency, 재연결, 이벤트 유실 등 외부 인덱서의 전통적 문제 해결.<br />
@@ -134,50 +88,23 @@ NodeBuilder::new(config)
 
         {/* ── FinishedHeight ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">FinishedHeight — Backpressure 관리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ExEx의 backpressure 시그널
-pub enum ExExEvent {
-    /// "이 높이까지 처리 완료"
-    /// 노드가 이 높이 이하 데이터를 안전하게 prune 가능
-    FinishedHeight(BlockNumber),
-}
-
-// ExEx가 느린 경우의 동작:
-// 노드는 ExEx가 따라올 때까지 기다림
-// - canonical chain 진행
-// - 하지만 ExEx가 처리 안 한 블록의 데이터는 prune 금지
-// - 결과: ExEx가 뒤처질수록 디스크 사용 증가
-
-// 올바른 ExEx 패턴:
-async fn indexer(ctx: ExExContext) -> Result<()> {
-    let mut last_finished = 0u64;
-
-    while let Some(notification) = ctx.notifications.recv().await {
-        match notification {
-            ExExNotification::ChainCommitted { new } => {
-                for block in new.blocks() {
-                    index_block(block).await?;  // DB 저장
-                    last_finished = block.number;
-                }
-                // 매 커밋마다 진행 상황 알림
-                ctx.events.send(ExExEvent::FinishedHeight(last_finished)).await?;
-            }
-            ExExNotification::ChainReorged { old, new } => {
-                remove_indices(old.blocks())?;
-                for block in new.blocks() { index_block(block).await?; }
-                ctx.events.send(ExExEvent::FinishedHeight(new.tip().number)).await?;
-            }
-            _ => {}
-        }
-    }
-    Ok(())
-}
-
-// 노드 관리자의 모니터링:
-// - lag = node_tip - exex_finished_height
-// - lag > 1000 블록: ExEx 성능 문제 가능성
-// - lag 증가: 디스크 사용 증가 경보`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">ExExEvent — Backpressure 시그널</p>
+            <p className="text-sm text-foreground/80 mb-2">
+              <code>FinishedHeight(BlockNumber)</code> — "이 높이까지 처리 완료". 노드가 이 높이 이하 데이터를 안전하게 prune 가능.
+            </p>
+            <p className="text-sm text-foreground/70">ExEx가 느리면: canonical chain은 진행하지만 미처리 블록 데이터는 prune 금지 → 디스크 사용 증가.</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">올바른 ExEx 패턴</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p><code>ChainCommitted</code>: 블록 순회 → <code>index_block()</code> → <code>FinishedHeight</code> 전송</p>
+              <p><code>ChainReorged</code>: old 인덱스 제거 → new 인덱싱 → <code>FinishedHeight</code> 전송</p>
+            </div>
+            <p className="text-sm text-amber-600 dark:text-amber-400 mt-2">모니터링: lag = node_tip - finished_height. lag &gt; 1000 블록 = ExEx 성능 문제 경보.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>FinishedHeight</code> 이벤트가 <strong>prune 허용 시그널</strong>.<br />
           ExEx가 해당 높이 처리 완료 → 노드가 그 이하 데이터 prune 가능.<br />

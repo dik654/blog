@@ -1,5 +1,7 @@
 import { CitationBlock } from '@/components/ui/citation';
 import MotivationViz from './viz/MotivationViz';
+import InterpDetailViz from './viz/InterpDetailViz';
+import SAERoleDetailViz from './viz/SAERoleDetailViz';
 
 export default function Overview() {
   return (
@@ -37,92 +39,10 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Interpretability의 중요성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 왜 LLM 내부 이해가 필요한가?
-//
-// 1. AI Safety (안전성)
-//    - 위험한 행동 사전 탐지
-//    - Deception 감지
-//    - Alignment 검증
-//
-// 2. Reliability (신뢰성)
-//    - 예측 불가능한 failure mode
-//    - 편향 원인 파악
-//    - 디버깅 가능성
-//
-// 3. Regulatory Compliance
-//    - EU AI Act (설명 가능성)
-//    - GDPR "설명 권리"
-//    - 의료/금융 규제
-//
-// 4. Scientific Understanding
-//    - 지능의 본질 탐구
-//    - 표현 학습 원리
-//    - 새로운 모델 설계 지침
-
-// Interpretability 접근법 3가지:
-//
-// A. Behavioral Interpretability
-//    - 입출력 관계 분석
-//    - Probing, eliciting
-//    - Black-box treatment
-//
-// B. Representation Analysis
-//    - 임베딩 공간 탐색
-//    - Linear probing
-//    - Attention visualization
-//
-// C. Mechanistic Interpretability ← SAE의 영역
-//    - 뉴런·회로 수준
-//    - 인과 관계 추적
-//    - 가장 야심찬 접근
-
-// Anthropic Interpretability Team의 철학:
-//   "LLM을 생물학처럼 연구"
-//   - 마이크로스코프 = SAE
-//   - 세포 = features
-//   - 기관 = circuits
-//   - 생명 = behaviors`}
-        </pre>
+        <div className="not-prose"><InterpDetailViz /></div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">SAE의 역할</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sparse Autoencoder가 풀려는 문제:
-//
-// 문제: Polysemanticity (다의성)
-//   한 뉴런이 여러 개념에 동시 반응
-//   → 해석 불가
-//
-// 가설: Superposition (중첩)
-//   모델이 뉴런 수보다 많은 개념을 인코딩
-//   → 각 개념이 거의 직교하는 방향에 저장
-//
-// SAE 해법:
-//   "펼쳐서 분리" (lift and separate)
-//   - 작은 dense → 큰 sparse 공간으로 투영
-//   - L1 페널티로 희소성 강제
-//   - 각 dimension이 하나의 개념
-//
-// 결과물:
-//   - Monosemantic features (단일 의미 특성)
-//   - Interpretable directions in activation space
-//   - 인과적 개입 가능
-
-// 역사적 발전:
-//   2014 Word2Vec: analogy 발견
-//   2017 Transformer attention visualization
-//   2021 Elhage et al.: Transformer circuits framework
-//   2022 Elhage et al.: Toy models of superposition
-//   2023 Anthropic: Towards Monosemanticity (첫 실질적 SAE)
-//   2024 Templeton: Scaling to Claude Sonnet (13M features)
-//   2024 OpenAI: Extracting concepts from GPT-4
-
-// 영향:
-//   - 새로운 AI 안전 패러다임
-//   - "Feature Steering" 상용화
-//   - Alignment tax 감소
-//   - Post-hoc interpretability tools`}
-        </pre>
+        <div className="not-prose"><SAERoleDetailViz /></div>
         <p className="leading-7">
           요약 1: LLM 해석성은 <strong>안전성·신뢰성·규제·과학</strong> 4가지 이유로 필수.<br />
           요약 2: SAE는 <strong>mechanistic interpretability</strong>의 주요 도구.<br />

@@ -71,107 +71,115 @@ export default function ZKConnection() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">STARK에서 RS 코드의 상세 역할</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Reed-Solomon in STARK Systems
-//
-// Philosophy:
-//   "Polynomial degree bound" ↔ "Reed-Solomon codeword"
-//
-//   If f is promised to have degree < d,
-//   then eval(f) on domain D of size n
-//   is a codeword of RS(n, d) code.
-//
-//   Distance of RS(n, d) = n - d + 1 (MDS)
-//
-//   Far from codeword = far from low-degree polynomial
-//   → soundness of proximity test
 
-// Typical STARK parameters:
-//
-//   Trace domain: |H| = 2^k (typically 2^16 - 2^20)
-//   Evaluation domain: |D| = |H| * rho  (rho = 4, 8, or 16)
-//   Code rate: 1/rho  (low rate = more redundancy)
-//   Distance: (1 - 1/rho) * |D|  (asymptotically)
-//
-//   Example (small STARK):
-//     |H| = 2^14, rho = 8
-//     |D| = 2^17 = 131072
-//     rate = 0.125
-//     distance ≈ 114688
+        <h4 className="text-lg font-semibold mt-5 mb-2">핵심 철학</h4>
+        <p>
+          "다항식 차수 바운드" ↔ "RS 코드워드".
+          <Math>{'f'}</Math>의 차수가 <Math>{'< d'}</Math>이면, 크기 n 도메인 D에서의 평가값은
+          <Math>{'\\text{RS}(n, d)'}</Math> 코드워드다.
+          <br />
+          RS 코드의 거리 = <Math>{'n - d + 1'}</Math> (MDS). 코드워드에서 멀다 = 낮은 차수 다항식에서 멀다 → 근접성 테스트의 건전성
+        </p>
 
-// FRI as RS proximity test:
-//
-//   Input: oracle for function f: D → F
-//   Claim: f is close to RS codeword (degree < d)
-//
-//   Protocol (simplified):
-//     Round i:
-//       Verifier sends random lambda_i
-//       Prover sends fold(f, lambda_i) on halved domain
-//
-//     After log(d) rounds:
-//       Final polynomial is constant (degree 0)
-//       Verifier checks consistency
-//
-//   Soundness:
-//     If f is delta-far from codeword,
-//     Verifier rejects with prob >= 1 - (1-delta)^queries
-//     → queries * log(1-delta) suffices
+        <h4 className="text-lg font-semibold mt-5 mb-2">일반적 STARK 파라미터</h4>
+        <p>
+          트레이스 도메인 <Math>{'|H| = 2^k'}</Math> (보통 <Math>{'2^{16}'}</Math> ~ <Math>{'2^{20}'}</Math>).
+          평가 도메인 <Math>{'|D| = |H| \\cdot \\rho'}</Math>.
+          코드 레이트 <Math>{'1/\\rho'}</Math> (낮을수록 중복 많음).
+          거리 <Math>{'\\approx (1 - 1/\\rho) \\cdot |D|'}</Math>
+        </p>
+      </div>
 
-// Blowup factor trade-offs:
-//
-//   rho = 2 (high rate):
-//     + Smaller proof size
-//     + Faster prover
-//     - Weaker soundness (needs more queries)
-//     - Requires conjecture for security beyond Johnson
-//
-//   rho = 8 (common):
-//     Balanced
-//     80-100 bit security with 40-80 queries
-//
-//   rho = 16 or 32 (low rate):
-//     + Strong soundness
-//     + Provable security
-//     - Larger proofs
-//     - Slower prover (more evaluation points)
+      <div className="not-prose rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4 my-3">
+        <p className="font-semibold text-sm text-indigo-400">예시 (소형 STARK)</p>
+        <p className="text-sm mt-1.5 text-foreground/75">
+          |H| = 2^14, rho = 8 → |D| = 2^17 = 131,072. rate = 0.125. distance ≈ 114,688
+        </p>
+      </div>
 
-// Concrete example: Winterfell / Plonky2
-//
-//   Plonky2 (Polygon Zero):
-//     Field: Goldilocks (2^64 - 2^32 + 1)
-//     rho = 1/8
-//     FRI queries: 28-84 depending on security
-//     2-adic subgroup up to 2^32
-//
-//   Winterfell (Facebook):
-//     Configurable blowup factor
-//     Optimized for STARK prover
-//     Assembly-level RS/FRI code
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">FRI: RS 근접성 테스트</h4>
+        <p>
+          입력: 함수 <Math>{'f: D \\to \\mathbb{F}'}</Math>에 대한 오라클.
+          주장: f가 RS 코드워드(차수 <Math>{'< d'}</Math>)에 가깝다
+        </p>
+      </div>
 
-// DEEP-FRI optimization:
-//
-//   Problem: vanilla FRI uses "rho-commit" twice
-//           → ~2x proof size
-//
-//   DEEP-FRI (Ben-Sasson et al.):
-//     Defer quotient/DEEP-ALI into single RS check
-//     ~30% proof size reduction
-//     Used in StarkNet, StarkEx
+      <div className="not-prose grid grid-cols-1 gap-3 my-3">
+        {[
+          { step: '라운드 i', desc: '검증자가 랜덤 λ_i 전송 → 증명자가 fold(f, λ_i)를 반으로 줄인 도메인에서 전송', color: 'indigo' },
+          { step: 'log(d) 라운드 후', desc: '최종 다항식은 상수(차수 0). 검증자가 일관성 확인', color: 'emerald' },
+          { step: '건전성', desc: 'f가 코드워드에서 δ만큼 멀면, 검증자가 확률 ≥ 1-(1-δ)^queries로 거부', color: 'amber' },
+        ].map(p => (
+          <div key={p.step} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.step}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
 
-// Connection to list decoding:
-//
-//   Johnson bound: delta < 1 - sqrt(rho)
-//   Johnson + list decoding:
-//     can have multiple RS codewords nearby
-//
-//   Conjectured bound: delta < 1 - rho - epsilon
-//   Not proven → needs "RS proximity gaps" conjecture
-//
-//   Security proof references:
-//     Ben-Sasson et al. "DEEP-FRI" (2019)
-//     Ben-Sasson et al. "Proximity gaps for RS codes" (2020)`}
-        </pre>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">Blowup factor 트레이드오프</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-3">
+        <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+          <p className="font-semibold text-sm text-indigo-400">rho = 2 (높은 레이트)</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            증명 크기 작음, 프로버 빠름.
+            건전성 약함(더 많은 쿼리 필요), Johnson 이상 보안에 추측 필요
+          </p>
+        </div>
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <p className="font-semibold text-sm text-emerald-400">rho = 8 (일반적)</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            균형. 40-80 쿼리로 80-100 bit 보안
+          </p>
+        </div>
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+          <p className="font-semibold text-sm text-amber-400">rho = 16-32 (낮은 레이트)</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            강한 건전성, 증명 가능한 보안.
+            더 큰 증명, 느린 프로버(평가점 증가)
+          </p>
+        </div>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">구현 예시</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+          <p className="font-semibold text-sm text-indigo-400">Plonky2 (Polygon Zero)</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            Goldilocks 체. rho = 1/8. FRI 쿼리 28-84. 2-adic 부분군 최대 2^32
+          </p>
+        </div>
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <p className="font-semibold text-sm text-emerald-400">Winterfell (Meta)</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            설정 가능한 blowup factor. 어셈블리 수준 RS/FRI 코드. STARK 프로버 최적화
+          </p>
+        </div>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">DEEP-FRI 최적화</h4>
+        <p>
+          바닐라 FRI는 rho-commit을 두 번 수행하여 증명 크기가 ~2배.
+          DEEP-FRI(Ben-Sasson et al.)는 quotient/DEEP-ALI를 단일 RS 체크로 지연시켜 ~30% 증명 크기 감소.
+          StarkNet, StarkEx에서 사용
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">리스트 디코딩과의 연결</h4>
+        <p>
+          Johnson 한계: <Math>{'\\delta < 1 - \\sqrt{\\rho}'}</Math>. 리스트 디코딩으로 여러 RS 코드워드가 근처에 존재할 수 있다.
+          <br />
+          추측 한계: <Math>{'\\delta < 1 - \\rho - \\epsilon'}</Math>. 미증명이므로 "RS 근접성 갭" 추측이 필요하다.
+          <br />
+          참고: Ben-Sasson et al. "DEEP-FRI"(2019), "Proximity gaps for RS codes"(2020)
+        </p>
       </div>
     </section>
   );

@@ -49,40 +49,67 @@ export default function Overview() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">보안 모델 — 4단계 방어</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`모든 파일 연산은 다음 4단계를 거친다:
-
-1. 권한 모드 체크       ReadOnly 모드에서 write/edit 즉시 거부
-2. 워크스페이스 경계    path.starts_with(workspace_root) 필수
-3. 블랙리스트           .env, .git/, *.pem 등 보호
-4. 심링크 이스케이프    canonicalize() 후 재검증`}</pre>
+        <p className="mb-3">모든 파일 연산은 다음 4단계를 거친다:</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">1단계</div>
+            <div className="font-semibold text-sm mb-1">권한 모드 체크</div>
+            <div className="text-sm text-muted-foreground">ReadOnly 모드에서 <code className="text-xs bg-muted px-1 rounded">write</code> / <code className="text-xs bg-muted px-1 rounded">edit</code> 즉시 거부</div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">2단계</div>
+            <div className="font-semibold text-sm mb-1">워크스페이스 경계</div>
+            <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">path.starts_with(workspace_root)</code> 필수</div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">3단계</div>
+            <div className="font-semibold text-sm mb-1">블랙리스트</div>
+            <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">.env</code>, <code className="text-xs bg-muted px-1 rounded">.git/</code>, <code className="text-xs bg-muted px-1 rounded">*.pem</code> 등 보호</div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">4단계</div>
+            <div className="font-semibold text-sm mb-1">심링크 이스케이프</div>
+            <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">canonicalize()</code> 후 재검증</div>
+          </div>
+        </div>
         <p>
           각 단계는 독립적 — 한 층을 우회해도 다른 층이 방어<br />
           1, 2단계는 정적(문자열 비교), 3, 4단계는 동적(파일 시스템 호출)
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">WorkspaceRoot 개념</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 세션 생성 시 결정, 변경 불가
-pub struct Workspace {
-    root: PathBuf,           // 절대 경로, canonicalize됨
-    name: String,            // 표시용 이름
-    git_root: Option<PathBuf>, // git 저장소 루트 (있으면)
-}
-
-impl Workspace {
-    pub fn from_cwd() -> Result<Self> {
-        let cwd = std::env::current_dir()?;
-        let canonical = cwd.canonicalize()?;
-
-        // git 루트 탐지 (선택)
-        let git_root = find_git_root(&canonical);
-
-        Ok(Self {
-            root: canonical,
-            name: extract_name(&canonical),
-            git_root,
-        })
-    }
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-blue-600 text-white text-xs font-semibold px-4 py-2">Workspace 구조체 — 세션 생성 시 결정, 변경 불가</div>
+            <div className="p-4 space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-background border border-border rounded-md p-3">
+                  <div className="text-xs text-muted-foreground mb-1">필드</div>
+                  <div className="font-mono text-sm font-semibold">root: PathBuf</div>
+                  <div className="text-xs text-muted-foreground mt-1">절대 경로, canonicalize됨</div>
+                </div>
+                <div className="bg-background border border-border rounded-md p-3">
+                  <div className="text-xs text-muted-foreground mb-1">필드</div>
+                  <div className="font-mono text-sm font-semibold">name: String</div>
+                  <div className="text-xs text-muted-foreground mt-1">표시용 이름</div>
+                </div>
+                <div className="bg-background border border-border rounded-md p-3">
+                  <div className="text-xs text-muted-foreground mb-1">필드</div>
+                  <div className="font-mono text-sm font-semibold">git_root: Option&lt;PathBuf&gt;</div>
+                  <div className="text-xs text-muted-foreground mt-1">git 저장소 루트 (있으면)</div>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-1">생성 — <code className="text-xs bg-muted px-1 rounded">from_cwd()</code></div>
+                <div className="text-sm space-y-1">
+                  <div>1. <code className="text-xs bg-muted px-1 rounded">current_dir()</code>로 현재 디렉토리 획득</div>
+                  <div>2. <code className="text-xs bg-muted px-1 rounded">canonicalize()</code>로 심링크 해제 → 실제 경로</div>
+                  <div>3. <code className="text-xs bg-muted px-1 rounded">find_git_root()</code>로 git 루트 탐지 (선택)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>workspace_root은 세션 불변</strong>: 한 번 설정되면 세션 내내 고정<br />
           시작 시 <code>canonicalize()</code>로 심링크 해제 — 실제 경로로 저장<br />
@@ -90,24 +117,49 @@ impl Workspace {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">기본 블랙리스트</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub fn default_blacklist() -> PathBlacklist {
-    PathBlacklist::new(vec![
-        // 환경 설정
-        ".env", ".env.*",
-        // 개인 키
-        "*.pem", "*.key", "*.p12", "*.pfx",
-        // 인증서
-        "*.crt", "*.cer",
-        // VCS 내부
-        ".git/**",
-        // 큰 바이너리/생성물
-        "node_modules/**", "target/**", "dist/**", "build/**",
-        // SSH 키
-        "~/.ssh/**", "id_rsa*", "id_ed25519*",
-        // AWS 등 클라우드 크리덴셜
-        ".aws/credentials", ".aws/config",
-    ])
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-red-600 text-white text-xs font-semibold px-4 py-2">default_blacklist() — 보호 카테고리 5가지</div>
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">환경 설정</div>
+                <div className="space-y-1">
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">.env</code>
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">.env.*</code>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">개인 키</div>
+                <div className="space-y-1">
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">*.pem, *.key</code>
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">*.p12, *.pfx</code>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">인증서</div>
+                <div className="space-y-1">
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">*.crt, *.cer</code>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">VCS &amp; 생성물</div>
+                <div className="space-y-1">
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">.git/**</code>
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">node_modules/**, target/**</code>
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">dist/**, build/**</code>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">SSH &amp; 클라우드</div>
+                <div className="space-y-1">
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">~/.ssh/**, id_rsa*</code>
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">id_ed25519*</code>
+                  <code className="block text-xs bg-muted px-2 py-1 rounded">.aws/credentials, .aws/config</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>보호 카테고리 5가지</strong>: 환경변수, 개인키, 인증서, VCS, 생성물<br />
           사용자는 <code>settings.json</code>에서 블랙리스트 확장/축소 가능<br />
@@ -115,26 +167,33 @@ impl Workspace {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PathBlacklist 매칭</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct PathBlacklist {
-    patterns: Vec<glob::Pattern>,
-}
-
-impl PathBlacklist {
-    pub fn matches(&self, path: &Path) -> bool {
-        // 1) 파일명만 매칭
-        if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-            for p in &self.patterns {
-                if p.matches(name) { return true; }
-            }
-        }
-        // 2) 전체 경로 매칭
-        let path_str = path.to_string_lossy();
-        for p in &self.patterns {
-            if p.matches(&path_str) { return true; }
-        }
-        false
-    }
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-orange-600 text-white text-xs font-semibold px-4 py-2">PathBlacklist — 2차원 매칭</div>
+            <div className="p-4 space-y-3">
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-1">구조</div>
+                <div className="font-mono text-sm"><code className="bg-muted px-1 rounded">patterns: Vec&lt;glob::Pattern&gt;</code></div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-background border border-border rounded-md p-3">
+                  <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">1차 — 파일명만 매칭</div>
+                  <div className="text-sm text-muted-foreground">
+                    <code className="text-xs bg-muted px-1 rounded">path.file_name()</code>을 추출, 각 패턴과 비교
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2 italic">예: <code className="bg-muted px-1 rounded">.env</code>는 어느 경로에 있든 차단</div>
+                </div>
+                <div className="bg-background border border-border rounded-md p-3">
+                  <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">2차 — 전체 경로 매칭</div>
+                  <div className="text-sm text-muted-foreground">
+                    <code className="text-xs bg-muted px-1 rounded">path.to_string_lossy()</code>로 전체 경로 문자열 비교
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2 italic">예: <code className="bg-muted px-1 rounded">.git/config</code>는 <code className="bg-muted px-1 rounded">.git/**</code> 패턴 필요</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>2차원 매칭</strong>: 파일명 단독 + 전체 경로<br />
           <code>.env</code>는 어느 경로에 있든 차단 (파일명 매칭)<br />
@@ -142,27 +201,25 @@ impl PathBlacklist {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">심링크 이스케이프 검증</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub fn validate_path(path: &Path, workspace: &Path) -> Result<()> {
-    // 1) 절대 경로화
-    let absolute = if path.is_absolute() {
-        path.to_path_buf()
-    } else {
-        workspace.join(path)
-    };
-
-    // 2) 문자열 비교 (빠름)
-    if !absolute.starts_with(workspace) {
-        return Err(anyhow!("outside workspace"));
-    }
-
-    // 3) 심링크 해제 후 재검증
-    let real = absolute.canonicalize()?;
-    if !real.starts_with(workspace) {
-        return Err(anyhow!("symlink escape: {:?} → {:?}", path, real));
-    }
-
-    Ok(())
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-purple-600 text-white text-xs font-semibold px-4 py-2">validate_path() — 2번 검증: 문자열 → canonicalize</div>
+            <div className="p-4 space-y-3">
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">1단계: 절대 경로화</div>
+                <div className="text-sm text-muted-foreground">상대 경로면 <code className="text-xs bg-muted px-1 rounded">workspace.join(path)</code>로 절대화</div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">2단계: 문자열 비교 (빠름)</div>
+                <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">absolute.starts_with(workspace)</code> 실패 시 즉시 <code className="text-xs bg-muted px-1 rounded">Err("outside workspace")</code></div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">3단계: 심링크 해제 후 재검증</div>
+                <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">absolute.canonicalize()</code> → 실제 경로가 workspace 밖이면 <code className="text-xs bg-muted px-1 rounded">Err("symlink escape")</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>2번 검증</strong>: 문자열 비교 → canonicalize 후 재비교<br />
           공격 시나리오: <code>workspace/link → /etc/passwd</code><br />

@@ -39,6 +39,7 @@ export default function Overview() {
         </p>
       </div>
       <ActivationTimelineViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: <strong>비선형성</strong>이 신경망의 표현력 원천 — Universal Approximation.<br />
           요약 2: <strong>ReLU의 단순함</strong>이 딥러닝 혁명의 촉매 — 기울기 소실 해결.<br />

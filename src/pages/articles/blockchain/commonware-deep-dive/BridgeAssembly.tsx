@@ -32,98 +32,107 @@ export default function BridgeAssembly({ onCodeRef }: {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Bridge Architecture</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Cross-chain bridge using Commonware
-
-// Components
-// - Source chain: 원본 state
-// - Destination chain: 미러 state
-// - Bridge validators: commit proofs
-
-// Simplex consensus on bridge validators
-// - They vote on source chain state
-// - Threshold signature as proof
-// - Destination verifies threshold sig
-
-// Validator code skeleton
-pub struct BridgeValidator {
-    ctx: Context,
-    identity: Ed25519Keypair,
-    bls_share: BlsShare,
-    consensus: SimplexConsensus,
-    p2p: AuthenticatedP2P,
-    source_client: SourceChainClient,
-    dest_client: DestChainClient,
-}
-
-impl BridgeValidator {
-    pub async fn run(&mut self) {
-        // 1) Connect to other validators
-        self.p2p.connect_peers().await;
-
-        // 2) Watch source chain
-        while let Some(block) = self.source_client.next_block().await {
-            // 3) Propose to consensus
-            let proposal = StateProposal {
-                chain_id: SOURCE,
-                block_hash: block.hash,
-                height: block.number,
-            };
-
-            // 4) Reach consensus (simplex)
-            let committed = self.consensus.propose(proposal).await?;
-
-            // 5) Generate threshold signature
-            let partial_sig = self.bls_share.sign(&committed.digest());
-            let agg_sig = self.collect_signatures(partial_sig).await?;
-
-            // 6) Submit to destination chain
-            self.dest_client.submit_proof(committed, agg_sig).await?;
-        }
-    }
-}
-
-// Security assumptions
-// - 2/3+ bridge validators honest
-// - Source/dest chains safe
-// - No offline attacks on shared key`}</pre>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <p className="text-sm text-muted-foreground mb-3">
+            Cross-chain bridge — Source chain(원본 state) → Bridge validators(합의 + 증명) → Destination chain(미러 state)
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 className="font-semibold text-sm mb-2"><code className="text-xs">BridgeValidator</code> 구조체</h4>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code className="text-xs">ctx: Context</code> — Runtime context</li>
+                <li><code className="text-xs">identity: Ed25519Keypair</code> — 피어 인증</li>
+                <li><code className="text-xs">bls_share: BlsShare</code> — 임계 서명 share</li>
+                <li><code className="text-xs">consensus: SimplexConsensus</code> — BFT 합의</li>
+                <li><code className="text-xs">p2p: AuthenticatedP2P</code> — 암호화 통신</li>
+                <li><code className="text-xs">source_client</code> / <code className="text-xs">dest_client</code> — 체인 클라이언트</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-sm mb-2"><code className="text-xs">run()</code> 실행 흐름</h4>
+              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+                <li>다른 validators에 P2P 연결</li>
+                <li>Source chain 블록 감시</li>
+                <li><code className="text-xs">StateProposal</code> 생성 — chain_id, block_hash, height</li>
+                <li>Simplex consensus로 합의</li>
+                <li>BLS threshold signature 생성 + 수집</li>
+                <li>Destination chain에 proof 제출</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Security Assumptions</h4>
+          <ul className="text-sm space-y-0.5 text-muted-foreground">
+            <li>2/3+ bridge validators honest</li>
+            <li>Source/dest chains safe</li>
+            <li>No offline attacks on shared key</li>
+          </ul>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">왜 Commonware로 Bridge 구축</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 장점 (vs custom 구현)
-
-// 1) Battle-tested primitives
-//    - Simplex: deterministic sim 검증
-//    - BLS: audited cryptography
-//    - P2P: authenticated channels
-
-// 2) Modularity
-//    - 원하는 부분만 사용
-//    - 다른 consensus로 쉽게 교체
-//    - Ed25519 대신 ECDSA 가능
-
-// 3) Deterministic testing
-//    - Cross-chain failure scenarios
-//    - Byzantine validator testing
-//    - Replay attack simulation
-
-// 4) Upgrade path
-//    - Primitive update는 library level
-//    - Fork 불필요
-
-// vs 대안 프레임워크
-// Cosmos SDK:
-//   - Full stack (대부분 불필요)
-//   - IBC 내장 (but specific)
-//   - Fork 어려움
-
-// Axelar / LayerZero:
-//   - Closed-source partial
-//   - Proprietary protocols
-//   - Limited customization
-
-// Commonware:
-//   - Open-source all components
-//   - Minimal footprint
-//   - Direct Rust integration`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">1. Battle-tested Primitives</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code className="text-xs">Simplex</code> — deterministic sim 검증</li>
+              <li><code className="text-xs">BLS</code> — audited cryptography</li>
+              <li><code className="text-xs">P2P</code> — authenticated channels</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">2. Modularity</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>원하는 부분만 사용</li>
+              <li>다른 consensus로 쉽게 교체</li>
+              <li>Ed25519 대신 ECDSA 가능</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">3. Deterministic Testing</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Cross-chain failure scenarios</li>
+              <li>Byzantine validator testing</li>
+              <li>Replay attack simulation</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">4. Upgrade Path</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Primitive update는 library level</li>
+              <li>Fork 불필요</li>
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-3 text-muted-foreground">vs 대안 프레임워크</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <h5 className="font-semibold text-sm mb-1">Cosmos SDK</h5>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Full stack — 대부분 불필요</li>
+                <li>IBC 내장 but specific</li>
+                <li>Fork 어려움</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold text-sm mb-1">Axelar / LayerZero</h5>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Closed-source partial</li>
+                <li>Proprietary protocols</li>
+                <li>Limited customization</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold text-sm mb-1 text-blue-600 dark:text-blue-400">Commonware</h5>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Open-source all components</li>
+                <li>Minimal footprint</li>
+                <li>Direct Rust integration</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

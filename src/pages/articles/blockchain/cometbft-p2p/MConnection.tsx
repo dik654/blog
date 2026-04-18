@@ -17,67 +17,41 @@ export default function MConnection({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── MConnection 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">MConnection struct</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/p2p/conn/connection.go
-type MConnection struct {
-    conn          net.Conn
-    bufConnReader *bufio.Reader
-    bufConnWriter *bufio.Writer
-    sendMonitor   *flow.Monitor   // rate limiting
-    recvMonitor   *flow.Monitor
-
-    send          chan struct{}    // send signal
-    pong          chan struct{}    // pong signal
-    channels      []*Channel       // channel 목록
-    channelsIdx   map[byte]*Channel
-
-    onReceive     receiveCbFunc    // callback
-    onError       errorCbFunc
-
-    // 통계
-    created       time.Time
-    stopped       atomic.Int32
-
-    // ping-pong
-    pingTimer     *time.Timer
-    pongTimeoutCh chan bool
-
-    config        MConnConfig
-}
-
-// MConnConfig:
-type MConnConfig struct {
-    SendRate int64           // 500 KB/s default
-    RecvRate int64           // 500 KB/s
-    MaxPacketMsgPayloadSize int  // 1024 bytes
-    FlushThrottle time.Duration  // 100ms
-    PingInterval time.Duration   // 60s
-    PongTimeout time.Duration    // 45s
-}
-
-// 각 Channel:
-type Channel struct {
-    conn          *MConnection
-    desc          ChannelDescriptor
-    sendQueue     chan []byte       // pending messages
-    sendQueueSize atomic.Int32
-    recving       []byte
-    sending       []byte
-    recentlySent  int64
-
-    maxPacketMsgPayloadSize int
-}
-
-// ChannelDescriptor:
-type ChannelDescriptor struct {
-    ID                  byte
-    Priority            int             // 높을수록 우선
-    SendQueueCapacity   int             // 기본 10
-    RecvBufferCapacity  int             // 1 MB
-    RecvMessageCapacity int
-    MessageType proto.Message
-}`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">MConnection 핵심 필드</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">conn net.Conn</code> — TCP 연결</li>
+              <li><code className="text-xs">bufConnReader/Writer</code> — buffered I/O</li>
+              <li><code className="text-xs">sendMonitor/recvMonitor *flow.Monitor</code> — rate limiting</li>
+              <li><code className="text-xs">channels []*Channel</code> — channel 목록</li>
+              <li><code className="text-xs">channelsIdx map[byte]*Channel</code></li>
+              <li><code className="text-xs">onReceive receiveCbFunc</code> — 수신 callback</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">MConnConfig 설정값</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">SendRate</code> — 500 KB/s default</li>
+              <li><code className="text-xs">RecvRate</code> — 500 KB/s</li>
+              <li><code className="text-xs">MaxPacketMsgPayloadSize</code> — 1024 bytes</li>
+              <li><code className="text-xs">FlushThrottle</code> — 100ms</li>
+              <li><code className="text-xs">PingInterval</code> — 60s</li>
+              <li><code className="text-xs">PongTimeout</code> — 45s</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">Channel & Descriptor</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">sendQueue chan []byte</code> — pending 메시지</li>
+              <li><code className="text-xs">recentlySent int64</code> — 우선순위 선택용</li>
+              <li><code className="text-xs">ID byte</code> — 채널 식별자</li>
+              <li><code className="text-xs">Priority int</code> — 높을수록 우선</li>
+              <li><code className="text-xs">SendQueueCapacity</code> — 기본 10</li>
+              <li><code className="text-xs">RecvBufferCapacity</code> — 1 MB</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           MConnection은 <strong>TCP multiplexing + rate limiting</strong>.<br />
           channel별 priority로 우선순위 보장 (consensus &gt; mempool).<br />

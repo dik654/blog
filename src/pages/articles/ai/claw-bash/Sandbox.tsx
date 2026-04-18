@@ -14,19 +14,35 @@ export default function Sandbox() {
           네임스페이스(mount, network, PID) 격리로 프로세스를 커널 레벨에서 제한<br />
           원본 Claude Code는 seccomp 기반, claw-code는 bwrap 선택 — 구성 간단, Flatpak에서 검증됨
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// bwrap 예시 명령
-bwrap \\
-  --ro-bind /usr /usr \\
-  --ro-bind /lib /lib \\
-  --ro-bind /lib64 /lib64 \\
-  --ro-bind /bin /bin \\
-  --bind \${WORKSPACE} /workspace \\
-  --chdir /workspace \\
-  --unshare-net \\          # 네트워크 격리
-  --unshare-pid \\          # PID 네임스페이스 격리
-  --proc /proc \\
-  --tmpfs /tmp \\
-  /bin/bash -c "CMD"`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-cyan-50 dark:bg-cyan-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold">bwrap 명령 구성</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="px-4 py-2.5 flex items-start gap-3">
+                <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 w-28 shrink-0">--ro-bind</span>
+                <span className="text-muted-foreground">읽기 전용 마운트 — <code className="text-xs bg-muted px-1 py-0.5 rounded">/usr</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">/lib</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">/lib64</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">/bin</code></span>
+              </div>
+              <div className="px-4 py-2.5 flex items-start gap-3 bg-muted/30">
+                <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 w-28 shrink-0">--bind</span>
+                <span className="text-muted-foreground">읽기/쓰기 마운트 — 워크스페이스만 <code className="text-xs bg-muted px-1 py-0.5 rounded">/workspace</code>로 매핑</span>
+              </div>
+              <div className="px-4 py-2.5 flex items-start gap-3">
+                <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 w-28 shrink-0">--unshare-net</span>
+                <span className="text-muted-foreground">네트워크 네임스페이스 격리 — 외부 접근 차단</span>
+              </div>
+              <div className="px-4 py-2.5 flex items-start gap-3 bg-muted/30">
+                <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 w-28 shrink-0">--unshare-pid</span>
+                <span className="text-muted-foreground">PID 네임스페이스 격리 — 다른 프로세스 보이지 않음</span>
+              </div>
+              <div className="px-4 py-2.5 flex items-start gap-3">
+                <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 w-28 shrink-0">--tmpfs</span>
+                <span className="text-muted-foreground">임시 파일 시스템 <code className="text-xs bg-muted px-1 py-0.5 rounded">/tmp</code> — 프로세스 종료 시 사라짐</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>핵심 플래그</strong>:<br />
           - <code>--ro-bind</code>: 읽기 전용 마운트 (시스템 파일)<br />
@@ -36,34 +52,43 @@ bwrap \\
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Sandbox 가용성 체크</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct Sandbox;
-
-impl Sandbox {
-    pub fn is_available() -> bool {
-        // 1) Linux인지 확인
-        if !cfg!(target_os = "linux") {
-            return false;
-        }
-
-        // 2) bwrap 바이너리 존재 확인
-        if !Path::new("/usr/bin/bwrap").exists()
-            && !Path::new("/usr/local/bin/bwrap").exists() {
-            return false;
-        }
-
-        // 3) 컨테이너 내부면 중첩 샌드박스 불필요
-        if Self::is_in_container() {
-            return false;
-        }
-
-        // 4) user namespace 활성화 확인
-        let unshare_works = std::fs::read_to_string(
-            "/proc/sys/kernel/unprivileged_userns_clone"
-        ).map(|s| s.trim() == "1").unwrap_or(true);
-
-        unshare_works
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">Sandbox::is_available()</code> — 4단계 가용성 체크</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2.5 items-start">
+                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">1</span>
+                <div>
+                  <p className="font-semibold">OS 확인</p>
+                  <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">cfg!(target_os = "linux")</code> — Linux 아니면 즉시 false</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2.5 items-start bg-muted/30">
+                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">2</span>
+                <div>
+                  <p className="font-semibold">bwrap 바이너리 존재</p>
+                  <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">/usr/bin/bwrap</code> 또는 <code className="text-xs bg-muted px-1 py-0.5 rounded">/usr/local/bin/bwrap</code> 확인</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2.5 items-start">
+                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">3</span>
+                <div>
+                  <p className="font-semibold">컨테이너 내부 확인</p>
+                  <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">is_in_container()</code> — 이미 격리 환경이면 중첩 불필요 → false</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2.5 items-start bg-muted/30">
+                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">4</span>
+                <div>
+                  <p className="font-semibold">user namespace 활성화</p>
+                  <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">/proc/sys/kernel/unprivileged_userns_clone</code> == "1" 확인</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계 가용성 체크</strong>: OS → 바이너리 → 컨테이너 → 커널 설정<br />
           macOS·Windows: 즉시 false — 샌드박스 미지원<br />
@@ -71,28 +96,31 @@ impl Sandbox {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">컨테이너 감지 — is_in_container()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl Sandbox {
-    fn is_in_container() -> bool {
-        // 1) /.dockerenv 파일 (Docker)
-        if Path::new("/.dockerenv").exists() { return true; }
-
-        // 2) /run/.containerenv (Podman)
-        if Path::new("/run/.containerenv").exists() { return true; }
-
-        // 3) /proc/1/cgroup에 docker/lxc/kubepods 문자열
-        if let Ok(cgroup) = std::fs::read_to_string("/proc/1/cgroup") {
-            if cgroup.contains("docker") || cgroup.contains("lxc")
-                || cgroup.contains("kubepods") {
-                return true;
-            }
-        }
-
-        // 4) 환경 변수 체크 (일부 컨테이너 런타임)
-        if std::env::var("container").is_ok() { return true; }
-
-        false
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-violet-50 dark:bg-violet-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">is_in_container()</code> — 4가지 감지 방법</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center">
+                <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">Docker</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">/.dockerenv</code> 파일 존재 확인</span>
+              </div>
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center bg-muted/30">
+                <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">Podman</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">/run/.containerenv</code> 파일 존재 확인</span>
+              </div>
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center">
+                <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">cgroup</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">/proc/1/cgroup</code>에 <code className="text-xs bg-muted px-1 py-0.5 rounded">docker</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">lxc</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">kubepods</code> 문자열</span>
+              </div>
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center bg-muted/30">
+                <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">환경 변수</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">$container</code> 환경 변수 존재 여부</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4가지 컨테이너 감지 방법</strong>: dockerenv 파일, containerenv 파일, cgroup, 환경 변수<br />
           여러 방법 병행 — 런타임마다 다른 시그니처 사용<br />
@@ -100,44 +128,35 @@ impl Sandbox {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">wrap_command() — bwrap 명령 조립</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl Sandbox {
-    pub fn wrap_command(program: &str, args: &[&str]) -> (String, Vec<String>) {
-        let mut bwrap_args = vec![
-            // 읽기 전용 시스템 디렉토리
-            "--ro-bind".into(), "/usr".into(), "/usr".into(),
-            "--ro-bind".into(), "/lib".into(), "/lib".into(),
-            "--ro-bind".into(), "/bin".into(), "/bin".into(),
-            "--ro-bind".into(), "/etc".into(), "/etc".into(),
-
-            // 쓰기 가능: 워크스페이스만
-            "--bind".into(), workspace_root().display().to_string(), "/workspace".into(),
-            "--chdir".into(), "/workspace".into(),
-
-            // /proc 필요 (일부 명령)
-            "--proc".into(), "/proc".into(),
-            // /dev 필요 (/dev/null 등)
-            "--dev".into(), "/dev".into(),
-            // 임시 파일
-            "--tmpfs".into(), "/tmp".into(),
-
-            // PID 격리 (다른 프로세스 보이지 않음)
-            "--unshare-pid".into(),
-        ];
-
-        // 네트워크 격리 (설정에 따라)
-        if !Self::config().allow_network {
-            bwrap_args.push("--unshare-net".into());
-        }
-
-        // 실제 명령 추가
-        bwrap_args.push(program.into());
-        for a in args {
-            bwrap_args.push((*a).into());
-        }
-
-        ("/usr/bin/bwrap".into(), bwrap_args)
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-teal-50 dark:bg-teal-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">wrap_command(program, args)</code> — bwrap 인자 조립</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="px-4 py-3">
+                <p className="font-semibold text-teal-700 dark:text-teal-400 mb-1">읽기 전용 마운트</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">--ro-bind</code>: <code className="text-xs bg-muted px-1 py-0.5 rounded">/usr</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">/lib</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">/bin</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">/etc</code> — 시스템 파일 변경 불가</p>
+              </div>
+              <div className="px-4 py-3 bg-muted/30">
+                <p className="font-semibold text-teal-700 dark:text-teal-400 mb-1">쓰기 가능 마운트</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">--bind</code>: <code className="text-xs bg-muted px-1 py-0.5 rounded">workspace_root()</code> → <code className="text-xs bg-muted px-1 py-0.5 rounded">/workspace</code> — 워크스페이스만 쓰기 허용</p>
+              </div>
+              <div className="px-4 py-3">
+                <p className="font-semibold text-teal-700 dark:text-teal-400 mb-1">필수 가상 파일시스템</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">--proc /proc</code> (일부 명령 필수), <code className="text-xs bg-muted px-1 py-0.5 rounded">--dev /dev</code> (/dev/null 등), <code className="text-xs bg-muted px-1 py-0.5 rounded">--tmpfs /tmp</code></p>
+              </div>
+              <div className="px-4 py-3 bg-muted/30">
+                <p className="font-semibold text-teal-700 dark:text-teal-400 mb-1">격리 설정</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">--unshare-pid</code> (항상) + <code className="text-xs bg-muted px-1 py-0.5 rounded">--unshare-net</code> (<code className="text-xs bg-muted px-1 py-0.5 rounded">allow_network</code> 설정에 따라)</p>
+              </div>
+              <div className="px-4 py-3">
+                <p className="font-semibold text-teal-700 dark:text-teal-400 mb-1">반환</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">("/usr/bin/bwrap", bwrap_args)</code> — 실제 명령은 bwrap_args 끝에 추가</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>워크스페이스만 쓰기 가능</strong>: 나머지는 read-only — 시스템 파일 변경 불가<br />
           PID 네임스페이스 격리: bash 프로세스가 <code>ps aux</code>로 다른 프로세스 못 봄<br />
@@ -145,14 +164,23 @@ impl Sandbox {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">폴백 동작 — 샌드박스 불가 시</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// execute_bash() 내부
-let (program, args) = if Sandbox::is_available() {
-    Sandbox::wrap_command("/bin/bash", &["-c", &cmd.command])
-} else {
-    // 폴백: 샌드박스 없이 직접 실행
-    log::warn!("sandbox unavailable, running without isolation");
-    ("/bin/bash".into(), vec!["-c".into(), cmd.command.clone()])
-};`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-amber-50 dark:bg-amber-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold">샌드박스 분기 — <code className="text-xs">execute_bash()</code> 내부</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 text-sm">
+              <div className="px-4 py-3 border-b sm:border-b-0 sm:border-r border-border">
+                <p className="font-semibold text-green-600 dark:text-green-400 mb-1">샌드박스 가용</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">Sandbox::wrap_command()</code>로 bwrap 래핑 후 실행</p>
+              </div>
+              <div className="px-4 py-3">
+                <p className="font-semibold text-amber-600 dark:text-amber-400 mb-1">샌드박스 불가 (폴백)</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">/bin/bash -c</code> 직접 실행 + 로그 경고 출력</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>graceful degradation</strong>: 샌드박스 불가해도 실행은 계속<br />
           대신 로그 경고 — 사용자가 "샌드박스 없이 실행 중"임을 인지<br />
@@ -160,21 +188,23 @@ let (program, args) = if Sandbox::is_available() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">macOS 대안 — Sandbox.app / seatbelt</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 향후 macOS 지원 계획 (현재 미구현)
-#[cfg(target_os = "macos")]
-impl Sandbox {
-    fn wrap_command_macos(program: &str, args: &[&str]) -> (String, Vec<String>) {
-        // macOS sandbox-exec 사용
-        let profile = r#"
-            (version 1)
-            (deny default)
-            (allow file-read*)
-            (allow file-write* (subpath "\${WORKSPACE}"))
-            (deny network*)
-        "#;
-        // ... sandbox-exec 명령 조립
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-dashed border-border rounded-lg overflow-hidden">
+            <div className="bg-gray-50 dark:bg-gray-950/30 px-4 py-2 border-b border-dashed border-border">
+              <p className="text-sm font-semibold text-muted-foreground">macOS 지원 계획 (현재 미구현)</p>
+            </div>
+            <div className="divide-y divide-dashed divide-border text-sm">
+              <div className="px-4 py-2.5">
+                <p className="font-semibold mb-1">seatbelt 프로파일 기반</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">sandbox-exec</code> + SBPL 정책: 기본 deny → <code className="text-xs bg-muted px-1 py-0.5 rounded">file-read*</code> 허용 → 워크스페이스만 <code className="text-xs bg-muted px-1 py-0.5 rounded">file-write*</code></p>
+              </div>
+              <div className="px-4 py-2.5 bg-muted/30">
+                <p className="font-semibold mb-1">Windows 고려</p>
+                <p className="text-muted-foreground">AppContainer / Job Object 기반 접근 검토 중</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           macOS는 <code>sandbox-exec</code> + seatbelt 프로파일 사용 가능<br />
           현재 claw-code는 미구현 — 향후 로드맵<br />

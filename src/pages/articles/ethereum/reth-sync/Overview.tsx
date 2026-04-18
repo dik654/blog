@@ -27,32 +27,28 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── 3가지 모드 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">3가지 동기화 모드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. Full Sync (파이프라인 기반)
-//    - 제네시스부터 모든 블록 실행 → 전체 역사 재현
-//    - 완전 신뢰 없이 진행 (매 블록 검증)
-//    - 소요 시간: ~하루 (Reth 기준)
-//    - 디스크: ~2.5TB (archive)
-//    - 용도: 기본 노드 운영, validator, archive
-
-// 2. Snap Sync (스냅샷 다운로드)
-//    - 특정 블록의 상태 스냅샷을 피어에서 다운로드
-//    - 그 이후 블록만 실행
-//    - 소요 시간: ~수 시간 (Reth 기준)
-//    - 디스크: 최소 ~500GB (recent state + history)
-//    - 용도: 빠른 노드 부팅, RPC 서버
-//    - 신뢰 가정: 피어가 올바른 스냅샷 제공
-
-// 3. Live Sync (CL FCU 기반)
-//    - 이미 동기화된 노드가 tip을 따라감
-//    - CL(consensus layer)이 FCU로 새 블록 알림
-//    - 블록당 ~50ms 처리 (빠름)
-//    - 용도: 운영 중 노드 유지
-
-// 전환:
-// Full → Live: 제네시스부터 시작 → tip 도달 → Live 진입
-// Snap → Live: 스냅샷 + 최근 블록 → tip 도달 → Live 진입`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2">Full Sync</p>
+              <p className="text-sm text-foreground/80">제네시스부터 모든 블록 실행 → 전체 역사 재현. 매 블록 검증(신뢰 불필요).</p>
+              <p className="text-xs text-foreground/50 mt-2">~하루 / ~2.5TB(archive) / validator, archive 용</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">Snap Sync</p>
+              <p className="text-sm text-foreground/80">특정 블록의 상태 스냅샷을 피어에서 다운로드. 그 이후 블록만 실행.</p>
+              <p className="text-xs text-foreground/50 mt-2">~수 시간 / ~500GB / 빠른 부팅, RPC 서버</p>
+            </div>
+            <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-2">Live Sync</p>
+              <p className="text-sm text-foreground/80">이미 동기화된 노드가 tip 추적. CL이 FCU로 새 블록 알림. 블록당 ~50ms.</p>
+              <p className="text-xs text-foreground/50 mt-2">운영 중 노드 유지 전용</p>
+            </div>
+          </div>
+          <div className="rounded border border-border/40 bg-muted/20 p-3 text-sm text-foreground/60">
+            전환: Full → Live(tip 도달 시) / Snap → Live(스냅샷 + 최근 블록 처리 완료 시)
+          </div>
+        </div>
         <p className="leading-7">
           3가지 모드는 <strong>용도별 선택지</strong>.<br />
           Full은 "완전한 역사 확보", Snap은 "빠른 부팅", Live는 "tip 추적".<br />
@@ -61,36 +57,30 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── FCU 기반 동기화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">FCU — CL과 EL의 동기화 트리거</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ForkChoiceUpdated (FCU) — Engine API 메시지
-// CL (Lighthouse, Prysm 등)이 EL (Reth)에 전송
-
-struct ForkchoiceUpdatedV3 {
-    head_block_hash: B256,        // 현재 체인의 head
-    safe_block_hash: B256,        // 다음 epoch 안전 블록
-    finalized_block_hash: B256,   // 되돌릴 수 없는 블록
-    payload_attributes: Option<PayloadAttributes>, // 블록 생성 요청
-}
-
-// EL 응답:
-struct ForkchoiceUpdatedResponse {
-    payload_status: PayloadStatus,  // VALID, INVALID, SYNCING
-    payload_id: Option<PayloadId>,  // 블록 생성 ID (validator만)
-}
-
-// 3가지 상태별 EL 동작:
-// - VALID: 이미 이 블록 실행 완료, head 업데이트
-// - INVALID: 블록 검증 실패, CL에 거부 알림
-// - SYNCING: 블록 미확보, 백그라운드로 다운로드 중
-
-// PoS 이후 EL은 CL에 완전히 종속:
-// - CL이 head를 결정 (proposer 선택, attestation)
-// - EL은 CL의 지시에 따라 블록 실행 & head 업데이트
-// - EL은 더 이상 자기 tip을 독립적으로 결정하지 않음
-
-// 동기화 시작 트리거:
-// CL이 FCU로 "X 블록이 head"라고 알림 → EL이 X까지 동기화 시도`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">ForkchoiceUpdatedV3 (CL → EL)</p>
+              <ul className="text-sm text-foreground/80 space-y-1">
+                <li><code>head_block_hash: B256</code> — 현재 체인 head</li>
+                <li><code>safe_block_hash: B256</code> — 다음 epoch 안전 블록</li>
+                <li><code>finalized_block_hash: B256</code> — 되돌릴 수 없는 블록</li>
+                <li><code>payload_attributes: Option&lt;PayloadAttributes&gt;</code> — 블록 생성 요청</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">EL 응답 — PayloadStatus</p>
+              <div className="space-y-1 text-sm">
+                <div className="flex gap-2 text-foreground/80"><span className="text-green-500 shrink-0">VALID</span> 이미 실행 완료, head 업데이트</div>
+                <div className="flex gap-2 text-foreground/80"><span className="text-red-400 shrink-0">INVALID</span> 블록 검증 실패, CL에 거부 알림</div>
+                <div className="flex gap-2 text-foreground/80"><span className="text-yellow-500 shrink-0">SYNCING</span> 블록 미확보, 백그라운드 다운로드 중</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-foreground/70">
+            PoS 이후 EL은 CL에 완전히 종속 — CL이 head 결정, EL은 지시에 따라 실행 & 업데이트. 동기화 시작도 FCU가 트리거.
+          </div>
+        </div>
         <p className="leading-7">
           <strong>PoS 전환 이후 EL은 CL의 명령을 따름</strong>.<br />
           FCU가 "이 블록이 head다"라고 알려주면 EL은 그 블록까지 동기화.<br />
@@ -99,50 +89,27 @@ struct ForkchoiceUpdatedResponse {
 
         {/* ── BlockchainTree ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlockchainTree — canonical/non-canonical 체인 관리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BlockchainTree: in-memory에서 최근 블록들 관리
-// canonical chain + side chains (fork 후보) 동시 유지
-
-pub struct BlockchainTree {
-    /// canonical chain의 tip
-    canonical_head: B256,
-    /// finalized 블록 (되돌릴 수 없음)
-    finalized: BlockNumber,
-
-    /// 최근 블록들 (canonical + 후보 fork)
-    /// 최대 128 블록 유지 (reorg 가능 깊이)
-    blocks: HashMap<B256, ExecutedBlock>,
-
-    /// 부모 → 자식 매핑 (fork 추적)
-    children: HashMap<B256, Vec<B256>>,
-}
-
-impl BlockchainTree {
-    /// 새 블록 추가 → canonical 확장 or new fork
-    pub fn insert_block(&mut self, block: Block) -> BlockStatus {
-        // 1. 블록 실행 & 검증
-        let executed = execute_block(block)?;
-
-        // 2. 부모가 canonical인지 확인
-        if executed.parent_hash == self.canonical_head {
-            // canonical 확장
-            self.canonical_head = executed.hash;
-            return BlockStatus::Valid;
-        }
-
-        // 3. 아니면 fork 후보로 추가
-        self.blocks.insert(executed.hash, executed);
-        BlockStatus::Accepted  // side chain
-    }
-
-    /// FCU에 따라 canonical chain 재결정
-    pub fn update_canonical(&mut self, new_head: B256) {
-        // canonical → non-canonical 전환: unwind
-        // non-canonical → canonical 전환: apply
-        self.walk_canonical_path(new_head);
-    }
-}`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">BlockchainTree 구조체</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>canonical_head: B256</code> — canonical chain tip</span>
+              <span><code>finalized: BlockNumber</code> — 되돌릴 수 없는 블록</span>
+              <span><code>blocks: HashMap&lt;B256, ExecutedBlock&gt;</code> — 최대 128 블록</span>
+              <span><code>children: HashMap&lt;B256, Vec&lt;B256&gt;&gt;</code> — fork 추적</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2">insert_block()</p>
+              <p className="text-sm text-foreground/80">블록 실행 & 검증 → 부모가 canonical이면 확장(<code>BlockStatus::Valid</code>), 아니면 fork 후보 추가(<code>BlockStatus::Accepted</code>).</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-2">update_canonical()</p>
+              <p className="text-sm text-foreground/80">FCU에 따라 canonical chain 재결정. canonical → non-canonical: unwind / non-canonical → canonical: apply.</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>BlockchainTree</code>가 <strong>reorg 처리의 핵심</strong>.<br />
           여러 fork 후보를 메모리에 유지 → CL이 다른 fork를 선택하면 즉시 canonical 전환.<br />

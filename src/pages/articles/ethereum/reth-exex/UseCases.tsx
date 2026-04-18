@@ -29,63 +29,17 @@ export default function UseCases({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── 사례 1: ERC20 Transfer 인덱서 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">사례 1: ERC20 Transfer 인덱서</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`use alloy_sol_types::SolEvent;
-use sqlx::PgPool;
-
-// ERC20 Transfer event signature
-sol! { event Transfer(address indexed from, address indexed to, uint256 value); }
-
-async fn erc20_indexer(ctx: ExExContext, db: PgPool) -> Result<()> {
-    while let Some(notification) = ctx.notifications.recv().await {
-        match notification {
-            ExExNotification::ChainCommitted { new } => {
-                let mut txn = db.begin().await?;
-
-                for block in new.blocks() {
-                    let receipts = &new.execution_outcome().receipts[
-                        (block.number - new.first_block()) as usize
-                    ];
-
-                    for receipt in receipts {
-                        for log in &receipt.logs {
-                            // Transfer 이벤트 decode
-                            if let Ok(event) = Transfer::decode_log(&log, true) {
-                                sqlx::query!(
-                                    "INSERT INTO transfers (block, tx, token, from, to, value)
-                                     VALUES ($1, $2, $3, $4, $5, $6)",
-                                    block.number,
-                                    log.tx_hash,
-                                    log.address,
-                                    event.from,
-                                    event.to,
-                                    event.value.to_string(),
-                                ).execute(&mut *txn).await?;
-                            }
-                        }
-                    }
-                }
-
-                txn.commit().await?;
-                ctx.events.send(ExExEvent::FinishedHeight(new.tip().number)).await?;
-            }
-
-            ExExNotification::ChainReorged { old, new } => {
-                // old 블록의 transfers 삭제 → new 블록 인덱싱
-                let mut txn = db.begin().await?;
-                sqlx::query!(
-                    "DELETE FROM transfers WHERE block >= $1",
-                    old.first_block()
-                ).execute(&mut *txn).await?;
-                // ... new 적용 ...
-                txn.commit().await?;
-            }
-            _ => {}
-        }
-    }
-    Ok(())
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">ERC20 Transfer 인덱서</p>
+          <p className="text-sm text-foreground/80 mb-2">
+            <code>alloy_sol_types::SolEvent</code>로 Transfer 이벤트 정의. <code>sqlx::PgPool</code>로 PostgreSQL 저장.
+          </p>
+          <div className="space-y-1 text-sm text-foreground/80 mb-2">
+            <p><strong>ChainCommitted</strong>: DB 트랜잭션 시작 → 블록별 receipt 순회 → <code>Transfer::decode_log</code> → INSERT → commit → <code>FinishedHeight</code></p>
+            <p><strong>ChainReorged</strong>: <code>DELETE FROM transfers WHERE block &gt;= old.first_block()</code> → new 블록 재인덱싱 → commit</p>
+          </div>
+          <p className="text-sm text-foreground/60">DB 트랜잭션으로 원자성 보장. reorg 시 old 삭제 → new 적용 순서 유지.</p>
+        </div>
         <p className="leading-7">
           ERC20 Transfer 인덱서의 <strong>실전 구현 예시</strong>.<br />
           모든 블록의 Transfer 이벤트 → PostgreSQL 저장 → 쿼리 가능.<br />
@@ -94,51 +48,18 @@ async fn erc20_indexer(ctx: ExExContext, db: PgPool) -> Result<()> {
 
         {/* ── 사례 2: Rollup Sequencer ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">사례 2: Rollup Sequencer (L2)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// OP Stack 시퀀서가 L1 블록을 추적하는 ExEx
-async fn l1_tracker(ctx: ExExContext, l2_state: Arc<Mutex<L2State>>) -> Result<()> {
-    while let Some(notification) = ctx.notifications.recv().await {
-        match notification {
-            ExExNotification::ChainCommitted { new } => {
-                let mut state = l2_state.lock().await;
-
-                for block in new.blocks() {
-                    // 1. L1 block info 추출
-                    let l1_info = L1BlockInfo {
-                        number: block.number,
-                        hash: block.hash(),
-                        timestamp: block.timestamp,
-                        base_fee: block.base_fee_per_gas,
-                        blob_base_fee: block.blob_base_fee,
-                    };
-
-                    // 2. L2 체인에 L1 attribute 추가
-                    state.pending_l1_attributes.push(l1_info);
-
-                    // 3. Deposit TX 감지 (OptimismPortal 주소로의 송금)
-                    let receipts = &new.execution_outcome().receipts[
-                        (block.number - new.first_block()) as usize
-                    ];
-                    for receipt in receipts {
-                        for log in &receipt.logs {
-                            if log.address == OPTIMISM_PORTAL_ADDRESS
-                                && log.topics[0] == DEPOSIT_TOPIC {
-                                // Deposit event → L2 메시지로 변환
-                                let deposit = parse_deposit_event(log)?;
-                                state.pending_deposits.push(deposit);
-                            }
-                        }
-                    }
-                }
-
-                ctx.events.send(ExExEvent::FinishedHeight(new.tip().number)).await?;
-            }
-            _ => {}
-        }
-    }
-    Ok(())
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">Rollup Sequencer (OP Stack)</p>
+          <p className="text-sm text-foreground/80 mb-2">
+            <code>l2_state: Arc&lt;Mutex&lt;L2State&gt;&gt;</code>를 공유하여 L1 블록 이벤트를 L2 state에 반영.
+          </p>
+          <div className="space-y-1 text-sm text-foreground/80">
+            <p>1. L1 block info 추출 — <code>number</code>, <code>hash</code>, <code>timestamp</code>, <code>base_fee</code>, <code>blob_base_fee</code></p>
+            <p>2. <code>pending_l1_attributes</code>에 L1 attribute 추가</p>
+            <p>3. <code>OptimismPortal</code> 주소의 Deposit event 감지 → <code>parse_deposit_event</code> → L2 메시지 변환</p>
+          </div>
+          <p className="text-sm text-foreground/60 mt-2">별도 L1 인덱서 불필요 — L1 노드 내부에서 직접 L2 state 업데이트.</p>
+        </div>
         <p className="leading-7">
           L2 시퀀서가 <strong>L1 노드 내부에서 직접 실행</strong>.<br />
           L1 블록 이벤트 수신 → L2 state 업데이트 → deposit TX 처리.<br />
@@ -147,48 +68,23 @@ async fn l1_tracker(ctx: ExExContext, l2_state: Arc<Mutex<L2State>>) -> Result<(
 
         {/* ── 사례 3: MEV Searcher ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">사례 3: MEV Searcher Bot</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// MEV 기회 탐지 bot
-async fn mev_searcher(
-    ctx: ExExContext,
-    flashbots_client: FlashbotsClient,
-) -> Result<()> {
-    while let Some(notification) = ctx.notifications.recv().await {
-        if let ExExNotification::ChainCommitted { new } = notification {
-            for block in new.blocks() {
-                // 1. 블록의 모든 TX를 시뮬레이션 (상태 변경 예상)
-                let state = ctx.provider.state_at_block(block.number)?;
-
-                // 2. DEX price updates 감지
-                for tx in &block.body.transactions {
-                    if let Some(swap) = parse_uniswap_swap(tx) {
-                        // 3. Arbitrage 기회 계산
-                        let arb = find_arbitrage(&swap, &state)?;
-
-                        if let Some(profitable_arb) = arb {
-                            // 4. Flashbots bundle 제출
-                            let bundle = build_arbitrage_bundle(profitable_arb)?;
-                            flashbots_client.send_bundle(
-                                bundle,
-                                block.number + 1,  // 다음 블록 타겟
-                            ).await?;
-                        }
-                    }
-                }
-            }
-
-            ctx.events.send(ExExEvent::FinishedHeight(new.tip().number)).await?;
-        }
-    }
-    Ok(())
-}
-
-// ExEx가 MEV에 유리한 이유:
-// 1. 블록 포함 즉시 알림 (mempool polling 대비 빠름)
-// 2. state query가 로컬 (외부 RPC 대비 빠름)
-// 3. 블록 실행 결과 직접 접근 (로그 전체)
-// 4. backpressure 없음 (이벤트 손실 없음)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3">MEV Searcher Bot</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>provider.state_at_block()</code>으로 블록 상태 로드</p>
+              <p>2. <code>parse_uniswap_swap(tx)</code>로 DEX swap 감지</p>
+              <p>3. <code>find_arbitrage(&amp;swap, &amp;state)</code>로 차익 기회 계산</p>
+              <p>4. 수익성 확인 시 <code>flashbots_client.send_bundle(bundle, block.number + 1)</code> 제출</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">블록 즉시 알림</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">로컬 state query</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">실행 결과 직접 접근</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">이벤트 손실 없음</div>
+          </div>
+        </div>
         <p className="leading-7">
           MEV searcher가 <strong>노드 내부에서 실시간 기회 탐지</strong>.<br />
           외부 RPC polling 대비 latency 수백 ms → 수 ms로 단축.<br />

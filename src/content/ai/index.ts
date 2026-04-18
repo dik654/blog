@@ -20,6 +20,7 @@ const ai: Category = {
       ],
     },
     { slug: 'ai-agents', name: 'Agents & Tools', description: '프롬프트·컨텍스트·MCP·하네스·에이전트 패턴 등 공통 이론', icon: '🤖' },
+    { slug: 'ai-agents-ops', name: 'Agent Dev Ops', description: '개인 에이전트 개발 운영 — devlog·ADR·lessons·changelog 패턴', icon: '📓' },
     {
       slug: 'ai-agents-claw', name: 'Claw Code', description: 'Claude Code 하네스의 클린룸 재구현 (Rust)', icon: '🦀',
       children: [
@@ -31,6 +32,19 @@ const ai: Category = {
       ],
     },
     { slug: 'ai-from-scratch', name: 'DL 구현 (Rust)', description: 'dezero_rs — 딥러닝 프레임워크를 Rust로 직접 구현', icon: '🦀' },
+    {
+      slug: 'ai-practical', name: '실전 ML', description: '대회·실무에서 바로 쓰는 파이프라인, 모델링, 전략', icon: '🏆',
+      children: [
+        { slug: 'ai-practical-data', name: '데이터 & 피처', description: 'EDA, 피처 엔지니어링, 증강, 불균형 처리' },
+        { slug: 'ai-practical-tabular', name: '테이블형 모델링', description: 'GBM, TabNet, 시계열 피처, 시퀀스 모델링' },
+        { slug: 'ai-practical-pipeline', name: '학습 파이프라인', description: 'PyTorch 실전, Transfer Learning, LR 스케줄링, 정규화' },
+        { slug: 'ai-practical-cv', name: '실전 CV', description: '이미지 분류, ViT, 멀티뷰, 딥페이크, 비디오' },
+        { slug: 'ai-practical-embedding', name: '도메인 임베딩', description: 'Contrastive Learning, 도메인 Fine-tuning, 문장 임베딩' },
+        { slug: 'ai-practical-compression', name: '모델 경량화', description: '양자화, 프루닝, 지식 증류, 경량화 파이프라인' },
+        { slug: 'ai-practical-llm', name: 'LLM 응용', description: 'RAG, LoRA/QLoRA, 멀티 에이전트 구현' },
+        { slug: 'ai-practical-strategy', name: '대회 전략', description: '교차 검증, 튜닝, 앙상블, 평가 지표, 실험 관리' },
+      ],
+    },
   ],
   articles: aiArticles,
 };

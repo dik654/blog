@@ -35,60 +35,55 @@ export default function PBFT() {
 
         {/* ── PBFT 기여 정리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PBFT의 기여와 한계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PBFT의 3가지 기여 (1999):
-//
-// 1. Partial synchrony 모델에서 동작:
-//    - 이전 BFT는 동기 가정 필요
-//    - PBFT는 GST 후 liveness 보장
-//    - Safety는 항상 보장
-//
-// 2. Symmetric cryptography + digital signatures:
-//    - MAC 기반 메시지 인증
-//    - 성능 vs security trade-off
-//    - 실무 배포 가능한 성능
-//
-// 3. View change 프로토콜 완비:
-//    - leader 실패 복구 구체화
-//    - 이전 state 보존 증명
-//    - Safety 유지 수학적 증명
+        <div className="grid gap-3 sm:grid-cols-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">기여 1: Partial Synchrony</p>
+            <p className="text-sm">이전 BFT는 동기 가정 필요. PBFT는 GST 후 liveness 보장, safety는 항상 보장.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">기여 2: MAC 기반 인증</p>
+            <p className="text-sm">Symmetric cryptography + digital signatures. 성능 vs security trade-off로 실무 배포 가능.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">기여 3: View Change 완비</p>
+            <p className="text-sm">leader 실패 복구 구체화 + 이전 state 보존 증명 + safety 유지 수학적 증명.</p>
+          </div>
+        </div>
 
-// 측정 성능 (1999 PC):
-// - normal case: 3ms per operation
-// - throughput: 1000 ops/s
-// - BFS (Byzantine FS) 구현
-// - NFS와 유사한 성능
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">측정 성능 (1999 PC)</p>
+          <p className="text-sm">Normal case <code className="text-xs">3ms/op</code>, throughput <code className="text-xs">1000 ops/s</code>. BFS(Byzantine FS) 구현으로 NFS와 유사 성능 달성.</p>
+        </div>
 
-// PBFT 한계:
-//
-// 1. O(n²) normal communication:
-//    - n=50: ~2500 messages per request
-//    - n=100: ~10000 messages
-//    - bandwidth 폭발
-//
-// 2. O(n³) view change:
-//    - 2f+1 VIEW-CHANGE messages
-//    - 각 O(n) proofs 포함
-//    - NEW-VIEW broadcast
-//    - 실제 delay: 수 초
-//
-// 3. Client-centric model:
-//    - client가 primary 추적
-//    - f+1 matching reply 수집
-//    - blockchain에 부적합
-//
-// 4. Static membership:
-//    - replica set 고정
-//    - 동적 합류/탈퇴 어려움
-//    - blockchain은 dynamic
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-1">한계 1: <code className="text-xs">O(n²)</code> Normal Communication</p>
+            <p className="text-sm"><code className="text-xs">n=50</code>: ~2500 messages, <code className="text-xs">n=100</code>: ~10000 messages. bandwidth 폭발.</p>
+          </div>
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-1">한계 2: <code className="text-xs">O(n³)</code> View Change</p>
+            <p className="text-sm"><code className="text-xs">2f+1</code> VIEW-CHANGE + 각 <code className="text-xs">O(n)</code> proofs + NEW-VIEW broadcast. 실제 delay 수 초.</p>
+          </div>
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-1">한계 3: Client-centric Model</p>
+            <p className="text-sm">client가 primary 추적 + <code className="text-xs">f+1</code> matching reply 수집. blockchain에 부적합.</p>
+          </div>
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-1">한계 4: Static Membership</p>
+            <p className="text-sm">replica set 고정 — 동적 합류/탈퇴 어려움. blockchain은 dynamic.</p>
+          </div>
+        </div>
 
-// 후속 프로토콜 (해결):
-// - Zyzzyva (2007): speculation으로 latency 단축
-// - Aardvark (2009): fault-injection 저항
-// - Tendermint (2014): blockchain 맞춤
-// - HotStuff (2019): O(n) complexity
-// - DiemBFT (2021): production-grade`}
-        </pre>
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">후속 프로토콜 (각 한계 해결)</p>
+          <ul className="text-sm space-y-1 list-disc pl-4">
+            <li>Zyzzyva (2007) — speculation으로 latency 단축</li>
+            <li>Aardvark (2009) — fault-injection 저항</li>
+            <li>Tendermint (2014) — blockchain 맞춤</li>
+            <li>HotStuff (2019) — <code className="text-xs">O(n)</code> complexity</li>
+            <li>DiemBFT (2021) — production-grade</li>
+          </ul>
+        </div>
         <p className="leading-7">
           PBFT = <strong>BFT의 Paxos</strong> — 26년간 모든 BFT의 기반.<br />
           한계: O(n²)/O(n³) communication, client-centric.<br />

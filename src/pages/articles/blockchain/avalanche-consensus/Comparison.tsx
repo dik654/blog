@@ -46,78 +46,44 @@ export default function Comparison() {
 
         {/* ── Deep Comparison ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Avalanche vs Classical BFT 심층 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Avalanche vs BFT:
-
-// Safety Model:
-// Avalanche: probabilistic
-// - P(violation) ≈ e^(-α*β) * ...
-// - 10^-10 typical
-// - not zero, but astronomically small
-//
-// BFT (PBFT, HotStuff):
-// - deterministic
-// - P(violation) = 0 (if f<n/3)
-// - absolute guarantee
-// - assumes f<n/3 (not always true)
-
-// Communication:
-// Avalanche: O(k log n)
-// - k=20 sample size
-// - per node per round
-// - total: O(n * k log n)
-//
-// BFT: O(n²) all-to-all or O(n) linear
-// - all validators exchange
-// - quadratic scaling
-
-// Latency:
-// Avalanche: β rounds × RTT
-// - ~1 second (20 rounds × 50ms)
-// - no immediate finality
-//
-// BFT: O(1) rounds
-// - 3-4 round trips
-// - 200-500ms (partial sync)
-
-// Throughput:
-// Avalanche: 4500 TPS (X-Chain)
-// BFT: 10K-100K+ TPS (latest)
-// BFT wins at top end
-
-// Scalability (validators):
-// Avalanche: thousands
-// BFT: hundreds
-// Avalanche wins
-
-// Byzantine tolerance:
-// Avalanche: up to n/2 (with tuning)
-// BFT: n/3 strict
-// Avalanche more tolerant
-
-// Fork resistance:
-// Avalanche: metastable → no forks
-// BFT: absolute no-fork
-// Both safe (different mechanism)
-
-// Energy:
-// Avalanche: low (no PoW)
-// BFT: low
-// 둘 다 efficient
-
-// 적합 용도:
-// Avalanche (probabilistic + scalable):
-// - social networks
-// - gaming
-// - low-stake payments
-// - high validator count
-//
-// BFT (deterministic + bounded):
-// - financial settlement
-// - cross-border transfers
-// - regulatory compliance
-// - institutional use`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Avalanche vs BFT 속성 비교</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">속성</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Avalanche</th>
+                    <th className="border border-border px-3 py-1.5 text-left">BFT (PBFT/HotStuff)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">Safety</td><td className="border border-border px-3 py-1.5">probabilistic (~10^-10)</td><td className="border border-border px-3 py-1.5">deterministic (f&lt;n/3이면 P=0)</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Communication</td><td className="border border-border px-3 py-1.5"><code>O(k log n)</code></td><td className="border border-border px-3 py-1.5"><code>O(n2)</code> 또는 <code>O(n)</code></td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Latency</td><td className="border border-border px-3 py-1.5">~1s (beta rounds x RTT)</td><td className="border border-border px-3 py-1.5">200-500ms (3-4 RTT)</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Throughput</td><td className="border border-border px-3 py-1.5">4500 TPS (X-Chain)</td><td className="border border-border px-3 py-1.5">10K-100K+ TPS</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Validators</td><td className="border border-border px-3 py-1.5">수천+</td><td className="border border-border px-3 py-1.5">수백</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Byzantine tolerance</td><td className="border border-border px-3 py-1.5">up to n/2 (tuning)</td><td className="border border-border px-3 py-1.5">n/3 strict</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Energy</td><td className="border border-border px-3 py-1.5">low</td><td className="border border-border px-3 py-1.5">low</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">적합 용도</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Avalanche (probabilistic + scalable)</p>
+                <p className="text-muted-foreground">social networks, gaming, low-stake payments, high validator count</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">BFT (deterministic + bounded)</p>
+                <p className="text-muted-foreground">financial settlement, cross-border transfers, regulatory compliance, institutional use</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Avalanche 강점: <strong>scalability (1000+ validators)</strong>.<br />
           BFT 강점: <strong>deterministic safety</strong>.<br />
@@ -126,76 +92,47 @@ export default function Comparison() {
 
         {/* ── Avalanche 실무 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Avalanche의 실무 사용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Avalanche blockchain (2020-현재):
-//
-// 3-chain architecture:
-// 1. X-Chain (eXchange):
-//    - Avalanche DAG consensus
-//    - UTXO-based
-//    - asset creation/transfer
-//    - 4500+ TPS
-//
-// 2. C-Chain (Contract):
-//    - Snowman consensus
-//    - EVM compatible
-//    - smart contracts
-//    - DeFi ecosystem
-//
-// 3. P-Chain (Platform):
-//    - Snowman consensus
-//    - staking, validators
-//    - subnet management
-
-// Subnet architecture:
-// - 독립 chain
-// - custom consensus
-// - custom VM
-// - permissioned or permissionless
-// - horizontal sharding
-
-// Subnet 예:
-// - DeFi Kingdoms (gaming)
-// - Shrapnel (gaming)
-// - Dexalot (exchange)
-// - enterprise subnets
-
-// Avalanche Performance (2024):
-// - ~1500 validators (mainnet)
-// - 4500 TPS (X-Chain)
-// - 100-500 TPS (C-Chain, EVM bound)
-// - subsecond finality
-// - $250M+ TVL
-
-// Tokenomics:
-// - AVAX: native token
-// - validators: 2000 AVAX stake minimum
-// - annual reward: ~7-11% APR
-// - burned fees (deflationary)
-
-// 경쟁 포지션:
-// - vs Ethereum: higher TPS, lower fees
-// - vs Solana: better decentralization
-// - vs Cosmos: similar modular approach
-// - vs Sui/Aptos: different consensus family
-
-// Avalanche 장점:
-// - mature ecosystem
-// - EVM compatibility
-// - subnet flexibility
-// - multi-chain architecture
-
-// 한계:
-// - probabilistic finality 우려 (일부)
-// - validator 요구 높음 ($70K+ stake)
-// - ecosystem 작음 (Ethereum 대비)
-
-// 미래:
-// - Avalanche 9000 (2024-2025)
-// - subnet fees 감소
-// - interchain messaging
-// - L1 chains 분사`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">3-Chain Architecture</p>
+            <div className="grid gap-2 sm:grid-cols-3 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">X-Chain (eXchange)</p>
+                <p className="text-muted-foreground">Avalanche DAG consensus, UTXO-based, asset creation/transfer, 4500+ TPS</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">C-Chain (Contract)</p>
+                <p className="text-muted-foreground">Snowman consensus, EVM compatible, smart contracts, DeFi ecosystem</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">P-Chain (Platform)</p>
+                <p className="text-muted-foreground">Snowman consensus, staking/validators, subnet management</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Subnet Architecture</p>
+            <p className="text-sm text-muted-foreground">
+              독립 chain, custom consensus, custom VM, permissioned/permissionless, horizontal sharding.<br />
+              예: DeFi Kingdoms (gaming), Shrapnel (gaming), Dexalot (exchange), enterprise subnets
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Performance &amp; Tokenomics (2024)</p>
+            <p className="text-sm">
+              ~1500 validators, 4500 TPS (X-Chain), 100-500 TPS (C-Chain), subsecond finality, $250M+ TVL.<br />
+              AVAX token: 2000 AVAX stake minimum, ~7-11% APR, burned fees (deflationary)
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">경쟁 포지션 &amp; 미래</p>
+            <p className="text-sm text-muted-foreground">
+              장점: mature ecosystem, EVM compatibility, subnet flexibility, multi-chain architecture.<br />
+              한계: probabilistic finality 우려, validator 요구 높음 ($70K+), ecosystem 작음 (vs Ethereum).<br />
+              미래: Avalanche 9000 (2024-2025), subnet fees 감소, interchain messaging, L1 chains 분사
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Avalanche: <strong>3-chain + subnet architecture</strong>.<br />
           X-Chain 4500 TPS, C-Chain EVM 호환, P-Chain 관리.<br />

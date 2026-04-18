@@ -1,3 +1,7 @@
+import AiFdsViz from './viz/AiFdsViz';
+import AiScoringViz from './viz/AiScoringViz';
+import ModelGovernanceViz from './viz/ModelGovernanceViz';
+
 export default function AiFds() {
   return (
     <section id="ai-fds" className="mb-16 scroll-mt-20">
@@ -10,6 +14,8 @@ export default function AiFds() {
           규칙 수가 늘어날수록 규칙 간 충돌과 오탐(False Positive)이 급증한다.<br />
           이 한계를 돌파하기 위해 AI 기반 FDS가 도입되고 있다.
         </p>
+
+        <AiFdsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">규칙 기반의 구조적 한계</h3>
 
@@ -133,6 +139,8 @@ export default function AiFds() {
           이를 통해 누적 수천억 원 규모의 가상자산 관련 범죄를 차단한 실적이 보고되고 있다.
         </p>
 
+        <AiScoringViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">블랙리스트 자동 갱신</h3>
         <p>
           FDS의 효과는 블랙리스트의 최신성에 직결된다.<br />
@@ -207,6 +215,8 @@ export default function AiFds() {
           AI가 자동으로 계정을 정지하는 것은 오탐 시 이용자 피해를 초래하므로 신중해야 한다 —
           다만 OFAC 제재 주소와의 직접 거래처럼 명백한 경우에는 자동 차단이 허용된다.
         </p>
+
+        <ModelGovernanceViz />
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>{'💡'} AI FDS의 다음 단계 — 블록체인 인텔리전스 에이전트</strong><br />

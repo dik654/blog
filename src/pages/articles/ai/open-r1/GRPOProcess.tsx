@@ -4,6 +4,7 @@ import { ppoVsGrpo, grpoHyperparams } from './grpoData';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
+import M from '@/components/ui/math';
 
 export default function GRPOProcess({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
   return (
@@ -13,6 +14,11 @@ export default function GRPOProcess({ onCodeRef }: { onCodeRef?: (key: string, r
         <p>
           <strong>왜 PPO가 아닌 GRPO인가</strong> — PPO는 Critic 모델이 필요 (7B 기준 +14GB)<br />
           GRPO는 Critic 없이 그룹 내 상대적 보상 순위로 Advantage 계산
+        </p>
+        <h4>GRPO Advantage 계산</h4>
+        <M display>{'\\hat{A}_i = \\frac{\\overbrace{r_i}^{\\text{개별 보상}} - \\underbrace{\\text{mean}(r_1, \\ldots, r_G)}_{\\text{그룹 평균}}}{\\underbrace{\\text{std}(r_1, \\ldots, r_G)}_{\\text{그룹 표준편차}}}'}</M>
+        <p className="text-sm text-muted-foreground mt-2">
+          같은 프롬프트에 G개 응답을 샘플링 → 그룹 내 상대 순위로 Advantage 계산. Critic 모델 불필요
         </p>
       </div>
 

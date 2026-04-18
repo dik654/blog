@@ -30,106 +30,112 @@ export default function RuntimeFoundation({ onCodeRef }: {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Runtime Trait 집합</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Commonware Runtime abstractions
-
-// Clock: Time provider
-#[async_trait]
-pub trait Clock: Clone + Send + Sync {
-    fn current(&self) -> SystemTime;
-    async fn sleep(&self, duration: Duration);
-    async fn sleep_until(&self, deadline: SystemTime);
-}
-
-// Network: P2P communication
-#[async_trait]
-pub trait Network: Clone + Send + Sync {
-    type Listener;
-    type Connection;
-
-    async fn bind(&self, addr: SocketAddr) -> Result<Self::Listener>;
-    async fn connect(&self, addr: SocketAddr) -> Result<Self::Connection>;
-}
-
-// Storage: Persistent data
-#[async_trait]
-pub trait Storage: Clone + Send + Sync {
-    type Blob;
-    async fn open(&self, path: &str) -> Result<Self::Blob>;
-    async fn remove(&self, path: &str) -> Result<()>;
-}
-
-// Spawner: Task spawning
-pub trait Spawner: Clone + Send + Sync {
-    fn spawn<F>(&self, f: F) -> JoinHandle<F::Output>
-    where F: Future + Send + 'static;
-}
-
-// Metrics: Observability
-pub trait Metrics: Clone + Send + Sync {
-    fn register_counter(&self, name: &str) -> Counter;
-    fn register_gauge(&self, name: &str) -> Gauge;
-    fn register_histogram(&self, name: &str) -> Histogram;
-}
-
-// Context: 모든 trait 번들
-pub trait Context:
-    Clock + Network + Storage + Spawner + Metrics
-    + Clone + Send + Sync + 'static
-{}`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Clock</code> — Time provider</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code className="text-xs">fn current(&self) -&gt; SystemTime</code></li>
+              <li><code className="text-xs">async fn sleep(&self, duration: Duration)</code></li>
+              <li><code className="text-xs">async fn sleep_until(&self, deadline: SystemTime)</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Network</code> — P2P communication</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Associated types: <code className="text-xs">Listener</code>, <code className="text-xs">Connection</code></li>
+              <li><code className="text-xs">async fn bind(&self, addr) -&gt; Result&lt;Listener&gt;</code></li>
+              <li><code className="text-xs">async fn connect(&self, addr) -&gt; Result&lt;Connection&gt;</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Storage</code> — Persistent data</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Associated type: <code className="text-xs">Blob</code></li>
+              <li><code className="text-xs">async fn open(&self, path) -&gt; Result&lt;Blob&gt;</code></li>
+              <li><code className="text-xs">async fn remove(&self, path) -&gt; Result&lt;()&gt;</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Spawner</code> — Task spawning</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code className="text-xs">fn spawn&lt;F&gt;(&self, f: F) -&gt; JoinHandle&lt;Output&gt;</code></li>
+              <li>where <code className="text-xs">F: Future + Send + 'static</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Metrics</code> — Observability</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code className="text-xs">fn register_counter(&self, name) -&gt; Counter</code></li>
+              <li><code className="text-xs">fn register_gauge(&self, name) -&gt; Gauge</code></li>
+              <li><code className="text-xs">fn register_histogram(&self, name) -&gt; Histogram</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Context</code> — 모든 trait 번들</h4>
+            <p className="text-sm text-muted-foreground">
+              <code className="text-xs">Clock + Network + Storage + Spawner + Metrics + Clone + Send + Sync + 'static</code>
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Deterministic Testing</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Deterministic simulation framework
-
-pub struct DeterministicRunner {
-    seed: u64,
-    clock: SimClock,
-    network: VirtualNetwork,
-    storage: MemStorage,
-}
-
-impl DeterministicRunner {
-    pub fn start<F, Fut>(self, f: F) -> Fut::Output
-    where
-        F: FnOnce(DeterministicContext) -> Fut,
-        Fut: Future,
-    {
-        let ctx = self.build_context();
-        executor::block_on(f(ctx))
-    }
-}
-
-// Virtual network: message-passing simulation
-// - No real TCP
-// - Configurable delay/drop
-// - Reproducible failures
-
-// SimClock: virtual time
-// - Can fast-forward
-// - Controlled concurrency
-// - Deterministic ordering
-
-// Test example
-#[test]
-fn test_consensus_safety() {
-    let mut runner = DeterministicRunner::new(seed: 42);
-
-    // Inject byzantine behaviors
-    runner.network().partition(|peers| peers.id < 2);
-    runner.clock().advance(Duration::from_secs(60));
-
-    // Assert safety property
-    let outcomes = runner.start(|ctx| async {
-        simplex::run(ctx, validators).await
-    });
-
-    assert_no_double_commit(outcomes);
-}
-
-// 장점
-// ✓ 100% 재현 가능
-// ✓ 실시간보다 1000x+ 빠름
-// ✓ Byzantine 시나리오 주입 쉬움
-// ✓ CI에서 검증 가능`}</pre>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-3"><code className="text-xs">DeterministicRunner</code> 구조체</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h5 className="font-semibold text-sm mb-2">필드</h5>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code className="text-xs">seed: u64</code> — 재현 가능한 시드</li>
+                <li><code className="text-xs">clock: SimClock</code> — 가상 시간</li>
+                <li><code className="text-xs">network: VirtualNetwork</code> — 가상 네트워크</li>
+                <li><code className="text-xs">storage: MemStorage</code> — 인메모리 저장소</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold text-sm mb-2"><code className="text-xs">start</code> 메서드</h5>
+              <p className="text-sm text-muted-foreground">
+                <code className="text-xs">DeterministicContext</code>를 생성하여 클로저에 주입, <code className="text-xs">executor::block_on</code>으로 동기 실행
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">VirtualNetwork</code></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>No real TCP — message-passing simulation</li>
+              <li>Configurable delay/drop</li>
+              <li>Reproducible failures</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code className="text-xs">SimClock</code></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Can fast-forward (가상 시간 점프)</li>
+              <li>Controlled concurrency</li>
+              <li>Deterministic ordering</li>
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-3">테스트 예시: consensus safety</h4>
+          <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside mb-3">
+            <li><code className="text-xs">DeterministicRunner::new(seed: 42)</code> 생성</li>
+            <li>Byzantine 주입 — <code className="text-xs">runner.network().partition(...)</code></li>
+            <li>시간 전진 — <code className="text-xs">runner.clock().advance(60s)</code></li>
+            <li><code className="text-xs">simplex::run(ctx, validators)</code> 실행</li>
+            <li><code className="text-xs">assert_no_double_commit(outcomes)</code> — safety 검증</li>
+          </ol>
+          <div className="text-sm">
+            <span className="font-medium text-green-600 dark:text-green-400">장점</span>
+            <ul className="mt-1 space-y-0.5 text-muted-foreground">
+              <li>100% 재현 가능 (seed 기반)</li>
+              <li>실시간보다 1000x+ 빠름</li>
+              <li>Byzantine 시나리오 주입 쉬움</li>
+              <li>CI에서 자동 검증 가능</li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </section>

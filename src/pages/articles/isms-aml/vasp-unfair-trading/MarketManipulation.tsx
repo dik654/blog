@@ -1,8 +1,14 @@
+import MarketManipulationViz from './viz/MarketManipulationViz';
+import SpoofingFlowViz from './viz/SpoofingFlowViz';
+import PumpDumpFlowViz from './viz/PumpDumpFlowViz';
+
 export default function MarketManipulation() {
   return (
     <section id="market-manipulation" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">시세조종과 부정거래</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <MarketManipulationViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">시세조종이란</h3>
         <p className="leading-7">
@@ -13,6 +19,8 @@ export default function MarketManipulation() {
           <br />
           가상자산이용자보호법 제10조 제2항은 시세조종을 명시적으로 금지한다.
         </p>
+
+        <SpoofingFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">허수 주문(Spoofing)</h3>
         <p className="leading-7">
@@ -79,6 +87,8 @@ export default function MarketManipulation() {
           <br />
           거래소 간 감시 정보 공유 체계가 구축되어야 실효적 탐지가 가능하다.
         </p>
+
+        <PumpDumpFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">펌프 앤 덤프(Pump and Dump)</h3>
         <p className="leading-7">

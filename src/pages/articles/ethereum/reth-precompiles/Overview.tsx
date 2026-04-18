@@ -32,50 +32,34 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── Precompile trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Precompile trait — revm의 네이티브 함수 인터페이스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm-precompile 크레이트의 trait
-pub trait Precompile {
-    /// 프리컴파일 실행
-    fn call(
-        &self,
-        input: &[u8],         // CALL의 calldata
-        gas_limit: u64,        // 남은 gas
-        env: &Env,             // EVM 환경 (chain_spec, block)
-    ) -> Result<PrecompileOutput, PrecompileError>;
-}
-
-pub struct PrecompileOutput {
-    pub gas_used: u64,
-    pub bytes: Bytes,  // 반환 데이터
-}
-
-pub enum PrecompileError {
-    OutOfGas,
-    Blake2WrongLength,
-    Blake2WrongFinalIndicatorFlag,
-    ModexpExpOverflow,
-    ModexpBaseOverflow,
-    ModexpModOverflow,
-    Bn128FieldPointNotAMember,
-    Bn128AffineGFailedToCreate,
-    Bn128PairLength,
-    BlobInvalidInputLength,
-    BlobMismatchedVersion,
-    BlobVerifyKzgProofFailed,
-    Other(String),
-}
-
-// 실행 흐름:
-// 1. EVM이 CALL opcode 실행
-// 2. to 주소가 0x01~0x0a 확인
-// 3. precompile 함수 직접 호출 (bytecode 없음)
-// 4. native Rust 코드로 암호 연산 수행
-// 5. 결과 + gas_used 반환
-
-// 성능:
-// - bytecode 실행: opcode마다 overhead ~100ns
-// - precompile: 직접 함수 호출 → opcode overhead 0`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">Precompile::call(<code>input: &amp;[u8]</code>, <code>gas_limit: u64</code>, <code>env: &amp;Env</code>)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="font-mono text-xs text-emerald-400 mb-1">PrecompileOutput</p>
+              <p className="text-xs text-foreground/60"><code>gas_used: u64</code> + <code>bytes: Bytes</code> (반환 데이터)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="font-mono text-xs text-red-400 mb-1">PrecompileError</p>
+              <p className="text-xs text-foreground/60">OutOfGas, Blake2WrongLength, Bn128PairLength, BlobVerifyKzgProofFailed 등</p>
+            </div>
+          </div>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3 mb-3">
+            <p className="text-xs font-semibold text-foreground/70 mb-1">실행 흐름</p>
+            <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
+              <span>1. CALL opcode</span>
+              <span>&#8594;</span>
+              <span>2. to=0x01~0x0a 확인</span>
+              <span>&#8594;</span>
+              <span>3. precompile 직접 호출</span>
+              <span>&#8594;</span>
+              <span>4. native Rust 암호 연산</span>
+              <span>&#8594;</span>
+              <span>5. 결과 반환</span>
+            </div>
+          </div>
+          <p className="text-xs text-foreground/50">bytecode: opcode마다 ~100ns overhead / precompile: 직접 함수 호출 &#8594; opcode overhead 0</p>
+        </div>
         <p className="leading-7">
           <code>Precompile</code> trait이 <strong>네이티브 함수의 공통 인터페이스</strong>.<br />
           EVM opcode 디스패치 거치지 않고 직접 Rust 함수 호출 → 성능 극대화.<br />
@@ -84,47 +68,44 @@ pub enum PrecompileError {
 
         {/* ── 포크별 레지스트리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Precompile 레지스트리 — 하드포크별 누적</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 하드포크별 Precompiles 정의
-pub enum PrecompileSpecId {
-    Homestead,     // 0x01-0x04
-    Byzantium,     // +0x05-0x08
-    Istanbul,      // +0x09
-    Berlin,        // (gas 조정)
-    Cancun,        // +0x0a (point_evaluation)
-    Prague,        // +0x0b-0x11 (BLS12-381)
-}
-
-pub fn precompiles_by_spec(spec: PrecompileSpecId) -> &'static Precompiles {
-    match spec {
-        PrecompileSpecId::Homestead => &HOMESTEAD_PRECOMPILES,
-        PrecompileSpecId::Byzantium => &BYZANTIUM_PRECOMPILES,
-        PrecompileSpecId::Istanbul => &ISTANBUL_PRECOMPILES,
-        PrecompileSpecId::Berlin => &BERLIN_PRECOMPILES,
-        PrecompileSpecId::Cancun => &CANCUN_PRECOMPILES,
-        PrecompileSpecId::Prague => &PRAGUE_PRECOMPILES,
-    }
-}
-
-// OnceLock 지연 초기화
-static CANCUN_PRECOMPILES: OnceLock<Precompiles> = OnceLock::new();
-
-fn init_cancun() -> Precompiles {
-    let mut p = BERLIN_PRECOMPILES.clone();  // Berlin 상속
-    p.insert(POINT_EVALUATION_ADDRESS, point_evaluation_precompile());
-    p
-}
-
-// 장점:
-// 1. 하드포크별 명확한 목록
-// 2. 이전 fork 기반으로 증분 추가 → 중복 제거
-// 3. OnceLock으로 thread-safe + 1회만 초기화
-
-// 레지스트리 조회:
-fn get_precompile(addr: &Address, spec: PrecompileSpecId) -> Option<&Precompile> {
-    precompiles_by_spec(spec).get(addr)
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">PrecompileSpecId enum</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="font-mono text-xs text-foreground/70">Homestead</p>
+              <p className="text-[11px] text-foreground/50">0x01-0x04</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="font-mono text-xs text-foreground/70">Byzantium</p>
+              <p className="text-[11px] text-foreground/50">+0x05-0x08</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="font-mono text-xs text-foreground/70">Istanbul</p>
+              <p className="text-[11px] text-foreground/50">+0x09</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="font-mono text-xs text-foreground/70">Berlin</p>
+              <p className="text-[11px] text-foreground/50">(gas 조정)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="font-mono text-xs text-foreground/70">Cancun</p>
+              <p className="text-[11px] text-foreground/50">+0x0a (point_eval)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="font-mono text-xs text-foreground/70">Prague</p>
+              <p className="text-[11px] text-foreground/50">+0x0b-0x11 (BLS12)</p>
+            </div>
+          </div>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3 mb-3">
+            <p className="text-xs font-semibold text-foreground/70 mb-1">초기화 패턴 (Cancun 예시)</p>
+            <p className="text-xs text-foreground/60"><code>OnceLock&lt;Precompiles&gt;</code> 지연 초기화. Berlin 목록 clone + point_evaluation 추가</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-foreground/50">
+            <p>1. 하드포크별 명확한 목록</p>
+            <p>2. 이전 fork 상속 + 증분 추가</p>
+            <p>3. OnceLock: thread-safe + 1회</p>
+          </div>
+        </div>
         <p className="leading-7">
           하드포크별 <strong>누적 모델</strong>로 precompile 관리.<br />
           각 fork는 이전 목록 상속 + 새 항목만 추가 → 명확한 증분.<br />
@@ -133,42 +114,51 @@ fn get_precompile(addr: &Address, spec: PrecompileSpecId) -> Option<&Precompile>
 
         {/* ── Precompile 주소 할당 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Precompile 주소 할당 규칙</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 주소 0x00은 예약 (사용 안 됨)
-// 0x01부터 순차 할당
-
-// Frontier/Homestead (2015):
-0x0000000000000000000000000000000000000001 ecrecover    (3_000 gas)
-0x0000000000000000000000000000000000000002 sha256      (60 + 12*len gas)
-0x0000000000000000000000000000000000000003 ripemd160   (600 + 120*len gas)
-0x0000000000000000000000000000000000000004 identity    (15 + 3*len gas)
-
-// Byzantium (EIP-196/197/198, 2017):
-0x0000000000000000000000000000000000000005 modexp      (복잡 공식)
-0x0000000000000000000000000000000000000006 bn128Add    (150 gas)
-0x0000000000000000000000000000000000000007 bn128Mul    (6_000 gas)
-0x0000000000000000000000000000000000000008 bn128Pairing (45_000 + 34_000*n)
-
-// Istanbul (EIP-152/1108, 2019):
-0x0000000000000000000000000000000000000009 blake2f     (rounds * 1 gas)
-
-// Cancun (EIP-4844, 2024):
-0x000000000000000000000000000000000000000a point_eval  (50_000 gas)
-
-// Prague (EIP-2537, 예정):
-0x000000000000000000000000000000000000000b BLS12_G1_add
-0x000000000000000000000000000000000000000c BLS12_G1_msm
-0x000000000000000000000000000000000000000d BLS12_G2_add
-0x000000000000000000000000000000000000000e BLS12_G2_msm
-0x000000000000000000000000000000000000000f BLS12_pairing
-0x0000000000000000000000000000000000000010 BLS12_map_fp_to_g1
-0x0000000000000000000000000000000000000011 BLS12_map_fp2_to_g2
-
-// 주소 할당 원칙:
-// - 순차 할당 (빈 주소 없음)
-// - 절대 재할당 금지 (deprecated도 유지)
-// - 주소 충돌 = EOA/컨트랙트 절대 사용 불가`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <div className="space-y-3 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Frontier/Homestead (2015)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div><p className="font-mono text-[11px] text-indigo-400">0x01</p><p className="text-[11px] text-foreground/50">ecrecover (3K gas)</p></div>
+                <div><p className="font-mono text-[11px] text-indigo-400">0x02</p><p className="text-[11px] text-foreground/50">sha256 (60+12*len)</p></div>
+                <div><p className="font-mono text-[11px] text-indigo-400">0x03</p><p className="text-[11px] text-foreground/50">ripemd160 (600+120*len)</p></div>
+                <div><p className="font-mono text-[11px] text-indigo-400">0x04</p><p className="text-[11px] text-foreground/50">identity (15+3*len)</p></div>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Byzantium (2017)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div><p className="font-mono text-[11px] text-amber-400">0x05</p><p className="text-[11px] text-foreground/50">modexp</p></div>
+                <div><p className="font-mono text-[11px] text-amber-400">0x06</p><p className="text-[11px] text-foreground/50">bn128Add (150)</p></div>
+                <div><p className="font-mono text-[11px] text-amber-400">0x07</p><p className="text-[11px] text-foreground/50">bn128Mul (6K)</p></div>
+                <div><p className="font-mono text-[11px] text-amber-400">0x08</p><p className="text-[11px] text-foreground/50">bn128Pairing</p></div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded-md border border-border/40 bg-background/60 p-3">
+                <p className="text-xs font-bold text-foreground/70 mb-1">Istanbul (2019)</p>
+                <p className="font-mono text-[11px] text-emerald-400">0x09 <span className="text-foreground/50">blake2f (rounds*1)</span></p>
+              </div>
+              <div className="rounded-md border border-border/40 bg-background/60 p-3">
+                <p className="text-xs font-bold text-foreground/70 mb-1">Cancun (2024)</p>
+                <p className="font-mono text-[11px] text-emerald-400">0x0a <span className="text-foreground/50">point_eval (50K)</span></p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Prague (예정) — BLS12-381</p>
+              <div className="grid grid-cols-3 sm:grid-cols-7 gap-1 text-[11px]">
+                <p className="font-mono text-red-400">0x0b <span className="text-foreground/50">G1_add</span></p>
+                <p className="font-mono text-red-400">0x0c <span className="text-foreground/50">G1_msm</span></p>
+                <p className="font-mono text-red-400">0x0d <span className="text-foreground/50">G2_add</span></p>
+                <p className="font-mono text-red-400">0x0e <span className="text-foreground/50">G2_msm</span></p>
+                <p className="font-mono text-red-400">0x0f <span className="text-foreground/50">pairing</span></p>
+                <p className="font-mono text-red-400">0x10 <span className="text-foreground/50">fp&#8594;G1</span></p>
+                <p className="font-mono text-red-400">0x11 <span className="text-foreground/50">fp2&#8594;G2</span></p>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-foreground/50">원칙: 순차 할당(빈 주소 없음), 절대 재할당 금지(deprecated 유지), 주소 충돌 = EOA/컨트랙트 사용 불가</p>
+        </div>
         <p className="leading-7">
           Precompile 주소는 <strong>단조 증가 순서</strong>로 할당.<br />
           주소 재할당 금지 → 기존 컨트랙트와의 호환성 영구 보장.<br />

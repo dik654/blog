@@ -28,46 +28,34 @@ export default function EthWire({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── EthMessage enum ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">EthMessage enum — 전체 메시지 타입</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`#[derive(RlpEncodable, RlpDecodable)]
-pub enum EthMessage {
-    // 연결 협상 (eth/68 Status)
-    Status(Status),
-
-    // 블록 동기화
-    NewBlockHashes(NewBlockHashes),
-    NewBlock(NewBlock),                        // PoS 이후 미사용
-    GetBlockHeaders(GetBlockHeaders),
-    BlockHeaders(BlockHeaders),
-    GetBlockBodies(GetBlockBodies),
-    BlockBodies(BlockBodies),
-
-    // TX 전파 (eth/68)
-    NewPooledTransactionHashes(NewPooledTransactionHashes68),
-    GetPooledTransactions(GetPooledTransactions),
-    PooledTransactions(PooledTransactions),
-    Transactions(Transactions),  // 즉시 전송 (작은 TX만)
-
-    // 영수증
-    GetReceipts(GetReceipts),
-    Receipts(Receipts),
-}
-
-// 각 메시지 TypeID (RLP envelope):
-// 0x00: Status
-// 0x01: NewBlockHashes
-// 0x02: Transactions
-// 0x03: GetBlockHeaders
-// 0x04: BlockHeaders
-// 0x05: GetBlockBodies
-// 0x06: BlockBodies
-// 0x07: NewBlock (legacy)
-// 0x08: NewPooledTransactionHashes
-// 0x09: GetPooledTransactions
-// 0x0A: PooledTransactions
-// 0x0F: GetReceipts
-// 0x10: Receipts`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">EthMessage enum <span className="font-normal text-foreground/50">#[derive(RlpEncodable, RlpDecodable)]</span></p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <p className="text-xs text-blue-500 font-semibold mb-1">연결 협상</p>
+                <p className="text-sm text-foreground/80"><code>Status(Status)</code></p>
+              </div>
+              <div>
+                <p className="text-xs text-green-500 font-semibold mb-1">블록 동기화</p>
+                <div className="text-sm text-foreground/80 space-y-0.5">
+                  <p><code>NewBlockHashes</code>, <code>NewBlock</code></p>
+                  <p><code>GetBlockHeaders</code> / <code>BlockHeaders</code></p>
+                  <p><code>GetBlockBodies</code> / <code>BlockBodies</code></p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-purple-500 font-semibold mb-1">TX 전파</p>
+                <div className="text-sm text-foreground/80 space-y-0.5">
+                  <p><code>NewPooledTransactionHashes68</code></p>
+                  <p><code>GetPooledTransactions</code> / <code>PooledTransactions</code></p>
+                  <p><code>Transactions</code> (즉시 전송)</p>
+                </div>
+              </div>
+            </div>
+            <p className="text-sm text-foreground/60 mt-2">영수증: <code>GetReceipts</code> / <code>Receipts</code>. 총 12개 메시지 타입(TypeID <code>0x00</code>~<code>0x10</code>).</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>EthMessage</code>가 <strong>eth/68의 전체 통신 어휘</strong>.<br />
           12개 메시지 타입으로 동기화 + TX 전파 + 영수증 조회 모두 커버.<br />
@@ -76,33 +64,27 @@ pub enum EthMessage {
 
         {/* ── eth/68 개선 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">eth/68 — NewPooledTransactionHashes 확장</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// eth/67 (2022)
-pub struct NewPooledTransactionHashes67 {
-    pub hashes: Vec<B256>,  // TX 해시만 전송
-}
-// 문제: 수신 노드가 TX 크기를 모름
-// → 큰 blob TX도 일단 요청해야 함
-
-// eth/68 (2023)
-pub struct NewPooledTransactionHashes68 {
-    pub types: Vec<u8>,      // TX 타입 (0=Legacy, 1=2930, 2=1559, 3=4844)
-    pub sizes: Vec<u32>,     // TX 크기 (바이트)
-    pub hashes: Vec<B256>,
-}
-// 해결: 타입 + 크기를 미리 알림
-// → 수신 노드가 "blob TX는 건너뛰기" 등 선택적 수신 가능
-
-// 대역폭 절감 예시:
-// 10K TX hash 전파 중 100개가 blob TX (각 125KB)
-// eth/67: 모두 요청 → 12.5 MB 다운로드
-// eth/68: blob 건너뛰기 → 0 MB
-// → 최대 100% 절감 (blob TX 비율 높을수록 효과 ↑)
-
-// 실제 도입 효과:
-// Cancun 포크 이후 blob TX 비율 증가
-// eth/68이 대역폭 병목 완화에 결정적 기여`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+              <p className="text-xs font-bold text-red-400 mb-2">eth/67 (2022)</p>
+              <p className="text-sm text-foreground/80"><code>NewPooledTransactionHashes67</code></p>
+              <p className="text-sm text-foreground/70 mt-1"><code>hashes: Vec&lt;B256&gt;</code> — TX 해시만 전송. 수신 노드가 TX 크기를 모름 → 큰 blob TX도 일단 요청 필요.</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">eth/68 (2023)</p>
+              <p className="text-sm text-foreground/80"><code>NewPooledTransactionHashes68</code></p>
+              <ul className="text-sm text-foreground/70 mt-1 space-y-0.5">
+                <li><code>types: Vec&lt;u8&gt;</code> — TX 타입(0=Legacy, 2=1559, 3=4844)</li>
+                <li><code>sizes: Vec&lt;u32&gt;</code> — TX 크기(바이트)</li>
+                <li><code>hashes: Vec&lt;B256&gt;</code></li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded border border-border/40 bg-muted/20 p-3 text-sm text-foreground/70">
+            대역폭 절감 예: 10K TX 중 100개 blob TX(각 125KB) → eth/67: 12.5 MB 다운로드 / eth/68: blob 건너뛰기 = 0 MB. Cancun 포크 이후 blob TX 증가로 결정적 기여.
+          </div>
+        </div>
         <p className="leading-7">
           eth/68의 핵심 개선: <strong>TX 메타데이터 사전 제공</strong>.<br />
           수신 노드가 블록스페이스 예산에 따라 TX 선별 수신 가능.<br />
@@ -111,46 +93,29 @@ pub struct NewPooledTransactionHashes68 {
 
         {/* ── Status 메시지 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Status 메시지 — 연결 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 연결 직후 양쪽이 Status 교환
-pub struct Status {
-    pub version: u8,           // eth/68 = 68
-    pub chain: Chain,          // ChainId (mainnet=1, sepolia=11155111)
-    pub total_difficulty: U256, // PoS 이후 고정값
-    pub blockhash: B256,       // 현재 tip 해시
-    pub genesis: B256,         // genesis 해시
-    pub forkid: ForkId,        // EIP-2124 fork identifier
-}
-
-// 연결 검증 로직:
-fn validate_peer_status(peer: &Status, local: &Status) -> Result<()> {
-    // 1. chain_id 일치
-    if peer.chain != local.chain {
-        return Err(WrongChain);
-    }
-
-    // 2. genesis 일치
-    if peer.genesis != local.genesis {
-        return Err(WrongGenesis);
-    }
-
-    // 3. fork_id 호환성 (EIP-2124)
-    //    둘 다 최신 포크를 알고 있는지
-    if !peer.forkid.is_compatible_with(&local.forkid) {
-        return Err(IncompatibleForks);
-    }
-
-    // 4. version 최소 지원
-    if peer.version < 66 {
-        return Err(VersionTooOld);
-    }
-
-    Ok(())
-}
-
-// 실패 시 Disconnect 메시지 전송 후 연결 종료
-// 성공 시 정식 통신 시작`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Status 구조체</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>version: u8</code> — eth/68 = 68</span>
+              <span><code>chain: Chain</code> — mainnet=1, sepolia=11155111</span>
+              <span><code>total_difficulty: U256</code> — PoS 이후 고정값</span>
+              <span><code>blockhash: B256</code> — 현재 tip 해시</span>
+              <span><code>genesis: B256</code> — genesis 해시</span>
+              <span><code>forkid: ForkId</code> — EIP-2124</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">validate_peer_status — 4단계 검증</p>
+            <div className="space-y-1 text-sm">
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 shrink-0">1.</span> <code>chain_id</code> 일치 확인 → 불일치 시 <code>WrongChain</code></div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 shrink-0">2.</span> <code>genesis</code> 해시 일치 → 불일치 시 <code>WrongGenesis</code></div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 shrink-0">3.</span> <code>forkid</code> 호환성(EIP-2124) → 불일치 시 <code>IncompatibleForks</code></div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 shrink-0">4.</span> <code>version &gt;= 66</code> 확인 → 미달 시 <code>VersionTooOld</code></div>
+            </div>
+            <p className="text-sm text-foreground/60 mt-2">실패 시 <code>Disconnect</code> 전송 후 연결 종료. 성공 시 정식 통신 시작.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Status 검증</strong>이 잘못된 네트워크/체인 연결 즉시 차단.<br />
           chain_id, genesis_hash, fork_id 3중 검사 → 다른 체인 피어는 확실히 거부.<br />
@@ -159,57 +124,38 @@ fn validate_peer_status(peer: &Status, local: &Status) -> Result<()> {
 
         {/* ── TX 브로드캐스트 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">TX 전파 — 3가지 방식</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TX 전파 전략 (크기별)
-//
-// 1. Transactions (직접 전송)
-//    - 작은 TX (< 100KB)
-//    - 피어에게 TX 본체 직접 발송
-//    - 지연 최소, 대역폭 높음
-//
-// 2. NewPooledTransactionHashes (해시 알림)
-//    - 큰 TX (>= 100KB, blob TX 등)
-//    - 해시 + 타입 + 크기만 먼저 알림
-//    - 피어가 GetPooledTransactions로 요청
-//    - 지연 약간 증가, 대역폭 절약
-
-// 전파 알고리즘 (txpool):
-fn propagate_tx(tx: &TransactionSigned) {
-    let tx_size = tx.size();
-
-    // sqrt(peer_count)만큼의 피어에게 직접 전송
-    let direct_count = (self.peers.len() as f64).sqrt() as usize;
-    let direct_peers = self.peers.choose_multiple(direct_count);
-
-    if tx_size < SMALL_TX_THRESHOLD {
-        // 직접 전송
-        for peer in direct_peers {
-            peer.send(EthMessage::Transactions(vec![tx.clone()]));
-        }
-    } else {
-        // 해시 알림만
-        let announcement = NewPooledTransactionHashes68 {
-            types: vec![tx.tx_type()],
-            sizes: vec![tx_size as u32],
-            hashes: vec![tx.hash()],
-        };
-        for peer in direct_peers {
-            peer.send(EthMessage::NewPooledTransactionHashes(announcement.clone()));
-        }
-    }
-
-    // 나머지 피어에게는 해시만 (지연 방지)
-    let hash_only = self.peers.iter().filter(|p| !direct_peers.contains(p));
-    for peer in hash_only {
-        peer.send_announcement(tx);
-    }
-}
-
-// sqrt(N) 알고리즘:
-// - 100 피어 → 10 피어에 직접 전송
-// - 1000 피어 → 32 피어에 직접 전송
-// - 네트워크 전파 속도 vs 대역폭 균형`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2">Transactions (직접 전송)</p>
+              <p className="text-sm text-foreground/80">작은 TX(&lt; 100KB). 피어에게 TX 본체 직접 발송. 지연 최소, 대역폭 높음.</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">NewPooledTransactionHashes (해시 알림)</p>
+              <p className="text-sm text-foreground/80">큰 TX(&gt;= 100KB, blob TX). 해시+타입+크기만 알림 → 피어가 <code>GetPooledTransactions</code>로 요청.</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">propagate_tx — sqrt(N) 전파 알고리즘</p>
+            <p className="text-sm text-foreground/80 mb-2">
+              <code>sqrt(peer_count)</code>만큼의 피어에게 직접 전송. 나머지는 해시 알림만.
+            </p>
+            <div className="grid grid-cols-3 gap-2 text-sm text-center">
+              <div className="rounded border border-border/40 p-2">
+                <p className="text-foreground/70">100 피어</p>
+                <p className="text-foreground/50">→ 10 직접</p>
+              </div>
+              <div className="rounded border border-border/40 p-2">
+                <p className="text-foreground/70">1000 피어</p>
+                <p className="text-foreground/50">→ 32 직접</p>
+              </div>
+              <div className="rounded border border-border/40 p-2">
+                <p className="text-foreground/70">목적</p>
+                <p className="text-foreground/50">전파 속도 vs 대역폭</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           TX 전파는 <strong>sqrt(peer_count) 피어에게 직접</strong>, 나머지는 해시 알림.<br />
           이 알고리즘이 네트워크 전파 속도와 대역폭의 최적 지점.<br />

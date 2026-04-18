@@ -30,10 +30,18 @@ export default function Overview() {
 
         {/* ── 2. CompactionConfig ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CompactionConfig — 압축 설정</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct CompactionConfig {
-    pub preserve_recent_messages: usize,  // 보존할 최근 메시지 수 (기본값: 마지막 N개)
-    pub max_estimated_tokens: usize,      // 최대 토큰 예산 (초과 시 압축 트리거)
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-mono text-muted-foreground mb-1">CompactionConfig</div>
+            <div className="font-semibold text-sm mb-2">preserve_recent_messages: <code className="text-xs bg-muted px-1 py-0.5 rounded">usize</code></div>
+            <p className="text-sm text-muted-foreground">보존할 최근 메시지 수 — 절대 압축하지 않는 마지막 N개</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-mono text-muted-foreground mb-1">CompactionConfig</div>
+            <div className="font-semibold text-sm mb-2">max_estimated_tokens: <code className="text-xs bg-muted px-1 py-0.5 rounded">usize</code></div>
+            <p className="text-sm text-muted-foreground">최대 토큰 예산 — 이 값을 초과하면 압축 트리거</p>
+          </div>
+        </div>
         <p>
           <code>preserve_recent_messages</code> — 절대 압축하지 않는 최근 메시지 개수<br />
           LLM은 최근 컨텍스트에 가장 강한 attention을 보이므로 최근 메시지를 원본 그대로 보존<br />
@@ -43,17 +51,30 @@ export default function Overview() {
 
         {/* ── 3. should_compact() 판정 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">should_compact() — 압축 판정</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub fn should_compact(session: &Session, config: &CompactionConfig) -> bool {
-    estimate_session_tokens(session) > config.max_estimated_tokens
-}
-
-fn estimate_session_tokens(session: &Session) -> usize {
-    // 메시지 텍스트의 총 문자 수 / 4
-    // 영어 기준 약 4자 = 1토큰 (BPE 토크나이저 근사)
-    session.messages.iter()
-        .map(|m| m.content.len())
-        .sum::<usize>() / 4
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 gap-3 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">should_compact(session, config) → bool</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              <code className="text-xs">estimate_session_tokens(session)</code>이 <code className="text-xs">config.max_estimated_tokens</code>를 초과하면 <code className="text-xs">true</code> 반환
+            </p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">estimate_session_tokens(session) → usize</span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-2">
+              메시지 텍스트의 총 문자 수를 4로 나눠 토큰 수를 근사
+            </p>
+            <div className="text-xs font-mono bg-muted rounded px-2 py-1 inline-block">
+              session.messages.iter().map(|m| m.content.len()).sum::&lt;usize&gt;() / 4
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">영어 기준 약 4바이트 = 1토큰 (BPE 토크나이저 근사)</p>
+          </div>
+        </div>
         <p>
           <code>estimate_session_tokens()</code>는 텍스트 길이를 4로 나눠 토큰 수를 근사<br />
           영어 기준 약 4바이트 = 1토큰이라는 경험적 근사 — 정확한 BPE 토큰화 없이도 실용적으로 작동<br />
@@ -87,18 +108,33 @@ fn estimate_session_tokens(session: &Session) -> usize {
 
         {/* ── 6. merge_compact_summaries() — 연속 압축 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">merge_compact_summaries() — 연속 압축</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`merge_compact_summaries(prev_summary, new_summary) -> MergedSummary
-
-// 이전 압축 요약이 존재하는 경우:
-1. <prior-context> XML 태그에서 이전 요약 추출
-2. 이전 요약의 scope, tools, timeline을 파싱
-3. 새 요약과 병합:
-   - scope: 이전 + 현재 범위 통합
-   - tools: 호출 횟수 누적 합산
-   - timeline: 시간순 병합 정렬
-4. 병합된 요약을 새 <prior-context>로 래핑
-
-// 결과: 대화가 아무리 길어도 전체 맥락의 연쇄 보존`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-3">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">merge_compact_summaries(prev_summary, new_summary) → MergedSummary</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+                <span className="text-muted-foreground"><code className="text-xs">&lt;prior-context&gt;</code> XML 태그에서 이전 요약 추출</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+                <span className="text-muted-foreground">이전 요약의 scope, tools, timeline을 파싱</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+                <span className="text-muted-foreground">새 요약과 병합: scope 통합, tools 누적, timeline 병합 정렬</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
+                <span className="text-muted-foreground">병합된 요약을 새 <code className="text-xs">&lt;prior-context&gt;</code>로 래핑</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground italic">대화가 아무리 길어도 전체 맥락의 연쇄 보존</p>
+        </div>
         <p>
           대화가 매우 길면 압축이 여러 번 발생<br />
           1차 압축 → 요약 A 생성<br />
@@ -111,22 +147,30 @@ fn estimate_session_tokens(session: &Session) -> usize {
 
         {/* ── 7. get_compact_continuation_message() ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">get_compact_continuation_message() — 연속 메시지</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`get_compact_continuation_message() -> Message
-
-// 압축 후 LLM에게 전달하는 시스템 메시지:
-// "이전 대화가 요약되었습니다. 요약을 참고하여 이어서 작업하세요."
-
-// SYSTEM_PROMPT_DYNAMIC_BOUNDARY 마커 활용:
-// 시스템 프롬프트 내 동적 경계를 표시하여
-// 압축 요약이 삽입될 위치를 지정
-
-구조:
-  role: "user"  (시스템 메시지가 아닌 사용자 메시지로 삽입)
-  content: [
-    "--- 컨텍스트 압축 발생 ---",
-    formatted_summary,
-    "위 요약을 참고하여 이어서 작업하세요.",
-  ]`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">get_compact_continuation_message() → Message</span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">압축 후 LLM에게 전달하는 연속 메시지 — <code className="text-xs">SYSTEM_PROMPT_DYNAMIC_BOUNDARY</code> 마커로 삽입 위치 지정</p>
+            <div className="bg-background border border-border rounded p-3 space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-xs font-mono bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded">role</span>
+                <span className="font-mono text-sm">"user"</span>
+                <span className="text-xs text-muted-foreground">(시스템이 아닌 사용자 메시지로 삽입)</span>
+              </div>
+              <div className="text-sm">
+                <span className="text-xs font-mono bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded">content</span>
+                <div className="mt-1 ml-2 space-y-1 text-xs font-mono text-muted-foreground">
+                  <div>"--- 컨텍스트 압축 발생 ---"</div>
+                  <div className="text-foreground">formatted_summary</div>
+                  <div>"위 요약을 참고하여 이어서 작업하세요."</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           연속 메시지는 <code>user</code> 역할로 삽입 — assistant 역할이 아닌 이유는
           LLM이 사용자의 지시로 인식하여 요약을 더 적극적으로 참조하기 때문<br />
@@ -137,28 +181,45 @@ fn estimate_session_tokens(session: &Session) -> usize {
 
         {/* ── 8. SummaryCompressor 보조 압축 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">SummaryCompressor — 2차 압축 레이어</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// summary_compression.rs (300 LOC)
-// compact.rs의 1차 압축 외에 추가 압축 레이어
-
-struct SummaryCompressor {
-    max_summary_tokens: usize,  // 요약의 최대 토큰 수
-}
-
-impl SummaryCompressor {
-    fn compress(&self, summary: &Summary) -> CompressedSummary {
-        // 1차: extract_key_facts() — 핵심 사실만 추출
-        let facts = self.extract_key_facts(summary);
-
-        // 2차: remove_noise() — 반복, 불필요한 세부사항 제거
-        let cleaned = self.remove_noise(facts);
-
-        // 3차: rank_by_relevance() — 최근 작업과의 관련도로 정렬
-        let ranked = self.rank_by_relevance(cleaned);
-
-        // 4차: truncate_to_budget() — 토큰 예산에 맞게 자르기
-        self.truncate_to_budget(ranked)
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-3">
+            <div className="text-xs font-mono text-muted-foreground mb-1">summary_compression.rs (300 LOC)</div>
+            <div className="font-semibold text-sm mb-1">SummaryCompressor</div>
+            <p className="text-xs text-muted-foreground mb-3">
+              <code className="text-xs">max_summary_tokens: usize</code> — 요약의 최대 토큰 수
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+                  <span className="text-sm font-semibold">extract_key_facts()</span>
+                </div>
+                <p className="text-xs text-muted-foreground">핵심 사실만 추출</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+                  <span className="text-sm font-semibold">remove_noise()</span>
+                </div>
+                <p className="text-xs text-muted-foreground">반복, 불필요한 세부사항 제거</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+                  <span className="text-sm font-semibold">rank_by_relevance()</span>
+                </div>
+                <p className="text-xs text-muted-foreground">최근 작업과의 관련도로 정렬</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
+                  <span className="text-sm font-semibold">truncate_to_budget()</span>
+                </div>
+                <p className="text-xs text-muted-foreground">토큰 예산에 맞게 자르기</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           1차 압축(compact.rs)이 메시지를 요약으로 교체한다면,
           2차 압축(SummaryCompressor)은 요약 자체를 더 짧게 만듦<br />

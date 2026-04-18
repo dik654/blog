@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import BertFinetuneDetailViz from './viz/BertFinetuneDetailViz';
+import M from '@/components/ui/math';
 
 const TASKS = [
   { id: 'cls', name: '분류 (SST-2)', color: '#6366f1',
@@ -69,94 +71,15 @@ export default function FineTuning() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">태스크별 파인튜닝 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. 문장 분류 (Single Sentence Classification)
-//
-//   입력:  [CLS] token1 token2 ... [SEP]
-//   출력 헤드: [CLS] 토큰의 hidden state → Dense(num_classes)
-//
-//   사용: 감정 분석, 스팸 분류, 언어 감지
-//   예시 데이터셋: SST-2, CoLA, TREC
-//
-// 2. 문장 쌍 분류 (Sentence Pair Classification)
-//
-//   입력:  [CLS] premise [SEP] hypothesis [SEP]
-//   segment: 0,0,0,0,1,1,1,1
-//   출력 헤드: [CLS] → Dense(num_classes)
-//
-//   사용: NLI, 의역 감지, 유사도
-//   예시 데이터셋: MNLI, QQP, STS-B
-//
-// 3. 질의응답 (Extractive QA)
-//
-//   입력:  [CLS] question [SEP] context [SEP]
-//   출력 헤드: 각 토큰 → (start_logit, end_logit)
-//   손실: start와 end 위치의 cross entropy
-//
-//   추론: argmax(start) ~ argmax(end) 구간이 정답
-//
-//   예시 데이터셋: SQuAD 1.1 / 2.0, NaturalQuestions
-//
-// 4. Named Entity Recognition (Token Classification)
-//
-//   입력:  [CLS] token1 token2 ... [SEP]
-//   출력 헤드: 각 토큰 → Dense(num_tags)
-//
-//   BIO 태깅: B-PER, I-PER, O, B-LOC, I-LOC, ...
-//
-//   예시 데이터셋: CoNLL-2003, OntoNotes
-
-// 파인튜닝 하이퍼파라미터 (논문 권장):
-//   - Learning rate: 2e-5, 3e-5, 5e-5 중 선택
-//   - Batch size: 16 or 32
-//   - Epochs: 2~4
-//   - Optimizer: AdamW
-//   - Warmup: 10% of steps`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">BERT 이후 모델 계보</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BERT 파생 모델들 (2019~2024)
-//
-// 효율화:
-//   - DistilBERT (2019): 지식 증류, 6 layers, 66M params
-//   - MobileBERT (2020): Bottleneck, 25M params
-//   - TinyBERT (2019): 2-layer distillation
-//   - ALBERT (2019): factorized embedding + shared layers
-//
-// 성능 개선:
-//   - RoBERTa (2019): 더 많은 데이터, 동적 마스킹, NSP 제거
-//   - SpanBERT (2019): 연속 span 마스킹
-//   - ELECTRA (2020): replaced token detection (더 효율)
-//   - DeBERTa (2020): disentangled attention
-//
-// 다국어:
-//   - mBERT: 104개 언어 동시 학습
-//   - XLM-R (2019): 100개 언어, RoBERTa 기반
-//   - KoBERT, BERT-ko: 한국어 특화
-//
-// 도메인 특화:
-//   - BioBERT: 생의학 논문
-//   - SciBERT: 과학 논문
-//   - FinBERT: 금융 문서
-//   - LegalBERT: 법률 문서
-//   - ClinicalBERT: 의료 기록
-//
-// Long Context:
-//   - Longformer (2020): sparse attention, 4K+ tokens
-//   - BigBird (2020): global + random + window
-//   - LED: Longformer Encoder-Decoder
-
-// 현재 위치 (2024):
-//   - Encoder-only BERT 계열: 검색, 분류, 임베딩에 여전히 활용
-//   - Decoder-only (GPT/LLaMA): 생성 태스크 지배
-//   - Encoder-decoder (T5, BART): 요약, 번역
-//
-// 트렌드: 거대 LLM에 밀리지만, 효율성 측면에서 여전히 필수
-//   - Sentence embedding (SBERT): 검색/유사도
-//   - Dense retrieval (DPR, ColBERT)
-//   - Reranking (cross-encoder)`}
-        </pre>
+        <M display>
+          {`\\text{Classification: } \\underbrace{P(y \\mid x)}_{\\text{Softmax}} = \\text{softmax}\\bigl(W \\cdot h_{\\text{[CLS]}} + b\\bigr)`}
+        </M>
+        <M display>
+          {`\\text{QA: } \\underbrace{P_{\\text{start}}(i)}_{\\text{시작 위치}} = \\text{softmax}(W_s \\cdot h_i), \\quad \\underbrace{P_{\\text{end}}(j)}_{\\text{끝 위치}} = \\text{softmax}(W_e \\cdot h_j)`}
+        </M>
+      </div>
+      <BertFinetuneDetailViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <p className="leading-7">
           요약 1: BERT는 <strong>분류·QA·NER·NLI</strong> 등 거의 모든 NLP 태스크의 standard backbone.<br />
           요약 2: <strong>RoBERTa·ELECTRA·DeBERTa</strong>로 개선되며 GLUE 90+ 달성.<br />

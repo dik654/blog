@@ -34,82 +34,94 @@ export default function RevenueModule({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="max-w-none mt-6 space-y-5">
         <h3 className="text-xl font-semibold mt-6 mb-3">TokenPair 및 양방향 변환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// x/erc20 Module 상세
-//
-// TokenPair 구조:
-//
-// type TokenPair struct {
-//     Erc20Address  string          // 컨트랙트 주소
-//     Denom         string          // Cosmos denom
-//     Enabled       bool            // 활성 여부
-//     ContractOwner Owner           // OWNER_MODULE or OWNER_EXTERNAL
-// }
-//
-// OwnerType:
-//   OWNER_MODULE: 모듈이 컨트랙트 배포/관리
-//   OWNER_EXTERNAL: 외부 소유자의 ERC20
 
-// Conversion 흐름:
-//
-// Cosmos Coin → ERC20:
-//
-//   사용자 요청: ConvertCoin
-//     denom: "aevmos"
-//     amount: 100 * 10^18
-//     receiver: 0x1234...
-//
-//   모듈 처리:
-//     1. bankKeeper.SendCoinsFromAccountToModule
-//        (escrow user's coins)
-//     2. Find TokenPair(denom)
-//     3. If ContractOwner == MODULE:
-//          evmKeeper.CallEVM(mint, receiver, amount)
-//        Else:
-//          require escrow already held
-//     4. Emit events
-//
-// ERC20 → Cosmos Coin:
-//
-//   사용자 요청: ConvertERC20
-//     erc20_address: 0xABCD...
-//     amount: 100 * 10^18
-//     receiver: evmos1xyz...
-//
-//   모듈 처리:
-//     1. Find TokenPair(erc20_address)
-//     2. If ContractOwner == MODULE:
-//          evmKeeper.CallEVM(burn, sender, amount)
-//        Else:
-//          evmKeeper.CallEVM(transfer, sender, module)
-//     3. bankKeeper.SendCoinsFromModuleToAccount
-//        (release escrowed coins)
-//     4. Emit events
+        {/* TokenPair 구조 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">TokenPair 구조</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs mb-3">
+            <div className="rounded bg-muted p-2">
+              <p className="font-medium"><code className="text-[11px]">Erc20Address</code></p>
+              <p className="text-muted-foreground"><code className="text-[11px]">string</code> — 컨트랙트 주소</p>
+            </div>
+            <div className="rounded bg-muted p-2">
+              <p className="font-medium"><code className="text-[11px]">Denom</code></p>
+              <p className="text-muted-foreground"><code className="text-[11px]">string</code> — Cosmos denom</p>
+            </div>
+            <div className="rounded bg-muted p-2">
+              <p className="font-medium"><code className="text-[11px]">Enabled</code></p>
+              <p className="text-muted-foreground"><code className="text-[11px]">bool</code> — 활성 여부</p>
+            </div>
+            <div className="rounded bg-muted p-2">
+              <p className="font-medium"><code className="text-[11px]">ContractOwner</code></p>
+              <p className="text-muted-foreground"><code className="text-[11px]">Owner</code> — MODULE or EXTERNAL</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            <code className="text-[11px]">OWNER_MODULE</code>: 모듈이 컨트랙트 배포/관리 &nbsp;|&nbsp;
+            <code className="text-[11px]">OWNER_EXTERNAL</code>: 외부 소유자의 ERC20
+          </p>
+        </div>
 
-// Precision Handling:
-//   Cosmos: "aevmos" = 10^-18 EVMOS
-//   Ethereum: "wei" = 10^-18 ETH
-//   → 1:1 매핑 가능 (둘 다 18 decimals)
-//
-//   다른 체인:
-//     "uatom" = 10^-6 ATOM
-//     Ethereum expects 18 decimals
-//     → x/precisebank가 해결
+        {/* Conversion 흐름 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border border-green-500/30 bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">Cosmos Coin → ERC20</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              <code className="text-[11px]">ConvertCoin</code> — denom: <code className="text-[11px]">"aevmos"</code>, amount: <code className="text-[11px]">100 * 10^18</code>, receiver: <code className="text-[11px]">0x1234...</code>
+            </p>
+            <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+              <li><code className="text-[11px]">bankKeeper.SendCoinsFromAccountToModule</code> (escrow)</li>
+              <li><code className="text-[11px]">Find TokenPair(denom)</code></li>
+              <li>MODULE → <code className="text-[11px]">evmKeeper.CallEVM(mint, receiver, amount)</code></li>
+              <li>Emit events</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">ERC20 → Cosmos Coin</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              <code className="text-[11px]">ConvertERC20</code> — erc20: <code className="text-[11px]">0xABCD...</code>, amount: <code className="text-[11px]">100 * 10^18</code>, receiver: <code className="text-[11px]">evmos1xyz...</code>
+            </p>
+            <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+              <li><code className="text-[11px]">Find TokenPair(erc20_address)</code></li>
+              <li>MODULE → <code className="text-[11px]">evmKeeper.CallEVM(burn, sender, amount)</code></li>
+              <li><code className="text-[11px]">bankKeeper.SendCoinsFromModuleToAccount</code> (release)</li>
+              <li>Emit events</li>
+            </ol>
+          </div>
+        </div>
 
-// 자동 Token Registration:
-//   Governance proposal로 TokenPair 등록
-//   RegisterCoinProposal: Cosmos Coin 등록
-//   RegisterERC20Proposal: ERC20 등록
-//   → 거버넌스 승인 후 활성화
-
-// Revenue Module (x/revenue):
-//   dApp 개발자 수익 공유 시스템
-//   Contract deployer → % of gas fees
-//   Developer incentive
-//   2024년 deprecated (일부 chain)`}
-        </pre>
+        {/* Precision + Registration + Revenue */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">Precision Handling</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li><code className="text-[11px]">"aevmos"</code> = 10^-18 EVMOS</li>
+              <li><code className="text-[11px]">"wei"</code> = 10^-18 ETH → 1:1 매핑</li>
+              <li><code className="text-[11px]">"uatom"</code> = 10^-6 ATOM → 18자리 필요</li>
+              <li><code className="text-[11px]">x/precisebank</code>가 차이 해결</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">Token Registration</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Governance proposal로 등록</li>
+              <li><code className="text-[11px]">RegisterCoinProposal</code> — Cosmos Coin</li>
+              <li><code className="text-[11px]">RegisterERC20Proposal</code> — ERC20</li>
+              <li>거버넌스 승인 후 활성화</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-muted bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">Revenue Module (x/revenue)</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>dApp 개발자 수익 공유 시스템</li>
+              <li>Contract deployer → % of gas fees</li>
+              <li>Developer incentive</li>
+              <li className="text-red-400/70">2024년 deprecated (일부 chain)</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

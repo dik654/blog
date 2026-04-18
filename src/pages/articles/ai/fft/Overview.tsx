@@ -1,4 +1,5 @@
 import Math from '@/components/ui/math';
+import FFTOverviewViz from './viz/FFTOverviewViz';
 
 export default function Overview() {
   return (
@@ -11,6 +12,9 @@ export default function Overview() {
           1965년 Cooley와 Tukey가 발표했지만, 아이디어 자체는 가우스(1805년)에게까지 거슬러 올라간다<br />
           신호 처리, 이미지 분석, 오디오 압축, 통신 등 거의 모든 공학 분야에서 사용
         </p>
+      </div>
+      <FFTOverviewViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3>시간 영역 vs 주파수 영역</h3>
         <p>

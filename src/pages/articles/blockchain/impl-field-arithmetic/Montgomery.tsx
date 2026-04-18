@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import MontViz from './viz/MontViz';
 import { codeRefs } from './codeRefs';
 import type { CodeRef } from '@/components/code/types';
@@ -39,132 +40,139 @@ export default function Montgomery({ onCodeRef }: { onCodeRef: (key: string, ref
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Montgomery 알고리즘 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Montgomery Multiplication - Detailed
-//
-// Problem:
-//   Compute (a * b) mod p efficiently
-//   Direct: multiply then divide by p (slow!)
-//   Division on CPU: ~20-40 cycles
-//
-// Montgomery insight:
-//   Work in "Montgomery form" where values are scaled by R
-//   Avoid division entirely, use shifts instead
 
-// Montgomery form:
-//
-//   Original value: x in [0, p)
-//   Montgomery form: x_mont = x * R mod p
-//     where R = 2^k (typically 2^256 for 256-bit fields)
-//
-//   Conversion:
-//     To Mont: x_mont = mont_mul(x, R^2 mod p)
-//     From Mont: x = mont_mul(x_mont, 1)
-//     (both use Montgomery multiplication)
+        {/* 문제 & 해법 */}
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">문제</p>
+            <p className="text-sm"><M>{'(a \\times b) \\bmod p'}</M> 를 효율적으로 계산해야 함</p>
+            <p className="text-sm mt-1">직접 방식: 곱한 뒤 p로 나눗셈 — CPU 나눗셈 ~20-40 사이클로 느림</p>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">Montgomery 해법</p>
+            <p className="text-sm">"Montgomery 형태"로 R을 스케일링하여 저장</p>
+            <p className="text-sm mt-1">나눗셈 완전 제거 — 시프트로 대체</p>
+          </div>
+        </div>
 
-// Key algorithm: REDC (Montgomery reduction)
-//
-//   REDC(T) computes T * R^{-1} mod p
-//     where T is a 2n-limb input (0 <= T < p * R)
-//   Returns n-limb result in [0, p)
-//
-//   Algorithm (CIOS - Coarsely Integrated Operand Scanning):
-//     for i = 0..n:
-//       q = (T[i] * INV) mod 2^64     // INV = -p^{-1} mod 2^64
-//       T += q * p * 2^{64*i}          // makes lower limb 0
-//     result = T / R                   // discard low limbs
-//     if result >= p: result -= p
+        {/* Montgomery form */}
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">Montgomery 형태 — 변환 규칙</span>
+          </div>
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">원래 값</p>
+              <p><M>{'x \\in [0, p)'}</M></p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">Montgomery 형태</p>
+              <p><M>{'x_{mont} = x \\cdot R \\bmod p'}</M></p>
+              <p className="text-xs text-muted-foreground mt-1"><M>{'R = 2^{256}'}</M> (256비트 필드)</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">변환</p>
+              <p className="text-xs">To Mont: <code className="text-xs bg-muted px-1 rounded">mont_mul(x, R^2 mod p)</code></p>
+              <p className="text-xs mt-1">From Mont: <code className="text-xs bg-muted px-1 rounded">mont_mul(x_mont, 1)</code></p>
+            </div>
+          </div>
+        </div>
 
-// Why does REDC work?
-//
-//   After each iteration: T's next lower limb becomes 0
-//   After n iterations: lower n limbs all 0
-//   So T = (something) * R
-//   Dividing by R = shift right 256 bits = discard lower limbs
-//
-//   Key congruence:
-//     T + q*p ≡ T (mod p)  // adding multiple of p
-//     T + q*p ≡ 0 (mod R)  // by choice of q = T*INV mod R
+        {/* REDC */}
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border flex items-center gap-2">
+            <span className="text-sm font-semibold">REDC (Montgomery Reduction)</span>
+            <span className="text-xs text-muted-foreground">CIOS 변형</span>
+          </div>
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">정의</p>
+              <p><M>{'\\text{REDC}(T) = T \\cdot R^{-1} \\bmod p'}</M></p>
+              <p className="text-xs text-muted-foreground mt-1">T: 2n-limb 입력 (<M>{'0 \\le T < p \\cdot R'}</M>)</p>
+              <p className="text-xs text-muted-foreground mt-2 mb-1">알고리즘</p>
+              <p className="text-xs">for i = 0..n:</p>
+              <p className="text-xs ml-2"><code className="text-xs bg-muted px-1 rounded">q = (T[i] * INV) mod 2^64</code></p>
+              <p className="text-xs ml-2"><code className="text-xs bg-muted px-1 rounded">T += q * p * 2^(64*i)</code> — 하위 limb을 0으로</p>
+              <p className="text-xs mt-1"><code className="text-xs bg-muted px-1 rounded">result = T / R</code> — 하위 limbs 버림</p>
+              <p className="text-xs"><code className="text-xs bg-muted px-1 rounded">if result &ge; p: result -= p</code></p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">왜 동작하는가?</p>
+              <p className="text-xs">각 반복 후: T의 다음 하위 limb이 0이 됨</p>
+              <p className="text-xs mt-1">n회 반복 후: 하위 n개 limb 전부 0</p>
+              <p className="text-xs mt-1">따라서 <M>{'T = (\\text{something}) \\cdot R'}</M></p>
+              <p className="text-xs mt-1">R로 나누기 = 256비트 오른쪽 시프트 = 하위 limbs 버림</p>
+              <p className="text-xs text-muted-foreground mt-3 mb-1">핵심 합동식</p>
+              <p className="text-xs"><M>{'T + q \\cdot p \\equiv T \\pmod{p}'}</M> — p의 배수 더하기</p>
+              <p className="text-xs mt-1"><M>{'T + q \\cdot p \\equiv 0 \\pmod{R}'}</M> — q 선택에 의해</p>
+            </div>
+          </div>
+        </div>
 
-// Montgomery multiplication:
-//
-//   fn mont_mul(a: Fp, b: Fp) -> Fp {
-//     // Step 1: schoolbook multiply
-//     // Produces 2n-limb result T = a * b (< p^2 < p*R)
-//     let T = big_mul(a.0, b.0);
-//
-//     // Step 2: Montgomery reduction
-//     // Computes T * R^{-1} mod p
-//     REDC(T)  // returns a*b*R^{-1} mod p
-//   }
-//
-//   If a, b are in Montgomery form (a*R, b*R):
-//     mont_mul gives (a*R) * (b*R) * R^{-1} = (a*b)*R
-//     Which is (a*b) in Montgomery form!
+        {/* mont_mul */}
+        <div className="not-prose my-4 bg-muted/50 rounded-xl p-5 border border-border">
+          <p className="text-sm font-semibold text-muted-foreground mb-2">Montgomery 곱셈</p>
+          <p className="text-sm"><strong>Step 1</strong>: schoolbook 곱셈 — 2n-limb 결과 <M>{'T = a \\cdot b'}</M></p>
+          <p className="text-sm mt-1"><strong>Step 2</strong>: REDC(T) — <M>{'T \\cdot R^{-1} \\bmod p'}</M> 반환</p>
+          <p className="text-xs text-muted-foreground mt-3">a, b가 Montgomery 형태 (<M>{'aR, bR'}</M>)일 때:</p>
+          <p className="text-sm mt-1"><M>{'(aR)(bR) \\cdot R^{-1} = (ab) \\cdot R'}</M> — 결과도 Montgomery 형태</p>
+        </div>
 
-// Computing INV constant:
-//
-//   INV = -p^{-1} mod 2^64
-//   Used in REDC inner loop
-//
-//   Newton's method (doubling precision each step):
-//     inv = 1
-//     inv = inv * (2 - p * inv)  // mod 2^2
-//     inv = inv * (2 - p * inv)  // mod 2^4
-//     inv = inv * (2 - p * inv)  // mod 2^8
-//     inv = inv * (2 - p * inv)  // mod 2^16
-//     inv = inv * (2 - p * inv)  // mod 2^32
-//     inv = inv * (2 - p * inv)  // mod 2^64
-//     return -inv
-//
-//   Precomputed as const at compile time
+        {/* INV & Inverse */}
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-muted/50 rounded-xl border border-border overflow-hidden">
+            <div className="bg-muted px-5 py-2 border-b border-border">
+              <span className="text-sm font-semibold">INV 상수 계산</span>
+            </div>
+            <div className="p-5 text-sm">
+              <p><M>{'\\text{INV} = -p^{-1} \\bmod 2^{64}'}</M></p>
+              <p className="text-xs text-muted-foreground mt-2">Newton법 (매 단계 정밀도 2배)</p>
+              <p className="text-xs mt-1"><code className="text-xs bg-muted px-1 rounded">inv = 1</code></p>
+              <p className="text-xs"><code className="text-xs bg-muted px-1 rounded">inv = inv * (2 - p * inv)</code> &times; 6회 반복</p>
+              <p className="text-xs text-muted-foreground mt-1">정밀도: 1 &rarr; 2 &rarr; 4 &rarr; 8 &rarr; 16 &rarr; 32 &rarr; 64비트</p>
+              <p className="text-xs mt-1"><code className="text-xs bg-muted px-1 rounded">return -inv</code></p>
+              <p className="text-xs text-muted-foreground mt-1">컴파일 타임 const로 사전 계산</p>
+            </div>
+          </div>
+          <div className="bg-muted/50 rounded-xl border border-border overflow-hidden">
+            <div className="bg-muted px-5 py-2 border-b border-border">
+              <span className="text-sm font-semibold">역원 — Fermat 소정리</span>
+            </div>
+            <div className="p-5 text-sm">
+              <p><M>{'a \\in \\mathbb{F}_p^*: a^{p-1} = 1 \\pmod{p}'}</M></p>
+              <p className="mt-1"><M>{'a^{p-2} = a^{-1} \\pmod{p}'}</M></p>
+              <p className="text-xs text-muted-foreground mt-2">구현: <code className="text-xs bg-muted px-1 rounded">self.pow(&(P - 2))</code></p>
+              <p className="text-xs text-muted-foreground mt-1">비용: ~256 제곱 + ~128 곱 = ~384 Montgomery mults</p>
+              <p className="text-xs text-muted-foreground mt-1">상수 시간 — 암호학에 적합</p>
+              <p className="text-xs text-muted-foreground mt-3">대안: 확장 유클리드 — 더 빠르지만 NOT 상수 시간</p>
+            </div>
+          </div>
+        </div>
 
-// Inverse via Fermat's little theorem:
-//
-//   For a in F_p*: a^{p-1} = 1 (mod p)
-//   Therefore: a^{p-2} = a^{-1} (mod p)
-//
-//   fn inv(&self) -> Self {
-//     self.pow(&(P - 2))  // P is the prime
-//   }
-//
-//   Cost: ~256 squarings + ~128 multiplications
-//   = ~384 Montgomery mults
-//   Constant time (good for crypto)
-
-// Alternative: extended Euclidean
-//
-//   Compute gcd(a, p) = 1 and coefficients s, t
-//   such that s*a + t*p = 1
-//   Then s = a^{-1} (mod p)
-//
-//   Faster: O(log p) instead of O(log p) multiplications
-//   But: NOT constant time (branches on intermediate values)
-
-// Performance comparison:
-//
-//   Operation        Cycles (x86_64)
-//   ------------------------------------
-//   mont_mul:        ~18 (with adx/bmi2)
-//   mont_sq:         ~15
-//   add/sub:         ~2-3
-//   inv (pow):       ~7000 (384 * 18)
-//   inv (bin ext):   ~1500 (not constant-time)
-//
-//   Batch inversion (Montgomery trick):
-//     inv(a_1), ..., inv(a_n) in one batch
-//     Cost: 3(n-1) mults + 1 inv
-//     ~3x speedup for n > 10
-
-// Memory layout optimization:
-//
-//   Align Fp structs to 32 bytes
-//   Fits in single cache line
-//   Enables SIMD load instructions
-//
-//   #[repr(align(32))]
-//   struct Fp([u64; 4]);`}
-        </pre>
+        {/* Performance & Memory */}
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-muted/50 rounded-xl border border-border overflow-hidden">
+            <div className="bg-muted px-5 py-2 border-b border-border">
+              <span className="text-sm font-semibold">성능 비교 (x86_64)</span>
+            </div>
+            <div className="p-5 text-sm space-y-1">
+              <div className="flex justify-between"><span><code className="text-xs bg-muted px-1 rounded">mont_mul</code></span><span>~18 사이클 (adx/bmi2)</span></div>
+              <div className="flex justify-between"><span><code className="text-xs bg-muted px-1 rounded">mont_sq</code></span><span>~15 사이클</span></div>
+              <div className="flex justify-between"><span><code className="text-xs bg-muted px-1 rounded">add/sub</code></span><span>~2-3 사이클</span></div>
+              <div className="flex justify-between"><span><code className="text-xs bg-muted px-1 rounded">inv</code> (pow)</span><span>~7000 사이클</span></div>
+              <div className="flex justify-between"><span><code className="text-xs bg-muted px-1 rounded">inv</code> (ext gcd)</span><span className="text-muted-foreground">~1500 (비상수 시간)</span></div>
+              <p className="text-xs text-muted-foreground mt-3">Batch inversion (Montgomery trick):</p>
+              <p className="text-xs text-muted-foreground"><M>{'\\text{inv}(a_1), \\ldots, \\text{inv}(a_n)'}</M> 한 번에 — 비용: 3(n-1) mults + 1 inv</p>
+            </div>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">메모리 레이아웃 최적화</p>
+            <p className="text-sm"><code className="text-xs bg-muted px-1 rounded">#[repr(align(32))]</code></p>
+            <p className="text-sm"><code className="text-xs bg-muted px-1 rounded">struct Fp([u64; 4])</code></p>
+            <p className="text-xs text-muted-foreground mt-2">32바이트 정렬 — 단일 캐시 라인에 적합</p>
+            <p className="text-xs text-muted-foreground mt-1">SIMD 로드 명령어 활용 가능</p>
+          </div>
+        </div>
       </div>
     </section>
   );

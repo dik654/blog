@@ -17,49 +17,71 @@ export default function Protocol({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">PDP Protocol 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PDP Protocol:
-
-// Setup:
-// 1. Client splits data (160B chunks)
-// 2. SHA256 per chunk → leaf hashes
-// 3. Build Merkle tree
-// 4. Register root on-chain
-
-// Challenge:
-// 1. DRAND beacon → randomness
-// 2. offset = beacon mod data_size
-// 3. SP reads 160B at offset
-// 4. Generate Merkle proof
-
-// Proof structure:
-// - leaf_data: 160 bytes
-// - leaf_hash: 32 bytes
-// - merkle_path: ~20-30 × 32 bytes
-// - total: ~1 KB
-
-// Verification:
-// 1. SHA256(leaf_data) == leaf_hash
-// 2. replay Merkle path to root
-// 3. compare with registered root
-
-// Gas cost:
-// - ~20 SHA256 ops
-// - <1 MGas per verify
-// - vs PoSt: 100M+ gas
-
-// Frequency:
-// - configurable (per SLA)
-// - typical: hourly / per epoch
-// - statistical guarantee
-// - penalty on failure
-
-// 장점:
-// - cheap verify
-// - no SNARK
-// - industry standard (SHA256)
-// - fast generation`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Setup</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>Client가 데이터를 160B chunk으로 분할</li>
+              <li>chunk마다 <code className="text-xs bg-background px-1 rounded">SHA256</code> 해시 계산 (leaf)</li>
+              <li>Merkle tree 구축</li>
+              <li>root를 온체인에 등록</li>
+            </ol>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Challenge</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>DRAND beacon에서 randomness 획득</li>
+              <li><code className="text-xs bg-background px-1 rounded">offset = beacon mod data_size</code></li>
+              <li>SP가 해당 offset에서 160B 읽기</li>
+              <li>Merkle proof 생성</li>
+            </ol>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Proof 구조</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs bg-background px-1 rounded">leaf_data</code>: 160 bytes</li>
+              <li><code className="text-xs bg-background px-1 rounded">leaf_hash</code>: 32 bytes</li>
+              <li><code className="text-xs bg-background px-1 rounded">merkle_path</code>: ~20-30 x 32 bytes</li>
+              <li>총 크기: ~1 KB</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Verification</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code className="text-xs bg-background px-1 rounded">SHA256(leaf_data) == leaf_hash</code> 확인</li>
+              <li>Merkle path를 root까지 재연산</li>
+              <li>등록된 root와 대조</li>
+            </ol>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Gas 비용</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>~20 SHA256 연산</li>
+              <li>&lt;1 MGas per verify</li>
+              <li>PoSt 대비: <code className="text-xs bg-background px-1 rounded">100x</code> 저렴</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">빈도</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>SLA별 설정 가능</li>
+              <li>통상 hourly / per epoch</li>
+              <li>실패 시 penalty</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">장점</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>저렴한 검증, SNARK 불필요</li>
+              <li>업계 표준(SHA256)</li>
+              <li>빠른 생성</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           PDP: <strong>DRAND challenge → SHA256 + Merkle → verify</strong>.<br />
           &lt;1 MGas per verify (100x cheaper than PoSt).<br />

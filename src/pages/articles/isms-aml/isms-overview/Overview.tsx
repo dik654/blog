@@ -1,8 +1,13 @@
+import OverviewViz from './viz/OverviewViz';
+import CertificationFlowViz from './viz/CertificationFlowViz';
+import OrgRolesViz from './viz/OrgRolesViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">ISMS-P 인증이란</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">정의</h3>
         <p>
@@ -79,6 +84,7 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">인증 흐름: 5단계</h3>
+        <CertificationFlowViz />
         <p>
           인증 취득까지 통상 6~12개월 소요. 각 단계를 순서대로 정리하면:
         </p>
@@ -107,6 +113,7 @@ export default function Overview() {
         </ol>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">조직 역할 구분</h3>
+        <OrgRolesViz />
         <p>
           ISMS-P 인증에서 가장 먼저 확인하는 것이 "조직 구조와 책임 배분".<br />
           법적으로 지정해야 하는 역할은 세 가지:

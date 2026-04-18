@@ -5,25 +5,44 @@ export default function Regulatory() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">한국 가상자산 규제 타임라인</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`2017-2018: 규제 공백기
-  - ICO 금지 (2017.09)
-  - 거래소 폭발적 성장
-  - 스테이블코인 논의 없음
-
-2021: 특정금융정보법 (특금법) 시행
-  - VASP 신고제 도입
-  - 은행 실명계좌 필수
-  - 거래소 대대적 구조조정
-
-2024: 가상자산이용자보호법 시행
-  - 이용자 자산 보호 강화
-  - 불공정거래 규제
-  - 거래소 보유 코인 80% 콜드월렛 의무
-
-2025 (예상): 2단계 규제
-  - 스테이블코인 전용 규제
-  - 발행사 자격 요건
-  - DeFi 규제 프레임워크`}</pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-neutral-500 rounded px-1.5 py-0.5">2017-2018</span>
+              <span className="font-semibold text-sm">규제 공백기</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              ICO 금지 (2017.09) / 거래소 폭발적 성장 / 스테이블코인 논의 없음
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-blue-500 rounded px-1.5 py-0.5">2021</span>
+              <span className="font-semibold text-sm">특정금융정보법 (특금법) 시행</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              VASP 신고제 도입 / 은행 실명계좌 필수 / 거래소 대대적 구조조정
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-green-600 rounded px-1.5 py-0.5">2024</span>
+              <span className="font-semibold text-sm">가상자산이용자보호법 시행</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              이용자 자산 보호 강화 / 불공정거래 규제 / 거래소 보유 코인 80% 콜드월렛 의무
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-amber-500 rounded px-1.5 py-0.5">2025</span>
+              <span className="font-semibold text-sm">2단계 규제 (예상)</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              스테이블코인 전용 규제 / 발행사 자격 요건 / DeFi 규제 프레임워크
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">스테이블코인 관련 주요 법률</h3>
         <p>

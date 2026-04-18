@@ -17,118 +17,106 @@ export default function PrePost() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Pre-tool 훅 실제 예시 — rm 차단</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#!/bin/bash
-# /opt/claw/hooks/no-rm.sh — rm 명령 차단
-
-INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool_name')
-
-if [[ "$TOOL" == "bash" ]]; then
-    CMD=$(echo "$INPUT" | jq -r '.tool_input.command')
-    if echo "$CMD" | grep -qE "\\brm\\b"; then
-        jq -n --arg cmd "$CMD" '{
-            permission: "deny",
-            reason: "rm 명령 금지 (회사 정책)"
-        }'
-        exit 0
-    fi
-fi
-
-# 해당 없음 → skip
-echo '{"permission":"skip"}'`}</pre>
-        <p>
-          <strong>stdin JSON 파싱</strong>: <code>jq</code> 명령으로 필드 추출<br />
-          <code>grep -qE</code>: 정규식 매칭, <code>-q</code>는 silent, <code>-E</code>는 확장 regex<br />
-          <strong>해당 없음 → skip</strong>: 다른 훅 또는 기본 Enforcer에 위임
-        </p>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-3">no-rm.sh — rm 명령 차단 훅</div>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">1</span>
+                <div>stdin에서 JSON 읽기 — <code className="text-xs">INPUT=$(cat)</code>으로 전체 입력 캡처, <code className="text-xs">jq -r '.tool_name'</code>으로 도구 이름 추출</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">2</span>
+                <div>도구가 <code className="text-xs">bash</code>인지 확인 후 명령 문자열에서 <code className="text-xs">grep -qE "\brm\b"</code>로 rm 패턴 탐지 (<code className="text-xs">-q</code> silent, <code className="text-xs">-E</code> 확장 regex)</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">deny</span>
+                <div>매칭 시 <code className="text-xs">{'{"permission": "deny", "reason": "rm 명령 금지"}'}</code> 출력 후 <code className="text-xs">exit 0</code></div>
+              </div>
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-neutral-200 dark:bg-neutral-700 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">skip</span>
+                <div>해당 없음 시 <code className="text-xs">{'{"permission":"skip"}'}</code> — 다른 훅 또는 기본 Enforcer에 위임</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Post-tool 훅 예시 — git status 경고</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#!/bin/bash
-# /opt/claw/hooks/git-dirty.sh — write_file 후 git status 확인
-
-INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool_name')
-WS=$(echo "$INPUT" | jq -r '.workspace_root')
-
-if [[ "$TOOL" == "write_file" || "$TOOL" == "edit_file" ]]; then
-    cd "$WS" || exit 0
-
-    CHANGED=$(git status --porcelain | wc -l)
-    if [[ $CHANGED -gt 20 ]]; then
-        echo "[warning] $CHANGED files modified, consider committing"
-    fi
-fi
-
-exit 0`}</pre>
-        <p>
-          <strong>Post 훅은 stdout 출력을 경고로 표시</strong> — JSON 프로토콜 따를 필요 없음<br />
-          사용자 터미널에 <code>[warning] ...</code> 표시 — 정보 제공만 수행<br />
-          exit code 0 필수 — 0 아니면 로그에 "hook failed" 기록
-        </p>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-3">git-dirty.sh — write/edit 후 git 변경 파일 수 경고</div>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">1</span>
+                <div>도구 이름 확인 — <code className="text-xs">write_file</code> 또는 <code className="text-xs">edit_file</code>인지 분기</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">2</span>
+                <div><code className="text-xs">workspace_root</code>로 이동 후 <code className="text-xs">git status --porcelain | wc -l</code>로 변경 파일 수 집계</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm">
+                <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">warn</span>
+                <div>20개 초과 시 <code className="text-xs">[warning] N files modified</code> 출력 — 사용자 터미널에 표시</div>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-border text-sm text-muted-foreground">
+              Post 훅은 JSON 프로토콜 불필요 — stdout 텍스트가 경고로 표시. <code className="text-xs">exit 0</code> 필수 (비정상 종료 시 "hook failed" 로그)
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Pre 훅 실행 코드</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl HookRunner {
-    async fn execute_hook(
-        &self,
-        hook: &HookDefinition,
-        event: &str,
-        tool: &str,
-        input: &Value,
-    ) -> HookResponse {
-        // 1) JSON 입력 준비
-        let payload = json!({
-            "event": event,
-            "tool_name": tool,
-            "tool_input": input,
-            "session_id": current_session_id(),
-            "workspace_root": workspace_root(),
-            "timestamp": Utc::now().to_rfc3339(),
-        });
-
-        // 2) 서브프로세스 실행
-        let mut child = Command::new("/bin/sh")
-            .arg("-c").arg(&hook.command)
-            .envs(&hook.env)
-            .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .spawn()
-            .map_err(|e| HookResponse::Error(e.to_string()))?;
-
-        // 3) stdin으로 JSON 전송
-        let stdin = child.stdin.as_mut().unwrap();
-        stdin.write_all(payload.to_string().as_bytes()).await?;
-        stdin.shutdown().await?;
-
-        // 4) 타임아웃 적용
-        let output = tokio::time::timeout(
-            hook.timeout.unwrap_or(self.default_timeout),
-            child.wait_with_output(),
-        ).await?.map_err(|e| HookResponse::Error(e.to_string()))??;
-
-        // 5) stdout JSON 파싱
-        let resp: HookResponseRaw = serde_json::from_slice(&output.stdout)
-            .unwrap_or(HookResponseRaw::skip());
-
-        resp.into()
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">execute_hook — 5단계 실행 파이프라인</div>
+            <div className="space-y-2">
+              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">1</span>
+                <div><strong>JSON 입력 준비</strong> — <code className="text-xs">event</code>, <code className="text-xs">tool_name</code>, <code className="text-xs">tool_input</code>, <code className="text-xs">session_id</code>, <code className="text-xs">workspace_root</code>, <code className="text-xs">timestamp</code> 조합</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">2</span>
+                <div><strong>서브프로세스 생성</strong> — <code className="text-xs">/bin/sh -c hook.command</code>로 실행, <code className="text-xs">stdin/stdout/stderr</code> 파이프 연결, 환경 변수 주입</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">3</span>
+                <div><strong>stdin 전송</strong> — payload JSON 바이트 기록 후 <code className="text-xs">shutdown()</code>으로 EOF 전송</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">4</span>
+                <div><strong>타임아웃 적용</strong> — <code className="text-xs">tokio::time::timeout</code>으로 감싸서 <code className="text-xs">hook.timeout</code> 또는 <code className="text-xs">default_timeout</code> 초과 시 중단</div>
+              </div>
+              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">5</span>
+                <div><strong>stdout JSON 파싱</strong> — <code className="text-xs">serde_json::from_slice</code>로 응답 파싱, 실패 시 <code className="text-xs">skip</code> 기본값</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
-          <strong>5단계 실행</strong>: JSON 입력 준비 → 프로세스 생성 → stdin 전송 → 타임아웃 → 응답 파싱<br />
-          <code>/bin/sh -c</code>: 셸 명령 문자열 실행 — 경로·인자 분리 불필요<br />
+          <code>/bin/sh -c</code>: 셸 명령 문자열 실행 — 경로/인자 분리 불필요<br />
           파싱 실패 시 <code>skip</code> 기본값 — 훅 버그가 시스템 차단으로 이어지지 않음
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">타임아웃 기본값 &amp; 실패 처리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub const DEFAULT_HOOK_TIMEOUT: Duration = Duration::from_millis(2000);
-
-// 타임아웃 초과 시
-if let Err(_) = tokio::time::timeout(timeout, child.wait_with_output()).await {
-    // 프로세스 강제 종료
-    let _ = child.kill().await;
-    log::warn!("hook timeout: {}", hook.command);
-    return HookResponse::Error("hook timeout".into());
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-center">
+                <div className="text-lg font-bold text-blue-600 dark:text-blue-400">2000ms</div>
+                <div className="text-xs text-muted-foreground mt-1"><code className="text-xs">DEFAULT_HOOK_TIMEOUT</code></div>
+              </div>
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-center">
+                <div className="text-lg font-bold text-red-600 dark:text-red-400">kill</div>
+                <div className="text-xs text-muted-foreground mt-1">초과 시 프로세스 강제 종료</div>
+              </div>
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-center">
+                <div className="text-lg font-bold text-amber-600 dark:text-amber-400">Error</div>
+                <div className="text-xs text-muted-foreground mt-1"><code className="text-xs">skip</code>과 동일 취급 — 다음 훅으로</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>기본 2초</strong>: 훅은 경량이어야 함 — 무거운 연산 금지<br />
           2초 초과 시 훅 프로세스 강제 종료 + Error 응답<br />

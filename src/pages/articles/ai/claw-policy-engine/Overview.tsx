@@ -17,36 +17,53 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">핵심 개념 — Lane &amp; Rule</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`Lane: 병렬 작업의 단위
-  - 하나의 branch + workspace + task
-  - 여러 Lane이 독립적으로 진행
-
-Rule: Lane 상태 전이 규칙
-  - 조건(condition) + 동작(action)
-  - 조건 충족 시 동작 수행
-
-Example:
-  조건: "build 성공 && test 성공"
-  동작: "merge to main, create next Lane"`}</pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-muted/50 border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Lane — 병렬 작업의 단위</p>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li>하나의 <code className="text-xs bg-muted px-1 rounded">branch</code> + <code className="text-xs bg-muted px-1 rounded">workspace</code> + <code className="text-xs bg-muted px-1 rounded">task</code></li>
+              <li>여러 Lane이 독립적으로 진행</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Rule — Lane 상태 전이 규칙</p>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li><code className="text-xs bg-muted px-1 rounded">condition</code>(조건) + <code className="text-xs bg-muted px-1 rounded">action</code>(동작)</li>
+              <li>조건 충족 시 동작 수행</li>
+            </ul>
+          </div>
+          <div className="md:col-span-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Example</p>
+            <p className="text-sm text-muted-foreground">
+              조건: <code className="text-xs bg-muted px-1 rounded">"build 성공 &amp;&amp; test 성공"</code><br />
+              동작: <code className="text-xs bg-muted px-1 rounded">"merge to main, create next Lane"</code>
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PolicyEngine 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct PolicyEngine {
-    rules: Vec<PolicyRule>,
-    lanes: HashMap<LaneId, Lane>,
-    green_contract: GreenContract,
-    event_log: Vec<PolicyEvent>,
-}
-
-pub struct Lane {
-    pub id: LaneId,
-    pub branch: String,
-    pub status: LaneStatus,
-    pub task_packet: TaskPacket,
-    pub context: LaneContext,
-    pub created_at: DateTime<Utc>,
-}
-
-pub enum LaneStatus { /* ... 7 variants ... */ }`}</pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-muted/50 border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2"><code className="text-xs bg-muted px-1 rounded">PolicyEngine</code></p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs bg-muted px-1 rounded">rules: Vec&lt;PolicyRule&gt;</code> — 상태 전이 규칙 목록</li>
+              <li><code className="text-xs bg-muted px-1 rounded">lanes: HashMap&lt;LaneId, Lane&gt;</code> — 활성 Lane 맵</li>
+              <li><code className="text-xs bg-muted px-1 rounded">green_contract: GreenContract</code> — 품질 게이트</li>
+              <li><code className="text-xs bg-muted px-1 rounded">event_log: Vec&lt;PolicyEvent&gt;</code> — 발동 이력</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2"><code className="text-xs bg-muted px-1 rounded">Lane</code></p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs bg-muted px-1 rounded">id: LaneId</code> — 고유 식별자</li>
+              <li><code className="text-xs bg-muted px-1 rounded">branch: String</code> — 작업 브랜치</li>
+              <li><code className="text-xs bg-muted px-1 rounded">status: LaneStatus</code> — 현재 상태 (7 variants)</li>
+              <li><code className="text-xs bg-muted px-1 rounded">task_packet: TaskPacket</code> — 작업 명세</li>
+              <li><code className="text-xs bg-muted px-1 rounded">context: LaneContext</code> — 평가 컨텍스트</li>
+              <li><code className="text-xs bg-muted px-1 rounded">created_at: DateTime&lt;Utc&gt;</code> — 생성 시각</li>
+            </ul>
+          </div>
+        </div>
         <LanePolicyActionsViz />
         <p>
           <strong>7개 LaneStatus</strong>: 작업 수명의 모든 단계 —
@@ -56,34 +73,27 @@ pub enum LaneStatus { /* ... 7 variants ... */ }`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">evaluate_lane() — 상태 전이 평가</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl PolicyEngine {
-    pub async fn evaluate_lane(&mut self, lane_id: &LaneId) -> Result<()> {
-        let lane = self.lanes.get(lane_id).ok_or(...)?;
-
-        // 현재 Lane 컨텍스트 수집
-        let ctx = self.build_context(lane).await?;
-
-        // 각 규칙 평가
-        for rule in &self.rules {
-            if !rule.condition.matches_lane_status(&lane.status) { continue; }
-
-            if rule.condition.evaluate(&ctx).await? {
-                // 동작 실행
-                self.apply_action(lane_id, &rule.action).await?;
-
-                // 이벤트 로그
-                self.event_log.push(PolicyEvent {
-                    lane: lane_id.clone(),
-                    rule: rule.name.clone(),
-                    timestamp: Utc::now(),
-                });
-
-                break;  // 첫 매칭 규칙만 적용
-            }
-        }
-        Ok(())
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">evaluate_lane(&mut self, lane_id: &LaneId) → Result&lt;()&gt;</code></p>
+          <div className="space-y-3">
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <p className="text-sm text-muted-foreground">Lane 조회 후 <code className="text-xs bg-muted px-1 rounded">build_context(lane)</code>로 현재 컨텍스트 수집</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <p className="text-sm text-muted-foreground">각 규칙 순회 — <code className="text-xs bg-muted px-1 rounded">matches_lane_status()</code>로 해당 상태인지 사전 필터</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">rule.condition.evaluate(&ctx)</code> 통과 시 <code className="text-xs bg-muted px-1 rounded">apply_action()</code> 실행</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">event_log</code>에 발동 기록 후 <code className="text-xs bg-muted px-1 rounded">break</code> — 첫 매칭 규칙만 적용</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>first-match 정책</strong>: 첫 매칭 규칙만 실행 — 다음 루프에서 재평가<br />
           각 평가마다 컨텍스트 재수집 — 최신 상태 반영<br />
@@ -91,23 +101,23 @@ pub enum LaneStatus { /* ... 7 variants ... */ }`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주기적 평가 루프</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`async fn policy_engine_loop(engine: Arc<Mutex<PolicyEngine>>) {
-    loop {
-        tokio::time::sleep(Duration::from_secs(30)).await;
-
-        let lane_ids: Vec<_> = {
-            let engine = engine.lock().await;
-            engine.lanes.keys().cloned().collect()
-        };
-
-        for lane_id in lane_ids {
-            let mut engine = engine.lock().await;
-            if let Err(e) = engine.evaluate_lane(&lane_id).await {
-                log::warn!("evaluate_lane failed: {}", e);
-            }
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">policy_engine_loop(engine: Arc&lt;Mutex&lt;PolicyEngine&gt;&gt;)</code></p>
+          <div className="space-y-3">
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">∞</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">loop</code> — 30초 간격으로 무한 반복 (<code className="text-xs bg-muted px-1 rounded">tokio::time::sleep</code>)</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">1</span>
+              <p className="text-sm text-muted-foreground">Mutex lock → 전체 <code className="text-xs bg-muted px-1 rounded">lane_ids</code> 복사 후 즉시 해제</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">2</span>
+              <p className="text-sm text-muted-foreground">각 Lane 순차 평가 — 에러는 <code className="text-xs bg-muted px-1 rounded">log::warn!</code>만, 전체 중단 없음</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>30초 주기</strong>: 너무 빈번하면 CI 부하, 너무 느리면 반응 지연<br />
           각 Lane 순차 평가 — 병렬화는 향후 최적화<br />
@@ -115,14 +125,15 @@ pub enum LaneStatus { /* ... 7 variants ... */ }`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PolicyRule 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct PolicyRule {
-    pub name: String,
-    pub priority: u32,
-    pub condition: PolicyCondition,
-    pub action: PolicyAction,
-}
-
-pub enum PolicyAction { /* 6 variants — 위 Viz 참조 */ }`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-2"><code className="text-xs bg-muted px-1 rounded">PolicyRule</code></p>
+          <ul className="text-sm space-y-1 text-muted-foreground">
+            <li><code className="text-xs bg-muted px-1 rounded">name: String</code> — 규칙 이름 (로그·디버깅용)</li>
+            <li><code className="text-xs bg-muted px-1 rounded">priority: u32</code> — 우선순위 (높을수록 먼저 평가)</li>
+            <li><code className="text-xs bg-muted px-1 rounded">condition: PolicyCondition</code> — 발동 조건</li>
+            <li><code className="text-xs bg-muted px-1 rounded">action: PolicyAction</code> — 실행할 동작 (6 variants)</li>
+          </ul>
+        </div>
         <p>
           <strong>6종 액션</strong>: 상태 전이, Lane 관리, VCS 조작, 외부 통합<br />
           <code>RunCommand</code>는 탈출구 — 정의된 액션으로 표현 안 될 때<br />
@@ -130,28 +141,32 @@ pub enum PolicyAction { /* 6 variants — 위 Viz 참조 */ }`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실제 사용 시나리오</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 시나리오: 야간 자동 버그 수정 파이프라인
-//
-// Lane 생성 → LLM이 수정 시도 → 빌드/테스트 →
-//   성공 → merge to staging → 알림
-//   실패 → 다시 시도 (3회) → 그래도 실패 → Abandoned + 알림
-
-rules:
-  - name: "Testing 완료 후 머지"
-    condition: "status == Testing && build_green && tests_pass"
-    action: MergeBranch
-
-  - name: "테스트 실패 재시도"
-    condition: "status == Blocked && failure_count < 3"
-    action: Transition(InProgress)
-
-  - name: "3회 실패 시 폐기"
-    condition: "status == Blocked && failure_count >= 3"
-    action: AbandonLane("max retries exceeded")
-
-  - name: "Merged 후 다음 이슈 픽업"
-    condition: "status == Merged && queue_has_pending"
-    action: SpawnLane(next_from_queue())`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-1">야간 자동 버그 수정 파이프라인</p>
+          <p className="text-xs text-muted-foreground mb-3">Lane 생성 → LLM 수정 시도 → 빌드/테스트 → 성공이면 merge, 실패면 재시도(3회) → 그래도 실패면 Abandoned</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-3">
+              <p className="text-xs font-semibold text-green-700 dark:text-green-300 mb-1">Testing 완료 후 머지</p>
+              <p className="text-xs text-muted-foreground">조건: <code className="text-xs bg-muted px-1 rounded">Testing &amp;&amp; build_green &amp;&amp; tests_pass</code></p>
+              <p className="text-xs text-muted-foreground">동작: <code className="text-xs bg-muted px-1 rounded">MergeBranch</code></p>
+            </div>
+            <div className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+              <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">테스트 실패 재시도</p>
+              <p className="text-xs text-muted-foreground">조건: <code className="text-xs bg-muted px-1 rounded">Blocked &amp;&amp; failure_count &lt; 3</code></p>
+              <p className="text-xs text-muted-foreground">동작: <code className="text-xs bg-muted px-1 rounded">Transition(InProgress)</code></p>
+            </div>
+            <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <p className="text-xs font-semibold text-red-700 dark:text-red-300 mb-1">3회 실패 시 폐기</p>
+              <p className="text-xs text-muted-foreground">조건: <code className="text-xs bg-muted px-1 rounded">Blocked &amp;&amp; failure_count &gt;= 3</code></p>
+              <p className="text-xs text-muted-foreground">동작: <code className="text-xs bg-muted px-1 rounded">AbandonLane("max retries")</code></p>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <p className="text-xs font-semibold text-blue-700 dark:text-blue-300 mb-1">Merged 후 다음 이슈 픽업</p>
+              <p className="text-xs text-muted-foreground">조건: <code className="text-xs bg-muted px-1 rounded">Merged &amp;&amp; queue_has_pending</code></p>
+              <p className="text-xs text-muted-foreground">동작: <code className="text-xs bg-muted px-1 rounded">SpawnLane(next_from_queue())</code></p>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 자율 코딩의 경계</p>

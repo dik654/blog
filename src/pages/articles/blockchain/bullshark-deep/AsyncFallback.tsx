@@ -13,70 +13,51 @@ export default function AsyncFallback() {
 
         {/* ── Async Fallback 동작 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Async Fallback 동작 원리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bullshark의 2 modes:
-
-// Mode 1: Partial Sync (Fast Path)
-// - 2-round wave
-// - deterministic anchor
-// - f+1+ votes → commit
-// - latency: 2 rounds = 2δ
-
-// Mode 2: Async (Fallback)
-// - 4-round wave
-// - randomized anchor (VRF/coin)
-// - more robust voting rules
-// - latency: 4 rounds = 4δ
-// - guaranteed liveness (probability 1)
-
-// Transition criteria:
-// - consecutive skipped waves (e.g., 3+)
-// - network timeout detected
-// - explicit view change signal
-// → switch to Mode 2
-
-// Recovery criteria:
-// - successful commits resume
-// - network stabilized
-// - → switch back to Mode 1
-
-// Async mode 메커니즘:
-//
-// 1. 4-round wave:
-//    wave w = rounds [4w, 4w+3]
-//    - round 4w: potential anchors
-//    - rounds 4w+1, 4w+2: voting
-//    - round 4w+3: commit decision
-//
-// 2. Randomized anchor:
-//    common coin at end of wave
-//    anchor = coin_result mod n
-//    - unpredictable
-//    - uniform random
-//    - Byzantine can't bias
-//
-// 3. Voting rules:
-//    - round 4w+1: "strong" votes for anchor
-//    - round 4w+2: "weak" votes (backup)
-//    - round 4w+3: final decision
-//
-// 4. Commit conditions:
-//    - 2f+1 strong votes → commit
-//    - if not 2f+1, use weak votes + coin
-//    - random anchor matches → commit
-//    - probability of commit: ≥ 1/3 per wave
-
-// Expected commit time:
-// - probability 1/3 per wave
-// - expected waves: 3
-// - expected rounds: 12
-// - but probability 1 eventually
-
-// Safety:
-// - both modes safe independently
-// - transition safe (wave boundaries)
-// - committed anchors preserved`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Bullshark의 2 modes</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Mode 1: Partial Sync (Fast Path)</p>
+                <p className="text-muted-foreground">2-round wave, deterministic anchor, <code>f+1+</code> votes → commit. latency: <code>2δ</code></p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Mode 2: Async (Fallback)</p>
+                <p className="text-muted-foreground">4-round wave, randomized anchor (VRF/coin), more robust voting rules. latency: <code>4δ</code>, guaranteed liveness</p>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Transition: consecutive skipped waves (3+) / network timeout → Mode 2. Recovery: successful commits 재개 → Mode 1
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Async mode 메커니즘</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">4-round wave</p>
+                <p className="text-muted-foreground"><code>wave w = rounds [4w, 4w+3]</code>. round 4w: potential anchors, 4w+1~4w+2: voting, 4w+3: commit decision</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Randomized anchor</p>
+                <p className="text-muted-foreground">common coin at end of wave. <code>anchor = coin_result mod n</code>. unpredictable, uniform random, Byzantine can't bias</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Voting rules</p>
+                <p className="text-muted-foreground">round 4w+1: "strong" votes, round 4w+2: "weak" votes (backup), round 4w+3: final decision</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Commit conditions</p>
+                <p className="text-muted-foreground"><code>2f+1</code> strong votes → commit. 부족 시 weak votes + coin 사용. commit 확률 &ge; 1/3 per wave</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="text-sm">
+              <strong>Expected commit</strong>: probability 1/3 per wave → expected 3 waves (12 rounds), probability 1 eventually.<br />
+              <strong>Safety</strong>: both modes safe independently, transition safe (wave boundaries), committed anchors preserved
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Async mode: <strong>4-round wave + randomized anchor</strong>.<br />
           expected 3 waves (12 rounds) for commit.<br />
@@ -115,68 +96,48 @@ export default function AsyncFallback() {
 
         {/* ── 하이브리드 전환 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Hybrid 전환 메커니즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bullshark 자동 전환:
-
-// Detection:
-// - monitor consecutive skipped waves
-// - threshold: 3 skipped (configurable)
-// - 원인: network partition, DDoS, multi-failure
-
-// Transition steps:
-//
-// 1. Fast → Slow:
-//    - detect 3 skipped waves
-//    - next wave: 4-round mode
-//    - announce via special marker (in next vertex)
-//    - all validators switch
-//
-// 2. Slow → Fast:
-//    - detect 2 consecutive successful commits (slow)
-//    - next wave: 2-round mode
-//    - optimistic restart
-
-// 상태 공유:
-// - mode state in DAG (special field)
-// - validators 동일 상태 유지
-// - byzantine이 잘못된 state 삽입 시 detect
-
-// Adaptive behavior:
-// - 네트워크 unstable: stay in slow mode
-// - 네트워크 stable: fast mode
-// - 자동 adaptation
-// - no manual intervention
-
-// 실제 시나리오:
-//
-// 정상 운영:
-// - 99% time in fast mode
-// - 2-round commits
-// - 130K+ TPS (Bullshark)
-//
-// DDoS 공격:
-// - 일시적 slow mode
-// - 4-round commits
-// - throughput 감소
-// - but progress 유지
-//
-// 회복:
-// - 공격 종료
-// - fast mode 복귀
-// - 정상 throughput
-
-// Tusk (Bullshark 이전):
-// - only async mode
-// - always 4 rounds
-// - simpler but slower
-// - was Sui initial choice
-
-// Bullshark:
-// - hybrid benefits
-// - fast in common case
-// - async safety in worst case
-// - optimal adaptive BFT`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">자동 전환 메커니즘</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Fast → Slow</p>
+                <p className="text-muted-foreground">3 consecutive skipped waves 감지 → next wave: 4-round mode. special marker로 announce → all validators switch</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Slow → Fast</p>
+                <p className="text-muted-foreground">2 consecutive successful commits (slow mode) → next wave: 2-round mode. optimistic restart</p>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              상태 공유: mode state in DAG (special field). validators 동일 상태 유지, Byzantine의 잘못된 state 삽입 감지 가능
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">실제 시나리오</p>
+            <div className="grid gap-3 sm:grid-cols-3 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">정상 운영</p>
+                <p className="text-muted-foreground">99% time fast mode, 2-round commits, 130K+ TPS</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">DDoS 공격</p>
+                <p className="text-muted-foreground">일시적 slow mode, 4-round commits. throughput 감소하지만 progress 유지</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">회복</p>
+                <p className="text-muted-foreground">공격 종료 → fast mode 복귀 → 정상 throughput</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Tusk vs Bullshark</p>
+            <p className="text-sm text-muted-foreground">
+              <strong>Tusk</strong>: only async mode, always 4 rounds, simpler but slower — Sui initial choice.<br />
+              <strong>Bullshark</strong>: hybrid benefits, fast in common case, async safety in worst case — optimal adaptive BFT
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Hybrid 전환: <strong>consecutive skips → slow, successful commits → fast</strong>.<br />
           99% fast mode + 1% slow mode (실제).<br />

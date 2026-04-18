@@ -13,55 +13,44 @@ export default function Responsiveness() {
 
         {/* ── Responsiveness 정의 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Responsiveness 형식 정의</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Responsiveness 정의 (Pass-Shi 2018):
-//
-// "A protocol is responsive if, in all executions,
-//  the time to complete consensus is within O(δ),
-//  where δ is the actual (unknown) message delay."
-//
-// Formal:
-// ∃ constant c such that
-// ∀ executions, Time_consensus <= c * δ
-// where δ = actual message delay
+        <div className="not-prose grid grid-cols-1 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">정의 (Pass-Shi 2018)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>Responsive: 합의 시간이 실제 메시지 지연 δ에 비례 — <code className="text-xs">Time_consensus &le; c * δ</code></p>
+              <p>Non-responsive: 고정 timeout Δ (worst-case) 대기. 실제 δ &lt;&lt; Δ여도 Δ 대기</p>
+              <p>Responsive: 2f+1 응답 즉시 진행. 네트워크 빠르면 합의 빠름</p>
+            </div>
+          </div>
+        </div>
 
-// Non-responsive 예:
-// - fixed timeout 기반 프로토콜
-// - timeout = worst-case estimate (Δ)
-// - 실제 δ << Δ 여도 Δ 대기
-// - 네트워크가 빨라도 합의 느림
-
-// Responsive 예:
-// - 2f+1 응답 즉시 진행
-// - δ에 비례하는 시간
-// - 네트워크 빠르면 합의 빠름
-
-// 비교:
-//
-// PBFT (not responsive in view change):
-// - normal: 3δ (responsive)
-// - view change: timeout 기반 (non-responsive)
-// - worst case: O(Δ)
-
-// HotStuff (optimistically responsive):
-// - normal: 3δ (responsive)
-// - view change: 2f+1 NewView 대기 (responsive)
-// - worst case: O(δ) under GST
-
-// Tendermint (non-responsive):
-// - timeout 기반 round advance
-// - 2/3+ prevote 대기 + timeout
-// - 실제 지연 작아도 timeout 기다림
-
-// HotStuff-2, Jolteon:
-// - fully responsive (normal + view change)
-// - 2-phase optimistic
-
-// Asymptotic complexity:
-// Responsive: O(δ) latency
-// Non-responsive: O(Δ) latency
-// Δ >> δ in practice (safety margin)`}
-        </pre>
+        <div className="not-prose overflow-x-auto mb-6">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-4 py-2 text-left">프로토콜</th>
+                <th className="border border-border px-4 py-2 text-left">Normal</th>
+                <th className="border border-border px-4 py-2 text-left">View Change</th>
+                <th className="border border-border px-4 py-2 text-left">Worst Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['PBFT', '3δ (responsive)', 'timeout 기반 (non-responsive)', 'O(Δ)'],
+                ['HotStuff', '3δ (responsive)', '2f+1 NewView (responsive)', 'O(δ) under GST'],
+                ['Tendermint', 'timeout 기반', '2/3+ prevote + timeout', 'O(Δ)'],
+                ['HotStuff-2 / Jolteon', 'fully responsive', 'fully responsive', 'O(δ)'],
+              ].map(([name, ...rest]) => (
+                <tr key={name}>
+                  <td className="border border-border px-4 py-2 font-medium">{name}</td>
+                  {rest.map((v, i) => (
+                    <td key={i} className="border border-border px-4 py-2">{v}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <p className="leading-7">
           Responsive = <strong>실제 지연 δ에 비례</strong>.<br />
           non-responsive는 고정 timeout Δ 대기 (pessimistic).<br />
@@ -70,63 +59,52 @@ export default function Responsiveness() {
 
         {/* ── HotStuff의 부분 응답성 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff의 부분 응답성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff responsiveness 분석:
-//
-// Normal operation:
-// - leader가 2f+1 vote 받으면 즉시 다음 phase
-// - timeout 대기 없음
-// - fully responsive
-// - latency: 3δ per block (chained)
-//
-// View change (partial responsiveness):
-// - leader 실패 감지: timeout 필요
-// - 실패한 leader는 응답 안 보냄
-// - timeout이 leader 장애 감지 수단
-// - 이 부분은 non-responsive
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Normal Operation — Fully Responsive</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>leader가 2f+1 vote 받으면 즉시 다음 phase</li>
+              <li>timeout 대기 없음</li>
+              <li>latency: <code className="text-xs">3δ</code> per block (chained)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">View Change — Partial Responsive</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>Phase 1</strong> timeout detection: <code className="text-xs">Δ</code> 대기 (non-responsive)</p>
+              <p><strong>Phase 2</strong> NewView collection: <code className="text-xs">δ</code> (responsive)</p>
+              <p><strong>Phase 3</strong> new propose: <code className="text-xs">δ</code> (responsive)</p>
+              <p>총: <code className="text-xs">Δ + 2δ</code></p>
+            </div>
+          </div>
+        </div>
 
-// View change의 non-responsive 부분:
-//
-// Phase 1 (timeout detection): Δ 대기
-// - leader가 propose 안 보냄 감지
-// - 고정 timeout 필요
-//
-// Phase 2 (NewView collection): δ
-// - 2f+1 NewView 즉시 수집 가능
-// - responsive
-//
-// Phase 3 (new propose): δ
-// - new leader가 propose 바로 전송
-// - responsive
-//
-// 총: Δ + 2δ (view change)
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">HotStuff-2 개선</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>2-phase protocol, locking 제거 (view-based)</li>
+              <li>view change도 fully responsive</li>
+              <li>latency: normal <code className="text-xs">2δ</code>, view change <code className="text-xs">Δ + δ</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Jolteon (Aptos)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>2-chain commit + async fallback (Ditto)</li>
+              <li>responsive in normal + view change</li>
+            </ul>
+          </div>
+        </div>
 
-// 개선: Optimistic Responsiveness
-//
-// 1. Happy path (normal): fully responsive
-//    - 2f+1 vote 즉시 진행
-//    - latency 3δ (chained) or 4δ (basic)
-//
-// 2. Sad path (view change): partial responsive
-//    - timeout 1회 필요
-//    - 이후 responsive
-
-// HotStuff-2의 개선:
-// - 2-phase protocol
-// - locking 제거 (view-based)
-// - view change도 fully responsive
-// - latency 2δ (normal), Δ + δ (view change)
-
-// Jolteon (Aptos):
-// - 2-chain commit
-// - async fallback (Ditto)
-// - responsive in normal + view change
-
-// Responsiveness의 가치:
-// - LAN: δ ≈ 1ms, Δ ≈ 100ms → 100x 차이
-// - WAN: δ ≈ 100ms, Δ ≈ 1s → 10x 차이
-// - 실제 응답 시간 크게 개선`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 mb-2">Responsiveness의 실제 가치</div>
+            <div className="text-sm text-muted-foreground">
+              LAN: δ ≈ 1ms, Δ ≈ 100ms → <strong>100x</strong> 차이 / WAN: δ ≈ 100ms, Δ ≈ 1s → <strong>10x</strong> 차이
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           HotStuff normal = <strong>responsive</strong>, view change = <strong>partial responsive</strong>.<br />
           leader 장애 감지에만 timeout 필요.<br />
@@ -135,54 +113,56 @@ export default function Responsiveness() {
 
         {/* ── 실측 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">실제 성능 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// WAN 환경 (100ms RTT):
-//
-// PBFT (3-phase):
-// - normal: 3 × 100 = 300ms
-// - view change: ~1s (timeout dependent)
-// - throughput: 1000 TPS (limited by O(n²))
-//
-// Tendermint:
-// - normal: 3-4 × 100 = 400ms
-// - view change: ~2s (exponential backoff)
-// - throughput: 10K TPS
-//
-// HotStuff (chained):
-// - normal: 3 × 100 = 300ms (latency)
-// - steady state: 1 block per 100ms
-// - view change: 500-1000ms
-// - throughput: 20K TPS (O(n))
-//
-// HotStuff-2:
-// - normal: 2 × 100 = 200ms
-// - view change: 200-500ms
-// - throughput: 30K+ TPS
-//
-// Jolteon (Aptos):
-// - normal: 2 × 100 = 200ms
-// - view change: 200-500ms
-// - throughput: 100K+ TPS (with DAG)
+        <div className="not-prose overflow-x-auto mb-4">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-4 py-2 text-left">프로토콜</th>
+                <th className="border border-border px-4 py-2 text-left">WAN Normal</th>
+                <th className="border border-border px-4 py-2 text-left">WAN VC</th>
+                <th className="border border-border px-4 py-2 text-left">TPS</th>
+                <th className="border border-border px-4 py-2 text-left">LAN</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['PBFT', '300ms', '~1s', '1K (O(n²) 한계)', '3ms'],
+                ['Tendermint', '400ms', '~2s', '10K', '4ms'],
+                ['HotStuff', '300ms', '500-1000ms', '20K', '3ms / 1ms steady'],
+                ['HotStuff-2', '200ms', '200-500ms', '30K+', '2ms'],
+                ['Jolteon (Aptos)', '200ms', '200-500ms', '100K+ (DAG)', '2ms'],
+              ].map(([name, ...rest]) => (
+                <tr key={name}>
+                  <td className="border border-border px-4 py-2 font-medium">{name}</td>
+                  {rest.map((v, i) => (
+                    <td key={i} className="border border-border px-4 py-2">{v}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-// LAN 환경 (1ms RTT):
-//
-// PBFT: 3ms
-// HotStuff: 3ms (latency), 1ms (throughput)
-// HotStuff-2: 2ms
-// Jolteon: 2ms
-
-// 프로토콜 선택 기준:
-// - WAN + 응답성: HotStuff-2, Jolteon
-// - LAN + 단순성: Tendermint
-// - 범용: HotStuff
-// - 고처리량: Jolteon + DAG
-
-// Aptos 실측 (2024):
-// - TPS: 100,000+
-// - latency: ~1s (end-to-end)
-// - Jolteon + Quorum Store (DAG mempool)
-// - validator: ~100`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">프로토콜 선택 기준</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><strong>WAN + 응답성</strong>: HotStuff-2, Jolteon</li>
+              <li><strong>LAN + 단순성</strong>: Tendermint</li>
+              <li><strong>범용</strong>: HotStuff</li>
+              <li><strong>고처리량</strong>: Jolteon + DAG</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Aptos 실측 (2024)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>TPS: <code className="text-xs">100,000+</code></li>
+              <li>latency: <code className="text-xs">~1s</code> (end-to-end)</li>
+              <li>Jolteon + Quorum Store (DAG mempool)</li>
+              <li>validator: ~100</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           WAN 환경에서 responsiveness 차이가 큼.<br />
           HotStuff 300ms → HotStuff-2 200ms → Jolteon 200ms.<br />

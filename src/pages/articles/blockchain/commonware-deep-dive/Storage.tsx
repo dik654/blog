@@ -32,91 +32,104 @@ export default function Storage() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">MMR (Merkle Mountain Range) 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// MMR: Append-only authenticated structure
-// Originally for Open Timestamps & Grin
-
-// 구조
-// 여러 Merkle tree를 크기 내림차순으로 배열
-// 새 leaf 추가 → 같은 크기 트리 병합
-
-// Example: 7 leaves
-//
-//         [14]                  (peak of rightmost tree)
-//        /    \\
-//      [10]   [11]
-//      /  \\   /  \\
-//     1    2  3    4  [15]    (peak 2)
-//                      /  \\
-//                     5    6  [13] (peak 3)
-//                              |
-//                              7 (single leaf)
-//
-// Peaks: [14, 15, 13] (decreasing size: 4, 2, 1)
-// Root = hash(peaks)
-
-// Append 알고리즘
-fn append(mmr: &mut Vec<Hash>, new_leaf: Hash):
-    mmr.push(new_leaf);
-
-    // 같은 크기 트리 merge
-    while can_merge(mmr):
-        right = mmr.pop();
-        left = mmr.pop();
-        parent = hash(left, right);
-        mmr.push(parent);
-
-// 특성
-// - O(log n) amortized append
-// - Append-only (no delete, no modify)
-// - Proofs: O(log n) size
-// - SSD friendly (sequential write)
-
-// 용도
-// - Beacon chain history (Ethereum)
-// - Timestamp protocols
-// - Ordered event logs
-// - Oracle data feeds`}</pre>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <p className="text-sm text-muted-foreground mb-3">
+            Append-only authenticated structure — Open Timestamps & Grin에서 유래.
+            여러 Merkle tree를 크기 내림차순으로 배열, 새 leaf 추가 시 같은 크기 트리 병합
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 className="font-semibold text-sm mb-2">Append 알고리즘</h4>
+              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+                <li><code className="text-xs">mmr.push(new_leaf)</code></li>
+                <li>같은 크기 트리가 있으면 <code className="text-xs">right</code>, <code className="text-xs">left</code> pop</li>
+                <li><code className="text-xs">parent = hash(left, right)</code></li>
+                <li>parent push, 반복</li>
+              </ol>
+            </div>
+            <div>
+              <h4 className="font-semibold text-sm mb-2">특성</h4>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code className="text-xs">O(log n)</code> amortized append</li>
+                <li>Append-only — no delete, no modify</li>
+                <li>Proofs: <code className="text-xs">O(log n)</code> size</li>
+                <li>SSD friendly — sequential write</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2 text-muted-foreground">용도</h4>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div><strong className="text-foreground">Beacon chain history</strong> <span className="text-muted-foreground">— Ethereum</span></div>
+            <div><strong className="text-foreground">Timestamp protocols</strong></div>
+            <div><strong className="text-foreground">Ordered event logs</strong></div>
+            <div><strong className="text-foreground">Oracle data feeds</strong></div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">QMDB 아키텍처</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// QMDB: Quick Merkle Database
-// LayerZero & Commonware collaboration
-
-// 성능 목표
-// - 1 SSD read per state query
-// - O(1) SSD I/O per update
-// - 0 SSD I/O for Merkleization
-// - 2.28M updates/sec
-
-// 핵심 아이디어
-// 1) In-memory Merkle tree
-//    - 모든 tree node가 RAM에 상주
-//    - Hash 재계산 instant
-//    - 2.3 bytes/entry overhead
-
-// 2) SSD-backed values
-//    - Values만 SSD에 저장
-//    - Key → SSD offset mapping
-//    - 1 SSD read per get_value
-
-// 3) Append-only log
-//    - Updates는 log에 기록
-//    - No random SSD writes
-//    - Compaction 주기적
-
-// 4) Radix Patricia tree
-//    - Ethereum MPT와 유사
-//    - 16-way branching (hex)
-//    - Path compression
-
-// 메모리 사용량
-// 1B entries × 2.3B = ~2.3 GB RAM
-// 일반 MPT: ~40 GB (metadata overhead)
-
-// 사용 사례
-// - L1 state storage
-// - High-throughput chains
-// - Real-time analytics
-// - Privacy-preserving DB`}</pre>
+        <p className="text-sm text-muted-foreground mb-4">
+          Quick Merkle Database — LayerZero & Commonware collaboration
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">1. In-memory Merkle Tree</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>모든 tree node가 RAM에 상주</li>
+              <li>Hash 재계산 instant</li>
+              <li>2.3 bytes/entry overhead</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">2. SSD-backed Values</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Values만 SSD에 저장</li>
+              <li>Key → SSD offset mapping</li>
+              <li>1 SSD read per <code className="text-xs">get_value</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">3. Append-only Log</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Updates는 log에 기록</li>
+              <li>No random SSD writes</li>
+              <li>Compaction 주기적</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">4. Radix Patricia Tree</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Ethereum MPT와 유사</li>
+              <li>16-way branching (hex)</li>
+              <li>Path compression</li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2 text-muted-foreground">성능 목표</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>State query: <strong className="text-foreground">1 SSD read</strong></li>
+              <li>State update: <strong className="text-foreground"><code className="text-xs">O(1)</code> SSD I/O</strong></li>
+              <li>Merkleization: <strong className="text-foreground">0 SSD I/O</strong> (in-memory)</li>
+              <li>Throughput: <strong className="text-foreground">2.28M updates/sec</strong></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2 text-muted-foreground">메모리 비교</h4>
+            <div className="text-sm space-y-1 text-muted-foreground">
+              <div><strong className="text-foreground">QMDB</strong> — 1B entries x 2.3B = ~2.3 GB RAM</div>
+              <div><strong className="text-foreground">일반 MPT</strong> — ~40 GB (metadata overhead)</div>
+            </div>
+            <h4 className="font-semibold text-sm mb-2 mt-3 text-muted-foreground">사용 사례</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>L1 state storage</li>
+              <li>High-throughput chains</li>
+              <li>Real-time analytics</li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </section>

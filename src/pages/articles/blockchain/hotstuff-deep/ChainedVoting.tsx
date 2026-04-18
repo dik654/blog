@@ -39,57 +39,40 @@ export default function ChainedVoting() {
 
         {/* ── Basic vs Chained ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Basic HotStuff vs Chained HotStuff</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Basic HotStuff (3-phase, 1 block per view):
-//
-// View v:
-//   Phase 1: Prepare (propose)
-//     leader → all: msg(PREPARE, B, prepareQC)
-//     each → leader: vote
-//     leader aggregates: new prepareQC
-//
-//   Phase 2: Pre-commit
-//     leader → all: msg(PRE-COMMIT, prepareQC)
-//     each → leader: vote
-//     leader aggregates: precommitQC
-//
-//   Phase 3: Commit
-//     leader → all: msg(COMMIT, precommitQC)
-//     each → leader: vote
-//     leader aggregates: commitQC
-//
-//   Phase 4: Decide
-//     leader → all: msg(DECIDE, commitQC)
-//     → execute block B
-//
-// 결과: 1 block, 4 rounds per view
-// Throughput: 낮음 (view 당 1 block)
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Basic HotStuff (3-phase, 1 block per view)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>Phase 1 Prepare</strong> — leader → all: <code className="text-xs">msg(PREPARE, B, prepareQC)</code> → vote → <code className="text-xs">prepareQC</code></p>
+              <p><strong>Phase 2 Pre-commit</strong> — leader → all: <code className="text-xs">msg(PRE-COMMIT, prepareQC)</code> → vote → <code className="text-xs">precommitQC</code></p>
+              <p><strong>Phase 3 Commit</strong> — leader → all: <code className="text-xs">msg(COMMIT, precommitQC)</code> → vote → <code className="text-xs">commitQC</code></p>
+              <p><strong>Phase 4 Decide</strong> — leader → all: <code className="text-xs">msg(DECIDE, commitQC)</code> → execute block B</p>
+              <p className="text-xs mt-2 text-muted-foreground/70">결과: 1 block, 4 rounds per view. Throughput 낮음</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Chained HotStuff (pipelined)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>View v</strong> — leader proposes <code className="text-xs">B_v</code>, <code className="text-xs">B_v.qc = QC(B_(v-1))</code></p>
+              <p className="text-xs pl-2">→ "vote for B_v = prepareQC for B_(v-1)"</p>
+              <p><strong>View v+1</strong> — proposes <code className="text-xs">B_(v+1)</code>, <code className="text-xs">qc = QC(B_v)</code></p>
+              <p className="text-xs pl-2">→ "vote = precommitQC for B_(v-1)"</p>
+              <p><strong>View v+2</strong> — proposes <code className="text-xs">B_(v+2)</code> → "vote = commitQC for B_(v-1)"</p>
+              <p><strong>View v+3</strong> — <code className="text-xs">B_(v-1)</code> DECIDED</p>
+              <p className="text-xs mt-2 text-muted-foreground/70">결과: 매 view 1 block, 3-view latency. Throughput 3배</p>
+            </div>
+          </div>
+        </div>
 
-// Chained HotStuff (pipelined, 1 block per message):
-//
-// View v:   leader proposes B_v
-//           B_v.qc = QC of B_(v-1)
-//           "my vote for B_v also acts as prepareQC for B_(v-1)"
-//
-// View v+1: leader proposes B_(v+1)
-//           B_(v+1).qc = QC of B_v
-//           "vote for B_(v+1) = precommitQC for B_(v-1)"
-//
-// View v+2: leader proposes B_(v+2)
-//           B_(v+2).qc = QC of B_(v+1)
-//           "vote = commitQC for B_(v-1)"
-//
-// View v+3: B_(v-1) DECIDED!
-//
-// 결과: 매 view 1 block 생성, 3-view latency로 finalize
-// Throughput: 3배 향상
-
-// 핵심 insight:
-// "같은 vote가 여러 단계 역할 수행"
-// - B_v에 대한 vote = B_(v-1)의 prepareQC 역할
-// - 별도 phase 없이 pipeline 효과
-// - 매 view 1 QC 생성`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">핵심 insight: 같은 vote가 여러 단계 역할 수행</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">B_v</code>에 대한 vote = <code className="text-xs">B_(v-1)</code>의 prepareQC 역할</li>
+              <li>별도 phase 없이 pipeline 효과 — 매 view 1 QC 생성</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Chained = <strong>vote 재사용으로 파이프라인</strong>.<br />
           vote(B_v)가 prev block의 다음 QC 단계 역할.<br />
@@ -98,65 +81,72 @@ export default function ChainedVoting() {
 
         {/* ── 3-chain 규칙 상세 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">3-chain Commit Rule 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Block structure:
-// struct Block {
-//     parent: Hash,     // 이전 block hash
-//     qc: QC,           // justifying QC
-//     view: int,        // block의 view
-//     proposer: Node,   // leader
-//     payload: [TX],    // transactions
-// }
-//
-// QC structure:
-// struct QC {
-//     block: Hash,              // voted-for block
-//     view: int,
-//     signatures: AggSig,       // 2f+1 votes
-// }
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Block 구조</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">parent: Hash</code> — 이전 block hash</li>
+              <li><code className="text-xs">qc: QC</code> — justifying QC</li>
+              <li><code className="text-xs">view: int</code> — block의 view</li>
+              <li><code className="text-xs">proposer: Node</code> — leader</li>
+              <li><code className="text-xs">payload: [TX]</code> — transactions</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">QC 구조</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">block: Hash</code> — voted-for block</li>
+              <li><code className="text-xs">view: int</code></li>
+              <li><code className="text-xs">signatures: AggSig</code> — 2f+1 votes</li>
+            </ul>
+          </div>
+        </div>
 
-// 3-chain 조건 (block B commits when):
-// ∃ blocks B, B', B'' such that:
-//   - B ← B' ← B'' (parent chain)
-//   - QC(B) exists (B has a QC)
-//   - QC(B') exists
-//   - QC(B'') exists
-//   - B.view + 1 == B'.view
-//   - B'.view + 1 == B''.view
-//   → B is committed (finalized)
+        <div className="not-prose grid grid-cols-1 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">3-chain 조건 — block B commits when</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>B ← B&apos; ← B&apos;&apos; (parent chain), 각각 QC 존재</p>
+              <p><code className="text-xs">B.view + 1 == B&apos;.view</code> &amp;&amp; <code className="text-xs">B&apos;.view + 1 == B&apos;&apos;.view</code> → B is committed (finalized)</p>
+            </div>
+          </div>
+        </div>
 
-// 왜 3-chain?
-//
-// 공격 시나리오 (2-chain 안 되는 이유):
-// View v: B 제안, prepareQC(B)
-// View v+1: B' 제안, QC(B) 포함
-// - 여기서 B 커밋하면?
-// - Byzantine leader가 v+2에서 다른 chain 제안 가능
-// - B 말고 B* (different from B)
-// - B*.view + 1 == B.view 불가 (과거 view)
-// - but B*가 "honest view" 가장할 수 있음
-// - fork 생성 가능
-//
-// 3-chain 방어:
-// - B commit 전 3 연속 view QC 필요
-// - 연속 view에 2f+1 vote → quorum 형성
-// - 동시에 다른 chain 3-chain 못 만듬
-// - safety 보장
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">왜 2-chain은 부족한가</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>View v: B 제안 + <code className="text-xs">prepareQC(B)</code></p>
+              <p>View v+1: B&apos; 제안, QC(B) 포함 — 여기서 B commit하면?</p>
+              <p>Byzantine leader가 v+2에서 다른 chain <code className="text-xs">B*</code> 제안 가능 → fork 생성</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">3-chain 방어</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>B commit 전 3 연속 view QC 필요</p>
+              <p>연속 view에 2f+1 vote → quorum 형성</p>
+              <p>동시에 다른 chain은 3-chain 형성 불가 → safety 보장</p>
+            </div>
+          </div>
+        </div>
 
-// 연속성 조건 (consecutive views):
-// B.view + 1 == B'.view
-// - 연속 view에 QC 형성 필수
-// - view gap 있으면 3-chain 깨짐
-// - leader rotation은 연속 증명
-//
-// Lock vs Commit:
-// Lock (pre-commit): 2-chain 달성
-//   - B가 B' 통해 2번 QC → B lock
-//   - lock은 safety (view change 시 보존)
-// Commit (decide): 3-chain 달성
-//   - B lock + B' lock → B commit
-//   - final decision, revert 불가`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">Lock (2-chain)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>B가 B&apos; 통해 2번 QC → B lock</p>
+              <p>lock은 safety (view change 시 보존)</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Commit (3-chain)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>B lock + B&apos; lock → B commit</p>
+              <p>final decision, revert 불가</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           3-chain = <strong>연속 view 3개 QC로 commit</strong>.<br />
           2-chain: lock (safety), 3-chain: commit (final).<br />
@@ -165,54 +155,61 @@ export default function ChainedVoting() {
 
         {/* ── 성능 분석 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">성능 분석: Latency vs Throughput</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Basic HotStuff:
-// - block B commit latency: 4 network delays
-//   (propose → prepare → pre-commit → commit)
-// - 1 block per 4 delays
-// - latency = throughput의 역수
+        <div className="not-prose overflow-x-auto mb-4">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-4 py-2 text-left">프로토콜</th>
+                <th className="border border-border px-4 py-2 text-left">Latency</th>
+                <th className="border border-border px-4 py-2 text-left">Throughput</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['Basic HotStuff', '4δ', '1/(4δ) blocks/sec'],
+                ['Chained HotStuff', '3δ', '1/δ blocks/sec (3x 향상)'],
+                ['PBFT', '3δ', '1/(3δ)'],
+                ['Tendermint', '3δ', '1/(3δ)'],
+              ].map(([name, ...rest]) => (
+                <tr key={name}>
+                  <td className="border border-border px-4 py-2 font-medium">{name}</td>
+                  {rest.map((v, i) => (
+                    <td key={i} className="border border-border px-4 py-2">{v}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-// Chained HotStuff:
-// - block B commit latency: 3 network delays
-//   (B → B' → B'' 3-chain)
-// - 1 block per 1 delay (steady state)
-// - latency != throughput의 역수
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Chained HotStuff 이점</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>각 view마다 새 block 생성</li>
+              <li>이전 block의 commit은 background</li>
+              <li>leader 바뀌어도 pipeline 유지</li>
+              <li>고처리량 + 빠른 finality</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">한계</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>매 view leader rotation 필요</li>
+              <li>leader 실패 시 pipeline break</li>
+              <li>view change도 3-chain에 포함됨</li>
+            </ul>
+          </div>
+        </div>
 
-// 구체적 숫자 (network delay δ):
-//
-// Basic HotStuff:
-// - latency: 4δ
-// - throughput: 1/(4δ) blocks/sec
-//
-// Chained HotStuff:
-// - latency: 3δ
-// - throughput: 1/δ blocks/sec (3x 향상)
-//
-// PBFT:
-// - latency: 3δ (pre-prepare, prepare, commit)
-// - throughput: 1/(3δ)
-//
-// Tendermint:
-// - latency: 3δ (propose, prevote, precommit)
-// - throughput: 1/(3δ)
-
-// 왜 Chained HotStuff가 좋은가:
-// - 각 view마다 새 block 생성
-// - 이전 block의 commit은 background
-// - leader 바뀌어도 pipeline 유지
-// - 고처리량 + 빠른 finality
-
-// 실제 성능 (Aptos, 2024):
-// - block time: 100-300ms
-// - finality: ~1s
-// - TPS: 10,000+ (under load)
-// - validator: ~100
-
-// 한계:
-// - 매 view leader rotation 필요
-// - leader 실패 시 pipeline break
-// - view change도 3-chain에 포함됨`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">실제 성능 — Aptos (2024)</div>
+            <div className="text-sm text-muted-foreground">
+              block time <code className="text-xs">100-300ms</code> / finality <code className="text-xs">~1s</code> / TPS <code className="text-xs">10,000+</code> / validator <code className="text-xs">~100</code>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Chained HotStuff: <strong>latency 3δ + throughput 1/δ</strong>.<br />
           Basic 대비 3배 처리량.<br />

@@ -35,129 +35,176 @@ export default function Overview({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="mt-6 space-y-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Initia MiniEVM 아키텍처</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Initia MiniEVM Overview
-//
-// Initia:
-//   L1 blockchain built for rollup interop
-//   InitiaOS: Cosmos SDK + customizations
-//   Supports multiple VMs: MoveVM, MiniWasm, MiniEVM
-//
-// MiniEVM philosophy:
-//   "EVM as a Cosmos module"
-//   Not a separate chain, not Engine API
-//   Direct integration at module level
 
-// Three EVM integration approaches:
-//
-//   1) Native Ethereum architecture:
-//      Beacon Chain (CL) + Engine API + geth (EL)
-//      Two separate processes, Engine API bridge
-//      Used: Ethereum, Berachain BeaconKit
-//      Pro: maximum compatibility
-//      Con: complex, IBC not native
-//
-//   2) Octane / Decoupled:
-//      CometBFT → Engine API → external geth
-//      ABCI converted to EL protocol
-//      Pro: reuses geth client
-//      Con: IPC overhead, state sync complexity
-//
-//   3) MiniEVM / Embedded:
-//      EVM executed INSIDE Cosmos SDK module
-//      go-ethereum's EVM imported as library
-//      Keeper directly calls evm.Call()
-//      Pro: native IBC integration, single state tree
-//      Con: less compatibility surface
+        {/* Initia 개요 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Initia 개요</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Initia</span> — 롤업 상호운용을 위한 L1 블록체인. InitiaOS = Cosmos SDK + 커스터마이징
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">지원 VM</span> — MoveVM, MiniWasm, MiniEVM 세 가지 VM을 하나의 체인에서 지원
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">MiniEVM 철학</span> — "EVM as a Cosmos module". 별도 체인이나 Engine API 없이 모듈 수준 직접 통합
+            </div>
+          </div>
+        </div>
 
-// Why MiniEVM vs other Cosmos EVMs?
-//
-//   Evmos / Cosmos EVM:
-//     Similar module approach
-//     Adds x/vm, x/erc20, x/feemarket, x/precisebank
-//     4 modules, heavier
-//
-//   MiniEVM:
-//     Single x/evm module (lighter)
-//     Reuses Cosmos modules: x/auth, x/bank
-//     Minimalist design
-//     Closer to "EVM precompile" style
+        {/* EVM 통합 3가지 접근법 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">EVM 통합 3가지 접근법</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded border-l-2 border-blue-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">1) Native Ethereum</span>
+              <p className="mt-1">Beacon Chain(CL) + Engine API + geth(EL). 두 프로세스 분리 + Engine API 브릿지</p>
+              <p className="mt-1 text-green-600 dark:text-green-400">장점: 최대 호환성</p>
+              <p className="text-red-600 dark:text-red-400">단점: 복잡, IBC 네이티브 불가</p>
+              <p className="mt-1 italic">사용: Ethereum, Berachain BeaconKit</p>
+            </div>
+            <div className="rounded border-l-2 border-amber-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">2) Octane / Decoupled</span>
+              <p className="mt-1">CometBFT → Engine API → 외부 geth. ABCI를 EL 프로토콜로 변환</p>
+              <p className="mt-1 text-green-600 dark:text-green-400">장점: geth 클라이언트 재활용</p>
+              <p className="text-red-600 dark:text-red-400">단점: IPC 오버헤드, 상태 동기화 복잡</p>
+            </div>
+            <div className="rounded border-l-2 border-emerald-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">3) MiniEVM / Embedded</span>
+              <p className="mt-1">EVM을 Cosmos SDK 모듈 <em>내부</em>에서 실행. go-ethereum을 라이브러리로 임포트, Keeper가 <code className="text-xs">evm.Call()</code> 직접 호출</p>
+              <p className="mt-1 text-green-600 dark:text-green-400">장점: 네이티브 IBC 통합, 단일 상태 트리</p>
+              <p className="text-red-600 dark:text-red-400">단점: 호환성 표면 축소</p>
+            </div>
+          </div>
+        </div>
 
-// Core components:
-//
-//   x/evm module:
-//     Keeper: manages EVM state
-//     MsgServer: handles EVM calls
-//     StateDB adapter: Cosmos KVStore -> EVM StateDB
-//     Precompiles: Cosmos function exposure
-//
-//   Uses standard Cosmos modules:
-//     x/auth: account sequences (nonces)
-//     x/bank: token balances
-//     x/ibc: cross-chain messaging
+        {/* MiniEVM vs 다른 Cosmos EVM */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">MiniEVM vs 다른 Cosmos EVM</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Evmos / Cosmos EVM</span>
+              <p className="mt-1">유사한 모듈 접근법이지만 <code className="text-xs">x/vm</code>, <code className="text-xs">x/erc20</code>, <code className="text-xs">x/feemarket</code>, <code className="text-xs">x/precisebank</code> 등 4개 모듈 필요. 상대적으로 무거움</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">MiniEVM</span>
+              <p className="mt-1">단일 <code className="text-xs">x/evm</code> 모듈. 기존 Cosmos 모듈(<code className="text-xs">x/auth</code>, <code className="text-xs">x/bank</code>) 재활용. 미니멀 설계 — "EVM precompile" 스타일에 가까움</p>
+            </div>
+          </div>
+        </div>
 
-// State mapping details:
-//
-//   EVM address ↔ Cosmos address:
-//     hex(20 bytes) <-> bech32 with chain prefix
-//     Bijection established via x/auth
-//
-//   EVM balance:
-//     balance[addr] = bank.GetBalance(addr, denom)
-//     Shared pool with Cosmos tokens
-//
-//   EVM nonce:
-//     nonce[addr] = auth.GetSequence(addr)
-//     Incremented on each EVM tx
-//
-//   EVM storage:
-//     KVStore key: address || slot
-//     KVStore value: 32-byte word
-//     Flat structure (no MPT tree)
-//
-//   EVM code:
-//     KVStore key: codeHash
-//     KVStore value: bytecode
-//     Content-addressed deduplication
+        {/* 핵심 컴포넌트 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">핵심 컴포넌트</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">x/evm 모듈</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">Keeper</code> — EVM 상태 관리</li>
+                <li><code className="text-xs">MsgServer</code> — EVM 호출 처리</li>
+                <li>StateDB 어댑터 — Cosmos KVStore → EVM StateDB</li>
+                <li>Precompiles — Cosmos 기능 노출</li>
+              </ul>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Cosmos 표준 모듈 활용</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">x/auth</code> — 계정 시퀀스(nonce)</li>
+                <li><code className="text-xs">x/bank</code> — 토큰 잔액</li>
+                <li><code className="text-xs">x/ibc</code> — 크로스체인 메시징</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-// Advantages of single state tree:
-//
-//   No consistency issues between EL and CL state
-//   IBC tokens visible to EVM natively
-//   Staking rewards auto-credited to EVM addresses
-//   Atomic cross-operation (e.g., IBC+ERC20 in one tx)
+        {/* 상태 매핑 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">상태 매핑 상세</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">주소 매핑</span>
+              <p className="mt-1">EVM <code className="text-xs">hex(20 bytes)</code> ↔ Cosmos <code className="text-xs">bech32</code>(체인 접두사 포함). <code className="text-xs">x/auth</code> 통한 전단사(bijection) 수립</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">잔액</span>
+              <p className="mt-1"><code className="text-xs">balance[addr] = bank.GetBalance(addr, denom)</code>. Cosmos 토큰과 공유 풀</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">논스</span>
+              <p className="mt-1"><code className="text-xs">nonce[addr] = auth.GetSequence(addr)</code>. 각 EVM tx마다 증가</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">스토리지</span>
+              <p className="mt-1">KVStore key = <code className="text-xs">address || slot</code>, value = 32바이트 워드. 플랫 구조 (MPT 트리 없음)</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">코드</span>
+              <p className="mt-1">KVStore key = <code className="text-xs">codeHash</code>, value = 바이트코드. 내용 기반 주소 지정으로 중복 제거</p>
+            </div>
+          </div>
+        </div>
 
-// Precompile-based Cosmos access:
-//
-//   From Solidity:
-//     interface ICosmos {
-//       function execute_cosmos(string memory msg) external;
-//       function query_cosmos(string memory req) external view returns (string memory);
-//       function to_denom(address token) external view returns (string memory);
-//       function to_erc20(string memory denom) external view returns (address);
-//     }
-//
-//   ICosmos precompile at fixed address
-//   Enables IBC transfers, staking, etc. from contracts
+        {/* 단일 상태 트리 이점 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">단일 상태 트리의 이점</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">EL/CL 상태 간 불일치 문제 없음</div>
+            <div className="rounded bg-muted/50 p-3">IBC 토큰이 EVM에서 네이티브로 가시</div>
+            <div className="rounded bg-muted/50 p-3">스테이킹 보상이 EVM 주소에 자동 반영</div>
+            <div className="rounded bg-muted/50 p-3">원자적 크로스 오퍼레이션 (예: IBC + ERC20를 단일 tx에서)</div>
+          </div>
+        </div>
 
-// Use cases:
-//   - Rollup built on Initia (uses MiniEVM)
-//   - EVM dApps with native IBC
-//   - Cross-VM composability (EVM + Move)
-//   - Interoperable stable swaps
+        {/* 프리컴파일 기반 Cosmos 접근 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">프리컴파일 기반 Cosmos 접근</h4>
+          <div className="rounded bg-muted/50 p-3 text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">ICosmos 인터페이스 (Solidity)</span>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><code className="text-xs">execute_cosmos(string memory msg) external</code> — Cosmos 메시지 실행</li>
+              <li><code className="text-xs">query_cosmos(string memory req) external view returns (string memory)</code> — Cosmos 상태 쿼리</li>
+              <li><code className="text-xs">to_denom(address token) external view returns (string memory)</code> — ERC20 → denom 변환</li>
+              <li><code className="text-xs">to_erc20(string memory denom) external view returns (address)</code> — denom → ERC20 변환</li>
+            </ul>
+            <p className="mt-2">고정 주소의 ICosmos 프리컴파일로 IBC 전송, 스테이킹 등을 컨트랙트에서 직접 호출</p>
+          </div>
+        </div>
 
-// Comparison:
-//
-//                  MiniEVM    Evmos    Berachain
-//   Architecture   Module     Module   Engine API
-//   EVM source     go-eth     go-eth   reth/geth
-//   CL engine      CometBFT   CometBFT BeaconKit
-//   IBC native     Yes        Yes      No (needs bridge)
-//   State tree     Shared     Shared   Separate
-//   Gas model      Cosmos+EVM EIP-1559 Hybrid`}
-        </pre>
+        {/* 유스케이스 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">유스케이스</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">Initia 기반 롤업 (MiniEVM 활용)</div>
+            <div className="rounded bg-muted/50 p-3">네이티브 IBC를 갖춘 EVM dApp</div>
+            <div className="rounded bg-muted/50 p-3">크로스 VM 합성 (EVM + Move)</div>
+            <div className="rounded bg-muted/50 p-3">상호운용 가능한 스테이블 스왑</div>
+          </div>
+        </div>
+
+        {/* 비교표 */}
+        <div className="rounded-lg border bg-card p-4 overflow-x-auto">
+          <h4 className="text-sm font-semibold mb-3">비교</h4>
+          <table className="w-full text-xs text-muted-foreground">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left py-1.5 pr-4 font-medium text-foreground"></th>
+                <th className="text-left py-1.5 pr-4 font-medium text-foreground">MiniEVM</th>
+                <th className="text-left py-1.5 pr-4 font-medium text-foreground">Evmos</th>
+                <th className="text-left py-1.5 font-medium text-foreground">Berachain</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr><td className="py-1.5 pr-4 font-medium text-foreground">아키텍처</td><td className="py-1.5 pr-4">Module</td><td className="py-1.5 pr-4">Module</td><td className="py-1.5">Engine API</td></tr>
+              <tr><td className="py-1.5 pr-4 font-medium text-foreground">EVM 소스</td><td className="py-1.5 pr-4">go-ethereum</td><td className="py-1.5 pr-4">go-ethereum</td><td className="py-1.5">reth / geth</td></tr>
+              <tr><td className="py-1.5 pr-4 font-medium text-foreground">CL 엔진</td><td className="py-1.5 pr-4">CometBFT</td><td className="py-1.5 pr-4">CometBFT</td><td className="py-1.5">BeaconKit</td></tr>
+              <tr><td className="py-1.5 pr-4 font-medium text-foreground">IBC 네이티브</td><td className="py-1.5 pr-4">Yes</td><td className="py-1.5 pr-4">Yes</td><td className="py-1.5">No (브릿지 필요)</td></tr>
+              <tr><td className="py-1.5 pr-4 font-medium text-foreground">상태 트리</td><td className="py-1.5 pr-4">Shared</td><td className="py-1.5 pr-4">Shared</td><td className="py-1.5">Separate</td></tr>
+              <tr><td className="py-1.5 pr-4 font-medium text-foreground">가스 모델</td><td className="py-1.5 pr-4">Cosmos + EVM</td><td className="py-1.5 pr-4">EIP-1559</td><td className="py-1.5">Hybrid</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );

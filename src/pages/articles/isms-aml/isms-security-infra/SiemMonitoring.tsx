@@ -1,8 +1,14 @@
+import SiemMonitoringViz from './viz/SiemMonitoringViz';
+import SiemCorrelationInline from './viz/SiemCorrelationInline';
+import LogRetentionInline from './viz/LogRetentionInline';
+
 export default function SiemMonitoring() {
   return (
     <section id="siem-monitoring" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">SIEM과 통합 모니터링</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <SiemMonitoringViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">SIEM이란</h3>
         <p>
@@ -109,6 +115,8 @@ export default function SiemMonitoring() {
             </tbody>
           </table>
         </div>
+
+        <SiemCorrelationInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">상관분석 (Correlation)</h3>
         <p>
@@ -218,6 +226,8 @@ export default function SiemMonitoring() {
             </tbody>
           </table>
         </div>
+
+        <LogRetentionInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">로그 보관 정책</h3>
         <p>

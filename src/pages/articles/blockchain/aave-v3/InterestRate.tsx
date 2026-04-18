@@ -1,5 +1,6 @@
 import InterestCurveViz from './viz/InterestCurveViz';
 import UtilizationRateViz from './viz/UtilizationRateViz';
+import M from '@/components/ui/math';
 
 export default function InterestRate() {
   return (
@@ -10,17 +11,24 @@ export default function InterestRate() {
         <InterestCurveViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Utilization의 의미</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`Utilization = totalBorrowed / totalDeposited
-
-// 예시
-예치: $10M USDC
-차입: $6M USDC
-Utilization = 60%
-
-// 의미
-0%: 아무도 차입 안 함 (대출자 수익 없음)
-100%: 모든 예치가 차입됨 (인출 불가 위험)
-최적점: 80~90% (효율 ↑, 안전 마진 유지)`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-2">Utilization 공식</p>
+          <M display>{String.raw`U = \frac{\text{totalBorrowed}}{\text{totalDeposited}}`}</M>
+          <div className="grid gap-2 sm:grid-cols-3 mt-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">예시</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">예치 $10M, 차입 $6M → U = 60%</p>
+            </div>
+            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">0% / 100%</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">0%: 수익 없음 / 100%: 인출 불가 위험</p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">최적점</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">80~90% — 효율과 안전 마진 균형</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Utilization이 핵심 시그널</strong>: 이자율 결정의 1차 입력<br />
           높은 utilization → 수요 &gt; 공급 → 이자율 ↑ (차입 억제, 예치 유도)<br />
@@ -28,19 +36,23 @@ Utilization = 60%
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">2단계 이자율 곡선</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Aave의 2단계 이자율 공식
-
-// Utilization < U_optimal:
-rate = R_0 + slope1 × (U / U_optimal)
-
-// Utilization >= U_optimal:
-rate = R_0 + slope1 + slope2 × ((U - U_optimal) / (1 - U_optimal))
-
-// 곡선 특성
-- R_0: 기본 이자율 (보통 0%)
-- slope1: 완만한 증가 구간 (U < U_optimal)
-- slope2: 급격한 증가 구간 (U > U_optimal, bank run 방지)
-- U_optimal: 최적 이용률 (보통 80-90%)`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-2">2단계 이자율 공식</p>
+          <div className="space-y-2 mb-3">
+            <M display>{String.raw`U < U_{\text{opt}}: \quad r = R_0 + \text{slope}_1 \times \frac{U}{U_{\text{opt}}}`}</M>
+            <M display>{String.raw`U \geq U_{\text{opt}}: \quad r = R_0 + \text{slope}_1 + \text{slope}_2 \times \frac{U - U_{\text{opt}}}{1 - U_{\text{opt}}}`}</M>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400"><M>{String.raw`R_0`}</M> / slope1</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">기본 이자율(보통 0%) + 완만한 증가 구간 (<M>{String.raw`U < U_{\text{opt}}`}</M>)</p>
+            </div>
+            <div className="rounded border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-2">
+              <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">slope2 / <M>{String.raw`U_{\text{opt}}`}</M></p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">급격한 증가 구간 (bank run 방지) / 최적 이용률 80-90%</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>2단계 설계 목표</strong>: 최적점 근처는 완만, 초과 시 급격한 증가<br />
           급격한 증가가 <strong>bank run 방지</strong> — 이자 무서워서 빨리 상환 유도<br />
@@ -50,24 +62,29 @@ rate = R_0 + slope1 + slope2 × ((U - U_optimal) / (1 - U_optimal))
         <h3 className="text-xl font-semibold mt-8 mb-3">자산별 파라미터 — USDC 예시</h3>
 
         <UtilizationRateViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Aave V3 USDC (Ethereum mainnet)
-baseVariableBorrowRate (R_0): 0%
-variableRateSlope1:           4%
-variableRateSlope2:           60%
-optimalUtilizationRate:       90%
-
-// 계산 예시
-U = 50%:
-  rate = 0 + 4% × (50 / 90) = 2.22%
-
-U = 90% (optimal):
-  rate = 0 + 4% = 4%
-
-U = 95%:
-  rate = 0 + 4% + 60% × (5 / 10) = 34%  (급증!)
-
-U = 100%:
-  rate = 0 + 4% + 60% = 64%`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">USDC 파라미터 (Ethereum mainnet) & 계산 예시</p>
+          <div className="grid gap-2 sm:grid-cols-2 mb-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">파라미터</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                <code>R_0</code> = 0%, <code>slope1</code> = 4%, <code>slope2</code> = 60%, <code>U_opt</code> = 90%
+              </p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">U = 50%</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">0 + 4% x (50/90) = <strong>2.22%</strong></p>
+            </div>
+            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">U = 90% (optimal)</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">0 + 4% = <strong>4%</strong></p>
+            </div>
+            <div className="rounded border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-2">
+              <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">U = 95% / 100%</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">95%: 4% + 60% x (5/10) = <strong>34%</strong> / 100%: 4% + 60% = <strong>64%</strong></p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>95% → 34% 이자율</strong>: 단 5% utilization 증가로 8배 이상<br />
           이 구조가 LPs·차입자에게 "최적점 유지" 동기 제공<br />
@@ -124,30 +141,27 @@ U = 100%:
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Supply Rate 계산</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 예치자 이자율 = 차입자 이자율 × utilization × (1 - reserve_factor)
-
-function calculateSupplyRate(
-    uint256 borrowRate,
-    uint256 utilization,
-    uint256 reserveFactor
-) internal pure returns (uint256) {
-    return borrowRate
-        .rayMul(utilization)
-        .rayMul(RAY - reserveFactor);
-}
-
-// 예시 (USDC)
-borrowRate = 4%
-utilization = 90%
-reserveFactor = 10%
-
-supplyRate = 4% × 90% × 90% = 3.24%
-
-// 이자 흐름
-100% 차입자 이자 → 풀
-  → 90% (utilization) × 90% (after reserve factor) → 예치자
-  → 10% (reserve factor) × 90% (utilization) → treasury
-  → 10% (unutilized) → 아무도 안 받음`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-2">Supply Rate 공식</p>
+          <M display>{String.raw`\text{supplyRate} = \text{borrowRate} \times U \times (1 - \text{reserveFactor})`}</M>
+          <div className="grid gap-2 sm:grid-cols-2 mt-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">USDC 예시</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                borrowRate 4% x U 90% x (1 - 10%) = <strong>3.24%</strong>
+              </p>
+            </div>
+            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">이자 흐름</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                차입자 이자 100% → 예치자 81% + treasury 9% + unutilized 10%
+              </p>
+            </div>
+          </div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+            <code>calculateSupplyRate()</code>: <code>borrowRate.rayMul(utilization).rayMul(RAY - reserveFactor)</code>
+          </p>
+        </div>
         <p>
           <strong>3요소 곱</strong>: borrowRate × utilization × (1 - reserveFactor)<br />
           Utilization이 1보다 작으면 예치자 이자는 차입자 이자의 일부만<br />
@@ -155,20 +169,20 @@ supplyRate = 4% × 90% × 90% = 3.24%
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">동적 조정 — 거버넌스</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 파라미터는 거버넌스 투표로 조정 가능
-// Aave DAO가 주기적으로 조정
-
-// 조정 시나리오
-1. 변동성 급증 → slope2 상향 (차입 억제)
-2. 유동성 부족 → U_optimal 하향 (더 보수적)
-3. 시장 금리 변동 → base rate 조정
-4. 새 자산 추가 → 초기 파라미터 설정
-
-// 거버넌스 절차
-1. Temperature Check (Snapshot, 오프체인)
-2. ARFC (Aave Request for Final Comment)
-3. AIP (Aave Improvement Proposal) 온체인 투표
-4. 3일 타임락 후 실행`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 my-4">
+          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">조정 시나리오</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              변동성 급증 → <code>slope2</code> 상향 / 유동성 부족 → <code>U_optimal</code> 하향 / 시장 금리 → base rate 조정 / 새 자산 → 초기 파라미터
+            </p>
+          </div>
+          <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-3">
+            <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">거버넌스 절차 (4단계)</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              Temperature Check (Snapshot) → ARFC (최종 코멘트 요청) → AIP (온체인 투표) → 3일 타임락 후 실행
+            </p>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 이자율 모델의 진화</p>

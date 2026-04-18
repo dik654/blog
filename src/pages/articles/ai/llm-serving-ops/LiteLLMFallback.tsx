@@ -1,22 +1,6 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
 import CodeSidebar from './CodeSidebar';
 import { fallbackRef, cooldownRef } from './codeRefs';
-
-const FALLBACK_CONFIG = `router_settings:
-  fallbacks:
-    - gpt-4o: [claude-sonnet, llama-70b]
-    - llama-70b: [gpt-4o-mini]
-
-  # 예산 관리
-  litellm_settings:
-    max_budget: 1000        # 월 $1000
-    budget_duration: 30d
-
-    # 예산 초과 시 저비용 모델로 전환
-    alerting:
-      - slack
-    alerting_threshold: 80  # 80% 도달 시 경고`;
 
 export default function LiteLLMFallback() {
   return (
@@ -32,13 +16,61 @@ export default function LiteLLMFallback() {
           }
         />
       </div>
-      <CodePanel title="litellm_config.yaml — fallbacks" code={FALLBACK_CONFIG}
-        annotations={[
-          { lines: [2, 4], color: 'rose', note: 'Primary 실패 시 순차 폴백 — gpt-4o → claude → llama' },
-          { lines: [7, 9], color: 'amber', note: '월간 예산 한도 설정 — 초과 시 요청 차단' },
-          { lines: [12, 14], color: 'emerald', note: '80% 도달 시 Slack 경고 → 사전 대응' },
-        ]}
-      />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        {/* Fallback Chain */}
+        <div className="rounded-lg border border-rose-500/30 bg-rose-500/5 p-4">
+          <div className="text-xs font-semibold text-rose-400 mb-2">폴백 체인</div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs bg-rose-500/10 px-1.5 py-0.5 rounded">gpt-4o</span>
+              <span className="text-foreground/40">→</span>
+              <span className="font-mono text-xs bg-rose-500/10 px-1.5 py-0.5 rounded">claude-sonnet</span>
+              <span className="text-foreground/40">→</span>
+              <span className="font-mono text-xs bg-rose-500/10 px-1.5 py-0.5 rounded">llama-70b</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs bg-rose-500/10 px-1.5 py-0.5 rounded">llama-70b</span>
+              <span className="text-foreground/40">→</span>
+              <span className="font-mono text-xs bg-rose-500/10 px-1.5 py-0.5 rounded">gpt-4o-mini</span>
+            </div>
+            <p className="text-xs text-foreground/60 mt-1">Primary 실패 시 순차 폴백</p>
+          </div>
+        </div>
+
+        {/* Retry Policy */}
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+          <div className="text-xs font-semibold text-amber-400 mb-2">예산 관리</div>
+          <div className="space-y-1.5 text-sm">
+            <div className="flex justify-between">
+              <span className="text-foreground/70">월간 한도</span>
+              <span className="font-mono text-xs">$1,000</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-foreground/70">예산 주기</span>
+              <span className="font-mono text-xs">30일</span>
+            </div>
+            <p className="text-xs text-foreground/60 mt-1">초과 시 요청 차단</p>
+          </div>
+        </div>
+
+        {/* Timeout Settings */}
+        <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+          <div className="text-xs font-semibold text-emerald-400 mb-2">얼럿 설정</div>
+          <div className="space-y-1.5 text-sm">
+            <div className="flex justify-between">
+              <span className="text-foreground/70">채널</span>
+              <span className="font-mono text-xs">Slack</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-foreground/70">경고 임계값</span>
+              <span className="font-mono text-xs">80%</span>
+            </div>
+            <p className="text-xs text-foreground/60 mt-1">80% 도달 시 사전 경고</p>
+          </div>
+        </div>
+      </div>
+
       <CitationBlock source="LiteLLM Docs — Reliability" citeKey={2} type="paper"
         href="https://docs.litellm.ai/docs/routing">
         <p className="italic">

@@ -16,42 +16,73 @@ export default function ContextOverride() {
           - 특정 CI 잡은 DangerFullAccess<br />
           - 사용자가 "Always" 응답한 도구는 이후 Prompt 생략
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct ContextOverride {
-    pub mode: Option<PermissionMode>,       // 임시 모드
-    pub allow_tools: HashSet<String>,       // 항상 허용할 도구
-    pub deny_tools: HashSet<String>,        // 항상 거부할 도구
-    pub scope: OverrideScope,               // 범위 (Once, Session, Persistent)
-}
-
-pub enum OverrideScope {
-    Once,        // 1회 호출 후 제거
-    Session,     // 현재 세션 동안 유지
-    Persistent,  // 재시작 후에도 유지 (Policy에 병합)
-}`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">ContextOverride 구조체</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">mode: Option&lt;PermissionMode&gt;</code>
+                <p className="text-muted-foreground mt-1">임시 모드 (None이면 현재 유지)</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">allow_tools: HashSet&lt;String&gt;</code>
+                <p className="text-muted-foreground mt-1">항상 허용할 도구 목록</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">deny_tools: HashSet&lt;String&gt;</code>
+                <p className="text-muted-foreground mt-1">항상 거부할 도구 목록</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">scope: OverrideScope</code>
+                <p className="text-muted-foreground mt-1">적용 범위 (아래 참조)</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">OverrideScope</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono font-medium">Once</code>
+                <p className="text-muted-foreground mt-1">1회 호출 후 자동 제거</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono font-medium">Session</code>
+                <p className="text-muted-foreground mt-1">현재 세션 동안 유지</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono font-medium">Persistent</code>
+                <p className="text-muted-foreground mt-1">재시작 후에도 유지 (Policy에 병합)</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Override 적용 순서</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// PermissionEnforcer::check() 수정
-pub fn check(&mut self, tool: &str, input: &Value) -> EnforcementResult {
-    // 0) ContextOverride 우선 확인
-    if let Some(ov) = &self.override_stack.top() {
-        if ov.deny_tools.contains(tool) {
-            return EnforcementResult::Deny("override: deny".into());
-        }
-        if ov.allow_tools.contains(tool) {
-            return EnforcementResult::Allow;
-        }
-        // 모드 임시 상승
-        if let Some(temp_mode) = ov.mode {
-            let saved = self.mode;
-            self.mode = temp_mode;
-            let result = self.check_inner(tool, input);
-            self.mode = saved;  // 복구
-            return result;
-        }
-    }
-
-    self.check_inner(tool, input)
-}`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-background px-1.5 py-0.5 rounded">check()</code> — Override 적용 흐름</div>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="text-muted-foreground font-mono shrink-0">0</span>
+              <div><code>override_stack.top()</code>에서 최상위 Override 확인</div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="text-red-600 font-mono shrink-0">1</span>
+              <div><code>deny_tools</code>에 포함 → 즉시 <span className="text-red-600 font-medium">Deny</span> 반환</div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="text-green-600 font-mono shrink-0">2</span>
+              <div><code>allow_tools</code>에 포함 → 즉시 <span className="text-green-600 font-medium">Allow</span> 반환</div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="text-amber-600 font-mono shrink-0">3</span>
+              <div><code>mode</code> 임시 상승 → <code>check_inner()</code> 호출 후 원래 모드 복구</div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="text-muted-foreground font-mono shrink-0">4</span>
+              <div>Override 없으면 기본 <code>check_inner()</code>로 폴백</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>override_stack</strong>: 중첩 오버라이드 지원 — LIFO 스택<br />
           <code>top()</code>의 오버라이드가 현재 유효 — 여러 계층 중 최상위 적용<br />
@@ -59,29 +90,32 @@ pub fn check(&mut self, tool: &str, input: &Value) -> EnforcementResult {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">스코프별 Override 생성</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Once: 1회용
-enforcer.push_override(ContextOverride {
-    allow_tools: ["bash".into()].into(),
-    scope: OverrideScope::Once,
-    ..Default::default()
-});
-// 다음 check() 호출 후 자동 pop
-
-// Session: 세션 전체
-enforcer.push_override(ContextOverride {
-    mode: Some(PermissionMode::DangerFullAccess),
-    scope: OverrideScope::Session,
-    ..Default::default()
-});
-// 세션 종료 시 제거
-
-// Persistent: 영구 저장
-enforcer.persist_override(ContextOverride {
-    allow_tools: ["trusted_plugin_tool".into()].into(),
-    scope: OverrideScope::Persistent,
-    ..Default::default()
-});
-// Policy 파일에 병합, 재시작 후에도 적용`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-semibold text-sm">Once</span>
+              <span className="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">1회용</span>
+            </div>
+            <p className="text-sm"><code className="text-xs bg-background px-1.5 py-0.5 rounded">push_override()</code>로 <code className="text-xs bg-background px-1.5 py-0.5 rounded">bash</code>를 allow_tools에 추가 → 다음 <code className="text-xs bg-background px-1.5 py-0.5 rounded">check()</code> 후 자동 pop</p>
+            <p className="text-xs text-muted-foreground mt-1">사용자가 특정 Prompt에 "Yes" 한 번 응답한 경우</p>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-semibold text-sm">Session</span>
+              <span className="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">세션 전체</span>
+            </div>
+            <p className="text-sm"><code className="text-xs bg-background px-1.5 py-0.5 rounded">mode: DangerFullAccess</code>로 세션 내 전체 승격 → 세션 종료 시 제거</p>
+            <p className="text-xs text-muted-foreground mt-1"><code className="bg-background px-1 py-0.5 rounded">/allow-all</code> 슬래시 명령으로 활성화</p>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-semibold text-sm">Persistent</span>
+              <span className="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">영구 저장</span>
+            </div>
+            <p className="text-sm"><code className="text-xs bg-background px-1.5 py-0.5 rounded">persist_override()</code>로 <code className="text-xs bg-background px-1.5 py-0.5 rounded">trusted_plugin_tool</code>을 allow → Policy 파일에 병합, 재시작 후에도 적용</p>
+            <p className="text-xs text-muted-foreground mt-1">"Always" 응답 시 자동 Policy 업데이트</p>
+          </div>
+        </div>
         <p>
           <strong>Once 사용 사례</strong>: 사용자가 특정 Prompt에 "Yes" 한 번 응답<br />
           <strong>Session 사용 사례</strong>: <code>/allow-all</code> 슬래시 명령 — 세션 내 전체 승격<br />
@@ -89,22 +123,34 @@ enforcer.persist_override(ContextOverride {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">훅 연동 — 커스텀 권한 판정</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// settings.json
-{
-  "hooks": {
-    "PreToolUse": [{
-      "command": "/opt/claw/hooks/check-tool.sh",
-      "matcher": {"tool": "*"},
-      "timeout_ms": 2000
-    }]
-  }
-}
-
-// 훅 스크립트 응답 (stdout JSON)
-{"permission": "allow"}
-{"permission": "deny", "reason": "보안팀 승인 필요"}
-{"permission": "prompt", "message": "확인: {tool_name}"}
-{"permission": "skip"}  // 훅이 판정 안 함, 기본 enforcer로 넘김`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">훅 설정 (settings.json)</div>
+            <div className="flex flex-col gap-1.5 text-sm">
+              <span><code className="text-xs bg-background px-1.5 py-0.5 rounded">PreToolUse</code> 이벤트에 훅 등록</span>
+              <span><code className="text-xs bg-background px-1.5 py-0.5 rounded">command</code>: 실행할 스크립트 경로</span>
+              <span><code className="text-xs bg-background px-1.5 py-0.5 rounded">matcher</code>: 대상 도구 필터 (<code>{"\"tool\": \"*\""}</code> = 전체)</span>
+              <span><code className="text-xs bg-background px-1.5 py-0.5 rounded">timeout_ms</code>: 응답 제한 시간 (초과 시 skip)</span>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">훅 응답 4종 (stdout JSON)</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <span className="text-green-600 font-medium">allow</span> — 도구 실행 허용
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <span className="text-red-600 font-medium">deny</span> + <code>reason</code> — 실행 거부
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <span className="text-amber-600 font-medium">prompt</span> + <code>message</code> — 사용자 확인
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <span className="text-muted-foreground font-medium">skip</span> — 판정 거부, 기본 enforcer로 폴백
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>훅 응답 4종</strong>: allow, deny, prompt, skip<br />
           <code>skip</code>은 "훅이 판정 거부" — 기본 PermissionEnforcer로 폴백<br />
@@ -112,28 +158,36 @@ enforcer.persist_override(ContextOverride {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">훅 실행 통합</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl PermissionEnforcer {
-    pub async fn check_with_hooks(&self, tool: &str, input: &Value) -> EnforcementResult {
-        // 1) 기본 Enforcer 판정
-        let base = self.check(tool, input);
-        if matches!(base, EnforcementResult::Deny(_)) {
-            return base;  // Deny는 훅에서 뒤집지 않음 (보안)
-        }
-
-        // 2) Pre-tool 훅 실행
-        let hook_result = self.hooks.run_pre_tool(tool, input).await;
-
-        // 3) 훅 결과 병합
-        match hook_result {
-            HookResult::Override(action) => action,  // 훅 결정 우선
-            HookResult::Skip             => base,     // 훅 판정 거부 → 기본
-            HookResult::Error(e)         => {
-                log::warn!("hook failed: {}, falling back to base", e);
-                base  // 훅 실패 → 기본
-            }
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-background px-1.5 py-0.5 rounded">check_with_hooks()</code> — 3단계 병합</div>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono shrink-0">1</span>
+              <div>
+                <span className="font-medium">기본 Enforcer 판정</span>
+                <p className="text-muted-foreground mt-0.5">Deny면 훅 스킵 — <strong>Deny는 뒤집을 수 없음</strong></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono shrink-0">2</span>
+              <div>
+                <span className="font-medium">Pre-tool 훅 실행</span>
+                <p className="text-muted-foreground mt-0.5"><code>hooks.run_pre_tool(tool, input)</code> 비동기 호출</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono shrink-0">3</span>
+              <div>
+                <span className="font-medium">결과 병합</span>
+                <div className="flex flex-col gap-1 mt-1 text-muted-foreground">
+                  <span><code>Override(action)</code> → 훅 결정 우선</span>
+                  <span><code>Skip</code> → 기본 판정 유지</span>
+                  <span><code>Error</code> → 경고 로그 + 기본 판정 폴백</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>핵심 보안 원칙</strong>: "Deny는 훅이 뒤집을 수 없음"<br />
           기본 Enforcer가 Deny하면 훅은 스킵 — 훅이 보안 약화 수단이 되는 것을 방지<br />
@@ -141,19 +195,24 @@ enforcer.persist_override(ContextOverride {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실제 훅 사용 예시 — 감사 로깅</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`# /opt/claw/hooks/audit-log.sh
-#!/bin/bash
-# stdin에서 JSON 수신
-INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool_name')
-TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-# 감사 로그 기록
-echo "{\\"timestamp\\":\\"$TIMESTAMP\\",\\"tool\\":\\"$TOOL\\"}" \\
-    >> /var/log/claw/audit.jsonl
-
-# 판정은 기본 Enforcer에 위임
-echo '{"permission":"skip"}'`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-2">감사 로깅 훅 (<code className="text-xs bg-background px-1 py-0.5 rounded">audit-log.sh</code>)</div>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">1</span>
+              <span>stdin에서 JSON 수신 → <code>tool_name</code>, <code>timestamp</code> 추출</span>
+            </div>
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">2</span>
+              <span><code>/var/log/claw/audit.jsonl</code>에 줄 단위 JSON 기록</span>
+            </div>
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">3</span>
+              <span><code>{'\'{"permission":"skip"}\''}</code> 출력 — 판정은 기본 Enforcer에 위임</span>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">감사 전용: 판정하지 않고 로깅만 수행. <code>jsonl</code> 포맷으로 대용량 처리 적합</p>
+        </div>
         <p>
           <strong>감사 전용 훅</strong>: 판정은 skip, 로깅만 수행<br />
           보안팀이 감사 로그를 별도 분석 — claw-code 자체는 수정 불필요<br />
@@ -161,21 +220,24 @@ echo '{"permission":"skip"}'`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실전 훅 사용 예시 — 시간대 제한</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`# /opt/claw/hooks/business-hours.sh
-#!/bin/bash
-HOUR=$(date +%H)
-
-# 업무 시간 외에는 bash·write_file 차단
-if [[ $HOUR -lt 9 || $HOUR -ge 18 ]]; then
-    INPUT=$(cat)
-    TOOL=$(echo "$INPUT" | jq -r '.tool_name')
-    if [[ "$TOOL" == "bash" || "$TOOL" == "write_file" ]]; then
-        echo '{"permission":"deny","reason":"업무 시간 외 위험 작업 금지"}'
-        exit 0
-    fi
-fi
-
-echo '{"permission":"skip"}'`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-2">시간대 제한 훅 (<code className="text-xs bg-background px-1 py-0.5 rounded">business-hours.sh</code>)</div>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">1</span>
+              <span>현재 시간 확인 — 09:00~18:00 업무 시간 범위 판별</span>
+            </div>
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-red-600 font-mono shrink-0">2</span>
+              <span>업무 시간 외 + 도구가 <code>bash</code> 또는 <code>write_file</code>이면 → <span className="text-red-600 font-medium">Deny</span> ("업무 시간 외 위험 작업 금지")</span>
+            </div>
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">3</span>
+              <span>업무 시간 내이거나 다른 도구면 → <code>skip</code> (기본 판정 위임)</span>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">동적 조건(시간, 환경, 네트워크 등)은 Policy로 표현 불가 — 훅의 존재 이유</p>
+        </div>
         <p>
           <strong>동적 조건 판정</strong>: 시간·환경·네트워크 상태 등 Policy로 표현 불가한 조건<br />
           이런 요구사항이 훅의 존재 이유 — 정책 정의 언어로는 불충분한 시나리오

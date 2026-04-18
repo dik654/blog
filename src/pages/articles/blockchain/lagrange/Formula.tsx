@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import LagrangeFormulaViz from './viz/LagrangeFormulaViz';
 
 export default function Formula() {
@@ -13,136 +14,136 @@ export default function Formula() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Lagrange 공식 유도</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Lagrange Interpolation Formula
-//
-// Standard form:
-//
-//   f(x) = sum_{i=0}^{n-1} y_i * L_i(x)
-//
-//   where L_i(x) is the i-th Lagrange basis polynomial:
-//     L_i(x) = prod_{j != i} (x - x_j) / (x_i - x_j)
-//
-// Properties of L_i(x):
-//   1. L_i is a polynomial of degree n-1
-//   2. L_i(x_i) = 1
-//   3. L_i(x_j) = 0 for j != i
-//
-// Verification that f(x_k) = y_k:
-//   f(x_k) = sum_i y_i * L_i(x_k)
-//          = y_k * L_k(x_k) + sum_{i!=k} y_i * L_i(x_k)
-//          = y_k * 1 + sum_{i!=k} y_i * 0
-//          = y_k ✓
 
-// Derivation from first principles:
-//
-//   Need: polynomial f with f(x_i) = y_i for n points
-//
-//   Idea: construct "indicator" polynomials L_i
-//         that pick out exactly the i-th point
-//
-//   To make L_i(x_j) = 0 for j != i:
-//     L_i(x) must have roots at all x_j, j != i
-//     → L_i(x) = c * prod_{j!=i}(x - x_j)
-//
-//   To make L_i(x_i) = 1:
-//     1 = c * prod_{j!=i}(x_i - x_j)
-//     c = 1 / prod_{j!=i}(x_i - x_j)
-//
-//   Hence: L_i(x) = prod_{j!=i} (x - x_j) / (x_i - x_j)
-//
-//   Then f(x) = sum y_i * L_i(x) interpolates!
+        <h4 className="text-lg font-semibold mt-5 mb-2">표준 형태</h4>
+        <M display>{'f(x) = \\underbrace{\\sum_{i=0}^{n-1}}_{\\text{모든 점에 대해}} \\underbrace{y_i}_{\\text{i번째 y값}} \\cdot \\underbrace{L_i(x)}_{\\text{기저 다항식}}'}</M>
+        <p className="text-sm text-muted-foreground mt-2">
+          <M>{'f(x)'}</M>: 보간 결과 다항식, <M>{'y_i'}</M>: i번째 데이터 점의 y좌표, <M>{'L_i(x)'}</M>: i번째 Lagrange 기저 다항식 (해당 점에서만 1, 나머지에서 0)
+        </p>
+        <p>
+          <M>{'L_i(x)'}</M>는 i번째 Lagrange basis 다항식이다:
+        </p>
+        <M display>{'\\underbrace{L_i(x)}_{\\text{기저 다항식}} = \\prod_{j \\neq i} \\frac{\\overbrace{x - x_j}^{\\text{현재 점과의 거리}}}{\\underbrace{x_i - x_j}_{\\text{정규화 상수}}}'}</M>
+        <p className="text-sm text-muted-foreground mt-2">
+          <M>{'x_j'}</M>: j번째 데이터 점의 x좌표, 분자 <M>{'(x - x_j)'}</M>: j번째 점에서 0이 되도록 강제, 분모 <M>{'(x_i - x_j)'}</M>: 자기 점 <M>{'x_i'}</M>에서 1이 되도록 정규화
+        </p>
+      </div>
 
-// Example: 3 points
-//
-//   Points: (0, 1), (1, 3), (2, 2)
-//
-//   L_0(x) = (x-1)(x-2) / (0-1)(0-2)
-//         = (x^2 - 3x + 2) / 2
-//
-//   L_1(x) = (x-0)(x-2) / (1-0)(1-2)
-//         = x(x-2) / (-1)
-//         = -x^2 + 2x
-//
-//   L_2(x) = (x-0)(x-1) / (2-0)(2-1)
-//         = x(x-1) / 2
-//         = (x^2 - x) / 2
-//
-//   f(x) = 1 * L_0 + 3 * L_1 + 2 * L_2
-//        = (x^2-3x+2)/2 - 3x^2+6x + (x^2-x)
-//        = (x^2-3x+2)/2 - 3x^2+6x + x^2-x
-//        = (1/2)x^2 - (3/2)x + 1 - 2x^2 + 5x
-//        = (-3/2)x^2 + (7/2)x + 1
-//
-//   Verify:
-//     f(0) = 1 ✓
-//     f(1) = -1.5 + 3.5 + 1 = 3 ✓
-//     f(2) = -6 + 7 + 1 = 2 ✓
+      <h4 className="text-lg font-semibold mt-5 mb-2">L_i(x)의 성질</h4>
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-3">
+        <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+          <p className="font-semibold text-sm text-indigo-400">차수</p>
+          <p className="text-sm mt-1.5 text-foreground/75"><M>{'L_i'}</M>는 차수 <M>{'n-1'}</M> 다항식</p>
+        </div>
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <p className="font-semibold text-sm text-emerald-400">자기 점에서 1</p>
+          <p className="text-sm mt-1.5 text-foreground/75"><M>{'L_i(x_i) = 1'}</M></p>
+        </div>
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+          <p className="font-semibold text-sm text-amber-400">다른 점에서 0</p>
+          <p className="text-sm mt-1.5 text-foreground/75"><M>{'L_i(x_j) = 0'}</M> (<M>{'j \\neq i'}</M>)</p>
+        </div>
+      </div>
 
-// Computational aspects:
-//
-//   Naive: O(n^2) multiplications per evaluation
-//
-//   Precompute denominators:
-//     den_i = prod_{j!=i}(x_i - x_j)
-//     O(n^2) total precomputation
-//     Then each L_i(x) is O(n)
-//
-//   Barycentric form:
-//     f(x) = (sum w_i*y_i/(x-x_i)) / (sum w_i/(x-x_i))
-//       where w_i = 1/den_i
-//     More stable, still O(n) per eval
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <p>
+          검증: <M>{'f(x_k) = \\sum_i y_i \\cdot L_i(x_k) = y_k \\cdot 1 + \\sum_{i \\neq k} y_i \\cdot 0 = y_k'}</M>
+        </p>
 
-// Special case: unity roots domain
-//
-//   Points: {1, omega, omega^2, ..., omega^{n-1}}
-//
-//   den_i = prod_{j!=i}(omega^i - omega^j)
-//         = n * omega^{-i}  (after simplification)
-//
-//   L_i(x) = (x^n - 1) / (n * omega^{-i} * (x - omega^i))
-//          = omega^i * (x^n - 1) / (n * (x - omega^i))
-//
-//   Compact form used in PLONK/STARK!
+        <h4 className="text-lg font-semibold mt-5 mb-2">일차 원리에서의 유도</h4>
+        <p>
+          n개 점에서 <M>{'f(x_i) = y_i'}</M>인 다항식이 필요하다.
+          <br />
+          <M>{'L_i(x_j) = 0'}</M> (<M>{'j \\neq i'}</M>)이 되려면 <M>{'L_i'}</M>는 모든 <M>{'x_j'}</M>를 근으로 가져야 한다:
+          <M display>{'L_i(x) = \\underbrace{c}_{\\text{정규화 계수}} \\cdot \\underbrace{\\prod_{j \\neq i}(x - x_j)}_{\\text{다른 모든 점에서 0이 되는 곱}}'}</M>
+          <p className="text-sm text-muted-foreground mt-2">
+            <M>{'c'}</M>: <M>{'L_i(x_i) = 1'}</M>을 만족시키기 위한 정규화 상수, <M>{'(x - x_j)'}</M>: j번째 점을 근으로 만드는 인수
+          </p>
+          <M>{'L_i(x_i) = 1'}</M>을 만족시키려면 <M>{'c = 1 / \\prod_{j \\neq i}(x_i - x_j)'}</M>.
+          <br />
+          따라서 <M>{'f(x) = \\sum y_i \\cdot L_i(x)'}</M>가 보간한다
+        </p>
 
-// Matrix form:
-//
-//   Lagrange interpolation solves Vandermonde system:
-//     V * a = y
-//     where V[i][j] = x_i^j
-//           a = coefficients vector
-//           y = evaluation vector
-//
-//   a = V^{-1} * y
-//
-//   For unity roots: V is the FFT matrix
-//   V^{-1} is (1/n) * conjugate(V)
-//   → FFT/IFFT gives O(n log n) interpolation
+        <h4 className="text-lg font-semibold mt-5 mb-2">예시: 3개 점</h4>
+        <p>
+          점: <M>{'(0, 1),\\; (1, 3),\\; (2, 2)'}</M>
+        </p>
+      </div>
 
-// In ZK circuits:
-//
-//   Selector polynomials:
-//     q(x) = sum_i q_i * L_i(x)
-//     q_i = value at gate i
-//     L_i(x) = evaluates to 1 only at omega^i
-//
-//   Copy constraints (PLONK):
-//     permutation polynomial sigma(X)
-//     expressed as multiple Lagrange polynomials
-//
-//   Trace column (STARK):
-//     trace[j] at step j
-//     interpolated over execution domain
+      <div className="not-prose grid grid-cols-1 gap-3 my-3">
+        {[
+          { name: 'L₀(x)', formula: '(x-1)(x-2) / (0-1)(0-2) = (x²-3x+2) / 2', color: 'indigo' },
+          { name: 'L₁(x)', formula: '(x-0)(x-2) / (1-0)(1-2) = x(x-2)/(-1) = -x²+2x', color: 'emerald' },
+          { name: 'L₂(x)', formula: '(x-0)(x-1) / (2-0)(2-1) = x(x-1)/2 = (x²-x)/2', color: 'amber' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.formula}</p>
+          </div>
+        ))}
+      </div>
 
-// Numerical stability (floating point):
-//
-//   Naive formula: can be unstable
-//   Barycentric formula: more stable
-//   Modified Lagrange (Higham): best stability
-//
-//   In finite fields: no floating point issues
-//   All exact arithmetic in F_p`}
-        </pre>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <p>
+          <M>{'f(x) = 1 \\cdot L_0 + 3 \\cdot L_1 + 2 \\cdot L_2 = -\\tfrac{3}{2}x^2 + \\tfrac{7}{2}x + 1'}</M>.
+          <br />
+          검증: <M>{'f(0) = 1'}</M>, <M>{'f(1) = 3'}</M>, <M>{'f(2) = 2'}</M>
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">계산 측면</h4>
+        <p>
+          나이브 계산은 평가당 <M>{'O(n^2)'}</M> 곱셈이다.
+          <br />
+          분모 <M>{'\\text{den}_i = \\prod_{j \\neq i}(x_i - x_j)'}</M>를 전처리하면 <M>{'O(n^2)'}</M> 후 각 <M>{'L_i(x)'}</M>는 <M>{'O(n)'}</M>.
+          <br />
+          Barycentric 형태: <M>{'f(x) = \\frac{\\sum w_i y_i / (x - x_i)}{\\sum w_i / (x - x_i)}'}</M>
+          (단, <M>{'w_i = 1/\\text{den}_i'}</M>). 수치적으로 더 안정적이며 평가당 <M>{'O(n)'}</M>
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">단위근 도메인 특수 경우</h4>
+        <p>
+          평가점이 <M>{'\\{1, \\omega, \\omega^2, \\ldots, \\omega^{n-1}\\}'}</M>일 때:
+        </p>
+        <M display>{'L_i(x) = \\frac{\\underbrace{\\omega^i}_{\\text{i번째 단위근}} \\cdot \\overbrace{(x^n - 1)}^{\\text{vanishing polynomial}}}{\\underbrace{n}_{\\text{도메인 크기}} \\cdot \\underbrace{(x - \\omega^i)}_{\\text{i번째 점 제외}}}'}</M>
+        <p className="text-sm text-muted-foreground mt-2">
+          <M>{'\\omega'}</M>: 원시 n차 단위근, <M>{'x^n - 1'}</M>: 모든 단위근에서 0인 vanishing polynomial, 분모의 <M>{'(x - \\omega^i)'}</M>: i번째 점의 영점을 제거하여 해당 점에서만 값을 가지게 함
+        </p>
+        <p>
+          PLONK/STARK에서 사용하는 간결한 형태다.
+          <br />
+          분모가 <M>{'n \\cdot \\omega^{-i}'}</M>로 단순화되기 때문이다
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">행렬 형태 (Vandermonde)</h4>
+        <p>
+          Lagrange 보간은 Vandermonde 시스템 <M>{'V \\cdot \\mathbf{a} = \\mathbf{y}'}</M>를 푸는 것이다
+          (<M>{'V[i][j] = x_i^j'}</M>).
+          <br />
+          단위근이면 V는 FFT 행렬이고, <M>{'V^{-1} = \\frac{1}{n} \\overline{V}'}</M>
+          → FFT/IFFT로 <M>{'O(n \\log n)'}</M> 보간이 가능하다
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">ZK 회로에서의 역할</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 gap-3 my-3">
+        {[
+          { name: 'Selector 다항식', desc: 'q(x) = Σ q_i · L_i(x). L_i(x)는 ω^i에서만 1로 평가. 각 게이트의 값을 선택', color: 'indigo' },
+          { name: 'Copy constraint (PLONK)', desc: '순열 다항식 σ(X)를 Lagrange 다항식들로 표현', color: 'emerald' },
+          { name: 'Trace column (STARK)', desc: '스텝 j의 trace[j]를 실행 도메인 위에서 보간', color: 'amber' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <p>
+          유한체 위에서는 부동소수점 문제가 없으므로 모든 산술이 정확하다.
+          실수 위에서는 Barycentric 공식이나 Modified Lagrange(Higham)가 수치 안정성 면에서 우수하다
+        </p>
       </div>
     </section>
   );

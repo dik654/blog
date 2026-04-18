@@ -1,8 +1,14 @@
+import IdsIpsViz from './viz/IdsIpsViz';
+import IdsDetectionInline from './viz/IdsDetectionInline';
+import FalsePositiveInline from './viz/FalsePositiveInline';
+
 export default function IdsIps() {
   return (
     <section id="ids-ips" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">IDS/IPS — 침입 탐지와 차단</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <IdsIpsViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">IDS와 IPS의 차이</h3>
         <p>
@@ -49,6 +55,8 @@ export default function IdsIps() {
             </tbody>
           </table>
         </div>
+
+        <IdsDetectionInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">탐지 방식 3가지</h3>
 
@@ -114,6 +122,8 @@ export default function IdsIps() {
           오탐이 충분히 줄어들면 인라인(IPS) 모드로 전환.<br />
           장비 장애 대비로 IPS에 바이패스(Bypass) 기능을 설정 — 장비가 응답하지 않으면 트래픽을 그대로 통과시켜 서비스 중단을 방지.
         </p>
+
+        <FalsePositiveInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">오탐(False Positive) 관리</h3>
         <p>

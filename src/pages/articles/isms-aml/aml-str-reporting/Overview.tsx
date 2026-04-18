@@ -1,3 +1,7 @@
+import OverviewViz from './viz/OverviewViz';
+import StrVsCtrViz from './viz/StrVsCtrViz';
+import ReportingObligationViz from './viz/ReportingObligationViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -10,6 +14,8 @@ export default function Overview() {
           국제적으로는 SAR(Suspicious Activity Report, 의심활동보고)로 불린다.<br />
           한국 특금법에서는 "의심되는 거래의 보고"로 표현하지만, 실무에서 STR과 SAR은 혼용된다.
         </p>
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">STR과 SAR — 같은 개념, 다른 이름</h3>
 
@@ -48,6 +54,8 @@ export default function Overview() {
           이 판단이 AML 담당자의 핵심 역량이며, 보고의 질(quality)이 FIU 분석의 효과를 결정한다.
         </p>
 
+        <StrVsCtrViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">법적 근거 — 특금법 제4조</h3>
         <p>
           특정금융거래정보의 보고 및 이용 등에 관한 법률(특금법) 제4조:<br />
@@ -70,6 +78,8 @@ export default function Overview() {
           의심의 기준을 너무 높게 잡으면 실제 세탁 거래를 놓치고(미탐),
           너무 낮게 잡으면 보고 건수가 폭증하여 FIU의 분석 역량이 희석된다(과탐).
         </p>
+
+        <ReportingObligationViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">보고 주체와 시기</h3>
         <p>

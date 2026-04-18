@@ -9,21 +9,36 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">문제 — 크립토의 변동성</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 일일 변동성 (최근 3년 평균)
-BTC: ±3.5%
-ETH: ±4.2%
-SOL: ±6.8%
-
-// 시사점
-- 지불 수단으로 부적합: 커피 $5 → 내일 $4.8 or $5.2
-- 회계 단위 부적합: 급여·청구서 예측 불가
-- 저축 수단 부적합: 월급 받고 1주일 만에 -20% 가능
-
-// 필요성
-1. Crypto 생태계 내부 결제 수단
-2. DeFi 대출·파생상품의 기준 자산
-3. 크로스보더 송금 (USD 대체)
-4. 인플레이션 높은 국가의 저축 수단`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">일일 변동성 (최근 3년 평균)</p>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="bg-background rounded px-3 py-2 text-center">
+              <span className="text-xs text-muted-foreground">BTC</span>
+              <p className="font-mono font-semibold">±3.5%</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-center">
+              <span className="text-xs text-muted-foreground">ETH</span>
+              <p className="font-mono font-semibold">±4.2%</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-center">
+              <span className="text-xs text-muted-foreground">SOL</span>
+              <p className="font-mono font-semibold">±6.8%</p>
+            </div>
+          </div>
+          <p className="font-semibold text-sm mb-2">시사점</p>
+          <ul className="text-sm space-y-1 mb-4 list-disc list-inside">
+            <li><strong>지불 수단 부적합</strong> — 커피 $5 → 내일 $4.8 or $5.2</li>
+            <li><strong>회계 단위 부적합</strong> — 급여·청구서 예측 불가</li>
+            <li><strong>저축 수단 부적합</strong> — 월급 받고 1주일 만에 -20% 가능</li>
+          </ul>
+          <p className="font-semibold text-sm mb-2">필요성</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="bg-background rounded px-3 py-2">Crypto 생태계 내부 결제 수단</div>
+            <div className="bg-background rounded px-3 py-2">DeFi 대출·파생상품의 기준 자산</div>
+            <div className="bg-background rounded px-3 py-2">크로스보더 송금 (USD 대체)</div>
+            <div className="bg-background rounded px-3 py-2">인플레이션 높은 국가의 저축 수단</div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">시장 규모 (2025년 기준)</h3>
 
@@ -56,25 +71,32 @@ SOL: ±6.8%
         <h3 className="text-xl font-semibold mt-8 mb-3">4가지 유형</h3>
 
         <TypesCompareViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`1. Fiat-Collateralized (법정화폐 담보)
-   - 예: USDC, USDT, PYUSD
-   - 은행 예치 USD를 담보로 온체인 토큰 발행
-   - 1:1 백업 (이론적)
-
-2. Crypto-Collateralized (암호자산 담보)
-   - 예: DAI (Sky), LUSD (Liquity)
-   - ETH·WBTC 등을 과담보로 예치
-   - CDP (Collateralized Debt Position)
-
-3. Algorithmic (알고리드믹)
-   - 예: UST (붕괴), AMPL, USDD
-   - 공급 조절로 가격 유지
-   - Seigniorage shares, rebase 등
-
-4. Hybrid / Synthetic
-   - 예: FRAX, USDe (Ethena), GHO (Aave)
-   - 여러 메커니즘 조합
-   - Delta-neutral, fractional reserve 등`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">1. Fiat-Collateralized</p>
+            <p className="text-xs text-muted-foreground mb-2">법정화폐 담보</p>
+            <p className="text-sm">USDC, USDT, PYUSD</p>
+            <p className="text-sm mt-1">은행 예치 USD를 담보로 온체인 토큰 발행 — 1:1 백업</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">2. Crypto-Collateralized</p>
+            <p className="text-xs text-muted-foreground mb-2">암호자산 담보</p>
+            <p className="text-sm">DAI (Sky), LUSD (Liquity)</p>
+            <p className="text-sm mt-1">ETH·WBTC 등을 과담보로 예치 — <code className="text-xs">CDP</code> (Collateralized Debt Position)</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">3. Algorithmic</p>
+            <p className="text-xs text-muted-foreground mb-2">알고리드믹</p>
+            <p className="text-sm">UST (붕괴), AMPL, USDD</p>
+            <p className="text-sm mt-1">공급 조절로 가격 유지 — Seigniorage shares, rebase 등</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">4. Hybrid / Synthetic</p>
+            <p className="text-xs text-muted-foreground mb-2">하이브리드</p>
+            <p className="text-sm">FRAX, USDe (Ethena), GHO (Aave)</p>
+            <p className="text-sm mt-1">여러 메커니즘 조합 — Delta-neutral, fractional reserve 등</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">페그 메커니즘 비교</h3>
         <div className="overflow-x-auto">
@@ -114,13 +136,23 @@ SOL: ±6.8%
         <h3 className="text-xl font-semibold mt-8 mb-3">Stablecoin Trilemma</h3>
 
         <TrilemmaViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 3개 꼭짓점 중 2개만 달성 가능 (경험적)
-
-USDC: 안정성 + 자본효율, but 중앙화
-DAI:  안정성 + 탈중앙화, but 자본효율 낮음 (150%+ 과담보)
-UST:  탈중앙화 + 자본효율, but 안정성 실패 (붕괴)
-
-// 각 스테이블코인은 2가지 선택`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">3개 꼭짓점 중 2개만 달성 가능 (경험적)</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2">
+              <span className="font-mono font-semibold shrink-0">USDC</span>
+              <span>안정성 + 자본효율, <span className="text-red-500 font-medium">but 중앙화</span></span>
+            </div>
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2">
+              <span className="font-mono font-semibold shrink-0">DAI</span>
+              <span>안정성 + 탈중앙화, <span className="text-red-500 font-medium">but 자본효율 낮음 (150%+ 과담보)</span></span>
+            </div>
+            <div className="flex items-start gap-2 bg-background rounded px-3 py-2">
+              <span className="font-mono font-semibold shrink-0">UST</span>
+              <span>탈중앙화 + 자본효율, <span className="text-red-500 font-medium">but 안정성 실패 (붕괴)</span></span>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>3개 속성 중 2개만</strong>: Crypto Stablecoin Trilemma<br />
           USDC/USDT: 탈중앙화 희생<br />

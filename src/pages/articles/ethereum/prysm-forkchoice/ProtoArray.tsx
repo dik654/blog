@@ -16,63 +16,36 @@ export default function ProtoArray({ onCodeRef }: Props) {
 
         {/* ── proto-array vs doubly-linked-tree ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">proto-array → doubly-linked-tree 전환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 fork choice 자료구조 진화:
-//
-// Phase 1: proto-array (2021~2023)
-// - 단일 배열 + index 기반 tree
-// - 삽입: O(1) (배열 끝에 추가)
-// - 삭제: O(N) (prune 시 전체 재배열)
-// - 메모리 연속 → 캐시 효율 좋음
-// - 단점: finality 후 old nodes 삭제가 느림
-
-// Phase 2: doubly-linked-tree (2023~)
-// - 명시적 포인터 기반 tree
-// - 삽입: O(1)
-// - 삭제: O(1) (포인터만 조정)
-// - 메모리 분산 → 캐시 효율 낮음
-// - finality 후 빠른 pruning
-
-// proto-array 구조:
-type ProtoArray struct {
-    nodes []ProtoNode        // 순차 배열
-    indices map[Root]int     // root → array index
-}
-type ProtoNode struct {
-    Root Root
-    ParentIndex int          // 배열 인덱스 참조
-    Weight uint64
-    BestChildIndex int
-    BestDescendantIndex int
-}
-
-// doubly-linked-tree 구조:
-type Store struct {
-    nodesLock sync.RWMutex
-    nodes map[Root]*Node     // root → Node pointer
-    root *Node               // tree root
-}
-type Node struct {
-    Root Root
-    Parent *Node             // 부모 포인터
-    Children []*Node         // 자식 포인터 slice
-    BestChild *Node
-    BestDescendant *Node
-    Weight uint64
-    Slot Slot
-    ...
-}
-
-// 전환 이유:
-// 1. finality 후 pruning 성능 (대부분 이유)
-//    proto-array: 전체 배열 재구성 → O(N)
-//    doubly-linked-tree: parent 포인터만 끊으면 됨 → O(1)
-//
-// 2. 구현 단순성 (포인터가 더 직관적)
-//
-// 3. 메모리 단편화 문제
-//    Go GC가 포인터 기반 구조체 잘 처리`}
-        </pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Phase 1: proto-array (2021~2023)</div>
+            <p className="text-sm mb-2">단일 배열 + index 기반 tree</p>
+            <div className="text-sm space-y-1">
+              <div><code>ProtoArray.nodes []ProtoNode</code> — 순차 배열</div>
+              <div><code>ProtoNode.ParentIndex int</code> — 배열 인덱스 참조</div>
+              <div className="mt-2">삽입 <strong>O(1)</strong> / 삭제 <strong>O(N)</strong> (전체 재배열)</div>
+              <div>메모리 연속 → 캐시 효율 좋음</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+            <div className="text-xs font-semibold text-green-400 mb-2">Phase 2: doubly-linked-tree (2023~)</div>
+            <p className="text-sm mb-2">명시적 포인터 기반 tree</p>
+            <div className="text-sm space-y-1">
+              <div><code>Store.nodes map[Root]*Node</code> — root → pointer</div>
+              <div><code>Node.Parent *Node</code> / <code>Children []*Node</code></div>
+              <div className="mt-2">삽입 <strong>O(1)</strong> / 삭제 <strong>O(1)</strong> (포인터만 조정)</div>
+              <div>finality 후 빠른 pruning</div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4 sm:col-span-2">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">전환 이유</div>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><strong>pruning 성능</strong> — proto-array: 전체 재구성 O(N) → doubly-linked-tree: 포인터만 끊기 O(1)</li>
+              <li><strong>구현 단순성</strong> — 포인터가 배열 인덱스보다 직관적</li>
+              <li><strong>Go GC 친화</strong> — 포인터 기반 구조체 효율적 처리</li>
+            </ol>
+          </div>
+        </div>
         <p className="leading-7">
           Prysm은 <strong>proto-array → doubly-linked-tree 전환</strong>.<br />
           pruning 성능 개선 (O(N) → O(1)) → finality 후 메모리 관리 효율.<br />
@@ -81,62 +54,42 @@ type Node struct {
 
         {/* ── bestDescendant 캐싱 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">bestDescendant 캐싱 — O(depth) head 계산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 노드가 자기 서브트리에서 가장 "무거운" descendant 캐싱
-// head 계산 시 서브트리 전체 탐색 불필요
-
-type Node struct {
-    Root Root
-    Weight uint64              // 자기 weight
-    Parent *Node
-    Children []*Node
-    BestChild *Node            // 가장 무거운 자식
-    BestDescendant *Node       // 가장 무거운 descendant (리프 방향)
-}
-
-// GetHead(root) 단순화:
-func GetHead() Root {
-    // root에서 bestDescendant로 직접 점프
-    node := s.root
-    for node.BestDescendant != nil {
-        node = node.BestDescendant
-    }
-    return node.Root
-}
-
-// BestDescendant 업데이트 (bottom-up):
-// 노드 weight 변경 시 (attestation 추가) 부모 방향으로 전파
-
-func (s *Store) updateBestDescendant(node *Node) {
-    for node.Parent != nil {
-        parent := node.Parent
-
-        // 부모의 best child 재선정
-        var bestChild *Node
-        var maxWeight uint64
-        for _, child := range parent.Children {
-            if child.Weight > maxWeight ||
-               (child.Weight == maxWeight && isLexSmaller(child.Root, bestChild.Root)) {
-                bestChild = child
-                maxWeight = child.Weight
-            }
-        }
-
-        if parent.BestChild != bestChild {
-            parent.BestChild = bestChild
-            parent.BestDescendant = bestChild.BestDescendant
-            // or bestChild if it's a leaf
-        }
-
-        node = parent  // 상위로 전파
-    }
-}
-
-// 결과:
-// - head 쿼리: O(1) (캐시된 BestDescendant)
-// - attestation 추가: O(depth) (부모 방향 업데이트)
-// - 메인넷 depth ~10-15 → 실용적`}
-        </pre>
+        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Node 캐싱 필드</div>
+            <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1">
+              <span><code>BestChild *Node</code> — 가장 무거운 자식</span>
+              <span><code>BestDescendant *Node</code> — 가장 무거운 descendant (리프 방향)</span>
+            </div>
+            <p className="text-sm mt-2"><code>GetHead()</code>: root에서 <code>BestDescendant</code>를 따라 직접 점프 → 리프 도달.</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">updateBestDescendant — bottom-up 전파</div>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li>weight 변경된 노드에서 <code>node.Parent</code> 방향으로 순회</li>
+              <li>부모의 <code>Children</code> 중 최대 weight 자식 재선정 (동률 시 <code>isLexSmaller</code>)</li>
+              <li><code>parent.BestChild</code>, <code>parent.BestDescendant</code> 갱신</li>
+              <li>root까지 상위 전파</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+            <div className="text-xs font-semibold text-blue-400 mb-2">성능 결과</div>
+            <div className="text-sm grid grid-cols-3 gap-2">
+              <div className="text-center">
+                <div className="font-bold">head 쿼리</div>
+                <div className="text-muted-foreground">O(1) 캐시</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold">attestation 추가</div>
+                <div className="text-muted-foreground">O(depth) 업데이트</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold">메인넷</div>
+                <div className="text-muted-foreground">depth ~10-15</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>BestDescendant 캐싱</strong>으로 head 계산 O(1).<br />
           attestation 추가 시 부모 방향으로만 업데이트 → O(depth).<br />

@@ -30,64 +30,51 @@ export default function AppLifecycle({ onCodeRef: _onCodeRef }: { onCodeRef: (ke
 
         {/* ── Vote Extension ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Vote Extension — ABCI++ 핵심 기능</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Vote Extension: validator가 Precommit에 임의 데이터 첨부
-// ABCI++ (v0.38+)의 가장 큰 변화
-
-// Extension 용도:
-// 1. Oracle data: validator가 외부 가격 서명
-// 2. MEV-resistant ordering: TX 순서 제안
-// 3. Cross-chain data: 다른 체인 상태 증명
-// 4. Threshold encryption: 암호화된 TX 복호화 share
-
-// Flow:
-// 1. ExtendVote(height) → app이 extension 생성
-// 2. VerifyVoteExtension(ext) → 다른 validator의 ext 검증
-// 3. Vote에 extension 포함 → BLS 서명
-// 4. 다음 블록의 PrepareProposal에서 사용 가능
-
-// 구조:
-type Vote struct {
-    // ... 기존 필드 ...
-    Extension          []byte  // app-specific data
-    ExtensionSignature []byte  // 별도 서명
-}
-
-// ExtendVote (app 구현):
-func (app *MyApp) ExtendVote(
-    req abci.RequestExtendVote,
-) abci.ResponseExtendVote {
-    // 예: 외부 oracle에서 BTC 가격 가져오기
-    btcPrice := app.oracle.GetBTCPrice()
-    data := encode(btcPrice)
-
-    return abci.ResponseExtendVote{
-        VoteExtension: data,
-    }
-}
-
-// VerifyVoteExtension:
-func (app *MyApp) VerifyVoteExtension(
-    req abci.RequestVerifyVoteExtension,
-) abci.ResponseVerifyVoteExtension {
-    btcPrice := decode(req.VoteExtension)
-
-    // sanity check
-    if btcPrice < 10000 || btcPrice > 200000 {
-        return abci.ResponseVerifyVoteExtension{
-            Status: abci.ResponseVerifyVoteExtension_REJECT,
-        }
-    }
-    return abci.ResponseVerifyVoteExtension{
-        Status: abci.ResponseVerifyVoteExtension_ACCEPT,
-    }
-}
-
-// Real-world 사용 (dYdX v4):
-// - orderbook 상태 validator가 투표에 포함
-// - MEV 공격 방어 (cross-validator ordering)
-// - 다음 블록 PrepareProposal에서 통합`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">Vote Extension 용도</p>
+            <div className="grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+              <p><strong className="text-foreground">Oracle data</strong> — validator가 외부 가격 서명</p>
+              <p><strong className="text-foreground">MEV-resistant ordering</strong> — TX 순서 제안</p>
+              <p><strong className="text-foreground">Cross-chain data</strong> — 다른 체인 상태 증명</p>
+              <p><strong className="text-foreground">Threshold encryption</strong> — 암호화된 TX 복호화 share</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">Vote Extension 흐름</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p><strong className="text-foreground">1.</strong> <code>ExtendVote(height)</code> → app이 extension 생성</p>
+              <p><strong className="text-foreground">2.</strong> <code>VerifyVoteExtension(ext)</code> → 다른 validator의 ext 검증</p>
+              <p><strong className="text-foreground">3.</strong> <code>Vote</code>에 extension 포함 → BLS 서명</p>
+              <p><strong className="text-foreground">4.</strong> 다음 블록의 <code>PrepareProposal</code>에서 사용 가능</p>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3"><code>Vote.Extension []byte</code> — app-specific data / <code>Vote.ExtensionSignature []byte</code> — 별도 서명</p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>ExtendVote</code> 예시</p>
+              <div className="text-sm text-muted-foreground space-y-1">
+                <p>외부 oracle에서 BTC 가격 가져오기</p>
+                <p><code>app.oracle.GetBTCPrice()</code> → encode → <code>ResponseExtendVote&#123;VoteExtension: data&#125;</code></p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>VerifyVoteExtension</code> 예시</p>
+              <div className="text-sm text-muted-foreground space-y-1">
+                <p>sanity check: <code>btcPrice &lt; 10000 || &gt; 200000</code> → REJECT</p>
+                <p>통과 → <code>ACCEPT</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">실전 활용 — dYdX v4</p>
+            <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>orderbook 상태를 validator가 투표에 포함</li>
+              <li>MEV 공격 방어 (cross-validator ordering)</li>
+              <li>다음 블록 <code>PrepareProposal</code>에서 통합</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Vote Extension</strong>이 ABCI++의 핵심 기능.<br />
           Oracle, MEV 방어, cross-chain 데이터 등 validator 협력 가능.<br />

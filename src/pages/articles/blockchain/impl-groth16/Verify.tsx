@@ -1,4 +1,5 @@
 import VerifyViz from './viz/VerifyViz';
+import M from '@/components/ui/math';
 import { codeRefs } from './codeRefs';
 import type { CodeRef } from '@/components/code/types';
 
@@ -39,138 +40,162 @@ export default function Verify({ onCodeRef }: { onCodeRef: (key: string, ref: Co
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Verifier 상세 및 온체인 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Groth16 Verifier
-//
-// Inputs:
-//   - VerifyingKey vk (fixed per circuit)
-//   - Public inputs [x_0, x_1, ..., x_l]
-//   - Proof (A, B, C)
-//
-// Output: accept / reject
 
-// Verification equation:
-//
-//   e(A, B) = e(alpha, beta) * e(IC_sum, gamma) * e(C, delta)
-//
-//   where:
-//     IC_sum = IC[0] + sum_{i=1..l} x_i * IC[i]
-//
-// Equivalently (pairing product = identity):
-//
-//   e(A, B) * e(-IC_sum, gamma) * e(-C, delta) * e(-alpha, beta) = 1
+        {/* 입출력 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">입력 / 출력</h4>
+          <div className="grid grid-cols-3 gap-3 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">VerifyingKey</p>
+              <p className="text-muted-foreground">회로 당 고정</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">공개 입력</p>
+              <p><M>{'[x_0, x_1, \\ldots, x_l]'}</M></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">증명</p>
+              <p><M>{'(A, B, C)'}</M> → accept / reject</p>
+            </div>
+          </div>
+        </div>
 
-// Optimization: precomputed e(alpha, beta)
-//
-//   alpha, beta are fixed in verifying key
-//   e(alpha, beta) in Fp12 computed once at setup
-//   Stored as "alpha_beta" field in vk
-//
-//   Saves 1 pairing per verification
-//   Reduces from 4 to 3 pairings
+        {/* 검증 방정식 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">검증 방정식</h4>
+          <M display>{'e(A, B) = e(\\alpha, \\beta) \\cdot e(\\text{IC}_{\\text{sum}}, \\gamma) \\cdot e(C, \\delta)'}</M>
+          <p className="text-sm mt-2"><M>{'\\text{IC}_{\\text{sum}} = \\text{IC}[0] + \\sum_{i=1}^{l} x_i \\cdot \\text{IC}[i]'}</M></p>
+          <p className="text-sm text-muted-foreground mt-1">동치: <M>{'e(A,B) \\cdot e(-\\text{IC}_{\\text{sum}}, \\gamma) \\cdot e(-C, \\delta) \\cdot e(-\\alpha, \\beta) = 1'}</M></p>
+        </div>
 
-// Full verifier algorithm:
-//
-//   1. Parse proof: (A, B, C)
-//      - Validate A, C are in G1 and on curve
-//      - Validate B is in G2 and on curve
-//      - Check subgroup membership (cofactor clearing)
-//
-//   2. Compute IC_sum:
-//      IC_sum = vk.IC[0]
-//      for i in 1..=l:
-//        if x_i != 0:
-//          IC_sum += x_i * vk.IC[i]
-//
-//   3. Check pairing equation:
-//      LHS = e(A, B)
-//      RHS = vk.alpha_beta * e(IC_sum, vk.gamma) * e(C, vk.delta)
-//      accept = (LHS == RHS)
+        {/* 사전 계산 최적화 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">최적화: <M>{'e(\\alpha, \\beta)'}</M> 사전 계산</h4>
+          <p className="text-sm"><M>{'\\alpha, \\beta'}</M>는 VK에 고정 → setup 시 <M>{'\\mathbb{F}_{p^{12}}'}</M> 원소로 한 번만 계산해 저장</p>
+          <p className="text-sm text-muted-foreground">페어링 4개 → 3개로 감소</p>
+        </div>
 
-// Single pairing check (batching):
-//
-//   e(A, B) * e(-IC_sum, gamma) * e(-C, delta) = vk.alpha_beta
-//
-//   Or via product check:
-//     e_prod([A, -IC_sum, -C], [B, gamma, delta]) = vk.alpha_beta
-//
-//   Multi-pairing: single Miller loop + single final exp
-//   Saves 2 final exponentiations (~2x faster!)
+        {/* 전체 알고리즘 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">전체 검증 알고리즘</h4>
+          <div className="grid grid-cols-1 gap-2 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">1. 증명 파싱 & 유효성</p>
+              <p>A, C ∈ G1 on-curve / B ∈ G2 on-curve / 부분군 소속 확인 (cofactor clearing)</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">2. IC_sum 계산</p>
+              <p><code>IC_sum = vk.IC[0]</code> → <code>x_i != 0</code>이면 <code>IC_sum += x_i * vk.IC[i]</code></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">3. 페어링 등식 확인</p>
+              <p>LHS = <M>{'e(A, B)'}</M>, RHS = <code>vk.alpha_beta</code> * <M>{'e(\\text{IC}_{\\text{sum}}, \\gamma) \\cdot e(C, \\delta)'}</M></p>
+              <p className="text-muted-foreground">LHS == RHS → accept</p>
+            </div>
+          </div>
+        </div>
 
-// Verifier performance:
-//
-//   Naive (3 separate pairings): ~6 ms on CPU
-//   Multi-pairing: ~2 ms on CPU
-//   Precompute + multi-pairing: ~1-1.5 ms
-//
-//   On Ethereum EIP-196/197 precompile:
-//     34K gas + 34K*n gas (n = number pairings)
-//     Total: ~150K gas per verification
-//     At 30 gwei: ~$10 verification cost (mainnet)
+        {/* Multi-pairing 배칭 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">Multi-pairing 배칭</h4>
+          <M display>{'e_{\\text{prod}}([A, -\\text{IC}_{\\text{sum}}, -C], \\; [B, \\gamma, \\delta]) = \\text{vk.alpha\\_beta}'}</M>
+          <p className="text-sm text-muted-foreground">단일 Miller loop + 단일 final exponentiation → final exp 2개 절약 (~2x 속도 향상)</p>
+        </div>
 
-// Proof size:
-//
-//   A: G1 point = 64 bytes (uncompressed) or 32 (compressed)
-//   B: G2 point = 128 bytes (uncompressed) or 64 (compressed)
-//   C: G1 point = 64 bytes (uncompressed) or 32 (compressed)
-//
-//   Total: 256 bytes (uncompressed) or 128 bytes (compressed)
-//   Usually sent uncompressed for faster verification
+        {/* 성능 & 크기 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">성능 & 증명 크기</h4>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">검증 시간</p>
+              <p>Naive (3 페어링): ~6ms</p>
+              <p>Multi-pairing: ~2ms</p>
+              <p>사전 계산 + multi: ~1-1.5ms</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Ethereum 온체인</p>
+              <p>EIP-196/197 precompile</p>
+              <p>~150K gas / ~$10 (30 gwei)</p>
+            </div>
+            <div className="bg-background rounded p-3 col-span-2">
+              <p className="font-medium">증명 크기</p>
+              <div className="grid grid-cols-4 gap-2 mt-1">
+                <div className="text-center">
+                  <p>A (G1)</p>
+                  <p className="text-muted-foreground">64B / 32B</p>
+                </div>
+                <div className="text-center">
+                  <p>B (G2)</p>
+                  <p className="text-muted-foreground">128B / 64B</p>
+                </div>
+                <div className="text-center">
+                  <p>C (G1)</p>
+                  <p className="text-muted-foreground">64B / 32B</p>
+                </div>
+                <div className="text-center">
+                  <p className="font-medium">합계</p>
+                  <p className="text-muted-foreground">256B / 128B</p>
+                </div>
+              </div>
+              <p className="text-muted-foreground mt-1">비압축 전송이 일반적 — 검증 속도 우선</p>
+            </div>
+          </div>
+        </div>
 
-// Security considerations:
-//
-//   1) Subgroup attack:
-//      Attacker sends B not in r-torsion subgroup
-//      Defense: subgroup check (cofactor multiplication)
-//   2) Malleability:
-//      Different (A, B, C) can verify same public input
-//      Not a Groth16-level issue; app should include nonce
-//   3) Toxic waste:
-//      If setup randomness leaked, all proofs forgeable
-//   4) Public input forgery:
-//      Correctly encoded in IC_sum, checked via gamma separation
+        {/* 보안 고려사항 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">보안 고려사항</h4>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">부분군 공격</p>
+              <p className="text-muted-foreground">B가 r-torsion 부분군 밖 → cofactor 곱으로 방어</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">가단성 (Malleability)</p>
+              <p className="text-muted-foreground">같은 공개 입력에 다른 (A,B,C) 가능 — 앱 레벨에서 nonce로 방어</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Toxic waste 유출</p>
+              <p className="text-muted-foreground">setup 랜덤값 노출 시 모든 증명 위조 가능</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">공개 입력 위조</p>
+              <p className="text-muted-foreground">IC_sum에 올바르게 인코딩, γ 분리로 검증</p>
+            </div>
+          </div>
+        </div>
 
-// On-chain verification (Solidity):
-//
-//   contract Verifier {
-//     struct Proof {
-//       G1Point A;
-//       G2Point B;
-//       G1Point C;
-//     }
-//     struct VerifyingKey {
-//       G1Point alpha_g1;
-//       G2Point beta_g2, gamma_g2, delta_g2;
-//       G1Point[] IC;
-//     }
-//
-//     function verifyProof(
-//       Proof memory proof,
-//       uint[] memory input,
-//       VerifyingKey memory vk
-//     ) public view returns (bool) {
-//       // Compute IC_sum
-//       G1Point memory IC_sum = vk.IC[0];
-//       for (uint i = 0; i < input.length; i++) {
-//         IC_sum = Pairing.add(IC_sum,
-//           Pairing.mul(vk.IC[i+1], input[i]));
-//       }
-//
-//       // Pairing check
-//       return Pairing.check(
-//         [proof.A, neg(IC_sum), neg(proof.C), neg(vk.alpha_g1)],
-//         [proof.B, vk.gamma_g2, vk.delta_g2, vk.beta_g2]
-//       );
-//     }
-//   }
+        {/* 온체인 검증 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">온체인 검증 (Solidity)</h4>
+          <div className="text-sm space-y-2">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">Proof 구조체</p>
+              <p><code>G1Point A</code> · <code>G2Point B</code> · <code>G1Point C</code></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">VerifyingKey 구조체</p>
+              <p><code>G1Point alpha_g1</code> · <code>G2Point beta_g2, gamma_g2, delta_g2</code> · <code>G1Point[] IC</code></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">verifyProof 흐름</p>
+              <p>IC_sum = <code>IC[0]</code> → 루프: <code>Pairing.add(IC_sum, Pairing.mul(IC[i+1], input[i]))</code></p>
+              <p><code>Pairing.check([A, neg(IC_sum), neg(C), neg(alpha)], [B, gamma, delta, beta])</code></p>
+            </div>
+          </div>
+        </div>
 
-// Typical production usage:
-//   - Zcash Sapling: note spend / output proofs
-//   - Tornado Cash: withdrawal proofs (mainnet)
-//   - ZK rollups: state transition proofs
-//   - Iden3: identity attestations
-//   - Filecoin: proof of replication`}
-        </pre>
+        {/* 프로덕션 사용처 */}
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h4 className="font-semibold mb-2">프로덕션 사용처</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
+            <div className="bg-background rounded p-2 text-center"><strong>Zcash Sapling</strong><br />note spend/output</div>
+            <div className="bg-background rounded p-2 text-center"><strong>Tornado Cash</strong><br />withdrawal proof</div>
+            <div className="bg-background rounded p-2 text-center"><strong>ZK Rollups</strong><br />state transition</div>
+            <div className="bg-background rounded p-2 text-center"><strong>Iden3</strong><br />identity attestation</div>
+            <div className="bg-background rounded p-2 text-center"><strong>Filecoin</strong><br />proof of replication</div>
+          </div>
+        </div>
       </div>
     </section>
   );

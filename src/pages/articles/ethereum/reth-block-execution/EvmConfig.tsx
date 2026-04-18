@@ -33,37 +33,52 @@ export default function EvmConfig({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── BlockEnv 필드 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlockEnv — revm에 전달하는 블록 컨텍스트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm의 BlockEnv 구조
-pub struct BlockEnv {
-    pub number: U256,              // 블록 번호 (BLOCKNUMBER opcode용)
-    pub coinbase: Address,         // 수수료 수취인 (COINBASE opcode)
-    pub timestamp: U256,           // Unix ts (TIMESTAMP opcode)
-    pub gas_limit: U256,           // 블록 가스 한도 (GASLIMIT opcode)
-    pub basefee: U256,             // EIP-1559 base fee (BASEFEE opcode)
-    pub difficulty: U256,          // PoW 난이도 (PoS에서는 0)
-    pub prevrandao: Option<B256>,  // PoS 랜덤값 (PREVRANDAO opcode)
-    pub blob_excess_gas_and_price: // EIP-4844 blob gas 가격
-        Option<BlobExcessGasAndPrice>,
-}
-
-// fill_block_env() 구현 예시
-fn fill_block_env(block_env: &mut BlockEnv, header: &Header, after_merge: bool) {
-    block_env.number = U256::from(header.number);
-    block_env.coinbase = header.beneficiary;
-    block_env.timestamp = U256::from(header.timestamp);
-    block_env.gas_limit = U256::from(header.gas_limit);
-    block_env.basefee = U256::from(header.base_fee_per_gas.unwrap_or(0));
-
-    if after_merge {
-        block_env.difficulty = U256::ZERO;
-        block_env.prevrandao = Some(header.mix_hash);  // PoS RANDAO
-    } else {
-        block_env.difficulty = header.difficulty;
-        block_env.prevrandao = None;
-    }
-}`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">BlockEnv 구조체</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">number</code>
+                <span className="text-foreground/60 text-xs">U256 -- BLOCKNUMBER opcode</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">coinbase</code>
+                <span className="text-foreground/60 text-xs">Address -- COINBASE opcode</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">timestamp</code>
+                <span className="text-foreground/60 text-xs">U256 -- TIMESTAMP opcode</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">gas_limit</code>
+                <span className="text-foreground/60 text-xs">U256 -- GASLIMIT opcode</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">basefee</code>
+                <span className="text-foreground/60 text-xs">U256 -- EIP-1559 BASEFEE opcode</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">difficulty</code>
+                <span className="text-foreground/60 text-xs">U256 -- PoS에서는 0</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">prevrandao</code>
+                <span className="text-foreground/60 text-xs">Option&lt;B256&gt; -- PoS PREVRANDAO</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">blob_excess_gas_and_price</code>
+                <span className="text-foreground/60 text-xs">EIP-4844 blob gas 가격</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1.5">fill_block_env() PoS 분기</p>
+            <div className="text-xs text-foreground/60 space-y-0.5">
+              <p><code>after_merge == true</code>: difficulty = 0, prevrandao = <code>header.mix_hash</code></p>
+              <p><code>after_merge == false</code>: difficulty = <code>header.difficulty</code>, prevrandao = None</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>BlockEnv</code>의 각 필드는 EVM opcode에 1:1 매핑 — BLOCKNUMBER, COINBASE, TIMESTAMP, GASLIMIT, BASEFEE, DIFFICULTY/PREVRANDAO.<br />
           PoS 전환 후 <code>difficulty</code>는 0, 대신 <code>mix_hash</code>가 <code>prevrandao</code>로 사용 — 스마트 컨트랙트의 난수 소스.<br />
@@ -72,31 +87,52 @@ fn fill_block_env(block_env: &mut BlockEnv, header: &Header, after_merge: bool) 
 
         {/* ── TxEnv 필드 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">TxEnv — TX 실행 컨텍스트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct TxEnv {
-    pub caller: Address,            // 발신자 (msg.sender)
-    pub gas_limit: u64,             // TX 가스 한도
-    pub gas_price: U256,            // effective gas price
-    pub transact_to: TxKind,        // Call(address) | Create
-    pub value: U256,                // 전송 ETH (wei)
-    pub data: Bytes,                // calldata
-    pub nonce: Option<u64>,         // nonce (None이면 검증 스킵)
-    pub chain_id: Option<u64>,      // EIP-155 replay 방어
-    pub access_list: Vec<AccessListItem>,  // EIP-2930
-    pub gas_priority_fee: Option<U256>,    // EIP-1559 max_priority_fee
-    pub blob_hashes: Vec<B256>,     // EIP-4844 blob versioned hashes
-    pub max_fee_per_blob_gas: Option<U256>,
-}
-
-// effective_gas_price 계산 (TX 타입별 분기):
-//
-// Legacy TX: tx.gas_price (고정)
-// EIP-2930 TX: tx.gas_price (고정)
-// EIP-1559 TX: min(max_fee, base_fee + max_priority_fee)
-// EIP-4844 TX: min(max_fee, base_fee + max_priority_fee)
-//
-// basefee가 이미 차감되고 남는 priority_fee가 miner에게 지급`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">TxEnv 구조체</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">caller</code>
+                <span className="text-foreground/60 text-xs">Address -- msg.sender</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">gas_limit</code>
+                <span className="text-foreground/60 text-xs">u64 -- TX 가스 한도</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">gas_price</code>
+                <span className="text-foreground/60 text-xs">U256 -- effective gas price</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">transact_to</code>
+                <span className="text-foreground/60 text-xs">TxKind -- Call(address) | Create</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">value / data</code>
+                <span className="text-foreground/60 text-xs">전송 ETH (wei) / calldata</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">chain_id</code>
+                <span className="text-foreground/60 text-xs">Option&lt;u64&gt; -- EIP-155 replay 방어</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">access_list</code>
+                <span className="text-foreground/60 text-xs">Vec&lt;AccessListItem&gt; -- EIP-2930</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">blob_hashes</code>
+                <span className="text-foreground/60 text-xs">Vec&lt;B256&gt; -- EIP-4844</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+            <p className="text-xs font-semibold text-foreground/60 mb-1.5">effective_gas_price 계산 (TX 타입별)</p>
+            <div className="grid grid-cols-2 gap-1 text-xs text-foreground/50">
+              <p>Legacy / EIP-2930: <code>tx.gas_price</code> (고정)</p>
+              <p>EIP-1559 / EIP-4844: <code>min(max_fee, base_fee + priority_fee)</code></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>TxEnv</code>는 EVM의 <strong>msg.sender, msg.value, msg.data</strong>에 대응.<br />
           <code>gas_price</code>는 TX 타입에 따라 다르게 계산 — Legacy는 고정, EIP-1559는 base_fee 기반 동적.<br />
@@ -105,42 +141,26 @@ fn fill_block_env(block_env: &mut BlockEnv, header: &Header, after_merge: bool) 
 
         {/* ── EIP-4788 beacon_root ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">EIP-4788 — Cancun 이후 beacon root 처리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Cancun (2024-03) 이후 추가된 pre-execution 훅
-// EIP-4788: Beacon block root in the EVM
-//
-// 매 블록 실행 전에 시스템 TX를 주입:
-// - target: 0xbEAC020...8002 (beacon root precompile)
-// - calldata: parent_beacon_block_root
-// - caller: 0xffff...fffe (시스템 주소)
-// - gas: 30_000 (고정)
-
-fn apply_beacon_root_contract_call(
-    parent_beacon_block_root: B256,
-    db: &mut State<DB>,
-) -> Result<()> {
-    let tx_env = TxEnv {
-        caller: SYSTEM_ADDRESS,  // 0xffff...fffe
-        transact_to: TxKind::Call(BEACON_ROOTS_ADDRESS),
-        data: Bytes::from(parent_beacon_block_root.as_slice()),
-        gas_limit: 30_000_000,
-        ..Default::default()
-    };
-
-    // revm으로 시스템 TX 실행
-    // 결과는 블록의 receipts에 포함되지 않음 (invisible TX)
-    let mut evm = Evm::builder()
-        .with_db(db)
-        .with_tx_env(tx_env)
-        .build();
-    evm.transact_commit()?;
-    Ok(())
-}
-
-// 스마트 컨트랙트에서 beacon root 조회:
-// keccak256(timestamp) % 8191 → storage slot
-// CL과 EL 간 staking 상태 증명 등에 활용`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">EIP-4788 — Cancun pre-execution 훅</p>
+            <p className="text-sm text-foreground/70 mb-2">매 블록 실행 전 시스템 TX를 주입해 beacon root를 EVM 컨트랙트에 기록</p>
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">target</code>
+              <span className="text-foreground/60 text-xs"><code>0xbEAC020...8002</code> (beacon root precompile)</span>
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">calldata</code>
+              <span className="text-foreground/60 text-xs"><code>parent_beacon_block_root</code></span>
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">caller</code>
+              <span className="text-foreground/60 text-xs"><code>0xffff...fffe</code> (SYSTEM_ADDRESS)</span>
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">gas</code>
+              <span className="text-foreground/60 text-xs">30,000,000 (고정)</span>
+            </div>
+            <p className="text-xs text-foreground/50 mt-2">결과는 블록 receipts에 포함되지 않음 (invisible TX)</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+            <p className="text-xs text-foreground/50">조회: <code>keccak256(timestamp) % 8191</code> &rarr; storage slot / CL-EL 간 staking 상태 증명에 활용 (Lido, EigenLayer 등)</p>
+          </div>
+        </div>
         <p className="leading-7">
           EIP-4788은 <strong>CL 상태를 EL EVM에서 증명 가능</strong>하게 만듦.<br />
           매 블록 시작 시 "시스템 TX"로 beacon root를 컨트랙트에 기록 — 스마트 컨트랙트가 읽을 수 있음.<br />

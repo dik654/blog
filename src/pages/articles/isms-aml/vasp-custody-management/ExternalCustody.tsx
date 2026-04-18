@@ -1,7 +1,12 @@
+import ExternalCustodyViz from './viz/ExternalCustodyViz';
+import CustodyConditionsViz from './viz/CustodyConditionsViz';
+import EmergencyHaltViz from './viz/EmergencyHaltViz';
+
 export default function ExternalCustody() {
   return (
     <section id="external-custody" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">외부 수탁과 취약점 점검</h2>
+      <ExternalCustodyViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-4">외부 수탁이란</h3>
@@ -131,6 +136,10 @@ export default function ExternalCustody() {
           <strong>SLA 이행 여부</strong> -- 서비스 수준 협약(SLA, Service Level Agreement)에서 정한 가용성, 응답 시간, 장애 복구 시간을 실제로 충족했는지 점검한다.
         </p>
 
+        <div className="not-prose my-6">
+          <CustodyConditionsViz />
+        </div>
+
         <h3 className="text-xl font-semibold mt-8 mb-4">취약점 분석 평가</h3>
         <p className="leading-7">
           가상자산이용자보호법은 VASP에 연 1회 이상 취약점 분석·평가를 의무화한다.
@@ -242,6 +251,10 @@ export default function ExternalCustody() {
           <br />
           수탁기관이 즉시 대응하지 못하면 피해가 확대되므로, 응답 시간은 15분 이내로 설정하는 것이 통상적이다.
         </p>
+
+        <div className="not-prose my-6">
+          <EmergencyHaltViz />
+        </div>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>{'💡'} 수탁 vs 자체 보관의 판단 기준</strong><br />

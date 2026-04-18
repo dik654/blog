@@ -40,81 +40,111 @@ export default function Overview({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="max-w-none mt-6 space-y-5">
         <h3 className="text-xl font-semibold mt-6 mb-3">Cosmos EVM 아키텍처</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Evmos / Cosmos EVM Stack
-//
-// Goal:
-//   "Ethereum smart contracts on Cosmos SDK chains"
-//
-// Architecture Layers:
-//
-//   User Applications (dApps, wallets)
-//     ↓ JSON-RPC (eth_* methods)
-//   JSON-RPC Server
-//     ↓ Cosmos TX wrap
-//   Cosmos SDK Baseapp
-//     ↓
-//   Cosmos Modules (x/vm, x/erc20, x/feemarket)
-//     ↓
-//   EVM (go-ethereum fork)
-//     ↓
-//   IAVL Tree (Cosmos state)
 
-// 4 Core Modules:
-//
-// 1. x/vm (EVM execution)
-//    - ApplyMessage() → EVM 실행
-//    - StateDB for EVM state
-//    - Ethereum-compatible opcodes
-//    - Gas metering
-//
-// 2. x/feemarket (EIP-1559)
-//    - Base fee calculation
-//    - Dynamic gas pricing
-//    - Block utilization tracking
-//    - Priority fees
-//
-// 3. x/erc20 (Token bridging)
-//    - TokenPair mappings
-//    - Cosmos Coin ↔ ERC20
-//    - IBC 호환 자동 변환
-//    - Mint/Burn on conversion
-//
-// 4. x/precisebank (Precision)
-//    - Cosmos: 6 decimals default
-//    - Ethereum: 18 decimals
-//    - Integer + fraction split
-//    - Accurate micro-transfers
+        {/* Architecture Layers */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Architecture Layers</h4>
+          <p className="text-xs text-muted-foreground mb-3">
+            "Ethereum smart contracts on Cosmos SDK chains"
+          </p>
+          <div className="flex flex-col items-center gap-1 text-xs">
+            <span className="px-3 py-1.5 rounded bg-blue-500/10 text-blue-400 font-medium">User Applications (dApps, wallets)</span>
+            <span className="text-muted-foreground">↓ JSON-RPC (<code className="text-[11px]">eth_*</code> methods)</span>
+            <span className="px-3 py-1.5 rounded bg-blue-500/10 text-blue-400 font-medium">JSON-RPC Server</span>
+            <span className="text-muted-foreground">↓ Cosmos TX wrap</span>
+            <span className="px-3 py-1.5 rounded bg-purple-500/10 text-purple-400 font-medium">Cosmos SDK Baseapp</span>
+            <span className="text-muted-foreground">↓</span>
+            <span className="px-3 py-1.5 rounded bg-purple-500/10 text-purple-400 font-medium">Cosmos Modules (x/vm, x/erc20, x/feemarket)</span>
+            <span className="text-muted-foreground">↓</span>
+            <span className="px-3 py-1.5 rounded bg-green-500/10 text-green-400 font-medium">EVM (go-ethereum fork)</span>
+            <span className="text-muted-foreground">↓</span>
+            <span className="px-3 py-1.5 rounded bg-amber-500/10 text-amber-400 font-medium">IAVL Tree (Cosmos state)</span>
+          </div>
+        </div>
 
-// vs Pure Ethereum:
-//
-//   Evmos 장점:
-//   ✓ IBC 호환성 (Cosmos ecosystem)
-//   ✓ Fast finality (Tendermint BFT)
-//   ✓ Low fees
-//   ✓ Cross-chain native
-//
-//   Evmos 단점:
-//   ✗ Lower TPS than Solana
-//   ✗ Smaller ecosystem than Ethereum
-//   ✗ Validators set 제한적
+        {/* 4 Core Modules */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">x/vm (EVM execution)</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li><code className="text-[11px]">ApplyMessage()</code> — EVM 실행</li>
+              <li>StateDB for EVM state</li>
+              <li>Ethereum-compatible opcodes</li>
+              <li>Gas metering</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">x/feemarket (EIP-1559)</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Base fee calculation</li>
+              <li>Dynamic gas pricing</li>
+              <li>Block utilization tracking</li>
+              <li>Priority fees</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">x/erc20 (Token bridging)</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li><code className="text-[11px]">TokenPair</code> mappings</li>
+              <li>Cosmos Coin ↔ ERC20</li>
+              <li>IBC 호환 자동 변환</li>
+              <li>Mint/Burn on conversion</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">x/precisebank (Precision)</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Cosmos: 6 decimals default</li>
+              <li>Ethereum: 18 decimals</li>
+              <li>Integer + fraction split</li>
+              <li>Accurate micro-transfers</li>
+            </ul>
+          </div>
+        </div>
 
-// 주요 체인 with Cosmos EVM:
-//   - Evmos (original)
-//   - Berachain
-//   - Canto
-//   - Kava
-//   - Cronos
-//   - Injective
+        {/* vs Pure Ethereum */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border border-green-500/30 bg-card p-4">
+            <h4 className="text-sm font-semibold text-green-400 mb-2">Evmos 장점</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>IBC 호환성 (Cosmos ecosystem)</li>
+              <li>Fast finality (Tendermint BFT)</li>
+              <li>Low fees</li>
+              <li>Cross-chain native</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-red-500/30 bg-card p-4">
+            <h4 className="text-sm font-semibold text-red-400 mb-2">Evmos 단점</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Lower TPS than Solana</li>
+              <li>Smaller ecosystem than Ethereum</li>
+              <li>Validators set 제한적</li>
+            </ul>
+          </div>
+        </div>
 
-// JSON-RPC Compatibility:
-//   eth_getBalance, eth_sendTransaction
-//   eth_call, eth_estimateGas
-//   eth_getBlockByNumber
-//   MetaMask, Hardhat, Remix 호환`}
-        </pre>
+        {/* Cosmos EVM Chains + JSON-RPC */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">주요 Cosmos EVM 체인</h4>
+            <div className="flex flex-wrap gap-1.5 text-xs">
+              {['Evmos', 'Berachain', 'Canto', 'Kava', 'Cronos', 'Injective'].map(c => (
+                <span key={c} className="px-2 py-0.5 rounded bg-muted text-muted-foreground">{c}</span>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">JSON-RPC Compatibility</h4>
+            <div className="flex flex-wrap gap-1.5 text-xs font-mono">
+              {['eth_getBalance', 'eth_sendTransaction', 'eth_call', 'eth_estimateGas', 'eth_getBlockByNumber'].map(m => (
+                <code key={m} className="px-1.5 py-0.5 rounded bg-muted text-[11px]">{m}</code>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">MetaMask, Hardhat, Remix 호환</p>
+          </div>
+        </div>
       </div>
     </section>
   );

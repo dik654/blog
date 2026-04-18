@@ -20,45 +20,37 @@ export default function HotState({ onCodeRef }: Props) {
 
         {/* ── hotStateCache 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">hotStateCache 내부 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 hot state 캐시 (in-memory)
-type hotStateCache struct {
-    cache *lru.Cache   // LRU eviction
-    lock  sync.RWMutex
-}
-
-// 구성:
-// - Key: state_root (Bytes32)
-// - Value: *BeaconState (in-memory pointer, COW 공유)
-// - 용량: 32 entries (약 2 epoch worth)
-
-// 동작:
-func (c *hotStateCache) get(root [32]byte) (*BeaconState, bool) {
-    c.lock.RLock()
-    defer c.lock.RUnlock()
-    if s, ok := c.cache.Get(root); ok {
-        // Copy() 반환 → 호출자가 자유롭게 수정 가능
-        return s.(*BeaconState).Copy(), true
-    }
-    return nil, false
-}
-
-func (c *hotStateCache) put(root [32]byte, state *BeaconState) {
-    c.lock.Lock()
-    defer c.lock.Unlock()
-    c.cache.Add(root, state)
-    // LRU가 자동으로 오래된 entry 제거
-}
-
-// 메모리 사용:
-// 32 state × 250 MB × COW 공유 = 약 500 MB~1 GB
-// (COW로 대부분 필드 공유, 실제 고유 데이터만 계산)
-
-// 동기화:
-// sync.RWMutex로 다중 reader + 단일 writer
-// Fork choice는 RLock (다중 조회)
-// 새 state 저장은 Lock (1회 쓰기)`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>hotStateCache</code> 구조</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-muted-foreground">
+              <span><code>cache *lru.Cache</code> — LRU eviction</span>
+              <span><code>lock sync.RWMutex</code> — 다중 reader + 단일 writer</span>
+              <span>Key: <code>state_root</code> (<code>[32]byte</code>)</span>
+              <span>Value: <code>*BeaconState</code> (in-memory pointer, COW 공유)</span>
+              <span>용량: 32 entries (약 2 epoch)</span>
+              <span>메모리: ~500 MB ~ 1 GB (COW 공유)</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2"><code>get(root)</code></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li><code>RLock()</code> 획득 (다중 reader 허용)</li>
+                <li><code>cache.Get(root)</code> 조회</li>
+                <li>hit 시 <code>state.Copy()</code> 반환 → 호출자가 자유롭게 수정 가능</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2"><code>put(root, state)</code></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li><code>Lock()</code> 획득 (단일 writer)</li>
+                <li><code>cache.Add(root, state)</code></li>
+                <li>LRU가 자동으로 오래된 entry 제거</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           hotStateCache는 <strong>LRU 기반 in-memory 캐시</strong>.<br />
           32 entry × COW 공유로 ~500MB 사용 (naive 8GB 대비 절감).<br />
@@ -74,52 +66,37 @@ func (c *hotStateCache) put(root [32]byte, state *BeaconState) {
 
         {/* ── StateByRoot 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StateByRoot — 계층적 조회 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`func (s *Service) StateByRoot(
-    ctx context.Context,
-    blockRoot [32]byte,
-) (*BeaconState, error) {
-    // Step 1: Hot cache 확인
-    if state, ok := s.hotStateCache.get(blockRoot); ok {
-        return state, nil  // ~μs
-    }
-
-    // Step 2: Epoch boundary cache (epoch-granularity)
-    if state, ok := s.epochBoundaryStateCache.get(blockRoot); ok {
-        s.hotStateCache.put(blockRoot, state)  // promote
-        return state, nil  // ~수 μs
-    }
-
-    // Step 3: finalized state DB 확인
-    if isFinalized(blockRoot) {
-        state, err := s.loadFinalizedState(blockRoot)
-        if err == nil {
-            return state, nil  // ~50ms (DB read)
-        }
-    }
-
-    // Step 4: Replay 경로
-    // 가장 가까운 saved state 찾기
-    slot, err := s.beaconDB.Slot(blockRoot)
-    nearest := s.findNearestSavedState(slot)
-
-    // 해당 state 로드
-    base, err := s.loadStateFromDB(nearest.root)
-
-    // Replay 수행
-    blocks, err := s.loadBlocksBetween(nearest.slot, slot)
-    finalState, err := ReplayBlocks(base, blocks, slot)
-
-    // Cache에 저장
-    s.hotStateCache.put(blockRoot, finalState)
-    return finalState, nil  // 수백 ms ~ 수 초
-}
-
-// 성능 분포 (메인넷):
-// 90%: ~μs (hot cache)
-// 9%:  ~50ms (DB finalized)
-// 1%:  수백 ms (replay)`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>StateByRoot</code> — 4단계 fallback</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-green-500/10 border border-green-500/20 p-2">
+                <span className="font-mono font-medium shrink-0 w-12 text-center">Step 1</span>
+                <div><code>hotStateCache.get(blockRoot)</code> — Hot cache 확인 → <strong>~us</strong></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-green-500/5 border border-green-500/10 p-2">
+                <span className="font-mono font-medium shrink-0 w-12 text-center">Step 2</span>
+                <div><code>epochBoundaryStateCache.get(blockRoot)</code> — epoch boundary cache → hit 시 hot cache로 promote → <strong>~수 us</strong></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-blue-500/10 border border-blue-500/20 p-2">
+                <span className="font-mono font-medium shrink-0 w-12 text-center">Step 3</span>
+                <div><code>loadFinalizedState(blockRoot)</code> — finalized state DB 조회 → <strong>~50ms</strong></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-amber-500/10 border border-amber-500/20 p-2">
+                <span className="font-mono font-medium shrink-0 w-12 text-center">Step 4</span>
+                <div><code>findNearestSavedState</code> → <code>loadStateFromDB</code> → <code>ReplayBlocks</code> → cache 저장 → <strong>수백 ms ~ 수 초</strong></div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">성능 분포 (메인넷)</h4>
+            <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+              <div><span className="text-green-500 font-medium">90%</span> — ~us (hot cache)</div>
+              <div><span className="text-blue-500 font-medium">9%</span> — ~50ms (DB finalized)</div>
+              <div><span className="text-amber-500 font-medium">1%</span> — 수백 ms (replay)</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>StateByRoot</code>가 <strong>4단계 fallback</strong>.<br />
           90%+ hot cache hit → 대부분 μs 수준 응답.<br />

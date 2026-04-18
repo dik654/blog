@@ -27,83 +27,101 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">RAILGUN의 Account → UTXO 변환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 일반 EVM (Account model)
-// 각 주소가 잔액 보유
-// alice.balance = 100 DAI
-// transfer(bob, 30) → alice.balance -= 30, bob.balance += 30
-// → "alice에서 bob으로 30 DAI" 공개
-
-// RAILGUN UTXO model on EVM
-// 잔액 없음. Note만 존재.
-// Note = {token, amount, owner_pubkey, random}
-// Note 해시 = Commitment (공개)
-// Owner는 private key로만 소비 가능
-
-// Transaction 예
-// Input notes (소비):
-//   note_1: {DAI, 50, alice_pk, r1}
-//   note_2: {DAI, 30, alice_pk, r2}
-// Output notes (생성):
-//   note_3: {DAI, 30, bob_pk, r3}
-//   note_4: {DAI, 50, alice_pk, r4} (change)
-
-// 외부 관찰자가 알 수 있는 것
-// ✓ Transaction 발생
-// ✓ Nullifier 2개 공개 (prevent double-spend)
-// ✓ Commitment 2개 추가
-
-// 외부 관찰자가 알 수 없는 것
-// ✗ 누가 sender인가
-// ✗ 누가 receiver인가
-// ✗ 얼마인가
-// ✗ 어떤 note와 연결되는가`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Account Model (일반 EVM)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>각 주소가 잔액 보유 &mdash; <code>alice.balance = 100 DAI</code></li>
+                <li><code>transfer(bob, 30)</code> &rarr; alice -30, bob +30</li>
+                <li>결과: &quot;alice에서 bob으로 30 DAI&quot; 완전 공개</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">UTXO Model (RAILGUN on EVM)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>잔액 없음 &mdash; <strong>Note</strong>만 존재</li>
+                <li>Note = <code>{'{token, amount, owner_pubkey, random}'}</code></li>
+                <li>Note 해시 = <strong>Commitment</strong> (온체인 공개)</li>
+                <li>Owner는 private key로만 소비 가능</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">Transaction 예시 (Alice → Bob 30 DAI)</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Input notes (소비)</p>
+                <ul className="space-y-0.5">
+                  <li><code>note_1</code>: DAI, 50, <code>alice_pk</code>, r1</li>
+                  <li><code>note_2</code>: DAI, 30, <code>alice_pk</code>, r2</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Output notes (생성)</p>
+                <ul className="space-y-0.5">
+                  <li><code>note_3</code>: DAI, 30, <code>bob_pk</code>, r3</li>
+                  <li><code>note_4</code>: DAI, 50, <code>alice_pk</code>, r4 (거스름돈)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">외부 관찰자가 알 수 있는 것</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Transaction 발생 여부</li>
+                <li>Nullifier 2개 공개 (이중 사용 방지)</li>
+                <li>Commitment 2개 추가</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">외부 관찰자가 알 수 없는 것</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>누가 sender인가</li>
+                <li>누가 receiver인가</li>
+                <li>얼마인가</li>
+                <li>어떤 note와 연결되는가</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Shield/Unshield — Entry/Exit</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// RAILGUN 이용 3단계
-
-// 1. Shield (Entry)
-// Public DAI → Private Note
-function shield(
-    token: address,
-    amount: uint256,
-    note_commitment: bytes32,
-    // ... encrypted memo
-) external {
-    // ERC20 transferFrom
-    IERC20(token).transferFrom(msg.sender, this, amount);
-
-    // Commitment tree에 추가
-    merkle_tree.insert(note_commitment);
-
-    emit Shielded(token, amount);
-}
-// → 이후 alice의 잔액은 "private"
-
-// 2. Private Transfer
-// Note_A → Note_B (unchanged public chain balance)
-// Groth16 proof 필수:
-// - "I own a note in the tree" (Merkle proof)
-// - "nullifier = hash(note_secret)"
-// - "output commitment = hash(new_note)"
-// - "input amount == output amount + fee"
-
-// 3. Unshield (Exit)
-// Private Note → Public address
-function unshield(
-    nullifier: bytes32,
-    public_recipient: address,
-    amount: uint256,
-    proof: Groth16Proof
-) external {
-    // Proof verification
-    verifier.verify(proof);
-
-    // Nullifier 기록 (replay 방어)
-    nullifiers[nullifier] = true;
-
-    // Public transfer
-    IERC20(token).transfer(public_recipient, amount);
-}`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-blue-500/30 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">1. Shield (Entry)</p>
+              <p className="text-sm text-muted-foreground mb-2">Public DAI &rarr; Private Note</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>transferFrom(msg.sender, this, amount)</code> &mdash; ERC-20 입금</li>
+                <li><code>merkle_tree.insert(note_commitment)</code> &mdash; tree에 추가</li>
+                <li><code>emit Shielded(token, amount)</code></li>
+              </ul>
+              <p className="text-xs text-muted-foreground mt-2">이후 alice의 잔액은 &quot;private&quot;</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">2. Private Transfer</p>
+              <p className="text-sm text-muted-foreground mb-2">Note_A &rarr; Note_B (공개 잔액 변동 없음)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>Groth16 proof 필수:</li>
+                <li>&bull; Merkle proof &mdash; &quot;I own a note in the tree&quot;</li>
+                <li>&bull; <code>nullifier = hash(note_secret)</code></li>
+                <li>&bull; <code>output commitment = hash(new_note)</code></li>
+                <li>&bull; <code>input amount == output amount + fee</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">3. Unshield (Exit)</p>
+              <p className="text-sm text-muted-foreground mb-2">Private Note &rarr; Public address</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>verifier.verify(proof)</code> &mdash; ZK 증명 검증</li>
+                <li><code>nullifiers[nullifier] = true</code> &mdash; replay 방어</li>
+                <li><code>IERC20(token).transfer(recipient, amount)</code> &mdash; 공개 전송</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Tornado Cash와의 차이</h3>
         <div className="overflow-x-auto">

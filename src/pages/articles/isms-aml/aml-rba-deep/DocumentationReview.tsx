@@ -1,8 +1,14 @@
+import DocumentationViz from './viz/DocumentationViz';
+import RetentionPeriodViz from './viz/RetentionPeriodViz';
+import AuditCycleViz from './viz/AuditCycleViz';
+
 export default function DocumentationReview() {
   return (
     <section id="documentation-review" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">문서화와 정기 점검</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <DocumentationViz />
 
         <p>
           AML/CFT 체계가 아무리 잘 설계되어 있어도 문서화되지 않으면 증명할 수 없다.<br />
@@ -73,6 +79,8 @@ export default function DocumentationReview() {
           이는 데이터가 검색 가능하고, 무결성이 보장되며,
           물리적 또는 전자적으로 추출 가능한 상태를 의미한다.
         </p>
+
+        <RetentionPeriodViz />
 
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
@@ -225,6 +233,8 @@ export default function DocumentationReview() {
             </tbody>
           </table>
         </div>
+
+        <AuditCycleViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">지적사항 사후관리</h3>
         <p>

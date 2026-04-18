@@ -55,74 +55,44 @@ export default function Snowball() {
 
         {/* ── Snowball Algorithm ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Snowball Algorithm 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Snowball Algorithm:
-
-// State per node:
-// - pref: current preference
-// - consecutive: consecutive same rounds (Snowflake-like)
-// - confidence: {0: cnt_0, 1: cnt_1}  # cumulative
-// - decided: bool
-
-// Parameters:
-// - k, α, β as in Snowflake
-
-fn snowball_round(self):
-    sample = random.sample(all_nodes, k)
-    responses = [n.query_preference() for n in sample]
-
-    count_0 = sum(r == 0 for r in responses)
-    count_1 = sum(r == 1 for r in responses)
-
-    winner = None
-    if count_0 >= alpha:
-        winner = 0
-    elif count_1 >= alpha:
-        winner = 1
-
-    if winner is not None:
-        # Update cumulative confidence
-        self.confidence[winner] += 1
-
-        # Update preference if confidence higher
-        if self.confidence[winner] > self.confidence[self.pref]:
-            self.pref = winner
-
-        # Consecutive logic (like Snowflake)
-        if winner == self.last_winner:
-            self.consecutive += 1
-        else:
-            self.consecutive = 1
-            self.last_winner = winner
-
-        # Decision
-        if self.consecutive >= beta:
-            self.decided = True
-            return self.pref
-    else:
-        self.consecutive = 0
-
-// 핵심 차이 (vs Snowflake):
-// - confidence counter 누적
-// - 선호는 confidence 높은 쪽
-// - consecutive는 decision gate
-// - robust to noise
-
-// Scenario:
-// R1: Blue wins (Blue conf=1)
-// R2: Red wins (Red conf=1, but Blue still 1=1 → no change yet)
-//     wait, Blue conf > Red conf 아님 → switch to Red
-// R3-R10: Blue wins (Blue conf=9, Red conf=1)
-//     → stay on Blue
-// R11-R20: Blue consecutively wins
-//     → decide on Blue
-
-// Advantages over Snowflake:
-// - persistent memory (confidence)
-// - harder for Byzantine to flip
-// - converges faster in practice
-// - better metastability breaking`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Snowball State &amp; Parameters</p>
+            <p className="text-sm">
+              노드별 상태: <code>pref</code> (current preference), <code>consecutive</code> (연속 동일 라운드 수), <code>confidence</code> (누적 카운터 per value), <code>decided</code> (bool).<br />
+              Parameters: <code>k</code>, <code>alpha</code>, <code>beta</code> (Snowflake와 동일)
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">매 라운드 동작</p>
+            <ol className="text-sm list-decimal list-inside space-y-1">
+              <li>k개 random nodes 샘플링 → 각 preference 질의</li>
+              <li><code>count_0</code>/<code>count_1</code> 집계 → <code>&ge; alpha</code>인 쪽이 winner</li>
+              <li>winner 있으면: <code>confidence[winner] += 1</code> (누적), confidence 높은 쪽으로 <code>pref</code> 갱신</li>
+              <li>winner가 직전과 같으면 <code>consecutive += 1</code>, 다르면 reset to 1</li>
+              <li><code>consecutive &ge; beta</code> → <code>decided = True</code></li>
+            </ol>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">핵심 차이 (vs Snowflake)</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Confidence counter 누적</p>
+                <p className="text-muted-foreground">선호는 confidence 높은 쪽 결정. consecutive는 decision gate 역할. noise에 robust</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Advantages</p>
+                <p className="text-muted-foreground">persistent memory, Byzantine flip 어려움, 실제 수렴 빠름, metastability breaking 우수</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-1">예시 시나리오</p>
+            <p className="text-sm text-muted-foreground">
+              R1: Blue wins (Blue conf=1). R2: Red wins (Red conf=1 → switch). R3-R10: Blue wins (Blue conf=9, Red conf=1 → stay Blue). R11-R20: Blue consecutive → decide Blue
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Snowball: <strong>confidence counter 누적 + consecutive gate</strong>.<br />
           선호는 confidence 높은 쪽 — 일시 변동에 강함.<br />
@@ -131,63 +101,36 @@ fn snowball_round(self):
 
         {/* ── Avalanche vs Snowman ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Avalanche (DAG) vs Snowman (Chain)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Avalanche (DAG version):
-//
-// - TX = DAG vertex
-// - each TX references multiple parents
-// - Snowball on TX level
-// - multiple TXs processed parallel
-// - complex conflict resolution
-//
-// Use case: Avalanche X-Chain (exchange)
-// - high throughput
-// - UTXO-based
-// - 4500+ TPS
-
-// Snowman (Linear chain):
-//
-// - chain of blocks (like Bitcoin/Ethereum)
-// - Snowball on block level
-// - sequential
-// - simpler for smart contracts
-// - EVM compatible
-//
-// Use case: Avalanche C-Chain (contracts)
-// - EVM execution
-// - DeFi applications
-// - DApp deployment
-
-// Why Snowman for C-Chain?
-// - EVM expects linear blocks
-// - smart contract execution sequential
-// - simpler integration
-// - 4500 TPS still
-
-// Why Avalanche for X-Chain?
-// - UTXO parallelizable
-// - DAG natural fit
-// - higher throughput
-// - simple TXs (transfers)
-
-// 선택 기준:
-// - EVM compat: Snowman
-// - UTXO + TPS: Avalanche DAG
-// - simple ledger: Avalanche
-// - complex logic: Snowman
-
-// 성능 (mainnet):
-// X-Chain: 4500 TPS
-// C-Chain: 100-500 TPS (EVM bound)
-// P-Chain: low (governance)
-// Subnets: custom
-
-// Subnet architecture:
-// - independent chains
-// - custom consensus
-// - custom VMs (EVM, WASM, etc.)
-// - scaling via horizontal sharding`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Avalanche (DAG) vs Snowman (Chain)</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Avalanche (DAG)</p>
+                <p className="text-muted-foreground">TX = DAG vertex, multiple parents 참조, TX level Snowball, parallel 처리. X-Chain (exchange, UTXO), 4500+ TPS</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Snowman (Linear chain)</p>
+                <p className="text-muted-foreground">block chain (Bitcoin/Ethereum 유사), block level Snowball, sequential. C-Chain (EVM, DeFi, DApp)</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">선택 기준</p>
+            <p className="text-sm text-muted-foreground">
+              EVM 호환: Snowman / UTXO + 고TPS: Avalanche DAG / simple ledger: Avalanche / complex logic: Snowman
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Mainnet 성능 &amp; Subnet</p>
+            <p className="text-sm">
+              X-Chain: 4500 TPS / C-Chain: 100-500 TPS (EVM bound) / P-Chain: low (governance) / Subnets: custom
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Subnet: independent chains, custom consensus, custom VMs (EVM, WASM 등), horizontal sharding으로 scaling
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Avalanche (DAG): TX level, X-Chain, 4500 TPS.<br />
           Snowman (Chain): block level, C-Chain (EVM).<br />

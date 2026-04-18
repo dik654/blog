@@ -1,4 +1,5 @@
 import VAELossViz from './viz/VAELossViz';
+import KLDerivationViz from './viz/KLDerivationViz';
 
 export default function VAELoss() {
   return (
@@ -47,86 +48,7 @@ export default function VAELoss() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">KL Divergence 폐형해 유도</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// KL Divergence of two Gaussians
-//
-// 일반적 정의:
-//   KL(q || p) = ∫ q(x) · log[q(x) / p(x)] dx
-//
-// q = N(μ_1, σ_1²), p = N(μ_2, σ_2²) 두 Gaussian의 KL:
-//
-//   KL(q || p) = log(σ_2/σ_1) + (σ_1² + (μ_1 - μ_2)²) / (2σ_2²) - 0.5
-//
-// VAE의 특수 경우: p = N(0, 1)
-//   μ_2 = 0, σ_2 = 1
-//
-//   KL(N(μ, σ²) || N(0, 1))
-//   = log(1/σ) + (σ² + μ²)/2 - 0.5
-//   = -log σ + σ²/2 + μ²/2 - 0.5
-//   = -0.5·log σ² + 0.5·σ² + 0.5·μ² - 0.5
-//   = -0.5·(1 + log σ² - σ² - μ²)
-//
-// 다차원 (d개 독립 차원):
-//   KL = -0.5 · Σ_i (1 + log σ_i² - σ_i² - μ_i²)
-//
-// PyTorch 구현:
-//   kl = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-
-// 각 항 해석:
-//   -1:        상수 (정규화)
-//   -log σ²:   분산 축소 억제 (σ가 너무 작아지지 않음)
-//   +σ²:       분산이 크면 페널티
-//   +μ²:       평균이 0에서 멀면 페널티
-//
-// 균형점:
-//   최적: μ = 0, σ² = 1 → KL = 0
-//   → prior와 정확히 일치
-//   → 하지만 이러면 재구성 불가
-//   → 재구성 loss와 경쟁 관계`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Loss 균형과 β-VAE</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Loss 간 균형의 딜레마
-//
-// L = L_recon + L_KL
-//
-// 극단 1: L_KL = 0
-//   → μ=0, σ=1 (완전 prior)
-//   → 모든 입력이 같은 분포로 인코딩
-//   → 정보 손실 완전, 재구성 불가
-//
-// 극단 2: L_recon = 0
-//   → 완벽 재구성
-//   → 잠재 공간 매우 분산
-//   → 샘플링 불가능 (KL 매우 큼)
-//
-// 적절한 균형 필요 → β-VAE 등장
-
-// β-VAE (Higgins et al. 2017):
-//
-//   L = L_recon + β · L_KL
-//
-// β 조정의 효과:
-//   β = 0: 일반 AE (KL 무시)
-//   β = 1: 표준 VAE
-//   β > 1: Disentanglement 강화
-//   β < 1: 재구성 품질 향상
-//
-// β > 1일 때:
-//   - 각 latent 차원이 독립적 factor 포착
-//   - 예: 차원 1=회전, 차원 2=크기, 차원 3=색상
-//   - 해석 가능한 표현
-//
-// 단점:
-//   - β 너무 크면 재구성 품질 저하
-//   - β=4~10 일반적
-
-// 다른 변형:
-//   - β-TCVAE: Total Correlation 분해
-//   - FactorVAE: discriminator로 독립성 강화
-//   - InfoVAE: MMD로 KL 대체`}
-        </pre>
+        <div className="not-prose"><KLDerivationViz /></div>
         <p className="leading-7">
           요약 1: KL(N(μ,σ²)‖N(0,1))은 <strong>해석적 폐형해</strong> — Monte Carlo 불필요.<br />
           요약 2: VAE loss는 <strong>재구성-KL 경쟁</strong> — 균형이 핵심.<br />

@@ -1,8 +1,12 @@
+import OverviewViz from './viz/OverviewViz';
+import BackupTargetRtoInline from './viz/BackupTargetRtoInline';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">백업 전략 설계</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <OverviewViz />
         <h3 className="text-xl font-semibold mt-8 mb-4">ISMS 2.12 요구사항</h3>
         <p className="leading-7">
           ISMS-P 인증 기준 2.12는 "재해복구"를 다룬다.
@@ -18,6 +22,8 @@ export default function Overview() {
           <br />
           백업 정책은 "무엇을, 얼마나 자주, 어디에, 얼마나 오래" 보관할 것인지를 명확히 정의해야 한다.
         </p>
+
+        <BackupTargetRtoInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">백업 대상 3분류</h3>
         <p className="leading-7">

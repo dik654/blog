@@ -1,7 +1,4 @@
 import ECDSAVerifyViz from './viz/ECDSAVerifyViz';
-import CodePanel from '@/components/ui/code-panel';
-import { ECDSA_CODE, PAIRING_CODE } from './ExamplesData';
-import { ecdsaAnnotations, pairingAnnotations } from './ExamplesAnnotations';
 
 export default function Examples({ title }: { title?: string }) {
   return (
@@ -20,36 +17,94 @@ export default function Examples({ title }: { title?: string }) {
           Final Exponentiation(easy part + hard part)으로 구성됩니다.<br />
           Sparse Fp12 곱셈으로 약 3배 성능 향상을 달성합니다.
         </p>
-        <CodePanel title="ECDSA 서명 검증 — 10단계 파이프라인" code={ECDSA_CODE} annotations={ecdsaAnnotations} />
-        <CodePanel title="BN254 Pairing — Miller Loop + Final Exp" code={PAIRING_CODE} annotations={pairingAnnotations} />
+
+        {/* ECDSA 검증 10단계 */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <p className="font-semibold text-sm text-blue-400 mb-3">ECDSA 서명 검증 &mdash; 10단계 파이프라인</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-xs">1-2. 입력 로드</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                서명 <code>(r, s)</code>, 메시지 해시 <code>msghash</code>, 공개키 <code>pubkey</code> 를 non-native field로 적재
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-xs">3-4. 역원 계산</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>s_inv = s.invert()</code> &mdash; Extended Euclidean으로 non-native 역원. 회로 내 가장 비싼 연산
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-xs">5-6. 스칼라 곱</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>u1 = msghash * s_inv</code>, <code>u2 = r * s_inv</code> &mdash; scalar multiplication 2회
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-xs">7-8. 점 곱</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>R1 = u1 * G</code>, <code>R2 = u2 * pubkey</code> &mdash; window method로 EC scalar mult
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-xs">9. 점 합</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>R = R1 + R2</code> &mdash; EC point addition
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-xs">10. x좌표 비교</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>R.x == r</code> 검증 &mdash; <code>StrictEcPoint</code>의 reduced x로 효율적 비교
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* BN254 Pairing */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <p className="font-semibold text-sm text-emerald-400 mb-3">BN254 Pairing &mdash; Miller Loop + Final Exp</p>
+          <div className="space-y-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold">Miller Loop</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Double-and-add 알고리즘 + line function 평가.
+                <code>multi_miller_loop()</code>로 여러 페어링을 하나의 루프에서 처리하여 효율화
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold">Final Exponentiation</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Easy part (Frobenius + 역원) + Hard part (BN254 specific).
+                Sparse Fp12 곱셈으로 약 3x 성능 향상 &mdash; 0이 많은 계수를 건너뜀
+              </p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실전 활용 사례</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 1. Axiom: On-chain ZK coprocessor
-// - 블록체인 storage 읽기 증명
-// - Historical block header access
-// - halo2-ecc로 ECDSA verify
 
-// 2. Succinct: SP1 zkVM
-// - Rust program → ZK proof
-// - Precompiles for crypto operations
-
-// 3. Scroll zkEVM
-// - BN254 pairing for recursive SNARK aggregation
-// - halo2 기반
-
-// 4. Taiko: Type-1 zkEVM
-// - Full Ethereum equivalence
-// - halo2 + sp1 hybrid
-
-// 5. Nil Foundation (zkLLVM)
-// - C++ → halo2 circuit
-// - Proof DSL 개발
-
-// halo2 생태계 통계 (2024)
-// - GitHub stars: 4K+ (zcash/halo2)
-// - Forks: ~500
-// - Based projects: 20+
-// - zkEVM market share: ~40%`}</pre>
+        {/* 프로젝트 카드 */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-sky-300">Axiom</p>
+              <p className="text-xs text-muted-foreground mt-1">On-chain ZK coprocessor &mdash; 블록체인 storage 읽기 증명, historical block header access. halo2-ecc ECDSA 검증 활용</p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-emerald-300">Succinct (SP1)</p>
+              <p className="text-xs text-muted-foreground mt-1">zkVM &mdash; Rust 프로그램을 ZK proof로 변환. crypto 연산 precompile 제공</p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-amber-300">Scroll zkEVM</p>
+              <p className="text-xs text-muted-foreground mt-1">halo2 기반 zkEVM &mdash; BN254 pairing으로 recursive SNARK aggregation</p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-purple-300">Taiko</p>
+              <p className="text-xs text-muted-foreground mt-1">Type-1 zkEVM &mdash; Full Ethereum equivalence. halo2 + SP1 hybrid</p>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: halo2-ecc의 제약</p>

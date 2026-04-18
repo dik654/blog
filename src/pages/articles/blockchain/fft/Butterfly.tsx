@@ -29,16 +29,18 @@ export default function Butterfly() {
         <p>
           평가점 <Math>{'\\omega^k'}</Math>를 대입하면:
         </p>
-        <Math display>{'f(\\omega^k) = f_{\\text{even}}(\\omega^{2k}) + \\omega^k \\cdot f_{\\text{odd}}(\\omega^{2k})'}</Math>
+        <Math display>{'\\underbrace{f(\\omega^k)}_{\\text{상반부 결과}} = \\underbrace{f_{\\text{even}}(\\omega^{2k})}_{\\text{짝수 부분}} + \\underbrace{\\omega^k}_{\\text{twiddle factor}} \\cdot \\underbrace{f_{\\text{odd}}(\\omega^{2k})}_{\\text{홀수 부분}}'}</Math>
+        <p className="text-sm text-muted-foreground mt-2">
+          ω<sup>k</sup> = twiddle factor — 짝수/홀수 부분을 결합하는 회전 인자<br />
+          f<sub>even</sub>(ω<sup>2k</sup>) = n/2 크기 하위 문제의 결과, f<sub>odd</sub>도 동일
+        </p>
         <p>
-          여기서 <Math>{'\\omega^k'}</Math>가 <strong>twiddle factor</strong>다.
-          <br />
           단위근의 성질 <Math>{'\\omega^{n/2} = -1'}</Math>을 이용하면
           하반부(<Math>{'k \\geq n/2'}</Math>)는 추가 계산 없이 얻는다:
         </p>
-        <Math display>{'f(\\omega^{k+n/2}) = f_{\\text{even}}(\\omega^{2k}) - \\omega^k \\cdot f_{\\text{odd}}(\\omega^{2k})'}</Math>
-        <p>
-          덧셈 한 번, 뺄셈 한 번으로 2개의 결과를 동시에 얻는 구조 — 이것이 <strong>butterfly</strong>다
+        <Math display>{'\\underbrace{f(\\omega^{k+n/2})}_{\\text{하반부 결과}} = \\underbrace{f_{\\text{even}}(\\omega^{2k})}_{\\text{짝수 부분}} - \\underbrace{\\omega^k}_{\\text{같은 twiddle}} \\cdot \\underbrace{f_{\\text{odd}}(\\omega^{2k})}_{\\text{홀수 부분}}'}</Math>
+        <p className="text-sm text-muted-foreground mt-2">
+          부호만 반전(+ → −) — 같은 twiddle factor로 2개 결과를 동시에 계산. 이것이 butterfly 구조
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

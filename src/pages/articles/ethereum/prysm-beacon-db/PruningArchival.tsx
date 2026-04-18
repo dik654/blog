@@ -14,56 +14,42 @@ export default function PruningArchival({ onCodeRef: _ }: Props) {
 
         {/* ── Pruning 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Pruning 프로세스 — finalized 이후</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Finalized checkpoint 갱신 시 pruning trigger
-
-func (s *Service) pruneFinalized(finalized *Checkpoint) error {
-    finalizedSlot := finalized.Epoch * SLOTS_PER_EPOCH
-
-    // 1. canonical chain 확인
-    canonicalChain := s.collectCanonicalChain(finalizedSlot)
-
-    // 2. 각 버킷 순회, non-canonical 항목 삭제
-    return s.db.Update(func(tx *bolt.Tx) error {
-        // blocks bucket 순회
-        cur := tx.Bucket(blocksBucket).Cursor()
-        for k, _ := cur.First(); k != nil; k, _ = cur.Next() {
-            var root [32]byte
-            copy(root[:], k)
-
-            // 블록의 slot 확인
-            block, err := s.BlockByRoot(ctx, root)
-            if err != nil { continue }
-
-            if block.Slot() >= finalizedSlot {
-                continue  // finalized 이후 블록은 유지
-            }
-
-            if !canonicalChain.Contains(root) {
-                // non-canonical + pre-finalized → 삭제
-                cur.Delete()
-            }
-        }
-
-        // 관련 인덱스도 정리
-        // - parent_root_indices
-        // - slot_indices
-        // - state (referenced by deleted blocks)
-
-        return nil
-    })
-}
-
-// Pruning 주기:
-// - Finalized checkpoint 변경 시 트리거
-// - 매 epoch 경계 (~6.4분) 약 1회
-// - 삭제 대상 적으므로 빠름 (~수 ms)
-
-// 주의:
-// - bbolt는 공간 즉시 반환 안 함 (free page)
-// - 삭제된 페이지는 재사용 대기
-// - 실제 디스크 반환은 compaction 필요 (수동)`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>pruneFinalized</code> 흐름</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
+                <div><code>collectCanonicalChain(finalizedSlot)</code> — 캐노니컬 체인 블록 루트 수집</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div><code>blocksBucket.Cursor()</code> 순회 — slot &lt; finalizedSlot + non-canonical → <code>cur.Delete()</code></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
+                <div>관련 인덱스 정리 — <code>parent_root_indices</code>, <code>slot_indices</code>, 참조된 state</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Pruning 주기</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>Finalized checkpoint 변경 시 트리거</li>
+                <li>매 epoch 경계 (~6.4분) 약 1회</li>
+                <li>삭제 대상 적으므로 빠름 (~수 ms)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">주의: bbolt 공간 관리</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>공간 즉시 반환 안 함 (free page 재사용 대기)</li>
+                <li>실제 디스크 반환은 <code>db.Compact()</code> 수동 필요</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Pruning은 <strong>finalized checkpoint 갱신 시 트리거</strong>.<br />
           non-canonical + pre-finalized 블록/state 삭제.<br />
@@ -79,44 +65,56 @@ func (s *Service) pruneFinalized(finalized *Checkpoint) error {
 
         {/* ── Archive vs Prune ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Archive vs Prune 모드 — 운영 결정</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Archive 모드 (--archive flag)
-// - 모든 데이터 영구 보관
-// - Finalized pruning skip
-// - 디스크: 연 ~2 TB 증가
-// - RPC: 모든 과거 slot 즉시 응답
-
-// Default 모드 (pruning 활성)
-// - non-canonical 즉시 삭제
-// - state 보존: 최근 ~10,000 epoch (~2달)
-// - 디스크: 안정적 ~100 GB
-// - RPC: 최근 상태만 즉시, 과거는 제한적
-
-// Minimal 모드 (--minimal)
-// - 최소 디스크 사용
-// - 최근 1주만 보관
-// - 디스크: ~30 GB
-// - validator 기능만 수행
-
-// 선택 기준:
-// - Solo validator: default 또는 minimal
-// - Institutional staker: default + replication
-// - RPC provider: archive
-// - Researcher/analyst: archive
-
-// Pruning의 함정:
-// 1. fork choice는 non-finalized 영역 필요
-//    → 최소 finalized_epoch - 1 epoch 유지 필수
-// 2. peer에게 과거 블록 제공 의무 (light client)
-//    → min_epochs_for_block_requests (최소 보관)
-// 3. reorg 대비 여유분
-//    → finalized는 되돌릴 수 없지만 안전 margin
-
-// DB compaction:
-// - bbolt는 자동 compaction 없음
-// - 수동 db.Compact() 필요
-// - 오프라인에서 실행 권장 (~수 시간)`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Archive <span className="text-xs text-muted-foreground font-normal">--archive</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>모든 데이터 영구 보관</li>
+                <li>Finalized pruning skip</li>
+                <li>디스크: 연 ~2 TB 증가</li>
+                <li>RPC: 모든 과거 slot 즉시 응답</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4 border-blue-500/30 bg-blue-500/5">
+              <h4 className="font-semibold text-sm mb-2">Default <span className="text-xs text-muted-foreground font-normal">pruning 활성</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>non-canonical 즉시 삭제</li>
+                <li>state 보존: 최근 ~10,000 epoch (~2달)</li>
+                <li>디스크: 안정적 ~100 GB</li>
+                <li>RPC: 최근 상태만 즉시</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Minimal <span className="text-xs text-muted-foreground font-normal">--minimal</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>최소 디스크 사용</li>
+                <li>최근 1주만 보관</li>
+                <li>디스크: ~30 GB</li>
+                <li>validator 기능만 수행</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">선택 기준</h4>
+              <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
+                <span>Solo validator → default / minimal</span>
+                <span>Institutional staker → default + replication</span>
+                <span>RPC provider → archive</span>
+                <span>Researcher/analyst → archive</span>
+              </div>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Pruning 주의점</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>fork choice는 finalized_epoch - 1 epoch 유지 필수</li>
+                <li>peer에게 과거 블록 제공 의무 (<code>min_epochs_for_block_requests</code>)</li>
+                <li>bbolt 자동 compaction 없음 → 수동 <code>db.Compact()</code> 필요 (오프라인 권장)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>3가지 모드</strong>로 디스크 vs 기능 균형 조절.<br />
           Archive(~TB) → Default(~100GB) → Minimal(~30GB).<br />

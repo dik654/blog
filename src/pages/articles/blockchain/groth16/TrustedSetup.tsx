@@ -1,9 +1,8 @@
-import CodePanel from '@/components/ui/code-panel';
+import M from '@/components/ui/math';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import TrustedSetupViz from './viz/TrustedSetupViz';
 import Groth16PipelineViz from './viz/Groth16PipelineViz';
-import { TOXIC_WASTE_CODE, SETUP_CODE } from './TrustedSetupData';
 import { codeRefs } from './codeRefs';
 
 export default function TrustedSetup({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
@@ -31,26 +30,71 @@ export default function TrustedSetup({ onCodeRef }: { onCodeRef: (key: string, r
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">5개의 Toxic Waste 파라미터</h3>
-        <CodePanel
-          title="Toxic Waste 파라미터"
-          code={TOXIC_WASTE_CODE}
-          annotations={[
-            { lines: [1, 1], color: 'sky', note: '비밀 평가점' },
-            { lines: [2, 3], color: 'emerald', note: '구조적 일관성 강제' },
-            { lines: [4, 5], color: 'amber', note: 'public/private 분리' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-2">
+          <h4 className="font-semibold text-base mb-2">Toxic Waste 파라미터</h4>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="rounded border p-3 bg-sky-50 dark:bg-sky-950/30">
+              <code className="font-mono text-xs font-semibold">τ (tau)</code>
+              <p className="text-xs text-muted-foreground mt-1">비밀 평가점 — QAP 다항식을 τ에서 평가하여 커브 포인트로 인코딩</p>
+            </div>
+            <div className="rounded border p-3 bg-emerald-50 dark:bg-emerald-950/30">
+              <code className="font-mono text-xs font-semibold">α (alpha)</code>
+              <p className="text-xs text-muted-foreground mt-1">지식 계수 — A, B가 올바른 구조로 만들어졌는지 강제</p>
+            </div>
+            <div className="rounded border p-3 bg-emerald-50 dark:bg-emerald-950/30">
+              <code className="font-mono text-xs font-semibold">β (beta)</code>
+              <p className="text-xs text-muted-foreground mt-1">교차항 계수 — A, B, C가 같은 witness에서 나왔는지 결합</p>
+            </div>
+            <div className="rounded border p-3 bg-amber-50 dark:bg-amber-950/30">
+              <code className="font-mono text-xs font-semibold">γ (gamma)</code>
+              <p className="text-xs text-muted-foreground mt-1">public 구분자 — 공개 변수의 commitment를 γ로 나눔</p>
+            </div>
+            <div className="rounded border p-3 bg-amber-50 dark:bg-amber-950/30">
+              <code className="font-mono text-xs font-semibold">δ (delta)</code>
+              <p className="text-xs text-muted-foreground mt-1">private 구분자 — 비공개 변수 + h(τ)t(τ)를 δ로 나눔</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">Setup 과정</h3>
-        <CodePanel
-          title="Trusted Setup 7단계"
-          code={SETUP_CODE}
-          annotations={[
-            { lines: [1, 2], color: 'sky', note: 'toxic waste 랜덤 생성' },
-            { lines: [8, 9], color: 'emerald', note: 'QAP 다항식 평가' },
-            { lines: [14, 17], color: 'amber', note: 'public/private LC 분리' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
+          <h4 className="font-semibold text-base mb-2">Trusted Setup 7단계</h4>
+          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">① toxic waste 랜덤 생성</p>
+            <p className="font-mono text-xs text-muted-foreground">
+              <M>{'\\tau, \\alpha, \\beta, \\gamma, \\delta \\leftarrow \\mathbb{F}_r^*'}</M> (0이 아닌 랜덤)
+            </p>
+          </div>
+          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">② 기본 커브 포인트 계산</p>
+            <p className="font-mono text-xs text-muted-foreground">[α]₁, [β]₁, [β]₂, [δ]₁, [δ]₂, [γ]₂</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">③ QAP 다항식을 τ에서 평가</p>
+            <p className="font-mono text-xs text-muted-foreground">
+              각 변수 j: <M>{'a_j(\\tau), b_j(\\tau), c_j(\\tau) \\in \\mathbb{F}_r'}</M>
+            </p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">④ Query 벡터 생성</p>
+            <p className="font-mono text-xs text-muted-foreground">
+              a_query[j] = [aⱼ(τ)]₁, b_g2_query[j] = [bⱼ(τ)]₂
+            </p>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">⑤ LC 계산 및 public/private 분리</p>
+            <M display>{'lc_j = \\beta \\cdot a_j(\\tau) + \\alpha \\cdot b_j(\\tau) + c_j(\\tau)'}</M>
+            <p className="font-mono text-xs text-muted-foreground">공개: ic[j] = [lcⱼ / γ]₁</p>
+            <p className="font-mono text-xs text-muted-foreground">비공개: l_query[j'] = [lcⱼ / δ]₁</p>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">⑥ h_query 생성</p>
+            <p className="font-mono text-xs text-muted-foreground">h_query[i] = [τⁱ · t(τ) / δ]₁</p>
+          </div>
+          <div className="bg-neutral-50 dark:bg-neutral-900/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">⑦ VK에 e(α, β) 사전 계산 저장</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">Public/Private 분리</h3>
         <p>

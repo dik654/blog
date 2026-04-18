@@ -40,145 +40,160 @@ export default function EVMExecution({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="mt-6 space-y-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">EVM 실행 단계별 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// MiniEVM Transaction Execution Pipeline
-//
-// Entry point: sdk.Handler (Cosmos Msg handler)
-//
-// MsgCall message:
-//   type MsgCall struct {
-//       Sender    string   // bech32 Cosmos address
-//       To        string   // hex EVM address or empty for CREATE
-//       Value     sdk.Int  // native value (uinit)
-//       Input     []byte   // ABI-encoded call data
-//       GasLimit  uint64   // EVM gas limit
-//       GasPrice  sdk.Int  // fee per unit
-//   }
 
-// Step 1: Message routing
-//
-//   Cosmos TX enters MsgServer:
-//     func (k Keeper) Call(ctx, msg *MsgCall) (*MsgCallResponse, error) {
-//         // 1. Validate sender
-//         sender := sdk.MustAccAddressFromBech32(msg.Sender)
-//         evmAddr := cosmosToEVMAddr(sender)
-//
-//         // 2. Call internal execution
-//         return k.executeCall(ctx, evmAddr, msg)
-//     }
+        {/* MsgCall 메시지 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">MsgCall 메시지 구조</h4>
+          <p className="text-xs text-muted-foreground mb-2">진입점: <code className="text-xs">sdk.Handler</code> (Cosmos Msg handler)</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">Sender string</code> — bech32 Cosmos 주소</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">To string</code> — hex EVM 주소 (CREATE 시 빈 값)</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">Value sdk.Int</code> — 네이티브 밸류 (uinit)</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">Input []byte</code> — ABI 인코딩 콜 데이터</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">GasLimit uint64</code> — EVM 가스 한도</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">GasPrice sdk.Int</code> — 단위당 수수료</div>
+          </div>
+        </div>
 
-// Step 2: AnteHandler (Cosmos-level validation)
-//
-//   Before EVM execution:
-//     - Verify signatures
-//     - Check account exists, has sequence
-//     - Deduct Cosmos-level fees (gas * gasPrice)
-//     - Increment sequence (nonce)
-//
-//   NOTE: EVM internal gas tracking is separate
-//     Cosmos collects fee; EVM runs within gasLimit
+        {/* Step 1: Message routing */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Step 1: 메시지 라우팅</h4>
+          <div className="rounded bg-muted/50 p-3 text-xs text-muted-foreground">
+            <p>Cosmos TX가 <code className="text-xs">MsgServer</code>로 진입. <code className="text-xs">Keeper.Call(ctx, msg *MsgCall)</code>에서 sender를 <code className="text-xs">sdk.MustAccAddressFromBech32</code>로 파싱하고, <code className="text-xs">cosmosToEVMAddr(sender)</code>로 EVM 주소 변환 후 <code className="text-xs">k.executeCall(ctx, evmAddr, msg)</code> 호출</p>
+          </div>
+        </div>
 
-// Step 3: StateDB adapter creation
-//
-//   stateDB := NewStateDB(ctx, k.storeKey, k.bankKeeper, k.authKeeper)
-//   // Wraps Cosmos KVStore as go-ethereum StateDB
-//   // Tracks balance, nonce, storage, code
-//   // Supports snapshots for revert
-//
-//   EVM state operations:
-//     stateDB.GetBalance(addr)   -> bank keeper
-//     stateDB.GetCode(addr)      -> KVStore
-//     stateDB.GetState(addr, k)  -> KVStore storage
-//     stateDB.SetState(addr, k, v) -> staged for commit
+        {/* Step 2: AnteHandler */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Step 2: AnteHandler (Cosmos 레벨 검증)</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">EVM 실행 전 검증</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>서명 검증</li>
+                <li>계정 존재 + 시퀀스 확인</li>
+                <li>Cosmos 레벨 수수료 차감 (<code className="text-xs">gas * gasPrice</code>)</li>
+                <li>시퀀스(논스) 증가</li>
+              </ul>
+            </div>
+            <div className="rounded border-l-2 border-amber-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">주의: 이중 가스 구조</span>
+              <p className="mt-1">EVM 내부 가스 추적은 별도. Cosmos가 수수료를 징수하고, EVM은 <code className="text-xs">gasLimit</code> 내에서 실행</p>
+            </div>
+          </div>
+        </div>
 
-// Step 4: EVM setup
-//
-//   blockCtx := vm.BlockContext{
-//       CanTransfer: canTransferFunc,
-//       Transfer:    transferFunc,
-//       GetHash:     getHashFunc,
-//       Coinbase:    common.Address{},  // validator reward addr
-//       BlockNumber: big.NewInt(ctx.BlockHeight()),
-//       Time:        big.NewInt(ctx.BlockTime().Unix()),
-//       Difficulty:  big.NewInt(0),       // PoS, no PoW
-//       BaseFee:     big.NewInt(0),       // or from x/feemarket
-//       GasLimit:    ctx.GasMeter().Limit(),
-//   }
-//
-//   txCtx := vm.TxContext{
-//       Origin:   evmAddr,
-//       GasPrice: big.NewInt(gasPrice),
-//   }
-//
-//   evm := vm.NewEVM(blockCtx, txCtx, stateDB, chainConfig, vmConfig)
-//   // Use go-ethereum's EVM interpreter directly
+        {/* Step 3: StateDB adapter */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Step 3: StateDB 어댑터 생성</h4>
+          <div className="space-y-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <p><code className="text-xs">NewStateDB(ctx, k.storeKey, k.bankKeeper, k.authKeeper)</code> — Cosmos KVStore를 go-ethereum <code className="text-xs">StateDB</code> 인터페이스로 래핑. 잔액, 논스, 스토리지, 코드를 추적하고 스냅샷을 통한 롤백 지원</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded bg-muted/50 p-2"><code className="text-xs">GetBalance(addr)</code> → bank keeper</div>
+              <div className="rounded bg-muted/50 p-2"><code className="text-xs">GetCode(addr)</code> → KVStore</div>
+              <div className="rounded bg-muted/50 p-2"><code className="text-xs">GetState(addr, k)</code> → KVStore storage</div>
+              <div className="rounded bg-muted/50 p-2"><code className="text-xs">SetState(addr, k, v)</code> → 커밋 대기</div>
+            </div>
+          </div>
+        </div>
 
-// Step 5: Execution
-//
-//   ret, leftoverGas, err := evm.Call(
-//       vm.AccountRef(evmAddr),  // caller
-//       toAddr,                   // callee
-//       input,                    // call data
-//       gasLimit,                 // gas
-//       value,                    // value
-//   )
-//
-//   EVM interpreter:
-//     - Loads bytecode from stateDB
-//     - Executes opcodes (ADD, MUL, SSTORE, SLOAD, ...)
-//     - Handles internal CALL, DELEGATECALL, CREATE
-//     - Charges gas per opcode
-//     - Tracks refunds (SELFDESTRUCT, SSTORE revert)
+        {/* Step 4: EVM setup */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Step 4: EVM 셋업</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">BlockContext</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">CanTransfer</code>, <code className="text-xs">Transfer</code>, <code className="text-xs">GetHash</code> — 전송/해시 함수</li>
+                <li><code className="text-xs">Coinbase</code> — 검증자 보상 주소</li>
+                <li><code className="text-xs">BlockNumber</code> ← <code className="text-xs">ctx.BlockHeight()</code></li>
+                <li><code className="text-xs">Time</code> ← <code className="text-xs">ctx.BlockTime().Unix()</code></li>
+                <li><code className="text-xs">Difficulty = 0</code> (PoS, PoW 없음)</li>
+                <li><code className="text-xs">BaseFee = 0</code> (또는 x/feemarket)</li>
+              </ul>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">TxContext + EVM 생성</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">Origin</code> ← <code className="text-xs">evmAddr</code> (발신자)</li>
+                <li><code className="text-xs">GasPrice</code> ← 메시지의 가스 가격</li>
+              </ul>
+              <p className="mt-2"><code className="text-xs">vm.NewEVM(blockCtx, txCtx, stateDB, chainConfig, vmConfig)</code> — go-ethereum EVM 인터프리터를 직접 사용</p>
+            </div>
+          </div>
+        </div>
 
-// Step 6: State commit
-//
-//   if err != nil:
-//       // EVM execution failed
-//       stateDB.RevertToSnapshot(0)
-//       return error
-//
-//   stateDB.Commit()
-//   // Writes all changes to Cosmos KVStore
-//   // Emits EVM logs as Cosmos events
+        {/* Step 5: Execution */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Step 5: EVM 실행</h4>
+          <div className="space-y-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <p><code className="text-xs">evm.Call(vm.AccountRef(evmAddr), toAddr, input, gasLimit, value)</code> → <code className="text-xs">(ret []byte, leftoverGas uint64, err error)</code></p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="rounded bg-muted/50 p-2">StateDB에서 바이트코드 로드</div>
+              <div className="rounded bg-muted/50 p-2">opcode 실행 (ADD, MUL, SSTORE, SLOAD ...)</div>
+              <div className="rounded bg-muted/50 p-2">내부 CALL, DELEGATECALL, CREATE 처리</div>
+              <div className="rounded bg-muted/50 p-2">opcode별 가스 차감</div>
+              <div className="rounded bg-muted/50 p-2">리펀드 추적 (SELFDESTRUCT, SSTORE revert)</div>
+            </div>
+          </div>
+        </div>
 
-// Step 7: Response
-//
-//   response := MsgCallResponse{
-//       Ret:       ret,
-//       GasUsed:   gasLimit - leftoverGas,
-//       Logs:      stateDB.Logs(),
-//   }
-//
-//   Cosmos SDK wraps this in TxResult
-//   Included in block, indexed by nodes
+        {/* Step 6-7: Commit & Response */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Step 6-7: 상태 커밋 & 응답</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">커밋</span>
+              <p className="mt-1">실패 시 <code className="text-xs">stateDB.RevertToSnapshot(0)</code>으로 전체 롤백. 성공 시 <code className="text-xs">stateDB.Commit()</code>으로 모든 변경을 Cosmos KVStore에 기록하고 EVM 로그를 Cosmos 이벤트로 변환</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">응답</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">Ret []byte</code> — 반환 데이터</li>
+                <li><code className="text-xs">GasUsed = gasLimit - leftoverGas</code></li>
+                <li><code className="text-xs">Logs</code> — <code className="text-xs">stateDB.Logs()</code></li>
+              </ul>
+              <p className="mt-1">Cosmos SDK가 <code className="text-xs">TxResult</code>로 래핑, 블록에 포함 후 노드에서 인덱싱</p>
+            </div>
+          </div>
+        </div>
 
-// Gas accounting:
-//
-//   Two separate gas meters:
-//     Cosmos GasMeter: tracks block-level gas
-//     EVM gas tracking: per-op EVM gas
-//
-//   Reconciliation:
-//     EVM gasUsed * ? = Cosmos gas consumed
-//     (configurable ratio, typically 1:1)
-//
-//   Gas refund:
-//     EVM refunds (SSTORE revert, SELFDESTRUCT)
-//     Up to max(gasUsed/5, reducedGas) refundable
-//     (EIP-3529 London rules)
+        {/* Gas Accounting */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">가스 회계</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">이중 가스 미터</span>
+              <p className="mt-1">Cosmos GasMeter: 블록 레벨 가스 추적. EVM gas: opcode별 EVM 가스 추적</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">조정</span>
+              <p className="mt-1">EVM gasUsed를 Cosmos gas로 환산 (설정 가능한 비율, 일반적으로 1:1)</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">리펀드</span>
+              <p className="mt-1">SSTORE revert, SELFDESTRUCT의 EVM 리펀드. <code className="text-xs">max(gasUsed/5, reducedGas)</code>까지 환불 가능 (EIP-3529 London 규칙)</p>
+            </div>
+          </div>
+        </div>
 
-// Error handling:
-//
-//   - Out of gas: revert all state changes
-//   - Invalid opcode: revert
-//   - REVERT opcode: revert + error message
-//   - Panic / system error: revert + log for debugging
-//
-//   All handled via stateDB snapshots
-//   Cosmos Msg returns standard error codes`}
-        </pre>
+        {/* Error Handling */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">에러 처리</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-2"><span className="font-medium text-foreground">Out of gas</span> — 전체 상태 변경 롤백</div>
+            <div className="rounded bg-muted/50 p-2"><span className="font-medium text-foreground">Invalid opcode</span> — 롤백</div>
+            <div className="rounded bg-muted/50 p-2"><span className="font-medium text-foreground">REVERT opcode</span> — 롤백 + 에러 메시지</div>
+            <div className="rounded bg-muted/50 p-2"><span className="font-medium text-foreground">Panic / 시스템 에러</span> — 롤백 + 디버그 로그</div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">모든 에러는 StateDB 스냅샷으로 처리. Cosmos Msg는 표준 에러 코드를 반환</p>
+        </div>
       </div>
     </section>
   );

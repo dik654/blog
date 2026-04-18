@@ -1,4 +1,6 @@
+import M from '@/components/ui/math';
 import PositionalEncodingChart from '../components/PositionalEncodingChart';
+import PosEncDetailViz from './viz/PosEncDetailViz';
 
 export default function PositionalEncoding() {
   return (
@@ -17,53 +19,15 @@ export default function PositionalEncoding() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Positional Encoding 대안들</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Positional Encoding 변형들 (2017~2024)
-//
-// 1. Sinusoidal (원 Transformer, 2017)
-//    PE(pos, 2i) = sin(pos / 10000^(2i/d))
-//    PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
-//    - 학습 불필요
-//    - 임의 길이 가능
-//    - 상대 위치 암시적
-//
-// 2. Learned PE (BERT, GPT-2)
-//    - 각 위치에 학습 가능한 임베딩
-//    - max_seq_len 고정 (예: 512, 1024)
-//    - 초과 시 작동 불가
-//
-// 3. Relative PE (T5, 2019)
-//    - attention bias로 상대 거리 표현
-//    - b_{i-j} 파라미터를 attention에 더함
-//    - 절대 위치 대신 상대
-//
-// 4. RoPE (RoFormer, LLaMA)
-//    - 복소수 회전으로 위치 인코딩
-//    - Q, K에 직접 적용
-//    - 상대 위치 자연스럽게 표현
-//    - 현재 LLM 표준
-//
-// 5. ALiBi (BLOOM, 2022)
-//    - attention score에 선형 bias
-//    - PE 없이 extrapolation 가능
-//    - 긴 문맥 처리 유리
-//
-// 6. YaRN / NTK-aware scaling (LLaMA-2 long)
-//    - RoPE의 주파수 보간
-//    - 사전학습 길이 초과 적응
-
-// 2024년 표준:
-//   LLaMA-3: RoPE + high-frequency adjustment
-//   GPT-4: 공개되지 않음 (추정: Rotary + optimizations)
-//   Claude: 공개 안 됨
-//   Gemma: RoPE
-//
-// 왜 RoPE가 대세?
-//   - 상대 위치 자동 포착
-//   - 기본 attention에 단순히 회전만 추가
-//   - 긴 문맥 extrapolation 비교적 유리
-//   - 수학적으로 깔끔`}
-        </pre>
+        <p className="leading-7">
+          Sinusoidal PE에서 시작하여 Learned, Relative, RoPE, ALiBi로 진화했다.
+          RoPE는 복소수 회전으로 Q·K^T 내적에서 상대 위치가 자연스럽게 등장한다.
+          ALiBi는 PE 자체를 제거하고 attention score에 선형 bias를 더하는 방식이다.
+        </p>
+        <M display>{'\\underbrace{\\text{Sinusoidal}}_{\\text{2017}} \\;\\to\\; \\underbrace{\\text{Learned}}_{\\text{BERT}} \\;\\to\\; \\underbrace{\\text{Relative}}_{\\text{T5}} \\;\\to\\; \\underbrace{\\text{RoPE}}_{\\text{LLaMA}} \\;\\to\\; \\underbrace{\\text{ALiBi}}_{\\text{BLOOM}}'}</M>
+      </div>
+      <div className="not-prose my-8"><PosEncDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: PE는 <strong>sinusoidal → learned → relative → RoPE → ALiBi</strong>로 진화.<br />
           요약 2: 현대 LLM은 <strong>RoPE</strong> 주류 — 상대 위치 자연스럽게 표현.<br />

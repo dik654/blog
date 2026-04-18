@@ -26,72 +26,82 @@ export default function UserOpStruct() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">UserOperation 전체 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// ERC-4337 UserOperation (PackedUserOperation)
-
-struct UserOperation {
-    address sender;              // smart account address
-    uint256 nonce;               // managed by EntryPoint
-    bytes initCode;              // 최초 배포 시 factory + calldata
-    bytes callData;              // 실제 실행 함수 호출
-    uint256 callGasLimit;        // callData 실행 가스 한도
-    uint256 verificationGasLimit; // validateUserOp 가스 한도
-    uint256 preVerificationGas;  // calldata zero/non-zero 비용
-    uint256 maxFeePerGas;        // EIP-1559 max fee
-    uint256 maxPriorityFeePerGas; // EIP-1559 priority
-    bytes paymasterAndData;      // gas 대납자 + 데이터
-    bytes signature;             // custom (Dilithium for PQ)
-}
-
-// UserOp hash 계산 (signature 대상)
-userOpHash = keccak256(
-    abi.encode(
-        sender, nonce, keccak256(initCode), keccak256(callData),
-        callGasLimit, verificationGasLimit, preVerificationGas,
-        maxFeePerGas, maxPriorityFeePerGas, keccak256(paymasterAndData)
-    )
-)
-// 최종 signable hash
-hash = keccak256(abi.encode(userOpHash, entrypoint, chainId))
-
-// Signature 검증 흐름
-// 1) Bundler가 UserOp 수집
-// 2) EntryPoint.handleOps() 호출
-// 3) EntryPoint → account.validateUserOp(userOp, hash)
-// 4) account: verify(signature, hash, publicKey)
-// 5) 통과 시 callData 실행`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>UserOperation</code> 필드 (PackedUserOperation)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+              <div><code>sender</code>: <code>address</code> &mdash; smart account 주소</div>
+              <div><code>nonce</code>: <code>uint256</code> &mdash; EntryPoint 관리</div>
+              <div><code>initCode</code>: <code>bytes</code> &mdash; 최초 배포 시 factory + calldata</div>
+              <div><code>callData</code>: <code>bytes</code> &mdash; 실행할 함수 호출</div>
+              <div><code>callGasLimit</code>: <code>uint256</code> &mdash; callData 실행 가스 한도</div>
+              <div><code>verificationGasLimit</code>: <code>uint256</code> &mdash; validateUserOp 가스 한도</div>
+              <div><code>preVerificationGas</code>: <code>uint256</code> &mdash; calldata 비용</div>
+              <div><code>maxFeePerGas</code>: <code>uint256</code> &mdash; EIP-1559 max fee</div>
+              <div><code>maxPriorityFeePerGas</code>: <code>uint256</code> &mdash; EIP-1559 priority</div>
+              <div><code>paymasterAndData</code>: <code>bytes</code> &mdash; gas 대납자 + 데이터</div>
+              <div><code>signature</code>: <code>bytes</code> &mdash; custom (Dilithium for PQ)</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">UserOp Hash 계산 (signature 대상)</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><code>userOpHash</code> = <code>keccak256(abi.encode(sender, nonce, keccak256(initCode), keccak256(callData), ...))</code></li>
+              <li>최종 signable hash = <code>keccak256(abi.encode(userOpHash, entrypoint, chainId))</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Signature 검증 흐름</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li>Bundler가 UserOp 수집</li>
+              <li><code>EntryPoint.handleOps()</code> 호출</li>
+              <li>EntryPoint &rarr; <code>account.validateUserOp(userOp, hash)</code></li>
+              <li>account: <code>verify(signature, hash, publicKey)</code></li>
+              <li>통과 시 <code>callData</code> 실행</li>
+            </ol>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Calldata Gas Cost</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Calldata gas cost (EVM)
-// zero byte: 4 gas
-// non-zero byte: 16 gas (EIP-2028)
-
-// UserOp with ECDSA
-// Signature: 65 bytes ~= ~1,000 gas
-
-// UserOp with Dilithium
-// Signature: 2,420 bytes ~= ~35,000 gas
-// 약 34x 증가
-
-// 완화 방법
-// 1) EIP-4844 blobs
-//    - blob 데이터: much cheaper (~1 gas/byte)
-//    - L2 rollup 사용 시 혜택
-// 2) L2 execution
-//    - L1 blob posting이 주요 비용
-//    - L2 execution은 거의 무료
-// 3) Signature aggregation
-//    - 여러 user op signature를 합침
-//    - BLS 같은 aggregable scheme
-
-// L1 native cost breakdown
-// ECDSA UserOp (~500B): ~8K calldata + 3K ecrecover = ~11K gas
-// Dilithium UserOp (~2.9KB): ~45K calldata + 2.5M verify = ~2.55M gas
-// 232x more expensive total!
-
-// L2 (Optimism/Base)
-// L1 data: EIP-4844 blobs
-// L2 execution: constant
-// Dilithium 비용: ~80K gas (vs 30K for ECDSA) = 2.7x`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">EVM Calldata 가격</p>
+            <div className="grid grid-cols-2 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">zero byte</p><p className="font-mono">4 gas</p></div>
+              <div><p className="text-muted-foreground">non-zero byte (EIP-2028)</p><p className="font-mono">16 gas</p></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm text-center mt-3">
+              <div><p className="text-muted-foreground">ECDSA sig (65B)</p><p className="font-mono">~1,000 gas</p></div>
+              <div><p className="text-muted-foreground">Dilithium sig (2,420B)</p><p className="font-mono">~35,000 gas (34x)</p></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">완화 방법</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>EIP-4844 blobs</strong> &mdash; blob 데이터 ~1 gas/byte, L2 rollup 사용 시 혜택</li>
+              <li><strong>L2 execution</strong> &mdash; L1 blob posting이 주요 비용, L2 execution은 거의 무료</li>
+              <li><strong>Signature aggregation</strong> &mdash; 여러 UserOp signature를 합침 (BLS 같은 aggregable scheme)</li>
+            </ol>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">L1 Native Cost</p>
+              <div className="text-sm space-y-1 text-muted-foreground">
+                <p><strong>ECDSA</strong> (~500B): ~8K calldata + 3K ecrecover = <strong>~11K gas</strong></p>
+                <p><strong>Dilithium</strong> (~2.9KB): ~45K calldata + 2.5M verify = <strong>~2.55M gas</strong></p>
+                <p className="text-red-400 font-semibold">232x more expensive!</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">L2 (Optimism/Base)</p>
+              <div className="text-sm space-y-1 text-muted-foreground">
+                <p>L1 data: EIP-4844 blobs</p>
+                <p>L2 execution: constant</p>
+                <p>Dilithium: <strong>~80K gas</strong> (vs 30K ECDSA) = <strong>2.7x</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

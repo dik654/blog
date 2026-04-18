@@ -31,27 +31,31 @@ export default function Genesis({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── genesis.json 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">genesis.json 구조 — 이더리움 메인넷</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`{
-  "config": { ... },                      // ChainConfig (ChainSpec이 이 부분을 파싱)
-  "nonce": "0x0000000000000042",          // PoW 시절의 난이도 관련 필드 (의미 없음)
-  "timestamp": "0x0",                     // 1970-01-01 (메인넷 genesis는 고정)
-  "extraData": "0x11bbe8db4e347b4e...",   // "embedded" in mainnet: 존 로키 예언서 문구
-  "gasLimit": "0x1388",                   // 5000 (현재 30M까지 상향됨)
-  "difficulty": "0x400000000",            // 17179869184 (초기 PoW 난이도)
-  "mixHash": "0x0000...0000",
-  "coinbase": "0x0000...0000",
-  "alloc": {                              // 프리마인 계정들
-    "000d836201318ec6899a67540690382780743280": {
-      "balance": "200000000000000000000"
-    },
-    "001762430ea9c3a26e5749afdb70da5f78ddbb8c": {
-      "balance": "2000000000000000000000"
-    },
-    // ... 8,893개 계정 (메인넷 기준, 총 72M ETH 프리세일 배분)
-  }
-}`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-3">genesis.json 구조 (메인넷)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                { field: 'config', value: '{ ... }', desc: 'ChainConfig (ChainSpec이 파싱)' },
+                { field: 'nonce', value: '0x42', desc: 'PoW 시절 필드 (현재 무의미)' },
+                { field: 'timestamp', value: '0x0', desc: '1970-01-01 (메인넷 고정)' },
+                { field: 'extraData', value: '0x11bbe8...', desc: '존 로키 예언서 문구 인코딩' },
+                { field: 'gasLimit', value: '0x1388 (5000)', desc: '초기값 (현재 30M)' },
+                { field: 'difficulty', value: '0x400000000', desc: '17,179,869,184 (초기 PoW)' },
+                { field: 'mixHash / coinbase', value: '0x0000...', desc: '초기값 (제로)' },
+                { field: 'alloc', value: '8,893개 계정', desc: '총 72M ETH 프리세일 배분' },
+              ].map(f => (
+                <div key={f.field} className="rounded border border-border/40 px-3 py-1.5">
+                  <div className="flex items-center gap-2">
+                    <code className="text-xs font-bold">{f.field}</code>
+                    <span className="text-[10px] text-foreground/40 font-mono">{f.value}</span>
+                  </div>
+                  <p className="text-[11px] text-foreground/60">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           메인넷 <code>extraData</code>에는 "we owe it all to Jon Schnelle" 등의 문구가 인코딩되어 있다.<br />
           <code>alloc</code> 필드가 8,893개 계정을 포함 — 2014년 ETH 프리세일 참여자에게 배분된 약 72M ETH.<br />
@@ -60,42 +64,31 @@ export default function Genesis({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── make_genesis_header ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">make_genesis_header — 하드포크 조건부 필드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub fn make_genesis_header(
-    genesis: &Genesis,
-    hardforks: &ChainHardforks,
-) -> Header {
-    // London 활성 → base_fee_per_gas 초기값 (EIP-1559)
-    let base_fee_per_gas = hardforks
-        .fork(EthereumHardfork::London)
-        .active_at_block(0)
-        .then(|| INITIAL_BASE_FEE);  // 1_000_000_000 wei (1 Gwei)
-
-    // Shanghai 활성 → withdrawals_root (EIP-4895)
-    let withdrawals_root = hardforks
-        .fork(EthereumHardfork::Shanghai)
-        .active_at_timestamp(genesis.timestamp)
-        .then_some(EMPTY_WITHDRAWALS);  // keccak256(RLP([])) = 0x56e8...
-
-    // Cancun 활성 → blob_gas_used + excess_blob_gas (EIP-4844)
-    let (blob_gas_used, excess_blob_gas) = if hardforks
-        .fork(EthereumHardfork::Cancun)
-        .active_at_timestamp(genesis.timestamp) {
-        (Some(0), Some(0))
-    } else { (None, None) };
-
-    Header {
-        state_root: state_root_ref_unhashed(&genesis.alloc),  // 핵심: alloc → MPT 루트
-        timestamp: genesis.timestamp,
-        gas_limit: genesis.gas_limit,
-        base_fee_per_gas,
-        withdrawals_root,
-        blob_gas_used,
-        excess_blob_gas,
-        ..Default::default()
-    }
-}`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2"><code>make_genesis_header()</code> — 하드포크 조건부 필드</p>
+            <p className="text-xs text-foreground/50 mb-3">각 필드는 활성화된 하드포크에 따라 조건부로 채워짐</p>
+            <div className="space-y-2">
+              {[
+                { fork: 'London', field: 'base_fee_per_gas', value: 'INITIAL_BASE_FEE (1 Gwei)', eip: 'EIP-1559' },
+                { fork: 'Shanghai', field: 'withdrawals_root', value: 'EMPTY_WITHDRAWALS (keccak256(RLP([])))', eip: 'EIP-4895' },
+                { fork: 'Cancun', field: 'blob_gas_used + excess_blob_gas', value: 'Some(0)', eip: 'EIP-4844' },
+              ].map(f => (
+                <div key={f.fork} className="rounded border border-border/40 px-3 py-2 flex items-start gap-3">
+                  <span className="text-xs font-mono font-bold text-foreground/50 whitespace-nowrap">{f.fork} 활성 →</span>
+                  <div>
+                    <code className="text-xs">{f.field}</code>
+                    <p className="text-[11px] text-foreground/60">{f.value} ({f.eip})</p>
+                  </div>
+                </div>
+              ))}
+              <div className="rounded border border-border/40 px-3 py-2">
+                <code className="text-xs font-bold">state_root</code>
+                <p className="text-[11px] text-foreground/60"><code>state_root_ref_unhashed(&genesis.alloc)</code> — 핵심: alloc → MPT 루트</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           제네시스 헤더의 각 필드는 <strong>활성화된 하드포크에 따라</strong> 조건부로 채워진다.<br />
           테스트넷/L2는 제네시스부터 최신 포크가 활성화될 수 있으므로 이 분기가 필요하다.<br />
@@ -104,38 +97,43 @@ export default function Genesis({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── state_root 계산 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">state_root 계산 — alloc → MPT 루트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`fn state_root_ref_unhashed(alloc: &BTreeMap<Address, GenesisAccount>) -> B256 {
-    let mut hb = HashBuilder::default();
-
-    for (address, account) in alloc {
-        // 1. 계정 주소 해시: keccak256(address) — MPT 키
-        let hashed_addr = keccak256(address);
-
-        // 2. GenesisAccount → TrieAccount 변환
-        let trie_account = TrieAccount {
-            nonce: account.nonce.unwrap_or(0),
-            balance: account.balance,
-            storage_root: if let Some(storage) = &account.storage {
-                // 스토리지가 있으면 그 하위 트라이도 계산
-                compute_storage_root(storage)
-            } else {
-                EMPTY_ROOT_HASH  // 0x56e8...
-            },
-            code_hash: account.code
-                .as_ref()
-                .map(keccak256)
-                .unwrap_or(KECCAK_EMPTY),  // 0xc5d2...
-        };
-
-        // 3. RLP 직렬화 후 HashBuilder에 추가
-        let encoded = alloy_rlp::encode(&trie_account);
-        hb.add_leaf(Nibbles::unpack(&hashed_addr), &encoded);
-    }
-
-    hb.root()  // 메인넷: 0xd7f8...1544
-}`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2"><code>state_root_ref_unhashed()</code> — alloc → MPT 루트</p>
+            <p className="text-xs text-foreground/50 mb-3">8,893개 계정을 순회하며 MPT leaf 구성 → 최종 root 계산</p>
+            <div className="space-y-2">
+              <div className="rounded border border-border/40 px-3 py-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold">1</span>
+                  <span className="text-xs font-semibold">주소 해시</span>
+                </div>
+                <p className="text-[11px] text-foreground/60 ml-7"><code>keccak256(address)</code> → MPT 키</p>
+              </div>
+              <div className="rounded border border-border/40 px-3 py-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold">2</span>
+                  <span className="text-xs font-semibold"><code>GenesisAccount</code> → <code>TrieAccount</code></span>
+                </div>
+                <div className="ml-7 grid grid-cols-2 gap-1.5">
+                  <p className="text-[11px] text-foreground/60"><code>nonce</code>: <code>unwrap_or(0)</code></p>
+                  <p className="text-[11px] text-foreground/60"><code>balance</code>: 그대로</p>
+                  <p className="text-[11px] text-foreground/60"><code>storage_root</code>: 스토리지 있으면 하위 트라이 계산, 없으면 <code>EMPTY_ROOT_HASH</code></p>
+                  <p className="text-[11px] text-foreground/60"><code>code_hash</code>: 코드 있으면 <code>keccak256(code)</code>, 없으면 <code>KECCAK_EMPTY</code></p>
+                </div>
+              </div>
+              <div className="rounded border border-border/40 px-3 py-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold">3</span>
+                  <span className="text-xs font-semibold">RLP 인코딩 + leaf 추가</span>
+                </div>
+                <p className="text-[11px] text-foreground/60 ml-7"><code>alloy_rlp::encode(trie_account)</code> → <code>hb.add_leaf(Nibbles, encoded)</code></p>
+              </div>
+            </div>
+            <p className="text-xs text-foreground/50 mt-3">
+              메인넷 genesis state_root: <code className="text-[10px]">0xd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544</code>
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>HashBuilder</code>는 정렬된 키 순서로 MPT를 구성하는 유틸리티.<br />
           8,893개 계정을 정렬(keccak256 순) → 각각 leaf로 추가 → 최종 root 계산.<br />
@@ -144,27 +142,42 @@ export default function Genesis({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── genesis_hash ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">genesis_hash — 피어 호환성 검증 키</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 메인넷 상수
-pub const MAINNET_GENESIS_HASH: B256 = b256!(
-    "d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3"
-);
-
-// eth/68 wire protocol — 피어 핸드셰이크 메시지
-struct StatusMessage {
-    protocol_version: u32,        // eth/68 = 68
-    network_id: u64,              // mainnet = 1
-    total_difficulty: U256,       // PoS 이후 final TD 고정
-    best_hash: B256,              // 현재 tip 블록 해시
-    genesis_hash: B256,           // ← 여기서 호환성 체크
-    fork_id: ForkId,              // EIP-2124 fork identifier
-}
-
-// 피어 연결 시:
-// 1. 상대방 Status 수신 → genesis_hash 비교
-// 2. 불일치 → "다른 체인"으로 판단 → 연결 거부
-// 3. 일치 → 정상 연결 진행`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-1">메인넷 genesis hash</p>
+            <p className="text-xs font-mono text-foreground/60 break-all">0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2">eth/68 <code>StatusMessage</code> — 피어 핸드셰이크</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {[
+                { field: 'protocol_version', value: '68 (eth/68)' },
+                { field: 'network_id', value: '1 (mainnet)' },
+                { field: 'total_difficulty', value: 'PoS 이후 final TD 고정' },
+                { field: 'best_hash', value: '현재 tip 블록 해시' },
+                { field: 'genesis_hash', value: '호환성 체크 키' },
+                { field: 'fork_id', value: 'EIP-2124 identifier' },
+              ].map(f => (
+                <div key={f.field} className="rounded border border-border/40 px-2 py-1.5">
+                  <code className="text-[11px] font-bold">{f.field}</code>
+                  <p className="text-[10px] text-foreground/50">{f.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">피어 연결 흐름</p>
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <span className="bg-muted rounded px-2 py-1">Status 수신</span>
+              <span className="text-foreground/40">→</span>
+              <span className="bg-muted rounded px-2 py-1">genesis_hash 비교</span>
+              <span className="text-foreground/40">→</span>
+              <span className="bg-emerald-100 dark:bg-emerald-900/30 rounded px-2 py-1">일치: 연결</span>
+              <span className="text-foreground/40">/</span>
+              <span className="bg-red-100 dark:bg-red-900/30 rounded px-2 py-1">불일치: 거부</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>genesis_hash</code>는 체인의 <strong>지문(fingerprint)</strong>.<br />
           내가 메인넷 노드를 실행하는데 상대가 Sepolia 제네시스 해시를 보내면 즉시 연결 거부.<br />

@@ -32,78 +32,115 @@ export default function Simplex() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">BFT Consensus 계보</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// BFT consensus 진화
-
-// PBFT (1999, Castro & Liskov)
-// - 첫 실용적 BFT
-// - 3 phases (pre-prepare, prepare, commit)
-// - Quadratic O(n²) view change
-// - 37 pages paper
-
-// Tendermint (2014, Buchman)
-// - Practical BFT for blockchain
-// - Locking mechanism for safety
-// - Used in Cosmos, Celestia
-// - Higher latency
-
-// HotStuff (2018, Yin et al.)
-// - Linear view change O(n)
-// - 3-chain commit
-// - Pipeline possible (Chained HotStuff)
-// - Used by Diem/Aptos
-
-// HotStuff-2 / Fast-HotStuff (2022)
-// - 2-chain commit (optimistic)
-// - Better latency
-
-// Simplex (2023, Chan & Pass)
-// - 2 round optimal (happy path)
-// - O(n²) messages but simpler proofs
-// - 15 pages paper
-// - Fast view change (3Δ vs 6Δ)
-
-// Trade-offs
-// Simplex: simplicity + speed
-// HotStuff: scalability (linear view change)
-// Tendermint: battle-tested`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-1">PBFT <span className="text-muted-foreground font-normal">(1999, Castro & Liskov)</span></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground mt-2">
+              <li>첫 실용적 BFT</li>
+              <li>3 phases — pre-prepare, prepare, commit</li>
+              <li>Quadratic <code className="text-xs">O(n²)</code> view change</li>
+              <li>37 pages paper</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-1">Tendermint <span className="text-muted-foreground font-normal">(2014, Buchman)</span></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground mt-2">
+              <li>Practical BFT for blockchain</li>
+              <li>Locking mechanism for safety</li>
+              <li>Cosmos, Celestia에서 사용</li>
+              <li>Higher latency</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-1">HotStuff <span className="text-muted-foreground font-normal">(2018, Yin et al.)</span></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground mt-2">
+              <li>Linear view change <code className="text-xs">O(n)</code></li>
+              <li>3-chain commit</li>
+              <li>Pipeline 가능 (Chained HotStuff)</li>
+              <li>Diem/Aptos에서 사용</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-1">HotStuff-2 / Fast-HotStuff <span className="text-muted-foreground font-normal">(2022)</span></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground mt-2">
+              <li>2-chain commit (optimistic)</li>
+              <li>Better latency</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4 border-blue-500/30 bg-blue-500/5">
+            <h4 className="font-semibold text-sm mb-1">Simplex <span className="text-muted-foreground font-normal">(2023, Chan & Pass)</span></h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground mt-2">
+              <li>2 round optimal (happy path)</li>
+              <li><code className="text-xs">O(n²)</code> messages but simpler proofs</li>
+              <li>15 pages paper</li>
+              <li>Fast view change — 3Δ vs 6Δ</li>
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Trade-offs</h4>
+          <div className="space-y-1 text-sm">
+            <div><strong className="text-foreground">Simplex</strong> <span className="text-muted-foreground">— simplicity + speed</span></div>
+            <div><strong className="text-foreground">HotStuff</strong> <span className="text-muted-foreground">— scalability (linear view change)</span></div>
+            <div><strong className="text-foreground">Tendermint</strong> <span className="text-muted-foreground">— battle-tested</span></div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Simplex 라운드 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Simplex 2-round (happy path)
-
-// Round 1: Propose + Vote
-// 1) Leader broadcasts Propose(k, block)
-// 2) Each replica:
-//    - Verify block
-//    - Vote for block if valid
-//    - Broadcast Vote(k, block_hash)
-// 3) On 2f+1 votes: form Cert(k, block_hash)
-
-// Round 2: Finalize
-// 1) Any replica sees Cert(k, block_hash)
-// 2) Broadcasts Finalize(k, block_hash)
-// 3) On 2f+1 Finalize: block committed
-// 4) IMMEDIATELY transition to view k+1
-
-// Key innovation: 즉시 view 전환
-// - Cert 받으면 바로 k+1 진입
-// - 과거 view에서 추가 vote/lock 불필요
-// - Linear messaging in happy path
-
-// Unhappy path: View change
-// 1) Timer expires without Cert(k)
-// 2) Broadcast ViewChange(k)
-// 3) 2f+1 ViewChange → No-Commit proof for k
-// 4) Start view k+1 with new leader
-
-// Safety
-// - No conflicting Cert in same view
-// - Block committed in view k → remains committed
-// - View change cannot rewrite history
-
-// Liveness
-// - Good leader → progress
-// - Faulty leader → 3Δ timeout → view change
-// - GST (global stabilization time) 후 progress guaranteed`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h4 className="font-semibold text-base mb-3">Round 1: Propose + Vote</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>Leader broadcasts <code className="text-xs">Propose(k, block)</code></li>
+              <li>Each replica: verify block, vote if valid, broadcast <code className="text-xs">Vote(k, block_hash)</code></li>
+              <li>On 2f+1 votes: form <code className="text-xs">Cert(k, block_hash)</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h4 className="font-semibold text-base mb-3">Round 2: Finalize</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>Any replica sees <code className="text-xs">Cert(k, block_hash)</code></li>
+              <li>Broadcasts <code className="text-xs">Finalize(k, block_hash)</code></li>
+              <li>On 2f+1 Finalize: block committed</li>
+              <li>즉시 view k+1로 전환</li>
+            </ol>
+          </div>
+        </div>
+        <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2">Key Innovation: 즉시 View 전환</h4>
+          <ul className="text-sm space-y-0.5 text-muted-foreground">
+            <li><code className="text-xs">Cert</code> 받으면 바로 k+1 진입</li>
+            <li>과거 view에서 추가 vote/lock 불필요</li>
+            <li>Happy path에서 linear messaging</li>
+          </ul>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Unhappy Path: View Change</h4>
+            <ol className="text-sm space-y-0.5 text-muted-foreground list-decimal list-inside">
+              <li>Timer expires without <code className="text-xs">Cert(k)</code></li>
+              <li>Broadcast <code className="text-xs">ViewChange(k)</code></li>
+              <li>2f+1 ViewChange → No-Commit proof for k</li>
+              <li>Start view k+1 with new leader</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Safety</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>No conflicting Cert in same view</li>
+              <li>View k에서 committed → 영구 유지</li>
+              <li>View change cannot rewrite history</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Liveness</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Good leader → progress</li>
+              <li>Faulty leader → 3Δ timeout → view change</li>
+              <li>GST 이후 progress guaranteed</li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </section>

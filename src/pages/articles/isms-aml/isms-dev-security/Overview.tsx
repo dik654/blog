@@ -1,8 +1,15 @@
+import OverviewViz from './viz/OverviewViz';
+import OwaspFlowViz from './viz/OwaspFlowViz';
+import EnvSeparationViz from './viz/EnvSeparationViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">개발 보안이 필요한 이유</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">ISMS 2.8: 정보시스템 도입 및 개발 보안</h3>
         <p className="leading-7">
           ISMS-P 인증 기준 2.8(정보시스템 도입 및 개발 보안)은 시스템을 새로 도입하거나 개발할 때
@@ -49,6 +56,8 @@ export default function Overview() {
           <br />
           이 목록을 개발 단계에서 체계적으로 점검하면 실제 공격의 80% 이상을 사전에 차단할 수 있다.
         </p>
+
+        <OwaspFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">시큐어코딩: 입력값 검증과 출력값 인코딩</h3>
         <p className="leading-7">
@@ -99,6 +108,8 @@ export default function Overview() {
           <br />
           개발자가 운영 서버에 직접 SSH 접속하여 코드를 수정하는 행위는 변경 추적이 불가능하고 롤백도 어려우므로 절대 허용하지 않는다.
         </p>
+
+        <EnvSeparationViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">보안 검수: 코드 리뷰와 취약점 스캔</h3>
         <p className="leading-7">

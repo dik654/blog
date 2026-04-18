@@ -1,8 +1,14 @@
+import FdsAndStrViz from './viz/FdsAndStrViz';
+import FdsAlertFlowViz from './viz/FdsAlertFlowViz';
+import IncidentResponseViz from './viz/IncidentResponseViz';
+
 export default function FdsAndStr() {
   return (
     <section id="fds-and-str" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">이상거래 탐지와 의심거래 보고</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <FdsAndStrViz />
 
         <p>
           CDD가 "입구"에서 고객을 확인하는 절차라면, FDS는 "내부"에서 거래를 감시하는 절차.<br />
@@ -135,6 +141,8 @@ export default function FdsAndStr() {
           </table>
         </div>
 
+        <FdsAlertFlowViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">STR/SAR — 의심거래 보고</h3>
         <p>
           STR(Suspicious Transaction Report)과 SAR(Suspicious Activity Report)은 같은 개념의 다른 이름.<br />
@@ -260,6 +268,8 @@ export default function FdsAndStr() {
           이 때문에 최소 권한 원칙(Least Privilege), 직무 분리(Segregation of Duties),
           관리자 행위 로그의 별도 보관(WORM 스토리지)이 필수.
         </p>
+
+        <IncidentResponseViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">재발 방지 — 체계 고도화</h3>
         <p>

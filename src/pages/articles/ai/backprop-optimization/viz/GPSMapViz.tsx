@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 
 const CITIES = [
-  { name: '마드리드', lon: -3.7, x: 120, y: 80, color: '#ef4444' },
-  { name: '파리', lon: 2.35, x: 200, y: 45, color: '#3b82f6' },
-  { name: '베를린', lon: 13.4, x: 320, y: 40, color: '#10b981' },
+  { name: '마드리드', lon: -3.7, x: 120, y: 68, color: '#ef4444' },
+  { name: '파리', lon: 2.35, x: 210, y: 46, color: '#3b82f6' },
+  { name: '베를린', lon: 13.4, x: 320, y: 42, color: '#10b981' },
 ];
 const sp = { type: 'spring' as const, bounce: 0.2, duration: 0.6 };
 
@@ -27,11 +27,11 @@ export default function GPSMapViz() {
         {CITIES.map((c, i) => (
           <motion.g key={c.name} initial={{ scale: 0 }} animate={{ scale: 1 }}
             transition={{ ...sp, delay: i * 0.15 }}>
-            <circle cx={c.x} cy={c.y} r={14} fill={`${c.color}20`}
+            <circle cx={c.x} cy={c.y} r={20} fill={`${c.color}15`}
               stroke={c.color} strokeWidth={1.5} />
-            <text x={c.x} y={c.y + 3} textAnchor="middle" fontSize={9}
+            <text x={c.x} y={c.y - 2} textAnchor="middle" fontSize={9}
               fontWeight={700} fill={c.color}>{c.name}</text>
-            <text x={c.x} y={c.y + 16} textAnchor="middle" fontSize={9}
+            <text x={c.x} y={c.y + 10} textAnchor="middle" fontSize={8}
               fill={c.color} fillOpacity={0.7}>{c.lon}°</text>
           </motion.g>
         ))}

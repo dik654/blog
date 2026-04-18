@@ -20,37 +20,38 @@ export default function Topics({ onCodeRef }: Props) {
 
         {/* ── 전체 토픽 목록 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Ethereum 2.0 토픽 전체 목록</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 토픽 이름 형식:
-// /eth2/{fork_digest}/{name}/ssz_snappy
-
-// fork_digest 계산:
-// fork_digest = SHA256(current_fork_version || genesis_validators_root)[:4]
-// 예: "6a95a1a9" (Deneb, mainnet)
-
-// 글로벌 토픽 (모든 노드 구독 필수):
-// - beacon_block                          // 블록 전파
-// - beacon_aggregate_and_proof            // 집계된 attestation
-// - voluntary_exit                         // validator 종료
-// - proposer_slashing                      // proposer 슬래싱 증거
-// - attester_slashing                      // attester 슬래싱 증거
-// - bls_to_execution_change                // withdrawal credential 변경 (Capella+)
-// - blob_sidecar_{0-5}                     // blob sidecar (Deneb+, 6 subnets)
-// - sync_committee_contribution_and_proof  // sync aggregate
-
-// 서브넷 토픽 (validator가 선택 구독):
-// - beacon_attestation_{0-63}              // 64 attestation subnets
-// - sync_committee_{0-3}                   // 4 sync committee subnets
-
-// 구독 전략:
-// 1. 모든 노드: 글로벌 토픽 전부 + 할당된 attestation subnet
-// 2. validator: + 자기 committee의 subnet
-// 3. aggregator: + 메인넷 가능한 많은 subnet (집계용)
-
-// 총 활성 토픽 수 (일반 노드): ~10개
-// 총 활성 토픽 수 (active validator): ~13개
-// 총 활성 토픽 수 (aggregator): ~40개+`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-1">토픽 이름 형식</p>
+            <p className="text-sm text-foreground/80 font-mono mb-2">/eth2/{'{fork_digest}'}/{'{name}'}/ssz_snappy</p>
+            <p className="text-xs text-foreground/60"><code>fork_digest</code> = SHA256(current_fork_version || genesis_validators_root)[:4]. 예: <code>"6a95a1a9"</code> (Deneb, mainnet)</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">글로벌 토픽 (모든 노드 구독 필수)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>beacon_block</code> — 블록 전파</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>aggregate_and_proof</code> — 집계 attestation</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>voluntary_exit</code> — validator 종료</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>proposer_slashing</code> — proposer 슬래싱</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>attester_slashing</code> — attester 슬래싱</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>bls_to_execution_change</code> — withdrawal 변경(Capella+)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>blob_sidecar_{'{0-5}'}</code> — blob(Deneb+, 6 subnets)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>sync_contribution_and_proof</code> — sync 집계</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">서브넷 토픽 (validator 선택 구독)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>beacon_attestation_{'{0-63}'}</code> — 64 attestation subnets</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>sync_committee_{'{0-3}'}</code> — 4 sync committee subnets</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">일반 노드: ~10개 토픽</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">active validator: ~13개</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">aggregator: ~40개+</div>
+          </div>
+        </div>
         <p className="leading-7">
           Ethereum 2.0은 <strong>글로벌 + 서브넷</strong> 이중 토픽 구조.<br />
           subnet 분산으로 attestation 대역폭 분산 → 한 노드가 모든 서명 전파 불필요.<br />
@@ -66,44 +67,41 @@ export default function Topics({ onCodeRef }: Props) {
 
         {/* ── 포크 다이제스트 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">포크 다이제스트 — 네트워크 자동 격리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 포크 다이제스트 계산
-func computeForkDigest(
-    forkVersion [4]byte,
-    genesisValidatorsRoot [32]byte,
-) [4]byte {
-    // SSZ container 해시
-    data := ForkData{
-        CurrentVersion: forkVersion,
-        GenesisValidatorsRoot: genesisValidatorsRoot,
-    }
-    root := HashTreeRoot(data)
-    return [4]byte{root[0], root[1], root[2], root[3]}
-}
-
-// 메인넷 fork_digest 연대기:
-// Phase0 (2020-12):   b5303f2a
-// Altair (2021-10):   afcaaba0
-// Bellatrix (2022-09): 4a26c58b (The Merge)
-// Capella (2023-04):  bba4da96
-// Deneb (2024-03):    6a95a1a9
-// Electra (2025 예정): TBD
-
-// 하드포크 전환:
-// 1. 포크 epoch N 설정
-// 2. epoch N-1까지: old fork_digest 사용
-// 3. epoch N부터: new fork_digest 사용
-// 4. 일정 시간 overlap (이전 버전 이해)
-
-// 자동 격리 효과:
-// 업그레이드 안 한 노드 → 이전 fork_digest 사용
-// → 새 fork_digest 토픽 수신 불가 → 자연 disconnect
-// → 수동 버전 체크 없이 네트워크 분리 보장
-
-// 크로스-포크 호환:
-// - subscribe old + new digest during transition (~4 epochs overlap)
-// - 노드는 gradually 이전 digest 구독 해제`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2"><code>computeForkDigest(forkVersion, genesisValidatorsRoot)</code></p>
+            <p className="text-sm text-foreground/80"><code>ForkData</code> SSZ container를 <code>HashTreeRoot</code>하여 처음 4바이트 추출. 네트워크 + 포크 조합의 고유 식별자.</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">메인넷 fork_digest 연대기</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Phase0 (2020-12) — <code>b5303f2a</code></div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Altair (2021-10) — <code>afcaaba0</code></div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Bellatrix (2022-09) — <code>4a26c58b</code> (The Merge)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Capella (2023-04) — <code>bba4da96</code></div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Deneb (2024-03) — <code>6a95a1a9</code></div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Electra (2025 예정) — TBD</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3">하드포크 전환 흐름</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80">포크 epoch N 설정</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80">epoch N-1까지 old fork_digest 사용</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80">epoch N부터 new fork_digest 사용 (~4 epochs overlap)</div>
+              </div>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2">업그레이드 안 한 노드 → 이전 fork_digest → 새 토픽 수신 불가 → 자연 disconnect. 수동 버전 체크 없이 격리 보장.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>fork_digest</strong>가 포크별 네트워크를 암호학적으로 분리.<br />
           업그레이드 안 한 노드는 새 토픽 모름 → 자동 isolate.<br />

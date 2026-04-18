@@ -1,8 +1,14 @@
+import AccountLifecycleViz from './viz/AccountLifecycleViz';
+import AccountIssuanceViz from './viz/AccountIssuanceViz';
+import RetirementViz from './viz/RetirementViz';
+
 export default function AccountLifecycle() {
   return (
     <section id="account-lifecycle" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">계정 생명주기 관리</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <AccountLifecycleViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">생명주기란</h3>
         <p>
@@ -30,6 +36,8 @@ export default function AccountLifecycle() {
           개발 환경(Development)과 운영 환경(Production)의 계정을 완전히 분리하고, 운영 환경 접근은 별도 승인 절차를 거쳐야 한다.
           VASP에서는 운영 DB에 고객 자산 잔고와 개인정보가 모두 존재하므로 분리가 더욱 중요.
         </p>
+
+        <AccountIssuanceViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">권한 변경: 임시 권한과 자동 회수</h3>
         <p>
@@ -94,6 +102,8 @@ export default function AccountLifecycle() {
           <li><strong>세션 녹화</strong> — 공용 계정 세션은 전체 녹화하여 사후 검토 가능하게 유지. 접근제어 소프트웨어가 이 기능을 제공</li>
           <li><strong>감축 계획</strong> — 공용 계정 수를 점진적으로 줄이는 계획을 수립하고 ISMS 심사에 제출. 현재 수량, 목표 수량, 일정을 명시</li>
         </ul>
+
+        <RetirementViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">퇴직/이직 처리</h3>
         <p>

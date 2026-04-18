@@ -1,8 +1,14 @@
+import SecureDeletionViz from './viz/SecureDeletionViz';
+import OverwriteStandardsInlineViz from './viz/OverwriteStandardsInlineViz';
+import BlockchainDeletionInlineViz from './viz/BlockchainDeletionInlineViz';
+
 export default function SecureDeletion() {
   return (
     <section id="secure-deletion" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">안전한 파기 방법</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <SecureDeletionViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">파기의 원칙: 복구 불가능</h3>
         <p>
@@ -49,6 +55,9 @@ export default function SecureDeletion() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">덮어쓰기 표준</h3>
+        <div className="my-6">
+          <OverwriteStandardsInlineViz />
+        </div>
         <p>
           덮어쓰기의 횟수와 패턴에 따라 여러 표준이 존재한다:
         </p>
@@ -123,6 +132,9 @@ export default function SecureDeletion() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">블록체인 특수성: 온체인 데이터</h3>
+        <div className="my-6">
+          <BlockchainDeletionInlineViz />
+        </div>
         <p>
           블록체인에 기록된 데이터는 기술적으로 삭제할 수 없다 — 블록체인의 핵심 속성인 불변성(Immutability)과 개인정보 파기 의무가 충돌하는 지점.<br />
           따라서 VASP가 준수해야 할 원칙:

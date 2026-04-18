@@ -19,14 +19,29 @@ export default function SummaryCompression() {
           2차 압축(<code>summary_compression.rs</code>, 300 LOC)은 <strong>요약 → 더 짧은 요약</strong> 변환<br />
           호출 조건: 연쇄 압축으로 요약 자체가 커져 <code>max_summary_tokens</code> 초과 시 자동 실행
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// compact.rs에서 2차 압축 트리거
-let merged = merge_compact_summaries(prev.as_ref(), &new_raw);
-
-let final_summary = if estimate_summary_tokens(&merged) > config.max_summary_tokens {
-    SummaryCompressor::new(config.max_summary_tokens).compress(&merged)
-} else {
-    merged
-};`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-mono text-muted-foreground mb-2">compact.rs — 2차 압축 트리거</div>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0 font-mono text-xs text-muted-foreground mt-0.5">1.</span>
+                <span className="text-muted-foreground"><code className="text-xs">merge_compact_summaries()</code>로 이전+새 요약 병합</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0 font-mono text-xs text-muted-foreground mt-0.5">2.</span>
+                <span className="text-muted-foreground"><code className="text-xs">estimate_summary_tokens(&merged)</code> &gt; <code className="text-xs">config.max_summary_tokens</code> 확인</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm ml-4">
+                <span className="shrink-0 text-xs text-green-600 dark:text-green-400 mt-0.5">초과 시</span>
+                <span className="text-muted-foreground"><code className="text-xs">SummaryCompressor::new().compress(&merged)</code> 실행</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm ml-4">
+                <span className="shrink-0 text-xs text-muted-foreground mt-0.5">이내 시</span>
+                <span className="text-muted-foreground"><code className="text-xs">merged</code> 그대로 사용 — 불필요한 정보 손실 방지</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>조건부 호출</strong>: 요약이 예산 이내면 2차 압축 스킵 — 불필요한 정보 손실 방지<br />
           2차 압축은 <strong>Lossy</strong> — 저우선순위 항목이 삭제됨<br />
@@ -35,28 +50,60 @@ let final_summary = if estimate_summary_tokens(&merged) > config.max_summary_tok
 
         {/* ── SummaryCompressor 구조 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">SummaryCompressor 4단계 파이프라인</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct SummaryCompressor {
-    max_summary_tokens: usize,
-    current_work_weight: f32,  // 최근 작업 우선도 (기본 3.0)
-    error_weight: f32,         // 오류 이벤트 우선도 (기본 2.5)
-    milestone_weight: f32,     // 이정표 우선도 (기본 2.0)
-}
-
-impl SummaryCompressor {
-    pub fn compress(&self, summary: &Summary) -> Summary {
-        // 1) 핵심 사실 추출
-        let facts = self.extract_key_facts(summary);
-
-        // 2) 노이즈 제거
-        let cleaned = self.remove_noise(facts);
-
-        // 3) 관련도 순위 매기기
-        let ranked = self.rank_by_relevance(&summary, cleaned);
-
-        // 4) 토큰 예산 내로 절단
-        self.truncate_to_budget(ranked, self.max_summary_tokens)
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-3">
+            <div className="font-semibold text-sm mb-3">SummaryCompressor 구조체 + 가중치</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">max_summary_tokens</div>
+                <p className="text-xs text-muted-foreground mt-1">요약 최대 토큰</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">current_work_weight</div>
+                <p className="text-xs text-muted-foreground mt-1">기본 3.0</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">error_weight</div>
+                <p className="text-xs text-muted-foreground mt-1">기본 2.5</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">milestone_weight</div>
+                <p className="text-xs text-muted-foreground mt-1">기본 2.0</p>
+              </div>
+            </div>
+            <div className="font-semibold text-sm mb-2">compress() — 4단계 파이프라인</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+                  <span className="text-xs font-semibold">Extract</span>
+                </div>
+                <p className="text-xs text-muted-foreground">핵심 사실 추출</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+                  <span className="text-xs font-semibold">Clean</span>
+                </div>
+                <p className="text-xs text-muted-foreground">노이즈 제거</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+                  <span className="text-xs font-semibold">Rank</span>
+                </div>
+                <p className="text-xs text-muted-foreground">관련도 순위</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
+                  <span className="text-xs font-semibold">Truncate</span>
+                </div>
+                <p className="text-xs text-muted-foreground">예산 내 절단</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계 파이프라인</strong>: Extract → Clean → Rank → Truncate<br />
           각 단계는 순수 함수 — 입력만 보고 출력 결정, 전역 상태 의존 없음<br />
@@ -65,40 +112,37 @@ impl SummaryCompressor {
 
         {/* ── 1단계: extract_key_facts ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">1단계 — extract_key_facts()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn extract_key_facts(&self, summary: &Summary) -> Vec<Fact> {
-    let mut facts = Vec::new();
-
-    // 파일 경로 (사실 타입: FilePath)
-    for path in &summary.file_candidates {
-        facts.push(Fact::file_path(path.clone()));
-    }
-
-    // 오류 이벤트 (사실 타입: ErrorEvent)
-    for ev in &summary.timeline {
-        if matches!(ev.kind, EventKind::Error) {
-            facts.push(Fact::error(ev.summary.clone(), ev.timestamp));
-        }
-    }
-
-    // 이정표 (사실 타입: Milestone)
-    for ev in &summary.timeline {
-        if matches!(ev.kind, EventKind::Milestone) {
-            facts.push(Fact::milestone(ev.summary.clone(), ev.timestamp));
-        }
-    }
-
-    // 진행 중 작업 (사실 타입: CurrentWork)
-    if let Some(cw) = &summary.current_work {
-        facts.push(Fact::current_work(cw.clone()));
-    }
-
-    // 미완료 (사실 타입: Pending)
-    for p in &summary.pending_work {
-        facts.push(Fact::pending(p.clone()));
-    }
-
-    facts
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">extract_key_facts(summary) → Vec&lt;Fact&gt;</span>
+            </div>
+            <div className="font-semibold text-xs text-muted-foreground mb-2">Fact 타입 5가지 — Summary에서 추출</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">FilePath</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">summary.file_candidates</code>에서 추출</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold text-red-600 dark:text-red-400">ErrorEvent</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">timeline</code>에서 <code className="text-xs">EventKind::Error</code> 필터</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold text-green-600 dark:text-green-400">Milestone</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">timeline</code>에서 <code className="text-xs">EventKind::Milestone</code> 필터</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold text-purple-600 dark:text-purple-400">CurrentWork</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">summary.current_work</code> (있을 때만)</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold text-amber-600 dark:text-amber-400">Pending</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">summary.pending_work</code> 각 항목</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Fact 타입 5가지</strong>: FilePath, ErrorEvent, Milestone, CurrentWork, Pending<br />
           사실 단위로 분해 — 각 사실은 독립적으로 삭제/보존 결정 가능<br />
@@ -107,26 +151,37 @@ impl SummaryCompressor {
 
         {/* ── 2단계: remove_noise ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">2단계 — remove_noise()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn remove_noise(&self, mut facts: Vec<Fact>) -> Vec<Fact> {
-    // 중복 제거
-    facts.sort_by(|a, b| a.text().cmp(b.text()));
-    facts.dedup_by(|a, b| a.text() == b.text());
-
-    // 의미 없는 파일 경로 필터
-    facts.retain(|f| match f {
-        Fact::FilePath(p) => {
-            !p.starts_with("/tmp/")
-                && !p.to_string_lossy().contains(".cache/")
-                && !p.file_name().map_or(false, |n| n.to_string_lossy().starts_with('.'))
-        }
-        _ => true,
-    });
-
-    // 너무 짧은 텍스트 필터 (10자 미만)
-    facts.retain(|f| f.text().len() >= 10);
-
-    facts
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">remove_noise(facts) → Vec&lt;Fact&gt;</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background border border-border rounded p-3">
+                <div className="text-xs font-semibold mb-1">1. 중복 제거</div>
+                <p className="text-xs text-muted-foreground">
+                  <code className="text-xs">sort_by()</code> + <code className="text-xs">dedup_by()</code><br />
+                  같은 텍스트의 사실 → 1회로
+                </p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="text-xs font-semibold mb-1">2. 임시 파일 필터</div>
+                <p className="text-xs text-muted-foreground">
+                  <code className="text-xs">/tmp/</code>, <code className="text-xs">.cache/</code>, dotfile 제외<br />
+                  장기 맥락과 무관한 경로
+                </p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="text-xs font-semibold mb-1">3. 짧은 텍스트 필터</div>
+                <p className="text-xs text-muted-foreground">
+                  10자 미만 제거<br />
+                  의미 추출 어려운 항목
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>3가지 노이즈 제거</strong>:<br />
           1. <strong>중복</strong>: 같은 파일 여러 번 언급 → 1회로<br />
@@ -140,35 +195,33 @@ impl SummaryCompressor {
 
         {/* ── 3단계: rank_by_relevance ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">3단계 — rank_by_relevance()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn rank_by_relevance(&self, summary: &Summary, facts: Vec<Fact>) -> Vec<(Fact, f32)> {
-    // 현재 작업 키워드 추출
-    let current_keywords: HashSet<String> = summary.current_work
-        .as_deref().unwrap_or("")
-        .split_whitespace()
-        .filter(|w| w.len() >= 4)
-        .map(|w| w.to_lowercase())
-        .collect();
-
-    facts.into_iter()
-        .map(|f| {
-            let base_score = match &f {
-                Fact::CurrentWork(_) => self.current_work_weight,
-                Fact::ErrorEvent(_)  => self.error_weight,
-                Fact::Milestone(_)   => self.milestone_weight,
-                _ => 1.0,
-            };
-
-            // 현재 작업과의 키워드 매칭 보너스
-            let text_lower = f.text().to_lowercase();
-            let keyword_hits = current_keywords.iter()
-                .filter(|kw| text_lower.contains(kw.as_str()))
-                .count() as f32;
-
-            let relevance_bonus = keyword_hits * 0.3;
-            (f, base_score + relevance_bonus)
-        })
-        .collect()
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">rank_by_relevance(summary, facts) → Vec&lt;(Fact, f32)&gt;</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-background border border-border rounded p-3">
+                <div className="text-xs font-semibold mb-2">타입별 기본 가중치</div>
+                <div className="space-y-1 text-xs">
+                  <div className="flex justify-between"><span className="font-mono text-purple-600 dark:text-purple-400">CurrentWork</span><span className="font-semibold">3.0</span></div>
+                  <div className="flex justify-between"><span className="font-mono text-red-600 dark:text-red-400">ErrorEvent</span><span className="font-semibold">2.5</span></div>
+                  <div className="flex justify-between"><span className="font-mono text-green-600 dark:text-green-400">Milestone</span><span className="font-semibold">2.0</span></div>
+                  <div className="flex justify-between"><span className="font-mono text-muted-foreground">기타</span><span className="font-semibold">1.0</span></div>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="text-xs font-semibold mb-2">키워드 매칭 보너스</div>
+                <p className="text-xs text-muted-foreground">
+                  <code className="text-xs">current_work</code>에서 4자 이상 단어 추출<br />
+                  사실 텍스트에 키워드 N개 포함 시 <code className="text-xs">N x 0.3</code> 보너스<br />
+                  최종 점수 = 기본 가중치 + 보너스
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>점수 계산</strong>: 타입별 기본 가중치 + 키워드 매칭 보너스<br />
           현재 작업 텍스트에서 4자 이상 단어를 키워드로 추출 — stop-word 같은 짧은 단어 제외<br />
@@ -183,25 +236,39 @@ impl SummaryCompressor {
 
         {/* ── 4단계: truncate_to_budget ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">4단계 — truncate_to_budget()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn truncate_to_budget(&self, mut ranked: Vec<(Fact, f32)>, budget: usize) -> Summary {
-    // 점수 내림차순 정렬
-    ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-
-    // 그리디 선택 — 예산 범위 내에서 점수 높은 것부터 포함
-    let mut chosen = Vec::new();
-    let mut tokens_used = 0usize;
-
-    for (fact, _score) in ranked {
-        let cost = estimate_fact_tokens(&fact);
-        if tokens_used + cost <= budget {
-            chosen.push(fact);
-            tokens_used += cost;
-        }
-    }
-
-    // Summary 구조로 재조립
-    Summary::from_facts(chosen)
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">truncate_to_budget(ranked, budget) → Summary</span>
+            </div>
+            <div className="space-y-2">
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+                  <span className="text-xs font-semibold">점수 내림차순 정렬</span>
+                </div>
+                <p className="text-xs text-muted-foreground">높은 점수부터 우선 선택 대상</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+                  <span className="text-xs font-semibold">그리디 선택</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  예산 내에서 점수 높은 것부터 포함 — <code className="text-xs">estimate_fact_tokens()</code>로 비용 계산 후 <code className="text-xs">tokens_used + cost &lt;= budget</code> 확인
+                </p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+                  <span className="text-xs font-semibold">Summary 재조립</span>
+                </div>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">Summary::from_facts(chosen)</code> — 각 Fact 타입이 원래 필드로 재배치</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>그리디 knapsack</strong>: 0/1 knapsack은 NP-hard지만 근사 해법으로 충분<br />
           점수/비용 비율 순으로 정렬하지 않고 <strong>점수 단독 정렬</strong> — 단순성 우선<br />
@@ -214,20 +281,31 @@ impl SummaryCompressor {
 
         {/* ── 극한 상황 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">극한 상황 — 예산 너무 작을 때</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// budget이 최소 사실 하나도 담을 수 없을 때
-if chosen.is_empty() {
-    // 폴백: 가장 중요한 사실 하나 + 절단 메시지
-    if let Some((top_fact, _)) = ranked.first() {
-        return Summary {
-            scope: format!("⚠️ 요약 극한 절단: {}", top_fact.text()),
-            current_work: None,
-            pending_work: vec!["(생략됨 — 예산 부족)".to_string()],
-            tool_usage: HashMap::new(),
-            file_candidates: vec![],
-            timeline: vec![],
-        };
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <div className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-2">폴백 — 예산이 최소 사실 하나도 담을 수 없을 때</div>
+            <div className="bg-background border border-border rounded p-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span className="font-mono font-semibold">scope</span>
+                  <span className="text-muted-foreground ml-1">"요약 극한 절단: " + top-1 사실</span>
+                </div>
+                <div>
+                  <span className="font-mono font-semibold">current_work</span>
+                  <span className="text-muted-foreground ml-1">None</span>
+                </div>
+                <div>
+                  <span className="font-mono font-semibold">pending_work</span>
+                  <span className="text-muted-foreground ml-1">"(생략됨 -- 예산 부족)"</span>
+                </div>
+                <div>
+                  <span className="font-mono font-semibold">나머지 필드</span>
+                  <span className="text-muted-foreground ml-1">전부 빈 값</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>폴백 동작</strong>: 예산이 매우 작아도 최소한 top-1 사실은 보존<br />
           UI/LLM에게 "정보가 절단됨"을 명시 — ⚠️ 기호로 표시<br />

@@ -15,55 +15,69 @@ export default function Timeout({ onCodeRef }: Props) {
 
         {/* ── Timeout 체인 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">4단계 Timeout 체인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Timeout 파라미터 (ConsensusParams)
-type TimeoutParams struct {
-    Propose        time.Duration  // 3s
-    ProposeDelta   time.Duration  // 500ms
-    Vote           time.Duration  // 1s
-    VoteDelta      time.Duration  // 500ms
-    Commit         time.Duration  // 1s
-}
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3"><code>TimeoutParams</code> — ConsensusParams</p>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-sm text-center">
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium text-xs">Propose</p>
+                <p className="text-xs text-muted-foreground font-mono">3s</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium text-xs">ProposeDelta</p>
+                <p className="text-xs text-muted-foreground font-mono">500ms</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium text-xs">Vote</p>
+                <p className="text-xs text-muted-foreground font-mono">1s</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium text-xs">VoteDelta</p>
+                <p className="text-xs text-muted-foreground font-mono">500ms</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium text-xs">Commit</p>
+                <p className="text-xs text-muted-foreground font-mono">1s</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Round R에서: <code>propose_timeout = Propose + R * ProposeDelta</code>, <code>vote_timeout = Vote + R * VoteDelta</code></p>
+          </div>
 
-// Round R에서의 timeout:
-// propose_timeout = Propose + R * ProposeDelta
-// prevote_timeout = Vote + R * VoteDelta
-// precommit_timeout = Vote + R * VoteDelta
-// commit_timeout = Commit
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3">Timeout Chain</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. timeoutPropose</p>
+                <p className="text-xs text-muted-foreground">R=0: 3s, R=1: 3.5s, R=2: 4s...</p>
+                <p className="text-xs text-muted-foreground mt-1">Propose 없으면 발동 → <code>enterPrevote(nil)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. timeoutPrevote</p>
+                <p className="text-xs text-muted-foreground">R=0: 1s, R=1: 1.5s...</p>
+                <p className="text-xs text-muted-foreground mt-1">+2/3 any prevote but no majority → <code>enterPrecommit(nil)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. timeoutPrecommit</p>
+                <p className="text-xs text-muted-foreground">R=0: 1s, R=1: 1.5s...</p>
+                <p className="text-xs text-muted-foreground mt-1">+2/3 any precommit but no majority → <code>enterNewRound(R+1)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">4. timeoutCommit</p>
+                <p className="text-xs text-muted-foreground">1s (고정)</p>
+                <p className="text-xs text-muted-foreground mt-1">느린 validator 따라잡기 → <code>enterNewRound(H+1, 0)</code></p>
+              </div>
+            </div>
+          </div>
 
-// Timeout chain:
-// 1. timeoutPropose (R=0: 3s, R=1: 3.5s, R=2: 4s, ...)
-//    - Propose 없으면 발동
-//    - → enterPrevote(nil)
-//
-// 2. timeoutPrevote (R=0: 1s, R=1: 1.5s, ...)
-//    - +2/3 Any prevote 있지만 majority 없을 때 발동
-//    - → enterPrecommit(nil)
-//
-// 3. timeoutPrecommit (R=0: 1s, R=1: 1.5s, ...)
-//    - +2/3 Any precommit 있지만 majority 없을 때 발동
-//    - → enterNewRound(R+1)
-//
-// 4. timeoutCommit (1s)
-//    - commit step 후 대기
-//    - 느린 validator 따라잡기 기회
-//    - → enterNewRound(H+1, 0)
-
-// 왜 linear backoff?
-// - round 실패 = 네트워크 문제 가능성
-// - 점진적 대기 증가 → 안정화 기회
-// - 과도한 round 방지 (현재 메인넷 round 3 이하 99%)
-
-// 구현:
-func (cs *State) scheduleTimeout(...) {
-    cs.timeoutTicker.ScheduleTimeout(timeoutInfo{
-        Duration: timeout,
-        Height: height,
-        Round: round,
-        Step: step,
-    })
-}`}
-        </pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">왜 linear backoff?</p>
+            <div className="grid grid-cols-3 gap-2 text-sm text-center text-muted-foreground">
+              <div className="bg-background rounded px-2 py-1.5">round 실패 = 네트워크 문제 가능성</div>
+              <div className="bg-background rounded px-2 py-1.5">점진적 대기 증가 → 안정화 기회</div>
+              <div className="bg-background rounded px-2 py-1.5">메인넷 round 3 이하 99%</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>4단계 timeout</strong> 체인: Propose → Prevote → Precommit → Commit.<br />
           각 round마다 linear backoff (500ms 증가).<br />
@@ -72,60 +86,63 @@ func (cs *State) scheduleTimeout(...) {
 
         {/* ── WAL Replay ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">WAL Replay — Crash Recovery</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// WAL (Write-Ahead Log) 복구 메커니즘
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">쓰기 — <code>handleMsg</code> 전</p>
+              <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground">
+                <div className="bg-background/50 rounded px-2 py-1">1. <code>cs.wal.Write(mi)</code> — 디스크에 기록</div>
+                <div className="bg-background/50 rounded px-2 py-1">2. <code>cs.wal.FlushAndSync()</code> — fsync</div>
+                <div className="bg-background/50 rounded px-2 py-1">3. 메시지 타입별 실제 처리</div>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">읽기 — <code>catchupReplay</code> (시작 시)</p>
+              <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground">
+                <div className="bg-background/50 rounded px-2 py-1">1. <code>SearchForEndHeight(csHeight)</code> — WAL 파일 열기</div>
+                <div className="bg-background/50 rounded px-2 py-1">2. <code>NewWALDecoder</code> → 순차 디코딩</div>
+                <div className="bg-background/50 rounded px-2 py-1">3. <code>readReplayMessage(msg)</code> — 새 메시지처럼 처리</div>
+              </div>
+            </div>
+          </div>
 
-// 쓰기 (handleMsg 전):
-func (cs *State) handleMsg(mi msgInfo) {
-    cs.wal.Write(mi)    // 디스크에 fsync
-    cs.wal.FlushAndSync()
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3">Crash Recovery 시나리오</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. 정상 운영</p>
+                <p className="text-xs text-muted-foreground">t=100s에 Precommit(blockA) 서명 + WAL 기록. fsync 완료</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. Crash</p>
+                <p className="text-xs text-muted-foreground">전원, OS 크래시 등으로 노드 중단</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. 재시작</p>
+                <p className="text-xs text-muted-foreground">WAL 읽음 → Precommit(blockA) 이미 서명했음 발견</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">4. 복구</p>
+                <p className="text-xs text-muted-foreground">같은 블록에 같은 서명 재방송. 다른 블록 서명 → 거부</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2 text-center">→ 이중 서명 방지 + consensus 복구</p>
+          </div>
 
-    // 그 다음 실제 처리
-    switch msg := mi.Msg.(type) {
-    ...
-    }
-}
-
-// 읽기 (시작 시):
-func (cs *State) catchupReplay(csHeight int64) error {
-    // 1. WAL 파일 열기
-    walFile, _ := cs.wal.SearchForEndHeight(csHeight, nil)
-
-    // 2. WAL 항목 순차 재생
-    decoder := NewWALDecoder(walFile)
-    for {
-        msg, err := decoder.Decode()
-        if err == io.EOF { break }
-
-        // 마치 새 메시지처럼 처리
-        cs.readReplayMessage(msg)
-    }
-
-    return nil
-}
-
-// Crash Recovery 시나리오:
-// 1. 노드 t=100s에 Precommit(blockA) 서명 + WAL 기록
-// 2. fsync 완료 (블록 WAL file에 안전하게 저장)
-// 3. 노드 crash (전원, OS 크래시 등)
-// 4. 재시작: WAL 읽음
-// 5. Precommit(blockA)을 이미 서명했음 발견
-// 6. 같은 블록에 같은 서명 재방송
-// 7. 다른 블록 서명 시도 → 거부 (이미 Precommit 기록됨)
-//
-// → 이중 서명 방지 + consensus 복구
-
-// WAL 파일 구조:
-// wal/
-//   ├── WAL (symlink to WAL.001)
-//   ├── WAL.001
-//   └── WAL.002  (rotation)
-
-// Size 관리:
-// - height 경과 시 rotation
-// - 오래된 wal 파일 삭제 가능
-// - 현재 height의 wal만 crash recovery에 필요`}
-        </pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">WAL 파일 구조 & Size 관리</p>
+            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground">
+              <div>
+                <p className="text-xs"><code>wal/WAL</code> (symlink) → <code>WAL.001</code></p>
+                <p className="text-xs"><code>wal/WAL.001</code>, <code>WAL.002</code> (rotation)</p>
+              </div>
+              <div>
+                <p className="text-xs">height 경과 시 rotation</p>
+                <p className="text-xs">현재 height의 wal만 crash recovery에 필요</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           WAL이 <strong>crash recovery의 핵심</strong>.<br />
           매 consensus event를 fsync 후 처리 → crash 후 정확 복구.<br />

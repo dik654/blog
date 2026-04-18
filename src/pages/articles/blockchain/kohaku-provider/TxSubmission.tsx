@@ -37,78 +37,95 @@ export default function TxSubmission({ onCodeRef }: Props) {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Dandelion++ 프로토콜 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Dandelion++ (Bitcoin BIP 156)
-// 트랜잭션 전파 시 sender anonymity 보호
+        <p className="text-sm text-muted-foreground mb-3">Bitcoin BIP 156 — 트랜잭션 전파 시 sender anonymity 보호</p>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4 border-l-4 border-blue-400">
+              <p className="text-sm font-semibold mb-2">Stem Phase (익명 라우팅)</p>
+              <ol className="text-sm text-muted-foreground space-y-1">
+                <li>1) Source가 stem graph에서 next hop 선택</li>
+                <li>2) 확률 p로 stem 계속, (1-p)로 fluff 전환</li>
+                <li>3) 평균 stem 경로 길이: 1/p hops</li>
+              </ol>
+            </div>
+            <div className="bg-muted rounded-lg p-4 border-l-4 border-green-400">
+              <p className="text-sm font-semibold mb-2">Fluff Phase (일반 broadcast)</p>
+              <ol className="text-sm text-muted-foreground space-y-1">
+                <li>1) Stem 종료 노드가 gossip mode 전환</li>
+                <li>2) 전체 네트워크로 flooding</li>
+                <li>3) 일반 Bitcoin/Ethereum 전파와 동일</li>
+              </ol>
+            </div>
+          </div>
 
-// Stem Phase (익명 라우팅)
-// 1) Source가 stem graph에서 next hop 선택
-// 2) Next hop은 확률 p로 stem 계속 (1-p로 fluff 전환)
-// 3) 평균 stem 경로 길이: 1/p hops
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Stem Graph Properties</p>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li>각 노드는 정확히 1 outgoing stem edge</li>
+              <li>노드마다 epoch 동안 고정된 next hop</li>
+              <li>Epoch 종료 시 전체 graph 재구성</li>
+            </ul>
+          </div>
 
-// Fluff Phase (일반 broadcast)
-// 1) Stem 종료 노드가 gossip mode 전환
-// 2) 전체 네트워크로 flooding
-// 3) 일반 Bitcoin/Ethereum 전파와 동일
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Diffusion 예시</p>
+            <p className="text-sm text-muted-foreground">
+              Alice → <span className="text-blue-500">[stem]</span> → NodeA → <span className="text-blue-500">[stem]</span> → NodeB → <span className="text-green-500">[fluff]</span> → whole network
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">관찰자 시점: Fluff 시작 노드 = NodeB (not Alice). 실제 sender 식별 어려움.</p>
+          </div>
 
-// Stem Graph Properties
-// - 각 노드는 정확히 1 outgoing stem edge
-// - 노드마다 epoch 동안 고정된 next hop
-// - Epoch 종료 시 전체 graph 재구성
-
-// Diffusion 예
-// Alice → [stem] → NodeA → [stem] → NodeB → [fluff] → whole network
-//
-// 관찰자 시점
-// - Fluff 시작 노드 = NodeB (not Alice!)
-// - Actual sender (Alice) 식별 어려움
-// - Stem path 길이만큼 anonymity
-
-// Attack resistance
-// - Majority of network must be honest
-// - Active adversary: "stem detect attack"
-//   → Dandelion++가 random stem 구조로 완화
-// - Passive adversary: 단순 관찰
-//   → 본질적으로 안전`}</pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Attack Resistance</p>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li><strong>Active adversary</strong>: "stem detect attack" → Dandelion++가 random stem 구조로 완화</li>
+              <li><strong>Passive adversary</strong>: 단순 관찰 → 본질적으로 안전</li>
+              <li>전제: 네트워크 과반수가 정직해야 함</li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">구현 세부사항</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Dandelion++ 핵심 파라미터
+        <div className="not-prose space-y-3 mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">핵심 파라미터</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-center">
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium font-mono">EPOCH_DURATION</p>
+                <p className="text-muted-foreground">10분</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium font-mono">FLUFF_PROBABILITY</p>
+                <p className="text-muted-foreground">0.1 (10%/hop)</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium font-mono">EMBARGO_TIMER</p>
+                <p className="text-muted-foreground">10s timeout</p>
+              </div>
+            </div>
+          </div>
 
-const EPOCH_DURATION: Duration = 10 * 60;  // 10 minutes
-const FLUFF_PROBABILITY: f64 = 0.1;         // 10% per hop
-const EMBARGO_TIMER: Duration = 10 * 1000;  // 10s timeout
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2"><code>start_epoch()</code> — Epoch 시작</p>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li><code>connected_peers()</code>에서 랜덤 stem graph 구축</li>
+              <li><code>stem_next = select_random_peer(&amp;peers)</code> — 단일 random next hop 지정</li>
+            </ul>
+          </div>
 
-// Epoch 시작 시
-fn start_epoch() {
-    // 랜덤 stem graph 구축
-    let peers = connected_peers();
-    self.stem_next = select_random_peer(&peers);
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2"><code>on_transaction(tx, from)</code> — TX 수신 처리</p>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li><strong>내 TX</strong> (<code>from == Self</code>): <code>stem_tx(tx)</code>로 stem 시작</li>
+              <li><strong>수신 TX</strong>: <code>random() &lt; FLUFF_PROBABILITY</code>이면 <code>fluff_tx(tx)</code> (broadcast), 아니면 <code>forward_to_stem_next(tx)</code></li>
+            </ul>
+          </div>
 
-    // 모든 peer가 단일 random next hop
-    self.epoch_started_at = now();
-}
-
-// TX 받기
-fn on_transaction(tx, from: Source) {
-    if from == Self {
-        // 내 TX: stem 시작
-        self.stem_tx(tx);
-    } else {
-        // 수신 TX: stem 계속 또는 fluff 전환
-        if random() < FLUFF_PROBABILITY {
-            self.fluff_tx(tx);  // broadcast all
-        } else {
-            self.forward_to_stem_next(tx);
-        }
-    }
-}
-
-// Embargo timer
-// Stem 중 응답 없으면 강제 fluff
-fn after_embargo(tx) {
-    if !tx.seen_on_network() {
-        self.fluff_tx(tx);  // fallback
-    }
-}`}</pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2"><code>after_embargo(tx)</code> — Embargo Timer</p>
+            <p className="text-sm text-muted-foreground">Stem 중 응답 없으면 (<code>!tx.seen_on_network()</code>) 강제 <code>fluff_tx(tx)</code> — fallback</p>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Tx privacy의 실전 한계</p>

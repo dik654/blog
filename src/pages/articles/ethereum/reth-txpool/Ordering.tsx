@@ -31,43 +31,25 @@ export default function Ordering({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── trait 정의 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">TransactionOrdering trait</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait TransactionOrdering: Send + Sync + 'static {
-    /// priority 값의 타입 (정렬 키)
-    type PriorityValue: Ord + Clone + Send + Sync;
-
-    /// TX에 대한 priority 계산
-    fn priority(
-        &self,
-        tx: &Self::Transaction,
-        base_fee: u64,
-    ) -> Priority<Self::PriorityValue>;
-}
-
-pub enum Priority<T> {
-    Value(T),  // 정렬 가능한 priority 값
-    None,      // 현재 블록에 포함 불가 (base_fee 부족 등)
-}
-
-// 기본 구현: CoinbaseTipOrdering
-pub struct CoinbaseTipOrdering<T>(PhantomData<T>);
-
-impl<T: PoolTransaction> TransactionOrdering for CoinbaseTipOrdering<T> {
-    type Transaction = T;
-    type PriorityValue = u128;  // effective_tip
-
-    fn priority(&self, tx: &T, base_fee: u64) -> Priority<u128> {
-        match tx.effective_tip_per_gas(Some(base_fee)) {
-            Some(tip) => Priority::Value(tip),
-            None => Priority::None,  // fee 부족
-        }
-    }
-}
-
-// 사용처: PoolInner가 priority 기반 정렬 BTreeSet 유지
-// - BTreeSet<(PriorityValue, TxHash)> 자동 정렬
-// - best_transactions()가 역순 iterate (high → low)`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">TransactionOrdering: <code>Send + Sync + 'static</code></p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="font-mono text-xs text-indigo-400 mb-1">type PriorityValue: <code>Ord + Clone</code></p>
+              <p className="text-xs text-foreground/50">정렬 키 타입 (연관 타입으로 유연 정의)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="font-mono text-xs text-indigo-400 mb-1">priority(<code>tx</code>, <code>base_fee</code>)</p>
+              <p className="text-xs text-foreground/50">&#8594; <code>Priority::Value(T)</code> 또는 <code>Priority::None</code> (포함 불가)</p>
+            </div>
+          </div>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3 mb-3">
+            <p className="font-mono text-xs text-amber-400 mb-1">CoinbaseTipOrdering (기본 구현)</p>
+            <p className="text-xs text-foreground/60"><code>PriorityValue = u128</code>. <code>effective_tip_per_gas(base_fee)</code> 호출</p>
+            <p className="text-xs text-foreground/50 mt-1"><code>Some(tip)</code> &#8594; <code>Priority::Value(tip)</code> / <code>None</code> &#8594; <code>Priority::None</code></p>
+          </div>
+          <p className="text-xs text-foreground/50">PoolInner가 <code>BTreeSet&lt;(PriorityValue, TxHash)&gt;</code> 유지. <code>best_transactions()</code>가 역순 iterate (high &#8594; low)</p>
+        </div>
         <p className="leading-7">
           <code>TransactionOrdering</code> trait이 <strong>정렬 기준 추상화</strong>.<br />
           <code>type PriorityValue</code> 연관 타입으로 정렬 키 타입 유연하게 정의.<br />
@@ -76,50 +58,34 @@ impl<T: PoolTransaction> TransactionOrdering for CoinbaseTipOrdering<T> {
 
         {/* ── best_transactions iterator ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">best_transactions() — priority 내림차순 iterator</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PayloadBuilder가 블록 생성 시 호출
-pub fn best_transactions(
-    &self,
-) -> Box<dyn Iterator<Item = Arc<Self::Transaction>>> {
-    // 1. Pending 서브풀의 정렬된 BTreeSet 순회
-    let sorted = self.pending_subpool.sorted_transactions();
-
-    // 2. 각 TX의 nonce가 순차적인지 확인
-    let mut sender_nonce_tracker: HashMap<Address, u64> = HashMap::new();
-
-    // 3. priority 순서로 iterator 반환
-    let iter = sorted.into_iter().filter(move |tx| {
-        let sender = tx.sender();
-        let current_next = sender_nonce_tracker
-            .entry(sender)
-            .or_insert_with(|| self.account_nonce(&sender));
-
-        // 같은 sender의 TX는 nonce 순서대로만 반환
-        if tx.nonce() == *current_next {
-            *current_next += 1;
-            true
-        } else {
-            false  // 이 TX는 다음 라운드에
-        }
-    });
-
-    Box::new(iter)
-}
-
-// PayloadBuilder 사용 예:
-let mut txs_to_include = Vec::new();
-let mut gas_used = 0;
-let gas_limit = 30_000_000;
-
-for tx in pool.best_transactions() {
-    if gas_used + tx.gas_limit() > gas_limit { break; }
-
-    txs_to_include.push(tx.clone());
-    gas_used += tx.gas_limit();
-}
-
-// 최종: 블록에 포함될 TX 목록 (priority 순서)`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">best_transactions() &#8594; <code>Box&lt;dyn Iterator&lt;Item = Arc&lt;Tx&gt;&gt;&gt;</code></p>
+          <div className="space-y-2 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-indigo-400 font-bold">1</span>
+              <div>
+                <p className="text-xs text-foreground/70">Pending 서브풀의 정렬된 <code>BTreeSet</code> 순회</p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-amber-400 font-bold">2</span>
+              <div>
+                <p className="text-xs text-foreground/70"><code>sender_nonce_tracker: HashMap&lt;Address, u64&gt;</code>로 nonce 연속성 확인</p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-emerald-400 font-bold">3</span>
+              <div>
+                <p className="text-xs text-foreground/70">같은 sender TX는 nonce 순서대로만 반환. 다음 nonce가 아니면 건너뜀</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3">
+            <p className="text-xs font-semibold text-foreground/70 mb-1">PayloadBuilder 사용 패턴</p>
+            <p className="text-xs text-foreground/60"><code>best_transactions()</code> 순회하며 <code>gas_used + tx.gas_limit() &gt; gas_limit(30M)</code>까지 블록에 채움</p>
+            <p className="text-xs text-foreground/50 mt-1">priority 순 + nonce 순 이중 정렬 &#8594; 검증자 수익 최대화</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>best_transactions()</code>는 <strong>priority 순 + nonce 순</strong> 이중 정렬.<br />
           priority 높은 TX부터 반환하되, 같은 sender는 nonce 연속성 유지.<br />
@@ -128,45 +94,35 @@ for tx in pool.best_transactions() {
 
         {/* ── MEV 정렬 예시 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">MEV Bundle Ordering — 커스텀 구현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// MEV 번들 우선 정렬 구현 예시
-pub struct BundleAwareOrdering {
-    bundle_scores: Arc<DashMap<TxHash, u128>>,  // 번들 수익
-}
-
-impl TransactionOrdering for BundleAwareOrdering {
-    type PriorityValue = BundlePriority;
-
-    fn priority(&self, tx: &Tx, base_fee: u64) -> Priority<BundlePriority> {
-        // 1. 번들 일원인지 확인
-        if let Some(bundle_score) = self.bundle_scores.get(&tx.hash()) {
-            return Priority::Value(BundlePriority::Bundle(*bundle_score));
-        }
-
-        // 2. 일반 TX는 effective_tip 사용
-        match tx.effective_tip_per_gas(Some(base_fee)) {
-            Some(tip) => Priority::Value(BundlePriority::Normal(tip)),
-            None => Priority::None,
-        }
-    }
-}
-
-#[derive(Clone, PartialOrd, Ord)]
-pub enum BundlePriority {
-    Normal(u128),       // 일반 TX
-    Bundle(u128),       // MEV 번들 (항상 우선)
-}
-
-// BundlePriority의 Ord 구현:
-// - Bundle > Normal (번들이 항상 우선)
-// - 같은 카테고리 내에서는 값 비교
-
-// Flashbots 빌더 통합:
-// 1. eth_sendBundle로 번들 수신
-// 2. 번들 수익 계산 → bundle_scores에 저장
-// 3. best_transactions() 호출 시 번들 TX가 먼저 반환
-// 4. 블록에 번들 포함 + 일반 TX는 이후`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">BundleAwareOrdering</p>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3 mb-3">
+            <p className="text-xs text-foreground/60"><code>bundle_scores: Arc&lt;DashMap&lt;TxHash, u128&gt;&gt;</code> — 번들 수익 점수</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#ef4444' }}>
+              <p className="text-xs font-bold text-red-400 mb-1">Bundle TX</p>
+              <p className="text-xs text-foreground/60"><code>bundle_scores</code>에 존재 &#8594; <code>BundlePriority::Bundle(score)</code></p>
+              <p className="text-xs text-foreground/50 mt-1">항상 Normal보다 우선 (Ord 구현)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#6366f1' }}>
+              <p className="text-xs font-bold text-indigo-400 mb-1">Normal TX</p>
+              <p className="text-xs text-foreground/60"><code>effective_tip_per_gas(base_fee)</code> &#8594; <code>BundlePriority::Normal(tip)</code></p>
+            </div>
+          </div>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3">
+            <p className="text-xs font-semibold text-foreground/70 mb-1">Flashbots 빌더 통합 흐름</p>
+            <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
+              <span>1. <code>eth_sendBundle</code> 수신</span>
+              <span>&#8594;</span>
+              <span>2. 수익 계산 &#8594; bundle_scores 저장</span>
+              <span>&#8594;</span>
+              <span>3. <code>best_transactions()</code> 시 번들 TX 먼저</span>
+              <span>&#8594;</span>
+              <span>4. 블록에 포함</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>MEV 빌더는 trait 교체만으로 통합</strong>.<br />
           번들을 우선 정렬하는 커스텀 ordering 삽입 → 나머지 파이프라인 코드 수정 없음.<br />

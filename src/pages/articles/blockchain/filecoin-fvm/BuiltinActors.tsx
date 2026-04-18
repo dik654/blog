@@ -25,93 +25,78 @@ export default function BuiltinActors({ onCodeRef }: { onCodeRef: (key: string, 
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Built-in Actors 전체 목록</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Filecoin Built-in Actors (15+):
 
-// Core System:
-// 0x00 - System: bootstrap
-// 0x01 - Init: creates actors
-// 0x02 - Reward: block rewards
-// 0x03 - Cron: periodic tasks
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Core System</h4>
+            <ul className="text-xs space-y-1">
+              <li><code>0x00</code> <strong>System</strong> — bootstrap</li>
+              <li><code>0x01</code> <strong>Init</strong> — Actor 생성</li>
+              <li><code>0x02</code> <strong>Reward</strong> — 블록 보상</li>
+              <li><code>0x03</code> <strong>Cron</strong> — 주기적 태스크</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Storage System</h4>
+            <ul className="text-xs space-y-1">
+              <li><code>0x04</code> <strong>StoragePower</strong> — 활성 마이너 추적</li>
+              <li><code>0x05</code> <strong>StorageMarket</strong> — 딜 관리</li>
+              <li><code>0x06</code> <strong>VerifiedRegistry</strong> — FIL+</li>
+              <li><code>0x07</code> <strong>StorageMiner</strong> — 마이너별 상태</li>
+              <li><code>0x0d</code> <strong>DataCap</strong> — FIL+ DataCap</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Payment &amp; Accounts</h4>
+            <ul className="text-xs space-y-1">
+              <li><code>0x08</code> <strong>Multisig</strong> — 다중 서명</li>
+              <li><code>0x09</code> <strong>PaymentChannel</strong> — 마이크로페이먼트</li>
+              <li><code>0x0a</code> <strong>Account</strong> — 일반 계정</li>
+              <li><code>0x0b</code> <strong>Placeholder</strong> — 사전 등록</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">EVM Support (2023+)</h4>
+            <ul className="text-xs space-y-1">
+              <li><code>0x0e</code> <strong>EAM</strong> — EVM Actor Manager</li>
+              <li><code>0x0f</code> <strong>EVMActor</strong> — Solidity 런타임</li>
+              <li><code>0x10</code> <strong>EthAccount</strong> — ETH 주소</li>
+            </ul>
+          </div>
+        </div>
 
-// Storage System:
-// 0x04 - StoragePower: active miners tracking
-// 0x05 - StorageMarket: deals management
-// 0x06 - VerifiedRegistry: FIL+
-// 0x07 - StorageMinerActor: per-miner state
-// 0x0d - DataCapActor: FIL+ DataCap
-
-// Payment:
-// 0x08 - Multisig: multi-sig accounts
-// 0x09 - PaymentChannel: micropayments
-
-// Accounts:
-// 0x0a - AccountActor: regular accounts
-// 0x0b - Placeholder: pre-registered
-
-// EVM Support (2023+):
-// 0x0e - EAM (EVM Actor Manager)
-// 0x0f - EVMActor: Solidity runtime
-// 0x10 - EthAccount: ETH addresses
-
-// Actor Details:
-
-// StorageMinerActor (0x07):
-// - per storage provider
-// - sector management
-// - PoSt submission
-// - fault handling
-// - deadline tracking
-// - reward claiming
-// - methods: PreCommitSector, ProveCommit,
-//   DeclareFaults, SubmitWindowedPoSt, ...
-
-// StorageMarketActor (0x05):
-// - deal registry
-// - deal validation
-// - payment settlement
-// - slashing
-// - methods: PublishStorageDeals, ActivateDeals,
-//   OnMinerSectorsTerminate, ...
-
-// StoragePowerActor (0x04):
-// - total network power
-// - per-miner power
-// - miner registration
-// - methods: CreateMiner, UpdateClaimedPower,
-//   EnrollCronEvent, ...
-
-// RewardActor (0x02):
-// - block reward calculation
-// - vesting schedules
-// - claiming
-// - methods: AwardBlockReward,
-//   UpdateNetworkKPI, ...
-
-// EAM (0x0e):
-// - deploys EVM contracts
-// - creates Delegated addresses
-// - bytecode deployment
-// - methods: Create, Create2
-
-// EVMActor (0x0f):
-// - Solidity runtime
-// - per contract instance
-// - EVM opcodes
-// - storage (standard Ethereum model)
-
-// Actor Upgrades:
-// - network upgrade → new WASM
-// - state migration (if needed)
-// - Actor CID changes
-// - via FIPs (Filecoin Improvement Proposals)
-
-// Examples of upgrades:
-// - Shark: FEVM introduction (2023)
-// - Hygge: more EVM features
-// - Lightning: optimizations
-// - Dragon: advanced features`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">StorageMinerActor <code>0x07</code></h4>
+            <p className="text-xs text-muted-foreground mb-1">SP(Storage Provider)별 인스턴스. 섹터 관리, PoSt 제출, 결함 처리, 데드라인 추적, 보상 청구</p>
+            <p className="text-xs"><code>PreCommitSector</code>, <code>ProveCommit</code>, <code>DeclareFaults</code>, <code>SubmitWindowedPoSt</code></p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">StorageMarketActor <code>0x05</code></h4>
+            <p className="text-xs text-muted-foreground mb-1">딜 레지스트리, 검증, 정산, 슬래싱</p>
+            <p className="text-xs"><code>PublishStorageDeals</code>, <code>ActivateDeals</code>, <code>OnMinerSectorsTerminate</code></p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">StoragePowerActor <code>0x04</code></h4>
+            <p className="text-xs text-muted-foreground mb-1">전체 네트워크 파워, 마이너별 파워, 마이너 등록</p>
+            <p className="text-xs"><code>CreateMiner</code>, <code>UpdateClaimedPower</code>, <code>EnrollCronEvent</code></p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">RewardActor <code>0x02</code></h4>
+            <p className="text-xs text-muted-foreground mb-1">블록 보상 계산, 베스팅 스케줄, 청구</p>
+            <p className="text-xs"><code>AwardBlockReward</code>, <code>UpdateNetworkKPI</code></p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">EAM <code>0x0e</code> + EVMActor <code>0x0f</code></h4>
+            <p className="text-xs text-muted-foreground mb-1">EAM: EVM 컨트랙트 배포, Delegated 주소 생성 (<code>Create</code>, <code>Create2</code>)</p>
+            <p className="text-xs">EVMActor: Solidity 런타임, 컨트랙트 인스턴스별 EVM opcode + 표준 스토리지 모델</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Actor 업그레이드</h4>
+            <p className="text-xs text-muted-foreground mb-1">네트워크 업그레이드 시 새 WASM 배포, 필요 시 상태 마이그레이션, Actor CID 변경. FIP를 통해 제안</p>
+            <p className="text-xs">Shark (FEVM 도입) → Hygge → Lightning → Dragon</p>
+          </div>
+        </div>
         <p className="leading-7">
           15+ Built-in Actors: <strong>System, Storage, Market, Power, Reward, EVM</strong>.<br />
           WASM code CID로 관리 → network upgrade 시 교체.<br />

@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import FlashSwapViz from './viz/FlashSwapViz';
 import FlashArbitrageViz from './viz/FlashArbitrageViz';
 import TwapAccumulatorViz from './viz/TwapAccumulatorViz';
@@ -18,19 +19,25 @@ export default function FlashSwap() {
         <FlashSwapViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">swap()의 data 파라미터 활용</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 일반 swap: data 비어있음
-pair.swap(amount0Out, amount1Out, to, new bytes(0));
-
-// Flash swap: data에 콜백 정보 전달
-pair.swap(amount0Out, amount1Out, myContract, abi.encode(arbitrageData));
-
-// Pair 내부
-if (data.length > 0) {
-    IUniswapV2Callee(to).uniswapV2Call(
-        msg.sender, amount0Out, amount1Out, data
-    );
-}
-// 콜백 실행 후 k 검증`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-2">일반 swap</p>
+              <p className="text-sm font-mono">pair.swap(amount0Out, amount1Out, to, <strong>new bytes(0)</strong>)</p>
+              <p className="text-xs text-muted-foreground mt-1">data 비어있음 → 콜백 없음</p>
+            </div>
+            <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm mb-2">Flash swap</p>
+              <p className="text-sm font-mono">pair.swap(amount0Out, amount1Out, myContract, <strong>abi.encode(data)</strong>)</p>
+              <p className="text-xs text-muted-foreground mt-1">data 존재 → 콜백 트리거</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">Pair 내부 분기</p>
+            <p className="text-sm"><code>if (data.length &gt; 0)</code> → <code>IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data)</code></p>
+            <p className="text-xs text-muted-foreground mt-1">콜백 실행 후 k 불변식 검증</p>
+          </div>
+        </div>
         <p>
           data가 비어있지 않으면 <strong>callback 실행</strong><br />
           to 주소는 <code>IUniswapV2Callee</code> 인터페이스 구현 필수<br />
@@ -41,31 +48,22 @@ if (data.length > 0) {
 
         <FlashArbitrageViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`contract Arbitrage is IUniswapV2Callee {
-    // Uniswap과 SushiSwap 가격 차이 이용
-    function arbitrage(address pair, uint amountOut) external {
-        // 1) Uniswap Pair에서 WETH 먼저 받기 (담보 없음)
-        IUniswapV2Pair(pair).swap(
-            0, amountOut, address(this),
-            abi.encode("trigger")  // 콜백 트리거
-        );
-    }
-
-    // 콜백: Uniswap이 호출
-    function uniswapV2Call(
-        address sender, uint amount0, uint amount1, bytes calldata data
-    ) external override {
-        // 2) 받은 WETH를 SushiSwap에서 USDC로 스왑 (높은 가격)
-        uint usdcGained = swapOnSushiswap(amount1);  // 1 WETH → 3100 USDC
-
-        // 3) Uniswap에 상환할 USDC 계산
-        uint usdcOwed = getAmountIn(amount1, pair);  // 1 WETH = 3000 USDC
-
-        // 4) 상환 + 차익 실현
-        IERC20(USDC).transfer(msg.sender, usdcOwed);
-        profit = usdcGained - usdcOwed;  // 100 USDC 이익
-    }
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>Arbitrage</code> 컨트랙트 — <code>IUniswapV2Callee</code> 구현</p>
+            <p className="text-sm"><code>arbitrage(pair, amountOut)</code>: Uniswap Pair에서 WETH를 담보 없이 수령</p>
+            <p className="text-sm font-mono mt-1">pair.swap(0, amountOut, address(this), abi.encode("trigger"))</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>uniswapV2Call()</code> 콜백 — 4단계 차익거래</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li>Uniswap에서 WETH 수령 (담보 없이)</li>
+              <li><code>swapOnSushiswap(amount1)</code> — 높은 가격에 매도 → <strong>3,100 USDC</strong></li>
+              <li><code>getAmountIn(amount1, pair)</code> — 상환 필요: <strong>3,000 USDC</strong></li>
+              <li><code>USDC.transfer(msg.sender, usdcOwed)</code> — 상환 + 차익 <strong>100 USDC</strong></li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>4단계 차익거래</strong>:<br />
           1. Uniswap에서 WETH 수령 (담보 없이)<br />
@@ -75,18 +73,28 @@ if (data.length > 0) {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Flash Swap 수수료</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Flash swap도 일반 swap과 동일하게 0.3% 수수료
-// 즉, 빌린 1 WETH를 갚으려면:
-//   - 같은 토큰으로 갚기: 1.003 WETH
-//   - 상대 토큰으로 갚기: 1 WETH에 해당하는 USDC + 0.3% 수수료
-
-// 예시: 1 WETH 빌려서 같은 페어에 갚기
-원래 reserve: x=3000 USDC, y=1 ETH (k=3000)
-1 WETH 빌림: y → 0
-갚을 때: (3000+Δx·0.997)(1) ≥ 3000
-Δx ≥ 3009.03 USDC (3000/0.997)
-
-=> 9.03 USDC 수수료`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">같은 토큰으로 갚기</p>
+              <p className="text-sm">1 WETH 빌림 → <strong>1.003 WETH</strong> 상환</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">상대 토큰으로 갚기</p>
+              <p className="text-sm">1 WETH 해당 USDC + <strong>0.3% 수수료</strong></p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">예시: 1 WETH 빌려서 같은 페어에 갚기</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li>원래 reserve: <code>x=3000 USDC</code>, <code>y=1 ETH</code> (k=3000)</li>
+              <li>1 WETH 빌림: y → 0</li>
+              <li>갚을 때: <M>{'(3000 + \\Delta x \\cdot 0.997)(1) \\geq 3000'}</M></li>
+              <li><M>{'\\Delta x \\geq 3000 / 0.997 = 3009.03'}</M> USDC</li>
+              <li>수수료: <strong>9.03 USDC</strong></li>
+            </ul>
+          </div>
+        </div>
         <p>
           Flash Swap 수수료 = 일반 swap과 동일 (0.3%)<br />
           "공짜 대출" 아님 — 여전히 LP에게 수수료 지급<br />
@@ -97,26 +105,31 @@ if (data.length > 0) {
 
         <TwapAccumulatorViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Pair 상태 저장
-uint public price0CumulativeLast;  // Σ (price0 · timeElapsed)
-uint public price1CumulativeLast;
-uint32 private blockTimestampLast;
-
-// 매 mint/swap/burn 시 업데이트
-function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
-    uint32 blockTimestamp = uint32(block.timestamp % 2**32);
-    uint32 timeElapsed = blockTimestamp - blockTimestampLast;
-
-    if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
-        // Q112.112 고정소수점
-        price0CumulativeLast += uint(UQ112x112.encode(_reserve1).uqdiv(_reserve0)) * timeElapsed;
-        price1CumulativeLast += uint(UQ112x112.encode(_reserve0).uqdiv(_reserve1)) * timeElapsed;
-    }
-
-    reserve0 = uint112(balance0);
-    reserve1 = uint112(balance1);
-    blockTimestampLast = blockTimestamp;
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1"><code>price0CumulativeLast</code></p>
+              <p className="text-sm"><M>{'\\Sigma(\\text{price0} \\cdot \\text{timeElapsed})'}</M></p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1"><code>price1CumulativeLast</code></p>
+              <p className="text-sm"><M>{'\\Sigma(\\text{price1} \\cdot \\text{timeElapsed})'}</M></p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1"><code>blockTimestampLast</code></p>
+              <p className="text-sm">마지막 업데이트 시각</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>_update()</code> — 매 mint/swap/burn 시 호출</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>timeElapsed = blockTimestamp - blockTimestampLast</code></li>
+              <li><code>timeElapsed &gt; 0</code>이면 누적 가격 업데이트</li>
+              <li><code>UQ112x112.encode(reserve1).uqdiv(reserve0) * timeElapsed</code> — Q112.112 고정소수점</li>
+              <li>reserve0, reserve1, blockTimestampLast 갱신</li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>price CumulativeLast</strong>: 가격 × 시간의 누적 합<br />
           Q112.112 고정소수점: 112비트 정수부 + 112비트 소수부 — 가격 정밀도 보장<br />
@@ -124,28 +137,25 @@ function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reser
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TWAP 계산 방법</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 외부 오라클 컨트랙트 예시
-contract OracleExample {
-    uint public price0CumulativeLast;
-    uint public price1CumulativeLast;
-    uint32 public blockTimestampLast;
-
-    function update() external {
-        (uint price0Cumulative, uint price1Cumulative, uint32 blockTimestamp) =
-            UniswapV2OracleLibrary.currentCumulativePrices(pair);
-
-        uint32 timeElapsed = blockTimestamp - blockTimestampLast;
-        require(timeElapsed >= PERIOD, "PERIOD_NOT_ELAPSED");  // 예: 1시간
-
-        // TWAP = (current - last) / timeElapsed
-        price0Average = FixedPoint.uq112x112(
-            uint224((price0Cumulative - price0CumulativeLast) / timeElapsed)
-        );
-
-        price0CumulativeLast = price0Cumulative;
-        blockTimestampLast = blockTimestamp;
-    }
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>OracleExample</code> — 외부 오라클 컨트랙트</p>
+            <div className="grid gap-2 sm:grid-cols-3 text-sm">
+              <p><code>price0CumulativeLast</code></p>
+              <p><code>price1CumulativeLast</code></p>
+              <p><code>blockTimestampLast</code></p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>update()</code> — TWAP 계산</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>currentCumulativePrices(pair)</code>로 현재 누적값 조회</li>
+              <li><code>require(timeElapsed &gt;= PERIOD)</code> — 최소 기간 (예: 1시간) 경과 확인</li>
+              <li>TWAP 계산: <M>{'\\text{price0Average} = \\frac{\\text{cumulative}_{now} - \\text{cumulative}_{last}}{\\text{timeElapsed}}'}</M></li>
+              <li>스냅샷 저장 후 다음 주기 대기</li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>외부에서 스냅샷 비교</strong>: 시작/종료 시점의 cumulative 차이 / 경과 시간 = 평균 가격<br />
           <strong>조작 어려움</strong>: 일정 기간 평균이므로 1블록 가격 조작 영향 작음<br />

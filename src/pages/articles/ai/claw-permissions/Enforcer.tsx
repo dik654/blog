@@ -14,59 +14,89 @@ export default function Enforcer() {
           모든 도구 호출은 <code>execute_tool()</code> 직전에 <code>enforcer.check()</code>를 통과<br />
           우회 불가 — enforcer를 건너뛰고 도구를 실행하는 경로가 구조적으로 없음
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct PermissionEnforcer {
-    pub mode: PermissionMode,
-    pub policy: PermissionPolicy,
-    pub prompt_handler: Arc<dyn PromptHandler>,  // 사용자 Y/N 입력 인터페이스
-    pub workspace_root: PathBuf,
-    pub blacklist: PathBlacklist,
-}
-
-pub enum EnforcementResult {
-    Allow,
-    Deny(String),
-    Prompt(String),
-}`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">PermissionEnforcer 구조체</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">mode: PermissionMode</code>
+                <p className="text-muted-foreground mt-1">현재 권한 모드</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">policy: PermissionPolicy</code>
+                <p className="text-muted-foreground mt-1">규칙 기반 정책</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">prompt_handler: Arc&lt;dyn PromptHandler&gt;</code>
+                <p className="text-muted-foreground mt-1">사용자 Y/N 입력 인터페이스</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">workspace_root: PathBuf</code>
+                <p className="text-muted-foreground mt-1">워크스페이스 경계 기준 경로</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border sm:col-span-2">
+                <code className="font-mono">blacklist: PathBlacklist</code>
+                <p className="text-muted-foreground mt-1">차단 경로 목록 (.env, .pem 등)</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">EnforcementResult</div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-green-600 font-medium">Allow</span>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-red-600 font-medium">Deny(String)</span>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-amber-600 font-medium">Prompt(String)</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">check() — 5단계 판정</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl PermissionEnforcer {
-    pub fn check(&self, tool: &str, input: &Value) -> EnforcementResult {
-        let ctx = Ctx::from_input(tool, input, &self.session);
-
-        // 1) Policy 평가 (가장 세밀)
-        match self.policy.evaluate(&ctx) {
-            Action::Deny   => return EnforcementResult::Deny(ctx.reason_or_default()),
-            Action::Allow  => return EnforcementResult::Allow,
-            Action::Prompt => return EnforcementResult::Prompt(ctx.summary()),
-        }
-
-        // 2) Mode 비교
-        let required = self.registry.get_spec(tool)?.required_permission;
-        if self.mode >= required {
-            // 3) 경로 검증 (파일 I/O만)
-            if let Some(path) = ctx.path {
-                if let err @ EnforcementResult::Deny(_) = self.check_path(path) {
-                    return err;
-                }
-            }
-            // 4) 명령 의도 분류 (bash만)
-            if tool == "bash" {
-                if let Some(cmd) = ctx.command {
-                    if CommandIntent::classify(cmd) == CommandIntent::Destructive {
-                        return EnforcementResult::Prompt(format!("파괴적 명령: {}", cmd));
-                    }
-                }
-            }
-            return EnforcementResult::Allow;
-        }
-
-        // 5) 차액 판정
-        if self.can_prompt() {
-            return EnforcementResult::Prompt(ctx.summary());
-        }
-        EnforcementResult::Deny(format!("{} requires {:?}", tool, required))
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-background px-1.5 py-0.5 rounded">check()</code> — 5단계 판정 흐름</div>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">1</span>
+              <div>
+                <span className="font-medium">Policy 평가</span> (가장 세밀)
+                <p className="text-muted-foreground mt-0.5"><code>policy.evaluate(ctx)</code> → Deny/Allow/Prompt 즉시 반환</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">2</span>
+              <div>
+                <span className="font-medium">Mode 비교</span>
+                <p className="text-muted-foreground mt-0.5"><code>self.mode &gt;= required_permission</code> — 도구 스펙에 명시된 최소 권한과 비교</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">3</span>
+              <div>
+                <span className="font-medium">경로 검증</span> (파일 I/O 도구만)
+                <p className="text-muted-foreground mt-0.5"><code>check_path(path)</code> — 워크스페이스 경계, 블랙리스트, 심링크 이스케이프 검사</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">4</span>
+              <div>
+                <span className="font-medium">명령 의도 분류</span> (bash 도구만)
+                <p className="text-muted-foreground mt-0.5"><code>CommandIntent::classify(cmd)</code> — Destructive면 Prompt로 전환</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">5</span>
+              <div>
+                <span className="font-medium">차액 판정</span>
+                <p className="text-muted-foreground mt-0.5">모드 부족 시 — Prompt 가능하면 Prompt, 아니면 Deny</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>판정 순서</strong>: Policy → Mode → 경로 → 명령 의도 → 차액<br />
           Policy가 가장 먼저 — 사용자 규칙이 기본 모드보다 우선<br />
@@ -74,40 +104,51 @@ pub enum EnforcementResult {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PromptHandler — 사용자 확인 인터페이스</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[async_trait]
-pub trait PromptHandler: Send + Sync {
-    async fn prompt(&self, message: &str, options: PromptOptions) -> PromptResponse;
-}
-
-pub struct PromptOptions {
-    pub remember: bool,  // "이번만/항상" 옵션 제공
-    pub timeout: Duration,
-}
-
-pub enum PromptResponse {
-    Yes,
-    No,
-    YesRemember,  // 이 도구+입력 조합을 Policy에 추가
-    Timeout,      // 사용자 응답 없음 → Deny로 처리
-}
-
-// 구현체: CliPromptHandler
-impl PromptHandler for CliPromptHandler {
-    async fn prompt(&self, msg: &str, opts: PromptOptions) -> PromptResponse {
-        println!("\\n⚠️  {}", msg);
-        println!("  [y] Yes, [n] No{}", if opts.remember { ", [a] Always" } else { "" });
-        print!("  > ");
-        // stdin 읽기 (timeout 적용)
-        match timeout(opts.timeout, read_line()).await {
-            Ok(Ok(line)) => match line.trim() {
-                "y" | "Y" => PromptResponse::Yes,
-                "a" | "A" => PromptResponse::YesRemember,
-                _         => PromptResponse::No,
-            },
-            _ => PromptResponse::Timeout,
-        }
-    }
-}`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">PromptHandler 트레이트</div>
+            <p className="text-sm"><code className="text-xs bg-background px-1.5 py-0.5 rounded">prompt(message, options)</code> 메서드 — 사용자에게 확인 요청 후 응답 대기</p>
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">remember: bool</code>
+                <p className="text-muted-foreground mt-1">"이번만/항상" 옵션 제공 여부</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+                <code className="font-mono">timeout: Duration</code>
+                <p className="text-muted-foreground mt-1">응답 제한 시간 (기본 60초)</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">PromptResponse 4종</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-green-600 font-medium">Yes</span>
+                <p className="text-muted-foreground mt-1">1회만 허용</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-red-600 font-medium">No</span>
+                <p className="text-muted-foreground mt-1">거부</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-green-600 font-medium">YesRemember</span>
+                <p className="text-muted-foreground mt-1">Policy에 추가</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2 text-xs border border-border text-center">
+                <span className="text-muted-foreground font-medium">Timeout</span>
+                <p className="text-muted-foreground mt-1">Deny 처리</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2">CliPromptHandler (CLI 구현체)</div>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>터미널에 <code className="bg-background px-1 py-0.5 rounded">[y] Yes, [n] No, [a] Always</code> 표시</p>
+              <p>stdin에서 응답 읽기 — timeout 초과 시 자동 Deny</p>
+              <p><code className="bg-background px-1 py-0.5 rounded">a/A</code> 입력 → YesRemember → 동적으로 Policy에 Allow 규칙 추가</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>3가지 옵션</strong>: Yes(1회만), No(거부), Always(Policy에 추가)<br />
           "Always" 선택 시 <strong>동적으로 Policy에 Allow 규칙 추가</strong> — 재확인 불필요<br />
@@ -115,35 +156,40 @@ impl PromptHandler for CliPromptHandler {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">경로 검증 — check_path()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn check_path(&self, path: &Path) -> EnforcementResult {
-    // 1) 절대 경로화
-    let absolute = if path.is_absolute() {
-        path.to_path_buf()
-    } else {
-        self.workspace_root.join(path)
-    };
-
-    // 2) 워크스페이스 경계
-    if !absolute.starts_with(&self.workspace_root) {
-        return EnforcementResult::Deny(
-            format!("outside workspace: {:?}", path));
-    }
-
-    // 3) 블랙리스트
-    if self.blacklist.matches(&absolute) {
-        return EnforcementResult::Deny(
-            format!("blacklisted path: {:?}", path));
-    }
-
-    // 4) 심링크 이스케이프
-    if let Ok(real) = absolute.canonicalize() {
-        if !real.starts_with(&self.workspace_root) {
-            return EnforcementResult::Deny("symlink escape".into());
-        }
-    }
-
-    EnforcementResult::Allow
-}`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-background px-1.5 py-0.5 rounded">check_path()</code> — 4단계 경로 검증</div>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">1</span>
+              <div>
+                <span className="font-medium">절대 경로화</span>
+                <p className="text-muted-foreground mt-0.5">상대 경로면 <code>workspace_root.join(path)</code>로 변환</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">2</span>
+              <div>
+                <span className="font-medium">워크스페이스 경계</span>
+                <p className="text-muted-foreground mt-0.5"><code>starts_with(workspace_root)</code> 실패 → Deny ("outside workspace")</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">3</span>
+              <div>
+                <span className="font-medium">블랙리스트</span>
+                <p className="text-muted-foreground mt-0.5"><code>blacklist.matches()</code> 일치 → Deny ("blacklisted path")</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border text-xs">
+              <span className="font-mono font-medium shrink-0">4</span>
+              <div>
+                <span className="font-medium">심링크 이스케이프</span>
+                <p className="text-muted-foreground mt-0.5"><code>canonicalize()</code>로 실제 경로 추적 — 워크스페이스 밖이면 Deny</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">심링크 이스케이프가 가장 교묘한 우회 — 공격자가 <code className="bg-background px-1 py-0.5 rounded">workspace/x → /etc/passwd</code> 설정 가능</p>
+        </div>
         <p>
           <strong>4단계 경로 검증</strong>: 절대 경로화 → 워크스페이스 → 블랙리스트 → 심링크<br />
           <code>canonicalize()</code>는 심링크를 따라가 실제 경로 반환 — OS 레벨 시스템 콜<br />
@@ -151,25 +197,32 @@ impl PromptHandler for CliPromptHandler {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">permission_log에 판정 기록</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// check() 호출마다 Session의 permission_log에 기록
-pub struct PermDecision {
-    pub timestamp: DateTime<Utc>,
-    pub tool: String,
-    pub result: EnforcementResult,
-    pub reason: String,
-    pub prompt_response: Option<PromptResponse>,
-}
-
-// 사용 예
-self.session.permission_log.push(PermDecision {
-    timestamp: Utc::now(),
-    tool: tool.into(),
-    result: decision.clone(),
-    reason: reason_text,
-    prompt_response: if let EnforcementResult::Prompt(_) = decision {
-        Some(user_response)
-    } else { None },
-});`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-3">PermDecision — 감사 로그 구조체</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+            <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+              <code className="font-mono">timestamp</code>
+              <p className="text-muted-foreground mt-1">판정 시각 (UTC)</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+              <code className="font-mono">tool</code>
+              <p className="text-muted-foreground mt-1">호출된 도구 이름</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+              <code className="font-mono">result</code>
+              <p className="text-muted-foreground mt-1">Allow/Deny/Prompt</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-xs border border-border">
+              <code className="font-mono">reason</code>
+              <p className="text-muted-foreground mt-1">판정 사유 문자열</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-xs border border-border sm:col-span-2">
+              <code className="font-mono">prompt_response</code>
+              <p className="text-muted-foreground mt-1">Prompt 결과 (Yes/No/YesRemember/Timeout)</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground"><code className="bg-background px-1 py-0.5 rounded">session.permission_log.push()</code>로 모든 판정 기록 — CI에서 분석하여 정책 개선 힌트 획득</p>
+        </div>
         <p>
           <strong>감사 로그(audit trail)</strong>: 모든 권한 판정이 Session에 기록<br />
           나중에 "왜 이 작업이 차단됐나?" 질문에 답할 수 있음<br />

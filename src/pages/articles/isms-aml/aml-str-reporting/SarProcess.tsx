@@ -1,3 +1,7 @@
+import SarProcessViz from './viz/SarProcessViz';
+import InitialDetectionViz from './viz/InitialDetectionViz';
+import SarSubmissionViz from './viz/SarSubmissionViz';
+
 export default function SarProcess() {
   return (
     <section id="sar-process" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function SarProcess() {
           5단계의 프로세스를 거친다.<br />
           각 단계에서 책임자가 명확히 지정되어야 하며, 전 과정의 기록이 남아야 한다.
         </p>
+
+        <SarProcessViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">1단계 — 현업 의심 인지</h3>
         <p>
@@ -42,6 +48,8 @@ export default function SarProcess() {
           (b) 추가 조사 필요 → 심층 분석 진행,<br />
           (c) SAR 작성 필요 → 3단계로 이행.
         </p>
+
+        <InitialDetectionViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">3단계 — SAR 작성</h3>
         <p>
@@ -124,6 +132,8 @@ export default function SarProcess() {
           <li><strong>계정 처리 결정</strong> — 의심이 해소되지 않으면 계정 해지 검토. 해지 시에도 기록은 5년 이상 보관</li>
           <li><strong>내부 교훈 반영</strong> — SAR 건에서 발견된 새로운 패턴을 FDS 규칙에 반영, 교육 사례로 활용</li>
         </ul>
+
+        <SarSubmissionViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">전체 프로세스 타임라인</h3>
 

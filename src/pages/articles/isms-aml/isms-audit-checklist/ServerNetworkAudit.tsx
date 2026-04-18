@@ -1,3 +1,8 @@
+import ServerNetworkAuditViz from './viz/ServerNetworkAuditViz';
+import PingTestInlineViz from './viz/PingTestInlineViz';
+import FirewallRulesInlineViz from './viz/FirewallRulesInlineViz';
+import OsSecurityInlineViz from './viz/OsSecurityInlineViz';
+
 export default function ServerNetworkAudit() {
   return (
     <section id="server-network-audit" className="mb-16 scroll-mt-20">
@@ -10,8 +15,15 @@ export default function ServerNetworkAudit() {
           아래는 심사원이 실제로 확인하는 구체적 항목과 명령어 수준의 정리.
         </p>
 
+        <ServerNetworkAuditViz />
+
         {/* --- 망분리·ping 테스트 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">1. 서버 간 통신 확인 (ping 테스트)</h3>
+
+        <div className="not-prose my-4">
+          <PingTestInlineViz />
+        </div>
+
         <p>
           심사원이 가장 먼저 확인하는 것 중 하나 — DMZ(Demilitarized Zone, 외부 접근 가능 네트워크 구간)와 내부망 사이의 통신 차단 여부.
         </p>
@@ -52,6 +64,11 @@ export default function ServerNetworkAudit() {
 
         {/* --- 방화벽 규칙 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2. 방화벽 규칙 확인</h3>
+
+        <div className="not-prose my-4">
+          <FirewallRulesInlineViz />
+        </div>
+
         <p>
           심사원: "방화벽 규칙 보여주세요."<br />
           이때 심사원이 찾는 것:
@@ -112,6 +129,11 @@ export default function ServerNetworkAudit() {
 
         {/* --- OS 보안 설정 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">4. OS 보안 설정</h3>
+
+        <div className="not-prose my-4">
+          <OsSecurityInlineViz />
+        </div>
+
         <p>
           심사원이 확인하는 주요 설정 파일과 기대값. 모두 ISMS-P 2.5(인증 및 권한관리), 2.10(시스템 보안관리) 항목에 해당.
         </p>

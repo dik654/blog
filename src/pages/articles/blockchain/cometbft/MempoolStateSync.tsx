@@ -1,6 +1,6 @@
 import MempoolViz from './viz/MempoolViz';
 import MempoolFlowViz from './viz/MempoolFlowViz';
-import {STATE_SYNC_CODE, REPO_CODE} from './MempoolStateSyncData';
+
 
 import type { CodeRef } from '@/components/code/types';
 
@@ -41,42 +41,41 @@ export default function MempoolStateSync({ onCodeRef: _onCodeRef }: { onCodeRef:
         </p>
         {/* ── CList Mempool 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CList Mempool — 이중 연결 리스트 기반</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/mempool/clist_mempool.go
-// Concurrent-safe double-linked list (CList)
-
-type CListMempool struct {
-    mtx   sync.RWMutex
-    config *config.MempoolConfig
-
-    proxyAppConn proxy.AppConnMempool  // ABCI connection
-
-    txs          *clist.CList           // 주 mempool
-    cache        txCache                // 중복 방지 cache
-    txsMap       map[TxKey]*clist.CElement  // fast lookup
-
-    height       int64                  // 현재 블록 높이
-    txBytes      int64                  // 총 bytes
-}
-
-// 동작:
-// 1. TX 수신 → CheckTx (async)
-// 2. pass → CList에 append
-// 3. Gossip → peers에 전파
-// 4. 블록 commit → 포함된 TX 제거
-// 5. Recheck (nonce 등 재검증)
-
-// CList 특성:
-// - concurrent iterator (read during write)
-// - 주기적으로 peer에게 gossip
-// - max size 제한 (~5000 txs)
-
-// 성능:
-// - TX 추가: O(1) (append)
-// - TX 제거: O(1) (linked list)
-// - Iteration: lock-free
-// - Peer gossip: sequence 기반 catch-up`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2"><code>CListMempool</code> 구조체</p>
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <code className="text-xs">proxyAppConn</code><span>ABCI connection (<code>AppConnMempool</code>)</span>
+              <code className="text-xs">txs *clist.CList</code><span>주 mempool (concurrent-safe 이중 연결 리스트)</span>
+              <code className="text-xs">cache txCache</code><span>중복 방지 cache</span>
+              <code className="text-xs">txsMap map[TxKey]*CElement</code><span>fast lookup</span>
+              <code className="text-xs">height int64</code><span>현재 블록 높이</span>
+              <code className="text-xs">txBytes int64</code><span>총 bytes</span>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">동작 흐름</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">1.</strong> TX 수신 → <code>CheckTx</code> (async)</p>
+                <p><strong className="text-foreground">2.</strong> pass → CList에 append</p>
+                <p><strong className="text-foreground">3.</strong> Gossip → peers에 전파</p>
+                <p><strong className="text-foreground">4.</strong> 블록 commit → 포함된 TX 제거</p>
+                <p><strong className="text-foreground">5.</strong> Recheck (nonce 등 재검증)</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">CList 성능</p>
+              <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <span className="font-mono text-xs">O(1)</span><span>TX 추가 (append)</span>
+                <span className="font-mono text-xs">O(1)</span><span>TX 제거 (linked list)</span>
+                <span className="text-xs">lock-free</span><span>Iteration (concurrent read during write)</span>
+                <span className="text-xs">sequence</span><span>Peer gossip catch-up</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">max size 제한 ~5000 txs</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           CList Mempool이 <strong>concurrent-safe 이중 연결 리스트</strong>.<br />
           O(1) 추가/제거 + lock-free iterator → 높은 throughput.<br />

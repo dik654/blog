@@ -10,52 +10,38 @@ export default function GraffitiRandao({ onCodeRef: _ }: Props) {
 
         {/* ── RANDAO Reveal ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">RANDAO Reveal — proposer의 암호학적 기여</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// RANDAO Reveal: proposer가 생성하는 verifiable random value
-// BLS 서명의 결정성 덕분에 가능
-
-// 생성:
-func generateRandaoReveal(
-    validator *Validator,
-    epoch Epoch,
-    fork Fork,
-    genesisValidatorsRoot Root,
-) BLSSignature {
-    // 1. Signing root 계산
-    domain := computeDomain(DOMAIN_RANDAO, fork, genesisValidatorsRoot)
-    signingRoot := computeSigningRoot(epoch, domain)
-
-    // 2. BLS 서명 (deterministic)
-    //    같은 (validator, epoch)에 대해 항상 같은 서명
-    reveal := validator.sign(signingRoot)
-
-    return reveal
-}
-
-// 결정성의 의미:
-// - validator의 정체 = stake = 고정
-// - epoch = 고정
-// - 따라서 reveal도 고정 (유일)
-// - 하지만 "이 validator가 어느 epoch에 뽑힐지"는 예측 불가
-//   → 효과적 랜덤성
-
-// Beacon chain의 RANDAO 사용:
-// 1. processRandao에서 reveal 검증
-// 2. hash(reveal)을 randao_mix에 XOR
-// 3. 다음 epoch proposer/committee 선정에 사용
-
-// Bias resistance:
-// - proposer가 "나쁜" reveal을 만들 수 있나? → No (결정적)
-// - proposer가 블록 제안 skip해서 편향 가능?
-//   → 가능하지만 미미 (skip = reward loss)
-//   → 공격자가 1/2 bit 편향 → 1 bit 편향 시 1 slot 수입 포기
-//   → 경제적으로 비효율적
-
-// secret sharing과의 관계:
-// RANDAO는 "commit-reveal" 스킴의 simple form
-// 각 proposer가 epoch당 1 bit 기여
-// 256 slot × 1 = 256 bits of entropy per epoch`}
-        </pre>
+        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Reveal 생성</div>
+            <p className="text-sm">
+              <code>computeDomain(DOMAIN_RANDAO, fork, genesisValidatorsRoot)</code> → signing root 계산 → <code>validator.sign(signingRoot)</code>으로 BLS 서명.
+              같은 (validator, epoch) 조합에 대해 항상 동일한 서명 — BLS의 결정성.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">결정성의 의미</div>
+            <ul className="text-sm space-y-1 mt-1">
+              <li>validator 정체(stake) = 고정, epoch = 고정 → reveal도 유일</li>
+              <li>"이 validator가 어느 epoch에 뽑힐지"는 예측 불가 → 효과적 랜덤성</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Beacon Chain RANDAO 사용</div>
+            <ol className="text-sm space-y-1 mt-1 list-decimal list-inside">
+              <li><code>processRandao</code>에서 reveal 검증</li>
+              <li><code>hash(reveal)</code>을 <code>randao_mix</code>에 XOR</li>
+              <li>다음 epoch proposer/committee 선정에 사용</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+            <div className="text-xs font-semibold text-blue-400 mb-2">Bias Resistance</div>
+            <ul className="text-sm space-y-1 mt-1">
+              <li>proposer가 "나쁜" reveal 생성? → 불가능 (결정적 서명)</li>
+              <li>블록 제안 skip으로 편향? → 가능하지만 1 slot 수입 포기 필요 → 경제적 비효율</li>
+              <li>RANDAO는 commit-reveal 스킴의 simple form — 각 proposer가 epoch당 1 bit 기여 (256 bits/epoch)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>RANDAO Reveal</strong>은 BLS 서명의 결정성 활용.<br />
           같은 (validator, epoch)에 유일한 reveal → verifiable random.<br />
@@ -70,41 +56,38 @@ func generateRandaoReveal(
 
         {/* ── Graffiti ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Graffiti — 32 bytes 자유 공간</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BeaconBlockBody.graffiti: 32 bytes 자유 메시지
-// proposer가 임의 데이터 포함 가능
-
-// 사용 예:
-// - 노드 소프트웨어 식별: "Prysm/v5.0.0"
-// - 노드 운영자 표시: "MyValidator123"
-// - 유머/메시지: "WAGMI", "GM", etc.
-// - 긴급 정보: 버전 알림 등
-
-// 기본값:
-// Prysm: "Prysm" + version bytes
-// Lighthouse: "Lighthouse" + version
-// Teku: "teku" + version
-
-// 커스텀 설정:
-// validator --graffiti "My custom message"
-// REST API:
-// POST /eth/v1/validator/beacon_committee_subscriptions
-// { "graffiti": "..." }
-
-// 분석 도구:
-// - beaconcha.in: proposer별 graffiti 집계
-// - 네트워크 클라이언트 점유율 측정
-// - 메시지 발견 (easter eggs)
-
-// 제약:
-// - 정확히 32 bytes (padding 또는 truncation)
-// - 무의미한 이점 외에는 영향 없음
-// - consensus에 반영 안 됨 (순수 metadata)
-
-// EIP-7688 (미래):
-// - Graffiti를 별도 rotating "block extra data"로 확장 논의
-// - 현재는 32 bytes 고정`}
-        </pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">사용 예</div>
+            <ul className="text-sm space-y-1 mt-1">
+              <li>노드 소프트웨어 식별 — <code>"Prysm/v5.0.0"</code></li>
+              <li>노드 운영자 표시 — <code>"MyValidator123"</code></li>
+              <li>유머/메시지 — <code>"WAGMI"</code>, <code>"GM"</code></li>
+              <li>긴급 정보 — 버전 알림 등</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">클라이언트별 기본값</div>
+            <ul className="text-sm space-y-1 mt-1">
+              <li><strong>Prysm</strong> — <code>"Prysm"</code> + version bytes</li>
+              <li><strong>Lighthouse</strong> — <code>"Lighthouse"</code> + version</li>
+              <li><strong>Teku</strong> — <code>"teku"</code> + version</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">커스텀 설정</div>
+            <p className="text-sm">CLI: <code>validator --graffiti "My custom message"</code></p>
+            <p className="text-sm mt-1">REST API: <code>POST /eth/v1/validator/beacon_committee_subscriptions</code></p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">제약 사항</div>
+            <ul className="text-sm space-y-1 mt-1">
+              <li>정확히 32 bytes (padding 또는 truncation)</li>
+              <li>consensus에 반영 안 됨 — 순수 metadata</li>
+              <li>EIP-7688: 향후 확장 논의 진행 중</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Graffiti</strong>는 32 bytes 자유 메시지.<br />
           Node software 식별, 운영자 표시, 메시지 삽입 등 활용.<br />

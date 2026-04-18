@@ -14,70 +14,50 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── BeaconState 30+ 필드 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BeaconState — 30+ 필드 구조체</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Deneb fork BeaconState (Ethereum 2.0 spec)
-struct BeaconState {
-    // Versioning
-    genesis_time: uint64,
-    genesis_validators_root: Bytes32,
-    slot: Slot,
-    fork: Fork,
-
-    // History
-    latest_block_header: BeaconBlockHeader,
-    block_roots: Vector[Bytes32, 8192],      // SLOTS_PER_HISTORICAL_ROOT
-    state_roots: Vector[Bytes32, 8192],
-    historical_roots: List[Bytes32, 16777216],
-
-    // Eth1 data
-    eth1_data: Eth1Data,
-    eth1_data_votes: List[Eth1Data, 2048],
-    eth1_deposit_index: uint64,
-
-    // Registry (가장 큰 부분)
-    validators: List[Validator, 1099511627776],  // 1M validator
-    balances: List[Gwei, 1099511627776],
-
-    // Randomness
-    randao_mixes: Vector[Bytes32, 65536],        // EPOCHS_PER_HISTORICAL
-
-    // Slashings
-    slashings: Vector[Gwei, 8192],
-
-    // Participation (Altair+)
-    previous_epoch_participation: List[ParticipationFlags, 1099511627776],
-    current_epoch_participation: List[ParticipationFlags, 1099511627776],
-
-    // Finality
-    justification_bits: Bitvector[4],
-    previous_justified_checkpoint: Checkpoint,
-    current_justified_checkpoint: Checkpoint,
-    finalized_checkpoint: Checkpoint,
-
-    // Inactivity (Altair+)
-    inactivity_scores: List[uint64, 1099511627776],
-
-    // Sync committee (Altair+)
-    current_sync_committee: SyncCommittee,
-    next_sync_committee: SyncCommittee,
-
-    // Execution (Bellatrix+)
-    latest_execution_payload_header: ExecutionPayloadHeader,
-
-    // Capella+
-    next_withdrawal_index: WithdrawalIndex,
-    next_withdrawal_validator_index: ValidatorIndex,
-    historical_summaries: List[HistoricalSummary, 16777216],
-}
-
-// 크기 추정 (메인넷 2025):
-// validators: ~1M × 120B = 120 MB
-// balances: ~1M × 8B = 8 MB
-// participation: ~1M × 1B × 2 = 2 MB
-// inactivity_scores: ~1M × 8B = 8 MB
-// 기타: ~100 MB
-// 총: ~250 MB per snapshot`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Versioning & History</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>genesis_time</code>: <code>uint64</code></li>
+                <li><code>genesis_validators_root</code>: <code>Bytes32</code></li>
+                <li><code>slot</code>: <code>Slot</code>, <code>fork</code>: <code>Fork</code></li>
+                <li><code>block_roots</code>: <code>Vector[Bytes32, 8192]</code></li>
+                <li><code>state_roots</code>: <code>Vector[Bytes32, 8192]</code></li>
+                <li><code>historical_roots</code>: <code>List[Bytes32, 16M]</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Registry (가장 큰 부분)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>validators</code>: <code>{'List[Validator, 2^40]'}</code></li>
+                <li><code>balances</code>: <code>{'List[Gwei, 2^40]'}</code></li>
+                <li><code>previous/current_epoch_participation</code></li>
+                <li><code>inactivity_scores</code>: <code>{'List[uint64, 2^40]'}</code></li>
+              </ul>
+              <div className="mt-2 pt-2 border-t border-border/40">
+                <p className="font-semibold text-xs text-foreground/70 mb-1">기타 주요 필드</p>
+                <ul className="text-sm space-y-0.5 text-muted-foreground">
+                  <li><code>randao_mixes</code>: <code>Vector[Bytes32, 65536]</code></li>
+                  <li><code>current/next_sync_committee</code>: <code>SyncCommittee</code></li>
+                  <li><code>latest_execution_payload_header</code></li>
+                  <li><code>finalized_checkpoint</code>: <code>Checkpoint</code></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">메인넷 크기 추정 (2025 기준)</p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-sm text-center">
+              <div><p className="text-muted-foreground">validators</p><p className="font-mono">120 MB</p></div>
+              <div><p className="text-muted-foreground">balances</p><p className="font-mono">8 MB</p></div>
+              <div><p className="text-muted-foreground">participation</p><p className="font-mono">2 MB</p></div>
+              <div><p className="text-muted-foreground">inactivity</p><p className="font-mono">8 MB</p></div>
+              <div><p className="text-muted-foreground">기타</p><p className="font-mono">~100 MB</p></div>
+              <div><p className="text-muted-foreground font-semibold">총</p><p className="font-mono font-semibold">~250 MB</p></div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           BeaconState는 <strong>30+ 필드 거대 구조체</strong>.<br />
           validators 배열이 120MB로 가장 큰 부분.<br />
@@ -86,46 +66,47 @@ struct BeaconState {
 
         {/* ── Validator 구조체 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Validator — registry entry 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// validators list의 각 entry
-struct Validator {
-    pubkey: BLSPubkey,                  // 48 bytes (signature key)
-    withdrawal_credentials: Bytes32,     // 32 bytes (fund recipient)
-
-    // Balance (economics)
-    effective_balance: Gwei,            // 8 bytes (rounded to 1 ETH)
-    slashed: bool,                      // 1 byte
-
-    // Lifecycle epochs
-    activation_eligibility_epoch: Epoch, // 8 bytes
-    activation_epoch: Epoch,             // 8 bytes
-    exit_epoch: Epoch,                   // 8 bytes
-    withdrawable_epoch: Epoch,           // 8 bytes
-}
-// 총: 121 bytes per validator
-
-// Validator lifecycle:
-// 1. PENDING_INITIALIZED: 32 ETH 예치, waiting queue
-// 2. PENDING_QUEUED: 활성화 대기
-// 3. ACTIVE_ONGOING: 정상 동작 (attestation 필수)
-// 4. ACTIVE_EXITING: exit 요청 후 대기
-// 5. ACTIVE_SLASHED: slashed but still active
-// 6. EXITED_UNSLASHED: exit 완료, 출금 대기
-// 7. EXITED_SLASHED: 슬래싱으로 exit
-// 8. WITHDRAWAL_POSSIBLE: 출금 가능
-// 9. WITHDRAWAL_DONE: 완전 종료
-
-// activation_epoch와 exit_epoch로 상태 결정
-// 현재 epoch >= activation_epoch && < exit_epoch → ACTIVE
-
-// withdrawal_credentials:
-// BLS_WITHDRAWAL_PREFIX (0x00) + bytes31: BLS 키 기반 (legacy)
-// ETH1_ADDRESS_PREFIX (0x01) + 0x00*11 + address: EL 주소 (권장)
-
-// effective_balance: 실제 balance를 1 ETH 단위로 내림
-// 32 ETH 예치 → effective 32
-// 32.5 ETH → effective 32 (자주 업데이트 안 함, 0.5 차이 내에서)`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Validator 구조체 (121 bytes, fixed-size)</p>
+            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground">
+              <ul className="space-y-0.5">
+                <li><code>pubkey</code>: <code>BLSPubkey</code> (48B)</li>
+                <li><code>withdrawal_credentials</code>: <code>Bytes32</code> (32B)</li>
+                <li><code>effective_balance</code>: <code>Gwei</code> (8B)</li>
+                <li><code>slashed</code>: <code>bool</code> (1B)</li>
+              </ul>
+              <ul className="space-y-0.5">
+                <li><code>activation_eligibility_epoch</code> (8B)</li>
+                <li><code>activation_epoch</code> (8B)</li>
+                <li><code>exit_epoch</code> (8B)</li>
+                <li><code>withdrawable_epoch</code> (8B)</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Validator lifecycle (9단계)</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-center text-muted-foreground">
+              <div className="bg-muted/50 rounded p-1.5">PENDING_INITIALIZED<br/>32 ETH 예치</div>
+              <div className="bg-muted/50 rounded p-1.5">PENDING_QUEUED<br/>활성화 대기</div>
+              <div className="bg-green-500/10 rounded p-1.5">ACTIVE_ONGOING<br/>정상 동작</div>
+              <div className="bg-amber-500/10 rounded p-1.5">ACTIVE_EXITING<br/>exit 대기</div>
+              <div className="bg-red-500/10 rounded p-1.5">ACTIVE_SLASHED<br/>슬래싱</div>
+              <div className="bg-muted/50 rounded p-1.5">EXITED_UNSLASHED<br/>출금 대기</div>
+              <div className="bg-red-500/10 rounded p-1.5">EXITED_SLASHED<br/>슬래싱 exit</div>
+              <div className="bg-muted/50 rounded p-1.5">WITHDRAWAL_POSSIBLE<br/>출금 가능</div>
+              <div className="bg-muted/50 rounded p-1.5">WITHDRAWAL_DONE<br/>완전 종료</div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">상태 결정: <code>{'epoch >= activation_epoch && epoch < exit_epoch'}</code> &rarr; ACTIVE</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">주요 필드 의미</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code>withdrawal_credentials</code>: <code>0x00</code> = BLS 키 기반 (legacy), <code>0x01</code> = EL 주소 (권장)</li>
+              <li><code>effective_balance</code>: 실제 balance를 1 ETH 단위로 내림 &mdash; 32.5 ETH &rarr; effective 32 (해시 변화 최소화)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           각 Validator는 <strong>121 bytes 고정 크기</strong>.<br />
           9가지 lifecycle state → activation/exit epoch로 결정.<br />
@@ -134,47 +115,49 @@ struct Validator {
 
         {/* ── state 변경 패턴 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">State 변경 패턴 — 매 슬롯의 업데이트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 매 슬롯마다 BeaconState 변경되는 필드:
-
-// slot transition (매 슬롯):
-// - slot (+1)
-// - state_roots[slot % 8192] (이전 slot의 state root)
-// - block_roots[slot % 8192] (이전 block root 또는 빈 slot)
-// - historical_roots (32768 slot마다)
-
-// block processing (블록이 있는 슬롯):
-// - latest_block_header
-// - randao_mixes[epoch % 65536]
-// - eth1_data_votes (추가)
-// - validators (입출금 처리)
-// - balances
-// - participation (attestation 처리)
-// - justification_bits
-// - finalized_checkpoint (epoch 경계에서)
-
-// epoch transition (매 32 슬롯):
-// - previous/current_epoch_participation (교대)
-// - validators (보상/페널티)
-// - balances (reward 지급)
-// - justification_bits (shift)
-// - slashings (epoch offset)
-// - randao_mixes (새 epoch)
-// - inactivity_scores
-
-// 필드별 변경 빈도 (12초 slot, 메인넷):
-// 매 슬롯: slot, state_roots, block_roots
-// 블록 있는 슬롯: validators, balances, participation (일부)
-// 에폭 경계 (~6.4분): 전체 validators/balances 업데이트
-
-// 일반 슬롯의 변경 필드:
-// - ~5개 "state" 필드
-// - ~1500 validator의 balance/participation
-// → 전체 대비 ~0.15% 필드만 변경
-
-// 이 관찰이 FieldTrie 캐싱의 근거가 됨
-// 변경 안 된 필드는 이전 해시 재사용 → O(1)`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-blue-500/30 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Slot transition (매 슬롯)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>slot</code> (+1)</li>
+                <li><code>state_roots[slot % 8192]</code></li>
+                <li><code>block_roots[slot % 8192]</code></li>
+                <li><code>historical_roots</code> (32768 slot마다)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Block processing</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>latest_block_header</code></li>
+                <li><code>randao_mixes[epoch % 65536]</code></li>
+                <li><code>eth1_data_votes</code></li>
+                <li><code>validators</code>, <code>balances</code></li>
+                <li><code>participation</code></li>
+                <li><code>justification_bits</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Epoch transition (매 32 슬롯)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>participation 교대</li>
+                <li>validators 보상/페널티</li>
+                <li>balances reward 지급</li>
+                <li>slashings, randao_mixes</li>
+                <li>inactivity_scores</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">변경 비율 (일반 슬롯)</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">변경 필드</p><p className="font-mono">~5개 state 필드</p></div>
+              <div><p className="text-muted-foreground">변경 validator</p><p className="font-mono">~1500개 balance/participation</p></div>
+              <div><p className="text-muted-foreground">전체 대비</p><p className="font-mono font-semibold">~0.15%</p></div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">99.85% 불변 &rarr; FieldTrie 캐싱의 수학적 근거</p>
+          </div>
+        </div>
         <p className="leading-7">
           매 슬롯 <strong>0.15% 필드만 변경</strong> — 99.85%는 그대로.<br />
           이 불변성이 <code>FieldTrie</code> 해시 캐싱의 수학적 근거.<br />

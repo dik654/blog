@@ -1,4 +1,6 @@
 import BERTPipelineViz from './viz/BERTPipelineViz';
+import BertOverviewDetailViz from './viz/BertOverviewDetailViz';
+import M from '@/components/ui/math';
 
 const MILESTONES = [
   { year: '2018-02', name: 'ELMo', color: '#f59e0b', desc: '양방향 LSTM 기반 문맥 임베딩. 사전학습 후 feature로 사용.' },
@@ -41,83 +43,12 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">BERT 모델 구조 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BERT-base vs BERT-large
-//
-// ┌──────────────────┬──────────┬──────────┐
-// │   파라미터       │ BERT-base│BERT-large│
-// ├──────────────────┼──────────┼──────────┤
-// │ Transformer 층   │    12    │    24    │
-// │ Hidden 크기      │    768   │   1024   │
-// │ Attention 헤드   │    12    │    16    │
-// │ Feed-forward     │   3072   │   4096   │
-// │ 총 파라미터      │   110M   │   340M   │
-// │ Max seq length   │    512   │    512   │
-// │ Vocabulary       │  30,522  │  30,522  │
-// └──────────────────┴──────────┴──────────┘
-//
-// 임베딩 레이어:
-//   Token Embeddings:    vocab_size × hidden (30,522 × 768)
-//   Position Embeddings: 512 × 768 (학습 가능)
-//   Segment Embeddings:  2 × 768 (문장 A, B 구분)
-//
-//   Input = TokenEmb + PositionEmb + SegmentEmb
-//
-// Position Embedding 방식:
-//   - Transformer 원논문: sinusoidal (고정)
-//   - BERT: 학습 가능한 임베딩
-//   - 최대 512 위치까지
-//   - 512 초과 시 truncation 필요
-
-// Transformer Encoder Block:
-//   1. Multi-Head Self-Attention
-//   2. Add & Norm (residual + LayerNorm)
-//   3. Position-wise Feed-Forward
-//   4. Add & Norm
-//
-// 출력: 각 토큰 위치마다 768차원 벡터 (contextualized embedding)`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">BERT 설계 철학</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 사전학습 + 파인튜닝 패러다임
-//
-// 기존 NLP 방식 (2017 이전):
-//   - 태스크별 전용 아키텍처 설계
-//   - 제로에서 학습 (small data)
-//   - feature engineering 필수
-//
-// BERT 방식:
-//   1. 대규모 코퍼스에서 사전학습 (3.3B words)
-//   2. 태스크별 가벼운 헤드만 추가
-//   3. 전체 모델 fine-tuning
-//   4. 태스크 독립적 표현 학습
-//
-// 양방향성의 가치:
-//   ELMo:  좌→우 LSTM + 우→좌 LSTM (concat)
-//   GPT:   좌→우만 (decoder)
-//   BERT:  완전 양방향 (MLM으로 가능)
-//
-// 예시 문장: "The [MASK] sat on the mat"
-//   단방향: "The" 만 보고 예측 → 불확실
-//   양방향: "sat on the mat" 도 봄 → "cat" 명확
-//
-// 혁신:
-//   - 모든 토큰이 모든 토큰 참조
-//   - 문맥적 임베딩 (같은 단어도 상황마다 다른 벡터)
-//   - 한 모델이 11개 태스크 SOTA
-
-// GLUE 벤치마크 성과 (2018):
-//   - 이전 SOTA: 68.9
-//   - BERT-large: 80.5 (+11.6 point)
-//   - 인간 수준에 근접
-//
-// 영향:
-//   - RoBERTa, ALBERT, ELECTRA 등 파생 모델
-//   - XLM-R로 다국어 확장
-//   - BioBERT, ClinicalBERT 등 도메인 특화
-//   - T5, BART로 encoder-decoder 확장`}
-        </pre>
+        <M display>
+          {`\\underbrace{E_{\\text{token}} + E_{\\text{position}} + E_{\\text{segment}}}_{\\text{Input Embedding}} \\;\\xrightarrow{\\text{12 or 24 layers}}\\; \\underbrace{h_i \\in \\mathbb{R}^{768}}_{\\text{contextualized embedding}}`}
+        </M>
+      </div>
+      <BertOverviewDetailViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <p className="leading-7">
           요약 1: <strong>Transformer Encoder 12/24층</strong> - BERT는 Attention 기반 깊은 문맥 인코더.<br />
           요약 2: <strong>양방향 MLM</strong>이 핵심 혁신 — GPT의 단방향과 근본적 차이.<br />

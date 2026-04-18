@@ -44,56 +44,26 @@ export default function RoundStructure() {
 
         {/* ── Round advancement ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Round Advancement 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Round Advance 규칙:
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Advance 규칙</p>
+          <p className="text-sm mb-1">상태: <code className="text-xs">current_round</code>, <code className="text-xs">round_certs: {'{ round → [certificates] }'}</code></p>
+          <p className="text-sm mb-2">조건: <code className="text-xs">len(round_certs[current_round]) &gt;= 2f+1</code> → <code className="text-xs">current_round++</code> → 새 header 생성 + broadcast</p>
+          <p className="text-sm text-muted-foreground">Asynchronous(no timeout): fixed round duration 없음. <code className="text-xs">2f+1</code> cert 받는 즉시 advance. 빠른 validator는 빨리, 느린 validator는 뒤처짐 → state sync로 catching up.</p>
+        </div>
 
-// 상태:
-// - current_round: 현재 내가 있는 round
-// - round_certs: {round → [certificates]}
+        <div className="rounded-lg border p-4 bg-muted/50 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">예시 (<code className="text-xs">n=4, f=1</code>)</p>
+          <div className="text-sm space-y-1">
+            <p><strong>Round 0</strong>: V1-V4 header 생성, <code className="text-xs">2f+1=3</code> signatures로 각자 certificate</p>
+            <p><strong>Round 1 advance</strong>: V1이 V1/V2/V3 cert 수신(3 &gt;= <code className="text-xs">2f+1</code>) → advance. parents = <code className="text-xs">[V1_r0_cert, V2_r0_cert, V3_r0_cert]</code></p>
+            <p><strong>Byzantine</strong>: V4가 round 0 안 만들어도 V1/V2/V3의 3 certs로 진행 가능</p>
+          </div>
+        </div>
 
-// Advance 조건:
-// while len(round_certs[current_round]) >= 2f+1:
-//     current_round += 1
-//     generate_new_header(current_round)
-//     broadcast(header)
-
-// Asynchronous (no timeout):
-// - fixed round duration 없음
-// - 2f+1 cert 받는 즉시 advance
-// - 빠른 validator는 빨리 advance
-// - 느린 validator는 뒤처짐
-
-// Catching up:
-// - 뒤처진 validator가 높은 round 보면
-// - 중간 round 건너뛰고 sync
-// - state sync protocol
-
-// 예시 (n=4, f=1):
-// Round 0:
-//   V1, V2, V3, V4 모두 round 0 header 생성
-//   2f+1 = 3 signatures 필요
-//   각자 certificate 만들기
-//
-// Round 1 advance:
-//   V1이 자신의 cert + V2 cert + V3 cert 봄
-//   3 certs >= 2f+1 → advance to round 1
-//   V1이 round 1 header 생성
-//   parents = [V1_r0_cert, V2_r0_cert, V3_r0_cert]
-//
-// Round 2 advance:
-//   V1이 3 round 1 certs 봄 → advance
-
-// Byzantine 고려:
-// - V4가 Byzantine (round 0 안 만듦)
-// - V1, V2, V3 의 3 certs면 2f+1 만족
-// - V4 제외하고 진행 가능
-// - V4는 뒤늦게 catching up
-
-// Garbage Collection:
-// - committed round 이전 state 삭제
-// - round 가 L 이상 차이나면 GC
-// - memory bound: O(L * n certs)`}
-        </pre>
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-1">Garbage Collection</p>
+          <p className="text-sm">committed round 이전 state 삭제. round가 L 이상 차이나면 GC. memory bound: <code className="text-xs">O(L * n certs)</code>.</p>
+        </div>
         <p className="leading-7">
           Round advance: <strong>2f+1 certs 수집 즉시</strong>.<br />
           no timeout = async-safe.<br />
@@ -102,57 +72,41 @@ export default function RoundStructure() {
 
         {/* ── Parent Selection ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Parent Selection 규칙</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Parent Selection:
-// - parents: 2f+1 certificates from round (r-1)
-// - 선택 주체: 새 header 생성 중인 validator
-// - 전략: 가능한 많은 cert 포함
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Rules</p>
+          <ol className="text-sm space-y-1 list-decimal pl-4">
+            <li>반드시 <code className="text-xs">2f+1</code> cert (minimum quorum)</li>
+            <li>모두 round <code className="text-xs">(r-1)</code></li>
+            <li>distinct authors (같은 validator 1개만)</li>
+            <li>certificates verified</li>
+          </ol>
+        </div>
 
-// Rules:
-// 1. 반드시 2f+1 cert (minimum quorum)
-// 2. 모두 round (r-1)
-// 3. distinct authors (같은 validator 1개만)
-// 4. certificates verified
+        <div className="grid gap-3 sm:grid-cols-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Conservative</p>
+            <p className="text-sm">처음 받은 <code className="text-xs">2f+1</code> cert만 선택. 빠른 advance. throughput 최적.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Greedy</p>
+            <p className="text-sm">가능한 모든 cert 포함(up to n). slow validator 포용. fairness 향상.</p>
+          </div>
+          <div className="rounded-lg border p-4 bg-muted/50">
+            <p className="font-semibold text-sm mb-1">Balanced (실제 구현)</p>
+            <p className="text-sm"><code className="text-xs">2f+1</code> minimum 보장 + 시간 여유 시 추가. 실제 5-10 parents.</p>
+          </div>
+        </div>
 
-// Strategies:
-//
-// Conservative:
-// - 처음 받은 2f+1 cert만 선택
-// - 빠른 advance
-// - throughput 최적
-//
-// Greedy:
-// - 가능한 모든 cert 포함 (up to n)
-// - slow validator 포용
-// - fairness 향상
-//
-// Balanced (실제 구현):
-// - 2f+1 minimum 보장
-// - 시간 여유 시 추가 cert
-// - 실제 5-10 parents
-
-// Validity:
-// 정직 validator는 자신이 본 cert 중 선택
-// Byzantine validator가 fake parent 참조?
-// - 수신자가 cert verification 실패
-// - header 자체 invalid
-// - signature 수집 못 함
-
-// 효과:
-// - parent 많을수록 DAG 연결성 증가
-// - causal history 풍부
-// - Bullshark anchor의 votes 증가
-// - commit rate 향상
-
-// 구현 예 (Narwhal Rust):
-// let parents: Vec<Certificate> = self.certificates
-//     .get(self.round - 1)
-//     .filter(|c| self.verified(c))
-//     .take(self.max_parents)  // e.g., 10
-//     .collect();
-
-// assert!(parents.len() >= 2 * f + 1);`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Validity (Byzantine 방어)</p>
+            <p className="text-sm">Byzantine가 fake parent 참조 → 수신자 cert verification 실패 → header invalid → signature 수집 불가.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">효과</p>
+            <p className="text-sm">parent 많을수록 DAG 연결성 증가 → causal history 풍부 → Bullshark anchor votes 증가 → commit rate 향상.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Parent 규칙: <strong>2f+1 certs from round (r-1)</strong>.<br />
           distinct authors, all verified.<br />
@@ -161,56 +115,27 @@ export default function RoundStructure() {
 
         {/* ── DAG 특성 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">DAG 특성과 Invariants</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DAG Invariants:
-
-// 1. Round monotonicity:
-//    - parent round < child round (strict)
-//    - cycle 불가 (DAG 속성)
-//
-// 2. Uniqueness:
-//    - (author, round) → 1 certificate
-//    - Byzantine author 2개 시도:
-//      - 첫 번째만 2f+1 sig 획득 가능
-//      - 두 번째는 signature 못 얻음
-//
-// 3. Connectivity:
-//    - 모든 round r 의 vertex는 (r-1)의 2f+1 vertex 참조
-//    - DAG는 causally connected
-//
-// 4. Reliability:
-//    - certificate 존재 → 2f+1 signed
-//    - 2f+1 중 f+1 정직 → data available
-//    - eventually all honest see it
-
-// Byzantine 가능한 공격:
-//
-// Attack 1: Equivocation
-// - author가 round r에 2 headers
-// - only one gets 2f+1 signatures (honest don't sign both)
-// - 다른 하나는 DAG에 없음
-//
-// Attack 2: No propose
-// - author가 round r 안 함
-// - 2f+1 cert (others)만 있으면 round advance
-// - 그냥 제외됨
-//
-// Attack 3: Invalid parents
-// - fake parent references
-// - cert verification 실패
-// - signature 못 얻음
-//
-// Attack 4: Censoring
-// - specific validator의 vertex 참조 안 함
-// - others가 참조하면 censoring 무효화
-// - 일부 validator만 censoring 가능
-
-// 공격 저항:
-// - reliable broadcast guarantees
-// - quorum intersection
-// - DAG causal connectivity
-// - 모든 공격 ineffective`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">DAG Invariants</p>
+            <ol className="text-sm space-y-1 list-decimal pl-4">
+              <li><strong>Round monotonicity</strong> — parent round &lt; child round (cycle 불가)</li>
+              <li><strong>Uniqueness</strong> — <code className="text-xs">(author, round)</code> → 1 certificate. Byzantine 2개 시도 시 첫 번째만 <code className="text-xs">2f+1</code> sig 가능</li>
+              <li><strong>Connectivity</strong> — 모든 round r vertex는 <code className="text-xs">(r-1)</code>의 <code className="text-xs">2f+1</code> vertex 참조</li>
+              <li><strong>Reliability</strong> — cert 존재 → <code className="text-xs">2f+1</code> signed → <code className="text-xs">f+1</code> 정직 → data available</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-2">Byzantine 공격 4종</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li><strong>Equivocation</strong> — 2 headers → honest가 둘 다 sign 안 함, 1개만 cert 가능</li>
+              <li><strong>No propose</strong> — 다른 <code className="text-xs">2f+1</code> cert로 round advance, 그냥 제외</li>
+              <li><strong>Invalid parents</strong> — cert verification 실패 → signature 못 얻음</li>
+              <li><strong>Censoring</strong> — 다른 validator가 참조하면 무효화</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">공격 저항: reliable broadcast + quorum intersection + DAG causal connectivity</p>
+          </div>
+        </div>
         <p className="leading-7">
           DAG invariants: <strong>round monotonic, unique, connected, reliable</strong>.<br />
           Byzantine 공격 4종 모두 구조적 방어.<br />

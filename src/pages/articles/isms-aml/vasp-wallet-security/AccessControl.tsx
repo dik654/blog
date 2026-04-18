@@ -1,7 +1,12 @@
+import AccessControlViz from './viz/AccessControlViz';
+import NetworkSegmentViz from './viz/NetworkSegmentViz';
+import DbSecurityPolicyViz from './viz/DbSecurityPolicyViz';
+
 export default function AccessControl() {
   return (
     <section id="access-control" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">접근통제와 DB 보안</h2>
+      <AccessControlViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-4">망분리 원칙</h3>
         <p className="leading-7">
@@ -19,6 +24,8 @@ export default function AccessControl() {
           <br />
           클라우드 환경에서는 VPC(Virtual Private Cloud) 분리와 보안 그룹(Security Group) 설정으로 동일한 효과를 구현한다.
         </p>
+
+        <NetworkSegmentViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">DB 접근제어 소프트웨어</h3>
         <p className="leading-7">
@@ -73,6 +80,8 @@ export default function AccessControl() {
           <br />
           검토 결과는 보고서로 작성하여 CISO에게 보고하며, 반복적으로 발생하는 패턴은 접근 정책 개선에 반영한다.
         </p>
+
+        <DbSecurityPolicyViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">비밀번호 정책</h3>
         <p className="leading-7">

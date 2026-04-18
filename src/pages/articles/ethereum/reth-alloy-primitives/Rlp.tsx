@@ -33,30 +33,34 @@ export default function Rlp({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
 
         {/* ── RLP 4가지 규칙 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">RLP 인코딩 4가지 규칙</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 규칙 1: 단일 바이트 [0x00, 0x7f] → 그 바이트 자체
-encode(0x42) = [0x42]
-encode(0x7f) = [0x7f]
-
-// 규칙 2: 짧은 문자열 [0..55 bytes] → 0x80 + len, 데이터
-encode("dog") = [0x83, 'd', 'o', 'g']
-                 ↑ 0x80 + 3
-
-// 규칙 3: 긴 문자열 [>55 bytes] → 0xb7 + len_of_len, len, 데이터
-encode(1024-byte string) = [0xb9, 0x04, 0x00, ...data...]
-                            ↑ 0xb7 + 2  ↑ 1024 (2바이트)
-
-// 규칙 4: 리스트 → 0xc0 + total_len (payload)
-encode(["cat", "dog"]) = [0xc8, 0x83, 'c', 'a', 't', 0x83, 'd', 'o', 'g']
-                          ↑ 0xc0 + 8 (payload 길이)
-
-// 첫 바이트 범위로 타입 판별:
-// 0x00-0x7f: 단일 바이트 문자열
-// 0x80-0xb7: 짧은 문자열 (len = byte - 0x80)
-// 0xb8-0xbf: 긴 문자열 (len_of_len = byte - 0xb7)
-// 0xc0-0xf7: 짧은 리스트 (len = byte - 0xc0)
-// 0xf8-0xff: 긴 리스트 (len_of_len = byte - 0xf7)`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="space-y-3 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1">규칙 1: 단일 바이트 [0x00, 0x7f]</p>
+              <p className="text-muted-foreground"><code>encode(0x42)</code> = <code>[0x42]</code> — 그 바이트 자체</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1">규칙 2: 짧은 문자열 (0~55 bytes)</p>
+              <p className="text-muted-foreground"><code>encode("dog")</code> = <code>[0x83, 'd', 'o', 'g']</code> — 0x80 + len 접두</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1">규칙 3: 긴 문자열 (&gt;55 bytes)</p>
+              <p className="text-muted-foreground"><code>encode(1024B)</code> = <code>[0xb9, 0x04, 0x00, ...data]</code> — 0xb7 + len_of_len + len 접두</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1">규칙 4: 리스트</p>
+              <p className="text-muted-foreground"><code>encode(["cat","dog"])</code> = <code>[0xc8, 0x83, 'c','a','t', 0x83, 'd','o','g']</code> — 0xc0 + payload 길이</p>
+            </div>
+          </div>
+          <p className="text-sm font-semibold mb-2">첫 바이트 범위로 타입 판별</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>0x00-0x7f</code>: 단일 바이트 문자열</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>0x80-0xb7</code>: 짧은 문자열 (len = byte - 0x80)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>0xb8-0xbf</code>: 긴 문자열 (len_of_len = byte - 0xb7)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>0xc0-0xf7</code>: 짧은 리스트 (len = byte - 0xc0)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>0xf8-0xff</code>: 긴 리스트 (len_of_len = byte - 0xf7)</div>
+          </div>
+        </div>
         <p className="leading-7">
           RLP는 매우 단순한 규칙 4가지로 모든 구조체를 인코딩 — JSON보다 컴팩트, protobuf보다 단순.<br />
           디코더는 첫 바이트만 보고 타입과 길이를 판단 → 한 번의 분기로 파싱 시작 가능.<br />
@@ -65,34 +69,32 @@ encode(["cat", "dog"]) = [0xc8, 0x83, 'c', 'a', 't', 0x83, 'd', 'o', 'g']
 
         {/* ── Encodable trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Encodable / Decodable trait</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// alloy-rlp의 핵심 trait
-pub trait Encodable {
-    /// 출력 버퍼에 RLP 인코딩 데이터 추가
-    fn encode(&self, out: &mut dyn BufMut);
-
-    /// 인코딩 결과의 총 바이트 길이 (pre-computed)
-    fn length(&self) -> usize;
-}
-
-pub trait Decodable: Sized {
-    /// 바이트 버퍼에서 디코딩 (버퍼 포인터 전진)
-    fn decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self>;
-}
-
-// length()가 별도 메서드인 이유:
-// - 리스트 header를 인코딩하려면 payload 길이를 미리 알아야 함
-// - encode() 전에 length() 호출 → header 작성 → encode() 호출
-
-// 기본 타입에 대한 구현:
-impl Encodable for u64 { ... }
-impl Encodable for U256 { ... }
-impl Encodable for Address { ... }
-impl Encodable for B256 { ... }
-impl Encodable for Bytes { ... }
-impl Encodable for Vec<T: Encodable> { ... }
-impl Encodable for Option<T: Encodable> { ... }`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1">Encodable</p>
+              <p className="text-muted-foreground"><code>encode(&amp;self, out: &amp;mut dyn BufMut)</code> — 출력 버퍼에 RLP 데이터 추가</p>
+              <p className="text-muted-foreground mt-1"><code>length(&amp;self) -&gt; usize</code> — 인코딩 결과의 총 바이트 길이</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1">Decodable</p>
+              <p className="text-muted-foreground"><code>decode(buf: &amp;mut &amp;[u8]) -&gt; Result&lt;Self&gt;</code> — 바이트 버퍼에서 디코딩 (포인터 전진)</p>
+            </div>
+          </div>
+          <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 px-3 py-2 text-sm mb-4">
+            <code>length()</code>가 별도 메서드인 이유: 리스트 header 인코딩에 payload 길이가 미리 필요 → <code>length()</code> 먼저 → header 작성 → <code>encode()</code>
+          </div>
+          <p className="text-sm font-semibold mb-2">기본 타입 구현</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>u64</code></div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>U256</code></div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>Address</code></div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B256</code></div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>Bytes</code></div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>{'Vec<T>'}</code></div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>{'Option<T>'}</code></div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>length()</code> 메서드가 핵심 설계 — 리스트 인코딩 시 <strong>2-pass</strong> 필요.<br />
           1st pass: 모든 필드의 length 합산으로 payload 길이 계산.<br />
@@ -101,48 +103,37 @@ impl Encodable for Option<T: Encodable> { ... }`}
 
         {/* ── derive 매크로 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">#[derive(RlpEncodable)] — 컴파일 타임 코드 생성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 사용자 코드
-#[derive(RlpEncodable, RlpDecodable)]
-pub struct TxLegacy {
-    pub nonce: u64,
-    pub gas_price: u128,
-    pub gas_limit: u64,
-    pub to: TxKind,        // Option<Address>
-    pub value: U256,
-    pub input: Bytes,
-}
-
-// 매크로가 컴파일 타임에 생성하는 코드 (단순화):
-impl Encodable for TxLegacy {
-    fn encode(&self, out: &mut dyn BufMut) {
-        // 1. 전체 payload 길이 계산
-        let payload_len = self.nonce.length()
-            + self.gas_price.length()
-            + self.gas_limit.length()
-            + self.to.length()
-            + self.value.length()
-            + self.input.length();
-
-        // 2. 리스트 header 작성
-        Header { list: true, payload_length: payload_len }.encode(out);
-
-        // 3. 각 필드 순서대로 인코딩
-        self.nonce.encode(out);
-        self.gas_price.encode(out);
-        self.gas_limit.encode(out);
-        self.to.encode(out);
-        self.value.encode(out);
-        self.input.encode(out);
-    }
-    fn length(&self) -> usize { /* similar */ }
-}
-
-// LLVM 최적화 후:
-// - 모든 encode() 호출이 inline됨
-// - 분기 예측 실패 0
-// - 리플렉션 기반보다 ~10배 빠름`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <p className="text-sm font-semibold mb-2">사용자 코드</p>
+          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-4">
+            <code>#[derive(RlpEncodable, RlpDecodable)]</code><br />
+            <code>pub struct TxLegacy {'{'}</code><br />
+            <span className="ml-4"><code>nonce: u64</code>, <code>gas_price: u128</code>, <code>gas_limit: u64</code>,</span><br />
+            <span className="ml-4"><code>to: TxKind</code>, <code>value: U256</code>, <code>input: Bytes</code></span><br />
+            <code>{'}'}</code>
+          </div>
+          <p className="text-sm font-semibold mb-2">매크로가 생성하는 코드 (3단계)</p>
+          <div className="space-y-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-violet-500 shrink-0">1.</span>
+              <span>전체 payload 길이 계산: 각 필드의 <code>length()</code> 합산</span>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-violet-500 shrink-0">2.</span>
+              <span>리스트 header 작성: <code>Header {'{'} list: true, payload_length {'}'}.encode(out)</code></span>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-violet-500 shrink-0">3.</span>
+              <span>각 필드 순서대로 <code>encode(out)</code> — nonce → gas_price → ... → input</span>
+            </div>
+          </div>
+          <p className="text-sm font-semibold mb-2">LLVM 최적화 결과</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-1.5">모든 <code>encode()</code> 호출 inline</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5">분기 예측 실패 0</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5">리플렉션 기반보다 ~10배 빠름</div>
+          </div>
+        </div>
         <p className="leading-7">
           Rust 프로시저 매크로는 <strong>AST 변환</strong>으로 코드 생성 — 컴파일 시 struct 필드 목록을 읽어서 encode() 함수를 작성.<br />
           생성된 코드는 "수동으로 쓴 것과 동일" — 런타임 타입 정보 조회 없음.<br />
@@ -151,34 +142,40 @@ impl Encodable for TxLegacy {
 
         {/* ── 결정성 검증 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">결정적 직렬화 — canonical encoding</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// RLP의 canonical 규칙:
-// 1. 정수는 leading zeros 제거
-encode(U256::from(15)) = [0x0f]             // ✓ canonical
-encode(U256::from(15)) ≠ [0x80, 0x00, 0x0f] // ✗ non-canonical
-
-// 2. 짧은 표현 우선
-encode("a") = [0x61]          // ✓ 단일 바이트 < 0x80
-encode("a") ≠ [0x81, 0x61]    // ✗ header는 0x80 이상에서만
-
-// 3. length는 최소 바이트 수로
-encode(0x100 바이트 문자열) = [0xb9, 0x01, 0x00, ...]  // ✓ 2바이트
-encode(0x100 바이트 문자열) ≠ [0xba, 0x00, 0x01, 0x00, ...]  // ✗
-
-// 왜 canonical이 중요한가:
-// TX 해시 = keccak256(RLP(tx))
-// 같은 TX를 두 가지 방법으로 인코딩하면 해시 2개 → 체인 무결성 붕괴
-//
-// 검증 로직:
-// 1. TX 디코딩 → 원본 RLP 바이트 저장
-// 2. 재인코딩 → canonical RLP 생성
-// 3. 원본 == canonical → OK
-// 4. 다름 → reject (non-canonical encoding 공격 차단)
-
-// alloy-rlp가 제공하는 안전성:
-// - encode()는 항상 canonical 형식
-// - decode()는 non-canonical 입력을 거부`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <p className="text-sm font-semibold mb-2">canonical 규칙 3가지</p>
+          <div className="space-y-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">1. 정수는 leading zeros 제거</span>
+              <div className="mt-1 text-muted-foreground">
+                <code>encode(15)</code> = <code>[0x0f]</code> — non-canonical: <code>[0x80, 0x00, 0x0f]</code>
+              </div>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">2. 짧은 표현 우선</span>
+              <div className="mt-1 text-muted-foreground">
+                <code>encode("a")</code> = <code>[0x61]</code> — non-canonical: <code>[0x81, 0x61]</code>
+              </div>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">3. length는 최소 바이트 수</span>
+              <div className="mt-1 text-muted-foreground">
+                256B 문자열 = <code>[0xb9, 0x01, 0x00, ...]</code> (2B length) — 3B length는 non-canonical
+              </div>
+            </div>
+          </div>
+          <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 px-3 py-2 text-sm mb-4">
+            <span className="font-semibold">왜 canonical이 중요한가:</span> TX 해시 = <code>keccak256(RLP(tx))</code> — 같은 TX를 두 가지 방법으로 인코딩하면 해시 2개 → 체인 무결성 붕괴
+          </div>
+          <p className="text-sm font-semibold mb-2">검증 로직</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">1. TX 디코딩</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">2. 재인코딩 (canonical)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">3. 원본 == canonical?</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">4. 다르면 reject</div>
+          </div>
+          <p className="text-xs text-muted-foreground">alloy-rlp: <code>encode()</code>는 항상 canonical, <code>decode()</code>는 non-canonical 입력 거부</p>
+        </div>
         <p className="leading-7">
           결정성이 없으면 <strong>같은 TX의 해시가 여러 개</strong> → 이중 지불, replay 공격 가능.<br />
           RLP의 canonical 규칙은 "한 데이터 = 한 인코딩"을 강제.<br />

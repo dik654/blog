@@ -1,21 +1,6 @@
 import { CitationBlock } from '@/components/ui/citation';
-import CodePanel from '@/components/ui/code-panel';
-
-const ELBO_CODE = `# ELBO = E[log p(x|z)] - KL(q(z|x) || p(z))
-def vae_loss(x, x_recon, mu, log_var):
-    # 재구성 손실: 입력과 출력의 차이
-    recon_loss = F.binary_cross_entropy(x_recon, x, reduction='sum')
-
-    # KL Divergence: 잠재 분포를 N(0,I)에 정규화
-    kl_loss = -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
-
-    return recon_loss + kl_loss
-
-# Reparameterization Trick
-def reparameterize(mu, log_var):
-    std = torch.exp(0.5 * log_var)   # sigma
-    eps = torch.randn_like(std)       # epsilon ~ N(0,1)
-    return mu + eps * std             # z = mu + eps * sigma`;
+import M from '@/components/ui/math';
+import TrainingLoopViz from './viz/TrainingLoopViz';
 
 export default function Training() {
   return (
@@ -25,12 +10,44 @@ export default function Training() {
         ELBO = 재구성 손실 + KL Divergence.<br />
         Reparameterization: z = μ + ε·σ로 샘플링을 미분 가능하게 변환.
       </p>
-      <CodePanel title="VAE Loss & Reparameterization (PyTorch)" code={ELBO_CODE}
-        annotations={[
-          { lines: [2, 4], color: 'sky', note: '재구성 손실' },
-          { lines: [6, 8], color: 'amber', note: 'KL Divergence (해석적 해)' },
-          { lines: [12, 15], color: 'emerald', note: 'Reparameterization Trick' },
-        ]} defaultOpen />
+
+      {/* ELBO 수식 */}
+      <div className="rounded-xl border bg-card p-6 mb-6 space-y-6">
+        <h3 className="text-lg font-semibold">ELBO (Evidence Lower Bound)</h3>
+        <M display>{String.raw`\text{ELBO} = \underbrace{\mathbb{E}_{q}[\log p(x|z)]}_{\text{재구성 손실}} - \underbrace{\text{KL}(q(z|x) \| p(z))}_{\text{잠재 공간 정규화}}`}</M>
+
+        <h3 className="text-lg font-semibold">KL Divergence (해석적 해)</h3>
+        <M display>{String.raw`\text{KL} = -\frac{1}{2}\sum_{j=1}^{J}\bigl(\underbrace{1 + \log\sigma_j^2}_{\text{엔트로피}} - \underbrace{\mu_j^2}_{\text{평균 페널티}} - \underbrace{\sigma_j^2}_{\text{분산 페널티}}\bigr)`}</M>
+
+        <h3 className="text-lg font-semibold">Reparameterization Trick</h3>
+        <M display>{String.raw`z = \underbrace{\mu}_{\text{인코더 출력}} + \underbrace{\sigma \odot \epsilon}_{\text{노이즈 주입}}, \quad \epsilon \sim \mathcal{N}(0, I)`}</M>
+
+        {/* 설명 카드 */}
+        <div className="grid gap-4 sm:grid-cols-3 mt-4">
+          <div className="rounded-lg border-l-4 border-sky-500 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sky-600 dark:text-sky-400 mb-1">재구성 손실</p>
+            <p className="text-sm text-muted-foreground">
+              입력 <M>{String.raw`x`}</M>와 복원 <M>{String.raw`\hat{x}`}</M>의 차이.<br />
+              이미지 → BCE, 연속값 → MSE.
+            </p>
+          </div>
+          <div className="rounded-lg border-l-4 border-amber-500 bg-amber-500/5 p-4">
+            <p className="font-semibold text-amber-600 dark:text-amber-400 mb-1">KL Divergence</p>
+            <p className="text-sm text-muted-foreground">
+              <M>{String.raw`q(z|x)`}</M>를 <M>{String.raw`\mathcal{N}(0,I)`}</M>에 정규화.<br />
+              가우시안이면 해석적 해(closed-form)로 계산.
+            </p>
+          </div>
+          <div className="rounded-lg border-l-4 border-emerald-500 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Reparameterization</p>
+            <p className="text-sm text-muted-foreground">
+              확률적 샘플링 <M>{String.raw`z \sim q`}</M>를 결정적 연산으로 변환.<br />
+              <M>{String.raw`\mu, \sigma`}</M>로 역전파 가능.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <CitationBlock source="Kingma & Welling, 2014 — Section 2.4"
         citeKey={3} type="paper" href="https://arxiv.org/abs/1312.6114">
         <p className="italic">
@@ -40,100 +57,7 @@ export default function Training() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">VAE 전체 학습 루프</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// VAE 학습 전체 파이프라인
-import torch
-import torch.nn.functional as F
-
-class VAE(nn.Module):
-    def __init__(self, input_dim=784, hidden_dim=400, latent_dim=20):
-        super().__init__()
-        self.encoder_fc1 = nn.Linear(input_dim, hidden_dim)
-        self.fc_mu = nn.Linear(hidden_dim, latent_dim)
-        self.fc_logvar = nn.Linear(hidden_dim, latent_dim)
-        self.decoder_fc1 = nn.Linear(latent_dim, hidden_dim)
-        self.decoder_fc2 = nn.Linear(hidden_dim, input_dim)
-
-    def encode(self, x):
-        h = F.relu(self.encoder_fc1(x))
-        return self.fc_mu(h), self.fc_logvar(h)
-
-    def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5 * logvar)
-        eps = torch.randn_like(std)
-        return mu + eps * std
-
-    def decode(self, z):
-        h = F.relu(self.decoder_fc1(z))
-        return torch.sigmoid(self.decoder_fc2(h))
-
-    def forward(self, x):
-        mu, logvar = self.encode(x)
-        z = self.reparameterize(mu, logvar)
-        x_recon = self.decode(z)
-        return x_recon, mu, logvar
-
-def loss_fn(x_recon, x, mu, logvar):
-    recon = F.binary_cross_entropy(x_recon, x, reduction='sum')
-    kl = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    return recon + kl
-
-# 학습 루프
-model = VAE()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-
-for epoch in range(20):
-    for batch_x in train_loader:
-        optimizer.zero_grad()
-        x_recon, mu, logvar = model(batch_x)
-        loss = loss_fn(x_recon, batch_x, mu, logvar)
-        loss.backward()
-        optimizer.step()`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">학습 트릭과 주의사항</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 일반적 문제와 해결
-//
-// 1. KL Collapse (Posterior Collapse)
-//    현상: KL → 0, 모든 x가 같은 분포로 매핑
-//    원인: 디코더가 강력하여 z 무시
-//    해결:
-//      - KL annealing (β를 0에서 1로 증가)
-//      - Free bits (최소 KL 보장)
-//      - 약한 decoder 사용
-//
-// 2. Blurry Output (흐릿한 출력)
-//    원인: Gaussian likelihood의 평균화
-//    해결:
-//      - VAE-GAN 조합
-//      - Perceptual loss
-//      - VQ-VAE (이산 latent)
-//
-// 3. Latent Space 구조 부재
-//    현상: 잠재 공간이 의미 없음
-//    해결:
-//      - β-VAE (higher β)
-//      - InfoVAE
-//      - Disentanglement 기법
-//
-// 4. Over-regularization
-//    현상: KL이 너무 강해 재구성 망가짐
-//    해결: β 감소, warmup 사용
-
-// Hyperparameters:
-//   latent_dim: 20~128 (MNIST), 256~1024 (이미지)
-//   hidden_dim: 400~2048
-//   learning_rate: 1e-3 (Adam)
-//   batch_size: 128~256
-//   epochs: 20~100
-
-// 평가:
-//   - Reconstruction Loss (낮을수록 좋음)
-//   - FID Score (생성 품질)
-//   - ELBO (전체 성능)
-//   - Latent traversal (시각적 평가)`}
-        </pre>
+        <div className="not-prose"><TrainingLoopViz /></div>
         <p className="leading-7">
           요약 1: VAE 학습은 <strong>encode → reparam → decode → loss → backprop</strong> 단순 파이프라인.<br />
           요약 2: <strong>KL collapse·blurry output</strong>이 주요 문제 — annealing·GAN 조합으로 해결.<br />

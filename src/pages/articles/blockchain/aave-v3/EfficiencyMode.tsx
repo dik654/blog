@@ -17,23 +17,33 @@ export default function EfficiencyMode() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">E-Mode — Efficiency Mode</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 아이디어: 서로 가격이 비슷한 자산들 간에는 높은 LTV 허용
-// 예: ETH/stETH/rETH 모두 ETH 가격 추종 → 청산 위험 낮음
-
-E-Mode 카테고리 예시:
-- ETH Correlated: WETH, wstETH, rETH, cbETH
-- Stablecoins: USDC, USDT, DAI, FRAX
-- BTC Correlated: WBTC, tBTC
-
-// 일반 모드 vs E-Mode
-일반 모드:
-  wstETH LTV: 72%
-  wstETH LT: 75%
-
-ETH E-Mode:
-  wstETH LTV: 93%
-  wstETH LT: 95%
-  (단, 같은 카테고리 자산만 담보로)`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">E-Mode 카테고리 & LTV 비교</p>
+          <div className="grid gap-2 sm:grid-cols-3 mb-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">ETH Correlated</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">WETH, wstETH, rETH, cbETH</p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Stablecoins</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">USDC, USDT, DAI, FRAX</p>
+            </div>
+            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">BTC Correlated</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">WBTC, tBTC</p>
+            </div>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="rounded border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 p-2">
+              <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">일반 모드 (wstETH)</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">LTV 72%, LT 75%</p>
+            </div>
+            <div className="rounded border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-2">
+              <p className="text-xs font-semibold text-violet-600 dark:text-violet-400">ETH E-Mode (wstETH)</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">LTV <strong>93%</strong>, LT <strong>95%</strong> (같은 카테고리만)</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>93% LTV</strong>: 1 ETH 담보로 0.93 stETH 차입 가능<br />
           레버리지 staking(looping) 전략에 최적<br />
@@ -41,23 +51,20 @@ ETH E-Mode:
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">E-Mode 활성화</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function setUserEMode(uint8 categoryId) external {
-    // 1) 현재 포지션 확인
-    // 2) 모든 담보가 해당 카테고리?
-    // 3) 모든 부채가 해당 카테고리?
-    // 4) HF > 1 (E-Mode 파라미터 기준)
-
-    require(
-        allCollateralInCategory && allDebtInCategory,
-        "INCONSISTENT_EMODE_CATEGORY"
-    );
-
-    _usersEModeCategory[msg.sender] = categoryId;
-    emit UserEModeSet(msg.sender, categoryId);
-}
-
-// E-Mode 해제
-function setUserEMode(0); // categoryId 0 = 해제`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 my-4">
+          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">setUserEMode() 활성화</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>setUserEMode(categoryId)</code> 호출 — 모든 담보/부채가 해당 카테고리인지 확인 후 <code>_usersEModeCategory[msg.sender]</code> 저장
+            </p>
+          </div>
+          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">검증 & 해제</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              담보/부채 카테고리 일치 + HF &gt; 1 검증 — 해제: <code>setUserEMode(0)</code> (일반 파라미터 복원 후 HF 재확인)
+            </p>
+          </div>
+        </div>
         <p>
           <strong>사용자 단위 설정</strong>: 전체 포지션이 하나의 카테고리여야 함<br />
           활성화 시 HF 재계산 — E-Mode 파라미터 적용<br />
@@ -67,25 +74,29 @@ function setUserEMode(0); // categoryId 0 = 해제`}</pre>
         <h3 className="text-xl font-semibold mt-8 mb-3">E-Mode 실제 활용 — Leveraged Staking</h3>
 
         <LoopingViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Looping 전략 (10 ETH 시작)
-1. 10 ETH → stETH 전환 (Lido 스테이킹)
-2. 10 stETH Aave 예치 (E-Mode)
-3. 9.3 ETH 차입 (93% LTV)
-4. 9.3 ETH → stETH 전환
-5. 9.3 stETH 추가 예치
-6. 반복... (보통 5-7 iteration)
-
-최종 포지션:
-- 담보: 49 stETH ($146,000)
-- 부채: 39 ETH ($117,000)
-- Net: 10 ETH 시작 → 49 stETH 노출 = 4.9x 레버리지
-
-수익 계산 (연 단위):
-- stETH staking yield: 3.5%
-- ETH borrow rate: 2.5%
-- Net yield on $146K: $1,460
-- Starting capital: $30K
-- Effective APY: 4.87%`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">Looping 전략 (10 ETH 시작)</p>
+          <div className="grid gap-2 sm:grid-cols-3 mb-3">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">1-2회차</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">10 ETH → stETH → Aave 예치 → 9.3 ETH 차입 (93% LTV)</p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">반복 (5-7회)</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">차입 ETH → stETH 전환 → 추가 예치 → 재차입 반복</p>
+            </div>
+            <div className="rounded border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-2">
+              <p className="text-xs font-semibold text-violet-600 dark:text-violet-400">최종 포지션</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">담보 49 stETH / 부채 39 ETH = <strong>4.9x 레버리지</strong></p>
+            </div>
+          </div>
+          <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">수익 계산</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              staking yield 3.5% - borrow rate 2.5% = net 1% x 4.9배 → effective APY <strong>4.87%</strong> ($30K 자본 기준)
+            </p>
+          </div>
+        </div>
         <p>
           <strong>E-Mode의 대표 사용 사례</strong>: LSD 레버리지 staking<br />
           일반 모드(75% LTV)로는 불가 — E-Mode(93%)로 효율적 레버리지<br />
@@ -93,19 +104,20 @@ function setUserEMode(0); // categoryId 0 = 해제`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Isolation Mode — 위험 자산 격리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 아이디어: 검증 안 된 신규 자산을 기존 자산과 격리
-// 예: 새로 상장된 토큰이 exploit 당해도 전체 시스템 영향 없게
-
-Isolated Asset 특징:
-- 담보로 사용 시 다른 담보와 함께 사용 불가
-- 특정 stablecoin만 차입 가능 (USDC, DAI 등)
-- Debt Ceiling 존재 (총 차입 상한)
-- 격리 가능 (exploit 시 해당 자산만 영향)
-
-예시: MKR as Isolated Collateral
-- Debt Ceiling: $10M
-- 차입 가능: USDC only
-- User MKR 담보 사용 시 → 다른 담보 비활성`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 my-4">
+          <div className="rounded-lg border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-3">
+            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 mb-1">Isolated Asset 제약</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              다른 담보와 함께 사용 불가, 지정 stablecoin만 차입 가능, Debt Ceiling(총 차입 상한) 존재
+            </p>
+          </div>
+          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">MKR Isolation 예시</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              Debt Ceiling $10M, USDC만 차입 가능 — MKR 담보 사용 시 다른 담보 비활성화
+            </p>
+          </div>
+        </div>
         <p>
           <strong>새 자산 점진적 통합</strong>: 바로 full collateral 안 되고 isolation부터<br />
           검증 기간 후 full collateral로 승격 — 단계적 리스크 관리<br />
@@ -113,39 +125,20 @@ Isolated Asset 특징:
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Isolation Mode 규칙</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function validateSetUseReserveAsCollateral(...) internal {
-    uint256 userIsolationModeAsset = userConfig.getIsolationModeStateAccount(...);
-
-    if (isolationModeActive) {
-        // 이미 다른 isolated asset 사용 중이면 새 담보 추가 불가
-        require(!userConfig.isUsingAsCollateralAny(), "USER_ALREADY_COLLATERAL");
-    }
-
-    if (reserveIsIsolated) {
-        // Isolated asset을 담보로 추가하려면 다른 담보 없어야
-        require(
-            userConfig.getActiveCollateralCount() == 0,
-            "USER_HAS_OTHER_COLLATERAL"
-        );
-    }
-}
-
-// 차입 제한
-function validateBorrow(...) internal view {
-    if (userInIsolationMode) {
-        // Isolation 자산의 허용된 차입만
-        require(
-            isBorrowableInIsolation[debtAsset],
-            "ASSET_NOT_BORROWABLE_IN_ISOLATION"
-        );
-
-        // Debt Ceiling 체크
-        require(
-            currentIsolationDebt + newBorrow <= debtCeiling,
-            "DEBT_CEILING_EXCEEDED"
-        );
-    }
-}`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 my-4">
+          <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-3">
+            <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">담보 설정 검증</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>validateSetUseReserveAsCollateral()</code> — isolation 활성 시 다른 담보 추가 불가(<code>USER_ALREADY_COLLATERAL</code>), isolated 자산 추가 시 기존 담보 0이어야 함
+            </p>
+          </div>
+          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">차입 제한 검증</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>validateBorrow()</code> — <code>isBorrowableInIsolation[debtAsset]</code> 허용 자산 확인 + <code>currentIsolationDebt + newBorrow &lt;= debtCeiling</code> 상한 체크
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">기능 비교 요약</h3>
         <div className="overflow-x-auto">

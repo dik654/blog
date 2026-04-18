@@ -53,83 +53,83 @@ export default function Overview() {
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Reed-Solomon 역사와 개발</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Reed-Solomon Code History
-//
-// 1960: Irving Reed & Gustave Solomon
-//   MIT Lincoln Lab
-//   "Polynomial codes over certain finite fields"
-//   원 논문은 다항식 평가 관점
-//
-// 1969: Berlekamp algorithm
-//   실용적 decoding 가능
-//
-// 1975: Welch-Berlekamp algorithm
-//   더 효율적 decoding
-//   O(n²) time complexity
-//
-// 1986: Voyager 2 Uranus flyby
-//   NASA가 RS coding 사용
-//   3.2 billion km 떨어진 데이터 복원
-//
-// 1990s: CD/DVD standardization
-//   모든 optical media 표준
-//   CIRC (Cross-Interleaved RS)
-//
-// 2000s: Wireless communications
-//   DVB-T, DAB, 802.11
-//   QR codes (2000)
-//
-// 2018: STARKs (Ben-Sasson et al.)
-//   RS code의 "proximity testing"
-//   FRI protocol 기반
-//   → Modern ZK systems
+        <h3 className="text-xl font-semibold mt-6 mb-3">Reed-Solomon 역사</h3>
+      </div>
 
-// 수학적 기반:
-//
-// Reed-Solomon code RS(n, k, d):
-//   n: codeword length
-//   k: message length
-//   d: minimum distance = n - k + 1
-//   → MDS (Maximum Distance Separable)
-//
-// Error correction capability:
-//   t = ⌊(d-1)/2⌋ = ⌊(n-k)/2⌋ errors
-//   Erasure correction: up to n-k erasures
-//
-// Field selection:
-//   RS over F_p where p > n
-//   Common: F_{2^8} (bytes), F_p for p ~ 2^256 (ZK)
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        {[
+          { year: '1960', desc: 'Irving Reed & Gustave Solomon (MIT Lincoln Lab). "Polynomial codes over certain finite fields" 논문', color: 'indigo' },
+          { year: '1969', desc: 'Berlekamp 알고리즘 — 실용적 디코딩이 가능해짐', color: 'emerald' },
+          { year: '1975', desc: 'Welch-Berlekamp 알고리즘. O(n²) 시간 복잡도로 효율적 디코딩', color: 'amber' },
+          { year: '1986', desc: 'Voyager 2 천왕성 근접비행. 32억 km 거리의 데이터를 RS 코딩으로 복원', color: 'indigo' },
+          { year: '1990s', desc: 'CD/DVD 표준화. 모든 광학 매체에 CIRC(Cross-Interleaved RS) 적용', color: 'emerald' },
+          { year: '2018', desc: 'STARK (Ben-Sasson et al.). RS 코드의 근접성 테스트(FRI) 기반 ZK 시스템', color: 'amber' },
+        ].map(p => (
+          <div key={p.year} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.year}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
 
-// 알고리즘 진화:
-//
-//   Decoding algorithms:
-//     Berlekamp-Massey: O(n²)
-//     Euclidean algorithm: O(n²)
-//     Guruswami-Sudan (list decoding): O(n^4)
-//     Koetter-Vardy: soft decoding
-//
-//   Encoding:
-//     Systematic: easier decoding
-//     Non-systematic: all-polynomial
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h3 className="text-xl font-semibold mt-6 mb-3">수학적 기반</h3>
+        <p>
+          RS 코드 <Math>{'\\text{RS}(n, k, d)'}</Math>:
+          <Math>{'n'}</Math> = 코드워드 길이, <Math>{'k'}</Math> = 메시지 길이,
+          <Math>{'d = n - k + 1'}</Math> = 최소 거리.
+          <br />
+          MDS(Maximum Distance Separable) 코드 — 주어진 중복도에서 최대 에러 감지/정정 능력을 달성한다
+        </p>
+        <Math display>{'t = \\left\\lfloor \\frac{n-k}{2} \\right\\rfloor \\text{ 개 에러 정정,} \\quad n-k \\text{ 개 소거(erasure) 정정}'}</Math>
+        <p>
+          체 선택: <Math>{'p > n'}</Math>인 <Math>{'\\mathbb{F}_p'}</Math>.
+          일반적으로 <Math>{'\\mathbb{F}_{2^8}'}</Math>(바이트 단위) 또는
+          <Math>{'\\mathbb{F}_p'}</Math> (<Math>{'p \\sim 2^{256}'}</Math>, ZK용)
+        </p>
+      </div>
 
-// 응용별 설정:
-//
-//   CD audio:
-//     RS(32, 28) + RS(28, 24)
-//     Cross-interleaved
-//     Handle 4000+ bit burst errors
-//
-//   QR Code:
-//     Multiple RS codes per block
-//     L (7%), M (15%), Q (25%), H (30%)
-//
-//   Voyager:
-//     RS(255, 223)
-//     Concatenated with convolutional code
-//     Can recover 16 symbol errors`}
-        </pre>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">디코딩 알고리즘 진화</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        {[
+          { name: 'Berlekamp-Massey', desc: 'O(n²). 고전적 LFSR 기반 디코딩', color: 'indigo' },
+          { name: '유클리드 알고리즘', desc: 'O(n²). 다항식 GCD 기반 접근', color: 'emerald' },
+          { name: 'Guruswami-Sudan', desc: 'O(n⁴). 리스트 디코딩 — t 바운드를 초과하는 에러 처리', color: 'amber' },
+          { name: 'Koetter-Vardy', desc: '소프트 디코딩. 신뢰도 정보 활용', color: 'indigo' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">응용별 설정</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-3">
+        <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+          <p className="font-semibold text-sm text-indigo-400">CD 오디오</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            RS(32,28) + RS(28,24). Cross-interleaved. 4000+ bit 버스트 에러 처리
+          </p>
+        </div>
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <p className="font-semibold text-sm text-emerald-400">QR 코드</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            블록당 다중 RS 코드. 에러 정정 수준: L(7%), M(15%), Q(25%), H(30%)
+          </p>
+        </div>
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+          <p className="font-semibold text-sm text-amber-400">Voyager</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            RS(255,223). 합성곱 코드와 연접. 16개 심볼 에러 복구 가능
+          </p>
+        </div>
       </div>
     </section>
   );

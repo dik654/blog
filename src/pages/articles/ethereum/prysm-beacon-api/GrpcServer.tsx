@@ -22,57 +22,47 @@ export default function GrpcServer({ onCodeRef }: Props) {
 
         {/* ── gRPC Server 초기화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">gRPC Server 초기화 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// beacon-chain/rpc/service.go
-
-func (s *Service) Start() {
-    // 1. TCP listener 생성
-    listener, err := net.Listen("tcp", s.cfg.Host + ":" + s.cfg.Port)
-    if err != nil { log.Fatalf("failed to listen: %v", err) }
-
-    // 2. gRPC 서버 옵션
-    opts := []grpc.ServerOption{
-        // Interceptor 체인
-        grpc.ChainUnaryInterceptor(
-            logging.UnaryServerInterceptor(),     // 로깅
-            recovery.UnaryServerInterceptor(),    // panic 복구
-            auth.UnaryServerInterceptor(authFunc),// 인증
-            metrics.UnaryServerInterceptor(),     // Prometheus metrics
-        ),
-        grpc.ChainStreamInterceptor(
-            logging.StreamServerInterceptor(),
-            recovery.StreamServerInterceptor(),
-        ),
-        grpc.MaxRecvMsgSize(s.cfg.MaxMsgSize),    // 기본 20 MB
-        grpc.KeepaliveParams(keepalive.ServerParameters{
-            MaxConnectionIdle: 2 * time.Hour,
-        }),
-    }
-
-    // 3. gRPC 서버 생성
-    s.grpcServer = grpc.NewServer(opts...)
-
-    // 4. 서비스 등록
-    s.registerServices()
-
-    // 5. Reflection 등록 (디버깅용)
-    reflection.Register(s.grpcServer)
-
-    // 6. 백그라운드에서 서버 실행
-    go func() {
-        if err := s.grpcServer.Serve(listener); err != nil {
-            log.Errorf("gRPC server failed: %v", err)
-        }
-    }()
-}
-
-// registerServices:
-// - BeaconChainService
-// - ValidatorService
-// - NodeService
-// - DebugService
-// - HealthService`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>Service.Start()</code> 초기화 흐름</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
+                <div><code>net.Listen("tcp", host:port)</code> — TCP listener 생성</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div>gRPC ServerOption 설정 — <code>ChainUnaryInterceptor</code> (logging, recovery, auth, metrics) + <code>ChainStreamInterceptor</code> + <code>MaxRecvMsgSize</code> (20 MB) + KeepaliveParams</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
+                <div><code>grpc.NewServer(opts...)</code> — gRPC 서버 생성</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">4</span>
+                <div><code>registerServices()</code> — 서비스 등록</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">5</span>
+                <div><code>reflection.Register()</code> — 디버깅용 Reflection 등록</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">6</span>
+                <div><code>go grpcServer.Serve(listener)</code> — 백그라운드 서버 실행</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">등록 서비스 (registerServices)</h4>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="rounded bg-muted px-2 py-1">BeaconChainService</span>
+              <span className="rounded bg-muted px-2 py-1">ValidatorService</span>
+              <span className="rounded bg-muted px-2 py-1">NodeService</span>
+              <span className="rounded bg-muted px-2 py-1">DebugService</span>
+              <span className="rounded bg-muted px-2 py-1">HealthService</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           gRPC Server는 <strong>4단계 초기화</strong>.<br />
           Listener → Interceptors → Server → Services 등록.<br />

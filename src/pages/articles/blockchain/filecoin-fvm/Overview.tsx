@@ -23,70 +23,69 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">FVM Architecture 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// FVM (Filecoin Virtual Machine):
 
-// Architecture:
-// - WASM-based runtime (wasmtime)
-// - IPLD state storage
-// - gas-metered execution
-// - deterministic
-// - sandboxed
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">레이어 스택</h4>
+          <div className="flex flex-wrap items-center gap-1 text-xs">
+            <span className="rounded bg-muted px-2 py-1">Application (Solidity, Rust, ...)</span>
+            <span className="text-muted-foreground">→</span>
+            <span className="rounded bg-muted px-2 py-1">FEVM / FVM native</span>
+            <span className="text-muted-foreground">→</span>
+            <span className="rounded bg-muted px-2 py-1">WASM bytecode</span>
+            <span className="text-muted-foreground">→</span>
+            <span className="rounded bg-muted px-2 py-1">wasmtime runtime</span>
+            <span className="text-muted-foreground">→</span>
+            <span className="rounded bg-muted px-2 py-1">Host syscalls (<code>ipld_get</code>, <code>ipld_put</code>)</span>
+            <span className="text-muted-foreground">→</span>
+            <span className="rounded bg-muted px-2 py-1">StateTree (HAMT)</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            2022 FVM v1 → 2023 FEVM (Ethereum compat) → 2024 mature ecosystem → 2025+ production DeFi
+          </p>
+        </div>
 
-// Evolution:
-// - 2022: FVM v1 (built-in actors in WASM)
-// - 2023: FEVM (Ethereum compat)
-// - 2024: mature ecosystem
-// - 2025+: production DeFi
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">EVM과의 차이</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li><strong>바이트코드</strong> — WASM (EVM 아님)</li>
+              <li><strong>상태 구조</strong> — HAMT (MPT 아님)</li>
+              <li><strong>주소 체계</strong> — 5종: ID, BLS, Secp, Actor, Delegated</li>
+              <li><strong>네이티브 토큰</strong> — FIL only</li>
+              <li><strong>가스 가격</strong> — 별도 가격 모델</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">FEVM (EVM on FVM)</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>Solidity 컨트랙트 지원</li>
+              <li>MetaMask 호환 + <code>eth-rpc</code> API</li>
+              <li>ETH 주소 (Delegated <code>f4</code>)</li>
+              <li>도구: Hardhat, Foundry, Remix</li>
+            </ul>
+          </div>
+        </div>
 
-// Layer stack:
-// Application (Solidity, Rust, ...)
-//   ↓
-// FEVM (EVM compat)  or  FVM native
-//   ↓
-// WASM bytecode
-//   ↓
-// wasmtime runtime
-//   ↓
-// Host syscalls (ipld_get, ipld_put, ...)
-//   ↓
-// StateTree (HAMT)
-
-// Key differences from EVM:
-// 1. WASM not EVM bytecode
-// 2. State: HAMT not MPT
-// 3. Addresses: 5 types (ID, BLS, Secp, Actor, Delegated)
-// 4. Native tokens: FIL only initially
-// 5. Gas: different pricing
-
-// FEVM (EVM on FVM):
-// - Solidity contracts supported
-// - MetaMask compatible
-// - eth-rpc API
-// - ETH addresses (Delegated f4)
-// - tooling: Hardhat, Foundry, Remix
-
-// FEVM use cases:
-// - port Ethereum DeFi to Filecoin
-// - storage-aware smart contracts
-// - NFT markets with Filecoin storage
-// - data DAOs
-// - retrieval markets
-
-// FVM Native (ref-fvm):
-// - Rust implementation
-// - actors in WASM
-// - more powerful than EVM
-// - direct syscalls
-// - custom cryptography
-
-// Supported languages:
-// - Rust (primary for native)
-// - Solidity (via FEVM)
-// - AssemblyScript
-// - C/C++ (via WASM)
-// - Go (experimental)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">FEVM Use Cases</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>Ethereum DeFi를 Filecoin으로 이식</li>
+              <li>스토리지 인식 스마트 컨트랙트</li>
+              <li>Filecoin 스토리지 기반 NFT 마켓</li>
+              <li>Data DAO / 리트리벌 마켓</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">FVM Native &amp; 지원 언어</h4>
+            <p className="text-xs text-muted-foreground mb-1">ref-fvm: Rust 구현, Actor를 WASM으로 컴파일. EVM보다 강력한 direct syscall + 커스텀 암호화</p>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li><strong>Rust</strong> — primary (native)</li>
+              <li><strong>Solidity</strong> — via FEVM</li>
+              <li>AssemblyScript / C/C++ (via WASM) / Go (experimental)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           FVM: <strong>WASM-based + IPLD state + FEVM compat</strong>.<br />
           FEVM으로 Solidity 지원 — Ethereum tooling 호환.<br />

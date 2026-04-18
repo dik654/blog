@@ -14,67 +14,36 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── process_block 파이프라인 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">process_block — 6단계 파이프라인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// consensus-specs의 process_block (Deneb)
-func ProcessBlock(state *BeaconState, block *BeaconBlock) error {
-    // 1. Block header 처리
-    //    - proposer_index 검증
-    //    - proposer slashing 확인
-    //    - latest_block_header 업데이트
-    if err := processBlockHeader(state, block); err != nil {
-        return err
-    }
-
-    // 2. RANDAO 처리
-    //    - proposer의 randao_reveal 서명 검증
-    //    - randao_mixes[epoch % 65536] 업데이트 (XOR)
-    if err := processRandao(state, block.Body); err != nil {
-        return err
-    }
-
-    // 3. Eth1 data voting
-    //    - eth1_data_votes에 추가
-    //    - 과반 시 eth1_data 확정
-    if err := processEth1Data(state, block.Body); err != nil {
-        return err
-    }
-
-    // 4. Operations 처리 (핵심)
-    //    - proposer_slashings
-    //    - attester_slashings
-    //    - attestations
-    //    - deposits
-    //    - voluntary_exits
-    //    - bls_to_execution_changes (Capella+)
-    if err := processOperations(state, block.Body); err != nil {
-        return err
-    }
-
-    // 5. Sync aggregate (Altair+)
-    //    - sync committee의 집계 서명 검증
-    //    - 참여자 보상 지급
-    if err := processSyncAggregate(state, block.Body.SyncAggregate); err != nil {
-        return err
-    }
-
-    // 6. Execution payload (Bellatrix+)
-    //    - EL에 payload 전달
-    //    - engine_newPayload 호출
-    //    - VALID/INVALID/SYNCING 결과 처리
-    if err := processExecutionPayload(state, block.Body); err != nil {
-        return err
-    }
-
-    return nil
-}
-
-// 성능:
-// - processBlockHeader: ~1ms
-// - processRandao: ~2ms (BLS verify)
-// - processOperations: ~100ms (~대부분 attestations)
-// - processExecutionPayload: ~수십 ms (EL 호출 + wait)
-// - 총: ~200ms per block (12초 slot 대비 여유)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-1"><code>ProcessBlock(state *BeaconState, block *BeaconBlock) error</code></p>
+            <p className="text-xs text-foreground/60">consensus-specs process_block (Deneb)</p>
+          </div>
+          <div className="space-y-2">
+            {[
+              { step: '1', fn: 'processBlockHeader', desc: 'proposer_index 검증 + proposer slashing 확인 + latest_block_header 업데이트', time: '~1ms', color: 'text-sky-400' },
+              { step: '2', fn: 'processRandao', desc: 'proposer의 randao_reveal 서명 검증 + randao_mixes[epoch % 65536] XOR 업데이트', time: '~2ms', color: 'text-violet-400' },
+              { step: '3', fn: 'processEth1Data', desc: 'eth1_data_votes에 추가, 과반 시 eth1_data 확정', time: '~1ms', color: 'text-emerald-400' },
+              { step: '4', fn: 'processOperations', desc: 'proposer/attester slashings, attestations, deposits, voluntary_exits, bls_to_execution_changes', time: '~100ms', color: 'text-amber-400' },
+              { step: '5', fn: 'processSyncAggregate', desc: 'sync committee 집계 서명 검증 + 참여자 보상 지급 (Altair+)', time: '~5ms', color: 'text-pink-400' },
+              { step: '6', fn: 'processExecutionPayload', desc: 'EL에 payload 전달 → engine_newPayload → VALID/INVALID/SYNCING (Bellatrix+)', time: '~수십ms', color: 'text-red-400' },
+            ].map(s => (
+              <div key={s.step} className="flex items-start gap-3 rounded-lg border border-border p-3">
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <code className="text-sm font-semibold">{s.fn}</code>
+                    <span className="text-xs text-muted-foreground">{s.time}</span>
+                  </div>
+                  <p className="text-xs text-foreground/70 mt-1">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs text-foreground/70">총 <strong>~200ms</strong> per block — 12초 slot 대비 매우 여유. Operations(attestations)가 전체의 50%+ 차지.</p>
+          </div>
+        </div>
         <p className="leading-7">
           블록 처리는 <strong>6단계 파이프라인</strong>.<br />
           각 단계가 독립적 검증 + state 업데이트.<br />

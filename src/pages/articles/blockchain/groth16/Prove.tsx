@@ -1,8 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
+import M from '@/components/ui/math';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import ProveViz from './viz/ProveViz';
-import { A_CALC_CODE, B_CALC_CODE, C_CALC_CODE, ZK_BLINDING_CODE } from './ProveData';
 import { codeRefs } from './codeRefs';
 
 export default function Prove({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
@@ -26,34 +25,61 @@ export default function Prove({ onCodeRef }: { onCodeRef: (key: string, ref: Cod
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">A 계산 (G1)</h3>
-        <CodePanel
-          title="A = [α + a(τ) + rδ]₁"
-          code={A_CALC_CODE}
-          annotations={[
-            { lines: [1, 1], color: 'sky', note: 'A 공식' },
-            { lines: [3, 5], color: 'emerald', note: '각 항의 역할' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-2">
+          <M display>{'A = [\\alpha]_1 + \\sum_j w_j \\cdot [a_j(\\tau)]_1 + r \\cdot [\\delta]_1'}</M>
+          <div className="grid gap-2 sm:grid-cols-3 mt-2">
+            <div className="rounded border p-3 bg-sky-50 dark:bg-sky-950/30">
+              <p className="font-mono text-xs font-semibold">[α]₁</p>
+              <p className="text-xs text-muted-foreground">구조적 태그 (α 포함을 보장)</p>
+            </div>
+            <div className="rounded border p-3 bg-emerald-50 dark:bg-emerald-950/30">
+              <p className="font-mono text-xs font-semibold">Σ wⱼ·[aⱼ(τ)]₁</p>
+              <p className="text-xs text-muted-foreground">witness에 의한 a(τ) 값</p>
+            </div>
+            <div className="rounded border p-3 bg-emerald-50 dark:bg-emerald-950/30">
+              <p className="font-mono text-xs font-semibold">r·[δ]₁</p>
+              <p className="text-xs text-muted-foreground">블라인딩 (영지식성)</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            결과: <M>{'A = [\\alpha + a(\\tau) + r\\delta]_1'}</M>
+          </p>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">B 계산 (G2 + G1)</h3>
-        <CodePanel
-          title="B (G2) + B' (G1) 이중 계산"
-          code={B_CALC_CODE}
-          annotations={[
-            { lines: [1, 2], color: 'sky', note: 'G2와 G1 두 버전' },
-            { lines: [4, 6], color: 'amber', note: 'G1 ↔ G2 변환 불가 이유' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
+          <h4 className="font-semibold text-base mb-2">B (G2) + B' (G1) 이중 계산</h4>
+          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
+            <M display>{'B \\in G_2:\\; [\\beta]_2 + \\sum_j w_j \\cdot [b_j(\\tau)]_2 + s \\cdot [\\delta]_2'}</M>
+            <M display>{"B' \\in G_1:\\; [\\beta]_1 + \\sum_j w_j \\cdot [b_j(\\tau)]_1 + s \\cdot [\\delta]_1"}</M>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium mb-1">G1 ↔ G2 변환이 불가능한 이유</p>
+            <p className="text-xs text-muted-foreground">B는 검증에서 e(A, B)에 사용 (G2 필요)</p>
+            <p className="text-xs text-muted-foreground">B'는 C 계산에서 r·B'로 사용 (G1 필요)</p>
+            <p className="text-xs text-muted-foreground">→ 두 그룹 간 변환이 불가능하므로 두 버전을 따로 계산</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">C 계산 (G1)</h3>
-        <CodePanel
-          title="C 계산 (비공개 + QAP + 블라인딩)"
-          code={C_CALC_CODE}
-          annotations={[
-            { lines: [1, 3], color: 'sky', note: '3가지 구성 요소' },
-            { lines: [5, 9], color: 'violet', note: '블라인딩 항 전개' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
+          <h4 className="font-semibold text-base mb-2">C 계산 (비공개 + QAP + 블라인딩)</h4>
+          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium mb-1">3가지 구성 요소</p>
+            <p className="font-mono text-xs"><M>{'\\sum_{j \\in \\text{private}} w_j \\cdot l\\_query[j\\,\']'}</M> — 비공개 변수 기여</p>
+            <p className="font-mono text-xs"><M>{'\\sum_i h_i \\cdot h\\_query[i]'}</M> — QAP 만족의 증거</p>
+            <p className="font-mono text-xs"><M>{'s \\cdot A + r \\cdot B\' - r \\cdot s \\cdot [\\delta]_1'}</M> — 블라인딩</p>
+          </div>
+          <div className="bg-violet-50 dark:bg-violet-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium mb-1">블라인딩 항 전개</p>
+            <div className="font-mono text-xs text-muted-foreground space-y-0.5">
+              <p>s·A = sα + s·a(τ) + rsδ</p>
+              <p>r·B' = rβ + r·b(τ) + rsδ</p>
+              <p>-rs·δ</p>
+              <p className="font-medium text-foreground">합계 = sα + s·a(τ) + rβ + r·b(τ) + rsδ</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">영지식성: r, s 블라인딩</h3>
         <p>
@@ -65,7 +91,22 @@ export default function Prove({ onCodeRef }: { onCodeRef: (key: string, ref: Cod
           <br />
           이것이 <strong>완전 영지식(perfect zero-knowledge)</strong>을 보장합니다.
         </p>
-        <CodePanel title="영지식성 보장 원리" code={ZK_BLINDING_CODE} />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-2">
+          <h4 className="font-semibold text-base mb-2">영지식성 보장 원리</h4>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="rounded border p-3 bg-red-50 dark:bg-red-950/30">
+              <p className="text-xs font-medium">r = s = 0 이면</p>
+              <p className="text-xs text-muted-foreground mt-1">같은 witness → 항상 같은 증명 → 정보 유출 위험</p>
+            </div>
+            <div className="rounded border p-3 bg-emerald-50 dark:bg-emerald-950/30">
+              <p className="text-xs font-medium">r, s ≠ 0 이면</p>
+              <p className="text-xs text-muted-foreground mt-1">같은 witness라도 매번 다른 증명 → 시뮬레이션 가능</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            → "시뮬레이터"가 witness 없이도 동일 분포의 증명 생성 가능
+          </p>
+        </div>
       </div>
     </section>
   );

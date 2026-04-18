@@ -21,60 +21,35 @@ export default function NewPayload({ onCodeRef }: Props) {
 
         {/* ── newPayloadV3 request/response ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">engine_newPayloadV3 — 요청/응답 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// engine_newPayloadV3 request
-// JSON-RPC 2.0 format
-
-POST http://localhost:8551
-Authorization: Bearer <jwt_token>
-Content-Type: application/json
-
-{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "engine_newPayloadV3",
-    "params": [
-        // 1. ExecutionPayload
-        {
-            "parentHash": "0x...",
-            "feeRecipient": "0x...",
-            "stateRoot": "0x...",
-            "receiptsRoot": "0x...",
-            "logsBloom": "0x...",
-            "prevRandao": "0x...",
-            "blockNumber": "0x12345",
-            "gasLimit": "0x1c9c380",
-            "gasUsed": "0x123456",
-            "timestamp": "0x67890abc",
-            "extraData": "0x",
-            "baseFeePerGas": "0x1234",
-            "blockHash": "0x...",
-            "transactions": [ "0x...", "0x..." ],
-            "withdrawals": [ ... ],
-            "blobGasUsed": "0x20000",
-            "excessBlobGas": "0x40000"
-        },
-        // 2. versionedHashes (blob commitments)
-        ["0x01abc...", "0x01def..."],
-        // 3. parentBeaconBlockRoot (EIP-4788)
-        "0x..."
-    ]
-}
-
-// Response:
-{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "result": {
-        "status": "VALID",              // VALID / INVALID / SYNCING / ACCEPTED
-        "latestValidHash": "0x...",     // 가장 최신 valid 블록
-        "validationError": null          // INVALID 시 에러 메시지
-    }
-}
-
-// 타임아웃: 8초
-// 이보다 길면 CL이 EL 응답 포기 → optimistic 처리`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">요청: <code>engine_newPayloadV3</code></h4>
+            <p className="text-xs text-muted-foreground mb-2"><code>POST http://localhost:8551</code> / <code>Authorization: Bearer {'{jwt}'}</code></p>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
+                <div><strong>ExecutionPayload</strong> — <code>parentHash</code>, <code>feeRecipient</code>, <code>stateRoot</code>, <code>receiptsRoot</code>, <code>logsBloom</code>, <code>prevRandao</code>, <code>blockNumber</code>, <code>gasLimit</code>, <code>gasUsed</code>, <code>timestamp</code>, <code>baseFeePerGas</code>, <code>blockHash</code>, <code>transactions</code>, <code>withdrawals</code>, <code>blobGasUsed</code>, <code>excessBlobGas</code></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div><strong>versionedHashes</strong> — blob KZG commitment 해시 배열</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
+                <div><strong>parentBeaconBlockRoot</strong> — EIP-4788 부모 비콘 블록 루트</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">응답</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-muted-foreground">
+              <span><code>status</code> — VALID / INVALID / SYNCING / ACCEPTED</span>
+              <span><code>latestValidHash</code> — 가장 최신 valid 블록</span>
+              <span><code>validationError</code> — INVALID 시 에러 메시지</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">타임아웃: 8초 — 초과 시 CL이 EL 응답 포기 → optimistic 처리</p>
+          </div>
+        </div>
         <p className="leading-7">
           newPayloadV3 요청이 <strong>3 파라미터 포함</strong>.<br />
           ExecutionPayload (블록) + versionedHashes (blob) + beaconRoot (EIP-4788).<br />
@@ -90,56 +65,42 @@ Content-Type: application/json
 
         {/* ── Response 처리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Response 처리 — 4가지 상태</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 response 처리
-func (s *Service) notifyNewPayload(
-    ctx context.Context,
-    payload ExecutionPayload,
-) error {
-    resp, err := s.engineClient.NewPayloadV3(ctx, payload, versionedHashes, parentRoot)
-    if err != nil {
-        return err  // network error
-    }
-
-    switch resp.Status {
-    case VALID:
-        // EL이 검증 성공 → block은 유효
-        log.Info("payload VALID", "hash", payload.BlockHash)
-        return nil
-
-    case INVALID:
-        // EL이 거부 → 이 block을 fork choice에서 제외
-        log.Error("payload INVALID", "error", resp.ValidationError)
-        return s.markBlockInvalid(payload.BlockHash)
-
-    case SYNCING:
-        // EL이 아직 sync 중 → optimistic 수락
-        // 나중에 완료되면 재검증
-        log.Warn("payload SYNCING - optimistic accept")
-        return s.markBlockOptimistic(payload.BlockHash)
-
-    case ACCEPTED:
-        // side chain으로만 수락 (canonical 아님)
-        log.Info("payload ACCEPTED (side chain)")
-        return nil
-
-    default:
-        return ErrUnknownStatus
-    }
-}
-
-// Optimistic Sync:
-// EL이 SYNCING일 때 CL은 블록을 "잠정적 유효"로 표시
-// - 계속 블록 처리 진행
-// - EL sync 완료 시 재검증
-// - INVALID 판정 시 해당 블록 + 후손 전부 무효화 → reorg
-
-// 실제 케이스:
-// 1. 노드 시작 시 EL이 뒤처진 상태
-// 2. CL이 몇 블록 앞서 처리
-// 3. EL이 따라오면 모두 재검증
-// 4. 모두 VALID면 optimistic → verified`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>notifyNewPayload</code> — Response 분기 처리</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded border border-green-500/20 bg-green-500/5 p-2">
+                <span className="font-medium shrink-0 text-green-500 w-16">VALID</span>
+                <div className="text-muted-foreground">EL 검증 성공 → block 유효 처리</div>
+              </div>
+              <div className="flex items-start gap-2 rounded border border-red-500/20 bg-red-500/5 p-2">
+                <span className="font-medium shrink-0 text-red-500 w-16">INVALID</span>
+                <div className="text-muted-foreground">EL 거부 → <code>markBlockInvalid(blockHash)</code> → fork choice에서 제외</div>
+              </div>
+              <div className="flex items-start gap-2 rounded border border-amber-500/20 bg-amber-500/5 p-2">
+                <span className="font-medium shrink-0 text-amber-500 w-16">SYNCING</span>
+                <div className="text-muted-foreground">EL sync 중 → <code>markBlockOptimistic(blockHash)</code> → 나중에 재검증</div>
+              </div>
+              <div className="flex items-start gap-2 rounded border border-blue-500/20 bg-blue-500/5 p-2">
+                <span className="font-medium shrink-0 text-blue-500 w-16">ACCEPTED</span>
+                <div className="text-muted-foreground">side chain으로만 수락 (canonical 아님)</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Optimistic Sync 흐름</h4>
+            <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+              <span className="rounded bg-muted px-2 py-1">노드 시작, EL 뒤처짐</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">CL이 몇 블록 앞서 처리</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">EL 따라오면 재검증</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">모두 VALID → optimistic → verified</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">INVALID 판정 시 해당 블록 + 후손 전부 무효화 → reorg</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>4가지 응답 상태</strong>로 CL이 다르게 처리.<br />
           SYNCING은 optimistic sync 트리거 — EL 지연 시에도 CL 진행.<br />

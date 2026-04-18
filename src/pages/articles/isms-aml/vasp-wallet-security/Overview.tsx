@@ -1,7 +1,12 @@
+import OverviewViz from './viz/OverviewViz';
+import OverviewHotColdViz from './viz/OverviewHotColdViz';
+import OverviewKycAmlViz from './viz/OverviewKycAmlViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">VASP 내부통제 체계</h2>
+      <OverviewViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-4">내부통제의 출발점</h3>
         <p className="leading-7">
@@ -43,6 +48,8 @@ export default function Overview() {
           나머지 대부분은 콜드월렛에 보관하여 물리적 접근 없이는 이동이 불가능하게 만든다.
           이렇게 하면 핫월렛이 침해되더라도 피해 규모가 한정된다.
         </p>
+
+        <OverviewHotColdViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">Multi-sig: 2인 이상 서명 체계</h3>
         <p className="leading-7">
@@ -88,6 +95,8 @@ export default function Overview() {
           <br />
           이 규칙이 적용되면서 익명 전송의 범위가 점점 좁아지고, VASP 간 상호 검증 체계가 강화되고 있다.
         </p>
+
+        <OverviewKycAmlViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">시스템 접근: VPN + MFA + 최소권한</h3>
         <p className="leading-7">

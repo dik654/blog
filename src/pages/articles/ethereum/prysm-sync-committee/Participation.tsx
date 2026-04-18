@@ -16,53 +16,25 @@ export default function Participation({ onCodeRef }: Props) {
 
         {/* ── Committee 선정 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Sync Committee 선정 알고리즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sync committee 선정 (매 256 epochs)
-
-func getNextSyncCommittee(state *BeaconState) *SyncCommittee {
-    // 1. 현재 epoch + 256 epoch 후의 committee 계산
-    //    (미리 알려짐 → validator 준비 가능)
-    epoch := getCurrentEpoch(state) + EPOCHS_PER_SYNC_COMMITTEE_PERIOD  // 256
-
-    // 2. Seed 생성 (RANDAO 기반)
-    seed := getSeed(state, epoch, DOMAIN_SYNC_COMMITTEE)
-
-    // 3. 512명 무작위 선정 (effective_balance 가중)
-    indices := []ValidatorIndex{}
-    i := 0
-    activeIndices := getActiveValidatorIndices(state, epoch)
-
-    for len(indices) < SYNC_COMMITTEE_SIZE {  // 512
-        // 효율 가중 선정
-        randomByte := hash(seed || (i/32).toBytes())[i%32]
-        candidate := activeIndices[i * len(activeIndices) / 2^24 % len(activeIndices)]
-        effectiveBalance := state.Validators[candidate].EffectiveBalance
-
-        if effectiveBalance * 255 >= MAX_EFFECTIVE_BALANCE * randomByte {
-            indices = append(indices, candidate)
-        }
-        i++
-    }
-
-    // 4. Committee 구성
-    pubkeys := []BLSPubkey{}
-    for _, idx := range indices {
-        pubkeys = append(pubkeys, state.Validators[idx].Pubkey)
-    }
-    aggregatePubkey := bls.Aggregate(pubkeys)
-
-    return &SyncCommittee{
-        Pubkeys: pubkeys,
-        AggregatePubkey: aggregatePubkey,
-    }
-}
-
-// 특성:
-// - effective_balance 32 ETH = 100% selection probability
-// - 낮은 balance = 낮은 probability
-// - 중복 선정 허용 (같은 validator가 여러 slot에 선정 가능)
-// - 메인넷 1M validator → 개별 validator 선정 확률 ~0.05% per period`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">getNextSyncCommittee 흐름</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>epoch = getCurrentEpoch + EPOCHS_PER_SYNC_COMMITTEE_PERIOD</code> (256) — 미리 알려짐</p>
+              <p>2. <code>getSeed(state, epoch, DOMAIN_SYNC_COMMITTEE)</code> — RANDAO 기반 seed</p>
+              <p>3. 512명 무작위 선정 (effective_balance 가중)</p>
+              <p className="pl-4 text-foreground/60"><code>randomByte = hash(seed || (i/32))[i%32]</code></p>
+              <p className="pl-4 text-foreground/60"><code>effectiveBalance * 255 &gt;= MAX_EFFECTIVE_BALANCE * randomByte</code> &rarr; 선정</p>
+              <p>4. 선정된 pubkeys + <code>bls.Aggregate(pubkeys)</code> &rarr; <code>SyncCommittee</code> 구성</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">32 ETH</p><p className="text-foreground/50">100% 선정 확률</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">낮은 balance</p><p className="text-foreground/50">낮은 확률</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">중복 허용</p><p className="text-foreground/50">같은 validator 복수</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">~0.05%</p><p className="text-foreground/50">개별 확률/period</p></div>
+          </div>
+        </div>
         <p className="leading-7">
           Sync committee는 <strong>effective_balance 가중 무작위 선정</strong>.<br />
           512명 중복 허용 → 같은 validator 여러 번 선정 가능.<br />
@@ -71,55 +43,36 @@ func getNextSyncCommittee(state *BeaconState) *SyncCommittee {
 
         {/* ── SyncCommitteeMessage ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">매 slot SyncCommitteeMessage 서명</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 선정된 validator는 매 slot에 block_root에 서명
-
-func (v *validator) SubmitSyncCommitteeMessage(
-    ctx context.Context,
-    slot Slot,
-) error {
-    // 1. committee 멤버인지 확인
-    subnets, err := v.getSyncCommitteeSubnets(slot)
-    if err != nil { return err }
-    if len(subnets) == 0 { return nil }  // 이번 period에 참여 안 함
-
-    // 2. 현재 head block_root 조회
-    head, err := v.validatorClient.GetHead(ctx)
-    if err != nil { return err }
-
-    // 3. 서명 (domain=DOMAIN_SYNC_COMMITTEE)
-    signingRoot := computeSigningRoot(head.Root, getDomain(DOMAIN_SYNC_COMMITTEE, epoch))
-    signature, err := v.keyManager.Sign(v.pubkey, signingRoot)
-    if err != nil { return err }
-
-    // 4. SyncCommitteeMessage 생성 (각 subnet별로)
-    for _, subnet := range subnets {
-        msg := &SyncCommitteeMessage{
-            Slot: slot,
-            BeaconBlockRoot: head.Root,
-            ValidatorIndex: v.validatorIndex,
-            Signature: signature,
-        }
-
-        // 5. subnet topic에 방송
-        topic := fmt.Sprintf("sync_committee_%d", subnet)
-        v.pubsub.Publish(topic, msg)
-    }
-
-    return nil
-}
-
-// Domain 분리:
-// DOMAIN_SYNC_COMMITTEE 사용 (DOMAIN_BEACON_ATTESTER와 다름)
-// → 같은 block_root에 대해 validator가
-//   attestation + sync committee 서명 2개 생성 (독립적)
-// → 서로 간섭 없음
-
-// 보상:
-// - 올바른 서명: base_reward_per_increment × validator effective_balance
-// - 미참여: 동일 금액 패널티
-// - 참여 인센티브로 높은 참여율 유지`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">SubmitSyncCommitteeMessage 흐름</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>getSyncCommitteeSubnets(slot)</code> — 멤버 확인 (0이면 참여 안 함)</p>
+              <p>2. <code>GetHead(ctx)</code> — 현재 head block_root 조회</p>
+              <p>3. <code>computeSigningRoot(head.Root, getDomain(DOMAIN_SYNC_COMMITTEE, epoch))</code></p>
+              <p>4. <code>keyManager.Sign(pubkey, signingRoot)</code> — BLS 서명</p>
+              <p>5. 각 subnet별 <code>SyncCommitteeMessage</code> 생성 &rarr; <code>pubsub.Publish("sync_committee_&#123;subnet&#125;", msg)</code></p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Domain 분리</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p><code>DOMAIN_SYNC_COMMITTEE</code> ≠ <code>DOMAIN_BEACON_ATTESTER</code></p>
+                <p>같은 block_root에 attestation + sync 서명 2개 (독립)</p>
+                <p>서로 간섭 없음</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">보상 & 패널티</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>참여: <code>base_reward_per_increment x effective_balance</code></p>
+                <p>미참여: 동일 금액 차감</p>
+                <p>참여 인센티브로 높은 참여율 유지</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Committee 멤버는 <strong>매 slot head block에 서명</strong>.<br />
           DOMAIN_SYNC_COMMITTEE로 attestation과 구분.<br />

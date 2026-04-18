@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import RecursiveViz from './viz/RecursiveViz';
 
 export default function Recursive() {
@@ -25,139 +26,146 @@ export default function Recursive() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">확장체 타워 재귀 적용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Tower Field Karatsuba Application
-//
-// BN254 tower:
-//   Fp → Fp2 = Fp[u]/(u^2 + 1)
-//   Fp2 → Fp6 = Fp2[v]/(v^3 - (u+9))
-//   Fp6 → Fp12 = Fp6[w]/(w^2 - v)
-//
-// BLS12-381 tower:
-//   Fp → Fp2 = Fp[u]/(u^2 + 1)
-//   Fp2 → Fp6 = Fp2[v]/(v^3 - (u+1))
-//   Fp6 → Fp12 = Fp6[w]/(w^2 - v)
 
-// Level 1: Fp2 Karatsuba
-//   Fp2 mult = 3 Fp mults + adds (vs 4 naive)
-//   Fp2 square = 2 Fp squares + adds
+        {/* 타워 정의 */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-sm font-semibold mb-2">BN254 Tower</div>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li><M>{'\\mathbb{F}_p \\to \\mathbb{F}_{p^2} = \\mathbb{F}_p[u]/(u^2+1)'}</M></li>
+              <li><M>{'\\mathbb{F}_{p^2} \\to \\mathbb{F}_{p^6} = \\mathbb{F}_{p^2}[v]/(v^3-(u+9))'}</M></li>
+              <li><M>{'\\mathbb{F}_{p^6} \\to \\mathbb{F}_{p^{12}} = \\mathbb{F}_{p^6}[w]/(w^2-v)'}</M></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-sm font-semibold mb-2">BLS12-381 Tower</div>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li><M>{'\\mathbb{F}_p \\to \\mathbb{F}_{p^2} = \\mathbb{F}_p[u]/(u^2+1)'}</M></li>
+              <li><M>{'\\mathbb{F}_{p^2} \\to \\mathbb{F}_{p^6} = \\mathbb{F}_{p^2}[v]/(v^3-(u+1))'}</M></li>
+              <li><M>{'\\mathbb{F}_{p^6} \\to \\mathbb{F}_{p^{12}} = \\mathbb{F}_{p^6}[w]/(w^2-v)'}</M></li>
+            </ul>
+          </div>
+        </div>
 
-// Level 2: Fp6 Karatsuba
-//   Fp6 element: (a, b, c) where each is Fp2
-//   Fp6 mult = multiply (a+bv+cv^2)(d+ev+fv^2)
-//
-//   Naive: 9 Fp2 mults
-//     a*d, a*e, a*f, b*d, b*e, b*f, c*d, c*e, c*f
-//     Then combine with v^2 reduction (v^3 = u+1)
-//
-//   Karatsuba-Toom:
-//     v0 = a*d
-//     v1 = b*e
-//     v2 = c*f
-//     v3 = (a+b)(d+e) - v0 - v1  // gives a*e + b*d
-//     v4 = (b+c)(e+f) - v1 - v2  // gives b*f + c*e
-//     v5 = (a+c)(d+f) - v0 - v2  // gives a*f + c*d
-//     6 mults total!
-//     Then: c0 = v0 + (v4)(u+1)
-//           c1 = v3 + v2*(u+1)
-//           c2 = v1 + v5
-//     (multiply-by-(u+1) is cheap, just a permutation)
-//
-//   Saved: 9 → 6 Fp2 mults
+        {/* Level 1: Fp2 */}
+        <div className="not-prose rounded-lg border-l-4 border-l-blue-500 bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">Level 1: Fp2 Karatsuba</div>
+          <p className="text-sm text-muted-foreground">
+            Fp2 mult = 3 Fp mults + adds (vs 4 naive). Fp2 square = 2 Fp squares + adds.
+          </p>
+        </div>
 
-// Level 3: Fp12 Karatsuba
-//   Fp12 element: (a, b) where each is Fp6
-//   Fp12 mult = multiply (a + b*w)(c + d*w)
-//   w^2 = v, so (bw)(dw) = bd*v (scale by v)
-//
-//   Naive: 4 Fp6 mults
-//     ac, ad, bc, bd
-//
-//   Karatsuba:
-//     v0 = a*c
-//     v1 = b*d
-//     v2 = (a+b)(c+d) - v0 - v1  // a*d + b*c
-//     c0 = v0 + v1 * v   // multiply by v (cheap, shift)
-//     c1 = v2
-//     3 Fp6 mults total
-//
-//   Saved: 4 → 3 Fp6 mults
+        {/* Level 2: Fp6 */}
+        <div className="not-prose rounded-lg border-l-4 border-l-emerald-500 bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">Level 2: Fp6 Karatsuba-Toom</div>
+          <p className="text-sm text-muted-foreground mb-2">
+            원소 <M>{'(a, b, c)'}</M> where each is Fp2. 곱셈 <M>{'(a+bv+cv^2)(d+ev+fv^2)'}</M>.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
+            <div className="rounded bg-muted/50 p-3">
+              <div className="text-xs font-mono text-red-500 mb-1">Naive: 9 Fp2 mults</div>
+              <p className="text-sm text-muted-foreground"><M>{'ad, ae, af, bd, be, bf, cd, ce, cf'}</M></p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <div className="text-xs font-mono text-emerald-500 mb-1">Karatsuba-Toom: 6 Fp2 mults</div>
+              <div className="text-sm text-muted-foreground font-mono space-y-0.5">
+                <p><code>v0=a*d, v1=b*e, v2=c*f</code></p>
+                <p><code>v3=(a+b)(d+e)-v0-v1</code></p>
+                <p><code>v4=(b+c)(e+f)-v1-v2</code></p>
+                <p><code>v5=(a+c)(d+f)-v0-v2</code></p>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            <M>{'v^3'}</M> 감약 시 <M>{'(u+1)'}</M> 곱은 저비용 (permutation).
+          </p>
+        </div>
 
-// Total savings (multiplicative):
-//
-//   Fp12 mult (naive):
-//     4 Fp6 mults
-//     × 9 Fp2 mults per Fp6
-//     × 4 Fp mults per Fp2
-//     = 144 Fp mults
-//
-//   Fp12 mult (Karatsuba at all levels):
-//     3 Fp6 mults
-//     × 6 Fp2 mults per Fp6
-//     × 3 Fp mults per Fp2
-//     = 54 Fp mults
-//
-//   Improvement: 144 / 54 = 2.67x
+        {/* Level 3: Fp12 */}
+        <div className="not-prose rounded-lg border-l-4 border-l-purple-500 bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">Level 3: Fp12 Karatsuba</div>
+          <p className="text-sm text-muted-foreground mb-2">
+            원소 <M>{'(a, b)'}</M> where each is Fp6. 곱셈 <M>{'(a + bw)(c + dw)'}</M>, <M>{'w^2 = v'}</M>.
+          </p>
+          <div className="text-sm text-muted-foreground font-mono space-y-0.5">
+            <p><code>v0 = a*c</code>, <code>v1 = b*d</code>, <code>v2 = (a+b)(c+d) - v0 - v1</code></p>
+            <p><code>c0 = v0 + v1*v</code> (v 곱은 shift), <code>c1 = v2</code></p>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">Naive 4 &rarr; Karatsuba 3 Fp6 mults.</p>
+        </div>
 
-// Squaring savings:
-//
-//   Fp12 squaring (naive): 144 Fp mults
-//   Fp12 squaring (Karatsuba): ~36 Fp mults
-//     (special formulas for squaring)
-//   Improvement: 4x
-//
-//   Used in:
-//     Final exponentiation (~200 squarings in BN254)
-//     Massive cumulative savings
+        {/* 총 절감 */}
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">Total 절감 (곱셈적 누적)</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded bg-muted/50 p-3">
+              <div className="text-xs font-mono text-red-500 mb-1">Naive</div>
+              <M display>{'\\underbrace{4}_{\\text{Fp12→Fp6}} \\times \\underbrace{9}_{\\text{Fp6→Fp2}} \\times \\underbrace{4}_{\\text{Fp2→Fp}} = 144 \\text{ Fp mults}'}</M>
+              <p className="text-sm text-muted-foreground mt-2">
+                각 층에서 naive 곱셈 수가 곱해진 결과. 최적화 없이 Fp12 곱셈 1회에 144번의 Fp 곱셈
+              </p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <div className="text-xs font-mono text-emerald-500 mb-1">Karatsuba (all levels)</div>
+              <M display>{'\\underbrace{3}_{\\text{Karatsuba}} \\times \\underbrace{6}_{\\text{Toom-like}} \\times \\underbrace{3}_{\\text{Karatsuba}} = 54 \\text{ Fp mults}'}</M>
+              <p className="text-sm text-muted-foreground mt-2">
+                각 층에서 Karatsuba/Toom 적용 후 곱셈 수. 144 대비 62% 절감 (2.67배 빠름)
+              </p>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2 text-center font-semibold">
+            개선: 144 / 54 = 2.67x
+          </p>
+        </div>
 
-// Fp12 multiplication in Miller loop:
-//
-//   BN254 Miller loop: 254 iterations
-//   Each iteration:
-//     - 1 line function eval (sparse Fp12)
-//     - 1 Fp12 mult (full)
-//     - 1 Fp12 squaring
-//
-//   Naive cost: 254 * (144 + 144 + sparse_cost) ≈ 80000 Fp mults
-//   Karatsuba cost: 254 * (54 + 36 + sparse_cost) ≈ 28000 Fp mults
-//   Factor: ~2.8x speedup
+        {/* Squaring */}
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">Squaring 절감</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+            <div>Fp12 squaring (naive): 144 Fp mults &rarr; Karatsuba: ~36 Fp mults (4x 개선)</div>
+            <div>Final exponentiation에서 ~200회 squaring &rarr; 누적 절감 매우 큼</div>
+          </div>
+        </div>
 
-// Sparse multiplication (line functions):
-//
-//   Line function L = l0 + l1*w (only 2 Fp6 parts out of 2)
-//   Sparse * Full mult:
-//     Normal Fp12 mult: 3 Fp6 mults
-//     Sparse mult: 2 Fp6 mults (l0 * f0 skipped or zero)
-//
-//   Additional 33% speedup in Miller loop
+        {/* Miller Loop 비용 */}
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">Miller Loop 비용 (BN254, 254 iterations)</div>
+          <p className="text-sm text-muted-foreground mb-2">
+            각 반복: line function eval (sparse) + Fp12 mult (full) + Fp12 squaring.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+            <div className="rounded bg-muted/50 p-2">Naive: 254 x (144+144+sparse) &asymp; 80,000 Fp mults</div>
+            <div className="rounded bg-muted/50 p-2">Karatsuba: 254 x (54+36+sparse) &asymp; 28,000 Fp mults (~2.8x)</div>
+          </div>
+        </div>
 
-// Actual BLST performance (BLS12-381):
-//
-//   Fp mult:      ~80 ns (256-bit)
-//   Fp2 mult:     ~250 ns (3 Fp mults + adds)
-//   Fp6 mult:     ~1700 ns (6 Fp2 mults)
-//   Fp12 mult:    ~5300 ns (3 Fp6 mults)
-//   Fp12 square:  ~3500 ns (fewer mults)
-//
-//   Single pairing: ~1.5 ms on modern x86
-//   With MSM optimizations: ~0.8 ms possible
+        {/* Sparse mult + 성능 */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-sm font-semibold mb-2">Sparse 곱셈 (line functions)</div>
+            <p className="text-sm text-muted-foreground">
+              Normal Fp12 mult 3 Fp6 mults &rarr; Sparse mult 2 Fp6 mults. 추가 33% 절감.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-sm font-semibold mb-2">BLST 실측 (BLS12-381)</div>
+            <div className="text-sm text-muted-foreground space-y-0.5">
+              <p>Fp mult: ~80 ns / Fp2: ~250 ns / Fp6: ~1700 ns</p>
+              <p>Fp12 mult: ~5300 ns / Fp12 sq: ~3500 ns</p>
+              <p className="font-semibold">Pairing: ~1.5 ms (MSM 최적화 시 ~0.8 ms)</p>
+            </div>
+          </div>
+        </div>
 
-// Further optimizations:
-//
-//   1. Lazy reduction
-//      Keep intermediate values unreduced
-//      Reduce only at final result
-//      Saves 20-30% more
-//
-//   2. Cyclotomic subgroup squaring
-//      For final exponentiation
-//      Fp12 cyclotomic squaring: 9 Fp mults
-//      vs 36 generic → 4x more savings
-//
-//   3. Frobenius precomputation
-//      Powers of Frobenius operator
-//      Used in final exponentiation`}
-        </pre>
+        {/* 추가 최적화 */}
+        <div className="not-prose rounded-lg border-l-4 border-l-amber-500 bg-card p-4 mb-4">
+          <div className="text-sm font-semibold mb-2">추가 최적화 기법</div>
+          <ul className="text-sm text-muted-foreground space-y-2">
+            <li><strong>Lazy reduction</strong> &mdash; 중간 값을 감약하지 않고 유지, 최종 결과에서만 감약. 20-30% 추가 절감.</li>
+            <li><strong>Cyclotomic subgroup squaring</strong> &mdash; Final exponentiation 전용. Fp12 cyclotomic sq = 9 Fp mults (vs 36 generic, 4x).</li>
+            <li><strong>Frobenius precomputation</strong> &mdash; Frobenius 연산자 거듭제곱 사전 계산. Final exponentiation에 활용.</li>
+          </ul>
+        </div>
       </div>
     </section>
   );

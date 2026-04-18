@@ -22,12 +22,10 @@ export default function Cryptography({ onCodeRef: _onCodeRef }: { onCodeRef: (ke
           다양한 블록체인 생태계와의 호환성을 보장합니다.
         </p>
         <CitationBlock source="cometbft/crypto/ed25519" citeKey={10} type="code" href="https://github.com/cometbft/cometbft/tree/main/crypto/ed25519">
-          <pre className="text-xs overflow-x-auto"><code>{`// Ed25519: 기본 서명 알고리즘
-PubKeySize     = 32   // 공개키 32바이트
-PrivateKeySize = 64   // 개인키 64바이트
-SignatureSize  = 64   // 서명 64바이트
-// 배치 검증 + 캐싱 검증기로 성능 최적화`}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">Ed25519는 빠른 서명 생성/검증, 사이드 채널 공격 저항성, 결정론적 서명을 제공합니다.</p>
+          <div className="text-xs text-foreground/70 space-y-1">
+            <p>Ed25519 — <code>PubKeySize=32</code> / <code>PrivateKeySize=64</code> / <code>SignatureSize=64</code> (bytes)</p>
+            <p>빠른 서명 생성/검증, 사이드 채널 공격 저항성, 결정론적 서명. 배치 검증 + 캐싱 검증기로 성능 최적화</p>
+          </div>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">암호화 스택 전체 구조</h3>
         <CodePanel title="해시 + 서명 + 머클 + P2P 보안" code={CRYPTO_STACK_CODE} annotations={CRYPTO_STACK_ANNOTATIONS} />
@@ -61,50 +59,59 @@ SignatureSize  = 64   // 서명 64바이트
 
         {/* ── 서명 알고리즘 선택 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Validator Key Type 선택</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CometBFT는 validator별 다른 key type 허용 (theoretical)
-// 실제로는 chain당 단일 type 채택
-
-// 선택 기준:
-// Ed25519 (기본):
-//   + 검증 빠름 (~50μs)
-//   + Batch verification 우수
-//   + Go 표준 라이브러리 성숙
-//   + side-channel 저항성
-//   - 모바일/HW wallet 지원 약함
-
-// Secp256k1:
-//   + Bitcoin/Ethereum 생태계 호환
-//   + HW wallet 광범위 지원 (Ledger, Trezor)
-//   + ECDSA 표준
-//   - 검증 상대적 느림
-//   - Batch 불가 (RFC 표준 없음)
-
-// BLS12-381 (BN254):
-//   + 서명 집계 가능
-//   + ZK proof 호환
-//   + 다중 서명자 scenarios
-//   - 검증 매우 느림 (~2ms)
-//   - 구현 복잡
-//   - Pairing 연산 비쌈
-
-// 실제 사용 현황:
-// - Cosmos Hub, Osmosis: Ed25519 (가장 일반적)
-// - Binance Chain: Secp256k1 (BNB ecosystem)
-// - dYdX: Ed25519 (성능 우선)
-// - Sei: Ed25519
-
-// Vote 서명:
-// - Precommit 서명: validator key
-// - Extension 서명: 동일 key (별도 signature)
-// - LastCommit: 모든 Precommit aggregate
-
-// 서명 throughput 요구사항:
-// 100 validators × 2 phases × 4 message = 800 signatures per block
-// Block time 3s → 267 sig/sec
-// Ed25519 verification: ~50μs × 267 = 13ms (5% of block time)
-// → 충분 여유`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Ed25519 (기본)</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li className="text-green-600 dark:text-green-400">+ 검증 빠름 (~50us)</li>
+                <li className="text-green-600 dark:text-green-400">+ Batch verification 우수</li>
+                <li className="text-green-600 dark:text-green-400">+ Go 표준 라이브러리 성숙</li>
+                <li className="text-green-600 dark:text-green-400">+ side-channel 저항성</li>
+                <li className="text-red-600 dark:text-red-400">- 모바일/HW wallet 약함</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Secp256k1</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li className="text-green-600 dark:text-green-400">+ BTC/ETH 호환</li>
+                <li className="text-green-600 dark:text-green-400">+ HW wallet 광범위 지원</li>
+                <li className="text-green-600 dark:text-green-400">+ ECDSA 표준</li>
+                <li className="text-red-600 dark:text-red-400">- 검증 상대적 느림</li>
+                <li className="text-red-600 dark:text-red-400">- Batch 불가</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">BLS12-381</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li className="text-green-600 dark:text-green-400">+ 서명 집계 가능</li>
+                <li className="text-green-600 dark:text-green-400">+ ZK proof 호환</li>
+                <li className="text-green-600 dark:text-green-400">+ 다중 서명자 scenarios</li>
+                <li className="text-red-600 dark:text-red-400">- 검증 매우 느림 (~2ms)</li>
+                <li className="text-red-600 dark:text-red-400">- Pairing 연산 비쌈</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">실제 사용 현황</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">Cosmos Hub, Osmosis</strong> — Ed25519 (가장 일반적)</p>
+                <p><strong className="text-foreground">Binance Chain</strong> — Secp256k1 (BNB ecosystem)</p>
+                <p><strong className="text-foreground">dYdX, Sei</strong> — Ed25519 (성능 우선)</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">서명 throughput</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p>Vote 서명: <code>Precommit</code> → validator key / Extension → 동일 key (별도 sig)</p>
+                <p>100 validators x 2 phases x 4 msg = <strong className="text-foreground">800 sig/block</strong></p>
+                <p>Block time 3s → 267 sig/sec</p>
+                <p>Ed25519: ~50us x 267 = <strong className="text-foreground">13ms</strong> (block time의 5%) → 충분 여유</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           validator key 선택은 <strong>생태계 + 성능 trade-off</strong>.<br />
           Ed25519가 default — 빠른 검증 + batch 지원.<br />

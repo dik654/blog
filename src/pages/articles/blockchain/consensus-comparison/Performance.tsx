@@ -52,92 +52,47 @@ export default function Performance() {
 
         {/* ── 세부 수치 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">세부 수치 비교 (2024 기준)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 2024 실측 수치:
-
-// PBFT:
-// - message: O(n²) + O(n³) VC
-// - latency: 3δ (~300ms WAN)
-// - TPS: 1K-10K
-// - validators: ~20 실용
-
-// Tendermint/CometBFT:
-// - message: O(n²)
-// - latency: 3-4δ (400-800ms)
-// - TPS: 10K-20K
-// - validators: 100-200
-
-// HotStuff (chained):
-// - message: O(n)
-// - latency: 3δ (300-500ms)
-// - TPS: 20K-30K
-// - validators: ~100-300
-
-// HotStuff-2 / Jolteon:
-// - message: O(n)
-// - latency: 2δ (200-400ms)
-// - TPS: 30K-50K
-// - validators: ~100
-
-// Narwhal+Bullshark:
-// - message: O(n) + DAG
-// - latency: 2-3 rounds (2s WAN)
-// - TPS: 100K-130K
-// - validators: 10-100
-
-// Mysticeti:
-// - message: O(n) uncertified
-// - latency: 390ms e2e WAN
-// - TPS: 160K+
-// - validators: ~100
-
-// Autobahn (prototype):
-// - message: O(n)
-// - latency: 200-300ms
-// - TPS: 100K+
-// - validators: 100
-
-// Avalanche (Snowman):
-// - message: O(k log n)
-// - latency: ~1s (β rounds)
-// - TPS: 4500 X-Chain
-// - validators: ~1500
-
-// Nakamoto (Bitcoin):
-// - message: O(n) gossip
-// - latency: 60min (k=6)
-// - TPS: 7
-// - miners: 수천+
-
-// Nakamoto (Ethereum PoW era):
-// - message: O(n) gossip
-// - latency: 3-5min (k=12)
-// - TPS: 15
-// - miners: 수만
-
-// 성능 랭킹 (TPS):
-// 1. Mysticeti: 160K+
-// 2. Bullshark: 130K+
-// 3. Autobahn: 100K+
-// 4. HotStuff-2: 30-50K
-// 5. HotStuff: 20-30K
-// 6. Tendermint: 10-20K
-// 7. PBFT: 1-10K
-// 8. Avalanche: 4.5K
-// 9. Ethereum: 15
-// 10. Bitcoin: 7
-
-// 성능 랭킹 (latency):
-// 1. Autobahn: 200-300ms
-// 2. Mysticeti: 390ms
-// 3. HotStuff-2: 200-400ms
-// 4. PBFT: 300ms
-// 5. Tendermint: 400-800ms
-// 6. Avalanche: 1s
-// 7. Bullshark: 2s
-// 8. Ethereum: 12s (block) / 12min (final)
-// 9. Bitcoin: 60min`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">2024 실측 수치</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">프로토콜</th>
+                    <th className="border border-border px-3 py-1.5 text-left">통신</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Latency</th>
+                    <th className="border border-border px-3 py-1.5 text-left">TPS</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Validators</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">PBFT</td><td className="border border-border px-3 py-1.5">O(n2)+O(n3) VC</td><td className="border border-border px-3 py-1.5">~300ms</td><td className="border border-border px-3 py-1.5">1K-10K</td><td className="border border-border px-3 py-1.5">~20</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Tendermint</td><td className="border border-border px-3 py-1.5">O(n2)</td><td className="border border-border px-3 py-1.5">400-800ms</td><td className="border border-border px-3 py-1.5">10K-20K</td><td className="border border-border px-3 py-1.5">100-200</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">HotStuff</td><td className="border border-border px-3 py-1.5">O(n)</td><td className="border border-border px-3 py-1.5">300-500ms</td><td className="border border-border px-3 py-1.5">20K-30K</td><td className="border border-border px-3 py-1.5">100-300</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">HotStuff-2/Jolteon</td><td className="border border-border px-3 py-1.5">O(n)</td><td className="border border-border px-3 py-1.5">200-400ms</td><td className="border border-border px-3 py-1.5">30K-50K</td><td className="border border-border px-3 py-1.5">~100</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Narwhal+Bullshark</td><td className="border border-border px-3 py-1.5">O(n)+DAG</td><td className="border border-border px-3 py-1.5">2s WAN</td><td className="border border-border px-3 py-1.5">100K-130K</td><td className="border border-border px-3 py-1.5">10-100</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Mysticeti</td><td className="border border-border px-3 py-1.5">O(n) uncertified</td><td className="border border-border px-3 py-1.5">390ms</td><td className="border border-border px-3 py-1.5">160K+</td><td className="border border-border px-3 py-1.5">~100</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Autobahn</td><td className="border border-border px-3 py-1.5">O(n)</td><td className="border border-border px-3 py-1.5">200-300ms</td><td className="border border-border px-3 py-1.5">100K+</td><td className="border border-border px-3 py-1.5">100</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Avalanche</td><td className="border border-border px-3 py-1.5">O(k log n)</td><td className="border border-border px-3 py-1.5">~1s</td><td className="border border-border px-3 py-1.5">4.5K</td><td className="border border-border px-3 py-1.5">~1500</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Bitcoin</td><td className="border border-border px-3 py-1.5">O(n) gossip</td><td className="border border-border px-3 py-1.5">60min</td><td className="border border-border px-3 py-1.5">7</td><td className="border border-border px-3 py-1.5">수천+</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">TPS 랭킹</p>
+                <p className="text-muted-foreground">1. Mysticeti 160K+ / 2. Bullshark 130K+ / 3. Autobahn 100K+ / 4. HotStuff-2 30-50K / 5. Tendermint 10-20K / 6. Avalanche 4.5K / 7. Bitcoin 7</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Latency 랭킹</p>
+                <p className="text-muted-foreground">1. Autobahn 200-300ms / 2. Mysticeti 390ms / 3. HotStuff-2 200-400ms / 4. PBFT 300ms / 5. Tendermint 400-800ms / 6. Avalanche 1s / 7. Bitcoin 60min</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           2024 TPS 챔피언: <strong>Mysticeti (160K+)</strong>.<br />
           Latency 챔피언: <strong>Autobahn (200-300ms)</strong>.<br />
@@ -146,61 +101,40 @@ export default function Performance() {
 
         {/* ── Scaling 분석 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Validator Scaling 분석</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Validator 수에 따른 성능:
-
-// PBFT (n²):
-// n=10: 100 msg/request
-// n=50: 2500 msg
-// n=100: 10K msg
-// n=200: 40K msg
-// n=500: 250K msg (bandwidth 폭발)
-// → 실무: n≤100
-
-// HotStuff (n):
-// n=10: 10 msg/request
-// n=100: 100 msg
-// n=1000: 1K msg
-// n=10000: 10K msg
-// → 이론: n=1000+ 가능
-// → 실무: n≤300 (leader bottleneck)
-
-// Bullshark (DAG):
-// n=10: 10 vertices/round (parallel)
-// n=100: 100 vertices
-// n=1000: 1000 vertices
-// → DAG scales linearly
-// → 실무: n≤100 (signature verification)
-
-// Avalanche (k log n):
-// n=100: 66 msg/node (k=20)
-// n=1000: 100 msg
-// n=10000: 130 msg
-// → excellent scaling
-// → 실무: n=1500+
-
-// Nakamoto:
-// n=수천: OK
-// n=수만: OK
-// n=수백만: OK (light clients)
-// → no validator limit
-// → miners 참여 자유
-
-// 실무 배포 (2024):
-// - Cosmos Hub: 180 validators (Tendermint)
-// - Ethereum 2.0: 1M+ validators (committee 32 per slot)
-// - Solana: ~1800 validators
-// - Avalanche: ~1500 validators
-// - Sui: ~100 validators (Mysticeti)
-// - Aptos: ~100 validators (Jolteon)
-// - Bitcoin: 15000+ miners
-
-// 결론:
-// - 수백만 validators: Ethereum 2.0 (committee sampling)
-// - 수천 validators: Avalanche, Solana
-// - 수백 validators: DAG-BFT (Sui, Aptos)
-// - 수십 validators: PBFT`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Validator 수에 따른 메시지 량</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">프로토콜</th>
+                    <th className="border border-border px-3 py-1.5 text-left">n=10</th>
+                    <th className="border border-border px-3 py-1.5 text-left">n=100</th>
+                    <th className="border border-border px-3 py-1.5 text-left">n=1000</th>
+                    <th className="border border-border px-3 py-1.5 text-left">실무 한계</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">PBFT (n2)</td><td className="border border-border px-3 py-1.5">100 msg</td><td className="border border-border px-3 py-1.5">10K msg</td><td className="border border-border px-3 py-1.5">1M msg</td><td className="border border-border px-3 py-1.5">n &le; 100</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">HotStuff (n)</td><td className="border border-border px-3 py-1.5">10 msg</td><td className="border border-border px-3 py-1.5">100 msg</td><td className="border border-border px-3 py-1.5">1K msg</td><td className="border border-border px-3 py-1.5">n &le; 300</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Bullshark (DAG)</td><td className="border border-border px-3 py-1.5">10 vtx</td><td className="border border-border px-3 py-1.5">100 vtx</td><td className="border border-border px-3 py-1.5">1000 vtx</td><td className="border border-border px-3 py-1.5">n &le; 100</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Avalanche (k log n)</td><td className="border border-border px-3 py-1.5">46 msg</td><td className="border border-border px-3 py-1.5">66 msg</td><td className="border border-border px-3 py-1.5">100 msg</td><td className="border border-border px-3 py-1.5">n = 1500+</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Nakamoto</td><td className="border border-border px-3 py-1.5" colSpan={3}>제한 없음 (light clients)</td><td className="border border-border px-3 py-1.5">수백만</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">실무 배포 (2024)</p>
+            <p className="text-sm text-muted-foreground">
+              Cosmos Hub: 180 (Tendermint) / Ethereum 2.0: 1M+ (committee 32/slot) / Solana: ~1800 / Avalanche: ~1500 / Sui: ~100 (Mysticeti) / Aptos: ~100 (Jolteon) / Bitcoin: 15000+ miners
+            </p>
+            <p className="text-sm mt-1">
+              수백만: Ethereum 2.0 (committee sampling) / 수천: Avalanche, Solana / 수백: DAG-BFT / 수십: PBFT
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Validator 수 한계: <strong>프로토콜별 명확</strong>.<br />
           PBFT n≤100, HotStuff n≤300, DAG n≤100, Avalanche n≥1500.<br />

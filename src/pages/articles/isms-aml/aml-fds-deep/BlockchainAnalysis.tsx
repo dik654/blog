@@ -1,3 +1,7 @@
+import BlockchainAnalysisViz from './viz/BlockchainAnalysisViz';
+import OnchainTechniquesViz from './viz/OnchainTechniquesViz';
+import AnalysisLimitsViz from './viz/AnalysisLimitsViz';
+
 export default function BlockchainAnalysis() {
   return (
     <section id="blockchain-analysis" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function BlockchainAnalysis() {
           블록체인 분석(Blockchain Analytics)은 이 간극을 메우는 기술 — 익명의 주소를 실제 엔티티(거래소, 믹서, 다크웹 마켓 등)와 연결하고,
           자금 흐름을 시각화하여 의심 거래의 전체 경로를 추적한다.
         </p>
+
+        <BlockchainAnalysisViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">온체인 분석의 네 가지 핵심 기법</h3>
 
@@ -56,6 +62,8 @@ export default function BlockchainAnalysis() {
           점수가 "높음"이면 계정 정지 + STR 검토, "중간"이면 모니터링 강화, "낮음"이면 정상 처리.<br />
           임계값 설정은 거래소의 위험 수용도(Risk Appetite)에 따라 다르다 — 보수적인 거래소일수록 낮은 점수에서도 경보를 발생시킨다.
         </p>
+
+        <OnchainTechniquesViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주요 블록체인 분석 도구</h3>
 
@@ -126,6 +134,8 @@ export default function BlockchainAnalysis() {
           그러나 비호스팅 지갑(개인 지갑, DeFi 프로토콜)으로의 이전에는 Travel Rule이 적용되지 않아
           세탁 경로가 비호스팅 지갑으로 우회하는 현상이 나타나고 있다.
         </p>
+
+        <AnalysisLimitsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">분석의 한계</h3>
 

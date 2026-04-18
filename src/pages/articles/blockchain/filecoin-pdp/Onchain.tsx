@@ -17,59 +17,60 @@ export default function Onchain({ onCodeRef }: { onCodeRef: (key: string, ref: C
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">PDP Actor 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PDP Actor (FVM smart contract):
-
-// State:
-// - datasets: dataset_id → Merkle root
-// - proving_obligations: SP → datasets
-// - penalty_accumulators
-// - challenge schedules
-
-// Methods:
-// 1. RegisterDataset(root, sla)
-//    - SP commits to prove data
-//    - stake collateral
-// 2. SubmitProof(dataset_id, proof)
-//    - verify on-chain
-//    - reward or slash
-// 3. Challenge(dataset_id)
-//    - force SP to prove
-// 4. Terminate(dataset_id)
-//    - end obligation
-//    - return remaining stake
-
-// Verification (Solidity/FVM):
-// function verifyProof(proof) {
-//     bytes32 leafHash = sha256(proof.leafData);
-//     require(leafHash == proof.leafHash);
-//
-//     bytes32 computed = proof.leafHash;
-//     for (uint i = 0; i < proof.path.length; i++) {
-//         if (bit_i(offset) == 0)
-//             computed = sha256(computed, proof.path[i]);
-//         else
-//             computed = sha256(proof.path[i], computed);
-//     }
-//     require(computed == datasets[id].root);
-// }
-
-// Economic:
-// - SP stake: N FIL per TiB
-// - reward: price × time
-// - slash on failure
-// - incentive aligned
-
-// Batching:
-// - multiple proofs in one tx
-// - gas amortization
-// - SP efficiency
-
-// Integration:
-// - Storacha: first user
-// - Onchain Cloud: platform
-// - 2024 launch`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">State (온체인 상태)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs bg-background px-1 rounded">datasets</code>: dataset_id → Merkle root</li>
+              <li><code className="text-xs bg-background px-1 rounded">proving_obligations</code>: SP → datasets</li>
+              <li><code className="text-xs bg-background px-1 rounded">penalty_accumulators</code>: 누적 패널티</li>
+              <li><code className="text-xs bg-background px-1 rounded">challenge_schedules</code>: 챌린지 일정</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Methods</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs bg-background px-1 rounded">RegisterDataset(root, sla)</code> — SP가 데이터 증명 약속 + 담보 예치</li>
+              <li><code className="text-xs bg-background px-1 rounded">SubmitProof(dataset_id, proof)</code> — 온체인 검증 후 보상/슬래싱</li>
+              <li><code className="text-xs bg-background px-1 rounded">Challenge(dataset_id)</code> — SP에게 증명 강제</li>
+              <li><code className="text-xs bg-background px-1 rounded">Terminate(dataset_id)</code> — 의무 종료 + 잔여 담보 반환</li>
+            </ul>
+          </div>
+        </div>
+        <div className="bg-muted rounded-lg p-4 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2">Verification 로직 (Solidity/FVM)</h4>
+          <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+            <li><code className="text-xs bg-background px-1 rounded">leafHash = sha256(proof.leafData)</code> 계산 후 <code className="text-xs bg-background px-1 rounded">proof.leafHash</code>와 비교</li>
+            <li>Merkle path를 순회하며 <code className="text-xs bg-background px-1 rounded">sha256(computed, proof.path[i])</code> 또는 역순 결합</li>
+            <li>최종 computed가 <code className="text-xs bg-background px-1 rounded">datasets[id].root</code>와 일치하는지 확인</li>
+          </ol>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Economic</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>SP stake: N FIL per TiB</li>
+              <li>reward: <code className="text-xs bg-background px-1 rounded">price x time</code></li>
+              <li>실패 시 slash</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Batching</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>한 tx에 다수 proof 포함</li>
+              <li>gas amortization</li>
+              <li>SP 효율성 극대화</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Integration</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Storacha: first user</li>
+              <li>Onchain Cloud: platform</li>
+              <li>2024 launch</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           PDP Actor: <strong>FVM smart contract + reward/slash</strong>.<br />
           on-chain verify (Solidity/FVM), DRAND challenges.<br />

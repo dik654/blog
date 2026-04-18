@@ -40,23 +40,32 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── ChainSpec 구조체 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ChainSpec 구조체 — 9개 핵심 필드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct ChainSpec<H = Header> {
-    pub chain: Chain,                              // mainnet, sepolia, holesky 등 (chain_id 포함)
-    pub genesis_header: SealedHeader<H>,           // 제네시스 블록 헤더 (해시 포함, immutable)
-    pub genesis: Genesis,                          // genesis.json 파싱 결과 (alloc, extraData 등)
-    pub paris_block_and_final_difficulty:          // The Merge(PoW→PoS) 전환 정보
-        Option<(u64, U256)>,                       //   (블록 번호, 최종 누적 난이도)
-    pub hardforks: ChainHardforks,                 // BTreeMap<Hardfork, ForkCondition>
-    pub deposit_contract: Option<DepositContract>, // CL(beacon chain) deposit 컨트랙트
-    pub base_fee_params: BaseFeeParamsKind,        // EIP-1559 base_fee 파라미터
-    pub blob_params: BlobScheduleBlobParams,       // EIP-4844 blob 파라미터
-    pub prune_delete_limit: usize,                 // 프루닝 배치 크기 (기본 1_750_000)
-}
-
-// H = Header 기본값 — 이더리움 표준 헤더
-// 커스텀 체인(L2 OP Stack 등)은 H를 자체 헤더 타입으로 교체 가능`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-3"><code>ChainSpec&lt;H = Header&gt;</code> — 9개 필드</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                { field: 'chain: Chain', desc: 'mainnet, sepolia, holesky 등 (chain_id 포함)' },
+                { field: 'genesis_header: SealedHeader<H>', desc: '제네시스 블록 헤더 (해시 포함, immutable)' },
+                { field: 'genesis: Genesis', desc: 'genesis.json 파싱 결과 (alloc, extraData 등)' },
+                { field: 'paris_block_and_final_difficulty', desc: 'The Merge 전환 (블록 번호, 최종 누적 난이도)' },
+                { field: 'hardforks: ChainHardforks', desc: 'BTreeMap<Hardfork, ForkCondition>' },
+                { field: 'deposit_contract', desc: 'CL(beacon chain) deposit 컨트랙트' },
+                { field: 'base_fee_params: BaseFeeParamsKind', desc: 'EIP-1559 base_fee 파라미터' },
+                { field: 'blob_params: BlobScheduleBlobParams', desc: 'EIP-4844 blob 파라미터' },
+                { field: 'prune_delete_limit: usize', desc: '프루닝 배치 크기 (기본 1,750,000)' },
+              ].map(f => (
+                <div key={f.field} className="rounded border border-border/40 px-3 py-2">
+                  <code className="text-xs font-bold">{f.field}</code>
+                  <p className="text-xs text-foreground/60 mt-0.5">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-foreground/50 mt-3">
+              <code>H = Header</code> 기본값 — 커스텀 체인(L2 OP Stack 등)은 <code>H</code>를 자체 헤더 타입으로 교체 가능
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>chain</code> 필드의 <code>Chain</code> 타입이 <code>chain_id</code>를 감싼다.<br />
           메인넷=1, Sepolia=11155111, Holesky=17000 — EIP-155 서명 검증에 사용된다.<br />
@@ -65,25 +74,36 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── ForkCondition ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ForkCondition — 3가지 활성화 조건</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub enum ForkCondition {
-    Block(BlockNumber),            // Frontier~Istanbul: 블록 번호로 활성
-    TTD {                          // The Merge: 누적 난이도로 활성
-        total_difficulty: U256,    //   이 값 이상이면 PoS 전환
-        fork_block: Option<BlockNumber>, // 사후 확인된 실제 블록
-    },
-    Timestamp(u64),                // Shanghai~: Unix 타임스탬프로 활성
-    Never,                         // 비활성화 (L2 체인이 특정 포크 skip)
-}
-
-// 하드포크별 활성화 방식 변천:
-// - Frontier(0) ~ Istanbul(9_069_000):    Block
-// - Muir Glacier(9_200_000) ~ GrayGlacier: Block
-// - Paris(The Merge):                     TTD → Block (사후)
-// - Shanghai(1681338455):                 Timestamp ← 여기부터
-// - Cancun(1710338135):                   Timestamp
-// - Prague(예정):                         Timestamp`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2"><code>ForkCondition</code> — 4가지 variant</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { variant: 'Block(BlockNumber)', desc: 'Frontier~Istanbul: 블록 번호로 활성' },
+                { variant: 'TTD { total_difficulty, fork_block }', desc: 'The Merge: 누적 난이도로 PoS 전환' },
+                { variant: 'Timestamp(u64)', desc: 'Shanghai~: Unix 타임스탬프로 활성' },
+                { variant: 'Never', desc: 'L2 체인이 특정 포크 skip' },
+              ].map(v => (
+                <div key={v.variant} className="rounded border border-border/40 px-3 py-2">
+                  <code className="text-[11px] font-bold">{v.variant}</code>
+                  <p className="text-[11px] text-foreground/60 mt-0.5">{v.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">활성화 방식 변천</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-xs border border-border">
+                <tbody>
+                  <tr><td className="border border-border/40 px-2 py-1 font-mono">Frontier ~ GrayGlacier</td><td className="border border-border/40 px-2 py-1"><code>Block</code></td></tr>
+                  <tr><td className="border border-border/40 px-2 py-1 font-mono">Paris (The Merge)</td><td className="border border-border/40 px-2 py-1"><code>TTD</code> → <code>Block</code> (사후)</td></tr>
+                  <tr><td className="border border-border/40 px-2 py-1 font-mono">Shanghai ~ Prague</td><td className="border border-border/40 px-2 py-1"><code>Timestamp</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Shanghai 이후 Timestamp 활성화로 전환된 이유: PoS 환경에서 블록 생성 속도가 정확히 12초로 고정되므로, 타임스탬프가 블록 번호보다 예측 가능.<br />
           L2/테스트넷은 네트워크마다 블록 생성 시점이 다르므로 Timestamp가 더 이식성 있음.<br />
@@ -92,26 +112,31 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── EthChainSpec trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">EthChainSpec trait — 다형성 인터페이스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait EthChainSpec: Send + Sync + Unpin + Debug {
-    type Header: BlockHeader;
-
-    fn chain(&self) -> Chain;
-    fn chain_id(&self) -> u64 { self.chain().id() }
-    fn base_fee_params_at_timestamp(&self, ts: u64) -> BaseFeeParams;
-    fn genesis_hash(&self) -> B256;
-    fn genesis_header(&self) -> &Self::Header;
-    fn genesis(&self) -> &Genesis;
-    fn bootnodes(&self) -> Option<Vec<NodeRecord>>;
-}
-
-// NodeBuilder는 EthChainSpec 제네릭으로 동작
-pub fn build_node<C: EthChainSpec>(chain_spec: Arc<C>) -> Node {
-    // 이 함수는 메인넷이든 OP Mainnet이든 Base든 동일하게 호출됨
-    // chain_spec이 제공하는 값만 다름
-    Node::new(chain_spec)
-}`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2"><code>EthChainSpec</code> trait — 다형성 인터페이스</p>
+            <p className="text-xs text-foreground/50 mb-3">연관 타입: <code>type Header: BlockHeader</code></p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {[
+                { method: 'chain()', ret: 'Chain' },
+                { method: 'chain_id()', ret: 'u64' },
+                { method: 'base_fee_params_at_timestamp(ts)', ret: 'BaseFeeParams' },
+                { method: 'genesis_hash()', ret: 'B256' },
+                { method: 'genesis_header()', ret: '&Header' },
+                { method: 'genesis()', ret: '&Genesis' },
+                { method: 'bootnodes()', ret: 'Option<Vec<NodeRecord>>' },
+              ].map(m => (
+                <div key={m.method} className="rounded border border-border/40 px-3 py-1.5">
+                  <code className="text-[11px]">{m.method}</code>
+                  <p className="text-[10px] text-foreground/40">→ <code>{m.ret}</code></p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-foreground/60 mt-3">
+              <code>NodeBuilder</code>가 이 trait을 제네릭으로 받으므로 메인넷/OP/Base 등 동일 빌드 파이프라인으로 동작
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>type Header: BlockHeader</code> — 연관 타입(associated type)으로 헤더 타입을 파라미터화.<br />
           이더리움 메인넷은 <code>Header</code>(20 필드), Optimism은 <code>OpHeader</code>(extra fields) 사용.<br />
@@ -120,32 +145,28 @@ pub fn build_node<C: EthChainSpec>(chain_spec: Arc<C>) -> Node {
 
         {/* ── MAINNET 초기화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">MAINNET 정적 초기화 — LazyLock 패턴</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub static MAINNET: LazyLock<Arc<ChainSpec>> = LazyLock::new(|| {
-    let genesis = serde_json::from_str(
-        include_str!("../res/genesis/mainnet.json")  // 컴파일 타임 임베딩
-    ).expect("Can't deserialize Mainnet genesis json");
-
-    let hardforks = EthereumHardfork::mainnet().into();
-
-    ChainSpec {
-        chain: Chain::mainnet(),
-        genesis_header: SealedHeader::new(
-            make_genesis_header(&genesis, &hardforks),
-            MAINNET_GENESIS_HASH,  // 0xd4e5...b3 (상수로 하드코딩)
-        ),
-        genesis,
-        paris_block_and_final_difficulty: Some((
-            15_537_394,             // The Merge 활성 블록
-            U256::from(58_750_003_716_598_352_816_469u128),
-        )),
-        hardforks,
-        deposit_contract: Some(MAINNET_DEPOSIT_CONTRACT),
-        base_fee_params: BaseFeeParamsKind::Constant(BaseFeeParams::ethereum()),
-        ..Default::default()
-    }.into()
-});`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2"><code>MAINNET</code> — <code>LazyLock&lt;Arc&lt;ChainSpec&gt;&gt;</code></p>
+            <p className="text-xs text-foreground/50 mb-3">첫 접근 시 1회 초기화. <code>include_str!()</code>로 JSON을 컴파일 타임 바이너리 임베딩.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                { field: 'chain', value: 'Chain::mainnet()' },
+                { field: 'genesis', value: 'serde_json::from_str(mainnet.json)' },
+                { field: 'genesis_header', value: 'SealedHeader(make_genesis_header(), 0xd4e5...b3)' },
+                { field: 'paris_block_and_final_difficulty', value: '(15,537,394, 58.75 × 10²¹)' },
+                { field: 'hardforks', value: 'EthereumHardfork::mainnet()' },
+                { field: 'deposit_contract', value: 'MAINNET_DEPOSIT_CONTRACT' },
+                { field: 'base_fee_params', value: 'BaseFeeParams::ethereum() (Constant)' },
+              ].map(f => (
+                <div key={f.field} className="rounded border border-border/40 px-3 py-1.5">
+                  <code className="text-xs font-bold">{f.field}</code>
+                  <p className="text-[11px] text-foreground/60 mt-0.5"><code>{f.value}</code></p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>LazyLock</code>은 첫 접근 시 1회만 초기화되는 정적 값 — Rust 1.80 안정화.<br />
           <code>include_str!()</code>는 컴파일 타임에 JSON 파일을 바이너리에 임베딩 — 런타임 파일 I/O 없음.<br />

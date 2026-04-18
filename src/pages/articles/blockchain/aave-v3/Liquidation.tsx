@@ -12,17 +12,30 @@ export default function Liquidation() {
         <LiquidationViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Health Factor — 포지션 건강도</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`HF = Σ(collateral_i × liquidationThreshold_i) / totalDebtInETH
-
-// 예시
-담보: 10 ETH × $3000 × 85% (LT) = $25,500
-부채: 10,000 USDC = $10,000
-HF = 25,500 / 10,000 = 2.55
-
-// 안전 구간
-HF > 1.5: 안전
-1.0 < HF < 1.5: 주의
-HF < 1.0: 청산 가능`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">Health Factor 공식 & 예시</p>
+          <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-3">
+            <code>HF = Sum(collateral_i * liquidationThreshold_i) / totalDebtInETH</code>
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
+              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">계산 예시</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                담보: 10 ETH x $3,000 x 85%(LT) = $25,500<br />
+                부채: 10,000 USDC = $10,000<br />
+                HF = 25,500 / 10,000 = <strong>2.55</strong>
+              </p>
+            </div>
+            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-2">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">안전 구간</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                HF &gt; 1.5 — 안전<br />
+                1.0 &lt; HF &lt; 1.5 — 주의<br />
+                HF &lt; 1.0 — <strong>청산 가능</strong>
+              </p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>HF &lt; 1이면 청산 대상</strong> — 담보 가치가 청산 임계치 아래<br />
           Liquidation Threshold(LT): LTV보다 약간 높음 (예: LTV 80%, LT 85%)<br />
@@ -32,43 +45,38 @@ HF < 1.0: 청산 가능`}</pre>
         <h3 className="text-xl font-semibold mt-8 mb-3">청산 흐름 — liquidationCall()</h3>
 
         <LiquidationCallFlowViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function liquidationCall(
-    address collateralAsset,  // 청산할 담보 자산
-    address debtAsset,         // 상환할 부채 자산
-    address user,              // 청산당하는 사용자
-    uint256 debtToCover,       // 상환할 부채 양
-    bool receiveAToken         // aToken으로 받을지, 원본으로
-) external {
-    LiquidationLogic.executeLiquidationCall(...)
-}
-
-// 실행 단계
-function executeLiquidationCall(...) external {
-    // 1) HF 계산
-    (,,, , healthFactor,) = GenericLogic.calculateUserAccountData(...);
-
-    // 2) HF < 1 확인
-    require(healthFactor < 1e18, "HEALTH_FACTOR_NOT_BELOW_THRESHOLD");
-
-    // 3) 최대 청산 가능량 계산
-    uint256 maxLiquidatableDebt = userDebt * MAX_LIQUIDATION_CLOSE_FACTOR / 10000;
-    // MAX_LIQUIDATION_CLOSE_FACTOR = 5000 (50%)
-    // HF < 0.95이면 100% 청산 가능
-
-    uint256 actualDebtToLiquidate = debtToCover > maxLiquidatableDebt
-        ? maxLiquidatableDebt
-        : debtToCover;
-
-    // 4) 담보 계산 (bonus 포함)
-    uint256 maxCollateralToLiquidate = getCollateralAmount(
-        debtAsset, collateralAsset, actualDebtToLiquidate, liquidationBonus
-    );
-
-    // 5) 토큰 이동
-    //    청산자 → 부채 자산 지불
-    //    청산자 ← 담보 자산 + 보너스 수령
-    //    user: 담보 -= maxCollateral, 부채 -= actualDebt
-}`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-2 lg:grid-cols-3 my-4">
+          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">liquidationCall() 파라미터</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>collateralAsset</code>, <code>debtAsset</code>, <code>user</code>, <code>debtToCover</code>, <code>receiveAToken</code> — aToken/원본 선택 가능
+            </p>
+          </div>
+          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">1단계: HF 확인</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>GenericLogic.calculateUserAccountData()</code>로 HF 계산, <code>healthFactor &lt; 1e18</code>이어야 진행
+            </p>
+          </div>
+          <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-3">
+            <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">2단계: 청산 가능량</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>MAX_LIQUIDATION_CLOSE_FACTOR = 5000</code> (50%) — HF &lt; 0.95이면 100% 청산 허용
+            </p>
+          </div>
+          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">3단계: 담보 계산</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <code>getCollateralAmount(debtAsset, collateralAsset, actualDebt, liquidationBonus)</code> — 보너스 포함 담보량
+            </p>
+          </div>
+          <div className="rounded-lg border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-3 sm:col-span-2">
+            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 mb-1">4단계: 토큰 이동</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              청산자 → 부채 자산 지불 / 청산자 ← 담보 + 보너스 수령 / user: 담보 감소, 부채 감소
+            </p>
+          </div>
+        </div>
         <p>
           <strong>청산자는 제3자</strong>: MEV bot, 청산 전문 프로토콜<br />
           <strong>50% 청산 제한</strong>: 한 번에 전체 포지션 청산 금지 (user 보호)<br />
@@ -78,24 +86,27 @@ function executeLiquidationCall(...) external {
         <h3 className="text-xl font-semibold mt-8 mb-3">Liquidation Bonus — 청산자 보상</h3>
 
         <LiquidationBonusViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 청산자가 받는 담보 = (부채 가치 + 보너스) / 담보 가격
-// 보너스가 청산 인센티브
-
-// 예시: WETH 담보, USDC 부채
-User:
-- 담보: 10 WETH ($3000 each) = $30,000
-- 부채: 26,000 USDC = $26,000
-- LT: 85%
-- HF = 30,000 × 0.85 / 26,000 = 0.98 (청산 대상)
-
-청산자:
-- 상환: 5,000 USDC (부채의 ~20%)
-- WETH 가격: $3000
-- Liquidation Bonus: 5% (WETH의 경우)
-- 받는 담보: 5000 × 1.05 / 3000 = 1.75 WETH = $5,250
-
-청산자 수익: $250 (5% of covered debt)
-User 손실: 추가 $250 (bonus만큼)`}</pre>
+        <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+          <p className="font-semibold text-sm mb-3">Liquidation Bonus 계산 예시 — WETH 담보, USDC 부채</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="rounded border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-2">
+              <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">User 포지션</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                담보: 10 WETH ($3,000 each) = $30,000<br />
+                부채: 26,000 USDC, LT: 85%<br />
+                HF = 30,000 x 0.85 / 26,000 = <strong>0.98</strong>
+              </p>
+            </div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">청산자 행동</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                상환: 5,000 USDC (~20%)<br />
+                Bonus 5%: 5000 x 1.05 / 3000 = <strong>1.75 WETH</strong> ($5,250)<br />
+                순이익: $250 / User 추가 손실: $250
+              </p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Bonus = 청산자 이익 = User 손실</strong><br />
           Bonus 크면 → 빠른 청산 (MEV bot 경쟁 ↑)<br />
@@ -132,23 +143,26 @@ User 손실: 추가 $250 (bonus만큼)`}</pre>
         <h3 className="text-xl font-semibold mt-8 mb-3">청산 bot 경쟁 — MEV 관점</h3>
 
         <MevLiquidationViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 청산 수익 모델 (청산 봇)
-1. 멤풀 모니터링 — 가격 변동 감지
-2. HF < 1 포지션 스캔 (off-chain)
-3. 기회 포착 → 청산 트랜잭션 전송
-4. 받은 담보 → DEX에서 즉시 매도 (flash swap 활용)
-5. 차익 = Liquidation Bonus - gas
-
-// 경쟁 전략
-- Gas war: priority fee 경쟁
-- Flash loan: 자본 없이도 대형 청산
-- Private mempool: Flashbots 사용
-- Atomic execution: 청산 + DEX swap 1 트랜잭션
-
-// 현실
-- 청산 시장은 극도로 경쟁적
-- 평균 청산 수익: 0.5-2% (bonus 대부분이 gas + MEV)
-- Top bot operators만 지속 수익`}</pre>
+        <div className="not-prose grid gap-3 sm:grid-cols-3 my-4">
+          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">청산 봇 수익 모델</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              멤풀 모니터링 → HF &lt; 1 스캔 → 청산 TX 전송 → 담보 DEX 매도(flash swap) → 차익 = Bonus - gas
+            </p>
+          </div>
+          <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-3">
+            <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">경쟁 전략</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              Gas war (priority fee), Flash loan (무자본 청산), Flashbots (private mempool), Atomic execution (청산+swap 1 TX)
+            </p>
+          </div>
+          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">현실</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              극도로 경쟁적 시장, 평균 수익 0.5-2% (bonus 대부분 gas+MEV), top bot만 지속 수익
+            </p>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 청산의 경제적 균형</p>

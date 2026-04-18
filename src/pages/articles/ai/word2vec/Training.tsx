@@ -1,12 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
+import M from '@/components/ui/math';
 import NegSamplingViz from './viz/NegSamplingViz';
 import TrainingPipelineViz from './viz/TrainingPipelineViz';
-import {
-  negSamplingCode, negSamplingAnnotations,
-  hierarchicalSoftmaxCode, hierarchicalAnnotations,
-  subsamplingCode, subsamplingAnnotations,
-  cOptimizationCode, cOptimizationAnnotations,
-} from './TrainingData';
+import TrainingDetailViz from './viz/TrainingDetailViz';
 
 export default function Training({ title }: { title?: string }) {
   return (
@@ -27,8 +22,10 @@ export default function Training({ title }: { title?: string }) {
           실제 맥락 단어 1개(positive)에 대해 k개의 노이즈 단어(negative)를 랜덤 샘플링<br />
           진짜 쌍과 가짜 쌍을 구별하도록 학습
         </p>
-        <CodePanel title="Negative Sampling 목적 함수" code={negSamplingCode} annotations={negSamplingAnnotations} />
+        <M display>{'J_{\\text{NEG}} = \\underbrace{\\log \\sigma({v\'_{w_O}}^{\\!\\top} \\cdot v_{w_I})}_{\\text{positive pair (실제 맥락)}} + \\sum_{i=1}^{k} \\underbrace{\\log \\sigma(-{v\'_{w_i}}^{\\!\\top} \\cdot v_{w_I})}_{\\text{negative pair (노이즈 } k \\text{개)}}'}</M>
         <p>
+          노이즈 분포: <M>{'P(w) \\propto f(w)^{3/4}'}</M> — 빈도의 3/4 거듭제곱으로 저빈도 단어도 적당히 샘플링<br />
+          업데이트 대상은 <M>{'v_{w_I}'}</M>(입력)과 <M>{'v\'_{w_O}, v\'_{w_i}'}</M>(출력) — 어휘 전체가 아닌 k+1개 벡터만 갱신<br />
           k는 보통 5~20 — 작은 데이터에서는 크게, 대용량 코퍼스에서는 작게 설정
         </p>
 
@@ -38,14 +35,22 @@ export default function Training({ title }: { title?: string }) {
           고빈도 단어는 루트 가까이, 저빈도 단어는 깊은 레벨에 배치<br />
           예측 시 루트에서 해당 잎까지 이진 경로를 따라가며 시그모이드 계산
         </p>
-        <CodePanel title="Hierarchical Softmax" code={hierarchicalSoftmaxCode} annotations={hierarchicalAnnotations} />
+        <M display>{'P(w \\mid w_I) = \\prod_{j=1}^{L-1} \\underbrace{\\sigma\\!\\bigl([d_j\\!=\\!1]\\; {v\'_{n_j}}^{\\!\\top} \\cdot v_{w_I}\\bigr)}_{\\text{내부 노드 } n_j \\text{에서의 이진 결정}}'}</M>
+        <p>
+          Huffman 트리 깊이 <M>{'\\approx \\log_2 V'}</M> — O(V)가 O(log V)로 감소<br />
+          고빈도 단어는 경로가 짧아 학습 기회가 많고, 희귀 단어는 깊지만 전체 어휘보다 훨씬 빠름
+        </p>
 
         <h3>서브샘플링 (Subsampling)</h3>
         <p>
           "은, 는, 이, 가" 같은 고빈도 단어 — 의미적 기여가 낮음<br />
           빈도에 반비례하는 확률로 훈련에서 건너뜀:
         </p>
-        <CodePanel title="서브샘플링 확률" code={subsamplingCode} annotations={subsamplingAnnotations} />
+        <M display>{'P(\\text{discard}) = 1 - \\sqrt{\\underbrace{t}_{\\text{threshold} \\approx 10^{-5}} \\;/\\; \\underbrace{f(w)}_{\\text{단어 } w \\text{의 빈도 비율}}}'}</M>
+        <p>
+          "the", "은/는" 같은 고빈도 단어는 <M>{'f(w) \\gg t'}</M>이므로 자주 건너뜀<br />
+          희귀 단어는 <M>{'f(w) \\approx t'}</M>이므로 거의 건너뛰지 않음 — 학습 속도 향상 + 희귀어 품질 개선
+        </p>
 
         <h3>Dynamic Context Window</h3>
         <p>
@@ -54,114 +59,32 @@ export default function Training({ title }: { title?: string }) {
         </p>
 
         <h3>구현 최적화 (C 코어)</h3>
-        <CodePanel title="C 구현 최적화 기법" code={cOptimizationCode} annotations={cOptimizationAnnotations} />
+        <div className="not-prose grid gap-3 sm:grid-cols-3 my-4">
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+            <p className="font-semibold text-sm mb-1">시그모이드 LUT</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              exp() 호출 대신 사전 계산 테이블(1000개)을 조회 — 루프마다 초월함수 연산 제거
+            </p>
+          </div>
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+            <p className="font-semibold text-sm mb-1">SIMD 메모리 정렬</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              128-byte 정렬(posix_memalign)로 벡터 내적 시 SIMD 명령어 활용 극대화
+            </p>
+          </div>
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
+            <p className="font-semibold text-sm mb-1">Hogwild! 병렬 SGD</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              코퍼스를 스레드 수로 분할, 락 없는 비동기 SGD — 충돌은 드물고 수렴에 영향 미미
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Negative Sampling 수식 유도</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Negative Sampling (NEG)
-//
-// 원래 Skip-gram 목적 함수:
-//   L = Σ_{(w,c)∈D} log P(c|w)
-//     = Σ log(exp(v_c · v_w) / Σ_{c'∈V} exp(v_c' · v_w))
-//
-//   문제: 분모 Σ_{c'∈V} 계산 비용 O(V)
-//   V = 100만이면 매번 100만 번 연산
-//
-// NEG의 아이디어:
-//   "정답 context vs 랜덤 negative"를 이진 분류
-//
-// 새 목적 함수:
-//   L_neg = log σ(v_c · v_w) + Σ_{i=1..k} E_{w_i ~ P_n}[log σ(-v_wi · v_w)]
-//
-// 해석:
-//   첫 항: (center, real context) 쌍의 확률 최대화
-//   둘째 항: (center, k random words) 쌍의 확률 최소화
-//
-// σ(x) = sigmoid(x) = 1/(1+e^(-x))
-//
-// Noise Distribution P_n:
-//   P_n(w) ∝ freq(w)^(3/4)
-//   - 원 빈도 그대로 쓰면 고빈도 단어만 샘플링
-//   - 0.75 power로 중저빈도 단어 보정
-//   - 실험적으로 최적
-
-// k 값 선택:
-//   small data: k = 10~20
-//   large data: k = 2~5
-//   데이터 많을수록 작은 k로 충분
-
-// 연산 비용 비교:
-//   Softmax: O(V) = O(100K~1M)
-//   NEG(k=5): O(k+1) = O(6)
-//   → 수만 배 빠름!
-
-// Python 구현 (간소화):
-def neg_sampling_loss(center_vec, context_vec, noise_vecs):
-    # center_vec: (D,)
-    # context_vec: (D,)  positive
-    # noise_vecs: (k, D)  negatives
-
-    pos_score = sigmoid(center_vec @ context_vec)
-    neg_scores = sigmoid(-noise_vecs @ center_vec)
-
-    loss = -log(pos_score) - sum(log(neg_scores))
-    return loss`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Hierarchical Softmax 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Hierarchical Softmax (HS)
-//
-// 아이디어: 어휘를 이진 트리로 구조화
-//
-// Huffman Tree 구성:
-//   - 고빈도 단어: 짧은 경로 (root 근처)
-//   - 저빈도 단어: 긴 경로 (깊은 리프)
-//
-// 예시 (4 단어):
-//
-//           [root]
-//          /      \\
-//      [inner]   the  ← 고빈도, 경로 1
-//       /   \\
-//      cat  dog  ← 중빈도, 경로 2
-//              \\
-//               rare  ← 저빈도, 경로 3
-//
-// 각 inner node는 학습 가능한 벡터 θ_n 보유
-//
-// 확률 계산:
-//   P(w) = ∏_{n ∈ path(w)} σ([left or right] · θ_n · v_w)
-//
-//   [left or right]: -1 또는 +1 (경로 방향)
-//
-// 연산 비용:
-//   기존 softmax: O(V)
-//   HS: O(log V)
-//
-//   V = 1M → log(1M) ≈ 20 연산만 필요
-
-// 학습:
-//   각 경로 노드의 θ를 업데이트
-//   Negative Sampling보다 구현 복잡
-//   저빈도 단어 학습에 유리
-//
-// 현대 추세:
-//   - NEG이 더 인기 (구현 간단, 품질 유사)
-//   - HS는 연구 목적이나 특수 케이스에 사용
-
-// Subsampling:
-//   P(w) = 1 - sqrt(t / freq(w))
-//   t = 1e-5 보통
-//
-//   고빈도 단어("the", "of")는 높은 확률로 제외
-//   저빈도 단어는 그대로 학습
-//   → 학습 속도 2~10배 향상
-//   → 품질도 개선 (노이즈 제거)`}
-        </pre>
-        <p className="leading-7">
+      <div className="mt-6">
+        <h3 className="text-xl font-semibold mt-6 mb-3 px-1">NEG 수식 유도 & Hierarchical Softmax 상세</h3>
+        <TrainingDetailViz />
+        <p className="prose prose-neutral dark:prose-invert max-w-none leading-7 mt-4">
           요약 1: <strong>Negative Sampling</strong>이 O(V)→O(k+1)로 수만 배 가속.<br />
           요약 2: <strong>Hierarchical Softmax</strong>는 이진 트리로 O(log V).<br />
           요약 3: <strong>Subsampling</strong>으로 고빈도 단어 제외 — 품질·속도 동시 개선.

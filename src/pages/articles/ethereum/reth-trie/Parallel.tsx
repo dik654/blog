@@ -24,39 +24,29 @@ export default function Parallel() {
 
         {/* ── rayon 병렬화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">rayon par_iter — storage trie 병렬화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`use rayon::prelude::*;
-
-pub fn overlay_root_parallel(self) -> Result<B256> {
-    // 1. 변경된 계정 목록 수집
-    let changed_accounts: Vec<B256> = self.changed_storage_prefixes
-        .keys()
-        .copied()
-        .collect();
-
-    // 2. 각 계정의 storage_root 병렬 계산
-    let storage_roots: HashMap<B256, B256> = changed_accounts
-        .par_iter()  // rayon 병렬 iterator
-        .map(|hashed_addr| {
-            let storage_prefix_set = &self.changed_storage_prefixes[hashed_addr];
-            let storage_root = self.compute_storage_root_incremental(
-                *hashed_addr,
-                storage_prefix_set,
-            )?;
-            Ok((*hashed_addr, storage_root))
-        })
-        .collect::<Result<_>>()?;
-
-    // 3. storage_roots를 account trie에 반영하여 state_root 계산
-    //    account trie는 단일 스레드로 구성 (병렬화 불가)
-    self.compute_account_root_with_storage(storage_roots)
-}
-
-// rayon의 work-stealing:
-// - N개 CPU 코어에 작업 자동 분산
-// - 빠른 스레드가 느린 스레드의 작업 훔침 (load balancing)
-// - 100K 계정 × 16 코어 = 이상적 16배 가속`}
-        </pre>
+        <div className="my-4 not-prose">
+          <div className="rounded-lg border border-border p-4">
+            <p className="font-semibold text-sm mb-3"><code>overlay_root_parallel()</code> — 3단계</p>
+            <div className="space-y-3">
+              {[
+                { step: '1', title: '변경 계정 목록 수집', detail: 'changed_storage_prefixes.keys() → Vec<B256>', color: 'text-sky-400' },
+                { step: '2', title: 'storage_root 병렬 계산', detail: 'par_iter() → 각 계정의 storage trie 증분 계산 (rayon work-stealing)', color: 'text-emerald-400' },
+                { step: '3', title: 'account trie 합산', detail: 'storage_roots → account trie 반영 → state_root (단일 스레드)', color: 'text-amber-400' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold">{s.title}</p>
+                    <p className="text-xs text-foreground/60">{s.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 pt-2 border-t border-border">
+              <p className="text-xs text-foreground/70"><strong>rayon work-stealing</strong>: N코어에 자동 분산, 빠른 스레드가 느린 스레드 작업 steal</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>par_iter()</code> 하나로 병렬화 완성 — rayon이 내부적으로 work-stealing 스케줄링.<br />
           각 storage trie 계산은 <strong>완전 독립</strong> — 공유 상태 없음, lock 없음.<br />
@@ -65,33 +55,28 @@ pub fn overlay_root_parallel(self) -> Result<B256> {
 
         {/* ── DB 접근 동시성 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">MDBX 다중 reader — DB 접근 병렬화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 병렬 task가 자체 MDBX 읽기 트랜잭션 보유
-par_iter().map(|hashed_addr| {
-    // 스레드 로컬 읽기 트랜잭션
-    let tx = db.tx()?;  // MVCC 스냅샷 (읽기 전용)
-
-    // 해당 계정의 storage trie 노드 읽기
-    let storage_nodes = tx.cursor_read::<StoragesTrie>()?
-        .walk_range(storage_prefix..)?;
-
-    // 병렬 계산 진행
-    compute_trie(storage_nodes)?
-})
-
-// MDBX의 동시성 모델:
-// - 다중 reader: 제한 없음 (READ_ONLY 트랜잭션 N개)
-// - 단일 writer: 동시 1개 (READ_WRITE 트랜잭션 1개)
-//
-// 병렬 trie 계산 시 16개 reader가 동시에 DB 접근
-// → 각 스레드가 mmap 영역을 직접 읽음 (lock 없음)
-// → 각 스레드가 자기 MVCC 스냅샷 보유
-
-// 성능 이점:
-// - 전통적 DB: writer lock → 읽기도 대기
-// - MDBX: reader는 lock 없음 → 병렬 읽기 자유
-// - 페이지 캐시 공유 → 여러 스레드가 같은 데이터 접근 시 추가 I/O 없음`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm text-sky-400 mb-2">MDBX 다중 reader — 스레드별 독립 TX</p>
+            <div className="space-y-1 text-xs text-foreground/60">
+              <p>각 병렬 task가 <code>db.tx()?</code>로 자체 MVCC 스냅샷 보유</p>
+              <p><code>cursor_read::&lt;StoragesTrie&gt;()</code>로 해당 계정 trie 노드 읽기</p>
+              <p>mmap 영역 직접 읽기 → <strong>lock 없음</strong></p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-3">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">MDBX 동시성 모델</p>
+              <p className="text-xs text-foreground/60">다중 reader: 제한 없음 (N개 READ_ONLY TX)</p>
+              <p className="text-xs text-foreground/60">단일 writer: 동시 1개 (READ_WRITE TX)</p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">성능 이점</p>
+              <p className="text-xs text-foreground/60">reader lock 없음 → 병렬 읽기 자유</p>
+              <p className="text-xs text-foreground/60">페이지 캐시 공유 → 추가 I/O 없음</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           MDBX의 <strong>multi-reader 지원</strong>이 병렬 trie 계산의 토대.<br />
           각 스레드가 독립 읽기 트랜잭션 → DB 경합 없이 병렬 스캔.<br />
@@ -100,33 +85,39 @@ par_iter().map(|hashed_addr| {
 
         {/* ── Amdahl의 법칙 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Amdahl의 법칙 — 이론적 한계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 병렬화 가속 계산 (Amdahl's law):
-// Speedup = 1 / (S + P/N)
-// S = 순차 부분 비율 (account trie)
-// P = 병렬 부분 비율 (storage trie)
-// N = 코어 수
-
-// Reth의 trie 계산 분석:
-// - 순차 부분 (account trie 재해시): ~20% (S=0.2)
-// - 병렬 부분 (storage trie 재해시): ~80% (P=0.8)
-
-// 이론적 가속:
-// N=4:  1 / (0.2 + 0.8/4) = 1 / 0.4 = 2.5x
-// N=8:  1 / (0.2 + 0.8/8) = 1 / 0.3 = 3.33x
-// N=16: 1 / (0.2 + 0.8/16) = 1 / 0.25 = 4x
-// N=32: 1 / (0.2 + 0.8/32) = 1 / 0.225 = 4.44x
-// N=∞:  1 / (0.2 + 0) = 5x (최대)
-
-// 실측값 (reth 메인넷 archive):
-// 단일 스레드 MerkleStage: ~150ms/block
-// 16 스레드 MerkleStage: ~40ms/block (3.75x)
-// → Amdahl 이론치(4x)에 근접
-
-// 추가 최적화 한계:
-// - account trie 병렬화는 locking 복잡 → 구현 난이도 > 이득
-// - storage trie 병렬화로 현재 만족스러운 속도 달성`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="font-semibold text-sm mb-2">Amdahl의 법칙</p>
+            <p className="text-xs text-foreground/70 mb-3">Speedup = 1 / (S + P/N) — S=순차(account trie ~20%), P=병렬(storage trie ~80%)</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead><tr className="border-b border-border">
+                  <th className="text-left py-1 pr-3 font-semibold">코어 수</th>
+                  <th className="text-right py-1 px-3 font-semibold">이론 가속</th>
+                  <th className="text-right py-1 pl-3 font-semibold">비고</th>
+                </tr></thead>
+                <tbody className="text-foreground/70">
+                  <tr className="border-b border-border/50"><td className="py-1 pr-3">N=4</td><td className="text-right px-3">2.5x</td><td className="text-right pl-3"></td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1 pr-3">N=8</td><td className="text-right px-3">3.33x</td><td className="text-right pl-3"></td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1 pr-3 font-semibold">N=16</td><td className="text-right px-3 font-semibold text-emerald-400">4x</td><td className="text-right pl-3 text-muted-foreground">실측 3.75x</td></tr>
+                  <tr><td className="py-1 pr-3">N=inf</td><td className="text-right px-3">5x</td><td className="text-right pl-3 text-muted-foreground">이론 최대</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">실측 (reth 메인넷 archive)</p>
+              <p className="text-xs text-foreground/60">단일: ~150ms → 16스레드: ~40ms (3.75x)</p>
+              <p className="text-xs text-muted-foreground">Amdahl 이론치(4x)에 근접</p>
+            </div>
+            <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+              <p className="text-xs font-semibold text-amber-400 mb-1">추가 최적화 한계</p>
+              <p className="text-xs text-foreground/60">account trie 병렬화는 locking 복잡</p>
+              <p className="text-xs text-muted-foreground">storage trie 병렬화로 충분한 속도</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Amdahl의 법칙: <strong>순차 부분이 가속의 상한</strong>.<br />
           account trie 순차 처리가 ~20% 점유 → 최대 가속 ~5배.<br />
@@ -135,38 +126,33 @@ par_iter().map(|hashed_addr| {
 
         {/* ── 실전 성능 수치 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">실전 벤치마크 — 블록 크기별 효과</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 블록 복잡도별 병렬화 효과 (메인넷 아카이브 노드, 16코어)
-//
-// 가벼운 블록 (100 TX, 500 변경 계정):
-//   순차: 20ms
-//   병렬: 15ms
-//   가속: 1.33x (병렬화 오버헤드가 체감됨)
-//
-// 일반 블록 (200 TX, 1500 변경 계정):
-//   순차: 80ms
-//   병렬: 30ms
-//   가속: 2.66x
-//
-// 혼잡 블록 (500 TX, 5000 변경 계정):
-//   순차: 300ms
-//   병렬: 80ms
-//   가속: 3.75x
-//
-// DeFi 폭주 블록 (1000 TX, 20000 변경 계정, 스토리지 집중):
-//   순차: 1500ms
-//   병렬: 350ms
-//   가속: 4.28x (이론 한계에 근접)
-
-// 병렬화의 가치:
-// - 가벼운 블록에서는 미미 (thread spawn 오버헤드)
-// - 무거운 블록에서 급격히 증가 (workload가 병렬 구간에 집중)
-// - DeFi 활동이 많은 시기에 유의미
-//
-// rayon의 adaptive scheduling:
-// - 작은 작업 → 단일 스레드 실행
-// - 큰 작업 → 자동 분할 병렬`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">블록 복잡도별 병렬화 효과 (16코어, 메인넷)</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead><tr className="border-b border-border">
+                  <th className="text-left py-1 pr-3 font-semibold">블록 유형</th>
+                  <th className="text-right py-1 px-2 font-semibold">TX</th>
+                  <th className="text-right py-1 px-2 font-semibold">변경 계정</th>
+                  <th className="text-right py-1 px-2 font-semibold text-red-400">순차</th>
+                  <th className="text-right py-1 px-2 font-semibold text-emerald-400">병렬</th>
+                  <th className="text-right py-1 pl-2 font-semibold">가속</th>
+                </tr></thead>
+                <tbody className="text-foreground/70">
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">가벼운</td><td className="text-right px-2">100</td><td className="text-right px-2">500</td><td className="text-right px-2 text-red-400">20ms</td><td className="text-right px-2 text-emerald-400">15ms</td><td className="text-right pl-2">1.33x</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">일반</td><td className="text-right px-2">200</td><td className="text-right px-2">1,500</td><td className="text-right px-2 text-red-400">80ms</td><td className="text-right px-2 text-emerald-400">30ms</td><td className="text-right pl-2">2.66x</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">혼잡</td><td className="text-right px-2">500</td><td className="text-right px-2">5,000</td><td className="text-right px-2 text-red-400">300ms</td><td className="text-right px-2 text-emerald-400">80ms</td><td className="text-right pl-2 font-semibold">3.75x</td></tr>
+                  <tr><td className="py-1.5 pr-3">DeFi 폭주</td><td className="text-right px-2">1,000</td><td className="text-right px-2">20,000</td><td className="text-right px-2 text-red-400">1,500ms</td><td className="text-right px-2 text-emerald-400">350ms</td><td className="text-right pl-2 font-semibold text-emerald-400">4.28x</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs text-foreground/70">가벼운 블록: thread spawn 오버헤드 → 이득 미미 / 무거운 블록: 병렬 구간 집중 → 이론 한계 근접</p>
+            <p className="text-xs text-muted-foreground mt-1">rayon adaptive scheduling: 작은 작업 → 단일 스레드, 큰 작업 → 자동 분할</p>
+          </div>
+        </div>
         <p className="leading-7">
           병렬화 효과는 <strong>블록 복잡도에 비례</strong>.<br />
           일반 블록에서 2~3배, 혼잡 블록에서 4배 근처 — 혼잡할수록 이득이 커짐.<br />

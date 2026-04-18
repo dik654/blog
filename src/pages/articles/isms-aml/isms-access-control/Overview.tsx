@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import LeastPrivilegeViz from './viz/LeastPrivilegeViz';
+import DefenseDepthViz from './viz/DefenseDepthViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">접근통제 원칙</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">ISMS 2.6 요구사항</h3>
         <p>
@@ -51,6 +57,8 @@ export default function Overview() {
           <li><strong>시간 제한</strong> — 상시 접근이 불필요한 자원은 접근 시간대를 제한. 예: 업무 시간 외 관리자 페이지 접근 차단</li>
         </ul>
 
+        <LeastPrivilegeViz />
+
         <h3 className="text-xl font-semibold mt-6 mb-3">직무 분리 (Separation of Duties)</h3>
         <p>
           하나의 중요한 업무를 한 사람이 단독으로 수행하지 못하도록 역할을 분리하는 원칙.<br />
@@ -97,6 +105,8 @@ export default function Overview() {
           출금은 멀티시그(Multi-signature)로 기술적 분리를 구현하고, 상장 심사는 심사위원회 합의제로 운영.
           한 사람이 상장 결정 + 선행매수(Front-running, 미공개 정보를 이용한 사전 거래)를 할 수 없도록 제도적 장치를 마련해야 한다.
         </p>
+
+        <DefenseDepthViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">심층 방어 (Defense in Depth)</h3>
         <p>

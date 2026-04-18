@@ -35,12 +35,12 @@ export function ModuleBox({ x, y, w = 90, h = 48, label, sub, color }: BoxProps)
 }
 
 /** 둥근 필(pill) 뱃지 — 데이터/객체 표현 */
-export function DataBox({ x, y, w = 65, h = 32, label, sub, color }: BoxProps) {
+export function DataBox({ x, y, w = 65, h = 32, label, sub, color, outlined }: BoxProps & { outlined?: boolean }) {
   return (
     <g>
       <rect x={x} y={y} width={w} height={h} rx={h / 2} fill="var(--card)" />
       <rect x={x} y={y} width={w} height={h} rx={h / 2}
-        fill={`${color}12`} stroke={color} strokeWidth={1} />
+        fill={`${color}12`} stroke={outlined ? color : 'var(--border)'} strokeWidth={outlined ? 1 : 0.5} />
       <text x={x + w / 2} y={y + h / 2 + (sub ? -1 : 4)} textAnchor="middle"
         fontSize={10} fontWeight={600} fill={color}>{label}</text>
       {sub && <text x={x + w / 2} y={y + h / 2 + 11} textAnchor="middle"

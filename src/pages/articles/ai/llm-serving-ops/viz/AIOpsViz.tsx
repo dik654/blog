@@ -4,9 +4,9 @@ import StepViz from '@/components/ui/step-viz';
 const sp = { type: 'spring' as const, bounce: 0.2, duration: 0.5 };
 
 const PIPELINE = [
-  { label: 'vLLM Metrics', sub: 'TTFT · TPS · GPU%', x: 15, color: '#6366f1' },
-  { label: 'Prometheus', sub: 'TSDB', x: 140, color: '#3b82f6' },
-  { label: 'Grafana', sub: 'Dashboard', x: 265, color: '#10b981' },
+  { label: 'vLLM Metrics', sub: 'TTFT · TPS · GPU%', x: 5, color: '#6366f1' },
+  { label: 'Prometheus', sub: 'TSDB', x: 130, color: '#3b82f6' },
+  { label: 'Grafana', sub: 'Dashboard', x: 260, color: '#10b981' },
   { label: 'AlertManager', sub: 'Rules', x: 390, color: '#ef4444' },
 ];
 
@@ -37,12 +37,12 @@ export default function AIOpsViz() {
                 <rect x={p.x} y={12} width={110} height={42} rx={5}
                   fill={current ? `${p.color}15` : `${p.color}08`}
                   stroke={p.color} strokeWidth={current ? 2 : 0.8} />
-                <text x={p.x + 55} y={30} textAnchor="middle" fontSize={11}
+                <text x={p.x + 55} y={30} textAnchor="middle" fontSize={10}
                   fontWeight={700} fill={p.color}>{p.label}</text>
-                <text x={p.x + 55} y={45} textAnchor="middle" fontSize={10}
+                <text x={p.x + 55} y={45} textAnchor="middle" fontSize={9}
                   fill={p.color} opacity={0.6}>{p.sub}</text>
                 {i < PIPELINE.length - 1 && (
-                  <text x={p.x + 118} y={36} fontSize={12}
+                  <text x={p.x + 117} y={36} fontSize={11}
                     fill="var(--muted-foreground)" opacity={active ? 0.5 : 0.15}>→</text>
                 )}
               </motion.g>

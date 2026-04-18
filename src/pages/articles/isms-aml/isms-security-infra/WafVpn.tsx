@@ -1,8 +1,14 @@
+import WafVpnViz from './viz/WafVpnViz';
+import WafDeployInline from './viz/WafDeployInline';
+import VpnNacInline from './viz/VpnNacInline';
+
 export default function WafVpn() {
   return (
     <section id="waf-vpn" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">WAF와 VPN</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <WafVpnViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">WAF (Web Application Firewall, 웹 애플리케이션 방화벽)</h3>
         <p>
@@ -86,6 +92,8 @@ export default function WafVpn() {
           </table>
         </div>
 
+        <WafDeployInline />
+
         <h3 className="text-xl font-semibold mt-6 mb-3">WAF 배치: 리버스 프록시 모드</h3>
         <p>
           WAF의 가장 일반적인 배치 방식은 리버스 프록시(Reverse Proxy) 모드.<br />
@@ -165,6 +173,8 @@ export default function WafVpn() {
           VPN 인증 로그(접속 시간, IP, 사용자, 접속 시간)는 반드시 기록하고 SIEM으로 전송.<br />
           비정상 접속 패턴(심야 시간대 접속, 해외 IP, 동시 다중 세션) 탐지에 활용한다.
         </p>
+
+        <VpnNacInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">NAC (Network Access Control, 네트워크 접근 제어)</h3>
         <p>

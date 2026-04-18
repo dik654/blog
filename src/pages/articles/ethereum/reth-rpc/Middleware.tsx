@@ -22,42 +22,26 @@ export default function Middleware() {
 
         {/* ── Service trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">tower::Service trait — 조합 가능한 비동기 서비스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// tower::Service — 모든 미들웨어의 공통 인터페이스
-pub trait Service<Request> {
-    type Response;
-    type Error;
-    type Future: Future<Output = Result<Self::Response, Self::Error>>;
-
-    /// 서비스가 요청 처리 준비됐는지 확인 (backpressure)
-    fn poll_ready(&mut self, cx: &mut Context<'_>)
-        -> Poll<Result<(), Self::Error>>;
-
-    /// 요청 처리 시작 → Future 반환
-    fn call(&mut self, req: Request) -> Self::Future;
-}
-
-// Layer trait — Service를 감싸는 미들웨어
-pub trait Layer<S> {
-    type Service;
-    fn layer(&self, inner: S) -> Self::Service;
-}
-
-// 조합 패턴:
-let stack = ServiceBuilder::new()
-    .layer(OuterLayer)
-    .layer(MiddleLayer)
-    .layer(InnerLayer)
-    .service(handler);
-//
-// 호출 흐름:
-// Request → OuterLayer → MiddleLayer → InnerLayer → handler
-// Response ← OuterLayer ← MiddleLayer ← InnerLayer ← handler
-
-// 각 Layer는 독립적:
-// - RPC 프로토콜 알 필요 없음 (HTTP 레벨에서 동작)
-// - 다른 프로젝트(hyper, axum)와 호환`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Service trait</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p><code>type Response</code>, <code>type Error</code>, <code>type Future</code></p>
+                <p><code>poll_ready(cx)</code> — backpressure 확인</p>
+                <p><code>call(req) -&gt; Future</code> — 요청 처리 시작</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Layer trait</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p><code>layer(inner: S) -&gt; Self::Service</code></p>
+                <p className="text-foreground/60 mt-1">Service를 감싸는 미들웨어. 호출: Request → Outer → Middle → Inner → handler → 역순 Response.</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/60">각 Layer는 RPC 프로토콜과 독립 — HTTP 레벨에서 동작. hyper, axum과 호환.</p>
+        </div>
         <p className="leading-7">
           <code>tower::Service</code>가 <strong>Rust 비동기 웹 생태계의 공통 토대</strong>.<br />
           모든 요청 처리기가 이 trait 구현 → 미들웨어 조합 자유.<br />
@@ -66,49 +50,26 @@ let stack = ServiceBuilder::new()
 
         {/* ── Rate Limiting ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Rate Limiting — per-IP 요청 제한</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// tower::limit::RateLimitLayer
-pub struct RateLimitLayer {
-    num: u64,          // 허용 요청 수
-    per: Duration,     // 시간 단위
-}
-
-// 사용:
-let rate_limit = RateLimitLayer::new(100, Duration::from_secs(1));
-// → 100 req/s per connection
-
-// 구현 (토큰 버킷 알고리즘):
-impl<S, Req> Service<Req> for RateLimit<S> {
-    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), _>> {
-        // 1. 현재 버킷에 토큰 있는지 확인
-        let now = Instant::now();
-        self.refill_tokens(now);
-
-        if self.tokens > 0 {
-            self.tokens -= 1;
-            Poll::Ready(Ok(()))
-        } else {
-            // 토큰 없음 → 다음 refill까지 대기
-            cx.waker().wake_by_ref();
-            Poll::Pending
-        }
-    }
-}
-
-// per-IP 제한 (더 정교한 구현):
-pub struct IpBasedRateLimit {
-    buckets: DashMap<IpAddr, TokenBucket>,
-}
-
-// IP당 100 req/s
-// DashMap으로 lock-free 접근
-// 오래된 IP는 주기적으로 제거 (메모리 관리)
-
-// 운영 시나리오:
-// - 공개 RPC: 100 req/s per IP
-// - 인증된 클라이언트: 1000 req/s
-// - 내부 모니터링: 무제한`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">RateLimitLayer — 토큰 버킷 알고리즘</p>
+            <p className="text-sm text-foreground/80 mb-2">
+              <code>{'RateLimitLayer { num: u64, per: Duration }'}</code> — 예: <code>new(100, 1s)</code> = 100 req/s.
+            </p>
+            <p className="text-sm text-foreground/70">
+              <code>poll_ready()</code>에서 토큰 확인 → 있으면 소비(<code>Poll::Ready</code>), 없으면 대기(<code>Poll::Pending</code>). <code>refill_tokens(now)</code>로 시간 경과 시 보충.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">IpBasedRateLimit</p>
+            <p className="text-sm text-foreground/80 mb-2"><code>buckets: DashMap&lt;IpAddr, TokenBucket&gt;</code> — IP별 lock-free 관리. 오래된 IP 주기적 제거.</p>
+            <div className="grid grid-cols-3 gap-2 text-sm text-center">
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">공개 RPC</p><p className="text-xs text-foreground/40">100 req/s per IP</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">인증 클라이언트</p><p className="text-xs text-foreground/40">1000 req/s</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">내부 모니터링</p><p className="text-xs text-foreground/40">무제한</p></div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Rate Limiting이 <strong>공개 RPC 보호</strong>의 첫 방어선.<br />
           IP 기반 token bucket으로 스팸/DoS 방지.<br />
@@ -117,52 +78,23 @@ pub struct IpBasedRateLimit {
 
         {/* ── JWT 인증 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">JWT 인증 — Engine API 전용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// JWT 미들웨어 (Engine API 포트에만 적용)
-pub struct JwtAuthLayer {
-    secret: [u8; 32],  // CL과 공유하는 비밀
-}
-
-impl<S> Service<Request<Body>> for JwtAuth<S> {
-    fn call(&mut self, req: Request<Body>) -> Self::Future {
-        // 1. Authorization 헤더 추출
-        let auth_header = req.headers()
-            .get("Authorization")
-            .and_then(|v| v.to_str().ok());
-
-        // 2. "Bearer <token>" 파싱
-        let token = auth_header
-            .and_then(|h| h.strip_prefix("Bearer "))
-            .ok_or_else(|| Unauthorized)?;
-
-        // 3. JWT 검증 (HS256)
-        let claims = jsonwebtoken::decode::<Claims>(
-            token,
-            &DecodingKey::from_secret(&self.secret),
-            &Validation::new(Algorithm::HS256),
-        )?;
-
-        // 4. iat(issued at) 검증 (최근 60초 이내)
-        let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
-        if now - claims.iat > 60 {
-            return Err(TokenExpired);
-        }
-
-        // 5. 통과 → 내부 서비스로 위임
-        self.inner.call(req)
-    }
-}
-
-// JWT secret 관리:
-// - 노드 시작 시 32바이트 랜덤 생성
-// - jwtsecret 파일에 저장 (0600 권한)
-// - CL과 이 파일 공유 (같은 머신이면 파일, 원격이면 설정)
-
-// 공격 벡터 방어:
-// - replay attack: iat 만료 (60초)
-// - brute force: HS256 + 256비트 secret
-// - MITM: HTTPS 권장 (추가 계층)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3">JwtAuthLayer — Engine API 전용</p>
+            <p className="text-sm text-foreground/80 mb-2"><code>secret: [u8; 32]</code> — CL과 공유하는 비밀. 노드 시작 시 랜덤 생성 → jwtsecret 파일 저장(0600 권한).</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>Authorization</code> 헤더에서 "Bearer &lt;token&gt;" 추출</p>
+              <p>2. <code>jsonwebtoken::decode</code>로 HS256 검증</p>
+              <p>3. <code>iat</code>(issued at) 최근 60초 이내 확인 → 만료 시 <code>TokenExpired</code></p>
+              <p>4. 통과 → 내부 서비스로 위임</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-sm text-center">
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">replay 방어</p><p className="text-xs text-foreground/40">iat 만료(60초)</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">brute force 방어</p><p className="text-xs text-foreground/40">HS256 + 256비트</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">MITM 방어</p><p className="text-xs text-foreground/40">HTTPS 권장</p></div>
+          </div>
+        </div>
         <p className="leading-7">
           JWT 인증이 <strong>Engine API 전용 방어선</strong>.<br />
           CL과 공유하는 32바이트 secret으로 HS256 서명 검증.<br />

@@ -35,34 +35,34 @@ export default function CNNPipelineViz() {
           )}
 
           {/* Arrow input->conv */}
-          <Arr x1={110} y1={72} x2={130} y2={72} show={step >= 1} />
+          <Arr x1={112} y1={72} x2={128} y2={72} show={step >= 1} />
 
-          {/* Step 1: Conv kernel */}
+          {/* Step 1: Conv kernel (above conv output) */}
           {step >= 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={148} y={12} textAnchor="middle" fontSize={11} fontWeight={600}
+              <text x={168} y={12} textAnchor="middle" fontSize={10} fontWeight={600}
                 fill="#6366f1">커널 (3×3)</text>
               {CONV_K.map((row, r) => row.map((v, c) => (
                 <g key={`k${r}${c}`}>
-                  <rect x={132 + c * 14} y={18 + r * 14} width={14} height={14}
+                  <rect x={140 + c * 14} y={18 + r * 14} width={14} height={14}
                     fill="#6366f10a" stroke="#6366f130" strokeWidth={0.5} />
-                  <text x={132 + c * 14 + 7} y={18 + r * 14 + 10}
+                  <text x={140 + c * 14 + 7} y={18 + r * 14 + 10}
                     textAnchor="middle" fontSize={8} fill="#6366f1" fontWeight={600}>{v}</text>
                 </g>
               )))}
             </motion.g>
           )}
 
-          {/* Step 1: Conv output 4x4 */}
+          {/* Step 1: Conv output 4x4 (below kernel, shifted right) */}
           {step >= 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={148} y={75} textAnchor="middle" fontSize={10} fill="#6366f1">Conv 출력 (4×4)</text>
+              <text x={168} y={72} textAnchor="middle" fontSize={10} fill="#6366f1">Conv 출력 (4×4)</text>
               {convOut.map((row, r) => row.map((v, c) => (
                 <g key={`cv${r}${c}`}>
-                  <rect x={110 + c * FC} y={80 + r * FC} width={FC} height={FC} rx={2}
+                  <rect x={130 + c * FC} y={78 + r * FC} width={FC} height={FC} rx={2}
                     fill={v > 0 ? '#6366f120' : v < 0 ? '#ef444415' : '#80808008'}
                     stroke="#6366f1" strokeWidth={0.4} />
-                  <text x={110 + c * FC + FC / 2} y={80 + r * FC + FC / 2 + 3}
+                  <text x={130 + c * FC + FC / 2} y={78 + r * FC + FC / 2 + 3}
                     textAnchor="middle" fontSize={9} fontWeight={500}
                     fill={v > 0 ? '#6366f1' : v < 0 ? '#ef4444' : '#94a3b8'}>{v}</text>
                 </g>
@@ -71,21 +71,21 @@ export default function CNNPipelineViz() {
           )}
 
           {/* Arrow conv->relu */}
-          <Arr x1={200} y1={72} x2={218} y2={72} show={step >= 2} />
+          <Arr x1={220} y1={72} x2={238} y2={72} show={step >= 2} />
 
           {/* Step 2: ReLU output 4x4 */}
           {step >= 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={260} y={12} textAnchor="middle" fontSize={11} fontWeight={600}
-                fill="#10b981">ReLU(x) = max(0, x)</text>
+              <text x={282} y={12} textAnchor="middle" fontSize={10} fontWeight={600}
+                fill="#10b981">ReLU = max(0, x)</text>
               {reluOut.map((row, r) => row.map((v, c) => {
                 const wasNeg = convOut[r][c] < 0;
                 return (
                   <g key={`re${r}${c}`}>
-                    <rect x={222 + c * FC} y={80 + r * FC} width={FC} height={FC} rx={2}
+                    <rect x={244 + c * FC} y={78 + r * FC} width={FC} height={FC} rx={2}
                       fill={wasNeg ? '#ef444418' : v > 0 ? '#10b98118' : '#80808008'}
                       stroke={wasNeg ? '#ef4444' : '#10b981'} strokeWidth={wasNeg ? 1 : 0.4} />
-                    <text x={222 + c * FC + FC / 2} y={80 + r * FC + FC / 2 + 3}
+                    <text x={244 + c * FC + FC / 2} y={78 + r * FC + FC / 2 + 3}
                       textAnchor="middle" fontSize={9} fontWeight={wasNeg ? 700 : 500}
                       fill={wasNeg ? '#ef4444' : v > 0 ? '#10b981' : '#94a3b8'}>
                       {v}
@@ -93,39 +93,39 @@ export default function CNNPipelineViz() {
                   </g>
                 );
               }))}
-              <text x={260} y={175} textAnchor="middle" fontSize={10} fill="#ef4444">
-                음수 → 0 으로 변환
+              <text x={282} y={175} textAnchor="middle" fontSize={10} fill="#ef4444">
+                음수 → 0 변환
               </text>
             </motion.g>
           )}
 
           {/* Arrow relu->pool */}
-          <Arr x1={312} y1={72} x2={330} y2={72} show={step >= 3} />
+          <Arr x1={334} y1={72} x2={350} y2={72} show={step >= 3} />
 
           {/* Step 3: Pool 2x2 highlight on relu */}
           {step >= 3 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={380} y={12} textAnchor="middle" fontSize={11} fontWeight={600}
+              <text x={410} y={12} textAnchor="middle" fontSize={10} fontWeight={600}
                 fill="#f59e0b">MaxPool 2×2</text>
               {/* Pool highlight boxes on relu grid */}
               {[0, 1].map(pr => [0, 1].map(pc => (
                 <rect key={`ph${pr}${pc}`}
-                  x={222 + pc * 2 * FC} y={80 + pr * 2 * FC}
+                  x={244 + pc * 2 * FC} y={78 + pr * 2 * FC}
                   width={2 * FC} height={2 * FC} rx={3}
                   fill="none" stroke="#f59e0b" strokeWidth={1} strokeDasharray="3 2" />
               )))}
               {/* Pooled output 2x2 */}
               {poolOut.map((row, r) => row.map((v, c) => (
                 <g key={`po${r}${c}`}>
-                  <rect x={340 + c * PC} y={88 + r * PC} width={PC} height={PC} rx={3}
+                  <rect x={360 + c * PC} y={78 + r * PC} width={PC} height={PC} rx={3}
                     fill="#f59e0b20" stroke="#f59e0b" strokeWidth={1} />
-                  <text x={340 + c * PC + PC / 2} y={88 + r * PC + PC / 2 + 4}
+                  <text x={360 + c * PC + PC / 2} y={78 + r * PC + PC / 2 + 4}
                     textAnchor="middle" fontSize={11} fontWeight={700}
                     fill="#f59e0b">{v}</text>
                 </g>
               )))}
-              <text x={380} y={155} textAnchor="middle" fontSize={10} fill="#f59e0b">
-                2×2 영역의 최댓값
+              <text x={410} y={145} textAnchor="middle" fontSize={10} fill="#f59e0b">
+                2×2 최댓값
               </text>
             </motion.g>
           )}

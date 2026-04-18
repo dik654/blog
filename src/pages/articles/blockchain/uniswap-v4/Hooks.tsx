@@ -18,25 +18,33 @@ export default function Hooks() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">10가지 Hook 포인트</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`interface IHooks {
-    // Initialize
-    function beforeInitialize(address sender, PoolKey calldata key, uint160 sqrtPriceX96) external;
-    function afterInitialize(address sender, PoolKey calldata key, uint160 sqrtPriceX96, int24 tick) external;
-
-    // Liquidity modification
-    function beforeAddLiquidity(address sender, PoolKey calldata key, ModifyLiquidityParams calldata params, bytes calldata hookData) external;
-    function afterAddLiquidity(address sender, PoolKey calldata key, ModifyLiquidityParams calldata params, BalanceDelta delta, bytes calldata hookData) external;
-    function beforeRemoveLiquidity(...) external;
-    function afterRemoveLiquidity(...) external;
-
-    // Swap
-    function beforeSwap(address sender, PoolKey calldata key, SwapParams calldata params, bytes calldata hookData) external;
-    function afterSwap(address sender, PoolKey calldata key, SwapParams calldata params, BalanceDelta delta, bytes calldata hookData) external;
-
-    // Donate
-    function beforeDonate(...) external;
-    function afterDonate(...) external;
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">IHooks 인터페이스 — 10개 Hook 포인트</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="bg-background rounded-md p-3 border border-border">
+              <p className="font-semibold mb-2">Initialize (2)</p>
+              <p className="text-muted-foreground"><code>beforeInitialize(sender, key, sqrtPriceX96)</code></p>
+              <p className="text-muted-foreground"><code>afterInitialize(sender, key, sqrtPriceX96, tick)</code></p>
+            </div>
+            <div className="bg-background rounded-md p-3 border border-border">
+              <p className="font-semibold mb-2">Liquidity (4)</p>
+              <p className="text-muted-foreground"><code>beforeAddLiquidity(sender, key, params, hookData)</code></p>
+              <p className="text-muted-foreground"><code>afterAddLiquidity(sender, key, params, delta, hookData)</code></p>
+              <p className="text-muted-foreground"><code>beforeRemoveLiquidity(...)</code></p>
+              <p className="text-muted-foreground"><code>afterRemoveLiquidity(...)</code></p>
+            </div>
+            <div className="bg-background rounded-md p-3 border border-border">
+              <p className="font-semibold mb-2">Swap (2)</p>
+              <p className="text-muted-foreground"><code>beforeSwap(sender, key, params, hookData)</code></p>
+              <p className="text-muted-foreground"><code>afterSwap(sender, key, params, delta, hookData)</code></p>
+            </div>
+            <div className="bg-background rounded-md p-3 border border-border">
+              <p className="font-semibold mb-2">Donate (2)</p>
+              <p className="text-muted-foreground"><code>beforeDonate(...)</code></p>
+              <p className="text-muted-foreground"><code>afterDonate(...)</code></p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>5개 이벤트 × Pre/Post = 10개 hook 포인트</strong><br />
           Pre hook: 이벤트 차단·파라미터 검증·사전 처리<br />
@@ -47,26 +55,32 @@ export default function Hooks() {
 
         <HookAddressViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Hook 컨트랙트 주소의 마지막 바이트에 플래그 인코딩
-// 각 bit가 어떤 hook이 활성화됐는지 표시
-
-uint160 constant BEFORE_INITIALIZE_FLAG = 1 << 159;
-uint160 constant AFTER_INITIALIZE_FLAG = 1 << 158;
-uint160 constant BEFORE_ADD_LIQUIDITY_FLAG = 1 << 157;
-// ... 10개 플래그
-
-// 예시: beforeSwap + afterSwap 활성화된 hook 주소
-// 상위 8비트 = 0000_1100 (binary)
-// → 주소가 특정 패턴으로 끝나야 함 (CREATE2 mining)
-
-// 검증
-function validateHookAddress(IHooks hook, PoolKey memory key) internal pure {
-    uint160 addr = uint160(address(hook));
-    require(
-        (addr & BEFORE_SWAP_FLAG != 0) == hook.beforeSwap.selector,
-        "Invalid hook address"
-    );
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">Hook 주소 플래그 인코딩</p>
+          <p className="text-sm text-muted-foreground mb-3">컨트랙트 주소의 상위 비트에 활성화 플래그 인코딩 — 각 bit가 hook 활성 여부 표시</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm mb-3">
+            <div className="bg-background rounded-md p-3 border border-border">
+              <code className="text-xs font-mono">BEFORE_INITIALIZE_FLAG</code>
+              <p className="text-muted-foreground mt-1">bit 159</p>
+            </div>
+            <div className="bg-background rounded-md p-3 border border-border">
+              <code className="text-xs font-mono">AFTER_INITIALIZE_FLAG</code>
+              <p className="text-muted-foreground mt-1">bit 158</p>
+            </div>
+            <div className="bg-background rounded-md p-3 border border-border">
+              <code className="text-xs font-mono">BEFORE_ADD_LIQUIDITY_FLAG</code>
+              <p className="text-muted-foreground mt-1">bit 157 ... (10개)</p>
+            </div>
+          </div>
+          <div className="bg-background rounded-md p-3 border border-border text-sm">
+            <p className="font-semibold mb-1">예시: beforeSwap + afterSwap 활성화</p>
+            <p className="text-muted-foreground">상위 8비트 = <code>0000_1100</code> → CREATE2로 이 패턴의 주소 마이닝 후 배포</p>
+          </div>
+          <div className="bg-background rounded-md p-3 border border-border text-sm mt-2">
+            <p className="font-semibold mb-1">validateHookAddress()</p>
+            <p className="text-muted-foreground">주소의 플래그 비트와 실제 함수 selector 일치 여부 검증 — 불일치 시 revert</p>
+          </div>
+        </div>
         <p>
           <strong>주소 자체가 활성화 플래그</strong>: CREATE2로 원하는 주소 패턴 배포<br />
           이 설계로 <strong>런타임 hook 호출 비용 절감</strong> — 어떤 hook이 활성인지 mapping 조회 불필요<br />
@@ -76,29 +90,32 @@ function validateHookAddress(IHooks hook, PoolKey memory key) internal pure {
         <h3 className="text-xl font-semibold mt-8 mb-3">실제 Hook 예시 — Dynamic Fee</h3>
 
         <DynamicFeeViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 변동성 기반 수수료 조정 hook
-contract VolatilityFeeHook is IHooks {
-    mapping(PoolId => uint24) public currentFee;
-
-    function beforeSwap(
-        address, PoolKey calldata key, SwapParams calldata, bytes calldata
-    ) external override returns (bytes4) {
-        // 최근 변동성 계산
-        uint256 volatility = computeVolatility(key);
-
-        // 변동성에 따라 수수료 조정 (0.05% ~ 1%)
-        uint24 newFee = volatility > 0.05e18
-            ? 10000  // 1%
-            : volatility > 0.02e18
-                ? 3000  // 0.3%
-                : 500;  // 0.05%
-
-        // Pool에 새 수수료 적용 (LPFee만 변경)
-        IPoolManager(msg.sender).updateDynamicLPFee(key, newFee);
-
-        return IHooks.beforeSwap.selector;
-    }
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">VolatilityFeeHook — 변동성 기반 수수료 조정</p>
+          <div className="bg-background rounded-md p-3 border border-border text-sm mb-3">
+            <p className="text-muted-foreground"><code>beforeSwap</code> hook에서 <code>computeVolatility(key)</code>로 최근 변동성 계산 후 수수료 동적 조정</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-sm mb-3">
+            <div className="bg-red-50 dark:bg-red-950/30 rounded-md p-3 border border-red-200 dark:border-red-800 text-center">
+              <p className="font-semibold text-red-700 dark:text-red-400">고변동성</p>
+              <p className="text-muted-foreground">volatility &gt; 5%</p>
+              <p className="font-semibold mt-1">1% (10000)</p>
+            </div>
+            <div className="bg-orange-50 dark:bg-orange-950/30 rounded-md p-3 border border-orange-200 dark:border-orange-800 text-center">
+              <p className="font-semibold text-orange-700 dark:text-orange-400">중간</p>
+              <p className="text-muted-foreground">volatility &gt; 2%</p>
+              <p className="font-semibold mt-1">0.3% (3000)</p>
+            </div>
+            <div className="bg-green-50 dark:bg-green-950/30 rounded-md p-3 border border-green-200 dark:border-green-800 text-center">
+              <p className="font-semibold text-green-700 dark:text-green-400">저변동성</p>
+              <p className="text-muted-foreground">volatility &le; 2%</p>
+              <p className="font-semibold mt-1">0.05% (500)</p>
+            </div>
+          </div>
+          <div className="bg-background rounded-md p-3 border border-border text-sm">
+            <p className="text-muted-foreground"><code>updateDynamicLPFee(key, newFee)</code>로 Pool에 새 수수료 적용 → <code>beforeSwap.selector</code> 반환</p>
+          </div>
+        </div>
         <p>
           <strong>Dynamic Fee</strong>: 시장 상황에 따라 수수료 실시간 조정<br />
           V3는 고정 4 tier — V4 hook은 무제한 유연성<br />
@@ -106,33 +123,23 @@ contract VolatilityFeeHook is IHooks {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실제 Hook 예시 — Onchain Limit Orders</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Limit Order를 유동성 포지션으로 시뮬레이션
-contract LimitOrderHook is IHooks {
-    struct Order {
-        address owner;
-        int24 tick;     // 실행 가격
-        uint128 amount;
-    }
-
-    mapping(PoolId => mapping(int24 => Order[])) public orders;
-
-    // Swap 후 가격이 limit 지나갔는지 확인
-    function afterSwap(
-        address, PoolKey calldata key, SwapParams calldata,
-        BalanceDelta, bytes calldata
-    ) external override returns (bytes4) {
-        (, int24 currentTick) = getSlot0(key.toId());
-
-        // 현재 tick까지 도달한 모든 limit order 실행
-        for (int24 t = lastTick; t <= currentTick; ++t) {
-            if (orders[key.toId()][t].length > 0) {
-                fillLimitOrders(key, t);
-            }
-        }
-
-        return IHooks.afterSwap.selector;
-    }
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">LimitOrderHook — Onchain Limit Orders</p>
+          <div className="bg-background rounded-md p-3 border border-border text-sm mb-3">
+            <p className="font-semibold mb-1">Order 구조체</p>
+            <p className="text-muted-foreground"><code>owner</code> (주소), <code>tick</code> (실행 가격), <code>amount</code> (수량) — <code>mapping(PoolId =&gt; mapping(int24 =&gt; Order[]))</code>에 저장</p>
+          </div>
+          <div className="space-y-2 text-sm">
+            <div className="bg-background rounded-md p-3 border border-border">
+              <p className="font-semibold">afterSwap hook 동작</p>
+              <div className="mt-2 space-y-1 text-muted-foreground">
+                <p>1. <code>getSlot0(key.toId())</code>로 현재 tick 조회</p>
+                <p>2. <code>lastTick</code>부터 <code>currentTick</code>까지 순회</p>
+                <p>3. 해당 tick에 등록된 주문이 있으면 <code>fillLimitOrders(key, t)</code> 실행</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Limit Order 구현</strong>: V4 이전엔 불가능했던 기능<br />
           CLOB(오더북) 없이 AMM 위에 limit order 레이어 추가<br />

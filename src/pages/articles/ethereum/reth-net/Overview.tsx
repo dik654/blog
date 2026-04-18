@@ -31,36 +31,36 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── devp2p 4계층 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">devp2p 4계층 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 계층 1: UDP Discovery (피어 발견)
-//   discv4 (legacy) / discv5 (현재)
-//   - Kademlia DHT 기반
-//   - 노드 ID (public key) 공간에서 가까운 노드 탐색
-//   - ENR(Ethereum Node Record) 교환
-
-// 계층 2: RLPx TCP transport (암호화 채널)
-//   ECIES handshake → ECDSA authentication
-//   - AES-CTR + HMAC-SHA256 암호화
-//   - ephemeral key exchange (forward secrecy)
-//   - message framing (기반 프레임 형식)
-
-// 계층 3: P2P 프로토콜 (서브프로토콜 협상)
-//   - Hello/Disconnect/Ping/Pong 메시지
-//   - capability 협상 (eth/68, snap/1, les/4 등)
-//   - shared capability로 통신 결정
-
-// 계층 4: eth/68 subprotocol (이더리움 메시지)
-//   - GetBlockHeaders, BlockHeaders
-//   - GetBlockBodies, BlockBodies
-//   - NewPooledTransactionHashes
-//   - GetPooledTransactions, PooledTransactions
-//   - NewBlock, NewBlockHashes
-
-// NetworkManager: 4계층을 모두 조정하는 최상위
-// - 연결 pool 관리 (max_peers: 기본 100)
-// - reputation tracking
-// - rate limiting`}
-        </pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-blue-500 mb-2">계층 1: UDP Discovery</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code>discv4</code>(legacy) / <code>discv5</code>(현재) — Kademlia DHT 기반으로 노드 ID(public key) 공간에서 가까운 노드 탐색. <code>ENR</code>(Ethereum Node Record) 교환.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-green-500 mb-2">계층 2: RLPx TCP Transport</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              ECIES handshake + ECDSA 인증. AES-CTR + HMAC-SHA256 암호화, ephemeral key exchange(forward secrecy), message framing 제공.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-purple-500 mb-2">계층 3: P2P 프로토콜</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              Hello/Disconnect/Ping/Pong 메시지. <code>Capability</code> 협상(<code>eth/68</code>, <code>snap/1</code>, <code>les/4</code> 등)으로 통신 결정.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-orange-500 mb-2">계층 4: eth/68 Subprotocol</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code>GetBlockHeaders</code>/<code>BlockHeaders</code>, <code>GetBlockBodies</code>/<code>BlockBodies</code>, <code>NewPooledTransactionHashes</code>, <code>NewBlock</code> 등 이더리움 메시지.
+            </p>
+          </div>
+        </div>
+        <div className="not-prose rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 my-4">
+          <p className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-1">NetworkManager</p>
+          <p className="text-sm text-foreground/80">4계층을 모두 조정하는 최상위 구조체. 연결 pool 관리(<code>max_peers</code>: 기본 100), reputation tracking, rate limiting 담당.</p>
+        </div>
         <p className="leading-7">
           devp2p는 <strong>4계층 독립적 설계</strong>.<br />
           각 계층이 자기 역할만 담당 — Discovery는 피어 찾기, RLPx는 암호화, P2P는 서브프로토콜 협상, eth는 실제 이더리움 통신.<br />
@@ -69,45 +69,23 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── tokio 비동기 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">tokio 기반 비동기 네트워킹</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// tokio 런타임: single-threaded event loop + multi-threaded executor
-#[tokio::main]
-async fn main() {
-    // NetworkManager는 Future → tokio task로 실행
-    let network = NetworkManager::new(config).await?;
-    tokio::spawn(network.run());
-
-    // 수천 개 연결을 하나의 이벤트 루프가 처리
-    // epoll(Linux) / kqueue(BSD/Mac) / IOCP(Windows)
-}
-
-// 메모리 비교:
-// Geth (Go goroutine):
-//   - 각 연결당 goroutine: ~8KB stack
-//   - 100 피어 × 8KB = 800KB (per goroutine)
-//   - goroutine 스케줄링 오버헤드
-//
-// Reth (tokio task):
-//   - 각 연결당 task: ~수백 바이트 (state machine)
-//   - 100 피어 × ~200B = ~20KB
-//   - epoll이 OS 수준 I/O multiplexing
-
-// 메모리 효율: ~40배 차이 (100 피어 기준)
-// 확장성: 1000+ 피어도 큰 부담 없음
-
-// 비동기 메시지 처리 예시:
-async fn handle_peer(mut stream: Framed<TcpStream, EthCodec>) {
-    while let Some(msg) = stream.next().await {
-        match msg? {
-            EthMessage::GetBlockHeaders(req) => {
-                let headers = load_headers(req)?;
-                stream.send(BlockHeaders(headers)).await?;
-            }
-            // ...
-        }
-    }
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">tokio 비동기 구조</p>
+          <p className="text-sm text-foreground/80 mb-3">
+            <code>NetworkManager</code>는 <code>Future</code>로 tokio task에서 실행. <code>tokio::spawn(network.run())</code>으로 비동기 시작. epoll(Linux) / kqueue(BSD) / IOCP(Windows)로 수천 연결 처리.
+          </p>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div className="rounded border border-border/40 p-3">
+              <p className="text-xs font-bold text-red-400 mb-1">Geth (Go goroutine)</p>
+              <p className="text-sm text-foreground/70">연결당 ~8KB stack. 100 피어 = 800KB. goroutine 스케줄링 오버헤드.</p>
+            </div>
+            <div className="rounded border border-border/40 p-3">
+              <p className="text-xs font-bold text-green-400 mb-1">Reth (tokio task)</p>
+              <p className="text-sm text-foreground/70">연결당 ~200B(state machine). 100 피어 = ~20KB. epoll 기반 I/O multiplexing.</p>
+            </div>
+          </div>
+          <p className="text-sm text-amber-600 dark:text-amber-400">메모리 효율 ~40배 차이(100 피어 기준). 1000+ 피어도 큰 부담 없음.</p>
+        </div>
         <p className="leading-7">
           tokio의 비동기 모델이 <strong>고밀도 연결</strong> 처리의 핵심.<br />
           Go goroutine 대비 ~40배 메모리 효율 — 동일 머신에서 더 많은 피어 유지.<br />
@@ -116,40 +94,37 @@ async fn handle_peer(mut stream: Framed<TcpStream, EthCodec>) {
 
         {/* ── capability 협상 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Capability 협상 — 피어 호환성 결정</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 연결 시작 시 Hello 메시지 교환
-struct Hello {
-    protocol_version: u8,  // devp2p 버전 (현재 5)
-    client_id: String,     // "reth/v1.0.0" 등
-    capabilities: Vec<Capability>,  // 지원 프로토콜 목록
-    listen_port: u16,
-    node_id: B512,
-}
-
-struct Capability {
-    name: String,  // "eth", "snap", "les"
-    version: u32,  // 프로토콜 버전
-}
-
-// 상대방 capabilities와 교집합 찾기
-// 예시:
-//   내 capabilities: [("eth", 68), ("snap", 1)]
-//   상대 capabilities: [("eth", 67), ("eth", 68), ("snap", 1)]
-//   교집합: [("eth", 68), ("snap", 1)]
-//   → eth/68 + snap/1 프로토콜 활성화
-
-// capability 없으면 연결 해제:
-// - eth/67 이하만 지원하는 구식 노드는 연결 차단
-// - 일치 없으면 Disconnect(ProtocolMismatch)
-
-// 이더리움 프로토콜 버전 진화:
-// eth/62 ~ eth/66: legacy
-// eth/67: NewPooledTransactionHashes 필드 확장
-// eth/68: metadata 필드 추가 (2023)
-// eth/69: blob transactions 지원 예정
-
-// Reth는 eth/68 기본, eth/67 backward compat`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Hello 구조체</p>
+              <ul className="text-sm text-foreground/80 space-y-1">
+                <li><code>protocol_version: u8</code> — devp2p 버전(현재 5)</li>
+                <li><code>client_id: String</code> — "reth/v1.0.0" 등</li>
+                <li><code>capabilities: Vec&lt;Capability&gt;</code> — 지원 프로토콜 목록</li>
+                <li><code>listen_port: u16</code>, <code>node_id: B512</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Capability 구조체</p>
+              <ul className="text-sm text-foreground/80 space-y-1">
+                <li><code>name: String</code> — "eth", "snap", "les"</li>
+                <li><code>version: u32</code> — 프로토콜 버전</li>
+              </ul>
+              <p className="text-sm text-foreground/60 mt-2">상대방 capabilities 교집합 계산. 일치 없으면 <code>Disconnect(ProtocolMismatch)</code>.</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">프로토콜 버전 진화</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+              <div className="text-foreground/60"><code>eth/62~66</code> legacy</div>
+              <div className="text-foreground/60"><code>eth/67</code> TX 해시 확장</div>
+              <div className="text-foreground/60"><code>eth/68</code> metadata 추가(2023)</div>
+              <div className="text-foreground/60"><code>eth/69</code> blob TX 예정</div>
+            </div>
+            <p className="text-sm text-foreground/60 mt-2">Reth는 <code>eth/68</code> 기본, <code>eth/67</code> backward compat.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Capability 협상</strong>이 devp2p의 확장성 — 새 프로토콜을 기존 연결에 추가 가능.<br />
           eth/68과 snap/1이 동일 TCP 연결에서 동시 동작 — 한 피어로 여러 기능 활용.<br />

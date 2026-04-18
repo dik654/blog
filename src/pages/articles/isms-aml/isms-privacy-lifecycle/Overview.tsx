@@ -1,10 +1,19 @@
+import OverviewViz from './viz/OverviewViz';
+import LifecycleStagesInlineViz from './viz/LifecycleStagesInlineViz';
+import AuditCheckInlineViz from './viz/AuditCheckInlineViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">개인정보 생명주기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
+        <OverviewViz />
+
         <h3 className="text-xl font-semibold mt-2 mb-3">수집에서 파기까지: 4단계</h3>
+        <div className="my-6">
+          <LifecycleStagesInlineViz />
+        </div>
         <p>
           개인정보는 수집 → 이용 → 보관 → 파기의 생명주기(Lifecycle)를 거친다.<br />
           개인정보보호법은 각 단계마다 별도의 의무를 부과하며, ISMS-P 인증 기준 3.x 영역이 이 생명주기 전체를 관리한다.
@@ -147,6 +156,9 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">ISMS-P 심사에서 확인하는 포인트</h3>
+        <div className="my-6">
+          <AuditCheckInlineViz />
+        </div>
         <p>
           ISMS-P 인증 기준 3.3(개인정보 보관 및 파기)에서 심사원이 확인하는 주요 항목:
         </p>

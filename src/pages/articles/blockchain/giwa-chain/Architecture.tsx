@@ -116,22 +116,41 @@ export default function Architecture() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Finality 계층</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 3단계 finality
-
-1. Sequencer Confirmation (~2초):
-   Sequencer가 블록 생성 & 서명
-   User UI: "Transaction confirmed"
-   주의: Sequencer 거짓말 가능 (reorg 위험)
-
-2. L1 Data Availability (~2분):
-   Batch가 L1에 게시됨
-   이제 누구나 L2 state 재구성 가능
-   Sequencer censorship 방지됨
-
-3. L1 Finality (~12분):
-   L1 블록이 finalized (Ethereum 2 epochs)
-   완전한 최종성
-   withdrawal 시 여전히 7일 challenge`}</pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-blue-500 rounded px-1.5 py-0.5">1</span>
+              <span className="font-semibold text-sm">Sequencer Confirmation</span>
+              <span className="text-xs text-muted-foreground">~2초</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Sequencer가 블록 생성 &amp; 서명 — User UI에 "Transaction confirmed" 표시<br />
+              주의: Sequencer 거짓말 가능 (reorg 위험)
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-blue-500 rounded px-1.5 py-0.5">2</span>
+              <span className="font-semibold text-sm">L1 Data Availability</span>
+              <span className="text-xs text-muted-foreground">~2분</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Batch가 L1에 게시됨 — 누구나 L2 state 재구성 가능<br />
+              Sequencer censorship 방지
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xs font-bold text-white bg-blue-500 rounded px-1.5 py-0.5">3</span>
+              <span className="font-semibold text-sm">L1 Finality</span>
+              <span className="text-xs text-muted-foreground">~12분</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              L1 블록이 finalized (Ethereum 2 epochs) — 완전한 최종성<br />
+              withdrawal 시 여전히 7일 challenge window 필요
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GIWA 운영 고려사항</h3>
         <p>

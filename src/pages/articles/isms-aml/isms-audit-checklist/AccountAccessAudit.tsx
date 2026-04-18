@@ -1,3 +1,7 @@
+import AccountAccessAuditViz from './viz/AccountAccessAuditViz';
+import PasswordPolicyInlineViz from './viz/PasswordPolicyInlineViz';
+import AccountLifecycleInlineViz from './viz/AccountLifecycleInlineViz';
+
 export default function AccountAccessAudit() {
   return (
     <section id="account-access-audit" className="mb-16 scroll-mt-20">
@@ -10,8 +14,15 @@ export default function AccountAccessAudit() {
           결함이 가장 많이 나오는 영역 중 하나 — 모든 시스템에 계정이 있기 때문에 점검 범위가 넓다.
         </p>
 
+        <AccountAccessAuditViz />
+
         {/* --- 비밀번호 정책 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">1. 비밀번호 정책 확인</h3>
+
+        <div className="not-prose my-4">
+          <PasswordPolicyInlineViz />
+        </div>
+
         <p>
           심사원: "비밀번호 정책 설정 화면 보여주세요."<br />
           확인하는 설정:
@@ -77,6 +88,11 @@ export default function AccountAccessAudit() {
 
         {/* --- 계정 분리 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2. 계정 분리 상황</h3>
+
+        <div className="not-prose my-4">
+          <AccountLifecycleInlineViz />
+        </div>
+
         <p>
           심사원: "DB 계정 목록 보여주세요." "root로 서비스 접속하나요?"<br />
           확인하는 것 — 하나의 계정이 모든 용도로 사용되고 있지 않은지.

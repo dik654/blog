@@ -39,150 +39,135 @@ export default function Circuit({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Circuit trait 구현 패턴</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Circuit Trait & R1CS Construction
-//
-// trait Circuit<F: Field> {
-//     fn synthesize<CS: ConstraintSystem<F>>(
-//         self,
-//         cs: &mut CS
-//     ) -> Result<(), SynthesisError>;
-// }
-//
-// Purpose:
-//   Describe arithmetic circuit in Rust
-//   Same code generates R1CS (for setup) and witness (for proving)
-//   Constraints added via ConstraintSystem
 
-// ConstraintSystem interface:
-//
-//   trait ConstraintSystem<F> {
-//       fn alloc_instance(&mut self, val: F) -> Variable;
-//       fn alloc_witness(&mut self, val: F) -> Variable;
-//       fn enforce(&mut self, a: LC, b: LC, c: LC);
-//
-//       // helper for linear combinations
-//       fn zero_lc(&self) -> LC;
-//   }
+        {/* Circuit trait */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">Circuit trait</h4>
+          <div className="text-sm space-y-1">
+            <p><code>Circuit&lt;F: Field&gt;</code> — <code>synthesize(self, cs: &mut CS) -&gt; Result&lt;(), SynthesisError&gt;</code> 하나만 구현</p>
+            <p className="text-muted-foreground">동일 코드가 R1CS 생성(setup)과 witness 생성(proving) 모두에 사용</p>
+          </div>
+        </div>
 
-// Variable types:
-//   - Instance: public input, visible to verifier
-//   - Witness: private input, known only to prover
-//   - ONE: constant 1 (special variable index 0)
+        {/* ConstraintSystem 인터페이스 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">ConstraintSystem 인터페이스</h4>
+          <div className="grid grid-cols-1 gap-2 text-sm">
+            <div className="bg-background rounded p-3">
+              <p><code>alloc_instance(&mut self, val: F) -&gt; Variable</code> — 공개 변수 할당 (verifier에게 보임)</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p><code>alloc_witness(&mut self, val: F) -&gt; Variable</code> — 비공개 변수 할당 (prover만 앎)</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p><code>enforce(&mut self, a: LC, b: LC, c: LC)</code> — 곱셈 제약 <code>a * b = c</code> 추가</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p><code>ONE</code> — 상수 1을 나타내는 특수 변수 (인덱스 0)</p>
+            </div>
+          </div>
+        </div>
 
-// Example: prove knowledge of x such that x^3 + x + 5 = 35
-//
-//   struct CubicCircuit<F> {
-//     pub x: Option<F>,   // witness
-//   }
-//
-//   impl<F: Field> Circuit<F> for CubicCircuit<F> {
-//     fn synthesize<CS: ConstraintSystem<F>>(
-//       self,
-//       cs: &mut CS
-//     ) -> Result<(), SynthesisError> {
-//       // Allocate variables
-//       let x = cs.alloc_witness(self.x.unwrap_or(F::zero()));
-//       let y = cs.alloc_instance(F::from(35u64));  // public output
-//
-//       // Auxiliary: t1 = x^2
-//       let t1_val = self.x.map(|x| x * x);
-//       let t1 = cs.alloc_witness(t1_val.unwrap_or(F::zero()));
-//       cs.enforce(
-//         LC::new().add(F::ONE, x),
-//         LC::new().add(F::ONE, x),
-//         LC::new().add(F::ONE, t1),
-//       );
-//       // Constraint: x * x = t1
-//
-//       // Auxiliary: t2 = x^3 = t1 * x
-//       let t2_val = t1_val.zip(self.x).map(|(t1,x)| t1 * x);
-//       let t2 = cs.alloc_witness(t2_val.unwrap_or(F::zero()));
-//       cs.enforce(
-//         LC::new().add(F::ONE, t1),
-//         LC::new().add(F::ONE, x),
-//         LC::new().add(F::ONE, t2),
-//       );
-//       // Constraint: t1 * x = t2
-//
-//       // Final: t2 + x + 5 = y
-//       cs.enforce(
-//         LC::new()
-//           .add(F::ONE, t2)
-//           .add(F::ONE, x)
-//           .add(F::from(5u64), CS::ONE),
-//         LC::new().add(F::ONE, CS::ONE),  // multiply by 1
-//         LC::new().add(F::ONE, y),
-//       );
-//       // Constraint: (t2 + x + 5) * 1 = y
-//
-//       Ok(())
-//     }
-//   }
+        {/* 예시: CubicCircuit */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">예시: x^3 + x + 5 = 35 증명</h4>
+          <div className="text-sm space-y-3">
+            <p><code>CubicCircuit&lt;F&gt;</code> — <code>x: Option&lt;F&gt;</code> (witness)</p>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">변수 할당</p>
+              <p><code>x</code> = <code>alloc_witness</code>, <code>y</code> = <code>alloc_instance(35)</code></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">제약 1: x * x = t1</p>
+              <p><code>enforce(LC(x), LC(x), LC(t1))</code> — 보조 변수 <code>t1 = x²</code></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">제약 2: t1 * x = t2</p>
+              <p><code>enforce(LC(t1), LC(x), LC(t2))</code> — 보조 변수 <code>t2 = x³</code></p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium mb-1">제약 3: (t2 + x + 5) * 1 = y</p>
+              <p><code>enforce(LC(t2).add(x).add(5·ONE), LC(ONE), LC(y))</code></p>
+              <p className="text-muted-foreground">덧셈은 LC 체이닝으로 흡수 — 추가 제약 불필요</p>
+            </div>
+          </div>
+        </div>
 
-// Linear combination builder:
-//
-//   LC::new()
-//     .add(coeff_1, var_1)
-//     .add(coeff_2, var_2)
-//     .add(coeff_3, var_3)
-//
-//   Represents: sum_i (coeff_i * var_i)
-//   Addition is FREE (absorbed in constraints)
+        {/* LC 빌더 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">Linear Combination 빌더</h4>
+          <div className="text-sm">
+            <p><code>LC::new().add(coeff₁, var₁).add(coeff₂, var₂).add(coeff₃, var₃)</code></p>
+            <p className="text-muted-foreground mt-1">= Σ(coeffᵢ · varᵢ) — 덧셈은 제약 소비 없이 무료</p>
+          </div>
+        </div>
 
-// Common gadgets:
-//
-//   Boolean: enforce b * (1 - b) = 0
-//     LC::new().add(F::ONE, b),
-//     LC::new().add(F::ONE, ONE).sub(F::ONE, b),
-//     LC::new()  // zero
-//
-//   Mux (if-else):
-//     result = b * (true_val - false_val) + false_val
-//     enforce b * (true_val - false_val) = result - false_val
-//
-//   Range check (n bits):
-//     x = sum_i (b_i * 2^i)
-//     Each b_i boolean
-//     Combines with reconstruct constraint
-//
-//   Equality:
-//     enforce (a - b) * 1 = 0
+        {/* Common gadgets */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">공용 가젯 (Common Gadgets)</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Boolean</p>
+              <p><code>enforce(b, 1-b, 0)</code></p>
+              <p className="text-muted-foreground">b·(1-b)=0 → b ∈ {'{0,1}'}</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Mux (if-else)</p>
+              <p><code>enforce(b, true-false, result-false)</code></p>
+              <p className="text-muted-foreground">result = b·(T-F) + F</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Range check (n bits)</p>
+              <p>각 비트 boolean + 재구성 제약</p>
+              <p className="text-muted-foreground">x = Σ bᵢ·2ⁱ</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Equality</p>
+              <p><code>enforce(a-b, 1, 0)</code></p>
+              <p className="text-muted-foreground">(a-b)·1 = 0</p>
+            </div>
+          </div>
+        </div>
 
-// Dual-use pattern:
-//
-//   Same circuit code used in 3 modes:
-//
-//   Setup mode:
-//     self.x = None
-//     Collects R1CS matrices (A, B, C)
-//     Produces ProvingKey via trusted setup
-//
-//   Prove mode:
-//     self.x = Some(witness_value)
-//     Computes all witness values
-//     Records witness vector
-//     Plus records R1CS for generating QAP
-//
-//   Verify mode:
-//     Not needed here — verifier just checks proof
-//     ConstraintSystem impl is a stub
-//
-//   The type system ensures code correctness!
+        {/* Dual-use 패턴 */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-4">
+          <h4 className="font-semibold mb-2">Dual-use 패턴</h4>
+          <div className="grid grid-cols-3 gap-3 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Setup 모드</p>
+              <p><code>x = None</code></p>
+              <p className="text-muted-foreground">R1CS 행렬 수집 → ProvingKey 생성</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Prove 모드</p>
+              <p><code>x = Some(val)</code></p>
+              <p className="text-muted-foreground">witness 계산 + R1CS 기록</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">Verify 모드</p>
+              <p>회로 불필요</p>
+              <p className="text-muted-foreground">verifier는 증명만 확인</p>
+            </div>
+          </div>
+        </div>
 
-// Debugging:
-//   is_satisfied(): checks all constraints hold
-//   which_unsatisfied(): returns failing constraint index
-//   num_constraints(): reports circuit size
-//   num_inputs(), num_witnesses(): variable counts
-
-// Production frameworks:
-//   arkworks (ark-relations): generic R1CS framework
-//   bellman (Zcash Rust): original framework
-//   circom (DSL): standalone compiler
-//   gnark (Go): Ethereum-oriented
-//   libsnark (C++): original libsnark for academic`}
-        </pre>
+        {/* 디버깅 + 프레임워크 */}
+        <div className="bg-muted/50 rounded-lg p-4">
+          <h4 className="font-semibold mb-2">디버깅 & 프레임워크</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">디버깅 메서드</p>
+              <p><code>is_satisfied()</code> — 모든 제약 만족 여부</p>
+              <p><code>which_unsatisfied()</code> — 실패 제약 인덱스</p>
+              <p><code>num_constraints()</code> — 회로 크기</p>
+            </div>
+            <div className="bg-background rounded p-3">
+              <p className="font-medium">프로덕션 프레임워크</p>
+              <p><strong>arkworks</strong> (Rust) · <strong>bellman</strong> (Zcash) · <strong>circom</strong> (DSL)</p>
+              <p><strong>gnark</strong> (Go) · <strong>libsnark</strong> (C++)</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

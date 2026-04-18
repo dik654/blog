@@ -15,7 +15,7 @@ export default function BackpropViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 440 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 440 150" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Loss box */}
           <rect x={160} y={6} width={120} height={26} rx={6}
             fill={`${C.loss}12`} stroke={C.loss} strokeWidth={1} />
@@ -56,11 +56,11 @@ export default function BackpropViz() {
           {step >= 3 && (
             <motion.g initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }} transition={sp}>
-              <rect x={80} y={105} width={280} height={20} rx={4}
+              <rect x={80} y={125} width={280} height={20} rx={4}
                 fill={`${C.enc}08`} stroke={C.enc} strokeWidth={0.6} />
-              <text x={220} y={119} textAnchor="middle" fontSize={9}
+              <text x={220} y={139} textAnchor="middle" fontSize={9}
                 fontWeight={500} fill={C.enc}>
-                w_new = w_old - 0.01 x gradient (반복 학습)
+                w_new = w_old - 0.01 × gradient (반복 학습)
               </text>
             </motion.g>
           )}

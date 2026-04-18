@@ -13,56 +13,47 @@ export default function LeaderRotation() {
 
         {/* ── Linear View Change ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Linear View Change 메커니즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff View Change (O(n)):
-//
-// 1. View-change trigger:
-//    - 각 replica가 timeout 감지
-//    - 새 view (v+1) 로 이동
-//
-// 2. NEW-VIEW 메시지 (each → new leader):
-//    NewView(v+1, highQC)
-//    - highQC: 자신이 본 가장 높은 QC
-//    - 단 1개 QC만 전송!
-//    - size: O(1) per message
-//
-// 3. New leader 수집:
-//    - 2f+1 NewView 수신 대기
-//    - max highQC 선택 → justifyQC
-//
-// 4. 새 proposal:
-//    leader → all: Propose(B, justifyQC)
-//    - B.parent = justifyQC.block
-//    - 정상 HotStuff round 시작
+        <div className="not-prose grid grid-cols-1 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">HotStuff View Change 4단계 — O(n)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>1. Trigger</strong> — 각 replica가 timeout 감지 → 새 view <code className="text-xs">v+1</code>로 이동</p>
+              <p><strong>2. NewView</strong> — each → new leader: <code className="text-xs">NewView(v+1, highQC)</code> — 자신이 본 가장 높은 QC 1개만 전송 (O(1) per msg)</p>
+              <p><strong>3. 수집</strong> — new leader가 2f+1 NewView 수신, <code className="text-xs">max(highQC)</code> 선택 → <code className="text-xs">justifyQC</code></p>
+              <p><strong>4. 새 proposal</strong> — leader → all: <code className="text-xs">Propose(B, justifyQC)</code>, <code className="text-xs">B.parent = justifyQC.block</code></p>
+            </div>
+          </div>
+        </div>
 
-// 통신 복잡도:
-// - NewView 메시지: n → 1 = O(n)
-// - New Proposal: 1 → n = O(n)
-// - 총: O(n) per view change
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">PBFT View Change — O(n³)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>VIEW-CHANGE: each → all = <code className="text-xs">O(n²)</code></li>
+              <li>메시지 크기: <code className="text-xs">O(n)</code> per msg</li>
+              <li>총: <code className="text-xs">O(n³)</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">HotStuff View Change — O(n)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>NewView: each → leader = <code className="text-xs">O(n)</code></li>
+              <li>메시지 크기: <code className="text-xs">O(1)</code> per msg (QC만)</li>
+              <li>총: <code className="text-xs">O(n)</code></li>
+            </ul>
+          </div>
+        </div>
 
-// PBFT 대비:
-// PBFT:
-// - VIEW-CHANGE: each → all, O(n²)
-// - VIEW-CHANGE 크기: O(n) per msg
-// - 총: O(n³)
-//
-// HotStuff:
-// - NewView: each → leader, O(n)
-// - NewView 크기: O(1) per msg (QC만)
-// - 총: O(n)
-
-// 왜 O(1) per message 가능?
-// - threshold signature: QC는 O(1) size
-// - aggregated signature
-// - 2f+1 sig → 1 sig
-
-// Safety 유지 (핵심):
-// new leader가 max highQC 기반 proposal:
-// - 이미 committed block의 QC 존재
-// - 모든 정직 replica가 그 QC 이상 가짐
-// - leader가 어느 replica에서 받아도 OK
-// - 2f+1 중 f+1은 정직 → max(highQC) 포함`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Safety 유지 핵심</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>O(1) per message 가능: threshold signature로 QC = O(1) size (2f+1 sig → 1 sig)</p>
+              <p>new leader가 <code className="text-xs">max(highQC)</code> 기반 proposal — 이미 committed block의 QC 포함 보장</p>
+              <p>2f+1 중 f+1은 정직 → <code className="text-xs">max(highQC)</code> 반드시 포함</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           HotStuff view change = <strong>O(n) NewView → leader → O(n) Proposal</strong>.<br />
           각 replica는 highQC (O(1))만 전송.<br />
@@ -71,56 +62,43 @@ export default function LeaderRotation() {
 
         {/* ── Safety 증명 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff Safety 증명</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Claim: B committed → 이후 어떤 view에서도
-//        conflicting B' commit 불가
+        <div className="not-prose grid grid-cols-1 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Claim: B committed → conflicting B* commit 불가</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>가정</strong> — view v에서 B commit (3-chain 완성). view v&apos; &gt; v에서 B* commit 가정 (B* != B). 목표: 모순 도출</p>
+            </div>
+          </div>
+        </div>
 
-// 가정:
-// view v에서 B commit (3-chain 완성)
-// - ∃ B'' such that QC(B''), QC(B'''), QC(B'''')
-// - B'' ← B''' ← B'''' (parent chain)
-// - B.view, B'''.view, B''''.view consecutive
-//
-// view v' > v에서 B* commit 가정 (B* ≠ B)
-// 목표: 모순 도출
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Locking Invariant</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>정직 replica가 B&apos;&apos;&apos; QC 받으면 lock on B&apos;&apos; (<code className="text-xs">lockedQC = QC(B&apos;&apos;)</code>)</p>
+              <p>이후 <code className="text-xs">lockedQC.view</code> 이상의 QC만 vote</p>
+              <p>B&apos;&apos; commit 시 2f+1 replica가 lock on B&apos;&apos;</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Quorum Intersection</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>B&apos;&apos;의 QC (2f+1) &cap; B*의 QC (2f+1) &ge; f+1</p>
+              <p>f+1에 정직 replica 1명 이상 존재</p>
+              <p>정직 replica j: B&apos;&apos;에 locked → B* vote하려면 <code className="text-xs">justifyQC.view &ge; B&apos;&apos;.view</code></p>
+              <p>B* != B이면서 같은 chain 포함 불가 → j가 B* vote 안 함 → <strong>모순</strong></p>
+            </div>
+          </div>
+        </div>
 
-// Locking invariant:
-// - 정직 replica가 B''' QC 받으면 lock on B''
-//   (lockedQC = QC(B''))
-// - 이후 replica는 "lockedQC.view 이상의 QC"만 vote
-
-// replica가 B'' commit 했을 때:
-// - 2f+1 replica가 B''' QC 형성
-// - → 2f+1 replica가 B''' vote
-// - → 2f+1 replica가 lock on B''
-// - → lockedQC.view = B''.view
-
-// view v' > v에서 B* vote하려면:
-// replica가 B*의 QC를 기반으로 accept 해야 함
-// - justifyQC.view >= lockedQC.view = B''.view
-// - B*의 parent chain이 B'' 포함 or B''.view 이상 QC 필요
-
-// Quorum intersection:
-// - B''의 QC (2f+1 signers)
-// - B*의 QC (2f+1 signers)
-// - intersection >= f+1
-// - f+1에 정직 1명 이상
-
-// 정직 replica j는:
-// - B''에 vote함 (locked on B'')
-// - B*에 vote하려면 justifyQC.view >= B''.view
-// - B* parent chain이 B'' 포함해야
-
-// B* ≠ B 이면서 같은 chain 포함 불가
-// → j가 B*에 vote 안 함
-// → B* QC 형성 불가
-// → 모순
-
-// 결론: B committed → conflicting block commit 불가
-// Safety 증명 완료
-
-// 엄밀한 증명: PODC 2019 paper §4`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">결론</div>
+            <div className="text-sm text-muted-foreground">
+              B committed → conflicting block commit 불가. Safety 증명 완료. (엄밀한 증명: PODC 2019 paper &sect;4)
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           HotStuff Safety = <strong>locking + quorum intersection</strong>.<br />
           2-chain QC로 lock, 3-chain QC로 commit.<br />
@@ -129,51 +107,52 @@ export default function LeaderRotation() {
 
         {/* ── Pacemaker ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Pacemaker: view synchronization</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Pacemaker의 역할:
-// - view synchronization
-// - timeout 관리
-// - view change 트리거
-// - leader rotation
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Pacemaker 역할</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>view synchronization — 모든 정직 replica를 같은 view로</li>
+              <li>timeout 관리 + view change 트리거</li>
+              <li>leader rotation</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">기본 알고리즘</div>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>각 replica가 <code className="text-xs">current_view</code> 유지</li>
+              <li>timeout 시 NewView 전송</li>
+              <li>2f+1 NewView 받으면 view 증가</li>
+              <li>new leader가 propose 시작</li>
+            </ol>
+          </div>
+        </div>
 
-// HotStuff paper는 pacemaker 분리:
-// "Pacemaker is responsible for bringing all honest
-//  replicas into the same view in a timely manner."
-
-// 기본 Pacemaker 알고리즘:
-//
-// 1. 각 replica는 자신의 current_view 유지
-// 2. timeout 시 vote 보냄 → NewView
-// 3. 2f+1 NewView 받으면 view 증가
-// 4. new leader가 propose 시작
-
-// Exponential backoff:
-// timeout(v) = base * 2^k
-// where k = v - last_successful_view
-// - view change 많으면 timeout 증가
-// - GST 후 반드시 수렴
-
-// Practical pacemaker (DiemBFT):
-// - round-robin leader
-// - timeout = f(network delay estimate)
-// - view 별 leader = round_robin(validators)
-
-// Optimistic pacemaker (optimization):
-// - 정상 case: timeout 대기 없이 다음 view
-// - 실패 case: timeout으로 복구
-// - latency 감소
-
-// 다른 프로토콜:
-// Jolteon pacemaker:
-// - 2-chain commit (HotStuff 3-chain 대비)
-// - fast path (2δ) + slow path (3δ)
-// - view synchronization 간소화
-
-// HotStuff-2 pacemaker:
-// - 2-phase protocol
-// - lockedQC 불필요 (view-based locking)
-// - 더 간단한 pacemaker`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">Exponential Backoff</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><code className="text-xs">timeout(v) = base * 2^k</code></p>
+              <p>k = v - last_successful_view</p>
+              <p>view change 많으면 timeout 증가, GST 후 수렴</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Jolteon Pacemaker</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>2-chain commit</p>
+              <p>fast path (2δ) + slow path (3δ)</p>
+              <p>view synchronization 간소화</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 mb-2">HotStuff-2 Pacemaker</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>2-phase protocol</p>
+              <p>lockedQC 불필요 (view-based locking)</p>
+              <p>더 간단한 pacemaker</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Pacemaker = <strong>view synchronization + timeout 관리</strong>.<br />
           HotStuff paper는 pacemaker를 프로토콜 밖으로 분리.<br />

@@ -24,54 +24,27 @@ export default function BlobStore({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── BlobStore trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlobStore trait — 저장소 추상화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait BlobStore: Send + Sync + 'static {
-    /// TX 해시로 blob sidecar 저장
-    fn insert(
-        &self,
-        tx: B256,
-        data: BlobTransactionSidecar,
-    ) -> Result<(), BlobStoreError>;
-
-    /// 여러 blob 일괄 저장
-    fn insert_all(
-        &self,
-        blobs: Vec<(B256, BlobTransactionSidecar)>,
-    ) -> Result<(), BlobStoreError>;
-
-    /// TX 해시로 blob 조회
-    fn get(
-        &self,
-        tx: B256,
-    ) -> Result<Option<BlobTransactionSidecar>, BlobStoreError>;
-
-    /// TX 해시들에 대한 blob 조회 (일괄)
-    fn get_all(
-        &self,
-        txs: Vec<B256>,
-    ) -> Result<Vec<(B256, BlobTransactionSidecar)>, BlobStoreError>;
-
-    /// 저장된 blob 삭제 (cleanup)
-    fn delete(&self, tx: B256) -> Result<(), BlobStoreError>;
-
-    /// 삭제 대기 목록에 추가
-    fn delete_all(&self, txs: Vec<B256>) -> Result<(), BlobStoreError>;
-
-    /// 만료된 blob 정리
-    fn cleanup(&self) -> Result<BlobStoreCleanupStat, BlobStoreError>;
-
-    /// 저장소 크기 (바이트)
-    fn data_size_hint(&self) -> Option<usize>;
-
-    /// 저장된 blob 개수
-    fn blobs_len(&self) -> usize;
-}
-
-// 구현체:
-// - DiskFileBlobStore: 프로덕션 (디스크 + LRU 캐시)
-// - InMemoryBlobStore: 테스트용 (HashMap)
-// - NoopBlobStore: blob 미지원 체인`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">BlobStore trait 메서드</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">insert(tx, data)</code> / <code className="text-xs">insert_all()</code> — 저장</li>
+              <li><code className="text-xs">get(tx)</code> / <code className="text-xs">get_all(txs)</code> — 조회</li>
+              <li><code className="text-xs">delete(tx)</code> / <code className="text-xs">delete_all(txs)</code> — 삭제</li>
+              <li><code className="text-xs">cleanup()</code> — 만료 blob 정리</li>
+              <li><code className="text-xs">data_size_hint()</code> / <code className="text-xs">blobs_len()</code> — 통계</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">구현체 3가지</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">DiskFileBlobStore</code> — 프로덕션 (디스크 + LRU 캐시)</li>
+              <li><code className="text-xs">InMemoryBlobStore</code> — 테스트용 (HashMap)</li>
+              <li><code className="text-xs">NoopBlobStore</code> — blob 미지원 체인</li>
+            </ul>
+            <p className="text-xs text-foreground/50 mt-2">trait bound: <code className="text-xs">Send + Sync + 'static</code></p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>BlobStore</code> trait이 <strong>저장소 교체 가능성</strong> 보장.<br />
           프로덕션은 디스크 기반, 테스트는 메모리 기반 → 동일 API.<br />
@@ -80,57 +53,36 @@ export default function BlobStore({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── DiskFileBlobStore ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">DiskFileBlobStore — 디스크 저장소</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct DiskFileBlobStore {
-    /// 디스크 저장 경로 (보통 ~/.reth/blobs/)
-    path: PathBuf,
-
-    /// LRU 캐시 (자주 접근하는 blob 메모리 유지)
-    cache: RwLock<LruCache<B256, Arc<BlobTransactionSidecar>>>,
-
-    /// 삭제 대기 목록 (지연 삭제)
-    txs_to_delete: RwLock<HashSet<B256>>,
-
-    /// 설정값
-    config: DiskFileBlobStoreConfig,
-}
-
-pub struct DiskFileBlobStoreConfig {
-    pub max_cached_entries: u32,  // 기본 100
-    pub open_files: u32,           // 기본 64
-}
-
-// 파일 레이아웃:
-// ~/.reth/blobs/
-//   ├── ab/
-//   │   ├── abc123....blob   (TX hash로 명명)
-//   │   └── abc456....blob
-//   ├── cd/
-//   │   └── cdef....blob
-//   └── ...
-//
-// 첫 바이트로 디렉토리 분산 (256개) → 파일시스템 부담 감소
-
-// insert_one 흐름:
-fn insert_one(&self, tx: B256, data: &BlobTransactionSidecar) -> Result<()> {
-    // 1. 파일 경로 계산
-    let file_path = self.path.join(
-        format!("{:02x}/{}.blob", tx.0[0], hex::encode(tx))
-    );
-
-    // 2. 디렉토리 생성 (없으면)
-    fs::create_dir_all(file_path.parent().unwrap())?;
-
-    // 3. 바이너리로 직렬화 후 저장 (atomic write)
-    let encoded = bincode::serialize(data)?;
-    fs::write(&file_path, encoded)?;
-
-    // 4. 캐시에 추가
-    self.cache.write().put(tx, Arc::new(data.clone()));
-
-    Ok(())
-}`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">DiskFileBlobStore 필드</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">path: PathBuf</code> — 디스크 경로 (~/.reth/blobs/)</li>
+              <li><code className="text-xs">cache: RwLock&lt;LruCache&gt;</code> — 자주 접근 blob 메모리 유지</li>
+              <li><code className="text-xs">txs_to_delete: RwLock&lt;HashSet&gt;</code> — 지연 삭제 대기</li>
+              <li><code className="text-xs">config</code> — max_cached_entries(100), open_files(64)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">파일 레이아웃</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code className="text-xs">~/.reth/blobs/{'{'}xx{'}'}/{'{'}tx_hash{'}'}.blob</code><br />
+              첫 바이트로 256개 하위 디렉토리 분산 → 파일시스템 부담 감소.
+            </p>
+          </div>
+          <div className="sm:col-span-2 rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-amber-400 mb-2">insert_one() 흐름</p>
+            <div className="flex flex-wrap gap-2 text-xs text-foreground/70">
+              <span className="rounded bg-muted/40 px-2 py-1">1. 파일 경로 계산</span>
+              <span className="text-foreground/30">&rarr;</span>
+              <span className="rounded bg-muted/40 px-2 py-1">2. 디렉토리 생성</span>
+              <span className="text-foreground/30">&rarr;</span>
+              <span className="rounded bg-muted/40 px-2 py-1">3. bincode 직렬화 + fs::write</span>
+              <span className="text-foreground/30">&rarr;</span>
+              <span className="rounded bg-muted/40 px-2 py-1">4. LRU 캐시 추가</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>DiskFileBlobStore</code>는 <strong>파일시스템 기반</strong>.<br />
           첫 바이트로 디렉토리 분산 → 256개 하위 폴더에 파일 분배.<br />
@@ -139,49 +91,38 @@ fn insert_one(&self, tx: B256, data: &BlobTransactionSidecar) -> Result<()> {
 
         {/* ── 지연 삭제 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">지연 삭제 (Deferred Cleanup)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 즉시 삭제 vs 지연 삭제
-//
-// 즉시 삭제 (단순):
-// delete(tx) → fs::remove_file() → O(1)
-// 문제: 다른 스레드가 같은 파일 읽는 중이면 race condition
-//
-// 지연 삭제 (Reth 방식):
-// delete(tx) → txs_to_delete에 추가 → O(1)
-// 실제 삭제는 cleanup()에서
-
-fn delete(&self, tx: B256) -> Result<()> {
-    self.txs_to_delete.write().insert(tx);
-    self.cache.write().pop(&tx);  // 캐시도 제거
-    Ok(())
-}
-
-fn cleanup(&self) -> Result<BlobStoreCleanupStat> {
-    let txs: Vec<B256> = self.txs_to_delete.write().drain().collect();
-    let mut deleted = 0u64;
-    let mut errors = 0u64;
-
-    for tx in txs {
-        let file_path = self.tx_to_path(tx);
-        match fs::remove_file(&file_path) {
-            Ok(_) => deleted += 1,
-            Err(_) => errors += 1,
-        }
-    }
-
-    Ok(BlobStoreCleanupStat { deleted, errors })
-}
-
-// cleanup 호출 시점:
-// - 블록 확정 시 (블록 내 TX 포함 시 sidecar 삭제 가능)
-// - 주기적 (예: 5분마다)
-// - 노드 종료 시
-
-// 장점:
-// 1. insert/delete hot path 빠름
-// 2. 배치 삭제로 파일시스템 효율
-// 3. 디스크 I/O 시간 분산`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-red-400 mb-2">즉시 삭제 (단순)</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code className="text-xs">delete(tx) → fs::remove_file()</code><br />
+              문제: 다른 스레드가 같은 파일 읽는 중이면 race condition.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">지연 삭제 (Reth 방식)</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code className="text-xs">delete(tx)</code> → <code className="text-xs">txs_to_delete</code>에 추가 + 캐시 제거.<br />
+              실제 삭제는 <code className="text-xs">cleanup()</code>에서 배치 수행.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-blue-400 mb-2">cleanup() 호출 시점</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li>블록 확정 시 (TX의 sidecar 삭제)</li>
+              <li>주기적 (5분마다)</li>
+              <li>노드 종료 시</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-amber-400 mb-2">장점</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li>insert/delete hot path 빠름</li>
+              <li>배치 삭제로 파일시스템 효율</li>
+              <li>디스크 I/O 시간 분산</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>지연 삭제</strong>가 hot path 성능 보호.<br />
           insert/get 작업 중 delete로 lock 경합 방지 → throughput 향상.<br />

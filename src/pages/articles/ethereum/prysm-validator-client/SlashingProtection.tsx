@@ -16,36 +16,55 @@ export default function SlashingProtection({ onCodeRef }: Props) {
 
         {/* ── Slashing 조건 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Slashing 조건 — 2가지</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Slashing 조건 (consensus spec):
-// 1. Proposer Slashing: 같은 slot에 2개 다른 block 서명
-// 2. Attester Slashing:
-//    a. Double Vote: 같은 target epoch에 2개 다른 attestation
-//    b. Surround Vote: 범위가 이전 투표를 감싸거나 감싸임
-
-// Surround Vote 예시:
-// Past: source=3, target=7 (range [3,7])
-// Curr: source=5, target=9 (range [5,9])
-// → past가 curr을 감쌈 (3<5 && 9<7 = FALSE, no surround)
-//
-// Past: source=3, target=10 (range [3,10])
-// Curr: source=5, target=8 (range [5,8])
-// → past가 curr을 감쌈 (3<5 && 8<10 = TRUE, surround!)
-
-// 양방향 체크:
-// - New attestation이 old를 감쌈
-// - Old attestation이 new를 감쌈
-
-// 슬래싱 페널티:
-// - 초기: effective_balance / 64 (즉시, ~0.5 ETH from 32 ETH)
-// - epoch offset 후: proportional multiplier 적용
-// - 최소 1 ETH 손실 + exit 강제 + 1년 withdrawal 대기
-
-// slashable validator의 stats (메인넷 이력):
-// - ~400 slashing 발생 (2020-2025)
-// - 대부분 validator 운영 실수 (dual setup, key migration)
-// - 악의적 공격은 거의 없음`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">1. Proposer Slashing</p>
+              <p className="text-sm text-foreground/80">같은 slot에 2개 다른 block 서명</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">2. Attester Slashing</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p><span className="font-semibold">Double Vote</span> — 같은 target epoch에 2개 다른 attestation</p>
+                <p><span className="font-semibold">Surround Vote</span> — 범위가 이전 투표를 감싸거나 감싸임</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Surround Vote 판정 예시</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-foreground/80">
+              <div>
+                <p className="text-xs text-foreground/50 mb-1">안전 (no surround)</p>
+                <p>Past: source=3, target=7 / Curr: source=5, target=9</p>
+                <p className="text-xs text-foreground/50">3&lt;5 &amp;&amp; 9&lt;7 = FALSE</p>
+              </div>
+              <div>
+                <p className="text-xs text-foreground/50 mb-1">슬래싱 대상 (surround!)</p>
+                <p>Past: source=3, target=10 / Curr: source=5, target=8</p>
+                <p className="text-xs text-foreground/50">3&lt;5 &amp;&amp; 8&lt;10 = TRUE</p>
+              </div>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2">양방향 체크 — new가 old를 감쌈 + old가 new를 감쌈</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">슬래싱 페널티</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>즉시: <code>effective_balance / 64</code> (~0.5 ETH from 32 ETH)</p>
+                <p>epoch offset 후: proportional multiplier 적용</p>
+                <p>최소 1 ETH 손실 + exit 강제 + 1년 withdrawal 대기</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">메인넷 슬래싱 이력</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>~400 slashing 발생 (2020-2025)</p>
+                <p>대부분 운영 실수 (dual setup, key migration)</p>
+                <p>악의적 공격은 거의 없음</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Slashing은 <strong>double-vote + surround-vote</strong> 2가지.<br />
           Surround vote: attestation range가 이전/이후와 겹치는 경우.<br />
@@ -54,80 +73,43 @@ export default function SlashingProtection({ onCodeRef }: Props) {
 
         {/* ── Slashing DB 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Slashing Protection DB — 구현 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// EIP-3076 compatible slashing protection DB
-type SlashingProtectionDB struct {
-    db *bolt.DB  // 독립 DB file
-}
-
-// 버킷 구조:
-// pubkeys_bucket:
-//   pubkey → ValidatorHistory
-// ValidatorHistory:
-//   - latest_signed_block_slot
-//   - min_source_epoch
-//   - max_target_epoch
-//   - attestations (최근 ~1000개)
-
-// 서명 전 체크:
-func (db *SlashingDB) CheckAttestation(
-    pubKey [48]byte,
-    data *AttestationData,
-) error {
-    history := db.getHistory(pubKey)
-
-    // 1. Min source check
-    if data.Source.Epoch < history.min_source_epoch {
-        return ErrSlashable  // source가 최소치보다 낮음
-    }
-
-    // 2. Max target check (double vote + old target)
-    if data.Target.Epoch <= history.max_target_epoch {
-        // 같은 target epoch인 경우 double vote 확인
-        past := history.getAttestationAt(data.Target.Epoch)
-        if past != nil && past.signingRoot != currentRoot {
-            return ErrDoubleVote
-        }
-    }
-
-    // 3. Surround check (pairwise)
-    for _, past := range history.attestations {
-        if past.source.epoch < data.Source.Epoch &&
-           past.target.epoch > data.Target.Epoch {
-            return ErrSurroundingVote  // past가 현재를 감쌈
-        }
-        if data.Source.Epoch < past.source.epoch &&
-           data.Target.Epoch > past.target.epoch {
-            return ErrSurroundedVote  // 현재가 past를 감쌈
-        }
-    }
-
-    return nil  // safe
-}
-
-// 서명 후 저장:
-func (db *SlashingDB) RecordAttestation(
-    pubKey [48]byte,
-    data *AttestationData,
-    signingRoot [32]byte,
-) error {
-    return db.db.Update(func(tx *bolt.Tx) error {
-        history := db.getHistory(pubKey)
-        history.Add(data, signingRoot)
-
-        // min/max 업데이트
-        history.min_source_epoch = max(history.min_source_epoch, data.Source.Epoch)
-        history.max_target_epoch = max(history.max_target_epoch, data.Target.Epoch)
-
-        return history.Save(tx, pubKey)
-    })
-}
-
-// 백업 중요성:
-// - DB 손실 → 새 validator처럼 시작 → double-signing 위험
-// - DB 항상 백업 필수 (클라우드 스토리지, RAID 등)
-// - migration 시 EIP-3076 JSON export 먼저`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">SlashingProtectionDB 구조</p>
+            <p className="text-sm text-foreground/80 mb-2"><code>db: *bolt.DB</code> — EIP-3076 compatible 독립 DB file</p>
+            <p className="text-xs font-bold text-foreground/70 mb-1">버킷 구조 (pubkeys_bucket)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>latest_signed_block_slot</code></span>
+              <span><code>min_source_epoch</code></span>
+              <span><code>max_target_epoch</code></span>
+              <span><code>attestations</code> — 최근 ~1000개</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">CheckAttestation — 서명 전 체크</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <span className="font-semibold">Min source check</span> — <code>data.Source.Epoch &lt; min_source_epoch</code> &rarr; <code>ErrSlashable</code></p>
+              <p>2. <span className="font-semibold">Max target check</span> — <code>data.Target.Epoch &lt;= max_target_epoch</code>이면 같은 epoch의 signingRoot 비교 &rarr; 다르면 <code>ErrDoubleVote</code></p>
+              <p>3. <span className="font-semibold">Surround check (pairwise)</span> — past가 현재를 감쌈 &rarr; <code>ErrSurroundingVote</code> / 현재가 past를 감쌈 &rarr; <code>ErrSurroundedVote</code></p>
+              <p>4. 모두 통과 &rarr; <code>nil</code> (safe)</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">RecordAttestation — 서명 후 저장</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p><code>db.Update()</code> 트랜잭션 내에서 history에 attestation 추가</p>
+              <p><code>min_source_epoch</code> / <code>max_target_epoch</code> 업데이트 후 <code>history.Save(tx, pubKey)</code></p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">백업 중요성</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>DB 손실 &rarr; 새 validator처럼 시작 &rarr; double-signing 위험</p>
+              <p>항상 백업 필수 (클라우드 스토리지, RAID 등)</p>
+              <p>migration 시 EIP-3076 JSON export 먼저</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Slashing Protection DB</strong>가 validator 안전의 핵심.<br />
           매 서명 전 surround-vote 양방향 체크 + double-vote 확인.<br />

@@ -29,41 +29,34 @@ export default function Discovery({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── Kademlia 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Kademlia k-bucket 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 노드 ID: 512비트 (secp256k1 공개키)
-// 실질적으로 사용: keccak256(pubkey) 256비트
-
-// K-bucket table:
-// 256개 bucket (각 비트 거리별)
-// bucket[i] = XOR 거리가 [2^i, 2^(i+1)) 인 노드들
-// 각 bucket 최대 16개 노드 저장 (k=16)
-
-pub struct KBucketTable {
-    buckets: [KBucket; 256],  // 거리별 bucket
-    local_id: NodeId,         // 내 노드 ID
-}
-
-pub struct KBucket {
-    nodes: VecDeque<Node>,  // 최대 16개
-    replacement_cache: VecDeque<Node>,  // 대기 목록
-}
-
-// XOR 거리 계산:
-fn distance(a: &NodeId, b: &NodeId) -> U256 {
-    U256::from_be_bytes(a.0) ^ U256::from_be_bytes(b.0)
-}
-
-// bucket 인덱스 계산:
-fn bucket_index(local: &NodeId, target: &NodeId) -> usize {
-    let d = distance(local, target);
-    d.leading_zeros() as usize  // 앞쪽 0 개수
-    // 255 - leading_zeros = bucket 번호
-}
-
-// 예시:
-// local=0xAAAA..., target=0xAAAB...
-// XOR = 0x0001... → leading_zeros=15 → bucket[240] 근처`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <p className="text-sm text-foreground/60">노드 ID: 512비트(<code>secp256k1</code> 공개키). 실질 사용: <code>keccak256(pubkey)</code> 256비트.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">KBucketTable</p>
+              <ul className="text-sm text-foreground/80 space-y-1">
+                <li><code>buckets: [KBucket; 256]</code> — 비트 거리별 bucket</li>
+                <li><code>local_id: NodeId</code> — 내 노드 ID</li>
+              </ul>
+              <p className="text-sm text-foreground/60 mt-2"><code>bucket[i]</code> = XOR 거리 [2^i, 2^(i+1)) 노드들. 각 bucket 최대 16개(k=16).</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">KBucket</p>
+              <ul className="text-sm text-foreground/80 space-y-1">
+                <li><code>nodes: VecDeque&lt;Node&gt;</code> — 최대 16개</li>
+                <li><code>replacement_cache: VecDeque&lt;Node&gt;</code> — 대기 목록</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">XOR 거리 계산</p>
+            <p className="text-sm text-foreground/80">
+              <code>distance(a, b)</code> = <code>U256::from_be_bytes(a.0) ^ U256::from_be_bytes(b.0)</code><br />
+              <code>bucket_index</code> = <code>255 - leading_zeros(distance)</code><br />
+              예: <code>local=0xAAAA...</code>, <code>target=0xAAAB...</code> → XOR = <code>0x0001...</code> → <code>bucket[240]</code> 근처
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Kademlia의 핵심: <strong>XOR 거리로 가까운 노드 유지</strong>.<br />
           가까운 노드일수록 많은 bucket에 저장 → 정보 밀집.<br />
@@ -72,45 +65,28 @@ fn bucket_index(local: &NodeId, target: &NodeId) -> usize {
 
         {/* ── lookup 알고리즘 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">lookup(target) — iterative 탐색</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 임의의 target NodeId에 가까운 K개 노드 찾기
-async fn lookup(&self, target: NodeId) -> Vec<Node> {
-    // 1. 초기 후보: 내 table에서 target과 가까운 α(3)개
-    let mut candidates: BinaryHeap<_> = self.closest_k(target, ALPHA);
-    let mut queried: HashSet<NodeId> = HashSet::new();
-    let mut result: Vec<Node> = Vec::new();
-
-    loop {
-        // 2. 미조회 candidate 중 가장 가까운 α개에게 FindNode 병렬 발송
-        let to_query: Vec<_> = candidates.iter()
-            .filter(|n| !queried.contains(&n.id))
-            .take(ALPHA)
-            .cloned()
-            .collect();
-
-        if to_query.is_empty() { break; }
-
-        // 3. 병렬 요청
-        let responses = join_all(
-            to_query.iter().map(|n| self.find_node(n, target))
-        ).await;
-
-        // 4. 응답(각 16개 neighbor)을 candidate에 추가
-        for response in responses {
-            queried.insert(response.sender_id);
-            for neighbor in response.neighbors {
-                candidates.push(neighbor);
-            }
-        }
-
-        // 5. 진전 없으면 종료
-        if !improved(&candidates, &result) { break; }
-        result = candidates.iter().take(K).cloned().collect();
-    }
-
-    result  // target에 가까운 K(16)개 노드
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">lookup(target) 알고리즘</p>
+          <p className="text-sm text-foreground/80 mb-2">target <code>NodeId</code>에 가까운 K(16)개 노드를 iterative하게 탐색.</p>
+          <div className="space-y-2">
+            <div className="flex gap-3 items-start text-sm border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0 w-8">1</span>
+              <span className="text-foreground/80">초기 후보: 내 table에서 target과 가까운 <code>ALPHA</code>(3)개 선택. <code>BinaryHeap</code>으로 관리.</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0 w-8">2</span>
+              <span className="text-foreground/80">미조회 후보 중 가장 가까운 <code>ALPHA</code>개에게 <code>FindNode</code> 병렬 발송.</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0 w-8">3</span>
+              <span className="text-foreground/80"><code>join_all</code>로 병렬 요청. 응답(각 16개 neighbor)을 후보에 추가.</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0 w-8">4</span>
+              <span className="text-foreground/80">진전 없으면 종료. 결과: target에 가까운 K(16)개 노드 반환.</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           lookup은 <strong>iterative 알고리즘</strong>.<br />
           매 라운드 α(3)개 노드에 병렬 쿼리 → 응답으로 더 가까운 노드 확보 → 수렴까지 반복.<br />
@@ -119,35 +95,39 @@ async fn lookup(&self, target: NodeId) -> Vec<Node> {
 
         {/* ── ENR ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ENR — Ethereum Node Record (EIP-778)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ENR: 노드 정보를 포함하는 서명된 레코드
-pub struct EnrRecord {
-    signature: Signature,       // secp256k1 서명
-    seq: u64,                   // 시퀀스 번호 (증가 시 새 버전)
-    id_scheme: String,          // "v4"
-    secp256k1: PublicKey,       // 공개키
-    ip: Option<Ipv4Addr>,       // IPv4
-    ip6: Option<Ipv6Addr>,      // IPv6
-    tcp: Option<u16>,           // eth TCP 포트
-    tcp6: Option<u16>,          // IPv6 TCP
-    udp: Option<u16>,           // discovery UDP
-    udp6: Option<u16>,          // IPv6 UDP
-    // eth2 추가 필드:
-    eth2: Option<Eth2Data>,     // fork_digest + attestation subnets
-}
-
-// 장점:
-// 1. 자체 서명 → 변조 방지
-// 2. 확장 가능 → 새 필드 추가 시 기존 노드와 호환
-// 3. 시퀀스 번호 → 노드 정보 변경 추적 (IP 변경 등)
-// 4. IPv4/IPv6 이중 스택 지원
-
-// URL 형식:
-// enr:-Iu4QFZYgTuT... (base64 인코딩된 ENR)
-
-// 부트노드 URL 예시:
-// enr:-Iu4QFZYgTuT90pfWfZjyKpKXtJGiGU...@144.91.79.251:30303`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">EnrRecord 구조체 (EIP-778)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>signature: Signature</code> — secp256k1 서명</span>
+              <span><code>seq: u64</code> — 시퀀스 번호(증가 시 새 버전)</span>
+              <span><code>secp256k1: PublicKey</code> — 공개키</span>
+              <span><code>id_scheme: String</code> — "v4"</span>
+              <span><code>ip: Option&lt;Ipv4Addr&gt;</code> / <code>ip6</code></span>
+              <span><code>tcp</code> / <code>tcp6</code> — eth TCP 포트</span>
+              <span><code>udp</code> / <code>udp6</code> — discovery UDP 포트</span>
+              <span><code>eth2: Option&lt;Eth2Data&gt;</code> — fork_digest 등</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="rounded border border-border/40 p-2 text-center">
+              <p className="text-xs text-foreground/60">자체 서명</p>
+              <p className="text-xs text-foreground/40">변조 방지</p>
+            </div>
+            <div className="rounded border border-border/40 p-2 text-center">
+              <p className="text-xs text-foreground/60">확장 가능</p>
+              <p className="text-xs text-foreground/40">새 필드 호환</p>
+            </div>
+            <div className="rounded border border-border/40 p-2 text-center">
+              <p className="text-xs text-foreground/60">시퀀스 번호</p>
+              <p className="text-xs text-foreground/40">정보 변경 추적</p>
+            </div>
+            <div className="rounded border border-border/40 p-2 text-center">
+              <p className="text-xs text-foreground/60">이중 스택</p>
+              <p className="text-xs text-foreground/40">IPv4/IPv6</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ENR</code>이 <strong>노드 identity의 정식 표현</strong>.<br />
           secp256k1 서명으로 "이 IP는 이 공개키의 노드"를 증명.<br />
@@ -156,43 +136,29 @@ pub struct EnrRecord {
 
         {/* ── Bootstrap ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Bootstrap — 네트워크 진입</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 메인넷 기본 bootnode 목록 (하드코딩)
-const MAINNET_BOOTNODES: &[&str] = &[
-    "enr:-Iu4QFZYgTuT90pfWfZjyKpKXtJGiGU...@144.91.79.251:30303",
-    "enr:-Ku4QDWoANKs8g6Xl0bkDLg9KTZHPfyd...@157.90.179.157:30303",
-    // ... 10~20개 부트노드
-];
-
-// 부팅 과정:
-async fn bootstrap(&self) -> Result<()> {
-    // 1. 하드코딩된 부트노드에 PING 발송
-    for bootnode in MAINNET_BOOTNODES {
-        let enr = EnrRecord::parse(bootnode)?;
-        self.send_ping(&enr).await?;
-    }
-
-    // 2. PONG 응답 수신 → 부트노드를 k-bucket에 추가
-    //    이 시점에서 최소 10개 피어 확보
-
-    // 3. 자기 자신에 대해 lookup 실행 → neighbor 수집
-    self.lookup(self.local_id).await?;
-
-    // 4. 랜덤 target lookup을 주기적으로 실행 (버킷 채우기)
-    self.refresh_buckets().await?;
-
-    Ok(())
-}
-
-// 결과:
-// 수 분 내에 100~300개 피어와 연결
-// 이 중 8~50개 TCP 연결 유지 (DevP2P 수준)
-
-// Bootnode는 중심이 아니라 "소개소":
-// - lookup 1회만 하면 신뢰 불필요
-// - 악의적 부트노드도 일부 유효 피어만 제공하면 OK
-// - 다양한 부트노드 운영자가 분산 보장`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">bootstrap() — 네트워크 진입 흐름</p>
+          <p className="text-sm text-foreground/60 mb-3">메인넷 기본 bootnode 10~20개 하드코딩(<code>MAINNET_BOOTNODES</code>). EF, Lighthouse, Nethermind 등 다양한 운영자가 제공.</p>
+          <div className="space-y-2 mb-3">
+            <div className="flex gap-3 items-start text-sm border-l-2 border-green-500/50 pl-3">
+              <span className="font-mono text-xs text-green-500 shrink-0 w-8">1</span>
+              <span className="text-foreground/80">하드코딩된 부트노드에 <code>PING</code> 발송. <code>EnrRecord::parse</code>로 URL 파싱.</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-green-500/50 pl-3">
+              <span className="font-mono text-xs text-green-500 shrink-0 w-8">2</span>
+              <span className="text-foreground/80"><code>PONG</code> 응답 수신 → 부트노드를 k-bucket에 추가. 최소 10개 피어 확보.</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-green-500/50 pl-3">
+              <span className="font-mono text-xs text-green-500 shrink-0 w-8">3</span>
+              <span className="text-foreground/80">자기 자신에 대해 <code>lookup(self.local_id)</code> 실행 → neighbor 수집.</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-green-500/50 pl-3">
+              <span className="font-mono text-xs text-green-500 shrink-0 w-8">4</span>
+              <span className="text-foreground/80">랜덤 target <code>refresh_buckets()</code> 주기 실행 → 수 분 내 100~300개 피어 파악.</span>
+            </div>
+          </div>
+          <p className="text-sm text-amber-600 dark:text-amber-400">Bootnode는 "소개소" 역할만 — lookup 1회 완료 후 일반 피어와 동일. 악의적 부트노드도 일부 유효 피어만 제공하면 OK.</p>
+        </div>
         <p className="leading-7">
           Bootnode는 <strong>초기 진입점 역할만</strong> — lookup 완료 후 일반 피어와 동일 취급.<br />
           하드코딩된 IP지만, 여러 운영자(EF, Lighthouse, Nethermind 등)가 각자 제공 → 탈중앙.<br />

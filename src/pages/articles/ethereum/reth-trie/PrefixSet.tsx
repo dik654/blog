@@ -29,38 +29,33 @@ export default function PrefixSet({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── PrefixSet 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PrefixSet 구현 — contains() 알고리즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct PrefixSet {
-    keys: BTreeSet<Nibbles>,
-    sorted: bool,
-}
-
-impl PrefixSet {
-    /// 주어진 prefix로 시작하는 key가 있는지 확인
-    /// 핵심 연산: trie 순회 중 "이 서브트리 재계산 필요?"
-    pub fn contains(&self, prefix: &Nibbles) -> bool {
-        // 1. prefix 이상인 첫 key 찾기 (lower_bound)
-        //    BTreeSet range는 O(log n)
-        let next_key = self.keys.range(prefix..).next();
-
-        // 2. 그 key가 실제로 prefix로 시작하는지 확인
-        next_key.map_or(false, |k| k.starts_with(prefix))
-    }
-}
-
-// 동작 예시:
-// keys = {[0x2], [0x5, 0x1], [0x5, 0x9], [0xa, 0x3]}
-// prefix = [0x5]
-//
-// range([0x5]..) → [0x5, 0x1] (first match)
-// starts_with([0x5]) → true ✓
-// → 서브트리 재계산 필요
-
-// prefix = [0x7]
-// range([0x7]..) → [0xa, 0x3]
-// starts_with([0x7]) → false
-// → 서브트리 재계산 불필요`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3">PrefixSet 구조</p>
+            <div className="space-y-2 text-xs mb-3">
+              <div><code className="text-indigo-300">keys: BTreeSet&lt;Nibbles&gt;</code> <span className="text-foreground/60">— 변경된 키 집합</span></div>
+            </div>
+            <div className="border-t border-border pt-3">
+              <p className="text-xs font-semibold text-muted-foreground mb-2"><code>contains(prefix)</code> 알고리즘</p>
+              <div className="space-y-1 text-xs text-foreground/60">
+                <p>1. <code>keys.range(prefix..)</code> → prefix 이상인 첫 key 찾기 (O(log n))</p>
+                <p>2. 해당 key가 <code>starts_with(prefix)</code>인지 확인</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">prefix = [0x5]</p>
+              <p className="text-xs text-foreground/60">range → [0x5, 0x1] → starts_with([0x5]) = true</p>
+              <p className="text-xs text-emerald-400">→ 재계산 필요</p>
+            </div>
+            <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3">
+              <p className="text-xs font-semibold text-red-400 mb-1">prefix = [0x7]</p>
+              <p className="text-xs text-foreground/60">range → [0xa, 0x3] → starts_with([0x7]) = false</p>
+              <p className="text-xs text-red-400">→ 재계산 불필요</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>contains()</code>는 trie 순회의 <strong>core primitive</strong>.<br />
           매 branch 노드 방문 시 호출 → 이 branch 아래 변경 있는지 O(log n)에 판단.<br />
@@ -69,44 +64,24 @@ impl PrefixSet {
 
         {/* ── Nibbles 표현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Nibbles — 4비트 단위 키 표현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct Nibbles {
-    /// 각 바이트가 하나의 nibble (0x0 ~ 0xf)
-    data: SmallVec<[u8; 64]>,
-}
-
-// Address → Nibbles 변환
-impl From<B256> for Nibbles {
-    fn from(hash: B256) -> Self {
-        let mut nibbles = Nibbles::with_capacity(64);
-        for byte in hash.0.iter() {
-            nibbles.push(byte >> 4);   // 상위 4비트
-            nibbles.push(byte & 0x0f); // 하위 4비트
-        }
-        nibbles
-    }
-}
-
-// 예시:
-// keccak256(addr) = 0xa7b3c5d9...
-// → Nibbles: [0xa, 0x7, 0xb, 0x3, 0xc, 0x5, 0xd, 0x9, ...]
-//   (64개 nibble)
-
-// Nibbles 연산:
-impl Nibbles {
-    pub fn starts_with(&self, prefix: &Nibbles) -> bool {
-        // prefix가 self의 앞부분과 일치?
-        self.data.starts_with(&prefix.data)
-    }
-
-    pub fn common_prefix_length(&self, other: &Nibbles) -> usize {
-        // 공통 prefix 길이 (Patricia 압축용)
-        self.data.iter().zip(other.data.iter())
-            .take_while(|(a, b)| a == b)
-            .count()
-    }
-}`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">Nibbles 구조</p>
+            <p className="text-xs text-foreground/70"><code>data: SmallVec&lt;[u8; 64]&gt;</code> — 64 이하 스택, 초과 시 힙</p>
+            <p className="text-xs text-foreground/60 mt-2">keccak256 해시 32바이트 → 각 바이트를 상위/하위 4비트로 분리 → <strong>64 nibbles</strong></p>
+            <p className="text-xs font-mono text-foreground/50 mt-1">0xa7b3c5d9... → [0xa, 0x7, 0xb, 0x3, 0xc, 0x5, 0xd, 0x9, ...]</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-3">
+              <code className="text-xs font-semibold text-violet-400">starts_with(prefix)</code>
+              <p className="text-xs text-foreground/60 mt-1">prefix가 self 앞부분과 일치하는지 확인</p>
+            </div>
+            <div className="rounded-lg border border-border p-3">
+              <code className="text-xs font-semibold text-violet-400">common_prefix_length(other)</code>
+              <p className="text-xs text-foreground/60 mt-1">공통 prefix 길이 (Patricia 압축용)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>Nibbles</code>가 <strong>트리 탐색의 기본 단위</strong>.<br />
           keccak256 해시 32바이트 → 64 nibble → 최대 trie 깊이 64.<br />
@@ -115,42 +90,26 @@ impl Nibbles {
 
         {/* ── freeze 최적화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">freeze() — 불변화 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl PrefixSet {
-    /// 모든 삽입 완료 후 불변 버전으로 변환
-    /// 이후 contains() 호출이 더 빠름
-    pub fn freeze(self) -> FrozenPrefixSet {
-        FrozenPrefixSet {
-            keys: self.keys.into_iter().collect::<Vec<_>>(),
-        }
-    }
-}
-
-pub struct FrozenPrefixSet {
-    keys: Vec<Nibbles>,  // 정렬된 Vec
-}
-
-impl FrozenPrefixSet {
-    pub fn contains(&self, prefix: &Nibbles) -> bool {
-        // binary_search로 O(log n) 확인
-        // BTreeSet보다 캐시 효율 높음 (연속 메모리)
-        match self.keys.binary_search_by(|k| k.as_slice().cmp(prefix)) {
-            Ok(_) => true,
-            Err(i) => {
-                // i = prefix보다 크거나 같은 첫 위치
-                self.keys.get(i).map_or(false, |k| k.starts_with(prefix))
-            }
-        }
-    }
-}
-
-// 성능 차이:
-// BTreeSet: 노드 간 pointer chase → 캐시 miss 빈번
-// Vec + binary_search: 연속 메모리 → 캐시 효율 ~3배
-//
-// trie 순회는 contains() 수천~수만 회 호출
-// → freeze() 최적화가 유의미`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-sm text-emerald-400 mb-2"><code>freeze()</code> → FrozenPrefixSet</p>
+            <p className="text-xs text-foreground/70">BTreeSet → 정렬된 <code>Vec&lt;Nibbles&gt;</code> 변환</p>
+            <p className="text-xs text-foreground/60 mt-1"><code>contains()</code>는 <code>binary_search</code>로 O(log n) + <code>starts_with</code> 확인</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3">
+              <p className="text-xs font-semibold text-red-400">BTreeSet</p>
+              <p className="text-xs text-foreground/60">노드 간 pointer chase → 캐시 miss 빈번</p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400">Vec + binary_search</p>
+              <p className="text-xs text-foreground/60">연속 메모리 → 캐시 효율 ~3배</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3 text-center">
+            <p className="text-xs text-foreground/70">trie 순회 시 <code>contains()</code> 수천~수만 회 호출 → <code>freeze()</code> 최적화 유의미</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>freeze()</code>로 BTreeSet → Vec 변환 — <strong>메모리 지역성 개선</strong>.<br />
           BTreeSet은 트리 노드가 힙 곳곳에 분산, Vec은 연속 메모리.<br />
@@ -159,46 +118,40 @@ impl FrozenPrefixSet {
 
         {/* ── 병합 연산 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PrefixSet 병합 — 배치 블록 누적</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 여러 블록의 PrefixSet 병합 (ExecutionStage의 배치 누적)
-impl PrefixSet {
-    pub fn extend(&mut self, other: PrefixSet) {
-        self.keys.extend(other.keys);
-        // BTreeSet이 자동으로 정렬 유지 + 중복 제거
-    }
-}
-
-// MerkleStage의 동작:
-// provider.changed_prefix_sets(checkpoint, target) 호출
-// → checkpoint+1 ~ target 범위 ChangeSets 전체 조회
-// → 모든 변경 address를 하나의 PrefixSet으로 통합
-
-fn changed_prefix_sets(
-    &self,
-    from_block: u64,
-    to_block: u64,
-) -> Result<PrefixSets> {
-    let mut account_prefix_set = PrefixSet::new();
-    let mut storage_prefix_sets = HashMap::new();
-
-    // AccountChangeSets 테이블 스캔
-    for (block, entries) in self.account_history_range(from_block..=to_block)? {
-        for (address, _) in entries {
-            account_prefix_set.insert(keccak256(address).into());
-        }
-    }
-
-    // StorageChangeSets 테이블 스캔
-    for (block, addr, slot, _) in self.storage_history_range(from_block..=to_block)? {
-        storage_prefix_sets
-            .entry(keccak256(addr))
-            .or_insert_with(PrefixSet::new)
-            .insert(keccak256(slot).into());
-    }
-
-    Ok(PrefixSets { account: account_prefix_set, storage: storage_prefix_sets })
-}`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="font-semibold text-sm mb-3">PrefixSet 병합 — 배치 블록 누적</p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted text-sky-400 shrink-0">1</span>
+                <div>
+                  <p className="text-sm font-semibold"><code>extend(other)</code></p>
+                  <p className="text-xs text-foreground/60">BTreeSet이 자동 정렬 + 중복 제거</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted text-emerald-400 shrink-0">2</span>
+                <div>
+                  <p className="text-sm font-semibold"><code>changed_prefix_sets(from, to)</code></p>
+                  <p className="text-xs text-foreground/60">checkpoint ~ target 범위 ChangeSets 전체 조회</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-3">
+              <p className="text-xs font-semibold text-sky-400 mb-1">AccountChangeSets 스캔</p>
+              <p className="text-xs text-foreground/60">각 address → <code>keccak256(addr)</code> → account PrefixSet에 insert</p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">StorageChangeSets 스캔</p>
+              <p className="text-xs text-foreground/60">addr별 <code>keccak256(slot)</code> → storage PrefixSets에 insert</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3 text-center">
+            <p className="text-xs text-foreground/70">10K 블록 배치 → 수만 개 변경 계정 → <strong>PrefixSet 1개로 통합</strong> → MerkleStage 1회 호출</p>
+          </div>
+        </div>
         <p className="leading-7">
           MerkleStage는 <strong>여러 블록의 변경을 통합</strong>해 한 번에 증분 계산.<br />
           10K 블록 배치 → 총 변경 계정 수만 개 → PrefixSet 1개로 통합.<br />

@@ -16,52 +16,31 @@ export default function PoolInclusion({ onCodeRef }: Props) {
 
         {/* ── Attestation pool 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">AttestationPool — 집계 후보 관리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 attestation pool
-// 유입된 attestations를 정리/집계/관리
-
-type Pool struct {
-    aggregatedLock sync.RWMutex
-    unaggregatedLock sync.RWMutex
-
-    aggregatedAttestations map[[32]byte]*Attestation  // 집계 완료
-    unaggregatedAttestations map[[32]byte]*Attestation  // 단일 validator
-
-    blockAttestations []*Attestation  // 블록 포함 대기
-}
-
-// 주요 연산:
-// SaveAggregatedAttestation: 집계된 것 저장 (같은 data key로 병합)
-// SaveUnaggregatedAttestation: 단일 저장
-// AggregateUnaggregatedAttestations: 주기적 집계 (같은 data 묶기)
-// AttestationsForInclusion: 블록 포함용 최적 선택
-
-// 집계 알고리즘 (Boyer-Moore 기반):
-// 같은 AttestationData끼리 묶되
-// aggregation_bits가 "disjoint"인 것만 병합
-// (동일 bit 있으면 병합 불가, 정당한 집계가 아님)
-
-func (p *Pool) tryMerge(a, b *Attestation) (*Attestation, bool) {
-    if a.Data.HashTreeRoot() != b.Data.HashTreeRoot() {
-        return nil, false  // 다른 data
-    }
-
-    // bit overlap 체크
-    if !a.AggregationBits.Disjoint(b.AggregationBits) {
-        return nil, false  // 겹치는 validator
-    }
-
-    // 병합
-    mergedBits := a.AggregationBits.Or(b.AggregationBits)
-    mergedSig := bls.AggregatePublicKeys([]Signature{a.Signature, b.Signature})
-
-    return &Attestation{
-        AggregationBits: mergedBits,
-        Data: a.Data,
-        Signature: mergedSig,
-    }, true
-}`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Pool 구조체</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>aggregatedAttestations: map[[32]byte]*Attestation</code> — 집계 완료</span>
+              <span><code>unaggregatedAttestations: map[[32]byte]*Attestation</code> — 단일 validator</span>
+              <span><code>blockAttestations: []*Attestation</code> — 블록 포함 대기</span>
+              <span>각각 <code>sync.RWMutex</code>로 동시성 보호</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">SaveAggregated</p><p className="text-foreground/50">집계된 것 저장</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">SaveUnaggregated</p><p className="text-foreground/50">단일 저장</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">AggregateAll</p><p className="text-foreground/50">주기적 집계</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">ForInclusion</p><p className="text-foreground/50">블록 포함용 선택</p></div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">tryMerge — 집계 병합 (Boyer-Moore 기반)</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>HashTreeRoot()</code> 비교 — 다른 <code>AttestationData</code>이면 병합 불가</p>
+              <p>2. <code>AggregationBits.Disjoint()</code> — bit 겹침 시 병합 불가 (정당한 집계가 아님)</p>
+              <p>3. <code>AggregationBits.Or()</code>로 bit 합침 + <code>bls.AggregatePublicKeys()</code>로 서명 합침</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           AttestationPool이 <strong>집계 후보 수집 & 병합</strong>.<br />
           aggregated/unaggregated 분리 관리 → efficient 선택.<br />
@@ -70,70 +49,26 @@ func (p *Pool) tryMerge(a, b *Attestation) (*Attestation, bool) {
 
         {/* ── 블록 포함 선택 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Block Inclusion — 최대 128 aggregates</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 블록 proposer가 attestations 선택 (최대 128 per block)
-
-// MAX_ATTESTATIONS = 128
-
-func (p *Pool) AttestationsForInclusion(
-    ctx context.Context,
-    slot Slot,
-) ([]*Attestation, error) {
-    // 1. pool에서 후보 수집
-    candidates := p.GetAllAttestations()
-
-    // 2. 유효 필터링
-    valid := []*Attestation{}
-    for _, att := range candidates {
-        // 슬롯 범위: slot - 32 <= att.slot < slot - 1
-        if att.Data.Slot >= slot - SLOTS_PER_EPOCH &&
-           att.Data.Slot < slot - 1 {
-            valid = append(valid, att)
-        }
-    }
-
-    // 3. Attestation score 계산
-    //    - 집계된 validator 수 (bit count)
-    //    - inclusion distance (낮을수록 좋음)
-    //    - head/source/target vote 정확도
-    type scored struct {
-        att *Attestation
-        score uint64
-    }
-    scores := []scored{}
-    for _, att := range valid {
-        s := att.AggregationBits.Count() * 1000  // validator 수 가중치
-        s -= (slot - att.Data.Slot) * 100         // distance 감점
-        scores = append(scores, scored{att, s})
-    }
-
-    // 4. Greedy 선택 (중복 bit 제외)
-    sort.SliceStable(scores, func(i, j int) bool {
-        return scores[i].score > scores[j].score
-    })
-
-    selected := []*Attestation{}
-    coveredBits := bitfield.Bitlist{}
-    for _, sc := range scores {
-        // 이미 포함된 validator 제외
-        newBits := sc.att.AggregationBits.Xor(coveredBits)
-        if newBits.Count() == 0 { continue }
-
-        selected = append(selected, sc.att)
-        coveredBits = coveredBits.Or(sc.att.AggregationBits)
-
-        if len(selected) >= 128 { break }
-    }
-
-    return selected, nil
-}
-
-// 보상 계산:
-// - Proposer reward: 포함된 validator 수에 비례
-// - Attester reward: head/source/target 정확도 × (1/inclusion_distance)
-// - inclusion_distance 1: 최대 reward
-// - inclusion_distance 32: 최소 reward (거의 제로)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">AttestationsForInclusion 흐름 (MAX_ATTESTATIONS = 128)</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>GetAllAttestations()</code> — pool에서 후보 수집</p>
+              <p>2. 유효 필터링 — <code>slot - 32 &lt;= att.slot &lt; slot - 1</code></p>
+              <p>3. Score 계산 — <code>AggregationBits.Count() * 1000</code> (validator 수) - <code>(slot - att.Slot) * 100</code> (distance 감점)</p>
+              <p>4. Greedy 선택 — score 내림차순 정렬 후 <code>coveredBits</code>와 Xor로 중복 bit 제외, 128개까지</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">보상 계산</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><span className="font-semibold">Proposer reward</span> — 포함된 validator 수에 비례</span>
+              <span><span className="font-semibold">Attester reward</span> — head/source/target 정확도 x (1/inclusion_distance)</span>
+              <span><span className="font-semibold">distance 1</span> — 최대 reward</span>
+              <span><span className="font-semibold">distance 32</span> — 최소 reward (거의 0)</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Block proposer가 <strong>최대 128 aggregate 선택</strong>.<br />
           validator count + inclusion distance 점수화 → greedy 선택.<br />

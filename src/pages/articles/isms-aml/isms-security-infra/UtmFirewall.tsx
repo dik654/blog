@@ -1,8 +1,14 @@
+import UtmFirewallViz from './viz/UtmFirewallViz';
+import UtmNgfwInline from './viz/UtmNgfwInline';
+import FirewallRulesInline from './viz/FirewallRulesInline';
+
 export default function UtmFirewall() {
   return (
     <section id="utm-firewall" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">UTM과 방화벽 — 인바운드/아웃바운드 규칙</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <UtmFirewallViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">방화벽(Firewall)이란</h3>
         <p>
@@ -54,6 +60,8 @@ export default function UtmFirewall() {
           현재 대부분의 방화벽은 Stateful 방식.<br />
           Stateless는 클라우드 환경의 네트워크 ACL(Access Control List) 등 제한적 용도로만 사용한다.
         </p>
+
+        <UtmNgfwInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">UTM (Unified Threat Management, 통합위협관리)</h3>
         <p>
@@ -147,6 +155,8 @@ export default function UtmFirewall() {
           실무에서 UTM과 NGFW의 경계는 점점 흐려지고 있다.<br />
           최신 UTM 장비도 DPI, 애플리케이션 식별 기능을 포함하는 경우가 많아 두 용어가 혼용되기도 한다.
         </p>
+
+        <FirewallRulesInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">인바운드 규칙 설계</h3>
         <p>

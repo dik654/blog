@@ -11,86 +11,78 @@ export default function Settlement({ onCodeRef: _onCodeRef }: { onCodeRef: (key:
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">On-chain Settlement 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Onchain Settlement:
-
-// Smart Contract Model:
-// contract StorageDeal {
-//     client: address
-//     provider: address
-//     price: uint256 per GiB per epoch
-//     deposit: uint256
-//     start_epoch: uint256
-//     end_epoch: uint256
-//     sla: SLATerms
-//
-//     function pullPayment(uint256 epoch) {
-//         require(pdpProofSubmitted(epoch));
-//         uint256 amount = calculatePayment(epoch);
-//         provider.transfer(amount);
-//     }
-// }
-
-// Payment Flow:
-// 1. Client deposits FIL to contract
-// 2. SP stores data + generates PDP proofs
-// 3. Contract verifies proof validity
-// 4. Auto-release payment per epoch
-// 5. End of term: final settlement
-
-// SLA Enforcement:
-// - uptime: 99.9% guaranteed
-// - response time: < 100ms p95
-// - retrievability: 99.99%
-// - PDP success rate: 100%
-
-// Automatic Penalties:
-// if (pdp_missed):
-//     penalty = 10 × price_per_epoch
-//     transfer(penalty, client)
-// if (retrieval_slow):
-//     reduce_payment(10%)
-// if (unavailable):
-//     terminate_contract()
-//     refund(client)
-
-// Metering:
-// - storage: epochs × GiB
-// - retrieval: GiB served
-// - operations: API calls
-// - on-chain tracked
-
-// Batching:
-// - multiple deals per SP
-// - batched settlements
-// - gas efficiency
-// - periodic sweeps
-
-// FVM Execution:
-// - Solidity/WASM contracts
-// - FVM runtime
-// - EVM compatible
-// - deterministic
-
-// Dispute Resolution:
-// - on-chain PDP proofs are final
-// - SP proves storage
-// - client can challenge
-// - arbitration via governance
-
-// Cost Components:
-// - storage price (hot)
-// - retrieval price (per GiB out)
-// - operation fees
-// - penalties / rewards
-
-// Example economics:
-// - store 1 TiB for 1 year
-// - $6/TiB/month hot
-// - $72/year total
-// - escrowed upfront
-// - released per epoch (30s)`}
-        </pre>
+        <div className="bg-muted rounded-lg p-4 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2">Smart Contract Model (<code className="text-xs">StorageDeal</code>)</h4>
+          <ul className="text-sm space-y-1 text-muted-foreground">
+            <li><code className="text-xs bg-background px-1 rounded">client</code> / <code className="text-xs bg-background px-1 rounded">provider</code>: 참여자 주소</li>
+            <li><code className="text-xs bg-background px-1 rounded">price</code>: per GiB per epoch 가격</li>
+            <li><code className="text-xs bg-background px-1 rounded">deposit</code>: 예치금, <code className="text-xs bg-background px-1 rounded">start_epoch</code> / <code className="text-xs bg-background px-1 rounded">end_epoch</code>: 기간</li>
+            <li><code className="text-xs bg-background px-1 rounded">pullPayment(epoch)</code>: PDP proof 확인 후 해당 epoch 결제 해제 → provider에 전송</li>
+          </ul>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Payment Flow</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>Client가 FIL을 contract에 예치</li>
+              <li>SP가 데이터 저장 + PDP proof 생성</li>
+              <li>Contract가 proof validity 검증</li>
+              <li>epoch마다 자동 결제 해제</li>
+              <li>기간 종료 시 최종 정산</li>
+            </ol>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">SLA Enforcement</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>uptime: <code className="text-xs bg-background px-1 rounded">99.9%</code> 보장</li>
+              <li>response time: <code className="text-xs bg-background px-1 rounded">&lt;100ms p95</code></li>
+              <li>retrievability: <code className="text-xs bg-background px-1 rounded">99.99%</code></li>
+              <li>PDP success rate: <code className="text-xs bg-background px-1 rounded">100%</code></li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Automatic Penalties</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>PDP 미제출: <code className="text-xs bg-background px-1 rounded">penalty = 10 x price_per_epoch</code> → client에 전송</li>
+              <li>retrieval 지연: 결제 10% 감소</li>
+              <li>unavailable: 계약 종료 + client 환불</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Metering</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>storage: <code className="text-xs bg-background px-1 rounded">epochs x GiB</code></li>
+              <li>retrieval: GiB served</li>
+              <li>operations: API calls</li>
+              <li>온체인 추적</li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Batching</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>SP당 다수 deal 일괄 처리</li>
+              <li>gas efficiency + periodic sweeps</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">FVM Execution</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Solidity/WASM contracts</li>
+              <li>EVM compatible, deterministic</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Example (1 TiB / 1 year)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs bg-background px-1 rounded">$6/TiB/mo</code> = $72/year</li>
+              <li>upfront escrow, 30s epoch 단위 해제</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Settlement: <strong>FVM smart contracts + automatic SLA enforcement</strong>.<br />
           PDP success → auto-release payment, miss → penalty.<br />

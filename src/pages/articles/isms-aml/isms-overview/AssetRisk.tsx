@@ -1,8 +1,13 @@
+import AssetRiskViz from './viz/AssetRiskViz';
+import CIAEvalViz from './viz/CIAEvalViz';
+import RiskEvalViz from './viz/RiskEvalViz';
+
 export default function AssetRisk() {
   return (
     <section id="asset-risk" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">정보자산 분류와 위험평가</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <AssetRiskViz />
 
         <p>
           ISMS-P 인증의 출발점은 "무엇을 보호할 것인가"를 정의하는 것.<br />
@@ -53,6 +58,7 @@ export default function AssetRisk() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">보안등급 산정: CIA 평가</h3>
+        <CIAEvalViz />
         <p>
           각 자산에 대해 CIA 3요소(기밀성·무결성·가용성)를 1~3점으로 평가, 평균값으로 보안등급을 결정.<br />
           CIA는 정보보안의 가장 기본적인 세 축:
@@ -112,6 +118,7 @@ export default function AssetRisk() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">위험평가 5단계</h3>
+        <RiskEvalViz />
         <p>
           자산 분류와 보안등급 산정이 완료되면, 각 자산에 대한 위험(Risk)을 체계적으로 평가.<br />
           위험 = 자산 가치 x 위협 발생 가능성 x 취약점 노출 정도. 이 공식을 5단계로 풀어낸다:

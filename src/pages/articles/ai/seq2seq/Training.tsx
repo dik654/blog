@@ -1,4 +1,6 @@
 import BackpropViz from './viz/BackpropViz';
+import S2STrainingViz from './viz/S2STrainingViz';
+import M from '@/components/ui/math';
 
 export default function Training() {
   return (
@@ -12,48 +14,13 @@ export default function Training() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Teacher Forcing 원리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Teacher Forcing vs Free Running
-//
-// [학습 시] Teacher Forcing
-//   decoder input = 정답 시퀀스 (shifted)
-//   입력:  <SOS>, y_1, y_2, y_3, ...  (ground truth)
-//   타겟:  y_1, y_2, y_3, y_4, ...
-//
-//   장점:
-//   - 모든 타임스텝 병렬 학습
-//   - 오류 누적 없음
-//   - 빠른 수렴
-//
-//   단점:
-//   - 추론 시 동작과 다름
-//   - Exposure bias 발생
-//
-// [추론 시] Free Running
-//   decoder input = 이전 예측
-//   입력:  <SOS>, ŷ_1, ŷ_2, ŷ_3, ...  (model's prediction)
-//
-//   오류가 다음 스텝으로 전파됨
-
-// 손실 계산:
-//   L = -Σ_{t=1}^{T'} log P(y_t | y_{<t}^{true}, X)
-//                                ↑
-//                      teacher forcing 적용
-//
-//   P(y_t | ...) = softmax(W · s_t)[y_t]
-//
-// 역전파 경로 (BPTT):
-//   L → softmax → decoder LSTM 전체 → encoder LSTM 전체
-//
-//   모든 파라미터 동시 업데이트
-//   (W_enc, W_dec, W_embed, W_out, ...)
-
-// Scheduled Sampling (Bengio 2015):
-//   - 학습 중 일부 확률로 모델 예측 사용
-//   - ε-probability로 ground truth, (1-ε)로 모델 출력
-//   - ε를 학습 진행과 함께 감소
-//   - exposure bias 완화`}
-        </pre>
+        <S2STrainingViz />
+        <M display>{'\\mathcal{L} = -\\sum_{t=1}^{T\'} \\log \\underbrace{P(y_t \\mid y_{<t}^{\\text{true}},\\, X)}_{\\text{teacher forcing 적용 cross-entropy}}'}</M>
+        <p className="leading-7">
+          Teacher Forcing: decoder 입력 = <M>{'y^*_{t-1}'}</M> (정답) — 병렬 학습 가능, 빠른 수렴<br />
+          Free Running: decoder 입력 = <M>{'\\hat{y}_{t-1}'}</M> (예측) — 오류 누적 위험
+        </p>
+        <M display>{'\\text{Scheduled Sampling}: \\quad P(\\text{use\\_target}) = \\varepsilon, \\quad \\varepsilon: 1 \\to 0 \\text{ (점진 감소)}'}</M>
         <p className="leading-7">
           요약 1: <strong>Teacher Forcing</strong>이 학습 속도와 안정성의 핵심.<br />
           요약 2: 모든 타임스텝 병렬 학습으로 <strong>GPU 효율</strong> 확보.<br />

@@ -14,61 +14,50 @@ export default function CheckpointSync({ onCodeRef: _ }: Props) {
 
         {/* ── Checkpoint Sync 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CheckpointSync 구현 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CLI 플래그:
-// --checkpoint-sync-url=https://mainnet.checkpoint.sigp.io
-// --genesis-beacon-api-url=https://mainnet.checkpoint.sigp.io
-
-func (s *Service) doCheckpointSync(ctx context.Context) error {
-    url := s.cfg.CheckpointSyncURL
-
-    // 1. genesis 정보 다운로드
-    genesisState, err := fetchGenesisState(url)
-    if err != nil { return err }
-    // 검증: genesis_validators_root와 config 일치
-
-    // 2. finalized state 다운로드
-    // GET /eth/v2/debug/beacon/states/finalized
-    stateBytes, err := httpGet(url + "/eth/v2/debug/beacon/states/finalized", "application/octet-stream")
-    if err != nil { return err }
-
-    finalizedState := &BeaconState{}
-    if err := finalizedState.UnmarshalSSZ(stateBytes); err != nil {
-        return err
-    }
-
-    // 3. finalized state의 latest_block_header로 block root 계산
-    blockRoot, err := finalizedState.LatestBlockHeader.HashTreeRoot()
-    // 주의: latest_block_header.state_root는 이 시점 ZERO_HASH
-    // 계산 전에 state_root를 기존 값으로 채워줘야 함
-    if err != nil { return err }
-
-    // 4. 해당 block 다운로드
-    blockBytes, err := httpGet(
-        url + "/eth/v2/beacon/blocks/" + hex(blockRoot),
-        "application/octet-stream",
-    )
-    finalizedBlock := &SignedBeaconBlock{}
-    finalizedBlock.UnmarshalSSZ(blockBytes)
-
-    // 5. DB 초기화
-    // - SaveGenesisState(genesisState)
-    // - SaveState(finalizedState)
-    // - SaveBlock(finalizedBlock)
-    // - SetHead(blockRoot)
-    // - SetFinalizedCheckpoint(...)
-
-    // 6. P2P 시작 후 tip까지 regular sync 로 진전
-
-    return nil
-}
-
-// 소요 시간:
-// - state 다운로드 (~250 MB): 10~30초
-// - genesis state: 1초
-// - 검증: 5초
-// - 총: 수 분 (네트워크 속도 따라)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-1">CLI 플래그</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-foreground/70 font-mono">
+              <span>--checkpoint-sync-url=https://mainnet.checkpoint.sigp.io</span>
+              <span>--genesis-beacon-api-url=https://mainnet.checkpoint.sigp.io</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3"><code>doCheckpointSync()</code> — 6단계 흐름</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80">genesis 정보 다운로드 — <code>fetchGenesisState(url)</code>. <code>genesis_validators_root</code>와 config 일치 검증</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80">finalized state 다운로드 — <code>GET /eth/v2/debug/beacon/states/finalized</code> → <code>UnmarshalSSZ</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80">block root 계산 — <code>LatestBlockHeader.HashTreeRoot()</code>. 주의: <code>state_root</code>를 먼저 채워야 함(ZERO_HASH 문제)</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
+                <span className="font-mono text-xs text-orange-500 shrink-0">4</span>
+                <div className="text-foreground/80">finalized block 다운로드 — <code>GET /eth/v2/beacon/blocks/{'{blockRoot}'}</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-red-500/50 pl-3">
+                <span className="font-mono text-xs text-red-400 shrink-0">5</span>
+                <div className="text-foreground/80">DB 초기화 — <code>SaveGenesisState</code> / <code>SaveState</code> / <code>SaveBlock</code> / <code>SetHead</code> / <code>SetFinalizedCheckpoint</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-cyan-500/50 pl-3">
+                <span className="font-mono text-xs text-cyan-500 shrink-0">6</span>
+                <div className="text-foreground/80">P2P 시작 후 tip까지 Regular Sync로 진전</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">state ~250MB: 10~30초</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">genesis: 1초</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">검증: 5초</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">총: 수 분</div>
+          </div>
+        </div>
         <p className="leading-7">
           Checkpoint Sync는 <strong>수 분 내 완료</strong>.<br />
           finalized state + block 2개 다운로드 → DB 초기화.<br />
@@ -85,43 +74,42 @@ func (s *Service) doCheckpointSync(ctx context.Context) error {
 
         {/* ── 신뢰 소스 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">신뢰할 수 있는 체크포인트 소스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 공개 checkpoint sync URLs (2025):
-//
-// Ethereum Mainnet:
-// - https://mainnet.checkpoint.sigp.io (Sigma Prime/Lighthouse)
-// - https://beaconstate.info (독립 운영)
-// - https://sync.invis.tools (Invis)
-// - https://checkpointz.pietjepuk.net (커뮤니티)
-// - https://beaconstate.ethstaker.cc (EthStaker)
-//
-// Testnet (Holesky):
-// - https://holesky.checkpoint.sigp.io
-//
-// OP Mainnet (Optimism):
-// - https://op-sepolia.checkpoint.sigp.io
-
-// 신뢰 검증:
-// 1. 여러 소스에서 같은 checkpoint 가져오기
-// 2. state_root / block_root 비교
-// 3. 모두 일치하면 신뢰
-// 4. 불일치 → 다른 소스 시도
-
-// Weak subjectivity check:
-// - checkpoint가 현재 finalized checkpoint의 최근 WS_PERIOD 내여야 함
-// - 메인넷 WS_PERIOD ≈ 256 epochs (~27시간)
-// - 너무 오래된 checkpoint는 거부
-
-// 보안 고려사항:
-// - TLS 필수 (MITM 방지)
-// - HTTPS 검증된 CA 사용
-// - Self-hosted checkpoint 운영 가능 (조직 내부)
-
-// 자체 운영 시:
-// Prysm beacon-chain에서:
-// HTTP API endpoint /eth/v2/debug/beacon/states/finalized 제공
-// 이를 다른 node가 checkpoint source로 사용 가능`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">공개 checkpoint sync URLs (2025)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Mainnet</span> — mainnet.checkpoint.sigp.io (Sigma Prime)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Mainnet</span> — beaconstate.info (독립)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Mainnet</span> — sync.invis.tools (Invis)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Mainnet</span> — beaconstate.ethstaker.cc (EthStaker)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Holesky</span> — holesky.checkpoint.sigp.io</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">OP Sepolia</span> — op-sepolia.checkpoint.sigp.io</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">신뢰 검증 절차</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>1. 여러 소스에서 같은 checkpoint 가져오기</p>
+                <p>2. <code>state_root</code> / <code>block_root</code> 비교</p>
+                <p>3. 모두 일치하면 신뢰 / 불일치 → 다른 소스 시도</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Weak Subjectivity Check</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>checkpoint가 <code>WS_PERIOD</code> 내여야 안전</p>
+                <p>메인넷 WS_PERIOD ~ 256 epochs (~27시간)</p>
+                <p>너무 오래된 checkpoint → 거부</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">TLS 필수 (MITM 방지)</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">HTTPS + 검증된 CA</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Self-hosted 가능</div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Checkpoint URL</strong>은 신뢰 단일점 — 선택 중요.<br />
           여러 source 비교로 검증 → 조작 감지.<br />

@@ -1,7 +1,12 @@
+import ProofOfReservesViz from './viz/ProofOfReservesViz';
+import MerkleTreePoRViz from './viz/MerkleTreePoRViz';
+import ZkSnarkPoRViz from './viz/ZkSnarkPoRViz';
+
 export default function ProofOfReserves() {
   return (
     <section id="proof-of-reserves" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">준비금 증명(PoR)과 온체인 검증</h2>
+      <ProofOfReservesViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-4">PoR이란</h3>
@@ -78,6 +83,10 @@ export default function ProofOfReserves() {
           일치하면 "나의 잔고가 거래소 총 잔고에 포함되어 있다"는 것이 수학적으로 증명된다.
         </p>
 
+        <div className="not-prose my-6">
+          <MerkleTreePoRViz />
+        </div>
+
         <h3 className="text-xl font-semibold mt-8 mb-4">외부 감사와 온체인 주소 공개</h3>
         <p className="leading-7">
           머클 트리 검증만으로는 "거래소가 정말 그 자산을 보유하는지"까지 증명하지 못한다.
@@ -137,6 +146,10 @@ export default function ProofOfReserves() {
         <p className="leading-7">
           이 세 조건을 영지식으로 증명하면, 개별 이용자의 잔고 정보를 노출하지 않으면서도 전체 준비금의 건전성을 검증할 수 있다.
         </p>
+
+        <div className="not-prose my-6">
+          <ZkSnarkPoRViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">PoR의 한계</h3>
         <p className="leading-7">

@@ -1,8 +1,15 @@
+import OverviewViz from './viz/OverviewViz';
+import DataAtRestInlineViz from './viz/DataAtRestInlineViz';
+import TlsHandshakeInlineViz from './viz/TlsHandshakeInlineViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">암호화가 필요한 곳</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">ISMS 2.7 암호화 적용 요구사항</h3>
         <p className="leading-7">
           ISMS-P 인증 기준 2.7(암호화 적용)은 개인정보와 인증정보를 저장하거나 전송할 때 암호화를 의무화한다.
@@ -47,6 +54,8 @@ export default function Overview() {
           국내 법령(개인정보의 안전성 확보조치 기준)은 주민등록번호, 여권번호, 바이오인식정보 등을 AES-128 이상으로 암호화하도록 명시한다.
         </p>
 
+        <DataAtRestInlineViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">전송 시 암호화 (Data in Transit)</h3>
         <p className="leading-7">
           전송 시 암호화는 네트워크를 통해 이동하는 데이터를 도청과 변조로부터 보호한다.
@@ -70,6 +79,8 @@ export default function Overview() {
           VPN(Virtual Private Network)은 원격 접속 시 전체 통신 구간을 암호화 터널로 감싸는 역할을 한다.
           재택 근무자나 외부 협력사가 내부 시스템에 접근할 때 VPN을 필수로 적용하여 공용 네트워크 구간의 도청을 방지한다.
         </p>
+
+        <TlsHandshakeInlineViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">비밀번호 저장: 단방향 해시</h3>
         <p className="leading-7">

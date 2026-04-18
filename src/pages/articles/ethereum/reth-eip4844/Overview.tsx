@@ -21,36 +21,42 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── Blob TX 동기 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">EIP-4844 동기 — 롤업 DA 비용 절감</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// EIP-4844 이전 (2024-03 이전):
-// 롤업(Optimism, Arbitrum, Base)은 calldata로 DA 제공
-// - calldata 바이트당 ~16 gas (zero는 4 gas)
-// - 4MB rollup batch = ~4M × 16 = 64M gas → 거의 2개 블록
-// - 롤업 TX 수수료의 80%가 DA 비용
-//
-// 문제: 이더리움 메인넷이 롤업 확장성의 병목
-
-// EIP-4844 (Proto-Danksharding):
-// Blob = 128KB 데이터 청크
-// - 블록당 최대 6 blob (768KB)
-// - 별도 gas market (blob_gas)
-// - 임시 저장 (약 18일, ~4096 epoch)
-// - EVM에서 직접 읽기 불가 → point evaluation precompile로만 접근
-
-// 목표:
-// - 롤업 DA 비용 10~100배 감소
-// - 메인넷 TPS 영향 최소화 (blob은 별도 대역폭)
-
-// 실제 효과 (2024~2025 관측):
-// - L2 TX 수수료: $0.05 → $0.005 (10배 하락)
-// - Base, Arbitrum, Optimism 사용량 급증
-// - L2 TPS: 수십 → 수천
-
-// 경제적 영향:
-// - 메인넷 base_fee 유지 (calldata 사용 감소)
-// - blob_gas market 별도 형성
-// - validator 수익 중 ~1~5%가 blob_gas fee`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-red-400 mb-2">EIP-4844 이전</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              롤업(Optimism, Arbitrum, Base)은 calldata로 DA 제공.<br />
+              calldata 바이트당 ~16 gas (zero는 4 gas).<br />
+              4MB rollup batch = ~64M gas — 거의 2개 블록 소모.<br />
+              롤업 TX 수수료의 <strong>80%</strong>가 DA 비용.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">EIP-4844 (Proto-Danksharding)</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              Blob = 128KB 데이터 청크, 블록당 최대 6개(768KB).<br />
+              별도 gas market(<code className="text-xs">blob_gas</code>) 운영.<br />
+              임시 저장 ~18일(4096 epoch) 후 폐기.<br />
+              EVM 직접 읽기 불가 — point evaluation precompile만 접근.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-blue-400 mb-2">실제 효과 (2024~2025)</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              L2 TX 수수료: $0.05 → $0.005 (<strong>10배 하락</strong>).<br />
+              Base, Arbitrum, Optimism 사용량 급증.<br />
+              L2 TPS: 수십 → 수천.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-amber-400 mb-2">경제적 영향</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              메인넷 <code className="text-xs">base_fee</code> 유지 (calldata 사용 감소).<br />
+              <code className="text-xs">blob_gas</code> market 별도 형성.<br />
+              validator 수익 중 ~1~5%가 blob_gas fee.
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           EIP-4844는 <strong>Proto-Danksharding</strong> — 전체 Danksharding의 예비 단계.<br />
           Blob을 임시 저장(~18일)하고 그 이후 폐기 → 상태 영구 팽창 방지.<br />
@@ -59,47 +65,36 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── BlobTransaction 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Blob TX 구조 — EIP-4844 Type 3</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// EIP-4844 TX (type = 0x03)
-pub struct TxEip4844 {
-    pub chain_id: u64,
-    pub nonce: u64,
-    pub max_priority_fee_per_gas: u128,
-    pub max_fee_per_gas: u128,
-    pub gas_limit: u64,
-    pub to: Address,                         // Call만 허용 (Create 불가)
-    pub value: U256,
-    pub access_list: AccessList,
-    pub max_fee_per_blob_gas: u128,          // blob gas 상한
-    pub blob_versioned_hashes: Vec<B256>,    // 각 blob의 VersionedHash
-    pub input: Bytes,
-}
-
-// VersionedHash 형식:
-// bytes[0] = 0x01 (version byte)
-// bytes[1..32] = keccak256(kzg_commitment)[1..32]
-//
-// 예: 0x01 abc123...
-
-// Blob 데이터 자체는 TX에 없음!
-// → "blob sidecar"에 별도 전송
-pub struct BlobTransactionSidecar {
-    pub blobs: Vec<Blob>,              // 실제 데이터 (각 128KB)
-    pub commitments: Vec<KzgCommitment>, // 각 blob의 KZG commitment
-    pub proofs: Vec<KzgProof>,         // 각 blob의 증명
-}
-
-// Blob 구조:
-pub struct Blob {
-    pub data: [u8; 131072],  // 128KB = 4096 × 32B
-}
-// 4096개 BLS12-381 field elements로 인코딩
-
-// 네트워크 전송:
-// - 일반 노드에 TX 전달 시: TX + sidecar 함께
-// - 블록에는 blob_versioned_hashes만 포함
-// - sidecar는 별도 저장 (BlobStore)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">TxEip4844 (type = 0x03)</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">chain_id</code> / <code className="text-xs">nonce</code> / <code className="text-xs">gas_limit</code> — 기본 필드</li>
+              <li><code className="text-xs">max_fee_per_gas</code>, <code className="text-xs">max_priority_fee_per_gas</code> — EIP-1559 가스</li>
+              <li><code className="text-xs">to: Address</code> — Call만 허용 (Create 불가)</li>
+              <li><code className="text-xs">max_fee_per_blob_gas: u128</code> — blob gas 상한</li>
+              <li><code className="text-xs">blob_versioned_hashes: Vec&lt;B256&gt;</code> — 각 blob의 VersionedHash</li>
+            </ul>
+            <p className="text-xs text-foreground/50 mt-2">VersionedHash: <code className="text-xs">0x01</code> + <code className="text-xs">SHA-256(commitment)[1..32]</code></p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">BlobTransactionSidecar</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">blobs: Vec&lt;Blob&gt;</code> — 실제 데이터 (각 128KB)</li>
+              <li><code className="text-xs">commitments: Vec&lt;KzgCommitment&gt;</code> — 각 blob의 KZG commitment</li>
+              <li><code className="text-xs">proofs: Vec&lt;KzgProof&gt;</code> — 각 blob의 증명</li>
+            </ul>
+            <p className="text-xs text-foreground/50 mt-2"><code className="text-xs">Blob.data: [u8; 131072]</code> — 4096 BLS12-381 field elements</p>
+          </div>
+          <div className="sm:col-span-2 rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-amber-400 mb-2">네트워크 전송 분리</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              노드 간 TX 전달 시: TX + sidecar 함께 전송.<br />
+              블록에는 <code className="text-xs">blob_versioned_hashes</code>만 포함 — blob 본체 없음.<br />
+              sidecar는 <code className="text-xs">BlobStore</code>에 별도 저장.
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Blob TX는 <strong>2개 부분 분리</strong> — on-chain TX (hashes만) + off-chain sidecar (blobs).<br />
           블록에 blob 본체 포함하지 않음 → consensus 부담 감소.<br />
@@ -108,40 +103,38 @@ pub struct Blob {
 
         {/* ── 블록 헤더 확장 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">블록 헤더 확장 — Cancun 필드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Cancun 이후 블록 헤더 추가 필드
-pub struct Header {
-    // ... 기존 필드 ...
-
-    // EIP-4844 필드:
-    pub blob_gas_used: Option<u64>,       // 블록에서 사용한 blob gas
-    pub excess_blob_gas: Option<u64>,     // 누적 초과분 (blob_fee 계산용)
-}
-
-// blob_gas 상수:
-const GAS_PER_BLOB: u64 = 131_072;           // 1 blob = 128KB
-const TARGET_BLOBS_PER_BLOCK: u64 = 3;       // 목표 blob/block
-const MAX_BLOBS_PER_BLOCK: u64 = 6;          // 최대 blob/block
-const TARGET_BLOB_GAS_PER_BLOCK: u64 = GAS_PER_BLOB * TARGET_BLOBS_PER_BLOCK;
-const MAX_BLOB_GAS_PER_BLOCK: u64 = GAS_PER_BLOB * MAX_BLOBS_PER_BLOCK;
-
-// 예시 블록 (3 blobs 사용):
-// blob_gas_used = 3 × 131072 = 393_216
-// excess_blob_gas: 이전 블록에서 누적, blob_base_fee 결정
-
-// 검증:
-// blob_gas_used <= MAX_BLOB_GAS_PER_BLOCK (786_432)
-// blob_gas_used % GAS_PER_BLOB == 0 (131072의 배수)
-
-// blob_base_fee 계산 (이전 excess 기반, 지수 함수):
-fn calc_blob_base_fee(excess_blob_gas: u64) -> u128 {
-    fake_exponential(
-        MIN_BLOB_BASE_FEE,            // 1 wei
-        excess_blob_gas,
-        BLOB_BASE_FEE_UPDATE_FRACTION, // 3_338_477
-    )
-}`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">Header 추가 필드</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">blob_gas_used: Option&lt;u64&gt;</code> — 블록에서 사용한 blob gas</li>
+              <li><code className="text-xs">excess_blob_gas: Option&lt;u64&gt;</code> — 누적 초과분 (blob_fee 계산용)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">Blob Gas 상수</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">GAS_PER_BLOB</code> = 131,072 (1 blob = 128KB)</li>
+              <li><code className="text-xs">TARGET_BLOBS_PER_BLOCK</code> = 3</li>
+              <li><code className="text-xs">MAX_BLOBS_PER_BLOCK</code> = 6</li>
+              <li><code className="text-xs">MAX_BLOB_GAS_PER_BLOCK</code> = 786,432</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-amber-400 mb-2">검증 규칙</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code className="text-xs">blob_gas_used</code> &le; 786,432 (MAX)<br />
+              <code className="text-xs">blob_gas_used</code> % 131,072 == 0 (정수 blob만 허용)
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-rose-400 mb-2">blob_base_fee 계산</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code className="text-xs">fake_exponential(1, excess_blob_gas, 3_338_477)</code><br />
+              이전 excess 기반 지수 함수 — EIP-1559와 동일 피드백 루프
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>2개 새 헤더 필드</strong>로 blob 경제 모델 관리.<br />
           <code>blob_gas_used</code>: 이 블록 사용량, <code>excess_blob_gas</code>: 누적 초과.<br />

@@ -1,7 +1,7 @@
 import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '../../../../components/ui/citation';
 import ByzantineDetectViz from './viz/ByzantineDetectViz';
-import {EVIDENCE_CODE, BFT_THRESHOLD_CODE, BFT_THRESHOLD_ANNOTATIONS} from './ByzantineFaultData';
+import {BFT_THRESHOLD_CODE, BFT_THRESHOLD_ANNOTATIONS} from './ByzantineFaultData';
 import type { CodeRef } from '@/components/code/types';
 
 export default function ByzantineFault({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
@@ -16,14 +16,10 @@ export default function ByzantineFault({ onCodeRef: _onCodeRef }: { onCodeRef: (
           탐지 시 <strong>DuplicateVoteEvidence</strong> 생성 → EvidencePool 저장 → 다음 블록에 포함하여 슬래싱 실행
         </p>
         <CitationBlock source="cometbft/evidence/pool.go" citeKey={6} type="code" href="https://github.com/cometbft/cometbft/blob/main/evidence/pool.go">
-          <pre className="text-xs overflow-x-auto"><code>{`type DuplicateVoteEvidence struct {
-    VoteA *Vote  // 첫 번째 투표
-    VoteB *Vote  // 충돌하는 두 번째 투표
-    TotalVotingPower int64
-    ValidatorPower   int64
-    Timestamp        time.Time
-}`}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">같은 Height/Round에서 다른 BlockID에 투표한 증거 — 두 투표 모두 유효한 서명 필수</p>
+          <div className="text-xs text-foreground/70 space-y-1">
+            <p><code>DuplicateVoteEvidence</code> — 같은 Height/Round에서 다른 BlockID에 투표한 증거</p>
+            <p><code>VoteA *Vote</code> / <code>VoteB *Vote</code> — 충돌하는 두 투표 (유효한 서명 필수) / <code>TotalVotingPower</code> — 전체 투표력 / <code>ValidatorPower</code> — 해당 validator 투표력 / <code>Timestamp</code> — 증거 시간</p>
+          </div>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">비잔틴 탐지 → 슬래싱 흐름</h3>
         <p>
@@ -45,71 +41,40 @@ export default function ByzantineFault({ onCodeRef: _onCodeRef }: { onCodeRef: (
 
         {/* ── Slashing 실행 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Slashing Execution — Evidence to Stake Loss</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Evidence → Slashing 실행 흐름 (Cosmos SDK)
-
-// 1. Evidence 탐지 (CometBFT)
-// P2P로 받은 두 vote 비교
-// DuplicateVoteEvidence 생성
-
-// 2. EvidencePool 저장
-// EvidencePool.AddEvidence(ev)
-// - max_age 체크 (UnbondingPeriod 이내)
-// - 중복 체크
-// - 서명 검증
-
-// 3. Gossip
-// Evidence reactor가 peers에게 방송
-// 다른 노드도 동일 evidence 수집
-
-// 4. Block 포함 (다음 proposer)
-// PrepareProposal에서 pending evidence 추가
-// Block.Evidence = [...evidences]
-
-// 5. FinalizeBlock → ABCI app에 전달
-// app.FinalizeBlock(RequestFinalizeBlock{
-//     Misbehavior: []abci.Misbehavior{ev1, ev2, ...}
-// })
-
-// 6. Cosmos SDK slashing module (app 측)
-func (k Keeper) HandleDoubleSign(
-    ctx sdk.Context,
-    ev abci.Misbehavior,
-) {
-    consAddr := sdk.ConsAddress(ev.Validator.Address)
-    validator := k.stakingKeeper.ValidatorByConsAddr(ctx, consAddr)
-
-    // slash 실행
-    k.stakingKeeper.Slash(
-        ctx,
-        consAddr,
-        ev.Height,
-        ev.Validator.Power,
-        k.SlashFractionDoubleSign(ctx),  // 5% by default
-    )
-
-    // tombstone (영구 제외)
-    k.Tombstone(ctx, consAddr)
-
-    // jail (다시 bond 해도 참여 불가)
-    k.stakingKeeper.Jail(ctx, consAddr)
-
-    // delegator stake도 함께 slash
-    // (제안: bond 당시 stake 비율에 따라)
-}
-
-// Slashing 파라미터 (Cosmos Hub):
-// - SlashFractionDoubleSign: 5% (0.05)
-// - SlashFractionDowntime: 0.01% (0.0001)
-// - SignedBlocksWindow: 10,000 blocks
-// - MinSignedPerWindow: 50%
-// - DowntimeJailDuration: 10 minutes
-
-// 효과:
-// - stake 5% 손실 (validator + delegators 모두)
-// - validator tombstone (재참여 불가)
-// - 수십억원 경제적 손실 (대형 validator의 경우)`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">Evidence → Slashing 실행 흐름</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p><strong className="text-foreground">1. 탐지</strong> — P2P로 받은 두 vote 비교 → <code>DuplicateVoteEvidence</code> 생성</p>
+              <p><strong className="text-foreground">2. EvidencePool 저장</strong> — <code>AddEvidence(ev)</code>: max_age 체크 (UnbondingPeriod 이내) + 중복 체크 + 서명 검증</p>
+              <p><strong className="text-foreground">3. Gossip</strong> — Evidence reactor가 peers에게 방송, 다른 노드도 동일 evidence 수집</p>
+              <p><strong className="text-foreground">4. Block 포함</strong> — <code>PrepareProposal</code>에서 pending evidence 추가 → <code>Block.Evidence</code></p>
+              <p><strong className="text-foreground">5. ABCI 전달</strong> — <code>FinalizeBlock</code> → <code>Misbehavior[]</code>로 app에 전달</p>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>HandleDoubleSign</code> — Cosmos SDK slashing</p>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p><code>Slash(consAddr, height, power, fraction)</code> — stake 차감 (default 5%)</p>
+                <p><code>Tombstone(consAddr)</code> — 영구 제외</p>
+                <p><code>Jail(consAddr)</code> — 다시 bond 해도 참여 불가</p>
+                <p>delegator stake도 함께 slash (bond 당시 비율에 따라)</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Slashing 파라미터 (Cosmos Hub)</p>
+              <div className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <code className="text-xs">SlashFractionDoubleSign</code><span>5% (0.05)</span>
+                <code className="text-xs">SlashFractionDowntime</code><span>0.01% (0.0001)</span>
+                <code className="text-xs">SignedBlocksWindow</code><span>10,000 blocks</span>
+                <code className="text-xs">MinSignedPerWindow</code><span>50%</span>
+                <code className="text-xs">DowntimeJailDuration</code><span>10 minutes</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">stake 5% 손실 + tombstone → 대형 validator는 수십억원 손실</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Evidence lifecycle: <strong>탐지 → pool → block 포함 → ABCI → slashing</strong>.<br />
           Cosmos SDK slashing module이 5% stake 차감 + tombstone.<br />

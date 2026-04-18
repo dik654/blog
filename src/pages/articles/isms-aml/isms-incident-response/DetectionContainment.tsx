@@ -1,8 +1,13 @@
+import DetectionContainmentViz from './viz/DetectionContainmentViz';
+import DetectionToolsInline from './viz/DetectionToolsInline';
+import ContainmentProcInline from './viz/ContainmentProcInline';
+
 export default function DetectionContainment() {
   return (
     <section id="detection-containment" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">탐지와 초동 대응</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <DetectionContainmentViz />
         <h3 className="text-xl font-semibold mt-8 mb-4">탐지 수단</h3>
         <p className="leading-7">
           침해사고 탐지의 첫 번째 방어선은 IDS/IPS(Intrusion Detection/Prevention System, 침입탐지/방지시스템)다.
@@ -27,6 +32,8 @@ export default function DetectionContainment() {
           <br />
           FDS(Fraud Detection System, 이상거래탐지시스템)는 금융/가상자산 거래에 특화된 탐지 체계로, 평소와 다른 거래 패턴(금액, 빈도, 시간대, 상대방)을 실시간으로 감시한다.
         </p>
+
+        <DetectionToolsInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">로그 모니터링</h3>
         <p className="leading-7">
@@ -69,6 +76,8 @@ export default function DetectionContainment() {
           감염 시스템이 접근했던 다른 서버, 데이터베이스, 외부 서비스를 로그 분석으로 추적한다.
           유출된 데이터의 종류(개인정보, 금융정보, 영업비밀)와 규모를 파악하여 보고 의무 여부를 결정한다.
         </p>
+
+        <ContainmentProcInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">봉쇄</h3>
         <p className="leading-7">

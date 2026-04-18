@@ -17,7 +17,7 @@ export default function AttentionSupersetViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 400 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Left grid: CNN */}
           <text x={45} y={10} textAnchor="middle" fontSize={11} fontWeight={700}
             fill={step === 0 ? '#3b82f6' : '#94a3b8'}>CNN</text>
@@ -77,18 +77,18 @@ export default function AttentionSupersetViz() {
           {/* Step 2: Superset proof */}
           {step === 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <rect x={250} y={12} width={145} height={90} rx={8}
+              <rect x={240} y={12} width={160} height={90} rx={8}
                 fill="var(--muted)" fillOpacity={0.4} stroke="var(--border)" strokeWidth={0.5} />
-              <text x={322} y={28} textAnchor="middle" fontSize={11} fontWeight={700}
+              <text x={320} y={28} textAnchor="middle" fontSize={10} fontWeight={700}
                 fill="var(--foreground)">Attention ⊃ Conv</text>
-              <text x={258} y={44} fontSize={11} fill="#3b82f6">CNN: 고정 가중치 커널</text>
-              <text x={258} y={58} fontSize={11} fill="#ef4444">Attn: 입력 의존 가중치</text>
-              <line x1={258} y1={65} x2={387} y2={65} stroke="var(--border)" strokeWidth={0.5} />
-              <text x={258} y={78} fontSize={11} fill="var(--foreground)">
+              <text x={248} y={44} fontSize={9} fill="#3b82f6">CNN: 고정 가중치 커널</text>
+              <text x={248} y={58} fontSize={9} fill="#ef4444">Attn: 입력 의존 가중치</text>
+              <line x1={248} y1={65} x2={392} y2={65} stroke="var(--border)" strokeWidth={0.5} />
+              <text x={248} y={78} fontSize={9} fill="var(--foreground)">
                 N heads = √N × √N 커널
               </text>
-              <text x={258} y={92} fontSize={11} fill="#8b5cf6" fontWeight={600}>
-                9 heads → 3×3 conv 구현 가능
+              <text x={248} y={92} fontSize={9} fill="#8b5cf6" fontWeight={600}>
+                9 heads → 3×3 conv 구현
               </text>
             </motion.g>
           )}

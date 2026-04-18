@@ -18,21 +18,36 @@ export default function PositionNft() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Position 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`struct Position {
-    uint96 nonce;               // 향후 기능용
-    address operator;           // 승인된 관리자
-    uint80 poolId;              // 풀 식별자
-    int24 tickLower;            // 구간 하한
-    int24 tickUpper;            // 구간 상한
-    uint128 liquidity;          // 유동성 L
-
-    // 수수료 회계용 스냅샷
-    uint256 feeGrowthInside0LastX128;
-    uint256 feeGrowthInside1LastX128;
-
-    uint128 tokensOwed0;        // 청구 대기 수수료
-    uint128 tokensOwed1;
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">Position 구조체</span>
+            <span className="text-xs text-muted-foreground ml-2">10개 필드</span>
+          </div>
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">식별 &amp; 관리</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint96 nonce</code> — 향후 기능용</p>
+              <p><code className="text-xs bg-muted px-1 rounded">address operator</code> — 승인된 관리자</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint80 poolId</code> — 풀 식별자</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">구간 &amp; 유동성</p>
+              <p><code className="text-xs bg-muted px-1 rounded">int24 tickLower</code> — 구간 하한</p>
+              <p><code className="text-xs bg-muted px-1 rounded">int24 tickUpper</code> — 구간 상한</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint128 liquidity</code> — 유동성 L</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">수수료 회계 스냅샷</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthInside0LastX128</code></p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthInside1LastX128</code></p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">청구 대기 수수료</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint128 tokensOwed0</code> — token0</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint128 tokensOwed1</code> — token1</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>10개 필드</strong>: 포지션 식별 + 상태 + 수수료 회계<br />
           <code>liquidity</code>는 L 단위 (토큰 양이 아닌 "유동성 양")<br />
@@ -40,40 +55,35 @@ export default function PositionNft() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">mint — 새 포지션 생성</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function mint(MintParams calldata params)
-    external payable returns (
-        uint256 tokenId, uint128 liquidity,
-        uint256 amount0, uint256 amount1
-    )
-{
-    IUniswapV3Pool pool;
-    (liquidity, amount0, amount1, pool) = addLiquidity(AddLiquidityParams({
-        token0: params.token0, token1: params.token1, fee: params.fee,
-        recipient: address(this),
-        tickLower: params.tickLower, tickUpper: params.tickUpper,
-        amount0Desired: params.amount0Desired,
-        amount1Desired: params.amount1Desired,
-        amount0Min: params.amount0Min, amount1Min: params.amount1Min
-    }));
-
-    _mint(params.recipient, (tokenId = _nextId++));
-
-    bytes32 positionKey = keccak256(abi.encodePacked(
-        address(this), params.tickLower, params.tickUpper
-    ));
-    (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, , ) =
-        pool.positions(positionKey);
-
-    _positions[tokenId] = Position({
-        nonce: 0, operator: address(0),
-        poolId: cachePoolKey(address(pool), poolKey),
-        tickLower: params.tickLower, tickUpper: params.tickUpper,
-        liquidity: liquidity,
-        feeGrowthInside0LastX128: feeGrowthInside0LastX128,
-        feeGrowthInside1LastX128: feeGrowthInside1LastX128,
-        tokensOwed0: 0, tokensOwed1: 0
-    });
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">mint() — 새 포지션 생성 흐름</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">1. 유동성 추가</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">addLiquidity()</code> &rarr; Pool에 토큰 예치</p>
+                <p className="text-xs text-muted-foreground mt-1">token0, token1, fee, tickLower/Upper, amount0/1Desired/Min</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">2. NFT 발행</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">_mint(recipient, _nextId++)</code></p>
+                <p className="text-xs text-muted-foreground mt-1">ERC-721 토큰 발행, 고유 tokenId 부여</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">3. 포지션 저장</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">_positions[tokenId] = Position{'{...}'}</code></p>
+                <p className="text-xs text-muted-foreground mt-1">feeGrowthInside 초기 스냅샷 저장</p>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-3 text-sm border border-border">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">positionKey 계산</p>
+              <p className="text-xs"><code className="bg-background px-1 rounded">keccak256(abi.encodePacked(address(this), tickLower, tickUpper))</code></p>
+              <p className="text-xs text-muted-foreground mt-1">Pool 레벨에서는 (address, tickLower, tickUpper)로 포지션 식별 &mdash; 여러 사용자 같은 구간 공유 가능</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>2단계</strong>: Pool의 <code>mint()</code> 호출 → NFT 발행<br />
           Pool 레벨에서는 <code>(tickLower, tickUpper)</code>가 포지션 키<br />
@@ -81,25 +91,30 @@ export default function PositionNft() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">수수료 누적 — feeGrowthGlobal</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Pool 컨트랙트
-uint256 public feeGrowthGlobal0X128;  // token0 수수료 / L 누적
-uint256 public feeGrowthGlobal1X128;
-
-// Swap마다 업데이트
-function _updateFees(uint256 feeAmount, bool zeroForOne) internal {
-    if (zeroForOne) {
-        feeGrowthGlobal0X128 += FullMath.mulDiv(
-            feeAmount, FixedPoint128.Q128, liquidity
-        );
-    } else {
-        feeGrowthGlobal1X128 += FullMath.mulDiv(
-            feeAmount, FixedPoint128.Q128, liquidity
-        );
-    }
-}
-
-// 의미: 전체 수수료 누적 / 활성 L
-// 각 LP는 "자신의 L × 경과한 feeGrowthGlobal 차이"만큼 수수료 수령`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">feeGrowthGlobal — 전역 수수료 누적</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">Pool 컨트랙트 상태 변수</p>
+                <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthGlobal0X128</code> — token0 누적</p>
+                <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthGlobal1X128</code> — token1 누적</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">Swap마다 업데이트 로직</p>
+                <p className="text-xs"><code className="bg-muted px-1 rounded">feeGrowthGlobal += feeAmount &times; Q128 / liquidity</code></p>
+                <p className="text-xs text-muted-foreground mt-1"><code className="bg-muted px-1 rounded">FullMath.mulDiv()</code>로 오버플로우 방지</p>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-3 text-sm border border-border">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">의미</p>
+              <p className="text-xs">feeGrowthGlobal = &Sigma; (수수료 / L) — 토큰 per 유동성 단위 누적</p>
+              <p className="text-xs text-muted-foreground mt-1">각 LP의 수수료 = 자신의 L &times; (현재 feeGrowthGlobal - 마지막 스냅샷)</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>feeGrowthGlobal = Σ (수수료 / L)</strong><br />
           단위: 토큰 per 유동성 L — LP가 자기 L 곱하면 수수료 계산 가능<br />
@@ -110,36 +125,46 @@ function _updateFees(uint256 feeAmount, bool zeroForOne) internal {
 
         <FeeGrowthViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 각 tick마다 "바깥쪽" 수수료 추적
-struct Tick {
-    uint128 liquidityGross;
-    int128 liquidityNet;
-    uint256 feeGrowthOutside0X128;
-    uint256 feeGrowthOutside1X128;
-    // ...
-}
-
-// 구간 내부 수수료 계산 (3 케이스)
-function getFeeGrowthInside(
-    int24 tickLower, int24 tickUpper, int24 tickCurrent,
-    uint256 feeGrowthGlobal0X128, uint256 feeGrowthGlobal1X128
-) internal view returns (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) {
-    TickInfo memory lower = ticks[tickLower];
-    TickInfo memory upper = ticks[tickUpper];
-
-    // feeGrowthBelow: 구간 아래 누적된 수수료
-    uint256 feeGrowthBelow0X128 = tickCurrent >= tickLower
-        ? lower.feeGrowthOutside0X128
-        : feeGrowthGlobal0X128 - lower.feeGrowthOutside0X128;
-
-    // feeGrowthAbove: 구간 위 누적된 수수료
-    uint256 feeGrowthAbove0X128 = tickCurrent < tickUpper
-        ? upper.feeGrowthOutside0X128
-        : feeGrowthGlobal0X128 - upper.feeGrowthOutside0X128;
-
-    // Inside = Global - Below - Above
-    feeGrowthInside0X128 = feeGrowthGlobal0X128 - feeGrowthBelow0X128 - feeGrowthAbove0X128;
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">getFeeGrowthInside() — 구간 수수료 추적</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="text-sm">
+              <p className="text-xs text-muted-foreground mb-1">Tick 구조체 (각 tick마다 저장)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <p><code className="text-xs bg-muted px-1 rounded">uint128 liquidityGross</code></p>
+                <p><code className="text-xs bg-muted px-1 rounded">int128 liquidityNet</code></p>
+                <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthOutside0X128</code></p>
+                <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthOutside1X128</code></p>
+              </div>
+            </div>
+            <div className="border-t border-border pt-3">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">포함-배제 원리 (3단계 계산)</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                <div className="bg-muted rounded-lg p-3">
+                  <p className="text-xs font-semibold mb-1">feeGrowthBelow</p>
+                  <p className="text-xs"><code className="bg-background px-1 rounded">tickCurrent &ge; tickLower</code></p>
+                  <p className="text-xs text-muted-foreground mt-1">&rarr; lower.feeGrowthOutside</p>
+                  <p className="text-xs"><code className="bg-background px-1 rounded">tickCurrent &lt; tickLower</code></p>
+                  <p className="text-xs text-muted-foreground mt-1">&rarr; global - lower.feeGrowthOutside</p>
+                </div>
+                <div className="bg-muted rounded-lg p-3">
+                  <p className="text-xs font-semibold mb-1">feeGrowthAbove</p>
+                  <p className="text-xs"><code className="bg-background px-1 rounded">tickCurrent &lt; tickUpper</code></p>
+                  <p className="text-xs text-muted-foreground mt-1">&rarr; upper.feeGrowthOutside</p>
+                  <p className="text-xs"><code className="bg-background px-1 rounded">tickCurrent &ge; tickUpper</code></p>
+                  <p className="text-xs text-muted-foreground mt-1">&rarr; global - upper.feeGrowthOutside</p>
+                </div>
+                <div className="bg-muted rounded-lg p-3 ring-1 ring-primary/30">
+                  <p className="text-xs font-semibold mb-1">Inside (결과)</p>
+                  <p className="text-xs font-mono">Global - Below - Above</p>
+                  <p className="text-xs text-muted-foreground mt-1">O(1) 계산 &mdash; tick마다 outside만 저장</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>포함-배제 원리</strong>: Global - (아래 누적) - (위 누적) = 구간 내 누적<br />
           tick마다 <strong>"어느 방향 수수료가 축적됐는지"</strong>만 저장 — O(1) 계산<br />
@@ -150,37 +175,35 @@ function getFeeGrowthInside(
 
         <CollectFlowViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function collect(CollectParams calldata params)
-    external payable returns (uint256 amount0, uint256 amount1)
-{
-    Position storage position = _positions[params.tokenId];
-
-    // 1) 최신 feeGrowthInside 조회
-    (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) =
-        getFeeGrowthInside(/* ... */);
-
-    // 2) 누적 수수료 증분 계산
-    position.tokensOwed0 += uint128(
-        FullMath.mulDiv(
-            feeGrowthInside0X128 - position.feeGrowthInside0LastX128,
-            position.liquidity,
-            FixedPoint128.Q128
-        )
-    );
-    position.tokensOwed1 += uint128(/* same for token1 */);
-
-    // 3) 스냅샷 업데이트
-    position.feeGrowthInside0LastX128 = feeGrowthInside0X128;
-    position.feeGrowthInside1LastX128 = feeGrowthInside1X128;
-
-    // 4) 실제 토큰 전송
-    amount0 = params.amount0Max < position.tokensOwed0 ? params.amount0Max : position.tokensOwed0;
-    amount1 = /* ... */;
-    position.tokensOwed0 -= uint128(amount0);
-    position.tokensOwed1 -= uint128(amount1);
-
-    pool.collect(params.recipient, tickLower, tickUpper, amount0, amount1);
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">collect() — 수수료 수거 4단계</span>
+          </div>
+          <div className="p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">1. feeGrowthInside 조회</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">getFeeGrowthInside(tickLower, tickUpper, ...)</code></p>
+                <p className="text-xs text-muted-foreground mt-1">현재 구간 내 누적 수수료 조회</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">2. 증분 계산</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">tokensOwed += (feeGrowthInside - last) &times; L / Q128</code></p>
+                <p className="text-xs text-muted-foreground mt-1">마지막 collect 이후 누적분만 계산</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">3. 스냅샷 갱신</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">feeGrowthInsideLastX128 = 현재값</code></p>
+                <p className="text-xs text-muted-foreground mt-1">이중 청구 방지</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">4. 토큰 전송</p>
+                <p className="text-xs"><code className="bg-background px-1 rounded">pool.collect(recipient, ...)</code></p>
+                <p className="text-xs text-muted-foreground mt-1"><code className="bg-background px-1 rounded">amount0Max/amount1Max</code>로 부분 수거 가능</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계</strong>: feeGrowthInside 조회 → 증분 계산 → 스냅샷 갱신 → 전송<br />
           마지막 collect 이후 누적된 수수료만 계산 — 이중 청구 방지<br />
@@ -188,24 +211,27 @@ function getFeeGrowthInside(
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Position NFT의 활용</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 2차 시장: OpenSea, Blur에서 LP 포지션 거래
-// 전략 1: 고수익 범위 포지션 매수 (이미 수수료 누적된 포지션)
-// 전략 2: 특정 구간 포지션 프리미엄 매도
-
-// 담보 활용: Aave 등에서 V3 포지션을 담보로 대출
-// → LP 자산 유동화
-
-// LP 매니저 vault: 여러 포지션을 NFT 번들로 관리
-// → 일반 사용자는 ERC20으로 여러 포지션 간접 소유
-
-// 예시: Charm/Alpha Vault
-contract PassiveVault {
-    uint256[] public positionIds;  // 소유한 NFT들
-
-    function rebalance() external {
-        // 모든 포지션 수거 → 재분배
-    }
-}`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold mb-2">2차 시장 거래</p>
+            <p className="text-sm text-muted-foreground">OpenSea, Blur에서 LP 포지션 거래</p>
+            <ul className="text-xs text-muted-foreground mt-2 space-y-1">
+              <li>고수익 범위 포지션 매수 (수수료 누적분 포함)</li>
+              <li>특정 구간 포지션 프리미엄 매도</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold mb-2">담보 활용</p>
+            <p className="text-sm text-muted-foreground">Aave, Morpho에서 V3 포지션을 담보로 대출</p>
+            <p className="text-xs text-muted-foreground mt-2">LP 자산 유동화 — 포지션 유지하면서 자본 활용</p>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold mb-2">LP 매니저 Vault</p>
+            <p className="text-sm text-muted-foreground">Charm/Alpha Vault 패턴</p>
+            <p className="text-xs text-muted-foreground mt-2">여러 NFT를 ERC20 vault로 래핑 &rarr; 일반 사용자가 간접 소유</p>
+            <p className="text-xs text-muted-foreground mt-1"><code className="text-xs bg-muted px-1 rounded">rebalance()</code>로 포지션 자동 재분배</p>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: NFT 기반 LP의 확장 효과</p>

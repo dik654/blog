@@ -16,151 +16,188 @@ export default function PromptCache() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">캐시 마킹 전략</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// claw-code가 마크하는 4개 지점
-1. 시스템 프롬프트 끝          항상 캐시
-2. 도구 목록 끝                항상 캐시
-3. 오래된 메시지 구간          선택적 캐시 (4개 제한)
-4. 현재 메시지 직전            사용자 설정
-
-// Anthropic 제약: 최대 4개 cache_control 마크 동시 활성`}</pre>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            4개 캐시 마크 지점 (Anthropic 최대 4개 동시 활성)
+          </div>
+          <div className="divide-y divide-border">
+            <div className="grid grid-cols-[32px_1fr_100px] p-3 items-center">
+              <span className="text-xs font-bold bg-emerald-100 dark:bg-emerald-950/40 rounded-full w-6 h-6 flex items-center justify-center">1</span>
+              <span className="text-sm">시스템 프롬프트 끝</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold text-right">항상 캐시</span>
+            </div>
+            <div className="grid grid-cols-[32px_1fr_100px] p-3 items-center">
+              <span className="text-xs font-bold bg-emerald-100 dark:bg-emerald-950/40 rounded-full w-6 h-6 flex items-center justify-center">2</span>
+              <span className="text-sm">도구 목록 끝</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold text-right">항상 캐시</span>
+            </div>
+            <div className="grid grid-cols-[32px_1fr_100px] p-3 items-center">
+              <span className="text-xs font-bold bg-amber-100 dark:bg-amber-950/40 rounded-full w-6 h-6 flex items-center justify-center">3</span>
+              <span className="text-sm">오래된 메시지 구간</span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold text-right">선택적 (동적)</span>
+            </div>
+            <div className="grid grid-cols-[32px_1fr_100px] p-3 items-center">
+              <span className="text-xs font-bold bg-amber-100 dark:bg-amber-950/40 rounded-full w-6 h-6 flex items-center justify-center">4</span>
+              <span className="text-sm">현재 메시지 직전</span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold text-right">사용자 설정</span>
+            </div>
+          </div>
+        </div>
         <p>
-          <strong>4 지점 전략</strong>: prefix 계층별 캐시 경계<br />
-          Anthropic은 <strong>동시 최대 4개 cache_control</strong> 허용 — 초과 시 오래된 것부터 무효<br />
-          앞 2개(system + tools)는 상시 마크, 나머지 2개는 대화 길이에 따라 동적
+          앞 2개(system + tools)는 상시 마크, 나머지 2개는 대화 길이에 따라 동적<br />
+          초과 시 오래된 것부터 무효
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PromptCache 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct PromptCache {
-    // 마지막 캐시 마크 위치 (메시지 인덱스)
-    pub last_message_cache_idx: Option<usize>,
-
-    // 캐시 히트 통계
-    pub cache_hits: u64,
-    pub cache_misses: u64,
-    pub tokens_saved: u64,
-
-    // 설정
-    pub enabled: bool,
-    pub min_prefix_tokens: usize,  // 1024 이하 prefix는 캐시 의미 없음
-}
-
-impl PromptCache {
-    pub fn should_cache(&self, messages: &[Message]) -> bool {
-        if !self.enabled { return false; }
-
-        // 총 prefix 토큰 수가 임계값 이상일 때만
-        let prefix_tokens = estimate_prefix_tokens(messages);
-        prefix_tokens >= self.min_prefix_tokens
-    }
-}`}</pre>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            PromptCache 필드
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold text-muted-foreground mb-1">위치 추적</div>
+                <code className="text-xs">last_message_cache_idx</code>
+                <p className="text-xs text-muted-foreground mt-1">Option&lt;usize&gt; — 마지막 캐시 마크 메시지 인덱스</p>
+              </div>
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold text-muted-foreground mb-1">히트 통계</div>
+                <div className="text-xs space-y-1">
+                  <div><code>cache_hits</code>: u64</div>
+                  <div><code>cache_misses</code>: u64</div>
+                  <div><code>tokens_saved</code>: u64</div>
+                </div>
+              </div>
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold text-muted-foreground mb-1">설정</div>
+                <div className="text-xs space-y-1">
+                  <div><code>enabled</code>: bool</div>
+                  <div><code>min_prefix_tokens</code>: usize <span className="text-muted-foreground">(기본 1024)</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-lg bg-muted/40 p-3">
+              <div className="text-xs font-semibold mb-1">should_cache(messages) → bool</div>
+              <p className="text-xs text-muted-foreground">
+                <code>enabled</code> 확인 → prefix 토큰 수 추정 → <code>min_prefix_tokens</code> 이상일 때만 true
+              </p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>min_prefix_tokens 1024</strong>: Anthropic 최소 요구치 — 이하는 캐시 거부<br />
-          짧은 프롬프트는 캐시 오버헤드(125% 생성 비용)가 손해<br />
-          <code>enabled</code>: 사용자가 비활성화 가능 — 대부분 활성
+          짧은 프롬프트는 캐시 오버헤드(125% 생성 비용)가 손해
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">동적 캐시 마크 위치</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl PromptCache {
-    pub fn decide_cache_marks(&mut self, messages: &[Message]) -> Vec<usize> {
-        let mut marks = Vec::new();
-
-        // 마크 1: 10개 이상의 오래된 메시지가 있으면 그 경계
-        if messages.len() >= 15 {
-            marks.push(messages.len() - 10);  // 최근 10개 제외 모두 캐시
-        }
-
-        // 마크 2: 5개 이상 새 메시지 추가됐으면 추가 경계
-        if let Some(last) = self.last_message_cache_idx {
-            if messages.len() - last >= 5 {
-                marks.push(messages.len() - 2);
-                self.last_message_cache_idx = Some(messages.len() - 2);
-            }
-        } else if messages.len() >= 5 {
-            marks.push(messages.len() - 2);
-            self.last_message_cache_idx = Some(messages.len() - 2);
-        }
-
-        marks
-    }
-}`}</pre>
-        <p>
-          <strong>2단계 마크</strong>: 과거 메시지 경계 + 현재 경계<br />
-          - 경계 1: <code>N-10</code> (최근 10개 제외) — 오래된 대화 전체 캐시<br />
-          - 경계 2: <code>N-2</code> (직전 응답) — 빠른 재개 캐시
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            decide_cache_marks — 2단계 경계 결정
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">경계 1: 과거 메시지</div>
+              <div className="bg-muted/40 rounded p-2 text-xs mb-2">
+                조건: <code>messages.len() &gt;= 15</code>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                위치 <code>N - 10</code> — 최근 10개 제외한 오래된 대화 전체 캐시
+              </p>
+            </div>
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">경계 2: 현재 경계</div>
+              <div className="bg-muted/40 rounded p-2 text-xs mb-2">
+                조건: 마지막 마크 이후 5개 이상 추가
+              </div>
+              <p className="text-xs text-muted-foreground">
+                위치 <code>N - 2</code> — 직전 응답까지 캐시, 빠른 재개
+              </p>
+            </div>
+          </div>
+          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
+            <code>last_message_cache_idx</code> 갱신으로 중복 마크 방지
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">캐시 마크 적용</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn apply_cache_marks(messages: &mut Vec<Value>, marks: &[usize]) {
-    for &idx in marks {
-        if idx < messages.len() {
-            // 해당 메시지의 마지막 content block에 cache_control 추가
-            if let Some(content) = messages[idx].get_mut("content") {
-                if let Some(arr) = content.as_array_mut() {
-                    if let Some(last_block) = arr.last_mut() {
-                        last_block["cache_control"] = json!({
-                            "type": "ephemeral"
-                        });
-                    }
-                }
-            }
-        }
-    }
-}`}</pre>
-        <p>
-          <strong>cache_control을 마지막 content block에 부착</strong>: Anthropic API 규칙<br />
-          같은 메시지의 모든 블록이 <strong>이 마크 위치까지 캐시 경계</strong><br />
-          마크된 메시지 이전 전체가 캐시 대상
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            apply_cache_marks — cache_control 삽입 경로
+          </div>
+          <div className="p-4">
+            <div className="flex items-center gap-2 text-xs flex-wrap">
+              <span className="bg-muted/40 rounded px-2 py-1"><code>messages[idx]</code></span>
+              <span className="text-muted-foreground">→</span>
+              <span className="bg-muted/40 rounded px-2 py-1"><code>.get_mut("content")</code></span>
+              <span className="text-muted-foreground">→</span>
+              <span className="bg-muted/40 rounded px-2 py-1"><code>.as_array_mut()</code></span>
+              <span className="text-muted-foreground">→</span>
+              <span className="bg-muted/40 rounded px-2 py-1"><code>.last_mut()</code></span>
+              <span className="text-muted-foreground">→</span>
+              <span className="bg-amber-100 dark:bg-amber-950/40 rounded px-2 py-1 font-semibold"><code>{`cache_control: {type: "ephemeral"}`}</code></span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              마지막 content block에 부착 — 해당 위치까지 전체가 캐시 경계<br />
+              마크된 메시지 이전 모든 내용이 캐시 대상
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">캐시 히트율 추적</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 응답의 usage에서 cache 통계 추출
-impl PromptCache {
-    pub fn record_usage(&mut self, usage: &TokenUsage) {
-        self.cache_hits += usage.cache_read_tokens;
-        self.cache_misses += usage.cache_creation_tokens;
-
-        // 절약 계산: input 단가 - cache_read 단가 = 90% 절감
-        self.tokens_saved += (usage.cache_read_tokens as f64 * 0.9) as u64;
-    }
-
-    pub fn hit_rate(&self) -> f64 {
-        let total = self.cache_hits + self.cache_misses;
-        if total == 0 { return 0.0; }
-        self.cache_hits as f64 / total as f64
-    }
-}`}</pre>
-        <p>
-          <strong>히트율 추적</strong>: cache_read / (cache_read + cache_creation)<br />
-          일반 에이전트 세션 히트율: 60-80% — 같은 시스템 프롬프트·도구 목록 반복 사용<br />
-          <code>tokens_saved</code>는 UI에 표시 — 사용자에게 "캐시로 X% 절감" 표시
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            record_usage + hit_rate — 캐시 통계
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold mb-2">record_usage(usage)</div>
+              <div className="space-y-1 text-xs text-muted-foreground">
+                <div><code>cache_hits</code> += <code>usage.cache_read_tokens</code></div>
+                <div><code>cache_misses</code> += <code>usage.cache_creation_tokens</code></div>
+                <div><code>tokens_saved</code> += <code>cache_read_tokens * 0.9</code> <span className="text-muted-foreground">(90% 절감)</span></div>
+              </div>
+            </div>
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold mb-2">hit_rate() → f64</div>
+              <div className="text-xs text-muted-foreground">
+                <code>cache_hits / (cache_hits + cache_misses)</code><br />
+                <span className="mt-1 inline-block">일반 세션 히트율: 60-80%</span>
+              </div>
+            </div>
+          </div>
+          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
+            <code>tokens_saved</code>는 UI에 표시 — 사용자에게 "캐시로 X% 절감" 안내
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">캐시 TTL 관리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Anthropic ephemeral 캐시 TTL: 5분
-// 5분 이상 지연 시 캐시 무효 — 재생성 필요
-
-pub struct CacheTracker {
-    last_request_at: Option<Instant>,
-}
-
-impl CacheTracker {
-    pub fn is_cache_likely_valid(&self) -> bool {
-        if let Some(last) = self.last_request_at {
-            last.elapsed() < Duration::from_secs(5 * 60)
-        } else {
-            false
-        }
-    }
-
-    pub fn record_request(&mut self) {
-        self.last_request_at = Some(Instant::now());
-    }
-}`}</pre>
-        <p>
-          <strong>5분 TTL</strong>: 마지막 요청 이후 5분 넘으면 캐시 무효<br />
-          장시간 대화 중단 후 재개 시 캐시 재생성 비용 발생<br />
-          Anthropic의 1시간 extended cache(beta): 장기 세션에 유용 (추가 비용)
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            CacheTracker — TTL 유효성 판정
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold mb-1">is_cache_likely_valid()</div>
+                <p className="text-xs text-muted-foreground">
+                  <code>last_request_at.elapsed() &lt; 5분</code> 여부 확인<br />
+                  None이면 false (첫 요청)
+                </p>
+              </div>
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold mb-1">record_request()</div>
+                <p className="text-xs text-muted-foreground">
+                  <code>last_request_at = Instant::now()</code><br />
+                  매 API 호출마다 갱신
+                </p>
+              </div>
+            </div>
+            <div className="rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 p-3 text-xs text-muted-foreground">
+              ephemeral 캐시 TTL <strong>5분</strong> — 초과 시 캐시 무효, 재생성 비용 발생<br />
+              extended cache(beta)는 1시간 TTL — 장기 세션에 유용 (추가 비용)
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">프로바이더별 캐시 지원</h3>
         <div className="overflow-x-auto">

@@ -1,8 +1,14 @@
+import RetentionPolicyViz from './viz/RetentionPolicyViz';
+import AccessControlInlineViz from './viz/AccessControlInlineViz';
+import DormantAccountInlineViz from './viz/DormantAccountInlineViz';
+
 export default function RetentionPolicy() {
   return (
     <section id="retention-policy" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">보유기간과 분리보관</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <RetentionPolicyViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">보유기간 산정표</h3>
         <p>
@@ -137,6 +143,9 @@ export default function RetentionPolicy() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">분리보관 접근통제</h3>
+        <div className="my-6">
+          <AccessControlInlineViz />
+        </div>
         <p>
           분리보관 DB에 대한 접근은 엄격히 통제해야 한다:
         </p>
@@ -161,6 +170,9 @@ export default function RetentionPolicy() {
         </ol>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">휴면계정 처리</h3>
+        <div className="my-6">
+          <DormantAccountInlineViz />
+        </div>
         <p>
           정보통신망법 제29조 제2항 — 정보통신서비스 제공자는 이용자가 1년간 서비스를 이용하지 않으면 해당 이용자의 개인정보를 분리보관하거나 파기해야 한다.<br />
           이를 "휴면계정 전환"이라 한다.

@@ -28,67 +28,89 @@ export default function Nullifier({ onCodeRef: _onCodeRef }: { onCodeRef: (key: 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Nullifier의 암호학적 속성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Nullifier 3가지 필수 속성
-
-// 1. Deterministic (결정론적)
-// 같은 note → 같은 nullifier (항상)
-// 다른 세션에서도 재현 가능
-nullifier = Poseidon(spendingKey, leafIndex)
-
-// 2. Pseudorandom (의사 랜덤)
-// nullifier에서 spendingKey 추출 불가
-// nullifier에서 leafIndex 추출 불가
-// → Privacy 보존
-
-// 3. Unique per note (note별 유일)
-// 서로 다른 note → 서로 다른 nullifier (거의 확실)
-// leafIndex가 다르면 → 결과 다름
-// collision 확률 ~2^-248 (무시 가능)
-
-// 공격 시도 vs 방어
-
-// 공격 1: Brute force
-// 공격자가 nullifier 주어지고 spendingKey 찾기
-// → 2^256 search space, 무한대 시간
-
-// 공격 2: Replay attack
-// 공격자가 이전 tx의 nullifier 재사용
-// → Contract가 nullifiers map 확인
-// → 이미 true면 revert (reuse 불가)
-
-// 공격 3: Front-running
-// 공격자가 mempool에서 proof 탈취
-// → 같은 nullifier 다른 tx로 submit
-// → 하지만 proof binding ensures sender
-// → Other addr로 submit 시 verify 실패`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-3">3가지 필수 속성</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">1. Deterministic (결정론적)</p>
+                <ul className="space-y-0.5">
+                  <li>같은 note &rarr; 같은 nullifier (항상)</li>
+                  <li><code>nullifier = Poseidon(spendingKey, leafIndex)</code></li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">2. Pseudorandom (의사 랜덤)</p>
+                <ul className="space-y-0.5">
+                  <li>nullifier에서 <code>spendingKey</code> 추출 불가</li>
+                  <li>nullifier에서 <code>leafIndex</code> 추출 불가</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">3. Unique per note</p>
+                <ul className="space-y-0.5">
+                  <li>서로 다른 note &rarr; 서로 다른 nullifier</li>
+                  <li>collision 확률 ~2<sup>-248</sup> (무시 가능)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-red-500/30 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-3">공격 시도 vs 방어</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Brute force</p>
+                <p>nullifier로부터 <code>spendingKey</code> 역산 &rarr; 2<sup>256</sup> search space, 불가능</p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Replay attack</p>
+                <p>이전 tx의 nullifier 재사용 &rarr; <code>nullifiers</code> map에서 이미 <code>true</code>면 revert</p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Front-running</p>
+                <p>mempool에서 proof 탈취 &rarr; proof binding으로 다른 addr submit 시 verify 실패</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Storage 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Solidity mapping
-// mapping(bytes32 => bool) public nullifiers;
-
-// 문제
-// - 매 tx마다 새 slot 할당
-// - 영구 storage (삭제 불가)
-// - Note 수 증가 → storage cost 증가
-
-// 최적화 기법
-// 1) Bitmap storage
-//    - 256 nullifiers → 1 storage slot
-//    - SSTORE cost 절감
-
-// 2) Rollup offloading
-//    - nullifier set을 L2 rollup에 저장
-//    - L1에는 merkle root만
-//    - 대규모 사용 시 필수
-
-// 3) Checkpoint pruning
-//    - 일정 시점 이후 old nullifier는 별도 tree
-//    - Contract upgrade로 관리
-
-// RAILGUN v2 (2023)
-// - Nullifier tree (별도 sparse Merkle tree)
-// - Gas cost 일정
-// - Batch verification 가능`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-muted-foreground mb-2">기본 구조: <code>mapping(bytes32 =&gt; bool) public nullifiers</code></p>
+            <p className="text-sm text-muted-foreground">문제: 매 tx마다 새 slot 할당 &rarr; 영구 storage (삭제 불가) &rarr; Note 증가에 비례해 cost 증가</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Bitmap storage</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>256 nullifiers &rarr; 1 storage slot</li>
+                <li>SSTORE cost 절감</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-blue-500/30 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Rollup offloading</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>nullifier set을 L2에 저장</li>
+                <li>L1에는 merkle root만</li>
+                <li>대규모 사용 시 필수</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Checkpoint pruning</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>old nullifier를 별도 tree로</li>
+                <li>Contract upgrade로 관리</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-violet-500/30 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">RAILGUN v2 (2023)</p>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>별도 <strong>sparse Merkle tree</strong>로 nullifier 관리 &rarr; gas cost 일정 + batch verification 가능</li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </section>

@@ -39,7 +39,7 @@ export default function TokenizerCompareViz() {
                 {t.tokens.map((tok, i) => {
                   const w = Math.max(tok.length * 9, 18);
                   let x = 160;
-                  for (let j = 0; j < i; j++) x += Math.max(t.tokens[j].length * 9, 18) + 4;
+                  for (let j = 0; j < i; j++) x += Math.max(t.tokens[j].length * 9, 18) + 6;
                   return (
                     <motion.g key={i} initial={active ? { opacity: 0, y: 4 } : {}}
                       animate={{ opacity: 1, y: 0 }} transition={{ ...sp, delay: active ? i * 0.04 : 0 }}>

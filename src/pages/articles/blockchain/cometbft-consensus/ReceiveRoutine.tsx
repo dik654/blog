@@ -13,59 +13,55 @@ export default function ReceiveRoutine({ onCodeRef }: { onCodeRef: (key: string,
 
         {/* ── receiveRoutine 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">receiveRoutine — single-threaded event loop</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/consensus/state.go
-func (cs *State) receiveRoutine(maxSteps int) {
-    for {
-        select {
-        // 3가지 이벤트 소스:
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3"><code>receiveRoutine</code> — 3가지 이벤트 소스 (cometbft/consensus/state.go)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. Local messages</p>
+                <p className="text-xs text-muted-foreground"><code>internalMsgQueue</code> — 내가 발생시킨 vote/proposal</p>
+                <p className="text-xs text-muted-foreground mt-1">→ <code>handleMsg(mi)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. P2P messages</p>
+                <p className="text-xs text-muted-foreground"><code>peerMsgQueue</code> — 다른 peer로부터</p>
+                <p className="text-xs text-muted-foreground mt-1">→ <code>handleMsg(mi)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. Timeout 이벤트</p>
+                <p className="text-xs text-muted-foreground"><code>timeoutTicker.Chan()</code></p>
+                <p className="text-xs text-muted-foreground mt-1">→ <code>handleTimeout(ti, rs)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">종료 시그널</p>
+                <p className="text-xs text-muted-foreground"><code>cs.Quit()</code> → return</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">단일 goroutine (락 불필요) + 메시지 직렬화 (event ordering 보장) + 결정적 상태 전이</p>
+          </div>
 
-        // 1. local messages (내가 발생시킨 vote/proposal)
-        case mi := <-cs.internalMsgQueue:
-            cs.handleMsg(mi)  // WAL 기록 후 처리
-
-        // 2. P2P messages (다른 peer로부터)
-        case mi := <-cs.peerMsgQueue:
-            cs.handleMsg(mi)
-
-        // 3. timeout 이벤트
-        case ti := <-cs.timeoutTicker.Chan():
-            cs.handleTimeout(ti, rs)
-
-        // 종료 시그널
-        case <-cs.Quit():
-            return
-        }
-    }
-}
-
-// 중요 특성:
-// - 단일 goroutine (락 불필요)
-// - 메시지 직렬화 (event ordering 보장)
-// - 결정적 상태 전이
-
-// WAL 기록:
-func (cs *State) handleMsg(mi msgInfo) {
-    // 1. WAL에 기록 (fsync)
-    cs.wal.Write(mi)
-
-    // 2. 메시지 타입별 dispatch
-    switch msg := mi.Msg.(type) {
-    case *ProposalMessage:
-        cs.setProposal(msg.Proposal)
-    case *VoteMessage:
-        cs.tryAddVote(msg.Vote, mi.PeerID)
-    case *BlockPartMessage:
-        cs.addProposalBlockPart(msg, mi.PeerID)
-    }
-}
-
-// Crash recovery:
-// 1. 노드 재시작
-// 2. WAL replay (handleMsg 다시 수행)
-// 3. 같은 상태 도달
-// 4. 이미 서명한 vote 재방송 → 이중 서명 X`}
-        </pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2"><code>handleMsg</code> — WAL 기록 후 dispatch</p>
+              <p className="text-xs text-muted-foreground mb-2">1. <code>cs.wal.Write(mi)</code> — fsync로 디스크에 기록</p>
+              <p className="text-xs text-muted-foreground mb-1">2. 메시지 타입별 dispatch:</p>
+              <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground">
+                <div className="bg-background/50 rounded px-2 py-1"><code>*ProposalMessage</code> → <code>setProposal()</code></div>
+                <div className="bg-background/50 rounded px-2 py-1"><code>*VoteMessage</code> → <code>tryAddVote()</code></div>
+                <div className="bg-background/50 rounded px-2 py-1"><code>*BlockPartMessage</code> → <code>addProposalBlockPart()</code></div>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Crash Recovery</p>
+              <div className="grid grid-cols-1 gap-1 text-sm text-muted-foreground">
+                <div className="bg-background/50 rounded px-2 py-1 text-xs">1. 노드 재시작</div>
+                <div className="bg-background/50 rounded px-2 py-1 text-xs">2. WAL replay — <code>handleMsg</code> 다시 수행</div>
+                <div className="bg-background/50 rounded px-2 py-1 text-xs">3. 같은 상태 도달</div>
+                <div className="bg-background/50 rounded px-2 py-1 text-xs">4. 이미 서명한 vote 재방송 → 이중 서명 방지</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           receiveRoutine이 <strong>3-event-source event loop</strong>.<br />
           internal/peer msg + timeout → single goroutine 처리.<br />

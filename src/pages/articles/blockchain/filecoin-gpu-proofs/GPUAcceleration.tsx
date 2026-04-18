@@ -33,21 +33,27 @@ export default function GPUAcceleration({ onCodeRef }: { onCodeRef?: (key: strin
         ]} />
         <CitationBlock source="bellperson — src/gpu/multiexp.rs (MSM CUDA)" citeKey={2} type="code"
           href="https://github.com/filecoin-project/bellperson">
-          <pre className="text-xs overflow-x-auto"><code>{`// multiexp.rs — GPU MSM (Multi-Scalar Multiplication)
-pub fn multiexp_gpu<G: CurveAffine>(
-    bases: &[G], scalars: &[G::Scalar], kern: &MultiexpKernel<G>
-) -> Result<G::Projective> {
-    // Pippenger's bucket method on GPU
-    // 1. scalars를 c-bit windows로 분할
-    // 2. 각 window의 bucket에 bases를 누적 (GPU 병렬)
-    // 3. bucket 결과를 계층적으로 합산
-    kern.multiexp(bases, scalars)
-    // 2^26 points: ~2.8s on A10, ~800x faster than CPU
-}`}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">
-            bellperson의 GPU MSM은 Pippenger 알고리즘을 CUDA/OpenCL로 구현합니다.<br />
-            Groth16 증명의 80% 이상이 MSM 연산이므로 GPU 가속의 핵심입니다.
-          </p>
+          <div className="not-prose mt-2">
+            <p className="text-xs font-semibold text-foreground mb-2"><code>multiexp_gpu()</code> — Pippenger Bucket Method on GPU</p>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="rounded border border-sky-500/30 bg-sky-500/5 p-2">
+                <p className="font-semibold text-sky-600 dark:text-sky-400">1. Window 분할</p>
+                <p className="text-muted-foreground mt-1">scalars를 c-bit windows로 분할</p>
+              </div>
+              <div className="rounded border border-emerald-500/30 bg-emerald-500/5 p-2">
+                <p className="font-semibold text-emerald-600 dark:text-emerald-400">2. Bucket 누적</p>
+                <p className="text-muted-foreground mt-1">각 window의 bucket에 bases를 GPU 병렬 누적</p>
+              </div>
+              <div className="rounded border border-amber-500/30 bg-amber-500/5 p-2">
+                <p className="font-semibold text-amber-600 dark:text-amber-400">3. 계층 합산</p>
+                <p className="text-muted-foreground mt-1">bucket 결과를 계층적으로 합산 → 최종 결과</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              2²⁶ points: ~2.8s on A10, ~800x faster than CPU.
+              Groth16 증명의 80%+ 가 MSM 연산 → GPU 가속의 핵심.
+            </p>
+          </div>
         </CitationBlock>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Supranational sppark</h3>
@@ -86,73 +92,84 @@ pub fn multiexp_gpu<G: CurveAffine>(
 
         {/* ── GPU Performance Comparison ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">GPU 성능 비교 (실측)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GPU 성능 비교 (32 GiB sector C2 proving):
 
-// CPU only (AMD EPYC 7B13 64-core):
-// - C2 time: 4-8 hours
-// - baseline (without GPU)
+        {/* ── C2 Proving Benchmark Table ── */}
+        <div className="not-prose overflow-x-auto my-4">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-4 py-2 text-left">GPU</th>
+                <th className="border border-border px-4 py-2 text-left">VRAM</th>
+                <th className="border border-border px-4 py-2 text-left">bellperson</th>
+                <th className="border border-border px-4 py-2 text-left">SupraSeal</th>
+                <th className="border border-border px-4 py-2 text-left">비고</th>
+              </tr>
+            </thead>
+            <tbody className="text-foreground/80">
+              <tr><td className="border border-border px-4 py-2 font-medium">CPU only (EPYC 7B13)</td><td className="border border-border px-4 py-2">-</td><td className="border border-border px-4 py-2">4-8 hours</td><td className="border border-border px-4 py-2">-</td><td className="border border-border px-4 py-2">baseline</td></tr>
+              <tr><td className="border border-border px-4 py-2 font-medium">RTX 3090</td><td className="border border-border px-4 py-2">24 GB</td><td className="border border-border px-4 py-2">60-90 min</td><td className="border border-border px-4 py-2">30-45 min</td><td className="border border-border px-4 py-2">budget</td></tr>
+              <tr><td className="border border-border px-4 py-2 font-medium">A6000</td><td className="border border-border px-4 py-2">48 GB</td><td className="border border-border px-4 py-2">45-75 min</td><td className="border border-border px-4 py-2">30-45 min</td><td className="border border-border px-4 py-2">cost-effective</td></tr>
+              <tr><td className="border border-border px-4 py-2 font-medium">A100</td><td className="border border-border px-4 py-2">40/80 GB</td><td className="border border-border px-4 py-2">30-60 min</td><td className="border border-border px-4 py-2">20-30 min</td><td className="border border-border px-4 py-2">professional</td></tr>
+              <tr><td className="border border-border px-4 py-2 font-medium">H100</td><td className="border border-border px-4 py-2">80 GB</td><td className="border border-border px-4 py-2">25-40 min</td><td className="border border-border px-4 py-2">15-25 min</td><td className="border border-border px-4 py-2">latest (2023-)</td></tr>
+              <tr><td className="border border-border px-4 py-2 font-medium">B200</td><td className="border border-border px-4 py-2">192 GB HBM3e</td><td className="border border-border px-4 py-2">-</td><td className="border border-border px-4 py-2">&lt;15 min (est.)</td><td className="border border-border px-4 py-2">highest tier</td></tr>
+              <tr><td className="border border-border px-4 py-2 font-medium">AMD MI250</td><td className="border border-border px-4 py-2">128 GB HBM2e</td><td className="border border-border px-4 py-2">40-60 min</td><td className="border border-border px-4 py-2">-</td><td className="border border-border px-4 py-2">OpenCL, less optimized</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-// NVIDIA RTX 3090 (24GB VRAM):
-// - bellperson: 60-90 min
-// - SupraSeal: 30-45 min
-// - budget option
+        {/* ── Scaling + Library Evolution ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="text-sm font-bold text-sky-400 mb-2">Multi-GPU Scaling</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>multi-GPU: <strong>near-linear</strong> scaling</li>
+              <li>PCIe bandwidth matters</li>
+              <li>NVLink for A100 pairs</li>
+              <li>shared CPU overhead 고려</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Library Evolution</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>bellman</code> (2018) — baseline CPU</li>
+              <li><code>bellperson</code> (2020) — GPU backend</li>
+              <li><code>SupraSeal</code> (2023) — <strong>2-3x faster</strong></li>
+              <li>future — FPGA / ASIC?</li>
+            </ul>
+          </div>
+        </div>
 
-// NVIDIA A100 (40GB/80GB):
-// - bellperson: 30-60 min
-// - SupraSeal: 20-30 min
-// - professional tier
+        {/* ── 선택 기준 + 네트워크 + 트렌드 ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="text-sm font-bold text-amber-400 mb-2">선택 기준</p>
+            <ol className="text-sm space-y-1 text-foreground/80 list-decimal list-inside">
+              <li>Budget — RTX 4090, A6000</li>
+              <li>Professional — A100</li>
+              <li>Cutting-edge — H100, B200</li>
+              <li>Volume — multi-A100 clusters</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Network Impact</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>전체 GPU 수: ~100,000+ (추정)</li>
+              <li>매일 증명: 100K+ SNARKs</li>
+              <li><strong>최대 GPU 소비 블록체인</strong></li>
+              <li>AI/ML과 GPU 경쟁</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">2024 트렌드</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>SupraSeal adoption 확산</li>
+              <li>H100 점진 도입</li>
+              <li>on-premise 선호</li>
+              <li>클라우드는 SLO 이슈</li>
+            </ul>
+          </div>
+        </div>
 
-// NVIDIA A6000 (48GB):
-// - bellperson: 45-75 min
-// - SupraSeal: 30-45 min
-// - cost-effective
-
-// NVIDIA H100 (80GB):
-// - bellperson: 25-40 min
-// - SupraSeal: 15-25 min
-// - latest (2023-)
-
-// NVIDIA B200 (192GB HBM3e):
-// - preliminary estimates: <15 min
-// - 2024 release
-// - highest tier
-
-// AMD MI250 (128GB HBM2e):
-// - OpenCL support
-// - ~40-60 min (bellperson)
-// - less optimized
-
-// Scaling:
-// - multi-GPU: near-linear
-// - PCIe bandwidth matter
-// - NVLink for A100
-// - shared CPU overhead
-
-// Library evolution:
-// - bellman (2018): baseline CPU
-// - bellperson (2020): GPU backend
-// - SupraSeal (2023): 2-3x faster
-// - future: FPGA/ASIC?
-
-// 선택 기준:
-// 1. Budget: RTX 4090, A6000
-// 2. Professional: A100
-// 3. Cutting-edge: H100, B200
-// 4. Volume: multi-A100 clusters
-
-// 네트워크 영향:
-// - 전체 GPU 수: ~100,000+ (추정)
-// - 매일 증명: 100K+ SNARKs
-// - 최대 GPU 소비 블록체인
-// - AI/ML과 경쟁
-
-// 2024 트렌드:
-// - SupraSeal adoption 확산
-// - H100 점진 도입
-// - on-premise 선호
-// - 클라우드는 SLO 이슈`}
-        </pre>
         <p className="leading-7">
           GPU 성능: <strong>RTX 3090 (60min) → A100 (30min) → H100 (25min)</strong>.<br />
           SupraSeal이 bellperson 대비 2-3x 빠름.<br />

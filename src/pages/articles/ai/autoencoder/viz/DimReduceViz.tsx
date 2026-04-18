@@ -9,7 +9,7 @@ export default function DimReduceViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Left panel: high-dim */}
           <rect x={5} y={8} width={170} height={104} rx={6}
             fill="none" stroke={M} strokeWidth={0.5} strokeOpacity={0.3} />
@@ -57,7 +57,7 @@ export default function DimReduceViz() {
               <circle cx={342} cy={40} r={20} fill="none"
                 stroke={COLORS[1]} strokeWidth={0.6}
                 strokeDasharray="3 2" strokeOpacity={0.4} />
-              <circle cx={300} cy={90} r={20} fill="none"
+              <circle cx={300} cy={80} r={20} fill="none"
                 stroke={COLORS[2]} strokeWidth={0.6}
                 strokeDasharray="3 2" strokeOpacity={0.4} />
             </motion.g>
@@ -66,9 +66,9 @@ export default function DimReduceViz() {
           {/* PCA vs AE comparison labels */}
           {step >= 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={90} y={112} textAnchor="middle" fontSize={9}
+              <text x={90} y={126} textAnchor="middle" fontSize={9}
                 fill={M}>PCA: 직선 투영만 가능</text>
-              <text x={317} y={112} textAnchor="middle" fontSize={9}
+              <text x={317} y={126} textAnchor="middle" fontSize={9}
                 fill="#f59e0b">AE: 비선형 곡면도 학습</text>
             </motion.g>
           )}

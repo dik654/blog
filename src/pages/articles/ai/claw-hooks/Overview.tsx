@@ -18,26 +18,35 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">HookRunner 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct HookRunner {
-    pre_tool_hooks: Vec<HookDefinition>,
-    post_tool_hooks: Vec<HookDefinition>,
-    user_prompt_hooks: Vec<HookDefinition>,
-    default_timeout: Duration,
-}
-
-pub struct HookDefinition {
-    pub command: String,            // 실행할 셸 명령 또는 스크립트 경로
-    pub matcher: HookMatcher,       // 이 훅이 적용되는 조건
-    pub timeout: Option<Duration>,
-    pub env: HashMap<String, String>,  // 추가 환경 변수
-}
-
-pub enum HookMatcher {
-    Always,                          // 모든 호출
-    Tool(String),                    // 특정 도구
-    ToolPattern(String),             // 글롭 패턴
-    BashCommand(String),             // bash 명령 패턴
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">HookRunner</div>
+            <ul className="text-sm space-y-1.5">
+              <li><code className="text-xs">pre_tool_hooks</code> — 도구 실행 전 훅 목록</li>
+              <li><code className="text-xs">post_tool_hooks</code> — 도구 실행 후 훅 목록</li>
+              <li><code className="text-xs">user_prompt_hooks</code> — 사용자 입력 시 훅 목록</li>
+              <li><code className="text-xs">default_timeout</code> — 기본 타임아웃</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">HookDefinition</div>
+            <ul className="text-sm space-y-1.5">
+              <li><code className="text-xs">command</code> — 실행할 셸 명령 또는 스크립트 경로</li>
+              <li><code className="text-xs">matcher</code> — 이 훅이 적용되는 조건</li>
+              <li><code className="text-xs">timeout</code> — 개별 타임아웃 (선택)</li>
+              <li><code className="text-xs">env</code> — 추가 환경 변수 맵</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">HookMatcher (enum)</div>
+            <ul className="text-sm space-y-1.5">
+              <li><code className="text-xs">Always</code> — 모든 호출에 적용</li>
+              <li><code className="text-xs">Tool(String)</code> — 특정 도구 이름 매칭</li>
+              <li><code className="text-xs">ToolPattern(String)</code> — 글롭 패턴 매칭</li>
+              <li><code className="text-xs">BashCommand(String)</code> — bash 명령 패턴</li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">훅 3종류</h3>
         <div className="overflow-x-auto">
@@ -70,34 +79,39 @@ pub enum HookMatcher {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">settings.json 설정 예시</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "command": "/opt/claw/hooks/check-bash.sh",
-        "matcher": {"tool": "bash"},
-        "timeout_ms": 2000
-      },
-      {
-        "command": "/opt/claw/hooks/audit-log.sh",
-        "matcher": {"always": true},
-        "timeout_ms": 500
-      }
-    ],
-    "PostToolUse": [
-      {
-        "command": "/opt/claw/hooks/git-check.sh",
-        "matcher": {"tool_pattern": "write_*|edit_*"}
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "command": "/opt/claw/hooks/sanitize.sh",
-        "matcher": {"always": true}
-      }
-    ]
-  }
-}`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">PreToolUse (2개 등록)</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-sm">
+                <div className="font-medium mb-1">check-bash.sh</div>
+                <div className="text-xs text-muted-foreground">matcher: <code className="text-xs">{'{"tool": "bash"}'}</code></div>
+                <div className="text-xs text-muted-foreground">timeout: 2000ms</div>
+              </div>
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-sm">
+                <div className="font-medium mb-1">audit-log.sh</div>
+                <div className="text-xs text-muted-foreground">matcher: <code className="text-xs">{'{"always": true}'}</code></div>
+                <div className="text-xs text-muted-foreground">timeout: 500ms</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">PostToolUse</div>
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-sm">
+                <div className="font-medium mb-1">git-check.sh</div>
+                <div className="text-xs text-muted-foreground">matcher: <code className="text-xs">write_*|edit_*</code> 패턴</div>
+              </div>
+            </div>
+            <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">UserPromptSubmit</div>
+              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-sm">
+                <div className="font-medium mb-1">sanitize.sh</div>
+                <div className="text-xs text-muted-foreground">matcher: <code className="text-xs">{'{"always": true}'}</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>여러 훅 등록 가능</strong>: 배열로 정의, 순서대로 실행<br />
           <code>matcher</code>: 이 훅이 어느 도구에 적용되는지 지정<br />
@@ -105,21 +119,28 @@ pub enum HookMatcher {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">JSON 프로토콜 — 훅 스크립트 인터페이스</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`# 훅 스크립트가 받는 입력 (stdin JSON)
-{
-  "event": "PreToolUse",
-  "tool_name": "bash",
-  "tool_input": {"command": "cargo test"},
-  "session_id": "sess_abc123",
-  "workspace_root": "/home/user/project",
-  "timestamp": "2026-04-05T10:30:00Z"
-}
-
-# 훅 스크립트가 출력하는 응답 (stdout JSON)
-{"permission": "allow"}
-{"permission": "deny", "reason": "테스트 금지"}
-{"permission": "prompt", "message": "확인 필요"}
-{"permission": "skip"}  # 훅 판정 안 함, 기본 Enforcer 사용`}</pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">stdin 입력 (훅이 받는 JSON)</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-2"><code className="text-xs shrink-0">event</code><span className="text-muted-foreground">— "PreToolUse"</span></div>
+              <div className="flex gap-2"><code className="text-xs shrink-0">tool_name</code><span className="text-muted-foreground">— "bash"</span></div>
+              <div className="flex gap-2"><code className="text-xs shrink-0">tool_input</code><span className="text-muted-foreground">— {"{"}"command": "cargo test"{"}"}</span></div>
+              <div className="flex gap-2"><code className="text-xs shrink-0">session_id</code><span className="text-muted-foreground">— "sess_abc123"</span></div>
+              <div className="flex gap-2"><code className="text-xs shrink-0">workspace_root</code><span className="text-muted-foreground">— "/home/user/project"</span></div>
+              <div className="flex gap-2"><code className="text-xs shrink-0">timestamp</code><span className="text-muted-foreground">— ISO 8601 UTC</span></div>
+            </div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-3">stdout 응답 (훅이 출력하는 JSON)</div>
+            <div className="space-y-2 text-sm">
+              <div className="bg-green-50 dark:bg-green-950/30 rounded px-2 py-1"><code className="text-xs">{'{"permission": "allow"}'}</code></div>
+              <div className="bg-red-50 dark:bg-red-950/30 rounded px-2 py-1"><code className="text-xs">{'{"permission": "deny", "reason": "..."}'}</code></div>
+              <div className="bg-amber-50 dark:bg-amber-950/30 rounded px-2 py-1"><code className="text-xs">{'{"permission": "prompt", "message": "..."}'}</code></div>
+              <div className="bg-neutral-100 dark:bg-neutral-800 rounded px-2 py-1"><code className="text-xs">{'{"permission": "skip"}'}</code> <span className="text-xs text-muted-foreground">— 기본 Enforcer 사용</span></div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>stdin/stdout JSON 프로토콜</strong>: 언어 무관 — bash, python, ruby 등 어떤 언어로도 작성 가능<br />
           <code>event</code> 필드로 이벤트 종류 구분 — 같은 훅이 여러 이벤트 처리 가능<br />
@@ -127,32 +148,37 @@ pub enum HookMatcher {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">훅 실행 순서 — 파이프라인</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl HookRunner {
-    pub async fn run_pre_tool(
-        &self,
-        tool: &str,
-        input: &Value,
-    ) -> HookOutcome {
-        // 매칭되는 모든 훅을 순서대로 실행
-        for hook in &self.pre_tool_hooks {
-            if !hook.matcher.matches(tool, input) { continue; }
-
-            match self.execute_hook(hook, "PreToolUse", tool, input).await {
-                HookResponse::Deny(r)   => return HookOutcome::Deny(r),
-                HookResponse::Prompt(m) => return HookOutcome::Prompt(m),
-                HookResponse::Allow     => return HookOutcome::Allow,
-                HookResponse::Skip      => continue,  // 다음 훅으로
-                HookResponse::Error(_)  => continue,  // 에러는 skip 취급
-            }
-        }
-        HookOutcome::NoDecision  // 모든 훅이 skip 또는 매칭 실패
-    }
-}`}</pre>
-        <p>
-          <strong>first-decision wins</strong>: 첫 판정 내린 훅이 최종 결정<br />
-          <code>Skip</code>, <code>Error</code>는 다음 훅으로 — 연쇄 진행<br />
-          <code>NoDecision</code>: 기본 Enforcer가 단독으로 판정
-        </p>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">run_pre_tool 실행 흐름</div>
+            <p className="text-sm mb-3">매칭되는 모든 훅을 배열 순서대로 실행 — <strong>first-decision wins</strong></p>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="bg-neutral-200 dark:bg-neutral-700 rounded px-2 py-0.5 text-xs font-mono shrink-0">matcher</span>
+                <span>매칭 실패 시 해당 훅 건너뜀</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 rounded px-2 py-0.5 text-xs font-mono shrink-0">Deny(r)</span>
+                <span>즉시 <code className="text-xs">HookOutcome::Deny</code> 반환 — 도구 차단</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded px-2 py-0.5 text-xs font-mono shrink-0">Prompt(m)</span>
+                <span>즉시 <code className="text-xs">HookOutcome::Prompt</code> 반환 — 사용자 확인</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded px-2 py-0.5 text-xs font-mono shrink-0">Allow</span>
+                <span>즉시 <code className="text-xs">HookOutcome::Allow</code> 반환 — 도구 허용</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="bg-neutral-100 dark:bg-neutral-800 rounded px-2 py-0.5 text-xs font-mono shrink-0">Skip / Error</span>
+                <span>다음 훅으로 <code className="text-xs">continue</code> — 연쇄 진행</span>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-border text-sm text-muted-foreground">
+              모든 훅이 skip 또는 매칭 실패 시 <code className="text-xs">NoDecision</code> — 기본 Enforcer가 단독 판정
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 훅의 사용 사례 4가지</p>

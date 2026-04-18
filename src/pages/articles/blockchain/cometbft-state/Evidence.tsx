@@ -13,65 +13,40 @@ export default function Evidence({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── EvidencePool 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">EvidencePool — 증거 수집 & 관리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/evidence/pool.go
-type Pool struct {
-    logger log.Logger
-    valToLastHeight valToLastHeightMap
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Pool 핵심 필드</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">evidenceStore dbm.DB</code> — 증거 영구 저장</li>
+              <li><code className="text-xs">evidenceList *clist.CList</code> — gossip용 concurrent list</li>
+              <li><code className="text-xs">evidenceSize uint32</code></li>
+              <li><code className="text-xs">state sm.State</code> / <code className="text-xs">blockStore BlockStore</code> — 만료 관리</li>
+              <li><code className="text-xs">consensusBuffer []Evidence</code> — rate-limiting</li>
+              <li><code className="text-xs">pruningHeight int64</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">만료 (MaxAgeNumBlocks)</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>기본값 <code className="text-xs">100000</code> (~1 week @ 6s block)</p>
+              <p>Cosmos Hub: <code className="text-xs">1_000_000</code> (~2 months)</p>
+              <p>이유: 오래된 validator 서명 검증 불가 + unbonded validator는 slash 대상 아님 + DB 크기 제한</p>
+            </div>
+          </div>
+        </div>
 
-    evidenceStore dbm.DB
-    evidenceList  *clist.CList  // concurrent list
-    evidenceSize  uint32
-
-    // 만료 관리
-    state        sm.State
-    blockStore   BlockStore
-    evpoolConfig *config.EvidenceConfig
-
-    // Rate-limiting
-    consensusBuffer []Evidence
-
-    pruningHeight  int64
-    dbKeyLayout    EvidenceDBKey
-}
-
-// Evidence 수명주기:
-// 1. AddEvidence(ev)
-//    - ValidateBasic
-//    - 중복 체크
-//    - evidenceStore 저장
-//    - evidenceList 추가 (gossip)
-//
-// 2. CheckEvidence (매 블록 검증)
-//    - max_age 확인
-//    - validator 존재 확인
-//    - double-spend 방지
-//
-// 3. Block 포함 (PrepareProposal)
-//    - PendingEvidence(maxCount) 호출
-//    - 가장 오래된 것부터 반환
-//    - 최대 N개 (체인 설정)
-//
-// 4. 블록 커밋 후
-//    - MarkEvidenceAsCommitted(block.Evidence)
-//    - 더 이상 pending 아님
-//
-// 5. Pruning
-//    - max_age 지난 Evidence 삭제
-//    - 백그라운드 goroutine
-
-// 만료 (MaxAgeNumBlocks):
-const DefaultMaxAge = 100000  // ~1 week @ 6s block time
-
-// 만료 이유:
-// - 너무 오래된 validator 서명 검증 불가
-// - unbonded validator는 slash 대상 아님
-// - DB 크기 제한
-
-// 메인넷 기준:
-// Cosmos Hub: max_age_num_blocks = 1_000_000 (~2 months)
-// Osmosis: max_age_num_blocks = 1_000_000`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">Evidence 수명주기 5단계</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>1. AddEvidence</strong> — <code className="text-xs">ValidateBasic</code> → 중복 체크 → <code className="text-xs">evidenceStore</code> 저장 → <code className="text-xs">evidenceList</code> 추가 (gossip)</p>
+              <p><strong>2. CheckEvidence</strong> — 매 블록 검증: max_age 확인 + validator 존재 확인 + double-spend 방지</p>
+              <p><strong>3. Block 포함</strong> — <code className="text-xs">PendingEvidence(maxCount)</code> → 가장 오래된 것부터 반환 (최대 N개)</p>
+              <p><strong>4. 커밋 후</strong> — <code className="text-xs">MarkEvidenceAsCommitted(block.Evidence)</code> → pending 해제</p>
+              <p><strong>5. Pruning</strong> — max_age 지난 Evidence 삭제 (백그라운드 goroutine)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           EvidencePool이 <strong>evidence 전체 lifecycle 관리</strong>.<br />
           Add → Check → Include → Commit → Prune 5단계.<br />

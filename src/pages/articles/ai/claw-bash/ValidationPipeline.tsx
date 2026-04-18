@@ -11,35 +11,57 @@ export default function ValidationPipeline() {
         <ValidationStagesViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">BashValidator 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct BashValidator<'a> {
-    cmd: &'a BashCommandInput,
-    config: &'a BashConfig,
-}
-
-impl<'a> BashValidator<'a> {
-    pub fn validate(&self) -> Result<()> {
-        self.check_empty()?;           // 1단계
-        self.check_length()?;          // 2단계
-        self.check_banned_patterns()?; // 3단계
-        self.classify_intent()?;       // 4단계
-        self.check_working_dir()?;     // 5단계
-        self.check_resource_limits()?; // 6단계
-        Ok(())
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">BashValidator</code> — 6단계 순차 검증</p>
+            </div>
+            <div className="px-4 py-2.5 text-sm border-b border-border text-muted-foreground">
+              필드: <code className="text-xs bg-muted px-1 py-0.5 rounded">cmd: &BashCommandInput</code> + <code className="text-xs bg-muted px-1 py-0.5 rounded">config: &BashConfig</code>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2 items-center">
+                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">1</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">check_empty()?</code></span>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2 items-center bg-muted/30">
+                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">2</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">check_length()?</code></span>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2 items-center">
+                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">3</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">check_banned_patterns()?</code></span>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2 items-center bg-muted/30">
+                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">4</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">classify_intent()?</code></span>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2 items-center">
+                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">5</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">check_working_dir()?</code></span>
+              </div>
+              <div className="grid grid-cols-[32px_1fr] px-4 py-2 items-center bg-muted/30">
+                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">6</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">check_resource_limits()?</code></span>
+              </div>
+            </div>
+            <div className="px-4 py-2.5 text-sm border-t border-border text-muted-foreground">
+              한 단계라도 실패 → 즉시 <code className="text-xs bg-muted px-1 py-0.5 rounded">Err</code> 반환, 이후 검증 스킵
+            </div>
+          </div>
+        </div>
         <p>
           <strong>6단계 순차 검증</strong>: 빠른 검증을 먼저, 비싼 검증을 나중에<br />
           한 단계라도 실패하면 즉시 <code>Err</code> 반환 — 이후 검증 스킵
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">1단계 — check_empty()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn check_empty(&self) -> Result<()> {
-    let trimmed = self.cmd.command.trim();
-    if trimmed.is_empty() {
-        return Err(anyhow!("empty command"));
-    }
-    Ok(())
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg px-4 py-3 text-sm">
+            <p className="font-semibold mb-1"><code className="text-xs bg-muted px-1 py-0.5 rounded">check_empty()</code></p>
+            <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">command.trim()</code> 후 빈 문자열이면 <code className="text-xs bg-muted px-1 py-0.5 rounded">Err("empty command")</code> 반환</p>
+          </div>
+        </div>
         <p>
           <strong>가장 빠른 검증</strong>: 문자열 trim + 길이 비교 — O(n) 1회 스캔<br />
           빈 명령은 LLM 환각의 대표적 패턴 — <code>bash("")</code>, <code>bash("  ")</code> 차단<br />
@@ -47,17 +69,12 @@ impl<'a> BashValidator<'a> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">2단계 — check_length()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`const MAX_COMMAND_LENGTH: usize = 10 * 1024;  // 10KB
-
-fn check_length(&self) -> Result<()> {
-    if self.cmd.command.len() > MAX_COMMAND_LENGTH {
-        return Err(anyhow!(
-            "command too long: {} bytes (max {})",
-            self.cmd.command.len(), MAX_COMMAND_LENGTH
-        ));
-    }
-    Ok(())
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg px-4 py-3 text-sm">
+            <p className="font-semibold mb-1"><code className="text-xs bg-muted px-1 py-0.5 rounded">check_length()</code></p>
+            <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">command.len() &gt; 10KB</code> → <code className="text-xs bg-muted px-1 py-0.5 rounded">Err("command too long: N bytes")</code> — 상수 <code className="text-xs bg-muted px-1 py-0.5 rounded">MAX_COMMAND_LENGTH = 10 * 1024</code></p>
+          </div>
+        </div>
         <p>
           <strong>10KB 상한</strong>: 대부분의 shell 명령은 수백 바이트 이내 — 10KB는 안전 마진<br />
           거대한 명령은 LLM 환각(반복 패턴) 또는 공격 시도 의심 — 조기 차단<br />
@@ -79,28 +96,31 @@ fn check_length(&self) -> Result<()> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">4단계 — classify_intent()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn classify_intent(&self) -> Result<()> {
-    let intent = CommandIntent::classify(&self.cmd.command);
-
-    match intent {
-        CommandIntent::Destructive => {
-            // Prompt 필요 표시 (Enforcer가 처리)
-            self.cmd.metadata_mut().require_prompt = true;
-        }
-        CommandIntent::System => {
-            // 시스템 제어는 항상 Prompt + 이중 확인
-            self.cmd.metadata_mut().require_prompt = true;
-            self.cmd.metadata_mut().require_confirm = true;
-        }
-        CommandIntent::Network => {
-            // 네트워크 호출은 로깅 강화
-            self.cmd.metadata_mut().log_network = true;
-        }
-        _ => {}
-    }
-
-    Ok(())
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-orange-50 dark:bg-orange-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">classify_intent()</code> — 의도별 메타데이터 설정</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="grid grid-cols-[100px_1fr] px-4 py-2.5 items-center">
+                <span className="font-semibold text-red-600 dark:text-red-400">Destructive</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">require_prompt = true</code> — Enforcer가 사용자 확인 요구</span>
+              </div>
+              <div className="grid grid-cols-[100px_1fr] px-4 py-2.5 items-center bg-muted/30">
+                <span className="font-semibold text-orange-600 dark:text-orange-400">System</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">require_prompt + require_confirm</code> — Prompt + 이중 확인</span>
+              </div>
+              <div className="grid grid-cols-[100px_1fr] px-4 py-2.5 items-center">
+                <span className="font-semibold text-purple-600 dark:text-purple-400">Network</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">log_network = true</code> — 감사 로깅 강화</span>
+              </div>
+              <div className="grid grid-cols-[100px_1fr] px-4 py-2.5 items-center bg-muted/30">
+                <span className="font-semibold text-gray-500 dark:text-gray-400">나머지</span>
+                <span className="text-muted-foreground">추가 제약 없음 — 통과</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>8가지 의도 분류</strong>: Read, Write, Destructive, Network, Execute, Package, System, Unknown<br />
           분류는 <strong>첫 단어 매칭</strong> — <code>rm</code>, <code>curl</code>, <code>sudo</code> 등<br />
@@ -116,25 +136,23 @@ fn check_length(&self) -> Result<()> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">6단계 — check_resource_limits()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn check_resource_limits(&self) -> Result<()> {
-    // Timeout 상한
-    let timeout_ms = self.cmd.timeout.unwrap_or(120_000);
-    if timeout_ms > MAX_TIMEOUT_MS {
-        return Err(anyhow!(
-            "timeout too large: {}ms (max {}ms)",
-            timeout_ms, MAX_TIMEOUT_MS
-        ));
-    }
-
-    // run_in_background: 허용 여부
-    if self.cmd.run_in_background && !self.config.allow_background {
-        return Err(anyhow!("background execution disabled"));
-    }
-
-    Ok(())
-}
-
-const MAX_TIMEOUT_MS: u64 = 30 * 60 * 1000;  // 30분`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-violet-50 dark:bg-violet-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">check_resource_limits()</code></p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="px-4 py-3">
+                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">타임아웃 상한</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">timeout_ms &gt; MAX_TIMEOUT_MS(30분)</code> → 거부 — 무한 루프 방지</p>
+              </div>
+              <div className="px-4 py-3 bg-muted/30">
+                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">백그라운드 실행 허용 여부</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">run_in_background && !config.allow_background</code> → <code className="text-xs bg-muted px-1 py-0.5 rounded">Err("background execution disabled")</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>타임아웃 상한 30분</strong>: 더 긴 명령은 거부 — 의도하지 않은 무한 루프 방지<br />
           30분은 대부분의 빌드·테스트 케이스 커버 — <code>cargo build --release</code>도 보통 10분 이내<br />
@@ -142,18 +160,26 @@ const MAX_TIMEOUT_MS: u64 = 30 * 60 * 1000;  // 30분`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">검증 실패 처리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 검증 실패 시 LLM에게 돌려주는 에러 메시지
-if let Err(e) = validator.validate() {
-    return Ok(ToolOutput {
-        stdout: String::new(),
-        stderr: format!("validation failed: {}", e),
-        exit_code: -1,
-    });
-}
-
-// LLM은 이 에러를 보고:
-// 1. 다른 명령을 시도하거나
-// 2. 사용자에게 제약 사항 설명`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-red-50 dark:bg-red-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold">검증 실패 → LLM 피드백</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="px-4 py-3">
+                <p className="font-semibold text-red-700 dark:text-red-400 mb-1">에러 반환 형식</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">ToolOutput {'{'} stdout: "", stderr: "validation failed: ...", exit_code: -1 {'}'}</code></p>
+              </div>
+              <div className="px-4 py-3 bg-muted/30">
+                <p className="font-semibold mb-1">LLM 후속 행동</p>
+                <div className="text-muted-foreground grid gap-1">
+                  <p>1. 다른 명령을 시도하거나</p>
+                  <p>2. 사용자에게 제약 사항 설명</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>에러도 ToolOutput으로 반환</strong> — 세션을 종료하지 않고 LLM이 재시도 가능<br />
           에러 메시지는 LLM이 이해할 수 있게 구체적 — "validation failed: banned pattern: rm -rf /"<br />

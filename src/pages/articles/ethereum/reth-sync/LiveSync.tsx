@@ -29,47 +29,22 @@ export default function LiveSync({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── Engine API 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Engine API — CL이 EL을 조종</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Live Sync 중 EL ← CL 통신 (Engine API v3)
-
-// 1. engine_newPayloadV3 — 새 블록 제공
-async fn new_payload_v3(
-    payload: ExecutionPayloadV3,
-    versioned_hashes: Vec<B256>,  // EIP-4844 blob hashes
-    parent_beacon_block_root: B256, // EIP-4788
-) -> PayloadStatus {
-    // 블록 검증 & 실행
-    let block = convert_payload_to_block(payload)?;
-    match execute_block(block).await {
-        Ok(_) => PayloadStatus::Valid,
-        Err(_) => PayloadStatus::Invalid,
-    }
-}
-
-// 2. engine_forkchoiceUpdatedV3 — head 결정
-async fn forkchoice_updated_v3(
-    state: ForkchoiceState,
-    payload_attrs: Option<PayloadAttributes>,
-) -> ForkchoiceUpdated {
-    // head/safe/finalized 블록 업데이트
-    blockchain_tree.update_canonical(state.head_block_hash);
-
-    // validator인 경우 payload_attrs로 새 블록 생성
-    if let Some(attrs) = payload_attrs {
-        let payload_id = payload_builder.new_job(attrs)?;
-        return ForkchoiceUpdated {
-            payload_status: PayloadStatus::Valid,
-            payload_id: Some(payload_id),
-        };
-    }
-    ForkchoiceUpdated { .. }
-}
-
-// 3. engine_getPayloadV3 — validator가 생성한 블록 조회
-async fn get_payload_v3(id: PayloadId) -> ExecutionPayloadV3 {
-    payload_builder.resolve(id).await?
-}`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2">engine_newPayloadV3</p>
+              <p className="text-sm text-foreground/80">새 블록 제공. <code>ExecutionPayloadV3</code> + <code>versioned_hashes</code>(EIP-4844) 수신 → 블록 실행 & 검증 → <code>PayloadStatus</code> 반환.</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">engine_forkchoiceUpdatedV3</p>
+              <p className="text-sm text-foreground/80">head 결정. <code>ForkchoiceState</code>로 head/safe/finalized 업데이트. <code>payload_attrs</code> 있으면 validator → 블록 생성 시작.</p>
+            </div>
+            <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-2">engine_getPayloadV3</p>
+              <p className="text-sm text-foreground/80">validator가 생성한 블록 조회. <code>PayloadId</code>로 <code>payload_builder.resolve()</code> 호출.</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Engine API가 CL ↔ EL 통신의 <strong>유일한 인터페이스</strong>.<br />
           CL이 <code>newPayload</code>로 블록 전달 → EL이 실행 & 검증 → 응답.<br />
@@ -78,44 +53,20 @@ async fn get_payload_v3(id: PayloadId) -> ExecutionPayloadV3 {
 
         {/* ── Live Sync 성능 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Live Sync 블록당 처리 시간</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Live Sync 블록 처리 흐름 (12초 슬롯 기준)
-//
-// 목표: 한 블록 실행을 1~2초 안에 완료
-// (슬롯 12초 중 나머지 10초는 다음 블록 대기)
-
-// 블록 실행 breakdown:
-// ┌────────────────────┬──────────┐
-// │ 단계               │ 시간     │
-// ├────────────────────┼──────────┤
-// │ payload 수신       │ ~10ms    │
-// │ TX sender 복구     │ ~50ms    │
-// │ revm 실행          │ ~200ms   │
-// │ state_root 계산    │ ~50ms    │
-// │ DB commit          │ ~100ms   │
-// │ Engine API 응답    │ ~20ms    │
-// │ ExEx 알림          │ ~10ms    │
-// ├────────────────────┼──────────┤
-// │ 합계               │ ~440ms   │
-// └────────────────────┴──────────┘
-
-// 여유시간 ~11.5초 동안:
-// - RPC 요청 처리
-// - BlockchainTree 관리
-// - ExEx 처리
-// - 다음 블록 대기
-
-// 시간 예산 관점:
-// - 12초 슬롯이 "블록 생성 + 전파 + 실행" 모두 포함
-// - EL 실행은 전체 시간의 ~4% 미만
-// - 여유가 크므로 RPC latency에 영향 없음
-
-// 블록이 큰 경우 (DeFi 폭주):
-// - revm 실행: ~1000ms
-// - state_root: ~200ms
-// - DB commit: ~300ms
-// - 합계: ~1.5초 (여전히 충분)`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">블록당 처리 시간 breakdown (12초 슬롯)</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
+            <div className="flex justify-between"><span className="text-foreground/70">payload 수신</span><span className="text-foreground/50">~10ms</span></div>
+            <div className="flex justify-between"><span className="text-foreground/70">TX sender 복구</span><span className="text-foreground/50">~50ms</span></div>
+            <div className="flex justify-between"><span className="text-foreground/70 font-semibold">revm 실행</span><span className="text-foreground/50">~200ms</span></div>
+            <div className="flex justify-between"><span className="text-foreground/70">state_root 계산</span><span className="text-foreground/50">~50ms</span></div>
+            <div className="flex justify-between"><span className="text-foreground/70">DB commit</span><span className="text-foreground/50">~100ms</span></div>
+            <div className="flex justify-between"><span className="text-foreground/70">Engine API 응답</span><span className="text-foreground/50">~20ms</span></div>
+            <div className="flex justify-between"><span className="text-foreground/70">ExEx 알림</span><span className="text-foreground/50">~10ms</span></div>
+            <div className="flex justify-between font-semibold"><span className="text-foreground/80">합계</span><span className="text-green-500">~440ms</span></div>
+          </div>
+          <p className="text-sm text-foreground/60">여유 ~11.5초(RPC 처리, ExEx, 다음 블록 대기). DeFi 폭주 시에도 ~1.5초 이내.</p>
+        </div>
         <p className="leading-7">
           Live Sync는 블록당 <strong>~500ms 내 처리</strong> — 12초 슬롯 기준 여유 충분.<br />
           혼잡 블록에서도 1.5초 이내 완료 → RPC 지연 없음.<br />
@@ -124,59 +75,28 @@ async fn get_payload_v3(id: PayloadId) -> ExecutionPayloadV3 {
 
         {/* ── ExEx 통합 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ExEx 이벤트 스트림</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ExEx는 Live Sync의 모든 이벤트를 subscribe
-pub enum ExExNotification {
-    /// 새 블록이 canonical chain에 추가됨
-    ChainCommitted {
-        new: Arc<Chain>,
-    },
-
-    /// reorg 발생: old 체인 제거 + new 체인 적용
-    ChainReorged {
-        old: Arc<Chain>,
-        new: Arc<Chain>,
-    },
-
-    /// 블록이 canonical에서 제거됨 (reorg 중간 상태)
-    ChainReverted {
-        old: Arc<Chain>,
-    },
-}
-
-// ExEx 사용 예시:
-async fn my_indexer(ctx: ExExContext) -> Result<()> {
-    while let Some(notification) = ctx.notifications.next().await {
-        match notification {
-            ExExNotification::ChainCommitted { new } => {
-                for block in new.blocks() {
-                    index_block(block)?;
-                }
-                // 완료 시그널 → 이 높이까지 prune 허용
-                ctx.events.send(ExExEvent::FinishedHeight(new.tip().number))?;
-            }
-            ExExNotification::ChainReorged { old, new } => {
-                // old 블록들의 인덱스 제거
-                for block in old.blocks() {
-                    remove_index(block)?;
-                }
-                // new 블록들 인덱싱
-                for block in new.blocks() {
-                    index_block(block)?;
-                }
-                ctx.events.send(ExExEvent::FinishedHeight(new.tip().number))?;
-            }
-            _ => {}
-        }
-    }
-    Ok(())
-}
-
-// ExEx는 노드 프로세스 내부 실행
-// → 별도 DB 복제 불필요
-// → Kafka/WebSocket 같은 중간 계층 불필요
-// → 지연 수 ms 수준`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">ExExNotification enum</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="rounded border border-green-500/30 bg-green-500/5 p-3">
+                <p className="text-xs font-bold text-green-500">ChainCommitted</p>
+                <p className="text-sm text-foreground/70"><code>new: Arc&lt;Chain&gt;</code> — 새 블록 추가</p>
+              </div>
+              <div className="rounded border border-orange-500/30 bg-orange-500/5 p-3">
+                <p className="text-xs font-bold text-orange-500">ChainReorged</p>
+                <p className="text-sm text-foreground/70"><code>old</code> + <code>new: Arc&lt;Chain&gt;</code> — reorg</p>
+              </div>
+              <div className="rounded border border-red-500/30 bg-red-500/5 p-3">
+                <p className="text-xs font-bold text-red-400">ChainReverted</p>
+                <p className="text-sm text-foreground/70"><code>old: Arc&lt;Chain&gt;</code> — 블록 제거</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded border border-border/40 bg-muted/20 p-3 text-sm text-foreground/70">
+            ExEx는 notifications 스트림을 순회하며 이벤트 처리. 완료 시 <code>ExExEvent::FinishedHeight</code>로 prune 허용 알림. 노드 프로세스 내부 실행 → 별도 DB/Kafka/WebSocket 불필요, 지연 수 ms.
+          </div>
+        </div>
         <p className="leading-7">
           ExEx가 <strong>실시간 블록 이벤트 스트림</strong>을 제공.<br />
           인덱서, 브릿지, MEV bot 등이 노드 내부에서 직접 구독 가능.<br />

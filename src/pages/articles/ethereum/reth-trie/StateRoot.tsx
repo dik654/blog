@@ -26,35 +26,29 @@ export default function StateRoot({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── StateRoot 구조체 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StateRoot 구조체 필드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct StateRoot<TX, H> {
-    /// DB 읽기 트랜잭션 (기존 trie 노드 접근)
-    tx: TX,
-
-    /// 변경된 account 주소의 prefix 집합
-    /// 이 집합에 속한 경로만 재계산
-    changed_account_prefixes: PrefixSet,
-
-    /// 변경된 storage slot의 prefix 집합 (account별)
-    /// key: keccak256(address), value: 해당 계정의 변경된 slot prefix
-    changed_storage_prefixes: HashMap<B256, PrefixSet>,
-
-    /// HashedPostState — BundleState를 hashed key로 변환
-    /// keccak256(address) → account, keccak256(slot_key) → value
-    hashed_state: H,
-}
-
-// HashedPostState 구조:
-pub struct HashedPostState {
-    pub accounts: HashMap<B256, Option<Account>>,  // hashed addr → account
-    pub storages: HashMap<B256, HashedStorage>,    // hashed addr → storage
-}
-
-pub struct HashedStorage {
-    pub wiped: bool,  // selfdestruct로 초기화 여부
-    pub storage: HashMap<B256, U256>,  // hashed slot → value
-}`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3">StateRoot&lt;TX, H&gt; 구조체</p>
+            <div className="space-y-2 text-xs">
+              <div><code className="text-indigo-300">tx: TX</code> <span className="text-foreground/60">— DB 읽기 트랜잭션 (기존 trie 접근)</span></div>
+              <div><code className="text-indigo-300">changed_account_prefixes: PrefixSet</code> <span className="text-foreground/60">— 변경된 account 경로만 재계산</span></div>
+              <div><code className="text-indigo-300">changed_storage_prefixes: HashMap&lt;B256, PrefixSet&gt;</code> <span className="text-foreground/60">— 계정별 변경 slot prefix</span></div>
+              <div><code className="text-indigo-300">hashed_state: H</code> <span className="text-foreground/60">— BundleState를 keccak256 key로 변환한 상태</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-3">
+              <p className="text-xs font-semibold text-sky-400 mb-1">HashedPostState</p>
+              <p className="text-xs text-foreground/60"><code>accounts: HashMap&lt;B256, Option&lt;Account&gt;&gt;</code></p>
+              <p className="text-xs text-foreground/60"><code>storages: HashMap&lt;B256, HashedStorage&gt;</code></p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">HashedStorage</p>
+              <p className="text-xs text-foreground/60"><code>wiped: bool</code> — selfdestruct 여부</p>
+              <p className="text-xs text-foreground/60"><code>storage: HashMap&lt;B256, U256&gt;</code></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>HashedPostState</code>가 주소/키를 이미 <strong>keccak256 해시</strong>로 변환한 상태.<br />
           Trie는 해시를 키로 사용하므로, 매번 해싱하지 않고 사전 계산된 값 재사용.<br />
@@ -63,48 +57,29 @@ pub struct HashedStorage {
 
         {/* ── TrieWalker ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">TrieWalker — PrefixSet 기반 순회</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TrieWalker: account trie를 PrefixSet에 따라 순회
-pub struct TrieWalker<'a, TX> {
-    tx: &'a TX,
-    /// 현재 순회 중인 스택
-    stack: Vec<TrieNodeEntry>,
-    /// 재해시할 prefix 집합
-    prefix_set: PrefixSet,
-}
-
-impl<'a, TX: DbTx> TrieWalker<'a, TX> {
-    /// 다음 변경 지점으로 이동
-    pub fn next(&mut self) -> Option<(Nibbles, B256)> {
-        loop {
-            let entry = self.stack.pop()?;
-
-            // PrefixSet에 있는지 확인
-            if !self.prefix_set.contains(&entry.nibbles) {
-                // 변경 없음 → DB에서 기존 해시 읽기
-                let cached_hash = self.tx.get::<AccountsTrie>(entry.nibbles)?;
-                continue;  // skip (재해시 불필요)
-            }
-
-            // 변경 있음 → 자식 노드 탐색
-            match entry.node {
-                TrieNode::Branch { children, .. } => {
-                    // 각 자식을 스택에 추가
-                    for (i, child) in children.iter().enumerate() {
-                        if child.is_some() {
-                            self.stack.push(child_entry(i));
-                        }
-                    }
-                }
-                TrieNode::Leaf { key, .. } => {
-                    return Some((entry.nibbles.join(&key), entry.hash));
-                }
-                _ => continue,
-            }
-        }
-    }
-}`}
-        </pre>
+        <div className="my-4 not-prose">
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-3">TrieWalker — PrefixSet 기반 순회</p>
+            <div className="space-y-2 text-xs mb-3">
+              <div><code className="text-amber-300">tx: &amp;TX</code> <span className="text-foreground/60">— DB 접근</span></div>
+              <div><code className="text-amber-300">stack: Vec&lt;TrieNodeEntry&gt;</code> <span className="text-foreground/60">— 현재 순회 스택</span></div>
+              <div><code className="text-amber-300">prefix_set: PrefixSet</code> <span className="text-foreground/60">— 재해시 대상 집합</span></div>
+            </div>
+            <div className="border-t border-border pt-3">
+              <p className="text-xs font-semibold text-muted-foreground mb-2"><code>next()</code> — 분기 로직</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="rounded bg-muted/50 p-2">
+                  <p className="text-xs font-semibold text-emerald-400">PrefixSet에 없음</p>
+                  <p className="text-xs text-foreground/60">→ DB 기존 해시 재사용 (skip)</p>
+                </div>
+                <div className="rounded bg-muted/50 p-2">
+                  <p className="text-xs font-semibold text-amber-400">PrefixSet에 있음</p>
+                  <p className="text-xs text-foreground/60">Branch → 자식 스택 push / Leaf → 반환</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>TrieWalker</code>가 <strong>PrefixSet 필터링</strong>으로 탐색 범위 축소.<br />
           변경 없는 서브트리 → DB의 기존 해시 재사용 (읽기만).<br />
@@ -113,33 +88,39 @@ impl<'a, TX: DbTx> TrieWalker<'a, TX> {
 
         {/* ── 증분 계산 비용 분석 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">증분 계산 비용 — 실제 수치</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 메인넷 블록 평균 변경 통계:
-// - 변경 계정: ~500 ~ 2,000개
-// - 변경 스토리지 slot: ~1,000 ~ 5,000개
-// - 새 컨트랙트: ~10 ~ 50개
-
-// 전체 재계산 시나리오:
-// 2.5억 계정 × keccak256 호출 = 수억 해시 계산
-// 각 해시 ~1 microsecond → 수 분 소요
-
-// 증분 계산 시나리오:
-// 1. 변경 계정 경로만 탐색
-//    - 각 경로 평균 깊이: ~6 nibbles
-//    - 방문 노드: ~6 × 1,000 = 6,000
-// 2. 각 노드에서 keccak256
-//    - ~6,000 × 1 us = 6 ms
-// 3. storage trie도 동일 패턴
-//    - 변경 슬롯 × 깊이 = ~3만 해시 = 30 ms
-
-// 총: ~40 ms per block
-// 가속비: 수 분 / 40 ms = 수천배
-
-// 실제 메인넷 측정 (reth archive 노드):
-// - 블록당 MerkleStage 평균: ~50 ms
-// - 이 중 증분 재해시: ~40 ms
-// - PrefixSet 순회 + DB read: ~10 ms`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">메인넷 블록 평균 변경</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-foreground/70">
+              <p>변경 계정: ~500~2,000개</p>
+              <p>변경 slot: ~1,000~5,000개</p>
+              <p>새 컨트랙트: ~10~50개</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+              <p className="font-semibold text-xs text-red-400 mb-2">전체 재계산</p>
+              <p className="text-xs text-foreground/60">2.5억 계정 x keccak256 = 수억 해시</p>
+              <p className="text-xs text-foreground/60">각 ~1us → <strong>수 분 소요</strong></p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-xs text-emerald-400 mb-2">증분 계산</p>
+              <div className="space-y-0.5 text-xs text-foreground/60">
+                <p>account 경로: ~6 x 1,000 = 6,000 해시 → 6ms</p>
+                <p>storage trie: ~3만 해시 → 30ms</p>
+                <p className="font-semibold text-emerald-400">총: ~40ms per block (수천 배 가속)</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-1">실측값 (reth archive, 메인넷)</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-foreground/70">
+              <p>MerkleStage 평균: ~50ms/block</p>
+              <p>증분 재해시: ~40ms</p>
+              <p>PrefixSet + DB read: ~10ms</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           증분 재계산의 <strong>실질 가속비는 1000배 이상</strong>.<br />
           전체 재계산은 블록 시간 12초 내 불가능 → 증분 계산이 필수.<br />

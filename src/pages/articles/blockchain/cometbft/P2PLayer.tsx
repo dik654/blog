@@ -1,6 +1,6 @@
 import { CitationBlock } from '../../../../components/ui/citation';
 import P2PChannelViz from './viz/P2PChannelViz';
-import { MCONNECTION_CODE, P2P_TABLE_ROWS, REACTOR_CODE } from './P2PLayerData';
+import { P2P_TABLE_ROWS } from './P2PLayerData';
 import { CodeViewButton } from '@/components/code';
 import { codeRefs } from './codeRefs';
 import type { CodeRef } from '@/components/code/types';
@@ -21,8 +21,7 @@ export default function P2PLayer({ onCodeRef }: { onCodeRef: (key: string, ref: 
           CometBFT는 자체 <strong>MConnection(멀티플렉스 연결, 단일 TCP 위 다중 채널)</strong> 기반의 Gossip 프로토콜을 사용합니다.
         </p>
         <CitationBlock source="cometbft/p2p/conn/connection.go" citeKey={5} type="code" href="https://github.com/cometbft/cometbft/blob/main/p2p/conn/connection.go">
-          <pre className="text-xs overflow-x-auto"><code>{MCONNECTION_CODE}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">MConnection은 단일 TCP 연결 위에 여러 채널을 멀티플렉싱합니다. 각 Reactor(Consensus, Mempool 등)가 고유 채널 ID로 등록되어 독립적으로 메시지를 송수신합니다.</p>
+          <p className="text-xs text-foreground/70"><code>MConnection</code>은 단일 TCP 연결 위에 여러 채널을 멀티플렉싱합니다. 각 <code>Reactor</code>(Consensus, Mempool 등)가 고유 채널 ID로 등록되어 독립적으로 메시지를 송수신합니다.</p>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">P2P 스택 비교</h3>
         <div className="overflow-x-auto">
@@ -69,52 +68,48 @@ export default function P2PLayer({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── Gossip 전략 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Gossip 전략 — Message Propagation</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CometBFT Gossip 특징 (libp2p GossipSub와 다름)
-// Channel별 독립적 전파 로직
-
-// 1. Mempool Gossip:
-//    - peer별 별도 goroutine
-//    - last-seen-by-peer 추적 (index)
-//    - new TX → 모든 peer에 방송 (자기 제외)
-//    - Rate limit: 1MB/peer/sec
-
-// 2. Consensus Gossip:
-//    - 매 round마다 새 proposal/votes
-//    - HasVote bitArray로 peer 상태 tracking
-//    - peer가 모르는 vote만 전송 (bandwidth 절약)
-//    - Priority: Proposal > Vote > Heartbeat
-
-// 3. Blockchain Gossip:
-//    - 뒤처진 peer에게 블록 전송
-//    - BlockchainReactor.respondToPeer()
-//    - 한 peer에 연속 블록 전달 (pipelining)
-
-// peer별 상태 tracking:
-type PeerRoundState struct {
-    Height                  int64
-    Round                   int32
-    Step                    RoundStepType
-
-    StartTime               time.Time
-    Proposal                bool              // peer가 proposal 가졌나
-    ProposalBlockPartSetHeader  PartSetHeader
-    ProposalBlockParts      *bits.BitArray
-    ProposalPOLRound        int32
-
-    Prevotes                *bits.BitArray    // peer가 본 prevotes
-    Precommits              *bits.BitArray    // peer가 본 precommits
-    LastCommitRound         int32
-    LastCommit              *bits.BitArray
-    CatchupCommitRound      int32
-    CatchupCommit           *bits.BitArray
-}
-
-// 결과:
-// - 중복 메시지 최소화 (peer 상태 기반)
-// - 빠른 catchup (뒤처진 peer 신속 동기화)
-// - 대역폭 효율 (선택적 전송)`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">1. Mempool Gossip</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>peer별 별도 goroutine</li>
+                <li>last-seen-by-peer 추적 (index)</li>
+                <li>new TX → 모든 peer에 방송</li>
+                <li>Rate limit: 1MB/peer/sec</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">2. Consensus Gossip</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>매 round마다 새 proposal/votes</li>
+                <li><code>HasVote</code> bitArray로 peer 상태 tracking</li>
+                <li>peer가 모르는 vote만 전송</li>
+                <li>Priority: Proposal &gt; Vote &gt; Heartbeat</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">3. Blockchain Gossip</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>뒤처진 peer에게 블록 전송</li>
+                <li><code>BlockchainReactor.respondToPeer()</code></li>
+                <li>한 peer에 연속 블록 전달 (pipelining)</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2"><code>PeerRoundState</code> — peer별 상태 tracking</p>
+            <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <span><code>Height</code> / <code>Round</code> / <code>Step</code> — peer의 합의 위치</span>
+              <span><code>Proposal bool</code> — peer가 proposal 보유 여부</span>
+              <span><code>ProposalBlockParts *bits.BitArray</code> — 받은 block parts</span>
+              <span><code>Prevotes *bits.BitArray</code> — peer가 본 prevotes</span>
+              <span><code>Precommits *bits.BitArray</code> — peer가 본 precommits</span>
+              <span><code>CatchupCommit *bits.BitArray</code> — catchup용 commit</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">중복 메시지 최소화 (peer 상태 기반) / 빠른 catchup / 대역폭 효율 (선택적 전송)</p>
+          </div>
+        </div>
         <p className="leading-7">
           CometBFT Gossip은 <strong>peer state tracking 기반</strong>.<br />
           peer가 본 votes/parts 추적 → 필요한 것만 선택 전송.<br />

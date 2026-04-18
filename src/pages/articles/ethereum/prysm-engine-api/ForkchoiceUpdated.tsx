@@ -22,34 +22,45 @@ export default function ForkchoiceUpdated({ onCodeRef }: Props) {
 
         {/* ── ForkchoiceState ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ForkchoiceState — 3개 포인터</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ForkchoiceState: CL이 EL에 통지하는 chain state
-struct ForkchoiceState {
-    headBlockHash: Hash32,        // 현재 canonical head
-    safeBlockHash: Hash32,        // safe checkpoint (justified 근처)
-    finalizedBlockHash: Hash32,   // finalized checkpoint
-}
-
-// 3 포인터의 의미:
-// head: 최신 블록 (LMD-GHOST 결과)
-// safe: 2/3+ validator가 투표한 블록 (justified)
-// finalized: 되돌릴 수 없는 블록 (finalized checkpoint)
-
-// EL이 ForkchoiceState로 하는 일:
-// 1. canonical chain 업데이트 (head → tip)
-// 2. safe/finalized 마킹 (reorg 불가 영역)
-// 3. pruning hint (finalized 이하는 permanent)
-// 4. RPC 응답 (eth_getBlockByTag "safe"/"finalized")
-
-// 업데이트 타이밍:
-// - 매 CL slot (12초)
-// - 특정 이벤트 (새 block 수신, attestation 반영)
-// - finality 갱신 (매 2 epoch)
-
-// 호출 빈도:
-// - Prysm: slot당 여러 번 (fork choice 재계산마다)
-// - EL은 단순 이벤트 수신 → 내부 state만 업데이트`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>ForkchoiceState</code> 구조체</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div className="rounded border p-2">
+                <p className="font-medium text-green-500 mb-1">headBlockHash</p>
+                <p className="text-muted-foreground">최신 블록 (LMD-GHOST 결과)</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium text-blue-500 mb-1">safeBlockHash</p>
+                <p className="text-muted-foreground">2/3+ validator 투표 블록 (justified)</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium text-amber-500 mb-1">finalizedBlockHash</p>
+                <p className="text-muted-foreground">되돌릴 수 없는 블록 (finalized)</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">EL의 활용</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>canonical chain 업데이트 (head → tip)</li>
+                <li>safe/finalized 마킹 (reorg 불가 영역)</li>
+                <li>pruning hint (finalized 이하는 permanent)</li>
+                <li>RPC 응답 (<code>eth_getBlockByTag "safe"/"finalized"</code>)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">업데이트 타이밍</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>매 CL slot (12초)</li>
+                <li>새 block 수신, attestation 반영 시</li>
+                <li>finality 갱신 (매 2 epoch)</li>
+                <li>Prysm: slot당 여러 번 (fork choice 재계산마다)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ForkchoiceState</code>는 <strong>3개 chain 포인터</strong>.<br />
           head(최신) / safe(justified) / finalized → EL에 chain state 통지.<br />
@@ -65,43 +76,49 @@ struct ForkchoiceState {
 
         {/* ── PayloadAttributes ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PayloadAttributes — validator 전용 필드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PayloadAttributesV3 (Deneb):
-struct PayloadAttributes {
-    timestamp: uint64,                 // 다음 block timestamp
-    prevRandao: Hash32,                // RANDAO mix
-    suggestedFeeRecipient: Address,    // 수수료 수취인
-    withdrawals: Array[Withdrawal],    // Capella+
-    parentBeaconBlockRoot: Hash32,     // EIP-4788 (Cancun+)
-}
-
-// 포함 여부:
-// - validator가 다음 slot proposer일 때 → 포함 (EL이 블록 빌드 시작)
-// - 일반 slot → null (단순 chain state 통지)
-
-// EL의 응답:
-// payload_attrs != null:
-//   payload_id 반환 (새 빌드 작업 ID)
-//   EL이 백그라운드에서 블록 조립 시작
-// payload_attrs == null:
-//   payload_id: null
-//   단순 state 업데이트만
-
-// Validator 블록 빌드 흐름:
-// t=0s (slot 시작):
-//   CL → EL: FCU + payload_attrs
-//   EL: "빌드 시작" payload_id 반환
-//   EL: 백그라운드에서 TX 선택 + 실행
-//
-// t=4s:
-//   CL → EL: getPayload(payload_id)
-//   EL: 현재까지 가장 좋은 블록 반환
-//   CL: 블록 서명 + 네트워크 전파
-//
-// 빌드 시간 (0~4초):
-//   EL이 더 많이 수집할수록 수익 증가
-//   timing game → MEV 최적화`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>PayloadAttributesV3</code> (Deneb)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-muted-foreground">
+              <span><code>timestamp uint64</code> — 다음 block timestamp</span>
+              <span><code>prevRandao Hash32</code> — RANDAO mix</span>
+              <span><code>suggestedFeeRecipient Address</code> — 수수료 수취인</span>
+              <span><code>withdrawals Array[Withdrawal]</code> — Capella+</span>
+              <span><code>parentBeaconBlockRoot Hash32</code> — EIP-4788 (Cancun+)</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">validator가 다음 slot proposer일 때만 포함 / 일반 slot → <code>null</code></p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4 border-green-500/20">
+              <h4 className="font-semibold text-sm mb-2">payload_attrs != null</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li><code>payload_id</code> 반환 (새 빌드 작업 ID)</li>
+                <li>EL이 백그라운드에서 블록 조립 시작</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">payload_attrs == null</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li><code>payload_id: null</code></li>
+                <li>단순 state 업데이트만</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">블록 빌드 타임라인</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-10 text-center">t=0s</span>
+                <div className="text-muted-foreground">CL → EL: FCU + payload_attrs → EL이 <code>payload_id</code> 반환 + TX 선택/실행 시작</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-10 text-center">t=4s</span>
+                <div className="text-muted-foreground">CL → EL: <code>getPayload(payload_id)</code> → 가장 좋은 블록 반환 → CL이 서명 + 전파</div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">빌드 시간 0~4초: EL이 더 많이 수집할수록 수익 증가 (timing game → MEV 최적화)</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>PayloadAttributes</strong>가 validator 블록 빌드 트리거.<br />
           validator의 slot일 때만 포함 → EL이 payload 빌드 시작.<br />

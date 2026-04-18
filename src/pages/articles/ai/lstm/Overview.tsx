@@ -1,4 +1,6 @@
 import OverviewViz from './viz/OverviewViz';
+import OverviewDetailViz from './viz/OverviewDetailViz';
+import M from '@/components/ui/math';
 
 export default function Overview() {
   return (
@@ -12,52 +14,20 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">LSTM 등장 배경</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Vanilla RNN 문제:
-//
-// Vanishing Gradient:
-// - gradient × W (weight)
-// - |W| < 1 → 기하급수 감소
-// - long-term dependency 학습 불가
-//
-// Exploding Gradient:
-// - |W| > 1 → 기하급수 증가
-// - gradient clipping으로 완화
-
-// LSTM (Hochreiter & Schmidhuber, 1997):
-// - cell state 개념 도입
-// - gating mechanism
-// - additive update (not multiplicative)
-// - gradient "highway"
-
-// 핵심 아이디어:
-// "정보를 선택적으로 기억/망각"
-// - forget gate: 버릴 정보
-// - input gate: 추가할 정보
-// - output gate: 출력할 정보
-
-// RNN vs LSTM vs GRU:
-// RNN: simplest, worst long-term
-// LSTM: 3 gates, cell state
-// GRU: 2 gates, simpler LSTM
-
-// Applications:
-// - 시계열 예측
-// - 언어 모델 (pre-Transformer)
-// - 음성 인식
-// - 기계 번역
-// - video analysis
-
-// 현재 (2024):
-// - Transformer에 대부분 대체
-// - time series에서 유지
-// - 저자원 환경에서 efficient
-// - embedded/mobile 사용`}
-        </pre>
+        <OverviewDetailViz />
         <p className="leading-7">
-          LSTM (1997): <strong>vanishing gradient 해결, 3 gates + cell state</strong>.<br />
-          additive update → gradient "highway" → long-term dependency.<br />
-          Transformer에 대체되었으나 time series에서 유지.
+          Vanilla RNN의 기울기 전파 — 시간 역방향으로 <M>{'W_{hh}'}</M>를 반복 곱셈하여 기울기가 지수적으로 변화.
+        </p>
+        <M display>{'\\frac{\\partial h_t}{\\partial h_k} = \\prod_{i=k+1}^{t} \\underbrace{W_{hh} \\cdot \\text{diag}(\\tanh\'(\\cdots))}_{\\text{각 단계마다 곱해지는 행렬}}'}</M>
+        <p className="leading-7">
+          <M>{'|\\lambda_{\\max}(W_{hh})| < 1'}</M>이면 기울기 소실, <M>{'> 1'}</M>이면 폭발.<br />
+          LSTM의 해결: 곱셈(×W) 대신 <strong>덧셈(+) 경로</strong>로 정보 전달 — 셀 상태를 통한 "gradient highway".
+        </p>
+        <M display>{'\\underbrace{C_t}_{\\text{새 셀 상태}} = \\underbrace{f_t \\odot C_{t-1}}_{\\text{선택적 보존}} + \\underbrace{i_t \\odot \\tilde{C}_t}_{\\text{새 정보 추가}}'}</M>
+        <p className="leading-7">
+          3개의 게이트 — forget(버릴 정보), input(추가할 정보), output(출력할 정보)으로 정보를 선택적으로 기억·망각.<br />
+          Transformer(2017)에 대부분 대체되었으나, 시계열 예측·임베디드 환경에서 여전히 유효.<br />
+          Mamba(2023), RWKV 등 현대 아키텍처도 LSTM의 게이트 아이디어를 계승.
         </p>
       </div>
     </section>

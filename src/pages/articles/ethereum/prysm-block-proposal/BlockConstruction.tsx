@@ -16,65 +16,43 @@ export default function BlockConstruction({ onCodeRef }: Props) {
 
         {/* ── Block construction ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ProduceBlockV3 — 블록 조립 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// validator가 beacon-chain에 블록 생성 요청
-// gRPC: ProduceBlock (또는 REST: /eth/v3/validator/blocks/{slot})
-
-func (s *Server) ProduceBlock(
-    ctx context.Context,
-    req *ProduceBlockRequest,
-) (*ProduceBlockResponse, error) {
-    // 1. Parent block 결정 (LMD-GHOST head)
-    head, err := s.forkchoiceStore.GetHead()
-    parent, err := s.beaconDB.Block(head)
-
-    // 2. Parent state 로드
-    parentState, err := s.stategen.StateByRoot(head)
-
-    // 3. State를 현재 slot으로 진전
-    preState := ProcessSlots(parentState, req.Slot)
-
-    // 4. Block body 조립
-    body := &BeaconBlockBody{
-        RandaoReveal: req.RandaoReveal,
-        Eth1Data: s.eth1DataFetcher.getEth1Data(),
-        Graffiti: req.Graffiti,
-
-        // operations from pools
-        ProposerSlashings: s.slashingPool.GetProposerSlashings(128, preState),
-        AttesterSlashings: s.slashingPool.GetAttesterSlashings(2, preState),
-        Attestations: s.attestationPool.AttestationsForInclusion(ctx, req.Slot),
-        Deposits: s.getDepositsFromEth1(preState),
-        VoluntaryExits: s.exitPool.GetExits(16, preState),
-        BlsToExecutionChanges: s.blsChangePool.GetChanges(16, preState),
-
-        // altair+
-        SyncAggregate: s.syncAggregateForBlock(req.Slot, head),
-
-        // bellatrix+
-        ExecutionPayload: s.getExecutionPayload(ctx, req.Slot),
-
-        // deneb+
-        BlobKzgCommitments: s.getBlobCommitments(),
-    }
-
-    // 5. Block 완성 (state_root 미정)
-    block := &BeaconBlock{
-        Slot: req.Slot,
-        ProposerIndex: req.ProposerIndex,
-        ParentRoot: head,
-        StateRoot: ZERO_HASH,  // 임시
-        Body: body,
-    }
-
-    // 6. 임시 state transition (state_root 계산용)
-    postState := processBlock(preState, block)
-    stateRoot, _ := postState.HashTreeRoot()
-    block.StateRoot = stateRoot  // backfill
-
-    return &ProduceBlockResponse{Block: block}, nil
-}`}
-        </pre>
+        <p className="text-sm text-muted-foreground mb-3">
+          validator가 beacon-chain에 블록 생성을 요청 — gRPC <code>ProduceBlock</code> 또는 REST <code>/eth/v3/validator/blocks/&#123;slot&#125;</code>.
+        </p>
+        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">1. Parent Block 결정</div>
+            <p className="text-sm"><code>forkchoiceStore.GetHead()</code> → LMD-GHOST head 선택 → <code>beaconDB.Block(head)</code>로 parent block 로드.</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">2. Parent State 로드 + Slot 진전</div>
+            <p className="text-sm"><code>stategen.StateByRoot(head)</code>로 parent state 로드 → <code>ProcessSlots(parentState, req.Slot)</code>으로 현재 slot까지 진전.</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">3. Block Body 조립</div>
+            <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1 mt-1">
+              <span><code>RandaoReveal</code> — 제안자 reveal</span>
+              <span><code>Eth1Data</code> — eth1 체인 데이터</span>
+              <span><code>ProposerSlashings</code> — max 128</span>
+              <span><code>AttesterSlashings</code> — max 2</span>
+              <span><code>Attestations</code> — pool에서 수집</span>
+              <span><code>Deposits</code> — eth1 deposit</span>
+              <span><code>VoluntaryExits</code> — max 16</span>
+              <span><code>BlsToExecutionChanges</code> — max 16</span>
+              <span><code>SyncAggregate</code> — Altair+</span>
+              <span><code>ExecutionPayload</code> — Bellatrix+</span>
+              <span className="col-span-2"><code>BlobKzgCommitments</code> — Deneb+</span>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">4. BeaconBlock 생성</div>
+            <p className="text-sm"><code>Slot</code>, <code>ProposerIndex</code>, <code>ParentRoot</code> 설정. <code>StateRoot</code>는 임시로 <code>ZERO_HASH</code>.</p>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <div className="text-xs font-semibold text-amber-400 mb-2">5. 임시 State Transition → StateRoot Backfill</div>
+            <p className="text-sm"><code>processBlock(preState, block)</code> → <code>postState.HashTreeRoot()</code>로 state_root 계산 → <code>block.StateRoot = stateRoot</code>.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Block construction은 <strong>6단계 파이프라인</strong>.<br />
           parent 선택 → operations 수집 → state transition → state_root 계산.<br />

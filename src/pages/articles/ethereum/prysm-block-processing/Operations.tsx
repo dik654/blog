@@ -16,66 +16,52 @@ export default function Operations({ onCodeRef }: Props) {
 
         {/* ── 5가지 operations ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">5가지 Operations — 고정 순서 처리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BeaconBlockBody의 operations (spec 정의 순서):
-struct BeaconBlockBody {
-    randao_reveal: BLSSignature,
-    eth1_data: Eth1Data,
-    graffiti: Bytes32,
-
-    // Operations (순서 중요):
-    proposer_slashings: List[ProposerSlashing, 16],
-    attester_slashings: List[AttesterSlashing, 2],
-    attestations: List[Attestation, 128],
-    deposits: List[Deposit, 16],
-    voluntary_exits: List[VoluntaryExit, 16],
-    // Capella+:
-    bls_to_execution_changes: List[BLSToExecutionChange, 16],
-    // Altair+:
-    sync_aggregate: SyncAggregate,
-    // Bellatrix+:
-    execution_payload: ExecutionPayload,
-    // Deneb+:
-    blob_kzg_commitments: List[KzgCommitment, 6],
-}
-
-// processOperations 순서 (spec):
-func ProcessOperations(state *BeaconState, body *BeaconBlockBody) error {
-    // 1. Slashings 먼저 (exit 순서 결정에 영향)
-    for _, ps := range body.ProposerSlashings {
-        processProposerSlashing(state, ps)  // validator 슬래싱
-    }
-    for _, as := range body.AttesterSlashings {
-        processAttesterSlashing(state, as)
-    }
-
-    // 2. Attestations
-    for _, att := range body.Attestations {
-        processAttestation(state, att)
-    }
-
-    // 3. Deposits (eth1_data.deposit_count 순서)
-    for _, dep := range body.Deposits {
-        processDeposit(state, dep)  // 새 validator 등록
-    }
-
-    // 4. Voluntary exits
-    for _, ve := range body.VoluntaryExits {
-        processVoluntaryExit(state, ve)
-    }
-
-    // 5. BLS to execution changes (Capella+)
-    for _, bec := range body.BlsToExecutionChanges {
-        processBlsToExecutionChange(state, bec)
-    }
-    return nil
-}
-
-// 순서가 중요한 이유:
-// slashing이 먼저 → exit queue 결정에 반영
-// attestation 먼저 → participation flag 설정 후 reward 계산
-// deposit은 validator가 활성화되기까지 대기 (queue)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm text-sky-400 mb-3">BeaconBlockBody Operations 필드</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+              <div className="space-y-1">
+                <div><code className="text-sky-300">proposer_slashings: List[ProposerSlashing, 16]</code></div>
+                <div><code className="text-sky-300">attester_slashings: List[AttesterSlashing, 2]</code></div>
+                <div><code className="text-sky-300">attestations: List[Attestation, 128]</code></div>
+                <div><code className="text-sky-300">deposits: List[Deposit, 16]</code></div>
+                <div><code className="text-sky-300">voluntary_exits: List[VoluntaryExit, 16]</code></div>
+              </div>
+              <div className="space-y-1 text-foreground/60">
+                <div><code>bls_to_execution_changes: List[..., 16]</code> <span>(Capella+)</span></div>
+                <div><code>sync_aggregate: SyncAggregate</code> <span>(Altair+)</span></div>
+                <div><code>execution_payload: ExecutionPayload</code> <span>(Bellatrix+)</span></div>
+                <div><code>blob_kzg_commitments: List[..., 6]</code> <span>(Deneb+)</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>ProcessOperations(state, body)</code> — 고정 순서</p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              {[
+                { step: '1', label: 'Slashings 먼저', detail: 'proposer/attester slashing 처리 → exit queue 결정에 영향', color: 'text-red-400' },
+                { step: '2', label: 'Attestations', detail: 'processAttestation — participation flag 설정 (보상 계산 기반)', color: 'text-sky-400' },
+                { step: '3', label: 'Deposits', detail: 'processDeposit — eth1_data.deposit_count 순서, 새 validator 등록', color: 'text-emerald-400' },
+                { step: '4', label: 'Voluntary exits', detail: 'processVoluntaryExit — validator 자발적 이탈', color: 'text-amber-400' },
+                { step: '5', label: 'BLS to execution changes', detail: 'processBlsToExecutionChange (Capella+)', color: 'text-violet-400' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground/80">{s.label}</p>
+                    <p className="text-foreground/60">{s.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-1">순서가 중요한 이유</p>
+            <p className="text-xs text-foreground/70">
+              slashing이 먼저 → exit queue 결정에 반영 / attestation 먼저 → participation flag 설정 후 reward 계산 / deposit은 activation queue로 대기
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           5가지 operations는 <strong>고정된 순서</strong>로 처리.<br />
           slashing → attestation → deposit → exit → BLS change.<br />
@@ -84,53 +70,28 @@ func ProcessOperations(state *BeaconState, body *BeaconBlockBody) error {
 
         {/* ── Attestation 처리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Attestation 처리 — 핵심 연산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// processAttestation: attestation 1개를 state에 반영
-func processAttestation(state *BeaconState, att *Attestation) error {
-    data := att.Data
-
-    // 1. slot 범위 검증
-    if data.Slot + SLOTS_PER_EPOCH < currentSlot &&
-       currentSlot < data.Slot + SLOTS_PER_EPOCH * 2 {
-        return ErrInvalidAttestationSlot
-    }
-
-    // 2. target epoch 검증
-    // target은 epoch boundary block
-    expectedTarget := blockRootAtSlot(state, epochStart(data.Target.Epoch))
-    if data.Target.Root != expectedTarget {
-        return ErrInvalidTarget
-    }
-
-    // 3. participating validators 조회
-    committee := getBeaconCommittee(state, data.Slot, data.CommitteeIndex)
-    attestingIndices := []uint64{}
-    for i, bit := range att.AggregationBits.BitIterator() {
-        if bit {
-            attestingIndices = append(attestingIndices, committee[i])
-        }
-    }
-
-    // 4. 집계 서명 검증
-    signing_root := computeSigningRoot(data, getDomain(state, DOMAIN_BEACON_ATTESTER, data.Target.Epoch))
-    pubkeys := getValidatorPubkeys(state, attestingIndices)
-    if !bls.FastAggregateVerify(pubkeys, signing_root, att.Signature) {
-        return ErrInvalidSignature
-    }
-
-    // 5. Participation flag 업데이트 (Altair+)
-    // source/target/head votes 반영 → 보상 계산 기반
-    for _, idx := range attestingIndices {
-        flags := state.CurrentEpochParticipation[idx]
-        flags |= TIMELY_SOURCE_FLAG
-        flags |= TIMELY_TARGET_FLAG
-        flags |= TIMELY_HEAD_FLAG  // head vote 정확성 체크
-        state.CurrentEpochParticipation[idx] = flags
-    }
-
-    return nil
-}`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>processAttestation(state, att)</code></p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              {[
+                { step: '1', label: 'Slot 범위 검증', detail: 'data.Slot + SLOTS_PER_EPOCH 범위 내인지 확인' },
+                { step: '2', label: 'Target epoch 검증', detail: 'target.Root == blockRootAtSlot(epochStart(target.Epoch))' },
+                { step: '3', label: 'Participating validators 조회', detail: 'getBeaconCommittee → AggregationBits에서 참여자 index 추출' },
+                { step: '4', label: '집계 서명 검증', detail: 'bls.FastAggregateVerify(pubkeys, signing_root, att.Signature)' },
+                { step: '5', label: 'Participation flag 업데이트', detail: 'TIMELY_SOURCE | TIMELY_TARGET | TIMELY_HEAD 비트 설정 (Altair+)' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground/80">{s.label}</p>
+                    <p className="text-foreground/60"><code>{s.detail}</code></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Attestation 처리가 <strong>블록 처리의 대부분</strong>.<br />
           committee 결정 → 서명 검증 → participation flag 업데이트.<br />

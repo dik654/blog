@@ -20,13 +20,28 @@ export default function Overview() {
           LLM이 "어떤 도구를 호출할 수 있는가"를 판단하는 유일한 근거가 이 스펙이므로,
           name/description/input_schema 세 필드가 곧 도구의 전부다.
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct ToolSpec {
-    pub name: &'static str,              // LLM이 호출하는 이름 (예: "bash", "read_file")
-    pub description: &'static str,       // 도구 설명 — LLM 프롬프트에 삽입
-    pub input_schema: Value,             // JSON Schema — 파라미터 타입·필수 여부 정의
-    pub required_permission: PermissionMode,  // 최소 권한 모드
-                                         // ReadOnly | WorkspaceWrite | DangerFullAccess
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="text-xs text-muted-foreground mb-1">필드</p>
+            <p className="font-mono text-sm font-semibold">name: <code className="text-xs bg-muted px-1 py-0.5 rounded">&amp;'static str</code></p>
+            <p className="text-sm text-muted-foreground mt-1">LLM이 호출하는 이름 (예: <code className="text-xs">"bash"</code>, <code className="text-xs">"read_file"</code>)</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="text-xs text-muted-foreground mb-1">필드</p>
+            <p className="font-mono text-sm font-semibold">description: <code className="text-xs bg-muted px-1 py-0.5 rounded">&amp;'static str</code></p>
+            <p className="text-sm text-muted-foreground mt-1">도구 설명 — LLM 프롬프트에 삽입</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="text-xs text-muted-foreground mb-1">필드</p>
+            <p className="font-mono text-sm font-semibold">input_schema: <code className="text-xs bg-muted px-1 py-0.5 rounded">Value</code></p>
+            <p className="text-sm text-muted-foreground mt-1">JSON Schema — 파라미터 타입 및 필수 여부 정의</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="text-xs text-muted-foreground mb-1">필드</p>
+            <p className="font-mono text-sm font-semibold">required_permission: <code className="text-xs bg-muted px-1 py-0.5 rounded">PermissionMode</code></p>
+            <p className="text-sm text-muted-foreground mt-1">최소 권한 모드 — ReadOnly | WorkspaceWrite | DangerFullAccess</p>
+          </div>
+        </div>
         <p>
           <code>mvp_tool_specs()</code> 함수가 40개 빌트인 도구 스펙을 <code>Vec&lt;ToolSpec&gt;</code>로 반환한다.<br />
           이 벡터가 LLM에게 전달되는 <code>tools</code> 배열의 원본이며,

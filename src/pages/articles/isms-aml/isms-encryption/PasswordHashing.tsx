@@ -1,8 +1,15 @@
+import PasswordHashingViz from './viz/PasswordHashingViz';
+import HashAttackInlineViz from './viz/HashAttackInlineViz';
+import MigrationInlineViz from './viz/MigrationInlineViz';
+
 export default function PasswordHashing() {
   return (
     <section id="password-hashing" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">비밀번호 해싱 전략</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <PasswordHashingViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">왜 단방향인가</h3>
         <p className="leading-7">
           비밀번호를 암호화(양방향)로 저장하면 복호화 키 하나가 유출될 때 전체 이용자의 비밀번호가 한꺼번에 노출된다.
@@ -44,6 +51,8 @@ export default function PasswordHashing() {
           <br />
           비밀번호 해싱에서 충돌은 직접적 위협은 아니지만, 알고리즘의 전체적 신뢰성을 훼손하므로 사용 자체를 중단하는 것이 원칙이다.
         </p>
+
+        <HashAttackInlineViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">bcrypt: 의도적으로 느린 해시</h3>
         <p className="leading-7">
@@ -123,6 +132,8 @@ export default function PasswordHashing() {
           그러나 MD5의 출력이 128비트로 고정되어 있어 bcrypt의 입력 엔트로피가 제한되는 단점이 있다.
           장기적으로는 로그인 시 점진 전환을 통해 순수 bcrypt로 교체하는 것이 바람직하다.
         </p>
+
+        <MigrationInlineViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">로그인 실패 횟수 제한</h3>
         <p className="leading-7">

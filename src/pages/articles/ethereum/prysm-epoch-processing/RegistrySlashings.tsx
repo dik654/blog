@@ -16,59 +16,52 @@ export default function RegistrySlashings({ onCodeRef }: Props) {
 
         {/* ── Registry updates ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Registry Updates — activation/exit queue</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 매 epoch validator 활성화/이탈 queue 처리
-
-func ProcessRegistryUpdates(state *BeaconState) error {
-    // 1. Activation eligibility 처리
-    //    pending deposit → eligible status
-    for i, v := range state.Validators {
-        if isEligibleForActivationQueue(v) {
-            v.ActivationEligibilityEpoch = getCurrentEpoch(state) + 1
-        }
-    }
-
-    // 2. Queue activations (churn limit 제한)
-    churnLimit := getValidatorChurnLimit(state)
-    eligible := getEligibleValidators(state)  // sorted by eligibility epoch
-
-    for i, idx := range eligible {
-        if uint64(i) >= churnLimit { break }  // 제한 초과 시 다음 epoch으로
-        state.Validators[idx].ActivationEpoch =
-            computeActivationExitEpoch(getCurrentEpoch(state))
-    }
-
-    // 3. Initiate voluntary exits (slashing으로 인한 것 포함)
-    // exit_epoch + MIN_VALIDATOR_WITHDRAWABILITY_DELAY 후 출금 가능
-}
-
-// Churn Limit:
-// 한 epoch에 활성화/이탈 가능한 validator 수 제한
-// 급격한 validator set 변화 방지
-
-// 계산:
-// churn_limit = max(
-//     MIN_PER_EPOCH_CHURN_LIMIT,          // 4
-//     active_validator_count / CHURN_LIMIT_QUOTIENT  // /65536
-// )
-
-// 메인넷 (1M active):
-// churn_limit = max(4, 1_000_000 / 65536) = 15 per epoch
-// → epoch당 15명 activate + 15명 exit
-// → 하루 (225 epochs) 3,375명
-// → 1달 ~100,000명 최대 변동
-
-// 역사적 churn limit:
-// 2021: 4 (min, validators 적음)
-// 2022: ~5
-// 2023: ~10
-// 2024: ~14
-// 2025: ~15
-
-// Churn limit 증가 시나리오:
-// EIP-7251 MaxEB (Max Effective Balance) 도입 시
-// 32 → 2048 ETH 증가 → validator 수 감소 → churn 비율 증가`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>ProcessRegistryUpdates(state)</code> — 매 epoch</p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              {[
+                { step: '1', label: 'Activation eligibility', detail: 'pending deposit → eligible status, ActivationEligibilityEpoch = currentEpoch + 1' },
+                { step: '2', label: 'Queue activations', detail: 'churn limit까지만 활성화 — eligible validators를 eligibility epoch 순 정렬 후 제한' },
+                { step: '3', label: 'Voluntary exits', detail: 'exit_epoch + MIN_VALIDATOR_WITHDRAWABILITY_DELAY 후 출금 가능 (slashing 포함)' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground/80">{s.label}</p>
+                    <p className="text-foreground/60">{s.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm text-sky-400 mb-2">Churn Limit 공식</p>
+            <div className="text-xs text-foreground/70 space-y-1">
+              <div><code>churn_limit = max(MIN_PER_EPOCH_CHURN_LIMIT(4), active_count / CHURN_LIMIT_QUOTIENT(65536))</code></div>
+              <div>메인넷 1M active: <code>max(4, 1M/65536)</code> = <strong>15 per epoch</strong></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              { year: '2021', value: '4 (min)' },
+              { year: '2022', value: '~5' },
+              { year: '2023', value: '~10' },
+              { year: '2024+', value: '~15' },
+            ].map(h => (
+              <div key={h.year} className="rounded-lg border border-border p-2 text-center">
+                <span className="text-xs font-bold text-muted-foreground">{h.year}</span>
+                <p className="text-xs text-foreground/70">{h.value}</p>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs text-foreground/70">
+              epoch당 15명 activate + 15명 exit → 하루 3,375명 → 1달 ~100,000명 최대 변동.<br />
+              EIP-7251 MaxEB(32 → 2048 ETH) 도입 시 validator 수 감소 → churn 비율 증가.
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Churn limit</strong>이 validator set 안정성 보장.<br />
           활성 validator의 1/65536 per epoch 변동 제한.<br />
@@ -77,57 +70,44 @@ func ProcessRegistryUpdates(state *BeaconState) error {
 
         {/* ── Slashings processing ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Slashings Penalty — epoch offset 분산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Slashing 발생 시 즉시 효과:
-// 1. validator.slashed = true
-// 2. 초기 penalty: effective_balance / MIN_SLASHING_PENALTY_QUOTIENT
-//    (Altair: 1/64 → 0.5 ETH from 32 ETH)
-// 3. exit_epoch, withdrawable_epoch 설정
-// 4. 공개 blockchain에 slash record
-
-// 그러나 "큰 penalty"는 epoch offset 후 적용
-// → 여러 slashing이 같은 epoch에 집중되면 페널티 증폭
-
-func ProcessSlashings(state *BeaconState) error {
-    epoch := getCurrentEpoch(state)
-    totalBalance := getTotalActiveBalance(state)
-
-    // 적용 시점: slashed_epoch + EPOCHS_PER_SLASHINGS_VECTOR / 2 (4096)
-    adjustedTotalSlashingBalance := min(
-        sum(state.Slashings) * PROPORTIONAL_SLASHING_MULTIPLIER,
-        totalBalance,
-    )
-
-    for i, v := range state.Validators {
-        if v.Slashed &&
-           epoch + EPOCHS_PER_SLASHINGS_VECTOR/2 == v.WithdrawableEpoch {
-
-            // Penalty 계산
-            increment := EFFECTIVE_BALANCE_INCREMENT  // 1 ETH
-            penaltyNumerator := v.EffectiveBalance / increment *
-                                adjustedTotalSlashingBalance
-            penalty := penaltyNumerator / totalBalance * increment
-
-            decreaseBalance(state, i, penalty)
-        }
-    }
-}
-
-// PROPORTIONAL_SLASHING_MULTIPLIER (Altair+):
-// 3 (Altair), 2 (Phase0)
-// 의미: N명 slashed → penalty × N × 3 / totalBalance
-
-// 동시 slashing 시나리오:
-// 1 validator slashed: ~0.5 ETH penalty (1/64)
-// 100 validators slashed: ~50 ETH penalty per validator
-// 1000+ validators (attack): ~전체 stake loss
-
-// 경제적 보안:
-// - Casper FFG는 finality reorg = 1/3+ slashing 필요
-// - 1/3 = ~333K validator × 32 ETH = ~10.6M ETH
-// - 현재 ETH 가치 기준 수십억 달러 손실
-// - 따라서 "finalized = 사실상 irreversible"`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-2">Slashing 즉시 효과</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-foreground/70">
+              <div className="rounded border border-border p-2"><code>validator.slashed = true</code></div>
+              <div className="rounded border border-border p-2">초기 penalty: <code>effective_balance / 64</code> (Altair: 0.5 ETH)</div>
+              <div className="rounded border border-border p-2"><code>exit_epoch</code>, <code>withdrawable_epoch</code> 설정</div>
+              <div className="rounded border border-border p-2">blockchain에 slash record 기록</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2"><code>ProcessSlashings(state)</code> — epoch offset 후 "큰 penalty"</p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              <div>적용 시점: <code>slashed_epoch + EPOCHS_PER_SLASHINGS_VECTOR/2</code> (4096 epochs)</div>
+              <div><code>adjustedTotalSlashingBalance = min(sum(Slashings) * MULTIPLIER, totalBalance)</code></div>
+              <div><code>penalty = (effectiveBalance / increment) * adjustedTotal / totalBalance * increment</code></div>
+              <div className="text-foreground/50"><code>PROPORTIONAL_SLASHING_MULTIPLIER</code>: 3 (Altair) / 2 (Phase0) — N명 slashed → penalty x N x 3 / totalBalance</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">동시 slashing 시나리오</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>1 validator: ~0.5 ETH penalty (1/64)</div>
+                <div>100 validators: ~50 ETH/validator</div>
+                <div>1000+ validators (attack): ~전체 stake loss</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">경제적 보안</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>Finality reorg = 1/3+ slashing 필요</div>
+                <div>1/3 = ~333K validator x 32 ETH = ~10.6M ETH</div>
+                <div>수십억 달러 손실 → <strong>finalized = 사실상 irreversible</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Slashing은 <strong>epoch offset 후 집단 penalty</strong>.<br />
           같은 epoch의 다수 slashing → proportional multiplier로 증폭.<br />

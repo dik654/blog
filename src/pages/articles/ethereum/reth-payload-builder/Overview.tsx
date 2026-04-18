@@ -35,34 +35,28 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── PayloadAttributes ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PayloadAttributes — 블록 생성 파라미터</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CL이 FCU에 포함시켜 전달하는 블록 생성 요청
-pub struct PayloadAttributes {
-    /// 블록 타임스탬프 (현재 슬롯의 시작 시간)
-    pub timestamp: u64,
-    /// RANDAO 값 (PoW의 mix_hash 대체)
-    pub prev_randao: B256,
-    /// 수수료 수취 주소 (validator가 지정)
-    pub suggested_fee_recipient: Address,
-    /// Shanghai 이후: withdrawals
-    pub withdrawals: Option<Vec<Withdrawal>>,
-    /// Cancun 이후: parent beacon block root (EIP-4788)
-    pub parent_beacon_block_root: Option<B256>,
-}
-
-// Withdrawal 구조 (EIP-4895)
-pub struct Withdrawal {
-    pub index: u64,          // 글로벌 withdrawal 인덱스
-    pub validator_index: u64, // CL validator ID
-    pub address: Address,     // EL 수취 주소
-    pub amount: u64,          // Gwei 단위 (1 Gwei = 10^9 wei)
-}
-
-// 전형적 withdrawals 처리:
-// - CL이 매 슬롯 16개 withdrawals 선정
-// - EL은 블록 실행 후 post-execution에서 잔고 증가
-// - 별도 TX 실행 없이 state만 변경`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">PayloadAttributes</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">timestamp: u64</code> — 현재 슬롯 시작 시간</li>
+              <li><code className="text-xs">prev_randao: B256</code> — RANDAO 값 (PoW mix_hash 대체)</li>
+              <li><code className="text-xs">suggested_fee_recipient: Address</code> — validator 수취 주소</li>
+              <li><code className="text-xs">withdrawals: Option&lt;Vec&lt;Withdrawal&gt;&gt;</code> — Shanghai 이후</li>
+              <li><code className="text-xs">parent_beacon_block_root: Option&lt;B256&gt;</code> — Cancun EIP-4788</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">Withdrawal (EIP-4895)</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">index: u64</code> — 글로벌 withdrawal 인덱스</li>
+              <li><code className="text-xs">validator_index: u64</code> — CL validator ID</li>
+              <li><code className="text-xs">address: Address</code> — EL 수취 주소</li>
+              <li><code className="text-xs">amount: u64</code> — Gwei 단위</li>
+            </ul>
+            <p className="text-xs text-foreground/50 mt-2">매 슬롯 16개 withdrawal — TX 없이 post-execution state 변경</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>PayloadAttributes</code>가 <strong>블록 생성의 parameters</strong>.<br />
           CL이 timestamp, fee_recipient, RANDAO 값 등을 지정 → EL은 이를 헤더에 반영.<br />
@@ -71,47 +65,28 @@ pub struct Withdrawal {
 
         {/* ── PayloadJob ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PayloadJob trait — 블록 빌드 상태 관리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait PayloadJob: Future<Output = Result<Self::BuiltPayload>> {
-    type BuiltPayload: BuiltPayload;
-    type ResolvePayloadFuture: Future<Output = Result<Self::BuiltPayload>>;
-
-    /// 최선의 페이로드 반환 (현 시점까지 빌드된 블록)
-    fn best_payload(&self) -> Result<Self::BuiltPayload>;
-
-    /// CL의 GetPayload 요청 응답 (최종 결정)
-    fn resolve(self) -> Self::ResolvePayloadFuture;
-
-    /// 지금까지의 빌드 메트릭
-    fn payload_attributes(&self) -> &PayloadAttributes;
-}
-
-// PayloadBuilder 구현체 (이더리움 메인넷)
-pub struct EthereumPayloadJob<Client, Pool, Tasks> {
-    attrs: PayloadAttributes,
-    client: Client,              // StateProvider
-    pool: Pool,                  // TxPool
-    tasks: Tasks,                // tokio spawner
-    best_payload: Arc<RwLock<BuiltPayload>>,
-    cancel_token: CancellationToken,
-}
-
-// continuous building 패턴:
-impl PayloadJob for EthereumPayloadJob {
-    fn best_payload(&self) -> Result<BuiltPayload> {
-        // 현재 best payload 읽기 (다른 스레드에서 업데이트 중일 수 있음)
-        Ok(self.best_payload.read().clone())
-    }
-
-    fn resolve(mut self) -> Self::ResolvePayloadFuture {
-        // GetPayload 요청 = "이제 그만 빌드, 지금 것 반환"
-        self.cancel_token.cancel();
-        async move {
-            self.await  // 마지막 업데이트 대기
-        }
-    }
-}`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">PayloadJob trait</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">best_payload()</code> — 현 시점까지 빌드된 최선 블록</li>
+              <li><code className="text-xs">resolve()</code> — CL GetPayload 응답 (최종 결정)</li>
+              <li><code className="text-xs">payload_attributes()</code> — 빌드 파라미터 조회</li>
+            </ul>
+            <p className="text-xs text-foreground/50 mt-2"><code className="text-xs">Future&lt;Output = Result&lt;BuiltPayload&gt;&gt;</code> 구현</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">EthereumPayloadJob 필드</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">attrs: PayloadAttributes</code></li>
+              <li><code className="text-xs">client: Client</code> — StateProvider</li>
+              <li><code className="text-xs">pool: Pool</code> — TxPool</li>
+              <li><code className="text-xs">best_payload: Arc&lt;RwLock&lt;BuiltPayload&gt;&gt;</code></li>
+              <li><code className="text-xs">cancel_token: CancellationToken</code></li>
+            </ul>
+            <p className="text-xs text-foreground/50 mt-2">resolve() → cancel → 마지막 업데이트 대기 후 반환</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>PayloadJob</code>이 <strong>진행 중인 블록 빌드 상태</strong>를 표현.<br />
           <code>best_payload()</code>는 "지금까지 찾은 최선" 반환 — 백그라운드에서 개선 계속.<br />
@@ -120,44 +95,46 @@ impl PayloadJob for EthereumPayloadJob {
 
         {/* ── 타임라인 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Validator 슬롯 타임라인 — 12초 내 블록 빌드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Validator가 블록 제안자인 슬롯의 타임라인
-//
-// T=-12s (이전 슬롯): fork choice 준비
-// T=0s: 슬롯 시작
-//   CL → EL: FCU(head, ..., payload_attrs=Some)
-//   EL: PayloadJob 생성, 빌드 시작
-//
-// T=0.5s: 초기 페이로드 완성
-//   - 빈 블록 (withdrawals만) 즉시 준비
-//   - best_payload() 호출 시 반환 가능
-//
-// T=1s: TX 추가 시작
-//   - txpool.best_transactions() iterator
-//   - 높은 priority TX부터 실행 & 추가
-//   - gas_limit 30M까지 채우기
-//
-// T=2s: 첫 번째 개선 완료
-//   - ~200 TX 포함, ~15M gas 사용
-//   - best_payload 업데이트
-//
-// T=4s: CL의 GetPayload 요청 (validator 전략별 타이밍 다름)
-//   CL → EL: engine_getPayloadV3(payload_id)
-//   EL: resolve() → 현재 best_payload 반환
-//   EL: PayloadJob 종료
-//
-// T=12s: 다음 슬롯 시작
-
-// 시간 예산 분석:
-// - 0~4s: 빌드 시간 (4초)
-// - 4~12s: CL이 블록 전파 & attestation 수집
-// - EL이 4초 안에 경쟁력 있는 블록 만들기 필요
-
-// Reth 전략:
-// - 병렬 TX 평가 (여러 TX 동시 시뮬레이션)
-// - bundle 통합 (MEV 빌더 rbuilder)
-// - state caching (이미 실행한 TX 재사용)`}
-        </pre>
+        <div className="not-prose space-y-2 my-4">
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="text-xs font-mono text-indigo-400 w-10 shrink-0 text-right">T=0s</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">슬롯 시작</p>
+              <p className="text-xs text-foreground/60">CL → EL: <code className="text-xs">FCU(head, payload_attrs=Some)</code> → PayloadJob 생성, 빌드 시작</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="text-xs font-mono text-blue-400 w-10 shrink-0 text-right">T=0.5s</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">초기 페이로드</p>
+              <p className="text-xs text-foreground/60">빈 블록 (withdrawals만) 즉시 준비 → <code className="text-xs">best_payload()</code> 호출 가능</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="text-xs font-mono text-emerald-400 w-10 shrink-0 text-right">T=1~2s</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">TX 추가 & 첫 번째 개선</p>
+              <p className="text-xs text-foreground/60">priority 순 TX 실행 → ~200 TX, ~15M gas → <code className="text-xs">best_payload</code> 업데이트</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="text-xs font-mono text-amber-400 w-10 shrink-0 text-right">T=4s</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">GetPayload 요청</p>
+              <p className="text-xs text-foreground/60">CL → EL: <code className="text-xs">engine_getPayloadV3(payload_id)</code> → resolve() → PayloadJob 종료</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="text-xs font-mono text-foreground/40 w-10 shrink-0 text-right">T=12s</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">다음 슬롯 시작</p>
+              <p className="text-xs text-foreground/60">4~12s: CL이 블록 전파 & attestation 수집</p>
+            </div>
+          </div>
+          <div className="rounded bg-muted/30 p-3 text-xs text-foreground/50">
+            Reth 전략: 병렬 TX 평가 + MEV bundle 통합 (rbuilder) + state caching
+          </div>
+        </div>
         <p className="leading-7">
           Validator는 <strong>4초 내에 수익 최대 블록</strong>을 만들어야 함.<br />
           Reth의 continuous building으로 시간 내 best 블록 확보.<br />

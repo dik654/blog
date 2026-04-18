@@ -172,7 +172,7 @@ function MDSMultiply() {
             <rect x={100} y={y} width={90} height={28} rx={5}
               fill={`${C3}08`} stroke={C3} strokeWidth={0.6} />
             <text x={145} y={y + 18} textAnchor="middle"
-              fontSize={10} fontWeight={500} fill={C3} fontFamily="monospace">
+              fontSize={10} fontWeight={500} fill={C3}>
               [{matRows[i].join('  ')}]
             </text>
             {/* = formula */}

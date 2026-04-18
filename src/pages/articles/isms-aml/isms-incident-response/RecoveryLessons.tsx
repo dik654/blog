@@ -1,8 +1,13 @@
+import RecoveryLessonsViz from './viz/RecoveryLessonsViz';
+import EradicationRecoveryInline from './viz/EradicationRecoveryInline';
+import PreventionDrillInline from './viz/PreventionDrillInline';
+
 export default function RecoveryLessons() {
   return (
     <section id="recovery-lessons" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">복구와 재발방지</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <RecoveryLessonsViz />
         <h3 className="text-xl font-semibold mt-8 mb-4">근절: 원인 제거</h3>
         <p className="leading-7">
           근절(Eradication)은 시스템에 남아 있는 공격의 흔적을 완전히 제거하는 단계다.
@@ -36,6 +41,8 @@ export default function RecoveryLessons() {
           동일 공격이 재발하는지, 공격자가 다른 경로로 재침입을 시도하는지 집중 감시하는 기간을 최소 2주 이상 유지한다.
         </p>
 
+        <EradicationRecoveryInline />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">사후 보고서</h3>
         <p className="leading-7">
           사고가 종료되면 반드시 사후 보고서(Post-Incident Report)를 작성한다.
@@ -66,6 +73,8 @@ export default function RecoveryLessons() {
           포렌식 과정에서 확보한 증거(디스크 이미지, 로그, 네트워크 패킷)를 증거 보관 체인(chain of custody) 기록과 함께 제출한다.
           수사 과정에서 추가 증거가 필요하면 협조하되, 내부 시스템 접근 권한은 최소 범위로 제한하여 제공한다.
         </p>
+
+        <PreventionDrillInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">재발방지</h3>
         <p className="leading-7">

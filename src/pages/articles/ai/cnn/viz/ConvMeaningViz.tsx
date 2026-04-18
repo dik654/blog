@@ -60,7 +60,7 @@ export default function ConvMeaningViz() {
           {step >= 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
               <Grid data={K_LINE} ox={125} oy={38} highlight label="커널 1 (│)" />
-              <text x={192} y={105} textAnchor="middle" fontSize={16} fill="#6366f1">→</text>
+              <text x={198} y={85} textAnchor="middle" fontSize={16} fill="#6366f1">→</text>
               <FeatureMap data={fmLine} ox={210} oy={30} maxVal={maxLine} color="#10b981" label="피처맵 1" />
               <text x={252} y={132} textAnchor="middle" fontSize={12} fill="#10b981" fontWeight={600}>
                 높은 출력 = 직선 많음
@@ -70,7 +70,7 @@ export default function ConvMeaningViz() {
           {step >= 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
               <Grid data={K_CURVE} ox={310} oy={38} highlight label="커널 2 (╲╱)" />
-              <text x={377} y={105} textAnchor="middle" fontSize={16} fill="#6366f1">→</text>
+              <text x={383} y={85} textAnchor="middle" fontSize={16} fill="#6366f1">→</text>
               <FeatureMap data={fmCurve} ox={395} oy={30} maxVal={maxCurve} color="#f59e0b" label="피처맵 2" />
               <text x={437} y={132} textAnchor="middle" fontSize={12} fill="#f59e0b" fontWeight={600}>
                 낮은 출력 = 곡선 적음

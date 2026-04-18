@@ -32,26 +32,25 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── alloy 크레이트 계보 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">alloy 크레이트 계보 — ethers-rs 후계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ethers-rs (2021~2023) → alloy (2023~)
-//
-// ethers-rs의 교훈:
-// - ABI 코드 생성(Abigen)이 유용 → 유지
-// - 하지만 Types/Providers/Signers가 하나의 거대 크레이트 → 분할 필요
-// - alloy는 이것을 ~40개 크레이트로 분할
-
-// alloy 주요 크레이트 (reth가 사용하는 것):
-alloy-primitives      // Address, B256, U256, Bytes, Bloom
-alloy-rlp             // RLP 인코딩/디코딩 (derive 매크로)
-alloy-rlp-derive      // #[derive(RlpEncodable)] 프로시저 매크로
-alloy-trie            // MPT 헬퍼 (HashBuilder, Nibbles)
-alloy-eips            // EIP-1559/2930/4844 타입 정의
-alloy-consensus       // TxEnvelope, Header, Receipt 타입
-alloy-genesis         // Genesis 구조체 파싱
-alloy-signer          // ECDSA 서명 (Ledger/AWS KMS 등)
-
-// Reth는 ~30개 alloy 크레이트를 직접 의존 → 공유 타입 기반 구축`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <p className="text-sm font-semibold mb-3">ethers-rs (2021~2023) → alloy (2023~)</p>
+          <p className="text-sm leading-6 mb-4">
+            ethers-rs의 교훈: ABI 코드 생성(<code>Abigen</code>)은 유용 → 유지했지만,
+            Types/Providers/Signers가 하나의 거대 크레이트였던 문제 → alloy는 ~40개 크레이트로 분할.
+          </p>
+          <p className="text-sm font-semibold mb-2">alloy 주요 크레이트 (Reth가 사용하는 것)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-primitives</code> — Address, B256, U256, Bytes, Bloom</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-rlp</code> — RLP 인코딩/디코딩 (derive 매크로)</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-rlp-derive</code> — <code>#[derive(RlpEncodable)]</code> 프로시저 매크로</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-trie</code> — MPT 헬퍼 (HashBuilder, Nibbles)</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-eips</code> — EIP-1559/2930/4844 타입 정의</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-consensus</code> — TxEnvelope, Header, Receipt 타입</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-genesis</code> — Genesis 구조체 파싱</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-signer</code> — ECDSA 서명 (Ledger/AWS KMS 등)</div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">Reth는 ~30개 alloy 크레이트를 직접 의존 → 공유 타입 기반 구축</p>
+        </div>
         <p className="leading-7">
           alloy의 가치: <strong>이더리움 Rust 생태계의 공통 타입</strong>.<br />
           Reth, Foundry, ethers-rs 후속 도구, 개인 프로젝트 모두 같은 Address/B256/U256 타입 공유.<br />
@@ -60,31 +59,30 @@ alloy-signer          // ECDSA 서명 (Ledger/AWS KMS 등)
 
         {/* ── const 제네릭 설계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">const 제네릭 — FixedBytes&lt;N&gt; 통합 설계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 하나의 구조체로 모든 고정 크기 타입 표현
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub struct FixedBytes<const N: usize>(pub [u8; N]);
-
-// 타입 별칭으로 의미 부여
-pub type B8    = FixedBytes<1>;   // 1바이트
-pub type B16   = FixedBytes<2>;   // 2바이트
-pub type B32   = FixedBytes<4>;   // 4바이트 (function selector)
-pub type B64   = FixedBytes<8>;   // 8바이트 (nonce)
-pub type B128  = FixedBytes<16>;  // 16바이트 (IPv6)
-pub type B160  = FixedBytes<20>;  // 20바이트 (Address)
-pub type B256  = FixedBytes<32>;  // 32바이트 (keccak256)
-pub type B512  = FixedBytes<64>;  // 64바이트 (공개키)
-pub type B1024 = FixedBytes<128>; // 128바이트
-pub type B2048 = FixedBytes<256>; // 256바이트 (Bloom filter)
-
-// Address는 B160의 newtype
-pub struct Address(pub B160);
-
-// 장점:
-// 1. 코드 중복 0 — trait impl 한 번으로 모든 크기 지원
-// 2. 스택 할당 — [u8; N]은 Copy, 힙 없음
-// 3. 컴파일 타임 크기 검증 — keccak256()이 B256 반환 보장`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <p className="text-sm font-semibold mb-2">하나의 구조체로 모든 고정 크기 타입 표현</p>
+          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-4">
+            <code>{'#[derive(Clone, Copy, PartialEq, Eq, Hash)]'}</code><br />
+            <code>{'pub struct FixedBytes<const N: usize>(pub [u8; N]);'}</code>
+          </div>
+          <p className="text-sm font-semibold mb-2">타입 별칭으로 의미 부여</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B8</code> = 1B</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B32</code> = 4B (selector)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B64</code> = 8B (nonce)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B160</code> = 20B (Address)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B256</code> = 32B (keccak256)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B512</code> = 64B (공개키)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B2048</code> = 256B (Bloom)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>Address(B160)</code> — newtype</div>
+          </div>
+          <p className="text-sm font-semibold mb-2">장점</p>
+          <div className="space-y-1.5 text-sm">
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">1.</span> 코드 중복 0 — trait impl 한 번으로 모든 크기 지원</div>
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">2.</span> 스택 할당 — <code>[u8; N]</code>은 <code>Copy</code>, 힙 없음</div>
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">3.</span> 컴파일 타임 크기 검증 — <code>keccak256()</code>이 <code>B256</code> 반환 보장</div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>const N: usize</code>는 Rust 1.51부터 안정화된 기능 — 컴파일 타임에 결정되는 정수 제네릭.<br />
           Geth에서 <code>Hash [32]byte</code>와 <code>Address [20]byte</code>를 각각 선언하고 각각 메서드 구현하는 것과 대조.<br />
@@ -93,32 +91,41 @@ pub struct Address(pub B160);
 
         {/* ── 성능 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">스택 vs 힙 — 할당 비용 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Geth: big.Int 사용
-balance := new(big.Int).Add(oldBalance, tx.Value())
-// 내부적으로:
-// 1. big.Int 구조체 힙 할당 (~48 bytes)
-// 2. 가변 []Word 슬라이스 할당 (~32 bytes for U256)
-// 3. 연산 결과로 새 슬라이스 할당 가능
-// 4. GC가 나중에 추적 + 회수
-
-// Reth: U256 사용
-let balance = old_balance + tx.value;
-// 내부적으로:
-// 1. U256 = [u64; 4] = 32 bytes → 스택에 배치
-// 2. 덧셈은 wrapping_add + carry → 명령어 수 개
-// 3. 결과도 스택 변수로 저장
-// 4. 함수 종료 시 스택 포인터만 감소 (GC 없음)
-
-// 블록 실행 1회에 발생하는 U256 연산:
-// - 가스 계산: ~1000회
-// - 잔고 변경: ~500회
-// - 스토리지 값: ~5000회
-// - 합계: ~10K+ U256 연산
-//
-// Geth: GC 압박 누적 → 간헐적 GC 휴지(~100ms)
-// Reth: 스택 할당만 → 일정한 응답 시간`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
+            <div className="rounded border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-3">
+              <p className="font-semibold mb-2 text-red-700 dark:text-red-400">Geth: <code>big.Int</code> 사용</p>
+              <p className="leading-6"><code>balance := new(big.Int).Add(oldBalance, tx.Value())</code></p>
+              <ul className="mt-2 space-y-1 text-sm list-disc list-inside">
+                <li><code>big.Int</code> 구조체 힙 할당 (~48B)</li>
+                <li>가변 <code>[]Word</code> 슬라이스 할당 (~32B)</li>
+                <li>연산 결과로 새 슬라이스 할당 가능</li>
+                <li>GC가 나중에 추적 + 회수</li>
+              </ul>
+            </div>
+            <div className="rounded border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-3">
+              <p className="font-semibold mb-2 text-emerald-700 dark:text-emerald-400">Reth: <code>U256</code> 사용</p>
+              <p className="leading-6"><code>let balance = old_balance + tx.value;</code></p>
+              <ul className="mt-2 space-y-1 text-sm list-disc list-inside">
+                <li><code>U256 = [u64; 4]</code> = 32B → 스택에 배치</li>
+                <li>덧셈은 <code>wrapping_add</code> + carry → 명령어 수 개</li>
+                <li>결과도 스택 변수로 저장</li>
+                <li>함수 종료 시 스택 포인터만 감소 (GC 없음)</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-sm font-semibold mb-2">블록 실행 1회 U256 연산 규모</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">가스 계산 ~1000회</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">잔고 변경 ~500회</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">스토리지 ~5000회</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center font-semibold">합계 ~10K+</div>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="rounded border border-red-200 dark:border-red-900 bg-background px-3 py-1.5">Geth: GC 압박 누적 → 간헐적 GC 휴지(~100ms)</div>
+            <div className="rounded border border-emerald-200 dark:border-emerald-900 bg-background px-3 py-1.5">Reth: 스택 할당만 → 일정한 응답 시간</div>
+          </div>
+        </div>
         <p className="leading-7">
           블록체인 실행은 <strong>짧은 생존 객체 수천 개</strong>를 빠르게 생성/소멸하는 워크로드.<br />
           Go의 GC는 이런 패턴에서 간헐적 휴지(pause)를 발생시킴 — RPC p99 latency에 반영.<br />

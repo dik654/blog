@@ -1,4 +1,5 @@
 import TanhViz from './viz/TanhViz';
+import TanhDetailViz from './viz/TanhDetailViz';
 import LSTMGateViz from './viz/LSTMGateViz';
 
 export default function Tanh() {
@@ -33,52 +34,13 @@ export default function Tanh() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Tanh 특성과 Sigmoid 관계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Hyperbolic Tangent
-//
-// 정의:
-//   tanh(x) = (e^x - e^-x) / (e^x + e^-x)
-//           = sinh(x) / cosh(x)
-//
-// Sigmoid와의 관계:
-//   tanh(x) = 2·σ(2x) - 1
-//
-// 범위:
-//   tanh(x) ∈ (-1, 1)
-//   tanh(-∞) = -1
-//   tanh(0) = 0
-//   tanh(+∞) = 1
-//
-// 미분:
-//   d/dx tanh(x) = 1 - tanh²(x) = sech²(x)
-//
-// 주요 값:
-//   tanh(-2) ≈ -0.964, tanh'(-2) ≈ 0.071
-//   tanh(-1) ≈ -0.762, tanh'(-1) ≈ 0.420
-//   tanh( 0) = 0.000,  tanh'( 0) = 1.000
-//   tanh( 1) ≈ 0.762,  tanh'( 1) ≈ 0.420
-//   tanh( 2) ≈ 0.964,  tanh'( 2) ≈ 0.071
-
-// Sigmoid 대비 장점:
-//
-// 1. Zero-centered output
-//    sigmoid: 출력 ∈ (0,1), 평균 ≈ 0.5
-//    tanh:    출력 ∈ (-1,1), 평균 ≈ 0
-//    → gradient update 방향성 균형
-//
-// 2. 더 큰 최대 기울기
-//    sigmoid'(0) = 0.25
-//    tanh'(0) = 1.00
-//    → 4배 빠른 학습 속도
-//
-// 3. Saturation 범위 비슷
-//    sigmoid: |x| > 5에서 포화
-//    tanh:    |x| > 2에서 포화 (더 빠름)
-//
-// 공통 단점:
-//   Vanishing gradient (포화 영역에서 기울기 ≈ 0)
-//   Exp 계산 필요 (느림)`}
-        </pre>
+        <p>
+          tanh는 sigmoid를 수직·수평 이동한 형태 — tanh(x) = 2σ(2x) − 1<br />
+          zero-centered 출력과 4배 큰 기울기가 핵심 장점
+        </p>
+      </div>
+      <TanhDetailViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">LSTM에서 Tanh 역할</h3>
         <p>

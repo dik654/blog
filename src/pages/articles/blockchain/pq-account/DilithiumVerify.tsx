@@ -1,5 +1,6 @@
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
+import M from '@/components/ui/math';
 import VerifyDilithiumViz from './viz/VerifyDilithiumViz';
 import { codeRefs } from './codeRefs';
 
@@ -33,82 +34,82 @@ export default function DilithiumVerify({ onCodeRef }: { onCodeRef: (key: string
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Verify 알고리즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Dilithium Verify(pk, message, signature)
-
-function Verify(pk, M, sig):
-    (seed, t_high) = pk
-    (c_tilde, z, h) = sig
-
-    // 1) Bounds check
-    if ||z||_∞ >= γ1 - β:
-        return FAIL
-
-    // 2) Expand public key
-    A = ExpandA(seed)
-    t_high_bits = t_high · 2^d
-
-    // 3) Decode challenge
-    c = H(c_tilde)  // back to polynomial
-
-    // 4) Reconstruct w_high
-    // Key equation: A·z - c·t_high = A·y - c·s2 + c·t_low
-    // With hint, we recover w_high
-    w_recon = A·z - c·t_high_bits
-    w_high_recon = UseHint(h, w_recon, 2γ2)
-
-    // 5) Hash check
-    c_tilde' = H(H(tr || M) || w_high_recon)
-
-    // 6) Compare
-    return (c_tilde == c_tilde')
-
-// Verify cost analysis
-// Matrix-vector mult A·z: ~k·l polynomial mults
-// Dilithium2 (k=l=4): 16 poly mults
-// Each poly mult: ~1500 cycles (with NTT)
-// Total A·z: ~24,000 cycles
-// + hash operations: ~5,000 cycles
-// Total verify: ~30,000 cycles ≈ 10μs on 3GHz CPU
-
-// Sign vs Verify performance
-// Sign: ~500,000 cycles (rejection loop)
-// Verify: ~30,000 cycles
-// Ratio: ~17x faster verify`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>Verify(pk, M, sig)</code></p>
+            <p className="text-xs text-muted-foreground mb-2">
+              <code>pk = (seed, t_high)</code>, <code>sig = (c_tilde, z, h)</code>
+            </p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>Bounds check</strong> &mdash; <M>{'\\|z\\|_\\infty \\geq \\gamma_1 - \\beta'}</M> &rarr; FAIL</li>
+              <li><strong>Expand</strong> &mdash; <M>{'A = \\text{ExpandA}(\\text{seed})'}</M>, <M>{'t_{\\text{high\\_bits}} = t_{\\text{high}} \\cdot 2^d'}</M></li>
+              <li><strong>Decode challenge</strong> &mdash; <M>{'c = H(\\tilde{c})'}</M></li>
+              <li><strong>Reconstruct</strong> &mdash; <M>{'w_{\\text{recon}} = A \\cdot z - c \\cdot t_{\\text{high\\_bits}}'}</M>, <M>{'w_{\\text{high}} = \\text{UseHint}(h, w_{\\text{recon}}, 2\\gamma_2)'}</M></li>
+              <li><strong>Hash check</strong> &mdash; <M>{"\\tilde{c}' = H(H(\\text{tr} \\| M) \\| w_{\\text{high}})"}</M></li>
+              <li><strong>Compare</strong> &mdash; <M>{"\\tilde{c} = \\tilde{c}'"}</M></li>
+            </ol>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Verify Cost Analysis</p>
+              <div className="text-sm space-y-1 text-muted-foreground">
+                <p><M>{'A \\cdot z'}</M>: <M>{'k \\cdot l'}</M> polynomial mults</p>
+                <p>Dilithium2 (k=l=4): 16 poly mults</p>
+                <p>Each poly mult: ~1,500 cycles (NTT)</p>
+                <p>Total <M>{'A \\cdot z'}</M>: ~24,000 cycles</p>
+                <p>+ hash: ~5,000 cycles</p>
+                <p><strong>Total: ~30,000 cycles (~10us @ 3GHz)</strong></p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Sign vs Verify 성능</p>
+              <div className="grid grid-cols-2 gap-3 text-sm text-center">
+                <div><p className="text-muted-foreground">Sign</p><p className="font-mono">~500K cycles</p></div>
+                <div><p className="text-muted-foreground">Verify</p><p className="font-mono">~30K cycles</p></div>
+              </div>
+              <p className="text-sm text-muted-foreground text-center mt-2">Verify가 <strong>~17x 빠름</strong> (rejection loop 없음)</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">On-chain Verification Gas Cost</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Solidity implementation (no precompile)
-// 예상 gas cost
-
-// Components
-// - Hash (Keccak or SHAKE): ~500 gas each
-// - Polynomial mult (naive): ~150,000 gas
-// - Polynomial mult (NTT in Solidity): ~80,000 gas
-// - Matrix-vector: 16 × poly_mult
-
-// Estimated total
-// Dilithium2 verify: ~2,500,000 gas
-// 비교: ecrecover (precompile) = 3,000 gas
-// → 800x more expensive
-
-// Optimization attempts
-// 1) Precompile (EIP proposal)
-//    - Native implementation → ~50k gas
-//    - 50x improvement
-// 2) Batch verification
-//    - Amortize cost over multiple sigs
-// 3) Off-chain + succinct proof
-//    - ZK proof of valid Dilithium sig
-//    - On-chain: verify ZK proof only
-
-// 현재 상태
-// - No EVM precompile yet
-// - Research implementations exist
-// - 실전 배포 아직 이름 (2024)
-
-// Trade-off
-// - Immediate quantum safety
-// - High gas cost
-// - Large signatures (2.4 KB per tx)`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Solidity 구현 Gas Cost (no precompile)</p>
+            <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+              <div>Hash (Keccak/SHAKE): <strong>~500 gas</strong> each</div>
+              <div>Polynomial mult (naive): <strong>~150K gas</strong></div>
+              <div>Polynomial mult (NTT): <strong>~80K gas</strong></div>
+              <div>Matrix-vector: 16 x poly_mult</div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm text-center mt-3">
+              <div className="rounded border border-red-500/30 p-2">
+                <p className="text-muted-foreground">Dilithium2 verify</p>
+                <p className="font-mono font-semibold text-red-400">~2,500,000 gas</p>
+              </div>
+              <div className="rounded border border-green-500/30 p-2">
+                <p className="text-muted-foreground"><code>ecrecover</code> (precompile)</p>
+                <p className="font-mono font-semibold text-green-400">3,000 gas</p>
+              </div>
+            </div>
+            <p className="text-sm text-red-400 text-center mt-2 font-semibold">800x more expensive</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Optimization 시도</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>Precompile (EIP proposal)</strong> &mdash; native implementation &rarr; ~50K gas (50x improvement)</li>
+              <li><strong>Batch verification</strong> &mdash; 여러 sig의 비용을 분산</li>
+              <li><strong>Off-chain + succinct proof</strong> &mdash; ZK proof of valid Dilithium sig &rarr; on-chain은 ZK proof만 검증</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">현재 상태 (2024)</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>EVM precompile 아직 없음, research implementations 존재</li>
+              <li><strong>Trade-off</strong>: 즉각적 양자 안전 vs 높은 gas cost vs 큰 signature (2.4KB/tx)</li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </section>

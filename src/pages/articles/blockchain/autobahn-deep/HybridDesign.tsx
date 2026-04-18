@@ -45,49 +45,31 @@ export default function HybridDesign() {
 
         {/* ── Fast Path 상세 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Fast Path 상세 (Happy Case)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Fast Path (PBFT-style, 2-phase):
-
-// Phase 1: Propose
-// - slot leader collects Lane batches
-// - creates proposal with batch IDs
-// - broadcasts to all validators
-// - latency: 1δ (single broadcast)
-
-// Phase 2: Vote + Commit
-// - validators verify proposal
-// - send votes to all (broadcast)
-// - leader aggregates 2f+1 votes
-// - commit certificate formed
-// - latency: 1δ + 1δ (vote propagation)
-
-// Total latency: 2δ per slot
-// - equivalent to PBFT happy path
-// - responsive (no timeout)
-
-// Why 2 phases suffice (not 3)?
-// - Autobahn uses view certificates
-// - similar to HotStuff-2 TC mechanism
-// - view change provides additional safety
-// - 2-phase + VC = safe
-
-// Signature aggregation:
-// - BLS12-381
-// - 2f+1 → 1 aggregated signature
-// - O(1) certificate size
-
-// Ride-Sharing optimization:
-// - proposal includes Lane acks
-// - vote includes Lane acks
-// - continuous data layer sync
-// - no separate ack messages
-
-// Performance:
-// - latency: 200ms (WAN)
-// - throughput: 100K TPS
-// - validators: 100
-// - CPU: <50%`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Fast Path (PBFT-style, 2-phase)</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Phase 1: Propose</p>
+                <p className="text-muted-foreground">slot leader가 Lane batches 수집 → batch ID 포함 proposal 생성 → all validators broadcast. latency: <code>1delta</code></p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Phase 2: Vote + Commit</p>
+                <p className="text-muted-foreground">validators verify → votes broadcast → leader가 <code>2f+1</code> votes 집계 → commit certificate. latency: <code>2delta</code></p>
+              </div>
+            </div>
+            <p className="text-sm mt-2">
+              Total: <code>2delta</code> per slot (PBFT happy path 동등). 2 phases 충분: view certificates(HotStuff-2 TC 유사)로 추가 safety 확보
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="text-sm">
+              <strong>BLS12-381</strong> signature aggregation: <code>2f+1</code> → 1 aggregated signature, <code>O(1)</code> certificate size.<br />
+              <strong>Ride-Sharing</strong>: proposal/vote에 Lane acks 포함 → 별도 ack 메시지 불필요.<br />
+              성능: 200ms (WAN), 100K TPS, 100 validators, CPU &lt;50%
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Fast path: <strong>2 phases = 2δ latency</strong>.<br />
           PBFT-style + BLS aggregation + Ride-Sharing piggyback.<br />
@@ -96,57 +78,29 @@ export default function HybridDesign() {
 
         {/* ── Slow Path 상세 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Slow Path 상세 (Leader Failure)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Slow Path (Failure recovery):
-
-// Detection:
-// - validator waits for Propose (timeout T)
-// - T = e.g., 500ms
-// - no Propose → leader suspected
-
-// View Change Protocol:
-// 1. Validator sends Timeout message
-//    - includes highQC (latest committed slot)
-//    - broadcasts to all
-
-// 2. New leader collects 2f+1 timeouts
-//    - forms Timeout Certificate (TC)
-//    - identifies latest progress
-//    - max highQC in TC
-
-// 3. New leader resumes slot
-//    - proposes using max highQC as base
-//    - includes TC as proof
-//    - 2-phase commit continues
-
-// 4. Slow path latency:
-//    - timeout: T (500ms)
-//    - timeout gathering: 1δ
-//    - new propose: 1δ + 1δ
-//    - Total: T + 3δ
-
-// Blip handling (Autobahn innovation):
-// - blip = brief leader unresponsiveness
-// - traditional BFT: full view change
-// - Autobahn: lightweight blip recovery
-//
-// Blip mechanism:
-// - detect 감지 (mini timeout 100ms)
-// - backup leader 활성화
-// - backup이 같은 slot 제안
-// - 원 leader 복귀 시 reconciliation
-// - minimal disruption
-
-// Latency with blips:
-// - traditional: T + 3δ = 500ms + 600ms = 1.1s
-// - Autobahn: mini timeout + 2δ = 100ms + 400ms = 500ms
-// - 2x+ faster blip recovery
-
-// Hybrid benefit:
-// - 99% happy path (fast)
-// - 1% failure handling (slow but bounded)
-// - blip specific optimization`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Slow Path (Failure recovery)</p>
+            <ol className="text-sm list-decimal list-inside space-y-1">
+              <li><strong>Detection</strong>: validator가 Propose 대기 (timeout T=500ms). no Propose → leader suspected</li>
+              <li><strong>Timeout message</strong>: <code>highQC</code> (latest committed slot) 포함, all broadcast</li>
+              <li><strong>New leader</strong>: <code>2f+1</code> timeouts 수집 → Timeout Certificate (TC) 형성, max <code>highQC</code> 식별</li>
+              <li><strong>Resume</strong>: max highQC as base로 propose, TC as proof 포함, 2-phase commit 계속</li>
+            </ol>
+            <p className="text-sm text-muted-foreground mt-1">Total latency: <code>T + 3delta</code> (500ms + 600ms = 1.1s)</p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Blip handling (Autobahn 혁신)</p>
+            <p className="text-sm">
+              기존 BFT: brief unresponsiveness에도 full view change.<br />
+              Autobahn: mini timeout(100ms) → backup leader 활성화 → 같은 slot 제안 → 원 leader 복귀 시 reconciliation
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              traditional: <code>T+3delta = 1.1s</code> vs Autobahn: <code>100ms+2delta = 500ms</code> → 2x+ faster.<br />
+              99% happy path (fast), 1% failure handling (slow but bounded), blip-specific optimization
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Slow path: <strong>timeout + TC + resume</strong>.<br />
           Blip handling: mini timeout + backup leader → 2x+ 빠름.<br />
@@ -155,72 +109,46 @@ export default function HybridDesign() {
 
         {/* ── View Change Mechanism ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">View Change Mechanism</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Autobahn View Change:
-
-// Trigger:
-// - T timeout (e.g., 500ms)
-// - leader suspected Byzantine / offline
-// - broadcast Timeout message
-
-// Timeout message:
-// struct Timeout {
-//     slot: u64,
-//     view: u64,
-//     highQC: QC,          // latest committed QC
-//     lane_state: LaneAcks, // current lane info
-//     signature: Sig,
-// }
-
-// New leader (view v+1):
-// leader_author = schedule[(v+1) mod n]
-
-// Aggregation:
-// 2f+1 timeouts received
-// → Timeout Certificate (TC)
-// → max highQC identified
-// → lane state merged
-
-// Resume:
-// - new leader proposes slot
-// - references TC as proof
-// - includes merged lane state
-// - proceeds with fast path
-
-// Safety:
-// - TC replaces old view certificates
-// - max highQC preserved
-// - committed slots never reverted
-// - quorum intersection (standard BFT)
-
-// Optimizations:
-//
-// 1. Implicit timeout:
-//    - no explicit TIMEOUT message if not needed
-//    - detect via Lane activity
-//
-// 2. Parallel view change:
-//    - multiple slots in flight
-//    - each may have separate view change
-//    - don't block each other
-//
-// 3. Blip-specific:
-//    - short timeout triggers blip mode
-//    - full view change for longer failures
-//    - adaptive threshold
-
-// Performance (SOSP 2024):
-// - view change latency: 300ms
-// - blip recovery: 100ms
-// - vs HotStuff VC: 1s
-// - 3-10x faster
-
-// Integration with Lanes:
-// - lanes continue during view change
-// - batch dissemination not interrupted
-// - only slot ordering paused
-// - throughput impact minimal`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">View Change Protocol</p>
+            <p className="text-sm mb-2">
+              Trigger: timeout T(500ms) → leader suspected → broadcast Timeout message
+            </p>
+            <p className="text-sm">
+              <strong>Timeout message</strong>: <code>slot</code>, <code>view</code>, <code>highQC</code> (latest committed QC), <code>lane_state</code> (LaneAcks), <code>signature</code>
+            </p>
+            <p className="text-sm mt-1">
+              New leader: <code>schedule[(v+1) mod n]</code>. <code>2f+1</code> timeouts → TC → max highQC → lane state merged → fast path resume
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Safety &amp; Optimizations</p>
+            <p className="text-sm mb-2">
+              Safety: TC replaces old view certificates, max highQC preserved, committed slots never reverted, quorum intersection
+            </p>
+            <div className="grid gap-2 sm:grid-cols-3 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Implicit timeout</p>
+                <p className="text-muted-foreground">명시적 TIMEOUT 불필요 시 Lane activity로 감지</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Parallel view change</p>
+                <p className="text-muted-foreground">multiple slots in flight, 각 slot 독립 VC, 서로 block 안 함</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Blip-specific</p>
+                <p className="text-muted-foreground">short timeout → blip mode, longer → full VC. adaptive threshold</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="text-sm">
+              <strong>Performance</strong>: VC latency 300ms, blip recovery 100ms (vs HotStuff 1s) → 3-10x faster.<br />
+              <strong>Lanes 통합</strong>: view change 중에도 lanes 계속 active, batch dissemination 미중단, slot ordering만 pause → throughput 영향 최소
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           View Change: <strong>Timeout + TC + resume with max highQC</strong>.<br />
           Blip-specific optimization → 3-10x 빠름.<br />

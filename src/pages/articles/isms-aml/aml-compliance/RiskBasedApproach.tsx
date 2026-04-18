@@ -1,8 +1,14 @@
+import RiskBasedApproachViz from './viz/RiskBasedApproachViz';
+import RiskAssessmentStepsViz from './viz/RiskAssessmentStepsViz';
+import CustomerRiskModelViz from './viz/CustomerRiskModelViz';
+
 export default function RiskBasedApproach() {
   return (
     <section id="risk-based-approach" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">위험기반 접근법 (RBA)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <RiskBasedApproachViz />
 
         <p>
           RBA(Risk-Based Approach)는 "모든 고객에게 동일한 수준의 확인을 하는 대신,
@@ -137,6 +143,8 @@ export default function RiskBasedApproach() {
           <li>외부 환경 급변 (예: 특정 국가 제재 추가)</li>
         </ul>
 
+        <RiskAssessmentStepsViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">3선 방어 모델 (Three Lines of Defence)</h3>
         <p>
           RBA를 조직적으로 실행하기 위한 거버넌스 구조.<br />
@@ -217,6 +225,8 @@ export default function RiskBasedApproach() {
           실무에서는 정량 모델로 초기 등급을 산출하고, 정성 평가로 조정(override)하는 방식을 병행한다.<br />
           override 시에는 반드시 사유를 기록하고, 상위자 승인을 받아야 한다.
         </p>
+
+        <CustomerRiskModelViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">문서화 의무</h3>
         <p>

@@ -13,55 +13,80 @@ export default function Evidence({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── Evidence 타입 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">Evidence 종류 — 2가지 비잔틴 행위</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/types/evidence.go
-type Evidence interface {
-    ABCI() []abci.Misbehavior
-    Bytes() []byte
-    Hash() []byte
-    Height() int64
-    String() string
-    Time() time.Time
-    ValidateBasic() error
-}
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2"><code>Evidence</code> interface — cometbft/types/evidence.go</p>
+            <div className="grid grid-cols-3 sm:grid-cols-7 gap-1 text-xs text-center text-muted-foreground">
+              <div className="bg-background rounded px-2 py-1.5"><code>ABCI()</code></div>
+              <div className="bg-background rounded px-2 py-1.5"><code>Bytes()</code></div>
+              <div className="bg-background rounded px-2 py-1.5"><code>Hash()</code></div>
+              <div className="bg-background rounded px-2 py-1.5"><code>Height()</code></div>
+              <div className="bg-background rounded px-2 py-1.5"><code>String()</code></div>
+              <div className="bg-background rounded px-2 py-1.5"><code>Time()</code></div>
+              <div className="bg-background rounded px-2 py-1.5"><code>ValidateBasic()</code></div>
+            </div>
+          </div>
 
-// 1. DuplicateVoteEvidence (equivocation)
-// 같은 (height, round, type)에 2개 다른 block 투표
-type DuplicateVoteEvidence struct {
-    VoteA            *Vote     // 첫 번째 투표
-    VoteB            *Vote     // 두 번째 투표
-    TotalVotingPower int64
-    ValidatorPower   int64
-    Timestamp        time.Time
-}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">1. DuplicateVoteEvidence (equivocation)</p>
+              <p className="text-xs text-muted-foreground mb-2">같은 (height, round, type)에 2개 다른 block 투표</p>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">VoteA</code><span className="text-xs text-muted-foreground"><code>*Vote</code> — 첫 번째 투표</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">VoteB</code><span className="text-xs text-muted-foreground"><code>*Vote</code> — 두 번째 투표</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">TotalVotingPower</code><span className="text-xs text-muted-foreground"><code>int64</code></span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">ValidatorPower</code><span className="text-xs text-muted-foreground"><code>int64</code></span>
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <code className="text-xs">Timestamp</code><span className="text-xs text-muted-foreground"><code>time.Time</code></span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">검증: Height/Round/Type 동일 + Address 동일 + BlockID 상이 + 두 Vote 서명 유효</p>
+            </div>
 
-// 검증:
-// - VoteA.Height == VoteB.Height
-// - VoteA.Round == VoteB.Round
-// - VoteA.Type == VoteB.Type
-// - VoteA.ValidatorAddress == VoteB.ValidatorAddress
-// - VoteA.BlockID != VoteB.BlockID
-// - 두 Vote 모두 유효한 서명
+            <div className="rounded-lg border border-orange-500/30 p-4">
+              <p className="font-semibold text-sm text-orange-400 mb-2">2. LightClientAttackEvidence</p>
+              <p className="text-xs text-muted-foreground mb-2">light client 공격 (conflicting headers)</p>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">ConflictingBlock</code><span className="text-xs text-muted-foreground"><code>*LightBlock</code> — 공격자 블록</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">CommonHeight</code><span className="text-xs text-muted-foreground"><code>int64</code> — 공통 조상 높이</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">ByzantineValidators</code><span className="text-xs text-muted-foreground"><code>[]*Validator</code></span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">TotalVotingPower</code><span className="text-xs text-muted-foreground"><code>int64</code></span>
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <code className="text-xs">Timestamp</code><span className="text-xs text-muted-foreground"><code>time.Time</code></span>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-1 mt-3 text-xs text-center text-muted-foreground">
+                <div className="bg-background/50 rounded px-2 py-1">Lunatic — 다른 state 기반</div>
+                <div className="bg-background/50 rounded px-2 py-1">Equivocation — conflicting 서명</div>
+                <div className="bg-background/50 rounded px-2 py-1">Amnesia — 이전 commit 무시</div>
+              </div>
+            </div>
+          </div>
 
-// 2. LightClientAttackEvidence
-// light client 공격 (conflicting headers)
-type LightClientAttackEvidence struct {
-    ConflictingBlock *LightBlock         // 공격자 블록
-    CommonHeight     int64                // 공통 조상 높이
-    ByzantineValidators []*Validator     // byzantine 검증자 목록
-    TotalVotingPower int64
-    Timestamp        time.Time
-}
-
-// 공격 유형:
-// - Lunatic: 다른 state 기반 블록 제안
-// - Equivocation: conflicting 블록들에 서명
-// - Amnesia: 이전 commit 무시하고 재투표
-
-// 탐지 시점:
-// - 일반 노드: P2P로 받은 Vote 비교
-// - Light client: 2개 full node의 응답 비교`}
-        </pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">탐지 시점</p>
+            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground">
+              <div><strong className="text-foreground/80">일반 노드</strong> — P2P로 받은 Vote 비교</div>
+              <div><strong className="text-foreground/80">Light client</strong> — 2개 full node의 응답 비교</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Evidence는 <strong>2가지 비잔틴 행위 증거</strong>.<br />
           DuplicateVote (equivocation) + LightClientAttack (reorg 공격).<br />
@@ -70,46 +95,49 @@ type LightClientAttackEvidence struct {
 
         {/* ── Evidence Pool & Slashing ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Evidence Lifecycle — 탐지 → Block 포함 → Slash</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Evidence 생명주기:
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3">Evidence 생명주기 — 5단계</p>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. 탐지</p>
+                <p className="text-xs text-muted-foreground"><code>VoteSet.AddVote</code>에서 equivocation 감지 → <code>DuplicateVoteEvidence</code> 생성 → EvidencePool 추가</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. Gossip</p>
+                <p className="text-xs text-muted-foreground">Evidence reactor가 모든 peer에게 방송. 누가 먼저 블록에 포함시키는지 경쟁</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. Block 포함</p>
+                <p className="text-xs text-muted-foreground"><code>evpool.PendingEvidence(10)</code> — 블록당 최대 10개 Evidence 포함</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">4. Validation</p>
+                <p className="text-xs text-muted-foreground"><code>ValidateBlock</code>에서 Evidence 재검증 + 서명 체크. 유효하지 않으면 블록 거부</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">5. Slashing</p>
+                <p className="text-xs text-muted-foreground">ABCI <code>FinalizeBlock</code>에 Misbehavior 전달 → Cosmos SDK slashing module stake 차감</p>
+              </div>
+            </div>
+          </div>
 
-// 1. 탐지 (P2P 메시지 수신 중)
-// - VoteSet.AddVote에서 equivocation 감지
-// - DuplicateVoteEvidence 생성
-// - EvidencePool에 추가
-
-// 2. Gossip (다른 피어에게 전파)
-// - Evidence reactor가 모든 peer에게 방송
-// - 누가 먼저 블록에 포함시키는지 경쟁
-
-// 3. Block 포함 (Proposer가 다음 블록에 추가)
-func (ms *State) createProposalBlock() *Block {
-    evs := ms.evpool.PendingEvidence(10)  // max 10 per block
-    block.Evidence = EvidenceData{Evidence: evs}
-    return block
-}
-
-// 4. Validation (모든 노드)
-// - ValidateBlock에서 Evidence 재검증
-// - evidence.ValidateBasic()
-// - 서명 검증
-// - 유효하지 않으면 블록 거부
-
-// 5. ABCI Commit에서 slashing
-// - ABCI FinalizeBlock에 Misbehavior 전달
-// - Cosmos SDK: slashing module이 stake 차감
-// - 보통 5% stake slash + tombstone (영구 제외)
-
-// Slashing 효과:
-// - stake 5% loss (Cosmos Hub 기준)
-// - validator tombstone (다시는 activate 불가)
-// - delegator stake 동시 slash
-
-// Evidence max age:
-// - UnbondingPeriod 내 (~21일)
-// - 이 기간 지나면 Evidence 거부
-// - 이유: unbond 후 stake 없어 slash 불가`}
-        </pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Slashing 효과 (Cosmos Hub 기준)</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>stake 5% loss</li>
+                <li>validator tombstone (영구 activate 불가)</li>
+                <li>delegator stake 동반 slash</li>
+              </ul>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Evidence max age</p>
+              <p className="text-sm text-muted-foreground">UnbondingPeriod 내 (~21일)에만 유효</p>
+              <p className="text-xs text-muted-foreground mt-1">이유: unbond 후 stake 없어 slash 불가</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Evidence lifecycle: <strong>탐지 → gossip → block 포함 → slashing</strong>.<br />
           Block에 최대 10개 Evidence → 모든 노드 동일 slashing.<br />

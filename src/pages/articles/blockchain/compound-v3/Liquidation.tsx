@@ -27,43 +27,42 @@ export default function Liquidation() {
         <h3 className="text-xl font-semibold mt-8 mb-3">absorb() — 1단계: 부채 흡수</h3>
 
         <AbsorbInternalsViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function absorb(address absorber, address[] calldata accounts) external {
-    uint startGas = gasleft();
-    accrueInternal();
-
-    for (uint i = 0; i < accounts.length; ) {
-        absorbInternal(absorber, accounts[i]);
-        unchecked { i++; }
-    }
-
-    uint gasUsed = startGas - gasleft();
-    uint256 bonus = gasUsed * baseTokenPriceFeed * priorityFeeBonus;
-    // absorber에게 가스 보상
-}
-
-function absorbInternal(address absorber, address account) internal {
-    require(!isLiquidatable(account), "NotLiquidatable");
-
-    int104 oldPrincipal = userBasic[account].principal;
-    int256 oldBalance = presentValue(oldPrincipal);
-
-    // 모든 담보를 프로토콜 storefront로 이전
-    uint128 totalCollateralValue = 0;
-    for (uint8 i = 0; i < numAssets; i++) {
-        address asset = assetAddr[i];
-        uint128 balance = userCollateral[account][asset].balance;
-        if (balance > 0) {
-            userCollateral[account][asset].balance = 0;
-            totalReserves[asset] += balance;  // 프로토콜이 흡수
-            totalCollateralValue += getAssetValue(asset, balance);
-        }
-    }
-
-    // 부채 청산
-    uint104 newBalance = totalCollateralValue;
-    uint104 repaidBalance = uint104(-oldBalance);
-    userBasic[account].principal = principalValue(int256(newBalance - repaidBalance));
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4 space-y-4">
+          <div>
+            <p className="font-semibold text-sm mb-3"><code className="text-xs">absorb()</code> — 외부 진입점</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">1</span>
+                <div><code className="text-xs">accrueInternal()</code> — 이자 index 먼저 갱신</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">2</span>
+                <div>대상 <code className="text-xs">accounts[]</code> 순회하며 <code className="text-xs">absorbInternal()</code> 호출</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">3</span>
+                <div><code className="text-xs">gasUsed * baseTokenPriceFeed * priorityFeeBonus</code> — absorber에게 가스 보상</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-sm mb-3"><code className="text-xs">absorbInternal()</code> — 핵심 청산 로직</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">A</span>
+                <div><code className="text-xs">isLiquidatable(account)</code> 확인 — 청산 불가능하면 revert</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">B</span>
+                <div>모든 담보 순회: <code className="text-xs">userCollateral[account][asset].balance = 0</code> 후 <code className="text-xs">totalReserves[asset] += balance</code> — 프로토콜이 흡수</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">C</span>
+                <div>부채 청산: <code className="text-xs">principal = principalValue(collateralValue - repaidBalance)</code> — 포지션 리셋</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>absorb 단계</strong>: 프로토콜이 담보를 모두 가져가고 부채 0으로<br />
           사용자의 포지션 완전 청산 — principal은 new 담보 가치로 리셋<br />
@@ -73,37 +72,37 @@ function absorbInternal(address absorber, address account) internal {
         <h3 className="text-xl font-semibold mt-8 mb-3">buyCollateral() — 2단계: 담보 판매</h3>
 
         <BuyCollateralViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function buyCollateral(
-    address asset, uint minAmount, uint baseAmount, address recipient
-) external {
-    accrueInternal();
-
-    uint128 reserves = totalReserves[asset];
-    require(reserves > 0, "NoCollateralAvailable");
-
-    // 할인 가격 계산
-    uint collateralAmount = quoteCollateral(asset, baseAmount);
-    require(collateralAmount >= minAmount, "TooMuchSlippage");
-    require(collateralAmount <= reserves, "InsufficientReserves");
-
-    // base asset 입금
-    doTransferIn(baseToken, msg.sender, baseAmount);
-
-    // 담보 전송
-    totalReserves[asset] -= uint128(collateralAmount);
-    doTransferOut(asset, recipient, collateralAmount);
-}
-
-function quoteCollateral(address asset, uint baseAmount) public view returns (uint) {
-    uint assetPrice = getPrice(assetInfo.priceFeed);
-    uint basePrice = getPrice(baseTokenPriceFeed);
-
-    // 할인 적용 (storeFrontPriceFactor)
-    uint assetWeiPerUnitBase = assetPrice * 1e18 / basePrice;
-    uint discountedPrice = assetWeiPerUnitBase * storeFrontPriceFactor / FACTOR_SCALE;
-
-    return baseAmount * discountedPrice / baseScale;
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4 space-y-4">
+          <div>
+            <p className="font-semibold text-sm mb-3"><code className="text-xs">buyCollateral()</code> — 할인 담보 구매</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">1</span>
+                <div>파라미터: <code className="text-xs">asset</code>(구매할 담보), <code className="text-xs">minAmount</code>(최소 수량), <code className="text-xs">baseAmount</code>(지불할 base), <code className="text-xs">recipient</code></div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">2</span>
+                <div><code className="text-xs">quoteCollateral(asset, baseAmount)</code> — 할인 가격으로 받을 담보 수량 계산</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">3</span>
+                <div><code className="text-xs">doTransferIn(baseToken, msg.sender, baseAmount)</code> — base asset 입금</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">4</span>
+                <div><code className="text-xs">doTransferOut(asset, recipient, collateralAmount)</code> — 할인 담보 전송</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-sm mb-2"><code className="text-xs">quoteCollateral()</code> — 할인 가격 산출</p>
+            <div className="bg-background border border-border rounded p-3 text-sm space-y-1">
+              <p><code className="text-xs">assetWeiPerUnitBase = assetPrice * 1e18 / basePrice</code></p>
+              <p><code className="text-xs">discountedPrice = assetWeiPerUnitBase * storeFrontPriceFactor / FACTOR_SCALE</code></p>
+              <p className="text-muted-foreground text-xs mt-2"><code>storeFrontPriceFactor</code>: 할인율 (보통 0-5%)</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>storefront 모델</strong>: 프로토콜이 할인된 가격에 담보 판매<br />
           아무나 구매 가능 — permissionless marketplace<br />
@@ -113,24 +112,32 @@ function quoteCollateral(address asset, uint baseAmount) public view returns (ui
         <h3 className="text-xl font-semibold mt-8 mb-3">Absorb 장점 — 청산자 관점</h3>
 
         <AbsorberCompareViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Aave V2/V3 청산
-청산자 필요 자본: 부채 금액만큼 base asset
-단계:
-  1. base asset 준비 (예: 10,000 USDC)
-  2. flash loan 사용 가능
-  3. liquidationCall() 호출
-  4. 담보 받음 + 매도
-
-// Compound V3 absorb
-청산자 필요 자본: 0 (gas만)
-단계:
-  1. absorb() 호출 → 가스만 지불
-  2. 프로토콜이 부채 흡수, 담보 획득
-  3. 사용자는 흡수 대가로 gas 보상
-
-// buyCollateral 단계 (선택)
-4. 누군가 base asset으로 할인 담보 구매
-5. 차익거래 기회 (할인 가격 < 시장 가격)`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Aave V2/V3 청산</p>
+            <p className="text-xs text-muted-foreground mb-2">필요 자본: 부채 금액만큼 base asset</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li>base asset 준비 (예: 10,000 USDC)</li>
+              <li>flash loan 사용 가능</li>
+              <li><code className="text-xs">liquidationCall()</code> 호출</li>
+              <li>담보 받음 + 매도</li>
+            </ol>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Compound V3 absorb</p>
+            <p className="text-xs text-muted-foreground mb-2">필요 자본: 0 (gas만)</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code className="text-xs">absorb()</code> 호출 — 가스만 지불</li>
+              <li>프로토콜이 부채 흡수, 담보 획득</li>
+              <li>absorber는 gas 보상 수령</li>
+            </ol>
+            <p className="text-xs text-muted-foreground mt-3 mb-1">buyCollateral 단계 (선택)</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside" start={4}>
+              <li>누군가 base asset으로 할인 담보 구매</li>
+              <li>차익거래 기회 (할인 &lt; 시장 가격)</li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>absorb는 capital-free</strong>: 가스만 있으면 누구나 호출<br />
           Aave는 청산 자본(debt 전액) 필요 → flash loan 필수<br />
@@ -140,28 +147,27 @@ function quoteCollateral(address asset, uint baseAmount) public view returns (ui
         <h3 className="text-xl font-semibold mt-8 mb-3">isLiquidatable() — 청산 가능 판정</h3>
 
         <IsLiquidatableViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function isLiquidatable(address account) public view returns (bool) {
-    int256 balance = presentValue(userBasic[account].principal);
-    if (balance >= 0) return false;  // 차입 없으면 불가
-
-    uint liquidationThreshold = 0;
-    uint16 assetsIn = userBasic[account].assetsIn;
-
-    for (uint8 i = 0; i < numAssets; i++) {
-        if (isInAsset(assetsIn, i)) {
-            AssetInfo memory asset = getAssetInfo(i);
-            uint128 balance = userCollateral[account][asset.asset].balance;
-            uint price = getPrice(asset.priceFeed);
-
-            // liquidateCollateralFactor 사용
-            liquidationThreshold += balance * price / asset.scale
-                * asset.liquidateCollateralFactor / FACTOR_SCALE;
-        }
-    }
-
-    uint debt = uint(-balance);
-    return debt > liquidationThreshold;
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs">isLiquidatable()</code> — 청산 판정 로직</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div><code className="text-xs">presentValue(principal)</code> &ge; 0 이면 <code className="text-xs">false</code> — 차입 없으면 청산 불가</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div><code className="text-xs">assetsIn</code> bitmap 순회하며 각 담보의 <code className="text-xs">balance * price * liquidateCollateralFactor</code> 합산</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div><code className="text-xs">debt &gt; liquidationThreshold</code> 이면 <code className="text-xs">true</code> — 청산 가능</div>
+            </div>
+          </div>
+          <div className="mt-3 bg-background border border-border rounded p-3 text-sm">
+            <p className="text-muted-foreground text-xs">예시 — WETH: borrow factor 83%, liquidate factor 90%</p>
+            <p className="text-xs">83% 초과 시 추가 차입 불가, 90% 초과 시 청산 가능</p>
+          </div>
+        </div>
         <p>
           <strong>liquidateCollateralFactor 기준</strong>: borrow factor보다 높음<br />
           예: WETH borrow 83%, liquidate 90%<br />
@@ -171,19 +177,23 @@ function quoteCollateral(address asset, uint baseAmount) public view returns (ui
         <h3 className="text-xl font-semibold mt-8 mb-3">Target Reserves — 담보 관리</h3>
 
         <TargetReservesViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 프로토콜은 absorb로 쌓인 담보를 storefront에 판매
-// 목표: reserve를 적절 수준 유지
-
-targetReserves = initial target (DAO 설정)
-
-if (totalReserves > targetReserves * SELL_THRESHOLD) {
-    // 초과분을 DEX에서 매도 (수동 또는 자동)
-    // base asset 확보 → treasury로
-}
-
-// 현재 상태 확인
-uint currentReserves = totalReserves[WETH];
-// DAO가 reserve 조정 결정`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">Reserve 관리 흐름</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div><code className="text-xs">targetReserves</code> = DAO가 설정한 목표 reserve 수준</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div><code className="text-xs">totalReserves &gt; targetReserves * SELL_THRESHOLD</code> 이면 초과분 DEX 매도 — base asset 확보 후 treasury로</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>DAO가 <code className="text-xs">totalReserves[asset]</code> 모니터링 후 reserve 조정 결정</div>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Absorb의 경제적 의미</p>

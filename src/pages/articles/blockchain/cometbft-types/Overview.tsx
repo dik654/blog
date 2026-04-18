@@ -17,45 +17,73 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── types 패키지 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">types 패키지 — 합의 메시지의 타입 계층</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/types/ 패키지 구조
-types/
-├── block.go               // Block, Header, Data, EvidenceData
-├── block_meta.go          // BlockMeta (블록 요약)
-├── part_set.go            // PartSet (블록 분할 전파)
-├── proposal.go            // Proposal (블록 제안)
-├── vote.go                // Vote (투표)
-├── vote_set.go            // VoteSet (투표 집계)
-├── validator.go           // Validator (단일 검증자)
-├── validator_set.go       // ValidatorSet (검증자 목록)
-├── evidence.go            // Evidence (비잔틴 증거)
-├── canonical.go           // CanonicalVote (서명 대상)
-├── genesis.go             // GenesisDoc (제네시스 정보)
-├── params.go              // ConsensusParams
-└── protobuf.go            // protobuf 변환
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3">cometbft/types/ 패키지 구조 (13개 파일)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">block.go</code><p className="text-xs text-muted-foreground mt-0.5">Block, Header, Data, EvidenceData</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">block_meta.go</code><p className="text-xs text-muted-foreground mt-0.5">BlockMeta (블록 요약)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">part_set.go</code><p className="text-xs text-muted-foreground mt-0.5">PartSet (블록 분할 전파)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">proposal.go</code><p className="text-xs text-muted-foreground mt-0.5">Proposal (블록 제안)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">vote.go</code><p className="text-xs text-muted-foreground mt-0.5">Vote (투표)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">vote_set.go</code><p className="text-xs text-muted-foreground mt-0.5">VoteSet (투표 집계)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">validator.go</code><p className="text-xs text-muted-foreground mt-0.5">Validator (단일 검증자)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">validator_set.go</code><p className="text-xs text-muted-foreground mt-0.5">ValidatorSet (검증자 목록)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">evidence.go</code><p className="text-xs text-muted-foreground mt-0.5">Evidence (비잔틴 증거)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">canonical.go</code><p className="text-xs text-muted-foreground mt-0.5">CanonicalVote (서명 대상)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">genesis.go</code><p className="text-xs text-muted-foreground mt-0.5">GenesisDoc (제네시스 정보)</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">params.go</code><p className="text-xs text-muted-foreground mt-0.5">ConsensusParams</p></div>
+              <div className="bg-background rounded px-3 py-2"><code className="text-xs">protobuf.go</code><p className="text-xs text-muted-foreground mt-0.5">protobuf 변환</p></div>
+            </div>
+          </div>
 
-// 합의 메시지 레이어:
-// 1. Block (블록 단위)
-//    - Header: 메타데이터
-//    - Data: transactions
-//    - Evidence: slashing 증거
-//    - LastCommit: 이전 블록 투표 집계
-// 2. Proposal (리더가 만드는 블록 제안)
-// 3. Vote (각 검증자가 서명한 투표)
-//    - Prevote: 블록 수용 여부
-//    - Precommit: 최종 커밋 투표
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3">합의 메시지 레이어</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. Block (블록 단위)</p>
+                <ul className="text-xs text-muted-foreground space-y-0.5">
+                  <li>Header — 메타데이터</li>
+                  <li>Data — transactions</li>
+                  <li>Evidence — slashing 증거</li>
+                  <li>LastCommit — 이전 블록 투표 집계</li>
+                </ul>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. Proposal</p>
+                <p className="text-xs text-muted-foreground">리더가 만드는 블록 제안</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. Vote (검증자 서명 투표)</p>
+                <ul className="text-xs text-muted-foreground space-y-0.5">
+                  <li>Prevote — 블록 수용 여부</li>
+                  <li>Precommit — 최종 커밋 투표</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-// Protobuf-based 직렬화:
-// - CometBFT는 Protobuf 3 사용
-// - Ethereum은 SSZ, Bitcoin은 bespoke binary
-// - gRPC native 지원
-
-// 왜 Protobuf?
-// - Tendermint Go 생태계 기본 선택
-// - Go codegen 도구 성숙
-// - ABCI 앱과 protobuf 공유
-// - 스키마 evolution 지원`}
-        </pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Protobuf 직렬화</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>CometBFT — Protobuf 3</li>
+                <li>Ethereum — SSZ</li>
+                <li>Bitcoin — bespoke binary</li>
+                <li>gRPC native 지원</li>
+              </ul>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">왜 Protobuf?</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>Tendermint Go 생태계 기본 선택</li>
+                <li>Go codegen 도구 성숙</li>
+                <li>ABCI 앱과 protobuf 공유</li>
+                <li>스키마 evolution 지원</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>types</code> 패키지는 <strong>합의 메시지 전체의 타입 정의</strong>.<br />
           Block/Vote/Validator 등 13개 파일로 계층 구성.<br />
@@ -64,42 +92,53 @@ types/
 
         {/* ── Tendermint BFT 메시지 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Tendermint BFT 메시지 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1 round of consensus (3-phase commit):
-//
-// Round R, Height H:
-//
-// Step 1: Propose
-//   Proposer (round-robin) → 모든 validator
-//   Message: Proposal(block, block_parts)
-//
-// Step 2: Prevote
-//   모든 validator → 모든 validator
-//   Message: Vote(type=Prevote, block_hash or nil)
-//   2/3+ 수집 → "polka" 달성
-//
-// Step 3: Precommit
-//   모든 validator → 모든 validator
-//   Message: Vote(type=Precommit, block_hash or nil)
-//   2/3+ 수집 → "commit" → 블록 finalize
-//
-// Step 4: Commit (새 높이)
-//   NewRoundStep 시작
-//   H += 1, R = 0
-//
-// 타이밍:
-// - propose timeout: 3초 (+라운드별 증가)
-// - prevote timeout: 1초
-// - precommit timeout: 1초
-// - commit timeout: 1초
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3">1 Round of Consensus (3-phase commit) — Round R, Height H</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">Step 1: Propose</p>
+                <p className="text-xs text-muted-foreground">Proposer (round-robin) → 모든 validator</p>
+                <p className="text-xs text-muted-foreground mt-1"><code>Proposal(block, block_parts)</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">Step 2: Prevote</p>
+                <p className="text-xs text-muted-foreground">모든 validator → 모든 validator</p>
+                <p className="text-xs text-muted-foreground mt-1"><code>Vote(Prevote, block_hash | nil)</code></p>
+                <p className="text-xs text-muted-foreground">2/3+ 수집 → "polka"</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">Step 3: Precommit</p>
+                <p className="text-xs text-muted-foreground">모든 validator → 모든 validator</p>
+                <p className="text-xs text-muted-foreground mt-1"><code>Vote(Precommit, block_hash | nil)</code></p>
+                <p className="text-xs text-muted-foreground">2/3+ 수집 → "commit"</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">Step 4: Commit</p>
+                <p className="text-xs text-muted-foreground">NewRoundStep 시작</p>
+                <p className="text-xs text-muted-foreground mt-1">H += 1, R = 0</p>
+              </div>
+            </div>
+          </div>
 
-// Round 실패 → R += 1 → re-propose
-// 목적: 네트워크 지연/장애로 timeout 시 재시도
-
-// 최종성 보장:
-// +2/3 Precommit 수집 → 블록 irreversible
-// 이더리움 Casper와 달리 단일 슬롯 finality`}
-        </pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">타이밍</p>
+              <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+                <div>propose timeout</div><div className="text-right font-mono">3s (+round별 증가)</div>
+                <div>prevote timeout</div><div className="text-right font-mono">1s</div>
+                <div>precommit timeout</div><div className="text-right font-mono">1s</div>
+                <div>commit timeout</div><div className="text-right font-mono">1s</div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">Round 실패 → R += 1 → re-propose (네트워크 지연/장애 시 재시도)</p>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">최종성 보장</p>
+              <p className="text-sm text-muted-foreground">+2/3 Precommit 수집 → 블록 irreversible</p>
+              <p className="text-sm text-muted-foreground mt-1">이더리움 Casper와 달리 <strong className="text-foreground/80">단일 슬롯 finality</strong></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Tendermint BFT는 <strong>3-phase commit</strong> — Propose/Prevote/Precommit.<br />
           각 round에서 모든 메시지 수집 후 다음 단계 진전.<br />

@@ -13,47 +13,99 @@ export default function VoteCommit({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── Vote 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">Vote 구조 — 9 필드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/types/vote.go
-type Vote struct {
-    Type             SignedMsgType  // Prevote(1) or Precommit(2)
-    Height           int64           // 블록 높이
-    Round            int32           // 현재 라운드
-    BlockID          BlockID         // 투표 대상 블록
-    Timestamp        time.Time       // 서명 시각
-    ValidatorAddress Address         // 서명자 주소
-    ValidatorIndex   int32           // ValidatorSet 내 인덱스
-    Signature        []byte          // Ed25519 서명
-    Extension        []byte          // ABCI 2.0+ vote extension
-    ExtensionSignature []byte        // extension 서명
-}
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2"><code>Vote</code> — cometbft/types/vote.go</p>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">Type</code><span className="text-xs text-muted-foreground"><code>SignedMsgType</code> — Prevote(1) or Precommit(2)</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">Height</code><span className="text-xs text-muted-foreground"><code>int64</code> — 블록 높이</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">Round</code><span className="text-xs text-muted-foreground"><code>int32</code> — 현재 라운드</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">BlockID</code><span className="text-xs text-muted-foreground"><code>BlockID</code> — 투표 대상 블록</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">Timestamp</code><span className="text-xs text-muted-foreground"><code>time.Time</code> — 서명 시각</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">ValidatorAddress</code><span className="text-xs text-muted-foreground"><code>Address</code> — 서명자 주소</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">ValidatorIndex</code><span className="text-xs text-muted-foreground"><code>int32</code> — ValidatorSet 내 인덱스</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">Signature</code><span className="text-xs text-muted-foreground"><code>[]byte</code> — Ed25519 서명</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">Extension</code><span className="text-xs text-muted-foreground"><code>[]byte</code> — ABCI 2.0+ vote extension</span>
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <code className="text-xs">ExtensionSignature</code><span className="text-xs text-muted-foreground"><code>[]byte</code> — extension 서명</span>
+                </div>
+              </div>
+            </div>
 
-// Vote 서명 흐름:
-// 1. CanonicalVote 생성 (결정적 직렬화)
-// 2. Protobuf encode
-// 3. Validator의 Ed25519 키로 서명
-// 4. 서명 + Vote 본체를 네트워크 방송
+            <div className="space-y-3">
+              <div className="bg-muted rounded-lg p-4">
+                <p className="text-sm font-semibold mb-2"><code>CanonicalVote</code> (서명 대상)</p>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">Type</code><span className="text-xs text-muted-foreground"><code>SignedMsgType</code></span>
+                  </div>
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">Height</code><span className="text-xs text-muted-foreground"><code>int64</code></span>
+                  </div>
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">Round</code><span className="text-xs text-muted-foreground"><code>int64</code></span>
+                  </div>
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">BlockID</code><span className="text-xs text-muted-foreground"><code>*CanonicalBlockID</code></span>
+                  </div>
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">Timestamp</code><span className="text-xs text-muted-foreground"><code>time.Time</code></span>
+                  </div>
+                  <div className="flex justify-between py-0.5">
+                    <code className="text-xs">ChainID</code><span className="text-xs text-muted-foreground"><code>string</code></span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-muted rounded-lg p-4">
+                <p className="text-sm font-semibold mb-2">Vote 서명 흐름</p>
+                <div className="grid grid-cols-4 gap-1 text-xs text-center text-muted-foreground">
+                  <div className="bg-background rounded px-2 py-1.5">1. CanonicalVote 생성</div>
+                  <div className="bg-background rounded px-2 py-1.5">2. Protobuf encode</div>
+                  <div className="bg-background rounded px-2 py-1.5">3. Ed25519 서명</div>
+                  <div className="bg-background rounded px-2 py-1.5">4. 네트워크 방송</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-// CanonicalVote (서명 대상):
-type CanonicalVote struct {
-    Type       SignedMsgType
-    Height     int64
-    Round      int64
-    BlockID    *CanonicalBlockID  // 순서 무관
-    Timestamp  time.Time
-    ChainID    string
-}
-
-// Timestamp 역할:
-// - 네트워크 시간 동기화
-// - byzantine 탐지 (심한 drift)
-// - Nakamoto로 불리는 median 시간 계산
-
-// Vote 타입:
-// 1. Prevote: 블록 타당성 투표 (1st phase)
-// 2. Precommit: 최종 커밋 투표 (2nd phase)
-// 3. Proposal: proposer의 블록 제안 서명`}
-        </pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Vote 타입</p>
+              <div className="grid grid-cols-3 gap-2 text-sm text-center text-muted-foreground">
+                <div className="bg-background rounded px-2 py-1.5"><strong className="text-foreground/80">Prevote</strong><br /><span className="text-xs">블록 타당성 (1st phase)</span></div>
+                <div className="bg-background rounded px-2 py-1.5"><strong className="text-foreground/80">Precommit</strong><br /><span className="text-xs">최종 커밋 (2nd phase)</span></div>
+                <div className="bg-background rounded px-2 py-1.5"><strong className="text-foreground/80">Proposal</strong><br /><span className="text-xs">proposer 블록 제안 서명</span></div>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Timestamp 역할</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>네트워크 시간 동기화</li>
+                <li>byzantine 탐지 (심한 drift)</li>
+                <li>Nakamoto median 시간 계산</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Vote는 <strong>9 필드 + Ed25519 서명</strong>.<br />
           CanonicalVote로 결정적 직렬화 → 서명 결정성 보장.<br />
@@ -62,63 +114,89 @@ type CanonicalVote struct {
 
         {/* ── VoteSet 2/3+ 판정 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">VoteSet — 2/3+ 집계 & 판정</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// VoteSet: 특정 높이/라운드/타입의 Vote 집계
-type VoteSet struct {
-    chainID       string
-    height        int64
-    round         int32
-    signedMsgType SignedMsgType
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2"><code>VoteSet</code> — 특정 높이/라운드/타입의 Vote 집계</p>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">chainID</code><span className="text-xs text-muted-foreground"><code>string</code></span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">height / round</code><span className="text-xs text-muted-foreground"><code>int64</code> / <code>int32</code></span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">signedMsgType</code><span className="text-xs text-muted-foreground"><code>SignedMsgType</code></span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">votesBitArray</code><span className="text-xs text-muted-foreground"><code>*bits.BitArray</code> — validator별 투표 여부</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">votes</code><span className="text-xs text-muted-foreground"><code>[]*Vote</code> — index → Vote</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">sum</code><span className="text-xs text-muted-foreground"><code>int64</code> — 집계된 voting power</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">maj23</code><span className="text-xs text-muted-foreground"><code>*BlockID</code> — +2/3 달성 시</span>
+                </div>
+                <div className="flex justify-between border-b border-border/30 py-0.5">
+                  <code className="text-xs">votesByBlock</code><span className="text-xs text-muted-foreground"><code>map[string]*blockVotes</code></span>
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <code className="text-xs">peerMaj23s</code><span className="text-xs text-muted-foreground"><code>map[P2PID]BlockID</code></span>
+                </div>
+              </div>
+            </div>
 
-    valSet        *ValidatorSet
+            <div className="space-y-3">
+              <div className="bg-muted rounded-lg p-4">
+                <p className="text-sm font-semibold mb-2"><code>blockVotes</code></p>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">peerMaj23</code><span className="text-xs text-muted-foreground"><code>bool</code></span>
+                  </div>
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">bitArray</code><span className="text-xs text-muted-foreground"><code>*bits.BitArray</code></span>
+                  </div>
+                  <div className="flex justify-between border-b border-border/30 py-0.5">
+                    <code className="text-xs">votes</code><span className="text-xs text-muted-foreground"><code>[]*Vote</code></span>
+                  </div>
+                  <div className="flex justify-between py-0.5">
+                    <code className="text-xs">sum</code><span className="text-xs text-muted-foreground"><code>int64</code></span>
+                  </div>
+                </div>
+              </div>
 
-    mtx           cmtsync.Mutex
-    votesBitArray *bits.BitArray          // validator별 투표 여부
-    votes         []*Vote                  // index → Vote
-    sum           int64                    // 집계된 voting power
-    maj23         *BlockID                 // +2/3 달성 시 BlockID
-    votesByBlock  map[string]*blockVotes   // blockKey → votes
-    peerMaj23s    map[P2PID]BlockID        // peer별 maj23 알림
-}
+              <div className="bg-muted rounded-lg p-4">
+                <p className="text-sm font-semibold mb-2">왜 blockKey별 분리 집계?</p>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>한 라운드에 여러 블록 투표 가능 (byzantine nodes)</li>
+                  <li>각 블록별 sum 분리 → 정확한 2/3+ 판정</li>
+                  <li>byzantine equivocation 즉시 감지</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-type blockVotes struct {
-    peerMaj23 bool
-    bitArray  *bits.BitArray
-    votes     []*Vote
-    sum       int64
-}
-
-// AddVote 동작:
-func (v *VoteSet) AddVote(vote *Vote) (bool, error) {
-    // 1. 중복 체크 (equivocation 감지)
-    if v.votesBitArray.GetIndex(vote.ValidatorIndex) {
-        existing := v.votes[vote.ValidatorIndex]
-        if existing.BlockID != vote.BlockID {
-            return false, ErrEquivocation  // slash 대상!
-        }
-    }
-
-    // 2. blockKey별 분리 집계
-    blockKey := vote.BlockID.Key()
-    if v.votesByBlock[blockKey] == nil {
-        v.votesByBlock[blockKey] = newBlockVotes(...)
-    }
-    v.votesByBlock[blockKey].votes[vote.ValidatorIndex] = vote
-    v.votesByBlock[blockKey].sum += vote.ValidatorPower
-
-    // 3. 2/3+ 판정
-    if v.votesByBlock[blockKey].sum * 3 > v.valSet.TotalVotingPower() * 2 {
-        v.maj23 = &vote.BlockID  // maj23 달성!
-    }
-
-    return true, nil
-}
-
-// 왜 blockKey별 분리 집계?
-// 한 라운드에 여러 블록 투표 가능 (byzantine nodes)
-// 각 블록별 sum 분리 → 정확한 2/3+ 판정
-// 또한 byzantine equivocation 즉시 감지`}
-        </pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3"><code>AddVote()</code> — 3단계 동작</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. 중복 체크 (equivocation 감지)</p>
+                <p className="text-xs text-muted-foreground"><code>votesBitArray.GetIndex(idx)</code> → 이미 투표 존재 + BlockID 상이 → <code>ErrEquivocation</code> (slash 대상)</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. blockKey별 분리 집계</p>
+                <p className="text-xs text-muted-foreground"><code>votesByBlock[blockKey]</code>에 vote 추가 + sum += ValidatorPower</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. 2/3+ 판정</p>
+                <p className="text-xs text-muted-foreground"><code>sum * 3 {'>'} totalPower * 2</code> → <code>maj23 = &amp;vote.BlockID</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           VoteSet이 <strong>blockKey별 분리 집계</strong>.<br />
           byzantine nodes가 여러 블록 투표 가능 → 분리 집계 필수.<br />

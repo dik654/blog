@@ -1,8 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
+import M from '@/components/ui/math';
 import EmbeddingViz from './viz/EmbeddingViz';
 import OneHotDenseViz from './viz/OneHotDenseViz';
 import Word2VecImpactViz from './viz/Word2VecImpactViz';
-import { analogyExampleCode, analogyAnnotations } from './OverviewData';
 
 export default function Overview({ title }: { title?: string }) {
   return (
@@ -40,7 +39,25 @@ export default function Overview({ title }: { title?: string }) {
           학습된 벡터 공간에는 놀라운 선형 구조가 존재<br />
           아날로지(Analogy, 벡터 산술로 단어 관계를 유추하는 것) 예시:
         </p>
-        <CodePanel title="벡터 공간의 선형 구조" code={analogyExampleCode} annotations={analogyAnnotations} />
+        <M display>{'\\vec{king} - \\vec{man} + \\vec{woman} \\approx \\vec{queen}'}</M>
+
+        <div className="not-prose grid gap-4 sm:grid-cols-3 my-6">
+          <div className="rounded-xl border border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950 p-4">
+            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">성별 방향</p>
+            <p className="text-sm font-medium">vec("왕") − vec("남자") + vec("여자")</p>
+            <p className="text-sm font-bold mt-1">≈ vec("여왕")</p>
+          </div>
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 p-4">
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">수도–국가 방향</p>
+            <p className="text-sm font-medium">vec("서울") − vec("한국") + vec("일본")</p>
+            <p className="text-sm font-bold mt-1">≈ vec("도쿄")</p>
+          </div>
+          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 p-4">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">형용사 활용 방향</p>
+            <p className="text-sm font-medium">vec("빠른") − vec("빠르다") + vec("크다")</p>
+            <p className="text-sm font-bold mt-1">≈ vec("큰")</p>
+          </div>
+        </div>
 
         <p>
           벡터 공간이 의미적·문법적 관계를 기하학적 방향으로 인코딩<br />

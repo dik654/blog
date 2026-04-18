@@ -1,9 +1,11 @@
 import Math from '@/components/ui/math';
+import FFTAIViz from './viz/FFTAIViz';
 
 export default function AIUsage() {
   return (
     <section id="ai-usage" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">AI에서의 FFT 활용</h2>
+      <FFTAIViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>① 스펙트로그램 — 오디오/음성 모델의 입력</h3>
         <p>

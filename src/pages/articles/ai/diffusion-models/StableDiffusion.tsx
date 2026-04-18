@@ -1,6 +1,7 @@
 import { CitationBlock } from '@/components/ui/citation';
 import StableDiffusionArchViz from './viz/StableDiffusionArchViz';
 import CFGSection from './CFGSection';
+import SDPipelineViz from './viz/SDPipelineViz';
 
 export default function StableDiffusion() {
   return (
@@ -38,53 +39,7 @@ export default function StableDiffusion() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Latent Diffusion 전체 파이프라인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Stable Diffusion 전체 구조
-//
-// [1] Image Space (512×512×3 = 786K dims)
-//         ↓ VAE Encoder (8× downsample)
-// [2] Latent Space (64×64×4 = 16K dims) ← 48× 압축
-//         ↓ Diffusion Process (U-Net)
-// [3] Generated Latent
-//         ↓ VAE Decoder
-// [4] Generated Image
-//
-// 핵심 통찰:
-//   이미지 픽셀 공간은 redundant
-//   "semantic" 정보는 훨씬 작은 latent space에 압축 가능
-//   Diffusion을 latent에서 하면 48배 효율적
-
-// 학습:
-//   1. VAE 먼저 학습 (autoencoder 단독)
-//   2. VAE encoder 고정, diffusion U-Net 학습
-//   3. latent에서 forward/reverse process
-//
-// 추론 (Text-to-Image):
-//   Input: "A cat sitting on a red chair"
-//   1. CLIP tokenizer → 77 tokens
-//   2. CLIP text encoder → (77, 768) embedding
-//   3. z_T ~ N(0, I), shape (4, 64, 64)
-//   4. for t = T, T-1, ..., 1:
-//        ε̂ = UNet(z_t, t, text_emb)
-//        z_{t-1} = denoise(z_t, ε̂, t)
-//      50~100 steps
-//   5. x = VAE_decoder(z_0)
-//   6. Output: 512×512 image
-
-// Stable Diffusion 버전:
-//   SD 1.x (2022): 원조, 512×512, 860M UNet
-//   SD 2.x (2022): CLIP-OpenAI → OpenCLIP, 768×768
-//   SDXL (2023): 1024×1024, 3.5B params, 두 VAE
-//   SD3 (2024): MM-DiT (transformer), flow matching
-//   Cascade (2024): 3-stage cascade
-
-// 생태계:
-//   - ControlNet: pose/edge/depth 제어
-//   - LoRA: 캐릭터/스타일 fine-tuning
-//   - DreamBooth: 특정 객체 학습
-//   - IP-Adapter: 이미지 prompt
-//   - AnimateDiff: 애니메이션 생성`}
-        </pre>
+        <div className="not-prose"><SDPipelineViz /></div>
         <p className="leading-7">
           요약 1: Stable Diffusion의 본질은 <strong>Latent Diffusion</strong> — VAE 압축 후 diffusion.<br />
           요약 2: <strong>48배 공간 압축</strong>으로 소비자 GPU에서도 학습/추론 가능.<br />

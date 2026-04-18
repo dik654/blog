@@ -1,3 +1,7 @@
+import OverviewViz from './viz/OverviewViz';
+import FdsArchitectureViz from './viz/FdsArchitectureViz';
+import MonitoringOrgViz from './viz/MonitoringOrgViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function Overview() {
           가상자산 거래소에서 FDS는 자금세탁, 사기, 시세조종 같은 불법 행위의 첫 번째 방어선 역할을 한다.<br />
           고객의 거래 패턴, 접속 환경, 지갑 주소 이력 등을 종합 분석하여 "정상 범위를 벗어난 거래"에 경보를 발생시킨다.
         </p>
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">법적 근거 — 이상거래 상시 감시 의무</h3>
         <p>
@@ -65,6 +71,8 @@ export default function Overview() {
           국내 주요 거래소들은 AI 기반 FDS를 도입하여 누적 수천억 원 규모의 이상거래를 차단한 것으로 알려져 있다.
         </p>
 
+        <FdsArchitectureViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">FDS 아키텍처</h3>
         <p>
           FDS는 크게 네 단계로 구성된다.
@@ -109,6 +117,8 @@ export default function Overview() {
           시스템이 경보를 발생시키면 AML 담당자가 1차 분석하고, 준법감시인이 최종 판단한다.<br />
           자동화만으로는 오탐(false positive)을 제거할 수 없고, 사람만으로는 초당 수천 건의 거래를 감당할 수 없다.
         </p>
+
+        <MonitoringOrgViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">감시 조직</h3>
         <p>

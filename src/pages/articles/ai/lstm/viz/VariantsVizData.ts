@@ -3,7 +3,7 @@ import type { StepDef } from '@/components/ui/step-viz';
 export const STEPS: StepDef[] = [
   {
     label: '① Peephole — 셀 상태 엿보기',
-    body: '게이트 계산에 C_{t-1}도 참조.\n게이트가 현재 셀 상태의 크기를 고려 → 더 정밀한 제어.',
+    body: '게이트 계산에 Cₜ₋₁도 참조.\n게이트가 현재 셀 상태의 크기를 고려 → 더 정밀한 제어.',
   },
   {
     label: '② GRU — 게이트 3→2개 축소',

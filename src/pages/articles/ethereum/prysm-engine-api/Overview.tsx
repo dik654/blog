@@ -14,47 +14,60 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── Engine API 개요 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Engine API — CL ↔ EL 통신 표준</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Engine API (EIP-3675)
-// PoS 이후 CL(Prysm) ↔ EL(Reth/Geth) 유일한 통신 경로
-
-// 접속 정보:
-// URL: http://localhost:8551 (기본)
-// Auth: JWT (shared secret 32 bytes)
-// Protocol: JSON-RPC 2.0
-
-// 3대 메서드 (Deneb 기준):
-// 1. engine_newPayloadV3
-//    - CL이 EL에 새 payload 검증 요청
-//    - 응답: VALID / INVALID / SYNCING
-
-// 2. engine_forkchoiceUpdatedV3
-//    - CL이 EL에 head/safe/finalized 통지
-//    - payload_attributes 포함 시 → 새 블록 빌드 시작
-//    - 응답: payload_status + payload_id
-
-// 3. engine_getPayloadV3
-//    - CL이 EL에서 빌드된 payload 회수
-//    - payload_id로 식별
-//    - validator가 블록 제안 시 사용
-
-// JWT 인증:
-// - 32 bytes hex secret
-// - CL과 EL이 공유 (jwt.hex 파일)
-// - 매 요청에 Authorization: Bearer {jwt_token} 헤더
-// - iat (issued at) claim으로 replay 방어 (5초 window)
-
-// 왜 JWT?
-// - TLS 대비 경량
-// - 신뢰 제3자 없이 상호 인증
-// - localhost 통신이 일반적 → TLS 과잉
-// - 간단한 shared secret으로 충분
-
-// 실패 시나리오:
-// - JWT mismatch → 401 Unauthorized
-// - EL 응답 없음 → CL 타임아웃 → retry
-// - EL VALID but CL disagree → critical bug`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Engine API (EIP-3675) 접속 정보</h4>
+            <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+              <span>URL: <code>http://localhost:8551</code></span>
+              <span>Auth: JWT (shared secret 32B)</span>
+              <span>Protocol: JSON-RPC 2.0</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2"><code>engine_newPayloadV3</code></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>CL이 EL에 새 payload 검증 요청</li>
+                <li>응답: VALID / INVALID / SYNCING</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2"><code>engine_forkchoiceUpdatedV3</code></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>CL이 EL에 head/safe/finalized 통지</li>
+                <li>payload_attributes 시 블록 빌드 시작</li>
+                <li>응답: payload_status + payload_id</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2"><code>engine_getPayloadV3</code></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>CL이 EL에서 빌드된 payload 회수</li>
+                <li>payload_id로 식별</li>
+                <li>validator 블록 제안 시 사용</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">JWT 인증</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>32 bytes hex secret (<code>jwt.hex</code> 파일 공유)</li>
+                <li>매 요청에 <code>Authorization: Bearer {'{jwt_token}'}</code></li>
+                <li><code>iat</code> claim으로 replay 방어 (5초 window)</li>
+                <li>TLS 대비 경량 / localhost 통신에 적합</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">실패 시나리오</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>JWT mismatch → 401 Unauthorized</li>
+                <li>EL 응답 없음 → CL 타임아웃 → retry</li>
+                <li>EL VALID but CL disagree → critical bug</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Engine API는 <strong>CL ↔ EL 유일한 통신 경로</strong>.<br />
           3대 메서드(newPayload, forkchoiceUpdated, getPayload)로 완전한 통신.<br />

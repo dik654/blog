@@ -30,58 +30,37 @@ export default function Components({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── ConfigureEvm trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ConfigureEvm trait — EVM 환경 구성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait ConfigureEvm: Send + Sync + Clone {
-    type DefaultExternalContext<'a>;
-
-    /// BlockEnv 설정 (block-level context)
-    fn fill_block_env(
-        &self,
-        block_env: &mut BlockEnv,
-        header: &Header,
-        after_merge: bool,
-    );
-
-    /// TxEnv 설정 (tx-level context)
-    fn fill_tx_env(
-        &self,
-        tx_env: &mut TxEnv,
-        tx: &TransactionSigned,
-        sender: Address,
-    );
-
-    /// revm Evm 인스턴스 생성
-    fn evm<DB: Database>(&self, db: DB) -> Evm<'_, Self::DefaultExternalContext<'_>, DB>;
-}
-
-// 이더리움 구현체:
-pub struct EthEvmConfig {
-    chain_spec: Arc<ChainSpec>,
-}
-
-// OP 구현체:
-pub struct OpEvmConfig {
-    chain_spec: Arc<OpChainSpec>,
-    // L1 block info 주입용
-    l1_block_info: Arc<L1BlockInfo>,
-}
-
-impl ConfigureEvm for OpEvmConfig {
-    fn fill_tx_env(&self, tx_env: &mut TxEnv, tx: &TxSigned, sender: Address) {
-        // 기본 이더리움 설정
-        fill_eth_tx_env(tx_env, tx, sender);
-
-        // OP 확장: L1 fee 계산용 메타데이터
-        if !tx.is_deposit() {
-            tx_env.optimism = Some(OptimismFields {
-                l1_fee_overhead: self.l1_block_info.fee_overhead,
-                l1_fee_scalar: self.l1_block_info.fee_scalar,
-                l1_base_fee: self.l1_block_info.base_fee,
-            });
-        }
-    }
-}`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2"><code>ConfigureEvm</code> trait — 3개 핵심 메서드</p>
+            <div className="space-y-2">
+              {[
+                { method: 'fill_block_env(&self, block_env, header, after_merge)', desc: 'BlockEnv 설정 (block-level context)' },
+                { method: 'fill_tx_env(&self, tx_env, tx, sender)', desc: 'TxEnv 설정 (tx-level context)' },
+                { method: 'evm<DB: Database>(&self, db) -> Evm', desc: 'revm Evm 인스턴스 생성' },
+              ].map(m => (
+                <div key={m.method} className="rounded border border-border/40 px-3 py-2">
+                  <code className="text-xs">{m.method}</code>
+                  <p className="text-xs text-foreground/60 mt-0.5">{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-1"><code>EthEvmConfig</code></p>
+              <p className="text-xs text-foreground/70"><code>chain_spec: Arc&lt;ChainSpec&gt;</code></p>
+              <p className="text-xs text-foreground/50 mt-1">표준 이더리움 EVM 환경</p>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-1"><code>OpEvmConfig</code></p>
+              <p className="text-xs text-foreground/70"><code>chain_spec: Arc&lt;OpChainSpec&gt;</code>, <code>l1_block_info: Arc&lt;L1BlockInfo&gt;</code></p>
+              <p className="text-xs text-foreground/50 mt-1">
+                OP 확장: deposit TX가 아닌 경우 <code>TxEnv::optimism</code>에 L1 fee 메타데이터 (<code>fee_overhead</code>, <code>fee_scalar</code>, <code>base_fee</code>) 주입
+              </p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ConfigureEvm</code> trait이 <strong>EVM 실행 환경을 추상화</strong>.<br />
           각 체인이 자체 <code>fill_tx_env</code> 구현 → EVM에 체인 특화 컨텍스트 주입.<br />
@@ -90,46 +69,50 @@ impl ConfigureEvm for OpEvmConfig {
 
         {/* ── Consensus trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Consensus trait — 블록 검증 규칙</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait Consensus: Debug + Send + Sync {
-    /// 헤더 검증 (부모 없이, 단일 헤더)
-    fn validate_header(&self, header: &SealedHeader) -> Result<(), ConsensusError>;
-
-    /// 헤더와 부모 비교 검증
-    fn validate_header_against_parent(
-        &self,
-        header: &SealedHeader,
-        parent: &SealedHeader,
-    ) -> Result<(), ConsensusError>;
-
-    /// 블록 전체 검증 (헤더 + 바디 정합성)
-    fn validate_block(&self, block: &SealedBlock) -> Result<(), ConsensusError>;
-
-    /// Post-execution 검증 (gas_used, receipts_root 등)
-    fn validate_block_post_execution(
-        &self,
-        block: &SealedBlock,
-        receipts: &[Receipt],
-        gas_used: u64,
-    ) -> Result<(), ConsensusError>;
-}
-
-// 구현체:
-// - EthBeaconConsensus: 이더리움 메인넷 (PoS)
-// - OpConsensus: Optimism (단일 시퀀서, 단순 검증)
-// - AutoSealConsensus: 테스트넷 (자동 블록 생성)
-
-// EthBeaconConsensus 특징:
-// - PoW 필드 검증 (mix_hash, nonce, difficulty=0)
-// - gas_limit 변동 제한 (1/1024)
-// - base_fee 계산 검증 (EIP-1559)
-// - extra_data 크기 제한 (32 bytes)
-
-// OpConsensus 특징:
-// - 시퀀서 서명 검증
-// - deposit TX 우선 처리 확인
-// - L1 attributes TX 존재 확인`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2"><code>Consensus</code> trait — 4단계 검증</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { method: 'validate_header', desc: '단일 헤더 검증 (부모 없이)' },
+                { method: 'validate_header_against_parent', desc: '헤더 + 부모 비교' },
+                { method: 'validate_block', desc: '블록 전체 (헤더 + 바디 정합)' },
+                { method: 'validate_block_post_execution', desc: 'gas_used, receipts_root 등' },
+              ].map(m => (
+                <div key={m.method} className="rounded border border-border/40 px-3 py-2">
+                  <code className="text-[11px] font-bold">{m.method}</code>
+                  <p className="text-[11px] text-foreground/60 mt-0.5">{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-1"><code>EthBeaconConsensus</code></p>
+              <p className="text-xs text-foreground/50 mb-1">메인넷 PoS</p>
+              <ul className="text-xs space-y-0.5 text-foreground/70">
+                <li>PoW 필드 검증 (<code>difficulty=0</code>)</li>
+                <li><code>gas_limit</code> 변동 제한 (1/1024)</li>
+                <li>base_fee 계산 검증 (EIP-1559)</li>
+                <li><code>extra_data</code> 32 bytes 제한</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-1"><code>OpConsensus</code></p>
+              <p className="text-xs text-foreground/50 mb-1">Optimism (시퀀서)</p>
+              <ul className="text-xs space-y-0.5 text-foreground/70">
+                <li>시퀀서 서명 검증</li>
+                <li>deposit TX 우선 처리 확인</li>
+                <li>L1 attributes TX 존재 확인</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-1"><code>AutoSealConsensus</code></p>
+              <p className="text-xs text-foreground/50 mb-1">테스트넷</p>
+              <p className="text-xs text-foreground/70">자동 블록 생성</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>Consensus</code> trait이 <strong>체인별 검증 규칙 캡슐화</strong>.<br />
           메인넷은 PoS 규칙, OP는 시퀀서 기반 규칙, 테스트넷은 자동 생성.<br />
@@ -138,40 +121,40 @@ impl ConfigureEvm for OpEvmConfig {
 
         {/* ── Pool trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">TransactionPool & Network — 나머지 컴포넌트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TransactionPool: TX 풀 관리 (이미 reth-txpool 아티클에서 상세)
-pub trait TransactionPool: Send + Sync {
-    type Transaction: PoolTransaction;
-    async fn add_transaction(&self, origin: TxOrigin, tx: Self::Transaction) -> Result<TxHash>;
-    fn best_transactions(&self) -> Box<dyn Iterator<Item = Arc<Self::Transaction>>>;
-    // ...
-}
-
-// NetworkHandle: P2P 네트워크 제어
-pub trait NetworkHandle: Send + Sync + Clone {
-    fn peer_count(&self) -> usize;
-    fn connect_peer(&self, addr: NodeRecord);
-    fn broadcast_transaction(&self, tx: TransactionSigned);
-    fn broadcast_block(&self, block: Arc<Block>);
-    // ...
-}
-
-// 4개 trait의 의존 관계:
-// NodeTypes: 체인 정의 (mainnet / OP)
-//     ↓
-// NodeComponents:
-//   - Pool (TX 관리)
-//   - Evm (실행 환경)
-//   - Consensus (검증 규칙)
-//   - Network (P2P 통신)
-//     ↓
-// NodeBuilder (조립 + 실행)
-
-// 각 trait은 독립적:
-// - Pool을 교체해도 Evm/Consensus/Network 영향 없음
-// - L2 구현 시 Evm만 교체, 나머지 재사용
-// - 테스트 시 MockNetwork, NoopPool 사용`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-2"><code>TransactionPool</code></p>
+              <ul className="text-xs space-y-0.5 text-foreground/70">
+                <li><code>type Transaction: PoolTransaction</code></li>
+                <li><code>add_transaction(origin, tx) → TxHash</code></li>
+                <li><code>best_transactions() → Iterator</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-2"><code>NetworkHandle</code></p>
+              <ul className="text-xs space-y-0.5 text-foreground/70">
+                <li><code>peer_count() → usize</code></li>
+                <li><code>connect_peer(addr)</code></li>
+                <li><code>broadcast_transaction(tx)</code></li>
+                <li><code>broadcast_block(block)</code></li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">의존 관계</p>
+            <div className="flex flex-col items-center gap-1 text-sm">
+              <span className="font-mono text-xs px-3 py-1 rounded bg-muted"><code>NodeTypes</code> — 체인 정의 (mainnet / OP)</span>
+              <span className="text-foreground/40">↓</span>
+              <span className="font-mono text-xs px-3 py-1 rounded bg-muted"><code>NodeComponents</code> — Pool + Evm + Consensus + Network</span>
+              <span className="text-foreground/40">↓</span>
+              <span className="font-mono text-xs px-3 py-1 rounded bg-muted"><code>NodeBuilder</code> — 조립 + 실행</span>
+            </div>
+            <p className="text-xs text-foreground/60 mt-3">
+              각 trait 독립적: Pool 교체 시 Evm/Consensus/Network 영향 없음. 테스트 시 <code>MockNetwork</code>, <code>NoopPool</code> 사용 가능.
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           4개 trait이 <strong>독립적으로 교체 가능</strong>.<br />
           특정 trait만 커스텀 구현 → 나머지 Reth 기본 재사용.<br />

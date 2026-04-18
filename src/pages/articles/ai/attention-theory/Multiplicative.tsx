@@ -1,29 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
+import M from '@/components/ui/math';
 import DotProductViz from './viz/DotProductViz';
-
-const mulCode = `Luong Attention 변형 3가지:
-
-1. Dot-Product:
-   score(s_t, h_s) = s_t^T * h_s
-   → 파라미터 없음, 가장 빠름, 같은 차원 필수
-
-2. General (Bilinear):
-   score(s_t, h_s) = s_t^T * W_a * h_s
-   → 학습 행렬 W_a로 차원 간 관계 학습
-
-3. Concat (= Bahdanau와 유사):
-   score = v^T * tanh(W * [s_t; h_s])
-   → MLP 기반, 가장 유연하지만 느림
-
-Transformer의 Scaled Dot-Product:
-   Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) * V`;
-
-const annotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: 'Dot: 단순 내적' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: 'General: 가중치 학습' },
-  { lines: [15, 16] as [number, number], color: 'amber' as const, note: 'Scaled: Transformer 표준' },
-];
+import MultiplicativeDetailViz from './viz/MultiplicativeDetailViz';
 
 export default function Multiplicative() {
   return (
@@ -44,89 +22,66 @@ export default function Multiplicative() {
           and local attention that only looks at a subset."</p>
         </CitationBlock>
 
-        <CodePanel title="Luong Attention 변형" code={mulCode} annotations={annotations} />
+        <h3 className="text-xl font-semibold mt-6 mb-3">Score 함수 3가지</h3>
+
+        <p className="font-semibold text-sm text-sky-500 mb-1">1. Dot-Product</p>
+        <M display>{'\\text{score}(s_t, h_s) = \\underbrace{s_t^\\top}_{\\text{디코더 상태}} \\cdot \\underbrace{h_s}_{\\text{인코더 상태}}'}</M>
+
+        <p className="font-semibold text-sm text-emerald-500 mb-1">2. General (Bilinear)</p>
+        <M display>{'\\text{score}(s_t, h_s) = s_t^\\top \\cdot \\underbrace{W_a}_{\\text{학습 가중치 행렬}} \\cdot h_s'}</M>
+
+        <p className="font-semibold text-sm text-amber-500 mb-1">3. Scaled Dot-Product (Transformer)</p>
+        <M display>{'\\text{Attention}(Q,K,V) = \\underbrace{\\text{softmax}\\!\\left(\\frac{\\overbrace{QK^\\top}^{\\text{유사도 행렬}}}{\\underbrace{\\sqrt{d_k}}_{\\text{스케일링}}}\\right)}_{\\text{주의 가중치}} \\cdot V'}</M>
+
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-4 text-sm">
+          <div className="rounded-lg border border-border bg-card px-3 py-2">
+            <span className="font-bold text-xs text-sky-500">Dot-Product</span>
+            <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              추가 파라미터 없음 — 가장 빠름.<br />
+              인코더·디코더 차원이 같아야 사용 가능.<br />
+              소규모 모델에서 빠른 프로토타이핑에 적합.
+            </div>
+          </div>
+          <div className="rounded-lg border border-border bg-card px-3 py-2">
+            <span className="font-bold text-xs text-emerald-500">General (Bilinear)</span>
+            <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              W_a 행렬이 차원 간 관계를 학습.<br />
+              인코더·디코더 차원이 달라도 동작.<br />
+              파라미터 d×d개 추가 — 유연하지만 비용 증가.
+            </div>
+          </div>
+          <div className="rounded-lg border border-border bg-card px-3 py-2">
+            <span className="font-bold text-xs text-amber-500">Scaled Dot-Product</span>
+            <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              √d_k 스케일링으로 softmax 포화 방지.<br />
+              행렬 곱 한 번 → GPU 병렬화 최적.<br />
+              Transformer 이후 사실상 표준.
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">√d_k 스케일링이 필요한 이유</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Dot product의 분산 분석
-//
-// Q와 K의 각 원소가 독립 정규분포를 따른다고 가정:
-//   Q_i ~ N(0, 1), K_i ~ N(0, 1)
-//
-// Dot product:
-//   Q · K = Σ_{i=1}^{d_k} Q_i · K_i
-//
-// 평균:
-//   E[Q · K] = Σ E[Q_i · K_i] = Σ 0 = 0
-//
-// 분산:
-//   Var[Q · K] = Σ Var[Q_i · K_i] = Σ 1 = d_k
-//
-// → 차원 d_k가 커질수록 dot product 값의 분산이 커짐
-// → |QK| 값이 매우 크거나 작은 경우 많아짐
-//
-// Softmax 포화 문제:
-//   softmax([10, 1, 1])  = [0.9998, 0.0001, 0.0001]
-//   softmax([1, 0.1, 0.1]) = [0.48, 0.26, 0.26]
-//
-//   값 차이가 클수록 softmax가 one-hot에 가까워짐
-//   → gradient가 거의 0 (saturated)
-//
-// 해결책: sqrt(d_k)로 나누기
-//   Var[Q·K / sqrt(d_k)] = d_k / d_k = 1
-//   → 분산 1로 정규화
-//   → softmax 안정 동작
-//
-// 예:
-//   d_k=64  → sqrt(64) = 8
-//   d_k=128 → sqrt(128) ≈ 11.3
-//   d_k=512 → sqrt(512) ≈ 22.6
-
-// Vaswani et al. 2017 논문 발췌:
-//   "We suspect that for large values of d_k, the dot products
-//    grow large in magnitude, pushing the softmax function into
-//    regions where it has extremely small gradients."`}
-        </pre>
+        <p>
+          Q와 K의 각 원소가 독립 N(0,1)을 따를 때, dot product Q·K의 분산은 d_k에 비례한다.
+          d_k=64이면 내적 값이 ±8 범위로 퍼져, softmax가 one-hot에 수렴하고 gradient가 거의 0이 된다.
+          √d_k로 나누면 분산이 1로 정규화되어 softmax가 안정적으로 동작한다.
+        </p>
+        <M display>{'\\text{Var}[Q \\cdot K] = d_k \\quad \\Rightarrow \\quad \\text{Var}\\!\\left[\\frac{Q \\cdot K}{\\sqrt{d_k}}\\right] = \\frac{d_k}{d_k} = 1'}</M>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">세 가지 score 함수 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ┌──────────────┬──────────┬──────────┬──────────┐
-// │   방식       │ 파라미터 │ 속도     │ 정확도   │
-// ├──────────────┼──────────┼──────────┼──────────┤
-// │ Dot-product  │ 없음     │ 매우빠름 │ 중간     │
-// │ Scaled dot   │ 없음     │ 매우빠름 │ 높음     │
-// │ General      │ W_a      │ 빠름     │ 높음     │
-// │ Concat (Add) │ W, v     │ 느림     │ 높음     │
-// └──────────────┴──────────┴──────────┴──────────┘
-//
-// 수식 비교:
-//   Dot:     score = Q · K
-//   Scaled:  score = Q · K / sqrt(d_k)
-//   General: score = Q^T · W · K
-//   Concat:  score = v^T · tanh(W · [Q; K])
-//
-// 실무 권장:
-//   - Transformer 계열: Scaled dot-product (표준)
-//   - 소규모 RNN: Additive (표현력)
-//   - 큰 차원: Scaled dot (필수)
-//   - 다른 차원 Q, K: General 또는 Additive
+        <p>
+          Dot-product는 파라미터 없이 가장 빠르지만 같은 차원 필수.
+          General(Bilinear)은 학습 행렬 W로 유사도 함수 자체를 학습한다.
+          Luong은 Global/Local attention 구분과 input-feeding 접근법도 제안하여 Transformer 표준의 토대를 놓았다.
+        </p>
+        <M display>{'\\underbrace{s^\\top h}_{\\text{Dot}} \\quad \\underbrace{\\frac{s^\\top h}{\\sqrt{d_k}}}_{\\text{Scaled}} \\quad \\underbrace{s^\\top W h}_{\\text{General}} \\quad \\underbrace{v^\\top \\tanh(W[s;h])}_{\\text{Concat}}'}</M>
+      </div>
 
-// Luong의 추가 기여:
-//   1. Global vs Local Attention
-//      - Global: 모든 소스 위치 참조 (표준)
-//      - Local: 윈도우 내 위치만 참조 (효율)
-//
-//   2. Input-feeding approach
-//      - 이전 context vector를 다음 디코더 입력에 concat
-//      - 과거 attention 결정을 기억하게 함
-//
-// 현대 Transformer로의 계승:
-//   Luong dot-product → Scaled dot-product (Transformer)
-//   → Multi-head로 확장
-//   → 행렬 연산으로 완전 병렬화`}
-        </pre>
+      <div className="not-prose my-8"><MultiplicativeDetailViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <p className="leading-7">
           요약 1: <strong>√d_k 스케일링</strong>은 dot product의 분산을 1로 정규화 — softmax 포화 방지.<br />
           요약 2: Dot-product 방식은 <strong>행렬 연산 한 번</strong>으로 완결 — Transformer의 핵심 효율성.<br />

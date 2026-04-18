@@ -1,8 +1,14 @@
+import CddProcessViz from './viz/CddProcessViz';
+import CddComponentsViz from './viz/CddComponentsViz';
+import EddTargetsViz from './viz/EddTargetsViz';
+
 export default function CddProcess() {
   return (
     <section id="cdd-process" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">고객확인제도 (CDD/EDD)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <CddProcessViz />
 
         <p>
           CDD(Customer Due Diligence)는 "이 사람이 누구인지 확인하고, 어떤 위험을 가져오는지 평가하는" 절차.<br />
@@ -82,6 +88,8 @@ export default function CddProcess() {
           </table>
         </div>
 
+        <CddComponentsViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">CDD 미이행 시 조치</h3>
         <p>
           CDD를 완료하지 못하면 시스템이 자동으로 해당 계정을 "제한 상태"로 전환한다.<br />
@@ -151,6 +159,8 @@ export default function CddProcess() {
           다만 간소화 CDD를 적용하더라도 최소한의 신원확인은 반드시 수행해야 하며,
           위험도가 변경되면 즉시 일반 CDD 또는 EDD로 전환해야 한다.
         </p>
+
+        <EddTargetsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">고객수용정책 (Customer Acceptance Policy)</h3>
         <p>

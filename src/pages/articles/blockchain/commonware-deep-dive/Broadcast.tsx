@@ -30,85 +30,110 @@ export default function Broadcast() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">DSMR Architecture</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Decoupled State Machine Replication
-// 전통 BFT의 monolithic 구조 분해
-
-// 전통 SMR (Tendermint, HotStuff)
-// ┌──────────────────────────┐
-// │ Consensus + Execution    │
-// │ Block proposal           │
-// │   → Vote                 │
-// │   → Commit               │
-// │   → Execute              │
-// │ All sequential           │
-// └──────────────────────────┘
-// 문제: 병목 쉬움, 전체 재시작
-
-// DSMR 구조
-// Phase 1: Replicate (data availability)
-// ┌──────────────────────────┐
-// │ Multiple sequencers      │
-// │ Parallel data broadcast  │
-// │ Threshold signatures     │
-// └──────────────────────────┘
-//
-// Phase 2: Sequence (ordering)
-// ┌──────────────────────────┐
-// │ BFT consensus only on order │
-// │ Not data content         │
-// └──────────────────────────┘
-//
-// Phase 3: Execute (state transition)
-// ┌──────────────────────────┐
-// │ Deterministic execution  │
-// │ Can be batched/parallel  │
-// └──────────────────────────┘
-
-// 장점
-// ✓ Horizontal scaling (multiple sequencers)
-// ✓ Execution parallelism
-// ✓ Data availability separate concern
-// ✓ Modular composability
-
-// Related work
-// - Narwhal/Bullshark (Aptos, Sui)
-// - Celestia DA layer
-// - EigenDA`}</pre>
+        <p className="text-sm text-muted-foreground mb-4">
+          Decoupled State Machine Replication — 전통 BFT의 monolithic 구조를 3단계로 분해
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h4 className="font-semibold text-sm mb-2 text-muted-foreground">전통 SMR (Tendermint, HotStuff)</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Consensus + Execution 일체</li>
+              <li>Block proposal → Vote → Commit → Execute</li>
+              <li>All sequential</li>
+              <li className="text-red-500 dark:text-red-400">문제: 병목 쉬움, 전체 재시작</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 space-y-3">
+            <div>
+              <h4 className="font-semibold text-sm mb-1">Phase 1: Replicate <span className="font-normal text-muted-foreground">(data availability)</span></h4>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Multiple sequencers</li>
+                <li>Parallel data broadcast</li>
+                <li>Threshold signatures</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-sm mb-1">Phase 2: Sequence <span className="font-normal text-muted-foreground">(ordering)</span></h4>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>BFT consensus only on order</li>
+                <li>Not data content</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-sm mb-1">Phase 3: Execute <span className="font-normal text-muted-foreground">(state transition)</span></h4>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Deterministic execution</li>
+                <li>Can be batched/parallel</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2 text-green-600 dark:text-green-400">장점</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Horizontal scaling — multiple sequencers</li>
+              <li>Execution parallelism</li>
+              <li>Data availability separate concern</li>
+              <li>Modular composability</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Related Work</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><strong className="text-foreground">Narwhal/Bullshark</strong> — Aptos, Sui</li>
+              <li><strong className="text-foreground">Celestia</strong> — DA layer</li>
+              <li><strong className="text-foreground">EigenDA</strong></li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">ZODA Data Availability</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Zero-Overhead Data Availability
-
-// Problem: 블록 데이터 저장 분산
-// - Large blocks (MBs~GBs)
-// - Not every node can store all
-// - Need: "data is available" 증명
-
-// ZODA 해결책
-// 1) Reed-Solomon encoding
-//    - n data chunks → n+k encoded chunks
-//    - Any n chunks can recover original
-//    - Redundancy factor: (n+k)/n
-
-// 2) Horizontal sharding
-//    - Each node stores subset of chunks
-//    - Probabilistic sampling for verification
-//    - O(sqrt(n)) verification
-
-// 3) No trusted setup
-//    - 기존 DA (KZG-based) needs trusted setup
-//    - ZODA uses hash-based commitments
-//    - Transparent, post-quantum secure
-
-// 4) Fraud proofs
-//    - Light client sampling
-//    - Invalid encoding → proof submittable
-//    - Cryptoeconomic security
-
-// 성능 지표
-// - 1GB block with 100 validators
-// - Each stores: ~20MB (2%)
-// - Sample verification: O(log n)
-// - Recovery: with 30% validators`}</pre>
+        <p className="text-sm text-muted-foreground mb-4">
+          Zero-Overhead Data Availability — 블록 데이터(MBs~GBs)를 모든 노드가 저장할 수 없는 문제를 해결, "data is available" 증명을 제공
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">1. Reed-Solomon Encoding</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>n data chunks → n+k encoded chunks</li>
+              <li>Any n chunks can recover original</li>
+              <li>Redundancy factor: <code className="text-xs">(n+k)/n</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">2. Horizontal Sharding</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Each node stores subset of chunks</li>
+              <li>Probabilistic sampling for verification</li>
+              <li><code className="text-xs">O(sqrt(n))</code> verification</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">3. No Trusted Setup</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>기존 DA (KZG-based) needs trusted setup</li>
+              <li>ZODA uses hash-based commitments</li>
+              <li>Transparent, post-quantum secure</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">4. Fraud Proofs</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Light client sampling</li>
+              <li>Invalid encoding → proof submittable</li>
+              <li>Cryptoeconomic security</li>
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2 text-muted-foreground">성능 지표 (1GB block, 100 validators)</h4>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div><strong className="text-foreground">노드당 저장</strong> <span className="text-muted-foreground">— ~20MB (2%)</span></div>
+            <div><strong className="text-foreground">Sample 검증</strong> <span className="text-muted-foreground">— <code className="text-xs">O(log n)</code></span></div>
+            <div><strong className="text-foreground">Recovery</strong> <span className="text-muted-foreground">— 30% validators로 가능</span></div>
+          </div>
+        </div>
 
       </div>
     </section>

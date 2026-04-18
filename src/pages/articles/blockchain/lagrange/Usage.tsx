@@ -46,133 +46,66 @@ export default function Usage() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Lagrange ZKP 활용 사례</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Lagrange Interpolation in ZK Systems
-//
-// 1) Witness encoding:
-//
-//    Execution: computes n values y_0, ..., y_{n-1}
-//    These become the "witness" of size n
-//
-//    To prove with ZK:
-//      Interpolate y_i into polynomial f(x)
-//      f(h_i) = y_i for domain H = {h_0, ..., h_{n-1}}
-//
-//    ZK proof now about polynomial, not raw values
-//    Enables efficient soundness via random evaluation
+      </div>
 
-// 2) Shamir Secret Sharing:
-//
-//    Secret s to be shared among n parties
-//    Polynomial: f(0) = s, random f(1), ..., f(t)
-//    Shares: (i, f(i)) for i = 1..n
-//
-//    Reconstruction:
-//      Any t+1 shares → interpolate → get f(0) = s
-//      Fewer than t+1 shares → zero information
-//
-//    Threshold cryptography:
-//      t-of-n signing, t-of-n decryption
-//      Used: Chainlink, distributed keygen
-
-// 3) PLONK copy constraints:
-//
-//    Wire values across gates must match:
-//      e.g., output of gate 3 = input of gate 7
-//
-//    Permutation polynomial sigma:
-//      sigma(omega^3) = omega^7 (index encoding)
-//
-//    Copy check: product argument
-//      check that z(x) satisfies certain recursion
-//      z(x) expressed via Lagrange basis
-//
-//    L_i(x) * (wire_val - expected) = 0 at each i
-
-// 4) STARK AIR (Algebraic Intermediate Representation):
-//
-//    Execution trace: 2D table (rows = steps, cols = state)
-//    Each column interpolated to polynomial over trace domain
-//
-//    Trace domain D_trace = {1, w, w^2, ..., w^{T-1}}
-//      T = trace length
-//
-//    Column j polynomial:
-//      t_j(x) = sum_step trace[step][j] * L_step(x)
-//
-//    Constraints expressed as polynomial identities:
-//      Transition: P(t_j(x), t_j(w*x)) = 0 for x in D_trace
-//      Boundary: t_j(w^step) = expected_value
-
-// 5) INTT (Inverse NTT):
-//
-//    Given evaluations on unity roots, recover coefficients
-//    This is Lagrange interpolation on {1, w, ..., w^{n-1}}
-//
-//    Fast via FFT structure:
-//      O(n log n) instead of O(n^2) naive Lagrange
-//
-//    Used in:
-//      KZG polynomial commitments
-//      Polynomial multiplication (convolution)
-//      Coefficient extraction from evaluations
-
-// 6) Kate/KZG polynomial commitments:
-//
-//    Commit: C = g^{f(tau)} (single group element)
-//    Open at point z: prove f(z) = y
-//
-//    Proof: pi = g^{q(tau)} where q(x) = (f(x) - y) / (x - z)
-//    Verifier: pairing check
-//
-//    Interpolation role:
-//      f is often known via n evaluations
-//      Lagrange used to compute f in coefficient form
-//      Or: commit directly via Lagrange basis commits
-
-// 7) Lookup arguments (Plookup, Halo2):
-//
-//    Prove that witness values are in a lookup table
-//
-//    Construction:
-//      Combine witness and table into one polynomial
-//      Prove it's a permutation of table
-//
-//    Lagrange basis used to express indicator polynomials
-//    L_i(x) = 1 if x = omega^i, 0 elsewhere in domain
-
-// 8) Product argument (grand product):
-//
-//    Prove: prod_i f(omega^i) = P (claimed value)
-//
-//    Construct z(x):
-//      z(1) = 1
-//      z(omega^{i+1}) = z(omega^i) * f(omega^i)
-//      z(omega^n) = P
-//
-//    Check via polynomial identity at random point
-//
-//    Used for: permutation arguments, lookup arguments
-
-// 9) Fiat-Shamir and transcripts:
-//
-//    Challenges depend on commitments so far
-//    r = hash(transcript)
-//
-//    Prover must then open at r (not in domain H)
-//    Uses Lagrange interpolation conceptually:
-//      f(r) can be computed from evaluations at H
-//      Barycentric formula: O(n) operations
-
-// 10) Evaluation proofs (multi-point):
-//
-//    Open polynomial at multiple points z_1, ..., z_k
-//    Interpolate y_i = f(z_i) at {z_i}
-//    Remainder polynomial handles the difference
-//
-//    Used in: multi-polynomial commitments, Fflonk
-//    Reduces multiple openings to single check`}
-        </pre>
+      <div className="not-prose grid grid-cols-1 gap-3 my-3">
+        {[
+          {
+            name: '1. 위트니스 인코딩',
+            desc: '실행 결과 n개 값 y_i를 도메인 H 위 다항식 f(x)로 보간. ZK 증명이 원시 값이 아닌 다항식에 대해 동작하므로 랜덤 평가를 통한 효율적 건전성이 가능해진다',
+            color: 'indigo',
+          },
+          {
+            name: '2. Shamir 비밀 분산',
+            desc: '비밀 s를 f(0) = s인 다항식의 n개 평가값으로 분배. t+1개 이상의 조각으로 보간하면 s 복원, 그 미만이면 정보 0. Chainlink, 분산 키 생성 등에 사용',
+            color: 'emerald',
+          },
+          {
+            name: '3. PLONK Copy Constraint',
+            desc: '게이트 간 와이어 값 일치를 순열 다항식 σ(ω^3) = ω^7로 인코딩. 곱 인자(product argument)에서 z(x)를 Lagrange basis로 표현하여 확인',
+            color: 'amber',
+          },
+          {
+            name: '4. STARK AIR',
+            desc: '실행 트레이스(2D 테이블)의 각 열을 트레이스 도메인 {1, w, w², ...} 위에서 보간. 전이 제약과 경계 제약을 다항식 항등식으로 표현',
+            color: 'indigo',
+          },
+          {
+            name: '5. INTT (역 NTT)',
+            desc: '단위근 위 평가값에서 계수 복원 — Lagrange 보간의 특수 경우. FFT 구조로 O(n log n). KZG 커밋, 다항식 곱셈, 계수 추출에 사용',
+            color: 'emerald',
+          },
+          {
+            name: '6. Kate/KZG 다항식 커밋먼트',
+            desc: '커밋 C = g^{f(τ)}. 점 z에서 f(z) = y를 증명할 때 q(x) = (f(x)-y)/(x-z) 사용. f가 n개 평가값으로 알려진 경우 Lagrange로 계수 형태 계산하거나 Lagrange basis 커밋으로 직접 커밋',
+            color: 'amber',
+          },
+          {
+            name: '7. Lookup 인자 (Plookup, Halo2)',
+            desc: '위트니스 값이 룩업 테이블에 있음을 증명. 지시 다항식 L_i(x)를 Lagrange basis로 표현 — ω^i에서 1, 나머지에서 0',
+            color: 'indigo',
+          },
+          {
+            name: '8. 곱 인자 (Grand Product)',
+            desc: 'z(1)=1, z(ω^{i+1}) = z(ω^i)·f(ω^i)로 누적 곱 z(x) 구성. 랜덤 점에서 다항식 항등식으로 검증. 순열 인자, 룩업 인자에 사용',
+            color: 'emerald',
+          },
+          {
+            name: '9. Fiat-Shamir 전사본',
+            desc: '챌린지 r = hash(transcript)는 도메인 H 밖의 점. f(r)을 H 위 평가값으로부터 Barycentric 공식으로 O(n)에 계산',
+            color: 'amber',
+          },
+          {
+            name: '10. 다중 점 평가 증명',
+            desc: '다항식을 여러 점 z_1, ..., z_k에서 개방. y_i = f(z_i)를 보간하고 나머지 다항식으로 차이를 처리. Fflonk 등에서 여러 개방을 하나의 확인으로 축소',
+            color: 'indigo',
+          },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

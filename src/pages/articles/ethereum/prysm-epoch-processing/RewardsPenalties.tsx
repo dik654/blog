@@ -18,92 +18,92 @@ export default function RewardsPenalties({ onCodeRef }: Props) {
 
         {/* ── 4가지 보상 카테고리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Attestation 보상 — 4가지 구성요소</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Altair+ 보상 공식 (기존 PendingAttestation 대체)
-// ParticipationFlags (3-bit):
-// - TIMELY_SOURCE_FLAG_INDEX = 0
-// - TIMELY_TARGET_FLAG_INDEX = 1
-// - TIMELY_HEAD_FLAG_INDEX = 2
-
-// 각 flag에 할당된 weight:
-// - source: 14 (TIMELY_SOURCE_WEIGHT)
-// - target: 26 (TIMELY_TARGET_WEIGHT)
-// - head: 14 (TIMELY_HEAD_WEIGHT)
-// - sync: 2 (SYNC_COMMITTEE_WEIGHT, Altair)
-// - proposer: 8 (PROPOSER_WEIGHT, block 포함 보상)
-// 총합: 64 (WEIGHT_DENOMINATOR)
-
-// 단일 validator 예상 보상 (per epoch):
-// BASE_REWARD = effective_balance * BASE_REWARD_FACTOR / sqrt(total_active_balance) / BASE_REWARDS_PER_EPOCH
-
-// flag별 보상:
-// source_reward = BASE_REWARD * TIMELY_SOURCE_WEIGHT / 64 * participation_ratio
-// target_reward = BASE_REWARD * TIMELY_TARGET_WEIGHT / 64 * participation_ratio
-// head_reward = BASE_REWARD * TIMELY_HEAD_WEIGHT / 64 * participation_ratio
-
-// 계산 예시 (32 ETH validator):
-// effective_balance = 32_000_000_000 Gwei (32 ETH)
-// total_active_balance ≈ 32_000_000 ETH (1M validators)
-// BASE_REWARD ≈ 2350 Gwei / epoch
-
-// Perfect attestation 보상 (모든 3 flags):
-// 14/64 + 26/64 + 14/64 = 54/64 = 84%
-// reward per epoch ≈ 2350 × 0.84 ≈ 1975 Gwei
-
-// 연간:
-// 225 epochs/day × 365 = 82,125 epochs/year
-// 82,125 × 1975 ≈ 162 million Gwei = 0.162 ETH/year
-// APR ≈ 0.162 / 32 = 0.5% (BASE, attestation만)
-
-// + sync committee (간헐적, 큰 보상)
-// + proposer (희귀, 큰 보상)
-// 실제 APR ≈ 3~5%`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-2">ParticipationFlags (3-bit) — Altair+</p>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+              {[
+                { flag: 'source', weight: '14', index: '0' },
+                { flag: 'target', weight: '26', index: '1' },
+                { flag: 'head', weight: '14', index: '2' },
+                { flag: 'sync', weight: '2', index: '-' },
+                { flag: 'proposer', weight: '8', index: '-' },
+              ].map(f => (
+                <div key={f.flag} className="rounded border border-border p-2 text-center">
+                  <span className="font-bold text-indigo-400">{f.flag}</span>
+                  <p className="text-foreground/60">weight: {f.weight}/64</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-foreground/50 mt-2">총합: 64 (<code>WEIGHT_DENOMINATOR</code>)</p>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">보상 공식</p>
+            <div className="space-y-1 text-xs text-foreground/70">
+              <div><code>BASE_REWARD = effective_balance * BASE_REWARD_FACTOR / sqrt(total_active_balance) / BASE_REWARDS_PER_EPOCH</code></div>
+              <div><code>flag_reward = BASE_REWARD * FLAG_WEIGHT / 64 * participation_ratio</code></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">계산 예시 (32 ETH validator, 1M validators)</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-foreground/70">
+              <div className="space-y-1">
+                <div><code>effective_balance</code> = 32,000,000,000 Gwei</div>
+                <div><code>BASE_REWARD</code> ≈ 2,350 Gwei/epoch</div>
+                <div>Perfect attestation (3 flags): 14+26+14 = 54/64 = <strong>84%</strong></div>
+                <div>reward/epoch ≈ 2,350 x 0.84 ≈ <strong>1,975 Gwei</strong></div>
+              </div>
+              <div className="space-y-1">
+                <div>225 epochs/day x 365 = 82,125 epochs/year</div>
+                <div>82,125 x 1,975 ≈ 0.162 ETH/year</div>
+                <div>APR ≈ 0.162 / 32 = <strong>0.5%</strong> (attestation만)</div>
+                <div>+ sync committee + proposer → 실제 APR ≈ <strong>3~5%</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
-          Attestation 보상 = <strong>3 flags × weights</strong>.<br />
+          Attestation 보상 = <strong>3 flags x weights</strong>.<br />
           source(14) + target(26) + head(14) = 54/64 of base reward.<br />
           Perfect participation 시 연 ~0.5% (attestation만).
         </p>
 
         {/* ── 패널티 공식 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">패널티 — 미참여/잘못된 투표</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 패널티 계산 (Altair+):
-// 각 flag에 대해 미참여 시 penalty
-
-// Timely source 미참여:
-// penalty_source = BASE_REWARD * TIMELY_SOURCE_WEIGHT / 64
-
-// Timely target 미참여:
-// penalty_target = BASE_REWARD * TIMELY_TARGET_WEIGHT / 64
-
-// Timely head 미참여:
-// penalty_head = 0  (head는 penalty 없음, reward only)
-
-// Total flag penalty:
-// 최대: BASE_REWARD × (14 + 26) / 64 = BASE_REWARD × 40/64 = 62%
-
-// 추가 Inactivity Penalty (leak):
-// finality 4 epoch 이상 지연 시 활성화
-// 미참여 validator는 extra penalty
-
-// Inactivity Score:
-// - 참여 시 -16 (초당 1 epoch, 감소)
-// - 미참여 시 +4 (초당 1 epoch, 증가)
-// - Inactivity leak 활성 시 +추가
-
-// Inactivity leak penalty:
-// if finality_delay > 4 epochs:
-//     leak_penalty = validator.inactivity_score *
-//                    validator.effective_balance /
-//                    INACTIVITY_SCORE_BIAS /  // 4
-//                    INACTIVITY_PENALTY_QUOTIENT  // 2^26 = 67M
-
-// 효과:
-// - 정상 시: 미참여 validator는 작은 penalty
-// - leak 시: 지수적 penalty 증가 → 빠른 exit 유도
-// - 목표: 2/3 quorum 빠르게 회복`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-2">Flag별 패널티 (Altair+)</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-foreground/70">
+              <div className="rounded border border-border p-2">
+                <strong>source 미참여:</strong> <code>BASE_REWARD * 14 / 64</code>
+              </div>
+              <div className="rounded border border-border p-2">
+                <strong>target 미참여:</strong> <code>BASE_REWARD * 26 / 64</code>
+              </div>
+              <div className="rounded border border-border p-2">
+                <strong>head 미참여:</strong> 0 (penalty 없음, reward only)
+              </div>
+            </div>
+            <p className="text-xs text-foreground/50 mt-2">최대 flag penalty: <code>BASE_REWARD x (14+26)/64 = 62%</code></p>
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Inactivity Leak — finality 지연 시 추가 패널티</p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              <div><strong>트리거:</strong> finality 4 epoch 이상 지연 시 활성화</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="rounded border border-border p-2">
+                  <strong>Inactivity Score 변동:</strong><br />
+                  참여 시 <code>-16</code>/epoch, 미참여 시 <code>+4</code>/epoch
+                </div>
+                <div className="rounded border border-border p-2">
+                  <strong>Leak penalty 공식:</strong><br />
+                  <code>score * effective_balance / BIAS(4) / QUOTIENT(2^26)</code>
+                </div>
+              </div>
+              <div className="text-foreground/50">정상 시: 작은 penalty / leak 시: 지수적 증가 → 빠른 exit 유도 → 2/3 quorum 회복</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           패널티는 <strong>reward와 대칭적 구조</strong>.<br />
           source/target 미참여 시 최대 62% penalty.<br />
@@ -112,61 +112,53 @@ export default function RewardsPenalties({ onCodeRef }: Props) {
 
         {/* ── Precompute 최적화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Precompute 패턴 — O(N) 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 rewards precompute 최적화
-
-// naive 구현 (N² 복잡도):
-for _, v := range validators {
-    // 각 validator마다 전체 validator 순회
-    totalBalance := computeTotalBalance(validators)  // O(N)
-    reward := computeReward(v, totalBalance)
-    // ...
-}
-// 총 복잡도: O(N²)
-
-// Precompute 최적화:
-// 1. 사전 계산 단계 (O(N) 순회 1회):
-type ValidatorPrecompute struct {
-    ValidatorIndex uint64
-    Balance uint64
-    EffectiveBalance uint64
-    IsActive bool
-    IsPreviousEpochSource, IsPreviousEpochTarget, IsPreviousEpochHead bool
-    IsCurrentEpochSource, IsCurrentEpochTarget, IsCurrentEpochHead bool
-    IsInactive bool
-}
-
-type BalancePrecompute struct {
-    TotalBalance uint64
-    PreviousEpochSourceAttestingBalance uint64
-    PreviousEpochTargetAttestingBalance uint64
-    PreviousEpochHeadAttestingBalance uint64
-    // ...
-}
-
-func Precompute(state *BeaconState) ([]*ValidatorPrecompute, *BalancePrecompute) {
-    vals := make([]*ValidatorPrecompute, len(state.Validators))
-    bals := &BalancePrecompute{}
-
-    for i, v := range state.Validators {
-        vals[i] = computeFlags(v, state, i)
-        bals.TotalBalance += v.EffectiveBalance
-        if vals[i].IsPreviousEpochTarget {
-            bals.PreviousEpochTargetAttestingBalance += v.EffectiveBalance
-        }
-        // ...
-    }
-    return vals, bals
-}
-
-// 2. 보상 계산 (O(N), precompute 사용):
-for i, v := range vals {
-    deltas[i] = computeDelta(v, bals)  // O(1)
-}
-
-// 총 복잡도: O(N) (2번의 O(N) 순회 = 선형)
-// 1M validator 기준: ~200ms (naive 수백 배 빠름)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">Naive 구현 — O(N²)</p>
+              <div className="text-xs text-foreground/70 space-y-1">
+                <div>각 validator마다 <code>computeTotalBalance(validators)</code> O(N) 호출</div>
+                <div>총 복잡도: O(N²) — 1M validator에서 수십 초</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm text-emerald-400 mb-2">Precompute 최적화 — O(N)</p>
+              <div className="text-xs text-foreground/70 space-y-1">
+                <div>2번의 O(N) 순회 = 선형</div>
+                <div>1M validator 기준: <strong>~200ms</strong> (naive 대비 수백 배)</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm text-sky-400 mb-3">Pass 1: 사전 계산 — O(N) 순회 1회</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div>
+                <p className="font-semibold text-foreground/80 mb-1"><code>ValidatorPrecompute</code></p>
+                <div className="space-y-1 text-foreground/60">
+                  <div><code>ValidatorIndex</code>, <code>Balance</code>, <code>EffectiveBalance</code></div>
+                  <div><code>IsActive</code>, <code>IsInactive</code></div>
+                  <div><code>IsPreviousEpochSource/Target/Head</code></div>
+                  <div><code>IsCurrentEpochSource/Target/Head</code></div>
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold text-foreground/80 mb-1"><code>BalancePrecompute</code></p>
+                <div className="space-y-1 text-foreground/60">
+                  <div><code>TotalBalance</code></div>
+                  <div><code>PreviousEpochSourceAttestingBalance</code></div>
+                  <div><code>PreviousEpochTargetAttestingBalance</code></div>
+                  <div><code>PreviousEpochHeadAttestingBalance</code></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">Pass 2: 보상 계산 — O(N), precompute 사용</p>
+            <div className="text-xs text-foreground/70">
+              <code>deltas[i] = computeDelta(vals[i], bals)</code> — 각 validator O(1) 연산
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Precompute 패턴</strong>으로 O(N²) → O(N) 최적화.<br />
           2번의 O(N) 순회로 reward 계산 완료.<br />

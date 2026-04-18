@@ -20,38 +20,31 @@ export default function FieldTrie({ onCodeRef }: Props) {
 
         {/* ── FieldTrie 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">FieldTrie — 필드별 merkle 캐시</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 FieldTrie: BeaconState의 각 필드를 merkle tree로 캐싱
-type FieldTrie struct {
-    fieldLayers [][]byte  // merkle tree 레이어 (bottom-up)
-    field       types.FieldIndex  // 어느 BeaconState 필드
-    dataType    types.DataType     // basic/composite
-    length      uint64
-    numOfElems  uint64
-    isTransferred bool
-    refs        int    // 참조 카운트 (COW)
-    RWMutex
-}
-
-// 저장 구조:
-// fieldLayers[0] = leaves (raw chunks)
-// fieldLayers[1] = level 1 hashes (leaves를 pair-wise hash)
-// fieldLayers[2] = level 2 hashes
-// ...
-// fieldLayers[depth] = root
-
-// 예: validators 필드 (1M entry, depth 40)
-// fieldLayers[0]: 1M × 32 bytes = 32 MB
-// fieldLayers[1]: 500K × 32 bytes = 16 MB
-// ...
-// fieldLayers[40]: 32 bytes (root)
-
-// 첫 계산: 전체 메모리 대량 소비 (~64 MB)
-// 업데이트: 변경된 경로만 재계산
-
-// 각 BeaconState 필드마다 별도 FieldTrie 인스턴스
-// 변경 없는 필드는 캐시된 root 재사용`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>FieldTrie</code> 구조체</p>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code>fieldLayers [][]byte</code> &mdash; merkle tree 레이어 (bottom-up)</li>
+              <li><code>field FieldIndex</code> &mdash; BeaconState 필드 식별자</li>
+              <li><code>dataType DataType</code> &mdash; basic / composite</li>
+              <li><code>length, numOfElems</code> &mdash; 원소 수</li>
+              <li><code>refs int</code> &mdash; 참조 카운트 (COW 공유)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">레이어 구조</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-center text-muted-foreground">
+              <div className="bg-muted/50 rounded p-2"><p className="text-xs">fieldLayers[0]</p><p className="font-mono">leaves (raw chunks)</p></div>
+              <div className="bg-muted/50 rounded p-2"><p className="text-xs">fieldLayers[1]</p><p className="font-mono">pair-wise hash</p></div>
+              <div className="bg-muted/50 rounded p-2"><p className="text-xs">...</p><p className="font-mono">상위 레벨</p></div>
+              <div className="bg-muted/50 rounded p-2"><p className="text-xs">fieldLayers[depth]</p><p className="font-mono font-semibold">root (32B)</p></div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">예: validators (1M entry, depth 40) &mdash; fieldLayers[0] = 32 MB, fieldLayers[1] = 16 MB, ...</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-sm text-muted-foreground">첫 계산: 전체 메모리 대량 소비 (~64 MB). 이후 업데이트: <strong>변경 경로만 재계산</strong>. 변경 없는 필드는 캐시된 root 재사용.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>FieldTrie</code>가 <strong>각 필드의 merkle tree</strong> 캐시.<br />
           fieldLayers 배열에 bottom-up 해시 저장 → 증분 업데이트 가능.<br />
@@ -60,47 +53,30 @@ type FieldTrie struct {
 
         {/* ── 증분 재계산 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">증분 재계산 — RecomputeTrie(indices)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 변경된 element index 목록으로 증분 재계산
-func (f *FieldTrie) RecomputeTrie(
-    indices []uint64,  // 변경된 element index
-    elements any,      // 새 값 목록
-) ([]byte, error) {
-    // 1. 변경된 leaves 업데이트
-    for i, idx := range indices {
-        chunk := computeChunk(elements, idx)
-        f.fieldLayers[0][idx] = chunk
-    }
-
-    // 2. 영향받은 경로만 재해시 (bottom-up)
-    touchedPaths := make(map[uint64]bool)
-    for _, idx := range indices {
-        // 해당 idx가 속한 모든 조상 추가
-        for level := 0; level < depth; level++ {
-            parentIdx := idx >> (level + 1)
-            touchedPaths[parentIdx<<(level+1)] = true
-        }
-    }
-
-    // 3. 각 레벨에서 touched paths만 재해시
-    for level := 1; level <= depth; level++ {
-        for path := range touchedPaths {
-            left := f.fieldLayers[level-1][2*path]
-            right := f.fieldLayers[level-1][2*path+1]
-            f.fieldLayers[level][path] = sha256(left, right)
-        }
-    }
-
-    // 4. 새 root 반환
-    return f.fieldLayers[depth][0], nil
-}
-
-// 성능:
-// 1M validator에서 1000개 변경:
-// - 전체 재계산: ~2백만 hash = ~2초
-// - 증분 재계산: ~log2(1M) × 1000 = ~20K hash = ~20ms
-// - 100배 가속`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>RecomputeTrie(indices, elements)</code></p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>변경된 leaves 업데이트</strong> &mdash; <code>fieldLayers[0][idx] = computeChunk(elements, idx)</code></li>
+              <li><strong>영향받은 경로 수집</strong> &mdash; 각 변경 idx의 모든 조상을 touchedPaths에 추가</li>
+              <li><strong>touched paths만 재해시</strong> &mdash; 각 레벨에서 <code>sha256(left, right)</code> (bottom-up)</li>
+              <li><strong>새 root 반환</strong> &mdash; <code>fieldLayers[depth][0]</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">성능 (1M validator, 1000개 변경)</p>
+            <div className="grid grid-cols-2 gap-3 text-sm text-center">
+              <div className="bg-red-500/10 rounded p-2">
+                <p className="text-muted-foreground">전체 재계산</p>
+                <p className="font-mono">~2M hash = <strong>~2초</strong></p>
+              </div>
+              <div className="bg-green-500/10 rounded p-2">
+                <p className="text-muted-foreground">증분 재계산</p>
+                <p className="font-mono">~20K hash = <strong>~20ms</strong> (100배)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>RecomputeTrie</code>가 <strong>변경 경로만 재해시</strong>.<br />
           1M validator 중 1000개 변경 시 100배 가속.<br />

@@ -13,55 +13,39 @@ export default function AnchorSelection() {
 
         {/* ── Anchor Selection Details ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Anchor Selection 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Anchor Selection 수학적 정의:
-//
-// anchor_author(w) = schedule[w mod n]
-//
-// where schedule = validators sorted by id
-// (or stake-weighted round-robin)
-//
-// anchor(w) = vertex at round 2w by anchor_author(w)
-// (if exists in DAG, else None)
-
-// 선택의 결정론성:
-// - schedule: pre-determined (setup phase)
-// - w: 현재 wave number (모든 validator 동일)
-// - mod n: deterministic index
-// - → 모든 validator가 같은 anchor 식별
-
-// No communication needed:
-// - 각 validator가 독립 계산
-// - network exchange 불필요
-// - 모두 같은 결론
-
-// Weighted round-robin:
-// - stake-weighted schedule
-// - higher stake validator 더 자주 anchor
-// - 예:
-//   V1 (40% stake): wave 0, 2, 5
-//   V2 (30%): wave 1, 4
-//   V3 (20%): wave 3, 7
-//   V4 (10%): wave 6
-//   반복
-
-// Reputation-based (Bullshark variant):
-// - 과거 anchor 성능에 기반
-// - commit rate 높은 validator 선호
-// - slow validator 자동 제외
-
-// Randomized (async mode):
-// - VRF (Verifiable Random Function)
-// - common coin flip
-// - 예측 불가능
-// - async fallback에서 사용
-
-// Byzantine anchor handling:
-// - Byzantine anchor가 vertex 안 만듦
-// - → anchor(w) = None
-// - wave skipped
-// - next wave anchor가 이전 wave 포함 commit`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">수학적 정의</p>
+            <p className="text-sm">
+              <code>anchor_author(w) = schedule[w mod n]</code> — schedule = validators sorted by id (or stake-weighted round-robin)<br />
+              <code>anchor(w)</code> = vertex at round 2w by <code>anchor_author(w)</code> (DAG에 존재하면, 아니면 <code>None</code>)
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              결정론성: schedule은 pre-determined, w는 모든 validator 동일, <code>mod n</code>으로 deterministic index → 모든 validator가 같은 anchor 식별, no communication 필요
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Anchor 선택 변형</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Weighted round-robin</p>
+                <p className="text-muted-foreground">stake-weighted schedule. 예: V1(40%) wave 0,2,5 / V2(30%) wave 1,4 / V3(20%) wave 3,7 / V4(10%) wave 6</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Reputation-based</p>
+                <p className="text-muted-foreground">과거 anchor 성능 기반. commit rate 높은 validator 선호, slow validator 자동 제외</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Randomized (async mode)</p>
+                <p className="text-muted-foreground">VRF (Verifiable Random Function) / common coin flip. 예측 불가능, async fallback에서 사용</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Byzantine anchor handling</p>
+                <p className="text-muted-foreground">Byzantine anchor가 vertex 안 만듦 → <code>anchor(w) = None</code> → wave skipped → next anchor가 이전 wave 포함 commit</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Anchor selection: <strong>schedule[w mod n]</strong>.<br />
           deterministic → no communication.<br />
@@ -106,62 +90,53 @@ export default function AnchorSelection() {
 
         {/* ── Skipped Wave Handling ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Skipped Wave 처리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Skipped Wave 시나리오:
-//
-// Case 1: Byzantine anchor
-// - anchor_author가 offline / malicious
-// - round 2w에 vertex 안 만듦
-// - anchor(w) = None
-// - wave w skipped
-//
-// Case 2: Insufficient votes
-// - anchor(w) exists
-// - but < f+1 votes in round 2w+1
-// - 원인: network partition, slow propagation
-// - → wave w undecided (yet)
-
-// Skipped wave handling:
-//
-// 1. Wave w skipped, continue to wave w+1
-// 2. anchor(w+1) exists + has enough votes → commit
-// 3. anchor(w+1) causal history includes:
-//    - itself
-//    - its parents (round 2(w+1)-1)
-//    - recursively down to genesis
-//    - → includes anchor(w) if exists
-// 4. anchor(w)와 causal history all committed together
-
-// 구체적 순서:
-// - commit anchor(w+1) trigger
-// - DFS from anchor(w+1) to all ancestors
-// - sort by (round, author)
-// - emit committed order
-// - includes anchor(w) if it existed
-
-// 예시:
-// wave 0 anchor: V0 (offline) → skipped
-// wave 1 anchor: V1 → committed
-// wave 1 causal history includes:
-// - round 0 vertices (V1, V2, V3) — V0 제외
-// - round 1 vertices
-// - round 2 vertices (up to anchor)
-//
-// committed order:
-// [V1_r0, V2_r0, V3_r0, V0_r1?, ..., anchor_r2]
-
-// Recovery property:
-// - eventually anchor committed
-// - honest anchor 순서는 4 waves 내 (expected)
-// - Byzantine 33%면 3 in 3 순서
-// - 시스템 liveness 보장
-
-// async fallback:
-// - 연속 skipped wave detection
-// - switch to async mode (4-round)
-// - randomized anchor selection
-// - guaranteed commit (probability 1)`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Skipped Wave 시나리오</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Case 1: Byzantine anchor</p>
+                <p className="text-muted-foreground"><code>anchor_author</code>가 offline/malicious → round 2w에 vertex 안 만듦 → <code>anchor(w) = None</code> → wave w skipped</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Case 2: Insufficient votes</p>
+                <p className="text-muted-foreground"><code>anchor(w)</code> exists but <code>&lt; f+1</code> votes in round 2w+1. 원인: network partition, slow propagation</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Skipped wave handling</p>
+            <ol className="text-sm list-decimal list-inside space-y-1">
+              <li>Wave w skipped → continue to wave w+1</li>
+              <li><code>anchor(w+1)</code> exists + enough votes → commit</li>
+              <li><code>anchor(w+1)</code> causal history: itself → parents → genesis까지 재귀 → <code>anchor(w)</code> 포함</li>
+              <li><code>anchor(w)</code>와 causal history 전체가 함께 committed</li>
+            </ol>
+            <p className="text-sm text-muted-foreground mt-2">
+              DFS from <code>anchor(w+1)</code> → sort by <code>(round, author)</code> → emit committed order
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">예시</p>
+            <p className="text-sm text-muted-foreground">
+              wave 0 anchor: V0 (offline) → skipped. wave 1 anchor: V1 → committed.<br />
+              wave 1 causal history: round 0의 V1,V2,V3 (V0 제외) + round 1 vertices + round 2 vertices.<br />
+              committed order: <code>[V1_r0, V2_r0, V3_r0, ..., anchor_r2]</code>
+            </p>
+          </div>
+          <div className="p-4">
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Recovery property</p>
+                <p className="text-muted-foreground">eventually anchor committed. honest anchor 순서 4 waves 내 expected. Byzantine 33%면 3 in 3 순서. liveness 보장</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Async fallback</p>
+                <p className="text-muted-foreground">연속 skipped wave detection → async mode (4-round) + randomized anchor selection → guaranteed commit (probability 1)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Skipped wave: <strong>next anchor's causal history에 포함</strong>.<br />
           skipped wave의 vertices도 eventually committed.<br />

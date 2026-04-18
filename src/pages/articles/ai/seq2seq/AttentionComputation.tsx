@@ -1,4 +1,6 @@
 import AttentionCompViz from './viz/AttentionCompViz';
+import S2SAttnCompViz from './viz/S2SAttnCompViz';
+import M from '@/components/ui/math';
 
 export default function AttentionComputation() {
   return (
@@ -38,55 +40,12 @@ export default function AttentionComputation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Softmax 계산 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Softmax 함수의 역할
-//
-// 입력: raw scores [0.62, 0.34, 0.50]
-//
-// Step 1: exponential 적용
-//   exp(0.62) = 1.8589
-//   exp(0.34) = 1.4049
-//   exp(0.50) = 1.6487
-//
-// Step 2: 합계 계산
-//   sum = 1.8589 + 1.4049 + 1.6487 = 4.9125
-//
-// Step 3: 정규화
-//   p_1 = 1.8589 / 4.9125 = 0.3784 ≈ 0.38
-//   p_2 = 1.4049 / 4.9125 = 0.2860 ≈ 0.29
-//   p_3 = 1.6487 / 4.9125 = 0.3356 ≈ 0.33
-//
-//   (반올림 후: 0.40, 0.30, 0.30 - 예시와 차이는 반올림)
-//
-// 특성:
-//   - 출력 ∈ (0, 1), 합 = 1 (확률 분포)
-//   - 큰 값이 더 커짐 (비선형 증폭)
-//   - 미분 가능 (gradient flow)
-//
-// 수치 안정성:
-//   max 빼기 트릭:
-//   softmax(x) = softmax(x - max(x))
-//
-//   → overflow 방지
-//   → 같은 결과
-
-// Numerically stable softmax:
-//   scores = [0.62, 0.34, 0.50]
-//   max_score = 0.62
-//   shifted = [0.00, -0.28, -0.12]
-//   exp = [1.00, 0.756, 0.887]
-//   sum = 2.643
-//   prob = [0.378, 0.286, 0.335]
-//
-// Temperature 조정:
-//   softmax(scores / T)
-//   - T < 1: 더 sharp (confidence↑)
-//   - T = 1: 표준
-//   - T > 1: 더 flat (uniform)
-//
-//   attention에서는 T=1 사용
-//   언어 생성에서는 T=0.7~1.2 조정`}
-        </pre>
+        <S2SAttnCompViz />
+        <M display>{'\\text{softmax}(x_i) = \\frac{\\exp(x_i)}{\\sum_k \\exp(x_k)} = \\frac{\\underbrace{\\exp(x_i - \\max(x))}_{\\text{overflow 방지}}}{\\sum_k \\exp(x_k - \\max(x))}'}</M>
+        <p className="leading-7">
+          Temperature 조정: <M>{'\\text{softmax}(x / T)'}</M> — <M>{'T < 1'}</M>: sharp, <M>{'T > 1'}</M>: flat<br />
+          Attention에서는 T=1 표준. 언어 생성(GPT)에서 T=0.7~1.2로 다양성 조절
+        </p>
         <p className="leading-7">
           요약 1: Softmax는 <strong>raw score → 확률 분포</strong> 변환 — 합=1 정규화.<br />
           요약 2: <strong>max 빼기 트릭</strong>으로 수치 안정성 확보 — 실무 필수.<br />

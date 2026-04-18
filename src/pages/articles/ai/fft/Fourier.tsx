@@ -1,4 +1,5 @@
 import Math from '@/components/ui/math';
+import FourierViz from './viz/FourierViz';
 
 export default function Fourier() {
   return (
@@ -11,7 +12,9 @@ export default function Fourier() {
           서로 다른 주파수의 사인파(정현파)를 적절히 더하면 재현할 수 있다<br />
           사각파, 톱니파, 음성 파형 모두 사인파의 중첩으로 분해 가능
         </p>
-
+      </div>
+      <FourierViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>연속 푸리에 변환 (Continuous FT)</h3>
         <p>
           연속 신호 <Math>{'f(t)'}</Math>에 대해:

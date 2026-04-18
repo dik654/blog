@@ -33,42 +33,60 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         {/* ── Filecoin vs Ethereum 차이 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Filecoin vs Ethereum 핵심 차이</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ethereum:
-// - 목적: 범용 smart contract 플랫폼
-// - 합의: PoS + Casper FFG (2022 merge 이후)
-// - 블록: 단일 leader, 12초마다
-// - 상태: Merkle Patricia Trie (MPT)
-// - 가격: gas = computation
-// - storage: on-chain expensive
-
-// Filecoin:
-// - 목적: 분산 storage marketplace
-// - 합의: Expected Consensus (EC) + F3
-// - 블록: tipset (여러 blocks), 30초/epoch
-// - 상태: HAMT (Hash Array Mapped Trie)
-// - 가격: storage deal + 증명 비용
-// - storage: off-chain, proofs on-chain
-
-// Lotus 역할:
-// 1. Filecoin blockchain 노드
-// 2. Storage provider 관리
-// 3. Deal making (storage/retrieval)
-// 4. PoRep/PoSt 증명 제출
-// 5. Payment channel 처리
-
-// 주요 구성:
-// - lotus-daemon: chain 동기화
-// - lotus-miner: storage provider
-// - lotus-worker: sealing worker
-// - lotus-gateway: light client gateway
-
-// 2024 상태:
-// - ~4000 active storage providers
-// - ~1900 PiB actual storage
-// - ~650 PiB committed capacity
-// - FIL token market cap ~$2B`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Ethereum</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>목적: 범용 smart contract 플랫폼</li>
+              <li>합의: PoS + Casper FFG (2022 merge 이후)</li>
+              <li>블록: 단일 leader, 12초마다</li>
+              <li>상태: Merkle Patricia Trie (MPT)</li>
+              <li>가격: gas = computation</li>
+              <li>storage: on-chain expensive</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Filecoin</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>목적: 분산 storage marketplace</li>
+              <li>합의: Expected Consensus (EC) + F3</li>
+              <li>블록: tipset (여러 blocks), 30초/epoch</li>
+              <li>상태: HAMT (Hash Array Mapped Trie)</li>
+              <li>가격: storage deal + 증명 비용</li>
+              <li>storage: off-chain, proofs on-chain</li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Lotus 역할</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Filecoin blockchain 노드</li>
+              <li>Storage provider 관리</li>
+              <li>Deal making (storage/retrieval)</li>
+              <li>PoRep/PoSt 증명 제출</li>
+              <li>Payment channel 처리</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">주요 구성 요소</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">lotus-daemon</code> — chain 동기화</li>
+              <li><code className="text-xs">lotus-miner</code> — storage provider</li>
+              <li><code className="text-xs">lotus-worker</code> — sealing worker</li>
+              <li><code className="text-xs">lotus-gateway</code> — light client gateway</li>
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
+          <h4 className="font-semibold text-sm mb-2">2024 네트워크 현황</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div><span className="text-muted-foreground">Active SPs</span><br /><strong>~4,000</strong></div>
+            <div><span className="text-muted-foreground">실저장</span><br /><strong>~1,900 PiB</strong></div>
+            <div><span className="text-muted-foreground">CC 용량</span><br /><strong>~650 PiB</strong></div>
+            <div><span className="text-muted-foreground">FIL 시가총액</span><br /><strong>~$2B</strong></div>
+          </div>
+        </div>
         <p className="leading-7">
           Lotus = <strong>Filecoin Go 참조 구현</strong>.<br />
           Ethereum과 다른 목적: 분산 storage marketplace.<br />
@@ -77,55 +95,33 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
 
         {/* ── 6-layer 아키텍처 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Lotus 6-Layer 아키텍처</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Lotus 6-Layer:
-//
-// Layer 6: API (JSON-RPC)
-//   - lotus CLI tools
-//   - third-party apps
-//   - Lotus JSON-RPC server
-//
-// Layer 5: Application Logic
-//   - Markets (deal making)
-//   - Payment channels
-//   - Retrieval
-//
-// Layer 4: VM & Actors
-//   - Filecoin Virtual Machine (FVM)
-//   - Built-in actors (Miner, Market, Power, ...)
-//   - FEVM (EVM on FVM, 2023+)
-//
-// Layer 3: Chain & State
-//   - ChainStore: block/tipset 저장
-//   - StateManager: 상태 관리
-//   - StateTree: HAMT 기반
-//   - Block validation
-//
-// Layer 2: Consensus
-//   - Expected Consensus (EC)
-//   - Tipset voting
-//   - VRF-based leader election
-//   - F3 fast finality (2024+)
-//
-// Layer 1: P2P & Storage
-//   - libp2p (network)
-//   - Blockstore (IPFS blocks)
-//   - Datastore (LevelDB/Badger)
-//
-// 각 layer 책임:
-// API: 외부 인터페이스
-// Application: business logic
-// VM: 결정론적 실행
-// Chain: 상태 저장
-// Consensus: 합의 alg
-// P2P: 네트워크
-
-// 설계 철학:
-// - IPFS 호환 (Content Addressable)
-// - libp2p 기반 P2P
-// - Modular design
-// - Go implementation (Protocol Labs)`}
-        </pre>
+        <div className="space-y-2 not-prose mb-4">
+          {[
+            { layer: '6', name: 'API (JSON-RPC)', items: ['lotus CLI tools', 'third-party apps', 'JSON-RPC server'] },
+            { layer: '5', name: 'Application Logic', items: ['Markets (deal making)', 'Payment channels', 'Retrieval'] },
+            { layer: '4', name: 'VM & Actors', items: ['Filecoin Virtual Machine (FVM)', 'Built-in actors (Miner, Market, Power ...)', 'FEVM (EVM on FVM, 2023+)'] },
+            { layer: '3', name: 'Chain & State', items: ['ChainStore: block/tipset 저장', 'StateManager: 상태 관리', 'StateTree: HAMT 기반', 'Block validation'] },
+            { layer: '2', name: 'Consensus', items: ['Expected Consensus (EC)', 'Tipset voting', 'VRF-based leader election', 'F3 fast finality (2024+)'] },
+            { layer: '1', name: 'P2P & Storage', items: ['libp2p (network)', 'Blockstore (IPFS blocks)', 'Datastore (LevelDB/Badger)'] },
+          ].map(l => (
+            <div key={l.layer} className="flex items-start gap-3 rounded-lg border bg-card p-3">
+              <span className="shrink-0 w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">{l.layer}</span>
+              <div>
+                <p className="text-sm font-semibold">{l.name}</p>
+                <p className="text-xs text-muted-foreground">{l.items.join(' · ')}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
+          <h4 className="font-semibold text-sm mb-2">설계 철학</h4>
+          <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+            <span>IPFS 호환 (Content Addressable)</span>
+            <span>libp2p 기반 P2P</span>
+            <span>Modular design</span>
+            <span>Go implementation (Protocol Labs)</span>
+          </div>
+        </div>
         <p className="leading-7">
           Lotus 6 layers: <strong>API → App → VM → Chain → Consensus → P2P</strong>.<br />
           IPFS 호환, libp2p 기반, modular design.<br />

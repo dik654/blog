@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import CurveViz from './viz/CurveViz';
 import SwapSimulatorViz from './viz/SwapSimulatorViz';
 import FeeModelViz from './viz/FeeModelViz';
@@ -20,18 +21,31 @@ export default function Overview() {
 
         <CurveViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Pair 컨트랙트의 reserve 관계
-x: token0 준비금
-y: token1 준비금
-k: 상수 (유동성 변화 시에만 변경)
-
-불변식: x · y = k
-
-// 스왑 시: Δx 입력 → Δy 출력
-(x + Δx) · (y - Δy) = k
-
-=> Δy = y - k / (x + Δx)
-       = y · Δx / (x + Δx)   (수수료 제외)`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">x</p>
+              <p className="text-sm"><code>token0</code> 준비금</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">y</p>
+              <p className="text-sm"><code>token1</code> 준비금</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">k</p>
+              <p className="text-sm">상수 (유동성 변화 시에만 변경)</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">불변식</p>
+            <M display>{'x \\cdot y = k'}</M>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">스왑 시: <M>{'\\Delta x'}</M> 입력 → <M>{'\\Delta y'}</M> 출력</p>
+            <M display>{'(x + \\Delta x)(y - \\Delta y) = k'}</M>
+            <M display>{'\\Delta y = \\frac{y \\cdot \\Delta x}{x + \\Delta x} \\quad \\text{(수수료 제외)}'}</M>
+          </div>
+        </div>
         <p>
           k는 <strong>풀의 "깊이"</strong>를 나타냄 — k가 클수록 슬리피지 작음<br />
           스왑이 일어나도 k는 일정 유지 — 단 수수료(0.3%)가 별도로 reserve에 추가되어 k 증가<br />
@@ -42,21 +56,30 @@ k: 상수 (유동성 변화 시에만 변경)
 
         <SwapSimulatorViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Uniswap V2에서 token0/token1 가격
-P = y / x  (token0 단위의 token1 가격)
-
-// 예시: USDC/ETH 풀
-x (USDC) = 3,000,000
-y (ETH)  = 1,000
-P = 1,000 / 3,000,000 = 1/3000  (1 USDC = 0.000333 ETH)
-역수: 3,000 USDC/ETH
-
-// 거래 후 가격 변화
-사용자가 1 ETH 구매:
-Δy = 1, Δx = x·Δy/(y-Δy) = 3,000,000 · 1 / 999 = 3,003 USDC
-새 reserve: x=3,003,003, y=999
-새 가격: P' = 999 / 3,003,003 = 0.0003327
-=> 1 ETH = 3,006 USDC (0.2% 상승)`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">가격 공식</p>
+            <M display>{'P = \\frac{y}{x} \\quad \\text{(token0 단위의 token1 가격)}'}</M>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">예시: USDC/ETH 풀</p>
+            <div className="grid gap-2 sm:grid-cols-3 text-sm font-mono mb-2">
+              <div>x (USDC) = 3,000,000</div>
+              <div>y (ETH) = 1,000</div>
+              <div>P = 1/3000</div>
+            </div>
+            <p className="text-sm">1 USDC = 0.000333 ETH / 역수: <strong>3,000 USDC/ETH</strong></p>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">거래 후 가격 변화 — 1 ETH 구매</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><M>{'\\Delta y = 1'}</M>, <M>{'\\Delta x = \\frac{x \\cdot \\Delta y}{y - \\Delta y} = \\frac{3{,}000{,}000 \\times 1}{999} = 3{,}003'}</M> USDC</li>
+              <li>새 reserve: <code>x=3,003,003</code>, <code>y=999</code></li>
+              <li>새 가격: <M>{"P' = 999 / 3{,}003{,}003 = 0.0003327"}</M></li>
+              <li>1 ETH = <strong>3,006 USDC</strong> (0.2% 상승)</li>
+            </ul>
+          </div>
+        </div>
         <p>
           가격은 <strong>reserve 비율의 도함수</strong> — <code>P = dy/dx = -y/x</code><br />
           거래 크기가 클수록 슬리피지 ↑ — x·y=k 곡선이 쌍곡선이기 때문<br />
@@ -67,18 +90,31 @@ P = 1,000 / 3,000,000 = 1/3000  (1 USDC = 0.000333 ETH)
 
         <FeeModelViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 수수료를 포함한 실제 swap 공식
-Δx' = Δx · 0.997   // 0.3% 수수료 차감
-Δy = y · Δx' / (x + Δx')
-
-// k 불변식 검증 (수수료 포함)
-x_new = x + Δx       // 수수료 포함 입금
-y_new = y - Δy
-k_new = x_new · y_new > k_old  // k가 증가
-
-// 0.3%의 분배
-0.25% → LP (풀 reserve에 누적)
-0.05% → 프로토콜 (나중에 토글 가능)`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">수수료 포함 swap 공식</p>
+            <M display>{"\\Delta x' = \\Delta x \\times 0.997 \\quad \\text{(0.3\\% 수수료 차감)}"}</M>
+            <M display>{"\\Delta y = \\frac{y \\cdot \\Delta x'}{x + \\Delta x'}"}</M>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">k 불변식 검증 (수수료 포함)</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><M>{"x_{new} = x + \\Delta x"}</M> — 수수료 포함 입금</li>
+              <li><M>{"y_{new} = y - \\Delta y"}</M></li>
+              <li><M>{"k_{new} = x_{new} \\cdot y_{new} > k_{old}"}</M> — k가 증가</li>
+            </ul>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm mb-1">0.25% → LP</p>
+              <p className="text-sm">풀 reserve에 누적</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">0.05% → 프로토콜</p>
+              <p className="text-sm">나중에 토글 가능</p>
+            </div>
+          </div>
+        </div>
         <p>
           수수료는 <strong>reserve에 통합</strong> — 별도 fee pool 없음<br />
           LP 수익 = reserve 증가분 + 임퍼머넌트 로스 복구<br />
@@ -89,25 +125,36 @@ k_new = x_new · y_new > k_old  // k가 증가
 
         <ImpermanentLossViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// LP가 50/50 비율로 $1000 예치
-초기: 500 USDC + 0.1 ETH (ETH = $5000 가정)
-
-// ETH 가격이 $10000으로 2배 상승
-AMM은 차익거래자가 ETH 가격 맞추도록 유도
-새 reserve: x·y = k 유지하면서 y/x = 1/10000
-
-계산:
-500·0.1 = 50 = k
-y/x = 1/10000 => x = 10000y
-10000y² = 50 => y = 0.0707
-x = 707.1 USDC
-
-LP 보유 가치: 707.1 USDC + 0.0707 ETH × 10000 = $1414.2
-
-// HODL 대비 비교
-HODL: 500 + 0.1·10000 = $1500
-LP:   $1414.2
-IL:   -$85.8 (-5.7%)`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">초기 예치: 50/50 비율 $1000</p>
+            <p className="text-sm">500 USDC + 0.1 ETH (ETH = $5,000 가정)</p>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">ETH 가격 2배 상승 ($10,000)</p>
+            <p className="text-sm mb-2">AMM은 차익거래자가 가격을 맞추도록 유도 — <M>{'x \\cdot y = k'}</M> 유지하면서 <M>{'y/x = 1/10000'}</M></p>
+            <div className="text-sm font-mono space-y-1">
+              <p><M>{'k = 500 \\times 0.1 = 50'}</M></p>
+              <p><M>{'x = 10000y \\Rightarrow 10000y^2 = 50 \\Rightarrow y = 0.0707'}</M></p>
+              <p><M>{'x = 707.1 \\text{ USDC}'}</M></p>
+            </div>
+            <p className="text-sm mt-2">LP 보유 가치: 707.1 + 0.0707 × 10,000 = <strong>$1,414.2</strong></p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm mb-1">HODL</p>
+              <p className="text-sm">500 + 0.1 × 10,000 = <strong>$1,500</strong></p>
+            </div>
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+              <p className="font-semibold text-sm mb-1">LP</p>
+              <p className="text-sm"><strong>$1,414.2</strong></p>
+            </div>
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+              <p className="font-semibold text-sm mb-1">IL</p>
+              <p className="text-sm"><strong>-$85.8 (-5.7%)</strong></p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>IL</strong>: 가격 변동 시 LP 보유 가치가 단순 HODL보다 낮아지는 현상<br />
           2배 변동 → -5.7% IL, 5배 변동 → -25.5% IL<br />

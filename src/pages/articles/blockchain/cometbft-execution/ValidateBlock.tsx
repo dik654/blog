@@ -13,84 +13,51 @@ export default function ValidateBlock({ onCodeRef }: { onCodeRef: (key: string, 
 
         {/* ── ValidateBlock 단계 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">ValidateBlock — 다단계 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/state/validation.go
-func ValidateBlock(state State, block *types.Block) error {
-    // 1. Basic validity
-    if err := block.ValidateBasic(); err != nil {
-        return err
-    }
+        <p className="text-xs text-muted-foreground mb-3">cometbft/state/validation.go — <code>ValidateBlock(state, block)</code></p>
 
-    // 2. Version check
-    if block.Version.Block != state.Version.Consensus.Block {
-        return ErrVersionMismatch
-    }
+        <div className="not-prose mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">기본 검증 (1-6)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><span className="font-medium">1.</span> <code className="text-xs">ValidateBasic()</code> — 구조 유효성</li>
+                <li><span className="font-medium">2.</span> Version 일치 확인</li>
+                <li><span className="font-medium">3.</span> ChainID 일치 확인</li>
+                <li><span className="font-medium">4.</span> Height = <code className="text-xs">LastBlockHeight + 1</code></li>
+                <li><span className="font-medium">5.</span> Time &gt; LastBlockTime</li>
+                <li><span className="font-medium">6.</span> LastBlockID 일치 확인</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">Hash 검증 (7-9)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><span className="font-medium">7.</span> <code className="text-xs">ValidatorsHash</code> / <code className="text-xs">NextValidatorsHash</code> / <code className="text-xs">ConsensusHash</code></li>
+                <li><span className="font-medium">8.</span> <code className="text-xs">LastResultsHash</code> — 이전 블록 app results</li>
+                <li><span className="font-medium">9.</span> <code className="text-xs">AppHash</code> — 이전 블록 app state</li>
+              </ul>
+            </div>
+          </div>
 
-    // 3. Chain ID check
-    if block.ChainID != state.ChainID {
-        return ErrChainIDMismatch
-    }
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Proposer & Commit (10-11)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><span className="font-medium">10.</span> Proposer가 현재 validator set에 존재하는지</li>
+                <li><span className="font-medium">11.</span> <code className="text-xs">VerifyCommitLightTrusting</code> — 2/3+ 서명 검증 (가장 비싼 연산)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">Evidence 검증 (12)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><span className="font-medium">12.</span> <code className="text-xs">VerifyEvidence(state, ev)</code> — 악의 행위 증거 검증</li>
+              </ul>
+              <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-muted">
+                hash 비교 11개 (fast) + 서명 검증 1개 (~수백 ms)
+              </p>
+            </div>
+          </div>
+        </div>
 
-    // 4. Height check
-    if block.Height != state.LastBlockHeight + 1 {
-        return ErrInvalidHeight
-    }
-
-    // 5. Time check
-    if !block.Time.After(state.LastBlockTime) {
-        return ErrInvalidTime
-    }
-
-    // 6. LastBlockID check
-    if !block.LastBlockID.Equals(state.LastBlockID) {
-        return ErrInvalidLastBlockID
-    }
-
-    // 7. Validator/Consensus/NextValidators hash check
-    if !bytes.Equal(block.ValidatorsHash, state.Validators.Hash()) {
-        return ErrInvalidValidatorsHash
-    }
-    if !bytes.Equal(block.NextValidatorsHash, state.NextValidators.Hash()) {
-        return ErrInvalidNextValidatorsHash
-    }
-    if !bytes.Equal(block.ConsensusHash, state.ConsensusParams.Hash()) {
-        return ErrInvalidConsensusHash
-    }
-
-    // 8. Last results hash (이전 block app results)
-    if !bytes.Equal(block.LastResultsHash, state.LastResultsHash) {
-        return ErrInvalidLastResultsHash
-    }
-
-    // 9. App hash (이전 block의 app state)
-    if !bytes.Equal(block.AppHash, state.AppHash) {
-        return ErrInvalidAppHash
-    }
-
-    // 10. Proposer validation
-    if !state.Validators.HasAddress(block.ProposerAddress) {
-        return ErrInvalidProposer
-    }
-
-    // 11. LastCommit 검증 (2/3+ signatures)
-    if err := state.LastValidators.VerifyCommitLightTrusting(...); err != nil {
-        return ErrInvalidCommit
-    }
-
-    // 12. Evidence 검증
-    for _, ev := range block.Evidence.Evidence {
-        if err := VerifyEvidence(state, ev); err != nil {
-            return err
-        }
-    }
-
-    return nil
-}
-
-// 12단계 검증 → 악의 블록 차단
-// 가장 비싼 단계: VerifyCommitLightTrusting (서명 검증)
-// 다른 단계는 모두 hash 비교 (fast)`}
-        </pre>
         <p className="leading-7">
           ValidateBlock이 <strong>12단계 검증</strong>.<br />
           Hash 비교 11개 + 서명 검증 1개.<br />

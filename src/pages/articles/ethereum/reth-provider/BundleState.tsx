@@ -27,41 +27,34 @@ export default function BundleState({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── BundleState 전체 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BundleState 전체 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct BundleState {
-    /// 변경된 계정들: Address → BundleAccount
-    pub state: HashMap<Address, BundleAccount>,
-
-    /// 새로 배포된 컨트랙트 바이트코드
-    /// code_hash로 중복 제거 (같은 코드 여러 번 배포 시)
-    pub contracts: HashMap<B256, Bytecode>,
-
-    /// 블록별 되돌리기 정보 (reorg 시 역순 적용)
-    /// reverts[0] = 첫 블록 실행 전 상태
-    /// reverts[N] = (first_block + N) 실행 전 상태
-    pub reverts: Vec<Vec<(Address, AccountRevert)>>,
-
-    /// 첫 번째 블록 번호 (reverts 인덱싱 기준)
-    pub first_block: BlockNumber,
-}
-
-pub struct BundleAccount {
-    /// 블록 실행 전 계정 상태
-    pub original_info: Option<AccountInfo>,
-    /// 블록 실행 후 계정 상태
-    pub info: Option<AccountInfo>,
-    /// 변경된 스토리지 슬롯: slot_key → (pre_value, post_value)
-    pub storage: HashMap<U256, StorageSlot>,
-    /// 계정 상태 태그 (Loaded, Changed, Destroyed 등)
-    pub status: AccountStatus,
-}
-
-// BundleState의 역할:
-// 1. revm 실행 결과 누적 (execute 후)
-// 2. 같은 배치 내 후속 TX의 상태 조회 (읽기 캐시)
-// 3. DB 쓰기 버퍼링 (commit_threshold까지 대기)
-// 4. reorg 롤백 정보 보관 (reverts)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3">BundleState 구조체</p>
+            <div className="space-y-2 text-xs">
+              <div><code className="text-indigo-300">state: HashMap&lt;Address, BundleAccount&gt;</code> <span className="text-foreground/60">— 변경된 계정들</span></div>
+              <div><code className="text-indigo-300">contracts: HashMap&lt;B256, Bytecode&gt;</code> <span className="text-foreground/60">— 배포된 바이트코드 (code_hash 중복 제거)</span></div>
+              <div><code className="text-indigo-300">reverts: Vec&lt;Vec&lt;(Address, AccountRevert)&gt;&gt;</code> <span className="text-foreground/60">— 블록별 롤백 정보</span></div>
+              <div><code className="text-indigo-300">first_block: BlockNumber</code> <span className="text-foreground/60">— reverts 인덱싱 기준</span></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm text-sky-400 mb-3">BundleAccount 구조체</p>
+            <div className="space-y-2 text-xs">
+              <div><code className="text-sky-300">original_info: Option&lt;AccountInfo&gt;</code> <span className="text-foreground/60">— 실행 전 상태</span></div>
+              <div><code className="text-sky-300">info: Option&lt;AccountInfo&gt;</code> <span className="text-foreground/60">— 실행 후 상태</span></div>
+              <div><code className="text-sky-300">storage: HashMap&lt;U256, StorageSlot&gt;</code> <span className="text-foreground/60">— 변경된 슬롯 (pre/post)</span></div>
+              <div><code className="text-sky-300">status: AccountStatus</code> <span className="text-foreground/60">— Loaded, Changed, Destroyed 등</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {['revm 실행 결과 누적', '후속 TX 읽기 캐시', 'DB 쓰기 버퍼링', 'reorg 롤백 보관'].map((role, i) => (
+              <div key={i} className="rounded-lg border border-border p-2 text-center">
+                <span className="text-xs font-bold text-muted-foreground">{i+1}.</span>
+                <p className="text-xs text-foreground/70">{role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         <p className="leading-7">
           <code>BundleState</code>는 <strong>4가지 역할</strong>을 하나의 구조체로 통합.<br />
           실행 중 누적, 캐시, 쓰기 버퍼, 롤백 저장 — 모두 같은 HashMap을 공유.<br />
@@ -70,53 +63,29 @@ pub struct BundleAccount {
 
         {/* ── revm → BundleState 변환 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">revm EvmState → BundleState 병합</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm이 1개 TX 실행 후 반환하는 상태
-// EvmState = HashMap<Address, Account> (revm 타입)
-
-// BundleState에 병합 로직
-impl BundleState {
-    pub fn apply_transitions_and_create_reverts(
-        &mut self,
-        evm_state: EvmState,
-        block_number: BlockNumber,
-    ) {
-        let mut block_reverts = Vec::new();
-
-        for (address, revm_account) in evm_state {
-            // 1. 이전 상태 저장 (reverts용)
-            let previous = self.state.get(&address)
-                .and_then(|a| a.info.clone());
-
-            // 2. BundleAccount 업데이트
-            let bundle_acc = self.state
-                .entry(address)
-                .or_insert_with(|| BundleAccount::new(address));
-
-            // 3. storage 변경 반영
-            for (slot_key, slot_value) in revm_account.storage {
-                bundle_acc.storage.insert(slot_key, StorageSlot {
-                    previous_or_original_value: slot_value.previous_value,
-                    present_value: slot_value.present_value,
-                });
-            }
-
-            // 4. account info 업데이트
-            bundle_acc.info = Some(revm_account.info);
-
-            // 5. revert 정보 기록
-            block_reverts.push((address, AccountRevert {
-                account: AccountInfoRevert::from(previous),
-                storage: collect_storage_reverts(&revm_account.storage),
-                previous_status: bundle_acc.status,
-            }));
-        }
-
-        // 블록 단위로 reverts 추가
-        self.reverts.push(block_reverts);
-    }
-}`}
-        </pre>
+        <div className="my-4 not-prose">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-3"><code>apply_transitions_and_create_reverts(evm_state, block_number)</code></p>
+            <div className="space-y-3">
+              {[
+                { step: '1', title: '이전 상태 저장', detail: 'reverts용 — state.get(addr).info.clone()', color: 'text-sky-400' },
+                { step: '2', title: 'BundleAccount 업데이트', detail: 'entry(address).or_insert_with() — 없으면 생성', color: 'text-emerald-400' },
+                { step: '3', title: 'storage 변경 반영', detail: 'revm_account.storage → bundle_acc.storage에 insert (pre/post)', color: 'text-amber-400' },
+                { step: '4', title: 'account info 갱신', detail: 'bundle_acc.info = Some(revm_account.info)', color: 'text-violet-400' },
+                { step: '5', title: 'revert 정보 기록', detail: 'AccountRevert에 이전 상태/스토리지/status 저장', color: 'text-indigo-400' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold">{s.title}</p>
+                    <p className="text-xs text-foreground/60">{s.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground mt-3 pt-2 border-t border-border">블록 단위로 <code>reverts</code>에 push → reorg 시 블록별 역적용</p>
+          </div>
+        </div>
         <p className="leading-7">
           매 TX 실행 후 revm이 <code>EvmState</code>를 반환 → BundleState에 병합.<br />
           동일 계정의 다중 변경은 HashMap entry로 누적 — 마지막 값이 유지.<br />
@@ -125,40 +94,46 @@ impl BundleState {
 
         {/* ── into_plain_state ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">into_plain_state — DB 쓰기 준비</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl BundleState {
-    /// BundleState → 정렬된 Vec (DB 쓰기용)
-    pub fn into_plain_state(self) -> PlainState {
-        // 1. HashMap → 정렬된 Vec 변환
-        let mut accounts: Vec<_> = self.state.into_iter().collect();
-        accounts.sort_by_key(|(addr, _)| *addr);
-
-        // 2. storage도 address 정렬 + slot_key 정렬
-        let mut storages = Vec::new();
-        for (addr, bundle_acc) in &accounts {
-            let mut slots: Vec<_> = bundle_acc.storage.iter().collect();
-            slots.sort_by_key(|(k, _)| *k);
-            storages.push((*addr, slots));
-        }
-
-        PlainState { accounts, storages, contracts: self.contracts }
-    }
-}
-
-// 왜 정렬이 중요한가?
-//
-// MDBX는 B+tree 기반 — 정렬된 순서로 삽입 시:
-// - append() 최적화 가능 (B+tree 리프 끝에만 추가)
-// - page split 최소 (순차 삽입)
-// - bulk loading 최적 경로 활성화
-//
-// 랜덤 순서 삽입 시:
-// - 매 삽입마다 B+tree 전체 재탐색
-// - page split 빈번
-// - 최대 수십 배 느림
-//
-// HashMap iteration은 비결정적 순서 → DB 쓰기 전 반드시 정렬`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="font-semibold text-sm mb-3"><code>into_plain_state()</code> — DB 쓰기 준비</p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted text-sky-400 shrink-0">1</span>
+                <div>
+                  <p className="text-sm font-semibold">HashMap → 정렬된 Vec</p>
+                  <p className="text-xs text-foreground/60">accounts를 address 기준 정렬</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted text-emerald-400 shrink-0">2</span>
+                <div>
+                  <p className="text-sm font-semibold">storage도 이중 정렬</p>
+                  <p className="text-xs text-foreground/60">address 정렬 + slot_key 정렬</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">정렬된 삽입</p>
+              <div className="space-y-0.5 text-xs text-foreground/60">
+                <p><code>append()</code> 최적화 (리프 끝 추가)</p>
+                <p>page split 최소, bulk loading 최적</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3">
+              <p className="text-xs font-semibold text-red-400 mb-1">랜덤 삽입</p>
+              <div className="space-y-0.5 text-xs text-foreground/60">
+                <p>매 삽입마다 B+tree 전체 재탐색</p>
+                <p>page split 빈번 → 최대 수십 배 느림</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3 text-center">
+            <p className="text-xs text-foreground/70">HashMap iteration은 비결정적 순서 → <strong>DB 쓰기 전 반드시 정렬</strong></p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>into_plain_state</code>가 <strong>DB 친화적 형식으로 변환</strong>.<br />
           HashMap의 비결정적 순서 → 정렬된 Vec으로 변환하여 B+tree 삽입 최적화.<br />
@@ -167,37 +142,48 @@ impl BundleState {
 
         {/* ── 메모리 크기 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BundleState 메모리 사용량</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BundleState 크기 추정 (메인넷 10K 블록 배치)
-//
-// 블록당 평균 변경:
-// - 계정: ~1,500개
-// - 스토리지 슬롯: ~3,000개
-//
-// 10K 블록 누적 후 (중복 제거 후):
-// - 고유 계정: ~500K개 (중복률 ~97%)
-// - 고유 스토리지: ~2M 슬롯
-//
-// 메모리 계산:
-// BundleAccount:
-//   - original_info: 112 bytes
-//   - info: 112 bytes
-//   - storage HashMap overhead + entries
-//
-// 대략 추정:
-// - state HashMap: 500K × 300 bytes ≈ 150 MB
-// - storage: 2M × 80 bytes ≈ 160 MB
-// - contracts: 수 MB
-// - reverts: 10K × 수천 entries ≈ 100 MB
-// - 합계: ~400 MB per 10K 블록 배치
-//
-// commit_threshold 조정 시:
-// - threshold=5K: ~200 MB (safer for low-RAM)
-// - threshold=10K: ~400 MB (default)
-// - threshold=20K: ~800 MB (faster for high-RAM)
-//
-// 블록 범위와 메모리 사용량은 대체로 선형 관계`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">블록당 평균 변경</p>
+              <p className="text-xs text-foreground/70">계정: ~1,500개 / 스토리지 슬롯: ~3,000개</p>
+              <p className="text-xs font-semibold text-muted-foreground mt-3 mb-1">10K 블록 누적 후 (중복 제거)</p>
+              <p className="text-xs text-foreground/70">고유 계정: ~500K (중복률 ~97%)</p>
+              <p className="text-xs text-foreground/70">고유 스토리지: ~2M 슬롯</p>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">메모리 분포</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div className="flex justify-between"><span>state HashMap (500K x 300B)</span><span>~150 MB</span></div>
+                <div className="flex justify-between"><span>storage (2M x 80B)</span><span>~160 MB</span></div>
+                <div className="flex justify-between"><span>contracts</span><span>수 MB</span></div>
+                <div className="flex justify-between"><span>reverts (10K x 수천)</span><span>~100 MB</span></div>
+                <div className="flex justify-between border-t border-border pt-1 font-semibold"><span>합계</span><span>~400 MB</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">commit_threshold 조정</p>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="rounded bg-muted/50 p-2 text-center">
+                <p className="font-semibold">5K 블록</p>
+                <p className="text-foreground/60">~200 MB</p>
+                <p className="text-muted-foreground">low-RAM safe</p>
+              </div>
+              <div className="rounded bg-indigo-500/10 p-2 text-center border border-indigo-500/20">
+                <p className="font-semibold text-indigo-400">10K (기본)</p>
+                <p className="text-foreground/60">~400 MB</p>
+                <p className="text-muted-foreground">default</p>
+              </div>
+              <div className="rounded bg-muted/50 p-2 text-center">
+                <p className="font-semibold">20K 블록</p>
+                <p className="text-foreground/60">~800 MB</p>
+                <p className="text-muted-foreground">high-RAM fast</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">블록 범위와 메모리 사용량은 대체로 선형 관계</p>
+          </div>
+        </div>
         <p className="leading-7">
           BundleState가 <strong>commit_threshold 블록까지 메모리에 상주</strong>.<br />
           10K 블록 기본값에서 ~400MB 사용 — 현대 노드 하드웨어 관점 안전 범위.<br />

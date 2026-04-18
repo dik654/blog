@@ -41,7 +41,7 @@ function MatrixOp({ matRows, formulas, matColor, matLabel, complexity }:
             <rect x={86} y={y} width={128} height={28} rx={5}
               fill={`${matColor}08`} stroke={matColor} strokeWidth={0.7} />
             <text x={150} y={y + 18} textAnchor="middle"
-              fontSize={9} fontWeight={500} fill={matColor} fontFamily="monospace">
+              fontSize={9} fontWeight={500} fill={matColor}>
               [{matRows[i].join('    ')}]
             </text>
 

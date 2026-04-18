@@ -1,8 +1,15 @@
+import DeploymentSecurityViz from './viz/DeploymentSecurityViz';
+import CiCdPipelineViz from './viz/CiCdPipelineViz';
+import ChangeManagementViz from './viz/ChangeManagementViz';
+
 export default function DeploymentSecurity() {
   return (
     <section id="deployment-security" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">배포와 변경관리</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <DeploymentSecurityViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">Git 기반 버전관리</h3>
         <p className="leading-7">
           모든 소스코드 변경은 Git과 같은 분산 버전관리 시스템(DVCS)을 통해 추적해야 한다.
@@ -66,6 +73,8 @@ export default function DeploymentSecurity() {
           <br />
           자체 코드를 자체 승인하는 것도 허용하지 않는다 -- 리뷰는 작성자가 아닌 제3자가 수행해야 효과가 있다.
         </p>
+
+        <CiCdPipelineViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">CI/CD 파이프라인: 자동 보안 검증</h3>
         <p className="leading-7">
@@ -138,6 +147,8 @@ export default function DeploymentSecurity() {
           <br />
           롤백 절차는 문서화하고, 정기적으로 롤백 훈련(drill)을 수행하여 실제 장애 시 혼란 없이 실행할 수 있도록 한다.
         </p>
+
+        <ChangeManagementViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">변경관리 프로세스</h3>
         <p className="leading-7">

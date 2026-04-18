@@ -34,88 +34,122 @@ export default function CryptoP2P() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">BLS12-381 Threshold Signatures</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// BLS (Boneh-Lynn-Shacham) signatures
-// Named after 3 cryptographers
-
-// Properties
-// - Deterministic (no randomness)
-// - Short signatures (48 bytes)
-// - Aggregation: n sigs → 1 sig
-// - Threshold: t-of-n signing
-
-// Signature aggregation
-// σ_agg = σ_1 + σ_2 + ... + σ_n  (단순 group addition)
-// verify_agg(σ_agg, pk_1+pk_2+...+pk_n, message) == true
-
-// Threshold signature (t-of-n)
-// 1) Distributed Key Generation (DKG)
-//    - n parties generate shares of private key
-//    - No single party knows full key
-// 2) Signing
-//    - Each party creates partial signature
-//    - t parties combine → valid signature
-// 3) Verification
-//    - Standard BLS verification
-//    - Verifier doesn't know who signed
-
-// Use cases
-// - Ethereum 2.0 validator signatures
-// - Randomness beacons (drand)
-// - Cross-chain bridges
-// - Consensus aggregation
-
-// Performance
-// - Signature: 48 bytes (G1)
-// - Public key: 96 bytes (G2)
-// - Verification: 3 pairings (~2ms)
-// - Aggregation: O(n) point additions
-// - DKG setup: O(n²) interactive`}</pre>
+        <p className="text-sm text-muted-foreground mb-4">
+          BLS (Boneh-Lynn-Shacham) — 3명의 암호학자 이름. Deterministic, short signatures(48 bytes), aggregation, threshold signing 지원
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h4 className="font-semibold text-sm mb-3">Signature Aggregation</h4>
+            <p className="text-sm text-muted-foreground mb-2">
+              n개 서명을 단순 group addition으로 1개로 합산
+            </p>
+            <div className="text-sm space-y-1 text-muted-foreground">
+              <div><code className="text-xs">σ_agg = σ_1 + σ_2 + ... + σ_n</code></div>
+              <div><code className="text-xs">verify_agg(σ_agg, pk_1+...+pk_n, msg) == true</code></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h4 className="font-semibold text-sm mb-3">Threshold Signature (t-of-n)</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><strong className="text-foreground">DKG</strong> — n parties generate shares, no single party knows full key</li>
+              <li><strong className="text-foreground">Signing</strong> — each party creates partial sig, t parties combine → valid</li>
+              <li><strong className="text-foreground">Verification</strong> — standard BLS verify, verifier doesn't know who signed</li>
+            </ol>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Performance</h4>
+            <div className="grid grid-cols-2 gap-1 text-sm">
+              <div className="text-muted-foreground">Signature</div><div><strong>48 bytes</strong> (G1)</div>
+              <div className="text-muted-foreground">Public key</div><div><strong>96 bytes</strong> (G2)</div>
+              <div className="text-muted-foreground">Verification</div><div><strong>3 pairings</strong> (~2ms)</div>
+              <div className="text-muted-foreground">Aggregation</div><div><code className="text-xs">O(n)</code> point additions</div>
+              <div className="text-muted-foreground">DKG setup</div><div><code className="text-xs">O(n²)</code> interactive</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Use Cases</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Ethereum 2.0 validator signatures</li>
+              <li>Randomness beacons (drand)</li>
+              <li>Cross-chain bridges</li>
+              <li>Consensus aggregation</li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">P2P Authenticated Network</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// p2p::authenticated module
-
-pub struct AuthenticatedPeer {
-    peer_id: PublicKey,       // Ed25519 pubkey = identity
-    secret_key: SecretKey,
-    session_key: Option<SessionKey>,  // ECDH derived
-    channels: HashMap<ChannelId, ChannelState>,
-}
-
-// Connection handshake
-// 1) TCP connect
-// 2) ECDH key exchange
-// 3) Identity verification (signed challenge)
-// 4) Session key derivation (ChaCha20-Poly1305)
-// 5) Channel setup (multiplexing)
-
-// Channel design
-// - Logical streams over single TCP connection
-// - Per-channel flow control
-// - Ordered delivery per channel
-// - Independent backpressure
-
-// Message encryption
-// - AEAD per message
-// - Nonce = sequence number (replay 방어)
-// - 16-byte auth tag
-
-// Blocker interface
-pub trait Blocker: Send + Sync {
-    fn should_block(&self, peer: &PeerId) -> bool;
-    fn on_misbehavior(&mut self, peer: &PeerId, kind: Misbehavior);
-}
-
-// 사용 예
-// - Peer reputation tracking
-// - Automated banning
-// - Rate limiting
-// - Allowlist/blocklist
-
-// Network partitions
-// - Node가 peer 연결 끊기
-// - Reconnection with backoff
-// - Gossip rediscovery
-// - Eventual consistency`}</pre>
+        <div className="rounded-lg border border-border bg-card p-5 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-3"><code className="text-xs">p2p::authenticated</code> module</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h5 className="font-semibold text-sm mb-2"><code className="text-xs">AuthenticatedPeer</code> 구조체</h5>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code className="text-xs">peer_id: PublicKey</code> — Ed25519 pubkey = identity</li>
+                <li><code className="text-xs">secret_key: SecretKey</code></li>
+                <li><code className="text-xs">session_key: Option&lt;SessionKey&gt;</code> — ECDH derived</li>
+                <li><code className="text-xs">channels: HashMap&lt;ChannelId, ChannelState&gt;</code></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold text-sm mb-2">Connection Handshake</h5>
+              <ol className="text-sm space-y-0.5 text-muted-foreground list-decimal list-inside">
+                <li>TCP connect</li>
+                <li>ECDH key exchange</li>
+                <li>Identity verification — signed challenge</li>
+                <li>Session key derivation — ChaCha20-Poly1305</li>
+                <li>Channel setup — multiplexing</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 not-prose mb-6">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Channel Design</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Logical streams over single TCP</li>
+              <li>Per-channel flow control</li>
+              <li>Ordered delivery per channel</li>
+              <li>Independent backpressure</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Message Encryption</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>AEAD per message</li>
+              <li>Nonce = sequence number — replay 방어</li>
+              <li>16-byte auth tag</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Network Partitions</h4>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li>Node가 peer 연결 끊기</li>
+              <li>Reconnection with backoff</li>
+              <li>Gossip rediscovery</li>
+              <li>Eventual consistency</li>
+            </ul>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4 not-prose mb-6">
+          <h4 className="font-semibold text-sm mb-2"><code className="text-xs">Blocker</code> trait</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code className="text-xs">fn should_block(&self, peer: &PeerId) -&gt; bool</code></li>
+                <li><code className="text-xs">fn on_misbehavior(&mut self, peer: &PeerId, kind: Misbehavior)</code></li>
+              </ul>
+            </div>
+            <div>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Peer reputation tracking</li>
+                <li>Automated banning / Rate limiting</li>
+                <li>Allowlist / blocklist</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

@@ -1,4 +1,5 @@
 import ChainRuleViz from './viz/ChainRuleViz';
+import ChainRuleMathViz from './viz/ChainRuleMathViz';
 import ComputationalGraphViz from './viz/ComputationalGraphViz';
 
 export default function ChainRule() {
@@ -13,53 +14,13 @@ export default function ChainRule() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">연쇄 법칙 수학적 정의</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 합성 함수의 미분
-// 함수 f(g(x))의 x에 대한 미분은
-// df/dx = (df/dg) · (dg/dx)
-
-// 다층 신경망에서
-// L = loss, y = f(x), x = g(w), w = parameters
-//
-// dL/dw = dL/dy · dy/dx · dx/dw
-//
-// 각 층마다 local gradient 계산 후 곱함
-// → 전체 gradient는 local gradient들의 product
-
-// 예시: 2층 네트워크
-// h = W1 @ x + b1
-// y = relu(h)
-// L = MSE(y, target)
-//
-// dL/dW1 = dL/dy · dy/dh · dh/dW1
-// where:
-//   dL/dy = 2(y - target)    // MSE derivative
-//   dy/dh = relu'(h)          // ReLU derivative
-//   dh/dW1 = x.T              // Linear layer`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">벡터/행렬 연쇄 법칙</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 스칼라 → 벡터 일반화
-// y = f(x) where x ∈ R^n, y ∈ R^m
-// Jacobian: J = ∂y/∂x ∈ R^(m×n)
-//
-// 연쇄 법칙:
-// ∂z/∂x = (∂z/∂y) · J
-//
-// Backprop에서는
-// upstream gradient: dz/dy (from next layer)
-// local jacobian: dy/dx (this layer)
-// downstream gradient: dz/dx = (dz/dy) · (dy/dx)
-
-// 실무에서는 Jacobian을 명시적으로 계산하지 않음
-// 대신 Jacobian-vector product (JVP) 또는
-// Vector-Jacobian product (VJP)만 계산
-// → 메모리 효율적
-// → autograd 엔진의 핵심
-
-// 예: Linear layer y = Wx
-// dy/dx = W (Jacobian = W 자체)
-// downstream = upstream · W  (matrix product)
-// vs explicit Jacobian: O(mn) memory`}</pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">연쇄 법칙 — 수학에서 VJP까지</h3>
+        <p>
+          합성 함수 미분 → 다층 네트워크 적용 → Jacobian 일반화 → autograd 최적화.
+        </p>
+      </div>
+      <ChainRuleMathViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Computational Graph 관점</h3>
         <p>

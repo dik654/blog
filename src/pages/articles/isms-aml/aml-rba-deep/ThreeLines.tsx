@@ -1,8 +1,14 @@
+import ThreeLinesViz from './viz/ThreeLinesViz';
+import DefenseLineFlowViz from './viz/DefenseLineFlowViz';
+import ReportingChainViz from './viz/ReportingChainViz';
+
 export default function ThreeLines() {
   return (
     <section id="three-lines" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">3선 방어 모델과 조직</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <ThreeLinesViz />
 
         <p>
           3선 방어 모델(Three Lines of Defense)은 AML/CFT 조직 체계의 표준 프레임워크.<br />
@@ -121,6 +127,8 @@ export default function ThreeLines() {
           오탐률을 낮추기 위한 FDS 규칙 튜닝(rule tuning)도 2선의 책임.
         </p>
 
+        <DefenseLineFlowViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">3선 — 내부감사(Third Line: Internal Audit)</h3>
         <p>
           1선과 2선의 AML/CFT 체계가 적절히 작동하고 있는지를
@@ -227,6 +235,8 @@ export default function ThreeLines() {
           만약 CCO가 특정 고위험 거래를 은폐하더라도
           내부감사가 이를 발견하여 이사회에 직접 보고할 수 있는 구조가 유지되어야 한다.
         </p>
+
+        <ReportingChainViz />
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>{'💡'} 소규모 VASP의 현실적 적용</strong><br />

@@ -16,36 +16,41 @@ export default function BlstBinding({ onCodeRef }: Props) {
 
         {/* ── CGo 바인딩 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CGo 바인딩 구조 — 3계층</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 3-layer 구조:
-//
-// Layer 1 (Go): Prysm API
-//   common.SecretKey.Sign(msg []byte) common.Signature
-//         ↓
-// Layer 2 (CGo bridge): blst-go 바인딩
-//   func (sk *SecretKey) Sign(msg []byte, dst []byte) *P2Affine {
-//       C.blst_sign_pk_in_g1(&sig, msg_ptr, msg_len, dst_ptr, dst_len, sk_ptr)
-//   }
-//         ↓
-// Layer 3 (Assembly): blst C 라이브러리
-//   blst_sign_pk_in_g1():
-//     1. Hash to G2: hash_to_field(msg, DST) → point P
-//     2. Scalar multiplication: sig = sk × P (in G2)
-//     3. Return 96-byte serialization
-
-// CGo 호출 overhead:
-// - Go stack → C stack 전환: ~100ns
-// - C 함수 호출 자체: ~수 μs
-// - 전환 비용이 실제 연산 시간의 0.005%
-// → 무시할 수준
-
-// blst 내부 최적화:
-// - AVX-512 (Intel): 512-bit 필드 연산 parallel
-// - ADX (Multi-precision arithmetic): 64-bit carry chain 가속
-// - NEON (ARM): 128-bit SIMD (Apple Silicon)
-// - assembly로 직접 작성된 critical path
-// → Rust/Go 구현 대비 2~3배 빠름`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-blue-500/30 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Layer 1: Go (Prysm API)</p>
+              <p className="text-sm text-muted-foreground font-mono">SecretKey.Sign(msg) Signature</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Layer 2: CGo bridge</p>
+              <p className="text-sm text-muted-foreground font-mono">C.blst_sign_pk_in_g1(&sig, ...)</p>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Layer 3: C + Assembly</p>
+              <p className="text-sm text-muted-foreground">Hash to G2 &rarr; scalar mul &rarr; 96B</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground/70 mb-2">CGo overhead</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>Go &harr; C stack 전환: ~100ns</li>
+                <li>C 함수 호출: ~수 us</li>
+                <li>전환 비용 = 실제 연산의 <strong>0.005%</strong></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground/70 mb-2">blst 내부 최적화</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><strong>AVX-512</strong> (Intel): 512-bit 필드 연산 parallel</li>
+                <li><strong>ADX</strong>: 64-bit carry chain 가속</li>
+                <li><strong>NEON</strong> (ARM/Apple Silicon): 128-bit SIMD</li>
+                <li>critical path assembly 직접 작성 &rarr; 2~3배 빠름</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           3계층 구조: <strong>Go API → CGo bridge → C + Assembly</strong>.<br />
           CGo overhead(~100ns)는 서명 연산(~1ms) 대비 무시할 수준.<br />
@@ -65,47 +70,48 @@ export default function BlstBinding({ onCodeRef }: Props) {
 
         {/* ── DST 도메인 분리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">DST (Domain Separation Tag) — 용도별 서명 분리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ethereum 2.0의 DST (hash_to_curve 입력)
-const DST = "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_"
-
-// 의미 해석:
-// BLS_SIG:          BLS signature
-// BLS12381G2:       BLS12-381 곡선, G2 그룹
-// XMD:SHA-256:      Extendable message digest using SHA-256
-// SSWU:             Simplified SWU (hash-to-curve mapping)
-// RO:               Random Oracle model
-// POP:              Proof-of-Possession scheme (for rogue key attack 방어)
-
-// 사용처별 도메인:
-// - Attestation 서명: DST + signing_root(attestation_data)
-// - Block proposal:   DST + signing_root(beacon_block)
-// - Sync committee:   DST + signing_root(sync_committee_contribution)
-// - Deposit:          DST + deposit_message_root
-// - Randao reveal:    DST + signing_root(epoch)
-
-// signing_root 구조:
-struct SigningData {
-    object_root: Root,   // attestation/block의 HashTreeRoot
-    domain: Domain,      // fork-specific + purpose domain
-}
-
-domain 계산:
-// domain = compute_domain(
-//     domain_type (ATTESTER, PROPOSER, etc.),
-//     fork_version,  // current hard fork
-//     genesis_validators_root,
-// )
-
-// 왜 DST + domain 두 단계?
-// 1. DST: BLS 메시지 공간 분리 (cryptographic)
-// 2. domain: 네트워크/포크/용도 분리 (protocol-level)
-//
-// 예방하는 공격:
-// - Cross-protocol replay: 테스트넷 서명 → 메인넷 재사용
-// - Cross-fork replay: Bellatrix 서명 → Capella 재사용
-// - Cross-purpose replay: attestation 서명 → block proposal 위조`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Ethereum 2.0 DST</p>
+            <p className="text-sm font-mono text-muted-foreground mb-2">BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-muted-foreground">
+              <div><code>BLS_SIG</code>: BLS signature</div>
+              <div><code>BLS12381G2</code>: 곡선 + G2 그룹</div>
+              <div><code>XMD:SHA-256</code>: hash 방식</div>
+              <div><code>SSWU</code>: hash-to-curve mapping</div>
+              <div><code>RO</code>: Random Oracle model</div>
+              <div><code>POP</code>: Proof-of-Possession</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">사용처별 도메인</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-muted-foreground">
+              <div><strong>Attestation</strong>: signing_root(att_data)</div>
+              <div><strong>Block proposal</strong>: signing_root(block)</div>
+              <div><strong>Sync committee</strong>: signing_root(contribution)</div>
+              <div><strong>Deposit</strong>: deposit_message_root</div>
+              <div><strong>Randao</strong>: signing_root(epoch)</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">DST + domain 2단계 분리</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+              <div>
+                <p className="font-semibold text-xs text-foreground/70 mb-1">DST &mdash; BLS 메시지 공간 분리 (cryptographic)</p>
+                <p className="font-semibold text-xs text-foreground/70 mb-1">domain &mdash; 네트워크/포크/용도 분리 (protocol-level)</p>
+                <p className="text-xs"><code>compute_domain(domain_type, fork_version, genesis_root)</code></p>
+              </div>
+              <div>
+                <p className="font-semibold text-xs text-red-400 mb-1">예방 공격</p>
+                <ul className="space-y-0.5 text-xs">
+                  <li>Cross-protocol: 테스트넷 &rarr; 메인넷 replay</li>
+                  <li>Cross-fork: Bellatrix &rarr; Capella replay</li>
+                  <li>Cross-purpose: attestation &rarr; proposal 위조</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>DST</strong> — BLS 메시지 공간 분리의 암호학 메커니즘.<br />
           POP(Proof-of-Possession) 스킴으로 rogue key attack 방어.<br />
@@ -114,45 +120,43 @@ domain 계산:
 
         {/* ── blst vs 대안 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">blst vs 대안 구현 벤치마크</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BLS12-381 Go 구현체 비교 (동일 하드웨어)
-//
-// 1. blst (supranational) - Prysm 기본
-//    - C++ + ASM
-//    - 단일 검증: 1.8ms
-//    - 배치 100: 28ms
-//
-// 2. herumi/bls-eth-go-binary
-//    - C++ (ASM 부분적)
-//    - 단일 검증: 2.5ms (1.4배 느림)
-//    - 배치 100: 40ms (1.4배 느림)
-//
-// 3. kilic/bls12-381 (pure Go)
-//    - 단일 검증: 8ms (4.4배 느림)
-//    - 배치 100: 180ms (6.4배 느림)
-//    - CGo 없음 → 빌드 단순
-//
-// 4. prysmaticlabs/go-bls (legacy)
-//    - 구 Prysm 구현 (2019)
-//    - 현재 deprecated
-
-// Prysm의 선택 과정:
-// - 2019: kilic/bls12-381 (pure Go, 단순성)
-// - 2020: herumi (속도 개선)
-// - 2021 현재: blst (최대 성능)
-
-// 메인넷 검증 부하:
-// - 블록당 ~150 aggregate attestation 검증
-// - 12초 슬롯 내 완료 필요
-// - blst: ~300ms (여유)
-// - herumi: ~400ms (여유)
-// - pure Go: ~1.2초 (빠듯함)
-
-// Go 생태계의 BLS 라이브러리 안정화:
-// - 2024년 blst가 사실상 표준
-// - Lighthouse, Teku, Lodestar도 blst 사용 (FFI 경유)
-// - 이더리움 spec test vectors 모두 통과`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-3">BLS12-381 Go 구현체 비교</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-center">
+              <div className="bg-green-500/10 rounded p-2">
+                <p className="font-semibold">blst</p>
+                <p className="text-xs text-muted-foreground">C++ + ASM</p>
+                <p className="font-mono text-muted-foreground">1.8ms / 28ms</p>
+              </div>
+              <div className="bg-muted/50 rounded p-2">
+                <p className="font-semibold">herumi</p>
+                <p className="text-xs text-muted-foreground">C++ (부분 ASM)</p>
+                <p className="font-mono text-muted-foreground">2.5ms / 40ms</p>
+              </div>
+              <div className="bg-muted/50 rounded p-2">
+                <p className="font-semibold">kilic</p>
+                <p className="text-xs text-muted-foreground">pure Go</p>
+                <p className="font-mono text-muted-foreground">8ms / 180ms</p>
+              </div>
+              <div className="bg-muted/50 rounded p-2 opacity-50">
+                <p className="font-semibold">go-bls</p>
+                <p className="text-xs text-muted-foreground">legacy (2019)</p>
+                <p className="font-mono text-muted-foreground">deprecated</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground text-center mt-2">단일 검증 / 배치 100개 기준</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">메인넷 검증 부하 (블록당 ~150 aggregate attestation)</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">blst</p><p className="font-mono text-green-400">~300ms (여유)</p></div>
+              <div><p className="text-muted-foreground">herumi</p><p className="font-mono">~400ms (여유)</p></div>
+              <div><p className="text-muted-foreground">pure Go</p><p className="font-mono text-red-400">~1.2초 (빠듯)</p></div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">2024년 blst가 사실상 표준 &mdash; Lighthouse, Teku, Lodestar도 blst 사용 (FFI 경유)</p>
+          </div>
+        </div>
         <p className="leading-7">
           blst가 <strong>Ethereum 2.0 CL의 사실상 표준</strong>.<br />
           Go/Rust/Java/JavaScript 구현체 모두 blst로 수렴.<br />

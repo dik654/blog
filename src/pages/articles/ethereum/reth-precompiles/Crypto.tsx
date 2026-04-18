@@ -28,56 +28,43 @@ export default function Crypto({ onCodeRef }: { onCodeRef: (key: string, ref: Co
 
         {/* ── ecRecover 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ecRecover (0x01) — 서명 복구</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub fn ec_recover_call(input: &[u8], gas_limit: u64) -> PrecompileResult {
-    const ECRECOVER_COST: u64 = 3_000;
-
-    // 1. Gas check
-    if gas_limit < ECRECOVER_COST {
-        return Err(OutOfGas);
-    }
-
-    // 2. Input 파싱 (128 bytes 고정)
-    // input[0..32]: msg_hash
-    // input[32..64]: v (27 or 28, 또는 EIP-155)
-    // input[64..96]: r
-    // input[96..128]: s
-    if input.len() < 128 {
-        let mut padded = [0u8; 128];
-        padded[..input.len()].copy_from_slice(input);
-        // padding 후 처리
-    }
-
-    let msg_hash = B256::from_slice(&input[0..32]);
-    let v = input[63];
-    let r = U256::from_be_slice(&input[64..96]);
-    let s = U256::from_be_slice(&input[96..128]);
-
-    // 3. v 검증 (27 or 28만 허용)
-    if v != 27 && v != 28 {
-        return Ok(PrecompileOutput { gas_used: ECRECOVER_COST, bytes: Bytes::default() });
-    }
-
-    // 4. Signature 복구 (secp256k1)
-    let signature = Signature::from_scalars(r, s, v - 27)?;
-    let public_key = signature.recover_from_prehash(msg_hash)?;
-
-    // 5. Address 유도 (pubkey → keccak256 → 하위 20 bytes)
-    let addr = public_key_to_address(&public_key);
-
-    // 6. 32 bytes로 패딩 (address는 20 bytes)
-    let mut output = [0u8; 32];
-    output[12..32].copy_from_slice(addr.as_slice());
-
-    Ok(PrecompileOutput {
-        gas_used: ECRECOVER_COST,
-        bytes: Bytes::from(output.to_vec()),
-    })
-}
-
-// 실패 시 빈 bytes 반환 (revert 아님, 0x00으로 간주)
-// 사용 예: TX 서명 검증, ERC-2612 permit`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">ec_recover_call(<code>input: &amp;[u8]</code>, <code>gas_limit: u64</code>) &#8594; <code>PrecompileResult</code></p>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3 mb-3">
+            <p className="text-xs font-semibold text-foreground/70 mb-1">Gas: <code className="text-amber-400">3,000</code> (고정)</p>
+          </div>
+          <div className="space-y-2 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-indigo-400 font-bold">1</span>
+              <p className="text-xs text-foreground/60">Gas check: <code>gas_limit &lt; 3000</code> &#8594; OutOfGas</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-indigo-400 font-bold">2</span>
+              <div>
+                <p className="text-xs text-foreground/60">Input 파싱 (128 bytes, 부족 시 zero-pad)</p>
+                <div className="grid grid-cols-4 gap-1 mt-1 text-[11px] text-foreground/50">
+                  <span>[0..32] msg_hash</span>
+                  <span>[32..64] v (27/28)</span>
+                  <span>[64..96] r</span>
+                  <span>[96..128] s</span>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-amber-400 font-bold">3</span>
+              <p className="text-xs text-foreground/60">v 검증: 27 또는 28만 허용. 아니면 빈 bytes 반환</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-amber-400 font-bold">4</span>
+              <p className="text-xs text-foreground/60">secp256k1 서명 복구: <code>Signature::from_scalars</code> &#8594; <code>recover_from_prehash</code></p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-emerald-400 font-bold">5</span>
+              <p className="text-xs text-foreground/60">pubkey &#8594; keccak256 &#8594; 하위 20 bytes = address. 32 bytes로 zero-pad 반환</p>
+            </div>
+          </div>
+          <p className="text-xs text-foreground/50">실패 시 빈 bytes 반환 (revert 아님). 용도: TX 서명 검증, ERC-2612 permit, EIP-712</p>
+        </div>
         <p className="leading-7">
           <code>ecRecover</code>가 <strong>가장 많이 사용되는 프리컴파일</strong>.<br />
           모든 TX의 sender 복구, ERC-2612 permit, EIP-712 서명에 사용.<br />
@@ -86,47 +73,35 @@ export default function Crypto({ onCodeRef }: { onCodeRef: (key: string, ref: Co
 
         {/* ── SHA256/RIPEMD ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">SHA256/RIPEMD/Identity — 범용 해시</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 0x02: SHA-256
-pub fn sha256_call(input: &[u8], gas_limit: u64) -> PrecompileResult {
-    // Gas: 60 + 12 × ceil(len / 32)
-    let cost = 60 + 12 * ((input.len() + 31) / 32) as u64;
-    if gas_limit < cost { return Err(OutOfGas); }
-
-    let hash = sha2::Sha256::digest(input);
-    Ok(PrecompileOutput { gas_used: cost, bytes: hash.to_vec().into() })
-}
-
-// 0x03: RIPEMD-160
-pub fn ripemd160_call(input: &[u8], gas_limit: u64) -> PrecompileResult {
-    // Gas: 600 + 120 × ceil(len / 32)
-    let cost = 600 + 120 * ((input.len() + 31) / 32) as u64;
-    if gas_limit < cost { return Err(OutOfGas); }
-
-    let hash = ripemd::Ripemd160::digest(input);
-    let mut output = [0u8; 32];
-    output[12..32].copy_from_slice(&hash);  // 20 bytes → 32 bytes
-    Ok(PrecompileOutput { gas_used: cost, bytes: output.to_vec().into() })
-}
-
-// 0x04: Identity (데이터 복사)
-pub fn identity_call(input: &[u8], gas_limit: u64) -> PrecompileResult {
-    // Gas: 15 + 3 × ceil(len / 32)
-    let cost = 15 + 3 * ((input.len() + 31) / 32) as u64;
-    if gas_limit < cost { return Err(OutOfGas); }
-
-    Ok(PrecompileOutput { gas_used: cost, bytes: input.to_vec().into() })
-}
-
-// Identity 용도:
-// - 기존 datacopy opcode 대체
-// - calldata를 memory로 빠르게 복사
-// - gas 효율적인 데이터 이동
-
-// SHA-256 vs Keccak-256:
-// - keccak256: 이더리움 표준 (opcode SHA3)
-// - sha256: 비트코인/외부 시스템 연동용 (Bitcoin SPV 등)`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#6366f1' }}>
+              <p className="font-mono text-xs text-indigo-400 mb-1">0x02: SHA-256</p>
+              <p className="text-xs text-foreground/60">Gas: <code>60 + 12 * ceil(len/32)</code></p>
+              <p className="text-xs text-foreground/50 mt-1"><code>sha2::Sha256::digest(input)</code> &#8594; 32 bytes</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#f59e0b' }}>
+              <p className="font-mono text-xs text-amber-400 mb-1">0x03: RIPEMD-160</p>
+              <p className="text-xs text-foreground/60">Gas: <code>600 + 120 * ceil(len/32)</code></p>
+              <p className="text-xs text-foreground/50 mt-1">20 bytes hash &#8594; 32 bytes zero-pad</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#22c55e' }}>
+              <p className="font-mono text-xs text-emerald-400 mb-1">0x04: Identity</p>
+              <p className="text-xs text-foreground/60">Gas: <code>15 + 3 * ceil(len/32)</code></p>
+              <p className="text-xs text-foreground/50 mt-1">입력 그대로 반환 (데이터 복사)</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">Identity 용도</p>
+              <p className="text-xs text-foreground/60">datacopy opcode 대체. calldata &#8594; memory 빠른 복사. gas 효율적 이동</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">SHA-256 vs Keccak-256</p>
+              <p className="text-xs text-foreground/60">keccak256: 이더리움 표준 (SHA3 opcode). sha256: Bitcoin/외부 시스템 연동용</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           3개 해시 함수가 <strong>외부 시스템 연동</strong> 지원.<br />
           SHA-256은 Bitcoin SPV proof, RIPEMD는 Bitcoin address 변환에 사용.<br />
@@ -135,47 +110,48 @@ pub fn identity_call(input: &[u8], gas_limit: u64) -> PrecompileResult {
 
         {/* ── bn128 시리즈 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">bn128 (0x06-0x08) — zkSNARK 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// bn128 (alt_bn128): Barreto-Naehrig 곡선, zkSNARK 표준
-
-// 0x06: bn128Add - G1 point 덧셈
-// 입력: (x1, y1, x2, y2) 각 32 bytes
-// 출력: (x3, y3) 64 bytes
-// Gas: 150 (Byzantium) → 150 (Istanbul)
-
-// 0x07: bn128Mul - G1 scalar multiplication
-// 입력: (x, y, k) 96 bytes
-// 출력: (x', y') 64 bytes
-// Gas: 6_000 (Byzantium) → 6_000 (Istanbul)
-
-// 0x08: bn128Pairing - pairing check
-// 입력: k개 (G1, G2) 쌍 (192 bytes × k)
-// 출력: 0x01 (pairing 성공) or 0x00 (실패)
-// Gas: 45_000 + 34_000 × k (Istanbul 기준)
-
-// Pairing check:
-// e(P_1, Q_1) × e(P_2, Q_2) × ... × e(P_k, Q_k) == 1
-//
-// Groth16 zkSNARK 검증:
-// verify(proof, public_inputs, vk) {
-//     e(A, B) == e(alpha, beta) ×
-//                e(L, gamma) ×
-//                e(C, delta)
-// }
-// → bn128Pairing call 1회로 증명 검증
-
-// 사용 사례:
-// - Tornado Cash (anonymous transfer)
-// - zkSync, Scroll, Loopring (zkRollup)
-// - Semaphore (익명 signaling)
-// - ENS zk-voting
-
-// 성능 (Rust arkworks):
-// - G1 add: ~1 μs
-// - G1 mul: ~100 μs
-// - Pairing: ~2 ms per pair
-// - Groth16 verify (3 pairings): ~6 ms`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="text-xs text-foreground/50 mb-3">alt_bn128: Barreto-Naehrig 곡선, zkSNARK 온체인 검증 표준</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#6366f1' }}>
+              <p className="font-mono text-xs text-indigo-400 mb-1">0x06: bn128Add</p>
+              <p className="text-xs text-foreground/60">G1 point 덧셈. 입력: (x1,y1,x2,y2) 128B</p>
+              <p className="text-xs text-foreground/50">Gas: <strong>150</strong> / ~1 us</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#f59e0b' }}>
+              <p className="font-mono text-xs text-amber-400 mb-1">0x07: bn128Mul</p>
+              <p className="text-xs text-foreground/60">G1 scalar multiplication. 입력: (x,y,k) 96B</p>
+              <p className="text-xs text-foreground/50">Gas: <strong>6,000</strong> / ~100 us</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#ef4444' }}>
+              <p className="font-mono text-xs text-red-400 mb-1">0x08: bn128Pairing</p>
+              <p className="text-xs text-foreground/60">Pairing check. 입력: k * (G1,G2) 192B*k</p>
+              <p className="text-xs text-foreground/50">Gas: <strong>45K + 34K*k</strong> / ~2 ms/pair</p>
+            </div>
+          </div>
+          <div className="rounded-md border border-border/40 bg-background/60 p-3 mb-3">
+            <p className="text-xs font-semibold text-foreground/70 mb-1">Groth16 zkSNARK 검증</p>
+            <p className="text-xs text-foreground/60">e(A,B) == e(alpha,beta) * e(L,gamma) * e(C,delta) &#8594; bn128Pairing 1회로 검증 완료</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-[11px] text-foreground/70">Tornado Cash</p>
+              <p className="text-[11px] text-foreground/50">anonymous transfer</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-[11px] text-foreground/70">zkSync / Scroll</p>
+              <p className="text-[11px] text-foreground/50">zkRollup</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-[11px] text-foreground/70">Semaphore</p>
+              <p className="text-[11px] text-foreground/50">anonymous signaling</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-[11px] text-foreground/70">Groth16 verify</p>
+              <p className="text-[11px] text-foreground/50">3 pairings ~6 ms</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>bn128</code> 시리즈가 <strong>온체인 zkSNARK 검증 기반</strong>.<br />
           Pairing check 1회로 Groth16 proof 검증 완료 → 가스 효율적.<br />

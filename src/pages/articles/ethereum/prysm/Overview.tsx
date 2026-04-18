@@ -43,36 +43,49 @@ export default function Overview() {
 
         {/* ── CL의 역할 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CL(Consensus Layer)의 역할</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PoS 전환(2022-09) 이후 이더리움 이중 구조:
-//
-// CL (Consensus Layer) — Beacon Chain
-//   - validator 관리 (활성화/슬래싱/출금)
-//   - 슬롯 & 에폭 타이밍 (12초 × 32 슬롯 = 6.4분)
-//   - fork choice (LMD-GHOST + Casper FFG)
-//   - attestation 수집 & 집계
-//   - block proposal 순서 결정
-//
-//         ↓ Engine API
-//
-// EL (Execution Layer) — Reth/Geth/Nethermind
-//   - TX 실행, state root 계산
-//   - EVM, txpool, devp2p
-//   - CL의 payload_attributes에 따라 블록 빌드
-
-// CL 클라이언트 구현체:
-// - Prysm (Go): ~40% 점유율
-// - Lighthouse (Rust): ~35% 점유율
-// - Teku (Java): ~15% 점유율
-// - Nimbus (Nim): ~7% 점유율
-// - Lodestar (TypeScript): ~3% 점유율
-
-// Prysm만의 특징:
-// - Go 생태계 활용 (libp2p, boltdb, grpc)
-// - Prysmatic Labs 개발
-// - 가장 오래된 CL 구현체 중 하나 (2018년부터)
-// - REST + gRPC 이중 API`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">CL (Consensus Layer) — Beacon Chain</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>validator 관리 (활성화/슬래싱/출금)</li>
+              <li>슬롯 & 에폭 타이밍 (12초 x 32 슬롯 = 6.4분)</li>
+              <li>fork choice (LMD-GHOST + Casper FFG)</li>
+              <li>attestation 수집 & 집계</li>
+              <li>block proposal 순서 결정</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">EL (Execution Layer) — Reth/Geth</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>TX 실행, state root 계산</li>
+              <li>EVM, txpool, devp2p</li>
+              <li>CL의 <code>payload_attributes</code>에 따라 블록 빌드</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">CL &rarr; EL 통신: Engine API</p>
+          </div>
+        </div>
+        <div className="not-prose grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
+          {[
+            { name: 'Prysm', lang: 'Go', share: '~40%' },
+            { name: 'Lighthouse', lang: 'Rust', share: '~35%' },
+            { name: 'Teku', lang: 'Java', share: '~15%' },
+            { name: 'Nimbus', lang: 'Nim', share: '~7%' },
+            { name: 'Lodestar', lang: 'TypeScript', share: '~3%' },
+          ].map(c => (
+            <div key={c.name} className="rounded-lg border border-border/60 p-3 text-center">
+              <p className="font-semibold text-sm">{c.name}</p>
+              <p className="text-xs text-muted-foreground">{c.lang} &middot; {c.share}</p>
+            </div>
+          ))}
+        </div>
+        <div className="not-prose rounded-lg border border-border/60 p-4 my-4">
+          <p className="font-semibold text-sm text-amber-400 mb-2">Prysm 특징</p>
+          <ul className="text-sm space-y-1 text-muted-foreground">
+            <li>Go 생태계 활용 (<code>libp2p</code>, <code>boltdb</code>, <code>grpc</code>)</li>
+            <li>Prysmatic Labs 개발 &mdash; 가장 오래된 CL 구현체 중 하나 (2018년~)</li>
+            <li>REST + gRPC 이중 API</li>
+          </ul>
+        </div>
         <p className="leading-7">
           CL과 EL의 <strong>분리 구조</strong>가 PoS 이더리움의 핵심.<br />
           CL이 합의/validator 관리, EL이 실행 → 각자 최적화 가능.<br />
@@ -81,32 +94,39 @@ export default function Overview() {
 
         {/* ── Prysm 모듈 맵 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Prysm 모듈 맵 — Go 패키지 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`prysm/
-├── beacon-chain/          # 비콘 체인 노드 (main binary)
-│   ├── blockchain/        #   fork choice, block processing
-│   ├── core/              #   state transition (slot/block/epoch)
-│   ├── db/                #   BoltDB 래퍼
-│   ├── p2p/               #   libp2p integration
-│   ├── sync/              #   initial/regular sync
-│   ├── rpc/               #   gRPC server + REST gateway
-│   ├── cache/             #   state cache, epoch cache
-│   └── operations/        #   attestation, slashing pools
-│
-├── validator/             # 검증자 클라이언트 (별도 바이너리)
-│   ├── client/            #   duty assignment, block signing
-│   ├── keymanager/        #   wallet, remote signer
-│   └── slashing-protection/ # EIP-3076 slash 방지
-│
-├── consensus-types/       # 공통 타입 (Block, State 등)
-├── crypto/
-│   ├── bls/               #   BLS12-381 (BLST CGo 바인딩)
-│   └── hash/              #   SHA-256, keccak
-├── encoding/
-│   └── ssz/               #   SSZ 직렬화
-├── network/forks/         # 하드포크별 분기
-└── runtime/prereqs/       # 시스템 점검`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">beacon-chain/ (비콘 체인 노드)</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code>blockchain/</code> — fork choice, block processing</li>
+              <li><code>core/</code> — state transition (slot/block/epoch)</li>
+              <li><code>db/</code> — BoltDB 래퍼</li>
+              <li><code>p2p/</code> — libp2p integration</li>
+              <li><code>sync/</code> — initial/regular sync</li>
+              <li><code>rpc/</code> — gRPC server + REST gateway</li>
+              <li><code>cache/</code> — state cache, epoch cache</li>
+              <li><code>operations/</code> — attestation, slashing pools</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">validator/ (검증자 클라이언트, 별도 바이너리)</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code>client/</code> — duty assignment, block signing</li>
+              <li><code>keymanager/</code> — wallet, remote signer</li>
+              <li><code>slashing-protection/</code> — EIP-3076 slash 방지</li>
+            </ul>
+            <div className="mt-3 pt-3 border-t border-border/40">
+              <p className="font-semibold text-sm text-amber-400 mb-1">공통 패키지</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>consensus-types/</code> — Block, State 등 공통 타입</li>
+                <li><code>crypto/bls/</code> — BLS12-381 (BLST CGo 바인딩)</li>
+                <li><code>crypto/hash/</code> — SHA-256, keccak</li>
+                <li><code>encoding/ssz/</code> — SSZ 직렬화</li>
+                <li><code>network/forks/</code> — 하드포크별 분기</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Prysm은 <strong>2개 별도 바이너리</strong> — beacon-chain(노드) + validator(키 관리).<br />
           분리로 보안 강화 — validator 서명 키는 beacon-chain과 별도 프로세스에서 보호.<br />
@@ -115,29 +135,41 @@ export default function Overview() {
 
         {/* ── 설계 판단 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">핵심 설계 판단 3가지</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. Go + libp2p 조합
-// - Go: 동시성(goroutine), 빠른 빌드, 성숙한 생태계
-// - libp2p: 이더리움이 채택한 P2P 프레임워크 (Rust/JS/Go 구현)
-// - libp2p-go 공식 구현체 활용
-
-// 2. gRPC + REST 이중 API
-// - gRPC: 내부 통신 (validator ↔ beacon-chain)
-// - REST: Beacon API 표준 (EIP-3075) 준수
-// - grpc-gateway로 동일 서비스를 2가지 프로토콜로 노출
-
-// 3. BLST CGo 바인딩
-// - BLS 서명 검증은 CPU-intensive (pairing 연산)
-// - BLST (supranational): C++ 최적화 라이브러리, 가장 빠름
-// - pure Go 구현(blst-go) 대비 2~5배 빠름
-// - cgo overhead는 배치 검증으로 상쇄
-
-// 성능 프로파일 (메인넷 vs Lighthouse):
-// - 블록 처리: 동등 (~50ms)
-// - state 재구성: Lighthouse가 빠름 (Rust 메모리 효율)
-// - p2p throughput: Prysm 우세 (libp2p-go 성숙)
-// - 메모리 사용: Lighthouse가 낮음 (Rust vs Go GC)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">1. Go + libp2p</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Go: 동시성(goroutine), 빠른 빌드</li>
+              <li>libp2p: 이더리움 채택 P2P 프레임워크</li>
+              <li><code>libp2p-go</code> 공식 구현체 활용</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">2. gRPC + REST 이중 API</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>gRPC: 내부 통신 (validator &harr; beacon)</li>
+              <li>REST: Beacon API 표준 (EIP-3075)</li>
+              <li><code>grpc-gateway</code>로 동일 서비스 2개 프로토콜 노출</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">3. BLST CGo 바인딩</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>BLS 서명 검증 = CPU-intensive (pairing)</li>
+              <li>BLST: C++ 최적화, 가장 빠름</li>
+              <li>pure Go 대비 2~5배 빠름</li>
+            </ul>
+          </div>
+        </div>
+        <div className="not-prose rounded-lg border border-border/60 p-4 my-4">
+          <p className="font-semibold text-sm mb-2">Prysm vs Lighthouse 성능 비교</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+            <div className="text-center"><p className="text-muted-foreground">블록 처리</p><p className="font-mono">동등 ~50ms</p></div>
+            <div className="text-center"><p className="text-muted-foreground">state 재구성</p><p className="font-mono text-red-400">Lighthouse 우세</p></div>
+            <div className="text-center"><p className="text-muted-foreground">p2p throughput</p><p className="font-mono text-green-400">Prysm 우세</p></div>
+            <div className="text-center"><p className="text-muted-foreground">메모리 사용</p><p className="font-mono text-red-400">Lighthouse 우세</p></div>
+          </div>
+        </div>
         <p className="leading-7">
           Prysm의 3가지 설계 선택 — <strong>Go, gRPC+REST, BLST</strong>.<br />
           Lighthouse(Rust) 대비 약간 높은 메모리 사용 + libp2p 생태계 활용.<br />

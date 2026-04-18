@@ -29,95 +29,91 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">EOA vs CA 기술적 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ethereum Account Types
-//
-// EOA (Externally Owned Account):
-//   - Address = keccak256(pubkey)[12:]
-//   - Secret: ECDSA private key (secp256k1)
-//   - Can initiate transactions
-//   - Signature required: yes (always)
-//   - Code: none
-//   - Storage: none
-//   - Cost: free to create (no on-chain action)
-//
-// CA (Contract Account):
-//   - Address = keccak256(rlp([sender, nonce]))[12:]
-//     or keccak256(0xff ++ sender ++ salt ++ keccak256(initcode))[12:] (CREATE2)
-//   - Can NOT initiate transactions (pre-AA)
-//   - Code: EVM bytecode
-//   - Storage: 2^256 slots
-//   - Cost: deployment gas
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-xl border p-4 bg-card">
+            <h4 className="font-semibold mb-2">EOA (Externally Owned Account)</h4>
+            <ul className="text-sm space-y-1.5 list-disc list-inside">
+              <li>주소 = <code>keccak256(pubkey)[12:]</code></li>
+              <li>비밀키: ECDSA secp256k1</li>
+              <li>트랜잭션 개시 가능, 서명 필수</li>
+              <li>코드/스토리지 없음</li>
+              <li>생성 비용 무료 (온체인 액션 불필요)</li>
+            </ul>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <h4 className="font-semibold mb-2">CA (Contract Account)</h4>
+            <ul className="text-sm space-y-1.5 list-disc list-inside">
+              <li>주소 = <code>keccak256(rlp([sender, nonce]))[12:]</code> 또는 CREATE2</li>
+              <li>트랜잭션 개시 불가 (pre-AA)</li>
+              <li>코드: EVM 바이트코드</li>
+              <li>스토리지: 2<sup>256</sup> 슬롯</li>
+              <li>생성 비용: 배포 가스</li>
+            </ul>
+          </div>
+        </div>
 
-// Pre-AA transaction flow:
-//
-//   User (EOA) → signs tx with private key
-//     ↓
-//   EVM: tx.from must be EOA
-//   EVM: ECDSA verify (built-in, no choice)
-//     ↓
-//   Execute: either transfer or contract call
+        <h4 className="font-semibold mt-6 mb-3">Pre-AA 트랜잭션 흐름</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p>User(EOA) → 개인키로 서명 → EVM: <code>tx.from</code>은 EOA여야 함 → ECDSA 검증(내장, 변경 불가) → 실행: 전송 또는 컨트랙트 호출</p>
+        </div>
 
-// Limitations of EOA model:
-//
-//   1. Fixed signature scheme (only ECDSA secp256k1)
-//      → No post-quantum signatures
-//      → No biometric/Passkey auth
-//      → No BLS aggregation
-//
-//   2. Fixed fee token (ETH only)
-//      → User must hold ETH for gas
-//      → Onboarding friction
-//
-//   3. Atomic single call
-//      → approve + swap = 2 transactions
-//      → 2 signatures required
-//
-//   4. No recovery mechanism
-//      → Lost seed = lost funds forever
-//      → No social recovery
-//
-//   5. No spending limits
-//      → Full authority on every signature
-//      → No time-bounded keys
+        <h4 className="font-semibold mt-6 mb-3">EOA 모델의 한계</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-1">1. 고정 서명 알고리즘</p>
+            <p className="text-sm text-muted-foreground">ECDSA secp256k1만 사용. 포스트퀀텀 서명, 생체인증(Passkey), BLS 집계 불가.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-1">2. 고정 수수료 토큰</p>
+            <p className="text-sm text-muted-foreground">가스비로 ETH만 가능. 사용자는 반드시 ETH를 보유해야 하며, 온보딩 마찰 발생.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-1">3. 단일 호출</p>
+            <p className="text-sm text-muted-foreground"><code>approve</code> + <code>swap</code> = 2개 트랜잭션, 2개 서명 필요.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-1">4. 복구 불가</p>
+            <p className="text-sm text-muted-foreground">시드 분실 = 자산 영구 손실. 소셜 리커버리 없음.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-1">5. 지출 한도 없음</p>
+            <p className="text-sm text-muted-foreground">모든 서명이 전체 권한 부여. 시간 제한 키 불가.</p>
+          </div>
+        </div>
 
-// AA unlocks:
-//
-//   validateUserOp(UserOperation op) external returns (uint256 validationData) {
-//     // ANY validation logic
-//     // ECDSA? Yes
-//     // WebAuthn? Yes
-//     // Multisig? Yes
-//     // ZK proof? Yes
-//     // Time-based? Yes
-//     // Social recovery check? Yes
-//   }
-//
-//   Key insight: validation becomes programmable
+        <h4 className="font-semibold mt-6 mb-3">AA가 해제하는 것</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-2"><code>validateUserOp()</code> — 검증 로직이 프로그래밍 가능해집니다.</p>
+          <p className="text-muted-foreground">ECDSA, WebAuthn, 멀티시그, ZK proof, 시간 기반 검증, 소셜 리커버리 등 자유롭게 구현할 수 있습니다.</p>
+        </div>
 
-// Historical approaches to AA:
-//
-//   2016: Vitalik's original proposal (EIP-86)
-//     - Protocol-level, never implemented
-//     - Too complex for protocol
-//
-//   2019: Argent, Gnosis Safe (multisig wallets)
-//     - Hack around EOA model
-//     - User still needs EOA + gas to deploy
-//
-//   2020: EIP-2938 (AA transaction type)
-//     - Rejected, too invasive to protocol
-//
-//   2021: ERC-4337 proposal (Vitalik, Bunz, et al.)
-//     - No protocol changes!
-//     - Uses alternative mempool + EntryPoint
-//
-//   2023: ERC-4337 deployed on Ethereum mainnet
-//
-//   2024+: EIP-7702 + EIP-7701 Native AA
-//     - Hybrid: EOA delegation to smart contract
-//     - Protocol-level Native AA roadmap`}
-        </pre>
+        <h4 className="font-semibold mt-6 mb-3">AA 역사</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm">2016 — EIP-86</p>
+            <p className="text-sm text-muted-foreground">Vitalik의 원래 제안. 프로토콜 레벨, 미구현 (너무 복잡).</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm">2019 — Argent, Gnosis Safe</p>
+            <p className="text-sm text-muted-foreground">멀티시그 지갑으로 EOA 모델 우회. 배포에 여전히 EOA + 가스 필요.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm">2020 — EIP-2938</p>
+            <p className="text-sm text-muted-foreground">AA 전용 트랜잭션 타입 제안. 프로토콜 침습성으로 거부.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm">2021 — ERC-4337</p>
+            <p className="text-sm text-muted-foreground">프로토콜 변경 없이 alt mempool + EntryPoint로 구현.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm">2023 — ERC-4337 메인넷 배포</p>
+            <p className="text-sm text-muted-foreground">이더리움 메인넷에서 프로덕션 가동.</p>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm">2024+ — EIP-7702 / EIP-7701</p>
+            <p className="text-sm text-muted-foreground">EOA→스마트 컨트랙트 위임 + 프로토콜 레벨 Native AA 로드맵.</p>
+          </div>
+        </div>
       </div>
     </section>
   );

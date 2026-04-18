@@ -19,51 +19,51 @@ export default function BackpropDerivViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 140" className="w-full max-w-2xl"
+        <svg viewBox="0 0 460 175" className="w-full max-w-2xl"
           style={{ height: 'auto' }}>
 
           {/* Neuron rows */}
           {NEURONS.map((n, i) => {
-            const ny = 10 + i * 42;
+            const ny = 6 + i * 48;
             const active = step >= i + 1;
-            const barW = Math.abs(n.grad) * 80;
+            const barW = Math.abs(n.grad) * 70;
             const isPos = n.grad >= 0;
 
             return (
               <g key={i}>
                 {/* Neuron label */}
-                <text x={10} y={ny + 18} fontSize={9} fontWeight={500}
+                <text x={10} y={ny + 20} fontSize={9} fontWeight={600}
                   fill={n.color}>{n.label}</text>
 
                 {/* y (pred) */}
-                <rect x={100} y={ny} width={50} height={28} rx={4}
+                <rect x={95} y={ny + 2} width={50} height={30} rx={4}
                   fill={`${n.color}10`} stroke={n.color}
                   strokeWidth={0.6} />
-                <text x={125} y={ny + 12} textAnchor="middle" fontSize={9}
+                <text x={120} y={ny + 15} textAnchor="middle" fontSize={8}
                   fill="var(--muted-foreground)">예측 y</text>
-                <text x={125} y={ny + 23} textAnchor="middle" fontSize={9}
+                <text x={120} y={ny + 27} textAnchor="middle" fontSize={10}
                   fontWeight={600} fill={n.color}>{n.pred}</text>
 
                 {/* ŷ (target) */}
-                <rect x={160} y={ny} width={50} height={28} rx={4}
+                <rect x={155} y={ny + 2} width={50} height={30} rx={4}
                   fill={`${n.color}10`} stroke={n.color}
                   strokeWidth={0.6} />
-                <text x={185} y={ny + 12} textAnchor="middle" fontSize={9}
+                <text x={180} y={ny + 15} textAnchor="middle" fontSize={8}
                   fill="var(--muted-foreground)">정답 ŷ</text>
-                <text x={185} y={ny + 23} textAnchor="middle" fontSize={9}
+                <text x={180} y={ny + 27} textAnchor="middle" fontSize={10}
                   fontWeight={600} fill={n.color}>{n.target}</text>
 
-                {/* gradient bar */}
+                {/* gradient bar — 같은 행 오른쪽 */}
                 {active && (
                   <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     transition={sp}>
-                    <text x={225} y={ny + 12} fontSize={9}
+                    <text x={220} y={ny + 12} fontSize={8}
                       fill="var(--muted-foreground)">기울기</text>
-                    <rect x={225} y={ny + 14} width={barW} height={10}
+                    <rect x={220} y={ny + 16} width={barW} height={10}
                       rx={2} fill={isPos ? '#ef444440' : '#3b82f640'}
                       stroke={isPos ? '#ef4444' : '#3b82f6'}
                       strokeWidth={0.8} />
-                    <text x={230 + barW} y={ny + 23} fontSize={9}
+                    <text x={225 + barW} y={ny + 25} fontSize={9}
                       fontWeight={600}
                       fill={isPos ? '#ef4444' : '#3b82f6'}>
                       {n.grad > 0 ? '+' : ''}{n.grad}
@@ -78,13 +78,13 @@ export default function BackpropDerivViz() {
           {step >= 3 && (
             <motion.g initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }} transition={sp}>
-              <rect x={100} y={105} width={300} height={28} rx={6}
-                fill="#8b5cf615" stroke="#8b5cf6" strokeWidth={1} />
-              <text x={250} y={123} textAnchor="middle" fontSize={9}
+              <rect x={95} y={150} width={280} height={22} rx={5}
+                fill="#8b5cf610" stroke="#8b5cf6" strokeWidth={1} />
+              <text x={235} y={165} textAnchor="middle" fontSize={9}
                 fontWeight={600} fill="#8b5cf6">
                 dL/dm₂ = 2.35 × (−0.91) = −2.14
               </text>
-              <text x={420} y={123} fontSize={9}
+              <text x={390} y={165} fontSize={8}
                 fill="var(--muted-foreground)">
                 m₂↑ → 손실↓
               </text>

@@ -6,7 +6,7 @@ import {
 } from './AttentionCompVizData';
 
 const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
-const W = 460, H = 190;
+const W = 460, H = 210;
 
 function VL({ x, y, l, v, c }: { x: number; y: number; l: string; v: number[]; c: string }) {
   return (<g>
@@ -63,22 +63,22 @@ export default function AttentionCompViz() {
                   {PROBS[i]}×h{i + 1} = [{wv.map(v => v.toFixed(2)).join(', ')}]
                 </text>
               ))}
-              <rect x={370} y={130} width={80} height={28} rx={6}
+              <rect x={355} y={130} width={100} height={28} rx={6}
                 fill={ATT_C + '18'} stroke={ATT_C} strokeWidth={1} />
-              <text x={410} y={142} textAnchor="middle" fontSize={11}
+              <text x={405} y={142} textAnchor="middle" fontSize={11}
                 fill={ATT_C} fontWeight={500}>컨텍스트</text>
-              <text x={410} y={154} textAnchor="middle" fontSize={11}
+              <text x={405} y={154} textAnchor="middle" fontSize={10}
                 fill={ATT_C}>[{CTX.map(v => v.toFixed(2)).join(', ')}]</text>
             </motion.g>
           )}
           {/* Output word */}
           {step >= 3 && (
             <motion.g initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={sp}>
-              <rect x={370} y={H - 38} width={80} height={26} rx={6}
+              <rect x={355} y={H - 36} width={100} height={26} rx={6}
                 fill={S_C + '18'} stroke={S_C} strokeWidth={1} />
-              <text x={410} y={H - 21} textAnchor="middle" fontSize={11}
+              <text x={405} y={H - 19} textAnchor="middle" fontSize={11}
                 fill={S_C} fontWeight={500}>"고마워"</text>
-              <line x1={410} y1={158} x2={410} y2={H - 38}
+              <line x1={405} y1={158} x2={405} y2={H - 36}
                 stroke={S_C} strokeWidth={1} strokeDasharray="3 2" />
             </motion.g>
           )}

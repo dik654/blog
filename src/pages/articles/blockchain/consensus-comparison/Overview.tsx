@@ -22,67 +22,39 @@ export default function Overview() {
 
         {/* ── 프로토콜 history ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">프로토콜 역사적 맥락</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 역사적 맥락:
-//
-// 1982: Lamport - Byzantine Generals Problem
-// 1999: PBFT - Castro & Liskov
-//   - 최초 실용적 BFT
-//   - O(n²) + O(n³) VC
-//
-// 2008: Nakamoto - Bitcoin
-//   - PoW + longest chain
-//   - probabilistic finality
-//   - open membership
-//
-// 2014: Tendermint - Kwon
-//   - blockchain-specific BFT
-//   - Cosmos 기반
-//
-// 2018: Avalanche - Team Rocket
-//   - metastable consensus
-//   - Snowball / Snowflake
-//   - scalable probabilistic
-//
-// 2019: HotStuff - Yin et al.
-//   - O(n) linear BFT
-//   - Libra/Diem/Aptos
-//
-// 2022: Narwhal+Bullshark - Spiegelman et al.
-//   - DAG-based BFT
-//   - 130K+ TPS
-//
-// 2023: Jolteon - Aptos
-//   - 2-chain commit
-//   - fast path
-//
-// 2024: Mysticeti - Mysten Labs
-//   - uncertified DAG
-//   - 390ms latency
-//
-// 2024: Autobahn - UC Berkeley
-//   - hybrid pipeline
-//   - Highway + Lanes
-
-// 시대별 주제:
-// - 1980s: 이론 성립 (Lamport)
-// - 1990s: 실무 배포 가능성 (PBFT)
-// - 2000s: blockchain 등장 (Bitcoin)
-// - 2010s: scalable BFT (Tendermint, HotStuff)
-// - 2020s: high throughput DAG (Narwhal, Mysticeti)
-
-// 대표 블록체인 채택:
-// - Bitcoin: Nakamoto PoW
-// - Ethereum: Casper FFG + LMD-GHOST
-// - Cosmos: Tendermint/CometBFT
-// - Polkadot: GRANDPA (BFT finality)
-// - Avalanche: Snowman/Avalanche
-// - Solana: Tower BFT + PoH
-// - Sui: Mysticeti
-// - Aptos: Jolteon (DiemBFT v4)
-// - Near: Doomslug BFT
-// - Filecoin: EC + F3 (GossiPBFT)`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">프로토콜 역사적 타임라인</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">연도</th>
+                    <th className="border border-border px-3 py-1.5 text-left">프로토콜</th>
+                    <th className="border border-border px-3 py-1.5 text-left">핵심 기여</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">1982</td><td className="border border-border px-3 py-1.5">Lamport</td><td className="border border-border px-3 py-1.5">Byzantine Generals Problem 정의</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">1999</td><td className="border border-border px-3 py-1.5">PBFT</td><td className="border border-border px-3 py-1.5">최초 실용적 BFT, O(n2) + O(n3) VC</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2008</td><td className="border border-border px-3 py-1.5">Nakamoto (Bitcoin)</td><td className="border border-border px-3 py-1.5">PoW + longest chain, open membership</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2014</td><td className="border border-border px-3 py-1.5">Tendermint</td><td className="border border-border px-3 py-1.5">blockchain-specific BFT, Cosmos 기반</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2018</td><td className="border border-border px-3 py-1.5">Avalanche</td><td className="border border-border px-3 py-1.5">metastable consensus, scalable probabilistic</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2019</td><td className="border border-border px-3 py-1.5">HotStuff</td><td className="border border-border px-3 py-1.5">O(n) linear BFT, Libra/Diem/Aptos</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2022</td><td className="border border-border px-3 py-1.5">Narwhal+Bullshark</td><td className="border border-border px-3 py-1.5">DAG-based BFT, 130K+ TPS</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2023</td><td className="border border-border px-3 py-1.5">Jolteon</td><td className="border border-border px-3 py-1.5">2-chain commit, fast path (Aptos)</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">2024</td><td className="border border-border px-3 py-1.5">Mysticeti / Autobahn</td><td className="border border-border px-3 py-1.5">uncertified DAG 390ms / hybrid pipeline</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">대표 블록체인 채택</p>
+            <p className="text-sm text-muted-foreground">
+              Bitcoin: Nakamoto PoW / Ethereum: Casper FFG + LMD-GHOST / Cosmos: Tendermint/CometBFT / Polkadot: GRANDPA / Avalanche: Snowman / Solana: Tower BFT + PoH / Sui: Mysticeti / Aptos: Jolteon / Near: Doomslug / Filecoin: EC + F3
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           40년 BFT 역사: <strong>이론 → 실무 → blockchain → DAG</strong>.<br />
           2020s = DAG-BFT + high throughput 시대.<br />
@@ -91,55 +63,43 @@ export default function Overview() {
 
         {/* ── 비교 기준 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">6 비교 기준</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 합의 프로토콜 비교 6 기준:
-
-// 1. Communication complexity:
-//    - O(n²): PBFT, Tendermint
-//    - O(n): HotStuff, Narwhal
-//    - O(k log n): Avalanche
-//    - 메시지 수 = validator 확장성 제약
-
-// 2. Commit latency:
-//    - 3-4δ: PBFT, HotStuff chained
-//    - 2-3δ: Mysticeti, Autobahn
-//    - ~1s: Avalanche
-//    - 60min+: Nakamoto
-//    - 실시간 요구 = BFT 필요
-
-// 3. Throughput (TPS):
-//    - 10K-30K: PBFT, Tendermint, HotStuff
-//    - 100K+: Narwhal+Bullshark, Mysticeti
-//    - 4500: Avalanche X-Chain
-//    - 7: Bitcoin, 15: Ethereum
-//    - 많은 사용자 = 고 throughput 필요
-
-// 4. Safety guarantee:
-//    - Deterministic (f<n/3): BFT 모두
-//    - Probabilistic (10^-10): Avalanche
-//    - Probabilistic (pow): Nakamoto
-//    - 금융 = deterministic 선호
-
-// 5. Liveness guarantee:
-//    - Partial sync (GST): BFT 모두
-//    - Always: Avalanche, Nakamoto
-//    - Async-safe: Ditto, Tusk
-//    - 업무 critical = always liveness
-
-// 6. Validator scalability:
-//    - 수십: PBFT
-//    - 수백: BFT 모두
-//    - 수천: Avalanche, DAG-BFT
-//    - 수백만: Nakamoto (light clients)
-//    - 탈중앙화 = 많은 validators
-
-// 추가 고려:
-// - bandwidth per validator
-// - CPU/memory requirements
-// - developer complexity
-// - production maturity
-// - governance / upgrade path`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">6 비교 기준</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">1. Communication complexity</p>
+                <p className="text-muted-foreground"><code>O(n2)</code>: PBFT, Tendermint / <code>O(n)</code>: HotStuff, Narwhal / <code>O(k log n)</code>: Avalanche</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">2. Commit latency</p>
+                <p className="text-muted-foreground">3-4delta: PBFT, HotStuff / 2-3delta: Mysticeti, Autobahn / ~1s: Avalanche / 60min+: Nakamoto</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">3. Throughput (TPS)</p>
+                <p className="text-muted-foreground">10K-30K: PBFT, Tendermint, HotStuff / 100K+: Narwhal, Mysticeti / 4500: Avalanche / 7-15: Bitcoin, Ethereum</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">4. Safety guarantee</p>
+                <p className="text-muted-foreground">Deterministic (f&lt;n/3): BFT 모두 / Probabilistic (10^-10): Avalanche / Probabilistic (PoW): Nakamoto</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">5. Liveness guarantee</p>
+                <p className="text-muted-foreground">Partial sync (GST): BFT / Always: Avalanche, Nakamoto / Async-safe: Ditto, Tusk</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">6. Validator scalability</p>
+                <p className="text-muted-foreground">수십: PBFT / 수백: BFT / 수천: Avalanche, DAG-BFT / 수백만: Nakamoto (light clients)</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-1">추가 고려</p>
+            <p className="text-sm text-muted-foreground">
+              bandwidth per validator, CPU/memory requirements, developer complexity, production maturity, governance/upgrade path
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           6 비교 기준: <strong>complexity, latency, throughput, safety, liveness, scalability</strong>.<br />
           각 블록체인이 가중치 다르게 선택.<br />

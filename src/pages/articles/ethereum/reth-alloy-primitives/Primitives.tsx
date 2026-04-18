@@ -39,33 +39,27 @@ export default function Primitives({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── Address 구조체 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Address — 20바이트 이더리움 주소</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// alloy-primitives/src/bits/address.rs
-#[repr(transparent)]  // 메모리 레이아웃 = B160 (= FixedBytes<20>)
-pub struct Address(pub B160);
-
-impl Address {
-    pub const ZERO: Self = Self(B160::ZERO);
-
-    /// 공개키에서 주소 유도 — ecrecover 결과의 변환
-    pub fn from_public_key(pk: &PublicKey) -> Self {
-        let uncompressed = pk.serialize_uncompressed();
-        let hash = keccak256(&uncompressed[1..]);  // 0x04 prefix 제외
-        Address::from_slice(&hash[12..32])         // 하위 20바이트
-    }
-
-    /// EIP-55 checksum 인코딩 (대소문자 혼합 주소)
-    pub fn to_checksum(&self, chain_id: Option<u64>) -> String {
-        let hex = hex::encode(self.0);
-        let hash = keccak256(hex.as_bytes());
-        // 각 hex char을 hash의 해당 bit에 따라 대소문자 결정
-        ...
-    }
-}
-
-// Address 리터럴 매크로
-let addr: Address = address!("5B38Da6a701c568545dCfcB03FcB875f56beddC4");`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-3">
+            <code>#[repr(transparent)]</code>{' '}<span className="text-muted-foreground">// 메모리 레이아웃 = B160 = <code>{'FixedBytes<20>'}</code></span><br />
+            <code>pub struct Address(pub B160);</code>
+          </div>
+          <p className="text-sm font-semibold mb-2">주요 메서드</p>
+          <div className="space-y-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <code>from_public_key(pk: &amp;PublicKey) -&gt; Self</code>
+              <p className="text-muted-foreground mt-1">공개키에서 주소 유도 — uncompressed 직렬화 후 <code>keccak256(&amp;uncompressed[1..])</code>의 하위 20바이트</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <code>to_checksum(&amp;self, chain_id: Option&lt;u64&gt;) -&gt; String</code>
+              <p className="text-muted-foreground mt-1">EIP-55 checksum 인코딩 — keccak256 해시의 비트에 따라 각 hex 문자를 대/소문자 결정</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <code>{'address!("5B38Da6a701c568545dCfcB03FcB875f56beddC4")'}</code>
+              <p className="text-muted-foreground mt-1">컴파일 타임 리터럴 매크로 — 잘못된 hex는 컴파일 에러</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>#[repr(transparent)]</code> — Rust 구조체의 메모리 레이아웃을 내부 필드와 동일하게 보장.<br />
           <code>Address</code>와 <code>B160</code>은 런타임에 바이트 수준에서 같음 → unsafe 변환이 안전.<br />
@@ -74,29 +68,29 @@ let addr: Address = address!("5B38Da6a701c568545dCfcB03FcB875f56beddC4");`}
 
         {/* ── B256 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">B256 — 32바이트 해시 (keccak256 결과)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 32바이트 해시 — TX 해시, 블록 해시, state_root 등
-pub type B256 = FixedBytes<32>;
-
-// 사용 패턴:
-let tx_hash: B256 = keccak256(&tx_encoded);
-let block_hash: B256 = header.hash_slow();
-let state_root: B256 = trie.root();
-
-// B256 리터럴
-let genesis = b256!("d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3");
-
-// B256 자주 쓰이는 상수
-pub const KECCAK_EMPTY: B256 = b256!(
-    "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
-);  // keccak256("") — 빈 바이트 열의 해시
-
-pub const EMPTY_ROOT_HASH: B256 = b256!(
-    "56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"
-);  // keccak256(RLP([])) — 빈 trie의 root
-
-// B256은 Copy + Eq + Hash → HashMap<B256, V>로 쉽게 사용 가능`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-3">
+            <code>{'pub type B256 = FixedBytes<32>;'}</code>{' '}<span className="text-muted-foreground">// TX 해시, 블록 해시, state_root 등</span>
+          </div>
+          <p className="text-sm font-semibold mb-2">사용 패턴</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2"><code>keccak256(&amp;tx_encoded)</code> — TX 해시</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>header.hash_slow()</code> — 블록 해시</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>trie.root()</code> — state root</div>
+          </div>
+          <p className="text-sm font-semibold mb-2">주요 상수</p>
+          <div className="space-y-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <code>KECCAK_EMPTY</code> — <code>keccak256("")</code> — 빈 바이트 열의 해시
+              <p className="text-xs text-muted-foreground mt-1 break-all">0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <code>EMPTY_ROOT_HASH</code> — <code>keccak256(RLP([]))</code> — 빈 trie의 root
+              <p className="text-xs text-muted-foreground mt-1 break-all">0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3"><code>B256</code>은 <code>Copy + Eq + Hash</code> → <code>{'HashMap<B256, V>'}</code>로 직접 사용 가능</p>
+        </div>
         <p className="leading-7">
           B256이 <code>Copy</code> trait을 구현하므로 함수 인자/반환 시 <strong>bitwise 복사</strong>만 발생 (32바이트 memcpy).<br />
           Vec이나 힙 할당 없이 레지스터/스택에서 완료.<br />
@@ -105,36 +99,35 @@ pub const EMPTY_ROOT_HASH: B256 = b256!(
 
         {/* ── U256 arithmetic ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">U256 — 256비트 정수 연산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// alloy-primitives가 ruint 크레이트 재export
-pub use ruint::aliases::U256;
-
-// 내부 표현: 4개의 u64 (little-endian)
-// U256 { limbs: [low, mid_low, mid_high, high] }
-
-// 연산 예시
-let a = U256::from(100_u64);
-let b = U256::from_str_radix("12345", 10)?;  // 십진 파싱
-let c = a + b;              // wrapping_add (오버플로 시 wrap)
-let d = a.checked_add(b);   // Option<U256> — 오버플로 검출
-let e = a.saturating_mul(b);// 오버플로 시 U256::MAX
-
-// EVM에서 중요한 연산:
-// 1. 가스 계산: 보통 u64 범위지만 multiplication 시 U256 필요
-let gas_cost = U256::from(gas) * U256::from(gas_price);
-
-// 2. 잔고/value 연산
-let new_balance = account.balance.checked_sub(tx_value)
-    .ok_or(InsufficientBalance)?;
-
-// 3. 스토리지 슬롯 (32바이트 키/값 모두 U256)
-storage.set(slot, value);
-
-// wei 단위 변환
-pub const ETHER: U256 = U256::from(1_000_000_000_000_000_000u128);
-pub const GWEI: U256 = U256::from(1_000_000_000u64);
-let balance_eth = balance / ETHER;  // wei → ETH`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-3">
+            <code>pub use ruint::aliases::U256;</code>{' '}<span className="text-muted-foreground">// 내부 표현: <code>[u64; 4]</code> little-endian [low, mid_low, mid_high, high]</span>
+          </div>
+          <p className="text-sm font-semibold mb-2">연산 예시</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2"><code>a + b</code> — wrapping_add (오버플로 시 wrap)</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>a.checked_add(b)</code> — <code>Option&lt;U256&gt;</code>, 오버플로 검출</div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>a.saturating_mul(b)</code> — 오버플로 시 <code>U256::MAX</code></div>
+            <div className="rounded border border-border bg-background px-3 py-2"><code>U256::from_str_radix("12345", 10)</code> — 십진 파싱</div>
+          </div>
+          <p className="text-sm font-semibold mb-2">EVM에서 중요한 연산</p>
+          <div className="space-y-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">가스 계산</span> — <code>U256::from(gas) * U256::from(gas_price)</code>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">잔고/value</span> — <code>account.balance.checked_sub(tx_value).ok_or(InsufficientBalance)?</code>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">스토리지 슬롯</span> — 32바이트 키/값 모두 U256: <code>storage.set(slot, value)</code>
+            </div>
+          </div>
+          <p className="text-sm font-semibold mb-2">wei 단위 변환</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>ETHER</code> = 10^18 wei</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>GWEI</code> = 10^9 wei</div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>U256</code>은 alloy가 <code>ruint</code> 크레이트를 재export.<br />
           <code>ruint::Uint&lt;256, 4&gt;</code> — 256비트, 4개 u64 limb로 표현 (little-endian).<br />

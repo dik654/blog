@@ -1,6 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
+import M from '@/components/ui/math';
 import SetupDetailViz from './viz/SetupDetailViz';
-import { SYNTHESIS_CODE, KEY_CALC_CODE, MPC_CODE } from './SetupDetailData';
 
 export default function SetupDetail() {
   return (
@@ -14,34 +13,57 @@ export default function SetupDetail() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">회로 합성과 QAP 변환</h3>
-        <CodePanel
-          title="SynthesisMode::Setup → R1CS → QAP"
-          code={SYNTHESIS_CODE}
-          annotations={[
-            { lines: [1, 3], color: 'sky', note: 'Setup 모드: 값 없이 구조만 수집' },
-            { lines: [5, 7], color: 'emerald', note: 'Lagrange 보간으로 다항식 생성' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
+          <h4 className="font-semibold text-base mb-2">SynthesisMode::Setup → R1CS → QAP</h4>
+          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium text-muted-foreground mb-1">Setup 모드: 값 없이 구조만 수집</p>
+            <p className="text-xs"><code>cs.alloc()</code> → 변수 개수만 카운트 (값 미할당)</p>
+            <p className="text-xs"><code>enforce_constraint()</code> → R1CS 매트릭스 A, B, C 수집</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium text-muted-foreground mb-1">Lagrange 보간으로 다항식 생성</p>
+            <p className="text-xs">
+              <M>{'a_j(x), b_j(x), c_j(x)'}</M> ← Lagrange 보간
+            </p>
+            <p className="text-xs text-muted-foreground">각 변수 j에 대한 다항식 3개 생성</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">키 구성 요소 계산</h3>
-        <CodePanel
-          title="Query 벡터 + 배치 MSM"
-          code={KEY_CALC_CODE}
-          annotations={[
-            { lines: [1, 6], color: 'amber', note: '5종 query 벡터 (SRS 포인트)' },
-            { lines: [8, 9], color: 'violet', note: 'Pippenger 윈도우 최적화' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
+          <h4 className="font-semibold text-base mb-2">Query 벡터 + 배치 MSM</h4>
+          <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium text-muted-foreground mb-1">5종 query 벡터 (SRS 포인트)</p>
+            <p className="font-mono text-xs"><code>a_query[j]</code> = [aⱼ(τ)]₁ — A 계산용</p>
+            <p className="font-mono text-xs"><code>b_g1_query[j]</code> = [bⱼ(τ)]₁ — C 계산용</p>
+            <p className="font-mono text-xs"><code>b_g2_query[j]</code> = [bⱼ(τ)]₂ — B 계산용</p>
+            <p className="font-mono text-xs"><code>h_query[i]</code> = [τⁱ · t(τ) / δ]₁ — h(x) 증명용</p>
+            <p className="font-mono text-xs"><code>l_query[j']</code> = [lcⱼ / δ]₁ — private LC용</p>
+          </div>
+          <div className="bg-violet-50 dark:bg-violet-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium text-muted-foreground mb-1">Pippenger 윈도우 최적화</p>
+            <p className="text-xs">
+              배치 MSM: <code>window_size</code> = <M>{'\\ln(n) + 2'}</M>
+            </p>
+            <p className="text-xs text-muted-foreground">Pippenger 알고리즘으로 수천 개 스칼라곱 병렬 처리</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">MPC 세레모니</h3>
-        <CodePanel
-          title="Powers of Tau — 2단계 MPC"
-          code={MPC_CODE}
-          annotations={[
-            { lines: [2, 3], color: 'sky', note: 'Phase 1: 범용 (여러 회로 공유)' },
-            { lines: [5, 6], color: 'emerald', note: 'Phase 2: 회로별 (α,β,γ,δ)' },
-          ]}
-        />
+        <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
+          <h4 className="font-semibold text-base mb-2">Powers of Tau — 2단계 MPC</h4>
+          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">Phase 1: 범용 (여러 회로 공유)</p>
+            <p className="text-xs text-muted-foreground">
+              각 참여자 i가 <M>{'s_i'}</M> 생성 → <M>{'\\tau = \\prod s_i'}</M>
+            </p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 space-y-1">
+            <p className="text-xs font-medium">Phase 2: 회로별 파라미터 (α,β,γ,δ)</p>
+            <p className="text-xs text-muted-foreground">각 참여자가 자기 비밀 기여 후 삭제</p>
+          </div>
+          <p className="text-xs font-medium mt-1">1-of-N 신뢰: N명 중 1명만 정직해도 안전</p>
+        </div>
       </div>
     </section>
   );

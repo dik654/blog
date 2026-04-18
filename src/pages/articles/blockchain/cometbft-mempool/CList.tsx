@@ -13,48 +13,46 @@ export default function CList({ onCodeRef }: { onCodeRef: (key: string, ref: Cod
 
         {/* ── CListMempool 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">CListMempool 구조체</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/mempool/clist_mempool.go
-type CListMempool struct {
-    mtx          sync.RWMutex
-    config       *config.MempoolConfig
-    proxyAppConn proxy.AppConnMempool
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">CListMempool 핵심 필드</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">txs *clist.CList</code> — 주 mempool (concurrent list)</li>
+              <li><code className="text-xs">recheckCursor/recheckEnd *CElement</code> — recheck 진행/끝 위치</li>
+              <li><code className="text-xs">txsMap *sync.Map</code> — TxKey → *CElement (O(1) 검색)</li>
+              <li><code className="text-xs">cache txCache</code> — 최근 TX hash cache</li>
+              <li><code className="text-xs">proxyAppConn</code> — ABCI 앱 연결</li>
+              <li><code className="text-xs">txsAvailable chan struct{}</code> — TX 도착 알림</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">핵심 연산</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">addTx(tx)</code> — <code className="text-xs">txs.PushBack</code> + txsMap 업데이트</li>
+              <li><code className="text-xs">removeTx(key)</code> — txsMap → CElement → <code className="text-xs">txs.Remove</code></li>
+              <li><code className="text-xs">reap(max)</code> — FIFO 순서로 max개 반환</li>
+              <li><code className="text-xs">NextWait()</code> — element 없으면 block (CPU 낭비 없음)</li>
+            </ul>
+          </div>
+        </div>
 
-    txs          *clist.CList           // 주 mempool (concurrent list)
-    recheckCursor *clist.CElement        // recheck 진행 위치
-    recheckEnd   *clist.CElement         // recheck 끝 위치
-
-    // Lookup (O(1) 검색)
-    txsMap       *sync.Map              // TxKey → *CElement
-    cache        txCache                // 최근 TX hash cache
-
-    // 통계
-    height       int64
-    txBytes      int64
-    txsAvailable chan struct{}          // Available notifier
-    notifiedTxsAvailable bool
-}
-
-// clist.CList: concurrent linked list
-// - Lock-free Push/Iter (일부)
-// - Front()/Back()/Remove() 지원
-// - NextWait() → element 없으면 block (CPU 낭비 없음)
-
-// 왜 CList?
-// Go slice 사용 시:
-// - 중간 삭제: O(n) (shift)
-// - 순회 중 수정 불가 (panic)
-//
-// CList 사용 시:
-// - 중간 삭제: O(1) (pointer 조정)
-// - 순회 중 안전한 수정 (iterator 방식)
-// - 메모리 지역성 낮음 (trade-off)
-
-// 핵심 연산:
-// - addTx(tx): txs.PushBack + txsMap 업데이트
-// - removeTx(key): txsMap → CElement → txs.Remove
-// - reap(max): FIFO 순서로 max개 반환`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">Go slice 사용 시 문제</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>중간 삭제: <code className="text-xs">O(n)</code> (shift)</li>
+              <li>순회 중 수정 불가 (panic)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">CList 사용 시</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>중간 삭제: <code className="text-xs">O(1)</code> (pointer 조정)</li>
+              <li>순회 중 안전한 수정 (iterator 방식)</li>
+              <li>trade-off: 메모리 지역성 낮음</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           CListMempool은 <strong>concurrent linked list 기반</strong>.<br />
           O(1) 삽입/삭제 + O(1) map 조회 combined.<br />

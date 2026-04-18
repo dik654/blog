@@ -4,7 +4,7 @@ export default function CryptoUsage() {
       name: 'Pohlig-Hellman 공격',
       desc: '위수를 소인수별로 분해 → 각 부분군에서 x mod pᵢ를 풀고 CRT로 합산하여 x 복원.',
       color: 'indigo',
-      href: '/crypto/zk-theory#schnorr',
+      href: '/blockchain/zk-theory#schnorr',
     },
     {
       name: 'RSA 복호화 최적화',

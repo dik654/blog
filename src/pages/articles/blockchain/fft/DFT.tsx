@@ -17,11 +17,11 @@ export default function DFT() {
         <p>
           DFT는 행렬 <Math>{'W'}</Math>와 계수 벡터 <Math>{'\\mathbf{a}'}</Math>의 곱이다:
         </p>
-        <Math display>{'\\begin{pmatrix} y_0 \\\\ y_1 \\\\ y_2 \\\\ y_3 \\end{pmatrix} = \\begin{pmatrix} 1 & 1 & 1 & 1 \\\\ 1 & \\omega & \\omega^2 & \\omega^3 \\\\ 1 & \\omega^2 & \\omega^4 & \\omega^6 \\\\ 1 & \\omega^3 & \\omega^6 & \\omega^9 \\end{pmatrix} \\begin{pmatrix} a_0 \\\\ a_1 \\\\ a_2 \\\\ a_3 \\end{pmatrix}'}</Math>
-        <p>
-          i행 j열 원소가 <Math>{'\\omega^{ij}'}</Math>인 <Math>{'n \\times n'}</Math> 행렬이다.
-          <br />
-          이 행렬-벡터 곱을 직접 계산하면 <Math>{'O(n^2)'}</Math> — 각 행마다 n번 곱셈, 총 n행
+        <Math display>{'\\underbrace{\\begin{pmatrix} y_0 \\\\ y_1 \\\\ y_2 \\\\ y_3 \\end{pmatrix}}_{\\text{평가값 벡터}} = \\underbrace{\\begin{pmatrix} 1 & 1 & 1 & 1 \\\\ 1 & \\omega & \\omega^2 & \\omega^3 \\\\ 1 & \\omega^2 & \\omega^4 & \\omega^6 \\\\ 1 & \\omega^3 & \\omega^6 & \\omega^9 \\end{pmatrix}}_{\\text{DFT 행렬 W}} \\underbrace{\\begin{pmatrix} a_0 \\\\ a_1 \\\\ a_2 \\\\ a_3 \\end{pmatrix}}_{\\text{계수 벡터}}'}</Math>
+        <p className="text-sm text-muted-foreground mt-2">
+          y = W·a. y<sub>k</sub> = f(ω<sup>k</sup>) = 다항식을 k번째 단위근에서 평가한 값<br />
+          W[i][j] = ω<sup>ij</sup> — i행 j열 원소가 단위근의 (i×j) 거듭제곱<br />
+          a = 다항식 계수 벡터. 직접 계산하면 O(n²), FFT로 O(n log n)
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
@@ -59,125 +59,119 @@ export default function DFT() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">DFT 수학적 심층</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Discrete Fourier Transform (DFT)
-//
-// Two interpretations:
-//
-//   (1) Evaluation interpretation:
-//     Polynomial f(x) = a_0 + a_1*x + ... + a_{n-1}*x^{n-1}
-//     Evaluate at n points: 1, w, w^2, ..., w^{n-1}
-//     Result: [f(1), f(w), f(w^2), ..., f(w^{n-1})]
-//
-//   (2) Linear algebra interpretation:
-//     y = W * a  where W[i][j] = w^{i*j}
-//     W is the Vandermonde matrix of unity roots
-//     O(n^2) for direct multiplication
 
-// Vandermonde property:
-//
-//   W * W^H = n * I  (where W^H has w^{-ij})
-//   → W^{-1} = (1/n) * W^H
-//   → DFT is INVERTIBLE
-//
-//   Shannon-Whittaker: n distinct points uniquely
-//   determine a degree-(n-1) polynomial
+        <h4 className="text-lg font-semibold mt-5 mb-2">두 가지 해석</h4>
+      </div>
 
-// Why DFT matrix is full rank:
-//
-//   det(W) = product_{i<j}(w^j - w^i)
-//   Each (w^j - w^i) is nonzero (distinct roots)
-//   → det != 0
-//   → W invertible
-//   → inverse transform exists
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+          <p className="font-semibold text-sm text-indigo-400">평가 해석</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            다항식 <Math>{'f(x) = a_0 + a_1 x + \\cdots'}</Math>를 n개 점
+            <Math>{'1, \\omega, \\omega^2, \\ldots'}</Math>에서 평가
+          </p>
+        </div>
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <p className="font-semibold text-sm text-emerald-400">선형대수 해석</p>
+          <p className="text-sm mt-1.5 text-foreground/75">
+            <Math>{'\\mathbf{y} = W \\cdot \\mathbf{a}'}</Math>.
+            <Math>{'W[i][j] = \\omega^{ij}'}</Math>인 Vandermonde 행렬.
+            직접 곱은 <code>O(n²)</code>
+          </p>
+        </div>
+      </div>
 
-// Direct computation (O(n^2)):
-//
-//   for k in 0..n:
-//     y[k] = 0
-//     for j in 0..n:
-//       y[k] += a[j] * w^{k*j mod n}
-//
-//   n^2 mults + n^2 adds
-//   For n = 1M: 10^12 ops, ~1000 sec
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">Vandermonde 성질 및 역변환</h4>
+        <p>
+          <Math>{'W \\cdot \\bar{W} = n \\cdot I'}</Math> (<Math>{'\\bar{W}'}</Math>는 <Math>{'\\omega^{-ij}'}</Math> 원소).
+          따라서 <Math>{'W^{-1} = \\frac{1}{n} \\bar{W}'}</Math> → DFT는 <strong>가역</strong>이다.
+          <br />
+          행렬식 <Math>{'\\det(W) = \\prod_{i < j}(\\omega^j - \\omega^i) \\neq 0'}</Math>
+          (서로 다른 근이므로). Shannon-Whittaker: n개 점이 차수 <Math>{'n-1'}</Math> 다항식을 유일하게 결정한다
+        </p>
 
-// Cooley-Tukey decomposition (O(n log n)):
-//
-//   Split by parity:
-//     f_even(x) = a_0 + a_2*x + a_4*x^2 + ...
-//     f_odd(x)  = a_1 + a_3*x + a_5*x^2 + ...
-//
-//   Then: f(x) = f_even(x^2) + x * f_odd(x^2)
-//
-//   Evaluate at {w^0, ..., w^{n-1}}:
-//     f_even and f_odd need evaluation at
-//       {w^0, w^2, w^4, ...} = {w'^0, w'^1, ...}
-//       where w' = w^2 is primitive (n/2)-root
-//
-//   Recursion:
-//     T(n) = 2*T(n/2) + O(n)
-//         = O(n log n)
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          직접 계산: <Math>{'O(n^2)'}</Math>
+        </h4>
+        <p>
+          각 <Math>{'y_k = \\sum_j a_j \\cdot \\omega^{kj}'}</Math>를 계산.
+          <Math>{'n^2'}</Math> 곱셈 + <Math>{'n^2'}</Math> 덧셈.
+          n = 100만이면 약 <Math>{'10^{12}'}</Math> 연산 (~1000초)
+        </p>
 
-// Example evaluation in F_17:
-//
-//   p = 17, n = 4, w = 4
-//     Verify: 4^4 = 256 = 15*17 + 1 ≡ 1 (mod 17) ✓
-//     Verify: 4^2 = 16 ≡ -1 ≠ 1 (mod 17) ✓ (primitive)
-//
-//   W matrix (mod 17):
-//     row 0: [1, 1, 1, 1]
-//     row 1: [1, 4, 16, 13]  (4^1, 4^2, 4^3)
-//     row 2: [1, 16, 1, 16]  (4^2, 4^4=1, 4^6=16)
-//     row 3: [1, 13, 16, 4]  (4^3, 4^6=16, 4^9=4)
-//
-//   Coefficients: a = [1, 2, 3, 4]
-//
-//   Matrix mult:
-//     y_0 = 1*1 + 1*2 + 1*3 + 1*4 = 10
-//     y_1 = 1*1 + 4*2 + 16*3 + 13*4 = 1+8+48+52 = 109 ≡ 7
-//     y_2 = 1*1 + 16*2 + 1*3 + 16*4 = 1+32+3+64 = 100 ≡ 15
-//     y_3 = 1*1 + 13*2 + 16*3 + 4*4 = 1+26+48+16 = 91 ≡ 6
-//
-//   Result: y = [10, 7, 15, 6]
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          Cooley-Tukey 분해: <Math>{'O(n \\log n)'}</Math>
+        </h4>
+        <p>
+          짝수/홀수 인덱스로 분할:
+          <Math>{'f_{\\text{even}}(x) = a_0 + a_2 x + a_4 x^2 + \\cdots'}</Math>,
+          <Math>{'f_{\\text{odd}}(x) = a_1 + a_3 x + a_5 x^2 + \\cdots'}</Math>
+        </p>
+        <Math display>{'f(x) = \\underbrace{f_{\\text{even}}(x^2)}_{\\text{짝수 인덱스 계수}} + \\underbrace{x}_{\\text{시프트}} \\cdot \\underbrace{f_{\\text{odd}}(x^2)}_{\\text{홀수 인덱스 계수}}'}</Math>
+        <p className="text-sm text-muted-foreground mt-2">
+          f<sub>even</sub> = a₀ + a₂x + a₄x² + … (짝수 번째 계수만 모은 다항식)<br />
+          f<sub>odd</sub> = a₁ + a₃x + a₅x² + … (홀수 번째 계수만 모은 다항식)<br />
+          n차 문제를 n/2차 2개로 분할 → 재귀 T(n) = 2T(n/2) + O(n) = O(n log n)
+        </p>
+        <p>
+          <Math>{'f_{\\text{even}}'}</Math>과 <Math>{'f_{\\text{odd}}'}</Math>는
+          <Math>{'\\{\\omega^0, \\omega^2, \\ldots\\} = \\{\\omega\'^0, \\omega\'^1, \\ldots\\}'}</Math>
+          (<Math>{'\\omega\' = \\omega^2'}</Math>는 <Math>{'n/2'}</Math>차 단위근)에서 평가하면 된다.
+          <br />
+          재귀: <Math>{'T(n) = 2T(n/2) + O(n) = O(n \\log n)'}</Math>
+        </p>
 
-// Parseval's theorem (NTT version):
-//
-//   sum_i a_i * conj(a_i) = (1/n) * sum_k |y_k|^2
-//
-//   In F_p: coefficient norm related to evaluation norm
-//   Used in bounded-error estimates
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          <Math>{'\\mathbb{F}_{17}'}</Math> 예시의 W 행렬
+        </h4>
+        <p>
+          <Math>{'p = 17, n = 4, \\omega = 4'}</Math>.
+          W 행렬(mod 17):
+        </p>
+      </div>
 
-// Important subtransforms:
-//
-//   Cosine-sine form (real input):
-//     Reduced to 2 DFTs of size n/2
-//     Used in MP3, JPEG compression
-//
-//   Inverse DFT:
-//     Same structure, use w^{-1}, divide by n
-//
-//   Fractional DFT:
-//     Evaluate at {w^0, w^{1/k}, ..., w^{(n-1)/k}}
-//     Used in signal processing
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        {[
+          { row: '행 0', vals: '[1, 1, 1, 1]', color: 'indigo' },
+          { row: '행 1', vals: '[1, 4, 16, 13] — 4¹, 4², 4³', color: 'emerald' },
+          { row: '행 2', vals: '[1, 16, 1, 16] — 4², 4⁴=1, 4⁶=16', color: 'amber' },
+          { row: '행 3', vals: '[1, 13, 16, 4] — 4³, 4⁶=16, 4⁹=4', color: 'indigo' },
+        ].map(p => (
+          <div key={p.row} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-3`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.row}</p>
+            <p className="text-xs mt-1 text-foreground/75">{p.vals}</p>
+          </div>
+        ))}
+      </div>
 
-// Efficient algorithms beyond Cooley-Tukey:
-//
-//   1. Stockham algorithm:
-//      No bit-reversal needed
-//      Better for GPU/SIMD
-//
-//   2. Six-step FFT:
-//      Handles very large n
-//      Cache-aware memory access
-//
-//   3. Bluestein's algorithm:
-//      Works for ANY n (not just 2^k)
-//      Uses chirp z-transform
-//
-//   4. Rader's algorithm:
-//      FFT of prime size via number-theoretic trick
-//      Converts to convolution`}
-        </pre>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <p>
+          계수 <Math>{'\\mathbf{a} = [1, 2, 3, 4]'}</Math>에 대한 행렬곱 결과:
+          <Math>{'\\mathbf{y} = [10,\\; 7,\\; 15,\\; 6]'}</Math> (모두 mod 17)
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">Parseval 정리 (NTT 버전)</h4>
+        <p>
+          <Math>{'\\sum_i |a_i|^2 = \\frac{1}{n} \\sum_k |y_k|^2'}</Math>.
+          <Math>{'\\mathbb{F}_p'}</Math>에서 계수 노름과 평가 노름의 관계를 나타내며, 바운딩된 오류 추정에 사용된다
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">Cooley-Tukey 이후의 알고리즘</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        {[
+          { name: 'Stockham', desc: 'Bit-reversal 불필요. GPU/SIMD에 적합', color: 'indigo' },
+          { name: 'Six-step FFT', desc: '매우 큰 n 처리. 캐시 인지 메모리 접근', color: 'emerald' },
+          { name: 'Bluestein', desc: '임의의 n에서 동작 (2^k 제한 없음). Chirp z-변환 사용', color: 'amber' },
+          { name: 'Rader', desc: '소수 크기 FFT. 정수론적 트릭으로 합성곱으로 변환', color: 'indigo' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

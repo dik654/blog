@@ -1,6 +1,6 @@
-import CodePanel from '@/components/ui/code-panel';
-import { lnCode, lnAnnotations } from './LayerNormData';
 import LayerNormViz from './viz/LayerNormViz';
+import LayerNormDetailViz from './viz/LayerNormDetailViz';
+import M from '@/components/ui/math';
 
 export default function LayerNorm() {
   return (
@@ -23,63 +23,37 @@ export default function LayerNorm() {
           GPT-2 이후 대부분의 모델이 <strong>Pre-LN</strong>으로 전환<br />
           Pre-LN — 잔차 연결 전에 정규화하여 그래디언트 흐름이 안정적
         </p>
-        <CodePanel title="Pre-LN vs Post-LN" code={lnCode} lang="python" annotations={lnAnnotations} />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mt-4">
+          <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
+            <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-2">Pre-LN (GPT-2, LLaMA)</h4>
+            <M display>
+              {`\\underbrace{x + \\text{Attn}\\bigl(\\text{LN}(x)\\bigr)}_{\\text{정규화 → 서브레이어 → 잔차}}`}
+            </M>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300 mt-2">
+              정규화를 먼저 적용 — 잔차 경로(identity path)가 그래디언트를 직접 전달. Warmup 없이도 안정적 학습 가능, 깊은 모델(100+ 레이어)에 적합
+            </p>
+          </div>
+          <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4">
+            <h4 className="font-semibold text-amber-700 dark:text-amber-300 mb-2">Post-LN (원본 Transformer)</h4>
+            <M display>
+              {`\\underbrace{\\text{LN}\\bigl(x + \\text{Attn}(x)\\bigr)}_{\\text{서브레이어 → 잔차 → 정규화}}`}
+            </M>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300 mt-2">
+              잔차 연결 후 정규화 — 그래디언트가 LN을 통과해야 해서 깊은 모델에서 불안정. 반드시 Warmup 필요, 학습률 민감
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">LayerNorm vs BatchNorm</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// LayerNorm 수식:
-//   μ = (1/d) Σ x_i           # 특징 차원 평균
-//   σ² = (1/d) Σ (x_i - μ)²   # 특징 차원 분산
-//   y_i = γ · (x_i - μ)/√(σ²+ε) + β
-//
-// 정규화 방향:
-//   입력 shape: (B, N, d_model)
-//
-//   BatchNorm: 배치 차원으로 정규화 (B 방향)
-//     - 각 특징 채널마다 배치 평균
-//     - CNN에서 유리
-//     - 시퀀스에 적용 시 패딩 문제
-//
-//   LayerNorm: 특징 차원으로 정규화 (d_model 방향)
-//     - 각 토큰의 모든 특징 평균
-//     - 배치 크기 무관
-//     - 가변 길이 시퀀스에 OK
-
-// Pre-LN vs Post-LN 차이:
-//
-// Post-LN (원 Transformer):
-//   x → SubLayer → Add(x) → LayerNorm
-//   y = LN(x + SubLayer(x))
-//
-// Pre-LN (GPT-2 이후):
-//   x → LayerNorm → SubLayer → Add(x)
-//   y = x + SubLayer(LN(x))
-//
-// 차이점:
-//   Post-LN:
-//     - 학습 불안정 (warmup 필수)
-//     - 최종 성능 약간 좋음
-//   Pre-LN:
-//     - 학습 안정적 (warmup 선택)
-//     - gradient flow 균일
-//     - 현대 LLM 표준
-
-// RMSNorm (LLaMA, T5):
-//   - LayerNorm의 평균 제거 단순화
-//   - RMS(x) = sqrt(mean(x²))
-//   - y_i = γ · x_i / RMS(x)
-//   - 약 7% 속도 향상
-//   - 성능 유사
-
-// 위치 변형:
-//   - Pre-LN (GPT-2, GPT-3)
-//   - Post-LN (original, BERT)
-//   - Sandwich-LN (PaLM, attention 전후)
-//   - DeepNorm (1000층 가능)
-//   - RMSNorm (LLaMA, Mistral)`}
-        </pre>
+        <M display>
+          {`\\underbrace{y_i = \\gamma \\cdot \\frac{x_i - \\mu}{\\sqrt{\\sigma^2 + \\varepsilon}} + \\beta}_{\\text{LayerNorm: 특징 차원(d)으로 정규화}}`}
+        </M>
+      </div>
+      <LayerNormDetailViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
           요약 1: LayerNorm은 <strong>특징 차원으로 정규화</strong> — BatchNorm과 대조.<br />
           요약 2: <strong>Pre-LN이 현대 표준</strong> — gradient flow 안정적.<br />

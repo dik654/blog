@@ -13,57 +13,35 @@ export default function Overview() {
 
         {/* ── BlockExecutor ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlockExecutor — 상태 전이의 중심</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/state/execution.go
-type BlockExecutor struct {
-    store Store             // state.db
-    proxyApp proxy.AppConnConsensus  // ABCI connection
+        <p className="text-xs text-muted-foreground mb-3">cometbft/state/execution.go</p>
 
-    // 이벤트 발행
-    eventBus types.BlockEventPublisher
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2"><code>BlockExecutor</code> 구조체</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">store Store</code> — state.db</li>
+              <li><code className="text-xs">proxyApp AppConnConsensus</code> — ABCI 연결</li>
+              <li><code className="text-xs">eventBus BlockEventPublisher</code> — 이벤트 발행</li>
+              <li><code className="text-xs">evpool EvidencePool</code> — 악의 행위 증거</li>
+              <li><code className="text-xs">mempool Mempool</code> — TX 풀</li>
+              <li><code className="text-xs">metrics *Metrics</code> — 모니터링</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2"><code>ApplyBlock</code> 5단계 흐름</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code className="text-xs">ValidateBlock(state, block)</code> — 블록 검증</li>
+              <li><code className="text-xs">proxyApp.FinalizeBlock(...)</code> — ABCI 실행</li>
+              <li><code className="text-xs">updateState(...)</code> — 상태 갱신</li>
+              <li><code className="text-xs">Commit(state, block, txResults)</code> — 디스크 저장</li>
+              <li><code className="text-xs">fireEvents(...)</code> — 이벤트 발행</li>
+            </ol>
+            <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-muted">
+              각 단계 실패 시 특정 error 반환 — single source of truth
+            </p>
+          </div>
+        </div>
 
-    // evidence
-    evpool EvidencePool
-
-    // Mempool
-    mempool mempool.Mempool
-
-    // 메트릭
-    metrics *Metrics
-
-    logger log.Logger
-}
-
-// ApplyBlock 핵심 메서드:
-func (e *BlockExecutor) ApplyBlock(
-    state State,
-    blockID types.BlockID,
-    block *types.Block,
-) (State, error) {
-    // 1. Block validation
-    if err := ValidateBlock(state, block); err != nil {
-        return state, ErrInvalidBlock(err)
-    }
-
-    // 2. ABCI FinalizeBlock 호출
-    abciResponse, err := e.proxyApp.FinalizeBlock(...)
-
-    // 3. State update
-    state, err = updateState(state, blockID, &block.Header, abciResponse, validatorUpdates)
-
-    // 4. Commit + state save
-    appHash, err := e.Commit(state, block, abciResponse.TxResults)
-
-    // 5. Events publish
-    fireEvents(e.logger, e.eventBus, block, abciResponse, validatorUpdates)
-
-    return state, nil
-}
-
-// 5단계 → 블록 1개의 전체 lifecycle
-// 각 단계가 실패하면 특정 error 반환
-// BlockExecutor는 모든 블록 처리의 "single source of truth"`}
-        </pre>
         <p className="leading-7">
           BlockExecutor가 <strong>block application의 central 컴포넌트</strong>.<br />
           ApplyBlock() 5단계로 validation → ABCI → state → commit → events.<br />

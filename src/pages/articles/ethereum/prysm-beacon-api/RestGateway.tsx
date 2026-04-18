@@ -18,55 +18,57 @@ export default function RestGateway({ onCodeRef }: Props) {
 
         {/* ── proto 매핑 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">proto 매핑 — google.api.http 어노테이션</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// proto 정의에서 REST endpoint 매핑
-service BeaconChain {
-    rpc GetBlockV2(BlockRequestV2) returns (BlockResponseV2) {
-        option (google.api.http) = {
-            get: "/eth/v2/beacon/blocks/{block_id}"
-        };
-    }
-
-    rpc SubmitBlock(SubmitBlockRequest) returns (SubmitBlockResponse) {
-        option (google.api.http) = {
-            post: "/eth/v1/beacon/blocks"
-            body: "*"
-        };
-    }
-
-    rpc GetStateV2(StateRequestV2) returns (StateResponseV2) {
-        option (google.api.http) = {
-            get: "/eth/v2/debug/beacon/states/{state_id}"
-        };
-    }
-}
-
-// grpc-gateway가 자동 생성:
-// 1. HTTP handler 함수
-// 2. URL path param 추출 (block_id, state_id)
-// 3. query string → gRPC request 변환
-// 4. POST body JSON → protobuf 변환
-// 5. gRPC response → HTTP JSON 변환
-
-// 생성된 Go 코드:
-func (h *httpHandler) getBlockV2(w http.ResponseWriter, r *http.Request) {
-    // 1. path param 추출
-    vars := mux.Vars(r)
-    blockID := vars["block_id"]
-
-    // 2. gRPC 호출
-    resp, err := h.grpcClient.GetBlockV2(r.Context(), &BlockRequestV2{
-        BlockId: blockID,
-    })
-
-    // 3. JSON 응답 직렬화
-    json.NewEncoder(w).Encode(resp)
-}
-
-// Accept 헤더에 따른 content negotiation:
-// Accept: application/json → JSON response
-// Accept: application/octet-stream → SSZ binary response`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">proto 매핑 예시</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-medium shrink-0 text-blue-500">GET</span>
+                <div><code>GetBlockV2</code> → <code>/eth/v2/beacon/blocks/{'{block_id}'}</code></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-medium shrink-0 text-green-500">POST</span>
+                <div><code>SubmitBlock</code> → <code>/eth/v1/beacon/blocks</code> (body: "*")</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-medium shrink-0 text-blue-500">GET</span>
+                <div><code>GetStateV2</code> → <code>/eth/v2/debug/beacon/states/{'{state_id}'}</code></div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">grpc-gateway 자동 생성 흐름</h4>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
+                <div>HTTP handler 함수 생성</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div>URL path param 추출 (<code>mux.Vars(r)</code> → <code>block_id</code>, <code>state_id</code>)</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
+                <div>query string → gRPC request 변환 / POST body JSON → protobuf 변환</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">4</span>
+                <div><code>grpcClient.GetBlockV2(ctx, req)</code> — gRPC 호출</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">5</span>
+                <div>gRPC response → HTTP JSON 변환 (<code>json.NewEncoder(w).Encode(resp)</code>)</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Content Negotiation</h4>
+            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+              <span><code>Accept: application/json</code> → JSON response</span>
+              <span><code>Accept: application/octet-stream</code> → SSZ binary response</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>grpc-gateway</code>가 <strong>proto 어노테이션 → HTTP handler 자동 생성</strong>.<br />
           path/query/body 파라미터 모두 자동 매핑.<br />

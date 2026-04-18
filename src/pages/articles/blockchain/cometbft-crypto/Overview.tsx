@@ -17,48 +17,70 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── crypto 패키지 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">crypto 패키지 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/crypto/ 패키지
-crypto/
-├── crypto.go          // PubKey, PrivKey interface
-├── ed25519/           // Ed25519 구현
-│   ├── ed25519.go     //   PubKey/PrivKey 구조체
-│   └── ed25519_test.go
-├── secp256k1/         // secp256k1 구현 (선택적)
-├── sr25519/           // sr25519 구현 (선택적)
-├── merkle/            // Merkle tree
-│   ├── tree.go        //   HashFromByteSlices
-│   ├── proof.go       //   Proof 생성/검증
-│   └── simple_map.go  //   key-value merkle
-├── tmhash/            // SHA256[:20] wrapper
-│   └── hash.go
-└── bn254/             // BN254 (선택적, ZK용)
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Ed25519 (서명)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">crypto/ed25519/</code></li>
+              <li>validator 서명, peer 인증</li>
+              <li>PubKey/PrivKey 구조체</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Merkle (증명)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">crypto/merkle/</code></li>
+              <li><code className="text-xs">HashFromByteSlices</code>, Proof 생성/검증</li>
+              <li>Block.Header, Block.Data, Evidence</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">TMHASH (해시)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">crypto/tmhash/</code></li>
+              <li>SHA256[:20] wrapper</li>
+              <li>address 생성, block hash</li>
+            </ul>
+          </div>
+        </div>
 
-// 사용처:
-// - Ed25519: validator 서명, peer 인증
-// - Merkle: Block.Header, Block.Data, Evidence
-// - TMHASH: address 생성, block hash
+        <div className="not-prose grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">secp256k1</div>
+            <p className="text-sm text-muted-foreground">선택적 구현</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">sr25519</div>
+            <p className="text-sm text-muted-foreground">선택적 구현</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">bn254</div>
+            <p className="text-sm text-muted-foreground">선택적, ZK용</p>
+          </div>
+        </div>
 
-// interface 기반 추상화:
-type PubKey interface {
-    Address() Address
-    Bytes() []byte
-    VerifySignature(msg []byte, sig []byte) bool
-    Equals(PubKey) bool
-    Type() string
-}
-
-type PrivKey interface {
-    Bytes() []byte
-    Sign(msg []byte) ([]byte, error)
-    PubKey() PubKey
-    Equals(PrivKey) bool
-    Type() string
-}
-
-// → Ed25519/secp256k1/sr25519 등 다양한 scheme 지원
-// validator마다 다른 키 타입 사용 가능 (Cosmos Hub는 Ed25519 기본)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">PubKey interface</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">Address() Address</code></li>
+              <li><code className="text-xs">Bytes() []byte</code></li>
+              <li><code className="text-xs">VerifySignature(msg, sig []byte) bool</code></li>
+              <li><code className="text-xs">Equals(PubKey) bool</code></li>
+              <li><code className="text-xs">Type() string</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">PrivKey interface</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">Bytes() []byte</code></li>
+              <li><code className="text-xs">Sign(msg []byte) ([]byte, error)</code></li>
+              <li><code className="text-xs">PubKey() PubKey</code></li>
+              <li><code className="text-xs">Equals(PrivKey) bool</code></li>
+              <li><code className="text-xs">Type() string</code></li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           CometBFT crypto는 <strong>3가지 주요 프리미티브</strong> + 추상화된 interface.<br />
           Ed25519(default), Merkle tree, TMHASH로 합의 구성.<br />

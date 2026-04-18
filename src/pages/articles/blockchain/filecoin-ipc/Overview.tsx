@@ -23,85 +23,77 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">IPC Architecture 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// IPC (InterPlanetary Consensus):
 
-// Concept:
-// - L2 subnet framework
-// - inherits Filecoin security
-// - custom consensus + VM
-// - hierarchical (subnet of subnet)
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Why IPC?</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filecoin 메인넷은 고정된 합의(EC + F3), 스토리지 전용, 30s 에폭, ~100 TPS 한계.
+            </p>
+            <p className="text-xs">
+              IPC 서브넷은 <code>custom consensus</code> 선택, 높은 처리량, 특화된 워크로드, 크로스 서브넷 메시지를 제공
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">계층 구조</h4>
+            <p className="text-xs">
+              Filecoin mainnet (L1) → Subnet A (L2) → Subnet B (L3) → 재귀적.<br />
+              수평 파티셔닝으로 확장, 메인넷 보안 상속, 합의 유연성, 앱 전용 체인 구성
+            </p>
+          </div>
+        </div>
 
-// Why IPC?
-// Filecoin mainnet:
-// - fixed consensus (EC + F3)
-// - storage-focused
-// - 30s epoch
-// - limited throughput (~100 TPS)
+        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Gateway Actor</h4>
+            <p className="text-xs text-muted-foreground">부모 체인에 배포</p>
+            <ul className="text-xs mt-1 space-y-0.5 list-disc list-inside">
+              <li>서브넷 레지스트리</li>
+              <li>검증자 관리</li>
+              <li>체크포인팅</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Subnet Actor</h4>
+            <p className="text-xs text-muted-foreground">서브넷별 상태 관리</p>
+            <ul className="text-xs mt-1 space-y-0.5 list-disc list-inside">
+              <li>체크포인트 수락</li>
+              <li>자금 관리</li>
+              <li>검증자 세트</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Subnet Nodes</h4>
+            <p className="text-xs text-muted-foreground">독립 검증자 운영</p>
+            <ul className="text-xs mt-1 space-y-0.5 list-disc list-inside">
+              <li>커스텀 합의 실행</li>
+              <li>로컬 트랜잭션 처리</li>
+              <li>블록 생산</li>
+            </ul>
+          </div>
+        </div>
 
-// IPC subnets:
-// - custom consensus choice
-// - higher throughput
-// - specialized use cases
-// - cross-subnet messaging
-
-// Hierarchy:
-// Filecoin mainnet (L1)
-//   ↓
-// Subnet A (L2)
-//   ↓
-// Subnet B (L3)
-//   ↓
-// ... recursive
-
-// Benefits:
-// - scalability via horizontal partitioning
-// - specialized computation environments
-// - preserve mainnet security
-// - flexibility in consensus
-// - application-specific chains
-
-// Components:
-// 1. Gateway Actor (on parent)
-//    - subnet registry
-//    - validator management
-//    - checkpointing
-//
-// 2. Subnet Actor
-//    - per-subnet state
-//    - checkpoint acceptance
-//    - fund management
-//
-// 3. Subnet nodes
-//    - independent validators
-//    - custom consensus
-//    - local execution
-
-// Use cases:
-// - DeFi subnet (fast finality)
-// - AI inference (high throughput)
-// - gaming (low latency)
-// - compliance (permissioned)
-// - enterprise (private data)
-
-// Comparison:
-// Ethereum: single chain + rollups
-// Polkadot: parachains
-// Cosmos: sovereign chains + IBC
-// Filecoin: IPC subnets (recursive)
-
-// Inspired by:
-// - Avalanche subnets
-// - Cosmos zones
-// - Polkadot parachains
-// - Ethereum L2s
-
-// Development:
-// - 2022: IPC spec
-// - 2023: testnet
-// - 2024: mainnet beta
-// - 2025: production`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Use Cases</h4>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li><strong>DeFi</strong> — fast finality</li>
+              <li><strong>AI 추론</strong> — high throughput</li>
+              <li><strong>게임</strong> — low latency</li>
+              <li><strong>컴플라이언스</strong> — permissioned</li>
+              <li><strong>엔터프라이즈</strong> — private data</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">비교 &amp; 영향</h4>
+            <p className="text-xs">
+              Ethereum: single chain + rollups / Polkadot: parachains / Cosmos: sovereign chains + IBC / <strong>Filecoin: IPC subnets (recursive)</strong>
+            </p>
+            <p className="text-xs mt-2 text-muted-foreground">
+              타임라인: 2022 spec → 2023 testnet → 2024 mainnet beta → 2025 production
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           IPC: <strong>hierarchical L2 subnets + custom consensus</strong>.<br />
           Filecoin mainnet → subnets → sub-subnets (recursive).<br />

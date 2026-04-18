@@ -20,58 +20,48 @@ export default function RegularSync({ onCodeRef }: Props) {
 
         {/* ── Regular Sync 처리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">실시간 블록 수신 파이프라인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Regular Sync의 블록 처리 흐름 (gossip validation + full validation)
-
-func (s *Service) beaconBlockSubscriber(
-    ctx context.Context,
-    msg pubsub.Message,
-) error {
-    // 1. Gossip-level validation (이미 완료)
-    //    validateBeaconBlockPubSub()에서 기본 검증
-
-    // 2. 블록 디코딩
-    block, err := decodeBlock(msg.Data)
-    if err != nil { return err }
-
-    // 3. parent 존재 확인
-    parentRoot := block.Block.ParentRoot
-    if !s.hasBlock(parentRoot) {
-        // parent 없음 → block queue에 저장
-        // 나중에 parent 도착 시 처리
-        return s.pendingQueue.add(block)
-    }
-
-    // 4. 전체 state transition 실행
-    if err := s.chain.ProcessBlock(ctx, block); err != nil {
-        log.Error("ProcessBlock failed", "error", err)
-        return err
-    }
-
-    // 5. Fork choice 업데이트
-    s.forkChoice.OnBlock(ctx, block, blockRoot, state)
-
-    // 6. Head 재계산
-    newHead, err := s.forkChoice.GetHead()
-    if newHead != s.chain.Head() {
-        s.chain.SetHead(newHead)
-        // Engine API에 forkchoiceUpdated 전송
-        s.notifyEngineForkChoice()
-    }
-
-    // 7. Pending queue 재확인 (이 block이 parent였던 children 처리)
-    s.processPendingChildren(blockRoot)
-
-    return nil
-}
-
-// 성능 (메인넷):
-// - Gossip validation: ~10ms
-// - Block decode: ~5ms
-// - State transition: ~50-100ms
-// - Fork choice: ~5ms
-// - 총: ~70-120ms per block`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3"><code>beaconBlockSubscriber()</code> — 블록 처리 7단계</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80">Gossip-level validation 이미 완료 (<code>validateBeaconBlockPubSub</code>)</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80">블록 디코딩 — <code>decodeBlock(msg.Data)</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80">parent 존재 확인 — 없으면 <code>pendingQueue.add(block)</code>으로 대기</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
+                <span className="font-mono text-xs text-orange-500 shrink-0">4</span>
+                <div className="text-foreground/80">전체 state transition — <code>chain.ProcessBlock(ctx, block)</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-red-500/50 pl-3">
+                <span className="font-mono text-xs text-red-400 shrink-0">5</span>
+                <div className="text-foreground/80">Fork choice 업데이트 — <code>forkChoice.OnBlock(ctx, block, blockRoot, state)</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-cyan-500/50 pl-3">
+                <span className="font-mono text-xs text-cyan-500 shrink-0">6</span>
+                <div className="text-foreground/80">Head 재계산 — <code>forkChoice.GetHead()</code> → 변경 시 <code>notifyEngineForkChoice()</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-yellow-500/50 pl-3">
+                <span className="font-mono text-xs text-yellow-500 shrink-0">7</span>
+                <div className="text-foreground/80">Pending queue 재확인 — 이 block이 parent였던 children 처리</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Gossip: ~10ms</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Decode: ~5ms</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">State: ~50-100ms</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Fork choice: ~5ms</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">총: ~70-120ms</div>
+          </div>
+        </div>
         <p className="leading-7">
           Regular Sync는 <strong>gossip 수신 + state transition 파이프라인</strong>.<br />
           parent 검증 → 전체 실행 → fork choice → engine API 순서.<br />
@@ -88,43 +78,31 @@ func (s *Service) beaconBlockSubscriber(
 
         {/* ── BlocksByRoot fallback ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlocksByRoot — gossip fallback</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Gossip 실패 시 fallback 메커니즘
-
-// /eth2/beacon_chain/req/beacon_blocks_by_root/2/ssz_snappy
-// RPC: block root 목록으로 직접 요청
-
-struct BeaconBlocksByRootRequest = List[Root, MAX_REQUEST_BLOCKS]  // max 1024
-
-// 사용 시나리오:
-// 1. Attestation 수신했는데 head block root 모름
-//    → BlocksByRoot로 peer에게 요청
-// 2. GossipSub topic에 가입 중 아닌데 특정 block 필요
-// 3. Pending queue의 누락된 parent 요청
-// 4. Reorg 복구 (side chain 블록 수집)
-
-// Prysm 구현:
-func (s *Service) requestMissingBlock(root Root) (*Block, error) {
-    // 1. 피어 중 이 블록 가진 것 찾기
-    //    (보통 모든 connected peer에게 시도)
-    for _, peer := range s.p2p.Peers() {
-        blocks, err := s.requestBlocksByRoot(peer, []Root{root})
-        if err == nil && len(blocks) > 0 {
-            return blocks[0], nil
-        }
-    }
-    return nil, ErrBlockNotFound
-}
-
-// Rate limiting:
-// - peer당 1분당 최대 ~100개 root 요청
-// - 과다 요청 시 peer reputation 감점
-
-// 실패 시:
-// - 모든 peer에서 못 찾으면 "orphaned" block
-// - pending queue에서 오래 기다리면 (1 epoch) 삭제
-// - fork choice에서도 제외`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-1"><code>BeaconBlocksByRootRequest</code> — Gossip fallback RPC</p>
+            <p className="text-xs text-foreground/60 mb-2 font-mono">/eth2/beacon_chain/req/beacon_blocks_by_root/2/ssz_snappy</p>
+            <p className="text-sm text-foreground/80"><code>List[Root, MAX_REQUEST_BLOCKS]</code> — block root 목록으로 직접 요청 (max 1024)</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">사용 시나리오</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Attestation 수신 시 head block root 모름 → 요청</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">GossipSub topic 미가입인데 특정 block 필요</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Pending queue의 누락된 parent 요청</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70">Reorg 복구 — side chain 블록 수집</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2"><code>requestMissingBlock(root)</code> — Prysm 구현</p>
+            <p className="text-sm text-foreground/80 mb-2">모든 connected peer에게 순차 시도. <code>requestBlocksByRoot(peer, []Root{'{root}'})</code>로 요청.</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-center">
+              <div className="rounded border border-border/40 p-2 text-foreground/60">Rate limit: ~100 root/min/peer</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/60">초과 시 reputation 감점</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/60">1 epoch 미발견 → 삭제</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>BlocksByRoot</strong>가 gossip의 안전망.<br />
           누락된 parent, attestation의 head 등을 직접 요청.<br />

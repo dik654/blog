@@ -1,3 +1,7 @@
+import RecordKeepingViz from './viz/RecordKeepingViz';
+import RetentionRequirementsViz from './viz/RetentionRequirementsViz';
+import TrainingCycleViz from './viz/TrainingCycleViz';
+
 export default function RecordKeeping() {
   return (
     <section id="record-keeping" className="mb-16 scroll-mt-20">
@@ -10,6 +14,8 @@ export default function RecordKeeping() {
           교육이 부실하면 체계가 형식에 그친다.<br />
           규제 당국의 점검에서 "기록 보관 미흡"과 "교육 미실시"는 가장 빈번하게 지적되는 사항.
         </p>
+
+        <RecordKeepingViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">보관 대상</h3>
         <p>
@@ -146,6 +152,8 @@ export default function RecordKeeping() {
           SAR 내용이 유출되면 Tipping-off에 해당하므로, AML 담당자와 준법감시인만 접근 가능하도록 별도 저장소에 보관한다.
         </p>
 
+        <RetentionRequirementsViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">정기 교육</h3>
         <p>
           AML/CFT 교육은 "형식적 이행"이 아니라 "실질적 역량 강화"를 목표로 해야 한다.<br />
@@ -208,6 +216,8 @@ export default function RecordKeeping() {
           DeFi를 활용한 세탁, 크로스체인 브릿지 경유, AI 기반 계정 자동 생성, 스테이블코인 악용 등.<br />
           세탁 수법은 지속적으로 진화하므로 교육 내용도 분기별로 갱신해야 한다.
         </p>
+
+        <TrainingCycleViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">교육 기록 보관</h3>
         <p>

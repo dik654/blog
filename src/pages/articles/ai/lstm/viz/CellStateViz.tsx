@@ -23,13 +23,13 @@ export default function CellStateViz() {
           return Math.min(r, 1);
         });
         return (
-          <svg viewBox="0 0 480 165" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <svg viewBox="0 0 480 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
             {/* Conveyor belt */}
             <text x={10} y={BELT_Y - 8} fontSize={11} fill={CELL_C} fontWeight={600}>Cell State</text>
             <line x1={20} y1={BELT_Y + BELT_H + 4} x2={440} y2={BELT_Y + BELT_H + 4}
               stroke={CELL_C} strokeWidth={2} strokeOpacity={0.3} />
-            <text x={8} y={BELT_Y + 16} fontSize={11} fill="#999">C_{'{t-1}'}</text>
-            <text x={444} y={BELT_Y + 16} fontSize={11} fill="#999">C_t</text>
+            <text x={8} y={BELT_Y + 16} fontSize={11} fill="#999">Cₜ₋₁</text>
+            <text x={444} y={BELT_Y + 16} fontSize={11} fill="#999">Cₜ</text>
             {/* Segments */}
             {vals.map((v, i) => {
               const x = 30 + i * 50;
@@ -76,39 +76,37 @@ export default function CellStateViz() {
             {/* Gate labels */}
             {step === 1 && (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-                <rect x={90} y={100} width={280} height={36} rx={5}
+                <rect x={90} y={4} width={280} height={30} rx={5}
                   fill={FORGET_C + '08'} stroke={FORGET_C} strokeWidth={1} />
-                <text x={230} y={114} textAnchor="middle" fontSize={10} fill={FORGET_C} fontWeight={600}>
-                  f_t * C_{'{t-1}'} — 빨간색 = 삭제 대상
+                <text x={230} y={16} textAnchor="middle" fontSize={9} fill={FORGET_C} fontWeight={600}>
+                  fₜ * Cₜ₋₁ — 빨간색 = 삭제 대상
                 </text>
-                <text x={230} y={130} textAnchor="middle" fontSize={9} fill={FORGET_C}>
+                <text x={230} y={28} textAnchor="middle" fontSize={8} fill={FORGET_C}>
                   f=0.2 → 80% 삭제 | f=0.95 → 거의 보존
                 </text>
               </motion.g>
             )}
             {step === 2 && (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-                <rect x={90} y={100} width={280} height={36} rx={5}
+                <rect x={90} y={4} width={280} height={30} rx={5}
                   fill={INPUT_C + '08'} stroke={INPUT_C} strokeWidth={1} />
-                <text x={230} y={114} textAnchor="middle" fontSize={10} fill={INPUT_C} fontWeight={600}>
-                  + i_t * C̃_t — 초록색 = 새 정보 추가
+                <text x={230} y={16} textAnchor="middle" fontSize={9} fill={INPUT_C} fontWeight={600}>
+                  + iₜ * C̃ₜ — 초록색 = 새 정보 추가
                 </text>
-                <text x={230} y={130} textAnchor="middle" fontSize={9} fill={INPUT_C}>
+                <text x={230} y={28} textAnchor="middle" fontSize={8} fill={INPUT_C}>
                   0.6 추가된 슬롯: 새 주어 "나는" 저장
                 </text>
               </motion.g>
             )}
             {step === 3 && (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-                <line x1={240} y1={BELT_Y + BELT_H + 8} x2={240} y2={120}
-                  stroke={OUTPUT_C} strokeWidth={1.5} />
-                <rect x={120} y={122} width={240} height={36} rx={5}
+                <rect x={90} y={4} width={280} height={30} rx={5}
                   fill={OUTPUT_C + '08'} stroke={OUTPUT_C} strokeWidth={1} />
-                <text x={240} y={136} textAnchor="middle" fontSize={10} fill={OUTPUT_C} fontWeight={600}>
-                  h_t = o_t * tanh(C_t)
+                <text x={230} y={16} textAnchor="middle" fontSize={9} fill={OUTPUT_C} fontWeight={600}>
+                  hₜ = oₜ * tanh(Cₜ)
                 </text>
-                <text x={240} y={152} textAnchor="middle" fontSize={9} fill={OUTPUT_C}>
-                  C_t = 장기 기억(보존) | h_t = 단기 출력(선별)
+                <text x={230} y={28} textAnchor="middle" fontSize={8} fill={OUTPUT_C}>
+                  Cₜ = 장기 기억(보존) | hₜ = 단기 출력(선별)
                 </text>
               </motion.g>
             )}

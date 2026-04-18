@@ -1,9 +1,11 @@
 import Math from '@/components/ui/math';
+import ComparisonViz from './viz/ComparisonViz';
 
 export default function Comparison() {
   return (
     <section id="comparison" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">PLONK vs HyperPLONK</h2>
+      <ComparisonViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-6 mb-4">비교 테이블</h3>

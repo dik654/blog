@@ -1,8 +1,13 @@
+import RecoveryTestingViz from './viz/RecoveryTestingViz';
+import RecoveryProcedureInline from './viz/RecoveryProcedureInline';
+import RetentionDrillInline from './viz/RetentionDrillInline';
+
 export default function RecoveryTesting() {
   return (
     <section id="recovery-testing" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">복구 절차와 테스트</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <RecoveryTestingViz />
         <h3 className="text-xl font-semibold mt-8 mb-4">DB 복구 절차</h3>
         <p className="leading-7">
           DB 복구는 가장 빈번하게 수행되는 복구 유형이다.
@@ -45,6 +50,8 @@ export default function RecoveryTesting() {
           서비스(nginx, mysql, application daemon 등)를 하나씩 시작하면서 각각의 정상 동작을 확인한다.
         </p>
 
+        <RecoveryProcedureInline />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">복구 테스트</h3>
         <p className="leading-7">
           백업이 실제로 복원 가능한지는 테스트하기 전까지 확신할 수 없다.
@@ -60,6 +67,8 @@ export default function RecoveryTesting() {
           <br />
           테스트 환경은 프로덕션과 분리된 별도의 서버나 VM(Virtual Machine)에서 수행하여 실 서비스에 영향을 주지 않도록 한다.
         </p>
+
+        <RetentionDrillInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">보존 기간</h3>
         <p className="leading-7">

@@ -15,65 +15,52 @@ export default function Overview() {
 
         {/* ── Bullshark의 혁신 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Bullshark의 이론적 기여</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bullshark 3가지 기여:
-
-// 1. Optimal amortized latency:
-//    - partial sync: 2 rounds per commit
-//    - Pass-Shi lower bound 달성
-//    - DAG 위에서 이론적 최적
-//
-// 2. Zero-extra-communication consensus:
-//    - DAG 자체가 voting
-//    - 추가 consensus 메시지 없음
-//    - Narwhal output 직접 사용
-//
-// 3. Sync/Async hybrid:
-//    - fast path: partial sync (2 rounds)
-//    - fallback: async (4 rounds)
-//    - 자동 전환
-//    - both safe
-
-// DAG + Consensus 분리:
-// - Narwhal: data dissemination (DAG)
-// - Bullshark: order determination (consensus)
-// - 각 layer 독립 발전
-// - modular architecture
-
-// 이전 프로토콜 대비:
-
-// PBFT/HotStuff (sequential):
-// - 1 block per round
-// - leader bottleneck
-// - 10-30K TPS
-
-// DAG-Rider (2021, asynchronous):
-// - DAG-based
-// - 4-round latency
-// - async-safe
-// - but higher latency
-
-// Narwhal+Tusk (2022):
-// - Narwhal mempool + Tusk ordering
-// - 4-round async
-// - Sui initial use
-
-// Narwhal+Bullshark (2022):
-// - same mempool
-// - Bullshark ordering
-// - 2-round partial sync
-// - 4-round async fallback
-// - Sui production
-
-// Mysticeti (2024):
-// - uncertified DAG
-// - 3-round commit
-// - 390ms e2e
-
-// 계보:
-// DAG-Rider → Tusk → Bullshark → Mysticeti
-// 각각 latency 또는 throughput 개선`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Bullshark 3가지 기여</p>
+            <div className="grid gap-2 sm:grid-cols-3 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Optimal amortized latency</p>
+                <p className="text-muted-foreground">partial sync: 2 rounds per commit. Pass-Shi lower bound 달성 — DAG 위 이론적 최적</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Zero-extra-communication</p>
+                <p className="text-muted-foreground">DAG 자체가 voting. 추가 consensus 메시지 없이 Narwhal output 직접 사용</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Sync/Async hybrid</p>
+                <p className="text-muted-foreground">fast path: partial sync (2 rounds), fallback: async (4 rounds). 자동 전환, both safe</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">DAG + Consensus 분리</p>
+            <p className="text-sm text-muted-foreground">
+              <code>Narwhal</code> = data dissemination (DAG), <code>Bullshark</code> = order determination (consensus). 각 layer 독립 발전 가능한 modular architecture
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">프로토콜 계보</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">프로토콜</th>
+                    <th className="border border-border px-3 py-1.5 text-left">특징</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">PBFT/HotStuff</td><td className="border border-border px-3 py-1.5">sequential, 1 block/round, leader bottleneck, 10-30K TPS</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">DAG-Rider (2021)</td><td className="border border-border px-3 py-1.5">DAG-based, 4-round latency, async-safe</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Narwhal+Tusk (2022)</td><td className="border border-border px-3 py-1.5">Narwhal mempool + Tusk ordering, 4-round async</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Narwhal+Bullshark (2022)</td><td className="border border-border px-3 py-1.5">2-round partial sync + 4-round async fallback, Sui production</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Mysticeti (2024)</td><td className="border border-border px-3 py-1.5">uncertified DAG, 3-round commit, 390ms e2e</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">계보: DAG-Rider → Tusk → Bullshark → Mysticeti — 각각 latency 또는 throughput 개선</p>
+          </div>
+        </div>
         <p className="leading-7">
           Bullshark: <strong>2-round partial sync + 4-round async fallback</strong>.<br />
           DAG 자체가 voting — zero extra communication.<br />
@@ -82,56 +69,52 @@ export default function Overview() {
 
         {/* ── 핵심 개념 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Bullshark 핵심 개념</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 핵심 개념:
-
-// Wave (웨이브):
-// - 2 rounds per wave (partial sync)
-// - 4 rounds per wave (async)
-// - wave w = rounds [2w, 2w+1] or [4w, 4w+3]
-
-// Anchor:
-// - wave의 특정 round의 designated leader vertex
-// - leader_w = schedule[w % n] (round-robin)
-// - anchor commit → entire wave committed
-
-// Vote:
-// - next wave의 vertex가 anchor 참조 (DAG edge)
-// - f+1+ votes → anchor committed
-// - 별도 vote message 불필요 (DAG 자체가 vote)
-
-// Commit Rule:
-// commit anchor(w) iff:
-//   exists a_(w+1) such that
-//     f+1 votes from round(2w+1) point to anchor(w)
-//   OR
-//     anchor(w+1) has 2f+1 causal ancestors back to anchor(w)
-
-// Skipped Wave:
-// - anchor가 없거나 insufficient votes
-// - skip, but include in later commit
-// - next committed anchor가 skip wave도 process
-
-// Total Order:
-// 1. committed anchors 순서 (wave 순)
-// 2. 각 anchor의 causal history 추출
-// 3. (round, author) 순 sort
-// 4. deterministic linear order
-
-// 예시 (n=4, fast path):
-// wave 0: rounds 0, 1
-//   leader = V0
-//   anchor = V0's round 0 vertex
-// wave 1: rounds 2, 3
-//   leader = V1
-//   anchor = V1's round 2 vertex
-
-// wave 1 의 round 2에서:
-// - V0, V1, V2가 anchor(0) 참조
-// - 3 votes >= f+1+1=2
-// - anchor(0) committed
-// - anchor(0)의 causal history all committed`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">핵심 개념 4가지</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Wave (웨이브)</p>
+                <p className="text-muted-foreground">partial sync: 2 rounds per wave, async: 4 rounds per wave. <code>wave w = rounds [2w, 2w+1]</code> 또는 <code>[4w, 4w+3]</code></p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Anchor</p>
+                <p className="text-muted-foreground">wave의 특정 round의 designated leader vertex. <code>leader_w = schedule[w % n]</code> (round-robin). anchor commit → entire wave committed</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Vote</p>
+                <p className="text-muted-foreground">next wave의 vertex가 anchor 참조 (DAG edge). <code>f+1+</code> votes → anchor committed. 별도 vote message 불필요</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Skipped Wave</p>
+                <p className="text-muted-foreground">anchor가 없거나 insufficient votes → skip. next committed anchor가 skip wave도 포함 처리</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Commit Rule</p>
+            <p className="text-sm">
+              <code>commit anchor(w)</code> iff: <code>f+1</code> votes from <code>round(2w+1)</code> point to <code>anchor(w)</code>, 또는 <code>anchor(w+1)</code>이 <code>2f+1</code> causal ancestors back to <code>anchor(w)</code> 보유
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Total Order 결정</p>
+            <ol className="text-sm list-decimal list-inside space-y-0.5">
+              <li>committed anchors 순서 (wave 순)</li>
+              <li>각 anchor의 causal history 추출</li>
+              <li><code>(round, author)</code> 순 sort</li>
+              <li>deterministic linear order</li>
+            </ol>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">예시 (<code>n=4</code>, fast path)</p>
+            <p className="text-sm text-muted-foreground">
+              wave 0: rounds 0,1 — leader=V0, anchor=V0's round 0 vertex.<br />
+              wave 1: rounds 2,3 — leader=V1, anchor=V1's round 2 vertex.<br />
+              wave 1의 round 2에서 V0, V1, V2가 <code>anchor(0)</code> 참조 → 3 votes &ge; <code>f+1</code>=2 → <code>anchor(0)</code> committed
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           핵심: <strong>Wave + Anchor + Vote (DAG edge) + Causal History</strong>.<br />
           DAG edge = implicit vote → zero extra communication.<br />

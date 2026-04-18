@@ -1,26 +1,3 @@
-import CodePanel from '@/components/ui/code-panel';
-
-const KARPENTER_YAML = `apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: gpu-pool
-spec:
-  template:
-    spec:
-      requirements:
-        - key: karpenter.k8s.aws/instance-family
-          operator: In
-          values: [p4d, p5]        # A100 / H100
-        - key: nvidia.com/gpu
-          operator: Exists
-      taints:
-        - key: nvidia.com/gpu
-          effect: NoSchedule
-  limits:
-    nvidia.com/gpu: "32"           # Fleet 전체 GPU 상한
-  disruption:
-    consolidationPolicy: WhenEmpty # 빈 GPU 노드 즉시 회수`;
-
 export default function GPUAutoscaling() {
   return (
     <>
@@ -30,13 +7,33 @@ export default function GPUAutoscaling() {
         Cluster Autoscaler 대비 장점: 노드 그룹 없이 인스턴스 타입 자동 선택,
         30초 내 프로비저닝 시작
       </p>
-      <CodePanel title="karpenter NodePool" code={KARPENTER_YAML}
-        annotations={[
-          { lines: [9, 12], color: 'sky', note: 'GPU 인스턴스 패밀리 지정 — p4d(A100) / p5(H100)' },
-          { lines: [18, 19], color: 'amber', note: 'Fleet GPU 총량 상한 — 비용 폭주 방지' },
-          { lines: [20, 21], color: 'rose', note: 'WhenEmpty — 빈 GPU 노드 즉시 회수 (비용 절감)' },
-        ]}
-      />
+      <div className="grid gap-4 sm:grid-cols-3 mt-4">
+        <div className="rounded-lg border-l-4 border-sky-500 bg-sky-500/5 p-4">
+          <p className="font-semibold text-sky-600 dark:text-sky-400 mb-1">GPU 인스턴스 타입</p>
+          <p className="text-sm text-muted-foreground">
+            <code>instance-family: [p4d, p5]</code><br />
+            p4d — A100 (80GB HBM2e)<br />
+            p5 — H100 (80GB HBM3)<br />
+            <code>nvidia.com/gpu: Exists</code> — GPU 보유 노드만 대상.
+          </p>
+        </div>
+        <div className="rounded-lg border-l-4 border-amber-500 bg-amber-500/5 p-4">
+          <p className="font-semibold text-amber-600 dark:text-amber-400 mb-1">스케일링 상한 정책</p>
+          <p className="text-sm text-muted-foreground">
+            <code>limits.nvidia.com/gpu: "32"</code><br />
+            Fleet 전체 GPU 총량 제한 — 비용 폭주 방지.<br />
+            Taint <code>NoSchedule</code>로 일반 워크로드 격리.
+          </p>
+        </div>
+        <div className="rounded-lg border-l-4 border-rose-500 bg-rose-500/5 p-4">
+          <p className="font-semibold text-rose-600 dark:text-rose-400 mb-1">Consolidation 전략</p>
+          <p className="text-sm text-muted-foreground">
+            <code>consolidationPolicy: WhenEmpty</code><br />
+            빈 GPU 노드를 즉시 회수 — 유휴 비용 제거.<br />
+            GPU 노드는 시간당 $10~$30이므로 빠른 회수가 핵심.
+          </p>
+        </div>
+      </div>
       <p className="mt-2 text-xs text-foreground/70">
         GPU 노드는 시간당 $10~$30 → consolidationPolicy로
         유휴 노드를 빠르게 회수하는 것이 비용 최적화의 핵심

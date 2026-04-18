@@ -11,75 +11,78 @@ export default function PdpIntegration({ onCodeRef: _onCodeRef }: { onCodeRef: (
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">PDP Integration Flow</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PDP Integration (Onchain Cloud):
-
-// Client Journey:
-// 1. Upload data to SP
-// 2. SP registers Merkle root on-chain
-// 3. Client funds escrow contract
-// 4. Ongoing: PDP proofs every epoch
-// 5. Auto-payment based on proofs
-// 6. Client retrieves data anytime
-
-// SP Journey:
-// 1. Receive data from client
-// 2. Calculate Merkle tree
-// 3. Register with PDP contract
-// 4. Stake collateral
-// 5. Generate periodic PDP proofs
-// 6. Submit proofs on-chain
-// 7. Earn FIL per epoch
-
-// Verification Flow:
-// 1. DRAND beacon → random challenge
-// 2. SP reads 160 bytes at offset
-// 3. Generates Merkle proof
-// 4. Submits to on-chain actor
-// 5. Contract verifies (SHA256 x ~20)
-// 6. If valid: release epoch payment
-// 7. If invalid: slash collateral
-
-// Economic Model:
-// SP rewards per epoch:
-//   reward = price × data_size × duration
-//   condition: valid PDP proof
-//
-// SP penalties:
-//   penalty = N × reward
-//   condition: missed/invalid proof
-//
-// Client refunds:
-//   if SP fails:
-//     refund = unused_escrow + penalty_transfer
-//     contract returns funds
-
-// Benefits:
-// - trustless verification
-// - automated payment
-// - no intermediary
-// - transparent pricing
-// - SLA in code
-
-// vs. centralized (S3):
-// - trust Amazon to keep data
-// - no cryptographic proof
-// - centralized billing
-// - terms subject to change
-// - censorship possible
-
-// vs. decentralized + no proofs:
-// - Saturn (2022-2023)
-// - can't verify SP behavior
-// - no economic accountability
-// - abuse potential
-
-// PDP = sweet spot:
-// - decentralized + verifiable
-// - lightweight proofs
-// - production-ready
-// - enterprise-grade`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Client Journey</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>SP에 데이터 업로드</li>
+              <li>SP가 Merkle root 온체인 등록</li>
+              <li>Client가 escrow 컨트랙트에 FIL 예치</li>
+              <li>매 epoch PDP proof 진행</li>
+              <li>proof 기반 자동 결제</li>
+              <li>Client는 언제든 데이터 조회</li>
+            </ol>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">SP Journey</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>Client로부터 데이터 수신</li>
+              <li>Merkle tree 계산</li>
+              <li>PDP contract에 등록 + 담보 예치</li>
+              <li>주기적 PDP proof 생성</li>
+              <li>온체인 제출</li>
+              <li>epoch마다 FIL 수령</li>
+            </ol>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Verification Flow</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>DRAND beacon → random challenge</li>
+              <li>SP가 offset에서 160B 읽기</li>
+              <li>Merkle proof 생성 후 온체인 제출</li>
+              <li>Contract가 SHA256 x ~20 검증</li>
+              <li>유효 → epoch payment 해제</li>
+              <li>무효 → collateral slash</li>
+            </ol>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Economic Model</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>SP reward: <code className="text-xs bg-background px-1 rounded">price x data_size x duration</code> (valid proof 조건)</li>
+              <li>SP penalty: <code className="text-xs bg-background px-1 rounded">N x reward</code> (missed/invalid proof)</li>
+              <li>Client refund: <code className="text-xs bg-background px-1 rounded">unused_escrow + penalty_transfer</code></li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">PDP 장점</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>trustless verification</li>
+              <li>automated payment</li>
+              <li>no intermediary</li>
+              <li>SLA in code</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">vs Centralized (S3)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Amazon 신뢰 필요</li>
+              <li>암호학적 증명 없음</li>
+              <li>약관 변경 가능, 검열 가능</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">vs No Proofs (Saturn)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>SP 행동 검증 불가</li>
+              <li>경제적 책임 없음</li>
+              <li>abuse potential</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           PDP Integration: <strong>upload → proofs → auto-payment → retrieval</strong>.<br />
           trustless verification + automated SLA enforcement.<br />

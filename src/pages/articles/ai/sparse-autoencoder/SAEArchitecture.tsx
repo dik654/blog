@@ -1,5 +1,7 @@
 import { CitationBlock } from '@/components/ui/citation';
 import SAEStructureViz from './viz/SAEStructureViz';
+import SAEMathDetailViz from './viz/SAEMathDetailViz';
+import M from '@/components/ui/math';
 
 export default function SAEArchitecture() {
   return (
@@ -14,18 +16,26 @@ export default function SAEArchitecture() {
           핵심 아이디어: 넓은 공간으로 확장한 뒤, 희소성 제약으로 소수만 활성화
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">인코더</h3>
-        <p>
-          뉴런 출력(d=2304) × 가중치 행렬(2304×16K) → 특징 벡터(d=16K)<br />
-          ReLU 활성화 함수 적용 → 대부분의 값이 0이 됨(희소성)<br />
-          활성화된 소수의 특징만이 의미 있는 개념에 대응
-        </p>
+        <h4>SAE 인코더 · 디코더</h4>
+        <M display>{'\\underbrace{f(x)}_{\\text{특징 벡터}} = \\text{ReLU}\\big(\\underbrace{W_{\\text{enc}}}_{d \\times m} \\cdot x + b_{\\text{enc}}\\big), \\quad \\underbrace{\\hat{x}}_{\\text{복원}} = \\underbrace{W_{\\text{dec}}}_{m \\times d} \\cdot f(x) + b_{\\text{dec}}'}</M>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">디코더</h3>
-        <p>
-          특징 벡터(16K) × 복원 행렬(16K×2304) → 원래 뉴런 출력 복원<br />
-          훈련 목표: <strong>복원 손실</strong>(reconstruction loss) 최소화 + <strong>L1 희소성 페널티</strong>
-        </p>
+        <h4>학습 손실</h4>
+        <M display>{'\\mathcal{L} = \\underbrace{\\|x - \\hat{x}\\|_2^2}_{\\text{복원 손실}} + \\underbrace{\\lambda \\|f(x)\\|_1}_{\\text{L1 희소성 페널티}}'}</M>
+
+        <div className="not-prose grid grid-cols-2 gap-2 mt-3 mb-4 text-sm">
+          {[
+            { sym: 'W_enc (d×m)', name: '인코더', desc: '뉴런 출력(d=2304)을 넓은 특징 공간(m=16K)으로 확장. ReLU로 대부분 0이 됨' },
+            { sym: 'W_dec (m×d)', name: '디코더', desc: '활성화된 특징을 원래 뉴런 공간으로 복원. 복원 품질이 학습 신호' },
+            { sym: '‖x − x̂‖²', name: '복원 손실', desc: '원본과 복원의 MSE. 이것만 최소화하면 모든 특징이 활성화됨' },
+            { sym: 'λ‖f(x)‖₁', name: 'L1 페널티', desc: 'λ가 커질수록 더 적은 특징만 활성화 → 하나의 특징 = 하나의 개념' },
+          ].map((p) => (
+            <div key={p.sym} className="rounded-lg border border-border bg-card px-3 py-2">
+              <span className="font-mono font-bold text-foreground text-xs">{p.sym}</span>
+              <span className="text-muted-foreground ml-1.5 text-xs font-semibold">{p.name}</span>
+              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
+            </div>
+          ))}
+        </div>
 
         <CitationBlock
           source="Bricken et al., Anthropic 2023 — Towards Monosemanticity §2"
@@ -52,108 +62,7 @@ export default function SAEArchitecture() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">SAE 수식과 학습</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sparse Autoencoder 수학적 정의
-//
-// 입력: x ∈ R^d (residual stream activation)
-//   예: Gemma 2B, d = 2304
-//
-// Encoder:
-//   f = ReLU(W_enc · x + b_enc)
-//   f ∈ R^D, D >> d (예: D = 16,384)
-//
-// Decoder:
-//   x̂ = W_dec · f + b_dec
-//   x̂ ∈ R^d (복원)
-//
-// Loss Function:
-//   L = ||x - x̂||² + λ · ||f||_1
-//
-//   첫 항: reconstruction loss
-//   둘째 항: L1 sparsity penalty
-//   λ: sparsity coefficient (0.1~10)
-
-// 핵심 제약:
-//
-// 1. Expansion: D > d (보통 8~64배)
-//    - 더 많은 "공간" 마련
-//    - 개념 분리 가능
-//
-// 2. Sparsity: ~L0 = 50~200 (16K 중)
-//    - 활성화된 특징 개수
-//    - 과잉 희소 → 정보 손실
-//    - 부족 희소 → 다의성 유지
-//
-// 3. Dictionary Learning 관점:
-//    x ≈ Σ f_i · d_i
-//    f: 희소 coefficients
-//    d: dictionary atoms (features)
-
-// Top-K SAE (OpenAI 2024):
-//   L1 대신 Top-K 선택
-//   f = TopK(W_enc · x + b_enc, k=32)
-//   - 정확히 k개 활성화 보장
-//   - 더 안정적 학습
-
-// Gated SAE (Anthropic 2024):
-//   Binary gate로 활성화 제어
-//   - 더 나은 reconstruction
-//   - dead features 감소`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">학습 과정 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// SAE 학습 파이프라인
-//
-// Step 1: Activation 수집
-//   - 대규모 데이터로 base LLM 실행
-//   - 특정 layer의 residual stream 저장
-//   - 예: 100M tokens × d_model
-//
-// Step 2: SAE 초기화
-//   - W_enc: random
-//   - W_dec: W_enc.T (tied weights)
-//   - 또는 W_dec: normalized random
-//
-// Step 3: 학습
-//   for batch in activations:
-//       x = batch
-//       f = ReLU(W_enc @ x + b_enc)
-//       x_hat = W_dec @ f + b_dec
-//
-//       recon_loss = (x - x_hat).pow(2).mean()
-//       sparsity_loss = f.abs().mean()
-//
-//       loss = recon_loss + λ · sparsity_loss
-//       loss.backward()
-//       optimizer.step()
-//
-// Step 4: 평가
-//   - L0 (avg non-zero per sample)
-//   - Reconstruction error
-//   - Feature interpretability
-//   - Alive ratio (dead features)
-
-// 주요 문제:
-//
-// 1. Dead Features:
-//    일부 features가 학습 중 절대 활성화 안 됨
-//    해결: resampling, auxiliary loss
-//
-// 2. Shrinkage:
-//    L1이 모든 activation을 0쪽으로 당김
-//    해결: decoder norm constraint
-//
-// 3. Feature Absorption:
-//    작은 feature가 큰 feature에 흡수됨
-//    해결: orthogonality regularization
-
-// 성공 기준:
-//   - Reconstruction L2 < 0.1
-//   - L0 ≈ 50~200 (SAE dim 16K 기준)
-//   - Alive features > 90%
-//   - Interpretable features > 70% (수동 평가)`}
-        </pre>
+        <div className="not-prose"><SAEMathDetailViz /></div>
         <p className="leading-7">
           요약 1: SAE는 <strong>wide linear encoder + ReLU + decoder</strong> 구조.<br />
           요약 2: <strong>Reconstruction + L1 sparsity</strong> 양립이 핵심 균형.<br />

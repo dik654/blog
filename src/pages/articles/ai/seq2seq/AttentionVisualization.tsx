@@ -1,4 +1,6 @@
 import AttentionHeatmapViz from './viz/AttentionHeatmapViz';
+import S2SAttnVisViz from './viz/S2SAttnVisViz';
+import M from '@/components/ui/math';
 
 export default function AttentionVisualization() {
   return (
@@ -32,61 +34,12 @@ export default function AttentionVisualization() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Attention Heatmap 해석</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Attention Matrix 시각화 (Bahdanau 2015)
-//
-// 학습된 정렬 패턴들:
-//
-// 1. 일대일 단조 정렬 (Monotonic)
-//    "I love you" → "나는 너를 사랑해"
-//
-//           I    love  you
-//    나는   0.9  0.0   0.0
-//    너를   0.0  0.1   0.9
-//    사랑해 0.0  0.9   0.0
-//
-//    → 대각선 패턴
-//
-// 2. 순서 역전 (Reordering)
-//    "I sold it yesterday" → "어제 나는 그것을 팔았다"
-//
-//              I    sold  it   yesterday
-//    어제      0.0  0.0   0.0  0.9        ← 맨 뒤로
-//    나는      0.9  0.0   0.0  0.0
-//    그것을    0.0  0.0   0.9  0.0
-//    팔았다    0.1  0.8   0.0  0.0
-//
-// 3. 다대일 (Many-to-one)
-//    "New York" → "뉴욕"
-//
-//          New  York
-//    뉴욕  0.5  0.5  ← 두 단어 평균
-//
-// 4. 일대다 (One-to-many)
-//    "beautiful" → "아름다운"
-//    여러 target 토큰이 같은 소스 참조
-
-// 진단 도구로서:
-//   - 번역 오류 시 attention 살펴봄
-//   - 잘못된 정렬 → 학습 부족 신호
-//   - 분산된 attention → 모호함
-//
-// 한계:
-//   - Attention ≠ 정확한 설명
-//   - 중요도는 gradient·Shapley value 필요
-//   - "Attention is not Explanation" (Jain 2019)
-//
-// 그러나:
-//   - 디버깅에 유용
-//   - 모델 동작 직관 제공
-//   - 시각적 임팩트 큼
-
-// Transformer에서의 진화:
-//   - Multi-head: 헤드마다 다른 패턴
-//   - 각 레이어마다 attention matrix
-//   - 12 layers × 12 heads = 144개 attention 행렬
-//   - BertViz 등 도구로 분석 가능`}
-        </pre>
+        <S2SAttnVisViz />
+        <M display>{'\\alpha_{tj} = \\text{softmax}(e_{tj}) \\quad \\Rightarrow \\quad \\underbrace{A \\in \\mathbb{R}^{T\' \\times T}}_{\\text{attention matrix (heatmap)}}'}</M>
+        <p className="leading-7">
+          4가지 정렬 패턴: 단조(대각선), 역전(반대각선), 다대일(<M>{'\\alpha = [0.5, 0.5]'}</M>), 일대다(같은 source 반복 참조)<br />
+          Transformer: 12 layers x 12 heads = <strong>144개 attention matrix</strong> — BertViz로 분석
+        </p>
         <p className="leading-7">
           요약 1: Attention heatmap은 <strong>학습된 단어 정렬</strong> 시각화 — 번역 품질 진단.<br />
           요약 2: <strong>단조·역전·다대일·일대다</strong> 다양한 정렬 패턴 자동 학습.<br />

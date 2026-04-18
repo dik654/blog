@@ -29,97 +29,132 @@ export default function KeyDerivation({ onCodeRef: _onCodeRef }: Props) {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">BIP-44 Derivation Path</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// BIP-44 표준 경로
-// m / purpose' / coin_type' / account' / change / address_index
+        <div className="not-prose space-y-3 mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">경로 구조: <code>m / purpose' / coin_type' / account' / change / address_index</code></p>
+            <div className="grid grid-cols-5 gap-1 text-center text-xs mt-3">
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium">44'</p>
+                <p className="text-muted-foreground">purpose</p>
+                <p className="text-[10px] text-muted-foreground">BIP-44</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium">60'</p>
+                <p className="text-muted-foreground">coin_type</p>
+                <p className="text-[10px] text-muted-foreground">Ethereum</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium">0'</p>
+                <p className="text-muted-foreground">account</p>
+                <p className="text-[10px] text-muted-foreground">기본 계정</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium">0</p>
+                <p className="text-muted-foreground">change</p>
+                <p className="text-[10px] text-muted-foreground">external</p>
+              </div>
+              <div className="bg-background rounded px-2 py-2">
+                <p className="font-medium">0</p>
+                <p className="text-muted-foreground">index</p>
+                <p className="text-[10px] text-muted-foreground">첫 주소</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2"><code>'</code> = hardened derivation (부모 공개키로 자식 비밀키 역추적 불가)</p>
+          </div>
 
-// m / 44' / 60' / 0' / 0 / 0
-//     |     |    |    |   |
-//     |     |    |    |   +-- address index (0, 1, 2, ...)
-//     |     |    |    +------ change (0=external, 1=internal/change)
-//     |     |    +----------- account (보통 0)
-//     |     +---------------- coin_type (60 = Ethereum, SLIP-0044)
-//     +---------------------- purpose (44 = BIP-44)
-//
-// ' = hardened derivation
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Coin Types (SLIP-0044)</p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="bg-background px-2 py-1 rounded"><code>0'</code> Bitcoin</span>
+              <span className="bg-background px-2 py-1 rounded"><code>60'</code> Ethereum</span>
+              <span className="bg-background px-2 py-1 rounded"><code>714'</code> BNB Chain</span>
+              <span className="bg-background px-2 py-1 rounded"><code>501'</code> Solana</span>
+            </div>
+          </div>
 
-// Coin types
-// 0'   = Bitcoin
-// 60'  = Ethereum
-// 714' = BNB Chain
-// 501' = Solana
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Derivation 과정</p>
+            <ol className="text-sm text-muted-foreground space-y-2">
+              <li><strong>1) Mnemonic → Seed (BIP-39)</strong>: <code>PBKDF2(password: mnemonic, salt: "mnemonic" + passphrase, iterations: 2048, output: 64B)</code></li>
+              <li><strong>2) Seed → Master Key (BIP-32)</strong>: <code>HMAC-SHA512(key: "Bitcoin seed", data: seed)</code> → master_priv + master_chain</li>
+              <li><strong>3) Path 따라 child key 파생</strong>: Hardened — <code>HMAC(chain, 0x00||priv||index+0x80000000)</code>, Normal — <code>HMAC(chain, pubkey||index)</code></li>
+              <li><strong>4) Final</strong>: <code>m/44'/60'/0'/0/0</code> → Ethereum address 0</li>
+            </ol>
+          </div>
 
-// Derivation 과정
-// 1) Mnemonic → Seed (BIP-39)
-seed = PBKDF2(
-    password: mnemonic,
-    salt: "mnemonic" + passphrase,
-    iterations: 2048,
-    output_length: 64
-)
-
-// 2) Seed → Master key (BIP-32)
-(master_priv, master_chain) = HMAC-SHA512(
-    key: "Bitcoin seed",
-    data: seed
-)
-
-// 3) Path 따라 child key 파생
-// - Hardened: ki = HMAC(chain, 0x00||priv||index+0x80000000)
-// - Normal: ki = HMAC(chain, pubkey||index)
-
-// 4) Final derivation
-// m/44'/60'/0'/0/0 → Ethereum address 0
-
-// 장점
-// - Deterministic (같은 mnemonic → 같은 key)
-// - Hierarchical (account 구조 자연스러움)
-// - Multi-chain 호환 (coin_type으로 분기)
-// - 표준화됨 (모든 wallet 호환)`}</pre>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Deterministic (같은 mnemonic → 같은 key)</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Hierarchical (account 구조)</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Multi-chain 호환</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">표준화 (모든 wallet 호환)</span>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Local Signing의 중요성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Local signing 원칙
-// 비밀키는 절대 서버로 전송하지 않음
+        <div className="not-prose space-y-3 mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">서명 흐름</p>
+            <p className="text-sm text-muted-foreground">비밀키는 절대 서버로 전송하지 않음</p>
+            <ol className="text-sm text-muted-foreground space-y-1 mt-2">
+              <li>1) User가 UI에서 TX 준비</li>
+              <li>2) Client가 TX 구성 (unsigned)</li>
+              <li>3) Private key로 local에서 서명</li>
+              <li>4) Signed TX만 RPC로 전송</li>
+            </ol>
+          </div>
 
-// 흐름
-// 1) User가 UI에서 TX 준비
-// 2) Client가 TX 구성 (unsigned)
-// 3) Private key로 local에서 서명
-// 4) Signed TX만 RPC로 전송
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4 border-l-4 border-green-400">
+              <p className="text-sm font-semibold mb-2">Client (trusted)</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>Private key 보관</li>
+                <li>Signing logic 실행</li>
+                <li>Nonce 관리</li>
+              </ul>
+            </div>
+            <div className="bg-muted rounded-lg p-4 border-l-4 border-red-400">
+              <p className="text-sm font-semibold mb-2">Server (untrusted)</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>signed_tx만 수신</li>
+                <li>Broadcast / Mempool relay</li>
+                <li>Query responses</li>
+              </ul>
+            </div>
+          </div>
 
-// 보안 모델
-// - Server: signed raw TX만 받음
-// - Server: private key 몰라도 broadcast 가능
-// - User: key loss = self responsibility
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Key Storage Options</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium">Browser localStorage</p>
+                <p className="text-muted-foreground">취약 (비암호화)</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium">Encrypted localStorage</p>
+                <p className="text-muted-foreground">password 기반 암호화</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium">Hardware wallet</p>
+                <p className="text-muted-foreground">Ledger, Trezor</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium">MPC custody</p>
+                <p className="text-muted-foreground">threshold signing</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium">Smart account</p>
+                <p className="text-muted-foreground">social recovery</p>
+              </div>
+            </div>
+          </div>
 
-// Trust boundary
-// ┌─────────────────────┐
-// │  Client (trusted)   │
-// │  - Private key      │
-// │  - Signing logic    │
-// │  - Nonce mgmt       │
-// └──────────┬──────────┘
-//            │
-//     signed_tx only
-//            │
-// ┌──────────▼──────────┐
-// │  Server (untrusted) │
-// │  - Broadcast        │
-// │  - Mempool relay    │
-// │  - Query responses  │
-// └─────────────────────┘
-
-// Key storage options
-// 1) Browser localStorage (취약)
-// 2) Encrypted localStorage (password)
-// 3) Hardware wallet (Ledger, Trezor)
-// 4) MPC custody (threshold signing)
-// 5) Smart account + social recovery
-
-// Best practice
-// ✓ Hardware wallet for high-value
-// ✓ Encrypted storage + strong password
-// ✓ Seed backup (offline)
-// ✗ 절대 seed를 온라인 전송하지 말 것`}</pre>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Hardware wallet for high-value</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Encrypted storage + strong password</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Seed backup (offline)</span>
+            <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-1 rounded">절대 seed를 온라인 전송하지 말 것</span>
+          </div>
+        </div>
 
       </div>
     </section>

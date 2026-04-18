@@ -22,61 +22,46 @@ export default function Overview() {
 
         {/* ── Avalanche 등장 배경 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Avalanche의 등장과 새로운 철학</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Avalanche 등장 (Team Rocket 2018):
-//
-// 기존 합의의 한계:
-// 1. Nakamoto (PoW):
-//    - 10분 finality
-//    - 에너지 낭비
-//    - probabilistic but slow
-//
-// 2. Classical BFT (PBFT, HotStuff):
-//    - O(n²)/O(n) communication
-//    - 수백 노드 한계
-//    - deterministic but bounded scalability
-
-// Avalanche의 새 접근:
-// "가십 + 샘플링으로 빠르면서 확장 가능"
-//
-// Core idea:
-// - 각 노드가 small random sample에 query
-// - majority 따라감
-// - 반복 → "metastable" 수렴
-// - 확률적 합의
-
-// 주요 성능:
-// - 1-2초 finality
-// - 4500+ TPS
-// - 수천 validators 가능
-// - 적은 에너지
-
-// 프로토콜 계보:
-// - Slush (theoretical baseline)
-// - Snowflake (binary agreement)
-// - Snowball (confidence counters)
-// - Avalanche (DAG version)
-// - Snowman (chain version)
-
-// 실제 배포:
-// - Avalanche blockchain (2020 mainnet)
-// - AVAX token
-// - Subnets (custom chains)
-// - C-Chain (EVM compatible)
-// - X-Chain (exchange chain)
-// - P-Chain (platform chain)
-
-// 설계 철학:
-// "Byzantine 과반 (51%) 대신 확률적 다수"
-// "결정론적 certainty 대신 probabilistic convergence"
-// "O(n) 통신 대신 O(k log n)"
-
-// 수학적 기반:
-// - metastability theory
-// - random sampling
-// - gossip protocols
-// - Markov chains`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">기존 합의의 한계</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Nakamoto (PoW)</p>
+                <p className="text-muted-foreground">10분 finality, 에너지 낭비, probabilistic but slow</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Classical BFT (PBFT, HotStuff)</p>
+                <p className="text-muted-foreground"><code>O(n2)/O(n)</code> communication, 수백 노드 한계, deterministic but bounded scalability</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Avalanche의 새 접근</p>
+            <p className="text-sm">
+              "가십 + 샘플링으로 빠르면서 확장 가능" — 각 노드가 small random sample에 query → majority 따라감 → 반복 → metastable 수렴
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              주요 성능: 1-2초 finality, 4500+ TPS, 수천 validators, 적은 에너지
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">프로토콜 계보 &amp; 배포</p>
+            <p className="text-sm">
+              Slush (theoretical) → Snowflake (binary) → Snowball (confidence) → Avalanche (DAG) → Snowman (chain)
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              실제 배포: Avalanche blockchain (2020), AVAX token, Subnets, C-Chain (EVM), X-Chain (exchange), P-Chain (platform)
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-1">설계 철학</p>
+            <p className="text-sm text-muted-foreground">
+              Byzantine 과반(51%) 대신 확률적 다수 / 결정론적 certainty 대신 probabilistic convergence / <code>O(n)</code> 통신 대신 <code>O(k log n)</code>.<br />
+              수학적 기반: metastability theory, random sampling, gossip protocols, Markov chains
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Avalanche 철학: <strong>random sampling + gossip + probabilistic convergence</strong>.<br />
           수천 validators, 1-2초 finality, 4500+ TPS.<br />
@@ -85,62 +70,45 @@ export default function Overview() {
 
         {/* ── 이론적 기반 ── */}
         <h3 className="text-xl function font-semibold mt-6 mb-3">이론적 기반: Metastability</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Metastability 개념:
-//
-// - state machine with stable states (0, 1)
-// - metastable state = unstable balance
-// - small perturbation → tip to one stable state
-//
-// 물리 예시:
-// - ball on top of hill (metastable)
-// - 작은 움직임 → 한 쪽으로 굴러감
-// - stable = 바닥 (valley)
-
-// Avalanche consensus에도 적용:
-// - 두 선택지 (Red, Blue)
-// - 초기: metastable (50/50)
-// - random perturbation (one validator choice)
-// - small bias → cascade
-// - eventually stable (all Red or all Blue)
-
-// Slush protocol (baseline):
-// - each node has preference (Red/Blue)
-// - query k random nodes
-// - if majority different, switch
-// - repeat m rounds
-
-// Slush 문제:
-// - m rounds 후 stop (arbitrary)
-// - 확률 보장 없음
-// - Byzantine 저항 약함
-
-// Snowflake 개선:
-// - β (beta) consecutive identical results → decide
-// - finite termination
-// - probabilistic safety
-
-// Snowball 개선:
-// - confidence counters (cumulative)
-// - 일시 변동 저항
-// - more robust
-
-// Avalanche (DAG):
-// - Snowball + DAG
-// - transaction-level decisions
-// - 4500+ TPS
-
-// Snowman (chain):
-// - linear chain (not DAG)
-// - simpler for EVM
-// - Avalanche C-Chain 사용
-
-// Safety probability:
-// P(safety violation) <= e^(-α * β) * ...
-// - α: threshold (e.g., 14 out of 20)
-// - β: confidence threshold (e.g., 20)
-// - extremely small (10^-20 typically)`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Metastability 개념</p>
+            <p className="text-sm">
+              state machine with stable states (0, 1). metastable state = unstable balance — small perturbation → tip to one stable state.
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              물리 예시: 언덕 위 공 (metastable) → 작은 움직임 → 한 쪽 바닥(valley)으로 굴러감.
+              Avalanche: 두 선택지 (Red, Blue), 초기 50/50 → random perturbation → small bias → cascade → eventually stable
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">프로토콜 계층별 개선</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Slush (baseline)</p>
+                <p className="text-muted-foreground">k random nodes query → majority면 switch → m rounds 반복. 문제: 확률 보장 없음, Byzantine 저항 약함</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Snowflake</p>
+                <p className="text-muted-foreground"><code>beta</code> consecutive identical results → decide. finite termination + probabilistic safety</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Snowball</p>
+                <p className="text-muted-foreground">confidence counters (cumulative) 추가. 일시 변동 저항 강화, more robust</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Avalanche (DAG) / Snowman (chain)</p>
+                <p className="text-muted-foreground">Avalanche: Snowball + DAG, TX-level, 4500+ TPS. Snowman: linear chain, EVM용 C-Chain</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-1">Safety probability</p>
+            <p className="text-sm text-muted-foreground">
+              <code>P(violation) &le; e^(-alpha * beta)</code> — alpha: threshold (14/20), beta: confidence (20). typically 10^-20 수준
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Metastability: <strong>small perturbation → cascade → stable state</strong>.<br />
           Slush → Snowflake → Snowball → Avalanche/Snowman 계층.<br />

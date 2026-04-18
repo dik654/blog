@@ -32,86 +32,115 @@ export default function PoSt({ title, onCodeRef }: {
 
         {/* ── PoSt 상세 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PoSt 메커니즘 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PoSt (Proof of SpaceTime):
 
-// WindowPoSt (24h 주기):
-// - 모든 active sectors 대상
-// - partition으로 분할 (~2349 sectors per partition)
-// - 10 random challenges per sector
-// - deadline-based (24h / 48 = 30min windows)
+        {/* ── WindowPoSt vs WinningPoSt ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="text-sm font-bold text-sky-400 mb-2">WindowPoSt (24h 주기)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>모든 active sectors 대상</li>
+              <li>partition 분할 (~2349 sectors/partition)</li>
+              <li><strong>10 random challenges</strong> per sector</li>
+              <li>deadline-based: <code>24h / 48 = 30min</code> windows</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="text-sm font-bold text-emerald-400 mb-2">WinningPoSt (leader election)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>trigger: VRF election winner</li>
+              <li>1 random sector sampled</li>
+              <li>tight deadline (~40s)</li>
+              <li>블록 생성에 사용, faster proof gen</li>
+            </ul>
+          </div>
+        </div>
 
-// WindowPoSt 프로세스:
-// 1. deadline 시작 시 challenge 생성
-//    - random drand-based
-//    - per partition
-// 2. each sector에 10 leaf 선택
-// 3. Merkle proof 생성
-//    - open leaves
-//    - sibling hashes
-//    - root verification
-// 4. SNARK proof 생성
-//    - Groth16
-//    - GPU accelerated
-// 5. on-chain submission
-//    - PartitionSubmitWindowedPoSt message
-//    - within deadline
+        {/* ── WindowPoSt 프로세스 ── */}
+        <div className="not-prose rounded-lg border border-border bg-muted/50 p-4 my-4">
+          <p className="text-sm font-bold text-foreground mb-2">WindowPoSt 프로세스</p>
+          <ol className="text-sm space-y-1 text-foreground/80 list-decimal list-inside">
+            <li><strong>Challenge 생성</strong> — deadline 시작 시, random drand-based, per partition</li>
+            <li><strong>Leaf 선택</strong> — each sector에 10 leaf</li>
+            <li><strong>Merkle proof</strong> — open leaves + sibling hashes + root verification</li>
+            <li><strong>SNARK proof</strong> — Groth16, GPU accelerated</li>
+            <li><strong>On-chain submission</strong> — <code>SubmitWindowedPoSt</code> message, within deadline</li>
+          </ol>
+        </div>
 
-// Skipped sectors:
-// - fault 인식된 sectors
-// - skipped in proof
-// - penalty paid
-// - recovery 가능
+        {/* ── Poseidon + Merkle Trees ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="text-sm font-bold text-amber-400 mb-2">Poseidon Hash</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>SNARK-friendly hash (MDS + S-box design)</li>
+              <li>BLS12-381 field operations</li>
+              <li>회로 내 SHA256 대비 <strong>3-5x faster</strong></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Merkle Tree Types</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>base tree</code> — on data</li>
+              <li><code>tree C</code> — on column commitments</li>
+              <li><code>tree T_aux</code> — on tree C</li>
+              <li>nested depth ~20-30</li>
+            </ul>
+          </div>
+        </div>
 
-// WinningPoSt (leader election):
-// - trigger: VRF election winner
-// - 1 random sector sampled
-// - tight deadline (~40s)
-// - used in block creation
-// - faster proof gen
+        {/* ── Proof Components + On-chain ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Proof Components</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>Merkle path for each challenge</li>
+              <li>column commitments</li>
+              <li><code>replica_id</code></li>
+              <li>SNARK wrapping (Groth16)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">On-chain Verification</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>SNARK verifier in VM (pairing operations)</li>
+              <li>Groth16 verify, batch verification</li>
+              <li>verification: ~5ms per partition</li>
+            </ul>
+          </div>
+        </div>
 
-// Poseidon Hash:
-// - SNARK-friendly hash
-// - BLS12-381 field operations
-// - 3-5x faster than SHA256 in circuit
-// - MDS + S-box design
-// - recent cryptography
+        {/* ── Fault + Slashing ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <p className="text-sm font-bold text-red-400 mb-2">Fault Handling</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>missed WindowPoSt → fault fee per epoch</li>
+              <li>7-day recovery window</li>
+              <li>미복구 시 termination penalty</li>
+              <li>skipped sectors — penalty paid, recovery 가능</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <p className="text-sm font-bold text-red-400 mb-2">Slashing Conditions</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><strong>missed PoSt</strong> → fault fee</li>
+              <li><strong>wrong proof</strong> → termination</li>
+              <li><strong>double-signing</strong> → termination + slash</li>
+            </ul>
+          </div>
+        </div>
 
-// Merkle Tree Types:
-// - base tree (on data)
-// - tree C (on column commitments)
-// - tree T_aux (on tree C)
-// - nested depth ~20-30
+        {/* ── Performance ── */}
+        <div className="not-prose rounded-lg border border-border bg-muted/50 p-4 my-4">
+          <p className="text-sm font-bold text-foreground mb-2">Performance</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-foreground/80">
+            <div><strong>~30 min</strong><br />WindowPoSt per partition</div>
+            <div><strong>parallel</strong><br />multi-GPU partitions</div>
+            <div><strong>~5 ms</strong><br />verification per partition</div>
+            <div><strong>moderate</strong><br />on-chain gas cost</div>
+          </div>
+        </div>
 
-// Proof Components:
-// - Merkle path for each challenge
-// - column commitments
-// - replica_id
-// - SNARK wrapping
-
-// On-chain verification:
-// - SNARK verifier in VM
-// - pairing operations
-// - Groth16 verify
-// - batch verification for efficiency
-
-// Fault handling:
-// - missed WindowPoSt
-// - fault fee per epoch
-// - 7-day recovery window
-// - termination penalty if not recovered
-
-// Performance:
-// - WindowPoSt generation: ~30 min per partition
-// - parallel partitions (multiple GPUs)
-// - verification: ~5ms per partition
-// - on-chain cost: moderate gas
-
-// Slashing conditions:
-// - missed PoSt: fault fee
-// - wrong proof: termination
-// - double-signing: termination + slash`}
-        </pre>
         <p className="leading-7">
           WindowPoSt (24h) + WinningPoSt (election).<br />
           <strong>10 challenges per sector</strong>, Merkle + SNARK.<br />

@@ -32,53 +32,32 @@ export default function Executor({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── execute_and_verify_one 내부 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">execute_and_verify_one() — 블록 1개 실행 파이프라인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl<EVM> BlockExecutor for EthBlockExecutor<EVM> {
-    fn execute_and_verify_one(
-        &mut self,
-        block: &BlockWithSenders,
-    ) -> Result<(), BlockExecutionError> {
-        // 1. pre-execution 훅 — EIP-4788 (beacon root) 등
-        self.apply_pre_execution_changes(block)?;
-
-        // 2. 블록 내 모든 TX 순회 실행
-        let mut cumulative_gas_used = 0;
-        let mut receipts = Vec::with_capacity(block.body.transactions.len());
-
-        for (tx, sender) in block.body.transactions.iter().zip(&block.senders) {
-            // 2a. revm 환경 설정 (fill_tx_env)
-            self.evm_config.fill_tx_env(
-                &mut self.evm.tx_mut(),
-                tx,
-                *sender,
-            );
-
-            // 2b. revm으로 TX 실행
-            let ResultAndState { result, state } = self.evm.transact()?;
-
-            // 2c. 상태 변경을 BundleState에 누적
-            self.state.commit(state);
-
-            // 2d. 영수증 생성
-            cumulative_gas_used += result.gas_used();
-            receipts.push(Receipt {
-                tx_type: tx.tx_type(),
-                success: result.is_success(),
-                cumulative_gas_used,
-                logs: result.logs().to_vec(),
-            });
-        }
-
-        // 3. post-execution 훅 — Shanghai withdrawals, Prague requests 등
-        let requests = self.apply_post_execution_changes(block, &receipts)?;
-
-        // 4. 블록 헤더와 실행 결과 대조 검증
-        self.verify_block(block, cumulative_gas_used, &receipts, &requests)?;
-
-        Ok(())
-    }
-}`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-indigo-500 mb-3">EthBlockExecutor::execute_and_verify_one() — 4단계 파이프라인</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <span className="text-foreground/70"><code>apply_pre_execution_changes(block)</code> — EIP-4788 beacon root 등 pre-execution 훅</span>
+            </div>
+            <div className="rounded border border-border/40 p-3 ml-7">
+              <p className="text-xs font-semibold text-foreground/60 mb-1.5">2. TX 순회 실행 (각 TX마다)</p>
+              <div className="space-y-1 text-xs text-foreground/60">
+                <p>a. <code>evm_config.fill_tx_env(tx, sender)</code> — revm 환경 설정</p>
+                <p>b. <code>evm.transact()</code> &rarr; <code>ResultAndState {'{'} result, state {'}'}</code></p>
+                <p>c. <code>self.state.commit(state)</code> — BundleState에 누적</p>
+                <p>d. Receipt 생성 (tx_type, success, cumulative_gas_used, logs)</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+              <span className="text-foreground/70"><code>apply_post_execution_changes(block, receipts)</code> — withdrawals, requests 등</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">4</span>
+              <span className="text-foreground/70"><code>verify_block(block, gas_used, receipts, requests)</code> — 헤더 대조 검증</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>execute_and_verify_one</code>이 <strong>4단계 파이프라인</strong>.<br />
           1) pre-execution 훅 → 2) TX 순회 실행 → 3) post-execution 훅 → 4) 헤더 대조 검증.<br />
@@ -87,49 +66,28 @@ export default function Executor({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── verify_block ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">verify_block — 실행 결과 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`fn verify_block(
-    &self,
-    block: &BlockWithSenders,
-    gas_used: u64,
-    receipts: &[Receipt],
-    requests: &[Request],
-) -> Result<()> {
-    // 1. gas_used 일치: 헤더의 gas_used == 실행 누적 gas
-    if block.header.gas_used != gas_used {
-        return Err(BlockExecutionError::GasUsedMismatch {
-            expected: block.header.gas_used,
-            actual: gas_used,
-        });
-    }
-
-    // 2. receipts_root 일치: 영수증들의 머클 루트
-    let receipts_root = calculate_receipt_root(receipts);
-    if block.header.receipts_root != receipts_root {
-        return Err(BlockExecutionError::ReceiptRootMismatch {
-            expected: block.header.receipts_root,
-            actual: receipts_root,
-        });
-    }
-
-    // 3. logs_bloom 일치: 모든 로그 항목의 블룸 OR
-    let logs_bloom = calculate_logs_bloom(receipts);
-    if block.header.logs_bloom != logs_bloom {
-        return Err(BlockExecutionError::LogsBloomMismatch { ... });
-    }
-
-    // 4. requests_root 일치 (EIP-7685, Prague 이후)
-    let requests_root = calculate_request_root(requests);
-    if block.header.requests_root != Some(requests_root) {
-        return Err(BlockExecutionError::RequestsRootMismatch { ... });
-    }
-
-    Ok(())
-}
-
-// 이 4가지가 모두 통과해야 블록이 "올바르게 실행됨"
-// 하나라도 불일치 → 합의 실패 → reorg 발생 또는 노드 정지`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-pink-500 mb-3">verify_block() — 헤더의 머클 루트 4개와 실행 결과 대조</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <span className="text-foreground/70"><code>gas_used</code> 일치: 헤더의 gas_used == 실행 누적 gas</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">2</span>
+              <span className="text-foreground/70"><code>receipts_root</code> 일치: <code>calculate_receipt_root(receipts)</code>와 헤더 대조</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+              <span className="text-foreground/70"><code>logs_bloom</code> 일치: 모든 로그 항목의 블룸 OR</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">4</span>
+              <span className="text-foreground/70"><code>requests_root</code> 일치 (EIP-7685, Prague 이후)</span>
+            </div>
+          </div>
+          <p className="text-xs text-foreground/50 mt-3">4가지 모두 통과해야 "올바르게 실행됨". 하나라도 불일치 &rarr; 합의 실패 &rarr; reorg 또는 노드 정지</p>
+        </div>
         <p className="leading-7">
           블록 실행 검증은 <strong>헤더의 머클 루트 4개와 실행 결과 대조</strong>.<br />
           gas_used, receipts_root, logs_bloom, requests_root가 모두 일치해야 합의 성공.<br />
@@ -138,43 +96,29 @@ export default function Executor({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── BundleState::commit 내부 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BundleState::commit — revm 결과 흡수</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm의 TX 실행 결과: HashMap<Address, AccountState>
-// 이를 BundleState에 병합
-
-impl BundleState {
-    pub fn commit(&mut self, evm_state: EvmState) {
-        for (address, account) in evm_state {
-            match self.state.entry(address) {
-                Entry::Occupied(mut existing) => {
-                    // 이미 bundle에 있음 → 기존 상태 업데이트
-                    // pre_state는 유지 (원본), post_state만 갱신
-                    let bundle_acc = existing.get_mut();
-                    bundle_acc.info = Some(account.info);
-                    for (slot_key, slot_val) in account.storage {
-                        bundle_acc.storage.insert(slot_key, slot_val);
-                    }
-                }
-                Entry::Vacant(vacant) => {
-                    // 처음 등장 → 새 BundleAccount 생성
-                    vacant.insert(BundleAccount {
-                        original_info: load_from_db(address),  // pre state
-                        info: Some(account.info),               // post state
-                        storage: account.storage,
-                        status: AccountStatus::Changed,
-                    });
-                }
-            }
-        }
-    }
-}
-
-// 누적 효과:
-// - 블록 1에서 A.balance = 100 → bundle[A] = 100
-// - 블록 2에서 A.balance = 150 → bundle[A] = 150 (덮어씀)
-// - 최종 DB write 시 bundle[A] = 150만 기록 (100은 사라짐)
-// → 100과 150 사이의 중간 값들은 DB에 불필요`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">BundleState::commit(evm_state) — revm 결과 흡수</p>
+            <div className="space-y-2 text-sm text-foreground/70">
+              <div className="rounded border border-border/40 p-2.5">
+                <p className="text-xs font-semibold text-foreground/60 mb-1">Occupied (이미 bundle에 존재)</p>
+                <p className="text-xs text-foreground/50">pre_state 유지 (원본), post_state만 갱신 &rarr; 스토리지 슬롯도 덮어쓰기</p>
+              </div>
+              <div className="rounded border border-border/40 p-2.5">
+                <p className="text-xs font-semibold text-foreground/60 mb-1">Vacant (처음 등장)</p>
+                <p className="text-xs text-foreground/50">DB에서 <code>original_info</code>(pre state) 로드 + 새 <code>BundleAccount</code> 생성</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1.5">누적 효과</p>
+            <div className="text-xs text-foreground/60 space-y-0.5">
+              <p>블록 1: A.balance = 100 &rarr; bundle[A] = 100</p>
+              <p>블록 2: A.balance = 150 &rarr; bundle[A] = 150 (덮어씀)</p>
+              <p>최종 DB write 시 150만 기록 -- 중간값은 DB에 불필요</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>commit</code>이 <strong>누적 병합</strong>을 수행 — 같은 계정의 여러 블록 변경을 최종값으로 수렴.<br />
           초기 동기화 시 100만 블록 실행 시 중간 상태는 DB에 쓰지 않음 → 쓰기량 극적 감소.<br />

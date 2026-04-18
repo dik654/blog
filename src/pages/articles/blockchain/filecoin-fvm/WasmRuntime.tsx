@@ -25,91 +25,97 @@ export default function WasmRuntime({ onCodeRef }: { onCodeRef: (key: string, re
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">WASM Runtime &amp; Actor Execution</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// FVM Message Execution Flow:
 
-// 1. Message arrival:
-// Message {
-//     to: Address
-//     from: Address
-//     method: MethodNum
-//     params: []byte
-//     gas_limit: uint64
-//     value: TokenAmount
-// }
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">Message 구조체</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+            <div className="rounded bg-muted p-2"><code>to</code> — <span className="text-muted-foreground">Address (대상)</span></div>
+            <div className="rounded bg-muted p-2"><code>from</code> — <span className="text-muted-foreground">Address (발신)</span></div>
+            <div className="rounded bg-muted p-2"><code>method</code> — <span className="text-muted-foreground">MethodNum</span></div>
+            <div className="rounded bg-muted p-2"><code>params</code> — <span className="text-muted-foreground">[]byte</span></div>
+            <div className="rounded bg-muted p-2"><code>gas_limit</code> — <span className="text-muted-foreground">uint64</span></div>
+            <div className="rounded bg-muted p-2"><code>value</code> — <span className="text-muted-foreground">TokenAmount</span></div>
+          </div>
+        </div>
 
-// 2. Validate:
-// - signature check
-// - nonce check
-// - gas check
-// - balance check
+        <div className="not-prose grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-3">
+            <div className="text-xs font-semibold mb-1">1. Validate</div>
+            <p className="text-[11px] text-muted-foreground">서명, nonce, 가스, 잔액 검증</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3">
+            <div className="text-xs font-semibold mb-1">2. Load Actor</div>
+            <p className="text-[11px] text-muted-foreground"><code>to</code> 주소 조회 → Code CID → WASM 바이트코드 로드</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3">
+            <div className="text-xs font-semibold mb-1">3. Instantiate</div>
+            <p className="text-[11px] text-muted-foreground">wasmtime 엔진, syscall 바인딩, 가스 미터, 메모리 초기화</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3">
+            <div className="text-xs font-semibold mb-1">4. Execute</div>
+            <p className="text-[11px] text-muted-foreground"><code>invoke(method, params)</code> — WASM 실행, syscall R/W, 가스 누적</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3">
+            <div className="text-xs font-semibold mb-1">5. Finalize</div>
+            <p className="text-[11px] text-muted-foreground">성공 시 상태 커밋, 실패 시 롤백. 사용 가스 차감, 미사용 환불</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3">
+            <div className="text-xs font-semibold mb-1">6. Lifecycle</div>
+            <p className="text-[11px] text-muted-foreground">배포(코드 해시 등록) → 호출마다 인스턴스화 → IPLD로 상태 유지</p>
+          </div>
+        </div>
 
-// 3. Load target actor:
-// - lookup to address
-// - load actor state (Code CID)
-// - resolve code → WASM bytecode
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Syscalls (Host Functions)</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+            <div className="rounded bg-muted p-2"><code>ipld_open(cid)</code> → handle</div>
+            <div className="rounded bg-muted p-2"><code>ipld_get(handle, offset)</code> → bytes</div>
+            <div className="rounded bg-muted p-2"><code>ipld_put(data)</code> → cid</div>
+            <div className="rounded bg-muted p-2"><code>send(msg)</code> → receipt</div>
+            <div className="rounded bg-muted p-2"><code>crypto_verify_signature(sig, key, data)</code></div>
+            <div className="rounded bg-muted p-2"><code>gas_charge(amount)</code></div>
+            <div className="rounded bg-muted p-2"><code>rand(seed)</code> → bytes</div>
+          </div>
+        </div>
 
-// 4. Instantiate WASM:
-// - wasmtime engine
-// - provide host functions (syscalls)
-// - set gas meter
-// - initialize memory
-
-// 5. Execute:
-// instance.invoke(method, params)
-// - runs WASM bytecode
-// - reads/writes via syscalls
-// - accumulates gas cost
-// - returns result or error
-
-// 6. Finalize:
-// - commit state changes if success
-// - rollback if error
-// - charge gas used
-// - refund unused gas
-
-// Syscalls (Host Functions):
-// - ipld_open(cid) → handle
-// - ipld_get(handle, offset) → bytes
-// - ipld_put(data) → cid
-// - send(msg) → receipt
-// - crypto_verify_signature(sig, key, data)
-// - gas_charge(amount)
-// - rand(seed) → bytes
-// - ... many more
-
-// Gas Metering:
-// - WASM instructions: gas per op
-// - memory access: gas per byte
-// - syscalls: gas per call
-// - hash operations: gas per byte
-// - continuously charged
-
-// Determinism:
-// - no floating-point
-// - no wall clock
-// - no randomness (provided via syscall)
-// - no system I/O
-// - reproducible
-
-// Security:
-// - sandboxed (WASM VM isolation)
-// - no direct memory access outside sandbox
-// - gas limits prevent infinite loops
-// - deterministic prevents exploits
-
-// Performance:
-// - wasmtime: near-native speed
-// - JIT compilation
-// - caching compiled code
-// - parallel execution (planned)
-
-// Actor lifecycle:
-// - deployed (code hash registered)
-// - instantiated per call
-// - state persisted via IPLD
-// - upgradeable (network upgrade)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Gas Metering</h4>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li>WASM 명령어: op당 가스</li>
+              <li>메모리 접근: byte당 가스</li>
+              <li>syscall: 호출당 가스</li>
+              <li>해시 연산: byte당 가스</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">결정론 보장</h4>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li>부동소수점 금지</li>
+              <li>시스템 시계 접근 불가</li>
+              <li>랜덤: syscall로만 제공</li>
+              <li>시스템 I/O 없음</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">보안</h4>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li>WASM VM 격리 (샌드박스)</li>
+              <li>외부 메모리 접근 불가</li>
+              <li>가스 한도로 무한 루프 방지</li>
+              <li>결정론으로 익스플로잇 차단</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">성능</h4>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li>wasmtime: near-native 속도</li>
+              <li>JIT 컴파일</li>
+              <li>컴파일된 코드 캐싱</li>
+              <li>병렬 실행 (계획)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           WASM Runtime: <strong>wasmtime + syscalls + gas metering</strong>.<br />
           deterministic + sandboxed + language-agnostic.<br />

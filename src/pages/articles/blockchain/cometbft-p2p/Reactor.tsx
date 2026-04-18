@@ -17,74 +17,47 @@ export default function Reactor({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── Reactor interface ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">Reactor interface</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/p2p/base_reactor.go
-type Reactor interface {
-    service.Service
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Reactor interface (6 메서드)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">SetSwitch(*Switch)</code> — Switch 역참조</li>
+              <li><code className="text-xs">GetChannels() []*ChannelDescriptor</code> — 사용할 channel 목록</li>
+              <li><code className="text-xs">InitPeer(peer Peer) Peer</code> — 연결 직후 (handshake 전)</li>
+              <li><code className="text-xs">AddPeer(peer Peer)</code> — handshake 성공 후</li>
+              <li><code className="text-xs">RemovePeer(peer Peer, reason interface{})</code> — 연결 종료</li>
+              <li><code className="text-xs">Receive(e Envelope)</code> — 메시지 수신 (핵심)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Envelope 구조</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">Src Peer</code> — 송신 peer</li>
+              <li><code className="text-xs">ChannelID byte</code> — channel ID</li>
+              <li><code className="text-xs">Message proto.Message</code> — protobuf 메시지</li>
+            </ul>
+          </div>
+        </div>
 
-    // Switch setting
-    SetSwitch(*Switch)
-
-    // GetChannels: 이 reactor가 사용할 channel 목록
-    GetChannels() []*conn.ChannelDescriptor
-
-    // InitPeer: peer 연결 직후 호출 (handshake 전)
-    InitPeer(peer Peer) Peer
-
-    // AddPeer: handshake 성공 후
-    AddPeer(peer Peer)
-
-    // RemovePeer: 연결 종료 시
-    RemovePeer(peer Peer, reason interface{})
-
-    // Receive: 메시지 수신 (핵심!)
-    Receive(e Envelope)
-}
-
-// Envelope: reactor 간 메시지 전달
-type Envelope struct {
-    Src       Peer        // 송신 peer
-    ChannelID byte        // channel ID
-    Message   proto.Message
-}
-
-// 예시 Reactor (MempoolReactor):
-type MempoolReactor struct {
-    p2p.BaseReactor
-    mempool mempool.Mempool
-    ids     *mempoolIDs
-}
-
-func (r *MempoolReactor) GetChannels() []*p2p.ChannelDescriptor {
-    return []*p2p.ChannelDescriptor{{
-        ID: MempoolChannel,  // 0x30
-        Priority: 5,
-        SendQueueCapacity: 100,
-        RecvBufferCapacity: 65536,
-    }}
-}
-
-func (r *MempoolReactor) Receive(e p2p.Envelope) {
-    switch msg := e.Message.(type) {
-    case *protomem.Txs:
-        for _, tx := range msg.Txs {
-            r.mempool.CheckTx(tx, nil, mempool.TxInfo{SenderID: r.ids.GetForPeer(e.Src)})
-        }
-    default:
-        r.Logger.Error("unknown msg", "type", fmt.Sprintf("%T", msg))
-    }
-}
-
-// Receive 특성:
-// - recvRoutine goroutine에서 동기 호출
-// - 오래 걸리면 해당 peer 수신 block됨
-// - 내부 channel로 비동기 처리 권장
-
-// AddPeer 사용:
-// - peer별 state 초기화
-// - gossip goroutine 시작
-// - subscribe to peer events`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">예시: MempoolReactor</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><code className="text-xs">GetChannels()</code> → channel <code className="text-xs">0x30</code>, priority 5, queue 100</p>
+              <p><code className="text-xs">Receive(e)</code> → <code className="text-xs">*protomem.Txs</code> 타입 매칭</p>
+              <p>→ 각 TX에 <code className="text-xs">mempool.CheckTx(tx, ...)</code> 호출</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">Receive 특성 & AddPeer 사용</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">recvRoutine</code> goroutine에서 동기 호출</li>
+              <li>오래 걸리면 해당 peer 수신 block</li>
+              <li>내부 channel로 비동기 처리 권장</li>
+              <li>AddPeer: peer별 state 초기화 + gossip goroutine 시작</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Reactor는 <strong>6개 메서드 interface</strong>.<br />
           GetChannels/Receive/AddPeer/RemovePeer 핵심.<br />

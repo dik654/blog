@@ -20,54 +20,86 @@ export default function Escalation() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">EscalationPolicy 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct EscalationPolicy {
-    pub levels: Vec<EscalationLevel>,
-}
-
-pub struct EscalationLevel {
-    pub trigger: EscalationTrigger,
-    pub target: EscalationTarget,
-    pub message_template: String,
-}
-
-pub enum EscalationTrigger {
-    RecipeFailedNTimes { recipe: String, n: u32 },
-    LaneStuckFor { duration: Duration },
-    CriticalFailure { class: FailureClass },
-    ResourceLimit { resource: String },
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-4">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">EscalationLevel</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>trigger</code></p>
+                <p className="text-xs text-muted-foreground mt-1">EscalationTrigger -- 발동 조건</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>target</code></p>
+                <p className="text-xs text-muted-foreground mt-1">EscalationTarget -- 전달 대상</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>message_template</code></p>
+                <p className="text-xs text-muted-foreground mt-1">String -- 메시지 템플릿</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">EscalationTrigger</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">RecipeFailedNTimes</p>
+                <p className="text-[11px] text-muted-foreground">레시피 N회 실패</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">LaneStuckFor</p>
+                <p className="text-[11px] text-muted-foreground">Lane 정체 시간</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">CriticalFailure</p>
+                <p className="text-[11px] text-muted-foreground">치명적 실패 분류</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">ResourceLimit</p>
+                <p className="text-[11px] text-muted-foreground">자원 한계 도달</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">단계별 에스컬레이션</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 실제 정책 예시 (YAML)
-escalation:
-  levels:
-    # 레벨 1: 조용한 알림 (채널)
-    - trigger:
-        recipe_failed_n_times:
-          recipe: "build-failure-retry"
-          n: 3
-      target:
-        webhook:
-          url: "https://hooks.slack.com/..."
-      message: "Lane #{{lane}} 빌드 수정 3회 실패"
-
-    # 레벨 2: 이슈 생성
-    - trigger:
-        lane_stuck_for: 2h
-      target:
-        create_issue:
-          repo: "org/repo"
-          labels: ["auto-issue", "needs-review"]
-      message: "Lane #{{lane}}이 2시간 멈춤. 검토 필요"
-
-    # 레벨 3: 온콜 페이지
-    - trigger:
-        critical_failure:
-          class: PermissionDenied
-      target:
-        pagerduty:
-          service_key: "..."
-      message: "🚨 권한 거부 — 보안 검토 필요"`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">YAML 정책 예시 -- 3단계 점진적 에스컬레이션</p>
+          <div className="space-y-2">
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-0.5 rounded font-semibold">Level 1</span>
+                <span className="text-xs text-muted-foreground">조용한 알림</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div><span className="text-muted-foreground">trigger:</span> <code>recipe_failed_n_times</code> (build-failure-retry, n=3)</div>
+                <div><span className="text-muted-foreground">target:</span> Slack webhook</div>
+                <div><span className="text-muted-foreground">message:</span> "Lane #{'{'}lane{'}'} 빌드 수정 3회 실패"</div>
+              </div>
+            </div>
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs px-2 py-0.5 rounded font-semibold">Level 2</span>
+                <span className="text-xs text-muted-foreground">이슈 생성</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div><span className="text-muted-foreground">trigger:</span> <code>lane_stuck_for</code> 2시간</div>
+                <div><span className="text-muted-foreground">target:</span> GitHub issue (labels: auto-issue, needs-review)</div>
+                <div><span className="text-muted-foreground">message:</span> "Lane #{'{'}lane{'}'}이 2시간 멈춤. 검토 필요"</div>
+              </div>
+            </div>
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs px-2 py-0.5 rounded font-semibold">Level 3</span>
+                <span className="text-xs text-muted-foreground">온콜 페이지</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div><span className="text-muted-foreground">trigger:</span> <code>critical_failure</code> (PermissionDenied)</div>
+                <div><span className="text-muted-foreground">target:</span> PagerDuty</div>
+                <div><span className="text-muted-foreground">message:</span> "권한 거부 -- 보안 검토 필요"</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>점진적 에스컬레이션</strong>: 조용한 알림 → 이슈 → 페이지<br />
           낮은 레벨부터 시도 — 큰일 아닌 경우 사람 괴롭히지 않음<br />
@@ -75,45 +107,39 @@ escalation:
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">escalate() 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl RecoveryEngine {
-    pub async fn escalate(
-        &self,
-        lane: &Lane,
-        classification: &FailureClass,
-    ) -> Result<RecoveryOutcome> {
-        // 매칭 레벨 찾기
-        let level = self.find_matching_escalation_level(lane, classification)?;
-
-        // 메시지 템플릿 렌더링
-        let message = render_template(&level.message_template, &[
-            ("lane", lane.id.to_string().as_str()),
-            ("branch", lane.branch.as_str()),
-            ("failure", format!("{:?}", classification).as_str()),
-        ]);
-
-        // 타겟별 전송
-        match &level.target {
-            EscalationTarget::HumanUser => {
-                print_to_terminal(&message);
-            }
-            EscalationTarget::Webhook(url) => {
-                send_webhook(url, &message).await?;
-            }
-            EscalationTarget::CreateIssue { repo } => {
-                let issue = create_github_issue(repo, &message, &lane).await?;
-                log::info!("created issue: {}", issue.url);
-            }
-            EscalationTarget::PagerDuty { service_key } => {
-                trigger_pager(service_key, &message).await?;
-            }
-            EscalationTarget::AbandonLane => {
-                return Ok(RecoveryOutcome::Escalated);
-            }
-        }
-
-        Ok(RecoveryOutcome::Escalated)
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">RecoveryEngine::escalate(lane, classification) → Result&lt;RecoveryOutcome&gt;</p>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="font-semibold text-sm">매칭 레벨 찾기</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>find_matching_escalation_level(lane, classification)</code></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="font-semibold text-sm">메시지 템플릿 렌더링</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>render_template</code>에 lane, branch, failure 변수 주입</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="font-semibold text-sm">타겟별 전송</p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 mt-1.5">
+                  <span className="bg-muted text-xs px-2 py-1 rounded text-center font-mono">HumanUser</span>
+                  <span className="bg-muted text-xs px-2 py-1 rounded text-center font-mono">Webhook</span>
+                  <span className="bg-muted text-xs px-2 py-1 rounded text-center font-mono">CreateIssue</span>
+                  <span className="bg-muted text-xs px-2 py-1 rounded text-center font-mono">PagerDuty</span>
+                  <span className="bg-muted text-xs px-2 py-1 rounded text-center font-mono">AbandonLane</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">모든 경로에서 <code>RecoveryOutcome::Escalated</code> 반환</p>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">템플릿 변수</h3>
         <EscalationTemplateVarsViz />
@@ -124,25 +150,35 @@ escalation:
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">이벤트 로그 — 감사 추적</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct EscalationEvent {
-    pub timestamp: DateTime<Utc>,
-    pub lane_id: LaneId,
-    pub level: u32,
-    pub target_kind: String,
-    pub success: bool,
-    pub message: String,
-}
-
-impl RecoveryEngine {
-    fn record_escalation(&mut self, event: EscalationEvent) {
-        self.escalation_log.push(event.clone());
-
-        // 외부 감사 시스템에도 전송
-        if let Some(audit) = &self.audit_sink {
-            let _ = audit.record(event);
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-3">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">EscalationEvent</p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              <div className="bg-background rounded-md border p-2 text-center">
+                <p className="text-xs font-mono"><code>timestamp</code></p>
+              </div>
+              <div className="bg-background rounded-md border p-2 text-center">
+                <p className="text-xs font-mono"><code>lane_id</code></p>
+              </div>
+              <div className="bg-background rounded-md border p-2 text-center">
+                <p className="text-xs font-mono"><code>level</code></p>
+              </div>
+              <div className="bg-background rounded-md border p-2 text-center">
+                <p className="text-xs font-mono"><code>target_kind</code></p>
+              </div>
+              <div className="bg-background rounded-md border p-2 text-center">
+                <p className="text-xs font-mono"><code>success</code></p>
+              </div>
+              <div className="bg-background rounded-md border p-2 text-center">
+                <p className="text-xs font-mono"><code>message</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-background rounded-md border p-3">
+            <p className="font-semibold text-sm mb-1"><code>record_escalation(event)</code></p>
+            <p className="text-xs text-muted-foreground"><code>escalation_log</code>에 push + <code>audit_sink</code> 존재 시 외부 감사 시스템에도 전송</p>
+          </div>
+        </div>
         <p>
           <strong>모든 에스컬레이션 기록</strong>: 언제 누구에게 전달됐는지<br />
           감사·분석·튜닝의 기반 데이터<br />
@@ -150,25 +186,19 @@ impl RecoveryEngine {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">에스컬레이션 피로 방지</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 같은 알림 반복 방지
-impl EscalationPolicy {
-    fn should_skip_duplicate(
-        &self,
-        lane: &LaneId,
-        target: &EscalationTarget,
-        cooldown: Duration,
-    ) -> bool {
-        let recent = self.escalation_log.iter()
-            .filter(|e| &e.lane_id == lane)
-            .filter(|e| e.target_kind == target.kind_string())
-            .filter(|e| Utc::now() - e.timestamp < cooldown)
-            .count();
-
-        recent > 0  // 쿨다운 내 동일 알림 있으면 스킵
-    }
-}
-
-// 기본 쿨다운: 1시간`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">should_skip_duplicate(lane, target, cooldown) → bool</p>
+          <div className="bg-background rounded-md border p-3">
+            <p className="font-semibold text-sm mb-2">중복 알림 필터링</p>
+            <div className="space-y-1.5 text-xs text-muted-foreground">
+              <p><code>escalation_log</code>에서 동일 <code>lane_id</code> 필터</p>
+              <p>→ 동일 <code>target_kind</code> 필터</p>
+              <p>→ <code>cooldown</code> 이내 타임스탬프 필터</p>
+              <p>→ 1건이라도 있으면 <code>true</code> (스킵)</p>
+            </div>
+            <p className="text-xs mt-2 font-semibold">기본 쿨다운: 1시간</p>
+          </div>
+        </div>
         <p>
           <strong>알림 쿨다운</strong>: 같은 Lane + 같은 타겟에 1시간 이내 중복 알림 금지<br />
           Slack 채널이 동일 메시지로 도배되는 것 방지<br />

@@ -21,26 +21,33 @@ export default function BodiesStage({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── 바디 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlockBody 구조 — 헤더와의 역할 분담</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct BlockBody {
-    /// 트랜잭션 목록 — 블록 바디의 90% 이상을 차지
-    /// Legacy/EIP-2930/EIP-1559/EIP-4844 4가지 타입 혼재
-    pub transactions: Vec<TransactionSigned>,
-    /// 삼촌 블록 헤더 (PoW 시절 유물, PoS 이후 항상 빈 Vec)
-    pub ommers: Vec<Header>,
-    /// Shanghai 이후 CL → EL 인출 목록
-    pub withdrawals: Option<Vec<Withdrawal>>,
-}
-
-// 바디 크기: 블록마다 변동
-// 평균 ≈ 80~150KB (1000TX 기준)
-// 최대 ≈ 수 MB (blob TX 포함 시)
-
-// 바디를 별도 다운로드하는 3가지 이유:
-// 1. 대역폭 — 헤더만 있으면 체인 구조 파악 가능
-// 2. 선택적 보관 — archive 노드만 모든 바디 유지, light 노드는 최근만
-// 3. 병렬성 — 여러 블록의 바디를 동시에 여러 피어에게 요청`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">BlockBody 구조체 <span className="font-normal text-foreground/50">(평균 80~150KB, blob TX 포함 시 수 MB)</span></p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">transactions</code>
+                <span className="text-foreground/70"><code>Vec&lt;TransactionSigned&gt;</code> — Legacy/EIP-2930/EIP-1559/EIP-4844 4가지 타입 혼재, 바디의 90% 이상</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">ommers</code>
+                <span className="text-foreground/70"><code>Vec&lt;Header&gt;</code> — 삼촌 블록 헤더 (PoS 이후 항상 빈 Vec)</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">withdrawals</code>
+                <span className="text-foreground/70"><code>Option&lt;Vec&lt;Withdrawal&gt;&gt;</code> — Shanghai 이후 CL &rarr; EL 인출 목록</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1.5">바디를 별도 다운로드하는 3가지 이유</p>
+            <div className="space-y-1 text-xs text-foreground/60">
+              <p>1. <strong>대역폭</strong> — 헤더만으로 체인 구조 파악 가능</p>
+              <p>2. <strong>선택적 보관</strong> — archive 노드만 모든 바디 유지, light 노드는 최근만</p>
+              <p>3. <strong>병렬성</strong> — 여러 블록의 바디를 동시에 여러 피어에게 요청</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ommers</code>는 PoS 이후 더 이상 사용되지 않지만, 헤더의 <code>ommers_hash</code>와의 호환성 때문에 필드는 유지된다.<br />
           머지(The Merge) 이후 <code>ommers_hash</code>는 빈 목록의 RLP 해시(상수 <code>EMPTY_OMMER_ROOT</code>)로 고정된다.<br />
@@ -49,26 +56,21 @@ export default function BodiesStage({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── 머클 루트 검증 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">tx_root 검증 — 왜 머클 트리인가</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BodiesStage execute() 내부
-let tx_root = body.calculate_tx_root();
-if tx_root != header.transactions_root {
-    return Err(ConsensusError::BodyTransactionRootDiff);
-}
-
-// calculate_tx_root() 내부 — MPT(Merkle Patricia Trie) 구성
-// Key: RLP(tx_index)      (0x80, 0x01, 0x02, ...)
-// Val: encoded_tx (typed tx는 EIP-2718 prefix 포함)
-fn calculate_tx_root(&self) -> B256 {
-    let mut trie = HashBuilder::default();
-    for (i, tx) in self.transactions.iter().enumerate() {
-        let key = rlp::encode(i);
-        let value = tx.envelope_encoded();
-        trie.add_leaf(key, value);
-    }
-    trie.root()  // keccak256 기반 머클 루트
-}`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-pink-500 mb-2">tx_root 검증 흐름</p>
+          <div className="space-y-2 text-sm text-foreground/70">
+            <p>1. <code>body.calculate_tx_root()</code> 호출 &rarr; <code>header.transactions_root</code>와 대조</p>
+            <p>2. 불일치 시 <code>ConsensusError::BodyTransactionRootDiff</code> 반환</p>
+          </div>
+          <div className="mt-3 pt-2 border-t border-border/30">
+            <p className="text-xs font-semibold text-foreground/60 mb-1.5">calculate_tx_root() 내부 -- MPT 구성</p>
+            <div className="space-y-1 text-xs text-foreground/60">
+              <p>Key: <code>RLP(tx_index)</code> (0x80, 0x01, 0x02, ...)</p>
+              <p>Val: <code>tx.envelope_encoded()</code> (typed tx는 EIP-2718 prefix 포함)</p>
+              <p>각 리프를 <code>HashBuilder</code>에 추가 &rarr; <code>trie.root()</code>로 keccak256 머클 루트 반환</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           TX 목록을 단순 해시가 아닌 <strong>머클 패트리샤 트리</strong>로 구성한 이유:<br />
           1. <strong>부분 증명</strong> — "이 TX가 N번 블록에 포함되었다"를 머클 증명으로 보일 수 있음 (light client용)<br />
@@ -78,24 +80,24 @@ fn calculate_tx_root(&self) -> B256 {
 
         {/* ── withdrawals_root ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">withdrawals_root & ommers_hash 병렬 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 바디는 3개의 머클 루트로 검증
-// 1. transactions_root — TX 목록 머클 루트
-let tx_root = body.calculate_tx_root();
-if tx_root != header.transactions_root { return Err(...); }
-
-// 2. ommers_hash — 삼촌 헤더 목록의 keccak256 해시 (MPT 아님)
-let ommers_hash = keccak256(rlp::encode(&body.ommers));
-if ommers_hash != header.ommers_hash { return Err(...); }
-
-// 3. withdrawals_root — Shanghai 이후, withdrawals 목록 머클 루트
-if let Some(withdrawals) = &body.withdrawals {
-    let wd_root = calculate_withdrawals_root(withdrawals);
-    if Some(wd_root) != header.withdrawals_root { return Err(...); }
-}
-
-// 3중 검증 통과 시 블록 바디는 "정답"으로 확정`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-pink-500 mb-3">바디 3중 머클 루트 검증</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <span className="text-foreground/70"><code>transactions_root</code> — TX 목록의 MPT 머클 루트</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">2</span>
+              <span className="text-foreground/70"><code>ommers_hash</code> — 삼촌 헤더 목록의 <code>keccak256(rlp::encode)</code> (MPT 아님)</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-pink-500 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+              <span className="text-foreground/70"><code>withdrawals_root</code> — Shanghai 이후, withdrawals 목록 머클 루트</span>
+            </div>
+          </div>
+          <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-3 font-semibold">3중 검증 통과 시 블록 바디는 "정답"으로 확정</p>
+        </div>
         <p className="leading-7">
           3개의 독립 머클 루트로 바디를 쪼개어 검증하는 이유: <strong>부분 검증 가능성</strong>이다.<br />
           light client가 "이 블록에 특정 인출만 있었는지"를 확인하려면 withdrawals_root 경로만 받으면 된다.<br />
@@ -104,21 +106,18 @@ if let Some(withdrawals) = &body.withdrawals {
 
         {/* ── 배치 삽입 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">DB 삽입 — 4개 테이블 분산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`provider.insert_block_bodies(batch)?;
-// ├─ BlockBodyIndices: BlockNumber → StoredBlockBodyIndices
-// │                    (first_tx_num, tx_count) — TX 범위 인덱스
-// ├─ Transactions: TxNumber → TransactionSigned
-// │                순차 번호로 저장 (블록 경계 신경 쓰지 않음)
-// ├─ TransactionHashNumbers: B256 → TxNumber
-// │                          (RPC eth_getTransactionByHash용 역조회)
-// └─ BlockWithdrawals: BlockNumber → Vec<Withdrawal>
-//                      Shanghai 이후만 채워짐
-
-// 핵심 설계: Transactions 테이블이 블록 번호 아닌 "글로벌 TX 번호"로 인덱싱
-// 장점 1: 순차 스캔이 자연스러움 (TX 번호가 연속)
-// 장점 2: BlockBodyIndices로 (first_tx, count)만 보면 블록→TX 역인덱싱`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">DB 삽입 — <code>provider.insert_block_bodies(batch)</code></p>
+          <div className="space-y-1.5 text-sm text-foreground/70 ml-2">
+            <p><code>BlockBodyIndices</code>: <code>BlockNumber &rarr; StoredBlockBodyIndices</code> (first_tx_num, tx_count)</p>
+            <p><code>Transactions</code>: <code>TxNumber &rarr; TransactionSigned</code> -- 글로벌 순차 번호</p>
+            <p><code>TransactionHashNumbers</code>: <code>B256 &rarr; TxNumber</code> -- RPC eth_getTransactionByHash 역조회</p>
+            <p><code>BlockWithdrawals</code>: <code>BlockNumber &rarr; Vec&lt;Withdrawal&gt;</code> -- Shanghai 이후만</p>
+          </div>
+          <div className="mt-3 pt-2 border-t border-border/30 text-xs text-foreground/50">
+            <p>핵심: Transactions 테이블이 블록 번호가 아닌 "글로벌 TX 번호"로 인덱싱 &rarr; 순차 스캔 자연스럽고 BlockBodyIndices로 블록&rarr;TX 역인덱싱</p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>Transactions</code> 테이블이 블록 번호가 아닌 <strong>글로벌 TX 번호</strong>로 인덱싱되는 것이 핵심 설계.<br />
           이더리움 역사 전체에 약 25억 개의 TX가 있으므로 TxNumber는 u64로 표현 가능.<br />

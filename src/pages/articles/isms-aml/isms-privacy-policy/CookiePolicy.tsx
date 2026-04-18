@@ -1,3 +1,7 @@
+import CookiePolicyViz from './viz/CookiePolicyViz';
+import CookieBannerInlineViz from './viz/CookieBannerInlineViz';
+import CookieSecurityInlineViz from './viz/CookieSecurityInlineViz';
+
 export default function CookiePolicy() {
   return (
     <section id="cookie-policy" className="mb-16 scroll-mt-20">
@@ -10,6 +14,10 @@ export default function CookiePolicy() {
           서버가 HTTP 응답 헤더의 <code>Set-Cookie</code> 필드로 쿠키를 전송하면, 브라우저가 로컬에 저장하고 이후 동일 도메인 요청 시 자동으로 포함하여 전송한다.<br />
           쿠키는 그 자체로 개인정보는 아니지만, 이용자를 식별하거나 행동을 추적하는 데 사용되면 개인정보에 해당할 수 있다.
         </p>
+
+        <div className="my-8">
+          <CookiePolicyViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">쿠키의 유형</h3>
         <div className="not-prose overflow-x-auto my-4">
@@ -57,6 +65,9 @@ export default function CookiePolicy() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">동의 의무와 쿠키 배너</h3>
+        <div className="my-6">
+          <CookieBannerInlineViz />
+        </div>
         <p>
           정보통신망법 제22조의2 — 정보통신서비스 제공자는 이용자의 이동통신단말장치(스마트폰, PC 브라우저 포함)에 저장되어 있는 정보에 접근하려면 이용자의 동의를 받아야 한다.<br />
           쿠키는 브라우저에 저장되는 정보이므로 이 조항의 적용을 받는다.
@@ -91,6 +102,9 @@ export default function CookiePolicy() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">기술적 보안 조치: 쿠키 속성 설정</h3>
+        <div className="my-6">
+          <CookieSecurityInlineViz />
+        </div>
         <p>
           쿠키 자체의 보안도 중요하다. 쿠키에 민감한 정보(세션 ID, 인증 토큰)가 담기면 탈취 시 세션 하이재킹(Session Hijacking, 타인의 로그인 세션을 가로채는 공격)이 가능하기 때문.<br />
           HTTP 응답 헤더에서 설정할 수 있는 보안 속성 3가지:

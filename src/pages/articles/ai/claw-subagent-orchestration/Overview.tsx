@@ -24,29 +24,36 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Agent Tool의 역할</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Agent 도구는 "서브 에이전트 스폰" 도구
-// rust/crates/tools/src/agent_tool.rs
-
-pub struct AgentToolInput {
-    pub description: String,      // 3-5 word 요약
-    pub prompt: String,           // sub-agent 실제 작업 지시
-    pub subagent_type: String,    // "Explore" | "Plan" | "general-purpose" 등
-    pub model: Option<String>,    // override (opus/sonnet/haiku)
-    pub isolation: Option<String>, // "worktree" 등
-}
-
-pub struct AgentToolOutput {
-    pub result: String,           // sub-agent의 최종 응답
-    pub tool_calls: Vec<String>,  // sub-agent가 호출한 도구 로그
-    pub tokens_used: u64,
-}
-
-// 호출 흐름
-// Main agent가 "Agent" tool을 호출
-//   → 새 Session 생성 (별도 context)
-//   → Worker에 특정 system prompt 주입
-//   → Worker가 자체 loop 실행 (이 안에서 다른 도구 사용)
-//   → 최종 결과만 Main에 반환`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">AgentToolInput</p>
+            <ul className="text-sm space-y-1 list-none pl-0">
+              <li><code>description</code> — 3-5 word 요약</li>
+              <li><code>prompt</code> — sub-agent 실제 작업 지시</li>
+              <li><code>subagent_type</code> — <code>"Explore"</code> | <code>"Plan"</code> | <code>"general-purpose"</code> 등</li>
+              <li><code>model</code> — override (opus/sonnet/haiku)</li>
+              <li><code>isolation</code> — <code>"worktree"</code> 등</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">AgentToolOutput</p>
+            <ul className="text-sm space-y-1 list-none pl-0">
+              <li><code>result</code> — sub-agent의 최종 응답</li>
+              <li><code>tool_calls</code> — sub-agent가 호출한 도구 로그</li>
+              <li><code>tokens_used</code> — 소비 토큰 수</li>
+            </ul>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-2">호출 흐름</p>
+          <ol className="text-sm space-y-1 list-decimal pl-4">
+            <li>Main agent가 <code>Agent</code> tool 호출</li>
+            <li>새 Session 생성 (별도 context)</li>
+            <li>Worker에 특정 system prompt 주입</li>
+            <li>Worker가 자체 loop 실행 (이 안에서 다른 도구 사용)</li>
+            <li>최종 결과만 Main에 반환</li>
+          </ol>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Sub-agent 유형 (실제 Claude Code)</h3>
         <div className="overflow-x-auto">
@@ -89,54 +96,57 @@ pub struct AgentToolOutput {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Orchestration의 실제 효과</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 시나리오: "로그인 버그 수정" 요청
-
-// Single-agent approach (비효율)
-// 1. 사용자: "로그인이 안 돼요"
-// 2. Main: 전체 codebase 검색 → context 10K tokens
-// 3. Main: auth.rs 읽기 → context 30K tokens
-// 4. Main: tests 읽기 → context 50K tokens
-// 5. Main: 버그 분석 → context 60K tokens
-// 6. Main: 수정 → context 70K tokens
-// → 토큰 비용 높음, context 포화
-
-// Multi-agent approach (claw)
-// 1. 사용자: "로그인이 안 돼요"
-// 2. Main: "Explore agent 호출 → 로그인 관련 파일 찾기"
-//    → Worker가 별도 session에서 Grep/Read 실행
-//    → 결과: "auth.rs:142에 null check 누락"
-//    → Main context: 500 tokens만 소비
-// 3. Main: "Plan agent 호출 → 수정 방안"
-//    → Worker: "line 142에 ? operator 추가" 반환
-//    → Main context: 300 tokens
-// 4. Main: Edit 도구로 직접 수정 (worker 불필요)
-// 5. Main: Bash로 테스트 실행
-// → 총 Main context: 2-3K tokens (30x 절감)`}</pre>
+        <p className="text-sm text-muted-foreground mb-3">시나리오: "로그인 버그 수정" 요청</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Single-agent (비효율)</p>
+            <ol className="text-sm space-y-1 list-decimal pl-4">
+              <li>사용자: "로그인이 안 돼요"</li>
+              <li>Main: 전체 codebase 검색 → context <strong>10K</strong></li>
+              <li>Main: <code>auth.rs</code> 읽기 → context <strong>30K</strong></li>
+              <li>Main: tests 읽기 → context <strong>50K</strong></li>
+              <li>Main: 버그 분석 → context <strong>60K</strong></li>
+              <li>Main: 수정 → context <strong>70K</strong></li>
+            </ol>
+            <p className="text-sm mt-2 text-red-600 dark:text-red-400">토큰 비용 높음, context 포화</p>
+          </div>
+          <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Multi-agent (claw)</p>
+            <ol className="text-sm space-y-1 list-decimal pl-4">
+              <li>사용자: "로그인이 안 돼요"</li>
+              <li><code>Explore</code> agent 호출 → 별도 session에서 Grep/Read 실행 → Main context: <strong>500</strong></li>
+              <li><code>Plan</code> agent 호출 → "line 142에 <code>?</code> operator 추가" → Main context: <strong>300</strong></li>
+              <li>Main이 <code>Edit</code> 도구로 직접 수정</li>
+              <li>Main이 <code>Bash</code>로 테스트 실행</li>
+            </ol>
+            <p className="text-sm mt-2 text-green-600 dark:text-green-400">총 Main context: 2-3K tokens (30x 절감)</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Session Isolation 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Main의 Agent tool 호출 → Worker Session 생성
-pub fn spawn_worker(
-    parent: &Session,
-    agent_type: AgentType,
-    prompt: String,
-) -> WorkerSession {
-    WorkerSession {
-        session_id: Uuid::new_v4(),          // 새 ID (parent와 분리)
-        parent_id: Some(parent.session_id),  // 추적용 (로깅만)
-        messages: vec![                       // parent messages 복사 안 함
-            Message::System(agent_type.system_prompt()),
-            Message::User(prompt),
-        ],
-        tool_registry: filter_tools(agent_type),  // 제한된 도구 셋
-        token_usage: TokenUsage::zero(),
-        workdir: parent.workdir.clone(),     // 파일 시스템만 공유
-        permission_mode: parent.permission_mode,
-    }
-}
-
-// 핵심: messages는 빈 slate로 시작
-// → parent의 대화 이력 접근 불가
-// → 주어진 prompt만 보고 판단`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code>spawn_worker</code> — Worker Session 생성</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="space-y-1">
+              <p className="font-medium text-xs text-muted-foreground uppercase tracking-wide">완전 분리 (새로 생성)</p>
+              <ul className="list-none pl-0 space-y-1">
+                <li><code>session_id</code> — 새 UUID (parent와 분리)</li>
+                <li><code>messages</code> — system prompt + user prompt만 포함, parent 대화 이력 복사 안 함</li>
+                <li><code>tool_registry</code> — <code>filter_tools(agent_type)</code>로 제한된 도구 셋</li>
+                <li><code>token_usage</code> — 0에서 시작</li>
+              </ul>
+            </div>
+            <div className="space-y-1">
+              <p className="font-medium text-xs text-muted-foreground uppercase tracking-wide">공유 (parent 참조)</p>
+              <ul className="list-none pl-0 space-y-1">
+                <li><code>parent_id</code> — 추적용 (로깅만)</li>
+                <li><code>workdir</code> — 파일 시스템만 공유</li>
+                <li><code>permission_mode</code> — 동일 권한 모드</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-sm mt-3 text-muted-foreground">핵심: messages는 빈 slate로 시작 → parent의 대화 이력 접근 불가, 주어진 prompt만 보고 판단</p>
+        </div>
         <p>
           <strong>격리 경계</strong>:<br />
           - <strong>messages</strong>: 완전 분리 — worker는 자기 prompt만 봄<br />
@@ -146,29 +156,33 @@ pub fn spawn_worker(
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">결과 반환 흐름</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Worker가 완료되면 ToolOutput으로 Main에 주입
-pub struct AgentToolOutput {
-    pub content: Vec<ContentBlock>,  // 최종 assistant message blocks
-    pub metadata: WorkerMetadata,
-}
-
-pub struct WorkerMetadata {
-    pub session_id: Uuid,
-    pub tool_calls_count: u32,       // worker가 사용한 도구 횟수
-    pub total_tokens: u64,
-    pub wall_time_ms: u64,
-    pub terminated_reason: TermReason, // Completed | BudgetExceeded | Error
-}
-
-// Main의 context에는 content만 삽입됨
-// metadata는 로깅/모니터링용 (대화에는 노출되지 않음)
-
-// Main 관점에서 보이는 것:
-// {
-//   "role": "tool",
-//   "tool_use_id": "toolu_01",
-//   "content": "auth.rs:142에 null check 누락 확인. ..."
-// }`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">AgentToolOutput</p>
+            <ul className="text-sm space-y-1 list-none pl-0">
+              <li><code>content</code> — 최종 assistant message blocks (Main context에 삽입)</li>
+              <li><code>metadata</code> — 로깅/모니터링용 (대화에는 노출되지 않음)</li>
+            </ul>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">WorkerMetadata</p>
+            <ul className="text-sm space-y-1 list-none pl-0">
+              <li><code>session_id</code> — Worker 세션 식별자</li>
+              <li><code>tool_calls_count</code> — worker가 사용한 도구 횟수</li>
+              <li><code>total_tokens</code> — 소비 토큰 수</li>
+              <li><code>wall_time_ms</code> — 실행 시간(ms)</li>
+              <li><code>terminated_reason</code> — <code>Completed</code> | <code>BudgetExceeded</code> | <code>Error</code></li>
+            </ul>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-2">Main 관점에서 보이는 것</p>
+          <p className="text-sm">
+            Worker 완료 시 <code>role: "tool"</code> 메시지로 최종 content만 전달<br />
+            예: <code>"auth.rs:142에 null check 누락 확인. ..."</code><br />
+            metadata는 별도 telemetry 파이프라인으로 흘러가 비용/성능 분석에 사용
+          </p>
+        </div>
         <p>
           Main은 worker의 내부 과정(어떤 파일을 읽었는지, 몇 번 grep 했는지)을 <strong>전혀 모름</strong><br />
           오직 최종 content 블록만 보고 다음 행동 결정 — information hiding 원칙<br />

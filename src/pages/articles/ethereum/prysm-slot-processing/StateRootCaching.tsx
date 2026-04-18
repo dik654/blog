@@ -10,43 +10,44 @@ export default function StateRootCaching({ onCodeRef: _ }: Props) {
 
         {/* ── Ring Buffer ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">Ring Buffer 8192 — 최근 state/block roots</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BeaconState의 두 필드:
-struct BeaconState {
-    // ...
-    block_roots: Vector[Bytes32, SLOTS_PER_HISTORICAL_ROOT],  // 8192
-    state_roots: Vector[Bytes32, SLOTS_PER_HISTORICAL_ROOT],  // 8192
-    historical_roots: List[Bytes32, HISTORICAL_ROOTS_LIMIT],  // 확장
-    // ...
-}
-
-// SLOTS_PER_HISTORICAL_ROOT = 8192 = 2^13
-// 8192 slot × 12초/slot = 약 27.3시간
-
-// Ring buffer 동작:
-// slot 0 → block_roots[0], state_roots[0]
-// slot 1 → block_roots[1], state_roots[1]
-// ...
-// slot 8191 → block_roots[8191], state_roots[8191]
-// slot 8192 → block_roots[0] 덮어씀
-// slot 8193 → block_roots[1] 덮어씀
-// ...
-
-// 인덱스 계산:
-idx := slot % SLOTS_PER_HISTORICAL_ROOT
-
-// 용도:
-// 1. RANDAO 계산: block_roots[previous_epoch % 8192]
-// 2. Attestation의 beacon_block_root 검증
-// 3. Fork choice tip 추적
-// 4. Light client의 근거리 증명
-
-// 왜 27시간?
-// - Attestation inclusion window: 1 epoch (6.4분)
-// - Finality: 2 epoch (~12.8분)
-// - Safety margin: ~수 시간
-// - 8192 slot (27시간)이 충분 + 메모리 효율`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3">BeaconState 필드</p>
+            <div className="space-y-2 text-xs">
+              <div><code className="text-indigo-300">block_roots: Vector[Bytes32, 8192]</code> <span className="text-foreground/60">— 슬롯별 블록 루트</span></div>
+              <div><code className="text-indigo-300">state_roots: Vector[Bytes32, 8192]</code> <span className="text-foreground/60">— 슬롯별 상태 루트</span></div>
+              <div><code className="text-indigo-300">historical_roots: List[Bytes32, LIMIT]</code> <span className="text-foreground/60">— 장기 보관용 (확장)</span></div>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2"><code>SLOTS_PER_HISTORICAL_ROOT = 8192 = 2^13</code> — 8192 x 12초 = 약 27.3시간</p>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">Ring Buffer 동작</p>
+            <div className="text-xs text-foreground/70 space-y-1">
+              <div>인덱스 계산: <code>idx = slot % SLOTS_PER_HISTORICAL_ROOT</code></div>
+              <div>slot 0~8191 → 순차 기록 / slot 8192 → <code>block_roots[0]</code> 덮어씀 (순환)</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              'RANDAO 계산',
+              'Attestation beacon_block_root 검증',
+              'Fork choice tip 추적',
+              'Light client 근거리 증명',
+            ].map((use, i) => (
+              <div key={i} className="rounded-lg border border-border p-2 text-center">
+                <span className="text-xs font-bold text-muted-foreground">{i + 1}.</span>
+                <p className="text-xs text-foreground/70">{use}</p>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">왜 27시간인가?</p>
+            <div className="text-xs text-foreground/70 space-y-1">
+              <div>Attestation inclusion window: 1 epoch (6.4분) / Finality: 2 epoch (~12.8분)</div>
+              <div>Safety margin ~수 시간 포함 → 8192 slot (27시간)이 충분 + 메모리 효율적</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           block_roots/state_roots는 <strong>8192 slot ring buffer</strong>.<br />
           slot % 8192로 순환 인덱싱 → 최근 ~27시간 roots 유지.<br />
@@ -55,49 +56,51 @@ idx := slot % SLOTS_PER_HISTORICAL_ROOT
 
         {/* ── HistoricalBatch ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HistoricalBatch — 장기 저장 압축</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 8192 slot 지나면 ring buffer 덮어씀 → 과거 데이터 영구 손실 방지
-// → HistoricalBatch를 historical_roots에 추가
-
-// Epoch 경계 (매 32 slot)에서:
-// ring buffer가 한 바퀴 돌았는지 확인
-// slot % SLOTS_PER_HISTORICAL_ROOT == 0 시점에 실행
-
-struct HistoricalBatch {
-    block_roots: Vector[Bytes32, 8192],  // 현재 ring buffer 전체
-    state_roots: Vector[Bytes32, 8192],
-}
-
-// HistoricalBatch의 merkle root 계산
-batch := HistoricalBatch{
-    block_roots: state.block_roots,
-    state_roots: state.state_roots,
-}
-root := batch.HashTreeRoot()  // 단일 32 bytes
-
-// historical_roots에 추가
-state.historical_roots = append(state.historical_roots, root)
-
-// 크기 비교:
-// - 원본 8192 × 2 × 32B = 512 KB
-// - HashTreeRoot: 32 bytes
-// - 압축률: 16,000배
-
-// Historical summary (Capella+):
-// HistoricalBatch 대신 HistoricalSummary 사용
-struct HistoricalSummary {
-    block_summary_root: Bytes32,  // block_roots의 HashTreeRoot
-    state_summary_root: Bytes32,  // state_roots의 HashTreeRoot
-}
-// 2개 필드로 분리 → 각각 독립 증명 가능
-
-// 장기 증명:
-// "slot X의 block이 특정 hash였음" 증명:
-// 1. X가 속한 HistoricalBatch index 계산
-// 2. historical_roots[index] 가져오기
-// 3. HistoricalBatch 복원 (아카이브 노드에서)
-// 4. merkle proof 생성`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">트리거 시점</p>
+            <div className="text-xs text-foreground/70">
+              ring buffer 한 바퀴(<code>slot % SLOTS_PER_HISTORICAL_ROOT == 0</code>) → 덮어쓰기 전 보관
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm text-sky-400 mb-2">HistoricalBatch (Phase0~Altair)</p>
+              <div className="space-y-1 text-xs">
+                <div><code className="text-sky-300">block_roots: Vector[Bytes32, 8192]</code></div>
+                <div><code className="text-sky-300">state_roots: Vector[Bytes32, 8192]</code></div>
+                <div className="text-foreground/60 mt-1"><code>batch.HashTreeRoot()</code> → 단일 32 bytes로 <code>historical_roots</code>에 추가</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
+              <p className="font-semibold text-sm text-violet-400 mb-2">HistoricalSummary (Capella+)</p>
+              <div className="space-y-1 text-xs">
+                <div><code className="text-violet-300">block_summary_root: Bytes32</code> <span className="text-foreground/60">— block_roots의 HashTreeRoot</span></div>
+                <div><code className="text-violet-300">state_summary_root: Bytes32</code> <span className="text-foreground/60">— state_roots의 HashTreeRoot</span></div>
+                <div className="text-foreground/60 mt-1">2개 필드 분리 → 각각 독립 증명 가능</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm text-emerald-400 mb-2">압축률</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>원본: 8192 x 2 x 32B = <strong>512 KB</strong></div>
+                <div>HashTreeRoot: <strong>32 bytes</strong></div>
+                <div className="font-semibold text-emerald-400">16,000배 압축</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">장기 증명 절차</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><strong>1.</strong> slot X가 속한 HistoricalBatch index 계산</div>
+                <div><strong>2.</strong> <code>historical_roots[index]</code> 가져오기</div>
+                <div><strong>3.</strong> HistoricalBatch 복원 (아카이브 노드)</div>
+                <div><strong>4.</strong> Merkle proof 생성</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           HistoricalBatch가 <strong>16,000배 압축</strong>.<br />
           512KB ring buffer → 32 bytes HashTreeRoot.<br />

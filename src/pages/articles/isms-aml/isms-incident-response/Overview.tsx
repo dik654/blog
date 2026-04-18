@@ -1,8 +1,13 @@
+import OverviewViz from './viz/OverviewViz';
+import IncidentLifecycleInline from './viz/IncidentLifecycleInline';
+import CertContactInline from './viz/CertContactInline';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">침해사고 대응 체계</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <OverviewViz />
         <h3 className="text-xl font-semibold mt-8 mb-4">ISMS 2.11 요구사항</h3>
         <p className="leading-7">
           ISMS-P 인증 기준 2.11은 "사고 예방 및 대응"을 다룬다.
@@ -18,6 +23,8 @@ export default function Overview() {
           <br />
           전체 생명주기를 빠짐없이 커버해야 비로소 "관리체계"라 부를 수 있다.
         </p>
+
+        <IncidentLifecycleInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">침해사고 유형</h3>
         <p className="leading-7">
@@ -60,6 +67,8 @@ export default function Overview() {
           5단계 사후활동(Post-Incident Activity)은 사고 경위를 분석하고 재발방지 대책을 수립하는 단계다.
           사후 보고서 작성, 정책 개선, 추가 훈련 실시가 핵심이다.
         </p>
+
+        <CertContactInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">대응 조직: CERT 구성</h3>
         <p className="leading-7">

@@ -16,21 +16,30 @@ export default function GreenContract() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GreenContract 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct GreenContract {
-    pub build_required: bool,
-    pub tests_required: bool,
-    pub min_test_coverage: Option<f32>,
-    pub lint_required: bool,
-    pub max_lint_warnings: usize,
-    pub custom_checks: Vec<CustomCheck>,
-    pub consecutive_green_count: u32,  // 연속 green 요구
-}
-
-pub struct CustomCheck {
-    pub name: String,
-    pub command: String,
-    pub timeout: Duration,
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">GreenContract</code></p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">build_required: bool</code></li>
+                <li><code className="bg-muted px-1 rounded">tests_required: bool</code></li>
+                <li><code className="bg-muted px-1 rounded">min_test_coverage: Option&lt;f32&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">lint_required: bool</code></li>
+                <li><code className="bg-muted px-1 rounded">max_lint_warnings: usize</code></li>
+                <li><code className="bg-muted px-1 rounded">custom_checks: Vec&lt;CustomCheck&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">consecutive_green_count: u32</code> — 연속 green 요구</li>
+              </ul>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">CustomCheck</code></p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">name: String</code> — 체크 이름</li>
+                <li><code className="bg-muted px-1 rounded">command: String</code> — 셸 명령</li>
+                <li><code className="bg-muted px-1 rounded">timeout: Duration</code> — 시간 제한</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>기본 검증 4가지</strong>: build, tests, coverage, lint<br />
           <code>custom_checks</code>: 팀별 추가 검증 (보안 스캔, 성능 벤치마크 등)<br />
@@ -38,58 +47,32 @@ pub struct CustomCheck {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">verify() — 계약 검증</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl GreenContract {
-    pub async fn verify(&self, ctx: &LaneContext) -> VerifyResult {
-        let mut failures = Vec::new();
-
-        // 빌드 체크
-        if self.build_required {
-            match ctx.last_build_status {
-                Some(BuildStatus::Green) => {},
-                _ => failures.push("build not green".into()),
-            }
-        }
-
-        // 테스트 체크
-        if self.tests_required {
-            match ctx.last_test_status {
-                Some(TestStatus::Pass) => {},
-                _ => failures.push("tests not passing".into()),
-            }
-        }
-
-        // 커버리지 체크
-        if let Some(min) = self.min_test_coverage {
-            match ctx.test_coverage {
-                Some(c) if c >= min => {},
-                Some(c) => failures.push(format!("coverage {:.1}% < {:.1}%", c * 100.0, min * 100.0)),
-                None    => failures.push("coverage unknown".into()),
-            }
-        }
-
-        // 린트 체크
-        if self.lint_required {
-            match ctx.lint_warnings {
-                Some(w) if w <= self.max_lint_warnings => {},
-                Some(w) => failures.push(format!("{} lint warnings (max {})", w, self.max_lint_warnings)),
-                None    => failures.push("lint result unknown".into()),
-            }
-        }
-
-        // 커스텀 체크
-        for check in &self.custom_checks {
-            if let Err(e) = self.run_custom_check(check).await {
-                failures.push(format!("custom check '{}': {}", check.name, e));
-            }
-        }
-
-        if failures.is_empty() {
-            VerifyResult::Pass
-        } else {
-            VerifyResult::Fail(failures)
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">verify(&self, ctx: &LaneContext) → VerifyResult</code></p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">build</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">build_required</code> → <code className="text-xs bg-muted px-1 rounded">BuildStatus::Green</code> 아니면 실패 추가</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">tests</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">tests_required</code> → <code className="text-xs bg-muted px-1 rounded">TestStatus::Pass</code> 아니면 실패 추가</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">coverage</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">min_test_coverage</code> 미달 또는 unknown이면 실패 추가</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">lint</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">lint_warnings &gt; max_lint_warnings</code>이면 실패 추가</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">custom</span>
+              <p className="text-sm text-muted-foreground">각 <code className="text-xs bg-muted px-1 rounded">CustomCheck</code> 실행 → 실패 시 이름 + 에러 메시지 추가</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">모든 체크 완료 후 실패 목록이 비어 있으면 <code className="bg-muted px-1 rounded">Pass</code>, 아니면 <code className="bg-muted px-1 rounded">Fail(failures)</code> — 첫 실패에서 멈추지 않고 전부 수집</p>
+        </div>
         <p>
           <strong>누적 실패 리스트</strong>: 첫 실패에서 멈추지 않고 모든 실패 수집<br />
           사용자에게 "한 번에 모든 문제" 표시 — 여러 번 시도 불필요<br />
@@ -97,28 +80,37 @@ pub struct CustomCheck {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">consecutive green — flaky test 대응</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// consecutive_green_count: 2 요구 시
-// 최근 2회 연속 green이어야 머지 가능
-
-impl GreenContract {
-    async fn verify_consecutive(&self, ctx: &LaneContext) -> bool {
-        if self.consecutive_green_count <= 1 { return true; }
-
-        let recent = ctx.recent_build_history.clone();
-        if recent.len() < self.consecutive_green_count as usize {
-            return false;
-        }
-
-        recent.iter()
-            .take(self.consecutive_green_count as usize)
-            .all(|b| b.status == BuildStatus::Green)
-    }
-}
-
-// 시나리오: flaky test가 있는 프로젝트
-// 1회 green → 재실행 시 실패 가능성 ↑
-// 2회 연속 green → 신뢰도 높음
-// 3회 연속 green → 거의 확실`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">verify_consecutive(ctx) → bool</code></p>
+          <div className="space-y-3">
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">consecutive_green_count &lt;= 1</code>이면 즉시 true 반환</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">recent_build_history</code>에서 최근 N개 확인 — 부족하면 false</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">.all(|b| b.status == Green)</code> — N개 전부 green이어야 통과</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            <div className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded p-2 text-center">
+              <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300">1회 green</p>
+              <p className="text-xs text-muted-foreground">flaky 가능성 높음</p>
+            </div>
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded p-2 text-center">
+              <p className="text-xs font-semibold text-green-700 dark:text-green-300">2회 연속</p>
+              <p className="text-xs text-muted-foreground">신뢰도 높음</p>
+            </div>
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded p-2 text-center">
+              <p className="text-xs font-semibold text-green-700 dark:text-green-300">3회 연속</p>
+              <p className="text-xs text-muted-foreground">거의 확실</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>flaky test 방어</strong>: 1회 통과로 판단 금지<br />
           2회 이상 연속 통과 요구 → 우연한 pass 배제<br />
@@ -126,32 +118,31 @@ impl GreenContract {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">커스텀 체크 실행</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl GreenContract {
-    async fn run_custom_check(&self, check: &CustomCheck) -> Result<()> {
-        let output = tokio::time::timeout(
-            check.timeout,
-            tokio::process::Command::new("/bin/sh")
-                .arg("-c").arg(&check.command)
-                .output(),
-        ).await??;
-
-        if !output.status.success() {
-            let stderr = String::from_utf8_lossy(&output.stderr);
-            return Err(anyhow!("exit {:?}: {}", output.status.code(), stderr));
-        }
-
-        Ok(())
-    }
-}
-
-// YAML 예시
-custom_checks:
-  - name: "security scan"
-    command: "cargo audit --deny warnings"
-    timeout: 60s
-  - name: "no console.log"
-    command: "! grep -rn 'console.log' src/"
-    timeout: 5s`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">run_custom_check(check) → Result&lt;()&gt;</code></p>
+          <div className="space-y-3 mb-3">
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">1</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">tokio::time::timeout</code> + <code className="text-xs bg-muted px-1 rounded">/bin/sh -c</code>로 셸 명령 실행</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">2</span>
+              <p className="text-sm text-muted-foreground">exit 0 = 통과, 비정상 exit = 실패 (stderr 포함), timeout 초과 = 실패</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1">security scan</p>
+              <p className="text-xs text-muted-foreground"><code className="bg-muted px-1 rounded">cargo audit --deny warnings</code></p>
+              <p className="text-xs text-muted-foreground">timeout: 60s</p>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1">no console.log</p>
+              <p className="text-xs text-muted-foreground"><code className="bg-muted px-1 rounded">! grep -rn 'console.log' src/</code></p>
+              <p className="text-xs text-muted-foreground">timeout: 5s</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>임의 셸 명령 지원</strong>: exit 0 = 통과, 비정상 exit = 실패<br />
           timeout 초과 시 실패 취급<br />
@@ -159,20 +150,21 @@ custom_checks:
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GreenContract 표시 UI</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Lane이 ReadyToMerge 상태일 때 terminal 출력
-╭─ Lane #42: feat/add-auth ──╮
-│ Status: ReadyToMerge        │
-│                             │
-│ GreenContract:              │
-│ ✓ build:       green         │
-│ ✓ tests:       pass (487/487)│
-│ ✓ coverage:    84.2% ≥ 80%   │
-│ ✓ lint:        0 warnings    │
-│ ✓ security:    no issues     │
-│ ✓ consecutive: 2/2 green     │
-│                             │
-│ Ready to merge!             │
-╰─────────────────────────────╯`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <div className="bg-background border-2 border-green-300 dark:border-green-700 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Lane #42: <code className="text-xs bg-muted px-1 rounded">feat/add-auth</code></p>
+            <p className="text-xs text-green-600 dark:text-green-400 font-semibold mb-3">Status: ReadyToMerge</p>
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground"><span className="text-green-600 dark:text-green-400 font-bold">&#10003;</span> build: green</p>
+              <p className="text-xs text-muted-foreground"><span className="text-green-600 dark:text-green-400 font-bold">&#10003;</span> tests: pass (487/487)</p>
+              <p className="text-xs text-muted-foreground"><span className="text-green-600 dark:text-green-400 font-bold">&#10003;</span> coverage: 84.2% &ge; 80%</p>
+              <p className="text-xs text-muted-foreground"><span className="text-green-600 dark:text-green-400 font-bold">&#10003;</span> lint: 0 warnings</p>
+              <p className="text-xs text-muted-foreground"><span className="text-green-600 dark:text-green-400 font-bold">&#10003;</span> security: no issues</p>
+              <p className="text-xs text-muted-foreground"><span className="text-green-600 dark:text-green-400 font-bold">&#10003;</span> consecutive: 2/2 green</p>
+            </div>
+            <p className="text-sm font-semibold text-green-600 dark:text-green-400 mt-3">Ready to merge!</p>
+          </div>
+        </div>
         <p>
           <strong>모든 체크 시각화</strong>: 통과 ✓ / 실패 ✗<br />
           사용자가 상태 한눈에 파악 — 무엇이 통과/실패했는지<br />

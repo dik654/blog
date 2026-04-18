@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import ConcentratedViz from './viz/ConcentratedViz';
 import CapitalEfficiencyViz from './viz/CapitalEfficiencyViz';
 import FeeTierViz from './viz/FeeTierViz';
@@ -22,21 +23,25 @@ export default function Overview() {
 
         <CapitalEfficiencyViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 예시: USDC/ETH 페어, 현재 가격 $3000
-
-V2 방식:
-  $100 LP가 제공하는 유동성이 $0 ~ $∞ 전 구간에 분산
-  $2500~$3500 구간에 실제 사용되는 유동성: 약 $2
-
-V3 방식:
-  LP가 $2500~$3500 구간만 집중
-  같은 $100으로 해당 구간에 $100 전부 제공
-  자본 효율: 50배
-
-// 좁을수록 효율 ↑
-V3 좁은 구간 ($2950~$3050):
-  자본 효율: 200배
-  단, 가격 이탈 시 100% 한 쪽 자산으로 전환`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">V2 방식</p>
+            <p className="text-sm">USDC/ETH, 현재 가격 $3000 기준</p>
+            <p className="text-sm mt-2">$100 LP 유동성이 <code className="text-xs bg-muted px-1 rounded">$0 ~ $∞</code> 전 구간에 분산</p>
+            <p className="text-sm mt-1">$2500~$3500 구간에 실제 사용 유동성: <strong>약 $2</strong></p>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">V3 방식</p>
+            <p className="text-sm">LP가 $2500~$3500 구간만 집중</p>
+            <p className="text-sm mt-2">같은 $100으로 해당 구간에 <strong>$100 전부 제공</strong></p>
+            <p className="text-sm mt-1">자본 효율: <strong>50배</strong></p>
+          </div>
+          <div className="md:col-span-2 bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">V3 좁은 구간 ($2950~$3050)</p>
+            <p className="text-sm">자본 효율: <strong>200배</strong> — 구간이 좁을수록 효율 상승</p>
+            <p className="text-sm mt-1 text-muted-foreground">단, 가격 이탈 시 100% 한 쪽 자산으로 전환</p>
+          </div>
+        </div>
         <p>
           <strong>구간이 좁을수록 효율 ↑, 위험 ↑</strong><br />
           가격이 구간 밖으로 나가면 100% 한 쪽 토큰으로 변환됨 — 수수료 수익 중단<br />
@@ -44,15 +49,35 @@ V3 좁은 구간 ($2950~$3050):
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">V2 vs V3 유동성 수학 비교</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`V2: x · y = k (전 구간)
-    √k = L (liquidity)
-
-V3: (x + L/√P_upper) · (y + L·√P_lower) = L²
-    여기서 P는 현재 가격, P_lower/P_upper는 구간 경계
-
-    가격이 구간 내: 양쪽 토큰 보유
-    가격 < P_lower: 100% x (base) 보유
-    가격 > P_upper: 100% y (quote) 보유`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">V2 수식</p>
+            <M display>{'x \\cdot y = k \\quad \\text{(전 구간)}'}</M>
+            <p className="text-sm mt-2"><M>{'\\sqrt{k} = L'}</M> — L은 유동성(liquidity)</p>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">V3 수식</p>
+            <M display>{'\\left(x + \\frac{L}{\\sqrt{P_{upper}}}\\right) \\cdot \\left(y + L \\cdot \\sqrt{P_{lower}}\\right) = L^2'}</M>
+            <p className="text-xs text-muted-foreground mt-2">P: 현재 가격, P_lower/P_upper: 구간 경계</p>
+          </div>
+          <div className="md:col-span-2 bg-muted/50 rounded-xl p-5 border border-border">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">가격 위치별 보유 토큰</p>
+            <div className="grid grid-cols-3 gap-3 text-sm mt-1">
+              <div className="text-center">
+                <p className="font-mono text-xs text-muted-foreground">P &lt; P_lower</p>
+                <p className="mt-1">100% <code className="text-xs bg-muted px-1 rounded">token0</code> (base)</p>
+              </div>
+              <div className="text-center border-x border-border px-3">
+                <p className="font-mono text-xs text-muted-foreground">P_lower &le; P &le; P_upper</p>
+                <p className="mt-1">양쪽 토큰 보유</p>
+              </div>
+              <div className="text-center">
+                <p className="font-mono text-xs text-muted-foreground">P &gt; P_upper</p>
+                <p className="mt-1">100% <code className="text-xs bg-muted px-1 rounded">token1</code> (quote)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           V3는 <strong>"가상 reserve"</strong> 개념 도입<br />
           실제 보유량 + 구간 경계로부터 계산된 가상 reserve가 곡선 형성<br />
@@ -60,21 +85,36 @@ V3: (x + L/√P_upper) · (y + L·√P_lower) = L²
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">유동성 제공자 포지션 — NFT</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// V2: LP 토큰은 ERC20 (fungible)
-// V3: 각 포지션이 고유 NFT (non-fungible)
-
-struct Position {
-    uint96 nonce;
-    address operator;
-    uint80 poolId;        // 어느 풀
-    int24 tickLower;      // 구간 하한 tick
-    int24 tickUpper;      // 구간 상한 tick
-    uint128 liquidity;    // 유동성 양 L
-    uint256 feeGrowthInside0LastX128;  // 수수료 누적 (token0)
-    uint256 feeGrowthInside1LastX128;
-    uint128 tokensOwed0;  // 청구 가능 수수료
-    uint128 tokensOwed1;
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border flex items-center gap-2">
+            <span className="text-sm font-semibold">Position 구조체</span>
+            <span className="text-xs text-muted-foreground">V2: ERC20 (fungible) &rarr; V3: NFT (non-fungible)</span>
+          </div>
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">식별 정보</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint96 nonce</code> — 향후 기능용</p>
+              <p><code className="text-xs bg-muted px-1 rounded">address operator</code> — 승인된 관리자</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint80 poolId</code> — 어느 풀</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">구간 &amp; 유동성</p>
+              <p><code className="text-xs bg-muted px-1 rounded">int24 tickLower</code> — 구간 하한 tick</p>
+              <p><code className="text-xs bg-muted px-1 rounded">int24 tickUpper</code> — 구간 상한 tick</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint128 liquidity</code> — 유동성 양 L</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">수수료 누적 스냅샷</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthInside0LastX128</code> — token0</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint256 feeGrowthInside1LastX128</code> — token1</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">청구 가능 수수료</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint128 tokensOwed0</code> — token0</p>
+              <p><code className="text-xs bg-muted px-1 rounded">uint128 tokensOwed1</code> — token1</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>포지션마다 구간 다름 → NFT로 개별 관리</strong><br />
           V2처럼 ERC20으로 fungible화 불가능 — 각 포지션 고유함<br />
@@ -124,17 +164,26 @@ struct Position {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">V3로 얻는 것 / 잃는 것</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`얻는 것:
-  ✓ 4000배 자본 효율
-  ✓ LP가 market maker 역할 (가격 예측 가능)
-  ✓ Stable 페어 1bp 수수료로 효율적 거래
-  ✓ Range order — limit order 유사 기능
-
-잃는 것:
-  ✗ Fungibility 상실 (NFT 기반)
-  ✗ LP 능동 관리 필요 (구간 재조정)
-  ✗ 복잡도 ↑ (일반 사용자 진입장벽)
-  ✗ 가스 비용 ↑ (tick 크로싱)`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-xl p-5 border border-emerald-200 dark:border-emerald-800">
+            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-3">얻는 것</p>
+            <ul className="text-sm space-y-1.5">
+              <li>4000배 자본 효율</li>
+              <li>LP가 market maker 역할 (가격 예측 가능)</li>
+              <li>Stable 페어 1bp 수수료로 효율적 거래</li>
+              <li>Range order — limit order 유사 기능</li>
+            </ul>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-5 border border-red-200 dark:border-red-800">
+            <p className="text-sm font-semibold text-red-700 dark:text-red-300 mb-3">잃는 것</p>
+            <ul className="text-sm space-y-1.5">
+              <li>Fungibility 상실 (NFT 기반)</li>
+              <li>LP 능동 관리 필요 (구간 재조정)</li>
+              <li>복잡도 상승 (일반 사용자 진입장벽)</li>
+              <li>가스 비용 상승 (tick 크로싱)</li>
+            </ul>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: "Professional LP"의 등장</p>

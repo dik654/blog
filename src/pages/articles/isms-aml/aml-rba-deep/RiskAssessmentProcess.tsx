@@ -1,8 +1,14 @@
+import RiskAssessmentViz from './viz/RiskAssessmentViz';
+import RiskCategoriesViz from './viz/RiskCategoriesViz';
+import ResidualRiskViz from './viz/ResidualRiskViz';
+
 export default function RiskAssessmentProcess() {
   return (
     <section id="risk-assessment-process" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">전사 위험평가 4단계</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <RiskAssessmentViz />
 
         <p>
           전사 위험평가(Enterprise-wide Risk Assessment)는 RBA의 출발점.<br />
@@ -83,6 +89,8 @@ export default function RiskAssessmentProcess() {
           </table>
         </div>
 
+        <RiskCategoriesViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">2단계 — 위험 분석(Risk Analysis)</h3>
         <p>
           식별된 위험을 정량적으로 분석하는 단계.<br />
@@ -147,6 +155,8 @@ export default function RiskAssessmentProcess() {
           경영진은 잔여위험이 "수용 가능 수준(risk appetite)" 이내인지 판단.<br />
           수용 불가 수준이면 추가 통제를 도입하거나 해당 서비스를 중단해야 한다.
         </p>
+
+        <ResidualRiskViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">4단계 — 지속 평가(Ongoing Assessment)</h3>
         <p>

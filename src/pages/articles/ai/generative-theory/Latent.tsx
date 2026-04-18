@@ -1,30 +1,6 @@
-import CodePanel from '@/components/ui/code-panel';
+import M from '@/components/ui/math';
 import { CitationBlock } from '@/components/ui/citation';
 import LatentViz from './viz/LatentViz';
-
-const latentCode = `잠재 변수 생성 모델:
-
-1. VAE (Variational Autoencoder):
-   P(x) = Integral P(x|z) P(z) dz  (intractable)
-   → ELBO 최대화로 우회:
-   ELBO = E_q[log P(x|z)] - KL(q(z|x) || P(z))
-   Reparameterization: z = mu + sigma * epsilon (epsilon ~ N(0,1))
-
-2. Normalizing Flow:
-   z_K = f_K ∘ ... ∘ f_1(z_0),  z_0 ~ N(0,I)
-   log P(x) = log P(z_0) - Sum log |det(df_k/dz_{k-1})|
-   가역 변환 f_k: 야코비 행렬식 계산이 핵심 비용
-
-3. Flow 변형:
-   RealNVP: 채널 분할 커플링 (O(d) 야코비)
-   Glow:    1x1 Conv + affine coupling
-   IAF:     Inverse Autoregressive (빠른 샘플링)`;
-
-const annotations = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: 'VAE: ELBO + Reparam' },
-  { lines: [9, 12] as [number, number], color: 'emerald' as const, note: 'Flow: 가역 변환 체인' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'Flow 변형' },
-];
 
 export default function Latent() {
   return (
@@ -43,7 +19,36 @@ export default function Latent() {
           algorithm that scales to large datasets — the Variational Autoencoder."</p>
         </CitationBlock>
 
-        <CodePanel title="잠재 변수 모델 수식" code={latentCode} annotations={annotations} />
+        <h3 className="text-xl font-semibold mt-6 mb-3">잠재 변수 모델 수식</h3>
+
+        <M display>
+          {`\\text{ELBO} = \\underbrace{\\mathbb{E}_{q}[\\log P(x|z)]}_{\\text{재구성 (Reconstruction)}} - \\underbrace{\\text{KL}\\bigl(q(z|x) \\,\\|\\, P(z)\\bigr)}_{\\text{정규화 (Regularization)}}`}
+        </M>
+
+        <M display>
+          {`\\log P(x) = \\underbrace{\\log P(z_0)}_{\\text{기저 분포}} - \\underbrace{\\sum_{k=1}^{K} \\log \\bigl|\\det\\bigl(\\tfrac{df_k}{dz_{k-1}}\\bigr)\\bigr|}_{\\text{가역 변환 체인의 야코비 행렬식 합}}`}
+        </M>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mt-4">
+          <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
+            <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-2">VAE</h4>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <M>{'P(x) = \\int P(x|z)P(z)\\,dz'}</M>가 intractable — ELBO 최대화로 우회. Reparameterization trick: <M>{'z = \\mu + \\sigma \\cdot \\epsilon'}</M> (<M>{'\\epsilon \\sim \\mathcal{N}(0,1)'}</M>)으로 역전파 가능
+            </p>
+          </div>
+          <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4">
+            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-2">Normalizing Flow</h4>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <M>{'z_K = f_K \\circ \\cdots \\circ f_1(z_0)'}</M>, <M>{'z_0 \\sim \\mathcal{N}(0, I)'}</M>. 가역 변환 <M>{'f_k'}</M>의 야코비 행렬식 계산이 핵심 비용 — 정확한 우도 계산 가능
+            </p>
+          </div>
+          <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4">
+            <h4 className="font-semibold text-amber-700 dark:text-amber-300 mb-2">Flow 변형</h4>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <strong>RealNVP</strong> — 채널 분할 커플링으로 <M>{'O(d)'}</M> 야코비. <strong>Glow</strong> — 1x1 Conv + affine coupling. <strong>IAF</strong> — Inverse Autoregressive로 빠른 샘플링
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

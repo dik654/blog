@@ -1,7 +1,5 @@
+import M from '@/components/ui/math';
 import ConstraintGateViz from './viz/ConstraintGateViz';
-import CodePanel from '@/components/ui/code-panel';
-import { FLEX_GATE_CODE, RANGE_GATE_CODE } from './ConstraintSystemData';
-import { flexGateAnnotations, rangeGateAnnotations } from './ConstraintSystemAnnotations';
 
 export default function ConstraintSystem({ title }: { title?: string }) {
   return (
@@ -21,40 +19,110 @@ export default function ConstraintSystem({ title }: { title?: string }) {
           <code>is_equal</code> 등 고수준 API를 제공하고,
           <code>RangeInstructions</code>는 limb 분해 기반 범위 검사를 담당합니다.
         </p>
-        <CodePanel title="FlexGate — Vertical Gate Strategy" code={FLEX_GATE_CODE} annotations={flexGateAnnotations} />
-        <CodePanel title="RangeGate — Lookup 기반 범위 검사" code={RANGE_GATE_CODE} annotations={rangeGateAnnotations} />
+
+        {/* FlexGate 구조 */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <p className="font-semibold text-sm text-blue-400 mb-3">FlexGate &mdash; Vertical Gate Strategy</p>
+          <div className="space-y-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold"><code>FlexGateConfig</code></p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>basic_gates: Vec&lt;BasicGateConfig&gt;</code> &mdash; 4열(a, b, c, d) + selector q로 구성된 vertical gate 벡터.
+                phase별로 생성
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold"><code>GateInstructions</code> 트레이트</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>add</code>, <code>sub</code>, <code>mul</code>, <code>inner_product</code>, <code>select</code>, <code>is_equal</code> &mdash;
+                모두 내부적으로 <code>a + b*c = d</code> 단일 제약으로 환원
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* RangeGate 구조 */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <p className="font-semibold text-sm text-emerald-400 mb-3">RangeGate &mdash; Lookup 기반 범위 검사</p>
+          <div className="space-y-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold"><code>RangeConfig</code></p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>gate: FlexGateConfig</code> + <code>lookup_advice / lookup_bits</code> &mdash;
+                FlexGate를 내장하고 lookup table 열을 추가
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold"><code>RangeInstructions</code> 트레이트</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>range_check(a, bits)</code> &mdash; 값을 limb로 분해하여 각 limb를 lookup table에서 검증.
+                <code>check_less_than</code>, <code>is_less_than</code> 등 비교 연산 제공
+              </p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Gate 설계 원리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Halo2 custom gate 수학
-// q(X) · constraint_polynomial(X) = 0 (for all X in evaluation domain)
 
-// FlexGate의 우아함
-// 하나의 제약식으로 여러 연산 표현
-// q_selector * (a + b*c - d) = 0
+        {/* 핵심 제약식 */}
+        <div className="not-prose rounded-lg border-l-4 border-l-purple-500 bg-card p-4 mb-4">
+          <p className="font-semibold text-sm text-purple-400 mb-2">FlexGate 제약식</p>
+          <M display>{'q(X) \\cdot \\bigl(a + b \\cdot c - d\\bigr) = 0'}</M>
+          <p className="text-xs text-muted-foreground mt-2">
+            evaluation domain의 모든 <M>{'X'}</M> 에서 성립. selector <M>{'q'}</M> 가 0이면 제약 비활성
+          </p>
+        </div>
 
-// 용법별 witness 할당
-// ADD(x, y): a=x, b=1, c=y, d=x+y
-//   → 0·1 + 1·y - (x+y) = y - x - y = -x ?
-//   잠깐, 다시:
-//   제약식: a + b*c = d
-//   ADD: 0 + 1·y - (x+y)는 계산 오류
-//   실제 용법: a=x, b=y, c=1, d=x+y
-//   → x + y·1 = x+y ✓
+        {/* 연산별 witness 할당 */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <p className="font-semibold text-sm text-amber-400 mb-3">하나의 제약식 &rarr; 3가지 연산</p>
+          <div className="grid grid-cols-3 gap-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-sky-300">ADD(x, y)</p>
+              <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                <p><code>a=x, b=y, c=1, d=x+y</code></p>
+                <M display>{'x + y \\cdot 1 = x + y \\;\\checkmark'}</M>
+              </div>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-emerald-300">MUL(x, y)</p>
+              <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                <p><code>a=0, b=x, c=y, d=x*y</code></p>
+                <M display>{'0 + x \\cdot y = x \\cdot y \\;\\checkmark'}</M>
+              </div>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-amber-300">MULADD(x, y, z)</p>
+              <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                <p><code>a=z, b=x, c=y, d=x*y+z</code></p>
+                <M display>{'z + x \\cdot y = x \\cdot y + z \\;\\checkmark'}</M>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">
+            단일 제약으로 세 연산을 모두 표현 &rarr; constraint 수 감소 &rarr; 증명 시간 단축
+          </p>
+        </div>
 
-// MUL(x, y): a=0, b=x, c=y, d=x·y
-//   → 0 + x·y = x·y ✓
-
-// MULADD(x, y, z): a=z, b=x, c=y, d=x·y+z
-//   → z + x·y = x·y+z ✓
-
-// 하나의 제약식 → 3가지 연산 가능
-// → Constraint 수 감소 → prove 시간 단축
-
-// RangeGate의 lookup
-// "이 value가 [0, 2^16)에 있음" 증명
-// Naive: 16 bit decomposition (16 constraints)
-// Lookup: table [0, 2^16) 미리 만들어두고 lookup (1 constraint)
-// Poseidon 등과 결합하여 효율 극대화`}</pre>
+        {/* RangeGate Lookup 비교 */}
+        <div className="not-prose rounded-lg border border-border/60 p-4 mb-4">
+          <p className="font-semibold text-sm text-emerald-400 mb-3">RangeGate &mdash; Lookup vs Naive 비교</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-red-300">Naive Decomposition</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                "값이 <M>{'[0,\\,2^{16})'}</M> 범위" 증명에 16 bit 분해 &rarr; <strong>16 constraints</strong>
+              </p>
+            </div>
+            <div className="rounded border bg-card p-3">
+              <p className="font-semibold text-emerald-300">Lookup Table</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <M>{'[0,\\,2^{16})'}</M> 테이블을 미리 구성하고 lookup &rarr; <strong>1 constraint</strong>.
+                Poseidon 등과 결합하여 효율 극대화
+              </p>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

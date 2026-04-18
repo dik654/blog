@@ -16,7 +16,7 @@ export default function MnistParamsViz() {
 
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 640 400" className="w-full h-auto" style={{ maxWidth: 820 }}>
+      <svg viewBox="0 0 640 420" className="w-full h-auto" style={{ maxWidth: 820 }}>
         <text x={320} y={24} textAnchor="middle" fontSize={16} fontWeight={700}
           fill="var(--foreground)">MNIST MLP — 파라미터 수 & 진화</text>
 
@@ -32,7 +32,7 @@ export default function MnistParamsViz() {
           const barW = 170 * wFrac;
           return (
             <g key={i}>
-              <rect x={x} y={68} width={185} height={110} rx={8}
+              <rect x={x} y={68} width={185} height={125} rx={8}
                 fill={l.color} fillOpacity={0.08} stroke={l.color} strokeWidth={1.8} />
 
               <text x={x + 92} y={88} textAnchor="middle" fontSize={12} fontWeight={700} fill={l.color}>
@@ -69,17 +69,17 @@ export default function MnistParamsViz() {
         })}
 
         {/* 총계 */}
-        <rect x={30} y={195} width={580} height={42} rx={7}
+        <rect x={30} y={210} width={580} height={42} rx={7}
           fill="#8b5cf6" fillOpacity={0.1} stroke="#8b5cf6" strokeWidth={1.5} />
-        <text x={320} y={215} textAnchor="middle" fontSize={14} fontWeight={700} fill="#8b5cf6">
+        <text x={320} y={230} textAnchor="middle" fontSize={14} fontWeight={700} fill="#8b5cf6">
           총 파라미터: 45,360개 (Float32 = 177 KB)
         </text>
-        <text x={320} y={230} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
+        <text x={320} y={245} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
           Layer 1(W₁)이 87% 차지 — 입력 차원(784)이 컸기 때문
         </text>
 
         {/* 진화 비교 */}
-        <text x={320} y={266} textAnchor="middle" fontSize={12} fontWeight={700} fill="var(--foreground)">
+        <text x={320} y={281} textAnchor="middle" fontSize={12} fontWeight={700} fill="var(--foreground)">
           MNIST 해결 역사 — 모델 규모 vs 정확도
         </text>
 
@@ -87,34 +87,34 @@ export default function MnistParamsViz() {
           const x = 25 + i * 120;
           return (
             <g key={i}>
-              <rect x={x} y={278} width={110} height={100} rx={7}
+              <rect x={x} y={293} width={110} height={100} rx={7}
                 fill={e.color} fillOpacity={0.08} stroke={e.color} strokeWidth={1.5} />
 
-              <text x={x + 55} y={297} textAnchor="middle" fontSize={12} fontWeight={700} fill={e.color}>
+              <text x={x + 55} y={312} textAnchor="middle" fontSize={12} fontWeight={700} fill={e.color}>
                 {e.model}
               </text>
 
-              <line x1={x + 10} y1={304} x2={x + 100} y2={304} stroke={e.color} strokeOpacity={0.3} strokeWidth={0.8} />
+              <line x1={x + 10} y1={319} x2={x + 100} y2={319} stroke={e.color} strokeOpacity={0.3} strokeWidth={0.8} />
 
-              <text x={x + 10} y={322} fontSize={9} fill="var(--muted-foreground)">Params</text>
-              <text x={x + 100} y={322} textAnchor="end" fontSize={10} fontFamily="monospace" fontWeight={700} fill="var(--foreground)">
+              <text x={x + 10} y={337} fontSize={9} fill="var(--muted-foreground)">Params</text>
+              <text x={x + 100} y={337} textAnchor="end" fontSize={10} fontFamily="monospace" fontWeight={700} fill="var(--foreground)">
                 {e.params}
               </text>
 
-              <text x={x + 10} y={340} fontSize={9} fill="var(--muted-foreground)">Accuracy</text>
-              <text x={x + 100} y={340} textAnchor="end" fontSize={10} fontFamily="monospace" fontWeight={700} fill={e.color}>
+              <text x={x + 10} y={355} fontSize={9} fill="var(--muted-foreground)">Accuracy</text>
+              <text x={x + 100} y={355} textAnchor="end" fontSize={10} fontFamily="monospace" fontWeight={700} fill={e.color}>
                 {e.acc}
               </text>
 
-              <text x={x + 10} y={358} fontSize={9} fill="var(--muted-foreground)">Year</text>
-              <text x={x + 100} y={358} textAnchor="end" fontSize={10} fontFamily="monospace" fill="var(--muted-foreground)">
+              <text x={x + 10} y={373} fontSize={9} fill="var(--muted-foreground)">Year</text>
+              <text x={x + 100} y={373} textAnchor="end" fontSize={10} fontFamily="monospace" fill="var(--muted-foreground)">
                 {e.year}
               </text>
             </g>
           );
         })}
 
-        <text x={320} y={396} textAnchor="middle" fontSize={10}
+        <text x={320} y={411} textAnchor="middle" fontSize={10}
           fill="var(--muted-foreground)">비교: AlexNet(2012) ~60M, GPT-3(2020) 175B, GPT-4 1T+ — 규모 혁명</text>
       </svg>
     </div>

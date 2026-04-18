@@ -1,3 +1,7 @@
+import DetectionPatternsViz from './viz/DetectionPatternsViz';
+import StructuringViz from './viz/StructuringViz';
+import LaunderingPathViz from './viz/LaunderingPathViz';
+
 export default function DetectionPatterns() {
   return (
     <section id="detection-patterns" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function DetectionPatterns() {
           패턴은 단독으로 사용되기보다 여러 패턴이 조합되어 하나의 세탁 시나리오를 구성한다.<br />
           아래 9가지는 가상자산 거래소에서 가장 빈번하게 적용되는 핵심 탐지 패턴.
         </p>
+
+        <DetectionPatternsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">1. 구조화 거래(Structuring)</h3>
         <p>
@@ -32,6 +38,8 @@ export default function DetectionPatterns() {
           FDS 탐지 조건: 입금 후 30분 이내 전액(90% 이상) 외부 출금 시 경보.<br />
           거래 금액이 클수록, 반복될수록 경보 등급 상승.
         </p>
+
+        <StructuringViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">3. 분산 출금(Fan-out)</h3>
         <p>
@@ -120,6 +128,8 @@ export default function DetectionPatterns() {
           예: "신규 고액(패턴8) + 빠른 이동(패턴2) + 믹서 경유(패턴5)"가 동시 발생하면 최고 등급 경보.<br />
           이러한 조합 로직이 FDS의 핵심 경쟁력이며, AI 모델이 자동으로 학습하는 영역이기도 하다.
         </p>
+
+        <LaunderingPathViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">가상자산 특유의 세탁 경로</h3>
         <p>

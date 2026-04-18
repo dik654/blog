@@ -34,38 +34,38 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── StateProvider trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StateProvider trait — 3개 메서드 추상화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait StateProvider: Send + Sync {
-    /// 계정 정보 조회 (nonce, balance, code_hash)
-    /// None이면 계정이 존재하지 않음
-    fn account(&self, address: &Address) -> Result<Option<Account>>;
-
-    /// 스토리지 슬롯 값 조회
-    /// (address, key) 쌍으로 특정 슬롯의 현재 값 반환
-    fn storage(&self, address: &Address, key: &StorageKey)
-        -> Result<Option<StorageValue>>;
-
-    /// 바이트코드 해시로 컨트랙트 코드 조회
-    /// code_hash → Bytecode 매핑
-    fn bytecode_by_hash(&self, hash: &B256) -> Result<Option<Bytecode>>;
-}
-
-// 구현체:
-// - LatestStateProviderRef: MDBX 최신 상태
-// - HistoricalStateProvider: 과거 특정 블록 상태
-// - BundleStateProvider: 인메모리 BundleState
-// - MockStateProvider: 테스트용
-
-// 사용처:
-// - revm의 Database trait (EVM 실행)
-// - RPC eth_getBalance, eth_call, eth_getCode
-// - txpool 검증 (nonce, balance 확인)
-// - MerkleStage (계정 상태 로드)
-
-// 모든 클라이언트는 동일 API 사용
-// → Mock 테스트 자유로움
-// → 저장소 교체 가능 (예: remote RPC를 state source로)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3">StateProvider trait — 3개 메서드</p>
+            <div className="space-y-2 text-xs">
+              <div><code className="text-indigo-300">account(&amp;Address)</code> → <code>Option&lt;Account&gt;</code> <span className="text-foreground/60">— nonce, balance, code_hash 조회</span></div>
+              <div><code className="text-indigo-300">storage(&amp;Address, &amp;StorageKey)</code> → <code>Option&lt;StorageValue&gt;</code> <span className="text-foreground/60">— 스토리지 슬롯 값</span></div>
+              <div><code className="text-indigo-300">bytecode_by_hash(&amp;B256)</code> → <code>Option&lt;Bytecode&gt;</code> <span className="text-foreground/60">— 컨트랙트 코드</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              { label: 'LatestStateProviderRef', desc: 'MDBX 최신 상태' },
+              { label: 'HistoricalStateProvider', desc: '과거 특정 블록' },
+              { label: 'BundleStateProvider', desc: '인메모리 캐시' },
+              { label: 'MockStateProvider', desc: '테스트용' },
+            ].map(impl => (
+              <div key={impl.label} className="rounded-lg border border-border p-2">
+                <code className="text-xs font-semibold text-indigo-400">{impl.label}</code>
+                <p className="text-xs text-muted-foreground mt-0.5">{impl.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-1">사용처</p>
+            <div className="grid grid-cols-2 gap-1 text-xs text-foreground/70">
+              <p>revm Database trait (EVM 실행)</p>
+              <p>RPC: eth_getBalance, eth_call, eth_getCode</p>
+              <p>txpool 검증 (nonce, balance)</p>
+              <p>MerkleStage (계정 상태 로드)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>StateProvider</code> trait이 <strong>상태 접근의 유일한 인터페이스</strong>.<br />
           revm, RPC, txpool 등 모든 상위 모듈이 이 3개 메서드만 사용.<br />
@@ -74,41 +74,30 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── 3계층 위임 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">조회 위임 — BundleState → MDBX → StaticFiles</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BundleStateProvider의 account() 구현
-impl StateProvider for BundleStateProvider<'_> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        // 1. BundleState (메모리) 우선 확인
-        if let Some(bundle_acc) = self.bundle.state.get(addr) {
-            match bundle_acc.info {
-                Some(ref info) => return Ok(Some(info.clone())),
-                None => return Ok(None),  // selfdestruct된 계정
-            }
-        }
-
-        // 2. MDBX (디스크) fallback
-        if let Some(account) = self.db_provider.account(addr)? {
-            return Ok(Some(account));
-        }
-
-        // 3. StaticFiles (고대 데이터) — 계정 상태는 아카이브 안 됨
-        //    (계정 최신 상태는 항상 MDBX에)
-        Ok(None)
-    }
-}
-
-// 조회 순서 이유:
-// - BundleState: 현재 배치의 변경 (hot, ~수 MB)
-// - MDBX: 최신 확정 상태 (warm, ~100 GB)
-// - StaticFiles: 과거 블록 데이터 (cold, ~300 GB)
-//
-// Hot → Warm → Cold 순서 → 캐시 효율 극대화
-
-// 블록 실행 중 typical access pattern:
-// 1. 99% 히트: BundleState (같은 배치 내 반복 읽기)
-// 2. 0.99%: MDBX (최초 접근)
-// 3. 0.01%: StaticFiles (historical query)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="space-y-2">
+            {[
+              { step: '1', label: 'BundleState (메모리)', hit: '99%', temp: 'Hot', size: '~수 MB', desc: '현재 배치 변경분 우선 확인. selfdestruct면 None 반환', color: 'border-red-500/20 bg-red-500/5', badge: 'bg-red-500' },
+              { step: '2', label: 'MDBX (디스크)', hit: '0.99%', temp: 'Warm', size: '~100 GB', desc: 'db_provider.account(addr) fallback — 최신 확정 상태', color: 'border-amber-500/20 bg-amber-500/5', badge: 'bg-amber-500' },
+              { step: '3', label: 'StaticFiles (고대)', hit: '0.01%', temp: 'Cold', size: '~300 GB', desc: '계정 상태는 아카이브 안 됨 — 항상 MDBX에 존재', color: 'border-sky-500/20 bg-sky-500/5', badge: 'bg-sky-500' },
+            ].map(s => (
+              <div key={s.step} className={`rounded-lg border p-3 flex items-start gap-3 ${s.color}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 ${s.badge}`}>{s.step}</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold">{s.label}</p>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{s.temp} — {s.size}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">히트 {s.hit}</span>
+                  </div>
+                  <p className="text-xs text-foreground/60 mt-0.5">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-border p-3 text-center">
+            <p className="text-xs text-foreground/70">Hot → Warm → Cold 순서 → <strong>캐시 효율 극대화</strong></p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>3계층 폴백 구조</strong> — hot/warm/cold 순서로 접근.<br />
           반복 읽기는 BundleState 캐시 히트 → 디스크 I/O 최소화.<br />
@@ -117,51 +106,29 @@ impl StateProvider for BundleStateProvider<'_> {
 
         {/* ── latest vs historical ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Latest vs Historical — 2가지 상태 관점</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// LatestStateProviderRef: 현재 상태 (최신 블록)
-pub struct LatestStateProviderRef<'a, TX> {
-    tx: &'a TX,
-    static_file: StaticFileProviderRef<'a>,
-}
-
-impl<TX: DbTx> StateProvider for LatestStateProviderRef<'_, TX> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        // PlainAccountState 테이블 직접 조회
-        self.tx.get::<tables::PlainAccountState>(*addr)
-    }
-}
-
-// HistoricalStateProviderRef: 특정 블록 시점 상태
-pub struct HistoricalStateProviderRef<'a, TX> {
-    tx: &'a TX,
-    block_number: BlockNumber,  // 이 블록 기준 상태
-    static_file: StaticFileProviderRef<'a>,
-}
-
-impl<TX: DbTx> StateProvider for HistoricalStateProviderRef<'_, TX> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        // 1. 현재 상태 로드
-        let current = self.tx.get::<PlainAccountState>(*addr)?;
-
-        // 2. AccountChangeSets에서 block_number 이후 변경 역적용
-        let changes = self.tx.cursor_read::<AccountChangeSets>()?
-            .walk_range(self.block_number..)?;
-
-        // 3. 변경을 역순 적용하여 block_number 시점 상태 복원
-        let mut account = current;
-        for (_, revert) in changes.into_iter().rev() {
-            if revert.address == *addr {
-                account = revert.previous_info;
-            }
-        }
-        Ok(account)
-    }
-}
-
-// 사용:
-// - Latest: eth_getBalance(addr) — 현재 잔고
-// - Historical: eth_getBalance(addr, block=12345) — 과거 잔고`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4 not-prose">
+          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-sm text-emerald-400 mb-2">LatestStateProviderRef — 현재 상태</p>
+            <div className="space-y-1 text-xs text-foreground/70">
+              <p>필드: <code>tx: &amp;TX</code>, <code>static_file: StaticFileProviderRef</code></p>
+              <p className="font-mono text-foreground/60 mt-2">account(addr) → tx.get::&lt;PlainAccountState&gt;(addr)</p>
+              <p className="text-muted-foreground mt-1">PlainAccountState 테이블 직접 조회</p>
+            </div>
+            <p className="text-xs text-emerald-400/70 mt-2">사용: <code>eth_getBalance(addr)</code> — 현재 잔고</p>
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">HistoricalStateProviderRef — 과거 상태</p>
+            <div className="space-y-1 text-xs text-foreground/70">
+              <p>필드: <code>tx</code>, <code>block_number: BlockNumber</code>, <code>static_file</code></p>
+              <div className="mt-2 space-y-0.5 text-foreground/60">
+                <p>1. 현재 상태 로드 (<code>PlainAccountState</code>)</p>
+                <p>2. <code>AccountChangeSets</code>에서 block_number 이후 변경 수집</p>
+                <p>3. 역순 적용하여 해당 블록 시점 상태 복원</p>
+              </div>
+            </div>
+            <p className="text-xs text-amber-400/70 mt-2">사용: <code>eth_getBalance(addr, block=12345)</code></p>
+          </div>
+        </div>
         <p className="leading-7">
           Latest와 Historical이 <strong>같은 trait의 다른 구현</strong>.<br />
           상위 코드는 구현 교체만으로 "현재" 또는 "과거" 쿼리 자유롭게 전환.<br />

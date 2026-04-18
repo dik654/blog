@@ -1,6 +1,7 @@
 import SoftmaxViz from './viz/SoftmaxViz';
 import SoftmaxExamplesViz from './viz/SoftmaxExamplesViz';
 import TemperatureViz from './viz/TemperatureViz';
+import SoftmaxAdvancedViz from './viz/SoftmaxAdvancedViz';
 
 export default function Softmax() {
   return (
@@ -33,88 +34,13 @@ export default function Softmax() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">수치 안정 구현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 문제: exp overflow
-// exp(1000) = inf (float overflow)
-
-// Translation invariance 활용
-// softmax(x) = softmax(x - c) for any constant c
-
-// Stable implementation
-def stable_softmax(x):
-    x_max = x.max()              // 최대값 찾기
-    exp_x = np.exp(x - x_max)    // 최대값 빼기 (0 <= exp_x <= 1)
-    return exp_x / exp_x.sum()
-
-// 증명
-// softmax(x_i) = exp(x_i) / Σ exp(x_j)
-//              = [exp(x_i - c) · exp(c)] / [Σ exp(x_j - c) · exp(c)]
-//              = exp(x_i - c) / Σ exp(x_j - c)
-
-// c = max(x) 선택 시
-// - 가장 큰 원소가 0이 됨
-// - 다른 원소는 음수 → exp <= 1
-// - overflow 원천 차단
-
-// GPU 구현 (CUDA)
-// Online softmax: 한 번의 pass로 계산 (FlashAttention)
-// 1) 첫 pass: max와 sum 동시 계산
-// 2) 두 번째 pass: 결과 계산
-// 메모리 접근 최소화`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">대안: LogSoftmax</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Softmax의 로그
-// log_softmax(x) = x - logsumexp(x)
-//
-// logsumexp(x) = log(Σ exp(x_i))
-//             = x_max + log(Σ exp(x_i - x_max))
-
-// 왜 log_softmax?
-// 1) 수치 안정 (log(0) 문제 회피)
-// 2) Cross-entropy loss가 log(softmax)이므로 직접 사용
-// 3) NLL loss와 결합: log_softmax + NLLLoss = CrossEntropyLoss
-
-// PyTorch
-// Method 1: 함수
-log_probs = F.log_softmax(logits, dim=-1)
-loss = F.nll_loss(log_probs, targets)
-
-// Method 2: 결합 (자동 안정)
-loss = F.cross_entropy(logits, targets)  # 내부적으로 log_softmax 사용
-
-// 성능
-// - log_softmax가 softmax보다 수치 안정
-// - Loss 계산 시 log 불필요 (이미 log 형태)
-// - Gradient 더 stable`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Softmax 변형들</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 1. Sparsemax (Martins & Astudillo 2016)
-// - Output이 sparse (많은 값이 정확히 0)
-// - Attention에서 interpretability 향상
-// - Softmax의 L2 regularized 버전
-
-// 2. Gumbel-Softmax (Jang et al. 2017)
-// - Discrete sampling을 differentiable하게
-// - VAE with discrete latent
-// - Reinforcement learning policy
-
-// 3. Mixture of Softmaxes (MoS, Yang et al. 2017)
-// - K개 softmax의 weighted combination
-// - 언어 모델의 표현력 증가
-// - "Softmax bottleneck" 해결
-
-// 4. Hierarchical Softmax
-// - 큰 vocabulary 처리 (수백만 클래스)
-// - Tree-based decomposition
-// - 복잡도 O(V) → O(log V)
-
-// 5. Scaled Softmax (attention)
-// - softmax(QK^T / √d_k)
-// - Scale로 gradient 안정화
-// - Transformer 필수
-
-// 6. Softmax with temperature (앞서 다룸)
-// 7. Taylor Softmax / Exponential family variants`}</pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">수치 안정 · LogSoftmax · 변형</h3>
+        <p>
+          exp overflow 문제와 해법, LogSoftmax의 수학적 근거, 실전 패턴, 그리고 용도별 변형.
+        </p>
+      </div>
+      <SoftmaxAdvancedViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Softmax의 기원과 의미</p>

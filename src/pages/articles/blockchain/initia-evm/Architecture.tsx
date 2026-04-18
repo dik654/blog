@@ -37,148 +37,177 @@ export default function Architecture({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="mt-6 space-y-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">상태 매핑 상세 구현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// State Mapping: Ethereum StateDB → Cosmos KVStore
-//
-// Ethereum state model:
-//   Trie: Merkle Patricia Trie (MPT)
-//   Root: 32-byte state root (in each block header)
-//   Accounts: {nonce, balance, codeHash, storageRoot}
-//   Storage: per-account MPT of (slot -> value)
-//   Backend: LevelDB/PebbleDB key-value store
-//
-// Cosmos state model:
-//   Trie: IAVL+ Tree (balanced binary tree with Merkle)
-//   Root: app_hash (in each block)
-//   Multistore: multiple named KVStores
-//   Backend: goleveldb, rocksdb, tm-db
 
-// Mapping choices:
-//
-//   Approach 1: Emulate MPT on top of KVStore
-//     Use Cosmos KVStore as leaf storage
-//     Reconstruct MPT on demand
-//     Pro: can compute Ethereum state root
-//     Con: expensive recomputation
-//
-//   Approach 2: Flat key-value mapping (MiniEVM choice)
-//     Each storage slot → direct KVStore entry
-//     Abandon Ethereum state root format
-//     Pro: fast, simple
-//     Con: state root differs from mainnet EVMs
+        {/* Ethereum vs Cosmos 상태 모델 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Ethereum vs Cosmos 상태 모델</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Ethereum</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>Trie: Merkle Patricia Trie (MPT)</li>
+                <li>Root: 32바이트 state root (각 블록 헤더)</li>
+                <li>계정: <code className="text-xs">{'{nonce, balance, codeHash, storageRoot}'}</code></li>
+                <li>Storage: 계정별 MPT (<code className="text-xs">slot → value</code>)</li>
+                <li>Backend: LevelDB / PebbleDB</li>
+              </ul>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Cosmos</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>Trie: IAVL+ Tree (균형 이진 트리 + Merkle)</li>
+                <li>Root: <code className="text-xs">app_hash</code> (각 블록)</li>
+                <li>Multistore: 여러 이름 기반 KVStore</li>
+                <li>Backend: goleveldb, rocksdb, tm-db</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-// MiniEVM StateDB implementation:
-//
-//   type StateDB struct {
-//       ctx        sdk.Context
-//       kvStore    storetypes.KVStore
-//       accounts   map[common.Address]*StateObject
-//       snapshots  []*Snapshot
-//       logs       []*ethtypes.Log
-//       // ...
-//   }
-//
-//   Implements go-ethereum's vm.StateDB interface:
-//     - GetBalance, AddBalance, SubBalance
-//     - GetNonce, SetNonce
-//     - GetCode, SetCode
-//     - GetCommittedState, GetState, SetState
-//     - CreateAccount, HasSuicided
-//     - Snapshot, RevertToSnapshot
+        {/* 매핑 선택지 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">매핑 접근법 선택</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">접근법 1: KVStore 위에 MPT 에뮬레이션</span>
+              <p className="mt-1">Cosmos KVStore를 리프 저장소로 사용, 필요 시 MPT 재구성</p>
+              <p className="mt-1 text-green-600 dark:text-green-400">장점: Ethereum state root 계산 가능</p>
+              <p className="text-red-600 dark:text-red-400">단점: 비용 높은 재계산</p>
+            </div>
+            <div className="rounded border-l-2 border-emerald-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">접근법 2: 플랫 KV 매핑 (MiniEVM 선택)</span>
+              <p className="mt-1">각 storage slot → KVStore 엔트리 직접 매핑. Ethereum state root 형식 포기</p>
+              <p className="mt-1 text-green-600 dark:text-green-400">장점: 빠르고 단순</p>
+              <p className="text-red-600 dark:text-red-400">단점: 메인넷 EVM과 state root 형식 상이</p>
+            </div>
+          </div>
+        </div>
 
-// Storage key layout:
-//
-//   Storage entries:
-//     key: "s" || address (20 bytes) || slot (32 bytes)
-//     value: word (32 bytes)
-//
-//   Code entries:
-//     key: "c" || codeHash (32 bytes)
-//     value: bytecode (variable length)
-//
-//   Code hash (for account):
-//     key: "h" || address (20 bytes)
-//     value: codeHash (32 bytes)
+        {/* StateDB 구현 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">MiniEVM StateDB 구현</h4>
+          <div className="space-y-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">StateDB 구조체</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">ctx sdk.Context</code> — Cosmos 컨텍스트</li>
+                <li><code className="text-xs">kvStore storetypes.KVStore</code> — 상태 저장소</li>
+                <li><code className="text-xs">accounts map[common.Address]*StateObject</code> — 계정 캐시</li>
+                <li><code className="text-xs">snapshots []*Snapshot</code> — 스냅샷 스택</li>
+                <li><code className="text-xs">logs []*ethtypes.Log</code> — EVM 로그</li>
+              </ul>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">vm.StateDB 인터페이스 구현</span>
+              <div className="mt-1 grid grid-cols-2 sm:grid-cols-3 gap-1">
+                <span><code className="text-xs">GetBalance</code>, <code className="text-xs">AddBalance</code>, <code className="text-xs">SubBalance</code></span>
+                <span><code className="text-xs">GetNonce</code>, <code className="text-xs">SetNonce</code></span>
+                <span><code className="text-xs">GetCode</code>, <code className="text-xs">SetCode</code></span>
+                <span><code className="text-xs">GetCommittedState</code>, <code className="text-xs">GetState</code>, <code className="text-xs">SetState</code></span>
+                <span><code className="text-xs">CreateAccount</code>, <code className="text-xs">HasSuicided</code></span>
+                <span><code className="text-xs">Snapshot</code>, <code className="text-xs">RevertToSnapshot</code></span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-// Balance handling:
-//
-//   MiniEVM delegates balance to x/bank:
-//     GetBalance(addr):
-//       return bank.GetBalance(addr, "uinit")
-//
-//     AddBalance(addr, amount):
-//       bank.MintCoins(evmModule, amount)
-//       bank.SendCoins(evmModule, addr, amount)
-//
-//   Consistency:
-//     EVM value transfers update bank balances
-//     IBC transfers update bank balances
-//     Both visible through same Get/Set interface
+        {/* Storage Key Layout */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">스토리지 키 레이아웃</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Storage</span>
+              <p className="mt-1">key: <code className="text-xs">"s" || address(20B) || slot(32B)</code></p>
+              <p>value: <code className="text-xs">word(32B)</code></p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Code</span>
+              <p className="mt-1">key: <code className="text-xs">"c" || codeHash(32B)</code></p>
+              <p>value: <code className="text-xs">bytecode</code> (가변 길이)</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Code Hash</span>
+              <p className="mt-1">key: <code className="text-xs">"h" || address(20B)</code></p>
+              <p>value: <code className="text-xs">codeHash(32B)</code></p>
+            </div>
+          </div>
+        </div>
 
-// Nonce handling:
-//
-//   Delegates to x/auth:
-//     GetNonce(addr):
-//       acc := auth.GetAccount(addr)
-//       return acc.GetSequence()
-//
-//     SetNonce(addr, nonce):
-//       acc := auth.GetAccount(addr)
-//       acc.SetSequence(nonce)
-//       auth.SetAccount(acc)
-//
-//   Cosmos SDK sequence number becomes EVM nonce
+        {/* Balance & Nonce */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">잔액 & 논스 위임</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">잔액 → x/bank</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">GetBalance(addr)</code> → <code className="text-xs">bank.GetBalance(addr, "uinit")</code></li>
+                <li><code className="text-xs">AddBalance(addr, amount)</code> → <code className="text-xs">bank.MintCoins</code> + <code className="text-xs">bank.SendCoins</code></li>
+              </ul>
+              <p className="mt-1">EVM value 전송과 IBC 전송 모두 bank 잔액을 갱신 — 동일 인터페이스로 일관성 유지</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">논스 → x/auth</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">GetNonce(addr)</code> → <code className="text-xs">auth.GetAccount(addr).GetSequence()</code></li>
+                <li><code className="text-xs">SetNonce(addr, n)</code> → <code className="text-xs">acc.SetSequence(n)</code> + <code className="text-xs">auth.SetAccount(acc)</code></li>
+              </ul>
+              <p className="mt-1">Cosmos SDK sequence number가 곧 EVM nonce</p>
+            </div>
+          </div>
+        </div>
 
-// Snapshot mechanism:
-//
-//   EVM needs rollback on revert/failure
-//   Cosmos KVStore supports cached context:
-//
-//     ctx, writeCache := ctx.CacheContext()
-//     // ... make changes ...
-//     if success:
-//       writeCache()  // commit changes
-//     else:
-//       // discard (changes never happened)
-//
-//   MiniEVM uses nested CacheContext for snapshots
-//   Each EVM Snapshot() creates new layer
+        {/* Snapshot & Determinism */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">스냅샷 & 결정론적 접근</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">스냅샷 메커니즘</span>
+              <p className="mt-1">EVM 롤백을 위해 Cosmos의 <code className="text-xs">CacheContext</code> 활용. 성공 시 <code className="text-xs">writeCache()</code> 호출로 커밋, 실패 시 폐기. 중첩 <code className="text-xs">CacheContext</code>로 다단계 스냅샷 구현 — 각 <code className="text-xs">Snapshot()</code> 호출이 새 레이어 생성</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">결정론적 상태 접근</span>
+              <p className="mt-1">EVM 실행은 검증자 간 결정론적이어야 함. 키 순서가 가스 계산에 영향</p>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>KVStore 내장 순서 활용</li>
+                <li>사전식(lexicographic) 키 정렬</li>
+                <li>map 순회 금지 (정의되지 않은 순서)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-// Deterministic state access:
-//
-//   EVM execution MUST be deterministic across validators
-//   Key ordering matters for gas accounting
-//
-//   MiniEVM preserves iteration order via:
-//     - Using KVStore's built-in ordering
-//     - Lexicographic key sorting
-//     - No map iteration (undefined order)
-
-// Commit phase:
-//
-//   On successful EVM execution:
-//     1. Apply all staged StateDB changes
-//     2. Write to Cosmos KVStore
-//     3. Emit Cosmos events for each EVM log
-//     4. Update IAVL tree
-//
-//   Final state root:
-//     Computed from IAVL, NOT from Ethereum MPT
-//     Still verifiable via Cosmos light client
-
-// Performance considerations:
-//
-//   IAVL has O(log n) read/write (similar to MPT)
-//   Flat storage keys: single lookup per slot
-//   Cached context: minimal overhead
-//
-//   Typical performance:
-//     Simple EVM transfer: ~50K gas, ~1ms
-//     Complex DeFi contract: ~500K gas, ~10ms
-//     Comparable to geth`}
-        </pre>
+        {/* Commit & Performance */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">커밋 & 성능</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">커밋 단계</span>
+              <ol className="mt-1 list-decimal list-inside space-y-0.5">
+                <li>스테이징된 StateDB 변경 적용</li>
+                <li>Cosmos KVStore에 기록</li>
+                <li>EVM 로그 → Cosmos 이벤트 변환</li>
+                <li>IAVL 트리 갱신</li>
+              </ol>
+              <p className="mt-1">최종 state root는 Ethereum MPT가 아닌 IAVL에서 계산 — Cosmos 라이트 클라이언트로 검증 가능</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">성능</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>IAVL: O(log n) 읽기/쓰기 (MPT와 유사)</li>
+                <li>플랫 스토리지 키: 슬롯당 단일 조회</li>
+                <li>캐시 컨텍스트: 최소 오버헤드</li>
+              </ul>
+              <p className="mt-2 font-medium text-foreground">일반적 성능 수치</p>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>단순 EVM 전송: ~50K gas, ~1ms</li>
+                <li>복잡한 DeFi 컨트랙트: ~500K gas, ~10ms</li>
+                <li>geth와 대등한 수준</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

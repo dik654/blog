@@ -14,76 +14,37 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── Epoch processing 7단계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ProcessEpoch — 7단계 파이프라인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// process_epoch: epoch 경계 (32 slot마다)에 실행
-// 1 epoch = 6.4분
-
-func ProcessEpoch(state *BeaconState) error {
-    // 1. Justification & Finalization
-    //    - 이전/현재 epoch의 attestation 집계
-    //    - 2/3+ supermajority 확인
-    //    - justified_checkpoint, finalized_checkpoint 갱신
-    if err := processJustificationAndFinalization(state); err != nil {
-        return err
-    }
-
-    // 2. Inactivity updates (Altair+)
-    //    - finality 지연 시 inactivity score 증가
-    //    - leak 메커니즘 트리거
-    if err := processInactivityUpdates(state); err != nil {
-        return err
-    }
-
-    // 3. Rewards & Penalties
-    //    - 모든 validator에게 보상/패널티 적용
-    //    - attestation 참여, head vote, target vote 등 평가
-    if err := processRewardsAndPenalties(state); err != nil {
-        return err
-    }
-
-    // 4. Registry updates
-    //    - activation queue 처리
-    //    - exit queue 처리
-    //    - churn limit 적용
-    if err := processRegistryUpdates(state); err != nil {
-        return err
-    }
-
-    // 5. Slashings
-    //    - 슬래싱 페널티 적용
-    //    - 에폭 offset (slashing period 분산)
-    if err := processSlashings(state); err != nil {
-        return err
-    }
-
-    // 6. Eth1 data reset
-    //    - eth1_data_votes 초기화
-    //    - 2 epoch마다 (SLOTS_PER_ETH1_VOTING_PERIOD = 2048)
-    if err := processEth1DataReset(state); err != nil {
-        return err
-    }
-
-    // 7. Effective balance updates + misc
-    //    - effective_balance 재계산 (hysteresis)
-    //    - slashings offset 갱신
-    //    - randao mix 슬롯으로 옮기기
-    //    - historical summaries 추가
-    if err := processFinalUpdates(state); err != nil {
-        return err
-    }
-
-    return nil
-}
-
-// 소요 시간 (메인넷 1M validator):
-// - Justification: ~50ms
-// - Inactivity: ~20ms
-// - Rewards: ~200ms (가장 비쌈)
-// - Registry: ~30ms
-// - Slashings: ~10ms
-// - 기타: ~10ms
-// 총: ~320ms per epoch (6.4분 대비 매우 여유)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-1"><code>ProcessEpoch(state *BeaconState) error</code></p>
+            <p className="text-xs text-foreground/60">epoch 경계 (32 slot마다) 실행 — 1 epoch = 6.4분</p>
+          </div>
+          <div className="space-y-2">
+            {[
+              { step: '1', fn: 'processJustificationAndFinalization', desc: '이전/현재 epoch attestation 집계 → 2/3+ supermajority → justified/finalized checkpoint 갱신', time: '~50ms', color: 'text-sky-400' },
+              { step: '2', fn: 'processInactivityUpdates', desc: 'finality 지연 시 inactivity score 증가 → leak 메커니즘 트리거 (Altair+)', time: '~20ms', color: 'text-violet-400' },
+              { step: '3', fn: 'processRewardsAndPenalties', desc: '모든 validator에게 보상/패널티 적용 — source, target, head vote 평가', time: '~200ms', color: 'text-amber-400' },
+              { step: '4', fn: 'processRegistryUpdates', desc: 'activation queue + exit queue 처리, churn limit 적용', time: '~30ms', color: 'text-emerald-400' },
+              { step: '5', fn: 'processSlashings', desc: '슬래싱 페널티 적용 — epoch offset으로 slashing period 분산', time: '~10ms', color: 'text-red-400' },
+              { step: '6', fn: 'processEth1DataReset', desc: 'eth1_data_votes 초기화 (SLOTS_PER_ETH1_VOTING_PERIOD = 2048)', time: '~5ms', color: 'text-indigo-400' },
+              { step: '7', fn: 'processFinalUpdates', desc: 'effective_balance 재계산 (hysteresis) + slashings offset + randao mix + historical summaries', time: '~5ms', color: 'text-pink-400' },
+            ].map(s => (
+              <div key={s.step} className="flex items-start gap-3 rounded-lg border border-border p-3">
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <code className="text-sm font-semibold">{s.fn}</code>
+                    <span className="text-xs text-muted-foreground">{s.time}</span>
+                  </div>
+                  <p className="text-xs text-foreground/70 mt-1">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs text-foreground/70">총 <strong>~320ms</strong> per epoch (1M validator 기준) — 6.4분 간격 대비 매우 여유. Rewards 단계가 전체의 60%+ 차지.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Epoch processing은 <strong>7단계 파이프라인</strong>.<br />
           매 epoch(6.4분) 1회만 실행 → validator 보상 일괄 정산.<br />

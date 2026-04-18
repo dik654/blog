@@ -29,84 +29,79 @@ export default function ENSResolution({ onCodeRef: _onCodeRef }: Props) {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">ENS Architecture</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// ENS 2-layer system
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">1) Registry Contract</p>
+              <p className="text-xs text-muted-foreground mb-1"><code>0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e</code></p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>node (namehash) → resolver address</li>
+                <li>+ owner + TTL</li>
+              </ul>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">2) Resolver Contract (per name)</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>ETH address, IPFS hash, 기타 레코드 반환</li>
+                <li>각 이름마다 커스텀 resolver 가능</li>
+              </ul>
+            </div>
+          </div>
 
-// 1) Registry contract
-// Address: 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
-// Maps: node (namehash) → resolver address
-//        + owner + TTL
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Resolution Flow</p>
+            <ol className="text-sm text-muted-foreground space-y-1">
+              <li>1) <code>node = namehash("vitalik.eth")</code> — 도메인 해싱</li>
+              <li>2) <code>resolver = Registry.resolver(node)</code> — 리졸버 조회</li>
+              <li>3) <code>address = Resolver.addr(node)</code> — 주소 조회</li>
+            </ol>
+          </div>
 
-// 2) Resolver contract (per name)
-// Returns: ETH address, IPFS hash, other records
-// Each name can have custom resolver
-
-// Resolution flow
-// 1) Hash domain name
-node = namehash("vitalik.eth")
-
-// 2) Lookup resolver
-resolver = Registry.resolver(node)
-
-// 3) Query resolver
-address = Resolver.addr(node)
-
-// Namehash algorithm
-function namehash(name):
-    if name == "":
-        return 0x0000...0000 (32 zero bytes)
-
-    labels = name.split(".")
-    node = 0x0000...0000
-
-    for label in reversed(labels):
-        labelhash = keccak256(label)
-        node = keccak256(node || labelhash)
-
-    return node
-
-// Example: "vitalik.eth"
-// 1) labels = ["vitalik", "eth"]
-// 2) Reversed: ["eth", "vitalik"]
-// 3) node1 = keccak256(0x00...00 || keccak256("eth"))
-// 4) node2 = keccak256(node1 || keccak256("vitalik"))
-// 5) return node2`}</pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Namehash Algorithm</p>
+            <p className="text-xs text-muted-foreground mb-2">빈 이름 → <code>0x0000...0000</code> (32 zero bytes), 그 외 라벨을 오른쪽부터 재귀 해싱</p>
+            <ol className="text-sm text-muted-foreground space-y-1">
+              <li>1) <code>"vitalik.eth".split(".")</code> → <code>["vitalik", "eth"]</code></li>
+              <li>2) Reversed: <code>["eth", "vitalik"]</code></li>
+              <li>3) <code>node1 = keccak256(0x00...00 || keccak256("eth"))</code></li>
+              <li>4) <code>node2 = keccak256(node1 || keccak256("vitalik"))</code></li>
+              <li>5) return <code>node2</code></li>
+            </ol>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Kohaku Verified ENS Resolution</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 일반 ENS 조회 (취약)
-async function resolveENS(name) {
-    // RPC에 위임 → 서버가 거짓말 가능
-    return provider.resolveName(name);
-}
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4 border-l-4 border-red-400">
+              <p className="text-sm font-semibold mb-2">일반 ENS 조회 (취약)</p>
+              <p className="text-sm text-muted-foreground"><code>provider.resolveName(name)</code></p>
+              <p className="text-xs text-muted-foreground mt-1">RPC에 위임 → 서버가 거짓말 가능</p>
+            </div>
+            <div className="bg-muted rounded-lg p-4 border-l-4 border-green-400">
+              <p className="text-sm font-semibold mb-2">Kohaku 검증된 조회</p>
+              <p className="text-sm text-muted-foreground">Helios state proof로 모든 단계 검증</p>
+              <p className="text-xs text-muted-foreground mt-1">서버가 거짓말 못 함</p>
+            </div>
+          </div>
 
-// Kohaku 검증된 ENS 조회
-async function resolveENSVerified(name) {
-    const node = namehash(name);
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2"><code>resolveENSVerified(name)</code> 흐름</p>
+            <ol className="text-sm text-muted-foreground space-y-1">
+              <li>1) <code>namehash(name)</code> → node</li>
+              <li>2) <code>provider.call(ENS_REGISTRY, "resolver(bytes32)", [node])</code> → resolverAddr</li>
+              <li>3) Helios가 ENS_REGISTRY storage slot 증명 검증 (node → resolver mapping)</li>
+              <li>4) <code>provider.call(resolverAddr, "addr(bytes32)", [node])</code> → address</li>
+              <li>5) Helios가 resolver storage proof 검증</li>
+            </ol>
+          </div>
 
-    // 1) Registry.resolver(node)
-    const resolverAddr = await provider.call({
-        to: ENS_REGISTRY,
-        data: encode("resolver(bytes32)", [node]),
-    });
-
-    // 2) Helios가 state proof 검증
-    // - ENS_REGISTRY storage slot 증명
-    // - node → resolver mapping 확인
-
-    // 3) Resolver.addr(node)
-    const address = await provider.call({
-        to: resolverAddr,
-        data: encode("addr(bytes32)", [node]),
-    });
-
-    // 4) Helios가 resolver storage proof 검증
-    return address;
-}
-
-// 검증 보장
-// ✓ Registry mapping 무결성
-// ✓ Resolver storage 무결성
-// ✓ State root는 header에서 Helios가 검증
-// → 서버가 거짓말 못 함`}</pre>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Registry mapping 무결성</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">Resolver storage 무결성</span>
+            <span className="bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-2 py-1 rounded">State root는 Helios가 검증</span>
+          </div>
+        </div>
 
       </div>
     </section>

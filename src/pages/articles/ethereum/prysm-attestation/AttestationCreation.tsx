@@ -16,59 +16,26 @@ export default function AttestationCreation({ onCodeRef }: Props) {
 
         {/* ── validator attestation 생성 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Validator 측 — attestation 생성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// validator/client/attest.go
-func (v *validator) SubmitAttestation(
-    ctx context.Context,
-    slot Slot,
-    pubKey [48]byte,
-) error {
-    // 1. Committee 정보 조회 (beacon-chain RPC)
-    duty, err := v.duties.AttesterDuty(pubKey, slot)
-    if err != nil { return err }
-
-    // 2. AttestationData 조회
-    //    head + source/target checkpoint 결정
-    data, err := v.validatorClient.GetAttestationData(ctx, &GetAttestationDataRequest{
-        Slot: slot,
-        CommitteeIndex: duty.CommitteeIndex,
-    })
-    if err != nil { return err }
-
-    // 3. Slashing protection 체크
-    signingRoot := computeSigningRoot(data, domain)
-    if err := v.slashingDB.CheckAttestationSafety(pubKey, signingRoot, data); err != nil {
-        return err  // ⚠ slashing 위험 → 거부
-    }
-
-    // 4. BLS 서명 생성
-    signature, err := v.keyManager.Sign(pubKey, signingRoot)
-    if err != nil { return err }
-
-    // 5. Aggregation bits 설정
-    //    자기 committee 내 위치의 bit만 true
-    aggregationBits := bitfield.NewBitlist(duty.CommitteeLength)
-    aggregationBits.SetBitAt(duty.CommitteePosition, true)
-
-    // 6. Attestation 구성
-    attestation := &Attestation{
-        AggregationBits: aggregationBits,
-        Data: data,
-        Signature: signature,
-    }
-
-    // 7. Slashing DB에 저장 (재서명 방지)
-    v.slashingDB.SaveAttestation(pubKey, data)
-
-    // 8. beacon-chain에 제출
-    return v.validatorClient.ProposeAttestation(ctx, attestation)
-}
-
-// 타이밍:
-// - slot 시작 + 4초 시점 수행
-// - 4초는 block propagation 대기
-// - 늦어도 slot 종료 전 (12초) 필수`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">SubmitAttestation 흐름 (attest.go)</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>duties.AttesterDuty(pubKey, slot)</code> — committee 정보 조회 (beacon-chain RPC)</p>
+              <p>2. <code>GetAttestationData(slot, committeeIndex)</code> — head + source/target checkpoint 결정</p>
+              <p>3. <code>slashingDB.CheckAttestationSafety(pubKey, signingRoot, data)</code> — slashing 위험 시 거부</p>
+              <p>4. <code>keyManager.Sign(pubKey, signingRoot)</code> — BLS 서명 생성</p>
+              <p>5. <code>bitfield.NewBitlist(committeeLength)</code> — 자기 committee 내 위치의 bit만 true</p>
+              <p>6. <code>Attestation&#123;AggregationBits, Data, Signature&#125;</code> 구성</p>
+              <p>7. <code>slashingDB.SaveAttestation(pubKey, data)</code> — 재서명 방지 기록</p>
+              <p>8. <code>ProposeAttestation(ctx, attestation)</code> — beacon-chain에 제출</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">t=4s</p><p className="text-foreground/50">실행 시점</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">4초 대기</p><p className="text-foreground/50">block propagation</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">t&lt;12s</p><p className="text-foreground/50">slot 종료 전 필수</p></div>
+          </div>
+        </div>
         <p className="leading-7">
           Validator가 매 slot <strong>committee 내 자기 bit만 set</strong> → attestation 생성.<br />
           Slashing DB 체크 → BLS 서명 → beacon-chain 제출.<br />
@@ -77,61 +44,43 @@ func (v *validator) SubmitAttestation(
 
         {/* ── Slashing protection DB ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Slashing Protection — EIP-3076</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Slashing conditions (attestation):
-// 1. Double vote: 같은 target epoch에 두 번 서명
-// 2. Surround vote: source_a < source_b AND target_b < target_a
-
-// Prysm의 slashing protection DB:
-type SlashingProtectionDB struct {
-    db *bolt.DB  // 독립 DB (validator 전용)
-}
-
-func (db *SlashingProtectionDB) CheckAttestationSafety(
-    pubKey [48]byte,
-    signingRoot [32]byte,
-    data *AttestationData,
-) error {
-    // 1. DB에서 historical attestations 조회
-    history := db.getAttestationHistory(pubKey)
-
-    // 2. Double-vote 체크
-    for _, past := range history {
-        if past.TargetEpoch == data.Target.Epoch {
-            if past.SigningRoot != signingRoot {
-                return ErrDoubleVote  // ❌ slashable
-            }
-            return ErrAlreadySigned  // ✓ 동일 attestation 재서명
-        }
-    }
-
-    // 3. Surrounded vote 체크
-    for _, past := range history {
-        // Past가 현재 attestation을 감쌈
-        if past.SourceEpoch < data.Source.Epoch &&
-           past.TargetEpoch > data.Target.Epoch {
-            return ErrSurroundingVote  // ❌ slashable
-        }
-        // 현재가 past를 감쌈
-        if data.Source.Epoch < past.SourceEpoch &&
-           data.Target.Epoch > past.TargetEpoch {
-            return ErrSurroundedVote  // ❌ slashable
-        }
-    }
-
-    return nil  // 안전
-}
-
-// Import/Export 표준 (EIP-3076):
-// - JSON 포맷으로 다른 클라이언트와 migration 가능
-// - pubkey별 min_source_epoch, max_target_epoch 저장
-// - client 교체 시 이 DB만 옮기면 안전
-
-// 중요성:
-// - slashing 당하면 최소 1 ETH 손실 + strike out
-// - Protection DB 손실 시 validator 재시작 위험
-// - 항상 백업 유지 필수`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Slashing 조건 (attestation)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-foreground/80">
+              <div><span className="font-semibold">Double vote</span> — 같은 target epoch에 두 번 서명</div>
+              <div><span className="font-semibold">Surround vote</span> — <code>source_a &lt; source_b AND target_b &lt; target_a</code></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">CheckAttestationSafety 흐름</p>
+            <p className="text-sm text-foreground/80 mb-2"><code>SlashingProtectionDB</code> — <code>db: *bolt.DB</code> (validator 전용 독립 DB)</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>getAttestationHistory(pubKey)</code> — 과거 attestation 조회</p>
+              <p>2. <span className="font-semibold">Double-vote 체크</span> — 같은 <code>TargetEpoch</code>에 다른 <code>SigningRoot</code> &rarr; <code>ErrDoubleVote</code></p>
+              <p>3. <span className="font-semibold">Surrounded vote 체크</span> — past가 현재를 감쌈 &rarr; <code>ErrSurroundingVote</code> / 현재가 past를 감쌈 &rarr; <code>ErrSurroundedVote</code></p>
+              <p>4. 모두 통과 &rarr; <code>nil</code> (안전)</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">EIP-3076 Import/Export</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>JSON 포맷으로 다른 클라이언트와 migration</p>
+                <p>pubkey별 <code>min_source_epoch</code>, <code>max_target_epoch</code> 저장</p>
+                <p>client 교체 시 이 DB만 옮기면 안전</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">중요성</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>slashing 시 최소 1 ETH 손실 + strike out</p>
+                <p>Protection DB 손실 &rarr; validator 재시작 위험</p>
+                <p>항상 백업 유지 필수</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Slashing protection DB</strong>가 validator 안전의 핵심.<br />
           double-vote, surround-vote 2가지 slash 조건 사전 검증.<br />

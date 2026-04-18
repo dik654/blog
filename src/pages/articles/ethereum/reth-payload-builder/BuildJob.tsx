@@ -34,72 +34,57 @@ export default function BuildJob({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── build_payload 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">build_payload() — TX 선택 & 실행 루프</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn build_payload(
-    client: &impl StateProvider,
-    pool: &impl TransactionPool,
-    attrs: &PayloadAttributes,
-    parent: &Header,
-) -> Result<BuiltPayload> {
-    // 1. 블록 환경 설정
-    let block_env = build_block_env(parent, attrs);
-    let base_fee = block_env.basefee.to::<u64>();
-    let gas_limit = parent.gas_limit;
-
-    // 2. pre-execution 훅 (EIP-4788)
-    let mut state = client.latest_state()?;
-    apply_beacon_root_contract_call(
-        attrs.parent_beacon_block_root,
-        &mut state,
-    )?;
-
-    // 3. TX pool iterator (priority 순)
-    let mut best_txs = pool.best_transactions_with_attributes(
-        BestTransactionsAttributes::new(base_fee, None),
-    );
-
-    // 4. TX 순회 실행
-    let mut cumulative_gas = 0u64;
-    let mut txs = Vec::new();
-    let mut block_value = U256::ZERO;
-
-    while let Some(tx) = best_txs.next() {
-        // gas_limit 확인
-        if cumulative_gas + tx.gas_limit() > gas_limit {
-            best_txs.mark_invalid(&tx);  // 너무 큼, 다른 TX 시도
-            continue;
-        }
-
-        // revm으로 실행
-        let evm_env = tx_env(tx.as_signed(), tx.sender());
-        let result = execute_tx(&mut state, &block_env, &evm_env)?;
-
-        match result {
-            Ok(exec_result) => {
-                cumulative_gas += exec_result.gas_used();
-                block_value += exec_result.fee_paid();
-                txs.push(tx);
-            }
-            Err(_) => {
-                // 실행 실패 → sender의 후속 TX 전부 skip
-                best_txs.mark_invalid(&tx);
-            }
-        }
-
-        // 가스 90% 채우면 조기 종료 (최적화)
-        if cumulative_gas > gas_limit * 9 / 10 { break; }
-    }
-
-    // 5. Withdrawals 처리 (Shanghai)
-    apply_withdrawals(&mut state, &attrs.withdrawals)?;
-
-    // 6. 블록 봉인 & 헤더 완성
-    let header = build_header(parent, attrs, &txs, cumulative_gas, &state)?;
-    let block = SealedBlock::new(header, txs, attrs.withdrawals.clone());
-
-    Ok(BuiltPayload { block, block_value })
-}`}
-        </pre>
+        <div className="not-prose space-y-2 my-4">
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">블록 환경 설정</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">build_block_env(parent, attrs)</code> → base_fee, gas_limit 결정</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">Pre-execution 훅 (EIP-4788)</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">apply_beacon_root_contract_call(parent_beacon_block_root)</code></p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">TX pool iterator (priority 순)</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">best_transactions_with_attributes(base_fee)</code> — effective_tip 내림차순</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <div className="flex gap-3">
+              <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold shrink-0">4</span>
+              <p className="text-sm font-semibold text-foreground/90">TX 순회 실행 루프</p>
+            </div>
+            <div className="mt-2 ml-9 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="rounded bg-muted/40 p-2">
+                <p className="text-xs font-semibold text-foreground/70">Gas 초과</p>
+                <p className="text-xs text-foreground/60"><code className="text-xs">mark_invalid()</code> → 다른 TX 시도</p>
+              </div>
+              <div className="rounded bg-muted/40 p-2">
+                <p className="text-xs font-semibold text-foreground/70">실행 성공</p>
+                <p className="text-xs text-foreground/60">gas/fee 누적, TX 추가</p>
+              </div>
+              <div className="rounded bg-muted/40 p-2">
+                <p className="text-xs font-semibold text-foreground/70">실행 실패</p>
+                <p className="text-xs text-foreground/60">sender 후속 TX skip</p>
+              </div>
+            </div>
+            <p className="text-xs text-foreground/50 mt-2 ml-9">gas 90% 도달 시 조기 종료</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-3 flex gap-3">
+            <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold shrink-0">5</span>
+            <div>
+              <p className="text-sm font-semibold text-foreground/90">Withdrawals + 블록 봉인</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">apply_withdrawals()</code> → <code className="text-xs">build_header()</code> → <code className="text-xs">SealedBlock::new()</code> → <code className="text-xs">BuiltPayload</code></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           TX 선택 루프의 핵심: <strong>priority 순회 + mark_invalid</strong>.<br />
           실행 실패 시 같은 sender의 후속 nonce TX도 건너뜀 (nonce gap 방지).<br />
@@ -108,45 +93,42 @@ export default function BuildJob({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── block_value 계산 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">block_value — validator 수익 계산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// block_value = 모든 TX의 priority_fee 합계
-// (base_fee는 소각되므로 제외)
-
-fn calculate_block_value(
-    txs: &[(TransactionSigned, ExecutionResult)],
-    base_fee: u64,
-) -> U256 {
-    let mut total = U256::ZERO;
-
-    for (tx, result) in txs {
-        // effective_tip = min(max_priority_fee, max_fee - base_fee)
-        let effective_tip = tx.effective_tip_per_gas(base_fee)
-            .unwrap_or(0);
-        let tip_paid = U256::from(effective_tip)
-            * U256::from(result.gas_used());
-        total += tip_paid;
-    }
-
-    total
-}
-
-// MEV-Boost 경쟁:
-// self-build block_value: 예) 0.05 ETH (일반 TX 팁)
-// MEV-Boost bid: 예) 0.15 ETH (arbitrage 번들 포함)
-// → validator는 MEV-Boost 블록 선택
-
-// block_value 극대화 전략:
-// 1. 더 많은 TX 포함 (gas_limit 최대 활용)
-// 2. 높은 priority_fee TX 우선 (CoinbaseTipOrdering)
-// 3. MEV 번들 통합 (rbuilder)
-// 4. continuous building (매 500ms 개선)
-
-// Validator 연간 수익 추정 (메인넷):
-// - 신규 발행: ~1 ETH/year per 32 ETH stake
-// - TX priority_fee: ~0.5 ETH/year
-// - MEV-Boost: ~1 ETH/year (활발한 시기)
-// - 합계: ~2.5 ETH/year (~7.8% APR)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">calculate_block_value()</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <code className="text-xs">effective_tip = min(max_priority_fee, max_fee - base_fee)</code><br />
+              <code className="text-xs">block_value += effective_tip * gas_used</code><br />
+              base_fee는 소각 — priority_fee만 validator 수익.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">극대화 전략 4가지</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li>gas_limit 최대 활용 (더 많은 TX)</li>
+              <li>높은 priority_fee TX 우선 (CoinbaseTipOrdering)</li>
+              <li>MEV 번들 통합 (rbuilder)</li>
+              <li>continuous building (매 500ms 개선)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-amber-400 mb-2">MEV-Boost 경쟁</p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              self-build: ~0.05 ETH (일반 TX 팁)<br />
+              MEV-Boost bid: ~0.15 ETH (arbitrage 번들)<br />
+              → validator는 높은 쪽 선택.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-blue-400 mb-2">연간 수익 추정 (메인넷)</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li>신규 발행: ~1 ETH/yr per 32 ETH</li>
+              <li>TX priority_fee: ~0.5 ETH/yr</li>
+              <li>MEV-Boost: ~1 ETH/yr</li>
+              <li>합계: ~2.5 ETH/yr (~7.8% APR)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <code>block_value</code>가 <strong>validator 수익성의 직접 지표</strong>.<br />
           높은 priority_fee TX 많이 포함 → 더 높은 block_value.<br />
@@ -155,46 +137,30 @@ fn calculate_block_value(
 
         {/* ── Withdrawals 처리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Withdrawals — post-execution 단계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Shanghai 이후 withdrawals 처리
-fn apply_withdrawals(
-    state: &mut State,
-    withdrawals: &Option<Vec<Withdrawal>>,
-) -> Result<()> {
-    if let Some(withdrawals) = withdrawals {
-        for w in withdrawals {
-            // 1. 수취 주소 계정 로드
-            let mut account = state.account(&w.address)?
-                .unwrap_or_default();
-
-            // 2. 잔고 증가 (Gwei → Wei 변환)
-            let amount_wei = U256::from(w.amount)
-                * U256::from(10u64.pow(9));
-            account.balance = account.balance.saturating_add(amount_wei);
-
-            // 3. 상태 업데이트
-            state.set_account(w.address, account);
-        }
-    }
-    Ok(())
-}
-
-// Withdrawal 특성:
-// - CL의 staking validator 인출
-// - EOA도 컨트랙트도 가능한 주소
-// - 인출량 = validator 잔고 감소량 (CL 쪽)
-// - 블록 내 최대 16개 withdrawals
-// - TX 아닌 state transition (gas 소모 없음)
-
-// withdrawals_root 계산:
-// - 16개 withdrawal의 머클 루트
-// - 블록 헤더의 withdrawals_root 필드에 기록
-
-// 경제적 효과:
-// - 연간 ETH 공급 증가 속도 제어
-// - validator의 유동성 확보 (full/partial withdrawal)
-// - staking ratio 안정화`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">apply_withdrawals() 흐름</p>
+            <div className="space-y-1">
+              <div className="flex gap-2 text-xs text-foreground/70">
+                <span className="rounded bg-muted/40 px-2 py-1">1. 수취 주소 계정 로드</span>
+                <span className="text-foreground/30">&rarr;</span>
+                <span className="rounded bg-muted/40 px-2 py-1">2. Gwei → Wei 변환 후 잔고 증가</span>
+                <span className="text-foreground/30">&rarr;</span>
+                <span className="rounded bg-muted/40 px-2 py-1">3. state 업데이트</span>
+              </div>
+            </div>
+            <p className="text-xs text-foreground/50 mt-2"><code className="text-xs">saturating_add</code>로 오버플로 방지</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-emerald-400 mb-2">Withdrawal 특성</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li>CL staking validator 인출 (EOA / 컨트랙트 주소)</li>
+              <li>블록당 최대 <strong>16개</strong> withdrawal</li>
+              <li>TX 아닌 state transition — <strong>gas 소모 없음</strong></li>
+              <li><code className="text-xs">withdrawals_root</code> → 헤더에 머클 루트 기록</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Withdrawals는 <strong>TX 아닌 특수 state transition</strong>.<br />
           gas 소모 없이 state만 변경 — CL의 validator 잔고를 EL로 이전.<br />

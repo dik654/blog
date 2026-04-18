@@ -35,6 +35,12 @@ export default function TokenPipelineViz() {
           {STAGES.map((s, i) => {
             const active = i === step;
             const y = 50;
+            const gap = 6;
+            const tokWidths = s.tokens.map(t => Math.max(t.length * 7, 20));
+            const tokOffsets = tokWidths.reduce<number[]>((acc, tw, idx) => {
+              acc.push(idx === 0 ? 10 : acc[idx - 1] + tokWidths[idx - 1] + gap);
+              return acc;
+            }, []);
             return (
               <motion.g key={i} animate={{ opacity: active ? 1 : i < step ? 0.3 : 0.12 }} transition={sp}>
                 <rect x={10 + i * 96} y={15} width={88} height={20} rx={4}
@@ -44,8 +50,8 @@ export default function TokenPipelineViz() {
                   fontWeight={active ? 600 : 400} fill={s.color}>{s.label}</text>
                 {/* tokens */}
                 {active && s.tokens.map((t, ti) => {
-                  const tw = Math.max(t.length * 7, 20);
-                  const tx = 10 + ti * (tw + 4);
+                  const tw = tokWidths[ti];
+                  const tx = tokOffsets[ti];
                   return (
                     <motion.g key={ti} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ ...sp, delay: ti * 0.05 }}>

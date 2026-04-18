@@ -1,3 +1,7 @@
+import ConsentManagementViz from './viz/ConsentManagementViz';
+import ActiveConsentInlineViz from './viz/ActiveConsentInlineViz';
+import WithdrawalInlineViz from './viz/WithdrawalInlineViz';
+
 export default function ConsentManagement() {
   return (
     <section id="consent-management" className="mb-16 scroll-mt-20">
@@ -14,6 +18,10 @@ export default function ConsentManagement() {
           제17조(제3자 제공)는 별도의 동의를 요구한다.<br />
           수집 동의와 제3자 제공 동의는 반드시 분리해야 하며, 하나의 체크박스로 묶으면 무효 처리된다.
         </p>
+
+        <div className="my-8">
+          <ConsentManagementViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">필수항목 vs 선택항목</h3>
         <p>
@@ -54,6 +62,9 @@ export default function ConsentManagement() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">동의 받는 방법: 적극적 동의</h3>
+        <div className="my-6">
+          <ActiveConsentInlineViz />
+        </div>
         <p>
           개인정보보호법 시행령 제17조는 동의를 받을 때 "각각의 동의 사항을 구분하여 정보주체가 이를 명확하게 인지할 수 있도록" 하라고 규정.<br />
           실무에서 유효한 동의로 인정받으려면 다음 조건을 충족해야 한다:
@@ -99,6 +110,9 @@ export default function ConsentManagement() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">동의 철회</h3>
+        <div className="my-6">
+          <WithdrawalInlineViz />
+        </div>
         <p>
           개인정보보호법 제37조 — 정보주체는 언제든지 동의를 철회(Withdrawal of Consent)할 수 있다.<br />
           핵심 원칙: "수집 경로보다 쉬운 방법으로 철회할 수 있어야 한다."

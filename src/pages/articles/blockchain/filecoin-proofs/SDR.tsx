@@ -33,83 +33,105 @@ export default function SDR({ title, onCodeRef }: {
 
         {/* ── SDR 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Stacked DRG (SDR) 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Stacked DRG (Depth Robust Graph):
 
-// 개념:
-// - Depth-robust graph
-// - 순차 계산만 가능 (무단병렬 불가)
-// - 시간과 공간 모두 필요
-// - cheating 방지
+        {/* ── SDR 핵심 특성 ── */}
+        <div className="not-prose rounded-lg border border-sky-500/30 bg-sky-500/5 p-4 my-4">
+          <p className="text-sm font-bold text-sky-400 mb-2">Depth-Robust Graph 핵심</p>
+          <ul className="text-sm space-y-1 text-foreground/80">
+            <li>순차 계산만 가능 — 무단 병렬화 불가 (cheating 방지)</li>
+            <li>시간과 공간 <strong>모두</strong> 필요 — space-time trade-off</li>
+            <li>Alwen-Serbinenko 증명: parallel computation hard</li>
+          </ul>
+        </div>
 
-// 11 layers (Filecoin 32GiB):
-// - layer 0 = original data encoding
-// - layer i depends on layer i-1
-// - each node has parents:
-//   - 6 DRG parents (within layer)
-//   - 8 Expander parents (from prev layer)
-//   - 14 total parent dependencies
+        {/* ── 11-Layer 구조 + 노드 연산 ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">11 Layers (32 GiB)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>layer 0</code> — original data encoding</li>
+              <li><code>layer i</code> depends on <code>layer i-1</code></li>
+              <li><strong>6</strong> DRG parents (within layer)</li>
+              <li><strong>8</strong> Expander parents (from prev layer)</li>
+              <li><strong>14</strong> total parent dependencies per node</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Node Computation</p>
+            <div className="text-sm text-foreground/80 space-y-1">
+              <p><code>node[i,j]</code> = <code>SHA256(replica_id || layer_i || node_id || parent_1..14_labels)</code></p>
+              <ul className="space-y-1 mt-2">
+                <li>SHA256 hash, 32 bytes output per node</li>
+                <li>sequential — all 14 parents needed first</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-// Node computation:
-// node_i,j = SHA256(
-//     replica_id ||
-//     layer_i ||
-//     node_id ||
-//     parent_1_label ||
-//     ...
-//     parent_14_label
-// )
-// - SHA256 hash
-// - sequential (all parents needed)
-// - 32 bytes output per node
+        {/* ── Scale ── */}
+        <div className="not-prose rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 my-4">
+          <p className="text-sm font-bold text-amber-400 mb-2">Scale (32 GiB sector)</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-foreground/80">
+            <div><strong>~10<sup>9</sup></strong><br />nodes per layer</div>
+            <div><strong>10<sup>10</sup></strong><br />nodes total (11 layers)</div>
+            <div><strong>10<sup>11</sup></strong><br />SHA256 operations</div>
+            <div><strong>3-5h</strong><br />on modern CPU</div>
+          </div>
+        </div>
 
-// Scale (32 GiB sector):
-// - ~10^9 nodes per layer
-// - 11 layers × 10^9 = 10^10 nodes total
-// - 10^10 × 14 parents = 10^11 SHA256 operations
-// - sequential execution
-// - ~3-5 hours on modern CPU
+        {/* ── Parallelism + Expander + Why SDR ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">병렬화</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>within layer — parallel (windows)</li>
+              <li>between layers — <strong>sequential</strong></li>
+              <li>multi-core CPU + SIMD (SHA-NI)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Expander Graph</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>추가 엔트로피 — shortcut attack 방지</li>
+              <li>bipartite between layers</li>
+              <li>random permutation</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Why SDR?</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>"I know the data" 아님</li>
+              <li>"I <strong>stored</strong> the data physically"</li>
+              <li>경제적 commitment 강제</li>
+            </ul>
+          </div>
+        </div>
 
-// Parallelism:
-// - within layer: parallel (windows)
-// - between layers: sequential
-// - multi-core CPU usage
-// - SIMD instructions (SHA-NI)
+        {/* ── Alternatives + Performance ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">대안 비교</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><strong>Simple hashing</strong> — parallelizable (attack 취약)</li>
+              <li><strong>Random walks</strong> — weak security</li>
+              <li><strong>DRG</strong> — strong time-space binding</li>
+              <li><strong>SDR</strong> — Filecoin 채택 (2019)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Performance 최적화</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>SIMD SHA256 (AVX2 / AVX512)</li>
+              <li>multi-layer caching + parallel windows</li>
+              <li>AMD EPYC 7003 series 권장</li>
+              <li>~8-15 TFLOPS/sec effective</li>
+            </ul>
+          </div>
+        </div>
 
-// DRG Properties:
-// - depth robust (Alwen-Serbinenko)
-// - parallel computation hard
-// - must store intermediate states
-// - space-time trade-off
-
-// Expander Graph:
-// - additional entropy
-// - prevents short-cut attacks
-// - bipartite between layers
-// - random permutation
-
-// Why SDR?
-// - physical storage verification
-// - not just "I know the data"
-// - "I stored the data physically"
-// - economic commitment
-
-// Alternatives considered:
-// - simple hashing: parallelizable (attack)
-// - random walks: weak security
-// - DRG: strong time-space binding
-// - SDR: Filecoin's choice (2019)
-
-// Performance optimization:
-// - SIMD SHA256 (AVX2/AVX512)
-// - multi-layer caching
-// - parallel windows
-// - modern CPU: AMD EPYC 7003 series
-// - ~8-15 TFLOPS/sec effective`}
-        </pre>
         <p className="leading-7">
-          SDR: <strong>11 layers × 14 parents × SHA256, sequential</strong>.<br />
-          10^11 SHA256 operations per sector.<br />
+          SDR: <strong>11 layers x 14 parents x SHA256, sequential</strong>.<br />
+          10<sup>11</sup> SHA256 operations per sector.<br />
           physical storage 경제적 commitment 강제.
         </p>
       </div>

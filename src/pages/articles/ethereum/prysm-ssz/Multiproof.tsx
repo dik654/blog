@@ -10,55 +10,49 @@ export default function Multiproof(_props: Props) {
 
         {/* ── GeneralizedIndex ── */}
         <h3 className="text-xl font-semibold mt-2 mb-3">GeneralizedIndex — 머클 트리 노드 주소</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GeneralizedIndex: 머클 트리 모든 노드의 고유 번호
-// BFS 순서로 할당, 1부터 시작
-
-//                1 (root)
-//               / \\
-//              2   3
-//             / \\ / \\
-//            4  5 6  7
-//           / \\
-//          8   9 ...
-//
-// 규칙:
-// - 루트 = 1
-// - 왼쪽 자식 = 2i
-// - 오른쪽 자식 = 2i + 1
-// - 부모 = i / 2
-// - 형제 = i XOR 1
-
-// BeaconState 필드의 GeneralizedIndex (단순화):
-// BeaconState에 30개 필드 → 5-depth 트리
-//
-// slot (필드 0) → path: 0,0,0,0,0 → index = 32
-// fork (필드 1) → path: 0,0,0,0,1 → index = 33
-// validators (필드 11) → path: 0,1,0,1,1 → index = 43
-// balances (필드 12) → path: 0,1,1,0,0 → index = 44
-
-// get_generalized_index(schema, ["validators", 5, "balance"]):
-// 1. "validators" 필드 → state_root의 특정 자식
-// 2. validators list 안의 인덱스 5
-// 3. Validator struct 안의 "balance" 필드
-// → 전체 경로를 index로 인코딩
-
-func GetGeneralizedIndex(schema Type, path ...Any) GeneralizedIndex {
-    root := GeneralizedIndex(1)
-    for _, p := range path {
-        if isField(p) {
-            fieldIdx := getFieldIndex(schema, p)
-            root = root * next_pow2(numFields(schema)) + fieldIdx
-        } else if isListIndex(p) {
-            // List: index * 2 + 0 (내부), index = length 위치
-            root = root * 2  // entering data subtree
-            root = root * next_pow2(maxLength(schema)) + p.Index
-        }
-        schema = advance_schema(schema, p)
-    }
-    return root
-}`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">GeneralizedIndex &mdash; BFS 순서 노드 번호</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-sm text-muted-foreground">
+                <p className="mb-1">머클 트리 모든 노드의 고유 번호 (1부터 시작)</p>
+                <ul className="space-y-0.5">
+                  <li>루트 = <strong>1</strong></li>
+                  <li>왼쪽 자식 = <strong>2i</strong></li>
+                  <li>오른쪽 자식 = <strong>2i + 1</strong></li>
+                  <li>부모 = <strong>i / 2</strong></li>
+                  <li>형제 = <strong>i XOR 1</strong></li>
+                </ul>
+              </div>
+              <div className="text-sm font-mono text-muted-foreground text-center">
+                <p>1 (root)</p>
+                <p>2 &nbsp;&nbsp;&nbsp; 3</p>
+                <p>4 &nbsp; 5 &nbsp; 6 &nbsp; 7</p>
+                <p>8 9 ...</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">BeaconState 필드의 GeneralizedIndex</p>
+            <p className="text-xs text-muted-foreground mb-2">30개 필드 &rarr; 5-depth 트리</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-center">
+              <div className="bg-muted/50 rounded p-2"><p className="text-muted-foreground">slot (필드 0)</p><p className="font-mono">index = 32</p></div>
+              <div className="bg-muted/50 rounded p-2"><p className="text-muted-foreground">fork (필드 1)</p><p className="font-mono">index = 33</p></div>
+              <div className="bg-muted/50 rounded p-2"><p className="text-muted-foreground">validators (필드 11)</p><p className="font-mono">index = 43</p></div>
+              <div className="bg-muted/50 rounded p-2"><p className="text-muted-foreground">balances (필드 12)</p><p className="font-mono">index = 44</p></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2"><code>GetGeneralizedIndex(schema, path...)</code></p>
+            <p className="text-sm text-muted-foreground mb-2">경로 예시: <code>["validators", 5, "balance"]</code></p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code>"validators"</code> 필드 &rarr; state_root의 특정 자식 (field index 기반)</li>
+              <li>validators list 인덱스 5 &rarr; data subtree 진입 후 offset</li>
+              <li>Validator struct의 <code>"balance"</code> 필드</li>
+            </ol>
+            <p className="text-xs text-muted-foreground mt-2">전체 경로를 하나의 정수 index로 인코딩</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>GeneralizedIndex</strong>가 SSZ 트리의 주소 시스템.<br />
           BFS 순서 번호로 모든 노드 식별 → path를 단일 정수로 인코딩.<br />
@@ -66,61 +60,40 @@ func GetGeneralizedIndex(schema Type, path ...Any) GeneralizedIndex {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">단일 필드 증명 — 형제 해시 목록</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 특정 필드의 merkle proof 생성
-//
-// target의 GeneralizedIndex → 루트까지 경로 → 형제 해시 목록
-
-func generateProof(
-    tree MerkleTree,
-    targetIndex GeneralizedIndex,
-) []Hash {
-    proof := []Hash{}
-
-    for targetIndex > 1 {
-        siblingIndex := targetIndex ^ 1  // 형제 index
-        proof = append(proof, tree[siblingIndex])
-        targetIndex = targetIndex / 2    // 부모로 이동
-    }
-
-    return proof
-}
-
-// 예시: 깊이 20 트리에서 특정 validator balance 증명
-// → 20개 hash (640 bytes)
-
-// 검증 (light client 측):
-func verifyProof(
-    leaf Hash,              // 증명할 값
-    targetIndex GeneralizedIndex,
-    proof []Hash,           // 형제 해시 목록
-    root Hash,              // 신뢰하는 root
-) bool {
-    computed := leaf
-
-    for _, sibling := range proof {
-        if targetIndex % 2 == 0 {  // 왼쪽 자식
-            computed = sha256(computed, sibling)
-        } else {                    // 오른쪽 자식
-            computed = sha256(sibling, computed)
-        }
-        targetIndex = targetIndex / 2
-    }
-
-    return computed == root
-}
-
-// Light client의 사용:
-// 1. 검증자가 sync committee 서명으로 block root 신뢰
-// 2. Full node에 "validator[X].balance 증명 요청"
-// 3. Full node가 (balance, merkle proof) 반환
-// 4. Light client가 proof 검증 → 신뢰 가능한 balance
-
-// 효율:
-// - 전체 state 다운로드: ~250MB
-// - 단일 balance proof: ~640 bytes (depth 20)
-// - 40만 배 절약`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>generateProof(tree, targetIndex)</code></p>
+            <p className="text-sm text-muted-foreground mb-2">target의 GeneralizedIndex &rarr; 루트까지 경로 &rarr; 형제 해시 목록 수집</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>형제 index = <code>targetIndex XOR 1</code> &rarr; 형제 해시를 proof에 추가</li>
+              <li>부모로 이동: <code>targetIndex / 2</code></li>
+              <li>루트(index=1)까지 반복</li>
+            </ol>
+            <p className="text-xs text-muted-foreground mt-2">깊이 20 트리에서 단일 증명 = <strong>20개 hash (640 bytes)</strong></p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2"><code>verifyProof(leaf, targetIndex, proof, root)</code></p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code>computed = leaf</code></li>
+              <li>각 sibling과 함께 <code>sha256</code> &mdash; 홀/짝으로 좌우 결정</li>
+              <li>최종 <code>computed == root</code> 여부 반환</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Light Client 사용 흐름</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>sync committee 서명으로 block root 신뢰</li>
+              <li>Full node에 "validator[X].balance 증명 요청"</li>
+              <li>Full node가 (balance, merkle proof) 반환</li>
+              <li>proof 검증 &rarr; 신뢰 가능한 balance</li>
+            </ol>
+            <div className="grid grid-cols-2 gap-3 mt-3 text-sm text-center">
+              <div className="bg-red-500/10 rounded p-2"><p className="text-muted-foreground">전체 state</p><p className="font-mono">~250 MB</p></div>
+              <div className="bg-green-500/10 rounded p-2"><p className="text-muted-foreground">단일 balance proof</p><p className="font-mono">~640 bytes</p></div>
+            </div>
+            <p className="text-xs text-muted-foreground text-center mt-1">40만 배 절약</p>
+          </div>
+        </div>
         <p className="leading-7">
           단일 필드 증명 = <strong>루트까지 경로의 형제 해시 목록</strong>.<br />
           검증자가 필드 값 + 형제 해시로 루트 재구성 → 일치 여부 확인.<br />
@@ -128,53 +101,29 @@ func verifyProof(
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Multiproof — 공유 경로 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 여러 필드를 동시 증명할 때 공유 경로 중복 제거
-
-// 예: validators[5], validators[6], validators[10] 동시 증명
-// 단일 증명: 20 × 3 = 60 hashes
-// Multiproof: 공유 경로 제거 → ~25 hashes
-
-func generateMultiproof(
-    tree MerkleTree,
-    targetIndices []GeneralizedIndex,
-) Multiproof {
-    // 1. 필요한 모든 노드 수집
-    needed := make(map[GeneralizedIndex]bool)
-    for _, idx := range targetIndices {
-        // target 자신 필요
-        needed[idx] = true
-        // target의 조상 경로 필요
-        for p := idx/2; p > 0; p /= 2 {
-            needed[p] = true
-        }
-    }
-
-    // 2. 실제 알려진 것 수집 (target + 조상 제외)
-    proof := []Hash{}
-    indices := []GeneralizedIndex{}
-    for idx := range needed {
-        sibling := idx ^ 1
-        if !needed[sibling] {
-            // 형제가 다른 target의 경로에 없으면 proof 필요
-            proof = append(proof, tree[sibling])
-            indices = append(indices, sibling)
-        }
-    }
-
-    return Multiproof{
-        Leaves: targetIndices,
-        Hashes: proof,
-        Indices: indices,
-    }
-}
-
-// 메인넷 사용 사례:
-// - Light client update: block header + sync committee proof
-//   → 여러 필드(slot, state_root, sync_aggregate) 동시 증명
-// - ERC-3668 CCIP-Read: state root 대상 multi-field proof
-// - Portal Network: historical state proofs`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>generateMultiproof(tree, targetIndices)</code></p>
+            <p className="text-sm text-muted-foreground mb-2">여러 필드 동시 증명 시 공유 경로 중복 제거</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li>필요한 모든 노드 수집 &mdash; target + 각 target의 조상 경로</li>
+              <li>각 노드의 형제가 다른 target 경로에 포함되는지 확인</li>
+              <li>포함되지 않은 형제만 proof에 추가 &rarr; 중복 제거</li>
+            </ol>
+            <div className="grid grid-cols-2 gap-3 mt-3 text-sm text-center">
+              <div className="bg-red-500/10 rounded p-2"><p className="text-muted-foreground">단일 증명 3개</p><p className="font-mono">20 x 3 = 60 hashes</p></div>
+              <div className="bg-green-500/10 rounded p-2"><p className="text-muted-foreground">Multiproof</p><p className="font-mono">~25 hashes</p></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">메인넷 사용 사례</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><strong>Light client update</strong> &mdash; slot, state_root, sync_aggregate 동시 증명</li>
+              <li><strong>ERC-3668 CCIP-Read</strong> &mdash; state root 대상 multi-field proof</li>
+              <li><strong>Portal Network</strong> &mdash; historical state proofs</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Multiproof</strong>로 여러 필드 증명 시 공유 경로 중복 제거.<br />
           단일 증명 총합 대비 30~50% 절약 가능.<br />
@@ -183,47 +132,36 @@ func generateMultiproof(
 
         {/* ── Light Client use case ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Light Client Update — SSZ Multiproof 활용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Altair 포크 이후 light client sync protocol
-// EIP-4444 이전의 public 명세
-
-struct LightClientUpdate {
-    // 새 슬롯의 block header
-    attested_header: BeaconBlockHeader,
-
-    // next sync committee (현재 싱크 위원회의 증명 필요)
-    next_sync_committee: SyncCommittee,  // 512 pubkeys
-    next_sync_committee_branch: Vec<Bytes32>,  // Merkle proof (~5 hashes)
-
-    // finalized block
-    finalized_header: BeaconBlockHeader,
-    finality_branch: Vec<Bytes32>,  // Merkle proof
-
-    // 현재 sync committee 서명
-    sync_aggregate: SyncAggregate,  // 512 bit flags + aggregate sig
-    signature_slot: Slot,
-}
-
-// Light client 검증:
-// 1. 기존 sync_committee가 attested_header에 서명했는지 확인
-// 2. attested_header.state_root에서 next_sync_committee merkle proof 검증
-//    → next_sync_committee_branch로
-// 3. attested_header.state_root에서 finalized_header merkle proof 검증
-//    → finality_branch로
-// 4. 성공 시: next_sync_committee 채택 + finalized_header 업데이트
-
-// 데이터 크기:
-// - SyncCommittee: 512 × 48 bytes + 48 bytes = ~25 KB
-// - Branches: ~15 hashes × 32 bytes = ~500 bytes
-// - BeaconBlockHeader: ~100 bytes
-// - Total update: ~26 KB per epoch
-
-// 브라우저/모바일 light client:
-// - epoch당 26KB 다운로드
-// - 하루 ~5 MB (225 epochs)
-// - 모든 validator 관리 불필요 → sync committee만 추적
-// - Helios, nimbus-light 등 구현`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>LightClientUpdate</code> 구조</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code>attested_header</code>: <code>BeaconBlockHeader</code> &mdash; 새 슬롯의 block header</li>
+              <li><code>next_sync_committee</code>: <code>SyncCommittee</code> (512 pubkeys) + <code>next_sync_committee_branch</code> (Merkle proof)</li>
+              <li><code>finalized_header</code>: <code>BeaconBlockHeader</code> + <code>finality_branch</code> (Merkle proof)</li>
+              <li><code>sync_aggregate</code>: <code>SyncAggregate</code> (512 bit flags + aggregate sig) + <code>signature_slot</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">검증 절차</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>기존 <code>sync_committee</code>가 <code>attested_header</code>에 서명했는지 확인</li>
+              <li><code>attested_header.state_root</code>에서 <code>next_sync_committee</code> merkle proof 검증</li>
+              <li><code>attested_header.state_root</code>에서 <code>finalized_header</code> merkle proof 검증</li>
+              <li>성공 시: next_sync_committee 채택 + finalized_header 업데이트</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">데이터 크기</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">SyncCommittee</p><p className="font-mono">~25 KB</p></div>
+              <div><p className="text-muted-foreground">Branches</p><p className="font-mono">~500 bytes</p></div>
+              <div><p className="text-muted-foreground">Header</p><p className="font-mono">~100 bytes</p></div>
+              <div><p className="text-muted-foreground font-semibold">총 update</p><p className="font-mono font-semibold">~26 KB/epoch</p></div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">하루 ~5 MB (225 epochs) &mdash; 브라우저/모바일에서 실용적 (Helios, nimbus-light 등)</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Light client</strong>가 SSZ multiproof의 대표 사용처.<br />
           sync committee + merkle proof로 full state 없이 상태 검증.<br />

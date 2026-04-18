@@ -1,7 +1,12 @@
+import IncidentResponseViz from './viz/IncidentResponseViz';
+import IncidentStagesViz from './viz/IncidentStagesViz';
+import BackupRecoveryViz from './viz/BackupRecoveryViz';
+
 export default function IncidentResponse() {
   return (
     <section id="incident-response" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">사고 대응과 백업/복구</h2>
+      <IncidentResponseViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-4">침해사고 대응 4단계</h3>
         <p className="leading-7">
@@ -26,6 +31,8 @@ export default function IncidentResponse() {
           동일한 공격이 재발하지 않도록 보안 체계를 보강한다.
           취약점 패치, 접근 정책 강화, 모니터링 규칙 추가, 전 직원 대상 보안 교육을 실시한다.
         </p>
+
+        <IncidentStagesViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">내부 금융사고 대응</h3>
         <p className="leading-7">
@@ -82,6 +89,8 @@ export default function IncidentResponse() {
           <strong>Mixer 블랙리스트</strong>: 자금세탁에 사용되는 Mixer(믹서, 자금 혼합 서비스) 주소를 블랙리스트로 관리한다.
           블랙리스트에 등록된 주소로의 출금은 자동 차단하고, 해당 주소에서 유입된 자금은 추가 심사를 거친다.
         </p>
+
+        <BackupRecoveryViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">백업 정책</h3>
         <p className="leading-7">

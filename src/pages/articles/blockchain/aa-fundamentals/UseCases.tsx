@@ -37,151 +37,148 @@ export default function UseCases() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">AA 활용 패턴 구현 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Real-world AA Patterns
-//
-// 1) Passkey / WebAuthn Authentication
-//
-//    Secure Enclave generates P-256 keypair
-//    Private key NEVER leaves device
-//    User signs with Face ID / Touch ID / Windows Hello
-//
-//    validateUserOp():
-//      bytes32 hash = sha256(authenticatorData || sha256(clientData))
-//      (r, s) = decode(signature)
-//      return ecRecover_P256(hash, r, s) == expectedPubKey
-//
-//    Gas cost: ~200K (P-256 precompile RIP-7212 reduces to 20K)
-//
-//    Live: Coinbase Smart Wallet, Safe{Wallet}, OKX
 
-// 2) Session Keys
-//
-//    Problem: DeFi automation requires many signatures
-//    Solution: delegate limited key
-//
-//    struct SessionKey {
-//        address signer;        // temp key
-//        uint48 validAfter;     // start time
-//        uint48 validUntil;     // expiry
-//        address[] targets;     // allowed contracts
-//        bytes4[] selectors;    // allowed functions
-//        uint256 spendLimit;    // max ETH per window
-//    }
-//
-//    validateUserOp():
-//      if (session not expired && target whitelisted):
-//        return ecRecover(hash, sig) == session.signer
-//
-//    Used: Argent X, Zerion, games (e.g., Sequence)
+        <h4 className="font-semibold mt-4 mb-3">1. Passkey / WebAuthn 인증</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-2">Secure Enclave에서 P-256 키쌍 생성. 개인키는 디바이스 밖으로 나가지 않음. Face ID / Touch ID / Windows Hello로 서명.</p>
+          <p className="mb-2 text-muted-foreground"><code>validateUserOp()</code>: <code>sha256(authenticatorData || sha256(clientData))</code> 해시에 대해 P-256 <code>ecRecover</code>로 공개키 검증.</p>
+          <p className="text-muted-foreground">가스: ~200K (RIP-7212 P-256 프리컴파일 적용 시 ~20K). 운영: Coinbase Smart Wallet, Safe&#123;Wallet&#125;, OKX.</p>
+        </div>
 
-// 3) Batch Operations
-//
-//    function executeBatch(
-//        address[] targets,
-//        uint256[] values,
-//        bytes[] datas
-//    ) external onlyEntryPoint {
-//        for (uint i = 0; i < targets.length; i++) {
-//            (bool ok,) = targets[i].call{value: values[i]}(datas[i]);
-//            require(ok, "batch failed");
-//        }
-//    }
-//
-//    DEX swap example:
-//      1. approve(USDC, router, amount)
-//      2. router.swap(USDC, WETH, amount)
-//    → 1 UserOp, atomic, cheaper gas
+        <h4 className="font-semibold mt-6 mb-3">2. Session Keys</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-3">DeFi 자동화 등 빈번한 서명 문제를 해결. 제한된 권한의 임시 키를 위임.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+            {[
+              ['signer', '임시 키 주소'],
+              ['validAfter', '시작 시간'],
+              ['validUntil', '만료 시간'],
+              ['targets[]', '허용 컨트랙트'],
+              ['selectors[]', '허용 함수'],
+              ['spendLimit', '윈도우당 최대 ETH'],
+            ].map(([field, desc]) => (
+              <div key={field} className="rounded-lg border p-2 bg-background">
+                <code className="text-xs">{field}</code>
+                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-muted-foreground"><code>validateUserOp()</code>: 세션 미만료 + 타겟 화이트리스트 확인 후 <code>ecRecover</code>. 운영: Argent X, Zerion, Sequence.</p>
+        </div>
 
-// 4) Multi-signature Threshold
-//
-//    struct MultiSig {
-//        address[] owners;
-//        uint256 threshold;  // e.g., 2 of 3
-//    }
-//
-//    validateUserOp():
-//      bytes[] memory sigs = decode(userOp.signature)
-//      uint256 valid = 0
-//      for (sig in sigs):
-//        signer = ecRecover(hash, sig)
-//        if (isOwner[signer]): valid++
-//      return valid >= threshold ? 0 : SIG_VALIDATION_FAILED
+        <h4 className="font-semibold mt-6 mb-3">3. 배치 실행</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-2"><code>executeBatch(targets[], values[], datas[])</code> — EntryPoint만 호출 가능. 각 타겟에 대해 <code>call&#123;value&#125;(data)</code> 순차 실행.</p>
+          <div className="rounded-lg border p-3 bg-background mt-3">
+            <p className="font-semibold text-xs mb-1">DEX 스왑 예시</p>
+            <p className="text-xs text-muted-foreground">1. <code>approve(USDC, router, amount)</code> → 2. <code>router.swap(USDC, WETH, amount)</code> → 1개 UserOp, 원자적, 가스 절약.</p>
+          </div>
+        </div>
 
-// 5) Social Recovery
-//
-//    Guardian system (Argent-style):
-//      struct Wallet {
-//          address owner;
-//          address[] guardians;
-//          uint256 recoveryThreshold;
-//      }
-//
-//      Recovery flow:
-//        1. N guardians sign new_owner message
-//        2. Wait recovery period (e.g., 48h)
-//        3. Owner can veto during waiting period
-//        4. After period: new_owner takes control
-//
-//    Variants:
-//      - Email OTP guardian
-//      - Hardware key guardian
-//      - Recovery by friend (contract)
-//      - zk-guardian (proves knowledge of secret)
+        <h4 className="font-semibold mt-6 mb-3">4. 멀티시그 임계값</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-2"><code>owners[]</code> + <code>threshold</code> (예: 3명 중 2명). <code>validateUserOp()</code>에서 서명 배열을 디코드하여 각 서명을 <code>ecRecover</code>로 검증, 유효 서명 수가 threshold 이상이면 통과.</p>
+        </div>
 
-// 6) Paymaster Sponsorship
-//
-//    VerifyingPaymaster flow:
-//      1. Frontend sends UserOp to paymaster API
-//      2. Paymaster service signs (op, validUntil, validAfter)
-//      3. Signature added to paymasterAndData
-//      4. On-chain: paymaster verifies signature
-//      5. Paymaster pays gas to EntryPoint
-//
-//    Token Paymaster flow:
-//      1. User pays in USDC (not ETH)
-//      2. Paymaster takes USDC.transferFrom
-//      3. Paymaster pays ETH to EntryPoint
-//      4. Oracle gives USDC/ETH rate
-//
-//    Sponsorship criteria examples:
-//      - Whitelisted addresses (KYC'd users)
-//      - Max N transactions per day
-//      - Specific target contract only (dApp)
-//      - NFT holder gets free tx
+        <h4 className="font-semibold mt-6 mb-3">5. 소셜 리커버리</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="font-semibold text-xs mb-2">Guardian 시스템 (Argent 스타일)</p>
+          <p className="mb-2 text-muted-foreground"><code>owner</code> + <code>guardians[]</code> + <code>recoveryThreshold</code>.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">1</p>
+              <p className="text-xs text-muted-foreground">N명 가디언이 new_owner 메시지 서명</p>
+            </div>
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">2</p>
+              <p className="text-xs text-muted-foreground">대기 기간 (예: 48시간)</p>
+            </div>
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">3</p>
+              <p className="text-xs text-muted-foreground">대기 중 소유자 거부권</p>
+            </div>
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">4</p>
+              <p className="text-xs text-muted-foreground">기간 경과 후 new_owner 인수</p>
+            </div>
+          </div>
+          <p className="text-muted-foreground">변형: 이메일 OTP 가디언, 하드웨어 키 가디언, 친구 컨트랙트 복구, zk-guardian (비밀 지식 증명).</p>
+        </div>
 
-// 7) Gas Abstraction (ERC-20 gas)
-//
-//    User has USDC, no ETH:
-//      UserOp.paymasterAndData = TokenPaymaster
-//
-//    Steps:
-//      1. Paymaster locks USDC via transferFrom
-//      2. Paymaster calls EntryPoint with prefund
-//      3. Gas refunded in USDC via postOp
+        <h4 className="font-semibold mt-6 mb-3">6. Paymaster 스폰서십</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-2">VerifyingPaymaster</p>
+            <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+              <li>프론트엔드 → Paymaster API로 UserOp 전송</li>
+              <li>Paymaster가 <code>(op, validUntil, validAfter)</code> 서명</li>
+              <li>서명을 <code>paymasterAndData</code>에 추가</li>
+              <li>온체인: Paymaster가 서명 검증</li>
+              <li>Paymaster가 EntryPoint에 가스 지불</li>
+            </ol>
+          </div>
+          <div className="rounded-xl border p-4 bg-card">
+            <p className="font-semibold text-sm mb-2">TokenPaymaster</p>
+            <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+              <li>사용자가 USDC로 지불 (ETH 불필요)</li>
+              <li>Paymaster가 <code>USDC.transferFrom</code> 실행</li>
+              <li>Paymaster가 ETH로 EntryPoint에 지불</li>
+              <li>오라클이 USDC/ETH 환율 제공</li>
+            </ol>
+          </div>
+        </div>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="font-semibold text-xs mb-2">스폰서십 기준 예시</p>
+          <div className="flex flex-wrap gap-2">
+            {['화이트리스트 주소 (KYC)', '일일 최대 N건', '특정 dApp 컨트랙트만', 'NFT 보유자 무료 tx'].map(c => (
+              <span key={c} className="rounded-full border px-3 py-1 text-xs bg-background">{c}</span>
+            ))}
+          </div>
+        </div>
 
-// 8) Programmable Permissions (ERC-7579 modules)
-//
-//    Modular Smart Account standard:
-//      - Validators (signature logic)
-//      - Executors (custom execution)
-//      - Fallback handlers
-//      - Hooks (pre/post execution)
-//
-//    Plug-and-play modules:
-//      Install SocialRecoveryValidator
-//      Install TwoFactorValidator
-//      Install GaslessSessionKeyModule
-//      Install IntentHandler
+        <h4 className="font-semibold mt-6 mb-3">7. 가스 추상화 (ERC-20 가스)</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-2">사용자가 USDC만 보유, ETH 없음: <code>UserOp.paymasterAndData = TokenPaymaster</code></p>
+          <p className="text-muted-foreground">1. Paymaster가 <code>transferFrom</code>으로 USDC 잠금 → 2. EntryPoint에 prefund → 3. <code>postOp</code>에서 USDC로 가스 환불.</p>
+        </div>
 
-// Production examples:
-//   - Rhinestone: AA security modules
-//   - Pimlico: bundler + paymaster infra
-//   - Stackup: infra + SDK
-//   - ZeroDev: Kernel modular account
-//   - Biconomy: paymaster platform
-//   - Safe{Core}: enterprise AA`}
-        </pre>
+        <h4 className="font-semibold mt-6 mb-3">8. 프로그래머블 권한 (ERC-7579 모듈)</h4>
+        <div className="rounded-xl border p-4 bg-card text-sm mb-6">
+          <p className="mb-3">모듈러 Smart Account 표준:</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">Validators</p>
+              <p className="text-xs text-muted-foreground">서명 로직</p>
+            </div>
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">Executors</p>
+              <p className="text-xs text-muted-foreground">커스텀 실행</p>
+            </div>
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">Fallback</p>
+              <p className="text-xs text-muted-foreground">핸들러</p>
+            </div>
+            <div className="rounded-lg border p-2 bg-background text-center">
+              <p className="text-xs font-semibold">Hooks</p>
+              <p className="text-xs text-muted-foreground">pre/post 실행</p>
+            </div>
+          </div>
+          <p className="text-muted-foreground">플러그앤플레이: SocialRecoveryValidator, TwoFactorValidator, GaslessSessionKeyModule, IntentHandler.</p>
+        </div>
+
+        <h4 className="font-semibold mt-6 mb-3">프로덕션 인프라</h4>
+        <div className="flex flex-wrap gap-2">
+          {[
+            'Rhinestone — AA 보안 모듈',
+            'Pimlico — Bundler + Paymaster',
+            'Stackup — 인프라 + SDK',
+            'ZeroDev — Kernel 모듈러 계정',
+            'Biconomy — Paymaster 플랫폼',
+            'Safe{Core} — 엔터프라이즈 AA',
+          ].map(p => (
+            <span key={p} className="rounded-full border px-3 py-1 text-sm bg-card">{p}</span>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -14,207 +14,167 @@ export default function Rendering() {
           터미널에서는 마크다운이 그대로 표시됨 — <strong>가독성 나쁨</strong><br />
           해결: 마크다운을 ANSI 이스케이프 코드로 변환 — 굵게·색상·들여쓰기 적용
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 입력 (LLM 응답)
-## 분석 결과
-**결론**: 이 함수는 \`unsafe\` 블록을 사용합니다.
-
-// 터미널 출력 (ANSI 적용)
-\\x1b[1m## 분석 결과\\x1b[0m
-\\x1b[1m결론\\x1b[0m: 이 함수는 \\x1b[38;5;208munsafe\\x1b[0m 블록을 사용합니다.
-
-// 화면에 보이는 모습
-# 분석 결과              (굵은 제목)
-결론: 이 함수는 unsafe   (결론 굵게, unsafe 주황)
-블록을 사용합니다.`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="bg-muted/30 border border-border rounded-lg overflow-hidden">
+            <div className="bg-muted px-3 py-1.5 border-b border-border text-xs font-semibold">입력 (마크다운 원본)</div>
+            <div className="p-3 font-mono text-sm space-y-1">
+              <p className="text-muted-foreground">## 분석 결과</p>
+              <p className="text-muted-foreground">**결론**: 이 함수는 `unsafe` 블록을 사용합니다.</p>
+            </div>
+          </div>
+          <div className="bg-muted/30 border border-border rounded-lg overflow-hidden">
+            <div className="bg-muted px-3 py-1.5 border-b border-border text-xs font-semibold">출력 (ANSI 렌더링)</div>
+            <div className="p-3 font-mono text-sm bg-zinc-900 text-zinc-100 rounded-b-lg space-y-1">
+              <p className="font-bold text-lg">분석 결과</p>
+              <p><span className="font-bold">결론</span>: 이 함수는 <span className="text-orange-400">unsafe</span> 블록을 사용합니다.</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MarkdownRenderer 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct MarkdownRenderer {
-    theme: Theme,
-    width: usize,  // 터미널 너비 (줄바꿈용)
-}
-
-pub struct Theme {
-    heading_1: Style,
-    heading_2: Style,
-    heading_3: Style,
-    bold: Style,
-    italic: Style,
-    code_inline: Style,
-    code_block: Style,
-    link: Style,
-    list_bullet: Style,
-}
-
-pub struct Style {
-    fg: Option<Color>,
-    bg: Option<Color>,
-    bold: bool,
-    italic: bool,
-    underline: bool,
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">MarkdownRenderer</span>
+            <span className="text-xs text-muted-foreground ml-2">theme + width(터미널 너비)</span>
+          </div>
+          <div className="p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">Theme 스타일 슬롯</p>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              {['heading_1', 'heading_2', 'heading_3', 'bold', 'italic', 'code_inline', 'code_block', 'link', 'list_bullet'].map(s => (
+                <div key={s} className="bg-background border border-border rounded px-2 py-1.5 text-center">
+                  <code className="text-xs">{s}</code>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs font-semibold text-muted-foreground mt-3 mb-2">Style 속성</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { prop: 'fg', desc: '글자 색상' },
+                { prop: 'bg', desc: '배경 색상' },
+                { prop: 'bold', desc: '굵게' },
+                { prop: 'italic', desc: '기울임' },
+                { prop: 'underline', desc: '밑줄' },
+              ].map(({ prop, desc }) => (
+                <span key={prop} className="inline-flex items-center gap-1 bg-background border border-border rounded px-2 py-1 text-xs">
+                  <code className="font-semibold text-primary">{prop}</code>
+                  <span className="text-muted-foreground">{desc}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">pulldown-cmark 통합</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`use pulldown_cmark::{Parser, Event, Tag};
-
-impl MarkdownRenderer {
-    pub fn render(&self, markdown: &str) -> String {
-        let parser = Parser::new(markdown);
-        let mut out = String::new();
-        let mut list_depth = 0;
-
-        for event in parser {
-            match event {
-                Event::Start(Tag::Heading(level, _, _)) => {
-                    let style = match level {
-                        HeadingLevel::H1 => &self.theme.heading_1,
-                        HeadingLevel::H2 => &self.theme.heading_2,
-                        _ => &self.theme.heading_3,
-                    };
-                    out.push_str(&style.prefix());
-                }
-                Event::End(Tag::Heading(_, _, _)) => {
-                    out.push_str(ANSI_RESET);
-                    out.push('\\n');
-                }
-
-                Event::Start(Tag::Emphasis) => out.push_str(&self.theme.italic.prefix()),
-                Event::End(Tag::Emphasis) => out.push_str(ANSI_RESET),
-
-                Event::Start(Tag::Strong) => out.push_str(&self.theme.bold.prefix()),
-                Event::End(Tag::Strong) => out.push_str(ANSI_RESET),
-
-                Event::Code(text) => {
-                    out.push_str(&self.theme.code_inline.prefix());
-                    out.push_str(&text);
-                    out.push_str(ANSI_RESET);
-                }
-
-                Event::Text(text) => out.push_str(&text),
-
-                Event::Start(Tag::List(_)) => list_depth += 1,
-                Event::End(Tag::List(_)) => list_depth -= 1,
-
-                Event::Start(Tag::Item) => {
-                    out.push_str(&"  ".repeat(list_depth - 1));
-                    out.push_str(&self.theme.list_bullet.prefix());
-                    out.push_str("• ");
-                    out.push_str(ANSI_RESET);
-                }
-
-                // ... 나머지 이벤트 처리
-                _ => {}
-            }
-        }
-        out
-    }
-}`}</pre>
         <p>
           <code>pulldown-cmark</code>: Rust 마크다운 파서 — CommonMark 표준 준수<br />
-          이벤트 기반 파싱 — 각 마크다운 요소가 Start/End 이벤트 쌍<br />
-          Start에서 ANSI 코드 시작, End에서 reset — 렌더링 상태 관리 간단
+          이벤트 기반 파싱 — Start에서 ANSI 코드 시작, End에서 reset
         </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">render() 이벤트 매핑</span>
+            <span className="text-xs text-muted-foreground ml-2">Event → ANSI 변환</span>
+          </div>
+          <div className="divide-y divide-border">
+            {[
+              { event: 'Heading(H1/H2/H3)', action: 'theme.heading_N.prefix() → ANSI_RESET', example: '## 제목 → 굵은 색상 제목' },
+              { event: 'Strong', action: 'theme.bold.prefix() → ANSI_RESET', example: '**텍스트** → 굵게' },
+              { event: 'Emphasis', action: 'theme.italic.prefix() → ANSI_RESET', example: '*텍스트* → 기울임' },
+              { event: 'Code(text)', action: 'theme.code_inline.prefix() + text + ANSI_RESET', example: '`코드` → 강조 색상' },
+              { event: 'List + Item', action: 'list_depth 들여쓰기 + "  " + 불릿', example: '- 항목 → • 항목 (중첩 지원)' },
+            ].map(({ event, action, example }) => (
+              <div key={event} className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 text-sm">
+                <code className="text-xs text-primary font-semibold">{event}</code>
+                <span className="text-xs text-muted-foreground">{action}</span>
+                <span className="text-xs">{example}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">코드 블록 — syntect 하이라이팅</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`use syntect::{
-    easy::HighlightLines, parsing::SyntaxSet,
-    highlighting::{ThemeSet, Style}, util::as_24_bit_terminal_escaped,
-};
-
-impl MarkdownRenderer {
-    fn render_code_block(&self, code: &str, language: &str) -> String {
-        let ss = SyntaxSet::load_defaults_newlines();
-        let ts = ThemeSet::load_defaults();
-
-        // 언어 감지
-        let syntax = ss.find_syntax_by_token(language)
-            .unwrap_or_else(|| ss.find_syntax_plain_text());
-
-        // 하이라이터 초기화
-        let mut h = HighlightLines::new(syntax, &ts.themes["base16-ocean.dark"]);
-
-        let mut out = String::from("\\n");
-        for line in code.lines() {
-            let ranges: Vec<(Style, &str)> = h.highlight_line(line, &ss).unwrap();
-            out.push_str(&as_24_bit_terminal_escaped(&ranges[..], false));
-            out.push('\\n');
-        }
-        out
-    }
-}`}</pre>
-        <p>
-          <strong>syntect</strong>: Sublime Text의 syntax highlighting 엔진을 Rust 포트<br />
-          지원 언어 100개 이상 — Rust, Python, TypeScript, Go 등<br />
-          24-bit 색상 지원 — 최신 터미널에서 IDE 수준의 하이라이팅
-        </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">render_code_block()</span>
+            <span className="text-xs text-muted-foreground ml-2">syntect 기반</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs font-semibold text-muted-foreground">엔진</p>
+                <p className="text-sm font-semibold">syntect</p>
+                <p className="text-xs text-muted-foreground mt-1">Sublime Text 하이라이팅의 Rust 포트</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs font-semibold text-muted-foreground">언어 지원</p>
+                <p className="text-sm font-semibold">100개 이상</p>
+                <p className="text-xs text-muted-foreground mt-1">Rust, Python, TypeScript, Go 등</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs font-semibold text-muted-foreground">색상 깊이</p>
+                <p className="text-sm font-semibold">24-bit True Color</p>
+                <p className="text-xs text-muted-foreground mt-1">IDE 수준의 하이라이팅</p>
+              </div>
+            </div>
+            <div className="text-sm space-y-1">
+              <p><code className="text-xs">find_syntax_by_token(language)</code>로 언어 감지 — 실패 시 plain text 폴백</p>
+              <p>테마: <code className="text-xs">base16-ocean.dark</code> — 각 줄을 <code className="text-xs">as_24_bit_terminal_escaped()</code>로 변환</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">스트리밍 렌더링 — 실시간 출력</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct StreamingRenderer {
-    accumulated: String,
-    rendered_up_to: usize,
-}
-
-impl StreamingRenderer {
-    pub fn append(&mut self, delta: &str) {
-        self.accumulated.push_str(delta);
-
-        // 완전한 마크다운 단위(줄 끝) 찾기
-        if let Some(last_newline) = self.accumulated[self.rendered_up_to..].rfind('\\n') {
-            let end = self.rendered_up_to + last_newline + 1;
-            let to_render = &self.accumulated[self.rendered_up_to..end];
-
-            // 렌더링 후 출력
-            let rendered = MarkdownRenderer::new().render(to_render);
-            print!("{}", rendered);
-            std::io::stdout().flush().ok();
-
-            self.rendered_up_to = end;
-        }
-    }
-
-    pub fn finalize(&mut self) {
-        // 남은 부분(줄바꿈 없이 끝난) 렌더링
-        let rest = &self.accumulated[self.rendered_up_to..];
-        print!("{}", MarkdownRenderer::new().render(rest));
-        self.rendered_up_to = self.accumulated.len();
-    }
-}`}</pre>
-        <p>
-          <strong>줄 단위 렌더링</strong>: 완전한 줄이 도착하면 렌더 + 출력<br />
-          부분 줄은 버퍼에 유지 — 마크다운이 완전해야 올바른 파싱<br />
-          <code>flush()</code>로 즉시 화면 업데이트 — 사용자 실시간 피드백
-        </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">StreamingRenderer</span>
+            <span className="text-xs text-muted-foreground ml-2">accumulated + rendered_up_to 포인터</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-background border border-border rounded p-3">
+                <p className="font-semibold text-sm">append(delta)</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  델타를 버퍼에 누적 → 마지막 <code className="text-xs">\n</code> 위치 탐색 → 완전한 줄만 렌더링 + <code className="text-xs">flush()</code>
+                </p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="font-semibold text-sm">finalize()</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  줄바꿈 없이 끝난 나머지 텍스트 렌더링 — 스트림 종료 시 호출
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              <strong className="text-foreground">줄 단위 렌더링</strong>: 부분 줄은 버퍼에 유지 — 마크다운이 완전해야 올바른 파싱<br />
+              <code className="text-xs">flush()</code>로 즉시 화면 업데이트 — 사용자 실시간 피드백
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">터미널 기능 감지</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub fn detect_terminal_capabilities() -> TermCaps {
-    TermCaps {
-        color: has_color_support(),
-        true_color: std::env::var("COLORTERM")
-            .map(|v| v == "truecolor" || v == "24bit")
-            .unwrap_or(false),
-        width: terminal_size::terminal_size()
-            .map(|(w, _)| w.0 as usize)
-            .unwrap_or(80),
-        unicode: is_unicode_term(),
-        is_tty: atty::is(atty::Stream::Stdout),
-    }
-}
-
-fn has_color_support() -> bool {
-    // NO_COLOR 환경 변수 존중
-    if std::env::var("NO_COLOR").is_ok() { return false; }
-
-    // TERM 확인
-    match std::env::var("TERM") {
-        Ok(t) if t == "dumb" => false,
-        Ok(_) => true,
-        Err(_) => false,
-    }
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">detect_terminal_capabilities()</span>
+            <span className="text-xs text-muted-foreground ml-2">TermCaps 구조체 반환</span>
+          </div>
+          <div className="divide-y divide-border">
+            {[
+              { cap: 'color', source: 'NO_COLOR 환경변수 + TERM 확인', fallback: 'TERM=dumb → false' },
+              { cap: 'true_color', source: 'COLORTERM == "truecolor" || "24bit"', fallback: '미설정 → false' },
+              { cap: 'width', source: 'terminal_size::terminal_size()', fallback: '감지 실패 → 80' },
+              { cap: 'unicode', source: 'is_unicode_term()', fallback: '터미널 인코딩 확인' },
+              { cap: 'is_tty', source: 'atty::is(Stream::Stdout)', fallback: 'false → 파이프/리다이렉션' },
+            ].map(({ cap, source, fallback }) => (
+              <div key={cap} className="grid grid-cols-3 gap-2 p-3 text-sm">
+                <code className="text-xs text-primary font-semibold">{cap}</code>
+                <span className="text-xs">{source}</span>
+                <span className="text-xs text-muted-foreground">{fallback}</span>
+              </div>
+            ))}
+          </div>
+        </div>
         <p>
           <strong>기능별 적응</strong>: 터미널이 지원하는 기능만 사용<br />
-          <code>NO_COLOR</code> 환경 변수: 색상 비활성화 표준 (no-color.org)<br />
-          <code>TERM=dumb</code>: 단순 터미널 — ANSI 비활성화<br />
-          is_tty=false: 파이프·리다이렉션 — 일반 텍스트 출력
+          <code>NO_COLOR</code> 환경 변수: 색상 비활성화 표준 (no-color.org)
         </p>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">

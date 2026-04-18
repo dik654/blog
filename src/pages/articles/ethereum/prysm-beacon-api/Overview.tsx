@@ -14,48 +14,51 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── Prysm API 계층 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Prysm API 계층 — gRPC + REST Gateway</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 이중 API 구조:
-//
-// Layer 1: gRPC Server (port 4000 기본)
-//   - Prysm 고유 API (proto 정의)
-//   - Validator ↔ Beacon-chain 통신
-//   - 내부 도구 (prysmctl)
-//
-// Layer 2: REST Gateway (port 3500 기본)
-//   - Ethereum Beacon API 표준 (EIP-3075)
-//   - 다른 CL 클라이언트와 호환
-//   - 외부 도구 (dashboard, explorer)
-//
-// Layer 3: gRPC-gateway (port 3500 동일)
-//   - REST 요청을 gRPC로 자동 변환
-//   - proto 정의에 google.api.http 어노테이션 사용
-
-// 아키텍처:
-//
-//   외부 도구          Validator Client
-//      ↓                   ↓
-//   [REST Gateway:3500]  [gRPC:4000]
-//      ↓                   ↓
-//   grpc-gateway        Direct gRPC
-//      ↓                   ↓
-//   [gRPC Service (internal)]
-//      ↓
-//   Beacon Chain Node
-
-// 표준 Beacon API endpoints:
-// GET /eth/v1/beacon/states/{state_id}/validators
-// GET /eth/v2/beacon/blocks/{block_id}
-// GET /eth/v1/validator/duties/attester/{epoch}
-// POST /eth/v1/beacon/blocks
-// GET /eth/v1/beacon/light_client/updates
-// ... 50+ endpoints
-
-// 인증:
-// - gRPC: TLS optional, JWT optional
-// - REST: 공개 (인증 없음)
-// - 단, /eth/v1/admin/* 등 민감 endpoint는 제한`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Layer 1: gRPC Server <span className="text-xs text-muted-foreground font-normal">:4000</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>Prysm 고유 API (proto 정의)</li>
+                <li>Validator - Beacon-chain 통신</li>
+                <li>내부 도구 (prysmctl)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Layer 2: REST Gateway <span className="text-xs text-muted-foreground font-normal">:3500</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>Ethereum Beacon API 표준 (EIP-3075)</li>
+                <li>다른 CL 클라이언트와 호환</li>
+                <li>외부 도구 (dashboard, explorer)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Layer 3: gRPC-gateway <span className="text-xs text-muted-foreground font-normal">:3500</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>REST 요청을 gRPC로 자동 변환</li>
+                <li><code>google.api.http</code> 어노테이션 사용</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">주요 Beacon API endpoints (50+)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-muted-foreground">
+              <span><code>GET /eth/v1/beacon/states/{'{state_id}'}/validators</code></span>
+              <span><code>GET /eth/v2/beacon/blocks/{'{block_id}'}</code></span>
+              <span><code>GET /eth/v1/validator/duties/attester/{'{epoch}'}</code></span>
+              <span><code>POST /eth/v1/beacon/blocks</code></span>
+              <span><code>GET /eth/v1/beacon/light_client/updates</code></span>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">인증</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-muted-foreground">
+              <span>gRPC: TLS optional, JWT optional</span>
+              <span>REST: 공개 (인증 없음)</span>
+              <span><code>/eth/v1/admin/*</code> 등 민감 endpoint는 제한</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Prysm은 <strong>gRPC + REST 이중 API 제공</strong>.<br />
           gRPC는 내부(validator), REST는 외부(dashboard/explorer).<br />

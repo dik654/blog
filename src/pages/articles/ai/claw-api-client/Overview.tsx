@@ -19,108 +19,103 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">ProviderClient 트레이트</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[async_trait]
-pub trait ProviderClient: Send + Sync {
-    // 메시지 전송 (스트리밍)
-    async fn send_message(
-        &self,
-        request: MessageRequest,
-    ) -> Result<BoxStream<'static, Result<Chunk>>>;
-
-    // 토큰 카운트
-    fn count_tokens(&self, text: &str) -> usize;
-
-    // 모델 정보
-    fn model_info(&self) -> ModelInfo;
-
-    // 동기 비용 계산
-    fn estimate_cost(&self, usage: &TokenUsage) -> f64;
-}
-
-pub struct ModelInfo {
-    pub name: String,
-    pub context_window: usize,    // 200_000
-    pub max_output: usize,        // 8_192
-    pub supports_vision: bool,
-    pub pricing: Pricing,
-}`}</pre>
-        <p>
-          <strong>4개 핵심 메서드</strong>: send_message, count_tokens, model_info, estimate_cost<br />
-          <code>BoxStream</code>: 비동기 스트림 — 각 청크가 SSE 프레임 하나<br />
-          <code>Send + Sync</code>: 멀티스레드 안전 — Arc로 공유
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            ProviderClient — 4개 핵심 메서드
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold text-muted-foreground mb-1">스트리밍 전송</div>
+              <code className="text-sm">send_message(&self, req) → BoxStream&lt;Chunk&gt;</code>
+              <p className="text-xs text-muted-foreground mt-1">비동기 스트림 반환 — 각 청크가 SSE 프레임 하나</p>
+            </div>
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold text-muted-foreground mb-1">토큰 카운트</div>
+              <code className="text-sm">count_tokens(&self, text) → usize</code>
+              <p className="text-xs text-muted-foreground mt-1">입력 텍스트의 토큰 수 근사 계산</p>
+            </div>
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold text-muted-foreground mb-1">모델 정보</div>
+              <code className="text-sm">model_info(&self) → ModelInfo</code>
+              <p className="text-xs text-muted-foreground mt-1">context_window, max_output, supports_vision, pricing</p>
+            </div>
+            <div className="bg-card p-4">
+              <div className="text-xs font-semibold text-muted-foreground mb-1">비용 계산</div>
+              <code className="text-sm">estimate_cost(&self, usage) → f64</code>
+              <p className="text-xs text-muted-foreground mt-1">TokenUsage 기반 동기 비용 계산</p>
+            </div>
+          </div>
+          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
+            트레이트 바운드 <code>Send + Sync</code> — 멀티스레드 안전, Arc로 공유 가능
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">구현체 2개</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 1. AnthropicClient — Anthropic Messages API 전용
-pub struct AnthropicClient {
-    api_key: Option<String>,
-    oauth_token: Option<String>,
-    base_url: Url,
-    http: reqwest::Client,
-    model: String,
-}
-
-// 2. OpenAICompatClient — OpenAI 호환 API 공용
-pub struct OpenAICompatClient {
-    api_key: String,
-    base_url: Url,              // OpenAI: https://api.openai.com/v1
-                                // xAI:    https://api.x.ai/v1
-                                // Azure:  https://{resource}.openai.azure.com/...
-    http: reqwest::Client,
-    model: String,
-    provider_kind: OpenAIKind,  // OpenAI | Azure | xAI
-}`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="bg-violet-100 dark:bg-violet-950/40 px-4 py-2 border-b border-border font-semibold text-sm">
+              AnthropicClient — Messages API 전용
+            </div>
+            <div className="p-4 space-y-2 text-sm">
+              <div><code className="text-xs">api_key: Option&lt;String&gt;</code> <span className="text-muted-foreground text-xs">— API 키 인증</span></div>
+              <div><code className="text-xs">oauth_token: Option&lt;String&gt;</code> <span className="text-muted-foreground text-xs">— OAuth Bearer 인증</span></div>
+              <div><code className="text-xs">base_url: Url</code> <span className="text-muted-foreground text-xs">— api.anthropic.com</span></div>
+              <div><code className="text-xs">http: reqwest::Client</code></div>
+              <div><code className="text-xs">model: String</code></div>
+            </div>
+          </div>
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="bg-emerald-100 dark:bg-emerald-950/40 px-4 py-2 border-b border-border font-semibold text-sm">
+              OpenAICompatClient — 호환 API 공용
+            </div>
+            <div className="p-4 space-y-2 text-sm">
+              <div><code className="text-xs">api_key: String</code></div>
+              <div><code className="text-xs">base_url: Url</code> <span className="text-muted-foreground text-xs">— OpenAI / xAI / Azure URL</span></div>
+              <div><code className="text-xs">http: reqwest::Client</code></div>
+              <div><code className="text-xs">model: String</code></div>
+              <div><code className="text-xs">provider_kind: OpenAIKind</code> <span className="text-muted-foreground text-xs">— OpenAI | Azure | xAI</span></div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>2개만 구현</strong>: Anthropic vs OpenAI 호환<br />
           xAI, Azure, 자체 호스팅 LLM 모두 OpenAICompatClient 재사용<br />
-          base_url만 바꾸면 다른 프로바이더 — 확장 비용 최소
+          <code>base_url</code>만 바꾸면 다른 프로바이더 — 확장 비용 최소
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MessageRequest 통합 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct MessageRequest {
-    pub model: String,
-    pub messages: Vec<Message>,
-    pub system: Option<String>,
-    pub tools: Option<Vec<ToolSpec>>,
-    pub max_tokens: usize,
-    pub temperature: Option<f32>,
-    pub stream: bool,
-}
-
-// 프로바이더별 변환
-impl AnthropicClient {
-    fn to_api_body(&self, req: &MessageRequest) -> serde_json::Value {
-        json!({
-            "model": req.model,
-            "messages": req.messages.iter().map(|m| m.to_anthropic()).collect::<Vec<_>>(),
-            "system": req.system,
-            "tools": req.tools.as_ref().map(convert_tools),
-            "max_tokens": req.max_tokens,
-            "temperature": req.temperature,
-            "stream": true,
-        })
-    }
-}
-
-impl OpenAICompatClient {
-    fn to_api_body(&self, req: &MessageRequest) -> serde_json::Value {
-        // system은 messages 배열의 첫 요소로 이동
-        let mut all_msgs = vec![];
-        if let Some(sys) = &req.system {
-            all_msgs.push(json!({"role": "system", "content": sys}));
-        }
-        all_msgs.extend(req.messages.iter().map(|m| m.to_openai()));
-
-        json!({
-            "model": req.model,
-            "messages": all_msgs,
-            "tools": req.tools.as_ref().map(convert_tools_openai),
-            "max_tokens": req.max_tokens,
-            "temperature": req.temperature,
-            "stream": true,
-        })
-    }
-}`}</pre>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            MessageRequest — 프로바이더 중립 요청 구조
+          </div>
+          <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">model</code><div className="text-xs text-muted-foreground">String</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">messages</code><div className="text-xs text-muted-foreground">Vec&lt;Message&gt;</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">system</code><div className="text-xs text-muted-foreground">Option&lt;String&gt;</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">tools</code><div className="text-xs text-muted-foreground">Option&lt;Vec&lt;ToolSpec&gt;&gt;</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">max_tokens</code><div className="text-xs text-muted-foreground">usize</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">temperature</code><div className="text-xs text-muted-foreground">Option&lt;f32&gt;</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">stream</code><div className="text-xs text-muted-foreground">bool</div></div>
+          </div>
+          <div className="border-t border-border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
+              <div className="bg-card p-4">
+                <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">Anthropic 변환</div>
+                <p className="text-xs text-muted-foreground">
+                  <code>system</code> 필드를 별도 최상위 키로 전달<br />
+                  <code>to_anthropic()</code>로 메시지 직렬화
+                </p>
+              </div>
+              <div className="bg-card p-4">
+                <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">OpenAI 변환</div>
+                <p className="text-xs text-muted-foreground">
+                  <code>system</code>을 messages 배열 첫 요소로 이동<br />
+                  <code>to_openai()</code>로 메시지 직렬화
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>내부 표현은 Anthropic 스타일</strong>: system 필드 분리<br />
           OpenAI로 변환 시 system을 messages 배열 첫 요소로 이동<br />
@@ -128,9 +123,22 @@ impl OpenAICompatClient {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">스트리밍 차이 흡수</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Anthropic SSE: event: content_block_delta · data: {"type":"text_delta","text":"hello"}
-// OpenAI SSE:    data: {"choices":[{"delta":{"content":"hello"}}]}
-// 두 포맷 모두 아래 Chunk enum으로 통합`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Anthropic SSE</div>
+            <div className="text-xs font-mono text-muted-foreground space-y-1">
+              <div><code>event: content_block_delta</code></div>
+              <div><code>data: {`{"type":"text_delta","text":"hello"}`}</code></div>
+            </div>
+          </div>
+          <div className="rounded-xl border border-border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">OpenAI SSE</div>
+            <div className="text-xs font-mono text-muted-foreground">
+              <code>data: {`{"choices":[{"delta":{"content":"hello"}}]}`}</code>
+            </div>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground mb-2">두 포맷 모두 아래 Chunk enum으로 통합</p>
         <ChunkEnumViz />
         <p>
           <strong>Chunk enum은 Anthropic SSE 구조를 따름</strong> — OpenAI는 클라이언트가 변환<br />
@@ -139,44 +147,43 @@ impl OpenAICompatClient {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">클라이언트 선택 흐름</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// config에서 provider 문자열 읽어 생성
-pub fn create_client(config: &AppConfig) -> Result<Box<dyn ProviderClient>> {
-    match config.provider.as_str() {
-        "anthropic" => Ok(Box::new(AnthropicClient::new(
-            config.api_key.clone(),
-            config.model.clone(),
-        )?)),
-
-        "openai" => Ok(Box::new(OpenAICompatClient::new(
-            config.api_key.clone().ok_or(anyhow!("API key required"))?,
-            "https://api.openai.com/v1".parse()?,
-            config.model.clone(),
-            OpenAIKind::OpenAI,
-        )?)),
-
-        "xai" => Ok(Box::new(OpenAICompatClient::new(
-            config.api_key.clone().unwrap(),
-            "https://api.x.ai/v1".parse()?,
-            config.model.clone(),
-            OpenAIKind::XAI,
-        )?)),
-
-        "azure" => Ok(Box::new(OpenAICompatClient::new(
-            config.api_key.clone().unwrap(),
-            format!("https://{}.openai.azure.com/openai/deployments/{}",
-                config.azure_resource.as_ref().unwrap(),
-                config.azure_deployment.as_ref().unwrap()).parse()?,
-            config.model.clone(),
-            OpenAIKind::Azure,
-        )?)),
-
-        _ => Err(anyhow!("unknown provider: {}", config.provider)),
-    }
-}`}</pre>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            create_client(config) → Box&lt;dyn ProviderClient&gt;
+          </div>
+          <div className="divide-y divide-border">
+            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
+              <span className="text-xs font-semibold bg-violet-100 dark:bg-violet-950/40 rounded px-2 py-1 text-center">"anthropic"</span>
+              <div className="text-sm">
+                <code className="text-xs">AnthropicClient::new(api_key, model)</code>
+              </div>
+            </div>
+            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
+              <span className="text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/40 rounded px-2 py-1 text-center">"openai"</span>
+              <div className="text-sm">
+                <code className="text-xs">OpenAICompatClient::new(key, "api.openai.com/v1", model, OpenAI)</code>
+              </div>
+            </div>
+            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
+              <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-950/40 rounded px-2 py-1 text-center">"xai"</span>
+              <div className="text-sm">
+                <code className="text-xs">OpenAICompatClient::new(key, "api.x.ai/v1", model, XAI)</code>
+              </div>
+            </div>
+            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
+              <span className="text-xs font-semibold bg-orange-100 dark:bg-orange-950/40 rounded px-2 py-1 text-center">"azure"</span>
+              <div className="text-sm">
+                <code className="text-xs">OpenAICompatClient::new(key, "{`{resource}.openai.azure.com/...`}", model, Azure)</code>
+              </div>
+            </div>
+          </div>
+          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
+            반환: <code>Box&lt;dyn ProviderClient&gt;</code> — 트레이트 객체로 동적 디스패치
+          </div>
+        </div>
         <p>
           <strong>4개 프로바이더 팩토리</strong>: anthropic, openai, xai, azure<br />
-          Azure는 base_url이 복잡 — resource + deployment 조합<br />
-          <code>Box&lt;dyn ProviderClient&gt;</code> 반환 — 트레이트 객체로 동적 디스패치
+          Azure는 base_url이 복잡 — resource + deployment 조합
         </p>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">

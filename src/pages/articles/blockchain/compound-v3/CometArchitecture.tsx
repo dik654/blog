@@ -12,45 +12,74 @@ export default function CometArchitecture() {
         <CometPackedViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Comet 주요 상태</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`contract Comet is CometMainInterface {
-    // Base asset 정보 (immutable)
-    address public immutable baseToken;
-    address public immutable baseTokenPriceFeed;
-    uint64 public immutable baseScale;
-
-    // Supply/Borrow 이자율
-    uint64 public immutable supplyKink;
-    uint64 public immutable supplyPerSecondInterestRateSlopeLow;
-    uint64 public immutable supplyPerSecondInterestRateSlopeHigh;
-    uint64 public immutable supplyPerSecondInterestRateBase;
-    // Borrow도 동일 구조
-
-    // 누적 이자 indexes
-    uint64 internal baseSupplyIndex_;
-    uint64 internal baseBorrowIndex_;
-    uint40 internal lastAccrualTime_;
-
-    // 총 잔액
-    uint104 public totalSupplyBase;
-    uint104 public totalBorrowBase;
-
-    // 사용자 계정
-    mapping(address => UserBasic) internal userBasic;
-    mapping(address => mapping(address => UserCollateral)) internal userCollateral;
-}
-
-struct UserBasic {
-    int104 principal;           // base asset balance (signed)
-    uint64 baseTrackingIndex;
-    uint64 baseTrackingAccrued;
-    uint16 assetsIn;            // 담보 자산 bitmap
-    uint8 _reserved;
-}
-
-struct UserCollateral {
-    uint128 balance;
-    uint128 _reserved;
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4 space-y-4">
+          <div>
+            <p className="font-semibold text-sm mb-2">Comet 핵심 상태 변수</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs text-muted-foreground mb-1">Base asset (immutable)</p>
+                <p><code className="text-xs">address baseToken</code></p>
+                <p><code className="text-xs">address baseTokenPriceFeed</code></p>
+                <p><code className="text-xs">uint64 baseScale</code></p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs text-muted-foreground mb-1">이자율 파라미터 (immutable)</p>
+                <p><code className="text-xs">uint64 supplyKink</code></p>
+                <p><code className="text-xs">uint64 supplyPerSecondInterestRateSlopeLow</code></p>
+                <p><code className="text-xs">uint64 supplyPerSecondInterestRateSlopeHigh</code></p>
+                <p className="text-xs text-muted-foreground">Borrow도 동일 구조</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs text-muted-foreground mb-1">누적 이자 index</p>
+                <p><code className="text-xs">uint64 baseSupplyIndex_</code></p>
+                <p><code className="text-xs">uint64 baseBorrowIndex_</code></p>
+                <p><code className="text-xs">uint40 lastAccrualTime_</code></p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs text-muted-foreground mb-1">총 잔액 · 사용자 계정</p>
+                <p><code className="text-xs">uint104 totalSupplyBase</code></p>
+                <p><code className="text-xs">uint104 totalBorrowBase</code></p>
+                <p><code className="text-xs">{"mapping(address => UserBasic)"}</code></p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-sm mb-2">UserBasic 구조체</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+              <div className="bg-background border border-border rounded p-2 text-center">
+                <div className="text-xs text-muted-foreground">principal</div>
+                <code className="text-xs">int104</code>
+                <div className="text-xs text-muted-foreground">양수=예치, 음수=차입</div>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-center">
+                <div className="text-xs text-muted-foreground">baseTrackingIndex</div>
+                <code className="text-xs">uint64</code>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-center">
+                <div className="text-xs text-muted-foreground">assetsIn</div>
+                <code className="text-xs">uint16</code>
+                <div className="text-xs text-muted-foreground">담보 bitmap</div>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-center">
+                <div className="text-xs text-muted-foreground">_reserved</div>
+                <code className="text-xs">uint8</code>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-sm mb-2">UserCollateral 구조체</p>
+            <div className="grid grid-cols-2 gap-2 text-sm max-w-xs">
+              <div className="bg-background border border-border rounded p-2 text-center">
+                <div className="text-xs text-muted-foreground">balance</div>
+                <code className="text-xs">uint128</code>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-center">
+                <div className="text-xs text-muted-foreground">_reserved</div>
+                <code className="text-xs">uint128</code>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>principal은 signed int</strong>: 양수=예치, 음수=차입<br />
           한 address가 동시 supply·borrow 불가 — 부호로 상태 구분<br />
@@ -60,18 +89,26 @@ struct UserCollateral {
         <h3 className="text-xl font-semibold mt-8 mb-3">packed storage 최적화</h3>
 
         <UserBasicPackedViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// UserBasic 구조체 layout
-struct UserBasic {
-    int104 principal;           // 13 bytes
-    uint64 baseTrackingIndex;   // 8 bytes
-    uint64 baseTrackingAccrued; // 8 bytes
-    uint16 assetsIn;            // 2 bytes
-    uint8 _reserved;            // 1 byte
-}
-// Total: 32 bytes = 1 storage slot
-
-// 한 SLOAD로 전체 사용자 상태 조회
-// 가스: 2,100 (cold) / 100 (warm)`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3">UserBasic Storage Layout — 1 Slot (32 bytes)</p>
+          <div className="flex flex-wrap gap-1 text-xs font-mono mb-3">
+            <div className="bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 rounded px-2 py-1"><code>int104 principal</code> <span className="text-muted-foreground">13B</span></div>
+            <div className="bg-green-100 dark:bg-green-900/40 border border-green-300 dark:border-green-700 rounded px-2 py-1"><code>uint64 baseTrackingIndex</code> <span className="text-muted-foreground">8B</span></div>
+            <div className="bg-green-100 dark:bg-green-900/40 border border-green-300 dark:border-green-700 rounded px-2 py-1"><code>uint64 baseTrackingAccrued</code> <span className="text-muted-foreground">8B</span></div>
+            <div className="bg-amber-100 dark:bg-amber-900/40 border border-amber-300 dark:border-amber-700 rounded px-2 py-1"><code>uint16 assetsIn</code> <span className="text-muted-foreground">2B</span></div>
+            <div className="bg-neutral-200 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded px-2 py-1"><code>uint8 _reserved</code> <span className="text-muted-foreground">1B</span></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="bg-background border border-border rounded p-2 text-center">
+              <div className="text-xs text-muted-foreground">Cold SLOAD</div>
+              <div className="font-mono">2,100 gas</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2 text-center">
+              <div className="text-xs text-muted-foreground">Warm SLOAD</div>
+              <div className="font-mono">100 gas</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>1 slot = 1 SLOAD</strong>: 사용자 상태 조회 가스 최소화<br />
           int104로 base asset 표현 — USDC 최대 10^31 (충분)<br />
@@ -79,28 +116,31 @@ struct UserBasic {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">supply() — base asset 공급</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function supply(address asset, uint amount) external {
-    if (asset == baseToken) {
-        _supplyBase(msg.sender, msg.sender, amount);
-    } else {
-        _supplyCollateral(msg.sender, msg.sender, asset, safe128(amount));
-    }
-}
-
-function _supplyBase(address from, address dst, uint amount) internal {
-    accrueInternal();  // 이자 누적 갱신
-
-    doTransferIn(baseToken, from, amount);
-
-    int104 dstPrincipal = userBasic[dst].principal;
-    int256 dstBalance = presentValue(dstPrincipal) + signed256(amount);
-
-    int104 dstPrincipalNew = principalValue(dstBalance);
-    updateBasePrincipal(dst, userBasic[dst], dstPrincipalNew);
-
-    // 부채 감소 or 예치 증가
-    // (principal이 signed이므로 같은 함수로 처리)
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs">supply()</code> — base asset 공급 흐름</p>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div><code className="text-xs">supply(asset, amount)</code> 호출 — base면 <code className="text-xs">_supplyBase()</code>, 아니면 <code className="text-xs">_supplyCollateral()</code></div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div><code className="text-xs">accrueInternal()</code> — 이자 index 갱신</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div><code className="text-xs">doTransferIn(baseToken, from, amount)</code> — 토큰 수신</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
+              <div><code className="text-xs">presentValue(principal) + amount</code> — 현재 잔액에 합산</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">5</span>
+              <div><code className="text-xs">updateBasePrincipal(dst, newPrincipal)</code> — principal이 signed이므로 부채 감소 or 예치 증가를 같은 함수로 처리</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>accrueInternal()</strong>: 이자 index 업데이트 먼저<br />
           <strong>presentValue/principalValue</strong>: index 곱/나눔으로 변환<br />
@@ -110,26 +150,31 @@ function _supplyBase(address from, address dst, uint amount) internal {
         <h3 className="text-xl font-semibold mt-8 mb-3">이자 누적 — accrueInternal()</h3>
 
         <AccrueInternalViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function accrueInternal() internal {
-    uint40 now_ = getNowInternal();
-    uint timeElapsed = uint(now_ - lastAccrualTime_);
-    if (timeElapsed == 0) return;
-
-    uint utilization = getUtilization();
-    uint supplyRate = getSupplyRate(utilization);
-    uint borrowRate = getBorrowRate(utilization);
-
-    // 복리 근사 (linear for short intervals)
-    baseSupplyIndex_ = mulFactor(baseSupplyIndex_, (FACTOR_SCALE + supplyRate * timeElapsed));
-    baseBorrowIndex_ = mulFactor(baseBorrowIndex_, (FACTOR_SCALE + borrowRate * timeElapsed));
-
-    lastAccrualTime_ = now_;
-}
-
-function getUtilization() public view returns (uint) {
-    if (totalSupplyBase == 0) return 0;
-    return totalBorrowBase * FACTOR_SCALE / totalSupplyBase;
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs">accrueInternal()</code> — 이자 누적 흐름</p>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div><code className="text-xs">timeElapsed = now_ - lastAccrualTime_</code> — 경과 시간 계산, 0이면 조기 반환</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div><code className="text-xs">utilization = totalBorrowBase / totalSupplyBase</code> — 자금 이용률</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div><code className="text-xs">getSupplyRate(utilization)</code>, <code className="text-xs">getBorrowRate(utilization)</code> — kink 모델로 이자율 결정</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                Index 갱신 (선형 복리 근사):<br />
+                <code className="text-xs">baseSupplyIndex_ *= (1 + supplyRate * timeElapsed)</code><br />
+                <code className="text-xs">baseBorrowIndex_ *= (1 + borrowRate * timeElapsed)</code>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>lazy accrual</strong>: 사용자 상호작용 시에만 index 갱신<br />
           Gas 효율 — 매 블록 업데이트하지 않음<br />
@@ -139,30 +184,57 @@ function getUtilization() public view returns (uint) {
         <h3 className="text-xl font-semibold mt-8 mb-3">이자율 곡선 — Kink 모델</h3>
 
         <KinkModelViz />
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function getBorrowRate(uint utilization) external view returns (uint64) {
-    if (utilization <= borrowKink) {
-        // Low utilization: 완만한 기울기
-        return borrowPerSecondInterestRateBase
-            + mulFactor(borrowPerSecondInterestRateSlopeLow, utilization);
-    } else {
-        // High utilization: 가파른 기울기
-        return borrowPerSecondInterestRateBase
-            + mulFactor(borrowPerSecondInterestRateSlopeLow, borrowKink)
-            + mulFactor(borrowPerSecondInterestRateSlopeHigh,
-                        utilization - borrowKink);
-    }
-}
-
-// Comet USDC 파라미터
-borrowKink: 90%
-borrowBase: 0.015 (1.5%/year)
-borrowSlopeLow: 0.0333 (at kink: 1.5% + 3% = 4.5%)
-borrowSlopeHigh: 2.0 (at 100%: 4.5% + 20% = 24.5%)
-
-supplyKink: 90%
-supplyBase: 0%
-supplySlopeLow: 0.0366 (at kink: 3.3%)
-supplySlopeHigh: 1.72 (at 100%: 3.3% + 17.2% = 20.5%)`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-5 my-4 space-y-4">
+          <div>
+            <p className="font-semibold text-sm mb-2"><code className="text-xs">getBorrowRate()</code> — Kink 분기</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs text-muted-foreground mb-1">utilization &le; kink (완만)</p>
+                <code className="text-xs">base + slopeLow * utilization</code>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs text-muted-foreground mb-1">utilization &gt; kink (급경사)</p>
+                <code className="text-xs">base + slopeLow * kink + slopeHigh * (util - kink)</code>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-sm mb-2">Comet USDC 파라미터</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">파라미터</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Borrow</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Supply</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-border px-3 py-1">Kink</td>
+                    <td className="border border-border px-3 py-1 font-mono">90%</td>
+                    <td className="border border-border px-3 py-1 font-mono">90%</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-border px-3 py-1">Base rate</td>
+                    <td className="border border-border px-3 py-1 font-mono">1.5%/yr</td>
+                    <td className="border border-border px-3 py-1 font-mono">0%</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-border px-3 py-1">At kink</td>
+                    <td className="border border-border px-3 py-1 font-mono">4.5%</td>
+                    <td className="border border-border px-3 py-1 font-mono">3.3%</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-border px-3 py-1">At 100%</td>
+                    <td className="border border-border px-3 py-1 font-mono">24.5%</td>
+                    <td className="border border-border px-3 py-1 font-mono">20.5%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Aave와 유사한 kink 모델</strong>: 최적점 근처 완만, 초과 시 급격<br />
           Supply rate &lt; Borrow rate — 프로토콜이 spread 획득<br />

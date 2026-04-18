@@ -32,39 +32,45 @@ export default function Historical({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── ChangeSet 테이블 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ChangeSet 테이블 스키마</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// AccountChangeSets: 계정 변경 이력
-// Key: BlockNumber
-// Value: (Address, 이전 AccountInfo)
-//
-// 블록 N에서 계정 A가 변경되었다면:
-//   AccountChangeSets[N] = (A, 블록 N 실행 전 상태)
-//
-// 읽는 방법:
-// 1. 블록 N 실행 전 계정 A 상태 복원하려면:
-//    AccountChangeSets[N] 조회 → 이전 값 확인
-// 2. 블록 N-1 실행 전 상태는:
-//    AccountChangeSets[N-1], [N-2], ... 순차 역추적
-
-// StorageChangeSets (DupSort): 스토리지 변경 이력
-// Key: (BlockNumber, Address)
-// Value: (StorageKey, 이전 StorageValue)
-//
-// 같은 키에 여러 엔트리 가능 (DupSort)
-// 같은 블록에서 같은 계정의 여러 슬롯 변경 시
-
-// 예시:
-// 블록 100에서 계정 A의 balance 변경: 10 → 50
-// 블록 100에서 계정 A의 스토리지[0x01] 변경: 0 → 100
-//
-// AccountChangeSets[100] = (A, Account { balance: 10, ... })
-// StorageChangeSets[(100, A)] = [(0x01, 0)]
-
-// 저장 크기 비교 (메인넷):
-// archive 모드 (Geth): 전체 상태 트리 스냅샷 × 블록 수 → 수 TB
-// ChangeSet 방식 (Reth): 변경분만 → 수백 GB
-// 대략 5~10배 절약`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm text-sky-400 mb-2">AccountChangeSets</p>
+              <p className="text-xs text-foreground/70">Key: <code>BlockNumber</code> → Value: <code>(Address, 이전 AccountInfo)</code></p>
+              <p className="text-xs text-foreground/60 mt-2">블록 N에서 계정 A 변경 시:</p>
+              <p className="text-xs font-mono text-foreground/50 mt-0.5">ChangeSets[N] = (A, 실행 전 상태)</p>
+              <p className="text-xs text-muted-foreground mt-1">복원: N, N-1, N-2... 순차 역추적</p>
+            </div>
+            <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">StorageChangeSets <span className="text-[10px] px-1 py-0.5 rounded bg-amber-500/10">DupSort</span></p>
+              <p className="text-xs text-foreground/70">Key: <code>(BlockNumber, Address)</code> → Value: <code>(StorageKey, 이전 Value)</code></p>
+              <p className="text-xs text-foreground/60 mt-2">같은 블록+계정의 여러 슬롯 변경 가능</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">예시: 블록 100에서 계정 A 변경</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+              <div className="rounded bg-muted/50 p-2">
+                <p className="text-foreground/60">balance 변경: 10 → 50</p>
+                <p className="font-mono text-foreground/50">AccountChangeSets[100] = (A, &#123;balance: 10&#125;)</p>
+              </div>
+              <div className="rounded bg-muted/50 p-2">
+                <p className="text-foreground/60">스토리지[0x01] 변경: 0 → 100</p>
+                <p className="font-mono text-foreground/50">StorageChangeSets[(100, A)] = [(0x01, 0)]</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-center">
+              <p className="text-xs font-semibold text-red-400">Geth archive</p>
+              <p className="text-xs text-foreground/60">전체 상태 스냅샷 x 블록 수 → 수 TB</p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+              <p className="text-xs font-semibold text-emerald-400">Reth ChangeSet</p>
+              <p className="text-xs text-foreground/60">변경분만 → 수백 GB (5~10배 절약)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           ChangeSets 테이블이 <strong>시간역행 복원 엔진</strong>.<br />
           "이 블록 직전 상태는 무엇이었나"를 블록별로 기록 — 역순 적용으로 과거 재구성.<br />
@@ -73,47 +79,41 @@ export default function Historical({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── 복원 알고리즘 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HistoricalStateProvider::account() — 역추적</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl<TX: DbTx> StateProvider for HistoricalStateProviderRef<'_, TX> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        let target_block = self.block_number;
-
-        // 1. 현재 상태 로드 (tip 시점)
-        let mut current = self.tx.get::<PlainAccountState>(*addr)?;
-
-        // 2. AccountHistory 인덱스로 변경이 있었던 블록 찾기
-        //    AccountHistory: Address → BlockNumber list (역인덱스)
-        let history_entry = self.tx
-            .get::<AccountHistory>(*addr)?
-            .unwrap_or_default();
-
-        // 3. target_block 이후 변경들 역적용
-        for &changed_block in history_entry.iter().rev() {
-            if changed_block <= target_block {
-                break;  // target 이전 변경은 건너뜀
-            }
-
-            // AccountChangeSets에서 이전 값 로드
-            let previous = self.tx
-                .get::<AccountChangeSets>(changed_block)?
-                .into_iter()
-                .find(|(a, _)| *a == *addr)
-                .map(|(_, info)| info);
-
-            // 현재 상태를 이전 상태로 되돌림
-            current = previous;
-        }
-
-        // 4. 최종 결과: target_block 시점의 계정 상태
-        Ok(current)
-    }
-}
-
-// 성능 특성:
-// - 최근 블록 조회 (tip-1000): 1000회 이하 역추적 → 빠름
-// - 1년 전 조회 (~260만 블록 역추적): 수 초 소요
-// - 1년 이상은 현실적으로 거의 사용 안 됨`}
-        </pre>
+        <div className="my-4 not-prose">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>HistoricalStateProviderRef::account()</code> — 역추적 알고리즘</p>
+            <div className="space-y-3">
+              {[
+                { step: '1', title: '현재 상태 로드', detail: 'PlainAccountState에서 tip 시점 값 가져오기', color: 'text-sky-400' },
+                { step: '2', title: 'AccountHistory 인덱스 조회', detail: 'Address → BlockNumber list (역인덱스)로 변경 블록 찾기', color: 'text-emerald-400' },
+                { step: '3', title: 'target 이후 변경 역적용', detail: '변경 블록 역순 순회 → AccountChangeSets에서 이전 값 → 현재 상태 되돌림', color: 'text-amber-400' },
+                { step: '4', title: '최종 결과 반환', detail: 'target_block 시점 계정 상태', color: 'text-indigo-400' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold">{s.title}</p>
+                    <p className="text-xs text-foreground/60">{s.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 pt-2 border-t border-border grid grid-cols-3 gap-2 text-xs">
+              <div className="rounded bg-muted/50 p-2 text-center">
+                <p className="font-semibold text-emerald-400">최근 1000블록</p>
+                <p className="text-foreground/60">빠름</p>
+              </div>
+              <div className="rounded bg-muted/50 p-2 text-center">
+                <p className="font-semibold text-amber-400">1년 전 (~260만)</p>
+                <p className="text-foreground/60">수 초 소요</p>
+              </div>
+              <div className="rounded bg-muted/50 p-2 text-center">
+                <p className="font-semibold text-muted-foreground">1년 이상</p>
+                <p className="text-foreground/60">거의 사용 안 됨</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           역추적 알고리즘: <strong>현재 → 과거 방향으로 ChangeSet 역적용</strong>.<br />
           <code>AccountHistory</code> 인덱스로 해당 계정의 변경 블록만 빠르게 찾음 (O(log n)).<br />
@@ -122,34 +122,42 @@ export default function Historical({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── AccountHistory 인덱스 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">AccountHistory — 변경 블록 역인덱스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// AccountHistory 테이블
-// Key: Address
-// Value: Vec<BlockNumber> (오름차순 정렬)
-//
-// 계정 A가 블록 100, 150, 200, 300에서 변경되었다면:
-// AccountHistory[A] = [100, 150, 200, 300]
-
-// 사용 시나리오:
-// "블록 180 시점 계정 A의 상태는?"
-//
-// 1. AccountHistory[A] 로드 → [100, 150, 200, 300]
-// 2. 180 이후 변경 블록 찾기: [200, 300]
-// 3. [300, 200] 순서로 역적용
-//    - AccountChangeSets[300].get(A) → 블록 300 이전 상태 = 블록 200 이후 상태
-//    - AccountChangeSets[200].get(A) → 블록 200 이전 상태 = 블록 180~199 상태
-// 4. 결과: 블록 180 시점 상태
-
-// HistoryIndex Stage:
-// - ExecutionStage 이후 실행
-// - AccountChangeSets 스캔 → AccountHistory 구성
-// - 스토리지는 StorageHistory에 동일 패턴
-
-// 메모리 효율:
-// - 메인넷 ~2.5억 계정
-// - 평균 변경 빈도: 계정당 ~3회
-// - AccountHistory 크기: ~7.5억 entries ≈ 20GB`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">AccountHistory 테이블</p>
+            <p className="text-xs text-foreground/70">Key: <code>Address</code> → Value: <code>Vec&lt;BlockNumber&gt;</code> (오름차순)</p>
+            <p className="text-xs font-mono text-foreground/50 mt-1">AccountHistory[A] = [100, 150, 200, 300]</p>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">시나리오: "블록 180 시점 계정 A?"</p>
+            <div className="space-y-2">
+              {[
+                { step: '1', text: 'AccountHistory[A] → [100, 150, 200, 300]' },
+                { step: '2', text: '180 이후 변경 블록: [200, 300]' },
+                { step: '3', text: '[300, 200] 역적용 → ChangeSets에서 이전 값 로드' },
+                { step: '4', text: '결과: 블록 180 시점 상태' },
+              ].map(s => (
+                <div key={s.step} className="flex items-center gap-2 text-xs">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center bg-muted text-muted-foreground font-bold shrink-0">{s.step}</span>
+                  <span className="text-foreground/70">{s.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-3">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">HistoryIndex Stage</p>
+              <p className="text-xs text-foreground/60">ExecutionStage 이후 실행</p>
+              <p className="text-xs text-foreground/60">AccountChangeSets 스캔 → AccountHistory 구성</p>
+              <p className="text-xs text-foreground/60">StorageHistory도 동일 패턴</p>
+            </div>
+            <div className="rounded-lg border border-border p-3">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">메모리 효율 (메인넷)</p>
+              <p className="text-xs text-foreground/60">~2.5억 계정 x 평균 3회 변경</p>
+              <p className="text-xs text-foreground/60">~7.5억 entries ≈ 20GB</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>AccountHistory</code>가 <strong>"이 계정이 언제 변경되었나"</strong>의 역인덱스.<br />
           전체 블록을 스캔할 필요 없이 관련 블록만 직접 접근.<br />
@@ -158,33 +166,38 @@ export default function Historical({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── 트레이드오프 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Archive vs ChangeSet — 트레이드오프</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 두 방식 비교 (메인넷, 1800만 블록)
-
-// ┌─────────────────┬──────────────┬──────────────┐
-// │ 항목            │ Geth archive │ Reth ChangeSet│
-// ├─────────────────┼──────────────┼──────────────┤
-// │ 디스크 사용     │ ~12 TB       │ ~2.5 TB      │
-// │ 최신 조회       │ O(1) trie    │ O(1) plain   │
-// │ 과거 조회 (1일전)│ O(1)        │ ~수백 ms     │
-// │ 과거 조회 (1년전)│ O(1)        │ ~수 초       │
-// │ reorg 지원      │ 복잡         │ 내장         │
-// │ 스토리지 팽창율 │ 연간 ~2TB    │ 연간 ~400GB  │
-// └─────────────────┴──────────────┴──────────────┘
-
-// Reth 방식의 이점:
-// - 디스크 5배 절약
-// - SSD 쓰기량 감소 (수명 연장)
-// - 점진적 팽창 (미래 지속 가능)
-
-// Reth 방식의 비용:
-// - 과거 조회 시 지연 (수백 ms ~ 수 초)
-// - RPC 제공자 입장에서 latency SLA 관리 필요
-
-// 실용적 선택:
-// - 대부분의 RPC 요청은 최근 블록 (~99% 최근 1주)
-// - 과거 조회는 특수 목적 (분석, 감사) → 지연 허용`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">메인넷 비교 (1800만 블록)</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead><tr className="border-b border-border">
+                  <th className="text-left py-1 pr-3 font-semibold">항목</th>
+                  <th className="text-right py-1 px-3 font-semibold text-red-400">Geth archive</th>
+                  <th className="text-right py-1 pl-3 font-semibold text-emerald-400">Reth ChangeSet</th>
+                </tr></thead>
+                <tbody className="text-foreground/70">
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">디스크 사용</td><td className="text-right px-3 text-red-400">~12 TB</td><td className="text-right pl-3 text-emerald-400">~2.5 TB</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">최신 조회</td><td className="text-right px-3">O(1) trie</td><td className="text-right pl-3">O(1) plain</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">과거 조회 (1일 전)</td><td className="text-right px-3">O(1)</td><td className="text-right pl-3">~수백 ms</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">과거 조회 (1년 전)</td><td className="text-right px-3">O(1)</td><td className="text-right pl-3">~수 초</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1.5 pr-3">reorg 지원</td><td className="text-right px-3">복잡</td><td className="text-right pl-3 text-emerald-400">내장</td></tr>
+                  <tr><td className="py-1.5 pr-3">연간 팽창률</td><td className="text-right px-3 text-red-400">~2 TB</td><td className="text-right pl-3 text-emerald-400">~400 GB</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">Reth 이점</p>
+              <p className="text-xs text-foreground/60">디스크 5배 절약, SSD 수명 연장, 점진적 팽창</p>
+            </div>
+            <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+              <p className="text-xs font-semibold text-amber-400 mb-1">Reth 비용</p>
+              <p className="text-xs text-foreground/60">과거 조회 지연 (수백 ms~수 초) — 99% 요청이 최근 블록이므로 실질 영향 적음</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>디스크 vs 조회 속도</strong>의 고전적 트레이드오프.<br />
           Reth는 디스크 5배 절약 + 오래된 쿼리 느려짐 → 대부분 워크로드에 유리.<br />

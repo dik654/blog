@@ -49,77 +49,55 @@ export default function Security() {
 
         {/* ── Security Models 심층 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Security Models 심층 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Security Model별 비교:
-
-// Deterministic BFT (PBFT, HotStuff, Tendermint):
-//
-// Safety:
-// - always (under f<n/3)
-// - never fork
-// - never conflicting commits
-// - mathematical proof
-//
-// Liveness:
-// - partial sync (GST required)
-// - GST 후 eventually progress
-// - 1/3+ Byzantine → halt (safety 우선)
-//
-// Threats:
-// - 33%+ Byzantine stake: safety violation
-// - Network partition: liveness halt
-// - DDoS: liveness halt
-// - Long-range attack: PoS only (slashing)
-
-// Probabilistic BFT (Avalanche):
-//
-// Safety:
-// - P(violation) ~ e^(-α*β)
-// - 10^-10 with α=14, β=20
-// - practical safety
-// - not mathematical zero
-//
-// Liveness:
-// - always (probabilistic)
-// - metastable convergence
-// - async network OK (randomization)
-//
-// Threats:
-// - extreme Byzantine (>50%): real threat
-// - bad parameters: safety weakened
-// - correlated failures: unknown
-// - academic vulnerabilities possible
-
-// Nakamoto (Bitcoin):
-//
-// Safety:
-// - P(reorg) ~ (q/p)^k (exponential)
-// - k=6: 10^-6 (0.0001%)
-// - probabilistic but small
-// - assumes honest majority (51%)
-//
-// Liveness:
-// - always (block production continues)
-// - network partition: both chains grow
-// - eventual consistency
-//
-// Threats:
-// - 51% hash power: double spend
-// - selfish mining: >25%
-// - eclipse attack: isolated victim
-// - weak block timing
-
-// 비교 매트릭스:
-//
-// Model            | Safety  | Liveness | Byzantine limit
-// -----------------|---------|----------|----------------
-// PBFT/HotStuff    | Always  | GST      | 33%
-// Tendermint       | Always  | GST      | 33%
-// Avalanche        | 10^-10  | Always   | ~50%
-// Nakamoto         | 10^-6   | Always   | 51%
-// Casper FFG       | Always  | Partial  | 33%
-// PoS BFT          | Always  | GST      | 33% (stake)`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">3가지 Security Model</p>
+            <div className="grid gap-2 sm:grid-cols-3 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Deterministic BFT</p>
+                <p className="text-muted-foreground">
+                  Safety: always (f&lt;n/3), never fork. Liveness: partial sync (GST). 1/3+ Byzantine → halt (safety 우선).<br />
+                  Threats: 33%+ stake, network partition, DDoS, long-range attack
+                </p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Probabilistic (Avalanche)</p>
+                <p className="text-muted-foreground">
+                  Safety: <code>P ~ e^(-alpha*beta)</code>, 10^-10 typical. Liveness: always (metastable convergence).<br />
+                  Threats: extreme Byzantine (&gt;50%), bad parameters, correlated failures
+                </p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Nakamoto (Bitcoin)</p>
+                <p className="text-muted-foreground">
+                  Safety: <code>P(reorg) ~ (q/p)^k</code>, k=6 → 10^-6. Liveness: always (block production continues).<br />
+                  Threats: 51% hash power, selfish mining (&gt;25%), eclipse attack
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">비교 매트릭스</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">Model</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Safety</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Liveness</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Byzantine limit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">PBFT/HotStuff</td><td className="border border-border px-3 py-1.5">Always</td><td className="border border-border px-3 py-1.5">GST</td><td className="border border-border px-3 py-1.5">33%</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Avalanche</td><td className="border border-border px-3 py-1.5">10^-10</td><td className="border border-border px-3 py-1.5">Always</td><td className="border border-border px-3 py-1.5">~50%</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Nakamoto</td><td className="border border-border px-3 py-1.5">10^-6</td><td className="border border-border px-3 py-1.5">Always</td><td className="border border-border px-3 py-1.5">51%</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Casper FFG</td><td className="border border-border px-3 py-1.5">Always</td><td className="border border-border px-3 py-1.5">Partial</td><td className="border border-border px-3 py-1.5">33%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           3가지 보안 모델: <strong>Deterministic, Probabilistic, Nakamoto</strong>.<br />
           BFT = mathematical safety, Avalanche = statistical, Nakamoto = exponential.<br />
@@ -128,60 +106,42 @@ export default function Security() {
 
         {/* ── 실제 공격 사례 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">실제 공격 사례와 대응</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 실제 공격 사례:
-
-// 1. 51% Attack (Nakamoto):
-// - Bitcoin Gold (2018): 1800 BTG 이중지불
-// - Ethereum Classic (2019, 2020): 여러 차례
-// - Bitcoin SV (2021): large reorg
-// - 대응: 소형 chain은 PoS로 전환
-
-// 2. BFT stake concentration:
-// - Solana 2022: 5 validators가 33% stake
-// - Cosmos 2023: top 10이 50%+
-// - 대응: stake 분산 incentive
-
-// 3. Selfish mining:
-// - Ethereum 2015-2016: 이론 연구
-// - Bitcoin mining pools: 지속 우려
-// - 대응: uncle reward (GHOST)
-
-// 4. Long-range attack (PoS):
-// - Cosmos: 완전 방어 없음 (weak subjectivity)
-// - Ethereum 2.0: checkpoint 기반
-// - 대응: trusted checkpoint
-
-// 5. Eclipse attack:
-// - Ethereum 2015: 발견, 패치
-// - 대응: 다양한 peer source
-
-// 6. DDoS on leader:
-// - Tendermint: 빈번
-// - 대응: view change
-
-// 7. Censorship:
-// - Ethereum 2022: OFAC 제재
-// - 대응: DAG-BFT (모든 validator propose)
-
-// 8. Validator failures:
-// - Celestia 2023: 50%+ temporary halt
-// - 대응: async fallback
-
-// BFT 방어 기법:
-// 1. Slashing: 잘못된 행동 penalty
-// 2. Bonding: stake lockup
-// 3. Unbonding period: reply attack 방어
-// 4. Social consensus: 극단 상황 hard fork
-// 5. Weak subjectivity: trusted checkpoint
-
-// 실무 교훈:
-// - 완벽한 보안 없음
-// - defense in depth
-// - 경제적 공격 비용 > 이득 설계
-// - slashing + bonding이 핵심
-// - governance (on-chain + off-chain)`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">실제 공격 사례</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">51% Attack</p>
+                <p className="text-muted-foreground">Bitcoin Gold (2018), Ethereum Classic (2019/2020), Bitcoin SV (2021). 대응: PoS 전환</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Stake concentration</p>
+                <p className="text-muted-foreground">Solana 2022: 5 validators가 33% stake. Cosmos 2023: top 10이 50%+. 대응: 분산 incentive</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Selfish mining / Eclipse</p>
+                <p className="text-muted-foreground">Ethereum 2015-16 연구, Bitcoin pools 우려. Eclipse: Ethereum 2015 패치. 대응: uncle reward, diverse peers</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Long-range / DDoS / Censorship</p>
+                <p className="text-muted-foreground">Cosmos: weak subjectivity. Tendermint: leader DDoS 빈번. Ethereum 2022: OFAC 제재. 대응: checkpoint, view change, DAG-BFT</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">BFT 방어 기법</p>
+            <ol className="text-sm list-decimal list-inside space-y-0.5">
+              <li><strong>Slashing</strong>: 잘못된 행동 penalty</li>
+              <li><strong>Bonding</strong>: stake lockup</li>
+              <li><strong>Unbonding period</strong>: replay attack 방어</li>
+              <li><strong>Social consensus</strong>: 극단 상황 hard fork</li>
+              <li><strong>Weak subjectivity</strong>: trusted checkpoint</li>
+            </ol>
+            <p className="text-sm text-muted-foreground mt-2">
+              실무 교훈: 완벽한 보안 없음, defense in depth, 경제적 공격 비용 &gt; 이득 설계, slashing + bonding 핵심
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           실제 공격: <strong>51%, selfish mining, long-range, censorship, DDoS</strong>.<br />
           방어: slashing, bonding, weak subjectivity, social consensus.<br />
@@ -190,64 +150,43 @@ export default function Security() {
 
         {/* ── Quorum 수학 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Quorum 수학 정리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Quorum 수학 정리:
-
-// BFT (Byzantine Fault Tolerance):
-// - n = 3f+1 (minimum)
-// - quorum = 2f+1 (intersection)
-// - 두 quorum 교차: f+1 >= 1 honest
-// - safety via intersection
-
-// CFT (Crash Fault Tolerance):
-// - n = 2f+1 (minimum)
-// - quorum = f+1 (majority)
-// - 단순 crash만 고려
-// - Paxos, Raft 사용
-
-// Nakamoto:
-// - 51% honest hash power
-// - "quorum" = majority hash
-// - probabilistic
-
-// Avalanche:
-// - α/k threshold (e.g., 14/20 = 70%)
-// - β consecutive (20)
-// - Pstats ~ e^(-α*β)
-
-// 실제 숫자 (n=100):
-// BFT: f=33, quorum=67
-// CFT: f=49, quorum=51
-// Nakamoto: 51% hash
-// Avalanche: 70% sample
-
-// Stake-weighted BFT (현대):
-// - voting power = stake
-// - 2/3+ stake threshold
-// - absolute validator 수 무관
-// - economic security
-
-// Committee sampling (Ethereum 2.0):
-// - 1M+ total validators
-// - committee 32 per slot
-// - random VRF sampling
-// - Byzantine detection in committee
-// - finality via 2/3 stake
-
-// 수학적 보안:
-// - f<n/3: BFT safety
-// - f<n/2: Nakamoto safety
-// - stake concentration: 경제 인센티브
-// - slashing: 33% attack 비용
-
-// 비교:
-// - 100 validators, stake 1 each:
-//   PBFT: 33 Byzantine 필요 for attack
-//   Stake-based: 33% stake 필요
-// - 100 validators, skewed stake (1 has 40%):
-//   BFT vanilla: 동일
-//   Stake-weighted: 큰 하나 = 위험`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Quorum 수학 정리</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">BFT (Byzantine Fault Tolerance)</p>
+                <p className="text-muted-foreground"><code>n = 3f+1</code> (minimum), quorum = <code>2f+1</code>. 두 quorum 교차: <code>f+1 &ge; 1</code> honest → safety via intersection</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">CFT (Crash Fault Tolerance)</p>
+                <p className="text-muted-foreground"><code>n = 2f+1</code>, quorum = <code>f+1</code>. 단순 crash만 고려 (Paxos, Raft)</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Nakamoto</p>
+                <p className="text-muted-foreground">51% honest hash power, "quorum" = majority hash, probabilistic</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Avalanche</p>
+                <p className="text-muted-foreground"><code>alpha/k</code> threshold (14/20=70%), beta consecutive (20), <code>P ~ e^(-alpha*beta)</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">실제 숫자 (n=100)</p>
+            <p className="text-sm">
+              BFT: f=33, quorum=67 / CFT: f=49, quorum=51 / Nakamoto: 51% hash / Avalanche: 70% sample
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">현대: Stake-weighted BFT &amp; Committee sampling</p>
+            <p className="text-sm text-muted-foreground">
+              <strong>Stake-weighted</strong>: voting power = stake, 2/3+ stake threshold, absolute validator 수 무관, economic security.<br />
+              <strong>Ethereum 2.0</strong>: 1M+ validators, committee 32 per slot, VRF sampling, 2/3 stake finality.<br />
+              n=100 uniform stake: PBFT 33 Byzantine 필요. skewed (1 has 40%): stake-weighted에서 큰 하나 = 위험
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Quorum: <strong>BFT 2f+1, CFT f+1, Nakamoto 51%</strong>.<br />
           stake-weighted가 현대 표준.<br />

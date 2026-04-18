@@ -9,25 +9,26 @@ export default function Registry() {
         <TaskStatusViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">TaskRegistry 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TaskRegistry {
-    tasks: RwLock<HashMap<TaskId, TaskEntry>>,
-    next_seq: AtomicU64,
-}
-
-pub struct TaskEntry {
-    pub packet: TaskPacket,
-    pub status: TaskStatus,
-    pub status_history: Vec<StatusTransition>,
-    pub worker: Option<WorkerId>,
-    pub output: Option<TaskOutput>,
-}
-
-pub struct StatusTransition {
-    pub from: TaskStatus,
-    pub to: TaskStatus,
-    pub timestamp: DateTime<Utc>,
-    pub reason: Option<String>,
-}`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 not-prose my-4">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">TaskRegistry</p>
+            <p className="text-sm"><code>tasks: RwLock&lt;HashMap&lt;TaskId, TaskEntry&gt;&gt;</code></p>
+            <p className="text-sm"><code>next_seq: AtomicU64</code> — 순차 ID 생성</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">TaskEntry</p>
+            <p className="text-sm"><code>packet: TaskPacket</code> — 작업 명세</p>
+            <p className="text-sm"><code>status: TaskStatus</code> — 현재 상태</p>
+            <p className="text-sm"><code>status_history</code> — 전이 기록</p>
+            <p className="text-sm"><code>worker</code> / <code>output</code></p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">StatusTransition</p>
+            <p className="text-sm"><code>from</code> → <code>to</code> — 상태 전이</p>
+            <p className="text-sm"><code>timestamp: DateTime&lt;Utc&gt;</code></p>
+            <p className="text-sm"><code>reason: Option&lt;String&gt;</code></p>
+          </div>
+        </div>
         <p>
           <strong>RwLock&lt;HashMap&gt;</strong>: 여러 리더 동시 읽기, 쓰기 배타<br />
           <code>status_history</code>: 모든 상태 전이 기록 — 감사 추적<br />
@@ -35,38 +36,35 @@ pub struct StatusTransition {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">CRUD 메서드 — create</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl TaskRegistry {
-    pub async fn create(&self, mut packet: TaskPacket) -> Result<TaskId> {
-        // ID 생성 (순차 증가)
-        let seq = self.next_seq.fetch_add(1, Ordering::SeqCst);
-        let id = TaskId::from(format!("task_{:08x}", seq));
-        packet.id = id.clone();
-
-        // 검증
-        packet.validate()?;
-
-        // 의존성 순환 체크
-        self.check_cyclic_deps(&packet.depends_on, &id)?;
-
-        // 엔트리 생성
-        let entry = TaskEntry {
-            packet,
-            status: TaskStatus::Pending,
-            status_history: vec![StatusTransition {
-                from: TaskStatus::Pending,
-                to: TaskStatus::Pending,
-                timestamp: Utc::now(),
-                reason: Some("created".into()),
-            }],
-            worker: None,
-            output: None,
-        };
-
-        // 저장
-        self.tasks.write().await.insert(id.clone(), entry);
-        Ok(id)
-    }
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-lg border border-border p-4">
+          <p className="text-xs font-semibold text-muted-foreground mb-3">TaskRegistry::create() — 4단계</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">1</span>
+              <div>
+                <strong>ID 생성</strong> — <code>next_seq.fetch_add(1, SeqCst)</code> → <code>task_00000001</code> 형식
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">2</span>
+              <div>
+                <strong>검증</strong> — <code>packet.validate()</code> 필수 필드·일관성
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">3</span>
+              <div>
+                <strong>순환 체크</strong> — <code>check_cyclic_deps()</code> DFS로 cycle 검사
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
+              <span className="text-muted-foreground font-mono shrink-0">4</span>
+              <div>
+                <strong>저장</strong> — <code>TaskEntry</code> 생성 (status: <code>Pending</code>, worker: None) → HashMap insert
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계 생성</strong>: ID 생성 → 검증 → 순환 체크 → 저장<br />
           순환 의존 탐지: DFS로 cycle 검사 — 생성 시점에 차단<br />
@@ -74,72 +72,43 @@ pub struct StatusTransition {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">get / list / update</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl TaskRegistry {
-    pub async fn get(&self, id: &TaskId) -> Option<TaskEntry> {
-        self.tasks.read().await.get(id).cloned()
-    }
-
-    pub async fn list(&self, filter: TaskFilter) -> Vec<TaskEntry> {
-        let tasks = self.tasks.read().await;
-        tasks.values()
-            .filter(|t| filter.matches(t))
-            .cloned()
-            .collect()
-    }
-
-    pub async fn update_status(
-        &self,
-        id: &TaskId,
-        new_status: TaskStatus,
-        reason: Option<String>,
-    ) -> Result<()> {
-        let mut tasks = self.tasks.write().await;
-        let entry = tasks.get_mut(id).ok_or(anyhow!("not found"))?;
-
-        let old_status = entry.status.clone();
-        if !is_valid_transition(&old_status, &new_status) {
-            return Err(anyhow!("invalid transition"));
-        }
-
-        entry.status = new_status.clone();
-        entry.status_history.push(StatusTransition {
-            from: old_status,
-            to: new_status,
-            timestamp: Utc::now(),
-            reason,
-        });
-
-        Ok(())
-    }
-}`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 not-prose my-4">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">get(id)</p>
+            <p className="text-sm"><code>tasks.read().await.get(id).cloned()</code></p>
+            <p className="text-sm text-muted-foreground mt-1">읽기 잠금 → 단일 task 조회</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">list(filter)</p>
+            <p className="text-sm"><code>tasks.values().filter(|t| filter.matches(t))</code></p>
+            <p className="text-sm text-muted-foreground mt-1">읽기 잠금 → 필터 매칭 다건 조회</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">update_status(id, new_status)</p>
+            <p className="text-sm"><code>is_valid_transition()</code> 체크 후 상태 전이</p>
+            <p className="text-sm text-muted-foreground mt-1">쓰기 잠금 → <code>status_history</code>에 전이 기록 push</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TaskFilter — 조건부 조회</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TaskFilter {
-    pub status: Option<TaskStatus>,
-    pub team: Option<TeamId>,
-    pub worker: Option<WorkerId>,
-    pub tag: Option<String>,
-    pub priority_min: Option<Priority>,
-    pub created_after: Option<DateTime<Utc>>,
-}
-
-impl TaskFilter {
-    pub fn matches(&self, entry: &TaskEntry) -> bool {
-        if let Some(s) = &self.status { if &entry.status != s { return false; } }
-        if let Some(t) = &self.team { if entry.packet.assigned_team.as_ref() != Some(t) { return false; } }
-        if let Some(w) = &self.worker { if entry.worker.as_ref() != Some(w) { return false; } }
-        if let Some(tag) = &self.tag { if !entry.packet.tags.contains(tag) { return false; } }
-        // ... 나머지 필터
-        true
-    }
-}
-
-// 사용 예
-let my_in_progress = registry.list(TaskFilter {
-    worker: Some(my_worker_id),
-    status: Some(TaskStatus::InProgress),
-    ..Default::default()
-}).await;`}</pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">TaskFilter 필드 (모두 Option — None이면 무시)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
+              <span><code>status</code></span>
+              <span><code>team</code></span>
+              <span><code>worker</code></span>
+              <span><code>tag</code></span>
+              <span><code>priority_min</code></span>
+              <span><code>created_after</code></span>
+            </div>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">matches() 로직</p>
+            <p className="text-sm">각 필드가 <code>Some</code>이면 해당 조건 체크 — 전부 AND 결합</p>
+            <p className="text-sm text-muted-foreground mt-1">예: <code>worker: Some(my_id)</code> + <code>status: Some(InProgress)</code> → "나에게 할당된 진행 중 task"</p>
+          </div>
+        </div>
         <p>
           <strong>AND 조합 필터</strong>: 모든 필드가 매칭해야 반환<br />
           None 필드는 무시 — 지정한 조건만 체크<br />
@@ -147,69 +116,40 @@ let my_in_progress = registry.list(TaskFilter {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">assign() — 워커 할당</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl TaskRegistry {
-    pub async fn assign(&self, id: &TaskId, worker: WorkerId) -> Result<()> {
-        let mut tasks = self.tasks.write().await;
-        let entry = tasks.get_mut(id).ok_or(anyhow!("not found"))?;
-
-        // 이미 할당됐는지 확인
-        if entry.worker.is_some() {
-            return Err(anyhow!("already assigned"));
-        }
-
-        // 상태 전이
-        if entry.status != TaskStatus::Pending {
-            return Err(anyhow!("task not in Pending state"));
-        }
-        entry.status = TaskStatus::Assigned;
-        entry.worker = Some(worker);
-
-        Ok(())
-    }
-
-    pub async fn find_next_unassigned(&self, team: Option<&TeamId>) -> Option<TaskId> {
-        let tasks = self.tasks.read().await;
-
-        // 우선순위 정렬 후 첫 Pending
-        let mut candidates: Vec<_> = tasks.values()
-            .filter(|t| t.status == TaskStatus::Pending && t.worker.is_none())
-            .filter(|t| team.is_none() || t.packet.assigned_team.as_ref() == team)
-            .collect();
-
-        candidates.sort_by(|a, b| b.packet.priority.cmp(&a.packet.priority));
-
-        candidates.first().map(|e| e.packet.id.clone())
-    }
-}`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 not-prose my-4">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">assign(id, worker)</p>
+            <p className="text-sm">가드: <code>worker.is_some()</code> → "already assigned" 에러</p>
+            <p className="text-sm">가드: <code>status != Pending</code> → "not in Pending" 에러</p>
+            <p className="text-sm mt-1">통과 시 <code>Pending → Assigned</code> 전이 + worker 설정</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">find_next_unassigned(team)</p>
+            <p className="text-sm">필터: <code>status == Pending</code> + <code>worker.is_none()</code></p>
+            <p className="text-sm">팀 지정 시 해당 팀만 필터</p>
+            <p className="text-sm mt-1">우선순위 정렬 → 가장 높은 Pending task 반환</p>
+          </div>
+        </div>
         <p>
           <strong>assign</strong>: Pending → Assigned 전이<br />
           <code>find_next_unassigned</code>: 우선순위 높은 Pending task 반환 — Worker의 "다음 할 일" 조회
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">영속화 — 선택적 디스크 저장</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl TaskRegistry {
-    pub async fn save_to_disk(&self, path: &Path) -> Result<()> {
-        let tasks = self.tasks.read().await;
-        let snapshot: Vec<TaskEntry> = tasks.values().cloned().collect();
-        let json = serde_json::to_string_pretty(&snapshot)?;
-        tokio::fs::write(path, json).await?;
-        Ok(())
-    }
-
-    pub async fn load_from_disk(path: &Path) -> Result<Self> {
-        let text = tokio::fs::read_to_string(path).await?;
-        let snapshot: Vec<TaskEntry> = serde_json::from_str(&text)?;
-
-        let registry = Self::new();
-        let mut tasks = registry.tasks.write().await;
-        for entry in snapshot {
-            tasks.insert(entry.packet.id.clone(), entry);
-        }
-        drop(tasks);
-
-        Ok(registry)
-    }
-}`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 not-prose my-4">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">save_to_disk(path)</p>
+            <p className="text-sm">읽기 잠금 → 전체 task를 <code>Vec&lt;TaskEntry&gt;</code>로 수집</p>
+            <p className="text-sm"><code>serde_json::to_string_pretty()</code> → JSON 직렬화</p>
+            <p className="text-sm"><code>tokio::fs::write()</code> → 디스크 기록</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">load_from_disk(path)</p>
+            <p className="text-sm"><code>tokio::fs::read_to_string()</code> → JSON 읽기</p>
+            <p className="text-sm"><code>serde_json::from_str()</code> → 역직렬화</p>
+            <p className="text-sm">새 registry 생성 후 HashMap에 전체 insert</p>
+          </div>
+        </div>
         <p>
           <strong>인메모리 기본 + 선택적 영속화</strong>: 성능 우선<br />
           저장 경로: <code>.claw/tasks.json</code><br />

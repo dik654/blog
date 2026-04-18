@@ -1,6 +1,7 @@
 import GradientUpdateViz from './viz/GradientUpdateViz';
 import SGDVariantsViz from './viz/SGDVariantsViz';
 import LRSchedulingViz from './viz/LRSchedulingViz';
+import GradTrainViz from './viz/GradTrainViz';
 
 export default function GradientUpdate() {
   return (
@@ -33,70 +34,13 @@ export default function GradientUpdate() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">PyTorch 구현 예</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`import torch
-import torch.nn as nn
-import torch.optim as optim
-
-model = nn.Linear(10, 2)
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-criterion = nn.CrossEntropyLoss()
-
-# Training loop
-for epoch in range(num_epochs):
-    for x, y in dataloader:
-        # 1) Forward
-        logits = model(x)
-        loss = criterion(logits, y)
-
-        # 2) Backward
-        optimizer.zero_grad()   # 이전 gradient 초기화
-        loss.backward()         # gradient 계산
-
-        # 3) Update
-        optimizer.step()        # θ = θ - η·∇L
-
-# 내부 동작 (simplified)
-# optimizer.step():
-#   for param in params:
-#       param.data -= lr * param.grad
-#
-# 또는 momentum:
-#   for param in params:
-#       momentum_buffer = beta * momentum_buffer + param.grad
-#       param.data -= lr * momentum_buffer`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Gradient Clipping</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 목적: 너무 큰 gradient로 인한 폭발 방지
-
-// 1. Global norm clipping
-torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-// - 전체 gradient vector의 L2 norm 계산
-// - norm > max_norm이면 scale down
-// - RNN/Transformer 훈련에 필수
-
-// 2. Per-parameter value clipping
-torch.nn.utils.clip_grad_value_(model.parameters(), clip_value=5.0)
-// - 각 원소를 [-clip, +clip]으로 클램프
-// - 덜 일반적
-
-// 적용 시점
-for epoch in range(num_epochs):
-    for x, y in dataloader:
-        loss = compute_loss(x, y)
-        loss.backward()
-
-        # Clip 직전, optimizer.step 직후 아님!
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-
-        optimizer.step()
-        optimizer.zero_grad()
-
-// Transformer 표준값
-// - max_norm = 1.0 (보편적)
-// - BERT: 1.0
-// - GPT: 1.0
-// - LLaMA: 1.0`}</pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">훈련 루프 · Momentum · Gradient Clipping</h3>
+        <p>
+          Forward → Backward → Update 루프부터 momentum, gradient clipping까지 전체 흐름.
+        </p>
+      </div>
+      <GradTrainViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Momentum이 왜 효과적인가</p>

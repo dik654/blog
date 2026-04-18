@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import FatfFlowViz from './viz/FatfFlowViz';
+import VaspObligationsViz from './viz/VaspObligationsViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">AML/CFT 컴플라이언스란</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <p>
           가상자산 거래소를 운영하려면 "돈세탁을 막을 수 있는 체계"를 갖춰야 한다.<br />
@@ -50,6 +56,8 @@ export default function Overview() {
           특금법은 자금세탁 방지에 초점을 맞추고, 가상자산이용자보호법은 투자자 보호와 시장 건전성에 초점을 맞춘다.<br />
           두 법률이 겹치는 영역도 있지만, VASP는 양쪽 모두 준수해야 한다.
         </p>
+
+        <FatfFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">FATF — 국제 기준의 출발점</h3>
         <p>
@@ -105,6 +113,8 @@ export default function Overview() {
           AML/CFT 의무를 실행하기 위한 조직·절차·시스템을 갖춰야 한다.<br />
           문서화된 정책, 정기 교육, 독립적인 감사가 핵심 요소.
         </p>
+
+        <VaspObligationsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">조직 체계</h3>
         <p>

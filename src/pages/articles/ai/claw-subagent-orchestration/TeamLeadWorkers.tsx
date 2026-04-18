@@ -18,45 +18,28 @@ export default function TeamLeadWorkers() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Parallel Spawning</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Main agent 응답에서 병렬 Agent 호출
-{
-  "content": [
-    {
-      "type": "tool_use",
-      "id": "toolu_01",
-      "name": "Agent",
-      "input": {
-        "subagent_type": "Explore",
-        "description": "auth files search",
-        "prompt": "Find all files in auth/ module..."
-      }
-    },
-    {
-      "type": "tool_use",
-      "id": "toolu_02",
-      "name": "Agent",
-      "input": {
-        "subagent_type": "Explore",
-        "description": "test coverage scan",
-        "prompt": "Find existing tests for authentication..."
-      }
-    },
-    {
-      "type": "tool_use",
-      "id": "toolu_03",
-      "name": "Agent",
-      "input": {
-        "subagent_type": "Plan",
-        "description": "refactor design",
-        "prompt": "Design refactoring plan..."
-      }
-    }
-  ]
-}
-
-// Runtime이 3개 Worker 동시 spawn
-// 각 Worker: 독립 session + API call
-// 모두 완료되면 tool_result × 3 취합 → Main에 전달`}</pre>
+        <p className="text-sm text-muted-foreground mb-3">Main agent 응답에서 <code>tool_use</code> 블록 3개를 동시에 포함 → Runtime이 병렬 spawn</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Worker 1 — <code>Explore</code></p>
+            <p className="text-sm"><code>description</code>: auth files search</p>
+            <p className="text-sm text-muted-foreground">"Find all files in auth/ module..."</p>
+          </div>
+          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Worker 2 — <code>Explore</code></p>
+            <p className="text-sm"><code>description</code>: test coverage scan</p>
+            <p className="text-sm text-muted-foreground">"Find existing tests for authentication..."</p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Worker 3 — <code>Plan</code></p>
+            <p className="text-sm"><code>description</code>: refactor design</p>
+            <p className="text-sm text-muted-foreground">"Design refactoring plan..."</p>
+          </div>
+        </div>
+        <p className="text-sm">
+          각 Worker는 독립 session + API call로 실행<br />
+          모두 완료되면 <code>tool_result</code> x 3 취합 → Main에 전달
+        </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Main vs Worker 차이점</h3>
         <div className="overflow-x-auto">
@@ -99,22 +82,38 @@ export default function TeamLeadWorkers() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">결과 집계 전략</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 3개 worker가 병렬 spawn 후 Main에 돌아오는 결과
-// tool_result 블록 3개가 한꺼번에 assistant message에 삽입
-
-[
-  { tool_use_id: "toolu_01", content: "auth files: login.rs, session.rs, ..." },
-  { tool_use_id: "toolu_02", content: "tests found: 4 tests, 2 skipped ..." },
-  { tool_use_id: "toolu_03", content: "refactor plan: 1) extract trait ..." },
-]
-
-// Main agent는 이 3개 결과를 자기 context에서 종합
-// 다음 turn에서 자체 reasoning으로 action 결정
-
-// 집계 패턴 3가지:
-// 1) Merge: 세 결과를 병합하여 하나의 plan 생성
-// 2) Cross-validate: 서로 모순이 있는지 확인 (예: Explore가 말한 파일이 Plan에 반영됐나)
-// 3) Select-best: 가장 신뢰도 높은 worker의 결과만 채택`}</pre>
+        <p className="text-sm mb-3">3개 worker 완료 후 <code>tool_result</code> 블록 3개가 한꺼번에 Main context에 삽입</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">toolu_01 결과</p>
+            <p className="text-sm text-muted-foreground">auth files: <code>login.rs</code>, <code>session.rs</code>, ...</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">toolu_02 결과</p>
+            <p className="text-sm text-muted-foreground">tests found: 4 tests, 2 skipped ...</p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">toolu_03 결과</p>
+            <p className="text-sm text-muted-foreground">refactor plan: 1) extract trait ...</p>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-2">집계 패턴 3가지</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <div>
+              <p className="font-medium">Merge</p>
+              <p className="text-muted-foreground">세 결과를 병합하여 하나의 plan 생성</p>
+            </div>
+            <div>
+              <p className="font-medium">Cross-validate</p>
+              <p className="text-muted-foreground">서로 모순 확인 (Explore 결과가 Plan에 반영됐나)</p>
+            </div>
+            <div>
+              <p className="font-medium">Select-best</p>
+              <p className="text-muted-foreground">가장 신뢰도 높은 worker 결과만 채택</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>집계는 Main의 책임</strong> — worker들은 서로 통신하지 않음<br />
           Main이 통신 hub 역할 — "message passing without shared state"<br />
@@ -122,38 +121,30 @@ export default function TeamLeadWorkers() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Prompt Engineering: Main → Worker</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Main이 Worker에 전달하는 prompt 구조 (best practice)
-
-struct WorkerPrompt {
-    /// Worker가 달성할 구체적 목표 (1-2 sentences)
-    objective: String,
-
-    /// Main context에서 필요한 정보만 추출하여 포함
-    relevant_context: String,
-
-    /// 이미 시도하거나 배제한 접근 (중복 방지)
-    prior_attempts: Vec<String>,
-
-    /// 결과 형식 명시 (JSON, markdown, file list 등)
-    expected_output_format: String,
-
-    /// 응답 길이 제한
-    response_budget_hint: String,  // "keep under 300 words"
-}
-
-// 예시
-WorkerPrompt {
-    objective: "Find the auth bug causing login failures",
-    relevant_context: "User reports 500 errors after password change. \\
-                       Auth module is at rust/crates/auth/. \\
-                       Session timeout was recently changed to 30min.",
-    prior_attempts: vec![
-        "Checked rate limiting — not the cause",
-        "Tested with new accounts — same issue",
-    ],
-    expected_output_format: "file:line references + 1-sentence hypothesis each",
-    response_budget_hint: "5 most suspicious locations, 200 words total",
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3">WorkerPrompt 구조 (best practice)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <ul className="list-none pl-0 space-y-2">
+              <li><code>objective</code> — Worker가 달성할 구체적 목표 (1-2 sentences)</li>
+              <li><code>relevant_context</code> — Main context에서 필요한 정보만 추출하여 포함</li>
+              <li><code>prior_attempts</code> — 이미 시도하거나 배제한 접근 (중복 방지)</li>
+            </ul>
+            <ul className="list-none pl-0 space-y-2">
+              <li><code>expected_output_format</code> — 결과 형식 명시 (JSON, markdown, file list 등)</li>
+              <li><code>response_budget_hint</code> — 응답 길이 제한 (예: "keep under 300 words")</li>
+            </ul>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-2">예시</p>
+          <div className="text-sm space-y-2">
+            <p><strong>objective</strong>: "Find the auth bug causing login failures"</p>
+            <p><strong>relevant_context</strong>: User reports 500 errors after password change. Auth module is at <code>rust/crates/auth/</code>. Session timeout was recently changed to 30min.</p>
+            <p><strong>prior_attempts</strong>: "Checked rate limiting — not the cause", "Tested with new accounts — same issue"</p>
+            <p><strong>expected_output_format</strong>: <code>file:line</code> references + 1-sentence hypothesis each</p>
+            <p><strong>response_budget_hint</strong>: 5 most suspicious locations, 200 words total</p>
+          </div>
+        </div>
         <p>
           <strong>Prompt 품질이 결과 품질을 결정</strong>:<br />
           - 목표가 모호하면 worker가 drift (sec 4. Guardrails 참조)<br />
@@ -162,39 +153,57 @@ WorkerPrompt {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Worker 실패 처리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Worker가 실패하는 경우들
-enum WorkerFailure {
-    BudgetExceeded(u64),       // token/turn/time cap
-    ToolError(String),         // 도구 호출 실패 (권한, 파일 없음)
-    MalformedOutput,           // 기대 format 불일치
-    InternalRefusal,           // worker가 태스크 거부
-    Timeout,
-}
-
-// Main이 받는 tool_result
-// content: "WORKER_FAILED: BudgetExceeded(10000 tokens) — partial result: ..."
-
-// Main의 재시도 전략
-match failure {
-    BudgetExceeded(_) => {
-        // 1) 스코프 좁혀서 재호출
-        //    "focus only on the 3 most critical files"
-    }
-    ToolError(err) if err.contains("permission") => {
-        // 2) 다른 agent type 사용 (더 많은 권한)
-    }
-    MalformedOutput => {
-        // 3) 더 엄격한 format 지정하여 재호출
-    }
-    InternalRefusal => {
-        // 4) Main이 직접 처리 (worker 대신)
-    }
-    Timeout => {
-        // 5) max_turns 줄여서 재호출
-    }
-}
-
-// 무한 재시도 방지: Main context에 retry_count 추적`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3">WorkerFailure 유형</p>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>BudgetExceeded</code></p>
+              <p className="text-xs text-muted-foreground">token/turn/time cap</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>ToolError</code></p>
+              <p className="text-xs text-muted-foreground">권한, 파일 없음</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>MalformedOutput</code></p>
+              <p className="text-xs text-muted-foreground">format 불일치</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>InternalRefusal</code></p>
+              <p className="text-xs text-muted-foreground">worker 태스크 거부</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>Timeout</code></p>
+              <p className="text-xs text-muted-foreground">시간 초과</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3">Main의 재시도 전략</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex gap-2">
+              <span className="font-medium shrink-0"><code>BudgetExceeded</code></span>
+              <span className="text-muted-foreground">→ 스코프 좁혀서 재호출 ("focus only on the 3 most critical files")</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-medium shrink-0"><code>ToolError</code> (permission)</span>
+              <span className="text-muted-foreground">→ 다른 agent type 사용 (더 많은 권한)</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-medium shrink-0"><code>MalformedOutput</code></span>
+              <span className="text-muted-foreground">→ 더 엄격한 format 지정하여 재호출</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-medium shrink-0"><code>InternalRefusal</code></span>
+              <span className="text-muted-foreground">→ Main이 직접 처리 (worker 대신)</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-medium shrink-0"><code>Timeout</code></span>
+              <span className="text-muted-foreground">→ <code>max_turns</code> 줄여서 재호출</span>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">무한 재시도 방지: Main context에 <code>retry_count</code> 추적 (hard cap 2회)</p>
+        </div>
         <p>
           <strong>실패가 normal case</strong> — worker 실패율은 보통 5-15%<br />
           Main이 failure 메시지를 context에 넣고 다음 action 결정 — LLM이 판단<br />

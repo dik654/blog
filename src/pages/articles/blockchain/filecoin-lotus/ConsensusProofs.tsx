@@ -33,57 +33,55 @@ export default function ConsensusProofs({ onCodeRef }: { onCodeRef?: (key: strin
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         {/* ── Expected Consensus ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Expected Consensus (EC) 메커니즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Expected Consensus (EC):
-//
-// 설계 원리:
-// - storage power 비례 leader election
-// - VRF (Verifiable Random Function) 기반
-// - DRAND randomness beacon 통합
-// - tipset (여러 blocks) per epoch
-// - probabilistic finality
-
-// Epoch 구조:
-// - 30초 per epoch
-// - each epoch: expected 5 winners (~)
-// - winning miners produce blocks
-// - blocks grouped into tipset
-
-// Leader Election (Sortition):
-// 1. miner computes VRF output:
-//    VRF(secret_key, epoch, ticket) → random value
-// 2. check threshold:
-//    if random_value / MAX < miner.storage_power / total_power:
-//        → this miner wins!
-// 3. independent decision (no coordination)
-// 4. multiple winners possible per epoch
-
-// Poisson distribution:
-// E[winners] = 5 per epoch (tunable)
-// P(n winners) = e^(-λ) * λ^n / n!
-// - P(0) = 0.67%
-// - P(5) = 17.5%
-// - P(10) = 1.8%
-
-// Tipset:
-// - 같은 epoch의 모든 winning blocks
-// - 공통 parents (같은 이전 tipset)
-// - 모두 valid면 tipset formed
-// - 여러 blocks per epoch → throughput up
-
-// Chain Weight:
-// chain_weight(T) = parent_weight + w_epoch
-// w_epoch = log2(network_power) * (#blocks in T * wR + wP)
-// where:
-// - wR: reward weight
-// - wP: producer weight
-// - log scaling: large power increases less
-
-// Finality:
-// - 900 epochs = ~7.5h
-// - probabilistic (like Bitcoin)
-// - F3 adds fast finality (2024+)`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">설계 원리</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Storage power 비례 leader election</li>
+              <li>VRF (Verifiable Random Function) 기반</li>
+              <li>DRAND randomness beacon 통합</li>
+              <li>Tipset (여러 blocks) per epoch</li>
+              <li>Probabilistic finality</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Leader Election (Sortition)</h4>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code className="text-xs">VRF(secret_key, epoch, ticket)</code> → random value</li>
+              <li><code className="text-xs">random_value / MAX &lt; storage_power / total_power</code> → 당선</li>
+              <li>독립 결정 (coordination 불필요)</li>
+              <li>epoch당 복수 winner 가능</li>
+            </ol>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Poisson 분포 (E[winners]=5)</h4>
+            <div className="text-sm space-y-1 text-muted-foreground">
+              <div className="flex justify-between"><span>P(0 winners)</span><strong>0.67%</strong></div>
+              <div className="flex justify-between"><span>P(5 winners)</span><strong>17.5%</strong></div>
+              <div className="flex justify-between"><span>P(10 winners)</span><strong>1.8%</strong></div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Tipset</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>같은 epoch의 모든 winning blocks</li>
+              <li>공통 parents (같은 이전 tipset)</li>
+              <li>모두 valid면 tipset 형성</li>
+              <li>여러 blocks → throughput 증가</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Chain Weight & Finality</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">w_epoch = log2(power) * (blocks * wR + wP)</code></li>
+              <li>log scaling: large power 증가 억제</li>
+              <li>Finality: 900 epochs (~7.5h)</li>
+              <li>F3: fast finality (2024+)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           EC = <strong>Poisson Sortition + VRF + Tipset</strong>.<br />
           epoch당 ~5 winners, storage power 비례.<br />
@@ -92,65 +90,35 @@ export default function ConsensusProofs({ onCodeRef }: { onCodeRef?: (key: strin
 
         {/* ── PoRep & PoSt ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PoRep &amp; PoSt 저장 증명</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 2가지 저장 증명:
-
-// PoRep (Proof of Replication):
-// - 목적: "unique physical storage 보유 증명"
-// - sealing 과정에서 생성
-// - 4-phase: PC1 → PC2 → C1 → C2
-// - 한 번만 생성 (sector 초기화)
-// - Stacked DRG (Depth-Robust Graph)
-// - SNARK로 압축 (Groth16)
-
-// PC1 (PreCommit Phase 1):
-// - Original data → Stacked DRG
-// - 11 layers of computation
-// - ~2-4 hours (CPU intensive)
-// - per sector: 32 GiB data → ~352 GiB intermediate
-
-// PC2 (PreCommit Phase 2):
-// - Merkle tree 생성
-// - column commitments
-// - ~30 min (GPU acceleration)
-// - tree C generation
-
-// C1 (Commit Phase 1):
-// - VDF challenge
-// - random leaf selection
-// - Merkle proof generation
-// - <1 min
-
-// C2 (Commit Phase 2):
-// - SNARK proof generation (Groth16)
-// - GPU acceleration (CUDA/OpenCL)
-// - ~30-90 min
-// - ~10 MB proof → ~200 bytes after SNARK
-
-// PoSt (Proof of Spacetime):
-// - 목적: "지속적 저장 증명"
-// - sealed sectors 대상
-// - 정기 제출 (24h마다 WindowPoSt)
-// - Leader election time (WinningPoSt)
-
-// WindowPoSt:
-// - 24 hour window
-// - 2880 epochs
-// - each window: challenge random sectors
-// - Merkle proofs + SNARK
-// - miss → penalty
-
-// WinningPoSt:
-// - leader election 시 즉시 생성
-// - tight deadline (~40s)
-// - 1 sector sampled
-// - quick proof
-
-// 경제:
-// - FIL+: reward × 10 for verified deals
-// - slashing: faulty sectors
-// - initial pledge: stake per sector`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">PoRep (Proof of Replication)</h4>
+            <p className="text-xs text-muted-foreground mb-2">목적: unique physical storage 보유 증명 (1회 생성)</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="rounded bg-muted p-2"><strong>PC1</strong> — Stacked DRG 11 layers, CPU, 2-4h (32 GiB → ~352 GiB)</div>
+              <div className="rounded bg-muted p-2"><strong>PC2</strong> — Merkle tree + column commitments, GPU, ~30m</div>
+              <div className="rounded bg-muted p-2"><strong>C1</strong> — VDF challenge + Merkle proofs, &lt;1m</div>
+              <div className="rounded bg-muted p-2"><strong>C2</strong> — SNARK (Groth16 + GPU), 30-90m, ~10MB → ~200B</div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">PoSt (Proof of Spacetime)</h4>
+            <p className="text-xs text-muted-foreground mb-2">목적: 지속적 저장 증명 (정기 제출)</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="rounded bg-muted p-2">
+                <strong>WindowPoSt</strong> — 24h window (2880 epochs)<br />
+                <span className="text-xs">random sectors challenge + Merkle proofs + SNARK, miss → penalty</span>
+              </div>
+              <div className="rounded bg-muted p-2">
+                <strong>WinningPoSt</strong> — leader election 시 즉시 생성<br />
+                <span className="text-xs">tight deadline ~40s, 1 sector sampled, quick proof</span>
+              </div>
+            </div>
+            <div className="mt-3 pt-2 border-t border-border text-xs text-muted-foreground">
+              <strong>경제:</strong> FIL+ = reward x10 (verified deals) / slashing (faulty) / initial pledge per sector
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           PoRep: <strong>sealing 증명 (4-phase)</strong>, 1회 생성.<br />
           PoSt: <strong>지속 저장 증명</strong>, 정기 제출.<br />
@@ -159,52 +127,45 @@ export default function ConsensusProofs({ onCodeRef }: { onCodeRef?: (key: strin
 
         {/* ── Chain Weight 상세 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Chain Weight 계산 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Chain Weight Function:
-//
-// w(chain) = Σ w_epoch for all epochs in chain
-//
-// w_epoch = w_function(
-//     network_power_at_epoch,
-//     num_winning_blocks_in_tipset,
-//     W_RATIO_NUM / W_RATIO_DEN
-// )
-//
-// where:
-// W_RATIO_NUM = 1
-// W_RATIO_DEN = 2
-// wForce = floor(log2(network_power))
-// wFunction = 256 * wForce
-//            + wForce * num_blocks * W_RATIO_NUM * 256 / expectedLeadersPerEpoch / W_RATIO_DEN
-
-// 예시:
-// network_power = 2^60 bytes (1 ExaByte)
-// wForce = 60
-// base = 60 * 256 = 15360
-// per block: 60 * 1 * 256 / 5 / 2 = 1536
-// 1 tipset with 5 blocks: 15360 + 5 * 1536 = 23040
-
-// Why log2(network_power)?
-// - linear scaling 부적합 (large chains 공격)
-// - log scaling → 모든 validator 참여 incentive
-// - storage power 의미 유지
-
-// Fork Choice:
-// - heaviest chain wins
-// - weight is deterministic
-// - reorg: 더 무거운 체인 발견 시
-
-// Bitcoin 비교:
-// Bitcoin: chain work (sum of difficulty)
-// Filecoin: tipset weight (log scaled)
-// 둘 다 heaviest wins
-
-// Tipset advantage:
-// - 1 epoch에 여러 blocks 가능
-// - 각 block이 다른 TXs
-// - TX throughput 증가
-// - single leader bottleneck 회피`}
-        </pre>
+        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
+          <h4 className="font-semibold text-sm mb-2">Weight 수식</h4>
+          <div className="text-sm text-muted-foreground space-y-1 mb-3">
+            <p><code className="text-xs">w(chain) = Sum w_epoch</code></p>
+            <p><code className="text-xs">wForce = floor(log2(network_power))</code></p>
+            <p><code className="text-xs">w_epoch = 256 * wForce + wForce * num_blocks * W_RATIO_NUM * 256 / expectedLeaders / W_RATIO_DEN</code></p>
+            <p className="text-xs">W_RATIO_NUM=1, W_RATIO_DEN=2, expectedLeaders=5</p>
+          </div>
+          <div className="rounded bg-muted p-3 text-sm text-muted-foreground">
+            <p className="font-medium text-xs mb-1">예시: network_power = 2^60 bytes (1 ExaByte)</p>
+            <p className="text-xs">wForce = 60 / base = 60 x 256 = 15,360 / per block = 1,536 / 5 blocks tipset = <strong>23,040</strong></p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">왜 log2(power)?</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>linear scaling → large chain 공격 가능</li>
+              <li>log scaling → 모든 validator 참여 incentive</li>
+              <li>storage power 의미 유지</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Fork Choice</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Heaviest chain wins</li>
+              <li>Weight is deterministic</li>
+              <li>Reorg: 더 무거운 체인 발견 시</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Bitcoin vs Filecoin</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Bitcoin: chain work (sum of difficulty)</li>
+              <li>Filecoin: tipset weight (log scaled)</li>
+              <li>Tipset: 1 epoch에 여러 blocks → throughput 증가</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Chain Weight: <strong>log2(network_power) × blocks</strong>.<br />
           log scaling으로 fork 공격 방지.<br />

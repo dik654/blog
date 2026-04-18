@@ -27,41 +27,39 @@ export default function StateProvider({ onCodeRef }: { onCodeRef: (key: string, 
 
         {/* ── trait 계층 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Provider trait 계층 — 역할별 세분화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Reth는 역할별 trait을 별도로 정의 → 조합
-pub trait HeaderProvider: Send + Sync {
-    fn header_by_number(&self, n: BlockNumber) -> Result<Option<Header>>;
-    fn header_by_hash(&self, h: B256) -> Result<Option<Header>>;
-    // ...
-}
-
-pub trait BlockReader: Send + Sync {
-    fn block(&self, id: BlockHashOrNumber) -> Result<Option<Block>>;
-    // ...
-}
-
-pub trait TransactionReader: Send + Sync {
-    fn transaction_by_hash(&self, h: B256) -> Result<Option<Transaction>>;
-    // ...
-}
-
-pub trait StateProvider: Send + Sync {
-    fn account(&self, a: &Address) -> Result<Option<Account>>;
-    fn storage(&self, a: &Address, k: &StorageKey) -> Result<Option<StorageValue>>;
-    fn bytecode_by_hash(&self, h: &B256) -> Result<Option<Bytecode>>;
-}
-
-// 조합 구현: StateProviderFactory
-pub trait StateProviderFactory: BlockReader + HeaderProvider {
-    fn latest(&self) -> Result<Box<dyn StateProvider>>;
-    fn history_by_block_number(&self, block: u64) -> Result<Box<dyn StateProvider>>;
-}
-
-// Interface Segregation Principle 적용:
-// - RPC는 필요한 trait만 의존 (e.g., HeaderProvider만)
-// - Mock 테스트 시 최소 메서드만 구현
-// - 새 기능 추가 시 관련 trait만 확장`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {[
+              { name: 'HeaderProvider', methods: ['header_by_number(n)', 'header_by_hash(h)'], color: 'border-sky-500/20 bg-sky-500/5', textColor: 'text-sky-400' },
+              { name: 'BlockReader', methods: ['block(id: BlockHashOrNumber)'], color: 'border-emerald-500/20 bg-emerald-500/5', textColor: 'text-emerald-400' },
+              { name: 'TransactionReader', methods: ['transaction_by_hash(h)'], color: 'border-violet-500/20 bg-violet-500/5', textColor: 'text-violet-400' },
+              { name: 'StateProvider', methods: ['account(a)', 'storage(a, k)', 'bytecode_by_hash(h)'], color: 'border-indigo-500/20 bg-indigo-500/5', textColor: 'text-indigo-400' },
+            ].map(t => (
+              <div key={t.name} className={`rounded-lg border p-3 ${t.color}`}>
+                <code className={`text-sm font-semibold ${t.textColor}`}>{t.name}</code>
+                <div className="mt-1 space-y-0.5">
+                  {t.methods.map(m => <p key={m} className="text-xs font-mono text-foreground/60">{m}</p>)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+            <code className="text-sm font-semibold text-amber-400">StateProviderFactory</code>
+            <span className="text-xs text-muted-foreground ml-2">: BlockReader + HeaderProvider</span>
+            <div className="mt-1 space-y-0.5 text-xs font-mono text-foreground/60">
+              <p>latest() → Box&lt;dyn StateProvider&gt;</p>
+              <p>history_by_block_number(block) → Box&lt;dyn StateProvider&gt;</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-1">Interface Segregation Principle</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-foreground/70">
+              <p>RPC는 필요한 trait만 의존</p>
+              <p>Mock은 최소 메서드만 구현</p>
+              <p>새 기능은 관련 trait만 확장</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           trait을 <strong>역할별로 쪼개어</strong> 정의 — "필요한 것만 의존".<br />
           RPC의 <code>eth_getBlockByNumber</code>는 <code>HeaderProvider + BlockReader</code>만 필요 → 다른 trait 몰라도 됨.<br />
@@ -70,43 +68,23 @@ pub trait StateProviderFactory: BlockReader + HeaderProvider {
 
         {/* ── 구현체 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StateProvider 구현체 3가지</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. LatestStateProviderRef — MDBX 최신 상태
-impl<TX: DbTx> StateProvider for LatestStateProviderRef<'_, TX> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        self.tx.get::<PlainAccountState>(*addr)  // O(log n) B+tree 조회
-    }
-}
-
-// 2. HistoricalStateProviderRef — 특정 블록 시점 상태
-impl<TX: DbTx> StateProvider for HistoricalStateProviderRef<'_, TX> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        // 1) 현재 상태 로드
-        // 2) AccountChangeSets에서 block_number 이후 변경 역적용
-        // → block_number 시점 상태 복원
-        load_historical_account(self.tx, *addr, self.block_number)
-    }
-}
-
-// 3. BundleStateProvider — 인메모리 BundleState
-impl<P: StateProvider> StateProvider for BundleStateProvider<'_, P> {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        // BundleState 우선 확인
-        if let Some(bundle_acc) = self.bundle.state.get(addr) {
-            return Ok(bundle_acc.info.clone());
-        }
-        // 없으면 fallback (DB 쪽 provider로 위임)
-        self.db_provider.account(addr)
-    }
-}
-
-// 4. MockStateProvider — 테스트용
-impl StateProvider for MockStateProvider {
-    fn account(&self, addr: &Address) -> Result<Option<Account>> {
-        Ok(self.accounts.get(addr).cloned())  // HashMap lookup
-    }
-}`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4 not-prose">
+          {[
+            { num: '1', name: 'LatestStateProviderRef', color: 'border-emerald-500/20 bg-emerald-500/5', textColor: 'text-emerald-400', how: 'tx.get::<PlainAccountState>(addr)', detail: 'O(log n) B+tree 직접 조회' },
+            { num: '2', name: 'HistoricalStateProviderRef', color: 'border-amber-500/20 bg-amber-500/5', textColor: 'text-amber-400', how: 'load_historical_account(tx, addr, block)', detail: '현재 상태 로드 → ChangeSets 역적용 → 복원' },
+            { num: '3', name: 'BundleStateProvider', color: 'border-sky-500/20 bg-sky-500/5', textColor: 'text-sky-400', how: 'bundle.state.get(addr) → fallback', detail: 'BundleState 우선, 없으면 DB provider 위임' },
+            { num: '4', name: 'MockStateProvider', color: 'border-border bg-muted/30', textColor: 'text-muted-foreground', how: 'self.accounts.get(addr).cloned()', detail: 'HashMap lookup — 테스트용' },
+          ].map(impl => (
+            <div key={impl.num} className={`rounded-lg border p-3 ${impl.color}`}>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-muted-foreground">{impl.num}.</span>
+                <code className={`text-sm font-semibold ${impl.textColor}`}>{impl.name}</code>
+              </div>
+              <p className="text-xs font-mono text-foreground/50 mt-1">{impl.how}</p>
+              <p className="text-xs text-foreground/60 mt-0.5">{impl.detail}</p>
+            </div>
+          ))}
+        </div>
         <p className="leading-7">
           4가지 구현체 모두 <strong>동일한 3개 메서드</strong>만 구현.<br />
           상위 코드(revm, RPC)는 어느 구현체를 받든 동일하게 동작 → 저장소 교체 가능.<br />
@@ -115,44 +93,35 @@ impl StateProvider for MockStateProvider {
 
         {/* ── EVM 통합 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">revm Database trait과의 통합</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm의 Database trait
-pub trait Database {
-    type Error;
-    fn basic(&mut self, address: Address) -> Result<Option<AccountInfo>>;
-    fn code_by_hash(&mut self, code_hash: B256) -> Result<Bytecode>;
-    fn storage(&mut self, addr: Address, index: U256) -> Result<U256>;
-    fn block_hash(&mut self, number: U256) -> Result<B256>;
-}
-
-// Reth가 StateProvider → revm Database로 어댑팅
-pub struct StateProviderDatabase<DB>(pub DB);
-
-impl<DB: StateProvider> Database for StateProviderDatabase<DB> {
-    type Error = ProviderError;
-
-    fn basic(&mut self, address: Address) -> Result<Option<AccountInfo>> {
-        // Reth의 account() → revm의 AccountInfo 변환
-        let account = self.0.account(&address)?;
-        Ok(account.map(|a| AccountInfo {
-            balance: a.balance,
-            nonce: a.nonce,
-            code_hash: a.code_hash,
-            code: None,  // lazy load on code_by_hash()
-        }))
-    }
-
-    fn storage(&mut self, addr: Address, slot: U256) -> Result<U256> {
-        let key = B256::from(slot);
-        Ok(self.0.storage(&addr, &key)?.unwrap_or_default())
-    }
-}
-
-// 결과: revm이 Reth의 모든 StateProvider 구현체와 동작
-// - 초기 동기화: LatestStateProviderRef
-// - Historical RPC: HistoricalStateProviderRef
-// - 블록 실행 중: BundleStateProvider`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
+              <p className="font-semibold text-sm text-violet-400 mb-2">revm Database trait</p>
+              <div className="space-y-1 text-xs">
+                <div><code className="text-violet-300">basic(address)</code> → <code>Option&lt;AccountInfo&gt;</code></div>
+                <div><code className="text-violet-300">code_by_hash(hash)</code> → <code>Bytecode</code></div>
+                <div><code className="text-violet-300">storage(addr, index)</code> → <code>U256</code></div>
+                <div><code className="text-violet-300">block_hash(number)</code> → <code>B256</code></div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+              <p className="font-semibold text-sm text-indigo-400 mb-2">StateProviderDatabase&lt;DB&gt; — 어댑터</p>
+              <div className="space-y-1 text-xs text-foreground/60">
+                <p><code>basic()</code> → Reth <code>account()</code> → revm <code>AccountInfo</code> 변환</p>
+                <p><code>storage()</code> → Reth <code>storage()</code> → <code>unwrap_or_default()</code></p>
+                <p className="text-muted-foreground mt-1">code: None (lazy load via <code>code_by_hash()</code>)</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-1">revm이 모든 StateProvider 구현체와 동작</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-foreground/70">
+              <p>초기 동기화: <code>LatestStateProviderRef</code></p>
+              <p>Historical RPC: <code>HistoricalStateProviderRef</code></p>
+              <p>블록 실행 중: <code>BundleStateProvider</code></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>StateProviderDatabase</code>가 <strong>어댑터 패턴</strong> — Reth와 revm의 경계.<br />
           StateProvider의 3개 메서드를 revm의 Database trait으로 매핑.<br />

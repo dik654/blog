@@ -36,50 +36,31 @@ export default function SnapSync({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── snap 프로토콜 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">eth/snap 프로토콜 — 상태 범위 쿼리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// snap/1 프로토콜 메시지 (EIP-2364)
-
-// 1. GetAccountRange — 계정 범위 요청
-struct GetAccountRange {
-    request_id: u64,
-    root_hash: B256,         // 기준 state_root
-    origin: B256,            // 시작 해시 (keccak256(address))
-    limit: B256,             // 끝 해시
-    response_bytes: u64,     // 최대 응답 크기
-}
-
-// 2. AccountRange — 응답
-struct AccountRange {
-    request_id: u64,
-    accounts: Vec<(B256, SlimAccount)>,  // 정렬된 계정 목록
-    proof: Vec<Bytes>,       // 범위 증명 (첫/끝 계정의 trie path)
-}
-
-// 3. GetStorageRanges — 컨트랙트 스토리지 요청
-struct GetStorageRanges {
-    request_id: u64,
-    root_hash: B256,
-    accounts: Vec<B256>,     // 타겟 계정들
-    origin: B256,            // 시작 slot 해시
-    limit: B256,
-    response_bytes: u64,
-}
-
-// 4. GetByteCodes — 컨트랙트 바이트코드
-struct GetByteCodes {
-    request_id: u64,
-    hashes: Vec<B256>,       // code_hash 목록
-    bytes: u64,
-}
-
-// 5. GetTrieNodes — 누락된 trie 노드 (healing)
-struct GetTrieNodes {
-    request_id: u64,
-    root_hash: B256,
-    paths: Vec<Vec<Bytes>>,
-    bytes: u64,
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">snap/1 프로토콜 메시지 (EIP-2364)</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+              <div className="text-foreground/80"><code>GetAccountRange</code> — 계정 범위 요청. <code>root_hash</code>(기준 state_root), <code>origin</code>~<code>limit</code> 해시 구간, <code>response_bytes</code>(최대 응답 크기).</div>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">2</span>
+              <div className="text-foreground/80"><code>AccountRange</code> — 응답. <code>accounts: Vec&lt;(B256, SlimAccount)&gt;</code>(정렬 목록) + <code>proof: Vec&lt;Bytes&gt;</code>(범위 증명).</div>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+              <span className="font-mono text-xs text-green-500 shrink-0">3</span>
+              <div className="text-foreground/80"><code>GetStorageRanges</code> — 컨트랙트 스토리지 요청. <code>accounts: Vec&lt;B256&gt;</code>(타겟 계정들), origin~limit slot 해시.</div>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+              <span className="font-mono text-xs text-purple-500 shrink-0">4</span>
+              <div className="text-foreground/80"><code>GetByteCodes</code> — 컨트랙트 바이트코드. <code>hashes: Vec&lt;B256&gt;</code>(code_hash 목록).</div>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
+              <span className="font-mono text-xs text-orange-500 shrink-0">5</span>
+              <div className="text-foreground/80"><code>GetTrieNodes</code> — 누락 trie 노드(healing). <code>paths: Vec&lt;Vec&lt;Bytes&gt;&gt;</code>.</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           snap 프로토콜은 <strong>범위 쿼리 기반</strong> — origin~limit 구간을 한 번에 전송.<br />
           응답에 Merkle proof 포함 → 수신자가 독립적으로 검증.<br />
@@ -88,47 +69,24 @@ struct GetTrieNodes {
 
         {/* ── Merkle proof 검증 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Range Proof 검증 — 완전성 증명</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 수신한 account range를 state_root에 대해 검증
-fn verify_account_range(
-    state_root: B256,
-    origin: B256,
-    limit: B256,
-    accounts: &[(B256, SlimAccount)],
-    proof: &[Bytes],
-) -> Result<bool> {
-    // 1. accounts가 정렬되어 있는지 확인
-    for window in accounts.windows(2) {
-        if window[0].0 >= window[1].0 {
-            return Err(NotSorted);
-        }
-    }
-
-    // 2. origin/limit 범위 내에 있는지 확인
-    if let Some((first_hash, _)) = accounts.first() {
-        if *first_hash < origin { return Err(OutOfRange); }
-    }
-    if let Some((last_hash, _)) = accounts.last() {
-        if *last_hash > limit { return Err(OutOfRange); }
-    }
-
-    // 3. proof로 trie 경로 재구성 → state_root 검증
-    let computed_root = verify_range_proof(
-        origin, limit, accounts, proof,
-    )?;
-
-    if computed_root != state_root {
-        return Err(ProofMismatch);
-    }
-
-    Ok(true)  // 유효한 range
-}
-
-// Range Proof의 핵심:
-// - 범위 경계(origin, limit)의 trie path 증명
-// - 내부 계정들은 proof 없이도 검증 가능 (경계로 묶임)
-// - 악의적 피어가 일부 계정 누락 시 proof 불일치 발생`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">verify_account_range — Range Proof 검증</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+              <span className="text-foreground/80">accounts 정렬 확인 — <code>windows(2)</code>로 순서 검증. 미정렬 시 <code>NotSorted</code>.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">2</span>
+              <span className="text-foreground/80"><code>origin</code>/<code>limit</code> 범위 내 확인. 벗어나면 <code>OutOfRange</code>.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">3</span>
+              <span className="text-foreground/80"><code>verify_range_proof()</code>로 trie 경로 재구성 → <code>state_root</code> 비교. 불일치 시 <code>ProofMismatch</code>.</span>
+            </div>
+          </div>
+          <p className="text-sm text-amber-600 dark:text-amber-400 mt-3">범위 경계의 trie path만으로 내부 계정 완전성 보장. 악의적 피어가 계정 누락 시 proof 검증 실패.</p>
+        </div>
         <p className="leading-7">
           Range Proof는 <strong>"이 범위에 다른 계정이 없다"</strong>까지 증명.<br />
           origin/limit 경계의 trie path만 받으면 내부 계정 목록의 완전성 보장.<br />
@@ -137,49 +95,26 @@ fn verify_account_range(
 
         {/* ── Healing 단계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Healing — 변경분 최종 정합성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Snap Sync 타임라인:
-// T=0:     스냅샷 다운로드 시작 (root_hash = S0)
-// T=0~2h:  AccountRange/StorageRanges 다운로드
-//          이 사이에 새 블록 수천 개 생성됨
-// T=2h:    다운로드 완료, 현재 state_root는 S1 (S0 아님)
-
-// 문제: S0 시점 스냅샷 vs 현재 S1 상태 불일치
-// 변경된 계정/슬롯의 trie 노드가 다름
-
-// 해결: Healing phase
-fn heal_trie(
-    target_root: B256,  // 현재 S1
-    existing_root: B256, // 내가 가진 S0
-) -> Result<()> {
-    // 1. S0과 S1 사이의 블록들 실행 (normal block execution)
-    for block in (s0_block + 1)..=s1_block {
-        execute_block(block)?;
-    }
-
-    // 2. 실행 중 누락된 trie 노드 감지 → snap으로 추가 요청
-    loop {
-        let missing = detect_missing_trie_nodes()?;
-        if missing.is_empty() { break; }
-
-        // GetTrieNodes 요청
-        let nodes = request_trie_nodes(missing)?;
-        insert_into_db(nodes)?;
-    }
-
-    // 3. state_root 최종 검증
-    let computed_root = compute_state_root()?;
-    if computed_root != target_root {
-        return Err(HealingFailed);
-    }
-
-    Ok(())
-}
-
-// Healing 소요 시간:
-// 스냅샷 다운로드 + 변경 블록 수에 비례
-// 보통 수십 분 ~ 1시간`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Snap Sync 타임라인</p>
+            <div className="grid grid-cols-3 gap-2 text-sm text-center mb-2">
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">T=0</p><p className="text-xs text-foreground/40">다운로드 시작(S0)</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">T=0~2h</p><p className="text-xs text-foreground/40">Account/Storage 다운로드</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">T=2h</p><p className="text-xs text-foreground/40">완료, 현재 root=S1</p></div>
+            </div>
+            <p className="text-sm text-red-400">문제: S0 스냅샷 vs 현재 S1 불일치 — 변경된 계정/슬롯의 trie 노드가 다름.</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-green-500 mb-2">heal_trie — Healing Phase</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. S0 → S1 사이 블록들 실행(normal block execution)</p>
+              <p>2. 누락 trie 노드 감지 → <code>GetTrieNodes</code>로 추가 요청</p>
+              <p>3. <code>compute_state_root()</code> → <code>target_root</code> 비교. 불일치 시 <code>HealingFailed</code>.</p>
+            </div>
+            <p className="text-sm text-foreground/60 mt-2">소요 시간: 변경 블록 수에 비례, 보통 수십 분 ~ 1시간.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Healing</strong>이 Snap Sync의 정체성 — "스냅샷 + 변경분 보정".<br />
           다운로드 중 체인이 진행되므로 최종 state_root까지 따라잡기 필요.<br />
@@ -188,41 +123,32 @@ fn heal_trie(
 
         {/* ── 총 소요시간 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Snap Sync 전체 단계별 소요 시간</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 메인넷 Snap Sync 단계별 시간 (2026 기준)
-//
-// Phase 1: Headers 동기화
-//   - 1800만 헤더 다운로드
-//   - 시간: ~30분
-//
-// Phase 2: Account snapshot
-//   - ~2.5억 계정 × SlimAccount(~80B) ≈ 20GB
-//   - 피어 대역폭에 따라: ~2~4시간
-//
-// Phase 3: Storage snapshot
-//   - 컨트랙트 스토리지 ~200GB
-//   - 시간: ~4~8시간
-//
-// Phase 4: Bytecode + Trie healing
-//   - 바이트코드 ~30GB
-//   - Healing: 변경된 trie 노드 수리
-//   - 시간: ~1~2시간
-//
-// ─────────────────────────────
-// 총 Snap Sync: ~8~15시간
-// Full Sync: ~36시간
-// → 약 3~5배 빠름
-
-// Snap Sync 전제:
-// - 피어가 snap/1 프로토콜 지원
-// - 피어의 snapshot이 최신 (~32 epoch 이내)
-// - 안정적인 네트워크 연결
-
-// 신뢰 가정:
-// - Full Sync: 제네시스에서 직접 검증 (완전 신뢰 없음)
-// - Snap Sync: 초기 state_root는 CL에서 받음 (CL 신뢰 필요)
-// - CL 신뢰는 PoS 보안 모델의 일부이므로 합리적`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Snap Sync 단계별 소요 시간 (2026 기준)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
+              <div className="rounded border border-border/40 p-2 text-center"><p className="text-foreground/60">Phase 1: Headers</p><p className="text-xs text-foreground/40">1800만 헤더 / ~30분</p></div>
+              <div className="rounded border border-border/40 p-2 text-center"><p className="text-foreground/60">Phase 2: Account</p><p className="text-xs text-foreground/40">~2.5억 계정(20GB) / ~2~4h</p></div>
+              <div className="rounded border border-border/40 p-2 text-center"><p className="text-foreground/60">Phase 3: Storage</p><p className="text-xs text-foreground/40">~200GB / ~4~8h</p></div>
+              <div className="rounded border border-border/40 p-2 text-center"><p className="text-foreground/60">Phase 4: Healing</p><p className="text-xs text-foreground/40">~30GB + trie / ~1~2h</p></div>
+            </div>
+            <div className="flex gap-4 text-sm">
+              <span className="text-foreground/60">총 Snap Sync: <strong>~8~15시간</strong></span>
+              <span className="text-foreground/50">Full Sync: ~36시간</span>
+              <span className="text-green-500">약 3~5배 빠름</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded border border-border/40 p-3 text-sm">
+              <p className="text-xs font-bold text-foreground/60 mb-1">Snap Sync 전제</p>
+              <p className="text-foreground/70">피어가 <code>snap/1</code> 지원 + 최신 snapshot(~32 epoch 이내) + 안정적 네트워크</p>
+            </div>
+            <div className="rounded border border-border/40 p-3 text-sm">
+              <p className="text-xs font-bold text-foreground/60 mb-1">신뢰 가정</p>
+              <p className="text-foreground/70">초기 <code>state_root</code>는 CL에서 수신(CL 신뢰 필요). PoS 보안 모델과 일치 → 합리적.</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Snap Sync는 <strong>Full Sync 대비 3~5배 빠름</strong>.<br />
           블록 실행을 건너뛰고 상태 스냅샷만 받으므로 CPU 부하 크게 감소.<br />

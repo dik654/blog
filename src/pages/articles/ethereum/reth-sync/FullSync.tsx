@@ -30,48 +30,21 @@ export default function FullSync({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── 실행 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Pipeline::run() — 완전 동기화 루프</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Full Sync 메인 루프
-pub async fn run(&mut self) -> Result<ControlFlow> {
-    loop {
-        // CL로부터 최신 tip 수신 (FCU)
-        let tip = self.wait_for_tip().await?;
-        self.tip = Some(tip);
-
-        // 파이프라인 1 사이클 실행
-        for stage in &mut self.stages {
-            let input = ExecInput {
-                target: Some(tip),
-                checkpoint: self.progress.get(stage.id()),
-            };
-
-            let output = stage.execute(&provider, input)?;
-            self.progress.update(stage.id(), output.checkpoint);
-
-            if !output.done {
-                // 아직 tip 미도달 → 다음 사이클로 break
-                break;
-            }
-        }
-
-        // 모든 Stage가 tip 도달 → live sync로 전환
-        if self.progress.all_at(tip) {
-            return Ok(ControlFlow::NoProgress);
-        }
-    }
-}
-
-// 완전 동기화 순서:
-// 1. Headers: 0 → tip 헤더 다운로드
-// 2. Bodies: 0 → tip 바디 다운로드
-// 3. SenderRecovery: TX sender 병렬 복구
-// 4. Execution: revm 실행 (배치 누적)
-// 5. Hashing: 계정/스토리지 키 해싱
-// 6. Merkle: 증분 state_root 계산
-// 7. HistoryIndex: 역인덱스 구축
-//
-// 각 Stage는 수일 걸릴 수 있음 → breakpoint 기반 재시작`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">Pipeline::run() — Full Sync 루프</p>
+          <p className="text-sm text-foreground/80 mb-3">
+            CL로부터 tip 수신(FCU) → 등록된 Stage들을 순서대로 실행. 각 Stage는 <code>ExecInput</code>(target, checkpoint)을 받아 처리. <code>output.done</code>이 아니면 break → 다음 사이클에서 이어서. 모든 Stage가 tip 도달 시 live sync 전환.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div className="rounded border border-border/40 p-2 text-center"><p className="font-mono text-xs text-blue-500">Headers</p><p className="text-xs text-foreground/50">헤더 다운로드</p></div>
+            <div className="rounded border border-border/40 p-2 text-center"><p className="font-mono text-xs text-blue-500">Bodies</p><p className="text-xs text-foreground/50">바디 다운로드</p></div>
+            <div className="rounded border border-border/40 p-2 text-center"><p className="font-mono text-xs text-green-500">SenderRecovery</p><p className="text-xs text-foreground/50">TX sender 복구</p></div>
+            <div className="rounded border border-border/40 p-2 text-center"><p className="font-mono text-xs text-green-500">Execution</p><p className="text-xs text-foreground/50">revm 실행</p></div>
+            <div className="rounded border border-border/40 p-2 text-center"><p className="font-mono text-xs text-purple-500">Hashing</p><p className="text-xs text-foreground/50">키 해싱</p></div>
+            <div className="rounded border border-border/40 p-2 text-center"><p className="font-mono text-xs text-purple-500">Merkle</p><p className="text-xs text-foreground/50">state_root 계산</p></div>
+            <div className="rounded border border-border/40 p-2 text-center col-span-2"><p className="font-mono text-xs text-orange-500">HistoryIndex</p><p className="text-xs text-foreground/50">역인덱스 구축</p></div>
+          </div>
+        </div>
         <p className="leading-7">
           파이프라인 사이클은 <strong>모든 Stage가 tip 도달할 때까지</strong> 반복.<br />
           일부 Stage만 느리면 해당 Stage에서 break → 다음 사이클에서 이어서 진행.<br />
@@ -80,42 +53,36 @@ pub async fn run(&mut self) -> Result<ControlFlow> {
 
         {/* ── 소요 시간 분석 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Full Sync 소요 시간 분석</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 메인넷 archive Full Sync (2026 기준, 1800만 블록)
-
-// Stage별 소요 시간:
-// ┌──────────────────┬──────────────┐
-// │ Stage            │ 시간         │
-// ├──────────────────┼──────────────┤
-// │ Headers          │ ~2시간       │
-// │ Bodies           │ ~6시간       │
-// │ SenderRecovery   │ ~4시간       │
-// │ Execution        │ ~12시간      │
-// │ Hashing          │ ~3시간       │
-// │ Merkle           │ ~5시간       │
-// │ HistoryIndex     │ ~4시간       │
-// ├──────────────────┼──────────────┤
-// │ 합계             │ ~36시간      │
-// └──────────────────┴──────────────┘
-
-// 네트워크 의존성:
-// - Headers/Bodies: 피어 대역폭에 따라 다름 (수십 Gbps 권장)
-// - SenderRecovery/Execution: CPU 집약적 (16+코어 권장)
-// - Hashing/Merkle: CPU + DB I/O (SSD 필수)
-
-// 하드웨어별 예상 시간:
-// - 최소 사양 (8코어 + SATA SSD): ~5일
-// - 권장 사양 (16코어 + NVMe): ~1.5일
-// - 고성능 (32코어 + 엔터프라이즈 SSD): ~1일
-
-// Geth 비교:
-// 동일 하드웨어 기준 ~5~10일 (Reth의 5배 이상)
-
-// 시간이 Stage별로 분리된 이점:
-// - 병목 stage 명확히 파악 가능
-// - 하드웨어 업그레이드 타겟 명확
-// - 재시작 시 완료 stage는 건너뜀`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Stage별 소요 시간 (2026 기준, 1800만 블록)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
+              <div className="flex justify-between"><span className="text-foreground/70">Headers</span><span className="text-foreground/50">~2h</span></div>
+              <div className="flex justify-between"><span className="text-foreground/70">Bodies</span><span className="text-foreground/50">~6h</span></div>
+              <div className="flex justify-between"><span className="text-foreground/70">SenderRecovery</span><span className="text-foreground/50">~4h</span></div>
+              <div className="flex justify-between"><span className="text-foreground/70 font-semibold">Execution</span><span className="text-red-400">~12h</span></div>
+              <div className="flex justify-between"><span className="text-foreground/70">Hashing</span><span className="text-foreground/50">~3h</span></div>
+              <div className="flex justify-between"><span className="text-foreground/70">Merkle</span><span className="text-foreground/50">~5h</span></div>
+              <div className="flex justify-between"><span className="text-foreground/70">HistoryIndex</span><span className="text-foreground/50">~4h</span></div>
+              <div className="flex justify-between font-semibold"><span className="text-foreground/80">합계</span><span className="text-foreground/60">~36h</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded border border-border/40 p-2 text-center text-sm">
+              <p className="text-foreground/60">최소(8코어+SATA)</p>
+              <p className="text-foreground/50">~5일</p>
+            </div>
+            <div className="rounded border border-border/40 p-2 text-center text-sm">
+              <p className="text-foreground/60">권장(16코어+NVMe)</p>
+              <p className="text-foreground/50">~1.5일</p>
+            </div>
+            <div className="rounded border border-border/40 p-2 text-center text-sm">
+              <p className="text-foreground/60">고성능(32코어)</p>
+              <p className="text-foreground/50">~1일</p>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/60">Geth 동일 하드웨어 기준 ~5~10일(Reth의 5배+). Stage 분리 이점: 병목 파악 용이, 재시작 시 완료 stage 건너뜀.</p>
+        </div>
         <p className="leading-7">
           Full Sync는 <strong>36시간 전후</strong> 소요 (적절한 하드웨어 기준).<br />
           ExecutionStage가 최장 — revm 실행이 CPU 집약적.<br />
@@ -124,42 +91,24 @@ pub async fn run(&mut self) -> Result<ControlFlow> {
 
         {/* ── unwind 메커니즘 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Unwind — reorg/검증실패 복구</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Unwind 시나리오:
-// 1. MerkleStage에서 state_root 불일치 감지
-// 2. Pipeline이 Unwind 시그널 발동
-// 3. 모든 Stage를 역순 unwind (MerkleExecute → ... → Headers)
-
-pub async fn unwind_to(
-    &mut self,
-    target: BlockNumber,
-) -> Result<()> {
-    // 역순 순회: Merkle → Execution → Senders → Bodies → Headers
-    for stage in self.stages.iter_mut().rev() {
-        let input = UnwindInput {
-            checkpoint: self.progress.get(stage.id()),
-            unwind_to: target,
-            bad_block: None,
-        };
-
-        stage.unwind(&provider, input)?;
-        self.progress.update(stage.id(), StageCheckpoint::new(target));
-    }
-    Ok(())
-}
-
-// 각 Stage의 unwind():
-// - HeadersStage: Headers 테이블에서 target+1 이후 삭제
-// - BodiesStage: BlockBodies, Transactions 삭제
-// - SendersStage: TxSenders 삭제
-// - ExecutionStage: AccountChangeSets/StorageChangeSets 역적용
-// - MerkleStage: AccountsTrie/StoragesTrie 삭제
-
-// 원자성:
-// - MDBX 트랜잭션 단위로 unwind 수행
-// - 실패 시 자동 롤백
-// - 다음 실행 시 같은 target에서 재시작`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3">unwind_to(target) — 역순 Stage 호출</p>
+            <p className="text-sm text-foreground/80 mb-2">
+              <code>MerkleStage</code>에서 <code>state_root</code> 불일치 감지 → Pipeline이 Unwind 시그널 → 모든 Stage를 역순으로 <code>unwind()</code> 호출.
+            </p>
+            <div className="space-y-1 text-sm">
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 font-mono text-xs shrink-0">Headers</span> target+1 이후 삭제</div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 font-mono text-xs shrink-0">Bodies</span> <code>BlockBodies</code>, <code>Transactions</code> 삭제</div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 font-mono text-xs shrink-0">Senders</span> <code>TxSenders</code> 삭제</div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 font-mono text-xs shrink-0">Execution</span> <code>AccountChangeSets</code>/<code>StorageChangeSets</code> 역적용</div>
+              <div className="flex gap-2 text-foreground/80"><span className="text-foreground/50 font-mono text-xs shrink-0">Merkle</span> <code>AccountsTrie</code>/<code>StoragesTrie</code> 삭제</div>
+            </div>
+          </div>
+          <div className="rounded border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-foreground/70">
+            MDBX 트랜잭션 단위로 unwind 수행 → 실패 시 자동 롤백. 다음 실행 시 같은 target에서 재시작.
+          </div>
+        </div>
         <p className="leading-7">
           Unwind는 <strong>역순 stage 호출</strong>로 상태 복원.<br />
           MDBX 트랜잭션 원자성 덕분에 unwind 중 크래시해도 안전.<br />

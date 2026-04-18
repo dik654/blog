@@ -14,48 +14,37 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── 3가지 동기화 모드 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">3가지 동기화 모드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 3 sync modes:
-
-// 1. Initial Sync (=Full Sync)
-// - genesis부터 block-by-block 재생
-// - 소요: 수 일 (Phase0 이후 ~수 년 데이터)
-// - 디스크 최대
-// - 완전 신뢰 없음 (자체 검증)
-
-// 2. Checkpoint Sync (=Snap Sync 변종)
-// - trusted URL에서 finalized state 다운로드
-// - 소요: 수 분
-// - 신뢰 가정: checkpoint URL 정직
-// - 일반 사용자 권장
-
-// 3. Regular Sync (=Live Sync)
-// - Initial/Checkpoint 완료 후 자동 전환
-// - 실시간 gossip 블록 수신
-// - 블록당 ~100ms 처리
-// - validator 운영 모드
-
-// 모드 전환:
-// (Initial or Checkpoint) → Regular
-// 완료 조건: head slot이 network tip에 도달
-
-// 결정 로직:
-func (s *Service) decideSyncMode() SyncMode {
-    if s.checkpointURL != "" {
-        return CheckpointSync  // URL 제공 시
-    }
-    if s.dbHead != 0 {
-        return RegularSync  // 기존 DB 존재
-    }
-    return InitialSync  // genesis부터 시작
-}
-
-// 사용 권장:
-// - Solo staker: Checkpoint Sync (빠른 시작)
-// - Archive provider: Initial Sync (완전성)
-// - Research/analysis: Initial Sync + archive
-// - Running validator: Checkpoint + Regular`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-1">1. Initial Sync (Full Sync)</p>
+              <p className="text-sm text-foreground/80">genesis부터 block-by-block 재생. 소요: 수 일. 디스크 최대. 완전 자체 검증(신뢰 불필요).</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-1">2. Checkpoint Sync</p>
+              <p className="text-sm text-foreground/80">trusted URL에서 finalized state 다운로드. 소요: 수 분. 신뢰 가정: checkpoint URL 정직. 일반 사용자 권장.</p>
+            </div>
+            <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-1">3. Regular Sync (Live)</p>
+              <p className="text-sm text-foreground/80">Initial/Checkpoint 완료 후 자동 전환. 실시간 gossip 블록 수신. 블록당 ~100ms. validator 운영 모드.</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2"><code>decideSyncMode()</code> — 모드 결정 로직</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p><code>checkpointURL != ""</code> → Checkpoint Sync</p>
+              <p><code>dbHead != 0</code> → Regular Sync (기존 DB 존재)</p>
+              <p>그 외 → Initial Sync (genesis부터)</p>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2">전환 조건: head slot이 network tip에 도달하면 (Initial or Checkpoint) → Regular.</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Solo staker → Checkpoint</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Archive → Initial</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Research → Initial+archive</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Validator → Checkpoint+Regular</div>
+          </div>
+        </div>
         <p className="leading-7">
           Prysm은 <strong>3가지 sync mode</strong> 지원.<br />
           Initial(완전) / Checkpoint(빠름) / Regular(실시간).<br />

@@ -4,10 +4,10 @@ import StepViz from '@/components/ui/step-viz';
 const sp = { type: 'spring' as const, bounce: 0.2, duration: 0.5 };
 
 const STAGES = [
-  { label: 'Model Store', sub: 'S3 / PVC', x: 15, color: '#6366f1' },
+  { label: 'Model Store', sub: 'S3 / PVC', x: 10, color: '#6366f1' },
   { label: 'Init Container', sub: 'Download', x: 125, color: '#3b82f6' },
-  { label: 'vLLM Pod', sub: 'Serving', x: 235, color: '#10b981' },
-  { label: 'HPA', sub: 'Scale', x: 345, color: '#f59e0b' },
+  { label: 'vLLM Pod', sub: 'Serving', x: 245, color: '#10b981' },
+  { label: 'HPA', sub: 'Scale', x: 365, color: '#f59e0b' },
 ];
 
 const REPLICAS = [[1], [1], [1], [1, 2], [1, 2, 3]];
@@ -30,15 +30,15 @@ export default function DeploymentViz() {
             const current = i === step;
             return (
               <motion.g key={s.label} animate={{ opacity: active ? 1 : 0.2 }} transition={sp}>
-                <rect x={s.x} y={15} width={95} height={42} rx={5}
+                <rect x={s.x} y={15} width={100} height={42} rx={5}
                   fill={current ? `${s.color}15` : `${s.color}08`}
                   stroke={s.color} strokeWidth={current ? 2 : 0.8} />
-                <text x={s.x + 47} y={33} textAnchor="middle" fontSize={11}
+                <text x={s.x + 50} y={33} textAnchor="middle" fontSize={11}
                   fontWeight={700} fill={s.color}>{s.label}</text>
-                <text x={s.x + 47} y={48} textAnchor="middle" fontSize={10}
+                <text x={s.x + 50} y={48} textAnchor="middle" fontSize={10}
                   fill={s.color} opacity={0.6}>{s.sub}</text>
                 {i < STAGES.length - 1 && (
-                  <text x={s.x + 104} y={40} fontSize={12}
+                  <text x={s.x + 110} y={40} fontSize={12}
                     fill="var(--muted-foreground)" opacity={active ? 0.5 : 0.15}>→</text>
                 )}
               </motion.g>
@@ -48,15 +48,15 @@ export default function DeploymentViz() {
           {step >= 2 && REPLICAS[Math.min(step, 4)].map((r, i) => (
             <motion.g key={r} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ ...sp, delay: i * 0.2 }}>
-              <rect x={235 + i * 34} y={70} width={30} height={24} rx={4}
+              <rect x={245 + i * 34} y={70} width={30} height={24} rx={4}
                 fill="#10b98120" stroke="#10b981" strokeWidth={1} />
-              <text x={250 + i * 34} y={86} textAnchor="middle" fontSize={10}
+              <text x={260 + i * 34} y={86} textAnchor="middle" fontSize={10}
                 fill="#10b981" fontWeight={600}>P{r}</text>
             </motion.g>
           ))}
 
           {step >= 3 && (
-            <motion.text x={370} y={100} textAnchor="middle" fontSize={10} fill="#f59e0b"
+            <motion.text x={390} y={100} textAnchor="middle" fontSize={10} fill="#f59e0b"
               initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}>
               GPU% {'>'} 70% → scale
             </motion.text>

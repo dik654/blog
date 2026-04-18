@@ -28,123 +28,133 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TelemetrySink 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TelemetrySink {
-    buffer: Arc<Mutex<VecDeque<TelemetryEvent>>>,
-    exporters: Vec<Box<dyn Exporter>>,
-    filters: Vec<Box<dyn EventFilter>>,
-    flush_interval: Duration,
-    max_buffer_size: usize,
-}
-
-#[async_trait]
-pub trait Exporter: Send + Sync {
-    async fn export(&self, events: &[TelemetryEvent]) -> Result<()>;
-}
-
-#[async_trait]
-pub trait EventFilter: Send + Sync {
-    fn should_emit(&self, event: &TelemetryEvent) -> bool;
-}`}</pre>
-        <p>
-          <strong>VecDeque 버퍼</strong>: FIFO 순서 유지, 효율적 push/pop<br />
-          여러 Exporter 지원 — 동시에 stdout + 파일 + HTTP 전송<br />
-          필터로 민감 이벤트 제외 가능 — 예: "개인 정보 포함된 Custom 이벤트 제외"
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">TelemetrySink 필드</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">buffer: Arc&lt;Mutex&lt;VecDeque&lt;TelemetryEvent&gt;&gt;&gt;</code>
+              <p className="text-xs text-muted-foreground mt-1">FIFO 순서 유지, 효율적 push/pop</p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">exporters: Vec&lt;Box&lt;dyn Exporter&gt;&gt;</code>
+              <p className="text-xs text-muted-foreground mt-1">동시에 stdout + 파일 + HTTP 전송</p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">filters: Vec&lt;Box&lt;dyn EventFilter&gt;&gt;</code>
+              <p className="text-xs text-muted-foreground mt-1">민감 이벤트 제외 — 예: 개인 정보 포함된 Custom 이벤트</p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">flush_interval</code> / <code className="text-xs font-mono text-blue-600 dark:text-blue-400">max_buffer_size</code>
+              <p className="text-xs text-muted-foreground mt-1">주기적 전송 간격 + 버퍼 상한</p>
+            </div>
+          </div>
+          <div className="mt-4 border-t border-border pt-3">
+            <p className="text-sm font-semibold text-muted-foreground mb-2">트레이트</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-muted/50 rounded-lg p-3">
+                <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">Exporter::export(&self, events)</code>
+                <p className="text-xs text-muted-foreground mt-1">이벤트 배치를 외부로 전송하는 비동기 메서드</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">EventFilter::should_emit(&self, event)</code>
+                <p className="text-xs text-muted-foreground mt-1">이벤트 기록 여부 결정 — false 반환 시 드롭</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">emit() — 이벤트 기록</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl TelemetrySink {
-    pub async fn emit(&self, event: TelemetryEvent) {
-        // 필터 적용
-        if !self.filters.iter().all(|f| f.should_emit(&event)) {
-            return;
-        }
-
-        // 버퍼에 추가
-        let mut buffer = self.buffer.lock().await;
-        buffer.push_back(event);
-
-        // 버퍼 오버플로 — 오래된 것부터 제거
-        if buffer.len() > self.max_buffer_size {
-            let overflow = buffer.len() - self.max_buffer_size;
-            for _ in 0..overflow { buffer.pop_front(); }
-            log::warn!("telemetry buffer overflow, dropped {} events", overflow);
-        }
-    }
-}`}</pre>
-        <p>
-          <strong>필터 후 버퍼</strong>: 모든 필터 통과한 이벤트만 기록<br />
-          오버플로 시 <strong>FIFO 드롭</strong> — 오래된 이벤트 우선 제거<br />
-          경고 로그로 드롭 알림 — 버퍼 크기 조정 신호
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">emit() 처리 흐름</p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">1</span>
+              <div>
+                <p className="text-sm font-medium">필터 적용</p>
+                <p className="text-xs text-muted-foreground"><code>filters.iter().all(f.should_emit)</code> — 모든 필터 통과한 이벤트만 기록</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">2</span>
+              <div>
+                <p className="text-sm font-medium">버퍼에 추가</p>
+                <p className="text-xs text-muted-foreground"><code>buffer.lock().await</code> → <code>push_back(event)</code></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-bold flex items-center justify-center">3</span>
+              <div>
+                <p className="text-sm font-medium">오버플로 처리</p>
+                <p className="text-xs text-muted-foreground"><code>max_buffer_size</code> 초과 시 <strong>FIFO 드롭</strong> — 오래된 이벤트 우선 제거 + 경고 로그</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">flush_loop() — 주기적 export</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl TelemetrySink {
-    pub async fn flush_loop(self: Arc<Self>) {
-        loop {
-            tokio::time::sleep(self.flush_interval).await;
-
-            // 버퍼 비우기
-            let events: Vec<TelemetryEvent> = {
-                let mut buffer = self.buffer.lock().await;
-                buffer.drain(..).collect()
-            };
-
-            if events.is_empty() { continue; }
-
-            // 모든 exporter에 전송
-            for exporter in &self.exporters {
-                if let Err(e) = exporter.export(&events).await {
-                    log::warn!("exporter failed: {}", e);
-                }
-            }
-        }
-    }
-}`}</pre>
-        <p>
-          <strong>주기적 flush</strong>: 기본 10초 간격<br />
-          배치 전송 — 이벤트 하나씩 보내는 오버헤드 제거<br />
-          Exporter 실패는 경고만 — 다른 Exporter는 계속 작동
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">flush_loop() 동작</p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">1</span>
+              <div>
+                <p className="text-sm font-medium">주기 대기</p>
+                <p className="text-xs text-muted-foreground"><code>tokio::time::sleep(flush_interval)</code> — 기본 10초 간격</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">2</span>
+              <div>
+                <p className="text-sm font-medium">버퍼 비우기</p>
+                <p className="text-xs text-muted-foreground"><code>buffer.drain(..).collect()</code> — 배치 전송으로 오버헤드 제거</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">3</span>
+              <div>
+                <p className="text-sm font-medium">모든 Exporter에 전송</p>
+                <p className="text-xs text-muted-foreground">Exporter 실패는 경고만 — 다른 Exporter는 계속 작동</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Exporter 구현체 3종</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 1. StdoutExporter — 디버그용
-pub struct StdoutExporter;
-impl Exporter for StdoutExporter {
-    async fn export(&self, events: &[TelemetryEvent]) -> Result<()> {
-        for e in events {
-            println!("[telemetry] {}", serde_json::to_string(e)?);
-        }
-        Ok(())
-    }
-}
-
-// 2. FileExporter — JSONL 파일
-pub struct FileExporter { path: PathBuf }
-impl Exporter for FileExporter {
-    async fn export(&self, events: &[TelemetryEvent]) -> Result<()> {
-        let mut file = tokio::fs::OpenOptions::new()
-            .create(true).append(true).open(&self.path).await?;
-        for e in events {
-            let line = format!("{}\\n", serde_json::to_string(e)?);
-            file.write_all(line.as_bytes()).await?;
-        }
-        Ok(())
-    }
-}
-
-// 3. HttpExporter — 원격 수집 서버
-pub struct HttpExporter { url: Url, api_key: String }
-impl Exporter for HttpExporter {
-    async fn export(&self, events: &[TelemetryEvent]) -> Result<()> {
-        let client = reqwest::Client::new();
-        client.post(&self.url)
-            .bearer_auth(&self.api_key)
-            .json(&events)
-            .send().await?
-            .error_for_status()?;
-        Ok(())
-    }
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              <p className="text-sm font-semibold">StdoutExporter</p>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2">디버그용 — 터미널 출력</p>
+            <div className="bg-muted/50 rounded p-2">
+              <code className="text-xs font-mono">println!("[telemetry] {'{'}...{'}'}")</code>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">이벤트별 JSON 직렬화 → stdout</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <p className="text-sm font-semibold">FileExporter</p>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2">JSONL 파일 — 줄 단위 저장</p>
+            <div className="bg-muted/50 rounded p-2">
+              <code className="text-xs font-mono">OpenOptions::append(true)</code>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2"><code className="text-xs">PathBuf</code> 경로에 append 모드로 기록</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-purple-500" />
+              <p className="text-sm font-semibold">HttpExporter</p>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2">원격 수집 서버 전송</p>
+            <div className="bg-muted/50 rounded p-2">
+              <code className="text-xs font-mono">reqwest::post().bearer_auth()</code>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2"><code className="text-xs">Url</code> + <code className="text-xs">api_key</code>로 JSON 배치 POST</p>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 텔레메트리의 프라이버시 고려</p>

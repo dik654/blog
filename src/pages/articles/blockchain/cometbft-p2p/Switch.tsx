@@ -17,58 +17,52 @@ export default function Switch({ onCodeRef }: { onCodeRef: (key: string, ref: Co
 
         {/* ── Switch 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">Switch struct & 초기화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/p2p/switch.go
-type Switch struct {
-    service.BaseService
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Switch 핵심 필드</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">reactors map[string]Reactor</code> — reactor 이름 → Reactor</li>
+              <li><code className="text-xs">reactorsByCh map[byte]Reactor</code> — channelID → Reactor (dispatch)</li>
+              <li><code className="text-xs">peers *PeerSet</code> — 연결된 peer 목록</li>
+              <li><code className="text-xs">dialing *cmap.CMap</code> — 다이얼 중 addrs</li>
+              <li><code className="text-xs">addrBook AddrBook</code> — known addresses</li>
+              <li><code className="text-xs">transport Transport</code> — MConnTransport</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Peer 관련 필드</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">nodeInfo NodeInfo</code> — 노드 정보</li>
+              <li><code className="text-xs">nodeKey *NodeKey</code> — 노드 키</li>
+              <li><code className="text-xs">unconditionalPeerIDs map[ID]struct{}</code> — 강제 유지 peers</li>
+              <li><code className="text-xs">persistentPeersAddrs []*NetAddress</code></li>
+              <li><code className="text-xs">peerFilters []PeerFilterFunc</code> — peer 연결 필터</li>
+            </ul>
+          </div>
+        </div>
 
-    config       *config.P2PConfig
-    reactors     map[string]Reactor      // reactor 이름 → Reactor
-    chDescs      []*conn.ChannelDescriptor  // 모든 channel descriptors
-    reactorsByCh map[byte]Reactor        // channelID → Reactor (dispatch)
-    peers        *PeerSet                 // 연결된 peer 목록
-    dialing      *cmap.CMap               // 다이얼 중 addrs
-    reconnecting *cmap.CMap
-    nodeInfo     NodeInfo
-    nodeKey      *NodeKey
-    addrBook     AddrBook                 // known addresses
-    unconditionalPeerIDs map[ID]struct{}   // 강제 유지 peers
-    persistentPeersAddrs []*NetAddress
-
-    transport    Transport                // MConnTransport
-    filterTimeout time.Duration
-    peerFilters   []PeerFilterFunc         // peer 연결 필터
-
-    rng          *cmtrand.Rand
-    metrics      *Metrics
-}
-
-// 초기화 순서:
-// 1. NewSwitch(config, transport, ...options)
-// 2. SetNodeInfo(nodeInfo)
-// 3. SetNodeKey(nodeKey)
-// 4. SetAddrBook(addrBook)
-// 5. AddReactor(name, reactor) for each reactor
-// 6. Start() (service.BaseService)
-
-// AddReactor 동작:
-func (sw *Switch) AddReactor(name string, reactor Reactor) Reactor {
-    for _, chDesc := range reactor.GetChannels() {
-        chID := chDesc.ID
-
-        // 중복 체크 (panic if duplicate)
-        if sw.reactorsByCh[chID] != nil {
-            panic(fmt.Sprintf("channel %X already registered", chID))
-        }
-
-        sw.chDescs = append(sw.chDescs, chDesc)
-        sw.reactorsByCh[chID] = reactor
-    }
-    sw.reactors[name] = reactor
-    reactor.SetSwitch(sw)
-    return reactor
-}`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">초기화 순서</div>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code className="text-xs">NewSwitch(config, transport, ...options)</code></li>
+              <li><code className="text-xs">SetNodeInfo(nodeInfo)</code></li>
+              <li><code className="text-xs">SetNodeKey(nodeKey)</code></li>
+              <li><code className="text-xs">SetAddrBook(addrBook)</code></li>
+              <li><code className="text-xs">AddReactor(name, reactor)</code> for each reactor</li>
+              <li><code className="text-xs">Start()</code> (service.BaseService)</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">AddReactor 동작</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>reactor의 <code className="text-xs">GetChannels()</code> 순회</p>
+              <p>→ 중복 channelID 체크 (있으면 <code className="text-xs">panic</code>)</p>
+              <p>→ <code className="text-xs">chDescs</code> 추가 + <code className="text-xs">reactorsByCh[chID]</code> 등록</p>
+              <p>→ <code className="text-xs">reactor.SetSwitch(sw)</code> 역참조 설정</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Switch가 <strong>P2P hub</strong> — reactor + peer 관리.<br />
           AddReactor로 channel 등록 + dispatch 테이블 구성.<br />

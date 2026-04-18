@@ -1,3 +1,7 @@
+import IdentityVerificationViz from './viz/IdentityVerificationViz';
+import BeneficialOwnerViz from './viz/BeneficialOwnerViz';
+import EkycFlowViz from './viz/EkycFlowViz';
+
 export default function IdentityVerification() {
   return (
     <section id="identity-verification" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function IdentityVerification() {
           신원확인(Identification)과 신원검증(Verification)은 서로 다른 단계이며,
           두 단계를 모두 완료해야 적법한 CDD가 성립한다.
         </p>
+
+        <IdentityVerificationViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">개인 고객 확인 항목</h3>
         <p>
@@ -135,6 +141,8 @@ export default function IdentityVerification() {
           A법인의 실제소유자는 C법인에 대해서도 간접 30% 지분을 갖는 것으로 판단한다.
         </p>
 
+        <BeneficialOwnerViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">신원검증 방법</h3>
         <p>
           정보를 수집했으면 그 정보가 진짜인지 독립적 출처를 통해 검증해야 한다.<br />
@@ -160,6 +168,8 @@ export default function IdentityVerification() {
           비대면이지만 실시간으로 직원이 고객의 얼굴과 신분증을 화면으로 확인하는 방식.<br />
           eKYC 자동화가 어려운 외국인 고객이나, 기술적 한계로 자동 검증이 실패한 경우에 사용.
         </p>
+
+        <EkycFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">실명확인 입출금 계정</h3>
         <p>

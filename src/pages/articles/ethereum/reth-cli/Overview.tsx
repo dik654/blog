@@ -37,40 +37,37 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── CLI 진입점 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CLI 진입점 — clap 기반 서브커맨드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// reth 바이너리의 main 함수
-#[tokio::main]
-async fn main() -> Result<()> {
-    // 1. Clap으로 CLI 파싱
-    let cli = Cli::parse();
-
-    // 2. 서브커맨드 디스패치
-    match cli.command {
-        Commands::Node(args) => node_command(args).await,
-        Commands::Init(args) => init_command(args).await,
-        Commands::Db(args) => db_command(args).await,
-        Commands::Stage(args) => stage_command(args).await,
-        Commands::P2p(args) => p2p_command(args).await,
-        Commands::Recover(args) => recover_command(args).await,
-        Commands::Debug(args) => debug_command(args).await,
-    }
-}
-
-// 주요 서브커맨드:
-// - reth node: 노드 실행
-// - reth init: genesis 초기화
-// - reth db: DB 조회/디버깅
-// - reth stage: 특정 Stage 수동 실행
-// - reth p2p: 네트워크 디버깅
-// - reth recover: 크래시 복구
-// - reth debug: 내부 상태 검사
-
-// Clap의 장점:
-// - 자동 --help 생성
-// - 타입 안전 인자 파싱
-// - 환경변수 / 설정파일 결합
-// - bash/zsh completion 생성`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2">진입점 — <code>Cli::parse()</code> → <code>Commands</code> match</p>
+            <p className="text-sm text-foreground/70 mb-3">Clap으로 CLI 파싱 후 서브커맨드 디스패치</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { cmd: 'reth node', desc: '노드 실행' },
+                { cmd: 'reth init', desc: 'genesis 초기화' },
+                { cmd: 'reth db', desc: 'DB 조회/디버깅' },
+                { cmd: 'reth stage', desc: 'Stage 수동 실행' },
+                { cmd: 'reth p2p', desc: '네트워크 디버깅' },
+                { cmd: 'reth recover', desc: '크래시 복구' },
+                { cmd: 'reth debug', desc: '내부 상태 검사' },
+              ].map(s => (
+                <div key={s.cmd} className="rounded border border-border/40 px-3 py-2">
+                  <p className="font-mono text-xs font-bold">{s.cmd}</p>
+                  <p className="text-xs text-foreground/60 mt-0.5">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">Clap 프레임워크 장점</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>자동 <code>--help</code> 생성</li>
+              <li>타입 안전 인자 파싱</li>
+              <li>환경변수 / 설정파일 결합</li>
+              <li>bash/zsh completion 자동 생성</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Clap</strong>이 Rust CLI의 표준 — 선언적 인자 정의로 자동 파싱.<br />
           7개 서브커맨드로 노드 운영 전 기능 제공 — 실행부터 복구/디버깅까지.<br />
@@ -79,51 +76,38 @@ async fn main() -> Result<()> {
 
         {/* ── Builder 패턴 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">NodeBuilder 패턴 — 제네릭 컴포넌트 조립</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// NodeBuilder의 type state 패턴
-pub struct NodeBuilder<State = InitialState> {
-    config: NodeConfig,
-    state: State,
-}
-
-// 단계별 state transitions:
-// InitialState → WithTypes → WithComponents → Ready
-
-impl NodeBuilder<InitialState> {
-    pub fn new(config: NodeConfig) -> Self { ... }
-
-    pub fn with_types<Types: NodeTypes>(self) -> NodeBuilder<WithTypes<Types>> {
-        // 체인 타입 고정 (EthereumNode, OptimismNode 등)
-    }
-}
-
-impl<Types: NodeTypes> NodeBuilder<WithTypes<Types>> {
-    pub fn with_components<C: NodeComponents>(self, components: C)
-        -> NodeBuilder<WithComponents<Types, C>> {
-        // 컴포넌트 주입 (Pool, Evm, Consensus, Network)
-    }
-}
-
-impl<Types, Components> NodeBuilder<WithComponents<Types, Components>> {
-    pub async fn launch(self) -> NodeHandle { ... }
-}
-
-// 사용 예:
-let handle = NodeBuilder::new(config)
-    .with_types::<EthereumNode>()           // 메인넷 타입
-    .with_components(EthComponents::default()) // 기본 컴포넌트
-    .launch()                                // 실행
-    .await?;
-
-// 컴파일 타임 검증:
-// - with_types() 전에 with_components() 호출 불가
-// - launch() 전에 모든 필수 단계 완료 강제
-
-// type state 패턴의 장점:
-// 1. 잘못된 초기화 순서 → 컴파일 에러
-// 2. 필수 필드 누락 → 컴파일 에러
-// 3. IDE 자동완성으로 다음 단계 안내`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2">Type State 전이 — 3단계</p>
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch">
+              {[
+                { state: 'InitialState', method: 'new(config)', desc: '설정 로드' },
+                { state: 'WithTypes', method: 'with_types::<T>()', desc: '체인 타입 고정 (EthereumNode, OpNode)' },
+                { state: 'WithComponents', method: 'with_components(c)', desc: '컴포넌트 주입 (Pool, Evm, Consensus, Network)' },
+              ].map((s, i) => (
+                <div key={s.state} className="flex-1 rounded border border-border/40 px-3 py-2 flex flex-col">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-xs font-bold">{i + 1}</span>
+                    <code className="text-xs font-bold">{s.state}</code>
+                  </div>
+                  <p className="text-xs text-foreground/60"><code>{s.method}</code></p>
+                  <p className="text-xs text-foreground/60 mt-0.5">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-foreground/70 mt-3">
+              <code>launch()</code>는 <code>WithComponents</code> 상태에서만 호출 가능 — 이전 단계에서 호출하면 컴파일 에러
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">컴파일 타임 보장</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>잘못된 초기화 순서 → 컴파일 에러</li>
+              <li>필수 필드 누락 → 컴파일 에러</li>
+              <li>IDE 자동완성으로 다음 단계 메서드 안내</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Type state 패턴</strong>으로 빌더의 상태를 타입 시스템에 인코딩.<br />
           잘못된 호출 순서를 컴파일 타임에 차단 → runtime panic 없음.<br />
@@ -132,50 +116,34 @@ let handle = NodeBuilder::new(config)
 
         {/* ── L2 확장 예시 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">L2 확장 — op-reth 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// op-reth: Optimism L2 노드
-// Reth를 라이브러리로 사용
-
-use reth::cli::Cli;
-use reth_optimism::{OpNode, OpEvm, OpPayloadBuilder};
-
-#[tokio::main]
-async fn main() -> Result<()> {
-    // Reth의 CLI 재사용
-    Cli::<OpNetworkArgs>::parse().run(|builder, args| async move {
-        let handle = builder
-            .with_types::<OpNode>()  // OP Stack 노드 타입
-            .with_components(
-                OpNode::components_builder()
-                    .payload_builder(OpPayloadBuilder::new(args))
-            )
-            .with_add_ons(OpAddOns::default())
-            .launch()
-            .await?;
-        handle.wait_for_node_exit().await
-    }).await
-}
-
-// 교체된 것:
-// 1. NodeTypes: EthereumNode → OpNode
-//    (OP 헤더 타입, OP fork config 등)
-// 2. ExecutionStrategy: EthStrategy → OpStrategy
-//    (deposit TX 처리, L1 attributes)
-// 3. PayloadBuilder: EthPayloadBuilder → OpPayloadBuilder
-//    (L1 block info 주입)
-
-// 재사용한 것:
-// - Pipeline/Stages (전부)
-// - Provider/DB (전부)
-// - Network (eth/68 그대로)
-// - RPC (eth namespace 그대로 + op namespace 추가)
-// - txpool (validation만 커스터마이즈)
-
-// 결과:
-// - op-reth 코드량: ~10K LOC
-// - Reth 전체 재사용: ~300K LOC
-// - 재사용률 ~97%`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-2 text-amber-600 dark:text-amber-400">교체된 것</p>
+              <ul className="text-sm space-y-1 text-foreground/80">
+                <li><code>NodeTypes</code>: <code>EthereumNode</code> → <code>OpNode</code> (OP 헤더, fork config)</li>
+                <li><code>ExecutionStrategy</code>: <code>EthStrategy</code> → <code>OpStrategy</code> (deposit TX, L1 attributes)</li>
+                <li><code>PayloadBuilder</code>: <code>EthPayloadBuilder</code> → <code>OpPayloadBuilder</code> (L1 block info 주입)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-2 text-emerald-600 dark:text-emerald-400">재사용한 것</p>
+              <ul className="text-sm space-y-1 text-foreground/80">
+                <li><code>Pipeline</code> / <code>Stages</code> — 전부</li>
+                <li><code>Provider</code> / <code>DB</code> — 전부</li>
+                <li><code>Network</code> — eth/68 그대로</li>
+                <li><code>RPC</code> — eth namespace + op namespace 추가</li>
+                <li><code>txpool</code> — validation만 커스터마이즈</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4 bg-muted/30">
+            <p className="font-semibold text-sm mb-1">결과</p>
+            <p className="text-sm text-foreground/80">
+              op-reth 코드량 ~10K LOC / Reth 전체 재사용 ~300K LOC → <strong>재사용률 ~97%</strong>
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           op-reth가 <strong>Reth 재사용의 증명</strong>.<br />
           OP 고유 로직(deposit, L1 attributes) 10K LOC만 작성 → 나머지 Reth 재사용.<br />

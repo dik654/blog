@@ -1,4 +1,5 @@
 import BackpropDerivViz from './viz/BackpropDerivViz';
+import BackpropMathViz from './viz/BackpropMathViz';
 
 export default function BackpropDerivation() {
   return (
@@ -12,91 +13,13 @@ export default function BackpropDerivation() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Softmax + Cross-Entropy 조합 유도</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 설정
-// h = logit (pre-softmax activation), h ∈ R^C
-// ŷ = softmax(h), C = number of classes
-// y = one-hot target
-// L = cross-entropy loss = -Σ y_i log(ŷ_i)
-
-// Step 1: Softmax 정의
-// ŷ_i = exp(h_i) / Σ_j exp(h_j)
-
-// Step 2: log(ŷ_i) 전개
-// log(ŷ_i) = h_i - log(Σ_j exp(h_j))
-
-// Step 3: L 전개
-// L = -Σ_i y_i · (h_i - log(Σ_j exp(h_j)))
-//   = -Σ_i y_i · h_i + log(Σ_j exp(h_j))   (since Σy_i = 1)
-
-// Step 4: dL/dh_k
-// 첫째 항: -y_k
-// 둘째 항: exp(h_k) / Σ_j exp(h_j) = ŷ_k
-//
-// ∴ dL/dh_k = ŷ_k - y_k
-
-// 놀라운 단순함!
-// Vector form: dL/dh = ŷ - y
-// 구현: 단순 element-wise subtraction`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Softmax 단독 Jacobian</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Softmax Jacobian (C x C 행렬)
-// J_ij = ∂ŷ_i / ∂h_j
-
-// Case 1: i = j
-// ∂ŷ_i/∂h_i
-// = [exp(h_i)·S - exp(h_i)^2] / S^2   (S = Σexp(h_k))
-// = ŷ_i - ŷ_i^2
-// = ŷ_i · (1 - ŷ_i)
-
-// Case 2: i ≠ j
-// ∂ŷ_i/∂h_j
-// = -exp(h_i)·exp(h_j) / S^2
-// = -ŷ_i · ŷ_j
-
-// 정리
-// J_softmax = diag(ŷ) - ŷŷ^T
-
-// 전체 미분 (chain rule)
-// dL/dh = J_softmax^T · dL/dŷ
-//
-// cross-entropy와 결합 시
-// dL/dŷ = -y/ŷ  (element-wise)
-// 대입하면 dL/dh = ŷ - y
-
-// 왜 합쳐서 유도하는가
-// - Softmax Jacobian 계산 O(C²)
-// - 합쳐서 하면 O(C) (단순 뺄셈)
-// - 수치 안정성도 향상`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">PyTorch 구현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// PyTorch는 CrossEntropyLoss가 이미 합쳐진 형태
-import torch
-import torch.nn as nn
-
-# 잘못된 방법 (수치 불안정)
-class BadModel(nn.Module):
-    def forward(self, x):
-        logits = self.fc(x)
-        probs = torch.softmax(logits, dim=-1)  # 분리 계산
-        return probs
-
-loss_fn = nn.NLLLoss()  # log 따로
-loss = loss_fn(torch.log(probs), target)
-# log(softmax(x)) → 수치 불안정 (log of very small number)
-
-# 올바른 방법 (수치 안정)
-class GoodModel(nn.Module):
-    def forward(self, x):
-        return self.fc(x)  # logits만 반환
-
-loss_fn = nn.CrossEntropyLoss()  # 합쳐진 형태
-loss = loss_fn(logits, target)
-
-# 내부적으로 log_softmax + nll_loss 결합
-# log_softmax는 max-subtraction trick 사용:
-#   log(softmax(x)) = x - max(x) - log(sum(exp(x - max(x))))
-# → overflow 방지`}</pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">Softmax + CE 유도 · Jacobian · PyTorch 실전</h3>
+        <p>
+          조합 유도로 ŷ-y가 나오는 과정, Softmax Jacobian, 실전 패턴까지.
+        </p>
+      </div>
+      <BackpropMathViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 왜 softmax+CE를 같이 쓰는가</p>

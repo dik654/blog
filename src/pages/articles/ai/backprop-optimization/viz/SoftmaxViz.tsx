@@ -8,7 +8,7 @@ export default function SoftmaxViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 460 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* h bars */}
           {H.map((v, i) => {
             const by = 20 + i * 38;
@@ -34,8 +34,8 @@ export default function SoftmaxViz() {
           {/* Sum */}
           {step >= 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <line x1={140} y1={110} x2={230} y2={110} stroke="var(--border)" strokeWidth={0.8} />
-              <text x={185} y={124} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--foreground)">Σ = {SUM}</text>
+              <line x1={140} y1={118} x2={230} y2={118} stroke="var(--border)" strokeWidth={0.8} />
+              <text x={185} y={132} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--foreground)">Σ = {SUM}</text>
             </motion.g>
           )}
 
@@ -54,7 +54,7 @@ export default function SoftmaxViz() {
             );
           })}
 
-          <text x={350} y={130} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">yᵢ = e^hᵢ / Σe^hⱼ</text>
+          <text x={350} y={150} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">yᵢ = e^hᵢ / Σe^hⱼ</text>
         </svg>
       )}
     </StepViz>

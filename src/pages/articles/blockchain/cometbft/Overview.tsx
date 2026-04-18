@@ -26,36 +26,51 @@ export default function Overview() {
 
         {/* ── CometBFT 배경 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CometBFT 프로젝트 배경</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CometBFT 연혁:
-// 2014: Tendermint 최초 (Jae Kwon PhD 논문)
-// 2017: Cosmos Network 런칭 (Tendermint 기반)
-// 2022: Tendermint 조직 분열
-// 2023: CometBFT로 fork (Informal Systems 주도)
-// 2024~: CometBFT v1.0 stable
-
-// 현재 사용 체인 (2025):
-// - Cosmos Hub (ATOM)
-// - Osmosis (OSMO) - DeFi hub
-// - dYdX v4 - orderbook DEX
-// - Celestia - DA layer
-// - Sei Network - trading blockchain
-// - Injective - finance blockchain
-// - Berachain - PoL
-// - Neutron, Juno, Stride, Kava 등 200+ chains
-
-// CometBFT의 위치:
-// - BFT 합의 엔진 (state machine 분리)
-// - IBC 프로토콜 기반
-// - Cosmos SDK와 통합
-// - "Proof of Stake + Instant Finality" 제공
-
-// 아키텍처 철학:
-// - 모듈성: 합의 엔진과 앱 로직 분리
-// - 언어 독립성: 어떤 언어로든 앱 구현 가능
-// - 즉시 최종성: 블록 커밋 = 확정 (2/3 quorum)
-// - IBC 호환: Cosmos 생태계 interop`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">CometBFT 연혁</p>
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span className="font-mono text-xs">2014</span><span>Tendermint 최초 (Jae Kwon PhD 논문)</span>
+              <span className="font-mono text-xs">2017</span><span>Cosmos Network 런칭 (Tendermint 기반)</span>
+              <span className="font-mono text-xs">2022</span><span>Tendermint 조직 분열</span>
+              <span className="font-mono text-xs">2023</span><span>CometBFT로 fork (Informal Systems 주도)</span>
+              <span className="font-mono text-xs">2024~</span><span>CometBFT v1.0 stable</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">현재 사용 체인 (2025)</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-muted-foreground">
+              <span><strong className="text-foreground">Cosmos Hub</strong> — ATOM</span>
+              <span><strong className="text-foreground">Osmosis</strong> — DeFi hub</span>
+              <span><strong className="text-foreground">dYdX v4</strong> — orderbook DEX</span>
+              <span><strong className="text-foreground">Celestia</strong> — DA layer</span>
+              <span><strong className="text-foreground">Sei</strong> — trading chain</span>
+              <span><strong className="text-foreground">Injective</strong> — finance chain</span>
+              <span><strong className="text-foreground">Berachain</strong> — PoL</span>
+              <span className="col-span-2 sm:col-span-3">Neutron, Juno, Stride, Kava 등 <strong className="text-foreground">200+ chains</strong></span>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">CometBFT 위치</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>BFT 합의 엔진 (state machine 분리)</li>
+                <li>IBC 프로토콜 기반</li>
+                <li>Cosmos SDK와 통합</li>
+                <li>PoS + Instant Finality 제공</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">아키텍처 철학</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li><strong className="text-foreground">모듈성</strong> — 합의 엔진과 앱 로직 분리</li>
+                <li><strong className="text-foreground">언어 독립성</strong> — 어떤 언어로든 앱 구현</li>
+                <li><strong className="text-foreground">즉시 최종성</strong> — 블록 커밋 = 확정 (2/3 quorum)</li>
+                <li><strong className="text-foreground">IBC 호환</strong> — Cosmos 생태계 interop</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           CometBFT는 <strong>Tendermint의 후계</strong>.<br />
           2023년 Informal Systems가 주도하여 community fork.<br />

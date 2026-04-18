@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import EncoderDecoderViz from './viz/EncoderDecoderViz';
+import SummaryDetailViz from './viz/SummaryDetailViz';
 
 const points = [
   'Self-Attention으로 시퀀스 내 모든 토큰 간 관계 계산',
@@ -33,57 +34,9 @@ export default function Summary() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Transformer 시대의 핵심 모델들</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Transformer 기반 주요 모델들 (2017~2024)
-//
-// Encoder-only (이해 중심):
-//   2018 BERT (Google) - 110M, MLM
-//   2019 RoBERTa (Meta) - 125M, no NSP
-//   2019 ALBERT - 12M, 파라미터 공유
-//   2020 DeBERTa - disentangled attention
-//   2020 ELECTRA - replaced token detection
-//
-// Decoder-only (생성 중심):
-//   2018 GPT-1 (OpenAI) - 117M
-//   2019 GPT-2 - 1.5B
-//   2020 GPT-3 - 175B, few-shot learning
-//   2023 GPT-4 - 추정 1.7T, multi-modal
-//   2022 LLaMA (Meta) - 7B~65B
-//   2023 LLaMA-2 - improved
-//   2024 LLaMA-3 - 8B~405B
-//   2023 Mistral / Mixtral (MoE)
-//   2024 Claude 3 (Anthropic)
-//   2024 Gemini (Google)
-//
-// Encoder-Decoder (seq2seq):
-//   2019 T5 (Google) - 11B
-//   2020 BART (Meta) - denoising
-//   2022 Flan-T5 - instruction tuned
-//
-// 멀티모달:
-//   2021 CLIP - text-image
-//   2022 DALL-E 2 - text→image
-//   2023 GPT-4V - vision
-//   2024 Sora - text→video
-
-// 아키텍처 혁신:
-//   - Sparse Mixture of Experts (Switch Transformer, Mixtral)
-//   - Flash Attention (메모리 최적화)
-//   - Grouped Query Attention (GQA, LLaMA-2)
-//   - Sliding Window Attention (Mistral)
-//   - State Space Models (Mamba, 2023)
-//
-// 2024 트렌드:
-//   - 긴 문맥 (1M tokens, Gemini)
-//   - 효율적 추론 (speculative decoding, medusa)
-//   - Open-source 경쟁 (LLaMA-3, Mixtral)
-//   - Agent / tool use
-//   - Multi-step reasoning (o1, Claude thinking)
-
-// 인용:
-//   "Attention Is All You Need" - 100,000+ 인용
-//   딥러닝 역사상 가장 영향력 있는 논문 중 하나`}
-        </pre>
+      </div>
+      <SummaryDetailViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
           요약 1: Transformer는 <strong>Encoder/Decoder/Hybrid</strong>로 분화해 각 분야 지배.<br />
           요약 2: <strong>Scaling + 아키텍처 혁신</strong>이 7년간 지속적 성능 개선.<br />

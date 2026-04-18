@@ -39,185 +39,160 @@ export default function LazyVerify({ onCodeRef }: { onCodeRef: (key: string, ref
         <LazyVerifyViz onOpenCode={open} />
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Lazy Verification 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Lazy Signature Verification
-//
-// Motivation:
-//
-//   Consensus has many signed messages:
-//     Votes, certificates, proposals
-//     N validators * M views * K messages/view
-//     Easily 10^4 - 10^6 signatures per epoch
-//
-//   Signature verification is expensive:
-//     Ed25519 verify: ~70 us
-//     BLS verify: ~2 ms
-//     At 10^4 signatures: ~0.7 sec (ed25519) / 20 sec (BLS)
-//
-//   Eager verification:
-//     Verify EVERY message on receive
-//     High CPU cost
-//     Many verifications WASTED (quorum not reached)
-//
-//   Lazy verification:
-//     Collect messages without verifying
-//     Verify only when quorum potentially reached
-//     Batch verification if supported
+      {/* Lazy Verification structured cards */}
+      <div className="not-prose mt-6">
+        <h3 className="text-xl font-semibold mb-3">Lazy Verification 최적화</h3>
 
-// Batching optimization (Ed25519 specifically):
-//
-//   Single verify: 70 us
-//   Batch verify 100: 1.5 ms total (15 us amortized)
-//   Speedup: ~4-5x
-//
-//   Why? Batch can share intermediate computations
-//   Check N signatures with single exponentiation
-//
-//   Mathematical basis:
-//     Random linear combination of signatures
-//     e(sum(s_i), G) == e(hash, sum(pk_i) * r_i)
+        {/* Motivation */}
+        <div className="rounded-lg border border-border bg-card p-5 mb-4">
+          <h4 className="font-semibold text-sm mb-2">동기</h4>
+          <p className="text-xs text-muted-foreground mb-2">
+            합의에 대량의 서명 메시지: 투표, 인증서, 제안. N 검증자 x M view x K 메시지/view → 에폭당 10^4 ~ 10^6 서명.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            서명 검증 비용: Ed25519 ~70 us · BLS ~2 ms · 10^4 서명 시: ~0.7초(ed25519) / 20초(BLS)
+          </p>
+        </div>
 
-// VoteTracker structure:
-//
-//   struct VoteTracker<D> {
-//       notarizes: AttributableMap<Notarize<D>>,
-//       nullifies: AttributableMap<Nullify>,
-//       finalizes: AttributableMap<Finalize<D>>,
-//       verified: bool,
-//   }
-//
-//   AttributableMap ensures:
-//     1 vote per validator (by index)
-//     Easy quorum detection (count entries)
-//
-//   verified flag:
-//     false initially
-//     true after batch verification passes
+        {/* Eager vs Lazy */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Eager 검증</h4>
+            <ul className="text-xs text-muted-foreground space-y-1">
+              <li>수신 즉시 모든 메시지 검증</li>
+              <li>높은 CPU 비용</li>
+              <li>쿼럼 미도달 시 검증 낭비</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-blue-400/40 bg-blue-500/5 p-4">
+            <h4 className="font-semibold text-sm mb-2">Lazy 검증</h4>
+            <ul className="text-xs text-muted-foreground space-y-1">
+              <li>검증 없이 메시지 수집</li>
+              <li>쿼럼 잠재 도달 시에만 검증</li>
+              <li>지원 시 배치 검증</li>
+            </ul>
+          </div>
+        </div>
 
-// Batcher processing loop:
-//
-//   loop {
-//       // 1. Receive votes from network
-//       let (vote, signer) = self.inbox.recv().await;
-//
-//       // 2. Add to unverified pool
-//       self.tracker.add(vote, signer);
-//
-//       // 3. Check if quorum reachable
-//       if self.tracker.count() >= self.threshold {
-//           // 4. Attempt batch verification
-//           let result = self.batch_verify(&self.tracker).await;
-//
-//           match result {
-//               BatchOk => {
-//                   // All signatures valid
-//                   self.tracker.verified = true;
-//                   let cert = self.tracker.aggregate();
-//                   self.emit_certificate(cert).await;
-//               }
-//               BatchFail(bad_signers) => {
-//                   // Some signatures invalid
-//                   for signer in bad_signers {
-//                       self.tracker.remove(signer);
-//                   }
-//                   // Continue collecting...
-//               }
-//           }
-//       }
-//   }
+        {/* Batching optimization */}
+        <div className="rounded-lg border border-border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">배치 최적화 (Ed25519)</h4>
+          <p className="text-xs text-muted-foreground mb-2">
+            단일 검증: 70 us · 배치 100개 검증: 1.5 ms (amortized 15 us) · 속도 향상: ~4-5x
+          </p>
+          <p className="text-xs text-muted-foreground">
+            원리: 중간 계산 공유 · 단일 지수 연산으로 N개 서명 확인. 수학적 기반: 서명의 랜덤 선형 결합 — <code className="text-xs">e(sum(s_i), G) == e(hash, sum(pk_i * r_i))</code>
+          </p>
+        </div>
 
-// Batch verification implementation:
-//
-//   fn batch_verify_ed25519(
-//       msgs: &[(Message, Signature, PublicKey)]
-//   ) -> Result<(), Vec<usize>> {
-//       // Pick random scalars r_i
-//       let rs: Vec<Scalar> = random_scalars(msgs.len());
-//
-//       // Verify combined equation
-//       // sum(r_i * s_i) * G ==
-//       //   sum(r_i * R_i) + sum(r_i * c_i * A_i)
-//       //
-//       //   where c_i = H(R_i, A_i, m_i)
-//
-//       if combined_check_passes {
-//           Ok(())
-//       } else {
-//           // If batch fails, fall back to individual
-//           identify_bad_signatures()
-//       }
-//   }
+        {/* VoteTracker */}
+        <div className="rounded-lg border border-border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2"><code className="text-sm">VoteTracker&lt;D&gt;</code></h4>
+          <ul className="text-xs text-muted-foreground space-y-1">
+            <li><code className="text-xs">notarizes: AttributableMap&lt;Notarize&lt;D&gt;&gt;</code></li>
+            <li><code className="text-xs">nullifies: AttributableMap&lt;Nullify&gt;</code></li>
+            <li><code className="text-xs">finalizes: AttributableMap&lt;Finalize&lt;D&gt;&gt;</code></li>
+            <li><code className="text-xs">verified: bool</code> — 초기 false, 배치 검증 통과 후 true</li>
+          </ul>
+          <p className="text-xs text-muted-foreground mt-2">
+            <code className="text-xs">AttributableMap</code>: 검증자당 1표 (인덱스 키) · 쿼럼 감지 용이 (엔트리 수 카운트)
+          </p>
+        </div>
 
-// Short-circuit optimization:
-//
-//   Sometimes Certificate arrives BEFORE all votes!
-//   (peer already aggregated)
-//
-//   fn handle_message(&mut self, msg: Message) {
-//       match msg {
-//           Message::Certificate(cert) => {
-//               // Skip individual vote collection
-//               // Just verify the aggregate signature
-//               if self.verify_certificate(&cert) {
-//                   self.adopt_certificate(cert);
-//               }
-//           }
-//           Message::Notarize(vote) => {
-//               // Normal lazy path
-//               self.tracker.add(vote);
-//               self.maybe_batch_verify();
-//           }
-//       }
-//   }
-//
-//   Result:
-//     Fast forward if certificate ready
-//     Individual votes only if needed
+        {/* Batcher processing loop */}
+        <div className="rounded-lg border border-border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Batcher 처리 루프</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li><strong>1.</strong> 네트워크에서 투표 수신 (<code className="text-xs">inbox.recv()</code>)</li>
+                <li><strong>2.</strong> 미검증 풀에 추가 (<code className="text-xs">tracker.add</code>)</li>
+                <li><strong>3.</strong> 쿼럼 도달 가능 여부 확인 (<code className="text-xs">count &gt;= threshold</code>)</li>
+              </ul>
+            </div>
+            <div>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li><strong>4.</strong> 배치 검증 시도 (<code className="text-xs">batch_verify</code>)</li>
+                <li><strong>성공:</strong> <code className="text-xs">verified = true</code> → 인증서 집계·전송</li>
+                <li><strong>실패:</strong> 잘못된 서명자 제거 → 계속 수집</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-// Network channels:
-//
-//   Separate channels for:
-//     - Vote messages (frequent, small)
-//     - Certificate messages (rare, large)
-//     - Resolver requests (sync)
-//
-//   Prioritization:
-//     Certificates processed first (faster finality)
-//     Votes next (feed batcher)
-//     Resolver last (sync is background)
+        {/* Batch verify implementation */}
+        <div className="rounded-lg border border-border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">배치 검증 구현 (<code className="text-sm">batch_verify_ed25519</code>)</h4>
+          <p className="text-xs text-muted-foreground">
+            입력: <code className="text-xs">&amp;[(Message, Signature, PublicKey)]</code> · 랜덤 스칼라 <code className="text-xs">r_i</code> 선택 · 결합 방정식 검증: <code className="text-xs">sum(r_i * s_i) * G == sum(r_i * R_i) + sum(r_i * c_i * A_i)</code> (c_i = H(R_i, A_i, m_i)). 배치 실패 시 개별 검증으로 폴백하여 잘못된 서명 식별.
+          </p>
+        </div>
 
-// Security considerations:
-//
-//   1) DoS protection:
-//      Bounded vote pool size per view
-//      Drop old votes on overflow
-//
-//   2) Invalid signature attacks:
-//      Batch fail → identify bad signer
-//      Can slash malicious validator
-//
-//   3) Replay attacks:
-//      Vote includes view number
-//      Same vote different view = different signature
-//
-//   4) Equivocation:
-//      AttributableMap detects multiple votes
-//      Trigger slashing path
+        {/* Short-circuit */}
+        <div className="rounded-lg border border-border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Short-circuit 최적화</h4>
+          <p className="text-xs text-muted-foreground mb-2">
+            인증서가 개별 투표보다 먼저 도착하는 경우 (피어가 이미 집계 완료):
+          </p>
+          <ul className="text-xs text-muted-foreground space-y-1">
+            <li><code className="text-xs">Message::Certificate(cert)</code> → 개별 투표 수집 건너뛰기 → 집계 서명만 검증 → 즉시 채택</li>
+            <li><code className="text-xs">Message::Notarize(vote)</code> → 일반 lazy 경로 → tracker에 추가 → 쿼럼 시 배치 검증</li>
+          </ul>
+          <p className="text-xs text-muted-foreground mt-1">결과: 인증서 준비 시 빠른 전진, 개별 투표는 필요 시에만 처리</p>
+        </div>
 
-// Performance impact:
-//
-//   With 100 validators, Ed25519:
-//     Eager: 100 verifications per view = 7ms
-//     Lazy (batch 67): 1 batch verify = 1.5ms
-//     Savings: ~5x CPU per view
-//
-//   Over 10,000 views:
-//     Eager: 70 sec CPU
-//     Lazy: 15 sec CPU
-//     55 sec saved per consensus participant`}
-        </pre>
+        {/* Network channels */}
+        <div className="rounded-lg border border-border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">네트워크 채널 분리</h4>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="text-xs text-muted-foreground"><strong>Vote 채널:</strong> 빈번, 작은 메시지</div>
+            <div className="text-xs text-muted-foreground"><strong>Certificate 채널:</strong> 드물지만 큰 메시지</div>
+            <div className="text-xs text-muted-foreground"><strong>Resolver 채널:</strong> 동기화 요청</div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            우선순위: 인증서 먼저 (빠른 최종성) → 투표 (batcher 공급) → Resolver (백그라운드 동기화)
+          </p>
+        </div>
+
+        {/* Security */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">DoS 방어</h4>
+            <p className="text-xs text-muted-foreground">view당 투표 풀 크기 제한. 오버플로 시 오래된 투표 삭제.</p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">잘못된 서명 공격</h4>
+            <p className="text-xs text-muted-foreground">배치 실패 → 잘못된 서명자 식별. 악의적 검증자 슬래싱 가능.</p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">리플레이 공격</h4>
+            <p className="text-xs text-muted-foreground">투표에 view 번호 포함. 동일 투표 다른 view = 다른 서명.</p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">이중 투표(Equivocation)</h4>
+            <p className="text-xs text-muted-foreground"><code className="text-xs">AttributableMap</code>이 복수 투표 감지. 슬래싱 경로 트리거.</p>
+          </div>
+        </div>
+
+        {/* Performance */}
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h4 className="font-semibold text-sm mb-2">성능 영향 (100 검증자, Ed25519)</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li><strong>Eager:</strong> view당 100회 검증 = 7ms</li>
+                <li><strong>Lazy (배치 67):</strong> 1회 배치 검증 = 1.5ms</li>
+                <li>view당 절감: ~5x CPU</li>
+              </ul>
+            </div>
+            <div>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li><strong>10,000 view:</strong> Eager 70초 vs Lazy 15초</li>
+                <li>합의 참여자당 55초 CPU 절감</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

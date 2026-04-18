@@ -1,6 +1,8 @@
 import StepViz from '@/components/ui/step-viz';
 import GradientCompareViz from './viz/GradientCompareViz';
 import { compSteps } from './ResidualComputationData';
+import ResidualDetailViz from './viz/ResidualDetailViz';
+import M from '@/components/ui/math';
 
 export default function ResidualComputation() {
   return (
@@ -30,90 +32,18 @@ export default function ResidualComputation() {
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">두 경로 기울기 상세 계산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 3층 + Skip Connection 수치 예시
-//
-// 순전파:
-//   x = 0.5
-//   h1 = sigmoid(w1·x) = sigmoid(0.05) = 0.5125
-//   h2 = sigmoid(w2·h1) = sigmoid(0.05125) = 0.5128
-//   F(x) = sigmoid(w3·h2) = sigmoid(0.05128) = 0.5128
-//   y = F(x) + x = 0.5128 + 0.5 = 1.0128
-//
-// 역전파 경로 1 (메인 - F를 통과):
-//   dy/dF = 1
-//   dF/dh2 = F·(1-F)·w3 = 0.5128 × 0.4872 × 0.1 = 0.02498
-//   dh2/dh1 = h2·(1-h2)·w2 = 0.2498 × 0.1 = 0.02498
-//   dh1/dw1 = h1·(1-h1)·x = 0.2498 × 0.5 = 0.1249
-//
-//   dL/dw1 (메인) = 1 × 0.02498 × 0.02498 × 0.1249 = 7.79e-5
-//
-// 역전파 경로 2 (Skip - x를 직접):
-//   dy/dx = 1  (identity)
-//   dL/dx (skip) = 1 × 1 = 1
-//
-//   그런데 w1은 x를 통하지 않으므로
-//   여기서는 skip이 x→y 경로만 확보
-//
-// w1에 대한 기울기는 메인 경로로만 흐르지만,
-// 깊은 네트워크에서는 중간 블록의 skip이 해당 층 기울기 직접 공급
-
-// 실제 ResNet 블록의 경우:
-//
-// 입력 x_l, 출력 x_{l+1} = x_l + F(x_l, W_l)
-//
-// 뒷쪽 층에서 기울기 전파:
-//   dL/dx_l = dL/dx_{l+1} × (1 + dF/dx_l)
-//
-// L층 이후:
-//   dL/dx_0 = dL/dx_L × ∏_{l=0}^{L-1} (1 + dF_l/dx_l)
-//
-// 1이 포함되어 있어 지수적 감쇠 방지`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">학습 안정성 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 깊이별 학습 안정성 (SGD with momentum, lr=0.1)
-//
-// Plain Network (No Skip):
-//   ┌────────┬────────────────────────────┐
-//   │ 층 수  │  수렴 여부                 │
-//   ├────────┼────────────────────────────┤
-//   │   10   │  ✓ 수렴                    │
-//   │   20   │  ✓ 수렴 (느림)             │
-//   │   34   │  ✗ 학습 실패               │
-//   │   50+  │  ✗ 학습 완전 실패          │
-//   └────────┴────────────────────────────┘
-//
-// ResNet (With Skip):
-//   ┌────────┬────────────────────────────┐
-//   │ 층 수  │  수렴 여부                 │
-//   ├────────┼────────────────────────────┤
-//   │   18   │  ✓ 빠른 수렴               │
-//   │   34   │  ✓ 빠른 수렴               │
-//   │   50   │  ✓ 수렴                    │
-//   │  101   │  ✓ 수렴                    │
-//   │  152   │  ✓ 수렴 (최고 성능)        │
-//   │  1000+ │  △ 수렴하나 한계           │
-//   └────────┴────────────────────────────┘
-//
-// ResNet의 효과:
-//   1. 기울기 소실 완화 (identity shortcut)
-//   2. 최적화 난이도 감소
-//   3. 손실 평면 매끄러워짐
-//   4. 앙상블 효과 (여러 경로 동시 학습)
-
-// "Ensemble of Shallow Networks" 해석 (Veit 2016):
-//   n개 residual block이 있는 ResNet
-//   → 2^n개 서로 다른 경로 존재
-//   → 각 경로는 다른 깊이의 shallow net
-//   → ResNet은 암묵적 앙상블
-//
-// 예: ResNet-152 (50 blocks)
-//   2^50 ≈ 10^15 경로 존재
-//   (대부분 경로는 매우 짧음)`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">두 경로 기울기 & 학습 안정성</h3>
+        <M display>{'\\underbrace{\\frac{\\partial L}{\\partial x_0}}_{\\text{첫 층 기울기}} = \\underbrace{\\frac{\\partial L}{\\partial x_L}}_{\\text{출력 기울기}} \\times \\prod_{l=0}^{L-1} \\left( \\underbrace{1}_{\\text{skip 경로}} + \\underbrace{\\frac{\\partial F_l}{\\partial x_l}}_{\\text{conv 경로}} \\right)'}</M>
+        <p className="text-sm text-muted-foreground mt-2">
+          ∂L/∂x<sub>0</sub> = 첫 번째 층까지 전달되는 기울기 (이 값이 0이면 학습 불가)<br />
+          ∂L/∂x<sub>L</sub> = 마지막 출력층의 기울기 (Loss에서 직접 계산)<br />
+          각 층마다 <strong>(1 + ∂F/∂x)</strong>를 곱함 — conv 기울기(∂F/∂x)가 0이 되어도 skip의 1이 남아 기울기 소실 방지
+        </p>
+      </div>
+      <div className="not-prose my-6">
+        <ResidualDetailViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: Skip connection의 <strong>1+dF/dx</strong>가 기울기 최소 보장.<br />
           요약 2: 34층 이상에서 <strong>Plain은 학습 실패, ResNet은 수렴</strong> — 실험적 검증.<br />

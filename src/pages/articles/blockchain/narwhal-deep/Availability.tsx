@@ -13,57 +13,28 @@ export default function Availability() {
 
         {/* ── Availability 정의 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Availability Guarantee 형식 정의</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Narwhal Availability Property:
-//
-// Formal Statement:
-// "For any header h with certificate C(h),
-//  if any honest validator has C(h),
-//  then eventually all honest validators
-//  will obtain the data referenced by h."
-//
-// 3개 보장 요소:
-// 1. Integrity: 받은 data = original
-// 2. Agreement: 모든 honest가 같은 data 수신
-// 3. Termination: 결국 수신 (eventual)
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Formal Statement</p>
+          <p className="text-sm italic mb-2">"For any header h with certificate C(h), if any honest validator has C(h), then eventually all honest validators will obtain the data referenced by h."</p>
+          <ol className="text-sm space-y-1 list-decimal pl-4">
+            <li><strong>Integrity</strong>: 받은 data = original</li>
+            <li><strong>Agreement</strong>: 모든 honest가 같은 data 수신</li>
+            <li><strong>Termination</strong>: 결국 수신 (eventual)</li>
+          </ol>
+        </div>
 
-// Formal Proof (sketch):
-//
-// 가정:
-// - header h, certificate C(h) exists
-// - honest validator A가 C(h) 보유
-// - C(h) = 2f+1 signatures
-//
-// Claim:
-// - 모든 honest validator가 결국 data 수신
-//
-// Proof:
-// - C(h)는 2f+1 signatures
-// - 2f+1 중 f+1은 honest (pigeonhole)
-// - honest validator는 sign 전 data 수신 + 저장
-// - f+1 honest validators hold data
-// - 어떤 honest가 request 하면
-// - f+1 중 1+ 가 response 가능
-// - reliable point-to-point channels 가정
-// - eventual delivery 보장
-
-// Impossibility:
-// - f+1 honest 모두 data 유실?
-//   → Byzantine 영향 (but honest는 유실 안 함)
-// - honest가 data 제공 거부?
-//   → 정의상 honest 아님
-
-// 결론:
-// - Narwhal availability = BFT reliability
-// - 2f+1 sig가 quorum intersection 기반
-// - FUD (Fear, Uncertainty, Doubt) 저항
-
-// 구체적 메커니즘:
-// - 각 honest는 signed data 저장
-// - 다른 validator의 request 응답
-// - gossip protocol로 data 전파
-// - retry with exponential backoff`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Formal Proof (sketch)</p>
+            <p className="text-sm mb-1">가정: <code className="text-xs">C(h) = 2f+1</code> signatures. honest validator A가 <code className="text-xs">C(h)</code> 보유.</p>
+            <p className="text-sm"><code className="text-xs">2f+1</code> 중 <code className="text-xs">f+1</code>은 honest(pigeonhole). honest는 sign 전 data 저장 → <code className="text-xs">f+1</code> honest hold data. 어떤 honest가 request → <code className="text-xs">f+1</code> 중 1+가 response → reliable channels → eventual delivery.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">결론 + 메커니즘</p>
+            <p className="text-sm mb-1">Narwhal availability = BFT reliability. <code className="text-xs">2f+1</code> sig = quorum intersection 기반.</p>
+            <p className="text-sm text-muted-foreground">메커니즘: 각 honest는 signed data 저장 + request 응답. gossip protocol 전파. retry with exponential backoff.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Availability 증명: <strong>2f+1 sig → f+1 honest → data 보유</strong>.<br />
           quorum intersection + reliable channels.<br />
@@ -92,63 +63,31 @@ export default function Availability() {
 
         {/* ── Data Retrieval ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Data Retrieval 프로토콜</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Validator A가 certificate C는 있는데 data 없을 때:
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Certificate C는 있는데 data 없을 때</p>
+          <ol className="text-sm space-y-1 list-decimal pl-4">
+            <li><strong>Request</strong>: <code className="text-xs">signers(C)</code>에 <code className="text-xs">payload_digests</code> 요청</li>
+            <li><strong>Response</strong>: data matches digest → store + break</li>
+            <li><strong>Fallback</strong>: 1 signer → timeout(500ms) → next signer → continue</li>
+            <li><strong>Eventually success</strong>: <code className="text-xs">f+1</code> honest signers → 최소 1명 respond → delivery 보장</li>
+          </ol>
+          <p className="text-sm mt-2 text-muted-foreground">실제: parallel requests to multiple signers. first response wins. failed signers tracked.</p>
+        </div>
 
-// 1. Request data:
-// for validator_j in signers(C):
-//     send(Request(C.header.payload_digests)) → j
-//
-// 2. Response 기다림:
-// while not data_received:
-//     for each response:
-//         if data matches digest:
-//             store(data)
-//             break
-
-// 3. Fallback (retry):
-// - first 1 signer에 request
-// - timeout (e.g., 500ms)
-// - next signer에 request
-// - continue until data 수신
-//
-// 4. Eventually success:
-// - f+1 honest signers exist
-// - 최소 1명은 data 보유 + respond
-// - eventual delivery 보장
-
-// 실제 Narwhal 구현:
-// - parallel requests to multiple signers
-// - first response wins
-// - failed signers tracked
-// - congestion control
-
-// Catching up 시나리오:
-// - new validator 합류
-// - 현재 DAG state 필요
-// - state sync protocol:
-//   - latest committed cert부터 역추적
-//   - parent chain 따라 data 다운로드
-//   - 병렬 batch retrieval
-
-// Byzantine retrieval attack:
-// - Byzantine이 fake data 전송
-// - receiver가 digest 검증
-// - mismatch → reject
-// - 다른 signer에게 재요청
-
-// Storage 요구:
-// - validator는 signed data 저장 필수
-// - retention period: GC까지
-// - 일반적으로 수 시간
-// - committed 후 archive (optional)
-
-// Performance metrics (Narwhal):
-// - retrieval latency: 100-500ms
-// - success rate: 99.9%+
-// - bandwidth: cert의 payload 크기
-// - 기존 ledger sync 대비 10-100x fast`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Catching Up</p>
+            <p className="text-sm">new validator 합류 시 latest committed cert부터 역추적 → parent chain data 다운로드 → 병렬 batch retrieval.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Byzantine 방어</p>
+            <p className="text-sm">fake data 전송 → digest 검증 → mismatch reject → 다른 signer 재요청.</p>
+          </div>
+          <div className="rounded-lg border p-4 bg-muted/50">
+            <p className="font-semibold text-sm mb-1">성능</p>
+            <p className="text-sm">Retrieval: 100-500ms. Success: 99.9%+. 기존 ledger sync 대비 10-100x fast.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Data retrieval: <strong>signer에게 parallel request → first wins</strong>.<br />
           f+1 honest signers → 최소 1명 응답 보장.<br />

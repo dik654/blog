@@ -1,8 +1,14 @@
+import InsiderTradingViz from './viz/InsiderTradingViz';
+import InsiderInfoFlowViz from './viz/InsiderInfoFlowViz';
+import InsiderChineseWallViz from './viz/InsiderChineseWallViz';
+
 export default function InsiderTrading() {
   return (
     <section id="insider-trading" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">미공개중요정보 이용 금지</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <InsiderTradingViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">미공개중요정보란</h3>
         <p className="leading-7">
@@ -73,6 +79,8 @@ export default function InsiderTrading() {
           국내 주요 거래소에 상장되면 가격이 수배~수십 배 뛰는 경우가 있으므로,
           상장 심사 결과를 사전에 아는 것은 극히 큰 경제적 이득으로 연결된다.
         </p>
+
+        <InsiderInfoFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">적용 대상: 누가 규제를 받는가</h3>
         <p className="leading-7">
@@ -195,6 +203,8 @@ export default function InsiderTrading() {
           <strong>생성~폐기 전 과정 기록</strong> -- 정보의 생성 시점, 접근 이력, 공유 이력, 공개 시점, 폐기 시점을 전 과정에 걸쳐 기록한다.
           사후 조사 시 "누가, 언제, 어떤 정보에 접근했는가"를 추적할 수 있어야 한다.
         </p>
+
+        <InsiderChineseWallViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">정보 차단벽(Chinese Wall)</h3>
         <p className="leading-7">

@@ -31,44 +31,38 @@ export default function Session({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── RLPx handshake ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">RLPx 핸드셰이크 — ECIES 기반 암호화 채널</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// RLPx v4 handshake 4단계
-
-// Step 1: Auth 메시지 (클라이언트 → 서버)
-// ECIES(server_pubkey, auth_body)
-struct AuthBody {
-    signature: Signature,            // ECDSA 서명 (session key 소유 증명)
-    initiator_pubkey: PublicKey,     // 클라이언트 공개키
-    initiator_nonce: B256,           // 랜덤 nonce
-    version: u8,                     // RLPx v4 = 4
-}
-
-// Step 2: AuthAck 메시지 (서버 → 클라이언트)
-// ECIES(client_pubkey, auth_ack_body)
-struct AuthAckBody {
-    recipient_ephemeral_pubkey: PublicKey,  // 서버의 ephemeral key
-    recipient_nonce: B256,
-    version: u8,
-}
-
-// Step 3: Session key 유도 (양쪽 독립 수행)
-// - ephemeral_shared_secret = ECDH(client_ephemeral, server_ephemeral)
-// - shared_secret = keccak256(ephemeral_shared_secret ‖ keccak256(nonces))
-// - aes_secret = keccak256(ephemeral_shared_secret ‖ shared_secret)
-// - mac_secret = keccak256(ephemeral_shared_secret ‖ aes_secret)
-
-// Step 4: 암호화 채널 활성화
-// - AES-CTR-256 for payload encryption
-// - HMAC-SHA256 for MAC
-
-// Forward secrecy:
-// - ephemeral key는 세션 종료 시 폐기
-// - 장기 키 유출되어도 과거 세션 복호화 불가
-
-// 성능:
-// handshake 1회 ~수 ms
-// 이후 메시지 암/복호화: ~마이크로초 단위`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2">Step 1: Auth (클라이언트 → 서버)</p>
+              <p className="text-sm text-foreground/80">ECIES(<code>server_pubkey</code>, auth_body) 전송.</p>
+              <ul className="text-sm text-foreground/70 mt-1 space-y-0.5">
+                <li><code>signature: Signature</code> — ECDSA 서명</li>
+                <li><code>initiator_pubkey: PublicKey</code></li>
+                <li><code>initiator_nonce: B256</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">Step 2: AuthAck (서버 → 클라이언트)</p>
+              <p className="text-sm text-foreground/80">ECIES(<code>client_pubkey</code>, auth_ack) 응답.</p>
+              <ul className="text-sm text-foreground/70 mt-1 space-y-0.5">
+                <li><code>recipient_ephemeral_pubkey: PublicKey</code></li>
+                <li><code>recipient_nonce: B256</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-2">Step 3: Session Key 유도</p>
+              <p className="text-sm text-foreground/80">양쪽 독립 수행. ECDH(ephemeral keys) → <code>keccak256</code> 체인으로 <code>aes_secret</code>, <code>mac_secret</code> 도출.</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-orange-500 mb-2">Step 4: 암호화 채널</p>
+              <p className="text-sm text-foreground/80">AES-CTR-256 payload 암호화 + HMAC-SHA256 MAC. handshake ~수 ms, 이후 암복호화 ~마이크로초.</p>
+            </div>
+          </div>
+          <div className="rounded border border-amber-500/30 bg-amber-500/5 p-3">
+            <p className="text-sm text-amber-600 dark:text-amber-400">Forward secrecy — ephemeral key는 세션 종료 시 폐기. 장기 키 유출되어도 과거 세션 복호화 불가.</p>
+          </div>
+        </div>
         <p className="leading-7">
           RLPx v4가 <strong>forward secrecy + 인증</strong> 제공.<br />
           ECIES(Elliptic Curve Integrated Encryption Scheme)로 초기 키 교환 → AES-CTR 스트리밍.<br />
@@ -77,46 +71,32 @@ struct AuthAckBody {
 
         {/* ── select! 이벤트 루프 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">tokio select! — 다중 이벤트 처리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// SessionManager의 메인 이벤트 루프
-async fn run(&mut self) {
-    loop {
-        tokio::select! {
-            // 새 인바운드 연결
-            Ok((stream, _)) = self.listener.accept() => {
-                self.handle_incoming(stream).await;
-            }
-            // 아웃바운드 연결 요청 완료
-            Some(stream) = self.dial_tasks.next() => {
-                self.handle_outgoing(stream?).await;
-            }
-            // 기존 세션의 메시지 수신
-            Some((peer_id, msg)) = self.active_sessions.next() => {
-                self.handle_session_message(peer_id, msg).await;
-            }
-            // 피어 관리 명령 (추가/삭제)
-            Some(cmd) = self.commands.recv() => {
-                self.handle_command(cmd).await;
-            }
-            // 주기적 keepalive
-            _ = self.ping_interval.tick() => {
-                self.send_pings().await;
-            }
-        }
-    }
-}
-
-// select!의 작동:
-// 1. 모든 branches를 병렬로 polling
-// 2. 먼저 ready된 branch 선택 (랜덤 tie-break)
-// 3. 나머지 branches는 다음 루프에서 재검사
-// 4. 모두 pending이면 스레드 yield (epoll)
-
-// 이점:
-// - 수천 세션을 단일 스레드가 관리
-// - fairness 보장 (한 연결이 독점 불가)
-// - lock-free (HashMap만 스레드 로컬)`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">tokio::select! 이벤트 루프</p>
+          <div className="space-y-2 mb-3">
+            <div className="flex gap-3 items-start text-sm border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">accept</span>
+              <span className="text-foreground/80"><code>self.listener.accept()</code> — 새 인바운드 연결 수락</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-green-500/50 pl-3">
+              <span className="font-mono text-xs text-green-500 shrink-0">dial</span>
+              <span className="text-foreground/80"><code>self.dial_tasks.next()</code> — 아웃바운드 연결 완료 처리</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-purple-500/50 pl-3">
+              <span className="font-mono text-xs text-purple-500 shrink-0">msg</span>
+              <span className="text-foreground/80"><code>self.active_sessions.next()</code> — 기존 세션 메시지 수신</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-orange-500/50 pl-3">
+              <span className="font-mono text-xs text-orange-500 shrink-0">cmd</span>
+              <span className="text-foreground/80"><code>self.commands.recv()</code> — 피어 관리 명령(추가/삭제)</span>
+            </div>
+            <div className="flex gap-3 items-start text-sm border-l-2 border-foreground/20 pl-3">
+              <span className="font-mono text-xs text-foreground/50 shrink-0">ping</span>
+              <span className="text-foreground/80"><code>self.ping_interval.tick()</code> — 주기적 keepalive</span>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/60">모든 branch 병렬 polling → 먼저 ready된 선택(랜덤 tie-break) → 나머지는 다음 루프. 수천 세션을 단일 스레드가 lock-free로 관리.</p>
+        </div>
         <p className="leading-7">
           <code>tokio::select!</code>가 <strong>비동기 이벤트 멀티플렉싱</strong>의 핵심.<br />
           여러 Future 중 먼저 완료되는 것을 선택 → 모든 세션이 공평하게 처리됨.<br />
@@ -125,55 +105,29 @@ async fn run(&mut self) {
 
         {/* ── Reputation 시스템 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Peer Reputation — 악의적 피어 차단</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct PeerScore {
-    pub reputation: i32,  // -1000 ~ +1000
-    pub last_seen: Instant,
-    pub connection_count: u32,
-    pub error_count: u32,
-}
-
-// Reputation 조정 규칙:
-impl PeerScore {
-    fn on_successful_response(&mut self) {
-        self.reputation = (self.reputation + 10).min(1000);
-    }
-
-    fn on_invalid_header(&mut self) {
-        self.reputation -= 100;
-    }
-
-    fn on_protocol_violation(&mut self) {
-        self.reputation -= 500;  // 심각한 위반
-    }
-
-    fn on_timeout(&mut self) {
-        self.reputation -= 10;
-    }
-}
-
-// 차단 정책:
-const BAN_THRESHOLD: i32 = -1000;
-const BAN_DURATION: Duration = Duration::from_secs(3600);  // 1시간
-
-fn handle_peer_event(&mut self, peer: &PeerId, event: PeerEvent) {
-    let score = self.scores.entry(*peer).or_default();
-    match event {
-        PeerEvent::BadHeader => score.on_invalid_header(),
-        PeerEvent::Timeout => score.on_timeout(),
-        // ...
-    }
-
-    if score.reputation <= BAN_THRESHOLD {
-        self.ban_peer(peer, BAN_DURATION);
-    }
-}
-
-// 시나리오:
-// - 정직한 피어: 시간 경과로 reputation 증가
-// - 가끔 실수: timeout 몇 번은 복구 가능
-// - 악의적 공격: 10회 protocol violation → BAN (1시간)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">PeerScore 구조체</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>reputation: i32</code> — -1000 ~ +1000</span>
+              <span><code>last_seen: Instant</code></span>
+              <span><code>connection_count: u32</code></span>
+              <span><code>error_count: u32</code></span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Reputation 조정 규칙</p>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between text-foreground/80"><span><code>on_successful_response</code></span><span className="text-green-500">+10</span></div>
+              <div className="flex justify-between text-foreground/80"><span><code>on_timeout</code></span><span className="text-orange-500">-10</span></div>
+              <div className="flex justify-between text-foreground/80"><span><code>on_invalid_header</code></span><span className="text-red-400">-100</span></div>
+              <div className="flex justify-between text-foreground/80"><span><code>on_protocol_violation</code></span><span className="text-red-500">-500</span></div>
+            </div>
+            <p className="text-sm text-foreground/60 mt-2">
+              <code>BAN_THRESHOLD</code>: -1000 / <code>BAN_DURATION</code>: 1시간. 10회 protocol violation = 즉시 BAN.
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Reputation 시스템</strong>으로 네트워크 품질 유지.<br />
           각 피어의 행동을 점수화 → 악의적 피어 자동 차단.<br />

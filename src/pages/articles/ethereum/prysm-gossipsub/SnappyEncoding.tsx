@@ -21,39 +21,49 @@ export default function SnappyEncoding({ onCodeRef: _ }: Props) {
 
         {/* ── Snappy 알고리즘 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Snappy — Google의 빠른 압축 알고리즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Snappy (Google, 2011)
-// LZ77 기반 non-stream compression
-// 설계 목표: 압축률보다 속도 우선
-
-// vs 다른 알고리즘 비교:
-//                압축률    압축 속도      해제 속도
-// Snappy:        2~2.5x    ~500 MB/s     ~2000 MB/s
-// LZ4:           2~2.5x    ~400 MB/s     ~3000 MB/s
-// gzip(-6):      3~4x      ~30 MB/s      ~300 MB/s
-// zstd(-3):      3~4x      ~300 MB/s     ~1000 MB/s
-
-// 알고리즘:
-// 1. 32-bit rolling hash로 중복 패턴 탐색
-// 2. 매치 발견 → (distance, length) tag 인코딩
-// 3. literal byte → literal tag 인코딩
-// 4. 64-byte sliding window (작음)
-
-// 출력 형식:
-// [length_prefix varint][compressed_data]
-// - length_prefix: 원본 크기 (decoder가 미리 버퍼 할당)
-// - compressed_data: snappy-encoded bytes
-
-// 이더리움 사용 사례:
-// - beacon_block (~100KB): ~50KB로 압축 (50%)
-// - attestation (~500 bytes): ~400 bytes (20% reduction)
-// - blob_sidecar (~128KB): ~90KB (30% reduction)
-
-// 왜 Snappy를 Ethereum 2.0이 채택?
-// 1. 속도: 30K attestation/slot 처리 가능
-// 2. 구현 단순: 기존 libsnappy 재사용
-// 3. 언어별 구현체 풍부: Go/Rust/Java/JS 모두 최적화된 라이브러리`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Snappy (Google, 2011) — LZ77 기반, 속도 우선 압축</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-foreground/80">
+                <thead><tr className="border-b border-border/40">
+                  <th className="text-left p-2 font-bold">알고리즘</th><th className="text-right p-2">압축률</th><th className="text-right p-2">압축 속도</th><th className="text-right p-2">해제 속도</th>
+                </tr></thead>
+                <tbody>
+                  <tr className="border-b border-border/20 bg-blue-500/5"><td className="p-2 font-bold">Snappy</td><td className="text-right p-2">2~2.5x</td><td className="text-right p-2">~500 MB/s</td><td className="text-right p-2">~2000 MB/s</td></tr>
+                  <tr className="border-b border-border/20"><td className="p-2">LZ4</td><td className="text-right p-2">2~2.5x</td><td className="text-right p-2">~400 MB/s</td><td className="text-right p-2">~3000 MB/s</td></tr>
+                  <tr className="border-b border-border/20"><td className="p-2">gzip(-6)</td><td className="text-right p-2">3~4x</td><td className="text-right p-2">~30 MB/s</td><td className="text-right p-2">~300 MB/s</td></tr>
+                  <tr><td className="p-2">zstd(-3)</td><td className="text-right p-2">3~4x</td><td className="text-right p-2">~300 MB/s</td><td className="text-right p-2">~1000 MB/s</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">알고리즘 4단계</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-foreground/70">
+              <div className="rounded border border-border/40 p-2">32-bit rolling hash로 중복 탐색</div>
+              <div className="rounded border border-border/40 p-2">매치 → (distance, length) tag</div>
+              <div className="rounded border border-border/40 p-2">literal byte → literal tag</div>
+              <div className="rounded border border-border/40 p-2">64-byte sliding window</div>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2">출력 형식: <code>[length_prefix varint][compressed_data]</code>. length_prefix로 decoder가 미리 버퍼 할당.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4 text-center">
+              <p className="text-xs font-bold text-foreground/70 mb-1">beacon_block (~100KB)</p>
+              <p className="text-sm text-foreground/80">→ ~50KB (50% 압축)</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4 text-center">
+              <p className="text-xs font-bold text-foreground/70 mb-1">attestation (~500B)</p>
+              <p className="text-sm text-foreground/80">→ ~400B (20% 감소)</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4 text-center">
+              <p className="text-xs font-bold text-foreground/70 mb-1">blob_sidecar (~128KB)</p>
+              <p className="text-sm text-foreground/80">→ ~90KB (30% 감소)</p>
+            </div>
+          </div>
+          <p className="text-xs text-foreground/60">채택 이유 — 30K attestation/slot 처리 가능한 속도 + 기존 libsnappy 재사용 + Go/Rust/Java/JS 구현체 풍부.</p>
+        </div>
         <p className="leading-7">
           Snappy는 <strong>속도 우선</strong> 압축 알고리즘.<br />
           gzip보다 10~15배 빠른 압축/해제 → consensus 타이밍 제약 대응.<br />
@@ -62,48 +72,29 @@ export default function SnappyEncoding({ onCodeRef: _ }: Props) {
 
         {/* ── Ethereum 사용 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Ethereum 2.0의 SSZ-Snappy 사용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 인코딩 흐름:
-func EncodeMessage(msg any) ([]byte, error) {
-    // 1. SSZ 직렬화
-    ssz_bytes, err := msg.MarshalSSZ()
-    if err != nil { return nil, err }
-
-    // 2. Snappy 압축
-    snappy_bytes := snappy.Encode(nil, ssz_bytes)
-
-    // 3. 길이 prefix (stream의 경우)
-    // GossipSub은 message-per-payload라 prefix 불필요
-    return snappy_bytes, nil
-}
-
-// 디코딩 흐름:
-func DecodeMessage(data []byte) (any, error) {
-    // 1. Snappy 해제
-    ssz_bytes, err := snappy.Decode(nil, data)
-    if err != nil { return nil, err }
-
-    // 2. 크기 검증 (DoS 방어)
-    if len(ssz_bytes) > MAX_CHUNK_SIZE { // 10 MB
-        return nil, ErrMessageTooLarge
-    }
-
-    // 3. SSZ 역직렬화
-    msg := &BeaconBlock{}
-    if err := msg.UnmarshalSSZ(ssz_bytes); err != nil {
-        return nil, err
-    }
-    return msg, nil
-}
-
-// 프로토콜 이름에 인코딩 명시:
-// /eth2/<fork_digest>/beacon_block/ssz_snappy
-//                                    ↑ 인코딩 버전
-
-// 미래 대체:
-// ssz_snappy → ssz_zstd (향후 고려)
-// 현재: snappy 안정, 변경 계획 없음`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2"><code>EncodeMessage()</code> — 인코딩</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>1. SSZ 직렬화 — <code>msg.MarshalSSZ()</code></p>
+                <p>2. Snappy 압축 — <code>snappy.Encode(nil, ssz_bytes)</code></p>
+                <p>3. GossipSub은 message-per-payload → 길이 prefix 불필요</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2"><code>DecodeMessage()</code> — 디코딩</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>1. Snappy 해제 — <code>snappy.Decode(nil, data)</code></p>
+                <p>2. 크기 검증 — <code>MAX_CHUNK_SIZE</code>(10MB) 초과 시 거부(DoS 방어)</p>
+                <p>3. SSZ 역직렬화 — <code>msg.UnmarshalSSZ(ssz_bytes)</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs text-foreground/70">프로토콜 이름: <code>/eth2/&lt;fork_digest&gt;/beacon_block/<strong>ssz_snappy</strong></code> — 인코딩 명시. 미래 대체: <code>ssz_zstd</code> 향후 고려, 현재 변경 계획 없음.</p>
+          </div>
+        </div>
         <p className="leading-7">
           모든 P2P 메시지가 <strong>SSZ → Snappy → 전송</strong> 파이프라인.<br />
           토픽 이름에 <code>/ssz_snappy</code> suffix로 인코딩 명시.<br />

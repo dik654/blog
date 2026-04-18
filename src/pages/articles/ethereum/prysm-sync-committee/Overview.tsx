@@ -14,37 +14,40 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── Sync Committee 배경 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Sync Committee — light client 지원 (Altair+)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sync Committee (Altair fork, 2021-10)
-// Light client의 가벼운 consensus verification 제공
-
-// 문제: Light client가 block root 검증 방법?
-// - 전체 validator attestation 수집 → 불가능 (100만+)
-// - 모든 attestation 검증 → 너무 많은 BLS 연산
-// → 512명의 "대표 committee" 도입
-
-// Sync Committee 특성:
-// - 크기: 512 validators
-// - 교대 주기: 256 epochs (~27시간)
-// - 역할: 매 slot block_root에 BLS 서명
-// - 서명 집계: SyncAggregate (1 BLS signature + 512 bit flags)
-
-// Light client 사용:
-// 1. trusted sync committee snapshot 로드
-// 2. 새 LightClientUpdate 수신
-// 3. update.sync_aggregate 검증 (512 validators 2/3+ 서명)
-// 4. block_root가 attested 되었으면 신뢰
-
-// 왜 512명?
-// - 512 × 48 bytes (pubkey) = 24 KB (경량)
-// - BLS FastAggregateVerify로 빠른 검증 (~30ms)
-// - 2/3 supermajority = 341 validators로 안전
-
-// 27시간 주기:
-// - 8192 slots × 12초 = 27시간
-// - 너무 짧으면 committee 업데이트 자주 필요
-// - 너무 길면 소수 validator 지배 위험`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">문제: Light client의 block root 검증</p>
+            <p className="text-sm text-foreground/80">전체 1M+ validator attestation 수집/검증 불가능 &rarr; 512명 "대표 committee" 도입 (Altair fork, 2021-10)</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Sync Committee 특성</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">512 validators</p><p className="text-foreground/50">위원회 크기</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">256 epochs</p><p className="text-foreground/50">~27시간 교대</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">매 slot 서명</p><p className="text-foreground/50">block_root BLS</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">SyncAggregate</p><p className="text-foreground/50">1 sig + 512 bits</p></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Light client 사용 흐름</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>1. trusted sync committee snapshot 로드</p>
+                <p>2. 새 <code>LightClientUpdate</code> 수신</p>
+                <p>3. <code>sync_aggregate</code> 검증 (2/3+ = 341명)</p>
+                <p>4. block_root attested &rarr; 신뢰</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">설계 근거</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>512 x 48 bytes = 24 KB (경량)</p>
+                <p><code>FastAggregateVerify</code> ~30ms</p>
+                <p>27시간: 너무 짧으면 잦은 업데이트, 너무 길면 소수 지배</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Sync Committee는 <strong>light client 전용 validator 대표단</strong>.<br />
           512명 × 27시간 임기로 block root 서명 제공.<br />

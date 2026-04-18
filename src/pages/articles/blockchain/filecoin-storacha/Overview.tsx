@@ -15,33 +15,43 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Saturn → Storacha 전환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Saturn (2022-2023):
-// - Filecoin decentralized CDN
-// - IPFS retrieval
-// - no storage proof
-// - trust-based
-
-// Storacha (2024+):
-// - Saturn + web3.storage 통합
-// - PDP 온체인 증명 추가
-// - trustless hot storage
-// - enterprise-grade
-// - $5.99/TB pricing
-
-// 비교 (hot storage):
-// - AWS S3: $23/TB/mo
-// - Pinata: $20/TB/mo
-// - Storacha: $5.99/TB/mo
-// - 4x cheaper than S3
-
-// Target:
-// - Web3 developers
-// - NFT platforms
-// - dApps needing CDN
-// - video streaming
-// - enterprise clients`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Saturn (2022-2023)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Filecoin decentralized CDN</li>
+              <li>IPFS retrieval</li>
+              <li>저장 증명 없음, trust-based</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Storacha (2024+)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Saturn + web3.storage 통합</li>
+              <li>PDP 온체인 증명 추가</li>
+              <li>trustless hot storage, enterprise-grade</li>
+              <li>가격: <code className="text-xs bg-background px-1 rounded">$5.99/TB/mo</code></li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">가격 비교 (hot storage)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>AWS S3: <code className="text-xs bg-background px-1 rounded">$23/TB/mo</code></li>
+              <li>Pinata: <code className="text-xs bg-background px-1 rounded">$20/TB/mo</code></li>
+              <li>Storacha: <code className="text-xs bg-background px-1 rounded">$5.99/TB/mo</code> (S3 대비 4x 저렴)</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">Target</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Web3 developers, NFT platforms</li>
+              <li>dApps needing CDN</li>
+              <li>video streaming, enterprise clients</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Storacha = <strong>Saturn + web3.storage + PDP</strong>.<br />
           $5.99/TB hot storage (S3 대비 4x cheaper).<br />

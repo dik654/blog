@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import OverviewLawCompareViz from './viz/OverviewLawCompareViz';
+import OverviewPenaltyViz from './viz/OverviewPenaltyViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">가상자산 불공정거래란</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">법적 정의와 근거</h3>
         <p className="leading-7">
@@ -58,6 +64,8 @@ export default function Overview() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">자본시장법과의 비교</h3>
 
+        <OverviewLawCompareViz />
+
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
             <thead>
@@ -108,6 +116,8 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">처벌 수준</h3>
+
+        <OverviewPenaltyViz />
         <p className="leading-7">
           불공정거래에 대한 처벌은 형사처벌과 행정 제재로 나뉜다.
         </p>

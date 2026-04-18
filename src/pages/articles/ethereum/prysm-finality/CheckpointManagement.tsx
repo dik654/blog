@@ -16,49 +16,41 @@ export default function CheckpointManagement({ onCodeRef }: Props) {
 
         {/* ── Checkpoint 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Checkpoint — epoch boundary block</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Checkpoint: (epoch, block_root) 쌍
-type Checkpoint struct {
-    Epoch Epoch    // epoch 번호
-    Root Root       // epoch 시작 slot의 block_root
-}
-
-// Epoch boundary block:
-// 각 epoch의 첫 slot의 block_root
-// 또는 그 slot이 비어있으면 가장 최근 블록
-
-// compute_epoch_at_slot 공식:
-// epoch = slot / SLOTS_PER_EPOCH (32)
-//
-// epoch 0: slots 0~31
-// epoch 1: slots 32~63
-// epoch 2: slots 64~95
-
-// 중요한 checkpoint들:
-// - genesis_checkpoint: Epoch=0, Root=genesis
-// - previous_justified_checkpoint: 이전 justified
-// - current_justified_checkpoint: 현재 justified
-// - finalized_checkpoint: finalized (가장 중요)
-
-// Attestation의 checkpoint:
-struct AttestationData {
-    slot: Slot,
-    index: CommitteeIndex,
-    beacon_block_root: Root,
-    source: Checkpoint,  // 출발 checkpoint (justified)
-    target: Checkpoint,  // 목표 checkpoint (vote 대상)
-}
-
-// 2-round voting:
-// validator가 (source, target) 쌍에 서명
-// source는 이미 justified (또는 finalized)
-// target은 이번 epoch justify 대상
-
-// 슬래싱 조건:
-// 1. Surrounded vote: 한 attestation이 다른 것을 "감쌈"
-//    (source_a <= source_b AND target_b < target_a)
-// 2. Double vote: 같은 target epoch에 두 번 서명`}
-        </pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Checkpoint 구조체</div>
+            <div className="text-sm space-y-1">
+              <div><code>Checkpoint.Epoch</code> — epoch 번호</div>
+              <div><code>Checkpoint.Root</code> — epoch 시작 slot의 <code>block_root</code></div>
+              <div className="text-muted-foreground mt-1">slot이 비어있으면 가장 최근 블록의 root 사용</div>
+              <div className="text-muted-foreground"><code>epoch = slot / SLOTS_PER_EPOCH (32)</code></div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">주요 Checkpoint 종류</div>
+            <ul className="text-sm space-y-1">
+              <li><code>genesis_checkpoint</code> — Epoch=0, Root=genesis</li>
+              <li><code>previous_justified_checkpoint</code> — 이전 justified</li>
+              <li><code>current_justified_checkpoint</code> — 현재 justified</li>
+              <li><code>finalized_checkpoint</code> — finalized (가장 중요)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">AttestationData — 2-round voting</div>
+            <div className="text-sm space-y-1">
+              <div><code>source: Checkpoint</code> — 출발 (이미 justified)</div>
+              <div><code>target: Checkpoint</code> — 목표 (이번 epoch justify 대상)</div>
+              <div className="text-muted-foreground mt-1">validator가 (source, target) 쌍에 서명</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <div className="text-xs font-semibold text-red-400 mb-2">슬래싱 조건</div>
+            <ul className="text-sm space-y-1">
+              <li><strong>Surrounded vote</strong> — 한 attestation이 다른 것을 "감쌈" (<code>source_a &lt;= source_b AND target_b &lt; target_a</code>)</li>
+              <li><strong>Double vote</strong> — 같은 target epoch에 두 번 서명</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Checkpoint = <strong>epoch 경계 block의 reference</strong>.<br />
           (epoch, root) 쌍으로 specific block 식별.<br />
@@ -67,50 +59,28 @@ struct AttestationData {
 
         {/* ── UpdateJustifiedCheckpoint ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">UpdateJustifiedCheckpoint — 안전 조건 체크</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 justified checkpoint 갱신
-// 모든 노드가 동일 시점에 업데이트되도록 careful
-
-func (s *Service) UpdateJustifiedCheckpoint(
-    ctx context.Context,
-    newJustified Checkpoint,
-) error {
-    s.lock.Lock()
-    defer s.lock.Unlock()
-
-    // 1. 퇴행 방지: 새 값의 epoch이 기존보다 크거나 같아야
-    if newJustified.Epoch < s.currentJustifiedCheckpoint.Epoch {
-        return ErrInvalidJustifiedCheckpoint
-    }
-
-    // 2. 같은 epoch인데 root가 다르면 거부
-    //    (불가능해야 함, 하지만 안전 체크)
-    if newJustified.Epoch == s.currentJustifiedCheckpoint.Epoch &&
-       newJustified.Root != s.currentJustifiedCheckpoint.Root {
-        return ErrConflictingCheckpoint
-    }
-
-    // 3. 이전 justified를 previous로 이동
-    s.prevJustifiedCheckpoint = s.currentJustifiedCheckpoint
-    s.currentJustifiedCheckpoint = newJustified
-
-    // 4. Fork choice store에 전달
-    s.forkChoice.UpdateJustifiedCheckpoint(newJustified)
-
-    // 5. DB에 영구 저장
-    s.beaconDB.SaveJustifiedCheckpoint(newJustified)
-
-    // 6. Event 발행 (RPC subscribers)
-    s.eventFeed.Send(&JustifiedEvent{Checkpoint: newJustified})
-
-    return nil
-}
-
-// 안전 불변식:
-// - justified_epoch은 단조 증가
-// - 같은 epoch의 같은 root만 허용
-// - 모든 노드가 동일 sequence를 봄 (consensus)`}
-        </pre>
+        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">UpdateJustifiedCheckpoint 처리 흐름</div>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>s.lock.Lock()</code> — 동시성 보호</li>
+              <li>퇴행 방지: <code>newJustified.Epoch &lt; current.Epoch</code> → <code>ErrInvalidJustifiedCheckpoint</code></li>
+              <li>충돌 방지: 같은 epoch인데 다른 root → <code>ErrConflictingCheckpoint</code></li>
+              <li><code>prevJustified = current</code> → <code>current = newJustified</code></li>
+              <li><code>forkChoice.UpdateJustifiedCheckpoint()</code> — store 전달</li>
+              <li><code>beaconDB.SaveJustifiedCheckpoint()</code> — DB 영구 저장</li>
+              <li><code>eventFeed.Send(&amp;JustifiedEvent)</code> — RPC subscribers 알림</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <div className="text-xs font-semibold text-amber-400 mb-2">안전 불변식</div>
+            <ul className="text-sm space-y-1">
+              <li><code>justified_epoch</code>은 단조 증가만 허용</li>
+              <li>같은 epoch에는 같은 root만 허용</li>
+              <li>모든 노드가 동일 sequence를 봄 (consensus)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <code>UpdateJustifiedCheckpoint</code>가 <strong>단조 증가 불변식 유지</strong>.<br />
           epoch 퇴행 금지 + 같은 epoch 다른 root 거부.<br />

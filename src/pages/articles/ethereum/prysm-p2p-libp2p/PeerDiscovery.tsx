@@ -20,47 +20,41 @@ export default function PeerDiscovery({ onCodeRef }: Props) {
 
         {/* ── ENR 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ENR — 노드 정보 서명된 레코드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ENR (Ethereum Node Record, EIP-778)
-// secp256k1 서명된 key-value 레코드
-
-type ENR struct {
-    Signature []byte           // 전체 레코드에 대한 서명
-    Seq       uint64           // 시퀀스 번호 (증가 시 새 버전)
-    Pairs     map[string]bytes // key-value 쌍
-}
-
-// 필수 필드:
-// "id": "v4" (identity scheme)
-// "secp256k1": 공개키 (33 bytes compressed)
-
-// IP 필드:
-// "ip": IPv4 주소 (4 bytes)
-// "ip6": IPv6 주소 (16 bytes)
-// "tcp": TCP 포트 (big-endian)
-// "udp": UDP 포트 (Discv5용)
-
-// Ethereum 2.0 추가 필드:
-// "eth2": Eth2Data (128 bytes)
-//   - fork_digest (4 bytes): 현재 포크 식별자
-//   - next_fork_version (4 bytes): 다음 포크 버전
-//   - next_fork_epoch (8 bytes): 다음 포크 epoch
-// "attnets": attestation subnet bitfield (8 bytes)
-//   - 64 subnets → 64 bits
-//   - 자신이 구독 중인 서브넷 표시
-// "syncnets": sync committee subnet bitfield (1 byte)
-//   - 4 subnets → 4 bits
-
-// ENR 인코딩:
-// enr:-Ku4QHqVeJ8PPICcWk1vSn_XcSkjOk...
-// base64 URL-safe 인코딩, "enr:" prefix
-
-// 검증:
-// 1. 서명 확인 (secp256k1)
-// 2. id=="v4" 확인
-// 3. 서명자가 "secp256k1" 필드와 일치 확인
-// → valid한 ENR만 저장`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">ENR (Ethereum Node Record, EIP-778) — <code>secp256k1</code> 서명된 key-value 레코드</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-foreground/80 mb-3">
+              <span><code>Signature: []byte</code> — 전체 레코드 서명</span>
+              <span><code>Seq: uint64</code> — 시퀀스(증가 시 새 버전)</span>
+              <span><code>Pairs: map[string]bytes</code> — key-value 쌍</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">id</span> — <code>"v4"</code> (identity scheme)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">secp256k1</span> — 공개키(33B compressed)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">ip</span> — IPv4(4B) / <span className="font-bold">ip6</span> — IPv6(16B)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">tcp</span> — TCP 포트 / <span className="font-bold">udp</span> — UDP 포트</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Ethereum 2.0 추가 필드</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">eth2</span> (128B) — <code>fork_digest</code>(4B) + <code>next_fork_version</code>(4B) + <code>next_fork_epoch</code>(8B)</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">attnets</span> (8B) — 64 attestation subnet bitfield. 구독 중인 서브넷 표시</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">syncnets</span> (1B) — 4 sync committee subnet bitfield</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-1">ENR 인코딩</p>
+              <p className="text-sm text-foreground/80 font-mono">enr:-Ku4QHqVeJ8PPICcWk1vSn_XcSkjOk...</p>
+              <p className="text-xs text-foreground/60 mt-1">base64 URL-safe 인코딩, <code>"enr:"</code> prefix</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-1">검증 3단계</p>
+              <p className="text-sm text-foreground/80">1. 서명 확인(<code>secp256k1</code>) → 2. <code>id=="v4"</code> 확인 → 3. 서명자 = <code>secp256k1</code> 필드 일치. valid ENR만 저장.</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ENR</code>이 <strong>노드의 정체성 카드</strong>.<br />
           서명된 key-value → 변조 방지 + 확장 가능.<br />
@@ -76,56 +70,42 @@ type ENR struct {
 
         {/* ── Kademlia 기반 탐색 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Kademlia Lookup — XOR 거리 기반</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Discv5는 Kademlia DHT 기반
-// 노드 ID: keccak256(public_key)[:32] = 256 bits
-
-// XOR 거리:
-// distance(a, b) = a XOR b (256-bit integer)
-// 공통 prefix가 길수록 거리 가까움
-
-// k-bucket 구조:
-// 256개 bucket × k(16) 노드
-// bucket[i] = 자신과 거리 [2^i, 2^(i+1)) 인 노드
-
-// FINDNODE lookup:
-async func Lookup(target NodeID) []ENR {
-    // 1. 초기 후보: 자신의 bucket에서 target에 가까운 α(3)개
-    candidates := findClosestK(routingTable, target, ALPHA)
-
-    queried := set{}
-    result := []ENR{}
-
-    for {
-        // 2. 미조회 후보 중 가장 가까운 α개에게 FINDNODE 병렬 발송
-        toQuery := selectUnqueried(candidates, queried, ALPHA)
-        if len(toQuery) == 0 { break }
-
-        responses := parallelMap(toQuery, func(node) {
-            return sendFindNode(node, target)  // UDP 요청/응답
-        })
-
-        // 3. 응답받은 노드들을 candidates에 추가
-        for _, enrs := range responses {
-            for _, enr := range enrs {
-                candidates.add(enr)
-            }
-        }
-        queried.addAll(toQuery)
-
-        // 4. closest K (16)개가 안정화되면 종료
-        result = candidates.sortByDistance(target)[:K]
-        if !improved(result) { break }
-    }
-
-    return result
-}
-
-// 복잡도:
-// 네트워크 크기 N에 대해 O(log N) round
-// 각 round에서 α=3개 노드 병렬 쿼리
-// 메인넷(~30K 노드) → ~15 round → 수 초`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Discv5 — Kademlia DHT 기반</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">노드 ID</span> — <code>keccak256(pubkey)[:32]</code> = 256 bits</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">XOR 거리</span> — <code>distance(a,b) = a XOR b</code>. 공통 prefix 길수록 가까움</div>
+              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">k-bucket</span> — 256개 bucket x k(16) 노드. <code>bucket[i]</code> = 거리 [2^i, 2^(i+1))</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3"><code>Lookup(target NodeID)</code> — FINDNODE 반복 탐색</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80">초기 후보: routing table에서 target에 가까운 alpha(3)개 선택</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80">미조회 후보 중 가장 가까운 alpha개에게 <code>FINDNODE</code> 병렬 발송(UDP)</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80">응답받은 노드들을 candidates에 추가</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
+                <span className="font-mono text-xs text-orange-500 shrink-0">4</span>
+                <div className="text-foreground/80">closest K(16)개가 안정화되면 종료</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">O(log N) round</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">각 round alpha=3 병렬</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">~30K 노드 → ~15 round → 수 초</div>
+          </div>
+        </div>
         <p className="leading-7">
           Discv5의 lookup은 <strong>iterative Kademlia</strong>.<br />
           매 라운드 α=3개 병렬 쿼리 → O(log N) 라운드에 수렴.<br />
@@ -134,48 +114,35 @@ async func Lookup(target NodeID) []ENR {
 
         {/* ── 서브넷 필터링 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">서브넷 필터링 — attnets 기반 피어 선별</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ethereum 2.0 CL은 64개 attestation subnet 운영
-// validator는 자기 committee의 subnet에만 attestation 전파
-// → 전체 subnet 피어 불필요, 자기 subnet 피어만 있으면 됨
-
-// Prysm의 subnet 피어 발견:
-func FindSubnetPeers(subnet uint64, desiredCount int) []ENR {
-    candidates := []ENR{}
-
-    // 무작위 lookup 실행 중 attnets 체크
-    for len(candidates) < desiredCount {
-        random_target := randomNodeID()
-        peers := Discv5.Lookup(random_target)
-
-        for _, peer := range peers {
-            // attnets 비트필드 파싱
-            attnets_bits, ok := peer.Get("attnets")
-            if !ok { continue }
-
-            // subnet의 bit가 set되어 있는지 확인
-            if getBit(attnets_bits, subnet) {
-                candidates = append(candidates, peer)
-            }
-        }
-    }
-
-    return candidates
-}
-
-// 서브넷별 target 피어 수:
-// - Attestation subnet 각: 3~10 피어
-// - Sync committee subnet 각: 10 피어
-// - 총 필요 피어: ~100~200
-
-// subnet 전환 시나리오:
-// 매 epoch(32 slots)마다 validator 커미티 재배정
-// → 다른 subnet 구독 필요 → 새 피어 탐색
-
-// 효율:
-// 무작위 lookup + 필터링으로 충분 (DHT 보장 없음)
-// 다행히 메인넷 피어가 많아 빠르게 찾음`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">서브넷 필터링 배경</p>
+            <p className="text-sm text-foreground/80">Ethereum 2.0 CL은 64개 attestation subnet 운영. validator는 자기 committee subnet에만 attestation 전파 → 전체 subnet 피어 불필요, 자기 subnet 피어만 있으면 됨.</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3"><code>FindSubnetPeers(subnet, desiredCount)</code> — attnets 기반 탐색</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80">무작위 <code>randomNodeID()</code>로 <code>Discv5.Lookup()</code> 실행</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80">각 피어의 <code>attnets</code> 비트필드 파싱 → 원하는 subnet bit가 set인지 확인</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80"><code>desiredCount</code>에 도달할 때까지 반복</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Attestation subnet: 3~10 피어</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Sync committee: 10 피어</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">총: ~100~200 피어</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">매 epoch 재배정 → 새 탐색</div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Subnet 필터링</strong>으로 불필요 피어 연결 방지.<br />
           attnets bit 체크 → 자기 subnet 피어만 선택.<br />

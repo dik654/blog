@@ -32,38 +32,28 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── MEV 종류 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">MEV 종류 — 4가지 주요 전략</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. Arbitrage (차익거래)
-// - DEX 간 가격 차이 발견 → 한 쪽에서 사서 다른 쪽에서 팜
-// - 리스크 낮음, 수익 중간
-// - 전체 MEV의 ~50%
-
-// 예시:
-// Uniswap: 1 ETH = 1800 USDC
-// SushiSwap: 1 ETH = 1810 USDC
-// → Uniswap에서 사서 SushiSwap에서 팔면 10 USDC 이익
-
-// 2. Liquidation (청산)
-// - 담보 대출의 담보비율 부족 → 강제 청산
-// - 청산자에게 수수료 지급 (~5~10%)
-// - Aave, Compound, MakerDAO에서 자주 발생
-
-// 3. Sandwich Attack (샌드위치 공격)
-// - victim의 swap TX 발견
-// - front-run: victim 전에 같은 방향 swap → 가격 상승
-// - back-run: victim 후에 반대 swap → 차익 실현
-// - victim이 slippage 만큼 손해
-
-// 4. Backrun / Long-tail MEV
-// - 특정 이벤트 직후 기회 포착
-// - NFT 민팅 첫 블록 스나이핑
-// - oracle 업데이트 활용
-
-// MEV 규모 (메인넷 추정):
-// - 연간 ~$500M - $1B 추출
-// - 하루 평균 ~$1M - $3M
-// - 혼잡 시기 급증`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
+              <p className="text-xs font-bold text-green-500 mb-1">Arbitrage (차익거래)</p>
+              <p className="text-sm text-foreground/80">DEX 간 가격 차이 → 낮은 곳에서 매수, 높은 곳에서 매도. 리스크 낮음. 전체 MEV ~50%.</p>
+              <p className="text-xs text-foreground/50 mt-1">예: Uniswap 1800 / SushiSwap 1810 → 10 USDC 이익</p>
+            </div>
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-1">Liquidation (청산)</p>
+              <p className="text-sm text-foreground/80">담보 대출 담보비율 부족 시 강제 청산. 청산자에게 ~5~10% 수수료. Aave, Compound, MakerDAO.</p>
+            </div>
+            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+              <p className="text-xs font-bold text-red-400 mb-1">Sandwich Attack</p>
+              <p className="text-sm text-foreground/80">victim swap TX 발견 → front-run(가격 상승) → back-run(차익 실현). victim이 slippage 만큼 손해.</p>
+            </div>
+            <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-1">Backrun / Long-tail</p>
+              <p className="text-sm text-foreground/80">이벤트 직후 기회 포착. NFT 민팅 스나이핑, oracle 업데이트 활용 등.</p>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/60">MEV 규모: 연간 ~$500M~$1B / 하루 ~$1M~$3M / 혼잡 시기 급증.</p>
+        </div>
         <p className="leading-7">
           MEV는 <strong>"block space의 숨은 가치"</strong> — TX 순서로 인해 생기는 추가 수익.<br />
           차익거래와 청산이 주요 수익원 — sandwich는 윤리적 논란 지속.<br />
@@ -72,42 +62,29 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── PBS 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PBS — 4개 역할 분리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 4개 역할:
-//
-// 1. Searcher (MEV 봇):
-//    - mempool 모니터링
-//    - MEV 기회 발견
-//    - 번들(여러 TX 묶음) 생성
-//    - builder에 번들 제출 + 수익 공유 제안
-//
-// 2. Builder (블록 빌더):
-//    - 여러 searcher로부터 번들 수집
-//    - 공개 mempool TX도 포함
-//    - 최적 TX 순서 계산 (NP-hard 문제)
-//    - 완성된 블록을 relay에 입찰
-//
-// 3. Relay (중개자):
-//    - builder들의 입찰 수집
-//    - validator에게 블록 header만 전달 (blind auction)
-//    - validator가 header 서명 후 full block 공개
-//    - trusted 역할: builder 검열 방지
-//
-// 4. Proposer (validator):
-//    - relay로부터 최고 입찰 header 수신
-//    - header 서명 후 전파 약속
-//    - full block 수신 후 네트워크 전파
-//    - bid 금액 수령
-
-// 수익 흐름:
-// user → searcher → builder → relay → proposer
-//       (gas fee)  (tip)    (수수료)  (bid)
-
-// Reth의 역할:
-// - 기본은 self-build (EL이 직접 블록 만듦)
-// - MEV-Boost 활성화 시 builder 블록 받아서 사용
-// - Reth 자체를 builder 기반으로 사용 가능 (rbuilder)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-orange-500 mb-2">Searcher (MEV 봇)</p>
+              <p className="text-sm text-foreground/80">mempool 모니터링 → MEV 기회 발견 → 번들(TX 묶음) 생성 → builder에 제출 + 수익 공유 제안.</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-blue-500 mb-2">Builder (블록 빌더)</p>
+              <p className="text-sm text-foreground/80">번들 수집 + 공개 mempool TX 포함 → 최적 TX 순서 계산(NP-hard) → relay에 입찰.</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-green-500 mb-2">Relay (중개자)</p>
+              <p className="text-sm text-foreground/80">builder 입찰 수집 → validator에게 header만 전달(blind auction) → header 서명 후 full block 공개.</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-purple-500 mb-2">Proposer (validator)</p>
+              <p className="text-sm text-foreground/80">relay에서 최고 입찰 header 수신 → 서명 → full block 수신 → 네트워크 전파 → bid 금액 수령.</p>
+            </div>
+          </div>
+          <div className="rounded border border-border/40 bg-muted/20 p-3 text-sm text-foreground/60">
+            수익 흐름: user → searcher(gas fee) → builder(tip) → relay(수수료) → proposer(bid). Reth: 기본 self-build, MEV-Boost 활성화 시 builder 블록 사용, rbuilder로 builder 역할도 가능.
+          </div>
+        </div>
         <p className="leading-7">
           <strong>PBS의 4개 역할 분리</strong>가 MEV 시장의 표준 구조.<br />
           각 역할이 전문화 → 전체 시스템 효율성 향상.<br />
@@ -116,43 +93,25 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── MEV-Boost vs self-build ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">MEV-Boost vs Self-Build — Validator 선택</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Validator가 블록 제안 시 선택지
-
-// 옵션 1: Self-Build (EL이 직접 만듦)
-// validator → EL: FCU(attrs) → PayloadJob 시작
-// validator → EL: getPayload() → EL의 블록 받음
-// 수익: ~0.05 ETH (평균)
-// 장점: 간단, 의존성 없음
-// 단점: MEV 놓침
-
-// 옵션 2: MEV-Boost (외부 builder 사용)
-// validator → relay: getHeader(slot, parent_hash)
-// relay → builder들: 최고 bid 수집
-// relay → validator: 최고 bid header 반환
-// validator → relay: getPayload(signed_header)
-// relay → validator: full block 반환
-// 수익: ~0.15 ETH (평균, 혼잡 시 10+ ETH)
-// 장점: MEV 수익 포함, 자동화
-// 단점: relay 신뢰 필요, 지연
-
-// MEV-Boost 채택률:
-// - 메인넷 validator ~90%가 MEV-Boost 사용
-// - 나머지는 solo staker + self-build
-// - Lido, Coinbase, Binance 등 대형 스테이커 거의 100%
-
-// 유명 relay:
-// - Flashbots Relay (가장 큰 점유율)
-// - BloXroute
-// - Eden Network
-// - Ultra Sound Relay
-// - Agnostic Relay
-
-// Reth 통합:
-// - reth 자체는 MEV-Boost 클라이언트 아님
-// - CL(Lighthouse, Prysm, Teku 등)이 MEV-Boost 통합
-// - validator가 MEV-Boost 활성화 시 CL이 relay와 통신`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">Self-Build (EL 직접 생성)</p>
+              <p className="text-sm text-foreground/80">FCU(attrs) → PayloadJob → getPayload(). 수익 ~0.05 ETH(평균).</p>
+              <p className="text-xs text-green-500 mt-1">장점: 간단, 의존성 없음</p>
+              <p className="text-xs text-red-400">단점: MEV 놓침</p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">MEV-Boost (외부 builder)</p>
+              <p className="text-sm text-foreground/80">getHeader → 최고 bid header 수신 → getPayload(signed_header) → full block. 수익 ~0.15 ETH(혼잡 시 10+).</p>
+              <p className="text-xs text-green-500 mt-1">장점: MEV 수익 포함</p>
+              <p className="text-xs text-red-400">단점: relay 신뢰 필요</p>
+            </div>
+          </div>
+          <div className="rounded border border-border/40 bg-muted/20 p-3 text-sm text-foreground/60">
+            MEV-Boost 채택률: 메인넷 validator ~90%. 유명 relay: Flashbots, BloXroute, Ultra Sound, Agnostic. CL이 MEV-Boost 통합 — EL(Reth)는 fallback self-build.
+          </div>
+        </div>
         <p className="leading-7">
           메인넷 <strong>validator 90%가 MEV-Boost 사용</strong>.<br />
           self-build는 solo staker나 탈중앙 지향 운영자의 선택.<br />

@@ -51,135 +51,111 @@ export default function INTT() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">INTT 수식 유도 및 응용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Inverse NTT (INTT)
-//
-// Derivation:
-//
-//   NTT:  y = W * a  (evaluate at unity roots)
-//   INTT: a = W^{-1} * y
-//
-//   Claim: W^{-1}[i][j] = (1/n) * w^{-ij}
-//
-//   Proof:
-//     (W * W^{-1})[i][k] = sum_j (w^{ij} * (1/n) * w^{-jk})
-//                       = (1/n) * sum_j w^{j(i-k)}
-//
-//     If i = k: sum = (1/n) * n = 1 (diagonal)
-//     If i != k: sum of n-th roots of unity = 0 (off-diagonal)
-//
-//     So W * W^{-1} = I ✓
-//
-//   This means:
-//     a_j = (1/n) * sum_k y_k * w^{-jk}
-//     → Same structure as forward NTT
-//     → Use w^{-1} instead of w, divide by n
 
-// Key observation:
-//   INTT uses EXACT SAME ALGORITHM as NTT
-//   Just substitute:
-//     w → w^{-1}
-//     Scale result by 1/n
-//
-//   Huge practical benefit: ONE implementation
-//   Used for both forward and inverse
+        <h4 className="text-lg font-semibold mt-5 mb-2">유도</h4>
+        <p>
+          NTT: <Math>{'\\mathbf{y} = W \\cdot \\mathbf{a}'}</Math>, INTT: <Math>{'\\mathbf{a} = W^{-1} \\cdot \\mathbf{y}'}</Math>.
+          <br />
+          <Math>{'W^{-1}[i][j] = \\frac{1}{n} \\omega^{-ij}'}</Math> 임을 증명:
+        </p>
+        <Math display>{'\\underbrace{(W \\cdot W^{-1})[i][k]}_{\\text{항등 행렬의 (i,k) 원소}} = \\underbrace{\\frac{1}{n}}_{\\text{정규화}} \\sum_j \\underbrace{\\omega^{j(i-k)}}_{\\text{단위근 거듭제곱}} = \\begin{cases} 1 & i = k \\\\ 0 & i \\neq k \\end{cases}'}</Math>
+        <p className="text-sm text-muted-foreground mt-2">
+          W = DFT 행렬 (<Math>{'W[i][j] = \\omega^{ij}'}</Math>), W⁻¹ = IDFT 행렬 (<Math>{'W^{-1}[i][j] = \\frac{1}{n}\\omega^{-ij}'}</Math>)<br />
+          i=k이면 <Math>{'\\sum_j \\omega^0 = n'}</Math>이므로 1/n × n = 1, i≠k이면 등비급수 합이 0 → 항등 행렬
+        </p>
+        <p>
+          따라서: <Math>{'a_j = \\frac{1}{n} \\sum_k y_k \\cdot \\omega^{-jk}'}</Math>.
+          순방향 NTT와 동일한 구조이며 <Math>{'\\omega \\to \\omega^{-1}'}</Math>로 대체하고 결과를 n으로 나누면 된다
+        </p>
 
-// Computing n^{-1} in F_p:
-//
-//   n^{-1} = n^{p-2} mod p  (Fermat's little theorem)
-//   O(log p) multiplications
-//   Computed once, used n times
+        <h4 className="text-lg font-semibold mt-5 mb-2">핵심 관찰</h4>
+        <p>
+          INTT는 NTT와 <strong>정확히 같은 알고리즘</strong>을 사용한다.
+          <Math>{'\\omega \\to \\omega^{-1}'}</Math> 대체, 결과에 <Math>{'1/n'}</Math> 스케일링.
+          <br />
+          실용적 이점: 하나의 구현으로 순방향과 역방향 모두 처리
+        </p>
 
-// Normalization strategies:
-//
-//   Strategy 1: divide at the end
-//     Perform INTT as forward with w^{-1}
-//     At the very end: a[i] *= n_inv for all i
-//     → 1 extra O(n) pass
-//
-//   Strategy 2: fold into twiddle factors
-//     Use (w^{-1} * n^{-1/k}) instead of w^{-1}
-//     where k = log2(n)
-//     → distributes scaling through butterflies
-//     → Fewer passes, same total ops
-//
-//   Strategy 3: combined with final bit-reversal
-//     If bit-rev needed anyway: integrate
-//     → Near-zero overhead
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          <Math>{'n^{-1}'}</Math> 계산
+        </h4>
+        <p>
+          <Math>{'\\mathbb{F}_p'}</Math>에서 <Math>{'n^{-1} = n^{p-2} \\bmod p'}</Math> (Fermat 소정리).
+          <Math>{'O(\\log p)'}</Math> 곱셈으로 한 번만 계산하면 n번 재사용한다
+        </p>
 
-// Round-trip consistency check:
-//
-//   For any vector a:
-//     INTT(NTT(a)) == a
-//
-//   Verification pattern in test suites:
-//     a = random vector
-//     b = NTT(a)
-//     c = INTT(b)
-//     assert(a == c)  // sanity check
+        <h4 className="text-lg font-semibold mt-5 mb-2">정규화 전략</h4>
+      </div>
 
-// Applications of INTT:
-//
-//   1. Polynomial multiplication:
-//      c = INTT(NTT(a) pointwise NTT(b))
-//      Final step recovers coefficients
-//
-//   2. Polynomial interpolation:
-//      Given evaluations, get coefficients
-//      INTT is exactly the Lagrange interp
-//      on unity roots
-//
-//   3. Polynomial division:
-//      p(x) / q(x) via inverse
-//      Requires multiple NTT/INTT
-//
-//   4. Convolution:
-//      discrete conv = pointwise mult in freq domain
-//      INTT to return to time domain
+      <div className="not-prose grid grid-cols-1 gap-3 my-3">
+        {[
+          { name: '전략 1: 마지막에 나누기', desc: 'ω⁻¹로 순방향 수행 후 최종 결과에 a[i] *= n⁻¹ 적용. O(n) 추가 패스 1회', color: 'indigo' },
+          { name: '전략 2: 트위들 인자에 접기', desc: 'ω⁻¹ 대신 ω⁻¹·n^{-1/k}를 사용하여 butterfly를 통해 스케일링 분배. 동일한 총 연산, 적은 패스', color: 'emerald' },
+          { name: '전략 3: bit-reversal과 결합', desc: 'bit-rev이 어차피 필요하면 통합 → 거의 오버헤드 없음', color: 'amber' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
 
-// Complexity summary:
-//
-//   NTT:  O(n log n) multiplications
-//   Pointwise mult: O(n) multiplications
-//   INTT: O(n log n) multiplications + O(n) divide
-//
-//   Total poly multiply: 3 FFTs + O(n)
-//                      = O(n log n)
-//
-//   Typical size n = 2^20 to 2^28 in modern ZK
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">왕복 일관성</h4>
+        <p>
+          임의 벡터 a에 대해 <code>INTT(NTT(a)) == a</code>.
+          테스트에서는 랜덤 벡터로 이 항등식을 검증한다
+        </p>
 
-// Batched NTT/INTT:
-//
-//   Multiple independent polys in parallel
-//   GPU: batch size 32-128 fits in shared memory
-//   CPU with SIMD: batch 4-8
+        <h4 className="text-lg font-semibold mt-5 mb-2">INTT 응용</h4>
+      </div>
 
-// Special case: bit-reverse trick
-//
-//   Forward NTT: natural → bit-rev
-//   Inverse NTT: bit-rev → natural
-//   → If output bit-rev acceptable, skip explicit permutation
-//   → Saves O(n) work
-//
-//   Common pattern in ZK provers:
-//     NTT(coeffs_natural) → evals_bitrev
-//     pointwise ops in bitrev → compat with INTT
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        {[
+          { name: '다항식 곱셈', desc: 'c = INTT(NTT(a) ⊙ NTT(b)). 마지막 단계에서 계수 복원', color: 'indigo' },
+          { name: '다항식 보간', desc: '평가값 → 계수. 단위근 위 Lagrange 보간과 동치', color: 'emerald' },
+          { name: '다항식 나눗셈', desc: 'p(x)/q(x)를 역수로 계산. 여러 NTT/INTT 필요', color: 'amber' },
+          { name: '합성곱', desc: '이산 합성곱 = 주파수 영역 점별 곱. INTT로 시간 영역 복귀', color: 'indigo' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
 
-// Implementation layers:
-//
-//   High-level (ark-poly):
-//     DensePolynomial<F>::{fft, ifft}
-//     EvaluationDomain<F>::{fft_in_place, ifft_in_place}
-//
-//   Low-level (bellperson, plonk-core):
-//     fn ntt(values: &mut [F], omega: F, log_n: u32)
-//     Cooley-Tukey radix-2 butterflies
-//
-//   Assembly (BLST, IceCream):
-//     Hand-tuned butterfly loops
-//     AVX-512 / NEON intrinsics
-//     ~2-3x faster than Rust intrinsics`}
-        </pre>
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">복잡도 요약</h4>
+        <p>
+          NTT <Math>{'O(n \\log n)'}</Math> + 점별곱 <Math>{'O(n)'}</Math> + INTT <Math>{'O(n \\log n)'}</Math>
+          = 총 <Math>{'O(n \\log n)'}</Math>.
+          <br />
+          현대 ZK에서 일반적 크기: <Math>{'n = 2^{20}'}</Math> ~ <Math>{'2^{28}'}</Math>.
+          배치 처리: GPU 32-128, CPU SIMD 4-8개 병렬
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">Bit-reverse 트릭</h4>
+        <p>
+          순방향 NTT: natural → bit-rev, 역방향: bit-rev → natural.
+          bit-rev 출력이 허용되면 명시적 permutation을 건너뛰어 <Math>{'O(n)'}</Math> 절약.
+          <br />
+          ZK 프로버 패턴: <code>NTT(계수_natural) → 평가_bitrev → 점별연산 → INTT</code>
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">구현 계층</h4>
+      </div>
+
+      <div className="not-prose grid grid-cols-1 gap-3 my-3">
+        {[
+          { name: '고수준 (ark-poly)', desc: 'DensePolynomial<F>::{fft, ifft}, EvaluationDomain<F>::{fft_in_place, ifft_in_place}', color: 'indigo' },
+          { name: '저수준 (bellperson, plonk-core)', desc: 'fn ntt(values: &mut [F], omega: F, log_n: u32) — Cooley-Tukey radix-2 butterfly', color: 'emerald' },
+          { name: '어셈블리 (BLST, IceCream)', desc: '수동 튜닝된 butterfly 루프, AVX-512/NEON 인트린식. Rust 대비 ~2-3x 빠름', color: 'amber' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75 font-mono text-xs">{p.desc}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

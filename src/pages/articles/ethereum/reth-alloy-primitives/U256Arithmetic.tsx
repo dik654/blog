@@ -28,28 +28,26 @@ export default function U256Arithmetic({ onCodeRef }: {
 
         {/* ── ruint 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ruint::Uint — 범용 BigInt 프레임워크</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ruint 크레이트의 범용 타입
-pub struct Uint<const BITS: usize, const LIMBS: usize> {
-    limbs: [u64; LIMBS],
-}
-
-// 이더리움에서 사용하는 별칭
-pub type U128 = Uint<128, 2>;  // 2 limbs
-pub type U160 = Uint<160, 3>;  // 3 limbs (Address용 정수 변환)
-pub type U256 = Uint<256, 4>;  // 4 limbs (EVM 워드 크기)
-pub type U384 = Uint<384, 6>;  // 6 limbs (BLS12-381)
-pub type U512 = Uint<512, 8>;  // 8 limbs (modexp 등)
-
-// const generics 이점:
-// - BITS와 LIMBS가 컴파일 타임 결정
-// - 모든 크기에 동일 알고리즘 공유
-// - 루프 언롤링이 LLVM 최적화에서 자동
-
-// 메모리 레이아웃:
-// U256 = 32바이트 (4 × 8바이트)
-// 스택에 배치 가능 → 함수 인자 전달 시 register 사용 가능`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-3">
+            <code>{'pub struct Uint<const BITS: usize, const LIMBS: usize> { limbs: [u64; LIMBS] }'}</code>
+          </div>
+          <p className="text-sm font-semibold mb-2">이더리움에서 사용하는 별칭</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>U128</code> = 2 limbs</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>U160</code> = 3 limbs (Address 정수)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 font-semibold"><code>U256</code> = 4 limbs (EVM 워드)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>U384</code> = 6 limbs (BLS12-381)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5"><code>U512</code> = 8 limbs (modexp)</div>
+          </div>
+          <p className="text-sm font-semibold mb-2">const generics 이점</p>
+          <div className="space-y-1.5 text-sm">
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">-</span> BITS와 LIMBS가 컴파일 타임 결정</div>
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">-</span> 모든 크기에 동일 알고리즘 공유</div>
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">-</span> LLVM 최적화에서 루프 언롤링 자동</div>
+            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">-</span> U256 = 32B → 스택 배치, 함수 인자 시 register 사용 가능</div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ruint::Uint&lt;BITS, LIMBS&gt;</code>는 <strong>범용 multi-precision integer</strong>.<br />
           U256만 위한 게 아니라 BLS12-381(U384), 모듈러 지수(U512) 등 모든 크기 지원.<br />
@@ -58,34 +56,35 @@ pub type U512 = Uint<512, 8>;  // 8 limbs (modexp 등)
 
         {/* ── overflowing_add ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">overflowing_add — carry 전파 메커니즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl U256 {
-    /// wrapping 덧셈 — EVM 기본 동작 (mod 2^256)
-    pub fn overflowing_add(self, rhs: Self) -> (Self, bool) {
-        let mut result = [0u64; 4];
-        let mut carry = 0u64;
-
-        // limb[0] → limb[1] → limb[2] → limb[3] 순서로 carry 전파
-        for i in 0..4 {
-            let (sum1, c1) = self.limbs[i].overflowing_add(rhs.limbs[i]);
-            let (sum2, c2) = sum1.overflowing_add(carry);
-            result[i] = sum2;
-            carry = (c1 as u64) + (c2 as u64);  // 0 or 1 or 2
-        }
-        (Self { limbs: result }, carry != 0)
-    }
-}
-
-// 어셈블리 수준 (x86_64):
-// add rax, rcx      ; limb[0] + rhs[0]
-// adc rbx, rdx      ; limb[1] + rhs[1] + carry
-// adc r8,  r9       ; limb[2] + rhs[2] + carry
-// adc r10, r11      ; limb[3] + rhs[3] + carry
-// → 4개 명령어로 256비트 덧셈 완료
-
-// LLVM이 위 코드를 "add chain with carry"로 인식하여 직접 생성
-// 수동 인라인 어셈블리 없이도 최적 코드 달성`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <p className="text-sm font-semibold mb-2"><code>overflowing_add(self, rhs) -&gt; (Self, bool)</code></p>
+          <div className="space-y-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-indigo-500 shrink-0">0</span>
+              <span><code>limbs[0]</code>: <code>self[0].overflowing_add(rhs[0])</code> → sum + carry</span>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-indigo-500 shrink-0">1</span>
+              <span><code>limbs[1]</code>: <code>self[1] + rhs[1] + carry</code> → carry 전파</span>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-indigo-500 shrink-0">2</span>
+              <span><code>limbs[2]</code>: 동일 carry 전파</span>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2 flex items-start gap-2">
+              <span className="font-bold text-indigo-500 shrink-0">3</span>
+              <span><code>limbs[3]</code>: 마지막 carry가 남으면 256비트 오버플로</span>
+            </div>
+          </div>
+          <p className="text-sm font-semibold mb-2">x86_64 어셈블리 (LLVM 자동 생성)</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-2">
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center font-mono text-xs">add rax, rcx</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center font-mono text-xs">adc rbx, rdx</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center font-mono text-xs">adc r8, r9</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5 text-center font-mono text-xs">adc r10, r11</div>
+          </div>
+          <p className="text-xs text-muted-foreground">4개 명령어로 256비트 덧셈 완료 — LLVM이 "add chain with carry" 패턴 인식, 수동 인라인 ASM 불필요</p>
+        </div>
         <p className="leading-7">
           <code>overflowing_add</code>은 Rust 표준 라이브러리의 <code>u64</code> 메서드 — 컴파일러가 <code>ADC</code>(add with carry) 명령어로 직접 변환.<br />
           4개 limb × 4개 ADC 명령어 = 256비트 덧셈이 4 clock cycle 근처에서 완료.<br />
@@ -94,31 +93,42 @@ pub type U512 = Uint<512, 8>;  // 8 limbs (modexp 등)
 
         {/* ── checked vs wrapping vs saturating ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">3가지 오버플로 전략</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. wrapping_add — EVM ADD opcode 동작
-let a = U256::MAX;
-let b = U256::from(1);
-let c = a.wrapping_add(b);  // = U256::ZERO (mod 2^256 wrap around)
-
-// 2. checked_add — None on overflow
-let c = a.checked_add(b);   // = None
-if let Some(result) = a.checked_add(b) { ... }
-
-// 3. saturating_add — MAX clamp
-let c = a.saturating_add(b); // = U256::MAX
-
-// 4. overflowing_add — (result, overflow flag)
-let (c, overflow) = a.overflowing_add(b);  // = (ZERO, true)
-
-// 사용 맥락별:
-// - EVM opcode (ADD, MUL): wrapping 사용 (스펙 요구)
-// - 가스 계산: checked 사용 (오버플로 = out of gas)
-// - 실제 잔고 연산: checked_sub (잔고 부족 감지)
-// - 수수료 계산: saturating (초과 시 최대값 clamp)
-//
-// 이 명시적 선택이 Rust의 안전성 핵심
-// Go는 자동 wrapping → 무음 오버플로 버그 가능`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1"><code>wrapping_add</code></p>
+              <p className="text-muted-foreground"><code>U256::MAX + 1</code> = <code>U256::ZERO</code> (mod 2^256)</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1"><code>checked_add</code></p>
+              <p className="text-muted-foreground"><code>U256::MAX + 1</code> = <code>None</code></p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1"><code>saturating_add</code></p>
+              <p className="text-muted-foreground"><code>U256::MAX + 1</code> = <code>U256::MAX</code> (clamp)</p>
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <p className="font-semibold mb-1"><code>overflowing_add</code></p>
+              <p className="text-muted-foreground"><code>U256::MAX + 1</code> = <code>(ZERO, true)</code></p>
+            </div>
+          </div>
+          <p className="text-sm font-semibold mb-2">사용 맥락별 선택</p>
+          <div className="space-y-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">EVM opcode</span> (ADD, MUL): <code>wrapping</code> — 스펙 요구
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">가스 계산</span>: <code>checked</code> — 오버플로 = out of gas
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">잔고 연산</span>: <code>checked_sub</code> — 잔고 부족 감지
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-medium">수수료 계산</span>: <code>saturating</code> — 초과 시 MAX clamp
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">이 명시적 선택이 Rust의 안전성 핵심 — Go는 자동 wrapping → 무음 오버플로 버그 가능</p>
+        </div>
         <p className="leading-7">
           Rust는 <strong>오버플로 정책을 명시적으로 선택</strong>하도록 강제.<br />
           EVM opcode는 wrapping이 맞지만, 애플리케이션 레벨 잔고 계산은 checked가 맞음.<br />
@@ -127,39 +137,27 @@ let (c, overflow) = a.overflowing_add(b);  // = (ZERO, true)
 
         {/* ── EVM에서의 활용 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">EVM opcode 구현에서의 U256 사용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm의 ADD opcode 구현 (단순화)
-fn op_add(interpreter: &mut Interpreter) {
-    let a = interpreter.stack.pop().unwrap();  // U256
-    let b = interpreter.stack.pop().unwrap();  // U256
-    let c = a.wrapping_add(b);                 // mod 2^256
-    interpreter.stack.push(c);
-}
-
-// MUL opcode — 256×256 → 512비트 연산, 하위 256비트만 유지
-fn op_mul(interpreter: &mut Interpreter) {
-    let a = interpreter.stack.pop().unwrap();
-    let b = interpreter.stack.pop().unwrap();
-    let c = a.wrapping_mul(b);
-    interpreter.stack.push(c);
-}
-
-// DIV opcode — 0으로 나누기는 0 반환 (EVM 스펙)
-fn op_div(interpreter: &mut Interpreter) {
-    let a = interpreter.stack.pop().unwrap();
-    let b = interpreter.stack.pop().unwrap();
-    let c = if b.is_zero() { U256::ZERO } else { a / b };
-    interpreter.stack.push(c);
-}
-
-// MOD, EXP, ADDMOD, MULMOD 등도 모두 U256 기반
-// 모든 EVM 스택 연산이 U256 워드 단위
-
-// 성능 핵심:
-// - 스택 자체가 Vec<U256> (각 슬롯 32바이트)
-// - push/pop이 32바이트 memcpy
-// - 연산은 register 사용으로 1~수십 cycles`}
-        </pre>
+        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
+          <p className="text-sm font-semibold mb-2">revm opcode 구현 (단순화)</p>
+          <div className="space-y-2 text-sm mb-4">
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-semibold">ADD</span> — <code>a.wrapping_add(b)</code> → mod 2^256
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-semibold">MUL</span> — <code>a.wrapping_mul(b)</code> → 256x256 → 하위 256비트만 유지
+            </div>
+            <div className="rounded border border-border bg-background px-3 py-2">
+              <span className="font-semibold">DIV</span> — <code>if b.is_zero() {'{'} U256::ZERO {'}'} else {'{'} a / b {'}'}</code> → 0으로 나누기는 0 반환 (EVM 스펙)
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">MOD, EXP, ADDMOD, MULMOD 등도 모두 U256 기반 — 모든 EVM 스택 연산이 U256 워드 단위</p>
+          <p className="text-sm font-semibold mb-2">성능 핵심</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+            <div className="rounded border border-border bg-background px-3 py-1.5">스택 = <code>{'Vec<U256>'}</code> (슬롯당 32B)</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5">push/pop = 32B memcpy</div>
+            <div className="rounded border border-border bg-background px-3 py-1.5">연산 = register → 1~수십 cycles</div>
+          </div>
+        </div>
         <p className="leading-7">
           EVM 스택이 <code>Vec&lt;U256&gt;</code>이므로, 각 opcode는 본질적으로 U256 연산.<br />
           push/pop, arithmetic, comparison 모두 U256 단위 — CPU register에 fit하는 최대 크기.<br />

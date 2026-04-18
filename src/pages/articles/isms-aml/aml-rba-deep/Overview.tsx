@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import RuleVsRiskViz from './viz/RuleVsRiskViz';
+import RbaBenefitsViz from './viz/RbaBenefitsViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">위험기반 접근법(RBA)이란</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <p>
           RBA(Risk-Based Approach, 위험기반 접근법)는 AML/CFT 체계의 설계 원칙.<br />
@@ -80,6 +86,8 @@ export default function Overview() {
           RBA는 규정 기반의 "위"에 더해지는 추가 레이어로 이해해야 한다.
         </p>
 
+        <RuleVsRiskViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">RBA의 3대 이점</h3>
 
         <p>
@@ -106,6 +114,8 @@ export default function Overview() {
           이런 과잉 보고는 FIU의 분석 역량을 소모시키고 실질적인 의심거래를 묻히게 만든다.<br />
           RBA는 위험 판단에 기반한 선별적 보고를 유도하여 FIU가 집중해야 할 거래에 자원을 배분하게 한다.
         </p>
+
+        <RbaBenefitsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">국내 법적 근거</h3>
         <p>

@@ -21,57 +21,39 @@ export default function InitialSync({ onCodeRef }: Props) {
 
         {/* ── BlocksByRange 프로토콜 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlocksByRange RPC — 배치 다운로드</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// eth2 P2P RPC 프로토콜
-// /eth2/beacon_chain/req/beacon_blocks_by_range/2/ssz_snappy
-
-struct BeaconBlocksByRangeRequest {
-    start_slot: Slot,      // 시작 slot
-    count: uint64,          // 요청 block 수 (max 1024)
-    step: uint64,           // 간격 (보통 1)
-}
-
-// Response: N개 block SSZ-Snappy 인코딩된 stream
-// 응답 제한:
-// - count 최대 1024 (MAX_REQUEST_BLOCKS)
-// - 응답당 ~100MB 이내
-// - 타임아웃 10초
-
-// Prysm 클라이언트 측:
-func requestBlocksByRange(
-    peer peer.ID,
-    start Slot,
-    count uint64,
-) ([]*SignedBeaconBlock, error) {
-    req := &BeaconBlocksByRangeRequest{
-        StartSlot: start,
-        Count: count,
-        Step: 1,
-    }
-
-    // libp2p stream 열기
-    stream, err := host.NewStream(ctx, peer, blocksByRangeTopic)
-    if err != nil { return nil, err }
-
-    // 요청 서명 + 전송
-    encoded := encodeSnappy(req)
-    stream.Write(encoded)
-
-    // 응답 수신 (streaming)
-    blocks := []*SignedBeaconBlock{}
-    for i := 0; i < count; i++ {
-        block, err := readSnappyStream(stream)
-        if err == io.EOF { break }
-        blocks = append(blocks, block)
-    }
-
-    return blocks, nil
-}
-
-// Rate limiting:
-// peer별 minute당 max ~5000 blocks 요청
-// 초과 시 peer 연결 해제 + reputation 감점`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2"><code>BeaconBlocksByRangeRequest</code> — P2P RPC 프로토콜</p>
+            <p className="text-xs text-foreground/60 mb-2 font-mono">/eth2/beacon_chain/req/beacon_blocks_by_range/2/ssz_snappy</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>start_slot: Slot</code> — 시작 slot</span>
+              <span><code>count: uint64</code> — 요청 수(max 1024)</span>
+              <span><code>step: uint64</code> — 간격(보통 1)</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3"><code>requestBlocksByRange()</code> — 클라이언트 요청 흐름</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80">libp2p stream 열기 — <code>host.NewStream(ctx, peer, blocksByRangeTopic)</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80">요청 Snappy 인코딩 + 전송 — <code>encodeSnappy(req)</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80">응답 streaming 수신 — <code>readSnappyStream()</code>로 block 순차 디코딩</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">count max: 1024</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">응답: ~100MB 이내, 10초 timeout</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">Rate limit: ~5000 blocks/min/peer</div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>BlocksByRange</code>가 <strong>배치 다운로드 표준</strong>.<br />
           한 번에 최대 1024 blocks → 효율적 bulk transfer.<br />
@@ -88,60 +70,38 @@ func requestBlocksByRange(
 
         {/* ── roundRobinSync 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">roundRobinSync — 병렬 다운로드 알고리즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`func (s *Service) roundRobinSync(
-    ctx context.Context,
-    genesis time.Time,
-) error {
-    // 1. 피어 선택 (head slot > ours)
-    peers := s.p2p.Peers().AheadOfUs()
-
-    currentSlot := s.chain.HeadSlot()
-    targetSlot := s.networkTipSlot()  // 네트워크 head
-
-    // 2. 범위를 chunks로 분할
-    const BATCH_SIZE = 64
-    chunks := []SlotRange{}
-    for s := currentSlot + 1; s <= targetSlot; s += BATCH_SIZE {
-        chunks = append(chunks, SlotRange{Start: s, Count: BATCH_SIZE})
-    }
-
-    // 3. 각 chunk를 피어에 round-robin 할당
-    responses := make(chan []*Block, len(chunks))
-    for i, chunk := range chunks {
-        peer := peers[i % len(peers)]  // round-robin
-
-        go func(p peer.ID, c SlotRange) {
-            blocks, err := requestBlocksByRange(p, c.Start, c.Count)
-            if err == nil { responses <- blocks }
-        }(peer, chunk)
-    }
-
-    // 4. 응답 수집 + 정렬
-    allBlocks := []*Block{}
-    for i := 0; i < len(chunks); i++ {
-        batch := <-responses
-        allBlocks = append(allBlocks, batch...)
-    }
-    sort.Slice(allBlocks, func(i, j int) bool {
-        return allBlocks[i].Slot < allBlocks[j].Slot
-    })
-
-    // 5. 순차 처리 (state transition)
-    for _, block := range allBlocks {
-        if err := s.chain.ProcessBlock(block); err != nil {
-            return err  // invalid block → sync 중단
-        }
-    }
-
-    return nil
-}
-
-// 성능:
-// - 다운로드: 병렬 (peer 수만큼)
-// - 실행: 순차 (state transition 제약)
-// - 메인넷 1500만 slot sync: ~24시간`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3"><code>roundRobinSync()</code> — 병렬 다운로드 알고리즘</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+                <div className="text-foreground/80"><strong>피어 선택</strong> — <code>Peers().AheadOfUs()</code>로 head slot이 우리보다 앞선 피어만</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
+                <div className="text-foreground/80"><strong>범위 분할</strong> — <code>BATCH_SIZE=64</code>로 <code>SlotRange</code> chunks 생성</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
+                <div className="text-foreground/80"><strong>Round-robin 할당</strong> — <code>peers[i % len(peers)]</code>로 chunk별 다른 피어에 goroutine 병렬 요청</div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
+                <span className="font-mono text-xs text-orange-500 shrink-0">4</span>
+                <div className="text-foreground/80"><strong>응답 수집 + 정렬</strong> — 도착 순서 무관, slot 순 <code>sort.Slice</code></div>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-red-500/50 pl-3">
+                <span className="font-mono text-xs text-red-400 shrink-0">5</span>
+                <div className="text-foreground/80"><strong>순차 실행</strong> — <code>chain.ProcessBlock(block)</code> slot 순서대로. 실패 시 sync 중단</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-2 text-foreground/60">다운로드: 병렬(peer 수만큼)</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">실행: 순차(state 제약)</div>
+            <div className="rounded border border-border/40 p-2 text-foreground/60">메인넷 ~1500만 slot: ~24시간</div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Round-robin + 병렬 다운로드 + 순차 실행</strong>.<br />
           chunk별 다른 peer 할당 → bandwidth 최대 활용.<br />

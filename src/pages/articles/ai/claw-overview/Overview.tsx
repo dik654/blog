@@ -40,22 +40,40 @@ export default function Overview() {
           37개 파일, 약 1,700 LOC의 Python 코드로 구성<br />
           핵심 모듈: <strong>PortRuntime</strong>과 <strong>QueryEnginePort</strong>
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`# PortRuntime — 원본 TypeScript 런타임의 동작을 Python으로 미러링
-class PortRuntime:
-    """Rust runtime 대비 패리티 검증 엔진"""
-    def route_tool_call(self, name: str, input: dict) -> ToolResult:
-        handler = self.registry.get(name)       # 도구 이름 → 핸들러
-        if handler is None:
-            return ToolResult.error(f"unknown tool: {name}")
-        return handler.execute(input)           # 실행 결과 반환
-
-# QueryEnginePort — 서브시스템별 쿼리 실행 시뮬레이션
-class QueryEnginePort:
-    subsystems: dict[str, Subsystem]            # conversation, auth, mcp ...
-    def query(self, path: str) -> Any:          # "conversation.turn_count"
-        return self.subsystems[path.split(".")[0]].get(path.split(".")[1])`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-4">
+          <div className="border border-border rounded-lg p-4 bg-muted/30">
+            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">PortRuntime</div>
+            <p className="text-sm text-muted-foreground mb-2">원본 TypeScript 런타임의 동작을 Python으로 미러링</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 text-muted-foreground">1.</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">registry.get(name)</code> 도구 이름으로 핸들러 조회</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 text-muted-foreground">2.</span>
+                <span>미등록 시 <code className="text-xs bg-muted px-1 py-0.5 rounded">ToolResult.error</code> 반환</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 text-muted-foreground">3.</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">handler.execute(input)</code> 실행 결과 반환</span>
+              </div>
+            </div>
+          </div>
+          <div className="border border-border rounded-lg p-4 bg-muted/30">
+            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">QueryEnginePort</div>
+            <p className="text-sm text-muted-foreground mb-2">서브시스템별 쿼리 실행 시뮬레이션</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 font-medium">필드</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">subsystems: dict[str, Subsystem]</code> — conversation, auth, mcp 등</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 font-medium">쿼리</span>
+                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">query("conversation.turn_count")</code> — 점 구분 경로로 서브시스템 조회</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           20개 서브시스템 패키지가 원본 TypeScript 아카이브의 모듈 인벤토리를 미러링<br />
           conversation, auth, tools, mcp, session, hooks, permissions 등<br />

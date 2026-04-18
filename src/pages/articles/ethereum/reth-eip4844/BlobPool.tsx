@@ -24,52 +24,35 @@ export default function BlobPool({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
         {/* ── stateless 검증 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2단계 검증 — stateless vs stateful</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Stage 1: Stateless Validation (빠른 필터링)
-fn validate_stateless(tx: &TxEip4844, sidecar: &BlobSidecar) -> Result<()> {
-    // 1. Cancun 포크 활성 확인
-    if !chain_spec.is_cancun_active_at_timestamp(current_ts) {
-        return Err(Eip4844TxNotSupportedYet);
-    }
-
-    // 2. blob 개수 검증
-    if sidecar.blobs.len() == 0 {
-        return Err(NoBlobs);
-    }
-    if sidecar.blobs.len() > MAX_BLOBS_PER_TX {  // 6
-        return Err(TooManyBlobs);
-    }
-
-    // 3. 각 blob 크기 검증 (128KB 고정)
-    for blob in &sidecar.blobs {
-        if blob.data.len() != BLOB_DATA_SIZE { // 131_072
-            return Err(InvalidBlobSize);
-        }
-    }
-
-    // 4. versioned_hashes 개수 = blobs 개수
-    if tx.blob_versioned_hashes.len() != sidecar.blobs.len() {
-        return Err(VersionedHashMismatch);
-    }
-
-    // 5. versioned_hash prefix 검증 (0x01)
-    for h in &tx.blob_versioned_hashes {
-        if h.0[0] != 0x01 {
-            return Err(InvalidVersionedHashPrefix);
-        }
-    }
-
-    // 6. commitments/proofs 개수 일치
-    if sidecar.commitments.len() != sidecar.blobs.len()
-        || sidecar.proofs.len() != sidecar.blobs.len() {
-        return Err(CommitmentCountMismatch);
-    }
-
-    Ok(())
-}
-
-// 비용: 모두 O(1) 검증 → 마이크로초 수준`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 p-4 my-4">
+          <p className="text-xs font-semibold text-indigo-400 mb-3">Stage 1: Stateless Validation (O(1), 마이크로초)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">1. Cancun 포크 확인</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">is_cancun_active_at_timestamp()</code></p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">2. Blob 개수</p>
+              <p className="text-xs text-foreground/60">0 &lt; blobs &le; <code className="text-xs">MAX_BLOBS_PER_TX</code> (6)</p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">3. Blob 크기</p>
+              <p className="text-xs text-foreground/60">각 blob == 131,072 bytes (128KB 고정)</p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">4. Hash-Blob 개수 일치</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">versioned_hashes.len() == blobs.len()</code></p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">5. Version prefix</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">hash[0] == 0x01</code></p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">6. Commitment/Proof 개수</p>
+              <p className="text-xs text-foreground/60"><code className="text-xs">commitments.len() == proofs.len() == blobs.len()</code></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Stateless 검증은 <strong>DB 접근 없이 TX 자체만</strong> 검사.<br />
           크기/개수/포맷 검증 → O(1) 시간에 완료 → 빠른 필터링.<br />
@@ -78,52 +61,28 @@ fn validate_stateless(tx: &TxEip4844, sidecar: &BlobSidecar) -> Result<()> {
 
         {/* ── KZG 검증 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Stateful 검증 — KZG proof 확인</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Stage 2: Stateful Validation (expensive)
-fn validate_stateful(
-    tx: &TxEip4844,
-    sidecar: &BlobSidecar,
-    kzg_settings: &KzgSettings,
-) -> Result<()> {
-    // 1. versioned_hash == KZG commitment hash 확인
-    for (i, commitment) in sidecar.commitments.iter().enumerate() {
-        let expected = kzg_to_versioned_hash(commitment);
-        if expected != tx.blob_versioned_hashes[i] {
-            return Err(VersionedHashMismatch);
-        }
-    }
-
-    // 2. KZG 증명 검증 (비싼 연산)
-    // - 각 blob에 대해 pairing 검증
-    // - BLS12-381 elliptic curve 연산
-    // - blob 1개당 ~5ms
-    for i in 0..sidecar.blobs.len() {
-        let blob = &sidecar.blobs[i];
-        let commitment = &sidecar.commitments[i];
-        let proof = &sidecar.proofs[i];
-
-        let valid = kzg_settings.verify_blob_kzg_proof(
-            blob,
-            commitment,
-            proof,
-        )?;
-        if !valid {
-            return Err(InvalidKzgProof);
-        }
-    }
-
-    // 3. 기본 TX 검증 (nonce, balance, gas)
-    //    이전 stage와 동일
-    validate_basic_tx(tx)?;
-
-    Ok(())
-}
-
-// 비용:
-// - KZG 검증: blob당 ~5ms (BLS12-381 pairing)
-// - 6 blob TX: ~30ms per TX
-// - 병렬화 가능 (각 blob 독립)`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 p-4 my-4">
+          <p className="text-xs font-semibold text-emerald-400 mb-3">Stage 2: Stateful Validation (blob당 ~5ms)</p>
+          <div className="space-y-2">
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">1. Versioned Hash 일치 확인</p>
+              <p className="text-xs text-foreground/60">
+                각 commitment를 <code className="text-xs">kzg_to_versioned_hash()</code>로 변환 → TX의 <code className="text-xs">blob_versioned_hashes[i]</code>와 비교
+              </p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">2. KZG 증명 검증 (비싼 연산)</p>
+              <p className="text-xs text-foreground/60">
+                각 blob에 대해 <code className="text-xs">verify_blob_kzg_proof(blob, commitment, proof)</code> 호출.<br />
+                BLS12-381 pairing 연산 — blob당 ~5ms, 6 blob TX ~30ms. 병렬화 가능.
+              </p>
+            </div>
+            <div className="rounded bg-muted/40 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">3. 기본 TX 검증</p>
+              <p className="text-xs text-foreground/60">nonce, balance, gas 확인 — stateless와 동일한 기본 검증</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Stateful 검증은 <strong>KZG 암호학 연산 포함</strong> — blob당 ~5ms.<br />
           BLS12-381 곡선의 pairing 연산 → 수학적으로 비쌈.<br />
@@ -132,49 +91,55 @@ fn validate_stateful(
 
         {/* ── Blob TX 풀 특성 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlobPool 특성 — 일반 Pool과 차이</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BlobPool: blob TX 전용 서브풀
-pub struct BlobPool {
-    /// blob TX 관리
-    pool: HashMap<TxHash, Arc<ValidPoolTransaction>>,
-
-    /// sender별 현재 nonce
-    sender_nonces: HashMap<Address, u64>,
-
-    /// 전체 blob gas 추적 (메모리 제한)
-    total_blob_gas: u64,
-
-    /// 연결된 BlobStore (sidecar 저장)
-    blob_store: Arc<dyn BlobStore>,
-}
-
-// 일반 Pool과의 차이:
-//
-// 1. 크기 제한:
-//    일반 pool: max 10K TX
-//    blob pool: max ~수천 (blob 크기 때문)
-//
-// 2. Replacement 가격 bump:
-//    일반: 10% 증가
-//    blob: 100% 증가 (blob 저장/전파 비용)
-//
-// 3. sidecar 분리:
-//    일반: TX 안에 모든 데이터
-//    blob: TX는 hash만, sidecar는 별도 store
-//
-// 4. 네트워크 전파:
-//    일반: 전체 TX broadcast
-//    blob: hash만 announce, 요청 시에만 sidecar 전송
-//
-// 5. Subpool 분류:
-//    일반: Pending/BaseFee/Queued
-//    blob: 별도 BlobPool (독립적으로 관리)
-
-// validator가 블록 생성 시:
-// 1. 일반 TX (txpool.best_transactions()) 수집
-// 2. blob TX (blob_pool.best_transactions()) 수집
-// 3. 두 목록 합쳐서 블록 구성 (blob_gas_limit 제약)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="text-xs font-semibold text-indigo-400 mb-2">BlobPool 구조체</p>
+            <ul className="text-sm text-foreground/80 space-y-1 leading-relaxed">
+              <li><code className="text-xs">pool: HashMap&lt;TxHash, Arc&lt;ValidPoolTransaction&gt;&gt;</code> — blob TX 관리</li>
+              <li><code className="text-xs">sender_nonces: HashMap&lt;Address, u64&gt;</code> — sender별 현재 nonce</li>
+              <li><code className="text-xs">total_blob_gas: u64</code> — 전체 blob gas 추적 (메모리 제한)</li>
+              <li><code className="text-xs">blob_store: Arc&lt;dyn BlobStore&gt;</code> — sidecar 저장소</li>
+            </ul>
+          </div>
+          <div className="overflow-x-auto rounded-lg border border-border/60">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-muted/30">
+                  <th className="text-left p-3 font-semibold text-xs">항목</th>
+                  <th className="text-left p-3 font-semibold text-xs">일반 Pool</th>
+                  <th className="text-left p-3 font-semibold text-xs">BlobPool</th>
+                </tr>
+              </thead>
+              <tbody className="text-foreground/80">
+                <tr className="border-t border-border/40">
+                  <td className="p-3 text-xs font-medium">크기 제한</td>
+                  <td className="p-3 text-xs">max 10K TX</td>
+                  <td className="p-3 text-xs">max ~수천 (blob 크기)</td>
+                </tr>
+                <tr className="border-t border-border/40">
+                  <td className="p-3 text-xs font-medium">Replacement bump</td>
+                  <td className="p-3 text-xs">10% 증가</td>
+                  <td className="p-3 text-xs">100% 증가</td>
+                </tr>
+                <tr className="border-t border-border/40">
+                  <td className="p-3 text-xs font-medium">데이터 구조</td>
+                  <td className="p-3 text-xs">TX 안에 모든 데이터</td>
+                  <td className="p-3 text-xs">TX는 hash만, sidecar 별도 store</td>
+                </tr>
+                <tr className="border-t border-border/40">
+                  <td className="p-3 text-xs font-medium">전파</td>
+                  <td className="p-3 text-xs">전체 TX broadcast</td>
+                  <td className="p-3 text-xs">hash announce, 요청 시 sidecar</td>
+                </tr>
+                <tr className="border-t border-border/40">
+                  <td className="p-3 text-xs font-medium">Subpool</td>
+                  <td className="p-3 text-xs">Pending / BaseFee / Queued</td>
+                  <td className="p-3 text-xs">별도 BlobPool (독립 관리)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         <p className="leading-7">
           BlobPool은 <strong>일반 Pool과 독립적</strong>으로 관리.<br />
           크기 제한, replacement 규칙, 네트워크 전파 모두 다름.<br />

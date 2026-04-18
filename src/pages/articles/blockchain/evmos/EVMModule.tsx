@@ -39,84 +39,131 @@ export default function EVMModule({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="max-w-none mt-6 space-y-5">
         <h3 className="text-xl font-semibold mt-6 mb-3">x/vm 모듈 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// x/vm Module (EVM on Cosmos SDK)
-//
-// Keeper 구조:
-//
-// type Keeper struct {
-//     storeKey     store.StoreKey
-//     paramstore   paramtypes.Subspace
-//
-//     // External keepers
-//     accountKeeper    types.AccountKeeper
-//     bankKeeper       types.BankKeeper
-//     stakingKeeper    types.StakingKeeper
-//     feeMarketKeeper  types.FeeMarketKeeper
-//
-//     // EVM config
-//     chainID      *big.Int
-//     tracer       string
-//
-//     // Precompiled contracts
-//     customPrecompiles map[common.Address]vm.PrecompiledContract
-// }
 
-// TX Execution Flow:
-//
-// 1. MetaMask → JSON-RPC
-//    eth_sendRawTransaction(signed_tx)
-//
-// 2. JSON-RPC Server
-//    unmarshal Ethereum TX
-//    wrap in Cosmos TX
-//    submit to mempool
-//
-// 3. Ante Handler (Cosmos SDK)
-//    - EthAccountVerificationDecorator
-//    - EthSigVerificationDecorator (ECDSA)
-//    - EthGasConsumeDecorator
-//    - EthIncrementSenderSequenceDecorator
-//    - EIP-1559 fee validation
-//
-// 4. ApplyMessage (keeper.go)
-//    - Create EVM instance
-//    - Configure StateDB
-//    - Execute message
-//    - Return result + logs
-//
-// 5. State Commit
-//    StateDB.Commit() → IAVL tree
-//    Events published
-//    Block finalized
+        {/* Keeper 구조 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">Keeper 구조</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <p className="font-medium text-muted-foreground mb-1">Storage</p>
+              <ul className="space-y-0.5 text-muted-foreground list-disc list-inside">
+                <li><code className="text-[11px]">storeKey</code> — <code className="text-[11px]">store.StoreKey</code></li>
+                <li><code className="text-[11px]">paramstore</code> — <code className="text-[11px]">paramtypes.Subspace</code></li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium text-muted-foreground mb-1">External Keepers</p>
+              <ul className="space-y-0.5 text-muted-foreground list-disc list-inside">
+                <li><code className="text-[11px]">accountKeeper</code></li>
+                <li><code className="text-[11px]">bankKeeper</code></li>
+                <li><code className="text-[11px]">stakingKeeper</code></li>
+                <li><code className="text-[11px]">feeMarketKeeper</code></li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium text-muted-foreground mb-1">EVM Config</p>
+              <ul className="space-y-0.5 text-muted-foreground list-disc list-inside">
+                <li><code className="text-[11px]">chainID</code> — <code className="text-[11px]">*big.Int</code></li>
+                <li><code className="text-[11px]">tracer</code> — <code className="text-[11px]">string</code></li>
+                <li><code className="text-[11px]">customPrecompiles</code> — <code className="text-[11px]">map[Address]PrecompiledContract</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-// StateDB Implementation:
-//
-//   stateDB.GetBalance(addr)
-//     → bankKeeper.GetBalance(sdkCtx, addr)
-//
-//   stateDB.SetState(addr, key, value)
-//     → store.Set(prefixKey(addr, key), value)
-//
-//   stateDB.AddLog(log)
-//     → Events.Append(convertLog(log))
+        {/* TX Execution Flow */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">TX Execution Flow</h4>
+          <div className="space-y-3 text-xs">
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-[10px]">1</span>
+              <div>
+                <p className="font-medium">MetaMask → JSON-RPC</p>
+                <p className="text-muted-foreground"><code className="text-[11px]">eth_sendRawTransaction(signed_tx)</code></p>
+              </div>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-[10px]">2</span>
+              <div>
+                <p className="font-medium">JSON-RPC Server</p>
+                <p className="text-muted-foreground">Ethereum TX unmarshal → Cosmos TX wrap → mempool 제출</p>
+              </div>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-[10px]">3</span>
+              <div>
+                <p className="font-medium">Ante Handler (Cosmos SDK)</p>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {['EthAccountVerificationDecorator', 'EthSigVerificationDecorator (ECDSA)', 'EthGasConsumeDecorator', 'EthIncrementSenderSequenceDecorator', 'EIP-1559 fee validation'].map(d => (
+                    <span key={d} className="px-1.5 py-0.5 rounded bg-muted text-muted-foreground text-[11px]">{d}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center font-bold text-[10px]">4</span>
+              <div>
+                <p className="font-medium">ApplyMessage (<code className="text-[11px]">keeper.go</code>)</p>
+                <p className="text-muted-foreground">Create EVM instance → Configure StateDB → Execute message → Return result + logs</p>
+              </div>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-[10px]">5</span>
+              <div>
+                <p className="font-medium">State Commit</p>
+                <p className="text-muted-foreground"><code className="text-[11px]">StateDB.Commit()</code> → IAVL tree, Events published, Block finalized</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-// EVM Config:
-//   EvmDenom: "aevmos" (18 decimals)
-//   EnableCreate: true (contract deployment)
-//   EnableCall: true (contract calls)
-//   ExtraEIPs: [3855, 3860, ...] (EIPs enabled)
+        {/* StateDB Implementation */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">StateDB Implementation</h4>
+          <div className="space-y-2 text-xs">
+            <div className="flex items-center gap-2">
+              <code className="text-[11px] px-1.5 py-0.5 rounded bg-muted shrink-0">stateDB.GetBalance(addr)</code>
+              <span className="text-muted-foreground">→</span>
+              <code className="text-[11px] px-1.5 py-0.5 rounded bg-muted">bankKeeper.GetBalance(sdkCtx, addr)</code>
+            </div>
+            <div className="flex items-center gap-2">
+              <code className="text-[11px] px-1.5 py-0.5 rounded bg-muted shrink-0">stateDB.SetState(addr, key, val)</code>
+              <span className="text-muted-foreground">→</span>
+              <code className="text-[11px] px-1.5 py-0.5 rounded bg-muted">store.Set(prefixKey(addr, key), val)</code>
+            </div>
+            <div className="flex items-center gap-2">
+              <code className="text-[11px] px-1.5 py-0.5 rounded bg-muted shrink-0">stateDB.AddLog(log)</code>
+              <span className="text-muted-foreground">→</span>
+              <code className="text-[11px] px-1.5 py-0.5 rounded bg-muted">Events.Append(convertLog(log))</code>
+            </div>
+          </div>
+        </div>
 
-// Precompiles:
-//   Standard (0x01-0x09): ecrecover, sha256, etc.
-//   Evmos-specific:
-//     - Staking precompile (delegate, undelegate)
-//     - IBC transfer precompile
-//     - Distribution (rewards)
-//     - Bech32 address conversion`}
-        </pre>
+        {/* EVM Config + Precompiles */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">EVM Config</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li><code className="text-[11px]">EvmDenom</code>: <code className="text-[11px]">"aevmos"</code> (18 decimals)</li>
+              <li><code className="text-[11px]">EnableCreate</code>: true (contract deployment)</li>
+              <li><code className="text-[11px]">EnableCall</code>: true (contract calls)</li>
+              <li><code className="text-[11px]">ExtraEIPs</code>: [3855, 3860, ...] (EIPs enabled)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">Precompiles</h4>
+            <p className="text-xs text-muted-foreground mb-1">Standard (0x01-0x09): ecrecover, sha256 등</p>
+            <p className="text-xs font-medium mt-2 mb-1">Evmos-specific:</p>
+            <ul className="text-xs text-muted-foreground space-y-0.5 list-disc list-inside">
+              <li>Staking precompile (delegate, undelegate)</li>
+              <li>IBC transfer precompile</li>
+              <li>Distribution (rewards)</li>
+              <li>Bech32 address conversion</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

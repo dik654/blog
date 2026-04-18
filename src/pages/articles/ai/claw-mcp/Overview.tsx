@@ -14,20 +14,49 @@ export default function Overview() {
           Anthropic이 2024년 말 공개 — 에이전트 생태계 표준화 시도<br />
           claw-code는 MCP 클라이언트 역할 — 외부 MCP 서버를 호출하여 도구/리소스 이용
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// claw-code (클라이언트) ←→ MCP Server (외부 프로세스)
-//                    JSON-RPC 2.0 over stdio
-
-// MCP 서버가 제공하는 2가지 주요 기능
-1. Tools: 실행 가능한 함수 (DB 쿼리, API 호출 등)
-2. Resources: 읽기 가능한 데이터 (파일, URL 등)`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-1">통신 구조</p>
+            <p className="text-sm">claw-code (클라이언트) ←→ MCP Server (외부 프로세스)<br />JSON-RPC 2.0 over stdio</p>
+          </div>
+          <div className="space-y-2">
+            <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3">
+              <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300">Tools</p>
+              <p className="text-sm">실행 가능한 함수 (DB 쿼리, API 호출 등)</p>
+            </div>
+            <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+              <p className="font-semibold text-sm text-purple-700 dark:text-purple-300">Resources</p>
+              <p className="text-sm">읽기 가능한 데이터 (파일, URL 등)</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MCP 모듈 3개 구성</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// runtime/src/mcp_*.rs
-McpLifecycleValidator   // 11단계 상태 머신
-  ↓
-McpStdioProcess         // stdio JSON-RPC 프로세스 관리
-  ↓
-McpToolRegistry         // MCP 도구를 claw-code 도구로 브릿지`}</pre>
+        <div className="space-y-2 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 flex items-center gap-3">
+            <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900 px-2 py-0.5 rounded">1</span>
+            <div>
+              <p className="font-semibold text-sm"><code>McpLifecycleValidator</code></p>
+              <p className="text-sm text-muted-foreground">11단계 상태 머신</p>
+            </div>
+          </div>
+          <div className="text-center text-muted-foreground text-lg">↓</div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 flex items-center gap-3">
+            <span className="text-xs font-mono bg-emerald-100 dark:bg-emerald-900 px-2 py-0.5 rounded">2</span>
+            <div>
+              <p className="font-semibold text-sm"><code>McpStdioProcess</code></p>
+              <p className="text-sm text-muted-foreground">stdio JSON-RPC 프로세스 관리</p>
+            </div>
+          </div>
+          <div className="text-center text-muted-foreground text-lg">↓</div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3 flex items-center gap-3">
+            <span className="text-xs font-mono bg-purple-100 dark:bg-purple-900 px-2 py-0.5 rounded">3</span>
+            <div>
+              <p className="font-semibold text-sm"><code>McpToolRegistry</code></p>
+              <p className="text-sm text-muted-foreground">MCP 도구를 claw-code 도구로 브릿지</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>계층 구조</strong>: Lifecycle → Process → Registry<br />
           - <strong>Lifecycle</strong>: 서버 연결 상태 추적 (11단계)<br />
@@ -36,29 +65,26 @@ McpToolRegistry         // MCP 도구를 claw-code 도구로 브릿지`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MCP 서버 설정 — settings.json</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`{
-  "mcp_servers": {
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "DATABASE_URL": "postgres://localhost/mydb"
-      }
-    },
-    "github": {
-      "command": "docker",
-      "args": ["run", "-i", "mcp/github-server"],
-      "env": {
-        "GITHUB_TOKEN": "ghp_..."
-      }
-    },
-    "filesystem": {
-      "command": "node",
-      "args": ["/opt/mcp-servers/fs/index.js"],
-      "cwd": "/home/user/project"
-    }
-  }
-}`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-2">postgres</p>
+            <p className="text-sm"><code>command</code>: <code>npx</code></p>
+            <p className="text-sm"><code>args</code>: <code>-y @modelcontextprotocol/server-postgres</code></p>
+            <p className="text-sm"><code>env</code>: <code>DATABASE_URL</code></p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300 mb-2">github</p>
+            <p className="text-sm"><code>command</code>: <code>docker</code></p>
+            <p className="text-sm"><code>args</code>: <code>run -i mcp/github-server</code></p>
+            <p className="text-sm"><code>env</code>: <code>GITHUB_TOKEN</code></p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-purple-700 dark:text-purple-300 mb-2">filesystem</p>
+            <p className="text-sm"><code>command</code>: <code>node</code></p>
+            <p className="text-sm"><code>args</code>: <code>/opt/mcp-servers/fs/index.js</code></p>
+            <p className="text-sm"><code>cwd</code>: <code>/home/user/project</code></p>
+          </div>
+        </div>
         <p>
           <strong>각 서버는 command + args + env로 정의</strong><br />
           <code>npx</code>로 npm 패키지 실행, <code>docker</code>로 컨테이너 실행, <code>node</code>로 직접 스크립트 실행 등 다양<br />
@@ -66,20 +92,24 @@ McpToolRegistry         // MCP 도구를 claw-code 도구로 브릿지`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">JSON-RPC 2.0 메시지 포맷</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 요청 (claw-code → MCP 서버)
-{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
-
-// 응답 (MCP 서버 → claw-code)
-{"jsonrpc": "2.0", "id": 1, "result": {"tools": [...]}}
-
-// 에러 응답
-{"jsonrpc": "2.0", "id": 1, "error": {
-  "code": -32601, "message": "Method not found"
-}}
-
-// 알림 (id 없음, 응답 불필요)
-{"jsonrpc": "2.0", "method": "notifications/progress",
- "params": {"progress": 50}}`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-1">요청 (claw-code → 서버)</p>
+            <p className="text-sm font-mono"><code>id</code>: 1, <code>method</code>: <code>"tools/list"</code>, <code>params</code>: {'{}'}</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300 mb-1">응답 (서버 → claw-code)</p>
+            <p className="text-sm font-mono"><code>id</code>: 1, <code>result</code>: {'{"tools": [...]}'}</p>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-red-700 dark:text-red-300 mb-1">에러 응답</p>
+            <p className="text-sm font-mono"><code>id</code>: 1, <code>error</code>: <code>code</code> -32601, <code>"Method not found"</code></p>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-amber-700 dark:text-amber-300 mb-1">알림 (id 없음, 응답 불필요)</p>
+            <p className="text-sm font-mono"><code>method</code>: <code>"notifications/progress"</code>, <code>progress</code>: 50</p>
+          </div>
+        </div>
         <p>
           <strong>4종 메시지</strong>: 요청, 응답, 에러, 알림<br />
           요청과 응답은 <code>id</code>로 매칭 — 병렬 요청 시 응답 구분<br />
@@ -129,19 +159,20 @@ McpToolRegistry         // MCP 도구를 claw-code 도구로 브릿지`}</pre>
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MCP 도구가 claw-code에서 보이는 방식</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// MCP 서버가 제공한 도구 "query_users"
-// → claw-code에서 네임스페이스 포함하여 노출
-mcp__postgres__query_users
-
-// LLM은 일반 도구처럼 호출
-tool_use {
-  name: "mcp__postgres__query_users",
-  input: {"where": "active = true"}
-}
-
-// claw-code가 매핑:
-// name 파싱 → 서버 "postgres" + 도구 "query_users"
-// → MCP JSON-RPC 호출 → 결과 받아서 LLM에 전달`}</pre>
+        <div className="space-y-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-1">MCP 서버 도구 → claw-code 네임스페이스</p>
+            <p className="text-sm">원본 도구명 <code>query_users</code> → 등록명 <code>mcp__postgres__query_users</code></p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300 mb-1">LLM 호출 (일반 도구와 동일)</p>
+            <p className="text-sm"><code>name</code>: <code>"mcp__postgres__query_users"</code><br /><code>input</code>: <code>{'{"where": "active = true"}'}</code></p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-purple-700 dark:text-purple-300 mb-1">claw-code 매핑 과정</p>
+            <p className="text-sm">name 파싱 → 서버 <code>"postgres"</code> + 도구 <code>"query_users"</code> → MCP JSON-RPC 호출 → 결과 LLM에 전달</p>
+          </div>
+        </div>
         <p>
           <strong>네임스페이스 컨벤션</strong>: <code>mcp__{`{server_name}`}__{`{tool_name}`}</code><br />
           두 언더스코어(<code>__</code>) 구분자 — 일반 도구명과 충돌 방지<br />

@@ -20,15 +20,10 @@ export default function P2PSecurity({ onCodeRef: _onCodeRef }: { onCodeRef: (key
           이더리움 devp2p의 RLPx 핸드셰이크와 유사한 구조입니다.
         </p>
         <CitationBlock source="cometbft/p2p/conn/secret_connection.go" citeKey={8} type="code" href="https://github.com/cometbft/cometbft/blob/main/p2p/conn/secret_connection.go">
-          <pre className="text-xs overflow-x-auto"><code>{`type SecretConnection struct {
-    conn       io.ReadWriteCloser
-    recvBuffer []byte
-    recvNonce  *[aeadNonceSize]byte
-    sendNonce  *[aeadNonceSize]byte
-    recvAead   cipher.AEAD  // ChaCha20-Poly1305
-    sendAead   cipher.AEAD
-}`}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">SecretConnection은 AEAD 암호화로 모든 P2P 메시지를 보호합니다.</p>
+          <div className="text-xs text-foreground/70 space-y-1">
+            <p><code>SecretConnection</code> — AEAD 암호화로 모든 P2P 메시지 보호</p>
+            <p><code>recvNonce</code>/<code>sendNonce</code> — 방향별 독립 nonce / <code>recvAead</code>/<code>sendAead</code> — ChaCha20-Poly1305 AEAD 인스턴스</p>
+          </div>
         </CitationBlock>
         <h3 className="text-xl font-semibold mt-6 mb-3">보안 핸드셰이크</h3>
         <CodePanel title="STS 프로토콜 4단계" code={HANDSHAKE_CODE} annotations={HANDSHAKE_ANNOTATIONS} />
@@ -58,57 +53,55 @@ export default function P2PSecurity({ onCodeRef: _onCodeRef }: { onCodeRef: (key
 
         {/* ── Peer Reputation ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Peer Reputation — 악의 피어 차단</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CometBFT의 peer reputation 관리
-// cometbft/p2p/switch.go
-
-type Switch struct {
-    peers *PeerSet
-    reconnectCh chan Peer
-
-    // Reactor별 상태 tracking
-    reactors map[string]Reactor
-}
-
-// 피어 제재 조건:
-// 1. Invalid message 전송 → immediate ban
-// 2. Consensus violation (잘못된 Vote/Block) → ban
-// 3. Rate limit 초과 → throttle, 반복 시 ban
-// 4. Timeout (no response 60s) → disconnect
-// 5. Wrong chain ID → disconnect (동일 chain 아님)
-
-// StopPeerForError 호출 시나리오:
-// - Decoding error
-// - Signature verification failure
-// - Duplicate/conflicting vote (sig valid but bad)
-// - Evidence 생성 후 bad peer 판정
-
-// 구현:
-func (sw *Switch) StopPeerForError(peer Peer, reason error) {
-    peer.CloseConn()
-
-    // peer list에서 제거
-    sw.peers.Remove(peer.ID())
-
-    // 재연결 시도 차단 (AddrBook)
-    sw.addrBook.MarkBad(peer.Address())
-
-    log.Error("Peer stopped for error",
-        "peer", peer,
-        "err", reason)
-}
-
-// AddrBook ban list:
-// - MarkBad: 1시간 재연결 금지
-// - MarkGood: reputation 회복
-// - 영구 ban은 config로 설정 (신뢰 피어만 연결)
-
-// 공격 방어:
-// - Sybil: max peer 제한 + AddrBook 다양성
-// - DoS: rate limit + auth 체크
-// - Eclipse: 다중 peer 유지 + outbound 연결 우선
-// - MITM: SecretConnection (STS handshake)`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2"><code>Switch</code> 구조체 — peer reputation 관리</p>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <p><code>peers *PeerSet</code> — 연결된 피어 목록 / <code>reconnectCh chan Peer</code> — 재연결 채널 / <code>reactors map[string]Reactor</code> — Reactor별 상태 tracking</p>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">피어 제재 조건</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">1.</strong> Invalid message 전송 → immediate ban</p>
+                <p><strong className="text-foreground">2.</strong> Consensus violation (잘못된 Vote/Block) → ban</p>
+                <p><strong className="text-foreground">3.</strong> Rate limit 초과 → throttle, 반복 시 ban</p>
+                <p><strong className="text-foreground">4.</strong> Timeout (no response 60s) → disconnect</p>
+                <p><strong className="text-foreground">5.</strong> Wrong chain ID → disconnect</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>StopPeerForError</code> 호출 시나리오</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>Decoding error</li>
+                <li>Signature verification failure</li>
+                <li>Duplicate/conflicting vote</li>
+                <li>Evidence 생성 후 bad peer 판정</li>
+              </ul>
+              <p className="text-xs text-muted-foreground mt-2">실행: <code>peer.CloseConn()</code> → <code>peers.Remove(peer.ID())</code> → <code>addrBook.MarkBad(peer.Address())</code></p>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">AddrBook ban list</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><code>MarkBad</code> — 1시간 재연결 금지</p>
+                <p><code>MarkGood</code> — reputation 회복</p>
+                <p>영구 ban은 config로 설정 (신뢰 피어만 연결)</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">공격 방어</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">Sybil</strong> — max peer 제한 + AddrBook 다양성</p>
+                <p><strong className="text-foreground">DoS</strong> — rate limit + auth 체크</p>
+                <p><strong className="text-foreground">Eclipse</strong> — 다중 peer 유지 + outbound 우선</p>
+                <p><strong className="text-foreground">MITM</strong> — SecretConnection (STS handshake)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Peer reputation이 <strong>Switch에서 관리</strong>.<br />
           consensus violation/rate limit 초과 등 다양한 제재 조건.<br />

@@ -16,178 +16,179 @@ export default function SessionTracer() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SessionTracer 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct SessionTracer {
-    session_id: SessionId,
-    started_at: DateTime<Utc>,
-
-    // 집계 카운터
-    tool_calls: HashMap<String, ToolStats>,
-    llm_requests: u64,
-    llm_errors: u64,
-    total_tokens_in: u64,
-    total_tokens_out: u64,
-    cache_hits: u64,
-
-    // 이벤트 타임라인 (최근 1000개)
-    events: VecDeque<TracedEvent>,
-}
-
-pub struct ToolStats {
-    pub call_count: u64,
-    pub success_count: u64,
-    pub total_duration_ms: u64,
-    pub max_duration_ms: u64,
-}`}</pre>
-        <p>
-          <strong>2계층 데이터</strong>: 집계 카운터 + 상세 타임라인<br />
-          카운터는 O(1) 업데이트 — 빠른 record<br />
-          타임라인은 최근 1000개만 — 메모리 상한
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">SessionTracer — 2계층 데이터</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">집계 카운터 (O(1) 업데이트)</p>
+              <div className="space-y-2">
+                <div className="bg-muted/50 rounded-lg p-2">
+                  <code className="text-xs font-mono">session_id</code> / <code className="text-xs font-mono">started_at</code>
+                  <p className="text-xs text-muted-foreground">세션 식별 + 시작 시간</p>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-2">
+                  <code className="text-xs font-mono">tool_calls: HashMap&lt;String, ToolStats&gt;</code>
+                  <p className="text-xs text-muted-foreground">도구별 호출 통계</p>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-2">
+                  <code className="text-xs font-mono">llm_requests</code> / <code className="text-xs font-mono">llm_errors</code> / <code className="text-xs font-mono">cache_hits</code>
+                  <p className="text-xs text-muted-foreground">LLM 요청·실패·캐시 카운터</p>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-2">
+                  <code className="text-xs font-mono">total_tokens_in</code> / <code className="text-xs font-mono">total_tokens_out</code>
+                  <p className="text-xs text-muted-foreground">입출력 토큰 누적량</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">상세 타임라인 (최근 1000개)</p>
+              <div className="bg-muted/50 rounded-lg p-3 mb-2">
+                <code className="text-xs font-mono">events: VecDeque&lt;TracedEvent&gt;</code>
+                <p className="text-xs text-muted-foreground">메모리 상한 — 오래된 이벤트 FIFO 드롭</p>
+              </div>
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mt-3 mb-2">ToolStats</p>
+              <div className="bg-muted/50 rounded-lg p-3 space-y-1">
+                <p className="text-xs"><code className="font-mono">call_count</code> — 호출 횟수</p>
+                <p className="text-xs"><code className="font-mono">success_count</code> — 성공 횟수</p>
+                <p className="text-xs"><code className="font-mono">total_duration_ms</code> — 총 소요시간</p>
+                <p className="text-xs"><code className="font-mono">max_duration_ms</code> — 최대 소요시간</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">record_tool_call()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl SessionTracer {
-    pub fn record_tool_call(
-        &mut self,
-        name: &str,
-        success: bool,
-        duration: Duration,
-    ) {
-        let duration_ms = duration.as_millis() as u64;
-
-        // 집계 업데이트
-        let stats = self.tool_calls.entry(name.to_string())
-            .or_insert_with(Default::default);
-        stats.call_count += 1;
-        if success { stats.success_count += 1; }
-        stats.total_duration_ms += duration_ms;
-        stats.max_duration_ms = stats.max_duration_ms.max(duration_ms);
-
-        // 타임라인 추가
-        self.events.push_back(TracedEvent {
-            timestamp: Utc::now(),
-            kind: EventKind::ToolCall,
-            summary: format!("{}({}ms)", name, duration_ms),
-        });
-        if self.events.len() > 1000 { self.events.pop_front(); }
-    }
-}`}</pre>
-        <p>
-          <strong>HashMap entry API</strong>: "있으면 업데이트, 없으면 생성" 원자적<br />
-          카운터 + max는 같이 업데이트 — 일관성 보장<br />
-          타임라인 1000 초과 시 FIFO 드롭
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">record_tool_call(name, success, duration) 흐름</p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">1</span>
+              <div>
+                <p className="text-sm font-medium">집계 업데이트</p>
+                <p className="text-xs text-muted-foreground"><code>HashMap::entry(name).or_insert_with</code> — "있으면 업데이트, 없으면 생성" 원자적</p>
+                <p className="text-xs text-muted-foreground"><code>call_count++</code>, <code>success_count++</code>, <code>total_duration_ms +=</code>, <code>max_duration_ms.max()</code></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">2</span>
+              <div>
+                <p className="text-sm font-medium">타임라인 추가</p>
+                <p className="text-xs text-muted-foreground"><code>events.push_back(TracedEvent)</code> — <code>summary: "Read(42ms)"</code> 형태</p>
+                <p className="text-xs text-muted-foreground">1000개 초과 시 <code>pop_front()</code> — FIFO 드롭</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">요약 통계 — SessionStats</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct SessionStats {
-    pub duration: Duration,
-    pub total_tool_calls: u64,
-    pub tool_success_rate: f64,
-    pub most_used_tool: Option<String>,
-    pub slowest_tool: Option<String>,
-    pub total_cost_usd: f64,
-    pub cache_hit_rate: f64,
-    pub errors: u64,
-}
-
-impl SessionTracer {
-    pub fn generate_stats(&self) -> SessionStats {
-        let duration = Utc::now() - self.started_at;
-
-        let total_calls: u64 = self.tool_calls.values()
-            .map(|s| s.call_count).sum();
-        let total_success: u64 = self.tool_calls.values()
-            .map(|s| s.success_count).sum();
-
-        let most_used = self.tool_calls.iter()
-            .max_by_key(|(_, s)| s.call_count)
-            .map(|(k, _)| k.clone());
-
-        let slowest = self.tool_calls.iter()
-            .max_by_key(|(_, s)| s.max_duration_ms)
-            .map(|(k, _)| k.clone());
-
-        let cache_hit_rate = if self.total_tokens_in > 0 {
-            self.cache_hits as f64 / self.total_tokens_in as f64
-        } else { 0.0 };
-
-        SessionStats {
-            duration: duration.to_std().unwrap(),
-            total_tool_calls: total_calls,
-            tool_success_rate: total_success as f64 / total_calls.max(1) as f64,
-            most_used_tool: most_used,
-            slowest_tool: slowest,
-            total_cost_usd: self.compute_cost(),
-            cache_hit_rate,
-            errors: self.llm_errors,
-        }
-    }
-}`}</pre>
-        <p>
-          <strong>요약 시점</strong>: 세션 종료 또는 <code>/status</code> 명령<br />
-          O(N) 집계 — N은 고유 도구 이름 수(수십 개)<br />
-          <strong>most_used_tool</strong>·<strong>slowest_tool</strong>: 개선 힌트
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">SessionStats 필드 + generate_stats() 계산</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">duration</code>
+              <p className="text-xs text-muted-foreground"><code>Utc::now() - started_at</code></p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">total_tool_calls</code>
+              <p className="text-xs text-muted-foreground"><code>tool_calls.values().map(call_count).sum()</code></p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">tool_success_rate</code>
+              <p className="text-xs text-muted-foreground"><code>total_success / total_calls.max(1)</code></p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">most_used_tool</code>
+              <p className="text-xs text-muted-foreground"><code>max_by_key(call_count)</code> — 가장 많이 호출된 도구</p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-amber-600 dark:text-amber-400">slowest_tool</code>
+              <p className="text-xs text-muted-foreground"><code>max_by_key(max_duration_ms)</code> — 가장 느린 도구</p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">cache_hit_rate</code>
+              <p className="text-xs text-muted-foreground"><code>cache_hits / total_tokens_in</code></p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-blue-600 dark:text-blue-400">total_cost_usd</code>
+              <p className="text-xs text-muted-foreground"><code>compute_cost()</code> — 토큰 × 단가</p>
+            </div>
+            <div className="bg-muted/50 rounded-lg p-3">
+              <code className="text-xs font-mono text-red-600 dark:text-red-400">errors</code>
+              <p className="text-xs text-muted-foreground"><code>llm_errors</code> — LLM 에러 횟수</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">요약 시점: 세션 종료 또는 <code>/status</code> 명령 — O(N) 집계, N은 고유 도구 이름 수(수십 개)</p>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">세션 종료 시 flush</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl ConversationRuntime {
-    pub async fn shutdown(&mut self) -> Result<()> {
-        // 통계 생성
-        let stats = self.tracer.generate_stats();
-
-        // TelemetrySink에 전송
-        self.telemetry_sink.emit(TelemetryEvent::SessionEnd {
-            session_id: self.session.id.clone(),
-            duration: stats.duration,
-            stats: stats.clone(),
-        }).await;
-
-        // 사용자에게 표시
-        print_session_summary(&stats);
-
-        // TelemetrySink 강제 flush
-        self.telemetry_sink.flush().await?;
-
-        Ok(())
-    }
-}
-
-fn print_session_summary(s: &SessionStats) {
-    println!("\\n╭── Session Summary ──╮");
-    println!("│ Duration:    {:?}", s.duration);
-    println!("│ Tool calls:  {} ({:.1}% success)",
-        s.total_tool_calls, s.tool_success_rate * 100.0);
-    println!("│ Most used:   {:?}", s.most_used_tool);
-    println!("│ Slowest:     {:?}", s.slowest_tool);
-    println!("│ Cache hit:   {:.1}%", s.cache_hit_rate * 100.0);
-    println!("│ Cost:        $\\{:.4}\\", s.total_cost_usd);
-    println!("╰─────────────────────╯\\n");
-}`}</pre>
-        <p>
-          <strong>세션 종료 시 집계·출력</strong>: 사용자에게 "이번 세션 요약" 제공<br />
-          TelemetrySink에도 SessionEnd 이벤트 전송 — 외부 분석 가능<br />
-          flush() 강제 호출 — 프로세스 종료 전 버퍼 비우기
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">ConversationRuntime::shutdown() 흐름</p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">1</span>
+              <div>
+                <p className="text-sm font-medium">통계 생성</p>
+                <p className="text-xs text-muted-foreground"><code>tracer.generate_stats()</code> → SessionStats</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">2</span>
+              <div>
+                <p className="text-sm font-medium">TelemetrySink 전송</p>
+                <p className="text-xs text-muted-foreground"><code>emit(TelemetryEvent::SessionEnd)</code> — 외부 분석용</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center justify-center">3</span>
+              <div>
+                <p className="text-sm font-medium">사용자에게 요약 표시</p>
+                <p className="text-xs text-muted-foreground"><code>print_session_summary</code> — Duration, Tool calls, Cost 등 요약</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-bold flex items-center justify-center">4</span>
+              <div>
+                <p className="text-sm font-medium">강제 flush</p>
+                <p className="text-xs text-muted-foreground"><code>telemetry_sink.flush().await</code> — 프로세스 종료 전 버퍼 비우기</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 border-t border-border pt-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">Session Summary 출력 예시</p>
+            <div className="bg-muted/50 rounded-lg p-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs font-mono">
+              <span className="text-muted-foreground">Duration</span><span>12m 34s</span>
+              <span className="text-muted-foreground">Tool calls</span><span>42 (95.2% success)</span>
+              <span className="text-muted-foreground">Most used</span><span>Read</span>
+              <span className="text-muted-foreground">Slowest</span><span>Bash</span>
+              <span className="text-muted-foreground">Cache hit</span><span>67.3%</span>
+              <span className="text-muted-foreground">Cost</span><span>$0.4230</span>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">히스토리컬 분석</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// .claw/telemetry.jsonl (FileExporter 기본 경로)
-{"type":"SessionEnd","session_id":"abc","duration":1200,"stats":{...}}
-{"type":"SessionEnd","session_id":"def","duration":3400,"stats":{...}}
-
-// 분석 명령 예시
-$ jq 'select(.type == "SessionEnd") | .stats.total_cost_usd' .claw/telemetry.jsonl
-0.24
-0.67
-0.42
-
-$ jq '[.[] | select(.type == "SessionEnd") | .stats.total_cost_usd] | add' .claw/telemetry.jsonl
-1.33
-
-// "지난 주 총 비용 $1.33"`}</pre>
-        <p>
-          <strong>JSONL 형식</strong>: 줄 단위 JSON — jq, awk로 분석 용이<br />
-          장기 로그 축적 → 주/월 단위 비용·사용 패턴 분석<br />
-          사용자가 자체 대시보드 구축 가능
-        </p>
+        <div className="not-prose bg-card border border-border rounded-xl p-5 my-4">
+          <p className="text-sm font-semibold text-muted-foreground mb-3">JSONL 로그 분석</p>
+          <div className="space-y-3">
+            <div className="bg-muted/50 rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1">저장 경로</p>
+              <p className="text-xs font-mono"><code>.claw/telemetry.jsonl</code> — FileExporter 기본 경로, 줄 단위 JSON</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-muted/50 rounded-lg p-3">
+                <p className="text-xs font-semibold mb-1">세션별 비용 조회</p>
+                <p className="text-xs font-mono text-muted-foreground"><code>jq 'select(.type == "SessionEnd") | .stats.total_cost_usd'</code></p>
+                <p className="text-xs text-muted-foreground mt-1">→ 0.24, 0.67, 0.42</p>
+              </div>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <p className="text-xs font-semibold mb-1">총 비용 합산</p>
+                <p className="text-xs font-mono text-muted-foreground"><code>jq '[... | .total_cost_usd] | add'</code></p>
+                <p className="text-xs text-muted-foreground mt-1">→ "지난 주 총 비용 $1.33"</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">장기 로그 축적 → 주/월 단위 비용·사용 패턴 분석 — 자체 대시보드 구축 가능</p>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 텔레메트리의 실제 효과</p>

@@ -21,27 +21,23 @@ export default function StageTrait({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── trait 시그니처 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Stage trait 시그니처</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub trait Stage<DB: Database>: Send + Sync {
-    /// Stage 식별자 — 체크포인트 테이블 키로 사용
-    /// StageId::Headers, Bodies, SenderRecovery, Execution, MerkleExecute
-    fn id(&self) -> StageId;
-
-    /// 정방향 실행 — checkpoint+1부터 target까지 처리
-    fn execute(
-        &mut self,
-        provider: &Provider,    // DB 트랜잭션(R/W) — 해당 Stage가 읽고 쓸 테이블 접근
-        input: ExecInput,       // { target, checkpoint } — 처리 범위 입력
-    ) -> Result<ExecOutput, StageError>;
-
-    /// 역방향 롤백 — target 블록까지 되감기 (reorg 시 호출)
-    fn unwind(
-        &mut self,
-        provider: &Provider,
-        input: UnwindInput,     // { checkpoint, unwind_to, bad_block } — 되감을 목적지
-    ) -> Result<UnwindOutput, StageError>;
-}`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-indigo-500 mb-2">Stage&lt;DB: Database&gt;: Send + Sync</p>
+          <div className="space-y-3 text-sm">
+            <div className="rounded border border-border/40 p-3">
+              <p className="font-mono text-xs font-semibold text-foreground/80 mb-1">fn id(&amp;self) -&gt; StageId</p>
+              <p className="text-foreground/60 text-xs">Stage 식별자 -- 체크포인트 테이블 키로 사용 (Headers, Bodies, SenderRecovery, Execution, MerkleExecute)</p>
+            </div>
+            <div className="rounded border border-border/40 p-3">
+              <p className="font-mono text-xs font-semibold text-foreground/80 mb-1">fn execute(&amp;mut self, provider: &amp;Provider, input: ExecInput) -&gt; Result&lt;ExecOutput, StageError&gt;</p>
+              <p className="text-foreground/60 text-xs"><code>provider</code>: DB 트랜잭션(R/W) / <code>input</code>: {'{'} target, checkpoint {'}'} -- checkpoint+1부터 target까지 정방향 처리</p>
+            </div>
+            <div className="rounded border border-border/40 p-3">
+              <p className="font-mono text-xs font-semibold text-foreground/80 mb-1">fn unwind(&amp;mut self, provider: &amp;Provider, input: UnwindInput) -&gt; Result&lt;UnwindOutput, StageError&gt;</p>
+              <p className="text-foreground/60 text-xs"><code>input</code>: {'{'} checkpoint, unwind_to, bad_block {'}'} -- reorg 시 역방향 롤백</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>Send + Sync</code> 경계가 붙은 이유: Pipeline이 스레드 안전하게 Stage를 소유해야 하기 때문이다.<br />
           <code>&amp;mut self</code>로 가변 참조를 받으므로 Stage가 내부 상태(카운터, 버퍼)를 유지할 수 있다.<br />
@@ -50,34 +46,37 @@ export default function StageTrait({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── ExecInput/ExecOutput ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ExecInput & ExecOutput 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct ExecInput {
-    /// CL tip — "여기까지 처리하라"는 목표 블록 번호
-    /// FCU(ForkchoiceUpdated)로 CL이 전달한 head 블록의 번호
-    pub target: Option<BlockNumber>,
-    /// 이 Stage가 마지막으로 처리 완료한 체크포인트 (DB에서 로드)
-    /// None이면 genesis부터 시작
-    pub checkpoint: Option<StageCheckpoint>,
-}
-
-impl ExecInput {
-    /// 이번 execute() 호출에서 처리할 블록 범위
-    /// checkpoint+1 ~ target
-    pub fn next_block_range(&self) -> RangeInclusive<BlockNumber> {
-        let start = self.checkpoint.map(|cp| cp.block_number + 1).unwrap_or(0);
-        let end = self.target.unwrap_or(start);
-        start..=end
-    }
-}
-
-pub struct ExecOutput {
-    /// 이번 execute()가 처리 완료한 마지막 블록 — 다음 루프에서 재사용
-    pub checkpoint: StageCheckpoint,
-    /// target에 도달했는가?
-    /// false면 Pipeline이 다음 루프에서 같은 Stage를 다시 호출
-    pub done: bool,
-}`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">ExecInput</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">target</code>
+                <span className="text-foreground/70"><code>Option&lt;BlockNumber&gt;</code> — CL tip, FCU로 전달된 목표 블록 번호</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">checkpoint</code>
+                <span className="text-foreground/70"><code>Option&lt;StageCheckpoint&gt;</code> — 마지막 완료 블록 (None이면 genesis부터)</span>
+              </div>
+            </div>
+            <div className="mt-2 pt-2 border-t border-border/30">
+              <p className="text-xs text-foreground/60"><code>next_block_range()</code> — checkpoint+1 ~ target 범위를 <code>RangeInclusive&lt;BlockNumber&gt;</code>로 반환</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">ExecOutput</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">checkpoint</code>
+                <span className="text-foreground/70"><code>StageCheckpoint</code> — 이번 호출이 완료한 마지막 블록</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">done</code>
+                <span className="text-foreground/70"><code>bool</code> — target 도달 여부. false면 Pipeline이 같은 Stage를 다시 호출</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>next_block_range()</code>가 체크포인트 기반 재개를 캡슐화한다.<br />
           Stage 구현체는 이 범위만 보면 되고, 크래시 복구 로직을 신경 쓸 필요가 없다.<br />
@@ -91,26 +90,33 @@ pub struct ExecOutput {
           Merkle → Execution → Senders → Bodies → Headers 순서 — 의존성의 반대 방향.<br />
           각 Stage는 자기가 쓴 DB 테이블에서 target+1 이후의 엔트리를 제거한다.
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct UnwindInput {
-    /// 현재 체크포인트 (되감기 시작점)
-    pub checkpoint: StageCheckpoint,
-    /// 되감을 목적지 — 이 블록 번호까지만 DB에 남김
-    pub unwind_to: BlockNumber,
-    /// reorg를 일으킨 나쁜 블록 (로깅/디버깅용)
-    pub bad_block: Option<B256>,
-}
-
-// ExecutionStage::unwind() 의사코드
-fn unwind(&mut self, provider: &Provider, input: UnwindInput) -> Result<UnwindOutput> {
-    // 1. PlainAccountState, PlainStorageState에서 unwind_to+1 이후 변경 제거
-    provider.remove_state_from(input.unwind_to + 1)?;
-    // 2. Receipts 테이블에서 unwind_to+1 이후 삭제
-    provider.remove_receipts_from(input.unwind_to + 1)?;
-    // 3. 체크포인트를 unwind_to로 덮어쓰기
-    Ok(UnwindOutput { checkpoint: StageCheckpoint::new(input.unwind_to) })
-}`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-pink-500 mb-2">UnwindInput</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">checkpoint</code>
+                <span className="text-foreground/70"><code>StageCheckpoint</code> — 되감기 시작점 (현재 체크포인트)</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">unwind_to</code>
+                <span className="text-foreground/70"><code>BlockNumber</code> — 이 블록까지만 DB에 남김</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">bad_block</code>
+                <span className="text-foreground/70"><code>Option&lt;B256&gt;</code> — reorg를 일으킨 블록 해시 (로깅/디버깅용)</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-pink-500 mb-2">ExecutionStage::unwind() 흐름</p>
+            <ol className="list-decimal list-inside space-y-1 text-sm text-foreground/70">
+              <li><code>provider.remove_state_from(unwind_to + 1)</code> — PlainAccountState, PlainStorageState에서 unwind_to+1 이후 제거</li>
+              <li><code>provider.remove_receipts_from(unwind_to + 1)</code> — Receipts 테이블 정리</li>
+              <li>체크포인트를 <code>unwind_to</code>로 덮어쓰기 &rarr; <code>UnwindOutput</code> 반환</li>
+            </ol>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Geth와의 차이:</strong> Geth는 블록 단위 실행이라 reorg 시 전체 상태를 되돌려야 한다.<br />
           Reth는 Stage별 unwind()가 있어 필요한 Stage만 부분 롤백이 가능하다.<br />
@@ -119,23 +125,24 @@ fn unwind(&mut self, provider: &Provider, input: UnwindInput) -> Result<UnwindOu
 
         {/* ── trait object ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">왜 trait object인가 — dyn Stage 설계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Pipeline 구조체 정의
-pub struct Pipeline<N: NodeTypesWithDB> {
-    stages: Vec<Box<dyn Stage<N::DB>>>, // ← 트레이트 객체 벡터 (동적 디스패치)
-    // ...
-}
-
-// 대안 1: 제네릭 튜플 — 컴파일 타임 결정, 유연성 부족
-struct Pipeline<A: Stage, B: Stage, C: Stage, D: Stage, E: Stage> {
-    stages: (A, B, C, D, E), // ← Stage 추가/제거 시 시그니처 변경 필요
-}
-
-// 대안 2: Vec<Box<dyn Stage>> — 런타임 다형성, 유연성 확보
-// 장점: Stage를 런타임에 추가/제거/순서변경 가능
-// 장점: PipelineBuilder 패턴으로 빌드 타임 커스터마이즈
-// 비용: vtable lookup 1회 (무시할 수준 — Stage 실행이 훨씬 비쌈)`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">실제 설계: <code>Vec&lt;Box&lt;dyn Stage&lt;N::DB&gt;&gt;&gt;</code></p>
+            <p className="text-sm text-foreground/70">트레이트 객체 벡터 (동적 디스패치) — 런타임 다형성</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-red-300/40 bg-red-50/30 dark:bg-red-950/10 p-3">
+              <p className="text-xs font-semibold text-red-500 mb-1">대안 1: 제네릭 튜플</p>
+              <p className="text-xs text-foreground/60"><code>Pipeline&lt;A: Stage, B: Stage, C, D, E&gt;</code></p>
+              <p className="text-xs text-foreground/50 mt-1">컴파일 타임 결정 -- Stage 추가/제거 시 시그니처 변경 필요</p>
+            </div>
+            <div className="rounded-lg border border-emerald-300/40 bg-emerald-50/30 dark:bg-emerald-950/10 p-3">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">채택: Vec&lt;Box&lt;dyn Stage&gt;&gt;</p>
+              <p className="text-xs text-foreground/60">런타임 추가/제거/순서변경 + PipelineBuilder 패턴</p>
+              <p className="text-xs text-foreground/50 mt-1">비용: vtable lookup 1회 (Stage 실행 비용 대비 무시 가능)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Stage 호출은 파이프라인 전체 실행 시간 중 극히 작은 부분이다.<br />
           실제 비용은 DB I/O, 네트워크, 해시 계산에 있다. vtable 오버헤드는 무시할 수준.<br />
@@ -148,25 +155,32 @@ struct Pipeline<A: Stage, B: Stage, C: Stage, D: Stage, E: Stage> {
           Pipeline::run()은 모든 Stage가 <code>done=true</code>를 반환할 때까지 루프를 반복한다.<br />
           한 Stage가 target까지 도달하지 못하면 다음 루프에서 같은 Stage부터 이어서 실행한다.
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 시나리오: HeadersStage가 100만 블록을 한 번에 처리하기엔 메모리 부담이 큼
-// → 10만 블록씩 잘라서 여러 번 execute() 호출
-
-// 1회차 호출
-input = { target: 18_000_000, checkpoint: 17_000_000 }
-HeadersStage::execute() 내부:
-  end_this_call = min(target, checkpoint + 100_000) = 17_100_000
-  // 100K 블록만 처리하고 반환
-  return ExecOutput { checkpoint: 17_100_000, done: false } // ← 아직 target 미도달
-
-// Pipeline이 break → 루프 재시작 → Headers부터 다시 호출
-// 2회차 호출
-input = { target: 18_000_000, checkpoint: 17_100_000 }
-// ... 반복 ...
-
-// 10회차 호출에서 드디어 target 도달
-return ExecOutput { checkpoint: 18_000_000, done: true } // ← 이제 다음 Stage로`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-3">시나리오: HeadersStage 100만 블록을 10만씩 분할 처리</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 rounded border border-border/40 p-2.5">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">1</span>
+              <div className="text-foreground/70">
+                <p>input: target=18,000,000 / checkpoint=17,000,000</p>
+                <p className="text-xs text-foreground/50 mt-0.5">&rarr; 100K 블록 처리 &rarr; <code>ExecOutput {'{'} checkpoint: 17,100,000, done: false {'}'}</code></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded border border-border/40 p-2.5">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">2</span>
+              <div className="text-foreground/70">
+                <p>input: target=18,000,000 / checkpoint=17,100,000</p>
+                <p className="text-xs text-foreground/50 mt-0.5">&rarr; 100K 블록 처리 &rarr; <code>done: false</code> ... 반복</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded border border-emerald-400/40 bg-emerald-50/30 dark:bg-emerald-950/10 p-2.5">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold">10</span>
+              <div className="text-foreground/70">
+                <p>target 도달 &rarr; <code>ExecOutput {'{'} checkpoint: 18,000,000, done: true {'}'}</code></p>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">다음 Stage로 진행</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           이 분할 메커니즘이 <strong>메모리 상한을 강제</strong>한다.<br />
           Stage는 "한 번에 너무 많이 처리하지 말라"를 알아서 판단해 done=false로 여유를 가진다.<br />

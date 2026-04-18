@@ -35,185 +35,157 @@ export default function SlashCommands() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SlashCommand 트레이트</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[async_trait]
-pub trait SlashCommand: Send + Sync {
-    fn name(&self) -> &'static str;
-    fn aliases(&self) -> &'static [&'static str] { &[] }
-    fn description(&self) -> &'static str;
-
-    async fn execute(
-        &self,
-        args: &[&str],
-        runtime: &mut ConversationRuntime,
-    ) -> Result<SlashResult>;
-}
-
-pub enum SlashResult {
-    Continue,  // REPL 계속
-    Exit,      // REPL 종료
-}`}</pre>
-        <p>
-          각 명령이 <code>SlashCommand</code> 트레이트 구현<br />
-          <code>aliases</code>: 줄임말 지원 — <code>/q</code> = <code>/quit</code><br />
-          <code>Continue</code>/<code>Exit</code>만 반환 — 다른 상태 변경은 runtime 수정으로
-        </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">trait SlashCommand</span>
+            <span className="text-xs text-muted-foreground ml-2">Send + Sync + async_trait</span>
+          </div>
+          <div className="divide-y divide-border">
+            {[
+              { method: 'name()', ret: "&'static str", desc: '명령 이름 (예: "compact")' },
+              { method: 'aliases()', ret: "&'static [&str]", desc: '줄임말 — /q = /quit (기본: 빈 배열)' },
+              { method: 'description()', ret: "&'static str", desc: '도움말에 표시할 설명' },
+              { method: 'execute(args, runtime)', ret: 'Result<SlashResult>', desc: '명령 실행 — runtime 직접 수정 가능' },
+            ].map(({ method, ret, desc }) => (
+              <div key={method} className="flex items-start gap-3 p-3">
+                <code className="flex-shrink-0 text-xs font-semibold text-primary whitespace-nowrap">{method}</code>
+                <div>
+                  <code className="text-xs text-muted-foreground">→ {ret}</code>
+                  <p className="text-sm mt-0.5">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="px-4 py-3 bg-muted/50 border-t border-border">
+            <p className="text-sm"><code className="text-xs">SlashResult::Continue</code> — REPL 계속 | <code className="text-xs">SlashResult::Exit</code> — REPL 종료</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">handle_slash_command() — 디스패처</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`async fn handle_slash_command(
-    input: &str,
-    runtime: &mut ConversationRuntime,
-) -> SlashResult {
-    // 입력 파싱
-    let parts: Vec<&str> = input.trim_start_matches('/').split_whitespace().collect();
-    let cmd_name = parts[0];
-    let args = &parts[1..];
-
-    // 레지스트리 조회
-    let registry = global_slash_registry();
-    let command = registry.find(cmd_name);
-
-    match command {
-        Some(cmd) => {
-            match cmd.execute(args, runtime).await {
-                Ok(result) => result,
-                Err(e) => {
-                    eprintln!("Error: {}", e);
-                    SlashResult::Continue
-                }
-            }
-        }
-        None => {
-            eprintln!("Unknown command: /{}. Type /help for list.", cmd_name);
-            SlashResult::Continue
-        }
-    }
-}`}</pre>
         <p>
-          <strong>3단계</strong>: 파싱 → 조회 → 실행<br />
           알 수 없는 명령은 에러 메시지 + 세션 계속 — 사용자 실수 방지<br />
           실행 에러도 계속 — 명령 실패가 세션 종료로 이어지지 않음
         </p>
+        <div className="not-prose my-4 flex flex-col sm:flex-row gap-2">
+          {[
+            { step: '1', label: '파싱', detail: '/ 제거 후 공백 분리 → cmd_name + args' },
+            { step: '2', label: '레지스트리 조회', detail: 'global_slash_registry().find(cmd_name)' },
+            { step: '3', label: '실행', detail: 'cmd.execute(args, runtime).await' },
+          ].map(({ step, label, detail }, i) => (
+            <div key={step} className="flex-1 flex items-start gap-2">
+              <div className="bg-muted/50 border border-border rounded-lg p-3 flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">{step}</span>
+                  <span className="font-semibold text-sm">{label}</span>
+                </div>
+                <p className="text-xs text-muted-foreground">{detail}</p>
+              </div>
+              {i < 2 && <span className="hidden sm:flex items-center text-muted-foreground self-center">→</span>}
+            </div>
+          ))}
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">구현 예시 — /compact</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct CompactCommand;
-
-#[async_trait]
-impl SlashCommand for CompactCommand {
-    fn name(&self) -> &'static str { "compact" }
-
-    fn description(&self) -> &'static str {
-        "현재 세션을 즉시 컴팩션"
-    }
-
-    async fn execute(
-        &self,
-        _args: &[&str],
-        runtime: &mut ConversationRuntime,
-    ) -> Result<SlashResult> {
-        let before = runtime.session.messages.len();
-
-        let result = compact_session(&runtime.session, &runtime.compact_config)?;
-        runtime.session = result.compacted_session;
-
-        let after = runtime.session.messages.len();
-        println!("Compacted: {} messages → {} (removed {})",
-            before, after, result.removed_count);
-
-        Ok(SlashResult::Continue)
-    }
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border flex items-center gap-2">
+            <code className="text-sm font-semibold text-primary">/compact</code>
+            <span className="text-xs text-muted-foreground">— 현재 세션을 즉시 컴팩션</span>
+          </div>
+          <div className="p-4 space-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">1.</span>
+              <span>세션 메시지 수 기록: <code className="text-xs">before = runtime.session.messages.len()</code></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">2.</span>
+              <span>컴팩션 실행: <code className="text-xs">compact_session(&session, &compact_config)</code></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">3.</span>
+              <span>결과 출력: <code className="text-xs">"Compacted: 42 messages → 12 (removed 30)"</code></span>
+            </div>
+            <p className="text-xs text-muted-foreground pt-1">반환: <code className="text-xs">SlashResult::Continue</code> — 세션 계속</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">구현 예시 — /status</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct StatusCommand;
-
-#[async_trait]
-impl SlashCommand for StatusCommand {
-    fn name(&self) -> &'static str { "status" }
-
-    async fn execute(
-        &self,
-        _args: &[&str],
-        runtime: &mut ConversationRuntime,
-    ) -> Result<SlashResult> {
-        let session = &runtime.session;
-        let usage = &session.token_usage;
-
-        println!("\\n╭── Session Status ──╮");
-        println!("│ ID:       {}", session.id);
-        println!("│ Messages: {}", session.messages.len());
-        println!("│ Duration: {:?}", Utc::now() - session.started_at);
-        println!("│");
-        println!("│ Tokens:");
-        println!("│   Input:  {} ({})",
-            usage.input_tokens, human_number(usage.input_tokens));
-        println!("│   Output: {}", human_number(usage.output_tokens));
-        println!("│   Cached: {} ({} saved)",
-            usage.cache_read_tokens, usage.cache_hit_savings());
-        println!("│");
-        println!("│ Cost: $\\{:.4}\\", usage.total_cost_usd());
-        println!("╰────────────────────╯\\n");
-
-        Ok(SlashResult::Continue)
-    }
-}`}</pre>
-        <p>
-          <strong>Unicode 박스 출력</strong>: 상태 정보를 시각적으로 그룹화<br />
-          사람이 읽기 쉬운 숫자 형식 (<code>human_number</code>) — "1.5M" 같은<br />
-          비용 USD 표시 — 사용자 투명성 확보
-        </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border flex items-center gap-2">
+            <code className="text-sm font-semibold text-primary">/status</code>
+            <span className="text-xs text-muted-foreground">— 세션 상태·토큰·비용 표시</span>
+          </div>
+          <div className="p-4">
+            <div className="font-mono text-sm bg-zinc-900 text-zinc-100 rounded-lg p-4 leading-relaxed">
+              <p>╭── Session Status ──╮</p>
+              <p>│ <span className="text-blue-400">ID:</span>       abc-123</p>
+              <p>│ <span className="text-blue-400">Messages:</span> 24</p>
+              <p>│ <span className="text-blue-400">Duration:</span> 12m 34s</p>
+              <p>│</p>
+              <p>│ <span className="text-green-400">Tokens:</span></p>
+              <p>│   Input:  <span className="text-yellow-300">45.2K</span></p>
+              <p>│   Output: <span className="text-yellow-300">12.8K</span></p>
+              <p>│   Cached: <span className="text-yellow-300">38.1K</span> (84% saved)</p>
+              <p>│</p>
+              <p>│ Cost: <span className="text-emerald-400">$0.0342</span></p>
+              <p>╰────────────────────╯</p>
+            </div>
+            <p className="text-sm text-muted-foreground mt-3">
+              <code className="text-xs">human_number()</code>로 읽기 쉬운 형식 — "45.2K", "1.5M" 등<br />
+              비용 USD 표시 — 사용자 투명성 확보
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">커스텀 슬래시 명령 — 프로젝트 로컬</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// .claw/slash-commands/my-command.sh
-#!/bin/bash
-# 이 파일이 있으면 /my-command 명령으로 사용 가능
-# stdin: 인자 JSON, stdout: 출력
-
-ARGS=$(cat | jq -r '.args[] | @sh')
-echo "Custom command executed with: $ARGS"
-
-// 사용
-> /my-command hello world
-Custom command executed with: 'hello' 'world'`}</pre>
-        <p>
-          <strong>파일 기반 커스텀 명령</strong>: <code>.claw/slash-commands/</code>에 스크립트 배치<br />
-          파일명이 곧 명령명 — <code>my-command.sh</code> → <code>/my-command</code><br />
-          프로젝트별 워크플로우 자동화 — "팀 공용 명령" 가능
-        </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">.claw/slash-commands/</span>
+            <span className="text-xs text-muted-foreground ml-2">파일 기반 커스텀 명령</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs font-semibold text-muted-foreground">파일명</p>
+                <code className="text-sm text-primary">my-command.sh</code>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs font-semibold text-muted-foreground">명령</p>
+                <code className="text-sm text-primary">/my-command</code>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <p className="text-xs font-semibold text-muted-foreground">인터페이스</p>
+                <span className="text-sm">stdin: JSON, stdout: 출력</span>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              파일명이 곧 명령명 — 프로젝트별 워크플로우 자동화, "팀 공용 명령" 가능
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">슬래시 명령 자동완성</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// rustyline completer 통합
-struct SlashCompleter {
-    commands: Vec<String>,
-}
-
-impl Completer for SlashCompleter {
-    type Candidate = Pair;
-
-    fn complete(
-        &self,
-        line: &str,
-        pos: usize,
-        _ctx: &Context<'_>,
-    ) -> Result<(usize, Vec<Pair>)> {
-        if !line.starts_with('/') { return Ok((pos, vec![])); }
-
-        let prefix = &line[1..pos];
-        let matches: Vec<Pair> = self.commands.iter()
-            .filter(|c| c.starts_with(prefix))
-            .map(|c| Pair {
-                display: format!("/{}", c),
-                replacement: format!("/{}", c),
-            })
-            .collect();
-
-        Ok((0, matches))
-    }
-}`}</pre>
-        <p>
-          <strong>Tab 누르면 자동완성</strong>: <code>/com</code> + Tab → <code>/compact</code><br />
-          rustyline의 Completer 트레이트 구현 — 표준 API<br />
-          사용자 학습 곡선 단축 — 명령 외우지 않아도 사용 가능
-        </p>
+        <div className="not-prose my-4 bg-muted/30 border border-border rounded-lg overflow-hidden">
+          <div className="bg-muted px-4 py-2 border-b border-border">
+            <span className="font-mono text-sm font-semibold">SlashCompleter</span>
+            <span className="text-xs text-muted-foreground ml-2">rustyline Completer 트레이트 구현</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="flex items-center gap-3 bg-background border border-border rounded-lg p-3">
+              <div className="font-mono text-sm">
+                <span className="text-muted-foreground">&gt; </span>
+                <span>/com</span>
+                <kbd className="ml-2 px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-700 rounded text-xs">Tab</kbd>
+              </div>
+              <span className="text-muted-foreground">→</span>
+              <div className="font-mono text-sm text-primary">/compact</div>
+            </div>
+            <div className="text-sm space-y-1">
+              <p><code className="text-xs">/</code>로 시작하지 않으면 자동완성 비활성화</p>
+              <p>접두사 매칭: <code className="text-xs">commands.filter(|c| c.starts_with(prefix))</code></p>
+              <p className="text-muted-foreground">사용자 학습 곡선 단축 — 명령 외우지 않아도 사용 가능</p>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 슬래시 명령의 범용성</p>

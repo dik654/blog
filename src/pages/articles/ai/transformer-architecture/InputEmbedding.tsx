@@ -1,4 +1,6 @@
+import M from '@/components/ui/math';
 import InputEmbeddingViz from './viz/InputEmbeddingViz';
+import InputEmbDetailViz from './viz/InputEmbDetailViz';
 
 export default function InputEmbedding() {
   return (
@@ -29,46 +31,15 @@ export default function InputEmbedding() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Positional Encoding 설계 원리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sinusoidal Positional Encoding (Vaswani 2017)
-//
-// 요구사항:
-//   1. 각 위치가 고유한 인코딩
-//   2. 서로 다른 길이 시퀀스에 일관성
-//   3. 상대 위치 학습 가능 (k 떨어진 위치)
-//
-// 수식:
-//   PE(pos, 2i) = sin(pos / 10000^(2i/d_model))
-//   PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
-//
-// 주파수 해석:
-//   i가 작을수록 (저차원) → 주파수 높음 (빠른 변화)
-//   i가 클수록 (고차원) → 주파수 낮음 (느린 변화)
-//
-// 마치 시계의 초침(빠름)과 시침(느림) 조합
-//
-// 예시 (d_model=4, 4개 위치):
-//   PE(0): [sin(0), cos(0), sin(0), cos(0)]     = [0, 1, 0, 1]
-//   PE(1): [sin(1), cos(1), sin(0.01), cos(0.01)]
-//        ≈ [0.841, 0.540, 0.010, 1.000]
-//   PE(2): [sin(2), cos(2), sin(0.02), cos(0.02)]
-//        ≈ [0.909, -0.416, 0.020, 1.000]
-//
-// 상대 위치 학습:
-//   PE(pos+k) = LinearTransform(PE(pos))
-//   → 모델이 "k 떨어진" 관계 학습 가능
-
-// 대안 방식들:
-//   - Learned PE (BERT): 학습 가능한 임베딩
-//   - Rotary PE (LLaMA, RoFormer): 회전 기반
-//   - ALiBi (BLOOM): attention bias로 대체
-//   - RelPos (T5): 상대 위치 bias
-
-// 핵심 특성:
-//   - 최대 길이 제한 없음 (sinusoidal)
-//   - 학습 불필요
-//   - 임베딩에 직접 덧셈`}
-        </pre>
+        <p className="leading-7">
+          sin/cos 주파수를 차원별로 달리하여 각 위치에 고유한 인코딩을 부여한다.
+          저차원은 빠르게 변하고(초침), 고차원은 느리게 변한다(시침).
+          PE(pos+k)가 PE(pos)의 선형 변환으로 표현되어 상대 위치 학습이 가능하다.
+        </p>
+        <M display>{'\\text{PE}(\\text{pos}, 2i) = \\sin\\!\\left(\\frac{\\text{pos}}{\\underbrace{10000^{2i/d_{\\text{model}}}}_{\\text{차원별 주파수}}}\\right), \\quad \\text{PE}(\\text{pos}, 2i{+}1) = \\cos\\!\\left(\\frac{\\text{pos}}{10000^{2i/d_{\\text{model}}}}\\right)'}</M>
+      </div>
+      <div className="not-prose my-8"><InputEmbDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: <strong>sin/cos 주파수 분리</strong>로 각 차원이 다른 시간 스케일 표현.<br />
           요약 2: <strong>최대 길이 제약 없음</strong> - sinusoidal PE가 학습 PE 대비 장점.<br />

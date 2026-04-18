@@ -121,32 +121,41 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
           <code>stages</code> 필드는 <code>Vec&lt;Box&lt;dyn Stage&gt;&gt;</code> — 트레이트 객체 벡터로 동적 디스패치를 허용한다.<br />
           PipelineBuilder가 조립 시점에 순서를 고정하므로 런타임 변경은 불가능하다.
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct Pipeline<N: NodeTypesWithDB> {
-    stages: Vec<Box<dyn Stage<N::DB>>>,  // Headers→Bodies→Senders→Execution→Merkle 순서
-    tip: Option<B256>,                   // CL(Lighthouse 등)이 FCU로 알려준 목표 블록 해시
-    max_block: Option<BlockNumber>,      // 디버그/테스트용 최대 블록 제한
-    progress: PipelineProgress,          // 각 Stage별 체크포인트(마지막 처리 블록) 추적
-}
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">Pipeline 구조체</p>
+            <div className="grid grid-cols-1 gap-2 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">stages</code>
+                <span className="text-foreground/70"><code>Vec&lt;Box&lt;dyn Stage&lt;N::DB&gt;&gt;&gt;</code> — Headers, Bodies, Senders, Execution, Merkle 순서로 트레이트 객체 벡터</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">tip</code>
+                <span className="text-foreground/70"><code>Option&lt;B256&gt;</code> — CL(Lighthouse 등)이 FCU로 알려준 목표 블록 해시</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">max_block</code>
+                <span className="text-foreground/70"><code>Option&lt;BlockNumber&gt;</code> — 디버그/테스트용 최대 블록 제한</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">progress</code>
+                <span className="text-foreground/70"><code>PipelineProgress</code> — 각 Stage별 체크포인트(마지막 처리 블록) 추적</span>
+              </div>
+            </div>
+          </div>
 
-pub async fn run(&mut self) -> Result<ControlFlow> {
-    loop {
-        for stage in &mut self.stages {
-            let input = ExecInput {
-                target: self.tip,                              // "여기까지 처리하라"
-                checkpoint: self.progress.checkpoint(stage.id()), // 이 Stage의 마지막 완료 블록
-            };
-            let output = stage.execute(&self.provider, input)?;
-            self.progress.update(stage.id(), output.checkpoint); // DB에 체크포인트 기록
-
-            if !output.done {
-                break; // 아직 target 미도달 → 이번 루프 중단, 다음 루프에서 이어서
-            }
-        }
-        if self.progress.all_done() { return Ok(ControlFlow::NoProgress); }
-    }
-}`}
-        </pre>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">Pipeline::run() 메인 루프</p>
+            <ol className="list-decimal list-inside space-y-1.5 text-sm text-foreground/80">
+              <li>바깥 <code>loop</code> — 모든 Stage가 CL tip까지 도달할 때까지 반복</li>
+              <li>안쪽 <code>for stage in &amp;mut self.stages</code> — Stage 목록 순회</li>
+              <li>각 Stage에 <code>ExecInput {'{'} target: self.tip, checkpoint {'}'}</code> 전달</li>
+              <li><code>stage.execute(&amp;self.provider, input)</code> 호출 후 체크포인트 갱신</li>
+              <li><code>output.done == false</code>면 <code>break</code> — 다음 루프에서 이어서</li>
+              <li><code>self.progress.all_done()</code>이면 <code>ControlFlow::NoProgress</code> 반환</li>
+            </ol>
+          </div>
+        </div>
         <p className="leading-7">
           바깥 <code>loop</code>는 모든 Stage가 CL tip까지 도달할 때까지 반복한다.<br />
           안쪽 <code>for</code>는 Stage 목록을 순회한다. 각 Stage는 <code>ExecInput</code>을 받아 <code>ExecOutput</code>을 반환한다.<br />
@@ -160,23 +169,22 @@ pub async fn run(&mut self) -> Result<ControlFlow> {
           파이프라인은 이 체크포인트를 MDBX <code>StageCheckpoints</code> 테이블에 기록한다.<br />
           크래시 후 재시작하면 동일 DB에서 체크포인트를 로드해 <strong>중단 지점부터 이어서 실행</strong>한다.
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 체크포인트 테이블 (MDBX StageCheckpoints)
-// Key: StageId (Headers, Bodies, Senders, Execution, MerkleExecute)
-// Val: u64 (마지막으로 처리 완료한 블록 번호)
-
-Headers        → 18,400,000
-Bodies         → 18,399,800  ← HeadersStage보다 뒤처져 있음
-SenderRecovery → 18,399,500  ← BodiesStage보다 뒤처져 있음
-Execution      → 18,399,000
-MerkleExecute  → 18,399,000
-
-// 다음 루프에서:
-//  HeadersStage: 18,400,001부터 시작 (target=18,400,500일 때)
-//  BodiesStage:  18,399,801부터 시작 (HeadersStage가 저장한 범위까지만)
-//  SendersStage: 18,399,501부터 시작
-//  ...`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-3">MDBX StageCheckpoints 테이블 — Key: <code>StageId</code>, Val: <code>u64</code> (마지막 처리 블록)</p>
+          <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm font-mono">
+            <span className="text-indigo-500 font-semibold">Headers</span>
+            <span className="text-foreground/70">18,400,000</span>
+            <span className="text-indigo-500 font-semibold">Bodies</span>
+            <span className="text-foreground/70">18,399,800 <span className="text-xs text-foreground/50 font-sans">-- HeadersStage보다 뒤처져 있음</span></span>
+            <span className="text-indigo-500 font-semibold">SenderRecovery</span>
+            <span className="text-foreground/70">18,399,500 <span className="text-xs text-foreground/50 font-sans">-- BodiesStage보다 뒤처져 있음</span></span>
+            <span className="text-indigo-500 font-semibold">Execution</span>
+            <span className="text-foreground/70">18,399,000</span>
+            <span className="text-indigo-500 font-semibold">MerkleExecute</span>
+            <span className="text-foreground/70">18,399,000</span>
+          </div>
+          <p className="text-xs text-foreground/50 mt-3">다음 루프: HeadersStage 18,400,001부터 / BodiesStage 18,399,801부터 / SendersStage 18,399,501부터</p>
+        </div>
         <p className="leading-7">
           체크포인트는 각 Stage마다 <strong>독립적</strong>이다.<br />
           HeadersStage가 100만 블록 앞서 있어도 BodiesStage는 자기 속도로 따라간다.<br />
@@ -189,22 +197,34 @@ MerkleExecute  → 18,399,000
           Stage 실행 결과는 <code>ControlFlow</code> enum으로 파이프라인에 보고된다.<br />
           단순 정상 종료가 아니라, 체인 재조직(reorg)이나 검증 실패 시 <strong>되감기(unwind)</strong>를 요청할 수도 있다.
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub enum ControlFlow {
-    NoProgress,                          // 모든 Stage가 CL tip에 도달, 대기 모드 진입
-    Continue { block_number: u64 },      // 진행 중, 다음 루프 실행
-    Unwind {                             // 되감기 필요 — reorg 감지 or 검증 실패
-        target: u64,                     //   어느 블록까지 되감을지
-        bad_block: BlockWithSenders,     //   문제가 된 블록 (디버깅/로깅용)
-    },
-}
-
-// 되감기 절차 (Pipeline::unwind_stages):
-// 1. 역순 순회: MerkleExecute → Execution → SenderRecovery → Bodies → Headers
-// 2. 각 Stage의 unwind()를 호출해서 target 블록까지 DB 상태를 롤백
-// 3. 체크포인트를 target으로 덮어씀
-// 4. 다시 run()을 호출하면 target+1부터 재실행`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">ControlFlow enum</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">NoProgress</code>
+                <span className="text-foreground/70">모든 Stage가 CL tip에 도달, 대기 모드 진입</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">Continue</code>
+                <span className="text-foreground/70"><code>block_number: u64</code> — 진행 중, 다음 루프 실행</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">Unwind</code>
+                <span className="text-foreground/70"><code>target: u64</code> + <code>bad_block: BlockWithSenders</code> — reorg 감지 or 검증 실패 시 되감기</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-4">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">되감기 절차 (Pipeline::unwind_stages)</p>
+            <ol className="list-decimal list-inside space-y-1 text-sm text-foreground/70">
+              <li>역순 순회: MerkleExecute &rarr; Execution &rarr; SenderRecovery &rarr; Bodies &rarr; Headers</li>
+              <li>각 Stage의 <code>unwind()</code>를 호출해 target 블록까지 DB 롤백</li>
+              <li>체크포인트를 target으로 덮어씀</li>
+              <li><code>run()</code> 재호출 시 target+1부터 재실행</li>
+            </ol>
+          </div>
+        </div>
         <p className="leading-7">
           Unwind는 reorg(체인 재조직) 상황에서 필수다.<br />
           CL이 새로운 tip을 알려줬는데 기존 체인과 분기점이 뒤에 있으면, 분기점까지 상태를 되돌려야 한다.<br />
@@ -218,21 +238,18 @@ MerkleExecute  → 18,399,000
           MDBX는 B+tree 기반 임베디드 DB로, mmap(메모리 맵)을 통해 DB 파일을 프로세스 주소 공간에 매핑한다.<br />
           읽기는 mmap 덕분에 시스템 콜 없이 거의 무료다. 쓰기는 트랜잭션으로 묶어서 커밋한다.
         </p>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 Stage의 내부 패턴
-let mut batch = Vec::new();
-while let Some(item) = stream.next().await? {
-    batch.push(item);
-    if batch.len() >= self.commit_threshold { // 기본 10,000
-        provider.insert_all(batch.drain(..))?;  // MDBX 트랜잭션 1회
-    }
-}
-provider.insert_all(batch)?;                    // 잔여분 마지막 커밋
-
-// commit_threshold=10K일 때:
-//   100만 블록 동기화 → 100회 트랜잭션 (Geth는 100만 회)
-//   I/O 감소율 ≈ 10,000배`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-indigo-500 mb-2">각 Stage의 배치 삽입 패턴</p>
+          <ol className="list-decimal list-inside space-y-1.5 text-sm text-foreground/80 mb-3">
+            <li><code>batch: Vec</code>에 스트림에서 받은 아이템을 누적</li>
+            <li><code>batch.len() &gt;= commit_threshold</code>(기본 10,000)에 도달하면 <code>provider.insert_all(batch.drain(..))</code> — MDBX 트랜잭션 1회</li>
+            <li>스트림 종료 후 잔여분 마지막 커밋</li>
+          </ol>
+          <div className="flex items-center gap-3 text-xs text-foreground/60 border-t border-border/30 pt-2">
+            <span><code>commit_threshold=10K</code> 기준: 100만 블록 &rarr; 100회 트랜잭션 (Geth는 100만 회)</span>
+            <span className="font-semibold text-amber-600 dark:text-amber-400">I/O 감소율 약 10,000배</span>
+          </div>
+        </div>
         <p className="leading-7">
           <code>commit_threshold</code>가 배치 크기를 결정한다. 기본값 10,000은 메모리 사용량과 크래시 복구 비용의 타협점이다.<br />
           값을 키우면 트랜잭션이 줄어 I/O가 효율화되지만, 크래시 시 재처리 범위가 커진다.<br />

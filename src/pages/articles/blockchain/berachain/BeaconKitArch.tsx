@@ -41,137 +41,164 @@ export default function BeaconKitArch({ onCodeRef }: Props) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">BeaconKit ABCI 2.0 + Engine API</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BeaconKit Block Lifecycle (ABCI 2.0)
-//
-// ABCI (Application Blockchain Interface):
-//   CometBFT's boundary between consensus and app
-//   Methods: PrepareProposal, ProcessProposal,
-//            FinalizeBlock, Commit, ExtendVote, etc.
-//
-// BeaconKit role:
-//   ABCI app that wraps Ethereum spec
-//   Translates CometBFT events → Engine API calls
+        {/* ABCI 2.0 개요 */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">ABCI 2.0 (Application Blockchain Interface)</h4>
+          <p className="text-sm text-muted-foreground mb-2">CometBFT와 애플리케이션 간 경계 인터페이스.</p>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+            <span className="text-muted-foreground">메서드</span>
+            <span><code className="text-xs bg-background/50 px-1 rounded">PrepareProposal</code>, <code className="text-xs bg-background/50 px-1 rounded">ProcessProposal</code>, <code className="text-xs bg-background/50 px-1 rounded">FinalizeBlock</code>, <code className="text-xs bg-background/50 px-1 rounded">Commit</code>, <code className="text-xs bg-background/50 px-1 rounded">ExtendVote</code></span>
+            <span className="text-muted-foreground">BeaconKit 역할</span>
+            <span>이더리움 스펙을 감싸는 ABCI 앱 — CometBFT 이벤트 → Engine API 호출로 변환</span>
+          </div>
+        </div>
 
-// Proposal phase (only by current leader):
-//
-//   PrepareProposal(height, round, tx_list) {
-//     // 1. Get EL's head block
-//     head = EL.getCanonicalHead()
-//
-//     // 2. Ask EL to build a block
-//     payload_id = EL.forkchoiceUpdated(
-//       head_block_hash = head.hash,
-//       safe_block_hash = head.hash,
-//       finalized_block_hash = last_finalized.hash,
-//       payload_attributes = {
-//         timestamp,
-//         prev_randao: beacon_state.randao_mix,
-//         suggested_fee_recipient: validator_addr,
-//         withdrawals: beacon_state.pending_withdrawals,
-//         parent_beacon_block_root: beacon_block.parent_root,
-//       }
-//     )
-//
-//     // 3. Wait for EL to finish building
-//     payload = EL.getPayload(payload_id)
-//
-//     // 4. Wrap into Cosmos tx
-//     return BeaconBlock{
-//       slot: height,
-//       proposer_index: round_robin_leader(height),
-//       parent_root: prev_beacon_block_root,
-//       body: BeaconBlockBody{
-//         execution_payload: payload,
-//         randao_reveal: sign(epoch),
-//         ...
-//       }
-//     }.marshal_ssz()
-//   }
+        {/* PrepareProposal */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Proposal 단계 — <code className="text-xs bg-background/50 px-1 rounded">PrepareProposal(height, round, tx_list)</code></h4>
+          <p className="text-xs text-muted-foreground mb-2">현재 리더(제안자)만 실행</p>
+          <div className="space-y-2 text-sm">
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">1.</span>
+              <span>EL의 head 블록 조회 — <code className="text-xs bg-background/50 px-1 rounded">head = EL.getCanonicalHead()</code></span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">2.</span>
+              <div>
+                <span>EL에 블록 빌드 요청 — <code className="text-xs bg-background/50 px-1 rounded">EL.forkchoiceUpdated(...)</code></span>
+                <div className="ml-4 mt-1 text-xs text-muted-foreground grid grid-cols-[160px_1fr] gap-x-3 gap-y-0.5">
+                  <span><code className="bg-background/50 px-1 rounded">head_block_hash</code></span><span>head.hash</span>
+                  <span><code className="bg-background/50 px-1 rounded">prev_randao</code></span><span>beacon_state.randao_mix</span>
+                  <span><code className="bg-background/50 px-1 rounded">fee_recipient</code></span><span>validator_addr</span>
+                  <span><code className="bg-background/50 px-1 rounded">withdrawals</code></span><span>beacon_state.pending_withdrawals</span>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">3.</span>
+              <span>빌드 완료 대기 — <code className="text-xs bg-background/50 px-1 rounded">payload = EL.getPayload(payload_id)</code></span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">4.</span>
+              <div>
+                <span>Cosmos tx로 래핑 — <code className="text-xs bg-background/50 px-1 rounded">BeaconBlock</code> SSZ 직렬화</span>
+                <div className="ml-4 mt-1 text-xs text-muted-foreground grid grid-cols-[120px_1fr] gap-x-3 gap-y-0.5">
+                  <span><code className="bg-background/50 px-1 rounded">slot</code></span><span>height</span>
+                  <span><code className="bg-background/50 px-1 rounded">proposer_index</code></span><span>round_robin_leader(height)</span>
+                  <span><code className="bg-background/50 px-1 rounded">execution_payload</code></span><span>EL이 빌드한 payload</span>
+                  <span><code className="bg-background/50 px-1 rounded">randao_reveal</code></span><span>sign(epoch)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-// Validation phase (all validators):
-//
-//   ProcessProposal(proposed_block) {
-//     // 1. Parse SSZ-encoded block
-//     block = BeaconBlock.unmarshal_ssz(proposed_block)
-//
-//     // 2. Verify beacon state transition
-//     verify_block_signature(block)
-//     verify_randao(block)
-//     verify_slot_proposer(block)
-//
-//     // 3. Verify execution payload via EL
-//     result = EL.newPayload(block.body.execution_payload)
-//     if result.status != VALID: return REJECT
-//
-//     // 4. Verify beacon state root
-//     new_state = apply_block(state, block)
-//     if new_state.hash != block.state_root: return REJECT
-//
-//     return ACCEPT
-//   }
+        {/* ProcessProposal */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Validation 단계 — <code className="text-xs bg-background/50 px-1 rounded">ProcessProposal(proposed_block)</code></h4>
+          <p className="text-xs text-muted-foreground mb-2">모든 검증자가 실행</p>
+          <div className="space-y-2 text-sm">
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">1.</span>
+              <span>SSZ 디코딩 — <code className="text-xs bg-background/50 px-1 rounded">BeaconBlock.unmarshal_ssz(proposed_block)</code></span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">2.</span>
+              <span>비콘 상태 전이 검증 — 서명, RANDAO, 슬롯 제안자 확인</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">3.</span>
+              <span>EL 페이로드 검증 — <code className="text-xs bg-background/50 px-1 rounded">EL.newPayload(execution_payload)</code> → VALID가 아니면 REJECT</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">4.</span>
+              <span>비콘 state root 검증 — <code className="text-xs bg-background/50 px-1 rounded">apply_block(state, block)</code> 해시 불일치 시 REJECT</span>
+            </div>
+          </div>
+        </div>
 
-// CometBFT voting rounds:
-//
-//   PrevoteProcess:
-//     Validator signs Prevote(block_id)
-//     Gossip prevote to peers
-//
-//   PrecommitProcess:
-//     If 2/3+ Prevotes seen → Precommit(block_id)
-//     Gossip precommit to peers
-//
-//   CommitProcess:
-//     If 2/3+ Precommits → BLOCK COMMITTED
+        {/* CometBFT Voting */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">CometBFT 투표 라운드</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+            <div className="bg-background/30 rounded p-3">
+              <p className="font-medium mb-1">Prevote</p>
+              <p className="text-xs text-muted-foreground">검증자가 <code className="bg-background/50 px-1 rounded">Prevote(block_id)</code> 서명 → 피어에 가십</p>
+            </div>
+            <div className="bg-background/30 rounded p-3">
+              <p className="font-medium mb-1">Precommit</p>
+              <p className="text-xs text-muted-foreground">2/3+ Prevote 수집 시 → <code className="bg-background/50 px-1 rounded">Precommit(block_id)</code> 서명 → 피어에 가십</p>
+            </div>
+            <div className="bg-background/30 rounded p-3">
+              <p className="font-medium mb-1">Commit</p>
+              <p className="text-xs text-muted-foreground">2/3+ Precommit 수집 시 → 블록 커밋 확정</p>
+            </div>
+          </div>
+        </div>
 
-// Finalization phase:
-//
-//   FinalizeBlock(committed_block) {
-//     // Apply state transition fully
-//     new_state = apply_beacon_block(state, block)
-//
-//     // Tell EL: this block is finalized
-//     EL.forkchoiceUpdated(
-//       head_block_hash = block.body.execution_payload.block_hash,
-//       safe_block_hash = block.body.execution_payload.block_hash,
-//       finalized_block_hash = block.body.execution_payload.block_hash,
-//       payload_attributes = nil
-//     )
-//
-//     // Update beacon state
-//     state = new_state
-//   }
+        {/* FinalizeBlock */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Finalization 단계 — <code className="text-xs bg-background/50 px-1 rounded">FinalizeBlock(committed_block)</code></h4>
+          <div className="space-y-2 text-sm">
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">1.</span>
+              <span>전체 상태 전이 적용 — <code className="text-xs bg-background/50 px-1 rounded">new_state = apply_beacon_block(state, block)</code></span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">2.</span>
+              <span>EL에 최종성 알림 — <code className="text-xs bg-background/50 px-1 rounded">EL.forkchoiceUpdated(...)</code> (head/safe/finalized 모두 동일 해시)</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">3.</span>
+              <span>비콘 상태 업데이트 — <code className="text-xs bg-background/50 px-1 rounded">state = new_state</code></span>
+            </div>
+          </div>
+        </div>
 
-// Optimistic payload building (key optimization):
-//
-//   Traditional flow:
-//     Block N committed → Build payload N+1 → Propose N+1
-//
-//   BeaconKit optimization:
-//     ProcessProposal(N) → validate ✓
-//         → simultaneously ask EL: "start building N+1"
-//     EL builds N+1 while consensus finishes for N
-//     FinalizeBlock(N) → commit
-//     PrepareProposal(N+1) → payload already ready!
-//
-//   Result: ~40% reduction in block time
-//   ~2s block time achievable
+        {/* Optimistic Payload Building */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">Optimistic Payload Building (핵심 최적화)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-medium mb-1">기존 방식</p>
+              <p className="text-muted-foreground text-xs">Block N 커밋 → Payload N+1 빌드 → N+1 제안 (순차 실행)</p>
+            </div>
+            <div>
+              <p className="font-medium mb-1">BeaconKit 최적화</p>
+              <div className="text-xs text-muted-foreground space-y-0.5">
+                <p><code className="bg-background/50 px-1 rounded">ProcessProposal(N)</code> 검증 통과 → 동시에 EL에 N+1 빌드 요청</p>
+                <p>EL이 N+1 빌드하는 동안 N 합의 완료</p>
+                <p><code className="bg-background/50 px-1 rounded">PrepareProposal(N+1)</code> 시 payload 이미 준비 완료</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs mt-2 font-medium">결과: 블록 타임 ~40% 단축 → ~2초 블록 타임 달성</p>
+        </div>
 
-// SSZ (Simple Serialize) vs Protobuf:
-//
-//   BeaconKit uses SSZ (Ethereum spec)
-//     - Fixed offsets (no tags)
-//     - Merkleization built-in
-//     - Smaller payloads
-//     - Same hashing as Ethereum
-//
-//   Standard Cosmos uses Protobuf
-//     - Variable-length
-//     - Reflection-based
-//     - Broader tooling
-//
-//   BeaconKit chose SSZ for Ethereum compatibility`}
-        </pre>
+        {/* SSZ vs Protobuf */}
+        <div className="bg-muted rounded-lg p-4">
+          <h4 className="font-semibold text-sm mb-3">SSZ vs Protobuf</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-medium mb-1">SSZ (BeaconKit 채택)</p>
+              <ul className="space-y-1 list-disc list-inside text-muted-foreground">
+                <li>고정 오프셋 (태그 없음)</li>
+                <li>Merkleization 내장</li>
+                <li>더 작은 페이로드</li>
+                <li>이더리움과 동일 해싱</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium mb-1">Protobuf (표준 Cosmos)</p>
+              <ul className="space-y-1 list-disc list-inside text-muted-foreground">
+                <li>가변 길이</li>
+                <li>리플렉션 기반</li>
+                <li>더 넓은 툴링 지원</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">BeaconKit가 SSZ를 선택한 이유: 이더리움 호환성 극대화</p>
+        </div>
       </div>
     </section>
   );

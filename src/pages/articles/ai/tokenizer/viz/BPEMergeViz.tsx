@@ -38,21 +38,29 @@ export default function BPEMergeViz() {
 
             {/* Current tokens */}
             <text x={20} y={50} fontSize={9} fontWeight={600} fill="var(--foreground)">토큰:</text>
-            {tokens.map((t, i) => {
-              const w = Math.max(t.length * 14, 24);
-              const x = 70 + i * (w + 12);
-              const merging = pair && (t === pair[0] || t === pair[1]);
-              const color = merging ? '#f59e0b' : '#0ea5e9';
-              return (
-                <motion.g key={`${step}-${i}`} initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }} transition={{ ...sp, delay: i * 0.06 }}>
-                  <rect x={x} y={38} width={w} height={24} rx={5}
-                    fill={`${color}15`} stroke={color} strokeWidth={merging ? 1.5 : 1} />
-                  <text x={x + w / 2} y={54} textAnchor="middle" fontSize={10}
-                    fontWeight={600} fill={color}>{t}</text>
-                </motion.g>
-              );
-            })}
+            {(() => {
+              const gap = 12;
+              const tokW = tokens.map(t => Math.max(t.length * 14, 24));
+              const tokX = tokW.reduce<number[]>((acc, w, idx) => {
+                acc.push(idx === 0 ? 70 : acc[idx - 1] + tokW[idx - 1] + gap);
+                return acc;
+              }, []);
+              return tokens.map((t, i) => {
+                const w = tokW[i];
+                const x = tokX[i];
+                const merging = pair && (t === pair[0] || t === pair[1]);
+                const color = merging ? '#f59e0b' : '#0ea5e9';
+                return (
+                  <motion.g key={`${step}-${i}`} initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }} transition={{ ...sp, delay: i * 0.06 }}>
+                    <rect x={x} y={38} width={w} height={24} rx={5}
+                      fill={`${color}15`} stroke={color} strokeWidth={merging ? 1.5 : 1} />
+                    <text x={x + w / 2} y={54} textAnchor="middle" fontSize={10}
+                      fontWeight={600} fill={color}>{t}</text>
+                  </motion.g>
+                );
+              });
+            })()}
 
             {/* Merge arrow */}
             {pair && (

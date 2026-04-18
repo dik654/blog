@@ -25,76 +25,74 @@ export default function Subnet({ onCodeRef }: { onCodeRef: (key: string, ref: Co
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Subnet 생성 &amp; 관리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Subnet Creation Process:
 
-// 1. Deploy SubnetActor (on parent chain):
-//    - specify parent subnet
-//    - set consensus type
-//    - define economic parameters
-//    - stake minimum
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">CreateSubnetParams</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+            <div className="rounded bg-muted p-2"><code>Parent</code> — <span className="text-muted-foreground">SubnetID</span></div>
+            <div className="rounded bg-muted p-2"><code>Name</code> — <span className="text-muted-foreground">string</span></div>
+            <div className="rounded bg-muted p-2"><code>MinValidators</code> — <span className="text-muted-foreground">uint64</span></div>
+            <div className="rounded bg-muted p-2"><code>MinValidatorStake</code> — <span className="text-muted-foreground">TokenAmount</span></div>
+            <div className="rounded bg-muted p-2"><code>BottomupCheckPeriod</code> — <span className="text-muted-foreground">ChainEpoch</span></div>
+            <div className="rounded bg-muted p-2"><code>TopdownCheckPeriod</code> — <span className="text-muted-foreground">ChainEpoch</span></div>
+            <div className="rounded bg-muted p-2"><code>Consensus</code> — <span className="text-muted-foreground">ConsensusType</span></div>
+          </div>
+        </div>
 
-// 2. CreateSubnet() method:
-//    type CreateSubnetParams struct {
-//        Parent: SubnetID
-//        Name: string
-//        MinValidators: uint64
-//        MinValidatorStake: TokenAmount
-//        BottomupCheckPeriod: ChainEpoch
-//        TopdownCheckPeriod: ChainEpoch
-//        Consensus: ConsensusType
-//    }
+        <div className="not-prose grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-3 text-center">
+            <div className="text-xs font-semibold mb-1">1. Deploy</div>
+            <p className="text-[11px] text-muted-foreground">부모 체인에 <code>SubnetActor</code> 배포. 합의 타입, 경제 파라미터, 최소 스테이크 설정</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3 text-center">
+            <div className="text-xs font-semibold mb-1">2. Register</div>
+            <p className="text-[11px] text-muted-foreground">Gateway에 등록, 고유 Subnet ID 부여, 검증자 모집 시작</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3 text-center">
+            <div className="text-xs font-semibold mb-1">3. Join</div>
+            <p className="text-[11px] text-muted-foreground"><code>JoinSubnet()</code> — 검증자가 FIL 스테이크, 검증자 세트 등록, 제네시스 파라미터 배포</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3 text-center">
+            <div className="text-xs font-semibold mb-1">4. Bootstrap</div>
+            <p className="text-[11px] text-muted-foreground">검증자 노드 시작, P2P 네트워크 구성, 합의 활성화, 블록 생산 개시</p>
+          </div>
+          <div className="rounded-lg border bg-card p-3 text-center">
+            <div className="text-xs font-semibold mb-1">5. Active</div>
+            <p className="text-[11px] text-muted-foreground">합의 + 체크포인트 운영. Kill → Liquidate로 종료 가능</p>
+          </div>
+        </div>
 
-// 3. SubnetActor deployed:
-//    - registered with Gateway
-//    - unique subnet ID
-//    - accepting validators
-
-// 4. JoinSubnet():
-//    - validators stake FIL
-//    - registered to validator set
-//    - genesis params distributed
-//    - launch subnet
-
-// 5. Bootstrap:
-//    - validators start nodes
-//    - P2P network
-//    - consensus activated
-//    - block production begins
-
-// Consensus Options:
-// - Tendermint/CometBFT: fast finality
-// - Mir: high throughput BFT
-// - Narwhal/Bullshark: DAG-based
-// - Custom: any consensus module
-
-// Validator Economics:
-// - minimum stake per validator
-// - rewards from subnet block rewards
-// - gas fees earned locally
-// - slash on misbehavior
-// - withdrawals to parent
-
-// Subnet Parameters:
-// - block time (1s - 60s)
-// - max block size
-// - gas limit
-// - finality period
-// - slashing conditions
-
-// Examples deployed:
-// - Mir BFT subnet
-// - EVM subnet (Solidity contracts)
-// - AI inference subnet
-// - game subnet (low latency)
-
-// Lifecycle:
-// 1. Create: parent deploys SubnetActor
-// 2. Bootstrap: validators join
-// 3. Active: consensus + checkpoints
-// 4. Kill: shut down (optional)
-// 5. Liquidate: return funds to parent`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">합의 옵션</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li><strong>Tendermint/CometBFT</strong> — fast finality</li>
+              <li><strong>Mir</strong> — high throughput BFT</li>
+              <li><strong>Narwhal/Bullshark</strong> — DAG-based</li>
+              <li><strong>Custom</strong> — 임의 합의 모듈</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">검증자 경제</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>검증자당 최소 스테이크</li>
+              <li>서브넷 블록 보상 수령</li>
+              <li>로컬 가스 수수료 수입</li>
+              <li>부정행위 시 슬래싱</li>
+              <li>부모 체인으로 인출</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">서브넷 파라미터</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>블록 타임: <code>1s ~ 60s</code></li>
+              <li>최대 블록 크기</li>
+              <li>가스 한도</li>
+              <li>finality 기간</li>
+              <li>슬래싱 조건</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Subnet 생성: <strong>CreateSubnet → validators join → bootstrap → active</strong>.<br />
           consensus 선택 자유 (Tendermint, Mir, Narwhal+Bullshark, custom).<br />

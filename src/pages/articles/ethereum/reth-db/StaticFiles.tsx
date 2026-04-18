@@ -35,32 +35,43 @@ export default function StaticFiles({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── StaticFileProvider 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StaticFileProvider 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct StaticFileProvider {
-    path: PathBuf,                    // static_files/ 디렉토리
-    highest_block: DashMap<           // 세그먼트별 최신 블록
-        StaticFileSegment, BlockNumber
-    >,
-}
-
-pub enum StaticFileSegment {
-    Headers,        // headers/ 디렉토리
-    Transactions,   // transactions/
-    Receipts,       // receipts/
-}
-
-// 파일 명명 규칙: static_files/{segment}/{start_block}-{end_block}.jar
-// 예시:
-// static_files/headers/0-499999.jar       (첫 50만 블록)
-// static_files/headers/500000-999999.jar  (다음 50만 블록)
-// ...
-// static_files/headers/18500000-18999999.jar
-
-// 각 .jar 파일 내부:
-// - 고정 크기 오프셋 테이블 (블록 번호 → 파일 오프셋)
-// - 압축된 RLP 데이터 (Zstd 또는 LZ4)
-// - 체크섬 (xxHash)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm text-sky-400 mb-2">StaticFileProvider</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <p><code>path: PathBuf</code> — <code>static_files/</code> 디렉토리</p>
+                <p><code>highest_block: DashMap&lt;StaticFileSegment, BlockNumber&gt;</code></p>
+                <p className="text-muted-foreground">lock-free 동시성 맵으로 세그먼트별 최신 블록 관리</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm text-emerald-400 mb-2">StaticFileSegment (3종)</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <p><code>Headers</code> — <code>headers/</code> 디렉토리</p>
+                <p><code>Transactions</code> — <code>transactions/</code></p>
+                <p><code>Receipts</code> — <code>receipts/</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">파일 명명 규칙</p>
+            <p className="text-xs font-mono text-foreground/60 mb-2">static_files/&#123;segment&#125;/&#123;start_block&#125;-&#123;end_block&#125;.jar</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-foreground/60 font-mono">
+              <p>headers/0-499999.jar</p>
+              <p>headers/500000-999999.jar</p>
+              <p>headers/18500000-18999999.jar</p>
+            </div>
+            <div className="mt-3 border-t border-border pt-2">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">각 .jar 내부 구조</p>
+              <div className="space-y-0.5 text-xs text-foreground/70">
+                <p>고정 크기 오프셋 테이블 (블록 번호 → 파일 오프셋)</p>
+                <p>압축된 RLP 데이터 (Zstd 또는 LZ4)</p>
+                <p>체크섬 (xxHash)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>DashMap</code>은 lock-free 동시성 해시맵 — 여러 스레드가 세그먼트 경계를 동시에 조회 가능.<br />
           세그먼트를 50만 블록 단위로 쪼개는 이유: 파일 1개가 너무 커지면 open/close 오버헤드 증가.<br />
@@ -69,39 +80,31 @@ pub enum StaticFileSegment {
 
         {/* ── 오프셋 계산 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">블록 번호 → 파일 오프셋 O(1) 변환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl StaticFileProvider {
-    pub fn header_by_number(&self, num: BlockNumber) -> Result<Option<Header>> {
-        // 1. 세그먼트 파일 결정 (500,000 단위)
-        let segment_start = (num / 500_000) * 500_000;
-        let segment_end = segment_start + 499_999;
-        let file_path = self.path
-            .join("headers")
-            .join(format!("{segment_start}-{segment_end}.jar"));
-
-        // 2. 파일 열기 (mmap, 캐시됨)
-        let file = self.open_mmap(&file_path)?;
-
-        // 3. 오프셋 테이블에서 오프셋 조회
-        //    각 엔트리는 8바이트(u64) 고정 → 블록 상대 번호 × 8로 접근
-        let rel_num = num - segment_start;
-        let offset_table_entry = rel_num as usize * 8;
-        let data_offset = u64::from_le_bytes(
-            file[offset_table_entry..offset_table_entry + 8].try_into()?
-        );
-
-        // 4. 압축 데이터 읽기 → 압축 해제 → RLP 디코딩
-        let compressed = &file[data_offset as usize..];
-        let decompressed = zstd::decode(compressed)?;
-        let header: Header = alloy_rlp::decode(&decompressed)?;
-
-        Ok(Some(header))
-    }
-}
-
-// 전체 경로: O(1) 파일 선택 + O(1) 오프셋 조회 + 압축 해제
-// → 결과: 어느 블록이든 동일한 접근 시간`}
-        </pre>
+        <div className="my-4 not-prose">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-3"><code>header_by_number(num)</code> — O(1) 접근 경로</p>
+            <div className="space-y-3">
+              {[
+                { step: '1', title: '세그먼트 파일 결정', detail: '(num / 500,000) * 500,000으로 파일 선택', complexity: 'O(1) 계산', color: 'text-sky-400' },
+                { step: '2', title: 'mmap 파일 열기', detail: 'open_mmap()으로 메모리 매핑 (캐시됨)', complexity: 'OS 페이지 캐시', color: 'text-emerald-400' },
+                { step: '3', title: '오프셋 테이블 조회', detail: '블록 상대 번호 x 8바이트 = 오프셋 위치', complexity: 'O(1) 곱셈', color: 'text-amber-400' },
+                { step: '4', title: '압축 해제 + RLP 디코딩', detail: 'zstd::decode() → alloy_rlp::decode()', complexity: '~마이크로초', color: 'text-violet-400' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-muted shrink-0 ${s.color}`}>{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold">{s.title}</p>
+                    <p className="text-xs text-foreground/60">{s.detail}</p>
+                    <p className="text-xs text-muted-foreground">{s.complexity}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 pt-2 border-t border-border text-center">
+              <p className="text-xs text-foreground/70">O(1) 파일 선택 + O(1) 오프셋 조회 + 압축 해제 → <strong>어느 블록이든 동일 접근 시간</strong></p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           핵심 설계: <strong>블록 번호가 곧 배열 인덱스</strong>.<br />
           MDBX B+tree는 키 탐색에 log(n) 필요하지만, flat file은 곱셈 1회로 오프셋 결정.<br />
@@ -110,28 +113,48 @@ pub enum StaticFileSegment {
 
         {/* ── 압축 이득 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Zstd 압축 — 디스크 공간 절약</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 메인넷 데이터 크기 (2026년 초 기준)
-//
-//                         원본        Zstd 압축       비율
-// Headers                ~9 GB       ~3 GB          33%
-// Transactions          ~180 GB      ~80 GB         44%
-// Receipts              ~120 GB      ~40 GB         33%
-// ──────────────────────────────────
-// 합계                  ~309 GB      ~123 GB        40%
-
-// Zstd 선택 이유:
-// 1. 압축률: gzip 대비 20% 우수
-// 2. 압축 해제 속도: ~500 MB/s per core (읽기 병목 아님)
-// 3. 블록 단위 독립 압축 가능 (random access)
-// 4. 사전(dictionary) 공유로 작은 블록도 효과적 압축
-
-// 트레이드오프:
-// + 디스크 180 GB 절약
-// + SSD 수명 연장 (쓰기량 감소)
-// - CPU 사용 증가 (읽기마다 압축 해제)
-// → 대부분의 노드에서 net win`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">메인넷 Zstd 압축 효과 (2026년 초)</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead><tr className="border-b border-border">
+                  <th className="text-left py-1 pr-3 font-semibold">세그먼트</th>
+                  <th className="text-right py-1 px-3 font-semibold">원본</th>
+                  <th className="text-right py-1 px-3 font-semibold text-emerald-400">압축</th>
+                  <th className="text-right py-1 pl-3 font-semibold">비율</th>
+                </tr></thead>
+                <tbody className="text-foreground/70">
+                  <tr className="border-b border-border/50"><td className="py-1 pr-3">Headers</td><td className="text-right px-3">~9 GB</td><td className="text-right px-3 text-emerald-400">~3 GB</td><td className="text-right pl-3">33%</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1 pr-3">Transactions</td><td className="text-right px-3">~180 GB</td><td className="text-right px-3 text-emerald-400">~80 GB</td><td className="text-right pl-3">44%</td></tr>
+                  <tr className="border-b border-border/50"><td className="py-1 pr-3">Receipts</td><td className="text-right px-3">~120 GB</td><td className="text-right px-3 text-emerald-400">~40 GB</td><td className="text-right pl-3">33%</td></tr>
+                  <tr className="font-semibold"><td className="py-1 pr-3">합계</td><td className="text-right px-3">~309 GB</td><td className="text-right px-3 text-emerald-400">~123 GB</td><td className="text-right pl-3">40%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              { label: '압축률', detail: 'gzip 대비 20% 우수' },
+              { label: '해제 속도', detail: '~500 MB/s per core' },
+              { label: '랜덤 접근', detail: '블록 단위 독립 압축' },
+              { label: '사전 공유', detail: '작은 블록도 효과적 압축' },
+            ].map(r => (
+              <div key={r.label} className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                <p className="text-xs font-semibold text-emerald-400">{r.label}</p>
+                <p className="text-xs text-foreground/60 mt-0.5">{r.detail}</p>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="text-emerald-400">+ 디스크 180GB 절약</div>
+              <div className="text-emerald-400">+ SSD 수명 연장</div>
+              <div className="text-amber-400">- CPU 사용 증가 (읽기마다 해제)</div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">→ 대부분 노드에서 net win</p>
+          </div>
+        </div>
         <p className="leading-7">
           Zstd 사전(dictionary)은 반복 패턴을 별도 저장 — 작은 청크도 효율적 압축.<br />
           Transaction 데이터는 서명/주소 패턴이 반복되므로 사전 압축과 궁합이 좋음.<br />

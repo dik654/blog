@@ -13,74 +13,34 @@ export default function CheckTx({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── CheckTx 흐름 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">CheckTx 전체 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/mempool/clist_mempool.go
-func (m *CListMempool) CheckTx(
-    tx types.Tx,
-    cb func(*abci.ResponseCheckTx),
-    txInfo TxInfo,
-) error {
-    // 1. 크기 체크
-    if len(tx) > m.config.MaxTxBytes {
-        return ErrTxTooLarge
-    }
-
-    // 2. 중복 체크 (cache)
-    if !m.cache.Push(tx) {
-        // 이미 봤음 → skip
-        return ErrTxInCache
-    }
-
-    // 3. PreCheck (app-specific, optional)
-    if m.preCheck != nil {
-        if err := m.preCheck(tx); err != nil {
-            m.cache.Remove(tx)
-            return ErrPreCheck{err}
-        }
-    }
-
-    // 4. ABCI CheckTx 호출 (app validation)
-    m.proxyMtx.Lock()
-    defer m.proxyMtx.Unlock()
-
-    reqRes := m.proxyAppConn.CheckTxAsync(&abci.RequestCheckTx{
-        Tx:   tx,
-        Type: abci.CheckTxType_New,
-    })
-
-    reqRes.SetCallback(func(res *abci.Response) {
-        r := res.GetCheckTx()
-
-        if r.Code == abci.CodeTypeOK {
-            // 유효 → mempool에 추가
-            m.addTx(&mempoolTx{
-                height: m.height,
-                gasWanted: r.GasWanted,
-                tx: tx,
-            })
-            m.notifyTxsAvailable()
-        } else {
-            // 무효 → cache에서 제거 + reject
-            m.cache.Remove(tx)
-        }
-
-        // user callback
-        if cb != nil { cb(r) }
-    })
-
-    return nil
-}
-
-// PreCheck 사용 예 (Cosmos SDK):
-// - tx 크기 < max
-// - gas < max_gas
-// - min_gas_price 체크
-// - 기본 signature format 검증
-
-// PostCheck:
-// - gas_used <= gas_wanted 보장
-// - tx order (nonce) 체크`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4 sm:col-span-2">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">CheckTx 5단계 흐름</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>1. 크기 체크</strong> — <code className="text-xs">len(tx) &gt; MaxTxBytes</code> → <code className="text-xs">ErrTxTooLarge</code></p>
+              <p><strong>2. 중복 체크</strong> — <code className="text-xs">cache.Push(tx)</code> 실패 → <code className="text-xs">ErrTxInCache</code></p>
+              <p><strong>3. PreCheck</strong> — app-specific 필터 (실패 시 cache에서 제거)</p>
+              <p><strong>4. ABCI CheckTx</strong> — <code className="text-xs">proxyMtx.Lock()</code> 직렬화 후 <code className="text-xs">CheckTxAsync(Type_New)</code></p>
+              <p><strong>5. Callback</strong> — <code className="text-xs">Code == OK</code> → <code className="text-xs">addTx()</code> + <code className="text-xs">notifyTxsAvailable()</code> / 무효 → cache 제거</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">PreCheck 사용 예 (Cosmos SDK)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>tx 크기 &lt; max</li>
+              <li>gas &lt; max_gas</li>
+              <li>min_gas_price 체크</li>
+              <li>기본 signature format 검증</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">PostCheck</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">gas_used &lt;= gas_wanted</code> 보장</li>
+              <li>tx order (nonce) 체크</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           CheckTx가 <strong>5단계 검증</strong>.<br />
           size → cache → PreCheck → ABCI → addTx.<br />

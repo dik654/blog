@@ -32,41 +32,34 @@ export default function EngineApi({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── Engine API 타임라인 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Engine API 호출 타임라인 — 12초 슬롯</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PoS 슬롯(12초)마다 반복되는 패턴
-
-// 슬롯 시작 (T=0s):
-// CL → EL: engine_forkchoiceUpdatedV3(state, payload_attrs)
-//   state: { head, safe, finalized }
-//   payload_attrs: Some(PayloadAttributes) (validator인 경우)
-// → EL: payload_id 반환, 백그라운드에서 블록 생성 시작
-
-// T=4s: validator가 블록 요청
-// CL → EL: engine_getPayloadV3(payload_id)
-// → EL: ExecutionPayloadV3 반환 (완성된 블록)
-
-// T=6s: attestation 전파
-// (CL 내부 작업, EL 관여 안 함)
-
-// T=12s (다음 슬롯 시작):
-// CL → EL: engine_newPayloadV3(payload, blob_hashes, beacon_root)
-// → EL: 블록 실행 & 검증 → PayloadStatus 반환
-// → CL: forkchoiceUpdatedV3로 head 업데이트 통보
-
-// 시간 예산:
-// - getPayload: ~500ms 이내 필요 (validator 타이밍)
-// - newPayload: ~1~2s 이내 (검증 완료 필요)
-// - forkchoiceUpdated: ~50ms (head 업데이트만)
-
-// 시간 초과 시:
-// - validator: 블록 제안 실패 (missed proposal)
-// - full node: sync late → temporary fork
-
-// Reth의 성능:
-// - getPayload: ~300ms (PayloadBuilder 준비 완료)
-// - newPayload: ~500ms (대부분)
-// - 여유 충분 (SLA 100% 달성)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3">12초 슬롯 타임라인</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+                <span className="font-mono text-xs text-blue-500 shrink-0">T=0s</span>
+                <span className="text-foreground/80"><code>forkchoiceUpdatedV3(state, payload_attrs)</code> — head 결정 + 블록 생성 시작(validator)</span>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
+                <span className="font-mono text-xs text-green-500 shrink-0">T=4s</span>
+                <span className="text-foreground/80"><code>getPayloadV3(payload_id)</code> — 완성된 블록 수신</span>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-foreground/20 pl-3">
+                <span className="font-mono text-xs text-foreground/50 shrink-0">T=6s</span>
+                <span className="text-foreground/70">attestation 전파 (CL 내부, EL 관여 안 함)</span>
+              </div>
+              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
+                <span className="font-mono text-xs text-purple-500 shrink-0">T=12s</span>
+                <span className="text-foreground/80"><code>newPayloadV3(payload, blob_hashes)</code> → 블록 실행 & 검증 → FCU로 head 업데이트</span>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-sm text-center">
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">getPayload</p><p className="text-xs text-green-500">~300ms (예산 500ms)</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">newPayload</p><p className="text-xs text-green-500">~500ms (예산 1~2s)</p></div>
+            <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">FCU</p><p className="text-xs text-green-500">~50ms</p></div>
+          </div>
+        </div>
         <p className="leading-7">
           12초 슬롯 안에 <strong>3번의 Engine API 호출</strong>이 일어남.<br />
           getPayload가 가장 시간 예산 빡빡 (~500ms) — 블록 생성 완료 필요.<br />
@@ -75,52 +68,29 @@ export default function EngineApi({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── newPayload 처리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">engine_newPayloadV3 — 블록 검증 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn new_payload_v3(
-    &self,
-    payload: ExecutionPayloadV3,
-    versioned_hashes: Vec<B256>,  // EIP-4844 blob commitments
-    parent_beacon_block_root: B256,
-) -> RpcResult<PayloadStatus> {
-    // 1. Payload → SealedBlock 변환
-    let block = match try_payload_to_block(payload) {
-        Ok(b) => b,
-        Err(_) => return Ok(PayloadStatus::Invalid { reason: "Invalid format" }),
-    };
-
-    // 2. 부모 블록 확인
-    let parent = self.provider.header_by_hash(block.parent_hash)?;
-    if parent.is_none() {
-        // 부모 없음 → SYNCING 상태 (백그라운드 다운로드)
-        self.beacon_consensus_engine.on_unknown_parent(block).await;
-        return Ok(PayloadStatus::Syncing);
-    }
-
-    // 3. 블록 실행 & 검증 (BlockchainTree)
-    match self.blockchain_tree.insert_block(block).await {
-        Ok(BlockStatus::Valid) => {
-            Ok(PayloadStatus::Valid { latest_valid_hash: Some(hash) })
-        }
-        Ok(BlockStatus::Accepted) => {
-            // side chain으로 추가 (canonical 아님)
-            Ok(PayloadStatus::Accepted)
-        }
-        Err(e) => {
-            // 검증 실패
-            Ok(PayloadStatus::Invalid {
-                reason: e.to_string(),
-                latest_valid_hash: parent.hash,
-            })
-        }
-    }
-}
-
-// PayloadStatus 종류:
-// - Valid: canonical chain에 추가
-// - Invalid: 블록 거부
-// - Syncing: 동기화 중
-// - Accepted: side chain으로만 보관`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">new_payload_v3 — 블록 검증 흐름</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+              <span className="text-foreground/80"><code>try_payload_to_block(payload)</code> → <code>SealedBlock</code> 변환. 실패 시 <code>Invalid</code>.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">2</span>
+              <span className="text-foreground/80">부모 블록 확인. 없으면 <code>Syncing</code> 반환 + 백그라운드 다운로드.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">3</span>
+              <span className="text-foreground/80"><code>blockchain_tree.insert_block()</code> → <code>Valid</code>(canonical) / <code>Accepted</code>(side chain) / <code>Invalid</code>(거부).</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-2 mt-3 text-xs text-center">
+            <div className="rounded border border-green-500/30 bg-green-500/5 p-1.5 text-green-500">Valid</div>
+            <div className="rounded border border-red-500/30 bg-red-500/5 p-1.5 text-red-400">Invalid</div>
+            <div className="rounded border border-yellow-500/30 bg-yellow-500/5 p-1.5 text-yellow-500">Syncing</div>
+            <div className="rounded border border-blue-500/30 bg-blue-500/5 p-1.5 text-blue-500">Accepted</div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>new_payload_v3</code>가 <strong>블록 게이트키퍼</strong>.<br />
           포맷 → 부모 확인 → 실행 검증 → 상태 반환 순서.<br />
@@ -129,48 +99,28 @@ export default function EngineApi({ onCodeRef }: { onCodeRef: (key: string, ref:
 
         {/* ── FCU 처리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">engine_forkchoiceUpdatedV3 — head 업데이트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn forkchoice_updated_v3(
-    &self,
-    state: ForkchoiceState,
-    payload_attrs: Option<PayloadAttributes>,
-) -> RpcResult<ForkchoiceUpdated> {
-    // 1. head 블록이 존재하는지 확인
-    if !self.blockchain_tree.contains(state.head_block_hash) {
-        return Ok(ForkchoiceUpdated::syncing());
-    }
-
-    // 2. canonical chain 업데이트
-    self.blockchain_tree.make_canonical(state.head_block_hash).await?;
-
-    // 3. finalized/safe 표시
-    if !state.finalized_block_hash.is_zero() {
-        self.blockchain_tree.finalize(state.finalized_block_hash)?;
-    }
-    if !state.safe_block_hash.is_zero() {
-        self.blockchain_tree.mark_safe(state.safe_block_hash)?;
-    }
-
-    // 4. validator인 경우 블록 생성 시작
-    let payload_id = if let Some(attrs) = payload_attrs {
-        Some(self.payload_builder.new_job(
-            state.head_block_hash,
-            attrs,
-        ).await?)
-    } else { None };
-
-    Ok(ForkchoiceUpdated {
-        payload_status: PayloadStatus::Valid {
-            latest_valid_hash: Some(state.head_block_hash)
-        },
-        payload_id,
-    })
-}
-
-// payload_attrs로 validator 요청 감지:
-// - Some: 이 노드가 블록 제안자 → 블록 생성 시작
-// - None: 일반 노드 → head 업데이트만`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">forkchoice_updated_v3 — head 업데이트</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
+              <span className="text-foreground/80">head 블록 존재 확인. 없으면 <code>ForkchoiceUpdated::syncing()</code>.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">2</span>
+              <span className="text-foreground/80"><code>make_canonical(head_block_hash)</code>로 canonical chain 업데이트.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">3</span>
+              <span className="text-foreground/80"><code>finalized</code>/<code>safe</code> 블록 표시.</span>
+            </div>
+            <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
+              <span className="font-mono text-xs text-blue-500 shrink-0">4</span>
+              <span className="text-foreground/80"><code>payload_attrs</code> 있으면 → validator → <code>payload_builder.new_job()</code>으로 블록 생성 시작.</span>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/60 mt-2"><code>payload_attrs: Some</code> = 블록 제안자 / <code>None</code> = 일반 노드(head 업데이트만).</p>
+        </div>
         <p className="leading-7">
           <code>forkchoiceUpdated</code>가 <strong>canonical chain 결정의 순간</strong>.<br />
           head/safe/finalized 3가지 지점 갱신 → BlockchainTree 상태 변경.<br />

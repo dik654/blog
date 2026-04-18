@@ -18,29 +18,34 @@ export default function SwapAlgorithm() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">swap() 진입점</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function swap(
-    address recipient,
-    bool zeroForOne,           // token0→token1 방향
-    int256 amountSpecified,    // 입력(+) 또는 출력(-) 지정
-    uint160 sqrtPriceLimitX96, // 가격 한계
-    bytes calldata data
-) external returns (int256 amount0, int256 amount1) {
-    SwapState memory state = SwapState({
-        amountSpecifiedRemaining: amountSpecified,
-        amountCalculated: 0,
-        sqrtPriceX96: slot0.sqrtPriceX96,
-        tick: slot0.tick,
-        feeGrowthGlobalX128: zeroForOne ? feeGrowthGlobal0X128 : feeGrowthGlobal1X128,
-        protocolFee: 0,
-        liquidity: liquidity
-    });
-
-    // 메인 루프: 유동성이 있는 모든 구간 순회
-    while (state.amountSpecifiedRemaining != 0
-           && state.sqrtPriceX96 != sqrtPriceLimitX96) {
-        // ... tick crossing 루프
-    }
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">swap() 함수 시그니처 &amp; 초기 상태</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">매개변수</p>
+                <p><code className="text-xs bg-muted px-1 rounded">address recipient</code> — 수령자</p>
+                <p><code className="text-xs bg-muted px-1 rounded">bool zeroForOne</code> — token0&rarr;token1 방향</p>
+                <p><code className="text-xs bg-muted px-1 rounded">int256 amountSpecified</code> — 입력(+) / 출력(-)</p>
+                <p><code className="text-xs bg-muted px-1 rounded">uint160 sqrtPriceLimitX96</code> — 가격 한계</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">SwapState 초기화</p>
+                <p><code className="text-xs bg-muted px-1 rounded">amountSpecifiedRemaining</code> — 잔여 입력량</p>
+                <p><code className="text-xs bg-muted px-1 rounded">sqrtPriceX96</code> — 현재 &radic;P</p>
+                <p><code className="text-xs bg-muted px-1 rounded">tick</code> — 현재 tick</p>
+                <p><code className="text-xs bg-muted px-1 rounded">liquidity</code> — 활성 유동성 L</p>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-3 text-sm border border-border">
+              <p className="font-semibold text-xs text-muted-foreground mb-1">메인 루프 조건</p>
+              <p><code className="text-xs">while (amountSpecifiedRemaining != 0 &amp;&amp; sqrtPriceX96 != sqrtPriceLimitX96)</code></p>
+              <p className="text-xs text-muted-foreground mt-1">입력 양 소진 또는 가격 한계 도달 시까지 구간 순회</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>while 루프가 핵심</strong>: 입력 양 소진되거나 가격 한계 도달 시까지 반복<br />
           각 iteration이 <strong>한 tick 구간 처리</strong><br />
@@ -51,96 +56,88 @@ export default function SwapAlgorithm() {
 
         <SwapLoopViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`while (state.amountSpecifiedRemaining != 0
-       && state.sqrtPriceX96 != sqrtPriceLimitX96) {
-    StepComputations memory step;
-    step.sqrtPriceStartX96 = state.sqrtPriceX96;
-
-    // 1) 다음 초기화된 tick 찾기
-    (step.tickNext, step.initialized) = tickBitmap.nextInitializedTickWithinOneWord(
-        state.tick, tickSpacing, zeroForOne
-    );
-
-    // 2) tick을 가격으로 변환
-    step.sqrtPriceNextX96 = TickMath.getSqrtRatioAtTick(step.tickNext);
-
-    // 3) 현재 step에서 swap 계산
-    (state.sqrtPriceX96, step.amountIn, step.amountOut, step.feeAmount) =
-        SwapMath.computeSwapStep(
-            state.sqrtPriceX96,
-            step.sqrtPriceNextX96,
-            state.liquidity,
-            state.amountSpecifiedRemaining,
-            fee
-        );
-
-    // 4) 잔여량 업데이트
-    state.amountSpecifiedRemaining -= int256(step.amountIn + step.feeAmount);
-    state.amountCalculated -= int256(step.amountOut);
-
-    // 5) 수수료 누적
-    if (state.liquidity > 0) {
-        state.feeGrowthGlobalX128 += FullMath.mulDiv(
-            step.feeAmount, FixedPoint128.Q128, state.liquidity
-        );
-    }
-
-    // 6) tick crossing 발생?
-    if (state.sqrtPriceX96 == step.sqrtPriceNextX96) {
-        if (step.initialized) {
-            int128 liquidityNet = ticks.cross(step.tickNext, state.feeGrowthGlobalX128);
-            state.liquidity = LiquidityMath.addDelta(state.liquidity, liquidityNet);
-        }
-        state.tick = zeroForOne ? step.tickNext - 1 : step.tickNext;
-    } else {
-        state.tick = TickMath.getTickAtSqrtRatio(state.sqrtPriceX96);
-    }
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">루프 6단계 — 한 iteration 처리</span>
+          </div>
+          <div className="p-5 space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">1. 다음 tick 찾기</p>
+                <p><code className="text-xs bg-background px-1 rounded">tickBitmap.nextInitializedTickWithinOneWord()</code></p>
+                <p className="text-xs text-muted-foreground mt-1">비트맵에서 다음 유동성 경계 탐색</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">2. tick &rarr; &radic;P 변환</p>
+                <p><code className="text-xs bg-background px-1 rounded">TickMath.getSqrtRatioAtTick(tickNext)</code></p>
+                <p className="text-xs text-muted-foreground mt-1">목표 가격 계산</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">3. swap 계산</p>
+                <p><code className="text-xs bg-background px-1 rounded">SwapMath.computeSwapStep()</code></p>
+                <p className="text-xs text-muted-foreground mt-1">현재 구간 내 amountIn/Out/fee 도출</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">4. 잔여량 업데이트</p>
+                <p className="text-xs"><code className="text-xs bg-background px-1 rounded">remaining -= amountIn + feeAmount</code></p>
+                <p className="text-xs text-muted-foreground mt-1">소비된 입력량 차감</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">5. 수수료 누적</p>
+                <p className="text-xs"><code className="text-xs bg-background px-1 rounded">feeGrowthGlobal += fee / L</code></p>
+                <p className="text-xs text-muted-foreground mt-1">Q128 고정소수점으로 누적</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">6. tick crossing 체크</p>
+                <p className="text-xs"><code className="text-xs bg-background px-1 rounded">ticks.cross() &rarr; liquidityNet</code></p>
+                <p className="text-xs text-muted-foreground mt-1">경계 도달 시 L에 진입/퇴출 LP 반영</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>6단계 per iteration</strong>: 다음 tick 찾기 → 가격 변환 → 계산 → 잔여 업데이트 → 수수료 누적 → 크로싱 체크<br />
           crossing 시 <code>liquidityNet</code> 적용 — 해당 tick에서 시작/끝나는 포지션들의 L 변화
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">computeSwapStep — 한 구간 내 계산</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function computeSwapStep(
-    uint160 sqrtRatioCurrentX96,
-    uint160 sqrtRatioTargetX96,
-    uint128 liquidity,
-    int256 amountRemaining,
-    uint24 feePips
-) internal pure returns (
-    uint160 sqrtRatioNextX96,
-    uint256 amountIn, uint256 amountOut, uint256 feeAmount
-) {
-    bool exactIn = amountRemaining >= 0;
-    bool zeroForOne = sqrtRatioCurrentX96 >= sqrtRatioTargetX96;
-
-    if (exactIn) {
-        // 수수료 제외한 입력 양
-        uint256 amountRemainingLessFee =
-            FullMath.mulDiv(uint256(amountRemaining), 1e6 - feePips, 1e6);
-
-        // 목표 가격까지 도달하기 위한 입력 양
-        amountIn = zeroForOne
-            ? SqrtPriceMath.getAmount0Delta(sqrtRatioTargetX96, sqrtRatioCurrentX96, liquidity, true)
-            : SqrtPriceMath.getAmount1Delta(sqrtRatioCurrentX96, sqrtRatioTargetX96, liquidity, true);
-
-        if (amountRemainingLessFee >= amountIn) {
-            // 목표 가격 도달 가능
-            sqrtRatioNextX96 = sqrtRatioTargetX96;
-        } else {
-            // 입력 양이 부족 — 목표 미달
-            sqrtRatioNextX96 = SqrtPriceMath.getNextSqrtPriceFromInput(
-                sqrtRatioCurrentX96, liquidity, amountRemainingLessFee, zeroForOne
-            );
-        }
-    }
-    // exactOut 케이스 ...
-
-    // 최종 amountIn/amountOut 재계산
-    // 수수료 계산
-    feeAmount = FullMath.mulDivRoundingUp(amountIn, feePips, 1e6 - feePips);
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">computeSwapStep() — 한 구간 내 계산</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">입력 매개변수</p>
+                <p><code className="text-xs bg-muted px-1 rounded">sqrtRatioCurrentX96</code> — 현재 &radic;P</p>
+                <p><code className="text-xs bg-muted px-1 rounded">sqrtRatioTargetX96</code> — 목표 &radic;P</p>
+                <p><code className="text-xs bg-muted px-1 rounded">liquidity</code> — 활성 유동성 L</p>
+                <p><code className="text-xs bg-muted px-1 rounded">amountRemaining</code> — 잔여 입력량</p>
+                <p><code className="text-xs bg-muted px-1 rounded">feePips</code> — 수수료율 (ppm)</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">반환값</p>
+                <p><code className="text-xs bg-muted px-1 rounded">sqrtRatioNextX96</code> — 결과 &radic;P</p>
+                <p><code className="text-xs bg-muted px-1 rounded">amountIn</code> — 소비된 입력</p>
+                <p><code className="text-xs bg-muted px-1 rounded">amountOut</code> — 산출된 출력</p>
+                <p><code className="text-xs bg-muted px-1 rounded">feeAmount</code> — 수수료</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-lg p-3 border border-emerald-200 dark:border-emerald-800">
+                <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 mb-1">시나리오 A: 입력 충분</p>
+                <p className="text-sm"><code className="text-xs bg-background px-1 rounded">amountRemainingLessFee &ge; amountIn</code></p>
+                <p className="text-xs text-muted-foreground mt-1">목표 가격 도달 &rarr; 다음 step 진행</p>
+              </div>
+              <div className="bg-amber-50 dark:bg-amber-950/30 rounded-lg p-3 border border-amber-200 dark:border-amber-800">
+                <p className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">시나리오 B: 입력 부족</p>
+                <p className="text-sm"><code className="text-xs bg-background px-1 rounded">getNextSqrtPriceFromInput()</code></p>
+                <p className="text-xs text-muted-foreground mt-1">중간 가격에서 멈춤 &rarr; 루프 종료</p>
+              </div>
+            </div>
+            <p className="text-sm border-t border-border pt-2">수수료: <code className="text-xs bg-muted px-1 rounded">feeAmount = amountIn &times; feePips / (1e6 - feePips)</code> — 올림(roundingUp) 적용</p>
+          </div>
+        </div>
         <p>
           <strong>2가지 시나리오</strong>:<br />
           1. 입력 양이 충분 → 구간 끝까지 도달, 다음 step 진행<br />
@@ -151,17 +148,43 @@ export default function SwapAlgorithm() {
 
         <GasCostViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// V3 swap 가스 비용 분석
-
-기본 swap (crossing 0회):    ~100K gas
-crossing 1회 추가:           ~10-20K gas 추가
-crossing 5회:                ~180K gas
-crossing 10회:               ~280K gas
-
-// 크로싱이 많이 발생하는 상황
-- 유동성이 분산된 풀 (수십 개 포지션, 작은 구간)
-- 변동성 큰 자산 (가격 급변)
-- 큰 스왑 (여러 구간 관통)`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">Swap 가스 비용 분석</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+              <div className="bg-muted rounded-lg p-3 text-center">
+                <p className="text-xs text-muted-foreground">crossing 0회</p>
+                <p className="font-semibold text-lg">~100K</p>
+                <p className="text-xs text-muted-foreground">gas</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center">
+                <p className="text-xs text-muted-foreground">+1회 추가</p>
+                <p className="font-semibold text-lg">+10~20K</p>
+                <p className="text-xs text-muted-foreground">gas</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center">
+                <p className="text-xs text-muted-foreground">crossing 5회</p>
+                <p className="font-semibold text-lg">~180K</p>
+                <p className="text-xs text-muted-foreground">gas</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center">
+                <p className="text-xs text-muted-foreground">crossing 10회</p>
+                <p className="font-semibold text-lg">~280K</p>
+                <p className="text-xs text-muted-foreground">gas</p>
+              </div>
+            </div>
+            <div className="border-t border-border pt-3 text-sm">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">크로싱 빈번 상황</p>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>유동성이 분산된 풀 (수십 개 포지션, 작은 구간)</li>
+                <li>변동성 큰 자산 (가격 급변)</li>
+                <li>큰 스왑 (여러 구간 관통)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>LP 구간이 조밀 → swap 가스 ↑</strong><br />
           Stable 페어(0.01% tier)는 LP들이 좁은 구간에 집중 → crossing 빈번 → 가스 ↑<br />
@@ -169,25 +192,39 @@ crossing 10회:               ~280K gas
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MEV & slippage 보호 — sqrtPriceLimitX96</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Router에서 slippage 계산
-function exactInputSingle(ExactInputSingleParams calldata params) external {
-    // sqrtPriceLimitX96 = 0 이면 한계 없음 (Router가 amountOutMin으로 보호)
-    // 또는 현재 가격에서 허용 편차 계산
-    uint160 limit = params.sqrtPriceLimitX96 == 0
-        ? (zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1)
-        : params.sqrtPriceLimitX96;
-
-    (int256 amount0, int256 amount1) = IUniswapV3Pool(pool).swap(
-        params.recipient,
-        zeroForOne,
-        int256(params.amountIn),
-        limit,
-        abi.encode(data)
-    );
-
-    amountOut = uint256(-amount1);  // token1 방향 스왑
-    require(amountOut >= params.amountOutMinimum, "Too little received");
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-xl border border-border overflow-hidden">
+          <div className="bg-muted px-5 py-2 border-b border-border">
+            <span className="text-sm font-semibold">Router — exactInputSingle() 슬리피지 보호</span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">sqrtPriceLimitX96 처리</p>
+                <p className="text-xs"><code className="text-xs bg-background px-1 rounded">== 0</code> &rarr; 한계 없음 (MIN/MAX_SQRT_RATIO 대체)</p>
+                <p className="text-xs mt-1"><code className="text-xs bg-background px-1 rounded">!= 0</code> &rarr; 지정된 가격 한계 적용</p>
+              </div>
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">출력 검증</p>
+                <p className="text-xs"><code className="text-xs bg-background px-1 rounded">amountOut = uint256(-amount1)</code></p>
+                <p className="text-xs mt-1"><code className="text-xs bg-background px-1 rounded">require(amountOut &ge; amountOutMinimum)</code></p>
+                <p className="text-xs text-muted-foreground mt-1">미달 시 전체 트랜잭션 revert</p>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-3 text-sm border border-border">
+              <p className="font-semibold text-xs text-muted-foreground mb-1">2중 보호 구조</p>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <p className="font-semibold">Pool 레벨</p>
+                  <p className="text-muted-foreground"><code className="bg-background px-1 rounded">sqrtPriceLimitX96</code> &rarr; 가격 도달 시 swap 중단</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Router 레벨</p>
+                  <p className="text-muted-foreground"><code className="bg-background px-1 rounded">amountOutMinimum</code> &rarr; 출력 미달 시 revert</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>2중 보호</strong>:<br />
           1. <code>sqrtPriceLimitX96</code>: pool 레벨 가격 한계 — 도달 시 swap 중단<br />

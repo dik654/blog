@@ -1,8 +1,12 @@
+import BackupPolicyViz from './viz/BackupPolicyViz';
+import BackupProcedureInline from './viz/BackupProcedureInline';
+
 export default function BackupPolicy() {
   return (
     <section id="backup-policy" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">백업 정책과 절차</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <BackupPolicyViz />
         <h3 className="text-xl font-semibold mt-8 mb-4">DB 백업</h3>
         <p className="leading-7">
           데이터베이스는 서비스의 핵심 자산이므로 가장 높은 빈도와 가장 긴 보관 기간을 적용한다.
@@ -52,6 +56,8 @@ export default function BackupPolicy() {
           로그의 무결성은 보안 감사에서 핵심적으로 검증하는 항목이다.
           백업 시 로그 파일의 해시값(SHA-256)을 함께 기록하여, 추후 변조 여부를 확인할 수 있게 한다.
         </p>
+
+        <BackupProcedureInline />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">백업 절차</h3>
         <p className="leading-7">

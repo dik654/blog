@@ -122,6 +122,20 @@ export const agentArticles: Article[] = [
     component: () => import('@/pages/articles/ai/claude-code'),
   },
   {
+    slug: 'qwen-korean-consistency',
+    title: 'Qwen 한국어 일관성: 프롬프트에서 가중치까지',
+    subcategory: 'ai-agents',
+    sections: [
+      { id: 'overview', title: '한자 leakage는 왜 발생하는가' },
+      { id: 'prompt-level', title: '프롬프트 가드레일의 한계' },
+      { id: 'smoothie-qwen', title: 'Smoothie-Qwen: lm_head 재가중치' },
+      { id: 'rl-approach', title: 'RL로 한국어 사고 강제하기' },
+      { id: 'runtime-guard', title: '런타임 LLM judge + retry' },
+      { id: 'decision-matrix', title: '해법 선택 매트릭스' },
+    ],
+    component: () => import('@/pages/articles/ai/qwen-korean-consistency'),
+  },
+  {
     slug: 'openclaw-assistant',
     title: 'OpenClaw: 개인용 AI 어시스턴트',
     subcategory: 'ai-agents',

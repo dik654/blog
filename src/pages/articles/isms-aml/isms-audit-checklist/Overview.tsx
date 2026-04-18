@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import AuditLoopInlineViz from './viz/AuditLoopInlineViz';
+import DefectGradeInlineViz from './viz/DefectGradeInlineViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">현장심사 흐름과 준비</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">현장심사란</h3>
         <p>
@@ -53,6 +59,11 @@ export default function Overview() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">심사 방식: 3단계 루프</h3>
+
+        <div className="not-prose my-4">
+          <AuditLoopInlineViz />
+        </div>
+
         <p>
           심사원은 한 항목에 대해 세 가지 방법을 조합하여 검증한다:
         </p>
@@ -151,6 +162,11 @@ export default function Overview() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">결함 등급과 대응</h3>
+
+        <div className="not-prose my-4">
+          <DefectGradeInlineViz />
+        </div>
+
         <p>
           심사원이 발견한 문제는 결함 보고서에 기록되며, 등급에 따라 후속 조치가 다르다:
         </p>

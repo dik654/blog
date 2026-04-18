@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import UnitRootViz from './viz/UnitRootViz';
 
 export default function UnitRoot() {
@@ -13,126 +14,129 @@ export default function UnitRoot() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">단위근의 수학적 성질</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Roots of Unity in Finite Fields
-//
-// Definition:
-//   omega is an n-th root of unity in F_p iff:
-//     omega^n = 1  AND  omega^k != 1  for 0 < k < n
-//
-//   Called "primitive" n-th root
-//
-// Existence condition:
-//   F_p has n-th root of unity iff n | (p - 1)
-//   i.e., n divides the order of F_p*
-//
-// F_p* is cyclic of order p-1
-//   Has generator g
-//   omega = g^((p-1)/n) is primitive n-th root
 
-// Key properties:
-//
-//   1. omega^n = 1
-//      (omega cycles back after n steps)
-//
-//   2. omega^{n/2} = -1
-//      (half-rotation gives sign flip)
-//
-//   3. omega^i = omega^{i mod n}
-//      (all powers live in {omega^0, ..., omega^{n-1}})
-//
-//   4. omega_n = (omega_{2n})^2
-//      n-th root is square of 2n-th root
-//      → enables recursive halving in FFT
-//
-//   5. Sum identity:
-//      sum_{j=0}^{n-1} (omega^j)^k = 0 for k != 0 (mod n)
-//                                    n for k = 0 (mod n)
-//      → basis for FFT orthogonality
+        <h4 className="text-lg font-semibold mt-5 mb-2">정의</h4>
+        <p>
+          <M>{'\\omega'}</M>가 <M>{'\\mathbb{F}_p'}</M>에서 n차 단위근(primitive n-th root of unity)이려면:
+        </p>
+        <M display>{'\\underbrace{\\omega^n = 1}_{\\text{n번 거듭제곱하면 1}} \\quad \\text{이고} \\quad \\underbrace{\\omega^k \\neq 1}_{\\text{그 전에는 1이 아님}} \\;\\;(0 < k < n)'}</M>
+        <p className="text-sm text-muted-foreground mt-2">
+          <M>{'\\omega'}</M>: 원시(primitive) n차 단위근, 첫 번째 조건은 주기성, 두 번째 조건은 원시성(n보다 작은 주기 없음)을 보장
+        </p>
+        <p>
+          존재 조건: <M>{'n \\mid (p - 1)'}</M>. <M>{'\\mathbb{F}_p^*'}</M>는 위수 <M>{'p-1'}</M>인 순환군이므로,
+          생성원 g에 대해 <M>{'\\omega = g^{(p-1)/n}'}</M>이 원시 n차 단위근이다
+        </p>
 
-// Why these properties matter for FFT:
-//
-//   Cooley-Tukey divides n-size problem into 2 n/2-size problems
-//   Requires: omega_n^2 = omega_{n/2}
-//   → Need 2-smooth domain (n = 2^k)
-//
-//   For odd/general n:
-//     Mixed-radix FFT (Bluestein, Rader)
-//     Less common in crypto
-//
-//   Most ZK systems: n = 2^k, 2-smooth fields
+        <h4 className="text-lg font-semibold mt-5 mb-2">핵심 성질</h4>
+      </div>
 
-// Example: F_17
-//
-//   p = 17, p-1 = 16 = 2^4
-//   Generator of F_17*: g = 3
-//     Check: 3^1=3, 3^2=9, 3^4=81≡13, 3^8=169≡16, 3^16≡1
-//
-//   Primitive n-th roots:
-//     n=2: omega = 3^8 = 16 = -1
-//     n=4: omega = 3^4 = 13
-//     n=8: omega = 3^2 = 9
-//     n=16: omega = 3^1 = 3
-//
-//   Verify n=4: 13^4 = 28561 = 1680*17+1 ≡ 1 (mod 17) ✓
-//   Verify n=4: 13^2 = 169 ≡ 16 = -1 (mod 17) ✓
+      <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        {[
+          { name: 'ω^n = 1', desc: 'n번째 거듭제곱에서 1로 순환', color: 'indigo' },
+          { name: 'ω^(n/2) = -1', desc: '반-회전은 부호 반전. butterfly의 핵심', color: 'emerald' },
+          { name: 'ω^i = ω^(i mod n)', desc: '모든 거듭제곱이 {ω⁰, ..., ω^(n-1)}에 존재', color: 'amber' },
+          { name: 'ω_n = (ω_{2n})²', desc: 'n차 단위근은 2n차의 제곱 → FFT의 재귀적 반분 가능', color: 'indigo' },
+          { name: '합 항등식', desc: 'Σ (ω^j)^k = 0 (k≢0 mod n), = n (k≡0 mod n). FFT 직교성의 기초', color: 'emerald' },
+        ].map(p => (
+          <div key={p.name} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.name}</p>
+            <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
+          </div>
+        ))}
+      </div>
 
-// Finding primitive roots:
-//
-//   Algorithm:
-//     1. Find any generator g of F_p*
-//     2. omega = g^((p-1)/n) is primitive n-th root
-//
-//   Generator finding:
-//     Pick random x in {2, ..., p-1}
-//     Check: x^((p-1)/q) != 1 for each prime q | (p-1)
-//     If all pass, x is a generator
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">FFT에 중요한 이유</h4>
+        <p>
+          Cooley-Tukey는 크기 n 문제를 2개의 <M>{'n/2'}</M> 문제로 분할한다.
+          <M>{'\\omega_n^2 = \\omega_{n/2}'}</M>가 필요하므로 2-smooth 도메인(<M>{'n = 2^k'}</M>)이 필요하다.
+          <br />
+          홀수/일반 n에는 혼합기수 FFT(Bluestein, Rader)를 쓰지만 암호학에서는 드물다.
+          대부분의 ZK 시스템은 <M>{'n = 2^k'}</M>와 2-smooth 체를 사용한다
+        </p>
 
-// 2-adic decomposition:
-//
-//   Any prime p > 2: p-1 = 2^s * t (t odd)
-//   2-adic value: s
-//   Max FFT size: 2^s
-//
-//   Common primes:
-//     BN254: s = 28
-//     BLS12-381: s = 32
-//     Goldilocks: s = 32
-//     Pallas: s = 32
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          예시: <M>{'\\mathbb{F}_{17}'}</M>
+        </h4>
+        <p>
+          <M>{'p = 17'}</M>, <M>{'p - 1 = 16 = 2^4'}</M>. 생성원 <M>{'g = 3'}</M>
+          (<M>{'3^1=3, 3^2=9, 3^4 \\equiv 13, 3^8 \\equiv 16, 3^{16} \\equiv 1'}</M>)
+        </p>
+      </div>
 
-// NTT-friendly primes:
-//
-//   p = k * 2^s + 1 for large s
-//   Examples:
-//     Solinas (pseudo-Mersenne): p = 2^s - delta
-//     Proth: p = k * 2^s + 1 with k < 2^s
-//
-//   Small NTT primes:
-//     2^61 + 2^25 + 1 (used in polymath)
-//     2^32 - 2^20 + 1 (field for Risc0)
-//     M31 = 2^31 - 1 (Circle STARKs)
+      <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 my-3">
+        {[
+          { n: '2', root: 'ω = 3⁸ = 16 = -1', color: 'indigo' },
+          { n: '4', root: 'ω = 3⁴ = 13', color: 'emerald' },
+          { n: '8', root: 'ω = 3² = 9', color: 'amber' },
+          { n: '16', root: 'ω = 3¹ = 3', color: 'indigo' },
+        ].map(p => (
+          <div key={p.n} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-3`}>
+            <p className={`font-semibold text-sm text-${p.color}-400`}>n={p.n}</p>
+            <p className="text-xs mt-1 text-foreground/75">{p.root}</p>
+          </div>
+        ))}
+      </div>
 
-// Bit-reversal and canonical ordering:
-//
-//   Standard FFT uses bit-reversed output
-//     Input: [a_0, a_1, a_2, a_3] (natural)
-//     Output: [f(w^0), f(w^2), f(w^1), f(w^3)] (bit-rev)
-//
-//   Why? Butterfly pattern operates on pairs
-//     Bit-rev puts them adjacent
-//
-//   Post-process: bit-reversal permutation
-//     Or: use bit-rev NTT (inverts the pattern)
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <p>
+          검증 (n=4): <M>{'13^4 = 28561 \\equiv 1 \\pmod{17}'}</M>,
+          <M>{'13^2 = 169 \\equiv 16 = -1 \\pmod{17}'}</M>
+        </p>
 
-// Frobenius endomorphism and roots of unity:
-//
-//   Frobenius: phi(x) = x^p
-//   Acts on roots of unity: phi(omega) = omega^p = omega^{p mod n}
-//
-//   For n | (p-1): omega^p = omega
-//   → Roots of unity fixed by Frobenius
-//   → All in base field F_p (not extension)`}
-        </pre>
+        <h4 className="text-lg font-semibold mt-5 mb-2">원시근 찾기</h4>
+        <p>
+          1) <M>{'\\mathbb{F}_p^*'}</M>의 생성원 g를 찾는다 — 랜덤 <M>{'x \\in \\{2, \\ldots, p-1\\}'}</M>를 시도하고,
+          <M>{'(p-1)'}</M>의 모든 소인수 q에 대해 <M>{'x^{(p-1)/q} \\neq 1'}</M>을 확인한다.
+          <br />
+          2) <M>{'\\omega = g^{(p-1)/n}'}</M>이 원시 n차 단위근이다
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">2-adic 분해</h4>
+        <p>
+          소수 <M>{'p > 2'}</M>에 대해 <M>{'p - 1 = 2^s \\cdot t'}</M> (t 홀수). 2-adic 값 s가 최대 FFT 크기 <M>{'2^s'}</M>를 결정한다
+        </p>
+      </div>
+
+      <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 my-3">
+        {[
+          { name: 'BN254', val: 's = 28' },
+          { name: 'BLS12-381', val: 's = 32' },
+          { name: 'Goldilocks', val: 's = 32' },
+          { name: 'Pallas', val: 's = 32' },
+        ].map((p, i) => (
+          <div key={p.name} className={`rounded-lg border border-${['indigo','emerald','amber','indigo'][i]}-500/20 bg-${['indigo','emerald','amber','indigo'][i]}-500/5 p-3`}>
+            <p className={`font-semibold text-sm text-${['indigo','emerald','amber','indigo'][i]}-400`}>{p.name}</p>
+            <p className="text-xs mt-1 text-foreground/75">{p.val}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
+        <h4 className="text-lg font-semibold mt-5 mb-2">NTT 친화적 소수</h4>
+        <p>
+          <M>{'p = k \\cdot 2^s + 1'}</M> 형태 (큰 s). Proth 소수라 한다.
+          <br />
+          예: <M>{'2^{61} + 2^{25} + 1'}</M> (polymath), <M>{'2^{32} - 2^{20} + 1'}</M> (Risc0),
+          <M>{'M_{31} = 2^{31} - 1'}</M> (Circle STARK)
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">Bit-reversal 순서</h4>
+        <p>
+          표준 FFT는 bit-reverse된 출력을 생성한다:
+          입력 <code>[a₀, a₁, a₂, a₃]</code>(자연순) → 출력 <code>[f(w⁰), f(w²), f(w¹), f(w³)]</code>(bit-rev).
+          <br />
+          Butterfly 패턴이 쌍으로 동작하므로, bit-rev이 인접하게 배치한다.
+          후처리로 bit-reversal permutation을 적용하거나, bit-rev NTT로 패턴을 역전시킨다
+        </p>
+
+        <h4 className="text-lg font-semibold mt-5 mb-2">Frobenius 자기준동형</h4>
+        <p>
+          Frobenius <M>{'\\phi(x) = x^p'}</M>는 단위근에 <M>{'\\phi(\\omega) = \\omega^{p \\bmod n}'}</M>으로 작용한다.
+          <M>{'n \\mid (p-1)'}</M>이면 <M>{'\\omega^p = \\omega'}</M>
+          → 단위근이 Frobenius에 의해 고정 → 모두 기저체 <M>{'\\mathbb{F}_p'}</M>에 존재한다 (확장체 불필요)
+        </p>
       </div>
     </section>
   );

@@ -1,7 +1,12 @@
+import ColdWalletPolicyViz from './viz/ColdWalletPolicyViz';
+import ColdWalletValuationViz from './viz/ColdWalletValuationViz';
+import ColdToHotTransferViz from './viz/ColdToHotTransferViz';
+
 export default function ColdWalletPolicy() {
   return (
     <section id="cold-wallet-policy" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">콜드월렛 80% 보관 규정</h2>
+      <ColdWalletPolicyViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-4">법적 요구사항</h3>
@@ -86,6 +91,10 @@ export default function ColdWalletPolicy() {
           <br />
           재산정 기록은 내부 문서로 보관하여, 감독 기관의 검사 시 제출할 수 있어야 한다.
         </p>
+
+        <div className="not-prose my-6">
+          <ColdWalletValuationViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">콜드월렛 물리적 관리</h3>
         <p className="leading-7">
@@ -192,6 +201,10 @@ export default function ColdWalletPolicy() {
           <br />
           모든 전송 기록(요청서, 승인 이력, 트랜잭션 해시)은 5년간 보관한다.
         </p>
+
+        <div className="not-prose my-6">
+          <ColdToHotTransferViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">예외: 금융위 별도 지정 비율</h3>
         <p className="leading-7">

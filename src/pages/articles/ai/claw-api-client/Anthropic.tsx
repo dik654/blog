@@ -14,172 +14,170 @@ export default function Anthropic() {
           1. <strong>API Key</strong>: <code>ANTHROPIC_API_KEY</code> 환경 변수<br />
           2. <strong>OAuth Bearer Token</strong>: Claude.ai 계정 기반 인증 (Pro/Team 사용자)
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct AnthropicClient {
-    api_key: Option<String>,
-    oauth_token: Option<String>,
-    base_url: Url,
-    http: reqwest::Client,
-}
-
-impl AnthropicClient {
-    fn auth_header(&self) -> (String, String) {
-        if let Some(token) = &self.oauth_token {
-            ("Authorization".into(), format!("Bearer {}", token))
-        } else if let Some(key) = &self.api_key {
-            ("x-api-key".into(), key.clone())
-        } else {
-            panic!("no authentication configured");
-        }
-    }
-}`}</pre>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            AnthropicClient 필드 + 인증 우선순위
+          </div>
+          <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">api_key</code><div className="text-xs text-muted-foreground">Option&lt;String&gt;</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">oauth_token</code><div className="text-xs text-muted-foreground">Option&lt;String&gt;</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">base_url</code><div className="text-xs text-muted-foreground">Url</div></div>
+            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">http</code><div className="text-xs text-muted-foreground">reqwest::Client</div></div>
+          </div>
+          <div className="border-t border-border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
+              <div className="bg-card p-4">
+                <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">1순위: OAuth Bearer</div>
+                <p className="text-xs text-muted-foreground">
+                  헤더 <code>Authorization: Bearer {`{token}`}</code><br />
+                  Claude.ai 계정 구독 혜택 활용
+                </p>
+              </div>
+              <div className="bg-card p-4">
+                <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">2순위: API Key</div>
+                <p className="text-xs text-muted-foreground">
+                  헤더 <code>x-api-key: {`{key}`}</code><br />
+                  Anthropic 전용 헤더 (OpenAI와 다름)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>OAuth 우선</strong>: 둘 다 있으면 OAuth 사용 (사용자 의도 추정)<br />
-          OAuth 토큰은 Claude.ai 계정 구독 혜택 활용 — API 키 없이도 사용 가능<br />
-          <code>x-api-key</code>는 Anthropic 전용 헤더 — OpenAI는 <code>Authorization: Bearer</code> 사용
+          OAuth 토큰은 Claude.ai 계정 구독 혜택 활용 — API 키 없이도 사용 가능
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">send_message() 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[async_trait]
-impl ProviderClient for AnthropicClient {
-    async fn send_message(
-        &self,
-        request: MessageRequest,
-    ) -> Result<BoxStream<'static, Result<Chunk>>> {
-        // 1) API 요청 바디 조립
-        let body = self.to_api_body(&request);
-
-        // 2) HTTP 요청 전송
-        let (auth_header, auth_value) = self.auth_header();
-        let response = self.http
-            .post(self.base_url.join("messages")?)
-            .header(auth_header, auth_value)
-            .header("anthropic-version", "2023-06-01")
-            .header("anthropic-beta", "prompt-caching-2024-07-31")
-            .json(&body)
-            .send()
-            .await?;
-
-        // 3) 에러 체크
-        if !response.status().is_success() {
-            let err_body = response.text().await?;
-            return Err(anyhow!("API error: {}", err_body));
-        }
-
-        // 4) SSE 스트림 파싱
-        let stream = parse_sse_stream(response.bytes_stream());
-
-        Ok(Box::pin(stream))
-    }
-}`}</pre>
-        <p>
-          <strong>3개 필수 헤더</strong>: 인증, anthropic-version, anthropic-beta<br />
-          <code>anthropic-version</code>: API 버전 고정 — 하위호환성 보장<br />
-          <code>anthropic-beta</code>: 실험 기능 opt-in — prompt caching 활성화
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            send_message 4단계 흐름
+          </div>
+          <div className="divide-y divide-border">
+            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
+              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">1</span>
+              <div>
+                <div className="text-sm font-semibold">API 요청 바디 조립</div>
+                <p className="text-xs text-muted-foreground mt-1"><code>to_api_body(&request)</code> — MessageRequest를 Anthropic JSON으로 변환</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
+              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">2</span>
+              <div>
+                <div className="text-sm font-semibold">HTTP POST 전송</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  엔드포인트 <code>/messages</code> + 3개 필수 헤더
+                </p>
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="bg-muted/40 rounded p-2 text-xs"><code>auth_header</code><br /><span className="text-muted-foreground">인증 (OAuth/API Key)</span></div>
+                  <div className="bg-muted/40 rounded p-2 text-xs"><code>anthropic-version</code><br /><span className="text-muted-foreground">2023-06-01 고정</span></div>
+                  <div className="bg-muted/40 rounded p-2 text-xs"><code>anthropic-beta</code><br /><span className="text-muted-foreground">prompt-caching opt-in</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
+              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">3</span>
+              <div>
+                <div className="text-sm font-semibold">에러 체크</div>
+                <p className="text-xs text-muted-foreground mt-1">비성공 상태 시 응답 본문을 에러 메시지로 반환</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
+              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">4</span>
+              <div>
+                <div className="text-sm font-semibold">SSE 스트림 파싱</div>
+                <p className="text-xs text-muted-foreground mt-1"><code>parse_sse_stream(response.bytes_stream())</code> → <code>Box::pin(stream)</code> 반환</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SSE 스트림 파서</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn parse_sse_stream(
-    byte_stream: impl Stream<Item = reqwest::Result<Bytes>> + Unpin + Send + 'static,
-) -> impl Stream<Item = Result<Chunk>> + Send + 'static {
-    let mut buffer = BytesMut::new();
-
-    byte_stream.flat_map(move |bytes_result| {
-        let mut chunks = Vec::new();
-
-        if let Ok(bytes) = bytes_result {
-            buffer.extend_from_slice(&bytes);
-
-            // 완전한 이벤트 추출 (\\n\\n으로 구분)
-            while let Some(pos) = find_double_newline(&buffer) {
-                let event_bytes = buffer.split_to(pos + 2);
-                let event_str = String::from_utf8_lossy(&event_bytes[..event_bytes.len() - 2]);
-
-                if let Some(chunk) = parse_sse_event(&event_str) {
-                    chunks.push(Ok(chunk));
-                }
-            }
-        }
-
-        futures::stream::iter(chunks)
-    })
-}
-
-fn parse_sse_event(text: &str) -> Option<Chunk> {
-    let mut event_name = "";
-    let mut data_str = "";
-    for line in text.lines() {
-        if let Some(rest) = line.strip_prefix("event: ") { event_name = rest; }
-        else if let Some(rest) = line.strip_prefix("data: ") { data_str = rest; }
-    }
-    let data: Value = serde_json::from_str(data_str).ok()?;
-    convert_anthropic_event(event_name, data)
-}`}</pre>
-        <p>
-          <strong>SSE 프로토콜</strong>: <code>event: NAME\ndata: JSON\n\n</code> 3줄 한 이벤트<br />
-          빈 줄(<code>\n\n</code>)이 이벤트 경계 — 부분 수신 시 버퍼에 유지<br />
-          <code>BytesMut</code>: 효율적인 버퍼 — 다수 바이트 덩어리 누적
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+            parse_sse_stream — 바이트 → Chunk 변환
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="rounded-lg border border-border p-3">
+              <div className="text-xs font-semibold text-muted-foreground mb-2">SSE 프로토콜 구조</div>
+              <div className="grid grid-cols-3 gap-2 text-xs font-mono">
+                <div className="bg-muted/40 rounded p-2"><code>event: NAME</code></div>
+                <div className="bg-muted/40 rounded p-2"><code>data: JSON</code></div>
+                <div className="bg-muted/40 rounded p-2"><code>\n\n</code> <span className="text-muted-foreground">(경계)</span></div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold mb-1">parse_sse_stream</div>
+                <p className="text-xs text-muted-foreground">
+                  <code>BytesMut</code> 버퍼에 바이트 누적 → <code>\n\n</code> 발견 시 이벤트 추출<br />
+                  부분 수신 시 버퍼에 유지 — <code>flat_map</code>으로 다수 청크 생성
+                </p>
+              </div>
+              <div className="rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold mb-1">parse_sse_event</div>
+                <p className="text-xs text-muted-foreground">
+                  <code>event:</code> 라인에서 이벤트명, <code>data:</code> 라인에서 JSON 추출<br />
+                  <code>convert_anthropic_event(name, data)</code>로 Chunk 변환
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">프롬프트 캐시 통합</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Anthropic prompt caching: 시스템 프롬프트·도구 목록·긴 대화 캐시
-fn to_api_body(&self, req: &MessageRequest) -> Value {
-    let mut body = json!({...});
-
-    // cache_control 삽입 — system 끝에 캐시 마크
-    if let Some(system) = &req.system {
-        body["system"] = json!([{
-            "type": "text",
-            "text": system,
-            "cache_control": {"type": "ephemeral"}  // 5분 캐시
-        }]);
-    }
-
-    // 도구 목록 캐시
-    if let Some(tools) = &req.tools {
-        let mut tools_json = convert_tools(tools);
-        if let Some(last) = tools_json.as_array_mut().unwrap().last_mut() {
-            last["cache_control"] = json!({"type": "ephemeral"});
-        }
-        body["tools"] = tools_json;
-    }
-
-    body
-}`}</pre>
-        <p>
-          <strong>프롬프트 캐시 단가</strong>: 생성 1.25×, 적중 0.1× — 평균 70% 비용 절감<br />
-          <code>cache_control: ephemeral</code>: 5분 TTL — 연속 호출에서 재사용<br />
-          system 프롬프트는 항상 캐시, tools는 마지막 도구에 마크 (전체 배열 캐시)
-        </p>
+        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-amber-100 dark:bg-amber-950/40 px-4 py-2 border-b border-border font-semibold text-sm">
+            to_api_body — cache_control 삽입 지점
+          </div>
+          <div className="divide-y divide-border">
+            <div className="grid grid-cols-[120px_1fr] p-3 items-start">
+              <span className="text-xs font-semibold">system 프롬프트</span>
+              <div className="text-xs text-muted-foreground">
+                <code>{`cache_control: {"type": "ephemeral"}`}</code> 부착 — 항상 캐시<br />
+                system을 배열 형식으로 감싸서 마지막 블록에 마크
+              </div>
+            </div>
+            <div className="grid grid-cols-[120px_1fr] p-3 items-start">
+              <span className="text-xs font-semibold">도구 목록</span>
+              <div className="text-xs text-muted-foreground">
+                마지막 도구 항목에 <code>cache_control</code> 마크 → 전체 배열 캐시<br />
+                <code>tools_json.last_mut()</code>에 삽입
+              </div>
+            </div>
+          </div>
+          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
+            비용: 생성 1.25x / 적중 0.1x / TTL 5분 — 평균 70% 절감
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">토큰 카운트</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl ProviderClient for AnthropicClient {
-    fn count_tokens(&self, text: &str) -> usize {
-        // Claude tokenizer는 공식 공개 안 됨
-        // 근사: 문자 수 / 4 (영어 기준)
-        // 더 정확: tiktoken-rs (GPT용, 유사)
-        text.len() / 4
-    }
-}
-
-// 정확한 토큰 카운트가 필요하면 Anthropic의 tokenization API 호출
-async fn count_tokens_exact(&self, text: &str) -> Result<usize> {
-    let resp = self.http
-        .post(self.base_url.join("messages/count_tokens")?)
-        .json(&json!({
-            "model": self.model,
-            "messages": [{"role": "user", "content": text}]
-        }))
-        .send()
-        .await?
-        .json::<Value>()
-        .await?;
-    Ok(resp["input_tokens"].as_u64().unwrap() as usize)
-}`}</pre>
-        <p>
-          <strong>근사 카운트</strong>: <code>len() / 4</code> — 대부분 경우 충분<br />
-          정확한 카운트 필요 시 <code>/messages/count_tokens</code> API 호출<br />
-          정확 카운트는 네트워크 비용 — 컴팩션 판정엔 근사로 충분
-        </p>
+        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+              근사 카운트 (동기)
+            </div>
+            <div className="p-4">
+              <code className="text-sm">text.len() / 4</code>
+              <p className="text-xs text-muted-foreground mt-2">
+                Claude tokenizer 비공개 — 영어 기준 문자/4 근사<br />
+                네트워크 비용 없음 — 컴팩션 판정에 충분
+              </p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
+              정확 카운트 (비동기 API)
+            </div>
+            <div className="p-4">
+              <code className="text-sm">/messages/count_tokens</code>
+              <p className="text-xs text-muted-foreground mt-2">
+                모델명 + 메시지 전송 → <code>input_tokens</code> 반환<br />
+                네트워크 왕복 필요 — 정밀 계산 시에만 사용
+              </p>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: prompt caching의 실제 효과</p>

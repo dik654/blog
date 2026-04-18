@@ -18,58 +18,36 @@ export default function StateInterface({ onCodeRef }: Props) {
 
         {/* ── COW 동작 원리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Copy-on-Write — 참조 카운트 기반</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 BeaconState는 COW로 메모리 효율화
-// 여러 state snapshot이 같은 filed를 공유, 변경 시에만 복사
-
-type BeaconState struct {
-    state *ethpb.BeaconState  // raw struct
-    lock sync.RWMutex
-
-    // 각 필드별 FieldTrie (위 아티클 참고)
-    tries map[types.FieldIndex]*stateutil.FieldTrie
-
-    // COW 관리용
-    sharedFieldReferences map[types.FieldIndex]*stateutil.Reference
-    dirtyFields map[types.FieldIndex]bool
-    dirtyIndices map[types.FieldIndex][]uint64
-
-    valMapHandler *stateValidators.ValidatorsMapHandler
-}
-
-// Copy() 동작:
-func (b *BeaconState) Copy() *BeaconState {
-    newState := &BeaconState{
-        state: b.state,  // struct 복사 아님, 포인터만
-        tries: b.tries,  // map 공유
-        sharedFieldReferences: b.sharedFieldReferences,
-    }
-
-    // 각 필드의 reference count 증가
-    for field := range b.sharedFieldReferences {
-        b.sharedFieldReferences[field].AddRef()
-    }
-    return newState  // O(1) 복사!
-}
-
-// SetXxx 호출 시 deep copy:
-func (b *BeaconState) SetValidators(vals []*Validator) {
-    ref := b.sharedFieldReferences[types.Validators]
-    if ref.Refs() > 1 {
-        // 다른 state와 공유 중 → deep copy 필요
-        newVals := make([]*Validator, len(b.state.Validators))
-        copy(newVals, b.state.Validators)
-        b.state.Validators = newVals
-        ref.MinusRef()
-
-        // 새 reference 생성 (ref=1)
-        b.sharedFieldReferences[types.Validators] = &Reference{count: 1}
-    }
-    // 실제 변경
-    b.state.Validators = vals
-    b.dirtyFields[types.Validators] = true
-}`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>BeaconState</code> 구조체</p>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code>state *ethpb.BeaconState</code> &mdash; raw struct</li>
+              <li><code>tries map[FieldIndex]*FieldTrie</code> &mdash; 각 필드별 merkle 캐시</li>
+              <li><code>sharedFieldReferences map[FieldIndex]*Reference</code> &mdash; COW 참조 카운트</li>
+              <li><code>dirtyFields map[FieldIndex]bool</code> &mdash; 변경된 필드 추적</li>
+              <li><code>dirtyIndices map[FieldIndex][]uint64</code> &mdash; 변경된 인덱스 추적</li>
+            </ul>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2"><code>Copy()</code> &mdash; O(1) 복사</p>
+              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+                <li>포인터만 복사 (struct deep copy 아님)</li>
+                <li>tries, sharedFieldReferences 공유</li>
+                <li>각 필드의 reference count 증가</li>
+              </ol>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2"><code>SetValidators()</code> &mdash; 쓰기 시 복사</p>
+              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+                <li><code>ref.Refs() &gt; 1</code>? &rarr; deep copy 실행</li>
+                <li>새 <code>Reference(count: 1)</code> 생성</li>
+                <li>실제 값 변경 + <code>dirtyFields</code> 마킹</li>
+              </ol>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           COW는 <strong>참조 카운트로 공유 여부 판단</strong>.<br />
           Copy()는 참조 카운터만 증가 → O(1) 연산.<br />
@@ -78,35 +56,41 @@ func (b *BeaconState) SetValidators(vals []*Validator) {
 
         {/* ── 메모리 효과 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">메모리 효과 — fork choice 분기 시나리오</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm은 fork choice 중 다수 state snapshot 유지
-// canonical chain + 여러 fork 후보
-
-// naive 복사:
-// 10개 state 유지 × 250 MB = 2.5 GB
-// 메모리 부담 + GC 압박
-
-// COW 복사:
-// state copy 직후: 여전히 250 MB (구조만 공유)
-// setter 호출 시: 변경된 필드만 복사 (~수 MB)
-// 10개 state 유지: ~250 MB + ~50 MB (변경 필드) = ~300 MB
-
-// 예: validators 필드만 변경
-// - 공유: pubkey, credentials (99% 불변)
-// - 복사: balance, participation (매 슬롯 변경)
-// → 전체의 ~10%만 복사
-
-// Fork choice 중 state 관리:
-// 매 slot 업데이트 → 10개 state 전부 Copy() → Setter 호출
-// naive: 10 × 250 MB = 2.5 GB 매번 할당
-// COW: 변경분만 ~50 MB 할당 → GC 부담 최소
-
-// trade-off:
-// + 메모리 효율
-// + Copy 비용 O(1)
-// - 참조 카운트 관리 overhead (mutex lock)
-// - race condition 가능성 (정밀한 동기화 필요)`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">10개 state 유지 시나리오</p>
+            <div className="grid grid-cols-2 gap-3 text-sm text-center">
+              <div className="bg-red-500/10 rounded p-2">
+                <p className="text-muted-foreground">naive 복사</p>
+                <p className="font-mono">10 x 250 MB = <strong>2.5 GB</strong></p>
+              </div>
+              <div className="bg-green-500/10 rounded p-2">
+                <p className="text-muted-foreground">COW 복사</p>
+                <p className="font-mono">250 MB + ~50 MB = <strong>~300 MB</strong></p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Copy 직후 포인터만 공유 &rarr; Setter 호출 시 변경 필드만 복사 (~수 MB)
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">장점</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>메모리 효율 (10배 절감)</li>
+                <li>Copy 비용 O(1)</li>
+                <li>GC 부담 최소</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">트레이드오프</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>참조 카운트 관리 overhead (mutex lock)</li>
+                <li>race condition 가능성 (정밀한 동기화 필요)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           COW로 <strong>fork choice 메모리 사용 10배 절감</strong>.<br />
           10개 state 유지: naive 2.5GB vs COW 300MB.<br />

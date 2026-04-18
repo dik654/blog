@@ -18,46 +18,63 @@ export default function StaleBranch() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">StaleBranchDetector 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct StaleBranchDetector {
-    pub no_activity_threshold: Duration,     // 7일
-    pub drift_threshold_commits: usize,      // 100
-    pub failure_threshold: u32,              // 5회
-}
-
-pub enum StaleReason {
-    NoActivity { duration: Duration },
-    LargeDrift { commits_behind: usize },
-    TooManyFailures { count: u32 },
-    ExplicitlyAbandoned,
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-4">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">StaleBranchDetector</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>no_activity_threshold</code></p>
+                <p className="text-xs text-muted-foreground mt-1">Duration -- 무활동 한계 (7일)</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>drift_threshold_commits</code></p>
+                <p className="text-xs text-muted-foreground mt-1">usize -- target 대비 뒤처진 커밋 수 한계 (100)</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>failure_threshold</code></p>
+                <p className="text-xs text-muted-foreground mt-1">u32 -- 누적 실패 횟수 한계 (5회)</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">StaleReason</p>
+            <div className="flex flex-wrap gap-2">
+              <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs px-2 py-1 rounded-md font-mono">NoActivity</span>
+              <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs px-2 py-1 rounded-md font-mono">LargeDrift</span>
+              <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs px-2 py-1 rounded-md font-mono">TooManyFailures</span>
+              <span className="bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-300 text-xs px-2 py-1 rounded-md font-mono">ExplicitlyAbandoned</span>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">3가지 stale 탐지 기준</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl StaleBranchDetector {
-    pub async fn check(&self, lane: &Lane) -> Option<StaleReason> {
-        // 1) 무활동 시간 체크
-        let since_activity = Utc::now() - lane.last_activity;
-        if since_activity > self.no_activity_threshold {
-            return Some(StaleReason::NoActivity {
-                duration: since_activity.to_std().unwrap(),
-            });
-        }
-
-        // 2) target과의 drift 체크
-        let behind = git_client::commits_behind(&lane.branch, "main").await.ok()?;
-        if behind > self.drift_threshold_commits {
-            return Some(StaleReason::LargeDrift { commits_behind: behind });
-        }
-
-        // 3) 누적 실패 횟수
-        if lane.failure_count >= self.failure_threshold {
-            return Some(StaleReason::TooManyFailures {
-                count: lane.failure_count,
-            });
-        }
-
-        None
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">StaleBranchDetector::check(lane) → Option&lt;StaleReason&gt;</p>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="font-semibold text-sm">무활동 시간 체크</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>Utc::now() - lane.last_activity</code> &gt; <code>no_activity_threshold</code> → NoActivity</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="font-semibold text-sm">target과의 drift 체크</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>git_client::commits_behind(&lane.branch, "main")</code> &gt; <code>drift_threshold_commits</code> → LargeDrift</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="font-semibold text-sm">누적 실패 횟수</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>lane.failure_count</code> &gt;= <code>failure_threshold</code> → TooManyFailures</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">하나라도 해당하면 즉시 반환 -- 순서대로 우선순위 판정</p>
+        </div>
         <p>
           <strong>3가지 판정 기준</strong>: 시간, drift, 실패 횟수<br />
           하나라도 해당하면 stale 판정 — 보수적 접근<br />
@@ -65,31 +82,62 @@ pub enum StaleReason {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">stale 브랜치 처리 액션</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub enum StaleAction {
-    RefreshBranch { rebase_onto: String },  // rebase 시도로 신선화
-    NotifyOwner { message: String },        // 사용자에게 알림만
-    AbandonLane,                             // 완전 폐기
-    ArchiveBranch { tag: String },           // 별도 태그로 아카이브 후 삭제
-}
-
-// 기본 매핑
-fn default_action(reason: &StaleReason) -> StaleAction {
-    match reason {
-        StaleReason::NoActivity { duration } if duration.as_secs() < 14 * 24 * 3600 => {
-            StaleAction::NotifyOwner {
-                message: "7일 이상 활동 없음".into(),
-            }
-        }
-        StaleReason::NoActivity { .. } => StaleAction::AbandonLane,  // 14일+
-        StaleReason::LargeDrift { .. } => StaleAction::RefreshBranch {
-            rebase_onto: "main".into(),
-        },
-        StaleReason::TooManyFailures { .. } => StaleAction::AbandonLane,
-        StaleReason::ExplicitlyAbandoned => StaleAction::ArchiveBranch {
-            tag: format!("abandoned/{}", Utc::now().format("%Y%m%d")),
-        },
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-4">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">StaleAction</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">RefreshBranch</p>
+                <p className="text-[11px] text-muted-foreground">rebase로 신선화</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">NotifyOwner</p>
+                <p className="text-[11px] text-muted-foreground">사용자 알림</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">AbandonLane</p>
+                <p className="text-[11px] text-muted-foreground">완전 폐기</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-mono font-semibold">ArchiveBranch</p>
+                <p className="text-[11px] text-muted-foreground">태그 백업 후 삭제</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">default_action() -- 기본 매핑</p>
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 bg-background rounded-md border p-2.5 text-xs">
+                <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded font-mono shrink-0">NoActivity &lt;14일</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="font-semibold">NotifyOwner</span>
+                <span className="text-muted-foreground">"7일 이상 활동 없음"</span>
+              </div>
+              <div className="flex items-center gap-2 bg-background rounded-md border p-2.5 text-xs">
+                <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-0.5 rounded font-mono shrink-0">NoActivity 14일+</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="font-semibold">AbandonLane</span>
+              </div>
+              <div className="flex items-center gap-2 bg-background rounded-md border p-2.5 text-xs">
+                <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-2 py-0.5 rounded font-mono shrink-0">LargeDrift</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="font-semibold">RefreshBranch</span>
+                <span className="text-muted-foreground">rebase onto main</span>
+              </div>
+              <div className="flex items-center gap-2 bg-background rounded-md border p-2.5 text-xs">
+                <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-0.5 rounded font-mono shrink-0">TooManyFailures</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="font-semibold">AbandonLane</span>
+              </div>
+              <div className="flex items-center gap-2 bg-background rounded-md border p-2.5 text-xs">
+                <span className="bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-2 py-0.5 rounded font-mono shrink-0">Abandoned</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="font-semibold">ArchiveBranch</span>
+                <span className="text-muted-foreground">abandoned/YYYYMMDD</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>기본 정책</strong>:<br />
           - 7일 무활동 → 알림<br />
@@ -100,35 +148,39 @@ fn default_action(reason: &StaleReason) -> StaleAction {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">refresh — rebase로 신선화</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn refresh_stale_branch(
-    branch: &str,
-    target: &str,
-) -> Result<RefreshOutcome> {
-    // 1) target 최신화
-    git_client::fetch(target).await?;
-
-    // 2) rebase 시도
-    let rebase_result = git_client::try_rebase(branch, target).await;
-
-    match rebase_result {
-        Ok(()) => Ok(RefreshOutcome::Clean),
-
-        Err(e) if e.is_conflict() => {
-            // 충돌 발생 → LLM 위임 필요
-            Ok(RefreshOutcome::NeedsLLMHelp {
-                conflicts: e.conflict_files(),
-            })
-        }
-
-        Err(e) => Ok(RefreshOutcome::Failed(e.to_string())),
-    }
-}
-
-pub enum RefreshOutcome {
-    Clean,                          // 자동 rebase 성공
-    NeedsLLMHelp { conflicts: Vec<PathBuf> },
-    Failed(String),
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">refresh_stale_branch(branch, target) → Result&lt;RefreshOutcome&gt;</p>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="font-semibold text-sm">target 최신화</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>git_client::fetch(target)</code></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="font-semibold text-sm">rebase 시도</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>git_client::try_rebase(branch, target)</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3">
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 p-3 text-center">
+              <p className="text-xs font-mono font-semibold text-green-700 dark:text-green-300">Clean</p>
+              <p className="text-[11px] text-muted-foreground mt-1">자동 rebase 성공</p>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800 p-3 text-center">
+              <p className="text-xs font-mono font-semibold text-amber-700 dark:text-amber-300">NeedsLLMHelp</p>
+              <p className="text-[11px] text-muted-foreground mt-1">충돌 발생 → LLM 위임</p>
+            </div>
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-800 p-3 text-center">
+              <p className="text-xs font-mono font-semibold text-red-700 dark:text-red-300">Failed</p>
+              <p className="text-[11px] text-muted-foreground mt-1">rebase 자체 실패</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>3가지 결과</strong>: Clean, NeedsLLMHelp, Failed<br />
           Clean: 자동 rebase로 신선화 완료<br />
@@ -137,20 +189,32 @@ pub enum RefreshOutcome {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">아카이브 — ArchiveBranch</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn archive_branch(branch: &str, tag: &str) -> Result<()> {
-    // 1) 태그 생성 (브랜치 현재 커밋 가리킴)
-    git_client::create_tag(tag, branch).await?;
-
-    // 2) 태그 푸시
-    git_client::push_tag(tag).await?;
-
-    // 3) 브랜치 삭제 (로컬 + 원격)
-    git_client::delete_branch(branch).await?;
-    git_client::push_delete_remote_branch(branch).await?;
-
-    log::info!("archived {} as tag {}", branch, tag);
-    Ok(())
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">archive_branch(branch, tag) → Result&lt;()&gt;</p>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="font-semibold text-sm">태그 생성</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>git_client::create_tag(tag, branch)</code> -- 현재 커밋을 가리키는 태그</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="font-semibold text-sm">태그 푸시</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>git_client::push_tag(tag)</code> -- 원격에 태그 보존</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="font-semibold text-sm">브랜치 삭제</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>delete_branch</code> + <code>push_delete_remote_branch</code> -- 로컬 · 원격 모두 제거</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>태그 백업 후 삭제</strong>: 완전 삭제 대신 태그로 보존<br />
           태그는 나중에 복구 가능 — 실수 방지<br />
@@ -158,29 +222,32 @@ pub enum RefreshOutcome {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주기적 스캔 — stale_scan_loop</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`async fn stale_scan_loop(
-    engine: Arc<Mutex<PolicyEngine>>,
-    detector: StaleBranchDetector,
-) {
-    loop {
-        tokio::time::sleep(Duration::from_secs(3600)).await;  // 1시간 주기
-
-        let lanes: Vec<_> = {
-            let engine = engine.lock().await;
-            engine.lanes.values().cloned().collect()
-        };
-
-        for lane in lanes {
-            if let Some(reason) = detector.check(&lane).await {
-                let action = default_action(&reason);
-                log::info!("stale lane {}: {:?} → {:?}", lane.id, reason, action);
-
-                // 액션 실행
-                apply_stale_action(&lane, &action).await.ok();
-            }
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-3">stale_scan_loop(engine, detector) -- 1시간 주기 무한 루프</p>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="font-semibold text-sm">3600초 대기</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>tokio::time::sleep</code> -- PolicyEngine 평가(30초)와 별도 주기</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="font-semibold text-sm">전체 Lane 수집</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>engine.lock().lanes.values().cloned().collect()</code> -- lock 범위 최소화</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-background rounded-md border p-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="font-semibold text-sm">각 Lane 검사 + 액션 실행</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code>detector.check(&lane)</code> → stale이면 <code>default_action</code> → <code>apply_stale_action</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>1시간 주기 스캔</strong>: PolicyEngine 평가(30초)와 별도<br />
           stale 탐지는 느린 변화 — 고주기 체크 불필요<br />

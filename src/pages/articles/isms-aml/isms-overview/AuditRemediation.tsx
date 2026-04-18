@@ -1,8 +1,14 @@
+import AuditRemediationViz from './viz/AuditRemediationViz';
+import AuditStagesViz from './viz/AuditStagesViz';
+import RemediationProcessViz from './viz/RemediationProcessViz';
+import PostCertViz from './viz/PostCertViz';
+
 export default function AuditRemediation() {
   return (
     <section id="audit-remediation" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">인증심사와 보완조치</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <AuditRemediationViz />
 
         <p>
           보호대책을 모두 구현했다고 끝이 아니다 — 심사원이 "실제로 동작하는가"를 검증하는 단계가 남아있다.<br />
@@ -11,6 +17,7 @@ export default function AuditRemediation() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">심사 단계</h3>
+        <AuditStagesViz />
 
         <h4 className="text-lg font-semibold mt-4 mb-2">1. 서면심사</h4>
         <p>
@@ -95,6 +102,7 @@ export default function AuditRemediation() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">보완조치 프로세스</h3>
+        <RemediationProcessViz />
         <p>
           결함 도출 후 통상 40일 이내에 보완조치를 완료하고 결과를 제출해야 한다.<br />
           보완조치는 다음 4단계로 진행:
@@ -187,6 +195,7 @@ export default function AuditRemediation() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">사후관리</h3>
+        <PostCertViz />
         <p>
           인증 취득 후에도 지속적인 관리가 필수. 인증은 "특정 시점의 보안 수준 확인"이 아니라 "지속적 보안 관리 능력의 증명"이기 때문.
         </p>

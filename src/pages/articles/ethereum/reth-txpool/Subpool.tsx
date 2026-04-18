@@ -32,50 +32,40 @@ export default function Subpool({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── 배치 결정 로직 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">서브풀 배치 결정 로직</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`fn decide_subpool(
-    tx: &ValidTx,
-    sender_account: &Account,
-    base_fee: u64,
-) -> SubpoolKind {
-    // 1. nonce gap 확인
-    if tx.nonce() > sender_account.nonce {
-        return SubpoolKind::Queued;  // nonce gap
-    }
-
-    // 2. fee 충족 확인
-    let effective_tip = tx.effective_tip_per_gas(base_fee);
-    if effective_tip.is_none() {
-        return SubpoolKind::BaseFee;  // fee 부족
-    }
-
-    // 3. nonce OK + fee OK → Pending
-    SubpoolKind::Pending
-}
-
-// 예시 TX들의 분류:
-//
-// tx1: sender=A, nonce=5 (A.nonce=5), max_fee=100, base_fee=30
-//   nonce == 5 ✓
-//   effective_tip = min(tip, 100-30) > 0 ✓
-//   → Pending
-
-// tx2: sender=B, nonce=7 (B.nonce=5), max_fee=100
-//   nonce > 5 (gap: need nonce=5,6 먼저)
-//   → Queued
-
-// tx3: sender=C, nonce=10 (C.nonce=10), max_fee=20, base_fee=30
-//   nonce == 10 ✓
-//   max_fee(20) < base_fee(30) → fee 부족
-//   → BaseFee
-
-// tx4: sender=D, nonce=3 (D.nonce=5)
-//   nonce < 5 → REJECTED (stale)
-
-// 블록 후 재분류 예시:
-// 이전 블록 확정 → A.nonce 6으로 증가
-// → A의 nonce=6 TX가 Queued에서 Pending으로 승격`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">decide_subpool(<code>tx</code>, <code>sender_account</code>, <code>base_fee</code>) &#8594; <code>SubpoolKind</code></p>
+          <div className="space-y-2 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#6366f1' }}>
+              <p className="text-xs font-bold text-indigo-400 mb-1">1. nonce gap &#8594; Queued</p>
+              <p className="text-xs text-foreground/60"><code>tx.nonce() &gt; sender_account.nonce</code></p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#f59e0b' }}>
+              <p className="text-xs font-bold text-amber-400 mb-1">2. fee 부족 &#8594; BaseFee</p>
+              <p className="text-xs text-foreground/60"><code>effective_tip_per_gas(base_fee).is_none()</code></p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#22c55e' }}>
+              <p className="text-xs font-bold text-emerald-400 mb-1">3. nonce OK + fee OK &#8594; Pending</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-xs font-semibold text-emerald-400">tx1 &#8594; Pending</p>
+              <p className="text-[11px] text-foreground/50">A: nonce=5(=5), fee=100&gt;30</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-xs font-semibold text-indigo-400">tx2 &#8594; Queued</p>
+              <p className="text-[11px] text-foreground/50">B: nonce=7(&gt;5), gap</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-xs font-semibold text-amber-400">tx3 &#8594; BaseFee</p>
+              <p className="text-[11px] text-foreground/50">C: nonce OK, fee=20&lt;30</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-2">
+              <p className="text-xs font-semibold text-red-400">tx4 &#8594; Rejected</p>
+              <p className="text-[11px] text-foreground/50">D: nonce=3(&lt;5), stale</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           서브풀 분류는 <strong>nonce + fee 2차원</strong>으로 결정.<br />
           가장 흔한 경우: nonce 맞고 fee 충족 → Pending.<br />
@@ -84,53 +74,39 @@ export default function Subpool({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── on_canonical_state_change ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">on_canonical_state_change — 블록 후 재분류</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub fn on_canonical_state_change(
-    &mut self,
-    block_info: BlockInfo,
-    pending_block_base_fee: u64,
-    new_mined_transactions: Vec<TxHash>,
-) {
-    // 1. 새로 채굴된 TX들 제거 (블록에 포함됨)
-    for tx_hash in new_mined_transactions {
-        self.remove_transaction(&tx_hash);
-    }
-
-    // 2. base_fee 변동 처리
-    let old_base_fee = self.base_fee;
-    self.base_fee = pending_block_base_fee;
-
-    if pending_block_base_fee < old_base_fee {
-        // base_fee 하락 → BaseFee → Pending 승격 검사
-        let promoted = self.basefee_subpool.promote_fee_eligible(
-            pending_block_base_fee
-        );
-        for tx in promoted {
-            self.pending_subpool.insert(tx);
-        }
-    } else if pending_block_base_fee > old_base_fee {
-        // base_fee 상승 → Pending → BaseFee 강등 검사
-        let demoted = self.pending_subpool.demote_fee_insufficient(
-            pending_block_base_fee
-        );
-        for tx in demoted {
-            self.basefee_subpool.insert(tx);
-        }
-    }
-
-    // 3. sender nonce 업데이트 → Queued 해소 검사
-    for (sender, new_nonce) in block_info.sender_nonce_updates {
-        let promoted = self.queued_subpool.promote_by_nonce(sender, new_nonce);
-        for tx in promoted {
-            // fee 확인 후 Pending/BaseFee로
-            self.insert_by_fee(tx, pending_block_base_fee);
-        }
-    }
-
-    // 4. 서브풀 크기 제한 — eviction
-    self.enforce_limits();
-}`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">on_canonical_state_change(<code>block_info</code>, <code>pending_base_fee</code>, <code>mined_txs</code>)</p>
+          <div className="space-y-2">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-indigo-400 font-bold">1</span>
+              <div>
+                <p className="text-xs font-bold text-foreground/70">채굴된 TX 제거</p>
+                <p className="text-xs text-foreground/50">블록에 포함된 TX들을 풀에서 <code>remove_transaction</code></p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-amber-400 font-bold">2</span>
+              <div>
+                <p className="text-xs font-bold text-foreground/70">base_fee 변동 처리</p>
+                <p className="text-xs text-foreground/50">하락: BaseFee &#8594; Pending (<code>promote_fee_eligible</code>) / 상승: Pending &#8594; BaseFee (<code>demote_fee_insufficient</code>)</p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-emerald-400 font-bold">3</span>
+              <div>
+                <p className="text-xs font-bold text-foreground/70">sender nonce 업데이트</p>
+                <p className="text-xs text-foreground/50">Queued gap 해소 &#8594; <code>promote_by_nonce</code> &#8594; fee 확인 후 Pending/BaseFee</p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3 grid grid-cols-[auto_1fr] gap-x-3 items-start">
+              <span className="text-xs font-mono text-red-400 font-bold">4</span>
+              <div>
+                <p className="text-xs font-bold text-foreground/70">서브풀 크기 제한</p>
+                <p className="text-xs text-foreground/50"><code>enforce_limits()</code> &#8594; 초과 시 eviction</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           매 블록마다 <strong>전체 풀 재분류</strong> — base_fee + nonce 변동 반영.<br />
           승격/강등은 서브풀 간 이동 (HashMap entry 이동).<br />
@@ -139,42 +115,38 @@ export default function Subpool({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── eviction 정책 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Eviction — 풀 초과 시 제거</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`fn enforce_limits(&mut self) {
-    // 전체 TX 개수 제한 (기본 10K)
-    while self.total_count() > self.max_tx_count {
-        // 우선순위가 가장 낮은 TX 제거
-        // 정책: effective_tip가 가장 낮은 것부터
-        let lowest_priority_tx = self.find_lowest_priority();
-        self.remove_transaction(&lowest_priority_tx);
-        // 메트릭: evicted count 증가
-    }
-
-    // sender별 슬롯 제한 (기본 16)
-    for (sender, count) in self.per_sender_counts() {
-        if count > self.max_account_slots {
-            // 해당 sender의 가장 높은 nonce TX 제거
-            // (이후 nonce의 TX는 어차피 Queued)
-            let highest_nonce_tx = self.find_highest_nonce(sender);
-            self.remove_transaction(&highest_nonce_tx);
-        }
-    }
-
-    // 총 메모리 제한
-    while self.total_bytes() > self.max_pool_bytes {
-        self.remove_lowest_priority_tx();
-    }
-}
-
-// Eviction 원칙:
-// 1. Pending 먼저 유지 (블록 포함 가능성 높음)
-// 2. 낮은 priority (fee)부터 제거
-// 3. 같은 sender 많은 경우 높은 nonce 먼저 제거 (어차피 못 실행)
-
-// 보호 TX:
-// - Local origin TX는 eviction 제외 (사용자 RPC)
-// - private mempool TX는 별도 한도`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
+          <p className="font-mono font-bold text-sm mb-3">enforce_limits()</p>
+          <div className="space-y-2 mb-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-bold text-foreground/70">전체 TX 개수 제한 (기본 10K)</p>
+              <p className="text-xs text-foreground/60"><code>total_count() &gt; max_tx_count</code> &#8594; lowest priority TX부터 제거 (effective_tip 최소)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-bold text-foreground/70">sender별 슬롯 제한 (기본 16)</p>
+              <p className="text-xs text-foreground/60"><code>count &gt; max_account_slots</code> &#8594; 해당 sender의 최고 nonce TX 제거 (어차피 Queued)</p>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-bold text-foreground/70">총 메모리 제한</p>
+              <p className="text-xs text-foreground/60"><code>total_bytes() &gt; max_pool_bytes</code> &#8594; lowest priority TX 제거</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">Eviction 원칙</p>
+              <div className="space-y-1 text-xs text-foreground/60">
+                <p>1. Pending 먼저 유지 (포함 가능성 높음)</p>
+                <p>2. 낮은 priority(fee)부터 제거</p>
+                <p>3. 같은 sender &#8594; 높은 nonce 먼저</p>
+              </div>
+            </div>
+            <div className="rounded-md border border-border/40 bg-background/60 p-3">
+              <p className="text-xs font-semibold text-foreground/70 mb-1">보호 TX</p>
+              <p className="text-xs text-foreground/60">Local origin: eviction 제외 (사용자 RPC)</p>
+              <p className="text-xs text-foreground/60">Private mempool: 별도 한도</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Eviction은 <strong>풀 크기 제한 위반 시</strong> 자동 실행.<br />
           낮은 priority TX 먼저 제거 → 높은 수익 TX 우선 유지.<br />

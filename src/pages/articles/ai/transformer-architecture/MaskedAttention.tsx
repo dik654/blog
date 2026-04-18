@@ -1,4 +1,6 @@
+import M from '@/components/ui/math';
 import MaskedAttentionViz from './viz/MaskedAttentionViz';
+import MaskedAttnDetailViz from './viz/MaskedAttnDetailViz';
 
 export default function MaskedAttention() {
   return (
@@ -29,56 +31,16 @@ export default function MaskedAttention() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Causal Mask 구현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Causal (Lower-Triangular) Mask
-//
-// 4 토큰 시퀀스의 mask 예시:
-//
-//       t=0  t=1  t=2  t=3
-//   t=0  0   -∞   -∞   -∞
-//   t=1  0    0   -∞   -∞
-//   t=2  0    0    0   -∞
-//   t=3  0    0    0    0
-//
-// Softmax 적용 후:
-//   exp(-∞) = 0 → 해당 위치 attention weight = 0
-//
-// PyTorch 구현:
-seq_len = 4
-mask = torch.triu(torch.ones(seq_len, seq_len), diagonal=1)
-mask = mask.masked_fill(mask == 1, float('-inf'))
-# mask:
-# [[0, -inf, -inf, -inf],
-#  [0,    0, -inf, -inf],
-#  [0,    0,    0, -inf],
-#  [0,    0,    0,    0]]
-
-scores = Q @ K.transpose(-2, -1) / sqrt(d_k)
-scores = scores + mask  # 미래 위치에 -inf 추가
-attn = F.softmax(scores, dim=-1)
-
-// 왜 Causal Masking?
-//
-// Decoder-only 모델 (GPT):
-//   - 학습 목표: P(x_t | x_<t)
-//   - 미래 토큰 보면 "cheating"
-//   - Autoregressive 생성과 일관성
-//
-// Encoder-only 모델 (BERT):
-//   - 학습 목표: P(x_masked | x_context)
-//   - 양방향 문맥 필요
-//   - Mask 불필요
-
-// 학습 효율성:
-//   - Causal mask로 teacher forcing 병렬화
-//   - 전체 시퀀스 한 번에 학습
-//   - GPT 계열의 사전학습 방식
-//
-// 생성 시:
-//   - 한 번에 한 토큰 (autoregressive)
-//   - KV cache로 이전 K, V 재사용
-//   - 생성 속도 최적화`}
-        </pre>
+        <p className="leading-7">
+          상삼각에 -∞를 넣으면 softmax(exp(-∞)=0)가 미래 토큰의 가중치를 완전히 제거한다.
+          GPT(Decoder-only)는 causal mask 필수, BERT(Encoder-only)는 양방향이므로 불필요.
+          학습 시에는 mask + teacher forcing으로 전체 시퀀스를 병렬 학습하고,
+          생성 시에는 autoregressive + KV cache로 속도를 최적화한다.
+        </p>
+        <M display>{'\\text{score}[i][j] = \\begin{cases} Q_i \\cdot K_j / \\sqrt{d_k} & \\text{if } j \\leq i \\;\\text{(과거+현재)} \\\\ \\underbrace{-\\infty}_{\\text{softmax} \\to 0} & \\text{if } j > i \\;\\text{(미래 차단)} \\end{cases}'}</M>
+      </div>
+      <div className="not-prose my-8"><MaskedAttnDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: <strong>Lower-triangular mask</strong>로 미래 토큰 참조 차단.<br />
           요약 2: GPT는 <strong>causal mask 필수</strong>, BERT는 불필요 (양방향).<br />

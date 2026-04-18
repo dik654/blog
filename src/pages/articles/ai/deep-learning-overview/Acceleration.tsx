@@ -1,4 +1,5 @@
 import GPUParallelViz from './viz/GPUParallelViz';
+import DLAccelViz from './viz/DLAccelViz';
 
 export default function Acceleration() {
   return (
@@ -12,172 +13,12 @@ export default function Acceleration() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">GPU 왜 빠른가</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// CPU vs GPU 아키텍처 차이
-
-// CPU (x86-64)
-// - 코어: 4~128개
-// - 복잡한 제어 로직 (out-of-order, branch prediction)
-// - 큰 cache (수십 MB)
-// - 최적화: sequential workload
-// - 예: Intel Xeon 8180 = 28 cores
-
-// GPU (NVIDIA H100)
-// - SM (Streaming Multiprocessor): 132개
-// - 각 SM에 128 CUDA cores = 16,896 total
-// - 간단한 제어 로직
-// - 작은 per-core cache
-// - 최적화: parallel workload
-// - Matrix acceleration (Tensor Cores)
-
-// 딥러닝에 왜 GPU?
-// 1) Matrix multiplication: 대규모 병렬 계산
-// 2) Backprop: independent per-sample operations
-// 3) Simple operations (add, multiply, ReLU): 단순 반복
-
-// CPU 대비 성능
-// - 32-bit float matmul: 10-50x 빠름
-// - 16-bit (FP16): 100x+ 빠름 (Tensor Core)
-// - 8-bit (INT8): 200x+ 빠름 (inference)
-
-// 대안 하드웨어
-// TPU (Google): Matrix ops 전용 ASIC
-// NPU (Apple, Samsung): 모바일 특화
-// FPGA: programmable, 추론 특화
-// Custom ASIC: Cerebras, Groq`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Mixed Precision Training</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 단정도(FP32) vs 반정도(FP16/BF16)
-
-// FP32: 4 bytes
-// - Standard floating point
-// - Range: ~1e-38 to ~1e38
-// - Precision: ~7 decimal digits
-
-// FP16: 2 bytes
-// - IEEE 754 half precision
-// - Range: ~6e-5 to ~65504
-// - Precision: ~3 decimal digits
-// - 절반 메모리, 2-4x 속도
-
-// BF16: 2 bytes (brain float)
-// - FP32와 같은 range (8-bit exponent)
-// - 낮은 precision (7-bit mantissa)
-// - Gradient overflow 적음
-// - A100/H100/TPU 기본
-
-// Mixed precision 원리
-// 1) Forward: FP16 (2x 빠름)
-// 2) Loss scaling: prevent underflow
-// 3) Gradient: FP16
-// 4) Master weights: FP32 (numerical stability)
-
-// PyTorch 사용
-from torch.cuda.amp import autocast, GradScaler
-
-model = MyModel().cuda()
-optimizer = torch.optim.Adam(model.parameters())
-scaler = GradScaler()
-
-for x, y in dataloader:
-    x, y = x.cuda(), y.cuda()
-
-    with autocast():
-        output = model(x)
-        loss = criterion(output, y)
-
-    scaler.scale(loss).backward()
-    scaler.step(optimizer)
-    scaler.update()
-
-// 효과
-// - Memory: 40-50% 절감
-// - Speed: 1.5-3x 빠름
-// - Accuracy: 거의 동일 (올바른 loss scaling 시)`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">분산 학습 (Distributed Training)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 여러 GPU/machine으로 확장
-
-// 1. Data Parallelism
-// - 모델 복제, 데이터 분산
-// - 각 GPU에 mini-batch 할당
-// - Gradient 평균 (AllReduce)
-// - PyTorch DDP
-
-# Data parallel training
-import torch.distributed as dist
-from torch.nn.parallel import DistributedDataParallel as DDP
-
-dist.init_process_group("nccl")
-model = DDP(model, device_ids=[local_rank])
-
-// 장점: 단순, 대부분 모델에 적용
-// 단점: 모델 크기 ≤ GPU 메모리
-
-// 2. Model Parallelism
-// - 모델을 여러 GPU로 split
-// - Layer별 or tensor별 분산
-// - GPU 간 통신 overhead
-
-// Tensor Parallelism (Megatron)
-// - Linear layer의 weight matrix split
-// - AllReduce로 output 동기화
-
-// Pipeline Parallelism (GPipe, PipeDream)
-// - Layer를 stage로 split
-// - Pipeline bubble 문제
-
-// 3. ZeRO (Zero Redundancy Optimizer)
-// - Optimizer state, gradient, weight 분산
-// - Stage 1: optimizer state
-// - Stage 2: gradient
-// - Stage 3: parameter
-// - DeepSpeed 구현
-// - 큰 모델 훈련 표준
-
-// 4. FSDP (Fully Sharded Data Parallel)
-// - PyTorch native ZeRO-3
-// - Automatic sharding
-
-// 대규모 훈련 예 (LLaMA-70B)
-// - 512 GPUs (A100 80GB)
-// - Tensor parallel × 8
-// - Pipeline parallel × 4
-// - Data parallel × 16
-// - ~21 days training`}</pre>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Flash Attention & 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Flash Attention (Tri Dao, 2022)
-// Attention 계산 memory-efficient하게
-
-// 기존 attention
-// attention(Q, K, V) = softmax(QK^T/√d) · V
-// Memory: O(n²) for n-length sequence
-// - n=2048 → 8MB (FP16, single head)
-// - n=16384 → 512MB (bottleneck)
-
-// Flash Attention 트릭
-// 1) Tile-wise computation (blocks of Q, K, V)
-// 2) Online softmax (running max/sum)
-// 3) Memory: O(n) instead of O(n²)
-// 4) HBM I/O 최소화
-
-// 결과
-// - 2-4x faster attention
-// - 5-20x less memory
-// - GPT-3 훈련에 사용
-// - 현재 모든 LLM 표준
-
-// PyTorch 2.0+ 내장
-torch.nn.functional.scaled_dot_product_attention(Q, K, V)
-
-// 기타 최적화
-// - Kernel fusion: 여러 연산 하나로
-// - Gradient checkpointing: memory-time tradeoff
-// - ZeRO-Offload: CPU/NVMe offload
-// - Paged Attention (vLLM inference)
-// - Continuous batching
-// - Speculative decoding`}</pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">GPU, Mixed Precision, 분산 학습, Flash Attention</h3>
+      </div>
+      <div className="not-prose mt-4 mb-4">
+        <DLAccelViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GPU 하드웨어 트렌드</h3>
         <div className="overflow-x-auto">

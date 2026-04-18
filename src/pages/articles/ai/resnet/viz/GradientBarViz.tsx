@@ -43,16 +43,17 @@ export default function GradientBarViz({ step }: { step: number }) {
         );
       })}
 
+      {/* 감소 비율 — 값 텍스트 뒤에 표시 */}
       {step >= 2 && (
-        <motion.text x={BASE_X + 60} y={128} fontSize={9}
+        <motion.text x={BASE_X + 80} y={32 + 1 * 36 + 15} fontSize={8}
           fill={COLORS.mid} initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}>
-          37x 감소
+          (3층 대비 37× 감소)
         </motion.text>
       )}
       {step >= 3 && (
-        <motion.text x={BASE_X + 60} y={138} fontSize={9}
+        <motion.text x={BASE_X + 90} y={32 + 2 * 36 + 15} fontSize={8}
           fill={COLORS.low} initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}>
-          1,500x 감소 -- 앞쪽 층은 학습 불가
+          (1,500× 감소 — 학습 불가)
         </motion.text>
       )}
     </svg>

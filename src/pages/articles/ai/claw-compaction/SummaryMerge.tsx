@@ -19,13 +19,22 @@ export default function SummaryMerge() {
           대화 진행 → 압축 → 대화 진행 → 또 압축... 연쇄적으로 발생<br />
           문제: <strong>매 압축마다 이전 요약이 "새 메시지"로 취급되어 다시 요약 대상이 됨</strong> → 정보가 점점 얇아짐
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 순진한 구현 (버그 있음)
-1차 압축: 메시지 100개 → 요약 A (3K tok)
-          세션 = [요약 A] + 최근 15개
-
-2차 압축: 메시지 115개(요약 A 포함) → 요약 B
-          세션 = [요약 B] + 최근 15개
-          ❌ 요약 B는 요약 A를 "일반 메시지"로 보고 요약 — 정보 2중 손실`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-red-50/50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="text-xs font-semibold text-red-700 dark:text-red-300 mb-3">순진한 구현의 문제 (버그)</div>
+            <div className="space-y-2">
+              <div className="bg-background border border-border rounded p-3">
+                <div className="text-xs font-semibold mb-1">1차 압축</div>
+                <p className="text-xs text-muted-foreground">메시지 100개 → 요약 A (3K tok) / 세션 = [요약 A] + 최근 15개</p>
+              </div>
+              <div className="bg-background border border-red-200 dark:border-red-800 rounded p-3">
+                <div className="text-xs font-semibold mb-1">2차 압축</div>
+                <p className="text-xs text-muted-foreground">메시지 115개(요약 A 포함) → 요약 B / 세션 = [요약 B] + 최근 15개</p>
+                <p className="text-xs text-red-600 dark:text-red-400 mt-1 font-semibold">요약 B는 요약 A를 "일반 메시지"로 보고 요약 — 정보 2중 손실</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>정답</strong>: 이전 요약(A)을 감지하고 <em>병합</em> — 원본 데이터를 유지하면서 통합<br />
           <code>merge_compact_summaries()</code>가 이 역할 담당
@@ -33,33 +42,43 @@ export default function SummaryMerge() {
 
         {/* ── 병합 흐름 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">merge_compact_summaries() 흐름</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub fn merge_compact_summaries(
-    prev: Option<&Summary>,
-    new_raw: &Summary,
-) -> Summary {
-    match prev {
-        None => new_raw.clone(),  // 이전 요약 없음 → 그대로 사용
-        Some(p) => Summary {
-            // scope: 이전과 새 범위를 문장 수준에서 결합
-            scope: merge_scope(&p.scope, &new_raw.scope),
-
-            // current_work: 항상 최신 것 우선
-            current_work: new_raw.current_work.clone().or(p.current_work.clone()),
-
-            // pending_work: 합집합 (중복 제거)
-            pending_work: union_sets(&p.pending_work, &new_raw.pending_work),
-
-            // tool_usage: 호출 횟수 누적
-            tool_usage: merge_counters(&p.tool_usage, &new_raw.tool_usage),
-
-            // file_candidates: 합집합
-            file_candidates: union_paths(&p.file_candidates, &new_raw.file_candidates),
-
-            // timeline: 시간순 병합 정렬
-            timeline: merge_timelines(&p.timeline, &new_raw.timeline),
-        },
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">merge_compact_summaries(prev, new_raw) → Summary</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              <code className="text-xs">prev</code>이 <code className="text-xs">None</code>이면 <code className="text-xs">new_raw</code> 그대로 사용 / <code className="text-xs">Some</code>이면 필드별 병합:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">scope</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">merge_scope()</code> — 문장 수준 결합</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">current_work</div>
+                <p className="text-xs text-muted-foreground mt-1">최신값 우선 (staleness 방지)</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">pending_work</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">union_sets()</code> — 합집합, 중복 제거</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">tool_usage</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">merge_counters()</code> — 호출 횟수 누적</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">file_candidates</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">union_paths()</code> — 경로 합집합</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">timeline</div>
+                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">merge_timelines()</code> — 시간순 병합 정렬</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>필드별 병합 전략</strong>:<br />
           - <code>scope</code>: 문자열 결합 (range accumulation)<br />
@@ -71,37 +90,50 @@ export default function SummaryMerge() {
 
         {/* ── 이전 요약 추출 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">이전 요약 추출 — extract_prior_summary()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn extract_prior_summary(messages: &[Message]) -> Option<Summary> {
-    // 첫 user 메시지 중 <prior-context>로 시작하는 것 탐지
-    for msg in messages {
-        if matches!(msg.role, Role::User)
-            && msg.content.starts_with("<prior-context>")
-            && msg.content.ends_with("</prior-context>")
-        {
-            return parse_prior_context(&msg.content);
-        }
-    }
-    None
-}
-
-fn parse_prior_context(text: &str) -> Option<Summary> {
-    // 마크다운 섹션 헤더로 파싱
-    let mut summary = Summary::default();
-
-    for section in text.split("## ") {
-        let (header, body) = section.split_once('\\n')?;
-        match header.trim() {
-            "작업 범위"   => summary.scope = body.trim().to_string(),
-            "진행 중"    => summary.current_work = Some(body.trim().to_string()),
-            "미완료"     => summary.pending_work = parse_bullet_list(body),
-            "도구 사용"  => summary.tool_usage = parse_counter_list(body),
-            "관련 파일"  => summary.file_candidates = parse_path_list(body),
-            "타임라인"   => summary.timeline = parse_timeline(body),
-            _ => {}
-        }
-    }
-    Some(summary)
-}`}</pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">extract_prior_summary(messages) → Option&lt;Summary&gt;</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              메시지 중 <code className="text-xs">Role::User</code>이면서 <code className="text-xs">&lt;prior-context&gt;</code>로 시작하고 <code className="text-xs">&lt;/prior-context&gt;</code>로 끝나는 것 탐지 → <code className="text-xs">parse_prior_context()</code>로 파싱
+            </p>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">parse_prior_context(text) → Option&lt;Summary&gt;</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2"><code className="text-xs">## </code> 헤더로 섹션 분리 후 각 섹션을 해당 파서로 처리</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="bg-background border border-border rounded p-2 text-xs">
+                <span className="font-mono font-semibold">"작업 범위"</span>
+                <span className="text-muted-foreground ml-1">→ scope</span>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-xs">
+                <span className="font-mono font-semibold">"진행 중"</span>
+                <span className="text-muted-foreground ml-1">→ current_work</span>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-xs">
+                <span className="font-mono font-semibold">"미완료"</span>
+                <span className="text-muted-foreground ml-1">→ pending_work</span>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-xs">
+                <span className="font-mono font-semibold">"도구 사용"</span>
+                <span className="text-muted-foreground ml-1">→ tool_usage</span>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-xs">
+                <span className="font-mono font-semibold">"관련 파일"</span>
+                <span className="text-muted-foreground ml-1">→ file_candidates</span>
+              </div>
+              <div className="bg-background border border-border rounded p-2 text-xs">
+                <span className="font-mono font-semibold">"타임라인"</span>
+                <span className="text-muted-foreground ml-1">→ timeline</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>파서 전략</strong>: <code>## </code> 헤더로 섹션 분리 후 각 섹션을 해당 파서로 처리<br />
           <code>split_once('\n')</code>: 첫 줄(헤더)과 나머지(본문) 분리<br />
@@ -110,30 +142,34 @@ fn parse_prior_context(text: &str) -> Option<Summary> {
 
         {/* ── 시간선 병합 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">merge_timelines() — 시간순 병합</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TimelineEvent {
-    pub timestamp: DateTime<Utc>,
-    pub kind: EventKind,              // UserMsg | ToolCall | Error | Milestone
-    pub summary: String,              // 예: "Edit: main.rs 수정 (245줄)"
-}
-
-fn merge_timelines(
-    prev: &[TimelineEvent],
-    new: &[TimelineEvent],
-) -> Vec<TimelineEvent> {
-    // Merge sort — 두 정렬된 벡터를 O(n+m)로 병합
-    let mut out = Vec::with_capacity(prev.len() + new.len());
-    let (mut i, mut j) = (0, 0);
-    while i < prev.len() && j < new.len() {
-        if prev[i].timestamp <= new[j].timestamp {
-            out.push(prev[i].clone()); i += 1;
-        } else {
-            out.push(new[j].clone());  j += 1;
-        }
-    }
-    out.extend_from_slice(&prev[i..]);
-    out.extend_from_slice(&new[j..]);
-    out
-}`}</pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="font-semibold text-sm mb-3">TimelineEvent 구조체</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">timestamp: <span className="text-muted-foreground">DateTime&lt;Utc&gt;</span></div>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">kind: <span className="text-muted-foreground">EventKind</span></div>
+                <p className="text-xs text-muted-foreground mt-1">UserMsg | ToolCall | Error | Milestone</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-mono font-semibold">summary: <span className="text-muted-foreground">String</span></div>
+                <p className="text-xs text-muted-foreground mt-1">예: "Edit: main.rs 수정 (245줄)"</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">merge_timelines(prev, new) → Vec&lt;TimelineEvent&gt;</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Merge sort — 양쪽 입력이 이미 시간순 정렬 → O(n+m) 병합이 정렬 O(n log n)보다 빠름<br />
+              <code className="text-xs">prev[i].timestamp &lt;= new[j].timestamp</code>이면 prev를, 아니면 new를 선택 후 나머지를 <code className="text-xs">extend_from_slice</code>
+            </p>
+          </div>
+        </div>
         <p>
           <strong>Merge sort 선택 이유</strong>: 양쪽 입력이 이미 시간순 정렬 → O(n+m) 병합이 정렬(O(n log n))보다 빠름<br />
           <code>TimelineEvent::kind</code>의 4가지 분류: UserMsg(사용자 입력), ToolCall(도구 호출), Error(오류), Milestone(주요 이정표)<br />
@@ -142,27 +178,38 @@ fn merge_timelines(
 
         {/* ── 타임라인 가지치기 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">타임라인 가지치기 — 크기 상한</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`const MAX_TIMELINE_EVENTS: usize = 50;
-
-fn prune_timeline(mut timeline: Vec<TimelineEvent>) -> Vec<TimelineEvent> {
-    if timeline.len() <= MAX_TIMELINE_EVENTS { return timeline; }
-
-    // 1) Milestone과 Error는 무조건 보존
-    let (must_keep, candidates): (Vec<_>, Vec<_>) = timeline.drain(..)
-        .partition(|e| matches!(e.kind, EventKind::Milestone | EventKind::Error));
-
-    // 2) 나머지는 최근 N개만 유지
-    let keep_recent = MAX_TIMELINE_EVENTS.saturating_sub(must_keep.len());
-    let recent: Vec<_> = candidates.into_iter()
-        .rev().take(keep_recent).collect::<Vec<_>>()
-        .into_iter().rev().collect();
-
-    // 3) 재병합 & 정렬
-    let mut merged = must_keep;
-    merged.extend(recent);
-    merged.sort_by_key(|e| e.timestamp);
-    merged
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">prune_timeline(timeline) → Vec&lt;TimelineEvent&gt;</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">상한: <code className="text-xs">MAX_TIMELINE_EVENTS = 50</code> — 초과 시 가지치기</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+                  <span className="text-xs font-semibold">필수 보존</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Milestone + Error는 무조건 보존</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+                  <span className="text-xs font-semibold">최근 N개 유지</span>
+                </div>
+                <p className="text-xs text-muted-foreground">나머지는 최근 것만 유지, old UserMsg/ToolCall 희생</p>
+              </div>
+              <div className="bg-background border border-border rounded p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+                  <span className="text-xs font-semibold">재병합 & 정렬</span>
+                </div>
+                <p className="text-xs text-muted-foreground">시간순으로 재정렬</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>3단계 가지치기</strong>:<br />
           1. Milestone·Error는 보존 필수 — 중요 이벤트 유실 방지<br />
@@ -176,19 +223,32 @@ fn prune_timeline(mut timeline: Vec<TimelineEvent>) -> Vec<TimelineEvent> {
 
         {/* ── scope 병합 전략 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">merge_scope() — 작업 범위 확장</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn merge_scope(prev: &str, new: &str) -> String {
-    // 완전 동일 → 그대로
-    if prev == new { return prev.to_string(); }
-
-    // new가 prev의 확장 → new만 사용
-    if new.contains(prev) { return new.to_string(); }
-
-    // prev가 new의 확장 → prev만 사용
-    if prev.contains(new) { return prev.to_string(); }
-
-    // 겹치지 않음 → 문장 결합
-    format!("{}; {}", prev, new)
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
+              <span className="font-semibold text-sm">merge_scope(prev, new) → String</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-semibold mb-1">동일 범위</div>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">prev == new</code> → 중복 제거, 그대로 반환</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-semibold mb-1">new가 prev의 확장</div>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">new.contains(prev)</code> → new만 사용</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-semibold mb-1">prev가 new의 확장</div>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">prev.contains(new)</code> → 축소 방지, prev 유지</p>
+              </div>
+              <div className="bg-background border border-border rounded p-2.5">
+                <div className="text-xs font-semibold mb-1">교차 없음</div>
+                <p className="text-xs text-muted-foreground">세미콜론으로 결합: <code className="text-xs">"prev; new"</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4가지 케이스</strong>:<br />
           1. 동일 범위 → 중복 제거<br />

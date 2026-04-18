@@ -1,7 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
 import ForwardFlowViz from './viz/ForwardFlowViz';
 import NumericTraceViz from './viz/NumericTraceViz';
-import { forwardCode, forwardAnnotations } from './ForwardData';
 
 export default function Forward() {
   return (
@@ -12,9 +10,36 @@ export default function Forward() {
         행렬 곱 한 번으로 한 층의 모든 뉴런 출력을 동시 계산.
       </p>
       <ForwardFlowViz />
-      <div className="mt-6">
-        <CodePanel title="NumPy 순전파 구현" code={forwardCode}
-          lang="python" annotations={forwardAnnotations} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+        <div className="rounded-xl border bg-card p-5">
+          <div className="text-sm font-semibold text-sky-600 dark:text-sky-400 mb-1">Step 1 — 입력층</div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            입력 벡터 <code className="text-xs">X</code>의 차원이 은닉층 가중치 행렬의 행 수를 결정.
+            예: 입력 2차원 → <code className="text-xs">W1</code>은 (2×3) 형상.
+          </p>
+        </div>
+        <div className="rounded-xl border bg-card p-5">
+          <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Step 2 — 은닉층 1</div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            선형 변환 <code className="text-xs">z = W·x + b</code> 후 활성화 <code className="text-xs">a = σ(z)</code>.
+            sigmoid가 비선형성을 부여 — 없으면 층을 쌓아도 직선.
+          </p>
+        </div>
+        <div className="rounded-xl border bg-card p-5">
+          <div className="text-sm font-semibold text-violet-600 dark:text-violet-400 mb-1">Step 3 — 은닉층 2</div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            동일 패턴 반복: <code className="text-xs">z = W·a + b → a = σ(z)</code>.
+            층이 깊어질수록 더 복잡한 특징 조합 학습 가능.
+          </p>
+        </div>
+        <div className="rounded-xl border bg-card p-5">
+          <div className="text-sm font-semibold text-rose-600 dark:text-rose-400 mb-1">Step 4 — 출력층</div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            softmax로 확률 분포 변환 — 모든 출력의 합이 1.
+            분류 문제에서 각 클래스의 예측 확률을 산출.
+          </p>
+        </div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">

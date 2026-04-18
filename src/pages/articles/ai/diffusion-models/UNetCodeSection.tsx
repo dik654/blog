@@ -1,77 +1,48 @@
-import CodePanel from '@/components/ui/code-panel';
-
-const CODE = `class ResBlock(nn.Module):
-    def __init__(self, ch, t_emb_dim):
-        super().__init__()
-        self.norm1 = nn.GroupNorm(8, ch)
-        self.conv1 = nn.Conv2d(ch, ch, 3, padding=1)
-        self.t_proj = nn.Linear(t_emb_dim, ch)  # 시간 임베딩 주입
-        self.conv2 = nn.Conv2d(ch, ch, 3, padding=1)
-
-    def forward(self, x, t_emb):
-        h = self.conv1(F.silu(self.norm1(x)))
-        h = h + self.t_proj(F.silu(t_emb))[:, :, None, None]
-        h = self.conv2(F.silu(h))
-        return x + h   # residual connection
-
-class CrossAttention(nn.Module):
-    def __init__(self, dim, context_dim):
-        super().__init__()
-        self.to_q = nn.Linear(dim, dim)
-        self.to_k = nn.Linear(context_dim, dim)
-        self.to_v = nn.Linear(context_dim, dim)
-
-    def forward(self, x, context):
-        q = self.to_q(x)         # image features → Query
-        k = self.to_k(context)   # text embedding → Key
-        v = self.to_v(context)   # text embedding → Value
-        attn = (q @ k.T) / (dim ** 0.5)
-        return F.softmax(attn, dim=-1) @ v`;
-
-const ANNOTATIONS = [
-  { lines: [6, 6] as [number, number], color: 'sky' as const, note: '시간 임베딩 프로젝션' },
-  { lines: [11, 11] as [number, number], color: 'emerald' as const, note: 't_emb를 공간 차원에 브로드캐스트' },
-  { lines: [23, 25] as [number, number], color: 'amber' as const, note: 'Cross-Attention QKV' },
-];
+import M from '@/components/ui/math';
 
 export default function UNetCodeSection() {
   return (
     <div className="not-prose mt-4">
-      <CodePanel title="ResBlock + CrossAttention 구현" code={CODE} annotations={ANNOTATIONS} />
+      <div className="rounded-lg border bg-card p-4 space-y-4">
+        <h4 className="text-sm font-semibold text-foreground">ResBlock + CrossAttention 구현</h4>
+
+        {/* Step 1: ResBlock */}
+        <div className="rounded-md border bg-muted/30 p-3 space-y-2">
+          <p className="text-xs font-semibold text-foreground">1. ResBlock</p>
+          <p className="text-xs text-muted-foreground">
+            GroupNorm → Conv → time embedding 주입 → Conv → residual connection
+          </p>
+          <M display>{'h = \\text{Conv}_1\\big(\\text{SiLU}(\\text{GN}(x))\\big) + \\underbrace{W_t \\cdot \\text{SiLU}(t_{\\text{emb}})}_{\\text{시간 정보 주입}}'}</M>
+          <M display>{'\\text{out} = x + \\text{Conv}_2\\big(\\text{SiLU}(h)\\big) \\quad \\leftarrow \\text{residual}'}</M>
+        </div>
+
+        {/* Step 2: Time Embedding */}
+        <div className="rounded-md border bg-muted/30 p-3 space-y-2">
+          <p className="text-xs font-semibold text-foreground">2. Time Embedding</p>
+          <p className="text-xs text-muted-foreground">
+            sinusoidal embedding → MLP(SiLU) → t_emb, 각 ResBlock에 주입
+          </p>
+          <M display>{'t \\;\\xrightarrow{\\text{sinusoidal}}\\; [\\sin, \\cos]_{128d} \\;\\xrightarrow{\\text{MLP + SiLU}}\\; t_{\\text{emb}} \\in \\mathbb{R}^{d}'}</M>
+          <p className="text-xs text-muted-foreground">
+            Transformer positional encoding과 동일 원리 — 각 블록에서 시간 조건 부여
+          </p>
+        </div>
+
+        {/* Step 3: Cross-Attention */}
+        <div className="rounded-md border bg-muted/30 p-3 space-y-2">
+          <p className="text-xs font-semibold text-foreground">3. Cross-Attention</p>
+          <p className="text-xs text-muted-foreground">
+            image features → Q, text embedding → K,V, scaled dot-product
+          </p>
+          <M display>{'Q = W_Q \\cdot \\underbrace{x}_{\\text{image}}, \\quad K = W_K \\cdot \\underbrace{c}_{\\text{text}}, \\quad V = W_V \\cdot \\underbrace{c}_{\\text{text}}'}</M>
+          <M display>{'\\text{Attn}(Q,K,V) = \\text{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d}}\\right) V'}</M>
+        </div>
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Timestep Embedding 구현
-def timestep_embedding(t, dim=128):
-    """Sinusoidal timestep embedding (like positional encoding)"""
-    half = dim // 2
-    freqs = torch.exp(
-        -math.log(10000) * torch.arange(half, dtype=torch.float32) / half
-    )
-    args = t[:, None].float() * freqs[None]
-    embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
-    return embedding
-
-# t: (B,) timestep
-# emb: (B, dim) embedding
-
-// TimeMLP:
-class TimeEmbedding(nn.Module):
-    def __init__(self, dim, time_dim):
-        super().__init__()
-        self.fc1 = nn.Linear(dim, time_dim)
-        self.fc2 = nn.Linear(time_dim, time_dim)
-
-    def forward(self, t):
-        emb = timestep_embedding(t, self.fc1.in_features)
-        emb = F.silu(self.fc1(emb))
-        return self.fc2(emb)
-
-// 각 ResBlock에 t_emb 주입:
-//   h = conv1(x)
-//   h = h + t_proj(t_emb)  # 시간 조건부
-//   h = conv2(h)
-//   return h + x  # residual`}
-        </pre>
+        <p className="text-sm text-muted-foreground">
+          Timestep Embedding: t → sinusoidal embedding (cos/sin 128dim) → MLP (SiLU) → t_emb.
+          각 ResBlock에 t_emb 주입: h = h + t_proj(t_emb) — Transformer positional encoding과 동일 원리.
+        </p>
       </div>
     </div>
   );

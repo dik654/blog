@@ -12,41 +12,50 @@ export default function EncodeDecode({ onCodeRef }: Props) {
 
         {/* ── fixed vs variable ── */}
         <h3 className="text-xl font-semibold mt-2 mb-3">Fixed vs Variable 구분 — 컴파일 타임 결정</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 SSZ 타입이 fixed-size인지 판별하는 규칙
-
-// Fixed-size인 경우:
-// - basic types (uint8~uint256, bool, byte)
-// - Vector[T, N]: T가 fixed + N 고정 → fixed
-// - Container: 모든 필드가 fixed → fixed
-// - Bitvector[N]: 항상 fixed
-
-// Variable-size인 경우:
-// - List[T, N]: 원소 개수가 런타임 결정
-// - Bitlist[N]: 비트 개수가 런타임 결정
-// - Vector/Container 중 하나라도 variable 필드 포함
-// - Union: tagged union
-
-// 예시:
-struct Validator {
-    pubkey: Vector[byte, 48],              // fixed (48)
-    withdrawal_credentials: B256,          // fixed (32)
-    effective_balance: Gwei,               // fixed (8)
-    slashed: bool,                         // fixed (1)
-    activation_eligibility_epoch: Epoch,   // fixed (8)
-    activation_epoch: Epoch,               // fixed (8)
-    exit_epoch: Epoch,                     // fixed (8)
-    withdrawable_epoch: Epoch,             // fixed (8)
-}
-// Validator는 fixed-size: 48+32+8+1+8+8+8+8 = 121 bytes
-
-struct Attestation {
-    aggregation_bits: Bitlist[MAX_VALIDATORS_PER_COMMITTEE],  // variable
-    data: AttestationData,                                    // fixed
-    signature: BLSSignature,                                  // fixed
-}
-// Attestation은 variable-size (Bitlist 때문)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-green-500/30 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Fixed-size</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>basic types (<code>uint8</code>~<code>uint256</code>, <code>bool</code>, <code>byte</code>)</li>
+              <li><code>Vector[T, N]</code>: T가 fixed + N 고정</li>
+              <li><code>Container</code>: 모든 필드가 fixed</li>
+              <li><code>Bitvector[N]</code>: 항상 fixed</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Variable-size</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code>List[T, N]</code>: 원소 개수가 런타임 결정</li>
+              <li><code>Bitlist[N]</code>: 비트 개수가 런타임 결정</li>
+              <li>Vector/Container 중 하나라도 variable 필드 포함</li>
+              <li><code>Union</code>: tagged union</li>
+            </ul>
+          </div>
+        </div>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Validator &mdash; fixed-size (121 bytes)</p>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code>pubkey</code>: <code>Vector[byte, 48]</code> (48B)</li>
+              <li><code>withdrawal_credentials</code>: <code>B256</code> (32B)</li>
+              <li><code>effective_balance</code>: <code>Gwei</code> (8B)</li>
+              <li><code>slashed</code>: <code>bool</code> (1B)</li>
+              <li><code>activation_eligibility_epoch</code>: <code>Epoch</code> (8B)</li>
+              <li><code>activation_epoch</code>: <code>Epoch</code> (8B)</li>
+              <li><code>exit_epoch</code>: <code>Epoch</code> (8B)</li>
+              <li><code>withdrawable_epoch</code>: <code>Epoch</code> (8B)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Attestation &mdash; variable-size</p>
+            <ul className="text-sm space-y-0.5 text-muted-foreground">
+              <li><code>aggregation_bits</code>: <code>Bitlist[MAX_VALIDATORS_PER_COMMITTEE]</code> <span className="text-amber-400">(variable)</span></li>
+              <li><code>data</code>: <code>AttestationData</code> (fixed)</li>
+              <li><code>signature</code>: <code>BLSSignature</code> (fixed)</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">Bitlist 하나로 전체 Container가 variable</p>
+          </div>
+        </div>
         <p className="leading-7">
           SSZ 타입은 <strong>구조적으로</strong> fixed/variable 결정.<br />
           한 필드라도 variable이면 전체 Container가 variable.<br />
@@ -55,54 +64,47 @@ struct Attestation {
 
         {/* ── Container 인코딩 레이아웃 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Container 인코딩 — 2-part 레이아웃</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 일반 Container 인코딩 알고리즘:
-// 1. 각 필드 크기 계산
-// 2. fixed part 생성:
-//    - fixed 필드: 실제 값
-//    - variable 필드: offset (4-byte LE, 전체 인코딩 내 절대 위치)
-// 3. variable part: 실제 variable 데이터 concat
-
-// 예시: Attestation 직렬화
-struct Attestation {
-    aggregation_bits: Bitlist[2048],  // variable (max 2048 bits = 256 bytes + 1 sentinel)
-    data: AttestationData (128 bytes), // fixed
-    signature: BLSSignature (96 bytes), // fixed
-}
-
-// encoded layout:
-// [0..4]     aggregation_bits offset (4 bytes LE)
-// [4..132]   data (128 bytes)
-// [132..228] signature (96 bytes)
-// [228..?]   aggregation_bits data (variable)
-
-// 고정 part 크기 = 4 + 128 + 96 = 228 bytes
-// 첫 번째 variable 필드 offset = 228
-
-func EncodeAttestation(a *Attestation) []byte {
-    buf := bytes.Buffer{}
-
-    // 1. aggregation_bits offset
-    fixedPartSize := uint32(4 + 128 + 96)  // 228
-    binary.LittleEndian.PutUint32(buf[0:4], fixedPartSize)
-
-    // 2. data (fixed)
-    buf.Write(a.data.Marshal())
-
-    // 3. signature (fixed)
-    buf.Write(a.signature.Marshal())
-
-    // 4. aggregation_bits data (variable)
-    buf.Write(a.aggregation_bits.Bytes())
-
-    return buf.Bytes()
-}
-
-// 디코딩:
-// 1. 처음 4바이트로 aggregation_bits offset 파악
-// 2. 128 bytes data, 96 bytes signature 파싱
-// 3. offset부터 끝까지 = aggregation_bits`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Container 인코딩 알고리즘</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>각 필드 크기 계산</li>
+              <li>fixed part 생성: fixed 필드는 실제 값, variable 필드는 <strong>4-byte LE offset</strong> (전체 인코딩 내 절대 위치)</li>
+              <li>variable part: 실제 variable 데이터를 순서대로 concat</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Attestation 직렬화 레이아웃</p>
+            <div className="grid grid-cols-4 gap-1 text-xs font-mono text-center mb-3">
+              <div className="bg-amber-500/15 rounded p-2">
+                <p className="text-amber-400">[0..4]</p>
+                <p>offset = 228</p>
+              </div>
+              <div className="bg-blue-500/15 rounded p-2">
+                <p className="text-blue-400">[4..132]</p>
+                <p>data (128B)</p>
+              </div>
+              <div className="bg-blue-500/15 rounded p-2">
+                <p className="text-blue-400">[132..228]</p>
+                <p>signature (96B)</p>
+              </div>
+              <div className="bg-green-500/15 rounded p-2">
+                <p className="text-green-400">[228..?]</p>
+                <p>aggregation_bits</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">고정 part 크기 = 4 + 128 + 96 = <strong>228 bytes</strong> &rarr; 첫 variable offset = 228</p>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">인코딩 절차 (<code>EncodeAttestation</code>)</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code>aggregation_bits</code> offset 기록 &mdash; <code>fixedPartSize</code> = 228</li>
+              <li><code>data</code> (128B) 직렬화 &mdash; fixed 필드 그대로 기록</li>
+              <li><code>signature</code> (96B) 직렬화 &mdash; fixed 필드 그대로 기록</li>
+              <li><code>aggregation_bits</code> 데이터 &mdash; variable 데이터 끝에 추가</li>
+            </ol>
+          </div>
+        </div>
         <p className="leading-7">
           Container는 <strong>2-part 레이아웃</strong>: fixed part + variable part.<br />
           variable 필드는 offset으로만 표시, 실제 데이터는 끝에.<br />
@@ -116,57 +118,28 @@ func EncodeAttestation(a *Attestation) []byte {
 
         {/* ── 디코딩 validation ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">디코딩 검증 — SSZ 공격 방어</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// SSZ 디코더의 검증 규칙 (Prysm 구현)
-
-func UnmarshalAttestation(data []byte) (*Attestation, error) {
-    // 1. 최소 크기 체크 (fixed part만큼은 있어야 함)
-    if len(data) < 228 { return nil, ErrTooShort }
-
-    // 2. offset 파싱
-    offset := binary.LittleEndian.Uint32(data[0:4])
-
-    // 3. offset 검증
-    //    - offset >= fixed part size
-    //    - offset < 전체 크기
-    //    - 4-byte aligned (권장)
-    if offset < 228 || offset > uint32(len(data)) {
-        return nil, ErrInvalidOffset
-    }
-
-    // 4. 다음 offset 또는 끝까지가 현재 필드 크기
-    //    (Attestation은 variable 1개뿐이므로 끝까지)
-    variable_data := data[offset:]
-
-    // 5. Bitlist 크기 검증 (max 2048 bits = 257 bytes)
-    if len(variable_data) > 257 {
-        return nil, ErrListTooLarge
-    }
-
-    // 6. Bitlist sentinel bit 검증
-    //    Bitlist는 마지막 바이트의 MSB=1로 길이 encoding
-    //    → 정확한 비트 수 역산 가능
-    bitCount, err := DeriveBitlistLength(variable_data)
-    if err != nil { return nil, err }
-    if bitCount > 2048 { return nil, ErrTooManyBits }
-
-    // 7. 일반 fixed 필드 파싱
-    data_obj := DecodeAttestationData(data[4:132])
-    signature := DecodeBLS(data[132:228])
-
-    return &Attestation{
-        aggregation_bits: variable_data,
-        data: data_obj,
-        signature: signature,
-    }, nil
-}
-
-// 공격 벡터:
-// - offset 조작: 메모리 밖 읽기 시도
-// - 잘못된 sentinel bit: Bitlist 크기 조작
-// - overflow: list max size 초과
-// → 모두 validation으로 거부`}
-        </pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>UnmarshalAttestation</code> 검증 단계</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>최소 크기 체크</strong> &mdash; <code>{'len(data) < 228'}</code> 이면 <code>ErrTooShort</code></li>
+              <li><strong>offset 파싱</strong> &mdash; <code>binary.LittleEndian.Uint32(data[0:4])</code></li>
+              <li><strong>offset 범위 검증</strong> &mdash; <code>{'offset >= 228 && offset <= len(data)'}</code></li>
+              <li><strong>variable 데이터 추출</strong> &mdash; <code>data[offset:]</code> (다음 offset 또는 끝까지)</li>
+              <li><strong>Bitlist 크기 검증</strong> &mdash; max 2048 bits = 257 bytes 초과 시 <code>ErrListTooLarge</code></li>
+              <li><strong>Sentinel bit 검증</strong> &mdash; Bitlist 마지막 바이트 MSB=1로 정확한 비트 수 역산</li>
+              <li><strong>fixed 필드 파싱</strong> &mdash; <code>data[4:132]</code> (AttestationData), <code>data[132:228]</code> (BLSSignature)</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-red-500/30 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-2">공격 벡터 &amp; 방어</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-muted-foreground">
+              <div><strong>offset 조작</strong><br />메모리 밖 읽기 시도 &rarr; 범위 체크로 거부</div>
+              <div><strong>잘못된 sentinel bit</strong><br />Bitlist 크기 조작 &rarr; sentinel 검증으로 거부</div>
+              <div><strong>list overflow</strong><br />max size 초과 &rarr; 크기 검증으로 거부</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           SSZ 디코더의 <strong>엄격한 검증</strong>이 보안 핵심.<br />
           offset 범위, list max size, bit sentinel 등 모든 bound 검사.<br />

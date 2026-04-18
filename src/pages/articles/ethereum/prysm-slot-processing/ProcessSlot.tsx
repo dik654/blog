@@ -18,45 +18,45 @@ export default function ProcessSlot({ onCodeRef }: Props) {
 
         {/* ── ProcessSlot 구현 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">ProcessSlot — 단일 슬롯 전환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// process_slot: 슬롯 1개 진전시키는 함수
-func ProcessSlot(state *BeaconState) error {
-    // 1. 이전 slot의 state root 계산
-    prevStateRoot, err := state.HashTreeRoot()
-    if err != nil { return err }
-
-    // 2. latest_block_header.state_root 백필
-    //    블록 생성 시 state_root가 0이었음 (circular dependency)
-    //    이제 계산된 값으로 채움
-    header := state.LatestBlockHeader()
-    if header.StateRoot == ZERO_HASH {
-        header.StateRoot = prevStateRoot
-        state.SetLatestBlockHeader(header)
-    }
-
-    // 3. state_roots 배열 업데이트 (ring buffer)
-    //    현재 slot의 이전 state root 저장
-    idx := (state.Slot()) % SLOTS_PER_HISTORICAL_ROOT  // 8192
-    state.UpdateStateRootAt(idx, prevStateRoot)
-
-    // 4. latest_block_header 자체도 변경되었으니 block_roots 갱신
-    prevBlockRoot, err := header.HashTreeRoot()
-    state.UpdateBlockRootAt(idx, prevBlockRoot)
-
-    return nil
-}
-
-// 핵심 개념:
-// - "slot n의 state"는 slot n 시작 직전의 state
-// - block이 있으면 → process_block 후 state 변경
-// - 다음 slot에서 이 state의 root를 state_roots에 저장
-
-// Ring buffer (SLOTS_PER_HISTORICAL_ROOT = 8192):
-// state_roots[slot % 8192] = state_root
-// block_roots[slot % 8192] = block_root
-// 약 27시간 (8192 × 12초) 분량 유지
-// 이보다 오래된 건 historical_roots로 이동`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>ProcessSlot(state *BeaconState) error</code></p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              {[
+                { step: '1', label: '이전 slot의 state root 계산', detail: 'prevStateRoot = state.HashTreeRoot()' },
+                { step: '2', label: 'latest_block_header.state_root 백필', detail: 'header.StateRoot == ZERO_HASH → prevStateRoot로 채움 (circular dependency 해결)' },
+                { step: '3', label: 'state_roots 배열 업데이트', detail: 'idx = slot % SLOTS_PER_HISTORICAL_ROOT(8192), state_roots[idx] = prevStateRoot' },
+                { step: '4', label: 'block_roots 갱신', detail: 'header.HashTreeRoot() → block_roots[idx]에 저장' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground/80">{s.label}</p>
+                    <p className="text-foreground/60"><code>{s.detail}</code></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">핵심 개념</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>"slot n의 state" = slot n 시작 직전의 state</div>
+                <div>block이 있으면 → <code>process_block</code> 후 state 변경</div>
+                <div>다음 slot에서 이 state의 root를 state_roots에 저장</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">Ring Buffer</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><code>SLOTS_PER_HISTORICAL_ROOT = 8192</code></div>
+                <div><code>state_roots[slot % 8192]</code> / <code>block_roots[slot % 8192]</code></div>
+                <div>약 27시간 (8192 x 12초) 분량 유지, 이후 historical_roots로 이동</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           ProcessSlot의 핵심: <strong>state root를 이전 슬롯에 소급 기록</strong>.<br />
           latest_block_header.state_root를 다음 slot에서 backfill.<br />
@@ -65,47 +65,51 @@ func ProcessSlot(state *BeaconState) error {
 
         {/* ── circular dependency ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">순환 의존성 해결 — state_root backfill</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 문제: block 서명 시점에 자기 state_root를 알 수 없음
-//
-// Block 구조:
-// SignedBeaconBlock {
-//     block: BeaconBlock {
-//         slot, proposer_index, parent_root,
-//         state_root: ???,  ← 이 값이 문제
-//         body: BeaconBlockBody { ... }
-//     },
-//     signature: BLSSignature
-// }
-//
-// state_root는 이 블록 실행 "후" state의 hash
-// 하지만 블록 서명은 실행 "전"에 필요
-// → 닭과 달걀 문제
-
-// 해결책: state_root를 0으로 두고 백필
-//
-// Slot N에서 proposer가 블록 생성:
-// 1. state_root 자리에 ZERO 임시 값
-// 2. 블록 body 채우기 (attestation, etc.)
-// 3. 블록 body로 임시 상태 계산
-// 4. 그 상태에서 "slot N의 header" 구성
-//    (header.state_root = ZERO 여전히)
-// 5. ProcessBlock 실행 후 state.slot = N
-//    → state_roots[N % 8192] = 여전히 비어있음
-// 6. Slot N+1 시작 → ProcessSlot 호출
-//    → state_root 계산 (slot N 실행 후 state의 root)
-//    → latest_block_header.state_root = 계산된 값 (backfill!)
-
-// 결과:
-// - 블록 서명은 state_root 몰라도 가능
-// - 최종 state_root는 다음 slot에 기록
-// - 무결성 보존
-
-// 검증:
-// 수신자는 블록 실행 후 동일 state_root 재계산
-// → header의 state_root와 일치 확인
-// → 이 과정이 consensus의 핵심 불변식`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-2">문제: block 서명 시점에 state_root를 알 수 없음</p>
+            <div className="space-y-1 text-xs text-foreground/70">
+              <div><code>SignedBeaconBlock.block.state_root</code> = 이 블록 실행 <strong>"후"</strong> state의 hash</div>
+              <div>하지만 블록 서명은 실행 <strong>"전"</strong>에 필요 → 닭과 달걀 문제</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-sm text-emerald-400 mb-3">해결: state_root를 0으로 두고 백필</p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              {[
+                { step: '1', text: 'state_root 자리에 ZERO 임시 값' },
+                { step: '2', text: '블록 body 채우기 (attestation, etc.)' },
+                { step: '3', text: '블록 body로 임시 상태 계산' },
+                { step: '4', text: '"slot N의 header" 구성 (header.state_root = ZERO 여전히)' },
+                { step: '5', text: 'ProcessBlock 실행 후 state.slot = N → state_roots[N % 8192] = 비어있음' },
+                { step: '6', text: 'Slot N+1 시작 → ProcessSlot → state_root 계산 → header.state_root = 계산된 값 (backfill!)' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-emerald-500/20 text-emerald-400 shrink-0">{s.step}</span>
+                  <span>{s.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">결과</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>블록 서명은 state_root 몰라도 가능</div>
+                <div>최종 state_root는 다음 slot에 기록</div>
+                <div>무결성 보존</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">검증</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>수신자가 블록 실행 후 동일 state_root 재계산</div>
+                <div>header의 state_root와 일치 확인</div>
+                <div>이 과정이 consensus의 핵심 불변식</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>circular dependency</strong>를 backfill 패턴으로 해결.<br />
           블록 서명 시점에 state_root = 0, 다음 slot에서 실제 값 채움.<br />

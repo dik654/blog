@@ -11,7 +11,7 @@ export default function InductiveBiasViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 500 145" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 500 195" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {step === 0 && <BiasOverview cards={OVERVIEW_CARDS} sp={sp} />}
 
           {/* Step 1: Locality - 3x3 kernel on grid with only 9 connections */}
@@ -85,21 +85,18 @@ export default function InductiveBiasViz() {
               }))}
               <text x={135} y={108} textAnchor="middle" fontSize={10}
                 fontWeight={700} fill="#10b981">출력: 2.0</text>
-              <rect x={215} y={25} width={270} height={90} rx={6}
+              <rect x={200} y={118} width={285} height={70} rx={6}
                 fill="var(--muted)" fillOpacity={0.4} stroke="var(--border)" strokeWidth={0.5} />
-              <text x={350} y={42} textAnchor="middle" fontSize={10}
+              <text x={342} y={132} textAnchor="middle" fontSize={10}
                 fontWeight={700} fill="#8b5cf6">평행이동 불변성</text>
-              <text x={225} y={58} fontSize={10} fill="var(--foreground)">
+              <text x={210} y={148} fontSize={9} fill="var(--foreground)">
                 같은 패턴 → 어디서나 같은 출력
               </text>
-              <text x={225} y={74} fontSize={10} fill="#10b981" fontWeight={600}>
+              <text x={210} y={162} fontSize={9} fill="#10b981" fontWeight={600}>
                 가중치 공유 → 파라미터 25→9 (64% 절약)
               </text>
-              <text x={225} y={90} fontSize={10} fill="var(--muted-foreground)">
-                FC: 위치마다 별도 가중치 필요
-              </text>
-              <text x={225} y={106} fontSize={10} fill="#ef4444">
-                한계: 물체의 상대적 배치 정보 손실
+              <text x={210} y={176} fontSize={9} fill="#ef4444">
+                한계: 상대적 배치 정보 손실
               </text>
             </motion.g>
           )}

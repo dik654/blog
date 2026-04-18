@@ -1,5 +1,7 @@
 import { CitationBlock } from '@/components/ui/citation';
 import ECODPipelineViz from './viz/ECODPipelineViz';
+import AnomalyCompareDetailViz from './viz/AnomalyCompareDetailViz';
+import ECDFDetailViz from './viz/ECDFDetailViz';
 
 export default function Overview() {
   return (
@@ -39,95 +41,10 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">이상 탐지 알고리즘 계보</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 이상 탐지(Anomaly Detection) 알고리즘 비교
-//
-// ┌─────────────────┬────────┬──────────┬─────────┐
-// │   알고리즘      │ 기반   │ 복잡도   │ 해석성  │
-// ├─────────────────┼────────┼──────────┼─────────┤
-// │ Isolation Forest│ 트리   │ O(n log n)│ 중간   │
-// │ LOF             │ 거리   │ O(n²)    │ 높음    │
-// │ One-Class SVM   │ kernel │ O(n²~n³) │ 낮음    │
-// │ Autoencoder     │ 신경망 │ O(n·E)   │ 낮음    │
-// │ ECOD            │ 통계   │ O(n·d)   │ 매우높음 │
-// │ HBOS            │ 히스토 │ O(n·d)   │ 높음    │
-// │ COPOD           │ copula │ O(n·d)   │ 높음    │
-// └─────────────────┴────────┴──────────┴─────────┘
-//
-// ECOD 장점:
-//   - Training-free (학습 불필요)
-//   - 하이퍼파라미터 프리
-//   - 해석 가능 (각 차원의 꼬리 확률)
-//   - 확장성 우수 (대규모 데이터)
-//   - 수학적 기반 명확
-
-// 전형적인 이상 탐지 사용 사례:
-//
-// 1. 네트워크 보안
-//    - DDoS 공격 탐지
-//    - 비정상 트래픽 패턴
-//
-// 2. 금융 사기 탐지
-//    - 신용카드 부정 사용
-//    - 자금 세탁 의심 거래
-//
-// 3. 제조 품질 관리
-//    - 제품 결함 탐지
-//    - 공정 이상 감지
-//
-// 4. 의료
-//    - 희귀 질환 탐지
-//    - 비정상 심전도 패턴
-//
-// 5. IoT 센서 모니터링
-//    - 장비 이상 조기 감지
-//    - Predictive maintenance
-//
-// 6. 로그 분석
-//    - 시스템 오류 패턴
-//    - 사용자 행동 이상`}
-        </pre>
+        <div className="not-prose"><AnomalyCompareDetailViz /></div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">왜 ECDF 기반인가</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ECDF (Empirical Cumulative Distribution Function)
-//
-// 정의:
-//   F_n(x) = (1/n) · Σ I(X_i ≤ x)
-//
-//   즉, "x보다 작거나 같은 관측값의 비율"
-//
-// 특성:
-//   - 비모수적 (분포 가정 없음)
-//   - 계단 함수 (step function)
-//   - n → ∞일 때 실제 CDF에 수렴
-//
-// 시각화 예시 (1차원 데이터):
-//   데이터: [1, 3, 3, 5, 7, 9, 100]
-//
-//   F(1) = 1/7  ≈ 0.14
-//   F(3) = 3/7  ≈ 0.43
-//   F(5) = 4/7  ≈ 0.57
-//   F(7) = 5/7  ≈ 0.71
-//   F(9) = 6/7  ≈ 0.86
-//   F(100) = 7/7 = 1.00
-//
-// Tail Probability로 이상 점수:
-//   x = 100 → F(100) = 1.00 → 우측 꼬리 확률 = 0 → 매우 이상
-//   x = 5 → F(5) = 0.57 → 중앙 근처 → 정상
-//
-// -log(p) 변환:
-//   p = 0.001 → score = 6.9
-//   p = 0.01  → score = 4.6
-//   p = 0.1   → score = 2.3
-//   p = 0.5   → score = 0.7
-//   → 꼬리일수록 급격히 증가
-//
-// 다차원 확장:
-//   Σ_j max(O_left, O_right)
-//   → 각 차원에서 가장 극단적인 쪽으로
-//   → 독립 가정하 합산`}
-        </pre>
+        <div className="not-prose"><ECDFDetailViz /></div>
         <p className="leading-7">
           요약 1: ECOD는 <strong>training-free + hyperparameter-free</strong> — 즉시 사용 가능.<br />
           요약 2: <strong>ECDF 꼬리 확률 + -log 변환</strong>으로 이상 점수 생성.<br />

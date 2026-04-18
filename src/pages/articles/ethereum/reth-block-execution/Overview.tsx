@@ -33,32 +33,50 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── revm 통합 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">revm — Rust 네이티브 EVM</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// revm 크레이트 구조
-revm/
-├── crates/
-│   ├── interpreter/      # opcode 실행 루프, 스택, 메모리
-│   ├── primitives/       # EVM 타입 (Env, CfgEnv, BlockEnv, TxEnv)
-│   ├── precompile/       # 프리컴파일 구현 (0x01~0x0A)
-│   └── revm/             # 최상위 API (Evm, Database trait)
-
-// Reth가 revm을 감싸는 방법:
-// 1. Reth의 StateProvider → revm의 Database trait 구현
-// 2. Reth의 Header/Block → revm의 BlockEnv 변환
-// 3. Reth의 Transaction → revm의 TxEnv 변환
-// 4. revm 실행 결과 → Reth의 Receipt + BundleState 변환
-
-// revm이 Geth EVM 대비 빠른 이유:
-// 1. Rust inline (Go는 인터페이스 경유)
-// 2. opcode 배열 디스패치 (Go는 map lookup)
-// 3. 스택 [u8; 32] 고정 크기 (Go는 big.Int 힙)
-// 4. 레지스터 할당 최적화 (LLVM)
-
-// 벤치마크 (1M gas 블록 실행):
-// Geth EVM:  ~10ms
-// revm:      ~5ms
-// → 약 2배 속도 차이`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">revm 크레이트 구조</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-mono font-semibold">interpreter/</p>
+                <p className="text-foreground/50 mt-0.5">opcode 실행 루프, 스택, 메모리</p>
+              </div>
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-mono font-semibold">primitives/</p>
+                <p className="text-foreground/50 mt-0.5">Env, CfgEnv, BlockEnv, TxEnv</p>
+              </div>
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-mono font-semibold">precompile/</p>
+                <p className="text-foreground/50 mt-0.5">프리컴파일 (0x01~0x0A)</p>
+              </div>
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-mono font-semibold">revm/</p>
+                <p className="text-foreground/50 mt-0.5">최상위 API (Evm, Database)</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+              <p className="text-xs font-semibold text-foreground/60 mb-1.5">Reth &harr; revm 연결</p>
+              <ol className="list-decimal list-inside space-y-0.5 text-xs text-foreground/60">
+                <li>StateProvider &rarr; revm Database trait</li>
+                <li>Header/Block &rarr; BlockEnv 변환</li>
+                <li>Transaction &rarr; TxEnv 변환</li>
+                <li>실행 결과 &rarr; Receipt + BundleState</li>
+              </ol>
+            </div>
+            <div className="rounded-lg border border-emerald-400/40 bg-emerald-50/20 dark:bg-emerald-950/10 p-3">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1.5">revm이 Geth 대비 빠른 이유</p>
+              <ol className="list-decimal list-inside space-y-0.5 text-xs text-foreground/60">
+                <li>Rust inline (Go는 인터페이스 경유)</li>
+                <li>opcode 배열 디스패치 (Go는 map lookup)</li>
+                <li>스택 [u8; 32] 고정 크기 (Go는 big.Int 힙)</li>
+                <li>LLVM 레지스터 할당 최적화</li>
+              </ol>
+              <p className="text-xs text-foreground/40 mt-1.5">1M gas 블록: Geth ~10ms / revm ~5ms (약 2배)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           revm은 <strong>독립 프로젝트</strong> — Reth, Foundry, Anvil, Hardhat Rust 엔진 등이 공통 사용.<br />
           옵코드 구현의 버그 수정/EIP 지원이 revm 팀에 집중 → 모든 사용자가 혜택.<br />
@@ -67,43 +85,35 @@ revm/
 
         {/* ── BlockExecutor trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlockExecutor & BatchExecutor trait</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 단일 블록 실행용
-pub trait BlockExecutor<DB: Database> {
-    type Input<'a>;   // &BlockWithSenders + StateProvider
-    type Output;      // BlockExecutionOutput { receipts, gas_used, requests }
-    type Error;       // BlockValidationError
-
-    fn execute_and_verify_one(
-        &mut self,
-        input: Self::Input<'_>,
-    ) -> Result<Self::Output, Self::Error>;
-}
-
-// 여러 블록 누적 실행용 (ExecutionStage가 사용)
-pub trait BatchExecutor<DB: Database> {
-    type Input<'a>;
-    type Output;      // finalize() 결과 = BundleState
-
-    fn execute_and_verify_one(
-        &mut self,
-        input: Self::Input<'_>,
-    ) -> Result<(), BlockExecutionError>;
-
-    /// finalize()는 self를 소비 → 한 번만 호출 가능
-    /// BundleState로 모든 누적 변경 반환
-    fn finalize(self) -> BundleState;
-}
-
-// 두 trait 분리 이유:
-// - BlockExecutor: live sync (1블록씩 실행, 즉시 검증)
-// - BatchExecutor: initial sync (수천 블록 누적, 나중에 저장)
-
-// BatchExecutor가 더 빠른 이유:
-// - 블록 간 상태 변경 캐시 재사용
-// - DB write 횟수 감소 (commit_threshold 단위)
-// - reorg 시 BundleState 롤백이 인메모리 조작`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-semibold text-indigo-500 mb-2">BlockExecutor&lt;DB&gt;</p>
+              <p className="text-xs text-foreground/50 mb-2">단일 블록 실행 (live sync)</p>
+              <div className="space-y-1 text-xs text-foreground/60">
+                <p><code>Input</code>: <code>&amp;BlockWithSenders</code> + StateProvider</p>
+                <p><code>Output</code>: receipts, gas_used, requests</p>
+                <p><code>execute_and_verify_one()</code> -- 1블록 실행 + 즉시 검증</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">BatchExecutor&lt;DB&gt;</p>
+              <p className="text-xs text-foreground/50 mb-2">누적 실행 (initial sync, ExecutionStage 사용)</p>
+              <div className="space-y-1 text-xs text-foreground/60">
+                <p><code>execute_and_verify_one()</code> -- 블록 하나 실행, 결과 누적</p>
+                <p><code>finalize(self)</code> -- self 소비 &rarr; BundleState 반환 (한 번만 호출 가능)</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-3">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1.5">BatchExecutor가 더 빠른 이유</p>
+            <div className="text-xs text-foreground/60 space-y-0.5">
+              <p>- 블록 간 상태 변경 캐시 재사용</p>
+              <p>- DB write 횟수 감소 (commit_threshold 단위)</p>
+              <p>- reorg 시 BundleState 롤백이 인메모리 조작</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>BlockExecutor</code>와 <code>BatchExecutor</code> 분리가 핵심 — 사용 목적에 따라 최적 경로 선택.<br />
           live sync는 블록마다 DB 커밋 (크래시 복구 우선), initial sync는 배치 누적 (속도 우선).<br />
@@ -112,43 +122,42 @@ pub trait BatchExecutor<DB: Database> {
 
         {/* ── Strategy 패턴 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BlockExecutionStrategy — 체인별 실행 커스터마이징</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// trait으로 체인별 실행 로직 추상화
-pub trait BlockExecutionStrategy {
-    type Error;
-
-    /// 블록 시작 전 훅 (EIP-4788 beacon root, OP deposit TX 등)
-    fn apply_pre_execution_changes(
-        &mut self,
-        block: &BlockWithSenders,
-    ) -> Result<(), Self::Error>;
-
-    /// 트랜잭션 실행 본체 (revm 호출)
-    fn execute_transactions(
-        &mut self,
-        block: &BlockWithSenders,
-    ) -> Result<(Vec<Receipt>, u64), Self::Error>;
-
-    /// 블록 종료 후 훅 (Shanghai withdrawals, Prague requests 등)
-    fn apply_post_execution_changes(
-        &mut self,
-        block: &BlockWithSenders,
-        receipts: &[Receipt],
-    ) -> Result<Vec<Request>, Self::Error>;
-}
-
-// 구현체:
-// - EthExecutionStrategy: 이더리움 메인넷
-// - OpExecutionStrategy: Optimism (L1 attributes deposit TX 추가)
-// - BaseExecutionStrategy: Base (OP 상속 + Coinbase 커스텀)
-
-// 공통 파이프라인:
-// 1. pre_execution_changes (훅)
-// 2. execute_transactions (revm 호출)
-// 3. post_execution_changes (훅)
-//
-// 각 체인은 3개 메서드만 오버라이드 → 경로 중복 없음`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">BlockExecutionStrategy trait</p>
+            <div className="space-y-2 text-sm">
+              <div className="rounded border border-border/40 p-2.5">
+                <p className="font-mono text-xs font-semibold text-foreground/70">apply_pre_execution_changes(&amp;mut self, block)</p>
+                <p className="text-xs text-foreground/50 mt-0.5">블록 시작 전 훅 -- EIP-4788 beacon root, OP deposit TX 등</p>
+              </div>
+              <div className="rounded border border-border/40 p-2.5">
+                <p className="font-mono text-xs font-semibold text-foreground/70">execute_transactions(&amp;mut self, block) -&gt; (Vec&lt;Receipt&gt;, u64)</p>
+                <p className="text-xs text-foreground/50 mt-0.5">TX 실행 본체 -- revm 호출</p>
+              </div>
+              <div className="rounded border border-border/40 p-2.5">
+                <p className="font-mono text-xs font-semibold text-foreground/70">apply_post_execution_changes(&amp;mut self, block, receipts)</p>
+                <p className="text-xs text-foreground/50 mt-0.5">블록 종료 후 훅 -- Shanghai withdrawals, Prague requests 등</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-foreground/60 mb-2">구현체 (각 체인은 3개 메서드만 오버라이드)</p>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-semibold">EthExecutionStrategy</p>
+                <p className="text-foreground/50">이더리움 메인넷</p>
+              </div>
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-semibold">OpExecutionStrategy</p>
+                <p className="text-foreground/50">Optimism (L1 deposit TX)</p>
+              </div>
+              <div className="rounded border border-border/40 p-2 text-center">
+                <p className="font-semibold">BaseExecutionStrategy</p>
+                <p className="text-foreground/50">Base (OP + Coinbase)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Strategy 패턴으로 <strong>OP Stack 통합 단순화</strong>.<br />
           OP는 메인넷과 TX 실행 로직 공유, L1 attribute deposit TX만 pre-execution 훅에서 추가.<br />

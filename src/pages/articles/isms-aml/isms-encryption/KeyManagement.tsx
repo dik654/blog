@@ -1,8 +1,17 @@
+import KeyManagementViz from './viz/KeyManagementViz';
+import HardcodingViz from './viz/HardcodingViz';
+import EnvSecretViz from './viz/EnvSecretViz';
+import KeyRotationInlineViz from './viz/KeyRotationInlineViz';
+import BackupCertViz from './viz/BackupCertViz';
+
 export default function KeyManagement() {
   return (
     <section id="key-management" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">키 관리와 시크릿 관리</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <KeyManagementViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">소스코드 하드코딩 금지</h3>
         <p className="leading-7">
           암호화 키, DB 비밀번호, API 토큰을 소스코드에 직접 작성하는 것은 가장 흔하면서도 가장 위험한 실수다.
@@ -10,6 +19,9 @@ export default function KeyManagement() {
           코드가 Git 저장소에 커밋되는 순간, 해당 키는 이력(history)에 영구적으로 남는다.
           커밋을 삭제해도 reflog와 백업에 흔적이 남으므로 사실상 영구 유출과 같다.
         </p>
+
+        <HardcodingViz />
+
         <p className="leading-7">
           오픈소스 저장소에 실수로 푸시한 경우 수 분 내에 자동 스캐너(봇)가 키를 수집하여 악용한다.
           <br />
@@ -21,6 +33,9 @@ export default function KeyManagement() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">환경변수 주입</h3>
+
+        <EnvSecretViz />
+
         <p className="leading-7">
           하드코딩의 대안으로 환경변수(environment variable)를 사용한다.
           <br />
@@ -79,6 +94,9 @@ export default function KeyManagement() {
           <br />
           주기적 회전은 이 exposure window를 제한하는 효과가 있다.
         </p>
+
+        <KeyRotationInlineViz />
+
         <p className="leading-7">
           자동 키 회전의 기본 흐름은 다음과 같다.
           <br />
@@ -106,6 +124,9 @@ export default function KeyManagement() {
           <br />
           백업을 평문으로 저장하면 운영 DB를 아무리 철저히 보호해도 백업 파일 한 건이 유출될 때 전체 데이터가 노출된다.
         </p>
+
+        <BackupCertViz />
+
         <p className="leading-7">
           백업 암호화에는 AES-256을 사용하며, 암호화 키는 백업 파일과 반드시 별도 위치에 보관한다.
           <br />

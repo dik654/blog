@@ -1,6 +1,8 @@
 import StepViz from '@/components/ui/step-viz';
 import ResBlockViz from './viz/ResBlockViz';
 import { blockSteps, variants } from './ArchitectureData';
+import ArchDetailViz from './viz/ArchDetailViz';
+import M from '@/components/ui/math';
 
 export default function Architecture() {
   return (
@@ -50,80 +52,28 @@ export default function Architecture() {
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">ResNet-50 전체 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ResNet-50 단계별 구조 (224×224 입력)
-//
-// Stage 0 - Stem:
-//   Conv 7×7, 64 filters, stride=2  → 112×112×64
-//   MaxPool 3×3, stride=2            → 56×56×64
-//
-// Stage 1 (conv2_x):
-//   Bottleneck 블록 × 3 (64 → 256 channels)
-//   출력: 56×56×256
-//
-// Stage 2 (conv3_x):
-//   첫 블록: stride=2 (해상도 절반)
-//   Bottleneck 블록 × 4 (128 → 512 channels)
-//   출력: 28×28×512
-//
-// Stage 3 (conv4_x):
-//   첫 블록: stride=2
-//   Bottleneck 블록 × 6 (256 → 1024 channels)
-//   출력: 14×14×1024
-//
-// Stage 4 (conv5_x):
-//   첫 블록: stride=2
-//   Bottleneck 블록 × 3 (512 → 2048 channels)
-//   출력: 7×7×2048
-//
-// Classifier:
-//   GlobalAvgPool    → 1×1×2048
-//   Flatten          → 2048
-//   Linear → 1000 (ImageNet classes)
-//
-// 블록 수: 3+4+6+3 = 16 blocks × 3 convs/block = 48 conv layers
-// Stem 1 + FC 1 = 총 50 layers
-//
-// 파라미터: 약 25.5M
-// FLOPs: 약 4.1 GFLOPs (224×224 입력)`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">BatchNorm + ReLU 역할</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BatchNorm (2015)
-//
-// 목적: 내부 공변량 이동(Internal Covariate Shift) 완화
-//
-// 수식:
-//   μ_B = (1/m) Σ x_i                  # 배치 평균
-//   σ²_B = (1/m) Σ (x_i - μ_B)²        # 배치 분산
-//   x̂_i = (x_i - μ_B) / √(σ²_B + ε)    # 정규화
-//   y_i = γ · x̂_i + β                  # 스케일/시프트 (학습)
-//
-// 효과:
-//   - 학습 안정화 (낮은 학습률 불필요)
-//   - 초기화 민감도 감소
-//   - regularization 효과 (noise)
-//   - 학습 속도 2~4배 향상
-//
-// Conv-BN-ReLU 순서 (ResNet v1):
-//   Conv → BN → ReLU → Conv → BN → (+x) → ReLU
-//
-// Pre-activation (ResNet v2):
-//   BN → ReLU → Conv → BN → ReLU → Conv → (+x)
-//
-//   v2 장점: 정규화가 shortcut 경로 바깥에 있어 기울기 더 깨끗
-//
-// 추론 시 BN:
-//   - 이동평균(moving average) μ, σ 사용
-//   - 배치 독립적 계산
-
-// 대안:
-//   - LayerNorm (Transformer 주류)
-//   - GroupNorm (small batch에서 유리)
-//   - InstanceNorm (스타일 전환)`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-6 mb-3">ResNet-50 구조 & BatchNorm</h3>
+        <M display>{'\\hat{x}_i = \\frac{\\overbrace{x_i - \\mu_B}^{\\text{평균 빼기}}}{\\underbrace{\\sqrt{\\sigma_B^2 + \\epsilon}}_{\\text{분산으로 나누기}}} \\qquad y_i = \\underbrace{\\gamma}_{\\text{스케일}} \\cdot \\hat{x}_i + \\underbrace{\\beta}_{\\text{시프트}}'}</M>
+        <div className="not-prose grid grid-cols-2 gap-2 mt-3 text-sm">
+          {[
+            { sym: 'x − μ_B', name: '평균 빼기', defs: 'μ_B = 미니배치 평균 (배치 내 같은 채널 값의 평균)', why: '층마다 출력 분포가 달라지면 다음 층이 계속 적응해야 함 → 학습 불안정. 평균을 0으로 맞춰 분포 중심을 고정', color: 'text-blue-500' },
+            { sym: '÷ √(σ²+ε)', name: '분산으로 나누기', defs: 'σ²_B = 미니배치 분산, ε = 0 나누기 방지 상수 (1e-5)', why: '어떤 채널은 값이 수천, 어떤 채널은 0.01 → 스케일 차이가 기울기를 왜곡. 분산 1로 통일하여 모든 채널이 동등한 학습 속도 확보', color: 'text-blue-500' },
+            { sym: 'γ · x̂', name: '스케일 복원', defs: 'γ = 학습 가능한 스케일 파라미터 (초기값 1)', why: '정규화가 항상 최적은 아님 — 네트워크가 γ를 학습하여 필요한 만큼 분산을 키우거나 줄임', color: 'text-purple-500' },
+            { sym: '+ β', name: '시프트 복원', defs: 'β = 학습 가능한 시프트 파라미터 (초기값 0)', why: '평균 0이 항상 좋지 않음 — ReLU 직전이면 음수가 절반이 죽음. β로 평균을 이동하여 활성화 함수에 최적 입력 제공', color: 'text-purple-500' },
+          ].map((p) => (
+            <div key={p.sym} className="rounded-lg border border-border bg-card px-3 py-2">
+              <span className={`font-mono font-bold ${p.color}`}>{p.sym}</span>
+              <span className="text-muted-foreground ml-1.5 text-xs font-semibold">{p.name}</span>
+              <div className="text-xs text-muted-foreground/70 mt-0.5">{p.defs}</div>
+              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.why}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="not-prose my-6">
+        <ArchDetailViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: ResNet-50은 <strong>Stem → 4 Stages (3+4+6+3 blocks) → GAP → FC</strong> 구조.<br />
           요약 2: <strong>BatchNorm</strong>은 학습 안정화의 핵심 — ResNet v2에서 pre-activation으로 진화.<br />

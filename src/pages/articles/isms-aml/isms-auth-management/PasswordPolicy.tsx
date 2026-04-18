@@ -1,8 +1,14 @@
+import PasswordPolicyViz from './viz/PasswordPolicyViz';
+import HashStorageViz from './viz/HashStorageViz';
+import PasswordResetViz from './viz/PasswordResetViz';
+
 export default function PasswordPolicy() {
   return (
     <section id="password-policy" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">비밀번호 정책과 생명주기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <PasswordPolicyViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">비밀번호 생성 규칙</h3>
         <p>
@@ -41,6 +47,8 @@ export default function PasswordPolicy() {
           최근 보안 업계 추세는 주기적 강제 변경보다 유출 탐지 시 즉시 변경을 권장하지만,
           ISMS 심사에서는 여전히 주기적 변경 정책의 존재와 이행을 확인한다.
         </p>
+
+        <HashStorageViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">비밀번호 저장: 단방향 해시</h3>
         <p>
@@ -111,6 +119,8 @@ export default function PasswordPolicy() {
           <li>유출된 자격증명이 오래된 계정에 유효할 확률 높음 — 비밀번호 변경이 없었으므로</li>
           <li>감사 추적 시 "사용하지 않는 활성 계정" 존재 자체가 ISMS 부적합 사유</li>
         </ul>
+
+        <PasswordResetViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">비밀번호 초기화 절차</h3>
         <p>

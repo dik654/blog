@@ -1,5 +1,6 @@
 import MNISTViz from './viz/MNISTViz';
 import MnistInfoViz from './viz/MnistInfoViz';
+import MlpTrainViz from './viz/MlpTrainViz';
 import MnistParamsViz from './viz/MnistParamsViz';
 
 export default function MNIST() {
@@ -23,63 +24,13 @@ export default function MNIST() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">3-layer MLP 구현</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
-
-# 데이터 로드
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.1307,), (0.3081,))  # MNIST mean/std
-])
-train_set = datasets.MNIST('./data', train=True, download=True, transform=transform)
-test_set = datasets.MNIST('./data', train=False, transform=transform)
-train_loader = DataLoader(train_set, batch_size=64, shuffle=True)
-test_loader = DataLoader(test_set, batch_size=1000)
-
-# 모델 정의
-class MLP(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.fc1 = nn.Linear(784, 50)
-        self.fc2 = nn.Linear(50, 100)
-        self.fc3 = nn.Linear(100, 10)
-
-    def forward(self, x):
-        x = x.view(-1, 784)           # flatten
-        x = F.relu(self.fc1(x))        # layer 1
-        x = F.relu(self.fc2(x))        # layer 2
-        x = self.fc3(x)                # layer 3 (logits)
-        return x
-
-model = MLP()
-optimizer = optim.Adam(model.parameters(), lr=1e-3)
-criterion = nn.CrossEntropyLoss()
-
-# 훈련 루프
-for epoch in range(10):
-    model.train()
-    for batch_idx, (data, target) in enumerate(train_loader):
-        optimizer.zero_grad()
-        output = model(data)
-        loss = criterion(output, target)
-        loss.backward()
-        optimizer.step()
-
-    # 평가
-    model.eval()
-    correct = 0
-    with torch.no_grad():
-        for data, target in test_loader:
-            output = model(data)
-            pred = output.argmax(dim=1)
-            correct += pred.eq(target).sum().item()
-    accuracy = correct / len(test_set)
-    print(f'Epoch {epoch+1}: Accuracy = {accuracy:.4f}')`}</pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">3-layer MLP 훈련 파이프라인</h3>
+        <p>
+          데이터 전처리 → 모델 정의 → 훈련 루프 → 평가까지 전체 흐름.
+        </p>
+      </div>
+      <MlpTrainViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">파라미터 수 계산 & MNIST 해결 역사</h3>
         <p>

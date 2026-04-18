@@ -58,63 +58,95 @@ export default function StablecoinDesign() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GIWA 잠재 KRW 스테이블 모델 추정</h3>
-        <p>
-          <strong>Model A: Fiat-backed (USDC/USDT 방식)</strong>
-        </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`구조:
-  GIWA Foundation → 국내 은행 계좌 (국민/신한 등)
-  은행 예치금 ↔ 1:1 KRW 스테이블 토큰
+        <div className="not-prose rounded-lg border border-border bg-card p-4 my-4">
+          <p className="font-semibold text-sm mb-3">Model A: Fiat-backed (USDC/USDT 방식)</p>
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">구조</p>
+            <p className="text-sm text-muted-foreground">
+              GIWA Foundation → 국내 은행 계좌 (국민/신한 등) → 은행 예치금과 1:1 KRW 스테이블 토큰 교환
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3 mb-3">
+            <div>
+              <p className="text-xs font-semibold text-green-600 mb-1">장점</p>
+              <ul className="text-sm text-muted-foreground space-y-0.5 list-none pl-0">
+                <li>안정성 최고</li>
+                <li>1:1 환급 명확</li>
+                <li>전통 금융과 호환</li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-red-500 mb-1">단점</p>
+              <ul className="text-sm text-muted-foreground space-y-0.5 list-none pl-0">
+                <li>중앙화</li>
+                <li>한국 규제 강함 (전자금융거래법, 가상자산법)</li>
+                <li>은행 파트너십 필요</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">적합한 라이센스</p>
+            <p className="text-sm text-muted-foreground">
+              <code className="text-xs">전자금융업자 (PG)</code> / <code className="text-xs">가상자산사업자 (VASP)</code>
+            </p>
+          </div>
+        </div>
 
-장점:
-  ✓ 안정성 최고
-  ✓ 1:1 환급 명확
-  ✓ 전통 금융과 호환
+        <div className="not-prose rounded-lg border border-border bg-card p-4 my-4">
+          <p className="font-semibold text-sm mb-3">Model B: Crypto-collateralized (DAI 방식)</p>
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">구조</p>
+            <p className="text-sm text-muted-foreground">
+              Users: ETH/BTC 담보 예치 → KRW 스테이블 발행 (150%+ 과담보) → KRW 원화 가격 peg 유지
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div>
+              <p className="text-xs font-semibold text-green-600 mb-1">장점</p>
+              <ul className="text-sm text-muted-foreground space-y-0.5 list-none pl-0">
+                <li>탈중앙</li>
+                <li>전통 금융 의존 없음</li>
+                <li>은행 파트너십 불필요</li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-red-500 mb-1">단점</p>
+              <ul className="text-sm text-muted-foreground space-y-0.5 list-none pl-0">
+                <li>자본 효율 낮음</li>
+                <li>KRW 환율 오라클 필요 (조작 위험)</li>
+                <li>Kimchi Premium 이슈</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-단점:
-  ✗ 중앙화
-  ✗ 한국 규제 강함 (전자금융거래법, 가상자산법)
-  ✗ 은행 파트너십 필요
-
-적합한 라이센스:
-  - 전자금융업자 (PG)
-  - 가상자산사업자 (VASP)`}</pre>
-
-        <p>
-          <strong>Model B: Crypto-collateralized (DAI 방식)</strong>
-        </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`구조:
-  Users: ETH/BTC 담보 예치
-  → KRW 스테이블 발행 (150%+ 과담보)
-  → KRW 원화 가격 peg 유지
-
-장점:
-  ✓ 탈중앙
-  ✓ 전통 금융 의존 없음
-  ✓ 은행 파트너십 불필요
-
-단점:
-  ✗ 자본 효율 낮음
-  ✗ KRW 환율 오라클 필요 (조작 위험)
-  ✗ Kimchi Premium 이슈`}</pre>
-
-        <p>
-          <strong>Model C: RWA-backed (한국 국채/회사채)</strong>
-        </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`구조:
-  GIWA SPV → 한국 국채/회사채 매입
-  → KRW 스테이블 1:1 토큰 발행
-  → 국채 이자 = 보유자 수익 (DSR 방식)
-
-장점:
-  ✓ 수익 발생 (yield-bearing)
-  ✓ 한국 금융 시장에 실물 연결
-  ✓ RWA 트렌드 부합
-
-단점:
-  ✗ 한국 자본시장법 규제 복잡
-  ✗ 증권형 토큰 분류 위험
-  ✗ KYC 필수
-`}</pre>
+        <div className="not-prose rounded-lg border border-border bg-card p-4 my-4">
+          <p className="font-semibold text-sm mb-3">Model C: RWA-backed (한국 국채/회사채)</p>
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">구조</p>
+            <p className="text-sm text-muted-foreground">
+              GIWA SPV → 한국 국채/회사채 매입 → KRW 스테이블 1:1 토큰 발행 → 국채 이자 = 보유자 수익 (DSR 방식)
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div>
+              <p className="text-xs font-semibold text-green-600 mb-1">장점</p>
+              <ul className="text-sm text-muted-foreground space-y-0.5 list-none pl-0">
+                <li>수익 발생 (yield-bearing)</li>
+                <li>한국 금융 시장에 실물 연결</li>
+                <li>RWA 트렌드 부합</li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-red-500 mb-1">단점</p>
+              <ul className="text-sm text-muted-foreground space-y-0.5 list-none pl-0">
+                <li>한국 자본시장법 규제 복잡</li>
+                <li>증권형 토큰 분류 위험</li>
+                <li>KYC 필수</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">한국 시장 특수성</h3>
         <p>

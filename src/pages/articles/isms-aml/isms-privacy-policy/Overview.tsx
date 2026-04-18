@@ -1,3 +1,7 @@
+import OverviewViz from './viz/OverviewViz';
+import RequiredItemsInlineViz from './viz/RequiredItemsInlineViz';
+import ChangeProcessInlineViz from './viz/ChangeProcessInlineViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -14,6 +18,10 @@ export default function Overview() {
           이 의무를 위반하면 개인정보보호법 제75조에 따라 1천만 원 이하의 과태료가 부과된다.<br />
           VASP(Virtual Asset Service Provider, 가상자산사업자)는 ISMS-P 인증 심사 시 처리방침의 적정성을 별도 항목으로 검증받는다 — 인증 기준 3.1(개인정보 수집 시 보호조치)과 직접 연동.
         </p>
+
+        <div className="my-8">
+          <OverviewViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">ISMS-P 3.x 영역과의 관계</h3>
         <p>
@@ -61,6 +69,9 @@ export default function Overview() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">필수 기재 항목 (제30조 제1항 각호)</h3>
+        <div className="my-6">
+          <RequiredItemsInlineViz />
+        </div>
         <p>
           개인정보보호법 제30조 제1항은 처리방침에 반드시 포함해야 할 항목을 열거한다.<br />
           시행령 제31조는 이를 더 구체화하여 세부 기재 사항을 규정.
@@ -120,6 +131,9 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">처리방침 변경 절차</h3>
+        <div className="my-6">
+          <ChangeProcessInlineViz />
+        </div>
         <p>
           처리방침을 변경할 때는 다음 절차를 거쳐야 한다:
         </p>

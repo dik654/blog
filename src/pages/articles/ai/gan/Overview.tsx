@@ -1,4 +1,6 @@
 import GANTrainingViz from './viz/GANTrainingViz';
+import GANMathViz from './viz/GANMathViz';
+import M from '@/components/ui/math';
 
 export default function Overview() {
   return (
@@ -28,9 +30,7 @@ export default function Overview() {
         <p>
           GAN의 원래 목적 함수 — <strong>min-max 게임</strong>으로 정의:
         </p>
-        <pre className="text-sm">
-{`min_G max_D  V(D,G) = E[log D(x)] + E[log(1 - D(G(z)))]`}
-        </pre>
+        <M display>{'\\min_G \\max_D \\; V(D,G) = \\underbrace{\\mathbb{E}_{x}[\\log D(x)]}_{\\text{진짜 판별}} + \\underbrace{\\mathbb{E}_{z}[\\log(1 - D(G(z)))]}_{\\text{가짜 판별}}'}</M>
         <p>
           D는 V를 최대화 — 진짜에는 높은 확률, 가짜에는 낮은 확률 부여<br />
           G는 V를 최소화 — D가 가짜를 진짜로 착각하게 만듦<br />
@@ -41,67 +41,7 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">수학적 최적해 유도</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GAN의 최적해 수학적 증명 (Goodfellow 2014 Thm 1)
-//
-// 목적 함수:
-//   V(D,G) = E_{x~p_data}[log D(x)] + E_{z~p_z}[log(1 - D(G(z)))]
-//          = ∫ p_data(x)·log D(x) dx + ∫ p_g(x)·log(1-D(x)) dx
-//
-// G 고정 시 D의 최적해:
-//   dV/dD = p_data(x)/D(x) - p_g(x)/(1-D(x)) = 0
-//
-//   풀면:  D*(x) = p_data(x) / (p_data(x) + p_g(x))
-//
-// 직관: 진짜와 가짜가 같은 비율로 섞여 있으면 D(x)=0.5
-//
-// D*를 V에 대입 후 G 관점에서 최소화:
-//   V(G) = -log(4) + 2·JSD(p_data || p_g)
-//
-//   여기서 JSD = Jensen-Shannon Divergence (대칭 KL)
-//
-// JSD ≥ 0이고 JSD=0 iff p_data = p_g
-// → V의 전역 최솟값 = -log(4) ≈ -1.386
-// → 이때 p_g = p_data (완벽한 생성 분포)
-//
-// 결론: 이론적으로 GAN은 올바른 확률 분포를 학습할 수 있음
-// 단, 실제 학습에서는 다양한 실패 모드 존재 (mode collapse 등)`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Generator / Discriminator 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Generator (생성자)
-//
-// 입력: z ~ N(0, I)          # 랜덤 잠재 벡터 (보통 100~512차원)
-// 출력: G(z) ~ p_g            # 가짜 데이터 (이미지, 텍스트, 오디오)
-//
-// 아키텍처 (이미지 생성의 경우):
-//   z (100) → Dense(1024) → Reshape(4x4x64)
-//     → ConvTranspose(stride=2) → 8x8x32
-//     → ConvTranspose(stride=2) → 16x16x16
-//     → ConvTranspose(stride=2) → 32x32x3  # 출력 이미지
-//
-// 핵심:
-//   - BatchNorm 권장 (DCGAN 가이드라인)
-//   - 활성화: ReLU (중간층), tanh (출력층, -1~1 정규화)
-//   - Dropout은 일반적으로 사용 안 함
-
-// Discriminator (판별자)
-//
-// 입력: x (실제 또는 G(z))
-// 출력: D(x) ∈ [0, 1]         # x가 진짜일 확률
-//
-// 아키텍처:
-//   32x32x3 → Conv(stride=2) → 16x16x16
-//     → Conv(stride=2) → 8x8x32
-//     → Conv(stride=2) → 4x4x64
-//     → Flatten → Dense(1) → Sigmoid
-//
-// 핵심:
-//   - 활성화: LeakyReLU (0.2 slope) — dying gradient 방지
-//   - BatchNorm 주의 (실제/가짜 배치 분리 필요)
-//   - Spectral Norm으로 Lipschitz 제약 (WGAN-GP 이후)`}
-        </pre>
+        <div className="not-prose"><GANMathViz /></div>
         <p className="leading-7">
           요약 1: GAN의 최적해는 <strong>JSD 최소화</strong> — p_g = p_data일 때 전역 최솟값.<br />
           요약 2: <strong>Generator</strong>는 랜덤 노이즈를 데이터 공간으로 매핑하는 역함수 역할.<br />

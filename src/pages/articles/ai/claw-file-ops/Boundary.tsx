@@ -13,42 +13,36 @@ export default function Boundary() {
         <PathAttackVectorsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">정규화 파이프라인 5단계</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub fn normalize_and_validate(
-    input_path: &str,
-    workspace: &Path,
-) -> Result<PathBuf> {
-    // 1) 입력 문자열 → PathBuf
-    let raw = PathBuf::from(input_path);
-
-    // 2) ../. 정리 (clean)
-    let cleaned = path_clean::clean(&raw);
-
-    // 3) 절대 경로 여부 확인
-    let absolute = if cleaned.is_absolute() {
-        cleaned
-    } else {
-        workspace.join(cleaned)
-    };
-
-    // 4) canonicalize (심링크 해제)
-    //    - 파일이 존재해야 canonicalize 가능
-    //    - 쓰기의 경우 부모 디렉토리로 검증
-    let canonical = if absolute.exists() {
-        absolute.canonicalize()?
-    } else {
-        // 쓰기용: 부모 canonicalize + 파일명 결합
-        let parent = absolute.parent().ok_or(anyhow!("no parent"))?;
-        let file_name = absolute.file_name().ok_or(anyhow!("no filename"))?;
-        parent.canonicalize()?.join(file_name)
-    };
-
-    // 5) 워크스페이스 포함 확인
-    if !canonical.starts_with(workspace) {
-        return Err(anyhow!("escape detected: {:?}", canonical));
-    }
-
-    Ok(canonical)
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-purple-600 text-white text-xs font-semibold px-4 py-2">normalize_and_validate(input_path, workspace)</div>
+            <div className="p-4 space-y-2">
+              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                <div className="text-sm"><strong>PathBuf 변환</strong> — 입력 문자열을 <code className="text-xs bg-muted px-1 rounded">PathBuf::from(input_path)</code></div>
+              </div>
+              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                <div className="text-sm"><strong>clean</strong> — <code className="text-xs bg-muted px-1 rounded">path_clean::clean()</code>으로 <code className="text-xs bg-muted px-1 rounded">../..</code> 패턴 정리 (lexical normalization)</div>
+              </div>
+              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                <div className="text-sm"><strong>절대화</strong> — 상대 경로면 <code className="text-xs bg-muted px-1 rounded">workspace.join(cleaned)</code></div>
+              </div>
+              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                <div className="text-sm">
+                  <strong>canonicalize</strong> — 심링크 해제
+                  <div className="text-xs text-muted-foreground mt-1">파일 존재 시: 직접 canonicalize | 미존재(쓰기용): 부모 canonicalize + 파일명 결합</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full flex items-center justify-center text-xs font-bold">5</span>
+                <div className="text-sm"><strong>경계 검증</strong> — <code className="text-xs bg-muted px-1 rounded">canonical.starts_with(workspace)</code> 실패 시 <code className="text-xs bg-muted px-1 rounded">Err("escape detected")</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>5단계 정규화</strong>: PathBuf 변환 → clean → 절대화 → canonicalize → 경계 검증<br />
           <code>path_clean</code> crate로 <code>../..</code> 패턴 정리 — lexical normalization<br />
@@ -56,25 +50,26 @@ export default function Boundary() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">쓰기 시 부모 디렉토리 검증 — TOCTOU 회피</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 새 파일 쓰기: 파일이 아직 없음
-let absolute = workspace.join("new_file.txt");
-// absolute.canonicalize() → Err (파일 없음)
-
-// 대안: 부모 디렉토리로 검증
-let parent = absolute.parent().unwrap();  // workspace
-let canonical_parent = parent.canonicalize()?;
-
-// 부모가 워크스페이스 내부라면 안전
-if !canonical_parent.starts_with(workspace) {
-    return Err(anyhow!("parent outside workspace"));
-}
-
-// 이후 쓰기 수행
-tokio::fs::write(&absolute, content).await?;
-
-// ⚠️ TOCTOU 주의:
-// 검증 후 쓰기 전에 공격자가 심링크로 바꾸면 우회 가능
-// 방어: workspace를 chroot-like 환경에서 실행 (샌드박스 병용)`}</pre>
+        <div className="not-prose mb-4 space-y-3">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-amber-600 text-white text-xs font-semibold px-4 py-2">새 파일 쓰기 — 파일이 아직 없는 경우</div>
+            <div className="p-4 space-y-2">
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-1">문제</div>
+                <div className="text-sm"><code className="text-xs bg-muted px-1 rounded">workspace.join("new_file.txt").canonicalize()</code> → <strong>Err</strong> (파일 없음)</div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-1">대안</div>
+                <div className="text-sm">부모 디렉토리로 검증 — <code className="text-xs bg-muted px-1 rounded">parent.canonicalize()</code> 후 <code className="text-xs bg-muted px-1 rounded">starts_with(workspace)</code></div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">TOCTOU 주의 (Time-of-check to time-of-use)</div>
+            <div className="text-sm text-muted-foreground">검증 후 쓰기 전에 공격자가 심링크로 바꾸면 우회 가능</div>
+            <div className="text-sm mt-1"><strong>방어</strong>: workspace를 chroot-like 환경에서 실행 (샌드박스 병용)</div>
+          </div>
+        </div>
         <p>
           <strong>TOCTOU(Time-of-check to time-of-use)</strong>: 검증과 사용 사이 공격자 개입<br />
           파일 경로 검증은 근본적으로 TOCTOU 취약 — race condition 발생 가능<br />
@@ -82,23 +77,29 @@ tokio::fs::write(&absolute, content).await?;
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Windows 특수 경로 처리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[cfg(windows)]
-fn normalize_windows(path: &Path) -> Result<PathBuf> {
-    let s = path.to_string_lossy();
-
-    // UNC prefix 차단
-    if s.starts_with(r"\\\\?\\") || s.starts_with(r"\\\\.\\") {
-        return Err(anyhow!("UNC/device paths not allowed"));
-    }
-
-    // 네트워크 경로 차단
-    if s.starts_with(r"\\\\") {
-        return Err(anyhow!("network paths not allowed"));
-    }
-
-    // 드라이브 문자 정규화 (C: vs c:)
-    Ok(PathBuf::from(s.to_uppercase()))
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-blue-600 text-white text-xs font-semibold px-4 py-2">normalize_windows() — Windows 전용 경로 정규화</div>
+            <div className="p-4 space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">UNC/device 경로 차단</div>
+                  <div className="text-sm font-mono"><code className="text-xs bg-muted px-1 rounded">\\?\</code> <code className="text-xs bg-muted px-1 rounded">\\.\</code></div>
+                  <div className="text-xs text-muted-foreground mt-1">260자 상한 우회 — 보안 검증 우회 시도</div>
+                </div>
+                <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">네트워크 경로 차단</div>
+                  <div className="text-sm font-mono"><code className="text-xs bg-muted px-1 rounded">\\server\share</code></div>
+                  <div className="text-xs text-muted-foreground mt-1">외부 SMB 서버 접근 가능성</div>
+                </div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">드라이브 문자 정규화</div>
+                <div className="text-sm"><code className="text-xs bg-muted px-1 rounded">C:</code> vs <code className="text-xs bg-muted px-1 rounded">c:</code> → 대문자로 통일 (<code className="text-xs bg-muted px-1 rounded">to_uppercase</code>)</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Windows 공격 벡터</strong>: UNC 경로, device 경로, 네트워크 드라이브<br />
           <code>\\?\</code> 프리픽스는 Windows API 상한(260자) 우회 — 보안 검증 우회 시도<br />
@@ -106,44 +107,42 @@ fn normalize_windows(path: &Path) -> Result<PathBuf> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">심링크 탐지 테스트 케이스</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::os::unix::fs::symlink;
-
-    #[test]
-    fn detect_symlink_escape() {
-        let tmp = tempfile::tempdir().unwrap();
-        let workspace = tmp.path();
-
-        // 공격자가 심링크 생성
-        std::fs::create_dir(workspace.join("sub")).unwrap();
-        symlink("/etc/passwd", workspace.join("sub/link")).unwrap();
-
-        // 경계 검증 호출
-        let result = normalize_and_validate(
-            "sub/link",
-            workspace,
-        );
-
-        // 차단 성공
-        assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("escape detected"));
-    }
-
-    #[test]
-    fn allow_internal_symlink() {
-        let tmp = tempfile::tempdir().unwrap();
-        let workspace = tmp.path();
-
-        // 워크스페이스 내부 심링크 (정상)
-        std::fs::write(workspace.join("real.txt"), "data").unwrap();
-        symlink("real.txt", workspace.join("alias.txt")).unwrap();
-
-        let result = normalize_and_validate("alias.txt", workspace);
-        assert!(result.is_ok());
-    }
-}`}</pre>
+        <div className="not-prose mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">detect_symlink_escape — 외부 심링크 차단</div>
+            <div className="space-y-2 text-sm">
+              <div className="bg-background border border-border rounded-md p-2">
+                <div className="text-xs text-muted-foreground">설정</div>
+                <div className="font-mono text-xs mt-1"><code className="bg-muted px-1 rounded">symlink("/etc/passwd", "sub/link")</code></div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-2">
+                <div className="text-xs text-muted-foreground">호출</div>
+                <div className="font-mono text-xs mt-1"><code className="bg-muted px-1 rounded">normalize_and_validate("sub/link", workspace)</code></div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-2">
+                <div className="text-xs text-muted-foreground">결과</div>
+                <div className="text-sm font-semibold text-red-600 mt-1">Err("escape detected") — 차단 성공</div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">allow_internal_symlink — 내부 심링크 허용</div>
+            <div className="space-y-2 text-sm">
+              <div className="bg-background border border-border rounded-md p-2">
+                <div className="text-xs text-muted-foreground">설정</div>
+                <div className="font-mono text-xs mt-1"><code className="bg-muted px-1 rounded">symlink("real.txt", "alias.txt")</code> (내부)</div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-2">
+                <div className="text-xs text-muted-foreground">호출</div>
+                <div className="font-mono text-xs mt-1"><code className="bg-muted px-1 rounded">normalize_and_validate("alias.txt", workspace)</code></div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-2">
+                <div className="text-xs text-muted-foreground">결과</div>
+                <div className="text-sm font-semibold text-green-600 mt-1">Ok — 정상 통과</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>테스트 2가지</strong>: 외부 심링크 차단 + 내부 심링크 허용<br />
           내부 심링크는 정상 — 사용자가 편의상 alias를 만들 수 있음<br />
@@ -156,20 +155,24 @@ mod tests {
           깊은 경로(20단계 이상)는 수 ms 소요 — 대량 작업에서 병목 가능<br />
           <strong>최적화</strong>: 워크스페이스 루트를 1회만 canonicalize, 세션 내 캐시
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 세션 시작 시 1회 계산
-let canonical_workspace = workspace_root().canonicalize()?;
-
-// 이후 매 경로 검증은 상대 경로만 canonicalize
-fn validate_relative(rel: &Path) -> Result<PathBuf> {
-    let joined = CANONICAL_WS.join(rel);
-    let canonical = joined.canonicalize()?;
-
-    // 상수 시간 비교 (prefix check)
-    if !canonical.starts_with(&*CANONICAL_WS) {
-        return Err(anyhow!("escape"));
-    }
-    Ok(canonical)
-}`}</pre>
+        <div className="not-prose mb-4">
+          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
+            <div className="bg-teal-600 text-white text-xs font-semibold px-4 py-2">최적화 — 워크스페이스 루트 1회 canonicalize</div>
+            <div className="p-4 space-y-3">
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-1">세션 시작 시 1회</div>
+                <div className="text-sm"><code className="text-xs bg-muted px-1 rounded">CANONICAL_WS = workspace_root().canonicalize()</code></div>
+              </div>
+              <div className="bg-background border border-border rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-1">매 검증 시</div>
+                <div className="text-sm space-y-1">
+                  <div><code className="text-xs bg-muted px-1 rounded">CANONICAL_WS.join(rel).canonicalize()</code> — 상대 경로만 canonicalize</div>
+                  <div><code className="text-xs bg-muted px-1 rounded">canonical.starts_with(&CANONICAL_WS)</code> — 상수 시간 prefix 비교</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 경계 검증은 단독으로 불완전</p>

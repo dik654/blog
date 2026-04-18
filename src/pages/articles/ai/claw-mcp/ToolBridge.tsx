@@ -15,17 +15,23 @@ export default function ToolBridge() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">도구 이름 네임스페이싱</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// MCP 서버가 반환한 tools/list 결과
-[
-  {"name": "query_users", "description": "...", "inputSchema": {...}},
-  {"name": "insert_user", "description": "...", "inputSchema": {...}}
-]
-
-// claw-code에서 등록되는 이름
-mcp__postgres__query_users
-mcp__postgres__insert_user
-
-// 네임스페이스 형식: mcp__<server_name>__<tool_name>`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-2">MCP 서버 반환 (tools/list)</p>
+            <div className="space-y-1 text-sm">
+              <p><code>query_users</code> — 설명 + inputSchema</p>
+              <p><code>insert_user</code> — 설명 + inputSchema</p>
+            </div>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300 mb-2">claw-code 등록 이름</p>
+            <div className="space-y-1 text-sm font-mono">
+              <p><code>mcp__postgres__query_users</code></p>
+              <p><code>mcp__postgres__insert_user</code></p>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">형식: <code>{'mcp__<server>__<tool>'}</code></p>
+          </div>
+        </div>
         <p>
           <strong>네임스페이스 필수</strong>: 여러 MCP 서버가 같은 도구 이름 가질 수 있음<br />
           예: <code>search</code> 도구는 postgres·github·filesystem 서버에 모두 존재 가능<br />
@@ -33,64 +39,51 @@ mcp__postgres__insert_user
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">McpToolRegistry 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct McpToolRegistry {
-    // server_name → 서버 핸들
-    servers: HashMap<String, Arc<McpServerHandle>>,
-    // qualified_name → (server_name, tool_name)
-    tool_index: HashMap<String, (String, String)>,
-}
-
-pub struct McpServerHandle {
-    pub name: String,
-    pub lifecycle: Arc<Mutex<McpLifecycleValidator>>,
-    pub tools: Vec<McpToolDef>,
-}`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-2">McpToolRegistry</p>
+            <p className="text-sm"><code>servers</code>: server_name → <code>McpServerHandle</code></p>
+            <p className="text-sm"><code>tool_index</code>: qualified_name → (server_name, tool_name)</p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-purple-700 dark:text-purple-300 mb-2">McpServerHandle</p>
+            <p className="text-sm"><code>name</code>: 서버 이름</p>
+            <p className="text-sm"><code>lifecycle</code>: <code>Arc&lt;Mutex&lt;McpLifecycleValidator&gt;&gt;</code></p>
+            <p className="text-sm"><code>tools</code>: <code>Vec&lt;McpToolDef&gt;</code></p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">register_server() — 서버 등록</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl McpToolRegistry {
-    pub async fn register_server(&mut self, name: String, config: McpServerConfig) -> Result<()> {
-        // 1) 라이프사이클 시작 (Spawning → Ready까지)
-        let mut lifecycle = McpLifecycleValidator::new(config);
-        while lifecycle.state() != McpState::Ready && lifecycle.state() != McpState::Failed {
-            lifecycle.advance_with_retry().await?;
-        }
-
-        if lifecycle.state() == McpState::Failed {
-            return Err(anyhow!("MCP server {} failed to start", name));
-        }
-
-        // 2) 도구 목록 추출
-        let tools = lifecycle.tools.clone();
-
-        // 3) 각 도구를 claw-code 레지스트리에 등록
-        for tool in &tools {
-            let qualified = format!("mcp__{}__{}", name, tool.name);
-
-            // GlobalToolRegistry에 등록
-            global_tool_registry().register_runtime_tool(RuntimeToolDefinition {
-                name: qualified.clone(),
-                spec: convert_to_toolspec(tool),
-                executor: Box::new(McpToolExecutor {
-                    server_name: name.clone(),
-                    tool_name: tool.name.clone(),
-                    registry: self.clone_ref(),
-                }),
-            })?;
-
-            // 인덱스 추가
-            self.tool_index.insert(qualified, (name.clone(), tool.name.clone()));
-        }
-
-        // 4) 서버 핸들 저장
-        self.servers.insert(name, Arc::new(McpServerHandle {
-            name: name.clone(),
-            lifecycle: Arc::new(Mutex::new(lifecycle)),
-            tools,
-        }));
-
-        Ok(())
-    }
-}`}</pre>
+        <div className="space-y-2 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-blue-200 dark:bg-blue-700 px-1.5 py-0.5 rounded mt-0.5">1</span>
+            <div>
+              <p className="font-semibold text-sm">라이프사이클 시작 (Spawning → Ready)</p>
+              <p className="text-sm text-muted-foreground"><code>advance_with_retry()</code> 반복 — Failed 도달 시 에러 반환</p>
+            </div>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-emerald-200 dark:bg-emerald-700 px-1.5 py-0.5 rounded mt-0.5">2</span>
+            <div>
+              <p className="font-semibold text-sm">도구 목록 추출</p>
+              <p className="text-sm text-muted-foreground"><code>lifecycle.tools.clone()</code></p>
+            </div>
+          </div>
+          <div className="bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-indigo-200 dark:bg-indigo-700 px-1.5 py-0.5 rounded mt-0.5">3</span>
+            <div>
+              <p className="font-semibold text-sm">각 도구를 GlobalToolRegistry에 등록</p>
+              <p className="text-sm text-muted-foreground">이름: <code>mcp__{'{name}'}__{'{tool.name}'}</code>, 실행기: <code>McpToolExecutor</code>, 인덱스에 매핑 추가</p>
+            </div>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-purple-200 dark:bg-purple-700 px-1.5 py-0.5 rounded mt-0.5">4</span>
+            <div>
+              <p className="font-semibold text-sm">서버 핸들 저장</p>
+              <p className="text-sm text-muted-foreground"><code>McpServerHandle</code> 생성 → <code>servers</code> 맵에 삽입</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계 등록</strong>: 라이프사이클 → 도구 목록 → 개별 등록 → 핸들 저장<br />
           각 MCP 도구는 <strong>claw-code 관점에서는 일반 RuntimeTool</strong> — LLM이 구분 없이 호출<br />
@@ -98,20 +91,24 @@ pub struct McpServerHandle {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">convert_to_toolspec() — 스키마 변환</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn convert_to_toolspec(mcp_tool: &McpToolDef) -> ToolSpec {
-    ToolSpec {
-        name: format!("mcp__{}__{}",
-            mcp_tool.server, mcp_tool.name).leak(),
-        description: mcp_tool.description.clone().leak(),
-
-        // MCP inputSchema를 그대로 사용
-        input_schema: mcp_tool.input_schema.clone(),
-
-        // MCP 도구는 기본 WorkspaceWrite 권한 요구
-        // (사용자가 trusted_mcp_servers로 ReadOnly 승격 가능)
-        required_permission: PermissionMode::WorkspaceWrite,
-    }
-}`}</pre>
+        <div className="grid grid-cols-2 gap-2 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+            <p className="font-semibold text-sm"><code>name</code></p>
+            <p className="text-xs text-muted-foreground"><code>mcp__{'{server}'}__{'{name}'}</code> 형식으로 조합</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3">
+            <p className="font-semibold text-sm"><code>description</code></p>
+            <p className="text-xs text-muted-foreground">MCP 도구 설명 그대로 사용</p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+            <p className="font-semibold text-sm"><code>input_schema</code></p>
+            <p className="text-xs text-muted-foreground">MCP JSON Schema 그대로 재사용</p>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+            <p className="font-semibold text-sm"><code>required_permission</code></p>
+            <p className="text-xs text-muted-foreground">기본 <code>WorkspaceWrite</code> — <code>trusted_mcp_servers</code>로 조정 가능</p>
+          </div>
+        </div>
         <p>
           <strong>기본 권한 WorkspaceWrite</strong>: MCP 서버가 어떤 작업을 할지 모르므로 보수적<br />
           신뢰 리스트(<code>trusted_mcp_servers</code>) 등재 시 Prompt 없이 실행<br />
@@ -119,34 +116,24 @@ pub struct McpServerHandle {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">McpToolExecutor — 실행 시 MCP 호출</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct McpToolExecutor {
-    server_name: String,
-    tool_name: String,
-    registry: Arc<McpToolRegistry>,
-}
-
-#[async_trait]
-impl ToolExecutor for McpToolExecutor {
-    async fn execute(&self, input: Value) -> Result<ToolOutput> {
-        let server = self.registry.servers.get(&self.server_name)
-            .ok_or(anyhow!("server not found"))?;
-
-        let lifecycle = server.lifecycle.lock().await;
-        if lifecycle.state() != McpState::Ready
-            && lifecycle.state() != McpState::Degraded {
-            return Err(anyhow!("MCP server not ready: {:?}", lifecycle.state()));
-        }
-
-        // MCP tools/call 요청
-        let result = lifecycle.process.as_ref().unwrap().send("tools/call", json!({
-            "name": self.tool_name,
-            "arguments": input,
-        })).await?;
-
-        // MCP 응답 → ToolOutput 변환
-        convert_mcp_result(result)
-    }
-}`}</pre>
+        <div className="space-y-2 my-4">
+          <div className="bg-slate-50 dark:bg-slate-950/30 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+            <p className="font-semibold text-sm">McpToolExecutor 필드</p>
+            <p className="text-sm text-muted-foreground"><code>server_name</code>, <code>tool_name</code>, <code>registry: Arc&lt;McpToolRegistry&gt;</code></p>
+          </div>
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+            <p className="font-semibold text-sm">상태 검증</p>
+            <p className="text-sm text-muted-foreground"><code>Ready</code> 또는 <code>Degraded</code>에서만 호출 허용 — 그 외는 에러 반환</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3">
+            <p className="font-semibold text-sm">MCP 호출</p>
+            <p className="text-sm text-muted-foreground"><code>tools/call</code> 요청: <code>name</code> = tool_name, <code>arguments</code> = input</p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+            <p className="font-semibold text-sm">결과 변환</p>
+            <p className="text-sm text-muted-foreground"><code>convert_mcp_result(result)</code> → <code>ToolOutput</code></p>
+          </div>
+        </div>
         <p>
           <strong>MCP tools/call</strong>: 표준 메서드 — arguments가 도구 입력<br />
           Ready 또는 Degraded 상태에서만 호출 — 그 외는 에러<br />
@@ -154,43 +141,24 @@ impl ToolExecutor for McpToolExecutor {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">convert_mcp_result() — 응답 변환</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn convert_mcp_result(mcp_result: Value) -> Result<ToolOutput> {
-    let content = mcp_result.get("content")
-        .and_then(|v| v.as_array())
-        .ok_or(anyhow!("invalid MCP result"))?;
-
-    // 여러 content 블록을 하나로 합침
-    let mut text_parts = Vec::new();
-    for block in content {
-        let block_type = block.get("type").and_then(|v| v.as_str()).unwrap_or("");
-        match block_type {
-            "text" => {
-                if let Some(text) = block.get("text").and_then(|v| v.as_str()) {
-                    text_parts.push(text.to_string());
-                }
-            }
-            "image" => {
-                text_parts.push("[image content]".into());
-            }
-            "resource" => {
-                text_parts.push(format!("[resource: {:?}]",
-                    block.get("uri")));
-            }
-            _ => {}
-        }
-    }
-
-    // is_error 체크
-    let is_error = mcp_result.get("isError")
-        .and_then(|v| v.as_bool()).unwrap_or(false);
-
-    let output = text_parts.join("\\n");
-    if is_error {
-        Err(anyhow!("MCP tool error: {}", output))
-    } else {
-        Ok(ToolOutput::text(output))
-    }
-}`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-blue-700 dark:text-blue-300 mb-1">text</p>
+            <p className="text-sm">텍스트 내용 추출 → <code>text_parts</code>에 수집</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300 mb-1">image</p>
+            <p className="text-sm"><code>[image content]</code> placeholder</p>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <p className="font-semibold text-sm text-purple-700 dark:text-purple-300 mb-1">resource</p>
+            <p className="text-sm"><code>[resource: uri]</code> placeholder</p>
+          </div>
+        </div>
+        <div className="bg-slate-50 dark:bg-slate-950/30 border border-slate-200 dark:border-slate-800 rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-1">최종 처리</p>
+          <p className="text-sm text-muted-foreground">content 블록을 <code>\\n</code>으로 합침 → <code>isError: true</code> 시 <code>Err</code>, 아니면 <code>ToolOutput::text(output)</code></p>
+        </div>
         <p>
           <strong>3종 content 블록</strong>: text, image, resource<br />
           현재 claw-code는 주로 text만 활용 — image/resource는 placeholder<br />
@@ -198,30 +166,29 @@ impl ToolExecutor for McpToolExecutor {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">서버 재연결 — reconnect()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl McpToolRegistry {
-    pub async fn reconnect_server(&mut self, server_name: &str) -> Result<()> {
-        // 1) 기존 서버 종료
-        if let Some(server) = self.servers.remove(server_name) {
-            let mut lifecycle = server.lifecycle.lock().await;
-            lifecycle.shutdown().await?;
-        }
-
-        // 2) 해당 서버의 모든 도구 등록 해제
-        let qualified_names: Vec<_> = self.tool_index.iter()
-            .filter(|(_, (s, _))| s == server_name)
-            .map(|(k, _)| k.clone()).collect();
-        for qn in &qualified_names {
-            global_tool_registry().unregister_runtime_tool(qn)?;
-            self.tool_index.remove(qn);
-        }
-
-        // 3) 설정 다시 로드 후 재등록
-        let config = load_mcp_config(server_name)?;
-        self.register_server(server_name.into(), config).await?;
-
-        Ok(())
-    }
-}`}</pre>
+        <div className="space-y-2 my-4">
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-red-200 dark:bg-red-700 px-1.5 py-0.5 rounded mt-0.5">1</span>
+            <div>
+              <p className="font-semibold text-sm">기존 서버 종료</p>
+              <p className="text-sm text-muted-foreground"><code>servers.remove()</code> → <code>lifecycle.shutdown()</code></p>
+            </div>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-amber-200 dark:bg-amber-700 px-1.5 py-0.5 rounded mt-0.5">2</span>
+            <div>
+              <p className="font-semibold text-sm">해당 서버의 모든 도구 등록 해제</p>
+              <p className="text-sm text-muted-foreground"><code>tool_index</code>에서 서버명 필터 → <code>unregister_runtime_tool()</code></p>
+            </div>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 flex items-start gap-3">
+            <span className="text-xs font-mono bg-emerald-200 dark:bg-emerald-700 px-1.5 py-0.5 rounded mt-0.5">3</span>
+            <div>
+              <p className="font-semibold text-sm">설정 다시 로드 후 재등록</p>
+              <p className="text-sm text-muted-foreground"><code>load_mcp_config()</code> → <code>register_server()</code></p>
+            </div>
+          </div>
+        </div>
         <p>
           서버 장애 시 <strong>수동 재연결</strong>: 기존 연결 종료 → 도구 해제 → 새로 등록<br />
           자동 재연결은 하지 않음 — 무한 재시도 루프 위험<br />

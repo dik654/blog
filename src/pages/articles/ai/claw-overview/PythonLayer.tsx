@@ -23,30 +23,48 @@ export default function PythonLayer() {
 
         {/* ── PortRuntime 구조 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">PortRuntime — 중앙 디스패처</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`# src/port_runtime.py (핵심 발췌)
-class PortRuntime:
-    """Rust runtime 대비 패리티 검증 엔진"""
-
-    def __init__(self):
-        self.registry: dict[str, ToolHandler] = {}  # 도구 레지스트리
-        self.session: Session = Session.new()       # 현재 세션
-        self.enforcer: PermissionEnforcer = ...     # 권한 강제기
-
-    def route_tool_call(self, name: str, input: dict) -> ToolResult:
-        # 1. 권한 게이트
-        check = self.enforcer.check(name, input)
-        if check.is_deny():
-            return ToolResult.error(check.reason)
-
-        # 2. 도구 조회
-        handler = self.registry.get(name)
-        if handler is None:
-            return ToolResult.error(f"unknown tool: {name}")
-
-        # 3. 실행 & 로깅
-        result = handler.execute(input)
-        self.session.log(name, input, result)
-        return result`}</pre>
+        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
+          <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
+            <span className="text-sm font-semibold">PortRuntime</span>
+            <span className="text-xs text-muted-foreground ml-2">src/port_runtime.py</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div className="border border-border rounded p-2 bg-muted/20">
+                <div className="font-medium mb-1">registry</div>
+                <code className="bg-muted px-1 py-0.5 rounded">dict[str, ToolHandler]</code>
+                <div className="text-muted-foreground mt-0.5">도구 레지스트리</div>
+              </div>
+              <div className="border border-border rounded p-2 bg-muted/20">
+                <div className="font-medium mb-1">session</div>
+                <code className="bg-muted px-1 py-0.5 rounded">Session</code>
+                <div className="text-muted-foreground mt-0.5">현재 세션</div>
+              </div>
+              <div className="border border-border rounded p-2 bg-muted/20">
+                <div className="font-medium mb-1">enforcer</div>
+                <code className="bg-muted px-1 py-0.5 rounded">PermissionEnforcer</code>
+                <div className="text-muted-foreground mt-0.5">권한 강제기</div>
+              </div>
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">route_tool_call(name, input) → ToolResult</div>
+              <div className="space-y-1.5 text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">1</span>
+                  <span>권한 게이트 — <code className="text-xs bg-muted px-1 py-0.5 rounded">enforcer.check()</code> 거부 시 즉시 에러</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">2</span>
+                  <span>도구 조회 — <code className="text-xs bg-muted px-1 py-0.5 rounded">registry.get(name)</code> 미등록 시 unknown tool 에러</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">3</span>
+                  <span>실행 & 로깅 — <code className="text-xs bg-muted px-1 py-0.5 rounded">handler.execute(input)</code> + 세션 로그 기록</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <code>PortRuntime</code>은 Rust의 <code>tool_dispatch.rs</code>와 1:1 대응<br />
           <strong>route_tool_call()</strong> 3단계 흐름:<br />
@@ -62,22 +80,34 @@ class PortRuntime:
 
         {/* ── QueryEnginePort ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">QueryEnginePort — 서브시스템 쿼리</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`# src/query_engine.py
-class QueryEnginePort:
-    """서브시스템별 상태 조회 & 시뮬레이션"""
-
-    subsystems: dict[str, Subsystem]  # 20개 서브시스템 인벤토리
-
-    def query(self, path: str) -> Any:
-        # 예: "conversation.turn_count" → 대화 턴 수
-        # 예: "mcp.server_count"        → 연결된 MCP 서버 수
-        # 예: "session.token_usage"     → 토큰 사용량
-        namespace, key = path.split(".", 1)
-        return self.subsystems[namespace].get(key)
-
-    def mutate(self, path: str, value: Any) -> None:
-        namespace, key = path.split(".", 1)
-        self.subsystems[namespace].set(key, value)`}</pre>
+        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2 border-b border-border">
+            <span className="text-sm font-semibold">QueryEnginePort</span>
+            <span className="text-xs text-muted-foreground ml-2">src/query_engine.py — 서브시스템별 상태 조회 & 시뮬레이션</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="border border-border rounded p-2 bg-muted/20 text-xs">
+              <span className="font-medium">subsystems</span>: <code className="bg-muted px-1 py-0.5 rounded">dict[str, Subsystem]</code>
+              <span className="text-muted-foreground ml-1">— 20개 서브시스템 인벤토리</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="border border-border rounded p-3 bg-muted/20">
+                <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">query(path) → Any</div>
+                <div className="space-y-1 text-xs text-muted-foreground">
+                  <div><code className="bg-muted px-1 py-0.5 rounded">"conversation.turn_count"</code> → 대화 턴 수</div>
+                  <div><code className="bg-muted px-1 py-0.5 rounded">"mcp.server_count"</code> → 연결된 MCP 서버 수</div>
+                  <div><code className="bg-muted px-1 py-0.5 rounded">"session.token_usage"</code> → 토큰 사용량</div>
+                </div>
+                <p className="text-xs mt-2">점 구분 경로를 namespace + key로 분리하여 서브시스템 조회</p>
+              </div>
+              <div className="border border-border rounded p-3 bg-muted/20">
+                <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">mutate(path, value) → None</div>
+                <p className="text-xs">서브시스템 상태를 변경 — 동일한 점 구분 경로 규칙 사용</p>
+                <p className="text-xs text-muted-foreground mt-1">Rust에서는 <code className="bg-muted px-1 py-0.5 rounded">SessionState</code> 구조체 필드로 매핑</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           20개 서브시스템 인벤토리가 원본 TypeScript 아카이브의 모듈 구조를 미러링<br />
           <strong>네이밍 컨벤션</strong>: <code>&lt;namespace&gt;.&lt;key&gt;</code> 점 구분 경로<br />
@@ -93,17 +123,38 @@ class QueryEnginePort:
 
         {/* ── 시뮬레이션 레벨 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">시뮬레이션 레벨 3단계</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`Level 1: 상태 머신 추적
-  - 각 서브시스템의 상태 전이 기록
-  - 예: WorkerBoot Idle → Launching → Ready → Working
-
-Level 2: 도구 호출 & 결과
-  - tool_use → tool_result 왕복 시뮬레이션
-  - MockFs + MockShell로 파일/명령 결과 생성
-
-Level 3: LLM 응답 시나리오
-  - mock-anthropic-service의 12개 시나리오와 동일한 응답 재현
-  - Python PortRuntime ↔ Rust runtime 응답 바이트 단위 비교`}</pre>
+        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="border border-border rounded-lg p-4 bg-blue-50/50 dark:bg-blue-950/20">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-bold">1</span>
+              <span className="text-sm font-semibold">상태 머신 추적</span>
+            </div>
+            <div className="space-y-1 text-xs">
+              <p>각 서브시스템의 상태 전이 기록</p>
+              <p className="text-muted-foreground">예: WorkerBoot Idle → Launching → Ready → Working</p>
+            </div>
+          </div>
+          <div className="border border-border rounded-lg p-4 bg-emerald-50/50 dark:bg-emerald-950/20">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs flex items-center justify-center font-bold">2</span>
+              <span className="text-sm font-semibold">도구 호출 & 결과</span>
+            </div>
+            <div className="space-y-1 text-xs">
+              <p><code className="bg-muted px-1 py-0.5 rounded">tool_use</code> → <code className="bg-muted px-1 py-0.5 rounded">tool_result</code> 왕복 시뮬레이션</p>
+              <p className="text-muted-foreground">MockFs + MockShell로 파일/명령 결과 생성</p>
+            </div>
+          </div>
+          <div className="border border-border rounded-lg p-4 bg-violet-50/50 dark:bg-violet-950/20">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-xs flex items-center justify-center font-bold">3</span>
+              <span className="text-sm font-semibold">LLM 응답 시나리오</span>
+            </div>
+            <div className="space-y-1 text-xs">
+              <p>mock-anthropic-service 12개 시나리오와 동일 응답 재현</p>
+              <p className="text-muted-foreground">Python ↔ Rust 응답 바이트 단위 비교</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>Level 1</strong>: 상태 머신만 추적 — 가장 빠른 단위 테스트에 사용<br />
           <strong>Level 2</strong>: 도구 호출 시뮬레이션 — 파일 I/O 없이 MockFs로 재현<br />

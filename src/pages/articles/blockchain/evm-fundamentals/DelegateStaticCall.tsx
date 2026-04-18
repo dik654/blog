@@ -20,69 +20,75 @@ export default function DelegateStaticCall({ onCodeRef }: { onCodeRef: (key: str
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">SELFDESTRUCT의 변화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// SELFDESTRUCT (opcode 0xFF)
-// 원래: 컨트랙트 삭제 + ETH를 지정된 주소로 전송
-
-// Original behavior (pre-Cancun)
-function selfdestruct(address payable recipient) external {
-    // 1) this contract의 모든 ETH를 recipient로 전송
-    // 2) this contract의 code 삭제
-    // 3) this contract의 storage 삭제
-    // 4) CREATE2로 재배포 가능
-}
-
-// 보상 (gas refund, pre-London)
-// SELFDESTRUCT → 24,000 gas refund
-// SSTORE zero set → 15,000 refund
-
-// EIP-3529 (London, 2021): refund 축소
-// SELFDESTRUCT refund 제거
-// SSTORE refund 절반
-
-// EIP-6780 (Cancun, 2024): SELFDESTRUCT 변경
-// 1) 같은 tx에서 create된 contract만 full selfdestruct
-// 2) 그 외에는 ETH만 전송 (코드 유지)
-// 3) Storage 보존
-
-// 영향
-// ✗ 기존 proxy upgrade 패턴 (CREATE2 + SELFDESTRUCT) 깨짐
-// ✓ 새 주소 deployment 보호 (기존 컨트랙트 code 불변)
-// ✓ "Contract killability" 문제 해결
-
-// 현대 대안
-// - Proxy + implementation upgrade (SSTORE of impl slot)
-// - Diamond standard (EIP-2535)
-// - UUPS/Transparent proxy (OpenZeppelin)`}</pre>
+        <p className="text-sm text-muted-foreground mb-4">
+          <code>SELFDESTRUCT</code> (opcode <code>0xFF</code>) — 컨트랙트 삭제 + ETH를 지정된 주소로 전송
+        </p>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Original (pre-Cancun)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Contract의 모든 ETH를 recipient로 전송</li>
+              <li>Contract의 code + storage 삭제</li>
+              <li><code className="text-xs">CREATE2</code>로 재배포 가능</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">Gas Refund 변화</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><strong>Pre-London</strong>: <code className="text-xs">SELFDESTRUCT</code> → <code className="text-xs">24,000</code> refund</li>
+              <li><strong>EIP-3529 (London)</strong>: <code className="text-xs">SELFDESTRUCT</code> refund 제거</li>
+              <li><code className="text-xs">SSTORE</code> refund 절반으로 축소</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">EIP-6780 (Cancun, 2024)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>같은 tx에서 create된 contract만 full selfdestruct</li>
+              <li>그 외에는 ETH만 전송 (코드 유지)</li>
+              <li>Storage 보존</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">영향 & 현대 대안</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>기존 <code className="text-xs">CREATE2 + SELFDESTRUCT</code> proxy 패턴 깨짐</li>
+              <li>Proxy + implementation upgrade (<code className="text-xs">SSTORE</code> of impl slot)</li>
+              <li>Diamond standard (EIP-2535) / UUPS Proxy</li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">STATICCALL 제약사항</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// STATICCALL 내부에서 금지된 ops
-// 모두 state 변경 opcode
-
-// 1) SSTORE (0x55)
-// 2) LOG0-LOG4 (0xA0-0xA4)
-// 3) CREATE, CREATE2 (0xF0, 0xF5)
-// 4) SELFDESTRUCT (0xFF)
-// 5) CALL with value > 0
-
-// 호출 시 실패 조건
-// - 위 중 하나라도 실행 시 → REVERT
-// - State 변경 시도 자체가 금지
-
-// Use case
-// - view/pure function 호출 강제
-// - External contract read 안전
-// - Re-entrancy 방어 (state 변경 불가)
-
-// Solidity 자동 사용
-// function fetchData() external view returns (uint) {
-//     return IOtherContract(addr).getValue();
-// }
-// → 컴파일러가 자동으로 STATICCALL 생성
-
-// 장점
-// - Strong guarantees (state immutability)
-// - Security audit 단순화
-// - Composable (외부 call이 안전)`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">금지된 Opcodes</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">SSTORE</code> (0x55)</li>
+              <li><code className="text-xs">LOG0</code>-<code className="text-xs">LOG4</code> (0xA0-0xA4)</li>
+              <li><code className="text-xs">CREATE</code>, <code className="text-xs">CREATE2</code> (0xF0, 0xF5)</li>
+              <li><code className="text-xs">SELFDESTRUCT</code> (0xFF)</li>
+              <li><code className="text-xs">CALL</code> with value &gt; 0</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">하나라도 실행 시 → <code className="text-xs">REVERT</code></p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Use Cases</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">view</code>/<code className="text-xs">pure</code> function 호출 강제</li>
+              <li>External contract read 안전 보장</li>
+              <li>Re-entrancy 방어 (state 변경 불가)</li>
+              <li>Solidity 컴파일러가 <code className="text-xs">view</code> 함수에 자동 적용</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">장점</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Strong guarantees (state immutability)</li>
+              <li>Security audit 단순화</li>
+              <li>Composable — 외부 call이 안전</li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </section>

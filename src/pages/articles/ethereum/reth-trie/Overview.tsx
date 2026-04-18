@@ -28,38 +28,46 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── MPT 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Merkle Patricia Trie 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// MPT = Merkle + Patricia + Trie
-// - Merkle: 각 노드에 자식의 해시 포함 → 변경 감지 가능
-// - Patricia: 경로 압축 (공통 prefix 1개 노드로)
-// - Trie: prefix-tree 탐색
-
-// 이더리움 MPT의 3가지 노드 타입:
-pub enum TrieNode {
-    /// Leaf 노드 — 실제 값 저장
-    Leaf {
-        key: Nibbles,     // 남은 경로
-        value: Bytes,     // RLP 인코딩된 값
-    },
-    /// Extension 노드 — 경로 압축 (여러 키 공유)
-    Extension {
-        key: Nibbles,           // 공유 prefix
-        child: B256,            // 자식 노드 해시
-    },
-    /// Branch 노드 — 16진수 트리 (2^4 = 16 갈래)
-    Branch {
-        children: [Option<B256>; 16],  // 0x0 ~ 0xf 자식
-        value: Option<Bytes>,           // terminal 값 (드물게)
-    },
-}
-
-// Nibbles: 4비트 단위 키 표현
-// keccak256(address) = 32바이트 → 64 nibbles
-// 각 nibble(0x0~0xf)이 Branch 노드의 자식 인덱스
-
-// 예시: keccak256(0xAbCd...) = 0xa7b3...
-// 경로: a → 7 → b → 3 → ... → leaf`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-3 text-center">
+              <p className="font-semibold text-sm text-sky-400">Merkle</p>
+              <p className="text-xs text-foreground/60">자식 해시 포함 → 변경 감지</p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+              <p className="font-semibold text-sm text-emerald-400">Patricia</p>
+              <p className="text-xs text-foreground/60">경로 압축 (공통 prefix 1노드)</p>
+            </div>
+            <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-3 text-center">
+              <p className="font-semibold text-sm text-violet-400">Trie</p>
+              <p className="text-xs text-foreground/60">prefix-tree 탐색</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-3">TrieNode — 3가지 노드 타입</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="rounded bg-muted/50 p-3">
+                <p className="text-sm font-semibold text-amber-400">Leaf</p>
+                <p className="text-xs text-foreground/60 mt-1"><code>key: Nibbles</code> — 남은 경로</p>
+                <p className="text-xs text-foreground/60"><code>value: Bytes</code> — RLP 인코딩 값</p>
+              </div>
+              <div className="rounded bg-muted/50 p-3">
+                <p className="text-sm font-semibold text-emerald-400">Extension</p>
+                <p className="text-xs text-foreground/60 mt-1"><code>key: Nibbles</code> — 공유 prefix</p>
+                <p className="text-xs text-foreground/60"><code>child: B256</code> — 자식 해시</p>
+              </div>
+              <div className="rounded bg-muted/50 p-3">
+                <p className="text-sm font-semibold text-sky-400">Branch</p>
+                <p className="text-xs text-foreground/60 mt-1"><code>children: [Option&lt;B256&gt;; 16]</code></p>
+                <p className="text-xs text-foreground/60">0x0~0xf 16갈래</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs text-foreground/70"><code>Nibbles</code>: keccak256(address) = 32바이트 → <strong>64 nibbles</strong> (4비트 단위)</p>
+            <p className="text-xs font-mono text-foreground/50 mt-1">keccak256(0xAbCd...) = 0xa7b3... → 경로: a → 7 → b → 3 → ... → leaf</p>
+          </div>
+        </div>
         <p className="leading-7">
           MPT는 <strong>3가지 노드 타입</strong>으로 키-값 매핑 표현.<br />
           Nibble(4비트)이 기본 단위 — 16진수 keccak256 해시가 자연스럽게 fit.<br />
@@ -68,39 +76,33 @@ pub enum TrieNode {
 
         {/* ── 2-tier 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">이더리움 State Trie — 2-tier 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 최상위: Account Trie
-//   keccak256(address) → TrieAccount
-//
-//                   state_root
-//                        │
-//           ┌────────────┼────────────┐
-//        Account      Account      Account
-//         (A)          (B)          (C)
-//          │
-//    ┌─────┴─────┐
-//    │  nonce    │
-//    │  balance  │
-//    │  code_hash│
-//    │  storage_root ← 계정마다 별도 storage trie 루트
-//    └───────────┘
-//          │
-//      Storage Trie
-//      keccak256(slot_key) → value
-//          │
-//      ┌───┴───┐
-//     Slot   Slot
-//
-// 특징:
-// 1. Account Trie는 전역 1개 — 모든 계정을 포함
-// 2. Storage Trie는 계정당 1개 — EOA는 비어있음
-// 3. 컨트랙트는 storage trie root가 포함되어 account 해시에 영향
-
-// 크기:
-// - Account Trie: ~2.5억 계정 × ~70바이트 = ~17GB
-// - Storage Trie: 수천만 계정 × 가변 크기 = ~200GB 이상
-// - 총 state size: 압축 없이 ~250GB`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+              <p className="font-semibold text-sm text-indigo-400 mb-2">Account Trie (전역 1개)</p>
+              <p className="text-xs text-foreground/70"><code>keccak256(address)</code> → <code>TrieAccount</code></p>
+              <div className="mt-2 space-y-0.5 text-xs text-foreground/60">
+                <p>nonce, balance, code_hash</p>
+                <p><code>storage_root</code> ← 계정별 storage trie 루트</p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">~2.5억 계정 x ~70B = ~17GB</p>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm text-emerald-400 mb-2">Storage Trie (계정당 1개)</p>
+              <p className="text-xs text-foreground/70"><code>keccak256(slot_key)</code> → <code>value</code></p>
+              <div className="mt-2 space-y-0.5 text-xs text-foreground/60">
+                <p>EOA는 비어 있음</p>
+                <p>컨트랙트만 스토리지 보유</p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">수천만 계정 x 가변 = ~200GB+</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-1">2-tier 해시 체인</p>
+            <p className="text-xs text-foreground/70">스토리지 변경 → <code>storage_root</code> 변경 → account 해시 변경 → <code>state_root</code> 변경</p>
+            <p className="text-xs text-muted-foreground mt-1">총 state size: 압축 없이 ~250GB</p>
+          </div>
+        </div>
         <p className="leading-7">
           2-tier 구조의 핵심: <strong>storage_root가 account 노드에 포함</strong>.<br />
           컨트랙트 스토리지 변경 → storage_root 변경 → account 해시 변경 → state_root 변경.<br />
@@ -109,41 +111,41 @@ pub enum TrieNode {
 
         {/* ── HashBuilder ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HashBuilder — Trie 구축 엔진</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 정렬된 key 순서로 trie 구성
-pub struct HashBuilder {
-    /// 현재 처리 중인 스택 (부모에서 자식으로)
-    stack: Vec<HashBuilderValue>,
-    /// 그룹 마스크 — 어느 nibble에 자식이 있는지
-    groups: Vec<TrieMask>,
-    /// 트리 마스크 — 어느 자식이 branch/leaf인지
-    tree_masks: Vec<TrieMask>,
-    /// 해시 마스크 — 어느 자식이 해시 저장 가능한지
-    hash_masks: Vec<TrieMask>,
-}
-
-impl HashBuilder {
-    /// 새 leaf 추가 (key는 정렬 순서로 입력되어야 함)
-    pub fn add_leaf(&mut self, key: Nibbles, value: &[u8]) {
-        // 1. 이전 key와의 공통 prefix 찾기
-        // 2. 공통 prefix 이후 diverge 지점에서 branch 생성
-        // 3. stack을 정리하며 hash 계산
-        self.update_from(key);
-        self.push_leaf(key, value);
-    }
-
-    /// 최종 root 해시 반환 (stack 정리)
-    pub fn root(mut self) -> B256 {
-        self.finalize();
-        self.stack[0].hash()
-    }
-}
-
-// key 정렬의 이유:
-// - 정렬된 입력 → 순차적 trie 구성 가능
-// - backtrack 없음 → O(N) 시간 복잡도
-// - 메모리 사용 최소 (스택에 현재 경로만)`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-3">HashBuilder 구조체</p>
+            <div className="space-y-2 text-xs">
+              <div><code className="text-violet-300">stack: Vec&lt;HashBuilderValue&gt;</code> <span className="text-foreground/60">— 현재 스택 (부모→자식)</span></div>
+              <div><code className="text-violet-300">groups: Vec&lt;TrieMask&gt;</code> <span className="text-foreground/60">— 어느 nibble에 자식 있는지</span></div>
+              <div><code className="text-violet-300">tree_masks / hash_masks</code> <span className="text-foreground/60">— branch/leaf 구분, 해시 저장 여부</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-3">
+              <code className="text-xs font-semibold text-violet-400">add_leaf(key, value)</code>
+              <div className="mt-1 space-y-0.5 text-xs text-foreground/60">
+                <p>1. 이전 key와 공통 prefix 찾기</p>
+                <p>2. diverge 지점에서 branch 생성</p>
+                <p>3. stack 정리하며 hash 계산</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-3">
+              <code className="text-xs font-semibold text-violet-400">root() → B256</code>
+              <div className="mt-1 space-y-0.5 text-xs text-foreground/60">
+                <p>stack 최종 정리 (finalize)</p>
+                <p>stack[0]의 해시 반환</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs font-semibold text-muted-foreground mb-1">key 정렬이 필수인 이유</p>
+            <div className="grid grid-cols-3 gap-2 text-xs text-foreground/70">
+              <p>정렬 입력 → 순차적 trie 구성</p>
+              <p>backtrack 없음 → O(N) 복잡도</p>
+              <p>스택에 현재 경로만 → 최소 메모리</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>HashBuilder</code>는 <strong>정렬된 leaf 입력</strong>을 받아 순차적으로 trie 구성.<br />
           각 leaf 추가 시 이전 key와의 공통 prefix 비교 → branch 노드 자동 생성.<br />

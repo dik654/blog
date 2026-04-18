@@ -22,41 +22,39 @@ export default function StateSummary({ onCodeRef }: Props) {
 
         {/* ── StateSummary 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StateSummary — 메타데이터 인덱스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 모든 slot에 대해 저장하는 메타데이터
-type StateSummary struct {
-    Slot uint64       // 해당 slot
-    Root [32]byte     // block root (state root 유도 가능)
-}
-
-// 저장:
-// - slot별 1 entry × ~30 bytes = 저렴
-// - 1년치: 2_700_000 slots × 30B = ~80 MB
-// - 실제 state 저장보다 100배 이상 작음
-
-// 용도:
-// 1. slot → block_root 매핑 (빠른 인덱스)
-// 2. Replay 기점 탐색
-// 3. RPC eth/v1/beacon/headers/{slot} 응답
-
-// DB 테이블:
-// "state-summary" bucket in BoltDB
-// Key: slot (big-endian uint64)
-// Value: block_root (32 bytes)
-
-// 조회:
-func GetStateSummary(slot uint64) (*StateSummary, error) {
-    key := encode_uint64(slot)
-    val, err := db.Get("state-summary", key)
-    if err != nil { return nil, err }
-    return &StateSummary{Slot: slot, Root: val}, nil
-}
-
-// Skipped slots 처리:
-// - 빈 slot (블록 없음): StateSummary 없음
-// - 하지만 state는 여전히 변경됨 (slot transition)
-// - replay 시 ProcessSlots만 수행 (블록 없이 진행)`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>StateSummary</code> 구조체</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-muted-foreground">
+              <span><code>Slot uint64</code> — 해당 slot</span>
+              <span><code>Root [32]byte</code> — block root (state root 유도 가능)</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">slot별 1 entry x ~30 bytes → 1년치 2,700,000 slots = <strong className="text-foreground">~80 MB</strong> (실제 state 저장보다 100배 이상 작음)</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">용도</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>slot → block_root 매핑 (빠른 인덱스)</li>
+                <li>Replay 기점 탐색</li>
+                <li>RPC <code>/eth/v1/beacon/headers/{'{slot}'}</code> 응답</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">DB 저장</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>Bucket: <code>"state-summary"</code> in BoltDB</li>
+                <li>Key: <code>slot</code> (big-endian uint64)</li>
+                <li>Value: <code>block_root</code> (32 bytes)</li>
+                <li>조회: <code>GetStateSummary(slot)</code> → <code>db.Get("state-summary", key)</code></li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Skipped slots 처리</h4>
+            <p className="text-xs text-muted-foreground">빈 slot (블록 없음) → StateSummary 없음. 하지만 state는 변경됨 (slot transition). Replay 시 <code>ProcessSlots</code> 만 수행 (블록 없이 진행)</p>
+          </div>
+        </div>
         <p className="leading-7">
           StateSummary는 <strong>모든 slot의 메타데이터 인덱스</strong>.<br />
           slot → block_root 매핑만 저장 → 1년치 ~80MB.<br />
@@ -72,54 +70,48 @@ func GetStateSummary(slot uint64) (*StateSummary, error) {
 
         {/* ── ReplayBlocks 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ReplayBlocks — 기점→타겟 state 전환</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`func ReplayBlocks(
-    ctx context.Context,
-    startState *BeaconState,
-    blocks []*BeaconBlock,
-    targetSlot uint64,
-) (*BeaconState, error) {
-    state := startState.Copy()
-    currentSlot := state.Slot()
-
-    // 1. 각 블록을 순차 적용
-    for _, block := range blocks {
-        // 1a. 블록 슬롯까지 empty slot 전환
-        for currentSlot < block.Slot {
-            state, err = ProcessSlot(state, currentSlot+1)
-            if err != nil { return nil, err }
-            currentSlot++
-        }
-
-        // 1b. 블록 실행 (state transition)
-        state, err = ExecuteStateTransition(state, block)
-        if err != nil { return nil, err }
-        currentSlot = block.Slot
-    }
-
-    // 2. 마지막 블록 이후 targetSlot까지 empty slots
-    for currentSlot < targetSlot {
-        state, err = ProcessSlot(state, currentSlot+1)
-        currentSlot++
-    }
-
-    return state, nil
-}
-
-// 비용 분석:
-// - ProcessSlot: 매우 빠름 (~수 ms, randao update 등만)
-// - ExecuteStateTransition: 블록 크기 비례 (~50ms 평균)
-
-// Replay 거리별 시간:
-// 1 epoch (32 slot): ~500ms
-// 1 day (7200 slot): ~2분
-// K=2048 max replay: ~1분 (avg)
-
-// 최적화:
-// - 병렬 signature verify
-// - FieldTrie 캐시 재사용
-// - pre-allocated slice pools`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>ReplayBlocks</code> 흐름</h4>
+            <p className="text-xs text-muted-foreground mb-2"><code>startState.Copy()</code> 로 복사본 생성 후 순차 적용</p>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1a</span>
+                <div>블록 슬롯까지 empty slot 전환: <code>ProcessSlot(state, currentSlot+1)</code> 반복</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1b</span>
+                <div>블록 실행: <code>ExecuteStateTransition(state, block)</code></div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div>마지막 블록 이후 targetSlot까지 empty slots 처리</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">비용 분석</h4>
+              <div className="grid gap-1 text-xs text-muted-foreground">
+                <span><code>ProcessSlot</code>: ~수 ms (randao update 등만)</span>
+                <span><code>ExecuteStateTransition</code>: ~50ms 평균 (블록 크기 비례)</span>
+                <div className="border-t pt-1 mt-1">
+                  <span>1 epoch (32 slot): ~500ms</span><br />
+                  <span>1 day (7200 slot): ~2분</span><br />
+                  <span>K=2048 max: ~1분 (avg)</span>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">최적화</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>병렬 signature verify</li>
+                <li>FieldTrie 캐시 재사용</li>
+                <li>pre-allocated slice pools</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ReplayBlocks</code>가 <strong>state transition 순차 재적용</strong>.<br />
           각 block마다 ProcessSlot(빈 slot) + ExecuteStateTransition(블록).<br />

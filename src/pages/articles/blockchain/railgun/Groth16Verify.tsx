@@ -1,5 +1,6 @@
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
+import M from '@/components/ui/math';
 import { codeRefs } from './codeRefs';
 import Groth16Viz from './viz/Groth16Viz';
 
@@ -26,96 +27,93 @@ export default function Groth16Verify({ onCodeRef }: { onCodeRef: (key: string, 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Pairing-based Verification</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Groth16 Proof 구조
-struct Proof {
-    G1Point A;   // ~48 bytes
-    G2Point B;   // ~96 bytes
-    G1Point C;   // ~48 bytes
-}
-// Total: 192 bytes
-
-// Verification equation
-// e(A, B) · e(-α, β) · e(-vk_x, γ) · e(-C, δ) = 1
-
-// where:
-// α, β, γ, δ : verification key (trusted setup output)
-// vk_x       : public input linear combination
-
-// vk_x computation
-vk_x = γABC_0 + sum_{i=1..l} public_input_i * γABC_i
-
-// EVM Implementation
-function verify(
-    Proof proof,
-    uint[3] publicInputs
-) public view returns (bool) {
-    // 1) vk_x 계산
-    G1Point vk_x = γABC[0];
-    for (uint i = 0; i < publicInputs.length; i++) {
-        vk_x = Pairing.addition(vk_x,
-                Pairing.scalar_mul(γABC[i+1], publicInputs[i]));
-    }
-
-    // 2) Pairing check (4 pairings)
-    return Pairing.pairingProd4(
-        Pairing.negate(proof.A), proof.B,
-        α, β,
-        vk_x, γ,
-        proof.C, δ
-    );
-}
-
-// EVM Precompiles 사용
-// 0x06: bn256Add       (~150 gas)
-// 0x07: bn256ScalarMul (~6,000 gas)
-// 0x08: bn256Pairing   (~45K base + 34K per pair)
-
-// Total gas
-// - Point additions: ~600 gas
-// - Scalar mults: ~18K gas (3 public inputs)
-// - Pairing (4 pairs): ~181K gas
-// - Misc: ~50K gas
-// Total: ~250K gas
-
-// Comparison
-// Plonk: ~300K gas (더 복잡한 verifier)
-// STARK: ~1M+ gas (더 많은 Merkle/FRI)
-// Groth16이 L1에 가장 효율적`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Groth16 Proof 구조 (192 bytes)</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">A</p><p className="font-mono"><code>G1Point</code></p><p className="text-xs text-muted-foreground">~48 bytes</p></div>
+              <div><p className="text-muted-foreground">B</p><p className="font-mono"><code>G2Point</code></p><p className="text-xs text-muted-foreground">~96 bytes</p></div>
+              <div><p className="text-muted-foreground">C</p><p className="font-mono"><code>G1Point</code></p><p className="text-xs text-muted-foreground">~48 bytes</p></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-violet-500/30 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">Verification Equation</p>
+            <div className="my-2 text-center">
+              <M display>{'e(A, B) \\cdot e(-\\alpha, \\beta) \\cdot e(-\\mathit{vk}_x, \\gamma) \\cdot e(-C, \\delta) = 1'}</M>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground mt-3">
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Verification key (trusted setup)</p>
+                <p><M>{'\\alpha, \\beta, \\gamma, \\delta'}</M></p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">Public input combination</p>
+                <p><M>{'\\mathit{vk}_x = \\gamma\\text{ABC}_0 + \\sum_{i=1}^{l} \\text{pub}_i \\cdot \\gamma\\text{ABC}_i'}</M></p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">EVM 구현 (<code>verify()</code>)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><strong>1)</strong> <M>{'\\mathit{vk}_x'}</M> 계산 &mdash; <code>Pairing.addition</code> + <code>scalar_mul</code> 반복</li>
+                <li><strong>2)</strong> Pairing check (4 pairings) &mdash; <code>Pairing.pairingProd4()</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">EVM Precompiles</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>0x06</code>: <code>bn256Add</code> (~150 gas)</li>
+                <li><code>0x07</code>: <code>bn256ScalarMul</code> (~6,000 gas)</li>
+                <li><code>0x08</code>: <code>bn256Pairing</code> (~45K base + 34K/pair)</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-muted-foreground mb-2">Gas 비교</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">Groth16</p><p className="font-mono font-semibold">~250K gas</p><p className="text-xs text-muted-foreground">L1 최적</p></div>
+              <div><p className="text-muted-foreground">PLONK</p><p className="font-mono">~300K gas</p><p className="text-xs text-muted-foreground">더 복잡한 verifier</p></div>
+              <div><p className="text-muted-foreground">STARK</p><p className="font-mono">~1M+ gas</p><p className="text-xs text-muted-foreground">Merkle/FRI 추가</p></div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Trusted Setup Ceremony</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Groth16 약점: per-circuit trusted setup
-// 각 circuit마다 secret values (toxic waste) 생성
-// 그 secrets 유출 시 → 가짜 proof 생성 가능
-
-// Multi-party computation (MPC) ceremony
-// Participants 100~1000명
-// 각자가 랜덤 기여
-// 한 명이라도 정직하면 안전
-
-// Phase 1: Powers of Tau (universal)
-// - BN254 curve의 powers 생성
-// - 모든 circuit에 공유 가능
-// - ZCash, Polygon, RAILGUN 등 재사용
-
-// Phase 2: Per-circuit
-// - Circuit-specific 파생
-// - RAILGUN은 자체 ceremony (2023)
-// - 수십 명 참여
-
-// 검증 방법
-// - Beacon (future block hash) 포함
-// - 각 기여자의 transcript 공개
-// - Verifier가 수학적 integrity 확인
-
-// Groth16의 trusted setup 문제를 해결하려는 시도
-// - PLONK: universal setup (circuit-agnostic)
-// - Marlin: universal + updatable
-// - Plonky2: no setup (FRI-based)
-
-// RAILGUN이 Groth16 선택 이유
-// - L1 verify gas 최적 (proof 크기, verify cost)
-// - MPC ceremony 참여 가능하면 충분히 안전
-// - 단, 새 circuit 추가 시 새 ceremony 필요`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-red-500/30 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-2">Groth16 약점: per-circuit trusted setup</p>
+            <p className="text-sm text-muted-foreground">각 circuit마다 secret values (toxic waste) 생성. 유출 시 가짜 proof 생성 가능.</p>
+            <p className="text-sm text-muted-foreground mt-1"><strong>해결</strong>: MPC ceremony &mdash; 100~1,000명 참여, 한 명이라도 정직하면 안전</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-blue-500/30 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Phase 1: Powers of Tau (universal)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>BN254 curve의 powers 생성</li>
+                <li>모든 circuit에 공유 가능</li>
+                <li>ZCash, Polygon, RAILGUN 등 재사용</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Phase 2: Per-circuit</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Circuit-specific 파생</li>
+                <li>RAILGUN 자체 ceremony (2023, 수십 명 참여)</li>
+                <li>Beacon (future block hash) + transcript 공개로 검증</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Trusted setup 문제 해결 시도</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center text-muted-foreground">
+              <div className="bg-muted/50 rounded p-2"><strong>PLONK</strong><br />universal setup<br /><span className="text-xs">(circuit-agnostic)</span></div>
+              <div className="bg-muted/50 rounded p-2"><strong>Marlin</strong><br />universal + updatable</div>
+              <div className="bg-muted/50 rounded p-2"><strong>Plonky2</strong><br />no setup<br /><span className="text-xs">(FRI-based)</span></div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">RAILGUN이 Groth16 선택: L1 verify gas 최적 + MPC ceremony 참여 가능하면 충분히 안전. 단, 새 circuit 추가 시 새 ceremony 필요.</p>
+          </div>
+        </div>
 
       </div>
     </section>

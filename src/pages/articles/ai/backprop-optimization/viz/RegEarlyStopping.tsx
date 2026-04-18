@@ -10,22 +10,23 @@ export default function RegEarlyStopping() {
   return (
     <motion.g initial={{ opacity: 0 }}
       animate={{ opacity: 1 }} transition={sp}>
+      {/* chart area: compact left side */}
       {/* axes */}
-      <line x1={60} y1={15} x2={60} y2={115}
+      <line x1={50} y1={15} x2={50} y2={110}
         stroke="var(--border)" strokeWidth={0.8} />
-      <line x1={60} y1={115} x2={430} y2={115}
+      <line x1={50} y1={110} x2={310} y2={110}
         stroke="var(--border)" strokeWidth={0.8} />
-      <text x={245} y={130} textAnchor="middle" fontSize={8}
+      <text x={180} y={125} textAnchor="middle" fontSize={8}
         fill="var(--muted-foreground)">epoch</text>
-      <text x={30} y={65} fontSize={8}
+      <text x={22} y={62} fontSize={8}
         fill="var(--muted-foreground)"
-        transform="rotate(-90 30 65)">loss</text>
+        transform="rotate(-90 22 62)">loss</text>
 
       {/* Y axis labels */}
       {[0, 0.5, 1.0, 1.5].map((v) => {
-        const yy = 115 - (v / 2.0) * 95;
+        const yy = 110 - (v / 2.0) * 90;
         return (
-          <text key={v} x={55} y={yy + 3} textAnchor="end"
+          <text key={v} x={46} y={yy + 3} textAnchor="end"
             fontSize={7} fill="var(--muted-foreground)">
             {v}
           </text>
@@ -34,7 +35,7 @@ export default function RegEarlyStopping() {
 
       {/* X axis labels */}
       {EPOCHS_LABELS.map((e, i) => (
-        <text key={e} x={70 + i * 46} y={126} textAnchor="middle"
+        <text key={e} x={58 + i * 34} y={122} textAnchor="middle"
           fontSize={7} fill="var(--muted-foreground)">
           {e}
         </text>
@@ -43,20 +44,20 @@ export default function RegEarlyStopping() {
       {/* train loss line */}
       <polyline
         points={TRAIN_LOSS.map((v, i) =>
-          `${70 + i * 46},${115 - (v / 2.0) * 95}`
+          `${58 + i * 34},${110 - (v / 2.0) * 90}`
         ).join(' ')}
         fill="none" stroke="#0ea5e9" strokeWidth={1.5} />
       {/* val loss line */}
       <polyline
         points={VAL_LOSS.map((v, i) =>
-          `${70 + i * 46},${115 - (v / 2.0) * 95}`
+          `${58 + i * 34},${110 - (v / 2.0) * 90}`
         ).join(' ')}
         fill="none" stroke="#ef4444" strokeWidth={1.5} />
 
-      {/* val loss data points with values */}
+      {/* val loss data points */}
       {VAL_LOSS.map((v, i) => {
-        const xx = 70 + i * 46;
-        const yy = 115 - (v / 2.0) * 95;
+        const xx = 58 + i * 34;
+        const yy = 110 - (v / 2.0) * 90;
         const rising = i >= 4;
         return (
           <g key={i}>
@@ -65,47 +66,40 @@ export default function RegEarlyStopping() {
               fill={rising ? '#ef4444' : '#ef444460'}
               stroke={rising ? '#ef4444' : 'none'}
               strokeWidth={0.8} />
-            {i >= 3 && (
-              <text x={xx} y={yy - 6} textAnchor="middle"
-                fontSize={7}
-                fontWeight={rising ? 600 : 400}
-                fill={rising ? '#ef4444' : '#ef444490'}>
-                {v}
-              </text>
-            )}
           </g>
         );
       })}
 
-      {/* stop line at epoch 20 */}
-      <line x1={70 + 3 * 46} y1={12}
-        x2={70 + 3 * 46} y2={115}
+      {/* best line */}
+      <line x1={58 + 3 * 34} y1={12}
+        x2={58 + 3 * 34} y2={110}
         stroke="#10b981" strokeWidth={1}
         strokeDasharray="4 2" />
-      <text x={70 + 3 * 46} y={10} textAnchor="middle"
-        fontSize={8} fill="#10b981" fontWeight={600}>
-        best (0.52)
+      <text x={58 + 3 * 34} y={10} textAnchor="middle"
+        fontSize={7} fill="#10b981" fontWeight={600}>
+        best
       </text>
 
-      {/* legend */}
-      <line x1={360} y1={20} x2={380} y2={20}
-        stroke="#0ea5e9" strokeWidth={1.5} />
-      <text x={385} y={23} fontSize={8} fill="#0ea5e9">train</text>
-      <line x1={360} y1={35} x2={380} y2={35}
-        stroke="#ef4444" strokeWidth={1.5} />
-      <text x={385} y={38} fontSize={8} fill="#ef4444">val</text>
+      {/* legend inside chart */}
+      <line x1={60} y1={22} x2={75} y2={22} stroke="#0ea5e9" strokeWidth={1.5} />
+      <text x={79} y={25} fontSize={7} fill="#0ea5e9">train</text>
+      <line x1={60} y1={32} x2={75} y2={32} stroke="#ef4444" strokeWidth={1.5} />
+      <text x={79} y={35} fontSize={7} fill="#ef4444">val</text>
 
-      {/* annotation */}
-      <rect x={340} y={50} width={110} height={40} rx={4}
-        fill="#ef444410" stroke="#ef4444" strokeWidth={0.6} />
-      <text x={395} y={64} textAnchor="middle" fontSize={7}
-        fill="#ef4444">val 3회 연속 증가</text>
-      <text x={395} y={76} textAnchor="middle" fontSize={7}
-        fill="#ef4444">0.55→0.58→0.65</text>
-      <text x={395} y={86} textAnchor="middle" fontSize={8}
-        fontWeight={600} fill="#10b981">
-        epoch 20에서 중단!
-      </text>
+      {/* annotation — right side, clearly separated from chart */}
+      <rect x={325} y={15} width={130} height={110} rx={6}
+        fill="#ef444406" stroke="#ef4444" strokeWidth={0.8} />
+      <text x={390} y={32} textAnchor="middle" fontSize={9}
+        fontWeight={700} fill="#ef4444">Early Stopping</text>
+      <line x1={335} y1={38} x2={445} y2={38} stroke="#ef4444" strokeOpacity={0.3} strokeWidth={0.5} />
+
+      <text x={335} y={54} fontSize={8} fill="var(--muted-foreground)">E15: val=0.55</text>
+      <text x={430} y={54} fontSize={7} fontWeight={600} fill="#10b981">best</text>
+
+      <text x={335} y={70} fontSize={8} fill="#ef4444">E20: val=0.52 → cnt 0</text>
+      <text x={335} y={84} fontSize={8} fill="#ef4444">E25: val=0.55 → cnt 1</text>
+      <text x={335} y={98} fontSize={8} fill="#ef4444">E30: val=0.58 → cnt 2</text>
+      <text x={335} y={112} fontSize={8} fontWeight={700} fill="#ef4444">E35: val=0.65 → STOP</text>
     </motion.g>
   );
 }

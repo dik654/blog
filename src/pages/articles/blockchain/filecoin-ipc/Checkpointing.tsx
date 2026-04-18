@@ -25,85 +25,84 @@ export default function Checkpointing({ onCodeRef }: { onCodeRef: (key: string, 
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Checkpointing &amp; Cross-Subnet Messages</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Checkpointing Protocol:
 
-// Bottom-up Checkpoints:
-// - child → parent submission
-// - subnet state anchoring
-// - periodic (e.g., every 100 epochs)
-// - 2/3+ validator signatures
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">BottomUpCheckpoint 구조체</h4>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+            <div className="rounded bg-muted p-2"><code>SubnetID</code> — <span className="text-muted-foreground">서브넷 식별자</span></div>
+            <div className="rounded bg-muted p-2"><code>Epoch</code> — <span className="text-muted-foreground">ChainEpoch</span></div>
+            <div className="rounded bg-muted p-2"><code>StateRoot</code> — <span className="text-muted-foreground">cid.Cid</span></div>
+            <div className="rounded bg-muted p-2"><code>CrossMessagesRoot</code> — <span className="text-muted-foreground">cid.Cid</span></div>
+            <div className="rounded bg-muted p-2"><code>Proofs</code> — <span className="text-muted-foreground">MultiSignature</span></div>
+          </div>
+        </div>
 
-// Checkpoint structure:
-// type BottomUpCheckpoint struct {
-//     SubnetID: SubnetID
-//     Epoch: ChainEpoch
-//     StateRoot: cid.Cid
-//     CrossMessagesRoot: cid.Cid
-//     Proofs: MultiSignature
-// }
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Bottom-up Checkpoint</h4>
+            <p className="text-xs text-muted-foreground mb-2">child → parent 제출. 서브넷 상태 앵커링</p>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li>주기적 제출 (예: 매 100 에폭)</li>
+              <li>검증자 2/3+ 서명 필수</li>
+              <li>상태 루트 + 크로스 메시지 루트 포함</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Top-down Messages</h4>
+            <p className="text-xs text-muted-foreground mb-2">parent → child 전달</p>
+            <ul className="text-xs space-y-0.5 list-disc list-inside">
+              <li>서브넷이 부모 메시지 수신</li>
+              <li>자금 이체 (FIL transfer)</li>
+              <li>크로스 체인 호출</li>
+            </ul>
+          </div>
+        </div>
 
-// Top-down Messages:
-// - parent → child
-// - subnet receives parent messages
-// - fund transfers
-// - cross-chain calls
+        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">Cross-Subnet 메시지 흐름 (A → B, 동일 부모)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-2 text-xs">
+            <div className="rounded bg-muted p-2 text-center"><strong>1.</strong> subnet_A에서 <code>Release()</code> 호출, FIL 락</div>
+            <div className="rounded bg-muted p-2 text-center"><strong>2.</strong> 체크포인트로 메인넷에 제출</div>
+            <div className="rounded bg-muted p-2 text-center"><strong>3.</strong> 메인넷 Gateway가 라우팅</div>
+            <div className="rounded bg-muted p-2 text-center"><strong>4.</strong> subnet_B Gateway 수신</div>
+            <div className="rounded bg-muted p-2 text-center"><strong>5.</strong> subnet_B에서 <code>Release()</code>, FIL 릴리스. 소요: ~2 체크포인트 주기</div>
+          </div>
+        </div>
 
-// Cross-Subnet Messaging:
-// 1. Source subnet: create message
-// 2. submit to parent (via checkpoint)
-// 3. parent routes to destination
-// 4. destination subnet executes
-// 5. result can flow back
-
-// Example: Fund transfer
-// subnet_A → subnet_B (both children of mainnet):
-// 1. user calls Release() in subnet_A
-//    - FIL locked in subnet_A
-// 2. checkpoint to mainnet
-// 3. mainnet Gateway routes
-// 4. subnet_B's Gateway receives
-// 5. Release() in subnet_B
-//    - FIL released to user
-// Time: ~2 checkpoint periods
-
-// Hierarchical Messages:
-// - messages traverse tree
-// - intermediate hops
-// - bottom-up + top-down
-// - path-based routing
-
-// Validator Rotation:
-// - subnet can update validators
-// - via SubnetActor governance
-// - parent chain enforces
-// - slashing preserved
-
-// Finality inheritance:
-// - subnet: local finality (e.g., 1s with Tendermint)
-// - parent checkpoint: inherits parent's finality
-// - after checkpoint: final
-// - mainnet 7.5h (EC) or 2-5min (F3)
-
-// Security Model:
-// - subnet security: 2/3+ of its validators honest
-// - parent security: parent's consensus
-// - composition: min(child, parent) security
-// - final anchor: Filecoin mainnet
-
-// 장점:
-// - specialized chains
-// - composable security
-// - hierarchical scaling
-// - flexible consensus
-// - interoperability
-
-// 단점:
-// - checkpoint delay
-// - validator coordination
-// - complexity
-// - cross-subnet latency`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Finality 상속 &amp; 보안</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li><strong>서브넷 로컬</strong> — 예: Tendermint 1s finality</li>
+              <li><strong>부모 체크포인트 후</strong> — 부모의 finality 상속</li>
+              <li><strong>메인넷 앵커</strong> — EC 7.5h 또는 F3 2~5min</li>
+              <li>보안 = <code>min(child, parent)</code> 합성</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">장단점</h4>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <p className="font-medium mb-1">장점</p>
+                <ul className="space-y-0.5 list-disc list-inside text-muted-foreground">
+                  <li>특화 체인 구성</li>
+                  <li>합성 보안</li>
+                  <li>계층적 확장</li>
+                  <li>합의 유연성</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-medium mb-1">단점</p>
+                <ul className="space-y-0.5 list-disc list-inside text-muted-foreground">
+                  <li>체크포인트 지연</li>
+                  <li>검증자 조율 비용</li>
+                  <li>설계 복잡도</li>
+                  <li>크로스 서브넷 레이턴시</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Checkpointing: <strong>subnet state → parent anchor + cross-messages</strong>.<br />
           bottom-up (commit) + top-down (command) messages.<br />

@@ -16,7 +16,7 @@ export function Step2() {
   return (
     <g>
       <text x={260} y={20} textAnchor="middle" fontSize={10} fill="#999">
-        ∂h_t/∂h_k = ∏ W_h · diag(tanh'(...))
+        ∂hₜ/∂hₖ = ∏ Wh · diag(tanh'(...))
       </text>
       {[1, 0.8, 0.64, 0.51, 0.41].map((v, i) => (
         <g key={i}>

@@ -1,4 +1,5 @@
 import CompositionViz from './viz/CompositionViz';
+import CompositionDetailViz from './viz/CompositionDetailViz';
 
 export default function Composition() {
   return (
@@ -10,124 +11,7 @@ export default function Composition() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-6 mb-3">하네스 3대 요소 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. System Prompt:
-//
-// Components:
-// - Role: "You are a helpful assistant"
-// - Persona: tone, style, expertise
-// - Instructions: what to do
-// - Constraints: what NOT to do
-// - Output format: how to respond
-//
-// Example:
-// """
-// You are a senior software engineer.
-// Communicate professionally and concisely.
-// Always provide code examples when asked.
-// Never recommend deprecated APIs.
-// Respond in markdown with code blocks.
-// """
-
-// 2. Tools:
-//
-// Tool types:
-// - API calls (search, DB query)
-// - Code execution (Python, shell)
-// - File operations (read, write)
-// - Custom functions
-//
-// Tool definition:
-// {
-//   "name": "search",
-//   "description": "Web search",
-//   "parameters": {
-//     "query": "string"
-//   }
-// }
-//
-// LLM function calling:
-// - LLM decides when to call
-// - extracts parameters
-// - invokes function
-// - uses result in response
-
-// 3. Guardrails:
-//
-// Input guardrails:
-// - PII detection
-// - prompt injection defense
-// - length limits
-// - content policy
-// - rate limiting
-//
-// Output guardrails:
-// - toxicity check
-// - factuality verification
-// - format validation
-// - bias detection
-// - source citation
-//
-// Example guardrail:
-// def validate_output(response):
-//     checks = [
-//         is_factual(response),
-//         is_safe(response),
-//         follows_format(response)
-//     ]
-//     if not all(checks):
-//         return fallback_response()
-//     return response
-
-// Composition pattern:
-// User → Input Guardrail → System Prompt + LLM + Tools
-// → Output Guardrail → User
-
-// LangChain example:
-// from langchain.agents import AgentExecutor
-// from langchain.tools import Tool
-//
-// tools = [
-//   Tool(name="search", func=search_func),
-//   Tool(name="calculator", func=calc_func)
-// ]
-//
-// agent = AgentExecutor.from_agent_and_tools(
-//   agent=create_react_agent(llm, tools, prompt),
-//   tools=tools,
-//   handle_parsing_errors=True
-// )
-//
-// response = agent.invoke({"input": user_query})
-
-// Modern approaches:
-
-// Claude Code harness:
-// - system prompt (agent instructions)
-// - tools (Bash, Read, Write, Grep, ...)
-// - hooks (extensibility)
-// - guardrails (permission system)
-// - memory (persistent)
-
-// OpenAI Assistants API:
-// - managed harness
-// - built-in tools
-// - thread management
-// - file handling
-
-// Custom DIY:
-// - full control
-// - more work
-// - better optimization
-// - needed for specialized use
-
-// Best practices:
-// ✓ explicit role definition
-// ✓ clear instructions
-// ✓ well-documented tools
-// ✓ fail-safe guardrails
-// ✓ observability hooks`}
-        </pre>
+        <div className="not-prose mb-6"><CompositionDetailViz /></div>
         <p className="leading-7">
           3 elements: <strong>system prompt + tools + guardrails</strong>.<br />
           system prompt: role/persona/instructions/format.<br />

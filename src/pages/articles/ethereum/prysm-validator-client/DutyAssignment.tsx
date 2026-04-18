@@ -18,64 +18,32 @@ export default function DutyAssignment({ onCodeRef }: Props) {
 
         {/* ── Validator main loop ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Validator 메인 루프 — slot tick 기반</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// validator/client/runner.go
-func (v *validator) Run(ctx context.Context) {
-    // 매 slot 12초 ticker
-    ticker := slotutil.NewSlotTicker(v.genesisTime, 12*time.Second)
-    defer ticker.Done()
-
-    for {
-        select {
-        case slot := <-ticker.C():
-            v.processSlot(ctx, slot)
-        case <-ctx.Done():
-            return
-        }
-    }
-}
-
-// 각 slot에서 수행할 작업 결정
-func (v *validator) processSlot(ctx context.Context, slot Slot) {
-    // 1. 모든 validator의 역할 조회
-    roles := v.RolesAt(ctx, slot)
-
-    // 2. 역할별 병렬 실행 (goroutine)
-    var wg sync.WaitGroup
-    for pubKey, role := range roles {
-        wg.Add(1)
-        go func(pk [48]byte, r []ValidatorRole) {
-            defer wg.Done()
-            for _, roleType := range r {
-                switch roleType {
-                case RoleAttester:
-                    v.SubmitAttestation(ctx, slot, pk)
-                case RoleAggregator:
-                    v.SubmitAggregateAndProof(ctx, slot, pk)
-                case RoleProposer:
-                    v.ProposeBlock(ctx, slot, pk)
-                case RoleSyncCommittee:
-                    v.SubmitSyncCommitteeMessage(ctx, slot, pk)
-                case RoleSyncCommitteeAggregator:
-                    v.SubmitSyncAggregate(ctx, slot, pk)
-                }
-            }
-        }(pubKey, role)
-    }
-    wg.Wait()
-}
-
-// RolesAt 내부 로직:
-// - 매 epoch 시작 시 beacon-chain에 duties 조회
-// - duties 캐시 보관
-// - slot별로 해당 duties 반환
-
-// 한 validator가 여러 역할 동시 수행 가능:
-// - Attester: 매 epoch (32 slot 중 1번)
-// - Aggregator: 확률적 (~1/16)
-// - Proposer: 매우 드물게 (슬롯별 추첨)
-// - SyncCommittee: 선정 시 27시간 연속`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Run() — 메인 루프</p>
+            <p className="text-sm text-foreground/80 mb-2">
+              <code>SlotTicker(genesisTime, 12s)</code>로 매 슬롯 tick 수신 → <code>processSlot(ctx, slot)</code> 호출.
+            </p>
+            <p className="text-xs font-bold text-foreground/70 mb-2">processSlot() — 역할 분기</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>RolesAt(ctx, slot)</code>로 모든 validator의 역할 조회</p>
+              <p>2. 각 pubKey별 goroutine 병렬 실행</p>
+              <p>3. 역할별 switch: <code>SubmitAttestation</code> / <code>SubmitAggregateAndProof</code> / <code>ProposeBlock</code> / <code>SubmitSyncCommitteeMessage</code> / <code>SubmitSyncAggregate</code></p>
+              <p>4. <code>wg.Wait()</code>로 전부 완료 대기</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">RolesAt 내부 로직</p>
+            <p className="text-sm text-foreground/80 mb-2">매 epoch 시작 시 beacon-chain에 duties 조회 → 캐시 보관 → slot별 해당 duties 반환.</p>
+            <p className="text-xs font-bold text-foreground/70 mb-2">한 validator의 동시 역할</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">Attester</p><p className="text-foreground/50">매 epoch 1번</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">Aggregator</p><p className="text-foreground/50">확률적 ~1/16</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">Proposer</p><p className="text-foreground/50">매우 드물게</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/70 font-semibold">SyncCommittee</p><p className="text-foreground/50">27시간 연속</p></div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Validator는 <strong>매 slot tick에 역할 실행</strong>.<br />
           RolesAt으로 duty 조회 → goroutine 병렬 처리.<br />

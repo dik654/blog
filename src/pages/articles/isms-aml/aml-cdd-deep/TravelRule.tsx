@@ -1,3 +1,7 @@
+import TravelRuleViz from './viz/TravelRuleViz';
+import TravelRuleSolutionViz from './viz/TravelRuleSolutionViz';
+import TravelRuleTimelineViz from './viz/TravelRuleTimelineViz';
+
 export default function TravelRule() {
   return (
     <section id="travel-rule" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function TravelRule() {
           송신인과 수신인의 신원 정보를 함께 전송하도록 의무화한 규정.<br />
           전통 금융의 전신환(wire transfer)에 적용되던 규칙을 가상자산에 확장한 것이다.
         </p>
+
+        <TravelRuleViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">FATF 권고 R.16 — 국제 기준</h3>
         <p>
@@ -160,6 +166,8 @@ export default function TravelRule() {
           해외 VASP와의 교환을 위해 TRISA나 Notabene을 병행 연동하는 구조.
         </p>
 
+        <TravelRuleSolutionViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">미신고 VASP와의 거래</h3>
         <p>
           Travel Rule의 전제는 "상대방도 신고된 VASP"라는 점.<br />
@@ -211,6 +219,8 @@ export default function TravelRule() {
           <p className="mb-1"><strong>2025.12</strong> — 한국 100만 원 이하 확대 추진 발표</p>
           <p><strong>2026.상반기</strong> — 가상자산 2단계 법안 입법 목표 (제재 강화, 스테이블코인 포함)</p>
         </div>
+
+        <TravelRuleTimelineViz />
 
         <p className="text-sm border-l-2 border-blue-500/50 pl-3 mt-4">
           <strong>{'💡'} Travel Rule과 프라이버시의 균형</strong><br />

@@ -1,8 +1,14 @@
+import DbAccessControlViz from './viz/DbAccessControlViz';
+import TripleControlViz from './viz/TripleControlViz';
+import LogReviewViz from './viz/LogReviewViz';
+
 export default function DbAccessControl() {
   return (
     <section id="db-access-control" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">DB 접근제어와 로그 감사</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <DbAccessControlViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">DB 접근제어 소프트웨어 도입 이유</h3>
         <p>
@@ -63,6 +69,8 @@ export default function DbAccessControl() {
           3중 통제를 결합하면: "허용된 IP에서(IP) → 본인 인증을 거친 사용자가(세션) → 허가된 쿼리만 실행(쿼리)".<br />
           세 축 모두를 동시에 만족해야 쿼리가 DB에 도달한다.
         </p>
+
+        <TripleControlViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">계정 분리 체계</h3>
         <p>
@@ -179,6 +187,8 @@ export default function DbAccessControl() {
             </tbody>
           </table>
         </div>
+
+        <LogReviewViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">산출물 목록</h3>
         <p>

@@ -1,4 +1,5 @@
 import ReparamViz from './viz/ReparamViz';
+import ReparamDetailViz from './viz/ReparamDetailViz';
 
 export default function ReparamTrick() {
   return (
@@ -37,93 +38,7 @@ export default function ReparamTrick() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Reparameterization Trick 수학적 원리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 문제 정의
-//
-// VAE loss에서:
-//   L = E_{z~q(z|x)}[log p(x|z)] - KL(q||p)
-//
-// 기대값 E_{z~q}[...] 안의 z 샘플링이 문제
-// - 확률적 노드는 미분 불가
-// - dL/dμ, dL/dσ 계산 불가
-// - 역전파 끊김
-//
-// Monte Carlo 추정 시도:
-//   L ≈ (1/M) Σ log p(x|z_m), z_m ~ N(μ, σ²)
-//
-//   여전히 z_m이 (μ, σ²)의 함수로 명시되지 않음
-//   → gradient 흐름 불가
-
-// 해결: Reparameterization
-//
-// z ~ N(μ, σ²) 를
-// z = μ + σ · ε,  ε ~ N(0, 1) 로 변환
-//
-// 핵심 아이디어:
-//   - 랜덤성 ε을 외부에서 샘플링 (고정)
-//   - z는 (μ, σ, ε)의 결정론적 함수
-//   - μ, σ에 대한 gradient 계산 가능
-//
-// 수학적 증명:
-//   z = μ + σε
-//   E[z] = μ + σ·E[ε] = μ (E[ε]=0)
-//   Var[z] = σ² · Var[ε] = σ² (Var[ε]=1)
-//   → z ~ N(μ, σ²)  ✓ (분포 같음)
-
-// Gradient 흐름:
-//   dL/dμ = dL/dz · dz/dμ = dL/dz · 1
-//   dL/dσ = dL/dz · dz/dσ = dL/dz · ε
-//   dL/dε = dL/dz · σ  (ε은 상수로 취급)
-//
-//   모든 필요한 gradient 존재
-//   → backprop 가능
-
-// PyTorch 구현:
-def reparameterize(mu, logvar):
-    std = torch.exp(0.5 * logvar)       # σ = exp(log σ² / 2)
-    eps = torch.randn_like(std)          # ε ~ N(0, I)
-    z = mu + eps * std                   # z = μ + σ·ε
-    return z`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">일반 Reparameterization</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 다른 분포들의 Reparameterization
-//
-// 1. Gaussian N(μ, σ²):
-//    z = μ + σ·ε, ε ~ N(0, 1)
-//
-// 2. Uniform U(a, b):
-//    z = a + (b-a)·u, u ~ U(0, 1)
-//
-// 3. Exponential Exp(λ):
-//    z = -log(u) / λ, u ~ U(0, 1)
-//
-// 4. Laplace L(μ, b):
-//    z = μ - b·sign(u)·log(1 - 2|u|), u ~ U(-0.5, 0.5)
-//
-// 5. Gumbel-Softmax (discrete):
-//    softmax((log π + g) / τ)
-//    g_i = -log(-log(u_i)), u_i ~ U(0, 1)
-//    τ = temperature (0에 가까울수록 one-hot)
-//
-// 6. Categorical:
-//    Gumbel-Softmax trick 사용
-//    VQ-VAE는 straight-through estimator 사용
-
-// 핵심 조건:
-//   "샘플링 = 간단한 분포(noise) + 결정론적 변환"
-//
-// 적용 불가능한 경우:
-//   - Mixture 모델 (여러 컴포넌트 선택)
-//   - 일반 discrete 분포 → Gumbel trick 필요
-//   - 복잡한 조건부 분포
-
-// 중요성:
-//   - VAE의 학습 가능성 보장
-//   - Flow 기반 모델의 핵심
-//   - Variational inference 전반에 응용`}
-        </pre>
+        <div className="not-prose"><ReparamDetailViz /></div>
         <p className="leading-7">
           요약 1: Reparameterization은 <strong>랜덤성 분리</strong>로 역전파 가능성 확보.<br />
           요약 2: <strong>z = μ + σ·ε</strong> (ε는 상수) — Gaussian의 핵심 트릭.<br />

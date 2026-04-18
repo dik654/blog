@@ -25,40 +25,46 @@ export default function AgentSelection() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Agent 메타데이터 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct AgentDefinition {
-    pub agent_type: String,            // "Explore" | "Plan" | ...
-    pub description: String,           // LLM이 선택 시 참고
-    pub tags: Vec<String>,             // ["search", "code", "analysis"]
-    pub allowed_tools: Vec<String>,    // 이 agent가 사용 가능한 도구
-    pub model_preference: Option<String>, // opus/sonnet/haiku
-    pub system_prompt: String,         // agent별 특화 prompt
-    pub recent_success_rate: f32,      // 최근 호출 성공률 (bandit)
-}
-
-// 선택 알고리즘
-fn rank_agents(task: &Task, pool: &[AgentDefinition]) -> Vec<&AgentDefinition> {
-    pool.iter()
-        .map(|a| {
-            let tag_overlap = a.tags.iter()
-                .filter(|t| task.tags.contains(t))
-                .count() as f32 / task.tags.len() as f32;
-
-            let domain_fit = compute_domain_fit(a, task);
-
-            let score = tag_overlap * 0.6
-                      + domain_fit * 0.3
-                      + a.recent_success_rate * 0.1;
-
-            (a, score)
-        })
-        .filter(|(_, score)| *score > 0.3)
-        .collect::<Vec<_>>()
-        .sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap())
-        .into_iter()
-        .take(11)  // "Best 11"
-        .map(|(a, _)| a)
-        .collect()
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3">AgentDefinition</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <ul className="list-none pl-0 space-y-1">
+              <li><code>agent_type</code> — <code>"Explore"</code> | <code>"Plan"</code> | ...</li>
+              <li><code>description</code> — LLM이 선택 시 참고하는 설명</li>
+              <li><code>tags</code> — <code>["search", "code", "analysis"]</code></li>
+              <li><code>allowed_tools</code> — 이 agent가 사용 가능한 도구 목록</li>
+            </ul>
+            <ul className="list-none pl-0 space-y-1">
+              <li><code>model_preference</code> — opus/sonnet/haiku (optional)</li>
+              <li><code>system_prompt</code> — agent별 특화 prompt</li>
+              <li><code>recent_success_rate</code> — 최근 호출 성공률 (bandit 학습)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3">선택 알고리즘 — <code>rank_agents</code></p>
+          <div className="space-y-2 text-sm">
+            <p><strong>점수 산출</strong>: <code>tag_overlap x 0.6</code> + <code>domain_fit x 0.3</code> + <code>recent_success_rate x 0.1</code></p>
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              <div className="bg-background border border-border rounded px-3 py-2 text-center">
+                <p className="font-medium">tag_overlap</p>
+                <p className="text-xs text-muted-foreground">태스크 태그와 agent 태그 교집합 비율</p>
+                <p className="text-lg font-bold">60%</p>
+              </div>
+              <div className="bg-background border border-border rounded px-3 py-2 text-center">
+                <p className="font-medium">domain_fit</p>
+                <p className="text-xs text-muted-foreground">도메인 적합도 (임베딩 기반)</p>
+                <p className="text-lg font-bold">30%</p>
+              </div>
+              <div className="bg-background border border-border rounded px-3 py-2 text-center">
+                <p className="font-medium">success_rate</p>
+                <p className="text-xs text-muted-foreground">최근 호출 성공률</p>
+                <p className="text-lg font-bold">10%</p>
+              </div>
+            </div>
+            <p className="text-muted-foreground mt-2">cutoff <code>0.3</code> 미만 제거 → 상위 11개("Best 11") 선택</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Selection 예시</h3>
         <AgentScoreChartViz />
@@ -69,41 +75,58 @@ fn rank_agents(task: &Task, pool: &[AgentDefinition]) -> Vec<&AgentDefinition> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">태그 추출 — 사용자 요청 분석</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 사용자 요청에서 태스크 태그 자동 추출
-fn extract_task_tags(user_message: &str) -> Vec<String> {
-    let mut tags = Vec::new();
-    let lower = user_message.to_lowercase();
-
-    // 1) 키워드 사전 매칭 (빠름)
-    let keyword_map: &[(&str, &[&str])] = &[
-        ("debug",    &["bug", "error", "crash", "broken", "fail"]),
-        ("refactor", &["refactor", "cleanup", "rename", "move", "extract"]),
-        ("feature",  &["add", "implement", "new", "create"]),
-        ("review",   &["review", "audit", "check", "verify"]),
-        ("docs",     &["document", "readme", "explain", "describe"]),
-        ("test",     &["test", "spec", "coverage", "unit"]),
-        ("auth",     &["login", "password", "token", "session", "auth"]),
-        ("perf",     &["slow", "faster", "optimize", "performance"]),
-    ];
-
-    for (tag, keywords) in keyword_map {
-        if keywords.iter().any(|kw| lower.contains(kw)) {
-            tags.push(tag.to_string());
-        }
-    }
-
-    // 2) 파일 확장자 힌트
-    if lower.contains(".rs") { tags.push("rust".into()); }
-    if lower.contains(".ts") || lower.contains(".tsx") {
-        tags.push("typescript".into());
-    }
-
-    // 3) 경로 힌트 — 디렉토리명이 도메인 힌트
-    if lower.contains("/auth/") { tags.push("auth".into()); }
-    if lower.contains("/api/") { tags.push("api".into()); }
-
-    tags
-}`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code>extract_task_tags</code> — 3단계 추출</p>
+          <div className="space-y-4">
+            <div>
+              <p className="font-medium text-sm mb-2">1) 키워드 사전 매칭 (빠름)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">debug</code>
+                  <p className="text-muted-foreground mt-0.5">bug, error, crash, broken, fail</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">refactor</code>
+                  <p className="text-muted-foreground mt-0.5">refactor, cleanup, rename, move, extract</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">feature</code>
+                  <p className="text-muted-foreground mt-0.5">add, implement, new, create</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">review</code>
+                  <p className="text-muted-foreground mt-0.5">review, audit, check, verify</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">docs</code>
+                  <p className="text-muted-foreground mt-0.5">document, readme, explain, describe</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">test</code>
+                  <p className="text-muted-foreground mt-0.5">test, spec, coverage, unit</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">auth</code>
+                  <p className="text-muted-foreground mt-0.5">login, password, token, session, auth</p>
+                </div>
+                <div className="bg-background border border-border rounded px-2 py-1.5">
+                  <code className="font-semibold">perf</code>
+                  <p className="text-muted-foreground mt-0.5">slow, faster, optimize, performance</p>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="font-medium mb-1">2) 파일 확장자 힌트</p>
+                <p className="text-muted-foreground"><code>.rs</code> → <code>rust</code>, <code>.ts/.tsx</code> → <code>typescript</code></p>
+              </div>
+              <div>
+                <p className="font-medium mb-1">3) 경로 힌트</p>
+                <p className="text-muted-foreground"><code>/auth/</code> → <code>auth</code>, <code>/api/</code> → <code>api</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>결정론적 매칭이 LLM보다 빠름</strong>:<br />
           - 선택 단계에서 LLM 호출 추가 → 비용·지연 증가<br />
@@ -116,32 +139,35 @@ fn extract_task_tags(user_message: &str) -> Vec<String> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">활성화 타이밍 — 언제 re-rank?</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Agent pool 재평가 시점
-enum RerankTrigger {
-    SessionStart,        // 새 세션 시작 시 1회
-    TaskSwitch,          // 사용자 요청이 전환된 것으로 판단
-    PeriodicRefresh,     // N turns 마다 (기본 10)
-    ExplicitHint,        // 사용자가 "switch to X agent" 명시
-}
-
-// TaskSwitch 감지
-fn detect_task_switch(prev: &TaskSummary, curr: &str) -> bool {
-    let curr_tags = extract_task_tags(curr);
-    let prev_tags = &prev.tags;
-
-    // Jaccard similarity < 0.3이면 새 태스크로 판단
-    let intersection = curr_tags.iter()
-        .filter(|t| prev_tags.contains(t)).count();
-    let union = (curr_tags.len() + prev_tags.len()) - intersection;
-
-    if union == 0 { return true; }
-    let similarity = intersection as f32 / union as f32;
-    similarity < 0.3
-}
-
-// Session 중간에 agent pool 변경 시
-// → System prompt 재작성 (agent 목록 섹션만)
-// → 기존 conversation history 유지`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3">RerankTrigger — Agent pool 재평가 시점</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>SessionStart</code></p>
+              <p className="text-xs text-muted-foreground">새 세션 시작 시 1회</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>TaskSwitch</code></p>
+              <p className="text-xs text-muted-foreground">사용자 요청이 전환된 것으로 판단</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>PeriodicRefresh</code></p>
+              <p className="text-xs text-muted-foreground">N turns 마다 (기본 10)</p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-medium"><code>ExplicitHint</code></p>
+              <p className="text-xs text-muted-foreground">"switch to X agent" 명시</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-2">TaskSwitch 감지 — Jaccard similarity</p>
+          <p className="text-sm">
+            현재 요청의 태그와 이전 태스크 태그의 <strong>Jaccard similarity</strong>(교집합/합집합)를 계산<br />
+            similarity &lt; <code>0.3</code>이면 새 태스크로 판단 → agent pool re-rank<br />
+            Session 중간에 pool 변경 시 system prompt의 agent 목록 섹션만 재작성, 기존 대화 이력은 유지
+          </p>
+        </div>
         <p>
           <strong>너무 자주 re-rank</strong>: prompt cache invalidation → API 비용 ↑<br />
           <strong>너무 드물게 re-rank</strong>: 무관한 agent가 system prompt에 남음<br />
@@ -149,33 +175,26 @@ fn detect_task_switch(prev: &TaskSummary, curr: &str) -> bool {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">System Prompt 주입 형태</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 선택된 agents가 system prompt에 어떻게 포함되는지
-
-fn build_system_prompt(selected: &[AgentDefinition]) -> String {
-    let mut prompt = String::from(BASE_SYSTEM_PROMPT);
-    prompt.push_str("\\n\\n# Available Sub-Agents\\n");
-    prompt.push_str("Spawn them via the Agent tool.\\n\\n");
-
-    for agent in selected {
-        prompt.push_str(&format!(
-            "## {}\\n{}\\n- Tools: {}\\n\\n",
-            agent.agent_type,
-            agent.description,
-            agent.allowed_tools.join(", "),
-        ));
-    }
-
-    prompt
-}
-
-// 결과 예시 (실제 Claude Code system prompt)
-// ## Explore
-// Fast agent specialized for exploring codebases...
-// - Tools: Read, Grep, Glob, WebFetch
-//
-// ## Plan
-// Software architect agent for designing implementation plans...
-// - Tools: Read, Grep, Glob (analysis-only)`}</pre>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code>build_system_prompt</code> — 선택된 agents를 system prompt에 포함</p>
+          <p className="text-sm mb-3">
+            <code>BASE_SYSTEM_PROMPT</code>에 <code># Available Sub-Agents</code> 섹션 추가<br />
+            각 agent마다 <code>agent_type</code>, <code>description</code>, <code>allowed_tools</code> 나열
+          </p>
+          <p className="font-medium text-sm mb-2">결과 예시 (실제 Claude Code system prompt)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-semibold">Explore</p>
+              <p className="text-muted-foreground">Fast agent specialized for exploring codebases...</p>
+              <p className="text-xs mt-1">Tools: <code>Read</code>, <code>Grep</code>, <code>Glob</code>, <code>WebFetch</code></p>
+            </div>
+            <div className="bg-background border border-border rounded px-3 py-2">
+              <p className="font-semibold">Plan</p>
+              <p className="text-muted-foreground">Software architect agent for designing implementation plans...</p>
+              <p className="text-xs mt-1">Tools: <code>Read</code>, <code>Grep</code>, <code>Glob</code> (analysis-only)</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>각 agent당 100-200 tokens 소비</strong> — 11개면 1.5-2K tokens<br />
           이 비용은 모든 turn마다 반복 — prompt caching으로 완화<br />

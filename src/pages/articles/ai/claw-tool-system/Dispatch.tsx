@@ -16,39 +16,46 @@ export default function Dispatch() {
           호출 사이트는 단일 — <code>conversation_runtime.rs</code>의 <code>handle_tool_use()</code> 함수<br />
           이 단일 진입점이 모든 도구 실행의 게이트웨이 역할
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// conversation_runtime.rs (발췌)
-async fn handle_tool_use(&mut self, block: ToolUseBlock) -> Result<ToolResult> {
-    let ToolUseBlock { id, name, input } = block;
-    //    ↑ LLM이 보낸 tool_use 블록 — id는 후속 tool_result와 매칭용
-
-    // 1) 권한 게이트
-    let check = self.enforcer.check(&name, &input)?;
-    match check {
-        EnforcementResult::Deny(reason) => return Ok(ToolResult::error(id, reason)),
-        EnforcementResult::Prompt(msg)  => {
-            if !self.prompt_user(&msg).await? {
-                return Ok(ToolResult::error(id, "user denied"));
-            }
-        }
-        EnforcementResult::Allow => {}
-    }
-
-    // 2) Pre-hook 실행 (취소 가능)
-    if let Some(abort) = self.hooks.pre_tool(&name, &input).await? {
-        return Ok(ToolResult::error(id, abort.reason));
-    }
-
-    // 3) 디스패치
-    let output = execute_tool(&name, input.clone()).await?;
-
-    // 4) Post-hook 실행
-    self.hooks.post_tool(&name, &input, &output).await?;
-
-    // 5) 세션 로그 기록
-    self.session.log_tool_call(id.clone(), name, input, output.clone());
-
-    Ok(ToolResult::ok(id, output))
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">conversation_runtime.rs &mdash; handle_tool_use()</p>
+          <div className="grid grid-cols-1 gap-2">
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="text-sm font-semibold">권한 게이트</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">enforcer.check(&name, &input)</code> — Deny 시 즉시 에러 반환, Prompt 시 사용자 Y/N 대기, Allow 시 통과</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="text-sm font-semibold">Pre-hook 실행</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">hooks.pre_tool(&name, &input)</code> — 훅이 abort 반환 시 디스패치 스킵</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="text-sm font-semibold">디스패치</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">execute_tool(&name, input.clone()).await</code> — 실제 도구 함수 호출</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                <p className="text-sm font-semibold">Post-hook 실행</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">hooks.post_tool(&name, &input, &output)</code> — 실패해도 도구 결과는 반환</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold">5</span>
+              <div>
+                <p className="text-sm font-semibold">세션 로그 기록</p>
+                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">session.log_tool_call(id, name, input, output)</code> — <code className="text-xs">id</code>로 tool_use와 tool_result 매칭</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>5단계 파이프라인</strong>: 권한 → Pre-hook → 디스패치 → Post-hook → 세션 로그<br />
           각 단계는 독립적 — Pre-hook이 abort하면 디스패치 스킵, Post-hook 실패해도 도구 결과는 반환<br />
@@ -60,46 +67,40 @@ async fn handle_tool_use(&mut self, block: ToolUseBlock) -> Result<ToolResult> {
 
         {/* ── match 분기 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">execute_tool() 내부 — 40개 match 분기</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn execute_tool(name: &str, input: Value) -> Result<ToolOutput> {
-    match name {
-        // 파일 I/O (3개)
-        "read_file"   => {
-            let p: TextFilePayload = serde_json::from_value(input)?;
-            read_file(p).await
-        }
-        "write_file"  => write_file(input).await,
-        "edit_file"   => edit_file(input).await,
-
-        // 검색 (2개)
-        "glob_search" => glob_search(input).await,
-        "grep_search" => grep_search(input).await,
-
-        // 실행 (4개)
-        "bash"       => execute_bash(input).await,
-        "PowerShell" => execute_powershell(input).await,
-        "REPL"       => execute_repl(input).await,
-        "Sleep"      => execute_sleep(input).await,
-
-        // UI (4개)
-        "SendUserMessage" => send_user_message(input).await,
-        "Config"          => config_tool(input).await,
-        "EnterPlanMode"   => enter_plan_mode(input).await,
-        "ExitPlanMode"    => exit_plan_mode(input).await,
-
-        // 태스크 (6개)
-        "TaskCreate"  => global_task_registry().create(input).await,
-        "TaskGet"     => global_task_registry().get(input).await,
-        "TaskList"    => global_task_registry().list(input).await,
-        "TaskStop"    => global_task_registry().stop(input).await,
-        "TaskUpdate"  => global_task_registry().update(input).await,
-        "TaskOutput"  => global_task_registry().output(input).await,
-
-        // 팀 (2개), 크론 (3개), 통합 (5개), MCP (4개), LSP (1개), 기타 (6개)
-        // ... 총 40개 분기
-
-        _ => Err(anyhow!("unknown tool: {}", name)),
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">execute_tool() &mdash; match name 분기 (40개 중 발췌)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="bg-muted/50 border border-border rounded-lg p-3">
+              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">파일 I/O (3개)</p>
+              <p className="text-sm font-mono"><code className="text-xs">"read_file"</code> &rarr; <code className="text-xs">read_file(p).await</code></p>
+              <p className="text-sm font-mono"><code className="text-xs">"write_file"</code> &rarr; <code className="text-xs">write_file(input).await</code></p>
+              <p className="text-sm font-mono"><code className="text-xs">"edit_file"</code> &rarr; <code className="text-xs">edit_file(input).await</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3">
+              <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">검색 (2개)</p>
+              <p className="text-sm font-mono"><code className="text-xs">"glob_search"</code> &rarr; <code className="text-xs">glob_search(input).await</code></p>
+              <p className="text-sm font-mono"><code className="text-xs">"grep_search"</code> &rarr; <code className="text-xs">grep_search(input).await</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3">
+              <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">실행 (4개)</p>
+              <p className="text-sm font-mono"><code className="text-xs">"bash"</code> / <code className="text-xs">"PowerShell"</code> / <code className="text-xs">"REPL"</code> / <code className="text-xs">"Sleep"</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3">
+              <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">태스크 (6개)</p>
+              <p className="text-sm font-mono"><code className="text-xs">"TaskCreate"</code> / <code className="text-xs">Get</code> / <code className="text-xs">List</code> / <code className="text-xs">Stop</code> / <code className="text-xs">Update</code> / <code className="text-xs">Output</code></p>
+              <p className="text-xs text-muted-foreground mt-1">모두 <code className="text-xs">global_task_registry()</code> 메서드 위임</p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3">
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">UI (4개)</p>
+              <p className="text-sm font-mono"><code className="text-xs">"SendUserMessage"</code> / <code className="text-xs">"Config"</code> / <code className="text-xs">"EnterPlanMode"</code> / <code className="text-xs">"ExitPlanMode"</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3">
+              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">fallback</p>
+              <p className="text-sm font-mono"><code className="text-xs">_ =&gt; Err("unknown tool")</code></p>
+              <p className="text-xs text-muted-foreground mt-1">존재하지 않는 도구 호출 시 에러 반환 (세션 유지)</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>match 분기 구조</strong>: 문자열 패턴 매칭 + 입력 역직렬화 + 도구 함수 호출<br />
           각 분기는 <code>serde_json::from_value::&lt;T&gt;(input)</code>로 타입 안전 변환 — 역직렬화 실패 시 즉시 에러<br />
@@ -108,29 +109,74 @@ async fn handle_tool_use(&mut self, block: ToolUseBlock) -> Result<ToolResult> {
 
         {/* ── 입력 타입 시스템 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">도구 입력 타입 — struct 매핑</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 각 도구는 전용 입력 struct를 보유
-pub struct TextFilePayload {
-    pub path: String,          // 절대 경로 (워크스페이스 검증 대상)
-    pub offset: Option<usize>, // 시작 줄 번호 (0-indexed)
-    pub limit: Option<usize>,  // 읽을 줄 수
-}
-
-pub struct BashCommandInput {
-    pub command: String,            // 실행할 셸 명령
-    pub timeout: Option<u64>,       // 밀리초 단위, 기본 120000 (2분)
-    pub description: Option<String>,// 사용자에게 표시할 설명
-    pub run_in_background: bool,    // 백그라운드 실행 여부
-}
-
-pub struct GrepSearchInput {
-    pub pattern: String,                // 정규식
-    pub path: Option<String>,           // 검색 디렉토리
-    pub output_mode: Option<OutputMode>,// content | files_with_matches | count
-    pub head_limit: Option<usize>,      // 최대 결과 수
-    pub case_insensitive: bool,         // -i 플래그
-    pub line_numbers: bool,             // -n 플래그
-    pub multiline: bool,                // -U 플래그 (cross-line)
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">도구별 입력 struct 매핑</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <p className="text-sm font-bold mb-2">TextFilePayload</p>
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">path</code>
+                  <span className="text-xs text-muted-foreground">절대 경로</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">offset?</code>
+                  <span className="text-xs text-muted-foreground">시작 줄 (0-indexed)</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">limit?</code>
+                  <span className="text-xs text-muted-foreground">읽을 줄 수</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <p className="text-sm font-bold mb-2">BashCommandInput</p>
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">command</code>
+                  <span className="text-xs text-muted-foreground">셸 명령</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">timeout?</code>
+                  <span className="text-xs text-muted-foreground">ms, 기본 120000</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">description?</code>
+                  <span className="text-xs text-muted-foreground">사용자 표시용</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">run_in_background</code>
+                  <span className="text-xs text-muted-foreground">백그라운드 실행</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <p className="text-sm font-bold mb-2">GrepSearchInput</p>
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">pattern</code>
+                  <span className="text-xs text-muted-foreground">정규식</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">path?</code>
+                  <span className="text-xs text-muted-foreground">검색 디렉토리</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">output_mode?</code>
+                  <span className="text-xs text-muted-foreground">content | files | count</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">head_limit?</code>
+                  <span className="text-xs text-muted-foreground">최대 결과 수</span>
+                </div>
+                <div className="flex justify-between items-baseline gap-2">
+                  <code className="text-xs font-mono">case_insensitive</code>
+                  <span className="text-xs text-muted-foreground">-i 플래그</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>타입 시스템의 역할</strong>: JSON Schema 역직렬화 시점에 타입 안전성 강제<br />
           <code>Option&lt;T&gt;</code>는 선택 파라미터 — LLM이 생략해도 컴파일 에러 없음<br />
@@ -144,23 +190,39 @@ pub struct GrepSearchInput {
 
         {/* ── 비동기 디스패치 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">async 디스패치 — tokio 런타임</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 모든 도구 함수는 async fn
-async fn execute_bash(input: Value) -> Result<ToolOutput> {
-    let cmd: BashCommandInput = serde_json::from_value(input)?;
-
-    // tokio::process::Command — async 프로세스 실행
-    let mut child = tokio::process::Command::new("/bin/bash")
-        .arg("-c").arg(&cmd.command)
-        .stdout(Stdio::piped()).stderr(Stdio::piped())
-        .spawn()?;
-
-    // tokio::time::timeout — async 타임아웃
-    let timeout = Duration::from_millis(cmd.timeout.unwrap_or(120_000));
-    let output = tokio::time::timeout(timeout, child.wait_with_output())
-        .await.map_err(|_| anyhow!("bash timeout"))??;
-
-    Ok(ToolOutput::text(String::from_utf8_lossy(&output.stdout).to_string()))
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">execute_bash() &mdash; async 프로세스 실행</p>
+          <div className="grid grid-cols-1 gap-2">
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="text-sm font-semibold">입력 역직렬화</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">serde_json::from_value::&lt;BashCommandInput&gt;(input)</code></p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="text-sm font-semibold">async 프로세스 실행</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">tokio::process::Command::new("/bin/bash").arg("-c").arg(&cmd.command)</code> &mdash; stdout/stderr 캡처</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="text-sm font-semibold">타임아웃 적용</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">tokio::time::timeout(Duration::from_millis(cmd.timeout.unwrap_or(120_000)))</code> &mdash; 기본 2분</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                <p className="text-sm font-semibold">결과 반환</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">ToolOutput::text(String::from_utf8_lossy(&output.stdout))</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <code>async fn</code>은 tokio 런타임에서 협력적 멀티태스킹으로 실행<br />
           <strong>병렬 도구 호출 지원</strong>: LLM이 여러 tool_use 블록을 한 번에 보내면 <code>tokio::join!</code>으로 동시 실행<br />
@@ -169,18 +231,26 @@ async fn execute_bash(input: Value) -> Result<ToolOutput> {
 
         {/* ── 병렬 실행 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">병렬 도구 실행</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// conversation_runtime.rs — 병렬 디스패치
-async fn handle_tool_uses_parallel(&mut self, blocks: Vec<ToolUseBlock>) -> Vec<ToolResult> {
-    let futures: Vec<_> = blocks.into_iter()
-        .map(|block| self.handle_tool_use(block))
-        .collect();
-
-    // 모든 도구를 동시에 시작, 결과를 순서대로 수집
-    futures::future::join_all(futures).await
-        .into_iter()
-        .map(|r| r.unwrap_or_else(|e| ToolResult::error_raw(e.to_string())))
-        .collect()
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">handle_tool_uses_parallel() &mdash; 병렬 디스패치</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
+              <p className="text-xs text-muted-foreground mb-1">Step 1</p>
+              <p className="text-sm font-semibold">Future 수집</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">blocks.map(handle_tool_use)</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
+              <p className="text-xs text-muted-foreground mb-1">Step 2</p>
+              <p className="text-sm font-semibold">동시 실행</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">join_all(futures).await</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
+              <p className="text-xs text-muted-foreground mb-1">Step 3</p>
+              <p className="text-sm font-semibold">에러 격리</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">unwrap_or_else(error_raw)</code></p>
+            </div>
+          </div>
+        </div>
         <p>
           <code>join_all</code>은 모든 future를 동시 실행 후 Vec 순서대로 결과 반환<br />
           <strong>순서 보장</strong>: 결과 순서는 입력 순서와 동일 — tool_use_id로 LLM이 매칭<br />

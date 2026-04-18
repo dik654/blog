@@ -13,51 +13,54 @@ export default function Hash({ onCodeRef }: { onCodeRef: (key: string, ref: Code
 
         {/* ── TMHASH ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">TMHASH — SHA256 truncated to 20 bytes</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/crypto/tmhash/hash.go
-const (
-    Size         = 32   // SHA256 full hash
-    TruncatedSize = 20  // truncated hash (for address)
-)
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">TMHASH 함수</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><code className="text-xs">Sum(bz)</code> → SHA256 full 32 bytes</p>
+              <p><code className="text-xs">SumTruncated(bz)</code> → SHA256[:20] (20 bytes, 주소용)</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">왜 SHA256?</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Bitcoin 계보 (Tendermint 초기 설계)</li>
+              <li>Go 표준 라이브러리 지원</li>
+              <li>hardware acceleration (SHA extensions)</li>
+              <li>ABCI 앱과 공유 (Cosmos SDK)</li>
+            </ul>
+          </div>
+        </div>
 
-// 전체 SHA256:
-func Sum(bz []byte) []byte {
-    h := sha256.Sum256(bz)
-    return h[:]
-}
+        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">Validator Address</div>
+            <p className="text-sm text-muted-foreground"><code className="text-xs">SumTruncated(pubkey)</code> → 20 bytes</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">Block Hash</div>
+            <p className="text-sm text-muted-foreground"><code className="text-xs">sha256(header)</code> → 32 bytes</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">Tx Hash</div>
+            <p className="text-sm text-muted-foreground"><code className="text-xs">sha256(tx_bytes)</code> → 32 bytes</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">Peer ID</div>
+            <p className="text-sm text-muted-foreground">pubkey hash[:20]</p>
+          </div>
+        </div>
 
-// Truncated SHA256 (주소용):
-func SumTruncated(bz []byte) []byte {
-    h := sha256.Sum256(bz)
-    return h[:TruncatedSize]  // first 20 bytes
-}
-
-// 사용처:
-// 1. Validator Address:
-//    address = tmhash.SumTruncated(pubkey)
-//    → 20 bytes (ETH 주소와 동일 크기)
-//
-// 2. Block Hash:
-//    blockHash = sha256(header_fields...)
-//    → 32 bytes full
-//
-// 3. Tx Hash:
-//    txHash = sha256(tx_bytes)
-//    → 32 bytes full
-//
-// 4. Peer ID (historical):
-//    peer_id = first 20 bytes of pubkey hash
-
-// 왜 SHA256 (keccak256 아님)?
-// - Bitcoin 계보 (Tendermint 초기 설계)
-// - Go 표준 라이브러리 지원
-// - hardware acceleration (SHA extensions)
-// - ABCI 앱과 공유 (Cosmos SDK)
-
-// keccak256 vs SHA256:
-// Keccak: Ethereum 표준, ASIC 덜 최적화
-// SHA256: Bitcoin 표준, HW 가속 활발`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">Keccak256 (Ethereum)</div>
+            <p className="text-sm text-muted-foreground">ASIC 덜 최적화</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">SHA256 (CometBFT)</div>
+            <p className="text-sm text-muted-foreground">Bitcoin 표준, HW 가속 활발</p>
+          </div>
+        </div>
         <p className="leading-7">
           TMHASH는 <strong>SHA256의 CometBFT 래퍼</strong>.<br />
           Full 32 bytes (block hash) + Truncated 20 bytes (address).<br />
@@ -66,48 +69,42 @@ func SumTruncated(bz []byte) []byte {
 
         {/* ── 해시 체인 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Block Hash Chain — 불변성의 토대</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CometBFT 블록 연결:
-//
-// Block N          Block N+1         Block N+2
-// Header {          Header {          Header {
-//   ...               ...               ...
-//   LastBlockID ───▶ LastBlockID ───▶ ...
-//                    = hash(Block N)
-// }                 }                 }
-//
-// LastBlockID 필드가 이전 블록 hash 포함
-// → 체인 형성 (불변성 보장)
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4 sm:col-span-2">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">블록 연결 구조</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>Block N → Block N+1 → Block N+2</p>
+              <p>각 Header의 <code className="text-xs">LastBlockID</code> = 이전 블록의 hash → 재귀적 체인 형성</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Header & BlockID</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">Header.LastBlockID BlockID</code></li>
+              <li><code className="text-xs">BlockID.Hash []byte</code></li>
+              <li><code className="text-xs">BlockID.PartSetHeader</code> — 블록 분할 전파용</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">변경 불가성</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>Block 1개 수정 → hash 변경 → 이후 모든 LastBlockID 변경</p>
+              <p>→ 모든 블록 재서명 필요 → 2/3+ validator 담합 필수</p>
+              <p>→ 경제적 비용 (slashing) → 실질 불가</p>
+            </div>
+          </div>
+        </div>
 
-// Header 필드 중 LastBlockID:
-type Header struct {
-    ...
-    LastBlockID BlockID  // hash(previous block header) + PartsHeader
-    ...
-}
-
-type BlockID struct {
-    Hash        []byte
-    PartSetHeader PartSetHeader
-}
-
-// Hash propagation:
-// Block N의 Header.Hash()를 계산
-// → Block N+1.Header.LastBlockID.Hash에 저장
-// → Block N+1.Header.Hash()는 이 LastBlockID 포함
-// → 재귀적 체인 형성
-
-// 변경 불가성:
-// Block 1개 수정 → 그 hash 변경 → 이후 모든 블록의 LastBlockID 변경
-// → 모든 블록 재서명 필요 → 2/3+ validator 담합 필수
-// → 경제적 비용 (slashing) → 실질 불가
-
-// 이더리움과 차이:
-// - Ethereum: parent_hash 필드 (동일 역할)
-// - CometBFT: LastBlockID (Hash + PartSetHeader)
-//   * PartSetHeader: 블록 분할 전파용
-//   * 블록 크기 MB 단위 → 청크 단위 gossip`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">Ethereum</div>
+            <p className="text-sm text-muted-foreground"><code className="text-xs">parent_hash</code> 필드 (동일 역할)</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">CometBFT</div>
+            <p className="text-sm text-muted-foreground"><code className="text-xs">LastBlockID</code> (Hash + PartSetHeader) — 블록 크기 MB → 청크 단위 gossip</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Block Hash Chain</strong>이 불변성의 토대.<br />
           LastBlockID가 이전 블록 hash 포함 → 재귀적 연결.<br />

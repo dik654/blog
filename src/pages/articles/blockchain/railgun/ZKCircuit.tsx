@@ -29,88 +29,81 @@ export default function ZKCircuit({ onCodeRef: _onCodeRef }: { onCodeRef: (key: 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">R1CS 제약 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Circom 스타일 circuit 표현
-
-template Transaction(N_INPUTS, N_OUTPUTS, TREE_DEPTH) {
-    // Public inputs (verifier가 검증)
-    signal input nullifiers[N_INPUTS];
-    signal input merkleRoot;
-    signal input outputCommitments[N_OUTPUTS];
-    signal input fee;
-
-    // Private inputs (witness, prover만 알고 있음)
-    signal input inputNotes[N_INPUTS][4];   // npk, token, value, random
-    signal input spendingKeys[N_INPUTS];
-    signal input merklePaths[N_INPUTS][TREE_DEPTH];
-    signal input merkleIndices[N_INPUTS][TREE_DEPTH];
-    signal input outputNotes[N_OUTPUTS][4];
-
-    // Constraint 1: Nullifier correctness
-    // nullifier = Poseidon(spendingKey, leafIndex)
-    component nullifierHasher[N_INPUTS];
-    for (var i = 0; i < N_INPUTS; i++) {
-        nullifierHasher[i] = Poseidon(2);
-        nullifierHasher[i].inputs[0] <== spendingKeys[i];
-        nullifierHasher[i].inputs[1] <== leafIndex[i];
-        nullifiers[i] === nullifierHasher[i].out;
-    }
-
-    // Constraint 2: Merkle membership
-    // input note's commitment must be in tree
-    component merkleProof[N_INPUTS];
-    for (var i = 0; i < N_INPUTS; i++) {
-        merkleProof[i] = MerkleProof(TREE_DEPTH);
-        // ... verify path
-        merkleRoot === merkleProof[i].root;
-    }
-
-    // Constraint 3: Balance preservation
-    // sum(inputs) == sum(outputs) + fee
-    var inputSum = 0;
-    var outputSum = 0;
-    for (var i = 0; i < N_INPUTS; i++) inputSum += inputNotes[i][2];
-    for (var o = 0; o < N_OUTPUTS; o++) outputSum += outputNotes[o][2];
-    inputSum === outputSum + fee;
-
-    // Constraint 4: Output commitments correct
-    for (var o = 0; o < N_OUTPUTS; o++) {
-        // commitment = Poseidon(npk, token, value, random)
-        outputCommitments[o] === Poseidon(outputNotes[o]);
-    }
-}`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-blue-500/30 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Public Inputs (verifier가 검증)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>nullifiers[N_INPUTS]</code></li>
+                <li><code>merkleRoot</code></li>
+                <li><code>outputCommitments[N_OUTPUTS]</code></li>
+                <li><code>fee</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Private Inputs (witness, prover만 보유)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>inputNotes[N_INPUTS][4]</code> &mdash; npk, token, value, random</li>
+                <li><code>spendingKeys[N_INPUTS]</code></li>
+                <li><code>merklePaths[N_INPUTS][TREE_DEPTH]</code></li>
+                <li><code>merkleIndices[N_INPUTS][TREE_DEPTH]</code></li>
+                <li><code>outputNotes[N_OUTPUTS][4]</code></li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-3">4개 제약 조건 (Circom R1CS)</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">C1: Nullifier correctness</p>
+                <p><code>nullifiers[i] === Poseidon(spendingKeys[i], leafIndex[i])</code></p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">C2: Merkle membership</p>
+                <p><code>merkleRoot === MerkleProof(TREE_DEPTH).root</code> per input</p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">C3: Balance preservation</p>
+                <p><code>sum(inputNotes[*].value) === sum(outputNotes[*].value) + fee</code></p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">C4: Output commitments correct</p>
+                <p><code>outputCommitments[o] === Poseidon(outputNotes[o])</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">회로 복잡도 분석</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Circom R1CS constraints (2 inputs, 2 outputs, depth 16)
-
-// Per input:
-// - Nullifier Poseidon: ~200 constraints
-// - Merkle proof: 16 × 200 = 3200 constraints
-// - Commitment Poseidon: ~200 constraints
-// Subtotal per input: ~3600
-
-// Per output:
-// - Commitment Poseidon: ~200 constraints
-// - Range check (value): ~128 constraints
-// Subtotal per output: ~330
-
-// Constants:
-// - Balance constraint: 1
-// - Zero check: 1
-
-// Total (2+2):
-// 2 × 3600 + 2 × 330 + 2 = ~7862 constraints
-
-// Groth16 proving key 크기
-// ~7862 × 64 bytes ≈ 500 KB
-
-// Proof 생성 시간
-// - MSM: O(n) group operations
-// - FFT: O(n log n)
-// - Typical: 500ms ~ 2s on laptop
-
-// Proof 크기
-// Groth16: 192 bytes (3 G1 + 1 G2 element)
-// Verification: ~250K gas on Ethereum`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Per Input (~3,600 constraints)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Nullifier Poseidon: ~200</li>
+                <li>Merkle proof: 16 &times; 200 = 3,200</li>
+                <li>Commitment Poseidon: ~200</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Per Output (~330 constraints)</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Commitment Poseidon: ~200</li>
+                <li>Range check (value): ~128</li>
+                <li>Constants (balance + zero): 2</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">총합 (2 in, 2 out): ~7,862 constraints</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">Proving key</p><p className="font-mono">~500 KB</p><p className="text-xs text-muted-foreground">7862 &times; 64 bytes</p></div>
+              <div><p className="text-muted-foreground">Prove time</p><p className="font-mono">0.5-2s</p><p className="text-xs text-muted-foreground">MSM O(n) + FFT O(n log n)</p></div>
+              <div><p className="text-muted-foreground">Proof size</p><p className="font-mono font-semibold">192 bytes</p><p className="text-xs text-muted-foreground">3 G1 + 1 G2 element</p></div>
+              <div><p className="text-muted-foreground">Verify gas</p><p className="font-mono font-semibold">~250K</p><p className="text-xs text-muted-foreground">EVM pairing precompile</p></div>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Circuit 설계의 trade-off</p>

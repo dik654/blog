@@ -16,57 +16,30 @@ export default function FinalizationPruning({ onCodeRef }: Props) {
 
         {/* ── Prune 메커니즘 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Fork Choice Tree Pruning — finalized 기반</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// finalized checkpoint 갱신 시 fork choice tree pruning
-
-func (s *Store) Prune(ctx context.Context, finalized Root) error {
-    // 1. finalized 노드 찾기
-    finalNode, ok := s.nodes[finalized]
-    if !ok { return ErrFinalizedNotFound }
-
-    // 2. finalized의 parent를 nil로 설정 (새 tree root)
-    finalNode.Parent = nil
-
-    // 3. finalized subtree 외의 모든 노드 삭제
-    toDelete := []Root{}
-    for root, node := range s.nodes {
-        if !isDescendantOf(node, finalNode) && root != finalized {
-            toDelete = append(toDelete, root)
-        }
-    }
-
-    // 4. non-canonical branches 제거
-    for _, root := range toDelete {
-        delete(s.nodes, root)
-    }
-
-    // 5. root 업데이트
-    s.root = finalNode
-
-    // 6. 정리된 tree 통계
-    log.Infof("Pruned %d nodes, tree size: %d", len(toDelete), len(s.nodes))
-
-    return nil
-}
-
-// isDescendantOf: node가 ancestor의 후손인지 확인
-func isDescendantOf(node, ancestor *Node) bool {
-    for cur := node; cur != nil; cur = cur.Parent {
-        if cur == ancestor { return true }
-    }
-    return false
-}
-
-// Pruning 효과:
-// - fork choice tree 크기 유지
-// - 메모리 관리 (finalized 이전 forks 완전 제거)
-// - old attestation 처리 비용 감소
-
-// 빈도:
-// - 매 epoch 경계 (~6.4분)에 잠재적 finalization
-// - 정상 운영 시 매 epoch ~64 nodes pruned
-// - tree 항상 "현재 + 미래" 영역만 유지`}
-        </pre>
+        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Prune 처리 흐름</div>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>s.nodes[finalized]</code>로 finalized 노드 조회</li>
+              <li><code>finalNode.Parent = nil</code> — 새 tree root 지정</li>
+              <li>전체 <code>s.nodes</code> 순회 → <code>isDescendantOf(node, finalNode)</code> 아닌 노드 수집</li>
+              <li>non-canonical branches 일괄 <code>delete(s.nodes, root)</code></li>
+              <li><code>s.root = finalNode</code> — root 업데이트</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">isDescendantOf — 후손 확인</div>
+            <p className="text-sm"><code>node</code>에서 <code>cur.Parent</code> 방향으로 순회 → <code>ancestor</code>와 일치하면 true. 포인터 기반이므로 O(depth).</p>
+          </div>
+          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+            <div className="text-xs font-semibold text-blue-400 mb-2">Pruning 효과 & 빈도</div>
+            <ul className="text-sm space-y-1">
+              <li>fork choice tree 크기 유지 — finalized 이전 forks 완전 제거</li>
+              <li>매 epoch 경계 (~6.4분)에 잠재적 finalization</li>
+              <li>정상 운영 시 매 epoch ~64 nodes pruned — tree는 항상 "현재 + 미래" 영역만 유지</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Prune</strong>이 finalized 이전 non-canonical 브랜치 제거.<br />
           finalized의 parent를 nil 설정 → 새 tree root 지정.<br />
@@ -75,42 +48,37 @@ func isDescendantOf(node, ancestor *Node) bool {
 
         {/* ── Finality의 불가역성 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Finality의 경제적 불가역성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Finality 되돌리려면 얼마나 필요한가?
-
-// Casper FFG의 안전성 속성:
-// "2개 conflicting finalized checkpoints 존재 시
-//  전체 stake의 >= 1/3이 slashing 당함"
-
-// 증명 개요:
-// - 2 checkpoints A, B가 둘 다 finalized
-// - 각각 >2/3 validators가 justified 서명
-// - 합집합 > 4/3 → 중복 > 1/3
-// - 이 중복 validators가 두 checkpoint에 모두 서명 → slashable
-
-// 현재 수치 (2025):
-// - Active validators: ~1M
-// - Active balance: ~32M ETH
-// - 1/3 slashing 필요: ~10.6M ETH
-// - ETH 가격 (예: $3000): ~$32B 손실
-
-// 비교: 51% 공격 비용
-// PoW: hashrate 조달 (CAPEX + OPEX, 수백 M$)
-// PoS Casper: stake + slashing ($32B+)
-
-// Finality 되돌리기 = 경제적 자살
-// → finalized = 사실상 irreversible
-
-// 유일한 예외 시나리오:
-// - Social consensus hard fork (network 분할)
-// - 2016 DAO hard fork 같은 수동 개입
-// - 매우 드문 긴급 상황
-
-// 결론:
-// finalized block은 신뢰 가능
-// validator는 finalized checkpoint 기준 state snapshot
-// Exchange/bridge는 finality 대기 후 출금 처리 가능`}
-        </pre>
+        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Casper FFG 안전성 속성</div>
+            <p className="text-sm">2개 conflicting finalized checkpoints 존재 시 → 전체 stake의 &ge; 1/3이 slashing 당함.</p>
+            <p className="text-sm mt-1 text-muted-foreground">증명: 각각 &gt;2/3가 서명 → 합집합 &gt;4/3 → 중복 &gt;1/3이 양쪽 모두 서명 → slashable.</p>
+          </div>
+          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <div className="text-xs font-semibold text-red-400 mb-2">되돌리기 비용 (2025 기준)</div>
+            <div className="text-sm grid grid-cols-2 gap-2">
+              <div>Active validators: <strong>~1M</strong></div>
+              <div>Active balance: <strong>~32M ETH</strong></div>
+              <div>1/3 slashing 필요: <strong>~10.6M ETH</strong></div>
+              <div>ETH @$3000 기준: <strong>~$32B 손실</strong></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <div className="text-xs font-semibold text-muted-foreground mb-2">PoW 51% 공격</div>
+              <p className="text-sm">hashrate 조달 (CAPEX + OPEX) → 수백 M$</p>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <div className="text-xs font-semibold text-muted-foreground mb-2">PoS Casper 공격</div>
+              <p className="text-sm">stake + slashing → <strong>$32B+</strong></p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">유일한 예외 & 결론</div>
+            <p className="text-sm">예외: social consensus hard fork (2016 DAO fork) 같은 수동 개입 — 매우 드문 긴급 상황.</p>
+            <p className="text-sm mt-1">finalized block은 신뢰 가능 → exchange/bridge의 출금 확정 기준점.</p>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Finality 되돌리기 = 1/3 슬래싱</strong> ~$32B 손실.<br />
           경제적으로 사실상 불가능 → finalized 사실상 immutable.<br />

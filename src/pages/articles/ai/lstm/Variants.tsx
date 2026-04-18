@@ -1,4 +1,6 @@
 import VariantsViz from './viz/VariantsViz';
+import VariantsDetailViz from './viz/VariantsDetailViz';
+import M from '@/components/ui/math';
 
 export default function Variants() {
   return (
@@ -11,71 +13,23 @@ export default function Variants() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">LSTM 변형 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// LSTM 변형들:
-
-// 1. GRU (Cho 2014):
-// - 2 gates (reset + update)
-// - no separate cell state
-// - simpler, faster
-// r_t = σ(W_r · [h_(t-1), x_t])
-// z_t = σ(W_z · [h_(t-1), x_t])
-// h̃_t = tanh(W · [r_t ⊙ h_(t-1), x_t])
-// h_t = (1-z_t) ⊙ h_(t-1) + z_t ⊙ h̃_t
-// vs LSTM: ~75% params, similar perf
-
-// 2. Peephole LSTM:
-// - gates see cell state
-// - marginal improvement
-
-// 3. Coupled Input/Forget:
-// - i_t = 1 - f_t
-// - slightly simpler
-
-// 4. Bidirectional LSTM:
-// - forward + backward
-// - past + future context
-// - 2x params
-// - NER, tagging 표준
-
-// 5. Stacked LSTM:
-// - multiple layers
-// - 2-4 layers common
-// - deeper representations
-
-// 6. LSTM + Attention:
-// - pre-Transformer era
-// - seq2seq models
-
-// 7. ConvLSTM:
-// - spatial + temporal
-// - video, weather
-
-// 8. Tree LSTM:
-// - tree-structured
-// - syntax parsing
-
-// Applications:
-// LSTM: long sequences, text
-// GRU: efficient, mobile
-// Bi-LSTM: NER, POS tagging
-
-// 2024 state:
-// - Transformer dominant
-// - LSTM/GRU niche use
-// - time series, RL
-// - edge devices
-
-// Modern hybrids:
-// - Mamba (SSM, 2023)
-// - RWKV (RNN-Transformer)
-// - RetNet (2023)
-// - linear attention`}
-        </pre>
+        <VariantsDetailViz />
         <p className="leading-7">
-          Variants: <strong>GRU, Peephole, Bi-LSTM, Stacked, ConvLSTM</strong>.<br />
-          GRU: 2 gates, simpler, often preferred.<br />
-          2024 state: Mamba, RWKV new hybrid 부상.
+          <strong>GRU</strong>(Cho 2014) — forget + input을 update gate 하나로 통합.
+          셀 상태 없이 은닉 상태만으로 기억 관리.
+        </p>
+        <M display>{'\\underbrace{r_t}_{\\text{리셋}} = \\sigma(W_r \\cdot [h_{t-1}, x_t]), \\quad \\underbrace{z_t}_{\\text{업데이트}} = \\sigma(W_z \\cdot [h_{t-1}, x_t])'}</M>
+        <M display>{'\\tilde{h}_t = \\tanh(W \\cdot [\\underbrace{r_t \\odot h_{t-1}}_{\\text{리셋된 과거}}, x_t])'}</M>
+        <M display>{'h_t = \\underbrace{(1 - z_t) \\odot h_{t-1}}_{\\text{이전 유지}} + \\underbrace{z_t \\odot \\tilde{h}_t}_{\\text{새 정보}}'}</M>
+        <p className="leading-7">
+          <M>{'z_t'}</M>가 높으면 새 정보 반영, <M>{'(1-z_t)'}</M>가 높으면 이전 유지 — coupled 구조로 파라미터 25% 감소.<br />
+          <strong>Peephole</strong>: 게이트가 <M>{'C_{t-1}'}</M>도 참조 — 타이밍 민감 작업에 약간의 개선.<br />
+          <strong>Bidirectional</strong>: 순방향 + 역방향 병렬 실행 → <M>{'h_t = [\\overrightarrow{h_t} ; \\overleftarrow{h_t}]'}</M> — NER/POS 태깅 표준.<br />
+          <strong>Stacked</strong>: 2~4 레이어 적층 — 하위는 로컬, 상위는 추상 패턴 학습.
+        </p>
+        <p className="leading-7">
+          현대 후계자 — Mamba(선택적 SSM), RWKV(RNN+Transformer), RetNet(선형 어텐션).<br />
+          공통 핵심: "선택적 기억" 메커니즘 — LSTM 게이트의 현대적 재해석.
         </p>
       </div>
     </section>

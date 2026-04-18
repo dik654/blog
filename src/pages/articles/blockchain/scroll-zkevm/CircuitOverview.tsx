@@ -1,9 +1,5 @@
 import CircuitMapViz from './viz/CircuitMapViz';
-import CodePanel from '@/components/ui/code-panel';
-import {
-  SUBCIRCUIT_MAP_CODE, subcircuitAnnotations,
-  SUPER_CIRCUIT_CODE, superCircuitAnnotations,
-} from './CircuitOverviewData';
+import M from '@/components/ui/math';
 
 export default function CircuitOverview() {
   return (
@@ -22,40 +18,27 @@ export default function CircuitOverview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">왜 서브회로로 분할하는가</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 단일 거대 회로의 문제
-// 1) 회로 크기 폭발
-//    - EVM: 140+ opcode × 복잡 로직
-//    - 단일 회로로 표현 시 rows 1B+ 필요
-//    - Prover memory 수백 GB
-//
-// 2) 변경 어려움
-//    - 하나 수정 시 전체 재검증
-//    - 디버깅 극히 어려움
-//
-// 3) 검증 비용
-//    - Proof 크기 선형 증가
-//    - Verifier gas 폭주
-
-// 서브회로 분할 장점
-// 1) 관심사 분리
-//    - EVM: opcode execution
-//    - Bytecode: code 저장 검증
-//    - Keccak: hash 계산
-//    - MPT: 상태 트리 접근
-//
-// 2) 병렬 증명 가능
-//    - 독립 서브회로 동시 prove
-//    - Multi-core/multi-GPU 활용
-//
-// 3) Lookup으로 연결
-//    - 서브회로 간 일관성은 lookup table
-//    - EVM → Bytecode: "이 bytecode가 실제 존재하는가"
-//    - EVM → Keccak: "이 hash가 올바른가"
-//    - 작은 proof, 빠른 verify
-
-// SuperCircuit
-// = 11개 서브회로의 공통 contraint 묶음
-// = 단일 proof로 전체 EVM 실행 증명`}</pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4">
+            <p className="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">단일 거대 회로의 문제</p>
+            <ul className="text-sm space-y-2 text-foreground/80">
+              <li><strong>회로 크기 폭발</strong> — 140+ opcode, 단일 회로 시 rows 1B+ 필요, Prover memory 수백 GB</li>
+              <li><strong>변경 어려움</strong> — 하나 수정 시 전체 재검증, 디버깅 극히 어려움</li>
+              <li><strong>검증 비용</strong> — Proof 크기 선형 증가, Verifier gas 폭주</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4">
+            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-2">서브회로 분할 장점</p>
+            <ul className="text-sm space-y-2 text-foreground/80">
+              <li><strong>관심사 분리</strong> — EVM(opcode), Bytecode(코드 검증), Keccak(해시), MPT(상태 트리)</li>
+              <li><strong>병렬 증명</strong> — 독립 서브회로 동시 prove, Multi-core/GPU 활용</li>
+              <li><strong>Lookup 연결</strong> — 서브회로 간 일관성은 lookup table로 보장</li>
+            </ul>
+          </div>
+        </div>
+        <div className="not-prose rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/30 p-3 mb-6 text-sm text-center">
+          <strong>SuperCircuit</strong> = 11개 서브회로의 공통 constraint 묶음 = 단일 proof로 전체 EVM 실행 증명
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">서브회로 역할 상세</h3>
         <div className="overflow-x-auto">
@@ -127,42 +110,88 @@ export default function CircuitOverview() {
           </table>
         </div>
 
-        <CodePanel title="서브회로 구성" code={SUBCIRCUIT_MAP_CODE}
-          annotations={subcircuitAnnotations} />
-        <CodePanel title="SuperCircuit — 통합 회로" code={SUPER_CIRCUIT_CODE}
-          annotations={superCircuitAnnotations} />
+        <h3 className="text-lg font-semibold mt-8 mb-3">서브회로 구성</h3>
+        <div className="not-prose grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+          <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/30 p-3">
+            <p className="text-xs font-semibold text-sky-700 dark:text-sky-300 mb-1">EVM 메인</p>
+            <p className="text-xs text-foreground/80"><code className="text-xs">evm_circuit.rs</code> — 140+ 오퍼코드 가젯</p>
+          </div>
+          <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-3">
+            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 mb-1">핵심 서브회로</p>
+            <p className="text-xs text-foreground/80"><code className="text-xs">bytecode</code>, <code className="text-xs">copy</code>, <code className="text-xs">keccak</code>, <code className="text-xs">mpt</code></p>
+          </div>
+          <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-3">
+            <p className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">암호 서브회로</p>
+            <p className="text-xs text-foreground/80"><code className="text-xs">sig_circuit</code>, <code className="text-xs">ecc_circuit</code></p>
+          </div>
+          <div className="rounded border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 p-3">
+            <p className="text-xs font-semibold text-violet-700 dark:text-violet-300 mb-1">프리컴파일 & 유틸</p>
+            <p className="text-xs text-foreground/80"><code className="text-xs">sha256</code>, <code className="text-xs">modexp</code>, <code className="text-xs">rlp</code>, <code className="text-xs">poseidon</code>, <code className="text-xs">exp</code></p>
+          </div>
+        </div>
+
+        <h3 className="text-lg font-semibold mt-6 mb-3">SuperCircuit — 통합 회로</h3>
+        <div className="not-prose rounded-lg border border-border bg-muted/30 p-4 mb-6">
+          <p className="text-sm font-semibold mb-2">
+            <code className="text-xs">SuperCircuitConfig&lt;F: Field&gt;</code>
+            <span className="text-muted-foreground font-normal ml-2">super_circuit.rs</span>
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-foreground/80 mb-3">
+            <span><code>evm_circuit</code></span>
+            <span><code>bytecode_circuit</code></span>
+            <span><code>copy_circuit</code></span>
+            <span><code>keccak_circuit</code></span>
+            <span><code>mpt_circuit</code></span>
+            <span><code>sig_circuit</code></span>
+            <span><code>poseidon_circuit</code></span>
+            <span className="text-muted-foreground">... 추가 서브회로</span>
+          </div>
+          <p className="text-sm text-foreground/80"><code className="text-xs">SuperCircuit::synthesize</code> → 모든 서브회로를 순차 합성, 공유 테이블(<code className="text-xs">RwTable</code>, <code className="text-xs">TxTable</code> 등)로 회로 간 일관성 유지</p>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">zkTrie — Binary MPT</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 이더리움 표준 MPT
-// - Hexary (branch: 16 children)
-// - Keccak hash (EVM-friendly)
-// - 문제: SNARK 회로에서 매우 비효율
-
-// Scroll zkTrie
-// - Binary MPT (branch: 2 children)
-// - Poseidon hash (SNARK-friendly)
-// - 2^248 key space
-
-// 왜 binary + Poseidon?
-// Poseidon vs Keccak SNARK cost
-// - Keccak: ~150K constraints per hash
-// - Poseidon: ~200 constraints per hash
-// → 750x 효율
-
-// Hexary vs Binary trie
-// - Hexary: log_16(N) depth, 16 hash per node
-// - Binary: log_2(N) depth, 2 hash per node
-// - Binary가 총 hash 수 적음 (~4x)
-
-// Trade-off
-// - 이더리움과 다른 trie → state root 다름
-// - L1 bridge에서 별도 매핑 필요
-// - Scroll node가 양쪽 state 유지
-
-// 성능 영향
-// - Proof 생성: 30-50x 빠름 (Poseidon 덕분)
-// - State sync: 비슷함 (hash는 cache 가능)
-// - 호환성: L1과 별도 commitment layer`}</pre>
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="rounded-lg border border-border bg-muted/30 p-4">
+            <p className="text-sm font-semibold mb-2">이더리움 표준 MPT</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>Hexary (branch: 16 children)</li>
+              <li>Keccak hash (EVM-friendly)</li>
+              <li className="text-red-600 dark:text-red-400">SNARK 회로에서 매우 비효율</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4">
+            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-2">Scroll zkTrie</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>Binary MPT (branch: 2 children)</li>
+              <li>Poseidon hash (SNARK-friendly)</li>
+              <li><M>{'2^{248}'}</M> key space</li>
+            </ul>
+          </div>
+        </div>
+        <div className="not-prose rounded-lg border border-border bg-muted/30 p-4 mb-6">
+          <p className="text-sm font-semibold mb-2">왜 Binary + Poseidon?</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground/80">
+            <div>
+              <p className="font-medium mb-1">Poseidon vs Keccak SNARK cost</p>
+              <ul className="space-y-1">
+                <li>Keccak: ~150K constraints/hash</li>
+                <li>Poseidon: ~200 constraints/hash</li>
+                <li className="font-semibold text-emerald-600 dark:text-emerald-400">750x 효율</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium mb-1">Hexary vs Binary trie</p>
+              <ul className="space-y-1">
+                <li>Hexary: <M>{'\\log_{16}(N)'}</M> depth, 16 hash/node</li>
+                <li>Binary: <M>{'\\log_2(N)'}</M> depth, 2 hash/node</li>
+                <li className="font-semibold text-emerald-600 dark:text-emerald-400">총 hash 수 ~4x 적음</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-border text-sm text-foreground/60">
+            <strong>Trade-off:</strong> 이더리움과 다른 trie → state root 다름, L1 bridge 별도 매핑 필요, Scroll node 양쪽 state 유지
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Scroll zkEVM 설계 철학</p>

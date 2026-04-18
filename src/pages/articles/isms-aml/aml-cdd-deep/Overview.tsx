@@ -1,3 +1,7 @@
+import OverviewViz from './viz/OverviewViz';
+import CddTimingViz from './viz/CddTimingViz';
+import CddLegalFrameworkViz from './viz/CddLegalFrameworkViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function Overview() {
           자금세탁 및 테러자금조달에 악용되는 것을 막는 핵심 절차.<br />
           "이 돈이 어디서 왔고, 누구에게 가는가"를 파악하는 것이 본질이다.
         </p>
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">특금법 제5조의2 — 고객확인의무 조문</h3>
         <p>
@@ -23,6 +29,8 @@ export default function Overview() {
           2021년 3월 특금법 개정으로 VASP가 명시적으로 적용 대상에 추가되었고,
           이후 모든 가상자산사업자는 금융회사와 동일한 수준의 고객확인의무를 이행해야 한다.
         </p>
+
+        <CddLegalFrameworkViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">CDD의 목적</h3>
         <p>
@@ -75,6 +83,8 @@ export default function Overview() {
             </tbody>
           </table>
         </div>
+
+        <CddTimingViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">CDD 3요소</h3>
         <p>

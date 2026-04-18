@@ -1,5 +1,7 @@
 import CNNPipelineViz from './viz/CNNPipelineViz';
 import FCLimitViz from './viz/FCLimitViz';
+import OverviewDetailViz from './viz/OverviewDetailViz';
+import M from '@/components/ui/math';
 
 export default function Overview() {
   return (
@@ -45,67 +47,12 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">FC vs CNN 파라미터 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 파라미터 수 비교 (224×224×3 컬러 이미지 입력)
-//
-// FC 첫 번째 층 (128 뉴런 기준):
-//   입력 크기: 224 × 224 × 3 = 150,528
-//   가중치: 150,528 × 128 = 19,267,584
-//   편향: 128
-//   합계: ~1,920만 파라미터
-//
-// CNN 첫 번째 층 (Conv 32 filters, 3×3 커널):
-//   필터당 가중치: 3 × 3 × 3 = 27
-//   필터 32개: 27 × 32 = 864
-//   편향: 32
-//   합계: 896 파라미터
-//
-// 비율: 1,920만 ÷ 896 ≈ 21,428배 감소
-//
-// 이것이 가능한 이유: 가중치 공유(weight sharing)
-// - FC: 각 입력-출력 연결마다 별도 가중치
-// - CNN: 동일 필터를 이미지 전체에 슬라이딩 (공유)
-//
-// 추가 이점:
-//   - 특성 지역성(local feature): 근방 픽셀만 결합
-//   - 위치 불변(translation invariant): 어디서든 같은 패턴 감지
-//   - 메모리 절감: GPU에서 대형 모델 학습 가능
-//   - 과적합 감소: 파라미터 적으면 일반화 좋음`}
-        </pre>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">CNN 연산 흐름 표준</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 전형적인 CNN 파이프라인 (분류 모델)
-//
-// Input: (B, 3, 224, 224)           # 배치×채널×H×W
-//
-// Conv Block 1:
-//   Conv2d(3 → 64, k=3, p=1) → ReLU
-//   Conv2d(64 → 64, k=3, p=1) → ReLU
-//   MaxPool2d(2)               → (B, 64, 112, 112)
-//
-// Conv Block 2:
-//   Conv2d(64 → 128, k=3, p=1) → ReLU
-//   Conv2d(128 → 128, k=3, p=1) → ReLU
-//   MaxPool2d(2)               → (B, 128, 56, 56)
-//
-// Conv Block 3:
-//   Conv2d(128 → 256, k=3, p=1) → ReLU
-//   Conv2d(256 → 256, k=3, p=1) → ReLU
-//   MaxPool2d(2)               → (B, 256, 28, 28)
-//
-// Classifier:
-//   GlobalAvgPool              → (B, 256, 1, 1)
-//   Flatten                    → (B, 256)
-//   Linear(256 → num_classes)
-//   Softmax
-//
-// 핵심 패턴:
-//   - 공간 해상도 감소 (224→112→56→28→1)
-//   - 채널 수 증가 (3→64→128→256)
-//   - 저수준→고수준 특성 추상화
-//   - GAP으로 파라미터 대폭 절감`}
-        </pre>
+        <M display>{'\\underbrace{150{,}528 \\times 128}_{\\text{FC}} = 19{,}267{,}584 \\quad \\text{vs} \\quad \\underbrace{3^2 \\times 3 \\times 32 + 32}_{\\text{CNN}} = 896'}</M>
+      </div>
+      <div className="not-prose my-6">
+        <OverviewDetailViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           요약 1: CNN은 <strong>지역성·가중치 공유·계층 구조</strong>로 이미지 구조를 보존.<br />
           요약 2: FC 대비 <strong>수천~수만 배 파라미터 감소</strong> — 학습 가능한 범위 극적 확대.<br />

@@ -18,58 +18,69 @@ export default function Overview() {
 
         {/* ── BFT 진화 3단계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BFT 프로토콜 계보</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BFT 진화 3단계:
+        <div className="grid gap-3 sm:grid-cols-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Stage 1: Feasibility (1999-2010)</p>
+            <p className="text-sm text-muted-foreground mb-1">"BFT가 실무에서 가능한가?"</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>PBFT (1999) — 최초 실용적 BFT</li>
+              <li>Zyzzyva (2007) — speculative execution</li>
+              <li>UpRight (2009) — Byzantine + crash</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">핵심 metric: 가능성</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Stage 2: Scalability (2014-2020)</p>
+            <p className="text-sm text-muted-foreground mb-1">"BFT를 blockchain 규모로 확장"</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>Tendermint (2014) — blockchain 맞춤</li>
+              <li>LibraBFT/HotStuff (2019) — <code className="text-xs">O(n)</code> linear</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">핵심 metric: validator 수</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Stage 3: Throughput (2021-현재)</p>
+            <p className="text-sm text-muted-foreground mb-1">"초고 throughput BFT"</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>Narwhal (2021) — DAG mempool</li>
+              <li>Bullshark (2022) — DAG consensus</li>
+              <li>Jolteon (2022) — 2-chain commit</li>
+              <li>Mysticeti (2024) — uncertified DAG</li>
+              <li>Autobahn (2024) — hybrid pipeline</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">핵심 metric: TPS</p>
+          </div>
+        </div>
 
-// Stage 1: Feasibility (1999-2010)
-// "BFT가 실무에서 가능한가?"
-// - PBFT (1999): 최초 실용적 BFT
-// - Zyzzyva (2007): speculative execution
-// - UpRight (2009): Byzantine + crash
-// - 공통: 학술 수준, production 드묾
-
-// Stage 2: Scalability (2014-2020)
-// "BFT를 blockchain 규모로 확장"
-// - Tendermint (2014): blockchain 맞춤
-// - LibraBFT/HotStuff (2019): O(n) linear
-// - 공통: O(n²) 통신 한계 돌파
-
-// Stage 3: Throughput (2021-현재)
-// "초고 throughput BFT"
-// - Narwhal (2021): DAG mempool
-// - Bullshark (2022): DAG consensus
-// - Jolteon (2022): 2-chain commit
-// - Mysticeti (2024): uncertified DAG
-// - Autobahn (2024): hybrid pipeline
-
-// 각 단계 핵심 metric:
-// Stage 1: 가능성 (feasibility)
-// Stage 2: validator 수 (scalability)
-// Stage 3: TPS (throughput)
-
-// 성능 진화:
-// PBFT (1999): 10K TPS, f<n/3
-// Tendermint (2014): 10K TPS, f<n/3, instant finality
-// HotStuff (2019): 20K TPS, O(n), instant finality
-// Jolteon (2022): 30K TPS, 2-chain, responsive
-// Mysticeti (2024): 160K TPS, DAG, 390ms
-// Autobahn (2024): 100K TPS, hybrid, fast recovery
-
-// validator 수 진화:
-// PBFT: ~20 (실무)
-// Tendermint: ~100-200
-// HotStuff: ~100-300
-// DAG-BFT: ~100-500
-
-// latency 진화:
-// PBFT: 3δ
-// HotStuff (basic): 7δ
-// HotStuff (chained): 3δ
-// HotStuff-2: 4δ
-// Jolteon: 4δ (fast path 2δ)
-// Mysticeti: 390ms e2e
-// Autobahn: 1-3δ adaptive`}
-        </pre>
+        <div className="overflow-x-auto not-prose mb-4">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-3 py-2 text-left">프로토콜</th>
+                <th className="border border-border px-3 py-2 text-left">TPS</th>
+                <th className="border border-border px-3 py-2 text-left">Validators</th>
+                <th className="border border-border px-3 py-2 text-left">Latency</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['PBFT (1999)', '10K', '~20', '3δ'],
+                ['Tendermint (2014)', '10K', '~100-200', '3-4δ'],
+                ['HotStuff (2019)', '20K', '~100-300', '3δ (chained)'],
+                ['Jolteon (2022)', '30K', '~100-300', '4δ (fast 2δ)'],
+                ['Mysticeti (2024)', '160K', '~100-500', '390ms e2e'],
+                ['Autobahn (2024)', '100K', '~100-500', '1-3δ adaptive'],
+              ].map(([proto, tps, vals, lat]) => (
+                <tr key={proto}>
+                  <td className="border border-border px-3 py-2 font-medium">{proto}</td>
+                  <td className="border border-border px-3 py-2">{tps}</td>
+                  <td className="border border-border px-3 py-2">{vals}</td>
+                  <td className="border border-border px-3 py-2">{lat}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <p className="leading-7">
           진화 3단계: <strong>feasibility → scalability → throughput</strong>.<br />
           각 단계 25년간 validator 5배, TPS 15배 증가.<br />
@@ -78,61 +89,51 @@ export default function Overview() {
 
         {/* ── 비교 dimension ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BFT 비교 dimensions</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BFT 프로토콜 비교 차원:
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">1. Communication Complexity</p>
+            <p className="text-sm">PBFT: <code className="text-xs">O(n²)</code> normal / <code className="text-xs">O(n³)</code> VC — HotStuff: <code className="text-xs">O(n)</code> both — DAG-BFT: <code className="text-xs">O(n²)</code> amortized parallel</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">2. Latency (commit)</p>
+            <p className="text-sm">PBFT: 3δ — HotStuff chained: 3δ — HotStuff-2: 4δ — Mysticeti: 390ms</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">3. Responsiveness</p>
+            <p className="text-sm">PBFT: normal only — Tendermint: non-responsive — HotStuff-2: fully responsive</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">4. View Change</p>
+            <p className="text-sm">PBFT: explicit, expensive — Tendermint: implicit <code className="text-xs">round++</code> — HotStuff: linear</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">5. Leader Selection</p>
+            <p className="text-sm">PBFT: round-robin — Tendermint: proposer schedule — DiemBFT: reputation-based</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">6. Network Model</p>
+            <p className="text-sm">대부분 partial sync — Ditto: async fallback — Mysticeti: partial sync + async</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">7. Throughput</p>
+            <p className="text-sm">전통 BFT: <code className="text-xs">O(1)</code> block/view — DAG-BFT: <code className="text-xs">O(n)</code> blocks/wave</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">8. Fork Resistance</p>
+            <p className="text-sm">BFT: absolute (<code className="text-xs">f&lt;n/3</code>) — Nakamoto: probabilistic</p>
+          </div>
+        </div>
 
-// 1. Communication complexity:
-//    PBFT: O(n²) normal, O(n³) VC
-//    Tendermint: O(n²) normal, O(n²) VC
-//    HotStuff: O(n) normal, O(n) VC
-//    DAG-BFT: O(n²) amortized but parallel
-
-// 2. Latency (to commit):
-//    PBFT: 3δ
-//    HotStuff: 3δ (chained)
-//    HotStuff-2: 4δ
-//    Mysticeti: 390ms (absolute)
-
-// 3. Responsiveness:
-//    PBFT: normal only
-//    Tendermint: non-responsive
-//    HotStuff: normal only
-//    HotStuff-2: fully responsive
-
-// 4. View Change:
-//    PBFT: explicit, expensive
-//    Tendermint: implicit (round++)
-//    HotStuff: linear
-//    HotStuff-2: + TC
-
-// 5. Leader:
-//    PBFT: round-robin
-//    Tendermint: proposer schedule
-//    HotStuff: rotation per view
-//    DiemBFT: reputation-based
-
-// 6. Network model:
-//    PBFT: partial sync
-//    Tendermint: partial sync
-//    HotStuff: partial sync
-//    Ditto: async fallback
-//    Mysticeti: partial sync + async
-
-// 7. Throughput:
-//    all traditional: O(1) block per view
-//    DAG-BFT: O(n) blocks per wave
-
-// 8. Fork resistance:
-//    all BFT: absolute (f<n/3)
-//    Nakamoto: probabilistic
-
-// 핵심 설계 결정:
-// 1. Chain structure (linear vs DAG)
-// 2. Voting mechanism (direct vs threshold)
-// 3. Leader selection (rotation vs reputation)
-// 4. Network assumption (sync/partial/async)
-// 5. Commit rule (2-chain vs 3-chain)`}
-        </pre>
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">핵심 설계 결정 5가지</p>
+          <ol className="text-sm space-y-1 list-decimal pl-4">
+            <li>Chain structure — linear vs DAG</li>
+            <li>Voting mechanism — direct vs threshold</li>
+            <li>Leader selection — rotation vs reputation</li>
+            <li>Network assumption — sync / partial / async</li>
+            <li>Commit rule — 2-chain vs 3-chain</li>
+          </ol>
+        </div>
         <p className="leading-7">
           8가지 비교 차원: <strong>complexity, latency, responsiveness, VC, leader, network, throughput, fork</strong>.<br />
           각 프로토콜은 차원별 trade-off 선택.<br />

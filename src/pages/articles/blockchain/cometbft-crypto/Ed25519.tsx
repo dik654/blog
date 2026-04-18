@@ -13,49 +13,53 @@ export default function Ed25519({ onCodeRef }: { onCodeRef: (key: string, ref: C
 
         {/* ── Ed25519 구조 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">Ed25519 — Edwards 곡선 서명</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ed25519 (RFC 8032)
-// Daniel J. Bernstein et al. 설계
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Ed25519 (RFC 8032)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Curve25519 기반 twisted Edwards 곡선</li>
+              <li>256-bit prime field, cofactor 8</li>
+              <li>~128-bit 보안 수준</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Key/Signature 크기</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">PrivKey []byte</code> — 64 bytes (32 seed + 32 pubkey cache)</li>
+              <li><code className="text-xs">PubKey []byte</code> — 32 bytes (compressed point)</li>
+              <li>Signature — 64 bytes (r + s)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">내부 구현</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Go 표준 <code className="text-xs">crypto/ed25519</code></li>
+              <li>Assembly 최적화 (amd64, arm64)</li>
+              <li>constant-time 연산 (side-channel 방어)</li>
+            </ul>
+          </div>
+        </div>
 
-// Curve25519 기반 twisted Edwards 곡선:
-// -x^2 + y^2 = 1 + d*x^2*y^2
-// 256-bit prime field, cofactor 8
-// ~128-bit 보안 수준
-
-// Key/Signature 크기:
-// PrivateKey: 32 bytes (seed)
-// PublicKey: 32 bytes (compressed point)
-// Signature: 64 bytes (r + s)
-
-// CometBFT의 Ed25519:
-// cometbft/crypto/ed25519/ed25519.go
-
-type PubKey []byte  // 32 bytes
-type PrivKey []byte // 64 bytes (32-byte seed + 32-byte pubkey cache)
-
-// Address 유도 (20 bytes):
-func (pubKey PubKey) Address() Address {
-    return Address(tmhash.SumTruncated(pubKey))
-    // SHA256(pubkey)[:20]
-}
-
-// 서명:
-func (privKey PrivKey) Sign(msg []byte) ([]byte, error) {
-    return ed25519.Sign(privKey.Bytes(), msg), nil
-    // Go 표준 crypto/ed25519 사용
-}
-
-// 검증:
-func (pubKey PubKey) VerifySignature(msg, sig []byte) bool {
-    if len(sig) != ed25519.SignatureSize { return false }
-    return ed25519.Verify(pubKey.Bytes(), msg, sig)
-}
-
-// 내부 구현:
-// - Go 표준: crypto/ed25519 (x/crypto 기반)
-// - Assembly 최적화 (amd64, arm64)
-// - constant-time 연산 (side-channel 방어)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Address 유도</div>
+            <div className="text-sm text-muted-foreground">
+              <code className="text-xs">tmhash.SumTruncated(pubKey)</code> → SHA256(pubkey)[:20] (20 bytes)
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">서명</div>
+            <div className="text-sm text-muted-foreground">
+              <code className="text-xs">ed25519.Sign(privKey.Bytes(), msg)</code> → Go 표준 <code className="text-xs">crypto/ed25519</code>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">검증</div>
+            <div className="text-sm text-muted-foreground">
+              <code className="text-xs">ed25519.Verify(pubKey.Bytes(), msg, sig)</code> — sig 길이 64 아니면 false
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           CometBFT가 <strong>Ed25519 (Go 표준)</strong> 사용.<br />
           32 bytes pubkey + 64 bytes signature + 20 bytes address.<br />
@@ -64,44 +68,32 @@ func (pubKey PubKey) VerifySignature(msg, sig []byte) bool {
 
         {/* ── Batch Verification ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Batch Verification — 투표 일괄 검증</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ed25519 batch verification (RFC 8032 Section 8.2)
-// N 서명을 단일 연산으로 검증
-
-// 배치 검증 수학:
-// 단일: e(G, sig) == e(pubkey, H(msg))
-// 배치: e(G, sum(z_i * sig_i)) == e(G, sum(z_i * s_i))
-//       (random z_i coefficient로 합산)
-
-// 성능 (crypto/ed25519/batch):
-// - 단일 verify: ~60μs
-// - 배치 100개: ~1.5ms (60배 가속)
-// - 배치 1000개: ~14ms (~400배 가속)
-
-// CometBFT 사용처:
-// 1. Vote batch verification
-// 한 라운드에 100+ validators 투표 수집
-// 모두 같은 높이/타입이면 배치 가능
-//
-// 2. PartSetHeader.Verify
-// 블록 파트들의 서명 배치 검증
-//
-// 3. Commit verification
-// LastCommit의 모든 Vote 일괄 검증
-
-// 주의사항:
-// - 배치 검증 실패 → 어떤 서명이 문제인지 모름
-// - fallback: 개별 검증으로 bad signature 찾기
-// - strict subgroup check 필요 (small subgroup attack)
-
-// Go 구현 예시:
-import "crypto/ed25519"
-
-func batchVerify(pubkeys [][]byte, msgs [][]byte, sigs [][]byte) bool {
-    // Go 1.23+ batch API
-    return ed25519.VerifyBatch(pubkeys, msgs, sigs)
-}`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Batch 검증 성능</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>단일 verify: ~60us</li>
+              <li>배치 100개: ~1.5ms (60배 가속)</li>
+              <li>배치 1000개: ~14ms (~400배 가속)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">CometBFT 사용처</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Vote batch verification (100+ validators)</li>
+              <li>PartSetHeader 서명 배치 검증</li>
+              <li>LastCommit의 모든 Vote 일괄 검증</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">주의사항</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>배치 실패 → 어떤 서명이 문제인지 모름</li>
+              <li>fallback: 개별 검증으로 bad signature 탐색</li>
+              <li>strict subgroup check 필요 (small subgroup attack)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Ed25519 <strong>batch verification</strong>이 핵심 성능 강점.<br />
           100 서명 배치 = 단일 60배 가속.<br />

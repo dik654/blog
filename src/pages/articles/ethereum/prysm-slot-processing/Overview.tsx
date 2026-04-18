@@ -14,46 +14,54 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── state transition 3단계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">State Transition — 3계층 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ethereum 2.0 state transition (spec):
-// 3계층으로 구성
-
-// Layer 1: state_transition(state, signed_block, validate_result)
-//   - 블록이 있는 슬롯의 전체 전환
-//   - 입력: pre_state, signed_block
-//   - 출력: post_state
-
-// Layer 2: process_slots(state, slot)
-//   - current_slot → target slot까지 empty slot 처리
-//   - 각 slot마다:
-//     - process_slot(state)
-//     - epoch 경계면 process_epoch(state) 수행
-
-// Layer 3: process_slot(state)
-//   - 단일 slot 진전
-//   - state.slot + 1
-//   - block_roots, state_roots 업데이트
-//   - latest_block_header.state_root 채움 (이전 슬롯에서 0이었음)
-
-// 호출 그래프:
-// state_transition
-//   └─ process_slots(block.slot - 1)  // empty slots 먼저
-//        └─ for each slot:
-//            ├─ process_slot
-//            └─ (if epoch boundary) process_epoch
-//   └─ process_block(block)            // 실제 블록 적용
-
-// Prysm 구현:
-// beacon-chain/core/transition/
-// - transition.go: state_transition
-// - slot_processing.go: process_slots, process_slot
-
-// 왜 3계층?
-// 1. process_slot: 매 slot 불변 연산 (cheap)
-// 2. process_epoch: epoch 경계 특수 처리 (expensive)
-// 3. process_block: 블록별 처리 (variable)
-// → 각 레이어가 독립 최적화 가능`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+              <p className="font-semibold text-sm text-indigo-400 mb-2">Layer 1: state_transition</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><code className="text-indigo-300">state_transition(state, signed_block)</code></div>
+                <div>블록이 있는 슬롯의 전체 전환</div>
+                <div>입력: pre_state + signed_block → 출력: post_state</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm text-sky-400 mb-2">Layer 2: process_slots</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><code className="text-sky-300">process_slots(state, slot)</code></div>
+                <div>current_slot → target slot까지 empty slot 처리</div>
+                <div>각 slot마다 <code>process_slot</code> + epoch 경계면 <code>process_epoch</code></div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm text-emerald-400 mb-2">Layer 3: process_slot</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><code className="text-emerald-300">process_slot(state)</code></div>
+                <div>단일 slot 진전 — state.slot + 1</div>
+                <div>block_roots, state_roots 업데이트 + header.state_root 백필</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">호출 그래프</p>
+            <div className="text-xs text-foreground/70 font-mono space-y-1">
+              <div><code>state_transition</code></div>
+              <div className="pl-4">└─ <code>process_slots(block.slot - 1)</code> — empty slots 먼저</div>
+              <div className="pl-8">└─ for each slot:</div>
+              <div className="pl-12">├─ <code>process_slot</code></div>
+              <div className="pl-12">└─ (if epoch boundary) <code>process_epoch</code></div>
+              <div className="pl-4">└─ <code>process_block(block)</code> — 실제 블록 적용</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">왜 3계층인가?</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-foreground/70">
+              <div><strong>process_slot</strong> — 매 slot 불변 연산 (cheap)</div>
+              <div><strong>process_epoch</strong> — epoch 경계 특수 처리 (expensive)</div>
+              <div><strong>process_block</strong> — 블록별 처리 (variable)</div>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2">각 레이어가 독립 최적화 가능. Prysm: <code>transition.go</code> + <code>slot_processing.go</code></p>
+          </div>
+        </div>
         <p className="leading-7">
           Ethereum 2.0 state transition은 <strong>3계층 추상화</strong>.<br />
           process_slot(매 slot) → process_epoch(epoch 경계) → process_block(선택적).<br />
@@ -62,49 +70,39 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
 
         {/* ── ProcessSlots 루프 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ProcessSlots — 다중 슬롯 처리 루프</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// process_slots: current → target slot까지 반복 처리
-func ProcessSlots(ctx context.Context, state *BeaconState, slot Slot) error {
-    if state.Slot() >= slot {
-        return ErrSlotAlreadyPassed
-    }
-
-    for state.Slot() < slot {
-        // 1. 단일 slot 처리
-        if err := ProcessSlot(state); err != nil {
-            return err
-        }
-
-        // 2. epoch 경계 확인
-        //    (slot + 1) % SLOTS_PER_EPOCH == 0
-        nextSlot := state.Slot() + 1
-        if nextSlot % SLOTS_PER_EPOCH == 0 {
-            // Epoch 전환 처리 (justification, rewards, etc.)
-            if err := ProcessEpoch(state); err != nil {
-                return err
-            }
-        }
-
-        // 3. Slot 증가
-        state.SetSlot(nextSlot)
-    }
-
-    return nil
-}
-
-// 사용처:
-// 1. block processing 시작 시:
-//    state.slot이 block.slot보다 작으면 empty slots 적용
-//    (validator가 특정 slot에 블록 안 만들어서 생긴 skip)
-// 2. validator가 미래 duty 계산 시:
-//    current state에서 target epoch까지 simulate
-
-// 성능:
-// - ProcessSlot: ~5ms per slot (가벼움)
-// - ProcessEpoch: ~100ms ~ 1s (무거움)
-// - 예: 100 slot replay = ~4 × ProcessEpoch + 100 × ProcessSlot
-//       = ~4 × 200ms + 100 × 5ms = ~1.3s`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-2"><code>ProcessSlots(ctx, state, slot)</code> — 루프 구조</p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              <div><strong>Guard:</strong> <code>state.Slot() &gt;= slot</code> → <code>ErrSlotAlreadyPassed</code></div>
+              <div className="rounded border border-border p-2">
+                <p className="font-semibold text-foreground/80 mb-1">for state.Slot() &lt; slot:</p>
+                <div className="pl-3 space-y-1">
+                  <div><span className="text-indigo-400 font-bold">1.</span> <code>ProcessSlot(state)</code> — 단일 slot 전환</div>
+                  <div><span className="text-indigo-400 font-bold">2.</span> <code>(slot + 1) % SLOTS_PER_EPOCH == 0</code> → <code>ProcessEpoch(state)</code></div>
+                  <div><span className="text-indigo-400 font-bold">3.</span> <code>state.SetSlot(nextSlot)</code> — slot 증가</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">사용처</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><strong>block processing:</strong> state.slot &lt; block.slot이면 empty slots 적용 (validator skip)</div>
+                <div><strong>validator duty 계산:</strong> current state에서 target epoch까지 simulate</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">성능 (100 slot replay 예시)</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><code>ProcessSlot</code> ~5ms/slot × 100 = 500ms</div>
+                <div><code>ProcessEpoch</code> ~200ms × 4회 = 800ms</div>
+                <div className="font-semibold text-foreground/80">총 ~1.3s</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>ProcessSlots</code>가 <strong>replay의 핵심 엔진</strong>.<br />
           ProcessSlot 반복 + epoch 경계에서 ProcessEpoch.<br />

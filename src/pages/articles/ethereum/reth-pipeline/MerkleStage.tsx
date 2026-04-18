@@ -21,34 +21,37 @@ export default function MerkleStage({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── MPT 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">World State Trie — MPT(Merkle Patricia Trie) 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 이더리움 World State의 계층 구조
-//
-//              StateRoot (= header.state_root)
-//                    │
-//         ┌──────────┼──────────┐
-//       Account   Account    Account    ← keccak256(address)를 키로 인덱싱
-//       (A)       (B)        (C)
-//        │         │          │
-//    StorageRoot StorageRoot  (EOA는 storage 없음)
-//        │         │
-//     ┌──┴──┐   ┌──┴──┐
-//    Slot Slot Slot Slot      ← keccak256(slot_key)를 키로 인덱싱
-//
-// 각 Account 노드의 구조:
-struct AccountTrieNode {
-    nonce: u64,
-    balance: U256,
-    storage_root: B256,   // ← 이 계정의 스토리지 트라이 루트
-    code_hash: B256,      // ← 컨트랙트 바이트코드 해시
-}
-
-// MPT는 2-tier 구조:
-// - 계정 트라이: keccak256(address) → AccountTrieNode
-// - 스토리지 트라이: keccak256(slot_key) → value (각 계정마다 1개)
-//
-// StateRoot는 "2-tier 트리의 루트의 루트"`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-pink-500 mb-2">World State 2-tier MPT 구조</p>
+            <div className="text-sm text-foreground/70 space-y-1.5">
+              <p><strong>계정 트라이</strong>: <code>keccak256(address)</code> &rarr; <code>AccountTrieNode</code></p>
+              <p><strong>스토리지 트라이</strong>: <code>keccak256(slot_key)</code> &rarr; value (각 계정마다 1개)</p>
+              <p><strong>StateRoot</strong> = header.state_root = "2-tier 트리의 루트의 루트"</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">AccountTrieNode</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">nonce</code>
+                <span className="text-foreground/60 text-xs">u64</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">balance</code>
+                <span className="text-foreground/60 text-xs">U256</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">storage_root</code>
+                <span className="text-foreground/60 text-xs">B256 -- 이 계정의 스토리지 트라이 루트</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1 py-0.5 rounded">code_hash</code>
+                <span className="text-foreground/60 text-xs">B256 -- 컨트랙트 바이트코드 해시</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           이더리움 State는 약 <strong>2억 5천만 계정</strong>을 포함하고, 각 컨트랙트는 수천~수백만 스토리지 슬롯을 가질 수 있다.<br />
           매 블록마다 전체 MPT를 재해싱하는 것은 경제적으로 불가능 — 수 기가바이트 크기의 트리.<br />
@@ -57,32 +60,25 @@ struct AccountTrieNode {
 
         {/* ── PrefixSet ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PrefixSet — 변경된 트리 경로 인덱스</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PrefixSet: "어떤 키 접두사가 변경되었는가"의 정렬된 집합
-pub struct PrefixSet {
-    keys: Vec<Nibbles>, // Nibbles = 4비트 단위 키 표현 (MPT의 기본 단위)
-}
-
-// 예시: 블록 N에서 다음 변경이 있었다면
-// - 계정 0xAAAA...의 잔고 변경
-// - 계정 0xBBBC...의 스토리지 슬롯 0x01 변경
-// - 계정 0xBBBC...의 스토리지 슬롯 0x05 변경
-//
-// 계정 트라이의 PrefixSet:
-//   [0xAAAA..., 0xBBBC...]
-//
-// 0xBBBC... 계정의 스토리지 트라이 PrefixSet:
-//   [0x01, 0x05]
-
-// ExecutionStage가 write_to_storage() 시점에 PrefixSet을 기록
-// MerkleStage는 이 인덱스를 읽어서 "어디를 재해싱할지"를 결정
-
-let prefix_sets = provider.changed_prefix_sets(
-    input.checkpoint().block_number, // 이전 MerkleStage 완료 지점 (예: 18,399,000)
-    input.target(),                  // CL tip (예: 18,400,000)
-)?;
-// → 18,399,001 ~ 18,400,000 블록의 모든 변경이 통합된 PrefixSet`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">PrefixSet — 변경된 키 접두사의 정렬된 집합</p>
+            <div className="text-sm text-foreground/70 space-y-1">
+              <p><code>keys: Vec&lt;Nibbles&gt;</code> — Nibbles = 4비트 단위 키 표현 (MPT 기본 단위)</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-4">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">예시: 블록 N에서 변경이 있는 경우</p>
+            <div className="text-xs text-foreground/60 space-y-1.5">
+              <p>계정 0xAAAA... 잔고 변경, 계정 0xBBBC... 스토리지 슬롯 0x01/0x05 변경</p>
+              <p>계정 트라이 PrefixSet: <code>[0xAAAA..., 0xBBBC...]</code></p>
+              <p>0xBBBC 스토리지 트라이 PrefixSet: <code>[0x01, 0x05]</code></p>
+            </div>
+            <div className="mt-2 pt-2 border-t border-border/30 text-xs text-foreground/50">
+              <code>provider.changed_prefix_sets(checkpoint, target)</code> &rarr; 범위 내 모든 변경을 통합한 PrefixSet 반환
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Geth와의 결정적 차이: 증분 계산.</strong><br />
           Geth는 매 블록마다 dirty 노드(변경된 트라이 노드)를 전부 재해싱한다.<br />
@@ -92,37 +88,31 @@ let prefix_sets = provider.changed_prefix_sets(
 
         {/* ── overlay_root ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">StateRoot::overlay_root() — 2-tier 증분 계산</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// overlay_root 알고리즘 (의사코드)
-fn overlay_root(provider: &Provider, prefix_sets: PrefixSets) -> B256 {
-    // 1. 변경된 계정 경로를 순회 (PrefixSet이 정렬되어 있어 순차 스캔)
-    let mut account_walker = TrieWalker::new(provider, prefix_sets.account);
-
-    while let Some((account_path, account_key)) = account_walker.next()? {
-        // 2. 해당 계정의 스토리지 트라이 증분 재계산
-        let storage_prefix_set = prefix_sets.storage.get(&account_key);
-        let new_storage_root = if let Some(sps) = storage_prefix_set {
-            // 스토리지 변경 있음 → 병렬로 StorageRoot 재계산
-            compute_storage_root_incremental(provider, account_key, sps)?
-        } else {
-            // 스토리지 변경 없음 → 기존 루트 재사용
-            provider.get_storage_root(account_key)?
-        };
-
-        // 3. 업데이트된 AccountTrieNode 구성
-        let account = AccountTrieNode {
-            storage_root: new_storage_root,
-            ..provider.get_account(account_key)?
-        };
-
-        // 4. 계정 트라이의 해당 경로만 재해싱
-        account_walker.update(account_path, account)?;
-    }
-
-    // 5. 루트에서부터 변경된 경로를 따라 상위 노드까지 재해싱
-    account_walker.finalize_root()
-}`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-indigo-500 mb-3">overlay_root() — 2-tier 증분 계산</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <span className="text-foreground/70">변경된 계정 경로를 <code>TrieWalker</code>로 순회 (PrefixSet 정렬 &rarr; 순차 스캔)</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] font-bold">2</span>
+              <span className="text-foreground/70">스토리지 변경이 있으면 <code>compute_storage_root_incremental()</code> 병렬 호출, 없으면 기존 루트 재사용</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+              <span className="text-foreground/70">업데이트된 <code>AccountTrieNode {'{'} storage_root, ... {'}'}</code> 구성</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[10px] font-bold">4</span>
+              <span className="text-foreground/70">계정 트라이의 해당 경로만 <code>account_walker.update()</code>로 재해싱</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">5</span>
+              <span className="text-foreground/70"><code>finalize_root()</code> — 변경된 경로를 따라 상위 노드까지 재해싱 &rarr; 최종 StateRoot 반환</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>rayon</code>으로 계정별 <code>StorageRoot</code>(각 계정의 스토리지 트라이 루트)를 병렬 계산한다.<br />
           계정 A의 스토리지와 계정 B의 스토리지는 독립적이므로 완벽한 병렬화가 가능하다.<br />
@@ -131,32 +121,30 @@ fn overlay_root(provider: &Provider, prefix_sets: PrefixSets) -> B256 {
 
         {/* ── 검증 & 실패 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">최종 검증 — state_root 불일치 시</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// MerkleStage 마지막 단계
-let target_header = provider.header_by_number(input.target())?;
-
-if state_root != target_header.state_root {
-    return Err(StageError::Validation {
-        block: input.target(),
-        error: ConsensusError::BodyStateRootDiff {
-            got: state_root,                  // MerkleStage가 계산한 루트
-            expected: target_header.state_root, // 헤더의 정답 루트
-        },
-    });
-}
-
-// 불일치 발생 시 Pipeline의 대응:
-// 1. StageError::Validation 감지 → Pipeline이 Unwind 시그널로 전환
-// 2. 역순 unwind: Merkle → Execution → Senders → Bodies → Headers
-// 3. unwind_to = input.target() - 1 (문제 블록 직전까지 되감기)
-// 4. 문제 블록을 bad_block으로 기록, 해당 피어 ban
-// 5. Pipeline 재시작 → 다른 피어에게 같은 범위 재요청
-
-// 불일치 가능 원인:
-// - 피어가 보낸 TX가 잘못됨 (BodiesStage에서 tx_root 검증 통과 후에도 이론적 가능)
-// - revm과 Geth EVM의 구현 차이 (합의 버그 — 극히 드물지만 있었음)
-// - 하드포크 활성화 블록 번호 오류 (chain_spec 설정 실수)`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-pink-400/40 bg-pink-50/30 dark:bg-pink-950/10 p-4">
+            <p className="text-xs font-semibold text-pink-500 mb-2">최종 검증: state_root 대조</p>
+            <p className="text-sm text-foreground/70 mb-2">
+              <code>state_root != target_header.state_root</code> &rarr; <code>StageError::Validation</code> + <code>ConsensusError::BodyStateRootDiff</code>
+            </p>
+            <p className="text-xs font-semibold text-foreground/60 mb-1.5">불일치 시 Pipeline 대응:</p>
+            <ol className="list-decimal list-inside space-y-1 text-xs text-foreground/60">
+              <li><code>StageError::Validation</code> 감지 &rarr; Unwind 시그널 전환</li>
+              <li>역순 unwind: Merkle &rarr; Execution &rarr; Senders &rarr; Bodies &rarr; Headers</li>
+              <li><code>unwind_to = target - 1</code> (문제 블록 직전까지)</li>
+              <li>문제 블록을 <code>bad_block</code>으로 기록, 해당 피어 ban</li>
+              <li>Pipeline 재시작 &rarr; 다른 피어에게 같은 범위 재요청</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+            <p className="text-xs font-semibold text-foreground/60 mb-1">불일치 가능 원인</p>
+            <div className="text-xs text-foreground/50 space-y-0.5">
+              <p>- 피어가 보낸 TX가 잘못됨 (tx_root 검증 통과 후에도 이론적 가능)</p>
+              <p>- revm과 Geth EVM의 구현 차이 (합의 버그)</p>
+              <p>- 하드포크 활성화 블록 번호 오류 (chain_spec 설정 실수)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           state_root 불일치는 <strong>전체 동기화를 중단시키는 심각한 오류</strong>다.<br />
           여기까지 오면 이전 3개 Stage(Headers, Bodies, Senders)는 이미 "정답"을 저장한 상태다.<br />

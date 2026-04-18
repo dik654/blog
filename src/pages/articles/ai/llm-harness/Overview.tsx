@@ -1,4 +1,5 @@
 import OverviewViz from './viz/OverviewViz';
+import OverviewDetailViz from './viz/OverviewDetailViz';
 
 export default function Overview() {
   return (
@@ -66,110 +67,7 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Harness vs Raw LLM</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Raw LLM (no harness):
-// - bare API call
-// - user → prompt → LLM → response
-// - no structure
-// - no safety
-// - no tools
-// - brittle
-
-// LLM with Harness:
-// - structured prompts
-// - tool calling capability
-// - guardrails (safety checks)
-// - retry logic
-// - evaluation hooks
-// - observability
-
-// Harness components:
-//
-// 1. System Prompt:
-// - role definition
-// - persona
-// - instructions
-// - output format
-//
-// 2. Tools:
-// - function calling
-// - external APIs
-// - knowledge retrieval
-// - action execution
-//
-// 3. Guardrails:
-// - input validation
-// - output filtering
-// - safety checks
-// - PII detection
-//
-// 4. Context Management:
-// - history summarization
-// - token budget
-// - memory retrieval
-// - session state
-//
-// 5. Evaluation:
-// - quality checks
-// - regression tests
-// - A/B testing
-// - metrics tracking
-
-// Example harness (simplified):
-// def query_with_harness(user_input):
-//     # Input guardrails
-//     if contains_pii(user_input):
-//         return "Please remove PII"
-//
-//     # System prompt
-//     system = load_system_prompt()
-//
-//     # Tools
-//     tools = get_available_tools()
-//
-//     # LLM call
-//     response = llm.complete(
-//         system=system,
-//         messages=[{"role": "user", "content": user_input}],
-//         tools=tools
-//     )
-//
-//     # Output guardrails
-//     if is_unsafe(response):
-//         return "Content filtered"
-//
-//     # Logging
-//     log_interaction(user_input, response)
-//
-//     return response
-
-// Why harness matters:
-// - consistency
-// - safety
-// - observability
-// - maintainability
-// - production readiness
-
-// Frameworks that provide harness:
-// - LangChain
-// - LlamaIndex
-// - Haystack
-// - Semantic Kernel
-// - DSPy
-// - Claude Code (internal)
-
-// Trade-offs:
-// Harness added cost:
-// - more LLM calls
-// - latency increase
-// - complexity
-//
-// Benefits:
-// - quality increase
-// - safety
-// - debuggability
-// - iteration speed`}
-        </pre>
+        <div className="not-prose mb-6"><OverviewDetailViz /></div>
         <p className="leading-7">
           Harness: <strong>system prompt + tools + guardrails + eval</strong>.<br />
           raw LLM → production system 변환 인프라.<br />

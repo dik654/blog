@@ -49,39 +49,54 @@ export default function Overview() {
 
         {/* ── 크레이트 맵 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">워크스페이스 구조 — ~200개 크레이트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`reth/crates/
-├── primitives/          # 기본 타입 (Block, Header, Transaction)
-├── primitives-traits/   # 타입 추상화 (BlockHeader, Transaction trait)
-├── chainspec/           # ChainSpec, hardfork, genesis
-├── ethereum-forks/      # EthereumHardfork enum, ForkCondition
-│
-├── storage/
-│   ├── db/              # tables! 매크로, 테이블 스키마
-│   ├── db-api/          # Database trait, Cursor trait
-│   ├── libmdbx-rs/      # MDBX FFI 바인딩
-│   ├── provider/        # StateProvider, HistoricalStateProvider
-│   └── static-file/     # StaticFileProvider (cold storage)
-│
-├── trie/                # MPT(Merkle Patricia Trie) 구현
-├── stages/              # Pipeline + 각 Stage 구현체
-│
-├── net/                 # devp2p 네트워킹
-│   ├── discv5/          # Discovery v5
-│   ├── eth-wire/        # eth/68 프로토콜
-│   └── network/         # NetworkManager
-│
-├── transaction-pool/    # TX 풀
-├── payload/             # Payload builder (CL을 위한 블록 구성)
-├── engine/              # Engine API (CL ↔ EL)
-├── rpc/                 # JSON-RPC 서버
-│
-├── consensus/           # 합의 검증 (Ethereum, Op Stack)
-├── blockchain-tree/     # canonical / non-canonical 체인 관리
-├── exex/                # Execution Extensions (확장 프레임워크)
-├── node/                # NodeBuilder, 컴포넌트 조립
-└── bin/                 # 실행 바이너리 (reth, op-reth)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">기초 타입</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>primitives/</code> — 기본 타입 (<code>Block</code>, <code>Header</code>, <code>Transaction</code>)</li>
+              <li><code>primitives-traits/</code> — 타입 추상화 (<code>BlockHeader</code>, <code>Transaction</code> trait)</li>
+              <li><code>chainspec/</code> — <code>ChainSpec</code>, hardfork, genesis</li>
+              <li><code>ethereum-forks/</code> — <code>EthereumHardfork</code> enum, <code>ForkCondition</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">저장 (storage/)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>db/</code> — <code>tables!</code> 매크로, 테이블 스키마</li>
+              <li><code>db-api/</code> — <code>Database</code> trait, <code>Cursor</code> trait</li>
+              <li><code>libmdbx-rs/</code> — MDBX FFI 바인딩</li>
+              <li><code>provider/</code> — <code>StateProvider</code>, <code>HistoricalStateProvider</code></li>
+              <li><code>static-file/</code> — <code>StaticFileProvider</code> (cold storage)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">실행 & 상태</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>trie/</code> — MPT(Merkle Patricia Trie) 구현</li>
+              <li><code>stages/</code> — <code>Pipeline</code> + 각 Stage 구현체</li>
+              <li><code>consensus/</code> — 합의 검증 (Ethereum, Op Stack)</li>
+              <li><code>blockchain-tree/</code> — canonical / non-canonical 체인 관리</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-2">네트워크 & TX</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>net/</code> — devp2p (<code>discv5</code>, <code>eth-wire</code>, <code>NetworkManager</code>)</li>
+              <li><code>transaction-pool/</code> — TX 풀</li>
+              <li><code>payload/</code> — Payload builder (CL 블록 구성)</li>
+              <li><code>engine/</code> — Engine API (CL ↔ EL)</li>
+              <li><code>rpc/</code> — JSON-RPC 서버</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4 sm:col-span-2">
+            <p className="font-semibold text-sm mb-2">확장 & 빌드</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><code>exex/</code> — Execution Extensions (확장 프레임워크)</li>
+              <li><code>node/</code> — <code>NodeBuilder</code>, 컴포넌트 조립</li>
+              <li><code>bin/</code> — 실행 바이너리 (<code>reth</code>, <code>op-reth</code>)</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           대략 200개 크레이트로 분할 — Rust의 크레이트가 Go의 패키지보다 훨씬 세분화된 단위.<br />
           각 크레이트는 단일 책임 + 명시적 의존 관계 + 독립 빌드 캐싱.<br />
@@ -90,27 +105,40 @@ export default function Overview() {
 
         {/* ── Stack 선택 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">기술 스택 — 4가지 핵심 선택</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 1. revm (EVM)
-//    - Rust 네이티브 EVM, no_std 지원
-//    - Geth EVM 대비 ~2배 빠름
-//    - Hook API로 tracing, simulation 용이
-
-// 2. MDBX (DB)
-//    - B+tree + mmap + MVCC
-//    - Erigon이 입증한 선택
-//    - 페이지 캐시 직접 접근 → zero-copy 읽기
-
-// 3. alloy (primitives & RLP)
-//    - ethers-rs 후계 (Abigen 재설계)
-//    - Address, B256, U256 등 기본 타입
-//    - derive 매크로로 RLP encode/decode 자동화
-
-// 4. reth-mdbx-rs (MDBX 바인딩)
-//    - libmdbx C 라이브러리의 safe Rust 래퍼
-//    - unsafe code는 이 크레이트에 한정
-//    - workspace 전역 unsafe_code = "forbid" 정책`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-1">revm (EVM)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>Rust 네이티브 EVM, <code>no_std</code> 지원</li>
+              <li>Geth EVM 대비 ~2배 빠름</li>
+              <li>Hook API로 tracing, simulation 용이</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-1">MDBX (DB)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>B+tree + mmap + MVCC</li>
+              <li>Erigon이 입증한 선택</li>
+              <li>페이지 캐시 직접 접근 → zero-copy 읽기</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-1">alloy (primitives & RLP)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>ethers-rs 후계 (Abigen 재설계)</li>
+              <li><code>Address</code>, <code>B256</code>, <code>U256</code> 등 기본 타입</li>
+              <li>derive 매크로로 RLP encode/decode 자동화</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-1">reth-mdbx-rs (MDBX 바인딩)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>libmdbx C 라이브러리의 safe Rust 래퍼</li>
+              <li>unsafe code는 이 크레이트에 한정</li>
+              <li>workspace 전역 <code>unsafe_code = "forbid"</code> 정책</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           4가지 핵심 선택이 Reth 성능의 토대.<br />
           각 선택이 <strong>기존 검증된 프로젝트의 Rust 버전</strong>을 활용 — 위험 최소화하면서 Rust 장점 획득.<br />

@@ -16,46 +16,54 @@ export default function CommandIntentSection() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">classify() 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl CommandIntent {
-    pub fn classify(cmd: &str) -> Self {
-        let trimmed = cmd.trim();
-
-        // 파이프/리다이렉션 무시, 첫 명령어만 추출
-        let first_word = trimmed
-            .split(|c: char| c.is_whitespace() || c == '|' || c == ';' || c == '&')
-            .next()
-            .unwrap_or("");
-
-        // 절대 경로라면 basename만
-        let basename = std::path::Path::new(first_word)
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or(first_word);
-
-        match basename {
-            "ls" | "cat" | "head" | "tail" | "less" | "more" |
-            "grep" | "find" | "locate" | "wc" | "file" => Self::Read,
-
-            "mv" | "cp" | "mkdir" | "touch" | "ln" | "chmod" | "chown" => Self::Write,
-
-            "rm" | "shred" | "dd" | "mkfs" | "wipefs" | "srm" | "fdisk" => Self::Destructive,
-
-            "curl" | "wget" | "ssh" | "scp" | "rsync" |
-            "nc" | "netcat" | "ping" | "telnet" | "ftp" => Self::Network,
-
-            "python" | "python3" | "node" | "ruby" | "perl" |
-            "sh" | "bash" | "zsh" | "fish" => Self::Execute,
-
-            "apt" | "apt-get" | "yum" | "dnf" | "brew" |
-            "pip" | "pip3" | "npm" | "yarn" | "cargo" | "go" => Self::Package,
-
-            "sudo" | "su" | "systemctl" | "service" |
-            "reboot" | "shutdown" | "mount" | "umount" | "kill" => Self::System,
-
-            _ => Self::Unknown,
-        }
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">classify(cmd)</code> — 첫 단어 basename 매칭</p>
+            </div>
+            <div className="px-4 py-3 border-b border-border text-sm text-muted-foreground">
+              <p>파이프(<code className="text-xs bg-muted px-1 py-0.5 rounded">|</code>), 세미콜론(<code className="text-xs bg-muted px-1 py-0.5 rounded">;</code>), 앰퍼샌드(<code className="text-xs bg-muted px-1 py-0.5 rounded">&</code>)를 구분자로 첫 단어 추출 → 절대 경로라면 basename만 사용</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-border">
+              <div className="divide-y divide-border border-r border-border">
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
+                  <span className="font-semibold text-green-600 dark:text-green-400 w-24 shrink-0">Read</span>
+                  <span className="font-mono text-xs text-muted-foreground">ls cat head tail less more grep find locate wc file</span>
+                </div>
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
+                  <span className="font-semibold text-blue-600 dark:text-blue-400 w-24 shrink-0">Write</span>
+                  <span className="font-mono text-xs text-muted-foreground">mv cp mkdir touch ln chmod chown</span>
+                </div>
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
+                  <span className="font-semibold text-red-600 dark:text-red-400 w-24 shrink-0">Destructive</span>
+                  <span className="font-mono text-xs text-muted-foreground">rm shred dd mkfs wipefs srm fdisk</span>
+                </div>
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
+                  <span className="font-semibold text-purple-600 dark:text-purple-400 w-24 shrink-0">Network</span>
+                  <span className="font-mono text-xs text-muted-foreground">curl wget ssh scp rsync nc netcat ping telnet ftp</span>
+                </div>
+              </div>
+              <div className="divide-y divide-border">
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
+                  <span className="font-semibold text-amber-600 dark:text-amber-400 w-24 shrink-0">Execute</span>
+                  <span className="font-mono text-xs text-muted-foreground">python python3 node ruby perl sh bash zsh fish</span>
+                </div>
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
+                  <span className="font-semibold text-teal-600 dark:text-teal-400 w-24 shrink-0">Package</span>
+                  <span className="font-mono text-xs text-muted-foreground">apt apt-get yum dnf brew pip pip3 npm yarn cargo go</span>
+                </div>
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
+                  <span className="font-semibold text-orange-600 dark:text-orange-400 w-24 shrink-0">System</span>
+                  <span className="font-mono text-xs text-muted-foreground">sudo su systemctl service reboot shutdown mount umount kill</span>
+                </div>
+                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
+                  <span className="font-semibold text-gray-500 dark:text-gray-400 w-24 shrink-0">Unknown</span>
+                  <span className="font-mono text-xs text-muted-foreground">위 목록에 없는 모든 명령</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>첫 단어 + basename 매칭</strong>: <code>/usr/bin/rm</code>도 <code>rm</code>으로 정규화<br />
           파이프·세미콜론·앰퍼샌드를 구분자로 취급 — 가장 위험한 첫 명령 기준<br />
@@ -63,41 +71,55 @@ export default function CommandIntentSection() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Destructive 명령 세부 검증</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// rm 명령의 위험도 세분화
-pub fn analyze_rm(cmd: &str) -> DestructiveLevel {
-    if cmd.contains("-rf") || cmd.contains("-fr") || cmd.contains("--recursive --force") {
-        if cmd.contains("/") || cmd.contains("*") {
-            return DestructiveLevel::Critical;  // 디렉토리 + recursive
-        }
-        return DestructiveLevel::High;
-    }
-    if cmd.contains("-r") || cmd.contains("-R") {
-        return DestructiveLevel::Medium;
-    }
-    DestructiveLevel::Low  // 단일 파일
-}
-
-pub enum DestructiveLevel { Low, Medium, High, Critical }`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-red-50 dark:bg-red-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">analyze_rm(cmd)</code> — rm 명령 위험도 4단계</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-600 text-white">Critical</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">-rf</code> + 경로에 <code className="text-xs bg-muted px-1 py-0.5 rounded">/</code> 또는 <code className="text-xs bg-muted px-1 py-0.5 rounded">*</code> 포함 — 디렉토리 recursive 삭제</span>
+              </div>
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center bg-muted/30">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-orange-500 text-white">High</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">-rf</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">-fr</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">--recursive --force</code> 포함 (경로 미포함)</span>
+              </div>
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-400 text-black">Medium</span>
+                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">-r</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">-R</code> 포함 — 재귀 삭제 (force 없음)</span>
+              </div>
+              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center bg-muted/30">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-green-500 text-white">Low</span>
+                <span className="text-muted-foreground">단일 파일 삭제 — 위 패턴 미해당</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <DestructiveLevelViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">네트워크 명령 로깅</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Network 분류 시 네트워크 로그 활성화
-pub fn execute_network_cmd(&self, cmd: &str) -> Result<ToolOutput> {
-    let url_regex = Regex::new(r"https?://[^\\s]+").unwrap();
-    let urls: Vec<String> = url_regex.find_iter(cmd)
-        .map(|m| m.as_str().to_string())
-        .collect();
-
-    // 감사 로그에 기록
-    self.audit_log.record_network(AuditNetwork {
-        command: cmd.into(),
-        urls,
-        timestamp: Utc::now(),
-    });
-
-    // 실행
-    self.run_command(cmd)
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-purple-50 dark:bg-purple-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold"><code className="text-xs">execute_network_cmd()</code> — 네트워크 명령 감사 흐름</p>
+            </div>
+            <div className="divide-y divide-border text-sm">
+              <div className="px-4 py-3">
+                <p className="font-semibold text-purple-700 dark:text-purple-400 mb-1">URL 추출</p>
+                <p className="text-muted-foreground">정규식 <code className="text-xs bg-muted px-1 py-0.5 rounded">https?://[^\s]+</code>로 명령 내 모든 URL 수집</p>
+              </div>
+              <div className="px-4 py-3 bg-muted/30">
+                <p className="font-semibold text-purple-700 dark:text-purple-400 mb-1">감사 로그 기록</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">AuditNetwork</code> 구조체: command + urls + timestamp → <code className="text-xs bg-muted px-1 py-0.5 rounded">audit_log.record_network()</code></p>
+              </div>
+              <div className="px-4 py-3">
+                <p className="font-semibold text-purple-700 dark:text-purple-400 mb-1">명령 실행</p>
+                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">self.run_command(cmd)</code> — 로깅 후 정상 실행</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>URL 추출 + 감사 로그</strong>: 어떤 외부 주소와 통신했는지 기록<br />
           보안팀이 로그 분석으로 <strong>데이터 유출 탐지</strong> 가능<br />
@@ -105,17 +127,23 @@ pub fn execute_network_cmd(&self, cmd: &str) -> Result<ToolOutput> {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">패턴 매칭의 한계 — 오탐/미탐</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 오탐 예시 (실제는 안전한데 Destructive로 분류됨)
-bash("echo 'rm -rf /backup' >> README.md")
-  → 첫 단어: echo → Read 분류 → 정상 실행 ✓
-
-// 미탐 예시 (위험한데 Destructive로 미분류)
-bash("eval \\"$(echo cm0gLXJmIC8= | base64 -d)\\"")
-  → 첫 단어: eval → Execute 분류 (Prompt만) → 숨겨진 rm -rf / 실행!
-
-// 환경 변수 우회
-bash("$DANGEROUS_CMD")
-  → 첫 단어: $DANGEROUS_CMD → Unknown → 검증 우회`}</pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2">오탐 (안전한데 위험으로 분류될 수 있음)</p>
+            <p className="text-sm mb-1"><code className="text-xs bg-green-100 dark:bg-green-900/50 px-1.5 py-0.5 rounded">bash("echo 'rm -rf /backup' &gt;&gt; README.md")</code></p>
+            <p className="text-sm text-green-600 dark:text-green-400">첫 단어: <code className="text-xs bg-muted px-1 py-0.5 rounded">echo</code> → Read 분류 → 정상 실행</p>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">미탐 — base64 우회</p>
+            <p className="text-sm mb-1"><code className="text-xs bg-red-100 dark:bg-red-900/50 px-1.5 py-0.5 rounded">bash("eval \"$(echo cm0gLXJmIC8= | base64 -d)\"")</code></p>
+            <p className="text-sm text-red-600 dark:text-red-400">첫 단어: <code className="text-xs bg-muted px-1 py-0.5 rounded">eval</code> → Execute 분류 (Prompt만) → 숨겨진 <code className="text-xs bg-muted px-1 py-0.5 rounded">rm -rf /</code> 실행</p>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">미탐 — 환경 변수 우회</p>
+            <p className="text-sm mb-1"><code className="text-xs bg-red-100 dark:bg-red-900/50 px-1.5 py-0.5 rounded">bash("$DANGEROUS_CMD")</code></p>
+            <p className="text-sm text-red-600 dark:text-red-400">첫 단어: <code className="text-xs bg-muted px-1 py-0.5 rounded">$DANGEROUS_CMD</code> → Unknown → 검증 우회</p>
+          </div>
+        </div>
         <p>
           <strong>근본 한계</strong>: 문자열 패턴만으로는 완벽한 분류 불가<br />
           공격자는 base64, eval, 환경 변수 등으로 우회 가능<br />
@@ -123,27 +151,37 @@ bash("$DANGEROUS_CMD")
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">분류 정확도 측정</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// tests/intent_classify.rs
-#[test]
-fn classification_accuracy() {
-    let cases = vec![
-        ("ls -la", CommandIntent::Read),
-        ("cat file.txt", CommandIntent::Read),
-        ("rm -rf old/", CommandIntent::Destructive),
-        ("curl https://example.com", CommandIntent::Network),
-        ("sudo apt install", CommandIntent::System),
-        // ... 200개 테스트 케이스
-    ];
-
-    let mut correct = 0;
-    for (cmd, expected) in &cases {
-        if CommandIntent::classify(cmd) == *expected {
-            correct += 1;
-        }
-    }
-    let accuracy = correct as f32 / cases.len() as f32;
-    assert!(accuracy > 0.95, "accuracy {:.2}% too low", accuracy * 100.0);
-}`}</pre>
+        <div className="not-prose my-4">
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-indigo-50 dark:bg-indigo-950/30 px-4 py-2 border-b border-border">
+              <p className="text-sm font-semibold">분류 정확도 테스트 — <code className="text-xs">tests/intent_classify.rs</code></p>
+            </div>
+            <div className="px-4 py-3 text-sm border-b border-border">
+              <p className="text-muted-foreground mb-2">200개 테스트 케이스로 회귀 방지</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-muted/50 rounded px-3 py-2">
+                  <span className="font-mono text-xs text-green-600 dark:text-green-400">"ls -la"</span>
+                  <span className="text-xs text-muted-foreground ml-2">→ Read</span>
+                </div>
+                <div className="bg-muted/50 rounded px-3 py-2">
+                  <span className="font-mono text-xs text-green-600 dark:text-green-400">"cat file.txt"</span>
+                  <span className="text-xs text-muted-foreground ml-2">→ Read</span>
+                </div>
+                <div className="bg-muted/50 rounded px-3 py-2">
+                  <span className="font-mono text-xs text-red-600 dark:text-red-400">"rm -rf old/"</span>
+                  <span className="text-xs text-muted-foreground ml-2">→ Destructive</span>
+                </div>
+                <div className="bg-muted/50 rounded px-3 py-2">
+                  <span className="font-mono text-xs text-purple-600 dark:text-purple-400">"curl https://..."</span>
+                  <span className="text-xs text-muted-foreground ml-2">→ Network</span>
+                </div>
+              </div>
+            </div>
+            <div className="px-4 py-3 text-sm">
+              <p className="text-muted-foreground">정확도 기준: <code className="text-xs bg-muted px-1 py-0.5 rounded">assert!(accuracy &gt; 0.95)</code> — 95% 미만이면 테스트 실패</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>정확도 목표</strong>: 95% 이상 — 200개 테스트 케이스로 회귀 방지<br />
           5% 오분류는 허용 — 대부분 Unknown으로 떨어져 보수적 처리<br />

@@ -37,7 +37,7 @@ export default function VariantsViz() {
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
                 <line x1={40} y1={95} x2={460} y2={95} stroke={PEEK_C} strokeWidth={2} strokeOpacity={0.3} />
                 <text x={250} y={90} textAnchor="middle" fontSize={11} fill={PEEK_C}>
-                  ↑ C_{'{t-1}'} 참조 (엿보기)
+                  ↑ Cₜ₋₁ 참조 (엿보기)
                 </text>
                 {[100, 250, 400].map((x, i) => (
                   <line key={i} x1={x} y1={95} x2={x} y2={74} stroke={PEEK_C} strokeWidth={1}
@@ -57,7 +57,7 @@ export default function VariantsViz() {
                 <rect x={120} y={100} width={260} height={30} rx={6}
                   fill={GRU_C + '10'} stroke={GRU_C} strokeWidth={1} />
                 <text x={250} y={120} textAnchor="middle" fontSize={11} fill={GRU_C}>
-                  h_t = (1-z)·h_(t-1) + z·h̃_t — 단일 상태로 통합
+                  hₜ = (1-z)·hₜ₋₁ + z·h̃ₜ — 단일 상태로 통합
                 </text>
               </motion.g>
               <motion.text x={250} y={155} textAnchor="middle" fontSize={11} fill="#999"

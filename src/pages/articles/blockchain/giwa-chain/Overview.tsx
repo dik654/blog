@@ -97,19 +97,31 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">하드웨어 요구사항</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`Minimum (테스트넷):
-  CPU:     4 cores
-  RAM:     8GB
-  Storage: 500GB NVMe SSD
-
-Recommended (아카이브 노드):
-  CPU:     8+ cores
-  RAM:     16GB+
-  Storage: 1TB+ NVMe SSD
-
-// 이더리움 풀 노드 대비
-Ethereum Archive: 12TB+
-GIWA Archive:     1TB+ (L2이므로 적음)`}</pre>
+        <div className="not-prose grid sm:grid-cols-2 gap-3 my-4">
+          <div className="rounded-lg border border-border bg-card p-4">
+            <p className="font-semibold text-sm mb-2">Minimum (테스트넷)</p>
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span className="font-mono">CPU</span><span>4 cores</span>
+              <span className="font-mono">RAM</span><span>8GB</span>
+              <span className="font-mono">Storage</span><span>500GB NVMe SSD</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-4">
+            <p className="font-semibold text-sm mb-2">Recommended (아카이브 노드)</p>
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span className="font-mono">CPU</span><span>8+ cores</span>
+              <span className="font-mono">RAM</span><span>16GB+</span>
+              <span className="font-mono">Storage</span><span>1TB+ NVMe SSD</span>
+            </div>
+          </div>
+        </div>
+        <div className="not-prose rounded-lg border border-border bg-card p-4 my-4">
+          <p className="font-semibold text-sm mb-2">이더리움 풀 노드 대비</p>
+          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+            <span className="font-mono">Ethereum Archive</span><span>12TB+</span>
+            <span className="font-mono">GIWA Archive</span><span>1TB+ (L2이므로 적음)</span>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">3가지 Sync 전략</h3>
         <p>

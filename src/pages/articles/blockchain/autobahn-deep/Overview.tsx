@@ -22,57 +22,55 @@ export default function Overview() {
 
         {/* ── Autobahn 문제 의식 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Autobahn 문제 의식 (SOSP 2024)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BFT Scalability Trilemma:
-//
-// 기존 BFT는 3가지 중 2개만 선택:
-// 1. Low latency (happy path)
-// 2. High throughput (pipelined)
-// 3. Fast blip recovery (failure handling)
-
-// PBFT:
-// - low latency (3δ)
-// - low throughput (O(n²) bottleneck)
-// - slow blip recovery (O(n³) VC)
-
-// HotStuff:
-// - moderate latency (3-7δ)
-// - higher throughput (O(n) + pipeline)
-// - moderate blip recovery
-
-// Narwhal+Bullshark:
-// - higher latency (2-4 rounds)
-// - highest throughput (DAG)
-// - fast blip recovery (parallel)
-
-// Mysticeti:
-// - low latency (3 rounds, 390ms)
-// - high throughput (uncertified DAG)
-// - fast recovery
-
-// Autobahn의 주장:
-// "3가지 모두 달성 가능"
-// - happy path: PBFT급 latency
-// - throughput: HotStuff+
-// - blip recovery: DAG급 fast
-
-// 메커니즘:
-// - Highway: PBFT-style consensus (low latency)
-// - Lanes: parallel data dissemination (throughput)
-// - Ride-Sharing: piggyback (bandwidth 효율)
-// - Blip handling: explicit protocol
-
-// Target 환경:
-// - WAN (global validators)
-// - 100+ validators
-// - real network conditions (blips 흔함)
-// - high TX load
-
-// 2024 SOSP publication:
-// - 학술 단계
-// - mainnet 아직 없음
-// - 미래 L1 후보`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">BFT Scalability Trilemma</p>
+            <p className="text-sm mb-2">기존 BFT는 3가지 중 2개만 선택: Low latency, High throughput, Fast blip recovery</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">프로토콜</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Latency</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Throughput</th>
+                    <th className="border border-border px-3 py-1.5 text-left">Blip Recovery</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">PBFT</td><td className="border border-border px-3 py-1.5">low (3delta)</td><td className="border border-border px-3 py-1.5">low (O(n2))</td><td className="border border-border px-3 py-1.5">slow (O(n3) VC)</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">HotStuff</td><td className="border border-border px-3 py-1.5">moderate (3-7delta)</td><td className="border border-border px-3 py-1.5">higher (O(n) + pipeline)</td><td className="border border-border px-3 py-1.5">moderate</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Narwhal+Bullshark</td><td className="border border-border px-3 py-1.5">higher (2-4 rounds)</td><td className="border border-border px-3 py-1.5">highest (DAG)</td><td className="border border-border px-3 py-1.5">fast (parallel)</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Mysticeti</td><td className="border border-border px-3 py-1.5">low (390ms)</td><td className="border border-border px-3 py-1.5">high (uncertified DAG)</td><td className="border border-border px-3 py-1.5">fast</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5 font-semibold">Autobahn</td><td className="border border-border px-3 py-1.5">PBFT급</td><td className="border border-border px-3 py-1.5">HotStuff+</td><td className="border border-border px-3 py-1.5">DAG급</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Autobahn 메커니즘</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="rounded border p-2">
+                <p className="font-medium">Highway</p>
+                <p className="text-muted-foreground">PBFT-style consensus → low latency</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Lanes</p>
+                <p className="text-muted-foreground">parallel data dissemination → throughput</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Ride-Sharing</p>
+                <p className="text-muted-foreground">piggyback → bandwidth 효율</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium">Blip handling</p>
+                <p className="text-muted-foreground">explicit protocol → fast recovery</p>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Target: WAN (global validators), 100+ validators, real network conditions. 2024 SOSP publication, 학술 단계
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Autobahn: <strong>low latency + high throughput + fast recovery</strong> 동시 달성.<br />
           Highway/Lanes/Ride-Sharing 3-tier 구조.<br />
@@ -81,62 +79,45 @@ export default function Overview() {
 
         {/* ── Blip 문제 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Blip 문제의 중요성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Blip (brief interruption) 정의:
-// - 짧은 validator failure
-// - network jitter
-// - temporary DDoS
-// - restart/GC pause
-// - typically 100-1000ms duration
-
-// 현실 네트워크에서 blip 빈도:
-// - 매 validator: 분당 수차례
-// - 전체 committee: 초당 수차례
-// - 완벽한 uptime 불가능
-
-// 기존 BFT의 blip 대응:
-//
-// PBFT:
-// - timeout 감지 (1-3s)
-// - view change 시작
-// - O(n³) 메시지 교환
-// - 복구: 3-10s
-// - blip 1회 = 수 초 halt
-//
-// HotStuff:
-// - timeout (1s)
-// - linear view change
-// - highQC 수집
-// - 복구: 1-3s
-// - blip 1회 = 1-3s halt
-//
-// Tendermint:
-// - timeout + round++
-// - round mod n 새 leader
-// - 복구: 2-5s
-// - blip 1회 = 2-5s halt
-
-// Blip 누적 효과:
-// - 10 blips/hour × 3s halt = 30s downtime/hour
-// - 720s/day = 12 min/day downtime
-// - 이것이 현실 BFT performance
-
-// DAG-BFT의 우위:
-// - 모든 validator parallel propose
-// - 1-2 validator blip = continue
-// - 복구: 100-300ms
-// - blip 1회 = 거의 무시
-
-// Autobahn의 목표:
-// - happy path 유지 (PBFT latency)
-// - blip 발생 시 DAG급 복구
-// - 둘 다 달성
-
-// Autobahn 성능 (SOSP 2024):
-// - no blip: 200-300ms latency
-// - with blip: 350ms (PBFT는 3s+)
-// - throughput: 100K+ TPS`}
-        </pre>
+        <div className="rounded-lg border divide-y">
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">Blip (brief interruption) 정의</p>
+            <p className="text-sm text-muted-foreground">
+              짧은 validator failure, network jitter, temporary DDoS, restart/GC pause. typically 100-1000ms duration.<br />
+              빈도: 매 validator 분당 수차례, 전체 committee 초당 수차례 — 완벽한 uptime 불가능
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-2">기존 BFT의 blip 대응</p>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-muted">
+                    <th className="border border-border px-3 py-1.5 text-left">프로토콜</th>
+                    <th className="border border-border px-3 py-1.5 text-left">감지</th>
+                    <th className="border border-border px-3 py-1.5 text-left">복구 시간</th>
+                    <th className="border border-border px-3 py-1.5 text-left">blip 영향</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="border border-border px-3 py-1.5">PBFT</td><td className="border border-border px-3 py-1.5">timeout 1-3s</td><td className="border border-border px-3 py-1.5">3-10s (O(n3) VC)</td><td className="border border-border px-3 py-1.5">수 초 halt</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">HotStuff</td><td className="border border-border px-3 py-1.5">timeout 1s</td><td className="border border-border px-3 py-1.5">1-3s (linear VC)</td><td className="border border-border px-3 py-1.5">1-3s halt</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">Tendermint</td><td className="border border-border px-3 py-1.5">timeout + round++</td><td className="border border-border px-3 py-1.5">2-5s</td><td className="border border-border px-3 py-1.5">2-5s halt</td></tr>
+                  <tr><td className="border border-border px-3 py-1.5">DAG-BFT</td><td className="border border-border px-3 py-1.5">parallel propose</td><td className="border border-border px-3 py-1.5">100-300ms</td><td className="border border-border px-3 py-1.5">거의 무시</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              누적 효과: 10 blips/hour x 3s halt = 30s downtime/hour → 12 min/day downtime
+            </p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold text-sm mb-1">Autobahn 성능 (SOSP 2024)</p>
+            <p className="text-sm text-muted-foreground">
+              no blip: 200-300ms latency / with blip: 350ms (PBFT는 3s+) / throughput: 100K+ TPS — happy path + blip 둘 다 최적
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           Blip = <strong>brief interruption</strong> — 현실에서 자주 발생.<br />
           PBFT/HotStuff: 수 초 halt, Autobahn: 수백 ms.<br />

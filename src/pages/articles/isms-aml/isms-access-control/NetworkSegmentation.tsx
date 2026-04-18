@@ -1,8 +1,14 @@
+import NetworkSegmentationViz from './viz/NetworkSegmentationViz';
+import ThreeZoneViz from './viz/ThreeZoneViz';
+import FirewallRulesViz from './viz/FirewallRulesViz';
+
 export default function NetworkSegmentation() {
   return (
     <section id="network-segmentation" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">망분리와 네트워크 보안</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <NetworkSegmentationViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">왜 망분리가 필요한가</h3>
         <p>
@@ -54,6 +60,8 @@ export default function NetworkSegmentation() {
             </tbody>
           </table>
         </div>
+
+        <ThreeZoneViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">DMZ(Demilitarized Zone, 비무장지대)</h3>
         <p>
@@ -108,6 +116,8 @@ export default function NetworkSegmentation() {
           <li><strong>접속 이력</strong> — 접속 시간, 접속 IP, 접속 지역을 기록. 비정상 지역(해외 등)에서의 접속 시 즉시 알림</li>
           <li><strong>세션 제한</strong> — VPN 세션 타임아웃 설정(예: 8시간). 장시간 미사용 시 자동 종료</li>
         </ul>
+
+        <FirewallRulesViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">방화벽 규칙: 화이트리스트 기반</h3>
         <p>

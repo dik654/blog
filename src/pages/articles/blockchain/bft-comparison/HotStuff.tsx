@@ -25,52 +25,40 @@ export default function HotStuff() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         {/* ── HotStuff 핵심 혁신 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff의 3가지 혁신</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 혁신 1: Linear View Change (O(n³) → O(n))
-//
-// PBFT view change:
-// - each → all: VIEW-CHANGE + O(n) proofs
-// - O(n²) messages × O(n) proof size = O(n³)
-//
-// HotStuff view change:
-// - each → leader: NewView(highQC)
-// - highQC: aggregated signature O(1)
-// - O(n) messages × O(1) proof = O(n)
-//
-// 1000x+ 통신 효율 개선
-
-// 혁신 2: Star Topology (O(n²) → O(n))
-//
-// PBFT: all-to-all broadcast
-// - 각 phase당 n × (n-1) messages
-// - 모든 link 활용
-//
-// HotStuff: leader-centric
-// - leader broadcasts
-// - replicas → leader votes
-// - leader aggregates + broadcasts
-// - O(n) per phase
-//
-// Trade-off: leader bandwidth bottleneck
-// 해결: rotate leader per view
-
-// 혁신 3: Chained Voting (파이프라이닝)
-//
-// Basic HotStuff: 1 block per 4 phases
-// Chained HotStuff: 1 block per 1 view
-// throughput 3x 향상
-//
-// 핵심 insight:
-// "vote for B_v = prepareQC for B_(v-1)"
-// "vote for B_(v+1) = precommitQC for B_(v-1)"
-// ...
-// 매 vote가 여러 역할 수행
-
-// 3-chain commit rule:
-// B committed iff B ← B' ← B'' with consecutive views
-// → 3 rounds of QC accumulated
-// → safety via chained locking`}
-        </pre>
+        <div className="grid gap-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">혁신 1: Linear View Change (<code className="text-xs">O(n³)</code> → <code className="text-xs">O(n)</code>)</p>
+            <div className="grid sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-muted-foreground mb-1">PBFT view change</p>
+                <p>each → all: VIEW-CHANGE + <code className="text-xs">O(n)</code> proofs.<br /><code className="text-xs">O(n²)</code> messages × <code className="text-xs">O(n)</code> proof = <code className="text-xs">O(n³)</code></p>
+              </div>
+              <div>
+                <p className="text-muted-foreground mb-1">HotStuff view change</p>
+                <p>each → leader: <code className="text-xs">NewView(highQC)</code>.<br /><code className="text-xs">O(n)</code> messages × <code className="text-xs">O(1)</code> proof = <code className="text-xs">O(n)</code>. 1000x+ 효율 개선.</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">혁신 2: Star Topology (<code className="text-xs">O(n²)</code> → <code className="text-xs">O(n)</code>)</p>
+            <div className="grid sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-muted-foreground mb-1">PBFT: all-to-all</p>
+                <p>각 phase당 <code className="text-xs">n × (n-1)</code> messages. 모든 link 활용.</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground mb-1">HotStuff: leader-centric</p>
+                <p>leader broadcasts → replicas vote → leader aggregates. <code className="text-xs">O(n)</code>/phase.<br />Trade-off: leader bottleneck → rotate per view로 해결.</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">혁신 3: Chained Voting (파이프라이닝)</p>
+            <p className="text-sm mb-1">Basic: 1 block / 4 phases → Chained: 1 block / 1 view. throughput 3x 향상.</p>
+            <p className="text-sm text-muted-foreground">핵심 insight: <code className="text-xs">vote for B_v = prepareQC for B_(v-1)</code> — 매 vote가 여러 역할 수행.</p>
+            <p className="text-sm mt-1">3-chain commit: <code className="text-xs">B ← B' ← B''</code> (consecutive views) → 3 rounds QC → safety via chained locking.</p>
+          </div>
+        </div>
         <p className="leading-7">
           3가지 혁신: <strong>linear VC, star topology, chained voting</strong>.<br />
           PBFT의 O(n²)/O(n³) → HotStuff의 O(n)/O(n).<br />
@@ -79,62 +67,39 @@ export default function HotStuff() {
 
         {/* ── Threshold Signature 심층 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Threshold Signature (BLS12-381)</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BLS Signature Aggregation:
-//
-// Setup:
-// - G1, G2, GT: elliptic curve groups
-// - pairing: e: G1 × G2 → GT
-// - hash H: message → G1
-// - generator g ∈ G2
-//
-// KeyGen (per validator):
-// - sk ∈ Z_q (random secret)
-// - pk = g^sk ∈ G2 (public key)
-//
-// Sign (per validator):
-// - σ = H(m)^sk ∈ G1 (signature)
-//
-// Verify:
-// - e(σ, g) == e(H(m), pk)
-// - 1 pairing operation
-
-// Aggregation:
-// - σ_agg = σ_1 · σ_2 · ... · σ_k
-// - (group multiplication in G1)
-// - pk_agg = pk_1 · pk_2 · ... · pk_k
-// - Verify aggregated:
-//   e(σ_agg, g) == e(H(m), pk_agg)
-// - 여전히 1 pairing!
-
-// HotStuff의 QC (Quorum Certificate):
-// struct QC {
-//     block_hash: Hash,
-//     view: int,
-//     sig_agg: G1_point,      // 96 bytes (BLS12-381)
-//     signers: Bitmap,        // n/8 bytes
-// }
-// 전체 크기: O(n) in bitmap, O(1) in signature
-
-// 검증 시간:
-// - 2f+1 individual signatures: O(n) pairings
-// - 1 aggregated signature: O(1) pairing
-// - n=100: 67 pairings → 1 pairing
-// - 67x 빠른 검증
-
-// 공격 방어:
-// - Rogue key attack
-//   → Proof-of-Possession (PoP)
-// - Small subgroup attack
-//   → subgroup membership check
-// - 구현 세심 필요
-
-// 실제 블록체인 사용:
-// - Ethereum 2.0 (Beacon): BLS12-381
-// - Chia: BLS12-381
-// - Diem/Aptos: BLS12-381
-// - Cosmos: Ed25519 (aggregation 지원 약함)`}
-        </pre>
+        <div className="grid gap-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">BLS Signature 흐름</p>
+            <div className="grid sm:grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-muted-foreground mb-1">Setup</p>
+                <p><code className="text-xs">G1, G2, GT</code>: elliptic curve groups, pairing <code className="text-xs">e: G1 × G2 → GT</code>, hash <code className="text-xs">H: msg → G1</code>, generator <code className="text-xs">g ∈ G2</code></p>
+              </div>
+              <div>
+                <p className="text-muted-foreground mb-1">KeyGen / Sign / Verify</p>
+                <p>KeyGen: <code className="text-xs">sk ∈ Z_q</code>, <code className="text-xs">pk = g^sk</code><br />Sign: <code className="text-xs">σ = H(m)^sk</code><br />Verify: <code className="text-xs">e(σ, g) == e(H(m), pk)</code> — 1 pairing</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Aggregation</p>
+            <p className="text-sm"><code className="text-xs">σ_agg = σ_1 · σ_2 · ... · σ_k</code> (G1 group multiplication). <code className="text-xs">pk_agg = pk_1 · ... · pk_k</code>.<br />검증: <code className="text-xs">e(σ_agg, g) == e(H(m), pk_agg)</code> — 여전히 1 pairing. <code className="text-xs">n=100</code>일 때 67 pairings → 1 pairing (67x 빠른 검증).</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">HotStuff QC 구조</p>
+            <p className="text-sm"><code className="text-xs">block_hash</code> + <code className="text-xs">view</code> + <code className="text-xs">sig_agg</code> (96 bytes, BLS12-381) + <code className="text-xs">signers</code> (bitmap, <code className="text-xs">n/8</code> bytes). 전체 크기: signature <code className="text-xs">O(1)</code>, bitmap <code className="text-xs">O(n)</code>.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-destructive/30 p-4">
+              <p className="font-semibold text-sm mb-1">공격 방어</p>
+              <p className="text-sm">Rogue key attack → Proof-of-Possession(PoP). Small subgroup attack → membership check. 구현 세심 필요.</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1">블록체인 사용 현황</p>
+              <p className="text-sm">Ethereum 2.0 / Chia / Diem / Aptos: BLS12-381. Cosmos: Ed25519 (aggregation 지원 약함).</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           BLS aggregation = <strong>n개 서명 → 1개 서명, n개 검증 → 1 pairing</strong>.<br />
           HotStuff O(n) 달성의 암호학적 기반.<br />
@@ -143,59 +108,43 @@ export default function HotStuff() {
 
         {/* ── 실무 적용 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff 실무 적용 사례</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff 적용 프로젝트:
-//
-// 1. Diem/Libra (2019-2022):
-//    - Facebook's blockchain project
-//    - LibraBFT (HotStuff 구현)
-//    - 2022 종료 (규제 이슈)
-//
-// 2. Aptos (2022-현재):
-//    - Diem 개발자 창립
-//    - DiemBFT v4 (Jolteon 기반)
-//    - Move language
-//    - 100K+ TPS 목표
-//
-// 3. ThunderCore (2019-):
-//    - PaLa + HotStuff
-//    - EVM 호환
-//    - Asia 시장
-//
-// 4. Cypherium (2018-):
-//    - HotStuff 초기 구현
-//    - PoW + BFT hybrid
-//
-// 5. Concordium (2021-):
-//    - HotStuff 변형
-//    - 규제 친화적 privacy
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Diem/Libra (2019-2022)</p>
+            <p className="text-sm">Facebook blockchain. LibraBFT(HotStuff 구현). 2022 종료(규제 이슈).</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Aptos (2022-현재)</p>
+            <p className="text-sm">Diem 개발자 창립. DiemBFT v4(Jolteon 기반). Move language. 100K+ TPS 목표.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">ThunderCore (2019-)</p>
+            <p className="text-sm">PaLa + HotStuff. EVM 호환. Asia 시장.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Cypherium / Concordium</p>
+            <p className="text-sm">Cypherium: PoW + BFT hybrid. Concordium: 규제 친화적 privacy.</p>
+          </div>
+        </div>
 
-// HotStuff 계열 변형:
-// - Jolteon: 2-chain commit
-// - Ditto: async fallback
-// - HotStuff-2: 2-phase + TC
-// - Marlin: optimized HotStuff
-// - Streamlet: simplified HotStuff
-
-// 성능 벤치마크:
-// HotStuff (origin):
-// - validators: 128
-// - TPS: 25,000
-// - latency: ~500ms
-// - geography: single region
-//
-// Jolteon (Aptos):
-// - validators: ~100
-// - TPS: 100,000+ (with Quorum Store)
-// - latency: ~1s
-// - geography: global
-
-// HotStuff → DAG-BFT 진화:
-// - HotStuff: 1 block per view (sequential)
-// - DAG-BFT: multiple blocks per wave (parallel)
-// - throughput 10-100x 향상
-// - Narwhal/Bullshark, Mysticeti 등`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">HotStuff 계열 변형</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>Jolteon — 2-chain commit</li>
+              <li>Ditto — async fallback</li>
+              <li>HotStuff-2 — 2-phase + TC</li>
+              <li>Marlin — optimized HotStuff</li>
+              <li>Streamlet — simplified HotStuff</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">성능 벤치마크</p>
+            <p className="text-sm"><strong>HotStuff (origin)</strong>: 128 validators, 25K TPS, ~500ms latency (single region).</p>
+            <p className="text-sm mt-1"><strong>Jolteon (Aptos)</strong>: ~100 validators, 100K+ TPS(Quorum Store), ~1s latency (global).</p>
+            <p className="text-sm mt-2 text-muted-foreground">DAG-BFT 진화: 1 block/view → multiple blocks/wave → 10-100x throughput.</p>
+          </div>
+        </div>
         <p className="leading-7">
           HotStuff = <strong>Diem/Aptos 기반, ThunderCore 등 적용</strong>.<br />
           실측 25K+ TPS, Jolteon 변형으로 100K+ 달성.<br />

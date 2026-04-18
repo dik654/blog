@@ -24,13 +24,13 @@ function Cell({ x, y, val, color, delay }: {
 export function GateNumericStep() {
   const headers = [
     { label: '차원', color: '#999' },
-    { label: 'C_{t-1}', color: CELL_C },
-    { label: 'f_t', color: FORGET_C },
+    { label: 'Cₜ₋₁', color: CELL_C },
+    { label: 'fₜ', color: FORGET_C },
     { label: 'f*C', color: FORGET_C },
     { label: 'i*C\u0303', color: INPUT_C },
-    { label: 'C_t', color: CELL_C },
-    { label: 'o_t', color: OUTPUT_C },
-    { label: 'h_t', color: OUTPUT_C },
+    { label: 'Cₜ', color: CELL_C },
+    { label: 'oₜ', color: OUTPUT_C },
+    { label: 'hₜ', color: OUTPUT_C },
   ];
 
   return (

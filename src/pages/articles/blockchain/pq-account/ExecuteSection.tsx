@@ -31,95 +31,73 @@ export default function ExecuteSection({ onCodeRef }: { onCodeRef: (key: string,
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Account execute() 패턴</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Smart Account execute 함수들
-
-// Pattern 1: Single call
-function execute(
-    address dest,
-    uint256 value,
-    bytes calldata func
-) external onlyEntryPoint {
-    (bool success,) = dest.call{value: value}(func);
-    require(success, "Execute failed");
-}
-
-// Pattern 2: Batch call (여러 tx를 한 userOp로)
-function executeBatch(
-    address[] calldata dest,
-    uint256[] calldata value,
-    bytes[] calldata func
-) external onlyEntryPoint {
-    for (uint i = 0; i < dest.length; i++) {
-        (bool success,) = dest[i].call{value: value[i]}(func[i]);
-        require(success, "Batch item failed");
-    }
-}
-
-// Pattern 3: execute with return data
-function executeCall(
-    address dest,
-    uint256 value,
-    bytes calldata data
-) external onlyEntryPoint returns (bytes memory result) {
-    (bool success, bytes memory ret) = dest.call{value: value}(data);
-    require(success, "Call failed");
-    return ret;
-}
-
-// Pattern 4: delegatecall (권한 위임, 주의!)
-function executeDelegate(
-    address dest,
-    bytes calldata data
-) external onlyEntryPoint {
-    (bool success,) = dest.delegatecall(data);
-    require(success, "Delegate failed");
-}
-
-// Security: onlyEntryPoint modifier
-modifier onlyEntryPoint() {
-    require(
-        msg.sender == address(entryPoint) || msg.sender == owner,
-        "Not authorized"
-    );
-    _;
-}`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Pattern 1: Single Call</p>
+              <p className="text-sm text-muted-foreground"><code>execute(address dest, uint256 value, bytes func)</code></p>
+              <p className="text-sm text-muted-foreground mt-1"><code>dest.call&#123;value&#125;(func)</code> &rarr; 단일 외부 호출</p>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Pattern 2: Batch Call</p>
+              <p className="text-sm text-muted-foreground"><code>executeBatch(address[] dest, uint256[] value, bytes[] func)</code></p>
+              <p className="text-sm text-muted-foreground mt-1">여러 tx를 한 UserOp로 &mdash; loop로 순차 실행</p>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Pattern 3: With Return Data</p>
+              <p className="text-sm text-muted-foreground"><code>executeCall(...)</code> &rarr; <code>bytes memory result</code></p>
+              <p className="text-sm text-muted-foreground mt-1">호출 결과를 반환값으로 받는 패턴</p>
+            </div>
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">Pattern 4: Delegatecall (주의)</p>
+              <p className="text-sm text-muted-foreground"><code>executeDelegate(address dest, bytes data)</code></p>
+              <p className="text-sm text-muted-foreground mt-1"><code>dest.delegatecall(data)</code> &mdash; 권한 위임, storage 접근 가능</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-muted-foreground mb-2">Security: <code>onlyEntryPoint</code> modifier</p>
+            <p className="text-sm text-muted-foreground">
+              <code>msg.sender == address(entryPoint) || msg.sender == owner</code> &mdash; EntryPoint 또는 owner만 실행 가능
+            </p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">UserOperationEvent</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// EntryPoint emits after each UserOp
-
-event UserOperationEvent(
-    bytes32 indexed userOpHash,
-    address indexed sender,
-    address indexed paymaster,
-    uint256 nonce,
-    bool success,
-    uint256 actualGasCost,
-    uint256 actualGasUsed
-);
-
-// 용도
-// - Indexer가 이벤트 모니터링
-// - UX: "Transaction 상태 추적"
-// - Analytics: 성공률, gas usage
-// - Fraud detection
-
-// 관련 이벤트
-event AccountDeployed(...)         // 최초 배포 시
-event UserOperationRevertReason(...) // 실패 reason
-event PrefundWithdrawal(...)        // 예치금 출금
-event SignatureAggregatorChanged(...) // aggregator 변경
-
-// Post-execution state
-// 1) account.balance 갱신 (value 전송)
-// 2) storage 변경 (callData 실행)
-// 3) nonce 증가
-// 4) deposit 차감
-// 5) events 기록
-
-// Gas accounting (final)
-// paid = actualGasCost = actualGasUsed * effectiveGasPrice
-// beneficiary (bundler) receives: paid
-// sender refund: (prefund - paid) back to deposit`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2"><code>UserOperationEvent</code> &mdash; EntryPoint emits after each UserOp</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-muted-foreground">
+              <div><code>userOpHash</code>: <code>bytes32</code> (indexed)</div>
+              <div><code>sender</code>: <code>address</code> (indexed)</div>
+              <div><code>paymaster</code>: <code>address</code> (indexed)</div>
+              <div><code>nonce</code>: <code>uint256</code></div>
+              <div><code>success</code>: <code>bool</code></div>
+              <div><code>actualGasCost</code>: <code>uint256</code></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground mt-3">
+              <div><strong>용도</strong>: Indexer 모니터링, TX 상태 추적, Analytics, Fraud detection</div>
+              <div><strong>관련 이벤트</strong>: <code>AccountDeployed</code>, <code>UserOperationRevertReason</code>, <code>PrefundWithdrawal</code></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Post-execution State</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li><code>account.balance</code> 갱신 (value 전송)</li>
+              <li>storage 변경 (<code>callData</code> 실행 결과)</li>
+              <li>nonce 증가</li>
+              <li>deposit 차감</li>
+              <li>events 기록</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Gas Accounting (final)</p>
+            <div className="text-sm space-y-1 text-muted-foreground">
+              <p><code>paid = actualGasCost = actualGasUsed * effectiveGasPrice</code></p>
+              <p>Beneficiary (bundler) receives: <strong>paid</strong></p>
+              <p>Sender refund: <strong>(prefund - paid)</strong> &rarr; back to deposit</p>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

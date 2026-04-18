@@ -1,3 +1,7 @@
+import TippingOffViz from './viz/TippingOffViz';
+import TippingOffRiskViz from './viz/TippingOffRiskViz';
+import NeedToKnowViz from './viz/NeedToKnowViz';
+
 export default function TippingOff() {
   return (
     <section id="tipping-off" className="mb-16 scroll-mt-20">
@@ -9,6 +13,8 @@ export default function TippingOff() {
           Tipping-off는 전 세계 AML 법률에서 공통적으로 금지하는 행위이며,
           한국에서도 형사처벌 대상이다.
         </p>
+
+        <TippingOffViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">왜 금지되는가</h3>
         <p>
@@ -77,6 +83,8 @@ export default function TippingOff() {
           "자금세탁", "의심거래", "FIU", "SAR", "STR" 같은 용어는 고객 대면 커뮤니케이션에서 절대 사용하지 않는다.
         </p>
 
+        <TippingOffRiskViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">내부 공유 범위 — Need-to-know 원칙</h3>
         <p>
           SAR 제출 사실은 조직 내부에서도 "알아야 할 사람만" 알 수 있다.<br />
@@ -131,6 +139,8 @@ export default function TippingOff() {
           운영팀과 CS팀이 고객에게 안내할 때는 "계정 제한" 사실만 알려주고, 그 이유가 SAR이라는 점은 모른다.<br />
           이렇게 해야 CS 직원이 고객 문의에 응대할 때 실수로 Tipping-off 하는 것을 방지할 수 있다.
         </p>
+
+        <NeedToKnowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Safe Harbor — 선의의 보고에 대한 면책</h3>
         <p>

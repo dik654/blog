@@ -48,6 +48,11 @@ export default function Overview() {
       <TrainingLoopViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-sm font-mono text-muted-foreground bg-muted/30 rounded-lg px-4 py-3 mt-4">
+          <strong className="text-foreground not-italic">PyTorch 코드:</strong>{' '}
+          <code>y_pred = model(x); loss = criterion(y_pred, y)</code><br />
+          <code>optimizer.zero_grad(); loss.backward(); optimizer.step()</code>
+        </p>
         <p className="leading-7">
           요약 1: Backprop은 <strong>chain rule + dynamic programming</strong> — 효율성의 핵심.<br />
           요약 2: <strong>Reverse mode autodiff</strong>가 신경망에 최적.<br />

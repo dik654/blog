@@ -1,6 +1,6 @@
-import CodePanel from '@/components/ui/code-panel';
-import { trainCode, trainAnnotations } from './TrainingData';
 import TrainingViz from './viz/TrainingViz';
+import TrainingDetailViz from './viz/TrainingDetailViz';
+import M from '@/components/ui/math';
 
 export default function Training() {
   return (
@@ -18,69 +18,41 @@ export default function Training() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>학습 파이프라인</h3>
-        <CodePanel title="Transformer 학습 핵심 기법" code={trainCode} lang="python" annotations={trainAnnotations} />
+
+        <M display>
+          {`\\underbrace{\\text{lr} = d_{\\text{model}}^{-0.5} \\cdot \\min\\!\\bigl(\\text{step}^{-0.5},\\; \\text{step} \\cdot \\text{warmup}^{-1.5}\\bigr)}_{\\text{원본 논문 LR 공식 — warmup 구간에서 선형 증가, 이후 } \\sqrt{\\text{step}} \\text{ 비례 감소}}`}
+        </M>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mt-4">
+          <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
+            <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-2">LR Warmup + Decay</h4>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              학습 초기 <M>{'\\text{warmup}'}</M> 스텝 동안 LR을 0에서 peak까지 선형 증가 — 초기 그래디언트 불안정 방지. 이후 cosine 또는 <M>{'\\text{step}^{-0.5}'}</M> 감쇠
+            </p>
+          </div>
+          <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4">
+            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-2">AdamW 옵티마이저</h4>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              <M>{'\\beta_1{=}0.9,\\;\\beta_2{=}0.95'}</M>, weight decay 0.1. Adam과 달리 가중치 감쇠를 그래디언트 업데이트에서 분리 — L2 정규화 편향 해결
+            </p>
+          </div>
+          <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4">
+            <h4 className="font-semibold text-amber-700 dark:text-amber-300 mb-2">Mixed Precision (BF16)</h4>
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+              Forward는 FP16/BF16, 그래디언트 축적은 FP32. <M>{'\\text{GradScaler}'}</M>가 언더플로 감지 후 스케일 자동 조정 — 메모리 절반, 속도 2배
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Warmup + Cosine Decay</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Learning Rate Schedule
-//
-// Warmup 단계 (0 → warmup_steps):
-//   lr = peak_lr × (step / warmup_steps)
-//   선형 증가
-//
-// Cosine Decay (warmup_steps → total_steps):
-//   progress = (step - warmup_steps) / (total_steps - warmup_steps)
-//   lr = min_lr + 0.5 × (peak_lr - min_lr) × (1 + cos(π · progress))
-//
-// 전형적 설정:
-//   warmup_steps = 2000
-//   total_steps = 100000
-//   peak_lr = 1e-4
-//   min_lr = 1e-5
-//
-// 왜 Warmup?
-//   - 초기 큰 lr → attention 불안정
-//   - Adam의 2nd moment 추정 불충분
-//   - 초기 작은 lr로 안정화 필요
-
-// AdamW Optimizer:
-//   β_1 = 0.9, β_2 = 0.95 (LLM), 0.999 (small)
-//   weight_decay = 0.1 (LLM), 0.01 (일반)
-//   eps = 1e-8
-//
-//   weight decay 분리:
-//     W ← W - lr × (grad + weight_decay × W)
-//   (Adam의 weight decay 편향 보정)
-
-// Mixed Precision (FP16 / BF16):
-//   - FP32: 메모리 8GB per 2B params
-//   - FP16: 메모리 4GB (2배 절감)
-//   - BF16: FP16보다 넓은 지수 범위 (권장)
-//
-//   구현:
-//     forward: FP16
-//     gradient: FP16
-//     optimizer state: FP32 (정밀도)
-//     loss scaling: overflow 방지
-
-// Gradient Accumulation:
-//   - 큰 배치 시뮬레이션
-//   - 작은 GPU에서 대형 모델 학습
-//
-//   for micro_batch in batch:
-//     loss = model(micro_batch) / N
-//     loss.backward()
-//   optimizer.step()
-//   optimizer.zero_grad()
-
-// 기타 기법:
-//   - Gradient Clipping (norm=1.0)
-//   - Dropout 0.1
-//   - Label smoothing 0.1
-//   - Checkpointing (메모리 절감)`}
-        </pre>
+        <M display>
+          {`\\text{lr} = \\begin{cases} \\text{peak} \\times \\dfrac{\\text{step}}{\\text{warmup}} & \\text{warmup 구간} \\\\[6pt] \\underbrace{\\text{min} + \\tfrac{1}{2}(\\text{peak}-\\text{min})\\,(1+\\cos\\pi p)}_{\\text{cosine decay, } p = \\frac{\\text{step}-\\text{warmup}}{\\text{total}-\\text{warmup}}} & \\text{decay 구간} \\end{cases}`}
+        </M>
+      </div>
+      <TrainingDetailViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
           요약 1: <strong>Warmup + Cosine decay</strong>가 학습 안정성의 핵심.<br />
           요약 2: <strong>AdamW</strong>가 Adam의 weight decay 편향 해결.<br />

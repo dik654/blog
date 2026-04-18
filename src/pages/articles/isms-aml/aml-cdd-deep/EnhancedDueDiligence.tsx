@@ -1,3 +1,7 @@
+import EnhancedDueDiligenceViz from './viz/EnhancedDueDiligenceViz';
+import EddProcedureViz from './viz/EddProcedureViz';
+import OngoingCddViz from './viz/OngoingCddViz';
+
 export default function EnhancedDueDiligence() {
   return (
     <section id="enhanced-due-diligence" className="mb-16 scroll-mt-20">
@@ -10,6 +14,8 @@ export default function EnhancedDueDiligence() {
           "위험이 높으면 확인도 강화한다"는 위험기반 접근법(RBA)의 핵심 원리가
           CDD 영역에서 구체화된 형태다.
         </p>
+
+        <EnhancedDueDiligenceViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">EDD 대상</h3>
         <p>
@@ -149,6 +155,8 @@ export default function EnhancedDueDiligence() {
           EDD 고객은 일 1천만 원 이상으로 기준을 낮추는 식.
         </p>
 
+        <EddProcedureViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-3">간소화 CDD (Simplified Due Diligence)</h3>
         <p>
           모든 고객에게 동일한 수준의 CDD를 적용하면 비효율적이다.<br />
@@ -211,6 +219,8 @@ export default function EnhancedDueDiligence() {
           특정 이벤트(고액 거래, 제재 리스트 변경, 부정적 언론 보도)가 발생하면
           즉시 CDD를 재수행하는 방식.
         </p>
+
+        <OngoingCddViz />
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>{'💡'} CDD 거부 시 대응</strong><br />

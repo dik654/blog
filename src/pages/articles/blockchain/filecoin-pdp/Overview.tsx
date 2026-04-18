@@ -17,49 +17,59 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">PDP vs PoRep 상세 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PoRep vs PDP 비교:
-//
-// PoRep (cold):
-// - sealing 3-6h
-// - unsealing 필요 (~1h)
-// - $2-5/TiB/year
-// - archival data
-//
-// PDP (hot):
-// - no sealing
-// - immediate access
-// - $5-10/TiB/year
-// - CDN/live content
-
-// 공통:
-// - Filecoin 생태계
-// - 경제적 보장
-// - slashable collateral
-
-// 차이:
-// - access latency
-// - compute cost
-// - price tier
-// - use case fit
-
-// Filecoin 접근:
-// - PoRep: long-term archival
-// - PDP: short-term / hot
-// - 둘 다 제공 → full spectrum
-
-// 대안 비교:
-// - AWS S3: $23/TiB/mo = $276/year
-// - Glacier: ~$48/TiB/year
-// - PoRep: $2-5/TiB/year
-// - PDP: $5-10/TiB/year
-
-// FIP-0079 (2024):
-// - PDP 공식 제안
-// - Storacha adoption
-// - Onchain Cloud 통합
-// - 2025 production`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">PoRep (cold storage)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Sealing 3-6시간, unsealing ~1시간</li>
+              <li>가격: <code className="text-xs bg-background px-1 rounded">$2-5/TiB/year</code></li>
+              <li>용도: archival data, long-term</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">PDP (hot storage)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Sealing 없음, 즉시 접근</li>
+              <li>가격: <code className="text-xs bg-background px-1 rounded">$5-10/TiB/year</code></li>
+              <li>용도: CDN, live content</li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">공통점</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Filecoin 생태계, 경제적 보장</li>
+              <li>slashable collateral</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">차이점</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>access latency, compute cost</li>
+              <li>price tier, use case fit</li>
+            </ul>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">가격 비교 (연간)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>AWS S3: <code className="text-xs bg-background px-1 rounded">$276/TiB</code></li>
+              <li>Glacier: <code className="text-xs bg-background px-1 rounded">~$48/TiB</code></li>
+              <li>PoRep: <code className="text-xs bg-background px-1 rounded">$2-5/TiB</code></li>
+              <li>PDP: <code className="text-xs bg-background px-1 rounded">$5-10/TiB</code></li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">FIP-0079 (2024)</h4>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>PDP 공식 제안</li>
+              <li>Storacha adoption</li>
+              <li>Onchain Cloud 통합, 2025 production</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           PDP = <strong>hot storage proof</strong>, PoRep = cold archival.<br />
           FIP-0079 (2024), Storacha first adopter.<br />

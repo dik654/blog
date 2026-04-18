@@ -39,149 +39,197 @@ export default function PoLArchitecture({ onCodeRef }: Props) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Proof of Liquidity 경제 모델</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Proof of Liquidity Economic Model
-//
-// Problem with traditional PoS:
-//   Stakers lock ETH/SOL → earn yield
-//   Capital sits idle (just secures network)
-//   DeFi protocols compete with staking for capital
-//   → Liquidity fragmentation
-//
-// PoL solution:
-//   Liquidity providers EARN consensus power
-//   Capital simultaneously:
-//     - Provides DEX/lending liquidity (productive)
-//     - Secures network (via BGT delegation)
-//   → Unified economic flywheel
+        {/* Problem & Solution */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">기존 PoS의 문제</h4>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li>스테이커가 ETH/SOL 잠금 → 수익률 수령</li>
+              <li>자본이 유휴 상태 (네트워크 보안만 담당)</li>
+              <li>DeFi 프로토콜이 스테이킹과 자본 경쟁</li>
+              <li>유동성 파편화 발생</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">PoL 해결책</h4>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li>유동성 제공자가 합의 파워 획득</li>
+              <li>자본이 동시에 DEX/대출 유동성 제공 (생산적)</li>
+              <li>BGT 위임으로 네트워크 보안 확보</li>
+              <li>통합 경제 플라이휠</li>
+            </ul>
+          </div>
+        </div>
 
-// Token roles:
-//
-//   BERA (gas token):
-//     Users pay gas in BERA
-//     Transfers, swaps, normal ERC-20 behavior
-//     Max supply: ~500M
-//
-//   BGT (governance, soulbound):
-//     Earned BY: providing LP, depositing to reward vaults
-//     Soulbound: cannot sell/transfer
-//     Use 1: Delegate to validators (increases their weight)
-//     Use 2: Burn for BERA (1:1 ratio)
-//     Use 3: Governance voting
-//
-//   HONEY (stablecoin):
-//     Overcollateralized stablecoin
-//     Mint by depositing whitelisted assets
-//     Pegged to $1 via BeraBorrowing
+        {/* Token roles */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">BERA <span className="text-xs text-muted-foreground">(gas token)</span></h4>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li>가스 지불용</li>
+              <li>일반 ERC-20 전송/스왑</li>
+              <li>최대 공급량: ~500M</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">BGT <span className="text-xs text-muted-foreground">(soulbound)</span></h4>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li>LP 제공 / Reward Vault 예치로 획득</li>
+              <li>양도 불가 (매매 불가)</li>
+              <li>검증자 위임 → 투표 파워 증가</li>
+              <li>BERA로 소각 (1:1 비율)</li>
+              <li>거버넌스 투표</li>
+            </ul>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold text-sm mb-2">HONEY <span className="text-xs text-muted-foreground">(stablecoin)</span></h4>
+            <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+              <li>초과 담보 스테이블코인</li>
+              <li>화이트리스트 자산 예치로 발행</li>
+              <li>BeraBorrowing으로 $1 페그 유지</li>
+            </ul>
+          </div>
+        </div>
 
-// Liquidity flywheel:
-//
-//   Step 1: User LP to BEX pool (BERA/HONEY)
-//           → Pool receives 100 HONEY + 50 BERA
-//
-//   Step 2: User stakes LP tokens in Reward Vault
-//           → Earns BGT at rate set by governance
-//
-//   Step 3: BGT accrues to user's address (soulbound)
-//           → 100 BGT earned over 7 days
-//
-//   Step 4: User delegates BGT to chosen validator
-//           → Validator V has more voting weight
-//
-//   Step 5: Validator V more likely to be block proposer
-//           → Earns block rewards, gas fees
-//
-//   Step 6: Validator V emits BGT to incentivized protocols
-//           → e.g., 50% to BEX, 30% to BEND, 20% to X
-//
-//   Step 7: Protocols distribute these BGT as LP rewards
-//           → Back to Step 1 (more liquidity)
+        {/* Flywheel steps */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">유동성 플라이휠 (7단계)</h4>
+          <div className="space-y-2 text-sm">
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">1.</span>
+              <span>사용자가 BEX 풀(BERA/HONEY)에 LP 제공 → 100 HONEY + 50 BERA 예치</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">2.</span>
+              <span>LP 토큰을 Reward Vault에 스테이킹 → 거버넌스가 정한 비율로 BGT 수령</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">3.</span>
+              <span>BGT가 사용자 주소에 축적 (soulbound) → 7일간 100 BGT 획득</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">4.</span>
+              <span>BGT를 원하는 검증자에게 위임 → 검증자 V의 투표 파워 증가</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">5.</span>
+              <span>검증자 V가 블록 제안자가 될 확률 증가 → 블록 보상 + 가스 수수료 획득</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">6.</span>
+              <span>검증자 V가 인센티브 프로토콜에 BGT 배분 → BEX 50%, BEND 30%, 기타 20%</span>
+            </div>
+            <div className="grid grid-cols-[24px_1fr] gap-2">
+              <span className="font-mono text-muted-foreground">7.</span>
+              <span>프로토콜이 BGT를 LP 보상으로 분배 → 1단계로 순환 (유동성 증가)</span>
+            </div>
+          </div>
+        </div>
 
-// Validator selection:
-//
-//   Weight(V) = sum of BGT delegated to V
-//
-//   Probability of being proposer = Weight(V) / Total_BGT
-//
-//   Delegation is revocable (epoch boundary)
-//   Bad validators lose delegations fast
+        {/* Validator selection */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">검증자 선출</h4>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+            <span className="text-muted-foreground">가중치</span>
+            <span><code className="text-xs bg-background/50 px-1 rounded">Weight(V)</code> = V에게 위임된 BGT 총합</span>
+            <span className="text-muted-foreground">제안자 확률</span>
+            <span><code className="text-xs bg-background/50 px-1 rounded">Weight(V) / Total_BGT</code></span>
+            <span className="text-muted-foreground">위임 철회</span>
+            <span>에폭 경계에서 가능 → 악성 검증자는 위임 빠르게 상실</span>
+          </div>
+        </div>
 
-// Governance pools (gauges):
-//
-//   BGT holders vote on gauges:
-//     "Which protocols should validators reward?"
-//
-//   Validator then emits BGT per-block to:
-//     - Winning gauges (per vote)
-//     - Proportional to vote weight
-//
-//   Protocols incentivize BGT holders to vote for them
-//     (pay bribes via external rewards, airdrops, etc.)
-//
-//   Similar to Curve's veCRV gauge system
+        {/* Gauges */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">거버넌스 풀 (Gauges)</h4>
+          <p className="text-sm text-muted-foreground mb-2">BGT 홀더가 게이지에 투표: "어떤 프로토콜에 검증자 보상을 지급할 것인가?"</p>
+          <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+            <li>검증자가 블록당 BGT를 투표 승리 게이지에 투표 가중치 비례 배분</li>
+            <li>프로토콜은 BGT 홀더에게 투표 유도를 위한 인센티브 제공 (뇌물: 외부 보상, 에어드롭 등)</li>
+            <li>Curve의 veCRV 게이지 시스템과 유사</li>
+          </ul>
+        </div>
 
-// Comparison with PoS chains:
-//
-//   Ethereum PoS:
-//     Stake = lock ETH in Beacon Chain
-//     Yield = ~4% APR
-//     Capital efficiency: LOW (just sits)
-//
-//   Berachain PoL:
-//     "Stake" = provide DeFi liquidity
-//     Yield = LP fees + BGT rewards
-//     Capital efficiency: HIGH (used in DeFi)
-//
-//   Trade-off:
-//     PoL complexity higher
-//     Risk: BGT volatility affects security
-//     Risk: validator-protocol collusion
+        {/* PoS comparison */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-3">PoS 체인 비교</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-medium mb-1">Ethereum PoS</p>
+              <ul className="space-y-1 list-disc list-inside text-muted-foreground">
+                <li>스테이킹 = ETH를 Beacon Chain에 잠금</li>
+                <li>수익률 = ~4% APR</li>
+                <li>자본 효율: 낮음 (유휴 상태)</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium mb-1">Berachain PoL</p>
+              <ul className="space-y-1 list-disc list-inside text-muted-foreground">
+                <li>"스테이킹" = DeFi 유동성 제공</li>
+                <li>수익률 = LP 수수료 + BGT 보상</li>
+                <li>자본 효율: 높음 (DeFi에서 활용)</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border/50 mt-3 pt-2">
+            <p className="text-xs font-medium mb-1">Trade-off</p>
+            <p className="text-xs text-muted-foreground">PoL 복잡도 높음 / BGT 변동성이 보안에 영향 / 검증자-프로토콜 결탁 위험</p>
+          </div>
+        </div>
 
-// BGT → BERA burn mechanism:
-//
-//   User can: burn X BGT → receive X BERA
-//     Only one way: BGT → BERA (not reverse)
-//
-//   Incentive:
-//     Keep BGT to earn validator rewards
-//     OR cash out via burn → BERA
-//
-//   Economic effect:
-//     BGT supply increases (from emissions)
-//     BERA supply increases when BGT burned
-//     Net BERA inflation tied to BGT emission
+        {/* BGT burn mechanism */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">BGT → BERA 소각 메커니즘</h4>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm mb-2">
+            <span className="text-muted-foreground">변환</span>
+            <span>X BGT 소각 → X BERA 수령 (단방향, 역방향 불가)</span>
+            <span className="text-muted-foreground">유인</span>
+            <span>BGT 유지 → 검증자 보상 수령 / 또는 소각 → BERA 현금화</span>
+          </div>
+          <div className="border-t border-border/50 pt-2">
+            <p className="text-xs font-medium mb-1">경제적 효과</p>
+            <p className="text-xs text-muted-foreground">BGT 공급 증가 (배출) → BGT 소각 시 BERA 공급 증가 → 순 BERA 인플레이션은 BGT 배출량에 연동</p>
+          </div>
+        </div>
 
-// Reward Vaults:
-//
-//   contract RewardVault {
-//     function stake(uint256 amount) // deposit LP tokens
-//     function withdraw(uint256 amount)
-//     function getReward() // claim BGT
-//     function notifyRewardAmount(uint256 reward)
-//   }
-//
-//   Multiple vaults per asset
-//   Each vault incentivized by different protocols
-//   Validators allocate BGT emissions across vaults
+        {/* Reward Vaults */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">Reward Vaults</h4>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm mb-2">
+            <span className="text-muted-foreground"><code className="text-xs bg-background/50 px-1 rounded">stake(uint256)</code></span><span>LP 토큰 예치</span>
+            <span className="text-muted-foreground"><code className="text-xs bg-background/50 px-1 rounded">withdraw(uint256)</code></span><span>LP 토큰 인출</span>
+            <span className="text-muted-foreground"><code className="text-xs bg-background/50 px-1 rounded">getReward()</code></span><span>BGT 청구</span>
+            <span className="text-muted-foreground"><code className="text-xs bg-background/50 px-1 rounded">notifyRewardAmount(uint256)</code></span><span>보상 알림</span>
+          </div>
+          <p className="text-xs text-muted-foreground">자산당 다수 vault 존재 — 각 vault는 서로 다른 프로토콜이 인센티브 — 검증자가 BGT 배출을 vault 간 할당</p>
+        </div>
 
-// Security assumptions:
-//
-//   Honest majority (BFT): 2/3+ validators honest
-//   Honest capital: 2/3+ of BGT delegated to honest validators
-//
-//   If malicious whale delegates 1/3+ BGT:
-//     → 1/3+ validator weight captured
-//     → Can halt chain (not rewrite)
-//   If 2/3+ BGT malicious:
-//     → Safety violation possible
+        {/* Security */}
+        <div className="bg-muted rounded-lg p-4 mb-4">
+          <h4 className="font-semibold text-sm mb-2">보안 가정</h4>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm mb-2">
+            <span className="text-muted-foreground">정직 다수 (BFT)</span>
+            <span>2/3+ 검증자가 정직</span>
+            <span className="text-muted-foreground">정직 자본</span>
+            <span>2/3+ BGT가 정직한 검증자에게 위임</span>
+          </div>
+          <div className="border-t border-border/50 pt-2 text-xs text-muted-foreground space-y-0.5">
+            <p>악성 고래가 1/3+ BGT 위임 시 → 체인 중단 가능 (재작성 불가)</p>
+            <p>2/3+ BGT 악성 시 → Safety 위반 가능</p>
+          </div>
+        </div>
 
-// Real economic protocols on Berachain:
-//   BEX: DEX (Balancer fork)
-//   BEND: lending market
-//   BERPS: perpetuals
-//   InfraRed: liquid BGT staking
-//   Kodiak: concentrated liquidity`}
-        </pre>
+        {/* Protocols */}
+        <div className="bg-muted rounded-lg p-4">
+          <h4 className="font-semibold text-sm mb-2">Berachain 실제 프로토콜</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1 text-sm">
+            <span><span className="font-medium">BEX</span> <span className="text-muted-foreground">— DEX (Balancer fork)</span></span>
+            <span><span className="font-medium">BEND</span> <span className="text-muted-foreground">— 렌딩 마켓</span></span>
+            <span><span className="font-medium">BERPS</span> <span className="text-muted-foreground">— 퍼페추얼</span></span>
+            <span><span className="font-medium">InfraRed</span> <span className="text-muted-foreground">— 리퀴드 BGT 스테이킹</span></span>
+            <span><span className="font-medium">Kodiak</span> <span className="text-muted-foreground">— 집중 유동성</span></span>
+          </div>
+        </div>
       </div>
     </section>
   );

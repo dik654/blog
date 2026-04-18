@@ -58,15 +58,15 @@ export default function GradientCompareViz({ step }: { step: number }) {
       })}
 
       {/* Legend */}
-      <rect x={130} y={165 - 10} width={10} height={8} rx={2}
+      <rect x={130} y={167} width={10} height={8} rx={2}
         fill={PLAIN_COLOR} fillOpacity={0.4} />
-      <text x={144} y={163} fontSize={9} fill={PLAIN_COLOR}>일반</text>
-      <rect x={190} y={165 - 10} width={10} height={8} rx={2}
+      <text x={144} y={175} fontSize={9} fill={PLAIN_COLOR}>일반</text>
+      <rect x={190} y={167} width={10} height={8} rx={2}
         fill={RES_COLOR} fillOpacity={0.4} />
-      <text x={204} y={163} fontSize={9} fill={RES_COLOR}>잔차</text>
+      <text x={204} y={175} fontSize={9} fill={RES_COLOR}>잔차</text>
 
       {step >= 3 && (
-        <motion.text x={300} y={163} fontSize={9}
+        <motion.text x={300} y={175} fontSize={9}
           fill={RES_COLOR} fontWeight={600}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           40x 개선!

@@ -29,93 +29,79 @@ export default function TokenTracking({ onCodeRef: _onCodeRef }: Props) {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Storage Slot Calculation</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Solidity storage layout
+        <div className="not-prose space-y-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Simple Variable Layout</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li><code>uint256 count</code> → slot 0</li>
+                <li><code>bool active</code> → slot 1</li>
+              </ul>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Mapping Layout</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li><code>mapping(address =&gt; uint256) balances</code> → slot 0</li>
+                <li><code>mapping(address =&gt; mapping(address =&gt; uint256)) allowances</code> → slot 1</li>
+              </ul>
+            </div>
+          </div>
 
-// Simple variable
-contract Counter {
-    uint256 public count;  // slot 0
-    bool public active;    // slot 1
-}
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Mapping Slot 계산</p>
+            <p className="text-sm text-muted-foreground"><code>balances[alice]</code>의 storage slot = <code>keccak256(pad32(alice) + pad32(slot_num))</code></p>
+            <div className="bg-background rounded px-3 py-2 mt-2 text-xs text-muted-foreground font-mono overflow-x-auto">
+              <p>alice = 0x742d35Cc6639C6c7B1B13B6C4fA8ec89b33CD1ab</p>
+              <p>slot_num = 0</p>
+              <p>computed_slot = keccak256(</p>
+              <p className="pl-4">0x000...742d35cc6639c6c7b1b13b6c4fa8ec89b33cd1ab +</p>
+              <p className="pl-4">0x000...0000</p>
+              <p>)</p>
+            </div>
+          </div>
 
-// Mapping
-contract Token {
-    mapping(address => uint256) public balances;  // slot 0
-    mapping(address => mapping(address => uint256)) public allowances;  // slot 1
-}
-
-// Storage slot for mapping value
-// balances[alice] storage slot?
-// = keccak256(abi.encode(alice, uint256(slot_num)))
-// = keccak256(pad32(alice) + pad32(0))
-
-// Example
-alice = 0x742d35Cc6639C6c7B1B13B6C4fA8ec89b33CD1ab
-slot_num = 0
-computed_slot = keccak256(
-    "0x000000000000000000000000742d35cc6639c6c7b1b13b6c4fa8ec89b33cd1ab" +
-    "0x0000000000000000000000000000000000000000000000000000000000000000"
-)
-
-// Rust 구현
-use ethers::types::U256;
-use tiny_keccak::{Hasher, Keccak};
-
-fn compute_balance_slot(addr: Address, mapping_slot: u64) -> [u8; 32] {
-    let mut keccak = Keccak::v256();
-    let mut input = [0u8; 64];
-
-    // First 32 bytes: address (left-padded)
-    input[12..32].copy_from_slice(&addr.0);
-
-    // Second 32 bytes: mapping slot
-    input[32 + 24..64].copy_from_slice(&mapping_slot.to_be_bytes());
-
-    keccak.update(&input);
-    let mut output = [0u8; 32];
-    keccak.finalize(&mut output);
-    output
-}`}</pre>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2">Rust 구현: <code>compute_balance_slot(addr, mapping_slot)</code></p>
+            <ol className="text-sm text-muted-foreground space-y-1">
+              <li>1) 64바이트 input 버퍼 생성 — <code>[0u8; 64]</code></li>
+              <li>2) 앞 32바이트: address (left-padded) — <code>input[12..32].copy_from_slice(&amp;addr.0)</code></li>
+              <li>3) 뒤 32바이트: mapping slot — <code>input[32+24..64].copy_from_slice(&amp;mapping_slot.to_be_bytes())</code></li>
+              <li>4) <code>Keccak::v256().update(&amp;input).finalize()</code> → <code>[u8; 32]</code> 슬롯</li>
+            </ol>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Verified Token Balance</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Full verification with Helios
+        <div className="not-prose space-y-3 mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-2"><code>get_erc20_balance_verified(token, holder)</code> — Helios 전체 검증</p>
+            <ol className="text-sm text-muted-foreground space-y-1">
+              <li>1) <code>compute_balance_slot(holder, 0)</code> — storage slot 계산 (대부분 ERC-20은 slot 0, 컨트랙트마다 다를 수 있음)</li>
+              <li>2) <code>provider.get_proof(token, vec![slot], BlockId::Latest)</code> — RPC에서 proof 요청</li>
+              <li>3) <code>helios.get_verified_header()</code> → <code>verify_proof(&amp;proof, block_header.state_root)</code> — state root 검증</li>
+              <li>4) <code>U256::from_be_bytes(proof.storage_proof[0].value)</code> — proof에서 잔액 추출</li>
+            </ol>
+          </div>
 
-async fn get_erc20_balance_verified(
-    token: Address,
-    holder: Address,
-) -> Result<U256> {
-    // 1) Compute storage slot
-    // 대부분 ERC-20은 balances mapping을 slot 0에 두지만
-    // 컨트랙트마다 다를 수 있음 (layout 분석 필요)
-    let slot = compute_balance_slot(holder, 0);
-
-    // 2) Request proof from RPC
-    let proof = provider.get_proof(
-        token,
-        vec![slot],
-        BlockId::Latest,
-    ).await?;
-
-    // 3) Verify state root (Helios)
-    let block_header = helios.get_verified_header().await?;
-    verify_proof(&proof, block_header.state_root)?;
-
-    // 4) Extract balance from proof
-    let balance = U256::from_be_bytes(
-        proof.storage_proof[0].value
-    );
-
-    Ok(balance)
-}
-
-// 일반 ERC-20 (balanceOf는 slot 0)
-// Custom contracts may differ
-// - Zero (0x0) for standard OpenZeppelin
-// - Different for upgradeable/proxy contracts
-
-// 성능 vs Security trade-off
-// - proof verification: ~1-5ms
-// - Untrusted RPC response: ~100ms
-// - Extra overhead for security`}</pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Slot 호환성</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>Standard OpenZeppelin → slot 0</li>
+                <li>Upgradeable/proxy contracts → 다를 수 있음</li>
+                <li>Layout 분석 필요</li>
+              </ul>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">성능 vs Security</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>Proof verification: ~1-5ms</li>
+                <li>Untrusted RPC response: ~100ms</li>
+                <li>보안을 위한 추가 overhead</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

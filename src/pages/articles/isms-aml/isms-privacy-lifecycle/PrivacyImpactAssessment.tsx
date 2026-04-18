@@ -1,8 +1,14 @@
+import PrivacyImpactAssessmentViz from './viz/PrivacyImpactAssessmentViz';
+import PIAStepsInlineViz from './viz/PIAStepsInlineViz';
+import PIAComparisonInlineViz from './viz/PIAComparisonInlineViz';
+
 export default function PrivacyImpactAssessment() {
   return (
     <section id="privacy-impact-assessment" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">개인정보 영향평가(PIA)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <PrivacyImpactAssessmentViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">PIA란 무엇인가</h3>
         <p>
@@ -63,6 +69,9 @@ export default function PrivacyImpactAssessment() {
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">평가 절차: 5단계</h3>
+        <div className="my-6">
+          <PIAStepsInlineViz />
+        </div>
         <p>
           PIA는 다음 5단계로 수행된다. 각 단계에서 산출물을 작성하고, 최종적으로 영향평가서를 완성한다.
         </p>
@@ -174,6 +183,9 @@ export default function PrivacyImpactAssessment() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">PIA vs ISMS-P 심사: 차이점</h3>
+        <div className="my-6">
+          <PIAComparisonInlineViz />
+        </div>
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
             <thead>

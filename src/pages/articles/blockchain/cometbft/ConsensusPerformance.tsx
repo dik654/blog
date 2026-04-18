@@ -48,59 +48,65 @@ export default function ConsensusPerformance({ onCodeRef: _onCodeRef }: { onCode
 
         {/* ── 메인넷 성능 수치 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">메인넷 성능 수치 — 실전 벤치마크</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 주요 Cosmos chain 실측 성능 (2025):
-
-// Cosmos Hub (ATOM):
-// - Block time: 6~7초
-// - TPS: ~20
-// - Block size: ~100KB
-// - Validators: 175
-// - Finality: 즉시 (2/3+ Precommit)
-
-// Osmosis:
-// - Block time: 5초
-// - TPS: ~150 (DEX TX 많음)
-// - Block size: 평균 500KB
-// - Validators: 150
-
-// dYdX v4:
-// - Block time: 1.3초 (매우 빠름)
-// - TPS: ~2000 (orderbook)
-// - Validators: 60
-// - Vote Extensions 적극 활용
-
-// Sei Network:
-// - Block time: 500ms (가장 빠름)
-// - TPS: ~12,000 (병렬 EVM)
-// - Validators: 50
-// - Optimistic block processing
-
-// 성능 결정 요소:
-// 1. validator 수: 적을수록 빠름 (정족수 확보 쉬움)
-//    60 validators: ~1초 합의
-//    175 validators: ~5초 합의
-//
-// 2. propose/prevote/precommit timeout:
-//    - Cosmos Hub: 1s/1s/1s (느림)
-//    - dYdX: 250ms/150ms/150ms (빠름)
-//    - Sei: 더 공격적
-//
-// 3. block size 제한:
-//    - max_bytes: 기본 1MB
-//    - max_gas: app-specific
-//    - 크면 TPS↑, 전파 느려짐
-//
-// 4. ABCI 앱 성능:
-//    - EVM: ~100ms per block
-//    - Cosmos SDK modules: ~50ms per block
-//    - 병목 시 block time 증가
-
-// Scalability 한계:
-// - validator > 200: gossip 오버헤드 급증
-// - block size > 5MB: 전파 timeout 빈번
-// - network latency > 200ms: round 실패 증가`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Cosmos Hub (ATOM)</p>
+              <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <span className="text-xs font-medium">Block time</span><span>6~7s</span>
+                <span className="text-xs font-medium">TPS</span><span>~20</span>
+                <span className="text-xs font-medium">Block size</span><span>~100KB</span>
+                <span className="text-xs font-medium">Validators</span><span>175</span>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Osmosis</p>
+              <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <span className="text-xs font-medium">Block time</span><span>5s</span>
+                <span className="text-xs font-medium">TPS</span><span>~150 (DEX TX 많음)</span>
+                <span className="text-xs font-medium">Block size</span><span>평균 500KB</span>
+                <span className="text-xs font-medium">Validators</span><span>150</span>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">dYdX v4</p>
+              <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <span className="text-xs font-medium">Block time</span><span>1.3s (매우 빠름)</span>
+                <span className="text-xs font-medium">TPS</span><span>~2000 (orderbook)</span>
+                <span className="text-xs font-medium">Validators</span><span>60</span>
+                <span className="text-xs font-medium">특징</span><span>Vote Extensions 적극 활용</span>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Sei Network</p>
+              <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <span className="text-xs font-medium">Block time</span><span>500ms (가장 빠름)</span>
+                <span className="text-xs font-medium">TPS</span><span>~12,000 (병렬 EVM)</span>
+                <span className="text-xs font-medium">Validators</span><span>50</span>
+                <span className="text-xs font-medium">특징</span><span>Optimistic block processing</span>
+              </div>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">성능 결정 요소</p>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">1. Validator 수</strong> — 적을수록 빠름 (60: ~1s, 175: ~5s)</p>
+                <p><strong className="text-foreground">2. Timeout 설정</strong> — Cosmos Hub 1s/1s/1s (느림) / dYdX 250ms/150ms/150ms (빠름)</p>
+                <p><strong className="text-foreground">3. Block size</strong> — <code>max_bytes</code> 기본 1MB, 크면 TPS 증가 but 전파 느려짐</p>
+                <p><strong className="text-foreground">4. ABCI 앱</strong> — EVM ~100ms / Cosmos SDK ~50ms per block</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Scalability 한계</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p>Validator &gt; 200 → gossip 오버헤드 급증</p>
+                <p>Block size &gt; 5MB → 전파 timeout 빈번</p>
+                <p>Network latency &gt; 200ms → round 실패 증가</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           CometBFT 성능은 <strong>validator 수 + timeout + block size</strong>로 결정.<br />
           Cosmos Hub(느림) → dYdX(빠름) → Sei(최고속)로 trade-off.<br />

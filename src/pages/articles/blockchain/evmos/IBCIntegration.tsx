@@ -37,85 +37,95 @@ export default function IBCIntegration({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="max-w-none mt-6 space-y-5">
         <h3 className="text-xl font-semibold mt-6 mb-3">IBC Middleware Stack</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// IBC Middleware Architecture
-//
-// IBC (Inter-Blockchain Communication):
-//   Cosmos의 핵심 기능
-//   체인 간 자산/메시지 전송
-//   표준 protocol (ICS)
-//
-// Middleware Pattern:
-//
-//   ┌──────────────────────────┐
-//   │ IBC Transfer App         │
-//   ├──────────────────────────┤
-//   │ ERC20 Middleware         │ ← Evmos 추가
-//   ├──────────────────────────┤
-//   │ Callbacks Middleware     │ ← Evmos 추가
-//   ├──────────────────────────┤
-//   │ Transfer Module (ICS-20) │
-//   ├──────────────────────────┤
-//   │ IBC Core                 │
-//   └──────────────────────────┘
-//
-//   Wrapping 순서:
-//     Inner → Outer 순으로 처리
-//     OnRecvPacket: Core → Transfer → ERC20 → Callbacks
-//     OnSendPacket: reverse order
 
-// ERC20 Middleware 동작:
-//
-// OnRecvPacket (수신):
-//   1. IBC 패킷 parse
-//   2. Cosmos Coin으로 저장 (전통 ICS-20)
-//   3. ERC20 TokenPair 확인
-//   4. 있으면 → ERC20 mint to user
-//   5. 없으면 → Coin 그대로 유지
-//
-// OnSendPacket (송신):
-//   1. User가 ERC20 토큰 전송 시도
-//   2. TokenPair 확인
-//   3. ERC20 burn
-//   4. Cosmos Coin mint (to module escrow)
-//   5. IBC 패킷으로 전송
+        {/* IBC 개요 + Middleware Stack */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-2">IBC (Inter-Blockchain Communication)</h4>
+          <p className="text-xs text-muted-foreground mb-4">
+            Cosmos의 핵심 기능 — 체인 간 자산/메시지 전송, 표준 protocol (ICS).
+          </p>
+          <h4 className="text-sm font-semibold mb-2">Middleware Stack</h4>
+          <div className="flex flex-col items-center gap-0 text-xs w-full max-w-xs mx-auto">
+            <span className="w-full text-center px-3 py-1.5 rounded-t border bg-blue-500/10 text-blue-400 font-medium">IBC Transfer App</span>
+            <span className="w-full text-center px-3 py-1.5 border-x border-b bg-purple-500/10 text-purple-400 font-medium">ERC20 Middleware <span className="text-muted-foreground font-normal">← Evmos 추가</span></span>
+            <span className="w-full text-center px-3 py-1.5 border-x border-b bg-purple-500/10 text-purple-400 font-medium">Callbacks Middleware <span className="text-muted-foreground font-normal">← Evmos 추가</span></span>
+            <span className="w-full text-center px-3 py-1.5 border-x border-b bg-muted text-muted-foreground font-medium">Transfer Module (ICS-20)</span>
+            <span className="w-full text-center px-3 py-1.5 rounded-b border-x border-b bg-muted text-muted-foreground font-medium">IBC Core</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3 text-center">
+            <code className="text-[11px]">OnRecvPacket</code>: Core → Transfer → ERC20 → Callbacks &nbsp;|&nbsp;
+            <code className="text-[11px]">OnSendPacket</code>: reverse order
+          </p>
+        </div>
 
-// Callbacks Middleware:
-//
-// IIBCCallback 인터페이스:
-//   interface IIBCCallback {
-//       function onPacketAcknowledgement(bytes memory, bytes memory) external;
-//       function onPacketTimeout(bytes memory) external;
-//   }
-//
-// 사용 예시:
-//   Cross-chain DEX:
-//     - IBC 전송 → 다른 체인에서 swap
-//     - callback으로 결과 수신
-//     - 스마트 컨트랙트가 자동 처리
-//
-//   Cross-chain Staking:
-//     - IBC로 다른 체인에 delegate
-//     - reward callback으로 재분배
-//     - 복합 yield farming
+        {/* ERC20 Middleware 동작 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border border-green-500/30 bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">OnRecvPacket (수신)</h4>
+            <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+              <li>IBC 패킷 parse</li>
+              <li>Cosmos Coin으로 저장 (전통 ICS-20)</li>
+              <li>ERC20 <code className="text-[11px]">TokenPair</code> 확인</li>
+              <li>있으면 → ERC20 mint to user</li>
+              <li>없으면 → Coin 그대로 유지</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">OnSendPacket (송신)</h4>
+            <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+              <li>User가 ERC20 토큰 전송 시도</li>
+              <li><code className="text-[11px]">TokenPair</code> 확인</li>
+              <li>ERC20 burn</li>
+              <li>Cosmos Coin mint (to module escrow)</li>
+              <li>IBC 패킷으로 전송</li>
+            </ol>
+          </div>
+        </div>
 
-// IBC Transfer Packet:
-//   {
-//     denom: string,
-//     amount: string,
-//     sender: string,
-//     receiver: string,
-//     memo: string  // callback 정보 인코딩
-//   }
+        {/* Callbacks Middleware */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-2">Callbacks Middleware</h4>
+          <p className="text-xs text-muted-foreground mb-2">
+            <code className="text-[11px]">IIBCCallback</code> 인터페이스 —
+            <code className="text-[11px]">onPacketAcknowledgement(bytes, bytes)</code>,
+            <code className="text-[11px]">onPacketTimeout(bytes)</code>
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <div className="rounded bg-muted p-3">
+              <p className="text-xs font-medium mb-1">Cross-chain DEX</p>
+              <p className="text-xs text-muted-foreground">IBC 전송 → 다른 체인에서 swap → callback으로 결과 수신 → 스마트 컨트랙트 자동 처리</p>
+            </div>
+            <div className="rounded bg-muted p-3">
+              <p className="text-xs font-medium mb-1">Cross-chain Staking</p>
+              <p className="text-xs text-muted-foreground">IBC로 다른 체인에 delegate → reward callback 재분배 → 복합 yield farming</p>
+            </div>
+          </div>
+        </div>
 
-// 실제 사용:
-//   Axelar: 범용 cross-chain bridge
-//   Squid Router: UX 통합
-//   Evmos ↔ Osmosis DEX pools
-//   Noble USDC ↔ Evmos`}
-        </pre>
+        {/* IBC Transfer Packet + 실제 사용 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">IBC Transfer Packet</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li><code className="text-[11px]">denom</code>: <code className="text-[11px]">string</code></li>
+              <li><code className="text-[11px]">amount</code>: <code className="text-[11px]">string</code></li>
+              <li><code className="text-[11px]">sender</code>: <code className="text-[11px]">string</code></li>
+              <li><code className="text-[11px]">receiver</code>: <code className="text-[11px]">string</code></li>
+              <li><code className="text-[11px]">memo</code>: <code className="text-[11px]">string</code> — callback 정보 인코딩</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="text-sm font-semibold mb-2">실제 사용</h4>
+            <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Axelar — 범용 cross-chain bridge</li>
+              <li>Squid Router — UX 통합</li>
+              <li>Evmos ↔ Osmosis DEX pools</li>
+              <li>Noble USDC ↔ Evmos</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,3 +1,7 @@
+import LogBackupAuditViz from './viz/LogBackupAuditViz';
+import LogStorageInlineViz from './viz/LogStorageInlineViz';
+import BackupRecoveryInlineViz from './viz/BackupRecoveryInlineViz';
+
 export default function LogBackupAudit() {
   return (
     <section id="log-backup-audit" className="mb-16 scroll-mt-20">
@@ -10,8 +14,15 @@ export default function LogBackupAudit() {
           심사원은 "로그가 남고 있는가 → 안전하게 보관되는가 → 복구할 수 있는가"의 순서로 확인한다.
         </p>
 
+        <LogBackupAuditViz />
+
         {/* --- 로그 저장 확인 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">1. 로그 저장 확인</h3>
+
+        <div className="not-prose my-4">
+          <LogStorageInlineViz />
+        </div>
+
         <p>
           심사원: "어떤 로그를 수집하나요? 보존 기간은?"<br />
           수집해야 하는 로그 종류와 확인 방법:
@@ -91,6 +102,11 @@ export default function LogBackupAudit() {
 
         {/* --- 백업 정상 수행 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2. 백업 정상 수행 확인</h3>
+
+        <div className="not-prose my-4">
+          <BackupRecoveryInlineViz />
+        </div>
+
         <p>
           심사원: "최근 백업 결과 보여주세요."<br />
           심사원이 확인하는 것:

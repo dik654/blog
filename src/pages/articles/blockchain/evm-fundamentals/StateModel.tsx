@@ -21,41 +21,76 @@ export default function StateModel({ onCodeRef }: { onCodeRef: (key: string, ref
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Account Types</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Ethereum has 2 account types
 
-// 1) Externally Owned Account (EOA)
-// - Controlled by private key (secp256k1)
-// - address = keccak256(pubkey)[12:]  (last 20 bytes)
-// - Can initiate transactions
-// - Cannot have code
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">EOA (Externally Owned Account)</p>
+            <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Private key(<code className="text-xs bg-background/50 px-1 py-0.5 rounded">secp256k1</code>)로 제어</li>
+              <li>주소 = <code className="text-xs bg-background/50 px-1 py-0.5 rounded">keccak256(pubkey)[12:]</code> (마지막 20 bytes)</li>
+              <li>트랜잭션 시작 가능</li>
+              <li>코드 보유 불가</li>
+            </ul>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-2">Contract Account</p>
+            <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>코드로 제어</li>
+              <li><code className="text-xs bg-background/50 px-1 py-0.5 rounded">CREATE</code>/<code className="text-xs bg-background/50 px-1 py-0.5 rounded">CREATE2</code> opcode로 생성</li>
+              <li>트랜잭션에 반응만 (reactive only)</li>
+              <li>코드 + storage 보유</li>
+            </ul>
+          </div>
+        </div>
 
-// 2) Contract Account
-// - Controlled by code
-// - Created via CREATE/CREATE2 opcode
-// - Responds to transactions (reactive only)
-// - Has associated code + storage
+        <h4 className="text-lg font-semibold mt-4 mb-2">Account State (공통 필드)</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1"><code className="text-xs">nonce</code> <span className="text-muted-foreground font-normal">(uint64)</span></p>
+            <p className="text-sm text-muted-foreground">EOA: tx 카운트 / Contract: CREATE 카운트</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1"><code className="text-xs">balance</code> <span className="text-muted-foreground font-normal">(uint256)</span></p>
+            <p className="text-sm text-muted-foreground">ETH 잔액 (wei 단위)</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1"><code className="text-xs">storageRoot</code> <span className="text-muted-foreground font-normal">(bytes32)</span></p>
+            <p className="text-sm text-muted-foreground">Storage trie의 Merkle root</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1"><code className="text-xs">codeHash</code> <span className="text-muted-foreground font-normal">(bytes32)</span></p>
+            <p className="text-sm text-muted-foreground">컨트랙트 코드의 keccak256 해시</p>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground mb-6">
+          EOA: <code className="text-xs bg-muted px-1 py-0.5 rounded">storageRoot</code> = empty trie root, <code className="text-xs bg-muted px-1 py-0.5 rounded">codeHash</code> = keccak256("") &mdash;
+          Contract: <code className="text-xs bg-muted px-1 py-0.5 rounded">storageRoot</code> = trie root, <code className="text-xs bg-muted px-1 py-0.5 rounded">codeHash</code> = deployed bytecode hash
+        </p>
 
-// Account State (both types)
-struct Account {
-    uint64 nonce;           // Tx count (EOA) or CREATE count (contract)
-    uint256 balance;        // ETH in wei
-    bytes32 storageRoot;    // Merkle root of storage trie
-    bytes32 codeHash;       // keccak256 of contract code
-}
+        <h4 className="text-lg font-semibold mt-4 mb-2">Storage Trie (컨트랙트별)</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Key</p>
+            <p className="text-sm text-muted-foreground"><code className="text-xs bg-background/50 px-1 py-0.5 rounded">keccak256(slot_number)</code> &mdash; 256-bit</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Value</p>
+            <p className="text-sm text-muted-foreground"><code className="text-xs bg-background/50 px-1 py-0.5 rounded">RLP(value)</code> &mdash; 256-bit</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">구조</p>
+            <p className="text-sm text-muted-foreground">Sparse, lazy allocation</p>
+          </div>
+        </div>
 
-// EOA: storageRoot = empty trie root, codeHash = keccak256("")
-// Contract: storageRoot = trie root, codeHash = hash of deployed bytecode
-
-// Storage Trie (per contract)
-// - Key: keccak256(slot_number)
-// - Value: RLP(value)
-// - 256-bit keys, 256-bit values
-// - Sparse, lazy allocation
-
-// 4337 Account Abstraction (future)
-// - Blur EOA/Contract distinction
-// - Contract가 tx 시작 가능 (bundler 통해)
-// - Smart wallet features (social recovery, etc.)`}</pre>
+        <h4 className="text-lg font-semibold mt-4 mb-2">EIP-4337 Account Abstraction</h4>
+        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 not-prose mb-4">
+          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+            <li>EOA/Contract 구분 흐릿해짐</li>
+            <li>Contract가 tx 시작 가능 (bundler 통해)</li>
+            <li>Smart wallet 기능: social recovery 등</li>
+          </ul>
+        </div>
 
       </div>
     </section>

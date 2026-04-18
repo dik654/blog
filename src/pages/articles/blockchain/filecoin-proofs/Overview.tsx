@@ -36,66 +36,88 @@ export default function Overview({ title, onCodeRef }: {
 
         {/* ── PoRep vs PoSt ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PoRep vs PoSt 구분</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Filecoin 저장 증명 2가지:
 
-// PoRep (Proof of Replication):
-// 목적: "이 sector는 unique 물리 저장"
-// 실행 시점: sector 초기화 시 (sealing)
-// 횟수: 1회 per sector
-// 과정: PC1 → PC2 → C1 → C2 (4-phase)
-// 출력: SNARK proof (~200 bytes)
-// Duration: 3-6 hours
-// GPU: ~30-90 min (C2)
-// CPU: ~3-5 hours (PC1)
+        {/* ── PoRep vs PoSt 비교 카드 ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="text-sm font-bold text-sky-400 mb-2">PoRep (Proof of Replication)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><strong>목적</strong> — 이 sector는 unique 물리 저장</li>
+              <li><strong>시점</strong> — sector 초기화 시 (sealing), 1회</li>
+              <li><strong>과정</strong> — <code>PC1 → PC2 → C1 → C2</code> (4-phase)</li>
+              <li><strong>출력</strong> — SNARK proof (~200 bytes)</li>
+              <li><strong>소요</strong> — 3-6h (CPU PC1 3-5h, GPU C2 30-90min)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="text-sm font-bold text-emerald-400 mb-2">PoSt (Proof of SpaceTime)</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><strong>목적</strong> — 시간 경과 후 여전히 저장 중</li>
+              <li><strong>시점</strong> — 지속적 (주기적)</li>
+              <li><strong>과정</strong> — <code>challenge → Merkle proof → SNARK</code></li>
+              <li><strong>출력</strong> — SNARK proof (~200 bytes)</li>
+            </ul>
+          </div>
+        </div>
 
-// PoSt (Proof of SpaceTime):
-// 목적: "시간 경과 후 여전히 저장 중"
-// 실행 시점: 지속적 (주기적)
-// 횟수: 매 24h (WindowPoSt) + election (WinningPoSt)
-// 과정: challenge → Merkle proof → SNARK
-// 출력: SNARK proof (~200 bytes)
+        {/* ── PoSt 2가지 ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="text-sm font-bold text-amber-400 mb-2">WindowPoSt</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>24h 주기, 모든 sectors (partitioned)</li>
+              <li>10 challenges per sector</li>
+              <li>miss → <strong>slashing</strong></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-violet-500/30 bg-violet-500/5 p-4">
+            <p className="text-sm font-bold text-violet-400 mb-2">WinningPoSt</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li>election 시점, 1 sampled sector</li>
+              <li>fast (~30-40s)</li>
+              <li>블록 생성 critical path</li>
+            </ul>
+          </div>
+        </div>
 
-// PoSt 2가지:
-// - WindowPoSt:
-//   - 24h 주기
-//   - all sectors (partitioned)
-//   - 10 challenges per sector
-//   - miss → slashing
-//
-// - WinningPoSt:
-//   - election 시점
-//   - 1 sampled sector
-//   - fast (~30-40s)
-//   - critical path
+        {/* ── Sector Lifecycle ── */}
+        <div className="not-prose rounded-lg border border-border bg-muted/50 p-4 my-4">
+          <p className="text-sm font-bold text-foreground mb-2">Sector Lifecycle</p>
+          <ol className="text-sm space-y-1 text-foreground/80 list-decimal list-inside">
+            <li><code>Empty</code> → accumulate pieces</li>
+            <li><code>PreCommit</code> — PoRep PC1 + PC2</li>
+            <li><code>Wait seed</code> — 150 epochs</li>
+            <li><code>Commit</code> — PoRep C1 + C2</li>
+            <li><code>Active</code> → WindowPoSt required</li>
+            <li><code>Deadline</code> — 24h windows</li>
+            <li><code>Termination</code> → finalize</li>
+          </ol>
+        </div>
 
-// Sector lifecycle with proofs:
-// 1. Empty → accumulate pieces
-// 2. PreCommit (PoRep PC1+PC2)
-// 3. Wait seed (150 epochs)
-// 4. Commit (PoRep C1+C2)
-// 5. Active → WindowPoSt required
-// 6. Deadline (24h windows)
-// 7. Termination → finalize
+        {/* ── Crypto Stack + Economics ── */}
+        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Cryptographic Stack</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><strong>SDR</strong> — Stacked DRG for PoRep</li>
+              <li><strong>Merkle</strong> — trees for PoSt</li>
+              <li><strong>Groth16</strong> — SNARK proof system</li>
+              <li><strong>Poseidon</strong> — SNARK-friendly hash</li>
+              <li><strong>BLS12-381</strong> — elliptic curve</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border bg-muted/50 p-4">
+            <p className="text-sm font-bold text-foreground mb-2">Economics</p>
+            <ul className="text-sm space-y-1 text-foreground/80">
+              <li><strong>Initial pledge</strong> — 4 FIL per 32 GiB</li>
+              <li><strong>Block reward</strong> — from inflation</li>
+              <li><strong>Deal reward</strong> — from client payments</li>
+              <li><strong>FIL+ verified</strong> — 10x multiplier</li>
+              <li><strong>Storage power</strong> — WindowPoSt 성공 시 유지, fault 시 감소</li>
+            </ul>
+          </div>
+        </div>
 
-// Cryptographic stack:
-// - Stacked DRG (SDR) for PoRep
-// - Merkle trees for PoSt
-// - SNARK (Groth16) for proofs
-// - Poseidon hash (SNARK-friendly)
-// - BLS12-381 curve
-
-// Storage power:
-// - sector 1 activated → storage power += sector_size
-// - WindowPoSt 성공 시 유지
-// - fault 감지 시 power 감소
-
-// Economic:
-// - initial pledge: 4 FIL per 32GiB
-// - block reward: from inflation
-// - deal reward: from client payments
-// - FIL+ verified: 10x multiplier`}
-        </pre>
         <p className="leading-7">
           PoRep = <strong>1회 sealing 증명</strong>, PoSt = <strong>지속 저장 증명</strong>.<br />
           PoRep: 3-6h, PoSt: 24h 주기 + election.<br />

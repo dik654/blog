@@ -1,3 +1,7 @@
+import ThirdPartySharingViz from './viz/ThirdPartySharingViz';
+import ProcessorManagementInlineViz from './viz/ProcessorManagementInlineViz';
+import SharingComparisonInlineViz from './viz/SharingComparisonInlineViz';
+
 export default function ThirdPartySharing() {
   return (
     <section id="third-party-sharing" className="mb-16 scroll-mt-20">
@@ -10,6 +14,11 @@ export default function ThirdPartySharing() {
           "제3자 제공"이란 개인정보처리자가 수집한 개인정보를 다른 법인·기관·개인에게 전달하여 그들이 자체 목적으로 이용하도록 하는 것.<br />
           단순히 업무를 대신 처리하는 "위탁"과는 구별된다 — 위탁은 처리자의 업무를 대행하는 것이고, 제공은 제3자가 자기 목적으로 사용하는 것.
         </p>
+
+        <div className="my-8">
+          <ThirdPartySharingViz />
+        </div>
+
         <p>
           동의를 받을 때 반드시 고지해야 하는 사항(제17조 제2항):
         </p>
@@ -61,6 +70,9 @@ export default function ThirdPartySharing() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">업무 위탁: 수탁자 관리·감독</h3>
+        <div className="my-6">
+          <ProcessorManagementInlineViz />
+        </div>
         <p>
           개인정보보호법 제26조 — 개인정보 처리 업무를 위탁(Outsourcing)하는 경우, 위탁자는 수탁자(Processor, 업무를 대행하는 자)를 관리·감독해야 한다.<br />
           "위탁"은 제3자 제공과 다르다: 수탁자는 위탁자의 지시 범위 내에서만 개인정보를 처리하며, 자체 목적으로 이용할 수 없다.
@@ -149,6 +161,9 @@ export default function ThirdPartySharing() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">제공 vs 위탁 vs 이전: 비교</h3>
+        <div className="my-6">
+          <SharingComparisonInlineViz />
+        </div>
         <div className="not-prose overflow-x-auto my-4">
           <table className="w-full text-sm border border-border">
             <thead>

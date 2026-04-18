@@ -11,11 +11,23 @@ export default function PermissionGating() {
 
         {/* ── PermissionMode 3단계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">PermissionMode — 3단계 권한 모드</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub enum PermissionMode {
-    ReadOnly,          // 읽기만 허용 — 파일 변경·실행 불가
-    WorkspaceWrite,    // 워크스페이스 내 쓰기 허용 — 임의 명령은 Prompt
-    DangerFullAccess,  // 모든 작업 허용 — Prompt 없이 즉시 실행
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-center">
+            <p className="text-sm font-bold text-blue-700 dark:text-blue-300">ReadOnly</p>
+            <p className="text-xs text-muted-foreground mt-1">읽기만 허용 — 파일 변경 및 실행 불가</p>
+            <p className="text-xs font-mono mt-2 text-blue-600 dark:text-blue-400">--read-only</p>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-center">
+            <p className="text-sm font-bold text-amber-700 dark:text-amber-300">WorkspaceWrite</p>
+            <p className="text-xs text-muted-foreground mt-1">워크스페이스 내 쓰기 허용 — 임의 명령은 Prompt</p>
+            <p className="text-xs font-mono mt-2 text-amber-600 dark:text-amber-400">기본값</p>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
+            <p className="text-sm font-bold text-red-700 dark:text-red-300">DangerFullAccess</p>
+            <p className="text-xs text-muted-foreground mt-1">모든 작업 허용 — Prompt 없이 즉시 실행</p>
+            <p className="text-xs font-mono mt-2 text-red-600 dark:text-red-400">--dangerously-skip-permissions</p>
+          </div>
+        </div>
         <p>
           <strong>ReadOnly</strong>: 탐색·이해 단계 — 사용자가 코드베이스를 읽기만 원할 때<br />
           <strong>WorkspaceWrite</strong>: 일반 작업 모드 — 파일 편집 허용, 임의 명령은 사용자 확인<br />
@@ -89,32 +101,39 @@ export default function PermissionGating() {
 
         {/* ── 게이트 판정 로직 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">PermissionEnforcer::check() 내부</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl PermissionEnforcer {
-    pub fn check(&self, tool_name: &str, input: &Value) -> EnforcementResult {
-        // 1) 도구 스펙 조회
-        let spec = self.registry.get_spec(tool_name)?;
-
-        // 2) 모드-권한 비교
-        let required = spec.required_permission;    // 도구가 요구하는 최소 권한
-        let current  = self.mode;                    // 현재 세션 권한 모드
-
-        if current >= required {
-            return EnforcementResult::Allow;
-        }
-
-        // 3) 차액 판정 — Prompt로 승격 가능한가?
-        if self.can_prompt() && required == PermissionMode::DangerFullAccess {
-            let msg = format!("Run: {}?", summarize_input(input));
-            return EnforcementResult::Prompt(msg);
-        }
-
-        // 4) 차액 거부
-        EnforcementResult::Deny(format!(
-            "{} requires {:?} mode (current: {:?})",
-            tool_name, required, current
-        ))
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">PermissionEnforcer::check() 판정 흐름</p>
+          <div className="grid grid-cols-1 gap-2">
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <p className="text-sm font-semibold">도구 스펙 조회</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">registry.get_spec(tool_name)</code> — 도구의 <code className="text-xs">required_permission</code> 획득</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <p className="text-sm font-semibold">모드-권한 비교</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">current &gt;= required</code> 이면 즉시 <strong>Allow</strong> &mdash; PartialOrd 기반 비교</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <p className="text-sm font-semibold">차액 판정 &mdash; Prompt 승격</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">can_prompt()</code> 가능 + DangerFullAccess 요구 시 &rarr; <strong>Prompt</strong> (<code className="text-xs">"Run: {cmd}?"</code>)</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                <p className="text-sm font-semibold">차액 거부</p>
+                <p className="text-xs text-muted-foreground">승격 불가 시 <strong>Deny</strong> &mdash; <code className="text-xs">"{tool} requires {required} mode (current: {current})"</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>비교 연산자</strong>: <code>PermissionMode</code>에 <code>PartialOrd</code> 구현 —
           ReadOnly &lt; WorkspaceWrite &lt; DangerFullAccess<br />
@@ -124,31 +143,35 @@ export default function PermissionGating() {
 
         {/* ── 경로 기반 게이팅 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">경로 기반 세밀 게이팅 — 파일 I/O 전용</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn check_file_path(&self, tool: &str, path: &Path) -> EnforcementResult {
-    // 1) 워크스페이스 경계 검증
-    if !path.starts_with(&self.workspace_root) {
-        return EnforcementResult::Deny(
-            format!("path outside workspace: {:?}", path)
-        );
-    }
-
-    // 2) 블랙리스트 검증 — .env, .git/ 등
-    if self.blacklist.matches(path) {
-        return EnforcementResult::Deny(
-            format!("protected path: {:?}", path)
-        );
-    }
-
-    // 3) 심링크 이스케이프 검증
-    let canonical = path.canonicalize()?;
-    if !canonical.starts_with(&self.workspace_root) {
-        return EnforcementResult::Deny(
-            "symlink escape detected".into()
-        );
-    }
-
-    EnforcementResult::Allow
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">check_file_path() &mdash; 3단계 경로 검증</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+                <p className="text-sm font-semibold">워크스페이스 경계</p>
+              </div>
+              <p className="text-xs text-muted-foreground"><code className="text-xs">path.starts_with(workspace_root)</code></p>
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1">실패 시: <code className="text-xs">"path outside workspace"</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">2</span>
+                <p className="text-sm font-semibold">블랙리스트 매칭</p>
+              </div>
+              <p className="text-xs text-muted-foreground"><code className="text-xs">blacklist.matches(path)</code></p>
+              <p className="text-xs text-muted-foreground mt-1">대상: <code className="text-xs">.env</code>, <code className="text-xs">.git/</code>, <code className="text-xs">*.pem</code>, <code className="text-xs">*.key</code></p>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">3</span>
+                <p className="text-sm font-semibold">심링크 이스케이프</p>
+              </div>
+              <p className="text-xs text-muted-foreground"><code className="text-xs">path.canonicalize()</code></p>
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1">실패 시: <code className="text-xs">"symlink escape detected"</code></p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>3단계 경로 검증</strong>: 워크스페이스 경계 → 블랙리스트 → 심링크 이스케이프<br />
           <code>canonicalize()</code>는 심링크를 실제 경로로 해석 — 공격자가 <code>workspace/link → /etc/passwd</code> 심링크로 우회 시도를 차단<br />
@@ -157,28 +180,43 @@ export default function PermissionGating() {
 
         {/* ── bash 명령 의도 분류 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">bash 명령 의도 분류 — CommandIntent</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub enum CommandIntent {
-    Read,           // ls, cat, grep, find — 파일 시스템 읽기
-    Write,          // mv, cp, mkdir, touch — 파일 시스템 쓰기
-    Destructive,    // rm, shred, dd — 복구 불가 명령
-    Network,        // curl, wget, ssh, nc — 네트워크 통신
-    Execute,        // ./script.sh, python, node — 임의 실행
-    Package,        // apt, pip, npm, cargo — 패키지 관리
-    System,         // systemctl, reboot, shutdown — 시스템 제어
-    Unknown,        // 분류 불가
-}
-
-fn classify(cmd: &str) -> CommandIntent {
-    let first_word = cmd.split_whitespace().next().unwrap_or("");
-    match first_word {
-        "ls" | "cat" | "grep" | "find" | "head" | "tail" => CommandIntent::Read,
-        "rm" | "shred" | "dd" | "mkfs" => CommandIntent::Destructive,
-        "curl" | "wget" | "ssh" | "nc" | "netcat" => CommandIntent::Network,
-        "sudo" | "su" | "systemctl" | "reboot" => CommandIntent::System,
-        // ... 추가 패턴
-        _ => CommandIntent::Unknown,
-    }
-}`}</pre>
+        <div className="not-prose my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">CommandIntent &mdash; 8가지 bash 명령 의도 분류 (첫 단어 매칭)</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-3">
+              <p className="text-xs font-bold text-green-700 dark:text-green-300">Read</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">ls</code> <code className="text-xs">cat</code> <code className="text-xs">grep</code> <code className="text-xs">find</code></p>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <p className="text-xs font-bold text-blue-700 dark:text-blue-300">Write</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">mv</code> <code className="text-xs">cp</code> <code className="text-xs">mkdir</code> <code className="text-xs">touch</code></p>
+            </div>
+            <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <p className="text-xs font-bold text-red-700 dark:text-red-300">Destructive</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">rm</code> <code className="text-xs">shred</code> <code className="text-xs">dd</code> <code className="text-xs">mkfs</code></p>
+            </div>
+            <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+              <p className="text-xs font-bold text-purple-700 dark:text-purple-300">Network</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">curl</code> <code className="text-xs">wget</code> <code className="text-xs">ssh</code> <code className="text-xs">nc</code></p>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+              <p className="text-xs font-bold text-amber-700 dark:text-amber-300">Execute</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">./script.sh</code> <code className="text-xs">python</code> <code className="text-xs">node</code></p>
+            </div>
+            <div className="bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800 rounded-lg p-3">
+              <p className="text-xs font-bold text-cyan-700 dark:text-cyan-300">Package</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">apt</code> <code className="text-xs">pip</code> <code className="text-xs">npm</code> <code className="text-xs">cargo</code></p>
+            </div>
+            <div className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+              <p className="text-xs font-bold text-gray-700 dark:text-gray-300">System</p>
+              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">systemctl</code> <code className="text-xs">reboot</code> <code className="text-xs">sudo</code></p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg p-3 border-dashed">
+              <p className="text-xs font-bold text-gray-500 dark:text-gray-400">Unknown</p>
+              <p className="text-xs text-muted-foreground mt-1">분류 불가 &mdash; 파이프 체인 등</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>8가지 의도 분류</strong>: Read, Write, Destructive, Network, Execute, Package, System, Unknown<br />
           분류 기준은 <strong>첫 단어 매칭</strong> — 간단하고 빠름, 복잡한 파이프 체인은 Unknown으로 분류<br />
@@ -187,20 +225,35 @@ fn classify(cmd: &str) -> CommandIntent {
 
         {/* ── 훅 오버라이드 ── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">훅 기반 권한 오버라이드</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Pre-tool 훅이 permission 결정을 오버라이드 가능
-{
-  "hooks": {
-    "PreToolUse": [{
-      "command": "/opt/claw/hooks/check-bash.sh",
-      "matcher": {"tool": "bash"}
-    }]
-  }
-}
-
-// 훅 스크립트가 JSON으로 응답:
-{"permission": "deny", "reason": "rm -rf not allowed"}
-{"permission": "allow"}
-{"permission": "prompt", "message": "확인 필요: {cmd}"}`}</pre>
+        <div className="not-prose my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <p className="text-xs text-muted-foreground mb-2">settings.json 훅 설정</p>
+              <p className="text-sm font-mono mb-1"><code className="text-xs bg-muted px-1 py-0.5 rounded">PreToolUse</code></p>
+              <div className="space-y-1 mt-2">
+                <p className="text-xs text-muted-foreground"><code className="text-xs">command</code>: 실행할 검증 스크립트 경로</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">matcher.tool</code>: 대상 도구 필터 (예: <code className="text-xs">"bash"</code>)</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-border rounded-lg p-4">
+              <p className="text-xs text-muted-foreground mb-2">훅 응답 JSON 프로토콜</p>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+                  <p className="text-xs"><code className="text-xs">{'{"permission": "allow"}'}</code></p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+                  <p className="text-xs"><code className="text-xs">{'{"permission": "deny", "reason": "..."}'}</code></p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                  <p className="text-xs"><code className="text-xs">{'{"permission": "prompt", "message": "..."}'}</code></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           사용자는 <code>settings.json</code>의 hooks 설정으로 도구 실행 전 자체 검증 삽입 가능<br />
           훅은 JSON 프로토콜로 <code>permission</code> 필드를 반환 — allow/deny/prompt 3중 하나<br />

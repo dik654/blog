@@ -1,8 +1,15 @@
+import WebSecurityViz from './viz/WebSecurityViz';
+import XssDefenseViz from './viz/XssDefenseViz';
+import SqlSessionViz from './viz/SqlSessionViz';
+
 export default function WebSecurity() {
   return (
     <section id="web-security" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">웹 애플리케이션 보안 조치</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <WebSecurityViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">서버 정보 노출 방지</h3>
         <p className="leading-7">
           웹 서버가 응답 헤더에 자신의 버전 정보를 노출하면 공격자가 해당 버전의 알려진 취약점을 즉시 활용할 수 있다.
@@ -49,6 +56,8 @@ export default function WebSecurity() {
           두 가지를 병행하면 UUID를 어떤 경로로 알아내더라도 권한 없이는 접근할 수 없다.
         </p>
 
+        <XssDefenseViz />
+
         <h3 className="text-xl font-semibold mt-8 mb-4">XSS 방지</h3>
         <p className="leading-7">
           XSS(Cross-Site Scripting)는 공격자가 웹 페이지에 악성 자바스크립트를 삽입하여 다른 이용자의 브라우저에서 실행시키는 공격이다.
@@ -90,6 +99,8 @@ export default function WebSecurity() {
           API 서버에서 POST/PUT/DELETE 같은 상태 변경 요청에는 반드시 CSRF 검증을 적용하고,
           GET 요청은 조회 전용으로만 사용하여 부작용(side effect)이 없도록 설계한다.
         </p>
+
+        <SqlSessionViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">SQL Injection 방지</h3>
         <p className="leading-7">

@@ -16,49 +16,51 @@ export default function ProcessBlock({ onCodeRef }: Props) {
 
         {/* ── RANDAO processing ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">RANDAO 처리 — 예측 불가능한 랜덤성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// RANDAO: 분산 랜덤성 소스
-// 각 validator의 BLS 서명을 누적하여 예측 불가능한 값 생성
-
-func processRandao(state *BeaconState, body *BeaconBlockBody) error {
-    epoch := slotToEpoch(state.Slot())
-    proposer_index := getBeaconProposerIndex(state)
-    proposer_pubkey := state.Validators[proposer_index].Pubkey
-
-    // 1. randao_reveal 서명 검증
-    //    proposer가 epoch에 대해 서명했는지 확인
-    signing_root := computeSigningRoot(epoch, getDomain(state, DOMAIN_RANDAO, epoch))
-    if !bls.Verify(proposer_pubkey, signing_root, body.RandaoReveal) {
-        return ErrInvalidRandaoReveal
-    }
-
-    // 2. randao_mix 업데이트 (XOR)
-    //    hash(randao_reveal) XOR 기존 mix
-    mix_index := epoch % EPOCHS_PER_HISTORICAL_VECTOR  // 65536
-    prev_mix := state.RandaoMixes[mix_index]
-    new_mix := xor(prev_mix, hash(body.RandaoReveal))
-    state.RandaoMixes[mix_index] = new_mix
-
-    return nil
-}
-
-// RANDAO의 특성:
-// - Forward secrecy: 과거 값 알아도 미래 예측 불가
-// - Bias resistance: 악의적 proposer가 편향 제한적
-//   (서명은 deterministic이므로 "skip vs sign" 선택만 가능)
-// - Collusion resistance: 여러 proposer 담합해도 제한적 영향
-
-// 사용처:
-// - 다음 epoch의 proposer 선출
-// - Committee 할당 (attestation 할당)
-// - Block proposer shuffling
-
-// get_beacon_proposer_index 공식:
-// epoch_randao = mix_in_historical_vector(state, epoch)
-// random_byte = hash(epoch_randao || slot.to_bytes(8))[byte_index]
-// candidate = active_validators[random_byte * N / 256]
-// 반복 until selected validator passes effective_balance check`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>processRandao(state, body)</code></p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              {[
+                { step: '1', label: 'randao_reveal 서명 검증', detail: 'proposer가 epoch에 대해 BLS 서명 → computeSigningRoot + DOMAIN_RANDAO로 검증' },
+                { step: '2', label: 'randao_mix XOR 업데이트', detail: 'hash(randao_reveal) XOR RandaoMixes[epoch % 65536] → 새 mix' },
+              ].map(s => (
+                <div key={s.step} className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">{s.step}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground/80">{s.label}</p>
+                    <p className="text-foreground/60">{s.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm text-sky-400 mb-2">RANDAO 보안 특성</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div><strong>Forward secrecy:</strong> 과거 값으로 미래 예측 불가</div>
+                <div><strong>Bias resistance:</strong> 서명은 deterministic → "skip vs sign" 선택만 가능</div>
+                <div><strong>Collusion resistance:</strong> 여러 proposer 담합해도 제한적 영향</div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">사용처</p>
+              <div className="space-y-1 text-xs text-foreground/70">
+                <div>다음 epoch의 proposer 선출</div>
+                <div>Committee 할당 (attestation 할당)</div>
+                <div>Block proposer shuffling</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2"><code>get_beacon_proposer_index</code> 공식</p>
+            <div className="text-xs text-foreground/70 space-y-1">
+              <div><code>epoch_randao = mix_in_historical_vector(state, epoch)</code></div>
+              <div><code>random_byte = hash(epoch_randao || slot.to_bytes(8))[byte_index]</code></div>
+              <div><code>candidate = active_validators[random_byte * N / 256]</code> — effective_balance check 통과까지 반복</div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           RANDAO는 <strong>분산 랜덤성 누적</strong>.<br />
           각 proposer의 BLS 서명 → hash → XOR로 누적.<br />
@@ -72,48 +74,39 @@ func processRandao(state *BeaconState, body *BeaconBlockBody) error {
 
         {/* ── Eth1 Data ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Eth1 Data — EL 상태 브릿지</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Eth1Data: EL(실행 계층)의 deposit contract 상태를 CL로 가져오기
-struct Eth1Data {
-    deposit_root: Bytes32,         // deposit contract의 Merkle root
-    deposit_count: uint64,          // 총 deposit 수
-    block_hash: Bytes32,            // EL 블록 hash
-}
-
-// proposer가 블록에 eth1_data 포함
-// → eth1_data_votes에 추가
-// → 과반 달성 시 state.eth1_data 확정
-
-func processEth1Data(state *BeaconState, body *BeaconBlockBody) error {
-    // 1. proposer의 투표 추가
-    state.Eth1DataVotes = append(state.Eth1DataVotes, body.Eth1Data)
-
-    // 2. 과반 체크 (2048 votes over 2 epochs)
-    //    SLOTS_PER_ETH1_VOTING_PERIOD = 2048
-    votes := countVotes(state.Eth1DataVotes, body.Eth1Data)
-    if votes * 2 > SLOTS_PER_ETH1_VOTING_PERIOD {
-        // 과반 → state.eth1_data 확정
-        state.Eth1Data = body.Eth1Data
-    }
-
-    return nil
-}
-
-// 목적:
-// validator deposit은 EL에서 처리됨 (deposit contract)
-// CL이 새 validator를 알려면 deposit_root 추적 필요
-// → Eth1Data voting으로 CL이 EL 상태 "투표"로 채택
-
-// 흐름:
-// 1. user deposit → EL의 deposit contract → deposit_root 증가
-// 2. CL proposer가 eth1_data 투표 (매 블록)
-// 3. 2 epochs 과반 달성 → eth1_data 업데이트
-// 4. state.eth1_deposit_index 증가 → 새 validator 등록 가능
-
-// Bellatrix(The Merge) 이후:
-// - EL = CL 같은 노드로 통합 관리
-// - eth1_data는 execution_payload의 block_hash 참조`}
-        </pre>
+        <div className="my-4 not-prose space-y-3">
+          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm text-sky-400 mb-2">Eth1Data 구조체</p>
+            <div className="space-y-1 text-xs">
+              <div><code className="text-sky-300">deposit_root: Bytes32</code> <span className="text-foreground/60">— deposit contract의 Merkle root</span></div>
+              <div><code className="text-sky-300">deposit_count: uint64</code> <span className="text-foreground/60">— 총 deposit 수</span></div>
+              <div><code className="text-sky-300">block_hash: Bytes32</code> <span className="text-foreground/60">— EL 블록 hash</span></div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+            <p className="font-semibold text-sm text-indigo-400 mb-3"><code>processEth1Data(state, body)</code></p>
+            <div className="space-y-2 text-xs text-foreground/70">
+              <div className="flex items-start gap-3">
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">1</span>
+                <div><strong>투표 추가:</strong> <code>Eth1DataVotes = append(Eth1DataVotes, body.Eth1Data)</code></div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">2</span>
+                <div><strong>과반 체크:</strong> <code>votes * 2 &gt; SLOTS_PER_ETH1_VOTING_PERIOD(2048)</code> → <code>state.Eth1Data</code> 확정</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">EL → CL 브릿지 흐름</p>
+            <div className="space-y-1 text-xs text-foreground/70">
+              <div><strong>1.</strong> user deposit → EL deposit contract → deposit_root 증가</div>
+              <div><strong>2.</strong> CL proposer가 <code>eth1_data</code> 투표 (매 블록)</div>
+              <div><strong>3.</strong> 2 epochs 과반 달성 → <code>eth1_data</code> 업데이트</div>
+              <div><strong>4.</strong> <code>eth1_deposit_index</code> 증가 → 새 validator 등록 가능</div>
+            </div>
+            <p className="text-xs text-foreground/50 mt-2">Bellatrix(The Merge) 이후: EL = CL 같은 노드 통합, eth1_data는 execution_payload의 block_hash 참조</p>
+          </div>
+        </div>
         <p className="leading-7">
           Eth1Data는 <strong>EL → CL 정보 브릿지</strong>.<br />
           deposit contract 상태를 proposer 투표로 채택.<br />

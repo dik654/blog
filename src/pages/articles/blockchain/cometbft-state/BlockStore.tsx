@@ -13,60 +13,65 @@ export default function BlockStoreSection({ onCodeRef }: { onCodeRef: (key: stri
 
         {/* ── BlockStore struct ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">BlockStore — Part 단위 저장</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/store/store.go
-type BlockStore struct {
-    db dbm.DB
-    mtx cmtsync.RWMutex
-    base, height int64  // oldest, newest heights
-}
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">BlockStore 필드</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">db dbm.DB</code></li>
+              <li><code className="text-xs">mtx cmtsync.RWMutex</code></li>
+              <li><code className="text-xs">base, height int64</code> — oldest, newest heights</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Key 레이아웃 (goleveldb)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">BH:{'{height}'}</code> → BlockMeta (블록 요약)</li>
+              <li><code className="text-xs">P:{'{height}'}:{'{partIndex}'}</code> → block part</li>
+              <li><code className="text-xs">SC:{'{height}'}</code> → seenCommit</li>
+              <li><code className="text-xs">C:{'{height}'}</code> → extendedCommit (validator 서명)</li>
+            </ul>
+          </div>
+        </div>
 
-// Key 레이아웃 (goleveldb 기준):
-// BH:{height} → BlockMeta (블록 요약)
-// P:{height}:{partIndex} → block part
-// SC:{height} → seenCommit (이 노드가 본 commit)
-// C:{height} → extendedCommit (validator 서명)
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">SaveBlock 흐름</div>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>BlockMeta 저장 (<code className="text-xs">NewBlockMeta</code>)</li>
+              <li>각 Part 저장 (65KB 단위)</li>
+              <li>Commits 저장 (<code className="text-xs">LastCommit</code> + <code className="text-xs">seenCommit</code>)</li>
+              <li>Batch commit (atomic)</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">Part 분할 이유</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Block 크기 수 KB ~ 수 MB (variable)</li>
+              <li>DB write: 작은 단위가 효율적</li>
+              <li>P2P gossip: Part 단위로 전파</li>
+              <li>네트워크/저장 동일 구조 → unified model</li>
+            </ul>
+          </div>
+        </div>
 
-// SaveBlock 흐름:
-func (bs *BlockStore) SaveBlock(
-    block *types.Block,
-    blockParts *types.PartSet,
-    seenCommit *types.Commit,
-) {
-    // 1. BlockMeta 저장
-    blockMeta := types.NewBlockMeta(block, blockParts)
-    bs.saveBlockMeta(blockMeta)
-
-    // 2. 각 Part 저장 (65KB 단위)
-    for i := 0; i < blockParts.Total(); i++ {
-        part := blockParts.GetPart(i)
-        bs.saveBlockPart(block.Height, i, part)
-    }
-
-    // 3. Commits 저장
-    bs.saveBlockCommit(block.Height, block.LastCommit)
-    bs.saveSeenCommit(block.Height, seenCommit)
-
-    // 4. Batch commit (atomic)
-    bs.db.SetSync(...)
-}
-
-// LoadBlock 흐름:
-// 1. BlockMeta 조회 → Part 수 확인
-// 2. 각 Part 로드 + 재조립
-// 3. Block 구조체 복원
-
-// Part 분할 이유:
-// - Block 크기: 수 KB ~ 수 MB (variable)
-// - DB write: 작은 단위가 효율적
-// - P2P gossip: Part 단위로 전파
-// - 동일 구조로 저장 → 네트워크/저장 통합
-
-// Size 추정 (Cosmos Hub):
-// - BlockMeta: ~1 KB per block
-// - Block Parts: ~100 KB per block (average)
-// - 연간 블록 ~5M → ~500 GB total`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">LoadBlock 흐름</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>BlockMeta 조회 → Part 수 확인</p>
+              <p>각 Part 로드 + 재조립</p>
+              <p>Block 구조체 복원</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4 sm:col-span-2">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Size 추정 (Cosmos Hub)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>BlockMeta: ~1 KB per block</li>
+              <li>Block Parts: ~100 KB per block (average)</li>
+              <li>연간 블록 ~5M → ~500 GB total</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           BlockStore는 <strong>Part 단위 (65KB) 분할 저장</strong>.<br />
           P2P gossip과 동일 구조 → unified data model.<br />

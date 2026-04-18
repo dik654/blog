@@ -15,51 +15,33 @@ export default function Overview() {
 
         {/* ── Narwhal의 3가지 혁신 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Narwhal의 3가지 혁신</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Narwhal 3가지 핵심 혁신:
+        <div className="grid gap-3 sm:grid-cols-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">1. DAG-based Mempool</p>
+            <p className="text-sm">기존: single-validator local mempool. Narwhal: shared DAG structure — all validators contribute, reliable availability.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">2. Availability/Ordering 분리</p>
+            <p className="text-sm">availability: DAG 자체. ordering: 별도 consensus(Bullshark). 각 layer 독립 최적화 + reusable.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">3. Primary-Worker Scaling</p>
+            <p className="text-sm">Primary: consensus(lightweight). Worker: data(heavy). worker 개수 조정 → throughput 조절.</p>
+          </div>
+        </div>
 
-// 1. DAG-based mempool:
-//    - 기존 mempool: single-validator local
-//    - Narwhal: shared DAG structure
-//    - all validators contribute
-//    - reliable availability
-
-// 2. Availability vs Ordering 분리:
-//    - availability: DAG structure 자체
-//    - ordering: 별도 consensus layer (Bullshark)
-//    - 각 layer 독립 최적화
-//    - reusable across consensus protocols
-
-// 3. Primary-Worker scaling:
-//    - Primary: consensus (lightweight)
-//    - Worker: data dissemination (heavy)
-//    - validator 내부 horizontal scaling
-//    - worker 개수 조정 → throughput 조절
-
-// 성능 (Narwhal paper):
-// - 10 validators + 4 workers each: 600K TPS
-// - mempool throughput (ordering 제외)
-// - bandwidth: 8.5 Gbps
-// - latency: 2s end-to-end
-
-// 비교:
-// Ethereum mempool: ~100 TPS ingestion
-// Bitcoin mempool: ~7 TPS
-// Narwhal: 600K TPS (with 4 workers)
-// 10000x+ improvement
-
-// 사용처:
-// - Sui (Narwhal + Bullshark → Mysticeti)
-// - Aptos (Quorum Store = Narwhal 변형)
-// - Mysten Labs research
-// - 다수 L1 projects
-
-// 이론적 기여:
-// - "mempool as consensus"
-// - reliable broadcast primitives
-// - DAG causality 증명
-// - BFT throughput 상한 돌파`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4 bg-muted/50">
+            <p className="font-semibold text-sm mb-2">성능 (Narwhal paper)</p>
+            <p className="text-sm">10 validators + 4 workers: <strong>600K TPS</strong>(mempool, ordering 제외). Bandwidth: 8.5 Gbps. Latency: 2s e2e.</p>
+            <p className="text-sm mt-1 text-muted-foreground">비교: Ethereum ~100 TPS / Bitcoin ~7 TPS → 10000x+ improvement.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">사용처 + 이론적 기여</p>
+            <p className="text-sm mb-1">Sui(Narwhal+Bullshark→Mysticeti), Aptos(Quorum Store=Narwhal 변형), 다수 L1.</p>
+            <p className="text-sm text-muted-foreground">"mempool as consensus" — reliable broadcast primitives + DAG causality 증명 + BFT throughput 상한 돌파.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Narwhal = <strong>DAG mempool + availability/ordering 분리 + Primary-Worker</strong>.<br />
           600K TPS (mempool), 기존 대비 10000x.<br />
@@ -68,63 +50,49 @@ export default function Overview() {
 
         {/* ── Narwhal 핵심 concepts ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Narwhal 핵심 Concepts</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 핵심 용어:
+        <div className="grid gap-3 sm:grid-cols-3 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Batch</p>
+            <p className="text-sm">TX 모음(~500KB). worker 생성. digest로 참조.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Header</p>
+            <p className="text-sm">round에 validator의 propose. payload = batch digest 리스트. parents = 이전 round <code className="text-xs">2f+1</code> cert 참조.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Certificate</p>
+            <p className="text-sm">Header + <code className="text-xs">2f+1</code> signatures. availability 증명. = DAG vertex.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Round</p>
+            <p className="text-sm">asynchronous round number. <code className="text-xs">2f+1</code> certs 수신 시 advance. no fixed timeout.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">DAG</p>
+            <p className="text-sm">vertices = certificates. edges = parent references. causal history graph.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Reliable Broadcast</p>
+            <p className="text-sm">data broadcast → <code className="text-xs">2f+1</code> ack → reliable delivered. "모든 정직 노드가 결국 수신".</p>
+          </div>
+        </div>
 
-// 1. Batch:
-//    - TX 모음 (e.g., 500KB)
-//    - worker가 생성
-//    - digest로 참조됨
-//
-// 2. Header:
-//    - round에 validator의 propose
-//    - payload: batch digest 리스트
-//    - parents: 이전 round 2f+1 cert 참조
-//
-// 3. Certificate:
-//    - Header + 2f+1 signatures
-//    - header availability 증명
-//    - DAG vertex
-//
-// 4. Round:
-//    - asynchronous round number
-//    - 2f+1 certs 수신 시 advance
-//    - no fixed timeout
-//
-// 5. DAG:
-//    - vertices = certificates
-//    - edges = parent references
-//    - causal history graph
-
-// Reliable Broadcast Protocol:
-// - validator가 data broadcast
-// - 2f+1 ack 수집 → reliable delivered
-// - delivered 상태: "모든 정직 노드가 결국 수신"
-// - Narwhal의 기반 primitive
-
-// Narwhal guarantees:
-// 1. Integrity: delivered data = original
-// 2. Agreement: all honest receive same
-// 3. Termination: eventually delivered
-// 4. Efficiency: O(n) total comms per broadcast
-
-// DAG invariants:
-// - 각 (author, round) 1 vertex만
-// - parents 2f+1 certificates
-// - acyclic (round increases)
-// - connected (via parents)
-
-// Security assumptions:
-// - f < n/3 Byzantine
-// - reliable point-to-point channels
-// - eventual message delivery
-// - asynchronous model
-
-// async-safe!
-// - no timing assumption
-// - works in any network
-// - liveness via reliable broadcast`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Narwhal Guarantees</p>
+            <ol className="text-sm space-y-1 list-decimal pl-4">
+              <li><strong>Integrity</strong>: delivered data = original</li>
+              <li><strong>Agreement</strong>: all honest receive same</li>
+              <li><strong>Termination</strong>: eventually delivered</li>
+              <li><strong>Efficiency</strong>: <code className="text-xs">O(n)</code> total comms/broadcast</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">DAG Invariants + Security</p>
+            <p className="text-sm mb-1">각 <code className="text-xs">(author, round)</code> 1 vertex만. parents <code className="text-xs">2f+1</code> certs. acyclic + connected.</p>
+            <p className="text-sm text-muted-foreground">Assumptions: <code className="text-xs">f &lt; n/3</code> Byzantine + reliable channels + eventual delivery. <strong>async-safe</strong> — no timing assumption.</p>
+          </div>
+        </div>
         <p className="leading-7">
           핵심: <strong>Batch → Header → Certificate → DAG</strong>.<br />
           reliable broadcast primitive가 기반.<br />

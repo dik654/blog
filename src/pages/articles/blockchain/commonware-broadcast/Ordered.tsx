@@ -33,162 +33,194 @@ export default function Ordered({ onCodeRef }: Props) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Ordered Broadcast 프로토콜</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ordered Broadcast Protocol
-//
-// Goal:
-//   Establish causal ordering per "sequencer"
-//   Multiple sequencers broadcast concurrently
-//   Each chain tracked independently
-//   Certificates prove quorum agreement
 
-// Core types:
-//
-//   struct Chunk {
-//       sequencer: PublicKey,
-//       height: u64,
-//       payload: Bytes,
-//   }
-//
-//   enum Parent {
-//       None,                     // genesis
-//       Some(Certificate),        // ref to previous height
-//   }
-//
-//   struct Node {
-//       chunk: Chunk,
-//       signature: Signature,     // sequencer's sig
-//       parent: Parent,
-//   }
-//
-//   struct Certificate {
-//       sequencer: PublicKey,
-//       height: u64,
-//       payload_hash: Hash,
-//       quorum_signature: AggSignature,  // BLS aggregate
-//   }
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-4">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">목표</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-semibold">시퀀서별 인과 순서</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-semibold">다중 시퀀서 동시 전파</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-semibold">체인 독립 추적</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2 text-center">
+                <p className="text-xs font-semibold">인증서로 쿼럼 증명</p>
+              </div>
+            </div>
+          </div>
 
-// Chain structure:
-//
-//   Each sequencer has own chain:
-//
-//     Node(seq=S, h=0) → Node(seq=S, h=1) → Node(seq=S, h=2) → ...
-//       parent=None     parent=cert(h=0)    parent=cert(h=1)
-//
-//   Chain is linear per-sequencer
-//   Different sequencers run independently
-//   No global ordering (yet)
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">핵심 타입 4종</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>Chunk</code></p>
+                <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+                  <p><code>sequencer: PublicKey</code> — 시퀀서 공개키</p>
+                  <p><code>height: u64</code> — 체인 높이</p>
+                  <p><code>payload: Bytes</code> — 페이로드 데이터</p>
+                </div>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>Parent</code></p>
+                <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+                  <p><code>None</code> — genesis (h=0)</p>
+                  <p><code>Some(Certificate)</code> — 이전 height 인증서 참조</p>
+                </div>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>Node</code></p>
+                <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+                  <p><code>chunk: Chunk</code> — 데이터 청크</p>
+                  <p><code>signature: Signature</code> — 시퀀서의 서명</p>
+                  <p><code>parent: Parent</code> — 부모 인증서 참조</p>
+                </div>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-sm"><code>Certificate</code></p>
+                <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+                  <p><code>sequencer: PublicKey</code></p>
+                  <p><code>height: u64</code> · <code>payload_hash: Hash</code></p>
+                  <p><code>quorum_signature: AggSignature</code> — BLS 집계</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-// Engine flow:
-//
-//   async fn handle_incoming_node(&mut self, node: Node) {
-//       // 1. Parse & validate format
-//       let chunk = &node.chunk;
-//
-//       // 2. Verify sequencer signature
-//       if !verify_signature(&chunk, &node.signature, &chunk.sequencer) {
-//           return;
-//       }
-//
-//       // 3. Validate parent certificate (if any)
-//       if let Parent::Some(cert) = &node.parent {
-//           if !self.validate_parent(cert, chunk.height - 1) {
-//               return;
-//           }
-//       }
-//
-//       // 4. Check if we've seen this node
-//       let node_hash = hash(&node);
-//       if self.ack_manager.has_node(node_hash) {
-//           return;
-//       }
-//
-//       // 5. Sign acknowledgement (partial signature)
-//       let my_ack = self.sign_ack(&node);
-//
-//       // 6. Broadcast our ack
-//       self.broadcast_ack(my_ack).await;
-//
-//       // 7. Update tip for this sequencer
-//       self.tip_manager.update(chunk.sequencer, node);
-//   }
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">체인 구조 — 시퀀서별 독립 선형 체인</p>
+            <div className="bg-background rounded-md border p-3 text-sm">
+              <p className="font-mono text-xs">
+                Node(h=0, parent=None) → Node(h=1, parent=cert(h=0)) → Node(h=2, parent=cert(h=1)) → ...
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                각 시퀀서가 자체 체인 운영 · 시퀀서 간 독립 실행 · 전역 순서는 합의 계층에서 결정
+              </p>
+            </div>
+          </div>
+        </div>
 
-// AckManager — partial signature aggregation:
-//
-//   struct AckManager {
-//       // Sequencer → Height → Epoch → Evidence
-//       evidence: BTreeMap<
-//           PublicKey,
-//           BTreeMap<u64, BTreeMap<u64, Evidence>>
-//       >,
-//   }
-//
-//   enum Evidence {
-//       Partials(BTreeMap<ValidatorIndex, PartialSig>),
-//       Certificate(Certificate),
-//   }
-//
-//   On receiving Ack(sequencer, height, sig, validator_id):
-//     1. Add to Partials map
-//     2. Count distinct validators: n
-//     3. If n >= quorum_threshold (2f+1):
-//        - Aggregate partial signatures
-//        - Produce Certificate
-//        - Transition state: Partials → Certificate
+        <h3 className="text-xl font-semibold mt-8 mb-3">Engine 처리 흐름</h3>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4">
+          <p className="text-xs font-mono text-muted-foreground mb-2">handle_incoming_node — 노드 수신 시 7단계</p>
+          <div className="space-y-2">
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-0.5 rounded font-semibold">1-2</span>
+                <span className="text-sm font-semibold">파싱 & 서명 검증</span>
+              </div>
+              <p className="text-xs text-muted-foreground"><code>verify_signature(&chunk, &node.signature, &chunk.sequencer)</code> 실패 시 즉시 반환</p>
+            </div>
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-0.5 rounded font-semibold">3</span>
+                <span className="text-sm font-semibold">부모 인증서 검증</span>
+              </div>
+              <p className="text-xs text-muted-foreground"><code>Parent::Some(cert)</code> → <code>validate_parent(cert, height - 1)</code>로 체인 연속성 확인</p>
+            </div>
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-0.5 rounded font-semibold">4</span>
+                <span className="text-sm font-semibold">중복 검사</span>
+              </div>
+              <p className="text-xs text-muted-foreground"><code>ack_manager.has_node(hash(&node))</code> — 이미 본 노드면 스킵</p>
+            </div>
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs px-2 py-0.5 rounded font-semibold">5-6</span>
+                <span className="text-sm font-semibold">Ack 서명 & 브로드캐스트</span>
+              </div>
+              <p className="text-xs text-muted-foreground"><code>sign_ack(&node)</code> → <code>broadcast_ack(my_ack)</code>로 부분 서명 전파</p>
+            </div>
+            <div className="bg-background rounded-md border p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs px-2 py-0.5 rounded font-semibold">7</span>
+                <span className="text-sm font-semibold">Tip 업데이트</span>
+              </div>
+              <p className="text-xs text-muted-foreground"><code>tip_manager.update(chunk.sequencer, node)</code> — 해당 시퀀서의 최신 노드 갱신</p>
+            </div>
+          </div>
+        </div>
 
-// TipManager — latest node per sequencer:
-//
-//   struct TipManager {
-//       tips: BTreeMap<PublicKey, Node>,
-//   }
-//
-//   fn update(&mut self, sequencer: PublicKey, node: Node) {
-//       let current = self.tips.get(&sequencer);
-//       if current.is_none()
-//          || current.unwrap().chunk.height < node.chunk.height {
-//           self.tips.insert(sequencer, node);
-//       }
-//   }
-//
-//   // Tip existence means:
-//   // "We have validated all heights 0..=tip.height"
-//   // "Chain is complete for this sequencer"
+        <h3 className="text-xl font-semibold mt-8 mb-3">AckManager & TipManager</h3>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-4">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">AckManager — 부분 서명 집계</p>
+            <div className="bg-background rounded-md border p-3 text-sm">
+              <p className="font-mono text-xs"><code>evidence: BTreeMap&lt;PublicKey, BTreeMap&lt;u64, BTreeMap&lt;u64, Evidence&gt;&gt;&gt;</code></p>
+              <p className="text-xs text-muted-foreground mt-1">3중 Map: Sequencer → Height → Epoch → Evidence</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-xs"><code>Evidence::Partials</code></p>
+                <p className="text-[11px] text-muted-foreground mt-1"><code>BTreeMap&lt;ValidatorIndex, PartialSig&gt;</code> — 수집 중인 부분 서명</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-xs"><code>Evidence::Certificate</code></p>
+                <p className="text-[11px] text-muted-foreground mt-1">2f+1 쿼럼 달성 → 부분 서명 집계 → <code>Certificate</code>로 승격</p>
+              </div>
+            </div>
+          </div>
 
-// BLS signature aggregation:
-//
-//   Each validator i has private key sk_i
-//   Ack signature: sig_i = Sign(sk_i, (sequencer, height, payload_hash))
-//
-//   Aggregate:
-//     agg_sig = sum(sig_i)  (in G1)
-//     agg_pk = sum(pk_i)   (in G2)
-//
-//   Verify:
-//     e(agg_sig, G2) == e(hash_to_g1(msg), agg_pk)
-//
-//   Quorum: 2f+1 out of 3f+1 validators (Byzantine tolerance)
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">TipManager — 시퀀서별 최신 Node 추적</p>
+            <div className="bg-background rounded-md border p-3 text-sm">
+              <p className="font-mono text-xs"><code>tips: BTreeMap&lt;PublicKey, Node&gt;</code></p>
+              <p className="text-xs text-muted-foreground mt-1">
+                <code>update()</code>: 기존 tip 없거나 새 height가 더 높으면 교체. tip 존재 = h=0~tip.height 전체 체인 검증 완료
+              </p>
+            </div>
+          </div>
+        </div>
 
-// Epoch rotation:
-//
-//   Validator set changes over time (membership updates)
-//   Each epoch has its own validator list
-//   Certificates must be within-epoch
-//   Cross-epoch: carry over via reconfiguration
+        <h3 className="text-xl font-semibold mt-8 mb-3">BLS 서명 집계 & Epoch</h3>
+        <div className="not-prose bg-muted/50 rounded-lg border p-4 my-4 space-y-4">
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">BLS 서명 집계</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-xs">Ack 서명</p>
+                <p className="text-[11px] text-muted-foreground mt-1">sig_i = Sign(sk_i, (sequencer, height, payload_hash))</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-xs">집계</p>
+                <p className="text-[11px] text-muted-foreground mt-1">agg_sig = sum(sig_i) in G1 · agg_pk = sum(pk_i) in G2</p>
+              </div>
+              <div className="bg-background rounded-md border p-3">
+                <p className="font-semibold text-xs">검증</p>
+                <p className="text-[11px] text-muted-foreground mt-1">e(agg_sig, G2) == e(hash_to_g1(msg), agg_pk) · 쿼럼: 2f+1 / 3f+1</p>
+              </div>
+            </div>
+          </div>
 
-// Benefits vs flat broadcast:
-//
-//   1. Parallelism: multiple sequencers = higher throughput
-//   2. Decoupling: chains isolated from each other
-//   3. Efficient storage: only need latest tip
-//   4. Quorum safety: 2f+1 threshold
-//   5. Self-describing: parent certs validate full chain
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">Epoch 로테이션</p>
+            <div className="bg-background rounded-md border p-3 text-sm">
+              <p>검증자 집합이 시간에 따라 변경(멤버십 업데이트) · 각 epoch별 검증자 목록 · 인증서는 epoch 내 유효 · epoch 전환 시 재구성으로 이월</p>
+            </div>
+          </div>
 
-// Integration with consensus:
-//   Consensus orders TIPS (not full data)
-//   Data already propagated via ordered_broadcast
-//   Very small consensus payload (hashes only)
-//   Enables high-throughput DSMR pattern`}
-        </pre>
+          <div>
+            <p className="text-xs font-mono text-muted-foreground mb-2">플랫 브로드캐스트 대비 장점</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-background rounded-md border px-3 py-2">
+                <p className="text-xs font-semibold">병렬성</p>
+                <p className="text-[11px] text-muted-foreground">다중 시퀀서 = 더 높은 처리량</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2">
+                <p className="text-xs font-semibold">분리</p>
+                <p className="text-[11px] text-muted-foreground">체인 간 격리 · 최신 tip만 저장</p>
+              </div>
+              <div className="bg-background rounded-md border px-3 py-2">
+                <p className="text-xs font-semibold">합의 연동</p>
+                <p className="text-[11px] text-muted-foreground">합의는 tip만 순서화(해시) → 고처리량 DSMR 패턴</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

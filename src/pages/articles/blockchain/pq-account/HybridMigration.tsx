@@ -32,83 +32,103 @@ export default function HybridMigration() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Phase별 구현 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Phase 1: ECDSA-only AA Account (baseline)
-contract SmartAccountV1 {
-    address public owner;  // ECDSA
-
-    function validateUserOp(..., bytes signature) external {
-        address recovered = ECDSA.recover(hash, signature);
-        require(recovered == owner, "Invalid sig");
-    }
-}
-
-// Phase 2: Add Dilithium key (storage only)
-contract SmartAccountV2 {
-    address public owner;             // ECDSA
-    bytes32 public dilithiumPkHash;   // 추가
-    bool public dilithiumEnabled = false;
-
-    function registerDilithium(bytes calldata pk) external onlyOwner {
-        dilithiumPkHash = keccak256(pk);
-        // Store pk separately (too large for single slot)
-    }
-}
-
-// Phase 3: Hybrid (ECDSA AND Dilithium)
-contract SmartAccountV3 {
-    function validateUserOp(..., bytes signature) external {
-        (bytes memory ecdsaSig, bytes memory dilithiumSig) =
-            abi.decode(signature, (bytes, bytes));
-
-        // Both must pass
-        require(ECDSA.recover(hash, ecdsaSig) == owner);
-        require(DilithiumVerifier.verify(dilithiumPk, hash, dilithiumSig));
-    }
-}
-
-// Phase 4: PQ-only (remove ECDSA)
-contract SmartAccountV4 {
-    function validateUserOp(..., bytes signature) external {
-        require(DilithiumVerifier.verify(dilithiumPk, hash, signature));
-    }
-}
-
-// Upgrade mechanism
-// - Transparent/UUPS proxy 사용
-// - Owner only upgradeability
-// - Timelock for safety (예: 7일)
-// - Social recovery 선택사항`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Phase 1: ECDSA-only</p>
+              <p className="text-xs text-muted-foreground mb-1"><code>SmartAccountV1</code></p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>owner</code>: <code>address</code> (ECDSA)</li>
+                <li><code>validateUserOp()</code> &mdash; <code>ECDSA.recover(hash, sig) == owner</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Phase 2: Dilithium key 등록</p>
+              <p className="text-xs text-muted-foreground mb-1"><code>SmartAccountV2</code></p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>dilithiumPkHash</code>: <code>bytes32</code> (추가)</li>
+                <li><code>registerDilithium(pk)</code> &mdash; <code>keccak256(pk)</code> 저장</li>
+                <li><code>dilithiumEnabled = false</code> (아직 비활성)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Phase 3: Hybrid (AND)</p>
+              <p className="text-xs text-muted-foreground mb-1"><code>SmartAccountV3</code></p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>signature를 <code>abi.decode</code>로 ECDSA + Dilithium 분리</li>
+                <li><strong>둘 다 통과</strong>해야 유효: <code>ECDSA.recover</code> + <code>DilithiumVerifier.verify</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Phase 4: PQ-only</p>
+              <p className="text-xs text-muted-foreground mb-1"><code>SmartAccountV4</code></p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>ECDSA 제거</li>
+                <li><code>DilithiumVerifier.verify(pk, hash, sig)</code>만 사용</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-muted-foreground mb-2">Upgrade Mechanism</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-muted-foreground text-center">
+              <span>Transparent/UUPS proxy</span>
+              <span>Owner only upgrade</span>
+              <span>Timelock (7일)</span>
+              <span>Social recovery (선택)</span>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Migration 실전 고려사항</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// When to migrate?
-
-// Trigger events
-// 1) NIST PQC 표준 완전 채택 (2024~)
-// 2) 실용적 quantum computer 등장 signal
-// 3) Harvest-now-decrypt-later 공격 뉴스
-// 4) 대형 금융기관 PQ 전환 발표
-
-// Checklist (per account)
-// ☐ AA smart account 사용 중인가?
-// ☐ Upgrade mechanism 존재?
-// ☐ Dilithium signer 지갑 준비?
-// ☐ Recovery 계획 설정?
-
-// Wallet support (2024 현재)
-// - Argent: AA 기반, PQ 연구 중
-// - Safe (Gnosis): 멀티시그, PQ module 가능
-// - ZeroDev: AA SDK, PQ 통합 쉬움
-// - Biconomy, Pimlico: PQ paymasters 계획
-
-// 일반 EOA 사용자
-// → AA account로 먼저 migrate
-// → 그 후 PQ 전환
-// → 대부분 사용자는 2단계 필요
-
-// Governance token holders
-// → Voting 시 PQ signature 지원 필요
-// → DAO tooling 업데이트 필수
-// → Snapshot signature schemes 확장`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-red-400 mb-2">Trigger Events &mdash; 언제 전환?</p>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>NIST PQC 표준 완전 채택 (2024~)</li>
+              <li>실용적 quantum computer 등장 signal</li>
+              <li>Harvest-now-decrypt-later 공격 뉴스</li>
+              <li>대형 금융기관 PQ 전환 발표</li>
+            </ol>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-blue-400 mb-2">Checklist (per account)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>AA smart account 사용 중인가?</li>
+                <li>Upgrade mechanism 존재?</li>
+                <li>Dilithium signer 지갑 준비?</li>
+                <li>Recovery 계획 설정?</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Wallet Support (2024)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><strong>Argent</strong>: AA 기반, PQ 연구 중</li>
+                <li><strong>Safe (Gnosis)</strong>: 멀티시그, PQ module 가능</li>
+                <li><strong>ZeroDev</strong>: AA SDK, PQ 통합 용이</li>
+                <li><strong>Biconomy, Pimlico</strong>: PQ paymasters 계획</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">일반 EOA 사용자</p>
+              <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+                <li>AA account로 먼저 migrate</li>
+                <li>이후 PQ 전환</li>
+                <li>대부분 사용자는 2단계 필요</li>
+              </ol>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Governance Token Holders</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>Voting 시 PQ signature 지원 필요</li>
+                <li>DAO tooling 업데이트 필수</li>
+                <li>Snapshot signature schemes 확장</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: EOA의 근본 취약점</p>

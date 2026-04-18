@@ -9,13 +9,29 @@ export default function Overview() {
         <CascadeViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">3단계 설정 캐스케이드</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 우선순위 오름차순
-1. 시스템 기본값:    /etc/claw/config.json       (관리자)
-2. 사용자 전역:       ~/.claw/config.json         (홈 디렉토리)
-3. 프로젝트 로컬:     .claw/config.json           (워크스페이스)
-
-// 병합 결과: 프로젝트 > 사용자 > 시스템
-// 같은 키가 여러 파일에 있으면 하위 레벨이 이김`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4 not-prose">
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-mono text-muted-foreground mb-1">우선순위 1 (최저)</div>
+            <div className="font-semibold text-sm mb-1">시스템 기본값</div>
+            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">/etc/claw/config.json</code>
+            <div className="text-xs text-muted-foreground mt-1">관리자 설정</div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-mono text-muted-foreground mb-1">우선순위 2</div>
+            <div className="font-semibold text-sm mb-1">사용자 전역</div>
+            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">~/.claw/config.json</code>
+            <div className="text-xs text-muted-foreground mt-1">홈 디렉토리</div>
+          </div>
+          <div className="bg-muted/50 border border-border rounded-lg p-4">
+            <div className="text-xs font-mono text-muted-foreground mb-1">우선순위 3 (최고)</div>
+            <div className="font-semibold text-sm mb-1">프로젝트 로컬</div>
+            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">.claw/config.json</code>
+            <div className="text-xs text-muted-foreground mt-1">워크스페이스</div>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground mt-2 not-prose">
+          병합 결과: 프로젝트 &gt; 사용자 &gt; 시스템 — 같은 키가 여러 파일에 있으면 하위 레벨이 이김
+        </p>
         <p>
           <strong>3단계 오버라이드</strong>: 시스템 &lt; 사용자 &lt; 프로젝트<br />
           병합은 deep-merge — 중첩 객체도 재귀적으로 병합<br />
@@ -23,67 +39,71 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">AppConfig 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct AppConfig {
-    // 프로바이더
-    pub provider: String,             // "anthropic" | "openai" | "xai"
-    pub api_key: Option<String>,
-    pub model: String,                // "claude-opus-4-6" 등
-    pub base_url: Option<Url>,
-
-    // 권한
-    pub permission_mode: PermissionMode,
-    pub trusted_plugins: HashSet<String>,
-    pub trusted_mcp_servers: HashSet<String>,
-
-    // 동작
-    pub compact_config: CompactionConfig,
-    pub max_tool_chain_length: usize,  // 25
-    pub temperature: f32,              // 1.0
-
-    // 훅 · 플러그인 · MCP
-    pub hooks: HookConfig,
-    pub plugin_paths: Vec<PathBuf>,
-    pub mcp_servers: HashMap<String, McpServerConfig>,
-
-    // 로깅 · 텔레메트리
-    pub log_level: LogLevel,
-    pub telemetry_sink: Option<TelemetrySink>,
-}`}</pre>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4 not-prose">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="font-semibold text-sm mb-2 text-blue-700 dark:text-blue-300">프로바이더</div>
+            <ul className="text-sm space-y-1">
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">provider: String</code> — <code className="text-xs">"anthropic"</code> | <code className="text-xs">"openai"</code> | <code className="text-xs">"xai"</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">api_key: Option&lt;String&gt;</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">model: String</code> — <code className="text-xs">"claude-opus-4-6"</code> 등</li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">base_url: Option&lt;Url&gt;</code></li>
+            </ul>
+          </div>
+          <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <div className="font-semibold text-sm mb-2 text-green-700 dark:text-green-300">권한</div>
+            <ul className="text-sm space-y-1">
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">permission_mode: PermissionMode</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">trusted_plugins: HashSet&lt;String&gt;</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">trusted_mcp_servers: HashSet&lt;String&gt;</code></li>
+            </ul>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <div className="font-semibold text-sm mb-2 text-amber-700 dark:text-amber-300">동작</div>
+            <ul className="text-sm space-y-1">
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">compact_config: CompactionConfig</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">max_tool_chain_length: usize</code> — 기본 25</li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">temperature: f32</code> — 기본 1.0</li>
+            </ul>
+          </div>
+          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+            <div className="font-semibold text-sm mb-2 text-purple-700 dark:text-purple-300">훅 / 플러그인 / MCP</div>
+            <ul className="text-sm space-y-1">
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">hooks: HookConfig</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">plugin_paths: Vec&lt;PathBuf&gt;</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">mcp_servers: HashMap&lt;String, McpServerConfig&gt;</code></li>
+            </ul>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-950/30 border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:col-span-2">
+            <div className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">로깅 / 텔레메트리</div>
+            <ul className="text-sm space-y-1">
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">log_level: LogLevel</code></li>
+              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">telemetry_sink: Option&lt;TelemetrySink&gt;</code></li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">ConfigLoader 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct ConfigLoader {
-    paths: Vec<PathBuf>,
-}
-
-impl ConfigLoader {
-    pub fn new() -> Self {
-        Self {
-            paths: vec![
-                PathBuf::from("/etc/claw/config.json"),
-                dirs::home_dir().unwrap().join(".claw/config.json"),
-                std::env::current_dir().unwrap().join(".claw/config.json"),
-            ],
-        }
-    }
-
-    pub async fn load(&self) -> Result<AppConfig> {
-        let mut merged = Value::Null;
-
-        for path in &self.paths {
-            if !path.exists() { continue; }
-            let text = tokio::fs::read_to_string(path).await?;
-            let layer: Value = serde_json::from_str(&text)?;
-            merged = deep_merge(merged, layer);
-        }
-
-        // 환경 변수 오버라이드
-        apply_env_overrides(&mut merged);
-
-        // 최종 AppConfig로 역직렬화
-        let config: AppConfig = serde_json::from_value(merged)?;
-        Ok(config)
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-3">ConfigLoader 4단계 로드 흐름</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-background border border-border rounded p-3">
+              <div className="text-xs font-mono text-muted-foreground mb-1">초기화</div>
+              <div className="text-sm">경로 3개 등록: <code className="text-xs bg-muted px-1 py-0.5 rounded">/etc/claw/config.json</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">~/.claw/config.json</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">.claw/config.json</code></div>
+            </div>
+            <div className="bg-background border border-border rounded p-3">
+              <div className="text-xs font-mono text-muted-foreground mb-1">순회 병합</div>
+              <div className="text-sm">각 경로를 순회하며 <code className="text-xs bg-muted px-1 py-0.5 rounded">deep_merge(merged, layer)</code> 호출. 파일 없으면 스킵</div>
+            </div>
+            <div className="bg-background border border-border rounded p-3">
+              <div className="text-xs font-mono text-muted-foreground mb-1">환경 변수</div>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">apply_env_overrides(&mut merged)</code> — 최우선 오버라이드</div>
+            </div>
+            <div className="bg-background border border-border rounded p-3">
+              <div className="text-xs font-mono text-muted-foreground mb-1">역직렬화</div>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">serde_json::from_value(merged)</code> — 최종 <code className="text-xs">AppConfig</code> 생성</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계 로드</strong>: 시스템 → 사용자 → 프로젝트 → 환경 변수<br />
           파일 없으면 스킵 — 프로젝트 로컬 설정 없어도 문제없음<br />
@@ -91,20 +111,19 @@ impl ConfigLoader {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">deep_merge — 재귀 병합</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn deep_merge(base: Value, overlay: Value) -> Value {
-    match (base, overlay) {
-        (Value::Object(mut base_map), Value::Object(overlay_map)) => {
-            // 객체 재귀 병합
-            for (key, value) in overlay_map {
-                let entry = base_map.entry(key).or_insert(Value::Null);
-                *entry = deep_merge(entry.clone(), value);
-            }
-            Value::Object(base_map)
-        }
-        // 비객체는 오버라이드 (배열·원시값은 치환)
-        (_, overlay) => overlay,
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 py-0.5 rounded">fn deep_merge(base, overlay) -&gt; Value</code></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded p-3">
+              <div className="text-xs font-semibold text-green-700 dark:text-green-300 mb-1">Object + Object</div>
+              <div className="text-sm">재귀 병합 — 각 키를 순회하며 <code className="text-xs bg-muted px-1 py-0.5 rounded">deep_merge(entry, value)</code> 재귀 호출</div>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded p-3">
+              <div className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">그 외 (배열, 원시값)</div>
+              <div className="text-sm">오버라이드 — overlay 값으로 치환. 배열은 병합하지 않고 대체</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>객체만 재귀 병합, 나머지는 치환</strong><br />
           이유: 배열을 병합하면 순서·중복 처리가 애매함 — 치환이 예측 가능<br />
@@ -112,28 +131,35 @@ impl ConfigLoader {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">환경 변수 오버라이드</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn apply_env_overrides(config: &mut Value) {
-    // CLAW_PROVIDER → config.provider
-    if let Ok(v) = std::env::var("CLAW_PROVIDER") {
-        config["provider"] = v.into();
-    }
-    if let Ok(v) = std::env::var("CLAW_API_KEY") {
-        config["api_key"] = v.into();
-    }
-    if let Ok(v) = std::env::var("CLAW_MODEL") {
-        config["model"] = v.into();
-    }
-    if let Ok(v) = std::env::var("CLAW_LOG_LEVEL") {
-        config["log_level"] = v.into();
-    }
-
-    // 특수 케이스: ANTHROPIC_API_KEY 호환
-    if let Ok(v) = std::env::var("ANTHROPIC_API_KEY") {
-        if config["provider"].as_str() == Some("anthropic") {
-            config["api_key"] = v.into();
-        }
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-3">CLAW_* 환경 변수 매핑</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
+              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_PROVIDER</code>
+              <span className="text-muted-foreground text-xs">&rarr;</span>
+              <code className="text-xs">config.provider</code>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
+              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_API_KEY</code>
+              <span className="text-muted-foreground text-xs">&rarr;</span>
+              <code className="text-xs">config.api_key</code>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
+              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_MODEL</code>
+              <span className="text-muted-foreground text-xs">&rarr;</span>
+              <code className="text-xs">config.model</code>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
+              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_LOG_LEVEL</code>
+              <span className="text-muted-foreground text-xs">&rarr;</span>
+              <code className="text-xs">config.log_level</code>
+            </div>
+          </div>
+          <div className="mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded p-2.5">
+            <div className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">호환 변수</div>
+            <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">ANTHROPIC_API_KEY</code> — provider가 <code className="text-xs">"anthropic"</code>일 때 자동으로 <code className="text-xs">api_key</code>에 매핑</div>
+          </div>
+        </div>
         <p>
           <strong>CLAW_* 환경 변수</strong>: claw-code 전용 오버라이드<br />
           기존 도구 환경 변수 호환: <code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code><br />
@@ -141,42 +167,31 @@ impl ConfigLoader {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">설정 검증</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl AppConfig {
-    pub fn validate(&self) -> Result<()> {
-        // 1) 프로바이더 유효성
-        if !["anthropic", "openai", "xai", "azure"].contains(&self.provider.as_str()) {
-            return Err(anyhow!("unknown provider: {}", self.provider));
-        }
-
-        // 2) API 키 존재
-        if self.api_key.is_none() && self.provider != "anthropic" {
-            return Err(anyhow!("API key required for {}", self.provider));
-        }
-
-        // 3) 모델명 검증
-        if self.model.is_empty() {
-            return Err(anyhow!("model not specified"));
-        }
-
-        // 4) 수치 범위
-        if self.temperature < 0.0 || self.temperature > 2.0 {
-            return Err(anyhow!("temperature out of range"));
-        }
-        if self.max_tool_chain_length > 100 {
-            return Err(anyhow!("max_tool_chain_length too large"));
-        }
-
-        // 5) 훅 파일 존재
-        for hook in self.hooks.all_hooks() {
-            let first_word = hook.command.split_whitespace().next().unwrap_or("");
-            if first_word.starts_with('/') && !Path::new(first_word).exists() {
-                log::warn!("hook not found: {}", hook.command);
-            }
-        }
-
-        Ok(())
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 py-0.5 rounded">AppConfig::validate()</code> — 5단계 검증</div>
+          <div className="space-y-2">
+            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
+              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">1</span>
+              <div className="text-sm"><strong>프로바이더 유효성</strong> — <code className="text-xs bg-muted px-1 py-0.5 rounded">"anthropic"</code> | <code className="text-xs">"openai"</code> | <code className="text-xs">"xai"</code> | <code className="text-xs">"azure"</code> 이외 거부</div>
+            </div>
+            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
+              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">2</span>
+              <div className="text-sm"><strong>API 키 존재</strong> — anthropic 외 프로바이더는 <code className="text-xs bg-muted px-1 py-0.5 rounded">api_key</code> 필수</div>
+            </div>
+            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
+              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">3</span>
+              <div className="text-sm"><strong>모델명 검증</strong> — 빈 문자열 거부</div>
+            </div>
+            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
+              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">4</span>
+              <div className="text-sm"><strong>수치 범위</strong> — <code className="text-xs bg-muted px-1 py-0.5 rounded">temperature</code>: 0.0~2.0, <code className="text-xs bg-muted px-1 py-0.5 rounded">max_tool_chain_length</code>: ~100</div>
+            </div>
+            <div className="bg-background border border-amber-200 dark:border-amber-800 rounded p-3 flex items-start gap-3">
+              <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">5</span>
+              <div className="text-sm"><strong>훅 파일 존재</strong> — 절대 경로 훅의 파일 존재 확인. 없으면 <span className="text-amber-600 dark:text-amber-400 font-medium">warn만</span> (거부 아님)</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>5단계 검증</strong>: 프로바이더 → API 키 → 모델 → 수치 범위 → 훅 파일<br />
           부트스트랩 시 1회 수행 — 실패 시 시작 거부<br />

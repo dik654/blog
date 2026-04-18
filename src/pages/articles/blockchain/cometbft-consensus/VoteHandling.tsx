@@ -15,57 +15,47 @@ export default function VoteHandling({ onCodeRef }: Props) {
 
         {/* ── tryAddVote 구현 ── */}
         <h3 className="text-xl font-semibold mt-4 mb-3">tryAddVote — 3단계 검증 + Evidence</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/consensus/state.go
-func (cs *State) tryAddVote(vote *Vote, peerID p2p.ID) (bool, error) {
-    // 1. ValidateBasic + height/round 체크
-    if err := cs.validateVote(vote); err != nil {
-        return false, err  // invalid vote
-    }
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="text-sm font-semibold mb-3"><code>tryAddVote()</code> — 3-stage flow (cometbft/consensus/state.go)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">1. Validate</p>
+                <p className="text-xs text-muted-foreground"><code>validateVote(vote)</code> — ValidateBasic + height/round 체크. 실패 시 즉시 반환</p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">2. addVote (Equivocation 감지)</p>
+                <p className="text-xs text-muted-foreground"><code>addVote(vote, peerID)</code> — VoteSet 추가. <code>ErrVoteConflictingVotes</code> 시 <code>DuplicateVoteEvidence</code> 생성 → <code>evpool.AddEvidence()</code></p>
+              </div>
+              <div className="bg-background rounded px-3 py-2">
+                <p className="font-medium text-xs mb-1">3. 2/3+ 임계값 체크</p>
+                <p className="text-xs text-muted-foreground">
+                  <strong className="text-foreground/80">3a.</strong> <code>TwoThirdsMajority()</code> — 특정 블록 2/3+ → <code>enterCommit()</code><br />
+                  <strong className="text-foreground/80">3b.</strong> <code>HasTwoThirdsAny()</code> — 아무 블록 2/3+ → <code>enterPrecommitWait()</code>
+                </p>
+              </div>
+            </div>
+          </div>
 
-    // 2. addVote: Equivocation 감지 + VoteSet 추가
-    added, err := cs.addVote(vote, peerID)
-
-    if err != nil {
-        // Conflicting vote detected!
-        if errors.Is(err, ErrVoteConflictingVotes) {
-            // DuplicateVoteEvidence 생성
-            evidence := &DuplicateVoteEvidence{
-                VoteA: existing,
-                VoteB: vote,
-                TotalVotingPower: cs.Validators.TotalVotingPower(),
-                ValidatorPower: validator.VotingPower,
-                Timestamp: cs.state.LastBlockTime,
-            }
-            cs.evpool.AddEvidence(evidence)
-            return false, err
-        }
-        return added, err
-    }
-
-    // 3. 2/3+ 임계값 체크 (2단계)
-    if precommits := cs.Votes.Precommits(vote.Round); precommits != nil {
-        // 3a. +2/3 precommit for specific block → commit
-        if blockID, ok := precommits.TwoThirdsMajority(); ok && !blockID.IsZero() {
-            cs.enterCommit(vote.Height, vote.Round)
-            return added, nil
-        }
-        // 3b. +2/3 ANY precommit → timeout 대기
-        if precommits.HasTwoThirdsAny() {
-            cs.enterPrecommitWait(vote.Height, vote.Round)
-            return added, nil
-        }
-    }
-
-    return added, nil
-}
-
-// 2단계 임계값:
-// - HasTwoThirdsAny: "2/3+ 투표 수집됨" (block 무관)
-//   → timeout 후 nil commit (liveness)
-// - TwoThirdsMajority: "2/3+ 같은 block 투표"
-//   → 즉시 상태 전이 (safety + liveness)`}
-        </pre>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">Conflicting Vote → Evidence 생성</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <div className="flex justify-between text-xs"><span>VoteA</span><span>기존 투표</span></div>
+                <div className="flex justify-between text-xs"><span>VoteB</span><span>새 투표 (다른 BlockID)</span></div>
+                <div className="flex justify-between text-xs"><span>TotalVotingPower</span><span><code>cs.Validators.TotalVotingPower()</code></span></div>
+                <div className="flex justify-between text-xs"><span>ValidatorPower</span><span><code>validator.VotingPower</code></span></div>
+              </div>
+            </div>
+            <div className="bg-muted rounded-lg p-4">
+              <p className="text-sm font-semibold mb-2">2단계 임계값</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li><strong className="text-foreground/80">HasTwoThirdsAny</strong> — 2/3+ 투표 수집됨 (block 무관) → timeout 후 nil commit (liveness)</li>
+                <li><strong className="text-foreground/80">TwoThirdsMajority</strong> — 2/3+ 같은 block 투표 → 즉시 상태 전이 (safety + liveness)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           tryAddVote의 <strong>3-stage flow</strong>: validate → addVote → threshold.<br />
           Conflicting vote → DuplicateVoteEvidence 자동 생성.<br />

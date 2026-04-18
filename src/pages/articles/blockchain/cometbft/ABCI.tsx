@@ -1,7 +1,7 @@
 import { CitationBlock } from '../../../../components/ui/citation';
 import ABCIMethodsViz from './viz/ABCIMethodsViz';
 import ABCIBlockFlowViz from './viz/ABCIBlockFlowViz';
-import {ABCI_METHODS_CODE} from './ABCIData';
+
 import { CodeViewButton } from '@/components/code';
 import { codeRefs } from './codeRefs';
 import type { CodeRef } from '@/components/code/types';
@@ -45,58 +45,67 @@ export default function ABCI({ onCodeRef }: { onCodeRef: (key: string, ref: Code
           → 멤풀 진입 전 트랜잭션 검증 (txpool 유효성 검사)
         </p>
         <CitationBlock source="cometbft/abci/types/types.go" citeKey={4} type="code" href="https://github.com/cometbft/cometbft/blob/main/abci/types/types.go">
-          <pre className="text-xs overflow-x-auto"><code>{`type RequestFinalizeBlock struct {
-    Txs                [][]byte
-    DecidedLastCommit  CommitInfo
-    Misbehavior        []Misbehavior
-    Hash               []byte    // Block hash
-    Height             int64
-    Time               time.Time
-    NextValidatorsHash []byte
-    ProposerAddress    []byte
-}`}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">ABCI++ FinalizeBlock 요청 구조체. 기존 BeginBlock/DeliverTx/EndBlock을 통합하여 단일 호출로 블록 전체를 처리합니다.</p>
+          <div className="text-xs text-foreground/70 space-y-1">
+            <p className="font-semibold">ABCI++ <code>RequestFinalizeBlock</code> 구조체</p>
+            <p><code>Txs [][]byte</code> — 블록에 포함된 트랜잭션 목록 / <code>DecidedLastCommit CommitInfo</code> — 이전 블록 커밋 정보 / <code>Misbehavior []Misbehavior</code> — 비잔틴 증거 / <code>Hash []byte</code> — 블록 해시 / <code>Height int64</code> — 블록 높이 / <code>NextValidatorsHash []byte</code> — 다음 validator set 해시 / <code>ProposerAddress []byte</code> — 제안자 주소</p>
+            <p>기존 <code>BeginBlock</code>/<code>DeliverTx</code>/<code>EndBlock</code>을 통합하여 단일 호출로 블록 전체를 처리</p>
+          </div>
         </CitationBlock>
         {/* ── ABCI 3 Connection Modes ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ABCI 3 Connection Modes — 관심사 분리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// CometBFT와 App 사이의 3개 독립 연결
-// 각 연결이 다른 목적 + 격리된 state 접근
-
-// 1. Mempool Connection (Async)
-//    - CheckTx(tx) → 유효성 검증
-//    - 멤풀 진입 전 필터링
-//    - state는 read-only (recent committed state)
-//    - 비동기 처리 (병렬 가능)
-
-// 2. Consensus Connection (Sync + Ordered)
-//    - PrepareProposal / ProcessProposal
-//    - FinalizeBlock / Commit
-//    - state를 변경하는 유일한 연결
-//    - 블록 단위 순차 처리 (ordering 보장)
-
-// 3. Info Connection (Query + Info)
-//    - Query(path) → state 조회
-//    - Info() → app 메타데이터
-//    - RPC handler가 사용
-//    - read-only
-
-// 왜 3개 분리?
-// 1. Consistency: Consensus만 write, 다른 것은 read
-// 2. Performance: CheckTx 병렬, Query 논블록킹
-// 3. Isolation: mempool validation이 consensus block 안 됨
-
-// Cosmos SDK의 구현:
-// 앱은 각 connection에 다른 multistore view 제공
-// - consensusState: 블록 실행용 (writable)
-// - checkState: CheckTx용 (read-only copy)
-// - queryState: Query용 (committed state)
-
-// 각 Connection의 격리 이유:
-// CheckTx가 consensus state 건드리면 → race condition
-// Query가 consensus state 건드리면 → inconsistent read
-// 분리 설계로 이 문제 원천 차단`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">1. Mempool Connection</p>
+              <p className="text-xs text-muted-foreground mb-1">Async</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li><code>CheckTx(tx)</code> → 유효성 검증</li>
+                <li>멤풀 진입 전 필터링</li>
+                <li>state는 read-only</li>
+                <li>비동기 처리 (병렬 가능)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">2. Consensus Connection</p>
+              <p className="text-xs text-muted-foreground mb-1">Sync + Ordered</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li><code>PrepareProposal</code> / <code>ProcessProposal</code></li>
+                <li><code>FinalizeBlock</code> / <code>Commit</code></li>
+                <li>state 변경하는 <strong className="text-foreground">유일한</strong> 연결</li>
+                <li>블록 단위 순차 처리</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">3. Info Connection</p>
+              <p className="text-xs text-muted-foreground mb-1">Query + Info</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li><code>Query(path)</code> → state 조회</li>
+                <li><code>Info()</code> → app 메타데이터</li>
+                <li>RPC handler가 사용</li>
+                <li>read-only</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">3개 분리 이유</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">Consistency</strong> — Consensus만 write, 나머지 read</p>
+                <p><strong className="text-foreground">Performance</strong> — <code>CheckTx</code> 병렬, Query 논블록킹</p>
+                <p><strong className="text-foreground">Isolation</strong> — mempool validation이 consensus 차단 안 함</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Cosmos SDK multistore view</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p><code>consensusState</code> — 블록 실행용 (writable)</p>
+                <p><code>checkState</code> — CheckTx용 (read-only copy)</p>
+                <p><code>queryState</code> — Query용 (committed state)</p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2"><code>CheckTx</code>가 consensus state 접근 → race condition / <code>Query</code>가 접근 → inconsistent read — 분리로 원천 차단</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           ABCI는 <strong>3개 독립 connection</strong>.<br />
           Mempool/Consensus/Info 각각 다른 state view 사용.<br />
@@ -105,40 +114,49 @@ export default function ABCI({ onCodeRef }: { onCodeRef: (key: string, ref: Code
 
         {/* ── ABCI 2.0 호출 순서 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ABCI 2.0 호출 순서 — 매 블록</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 매 블록 생성/검증 시 호출 순서 (ABCI 2.0+):
-//
-// Validator가 Proposer인 경우:
-// 1. PrepareProposal(txs, ...) → app이 block 내용 결정
-//    - txs 선별 (sort, filter, 추가)
-//    - max_block_size 고려
-//    - app-specific ordering (IBC, module state)
-// 2. (consensus 진행: Prevote → Precommit → Commit)
-// 3. FinalizeBlock(block) → state transition 실행
-// 4. Commit() → state root 반환 + 디스크 저장
-//
-// Validator가 Proposer 아닌 경우:
-// 1. ProcessProposal(block) → 제안된 block 검증
-//    - valid면 Accept → Prevote(block)
-//    - invalid면 Reject → Prevote(nil)
-// 2. (consensus 진행)
-// 3. FinalizeBlock(block) → state transition
-// 4. Commit() → state root 반환
-
-// 타이밍:
-// - PrepareProposal: ~50ms (mempool 선별)
-// - ProcessProposal: ~50ms (quick validation)
-// - FinalizeBlock: ~수백 ms (full execution)
-// - Commit: ~100ms (disk write)
-
-// Cosmos SDK app의 FinalizeBlock 내부:
-// 1. BeginBlocker (module 초기화)
-// 2. DeliverTx × N (각 tx 실행)
-// 3. EndBlocker (module 마무리)
-// 4. state root 계산 (IAVL tree)
-
-// → ABCI 2.0에서 단일 호출로 통합 (이전 3회 호출이 1회로)`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Proposer인 경우</p>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">1.</strong> <code>PrepareProposal(txs)</code> — app이 block 내용 결정 (txs 선별, max_block_size 고려)</p>
+                <p><strong className="text-foreground">2.</strong> consensus 진행: Prevote → Precommit → Commit</p>
+                <p><strong className="text-foreground">3.</strong> <code>FinalizeBlock(block)</code> — state transition 실행</p>
+                <p><strong className="text-foreground">4.</strong> <code>Commit()</code> — state root 반환 + 디스크 저장</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Proposer 아닌 경우</p>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">1.</strong> <code>ProcessProposal(block)</code> — 제안된 block 검증 (valid → Accept, invalid → Reject)</p>
+                <p><strong className="text-foreground">2.</strong> consensus 진행</p>
+                <p><strong className="text-foreground">3.</strong> <code>FinalizeBlock(block)</code> — state transition</p>
+                <p><strong className="text-foreground">4.</strong> <code>Commit()</code> — state root 반환</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">타이밍</p>
+              <div className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                <code className="text-xs">PrepareProposal</code><span>~50ms (mempool 선별)</span>
+                <code className="text-xs">ProcessProposal</code><span>~50ms (quick validation)</span>
+                <code className="text-xs">FinalizeBlock</code><span>~수백ms (full execution)</span>
+                <code className="text-xs">Commit</code><span>~100ms (disk write)</span>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>FinalizeBlock</code> 내부 (Cosmos SDK)</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p>1. <code>BeginBlocker</code> — module 초기화</p>
+                <p>2. <code>DeliverTx</code> x N — 각 tx 실행</p>
+                <p>3. <code>EndBlocker</code> — module 마무리</p>
+                <p>4. state root 계산 (IAVL tree)</p>
+                <p className="text-xs mt-2">ABCI 2.0에서 기존 3회 호출 → 단일 호출로 통합</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           매 블록에 ABCI <strong>3-4개 함수 순차 호출</strong>.<br />
           PrepareProposal(proposer만) → ProcessProposal → FinalizeBlock → Commit.<br />

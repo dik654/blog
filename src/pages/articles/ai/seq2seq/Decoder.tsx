@@ -1,4 +1,6 @@
 import DecoderViz from './viz/DecoderViz';
+import S2SDecoderViz from './viz/S2SDecoderViz';
+import M from '@/components/ui/math';
 
 export default function Decoder() {
   return (
@@ -12,57 +14,13 @@ export default function Decoder() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Decoder LSTM 자기회귀 생성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Decoder LSTM 생성 과정 (Autoregressive)
-//
-// 초기 상태:
-//   (c_0, h_0) = (c_T, h_T)  # encoder의 최종 상태
-//   y_0 = <SOS>               # start-of-sequence 토큰
-//
-// 생성 루프:
-//   t = 1
-//   while y_{t-1} ≠ <EOS> and t < max_len:
-//     e_t = Embedding[y_{t-1}]
-//     (c_t, h_t) = LSTM(e_t, (c_{t-1}, h_{t-1}))
-//     logits = W_out · h_t       # (vocab_size,)
-//     probs = softmax(logits)
-//
-//     # Greedy
-//     y_t = argmax(probs)
-//
-//     # 또는 Beam Search (k=4~10)
-//
-//     t += 1
-//
-// 출력: y_1, y_2, ..., <EOS>
-
-// 자기회귀(Autoregressive)의 의미:
-//   - 이전 출력이 다음 입력이 됨
-//   - 순차적 생성 (병렬 불가)
-//   - GPT도 동일 방식
-//
-// 생성 전략:
-//
-// 1. Greedy Search
-//    - 매 스텝 argmax
-//    - 빠르지만 suboptimal
-//
-// 2. Beam Search
-//    - top-k 후보 유지
-//    - 누적 확률 최대 경로
-//    - 번역 품질 우수
-//
-// 3. Sampling
-//    - temperature, top-p, top-k
-//    - 다양성 확보
-//    - 창의적 생성에 유리
-
-// Exposure Bias 문제:
-//   - 학습: teacher forcing (정답 입력)
-//   - 추론: 자신의 예측 입력
-//   - 오류 누적 가능
-//   - 해결: Scheduled Sampling (Bengio 2015)`}
-        </pre>
+        <S2SDecoderViz />
+        <M display>{'\\underbrace{(c_0, h_0) = (c_T, h_T)}_{\\text{Encoder 최종 상태 복사}}, \\quad y_0 = \\langle\\text{SOS}\\rangle'}</M>
+        <p className="leading-7">
+          자기회귀 생성: <M>{'s_t = \\text{LSTM}(y_{t-1},\\, s_{t-1},\\, c)'}</M>, <M>{'y_t = \\arg\\max \\text{softmax}(W_{out} \\cdot s_t)'}</M><br />
+          Beam Search: top-k 후보를 유지하며 <M>{'\\prod_t P(y_t)'}</M> 최대 경로 선택 (k=4~10)
+        </p>
+        <M display>{'\\text{Exposure Bias}: \\underbrace{P_{\\text{train}}(y_{t-1}) = y^*_{t-1}}_{\\text{정답}} \\neq \\underbrace{P_{\\text{test}}(y_{t-1}) = \\hat{y}_{t-1}}_{\\text{모델 예측}}'}</M>
         <p className="leading-7">
           요약 1: Decoder는 <strong>이전 출력을 다음 입력</strong>으로 사용 — autoregressive 생성.<br />
           요약 2: <strong>Beam Search</strong>가 greedy 대비 번역 품질 향상 — top-k 후보 추적.<br />

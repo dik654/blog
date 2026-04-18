@@ -16,24 +16,32 @@ export default function Observe() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">observe() 함수 시그니처</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn observe(worker: &Worker) -> Observation {
-    // 1) 가상 터미널에서 화면 텍스트 추출
-    let screen = worker.terminal.as_ref()
-        .map(|t| t.get_screen_text())
-        .unwrap_or_default();
-
-    // 2) 패턴 매칭으로 상태 추론
-    let inferred_status = infer_status(&screen);
-
-    // 3) 추출된 정보
-    Observation {
-        status: inferred_status,
-        last_line: screen.lines().last().unwrap_or("").to_string(),
-        contains_prompt: has_prompt(&screen),
-        contains_error: has_error(&screen),
-        screen_snapshot: screen,
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-3"><code>observe(worker: &Worker) → Observation</code></div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">1</span>
+              <div>
+                <div className="font-medium">가상 터미널에서 화면 텍스트 추출</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>worker.terminal.get_screen_text()</code></div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">2</span>
+              <div>
+                <div className="font-medium">패턴 매칭으로 상태 추론</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>infer_status(&screen)</code></div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">3</span>
+              <div>
+                <div className="font-medium">Observation 구조체 반환</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>status</code>, <code>last_line</code>, <code>contains_prompt</code>, <code>contains_error</code>, <code>screen_snapshot</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <code>Observation</code> 구조체: 화면에서 추출한 "상태 스냅샷"<br />
           <code>status</code>는 추론된 상태 — Worker의 실제 status와 비교하여 일치 검증<br />
@@ -41,64 +49,61 @@ export default function Observe() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">패턴 매칭 기반 추론</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`fn infer_status(screen: &str) -> InferredStatus {
-    let last_lines = screen.lines().rev().take(10).collect::<Vec<_>>();
-    let tail = last_lines.join("\\n");
-
-    // 완료 패턴
-    if tail.contains("Task completed") || tail.contains("✓ Done") {
-        return InferredStatus::Completed;
-    }
-
-    // 에러 패턴
-    if tail.contains("Error:") || tail.contains("Failed to") || tail.contains("panic:") {
-        return InferredStatus::Failed;
-    }
-
-    // 입력 대기 패턴
-    if tail.contains("Continue? (y/n)")
-        || tail.contains("Enter your choice")
-        || tail.ends_with("$ ")
-        || tail.ends_with("> ") {
-        return InferredStatus::WaitingInput;
-    }
-
-    // 진행 중 패턴
-    if tail.contains("Running") || tail.contains("Processing") || tail.contains("...") {
-        return InferredStatus::Working;
-    }
-
-    // 기본값
-    InferredStatus::Unknown
-}`}</pre>
-        <p>
-          <strong>4가지 상태 패턴</strong>: Completed, Failed, WaitingInput, Working<br />
-          <strong>마지막 10줄만 분석</strong>: 이전 히스토리 노이즈 제거 — 현재 상태에 집중<br />
-          Unknown은 폴백 — 매칭 실패 시 외부 개입 불필요 표시
-        </p>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-1"><code>infer_status(screen: &str)</code></div>
+          <div className="text-xs text-muted-foreground mb-3">마지막 10줄(<code>tail</code>)만 분석 — 이전 히스토리 노이즈 제거</div>
+          <div className="space-y-2 text-sm">
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-3">
+              <div className="font-semibold text-xs text-green-700 dark:text-green-400 mb-1">Completed</div>
+              <div className="text-xs text-muted-foreground"><code>"Task completed"</code> 또는 <code>"✓ Done"</code> 포함</div>
+            </div>
+            <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <div className="font-semibold text-xs text-red-700 dark:text-red-400 mb-1">Failed</div>
+              <div className="text-xs text-muted-foreground"><code>"Error:"</code>, <code>"Failed to"</code>, <code>"panic:"</code> 포함</div>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+              <div className="font-semibold text-xs text-amber-700 dark:text-amber-400 mb-1">WaitingInput</div>
+              <div className="text-xs text-muted-foreground"><code>"Continue? (y/n)"</code>, <code>"Enter your choice"</code>, 또는 <code>$ </code> / <code>&gt; </code> 프롬프트로 끝남</div>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <div className="font-semibold text-xs text-blue-700 dark:text-blue-400 mb-1">Working</div>
+              <div className="text-xs text-muted-foreground"><code>"Running"</code>, <code>"Processing"</code>, <code>"..."</code> 포함</div>
+            </div>
+            <div className="bg-background/60 border border-border rounded-lg p-3">
+              <div className="font-semibold text-xs mb-1">Unknown (폴백)</div>
+              <div className="text-xs text-muted-foreground">위 패턴 모두 불일치 — 외부 개입 불필요</div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">pty 화면 캡처 — TerminalHandle</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TerminalHandle {
-    master: OwnedFd,              // pty 마스터 디스크립터
-    buffer: VecDeque<u8>,         // 최근 출력 버퍼 (circular)
-    size: (u16, u16),             // (rows, cols)
-}
-
-impl TerminalHandle {
-    pub fn get_screen_text(&self) -> String {
-        // 버퍼의 ANSI 이스케이프 시퀀스 제거
-        let raw = String::from_utf8_lossy(self.buffer.as_slices().0);
-        strip_ansi_escapes(&raw)
-    }
-
-    pub async fn write_input(&mut self, input: &str) -> Result<()> {
-        // Worker의 stdin으로 입력 전송
-        use std::io::Write;
-        let mut master = unsafe { File::from_raw_fd(self.master.as_raw_fd()) };
-        master.write_all(input.as_bytes())?;
-        Ok(())
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-3"><code>pub struct TerminalHandle</code></div>
+          <div className="space-y-2 text-sm mb-4">
+            <div className="flex items-start gap-3 bg-background/60 rounded px-3 py-2">
+              <code className="text-xs shrink-0 mt-0.5">master: OwnedFd</code>
+              <span className="text-xs text-muted-foreground">pty 마스터 디스크립터</span>
+            </div>
+            <div className="flex items-start gap-3 bg-background/60 rounded px-3 py-2">
+              <code className="text-xs shrink-0 mt-0.5">buffer: VecDeque&lt;u8&gt;</code>
+              <span className="text-xs text-muted-foreground">최근 출력 버퍼 (circular)</span>
+            </div>
+            <div className="flex items-start gap-3 bg-background/60 rounded px-3 py-2">
+              <code className="text-xs shrink-0 mt-0.5">size: (u16, u16)</code>
+              <span className="text-xs text-muted-foreground">(rows, cols) — 터미널 크기</span>
+            </div>
+          </div>
+          <div className="border-t border-border pt-3 space-y-2 text-sm">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <div className="font-medium text-xs"><code>get_screen_text()</code> → <code>String</code></div>
+              <div className="text-xs text-muted-foreground mt-0.5">버퍼를 UTF-8로 변환 후 <code>strip_ansi_escapes()</code>로 색상 코드 제거 — 순수 텍스트 반환</div>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <div className="font-medium text-xs"><code>write_input(input: &str)</code></div>
+              <div className="text-xs text-muted-foreground mt-0.5">마스터 fd에 바이트 쓰기 — Worker의 stdin으로 입력 전송</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>pty(pseudo-terminal)</strong>: Unix의 가상 터미널 메커니즘<br />
           마스터/슬레이브 쌍 — 슬레이브는 Worker에 할당, 마스터는 claw-code가 소유<br />
@@ -106,42 +111,40 @@ impl TerminalHandle {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주기적 관찰 루프</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`async fn observation_loop(worker_id: WorkerId) {
-    loop {
-        tokio::time::sleep(Duration::from_millis(500)).await;
-
-        let worker = global_worker_registry().get(&worker_id);
-        let Some(worker) = worker else { break; };
-
-        // 최종 상태 도달 시 루프 종료
-        if matches!(worker.status,
-            WorkerStatus::Completed | WorkerStatus::Failed) {
-            break;
-        }
-
-        // 관찰 & 상태 업데이트
-        let obs = observe(&worker).await;
-
-        // 추론 상태와 현재 상태 비교
-        if obs.status != worker.status.into() {
-            log::warn!(
-                "worker {:?}: expected {:?}, observed {:?}",
-                worker_id, worker.status, obs.status
-            );
-        }
-
-        // 전이 가능한 상태면 자동 전이
-        match obs.status {
-            InferredStatus::Completed => {
-                let _ = worker.transition(WorkerStatus::Completed);
-            }
-            InferredStatus::Failed => {
-                let _ = worker.transition(WorkerStatus::Failed);
-            }
-            _ => {}
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-1"><code>observation_loop(worker_id: WorkerId)</code></div>
+          <div className="text-xs text-muted-foreground mb-3">500ms 주기 — Completed 또는 Failed 도달 시 루프 종료</div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">1</span>
+              <div>
+                <div className="font-medium">레지스트리에서 Worker 조회</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>global_worker_registry().get(&worker_id)</code> — 없으면 루프 종료</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">2</span>
+              <div>
+                <div className="font-medium">관찰 수행 — <code>observe(&worker)</code></div>
+                <div className="text-xs text-muted-foreground mt-0.5">화면 텍스트에서 상태 추론</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-amber-600 dark:text-amber-400 shrink-0">3</span>
+              <div>
+                <div className="font-medium">추론 상태 vs 현재 상태 비교</div>
+                <div className="text-xs text-muted-foreground mt-0.5">불일치 시 <code>log::warn!</code> 기록</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-green-50 dark:bg-green-950/30 border-l-2 border-green-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-green-600 dark:text-green-400 shrink-0">4</span>
+              <div>
+                <div className="font-medium">자동 전이 — Completed / Failed 감지 시</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>worker.transition(WorkerStatus::Completed | Failed)</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>500ms 주기</strong>: 사람이 화면 변화를 인지할 수 있는 속도<br />
           너무 빈번하면 CPU 낭비, 너무 느리면 상태 전이 지연<br />
@@ -149,21 +152,22 @@ impl TerminalHandle {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">관찰 불일치 감지</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Worker 상태는 Working인데 화면에는 "$ " 프롬프트가 보임
-if worker.status == WorkerStatus::Working
-    && obs.contains_prompt
-    && !obs.contains_error {
-    // Worker가 예상보다 일찍 작업 종료
-    log::info!("worker finished earlier than expected");
-    worker.transition(WorkerStatus::Completed)?;
-}
-
-// Worker 상태는 Ready인데 화면에는 에러 메시지
-if worker.status == WorkerStatus::Ready && obs.contains_error {
-    // 시작 직후 크래시
-    log::error!("worker crashed: {}", obs.last_line);
-    worker.transition(WorkerStatus::Failed)?;
-}`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+            <div className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-2">상태 Working + 화면에 프롬프트</div>
+            <div className="text-xs text-muted-foreground mb-2">
+              <code>worker.status == Working</code> && <code>obs.contains_prompt</code> && <code>!obs.contains_error</code>
+            </div>
+            <div className="text-xs font-medium">→ 예상보다 일찍 작업 종료 — <code>Completed</code>로 전이</div>
+          </div>
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+            <div className="text-xs font-semibold text-red-700 dark:text-red-400 mb-2">상태 Ready + 화면에 에러</div>
+            <div className="text-xs text-muted-foreground mb-2">
+              <code>worker.status == Ready</code> && <code>obs.contains_error</code>
+            </div>
+            <div className="text-xs font-medium">→ 시작 직후 크래시 — <code>Failed</code>로 전이</div>
+          </div>
+        </div>
         <p>
           <strong>불일치는 정보</strong>: claw-code의 예상과 실제 행동이 다름 → 조정 필요<br />
           로그 기록 + 상태 보정 — 자동 복구 메커니즘의 일부<br />

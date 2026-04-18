@@ -1,8 +1,14 @@
+import PreventionFrameworkViz from './viz/PreventionFrameworkViz';
+import MonitoringSystemViz from './viz/MonitoringSystemViz';
+import ViolationResponseViz from './viz/ViolationResponseViz';
+
 export default function PreventionFramework() {
   return (
     <section id="prevention-framework" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">예방 체계와 준법감시</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <PreventionFrameworkViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">준법감시인의 역할</h3>
         <p className="leading-7">
@@ -54,6 +60,8 @@ export default function PreventionFramework() {
           이 때문에 법률은 준법감시인의 해임에 대한 보호 장치를 두고 있으며,
           준법감시인이 이사회에 직접 보고할 수 있는 경로를 보장한다.
         </p>
+
+        <MonitoringSystemViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">내부 감시 시스템</h3>
         <p className="leading-7">
@@ -157,6 +165,8 @@ export default function PreventionFramework() {
           <br />
           신고 채널의 활성화와 신고자 보호는 "비용 대비 효과"가 가장 높은 불공정거래 예방 수단이다.
         </p>
+
+        <ViolationResponseViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-4">위반 시 조치 절차</h3>
         <p className="leading-7">

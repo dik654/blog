@@ -34,45 +34,27 @@ export default function Autobahn() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         {/* ── Autobahn 등장 동기 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Autobahn 등장 동기</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 문제 인식 (2024):
-//
-// 전통 BFT (HotStuff, Tendermint):
-// - 낮은 정상 latency (3-4δ)
-// - but blip 복구 느림 (timeout + view change)
-// - f validators blip → 수 초 halt
-//
-// DAG-BFT (Narwhal, Mysticeti):
-// - 빠른 blip 복구 (parallel progress)
-// - but 높은 정상 latency
-// - DAG 구축 overhead
-//
-// "둘 다 얻을 수 없을까?"
-// - 낮은 happy-path latency + 빠른 blip 복구
-// - Autobahn의 도전
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-1">전통 BFT (HotStuff, Tendermint)</p>
+            <p className="text-sm">낮은 정상 latency (3-4δ). but blip 복구 느림 — timeout + view change로 <strong>~2-5s halt</strong>.</p>
+          </div>
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-1">DAG-BFT (Narwhal, Mysticeti)</p>
+            <p className="text-sm">빠른 blip 복구 (parallel progress, <strong>~100-200ms</strong>). but 높은 정상 latency + DAG 구축 overhead.</p>
+          </div>
+        </div>
 
-// Blip 정의:
-// - brief failure (단기 장애)
-// - 수 백 ms 동안 validator 응답 없음
-// - 네트워크 jitter, 일시적 DDoS, restart
-// - 현실 운영에서 자주 발생
-
-// 전통 BFT의 blip 복구:
-// - timeout 감지 (~1-3s)
-// - view change 시작
-// - new leader propose
-// - 복구 완료: ~2-5s
-//
-// DAG-BFT의 blip 복구:
-// - DAG 계속 성장 (다른 validator가 커버)
-// - blip validator 제외하고 진행
-// - 복구 완료: ~100-200ms
-
-// Autobahn의 해결:
-// - happy path: 전통 BFT 스타일 (저지연)
-// - blip 감지 시: DAG-like 구조로 전환
-// - hybrid benefit`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Blip(일시 장애) 정의</p>
+            <p className="text-sm">brief failure — 수 백 ms 동안 validator 응답 없음. 네트워크 jitter, 일시적 DDoS, restart 등. 현실 운영에서 자주 발생.</p>
+          </div>
+          <div className="rounded-lg border p-4 bg-muted/50">
+            <p className="font-semibold text-sm mb-1">Autobahn의 해결</p>
+            <p className="text-sm">happy path: 전통 BFT 스타일(저지연). blip 감지 시: DAG-like 구조로 전환. <strong>hybrid benefit</strong> — "둘 다 얻을 수 없을까?"에 대한 답.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Autobahn = <strong>BFT 저지연 + DAG 빠른 복구</strong>.<br />
           blip (일시 장애)는 현실 자주 발생.<br />
@@ -81,58 +63,44 @@ export default function Autobahn() {
 
         {/* ── Highway-Lanes 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Highway + Lanes 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Autobahn 2-tier architecture:
-//
-// Tier 1: Lanes (data dissemination)
-// - 각 validator가 독립 lane 소유
-// - TX batch 생성 + broadcast
-// - Narwhal-style parallel dissemination
-// - high throughput
-// - O(n) lanes in parallel
-//
-// Tier 2: Highway (consensus)
-// - sequential ordering
-// - BFT consensus on batch references
-// - low latency commit
-// - HotStuff-like 3-chain or 2-chain
-//
-// 분리의 장점:
-// - throughput decoupled from latency
-// - lanes handle heavy traffic
-// - highway handles ordering
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Tier 1: Lanes (data dissemination)</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>각 validator가 독립 lane 소유</li>
+              <li>TX batch 생성 + broadcast</li>
+              <li>Narwhal-style parallel dissemination</li>
+              <li><code className="text-xs">O(n)</code> lanes in parallel → high throughput</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Tier 2: Highway (consensus)</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>sequential ordering</li>
+              <li>BFT consensus on batch references</li>
+              <li>low latency commit</li>
+              <li>HotStuff-like 3-chain or 2-chain</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">분리의 장점: throughput decoupled from latency</p>
+          </div>
+        </div>
 
-// Ride-Sharing (piggyback):
-// - validator가 lane batch 만들 때
-// - 다른 validator의 batch signature 포함 (piggyback)
-// - additional messages 절감
-// - bandwidth 효율화
-//
-// 예:
-// validator A가 batch A1 생성:
-//   include ack(B3, C2) if received recently
-// validator B가 A1 받으면:
-//   ack(A1) + piggyback ack(C2) from A
-//
-// 결과:
-// - N^2 ack messages → N ack messages
-// - latency도 감소
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Ride-Sharing (piggyback)</p>
+          <p className="text-sm mb-2">validator가 lane batch 생성 시 다른 validator의 batch signature를 포함(piggyback) — additional messages 절감.</p>
+          <p className="text-sm text-muted-foreground">예: validator A가 batch A1 생성 시 <code className="text-xs">ack(B3, C2)</code> 포함 → <code className="text-xs">N²</code> ack → <code className="text-xs">N</code> ack. latency도 감소.</p>
+        </div>
 
-// Blip 복구 메커니즘:
-// - 정상 시: highway sequential commit
-// - validator failure 감지:
-//   - 해당 validator의 lane skip
-//   - 다른 validator의 batch로 continue
-// - failure 복구:
-//   - 누락된 batch replay
-//   - highway catch up
-
-// 성능 (SOSP 2024):
-// - happy path: 2-3δ latency (HotStuff급)
-// - blip recovery: 100-200ms (DAG급)
-// - throughput: 100K+ TPS
-// - validators: 50-100`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-1">Blip 복구 메커니즘</p>
+            <p className="text-sm">정상 시: highway sequential commit. validator failure 감지 → 해당 lane skip + 다른 batch로 continue. failure 복구 시 누락된 batch replay + highway catch up.</p>
+          </div>
+          <div className="rounded-lg border p-4 bg-muted/50">
+            <p className="font-semibold text-sm mb-1">성능 (SOSP 2024)</p>
+            <p className="text-sm">Happy path: 2-3δ (HotStuff급). Blip recovery: 100-200ms (DAG급). Throughput: 100K+ TPS. Validators: 50-100.</p>
+          </div>
+        </div>
         <p className="leading-7">
           Highway (consensus) + Lanes (dissemination) 분리.<br />
           Ride-Sharing = <strong>ack piggybacking으로 N² → N</strong>.<br />
@@ -141,54 +109,54 @@ export default function Autobahn() {
 
         {/* ── 실무 적용 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">실무 적용과 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Autobahn 비교:
-//
-// HotStuff:
-// - happy: 3δ
-// - blip: timeout + VC (2-5s)
-// - throughput: 25K TPS
-//
-// Narwhal+Bullshark:
-// - happy: 6-10δ (DAG overhead)
-// - blip: 100-200ms
-// - throughput: 100K+ TPS
-//
-// Mysticeti:
-// - happy: 3-4δ
-// - blip: 100-200ms
-// - throughput: 160K+ TPS
-// - 390ms e2e
-//
-// Autobahn:
-// - happy: 2-3δ
-// - blip: 100-200ms
-// - throughput: 100K+ TPS
-// - "best of both worlds"
+        <div className="overflow-x-auto not-prose mb-4">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-3 py-2 text-left">프로토콜</th>
+                <th className="border border-border px-3 py-2 text-left">Happy Path</th>
+                <th className="border border-border px-3 py-2 text-left">Blip 복구</th>
+                <th className="border border-border px-3 py-2 text-left">Throughput</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['HotStuff', '3δ', '2-5s (timeout + VC)', '25K TPS'],
+                ['Narwhal+Bullshark', '6-10δ', '100-200ms', '100K+ TPS'],
+                ['Mysticeti', '3-4δ (390ms e2e)', '100-200ms', '160K+ TPS'],
+                ['Autobahn', '2-3δ', '100-200ms', '100K+ TPS'],
+              ].map(([proto, happy, blip, tps]) => (
+                <tr key={proto}>
+                  <td className="border border-border px-3 py-2 font-medium">{proto}</td>
+                  <td className="border border-border px-3 py-2">{happy}</td>
+                  <td className="border border-border px-3 py-2">{blip}</td>
+                  <td className="border border-border px-3 py-2">{tps}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-// 2024년 현재 상황:
-// - Autobahn: 학술 (SOSP 2024)
-// - Mysticeti: mainnet (Sui)
-// - Jolteon: mainnet (Aptos)
-// - 각자 다른 접근
-
-// 미래 전망:
-// - DAG + sequential hybrid가 주류
-// - Autobahn 아이디어 채택 증가 예상
-// - 새 블록체인 (2025-) 선택지
-
-// 설계 교훈:
-// 1. happy path와 sad path 분리 설계
-// 2. piggyback으로 overhead 감소
-// 3. 각 tier에 최적 프로토콜 선택
-// 4. blip은 현실, 복구 속도 중요
-
-// 연구 방향:
-// - async-safe Autobahn
-// - adaptive pipeline depth
-// - privacy 통합
-// - execution layer 통합`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">2024년 현재 상황</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>Autobahn — 학술 (SOSP 2024)</li>
+              <li>Mysticeti — mainnet (Sui)</li>
+              <li>Jolteon — mainnet (Aptos)</li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-2">DAG + sequential hybrid가 주류 전망</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">설계 교훈</p>
+            <ol className="text-sm space-y-1 list-decimal pl-4">
+              <li>happy path와 sad path 분리 설계</li>
+              <li>piggyback으로 overhead 감소</li>
+              <li>각 tier에 최적 프로토콜 선택</li>
+              <li>blip은 현실 — 복구 속도 중요</li>
+            </ol>
+          </div>
+        </div>
         <p className="leading-7">
           Autobahn vs Mysticeti/Jolteon 비교 — <strong>happy path 최적</strong>.<br />
           2024 SOSP, 아직 mainnet 없음.<br />

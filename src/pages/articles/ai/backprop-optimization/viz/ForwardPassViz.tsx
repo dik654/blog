@@ -48,10 +48,19 @@ export default function ForwardPassViz() {
                   stroke={active ? n.color : '#80808040'}
                   strokeWidth={active ? 1.2 : 0.6}
                   transition={sp} />
-                {/* weight label */}
-                <text x={140} y={ny + (i === 0 ? 8 : i === 2 ? 28 : 16)}
-                  textAnchor="middle" fontSize={9}
-                  fill="var(--muted-foreground)">m={n.m}</text>
+                {/* weight label with opaque background */}
+                {(() => {
+                  const ly = ny + (i === 0 ? 8 : i === 2 ? 28 : 16);
+                  return (
+                    <g>
+                      <rect x={118} y={ly - 9} width={44} height={13} rx={3}
+                        fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
+                      <text x={140} y={ly}
+                        textAnchor="middle" fontSize={9}
+                        fontWeight={600} fill={n.color}>m={n.m}</text>
+                    </g>
+                  );
+                })()}
 
                 {/* neuron box */}
                 <motion.rect x={180} y={ny} width={110} height={36} rx={6}

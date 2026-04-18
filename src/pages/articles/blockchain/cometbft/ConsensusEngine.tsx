@@ -1,7 +1,7 @@
 import { CitationBlock } from '../../../../components/ui/citation';
 import { CodeViewButton } from '@/components/code';
 import TendermintRoundViz from './viz/TendermintRoundViz';
-import { ROUND_CODE, STATE_CODE, COMPARISON_TABLE } from './ConsensusEngineData';
+import { COMPARISON_TABLE } from './ConsensusEngineData';
 import { codeRefs } from './codeRefs';
 import type { CodeRef } from '@/components/code/types';
 
@@ -48,51 +48,59 @@ export default function ConsensusEngine({ onCodeRef }: { onCodeRef: (key: string
           +2/3 nil Prevote → Unlock
         </p>
         <CitationBlock source="cometbft/consensus/state.go" citeKey={2} type="code" href="https://github.com/cometbft/cometbft/blob/main/consensus/state.go">
-          <pre className="text-xs overflow-x-auto"><code>{STATE_CODE}</code></pre>
-          <p className="mt-2 text-xs text-foreground/70">합의 상태 머신의 핵심 구조체.</p>
+          <p className="text-xs text-foreground/70">합의 상태 머신의 핵심 구조체 — <code>RoundState</code>가 Height/Round/Step + LockedBlock + ValidBlock + Votes를 관리</p>
         </CitationBlock>
         {/* ── State Machine 전이 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">State Machine — 슬롯당 5 단계 전이</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// cometbft/consensus/state.go: RoundStepType
-const (
-    RoundStepNewHeight     = 1  // 새 높이 시작 대기
-    RoundStepNewRound      = 2  // 새 라운드 시작
-    RoundStepPropose       = 3  // proposer 블록 대기
-    RoundStepPrevote       = 4  // 2/3+ Prevote 수집
-    RoundStepPrevoteWait   = 5  // polka 대기 timeout
-    RoundStepPrecommit     = 6  // 2/3+ Precommit 수집
-    RoundStepPrecommitWait = 7  // commit 대기 timeout
-    RoundStepCommit        = 8  // 블록 finalize
-)
-
-// 상태 전이 흐름 (정상 경로):
-// NewHeight → NewRound → Propose → Prevote → Precommit → Commit
-//              ↑                                              ↓
-//              └────────── (round failed) ← Timeout ←────────┘
-
-// enterPropose (height H, round R):
-// 1. Proposer = 현재 round의 선정된 validator
-// 2. 내가 proposer면 → 블록 생성 + 방송
-// 3. 아니면 → proposer 블록 대기 (propose timeout)
-
-// enterPrevote:
-// 1. 받은 proposal validation
-// 2. valid → Prevote(block_hash)
-// 3. invalid/timeout → Prevote(nil)
-
-// enterPrevoteWait:
-// +2/3 Prevote 수집 못 하면 timeout 대기
-// timeout 후 enterPrecommit(nil) 강제
-
-// enterPrecommit:
-// 1. +2/3 Prevote 확인 → Precommit(block_hash) + lock
-// 2. +2/3 nil Prevote → Precommit(nil) + unlock
-// 3. 애매하면 Precommit(nil)
-
-// enterPrecommitWait / enterCommit:
-// +2/3 Precommit 확보 → enterCommit → block finalize`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2"><code>RoundStepType</code> — 8단계 상태</p>
+            <div className="grid grid-cols-[auto_auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span className="font-mono text-xs">1</span><code className="text-xs">NewHeight</code><span>새 높이 시작 대기</span>
+              <span className="font-mono text-xs">2</span><code className="text-xs">NewRound</code><span>새 라운드 시작</span>
+              <span className="font-mono text-xs">3</span><code className="text-xs">Propose</code><span>proposer 블록 대기</span>
+              <span className="font-mono text-xs">4</span><code className="text-xs">Prevote</code><span>2/3+ Prevote 수집</span>
+              <span className="font-mono text-xs">5</span><code className="text-xs">PrevoteWait</code><span>polka 대기 timeout</span>
+              <span className="font-mono text-xs">6</span><code className="text-xs">Precommit</code><span>2/3+ Precommit 수집</span>
+              <span className="font-mono text-xs">7</span><code className="text-xs">PrecommitWait</code><span>commit 대기 timeout</span>
+              <span className="font-mono text-xs">8</span><code className="text-xs">Commit</code><span>블록 finalize</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">정상 경로: NewHeight → NewRound → Propose → Prevote → Precommit → Commit<br />실패 시: Timeout → NewRound로 복귀</p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>enterPropose</code></p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>Proposer = 현재 round 선정 validator</li>
+                <li>내가 proposer → 블록 생성 + 방송</li>
+                <li>아니면 → proposer 블록 대기 (propose timeout)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>enterPrevote</code></p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>받은 proposal validation</li>
+                <li>유효 → <code>Prevote(block_hash)</code></li>
+                <li>무효/타임아웃 → <code>Prevote(nil)</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>enterPrecommit</code></p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>+2/3 Prevote 확인 → <code>Precommit(block_hash)</code> + lock</li>
+                <li>+2/3 nil Prevote → <code>Precommit(nil)</code> + unlock</li>
+                <li>애매하면 → <code>Precommit(nil)</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2"><code>enterCommit</code></p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>+2/3 Precommit 확보 → block finalize</li>
+                <li><code>PrevoteWait</code> timeout → <code>enterPrecommit(nil)</code> 강제</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Tendermint BFT는 <strong>8 단계 state machine</strong>.<br />
           각 단계가 명확한 전이 조건 + timeout 보장.<br />
@@ -101,62 +109,39 @@ const (
 
         {/* ── Lock 메커니즘 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Lock 메커니즘 — Safety 보장의 핵심</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Lock: validator가 특정 block에 commit 의사
-// safety를 위반하지 않기 위한 제약 조건
-
-// 구조:
-type State struct {
-    Height       int64
-    Round        int32
-    Step         RoundStepType
-
-    LockedRound int32      // 현재 lock된 round (-1 = unlock)
-    LockedBlock *Block     // 현재 lock된 block
-    LockedBlockParts *PartSet
-
-    ValidRound int32       // 가장 최근 valid block round
-    ValidBlock *Block
-}
-
-// Lock 규칙:
-// 1. Polka 발견 (+2/3 Prevote for block X)
-//    → lock = block X
-//    → Precommit(X) 방송
-//
-// 2. Lock된 상태에서 다른 block에 Prevote 못 함
-//    → safety 위반 방지
-//    → 만약 Prevote(Y)하면 equivocation = slashing
-//
-// 3. Unlock 조건:
-//    a. +2/3 nil Prevote 수집 (현재 round)
-//    b. 다른 block에 대한 polka 발견 (higher round)
-//    c. polka round > LockedRound
-//
-// 4. 새 round 시작 시:
-//    - Lock 유지 (safety)
-//    - 하지만 새 proposal이 LockedBlock이면 Prevote 가능
-
-// Safety 증명:
-// 두 validator가 서로 다른 block을 finalize 불가
-// 이유:
-// - Block X finalize = 2/3+ Precommit(X)
-// - Precommit(X)한 validator는 X에 lock됨
-// - lock된 validator는 다른 Y에 Prevote 불가
-// - 따라서 Y는 2/3+ Prevote 못 받음 = finalize 불가
-// - 2/3 vs 1/3 = 최소 1/3 overlap → 슬래싱 가능
-
-// Lock 예시:
-// Round 0: Proposer A가 block1 제안 → Prevote(block1) → polka → lock(block1)
-//          Round 0 commit 실패 (네트워크 장애 등)
-// Round 1: 새 Proposer B가 block2 제안
-//          나는 locked(block1) → Prevote(nil)
-//          block2가 polka 달성 불가 → round 1 실패
-// Round 2: 다시 제안...
-//          만약 다른 validator들이 block2에 polka 달성
-//          → 나도 unlock → Prevote(block2) 가능
-//          → block2 finalize`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2"><code>State</code> 구조체 — Lock 관련 필드</p>
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <code className="text-xs">LockedRound int32</code><span>현재 lock된 round (-1 = unlock)</span>
+              <code className="text-xs">LockedBlock *Block</code><span>현재 lock된 block</span>
+              <code className="text-xs">LockedBlockParts *PartSet</code><span>lock된 block의 파트셋</span>
+              <code className="text-xs">ValidRound int32</code><span>가장 최근 valid block round</span>
+              <code className="text-xs">ValidBlock *Block</code><span>가장 최근 valid block</span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">Lock 규칙 4가지</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p><strong className="text-foreground">1. Polka 발견</strong> — +2/3 Prevote for block X → lock = block X → <code>Precommit(X)</code> 방송</p>
+              <p><strong className="text-foreground">2. Lock 유지</strong> — lock된 상태에서 다른 block에 Prevote 불가 (위반 = equivocation → slashing)</p>
+              <p><strong className="text-foreground">3. Unlock 조건</strong> — a) +2/3 nil Prevote 수집 b) 다른 block의 polka 발견 (higher round) c) polka round &gt; <code>LockedRound</code></p>
+              <p><strong className="text-foreground">4. 새 round</strong> — Lock 유지 (safety), 단 새 proposal이 <code>LockedBlock</code>이면 Prevote 가능</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">Safety 증명</p>
+            <p className="text-sm text-muted-foreground">Block X finalize = 2/3+ <code>Precommit(X)</code> → X에 lock됨 → 다른 Y에 Prevote 불가 → Y는 2/3+ Prevote 불가 = finalize 불가<br />2/3 vs 1/3 = 최소 1/3 overlap → 슬래싱 가능</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2">Lock 예시</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p><strong className="text-foreground">Round 0</strong> — Proposer A가 block1 제안 → <code>Prevote(block1)</code> → polka → <code>lock(block1)</code>. commit 실패 (네트워크 장애)</p>
+              <p><strong className="text-foreground">Round 1</strong> — Proposer B가 block2 제안 → 나는 <code>locked(block1)</code> → <code>Prevote(nil)</code>. block2 polka 불가 → round 1 실패</p>
+              <p><strong className="text-foreground">Round 2</strong> — 다른 validator들이 block2에 polka 달성 → 나도 unlock → <code>Prevote(block2)</code> → block2 finalize</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Lock 메커니즘</strong>이 BFT safety의 핵심.<br />
           한 block에 Precommit한 validator는 다른 block 투표 불가.<br />
@@ -165,47 +150,40 @@ type State struct {
 
         {/* ── Timeout 전략 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Timeout 전략 — Liveness 보장</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 단계별 timeout (cometbft/types/params.go)
-type ConsensusParams struct {
-    TimeoutPropose      time.Duration  // 3s (기본)
-    TimeoutProposeDelta time.Duration  // 500ms
-    TimeoutPrevote      time.Duration  // 1s
-    TimeoutPrevoteDelta time.Duration  // 500ms
-    TimeoutPrecommit    time.Duration  // 1s
-    TimeoutPrecommitDelta time.Duration // 500ms
-    TimeoutCommit       time.Duration  // 1s
-}
-
-// Round마다 timeout 증가:
-// Round 0: propose 3s, prevote 1s, precommit 1s
-// Round 1: propose 3.5s, prevote 1.5s, precommit 1.5s
-// Round 2: propose 4s, prevote 2s, precommit 2s
-// ...
-
-// 이유: 네트워크 상태 변동에 적응
-// - 초기 시도: 낙관적 짧은 timeout
-// - 실패 반복 → 네트워크 문제 가능성 → 증가
-// - 무한 round 불가 (천장 있음)
-
-// Round 실패 시나리오:
-// 1. Proposer 오프라인
-//    → propose timeout → Prevote(nil) → round 실패
-// 2. +2/3 Prevote 미달성
-//    → prevoteWait timeout → Precommit(nil) → round 실패
-// 3. +2/3 Precommit 미달성
-//    → precommitWait timeout → NewRound
-
-// 3-5 round 내 대부분 성공 (메인넷 경험):
-// - Round 0 성공률: ~95%
-// - Round 1 성공률: ~99%
-// - Round 3+: 매우 드물게 발생 (주요 네트워크 장애)
-
-// Liveness 조건:
-// - 2/3+ honest validators
-// - 네트워크 궁극적 전달 (eventual delivery)
-// - round 계속 증가 → 결국 성공 보장`}
-        </pre>
+        <div className="not-prose grid gap-4 mb-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-foreground mb-2"><code>ConsensusParams</code> — 단계별 timeout</p>
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <code className="text-xs">TimeoutPropose</code><span>3s (기본)</span>
+              <code className="text-xs">TimeoutProposeDelta</code><span>500ms</span>
+              <code className="text-xs">TimeoutPrevote</code><span>1s</span>
+              <code className="text-xs">TimeoutPrevoteDelta</code><span>500ms</span>
+              <code className="text-xs">TimeoutPrecommit</code><span>1s</span>
+              <code className="text-xs">TimeoutPrecommitDelta</code><span>500ms</span>
+              <code className="text-xs">TimeoutCommit</code><span>1s</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">Round별 증가: R0 → propose 3s, R1 → 3.5s, R2 → 4s ... 네트워크 상태에 적응</p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">Round 실패 시나리오</p>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p><strong className="text-foreground">1. Proposer 오프라인</strong> — propose timeout → <code>Prevote(nil)</code> → round 실패</p>
+                <p><strong className="text-foreground">2. +2/3 Prevote 미달성</strong> — prevoteWait timeout → <code>Precommit(nil)</code> → round 실패</p>
+                <p><strong className="text-foreground">3. +2/3 Precommit 미달성</strong> — precommitWait timeout → NewRound</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-foreground mb-2">메인넷 성공률</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p>Round 0 성공률: <strong className="text-foreground">~95%</strong></p>
+                <p>Round 1 성공률: <strong className="text-foreground">~99%</strong></p>
+                <p>Round 3+: 매우 드물게 발생 (주요 네트워크 장애)</p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">Liveness 조건: 2/3+ honest validators + eventual delivery → round 증가로 결국 성공 보장</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <strong>Round별 증가하는 timeout</strong>이 liveness 확보.<br />
           네트워크 장애 시 점진적 대기 증가 → 결국 성공.<br />

@@ -28,11 +28,11 @@ export const POINTS = [
   { cls: 1, hx: 105, hy: 60, lx: 142, ly: 28 },
   { cls: 1, hx: 115, hy: 45, lx: 148, ly: 32 },
   // Class C (green)
-  { cls: 2, hx: 70, hy: 100, lx: 100, ly: 80 },
-  { cls: 2, hx: 80, hy: 90, lx: 95, ly: 75 },
-  { cls: 2, hx: 65, hy: 95, lx: 105, ly: 82 },
-  { cls: 2, hx: 75, hy: 105, lx: 98, ly: 85 },
-  { cls: 2, hx: 85, hy: 85, lx: 102, ly: 78 },
+  { cls: 2, hx: 70, hy: 80, lx: 100, ly: 72 },
+  { cls: 2, hx: 80, hy: 75, lx: 95, ly: 68 },
+  { cls: 2, hx: 65, hy: 82, lx: 105, ly: 74 },
+  { cls: 2, hx: 75, hy: 85, lx: 98, ly: 76 },
+  { cls: 2, hx: 85, hy: 72, lx: 102, ly: 70 },
 ];
 
 export const COLORS = ['#ef4444', '#3b82f6', '#10b981'];

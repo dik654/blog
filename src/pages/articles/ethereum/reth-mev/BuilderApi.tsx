@@ -34,64 +34,35 @@ export default function BuilderApi({ onCodeRef }: { onCodeRef: (key: string, ref
 
         {/* ── rbuilder 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">rbuilder — Reth 기반 MEV 빌더</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// rbuilder: Flashbots가 만든 Rust MEV 빌더
-// https://github.com/flashbots/rbuilder
-//
-// Reth를 라이브러리로 사용 → 블록 실행 엔진 재활용
-// builder 전용 로직만 추가 구현
-
-use reth::providers::StateProviderFactory;
-use reth_primitives::{Block, Transaction};
-
-pub struct Builder {
-    // Reth provider
-    state_provider: Arc<dyn StateProviderFactory>,
-
-    // Builder 전용
-    bundles: Arc<DashMap<BundleId, Bundle>>,
-    block_assembler: BlockAssembler,
-    bid_submitter: RelaySubmitter,
-}
-
-impl Builder {
-    pub async fn build_block(
-        &self,
-        slot: u64,
-        parent_hash: B256,
-        attrs: PayloadAttributes,
-    ) -> Result<BuiltBlock> {
-        // 1. 모든 번들 수집
-        let bundles = self.bundles.iter().collect::<Vec<_>>();
-
-        // 2. Reth의 state provider로 초기 상태 로드
-        let state = self.state_provider.state_at_block_hash(parent_hash)?;
-
-        // 3. 번들 조합 최적화 (bin packing 변종)
-        let best_combo = self.block_assembler.optimize(
-            bundles,
-            self.public_mempool_txs(),
-            attrs.gas_limit,
-        ).await?;
-
-        // 4. Reth의 revm으로 실행 & 검증
-        let block = execute_and_seal(best_combo, state, &attrs)?;
-
-        // 5. block_value 계산 + relay에 bid 제출
-        let value = calculate_builder_profit(&block);
-        self.bid_submitter.submit(slot, &block, value).await?;
-
-        Ok(block)
-    }
-}
-
-// Reth 재사용 요소:
-// - state provider
-// - revm executor
-// - MPT (state_root 계산)
-// - RLP encoding
-// - chain spec`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Builder 구조체 (rbuilder)</p>
+            <p className="text-sm text-foreground/60 mb-2">Flashbots가 만든 Rust MEV 빌더. Reth를 라이브러리로 사용.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
+              <span><code>state_provider: Arc&lt;dyn StateProviderFactory&gt;</code></span>
+              <span><code>bundles: Arc&lt;DashMap&lt;BundleId, Bundle&gt;&gt;</code></span>
+              <span><code>block_assembler: BlockAssembler</code></span>
+              <span><code>bid_submitter: RelaySubmitter</code></span>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">build_block 흐름</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. 모든 번들 수집 (<code>bundles.iter()</code>)</p>
+              <p>2. <code>state_provider.state_at_block_hash(parent_hash)</code>로 초기 상태 로드</p>
+              <p>3. <code>block_assembler.optimize(bundles, mempool_txs, gas_limit)</code> — bin packing 변종</p>
+              <p>4. <code>execute_and_seal()</code> — Reth의 revm으로 실행 & 검증</p>
+              <p>5. <code>bid_submitter.submit(slot, block, value)</code> — relay에 bid 제출</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">state provider</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">revm executor</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">MPT</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">RLP encoding</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">chain spec</div>
+          </div>
+        </div>
         <p className="leading-7">
           rbuilder가 <strong>Reth의 첫 번째 대규모 downstream 프로젝트</strong>.<br />
           Reth를 라이브러리로 사용 → 블록 실행 엔진 재구현 불필요.<br />
@@ -100,55 +71,23 @@ impl Builder {
 
         {/* ── block assembler 최적화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Block Assembler — NP-hard 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 번들 + 공개 TX 조합 문제
-//
-// 제약:
-// - gas_limit 30M 초과 불가
-// - 번들은 atomic (전부 or 전무)
-// - TX 간 state 충돌 가능 (예: 같은 Uniswap pool 사용)
-// - 번들 간 수익 의존성 (A 실행 시 B 수익 감소 등)
-//
-// 목표: total_value 최대화
-
-// 완전 탐색: 2^N 조합 (N=번들 수)
-// 1000개 번들 → 2^1000 = 불가능
-
-// 근사 알고리즘:
-// 1. Greedy: 수익/gas 비율 높은 순으로 선택
-// 2. Simulated Annealing: 랜덤 perturbation + 수용 확률
-// 3. Beam Search: top K 후보 유지
-// 4. Parallel Execution Simulation
-
-// rbuilder의 전략:
-// - 여러 algorithm을 병렬 실행
-// - 가장 높은 block_value 결과 선택
-// - 매 50ms마다 새 결과 생성 (continuous building)
-
-fn bin_packing_greedy(
-    bundles: &[Bundle],
-    txs: &[Transaction],
-    gas_limit: u64,
-) -> Block {
-    // 1. 수익 기준 정렬
-    let mut candidates = bundles.iter().chain(txs.iter())
-        .collect::<Vec<_>>();
-    candidates.sort_by_key(|c| -c.expected_value() as i64);
-
-    let mut block = Block::new();
-    for candidate in candidates {
-        if block.gas_used + candidate.gas_limit() > gas_limit { continue; }
-        if block.has_conflict(&candidate) { continue; }
-
-        // 시뮬레이션 실행 → 수익 확인
-        let simulated = simulate_in_context(&block, candidate);
-        if simulated.is_profitable() {
-            block.add(candidate);
-        }
-    }
-    block
-}`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Block Assembler — NP-hard 최적화</p>
+            <p className="text-sm text-foreground/80 mb-2">제약: <code>gas_limit</code> 30M 이하 / 번들 atomic / TX 간 state 충돌 가능 / 번들 간 수익 의존성. 완전 탐색: 2^N 불가능.</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-center mb-2">
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">Greedy</p><p className="text-xs text-foreground/40">수익/gas 비율 순</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">SA</p><p className="text-xs text-foreground/40">랜덤 perturbation</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">Beam Search</p><p className="text-xs text-foreground/40">top K 후보 유지</p></div>
+              <div className="rounded border border-border/40 p-2"><p className="text-foreground/60">Parallel Sim</p><p className="text-xs text-foreground/40">병렬 시뮬레이션</p></div>
+            </div>
+            <p className="text-sm text-foreground/60">rbuilder: 여러 알고리즘 병렬 실행 → 최고 block_value 선택. 매 50ms 새 결과 생성(continuous building).</p>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">bin_packing_greedy</p>
+            <p className="text-sm text-foreground/80">수익 기준 정렬 → gas 초과 skip → conflict skip → <code>simulate_in_context()</code>로 수익 확인 → profitable이면 추가.</p>
+          </div>
+        </div>
         <p className="leading-7">
           블록 조립은 <strong>제약 조건 하 최적화 문제</strong> — NP-hard.<br />
           완전 탐색 불가 → 근사 알고리즘 병렬 실행 후 best 결과 선택.<br />
@@ -157,50 +96,30 @@ fn bin_packing_greedy(
 
         {/* ── Bid 제출 & 선택 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Bid 제출 & Validator 선택</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Builder → Relay: bid 제출
-POST /relay/v1/builder/blocks
-Body: {
-  "message": {
-    "slot": 12345,
-    "parent_hash": "0x...",
-    "block_hash": "0x...",
-    "builder_pubkey": "0x...",
-    "proposer_pubkey": "0x...",
-    "proposer_fee_recipient": "0x...",
-    "gas_limit": 30000000,
-    "gas_used": 29800000,
-    "value": "150000000000000000",  // 0.15 ETH bid
-  },
-  "execution_payload": {  // full block
-    "parent_hash": "0x...",
-    "transactions": [ ... ],
-    "withdrawals": [ ... ]
-  },
-  "signature": "0x..."  // builder 서명
-}
-
-// Builder의 수익 분배:
-// - 사용자 priority_fee 수집: 0.20 ETH
-// - bid 금액 (validator에게 지급): 0.15 ETH
-// - Builder 순이익: 0.05 ETH (MEV + priority fee 일부)
-
-// Relay의 검증:
-// 1. 서명 확인 (builder_pubkey)
-// 2. value >= min_bid (relay 정책)
-// 3. gas_used <= gas_limit
-// 4. execution_payload 유효성
-
-// Validator의 선택:
-// GET /relay/v1/builder/header (get best bid)
-// → relay가 가장 높은 value bid 반환
-// → validator가 서명 후 getPayload
-
-// 시간 게임:
-// - 빌더: 늦을수록 더 많은 번들 수집 가능 (수익 ↑)
-// - 하지만 너무 늦으면 validator가 self-build 선택
-// - 약 3~4초가 균형점`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">Bid 제출 — <code>POST /relay/v1/builder/blocks</code></p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80 mb-2">
+              <span><code>slot</code>, <code>parent_hash</code>, <code>block_hash</code></span>
+              <span><code>builder_pubkey</code>, <code>proposer_pubkey</code></span>
+              <span><code>gas_limit</code> / <code>gas_used</code></span>
+              <span><code>value</code> — bid 금액(wei)</span>
+              <span><code>execution_payload</code> — full block</span>
+              <span><code>signature</code> — builder 서명</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded border border-border/40 p-3 text-sm">
+              <p className="text-xs font-bold text-foreground/60 mb-1">수익 분배 예시</p>
+              <p className="text-foreground/70">priority_fee 수집: 0.20 ETH / bid(validator): 0.15 ETH / builder 순이익: 0.05 ETH</p>
+            </div>
+            <div className="rounded border border-border/40 p-3 text-sm">
+              <p className="text-xs font-bold text-foreground/60 mb-1">Relay 검증</p>
+              <p className="text-foreground/70">서명 확인 / <code>value &gt;= min_bid</code> / <code>gas_used &lt;= gas_limit</code> / payload 유효성</p>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/60">시간 게임: 늦을수록 더 많은 번들 수집(수익 상승) vs 너무 늦으면 self-build 선택. 균형점 ~3~4초.</p>
+        </div>
         <p className="leading-7">
           Builder는 <strong>bid 금액으로 validator 유혹</strong>.<br />
           builder의 수익 = total_mev - validator_bid → 더 많이 양보하면 validator에 더 많이 선택됨.<br />

@@ -28,56 +28,32 @@ export default function Bullshark({ onCodeRef }: { onCodeRef?: (key: string, ref
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         {/* ── Wave & Anchor ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Wave 구조와 Anchor</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bullshark Wave 구조:
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Wave (sync mode, fast path)</p>
+            <p className="text-sm mb-1">2 rounds/wave. <code className="text-xs">wave_leader = round_r</code>의 designated validator.</p>
+            <p className="text-sm"><strong>Anchor commit</strong>: leader vertex <code className="text-xs">L_w</code>에 <code className="text-xs">f+1+</code> votes(references from r+1) → committed + causal history all committed.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Wave (async mode, fallback)</p>
+            <p className="text-sm">4 rounds/wave. randomized leader(coin-flip or VRF). slower but async-safe.</p>
+            <p className="text-sm mt-1 text-muted-foreground">Anchor selection: <code className="text-xs">leader_w = schedule(w mod n)</code> (round-robin) or reputation-based.</p>
+          </div>
+        </div>
 
-// Wave (sync mode, fast):
-// - 2 rounds per wave
-// - wave_leader = round_r's designated validator
-// - round r: leader proposes vertex
-// - round r+1: validators reference leader
-//
-// Anchor commit rule (fast path):
-// - wave w의 leader vertex L_w
-// - L_w에 f+1+ votes (references from r+1)
-// - L_w committed
-// - L_w의 causal history all committed
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Total Order Extraction</p>
+          <ol className="text-sm space-y-1 list-decimal pl-4">
+            <li>Committed anchors: <code className="text-xs">L_w1 → L_w2 → L_w3 → ...</code></li>
+            <li>각 anchor L에서 BFS → causal history 수집 → <code className="text-xs">(round, author)</code>로 정렬</li>
+            <li>deterministic total order</li>
+          </ol>
+        </div>
 
-// Wave (async mode, fallback):
-// - 4 rounds per wave
-// - randomized leader
-// - coin-flip or VRF
-// - slower but async-safe
-
-// Anchor selection:
-// - leader_w = schedule(w mod n)
-// - deterministic round-robin
-// - 또는 reputation-based (DiemBFT 스타일)
-
-// Vote collection:
-// - L_w가 round r에 있을 때
-// - round r+1에서 L_w를 parent로 가진 vertex 수 체크
-// - >= f+1 = committed (fast path)
-// - < f+1 = wait for next wave
-
-// Total Order Extraction:
-// 1. Committed anchors: L_w1, L_w2, L_w3, ...
-// 2. For each anchor L:
-//    - BFS on DAG from L
-//    - collect all causal history
-//    - order by round, then author
-// 3. deterministic total order
-
-// 예시 (n=4):
-// wave 1 leader = V1
-// Round 1: V1, V2, V3, V4 propose
-// Round 2: V1, V2, V3, V4 propose
-//   - V1, V2, V3 all reference V1's r1 vertex
-//   - V4 references V2's r1
-//   - V1's r1 가 3 votes (f+1 = 2 이상)
-//   - V1's r1 = anchor → committed
-// 3 rounds later anchor commit 가능`}
-        </pre>
+        <div className="rounded-lg border p-4 bg-muted/50 not-prose mb-4">
+          <p className="font-semibold text-sm mb-1">예시 (<code className="text-xs">n=4</code>)</p>
+          <p className="text-sm">wave 1 leader = V1. Round 1-2: V1-V4 propose. V1/V2/V3가 V1의 r1 vertex 참조 → 3 votes(<code className="text-xs">f+1=2</code> 이상) → V1의 r1 = anchor → committed.</p>
+        </div>
         <p className="leading-7">
           Wave = <strong>2 rounds (sync) or 4 rounds (async)</strong>.<br />
           anchor = wave 첫 round의 leader vertex.<br />
@@ -86,60 +62,43 @@ export default function Bullshark({ onCodeRef }: { onCodeRef?: (key: string, ref
 
         {/* ── Commit Rule & Safety ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Commit Rule &amp; Safety</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bullshark Commit Rule:
-//
-// anchor(w): wave w의 leader vertex
-// links(L, r): round r에서 L을 ancestor로 하는 vertex 수
-//
-// fast path commit:
-// commit anchor(w) iff:
-//     links(anchor(w), w.round + 1) >= f+1
-//
-// slow path (async):
-// - random leader per wave
-// - coin-flip for tie-breaking
-// - 확률적 commit (expected time bounded)
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Fast Path Commit Rule</p>
+            <p className="text-sm"><code className="text-xs">anchor(w)</code>: wave w의 leader vertex. <code className="text-xs">links(L, r)</code>: round r에서 L을 ancestor로 하는 vertex 수.</p>
+            <p className="text-sm mt-1">commit <code className="text-xs">anchor(w)</code> iff <code className="text-xs">links(anchor(w), w.round+1) &gt;= f+1</code></p>
+            <p className="text-sm mt-1 text-muted-foreground">Slow path(async): random leader/wave + coin-flip → 확률적 commit.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Safety 증명 sketch</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li><code className="text-xs">f+1</code> links → 최소 1 honest validator referenced</li>
+              <li>honest validator는 conflicting anchor 안 만듦</li>
+              <li>anchor commit = irreversible</li>
+              <li>future waves도 이 anchor 포함(causal history)</li>
+            </ul>
+          </div>
+        </div>
 
-// Safety 증명 sketch:
-// - f+1 links → at least 1 honest validator referenced
-// - honest validator는 conflicting anchor 안 만듦
-// - anchor commit = irreversible
-// - future waves도 이 anchor 포함 (causal history)
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Liveness</p>
+            <p className="text-sm">sync mode: GST 이후 매 wave commit. async mode: 확률 1로 commit(randomized). 어떤 환경에서도 progress 보장.</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">Ordering</p>
+            <ol className="text-sm space-y-1 list-decimal pl-4">
+              <li>committed anchor 순서(wave 순)</li>
+              <li>각 anchor 내부: causal history → <code className="text-xs">(round, author)</code> deterministic</li>
+              <li>linear total order</li>
+            </ol>
+          </div>
+        </div>
 
-// Liveness:
-// - sync mode: GST 이후 매 wave commit
-// - async mode: 확률 1로 commit (randomized)
-// - 어떤 환경에서도 progress 보장
-
-// Ordering:
-// 1. committed anchor 순서 (wave 순)
-// 2. 각 anchor 내부:
-//    - causal history (ancestors in DAG)
-//    - 순서: (round, author)로 deterministic
-// 3. linear total order
-
-// 구체적 algorithm:
-// function commit_order(new_anchor):
-//     to_commit = []
-//     visited = set()
-//     queue = [new_anchor]
-//     while queue:
-//         v = queue.pop()
-//         if v in visited: continue
-//         visited.add(v)
-//         to_commit.append(v)
-//         for p in v.parents:
-//             if not committed(p):
-//                 queue.append(p)
-//     sort by (round, author)
-//     return to_commit
-
-// 주의:
-// - 이전 wave의 uncommitted vertex도 포함
-// - skip된 anchor의 history도 포함
-// - 모든 reliable broadcast된 vertex 결국 ordered`}
-        </pre>
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">commit_order 알고리즘</p>
+          <p className="text-sm">new_anchor에서 BFS → 미committed 모든 parents 수집 → <code className="text-xs">(round, author)</code>로 정렬. 이전 wave의 uncommitted vertex + skip된 anchor history 모두 포함 → 모든 reliable broadcast vertex 결국 ordered.</p>
+        </div>
         <p className="leading-7">
           Commit rule: <strong>anchor의 f+1+ links → commit</strong>.<br />
           Safety: f+1 중 정직 1명 → conflicting anchor 불가.<br />
@@ -148,56 +107,37 @@ export default function Bullshark({ onCodeRef }: { onCodeRef?: (key: string, ref
 
         {/* ── 성능 및 한계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Bullshark 성능 및 후속 연구</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bullshark 성능 (CCS 2022 paper):
-//
-// Setup:
-// - 10 validators, 4 workers each
-// - AWS 다중 리전 (WAN)
-// - BLS12-381 signatures
-//
-// 측정:
-// - throughput: 130K+ TPS
-// - latency: 2s (WAN, fast path)
-// - bandwidth: 8.5 Gbps aggregate
-// - CPU: under 50%
+        <div className="rounded-lg border p-4 not-prose mb-4">
+          <p className="font-semibold text-sm mb-2">Bullshark 벤치마크 (CCS 2022)</p>
+          <p className="text-sm text-muted-foreground mb-2">Setup: 10 validators, 4 workers each, AWS WAN, BLS12-381</p>
+          <div className="grid sm:grid-cols-4 gap-2 text-sm">
+            <div className="rounded border p-2 text-center"><p className="font-semibold">130K+</p><p className="text-xs text-muted-foreground">TPS</p></div>
+            <div className="rounded border p-2 text-center"><p className="font-semibold">2s</p><p className="text-xs text-muted-foreground">Latency (WAN)</p></div>
+            <div className="rounded border p-2 text-center"><p className="font-semibold">8.5 Gbps</p><p className="text-xs text-muted-foreground">Bandwidth</p></div>
+            <div className="rounded border p-2 text-center"><p className="font-semibold">&lt;50%</p><p className="text-xs text-muted-foreground">CPU</p></div>
+          </div>
+          <p className="text-sm mt-2 text-muted-foreground">비교: Narwhal 단독 600K TPS(mempool) / HotStuff 10K TPS / Tendermint 5K TPS</p>
+        </div>
 
-// 비교:
-// Narwhal 단독 (no ordering): 600K TPS (mempool only)
-// Bullshark (with ordering): 130K TPS (consensus bound)
-// HotStuff (sequential): 10K TPS
-// Tendermint: 5K TPS
-
-// Bullshark 한계:
-// - latency 여전히 높음 (2s)
-// - wave 단위 commit (2-round batching)
-// - async mode 복잡
-// - leader bottleneck 여전 (anchor)
-
-// 후속 프로토콜:
-//
-// Shoal (2023):
-// - pipelined Bullshark
-// - multiple anchors per wave
-// - latency 감소
-//
-// Mysticeti (2024):
-// - uncertified DAG (no 2f+1 signatures)
-// - 3-round commit (vs Bullshark 4-round)
-// - 390ms e2e latency
-// - Sui mainnet
-//
-// Shoal++ (2024):
-// - further optimizations
-// - reputation-based leader
-// - sub-second latency
-
-// 미래 방향:
-// - sub-second DAG commit
-// - async-safe without fallback
-// - privacy-preserving DAG
-// - shared DAG across chains`}
-        </pre>
+        <div className="grid gap-3 sm:grid-cols-2 not-prose mb-4">
+          <div className="rounded-lg border border-destructive/30 p-4">
+            <p className="font-semibold text-sm mb-2">Bullshark 한계</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li>latency 여전히 높음(2s)</li>
+              <li>wave 단위 commit(2-round batching)</li>
+              <li>async mode 복잡</li>
+              <li>leader bottleneck 여전(anchor)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">후속 프로토콜</p>
+            <ul className="text-sm space-y-1 list-disc pl-4">
+              <li><strong>Shoal</strong> (2023) — pipelined Bullshark, multiple anchors/wave, latency 감소</li>
+              <li><strong>Mysticeti</strong> (2024) — uncertified DAG, 3-round commit, 390ms e2e, Sui mainnet</li>
+              <li><strong>Shoal++</strong> (2024) — reputation-based leader, sub-second latency</li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Bullshark: <strong>130K TPS, 2s latency (WAN)</strong>.<br />
           Shoal, Mysticeti가 latency 개선 (390ms).<br />

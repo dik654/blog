@@ -14,60 +14,53 @@ export default function DiemBFT() {
 
         {/* ── Leader Reputation ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Leader Reputation 메커니즘</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Leader Reputation 문제 인식:
-//
-// 기존 round-robin leader:
-// - 모든 validator가 동등한 차례
-// - 네트워크 약한 validator도 leader
-// - leader 실패 시 view change 지연
-// - system throughput 저하
-//
-// 해결: 최근 성능 기반 선출
-// - 성공한 leader → 자주 선출
-// - 실패한 leader → 제외 or 후순위
-// - 동적 조정
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">문제: Round-Robin Leader</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>모든 validator가 동등한 차례</li>
+              <li>네트워크 약한 validator도 leader</li>
+              <li>leader 실패 시 view change 지연</li>
+              <li>system throughput 저하</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Reputation 계산</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>window = 지난 W 라운드 (예: W=100)</p>
+              <p><code className="text-xs">reputation(v) = successes / (successes + failures + 1)</code></p>
+              <p>Leader 선출: <code className="text-xs">prob(v) = reputation(v) / Σ reputation(v_i)</code></p>
+              <p>VRF or hash-based weighted random</p>
+            </div>
+          </div>
+        </div>
 
-// Reputation 계산:
-//
-// window = 지난 W 라운드 (e.g., W=100)
-// for each validator v:
-//     successes = # rounds where v was leader and committed
-//     failures = # rounds where v was leader and timed out
-//     reputation(v) = successes / (successes + failures + 1)
-//
-// Leader 선출 (weighted random):
-// prob(v) = reputation(v) / Σ reputation(v_i)
-// 가중 확률 기반 random
-
-// 실제 구현 (DiemBFT v4):
-// - active validator set (ActiveValidatorSet)
-// - reputation score tracked per round
-// - leader_selection: pseudo-random weighted
-// - VRF or hash-based randomness
-
-// 효과:
-// - 빠른 leader = 더 자주 선출
-// - 느린 leader = 덜 선출
-// - 악의적 leader = exclude 가능
-// - throughput 향상
-
-// 공격 완화:
-// - bribery 공격: 일시적 선출 증가만
-// - long-term 평판으로 평가
-// - sudden failure = 즉시 demotion
-
-// 제한사항:
-// - 초기에는 random (reputation 없음)
-// - reputation 축적 필요
-// - window 크기 trade-off
-
-// Aptos 실측 (2024):
-// - validator ~100
-// - leader rotation: 매 round
-// - reputation 기반: ~80% 고성능 leader
-// - throughput: 100K+ TPS`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">효과</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>빠른 leader = 더 자주 선출</li>
+              <li>악의적 leader = exclude 가능</li>
+              <li>throughput 향상</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">제한사항</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>초기에는 random (reputation 없음)</li>
+              <li>reputation 축적 필요</li>
+              <li>window 크기 trade-off</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Aptos 실측 (2024)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>validator ~100, 매 round rotation</li>
+              <li>reputation 기반: ~80% 고성능 leader</li>
+              <li>throughput: <code className="text-xs">100K+ TPS</code></li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
           Leader Reputation = <strong>성과 기반 weighted 선출</strong>.<br />
           느린/실패한 leader를 자동 demotion.<br />
@@ -76,61 +69,44 @@ export default function DiemBFT() {
 
         {/* ── Pacemaker 상세 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Pacemaker: View Synchronization</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DiemBFT Pacemaker 역할:
-// - view 증가 관리
-// - timeout 추적
-// - TC 생성
-// - view synchronization
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Pacemaker 역할</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>view(round) 증가 관리 — round ↔ leader 1:1 매핑</li>
+              <li>timeout 추적 + TC 생성</li>
+              <li>view synchronization — consecutive rounds 보장 (2-chain)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">Timeout 관리</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><code className="text-xs">timeout(round) = base_timeout * γ^k</code></p>
+              <p><code className="text-xs">base_timeout = 1s</code>, <code className="text-xs">γ = 1.2</code> (geometric backoff)</p>
+              <p>k = round 지속 시간. Byzantine premature timeout 방어: TC로 자동 동기화</p>
+            </div>
+          </div>
+        </div>
 
-// Round 구조:
-// - round = view in HotStuff 용어
-// - round ↔ leader 1:1 매핑
-// - consecutive rounds 필요 (2-chain)
+        <div className="not-prose grid grid-cols-1 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Pacemaker 루프</div>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><strong>1.</strong> <code className="text-xs">leader = leader_selection(round)</code> → leader면 propose, timer 시작</p>
+              <p><strong>2.</strong> QC(round) 수신 → process QC, next round / TC(round) 수신 → skip to <code className="text-xs">TC.round+1</code></p>
+              <p><strong>3.</strong> timeout 시 → <code className="text-xs">Timeout(round, highQC, highTC)</code> 전송 → 2f+1 수집 → <code className="text-xs">TC(round)</code> 형성 → next round</p>
+            </div>
+          </div>
+        </div>
 
-// Timeout 관리:
-// timeout(round) = base_timeout * γ^k
-// - base_timeout = 1s
-// - γ = 1.2 (geometric backoff)
-// - k = round가 얼마나 지속됐는지
-// - exponential backoff
-
-// View 동기화:
-// - Byzantine validator가 premature timeout 가능
-// - TC로 자동 동기화:
-//   TC(v) 수신 → all validators move to v+1
-// - 정직 validator가 TC 따라가기
-
-// 상세 알고리즘:
-// loop:
-//     leader = leader_selection(round)
-//     if self == leader:
-//         propose(get_block())
-//     start timer(timeout(round))
-//
-//     while not timeout:
-//         if receive QC(round):
-//             process QC, next round
-//         if receive TC(round):
-//             process TC, skip to TC.round+1
-//
-//     on timeout:
-//         send Timeout(round, highQC, highTC)
-//         collect 2f+1 timeouts
-//         form TC(round)
-//         move to next round
-
-// QC Fast-forward:
-// - 높은 QC 받으면 skip 가능
-// - QC(r) received, current_round < r
-// - update current_round = r
-// - 따라잡기
-
-// 결과:
-// - 빠른 view synchronization
-// - byzantine 저항
-// - async-safe (Ditto fallback)`}
-        </pre>
+        <div className="not-prose grid grid-cols-1 gap-3 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">QC Fast-forward</div>
+            <div className="text-sm text-muted-foreground">
+              높은 QC 받으면 skip 가능: <code className="text-xs">QC(r)</code> received &amp;&amp; <code className="text-xs">current_round &lt; r</code> → update. 빠른 view 동기화 + byzantine 저항 + async-safe (Ditto fallback)
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Pacemaker = <strong>view 동기화 + timeout 관리</strong>.<br />
           TC와 QC로 자동 fast-forward.<br />
@@ -139,61 +115,76 @@ export default function DiemBFT() {
 
         {/* ── Aptos 실제 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Aptos의 실제 구현 세부사항</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Aptos Consensus (DiemBFT v4 기반):
-//
-// Components:
-// 1. Consensus protocol: DiemBFT v4
-// 2. Quorum Store: Narwhal 기반 DAG mempool
-// 3. State Sync: 새 validator 동기화
-// 4. Execution: Block-STM parallel execution
-// 5. Storage: RocksDB
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Aptos 컴포넌트</div>
+            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
+              <li>Consensus: DiemBFT v4</li>
+              <li>Quorum Store: Narwhal 기반 DAG mempool</li>
+              <li>State Sync: 새 validator 동기화</li>
+              <li>Execution: Block-STM parallel execution</li>
+              <li>Storage: RocksDB</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Block 구조</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><code className="text-xs">epoch: u64</code> / <code className="text-xs">round: u64</code> / <code className="text-xs">timestamp: u64</code></li>
+              <li><code className="text-xs">payload: Payload</code> — QS batches</li>
+              <li><code className="text-xs">qc: QuorumCert</code> — parent QC</li>
+              <li><code className="text-xs">tc: Option&lt;TC&gt;</code> — view change 시</li>
+            </ul>
+          </div>
+        </div>
 
-// Block structure:
-// struct Block {
-//     epoch: u64,
-//     round: u64,
-//     timestamp: u64,
-//     payload: Payload,       // QS batches
-//     qc: QuorumCert,         // parent QC
-//     tc: Option<TC>,         // if view change
-// }
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Quorum Store (Narwhal-inspired)</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>validators가 transactions broadcast</li>
+              <li>batches formed with signatures</li>
+              <li>block payload = batch references (<code className="text-xs">O(1)</code>)</li>
+              <li>throughput decoupled from consensus</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">Block-STM Execution</div>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>optimistic concurrency control</li>
+              <li>speculative parallel execution</li>
+              <li>conflict detection + retry</li>
+              <li>deterministic outcome</li>
+            </ul>
+          </div>
+        </div>
 
-// Quorum Store (Narwhal-inspired):
-// - transactions broadcast by validators
-// - batches formed with signatures
-// - block payload = batch references (O(1))
-// - throughput decoupled from consensus
-
-// Execution (Block-STM):
-// - optimistic concurrency control
-// - speculative parallel execution
-// - conflict detection + retry
-// - deterministic outcome
-
-// Performance (2024):
-// - block time: 100-300ms
-// - finality: ~1s
-// - throughput: 100K+ TPS (tested)
-// - validators: ~100
-
-// Comparison:
-// Ethereum: 12s block time, 30 TPS
-// Solana: 400ms, 2K TPS
-// Sui: ~400ms, 100K+ TPS
-// Aptos: 300ms, 100K+ TPS
-
-// Aptos vs Sui:
-// - Aptos: DiemBFT v4 (leader-based)
-// - Sui: Mysticeti (DAG-based)
-// - 성능 비슷, 접근 다름
-
-// 오픈소스:
-// - Aptos Core: github.com/aptos-labs
-// - Move language
-// - Rust 구현
-// - 완전 공개 + 활발`}
-        </pre>
+        <div className="not-prose overflow-x-auto mb-6">
+          <table className="min-w-full text-sm border border-border">
+            <thead>
+              <tr className="bg-muted">
+                <th className="border border-border px-4 py-2 text-left">블록체인</th>
+                <th className="border border-border px-4 py-2 text-left">Block Time</th>
+                <th className="border border-border px-4 py-2 text-left">TPS</th>
+                <th className="border border-border px-4 py-2 text-left">합의</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['Ethereum', '12s', '30', 'Gasper'],
+                ['Solana', '400ms', '2K', 'Tower BFT'],
+                ['Sui', '~400ms', '100K+', 'Mysticeti (DAG)'],
+                ['Aptos', '300ms', '100K+', 'DiemBFT v4 (leader)'],
+              ].map(([name, ...rest]) => (
+                <tr key={name}>
+                  <td className="border border-border px-4 py-2 font-medium">{name}</td>
+                  {rest.map((v, i) => (
+                    <td key={i} className="border border-border px-4 py-2">{v}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <p className="leading-7">
           Aptos = <strong>DiemBFT v4 + Quorum Store + Block-STM</strong>.<br />
           100K+ TPS 목표 — production-grade BFT blockchain.<br />

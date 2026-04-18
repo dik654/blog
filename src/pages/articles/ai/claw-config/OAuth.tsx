@@ -16,17 +16,35 @@ export default function OAuth() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PKCE란</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`PKCE(Proof Key for Code Exchange):
-  OAuth 2.0 확장, 클라이언트 시크릿 없이 인증
-
-흐름:
-  1. 클라이언트가 code_verifier 생성 (랜덤 문자열)
-  2. code_challenge = SHA256(code_verifier)를 인증 서버에 전송
-  3. 사용자 인증 후 code 받음
-  4. code_verifier 원본을 인증 서버에 전송하여 토큰 받음
-  5. 서버는 SHA256(code_verifier) == code_challenge 검증
-
-장점: 중간 탈취된 code로 토큰 획득 불가 (code_verifier 모름)`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-1">PKCE (Proof Key for Code Exchange)</div>
+          <div className="text-xs text-muted-foreground mb-3">OAuth 2.0 확장 — 클라이언트 시크릿 없이 인증</div>
+          <div className="space-y-2">
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">1</span>
+              <div className="text-sm">클라이언트가 <code className="text-xs bg-muted px-1 py-0.5 rounded">code_verifier</code> 생성 (랜덤 문자열)</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">2</span>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">code_challenge = SHA256(code_verifier)</code>를 인증 서버에 전송</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">3</span>
+              <div className="text-sm">사용자 인증 후 <code className="text-xs bg-muted px-1 py-0.5 rounded">code</code> 수신</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">4</span>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">code_verifier</code> 원본을 서버에 전송하여 토큰 수신</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">5</span>
+              <div className="text-sm">서버가 <code className="text-xs bg-muted px-1 py-0.5 rounded">SHA256(code_verifier) == code_challenge</code> 검증</div>
+            </div>
+          </div>
+          <div className="mt-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded p-2.5">
+            <div className="text-sm"><strong>장점</strong>: 중간 탈취된 code로 토큰 획득 불가 &mdash; 공격자는 <code className="text-xs bg-muted px-1 py-0.5 rounded">code_verifier</code>를 모름</div>
+          </div>
+        </div>
         <p>
           <strong>PKCE의 보안 가치</strong>: CLI 같은 <strong>public client</strong>에서 시크릿 관리 불필요<br />
           웹 브라우저로 인증 리다이렉트 후, code 탈취되더라도 공격자는 code_verifier 모름<br />
@@ -34,47 +52,50 @@ export default function OAuth() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">OAuth 흐름 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct OAuthFlow {
-    client_id: String,
-    redirect_uri: Url,  // http://localhost:{port}/callback
-    auth_endpoint: Url, // https://claude.ai/oauth/authorize
-    token_endpoint: Url,// https://console.anthropic.com/oauth/token
-}
-
-impl OAuthFlow {
-    pub async fn authenticate(&self) -> Result<TokenSet> {
-        // 1) PKCE 생성
-        let code_verifier = generate_random_string(64);  // 64자 랜덤
-        let code_challenge = base64_url_encode(
-            sha256::digest(&code_verifier).as_bytes()
-        );
-
-        // 2) 로컬 콜백 서버 시작
-        let (port, rx) = start_callback_server().await?;
-
-        // 3) 인증 URL 조립
-        let auth_url = build_auth_url(
-            &self.auth_endpoint,
-            &self.client_id,
-            &format!("{}:{}/callback", "http://localhost", port),
-            &code_challenge,
-        );
-
-        // 4) 브라우저 열기
-        open::that(&auth_url)?;
-        println!("브라우저에서 인증하세요: {}", auth_url);
-
-        // 5) 콜백 대기 (타임아웃 5분)
-        let auth_code = tokio::time::timeout(
-            Duration::from_secs(300), rx,
-        ).await??;
-
-        // 6) 토큰 교환
-        let tokens = self.exchange_code(&auth_code, &code_verifier).await?;
-
-        Ok(tokens)
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-1"><code className="text-xs bg-muted px-1 py-0.5 rounded">OAuthFlow</code> 구조체</div>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="bg-background border border-border rounded p-2 text-xs">
+              <code className="bg-muted px-1 py-0.5 rounded">client_id</code>
+            </div>
+            <div className="bg-background border border-border rounded p-2 text-xs">
+              <code className="bg-muted px-1 py-0.5 rounded">redirect_uri</code> &mdash; <code>localhost:{'{port}'}/callback</code>
+            </div>
+            <div className="bg-background border border-border rounded p-2 text-xs">
+              <code className="bg-muted px-1 py-0.5 rounded">auth_endpoint</code> &mdash; <code>claude.ai/oauth/authorize</code>
+            </div>
+            <div className="bg-background border border-border rounded p-2 text-xs">
+              <code className="bg-muted px-1 py-0.5 rounded">token_endpoint</code> &mdash; <code>anthropic.com/oauth/token</code>
+            </div>
+          </div>
+          <div className="font-semibold text-sm mb-2"><code className="text-xs bg-muted px-1 py-0.5 rounded">authenticate()</code> 6단계</div>
+          <div className="space-y-2">
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">1</span>
+              <div className="text-sm">PKCE 생성 &mdash; <code className="text-xs bg-muted px-1 py-0.5 rounded">generate_random_string(64)</code> &rarr; SHA256 &rarr; <code className="text-xs bg-muted px-1 py-0.5 rounded">code_challenge</code></div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">2</span>
+              <div className="text-sm">로컬 콜백 서버 시작 &mdash; <code className="text-xs bg-muted px-1 py-0.5 rounded">start_callback_server()</code></div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">3</span>
+              <div className="text-sm">인증 URL 조립 &mdash; <code className="text-xs bg-muted px-1 py-0.5 rounded">build_auth_url(endpoint, client_id, redirect, challenge)</code></div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">4</span>
+              <div className="text-sm">OS 기본 브라우저 자동 오픈 &mdash; <code className="text-xs bg-muted px-1 py-0.5 rounded">open::that(auth_url)</code></div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">5</span>
+              <div className="text-sm">콜백 대기 &mdash; 타임아웃 5분 (<code className="text-xs bg-muted px-1 py-0.5 rounded">Duration::from_secs(300)</code>)</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5 flex items-start gap-2">
+              <span className="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">6</span>
+              <div className="text-sm">토큰 교환 &mdash; <code className="text-xs bg-muted px-1 py-0.5 rounded">exchange_code(auth_code, code_verifier)</code></div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>6단계 흐름</strong>: PKCE 생성 → 콜백 서버 → URL 조립 → 브라우저 → 콜백 수신 → 토큰 교환<br />
           콜백 서버는 <strong>임시 HTTP 서버</strong> — <code>localhost:임의포트/callback</code><br />
@@ -82,37 +103,27 @@ impl OAuthFlow {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">콜백 서버 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`async fn start_callback_server() -> Result<(u16, oneshot::Receiver<String>)> {
-    let listener = TcpListener::bind("127.0.0.1:0").await?;  // 0: OS 선택 포트
-    let port = listener.local_addr()?.port();
-
-    let (tx, rx) = oneshot::channel();
-
-    tokio::spawn(async move {
-        let (mut stream, _) = listener.accept().await.unwrap();
-
-        // HTTP 요청 읽기
-        let mut buf = [0u8; 4096];
-        let n = stream.read(&mut buf).await.unwrap();
-        let req = String::from_utf8_lossy(&buf[..n]);
-
-        // GET /callback?code=XXX&state=YYY 파싱
-        let code = parse_query_param(&req, "code").unwrap_or_default();
-
-        // HTTP 응답 (사용자에게 "탭 닫아도 됨" 안내)
-        let html = "<html><body><h1>인증 완료</h1><p>탭을 닫으셔도 됩니다.</p></body></html>";
-        let response = format!(
-            "HTTP/1.1 200 OK\\r\\nContent-Type: text/html\\r\\nContent-Length: {}\\r\\n\\r\\n{}",
-            html.len(), html
-        );
-        stream.write_all(response.as_bytes()).await.unwrap();
-
-        // code 전달
-        let _ = tx.send(code);
-    });
-
-    Ok((port, rx))
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 py-0.5 rounded">start_callback_server()</code> &mdash; 임시 HTTP 서버</div>
+          <div className="space-y-2">
+            <div className="bg-background border border-border rounded p-2.5">
+              <div className="text-xs font-mono text-muted-foreground mb-1">바인딩</div>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">TcpListener::bind("127.0.0.1:0")</code> &mdash; 포트 0 = OS가 할당</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5">
+              <div className="text-xs font-mono text-muted-foreground mb-1">채널 생성</div>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">oneshot::channel()</code> &mdash; code 전달용 일회성 채널</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5">
+              <div className="text-xs font-mono text-muted-foreground mb-1">요청 처리</div>
+              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">GET /callback?code=XXX&state=YYY</code> 파싱 &rarr; code 추출</div>
+            </div>
+            <div className="bg-background border border-border rounded p-2.5">
+              <div className="text-xs font-mono text-muted-foreground mb-1">응답</div>
+              <div className="text-sm">HTML 응답으로 "인증 완료 &mdash; 탭을 닫으셔도 됩니다" 안내 &rarr; <code className="text-xs bg-muted px-1 py-0.5 rounded">tx.send(code)</code></div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>임시 HTTP 서버</strong>: 포트 0으로 바인딩 → OS가 할당<br />
           단일 요청만 처리 — code 받으면 종료<br />
@@ -120,28 +131,29 @@ impl OAuthFlow {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">토큰 교환</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl OAuthFlow {
-    async fn exchange_code(&self, code: &str, verifier: &str) -> Result<TokenSet> {
-        let client = reqwest::Client::new();
-        let resp = client.post(&self.token_endpoint)
-            .form(&[
-                ("grant_type", "authorization_code"),
-                ("code", code),
-                ("client_id", &self.client_id),
-                ("redirect_uri", &self.redirect_uri.to_string()),
-                ("code_verifier", verifier),  // PKCE 검증용
-            ])
-            .send()
-            .await?;
-
-        let token_resp: TokenResponse = resp.json().await?;
-        Ok(TokenSet {
-            access_token: token_resp.access_token,
-            refresh_token: token_resp.refresh_token,
-            expires_at: Utc::now() + Duration::seconds(token_resp.expires_in),
-        })
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 py-0.5 rounded">exchange_code(code, verifier)</code> &mdash; form-encoded POST</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded p-2.5">
+              <div className="text-xs font-semibold text-blue-700 dark:text-blue-300 mb-1">요청 파라미터</div>
+              <ul className="text-xs space-y-1">
+                <li><code className="bg-muted px-1 py-0.5 rounded">grant_type</code>: <code>"authorization_code"</code></li>
+                <li><code className="bg-muted px-1 py-0.5 rounded">code</code>: 인증 코드</li>
+                <li><code className="bg-muted px-1 py-0.5 rounded">client_id</code>: 클라이언트 ID</li>
+                <li><code className="bg-muted px-1 py-0.5 rounded">redirect_uri</code>: 콜백 URL</li>
+                <li><code className="bg-muted px-1 py-0.5 rounded">code_verifier</code>: PKCE 검증값</li>
+              </ul>
+            </div>
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded p-2.5">
+              <div className="text-xs font-semibold text-green-700 dark:text-green-300 mb-1">응답 &rarr; TokenSet</div>
+              <ul className="text-xs space-y-1">
+                <li><code className="bg-muted px-1 py-0.5 rounded">access_token</code>: API 호출용</li>
+                <li><code className="bg-muted px-1 py-0.5 rounded">refresh_token</code>: 갱신용</li>
+                <li><code className="bg-muted px-1 py-0.5 rounded">expires_at</code>: <code>Utc::now() + expires_in</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>form-encoded POST</strong>: OAuth 2.0 표준<br />
           <code>grant_type: authorization_code</code>: 표준 플로우<br />
@@ -149,30 +161,28 @@ impl OAuthFlow {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">토큰 저장 — TokenStore</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TokenStore {
-    path: PathBuf,  // ~/.claw/tokens.json
-}
-
-impl TokenStore {
-    pub async fn save(&self, tokens: &TokenSet) -> Result<()> {
-        let json = serde_json::to_vec(tokens)?;
-        tokio::fs::write(&self.path, &json).await?;
-        // 권한 600 (rw-------)
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::PermissionsExt;
-            let perm = std::fs::Permissions::from_mode(0o600);
-            std::fs::set_permissions(&self.path, perm)?;
-        }
-        Ok(())
-    }
-
-    pub async fn load(&self) -> Result<Option<TokenSet>> {
-        if !self.path.exists() { return Ok(None); }
-        let text = tokio::fs::read_to_string(&self.path).await?;
-        Ok(Some(serde_json::from_str(&text)?))
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="font-semibold text-sm mb-1"><code className="text-xs bg-muted px-1 py-0.5 rounded">TokenStore</code></div>
+          <div className="text-xs text-muted-foreground mb-3">경로: <code className="bg-muted px-1 py-0.5 rounded">~/.claw/tokens.json</code></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-background border border-border rounded p-3">
+              <div className="text-xs font-semibold mb-1">save(tokens)</div>
+              <ul className="text-sm space-y-1">
+                <li><code className="text-xs bg-muted px-1 py-0.5 rounded">serde_json::to_vec</code> &rarr; 파일 쓰기</li>
+                <li>Unix: 권한 <code className="text-xs bg-muted px-1 py-0.5 rounded">0o600</code> (rw-------) 설정</li>
+                <li className="text-xs text-muted-foreground">소유자만 읽기/쓰기 &mdash; 다른 사용자 접근 차단</li>
+              </ul>
+            </div>
+            <div className="bg-background border border-border rounded p-3">
+              <div className="text-xs font-semibold mb-1">load()</div>
+              <ul className="text-sm space-y-1">
+                <li>파일 없으면 <code className="text-xs bg-muted px-1 py-0.5 rounded">Ok(None)</code> 반환</li>
+                <li><code className="text-xs bg-muted px-1 py-0.5 rounded">serde_json::from_str</code> &rarr; TokenSet</li>
+                <li className="text-xs text-muted-foreground">keyring(OS 키체인) 통합은 로드맵</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>저장 경로</strong>: <code>~/.claw/tokens.json</code><br />
           <strong>파일 권한 600</strong>: 소유자만 읽기/쓰기 — 다른 사용자 접근 차단<br />
@@ -180,37 +190,36 @@ impl TokenStore {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">토큰 갱신 — refresh_token 사용</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl OAuthFlow {
-    pub async fn refresh(&self, refresh_token: &str) -> Result<TokenSet> {
-        let resp = reqwest::Client::new()
-            .post(&self.token_endpoint)
-            .form(&[
-                ("grant_type", "refresh_token"),
-                ("refresh_token", refresh_token),
-                ("client_id", &self.client_id),
-            ])
-            .send()
-            .await?;
-
-        let token: TokenResponse = resp.json().await?;
-        Ok(TokenSet::from(token))
-    }
-}
-
-// 자동 갱신: access_token 만료 5분 전에 백그라운드 갱신
-async fn auto_refresh_loop(store: Arc<TokenStore>) {
-    loop {
-        if let Ok(Some(tokens)) = store.load().await {
-            let expires_in = tokens.expires_at - Utc::now();
-            if expires_in < Duration::minutes(5) {
-                // 갱신
-                let new_tokens = flow.refresh(&tokens.refresh_token).await?;
-                store.save(&new_tokens).await?;
-            }
-        }
-        tokio::time::sleep(Duration::from_secs(60)).await;
-    }
-}`}</pre>
+        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-background border border-border rounded p-3">
+              <div className="font-semibold text-sm mb-2"><code className="text-xs bg-muted px-1 py-0.5 rounded">refresh(refresh_token)</code></div>
+              <ul className="text-sm space-y-1">
+                <li><code className="text-xs bg-muted px-1 py-0.5 rounded">grant_type: "refresh_token"</code></li>
+                <li>토큰 엔드포인트에 POST 요청</li>
+                <li>새 <code className="text-xs bg-muted px-1 py-0.5 rounded">TokenSet</code> 반환</li>
+              </ul>
+            </div>
+            <div className="bg-background border border-border rounded p-3">
+              <div className="font-semibold text-sm mb-2"><code className="text-xs bg-muted px-1 py-0.5 rounded">auto_refresh_loop(store)</code></div>
+              <ul className="text-sm space-y-1">
+                <li>60초마다 토큰 만료 시간 확인</li>
+                <li>만료 5분 전 자동 갱신</li>
+                <li>사용자 interrupt 없음</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded p-2.5 text-center">
+              <div className="text-xs text-muted-foreground">access_token 수명</div>
+              <div className="font-semibold text-sm">~1시간</div>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded p-2.5 text-center">
+              <div className="text-xs text-muted-foreground">refresh_token 수명</div>
+              <div className="font-semibold text-sm">~30일</div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>access_token 수명</strong>: 보통 1시간<br />
           <strong>refresh_token 수명</strong>: 보통 30일 — 재로그인 불필요<br />

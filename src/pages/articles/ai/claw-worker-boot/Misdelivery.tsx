@@ -19,28 +19,33 @@ export default function Misdelivery() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">탐지 방법 — 에코백 확인</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn send_with_verification(
-    worker: &mut Worker,
-    prompt: &str,
-) -> Result<()> {
-    // 1) 프롬프트 전송
-    worker.terminal.as_mut().unwrap().write_input(prompt).await?;
-
-    // 2) 에코백 대기 (타임아웃 2초)
-    let deadline = Instant::now() + Duration::from_secs(2);
-    loop {
-        if Instant::now() > deadline {
-            return Err(anyhow!("prompt not echoed back"));
-        }
-
-        let screen = worker.terminal.as_ref().unwrap().get_screen_text();
-        if screen.contains(prompt.trim()) {
-            return Ok(());  // 에코백 확인 성공
-        }
-
-        tokio::time::sleep(Duration::from_millis(100)).await;
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-1"><code>send_with_verification(worker, prompt)</code></div>
+          <div className="text-xs text-muted-foreground mb-3">프롬프트 전송 후 에코백(echo-back) 확인 — 타임아웃 2초</div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">1</span>
+              <div>
+                <div className="font-medium">프롬프트 전송</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>worker.terminal.write_input(prompt)</code></div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">2</span>
+              <div>
+                <div className="font-medium">100ms 주기로 화면 확인</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>screen.contains(prompt.trim())</code> — 프롬프트 문자열 포함 여부 체크</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">!</span>
+              <div>
+                <div className="font-medium">2초 초과 시 실패</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>Err(anyhow!("prompt not echoed back"))</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>에코백(echo-back) 확인</strong>: Worker의 터미널이 입력을 다시 화면에 표시하는 기본 동작<br />
           100ms마다 화면을 확인, 프롬프트 문자열 포함 여부 체크<br />
@@ -48,31 +53,39 @@ export default function Misdelivery() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">복구 전략 4단계</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn recover_from_misdelivery(worker: &mut Worker, prompt: &str) -> Result<()> {
-    // 1) 재전송 시도 (지수 백오프)
-    for attempt in 0..3 {
-        tokio::time::sleep(Duration::from_millis(500 * (attempt + 1))).await;
-        if send_with_verification(worker, prompt).await.is_ok() {
-            return Ok(());
-        }
-    }
-
-    // 2) Enter 키 전송 — Worker 상태 흔들기
-    worker.terminal.as_mut().unwrap().write_input("\\n").await?;
-    tokio::time::sleep(Duration::from_millis(500)).await;
-
-    // 3) 다시 재전송
-    if send_with_verification(worker, prompt).await.is_ok() {
-        return Ok(());
-    }
-
-    // 4) Worker 재시작
-    log::warn!("prompt misdelivery unrecoverable, restarting worker");
-    restart_worker(worker).await?;
-
-    // 재시작 후 재전송
-    send_with_verification(worker, prompt).await
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-3"><code>recover_from_misdelivery(worker, prompt)</code></div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">1</span>
+              <div>
+                <div className="font-medium">재전송 시도 (지수 백오프 x3)</div>
+                <div className="text-xs text-muted-foreground mt-0.5">500ms → 1000ms → 1500ms 대기 후 <code>send_with_verification()</code></div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-amber-600 dark:text-amber-400 shrink-0">2</span>
+              <div>
+                <div className="font-medium">Enter 키 전송 — Worker 상태 흔들기</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>write_input("\n")</code> — 대화형 Prompt에 걸린 경우 해제</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-amber-600 dark:text-amber-400 shrink-0">3</span>
+              <div>
+                <div className="font-medium">다시 재전송</div>
+                <div className="text-xs text-muted-foreground mt-0.5">Enter 이후 <code>send_with_verification()</code> 1회 시도</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">4</span>
+              <div>
+                <div className="font-medium">Worker 재시작 (마지막 수단)</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>restart_worker(worker)</code> — 작업 진행 상태 손실 가능</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>4단계 복구</strong>: 재시도 → Enter 키 → 재시도 → Worker 재시작<br />
           <strong>지수 백오프</strong>: 500ms, 1000ms, 1500ms — 과부하 회피<br />
@@ -88,33 +101,39 @@ export default function Misdelivery() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">restart_worker() — 워커 재시작</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub async fn restart_worker(worker: &mut Worker) -> Result<()> {
-    // 1) 기존 프로세스 종료
-    if let Some(pid) = worker.pid {
-        let _ = kill(Pid::from_raw(pid as i32), Signal::SIGTERM);
-        tokio::time::sleep(Duration::from_millis(500)).await;
-        let _ = kill(Pid::from_raw(pid as i32), Signal::SIGKILL);  // 강제
-    }
-
-    // 2) 터미널 핸들 해제
-    worker.terminal = None;
-
-    // 3) 상태 초기화
-    worker.status = WorkerStatus::Idle;
-
-    // 4) 재시작
-    worker.transition(WorkerStatus::Launching)?;
-    let (terminal, pid) = launch_process(&worker.task_config).await?;
-    worker.terminal = Some(terminal);
-    worker.pid = Some(pid);
-
-    // 5) Trust 재결정 (이미 캐시되어 있으면 빠름)
-    worker.transition(WorkerStatus::TrustResolving)?;
-    worker.trust = Some(TrustResolver::resolve(&worker.workspace).await?);
-    worker.transition(WorkerStatus::Ready)?;
-
-    Ok(())
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-3"><code>restart_worker(worker: &mut Worker)</code></div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">1</span>
+              <div>
+                <div className="font-medium">기존 프로세스 종료</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>SIGTERM</code> → 500ms 대기 → <code>SIGKILL</code> (강제)</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">2</span>
+              <div>
+                <div className="font-medium">터미널 핸들 해제 + 상태 초기화</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>worker.terminal = None</code>, <code>worker.status = Idle</code></div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">3</span>
+              <div>
+                <div className="font-medium">재시작 — Launching 전이 + 프로세스 시작</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>launch_process(&worker.task_config)</code> → 새 <code>(terminal, pid)</code></div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 bg-green-50 dark:bg-green-950/30 border-l-2 border-green-400 rounded-r px-3 py-2">
+              <span className="font-mono text-xs text-green-600 dark:text-green-400 shrink-0">4</span>
+              <div>
+                <div className="font-medium">Trust 재결정 → Ready 전이</div>
+                <div className="text-xs text-muted-foreground mt-0.5"><code>TrustResolver::resolve()</code> — 캐시되어 있으면 빠름</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>SIGTERM → SIGKILL</strong>: graceful → forceful 종료<br />
           SIGTERM 500ms 대기 후 응답 없으면 SIGKILL — 좀비 프로세스 방지<br />
@@ -122,27 +141,30 @@ export default function Misdelivery() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Misdelivery 통계 수집</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 텔레메트리에 기록
-pub struct MisdeliveryStats {
-    total_sends: u64,
-    misdelivery_count: u64,
-    recovery_success: u64,
-    recovery_restart: u64,
-}
-
-impl MisdeliveryStats {
-    pub fn rate(&self) -> f64 {
-        self.misdelivery_count as f64 / self.total_sends.max(1) as f64
-    }
-}
-
-// 주기적 체크 (매 100회 send마다)
-if stats.total_sends % 100 == 0 {
-    let rate = stats.rate();
-    if rate > 0.05 {
-        log::warn!("misdelivery rate {:.1}% — investigate", rate * 100.0);
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-3"><code>MisdeliveryStats</code> — 텔레메트리 기록</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
+            <div className="bg-background/60 rounded px-3 py-2 text-center">
+              <div className="font-mono text-xs"><code>total_sends</code></div>
+              <div className="text-xs text-muted-foreground mt-1">전체 전송 수</div>
+            </div>
+            <div className="bg-background/60 rounded px-3 py-2 text-center">
+              <div className="font-mono text-xs"><code>misdelivery_count</code></div>
+              <div className="text-xs text-muted-foreground mt-1">미전달 횟수</div>
+            </div>
+            <div className="bg-background/60 rounded px-3 py-2 text-center">
+              <div className="font-mono text-xs"><code>recovery_success</code></div>
+              <div className="text-xs text-muted-foreground mt-1">재시도 성공</div>
+            </div>
+            <div className="bg-background/60 rounded px-3 py-2 text-center">
+              <div className="font-mono text-xs"><code>recovery_restart</code></div>
+              <div className="text-xs text-muted-foreground mt-1">재시작 복구</div>
+            </div>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded px-3 py-2 text-xs">
+            <span className="font-medium">경고 조건:</span> 매 100회 send마다 <code>rate()</code> 체크 — <span className="font-semibold text-amber-700 dark:text-amber-400">5% 초과 시 경고</span> (<code>misdelivery_count / total_sends</code>)
+          </div>
+        </div>
         <p>
           <strong>5% 이상 발생 시 경고</strong> — 시스템 문제 의심<br />
           정상 환경에서는 misdelivery rate가 1% 미만<br />
@@ -150,25 +172,21 @@ if stats.total_sends % 100 == 0 {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">디버깅 지원 — 화면 덤프</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// misdelivery 발생 시 화면 덤프
-if attempt >= 3 {
-    let dump_path = workspace_root()
-        .join(".claw/debug")
-        .join(format!("misdelivery-{}-{}.txt", worker.id, Utc::now().timestamp()));
-
-    let screen = worker.terminal.as_ref().unwrap().get_screen_text();
-    tokio::fs::write(&dump_path, format!(
-        "=== prompt ===\\n{}\\n\\n=== screen ===\\n{}",
-        prompt, screen
-    )).await?;
-
-    log::info!("screen dumped to {:?}", dump_path);
-}`}</pre>
-        <p>
-          <strong>화면 덤프 파일</strong>: <code>.claw/debug/misdelivery-*.txt</code><br />
-          사용자·지원팀이 나중에 분석 — "왜 프롬프트가 전달 안 됐는지" 추적<br />
-          덤프 파일 주기적 정리(7일 이상) — 디스크 오염 방지
-        </p>
+        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
+          <div className="text-sm font-semibold mb-1">3회 재시도 실패 시 화면 덤프 저장</div>
+          <div className="text-xs text-muted-foreground mb-3">경로: <code>.claw/debug/misdelivery-{'{worker.id}'}-{'{timestamp}'}.txt</code></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <div className="bg-background/60 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <div className="font-medium text-xs">prompt 섹션</div>
+              <div className="text-xs text-muted-foreground mt-0.5">전송하려던 프롬프트 원문</div>
+            </div>
+            <div className="bg-background/60 border-l-2 border-blue-400 rounded-r px-3 py-2">
+              <div className="font-medium text-xs">screen 섹션</div>
+              <div className="text-xs text-muted-foreground mt-0.5"><code>get_screen_text()</code> 결과 — 실패 시점 화면 스냅샷</div>
+            </div>
+          </div>
+          <div className="text-xs text-muted-foreground mt-3">덤프 파일 주기적 정리(7일 이상) — 디스크 오염 방지</div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: pty 기반 자동화의 근본 한계</p>

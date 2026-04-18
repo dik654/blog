@@ -29,53 +29,54 @@ export default function NodeBuilder({ onCodeRef }: { onCodeRef: (key: string, re
 
         {/* ── typestate 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Typestate 패턴 구현 — 단계별 struct</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 상태를 별도 struct으로 표현
-pub struct NodeBuilder {
-    config: NodeConfig,
-    database: Option<Database>,
-}
-
-pub struct NodeBuilderWithTypes<Types: NodeTypes> {
-    config: NodeConfig,
-    database: Database,
-    types: PhantomData<Types>,
-}
-
-pub struct NodeBuilderWithComponents<Types: NodeTypes, Components> {
-    config: NodeConfig,
-    database: Database,
-    types: PhantomData<Types>,
-    components: Components,
-}
-
-// 상태 전이 메서드는 각 struct에만 정의:
-impl NodeBuilder {
-    pub fn new(config: NodeConfig) -> Self { ... }
-
-    pub fn with_database(mut self, db: Database) -> Self { ... }
-
-    pub fn with_types<T: NodeTypes>(self) -> NodeBuilderWithTypes<T> {
-        NodeBuilderWithTypes { ... }
-    }
-    // launch() 메서드는 여기 없음
-}
-
-impl<T: NodeTypes> NodeBuilderWithTypes<T> {
-    pub fn with_components<C>(self, components: C)
-        -> NodeBuilderWithComponents<T, C> { ... }
-    // launch() 메서드는 여기 없음
-}
-
-impl<T: NodeTypes, C> NodeBuilderWithComponents<T, C> {
-    pub async fn launch(self) -> NodeHandle { ... }
-    // 오직 여기서만 launch() 호출 가능
-}
-
-// 잘못된 사용:
-let builder = NodeBuilder::new(config);
-builder.launch().await;  // ❌ compile error: no method 'launch'`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="space-y-2 mb-3">
+            {[
+              {
+                name: 'NodeBuilder',
+                fields: ['config: NodeConfig', 'database: Option<Database>'],
+                methods: ['new(config)', 'with_database(db)', 'with_types::<T>()'],
+                note: 'launch() 없음',
+              },
+              {
+                name: 'NodeBuilderWithTypes<T>',
+                fields: ['config: NodeConfig', 'database: Database', 'types: PhantomData<T>'],
+                methods: ['with_components(c)'],
+                note: 'launch() 없음',
+              },
+              {
+                name: 'NodeBuilderWithComponents<T, C>',
+                fields: ['config: NodeConfig', 'database: Database', 'types: PhantomData<T>', 'components: C'],
+                methods: ['launch() → NodeHandle'],
+                note: '오직 여기서만 launch() 가능',
+              },
+            ].map(s => (
+              <div key={s.name} className="rounded-lg border border-border/60 p-4">
+                <p className="font-mono font-bold text-sm mb-2"><code>{s.name}</code></p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs font-semibold text-foreground/50 mb-1">필드</p>
+                    <ul className="text-xs space-y-0.5 text-foreground/70">
+                      {s.fields.map(f => <li key={f}><code>{f}</code></li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground/50 mb-1">메서드</p>
+                    <ul className="text-xs space-y-0.5 text-foreground/70">
+                      {s.methods.map(m => <li key={m}><code>{m}</code></li>)}
+                    </ul>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">{s.note}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/20 p-3">
+            <p className="text-sm text-foreground/80">
+              <code>NodeBuilder::new(config).launch()</code> → 컴파일 에러: <code>no method 'launch'</code>
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           각 단계가 <strong>별도 struct 타입</strong>이므로 메서드 존재 자체가 단계별로 제한.<br />
           builder state를 enum flag로 확인하는 런타임 패턴보다 안전.<br />
@@ -84,48 +85,47 @@ builder.launch().await;  // ❌ compile error: no method 'launch'`}
 
         {/* ── NodeComponents trait ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">NodeComponents trait — 4개 핵심 컴포넌트</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// NodeComponents: 노드 동작에 필요한 모든 컴포넌트 집합
-pub trait NodeComponents<N: NodeTypes> {
-    type Pool: TransactionPool;
-    type Evm: ConfigureEvm;
-    type Consensus: Consensus;
-    type Network: NetworkHandle;
-    type PayloadBuilder: PayloadBuilder;
-
-    fn pool(&self) -> &Self::Pool;
-    fn evm_config(&self) -> &Self::Evm;
-    fn consensus(&self) -> &Self::Consensus;
-    fn network(&self) -> &Self::Network;
-    fn payload_builder(&self) -> &Self::PayloadBuilder;
-}
-
-// 이더리움 메인넷 구현체
-pub struct EthComponents {
-    pool: EthTransactionPool,
-    evm_config: EthEvmConfig,
-    consensus: EthBeaconConsensus,
-    network: NetworkHandle,
-    payload_builder: EthereumPayloadBuilder,
-}
-
-// OP Stack 구현체
-pub struct OpComponents {
-    pool: OpTransactionPool,  // deposit TX 거부
-    evm_config: OpEvmConfig,  // L1 attributes 추가
-    consensus: OpConsensus,
-    network: NetworkHandle,   // 동일
-    payload_builder: OpPayloadBuilder,
-}
-
-// 컴포넌트 조합 자유:
-// builder.with_components(EthComponents::default())    // 메인넷
-// builder.with_components(OpComponents::default())     // OP Stack
-// builder.with_components(CustomComponents { ... })    // 커스텀
-// builder.with_components(                            // 부분 교체
-//     EthComponents::default().with_pool(my_pool)
-// )`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4 mb-3">
+            <p className="font-semibold text-sm mb-2"><code>NodeComponents&lt;N: NodeTypes&gt;</code> — 5개 연관 타입</p>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {[
+                { type: 'Pool', bound: 'TransactionPool' },
+                { type: 'Evm', bound: 'ConfigureEvm' },
+                { type: 'Consensus', bound: 'Consensus' },
+                { type: 'Network', bound: 'NetworkHandle' },
+                { type: 'PayloadBuilder', bound: 'PayloadBuilder' },
+              ].map(t => (
+                <div key={t.type} className="rounded border border-border/40 px-3 py-2 text-center">
+                  <p className="font-mono text-xs font-bold">{t.type}</p>
+                  <p className="text-xs text-foreground/50 mt-0.5"><code>{t.bound}</code></p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-2">이더리움 메인넷 — <code>EthComponents</code></p>
+              <ul className="text-xs space-y-0.5 text-foreground/70">
+                <li><code>EthTransactionPool</code></li>
+                <li><code>EthEvmConfig</code></li>
+                <li><code>EthBeaconConsensus</code></li>
+                <li><code>NetworkHandle</code></li>
+                <li><code>EthereumPayloadBuilder</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm mb-2">OP Stack — <code>OpComponents</code></p>
+              <ul className="text-xs space-y-0.5 text-foreground/70">
+                <li><code>OpTransactionPool</code> — deposit TX 거부</li>
+                <li><code>OpEvmConfig</code> — L1 attributes 추가</li>
+                <li><code>OpConsensus</code></li>
+                <li><code>NetworkHandle</code> — 동일</li>
+                <li><code>OpPayloadBuilder</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>NodeComponents</code>가 <strong>노드 구성의 전체 청사진</strong>.<br />
           5개 연관 타입으로 Pool, Evm, Consensus, Network, PayloadBuilder 정의.<br />
@@ -134,60 +134,34 @@ pub struct OpComponents {
 
         {/* ── launch() 흐름 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">launch() — 노드 시작 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl<T: NodeTypes, C: NodeComponents<T>> NodeBuilderWithComponents<T, C> {
-    pub async fn launch(self) -> Result<NodeHandle> {
-        // 1. DB 열기 (이미 준비됨)
-        let db = self.database;
-
-        // 2. Provider 생성
-        let provider = ProviderFactory::new(db, self.chain_spec.clone());
-
-        // 3. 컴포넌트 초기화 순서:
-        //    - Network 시작 (백그라운드)
-        //    - TxPool 생성
-        //    - Consensus 검증자 구성
-        //    - PayloadBuilder 배치
-
-        let network = spawn_network(&self.components.network, &provider).await?;
-        let pool = create_pool(&self.components.pool, provider.clone()).await?;
-        let consensus = Arc::new(self.components.consensus);
-
-        // 4. Pipeline 구성 (Full Sync용)
-        let pipeline = default_pipeline(provider.clone(), &consensus, &network);
-
-        // 5. BlockchainTree (live sync용)
-        let tree = BlockchainTree::new(
-            provider.clone(),
-            consensus.clone(),
-            self.components.evm_config,
-        );
-
-        // 6. RPC 서버 시작
-        let rpc = start_rpc_server(
-            provider.clone(),
-            pool.clone(),
-            network.clone(),
-            &self.config,
-        ).await?;
-
-        // 7. Engine API 서버 시작 (CL 연결)
-        let engine = start_engine_api(
-            tree.clone(),
-            pool.clone(),
-            self.components.payload_builder,
-            &self.config,
-        ).await?;
-
-        // 8. NodeHandle 반환 (graceful shutdown 지원)
-        Ok(NodeHandle { pipeline, tree, rpc, engine, network })
-    }
-}
-
-// launch() 반환 후:
-// - 노드가 백그라운드에서 완전 동작
-// - handle.wait_for_node_exit()로 종료 신호 대기`}
-        </pre>
+        <div className="not-prose my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm mb-3"><code>launch()</code> — 8단계 초기화 순서</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { step: '1', label: 'DB 열기', detail: 'self.database' },
+                { step: '2', label: 'Provider 생성', detail: 'ProviderFactory::new(db, chain_spec)' },
+                { step: '3', label: 'Network', detail: 'spawn_network() — 백그라운드' },
+                { step: '4', label: 'TxPool', detail: 'create_pool(provider)' },
+                { step: '5', label: 'Pipeline', detail: 'Full Sync용 파이프라인 구성' },
+                { step: '6', label: 'BlockchainTree', detail: 'Live sync용 (provider + consensus + evm)' },
+                { step: '7', label: 'RPC 서버', detail: 'provider + pool + network 조합' },
+                { step: '8', label: 'Engine API', detail: 'CL 연결 (tree + pool + payload_builder)' },
+              ].map(s => (
+                <div key={s.step} className="rounded border border-border/40 px-3 py-2">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="w-4 h-4 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold">{s.step}</span>
+                    <span className="text-xs font-semibold">{s.label}</span>
+                  </div>
+                  <p className="text-[11px] text-foreground/50">{s.detail}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-foreground/60 mt-3">
+              반환값 <code>NodeHandle</code> — 노드가 백그라운드에서 동작, <code>wait_for_node_exit()</code>로 종료 대기
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
           <code>launch()</code>가 <strong>모든 컴포넌트를 올바른 순서로 시작</strong>.<br />
           Network → Pool → Pipeline → BlockchainTree → RPC → Engine 순서.<br />

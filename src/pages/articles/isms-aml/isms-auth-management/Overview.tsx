@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import MfaFlowViz from './viz/MfaFlowViz';
+import SessionControlViz from './viz/SessionControlViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">인증 체계 설계</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">왜 인증이 필요한가</h3>
         <p>
@@ -62,6 +68,8 @@ export default function Overview() {
           비밀번호(지식) + OTP(소유)처럼 서로 다른 범주를 결합해야 진정한 MFA.
         </p>
 
+        <MfaFlowViz />
+
         <h3 className="text-xl font-semibold mt-6 mb-3">MFA(Multi-Factor Authentication) 필수 적용 범위</h3>
         <p>
           ISMS 2.5 기준에서 MFA를 반드시 적용해야 하는 영역:
@@ -89,6 +97,8 @@ export default function Overview() {
           대응책: 관리자 계정은 단일 세션만 허용, 새 로그인 시 기존 세션 강제 종료.<br />
           일반 사용자 계정도 동시 접속 수를 제한(예: 최대 3개)하고, 비정상적 동시 접속 시 알림 발생.
         </p>
+
+        <SessionControlViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">권한 분리 체계</h3>
         <p>

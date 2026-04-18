@@ -27,16 +27,16 @@ export default function KLDivergenceViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 400 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 400 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Step 0: CE = H + KL decomposition */}
           {step === 0 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <Bar x={40} y={90} h={BAR_MAX} color="#ef4444" label="CE(P,Q)" value="0.51" />
-              <text x={120} y={60} fontSize={14} className="fill-foreground" fontWeight={700}>=</text>
-              <Bar x={150} y={90} h={1} color="#3b82f6" label="H(P)" value="0.00" />
-              <text x={230} y={60} fontSize={14} className="fill-foreground" fontWeight={700}>+</text>
-              <Bar x={260} y={90} h={BAR_MAX} color="#10b981" label="KL(P‖Q)" value="0.51" />
-              <text x={200} y={112} textAnchor="middle" fontSize={9}
+              <Bar x={40} y={95} h={BAR_MAX} color="#ef4444" label="CE(P,Q)" value="0.51" />
+              <text x={120} y={65} fontSize={14} className="fill-foreground" fontWeight={700}>=</text>
+              <Bar x={150} y={95} h={1} color="#3b82f6" label="H(P)" value="0.00" />
+              <text x={230} y={65} fontSize={14} className="fill-foreground" fontWeight={700}>+</text>
+              <Bar x={260} y={95} h={BAR_MAX} color="#10b981" label="KL(P‖Q)" value="0.51" />
+              <text x={175} y={130} textAnchor="middle" fontSize={9}
                 className="fill-muted-foreground">원-핫 P=[1,0,0] → H(P)=0, CE 전부가 KL</text>
             </motion.g>
           )}

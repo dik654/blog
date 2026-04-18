@@ -27,12 +27,12 @@ export default function ForwardExampleViz() {
           {/* Summation */}
           {step >= 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <rect x={140} y={50} width={60} height={30} rx={4}
+              <rect x={130} y={46} width={100} height={36} rx={4}
                 fill={`${C.enc}12`} stroke={C.enc} strokeWidth={1} />
-              <text x={170} y={63} textAnchor="middle" fontSize={9}
-                fill={C.enc}>0.5x0.8+0.3x0.4</text>
-              <text x={170} y={75} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill={C.enc}>= 0.52</text>
+              <text x={180} y={61} textAnchor="middle" fontSize={8}
+                fill={C.enc}>0.5×0.8 + 0.3×0.4</text>
+              <text x={180} y={75} textAnchor="middle" fontSize={10}
+                fontWeight={700} fill={C.enc}>= 0.52</text>
             </motion.g>
           )}
 
@@ -40,9 +40,9 @@ export default function ForwardExampleViz() {
           {step >= 2 && (
             <motion.g initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }} transition={sp}>
-              <line x1={200} y1={65} x2={230} y2={65}
+              <line x1={232} y1={65} x2={252} y2={65}
                 stroke={C.lat} strokeWidth={1} />
-              <circle cx={250} cy={65} r={18} fill={`${C.lat}18`}
+              <circle cx={272} cy={65} r={18} fill={`${C.lat}18`}
                 stroke={C.lat} strokeWidth={1.2} strokeDasharray="4 2" />
               <text x={250} y={62} textAnchor="middle" fontSize={9}
                 fontWeight={500} fill={C.lat}>z</text>

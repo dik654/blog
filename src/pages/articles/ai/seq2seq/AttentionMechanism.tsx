@@ -1,4 +1,6 @@
 import AttentionMechViz from './viz/AttentionMechViz';
+import S2SAttnViz from './viz/S2SAttnViz';
+import M from '@/components/ui/math';
 
 export default function AttentionMechanism() {
   return (
@@ -32,52 +34,12 @@ export default function AttentionMechanism() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Attention 동작 원리</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Attention-based Seq2Seq (Bahdanau 2015)
-//
-// Encoder (변경):
-//   모든 hidden state 유지: H = (h_1, h_2, ..., h_T)
-//   단순히 h_T만 쓰는 것이 아님
-//
-// Decoder (매 스텝):
-//   s_{t-1}: 이전 디코더 상태
-//   h_j: j번째 인코더 상태
-//
-//   Step 1: Alignment score
-//     e_tj = score(s_{t-1}, h_j)  for j=1..T
-//
-//   Step 2: Attention weights
-//     α_tj = exp(e_tj) / Σ_k exp(e_tk)
-//
-//   Step 3: Context vector (동적)
-//     c_t = Σ_j α_tj · h_j
-//
-//   Step 4: Decoder update
-//     s_t = LSTM(s_{t-1}, concat(y_{t-1}, c_t))
-//     y_t = softmax(W · concat(s_t, c_t))
-//
-// 핵심 차이:
-//   Seq2Seq: c = h_T (고정, 모든 스텝 공유)
-//   Attention: c_t (매 스텝 다름, 입력 동적 재조합)
-
-// 성능 개선 (Bahdanau 2015):
-//   WMT'14 English→French
-//   - Seq2Seq: BLEU 29.3 (baseline)
-//   - + Attention: BLEU 36.2 (+6.9 point!)
-//
-//   긴 문장에서 특히 큰 개선
-//   50단어 이상: +10 BLEU
-
-// Alignment 해석:
-//   α_tj 값이 출력 t와 입력 j의 "정렬도"
-//   → attention heatmap으로 시각화
-//   → 자동 학습된 word alignment
-
-// 역사적 의의:
-//   Bahdanau 2015 = "내가 그 논문을 보지 않았다면
-//                    Transformer도 없었다" (Vaswani)
-//   Attention의 탄생 → Transformer의 기반`}
-        </pre>
+        <S2SAttnViz />
+        <M display>{'e_{tj} = \\text{score}(s_{t-1},\\, h_j), \\quad \\alpha_{tj} = \\frac{\\exp(e_{tj})}{\\sum_k \\exp(e_{tk})}, \\quad c_t = \\sum_j \\underbrace{\\alpha_{tj}}_{\\text{attention weight}} \\cdot h_j'}</M>
+        <p className="leading-7">
+          Score 함수: Dot <M>{'s^\\top h'}</M>, General <M>{'s^\\top W h'}</M>, Additive <M>{'v^\\top \\tanh(W_1 s + W_2 h)'}</M><br />
+          핵심 차이: 기존 <M>{'c = h_T'}</M> (고정) vs Attention <M>{'c_t'}</M> (매 스텝 동적 재조합)
+        </p>
         <p className="leading-7">
           요약 1: Attention의 핵심은 <strong>동적 context vector</strong> c_t — 매 스텝 다름.<br />
           요약 2: <strong>α_tj</strong>가 출력-입력 정렬을 자동 학습 — 해석 가능성 확보.<br />

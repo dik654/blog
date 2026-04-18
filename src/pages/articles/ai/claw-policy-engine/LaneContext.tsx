@@ -9,72 +9,71 @@ export default function LaneContext() {
         <LaneContextViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">LaneContext 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct LaneContext {
-    pub lane_id: LaneId,
-    pub lane_status: LaneStatus,
-    pub status_changed_at: DateTime<Utc>,
-    pub created_at: DateTime<Utc>,
-
-    // 빌드 & 테스트
-    pub last_build_status: Option<BuildStatus>,
-    pub last_test_status: Option<TestStatus>,
-    pub test_coverage: Option<f32>,
-    pub lint_warnings: Option<usize>,
-
-    // 재시도
-    pub failure_count: u32,
-    pub retry_count: u32,
-
-    // 활동
-    pub last_activity: DateTime<Utc>,
-    pub commits: Vec<CommitRef>,
-
-    // 의존성
-    pub blocked_by: Vec<LaneId>,
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">LaneContext</code> — 평가 시점의 스냅샷</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">식별 · 상태</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">lane_id: LaneId</code></li>
+                <li><code className="bg-muted px-1 rounded">lane_status: LaneStatus</code></li>
+                <li><code className="bg-muted px-1 rounded">status_changed_at: DateTime&lt;Utc&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">created_at: DateTime&lt;Utc&gt;</code></li>
+              </ul>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">빌드 · 테스트</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">last_build_status: Option&lt;BuildStatus&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">last_test_status: Option&lt;TestStatus&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">test_coverage: Option&lt;f32&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">lint_warnings: Option&lt;usize&gt;</code></li>
+              </ul>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">재시도</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">failure_count: u32</code></li>
+                <li><code className="bg-muted px-1 rounded">retry_count: u32</code></li>
+              </ul>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">활동 · 의존성</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">last_activity: DateTime&lt;Utc&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">commits: Vec&lt;CommitRef&gt;</code></li>
+                <li><code className="bg-muted px-1 rounded">blocked_by: Vec&lt;LaneId&gt;</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">컨텍스트 빌더 — build_context()</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`impl PolicyEngine {
-    pub async fn build_context(&self, lane: &Lane) -> Result<LaneContext> {
-        // 기본 필드
-        let mut ctx = LaneContext {
-            lane_id: lane.id.clone(),
-            lane_status: lane.status.clone(),
-            status_changed_at: lane.status_changed_at,
-            created_at: lane.created_at,
-            failure_count: lane.failure_count,
-            retry_count: lane.retry_count,
-            last_activity: lane.last_activity,
-            ..Default::default()
-        };
-
-        // 빌드 상태 조회 (CI 시스템)
-        if let Ok(build) = ci_client::fetch_latest_build(&lane.branch).await {
-            ctx.last_build_status = Some(build.status);
-        }
-
-        // 테스트 결과 조회
-        if let Ok(tests) = ci_client::fetch_latest_tests(&lane.branch).await {
-            ctx.last_test_status = Some(tests.status);
-            ctx.test_coverage = tests.coverage;
-        }
-
-        // 린트 결과
-        if let Ok(lint) = ci_client::fetch_lint_warnings(&lane.branch).await {
-            ctx.lint_warnings = Some(lint.warning_count);
-        }
-
-        // git log
-        if let Ok(commits) = git_client::log_branch(&lane.branch).await {
-            ctx.commits = commits;
-        }
-
-        // 의존성
-        ctx.blocked_by = lane.task_packet.depends_on.clone();
-
-        Ok(ctx)
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">build_context(&self, lane: &Lane) → Result&lt;LaneContext&gt;</code></p>
+          <div className="space-y-3">
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
+              <p className="text-sm text-muted-foreground">기본 필드 복사 — <code className="text-xs bg-muted px-1 rounded">lane_id</code>, <code className="text-xs bg-muted px-1 rounded">status</code>, <code className="text-xs bg-muted px-1 rounded">failure_count</code>, <code className="text-xs bg-muted px-1 rounded">retry_count</code>, <code className="text-xs bg-muted px-1 rounded">last_activity</code></p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">ci_client::fetch_latest_build()</code> — 빌드 상태 조회 (실패 허용)</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">ci_client::fetch_latest_tests()</code> — 테스트 결과 + 커버리지 (실패 허용)</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">ci_client::fetch_lint_warnings()</code> — 린트 경고 수 (실패 허용)</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">5</span>
+              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">git_client::log_branch()</code> — 커밋 이력 + <code className="text-xs bg-muted px-1 rounded">task_packet.depends_on</code> 의존성</p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>컨텍스트 구축 단계</strong>: 기본 필드 → CI 조회 → git 조회 → 의존성<br />
           각 외부 조회는 실패 허용 — 일부 정보 없어도 평가 가능<br />
@@ -82,26 +81,32 @@ export default function LaneContext() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TimeRef — 시간 참조점</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub enum TimeRef {
-    LaneCreated,           // Lane 생성 시각
-    StatusChanged,         // 현재 상태 진입 시각
-    LastActivity,          // 마지막 활동 시각
-    LastBuild,             // 마지막 빌드 시각
-    FirstFailure,          // 첫 실패 시각
-}
-
-impl LaneContext {
-    pub fn elapsed_since(&self, since: TimeRef) -> Duration {
-        let ref_time = match since {
-            TimeRef::LaneCreated    => self.created_at,
-            TimeRef::StatusChanged  => self.status_changed_at,
-            TimeRef::LastActivity   => self.last_activity,
-            TimeRef::LastBuild      => self.last_build_time.unwrap_or(Utc::now()),
-            TimeRef::FirstFailure   => self.first_failure_at.unwrap_or(Utc::now()),
-        };
-        Utc::now() - ref_time
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">TimeRef</code> enum + <code className="text-xs bg-muted px-1 rounded">elapsed_since()</code></p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">LaneCreated</span>
+              <p className="text-sm text-muted-foreground">Lane 생성 시각</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">StatusChanged</span>
+              <p className="text-sm text-muted-foreground">현재 상태 진입 시각</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">LastActivity</span>
+              <p className="text-sm text-muted-foreground">마지막 활동 시각</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">LastBuild</span>
+              <p className="text-sm text-muted-foreground">마지막 빌드 시각 (없으면 <code className="text-xs bg-muted px-1 rounded">Utc::now()</code>)</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">FirstFailure</span>
+              <p className="text-sm text-muted-foreground">첫 실패 시각 (없으면 <code className="text-xs bg-muted px-1 rounded">Utc::now()</code>)</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3"><code className="bg-muted px-1 rounded">elapsed_since()</code>: <code className="bg-muted px-1 rounded">Utc::now() - ref_time</code> 반환</p>
+        </div>
         <p>
           <strong>5개 시간 참조</strong>: 상황별 기준 시각<br />
           "1시간 동안 InProgress면 blocked 체크" → <code>StatusChanged</code> 사용<br />
@@ -109,35 +114,24 @@ impl LaneContext {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">의존성 체크 — blocked_by</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Lane A가 Lane B의 merge를 기다리는 상황
-pub struct TaskPacket {
-    pub depends_on: Vec<LaneId>,
-    // ...
-}
-
-impl LaneContext {
-    pub async fn blocking_lanes(&self, engine: &PolicyEngine) -> Vec<LaneId> {
-        let mut blocking = Vec::new();
-        for dep_id in &self.blocked_by {
-            if let Some(dep_lane) = engine.lanes.get(dep_id) {
-                // 머지됐거나 폐기됐으면 더 이상 차단 안 함
-                if !matches!(dep_lane.status,
-                    LaneStatus::Merged | LaneStatus::Abandoned) {
-                    blocking.push(dep_id.clone());
-                }
-            }
-        }
-        blocking
-    }
-}
-
-// 의존성 기반 규칙 예시 (YAML)
-- name: "의존성 해결 대기"
-  condition:
-    and:
-      - status_is: Initialized
-      - has_blocking_lanes: true
-  action: transition(Blocked(WaitingForDependency))`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">TaskPacket</code></p>
+              <p className="text-xs text-muted-foreground"><code className="bg-muted px-1 rounded">depends_on: Vec&lt;LaneId&gt;</code> — Lane A가 Lane B의 merge를 기다리는 상황</p>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">blocking_lanes()</code></p>
+              <p className="text-xs text-muted-foreground"><code className="bg-muted px-1 rounded">blocked_by</code> 순회 → <code className="bg-muted px-1 rounded">Merged</code> / <code className="bg-muted px-1 rounded">Abandoned</code>가 아닌 것만 반환</p>
+            </div>
+          </div>
+          <div className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+            <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">YAML 규칙 예시 — 의존성 해결 대기</p>
+            <p className="text-xs text-muted-foreground">
+              조건: <code className="bg-muted px-1 rounded">Initialized &amp;&amp; has_blocking_lanes</code> → <code className="bg-muted px-1 rounded">transition(Blocked(WaitingForDependency))</code>
+            </p>
+          </div>
+        </div>
         <p>
           <strong>의존성 그래프</strong>: Lane 간 DAG 구성 가능<br />
           예: refactor Lane → migration Lane → cleanup Lane<br />
@@ -145,29 +139,27 @@ impl LaneContext {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">CI 통합 — ci_client</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub trait CiClient: Send + Sync {
-    async fn fetch_latest_build(&self, branch: &str) -> Result<BuildResult>;
-    async fn fetch_latest_tests(&self, branch: &str) -> Result<TestResult>;
-    async fn fetch_lint_warnings(&self, branch: &str) -> Result<LintResult>;
-}
-
-// 구현체 예: GitHubActionsClient
-pub struct GitHubActionsClient {
-    repo: String,
-    token: String,
-}
-
-#[async_trait]
-impl CiClient for GitHubActionsClient {
-    async fn fetch_latest_build(&self, branch: &str) -> Result<BuildResult> {
-        let url = format!(
-            "https://api.github.com/repos/{}/actions/runs?branch={}",
-            self.repo, branch
-        );
-        // REST API 호출 → 최신 워크플로우 실행 조회
-        // ...
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">CiClient</code> 트레이트 — CI 시스템 추상화</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1">트레이트 메서드 (3개)</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">fetch_latest_build(branch) → BuildResult</code></li>
+                <li><code className="bg-muted px-1 rounded">fetch_latest_tests(branch) → TestResult</code></li>
+                <li><code className="bg-muted px-1 rounded">fetch_lint_warnings(branch) → LintResult</code></li>
+              </ul>
+            </div>
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">GitHubActionsClient</code> 구현체</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">repo: String</code> — 대상 리포</li>
+                <li><code className="bg-muted px-1 rounded">token: String</code> — API 인증</li>
+                <li>GitHub Actions REST API로 최신 워크플로우 실행 조회</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>CiClient 트레이트</strong>: CI 시스템 추상화<br />
           구현체: GitHubActions, GitLabCI, CircleCI, Jenkins<br />
@@ -175,30 +167,27 @@ impl CiClient for GitHubActionsClient {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">캐시 전략 — 과도한 API 호출 방지</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct CachedCiClient {
-    inner: Box<dyn CiClient>,
-    cache: Arc<Mutex<HashMap<String, (DateTime<Utc>, BuildResult)>>>,
-    ttl: Duration,
-}
-
-#[async_trait]
-impl CiClient for CachedCiClient {
-    async fn fetch_latest_build(&self, branch: &str) -> Result<BuildResult> {
-        let mut cache = self.cache.lock().await;
-
-        // 캐시 확인
-        if let Some((cached_at, result)) = cache.get(branch) {
-            if Utc::now() - *cached_at < self.ttl {
-                return Ok(result.clone());
-            }
-        }
-
-        // 실제 호출
-        let result = self.inner.fetch_latest_build(branch).await?;
-        cache.insert(branch.into(), (Utc::now(), result.clone()));
-        Ok(result)
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
+          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">CachedCiClient</code> — TTL 기반 캐시 데코레이터</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+            <div className="bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1">필드</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li><code className="bg-muted px-1 rounded">inner</code> — 실제 CiClient</li>
+                <li><code className="bg-muted px-1 rounded">cache</code> — branch별 결과 맵</li>
+                <li><code className="bg-muted px-1 rounded">ttl</code> — 캐시 유효 시간</li>
+              </ul>
+            </div>
+            <div className="sm:col-span-2 bg-background border rounded-lg p-3">
+              <p className="text-xs font-semibold mb-1">동작 흐름</p>
+              <ul className="text-xs space-y-0.5 text-muted-foreground">
+                <li>1. Mutex lock → 캐시에서 branch 조회</li>
+                <li>2. TTL 이내면 캐시 결과 반환 (API 호출 생략)</li>
+                <li>3. 만료/미적중이면 <code className="bg-muted px-1 rounded">inner.fetch_latest_build()</code> 호출 후 캐시 갱신</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>30초 TTL 캐시</strong>: 같은 Lane 평가 내 중복 호출 제거<br />
           GitHub API는 시간당 5000회 제한 — 캐시 필수<br />

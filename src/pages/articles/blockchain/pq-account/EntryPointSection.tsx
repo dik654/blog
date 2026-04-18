@@ -28,80 +28,94 @@ export default function EntryPointSection({ onCodeRef }: { onCodeRef: (key: stri
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">handleOps 3단계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// EntryPoint.handleOps(ops[], beneficiary)
-
-// Phase 1: Validation (verification loop)
-for each userOp in ops:
-    // 1a) Deploy account if needed
-    if userOp.initCode != "":
-        deployAccount(userOp.sender, userOp.initCode)
-
-    // 1b) Account.validateUserOp()
-    //     - signature check
-    //     - nonce check
-    //     - prefund (missing balance 반환)
-    validationData = account.validateUserOp(userOp, hash, missingFunds)
-
-    // 1c) Paymaster.validatePaymasterUserOp() (if used)
-    if userOp.paymasterAndData != "":
-        paymaster.validate(...)
-
-// Phase 2: Execution (execution loop)
-for each userOp in ops:
-    // 2a) Execute callData
-    try account.execute(callData) {
-        opSuccess = true
-    } catch {
-        opSuccess = false
-        // state revert but gas refund X
-    }
-
-    // 2b) Paymaster postOp (if used)
-    if paymaster:
-        paymaster.postOp(opSuccess, actualGasCost)
-
-// Phase 3: Reimbursement
-// EntryPoint → beneficiary.transfer(total_gas * effective_price)
-
-// 장점
-// ✓ Fail-safe: 한 op 실패 다른 op 영향 X
-// ✓ Bundler 보상 보장
-// ✓ Paymaster 비용 통제`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Phase 1: Validation (verification loop)</p>
+            <p className="text-xs text-muted-foreground mb-2"><code>EntryPoint.handleOps(ops[], beneficiary)</code></p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>1a) Deploy</strong> &mdash; <code>initCode != ""</code>이면 <code>deployAccount(sender, initCode)</code></li>
+              <li><strong>1b) Validate</strong> &mdash; <code>account.validateUserOp(userOp, hash, missingFunds)</code>: signature check + nonce check + prefund</li>
+              <li><strong>1c) Paymaster</strong> &mdash; <code>paymasterAndData != ""</code>이면 <code>paymaster.validate(...)</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Phase 2: Execution (execution loop)</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li><strong>2a) Execute</strong> &mdash; <code>account.execute(callData)</code> &rarr; 성공/실패 기록 (실패 시 state revert, gas refund 없음)</li>
+              <li><strong>2b) PostOp</strong> &mdash; paymaster 사용 시 <code>paymaster.postOp(opSuccess, actualGasCost)</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Phase 3: Reimbursement</p>
+            <p className="text-sm text-muted-foreground"><code>EntryPoint</code> &rarr; <code>beneficiary.transfer(total_gas * effective_price)</code></p>
+          </div>
+          <div className="rounded-lg border border-green-500/30 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">설계 장점</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li><strong>Fail-safe</strong>: 한 op 실패해도 다른 op에 영향 없음</li>
+              <li><strong>Bundler 보상 보장</strong>: Phase 1에서 예치금 선확보</li>
+              <li><strong>Paymaster 비용 통제</strong>: postOp에서 정산</li>
+            </ul>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Bundler 경제학</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Bundler 역할
-// - Mempool에서 UserOp 수집
-// - 유효성 simulate
-// - 배치로 묶어 handleOps 제출
-// - MEV 수익 획득 가능
-
-// Simulation 중요성
-// - Bundler는 invalid UserOp으로 혼자 gas 지불 위험
-// - eth_estimateGas + eth_call로 미리 검증
-// - Invalid op 제외
-
-// Reputation system (EIP-4337)
-// - 각 entity (sender, paymaster, factory)에 점수
-// - DoS 공격 시도 → 점수 하락
-// - 일정 점수 이하면 throttle/ban
-
-// MEV opportunities
-// - Ordering within bundle
-// - Censorship (user 우선순위)
-// - Arbitrage embedded
-// - Sandwich attack (공식 비방)
-
-// Known bundlers (2024)
-// - Alchemy Rundler
-// - Stackup
-// - Biconomy
-// - Pimlico
-// - ZeroDev Ultra Relay
-
-// Bundler revenue
-// - transaction fees
-// - MEV profits
-// - Paymaster relationships`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Bundler 역할</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Mempool에서 UserOp 수집</li>
+              <li><code>eth_estimateGas</code> + <code>eth_call</code>로 유효성 simulate</li>
+              <li>배치로 묶어 <code>handleOps</code> 제출</li>
+              <li>MEV 수익 획득 가능</li>
+            </ul>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Simulation 중요성</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>Invalid UserOp &rarr; Bundler가 혼자 gas 지불 위험</li>
+                <li>사전 검증으로 invalid op 제외</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">Reputation System (EIP-4337)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>각 entity (sender, paymaster, factory)에 점수</li>
+                <li>DoS 시도 &rarr; 점수 하락 &rarr; throttle/ban</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">MEV Opportunities</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>Bundle 내 ordering</li>
+                <li>Censorship (user 우선순위)</li>
+                <li>Embedded arbitrage</li>
+                <li>Sandwich attack (공식 비방)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border/60 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Bundler Revenue</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>Transaction fees</li>
+                <li>MEV profits</li>
+                <li>Paymaster relationships</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-muted-foreground mb-2">Known Bundlers (2024)</p>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-sm text-center text-muted-foreground">
+              <span>Alchemy Rundler</span>
+              <span>Stackup</span>
+              <span>Biconomy</span>
+              <span>Pimlico</span>
+              <span>ZeroDev Ultra Relay</span>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

@@ -30,42 +30,37 @@ export default function EthApi({ onCodeRef }: { onCodeRef: (key: string, ref: Co
 
         {/* ── eth_getBalance 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">eth_getBalance — 단순 조회</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn balance(
-    &self,
-    address: Address,
-    block_id: BlockId,
-) -> RpcResult<U256> {
-    // 1. BlockId 해석: "latest", "pending", "finalized", 블록 번호, 블록 해시
-    let state = self.state_at_block_id(block_id)?;
-
-    // 2. StateProvider에서 계정 조회
-    let account = state.account(&address)?.unwrap_or_default();
-
-    // 3. 잔고 반환 (wei 단위)
-    Ok(account.balance)
-}
-
-// BlockId 종류:
-pub enum BlockId {
-    Hash(B256),                          // 특정 블록 해시
-    Number(BlockNumberOrTag),            // 번호 또는 태그
-}
-
-pub enum BlockNumberOrTag {
-    Latest,     // 현재 tip
-    Finalized,  // finalized 블록
-    Safe,       // safe 블록
-    Earliest,   // genesis
-    Pending,    // 아직 포함 안된 다음 블록 (txpool 포함)
-    Number(u64), // 특정 번호
-}
-
-// state_at_block_id 동작:
-// - "latest": LatestStateProvider (최신 MDBX 상태)
-// - 과거 블록: HistoricalStateProvider (ChangeSets 역추적)
-// - "pending": txpool 시뮬레이션 상태 (pending TX 적용 후)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-2">eth_getBalance 흐름</p>
+            <div className="space-y-1 text-sm text-foreground/80">
+              <p>1. <code>state_at_block_id(block_id)</code>로 StateProvider 결정</p>
+              <p>2. <code>state.account(&amp;address)?.unwrap_or_default()</code> 계정 조회</p>
+              <p>3. <code>account.balance</code> 반환(wei 단위)</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">BlockNumberOrTag</p>
+              <div className="grid grid-cols-2 gap-1 text-sm text-foreground/80">
+                <span><code>Latest</code> — 현재 tip</span>
+                <span><code>Finalized</code></span>
+                <span><code>Safe</code></span>
+                <span><code>Earliest</code> — genesis</span>
+                <span><code>Pending</code> — txpool 포함</span>
+                <span><code>Number(u64)</code></span>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+              <p className="text-xs font-bold text-foreground/70 mb-2">StateProvider 선택</p>
+              <div className="space-y-1 text-sm text-foreground/80">
+                <p>"latest" → <code>LatestStateProvider</code>(최신 MDBX)</p>
+                <p>과거 블록 → <code>HistoricalStateProvider</code>(ChangeSets 역추적)</p>
+                <p>"pending" → txpool 시뮬레이션 상태</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>eth_getBalance</code>는 <strong>StateProvider 1회 호출</strong>로 완료.<br />
           <code>block_id</code>에 따라 다른 Provider 구현체 선택 → 통일된 인터페이스로 처리.<br />
@@ -74,50 +69,22 @@ pub enum BlockNumberOrTag {
 
         {/* ── eth_call 구현 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">eth_call — EVM 시뮬레이션</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn call(
-    &self,
-    request: CallRequest,
-    block_id: BlockId,
-    overrides: Option<StateOverride>,
-) -> RpcResult<Bytes> {
-    // 1. 기준 블록 상태 로드
-    let state = self.state_at_block_id(block_id)?;
-
-    // 2. state overrides 적용 (디버깅용)
-    let state = if let Some(overrides) = overrides {
-        apply_state_overrides(state, overrides)
-    } else { state };
-
-    // 3. revm 설정 & 블록 환경
-    let mut evm = Evm::builder()
-        .with_db(StateProviderDatabase::new(state))
-        .with_block_env(self.build_block_env(block_id)?)
-        .with_tx_env(request.into_tx_env())
-        .build();
-
-    // 4. TX 실행 (상태 변경 없음, 결과만 수집)
-    let ResultAndState { result, .. } = evm.transact()?;
-
-    // 5. 출력 반환
-    match result {
-        ExecutionResult::Success { output, .. } => Ok(output.into_data()),
-        ExecutionResult::Revert { output, .. } => Err(RevertError(output)),
-        ExecutionResult::Halt { reason, .. } => Err(HaltError(reason)),
-    }
-}
-
-// 특징:
-// - read-only: 상태 변경 disk에 기록 안 함
-// - 현재 블록 기준으로 시뮬레이션
-// - gas 무제한 (기본 50M)
-// - gas price 0 가능 (비용 계산 무시)
-
-// 사용처:
-// - ERC20 balanceOf 조회
-// - Uniswap 쿼터 계산
-// - 컨트랙트 view/pure 함수 호출`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">eth_call — EVM 시뮬레이션 흐름</p>
+          <div className="space-y-1 text-sm text-foreground/80 mb-3">
+            <p>1. <code>state_at_block_id(block_id)</code>로 기준 블록 상태 로드</p>
+            <p>2. <code>StateOverride</code> 적용(선택적, 디버깅용)</p>
+            <p>3. <code>Evm::builder()</code>로 revm 설정 — <code>StateProviderDatabase</code> + <code>block_env</code> + <code>tx_env</code></p>
+            <p>4. <code>evm.transact()</code> 실행(read-only, 상태 변경 기록 안 함)</p>
+            <p>5. <code>Success</code> → 출력 반환 / <code>Revert</code> → 에러 / <code>Halt</code> → 에러</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">read-only</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">gas 무제한(50M)</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">gas price 0 가능</div>
+            <div className="rounded border border-border/40 p-1.5 text-foreground/60">ERC20/Uniswap 조회</div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>eth_call</code>은 <strong>상태 변경 없이 EVM 실행</strong> — revm의 transact() 호출.<br />
           <code>StateOverride</code>로 가상의 상태 주입 가능 (디버깅/시뮬레이션).<br />
@@ -126,50 +93,29 @@ pub enum BlockNumberOrTag {
 
         {/* ── eth_estimateGas ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">eth_estimateGas — binary search</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn estimate_gas(
-    &self,
-    request: CallRequest,
-    block_id: BlockId,
-) -> RpcResult<U256> {
-    let state = self.state_at_block_id(block_id)?;
-
-    // Binary search 범위
-    let mut lo = intrinsic_gas(&request);  // 최소 21000
-    let mut hi = request.gas.unwrap_or(30_000_000);  // 블록 gas_limit
-
-    // 초기 실행: hi로 성공하는지 확인
-    let initial = execute_tx_with_gas(request.clone(), hi, state)?;
-    if !initial.is_success() {
-        return Err(ExecutionReverted);
-    }
-
-    // Binary search
-    while hi - lo > 1 {
-        let mid = (lo + hi) / 2;
-        let result = execute_tx_with_gas(request.clone(), mid, state)?;
-        if result.is_success() {
-            hi = mid;  // mid로 성공 → 더 낮게 시도
-        } else {
-            lo = mid;  // mid로 실패 → 더 높게 시도
-        }
-    }
-
-    // 수렴 지점: hi가 최소 필요 가스
-    // 여유분 +10% 추가 (안전 마진)
-    let estimated = hi * 110 / 100;
-    Ok(U256::from(estimated))
-}
-
-// 성능:
-// - log2(30_000_000 / 21_000) ≈ 11 iterations
-// - 각 iteration = revm 실행 (평균 ~수 ms)
-// - 총 estimateGas 응답: ~수십 ms
-
-// 최적화:
-// - memoize: 같은 TX의 여러 estimate 재사용
-// - starting hint: 과거 유사 TX의 gas_used 참조`}
-        </pre>
+        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 my-4">
+          <p className="text-xs font-bold text-foreground/70 mb-3">eth_estimateGas — binary search</p>
+          <div className="space-y-1 text-sm text-foreground/80 mb-3">
+            <p>범위: <code>lo</code> = <code>intrinsic_gas</code>(최소 21000) / <code>hi</code> = <code>gas_limit</code>(30M)</p>
+            <p>초기: <code>hi</code>로 실행 성공 확인 → 실패 시 <code>ExecutionReverted</code></p>
+            <p>탐색: <code>mid = (lo + hi) / 2</code> → 성공이면 <code>hi = mid</code>, 실패면 <code>lo = mid</code></p>
+            <p>결과: 수렴 지점 <code>hi</code> × 110%(안전 마진) 반환</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-sm text-center">
+            <div className="rounded border border-border/40 p-2">
+              <p className="text-foreground/60">반복 횟수</p>
+              <p className="text-xs text-foreground/40">~11회 (log2(30M/21K))</p>
+            </div>
+            <div className="rounded border border-border/40 p-2">
+              <p className="text-foreground/60">각 반복</p>
+              <p className="text-xs text-foreground/40">revm 실행 ~수 ms</p>
+            </div>
+            <div className="rounded border border-border/40 p-2">
+              <p className="text-foreground/60">총 응답</p>
+              <p className="text-xs text-foreground/40">~수십 ms</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>eth_estimateGas</code>는 <strong>binary search + revm 실행</strong>.<br />
           정확한 gas 사용량은 실행해봐야 알 수 있음 — 점진적으로 범위 좁히기.<br />
@@ -178,51 +124,26 @@ pub enum BlockNumberOrTag {
 
         {/* ── eth_getLogs ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">eth_getLogs — Bloom filter 활용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`async fn get_logs(
-    &self,
-    filter: LogFilter,
-) -> RpcResult<Vec<Log>> {
-    let mut matching_logs = Vec::new();
-
-    // 블록 범위 결정
-    let from = filter.from_block.unwrap_or(0);
-    let to = filter.to_block.unwrap_or(tip);
-
-    // 블록별 순회
-    for block_num in from..=to {
-        let block_bloom = self.header_by_number(block_num)?.logs_bloom;
-
-        // 1. Bloom 필터로 O(1) 사전 필터링
-        if !matches_filter_bloom(&block_bloom, &filter) {
-            continue;  // 이 블록은 매칭 없음 확정
-        }
-
-        // 2. Bloom 통과 블록만 실제 로그 조회
-        let receipts = self.receipts_by_block(block_num)?;
-        for receipt in receipts {
-            for log in &receipt.logs {
-                if filter.matches(log) {
-                    matching_logs.push(log.clone());
-                }
-            }
-        }
-    }
-
-    Ok(matching_logs)
-}
-
-// Bloom 사전 필터링의 효과:
-// 100만 블록 범위 쿼리 가정:
-// - Bloom 없이: 100만 블록 × 평균 150 TX = 1.5억 log 전수 검사
-// - Bloom 있음: ~0.2% 히트 = 2000 블록만 검사 = 30만 log
-// - 500배 가속
-
-// 제한:
-// - 기본 block 범위 제한: ~10K (인프라 보호)
-// - 결과 개수 제한: ~10K logs (response size)
-// - 초과 시 에러 반환 (400 Bad Request)`}
-        </pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-bold text-foreground/70 mb-3">eth_getLogs — Bloom filter 활용</p>
+            <div className="space-y-1 text-sm text-foreground/80 mb-2">
+              <p>1. 블록 범위 결정: <code>from_block</code> ~ <code>to_block</code></p>
+              <p>2. 각 블록의 <code>logs_bloom</code>으로 O(1) 사전 필터링 — 매칭 없으면 <code>continue</code></p>
+              <p>3. Bloom 통과 블록만 실제 receipt/log 조회 → <code>filter.matches(log)</code></p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded border border-green-500/30 bg-green-500/5 p-3 text-sm">
+              <p className="text-xs font-bold text-green-500 mb-1">Bloom 필터링 효과</p>
+              <p className="text-foreground/70">100만 블록 범위: Bloom 없이 1.5억 log 전수 검사 → Bloom 있으면 ~0.2%(2000 블록)만 검사 = <strong>500배 가속</strong></p>
+            </div>
+            <div className="rounded border border-border/40 p-3 text-sm">
+              <p className="text-xs font-bold text-foreground/60 mb-1">제한</p>
+              <p className="text-foreground/70">블록 범위 ~10K / 결과 ~10K logs / 초과 시 400 에러 반환(인프라 보호)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>eth_getLogs</code>는 <strong>Bloom filter로 99% 블록 건너뜀</strong>.<br />
           블룸 통과한 ~0.2% 블록만 실제 log 검사 → 500배 가속.<br />

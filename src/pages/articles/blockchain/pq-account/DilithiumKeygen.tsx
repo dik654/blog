@@ -1,5 +1,6 @@
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
+import M from '@/components/ui/math';
 import KeygenViz from './viz/KeygenViz';
 import { codeRefs } from './codeRefs';
 
@@ -34,37 +35,59 @@ export default function DilithiumKeygen({ onCodeRef }: { onCodeRef: (key: string
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Module-LWE 수학적 기초</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// LWE (Learning With Errors, Regev 2005)
-// 문제: 주어진 (A, b) where b = A·s + e mod q, s 찾기
-// - s: secret vector
-// - e: small error
-// - A: public random matrix
-
-// Hardness assumption
-// - SIS (Short Integer Solution) 문제와 동치
-// - Lattice SVP에 reduction
-// - Best quantum attack: 2^(0.292 · dim) time
-
-// Module-LWE (MLWE)
-// LWE의 변형: polynomial ring 사용
-// R_q = Z_q[X] / (X^n + 1)
-// Vector elements are polynomials
-// - 더 효율적 (FFT 적용 가능)
-// - 구조화된 보안 가정 (weaker than general LWE)
-
-// Dilithium keygen 수식
-// 1) seed 선택
-// 2) A = expand(seed) ∈ R_q^{k×l}
-// 3) s1 ∈ S_η^l, s2 ∈ S_η^k (short polynomials)
-// 4) t = A·s1 + s2
-// 5) (t_high, t_low) = power2round(t)
-// Public key: (seed, t_high)
-// Secret key: (seed, tr, s1, s2, t_low)
-
-// NIST security levels
-// Dilithium2: Level 2 (~AES-128 equivalent)
-// Dilithium3: Level 3 (~AES-192)
-// Dilithium5: Level 5 (~AES-256)`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">LWE (Learning With Errors, Regev 2005)</p>
+            <p className="text-sm text-muted-foreground mb-2">
+              문제: 주어진 <M>{'(A, b)'}</M> where <M>{'b = A \\cdot s + e \\mod q'}</M>, <M>{'s'}</M> 찾기
+            </p>
+            <div className="grid grid-cols-3 gap-2 text-sm text-muted-foreground">
+              <div><M>{'s'}</M>: secret vector</div>
+              <div><M>{'e'}</M>: small error</div>
+              <div><M>{'A'}</M>: public random matrix</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Hardness Assumption</p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>SIS (Short Integer Solution) 문제와 동치</li>
+              <li>Lattice SVP에 reduction</li>
+              <li>Best quantum attack: <M>{'2^{0.292 \\cdot \\dim}'}</M> time</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-2">Module-LWE (MLWE)</p>
+            <p className="text-sm text-muted-foreground mb-2">
+              LWE의 변형: polynomial ring <M>{'R_q = \\mathbb{Z}_q[X]/(X^n + 1)'}</M> 사용
+            </p>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>Vector elements가 polynomials &mdash; 더 효율적 (FFT 적용 가능)</li>
+              <li>구조화된 보안 가정 (weaker than general LWE)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Dilithium Keygen 수식</p>
+            <ol className="text-sm space-y-1.5 text-muted-foreground list-decimal list-inside">
+              <li>seed 선택</li>
+              <li><M>{'A = \\text{expand}(\\text{seed}) \\in R_q^{k \\times l}'}</M></li>
+              <li><M>{'s_1 \\in S_\\eta^l,\\; s_2 \\in S_\\eta^k'}</M> (short polynomials)</li>
+              <li><M>{'t = A \\cdot s_1 + s_2'}</M></li>
+              <li><M>{'(t_{\\text{high}}, t_{\\text{low}}) = \\text{power2round}(t)'}</M></li>
+            </ol>
+            <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground mt-3">
+              <div><strong>Public key</strong>: (seed, <M>{'t_{\\text{high}}'}</M>)</div>
+              <div><strong>Secret key</strong>: (seed, tr, <M>{'s_1, s_2, t_{\\text{low}}'}</M>)</div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-muted-foreground mb-2">NIST Security Levels</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">Dilithium2</p><p className="font-mono">Level 2 (~AES-128)</p></div>
+              <div><p className="text-muted-foreground">Dilithium3</p><p className="font-mono">Level 3 (~AES-192)</p></div>
+              <div><p className="text-muted-foreground">Dilithium5</p><p className="font-mono">Level 5 (~AES-256)</p></div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">키/서명 크기 트레이드오프</h3>
         <div className="overflow-x-auto">

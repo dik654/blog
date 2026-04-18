@@ -13,7 +13,7 @@ export default function FCLimitFCLayer({ step }: { step: number }) {
         </g>
       ))}
       {step >= 1 && (
-        <text x={114} y={128} textAnchor="middle" fontSize={11} fill="#f59e0b">1D 벡터</text>
+        <text x={114} y={136} textAnchor="middle" fontSize={9} fill="#f59e0b">1D 벡터</text>
       )}
 
       {/* FC neurons */}
@@ -36,7 +36,7 @@ export default function FCLimitFCLayer({ step }: { step: number }) {
       )}
 
       {step >= 2 && (
-        <motion.text x={180} y={128} textAnchor="middle" fontSize={11} fill="#ef4444" fontWeight={600}
+        <motion.text x={180} y={148} textAnchor="middle" fontSize={9} fill="#ef4444" fontWeight={600}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           {GRID * GRID}×4 = {GRID * GRID * 4} 파라미터
         </motion.text>

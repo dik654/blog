@@ -1,4 +1,5 @@
 import MultilayerViz from './viz/MultilayerViz';
+import ForwardPropDetailViz from './viz/ForwardPropDetailViz';
 import CoordinateRemapViz from './viz/CoordinateRemapViz';
 import ReLUTruthTableViz from './viz/ReLUTruthTableViz';
 import LinearCollapseViz from './viz/LinearCollapseViz';
@@ -63,15 +64,7 @@ export default function Multilayer() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-6 mb-3">Forward Propagation — 수식</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// l번째 층의 계산 (벡터화)
-z^(l) = W^(l) · a^(l-1) + b^(l)    // 선형 변환
-a^(l) = activation(z^(l))          // 비선형 활성화
-
-// W^(l): 가중치 행렬 [다음_층_크기 × 현재_층_크기]
-// b^(l): 편향 벡터
-// a^(l-1): 이전 층 출력 (a^(0) = 입력 x)`}
-        </pre>
+        <div className="not-prose"><ForwardPropDetailViz /></div>
         <p>
           선형 <code>W·a + b</code>와 비선형 <code>activation</code>의 교대 — <strong>이 쌍이 MLP의 최소 반복 단위</strong>
         </p>

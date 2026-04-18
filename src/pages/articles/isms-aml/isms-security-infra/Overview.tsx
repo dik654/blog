@@ -1,8 +1,14 @@
+import OverviewViz from './viz/OverviewViz';
+import DefenseLayersInline from './viz/DefenseLayersInline';
+import IsmsLinkInline from './viz/IsmsLinkInline';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">보안 인프라 아키텍처</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+        <OverviewViz />
 
         <h3 className="text-xl font-semibold mt-2 mb-3">다계층 방어 (Defense in Depth)</h3>
         <p>
@@ -15,6 +21,8 @@ export default function Overview() {
           네트워크 보안 장비의 배치는 외부에서 내부로 향하는 트래픽 흐름을 기준으로 설계한다.
           각 단계에서 서로 다른 종류의 위협을 걸러내므로, 하나의 장비에 모든 것을 의존해서는 안 된다.
         </p>
+
+        <DefenseLayersInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">네트워크 보안 장비 배치 흐름</h3>
         <p>
@@ -108,6 +116,8 @@ export default function Overview() {
             </tbody>
           </table>
         </div>
+
+        <IsmsLinkInline />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">ISMS 보호대책 연계</h3>
         <p>

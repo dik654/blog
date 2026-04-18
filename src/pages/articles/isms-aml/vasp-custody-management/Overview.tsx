@@ -1,7 +1,12 @@
+import OverviewViz from './viz/OverviewViz';
+import OverviewSeparationViz from './viz/OverviewSeparationViz';
+import OverviewLiabilityViz from './viz/OverviewLiabilityViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">가상자산 보관 의무</h2>
+      <OverviewViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-4">왜 보관 의무가 필요한가</h3>
@@ -58,6 +63,10 @@ export default function Overview() {
           <br />
           혼합 보관은 장부 조작, 횡령, 지급 불능 시 이용자 자산 훼손의 직접적 원인이 된다.
         </p>
+
+        <div className="not-prose my-6">
+          <OverviewSeparationViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">수량 동일성과 종류 동일성</h3>
         <p className="leading-7">
@@ -145,6 +154,10 @@ export default function Overview() {
           <br />
           이용자가 기술적 원인을 파악하기 어려운 현실을 반영한 설계로, 금융소비자 보호법의 패턴과 유사하다.
         </p>
+
+        <div className="not-prose my-6">
+          <OverviewLiabilityViz />
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">보관 체계의 전체 구조</h3>
         <p className="leading-7">

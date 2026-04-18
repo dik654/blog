@@ -1,5 +1,6 @@
 import CrossEntropyViz from './viz/CrossEntropyViz';
 import InfoTheoryViz from './viz/InfoTheoryViz';
+import CeStabilityViz from './viz/CeStabilityViz';
 import LabelSmoothingViz from './viz/LabelSmoothingViz';
 
 export default function CrossEntropy() {
@@ -23,37 +24,13 @@ export default function CrossEntropy() {
       <InfoTheoryViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">수치 안정성 — LogSumExp Trick</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 문제: softmax overflow
-// exp(1000) = inf
-// exp(-1000) = 0
-// → NaN 발생
-
-// Naive implementation
-def naive_softmax(x):
-    exp_x = np.exp(x)           // overflow 가능
-    return exp_x / exp_x.sum()
-
-def naive_cross_entropy(logits, target):
-    probs = naive_softmax(logits)
-    return -np.log(probs[target])  // log(0) = -inf
-
-// Stable implementation
-def stable_softmax(x):
-    x_max = x.max()
-    exp_x = np.exp(x - x_max)   // subtract max → no overflow
-    return exp_x / exp_x.sum()
-
-def stable_cross_entropy(logits, target):
-    # log(softmax(x)) = x - max(x) - logsumexp(x)
-    x_max = logits.max()
-    logsumexp = x_max + np.log(np.exp(logits - x_max).sum())
-    log_probs = logits - logsumexp
-    return -log_probs[target]
-
-// PyTorch의 F.cross_entropy는 이미 수치 안정 구현
-// Manual하게 log_softmax + nll_loss 쓰거나
-// 바로 cross_entropy로 logits 전달`}</pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">수치 안정성 · Weighted CE · Focal Loss</h3>
+        <p>
+          overflow/log(0) 문제 해법부터 클래스 불균형 대응까지.
+        </p>
+      </div>
+      <CeStabilityViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Label Smoothing</h3>
         <p>
@@ -63,43 +40,6 @@ def stable_cross_entropy(logits, target):
       </div>
       <LabelSmoothingViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Weighted Cross-Entropy — 클래스 불균형</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 클래스별 loss 가중치 다르게
-
-// 불균형 예: 의료 영상 (정상 95%, 병변 5%)
-// 그냥 CE 사용 시 모델이 전부 "정상" 예측해도 95% accuracy
-
-// 해결: inverse frequency weighting
-class_counts = [950, 50]  # 정상, 병변
-total = sum(class_counts)
-weights = [total/(len(class_counts) * c) for c in class_counts]
-# weights ≈ [0.53, 10.0]
-
-import torch.nn as nn
-criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights))
-
-// Focal Loss (RetinaNet, 2017)
-// FL = -α (1-p_t)^γ log(p_t)
-// - 쉬운 샘플 가중치 줄임
-// - Hard negative mining 효과
-// - γ = 2 (일반적)
-
-class FocalLoss(nn.Module):
-    def __init__(self, alpha=0.25, gamma=2.0):
-        super().__init__()
-        self.alpha = alpha
-        self.gamma = gamma
-
-    def forward(self, logits, target):
-        ce_loss = F.cross_entropy(logits, target, reduction='none')
-        pt = torch.exp(-ce_loss)
-        focal = self.alpha * (1 - pt)**self.gamma * ce_loss
-        return focal.mean()
-
-// Object detection에서 특히 유용
-// - Background class가 dominant
-// - Focal loss로 rare object에 집중`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Cross-Entropy의 우아함</p>

@@ -15,12 +15,28 @@ export default function Overview() {
           목표: LLM이 파일 시스템·셸을 조작할 때 <em>사용자 의도 밖의 작업</em>을 방지<br />
           반대 극: "무제한 실행" 에이전트 — 빠르지만 사고 위험 (rm -rf, .env 유출 등)
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 5개 핵심 컴포넌트
-PermissionMode      ReadOnly | WorkspaceWrite | DangerFullAccess
-PermissionPolicy    규칙 리스트 (allow/deny/prompt 매칭)
-PermissionEnforcer  런타임 게이트 — execute_tool() 진입 시 호출
-ContextOverride     일시적 모드 변경 (특정 도구만, 1회 한정 등)
-HookRunner          사용자 정의 Pre/Post 훅 (JSON 프로토콜)`}</pre>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <div className="bg-muted/60 rounded-lg p-4 border border-border">
+            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">PermissionMode</code></div>
+            <p className="text-sm text-muted-foreground">ReadOnly | WorkspaceWrite | DangerFullAccess 3단계 모드</p>
+          </div>
+          <div className="bg-muted/60 rounded-lg p-4 border border-border">
+            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">PermissionPolicy</code></div>
+            <p className="text-sm text-muted-foreground">규칙 리스트로 allow/deny/prompt 매칭 판정</p>
+          </div>
+          <div className="bg-muted/60 rounded-lg p-4 border border-border">
+            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">PermissionEnforcer</code></div>
+            <p className="text-sm text-muted-foreground">런타임 게이트 — <code className="text-xs">execute_tool()</code> 진입 시 호출</p>
+          </div>
+          <div className="bg-muted/60 rounded-lg p-4 border border-border">
+            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">ContextOverride</code></div>
+            <p className="text-sm text-muted-foreground">일시적 모드 변경 (특정 도구만, 1회 한정 등)</p>
+          </div>
+          <div className="bg-muted/60 rounded-lg p-4 border border-border sm:col-span-2">
+            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">HookRunner</code></div>
+            <p className="text-sm text-muted-foreground">사용자 정의 Pre/Post 훅 (JSON 프로토콜)</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">3단계 PermissionMode</h3>
         <div className="overflow-x-auto">
@@ -62,24 +78,32 @@ HookRunner          사용자 정의 Pre/Post 훅 (JSON 프로토콜)`}</pre>
         <p className="text-sm text-muted-foreground mt-2">* WorkspaceWrite의 쓰기는 워크스페이스 경계 내부로 한정</p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">PermissionMode 타입 정의</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-pub enum PermissionMode {
-    ReadOnly        = 0,
-    WorkspaceWrite  = 1,
-    DangerFullAccess= 2,
-}
-
-impl PermissionMode {
-    pub fn from_cli_flags(flags: &CliFlags) -> Self {
-        if flags.dangerously_skip_permissions {
-            PermissionMode::DangerFullAccess
-        } else if flags.read_only {
-            PermissionMode::ReadOnly
-        } else {
-            PermissionMode::WorkspaceWrite  // 기본값
-        }
-    }
-}`}</pre>
+        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
+          <div className="font-semibold text-sm mb-3">PermissionMode enum</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+            <div className="bg-background rounded px-3 py-2 text-sm border border-border">
+              <code className="text-xs font-mono">ReadOnly = 0</code>
+              <p className="text-xs text-muted-foreground mt-1">읽기 전용, 가장 낮은 권한</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-sm border border-border">
+              <code className="text-xs font-mono">WorkspaceWrite = 1</code>
+              <p className="text-xs text-muted-foreground mt-1">워크스페이스 내 쓰기 허용 (기본값)</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 text-sm border border-border">
+              <code className="text-xs font-mono">DangerFullAccess = 2</code>
+              <p className="text-xs text-muted-foreground mt-1">모든 작업 허용, CI/자동화 전용</p>
+            </div>
+          </div>
+          <div className="text-sm">
+            <span className="font-medium">CLI 플래그 → 모드 결정</span>
+            <div className="flex flex-col gap-1 mt-2 text-xs text-muted-foreground">
+              <span><code className="bg-background px-1 py-0.5 rounded">--dangerously-skip-permissions</code> → DangerFullAccess</span>
+              <span><code className="bg-background px-1 py-0.5 rounded">--read-only</code> → ReadOnly</span>
+              <span>플래그 없음 → WorkspaceWrite (기본값)</span>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3"><code className="bg-background px-1 py-0.5 rounded">PartialOrd</code> derive로 <code className="bg-background px-1 py-0.5 rounded">current &gt;= required</code> 비교 — 수치 순서가 판정 기준</p>
+        </div>
         <p>
           <strong>PartialOrd 구현</strong>: <code>ReadOnly &lt; WorkspaceWrite &lt; DangerFullAccess</code> 순서<br />
           <code>current &gt;= required</code> 비교로 권한 판정 — 수치 순서가 모든 것<br />
@@ -87,22 +111,33 @@ impl PermissionMode {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">각 모드의 실제 동작 예시</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// ReadOnly 모드
-User:   "main.rs를 읽고 내용 요약해줘"
-Agent:  read_file(main.rs) → Allow → 읽기 성공
-User:   "이 파일에 println 추가해줘"
-Agent:  edit_file(main.rs, ...) → Deny("read-only mode")
-        → 사용자에게 "권한 부족, 모드 변경 필요" 표시
-
-// WorkspaceWrite 모드
-User:   "main.rs에 println 추가"
-Agent:  edit_file(main.rs, ...) → Allow (workspace 내부) → 성공
-User:   "cargo test 실행"
-Agent:  bash("cargo test") → Prompt → 사용자 확인 후 실행
-
-// DangerFullAccess 모드
-User:   "cargo test 실행"
-Agent:  bash("cargo test") → Allow → 즉시 실행 (Prompt 없음)`}</pre>
+        <div className="not-prose space-y-3 my-4">
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2 text-red-600 dark:text-red-400">ReadOnly 모드</div>
+            <div className="space-y-1.5 text-sm">
+              <p><span className="text-muted-foreground">User:</span> "main.rs를 읽고 내용 요약해줘"</p>
+              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">read_file(main.rs)</code> → <span className="text-green-600 font-medium">Allow</span> → 읽기 성공</p>
+              <p><span className="text-muted-foreground">User:</span> "이 파일에 println 추가해줘"</p>
+              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">edit_file(main.rs)</code> → <span className="text-red-600 font-medium">Deny</span> → "권한 부족, 모드 변경 필요"</p>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2 text-amber-600 dark:text-amber-400">WorkspaceWrite 모드</div>
+            <div className="space-y-1.5 text-sm">
+              <p><span className="text-muted-foreground">User:</span> "main.rs에 println 추가"</p>
+              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">edit_file(main.rs)</code> → <span className="text-green-600 font-medium">Allow</span> (workspace 내부) → 성공</p>
+              <p><span className="text-muted-foreground">User:</span> "cargo test 실행"</p>
+              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">bash("cargo test")</code> → <span className="text-amber-600 font-medium">Prompt</span> → 사용자 확인 후 실행</p>
+            </div>
+          </div>
+          <div className="bg-muted/60 rounded-lg border border-border p-4">
+            <div className="font-semibold text-sm mb-2 text-green-600 dark:text-green-400">DangerFullAccess 모드</div>
+            <div className="space-y-1.5 text-sm">
+              <p><span className="text-muted-foreground">User:</span> "cargo test 실행"</p>
+              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">bash("cargo test")</code> → <span className="text-green-600 font-medium">Allow</span> → 즉시 실행 (Prompt 없음)</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">왜 3단계인가 (2도 5도 아닌)</h3>
         <p>

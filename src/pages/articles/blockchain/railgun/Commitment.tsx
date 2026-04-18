@@ -26,74 +26,67 @@ export default function Commitment({ onCodeRef }: { onCodeRef: (key: string, ref
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Incremental Merkle Tree</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// RAILGUN Merkle tree 특성
-// - Depth: 16 (65,536 leaves per tree)
-// - Hash: Poseidon
-// - Incremental (insert-only)
-// - Empty leaves = pre-computed zero values
-
-// Structure
-// Leaf level (depth 16): commitments
-// Intermediate: Poseidon(left, right)
-// Root (depth 0): 단일 값
-
-// Insert 알고리즘
-function insertLeaf(commitment) {
-    let current = commitment;
-    let index = nextLeafIndex++;
-
-    for (let level = 0; level < DEPTH; level++) {
-        if (index % 2 == 0) {
-            // Left child: save for pairing
-            filledSubtrees[level] = current;
-            current = Poseidon(current, ZEROS[level]);
-        } else {
-            // Right child: pair with stored left
-            current = Poseidon(filledSubtrees[level], current);
-        }
-        index >>= 1;
-    }
-
-    roots[rootHistoryIndex++] = current;
-}
-
-// 최적화
-// 1) filledSubtrees[] 배열로 log N storage
-// 2) ZEROS[] precomputed zero hashes
-// 3) Root history (recent roots 기억)
-// 4) User는 full tree 저장 불필요
-
-// Tree overflow
-// 65,536 leaves 차면 새 tree 생성
-// Multiple trees → longer Merkle proof path
-// 실전에선 충분 (block당 수 개 commit)`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">RAILGUN Merkle Tree 특성</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">Depth</p><p className="font-mono font-semibold">16</p></div>
+              <div><p className="text-muted-foreground">Max Leaves</p><p className="font-mono font-semibold">65,536</p></div>
+              <div><p className="text-muted-foreground">Hash</p><p className="font-mono font-semibold">Poseidon</p></div>
+              <div><p className="text-muted-foreground">Mode</p><p className="font-mono font-semibold">Insert-only</p></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">Insert 알고리즘 (<code>insertLeaf</code>)</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>current = commitment</code>, <code>index = nextLeafIndex++</code></li>
+                <li>level 0 &rarr; 15 순회:</li>
+                <li>&bull; <code>index % 2 == 0</code> (left child) &rarr; <code>filledSubtrees[level] = current</code>, <code>Poseidon(current, ZEROS[level])</code></li>
+                <li>&bull; <code>index % 2 == 1</code> (right child) &rarr; <code>Poseidon(filledSubtrees[level], current)</code></li>
+                <li>&bull; <code>index &gt;&gt;= 1</code></li>
+                <li>결과: <code>roots[rootHistoryIndex++] = current</code></li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-amber-500/30 p-4">
+              <p className="font-semibold text-sm text-amber-400 mb-2">최적화 기법</p>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li><code>filledSubtrees[]</code> 배열로 <strong>O(log N)</strong> storage</li>
+                <li><code>ZEROS[]</code> precomputed zero hashes</li>
+                <li>Root history &mdash; recent roots 기억</li>
+                <li>User는 full tree 저장 불필요</li>
+              </ul>
+              <p className="text-xs text-muted-foreground mt-2">65,536 leaves 초과 시 새 tree 생성. 실전에선 block당 수 개 commit으로 충분.</p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Zero Hash 최적화</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 문제: Empty leaves도 hash 필요
-// Naive: 매 insert마다 65,535 empty hashes 재계산
-
-// 해결: Pre-computed zero hashes
-// ZEROS[0] = 0 (empty leaf sentinel)
-// ZEROS[1] = Poseidon(0, 0)
-// ZEROS[2] = Poseidon(ZEROS[1], ZEROS[1])
-// ...
-// ZEROS[16] = empty tree's root
-
-// Contract deployment 시 한 번만 계산
-uint256[] private ZEROS = [
-    0x0,
-    0x2098f5fb9e239eab3ceac3f27b81e481dc3124d55ffed523a839ee8446b64864,
-    0x1069673dcdb12263df301a6ff584a7ec261a44cb9dc68df067a4774460b1f1e1,
-    // ... total 17 values
-];
-
-// Insert 시 ZEROS 재사용
-// → O(log N) 계산 per insert
-// → Gas cost 거의 일정
-
-// 고정 cost
-// Insert gas: ~100K (16 levels × 6K gas)
-// 대안: 동적 zero tree → 수 MB gas`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">문제</p>
+              <p className="text-sm text-muted-foreground">Empty leaves도 hash 필요. Naive 접근은 매 insert마다 65,535 empty hashes를 재계산 &mdash; 비현실적.</p>
+            </div>
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">해결: Pre-computed Zero Hashes</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><code>ZEROS[0] = 0</code> (empty leaf sentinel)</li>
+                <li><code>ZEROS[1] = Poseidon(0, 0)</code></li>
+                <li><code>ZEROS[2] = Poseidon(ZEROS[1], ZEROS[1])</code></li>
+                <li>... <code>ZEROS[16]</code> = empty tree root</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-violet-400 mb-2">Gas 비용 비교</p>
+            <div className="grid grid-cols-3 gap-3 text-sm text-center">
+              <div><p className="text-muted-foreground">배포 시</p><p className="font-mono">17개 값 1회 계산</p></div>
+              <div><p className="text-muted-foreground">Insert당</p><p className="font-mono font-semibold">~100K gas</p><p className="text-xs text-muted-foreground">16 levels x 6K gas</p></div>
+              <div><p className="text-muted-foreground">복잡도</p><p className="font-mono font-semibold">O(log N)</p><p className="text-xs text-muted-foreground">거의 일정</p></div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

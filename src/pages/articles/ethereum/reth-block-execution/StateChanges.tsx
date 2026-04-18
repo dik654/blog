@@ -31,42 +31,50 @@ export default function StateChanges({ onCodeRef }: { onCodeRef: (key: string, r
 
         {/* ── BundleAccount 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">BundleAccount — 계정 상태 변경 단위</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`pub struct BundleAccount {
-    /// 블록 실행 전 계정 상태 (None이면 새로 생성된 계정)
-    pub original_info: Option<AccountInfo>,
-
-    /// 블록 실행 후 계정 상태 (None이면 selfdestruct)
-    pub info: Option<AccountInfo>,
-
-    /// 변경된 스토리지 슬롯들
-    pub storage: HashMap<U256, StorageSlot>,
-
-    /// 계정 상태 태그
-    pub status: AccountStatus,
-}
-
-pub enum AccountStatus {
-    LoadedNotExisting,  // DB에 없는 계정 (존재하지 않음 상태)
-    Loaded,             // DB에서 로드만, 변경 없음
-    Changed,            // 잔고/nonce/storage 변경
-    Destroyed,          // selfdestruct로 제거
-    DestroyedChanged,   // 제거 후 같은 블록에서 다시 생성
-    DestroyedAgain,     // 다시 제거
-}
-
-pub struct AccountInfo {
-    pub balance: U256,
-    pub nonce: u64,
-    pub code_hash: B256,
-    pub code: Option<Bytecode>,  // optional (캐싱)
-}
-
-pub struct StorageSlot {
-    pub previous_or_original_value: U256,  // pre-state
-    pub present_value: U256,               // post-state
-}`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-indigo-500 mb-2">BundleAccount</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">original_info</code>
+                <span className="text-foreground/70"><code>Option&lt;AccountInfo&gt;</code> — 실행 전 상태 (None = 새 계정)</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">info</code>
+                <span className="text-foreground/70"><code>Option&lt;AccountInfo&gt;</code> — 실행 후 상태 (None = selfdestruct)</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">storage</code>
+                <span className="text-foreground/70"><code>HashMap&lt;U256, StorageSlot&gt;</code> — 변경된 슬롯 (pre/post 값)</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">status</code>
+                <span className="text-foreground/70"><code>AccountStatus</code> — 계정 생명주기 태그</span>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+              <p className="text-xs font-semibold text-foreground/60 mb-1.5">AccountStatus enum</p>
+              <div className="space-y-0.5 text-xs text-foreground/50">
+                <p><code>LoadedNotExisting</code> — DB에 없는 계정</p>
+                <p><code>Loaded</code> — 로드만, 변경 없음</p>
+                <p><code>Changed</code> — 잔고/nonce/storage 변경</p>
+                <p><code>Destroyed</code> — selfdestruct 제거</p>
+                <p><code>DestroyedChanged</code> — 제거 후 재생성</p>
+                <p><code>DestroyedAgain</code> — 다시 제거</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+              <p className="text-xs font-semibold text-foreground/60 mb-1.5">AccountInfo / StorageSlot</p>
+              <div className="space-y-0.5 text-xs text-foreground/50">
+                <p><code>balance: U256</code>, <code>nonce: u64</code>, <code>code_hash: B256</code></p>
+                <p><code>code: Option&lt;Bytecode&gt;</code> (캐싱)</p>
+                <p className="mt-1"><code>StorageSlot</code>: <code>previous_or_original_value</code>(pre) + <code>present_value</code>(post)</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           각 <code>BundleAccount</code>가 <strong>pre/post state 쌍</strong> 유지.<br />
           <code>AccountStatus</code>는 생명주기 전체를 표현 — selfdestruct 후 재생성(CREATE2 같은 주소) 케이스까지 고려.<br />
@@ -75,55 +83,35 @@ pub struct StorageSlot {
 
         {/* ── write_to_storage 내부 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">write_to_storage — DB 6개 테이블 기록</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`impl BundleState {
-    pub fn write_to_storage<P: StateWriter>(
-        self,
-        provider: &P,
-    ) -> Result<(), ProviderError> {
-        // 1. PlainAccountState: 최신 계정 상태
-        for (addr, bundle_acc) in &self.state {
-            match &bundle_acc.info {
-                Some(info) => provider.put_account(*addr, info)?,
-                None => provider.delete_account(*addr)?,  // selfdestruct
-            }
-        }
-
-        // 2. PlainStorageState: 최신 스토리지 (DupSort)
-        for (addr, bundle_acc) in &self.state {
-            for (slot_key, slot) in &bundle_acc.storage {
-                if slot.present_value.is_zero() {
-                    provider.delete_storage(*addr, *slot_key)?;
-                } else {
-                    provider.put_storage(*addr, *slot_key, slot.present_value)?;
-                }
-            }
-        }
-
-        // 3. AccountChangeSets: 블록별 pre-state (unwind용)
-        for (block_num, block_reverts) in self.reverts.into_iter().enumerate() {
-            for (addr, revert) in block_reverts {
-                provider.put_account_history(block_num, addr, revert.info)?;
-            }
-        }
-
-        // 4. StorageChangeSets: 스토리지 pre-state
-        for (block_num, addr, slot_key, pre_value) in storage_history {
-            provider.put_storage_history(block_num, addr, slot_key, pre_value)?;
-        }
-
-        // 5. Bytecodes: 새로 배포된 컨트랙트 코드
-        for (code_hash, bytecode) in self.contracts {
-            provider.put_bytecode(code_hash, bytecode)?;
-        }
-
-        // 6. Receipts: 영수증 (execute 시 생성된 것)
-        provider.put_receipts(receipts)?;
-
-        Ok(())
-    }
-}`}
-        </pre>
+        <div className="not-prose my-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-3">write_to_storage() — 6개 테이블 원자적 기록 (MDBX 1회 트랜잭션)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <div className="rounded border border-border/40 p-2.5">
+              <p className="text-xs font-semibold text-foreground/60 mb-1">1. PlainAccountState</p>
+              <p className="text-xs text-foreground/50">최신 계정 상태 put / selfdestruct 시 delete</p>
+            </div>
+            <div className="rounded border border-border/40 p-2.5">
+              <p className="text-xs font-semibold text-foreground/60 mb-1">2. PlainStorageState</p>
+              <p className="text-xs text-foreground/50">최신 스토리지, zero 값이면 delete (DupSort)</p>
+            </div>
+            <div className="rounded border border-border/40 p-2.5">
+              <p className="text-xs font-semibold text-foreground/60 mb-1">3. AccountChangeSets</p>
+              <p className="text-xs text-foreground/50">블록별 pre-state (unwind용 역사 기록)</p>
+            </div>
+            <div className="rounded border border-border/40 p-2.5">
+              <p className="text-xs font-semibold text-foreground/60 mb-1">4. StorageChangeSets</p>
+              <p className="text-xs text-foreground/50">스토리지 pre-state 기록</p>
+            </div>
+            <div className="rounded border border-border/40 p-2.5">
+              <p className="text-xs font-semibold text-foreground/60 mb-1">5. Bytecodes</p>
+              <p className="text-xs text-foreground/50">새로 배포된 컨트랙트 코드 (<code>code_hash &rarr; bytecode</code>)</p>
+            </div>
+            <div className="rounded border border-border/40 p-2.5">
+              <p className="text-xs font-semibold text-foreground/60 mb-1">6. Receipts</p>
+              <p className="text-xs text-foreground/50">영수증 (<code>TxNumber &rarr; Receipt</code>)</p>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>write_to_storage</code>는 6개 테이블에 <strong>원자적 쓰기</strong> (MDBX 트랜잭션 1회).<br />
           PlainAccountState/PlainStorageState = 현재 상태, ChangeSets = 과거 이력.<br />
@@ -132,45 +120,38 @@ pub struct StorageSlot {
 
         {/* ── reverts 구조 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">reverts — unwind를 위한 pre-state 보존</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BundleState의 reverts 필드
-pub struct BundleState {
-    pub state: HashMap<Address, BundleAccount>,    // 현재 누적 상태
-    pub contracts: HashMap<B256, Bytecode>,
-    pub reverts: Vec<Vec<(Address, AccountRevert)>>,  // 블록별 pre-state
-    pub first_block: u64,
-}
-
-pub struct AccountRevert {
-    pub account: AccountInfoRevert,    // 잔고/nonce/code_hash revert
-    pub storage: HashMap<U256, RevertToSlot>,  // 스토리지 revert
-    pub previous_status: AccountStatus,
-}
-
-// reverts 구조:
-// reverts[0] = 블록 #18,000,000 실행 전 상태 변경 목록
-// reverts[1] = 블록 #18,000,001 실행 전 상태 변경 목록
-// ...
-
-// unwind 시 사용 (reorg 발생):
-fn unwind_to(&mut self, target: u64) {
-    let blocks_to_unwind = self.tip - target;
-    for _ in 0..blocks_to_unwind {
-        let last_block_reverts = self.reverts.pop().unwrap();
-        for (addr, revert) in last_block_reverts {
-            // pre-state를 다시 적용
-            let bundle_acc = self.state.get_mut(&addr).unwrap();
-            bundle_acc.info = revert.account.original_info;
-            for (slot_key, revert_slot) in revert.storage {
-                bundle_acc.storage.insert(slot_key, revert_slot.into_slot());
-            }
-        }
-    }
-}
-
-// 효과: reverts 역적용으로 target 블록까지 완벽 복원
-// DB AccountChangeSets/StorageChangeSets 테이블이 같은 역할`}
-        </pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-pink-500 mb-2">BundleState reverts 구조</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-start gap-2">
+                <code className="shrink-0 text-xs bg-muted px-1.5 py-0.5 rounded">reverts</code>
+                <span className="text-foreground/70"><code>Vec&lt;Vec&lt;(Address, AccountRevert)&gt;&gt;</code> — 블록별 pre-state 목록</span>
+              </div>
+            </div>
+            <div className="mt-2 pt-2 border-t border-border/30 text-xs text-foreground/50">
+              <p><code>reverts[0]</code> = 블록 #18,000,000 실행 전 상태</p>
+              <p><code>reverts[1]</code> = 블록 #18,000,001 실행 전 상태 ...</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs font-semibold text-foreground/60 mb-2">AccountRevert</p>
+            <div className="space-y-1 text-xs text-foreground/50">
+              <p><code>account: AccountInfoRevert</code> — 잔고/nonce/code_hash revert</p>
+              <p><code>storage: HashMap&lt;U256, RevertToSlot&gt;</code> — 스토리지 revert</p>
+              <p><code>previous_status: AccountStatus</code></p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/40 bg-amber-50/50 dark:bg-amber-950/20 p-4">
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">unwind_to(target) — reorg 복원</p>
+            <ol className="list-decimal list-inside space-y-1 text-sm text-foreground/70">
+              <li><code>reverts.pop()</code> 반복 -- 최신 블록부터 역순 처리</li>
+              <li>각 계정의 <code>info</code>를 revert의 <code>original_info</code>로 복원</li>
+              <li>스토리지 슬롯도 <code>revert_slot.into_slot()</code>으로 원상복구</li>
+            </ol>
+            <p className="text-xs text-foreground/50 mt-2">DB의 AccountChangeSets/StorageChangeSets 테이블이 같은 역할 수행</p>
+          </div>
+        </div>
         <p className="leading-7">
           reverts는 <strong>시간 순서대로 정렬된 pre-state 기록</strong>.<br />
           reorg 시 <code>reverts.pop()</code>을 반복 호출 — 최신 블록부터 역순으로 복원.<br />

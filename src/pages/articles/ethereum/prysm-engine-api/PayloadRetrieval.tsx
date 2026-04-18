@@ -21,56 +21,50 @@ export default function PayloadRetrieval({ onCodeRef }: Props) {
 
         {/* ── GetPayloadV3 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">engine_getPayloadV3 — 응답 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Request:
-{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "engine_getPayloadV3",
-    "params": ["0x..."]  // payload_id
-}
-
-// Response (Deneb):
-{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "result": {
-        "executionPayload": {
-            "parentHash": "0x...",
-            "feeRecipient": "0x...",
-            "stateRoot": "0x...",
-            "receiptsRoot": "0x...",
-            "logsBloom": "0x...",
-            "prevRandao": "0x...",
-            "blockNumber": "0x...",
-            "gasLimit": "0x...",
-            "gasUsed": "0x...",
-            "timestamp": "0x...",
-            "extraData": "0x...",
-            "baseFeePerGas": "0x...",
-            "blockHash": "0x...",
-            "transactions": [ ... ],
-            "withdrawals": [ ... ],
-            "blobGasUsed": "0x...",
-            "excessBlobGas": "0x..."
-        },
-        "blockValue": "0x...",           // validator 예상 수익 (wei)
-        "blobsBundle": {                  // Deneb blob 데이터
-            "commitments": [ ... ],
-            "proofs": [ ... ],
-            "blobs": [ ... ]
-        },
-        "shouldOverrideBuilder": false    // MEV-Boost override hint
-    }
-}
-
-// Prysm의 처리:
-// 1. 응답 수신 → ExecutionPayload 파싱
-// 2. Beacon block에 payload 통합
-// 3. blob sidecar 준비 (Deneb+)
-// 4. validator의 BLS 서명 추가
-// 5. SignedBeaconBlock 완성`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>engine_getPayloadV3</code> 응답 (Deneb)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="rounded border p-2">
+                <p className="font-medium mb-1">executionPayload</p>
+                <div className="text-muted-foreground space-y-0.5">
+                  <p><code>parentHash</code>, <code>feeRecipient</code>, <code>stateRoot</code>, <code>receiptsRoot</code></p>
+                  <p><code>logsBloom</code>, <code>prevRandao</code>, <code>blockNumber</code>, <code>gasLimit</code></p>
+                  <p><code>gasUsed</code>, <code>timestamp</code>, <code>baseFeePerGas</code>, <code>blockHash</code></p>
+                  <p><code>transactions</code>, <code>withdrawals</code>, <code>blobGasUsed</code>, <code>excessBlobGas</code></p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="rounded border p-2">
+                  <p className="font-medium mb-1">blockValue</p>
+                  <p className="text-muted-foreground">validator 예상 수익 (wei)</p>
+                </div>
+                <div className="rounded border p-2">
+                  <p className="font-medium mb-1">blobsBundle</p>
+                  <p className="text-muted-foreground"><code>commitments</code>, <code>proofs</code>, <code>blobs</code></p>
+                </div>
+                <div className="rounded border p-2">
+                  <p className="font-medium mb-1">shouldOverrideBuilder</p>
+                  <p className="text-muted-foreground">MEV-Boost override hint</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">Prysm 처리 흐름</h4>
+            <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+              <span className="rounded bg-muted px-2 py-1">ExecutionPayload 파싱</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">Beacon block에 payload 통합</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">blob sidecar 준비</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">BLS 서명 추가</span>
+              <span>→</span>
+              <span className="rounded bg-muted px-2 py-1">SignedBeaconBlock 완성</span>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           <code>getPayloadV3</code>가 <strong>완성된 ExecutionPayload + 추가 정보</strong> 반환.<br />
           blockValue로 validator 예상 수익 공지.<br />
@@ -86,57 +80,49 @@ export default function PayloadRetrieval({ onCodeRef }: Props) {
 
         {/* ── MEV-Boost 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">MEV-Boost 선택 — local vs relay bid</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Validator가 MEV-Boost 활성화 시 2개 후보 비교:
-// 1. Local build (EL GetPayloadV3): local_payload + local_value
-// 2. MEV-Boost relay: relay_payload_header + relay_bid
-
-// Relay 요청 흐름:
-// POST https://relay.flashbots.net/eth/v1/builder/header/{slot}/{parent_hash}/{pubkey}
-// Response:
-// - execution_payload_header (payload 없이 header만)
-// - value (bid 금액)
-// - pubkey (builder 공개키)
-
-// 선택 로직:
-func (v *validator) selectPayload(
-    localPayload *ExecutionPayload,
-    localValue *big.Int,
-    relayHeader *ExecutionPayloadHeader,
-    relayBid *big.Int,
-) Selection {
-    // 1. relay가 더 높으면 relay 선택
-    if relayBid.Cmp(localValue) > 0 {
-        return Selection{
-            UseRelay: true,
-            Header: relayHeader,
-            Bid: relayBid,
-        }
-    }
-
-    // 2. local이 더 높거나 같으면 local 선택
-    return Selection{
-        UseRelay: false,
-        Payload: localPayload,
-        Value: localValue,
-    }
-}
-
-// Relay 선택 후 블록 완성:
-// 1. validator가 header에 서명 (블록 서명)
-// 2. relay에 signed_header POST
-// 3. relay가 full payload 반환
-// 4. validator가 block + payload 전파
-
-// Local vs Relay 분포 (메인넷 2025):
-// - ~90% relay (MEV 최적화)
-// - ~10% local (solo staker, censorship-resistant)
-
-// 수익 비교:
-// - Local average: ~0.05 ETH per slot
-// - Relay average: ~0.15 ETH per slot (3배)
-// - Relay peak (airdrop): 10+ ETH per slot`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Local Build (EL)</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li><code>GetPayloadV3</code> → <code>local_payload</code> + <code>local_value</code></li>
+                <li>평균 ~0.05 ETH / slot</li>
+                <li>메인넷 ~10% 사용 (solo staker, censorship-resistant)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">MEV-Boost Relay</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li><code>POST /eth/v1/builder/header/{'{slot}'}/{'{parent_hash}'}/{'{pubkey}'}</code></li>
+                <li>응답: <code>execution_payload_header</code> + <code>value</code> (bid)</li>
+                <li>평균 ~0.15 ETH / slot (3배) / peak 10+ ETH</li>
+                <li>메인넷 ~90% 사용</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>selectPayload</code> — 선택 로직</h4>
+            <p className="text-xs text-muted-foreground mb-2"><code>relayBid.Cmp(localValue) &gt; 0</code> → relay 선택 / 아니면 local 선택</p>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
+                <div className="text-muted-foreground">validator가 header에 서명</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div className="text-muted-foreground">relay에 signed_header POST</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
+                <div className="text-muted-foreground">relay가 full payload 반환</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">4</span>
+                <div className="text-muted-foreground">validator가 block + payload 전파</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Validator는 <strong>local vs relay bid 비교</strong>하여 더 높은 것 선택.<br />
           메인넷 90% validators가 MEV-Boost 사용 → 평균 3배 수익.<br />

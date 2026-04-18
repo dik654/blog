@@ -27,76 +27,86 @@ export default function Broadcaster({ onCodeRef: _onCodeRef }: { onCodeRef: (key
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Broadcaster 프로토콜 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 사용자 측 (지갑)
-// 1) Transact proof 생성 (off-chain)
-// 2) Broadcaster의 public key로 암호화
-encryptedTx = AES_256_GCM(
-    key: derive_key(broadcaster_pubkey, ephemeral_key),
-    plaintext: {
-        to: RAILGUN_CONTRACT,
-        data: transactCalldata,
-        gasLimit: ...,
-        maxFee: ...,
-        broadcasterFee: 0.01 ETH  // broadcaster 보상
-    }
-)
-
-// 3) Waku network에 publish
-waku_publish(
-    topic: "/railgun/1/broadcast/proto",
-    payload: encryptedTx
-)
-
-// Broadcaster 측
-// 1) Waku에서 수신
-for msg in waku_messages:
-    decrypted = try_decrypt(msg, my_private_key)
-    if not decrypted: continue
-
-    // 2) Proof 검증 (off-chain, gas 절약)
-    if not verify_proof_offchain(decrypted.proof):
-        continue
-
-    // 3) 수수료 확인
-    if decrypted.broadcasterFee < my_min_fee:
-        continue
-
-    // 4) 자기 지갑으로 tx submit
-    tx = sign(decrypted, my_private_key)
-    await eth.sendTransaction(tx)
-
-    // 5) Fee는 unshielded ERC-20으로 받음 (in shielded tx)`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-blue-500/30 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-3">사용자 측 (지갑)</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">1. Proof 생성</p>
+                <p>Off-chain에서 Transact proof 생성</p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">2. AES-256-GCM 암호화</p>
+                <ul className="space-y-0.5">
+                  <li><code>key = derive_key(broadcaster_pubkey, ephemeral_key)</code></li>
+                  <li>payload: <code>to</code>, <code>data</code>, <code>gasLimit</code>, <code>maxFee</code></li>
+                  <li><code>broadcasterFee</code>: 0.01 ETH (보상)</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-medium text-foreground/80 mb-1">3. Waku publish</p>
+                <p>topic: <code>/railgun/1/broadcast/proto</code></p>
+                <p>payload: <code>encryptedTx</code></p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-green-500/30 p-4">
+            <p className="font-semibold text-sm text-green-400 mb-3">Broadcaster 측</p>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm text-center text-muted-foreground">
+              <div className="bg-muted/50 rounded p-2">1. Waku에서 수신</div>
+              <div className="bg-muted/50 rounded p-2">2. 복호화 시도<br /><span className="text-xs"><code>try_decrypt()</code></span></div>
+              <div className="bg-muted/50 rounded p-2">3. Off-chain proof 검증<br /><span className="text-xs">(gas 절약)</span></div>
+              <div className="bg-muted/50 rounded p-2">4. 수수료 확인<br /><span className="text-xs"><code>fee &ge; min_fee</code></span></div>
+              <div className="bg-muted/50 rounded p-2">5. 자기 EOA로 tx submit</div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Fee는 shielded tx 내부에서 unshielded ERC-20으로 수령</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Waku Protocol 사용</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Waku = libp2p 기반 P2P messaging
-// Ethereum Foundation + Status 개발
-
-// 특성
-// - Decentralized (no central server)
-// - Message store (30일 보관)
-// - End-to-end encryption
-// - Spam protection (proof-of-work 또는 RLN)
-
-// RAILGUN이 Waku 선택한 이유
-// ✓ Censorship-resistant (Waku 노드 분산)
-// ✓ Privacy-first design (IP 숨김)
-// ✓ Persistent storage (broadcaster 오프라인 대응)
-// ✓ 무료 (no API 비용)
-
-// 대안 vs 단점
-// - Centralized relay service: privacy 위험
-// - Direct mempool submit: msg.sender 노출
-// - Tor only: latency 큼
-
-// Anti-censorship
-// - 여러 Waku 노드에 publish
-// - 다수 broadcaster가 경쟁
-// - 첫 submit한 broadcaster가 fee 획득
-
-// 현재 생태계
-// - RAILGUN Wallet: built-in broadcaster selection
-// - 공식 broadcaster 몇 개 + 커뮤니티 운영
-// - Fee competition → 가격 하락`}</pre>
+        <div className="not-prose space-y-4 my-4">
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-blue-400 mb-2">Waku = libp2p 기반 P2P messaging (Ethereum Foundation + Status)</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-center text-muted-foreground">
+              <div className="bg-muted/50 rounded p-2">Decentralized<br /><span className="text-xs">no central server</span></div>
+              <div className="bg-muted/50 rounded p-2">Message store<br /><span className="text-xs">30일 보관</span></div>
+              <div className="bg-muted/50 rounded p-2">E2E encryption</div>
+              <div className="bg-muted/50 rounded p-2">Spam protection<br /><span className="text-xs">PoW or RLN</span></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-green-500/30 p-4">
+              <p className="font-semibold text-sm text-green-400 mb-2">RAILGUN이 Waku를 선택한 이유</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li>Censorship-resistant (노드 분산)</li>
+                <li>Privacy-first design (IP 숨김)</li>
+                <li>Persistent storage (broadcaster 오프라인 대응)</li>
+                <li>무료 (no API 비용)</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-red-500/30 p-4">
+              <p className="font-semibold text-sm text-red-400 mb-2">대안의 단점</p>
+              <ul className="text-sm space-y-0.5 text-muted-foreground">
+                <li><strong>Centralized relay</strong>: privacy 위험</li>
+                <li><strong>Direct mempool submit</strong>: msg.sender 노출</li>
+                <li><strong>Tor only</strong>: latency 큼</li>
+              </ul>
+            </div>
+          </div>
+          <div className="rounded-lg border border-border/60 p-4">
+            <p className="font-semibold text-sm text-amber-400 mb-2">Anti-censorship & 생태계</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+              <ul className="space-y-0.5">
+                <li>여러 Waku 노드에 publish &rarr; 다수 broadcaster 경쟁</li>
+                <li>첫 submit한 broadcaster가 fee 획득</li>
+              </ul>
+              <ul className="space-y-0.5">
+                <li>RAILGUN Wallet: built-in broadcaster selection</li>
+                <li>공식 broadcaster + 커뮤니티 운영 &rarr; fee competition으로 가격 하락</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 완전 익명성의 조건</p>

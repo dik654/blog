@@ -17,50 +17,48 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TaskPacket 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct TaskPacket {
-    pub id: TaskId,
-    pub title: String,
-    pub description: String,
-    pub priority: Priority,
-    pub tags: Vec<String>,
-
-    // 목표·조건
-    pub goals: Vec<Goal>,                    // 완료 조건
-    pub constraints: Vec<Constraint>,        // 제약 사항
-    pub acceptance_criteria: Vec<String>,   // 수용 기준
-
-    // 할당
-    pub assigned_team: Option<TeamId>,
-    pub assigned_worker: Option<WorkerId>,
-
-    // 의존성
-    pub depends_on: Vec<TaskId>,
-    pub blocks: Vec<TaskId>,
-
-    // 메타데이터
-    pub created_by: String,
-    pub created_at: DateTime<Utc>,
-    pub deadline: Option<DateTime<Utc>>,
-    pub estimated_duration: Option<Duration>,
-}
-
-pub enum Priority {
-    Critical, High, Medium, Low,
-}`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 not-prose my-4">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">식별 / 기본</p>
+            <p className="text-sm"><code>id: TaskId</code> — 고유 식별자</p>
+            <p className="text-sm"><code>title: String</code> — 작업 제목</p>
+            <p className="text-sm"><code>description: String</code> — 상세 설명</p>
+            <p className="text-sm"><code>priority: Priority</code> — Critical / High / Medium / Low</p>
+            <p className="text-sm"><code>tags: Vec&lt;String&gt;</code> — 분류 태그</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">목표 / 조건</p>
+            <p className="text-sm"><code>goals: Vec&lt;Goal&gt;</code> — 완료 조건</p>
+            <p className="text-sm"><code>constraints: Vec&lt;Constraint&gt;</code> — 제약 사항</p>
+            <p className="text-sm"><code>acceptance_criteria: Vec&lt;String&gt;</code> — 수용 기준</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">할당</p>
+            <p className="text-sm"><code>assigned_team: Option&lt;TeamId&gt;</code> — 담당 팀</p>
+            <p className="text-sm"><code>assigned_worker: Option&lt;WorkerId&gt;</code> — 담당 워커</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">의존성 / 메타</p>
+            <p className="text-sm"><code>depends_on: Vec&lt;TaskId&gt;</code> — 선행 task</p>
+            <p className="text-sm"><code>blocks: Vec&lt;TaskId&gt;</code> — 차단 task</p>
+            <p className="text-sm"><code>created_by</code> / <code>created_at</code> / <code>deadline</code> / <code>estimated_duration</code></p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Goal 과 Constraint</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub struct Goal {
-    pub description: String,
-    pub measurable: bool,        // 측정 가능한 목표?
-    pub completion_check: Option<String>,  // 자동 완료 확인 명령
-}
-
-pub struct Constraint {
-    pub kind: ConstraintKind,
-    pub description: String,
-}
-
-pub enum ConstraintKind { /* 5 variants — 아래 Viz 참조 */ }`}</pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 not-prose my-4">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">Goal 구조체</p>
+            <p className="text-sm"><code>description: String</code> — 목표 설명</p>
+            <p className="text-sm"><code>measurable: bool</code> — 측정 가능한 목표인지</p>
+            <p className="text-sm"><code>completion_check: Option&lt;String&gt;</code> — 자동 완료 확인 명령</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">Constraint 구조체</p>
+            <p className="text-sm"><code>kind: ConstraintKind</code> — 5가지 변형 (아래 Viz 참조)</p>
+            <p className="text-sm"><code>description: String</code> — 제약 설명</p>
+          </div>
+        </div>
         <ConstraintKindViz />
         <p>
           <strong>Goal</strong>: 달성해야 할 목표 (예: "테스트 커버리지 80% 달성")<br />
@@ -69,78 +67,105 @@ pub enum ConstraintKind { /* 5 variants — 아래 Viz 참조 */ }`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">JSON 직렬화 예시</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`{
-  "id": "task_abc123",
-  "title": "User auth 리팩토링",
-  "description": "JWT 검증 로직을 미들웨어로 추출",
-  "priority": "High",
-  "tags": ["refactoring", "auth"],
-  "goals": [{
-    "description": "인증 로직이 재사용 가능한 미들웨어로 분리됨",
-    "measurable": true,
-    "completion_check": "grep -r 'fn verify_jwt' src/middleware/"
-  }],
-  "constraints": [{
-    "kind": {"no_touch_files": ["src/config/secrets.rs"]},
-    "description": "secrets 모듈 수정 금지"
-  }],
-  "acceptance_criteria": [
-    "기존 API가 동일하게 동작",
-    "모든 기존 테스트 통과",
-    "새 미들웨어 unit test 추가"
-  ],
-  "assigned_team": "backend",
-  "depends_on": [],
-  "created_by": "alice",
-  "created_at": "2026-04-05T10:00:00Z"
-}`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-lg border border-border divide-y divide-border">
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">id</span>
+            <span><code>"task_abc123"</code></span>
+          </div>
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">title</span>
+            <span><code>"User auth 리팩토링"</code></span>
+          </div>
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">priority</span>
+            <span><code>"High"</code> / tags: <code>["refactoring", "auth"]</code></span>
+          </div>
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">goals</span>
+            <span>"인증 로직이 재사용 가능한 미들웨어로 분리됨" — <code>completion_check</code>: <code>grep -r 'fn verify_jwt' src/middleware/</code></span>
+          </div>
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">constraints</span>
+            <span><code>no_touch_files</code>: <code>["src/config/secrets.rs"]</code> — secrets 모듈 수정 금지</span>
+          </div>
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">acceptance</span>
+            <span>기존 API 동일 동작 / 기존 테스트 통과 / 새 미들웨어 unit test 추가</span>
+          </div>
+          <div className="grid grid-cols-[120px_1fr] gap-2 p-3 text-sm">
+            <span className="text-muted-foreground font-medium">assigned</span>
+            <span>team: <code>"backend"</code> / created_by: <code>"alice"</code></span>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TaskCreate 도구 호출</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// LLM이 Task 도구로 subagent 생성 시
-tool_use {
-  name: "TaskCreate",
-  input: {
-    title: "Fix failing tests in user module",
-    description: "5 tests failing in src/user/tests/",
-    priority: "High",
-    goals: [{"description": "All user tests passing"}],
-    assigned_worker: null  // 자동 할당
-  }
-}
-
-// claw-code 처리
-async fn handle_task_create(input: Value) -> Result<ToolOutput> {
-    let packet: TaskPacket = serde_json::from_value(input)?;
-
-    // 검증
-    packet.validate()?;
-
-    // 레지스트리 등록
-    let task_id = global_task_registry().insert(packet.clone()).await;
-
-    // 자동 worker spawn (설정 활성 시)
-    if config.auto_spawn_workers && packet.assigned_worker.is_none() {
-        let worker_id = spawn_worker(packet.clone()).await?;
-        global_task_registry().assign(&task_id, worker_id).await?;
-    }
-
-    Ok(ToolOutput::text(format!("Task created: {}", task_id)))
-}`}</pre>
+        <div className="not-prose my-4 space-y-3">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">도구 호출 입력</p>
+            <p className="text-sm">도구명: <code>TaskCreate</code></p>
+            <p className="text-sm"><code>title</code>: "Fix failing tests in user module" / <code>priority</code>: High</p>
+            <p className="text-sm"><code>goals</code>: "All user tests passing" / <code>assigned_worker</code>: null (자동 할당)</p>
+          </div>
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <p className="text-xs font-semibold text-muted-foreground mb-2">handle_task_create 처리 흐름</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="text-muted-foreground font-mono shrink-0">1.</span>
+                <span><code>serde_json::from_value(input)</code> — JSON → TaskPacket 역직렬화</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-muted-foreground font-mono shrink-0">2.</span>
+                <span><code>packet.validate()</code> — 필수 필드·일관성 검증</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-muted-foreground font-mono shrink-0">3.</span>
+                <span><code>global_task_registry().insert()</code> — 레지스트리 등록</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-muted-foreground font-mono shrink-0">4.</span>
+                <span><code>spawn_worker()</code> — 자동 worker spawn (설정 활성 시, 미할당일 때)</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Task 생명주기</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`pub enum TaskStatus {
-    Pending,       // 생성됨, 할당 대기
-    Assigned,      // Worker/Team에 할당됨
-    InProgress,    // 작업 중
-    Review,        // 완료 주장, 검증 필요
-    Completed,     // 완료·수용됨
-    Rejected,      // 수용 기준 미달 — 재작업 필요
-    Cancelled,     // 취소됨
-}
-
-// 전이:
-// Pending → Assigned → InProgress → Review → Completed
-//                                        ↘ Rejected → InProgress`}</pre>
+        <div className="not-prose my-4 bg-muted/50 rounded-lg border border-border p-4">
+          <p className="text-xs font-semibold text-muted-foreground mb-3">TaskStatus — 7가지 상태</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-4">
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>Pending</code>
+              <p className="text-xs text-muted-foreground mt-1">생성됨, 할당 대기</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>Assigned</code>
+              <p className="text-xs text-muted-foreground mt-1">Worker/Team 할당됨</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>InProgress</code>
+              <p className="text-xs text-muted-foreground mt-1">작업 중</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>Review</code>
+              <p className="text-xs text-muted-foreground mt-1">완료 주장, 검증 필요</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>Completed</code>
+              <p className="text-xs text-muted-foreground mt-1">완료·수용됨</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>Rejected</code>
+              <p className="text-xs text-muted-foreground mt-1">수용 기준 미달</p>
+            </div>
+            <div className="bg-background rounded px-3 py-2 border border-border text-center">
+              <code>Cancelled</code>
+              <p className="text-xs text-muted-foreground mt-1">취소됨</p>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            전이: Pending → Assigned → InProgress → Review → Completed / Review → Rejected → InProgress (역류)
+          </p>
+        </div>
         <p>
           <strong>7가지 상태</strong>: Pending → Completed 선형 + Review→Rejected 역류<br />
           Review 단계: 자동 수용 기준 체크 + 사람 승인 (선택)<br />

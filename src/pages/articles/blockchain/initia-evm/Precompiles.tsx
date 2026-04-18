@@ -39,168 +39,197 @@ export default function Precompiles({ onCodeRef }: Props) {
         )}
       </StepViz>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+      <div className="mt-6 space-y-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">프리컴파일 인터페이스 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// MiniEVM Precompile Architecture
-//
-// Standard EVM precompiles (0x01 - 0x09):
-//   0x01: ecRecover (signature recovery)
-//   0x02: sha256
-//   0x03: ripemd-160
-//   0x04: identity (data copy)
-//   0x05: modexp (modular exponentiation)
-//   0x06: bn256Add (curve add)
-//   0x07: bn256Mul (curve mul)
-//   0x08: bn256Pairing (pairing check)
-//   0x09: blake2f
-//
-// MiniEVM adds custom precompiles at higher addresses:
-//   0x...ICosmos: Cosmos integration
-//   0x...ERC20Registry: token mapping
-//   0x...JSONUtils: JSON encoding helpers
 
-// ICosmos precompile (KEY innovation):
-//
-//   interface ICosmos {
-//     function execute_cosmos(string calldata jsonMsg) external;
-//       // Queue a Cosmos SDK Msg for dispatch
-//       // e.g., IBC transfer, staking delegation
-//
-//     function query_cosmos(string calldata reqJSON) external view
-//       returns (string memory);
-//       // Query Cosmos state (whitelisted queries only)
-//
-//     function to_denom(address token) external view
-//       returns (string memory);
-//       // Convert ERC20 address -> Cosmos denom
-//
-//     function to_erc20(string calldata denom) external view
-//       returns (address);
-//       // Convert Cosmos denom -> ERC20 address
-//   }
-//
-//   Address: common.HexToAddress("0x00...CAFE")
-//   (fixed address, known to all contracts)
+        {/* 표준 EVM 프리컴파일 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">표준 EVM 프리컴파일 (0x01 - 0x09)</h4>
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x01</code> ecRecover</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x02</code> sha256</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x03</code> ripemd-160</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x04</code> identity</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x05</code> modexp</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x06</code> bn256Add</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x07</code> bn256Mul</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x08</code> bn256Pairing</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">0x09</code> blake2f</div>
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">MiniEVM 커스텀 프리컴파일은 상위 주소에 등록: <code className="text-xs">ICosmos</code> (Cosmos 통합), <code className="text-xs">ERC20Registry</code> (토큰 매핑), <code className="text-xs">JSONUtils</code> (JSON 인코딩)</p>
+        </div>
 
-// Execute_cosmos mechanism:
-//
-//   Solidity side:
-//     string memory ibc_msg = '{
-//       "@type": "/ibc.applications.transfer.v1.MsgTransfer",
-//       "source_port": "transfer",
-//       "source_channel": "channel-0",
-//       "token": {"denom":"uinit","amount":"1000000"},
-//       "sender": "init1...",
-//       "receiver": "osmo1...",
-//       "timeout_timestamp": 1234567890000000000
-//     }';
-//     ICosmos(COSMOS).execute_cosmos(ibc_msg);
-//
-//   Precompile side (Go):
-//     func executeCosmos(jsonMsg string, caller common.Address) {
-//         // 1. Parse JSON to sdk.Msg
-//         msg := unmarshalCosmosMsg(jsonMsg)
-//
-//         // 2. Validate signer == caller (authorization)
-//         signers := msg.GetSigners()
-//         require(signers[0] == cosmosFromEVMAddr(caller))
-//
-//         // 3. Queue for dispatch (after EVM completes)
-//         k.queueCosmosMsg(ctx, msg, caller, callbackId)
-//     }
+        {/* ICosmos 프리컴파일 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">ICosmos 프리컴파일 (핵심 혁신)</h4>
+          <div className="space-y-3 text-xs text-muted-foreground">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded bg-muted/50 p-3">
+                <code className="text-xs font-medium text-foreground">execute_cosmos(string calldata jsonMsg) external</code>
+                <p className="mt-1">Cosmos SDK Msg를 큐에 등록. IBC 전송, 스테이킹 위임 등 실행</p>
+              </div>
+              <div className="rounded bg-muted/50 p-3">
+                <code className="text-xs font-medium text-foreground">query_cosmos(string calldata reqJSON) external view returns (string memory)</code>
+                <p className="mt-1">Cosmos 상태 쿼리 (화이트리스트 기반만 허용)</p>
+              </div>
+              <div className="rounded bg-muted/50 p-3">
+                <code className="text-xs font-medium text-foreground">to_denom(address token) external view returns (string memory)</code>
+                <p className="mt-1">ERC20 주소 → Cosmos denom 변환</p>
+              </div>
+              <div className="rounded bg-muted/50 p-3">
+                <code className="text-xs font-medium text-foreground">to_erc20(string calldata denom) external view returns (address)</code>
+                <p className="mt-1">Cosmos denom → ERC20 주소 변환</p>
+              </div>
+            </div>
+            <p>주소: <code className="text-xs">common.HexToAddress("0x00...CAFE")</code> — 고정 주소, 모든 컨트랙트에 알려짐</p>
+          </div>
+        </div>
 
-// Why queue instead of direct execute?
-//
-//   Problem: Cosmos Msg execution can MODIFY state
-//   that EVM already read/cached
-//   Could cause inconsistency within single EVM tx
-//
-//   Solution: EXECUTE-AFTER-EVM pattern
-//     1. EVM runs, precompiles queue Cosmos msgs
-//     2. EVM completes, state committed
-//     3. Queued Cosmos msgs dispatched sequentially
-//     4. Callbacks (if any) invoke EVM back
+        {/* execute_cosmos 메커니즘 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">execute_cosmos 메커니즘</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Solidity 측</span>
+              <p className="mt-1">JSON 형식의 Cosmos 메시지(예: <code className="text-xs">MsgTransfer</code>)를 구성하고 <code className="text-xs">ICosmos(COSMOS).execute_cosmos(ibc_msg)</code> 호출. source_port, source_channel, token, sender, receiver, timeout 등을 JSON으로 직렬화</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">프리컴파일 측 (Go)</span>
+              <ol className="mt-1 list-decimal list-inside space-y-0.5">
+                <li>JSON → <code className="text-xs">sdk.Msg</code> 파싱 (<code className="text-xs">unmarshalCosmosMsg</code>)</li>
+                <li>서명자 == 호출자 검증 (<code className="text-xs">msg.GetSigners()[0] == cosmosFromEVMAddr(caller)</code>)</li>
+                <li>디스패치 큐에 등록 (<code className="text-xs">k.queueCosmosMsg(ctx, msg, caller, callbackId)</code>)</li>
+              </ol>
+            </div>
+          </div>
+        </div>
 
-// Callback pattern (EVM ↔ Cosmos bidirectional):
-//
-//   Solidity registers callback:
-//     function my_callback(uint256 result) external {
-//       // handle IBC ack result
-//     }
-//     uint256 callbackId = ICosmos.execute_cosmos_with_callback(
-//       ibc_msg, address(this), this.my_callback.selector
-//     );
-//
-//   When IBC ack arrives:
-//     1. x/ibc delivers packet ack
-//     2. MiniEVM looks up callback registration
-//     3. Calls contract.callback(result) via EVM
-//     4. Completes in new transaction
+        {/* 왜 큐잉인가 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">왜 즉시 실행이 아닌 큐잉인가?</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded border-l-2 border-red-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">문제</span>
+              <p className="mt-1">Cosmos Msg 실행이 EVM이 이미 읽거나 캐싱한 상태를 수정할 수 있음. 단일 EVM tx 내에서 불일치 발생 가능</p>
+            </div>
+            <div className="rounded border-l-2 border-emerald-500 bg-muted/50 p-3">
+              <span className="font-medium text-foreground">해결: EXECUTE-AFTER-EVM 패턴</span>
+              <ol className="mt-1 list-decimal list-inside space-y-0.5">
+                <li>EVM 실행, 프리컴파일이 Cosmos 메시지 큐잉</li>
+                <li>EVM 완료, 상태 커밋</li>
+                <li>큐잉된 Cosmos 메시지 순차 디스패치</li>
+                <li>콜백(있는 경우) EVM 재호출</li>
+              </ol>
+            </div>
+          </div>
+        </div>
 
-// Query_cosmos safety:
-//
-//   Whitelist-based:
-//     Only queries in allowed_queries list work
-//     Prevents state leak attacks
-//
-//   Examples (whitelisted):
-//     - /cosmos.bank.v1beta1.Query/Balance
-//     - /cosmos.staking.v1beta1.Query/Validator
-//     - /ibc.applications.transfer.v1.Query/DenomTrace
-//
-//   Not whitelisted:
-//     - Internal module queries
-//     - Non-deterministic queries (time-based)
-//     - Expensive iterations
+        {/* 콜백 패턴 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">콜백 패턴 (EVM ↔ Cosmos 양방향)</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">Solidity에서 콜백 등록</span>
+              <p className="mt-1"><code className="text-xs">execute_cosmos_with_callback(ibc_msg, address(this), this.my_callback.selector)</code>로 콜백 함수 등록. 콜백은 IBC ack 결과를 처리</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">IBC ack 도착 시</span>
+              <ol className="mt-1 list-decimal list-inside space-y-0.5">
+                <li><code className="text-xs">x/ibc</code>가 packet ack 전달</li>
+                <li>MiniEVM이 콜백 등록 조회</li>
+                <li>EVM을 통해 <code className="text-xs">contract.callback(result)</code> 호출</li>
+                <li>새 트랜잭션에서 완료</li>
+              </ol>
+            </div>
+          </div>
+        </div>
 
-// ERC20 Registry:
-//
-//   Maps between Cosmos denoms and EVM ERC20 contracts
-//
-//   Bidirectional:
-//     Cosmos side:
-//       x/bank has "uinit" with 6 decimals
-//     EVM side:
-//       ERC20 contract at 0x...INIT with 18 decimals
-//
-//   Conversions:
-//     Cosmos → EVM: native tokens appear as ERC20
-//     EVM → Cosmos: ERC20 can be IBC-transferred
-//
-//   Decimal scaling:
-//     Cosmos "uinit" (6 dp) * 10^12 = ERC20 INIT (18 dp)
+        {/* query_cosmos 안전성 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">query_cosmos 안전성</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">화이트리스트 허용</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li><code className="text-xs">/cosmos.bank.v1beta1.Query/Balance</code></li>
+                <li><code className="text-xs">/cosmos.staking.v1beta1.Query/Validator</code></li>
+                <li><code className="text-xs">/ibc.applications.transfer.v1.Query/DenomTrace</code></li>
+              </ul>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">비허용</span>
+              <ul className="mt-1 list-disc list-inside space-y-0.5">
+                <li>내부 모듈 쿼리</li>
+                <li>비결정론적 쿼리 (시간 기반)</li>
+                <li>비용 높은 이터레이션</li>
+              </ul>
+              <p className="mt-1">상태 유출 공격 방지가 목적</p>
+            </div>
+          </div>
+        </div>
 
-// JSONUtils precompile:
-//
-//   Solidity JSON parsing is limited and expensive
-//   MiniEVM provides native helpers:
-//     string memory encoded = JSONUtils.marshal(data);
-//     JSONUtils.stringify_uint(123);
-//     JSONUtils.stringify_bytes(hash);
-//
-//   Used for constructing Cosmos Msgs from EVM
+        {/* ERC20 Registry */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">ERC20 Registry</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">양방향 매핑</span>
+              <p className="mt-1">Cosmos <code className="text-xs">x/bank</code>의 <code className="text-xs">"uinit"</code>(6dp) ↔ EVM ERC20 컨트랙트 <code className="text-xs">0x...INIT</code>(18dp)</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">변환</span>
+              <p className="mt-1">Cosmos → EVM: 네이티브 토큰이 ERC20으로 표현. EVM → Cosmos: ERC20를 IBC 전송 가능</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">소수점 스케일링</span>
+              <p className="mt-1"><code className="text-xs">Cosmos "uinit"(6dp) * 10^12 = ERC20 INIT(18dp)</code></p>
+            </div>
+          </div>
+        </div>
 
-// Precompile gas costs:
-//   execute_cosmos: ~50K gas (JSON parse + queue)
-//   query_cosmos: ~10-50K gas (depends on query)
-//   to_denom/to_erc20: ~5K gas (simple lookup)
-//   JSONUtils helpers: ~1-10K gas each
+        {/* JSONUtils */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">JSONUtils 프리컴파일</h4>
+          <div className="rounded bg-muted/50 p-3 text-xs text-muted-foreground">
+            <p>Solidity의 JSON 파싱은 제한적이고 비용이 높음. MiniEVM이 네이티브 헬퍼 제공</p>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              <div className="rounded bg-background p-2"><code className="text-xs">JSONUtils.marshal(data)</code></div>
+              <div className="rounded bg-background p-2"><code className="text-xs">JSONUtils.stringify_uint(123)</code></div>
+              <div className="rounded bg-background p-2"><code className="text-xs">JSONUtils.stringify_bytes(hash)</code></div>
+            </div>
+            <p className="mt-2">EVM에서 Cosmos Msg를 구성할 때 사용</p>
+          </div>
+        </div>
 
-// Security considerations:
-//
-//   1) Authorization:
-//      execute_cosmos verifies caller == msg.signer
-//      Prevents unauthorized state changes
-//
-//   2) Replay:
-//      Cosmos sequence numbers prevent replay
-//      EVM tx nonces prevent EVM replay
-//
-//   3) Reentrancy:
-//      Cosmos msgs dispatched AFTER EVM completes
-//      No reentrancy during EVM execution`}
-        </pre>
+        {/* 가스 비용 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">프리컴파일 가스 비용</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">execute_cosmos</code> ~50K gas (JSON 파싱 + 큐잉)</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">query_cosmos</code> ~10-50K gas (쿼리에 따라)</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">to_denom / to_erc20</code> ~5K gas (단순 조회)</div>
+            <div className="rounded bg-muted/50 p-2"><code className="text-xs">JSONUtils</code> 헬퍼 각 ~1-10K gas</div>
+          </div>
+        </div>
+
+        {/* 보안 고려 */}
+        <div className="rounded-lg border bg-card p-4">
+          <h4 className="text-sm font-semibold mb-3">보안 고려 사항</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">1) 권한 검증</span>
+              <p className="mt-1"><code className="text-xs">execute_cosmos</code>가 <code className="text-xs">caller == msg.signer</code> 확인. 비인가 상태 변경 방지</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">2) 리플레이 방지</span>
+              <p className="mt-1">Cosmos sequence number + EVM tx nonce 이중 방어</p>
+            </div>
+            <div className="rounded bg-muted/50 p-3">
+              <span className="font-medium text-foreground">3) 재진입 방지</span>
+              <p className="mt-1">Cosmos 메시지는 EVM 완료 후 디스패치. EVM 실행 중 재진입 불가</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

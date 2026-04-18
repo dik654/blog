@@ -13,19 +13,37 @@ export default function PairContract() {
 
         <PairStateViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`contract UniswapV2Pair is UniswapV2ERC20 {
-    address public factory;      // Factory 컨트랙트 주소
-    address public token0;       // 주소 순 더 작은 토큰
-    address public token1;
-
-    uint112 private reserve0;    // token0 준비금
-    uint112 private reserve1;    // token1 준비금
-    uint32  private blockTimestampLast;  // 마지막 업데이트 블록
-
-    uint public price0CumulativeLast;  // TWAP용
-    uint public price1CumulativeLast;
-    uint public kLast;  // reserve0 * reserve1 (마지막 mint/burn 시점)
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>UniswapV2Pair</code> — 핵심 상태 변수</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="space-y-1 text-sm">
+                <p><code>address factory</code> — Factory 컨트랙트 주소</p>
+                <p><code>address token0</code> — 주소 순 더 작은 토큰</p>
+                <p><code>address token1</code> — 나머지 토큰</p>
+              </div>
+              <div className="space-y-1 text-sm">
+                <p><code>uint112 reserve0</code> — token0 준비금</p>
+                <p><code>uint112 reserve1</code> — token1 준비금</p>
+                <p><code>uint32 blockTimestampLast</code> — 마지막 업데이트 블록</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1"><code>price0CumulativeLast</code></p>
+              <p className="text-sm">TWAP 누적 가격</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1"><code>price1CumulativeLast</code></p>
+              <p className="text-sm">TWAP 누적 가격 (역방향)</p>
+            </div>
+            <div className="rounded-lg border p-4">
+              <p className="font-semibold text-sm mb-1"><code>kLast</code></p>
+              <p className="text-sm">마지막 mint/burn 시점의 <code>reserve0 * reserve1</code></p>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>uint112 reserve</strong>: 2개 reserve + timestamp를 32바이트 1 슬롯에 packing<br />
           112+112+32 = 256비트 — SSTORE 가스 절감 (1회 쓰기로 3개 변수 업데이트)<br />
@@ -36,26 +54,32 @@ export default function PairContract() {
 
         <Create2PairViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// UniswapV2Factory.createPair()
-function createPair(address tokenA, address tokenB) external returns (address pair) {
-    require(tokenA != tokenB, "IDENTICAL_ADDRESSES");
-    (address token0, address token1) = tokenA < tokenB
-        ? (tokenA, tokenB) : (tokenB, tokenA);
-
-    // 중복 생성 방지
-    require(getPair[token0][token1] == address(0), "PAIR_EXISTS");
-
-    // CREATE2로 결정론적 주소 생성
-    bytes memory bytecode = type(UniswapV2Pair).creationCode;
-    bytes32 salt = keccak256(abi.encodePacked(token0, token1));
-    assembly {
-        pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
-    }
-
-    UniswapV2Pair(pair).initialize(token0, token1);
-    getPair[token0][token1] = pair;
-    getPair[token1][token0] = pair;  // 역방향도 저장
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>createPair(tokenA, tokenB)</code> — Factory 함수</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>require(tokenA != tokenB)</code> — 동일 토큰 방지</li>
+              <li><code>token0 &lt; token1</code>로 정렬 — 중복 페어 방지</li>
+              <li><code>require(getPair[token0][token1] == address(0))</code> — 이미 존재하면 revert</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">CREATE2 결정론적 배포</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><code>bytecode</code> = <code>type(UniswapV2Pair).creationCode</code></li>
+              <li><code>salt</code> = <code>keccak256(abi.encodePacked(token0, token1))</code></li>
+              <li>assembly: <code>create2(0, add(bytecode, 32), mload(bytecode), salt)</code></li>
+            </ul>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">초기화 및 매핑 등록</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><code>UniswapV2Pair(pair).initialize(token0, token1)</code></li>
+              <li><code>getPair[token0][token1] = pair</code> — 정방향</li>
+              <li><code>getPair[token1][token0] = pair</code> — 역방향도 저장</li>
+            </ul>
+          </div>
+        </div>
         <p>
           <strong>CREATE2</strong>: 배포 주소를 미리 계산 가능 — Router가 pair 주소를 찾는 데 활용<br />
           salt는 <code>keccak256(token0, token1)</code> — 정렬된 주소 쌍<br />
@@ -66,30 +90,35 @@ function createPair(address tokenA, address tokenB) external returns (address pa
 
         <MintLpViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function mint(address to) external returns (uint liquidity) {
-    (uint112 _reserve0, uint112 _reserve1,) = getReserves();
-    uint balance0 = IERC20(token0).balanceOf(address(this));
-    uint balance1 = IERC20(token1).balanceOf(address(this));
-    uint amount0 = balance0 - _reserve0;  // 사용자가 방금 입금한 양
-    uint amount1 = balance1 - _reserve1;
-
-    uint _totalSupply = totalSupply;
-    if (_totalSupply == 0) {
-        // 최초 LP: sqrt(x·y) 공식
-        liquidity = sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY;
-        _mint(address(0), MINIMUM_LIQUIDITY);  // 영구 잠금
-    } else {
-        // 기존 LP: 비율 유지
-        liquidity = min(
-            amount0 * _totalSupply / _reserve0,
-            amount1 * _totalSupply / _reserve1
-        );
-    }
-
-    require(liquidity > 0, "INSUFFICIENT_LIQUIDITY_MINTED");
-    _mint(to, liquidity);
-    _update(balance0, balance1, _reserve0, _reserve1);
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>mint(to)</code> — 입금량 계산</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><code>getReserves()</code>로 현재 reserve 조회</li>
+              <li><code>balanceOf(address(this))</code>로 실제 잔액 확인</li>
+              <li><code>amount = balance - reserve</code> — 사용자가 방금 입금한 양</li>
+            </ul>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+              <p className="font-semibold text-sm mb-2">최초 LP (<code>totalSupply == 0</code>)</p>
+              <p className="text-sm font-mono">liquidity = sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY</p>
+              <p className="text-sm mt-1"><code>_mint(address(0), MINIMUM_LIQUIDITY)</code> — 1000 wei 영구 잠금</p>
+            </div>
+            <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+              <p className="font-semibold text-sm mb-2">기존 LP — 비율 유지</p>
+              <p className="text-sm font-mono">liquidity = min(amount0 * totalSupply / reserve0, amount1 * totalSupply / reserve1)</p>
+            </div>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">최종 처리</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><code>require(liquidity &gt; 0)</code> — 0 발행 방지</li>
+              <li><code>_mint(to, liquidity)</code> — LP 토큰 발행</li>
+              <li><code>_update()</code> — reserve 갱신</li>
+            </ul>
+          </div>
+        </div>
         <p>
           <strong>최초 LP만 특별 처리</strong>: <code>sqrt(x·y)</code> 공식으로 LP 토큰 발행<br />
           MINIMUM_LIQUIDITY(1000 wei) 영구 잠금 → <code>totalSupply</code>가 절대 0이 안 됨<br />
@@ -97,23 +126,29 @@ function createPair(address tokenA, address tokenB) external returns (address pa
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">burn — 유동성 출금</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function burn(address to) external returns (uint amount0, uint amount1) {
-    uint liquidity = balanceOf[address(this)];  // Router가 transfer한 LP 토큰
-    uint balance0 = IERC20(token0).balanceOf(address(this));
-    uint balance1 = IERC20(token1).balanceOf(address(this));
-    uint _totalSupply = totalSupply;
-
-    // 지분 비례로 token 계산
-    amount0 = liquidity * balance0 / _totalSupply;
-    amount1 = liquidity * balance1 / _totalSupply;
-    require(amount0 > 0 && amount1 > 0, "INSUFFICIENT_LIQUIDITY_BURNED");
-
-    _burn(address(this), liquidity);
-    _safeTransfer(token0, to, amount0);
-    _safeTransfer(token1, to, amount1);
-
-    _update(balance0 - amount0, balance1 - amount1, _reserve0, _reserve1);
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>burn(to)</code> — 유동성 출금</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><code>liquidity = balanceOf[address(this)]</code> — Router가 전송한 LP 토큰</li>
+              <li><code>balance0/1</code> = 현재 Pair의 토큰 잔액</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">지분 비례 (pro-rata) 분배</p>
+            <p className="text-sm font-mono">amount0 = liquidity * balance0 / totalSupply</p>
+            <p className="text-sm font-mono">amount1 = liquidity * balance1 / totalSupply</p>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">실행 순서</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>_burn(address(this), liquidity)</code> — LP 소각</li>
+              <li><code>_safeTransfer(token0, to, amount0)</code> — token0 전송</li>
+              <li><code>_safeTransfer(token1, to, amount1)</code> — token1 전송</li>
+              <li><code>_update()</code> — reserve 갱신</li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>pull 모델</strong>: Router가 LP 토큰을 Pair에 보낸 후 burn 호출<br />
           pro-rata 분배: <code>(liquidity / totalSupply) × balance</code><br />
@@ -124,39 +159,31 @@ function createPair(address tokenA, address tokenB) external returns (address pa
 
         <SwapFlowViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function swap(
-    uint amount0Out,
-    uint amount1Out,
-    address to,
-    bytes calldata data
-) external lock {
-    require(amount0Out > 0 || amount1Out > 0, "INSUFFICIENT_OUTPUT_AMOUNT");
-    (uint112 _reserve0, uint112 _reserve1,) = getReserves();
-    require(amount0Out < _reserve0 && amount1Out < _reserve1, "INSUFFICIENT_LIQUIDITY");
-
-    uint balance0; uint balance1;
-    {
-        if (amount0Out > 0) _safeTransfer(token0, to, amount0Out);
-        if (amount1Out > 0) _safeTransfer(token1, to, amount1Out);
-        if (data.length > 0) IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
-        //                                        ↑ Flash Swap 콜백
-        balance0 = IERC20(token0).balanceOf(address(this));
-        balance1 = IERC20(token1).balanceOf(address(this));
-    }
-
-    uint amount0In = balance0 > _reserve0 - amount0Out
-        ? balance0 - (_reserve0 - amount0Out) : 0;
-    uint amount1In = balance1 > _reserve1 - amount1Out
-        ? balance1 - (_reserve1 - amount1Out) : 0;
-    require(amount0In > 0 || amount1In > 0, "INSUFFICIENT_INPUT_AMOUNT");
-
-    // k 불변식 검증 (0.3% 수수료 포함)
-    uint balance0Adjusted = balance0 * 1000 - amount0In * 3;
-    uint balance1Adjusted = balance1 * 1000 - amount1In * 3;
-    require(balance0Adjusted * balance1Adjusted >= uint(_reserve0) * _reserve1 * 1000**2, "K");
-
-    _update(balance0, balance1, _reserve0, _reserve1);
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>swap(amount0Out, amount1Out, to, data)</code> — 파라미터</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <p><code>amount0Out</code> / <code>amount1Out</code> — 요청 출력량</p>
+              <p><code>to</code> — 수신 주소, <code>data</code> — Flash Swap 콜백용</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">실행 흐름 — "먼저 송금 후 검증"</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>_safeTransfer</code>로 출력 토큰 전송</li>
+              <li><code>data.length &gt; 0</code>이면 <code>IUniswapV2Callee(to).uniswapV2Call()</code> 콜백 실행</li>
+              <li><code>balanceOf(address(this))</code>로 현재 잔액 확인</li>
+              <li>입력량 역산: <code>amountIn = balance - (reserve - amountOut)</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">k 불변식 검증 (0.3% 수수료 포함)</p>
+            <p className="text-sm font-mono">balance0Adjusted = balance0 * 1000 - amount0In * 3</p>
+            <p className="text-sm font-mono">balance1Adjusted = balance1 * 1000 - amount1In * 3</p>
+            <p className="text-sm font-mono mt-1">require(adjusted0 * adjusted1 &gt;= reserve0 * reserve1 * 1000^2)</p>
+            <p className="text-xs text-muted-foreground mt-2">실패 시 "K" 에러로 전체 트랜잭션 revert</p>
+          </div>
+        </div>
         <p>
           <strong>먼저 송금 후 검증</strong>: 전통적 방식(입금→검증→송금)과 반대<br />
           이유: Flash Swap 지원 — 사용자가 토큰 먼저 받아서 활용 후 갚기<br />

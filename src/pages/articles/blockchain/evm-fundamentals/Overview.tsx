@@ -33,34 +33,98 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">EVM 아키텍처 특성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// EVM 설계 원칙
-// 1) Deterministic: 같은 입력 → 같은 출력 (모든 노드)
-// 2) Sandbox: 외부 상태 접근 제한
-// 3) Gas metering: 무한 루프 방지
-// 4) Turing-complete: 모든 계산 표현 가능
 
-// EVM 상태 구성
-// - World State: 모든 account의 mapping
-// - Account State: (nonce, balance, storageRoot, codeHash)
-// - Machine State: (stack, memory, pc, gas, ...)
-// - Transaction State: tx fields + intermediate state
+        <h4 className="text-lg font-semibold mt-4 mb-2">설계 원칙</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Deterministic</p>
+            <p className="text-sm text-muted-foreground">같은 입력 &rarr; 같은 출력 (모든 노드)</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Sandbox</p>
+            <p className="text-sm text-muted-foreground">외부 상태 접근 제한</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Gas Metering</p>
+            <p className="text-sm text-muted-foreground">무한 루프 방지</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Turing-complete</p>
+            <p className="text-sm text-muted-foreground">모든 계산 표현 가능</p>
+          </div>
+        </div>
 
-// 256-bit Word
-// - Address: 160 bits (20 bytes)
-// - Hash: 256 bits (32 bytes)
-// - Big int arithmetic: native support
-// - 이유: secp256k1 + Keccak-256 기반
+        <h4 className="text-lg font-semibold mt-4 mb-2">EVM 상태 구성</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">World State</p>
+            <p className="text-sm text-muted-foreground">모든 account의 mapping</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Account State</p>
+            <p className="text-sm text-muted-foreground"><code className="text-xs bg-background/50 px-1 py-0.5 rounded">nonce</code>, <code className="text-xs bg-background/50 px-1 py-0.5 rounded">balance</code>, <code className="text-xs bg-background/50 px-1 py-0.5 rounded">storageRoot</code>, <code className="text-xs bg-background/50 px-1 py-0.5 rounded">codeHash</code></p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Machine State</p>
+            <p className="text-sm text-muted-foreground"><code className="text-xs bg-background/50 px-1 py-0.5 rounded">stack</code>, <code className="text-xs bg-background/50 px-1 py-0.5 rounded">memory</code>, <code className="text-xs bg-background/50 px-1 py-0.5 rounded">pc</code>, <code className="text-xs bg-background/50 px-1 py-0.5 rounded">gas</code>, ...</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Transaction State</p>
+            <p className="text-sm text-muted-foreground">tx fields + intermediate state</p>
+          </div>
+        </div>
 
-// Stack-based vs Register-based
-// Stack: 단순 해석, 간결한 bytecode
-// Register: 더 효율적 execution (but 복잡)
-// EVM 선택: stack (검증 단순성)
+        <h4 className="text-lg font-semibold mt-4 mb-2">256-bit Word</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Address</p>
+            <p className="text-sm text-muted-foreground">160 bits (20 bytes)</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Hash</p>
+            <p className="text-sm text-muted-foreground">256 bits (32 bytes)</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Big int</p>
+            <p className="text-sm text-muted-foreground">네이티브 256-bit 산술 지원</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">근거</p>
+            <p className="text-sm text-muted-foreground"><code className="text-xs bg-background/50 px-1 py-0.5 rounded">secp256k1</code> + <code className="text-xs bg-background/50 px-1 py-0.5 rounded">Keccak-256</code> 기반</p>
+          </div>
+        </div>
 
-// Memory model
-// - Volatile: transaction 끝나면 사라짐
-// - Byte-addressable: 1 byte 단위 접근
-// - 자동 확장 (word 단위)
-// - 확장 비용 quadratic (MEMORY_EXPAND)`}</pre>
+        <h4 className="text-lg font-semibold mt-4 mb-2">Stack vs Register</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Stack-based (EVM 선택)</p>
+            <p className="text-sm text-muted-foreground">단순 해석, 간결한 bytecode &mdash; 검증 단순성 우선</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Register-based</p>
+            <p className="text-sm text-muted-foreground">더 효율적 execution, but 구조 복잡</p>
+          </div>
+        </div>
+
+        <h4 className="text-lg font-semibold mt-4 mb-2">Memory Model</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-6">
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Volatile</p>
+            <p className="text-sm text-muted-foreground">transaction 끝나면 사라짐</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">Byte-addressable</p>
+            <p className="text-sm text-muted-foreground">1 byte 단위 접근</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">자동 확장</p>
+            <p className="text-sm text-muted-foreground">word 단위로 확장</p>
+          </div>
+          <div className="bg-muted rounded-lg p-4">
+            <p className="font-semibold text-sm mb-1">확장 비용</p>
+            <p className="text-sm text-muted-foreground">quadratic (<code className="text-xs bg-background/50 px-1 py-0.5 rounded">MEMORY_EXPAND</code>)</p>
+          </div>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">EVM 주요 Opcode 카테고리</h3>
         <div className="overflow-x-auto">

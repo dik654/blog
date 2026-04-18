@@ -1,8 +1,15 @@
+import ProtectionMeasuresViz from './viz/ProtectionMeasuresViz';
+import HumanPhysicalSecViz from './viz/HumanPhysicalSecViz';
+import AccessControlViz from './viz/AccessControlViz';
+import CryptoDevSecViz from './viz/CryptoDevSecViz';
+import DisasterRecoveryViz from './viz/DisasterRecoveryViz';
+
 export default function ProtectionMeasures() {
   return (
     <section id="protection-measures" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">보호대책 요구사항 (2.x) 핵심</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <ProtectionMeasuresViz />
 
         <p>
           2.x 영역은 64개 세부 항목으로 구성된 "실제 보안 조치"의 집합.<br />
@@ -11,6 +18,7 @@ export default function ProtectionMeasures() {
 
         {/* ── 2.2 인적 보안 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2.2 인적 보안</h3>
+        <HumanPhysicalSecViz />
         <p>
           기술적 보안이 아무리 견고해도 사람이 취약하면 무력화된다.<br />
           내부자 위협(Insider Threat)은 VASP에서 가장 치명적인 공격 벡터 — 개인키에 접근 가능한 인원이 곧 자산에 접근 가능한 인원이므로.
@@ -70,6 +78,7 @@ export default function ProtectionMeasures() {
 
         {/* ── 2.5 인증 및 권한관리 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2.5 인증 및 권한관리</h3>
+        <AccessControlViz />
         <p>
           "누가 어디에 접근할 수 있는가"를 통제하는 핵심 영역.<br />
           인증(Authentication, 신원 확인)과 인가(Authorization, 권한 부여)를 분리하여 관리.
@@ -127,6 +136,7 @@ export default function ProtectionMeasures() {
 
         {/* ── 2.7 암호화 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2.7 암호화 적용</h3>
+        <CryptoDevSecViz />
         <p>
           저장·전송 중인 데이터의 기밀성을 보장하는 기술적 조치.<br />
           VASP에서는 지갑 개인키, 이용자 비밀번호, KYC 서류, API 키 등이 암호화 대상.
@@ -213,6 +223,7 @@ export default function ProtectionMeasures() {
 
         {/* ── 2.12 재해 복구 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">2.12 재해 복구</h3>
+        <DisasterRecoveryViz />
         <p>
           자연재해, 하드웨어 장애, 랜섬웨어 등으로 시스템이 전면 장애에 빠졌을 때 사업을 지속할 수 있는 능력.<br />
           백업이 없으면 복구가 불가능하고, 백업이 있어도 테스트하지 않으면 복구 가능 여부를 보장할 수 없다.

@@ -5,68 +5,87 @@ const sp = { type: 'spring' as const, bounce: 0.12, duration: 0.5 };
 const C = { srs: '#6366f1', cm: '#10b981', open: '#f59e0b', vfy: '#8b5cf6' };
 
 const STEPS = [
-  { label: '① Universal Setup — SRS', body: 'τ ← Fr (비밀)\nSRS = {[1]₁, [τ]₁, [τ²]₁, ..., [τᵈ]₁,  [τ]₂}\n= {G₁, τ·G₁, τ²·G₁, ..., τᵈ·G₁,  τ·G₂}\n// 1회 생성, 모든 deg≤d 다항식에 재사용.' },
-  { label: '② Commit — f(x) → G1 점', body: 'f(x) = a₀ + a₁x + a₂x² + ... + aₙxⁿ\n[f]₁ = a₀·[1]₁ + a₁·[τ]₁ + a₂·[τ²]₁ + ...\n     = [f(τ)]₁  // τ를 모르지만 결과는 계산 가능\n     = G1Affine  → 64 bytes (x, y 좌표).' },
-  { label: '③ Open at z — 인수정리', body: '주장: f(z) = y\nq(x) = (f(x) − y) / (x − z)  // 인수정리\n[q]₁ = KZG.commit(q)\n\nf(z) = y ⟺ (x-z) | (f(x)-y)\n즉, q(x) 존재 ⟺ f(z)=y 참.' },
-  { label: '④ Verify — 페어링 2회', body: 'e([f]₁ − y·G₁,  G₂) == e([q]₁,  [τ]₂ − z·G₂)\n\nLHS: e([f(τ)−y]₁,  G₂) = e(f(τ)-y, 1)_T\nRHS: e([q(τ)]₁, [τ−z]₂) = e(q(τ), τ-z)_T\n\nf(τ)-y = q(τ)·(τ-z) ⟺ 등식 성립.' },
+  { label: 'Universal Setup -- SRS', body: 'MPC 세레모니로 비밀 tau를 생성하고, tau의 거듭제곱을 타원곡선 점으로 인코딩. 1회 생성 후 재사용.' },
+  { label: 'Commit -- 다항식을 G1 점으로', body: 'f(x)의 계수와 SRS를 MSM으로 결합하여 G1 점 하나(64바이트)로 압축. tau를 모르지만 계산 가능.' },
+  { label: 'Open -- 인수정리로 증명', body: 'f(z)=y를 증명하려면 q(x)=(f(x)-y)/(x-z)를 계산. 인수정리에 의해 q가 존재하면 f(z)=y 참.' },
+  { label: 'Verify -- 페어링 2회 O(1)', body: 'e([f]-y*G1, G2) = e([q], [tau]-z*G2). 페어링 2회로 회로 크기와 무관하게 상수 시간 검증.' },
 ];
+
+const NODES = [
+  { id: 'tau', label: 'tau', sub: 'secret', x: 20, y: 20, w: 60, h: 30, color: C.srs },
+  { id: 'srs', label: 'SRS', sub: '[tau^i]', x: 20, y: 75, w: 60, h: 30, color: C.srs },
+  { id: 'fx', label: 'f(x)', sub: 'polynomial', x: 120, y: 20, w: 70, h: 30, color: C.cm },
+  { id: 'commit', label: '[f(tau)]', sub: 'G1 64B', x: 120, y: 75, w: 70, h: 30, color: C.cm },
+  { id: 'open', label: 'q(x)', sub: '(f-y)/(x-z)', x: 240, y: 20, w: 80, h: 30, color: C.open },
+  { id: 'verify', label: 'Pairing', sub: 'e(.,.) O(1)', x: 240, y: 75, w: 80, h: 30, color: C.vfy },
+  { id: 'result', label: 'Accept', sub: '', x: 370, y: 50, w: 70, h: 30, color: '#22c55e' },
+];
+
+const stepMap: Record<number, number[]> = { 0: [0, 1], 1: [2, 3], 2: [4], 3: [5, 6] };
 
 export default function KZGCommitViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 490 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {step === 0 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.srs}>Universal SRS</text>
-              {['τ ← rand(Fr)   // 비밀 평가점',
-                'SRS_G1 = [G₁, τ·G₁, τ²·G₁, ..., τᵈ·G₁]',
-                'SRS_G2 = [G₂, τ·G₂]', '',
-                '// d = 최대 다항식 차수',
-                '// τ 삭제 후 재사용 가능 (universal)'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.srs}>{t}</text>
-              ))}
-            </motion.g>
-          )}
-          {step === 1 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.cm}>Commit (MSM)</text>
-              {['f(x) = a₀ + a₁x + ... + aₙxⁿ',
-                '[f]₁ = a₀·G₁ + a₁·[τ]₁ + ... + aₙ·[τⁿ]₁',
-                '     = [f(τ)]₁   // G1 점 1개', '',
-                '// MSM으로 계산: O(n / log n)',
-                '// 출력: G1Affine (x,y) = 64 bytes'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.cm}>{t}</text>
-              ))}
-            </motion.g>
-          )}
-          {step === 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.open}>Open (인수정리)</text>
-              {['주장: f(z) = y',
-                'q(x) = (f(x) - y) / (x - z)', '',
-                '인수정리: (x-z) | (f(x)-y)',
-                '  ⟺ f(z) = y', '',
-                '[q]₁ = KZG.commit(q) → 전송'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.open}>{t}</text>
-              ))}
-            </motion.g>
-          )}
-          {step === 3 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.vfy}>Verify (Pairing)</text>
-              {['e([f]₁ − y·G₁, G₂)',
-                '  == e([q]₁, [τ]₂ − z·G₂) ?', '',
-                '등가: f(τ)−y == q(τ)·(τ−z)', '',
-                '// 페어링 2회, 회로 크기 무관 O(1)'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.vfy}>{t}</text>
-              ))}
-            </motion.g>
-          )}
+        <svg viewBox="0 0 470 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          {NODES.map((n, i) => {
+            const activeNodes = [...Array(step + 1)].flatMap((_, s) => stepMap[s] || []);
+            const active = activeNodes.includes(i);
+            const glow = (stepMap[step] || []).includes(i);
+            return (
+              <g key={n.id}>
+                <motion.rect x={n.x} y={n.y} width={n.w} height={n.h} rx={5}
+                  initial={{ opacity: 0.1 }}
+                  animate={{
+                    opacity: active ? 1 : 0.15,
+                    fill: active ? `${n.color}18` : `${n.color}06`,
+                    stroke: n.color,
+                    strokeWidth: glow ? 2 : 0.5,
+                  }}
+                  transition={sp} />
+                <text x={n.x + n.w / 2} y={n.y + 13} textAnchor="middle"
+                  fontSize={10} fontWeight={600} fill={n.color}
+                  opacity={active ? 1 : 0.2}>{n.label}</text>
+                {n.sub && (
+                  <text x={n.x + n.w / 2} y={n.y + 24} textAnchor="middle"
+                    fontSize={8} fill={n.color}
+                    opacity={active ? 0.6 : 0.1}>{n.sub}</text>
+                )}
+              </g>
+            );
+          })}
+          {/* tau -> SRS */}
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: step >= 0 ? 0.5 : 0.05 }} transition={sp}>
+            <line x1={50} y1={50} x2={50} y2={74} stroke={C.srs} strokeWidth={0.8} />
+            <polygon points="47,72 53,72 50,76" fill={C.srs} />
+          </motion.g>
+          {/* f(x) -> commit */}
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: step >= 1 ? 0.5 : 0.05 }} transition={sp}>
+            <line x1={155} y1={50} x2={155} y2={74} stroke={C.cm} strokeWidth={0.8} />
+            <polygon points="152,72 158,72 155,76" fill={C.cm} />
+          </motion.g>
+          {/* SRS -> commit */}
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: step >= 1 ? 0.5 : 0.05 }} transition={sp}>
+            <line x1={80} y1={90} x2={119} y2={90} stroke={C.cm} strokeWidth={0.8} />
+            <polygon points="117,87 117,93 121,90" fill={C.cm} />
+          </motion.g>
+          {/* commit -> open */}
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: step >= 2 ? 0.5 : 0.05 }} transition={sp}>
+            <line x1={190} y1={82} x2={239} y2={42} stroke={C.open} strokeWidth={0.8} />
+            <polygon points="237,39 237,46 241,42" fill={C.open} />
+          </motion.g>
+          {/* open -> verify, commit -> verify */}
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: step >= 3 ? 0.5 : 0.05 }} transition={sp}>
+            <line x1={280} y1={50} x2={280} y2={74} stroke={C.vfy} strokeWidth={0.8} />
+            <polygon points="277,72 283,72 280,76" fill={C.vfy} />
+            <line x1={190} y1={95} x2={239} y2={90} stroke={C.vfy} strokeWidth={0.8} />
+            <polygon points="237,87 237,93 241,90" fill={C.vfy} />
+          </motion.g>
+          {/* verify -> accept */}
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: step >= 3 ? 0.5 : 0.05 }} transition={sp}>
+            <line x1={320} y1={90} x2={369} y2={70} stroke="#22c55e" strokeWidth={0.8} />
+            <polygon points="367,67 367,73 371,70" fill="#22c55e" />
+          </motion.g>
         </svg>
       )}
     </StepViz>

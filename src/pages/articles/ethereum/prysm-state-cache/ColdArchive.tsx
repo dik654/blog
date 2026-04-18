@@ -14,43 +14,47 @@ export default function ColdArchive({ onCodeRef: _ }: Props) {
 
         {/* ── Cold state 저장 정책 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Cold State 저장 정책 — K-slot interval</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Cold state 저장 규칙
-const DEFAULT_SLOTS_PER_COLD_STATE = 2048  // ~6.8시간
-
-// 저장 조건:
-// 1. slot % K == 0 (K-slot 간격)
-// 2. epoch boundary (64 slot마다)
-// 3. finalized checkpoint slot
-
-// 저장 흐름:
-func saveColdState(state *BeaconState, root [32]byte) error {
-    slot := state.Slot()
-
-    // K-interval 체크
-    if slot % DEFAULT_SLOTS_PER_COLD_STATE != 0 {
-        // 저장 안 함, StateSummary만 기록
-        return saveStateSummary(slot, root)
-    }
-
-    // Full state 저장
-    encoded, err := state.MarshalSSZ()
-    // ~250 MB SSZ-serialized bytes
-    return beaconDB.SaveState(root, encoded)
-}
-
-// 저장 결과:
-// Cold state 수: total_slots / K = 약 5000개 (1년치)
-// 각 state ~250 MB → 총 ~1.2 TB (archive 모드)
-
-// Non-archive 모드:
-// K=8192 (~1일)
-// ~365개 state → ~90 GB
-
-// Prune 모드:
-// Finalized 이전 수 주만 유지
-// ~100개 state → ~25 GB`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2"><code>saveColdState</code> 흐름</h4>
+            <p className="text-xs text-muted-foreground mb-2"><code>DEFAULT_SLOTS_PER_COLD_STATE = 2048</code> (~6.8시간)</p>
+            <div className="grid gap-2 text-xs">
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
+                <div><code>slot % K == 0</code> 체크 — 아니면 <code>saveStateSummary()</code> 만 기록</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
+                <div><code>state.MarshalSSZ()</code> — SSZ 직렬화 (~250 MB)</div>
+              </div>
+              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
+                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
+                <div><code>beaconDB.SaveState(root, encoded)</code> — full state 저장</div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">추가 조건: epoch boundary (64 slot), finalized checkpoint slot</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">모드별 저장량 (1년 기준)</h4>
+            <div className="grid grid-cols-3 gap-3 text-xs text-muted-foreground">
+              <div className="rounded border p-2">
+                <p className="font-medium text-foreground">Archive</p>
+                <p>K=1 효과 / ~5000개 state</p>
+                <p>~1.2 TB</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium text-foreground">Non-archive</p>
+                <p>K=8192 (~1일) / ~365개</p>
+                <p>~90 GB</p>
+              </div>
+              <div className="rounded border p-2">
+                <p className="font-medium text-foreground">Prune</p>
+                <p>수 주만 유지 / ~100개</p>
+                <p>~25 GB</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Cold state는 <strong>K-slot 간격으로만 저장</strong>.<br />
           2048 slot(~6.8시간) = 기본값 → 디스크 사용량과 조회 속도 균형.<br />
@@ -67,44 +71,58 @@ func saveColdState(state *BeaconState, root [32]byte) error {
 
         {/* ── Archive 모드 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">저장 모드 3가지</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prysm의 state 저장 모드 설정
-
-// 1. Default 모드 (대부분의 validator)
-// - K = 2048 (6.8시간)
-// - Finalized 이전 ~1달 유지
-// - 디스크: ~100 GB
-// - Replay max distance: K-1 = 2047 slots (~6.8h)
-// - Replay 비용: ~수 초
-
-// 2. Archive 모드 (RPC 제공자, 블록 익스플로러)
-// --state-gen-cache-size=1000
-// --archive
-// - 모든 slot의 state 저장 (K=1 효과)
-// - 디스크: ~5 TB (매년 ~2 TB 증가)
-// - Replay max distance: 0
-// - Replay 비용: 0 (항상 hit)
-// - 단점: 디스크 비용 큼
-
-// 3. Minimal 모드 (light validator)
-// --minimal
-// - K = 8192 (~27시간)
-// - Finalized 이전 ~1주만 유지
-// - 디스크: ~30 GB
-// - Replay max distance: 8191 slots (~27h)
-// - Replay 비용: 최대 수 분 (드물게)
-
-// 선택 기준:
-// - Solo validator: default/minimal (비용 최소화)
-// - Staking pool: default (validator 의무 안정성)
-// - RPC provider: archive (빠른 과거 조회)
-// - Explorer: archive (과거 state 정밀 조회)
-
-// 모드 전환:
-// 데이터 폐기 없이 모드 변경 가능 (추후 보강)
-// default → archive: missing slot state 복원 필요 (시간 소요)
-// archive → default: 추가 삭제만 수행 (즉시)`}
-        </pre>
+        <div className="not-prose grid gap-3 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-lg border bg-card p-4 border-blue-500/30 bg-blue-500/5">
+              <h4 className="font-semibold text-sm mb-2">Default <span className="text-xs text-muted-foreground font-normal">대부분의 validator</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>K = 2048 (6.8시간)</li>
+                <li>Finalized 이전 ~1달 유지</li>
+                <li>디스크: ~100 GB</li>
+                <li>Replay max: K-1 = 2047 slots</li>
+                <li>Replay 비용: ~수 초</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Archive <span className="text-xs text-muted-foreground font-normal">--archive</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>모든 slot의 state 저장 (K=1)</li>
+                <li>디스크: ~5 TB (연 ~2 TB 증가)</li>
+                <li>Replay max: 0 (항상 hit)</li>
+                <li>Replay 비용: 0</li>
+                <li>단점: 디스크 비용 큼</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">Minimal <span className="text-xs text-muted-foreground font-normal">--minimal</span></h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>K = 8192 (~27시간)</li>
+                <li>Finalized 이전 ~1주만 유지</li>
+                <li>디스크: ~30 GB</li>
+                <li>Replay max: 8191 slots (~27h)</li>
+                <li>Replay 비용: 최대 수 분</li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">선택 기준</h4>
+              <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
+                <span>Solo validator → default / minimal</span>
+                <span>Staking pool → default</span>
+                <span>RPC provider → archive</span>
+                <span>Explorer → archive</span>
+              </div>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="font-semibold text-sm mb-2">모드 전환</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>default → archive: missing slot state 복원 필요 (시간 소요)</li>
+                <li>archive → default: 추가 삭제만 수행 (즉시)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="leading-7">
           Prysm은 <strong>3가지 저장 모드</strong> 지원.<br />
           Default(100GB) → Archive(5TB) → Minimal(30GB).<br />

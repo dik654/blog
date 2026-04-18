@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import MultiHopViz from './viz/MultiHopViz';
 import GetAmountsOutViz from './viz/GetAmountsOutViz';
 import AddLiquidityViz from './viz/AddLiquidityViz';
@@ -20,25 +21,31 @@ export default function RouterSwap() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">swapExactTokensForTokens — 가장 일반적 함수</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function swapExactTokensForTokens(
-    uint amountIn,          // 입력 토큰 양 (정확)
-    uint amountOutMin,      // 최소 출력 (슬리피지 보호)
-    address[] calldata path, // 경로: [tokenA, tokenB, tokenC]
-    address to,             // 출력 수신 주소
-    uint deadline           // 트랜잭션 만료 시각
-) external ensure(deadline) returns (uint[] memory amounts) {
-    // 1) 경로별 출력량 미리 계산
-    amounts = getAmountsOut(amountIn, path);
-    require(amounts[amounts.length - 1] >= amountOutMin, "INSUFFICIENT_OUTPUT_AMOUNT");
-
-    // 2) 첫 번째 Pair로 입력 토큰 전송
-    TransferHelper.safeTransferFrom(
-        path[0], msg.sender, pairFor(path[0], path[1]), amounts[0]
-    );
-
-    // 3) 경로 따라 swap 연쇄 실행
-    _swap(amounts, path, to);
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>swapExactTokensForTokens()</code> — 파라미터</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="space-y-1">
+                <p><code>uint amountIn</code> — 입력 토큰 양 (정확)</p>
+                <p><code>uint amountOutMin</code> — 최소 출력 (슬리피지 보호)</p>
+                <p><code>address[] path</code> — 경로: [tokenA, tokenB, ...]</p>
+              </div>
+              <div className="space-y-1">
+                <p><code>address to</code> — 출력 수신 주소</p>
+                <p><code>uint deadline</code> — 트랜잭션 만료 시각</p>
+                <p className="text-muted-foreground"><code>ensure(deadline)</code> modifier 적용</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2">3단계 실행 흐름</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>getAmountsOut(amountIn, path)</code> — 경로별 출력량 미리 계산</li>
+              <li><code>safeTransferFrom(path[0], msg.sender, pairFor(...))</code> — 첫 Pair로 입력 전송</li>
+              <li><code>_swap(amounts, path, to)</code> — 경로 따라 swap 연쇄 실행</li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>3단계 흐름</strong>: 출력 계산 → 입력 전송 → 연쇄 swap<br />
           <code>amountOutMin</code>: 프론트엔드가 예상 출력 × (1 - slippage) 계산<br />
@@ -49,26 +56,21 @@ export default function RouterSwap() {
 
         <MultiHopViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function _swap(uint[] memory amounts, address[] memory path, address _to) internal {
-    for (uint i; i < path.length - 1; i++) {
-        (address input, address output) = (path[i], path[i + 1]);
-        (address token0,) = sortTokens(input, output);
-
-        uint amountOut = amounts[i + 1];
-        (uint amount0Out, uint amount1Out) = input == token0
-            ? (uint(0), amountOut)
-            : (amountOut, uint(0));
-
-        // 다음 홉의 Pair(있으면)를 수신 주소로 — 중간 단계 gas 절감
-        address to = i < path.length - 2
-            ? pairFor(output, path[i + 2])
-            : _to;
-
-        IUniswapV2Pair(pairFor(input, output)).swap(
-            amount0Out, amount1Out, to, new bytes(0)
-        );
-    }
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>_swap()</code> — 다중 홉 루프</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li>각 홉마다 <code>(input, output)</code> 페어 결정</li>
+              <li><code>sortTokens</code>로 token0/token1 정렬 → <code>amount0Out</code> / <code>amount1Out</code> 배정</li>
+              <li>수신 주소 결정: 중간 홉이면 <strong>다음 Pair</strong>, 마지막이면 <code>_to</code></li>
+              <li><code>pair.swap(amount0Out, amount1Out, to, "")</code> 호출</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="font-semibold text-sm mb-1">연쇄 전송 최적화</p>
+            <p className="text-sm">중간 단계 결과를 <strong>다음 Pair로 직접 전송</strong> — Router 경유 없이 가스 절감</p>
+          </div>
+        </div>
         <p>
           <strong>연쇄 전송 최적화</strong>: 중간 단계 결과를 다음 Pair로 직접 전송<br />
           ex: A→B→C 경로 시, A→B의 출력을 B→C Pair로 바로 보냄 — Router 경유 없음<br />
@@ -79,30 +81,24 @@ export default function RouterSwap() {
 
         <GetAmountsOutViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function getAmountsOut(uint amountIn, address[] memory path)
-    public view returns (uint[] memory amounts)
-{
-    require(path.length >= 2, "INVALID_PATH");
-    amounts = new uint[](path.length);
-    amounts[0] = amountIn;
-    for (uint i; i < path.length - 1; i++) {
-        (uint reserveIn, uint reserveOut) = getReserves(path[i], path[i + 1]);
-        amounts[i + 1] = getAmountOut(amounts[i], reserveIn, reserveOut);
-    }
-}
-
-function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut)
-    internal pure returns (uint amountOut)
-{
-    require(amountIn > 0, "INSUFFICIENT_INPUT_AMOUNT");
-    require(reserveIn > 0 && reserveOut > 0, "INSUFFICIENT_LIQUIDITY");
-
-    // 0.3% 수수료 포함 공식
-    uint amountInWithFee = amountIn * 997;
-    uint numerator = amountInWithFee * reserveOut;
-    uint denominator = reserveIn * 1000 + amountInWithFee;
-    amountOut = numerator / denominator;
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>getAmountsOut(amountIn, path)</code> — view 함수</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>amounts[0] = amountIn</code></li>
+              <li>각 홉마다 <code>getReserves</code> 조회 → <code>getAmountOut</code> 계산</li>
+              <li>결과 배열: <code>[amountIn, hop1Out, hop2Out, ...]</code></li>
+            </ol>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2"><code>getAmountOut</code> — 0.3% 수수료 포함 공식</p>
+            <p className="text-sm font-mono mb-2">amountInWithFee = amountIn * 997</p>
+            <p className="text-sm font-mono">amountOut = (amountInWithFee * reserveOut) / (reserveIn * 1000 + amountInWithFee)</p>
+            <div className="mt-3">
+              <M display>{'\\Delta y = \\frac{997 \\cdot \\Delta x \\cdot y}{1000 \\cdot x + 997 \\cdot \\Delta x}'}</M>
+            </div>
+          </div>
+        </div>
         <p>
           <strong>공식 유도</strong>:<br />
           (x + 0.997·Δx) · (y - Δy) = x · y<br />
@@ -118,29 +114,30 @@ function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut)
 
         <AddLiquidityViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`function addLiquidity(
-    address tokenA, address tokenB,
-    uint amountADesired, uint amountBDesired,
-    uint amountAMin, uint amountBMin,
-    address to, uint deadline
-) external ensure(deadline) returns (uint amountA, uint amountB, uint liquidity) {
-    // 1) 최적 비율 계산
-    (amountA, amountB) = _addLiquidity(
-        tokenA, tokenB,
-        amountADesired, amountBDesired,
-        amountAMin, amountBMin
-    );
-
-    // 2) Pair 주소 계산
-    address pair = pairFor(tokenA, tokenB);
-
-    // 3) 토큰 이동
-    TransferHelper.safeTransferFrom(tokenA, msg.sender, pair, amountA);
-    TransferHelper.safeTransferFrom(tokenB, msg.sender, pair, amountB);
-
-    // 4) LP 토큰 발행
-    liquidity = IUniswapV2Pair(pair).mint(to);
-}`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>addLiquidity()</code> — 파라미터</p>
+            <div className="grid gap-2 sm:grid-cols-2 text-sm">
+              <div className="space-y-1">
+                <p><code>tokenA</code>, <code>tokenB</code> — 페어 토큰 주소</p>
+                <p><code>amountADesired</code>, <code>amountBDesired</code> — 희망 입금량</p>
+              </div>
+              <div className="space-y-1">
+                <p><code>amountAMin</code>, <code>amountBMin</code> — 최소 허용치</p>
+                <p><code>to</code> — LP 수신 주소, <code>deadline</code> — 만료 시각</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">4단계 실행</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><code>_addLiquidity()</code> — 현재 reserve 비율에 맞춰 최적 비율 계산</li>
+              <li><code>pairFor(tokenA, tokenB)</code> — Pair 주소 결정론적 계산</li>
+              <li><code>safeTransferFrom</code> × 2 — 두 토큰을 Pair로 전송</li>
+              <li><code>pair.mint(to)</code> — LP 토큰 발행</li>
+            </ol>
+          </div>
+        </div>
         <p>
           <strong>최적 비율 자동 계산</strong>: 사용자가 원하는 양과 현재 reserve 비율 맞춤<br />
           예: 500 USDC + 1 ETH 원하는데 시장가 $3000이면 → 500 USDC + 0.167 ETH 자동 조정<br />
@@ -151,17 +148,25 @@ function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut)
 
         <SandwichAttackViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 샌드위치 공격 시나리오
-1. 사용자: 10 ETH → 30000 USDC 스왑 트랜잭션 (amountOutMin=29700)
-2. 봇 (프론트런): 100 ETH → USDC 선매수 (가격 상승 유도)
-3. 사용자 트랜잭션 실행: 원하는 양보다 적게 받음 (28000 USDC라면 revert)
-   → amountOutMin 29700이 보호
-4. 봇 (백런): USDC → ETH 매도 (차익 실현)
-
-// amountOutMin 계산 (프론트엔드)
-expectedOut = getAmountsOut(10 * 1e18, [WETH, USDC])[1]
-slippage = 0.01  // 1%
-amountOutMin = expectedOut * (1 - slippage)`}</pre>
+        <div className="not-prose space-y-3 mb-4">
+          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
+            <p className="font-semibold text-sm mb-2">샌드위치 공격 시나리오</p>
+            <ol className="text-sm space-y-1 list-decimal list-inside">
+              <li><strong>사용자</strong>: 10 ETH → 30,000 USDC 스왑 (<code>amountOutMin=29700</code>)</li>
+              <li><strong>봇 (프론트런)</strong>: 100 ETH → USDC 선매수 — 가격 상승 유도</li>
+              <li><strong>사용자 실행</strong>: 원하는 양보다 적게 받음 → <code>amountOutMin</code> 29,700이 보호 (28,000이면 revert)</li>
+              <li><strong>봇 (백런)</strong>: USDC → ETH 매도 — 차익 실현</li>
+            </ol>
+          </div>
+          <div className="rounded-lg border p-4">
+            <p className="font-semibold text-sm mb-2"><code>amountOutMin</code> 계산 (프론트엔드)</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><code>expectedOut = getAmountsOut(10e18, [WETH, USDC])[1]</code></li>
+              <li><code>slippage = 0.01</code> (1%)</li>
+              <li><code>amountOutMin = expectedOut * (1 - slippage)</code></li>
+            </ul>
+          </div>
+        </div>
         <p>
           <strong>슬리피지 1%가 표준</strong>: 일반 거래는 1%, 스테이블코인 페어는 0.1%<br />
           너무 낮으면 트랜잭션 revert, 너무 높으면 MEV 취약<br />

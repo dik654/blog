@@ -1,3 +1,8 @@
+import PrivacyWebAuditViz from './viz/PrivacyWebAuditViz';
+import ConsentScreenInlineViz from './viz/ConsentScreenInlineViz';
+import ErrorPageInlineViz from './viz/ErrorPageInlineViz';
+import HttpsCheckInlineViz from './viz/HttpsCheckInlineViz';
+
 export default function PrivacyWebAudit() {
   return (
     <section id="privacy-web-audit" className="mb-16 scroll-mt-20">
@@ -10,8 +15,15 @@ export default function PrivacyWebAudit() {
           기술적 설정 점검이 아니라 "사용자 관점에서 법적 요건이 충족되는가"를 눈으로 보는 방식.
         </p>
 
+        <PrivacyWebAuditViz />
+
         {/* --- 개인정보 처리방침 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">1. 개인정보 처리방침 확인</h3>
+
+        <div className="not-prose my-4">
+          <ConsentScreenInlineViz />
+        </div>
+
         <p>
           심사원이 가장 먼저 하는 행동 — 서비스 메인 페이지 하단으로 스크롤.<br />
           "개인정보 처리방침" 링크가 있는지 확인한다.
@@ -125,6 +137,11 @@ export default function PrivacyWebAudit() {
 
         {/* --- 에러 페이지 --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">3. 에러 페이지 확인</h3>
+
+        <div className="not-prose my-4">
+          <ErrorPageInlineViz />
+        </div>
+
         <p>
           심사원: 존재하지 않는 URL을 직접 입력하여 접속 시도.<br />
           예: <code>https://example.com/asdfjkl123</code>
@@ -205,6 +222,11 @@ export default function PrivacyWebAudit() {
 
         {/* --- HTTPS --- */}
         <h3 className="text-xl font-semibold mt-6 mb-3">6. HTTPS 적용</h3>
+
+        <div className="not-prose my-4">
+          <HttpsCheckInlineViz />
+        </div>
+
         <p>
           심사원이 브라우저에서 직접 확인:
         </p>
