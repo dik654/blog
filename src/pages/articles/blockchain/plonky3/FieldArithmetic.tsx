@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import FieldCompareViz from './viz/FieldCompareViz';
+import TwoAdicityViz from './viz/TwoAdicityViz';
 import {
   BABYBEAR_CODE, BABYBEAR_ANNOTATIONS,
   MERSENNE_CODE, MERSENNE_ANNOTATIONS,
@@ -85,33 +86,7 @@ export default function FieldArithmetic({ title, onCodeRef }: { title?: string; 
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">2-adicity의 중요성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 2-adicity = p - 1의 2의 거듭제곱 인수
-// 예: BabyBear p-1 = 2^27 × k (k는 홀수)
-// → 2-adicity = 27
-
-// 왜 중요?
-// FFT는 2^k 크기 그룹 필요
-// Max FFT size = 2^(2-adicity)
-// BabyBear: 최대 2^27 ≈ 1.3억 크기 FFT
-
-// Circuit 크기 제약
-// Typical zkVM trace: 2^20 ~ 2^24 rows
-// BabyBear 2^27로 충분
-
-// Mersenne31 (2-adicity = 1)
-// - FFT 바로 적용 불가
-// - Circle FFT 기법 필요 (새 수학)
-// - 하지만 reduction 매우 빠름 (Mersenne prime)
-
-// Goldilocks (2-adicity = 32)
-// - 충분히 큰 FFT
-// - 64-bit (32-bit 2배)
-// - Extension field 더 쉬움
-
-// Selection 기준
-// - zkVM: BabyBear/KoalaBear (31-bit, 빠름)
-// - Large circuits: Goldilocks (64-bit, 여유)
-// - Novel math: Mersenne31 (Circle STARKs)`}</pre>
+        <div className="not-prose"><TwoAdicityViz /></div>
 
       </div>
     </section>
