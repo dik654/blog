@@ -1,4 +1,5 @@
 import CircuitExampleViz from './viz/CircuitExampleViz';
+import NullifierFlowViz from './viz/NullifierFlowViz';
 
 export default function CircuitExamples({ title }: { title?: string }) {
   return (
@@ -73,38 +74,7 @@ export default function CircuitExamples({ title }: { title?: string }) {
         <h3 className="text-xl font-semibold mt-6 mb-3">실전 회로 패턴</h3>
 
         <h4 className="font-semibold mt-6 mb-3">1. Nullifier 구성 (Tornado Cash)</h4>
-        <div className="not-prose rounded-lg border p-4 text-sm space-y-3 mb-6">
-          <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3">
-            <p className="text-xs font-medium mb-2">Commitment 템플릿</p>
-            <div className="font-mono text-xs space-y-1">
-              <p><code>template</code> <strong>Commitment</strong>() {'{'}</p>
-              <p className="pl-4"><code>signal input</code> nullifier; <span className="text-muted-foreground">// 증명자 비밀</span></p>
-              <p className="pl-4"><code>signal input</code> secret; <span className="text-muted-foreground">// 증명자 비밀</span></p>
-              <p className="pl-4"><code>signal output</code> commitment; <span className="text-muted-foreground">// 공개</span></p>
-              <p className="pl-4"><code>signal output</code> nullifierHash; <span className="text-muted-foreground">// 공개</span></p>
-            </div>
-          </div>
-          <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 font-mono text-xs space-y-1">
-            <p className="pl-4"><code>component</code> commitHasher = Poseidon(2);</p>
-            <p className="pl-4">commitHasher.inputs[0] <code>{'<=='}</code> nullifier;</p>
-            <p className="pl-4">commitHasher.inputs[1] <code>{'<=='}</code> secret;</p>
-            <p className="pl-4">commitment <code>{'<=='}</code> commitHasher.out;</p>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-3 mt-2">
-            <div className="rounded bg-white dark:bg-neutral-800 p-2 text-xs text-center">
-              <p className="font-semibold">입금 시</p>
-              <p className="text-muted-foreground">commitment 공개, (nullifier, secret) 보관</p>
-            </div>
-            <div className="rounded bg-white dark:bg-neutral-800 p-2 text-xs text-center">
-              <p className="font-semibold">출금 시</p>
-              <p className="text-muted-foreground">nullifierHash 공개, 트리 소속 증명</p>
-            </div>
-            <div className="rounded bg-white dark:bg-neutral-800 p-2 text-xs text-center">
-              <p className="font-semibold">이중 사용 방지</p>
-              <p className="text-muted-foreground">nullifier 고유성으로 보장</p>
-            </div>
-          </div>
-        </div>
+        <div className="not-prose mb-6"><NullifierFlowViz /></div>
 
         <h4 className="font-semibold mt-6 mb-3">2. Signal Membership (Semaphore)</h4>
         <div className="not-prose rounded-lg border p-4 text-sm mb-6">

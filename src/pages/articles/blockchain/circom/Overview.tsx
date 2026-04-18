@@ -1,4 +1,5 @@
 import CompilerPipelineViz from './viz/CompilerPipelineViz';
+import WorkflowPipelineViz from './viz/WorkflowPipelineViz';
 
 export default function Overview({ title }: { title?: string }) {
   return (
@@ -140,22 +141,7 @@ export default function Overview({ title }: { title?: string }) {
         </div>
 
         <h4 className="font-semibold mt-6 mb-3">전형적 워크플로우</h4>
-        <div className="not-prose flex flex-col gap-2 mb-6">
-          {[
-            { step: 1, text: '회로 작성', detail: 'circuit.circom 파일 작성' },
-            { step: 2, text: '컴파일', detail: 'circom circuit.circom --r1cs --wasm --sym' },
-            { step: 3, text: 'Trusted Setup', detail: 'R1CS를 Groth16 / PLONK 등에 전달' },
-            { step: 4, text: '증인 생성', detail: 'WASM에 입력 전달 → witness 계산' },
-            { step: 5, text: '증명 생성', detail: 'witness + proving key로 증명 생성' },
-            { step: 6, text: '검증', detail: 'verification key로 증명 검증' },
-          ].map(s => (
-            <div key={s.step} className="flex items-center gap-3 rounded-lg border p-3 text-sm">
-              <span className="flex-none w-7 h-7 rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300 flex items-center justify-center text-xs font-bold">{s.step}</span>
-              <span className="font-medium w-28 flex-none">{s.text}</span>
-              <span className="text-muted-foreground">{s.detail}</span>
-            </div>
-          ))}
-        </div>
+        <div className="not-prose mb-6"><WorkflowPipelineViz /></div>
 
         <h4 className="font-semibold mt-6 mb-3">표준 라이브러리 (circomlib)</h4>
         <p className="text-sm text-muted-foreground mb-3">github.com/iden3/circomlib — 200+ 템플릿</p>

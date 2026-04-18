@@ -1,4 +1,5 @@
 import TemplateSignalViz from './viz/TemplateSignalViz';
+import AssignmentOperatorsViz from './viz/AssignmentOperatorsViz';
 import M from '@/components/ui/math';
 
 export default function TemplateSignal({ title }: { title?: string }) {
@@ -112,46 +113,8 @@ export default function TemplateSignal({ title }: { title?: string }) {
           <M display>{'\\text{out} = \\sum_{i=0}^{n-1} \\text{in}[i] \\cdot 2^i'}</M>
         </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-4">대입 연산자 3종</h3>
-        <div className="not-prose space-y-3 mb-6">
-          <div className="rounded-lg border bg-emerald-50 dark:bg-emerald-950/30 p-4 text-sm">
-            <p className="font-semibold text-xs mb-1">
-              <code>{'<=='}</code> — 제약 + 대입 동시
-            </p>
-            <p className="font-mono text-xs">c <code>{'<=='}</code> a * b</p>
-            <p className="text-xs text-muted-foreground mt-1">c = a*b 대입 AND 제약 추가: c - a*b = 0. 선형/이차 표현식에 항상 사용</p>
-          </div>
-          <div className="rounded-lg border bg-amber-50 dark:bg-amber-950/30 p-4 text-sm">
-            <p className="font-semibold text-xs mb-1">
-              <code>{'<--'}</code> — 대입만 (비결정적)
-            </p>
-            <p className="font-mono text-xs">c <code>{'<--'}</code> a * b</p>
-            <p className="text-xs text-muted-foreground mt-1">c = a*b 대입, 제약 없음. 나중에 별도 제약 추가 필수. 위험: 제약 없으면 증명자가 거짓값 가능</p>
-          </div>
-          <div className="rounded-lg border bg-sky-50 dark:bg-sky-950/30 p-4 text-sm">
-            <p className="font-semibold text-xs mb-1">
-              <code>{'==='}</code> — 제약만 (Circom 2 신규)
-            </p>
-            <p className="font-mono text-xs">c <code>{'==='}</code> a * b</p>
-            <p className="text-xs text-muted-foreground mt-1">대입 없음, 제약만 추가. c는 이미 대입된 상태여야 함. 추가 제약 용도</p>
-          </div>
-        </div>
-
-        <h4 className="font-semibold mt-6 mb-3">흔한 안티패턴</h4>
-        <div className="not-prose grid gap-3 sm:grid-cols-2 mb-6">
-          <div className="rounded-lg border border-red-300 dark:border-red-800 p-4 text-sm">
-            <p className="font-semibold text-xs text-red-600 dark:text-red-400 mb-2">잘못된 사용</p>
-            <p className="font-mono text-xs">out <code>{'<--'}</code> in / 2;</p>
-            <p className="text-xs text-muted-foreground mt-1">제약 없음 — 증명자가 임의 값 가능!</p>
-          </div>
-          <div className="rounded-lg border border-emerald-300 dark:border-emerald-800 p-4 text-sm">
-            <p className="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-2">올바른 사용</p>
-            <div className="font-mono text-xs space-y-1">
-              <p>out <code>{'<--'}</code> in / 2;</p>
-              <p>in <code>{'==='}</code> out * 2; <span className="text-muted-foreground">// 제약 강제</span></p>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-4">대입 연산자 3종 & 안티패턴</h3>
+        <div className="not-prose mb-6"><AssignmentOperatorsViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">컴포넌트 인스턴스화</h3>
         <div className="not-prose rounded-lg border p-4 text-sm space-y-3 mb-6">
