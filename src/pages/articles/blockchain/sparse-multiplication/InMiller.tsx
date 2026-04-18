@@ -1,5 +1,6 @@
 import M from '@/components/ui/math';
 import InMillerViz from './viz/InMillerViz';
+import MillerLoopTraceViz from './viz/MillerLoopTraceViz';
 
 export default function InMiller() {
   return (
@@ -46,64 +47,8 @@ export default function InMiller() {
           </div>
         </div>
 
-        {/* Pseudocode */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">Miller Loop Pseudocode</div>
-          <div className="text-sm text-muted-foreground font-mono space-y-0.5">
-            <p><code>let mut f = Fp12::ONE;</code></p>
-            <p><code>let mut T = Q;</code></p>
-            <p><code>for i in (0..L.len()-1).rev() {'{'}</code></p>
-            <p className="pl-4"><code>line = tangent_line(T);</code> <span className="text-xs text-muted-foreground/60">// doubling</span></p>
-            <p className="pl-4"><code>T = 2 * T;</code></p>
-            <p className="pl-4"><code>f = f * f;</code></p>
-            <p className="pl-4"><code>f = mul_by_034(f, line.coeffs);</code> <span className="text-xs text-muted-foreground/60">// sparse!</span></p>
-            <p className="pl-4"><code>if L.get_bit(i) {'{'}</code></p>
-            <p className="pl-8"><code>line = chord_line(T, Q);</code> <span className="text-xs text-muted-foreground/60">// addition</span></p>
-            <p className="pl-8"><code>T = T + Q;</code></p>
-            <p className="pl-8"><code>f = mul_by_034(f, line.coeffs);</code> <span className="text-xs text-muted-foreground/60">// sparse!</span></p>
-            <p className="pl-4"><code>{'}'}</code></p>
-            <p><code>{'}'}</code></p>
-          </div>
-        </div>
-
-        {/* 반복당 비용 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">반복당 비용 (Fp mults 단위)</div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
-            <div className="rounded bg-muted/50 p-3">
-              <div className="font-medium mb-1">Doubling (매 반복)</div>
-              <ul className="space-y-0.5 text-xs">
-                <li><M>{'f^2'}</M> cyclotomic: 18m</li>
-                <li>Tangent line 계산: 12m</li>
-                <li>Double T: 5m</li>
-                <li><M>{'f \\times'}</M> line (sparse): 39m</li>
-                <li className="font-semibold text-sm">Total: ~74m</li>
-              </ul>
-            </div>
-            <div className="rounded bg-muted/50 p-3">
-              <div className="font-medium mb-1">Addition (bit set일 때)</div>
-              <ul className="space-y-0.5 text-xs">
-                <li>Chord line 계산: 15m</li>
-                <li>Add Q to T: 10m</li>
-                <li><M>{'f \\times'}</M> line (sparse): 39m</li>
-                <li className="font-semibold text-sm">Total: ~64m</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Total + Sparse 기여 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-emerald-500 bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">BN254 Miller Loop 총 비용</div>
-          <div className="grid grid-cols-3 gap-2 text-center text-sm text-muted-foreground mb-3">
-            <div className="rounded bg-muted/50 p-2">64 doublings x 74 = 4,736m</div>
-            <div className="rounded bg-muted/50 p-2">30 additions x 64 = 1,920m</div>
-            <div className="rounded bg-muted/50 p-2 font-semibold">Total: ~6,700m</div>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Sparse 없이: 94 iterations x full 54 mult = 5,076 추가 연산 &rarr; sparse로 ~5,000 Fp mults 절약 (Miller loop의 ~40%).
-          </p>
-        </div>
+        {/* Miller Loop trace + 반복당 비용 + 누적 → Viz */}
+        <div className="not-prose mb-4"><MillerLoopTraceViz /></div>
 
         {/* Multi-pairing */}
         <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
