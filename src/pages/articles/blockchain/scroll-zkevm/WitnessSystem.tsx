@@ -1,4 +1,5 @@
 import WitnessPipelineViz from './viz/WitnessPipelineViz';
+import WitnessFlowViz from './viz/WitnessFlowViz';
 
 export default function WitnessSystem() {
   return (
@@ -12,41 +13,9 @@ export default function WitnessSystem() {
           Geth 트레이스 수집 → Bus-Mapping 변환 → Block 생성 → 회로 할당의 4단계를 거칩니다.
         </p>
 
-        {/* Witness 생성 파이프라인 */}
-        <h3 className="text-lg font-semibold mt-6 mb-3">Witness 생성 파이프라인</h3>
-        <div className="rounded-lg border bg-muted/30 p-4 not-prose mb-6">
-          <p className="text-sm font-semibold mb-2">4단계 파이프라인</p>
-          <div className="grid gap-2">
-            <div className="rounded border bg-sky-50/50 dark:bg-sky-950/20 border-sky-200 dark:border-sky-800 p-3">
-              <p className="text-sm font-semibold text-sky-700 dark:text-sky-300 mb-1">1단계: Geth 트레이스 수집</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                <code>GethExecTrace</code> — <code>gas</code>, <code>failed</code>, <code>return_value</code>,
-                <code>struct_logs: Vec&lt;GethExecStep&gt;</code>.
-                EVM 실행의 각 스텝별 상태를 기록.
-              </p>
-            </div>
-            <div className="rounded border bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800 p-3">
-              <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-1">2단계: CircuitInputBuilder로 변환</p>
-              <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                <p><code>sdb: StateDB</code> — 상태 데이터베이스</p>
-                <p><code>code_db: CodeDB</code> — 코드 데이터베이스</p>
-                <p><code>block: Blocks</code> — 블록 데이터</p>
-              </div>
-            </div>
-            <div className="rounded border bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 p-3">
-              <p className="text-sm font-semibold text-amber-700 dark:text-amber-300 mb-1">3단계: Block 구조체 생성</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                <code>block_convert()</code> 호출 — RW 연산 맵 → 트랜잭션 변환 → 실행 단계 → MPT 업데이트 → Bytecode 수집
-              </p>
-            </div>
-            <div className="rounded border bg-violet-50/50 dark:bg-violet-950/20 border-violet-200 dark:border-violet-800 p-3">
-              <p className="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-1">4단계: 회로별 Witness 할당</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                EVM Circuit → State Circuit → Bytecode Circuit → 기타 서브회로에 각각 할당
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Witness 생성 파이프라인 + Witness vs Public Input */}
+        <h3 className="text-lg font-semibold mt-6 mb-3">Witness 생성 4단계 + Witness vs Public</h3>
+        <div className="not-prose mb-6"><WitnessFlowViz /></div>
 
         {/* Block Witness */}
         <h3 className="text-lg font-semibold mt-6 mb-3">Block Witness</h3>
