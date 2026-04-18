@@ -1,5 +1,6 @@
 import M from '@/components/ui/math';
 import TrickViz from './viz/TrickViz';
+import AlgorithmTraceViz from './viz/AlgorithmTraceViz';
 
 export default function KaratsubaTrick() {
   return (
@@ -35,19 +36,8 @@ export default function KaratsubaTrick() {
           </p>
         </div>
 
-        {/* 알고리즘 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">알고리즘 (3 mults)</div>
-          <div className="text-sm text-muted-foreground font-mono space-y-0.5">
-            <p><code>let v0 = a1 * a2;</code> <span className="text-xs text-muted-foreground/60">// mult #1</span></p>
-            <p><code>let v1 = b1 * b2;</code> <span className="text-xs text-muted-foreground/60">// mult #2</span></p>
-            <p><code>let s1 = a1 + b1;</code></p>
-            <p><code>let s2 = a2 + b2;</code></p>
-            <p><code>let v2 = s1 * s2;</code> <span className="text-xs text-muted-foreground/60">// mult #3</span></p>
-            <p className="mt-1"><code>let real = v0 - v1;</code> <span className="text-xs text-muted-foreground/60">// <M>{'a_1 a_2 - b_1 b_2'}</M></span></p>
-            <p><code>let imag = v2 - v0 - v1;</code> <span className="text-xs text-muted-foreground/60">// <M>{'a_1 b_2 + a_2 b_1'}</M></span></p>
-          </div>
-        </div>
+        {/* Algorithm trace: Naive vs Karatsuba side-by-side */}
+        <div className="not-prose mb-4"><AlgorithmTraceViz /></div>
 
         {/* 비용 비교 */}
         <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
