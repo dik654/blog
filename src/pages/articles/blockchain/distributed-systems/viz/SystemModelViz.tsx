@@ -4,10 +4,16 @@ import StepViz from '@/components/ui/step-viz';
 const C1 = '#6366f1', C2 = '#10b981', C3 = '#f59e0b';
 
 const STEPS = [
-  { label: '분산 시스템 통신 모델', body: '동기, 비동기, 부분 동기 — 메시지 전달 시간에 대한 가정이 합의 가능성을 결정.' },
-  { label: '동기 (Synchronous)', body: '메시지 전달 상한 Δ가 알려짐. 타임아웃 기반 프로토콜 가능. 비현실적이나 분석에 유용.' },
-  { label: '비동기 (Asynchronous)', body: '메시지 전달 시간에 상한 없음. FLP 불가능성으로 결정적 합의 불가. 실제 인터넷에 가까움.' },
-  { label: '부분 동기 (Partial Synchrony)', body: 'GST(Global Stabilization Time) 이후 Δ 보장. BFT 프로토콜 대부분이 이 모델 채택.' },
+  { label: '분산 시스템 통신 모델', body: '동기 / 비동기 / 부분 동기 — 메시지 전달 시간에 대한 가정이 합의 가능성을 결정.\nΔ = "메시지 전달 상한 시간".' },
+  {
+    label: '동기 (Synchronous)',
+    body: 'Δ 가 항상 보장 — 타임아웃 = Δ 로 잡으면 "Δ 지나도 응답 없음 → 장애 확정" 가능.\n비현실적인 이유: GC stall · 네트워크 변동 · NTP 점프 한 번이면 Δ 가 깨지고 안전성 붕괴. 이상 한계 분석에만 사용.',
+  },
+  { label: '비동기 (Asynchronous)', body: 'Δ = ∞. 도착 시간 상한 없음 → 장애와 지연 구분 불가.\nFLP 불가능성: 단일 crash 만 있어도 결정적 합의 불가. 실제 인터넷에 가장 가까움.' },
+  {
+    label: '부분 동기 (Partial Synchrony)',
+    body: 'GST (Global Stabilization Time) — 어느 미지의 시점 이후로는 Δ 가 유지됨만 가정.\n언제 GST 인지는 모름 → 알고리즘은 GST 도래 후 결국 종료한다는 식으로 설계. BFT 프로토콜 대부분 채택.',
+  },
 ];
 
 const MODELS = [
