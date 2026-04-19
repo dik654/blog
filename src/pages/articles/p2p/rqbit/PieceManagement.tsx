@@ -2,6 +2,7 @@ import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
 import PieceManagerViz from './viz/PieceManagerViz';
+import PieceStructureViz from './viz/PieceStructureViz';
 
 export default function PieceManagement({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
   return (
@@ -60,84 +61,7 @@ export default function PieceManagement({ onCodeRef }: { onCodeRef?: (key: strin
         </p>
 
         <h3 className="text-lg font-semibold">Piece/Chunk 계층 구조</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BitTorrent Piece Structure
-//
-// File 구조 계층:
-//
-//   Torrent
-//   ├── Files (multi-file)
-//   │   ├── File 1
-//   │   ├── File 2
-//   │   └── File N
-//   └── Pieces (fixed size, e.g., 256KB/1MB)
-//       ├── Piece 0
-//       │   ├── Chunk 0 (16KB block)
-//       │   ├── Chunk 1
-//       │   └── Chunk N
-//       ├── Piece 1
-//       └── Piece N
-
-// 크기 설정:
-//
-//   Piece size:
-//     16KB ~ 16MB (일반적)
-//     Small torrent: 16-256KB
-//     Large torrent: 1-16MB
-//
-//   Block size (chunk):
-//     항상 16KB (16384 bytes)
-//     Wire protocol에서 request 단위
-
-// Bitfield:
-//   각 bit = 1 piece
-//   1 = have, 0 = don't have
-//
-//   Example:
-//     Bitfield: 10110010
-//     Have pieces: 0, 2, 3, 6
-
-// Request Flow:
-//
-//   1. Peer sends bitfield
-//   2. Calculate interested pieces (rarest first)
-//   3. Request block by block:
-//      REQUEST(piece_idx, offset, length=16KB)
-//   4. Peer responds: PIECE(piece_idx, offset, data)
-//   5. Store in chunk buffer
-//   6. When piece complete → verify SHA-1
-//   7. If hash valid → write to disk
-//   8. BROADCAST HAVE to all peers
-
-// rqbit's PieceTracker:
-//
-//   pieces: HashMap<piece_idx, PieceState>
-//
-//   PieceState:
-//     status: InProgress / Complete / Verified
-//     chunks_received: Vec<bool>
-//     buffer: Option<Vec<u8>>
-//
-//   ChunkTracker:
-//     per-piece chunk tracking
-//     fine-grained progress
-
-// Hash Verification:
-//
-//   expected = torrent_info.piece_hashes[idx]
-//   actual = SHA1(piece_data)
-//
-//   if actual != expected:
-//     discard piece
-//     request again (from different peer)
-//     add "bad piece" to peer score
-
-// Endgame Mode:
-//   마지막 몇 piece 남았을 때
-//   모든 피어에게 동시 요청
-//   먼저 응답한 것 수락
-//   나머지 CANCEL 전송`}
-        </pre>
+        <div className="not-prose mb-4"><PieceStructureViz /></div>
       </div>
     </section>
   );

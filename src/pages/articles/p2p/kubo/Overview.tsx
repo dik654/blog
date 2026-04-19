@@ -1,4 +1,5 @@
 import ArchViz from './viz/ArchViz';
+import KuboStackViz from './viz/KuboStackViz';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
@@ -39,76 +40,9 @@ export default function Overview({ onCodeRef }: {
           </div>
         )}
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Kubo 아키텍처 구성</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Kubo Stack (Go IPFS)
-//
-// Application Layer:
-//   HTTP Gateway (browser access)
-//   CLI (ipfs commands)
-//   gRPC API
-//
-// Coordination Layer:
-//   PubSub (GossipSub)
-//   Bitswap (block exchange)
-//   Graphsync (DAG-aware transfer)
-//
-// Content Layer:
-//   UnixFS (filesystem mapping)
-//   IPLD (linked data)
-//   CID (content identifiers)
-//   DAG (Merkle DAG)
-//
-// Storage Layer:
-//   Blockstore (block persistence)
-//   Datastore (key-value abstraction)
-//   Flatfs / Badger / LevelDB
-//
-// Routing Layer:
-//   Kademlia DHT
-//   DNS-based discovery
-//   mDNS local discovery
-//
-// Network Layer:
-//   libp2p (transport abstraction)
-//   TCP, QUIC, WebSocket
-//   Noise, TLS 1.3
-
-// 주요 컴포넌트 상호작용:
-//
-//   User → "ipfs add file.txt"
-//   ↓
-//   UnixFS: file → chunks → DAG
-//   ↓
-//   IPLD: chunks → CID tree
-//   ↓
-//   Blockstore: persist blocks
-//   ↓
-//   DHT: announce providers
-//
-//   User → "ipfs cat <CID>"
-//   ↓
-//   DHT: find providers
-//   ↓
-//   Bitswap: fetch blocks from peers
-//   ↓
-//   Blockstore: cache + verify
-//   ↓
-//   UnixFS: reconstruct file
-
-// 주요 버전:
-//   go-ipfs (original, renamed)
-//   Kubo 0.14+ (2022 rename)
-//   Helia (JS replacement, 2023+)
-
-// 경쟁 구현:
-//   Helia (JavaScript)
-//   iroh (Rust, simpler)
-//   rust-ipfs (legacy)
-//   java-ipfs-http-client
-//   IPFS Cluster (orchestration)`}
-        </pre>
       </div>
+      <h3 className="text-xl font-semibold mt-6 mb-3">Kubo 아키텍처 구성</h3>
+      <div className="not-prose mb-4"><KuboStackViz /></div>
       <div className="mt-8"><ArchViz /></div>
     </section>
   );

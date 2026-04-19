@@ -2,6 +2,7 @@ import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
 import HandshakeFlowViz from './viz/HandshakeFlowViz';
+import WhoareyouDetailViz from './viz/WhoareyouDetailViz';
 
 export default function Handshake({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -59,81 +60,7 @@ export default function Handshake({ onCodeRef }: { onCodeRef: (key: string, ref:
         </div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">WHOAREYOU 프로토콜 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// discv5 Handshake: WHOAREYOU Challenge
-//
-// 목적:
-//   - 세션 수립 (AES-GCM key 공유)
-//   - Node identity 검증
-//   - Replay 공격 방어
-//
-// 메시지 흐름:
-//
-// 1. A → B: Unknown Message (encrypted)
-//    B: "복호화 불가, session 없음"
-//
-// 2. B → A: WHOAREYOU
-//    {
-//      flag: 1,
-//      packet-type: 1,
-//      challenge-data: random,
-//      id-nonce: random (16 bytes),
-//      enr-seq: B's ENR sequence
-//    }
-//
-// 3. A → B: Handshake Packet
-//    {
-//      flag: 2,
-//      ephemeral-pubkey: A's ephemeral key,
-//      id-signature: A's signature over challenge,
-//      record: A's ENR (if needed),
-//      encrypted message
-//     }
-//
-// 4. B: validates signature, derives session keys
-//    B ↔ A: encrypted communication
-
-// ID Signature:
-//   scheme: "discovery v5 identity proof"
-//   content:
-//     SHA256("discovery v5 identity proof"
-//            || challenge-data
-//            || ephemeral-pubkey
-//            || dest-node-id)
-//   sign with A's static private key
-//
-// → 정적 키 소유 증명
-
-// Session Key Derivation:
-//   ephemeral_secret = ECDH(A_ephemeral, B_public)
-//
-//   info = "discovery v5 key agreement"
-//          || A_node_id || B_node_id
-//
-//   keys = HKDF-Extract-Expand(
-//       salt: challenge-data,
-//       secret: ephemeral_secret,
-//       info: info,
-//       length: 32 bytes
-//   )
-//   split: initiator_key (16B) + recipient_key (16B)
-
-// Packet Encryption (post-handshake):
-//   AES-GCM:
-//     key: session key
-//     nonce: 12 bytes (sender-chosen)
-//     AAD: packet header
-//     plaintext: message RLP
-
-// Replay Protection:
-//   - Random challenge per handshake
-//   - Nonce per packet
-//   - Session TTL (주기적 re-handshake)
-
-// ENR Update:
-//   seq number 비교
-//   오래된 ENR 감지 시 자동 업데이트`}
-        </pre>
+        <div className="not-prose mb-4"><WhoareyouDetailViz /></div>
       </div>
     </section>
   );
