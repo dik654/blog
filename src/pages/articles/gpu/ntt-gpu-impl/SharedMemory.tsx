@@ -1,4 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
+import HybridStrategyViz from './viz/HybridStrategyViz';
+import BankConflictViz from './viz/BankConflictViz';
 
 const sharedKernelCode = `__global__ void ntt_shared_stages(
     uint64_t* data, const uint64_t* twiddles,
@@ -25,30 +27,6 @@ const sharedKernelCode = `__global__ void ntt_shared_stages(
     data[base + lid + BLOCK_SIZE/2] = s[lid + BLOCK_SIZE/2];
 }`;
 
-const strategyCode = `하이브리드 전략 (n = 2^24, BLOCK_SIZE = 1024):
-
-작은 스테이지 (stage 0 ~ 9):
-  → 블록당 1024개 원소를 공유 메모리에 로드
-  → 10개 스테이지를 __syncthreads()만으로 연속 처리
-  → 글로벌 메모리 R/W는 처음과 끝에 각 1회
-
-큰 스테이지 (stage 10 ~ 23):
-  → stride >= 1024, 다른 블록 데이터가 필요
-  → 스테이지당 글로벌 커널 1회 실행
-
-결과: 순수 글로벌 24회 → 하이브리드 15회 (1 + 14)
-     공유 구간의 글로벌 R/W를 10회 → 1회로 압축 → ~2x 향상`;
-
-const bankCode = `// uint64_t 뱅크 충돌과 +1 패딩
-
-// uint64_t = 8바이트, 뱅크 폭 = 4바이트 → 원소당 2뱅크 점유
-// Thread 0→Bank 0-1, Thread 1→Bank 2-3, ..., Thread 16→Bank 0-1
-// → Thread 0과 16이 같은 뱅크 → 2-way 충돌
-
-// 해결: __shared__ uint64_t s[BLOCK_SIZE + 1]
-// 패딩 1개가 주소 매핑을 1뱅크씩 밀어서 충돌 패턴 파괴
-// 대안: s[i ^ (i >> 4)] 형태의 XOR 인덱싱`;
-
 export default function SharedMemory() {
   return (
     <section id="shared-memory" className="mb-16 scroll-mt-20">
@@ -70,23 +48,14 @@ export default function SharedMemory() {
         <p>
           전체 스테이지를 두 구간으로 나눈다. 작은 스테이지는 공유 메모리 커널 1회, 큰 스테이지는 글로벌 커널을 스테이지마다 실행한다.
         </p>
-        <CodePanel title="전략 요약과 성능" code={strategyCode}
-          annotations={[
-            { lines: [3, 6], color: 'sky', note: '공유 메모리 구간' },
-            { lines: [8, 10], color: 'amber', note: '글로벌 구간' },
-            { lines: [12, 13], color: 'emerald', note: '~2x 향상' },
-          ]} />
+        <HybridStrategyViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">uint64_t 뱅크 충돌</h3>
         <p>
           NTT는 64비트 정수 연산이다. uint64_t가 2개 뱅크를 점유하므로 16번째 스레드에서 충돌이 발생한다.<br />
           배열에 +1 패딩을 추가하면 주소 매핑이 어긋나 충돌을 방지한다.
         </p>
-        <CodePanel title="뱅크 충돌과 패딩" code={bankCode}
-          annotations={[
-            { lines: [3, 5], color: 'rose', note: '충돌 원인' },
-            { lines: [7, 9], color: 'emerald', note: '패딩 + XOR 해결법' },
-          ]} />
+        <BankConflictViz />
       </div>
     </section>
   );

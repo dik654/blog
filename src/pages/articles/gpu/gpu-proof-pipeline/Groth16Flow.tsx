@@ -1,7 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
 import Groth16FlowViz from './viz/Groth16FlowViz';
-import { groth16PipelineCode, groth16StepBreakdown } from './Groth16FlowData';
+import Groth16KernelViz from './viz/Groth16KernelViz';
+import { groth16StepBreakdown } from './Groth16FlowData';
 
 export default function Groth16Flow() {
   return (
@@ -23,13 +23,7 @@ export default function Groth16Flow() {
             B는 G2 위의 점입니다. 각 원소의 계산에 n-크기 MSM이 필요합니다.
           </p>
         </CitationBlock>
-        <CodePanel title="Groth16 GPU 커널 호출 순서" code={groth16PipelineCode} annotations={[
-          { lines: [3, 4], color: 'sky', note: 'CPU 전용: witness 계산' },
-          { lines: [6, 9], color: 'emerald', note: 'GPU NTT: 3회 다항식 평가' },
-          { lines: [11, 13], color: 'violet', note: 'GPU INTT: H(x) 몫 다항식' },
-          { lines: [15, 18], color: 'amber', note: 'GPU MSM: 증명 원소 (병목)' },
-          { lines: [23, 25], color: 'rose', note: 'Host-Device 전송 패턴' },
-        ]} />
+        <div className="not-prose my-6"><Groth16KernelViz /></div>
         <h3 className="text-xl font-semibold mt-6 mb-3">단계별 시간 비중</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

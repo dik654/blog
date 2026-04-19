@@ -1,17 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
-
-const bankLayoutCode = `공유 메모리 뱅크 구조 (32 banks, 4-byte stride):
-
-주소(byte)   뱅크 번호
-  0 -  3  →  Bank 0      ← Thread 0
-  4 -  7  →  Bank 1      ← Thread 1
-  8 - 11  →  Bank 2      ← Thread 2
-  ...
-124 - 127 →  Bank 31     ← Thread 31
-128 - 131 →  Bank 0  (다시 Bank 0, 순환)
-
-규칙: address / 4 % 32 = bank number
-연속된 4바이트 주소 → 서로 다른 뱅크 → 충돌 없음`;
+import BankLayoutViz from './viz/BankLayoutViz';
 
 const conflictCode = `// 충돌 없음: 연속 접근 (stride = 1)
 __shared__ float s[256];
@@ -50,11 +38,7 @@ export default function BankConflict() {
           연속된 4바이트 주소가 연속된 뱅크에 매핑된다. 같은 워프(32 스레드)가 동시에 접근할 때,
           서로 다른 뱅크를 사용하면 <strong>단일 사이클에 병렬 처리</strong>된다.
         </p>
-        <CodePanel title="공유 메모리 뱅크 매핑" code={bankLayoutCode}
-          annotations={[
-            { lines: [3, 10], color: 'sky', note: '주소→뱅크 매핑 (4바이트 stride)' },
-            { lines: [12, 13], color: 'emerald', note: '뱅크 계산 공식' },
-          ]} />
+        <div className="not-prose mb-4"><BankLayoutViz /></div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">N-way 충돌과 브로드캐스트</h3>
         <p>

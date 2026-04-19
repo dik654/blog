@@ -1,13 +1,6 @@
 import { CitationBlock } from '@/components/ui/citation';
 import CodePanel from '@/components/ui/code-panel';
-
-const hierarchyCode = `CUDA 스레드 계층 (Hopper 이전 vs 이후):
-
-이전: Thread → Warp → Block ──────────── → Grid
-이후: Thread → Warp → Block → Cluster → Grid
-                                 ↑
-                        같은 GPC 내 블록 그룹
-                        분산 공유 메모리 접근 가능`;
+import ClusterHierarchyViz from './viz/ClusterHierarchyViz';
 
 const clusterCode = `// Cluster 런치: 컴파일 타임 속성으로 클러스터 크기 지정
 __cluster_dims__(2, 1, 1)  // 2개 블록을 하나의 클러스터로
@@ -47,7 +40,7 @@ export default function Cluster() {
           최대 <strong>16개 블록</strong>을 하나의 클러스터로 묶을 수 있습니다.
         </p>
 
-        <CodePanel title="스레드 계층 변화" code={hierarchyCode} />
+        <ClusterHierarchyViz />
 
         <CitationBlock source="NVIDIA CUDA C++ Programming Guide -- Thread Block Clusters" citeKey={4} type="paper"
           href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#thread-block-clusters">

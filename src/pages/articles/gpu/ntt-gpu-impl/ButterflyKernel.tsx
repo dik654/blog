@@ -1,4 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
+import IndexPatternViz from './viz/IndexPatternViz';
 
 const butterflyCode = `// 단일 스테이지 NTT 나비 커널
 __global__ void ntt_butterfly_stage(
@@ -21,20 +22,6 @@ __global__ void ntt_butterfly_stage(
     data[idx_a] = add_mod(a, wb, p);  // a' = a + w*b
     data[idx_b] = sub_mod(a, wb, p);  // b' = a - w*b
 }`;
-
-const indexCode = `나비 인덱스 매핑 예시 (n=8, 3스테이지):
-
-Stage 0 (stride=1, group=2):
-  tid=0 → (0,1)  tid=1 → (2,3)  tid=2 → (4,5)  tid=3 → (6,7)
-
-Stage 1 (stride=2, group=4):
-  tid=0 → (0,2)  tid=1 → (1,3)  tid=2 → (4,6)  tid=3 → (5,7)
-
-Stage 2 (stride=4, group=8):
-  tid=0 → (0,4)  tid=1 → (1,5)  tid=2 → (2,6)  tid=3 → (3,7)
-
-패턴: stride가 커질수록 (a, b) 사이 거리가 늘어남
-  → 큰 스테이지일수록 캐시 미스 증가 → 글로벌 메모리 대역폭이 병목`;
 
 const launchCode = `// 호스트 코드: 스테이지별 커널 실행
 void ntt_gpu(uint64_t* d_data, uint64_t* d_twiddles,
@@ -74,12 +61,7 @@ export default function ButterflyKernel() {
           Stage 0에서는 인접 원소끼리, 마지막 스테이지에서는 n/2 거리의 원소끼리 연산한다.<br />
           큰 stride는 캐시 활용이 어려워 글로벌 메모리 대역폭이 병목이 된다.
         </p>
-        <CodePanel title="n=8 나비 인덱스 예시" code={indexCode}
-          annotations={[
-            { lines: [3, 4], color: 'sky', note: 'stride=1: 인접 쌍' },
-            { lines: [6, 7], color: 'emerald', note: 'stride=2: 2칸 건너뜀' },
-            { lines: [9, 10], color: 'amber', note: 'stride=4: 절반 거리' },
-          ]} />
+        <IndexPatternViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">호스트에서 스테이지 루프</h3>
         <p>

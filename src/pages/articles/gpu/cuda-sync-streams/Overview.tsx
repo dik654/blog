@@ -1,20 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
-
-const syncLevelsCode = `CUDA 동기화 수준:
-
-1. Thread-level (워프 내)
-   __syncwarp()           // 워프(32스레드) 내 동기화
-
-2. Block-level (블록 내)
-   __syncthreads()        // 블록 내 전체 스레드 동기화
-   __syncthreads_count()  // 동기화 + 조건 만족 스레드 수 반환
-
-3. Device-level (디바이스 전체)
-   cudaDeviceSynchronize()  // 호스트가 디바이스 작업 완료 대기
-
-4. Stream-level (스트림 단위)
-   cudaStreamSynchronize(stream)  // 특정 스트림 완료 대기
-   cudaStreamWaitEvent(stream, event)  // 이벤트 기반 의존성`;
+import SyncLevelsViz from './viz/SyncLevelsViz';
 
 export default function Overview() {
   return (
@@ -34,13 +18,7 @@ export default function Overview() {
           범위가 좁을수록 오버헤드가 적고, 넓을수록 비용이 큽니다.
         </p>
 
-        <CodePanel title="CUDA 동기화 수준별 API" code={syncLevelsCode}
-          annotations={[
-            { lines: [3, 4], color: 'sky', note: '워프 내 동기화 (가장 경량)' },
-            { lines: [6, 8], color: 'emerald', note: '블록 내 동기화 (공유 메모리 일관성)' },
-            { lines: [10, 11], color: 'amber', note: '디바이스 전체 (호스트 블로킹)' },
-            { lines: [13, 15], color: 'violet', note: '스트림 단위 (비동기 제어)' },
-          ]} />
+        <div className="not-prose mb-4"><SyncLevelsViz /></div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">__syncthreads()가 필요한 이유</h3>
         <p>

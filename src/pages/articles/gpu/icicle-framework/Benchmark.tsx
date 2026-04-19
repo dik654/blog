@@ -1,31 +1,6 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
-
-const scalingCode = `// MSM 입력 크기별 처리 시간 (BN254, A100 80GB)
-//
-// 입력 크기      ICICLE     bellperson    sppark
-// ─────────    ────────   ──────────   ───────
-// 2^16          0.8ms       3.2ms       1.1ms
-// 2^18          2.1ms      11.5ms       3.0ms
-// 2^20          7.8ms      42ms        10.2ms
-// 2^22         28ms       160ms        35ms
-// 2^24        105ms       620ms       130ms
-// 2^26        410ms      2400ms       500ms
-//
-// ICICLE은 2^20 이상에서 bellperson 대비 5~6x 빠르다.
-// sppark과는 비슷하거나 10~20% 우위.`;
-
-const nttScalingCode = `// NTT 벤치마크 (BN254 스칼라 필드, A100 80GB)
-//
-// 입력 크기      ICICLE NTT    CPU (single)   속도 향상
-// ─────────    ──────────    ───────────   ────────
-// 2^20          1.2ms         85ms          ~70x
-// 2^22          4.5ms        380ms          ~84x
-// 2^24         17ms         1650ms          ~97x
-// 2^26         68ms         7200ms         ~106x
-//
-// 입력이 클수록 GPU 병렬화 이점이 극대화된다.
-// NTT는 butterfly 패턴이 규칙적이라 GPU 점유율이 높다.`;
+import MsmBenchmarkViz from './viz/MsmBenchmarkViz';
+import NttBenchmarkViz from './viz/NttBenchmarkViz';
 
 export default function Benchmark() {
   return (
@@ -42,20 +17,14 @@ export default function Benchmark() {
           ICICLE은 Pippenger 알고리즘을 최적화한 버킷 방식을 사용한다.
           2^20 포인트 이상에서 bellperson 대비 <strong>5~6배</strong> 빠르고, sppark과 유사하거나 소폭 우위다.
         </p>
-        <CodePanel title="MSM 벤치마크: ICICLE vs bellperson vs sppark" code={scalingCode} annotations={[
-          { lines: [5, 11], color: 'sky', note: '입력 크기별 MSM 처리 시간' },
-          { lines: [13, 14], color: 'emerald', note: 'ICICLE: 대규모에서 5~6x 우위' },
-        ]} />
+        <div className="not-prose my-6"><MsmBenchmarkViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">NTT 벤치마크</h3>
         <p>
           NTT는 butterfly 연산이 규칙적이어서 GPU 점유율이 높다.
           2^26 크기에서 CPU 대비 <strong>100배 이상</strong> 빠르며, 입력이 클수록 격차가 벌어진다.
         </p>
-        <CodePanel title="NTT 벤치마크: GPU vs CPU" code={nttScalingCode} annotations={[
-          { lines: [4, 9], color: 'sky', note: '입력 크기별 NTT 처리 시간' },
-          { lines: [11, 12], color: 'emerald', note: 'GPU 병렬화 효율' },
-        ]} />
+        <div className="not-prose my-6"><NttBenchmarkViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Multi-GPU & H100</h3>
         <div className="overflow-x-auto my-4">

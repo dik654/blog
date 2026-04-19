@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
+import MontConstViz from './viz/MontConstViz';
 
 const templateCode = `// ec-gpu-gen이 생성하는 OpenCL 커널 (BN254 예시, 실제 생성 출력 요약)
 //
@@ -25,25 +26,6 @@ FIELD FIELD_mul(FIELD a, FIELD b) {
 POINT POINT_add(POINT a, POINT b) { /* Jacobian 혼합 덧셈 */ }
 POINT POINT_double(POINT a)       { /* Jacobian 더블링 */ }
 POINT POINT_mul(POINT p, FIELD s) { /* double-and-add */ }`;
-
-const montConstCode = `// Montgomery 상수 계산 (build.rs 내부, Rust)
-//
-// 입력: 소수 p (커브의 기저체)
-// 출력: R, R2, inv  →  OpenCL/CUDA 커널에 #define으로 주입
-//
-// R   = 2^(64*LIMBS) mod p     -- Montgomery 표현 변환용
-// R2  = R * R mod p            -- to_montgomery() 변환용
-// inv = (-p)^{-1} mod 2^64     -- Montgomery 환원의 핵심 상수
-//
-// 예: BN254 (4-limb)
-//   R  = 2^256 mod p = 0x0e0a77c19a07df2f...
-//   R2 = R^2 mod p   = 0x06d89f71cab8351f...
-//   inv = 0x87d20782e4866389
-//
-// 예: BLS12-381 (6-limb)
-//   R  = 2^384 mod p = 0x015f65ec3fa80e49...
-//   R2 = R^2 mod p   = 0x05f19672fdf76ce5...
-//   inv = 0x89f3fffcfffcfffd`;
 
 export default function Codegen() {
   return (
@@ -74,11 +56,7 @@ export default function Codegen() {
           세 가지 Montgomery 상수 <code>R</code>, <code>R2</code>, <code>inv</code>는 빌드 타임에 정확히 한 번 계산된다.<br />
           이 상수들이 GPU 커널의 모든 필드 곱셈에서 사용되므로, 정확성이 전체 증명의 정합성을 결정한다.
         </p>
-        <CodePanel title="Montgomery 상수 계산 (build.rs)" code={montConstCode} annotations={[
-          { lines: [4, 8], color: 'sky', note: 'R, R2, inv 세 상수의 정의' },
-          { lines: [10, 13], color: 'emerald', note: 'BN254: 4-limb 상수값' },
-          { lines: [15, 17], color: 'amber', note: 'BLS12-381: 6-limb 상수값' },
-        ]} />
+        <MontConstViz />
       </div>
     </section>
   );

@@ -1,21 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
-
-const archCode = `// bellperson GPU 아키텍처
-//
-// [bellperson]  Groth16 prover (Rust)
-//     |
-//     | multiexp() 호출 (MSM: 수백만 점 × 스칼라)
-//     v
-// [ec-gpu-gen]  빌드 타임에 커널 소스 생성
-//     |         BN254용 FIELD_mul, POINT_add 등
-//     v
-// [rust-gpu-tools]  런타임 GPU 관리 계층
-//     |  - 디바이스 탐색 (OpenCL/CUDA)
-//     |  - 커널 소스 → GPU 바이너리 컴파일 (첫 호출 시)
-//     |  - GPU 메모리 버퍼 할당/전송
-//     v
-// [GPU]  실제 커널 실행 (NVIDIA/AMD)`;
+import ArchViz from './viz/ArchViz';
 
 const multiexpCode = `// bellperson/src/gpu/multiexp.rs (핵심 흐름 요약)
 //
@@ -57,11 +42,7 @@ export default function BellpersonIntegration() {
           증명의 80% 이상을 차지하는 MSM(Multi-Scalar Multiplication) 연산을 GPU로 오프로드한다.
           ec-gpu-gen이 생성한 커널을 rust-gpu-tools가 런타임에 컴파일하고 실행하는 구조다.
         </p>
-        <CodePanel title="bellperson GPU 아키텍처" code={archCode} annotations={[
-          { lines: [3, 5], color: 'sky', note: 'bellperson: Groth16 MSM 호출' },
-          { lines: [7, 8], color: 'emerald', note: 'ec-gpu-gen: 빌드 타임 커널 생성' },
-          { lines: [10, 14], color: 'amber', note: 'rust-gpu-tools: 런타임 GPU 관리' },
-        ]} />
+        <ArchViz />
 
         <CitationBlock source="bellperson GPU multiexp" citeKey={3} type="code"
           href="https://github.com/filecoin-project/bellperson">

@@ -1,7 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
 import PipelineOverviewViz from './viz/PipelineOverviewViz';
-import { pipelineOverviewCode, speedupTableRows } from './OverviewData';
+import PipelineCodeViz from './viz/PipelineCodeViz';
+import { speedupTableRows } from './OverviewData';
 
 export default function Overview() {
   return (
@@ -30,11 +30,7 @@ export default function Overview() {
           <br />
           NTT는 butterfly 연산을 스테이지별로 병렬 실행합니다.
         </p>
-        <CodePanel title="증명 파이프라인 전체 구조" code={pipelineOverviewCode} annotations={[
-          { lines: [3, 8], color: 'sky', note: 'Witness -> NTT -> MSM -> Proof 흐름' },
-          { lines: [10, 12], color: 'emerald', note: 'GPU 시간 비중' },
-          { lines: [14, 18], color: 'amber', note: '시간 비중 시각화' },
-        ]} />
+        <div className="not-prose my-6"><PipelineCodeViz /></div>
         <h3 className="text-xl font-semibold mt-6 mb-3">GPU 가속 효과</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

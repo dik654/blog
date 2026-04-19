@@ -1,4 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
+import SharedMemUseCasesViz from './viz/SharedMemUseCasesViz';
 
 const allocCode = `// 정적 할당: 컴파일 시점에 크기 결정
 __shared__ float tile[BLOCK_SIZE][BLOCK_SIZE];
@@ -11,26 +12,6 @@ kernel<<<grid, block, sharedBytes>>>(args);
 extern __shared__ char shared[];
 float* A = (float*)shared;                   // 0번째부터
 float* B = (float*)&shared[n * sizeof(float)]; // n번째부터`;
-
-const useCasesCode = `공유 메모리 3가지 핵심 용도:
-
-1. 스레드 간 통신 (Inter-thread Communication)
-   __shared__ float partialSum[256];
-   partialSum[tid] = myValue;
-   __syncthreads();           // 모든 스레드가 쓰기 완료 대기
-   if (tid == 0) total = sum(partialSum);
-
-2. 사용자 관리 캐시 (User-managed Cache)
-   // 글로벌 메모리 → 공유 메모리 한 번 로드
-   // 이후 반복 접근은 공유 메모리에서 처리
-   tile[ty][tx] = input[row * N + col];
-   __syncthreads();
-   // tile[ty][tx]를 여러 번 재사용 → 글로벌 접근 횟수 감소
-
-3. 데이터 재사용 (Data Reuse)
-   // 행렬 곱셈: A의 행, B의 열을 타일 단위로 로드
-   // BLOCK_SIZE개 스레드가 같은 타일을 공유
-   // 글로벌 접근: O(N) → O(N/BLOCK_SIZE)`;
 
 export default function Overview() {
   return (
@@ -61,12 +42,7 @@ export default function Overview() {
           ]} />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">핵심 활용 패턴</h3>
-        <CodePanel title="공유 메모리 3가지 용도" code={useCasesCode}
-          annotations={[
-            { lines: [3, 7], color: 'sky', note: '리덕션 등 블록 내 협업' },
-            { lines: [9, 13], color: 'emerald', note: '글로벌 접근 최소화' },
-            { lines: [15, 19], color: 'amber', note: '타일링으로 재사용 극대화' },
-          ]} />
+        <div className="not-prose mb-4"><SharedMemUseCasesViz /></div>
       </div>
     </section>
   );

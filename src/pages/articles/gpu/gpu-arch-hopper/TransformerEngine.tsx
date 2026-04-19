@@ -1,5 +1,6 @@
 import { CitationBlock } from '@/components/ui/citation';
 import CodePanel from '@/components/ui/code-panel';
+import ScalingViz from './viz/ScalingViz';
 
 const teCode = `# nvidia-transformer-engine 사용 예시 (PyTorch)
 import transformer_engine.pytorch as te
@@ -22,22 +23,6 @@ const teAnnotations = [
   { lines: [4, 9] as [number, number], color: 'sky' as const, note: 'te.TransformerLayer: drop-in 교체' },
   { lines: [12, 15] as [number, number], color: 'emerald' as const, note: 'fp8_autocast: 자동 혼합 정밀도' },
 ];
-
-const scalingCode = `Per-tensor 동적 스케일링 과정:
-
-1. Forward pass 실행 (FP8 E4M3)
-   ├─ 각 텐서의 amax(절대 최대값) 기록
-   └─ amax history window (최근 N step) 유지
-
-2. Scale factor 계산
-   ├─ scale = FP8_MAX / amax_history.max()
-   └─ 오버플로 방지 + 정밀도 최대화
-
-3. Backward pass 실행 (FP8 E5M2)
-   ├─ 그래디언트는 동적 범위가 넓은 E5M2 사용
-   └─ 별도 scale factor로 그래디언트 스케일링
-
-4. 정밀도 판단: amax가 FP8 범위 초과 시 FP16 fallback`;
 
 export default function TransformerEngine() {
   return (
@@ -63,7 +48,7 @@ export default function TransformerEngine() {
           이를 <strong>delayed scaling</strong>이라 부릅니다. 현재 스텝이 아닌 이전 스텝 통계를 사용하므로 오버헤드가 최소화됩니다.
         </p>
 
-        <CodePanel title="Per-tensor 동적 스케일링 과정" code={scalingCode} />
+        <ScalingViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">PyTorch 통합</h3>
         <p className="leading-7">
