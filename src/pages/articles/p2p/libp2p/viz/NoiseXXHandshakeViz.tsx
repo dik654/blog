@@ -1,58 +1,106 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
+import { ModuleBox, DataBox, ActionBox, StatusBox } from '@/components/viz/boxes';
 
 const sp = { type: 'spring' as const, bounce: 0.12, duration: 0.5 };
-const C = { i: '#6366f1', r: '#10b981', k: '#f59e0b' };
+const C = {
+  i: '#6366f1',
+  r: '#10b981',
+  k: '#f59e0b',
+  enc: '#a855f7',
+  dh: '#0ea5e9',
+};
 
 const STEPS = [
-  { label: 'Round 1: → e (임시 공개키)', body: 'Initiator:\n  e_priv ← x25519_generate()   // 32B\n  e_pub = x25519_pubkey(e_priv) // 32B\n\n→ 전송: e_pub (plaintext)\n// 아직 암호화 없음.\n// Responder는 Initiator의 정체를 모름.' },
-  { label: 'Round 2: ← e, ee, s, es', body: 'Responder:\n  re_priv ← x25519_generate()\n  re_pub = x25519_pubkey(re_priv)\n\n  ee = x25519(re_priv, i_e_pub)  // DH(ee)\n  mix_key(ee)                     // CipherState 갱신\n\n  encrypt(rs_pub)                 // 정적키 암호화 전송\n  es = x25519(rs_priv, i_e_pub)   // DH(es)\n  mix_key(es)' },
-  { label: 'Round 3: → s, se + 세션 확립', body: 'Initiator:\n  ee = x25519(e_priv, r_e_pub)    // DH(ee) 동일\n  mix_key(ee)\n  decrypt(rs_pub)                 // Responder 정적키 복원\n  es = x25519(e_priv, rs_pub)     // DH(es)\n  mix_key(es)\n\n  encrypt(is_pub)                 // 내 정적키 암호화 전송\n  se = x25519(is_priv, r_e_pub)   // DH(se)\n  mix_key(se)  → 세션키 확립' },
+  {
+    label: '1: → e (임시 공개키 평문)',
+    body: 'Initiator 가 ephemeral 키쌍 (e_priv, e_pub) 을 생성하고 e_pub 만 평문으로 전송.\n아직 암호화 없음 — Responder 는 Initiator 의 정적 정체를 모름.',
+  },
+  {
+    label: '2: ← e, ee, s, es',
+    body: 'Responder 도 ephemeral 키 생성 후 DH(ee) → mix_key.\n정적 pub(rs) 을 암호화 전송 + DH(es) 로 mix_key 누적.',
+  },
+  {
+    label: '3: → s, se → 세션 확립',
+    body: 'Initiator 가 동일한 DH(ee), DH(es) 를 거울 도출.\n자신의 정적 pub(is) 을 암호화 전송 + DH(se) → mix_key 로 양방향 세션키 확립.',
+  },
 ];
 
 export default function NoiseXXHandshakeViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 490 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 500 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <defs>
+            <marker id="nxx-arr-i" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill={C.i} />
+            </marker>
+            <marker id="nxx-arr-r" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill={C.r} />
+            </marker>
+          </defs>
+
+          {/* 양쪽 노드 공통 */}
+          <ModuleBox x={10} y={20} w={90} h={42} label="Initiator" sub="i" color={C.i} />
+          <ModuleBox x={400} y={20} w={90} h={42} label="Responder" sub="r" color={C.r} />
+
           {step === 0 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.i}>Round 1: → e</text>
-              {['e_priv ← x25519_generate()  // 32B',
-                'e_pub = x25519_pubkey(e_priv)', '',
-                '→ send: e_pub (plaintext)', '',
-                '// 암호화 없음, 정체 미공개'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.i}>{t}</text>
-              ))}
+              <DataBox x={20} y={80} w={150} h={40} label="e_priv ← x25519" sub="ephemeral 32B" color={C.i} outlined />
+              <DataBox x={20} y={130} w={150} h={40} label="e_pub" sub="x25519(e_priv)" color={C.i} outlined />
+
+              <motion.line x1={170} y1={150} x2={400} y2={42} stroke={C.i} strokeWidth={1.5}
+                markerEnd="url(#nxx-arr-i)"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.7, delay: 0.4 }} />
+              <text x={285} y={92} textAnchor="middle" fontSize={9.5} fontWeight={600} fill={C.i}>
+                e_pub (plaintext)
+              </text>
+              <text x={285} y={108} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                암호화 없음 · 정적 정체 미공개
+              </text>
+
+              <DataBox x={330} y={130} w={150} h={40} label="i_e_pub 저장" sub="다음 라운드용" color={C.r} outlined />
             </motion.g>
           )}
+
           {step === 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.r}>Round 2: ← e, ee, s, es</text>
-              {['re = x25519_generate()',
-                'ee = x25519(re.priv, i_e_pub)  // DH',
-                'mix_key(ee)', '',
-                'encrypt(rs_pub)  // 정적키 암호화',
-                'es = x25519(rs.priv, i_e_pub)',
-                'mix_key(es)'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.r}>{t}</text>
-              ))}
+              <DataBox x={330} y={80} w={150} h={36} label="re_priv / re_pub" sub="x25519 ephemeral" color={C.r} outlined />
+              <ActionBox x={330} y={120} w={150} h={36} label="DH(ee)" sub="re·i_e → mix_key" color={C.dh} />
+              <ActionBox x={330} y={158} w={150} h={36} label="DH(es)" sub="rs·i_e → mix_key" color={C.dh} />
+
+              <motion.line x1={400} y1={42} x2={170} y2={150} stroke={C.r} strokeWidth={1.5}
+                markerEnd="url(#nxx-arr-r)"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.7, delay: 0.4 }} />
+              <text x={285} y={92} textAnchor="middle" fontSize={9.5} fontWeight={600} fill={C.r}>
+                re_pub ∥ enc(rs_pub)
+              </text>
+              <text x={285} y={108} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                정적 pub 은 mix_key 로 암호화
+              </text>
+
+              <DataBox x={20} y={130} w={150} h={36} label="re_pub 수신" color={C.i} outlined />
+              <DataBox x={20} y={170} w={150} h={36} label="enc(rs_pub) 수신" sub="복호화는 다음 단계" color={C.enc} outlined />
             </motion.g>
           )}
+
           {step === 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.k}>Round 3: → s, se</text>
-              {['ee = x25519(e.priv, r_e_pub)',
-                'decrypt(rs_pub)  // R 정적키 복원',
-                'es = x25519(e.priv, rs_pub)', '',
-                'encrypt(is_pub)  // 내 정적키 전송',
-                'se = x25519(is.priv, r_e_pub)',
-                'mix_key(se) → 세션키 확립'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.k}>{t}</text>
-              ))}
+              <ActionBox x={20} y={75} w={150} h={32} label="DH(ee)" sub="i_e·re_pub" color={C.dh} />
+              <ActionBox x={20} y={110} w={150} h={32} label="decrypt(rs_pub)" sub="복호화" color={C.enc} />
+              <ActionBox x={20} y={145} w={150} h={32} label="DH(es)" sub="i_e·rs" color={C.dh} />
+              <ActionBox x={20} y={180} w={150} h={32} label="DH(se)" sub="is·re_pub" color={C.dh} />
+
+              <motion.line x1={170} y1={195} x2={400} y2={42} stroke={C.i} strokeWidth={1.8}
+                markerEnd="url(#nxx-arr-i)"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.7, delay: 0.6 }} />
+              <text x={285} y={108} textAnchor="middle" fontSize={9.5} fontWeight={600} fill={C.i}>
+                enc(is_pub)
+              </text>
+
+              <ActionBox x={330} y={75} w={150} h={32} label="decrypt(is_pub)" color={C.enc} />
+              <ActionBox x={330} y={110} w={150} h={32} label="DH(se)" sub="rs·i_e" color={C.dh} />
+              <StatusBox x={330} y={150} w={150} h={56} label="세션 확립" sub="양방향 키 매칭" color={C.k} progress={1} />
             </motion.g>
           )}
         </svg>
