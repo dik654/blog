@@ -1,6 +1,9 @@
 import CryptoOperationsViz from './viz/CryptoOperationsViz';
 import CryptoStateViz from './viz/CryptoStateViz';
 import KeyObjViz from './viz/KeyObjViz';
+import AesTaCodeViz from './viz/AesTaCodeViz';
+import CrypStateLifecycleViz from './viz/CrypStateLifecycleViz';
+import KeyObjectStructViz from './viz/KeyObjectStructViz';
 
 export default function CryptoOperations() {
   return (
@@ -17,47 +20,8 @@ export default function CryptoOperations() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TA에서 AES 암호화 예</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// ta/aes/aes_ta.c
-
-#include <tee_api.h>
-
-TEE_Result aes_encrypt(void *plain, size_t plain_len,
-                        void *cipher, size_t *cipher_len) {
-    TEE_Result res;
-    TEE_OperationHandle op = TEE_HANDLE_NULL;
-    TEE_ObjectHandle key_obj = TEE_HANDLE_NULL;
-
-    // 1) Allocate operation
-    res = TEE_AllocateOperation(&op, TEE_ALG_AES_CBC_NOPAD,
-                                 TEE_MODE_ENCRYPT, 256);
-    if (res != TEE_SUCCESS) return res;
-
-    // 2) Allocate transient key object
-    res = TEE_AllocateTransientObject(TEE_TYPE_AES, 256, &key_obj);
-    if (res != TEE_SUCCESS) goto cleanup;
-
-    // 3) Generate random key (TEE internal RNG)
-    TEE_GenerateKey(key_obj, 256, NULL, 0);
-
-    // 4) Set key to operation
-    res = TEE_SetOperationKey(op, key_obj);
-    if (res != TEE_SUCCESS) goto cleanup;
-
-    // 5) Set IV
-    uint8_t iv[16];
-    TEE_GenerateRandom(iv, 16);
-    TEE_CipherInit(op, iv, 16);
-
-    // 6) Perform encryption
-    res = TEE_CipherDoFinal(op, plain, plain_len, cipher, cipher_len);
-
-cleanup:
-    if (op != TEE_HANDLE_NULL) TEE_FreeOperation(op);
-    if (key_obj != TEE_HANDLE_NULL) TEE_FreeTransientObject(key_obj);
-    return res;
-}`}</pre>
-
       </div>
+      <div className="not-prose mb-6"><AesTaCodeViz /></div>
       <CryptoOperationsViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -115,95 +79,16 @@ cleanup:
         <h3 className="text-xl font-semibold mt-8 mb-3">암호화 상태 관리 (tee_svc_cryp.c)</h3>
       </div>
       <div className="not-prose mb-6"><CryptoStateViz /></div>
+      <div className="not-prose mb-6"><CrypStateLifecycleViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm mt-4">{`// core/tee/tee_svc_cryp.c
-// Crypto operation handle 관리
-
-struct tee_cryp_state {
-    uint32_t algo;              // Algorithm ID
-    uint32_t mode;              // ENCRYPT/DECRYPT/MAC/...
-    uint32_t state;             // Active state machine
-    void *ctx;                  // Algorithm-specific context
-    tee_ta_session_t *session;  // Owning TA session
-};
-
-// Operation lifecycle
-//
-//   [Allocated] ──SetKey──> [KeySet]
-//                              │
-//                              v
-//   [Completed] <──DoFinal── [Initialized] <──Init──
-//                              │          \\
-//                              v           \\
-//                          [InProgress]   update loops
-//
-// 상태 전이 검증
-// - DoFinal 전에 반드시 Init 필요
-// - Init 전에 key 설정 필수
-// - 잘못된 순서 → TEE_ERROR_BAD_STATE
-
-// Syscall 계층 (TA → kernel)
-// utee_cryp_obj_alloc()
-// → syscall_cryp_obj_alloc()
-// → tee_svc_cryp.c 처리
-// → Crypto backend 호출 (HW/SW)
-
-// TA-TA 격리
-// - 각 TA 세션마다 독립 state
-// - TA 종료 시 모든 operation 해제
-// - 다른 TA의 key 객체 접근 불가`}</pre>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">보안 키 객체 & HW 가속 선택</h3>
       </div>
       <div className="not-prose mb-6"><KeyObjViz /></div>
+      <div className="not-prose mb-6"><KeyObjectStructViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm mt-4">{`// Key 객체 구조 (GP TEE API)
-
-typedef struct __TEE_ObjectInfo {
-    uint32_t objectType;       // TEE_TYPE_AES, TEE_TYPE_RSA_KEYPAIR, ...
-    uint32_t objectSize;       // bits
-    uint32_t maxObjectSize;
-    uint32_t objectUsage;      // TEE_USAGE_ENCRYPT | ...
-    uint32_t dataSize;
-    uint32_t dataPosition;
-    uint32_t handleFlags;
-} TEE_ObjectInfo;
-
-// Key 생성 방법
-// 1) GenerateKey: TRNG로 랜덤 생성
-TEE_GenerateKey(key_obj, 256, NULL, 0);
-
-// 2) PopulateTransientObject: 평문 key 주입
-TEE_Attribute attrs[1] = {{
-    .attributeID = TEE_ATTR_SECRET_VALUE,
-    .content = { .ref = { .buffer = key_bytes, .length = 32 } }
-}};
-TEE_PopulateTransientObject(key_obj, attrs, 1);
-
-// 3) Persistent storage에서 로드
-TEE_OpenPersistentObject(
-    TEE_STORAGE_PRIVATE, "mykey", 5,
-    TEE_DATA_FLAG_ACCESS_READ, &key_obj);
-
-// Key는 TEE 내부에만 존재
-// - TA 외부로 추출 불가 (UNEXTRACTABLE)
-// - TEE_USAGE_EXTRACTABLE 플래그 없으면 read 거부
-// - Secure storage는 HUK로 sealing
-
-// HW 가속 선택 로직
-// 1) algorithm 요청 들어옴
-// 2) crypto driver가 지원 알고리즘 검사
-// 3) 지원하면 HW 호출, 아니면 SW fallback
-// 4) 투명 — TA는 알고리즘만 지정
-
-// 성능 비교 (AES-256-CBC, 1MB)
-// - SW (mbedTLS): ~50 ms
-// - HW (CAAM):     ~2 ms
-// - 25x 차이`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: HUK(Hardware Unique Key)의 역할</p>

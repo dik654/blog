@@ -1,5 +1,8 @@
 import CoreArchitectureViz from './viz/CoreArchitectureViz';
 import NodeTypesViz from './viz/NodeTypesViz';
+import AbciMuxViz from './viz/AbciMuxViz';
+import NodeRolesViz from './viz/NodeRolesViz';
+import CommonInfraViz from './viz/CommonInfraViz';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
@@ -21,42 +24,9 @@ export default function CoreArchitecture({ onCodeRef }: { onCodeRef?: (key: stri
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">ABCI 멀티플렉서 — 합의 진입점</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// go/consensus/tendermint/abci/mux.go
-
-// abciMux: 여러 ABCI Application을 하나로 합치는 멀티플렉서
-// 각 Oasis 모듈(Staking, Registry, Roothash 등)이 Application 구현
-// CometBFT는 단일 ABCI만 인식 → mux가 fanout
-
-type abciMux struct {
-    // 등록된 ABCI Applications
-    apps    []Application
-    appsByName map[string]Application
-    appsByTxTag map[byte]Application
-
-    // CometBFT 상태 (DeliverTx·BeginBlock·EndBlock 추적)
-    state   *ApplicationState
-
-    // Debug & metrics
-    logger  *logging.Logger
-}
-
-// CheckTx: 트랜잭션 mempool 진입 전 유효성 검사
-func (mux *abciMux) CheckTx(req types.RequestCheckTx) types.ResponseCheckTx {
-    // 트랜잭션 tag로 담당 Application 선택
-    tag := req.Tx[0]
-    app := mux.appsByTxTag[tag]
-
-    // 해당 app에 위임
-    return app.CheckTx(req)
-}
-
-// DeliverTx: 블록에 포함된 tx 실제 실행
-func (mux *abciMux) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
-    ctx := newContext(mux.state)
-    tag := req.Tx[0]
-    app := mux.appsByTxTag[tag]
-    return app.ExecuteTx(ctx, req.Tx[1:])
-}`}</pre>
+      </div>
+      <div className="not-prose mb-4"><AbciMuxViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">등록되는 ABCI Applications</h3>
         <div className="overflow-x-auto">
@@ -122,54 +92,14 @@ func (mux *abciMux) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverT
       <NodeTypesViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm mt-4">{`// 노드 유형별 활성 서비스
-
-// 1) Validator Node (합의 전용)
-//    ✓ CometBFT consensus
-//    ✓ P2P (Tendermint mempool/blockchain)
-//    ✗ Runtime host
-//    → 검증인 스테이킹 필수
-
-// 2) Compute Node (ParaTime 실행)
-//    ✓ CometBFT consensus (non-validator)
-//    ✓ Runtime host (TEE process)
-//    ✓ Storage access (local MKVS)
-//    ✓ P2P (consensus + runtime)
-//    → TEE 하드웨어 필수 (SGX/TDX)
-
-// 3) Storage Node
-//    ✓ CometBFT consensus (full)
-//    ✓ MKVS storage (Merkle Key-Value Store)
-//    ✓ IAVL sync
-//    → 디스크 I/O 집중
-
-// 4) Client Node (RPC/Gateway)
-//    ✓ CometBFT consensus (light client 가능)
-//    ✗ Runtime host
-//    ✗ Storage (read-only)
-//    → 웹3 dApp 진입점`}</pre>
+      </div>
+      <div className="not-prose mb-4"><NodeRolesViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Common Infrastructure</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 모든 노드가 공유하는 기반
-
-// 1) Identity
-//    - Node 서명 키(Ed25519)
-//    - P2P peer ID
-//    - TLS 인증서
-
-// 2) P2P (libp2p)
-//    - Gossipsub: Tx·Commitment 전파
-//    - Kademlia DHT: Peer discovery
-//    - Yamux: 멀티플렉싱
-
-// 3) IPC (Internal Process Comm)
-//    - Runtime process ↔ Host 통신
-//    - Unix socket + length-prefixed CBOR
-//    - 암호화 불필요 (로컬)
-
-// 4) Metrics
-//    - Prometheus exporter
-//    - Health endpoint`}</pre>
+      </div>
+      <div className="not-prose mb-4"><CommonInfraViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 왜 모듈을 ABCI Application으로 분리했나</p>

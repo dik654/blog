@@ -1,5 +1,7 @@
 import ContextViz from './viz/ContextViz';
 import TrustChainViz from './viz/TrustChainViz';
+import ThreatModelViz from './viz/ThreatModelViz';
+import DeploymentMatrixViz from './viz/DeploymentMatrixViz';
 
 export default function Overview({ title }: { title?: string }) {
   return (
@@ -25,32 +27,9 @@ export default function Overview({ title }: { title?: string }) {
         </ul>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">위협 모델</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Trusted (TCB)
-// - AMD CPU (EPYC)
-// - AMD Secure Processor (ASP, ARM Cortex-A5)
-// - SEV firmware (AMD 서명)
-// - Guest VM OS + apps
-
-// Untrusted
-// - Hypervisor (KVM/QEMU)
-// - Host OS (Linux host)
-// - BIOS/UEFI of host
-// - 다른 tenant VMs
-// - 데이터센터 운영자
-// - 물리적 접근자 (DRAM probe)
-
-// 방어 가능한 공격
-// ✓ Hypervisor 메모리 읽기 시도 → 암호문만 노출
-// ✓ 다른 VM의 메모리 접근 → ASID 격리
-// ✓ Cold boot attack → 키는 CPU 내부에만
-// ✓ DMA 공격 → IOMMU + SEV-SNP validation
-// ✓ Rollback (SNP only) → RMP nonce 포함
-
-// 방어 불가능
-// ✗ Guest OS의 악성 코드 (TCB 내부)
-// ✗ Side channel (Spectre/Meltdown 변종)
-// ✗ DoS (hypervisor가 VM 정지)
-// ✗ AMD ASP 버그 (firmware 레벨)`}</pre>
+      </div>
+      <div className="not-prose mb-4"><ThreatModelViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">진화 단계 요약</h3>
         <div className="overflow-x-auto">
@@ -93,29 +72,9 @@ export default function Overview({ title }: { title?: string }) {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">배포 현황</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 클라우드 서비스
-// - AWS EC2 M6a/C6a/R6a (SNP, 2023~)
-// - Azure Confidential VMs (DC/EC series, SNP)
-// - Google Cloud Confidential VMs (N2D, C2D with SNP)
-// - Oracle Cloud (Standard.E5, E6)
-
-// 하드웨어
-// - EPYC Rome (2nd gen): SEV 1.0, SEV-ES
-// - EPYC Milan (3rd gen): SEV-SNP
-// - EPYC Genoa (4th gen): SEV-SNP + 개선
-// - EPYC Turin (5th gen): SEV-SNP + Ciphertext Hiding
-// - Ryzen PRO 7000+: 일부 모델 SEV 지원
-
-// 최대 ASID(concurrent VMs)
-// Rome   : 509
-// Milan  : 509
-// Genoa  : 1006
-// Turin  : 1006+
-
-// Linux kernel
-// - KVM host: 5.11+ (SEV-SNP host)
-// - Guest: 5.19+ (SNP guest)
-// - 성숙한 프로덕션 지원: 6.5+`}</pre>
+      </div>
+      <div className="not-prose mb-4"><DeploymentMatrixViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
       </div>
       <div className="not-prose mt-8">

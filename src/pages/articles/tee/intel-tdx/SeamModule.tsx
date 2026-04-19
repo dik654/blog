@@ -1,4 +1,9 @@
 import SeamLevelsViz from './viz/SeamLevelsViz';
+import SeamHierarchyViz from './viz/SeamHierarchyViz';
+import PSeamLdrBootViz from './viz/PSeamLdrBootViz';
+import TdModuleStructViz from './viz/TdModuleStructViz';
+import SeamcallFlowViz from './viz/SeamcallFlowViz';
+import TdmrInitViz from './viz/TdmrInitViz';
 
 export default function SeamModule() {
   return (
@@ -16,17 +21,7 @@ export default function SeamModule() {
         <SeamLevelsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">권한 레벨 상세</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`SEAM (최상위) — TD Module, P-SEAMLDR
-  │
-  ├─ VMX Root (Ring 0-3, 하이퍼바이저)
-  │   │  - KVM, Hyper-V, ESXi
-  │   │  - TD 메모리 직접 접근 불가
-  │   │
-  │   └─ VMX Non-Root (Ring 0-3, 게스트 VM)
-  │       - Trust Domain (TD) — TDX 보호
-  │       - 일반 VM — 비보호
-  │
-  └─ (SEAM만의 독립 메모리 영역: SEAMRR)`}</pre>
+        <SeamHierarchyViz />
         <p>
           <strong>SEAMRR(SEAM Range Register)</strong>: BIOS가 예약하는 메모리 영역<br />
           - 크기: 보통 256MB<br />
@@ -39,47 +34,14 @@ export default function SeamModule() {
           P-SEAMLDR은 TD Module을 <strong>검증 후 SEAMRR에 로드</strong>하는 프로그램<br />
           자체도 Intel 서명됨 — SEAM Loader의 "루트 오브 트러스트"
         </p>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`부팅 시퀀스:
-1. BIOS가 SEAMRR 영역 예약 (pre-boot memory layout)
-2. BIOS가 P-SEAMLDR 로드 (BIOS 서명 ACM)
-3. P-SEAMLDR이 TD Module 바이너리 서명 검증
-4. 서명 통과 시 SEAMRR에 TD Module 로드
-5. TD Module 초기화 (TDH.SYS.LP.INIT)
-6. TDX 사용 준비 완료
-
-// 런타임 업그레이드
-P-SEAMLDR이 TD Module을 runtime에 교체 가능
-- TDH.SYS.UPDATE 명령
-- 새 TD Module 서명 검증 후 교체
-- 기존 TD는 유지 (상태 마이그레이션)`}</pre>
+        <PSeamLdrBootViz />
         <p>
           <strong>핵심</strong>: TD Module 버전이 올라가도 <strong>실행 중인 TD는 영향 없음</strong><br />
           Intel이 보안 패치 배포 시 TCB 업그레이드가 seamless
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TD Module 내부 구조</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`TD Module (SEAMRR 내부, 약 5MB)
-├── TDH.* (Host-side functions) — 하이퍼바이저가 호출
-│   ├── TDH.MNG.*    — TD 생성/초기화/종료
-│   ├── TDH.MEM.*    — 메모리 매핑 관리
-│   ├── TDH.VP.*     — 가상 CPU 관리
-│   ├── TDH.PHYMEM.* — 물리 메모리 페이지 관리
-│   └── TDH.SYS.*    — 시스템 초기화, 업데이트
-│
-├── TDG.* (Guest-side functions) — TD 내부에서 호출
-│   ├── TDG.VP.*     — VM 속성 조회
-│   ├── TDG.MEM.*    — 메모리 속성 조회
-│   ├── TDG.MR.*     — Measurement 관련 (REPORT 생성)
-│   ├── TDG.VP.VMCALL — Host 서비스 요청 (I/O 등)
-│   └── TDG.SERVTD.* — Service TD 연동
-│
-├── 내부 데이터 구조
-│   ├── TDR (TD Root)       — TD 메타데이터
-│   ├── TDCS (TD Control)   — TD 설정
-│   ├── TDVPS (TD VP State) — 각 vCPU 상태
-│   └── SEPT (Secure EPT)   — TD 전용 페이지 테이블
-│
-└── 메모리 암호화 키 관리`}</pre>
+        <TdModuleStructViz />
         <p>
           <strong>TDH vs TDG</strong>:<br />
           - <code>TDH.*</code>: Host가 <strong>SEAMCALL</strong>로 호출<br />
@@ -88,31 +50,7 @@ P-SEAMLDR이 TD Module을 runtime에 교체 가능
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SEAMCALL / SEAMRET 흐름</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Host → TD Module (SEAMCALL 예시)
-// Linux arch/x86/virt/vmx/tdx/seamcall.S
-
-SYM_FUNC_START(__seamcall)
-    // RAX = TDH function ID
-    // RCX, RDX, R8-R11 = 입력 인자
-    seamcall
-
-    // 반환 시
-    // RAX = completion status
-    // RCX, RDX, R8-R11 = 출력값
-    ret
-SYM_FUNC_END(__seamcall)
-
-// SEAMCALL 동작
-1. CPU가 현재 VMX Root 상태 저장
-2. SEAM 모드 진입 (SEAMRR에서 TD Module 코드 fetch)
-3. 입력 파라미터 검증
-4. 요청된 TDH 함수 실행
-5. SEAMRET으로 VMX Root 복귀
-6. RAX에 결과 코드 반환
-
-// 실패 예시
-SEAMCALL 결과 = 0x8000_0001_0000_0001
-  → ENTROPY_FAIL: TD 키 생성에 필요한 엔트로피 부족`}</pre>
+        <SeamcallFlowViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주요 TDH 함수 카테고리</h3>
         <div className="overflow-x-auto">
@@ -155,22 +93,7 @@ SEAMCALL 결과 = 0x8000_0001_0000_0001
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TD Module 초기화 (시작 시퀀스)</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Linux 호스트 커널 초기화 (tdx_cpu_enable 등)
-
-1. TDH.SYS.INIT        // TDX 전역 초기화 (1회)
-2. TDH.SYS.LP.INIT     // 각 논리 CPU별 초기화
-3. TDH.SYS.CONFIG      // 시스템 설정 (TDMR 영역 지정)
-4. TDH.SYS.TDMR.INIT   // 각 TDMR에 대해 호출
-5. (TD 생성 준비 완료)
-
-// TDMR (TD Memory Range)
-- TDX가 관리하는 물리 메모리 범위
-- 각 TDMR마다 PAMT(Physical Address Meta Table) 필요
-- PAMT: 페이지당 소유권, 타입, MAC 저장
-
-// 메모리 요구량
-TDMR 1GB당 PAMT = 약 16MB
-총 시스템 메모리의 ~1.5% 예약됨`}</pre>
+        <TdmrInitViz />
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 왜 SEAM이 필요한가</p>

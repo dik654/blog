@@ -1,5 +1,8 @@
 import P2PNetworkingViz from './viz/P2PNetworkingViz';
 import PeerDiscoveryViz from './viz/PeerDiscoveryViz';
+import Libp2pStackViz from './viz/Libp2pStackViz';
+import Discovery4StepViz from './viz/Discovery4StepViz';
+import SentryArchViz from './viz/SentryArchViz';
 
 export default function P2PNetworking() {
   return (
@@ -19,41 +22,9 @@ export default function P2PNetworking() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">libp2p 스택 구성</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// go/p2p/p2p.go
-
-// libp2p 호스트 초기화
-host := libp2p.New(
-    // Transport
-    libp2p.Transport(tcp.NewTCPTransport),
-    libp2p.Transport(quic.NewTransport),
-
-    // Security
-    libp2p.Security(noise.ID, noise.New),
-
-    // Muxer
-    libp2p.Muxer(yamux.ID, yamux.DefaultTransport),
-
-    // Identity
-    libp2p.Identity(privKey),        // Ed25519 node key
-
-    // Listen addresses
-    libp2p.ListenAddrStrings(
-        "/ip4/0.0.0.0/tcp/26656",
-        "/ip4/0.0.0.0/udp/26656/quic-v1",
-    ),
-
-    // NAT traversal
-    libp2p.EnableNATService(),
-    libp2p.EnableRelay(),
-    libp2p.EnableHolePunching(),
-)
-
-// Gossipsub 설정
-gossipsub := pubsub.NewGossipSub(ctx, host,
-    pubsub.WithFloodPublish(true),
-    pubsub.WithMessageSignaturePolicy(pubsub.StrictSign),
-    pubsub.WithPeerExchange(true),
-)`}</pre>
+      </div>
+      <div className="not-prose mb-4"><Libp2pStackViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Gossipsub 토픽 — 메시지 카테고리</h3>
         <div className="overflow-x-auto">
@@ -100,64 +71,14 @@ gossipsub := pubsub.NewGossipSub(ctx, host,
       <PeerDiscoveryViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm mt-4">{`// 4단계 피어 발견 파이프라인
-
-// 1) Bootstrap nodes (seed)
-bootstrapPeers := []string{
-    "/dnsaddr/bootstrap.oasis.dev/p2p/12D3Koo...",
-    "/dnsaddr/bootstrap-1.oasis.dev/p2p/12D3Koo...",
-    // ...
-}
-for _, addr := range bootstrapPeers {
-    host.Connect(addr)
-}
-
-// 2) Registry-based discovery
-// Consensus에 등록된 노드 리스트 쿼리
-nodes := registry.GetNodes(latestEpoch)
-for _, n := range nodes {
-    if n.HasRole(runtimeID) {
-        host.Connect(n.P2PAddress)
-    }
-}
-
-// 3) Kademlia DHT
-// libp2p-kad-dht로 peer 주소 분산 저장
-// Peer ID로 multiaddr 조회
-dht.FindPeer(ctx, targetPeerID)
-
-// 4) Peer Exchange (GossipSub)
-// Mesh 안 피어들이 서로 교환
-// Peer Scoring으로 nefarious peer 차단`}</pre>
+      </div>
+      <div className="not-prose mb-4"><Discovery4StepViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Sentry Architecture — 검증인 보호</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Sentry = 검증인 앞단 프록시 노드
-
-// 네트워크 토폴로지
-Internet
-  ↓
-Sentry Node 1, 2, 3  (공개 IP, P2P 브로드캐스트)
-  ↓ (private network)
-Validator Node       (비공개 IP, sentry에만 연결)
-
-// config.yaml (sentry)
-sentry:
-  enabled: true
-  upstream_addresses:
-    - "<validator_pubkey>@<validator_ip>:26656"
-
-// config.yaml (validator)
-p2p:
-  parent_node:
-    # sentry만 신뢰
-    private_peer_ids:
-      - <sentry_1_pubkey>
-      - <sentry_2_pubkey>
-
-// 효과
-// - DDoS 공격 시 sentry만 영향받음
-// - 검증인 IP 외부 노출 안 됨
-// - Sentry 1개 다운돼도 다른 sentry로 대체`}</pre>
+      </div>
+      <div className="not-prose mb-4"><SentryArchViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Per-ParaTime P2P 분리</p>

@@ -1,5 +1,8 @@
 import ConsensusServicesViz from './viz/ConsensusServicesViz';
 import ConsensusServicesStepViz from './viz/ConsensusServicesStepViz';
+import BftRoundViz from './viz/BftRoundViz';
+import VrfProposerViz from './viz/VrfProposerViz';
+import EpochTransitionViz from './viz/EpochTransitionViz';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
@@ -22,66 +25,14 @@ export default function ConsensusServices({ onCodeRef }: { onCodeRef?: (key: str
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">BFT 라운드 흐름</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// CometBFT 합의 라운드 (1 블록 생성)
-
-Round 0:
-  1. PROPOSE        // Proposer가 블록 제안 (제안자는 VRF로 선출)
-     - 제안자가 블록 헤더 + tx 전파
-     - 타임아웃: 3초
-
-  2. PREVOTE        // 검증인이 제안 블록에 투표
-     - 유효한 블록이면 PREVOTE for block_hash
-     - 유효하지 않으면 PREVOTE for nil
-     - 2/3 도달 → polka 형성
-
-  3. PRECOMMIT      // polka 확인 후 precommit
-     - polka 보면 PRECOMMIT for block_hash
-     - 2/3 precommit → commit 준비
-     - 실패 시 round++, 재시도
-
-  4. COMMIT         // 최종 확정
-     - 2/3 precommit 수집
-     - 블록 애플리케이션에 deliver
-     - 다음 블록으로 진행
-
-// 검증인 투표 가중치 = 스테이킹 양
-// 2/3 = voting_power 기준 (head-count 아님)`}</pre>
+      </div>
+      <div className="not-prose mb-4"><BftRoundViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">VRF 기반 제안자 선출</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// go/beacon/api/beacon.go
-
-// 각 에포크(600 블록)마다 VRF로 무작위 beacon 생성
-// Proposer는 beacon + validator set에서 결정적으로 계산
-
-type Beacon struct {
-    Epoch  EpochTime
-    Entropy []byte    // VRF output (32B)
-}
-
-// Proposer 선출
-func SelectProposer(beacon *Beacon, validators []*Validator,
-                     height int64, round int32) *Validator {
-    // 가중치 스케일링: 스테이킹 많을수록 선출 확률 ↑
-    totalPower := sumPower(validators)
-
-    // Deterministic PRNG seed
-    seed := hash(beacon.Entropy, height, round)
-    r := rand.NewSource(seed).Intn(totalPower)
-
-    // Weighted selection
-    cumulative := 0
-    for _, v := range validators {
-        cumulative += v.Power
-        if r < cumulative {
-            return v
-        }
-    }
-    return nil
-}
-
-// VRF 선출로 proposer manipulation 방지
-// - VRF output은 미리 예측 불가
-// - 충분한 분산성 보장`}</pre>
+      </div>
+      <div className="not-prose mb-4"><VrfProposerViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
@@ -148,32 +99,9 @@ func SelectProposer(beacon *Beacon, validators []*Validator,
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">에포크 전이</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 에포크 = 600 블록 (약 1시간)
-// 에포크 경계에서 위원회 재구성
-
-EndBlock(height):
-    if height % EPOCH_LENGTH == 0:
-        // 1) 새 beacon 생성
-        beacon := VRF(prevBeacon, height)
-
-        // 2) Scheduler가 새 위원회 선출
-        compute_committees := scheduler.SelectCompute(beacon, runtimes)
-        storage_committees := scheduler.SelectStorage(beacon, runtimes)
-
-        // 3) Registry 갱신 (현재 활성 노드 집합)
-        registry.UpdateEpoch(epoch)
-
-        // 4) Staking 보상 분배
-        staking.DistributeRewards(validators, prev_votes)
-
-        // 5) Governance 제안 투표 종료 처리
-        governance.ProcessExpiredProposals()
-
-        emit NewEpoch(epoch)
-
-// Runtime 노드들은 NewEpoch 이벤트 구독
-// - 자신이 새 위원회에 포함됐는지 확인
-// - 포함 시 다음 라운드 참여 준비`}</pre>
+      </div>
+      <div className="not-prose mb-4"><EpochTransitionViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: CometBFT 선택 이유</p>

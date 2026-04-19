@@ -1,5 +1,6 @@
 import ContextViz from './viz/ContextViz';
 import ThreatModelViz from './viz/ThreatModelViz';
+import LinuxKernelViz from './viz/LinuxKernelViz';
 
 export default function Overview() {
   return (
@@ -177,20 +178,7 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Linux 커널 통합</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Host 측 (KVM-TDX)
-arch/x86/kvm/vmx/tdx.c          // TDX-specific KVM logic
-arch/x86/virt/vmx/tdx/          // Low-level SEAMCALL wrappers
-  tdx.c                         // TDH.* host functions
-  seamcall.S                    // ASM SEAMCALL trampoline
-
-// Guest 측 (TD 내부)
-arch/x86/coco/tdx/              // TDX guest support
-  tdx.c                         // TDCALL wrappers
-  tdcall.S                      // ASM TDCALL trampoline
-
-// 주요 함수 시그니처
-u64 __seamcall(u64 fn, struct tdx_module_args *args);  // Host → TDX Module
-u64 __tdcall(u64 fn, struct tdx_module_args *args);    // Guest → TDX Module`}</pre>
+        <LinuxKernelViz />
         <p>
           Linux 6.x 부터 KVM-TDX 패치 병합 — 메인라인 커널 지원<br />
           <code>CONFIG_INTEL_TDX_HOST</code> + <code>CONFIG_INTEL_TDX_GUEST</code> 구분

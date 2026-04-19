@@ -1,5 +1,7 @@
 import ContextViz from './viz/ContextViz';
 import FourWorldsViz from './viz/FourWorldsViz';
+import ExceptionLevelViz from './viz/ExceptionLevelViz';
+import TfRmmTreeViz from './viz/TfRmmTreeViz';
 
 export default function Overview() {
   return (
@@ -41,26 +43,7 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Exception Level과 매핑</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// ARM 예외 레벨 (EL0=최하 · EL3=최상)
-
-              Non-secure    Secure        Realm         Root
-              ──────────    ──────────    ──────────    ────────
-  EL3                                                    Monitor
-                                                         (TF-A)
-  EL2         Host Hyp      Secure Hyp    RMM            —
-              (KVM, Xen)    (SPM)         (TF-RMM)
-  EL1         Host Kernel   TEE OS        Realm OS       —
-              (Linux)       (OP-TEE)      (Linux Guest)
-  EL0         Apps          TAs           Realm Apps     —
-
-// 핵심 신규 컴포넌트
-// ┌───────────────────────────────────────────┐
-// │  RMM(Realm Management Monitor, EL2 R)     │
-// │  - Realm 생성/소멸                        │
-// │  - Realm 페이지 테이블 관리               │
-// │  - RMI/RSI 호출 처리                      │
-// │  - Intel TDX Module의 ARM 버전            │
-// └───────────────────────────────────────────┘`}</pre>
+        <div className="not-prose mb-4"><ExceptionLevelViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">경쟁 기술 비교</h3>
         <div className="overflow-x-auto">
@@ -125,22 +108,7 @@ export default function Overview() {
         </ul>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TF-RMM — Arm 레퍼런스 구현</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// github.com/TF-RMM/tf-rmm
-
-// RMM은 EL2 Realm 펌웨어
-// - 아키텍처 독립 (C로 구현)
-// - Arm이 레퍼런스로 유지
-// - 오픈소스 (BSD-3)
-
-// 주요 모듈
-lib/arch/     — ARM 아키텍처 인터페이스
-lib/realm/    — Realm 데이터 구조
-lib/rmm_el3_ifc/ — EL3(Monitor) 통신
-plat/         — 플랫폼별 (fvp, arm)
-runtime/      — 런타임 루프
-  core/       — RMI 핸들러
-  rsi/        — RSI 핸들러
-  exit/       — Realm exit 처리`}</pre>
+        <div className="not-prose mb-4"><TfRmmTreeViz /></div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: CCA의 철학 — Attestation First</p>

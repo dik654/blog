@@ -1,4 +1,5 @@
 import MeasuredBootViz from './viz/MeasuredBootViz';
+import MeasuredBootChainViz from './viz/MeasuredBootChainViz';
 
 export default function MeasuredBoot() {
   return (
@@ -22,67 +23,8 @@ export default function MeasuredBoot() {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Measured Boot 단계별 흐름</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Measured Boot 전체 체인
-//
-// Stage 0: Root of Trust (ROM/Firmware)
-//   - CPU 내부 Boot ROM
-//   - 변경 불가
-//   - 하드웨어 키 포함
-//   → Measures: BIOS/UEFI
-//
-// Stage 1: BIOS/UEFI
-//   - 측정값 → PCR[0]
-//   - Secure Boot 정책 로드
-//   → Measures: bootloader (GRUB)
-//
-// Stage 2: Bootloader (GRUB/shim)
-//   - 측정값 → PCR[4]
-//   - OS 선택
-//   → Measures: kernel, initrd
-//
-// Stage 3: OS Kernel
-//   - 측정값 → PCR[8-9]
-//   - 커널 모듈 로드
-//   → Measures: init system
-//
-// Stage 4: User Space (IMA)
-//   - Linux IMA (Integrity Measurement)
-//   - 파일 해시 → PCR[10]
-//   → Measures: application binaries
-
-// 측정값 계산:
-//   measurement = SHA-256(next_stage_binary)
-//
-// PCR Extend:
-//   PCR[i] = SHA-256(PCR[i] || measurement)
-//
-// 체인 무결성:
-//   단 한 바이트만 변조되어도
-//   → 측정값 완전히 달라짐
-//   → PCR 값 검증 시 탐지
-
-// 실무 구현:
-//   - TPM 2.0 (PCR 24개)
-//   - UEFI Secure Boot
-//   - Intel Trusted Boot
-//   - AMD PSP Secure Boot
-//   - ARM Trusted Firmware
-
-// 검증 시나리오:
-//   Remote Attestation 시:
-//     Verifier requests: PCR values + log
-//     Client sends: quote (signed PCRs)
-//     Verifier: 해시 체인 재계산 비교
-//     → 부팅 과정 검증
-
-// Log (Event Log):
-//   - 각 PCR extend 이벤트 기록
-//   - TPM2_PCR_Event
-//   - /sys/kernel/security/tpm0/binary_bios_measurements
-//   - 체인 재계산에 사용`}
-        </pre>
       </div>
+      <MeasuredBootChainViz />
     </section>
   );
 }

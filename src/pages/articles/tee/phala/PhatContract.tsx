@@ -1,5 +1,8 @@
 import PhatContractViz from './viz/PhatContractViz';
 import PhatContractStepViz from './viz/PhatContractStepViz';
+import PhatInkExampleViz from './viz/PhatInkExampleViz';
+import PhatDeployFlowViz from './viz/PhatDeployFlowViz';
+import PhatSecurityLayersViz from './viz/PhatSecurityLayersViz';
 
 export default function PhatContract({ title }: { title?: string }) {
   return (
@@ -19,54 +22,9 @@ export default function PhatContract({ title }: { title?: string }) {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Phat Contract 개발 예시</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Ink! Phat Contract (Rust)
-// 예: 외부 가격 오라클
-
-#[ink::contract]
-mod price_oracle {
-    use ink::prelude::string::String;
-    use pink_extension as pink;
-
-    #[ink(storage)]
-    pub struct PriceOracle {
-        admin: AccountId,
-        api_key: String,  // 암호화 저장
-    }
-
-    impl PriceOracle {
-        #[ink(constructor)]
-        pub fn new(api_key: String) -> Self {
-            Self {
-                admin: Self::env().caller(),
-                api_key,
-            }
-        }
-
-        #[ink(message)]
-        pub fn get_btc_price(&self) -> Result<u128, Error> {
-            // 1) HTTP 요청 (TEE 안에서만 가능!)
-            let response = pink::http_get(
-                &format!(
-                    "https://api.coingecko.com/v3/simple/price?ids=bitcoin&vs_currencies=usd&x_api_key={}",
-                    self.api_key
-                )
-            )?;
-
-            // 2) JSON 파싱
-            let data: Value = serde_json::from_slice(&response.body)?;
-            let price = data["bitcoin"]["usd"].as_f64()?;
-
-            // 3) 반환 (on-chain 기록)
-            Ok((price * 1e8) as u128)
-        }
-
-        #[ink(message)]
-        pub fn sign_message(&self, msg: Vec<u8>) -> Vec<u8> {
-            // TEE 내부 랜덤 키로 서명
-            pink::signing::sign(pink::SigType::Sr25519, &self.signing_key(), &msg)
-        }
-    }
-}`}</pre>
+      </div>
+      <div className="not-prose my-6"><PhatInkExampleViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Pink Runtime 확장 기능</h3>
         <div className="overflow-x-auto">
@@ -114,75 +72,14 @@ mod price_oracle {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">배포 & 호출</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 1) 개발 & 빌드
-cargo contract new price_oracle
-cd price_oracle
-cargo contract build --release
-# → price_oracle.contract 파일 생성
-
-// 2) Phala 테스트넷 배포
-npx @phala/phat-contract-cli deploy \\
-    --artifact ./target/ink/price_oracle.contract \\
-    --network testnet \\
-    --suri "your seed phrase" \\
-    --cluster 0x0000...0001
-
-# 출력:
-# Contract address: 0xabc123...
-# Cluster: 0x0000...0001
-# Deployer: 5F3s...
-
-// 3) 호출 (JS/TS)
-import { OnChainRegistry, PinkContractPromise } from '@phala/sdk';
-
-const api = await ApiPromise.create({ provider: wsProvider });
-const phatRegistry = await OnChainRegistry.create(api);
-
-const contract = new PinkContractPromise(
-    api, phatRegistry,
-    abi, contractAddress, clusterId
-);
-
-// Query (read-only, free)
-const { output } = await contract.query.getBtcPrice(signer.address, {});
-console.log('BTC Price:', output.toHuman());
-
-// Tx (state change, gas cost)
-await contract.tx.updateApiKey({}, 'new-api-key').signAndSend(signer);`}</pre>
+      </div>
+      <div className="not-prose my-6"><PhatDeployFlowViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">보안 모델</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Phat Contract의 4계층 보안
-
-// Layer 1: SGX Hardware
-// - 메모리 암호화 (MEE)
-// - Enclave 격리
-// - Attestation
-
-// Layer 2: pRuntime
-// - Rust 메모리 안전성
-// - Minimal TCB
-// - Signed binary (MRENCLAVE 고정)
-
-// Layer 3: Contract WASM sandbox
-// - 리소스 제약 (gas, memory)
-// - Deterministic execution
-// - No arbitrary file/network access (via pink only)
-
-// Layer 4: Contract code
-// - ink! 타입 안전성
-// - Access control (admin, roles)
-// - Input validation
-
-// 공격 시나리오 대응
-// - 악성 Contract 배포: pallet 감사 (cluster admin 검토)
-// - TEE 탈출: 4계층이 순차 방어
-// - Side channel: constant-time crypto (contract 작성자 책임)
-// - 악성 Worker: 다수 cluster 검증 (consensus)
-
-// Gas 계산
-// - CPU, memory, storage 사용량
-// - HTTP 요청 비용 (pink 확장)
-// - 외부 API 응답 크기`}</pre>
+      </div>
+      <div className="not-prose my-6"><PhatSecurityLayersViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
       </div>
       <div className="not-prose mt-6">

@@ -1,5 +1,8 @@
 import MemEncViz from './viz/MemEncViz';
 import MemEncStepViz from './viz/MemEncStepViz';
+import AesXtsModeViz from './viz/AesXtsModeViz';
+import MemEncPipelineViz from './viz/MemEncPipelineViz';
+import MemEncDefenseViz from './viz/MemEncDefenseViz';
 
 export default function MemoryEncryption() {
   return (
@@ -16,33 +19,9 @@ export default function MemoryEncryption() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">AES-XTS 모드 — 주소 기반 암호화</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// AES-XTS (XEX Tweakable block cipher with ciphertext Stealing)
-// IEEE 1619 표준 (원래는 full-disk encryption 용)
-
-// 공식
-// C = AES_K1(P ⊕ T) ⊕ T
-// 여기서 T = AES_K2(tweak)
-// tweak = 물리 주소 또는 블록 인덱스
-
-// 이중 키 (K1 = 암호화, K2 = tweak 암호화)
-
-// 블록별 독립 암호화
-// - 메모리 주소 A1, A2 서로 다름
-// - P 같아도 T 다름 → C 다름
-// - Rainbow table / dictionary 공격 무력화
-
-// 병렬 처리 가능
-// - 각 블록 독립 연산
-// - 멀티코어·파이프라인 최적화
-// - 하드웨어 구현 친화
-
-// XTS vs CTR vs GCM
-// - XTS: 동일 길이 (block=ciphertext), 무결성 없음
-// - CTR: 동일 길이, 무결성 없음 (stream cipher-like)
-// - GCM: 추가 MAC (확장 크기), 무결성 있음
-
-// 메모리 암호화는 주로 XTS 또는 CTR
-// GCM은 메타데이터 오버헤드 커서 사용 드묾`}</pre>
+      </div>
+      <div className="not-prose my-6"><AesXtsModeViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">벤더별 메모리 암호화 비교</h3>
         <div className="overflow-x-auto">
@@ -97,43 +76,9 @@ export default function MemoryEncryption() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">메모리 암호화 파이프라인</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// CPU → DRAM 쓰기 시
-
-CPU Core
-   │ (cache에 write, 평문)
-   ▼
-L1/L2/L3 Cache  (평문)
-   │ (write back)
-   ▼
-Memory Controller
-   │
-   ├─ Key selection (KeyID, ASID, or C-bit)
-   ├─ Tweak calculation (based on PA)
-   ├─ AES-XTS encryption
-   │
-   ▼
-DRAM (암호문 저장)
-
-// DRAM → CPU 읽기 시 (역순)
-
-DRAM (암호문)
-   │
-   ▼
-Memory Controller
-   │
-   ├─ Key selection
-   ├─ Tweak calculation
-   ├─ AES-XTS decryption
-   │
-   ▼
-L1/L2/L3 Cache  (평문)
-   │
-   ▼
-CPU Core (평문 사용)
-
-// Key는 CPU 내부 레지스터에만 존재
-// DRAM에는 absolutely never
-// Cache 라인은 평문 (캐시 없으면 성능 90% 하락)`}</pre>
+      </div>
+      <div className="not-prose my-6"><MemEncPipelineViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
       </div>
       <div className="not-prose mt-6">
@@ -145,44 +90,9 @@ CPU Core (평문 사용)
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">방어 vs 방어 불가</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 메모리 암호화가 방어하는 것
-
-// ✓ Cold Boot Attack
-// - DRAM을 동결 후 다른 컴퓨터에 이식
-// - 키는 CPU 전원 OFF 시 사라짐 → 복호화 불가
-
-// ✓ Bus Snooping
-// - CPU-DRAM 버스에 logic analyzer 부착
-// - 관찰되는 것은 암호문만
-
-// ✓ DRAM Probe
-// - 물리적으로 칩에 프로브 대기
-// - 하드웨어 공격자 (nation-state)
-// - 여전히 암호문만 추출
-
-// ✓ Rowhammer (부분)
-// - DRAM 셀 비트 플립 공격
-// - 암호화 시 flip된 바이트가 random으로 복호화
-// - 무결성(MAC) 있으면 탐지 가능
-
-// 방어 못 하는 것
-
-// ✗ Cache Side Channel
-// - CPU 캐시는 평문
-// - Prime+Probe, Flush+Reload 가능
-
-// ✗ Transient Execution (Spectre)
-// - 투기 실행이 메모리 접근 패턴 유도
-// - 캐시 기반 누출
-
-// ✗ Electromagnetic Analysis
-// - CPU 전력·EM 방사로 키 추출
-// - 물리 접근 + 고가 장비
-
-// ✗ Software Vulnerabilities
-// - Guest OS의 버그
-// - Kernel exploit → 프로세스 메모리 접근
-// - 메모리 암호화는 SW 공격 방어 아님`}</pre>
+      </div>
+      <div className="not-prose my-6"><MemEncDefenseViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 무결성 포함 여부의 중요성</p>

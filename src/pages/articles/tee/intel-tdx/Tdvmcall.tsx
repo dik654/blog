@@ -1,4 +1,8 @@
 import TdvmcallViz from './viz/TdvmcallViz';
+import TdvmcallRegsViz from './viz/TdvmcallRegsViz';
+import TdxHypercallAsmViz from './viz/TdxHypercallAsmViz';
+import MapGpaViz from './viz/MapGpaViz';
+import GetQuoteViz from './viz/GetQuoteViz';
 
 export default function Tdvmcall() {
   return (
@@ -17,57 +21,10 @@ export default function Tdvmcall() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TDVMCALL 레지스터 규약</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// TD Guest 측 레지스터 세팅
-R10 = TDX_HYPERCALL_STANDARD  // 0: 표준 TDVMCALL, else: vendor-specific
-R11 = sub-function number     // EXIT_REASON_* (KVM 코드 재사용)
-R12..R15 = arguments
-
-// SEAM이 Host로 노출하는 레지스터
-// - R10, R11, R12, R13, R14, R15만 전달 (TD 측이 지정)
-// - RAX, RBX, RCX, RDX 등은 숨김
-
-// Host가 받는 데이터 (arch/x86/kvm/vmx/tdx.c)
-struct vcpu_tdx {
-    u64 exit_reason;    // R11
-    u64 exit_qual;      // R12
-    u64 ext_exit_qual;  // R13
-    ...
-};
-
-// 결과 반환
-// Host → TD: R10(상태), R11..R15(데이터)
-// R10 = 0 (성공) 또는 TDX_VMCALL_RETRY 등`}</pre>
+        <TdvmcallRegsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Linux TDX Guest의 __tdx_hypercall</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// arch/x86/coco/tdx/tdcall.S
-
-SYM_FUNC_START(__tdx_hypercall)
-    push %rbp
-    mov  %rsp, %rbp
-
-    /* TD Module에게 이 레지스터들만 노출하라고 지시 */
-    movl $TDVMCALL_EXPOSE_REGS_MASK, %ecx
-
-    /* 인자(args 구조체)를 R10..R15로 적재 */
-    mov 0(%rdi), %r10
-    mov 8(%rdi), %r11
-    mov 16(%rdi), %r12
-    mov 24(%rdi), %r13
-    mov 32(%rdi), %r14
-    mov 40(%rdi), %r15
-
-    /* TDG.VP.VMCALL leaf = 0 */
-    xor %eax, %eax
-    tdcall
-
-    /* 반환값 R10..R15를 args 구조체에 저장 */
-    mov %r10, 0(%rdi)
-    mov %r11, 8(%rdi)
-    ...
-
-    pop %rbp
-    ret
-SYM_FUNC_END(__tdx_hypercall)`}</pre>
+        <TdxHypercallAsmViz />
         <p>
           <strong>EXPOSE_REGS_MASK</strong>: 어떤 레지스터를 Host에 노출할지 비트마스크<br />
           TD 자체 비밀 레지스터(FLAGS, FS_BASE 등)는 자동 숨김<br />
@@ -130,36 +87,7 @@ SYM_FUNC_END(__tdx_hypercall)`}</pre>
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MapGPA — 메모리 변환 (가장 중요)</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// arch/x86/coco/tdx/tdx.c
-
-// Private → Shared 전환 (예: DMA 버퍼 할당)
-static int tdx_enc_status_changed(unsigned long vaddr,
-                                   int numpages, bool enc)
-{
-    phys_addr_t start = __pa(vaddr);
-    phys_addr_t end   = start + numpages * PAGE_SIZE;
-
-    if (!enc) {
-        /* Shared로 전환: bit 추가 */
-        start |= cc_mkdec(0);  // shared bit set
-        end   |= cc_mkdec(0);
-    }
-
-    /* 1) TD → Host: MapGPA VMCALL */
-    ret = _tdx_hypercall(TDVMCALL_MAP_GPA, start, end - start, 0, 0);
-    if (ret) return ret;
-
-    /* 2) Host가 S-EPT 언매핑 → EPT 매핑 (또는 반대) */
-    /* 3) TD가 각 페이지 accept */
-    if (enc)
-        tdx_accept_memory(start, end);
-
-    return 0;
-}
-
-// 호출 예시
-set_memory_decrypted(vaddr, numpages);  // Private → Shared
-set_memory_encrypted(vaddr, numpages);  // Shared → Private`}</pre>
+        <MapGpaViz />
         <p>
           <strong>MapGPA</strong>: DMA 수행 전 버퍼를 Shared로 전환 필수<br />
           Private 메모리는 디바이스가 읽을 수 없음 (KeyID 다름)<br />
@@ -167,31 +95,7 @@ set_memory_encrypted(vaddr, numpages);  // Shared → Private`}</pre>
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GetQuote — 원격 증명 요청</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// drivers/virt/coco/tdx-guest/tdx-guest.c
-
-long tdx_get_quote(struct tdx_quote_hdr *quote_hdr)
-{
-    /* 1) TDREPORT 생성 (로컬) */
-    ret = tdx_mcall_get_report0(reportdata, tdreport);
-
-    /* 2) TDREPORT를 Shared 버퍼에 복사 */
-    memcpy(shared_buf, tdreport, TDREPORT_SIZE);
-
-    /* 3) GetQuote VMCALL */
-    args.r10 = TDX_HYPERCALL_STANDARD;
-    args.r11 = TDVMCALL_GET_QUOTE;
-    args.r12 = virt_to_phys(shared_buf);  // shared GPA
-    args.r13 = shared_buf_size;
-    ret = __tdx_hypercall(&args);
-
-    /* 4) Host가 Quote Enclave에 forward
-          → Intel PCS 서명 → 비동기 완료
-          → SetupEventNotify로 알림 */
-
-    /* 5) Shared 버퍼에서 Quote 읽기 */
-    memcpy(quote_hdr->data, shared_buf, quote_size);
-    return 0;
-}`}</pre>
+        <GetQuoteViz />
         <p>
           <strong>2단계 증명</strong>: 로컬 TDREPORT → Host → Quote Service<br />
           비동기 — Host가 Quote 준비되면 이벤트 알림<br />
