@@ -1,72 +1,122 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
+import { ModuleBox, DataBox, ActionBox, StatusBox } from '@/components/viz/boxes';
 
 const sp = { type: 'spring' as const, bounce: 0.12, duration: 0.5 };
-const C = { ml: '#6b7280', e1: '#6366f1', e2: '#10b981', hard: '#f59e0b' };
+const C = {
+  ml: '#6b7280',
+  e1: '#6366f1',
+  e2: '#10b981',
+  hard: '#f59e0b',
+  result: '#a855f7',
+  cheap: '#0ea5e9',
+};
 
 const STEPS = [
-  { label: 'Miller Loop 결과: f ∈ Fp12*', body: 'f = miller_loop(P, Q)  // Fp12 원소\nf = (c0, c1) where ci ∈ Fp6\n\n아직 GT 부분군이 아님 → Final Exp 필요.\n전체 지수: (p¹² - 1) / r' },
-  { label: 'Easy Part 1: f^(p⁶-1)', body: 'p⁶승 = conjugate(f)  // Fp12에서 c1 부호 반전\nf₁ = conjugate(f) · f⁻¹\n\n= (c0, -c1) · inv(c0, c1)\n// inv: Fp6 역원 1회. 총 비용: inv + mul 각 1회.\n// 결과: f₁^(p⁶) = f₁⁻¹ (유니타리 성질 획득).' },
-  { label: 'Easy Part 2: f₁^(p²+1)', body: 'f₂ = frobenius_square(f₁) · f₁\n\np²승 = Frobenius²: 각 Fp2 계수에 상수 곱.\n// Fp2 원소 6개의 계수 재배열.\n// 비용: Fp 곱셈 ~6회 → "거의 무료".\n결과: f₂^(p⁶-1)(p²+1) = 유니타리 원소.' },
-  { label: 'Hard Part: f₂^((p⁴-p²+1)/r)', body: '지수 ≈ 761 bits (BN254).\n\nu = 4965661367071055426 (BN 파라미터)\n\n분해: addition chain 사용:\n  a = f₂^u, b = a^u, c = b · conj(a)\n  ... (약 12단계 Fp12 곱셈 + Frobenius)\n\n최종: e(P,Q) ∈ GT ⊂ Fp12*  // r차 부분군.' },
+  {
+    label: '1: Miller Loop 결과 f ∈ Fp12*',
+    body: 'Miller loop 출력 f. 아직 GT 부분군 아님.\n전체 지수 (p¹² − 1)/r 을 (p⁶−1) · (p²+1) · ((p⁴−p²+1)/r) 3 단계로 분해.',
+  },
+  {
+    label: '2: Easy Part 1 — f^(p⁶−1)',
+    body: 'p⁶ 승 = conjugate (c0, c1) → (c0, −c1). f₁ = conjugate(f) · f⁻¹.\nFp6 역원 1회 + Fp12 곱셈 1회 = 거의 무료. 유니타리 성질 획득.',
+  },
+  {
+    label: '3: Easy Part 2 — f₁^(p²+1)',
+    body: 'f₂ = Frobenius²(f₁) · f₁.\nFrobenius² 는 각 Fp2 계수에 상수 곱 — Fp 곱 ~6회. "거의 무료".',
+  },
+  {
+    label: '4: Hard Part — f₂^((p⁴−p²+1)/r)',
+    body: '지수 ≈ 761 bit. BN param u 활용한 addition chain.\n약 12 단계 Fp12 곱 + Frobenius. 결과: e(P,Q) ∈ GT ⊂ Fp12*.',
+  },
 ];
 
 export default function FinalExpViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 490 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 500 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <defs>
+            <marker id="fe-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill={C.hard} />
+            </marker>
+          </defs>
+
           {step === 0 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.ml}>Miller Loop 결과</text>
-              {['f = miller_loop(P, Q)  // ∈ Fp12',
-                'f = (c0, c1),  ci ∈ Fp6', '',
-                '전체 지수: (p¹² − 1) / r',
-                '= (p⁶−1) · (p²+1) · (p⁴−p²+1)/r',
-                '// 3단계로 분해'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.ml}>{t}</text>
-              ))}
+              <text x={250} y={20} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.ml}>
+                지수 분해
+              </text>
+              <DataBox x={20} y={50} w={460} h={42} label="(p¹² − 1) / r" sub="전체 final exp 지수" color={C.ml} outlined />
+
+              <DataBox x={20} y={120} w={140} h={42} label="(p⁶ − 1)" sub="Easy 1" color={C.e1} outlined />
+              <DataBox x={170} y={120} w={140} h={42} label="(p² + 1)" sub="Easy 2" color={C.e2} outlined />
+              <DataBox x={320} y={120} w={160} h={42} label="(p⁴−p²+1)/r" sub="Hard ≈ 761 bit" color={C.hard} outlined />
+
+              <text x={250} y={195} textAnchor="middle" fontSize={9.5} fill="var(--muted-foreground)">
+                3 단계 분해 — 앞 두 단계는 "거의 무료", 마지막이 비용 95%
+              </text>
             </motion.g>
           )}
+
           {step === 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.e1}>Easy Part 1: f^(p⁶-1)</text>
-              {['p⁶승 = conjugate: (c0, c1) → (c0, -c1)',
-                'f₁ = conjugate(f) · f⁻¹', '',
-                '// f⁻¹: Fp6 역원 1회',
-                '// 총: inv + mul = 2 연산',
-                '결과: f₁^(p⁶) = f₁⁻¹ (유니타리)'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.e1}>{t}</text>
-              ))}
+              <text x={250} y={20} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.e1}>
+                Easy 1 — f^(p⁶ − 1)
+              </text>
+              <DataBox x={20} y={60} w={140} h={42} label="f = (c0, c1)" sub="∈ Fp12" color={C.ml} outlined />
+              <ActionBox x={180} y={60} w={140} h={42} label="conjugate" sub="(c0, −c1)" color={C.e1} />
+              <DataBox x={340} y={60} w={140} h={42} label="conj(f)" color={C.e1} outlined />
+
+              <ActionBox x={180} y={120} w={140} h={42} label="f⁻¹" sub="Fp6 inversion" color={C.cheap} />
+              <ActionBox x={20} y={170} w={460} h={36} label="f₁ = conj(f) · f⁻¹" color={C.e1} />
+
+              <text x={250} y={213} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                inv + mul = 2 연산 → 매우 저렴
+              </text>
             </motion.g>
           )}
+
           {step === 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.e2}>Easy Part 2: f₁^(p²+1)</text>
-              {['f₂ = frobenius_sq(f₁) · f₁', '',
-                'frobenius²: 각 Fp2 계수에 상수 곱',
-                '// 6개 Fp2 원소의 계수 보정',
-                '// 비용: Fp mul ~6회 → "무료급"',
-                '결과: 유니타리 원소 획득'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.e2}>{t}</text>
-              ))}
+              <text x={250} y={20} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.e2}>
+                Easy 2 — f₁^(p² + 1)
+              </text>
+              <DataBox x={20} y={60} w={140} h={42} label="f₁" sub="유니타리" color={C.e1} outlined />
+              <ActionBox x={180} y={60} w={140} h={42} label="Frobenius²" sub="계수 상수 곱" color={C.e2} />
+              <DataBox x={340} y={60} w={140} h={42} label="Frob²(f₁)" color={C.e2} outlined />
+
+              <ActionBox x={130} y={130} w={240} h={50} label="f₂ = Frob²(f₁) · f₁" color={C.e2} />
+
+              <text x={250} y={205} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                Frobenius² 는 6 Fp 곱뿐 — 사실상 무료
+              </text>
             </motion.g>
           )}
+
           {step === 3 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.hard}>Hard Part: (p⁴-p²+1)/r</text>
-              {['u = 4965661367071055426  // BN param', '',
-                'a = f₂^u         // square-and-multiply',
-                'b = a^u          // 같은 방법',
-                'c = b · conj(a)  // Fp12 곱셈', '',
-                '... (addition chain ~12단계)',
-                '→ e(P,Q) ∈ GT ⊂ Fp12*'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.hard}>{t}</text>
+              <text x={250} y={20} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.hard}>
+                Hard Part — addition chain
+              </text>
+              <DataBox x={20} y={50} w={140} h={36} label="f₂" color={C.e2} outlined />
+              <DataBox x={180} y={50} w={140} h={36} label="u" sub="BN param" color={C.hard} outlined />
+
+              {[0, 1, 2].map((i) => (
+                <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 * i }}>
+                  <ActionBox x={20 + i * 160} y={100} w={140} h={42}
+                    label={['a = f₂^u', 'b = a^u', 'c = b · conj(a)'][i]} color={C.hard} />
+                  {i < 2 && (
+                    <line x1={160 + i * 160} y1={120} x2={180 + i * 160} y2={120} stroke={C.hard} strokeWidth={1.2}
+                      markerEnd="url(#fe-arr)" />
+                  )}
+                </motion.g>
               ))}
+
+              <text x={250} y={170} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                ... addition chain 약 12 단계 (Fp12 mul + Frob 조합)
+              </text>
+              <StatusBox x={130} y={180} w={240} h={32} label="e(P,Q) ∈ GT ⊂ Fp12*" sub=" " color={C.result} progress={1} />
             </motion.g>
           )}
         </svg>
