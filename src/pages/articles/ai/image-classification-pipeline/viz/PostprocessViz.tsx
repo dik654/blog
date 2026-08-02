@@ -48,13 +48,13 @@ export default function PostprocessViz() {
             transition={sp}
           >
             {/* F1 커브 시뮬레이션 */}
-            <text x={80} y={45} textAnchor="middle" fontSize={11} fontWeight={600} fill="var(--foreground)">F1 Score vs Threshold</text>
+            <text x={170} y={42} textAnchor="middle" fontSize={11} fontWeight={600} fill="var(--foreground)">F1 Score vs Threshold</text>
 
             {/* 축 */}
             <line x1={40} y1={160} x2={300} y2={160} stroke="var(--border)" strokeWidth={1.2} />
             <line x1={40} y1={55} x2={40} y2={160} stroke="var(--border)" strokeWidth={1.2} />
-            <text x={170} y={178} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">Threshold</text>
-            <text x={32} y={50} textAnchor="end" fontSize={9} fill="var(--muted-foreground)">F1</text>
+            <text x={290} y={182} textAnchor="end" fontSize={9} fill="var(--muted-foreground)">Threshold</text>
+            <text x={32} y={66} textAnchor="end" fontSize={9} fill="var(--muted-foreground)">F1</text>
 
             {/* F1 커브 — 포물선 형태 */}
             <path
@@ -72,7 +72,7 @@ export default function PostprocessViz() {
               transition={{ ...sp, delay: 0.3 }}
             />
             <line x1={170} y1={58} x2={170} y2={160} stroke={COLORS.threshold} strokeWidth={1} strokeDasharray="3 2" />
-            <text x={170} y={190} textAnchor="middle" fontSize={9} fontWeight={700} fill={COLORS.threshold}>최적: 0.42</text>
+            <text x={170} y={202} textAnchor="middle" fontSize={9} fontWeight={700} fill={COLORS.threshold}>최적: 0.42</text>
 
             {/* 눈금 */}
             {[0.3, 0.4, 0.5, 0.6, 0.7].map((v, i) => (

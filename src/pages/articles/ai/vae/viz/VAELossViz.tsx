@@ -34,7 +34,7 @@ export default function VAELossViz() {
                 <text x={40} y={42 + i * 22} fontSize={9} fill="var(--muted-foreground)">
                   ({d.x}-{d.xh})²
                 </text>
-                <motion.rect x={100} y={34 + i * 22} width={barW} height={10} rx={2}
+                <motion.rect initial={false} x={100} y={34 + i * 22} width={barW} height={10} rx={2}
                   fill={C.mse + '40'} animate={{ width: step >= 0 ? barW : 0 }}
                   transition={{ delay: i * 0.1 }} />
                 <text x={100 + barW + 4} y={43 + i * 22} fontSize={9} fill={C.mse}>{d.diff.toFixed(4)}</text>

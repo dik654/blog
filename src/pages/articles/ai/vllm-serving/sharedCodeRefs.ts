@@ -3,17 +3,18 @@ import engineCorePy from './codebase/vllm/v1/engine/core.py?raw';
 import schedulerPy from './codebase/vllm/v1/core/sched/scheduler.py?raw';
 import kvCacheMgrPy from './codebase/vllm/v1/core/kv_cache_manager.py?raw';
 import apiServerPy from './codebase/vllm/entrypoints/openai/api_server.py?raw';
+import gpuWorkerPy from './codebase/vllm/v1/worker/gpu_worker.py?raw';
 
 export const sharedCodeRefs: Record<string, CodeRef> = {
   'engine-core': {
     path: 'vllm/v1/engine/core.py',
     code: engineCorePy,
     lang: 'python',
-    highlight: [85, 134],
+    highlight: [85, 148],
     annotations: [
-      { lines: [85, 95], color: 'sky',     note: 'EngineCore.__init__ — vllm_config, executor_class 초기화' },
-      { lines: [111, 114], color: 'emerald', note: 'Model + Executor 설정 — GPU Worker 관리' },
-      { lines: [121, 126], color: 'amber',   note: 'KV 캐시 초기화 + 스케줄러 생성' },
+      { lines: [85, 107], color: 'sky', note: 'EngineCore.__init__ — plugin을 먼저 로드하고 runtime config를 기록' },
+      { lines: [111, 122], color: 'emerald', note: 'Executor 생성 뒤 available memory를 profile해 KV cache를 초기화' },
+      { lines: [123, 148], color: 'amber', note: 'Structured-output manager와 scheduler class를 준비하고 실제 Scheduler instance를 생성' },
     ],
     desc:
 `문제: LLM 추론 엔진의 핵심 루프를 어떻게 구성할까요?
@@ -33,7 +34,7 @@ step() 메서드에서 schedule → execute → output 파이프라인을 실행
     annotations: [
       { lines: [378, 389], color: 'sky',     note: 'step() — 스케줄러 호출, 실행 요청 생성' },
       { lines: [390, 398], color: 'emerald', note: '비동기 모델 실행 → 토큰 샘플링' },
-      { lines: [400, 407], color: 'amber',   note: '중단 처리 + 스케줄러 상태 업데이트' },
+      { lines: [400, 407], color: 'amber', note: '중단 처리, scheduler 상태 갱신, 실제 scheduled token이 있었는지 반환' },
     ],
     desc:
 `문제: 매 스텝마다 스케줄링, 모델 실행, 출력 처리를 효율적으로 파이프라이닝해야 합니다.
@@ -41,7 +42,8 @@ step() 메서드에서 schedule → execute → output 파이프라인을 실행
 해결: step()은 3단계로 동작합니다.
 ① scheduler.schedule() — 대기 중인 요청에서 배치 구성
 ② model_executor.execute_model() — GPU에서 비동기 추론 실행
-③ scheduler.update_from_output() — 완료된 토큰 반영, 요청 상태 갱신`,
+③ scheduler.update_from_output() — 완료된 토큰 반영, 요청 상태 갱신
+마지막 boolean은 상수가 아니라 total_num_scheduled_tokens > 0으로 실제 model 실행 여부를 알립니다.`,
   },
 
   'kv-cache-mgr': {
@@ -82,14 +84,34 @@ KV 캐시 가용량에 따라 요청 우선순위를 결정합니다.`,
     path: 'vllm/entrypoints/openai/api_server.py',
     code: apiServerPy,
     lang: 'python',
-    highlight: [1, 40],
+    highlight: [165, 221],
     annotations: [
-      { lines: [1, 20], color: 'sky',     note: 'OpenAI 호환 API 서버 — FastAPI 기반 진입점' },
+      { lines: [165, 190], color: 'sky', note: 'build_app() — FastAPI application을 만들고 공통 vLLM route를 등록' },
+      { lines: [192, 209], color: 'emerald', note: 'Model route와 generate task router를 조건에 맞게 연결' },
+      { lines: [211, 221], color: 'amber', note: 'Disaggregated serving과 RLHF router를 generate app에 추가' },
     ],
     desc:
 `문제: vLLM을 OpenAI API와 호환되는 서빙 엔드포인트로 제공해야 합니다.
 
 해결: FastAPI 기반 서버가 /v1/completions, /v1/chat/completions 등의
-OpenAI 호환 API를 제공합니다. 내부적으로 EngineCore를 호출하여 추론을 수행합니다.`,
+OpenAI 호환 API를 제공합니다. 이 범위는 endpoint handler 자체가 아니라 task별 router를 FastAPI app에 연결하는 composition root입니다.`,
+  },
+
+  'gpu-worker-execute': {
+    path: 'vllm/v1/worker/gpu_worker.py',
+    code: gpuWorkerPy,
+    lang: 'python',
+    highlight: [759, 820],
+    annotations: [
+      { lines: [759, 769], color: 'sky', note: 'execute_model() — 이전 pipeline send를 끝낸 뒤 scheduled token 유무로 forward 여부를 결정' },
+      { lines: [775, 803], color: 'emerald', note: 'Pipeline parallel과 sequence parallel 조건에서 batch shape와 all-gather 요구를 준비' },
+      { lines: [804, 820], color: 'amber', note: '이전 pipeline rank의 tensor를 비동기로 받고 model_runner.execute_model()에 위임' },
+    ],
+    desc:
+`문제: EngineCore가 만든 SchedulerOutput은 실제 GPU 실행으로 어떻게 이어질까요?
+
+해결: GPUWorker.execute_model()은 scheduled token이 있을 때만 forward path를 엽니다.
+Pipeline parallel 환경이면 이전 rank의 intermediate tensor를 비동기로 받고,
+마지막에는 GPUModelRunner에 scheduler output과 intermediate state를 함께 넘깁니다.`,
   },
 };

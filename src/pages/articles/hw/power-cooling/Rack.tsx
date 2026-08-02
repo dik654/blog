@@ -49,112 +49,67 @@ export default function Rack() {
           ))}
         </ul>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Rack &amp; Power Distribution 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Rack Form Factors:
+        <h3 className="text-xl font-semibold mt-8 mb-3">19-inch Rack 표준</h3>
+        <ul className="leading-7">
+          <li>폭 19 inch</li>
+          <li>높이 N × U (1U = 1.75")</li>
+          <li>일반 — 42U, 48U, 52U</li>
+          <li>EIA-310 표준</li>
+        </ul>
 
-// 19-inch Rack Standard:
-// - width: 19 inches
-// - height: N × U (1U = 1.75")
-// - typical: 42U, 48U, 52U racks
-// - standard EIA-310
+        <h3 className="text-xl font-semibold mt-8 mb-3">서버 높이별 특성</h3>
+        <ul className="leading-7">
+          <li><strong>1U (44mm)</strong> — $3K~$10K. 최대 1~2 GPU. dense compute. 풀사이즈 GPU 불가. DGX 같은 시스템은 커스텀.</li>
+          <li><strong>2U (88mm)</strong> — $10K~$30K. 2~4 GPU. 더 나은 냉각, 스토리지 서버. 예 Supermicro 2124GQ.</li>
+          <li><strong>4U (176mm)</strong> — $20K~$50K+. 4~10 GPU. 풀사이즈 GPU 지원, GPU 최고 밀도. 예 Supermicro 4124GO.</li>
+          <li><strong>5U/7U</strong> — 특수 용도. 최대 GPU 밀도, 커스텀 구성.</li>
+        </ul>
 
-// Server heights:
-// 1U (44mm): ~$3-10K
-// - 1-2 GPUs max
-// - dense compute
-// - no full-size GPUs
-// - example: DGX systems are custom
-//
-// 2U (88mm): ~$10-30K
-// - 2-4 GPUs
-// - better cooling
-// - storage servers
-// - example: Supermicro 2124GQ
-//
-// 4U (176mm): ~$20-50K+
-// - 4-10 GPUs possible
-// - full-size GPU support
-// - highest density for GPU
-// - example: Supermicro 4124GO
-//
-// 5U/7U: specialized
-// - max GPU density
-// - custom configs
+        <h3 className="text-xl font-semibold mt-8 mb-3">PDU 종류</h3>
+        <ul className="leading-7">
+          <li><strong>Basic</strong> — 단순 outlet, 모니터링 없음. $200~$500.</li>
+          <li><strong>Metered</strong> — outlet 레벨 측정, 원격 모니터링. rack 당 $1K~$3K.</li>
+          <li><strong>Switched</strong> — outlet 별 원격 on/off, 전원 cycling. rack 당 $2K~$5K.</li>
+          <li><strong>Smart/Monitored</strong> — 환경 센서, 알림, DCIM 통합. rack 당 $3K~$10K.</li>
+        </ul>
 
-// Power Distribution Units (PDUs):
-//
-// Basic PDU:
-// - just power outlets
-// - no monitoring
-// - cheap ($200-500)
-//
-// Metered PDU:
-// - outlet-level metering
-// - remote monitoring
-// - $1K-3K per rack
-//
-// Switched PDU:
-// - remote on/off per outlet
-// - power cycling
-// - $2K-5K per rack
-//
-// Smart/Monitored PDU:
-// - environmental sensors
-// - alerts
-// - integration with DCIM
-// - $3K-10K per rack
+        <h3 className="text-xl font-semibold mt-8 mb-3">UPS 종류</h3>
+        <ul className="leading-7">
+          <li><strong>Offline</strong> — 정전 시 전환, 짧은 transient. 가정/소규모 사무실.</li>
+          <li><strong>Line-Interactive</strong> — 전압 regulation. offline 보다 우수, 중소기업.</li>
+          <li><strong>Online (Double Conversion)</strong> — 항상 inverter 출력, transfer time 0. 데이터센터 표준, 고가.</li>
+        </ul>
 
-// UPS Systems:
-//
-// Offline UPS:
-// - switches on power loss
-// - small transient
-// - home/small office
-//
-// Line-Interactive:
-// - voltage regulation
-// - better than offline
-// - medium business
-//
-// Online (Double Conversion):
-// - always runs from inverter
-// - zero transfer time
-// - datacenter standard
-// - expensive
+        <h3 className="text-xl font-semibold mt-8 mb-3">UPS 사이징</h3>
+        <ul className="leading-7">
+          <li>runtime 5~30 분 — 안전 종료 또는 generator 시동까지</li>
+          <li>80% load factor</li>
+        </ul>
 
-// UPS sizing:
-// - runtime: 5-30 minutes
-// - enough for safe shutdown
-// - or generator startup
-// - 80% load factor
+        <h3 className="text-xl font-semibold mt-8 mb-3">Generator 백업</h3>
+        <ul className="leading-7">
+          <li>디젤 또는 천연가스</li>
+          <li>30 초~2 분 시동</li>
+          <li>며칠간 runtime</li>
+          <li>Tier III/IV 데이터센터</li>
+        </ul>
 
-// Generator backup:
-// - diesel or natural gas
-// - 30s-2min startup
-// - days of runtime
-// - datacenter tier III/IV
+        <h3 className="text-xl font-semibold mt-8 mb-3">Tier 분류와 SLA</h3>
+        <ul className="leading-7">
+          <li>Tier I — 99.671% (연간 28h downtime)</li>
+          <li>Tier II — 99.749% (22h), redundant component</li>
+          <li>Tier III — 99.982% (1.6h), concurrently maintainable</li>
+          <li>Tier IV — 99.995% (26min), fault tolerant</li>
+        </ul>
 
-// Tier classifications:
-// - Tier I: basic
-// - Tier II: redundant components
-// - Tier III: concurrently maintainable
-// - Tier IV: fault tolerant
-// - affects uptime SLA
-
-// Uptime SLA:
-// - Tier I: 99.671% (28h downtime)
-// - Tier II: 99.749% (22h)
-// - Tier III: 99.982% (1.6h)
-// - Tier IV: 99.995% (26min)
-
-// Blockchain SP colo:
-// - Tier III typical
-// - $100-300/month per 1U
-// - $1000+ per month per rack
-// - power costs separate
-// - bandwidth included varies`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">블록체인 SP colocation</h3>
+        <ul className="leading-7">
+          <li>Tier III 일반</li>
+          <li>$100~$300/month per 1U</li>
+          <li>$1,000+/month per rack</li>
+          <li>전력비 별도</li>
+          <li>대역폭 포함 여부 상이</li>
+        </ul>
         <p className="leading-7">
           Rack: <strong>1U (dense) → 2U (balanced) → 4U (GPU density)</strong>.<br />
           Power: PDU (metered/switched) + UPS (online) + generator.<br />

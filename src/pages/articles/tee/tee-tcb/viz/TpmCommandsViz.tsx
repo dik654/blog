@@ -14,7 +14,7 @@ const C = {
 const STEPS = [
   {
     label: 'TPM 2.0 명령어 카테고리',
-    body: 'Init/PCR/Attestation/Key/Sealed Storage 5개 그룹. 각 명령은 root of trust(EK)에서 파생된 핸들로 권한이 검증됩니다.',
+    body: 'Init/PCR/Attestation/Key/Sealed Storage 5개 그룹. 각 명령은 root of trust(EK)에서 파생된 핸들로 권한이 검증된다.',
   },
   {
     label: 'PCR 인덱스 23개 매핑',
@@ -22,7 +22,7 @@ const STEPS = [
   },
   {
     label: 'PCR Bank: 다중 해시 알고리즘',
-    body: 'TPM 2.0은 SHA-256(표준), SHA-384(고강도), SM3(중국 표준), SHA-1(legacy)를 동시 운용. 같은 측정이 여러 bank에 누적됩니다.',
+    body: 'TPM 2.0은 SHA-256(표준), SHA-384(고강도), SM3(중국 표준), SHA-1(legacy)를 동시 운용. 같은 측정이 여러 bank에 누적된다.',
   },
   {
     label: 'TPM 사용 사례 + Linux 도구',

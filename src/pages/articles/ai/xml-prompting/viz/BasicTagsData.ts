@@ -2,20 +2,20 @@ import type { StepDef } from '@/components/ui/step-viz';
 
 export const STEPS: StepDef[] = [
   {
-    label: '<instructions> — 지시사항 격리',
-    body: '지시문을 태그로 감싸서 참조 자료·예시와 명확히 분리\nLLM이 "무엇을 해야 하는지"를 정확히 인식',
+    label: '<instructions> — 할 일 표시',
+    body: '지시문과 참조 자료를 서로 다른 영역으로 표시한다.\n태그는 읽기 단서이며 준수나 권한을 보장하지는 않는다.',
   },
   {
     label: '<context> / <document> — 참조 자료 구분',
-    body: 'RAG(검색 증강 생성) 결과, 문서, API 응답 등을 태그로 감쌈\n지시문과 참조 자료가 섞이면 LLM이 혼동 → 태그로 경계 설정',
+    body: 'RAG 결과, 문서, API 응답처럼 답을 만들 때 참고할 데이터를 묶는다.\n출처 ID는 별도 속성이나 필드로 보존한다.',
   },
   {
     label: '<examples> — Few-shot 예시',
-    body: '<example> 안에 <input>과 <output> 쌍을 배치\n0-shot 대비 정확도 상승 — 패턴 학습의 핵심 도구',
+    body: '<example> 안에 <input>과 <output> 쌍을 배치한다.\n효과는 task와 model에 따라 달라지므로 평가 fixture로 비교한다.',
   },
   {
     label: '<output_format> — 출력 형식 정의',
-    body: '원하는 출력 스키마를 태그 안에 명시\nJSON 필드, Markdown 구조 등 → 파싱 가능한 일관된 출력',
+    body: '필드 이름과 허용 형식을 명시한다.\n실제 parseability는 parser와 validator가 판정한다.',
   },
 ];
 

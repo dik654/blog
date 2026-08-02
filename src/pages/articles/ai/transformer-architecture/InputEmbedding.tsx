@@ -1,20 +1,21 @@
+import MathText from '@/components/ui/math-text';
 import M from '@/components/ui/math';
-import InputEmbeddingViz from './viz/InputEmbeddingViz';
-import InputEmbDetailViz from './viz/InputEmbDetailViz';
+import InputEmbeddingScene from './viz/InputEmbeddingScene';
+import InputEmbDetailScene from './viz/InputEmbDetailScene';
 
 export default function InputEmbedding() {
   return (
-    <section id="input-embedding" className="mb-16 scroll-mt-20">
+    <MathText id="input-embedding" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">입력 임베딩 + 위치 인코딩</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          임베딩 벡터만으로는 <strong>단어 순서</strong>를 알 수 없다<br />
-          Transformer는 RNN과 달리 순차 처리를 하지 않기 때문이다<br />
-          sin/cos 함수로 위치 정보를 만들어 더한다
+          token embedding $E[token]$ 은 단어의 의미만 담는다<br />
+          attention은 모든 위치를 동시에 비교하므로 “첫 번째 학생”과 “세 번째 학생”을 자동으로 구분하지 못한다<br />
+          같은 차원의 위치 벡터 $P$ 를 더해 최종 입력 $X=E[token]+P$ 를 만든다
         </p>
       </div>
 
-      <InputEmbeddingViz />
+      <InputEmbeddingScene />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>위치 인코딩 공식</h3>
@@ -23,9 +24,9 @@ export default function InputEmbedding() {
           <div>PE(pos, 2i+1) = cos(pos / 10000<sup>2i/d_model</sup>)</div>
         </div>
         <p>
-          짝수 차원은 sin, 홀수 차원은 cos 사용<br />
-          pos=위치, i=차원 인덱스, d_model=6<br />
-          최종 입력 = 임베딩 벡터 + 위치 인코딩 벡터
+          짝수 차원은 sin, 홀수 차원은 cos를 쓴다<br />
+          낮은 차원은 빠르게 변하고 높은 차원은 천천히 변한다<br />
+          여러 주파수를 섞으면 각 위치가 고유한 패턴을 갖고, 가까운 위치의 관계도 내적에서 드러난다
         </p>
       </div>
 
@@ -38,14 +39,14 @@ export default function InputEmbedding() {
         </p>
         <M display>{'\\text{PE}(\\text{pos}, 2i) = \\sin\\!\\left(\\frac{\\text{pos}}{\\underbrace{10000^{2i/d_{\\text{model}}}}_{\\text{차원별 주파수}}}\\right), \\quad \\text{PE}(\\text{pos}, 2i{+}1) = \\cos\\!\\left(\\frac{\\text{pos}}{10000^{2i/d_{\\text{model}}}}\\right)'}</M>
       </div>
-      <div className="not-prose my-8"><InputEmbDetailViz /></div>
+      <div className="not-prose my-8"><InputEmbDetailScene /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: <strong>sin/cos 주파수 분리</strong>로 각 차원이 다른 시간 스케일 표현.<br />
-          요약 2: <strong>최대 길이 제약 없음</strong> - sinusoidal PE가 학습 PE 대비 장점.<br />
-          요약 3: LLaMA/GPT-4는 <strong>RoPE (Rotary)</strong>로 진화 — 상대 위치 내장.
+          요약 1: 입력 행렬은 token 의미 $E[token]$ 과 위치 $P$ 의 합.<br />
+          요약 2: sin/cos는 차원별 주파수를 달리해 위치마다 다른 패턴을 만든다.<br />
+          요약 3: 현대 LLM은 score 안에 상대 위치가 드러나는 RoPE 계열을 주로 쓴다.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

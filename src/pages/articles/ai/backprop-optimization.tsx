@@ -1,25 +1,19 @@
-import Overview from './backprop-optimization/Overview';
-import ForwardPass from './backprop-optimization/ForwardPass';
-import Softmax from './backprop-optimization/Softmax';
-import CrossEntropy from './backprop-optimization/CrossEntropy';
-import ChainRule from './backprop-optimization/ChainRule';
-import BackpropDerivation from './backprop-optimization/BackpropDerivation';
-import GradientUpdate from './backprop-optimization/GradientUpdate';
-import LossFunction from './backprop-optimization/LossFunction';
-import Regularization from './backprop-optimization/Regularization';
+import CoreOverview from './backprop-optimization/CoreOverview';
+import ComputationalGraph from './backprop-optimization/ComputationalGraph';
+import CoreChainRule from './backprop-optimization/CoreChainRule';
+import CoreReverseMode from './backprop-optimization/CoreReverseMode';
+import LayerBackprop from './backprop-optimization/LayerBackprop';
+import AutogradPractice from './backprop-optimization/AutogradPractice';
 
 export default function BackpropOptimizationArticle() {
   return (
     <>
-      <Overview />
-      <ForwardPass />
-      <Softmax />
-      <CrossEntropy />
-      <ChainRule />
-      <BackpropDerivation />
-      <GradientUpdate />
-      <LossFunction />
-      <Regularization />
+      <CoreOverview />
+      <ComputationalGraph />
+      <CoreChainRule />
+      <CoreReverseMode />
+      <LayerBackprop />
+      <AutogradPractice />
     </>
   );
 }

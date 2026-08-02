@@ -26,7 +26,7 @@ export default function Prove({ onCodeRef }: { onCodeRef: (key: string, ref: Cod
 
         <h3 className="text-xl font-semibold mt-8 mb-4">A 계산 (G1)</h3>
         <div className="rounded-lg border p-4 not-prose text-sm space-y-2">
-          <M display>{'A = [\\alpha]_1 + \\sum_j w_j \\cdot [a_j(\\tau)]_1 + r \\cdot [\\delta]_1'}</M>
+          <M display>{'A = \\underbrace{[\\alpha]_1}_{\\text{구조적 태그}} + \\underbrace{\\sum_j w_j \\cdot [a_j(\\tau)]_1}_{\\text{witness 가중합}} + \\underbrace{r \\cdot [\\delta]_1}_{\\text{블라인딩 (zk)}}'}</M>
           <div className="grid gap-2 sm:grid-cols-3 mt-2">
             <div className="rounded border p-3 bg-sky-50 dark:bg-sky-950/30">
               <p className="font-mono text-xs font-semibold">[α]₁</p>
@@ -50,7 +50,7 @@ export default function Prove({ onCodeRef }: { onCodeRef: (key: string, ref: Cod
         <div className="rounded-lg border p-4 not-prose text-sm space-y-3">
           <h4 className="font-semibold text-base mb-2">B (G2) + B' (G1) 이중 계산</h4>
           <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
-            <M display>{'B \\in G_2:\\; [\\beta]_2 + \\sum_j w_j \\cdot [b_j(\\tau)]_2 + s \\cdot [\\delta]_2'}</M>
+            <M display>{'B \\in G_2:\\; \\underbrace{[\\beta]_2}_{\\text{태그}} + \\underbrace{\\sum_j w_j \\cdot [b_j(\\tau)]_2}_{\\text{witness 가중합}} + \\underbrace{s \\cdot [\\delta]_2}_{\\text{블라인딩}}'}</M>
             <M display>{"B' \\in G_1:\\; [\\beta]_1 + \\sum_j w_j \\cdot [b_j(\\tau)]_1 + s \\cdot [\\delta]_1"}</M>
           </div>
           <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 space-y-1">

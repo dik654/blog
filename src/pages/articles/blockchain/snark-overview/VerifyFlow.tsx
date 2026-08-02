@@ -18,7 +18,7 @@ export default function VerifyFlow() {
           증명 <Math>{'(A, B, C) \\in \\mathbb{G}_1 \\times \\mathbb{G}_2 \\times \\mathbb{G}_1'}</Math>에 대해
           페어링 등식 하나를 검증한다
         </p>
-        <Math display>{'e(A, B) = e(\\alpha, \\beta) \\cdot e(\\sum_i a_i \\cdot L_i, \\gamma) \\cdot e(C, \\delta)'}</Math>
+        <Math display>{'\\underbrace{e(A, B)}_{\\text{증명자 페어링}} = \\underbrace{e(\\alpha, \\beta)}_{\\text{trusted setup 항}} \\cdot \\underbrace{e(\\sum_i a_i \\cdot L_i, \\gamma)}_{\\text{공개 입력 항}} \\cdot \\underbrace{e(C, \\delta)}_{\\text{증인 항}}'}</Math>
         <p>
           페어링 3회 + 공개 입력에 대한 MSM 1회로 완료된다
           <br />

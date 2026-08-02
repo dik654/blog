@@ -99,7 +99,7 @@ export default function SharedMemoryFlowViz() {
                   <text x={32} y={l.y} fontSize={8.5} fontFamily="monospace" fontWeight={600} fill={l.c}>{l.line}</text>
                 </motion.g>
               ))}
-              <AlertBox x={150} y={186} w={180} h={26} label="검증 ≠ 사용 시점 다름 → TOCTOU" color={C.toctou} />
+              <AlertBox x={150} y={186} w={180} h={26} label="검증 시점 ≠ 사용 시점 → TOCTOU" color={C.toctou} />
             </g>
           )}
           {step === 4 && (

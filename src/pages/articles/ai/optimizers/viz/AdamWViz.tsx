@@ -28,7 +28,7 @@ export default function AdamWViz() {
                 <g key={i}>
                   {/* L2+Adam bar */}
                   {showL2 && (
-                    <motion.rect x={gx} width={BAR_W} rx={3}
+                    <motion.rect initial={false} x={gx} width={BAR_W} rx={3}
                       animate={{ y: BASE_Y - (L2_DECAY[t][i] / 5.5) * MAX_H,
                         height: (L2_DECAY[t][i] / 5.5) * MAX_H }}
                       fill={COLORS.l2 + '30'} stroke={COLORS.l2} strokeWidth={1}
@@ -36,7 +36,7 @@ export default function AdamWViz() {
                   )}
                   {/* AdamW bar */}
                   {showAW && (
-                    <motion.rect x={gx + BAR_W + 4} width={BAR_W} rx={3}
+                    <motion.rect initial={false} x={gx + BAR_W + 4} width={BAR_W} rx={3}
                       animate={{ y: BASE_Y - (ADAMW_DECAY[t][i] / 5.5) * MAX_H,
                         height: (ADAMW_DECAY[t][i] / 5.5) * MAX_H }}
                       fill={COLORS.adamw + '30'} stroke={COLORS.adamw} strokeWidth={1}

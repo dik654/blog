@@ -51,7 +51,7 @@ export default function MEVBoostViz() {
               <rect x={20} y={170} width={10} height={14} rx={2} fill={`${CP}44`} stroke={CP} strokeWidth={1.5} />
               <text x={25} y={196} textAnchor="middle" fontSize={9} fill={CP}>로컬</text>
               <text x={33} y={180} fontSize={8} fill={CP} fontFamily="monospace">0.005</text>
-              <motion.rect x={38} y={170} width={0} height={14} rx={2} fill={`${CB}44`} stroke={CB} strokeWidth={1.5}
+              <motion.rect initial={false} x={38} y={170} width={0} height={14} rx={2} fill={`${CB}44`} stroke={CB} strokeWidth={1.5}
                 animate={{ width: 60 }} transition={{ duration: 0.5 }} />
               <motion.text x={68} y={180} fontSize={8} fill={CB} fontFamily="monospace"
                 animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={{ delay: 0.3 }}>

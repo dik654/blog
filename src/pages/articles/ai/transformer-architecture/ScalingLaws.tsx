@@ -1,20 +1,21 @@
-import ScalingLawsViz from './viz/ScalingLawsViz';
-import ScalingDetailViz from './viz/ScalingDetailViz';
+import MathText from '@/components/ui/math-text';
+import ScalingLawsScene from './viz/ScalingLawsScene';
+import ScalingDetailScene from './viz/ScalingDetailScene';
 import M from '@/components/ui/math';
 
 export default function ScalingLaws() {
   return (
-    <section id="scaling-laws" className="mb-16 scroll-mt-20">
+    <MathText id="scaling-laws" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">스케일링 법칙</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Transformer의 성능 — <strong>파라미터 수(N)</strong>, <strong>데이터양(D)</strong>, <strong>연산량(C)</strong>의 멱법칙(Power Law, 변수 간 거듭제곱 관계)을 따라 예측 가능하게 향상<br />
-          Chinchilla 논문 — 고정 연산 예산에서 <strong>N:D=1:20</strong>이 최적임을 입증<br />
-          LLM 학습 패러다임을 근본적으로 변화시킴
+          모델을 키우면 loss가 내려가지만, 데이터가 부족하면 같은 문장을 반복해서 외운다<br />
+          데이터를 늘려도 모델이 너무 작으면 새 패턴을 담을 공간이 부족하다<br />
+          파라미터 수 $N$, 토큰 수 $D$, 연산량 $C$ 를 함께 맞추는 경험 법칙이 scaling laws다
         </p>
       </div>
 
-      <ScalingLawsViz />
+      <ScalingLawsScene />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>스케일링 법칙 & Chinchilla</h3>
@@ -27,13 +28,13 @@ export default function ScalingLaws() {
           <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
             <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-2">Kaplan (2020)</h4>
             <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              Loss가 <M>{'N, D, C'}</M> 각각에 대해 멱법칙(power law)을 따름. 지수 <M>{'\\alpha{=}0.076'}</M>이 가장 작아 파라미터 증가 대비 수익이 가장 낮음
+              loss가 <M>{'N, D, C'}</M> 각각에 대해 완만한 power law를 따른다는 관찰. 작은 실험으로 큰 학습의 loss를 어느 정도 예측할 수 있게 했다
             </p>
           </div>
           <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4">
             <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-2">Chinchilla (2022)</h4>
             <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              고정 FLOP에서 최적 비율 <M>{'N{:}D = 1{:}20'}</M>. GPT-3(175B, 300B토큰)보다 Chinchilla(70B, 1.4T토큰)가 더 나은 성능 달성
+              고정 FLOP에서는 큰 모델만 키우는 것보다 토큰을 충분히 먹이는 쪽이 낫다는 결론. 대표 비율이 <M>{'N{:}D = 1{:}20'}</M>
             </p>
           </div>
           <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4">
@@ -51,14 +52,14 @@ export default function ScalingLaws() {
           {`L(N,D,C) \\approx \\underbrace{a \\cdot N^{-\\alpha}}_{\\text{파라미터}} + \\underbrace{b \\cdot D^{-\\beta}}_{\\text{데이터}} + \\underbrace{c \\cdot C^{-\\gamma}}_{\\text{연산량}}`}
         </M>
       </div>
-      <ScalingDetailViz />
+      <ScalingDetailScene />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
-          요약 1: <strong>Kaplan 2020</strong>이 scaling laws 정식화 — 성능 예측 가능해짐.<br />
-          요약 2: <strong>Chinchilla (1:20 비율)</strong>이 GPT-3 시대 통념 전복.<br />
-          요약 3: <strong>Emergent abilities</strong>는 scaling의 질적 전환 — 아직도 연구 중.
+          요약 1: loss는 $N$, $D$, $C$ 중 어느 한 축만으로 내려가지 않는다.<br />
+          요약 2: Chinchilla는 고정 FLOP에서 데이터 부족 모델의 비효율을 드러냈다.<br />
+          요약 3: 큰 모델 학습 계획은 아키텍처보다 먼저 예산 배분 문제를 풀어야 한다.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

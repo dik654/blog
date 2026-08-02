@@ -41,7 +41,7 @@ export default function ImplementationViz() {
           })}
 
           {/* active indicator dot */}
-          <motion.circle r={4}
+          <motion.circle initial={false} r={4}
             animate={{ cx: BX - 12, cy: IMPL_BLOCKS[step].y + BH / 2 }}
             transition={{ type: 'spring', bounce: 0.3 }}
             fill={IMPL_BLOCKS[step].color}

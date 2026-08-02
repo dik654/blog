@@ -66,7 +66,7 @@ export default function BeaconKitArch({ onCodeRef }: Props) {
               <span className="font-mono text-muted-foreground">2.</span>
               <div>
                 <span>EL에 블록 빌드 요청 — <code className="text-xs bg-background/50 px-1 rounded">EL.forkchoiceUpdated(...)</code></span>
-                <div className="ml-4 mt-1 text-xs text-muted-foreground grid grid-cols-[160px_1fr] gap-x-3 gap-y-0.5">
+                <div className="mt-2 grid grid-cols-1 gap-x-3 gap-y-0.5 text-xs text-muted-foreground sm:ml-4 sm:mt-1 sm:grid-cols-[160px_minmax(0,1fr)]">
                   <span><code className="bg-background/50 px-1 rounded">head_block_hash</code></span><span>head.hash</span>
                   <span><code className="bg-background/50 px-1 rounded">prev_randao</code></span><span>beacon_state.randao_mix</span>
                   <span><code className="bg-background/50 px-1 rounded">fee_recipient</code></span><span>validator_addr</span>
@@ -82,7 +82,7 @@ export default function BeaconKitArch({ onCodeRef }: Props) {
               <span className="font-mono text-muted-foreground">4.</span>
               <div>
                 <span>Cosmos tx로 래핑 — <code className="text-xs bg-background/50 px-1 rounded">BeaconBlock</code> SSZ 직렬화</span>
-                <div className="ml-4 mt-1 text-xs text-muted-foreground grid grid-cols-[120px_1fr] gap-x-3 gap-y-0.5">
+                <div className="mt-2 grid grid-cols-1 gap-x-3 gap-y-0.5 text-xs text-muted-foreground sm:ml-4 sm:mt-1 sm:grid-cols-[120px_minmax(0,1fr)]">
                   <span><code className="bg-background/50 px-1 rounded">slot</code></span><span>height</span>
                   <span><code className="bg-background/50 px-1 rounded">proposer_index</code></span><span>round_robin_leader(height)</span>
                   <span><code className="bg-background/50 px-1 rounded">execution_payload</code></span><span>EL이 빌드한 payload</span>

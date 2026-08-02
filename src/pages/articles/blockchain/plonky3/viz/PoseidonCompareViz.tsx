@@ -141,9 +141,9 @@ function RoundStructure({ step }: { step: number }) {
       <text x={220} y={30} textAnchor="middle" fontSize={9} fill="#64748b" fontWeight={600}>
         총 20 라운드 (BabyBear width 16)
       </text>
-      {parts.map((p) => {
+      {parts.map((p, index) => {
         const rect = (
-          <g key={p.label}>
+          <g key={`${p.label}-${index}`}>
             <motion.rect
               x={x}
               y={55}

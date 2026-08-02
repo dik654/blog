@@ -16,7 +16,7 @@ export default function OverviewViz() {
       {(step) => (
         <svg viewBox="0 0 520 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Step 0: Random I/O */}
-          <motion.g animate={{ opacity: step === 0 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 0 ? 1 : 0.05 }}>
             <rect x={20} y={30} width={220} height={160} rx={6} fill={`${C1}08`} stroke={C1} strokeWidth={step === 0 ? 1.2 : 0.5} />
             <text x={130} y={22} textAnchor="middle" fontSize={11} fontWeight={600} fill={C1}>Random I/O</text>
             {/* Disk platter */}
@@ -34,7 +34,7 @@ export default function OverviewViz() {
           </motion.g>
 
           {/* Step 1: Sequential I/O */}
-          <motion.g animate={{ opacity: step === 1 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 1 ? 1 : 0.05 }}>
             <rect x={280} y={30} width={220} height={160} rx={6} fill={`${C2}08`} stroke={C2} strokeWidth={step === 1 ? 1.2 : 0.5} />
             <text x={390} y={22} textAnchor="middle" fontSize={11} fontWeight={600} fill={C2}>Sequential I/O</text>
             {/* Sequential blocks */}
@@ -53,7 +53,7 @@ export default function OverviewViz() {
           </motion.g>
 
           {/* Step 2: LSM structure */}
-          <motion.g animate={{ opacity: step === 2 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 2 ? 1 : 0.05 }}>
             <rect x={30} y={50} width={90} height={40} rx={5} fill={`${C3}15`} stroke={C3} strokeWidth={1} />
             <text x={75} y={74} textAnchor="middle" fontSize={10} fontWeight={600} fill={C3}>Memtable</text>
             <text x={75} y={44} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">(메모리)</text>
@@ -74,7 +74,7 @@ export default function OverviewViz() {
           </motion.g>
 
           {/* Step 3: Implementations */}
-          <motion.g animate={{ opacity: step === 3 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 3 ? 1 : 0.05 }}>
             {[
               { name: 'LevelDB', sub: 'Google · Go', x: 40 },
               { name: 'RocksDB', sub: 'Facebook · C++', x: 160 },

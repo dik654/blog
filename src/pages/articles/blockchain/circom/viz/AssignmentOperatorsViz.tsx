@@ -188,7 +188,7 @@ function AssignOnlyPanel() {
 
       {/* R1CS table — empty */}
       <text x={240} y={64} fontSize={10} fontWeight={700} fill={COLORS.danger}>R1CS 제약 테이블</text>
-      <motion.rect x={240} y={72} width={220} height={130} rx={8}
+      <motion.rect initial={false} x={240} y={72} width={220} height={130} rx={8}
         animate={{ x: [240, 241.5, 240, 238.5, 240] }}
         transition={{ duration: 0.35, repeat: 3, delay: 1.0 }}
         fill={`${COLORS.danger}08`} stroke={COLORS.danger} strokeWidth={1.2} strokeDasharray="4 3" />
@@ -322,7 +322,7 @@ function AntiPatternPanel() {
   return (
     <svg viewBox="0 0 480 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
       {/* Left: BAD */}
-      <motion.rect x={16} y={16} width={214} height={188} rx={10}
+      <motion.rect initial={false} x={16} y={16} width={214} height={188} rx={10}
         animate={{
           x: [16, 17.5, 16, 14.5, 16],
           stroke: [COLORS.danger, '#fca5a5', COLORS.danger],

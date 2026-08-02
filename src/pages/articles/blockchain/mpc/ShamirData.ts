@@ -44,13 +44,13 @@ def lagrange_interpolate(shares: list[tuple[int, int]], x: int, p: int) -> int:
 # 복원
 secret = lagrange_interpolate(shares[:t+1], x=0, p=p)`;
 
-export const INTEGER_CODE = `# 정수 위 Shamir: 계수를 큰 범위에서 샘플링
+export const INTEGER_CODE = `# 교육용 큰 소수체 예제: 여전히 F_p 위에서 계산
 shamir_length = 2 * (prime_length + ceil(log2(num_players)))
 shamir_prime = sympy.nextprime(2**shamir_length)
 
-# 마스킹 범위 (통계적 보안 보장)
+# 큰 범위의 random mask를 표현할 수 있도록 field 크기 선택
 masking_range = 2^(prime_length + stat_sec_shamir)
-# stat_sec_shamir = 40 → 통계적 거리 ≤ 2^(-40)
+# 실제 statistical distance는 protocol의 분포·범위 증명을 따라 검증
 
-# 공유는 큰 정수 도메인에서 계산
-# 복원 시에는 원래 소수체로 모듈러 감산`;
+# 이 코드는 "정수 위 Shamir" 구현이 아니다.
+# Unknown-order protocol의 integer sharing과 혼동하지 않는다.`;

@@ -10,6 +10,7 @@ export interface CodeRef {
   path: string;
   code: string;
   highlight: [number, number]; // 1-indexed
+  lineStart?: number; // source line number for code[0], defaults to 1
   lang: Lang;
   desc?: string;
   annotations?: LineNote[];

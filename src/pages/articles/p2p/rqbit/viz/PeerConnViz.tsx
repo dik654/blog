@@ -50,7 +50,7 @@ export default function PeerConnViz() {
               <text x={210} y={127} textAnchor="middle" fontSize={10} fontWeight={600} fill="#10b981">
                 Piece #42
               </text>
-              <motion.circle r={5} fill="#10b981"
+              <motion.circle initial={false} r={5} fill="#10b981"
                 animate={{ cx: [170, 250], cy: [125, 125] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }} />
             </>

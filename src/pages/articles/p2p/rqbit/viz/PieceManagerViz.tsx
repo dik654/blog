@@ -27,7 +27,7 @@ export default function PieceManagerViz() {
             const active = i === activeIdx;
             return (
               <g key={s.label}>
-                <motion.rect x={cx - 32} y={30} width={64} height={36} rx={10}
+                <motion.rect initial={false} x={cx - 32} y={30} width={64} height={36} rx={10}
                   fill={active ? `${s.color}22` : `${s.color}08`}
                   stroke={active ? s.color : `${s.color}30`}
                   strokeWidth={active ? 2.5 : 1}
@@ -48,7 +48,7 @@ export default function PieceManagerViz() {
           ))}
           {/* Progress bar */}
           <rect x={40} y={100} width={280} height={16} rx={4} fill="var(--border)" />
-          <motion.rect x={40} y={100} rx={4} height={16}
+          <motion.rect initial={false} x={40} y={100} rx={4} height={16}
             fill={STATES[step === 3 ? 1 : Math.min(step, 2)].color}
             animate={{ width: step === 0 ? 40 : step === 1 ? 120 : step === 2 ? 230 : 180 }}
             transition={{ duration: 0.5 }} />

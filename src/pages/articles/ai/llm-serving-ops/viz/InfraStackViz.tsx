@@ -52,7 +52,7 @@ export default function InfraStackViz() {
                 transform="rotate(-90,28,198)" textAnchor="middle">피드백</text>
             </motion.g>
           )}
-          <motion.circle r={5}
+          <motion.circle initial={false} r={5}
             animate={{ cx: 70, cy: LAYERS[Math.min(step, 4)].y + 21 }}
             transition={sp} fill={LAYERS[Math.min(step, 4)].color} />
           <defs>

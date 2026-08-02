@@ -27,7 +27,7 @@ export default function LRStrategyViz() {
                   {/* Bar background */}
                   <rect x={110} y={row.y + 6} width={330} height={24} rx={4} fill="var(--border)" opacity={0.15} />
                   {/* Animated bar */}
-                  <motion.rect x={110} y={row.y + 6} width={0} height={24} rx={4}
+                  <motion.rect initial={false} x={110} y={row.y + 6} width={0} height={24} rx={4}
                     fill={row.color} opacity={0.6}
                     animate={{ width: row.barW }} transition={{ ...sp, duration: 0.8, delay: 0.2 + i * 0.1 }} />
                 </motion.g>
@@ -37,9 +37,9 @@ export default function LRStrategyViz() {
                 하위 → 상위: 학습률 10~100배 차이 (로그 스케일)
               </text>
               {/* Arrow */}
-              <line x1={60} y1={50} x2={60} y2={130} stroke="var(--muted-foreground)" strokeWidth={1} markerEnd="url(#arrLR)" />
-              <text x={50} y={47} fontSize={7} fill="var(--muted-foreground)" textAnchor="middle">하위</text>
-              <text x={50} y={140} fontSize={7} fill="var(--muted-foreground)" textAnchor="middle">상위</text>
+              <line x1={45} y1={50} x2={45} y2={130} stroke="var(--muted-foreground)" strokeWidth={1} markerEnd="url(#arrLR)" />
+              <text x={35} y={47} fontSize={7} fill="var(--muted-foreground)" textAnchor="middle">하위</text>
+              <text x={35} y={140} fontSize={7} fill="var(--muted-foreground)" textAnchor="middle">상위</text>
               {/* Insight box */}
               <rect x={120} y={178} width={280} height={26} rx={5} fill={COLORS.high} fillOpacity={0.08}
                 stroke={COLORS.high} strokeWidth={0.8} />

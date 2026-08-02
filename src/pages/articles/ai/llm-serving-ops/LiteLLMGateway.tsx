@@ -3,6 +3,9 @@ import LiteLLMConfig from './LiteLLMConfig';
 import LiteLLMFallback from './LiteLLMFallback';
 import CodeSidebar from './CodeSidebar';
 import { proxyHandlerRef, routerInitRef, routerCompletionRef } from './codeRefs';
+import GatewayDeepDive from './GatewayDeepDive';
+import ServingDepthGuide from './ServingDepthGuide';
+import ServingOpsDeepViz from './viz/ServingOpsDeepViz';
 
 export default function LiteLLMGateway() {
   return (
@@ -19,6 +22,9 @@ export default function LiteLLMGateway() {
         </p>
         <LiteLLMConfig />
         <LiteLLMFallback />
+        <div className="not-prose my-8"><ServingOpsDeepViz variant="gateway" /></div>
+        <GatewayDeepDive />
+        <ServingDepthGuide guideKey="litellm" />
       </div>
     </section>
   );

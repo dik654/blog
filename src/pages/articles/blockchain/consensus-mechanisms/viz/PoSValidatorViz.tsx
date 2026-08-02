@@ -22,7 +22,7 @@ export default function PoSValidatorViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 480 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 480 125" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {VALS.map((v, i) => {
             const barH = (v.stake / TOTAL) * MAX_H;
             const barY = BAR_BASE - barH;
@@ -39,7 +39,7 @@ export default function PoSValidatorViz() {
                   }} transition={sp} />
                 <text x={CX[i]} y={BAR_BASE + 12} textAnchor="middle" fontSize={10}
                   fontWeight={600} fill={v.color}>{v.name}</text>
-                <text x={CX[i]} y={BAR_BASE + 20} textAnchor="middle" fontSize={10}
+                <text x={CX[i]} y={BAR_BASE + 26} textAnchor="middle" fontSize={10}
                   fill="var(--muted-foreground)">{v.stake} ETH</text>
                 <motion.text x={CX[i]} y={barY - 5} textAnchor="middle" fontSize={10}
                   fill={v.color} animate={{ opacity: step === 0 ? 1 : 0.4 }}>

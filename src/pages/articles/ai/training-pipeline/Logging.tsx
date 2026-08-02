@@ -1,4 +1,5 @@
 import LoggingViz from './viz/LoggingViz';
+import { SourceNotes } from '@/components/learning/ArticleLearning';
 
 export default function Logging() {
   return (
@@ -7,7 +8,8 @@ export default function Logging() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           학습 과정에서 기록하는 것 — <strong>loss</strong>(손실)와 <strong>metric</strong>(평가 지표)<br />
-          매 배치: running_loss에 누적 → epoch 끝에 len(loader)로 나눠 평균 계산<br />
+          매 배치: <code>reduction="mean"</code>인 batch loss에 실제 batch size를 곱해 sample loss 합으로 바꾼 뒤 누적<br />
+          epoch 끝: 누적한 loss 합을 전체 sample 수로 나눠 평균 계산. 마지막 batch가 작아도 같은 sample 가중치를 유지한다.<br />
           검증: val_loss + task별 metric (accuracy, F1, AUC, RMSE 등)<br />
           이 값들을 리스트에 저장하면 <strong>학습곡선</strong>(learning curve)을 그릴 수 있다
         </p>
@@ -28,20 +30,23 @@ export default function Logging() {
           오버피팅을 자동으로 감지하고 학습을 중단하는 기법<br />
           <strong>patience=N</strong>: val_loss가 N epoch 연속 개선되지 않으면 학습 중단<br />
           best_loss 갱신 시 patience 카운터를 0으로 리셋<br />
-          patience=5~10이 일반적 — 너무 작으면 조기 중단으로 최적점 이전에 멈춤
+          N은 보편적인 상수가 아니다. Validation noise와 평가 간격을 보고 정하며, 너무 작으면 일시적 흔들림을 개선 종료로 오판한다.
         </p>
         <p>
           Early stopping + best model 저장 조합이 실전 표준:<br />
-          patience 초과로 학습 중단 → 저장해둔 best_model.pt를 최종 모델로 사용<br />
-          이 패턴 하나로 오버피팅 방어 + 최적 모델 확보를 동시에 달성
+          patience 초과로 학습 중단 → 저장해둔 best_model.pt를 <strong>선택된 후보</strong>로 복원<br />
+          validation은 hyperparameter와 checkpoint를 선택한다. 모든 결정을 마친 뒤 untouched test set을 한 번만 평가해야 일반화 성능을 보고할 수 있다.
+        </p>
+        <p>
+          Test 결과를 보고 learning rate, patience나 architecture를 다시 바꾸면 그 test는 이미 validation이 된 셈이다.<br />
+          Data가 작다면 단일 split의 우연을 줄이기 위해 outer cross-validation 같은 별도 평가 설계를 사용한다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">W&B / TensorBoard</h3>
         <p>
           <strong>Weights & Biases (W&B)</strong> — 클라우드 기반 실험 관리 플랫폼<br />
           wandb.log() 한 줄로 loss, learning rate, metric을 실시간 대시보드에 기록<br />
-          실험 비교, 하이퍼파라미터 sweep, 팀 공유 기능이 강점<br />
-          Kaggle 대회에서 팀 단위 실험 관리에 사실상 표준
+          실험 비교, 하이퍼파라미터 sweep, 팀 공유 기능이 강점
         </p>
         <p>
           <strong>TensorBoard</strong> — PyTorch에 내장된 로컬 시각화 도구<br />
@@ -59,6 +64,29 @@ export default function Logging() {
           최소 loss, lr, epoch은 반드시 기록 — 나머지는 필요에 따라 추가.
         </p>
       </div>
+
+      <SourceNotes sources={[
+        {
+          label: 'PyTorch AMP documentation',
+          href: 'https://docs.pytorch.org/docs/stable/amp',
+          note: 'autocast의 op별 dtype 선택, 현재 GradScaler API와 동적 scaling 기본값의 근거.',
+        },
+        {
+          label: 'PyTorch data loading tutorial',
+          href: 'https://docs.pytorch.org/tutorials/intermediate/intermediate_data_loading_tutorial.html',
+          note: 'GPU당 2~4 worker에서 시작해 throughput plateau까지 측정하라는 현재 tuning 지침.',
+        },
+        {
+          label: 'PyTorch performance tuning guide',
+          href: 'https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html',
+          note: 'num_workers와 pin_memory가 workload와 data 위치에 따라 달라지는 경계.',
+        },
+        {
+          label: 'PyTorch deterministic algorithms',
+          href: 'https://docs.pytorch.org/docs/main/generated/torch.use_deterministic_algorithms.html',
+          note: '결정론적 연산 설정의 보장 범위와 성능·지원 trade-off.',
+        },
+      ]} />
     </section>
   );
 }

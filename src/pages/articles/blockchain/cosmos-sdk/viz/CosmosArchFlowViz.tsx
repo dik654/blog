@@ -43,7 +43,7 @@ export default function CosmosArchFlowViz() {
                   initial={{ pathLength: 0 }} animate={{ pathLength: show ? 1 : 0 }}
                   transition={{ duration: 0.4, delay: i * 0.08 }} />
                 {show && (
-                  <motion.circle r={4} fill={NODES[e.from].color}
+                  <motion.circle initial={false} r={4} fill={NODES[e.from].color}
                     animate={{ cx: [f.x, t.x], cy: [f.y, t.y] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1.2 }} />
                 )}

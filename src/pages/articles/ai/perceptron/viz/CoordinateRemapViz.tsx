@@ -81,18 +81,42 @@ export default function CoordinateRemapViz() {
         <text x={475} y={236} fontSize={10} fill="var(--muted-foreground)" textAnchor="middle">0.5</text>
         <text x={565} y={236} fontSize={10} fill="var(--muted-foreground)" textAnchor="middle">1.5</text>
 
-        {/* 분리선 */}
-        <line x1={395} y1={176} x2={585} y2={128} stroke="#10b981" strokeWidth={2.5} />
-        <text x={580} y={115} fontSize={11} fontWeight={700} fill="#10b981" textAnchor="end">결정 경계</text>
+        {/* 분리선: h₂ = h₁/3 − 0.1 (−h₁ + 3h₂ + 0.3 = 0) — Green 아래, Red 위 */}
+        <line x1={429} y1={220} x2={585} y2={147} stroke="#10b981" strokeWidth={2.5} />
+        <text x={470} y={162} fontSize={11} fontWeight={700} fill="#10b981" textAnchor="middle">결정 경계</text>
 
-        {/* h-공간 점들 */}
+        {/* h-공간 점들. 두 양성 샘플은 같은 은닉 좌표를 공유한다. */}
         {points.map((p, i) => {
           const cx = 395 + (p.h1 / 1.5) * 170;
           const cy = 220 - (p.h2 / 0.5) * 80;
+
+          if (i === 2) return null;
+
+          if (i === 1) {
+            return (
+              <g key={i}>
+                <circle cx={cx} cy={cy} r={12} fill="none" stroke={p.color} strokeWidth={1.5} strokeDasharray="3 2" />
+                <circle cx={cx} cy={cy} r={8} fill={p.color} fillOpacity={0.35} stroke={p.color} strokeWidth={2.5} />
+                <text x={cx + 15} y={cy - 18} fontSize={11} fontWeight={600} fill={p.color}>(0,1)→1</text>
+                <text x={cx + 15} y={cy - 5} fontSize={11} fontWeight={600} fill={p.color}>(1,0)→1</text>
+              </g>
+            );
+          }
+
+          const isRightEdge = i === points.length - 1;
           return (
             <g key={i}>
               <circle cx={cx} cy={cy} r={9} fill={p.color} fillOpacity={0.3} stroke={p.color} strokeWidth={2.5} />
-              <text x={cx + 13} y={cy - 7} fontSize={11} fontWeight={600} fill={p.color}>{p.label}</text>
+              <text
+                x={cx + (isRightEdge ? -13 : 13)}
+                y={cy - 7}
+                textAnchor={isRightEdge ? 'end' : 'start'}
+                fontSize={11}
+                fontWeight={600}
+                fill={p.color}
+              >
+                {p.label}
+              </text>
             </g>
           );
         })}

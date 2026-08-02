@@ -1,12 +1,12 @@
-export const INIT_CODE = `# 보안 파라미터 설정
-corruption_threshold = t  # 최대 악의적 참가자
+export const INIT_CODE = `# 이 분산 modulus 예제의 파라미터
+sharing_degree = t       # 복원에는 t+1개 share 필요
 key_length = 2048         # N의 비트 길이 (공개키)
 prime_threshold = ...     # 소수성 검사 상한
 stat_sec_shamir = 40     # 통계적 보안 (2^-40)
 
-# 두 가지 Shamir 스킴 초기화
-shamir_scheme_t  = Shamir(prime, n, t)    # t-out-of-n
-shamir_scheme_2t = Shamir(prime, n, 2*t)  # 2t-out-of-n (곱셈용)
+# 두 가지 다항식 차수
+shamir_degree_t  = Shamir(prime, n, degree=t)    # t+1개로 복원
+shamir_degree_2t = Shamir(prime, n, degree=2*t)  # 2t+1개로 복원
 
 # 참가자 인덱스 할당 (공정한 방식)
 async def get_indices(pool):
@@ -16,25 +16,24 @@ async def get_indices(pool):
     session_id = sum(random_nums.values()) % 1_000_000
     return sorted_indices, session_id`;
 
-export const PRIME_CODE = `// N = p × q를 분산 방식으로 생성
-// (단일 참가자가 p, q를 모두 알면 안 됨)
+export const PRIME_CODE = `// 개념 흐름: 실제 distributed RSA/Paillier keygen은 protocol spec을 따른다.
+// 단일 참가자가 p 또는 q 전체를 로컬에서 만들거나 시험하면 안 된다.
 
-async fn generate_safe_prime_shares():
-    // 1. 각 참가자 독립적으로 소수 후보 생성
-    let candidate = generate_prime_candidate(key_length / 2);
+async fn generate_distributed_modulus():
+    loop {
+        // 1. 각 party의 비밀 contribution으로 후보를 share 상태에서 구성
+        let p_shares = jointly_sample_candidate_shares();
+        let q_shares = jointly_sample_candidate_shares();
 
-    // 2. 작은 소수 테스트 (빠른 필터링)
-    if !passes_small_prime_test(candidate, prime_threshold) { retry }
+        // 2. Secure multiplication 뒤 공개해도 되는 N = p*q만 open
+        let N = open(secure_multiply(p_shares, q_shares));
 
-    // 3. Miller-Rabin 소수성 검사
-    if !miller_rabin(candidate, 40) { retry }
-
-    // 4. 분산 소수성 검증 (Jacobi 기호)
-    // 각 참가자가 부분 지수 연산 수행
-    let partial_exp = pow(generator, candidate_share, N_candidate);
-    broadcast(partial_exp);
-    // 모든 부분을 결합해 최종 소수성 판정
-    let is_prime = combine_jacobi_checks(all_partial_exps);`;
+        // 3. p, q를 열지 않는 distributed biprimality test
+        //    Jacobi-symbol round와 proof/complaint는 protocol-specific
+        if distributed_biprimality_test(N, p_shares, q_shares) {
+            return N;
+        }
+    }`;
 
 export const MODULUS_CODE = `// p와 q의 Shamir 공유를 곱해 N = p×q 계산
 async fn compute_modulus(p_shares, q_shares):
@@ -54,17 +53,22 @@ async fn compute_modulus(p_shares, q_shares):
 // 이 과정에서 어떤 참가자도 p나 q를 알 수 없음
 // N만 공개됨 → RSA 가정에 의해 p, q 인수분해 불가`;
 
-export const THRESHOLD_SIGN_CODE = `// DKG 이후: t+1명이 협력해야 서명 가능
+export const THRESHOLD_SIGN_CODE = `// 개념 흐름: 실제 round와 threshold 표기는 protocol마다 다름
 
-// 개인키 d를 Shamir로 분산: [d]ᵢ
-// 공개키 Q = d × G는 모두 알고 있음
+// 개인키 x는 share 상태로 유지: [x]ᵢ
+// 공개키 Q = x × G만 공개됨
 
-// 임계값 ECDSA 서명 (간략화)
+// 임계값 ECDSA 서명 (비실행 pseudocode)
 async fn threshold_sign(message: &[u8], shares: &[Share]) -> Signature {
-    // 1. 각 참가자: 랜덤 k₁ 선택, k = k₁ + k₂ + ... (MPC)
-    // 2. R = k × G, r = R.x mod n 계산 (공개)
-    // 3. 각 참가자: 부분 서명 sᵢ = k⁻¹(hash(m) + r × dᵢ) 계산
-    // 4. 라그랑주 계수로 결합: s = Σᵢ Lᵢ(0) × sᵢ
-    // 최종: 서명 (r, s)
-    combine_signature_shares(partial_sigs, threshold)
+    // 1. nonce share와 commitment를 만들고 transcript에 묶음
+    let nonce_state = distributed_presign(shares);
+
+    // 2. MtA/OT/ZK 등 protocol-specific MPC로
+    //    k⁻¹ · (H(message) + r · x)를 share 상태에서 계산
+    let signature_state = mpc_ecdsa(message, shares, nonce_state);
+
+    // 3. 허용된 출력만 결합하고 표준 ECDSA verifier로 확인
+    let signature = finalize(signature_state);
+    assert!(verify(Q, message, signature));
+    signature
 }`;

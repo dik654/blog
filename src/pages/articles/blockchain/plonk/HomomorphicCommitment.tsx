@@ -12,7 +12,7 @@ export default function HomomorphicCommitment() {
         <div className="not-prose my-4">
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">Pedersen Commitment</p>
-            <M display>{'C = v \\cdot G + r \\cdot H'}</M>
+            <M display>{'\\underbrace{C}_{\\text{커밋먼트}} = \\underbrace{v \\cdot G}_{\\text{값 바인딩}} + \\underbrace{r \\cdot H}_{\\text{블라인딩 (hiding)}}'}</M>
             <p className="text-sm text-muted-foreground mt-2"><M>{'G, H'}</M>: 독립 생성자 (이산로그 관계 미지)</p>
             <div className="grid grid-cols-2 gap-3 text-sm mt-2">
               <div className="bg-muted/50 rounded p-2 text-center">
@@ -36,7 +36,7 @@ export default function HomomorphicCommitment() {
             <M display>{'C_2 = v_2 \\cdot G + r_2 \\cdot H'}</M>
             <div className="mt-2 rounded border border-sky-500/30 p-3">
               <p className="text-sm text-sky-400 font-medium mb-1">커밋 덧셈 = 값의 덧셈</p>
-              <M display>{'C_1 + C_2 = (v_1 + v_2) \\cdot G + (r_1 + r_2) \\cdot H = \\text{Commit}(v_1 + v_2,\\; r_1 + r_2)'}</M>
+              <M display>{'C_1 + C_2 = \\underbrace{(v_1 + v_2) \\cdot G}_{\\text{값 합 바인딩}} + \\underbrace{(r_1 + r_2) \\cdot H}_{\\text{블라인딩 합}} = \\text{Commit}(v_1 + v_2,\\; r_1 + r_2)'}</M>
               <p className="text-sm text-muted-foreground mt-1">→ 암호화 상태에서 연산 가능!</p>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function HomomorphicCommitment() {
             </div>
             <div className="rounded-lg border border-sky-500/30 p-4">
               <p className="font-semibold text-sm text-sky-400 mb-2">Confidential Tx -- 잔액 검증</p>
-              <M display>{'\\text{Commit}(\\text{in}_1) + \\text{Commit}(\\text{in}_2) = \\text{Commit}(\\text{out}_1) + \\text{Commit}(\\text{out}_2) + \\text{Commit}(\\text{fee})'}</M>
+              <M display>{'\\underbrace{\\text{Commit}(\\text{in}_1) + \\text{Commit}(\\text{in}_2)}_{\\text{입력 잔액 합}} = \\underbrace{\\text{Commit}(\\text{out}_1) + \\text{Commit}(\\text{out}_2) + \\text{Commit}(\\text{fee})}_{\\text{출력 + 수수료 합}}'}</M>
               <p className="text-sm text-muted-foreground">→ 값을 노출하지 않고 합계 검증</p>
             </div>
           </div>

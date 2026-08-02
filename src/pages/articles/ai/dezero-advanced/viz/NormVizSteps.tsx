@@ -8,7 +8,7 @@ export function FeatureNormStep() {
   const vals = [3.2, 1.1, 4.7, 2.5, 0.8];
   const normed = [0.52, -0.95, 1.57, 0.03, -1.16];
   const mean = 2.46;
-  const cw = 62, startX = 35;
+  const cw = 45, startX = 15;
   return (
     <g>
       {/* title */}
@@ -23,33 +23,33 @@ export function FeatureNormStep() {
         return (
           <motion.g key={i} initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }} transition={{ ...sp, delay: i * 0.06 }}>
-            <rect x={x} y={55 - barH} width={42} height={barH}
+            <rect x={x} y={65 - barH} width={42} height={barH}
               rx={2} fill={`${CA}25`} stroke={CA} strokeWidth={0.8} />
-            <text x={x + 21} y={55 - barH - 4} textAnchor="middle"
+            <text x={x + 21} y={65 - barH + 11} textAnchor="middle"
               fontSize={8} fontWeight={600} fill={CA}>{v}</text>
           </motion.g>
         );
       })}
 
       {/* mean dashed line */}
-      <motion.line x1={startX} y1={55 - mean * 12}
-        x2={startX + 5 * cw - 18} y2={55 - mean * 12}
+      <motion.line x1={startX} y1={65 - mean * 12}
+        x2={startX + 5 * cw - 18} y2={65 - mean * 12}
         stroke={CV} strokeWidth={0.8} strokeDasharray="4 2"
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.35 }} />
-      <motion.text x={startX + 5 * cw - 12} y={55 - mean * 12 + 3}
-        fontSize={7} fill={CV}
+      <motion.text x={startX + 5 * cw - 25} y={65 - mean * 12 - 4}
+        textAnchor="end" fontSize={8} fontWeight={600} fill={CV}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
         mean=2.46
       </motion.text>
 
       {/* computation */}
-      <VizBox x={350} y={8} w={120} h={22}
+      <VizBox x={255} y={4} w={100} h={28}
         label="var = 2.034" sub="sum((x-mean)^2)/5" c={CV} delay={0.4} />
-      <VizBox x={350} y={36} w={120} h={22}
+      <VizBox x={255} y={38} w={100} h={28}
         label="std = 1.426" sub="sqrt(var + 1e-5)" c={CV} delay={0.48} />
 
       {/* arrow: transform */}
-      <motion.text x={200} y={72} textAnchor="middle" fontSize={8} fill={CV} fontWeight={600}
+      <motion.text x={135} y={78} textAnchor="middle" fontSize={9} fill={CV} fontWeight={600}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
         x_hat = (x - mean) / std
       </motion.text>
@@ -58,7 +58,7 @@ export function FeatureNormStep() {
       <text x={15} y={88} fontSize={8} fontWeight={600} fill={CE}>정규화 x_hat</text>
       {normed.map((v, i) => {
         const x = startX + i * cw;
-        const baseline = 128;
+        const baseline = 125;
         const barH = Math.abs(v) * 16;
         const top = v >= 0 ? baseline - barH : baseline;
         return (
@@ -75,10 +75,10 @@ export function FeatureNormStep() {
       })}
 
       {/* zero line */}
-      <motion.line x1={startX} y1={128} x2={startX + 5 * cw - 18} y2={128}
+      <motion.line x1={startX} y1={125} x2={startX + 5 * cw - 18} y2={125}
         stroke="var(--muted-foreground)" strokeWidth={0.5} strokeDasharray="2 2"
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.65 }} />
-      <text x={startX + 5 * cw - 12} y={131} fontSize={7} fill="var(--muted-foreground)">0</text>
+      <text x={startX + 5 * cw - 12} y={128} fontSize={7} fill="var(--muted-foreground)">0</text>
 
       <motion.text x={15} y={155} fontSize={7} fill="var(--muted-foreground)"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>

@@ -3,6 +3,7 @@ import GradientCompareViz from './viz/GradientCompareViz';
 import { compSteps } from './ResidualComputationData';
 import ResidualDetailViz from './viz/ResidualDetailViz';
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
 export default function ResidualComputation() {
   return (
@@ -34,20 +35,24 @@ export default function ResidualComputation() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">두 경로 기울기 & 학습 안정성</h3>
         <M display>{'\\underbrace{\\frac{\\partial L}{\\partial x_0}}_{\\text{첫 층 기울기}} = \\underbrace{\\frac{\\partial L}{\\partial x_L}}_{\\text{출력 기울기}} \\times \\prod_{l=0}^{L-1} \\left( \\underbrace{1}_{\\text{skip 경로}} + \\underbrace{\\frac{\\partial F_l}{\\partial x_l}}_{\\text{conv 경로}} \\right)'}</M>
-        <p className="text-sm text-muted-foreground mt-2">
-          ∂L/∂x<sub>0</sub> = 첫 번째 층까지 전달되는 기울기 (이 값이 0이면 학습 불가)<br />
-          ∂L/∂x<sub>L</sub> = 마지막 출력층의 기울기 (Loss에서 직접 계산)<br />
-          각 층마다 <strong>(1 + ∂F/∂x)</strong>를 곱함 — conv 기울기(∂F/∂x)가 0이 되어도 skip의 1이 남아 기울기 소실 방지
-        </p>
+        <FormulaNote
+          meaning="여러 residual block을 지나면 각 블록의 identity Jacobian과 residual Jacobian의 합이 연쇄적으로 곱해진다. residual Jacobian이 0 근처라면 항등 경로가 신호를 보존하기 쉬워지지만, 모든 블록에서 소실이나 폭발이 절대 일어나지 않는다는 보장은 아니다. 행렬 Jacobian에서는 곱의 순서도 중요하다."
+          symbols={[
+            ['\\frac{\\partial L}{\\partial x_L}', '마지막 블록 출력에서 시작하는 손실 기울기'],
+            ['I+\\frac{\\partial F_l}{\\partial x_l}', 'l번째 블록의 identity Jacobian과 residual Jacobian의 합'],
+            ['\\prod_{l=0}^{L-1}', '출력 쪽 블록부터 연쇄법칙 순서로 적용되는 Jacobian 곱'],
+            ['\\frac{\\partial L}{\\partial x_0}', '첫 블록 입력까지 전달된 최종 기울기'],
+          ]}
+        />
       </div>
       <div className="not-prose my-6">
         <ResidualDetailViz />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: Skip connection의 <strong>1+dF/dx</strong>가 기울기 최소 보장.<br />
+          요약 1: Skip connection의 <strong>I+dF/dx</strong>가 residual branch와 별개의 직접 경로를 제공.<br />
           요약 2: 34층 이상에서 <strong>Plain은 학습 실패, ResNet은 수렴</strong> — 실험적 검증.<br />
-          요약 3: ResNet은 <strong>암묵적 앙상블</strong> — 2^n개 경로의 동시 학습.
+          요약 3: ResNet은 여러 길이의 경로가 공존하는 <strong>경로 관점</strong>으로도 해석할 수 있지만, 독립 모델 2^n개를 그대로 학습하는 것은 아님.
         </p>
       </div>
     </section>

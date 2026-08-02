@@ -49,7 +49,7 @@ export default function CircuitCompilation() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="rounded border border-sky-500/30 p-3">
                 <p className="text-sm text-sky-400 font-medium mb-1">MPC로 &tau; 생성</p>
-                <M display>{'\\text{SRS} = \\{ [\\tau^0]_1, [\\tau^1]_1, \\ldots, [\\tau^d]_1, [\\tau]_2 \\}'}</M>
+                <M display>{'\\text{SRS} = \\{ \\underbrace{[\\tau^0]_1, [\\tau^1]_1, \\ldots, [\\tau^d]_1}_{G_1 \\text{ 원소 d+1개 (commit 용)}}, \\underbrace{[\\tau]_2}_{G_2 \\text{ (verify 용)}} \\}'}</M>
                 <p className="text-sm text-muted-foreground"><M>{'d \\ge \\text{max\\_gates} + 6'}</M> (블라인딩 여유)</p>
               </div>
               <div className="rounded border border-rose-500/30 p-3">

@@ -17,7 +17,7 @@ export default function Components() {
           회로(circuit)로부터 proving key <Math>{'\\mathsf{pk}'}</Math>와
           verification key <Math>{'\\mathsf{vk}'}</Math>를 생성한다
         </p>
-        <Math display>{'\\mathsf{Setup}(C) \\rightarrow (\\mathsf{pk}, \\mathsf{vk})'}</Math>
+        <Math display>{'\\mathsf{Setup}(\\underbrace{C}_{\\text{회로}}) \\rightarrow (\\underbrace{\\mathsf{pk}}_{\\text{증명 키}}, \\underbrace{\\mathsf{vk}}_{\\text{검증 키}})'}</Math>
         <div className="grid gap-3 sm:grid-cols-2 not-prose mt-4 mb-4">
           <div className="rounded-lg border p-4">
             <h4 className="font-medium text-sm mb-2 text-sky-400">Trusted Setup (Circuit-specific)</h4>
@@ -42,7 +42,7 @@ export default function Components() {
         <p>
           증명자가 proving key, 공개 입력, 비밀 witness를 입력으로 증명 <Math>{'\\pi'}</Math>를 생성한다
         </p>
-        <Math display>{'\\mathsf{Prove}(\\mathsf{pk}, x, w) \\rightarrow \\pi'}</Math>
+        <Math display>{'\\mathsf{Prove}(\\underbrace{\\mathsf{pk}}_{\\text{증명 키}}, \\underbrace{x}_{\\text{공개 입력}}, \\underbrace{w}_{\\text{비밀 증인}}) \\rightarrow \\underbrace{\\pi}_{\\text{증명}}'}</Math>
         <p>
           이 단계가 가장 계산 비용이 크다
           <br />
@@ -64,7 +64,7 @@ export default function Components() {
         <p>
           검증자가 verification key, 공개 입력, 증명만으로 수락/거부를 결정한다
         </p>
-        <Math display>{'\\mathsf{Verify}(\\mathsf{vk}, x, \\pi) \\rightarrow \\{0, 1\\}'}</Math>
+        <Math display>{'\\mathsf{Verify}(\\underbrace{\\mathsf{vk}}_{\\text{검증 키}}, \\underbrace{x}_{\\text{공개 입력}}, \\underbrace{\\pi}_{\\text{증명}}) \\rightarrow \\underbrace{\\{0, 1\\}}_{\\text{거부/수락}}'}</Math>
         <p>
           검증은 반드시 빨라야 한다 &mdash; 온체인에서 모든 노드가 실행하기 때문이다
         </p>

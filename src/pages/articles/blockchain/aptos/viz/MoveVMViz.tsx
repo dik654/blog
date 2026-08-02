@@ -35,7 +35,7 @@ export default function MoveVMViz({ onOpenCode }: { onOpenCode?: (key: string) =
             </motion.g>
             {step >= 1 && step < 3 && (
               <motion.g>
-                <motion.rect rx={6} width={50} height={22} fill="#10b98130" stroke="#10b981" strokeWidth={1.5}
+                <motion.rect initial={false} rx={6} width={50} height={22} fill="#10b98130" stroke="#10b981" strokeWidth={1.5}
                   animate={{ x: step === 2 ? [220, 310] : [220, 220], y: [70, 70] }}
                   transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }} />
                 <motion.text fontSize={9} fill="#10b981" fontWeight={600} textAnchor="middle"

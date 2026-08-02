@@ -64,7 +64,7 @@ export default function SelectionViz() {
                     transition={{ ...sp, delay: 0.2 + i * 0.1 }}>
                     <text x={barX - (item.val >= 0 ? 5 : -barW - 5)} y={60 + i * 30}
                       textAnchor={item.val >= 0 ? 'end' : 'start'} fontSize={9} fill="var(--foreground)">{item.feat}</text>
-                    <motion.rect x={barX} y={50 + i * 30} width={0} height={18} rx={3}
+                    <motion.rect initial={false} x={barX} y={50 + i * 30} width={0} height={18} rx={3}
                       fill={item.val >= 0 ? `${COLORS.shap}40` : `${COLORS.corr}40`}
                       stroke={item.val >= 0 ? COLORS.shap : COLORS.corr} strokeWidth={0.8}
                       animate={{ width: barW }} transition={{ ...sp, delay: 0.3 + i * 0.1 }} />

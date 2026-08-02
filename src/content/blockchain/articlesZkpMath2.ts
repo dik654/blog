@@ -30,10 +30,15 @@ export const zkpMath2Articles: Article[] = [
   },
   {
     slug: 'mpc',
-    title: 'MPC: Paillier 기반 분산 키 생성 프로토콜',
+    title: 'MPC 구현 심화: Shamir · Paillier · Threshold ECDSA',
     subcategory: 'mpc',
+    summary: '지갑 키 관리 경로에서 배운 경계를 실제 Shamir·Paillier·MtA·threshold ECDSA 코드에 대입합니다.',
+    level: '심화',
+    estimatedMinutes: 38,
+    prerequisites: ['wallet-key-management-map', 'threshold-wallet-signing', 'browser-wallet-recovery'],
+    learningPath: 'wallet-key-management-current-first',
     sections: [
-      { id: 'overview', title: '개요 & 보안 모델' },
+      { id: 'overview', title: '구현 범위 & 보안 모델' },
       { id: 'shamir', title: 'Shamir 비밀 분산' },
       { id: 'paillier', title: 'Paillier 동형 암호화' },
       { id: 'dkg', title: '분산 키 생성 (DKG)' },

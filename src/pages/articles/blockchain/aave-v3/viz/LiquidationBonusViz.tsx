@@ -12,18 +12,20 @@ export default function LiquidationBonusViz() {
 
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <div className="mb-2 flex items-center gap-3">
+      <div className="mb-2 flex flex-wrap items-center gap-3 sm:flex-nowrap">
         <label className="text-xs font-semibold text-muted-foreground min-w-[100px]">상환 부채</label>
         <input type="range" min={1000} max={30000} step={500} value={coveredDebt}
-          onChange={(e) => setCoveredDebt(+e.target.value)} className="flex-1 accent-red-500" />
+          onChange={(e) => setCoveredDebt(+e.target.value)}
+          className="order-last w-full accent-red-500 sm:order-none sm:w-auto sm:flex-1" />
         <span className="text-sm font-bold text-foreground min-w-[90px] text-right">
           ${coveredDebt.toLocaleString()}
         </span>
       </div>
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex flex-wrap items-center gap-3 sm:flex-nowrap">
         <label className="text-xs font-semibold text-muted-foreground min-w-[100px]">청산 Bonus</label>
         <input type="range" min={2} max={15} step={0.5} value={bonusPct}
-          onChange={(e) => setBonusPct(+e.target.value)} className="flex-1 accent-green-500" />
+          onChange={(e) => setBonusPct(+e.target.value)}
+          className="order-last w-full accent-green-500 sm:order-none sm:w-auto sm:flex-1" />
         <span className="text-sm font-bold text-foreground min-w-[50px] text-right">{bonusPct}%</span>
       </div>
 

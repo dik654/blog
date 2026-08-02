@@ -41,7 +41,7 @@ export default function LSTMCellFlowViz() {
             const open = step >= g.step, active = step === g.step;
             return (
               <g key={g.name}>
-                <motion.rect x={g.x - 12} width={24} rx={2} transition={sp}
+                <motion.rect initial={false} x={g.x - 12} width={24} rx={2} transition={sp}
                   animate={{ height: open ? 4 : 36, y: open ? 48 : 52, fill: active ? g.color : open ? `${g.color}88` : `${g.color}33` }} />
                 <text x={g.x} y={42} textAnchor="middle" fontSize={9} fontWeight={600}
                   style={{ fill: active ? g.color : 'var(--muted-foreground)' }}>{g.name}</text>
@@ -78,7 +78,7 @@ export default function LSTMCellFlowViz() {
             </motion.g>
           )}
           {/* Data packet on conveyor */}
-          <motion.circle r={6} fill="#8b5cf6" style={{ filter: 'drop-shadow(0 0 4px #8b5cf699)' }}
+          <motion.circle initial={false} r={6} fill="#8b5cf6" style={{ filter: 'drop-shadow(0 0 4px #8b5cf699)' }}
             animate={{ cx: [70, 140, 230, 290, 360][step], cy: 70 }} transition={sp} />
           <motion.text x={450} y={85} fontSize={9}
             fill="var(--muted-foreground)"

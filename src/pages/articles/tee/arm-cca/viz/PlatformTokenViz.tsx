@@ -13,7 +13,7 @@ const STEPS = [
   },
   {
     label: 'Step 3 — Platform claims 수집',
-    body: 'profile / impl_id / instance_id / lifecycle / sw_components 등 플랫폼 측 정적 정보.\nchallenge에는 RAK pub key hash → 두 토큰 결박.',
+    body: 'profile / impl_id / instance_id / lifecycle / sw_components 등 플랫폼 측 정적 정보.\nchallenge에는 RAK pub key hash → 두 토큰 결속.',
   },
   {
     label: 'Step 4 — IAK로 COSE_Sign1',

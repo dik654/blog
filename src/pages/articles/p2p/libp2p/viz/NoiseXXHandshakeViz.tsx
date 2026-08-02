@@ -22,7 +22,7 @@ const STEPS = [
   },
   {
     label: '3: → s, se → 세션 확립',
-    body: 'Initiator 가 동일한 DH(ee), DH(es) 를 거울 도출.\n자신의 정적 pub(is) 을 암호화 전송 + DH(se) → mix_key 로 양방향 세션키 확립.',
+    body: 'Initiator 가 동일한 DH(ee), DH(es) 를 대칭 도출.\n자신의 정적 pub(is) 을 암호화 전송 + DH(se) → mix_key 로 양방향 세션키 확립.',
   },
 ];
 

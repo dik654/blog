@@ -1,19 +1,20 @@
+import MathText from '@/components/ui/math-text';
 import { motion } from 'framer-motion';
-import EncoderDecoderViz from './viz/EncoderDecoderViz';
-import SummaryDetailViz from './viz/SummaryDetailViz';
+import EncoderDecoderScene from './viz/EncoderDecoderScene';
+import SummaryDetailScene from './viz/SummaryDetailScene';
 
 const points = [
-  'Self-Attention으로 시퀀스 내 모든 토큰 간 관계 계산',
-  'Multi-Head로 다양한 관점의 정보 포착',
-  'Positional Encoding으로 순서 정보 보존',
-  '병렬 처리 가능 → 학습 속도 대폭 향상',
+  '토큰을 행렬 X로 묶고 위치 P를 더한다',
+  'Q/K/V와 attention으로 위치 사이 정보를 직접 가져온다',
+  '여러 head가 다른 관계를 병렬로 학습한다',
+  'FFN, residual, LayerNorm이 깊은 stack을 안정화한다',
 ];
 
 export default function Summary() {
   return (
-    <section id="summary">
+    <MathText id="summary">
       <h2 className="text-2xl font-semibold mb-4 scroll-mt-20">전체 아키텍처 흐름</h2>
-      <EncoderDecoderViz />
+      <EncoderDecoderScene />
       <div className="rounded-lg border p-4 space-y-3">
         {points.map((text, i) => (
           <motion.div
@@ -35,14 +36,14 @@ export default function Summary() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Transformer 시대의 핵심 모델들</h3>
       </div>
-      <SummaryDetailViz />
+      <SummaryDetailScene />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
-          요약 1: Transformer는 <strong>Encoder/Decoder/Hybrid</strong>로 분화해 각 분야 지배.<br />
-          요약 2: <strong>Scaling + 아키텍처 혁신</strong>이 7년간 지속적 성능 개선.<br />
-          요약 3: 2024년 현재 <strong>긴 문맥·효율 추론·멀티모달</strong>이 주요 연구 방향.
+          요약 1: encoder-only는 양방향 이해, decoder-only는 causal 생성, encoder-decoder는 source-target 변환에 맞다.<br />
+          요약 2: 같은 primitive라도 mask와 cross-attention 유무가 모델 계열을 나눈다.<br />
+          요약 3: 긴 문맥, 효율 추론, 멀티모달은 이 기본 조각의 확장 문제다.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

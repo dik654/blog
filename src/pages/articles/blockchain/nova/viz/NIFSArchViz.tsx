@@ -82,7 +82,7 @@ export default function NIFSArchViz() {
 
               <text x={250} y={195} textAnchor="middle" fontSize={9}
                 fill="var(--muted-foreground)">
-                T 가 없으면 fold 후 등식이 깨진다 — Relaxed 의 E 가 흡수
+                T 가 없으면 fold 후 등식이 깨진다 — Relaxed 의 E 가 흡수한다
               </text>
             </motion.g>
           )}

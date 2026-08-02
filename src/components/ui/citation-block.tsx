@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, Code2, FileText } from 'lucide-react';
 
 interface CitationBlockProps {
   source: string;
@@ -20,14 +21,14 @@ export function CitationBlock({ source, citeKey, type = 'paper', children, href 
     ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
     : 'bg-blue-500/15 text-blue-400 border-blue-500/30';
 
-  const icon = type === 'code' ? '</>' : '\u{1F4C4}';
+  const SourceIcon = type === 'code' ? Code2 : FileText;
 
   return (
     <div className="not-prose my-3">
       <button
         onClick={() => setOpen(o => !o)}
         className={`
-          inline-flex items-center gap-2 px-3 py-1.5
+          inline-flex min-h-11 max-w-full items-center gap-2 px-3 py-2
           rounded-lg border text-xs font-medium
           cursor-pointer select-none transition-all duration-200
           ${open ? accent + ' border-opacity-100' : 'border-border hover:bg-accent'}
@@ -35,15 +36,15 @@ export function CitationBlock({ source, citeKey, type = 'paper', children, href 
       >
         <span className={`
           inline-flex items-center justify-center
-          w-5 h-5 rounded-full text-[10px] font-bold border
+          w-6 h-6 rounded-full text-xs font-bold border
           ${badgeColor}
         `}>
           {citeKey}
         </span>
-        <span className="text-muted-foreground">{icon}</span>
-        <span className={open ? 'text-foreground' : 'text-muted-foreground'}>{source}</span>
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-muted-foreground">
-          ▾
+        <SourceIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        <span className={`min-w-0 break-words text-left ${open ? 'text-foreground' : 'text-muted-foreground'}`}>{source}</span>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="shrink-0 text-muted-foreground">
+          <ChevronDown className="size-4" aria-hidden="true" />
         </motion.span>
       </button>
 

@@ -37,7 +37,7 @@ export default function ZKHashViz() {
                 {/* R1CS 제약 수 바 */}
                 <rect x={220} y={y + 8} width={170} height={14} rx={3}
                   fill={`${h.color}06`} stroke={h.color} strokeWidth={0.5} />
-                <motion.rect x={222} y={y + 10} height={10} rx={2}
+                <motion.rect initial={false} x={222} y={y + 10} height={10} rx={2}
                   fill={`${h.color}30`}
                   animate={{ width: active || step === 0 ? h.bar * 1.6 : 40 }}
                   transition={{ type: 'spring', bounce: 0.1 }} />

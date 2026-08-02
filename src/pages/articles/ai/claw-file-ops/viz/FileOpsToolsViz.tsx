@@ -1,60 +1,50 @@
+import { FilePenLine, FileSearch, FileText, FolderSearch, ShieldCheck } from 'lucide-react';
+
+const TOOLS = [
+  { name: 'read_file', role: '줄 창을 읽는다', boundary: 'ReadOnly', icon: FileText },
+  { name: 'glob_search', role: '경로 후보를 좁힌다', boundary: 'ReadOnly', icon: FolderSearch },
+  { name: 'grep_search', role: '내용 후보를 좁힌다', boundary: 'ReadOnly', icon: FileSearch },
+  { name: 'edit_file', role: '일치한 문자열을 바꾼다', boundary: 'WorkspaceWrite', icon: FilePenLine },
+  { name: 'write_file', role: '파일 전체를 교체한다', boundary: 'WorkspaceWrite', icon: ShieldCheck },
+];
+
 export default function FileOpsToolsViz() {
-  const tools = [
-    { name: 'read_file', perm: 'ReadOnly', color: '#10b981' },
-    { name: 'write_file', perm: 'WorkspaceWrite', color: '#3b82f6' },
-    { name: 'edit_file', perm: 'WorkspaceWrite', color: '#3b82f6' },
-    { name: 'glob_search', perm: 'ReadOnly', color: '#10b981' },
-    { name: 'grep_search', perm: 'ReadOnly', color: '#10b981' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">파일 I/O 5개 도구 + 4단계 방어</text>
-
-        {/* 도구들 */}
-        {tools.map((t, i) => {
-          const x = 30 + i * 104;
+    <figure
+      aria-label="파일 도구를 관찰에서 변경 순서로 배치한 그림"
+      className="not-prose my-7 overflow-hidden rounded-md border border-border bg-background"
+    >
+      <figcaption className="border-b border-border px-4 py-3">
+        <p className="text-sm font-semibold">side effect가 커지는 순서</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          검색은 후보를 줄이고, 읽기는 내용을 관찰하며, edit와 write만 workspace를 변경한다.
+        </p>
+      </figcaption>
+      <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-3 lg:grid-cols-5">
+        {TOOLS.map((tool) => {
+          const Icon = tool.icon;
+          const isWrite = tool.boundary === 'WorkspaceWrite';
           return (
-            <g key={t.name}>
-              <rect x={x} y={54} width={94} height={58} rx={6}
-                fill={t.color} fillOpacity={0.1} stroke={t.color} strokeWidth={0.8} />
-              <text x={x + 47} y={74} textAnchor="middle" fontSize={10} fontWeight={700}
-                fill={t.color}>{t.name}</text>
-              <line x1={x + 10} y1={82} x2={x + 84} y2={82}
-                stroke={t.color} strokeWidth={0.3} opacity={0.4} />
-              <text x={x + 47} y={98} textAnchor="middle" fontSize={8.5}
-                fill="var(--muted-foreground)">{t.perm}</text>
-            </g>
+            <div
+              key={tool.name}
+              className="min-w-0 bg-background p-4 last:col-span-2 sm:last:col-span-1"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <Icon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                <span className={`h-2 w-2 rounded-full ${isWrite ? 'bg-amber-500' : 'bg-emerald-500'}`} aria-hidden="true" />
+              </div>
+              <code className="mt-4 block break-all text-[13px] font-semibold">{tool.name}</code>
+              <p className="mt-2 min-h-10 text-xs leading-relaxed text-muted-foreground">{tool.role}</p>
+              <p className="mt-3 text-xs font-medium">{tool.boundary}</p>
+            </div>
           );
         })}
-
-        {/* 방어 레이어 */}
-        <text x={280} y={142} textAnchor="middle" fontSize={12} fontWeight={700}
-          fill="var(--foreground)">4단계 방어 레이어 (순차 검증)</text>
-
-        {[
-          { label: '1. 권한 모드 체크', sub: 'ReadOnly: write 거부', color: '#3b82f6' },
-          { label: '2. 워크스페이스 경계', sub: 'path.starts_with(root)', color: '#8b5cf6' },
-          { label: '3. 블랙리스트', sub: '.env, .git/, *.pem', color: '#f59e0b' },
-          { label: '4. 심링크 이스케이프', sub: 'canonicalize() 재검증', color: '#ef4444' },
-        ].map((layer, i) => (
-          <g key={i}>
-            <rect x={30} y={160 + i * 28} width={500} height={24} rx={3}
-              fill={layer.color} fillOpacity={0.1} stroke={layer.color} strokeWidth={0.5} />
-            <rect x={30} y={160 + i * 28} width={3} height={24} fill={layer.color} rx={1} />
-            <text x={48} y={176 + i * 28} fontSize={10} fontWeight={700} fill={layer.color}>
-              {layer.label}
-            </text>
-            <text x={515} y={176 + i * 28} textAnchor="end" fontSize={9} fontFamily="monospace"
-              fill="var(--muted-foreground)">{layer.sub}</text>
-          </g>
-        ))}
-
-        <text x={280} y={288} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">각 단계 실패 시 즉시 종료 — defense in depth</text>
-      </svg>
-    </div>
+      </div>
+      <div className="grid gap-3 border-t border-border bg-muted/15 px-4 py-3 text-xs leading-relaxed text-muted-foreground sm:grid-cols-3">
+        <p><strong className="text-foreground">정책</strong><br />이 action을 요청해도 되는가</p>
+        <p><strong className="text-foreground">경로</strong><br />대상이 workspace 안인가</p>
+        <p><strong className="text-foreground">변경</strong><br />실패·경합 때 파일이 온전한가</p>
+      </div>
+    </figure>
   );
 }

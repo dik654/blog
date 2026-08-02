@@ -50,7 +50,7 @@ export default function StreamMuxer({ onCodeRef }: {
             </p>
             <p className="text-xs text-foreground/70 mb-3">{step.detail}</p>
 
-            <div className="flex items-center gap-1.5 mb-3">
+            <div className="mb-3 flex flex-wrap items-center gap-1.5">
               {step.flow.map((f, i) => (
                 <motion.div key={f}
                   initial={{ opacity: 0, scale: 0.9 }}

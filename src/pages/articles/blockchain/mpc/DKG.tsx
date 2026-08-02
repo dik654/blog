@@ -14,9 +14,9 @@ export default function DKG({ title, onCodeRef }: { title?: string; onCodeRef?: 
       <div className="not-prose mb-8"><DKGProtocolViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          DKG(Distributed Key Generation, 분산 키 생성)는 신뢰할 수 있는 딜러(trusted dealer) 없이 여러 참가자가 협력해 Paillier 키 쌍을 생성하는 프로토콜입니다.
+          DKG(Distributed Key Generation, 분산 키 생성)는 신뢰할 수 있는 딜러(trusted dealer) 없이 여러 참가자가 협력해 공동 public key와 각자의 key share를 생성하는 protocol family입니다.
           <br />
-          어떤 t개의 참가자가 협력해도 비밀키를 복원할 수 없습니다.
+          아래 분산 소수 생성과 Paillier modulus는 특정 threshold ECDSA 구현에서 쓰는 보조 키 생성 경로입니다. 공동 ECDSA key의 DKG와 Paillier 보조 키 생성은 같은 단계가 아닙니다.
         </p>
 
         <h3>프로토콜 초기화</h3>
@@ -30,14 +30,14 @@ export default function DKG({ title, onCodeRef }: { title?: string; onCodeRef?: 
           ]}
         />
 
-        <h3>소수 생성 단계</h3>
+        <h3>보조 Paillier modulus의 분산 생성</h3>
         <CodePanel
-          title="분산 소수 생성"
+          title="분산 modulus 생성 · 개념 흐름"
           code={PRIME_CODE}
           annotations={[
-            { lines: [4, 5], color: 'sky', note: '독립적 소수 후보 생성' },
-            { lines: [7, 11], color: 'emerald', note: '소수성 필터링 (빠른 테스트 + Miller-Rabin)' },
-            { lines: [13, 17], color: 'amber', note: '분산 Jacobi 기호 검증' },
+            { lines: [5, 9], color: 'sky', note: '비밀 contribution으로 후보 share 구성' },
+            { lines: [11, 12], color: 'emerald', note: 'p와 q가 아닌 N만 공개' },
+            { lines: [14, 17], color: 'amber', note: 'Protocol-specific biprimality test' },
           ]}
         />
 
@@ -63,7 +63,7 @@ export default function DKG({ title, onCodeRef }: { title?: string; onCodeRef?: 
           </div>
         )}
 
-        <h3>임계값 서명 (Threshold ECDSA)</h3>
+        <h3>임계값 서명 (Threshold ECDSA · 개념 흐름)</h3>
         <CodePanel
           title="Threshold ECDSA 서명"
           code={THRESHOLD_SIGN_CODE}

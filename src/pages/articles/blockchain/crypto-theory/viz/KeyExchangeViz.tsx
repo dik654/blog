@@ -14,7 +14,7 @@ export default function KeyExchangeViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 150" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Alice */}
           <rect x={30} y={25} width={70} height={30} rx={5} fill={`${C1}10`} stroke={C1} strokeWidth={1} />
           <text x={65} y={44} textAnchor="middle" fontSize={10} fontWeight={500} fill={C1}>Alice</text>
@@ -29,7 +29,7 @@ export default function KeyExchangeViz() {
               {/* Arrow Alice → Bob */}
               <motion.line x1={100} y1={35} x2={320} y2={35} stroke={C1} strokeWidth={0.7}
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
-              <rect x={170} y={26} width={50} height={13} rx={2} fill="none" stroke={C1} strokeWidth={0.5} />
+              <rect x={170} y={26} width={50} height={13} rx={2} fill="var(--card)" stroke={C1} strokeWidth={0.5} />
               <text x={195} y={36} textAnchor="middle" fontSize={10} fill={C1}>[a]G</text>
             </motion.g>
           )}
@@ -41,7 +41,7 @@ export default function KeyExchangeViz() {
               {/* Arrow Bob → Alice */}
               <motion.line x1={320} y1={50} x2={100} y2={50} stroke={C2} strokeWidth={0.7}
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
-              <rect x={170} y={44} width={50} height={13} rx={2} fill="none" stroke={C2} strokeWidth={0.5} />
+              <rect x={170} y={44} width={50} height={13} rx={2} fill="var(--card)" stroke={C2} strokeWidth={0.5} />
               <text x={195} y={54} textAnchor="middle" fontSize={10} fill={C2}>[b]G</text>
             </motion.g>
           )}
@@ -49,11 +49,11 @@ export default function KeyExchangeViz() {
           {step >= 3 && (
             <motion.g initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', bounce: 0.2 }}>
-              <rect x={130} y={90} width={160} height={28} rx={5} fill={`${C3}10`} stroke={C3} strokeWidth={1} />
-              <text x={210} y={105} textAnchor="middle" fontSize={10} fontWeight={500} fill={C3}>
+              <rect x={130} y={90} width={160} height={42} rx={5} fill={`${C3}10`} stroke={C3} strokeWidth={1} />
+              <text x={210} y={106} textAnchor="middle" fontSize={10} fontWeight={500} fill={C3}>
                 K = [ab]G
               </text>
-              <text x={210} y={115} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
+              <text x={210} y={122} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
                 도청자: [a]G, [b]G만 보임 — ECDLP
               </text>
             </motion.g>

@@ -73,7 +73,7 @@ export default function NodeRolesViz() {
           ))}
 
           {/* Highlight ring on active column */}
-          <motion.rect
+          <motion.rect initial={false}
             animate={{ x: ROLES[step].x - 5, opacity: 1 }}
             transition={{ duration: 0.4, type: 'spring', bounce: 0.2 }}
             y={15} width={100} height={210} rx={8}

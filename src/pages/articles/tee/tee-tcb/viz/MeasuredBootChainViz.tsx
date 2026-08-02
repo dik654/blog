@@ -14,11 +14,11 @@ const C = {
 const STEPS = [
   {
     label: 'Stage 0~1: Root of Trust → BIOS/UEFI',
-    body: 'CPU 내부 Boot ROM(변경 불가)이 시작점. ROM이 BIOS/UEFI를 측정해 PCR[0]에 기록. Secure Boot 정책도 함께 로드합니다.',
+    body: 'CPU 내부 Boot ROM(변경 불가)이 시작점. ROM이 BIOS/UEFI를 측정해 PCR[0]에 기록. Secure Boot 정책도 함께 로드.',
   },
   {
     label: 'Stage 2~4: Bootloader → Kernel → User',
-    body: 'GRUB(PCR[4])이 kernel·initrd 측정(PCR[8-9]). Linux IMA가 사용자 영역 바이너리를 PCR[10]에 누적합니다.',
+    body: 'GRUB(PCR[4])이 kernel·initrd 측정(PCR[8-9]). Linux IMA가 사용자 영역 바이너리를 PCR[10]에 누적.',
   },
   {
     label: 'PCR Extend & Event Log',

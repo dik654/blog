@@ -50,7 +50,7 @@ export default function CosmosStackViz() {
           })}
           {/* Animated packet flowing down */}
           {step >= 1 && step <= 4 && (
-            <motion.circle r={5} fill={LAYERS[step - 1].color}
+            <motion.circle initial={false} r={5} fill={LAYERS[step - 1].color}
               animate={{
                 cx: [LX + W / 2, LX + W / 2],
                 cy: [LAYERS[step - 1].y + LH, LAYERS[Math.min(step, 4)].y],

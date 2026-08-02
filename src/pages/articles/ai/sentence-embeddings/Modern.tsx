@@ -1,4 +1,5 @@
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 import ModernModelsViz from './viz/ModernModelsViz';
 
 export default function Modern() {
@@ -53,6 +54,15 @@ export default function Modern() {
           같은 문장이라도 "query:" 접두사 → 검색 최적화 벡터, "classify:" 접두사 → 분류 최적화 벡터
         </p>
         <M display>{'\\text{embed}(\\text{"query: 파이썬"}) \\neq \\text{embed}(\\text{"classify: 파이썬"})'}</M>
+        <FormulaNote
+          meaning="접두사도 tokenizer를 거쳐 입력 토큰이 되므로 같은 본문이라도 encoder의 attention과 최종 벡터가 달라진다. 다만 임의의 접두사를 붙인다고 자동으로 태스크가 분리되는 것은 아니며, 모델이 그 instruction 형식으로 학습되었을 때만 의도한 효과를 기대할 수 있다."
+          symbols={[
+            ['\\mathrm{embed}(\\cdot)', '문자열 전체를 고정 차원 벡터로 바꾸는 instruction-tuned encoder'],
+            ['\\text{query:}', '검색 질문 역할을 알리는 학습된 입력 접두사'],
+            ['\\text{classify:}', '분류 입력 역할을 알리는 예시 접두사'],
+            ['\\neq', '동일 본문이라도 instruction이 다르면 일반적으로 벡터가 달라짐'],
+          ]}
+        />
         <p className="text-sm text-muted-foreground mt-1">
           접두사가 모델의 attention 패턴을 변경 — 검색 시에는 키워드에, 분류 시에는 주제에 집중
         </p>

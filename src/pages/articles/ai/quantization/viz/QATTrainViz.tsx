@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
-import { ModuleBox, ActionBox, DataBox, AlertBox } from '@/components/viz/boxes';
+import { ModuleBox, ActionBox, DataBox } from '@/components/viz/boxes';
 
 const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.4 };
 
@@ -46,9 +46,6 @@ export default function QATTrainViz() {
                 <text x={392} y={48} fontSize={10} fill="var(--muted-foreground)">→</text>
                 <DataBox x={402} y={30} w={60} h={30} label="Loss" color="#ef4444" />
               </motion.g>
-
-              {/* Forward label */}
-              <text x={240} y={22} textAnchor="middle" fontSize={8} fill="#10b981">Forward →</text>
 
               {/* Backward path */}
               <motion.g initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ ...sp, delay: 0.3 }}>

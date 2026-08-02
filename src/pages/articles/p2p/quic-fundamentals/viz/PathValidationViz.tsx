@@ -61,7 +61,7 @@ export default function PathValidationViz() {
 
             {step === 0 && (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-                <motion.circle cx={120} cy={99} r={4} fill={C.client}
+                <motion.circle initial={false} cx={120} cy={99} r={4} fill={C.client}
                   animate={{ cx: [120, 360] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }} />
                 <text x={240} y={88} textAnchor="middle" fontSize={9} fill={C.client} fontWeight={600}>
@@ -133,7 +133,7 @@ export default function PathValidationViz() {
             {step === 4 && (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
                 <line x1={120} y1={99} x2={360} y2={99} stroke={C.server} strokeWidth={1.6} />
-                <motion.circle r={4} fill={C.server}
+                <motion.circle initial={false} r={4} fill={C.server}
                   animate={{ cx: [120, 360], opacity: [1, 1, 1] }}
                   transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
                   cy={99} />

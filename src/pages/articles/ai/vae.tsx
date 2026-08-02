@@ -1,25 +1,19 @@
-import Overview from './vae/Overview';
-import AEvsVAE from './vae/AEvsVAE';
-import EncoderComputation from './vae/EncoderComputation';
-import ReparamTrick from './vae/ReparamTrick';
-import DecoderComputation from './vae/DecoderComputation';
-import VAELoss from './vae/VAELoss';
-import LatentSpace from './vae/LatentSpace';
-import Training from './vae/Training';
-import Applications from './vae/Applications';
+import FromAutoencoder from './vae/FromAutoencoder';
+import PosteriorExplorer from './vae/PosteriorExplorer';
+import ReparameterizationPath from './vae/ReparameterizationPath';
+import ElboObjective from './vae/ElboObjective';
+import TrainingAndGeneration from './vae/TrainingAndGeneration';
+import LimitsAndHandoff from './vae/LimitsAndHandoff';
 
 export default function VAEArticle() {
   return (
-    <div className="space-y-12">
-      <Overview />
-      <AEvsVAE />
-      <EncoderComputation />
-      <ReparamTrick />
-      <DecoderComputation />
-      <VAELoss />
-      <LatentSpace />
-      <Training />
-      <Applications />
-    </div>
+    <>
+      <FromAutoencoder />
+      <PosteriorExplorer />
+      <ReparameterizationPath />
+      <ElboObjective />
+      <TrainingAndGeneration />
+      <LimitsAndHandoff />
+    </>
   );
 }

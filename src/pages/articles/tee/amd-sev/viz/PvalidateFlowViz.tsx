@@ -30,7 +30,7 @@ export default function PvalidateFlowViz() {
           <motion.g animate={{ opacity: step >= 0 ? 1 : 0.2 }}>
             <motion.line x1={140} y1={48} x2={340} y2={48} stroke={C.host} strokeWidth={1.2}
               strokeDasharray="3 2" markerEnd="url(#pv1)" />
-            <text x={240} y={42} textAnchor="middle" fontSize={8} fill={C.host}>RMP 엔트리 등록</text>
+            <text x={240} y={16} textAnchor="middle" fontSize={8} fill={C.host}>RMP 엔트리 등록</text>
           </motion.g>
 
           {/* Step 1: Guest runs PVALIDATE */}

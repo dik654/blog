@@ -13,8 +13,8 @@ function Axes() {
     <g>
       <line x1={40} y1={145} x2={445} y2={145} stroke="var(--border)" strokeWidth={1} />
       <line x1={40} y1={20} x2={40} y2={145} stroke="var(--border)" strokeWidth={1} />
-      <text x={445} y={160} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">epoch</text>
-      <text x={34} y={22} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">η</text>
+      <text x={472} y={160} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">epoch</text>
+      <text x={13} y={82} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)" transform="rotate(-90 13 82)">LR η</text>
       {[0, 25, 50, 75, 100].map(t => (
         <text key={t} x={px(t)} y={158} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">{t}</text>
       ))}
@@ -52,9 +52,9 @@ export function CosineStep0() {
 
       {/* phase annotations */}
       <motion.g {...slideR(0.2)}>
-        <rect x={px(5)} y={py(cosine[5]) - 16} width={56} height={12} rx={3}
+        <rect x={px(5)} y={py(cosine[5]) + 8} width={56} height={12} rx={3}
           fill="var(--card)" stroke={C.cosine} strokeWidth={0.8} />
-        <text x={px(5) + 28} y={py(cosine[5]) - 7} textAnchor="middle"
+        <text x={px(5) + 28} y={py(cosine[5]) + 17} textAnchor="middle"
           fontSize={7} fontWeight={600} fill={C.cosine}>천천히 감소</text>
       </motion.g>
 

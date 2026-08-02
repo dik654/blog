@@ -39,102 +39,63 @@ export default function DDR() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">DDR4 vs DDR5 기술 차이</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DDR5 핵심 개선사항:
+        <h3 className="text-xl font-semibold mt-8 mb-3">Sub-channel Architecture</h3>
+        <p className="leading-7">
+          DDR4 는 DIMM 당 64-bit 단일 채널. DDR5 는 DIMM 당 32-bit 서브채널 2 개로 분할 — 독립 addressing, command/address bus 2배, 병렬성 향상으로 실효 대역폭 약 2배.
+        </p>
 
-// 1. Sub-channel Architecture:
-// DDR4: single 64-bit channel per DIMM
-// DDR5: two 32-bit sub-channels per DIMM
-// - independent addressing
-// - 2x command/address bus
-// - better parallelism
-// - effective bandwidth ~2x
+        <h3 className="text-xl font-semibold mt-8 mb-3">On-die ECC</h3>
+        <p className="leading-7">
+          DDR5 DIMM 내부에 통합된 ECC. DRAM cell 에러를 CPU 에 투명하게 보정. SECDED 대체는 아니지만 soft error rate 를 낮춘다.
+        </p>
 
-// 2. On-die ECC:
-// - integrated in DDR5 DIMM
-// - protects DRAM cell errors
-// - transparent to CPU
-// - not replacement for SECDED
-// - reduces soft error rate
+        <h3 className="text-xl font-semibold mt-8 mb-3">전력 관리</h3>
+        <ul className="leading-7">
+          <li>DDR4 — PMIC 가 메인보드에 외부 배치.</li>
+          <li>DDR5 — PMIC 가 DIMM 위로 이동. per-DIMM tuning, 1.1V (vs 1.2V), 더 높은 클럭 가능.</li>
+        </ul>
 
-// 3. Power Management:
-// DDR4: external PMIC on motherboard
-// DDR5: PMIC on DIMM
-// - better voltage regulation
-// - per-DIMM tuning
-// - lower power (1.1V vs 1.2V)
-// - higher speeds possible
+        <h3 className="text-xl font-semibold mt-8 mb-3">속도</h3>
+        <ul className="leading-7">
+          <li>DDR4 — 2133~3200 MT/s 표준, OC 시 5000 MT/s</li>
+          <li>DDR5 — 4800~5600 MT/s 런칭, OC 8000+ MT/s</li>
+        </ul>
 
-// 4. Higher Speeds:
-// DDR4: 2133-3200 MT/s (standard)
-// DDR4 OC: up to 5000 MT/s
-// DDR5: 4800-5600 MT/s (launch)
-// DDR5: 8000+ MT/s (overclocked)
-// - near-doubling
+        <h3 className="text-xl font-semibold mt-8 mb-3">Bank Groups</h3>
+        <p className="leading-7">
+          DDR4 는 4 bank group (총 16 bank), DDR5 는 8 bank group (총 32 bank). 병렬 접근 향상 → random I/O 효율 + row conflict 감소.
+        </p>
 
-// 5. Bank Groups:
-// DDR4: 4 bank groups (4 banks each = 16)
-// DDR5: 8 bank groups (4 banks each = 32)
-// - more parallel access
-// - better random I/O
-// - reduced row conflicts
+        <h3 className="text-xl font-semibold mt-8 mb-3">밀도</h3>
+        <p className="leading-7">
+          DDR4 는 chip 당 16 Gb 가 최대, DDR5 는 64 Gb 까지 — 4배. 더 큰 DIMM 구성 가능.
+        </p>
 
-// 6. Capacity:
-// DDR4: 16 Gb max density
-// DDR5: 64 Gb max density
-// - 4x per chip
-// - larger DIMMs possible
+        <h3 className="text-xl font-semibold mt-8 mb-3">대역폭 비교</h3>
+        <ul className="leading-7">
+          <li><strong>DDR4-3200</strong> — DIMM 25.6 GB/s · dual 51.2 GB/s · 8-channel 서버 205 GB/s</li>
+          <li><strong>DDR5-4800</strong> — DIMM 38.4 GB/s · dual 76.8 GB/s · 8-channel 서버 307 GB/s</li>
+          <li><strong>DDR5-5600</strong> — DIMM 44.8 GB/s · dual 89.6 GB/s · 8-channel 서버 358 GB/s</li>
+        </ul>
 
-// Bandwidth comparison:
+        <h3 className="text-xl font-semibold mt-8 mb-3">레이턴시</h3>
+        <p className="leading-7">
+          DDR4 CL16 = 10 ns, DDR5 CL40 = 14 ns. nominal CL 은 DDR5 가 높지만 데이터 레이트가 빨라 실제 레이턴시는 비슷.
+        </p>
 
-// DDR4-3200:
-// - per DIMM: 25.6 GB/s
-// - dual-channel: 51.2 GB/s
-// - 8-channel server: 205 GB/s
+        <h3 className="text-xl font-semibold mt-8 mb-3">워크로드 영향</h3>
+        <ul className="leading-7">
+          <li><strong>Memory-bound</strong> — DDR5 압도적 (MSM, 대형 그래프, DB scan).</li>
+          <li><strong>Latency-sensitive</strong> — 한계 이득. CPU cache 영향이 더 크다. DDR4 도 경쟁력.</li>
+          <li><strong>가격</strong> — DDR4 $3~5/GB, DDR5 $4~8/GB (2024) — 수렴 중.</li>
+        </ul>
 
-// DDR5-4800:
-// - per DIMM: 38.4 GB/s
-// - dual-channel: 76.8 GB/s
-// - 8-channel server: 307 GB/s
-
-// DDR5-5600:
-// - per DIMM: 44.8 GB/s
-// - dual-channel: 89.6 GB/s
-// - 8-channel server: 358 GB/s
-
-// Latency:
-// DDR4 CL16: 10 ns
-// DDR5 CL40: 14 ns
-// - DDR5 higher nominal CL
-// - but faster data rate
-// - similar actual latency
-
-// Workload implications:
-//
-// Memory-bound:
-// - DDR5 significantly faster
-// - MSM computations
-// - large graph algorithms
-// - database scans
-//
-// Latency-sensitive:
-// - marginal gains
-// - CPU caches matter more
-// - DDR4 still competitive
-//
-// Cost:
-// - DDR4: $3-5/GB (2024)
-// - DDR5: $4-8/GB (2024)
-// - converging
-
-// Compatibility:
-// - different slots (not interchangeable)
-// - requires DDR5-compatible motherboard
-// - Intel 12th gen+ (2021)
-// - AMD Ryzen 7000+ (2022)
-// - servers: Sapphire Rapids, Genoa+`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">호환성</h3>
+        <ul className="leading-7">
+          <li>슬롯 다름 — 호환 불가.</li>
+          <li>Intel 12th gen+ (2021), AMD Ryzen 7000+ (2022).</li>
+          <li>서버 — Sapphire Rapids, Genoa 이상.</li>
+        </ul>
         <p className="leading-7">
           DDR5: <strong>sub-channels + on-die ECC + higher speeds</strong>.<br />
           8-channel server: DDR4 205 GB/s → DDR5 358 GB/s.<br />

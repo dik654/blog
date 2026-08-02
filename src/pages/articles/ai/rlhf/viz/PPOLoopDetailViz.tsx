@@ -194,7 +194,7 @@ export default function PPOLoopDetailViz() {
                     fontSize={8.5} fontWeight={500} fill="var(--foreground)">{item.label}</text>
                   <rect x={100} y={9 + i * 17} width={240} height={12} rx={3}
                     fill="var(--border)" opacity={0.15} />
-                  <motion.rect x={100} y={9 + i * 17} width={0} height={12} rx={3}
+                  <motion.rect initial={false} x={100} y={9 + i * 17} width={0} height={12} rx={3}
                     fill={item.color} opacity={0.6}
                     animate={{ width: 240 * item.ratio }}
                     transition={{ ...sp, delay: i * 0.05 + 0.1 }} />

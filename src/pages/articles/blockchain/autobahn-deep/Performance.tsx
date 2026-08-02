@@ -17,7 +17,7 @@ function PerfViz() {
           <motion.g key={b.label} initial={{ opacity: 0 }}
             animate={{ opacity: 1 }} transition={{ delay: i * 0.15 }}>
             <text x={15} y={38 + i * 32} fontSize={10} fontWeight={600} fill={b.color}>{b.label}</text>
-            <motion.rect x={100} y={25 + i * 32} width={0} height={18} rx={4}
+            <motion.rect initial={false} x={100} y={25 + i * 32} width={0} height={18} rx={4}
               fill={`${b.color}30`} stroke={b.color} strokeWidth={1}
               animate={{ width: b.tps * 3 }}
               transition={{ delay: i * 0.15, duration: 0.5 }} />

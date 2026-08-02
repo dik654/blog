@@ -59,7 +59,7 @@ export default function TxLifecycleViz() {
           </defs>
           {/* Animated packet */}
           {step >= 1 && step <= 5 && (
-            <motion.rect width={10} height={10} rx={2} y={40}
+            <motion.rect initial={false} width={10} height={10} rx={2} y={40}
               fill={STAGES[step - 1].color}
               animate={{
                 x: [STAGES[step - 1].x + 5, STAGES[Math.min(step, 4)].x + SW - 15],

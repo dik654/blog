@@ -1,4 +1,5 @@
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 import EvalBenchViz from './viz/EvalBenchViz';
 
 export default function Evaluation() {
@@ -25,7 +26,15 @@ export default function Evaluation() {
           cosine similarity와 인간 평가 간의 <strong>Spearman 순위 상관계수(ρ)</strong> 또는 Pearson 상관계수(r)를 계산<br />
           STSb(STS Benchmark): 8,628개 문장 쌍 — 뉴스, 포럼, 이미지 캡션 도메인에서 수집
         </p>
-        <M display>{'\\rho = 1 - \\frac{6 \\sum d_i^2}{n(n^2 - 1)}'}</M>
+        <M display>{'\\underbrace{\\rho}_{\\text{Spearman 상관 } \\in [-1, 1]} = 1 - \\frac{\\overbrace{6 \\sum d_i^2}^{\\text{순위 차이 제곱합}}}{\\underbrace{n(n^2 - 1)}_{\\text{샘플 수 정규화}}}'}</M>
+        <FormulaNote
+          meaning="사람 점수와 모델 점수를 각각 순위로 바꾼 뒤, 같은 문장 쌍의 두 순위가 얼마나 어긋나는지 측정한다. ρ=1이면 순서가 완전히 같고 -1이면 완전히 반대다. 이 간단한 식은 동점 순위가 없을 때의 형태이며, 실제 라이브러리는 tie correction을 처리한다."
+          symbols={[
+            ['d_i', 'i번째 문장 쌍의 인간 순위와 모델 순위의 차이'],
+            ['n', '평가한 문장 쌍의 수'],
+            ['\\rho', '절대 점수가 아니라 순서 일치를 나타내는 Spearman 상관계수'],
+          ]}
+        />
         <p className="text-sm text-muted-foreground mt-1">
           Spearman ρ: 순위 기반 상관 — 예측값의 절대 크기보다 순서의 일치를 측정. d_i = 순위 차이
         </p>
@@ -36,13 +45,30 @@ export default function Evaluation() {
           <strong>Recall@k</strong>: 상위 k개 결과에 정답이 포함된 비율 — k=10이면 상위 10개 중 정답 포함 여부<br />
           <strong>MRR(Mean Reciprocal Rank)</strong>: 정답의 평균 역순위 — 1위에 있으면 1.0, 2위면 0.5, 3위면 0.33
         </p>
-        <M display>{'\\text{MRR} = \\frac{1}{|Q|} \\sum_{i=1}^{|Q|} \\frac{1}{\\text{rank}_i}'}</M>
+        <M display>{'\\text{MRR} = \\underbrace{\\frac{1}{|Q|}}_{\\text{쿼리 개수 평균}} \\cdot \\sum_{i=1}^{|Q|} \\underbrace{\\frac{1}{\\text{rank}_i}}_{\\text{역순위 (1위=1, 2위=0.5)}}'}</M>
+        <FormulaNote
+          meaning="각 쿼리에서 첫 번째 정답 문서가 나타난 순위의 역수를 구해 전체 쿼리에서 평균낸다. 첫 정답을 위로 올리는 능력에는 민감하지만, 그 뒤에 있는 추가 정답들의 순위는 반영하지 않는다."
+          symbols={[
+            ['Q', '평가 쿼리 집합'],
+            ['\\mathrm{rank}_i', 'i번째 쿼리에서 첫 관련 문서가 등장한 1부터 시작하는 순위'],
+            ['1/\\mathrm{rank}_i', '첫 정답이 아래로 내려갈수록 작아지는 쿼리별 점수'],
+          ]}
+        />
         <p>
           <strong>NDCG(Normalized Discounted Cumulative Gain)</strong>: 순위 품질의 표준 지표<br />
           상위에 관련성 높은 문서가 배치될수록 높은 점수 — 이진 관련성뿐 아니라 등급별 관련성도 반영<br />
           대표 벤치마크: MS-MARCO(검색), Natural Questions(QA), BEIR(다양한 도메인)
         </p>
-        <M display>{'\\text{DCG@k} = \\sum_{i=1}^{k} \\frac{2^{\\text{rel}_i} - 1}{\\log_2(i+1)}, \\quad \\text{NDCG@k} = \\frac{\\text{DCG@k}}{\\text{IDCG@k}}'}</M>
+        <M display>{'\\text{DCG@k} = \\sum_{i=1}^{k} \\frac{\\overbrace{2^{\\text{rel}_i} - 1}^{\\text{관련성 이득}}}{\\underbrace{\\log_2(i+1)}_{\\text{순위 할인}}}, \\quad \\underbrace{\\text{NDCG@k} = \\frac{\\text{DCG@k}}{\\text{IDCG@k}}}_{\\text{이상적 DCG 로 정규화}}'}</M>
+        <FormulaNote
+          meaning="DCG는 관련성이 높은 문서를 보상하되 아래 순위에 놓일수록 로그로 할인한다. NDCG는 같은 정답 집합을 완벽하게 정렬했을 때의 IDCG로 나눠 쿼리마다 다른 정답 수와 등급을 비교 가능하게 만든다. 관련 문서가 하나도 없어 IDCG=0인 경우의 처리는 평가 구현에서 명시해야 한다."
+          symbols={[
+            ['\\mathrm{rel}_i', 'i위 문서에 부여된 등급형 관련성 점수'],
+            ['\\log_2(i+1)', '낮은 순위의 이득을 줄이는 position discount'],
+            ['\\mathrm{IDCG@k}', '관련성 순으로 완벽히 정렬했을 때 가능한 최대 DCG'],
+            ['\\mathrm{NDCG@k}', '이상적 순위 대비 현재 순위의 0~1 정규화 점수'],
+          ]}
+        />
 
         <h3 className="text-lg font-semibold mt-6 mb-3">4. 클러스터링 품질</h3>
         <p>

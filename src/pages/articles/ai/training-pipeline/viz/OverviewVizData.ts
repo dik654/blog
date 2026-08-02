@@ -25,11 +25,11 @@ export const STEPS: StepDef[] = [
   },
   {
     label: 'Update: 기울기 → 가중치 갱신',
-    body: 'Optimizer가 gradient를 써서 가중치를 갱신 (optimizer.step()).\nScheduler가 learning rate를 epoch마다 조절.\nzero_grad()로 gradient 초기화 후 다음 배치.',
+    body: 'Optimizer가 gradient를 써서 가중치를 갱신 (optimizer.step()).\nScheduler는 설정한 호출 주기(batch 또는 epoch)에 맞춰 learning rate를 조절.\nzero_grad()로 gradient 초기화 후 다음 배치.',
   },
   {
-    label: '대회 실전: 빠른 세팅이 핵심',
-    body: '뼈대 코드를 15분 안에 완성하고 → 데이터/피처/하이퍼파라미터 실험에 집중.\n파이프라인 구조를 외워두면 대회 시작 30분 안에 첫 제출 가능.',
+    label: '실전: 재현 가능한 baseline을 먼저 닫는다',
+    body: '뼈대 코드를 먼저 실행해 end-to-end baseline과 기록 경로를 확인한다.\n그 다음 데이터, feature와 hyperparameter를 한 변수씩 바꿔 비교한다.',
   },
 ];
 

@@ -72,7 +72,7 @@ export default function BFTComparisonViz() {
             return (
               <motion.g key={p.name} animate={{ opacity: active ? 1 : 0.2 }} transition={sp}>
                 <text x={10} y={y + 12} fontSize={10} fontWeight={600} fill={p.color}>{p.name}</text>
-                <motion.rect x={90} y={y} height={16} rx={4}
+                <motion.rect initial={false} x={90} y={y} height={16} rx={4}
                   fill={`${p.color}25`} stroke={p.color} strokeWidth={0.8}
                   animate={{ width: active ? barW : 8 }}
                   transition={{ duration: 0.4 }} />

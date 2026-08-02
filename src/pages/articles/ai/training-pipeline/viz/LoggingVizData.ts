@@ -13,7 +13,7 @@ export const COLORS = {
 export const STEPS: StepDef[] = [
   {
     label: 'Loss & Metric 기록 구조',
-    body: '매 배치: running_loss 누적 → epoch 끝에 평균.\n검증: val_loss + metric (accuracy, F1, AUC 등).\n리스트에 저장하면 학습곡선 시각화 가능.',
+    body: 'reduction="mean"인 batch loss는 batch sample 수를 곱해 누적하고, epoch 끝에 전체 sample 수로 나눈다.\n검증은 val_loss와 task metric을 별도 기록한다.\n분모와 split까지 남겨야 학습곡선을 비교할 수 있다.',
   },
   {
     label: '학습곡선으로 오버피팅 감지',
@@ -21,11 +21,15 @@ export const STEPS: StepDef[] = [
   },
   {
     label: 'Early Stopping: 과적합 방지 자동화',
-    body: 'patience=N: val_loss가 N epoch 연속 개선되지 않으면 학습 중단.\nbest_loss 갱신 시 patience 카운터 리셋.\npatience=5~10이 일반적.',
+    body: 'patience=N: val_loss가 N epoch 연속 개선되지 않으면 학습 중단.\nbest_loss 갱신 시 patience 카운터 리셋.\nN은 validation noise와 평가 간격에 맞춰 정한다.',
   },
   {
     label: 'W&B / TensorBoard 연동',
     body: 'W&B: wandb.log({"loss": loss, "lr": lr}) — 클라우드 대시보드.\nTensorBoard: SummaryWriter + add_scalar — 로컬 시각화.\n둘 다 실시간 모니터링 + 실험 비교 + 하이퍼파라미터 추적 지원.',
+  },
+  {
+    label: 'Untouched test: 선택을 닫은 뒤 한 번',
+    body: 'Train은 weight를 학습하고 validation은 checkpoint와 hyperparameter를 선택한다.\n선택을 모두 닫은 뒤 untouched test로 일반화 성능을 한 번 보고한다.\nTest를 보고 다시 조정하면 그 split은 더 이상 test가 아니다.',
   },
 ];
 

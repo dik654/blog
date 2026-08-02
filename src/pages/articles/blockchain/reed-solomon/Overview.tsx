@@ -39,7 +39,7 @@ export default function Overview() {
           <br />
           <Math>{'n - k'}</Math>개의 추가 값이 중복(redundancy)이다 — 이것으로 오류를 감지하고 복구한다
         </p>
-        <Math display>{'k \\text{개 메시지} \\xrightarrow{\\text{다항식 평가}} n \\text{개 코드워드} \\quad (n - k \\text{개 중복})'}</Math>
+        <Math display>{'\\underbrace{k}_{\\text{메시지 길이}} \\xrightarrow{\\text{다항식 평가}} \\underbrace{n}_{\\text{코드워드 길이}} \\quad (\\underbrace{n - k}_{\\text{중복도}})'}</Math>
       </div>
 
       <h3 className="text-lg font-semibold mt-8 mb-3">어디에 쓰이는가?</h3>
@@ -81,7 +81,7 @@ export default function Overview() {
           <br />
           MDS(Maximum Distance Separable) 코드 — 주어진 중복도에서 최대 에러 감지/정정 능력을 달성한다
         </p>
-        <Math display>{'t = \\left\\lfloor \\frac{n-k}{2} \\right\\rfloor \\text{ 개 에러 정정,} \\quad n-k \\text{ 개 소거(erasure) 정정}'}</Math>
+        <Math display>{'\\underbrace{t = \\left\\lfloor \\frac{n-k}{2} \\right\\rfloor}_{\\text{에러 정정 가능 개수}} \\quad \\underbrace{n-k}_{\\text{소거(erasure) 정정 개수}}'}</Math>
         <p>
           체 선택: <Math>{'p > n'}</Math>인 <Math>{'\\mathbb{F}_p'}</Math>.
           일반적으로 <Math>{'\\mathbb{F}_{2^8}'}</Math>(바이트 단위) 또는

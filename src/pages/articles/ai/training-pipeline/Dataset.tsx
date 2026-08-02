@@ -25,12 +25,13 @@ export default function Dataset() {
         <p>
           <strong>num_workers</strong> — 데이터 로드에 사용할 CPU 프로세스 수<br />
           0이면 메인 프로세스가 직접 로드 (GPU가 데이터 대기 중 유휴 상태)<br />
-          보통 CPU 코어 수의 2~4배를 설정 — 너무 크면 메모리 초과, 너무 작으면 병목
+          GPU 하나당 2~4개를 출발점으로 두고 실제 batch 처리량이 더는 늘지 않을 때까지 측정한다.<br />
+          Dataset의 I/O·decode 비용, CPU 수, storage와 shared memory에 따라 최적값이 달라지며 너무 크면 오히려 memory와 process overhead가 늘어난다.
         </p>
         <p>
           <strong>pin_memory=True</strong> — CPU 메모리를 페이지 잠금(pinned) 상태로 할당<br />
-          GPU로의 DMA(Direct Memory Access) 전송이 가능해져 복사 속도 향상<br />
-          GPU 학습 시 거의 항상 True 설정 — CPU 전용 학습에서는 불필요
+          GPU 전송을 비동기로 겹칠 수 있는 기반을 만들지만 pinned memory 자체도 제한된 host 자원이다.<br />
+          GPU 학습에서는 후보로 켜고 profiler로 비교하며, CPU 전용 학습이나 작은 in-memory dataset에서는 이득이 없을 수 있다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">도메인별 Dataset 패턴</h3>

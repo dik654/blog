@@ -17,11 +17,11 @@ export default function LangGraphViz() {
                 fontWeight={700} fill="var(--foreground)">TypedDict 공유 상태</text>
 
               {/* State box */}
-              <rect x={130} y={34} width={220} height={120} rx={10}
+              <rect x={110} y={34} width={360} height={120} rx={10}
                 fill="#6366f108" stroke="#6366f1" strokeWidth={1.2} />
-              <text x={240} y={52} textAnchor="middle" fontSize={10}
+              <text x={290} y={52} textAnchor="middle" fontSize={10}
                 fontWeight={600} fill="#6366f1">AgentState</text>
-              <line x1={140} y1={58} x2={340} y2={58}
+              <line x1={120} y1={58} x2={460} y2={58}
                 stroke="#6366f1" strokeWidth={0.5} opacity={0.3} />
 
               {STATE_FIELDS.map((f, i) => (
@@ -29,11 +29,11 @@ export default function LangGraphViz() {
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.15 + i * 0.1 }}>
-                  <text x={150} y={78 + i * 28} fontSize={10}
+                  <text x={125} y={78 + i * 28} fontSize={10}
                     fontWeight={600} fontFamily="monospace" fill="#6366f1">{f.name}</text>
-                  <text x={260} y={78 + i * 28} fontSize={9}
+                  <text x={245} y={78 + i * 28} fontSize={9}
                     fill="var(--muted-foreground)">{f.type}</text>
-                  <text x={345} y={78 + i * 28} textAnchor="end" fontSize={8}
+                  <text x={455} y={78 + i * 28} textAnchor="end" fontSize={8}
                     fill="var(--muted-foreground)">{f.desc}</text>
                 </motion.g>
               ))}
@@ -43,12 +43,12 @@ export default function LangGraphViz() {
                 transition={{ delay: 0.5 }}>
                 <text x={80} y={90} textAnchor="middle" fontSize={9}
                   fill="var(--muted-foreground)">Node A</text>
-                <line x1={100} y1={90} x2={128} y2={90}
+                <line x1={100} y1={90} x2={108} y2={90}
                   stroke="#6366f1" strokeWidth={1} opacity={0.4}
                   markerEnd="url(#arrowLG)" />
                 <text x={400} y={90} textAnchor="middle" fontSize={9}
                   fill="var(--muted-foreground)">Node B</text>
-                <line x1={352} y1={90} x2={380} y2={90}
+                <line x1={472} y1={90} x2={478} y2={90}
                   stroke="#6366f1" strokeWidth={1} opacity={0.4}
                   markerEnd="url(#arrowLG)" />
               </motion.g>

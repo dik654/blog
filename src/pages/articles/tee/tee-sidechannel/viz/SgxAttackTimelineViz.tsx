@@ -57,7 +57,7 @@ export default function SgxAttackTimelineViz() {
                 const x = 40 + (i / (ATTACKS.length - 1)) * 400;
                 return (
                   <motion.text key={i} x={x} y={56} textAnchor="middle" fontSize={8.5} fill={C_ATTACK}
-                    initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 56 }}
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.07 }}>
                     {a.name}
                   </motion.text>

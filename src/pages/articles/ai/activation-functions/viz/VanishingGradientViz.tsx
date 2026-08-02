@@ -70,7 +70,7 @@ export default function VanishingGradientViz() {
         {points.map((p, i) => (
           <g key={i}>
             <circle cx={plotX(p.n)} cy={plotY(p.v)} r={6} fill="#ef4444" fillOpacity={0.3} stroke="#ef4444" strokeWidth={2} />
-            <text x={plotX(p.n) + 10} y={plotY(p.v) - 8} fontSize={10} fontWeight={700} fill="#ef4444">{p.note}</text>
+            <text x={plotX(p.n) + 10} y={plotY(p.v) + (p.n === 1 ? 18 : -8)} fontSize={10} fontWeight={700} fill="#ef4444">{p.note}</text>
           </g>
         ))}
 

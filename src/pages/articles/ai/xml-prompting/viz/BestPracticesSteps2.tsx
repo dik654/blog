@@ -7,7 +7,7 @@ export function StepDepth() {
   const depths = [
     { depth: 1, label: '<task>', x: 40, w: 380, c: CV },
     { depth: 2, label: '<subtask>', x: 70, w: 320, c: CE },
-    { depth: 3, label: '<detail>', x: 100, w: 260, c: CA },
+    { depth: 3, label: '<input>', x: 100, w: 260, c: CA },
   ];
   return (
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -20,7 +20,7 @@ export function StepDepth() {
             fontFamily={MF} fontWeight={600} fill={d.c}>{d.label}</text>
           <text x={d.x + d.w - 10} y={47 + i * 44}
             textAnchor="end" fontSize={9}
-            fill="var(--muted-foreground)">깊이 {d.depth} OK</text>
+            fill="var(--muted-foreground)">관계 {d.depth}</text>
         </motion.g>
       ))}
       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -31,7 +31,7 @@ export function StepDepth() {
         <text x={140} y={179} fontSize={9}
           fontFamily={MF} fill="#ef4444">{'<sub_detail>'}</text>
         <text x={350} y={179} fontSize={9}
-          fill="#ef4444">깊이 4+ → 분리 권장</text>
+          fill="#ef4444">소속 없음 → 별도 문서</text>
       </motion.g>
     </motion.g>
   );

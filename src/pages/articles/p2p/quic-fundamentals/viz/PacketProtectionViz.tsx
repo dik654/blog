@@ -103,7 +103,7 @@ export default function PacketProtectionViz() {
 
               {step === 0 && (
                 <text x={240} y={140} textAnchor="middle" fontSize={9} fill="#9ca3af">
-                  플레인 영역은 CIDs 정도. payload 와 PN 은 모두 보호 대상.
+                  평문 영역은 CIDs 정도. payload 와 PN 은 모두 보호 대상.
                 </text>
               )}
             </motion.g>

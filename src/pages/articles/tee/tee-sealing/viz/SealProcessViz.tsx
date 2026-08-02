@@ -23,7 +23,7 @@ const STEPS = [
   },
   {
     label: '4-7. IV=0, AES-GCM 암호화 + metadata 저장',
-    body: 'KeyID가 unique → IV는 0 고정 가능.\nsgx_rijndael128GCM_encrypt → ciphertext + MAC. metadata에 key_request 저장.',
+    body: 'KeyID가 unique → IV는 0으로 고정 가능.\nsgx_rijndael128GCM_encrypt → ciphertext + MAC. metadata에 key_request 저장.',
   },
 ];
 

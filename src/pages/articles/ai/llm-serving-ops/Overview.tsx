@@ -3,6 +3,29 @@ import InfraStackViz from './viz/InfraStackViz';
 import CodeSidebar from './CodeSidebar';
 import { proxyHandlerRef, routerInitRef } from './codeRefs';
 
+const topicLinks = [
+  {
+    href: '/lab/blog/ai/litellm-gateway',
+    title: 'LiteLLM 게이트웨이',
+    body: 'OpenAI-compatible proxy, 라우터 초기화, provider fallback, cooldown, 비용 제어를 코드와 함께 분리해서 읽는다.',
+  },
+  {
+    href: '/lab/blog/ai/k8s-gpu-fleet',
+    title: 'Kubernetes GPU Fleet',
+    body: 'GPU Operator, device plugin, Karpenter 기반 GPU 노드 프로비저닝과 autoscaling 흐름을 따로 본다.',
+  },
+  {
+    href: '/lab/blog/ai/serving-deployment',
+    title: '서빙 배포 패턴',
+    body: 'vLLM/TGI 배포, 모델 로딩, GPU 메트릭 기반 HPA, 무중단 배포 고려사항을 배포 단위로 정리한다.',
+  },
+  {
+    href: '/lab/blog/ai/observability-aiops',
+    title: '관측성 & AIOps',
+    body: 'TTFT, TPS, GPU utilization, Prometheus pipeline, 자동 폴백과 스케일링 대응을 운영 루프로 묶는다.',
+  },
+];
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -38,6 +61,24 @@ export default function Overview() {
           <strong>Prometheus + Grafana</strong> — 관측성 파이프라인 (메트릭·대시보드·알럿)<br />
           <strong>AIOps</strong> — 자동화 대응 (스케일링·폴백 트리거)
         </p>
+
+        <h3 id="topic-map">주제별 상세 글</h3>
+        <p>
+          LLM 서빙 운영은 한 글에서 모두 설명하기에는 레이어가 다르다. 이 페이지는 전체 지도로 두고,
+          실제 구현과 운영 개념은 아래 글로 나누어 읽는 구조로 정리했다.
+        </p>
+      </div>
+      <div className="not-prose mt-6 grid gap-3 md:grid-cols-2">
+        {topicLinks.map((topic) => (
+          <a
+            key={topic.href}
+            href={topic.href}
+            className="rounded-lg border bg-background p-4 transition-colors hover:border-foreground/25 hover:bg-accent/30"
+          >
+            <h3 className="mb-2 text-sm font-semibold">{topic.title}</h3>
+            <p className="text-sm leading-6 text-muted-foreground">{topic.body}</p>
+          </a>
+        ))}
       </div>
     </section>
   );

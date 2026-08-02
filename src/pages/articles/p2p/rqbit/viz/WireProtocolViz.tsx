@@ -66,7 +66,7 @@ export default function WireProtocolViz() {
                 {HANDSHAKE.map((h, i) => {
                   const cx = x; x += h.w + 4;
                   return (
-                    <motion.g key={h.label} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
+                    <motion.g key={`${h.label}-${h.sub}`} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.08 }}>
                       <DataBox x={cx} y={40} w={h.w} h={50} label={h.label} sub={h.sub} color={h.color} outlined />
                     </motion.g>

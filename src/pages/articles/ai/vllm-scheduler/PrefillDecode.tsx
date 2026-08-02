@@ -17,18 +17,23 @@ export default function PrefillDecode({ onCodeRef }: Props) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          V1 스케줄러의 가장 큰 혁신 — <strong>"Prefill Phase"와 "Decode Phase"가 없다</strong>.
-          소스 코드 주석에도 명시되어 있습니다:
+          V1 스케줄러는 <strong>"Prefill Phase"와 "Decode Phase"라는 별도 scheduler 상태 없이</strong>
+          두 경우를 계산할 token 수로 표현합니다. 소스 코드 주석은 이 accounting model을 다음처럼 설명합니다:
         </p>
 
         <blockquote className="border-l-4 border-sky-400 pl-4 my-4 text-sm">
           "There's no 'decoding phase' nor 'prefill phase' in the scheduler.
           Each request just has num_computed_tokens and num_tokens_with_spec."
           <br />
-          — scheduler.py L342-346
+          — scheduler.py L339-343
         </blockquote>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">왜 통합했을까?</h3>
+        <p>
+          이는 prefill과 decode의 실제 연산 특성이 같다는 뜻이 아닙니다. Prefill은 긴 token 축의 compute를,
+          decode는 반복적인 KV read와 memory bandwidth를 더 강하게 압박할 수 있습니다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">왜 장부를 통합했을까?</h3>
         <p>
           Phase 분리 시 Prefill 중에는 Decode 요청이 대기하고, 그 반대도 마찬가지입니다.<br />
           GPU 활용률이 떨어집니다. 통합 모델은 한 배치에 Prefill 토큰과 Decode 토큰을 함께 넣어
@@ -49,7 +54,7 @@ export default function PrefillDecode({ onCodeRef }: Props) {
 
         <p>
           이 루프가 최대 1,000개 이상의 요청을 처리하므로,
-          내부에서 비싼 연산은 피해야 합니다 (소스 주석 L1333-1335 참조).
+          내부에서 비싼 연산은 피해야 합니다 (소스 주석 L1312-1314 참조).
         </p>
       </div>
     </section>

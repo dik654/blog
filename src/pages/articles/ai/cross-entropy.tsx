@@ -1,21 +1,19 @@
-import Overview from './cross-entropy/Overview';
-import Expectation from './cross-entropy/Expectation';
-import Entropy from './cross-entropy/Entropy';
-import CrossEntropy from './cross-entropy/CrossEntropy';
-import CEvsMSE from './cross-entropy/CEvsMSE';
-import SoftmaxCEGradient from './cross-entropy/SoftmaxCEGradient';
-import KLDivergence from './cross-entropy/KLDivergence';
+import ProbabilityInformation from './cross-entropy/ProbabilityInformation';
+import LikelihoodToLoss from './cross-entropy/LikelihoodToLoss';
+import CrossEntropyExplorer from './cross-entropy/CrossEntropyExplorer';
+import SoftmaxGradient from './cross-entropy/SoftmaxGradient';
+import NumericalStability from './cross-entropy/NumericalStability';
+import EntropyKLPractice from './cross-entropy/EntropyKLPractice';
 
 export default function CrossEntropyArticle() {
   return (
     <>
-      <Overview />
-      <Expectation />
-      <Entropy />
-      <CrossEntropy />
-      <CEvsMSE />
-      <SoftmaxCEGradient />
-      <KLDivergence />
+      <ProbabilityInformation />
+      <LikelihoodToLoss />
+      <CrossEntropyExplorer />
+      <SoftmaxGradient />
+      <NumericalStability />
+      <EntropyKLPractice />
     </>
   );
 }

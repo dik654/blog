@@ -1,15 +1,17 @@
-import Overview from './Overview';
-import Fourier from './Fourier';
-import Algorithm from './Algorithm';
-import AIUsage from './AIUsage';
+import SignalSpectrum from './SignalSpectrum';
+import DFTProjection from './DFTProjection';
+import FFTDivideConquer from './FFTDivideConquer';
+import SamplingAndSTFT from './SamplingAndSTFT';
+import AIPractice from './AIPractice';
 
 export default function FFTArticle() {
   return (
     <>
-      <Overview />
-      <Fourier />
-      <Algorithm />
-      <AIUsage />
+      <SignalSpectrum />
+      <DFTProjection />
+      <FFTDivideConquer />
+      <SamplingAndSTFT />
+      <AIPractice />
     </>
   );
 }

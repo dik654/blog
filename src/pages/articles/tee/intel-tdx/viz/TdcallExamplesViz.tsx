@@ -86,12 +86,12 @@ export default function TdcallExamplesViz() {
                 <motion.g key={j}
                   initial={{ opacity: 0, x: -3 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + i * 0.18 + j * 0.05 }}>
-                  <rect x={100 + j * 110} y={y0 + 47} width={105} height={14} rx={2}
+                  <rect x={100 + j * 110} y={y0 + 45} width={105} height={22} rx={2}
                     fill={REG} fillOpacity={0.1} stroke={REG} strokeWidth={0.4} />
-                  <text x={108 + j * 110} y={y0 + 56} fontSize={6.5} fontFamily="monospace" fontWeight={700} fill={REG}>
+                  <text x={108 + j * 110} y={y0 + 53} fontSize={6.5} fontFamily="monospace" fontWeight={700} fill={REG}>
                     .{a.reg}
                   </text>
-                  <text x={130 + j * 110} y={y0 + 56} fontSize={6.5} fontFamily="monospace" fill="var(--muted-foreground)">
+                  <text x={108 + j * 110} y={y0 + 63} fontSize={5.7} fontFamily="monospace" fill="var(--muted-foreground)">
                     = {a.val}
                   </text>
                 </motion.g>

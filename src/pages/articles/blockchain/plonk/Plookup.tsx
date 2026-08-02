@@ -71,7 +71,7 @@ export default function Plookup() {
             <p className="font-semibold text-sm text-emerald-400 mb-2">Grand Product 검증</p>
             <div className="my-2">
               <M display>{'Z(\\omega^0) = 1'}</M>
-              <M display>{'Z(\\omega^{i+1}) = Z(\\omega^i) \\cdot \\frac{(1+\\beta)(\\gamma + f_i)(\\gamma(1+\\beta) + t_i + \\beta \\cdot t_{i+1})}{(\\gamma(1+\\beta) + h_{1,i} + \\beta \\cdot h_{1,i+1})(\\gamma(1+\\beta) + h_{2,i} + \\beta \\cdot h_{2,i+1})}'}</M>
+              <M display>{'Z(\\omega^{i+1}) = Z(\\omega^i) \\cdot \\frac{\\overbrace{(1+\\beta)(\\gamma + f_i)(\\gamma(1+\\beta) + t_i + \\beta \\cdot t_{i+1})}^{\\text{f (lookup) + t (table) 항}}}{\\underbrace{(\\gamma(1+\\beta) + h_{1,i} + \\beta \\cdot h_{1,i+1})(\\gamma(1+\\beta) + h_{2,i} + \\beta \\cdot h_{2,i+1})}_{\\text{병합 후 정렬된 } h_1, h_2 \\text{ witness 항}}}'}</M>
             </div>
             <p className="text-sm text-muted-foreground">최종: <M>{'Z(\\omega^{n-1})'}</M> &middot; (마지막 항) = 1 → 분자/분모 전체가 상쇄되면 <M>{'f \\subseteq t'}</M> 증명 완료</p>
           </div>

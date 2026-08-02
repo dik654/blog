@@ -31,11 +31,11 @@ export default function Verify({ onCodeRef }: { onCodeRef: (key: string, ref: Co
           </p>
           <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3">
             <p className="text-xs font-medium mb-1">① IC_sum 계산</p>
-            <M display>{'IC_{sum} = ic[0] + \\sum_{j=1}^{l} s_j \\cdot ic[j]'}</M>
+            <M display>{'IC_{sum} = \\underbrace{ic[0]}_{\\text{상수항 (}w_0=1\\text{)}} + \\underbrace{\\sum_{j=1}^{l} s_j \\cdot ic[j]}_{\\text{공개 입력 } l \\text{개의 가중합}}'}</M>
           </div>
           <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3">
             <p className="text-xs font-medium mb-1">② 검증 방정식</p>
-            <M display>{'e(A, B) \\stackrel{?}{=} e(\\alpha, \\beta) \\cdot e(IC_{sum}, [\\gamma]_2) \\cdot e(C, [\\delta]_2)'}</M>
+            <M display>{'\\underbrace{e(A, B)}_{\\text{증명자 페어링 (좌변)}} \\stackrel{?}{=} \\underbrace{e(\\alpha, \\beta)}_{\\text{trusted setup 항}} \\cdot \\underbrace{e(IC_{sum}, [\\gamma]_2)}_{\\text{공개 입력 항}} \\cdot \\underbrace{e(C, [\\delta]_2)}_{\\text{증인 항}}'}</M>
             <div className="grid grid-cols-4 gap-1 mt-2 text-center">
               <div className="rounded bg-white dark:bg-neutral-800 p-1 text-xs">LHS</div>
               <div className="rounded bg-white dark:bg-neutral-800 p-1 text-xs">상수</div>
@@ -50,7 +50,7 @@ export default function Verify({ onCodeRef }: { onCodeRef: (key: string, ref: Co
           <h4 className="font-semibold text-base mb-2">A·B 전개로 검증 방정식 유도</h4>
           <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3">
             <p className="text-xs font-medium mb-1">A·B 곱 전개</p>
-            <M display>{'A \\cdot B = (\\alpha + a(\\tau) + r\\delta)(\\beta + b(\\tau) + s\\delta)'}</M>
+            <M display>{'A \\cdot B = \\underbrace{(\\alpha + a(\\tau) + r\\delta)}_{A \\text{ 정의}} \\cdot \\underbrace{(\\beta + b(\\tau) + s\\delta)}_{B \\text{ 정의}}'}</M>
           </div>
           <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 space-y-1">
             <p className="text-xs font-medium mb-1">각 항이 매핑되는 페어링</p>

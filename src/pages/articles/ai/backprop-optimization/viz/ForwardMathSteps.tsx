@@ -37,8 +37,18 @@ export function ForwardMathStep0() {
           <circle cx={40} cy={inp.y} r={14} fill={`${C.input}15`} stroke={C.input} strokeWidth={1} />
           <text x={40} y={inp.y + 4} textAnchor="middle" fontSize={10} fontWeight={600} fill={C.input}>{inp.label}</text>
           <line x1={54} y1={inp.y} x2={neuronX - 22} y2={neuronY} stroke={C.weight} strokeWidth={0.8} />
-          <text x={80 + i * 10} y={inp.y + (neuronY - inp.y) * 0.4 - 4}
-            fontSize={7} fill={C.weight} fontWeight={600}>w{i === 2 ? 'ₙ' : String(i + 1)}</text>
+          {(() => {
+            const lx = 80 + i * 10;
+            const ly = inp.y + (neuronY - inp.y) * 0.4 - 4;
+            return (
+              <g>
+                <rect x={lx - 2} y={ly - 7} width={18} height={10} rx={2} fill="var(--card)" />
+                <text x={lx} y={ly} fontSize={7} fill={C.weight} fontWeight={600}>
+                  w{i === 2 ? 'ₙ' : String(i + 1)}
+                </text>
+              </g>
+            );
+          })()}
         </motion.g>
       ))}
       {/* dots between x2 and xn */}

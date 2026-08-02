@@ -24,7 +24,7 @@ const STEPS = [
   },
   {
     label: 'LibP2P 통합',
-    body: 'libp2p이 discv5를 peer discovery로 사용.\nKad-DHT 기반 peer routing.\nIPFS, Filecoin 등 광범위 활용.',
+    body: 'libp2p가 discv5를 peer discovery로 사용.\nKad-DHT 기반 peer routing.\nIPFS, Filecoin 등 광범위 활용.',
   },
   {
     label: 'Message flow + 설계 원칙',
@@ -120,7 +120,7 @@ export default function TalkProtocolsViz() {
               <motion.line x1={290} y1={130} x2={250} y2={95} stroke="var(--muted-foreground)" strokeWidth={0.8} />
               <motion.line x1={400} y1={130} x2={270} y2={95} stroke="var(--muted-foreground)" strokeWidth={0.8} />
               <text x={240} y={205} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-                libp2p이 peer discovery로 discv5 채택 → 광범위 채택.
+                libp2p가 peer discovery로 discv5 채택 → 광범위 채택.
               </text>
             </motion.g>
           )}

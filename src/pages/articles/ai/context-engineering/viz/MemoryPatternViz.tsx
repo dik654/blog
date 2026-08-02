@@ -60,7 +60,7 @@ export default function MemoryPatternViz() {
 
           {/* active pattern highlight */}
           {step < 4 && (
-            <motion.circle r={4}
+            <motion.circle initial={false} r={4}
               animate={{
                 cx: BAR_X - 20,
                 cy: 40 + step * (BAR_H + GAP) + BAR_H / 2,

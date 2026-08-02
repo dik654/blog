@@ -231,7 +231,7 @@ export default function TLSHandshakeMessagesViz() {
                 상호 검증
               </text>
 
-              <StatusBox x={140} y={210} w={240} h={50} label="transcript 일치 = 변조 없음" sub="modify 한 비트라도 → 실패" color={C.ok} progress={1} />
+              <StatusBox x={140} y={210} w={240} h={50} label="transcript 일치 = 변조 없음" sub="1비트라도 변조되면 → 실패" color={C.ok} progress={1} />
             </motion.g>
           )}
 

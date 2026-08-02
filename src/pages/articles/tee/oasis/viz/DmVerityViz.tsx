@@ -21,7 +21,11 @@ export default function DmVerityViz() {
               <DataBox x={30}  y={40}  w={170} h={28} label="rootfs.img (ext4)" color="#6366f1" outlined />
               <DataBox x={30}  y={75}  w={170} h={28} label="rootfs.verity" color="#10b981" outlined />
               <DataBox x={30}  y={110} w={170} h={28} label="rootfs.roothash" color="#f59e0b" outlined />
-              <ModuleBox x={250} y={45} w={210} h={100} label="manifest" color="#a855f7" />
+              <rect x={250} y={45} width={210} height={100} rx={8}
+                fill="var(--card)" stroke="#a855f7" strokeWidth={0.9} />
+              <text x={355} y={66} textAnchor="middle" fontSize={10} fontWeight={700} fill="#a855f7">
+                manifest
+              </text>
               <text x={355} y={95} textAnchor="middle" fontSize={9} fill="#f59e0b" fontWeight={600}>
                 roothash 기록
               </text>

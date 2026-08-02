@@ -77,12 +77,12 @@ export default function SwarmFlowViz() {
             </motion.g>
           )}
           {/* step indicator */}
-          <motion.text key={step} x={200} y={148} textAnchor="middle"
+          <motion.text key={`status-${step}`} x={200} y={148} textAnchor="middle"
             fontSize={10} fill={C[step]} fillOpacity={0.6}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {['해시 확인', '피어 탐색', '병렬 다운로드', 'SHA1 검증', '조각 재공유'][step]}
           </motion.text>
-                  <motion.text x={405} y={80} fontSize={10} fill="var(--foreground)" initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} key={step}>{ANNOT[step]}</motion.text>
+                  <motion.text x={405} y={80} fontSize={10} fill="var(--foreground)" initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} key={`annotation-${step}`}>{ANNOT[step]}</motion.text>
         </svg>
       )}
     </StepViz>

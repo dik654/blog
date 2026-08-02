@@ -17,7 +17,7 @@ const STEPS = [
   },
   {
     label: 'EADD: 페이지별 메타데이터 누적',
-    body: '각 EPC 페이지마다 type(REG/TCS), offset, secinfo.flags(권한)을 해시. 페이지 종류와 권한이 measurement에 반영됩니다.',
+    body: '각 EPC 페이지마다 type(REG/TCS), offset, secinfo.flags(권한)을 해시. 페이지 종류와 권한이 measurement에 반영된다.',
   },
   {
     label: 'EEXTEND: 4KB 페이지 → 256B × 16',

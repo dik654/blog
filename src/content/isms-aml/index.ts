@@ -2,6 +2,19 @@ import type { Article, Category } from '../types';
 
 const ismsAmlArticles: Article[] = [
   {
+    slug: 'information-security-engineer-2024-2026',
+    title: '정보보안기사 2024-2026 기출 경향 정리',
+    subcategory: 'security-engineer-exam',
+    sections: [
+      { id: 'trend', title: '최근 출제 경향' },
+      { id: 'priority', title: '우선순위' },
+      { id: 'drill', title: '기출형 변형 문제' },
+      { id: 'plan', title: '2주 압축 학습 순서' },
+      { id: 'sources', title: '참고 자료' },
+    ],
+    component: () => import('@/pages/articles/isms-aml/information-security-engineer-2024-2026'),
+  },
+  {
     slug: 'isms-overview',
     title: 'ISMS-P 인증 프로세스 — 자산분류부터 사후관리까지',
     subcategory: 'isms-management',
@@ -243,9 +256,16 @@ const ismsAmlArticles: Article[] = [
 
 const ismsAml: Category = {
   slug: 'isms-aml',
-  name: 'ISMS / AML',
+  name: 'ISMS · AML',
   description: '정보보호 관리체계(ISMS-P), 자금세탁방지(AML/CFT), VASP 컴플라이언스',
+  group: 'operations',
   subcategories: [
+    {
+      slug: 'security-engineer-exam',
+      name: '정보보안기사 시험 대비',
+      description: '2024-2026 복원 경향, 최신 카페/공개 자료 기반 우선순위와 변형 문제',
+      icon: '📝',
+    },
     {
       slug: 'isms-management',
       name: 'ISMS 관리체계',

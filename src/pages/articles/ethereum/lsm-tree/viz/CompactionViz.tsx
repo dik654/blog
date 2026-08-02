@@ -30,7 +30,7 @@ export default function CompactionViz() {
               <path d="M0,0 L6,3 L0,6 Z" fill="var(--muted-foreground)" /></marker>
           </defs>
           {/* Step 0 */}
-          <motion.g animate={{ opacity: step === 0 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 0 ? 1 : 0.05 }}>
             <text x={260} y={24} textAnchor="middle" fontSize={11} fontWeight={600} fill="var(--foreground)">파일이 쌓이면 읽기 성능 저하</text>
             {Array.from({ length: 6 }, (_, i) => (
               <motion.rect key={i} x={80 + i * 60} y={40} width={50} height={30} rx={4}
@@ -43,7 +43,7 @@ export default function CompactionViz() {
             <text x={260} y={165} textAnchor="middle" fontSize={10} fill={CR}>읽기: 최대 6개 파일 순회 필요</text>
           </motion.g>
           {/* Step 1: L0→L1 */}
-          <motion.g animate={{ opacity: step === 1 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 1 ? 1 : 0.05 }}>
             <text x={130} y={30} textAnchor="middle" fontSize={10} fontWeight={600} fill={C0}>L0</text>
             <FileBoxes files={L0_FILES} color={C0} />
             <text x={380} y={30} textAnchor="middle" fontSize={10} fontWeight={600} fill={C1}>L1 (before)</text>
@@ -53,7 +53,7 @@ export default function CompactionViz() {
             <FileBoxes files={L1_AFTER.map(f => ({ ...f, k: f.k }))} color={C1} w={80} />
           </motion.g>
           {/* Step 2: L1→L2 */}
-          <motion.g animate={{ opacity: step === 2 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 2 ? 1 : 0.05 }}>
             <text x={130} y={30} textAnchor="middle" fontSize={10} fontWeight={600} fill={C1}>L1 (10MB 초과)</text>
             <rect x={60} y={38} width={140} height={28} rx={4} fill={`${C1}15`} stroke={C1} strokeWidth={1.2} />
             <text x={130} y={56} textAnchor="middle" fontSize={9} fill={C1}>선택된 SSTable (k-p)</text>
@@ -69,7 +69,7 @@ export default function CompactionViz() {
             ))}
           </motion.g>
           {/* Step 3: Write Amplification */}
-          <motion.g animate={{ opacity: step === 3 ? 1 : 0.15 }}>
+          <motion.g animate={{ opacity: step === 3 ? 1 : 0.05 }}>
             <text x={260} y={30} textAnchor="middle" fontSize={11} fontWeight={600} fill={CR}>Write Amplification</text>
             {WA_LEVELS.map((lv, i) => {
               const y = 50 + i * 40;

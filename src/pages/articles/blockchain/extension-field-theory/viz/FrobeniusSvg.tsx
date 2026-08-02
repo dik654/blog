@@ -49,7 +49,7 @@ export default function FrobeniusSvg({ a, b }: Props) {
       </motion.g>
 
       {/* Dashed connector */}
-      <motion.line x1={px} y1={py} x2={px} y2={pyC}
+      <motion.line initial={false} x1={px} y1={py} x2={px} y2={pyC}
         stroke={`${C.conj}40`} strokeWidth={0.8} strokeDasharray="3 2"
         animate={{ x1: px, y1: py, x2: px, y2: pyC }} transition={sp} />
 

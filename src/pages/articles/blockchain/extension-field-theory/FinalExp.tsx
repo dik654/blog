@@ -11,7 +11,7 @@ export default function FinalExp() {
           Miller Loop 출력 f를 <Math>{'f^{(p^{12}-1)/r}'}</Math>로 변환하여 GT 원소를 만든다.
         </p>
         <p>~3000-bit 지수를 인수분해:</p>
-        <Math display>{'\\frac{p^{12}-1}{r} = (p^6 - 1) \\cdot (p^2 + 1) \\cdot \\frac{p^4 - p^2 + 1}{r}'}</Math>
+        <Math display>{'\\frac{p^{12}-1}{r} = \\underbrace{(p^6 - 1)}_{\\text{conjugate (싸짐)}} \\cdot \\underbrace{(p^2 + 1)}_{\\text{Frobenius 1회}} \\cdot \\underbrace{\\frac{p^4 - p^2 + 1}{r}}_{\\text{hard part (cyclotomic)}}'}</Math>
         <p>각 인수를 순서대로 처리. 약 5,000 Fp 곱셈.</p>
       </div>
       <div className="not-prose"><FinalExpViz /></div>

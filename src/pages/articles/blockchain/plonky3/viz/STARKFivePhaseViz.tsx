@@ -21,12 +21,12 @@ const PHASES = [
 ];
 
 const STEPS = [
-  { label: '① 5단계 개요', body: 'AIR 트레이스 커밋 → 몫 다항식 → FRI 저차 검증 → 개구 증명 → 최종 검증.\n각 phase 의 내부를 차례로 펼쳐봅니다.' },
+  { label: '① 5단계 개요', body: 'AIR 트레이스 커밋 → 몫 다항식 → FRI 저차 검증 → 개구 증명 → 최종 검증.\n각 phase 의 내부를 차례로 펼쳐본다.' },
   { label: '② Phase 1 — Trace Commitment', body: 'AIR 실행 트레이스 M[rows×cols] 의 각 column 을 다항식으로 보간.\nLDE(Low-Degree Extension) 후 Merkle 트리에 커밋, root 를 transcript 에 추가.' },
   { label: '③ Phase 2 — Quotient C(X)', body: 'AIR 제약 만족 시 C(X) = AIR_poly(M) / Z_H(X) 가 low-degree.\nZ_H 는 trace domain 의 vanishing polynomial.' },
   { label: '④ Phase 3 — FRI Folding', body: 'C(X) 의 degree 를 log N 단계 folding 으로 검증.\n각 round 마다 commitment + Fiat-Shamir challenge.' },
   { label: '⑤ Phase 4 — Opening Proofs', body: 'Verifier 가 random query points 선택, Prover 가 Merkle path + claimed value 제출.\nTrace 와 constraint 의 consistency 검증.' },
-  { label: '⑥ Phase 5 — Final Check', body: '마지막 FRI folding 결과가 constant (degree 0) 다항식이어야.\nVerifier 가 모든 commitment 와 opening 을 재검증.' },
+  { label: '⑥ Phase 5 — Final Check', body: '마지막 FRI folding 결과가 constant (degree 0) 다항식이어야 한다.\nVerifier 가 모든 commitment 와 opening 을 재검증.' },
   { label: '⑦ Complexity & Plonky3 최적화', body: 'Prover O(n log n) FFT, Verifier O(log² n), Proof O(log² n × λ).\nbatching · DEEP-ALI · multi-thread · SIMD 로 상수항 단축.' },
 ];
 
@@ -68,7 +68,7 @@ export default function STARKFivePhaseViz() {
                 STARK 증명 5단계
               </text>
               <text x={240} y={180} textAnchor="middle" fontSize={9} fill="#64748b">
-                각 phase 를 클릭하면 내부 동작을 drill-down 합니다
+                각 phase 를 클릭하면 내부 동작을 drill-down 한다
               </text>
             </g>
           )}

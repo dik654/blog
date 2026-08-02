@@ -4,7 +4,7 @@ export const hwArticles: Article[] = [
   /* ── Compute ── */
   {
     slug: 'hw-gpu-comparison', title: 'GPU 비교: RTX 4090 vs 5090 vs A100 vs H100', subcategory: 'hw-compute',
-    sections: [{ id: 'overview', title: '왜 GPU를 비교해야 하는가' }, { id: 'consumer', title: '컨슈머 GPU (4090, 5090)' }, { id: 'datacenter', title: '데이터센터 GPU (A100, H100)' }, { id: 'blockchain', title: '블록체인 워크로드별 선택' }],
+    sections: [{ id: 'overview', title: '왜 GPU를 비교해야 하는가' }, { id: 'glossary', title: '먼저 — 사양 용어 풀이 (HBM·ECC·NVLink 등)' }, { id: 'consumer', title: '컨슈머 GPU (4090, 5090)' }, { id: 'datacenter', title: '데이터센터 GPU (A100·H100·B200)' }, { id: 'blockchain', title: '블록체인 워크로드별 선택' }],
     component: () => import('@/pages/articles/hw/gpu-comparison'),
   },
   {
@@ -40,6 +40,10 @@ export const hwArticles: Article[] = [
   },
   {
     slug: 'hw-network', title: '서버 네트워크: 10G/25G/100G, RDMA, InfiniBand', subcategory: 'hw-infra',
+    summary: 'GPU cluster의 packet이 Ethernet, RoCEv2와 InfiniBand를 지날 때 link rate, RDMA data path와 fabric 책임이 어떻게 달라지는지 비교합니다.',
+    level: '기초', estimatedMinutes: 32,
+    prerequisites: ['bit와 byte의 차이', 'NIC와 switch가 서버 사이 packet을 전달한다는 이해'],
+    learningPath: 'gpu-hpc-current-first',
     sections: [{ id: 'overview', title: '왜 서버 네트워크가 다른가' }, { id: 'ethernet', title: '10G/25G/100G 이더넷' }, { id: 'rdma', title: 'RDMA & RoCE v2' }, { id: 'infiniband', title: 'InfiniBand: GPU 클러스터 연결' }],
     component: () => import('@/pages/articles/hw/network'),
   },

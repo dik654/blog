@@ -1,11 +1,31 @@
-import ContinuedPretrainViz from './viz/ContinuedPretrainViz';
+import { CitationBlock } from '@/components/ui/citation';
+import { CapabilityCheck, SourceNotes, StopRule } from '@/components/learning/ArticleLearning';
 
-const HYPERPARAMS = [
-  { param: 'Learning Rate', base: '1e-4 ~ 3e-4', adapted: '1e-6 ~ 5e-6', note: '원래의 1/10~1/50' },
-  { param: 'Epochs', base: '40 ~ 100+', adapted: '1 ~ 5', note: '과적합 방지 (조기 종료)' },
-  { param: 'Batch Size', base: '256 ~ 4096', adapted: '16 ~ 64', note: '도메인 데이터 크기에 비례' },
-  { param: 'Warmup', base: '1~2%', adapted: '5~10%', note: '안정적 적응 유도' },
-  { param: 'Weight Decay', base: '0.01', adapted: '0.01 ~ 0.1', note: '과적합 억제 강화' },
+const DECISIONS = [
+  {
+    label: '목표 함수',
+    question: '기존 checkpoint가 무엇을 예측하며 배웠는가?',
+    action: 'Encoder 계열은 masking objective, autoregressive 계열은 next-token objective처럼 원래 학습 계약과 맞춘다.',
+    evidence: 'Mask 비율이나 corruption 방식은 상수가 아니다. 사용한 checkpoint와 구현 설정을 실험 기록에 고정한다.',
+  },
+  {
+    label: '학습 강도',
+    question: '얼마나 크게 가중치를 움직여도 되는가?',
+    action: '작은 learning-rate 후보부터 짧은 pilot을 돌리고 domain validation과 generic holdout을 동시에 측정한다.',
+    evidence: '“사전학습의 1/10” 같은 비율을 규칙으로 쓰지 않는다. optimizer, batch와 checkpoint가 바뀌면 같은 숫자의 의미도 달라진다.',
+  },
+  {
+    label: '데이터 혼합',
+    question: '새 분포를 배우면서 무엇을 잊으면 안 되는가?',
+    action: 'Domain-only, replay mixture, regularization 후보를 같은 token budget으로 비교한다.',
+    evidence: '일반 data 혼합률도 고정 처방이 아니다. 보존할 능력을 대표하는 holdout이 먼저 정의되어야 한다.',
+  },
+  {
+    label: '중단 조건',
+    question: '추가 학습을 언제 멈출 것인가?',
+    action: 'Domain loss가 아니라 최종 과업 개선, generic 능력 보존과 계산 비용을 함께 gate로 둔다.',
+    evidence: '더 많은 token이 자동으로 더 좋은 적응을 보장하지 않는다. downstream 이득이 멈추면 학습을 종료한다.',
+  },
 ];
 
 export default function ContinuedPretrain() {
@@ -14,53 +34,71 @@ export default function ContinuedPretrain() {
       <h2 className="text-2xl font-bold mb-6">Continued Pretraining 전략</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          <strong>핵심 아이디어</strong> — 범용 사전학습 모델의 가중치를 초기값으로 사용하고, 도메인 코퍼스로 MLM(Masked Language Modeling) 또는 CLM(Causal Language Modeling)을 추가 수행.<br />
-          이 과정에서 모델이 도메인 어휘의 문맥 관계, 전문 용어 간 의미 연결, 도메인 특유의 구문 패턴을 내재화한다.
+          <strong>Continued pretraining</strong>은 범용 checkpoint를 초기값으로 삼아, 라벨이 없는 domain corpus에서
+          기존 사전학습 objective를 더 수행하는 단계다. 목표는 최종 class 경계를 곧바로 외우는 것이 아니라
+          새 어휘, texture, 공정 문맥처럼 입력 분포 자체를 representation에 반영하는 것이다.
         </p>
         <p>
-          <strong>MLM</strong>은 입력 토큰의 15%를 [MASK]로 치환하고 예측하는 양방향 학습 — BERT 계열에 사용.<br />
-          <strong>CLM</strong>은 이전 토큰으로부터 다음 토큰을 예측하는 자기회귀 학습 — GPT 계열에 사용.<br />
-          도메인 적응에서는 MLM이 분류·추출 태스크에 유리하고, CLM은 생성 태스크에 유리하다.
+          MLM은 일부 입력을 가리고 복원하며 양쪽 문맥을 사용한다. CLM은 앞의 token으로 다음 token을 예측한다.
+          중요한 점은 “분류면 MLM, 생성이면 CLM”이라는 단순 대응이 아니라,
+          <strong>현재 checkpoint의 architecture와 pretraining contract를 보존하는가</strong>다.
+          Vision encoder라면 masked image modeling, image-text alignment, self-distillation처럼 출발 checkpoint와 맞는 신호를 먼저 확인한다.
         </p>
-        <p>
-          <strong>핵심 주의점</strong>: 학습률(Learning Rate)이 너무 높으면 사전학습 지식이 파괴(catastrophic forgetting)되고,
-          너무 낮으면 도메인 적응이 불충분하다. 원래 사전학습 LR의 1/10 수준이 경험적 최적.
-        </p>
+        <CitationBlock source="Don't Stop Pretraining · Gururangan et al." citeKey={2} href="https://arxiv.org/abs/2004.10964">
+          <p>
+            이 논문은 domain-adaptive와 task-adaptive pretraining을 분리해 비교한 대표 근거다.
+            여기서 특정 learning rate, 혼합률이나 token 수를 모든 모델의 최적값으로 가져오지 않고,
+            “추가 사전학습을 독립 실험 branch로 검증한다”는 설계 원칙만 일반화한다.
+          </p>
+        </CitationBlock>
       </div>
 
-      <div className="not-prose overflow-x-auto mb-8">
-        <table className="w-full text-sm border-collapse">
-          <thead>
-            <tr className="border-b">
-              <th className="text-left py-2 px-3">하이퍼파라미터</th>
-              <th className="text-left py-2 px-3">원래 사전학습</th>
-              <th className="text-left py-2 px-3">Continued Pretrain</th>
-              <th className="text-left py-2 px-3">비고</th>
-            </tr>
-          </thead>
-          <tbody>
-            {HYPERPARAMS.map(h => (
-              <tr key={h.param} className="border-b border-border/40">
-                <td className="py-2 px-3 font-semibold">{h.param}</td>
-                <td className="py-2 px-3 font-mono text-xs">{h.base}</td>
-                <td className="py-2 px-3 font-mono text-xs text-emerald-600 dark:text-emerald-400">{h.adapted}</td>
-                <td className="py-2 px-3 text-muted-foreground">{h.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="not-prose mb-8 divide-y divide-border border-y border-border">
+        {DECISIONS.map((item, index) => (
+          <div key={item.label} className="grid min-w-0 gap-3 py-5 md:grid-cols-[3rem_9rem_minmax(0,1fr)] md:gap-5">
+            <span className="text-3xl font-black tabular-nums text-muted-foreground/40">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-sm font-bold">{item.label}</h3>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.question}</p>
+            </div>
+            <div className="min-w-0 text-sm leading-relaxed text-muted-foreground">
+              <p><strong className="text-foreground">실행.</strong> {item.action}</p>
+              <p className="mt-2"><strong className="text-foreground">근거.</strong> {item.evidence}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">MLM/CLM 학습 & 망각 방지 & 데이터량 효과</h3>
-        <div className="not-prose"><ContinuedPretrainViz /></div>
-        <p className="leading-7">
-          요약 1: Continued Pretrain은 <strong>기존 가중치 위에 도메인 지식을 점진적으로 쌓는</strong> 과정.<br />
-          요약 2: 학습률은 원래의 <strong>1/10 수준</strong>이 최적 — 너무 높으면 사전학습 지식 파괴, 너무 낮으면 적응 부족.<br />
-          요약 3: 카타스트로픽 망각 방지의 가장 실용적 방법은 <strong>일반 데이터 5~10% 혼합</strong>.<br />
-          요약 4: 도메인 데이터 <strong>1M~10M 토큰</strong> 구간에서 비용 대비 효과가 가장 높음 — 그 이상은 수확 체감.
+        <h3>최소 비교 실험</h3>
+        <ol>
+          <li><strong>Generic baseline:</strong> 원 checkpoint를 그대로 평가한다.</li>
+          <li><strong>Domain adaptation:</strong> 같은 backbone에 domain corpus만 추가한다.</li>
+          <li><strong>Replay 후보:</strong> 보존할 일반 data를 섞되 같은 계산 예산으로 비교한다.</li>
+          <li><strong>최종 gate:</strong> domain slice, generic holdout, 새 시점 holdout과 비용을 함께 본다.</li>
+        </ol>
+        <p>
+          2번이 1번을 이기지 못하면 domain pretraining이 아직 필요하다는 결론이 아니라,
+          corpus 품질·objective·학습 강도 중 무엇이 잘못됐는지 다시 분리해야 한다.
+          2번이 domain metric만 올리고 generic holdout을 크게 망치면 release하지 않는다.
         </p>
       </div>
+      <StopRule>
+        특정 learning rate나 token 수를 외우는 대신 generic baseline, domain-adapted candidate와 보존 holdout을 같은 조건에서 비교할 수 있으면 이 단계의 최소 기반에 도달했다.
+      </StopRule>
+      <CapabilityCheck items={[
+        'Continued pretraining과 task fine-tuning의 목표 신호를 구분한다.',
+        'Checkpoint의 원래 pretraining contract를 먼저 확인한다.',
+        'Domain metric과 generic 능력 보존을 동시에 측정한다.',
+        'Learning rate, 혼합률과 token budget을 보편 상수가 아닌 sweep 변수로 다룬다.',
+        '추가 계산이 최종 과업 이득으로 이어지지 않으면 중단한다.',
+      ]} />
+      <SourceNotes sources={[
+        { label: 'Don’t Stop Pretraining', href: 'https://arxiv.org/abs/2004.10964', note: 'Domain-adaptive와 task-adaptive pretraining의 실험 분리 기준.' },
+        { label: 'BioBERT', href: 'https://arxiv.org/abs/1901.08746', note: '전문 corpus에서 continued pretraining을 수행한 공개 사례.' },
+      ]} />
     </section>
   );
 }

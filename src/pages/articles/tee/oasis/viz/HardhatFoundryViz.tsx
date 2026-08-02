@@ -35,7 +35,7 @@ export default function HardhatFoundryViz() {
                   <DataBox x={35} y={120} w={220} h={26}
                     label='import "@oasisprotocol/sapphire-hardhat"' color="#f59e0b" outlined />
                   <text x={145} y={195} textAnchor="middle" fontSize={9} fill="#f59e0b" fontWeight={600}>
-                    plugin 으로 자동 wrapping
+                    plugin으로 자동 wrapping
                   </text>
                 </>
               )}

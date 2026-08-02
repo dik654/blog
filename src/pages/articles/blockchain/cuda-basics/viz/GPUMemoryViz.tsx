@@ -32,7 +32,7 @@ export default function GPUMemoryViz() {
                   fill={l.c} fillOpacity={0.5}>{l.size}</text>
                 {/* speed indicator bar */}
                 {active && (
-                  <motion.rect x={x + 4} y={y + 2} width={0} height={3} rx={1.5}
+                  <motion.rect initial={false} x={x + 4} y={y + 2} width={0} height={3} rx={1.5}
                     fill={l.c} fillOpacity={0.6}
                     animate={{ width: l.w - 8 }}
                     transition={{ duration: [0.2, 0.4, 0.8, 1.5][i] }} />

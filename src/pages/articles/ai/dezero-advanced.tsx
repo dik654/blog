@@ -1,32 +1,23 @@
-import Overview from './dezero-advanced/Overview';
-import RnnVsLstm from './dezero-advanced/RnnVsLstm';
-import LstmCell from './dezero-advanced/LstmCell';
-import Normalization from './dezero-advanced/Normalization';
-import DropoutEmbedding from './dezero-advanced/DropoutEmbedding';
+import Article from './dezero-advanced/Article';
 import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './dezero-advanced/codeRefs';
-import { dezeroAdvTree } from './dezero-advanced/fileTrees';
+import { runtimeCodeRefs, runtimeFileTree } from './dezero-shared/runtimeCodeRefs';
 
 export default function DezeroAdvanced() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
-      <Overview onCodeRef={sidebar.open} />
-      <RnnVsLstm onCodeRef={sidebar.open} />
-      <LstmCell onCodeRef={sidebar.open} />
-      <Normalization onCodeRef={sidebar.open} />
-      <DropoutEmbedding onCodeRef={sidebar.open} />
+      <Article onCodeRef={sidebar.open} />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef}
         onClose={sidebar.close} onNavigate={sidebar.navigate}
-        codeRefs={codeRefs}
-        fileTrees={{ dezero: dezeroAdvTree }}
+        codeRefs={runtimeCodeRefs}
+        fileTrees={{ 'dezero-rs': runtimeFileTree }}
         projectMetas={{
-          dezero: {
-            id: 'dezero',
-            label: 'dezero_rs · Rust',
-            badgeClass: 'bg-[#fef3c7] border-[#f59e0b] text-[#92400e]',
+          'dezero-rs': {
+            id: 'dezero-rs',
+            label: '교육용 재구성 · Rust',
+            badgeClass: 'bg-cyan-50 border-cyan-600/35 text-cyan-900 dark:bg-cyan-950 dark:text-cyan-100',
           },
         }}
       />

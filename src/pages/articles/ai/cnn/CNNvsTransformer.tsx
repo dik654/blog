@@ -1,6 +1,7 @@
 import AttentionSupersetViz from './viz/AttentionSupersetViz';
 import TransformerDetailViz from './viz/TransformerDetailViz';
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
 export default function CNNvsTransformer() {
   return (
@@ -58,7 +59,15 @@ export default function CNNvsTransformer() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">ViT & 하이브리드 동향</h3>
-        <M display>{'\\underbrace{224 \\times 224}_{\\text{이미지}} \\to \\underbrace{14 \\times 14 = 196}_{\\text{패치}} \\to \\text{Transformer Encoder} \\to \\text{[CLS]} \\to \\text{분류}'}</M>
+        <M display>{'\\begin{aligned} \\underbrace{224\\times224}_{\\text{이미지}} &\\longrightarrow \\underbrace{14\\times14=196}_{\\text{16×16 패치 토큰}} \\\\ &\\longrightarrow \\mathrm{Encoder} \\longrightarrow [\\mathrm{CLS}] \\longrightarrow \\text{분류} \\end{aligned}'}</M>
+        <FormulaNote
+          meaning="224×224 이미지를 16×16 패치로 자르는 대표적인 ViT 설정의 데이터 흐름이다. 각 패치는 하나의 토큰이 되고, [CLS] 토큰이 encoder를 거치며 전체 이미지 정보를 모아 분류기에 전달한다. 패치 크기와 [CLS] 사용 여부는 모델마다 달라질 수 있다."
+          symbols={[
+            ['14\\times14=196', '각 축에서 224÷16=14이므로 생기는 이미지 패치 토큰 수'],
+            ['\\mathrm{Encoder}', '모든 패치 사이의 관계를 self-attention으로 갱신하는 블록'],
+            ['[\\mathrm{CLS}]', '전체 시퀀스를 대표하도록 함께 학습되는 분류용 토큰'],
+          ]}
+        />
       </div>
       <div className="not-prose my-6">
         <TransformerDetailViz />

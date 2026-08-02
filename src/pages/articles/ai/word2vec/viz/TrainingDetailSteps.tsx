@@ -58,7 +58,7 @@ export function SoftmaxBottleneck() {
         {/* Softmax bar (long) */}
         <text x={55} y={92} textAnchor="end" fontSize={8}
           fontWeight={600} fill={COLORS.softmax}>Softmax</text>
-        <motion.rect x={60} y={82} width={0} height={14} rx={3}
+        <motion.rect initial={false} x={60} y={82} width={0} height={14} rx={3}
           fill={COLORS.softmax} fillOpacity={0.2} stroke={COLORS.softmax} strokeWidth={0.6}
           animate={{ width: 380 }}
           transition={{ ...sp, delay: 0.7 }} />
@@ -68,7 +68,7 @@ export function SoftmaxBottleneck() {
         {/* NEG bar (short) */}
         <text x={55} y={112} textAnchor="end" fontSize={8}
           fontWeight={600} fill={COLORS.neg}>NEG</text>
-        <motion.rect x={60} y={102} width={0} height={14} rx={3}
+        <motion.rect initial={false} x={60} y={102} width={0} height={14} rx={3}
           fill={COLORS.neg} fillOpacity={0.2} stroke={COLORS.neg} strokeWidth={0.6}
           animate={{ width: 18 }}
           transition={{ ...sp, delay: 0.8 }} />
@@ -78,7 +78,7 @@ export function SoftmaxBottleneck() {
         {/* HS bar (medium-short) */}
         <text x={55} y={132} textAnchor="end" fontSize={8}
           fontWeight={600} fill={COLORS.hs}>HS</text>
-        <motion.rect x={60} y={122} width={0} height={14} rx={3}
+        <motion.rect initial={false} x={60} y={122} width={0} height={14} rx={3}
           fill={COLORS.hs} fillOpacity={0.2} stroke={COLORS.hs} strokeWidth={0.6}
           animate={{ width: 36 }}
           transition={{ ...sp, delay: 0.9 }} />
@@ -371,7 +371,7 @@ export function SubsamplingStep() {
               fontWeight={600} fill={w.color}>{w.word}</text>
 
             {/* Frequency bar */}
-            <motion.rect x={60} y={y + 2} width={0} height={12} rx={3}
+            <motion.rect initial={false} x={60} y={y + 2} width={0} height={12} rx={3}
               fill={w.color} fillOpacity={0.2} stroke={w.color} strokeWidth={0.5}
               animate={{ width: barW }}
               transition={{ ...sp, delay: 0.25 + i * 0.08 }} />
@@ -460,7 +460,7 @@ export function CostComparison() {
               fill="var(--muted-foreground)">{m.cost} = {m.example}</text>
 
             {/* Bar */}
-            <motion.rect x={115} y={y + 5} width={0} height={10} rx={3}
+            <motion.rect initial={false} x={115} y={y + 5} width={0} height={10} rx={3}
               fill={m.color} fillOpacity={0.25}
               stroke={m.color} strokeWidth={0.5}
               animate={{ width: m.barW }}

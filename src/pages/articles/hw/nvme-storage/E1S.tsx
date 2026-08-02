@@ -40,99 +40,68 @@ export default function E1S() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">E1.S/E3.S 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// EDSFF (Enterprise & Datacenter SSD Form Factor):
+        <h3 className="text-xl font-semibold mt-8 mb-3">EDSFF 폼팩터 종류</h3>
+        <ul className="leading-7">
+          <li><strong>E1.S (Enterprise 1 Short)</strong> — 31.5mm × 111.49mm. 두께 5.9/8/9.5/15/25mm 선택. hot-swap, 전면 접근. EDSFF SFF-TA-1006 표준.</li>
+          <li><strong>E1.L (Enterprise 1 Long)</strong> — 동일 폭, 길이 318.75mm. 고용량, ruler 형태.</li>
+          <li><strong>E3.S / E3.L (Enterprise 3)</strong> — 폭 76mm, 길이 104~142mm, 두께 7.5~25mm. 후속 표준, 더 큰 용량.</li>
+        </ul>
 
-// E1.S (Enterprise 1 Short):
-// - 31.5mm wide × 111.49mm long
-// - thickness options: 5.9mm, 8mm, 9.5mm, 15mm, 25mm
-// - hot-swap
-// - front-access
-// - EDSFF SFF-TA-1006 standard
+        <h3 className="text-xl font-semibold mt-8 mb-3">주요 장점</h3>
+        <ul className="leading-7">
+          <li><strong>밀도</strong> — 1U 에 최대 32 × E1.S (U.2 는 1U 약 10 개) — 3배 우위.</li>
+          <li><strong>열</strong> — 슬림 (5.9mm 옵션), 최적 airflow path, 우수한 냉각, 지속 성능.</li>
+          <li><strong>서비스성</strong> — tool-less, indicator LED, hot-swap, 엔터프라이즈 등급.</li>
+          <li><strong>전력</strong> — 드라이브별 조절 가능, sleep state, 효율적 냉각.</li>
+          <li><strong>future-proof</strong> — PCIe 5.0 준비, CXL 지원 예정, NVMe-oF 설계. Meta, Microsoft, Google 채택.</li>
+        </ul>
 
-// E1.L (Enterprise 1 Long):
-// - same width
-// - 318.75mm long
-// - higher capacity
-// - ruler form factor
+        <h3 className="text-xl font-semibold mt-8 mb-3">채택 타임라인</h3>
+        <ul className="leading-7">
+          <li>2019 — 스펙 발표</li>
+          <li>2021 — 첫 제품 (Samsung PM9A3)</li>
+          <li>2023 — 하이퍼스케일러 광범위 도입</li>
+          <li>2024 — 엔터프라이즈 mainstream</li>
+        </ul>
 
-// E3.S / E3.L (Enterprise 3):
-// - 76mm wide
-// - 104-142mm long
-// - 7.5mm-25mm thickness
-// - successor standard
-// - more capacity
+        <h3 className="text-xl font-semibold mt-8 mb-3">OCP (Open Compute Project)</h3>
+        <p className="leading-7">
+          Meta 가 주도한 하드웨어 이니셔티브. open standard, EDSFF 지원, 클라우드 데이터센터 설계.
+        </p>
 
-// 주요 장점:
-//
-// 1. Density:
-// - 1U: up to 32 × E1.S
-// - vs U.2: ~10 in 1U
-// - 3x density advantage
-//
-// 2. Thermal:
-// - thin profile (5.9mm option)
-// - optimal airflow paths
-// - better cooling
-// - sustained performance
-//
-// 3. Serviceability:
-// - tool-less
-// - indicator LEDs
-// - hot-swap
-// - enterprise-grade
-//
-// 4. Power:
-// - adjustable power
-// - per-drive budgeting
-// - sleep states
-// - efficient cooling
+        <h3 className="text-xl font-semibold mt-8 mb-3">폼팩터 면적</h3>
+        <ul className="leading-7">
+          <li>M.2 2280 — ~2.8K mm² (보드 면적)</li>
+          <li>U.2 — ~3.6K mm² (enclosure)</li>
+          <li>E1.S — ~3.5K mm²</li>
+          <li>E1.L — ~10K mm² (고용량)</li>
+        </ul>
 
-// 5. Future-proof:
-// - PCIe 5.0 ready
-// - CXL support (future)
-// - designed for NVMe-oF
-// - adopted by Meta, Microsoft, Google
+        <h3 className="text-xl font-semibold mt-8 mb-3">가격 추세</h3>
+        <ul className="leading-7">
+          <li>초기 — 프리미엄 가격</li>
+          <li>2024 — U.2 와 가격 수렴</li>
+          <li>2025 — 더 저렴해질 전망</li>
+          <li>규모 경제 진행</li>
+        </ul>
 
-// Adoption:
-// - 2019: spec released
-// - 2021: first products (Samsung PM9A3)
-// - 2023: widespread in hyperscalers
-// - 2024: enterprise mainstream
+        <h3 className="text-xl font-semibold mt-8 mb-3">용도</h3>
+        <ul className="leading-7">
+          <li>하이퍼스케일러 데이터센터</li>
+          <li>고밀도 스토리지 서버</li>
+          <li>NVMe-oF fabric</li>
+          <li>HPC scratch</li>
+          <li>Filecoin SP (차세대)</li>
+        </ul>
 
-// OCP (Open Compute Project):
-// - Meta's hardware initiative
-// - open standards
-// - EDSFF supported
-// - designed for cloud datacenters
-
-// Form factor comparison:
-// M.2 2280: ~2.8K mm² (board area)
-// U.2: ~3.6K mm² (enclosure)
-// E1.S: ~3.5K mm²
-// E1.L: ~10K mm² (high capacity)
-
-// Cost trends:
-// - initial: premium pricing
-// - 2024: approaching U.2 parity
-// - 2025: expected to be cheaper
-// - economies of scale
-
-// Use cases:
-// ✓ Hyperscaler datacenters
-// ✓ Dense storage servers
-// ✓ NVMe-oF fabrics
-// ✓ HPC scratch
-// ✓ Filecoin SP (next-gen)
-
-// Future (2025+):
-// - E3.S primary standard
-// - PCIe 5.0 mainstream
-// - CXL integration
-// - 30-60 TB single drive
-// - $100/TB target`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">2025+ 전망</h3>
+        <ul className="leading-7">
+          <li>E3.S 가 주 표준</li>
+          <li>PCIe 5.0 mainstream</li>
+          <li>CXL 통합</li>
+          <li>드라이브당 30~60 TB</li>
+          <li>$100/TB 목표</li>
+        </ul>
         <p className="leading-7">
           E1.S/E3.S: <strong>EDSFF standard, 1U density 32 drives</strong>.<br />
           hyperscaler 표준 (Meta OCP, Microsoft, Google).<br />

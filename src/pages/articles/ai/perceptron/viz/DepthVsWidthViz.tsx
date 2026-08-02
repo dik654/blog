@@ -35,7 +35,7 @@ export default function DepthVsWidthViz() {
           fill="#ef4444" fillOpacity={0.08} stroke="#ef4444" strokeWidth={1.2} />
         <text x={155} y={280} textAnchor="middle" fontSize={12} fontWeight={700} fill="#ef4444">파라미터 수</text>
         <text x={155} y={300} textAnchor="middle" fontSize={13} fontFamily="monospace" fill="var(--foreground)">
-          2 × 2ⁿ = O(2ⁿ) 지수
+          2 × 2ⁿ = O(2ⁿ) exp
         </text>
 
         {/* ───── 중앙: VS 구분선 ───── */}
@@ -96,7 +96,7 @@ export default function DepthVsWidthViz() {
           fill="#10b981" fillOpacity={0.08} stroke="#10b981" strokeWidth={1.2} />
         <text x={497} y={280} textAnchor="middle" fontSize={12} fontWeight={700} fill="#10b981">파라미터 수</text>
         <text x={497} y={300} textAnchor="middle" fontSize={13} fontFamily="monospace" fill="var(--foreground)">
-          n × (2×2) = O(n) 선형
+          n × (2×2) = O(n) linear
         </text>
 
         {/* 하단 메시지 */}

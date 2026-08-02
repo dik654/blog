@@ -15,7 +15,7 @@ function PathLine({ path, color, active }: { path: typeof SGD_PATH; color: strin
             stroke={color} strokeWidth={active ? 1.3 : 0.7} opacity={0.7} />
         );
       })}
-      <motion.circle r={active ? 4 : 2.5} fill={color}
+      <motion.circle initial={false} r={active ? 4 : 2.5} fill={color}
         animate={{ cx: path[path.length - 1].x, cy: path[path.length - 1].y }} transition={sp} />
     </motion.g>
   );

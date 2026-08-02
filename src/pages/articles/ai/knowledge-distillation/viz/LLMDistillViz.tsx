@@ -18,7 +18,7 @@ function TowerBlock({ x, y, layers, color, label, w = 38 }: {
           width={w} height={layerH} rx={2}
           fill={color} opacity={0.3 + (i / layers) * 0.5} />
       ))}
-      <text x={x + w / 2} y={y + layers * (layerH + gap) + 10}
+      <text x={x + w / 2} y={y - 6}
         textAnchor="middle" fontSize={8} fontWeight={600} fill={color}>{label}</text>
     </g>
   );

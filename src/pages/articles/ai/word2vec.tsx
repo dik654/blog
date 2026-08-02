@@ -1,15 +1,17 @@
-import Overview from './word2vec/Overview';
-import Models from './word2vec/Models';
-import Training from './word2vec/Training';
-import Applications from './word2vec/Applications';
+import ContextPairs from './word2vec/ContextPairs';
+import PredictionObjectives from './word2vec/PredictionObjectives';
+import NegativeSampling from './word2vec/NegativeSampling';
+import GeometryAndLimits from './word2vec/GeometryAndLimits';
+import ModernHandoff from './word2vec/ModernHandoff';
 
 export default function Word2VecArticle() {
   return (
     <>
-      <Overview />
-      <Models />
-      <Training />
-      <Applications />
+      <ContextPairs />
+      <PredictionObjectives />
+      <NegativeSampling />
+      <GeometryAndLimits />
+      <ModernHandoff />
     </>
   );
 }

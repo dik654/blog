@@ -61,7 +61,7 @@ export default function TransformerBlockViz() {
                 animate={{ opacity: show ? 0.7 : 0.12 }} transition={{ duration: 0.3 }} />
             );
           })}
-          <motion.circle r={6}
+          <motion.circle initial={false} r={6}
             animate={{ cx: CX, cy: 10 + step * (LH + GAP) + LH / 2 }}
             transition={{ type: 'spring', bounce: 0.2 }}
             fill={LAYERS[step].color}

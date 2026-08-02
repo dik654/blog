@@ -63,7 +63,7 @@ export default function R1CSGadgets() {
         <div className="not-prose space-y-3 mb-4">
           <div className="rounded-lg border-l-4 border-l-violet-500 bg-card p-4">
             <p className="font-semibold text-sm text-violet-400 mb-2">제약 정의</p>
-            <M display>{'b \\cdot (1 - b) = 0'}</M>
+            <M display>{'\\underbrace{b}_{\\text{변수}} \\cdot \\underbrace{(1 - b)}_{\\text{보수}} = 0 \\quad \\Rightarrow \\quad b \\in \\{0, 1\\}'}</M>
             <p className="text-sm text-muted-foreground mt-2">
               A = <code>[(b, 1)]</code>, &ensp; B = <code>[(One, 1), (b, -1)]</code>, &ensp; C = <code>0</code>
             </p>

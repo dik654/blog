@@ -47,7 +47,7 @@ export default function AttestFlowViz() {
               <ModuleBox x={50} y={70} w={140} h={56}
                 label="Client" sub="user device" color="#6366f1" />
               <text x={215} y={102} fontSize={20} fill="var(--muted-foreground)">→</text>
-              <text x={260} y={92} textAnchor="middle" fontSize={11}
+              <text x={280} y={152} textAnchor="middle" fontSize={11}
                 fontWeight={600} fill="#6366f1" style={{ fontFamily: 'monospace' }}>
                 "Hello, need attestation"
               </text>

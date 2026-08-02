@@ -4,7 +4,7 @@ import { ModuleBox, ActionBox, DataBox } from '@/components/viz/boxes';
 
 const STEPS = [
   { label: '1. Envelope CBOR 파싱', body: 'cbor::from_slice(&tx.data) — version, data, nonce, pk 추출.' },
-  { label: '2. Key Manager 에서 secret key 가져옴', body: 'ctx.key_manager().get_private_key().\nKM 가 RA-TLS + policy 검증 후 key 제공.' },
+  { label: '2. Key Manager 에서 secret key 가져옴', body: 'ctx.key_manager().get_private_key().\nKM 이 RA-TLS + policy 검증 후 key 제공.' },
   { label: '3. ECDH → shared secret 재구성', body: 'x25519_diffie_hellman(km_secret, envelope.pk).\n클라이언트 측과 동일한 shared secret.' },
   { label: '4. Deoxys-II 복호화 → 평문 calldata', body: 'plaintext = decrypt(shared, nonce, data).\nEVM 이 평문으로 실행.' },
   { label: '5. 결과 암호화 후 반환', body: 'returnData 도 같은 키로 재암호화.\nstorage slot 도 슬롯별 키로 암호화 — 외부는 암호문만 관측.' },

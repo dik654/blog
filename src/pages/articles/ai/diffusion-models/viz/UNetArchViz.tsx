@@ -74,7 +74,7 @@ export default function UNetArchViz() {
             ))}
             {step === 3 && <text x={190} y={28} textAnchor="middle" fontSize={9} fill="#ec4899">skip</text>}
             {/* Moving packet */}
-            <motion.circle r={5} animate={{ cx: packetX, cy: packetY + 12 }}
+            <motion.circle initial={false} r={5} cx={packetX} cy={packetY + 12} animate={{ cx: packetX, cy: packetY + 12 }}
               transition={{ type: 'spring', bounce: 0.2 }}
               fill={step <= 1 ? '#3b82f6' : step === 2 ? '#f59e0b' : '#10b981'}
               style={{ filter: `drop-shadow(0 0 4px ${step <= 1 ? '#3b82f6' : step === 2 ? '#f59e0b' : '#10b981'}88)` }} />

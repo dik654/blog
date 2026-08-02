@@ -24,7 +24,7 @@ export const STEPS: StepDef[] = [
   },
   {
     label: 'Mixed Precision (AMP): FP16 + FP32 혼합',
-    body: 'torch.cuda.amp.autocast: forward를 FP16으로 실행.\nGradScaler: FP16 기울기의 underflow 방지.\nGPU 메모리 40~50% 절약, 속도 2x.',
+    body: 'torch.amp.autocast("cuda"): op별로 안전한 dtype을 선택.\nGradScaler: 동적 scale로 FP16 gradient underflow를 줄이고 overflow 시 step을 건너뜀.\n메모리와 처리량 이득은 workload에서 직접 측정한다.',
   },
 ];
 

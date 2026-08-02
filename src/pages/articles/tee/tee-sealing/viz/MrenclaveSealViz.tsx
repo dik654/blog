@@ -22,7 +22,7 @@ const STEPS = [
   },
   {
     label: '장단점 — 가장 강한 격리, but 사소한 업데이트도 migration 필요',
-    body: '✓ 백도어 주입 불가, ✓ 검증 가능성 최고.\n✗ 컴파일러 버전 변경 시도 MRENCLAVE 변경 → 데이터 영속성과 충돌.',
+    body: '✓ 백도어 주입 불가, ✓ 검증 가능성 최고.\n✗ 컴파일러 버전 변경만으로도 MRENCLAVE 변경 → 데이터 영속성과 충돌.',
   },
 ];
 
@@ -71,7 +71,7 @@ export default function MrenclaveSealViz() {
                 ['✓', '백도어 주입 불가 (byte-level)', C_V2],
                 ['✓', '검증 가능성 최고', C_V2],
                 ['✗', '사소한 업데이트도 migration 필요', C_BAD],
-                ['✗', '컴파일러 버전 변경 시도 MRENCLAVE 변경', C_BAD],
+                ['✗', '컴파일러 버전 변경만으로도 MRENCLAVE 변경', C_BAD],
               ].map(([sym, line, color], i) => (
                 <motion.g key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07 }}>

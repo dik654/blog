@@ -52,7 +52,6 @@ export const subcategories: Subcategory[] = [
       { slug: 'fil-theory', name: '이론', description: '저장 증명 이론, VDF, DRAND', icon: '📐' },
     ],
   },
-  // { slug: 'l1-chains', name: 'L1 Blockchains', description: 'Berachain 등 신규 L1 체인 분석', icon: '⛓️' },
   { slug: 'commonware', name: 'Commonware', description: 'Anti-Framework 블록체인 프리미티브 라이브러리', icon: '🧩' },
   { slug: 'zk-from-scratch', name: 'ZK 구현 (Rust)', description: 'blockchain-project-from-scratch — ZK 증명 시스템을 Rust로 직접 구현', icon: '🦀' },
 ];

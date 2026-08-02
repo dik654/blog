@@ -1,20 +1,21 @@
-import LinearSoftmaxViz from './viz/LinearSoftmaxViz';
-import LinearSoftmaxDetailViz from './viz/LinearSoftmaxDetailViz';
+import MathText from '@/components/ui/math-text';
+import LinearSoftmaxScene from './viz/LinearSoftmaxScene';
+import LinearSoftmaxDetailScene from './viz/LinearSoftmaxDetailScene';
 import M from '@/components/ui/math';
 
 export default function LinearSoftmax() {
   return (
-    <section id="linear-softmax" className="mb-16 scroll-mt-20">
+    <MathText id="linear-softmax" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">최종 출력 (Linear + Softmax)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          디코더의 마지막 출력 벡터(d_model=6)를 단어장 크기(11)로 확장한다<br />
-          <strong>Linear(6→11)</strong> → <strong>Softmax</strong> → 다음 단어 확률 분포<br />
-          가장 높은 확률의 단어가 예측 결과
+          decoder의 마지막 벡터 $h$ 는 아직 모델 내부 차원이다<br />
+          다음 token을 고르려면 vocabulary의 모든 후보에 점수 $z$ 를 줘야 한다<br />
+          $hW_U$ 로 logit을 만들고 softmax로 다음 단어 확률 $p$ 를 만든다
         </p>
       </div>
 
-      <LinearSoftmaxViz />
+      <LinearSoftmaxScene />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>학습 과정</h3>
@@ -25,8 +26,8 @@ export default function LinearSoftmax() {
           <div><strong>4.</strong> Cross-Entropy Loss 계산 → 역전파</div>
         </div>
         <p>
-          CE Loss = -log(정답 확률)<br />
-          확률이 1에 가까울수록 Loss → 0, 학습이 잘 된 것
+          cross-entropy는 정답 token에 준 확률만 본다<br />
+          p_target 이 작으면 -log p_target 이 크게 올라가고, 그 스칼라가 backward의 시작점이 된다
         </p>
       </div>
 
@@ -36,14 +37,14 @@ export default function LinearSoftmax() {
           {`P(w_i) = \\underbrace{\\text{softmax}\\!\\left(\\frac{e^{z_i}}{\\sum_j e^{z_j}}\\right)}_{\\text{확률 분포}}, \\quad \\underbrace{\\mathcal{L} = -\\log P(w_{\\text{target}})}_{\\text{Cross-Entropy Loss}}`}
         </M>
       </div>
-      <LinearSoftmaxDetailViz />
+      <LinearSoftmaxDetailScene />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
-          요약 1: 출력은 <strong>Linear → Softmax → Loss/Sampling</strong> 순.<br />
-          요약 2: <strong>Weight tying</strong>으로 임베딩-출력 공유 — 파라미터 절감.<br />
-          요약 3: 생성 시 <strong>temperature·top-k·top-p</strong>로 다양성 조절.
+          요약 1: 내부 벡터 $h$ 는 $W_U$ 를 지나 vocabulary logit $z$ 가 된다.<br />
+          요약 2: softmax는 logit을 다음 token 확률 분포로 바꾼다.<br />
+          요약 3: 학습은 -log p_target, 생성은 temperature/top-k/top-p가 분포를 조정한다.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

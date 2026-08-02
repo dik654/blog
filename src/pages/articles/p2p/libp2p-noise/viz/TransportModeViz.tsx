@@ -18,7 +18,7 @@ const STEPS = [
     body: 'XX 3 라운드 모두 완료, 양쪽 identity 검증됨.\nfinish() 호출 가능 상태.',
   },
   {
-    label: '2. Split — Final ck 에서 두 키 파생',
+    label: '2. Split — Final ck에서 두 키 파생',
     body: 'k_init→resp, k_resp→init = HKDF(ck, "", 64).\n방향별로 분리해야 nonce 충돌 회피.',
   },
   {

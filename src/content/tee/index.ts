@@ -7,6 +7,7 @@ const tee: Category = {
   slug: 'tee',
   name: 'TEE',
   description: '신뢰 실행 환경 — Intel SGX/TDX, ARM TrustZone/CCA, AMD SEV, 기밀 컴퓨팅',
+  group: 'capability',
   subcategories: [
     {
       slug: 'tee-fundamentals', name: 'Fundamentals', description: 'TCB, 메모리 격리, 원격 증명, 사이드채널', icon: '🔒',

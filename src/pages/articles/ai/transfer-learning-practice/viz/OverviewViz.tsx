@@ -21,7 +21,7 @@ export default function OverviewViz() {
               </text>
               {/* GPU cost bar */}
               <rect x={100} y={155} width={320} height={20} rx={4} fill="var(--border)" opacity={0.2} />
-              <motion.rect x={100} y={155} width={0} height={20} rx={4} fill="#ef4444" opacity={0.5}
+              <motion.rect initial={false} x={100} y={155} width={0} height={20} rx={4} fill="#ef4444" opacity={0.5}
                 animate={{ width: 320 }} transition={{ ...sp, duration: 1 }} />
               <text x={260} y={169} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--foreground)">
                 GPU 수천 시간 · 데이터 수백만 장 필요
@@ -41,11 +41,11 @@ export default function OverviewViz() {
               <StatusBox x={380} y={28} w={120} h={50} label="Acc 94%" sub="빠른 수렴" color={COLORS.finetune} progress={0.94} />
               {/* Time comparison bars */}
               <rect x={60} y={110} width={400} height={14} rx={3} fill="var(--border)" opacity={0.15} />
-              <motion.rect x={60} y={110} width={0} height={14} rx={3} fill={COLORS.finetune} opacity={0.6}
+              <motion.rect initial={false} x={60} y={110} width={0} height={14} rx={3} fill={COLORS.finetune} opacity={0.6}
                 animate={{ width: 60 }} transition={{ ...sp, duration: 0.8 }} />
               <text x={130} y={121} fontSize={8} fill="var(--foreground)">Fine-tuning: 30분</text>
               <rect x={60} y={130} width={400} height={14} rx={3} fill="var(--border)" opacity={0.15} />
-              <motion.rect x={60} y={130} width={0} height={14} rx={3} fill="#ef4444" opacity={0.4}
+              <motion.rect initial={false} x={60} y={130} width={0} height={14} rx={3} fill="#ef4444" opacity={0.4}
                 animate={{ width: 400 }} transition={{ ...sp, duration: 1 }} />
               <text x={130} y={141} fontSize={8} fill="var(--foreground)">From Scratch: 48시간+</text>
               <text x={260} y={175} textAnchor="middle" fontSize={10} fill={COLORS.finetune} fontWeight={600}>

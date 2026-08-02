@@ -26,7 +26,7 @@ export const vllmTree: FileNode = d('vllm', [
     f('rejection_sampler.py', 'vllm/v1/sample/rejection_sampler.py', 'spec-rejection-sampler'),
   ]),
   d('v1/worker', [
-    f('gpu_worker.py', 'vllm/v1/worker/gpu_worker.py'),
+    f('gpu_worker.py', 'vllm/v1/worker/gpu_worker.py', 'gpu-worker-execute'),
   ]),
   d('v1', [
     f('request.py', 'vllm/v1/request.py'),

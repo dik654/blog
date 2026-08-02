@@ -22,8 +22,8 @@ export default function ChipArchitecture() {
       </div>
       <div className="space-y-1.5 mt-4 mb-6">
         {CPU_ROLE.map(r => (
-          <div key={r.role} className="rounded-lg border border-border/60 p-3 flex gap-3">
-            <span className="font-mono text-xs font-bold text-indigo-400 w-32 flex-shrink-0">
+          <div key={r.role} className="flex min-w-0 flex-col gap-1 rounded-lg border border-border/60 p-3 sm:flex-row sm:gap-3">
+            <span className="font-mono text-xs font-bold text-indigo-400 sm:w-32 sm:flex-shrink-0">
               {r.role}
             </span>
             <span className="text-sm text-foreground/75">{r.desc}</span>

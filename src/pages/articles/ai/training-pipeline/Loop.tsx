@@ -32,14 +32,15 @@ export default function Loop() {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Mixed Precision (AMP)</h3>
         <p>
-          <strong>torch.cuda.amp.autocast</strong> — forward pass를 FP16(반정밀도)으로 실행<br />
-          FP16: 메모리 절반, Tensor Core 활용으로 연산 2배 속도<br />
-          단점: FP16의 작은 범위(6e-8 ~ 65504)로 gradient underflow 발생 가능
+          <strong>torch.amp.autocast(&quot;cuda&quot;)</strong>는 모든 연산을 FP16으로 강제하지 않는다.<br />
+          Tensor Core에 유리한 연산은 낮은 정밀도로, 수치 범위가 중요한 연산은 FP32로 실행한다.
+          즉 autocast가 op별로 dtype을 선택한다.<br />
+          그래서 memory와 처리량 이득은 model, tensor shape, GPU와 병목 위치에 따라 달라지며 직접 benchmark해야 한다.
         </p>
         <p>
-          <strong>GradScaler</strong>가 이 문제를 해결 — loss에 큰 scale(예: 1024)을 곱한 뒤 backward<br />
-          gradient가 FP16 범위 안에 들어오도록 키운 뒤, unscale로 원래 크기로 복원<br />
-          결과: GPU 메모리 40~50% 절약, 속도 1.5~2배 — 성능 손실 거의 없음
+          <strong>torch.amp.GradScaler(&quot;cuda&quot;)</strong>는 loss에 동적인 scale을 곱해 작은 gradient가 FP16에서 0으로 사라지는 위험을 줄인다.<br />
+          Optimizer step 전에 같은 scale로 gradient를 되돌리고, overflow가 보이면 step을 건너뛰며 scale을 낮춘다.<br />
+          현재 기본 initial scale은 65,536이지만 고정 상수가 아니다. 관찰된 overflow에 따라 매 step 조정되는 상태다.
         </p>
       </div>
 

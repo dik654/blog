@@ -47,7 +47,7 @@ export default function R1CStoQAP() {
           </div>
           <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 mt-2">
             <p className="font-medium text-xs mb-1">QAP 만족 조건</p>
-            <M display>{'A(x) \\cdot B(x) - C(x) = h(x) \\cdot t(x)'}</M>
+            <M display>{'\\underbrace{A(x) \\cdot B(x) - C(x)}_{\\text{R1CS 제약 위반 다항식}} = \\underbrace{h(x)}_{\\text{몫 다항식}} \\cdot \\underbrace{t(x)}_{\\text{vanishing 다항식}}'}</M>
             <p className="text-xs text-muted-foreground">
               모든 <M>{'x \\in \\{\\omega^0, \\ldots, \\omega^{n-1}\\}'}</M>에서 성립
             </p>
@@ -59,8 +59,8 @@ export default function R1CStoQAP() {
           <h4 className="font-semibold text-base mb-2">h(x) = [A·B - C] / t(x)</h4>
           <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 mb-2">
             <p className="text-xs text-muted-foreground">vanishing polynomial</p>
-            <M display>{'t(x) = (x - \\omega^0)(x - \\omega^1)\\cdots(x - \\omega^{n-1}) = x^n - 1'}</M>
-            <M display>{'h(x) = \\frac{A(x) \\cdot B(x) - C(x)}{t(x)}'}</M>
+            <M display>{'t(x) = \\underbrace{(x - \\omega^0)(x - \\omega^1)\\cdots(x - \\omega^{n-1})}_{n \\text{개 평가점에서 0}} = x^n - 1'}</M>
+            <M display>{'h(x) = \\frac{\\overbrace{A(x) \\cdot B(x) - C(x)}^{\\text{모든 } \\omega^i \\text{ 에서 0}}}{\\underbrace{t(x)}_{\\text{나누어 떨어짐}}}'}</M>
           </div>
           <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3">
             <p className="font-medium text-xs mb-2">5단계 코셋 FFT 최적화</p>

@@ -27,7 +27,7 @@ export default function LogReplicationViz() {
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <rect x={15} y={30} width={55} height={24} rx={4} fill={`${C3}12`} stroke={C3} strokeWidth={0.8} />
               <text x={42} y={46} textAnchor="middle" fontSize={10} fill={C3}>Client</text>
-              <motion.line x1={70} y1={42} x2={110} y2={42} stroke={C3} strokeWidth={0.8}
+              <motion.line x1={70} y1={42} x2={120} y2={42} stroke={C3} strokeWidth={0.8}
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} />
             </motion.g>
           )}
@@ -54,23 +54,27 @@ export default function LogReplicationViz() {
           {/* Log entries */}
           {step >= 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <text x={155} y={80} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                Leader Log (엔트리 = 명령)
+              </text>
               {[0, 1, 2].map(i => {
                 const committed = step >= 3 && i < 2;
                 return (
-                  <rect key={i} x={110 + i * 22} y={72} width={20} height={14} rx={2}
-                    fill={committed ? `${C2}20` : `${C1}10`}
-                    stroke={committed ? C2 : C1} strokeWidth={0.8} />
+                  <g key={i}>
+                    <rect x={125 + i * 22} y={84} width={20} height={16} rx={2}
+                      fill={committed ? `${C2}20` : `${C1}10`}
+                      stroke={committed ? C2 : C1} strokeWidth={0.8} />
+                    <text x={125 + i * 22 + 10} y={95} textAnchor="middle" fontSize={8}
+                      fontWeight={500} fill={committed ? C2 : C1}>E{i + 1}</text>
+                  </g>
                 );
               })}
-              <text x={155} y={100} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
-                Leader Log
-              </text>
             </motion.g>
           )}
           {/* Commit label */}
           {step >= 3 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <rect x={105} y={105} width={90} height={18} rx={4} fill={`${C2}10`} stroke={C2} strokeWidth={0.8} />
+              <rect x={90} y={105} width={120} height={18} rx={4} fill={`${C2}10`} stroke={C2} strokeWidth={0.8} />
               <text x={150} y={118} textAnchor="middle" fontSize={10} fontWeight={500} fill={C2}>
                 committed (과반 ACK)
               </text>

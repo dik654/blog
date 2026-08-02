@@ -34,7 +34,7 @@ export default function PreTraining() {
       </div>
       <div className="space-y-2 mb-6">
         {MLM_STRATEGY.map((s) => (
-          <div key={s.pct} className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
+          <div key={`${s.pct}-${s.action}`} className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
             style={{ borderColor: s.color + '40', background: s.color + '08' }}>
             <span className="font-mono font-bold text-sm w-10" style={{ color: s.color }}>{s.pct}</span>
             <span className="text-sm w-36">{s.action}</span>

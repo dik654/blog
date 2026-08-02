@@ -21,7 +21,7 @@ export const STEPS: StepDef[] = [
   },
   {
     label: 'num_workers & pin_memory 최적화',
-    body: 'num_workers: CPU 프로세스 수 (보통 CPU 코어의 2~4배).\npin_memory=True: GPU 전송 속도 향상 (페이지 잠금 메모리).\n두 설정이 GPU 유휴 시간을 줄인다.',
+    body: 'num_workers: GPU당 2~4개에서 시작해 처리량이 더 늘지 않을 때까지 측정.\npin_memory: CPU→GPU 전송을 겹칠 후보이며 host memory 비용도 함께 본다.\n고정 공식 대신 profiler로 GPU 대기 시간을 확인한다.',
   },
   {
     label: '도메인별 Dataset 패턴',

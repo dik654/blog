@@ -1,3 +1,4 @@
+import M from '@/components/ui/math';
 import LinearVsNonlinearViz from './viz/LinearVsNonlinearViz';
 import ActivationRequirementsViz from './viz/ActivationRequirementsViz';
 import ActivationTimelineViz from './viz/ActivationTimelineViz';
@@ -8,14 +9,25 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">활성화 함수가 왜 필요한가</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          신경망의 각 뉴런 — 입력에 가중치를 곱하고 편향을 더하는 <strong>선형 변환</strong><br />
-          선형 함수를 아무리 쌓아도 결과는 여전히 선형: f(g(x)) = (w₁·w₂)x + b<br />
-          비선형 패턴(XOR, 이미지 경계, 언어 문맥)을 학습할 수 없다
+          신경망의 각 뉴런은 입력에 가중치를 곱하고 편향을 더하는 <strong>선형 변환</strong> 하나를 수행한다 —
+          <M>{'h = w \\cdot x + b'}</M>. 선형 함수를 아무리 쌓아도 결과는 여전히 선형이라는 게 문제의 출발이다:
+        </p>
+        <M display>{'f(g(x)) = w_2 \\bigl(\\underbrace{w_1 x + b_1}_{\\text{1층 출력}}\\bigr) + b_2 = \\underbrace{(w_2 w_1)}_{\\text{새 가중치}} x + \\underbrace{(w_2 b_1 + b_2)}_{\\text{새 편향}}'}</M>
+        <p>
+          여기서 <M>{'x \\in \\mathbb{R}'}</M> 는 입력 (스칼라 또는 벡터),
+          <M>{'w_1, w_2'}</M> 는 두 층의 가중치, <M>{'b_1, b_2'}</M> 는 편향.
+          두 층의 합성은 새 가중치 <M>{'w_2 w_1'}</M> 와 새 편향 <M>{'w_2 b_1 + b_2'}</M> 인 단일 선형 변환으로 무너진다 —
+          XOR · 이미지 경계 · 언어 문맥 같은 비선형 패턴은 학습 불가.
         </p>
         <p>
-          <strong>활성화 함수</strong>(Activation Function) — 선형 변환 뒤에 붙는 비선형 함수<br />
-          이것 하나로 신경망이 임의의 복잡한 함수를 근사할 수 있게 된다<br />
-          (Universal Approximation Theorem, 만능 근사 정리)
+          <strong>활성화 함수</strong>(Activation Function) <M>{'\\sigma(\\cdot)'}</M> 가 선형 변환 뒤에 끼어들어 합성을 깨뜨린다:
+        </p>
+        <M display>{'h = \\underbrace{\\sigma}_{\\text{비선형}}\\bigl(\\underbrace{w \\cdot x + b}_{\\text{선형 변환}}\\bigr)'}</M>
+        <p>
+          <M>{'\\sigma : \\mathbb{R} \\to \\mathbb{R}'}</M> 는 비선형 변환 (sigmoid · tanh · ReLU 등 어느 것이든).
+          이 한 함수 덕분에 신경망이 <strong>임의의 연속 함수</strong>를 근사할 수 있다 —
+          Universal Approximation Theorem (Cybenko 1989, Hornik 1991): 충분히 많은 뉴런을 가진 한 층 MLP 가
+          임의의 연속 함수를 임의의 정확도로 근사한다.
         </p>
       </div>
       <div className="not-prose my-8">

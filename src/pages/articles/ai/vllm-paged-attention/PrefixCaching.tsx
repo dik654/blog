@@ -24,7 +24,9 @@ export default function PrefixCaching({ onCodeRef }: Props) {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">블록 해시 기반 매칭</h3>
         <p>
-          각 블록은 해당 블록에 저장된 토큰 ID들의 해시(BlockHash)를 가집니다.
+          각 완전한 블록은 이전 prefix의 hash, 해당 블록의 token ID와 LoRA·multimodal 같은 추가 식별 정보를 반영한
+          BlockHash를 가집니다. 현재 구현 세부는 version에 따라 달라질 수 있지만,
+          단일 블록 내용만 같다고 서로 다른 앞 문맥을 공유하지 않는 것이 핵심입니다.
           <code>get_computed_blocks()</code>가 호출되면 요청의 <code>block_hashes</code>를
           BlockPool의 <code>cached_block_hash_to_block</code> 맵에서 검색합니다.
         </p>

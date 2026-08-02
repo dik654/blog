@@ -23,7 +23,7 @@ export default function SpartanCompression({ title, onCodeRef }: { title?: strin
             Relaxed R1CS 만족식 <M>{'(A z) \\circ (B z) = u (C z) + E'}</M> 의 양변 차이를
             log-space 에서 zero-test 한다. 다변수 다항식
           </p>
-          <M display>{'g(\\vec{x}) = \\widetilde{A z}(\\vec{x}) \\cdot \\widetilde{B z}(\\vec{x}) - u \\cdot \\widetilde{C z}(\\vec{x}) - \\widetilde{E}(\\vec{x})'}</M>
+          <M display>{'g(\\vec{x}) = \\underbrace{\\widetilde{A z}(\\vec{x}) \\cdot \\widetilde{B z}(\\vec{x})}_{\\text{좌·우변 곱}} - \\underbrace{u \\cdot \\widetilde{C z}(\\vec{x})}_{\\text{스케일된 출력}} - \\underbrace{\\widetilde{E}(\\vec{x})}_{\\text{에러 항}}'}</M>
           <p className="text-sm text-muted-foreground mt-2">
             가 모든 부울 큐브 점에서 0 임을 <strong>Sumcheck</strong> 로 증명. 라운드 수 = log m
             (m = 제약 수) → Verifier 비용 <M>{'O(\\log m)'}</M>.

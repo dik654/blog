@@ -12,7 +12,6 @@ export const ethereum2Articles: Article[] = [
     sections: [{ id: 'glossary', title: '핵심 용어 & 배경 지식' }, { id: 'overview', title: '개요 & DA 문제' }, { id: 'das', title: 'Data Availability Sampling' }, { id: 'da-layer', title: 'Celestia, EigenDA, Avail' }, { id: 'eip-4844', title: 'Blob 트랜잭션 & Proto-Danksharding' }],
     component: () => import('@/pages/articles/blockchain/da-theory'),
   },
-
   /* ── Privacy (심층 코드 추적) ── */
   {
     slug: 'railgun', title: 'RAILGUN: ZKP 기반 EVM 프라이버시 프로토콜', subcategory: 'eth-privacy',

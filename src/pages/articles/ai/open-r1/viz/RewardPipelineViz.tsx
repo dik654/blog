@@ -1,82 +1,81 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
+import { Braces, Code2, Gauge, Sigma } from 'lucide-react';
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.4 };
-
-const STEPS = [
-  { label: '1. 모델 응답 수신', body: 'GRPO가 생성한 응답을 보상 파이프라인에 입력\n<think>..추론..</think><answer>..답..</answer> 형식' },
-  { label: '2. 답안 추출 (LaTeX)', body: 'math_verify.parse()로 <answer> 내용 추출\n\\boxed{} 우선 → 일반 LaTeX 폴백\n"1/2", "0.5", "\\frac{1}{2}" 동일 파싱' },
-  { label: '3. 형식 + 태그 검증', body: '정규식: <think>.*</think>\\s*<answer>.*</answer>\n4개 태그 각 0.25점 → 지름길 학습 방지' },
-  { label: '4. 정확도 검증', body: 'math_verify.verify(gold, answer)\n대수적 동치 판정 → 정답 1.0 / 오답 0.0' },
-  { label: '5. 가중 합산 → R', body: 'R = accuracy×0.7 + format×0.2 + tag×0.1\n정확도 지배적이지만 형식 무시 시 최대 0.7' },
-];
-
-const SCORES = [
-  { func: 'accuracy', score: 1.0, weight: 0.7, color: '#6366f1' },
-  { func: 'format', score: 1.0, weight: 0.2, color: '#10b981' },
-  { func: 'tag_count', score: 0.75, weight: 0.1, color: '#f59e0b' },
-];
+const contracts = [
+  {
+    key: 'accuracy',
+    label: '수학적 정답',
+    owner: 'math parser + verifier',
+    input: 'gold solution + completion',
+    output: '동치 1 · 비동치/검증 실패 0',
+    failure: 'Gold parse 실패와 model 오답을 같은 0으로 숨기면 data 오류를 찾지 못한다.',
+    Icon: Sigma,
+  },
+  {
+    key: 'format',
+    label: '출력 구조',
+    owner: 'regex / tag contract',
+    input: '직렬화된 completion 전체',
+    output: '요구한 태그·순서를 지키면 1',
+    failure: '형식 통과는 reasoning의 사실성이나 인과적 충실성을 증명하지 않는다.',
+    Icon: Braces,
+  },
+  {
+    key: 'length',
+    label: '길이·반복',
+    owner: 'regularization reward',
+    input: 'completion token·n-gram',
+    output: '반복·과도한 길이에 penalty',
+    failure: '길이 자체를 보상하면 쉬운 문제에서도 장황한 overthinking을 학습할 수 있다.',
+    Icon: Gauge,
+  },
+  {
+    key: 'code',
+    label: '코드 실행',
+    owner: 'external sandbox',
+    input: 'candidate code + hidden tests',
+    output: '통과율 또는 binary success',
+    failure: 'Trainer host에서 직접 실행하면 model output에 infrastructure 권한을 넘기는 보안 사고다.',
+    Icon: Code2,
+  },
+] as const;
 
 export default function RewardPipelineViz() {
+  const [selected, setSelected] = useState(0);
+  const contract = contracts[selected];
+
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 460 155" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* 응답 입력 */}
-          <motion.g animate={{ opacity: step >= 0 ? 1 : 0.2 }} transition={sp}>
-            <rect x={10} y={8} width={440} height={26} rx={5}
-              fill={step === 0 ? '#6366f115' : '#6366f108'} stroke="#6366f1" strokeWidth={step === 0 ? 1.5 : 0.5} />
-            <text x={20} y={25} fontSize={10} fill="#6366f1">
-              {'<think>'}Let me solve...{'</think><answer>'}42{'</answer>'}
-            </text>
-          </motion.g>
-
-          {/* 추출 */}
-          {step >= 1 && (
-            <motion.g initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={sp}>
-              <line x1={230} y1={34} x2={230} y2={44} stroke="var(--muted-foreground)" strokeWidth={0.8} strokeDasharray="2 2" />
-              <rect x={160} y={46} width={140} height={20} rx={4}
-                fill="#8b5cf612" stroke="#8b5cf6" strokeWidth={1} />
-              <text x={230} y={60} textAnchor="middle" fontSize={10} fill="#8b5cf6">추출: "42"</text>
-            </motion.g>
-          )}
-
-          {/* 3개 보상 함수 */}
-          {step >= 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <line x1={230} y1={66} x2={230} y2={76} stroke="var(--muted-foreground)" strokeWidth={0.8} strokeDasharray="2 2" />
-              {SCORES.map((s, i) => {
-                const x = 30 + i * 150;
-                const barW = s.score * 100;
-                return (
-                  <motion.g key={s.func} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    transition={{ ...sp, delay: i * 0.1 }}>
-                    <text x={x} y={90} fontSize={10} fontWeight={600} fill={s.color}>{s.func}</text>
-                    <text x={x + 105} y={90} textAnchor="end" fontSize={9} fill="var(--muted-foreground)">×{s.weight}</text>
-                    <rect x={x} y={94} width={110} height={12} rx={3} fill="var(--muted)" opacity={0.1} />
-                    <motion.rect x={x} y={94} height={12} rx={3}
-                      fill={`${s.color}30`} stroke={s.color} strokeWidth={0.8}
-                      initial={{ width: 0 }} animate={{ width: barW * 1.1 }}
-                      transition={{ ...sp, delay: i * 0.1 }} />
-                    <text x={x + barW * 1.1 + 5} y={104} fontSize={9} fill={s.color}>{s.score}</text>
-                  </motion.g>
-                );
-              })}
-            </motion.g>
-          )}
-
-          {/* 가중 합산 */}
-          {step >= 4 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <rect x={100} y={120} width={260} height={26} rx={5}
-                fill="#ef444412" stroke="#ef4444" strokeWidth={1.5} />
-              <text x={230} y={137} textAnchor="middle" fontSize={11} fontWeight={700} fill="#ef4444">
-                R = 1.0×0.7 + 1.0×0.2 + 0.75×0.1 = 0.975
-              </text>
-            </motion.g>
-          )}
-        </svg>
-      )}
-    </StepViz>
+    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-card" data-reward-contract>
+      <div className="grid grid-cols-2 border-b border-border sm:grid-cols-4">
+        {contracts.map(({ label, Icon }, index) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => setSelected(index)}
+            aria-pressed={selected === index}
+            className={`relative min-h-24 border-b border-r border-border px-3 py-4 text-left transition-colors sm:border-b-0 ${selected === index ? 'bg-amber-50/80 dark:bg-amber-950/20' : 'hover:bg-muted/40'}`}
+          >
+            <Icon className={`h-4 w-4 ${selected === index ? 'text-amber-700 dark:text-amber-300' : 'text-muted-foreground'}`} aria-hidden="true" />
+            <span className="mt-4 block text-xs font-black">{label}</span>
+            {selected === index && <motion.span layoutId="reward-contract" className="absolute inset-x-0 bottom-0 h-0.5 bg-amber-500" />}
+          </button>
+        ))}
+      </div>
+      <motion.div key={contract.key} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="grid gap-px bg-border md:grid-cols-3">
+        <div className="min-w-0 bg-background p-5">
+          <p className="font-mono text-[10px] font-black uppercase text-muted-foreground">Input</p>
+          <p className="mt-3 break-words text-sm font-bold [overflow-wrap:anywhere]">{contract.input}</p>
+        </div>
+        <div className="min-w-0 bg-background p-5">
+          <p className="font-mono text-[10px] font-black uppercase text-muted-foreground">Output</p>
+          <p className="mt-3 break-words text-sm font-bold [overflow-wrap:anywhere]">{contract.output}</p>
+        </div>
+        <div className="min-w-0 bg-background p-5">
+          <p className="font-mono text-[10px] font-black uppercase text-rose-700 dark:text-rose-300">Failure owner · {contract.owner}</p>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">{contract.failure}</p>
+        </div>
+      </motion.div>
+    </div>
   );
 }

@@ -45,9 +45,9 @@ export default function OverviewViz() {
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
               {/* Bar chart: 80% FE, 20% model */}
               <rect x={60} y={50} width={320} height={32} rx={6} fill="var(--border)" opacity={0.2} />
-              <motion.rect x={60} y={50} width={0} height={32} rx={6} fill={COLORS.feat} opacity={0.7}
+              <motion.rect initial={false} x={60} y={50} width={0} height={32} rx={6} fill={COLORS.feat} opacity={0.7}
                 animate={{ width: 256 }} transition={{ ...sp, duration: 0.8 }} />
-              <motion.rect x={316} y={50} width={0} height={32} rx={6} fill={COLORS.model} opacity={0.7}
+              <motion.rect initial={false} x={316} y={50} width={0} height={32} rx={6} fill={COLORS.model} opacity={0.7}
                 animate={{ width: 64 }} transition={{ ...sp, duration: 0.8, delay: 0.3 }} />
               <text x={188} y={71} textAnchor="middle" fontSize={12} fontWeight={700} fill="#ffffff">80% 피처 엔지니어링</text>
               <text x={348} y={71} textAnchor="middle" fontSize={9} fontWeight={600} fill="#ffffff">20%</text>

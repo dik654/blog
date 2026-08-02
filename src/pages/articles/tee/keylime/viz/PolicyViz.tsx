@@ -28,7 +28,7 @@ export default function PolicyViz() {
             const active = i === step;
             return (
               <g key={b.label}>
-                <motion.rect x={x} y={30} width={64} height={40} rx={8}
+                <motion.rect initial={false} x={x} y={30} width={64} height={40} rx={8}
                   fill={active ? `${b.color}22` : `${b.color}08`}
                   stroke={active ? b.color : `${b.color}30`}
                   strokeWidth={active ? 2.5 : 1}

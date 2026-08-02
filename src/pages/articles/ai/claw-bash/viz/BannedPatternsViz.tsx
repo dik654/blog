@@ -1,69 +1,47 @@
+import { TriangleAlert } from 'lucide-react';
+
+const SIGNALS = [
+  ['root/home deletion', 'rm -rf / · rm -rf ~ · rm -rf *', 'substring match'],
+  ['raw device / format', 'mkfs · dd if= · > /dev/sd', 'substring match'],
+  ['permission / resource', 'chmod -R 777 · chmod -R 000 · fork bomb', 'substring match'],
+  ['always destructive', 'shred · wipefs', 'first command match'],
+  ['broad recursive delete', 'rm + -r + -f', 'fallback combination'],
+];
+
 export default function BannedPatternsViz() {
-  const patterns = [
-    { cat: '루트 삭제',   pat: 'rm -rf /',                       risk: '복구 불가', color: '#ef4444' },
-    { cat: '루트 삭제',   pat: 'rm -rf /*',                      risk: '복구 불가', color: '#ef4444' },
-    { cat: 'Fork bomb',  pat: ':(){ :|:& };:',                  risk: '시스템 다운', color: '#dc2626' },
-    { cat: '디스크 파괴', pat: '> /dev/sda',                     risk: '데이터 손실', color: '#ef4444' },
-    { cat: '디스크 파괴', pat: 'dd if=/dev/zero of=/dev/sda',    risk: '디스크 와이프', color: '#ef4444' },
-    { cat: '포맷',        pat: 'mkfs.*',                         risk: '파일시스템 파괴', color: '#ef4444' },
-    { cat: '권한 파괴',   pat: 'chmod -R 777 /',                 risk: '보안 무력화', color: '#f97316' },
-    { cat: '원격 실행',   pat: 'curl | sh',                      risk: 'MITM 공격', color: '#ea580c' },
-    { cat: '원격 실행',   pat: 'wget | bash',                    risk: 'MITM 공격', color: '#ea580c' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 380" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">BANNED_PATTERNS — 9개 절대 차단 명령</text>
-
-        <text x={280} y={42} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
-          Prompt 없이 즉시 Deny — 정당한 사용 케이스 없음
-        </text>
-
-        {/* Pattern cards — 3 columns × 3 rows */}
-        {patterns.map((p, i) => {
-          const col = i % 3;
-          const row = Math.floor(i / 3);
-          const x = 24 + col * 176;
-          const y = 58 + row * 96;
-          return (
-            <g key={i}>
-              <rect x={x} y={y} width={168} height={88} rx={6}
-                fill={p.color} fillOpacity={0.1} stroke={p.color} strokeWidth={1.5} />
-              {/* Left stripe */}
-              <rect x={x} y={y} width={4} height={88} fill={p.color} rx={1} />
-              {/* Danger icon */}
-              <circle cx={x + 22} cy={y + 18} r={8} fill={p.color} opacity={0.2} stroke={p.color} strokeWidth={1.5} />
-              <text x={x + 22} y={y + 22} textAnchor="middle" fontSize={10} fontWeight={700} fill={p.color}>!</text>
-              {/* Category */}
-              <text x={x + 38} y={y + 22} fontSize={10} fontWeight={700} fill={p.color}>
-                {p.cat}
-              </text>
-              {/* Pattern (monospace) */}
-              <rect x={x + 10} y={y + 32} width={148} height={22} rx={3}
-                fill="var(--muted)" opacity={0.6} />
-              <text x={x + 14} y={y + 47} fontSize={9} fontFamily="monospace" fill="var(--foreground)">
-                {p.pat.length > 22 ? p.pat.slice(0, 21) + '…' : p.pat}
-              </text>
-              {/* Risk */}
-              <text x={x + 14} y={y + 70} fontSize={9} fill="var(--muted-foreground)">
-                결과:
-              </text>
-              <text x={x + 42} y={y + 70} fontSize={9} fontWeight={700} fill={p.color}>
-                {p.risk}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Bottom summary */}
-        <rect x={24} y={350} width={512} height={22} rx={4}
-          fill="var(--muted)" opacity={0.4} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={34} y={365} fontSize={9.5} fontFamily="monospace" fill="var(--muted-foreground)">
-          if cmd.contains(pattern) → Err(anyhow!(&quot;banned pattern: {`{}`}&quot;, pattern))
-        </text>
-      </svg>
-    </div>
+    <figure
+      aria-label="destructive command warning이 찾는 신호와 실제 결과"
+      className="not-prose my-7 overflow-hidden rounded-md border border-border"
+    >
+      <figcaption className="border-b border-border px-4 py-3">
+        <div className="flex items-start gap-3">
+          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
+          <div>
+            <p className="text-sm font-semibold">이 목록은 “절대 차단”이 아니라 Warn 신호다</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              caller가 Warn을 사용자 decision으로 닫지 않으면 문자열 탐지만으로 실행을 막지 못한다.
+            </p>
+          </div>
+        </div>
+      </figcaption>
+      <div className="divide-y divide-border">
+        {SIGNALS.map(([group, examples, method], index) => (
+          <div
+            key={group}
+            className="grid grid-cols-[28px_minmax(0,1fr)] gap-x-3 gap-y-1.5 px-4 py-3 md:grid-cols-[34px_150px_minmax(0,1fr)_140px] md:items-center"
+          >
+            <span className="text-xs font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+            <p className="text-sm font-semibold">{group}</p>
+            <code className="col-start-2 break-words whitespace-normal text-xs md:col-start-auto">{examples}</code>
+            <span className="col-start-2 text-xs text-muted-foreground md:col-start-auto md:text-right">{method}</span>
+          </div>
+        ))}
+      </div>
+      <p className="border-t border-border bg-rose-500/[0.035] px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        더 큰 현재 격차: 이 <code className="text-xs">validate_command()</code> pipeline은 production{' '}
+        <code className="text-xs">execute_bash()</code> 경로에 아직 배선되지 않았다.
+      </p>
+    </figure>
   );
 }

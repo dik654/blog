@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
+import MontgomeryMulViz from './viz/MontgomeryMulViz';
 
 const montMulCode = `// Montgomery 곱셈: CIOS (Coarsely Integrated Operand Scanning)
 // 입력: a, b (Montgomery form: aR mod p, bR mod p)
@@ -57,6 +58,7 @@ export default function FpMontgomery() {
           GPU에서는 레지스터 사용량이 핵심이다.
           4-limb CIOS는 약 <strong>40개 레지스터</strong>를 사용하며, SM당 점유율과 직접 트레이드오프된다.
         </p>
+        <MontgomeryMulViz />
         <CodePanel title="Montgomery 곱셈 CIOS 커널 (CUDA C++)" code={montMulCode}
           annotations={[
             { lines: [4, 6], color: 'sky', note: 'Montgomery form 입출력' },

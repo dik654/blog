@@ -27,12 +27,12 @@ export default function StateModelViz({ onOpenCode }: { onOpenCode?: (key: strin
           </motion.g>
           {/* Accounts */}
           {[
-            { label: 'EOA', x: 80, y: 55 },
-            { label: 'Contract', x: 210, y: 55 },
-            { label: 'EOA', x: 340, y: 55 },
+            { label: 'EOA', x: 60, y: 55, w: 80 },
+            { label: 'Contract', x: 210, y: 55, w: 140 },
+            { label: 'EOA', x: 360, y: 55, w: 80 },
           ].map((a, i) => (
             <motion.g key={i} animate={{ opacity: step >= 2 ? 1 : (step === 1 ? 0.5 : 0.3) }}>
-              <rect x={a.x - 45} y={a.y} width={90} height={40} rx={5}
+              <rect x={a.x - a.w / 2} y={a.y} width={a.w} height={40} rx={5}
                 fill={`${i === 1 ? C2 : C1}08`} stroke={i === 1 ? C2 : C1}
                 strokeWidth={step === 2 ? 1 : 0.6} />
               <text x={a.x} y={a.y + 15} textAnchor="middle" fontSize={10} fontWeight={500}
@@ -40,7 +40,7 @@ export default function StateModelViz({ onOpenCode }: { onOpenCode?: (key: strin
               {step >= 2 && (
                 <motion.text x={a.x} y={a.y + 30} textAnchor="middle" fontSize={10}
                   fill="var(--muted-foreground)" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  {i === 1 ? 'nonce,bal,storage,code' : 'nonce,bal'}
+                  {i === 1 ? 'nonce, bal, storage, code' : 'nonce, bal'}
                 </motion.text>
               )}
               {/* Arrow from root */}

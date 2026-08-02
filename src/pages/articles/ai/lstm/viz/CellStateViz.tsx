@@ -40,7 +40,7 @@ export default function CellStateViz() {
                 <motion.g key={i}>
                   <rect x={x} y={BELT_Y} width={40} height={BELT_H} rx={3}
                     fill="#80808008" stroke="#55555540" strokeWidth={0.5} />
-                  <motion.rect x={x} y={BELT_Y + BELT_H - h} width={40} height={h} rx={3}
+                  <motion.rect initial={false} x={x} y={BELT_Y + BELT_H - h} width={40} height={h} rx={3}
                     animate={{
                       fill: dimmed ? FORGET_C + '40' : added ? INPUT_C + '40' : CELL_C + '35',
                       height: h,

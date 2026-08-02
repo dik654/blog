@@ -65,7 +65,7 @@ export function StepClosingTag() {
         fill="var(--foreground)" fontWeight={600}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}>
-        여는 태그 + 닫는 태그 = 경계 인식의 핵심
+        문서 전체를 parser로 검증
       </motion.text>
     </motion.g>
   );

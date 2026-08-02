@@ -57,7 +57,7 @@ export default function AttestChainViz() {
           })}
 
           {/* Animated ball */}
-          <motion.circle r={6} fill={CHAIN[step].color}
+          <motion.circle initial={false} r={6} fill={CHAIN[step].color}
             animate={{ cx: CHAIN[step].x + 50, cy: 45 }}
             transition={{ type: 'spring', bounce: 0.25 }}
             style={{ filter: `drop-shadow(0 0 4px ${CHAIN[step].color}88)` }} />

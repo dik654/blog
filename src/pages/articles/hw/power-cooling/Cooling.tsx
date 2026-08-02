@@ -38,107 +38,64 @@ export default function Cooling() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">냉각 방식 상세 분석</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 냉각 방식 상세:
+        <h3 className="text-xl font-semibold mt-8 mb-3">Air Cooling</h3>
+        <ul className="leading-7">
+          <li><strong>Blower (서버 랙)</strong> — axial fan, single direction. front intake, rear exhaust. 표준 rack airflow 호환. 고 RPM (10K+) 시끄럽다. A100, H100 SXM, 서버 GPU 에 사용.</li>
+          <li><strong>Open-air (컨슈머)</strong> — 다수 fan, radial. 주변 공기 가열, 개방 공간 필요. 단일 GPU 에는 더 조용하고 효과적. RTX 4090, 5090.</li>
+          <li><strong>Tower Cooler (CPU)</strong> — heatpipe + fin + fan. CPU 효과적, 대형 폼팩터. 150~250W 발산.</li>
+        </ul>
 
-// 1. Air Cooling (Traditional):
-//
-// 1a. Blower (Server Rack):
-// - axial fan, single direction
-// - front intake, rear exhaust
-// - through chassis
-// - fits standard rack airflow
-// - high RPM (10K+), loud
-// - used in: A100, H100 SXM, server GPUs
+        <h3 className="text-xl font-semibold mt-8 mb-3">Water Cooling</h3>
+        <ul className="leading-7">
+          <li><strong>AIO (All-in-One)</strong> — 펌프 + radiator 통합. 설치 쉽고 중간 성능. 360mm radiator ≈ ~400W GPU. 펌프 고장 위험.</li>
+          <li><strong>Custom Loop</strong> — waterblock + reservoir + 펌프. 다수 컴포넌트 냉각, air 대체 최고 성능. 설치 복잡, 유지보수 필요.</li>
+          <li><strong>Direct-to-Chip (DTC)</strong> — CPU/GPU 위 water cold plate. 40~60°C coolant. 엔터프라이즈 등급. CoolIT, Asetek, NVIDIA MGX. H100 표준 냉각.</li>
+          <li><strong>Rear Door Heat Exchanger</strong> — rack 뒷문에 water-cooled door. passive cooling, 50~100 kW/rack. rack 변경 최소.</li>
+        </ul>
 
-// 1b. Open-air (Consumer):
-// - multiple fans, radial
-// - heats surrounding air
-// - needs open space
-// - quieter, more effective for single GPU
-// - used in: RTX 4090, 5090
+        <h3 className="text-xl font-semibold mt-8 mb-3">Immersion Cooling</h3>
+        <ul className="leading-7">
+          <li><strong>Single-phase</strong> — 절연 유체 (mineral oil) 에 서버 전체 침지. 자연 대류, 조용하고 효율적.</li>
+          <li><strong>Two-phase</strong> — fluorocarbon 이 CPU 에서 끓음 (상변화 냉각). 최고 효율, 복잡하고 비싸다.</li>
+        </ul>
 
-// 1c. Tower Cooler (CPU):
-// - heatpipes + fins + fan
-// - effective for CPUs
-// - large form factor
-// - 150-250W dissipation
+        <h3 className="text-xl font-semibold mt-8 mb-3">성능 비교</h3>
+        <ul className="leading-7">
+          <li>Air — 최대 30 kW/rack</li>
+          <li>Water DTC — 100 kW/rack</li>
+          <li>Immersion — 200+ kW/rack</li>
+          <li>미래 — 500+ kW/rack</li>
+        </ul>
 
-// 2. Water Cooling:
+        <h3 className="text-xl font-semibold mt-8 mb-3">Filecoin SP 일반 구성</h3>
+        <ul className="leading-7">
+          <li>air-cooled 4U 서버</li>
+          <li>hot/cold aisle containment</li>
+          <li>CRAC 유닛</li>
+          <li>10~20 kW/rack</li>
+          <li>표준 데이터센터로 충분</li>
+        </ul>
 
-// 2a. AIO (All-in-One):
-// - pump + radiator integrated
-// - easier installation
-// - moderate performance
-// - 360mm radiator: ~400W GPU
-// - risk: pump failure
+        <h3 className="text-xl font-semibold mt-8 mb-3">AI/HPC (H100, B200)</h3>
+        <ul className="leading-7">
+          <li>direct-to-chip water 필수</li>
+          <li>50~100 kW/rack</li>
+          <li>특수 설비 필요</li>
+          <li>비용 상승</li>
+        </ul>
 
-// 2b. Custom Loop:
-// - waterblocks, reservoir, pumps
-// - multiple components cooled
-// - highest air-replacement performance
-// - complex installation
-// - maintenance required
+        <h3 className="text-xl font-semibold mt-8 mb-3">냉각 비용 경제학</h3>
+        <ul className="leading-7">
+          <li>Air — $2K~$3K/year per kW</li>
+          <li>Water — $1K~$1.5K/year per kW</li>
+          <li>Immersion — $0.5K~$1K/year per kW</li>
+          <li>5년 누적으로 절감 amortize</li>
+        </ul>
 
-// 2c. Direct-to-Chip (DTC):
-// - water cold plates on CPU/GPU
-// - 40-60°C coolant
-// - enterprise-grade
-// - CoolIT, Asetek, Nvidia MGX
-// - H100 standard cooling
-
-// 2d. Rear Door Heat Exchanger:
-// - water-cooled door on rack
-// - passive cooling
-// - 50-100 kW per rack
-// - minimal rack modification
-
-// 3. Immersion Cooling:
-
-// 3a. Single-phase:
-// - dielectric fluid (mineral oil)
-// - submerge entire server
-// - natural convection
-// - quiet, efficient
-
-// 3b. Two-phase:
-// - fluorocarbon boils at CPU
-// - phase change cooling
-// - highest efficiency
-// - complex, expensive
-
-// Performance comparison:
-// - Air: 30 kW/rack max
-// - Water DTC: 100 kW/rack
-// - Immersion: 200+ kW/rack
-// - Future: 500+ kW/rack
-
-// Filecoin SP typical:
-// - air-cooled 4U servers
-// - hot/cold aisle containment
-// - CRAC units
-// - 10-20 kW/rack
-// - standard datacenter OK
-
-// AI/HPC (H100, B200):
-// - direct-to-chip water required
-// - 50-100 kW/rack
-// - specialized facilities
-// - higher cost
-
-// Cooling cost economics:
-// - Air: $2-3K/year per kW
-// - Water: $1-1.5K/year per kW
-// - Immersion: $0.5-1K/year per kW
-// - savings amortize over 5 years
-
-// Heat reuse:
-// - water cooling → district heating
-// - server farms + greenhouses
-// - Nordic datacenters
-// - sustainability benefit`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">열 재활용</h3>
+        <p className="leading-7">
+          water cooling → district heating 으로 활용. server farm + greenhouse 결합. Nordic 데이터센터 사례. 지속가능성 이점.
+        </p>
         <p className="leading-7">
           냉각: <strong>air (30 kW/rack) → water (100 kW/rack) → immersion (200+ kW/rack)</strong>.<br />
           Filecoin SP: air + hot/cold aisle 충분.<br />

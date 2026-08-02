@@ -1,4 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
+import NaiveMatMulViz from './viz/NaiveMatMulViz';
 
 const naiveKernel = `__global__ void matMulNaive(float *A, float *B, float *C,
                             int M, int N, int K) {
@@ -27,7 +28,11 @@ export default function Naive() {
         <p className="leading-7">
           가장 단순한 구현입니다. 각 스레드가 A의 한 행 전체와 B의 한 열 전체를 <strong>글로벌 메모리</strong>에서 직접 읽습니다.
         </p>
+      </div>
 
+      <NaiveMatMulViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-10">
         <CodePanel
           title="나이브 행렬 곱셈 커널"
           code={naiveKernel}

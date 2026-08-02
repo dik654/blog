@@ -34,7 +34,7 @@ const STEPS = [
       'Verifier가 무작위 열 인덱스 선택.\n' +
       '선택된 열의 모든 행 셀 open.\n' +
       'check: 각 행이 같은 다항식의 RS encoding인지 + 선형 관계.\n' +
-      '구현 단순(2-round) 단점: proof O(√n).',
+      '구현: 단순(2-round). 단점: proof O(√n).',
   },
   {
     label: '④ Aurora — R1CS → polynomial encoding',

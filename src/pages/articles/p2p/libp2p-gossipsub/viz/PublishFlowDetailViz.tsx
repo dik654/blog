@@ -129,7 +129,7 @@ export default function PublishFlowDetailViz() {
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
                 <text x={240} y={170} fontSize={9} fontWeight={700} fill="#10b981">─ full message</text>
                 <text x={240} y={186} fontSize={9} fontWeight={700} fill="#ec4899">--- IDONTWANT(msg_id) (~50 bytes)</text>
-                <text x={240} y={210} fontSize={9} fill="var(--muted-foreground)">non-mesh 가 같은 msg 보내지 않게 사전 dedup</text>
+                <text x={240} y={210} fontSize={9} fill="var(--muted-foreground)">non-mesh가 같은 msg를 보내지 않게 사전 dedup</text>
               </motion.g>
               <defs>
                 <marker id="par1" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
@@ -223,7 +223,7 @@ export default function PublishFlowDetailViz() {
               </text>
               {[
                 { y: 50, label: 'flood_publish = true', desc: '모든 subscribed peers (높은 bandwidth, 높은 신뢰성)', color: '#ef4444' },
-                { y: 110, label: 'flood_publish = false', desc: 'fanout 만 (D=6) — 기본값, 효율적', color: '#10b981' },
+                { y: 110, label: 'flood_publish = false', desc: 'fanout만 (D=6) — 기본값, 효율적', color: '#10b981' },
               ].map((s, i) => (
                 <motion.g key={s.y} initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }}>

@@ -1,72 +1,85 @@
+import { useState } from 'react';
+import { ArrowRight, Check, ShieldQuestion } from 'lucide-react';
+
+type CaseKey = 'alias' | 'empty' | 'custom';
+
+const cases = [
+  {
+    key: 'alias',
+    label: '별칭 입력',
+    input: 'explorer',
+    normalized: 'Explore',
+    branch: '고정 Explore allowlist',
+    tools: ['read_file', 'glob_search', 'grep_search', 'WebFetch', 'WebSearch'],
+  },
+  {
+    key: 'empty',
+    label: '타입 생략',
+    input: '(empty)',
+    normalized: 'general-purpose',
+    branch: '기본 allowlist',
+    tools: ['bash', 'read_file', 'write_file', 'edit_file', 'WebFetch'],
+  },
+  {
+    key: 'custom',
+    label: '알 수 없는 타입',
+    input: 'security-review',
+    normalized: 'security-review',
+    branch: '기본 allowlist',
+    tools: ['bash', 'read_file', 'write_file', 'edit_file', 'WebFetch'],
+  },
+] as const;
+
 export default function AgentSelectionViz() {
+  const [caseKey, setCaseKey] = useState<CaseKey>('alias');
+  const selected = cases.find((item) => item.key === caseKey) ?? cases[0];
+
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Agent Selection — 태스크별 &quot;베스트11&quot;</text>
-
-        <defs>
-          <marker id="as-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#8b5cf6" />
-          </marker>
-        </defs>
-
-        {/* Task input */}
-        <rect x={160} y={46} width={240} height={38} rx={6}
-          fill="#3b82f6" fillOpacity={0.15} stroke="#3b82f6" strokeWidth={1.8} />
-        <text x={280} y={65} textAnchor="middle" fontSize={11} fontWeight={700} fill="#3b82f6">
-          &quot;Find auth bugs&quot;
-        </text>
-        <text x={280} y={78} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          User task
-        </text>
-
-        <line x1={280} y1={86} x2={280} y2={100} stroke="#8b5cf6" strokeWidth={1.5} markerEnd="url(#as-arr)" />
-
-        {/* Selection process */}
-        <rect x={80} y={102} width={400} height={48} rx={8}
-          fill="#f59e0b" fillOpacity={0.15} stroke="#f59e0b" strokeWidth={1.5} />
-        <text x={280} y={124} textAnchor="middle" fontSize={11} fontWeight={700} fill="#f59e0b">
-          1. Task Analysis → Tag extraction
-        </text>
-        <text x={280} y={140} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          tags: [search, code, auth, bug-find]
-        </text>
-
-        <line x1={280} y1={152} x2={280} y2={168} stroke="#8b5cf6" strokeWidth={1.5} markerEnd="url(#as-arr)" />
-
-        {/* Matching */}
-        <rect x={80} y={170} width={400} height={48} rx={8}
-          fill="#10b981" fillOpacity={0.15} stroke="#10b981" strokeWidth={1.5} />
-        <text x={280} y={192} textAnchor="middle" fontSize={11} fontWeight={700} fill="#10b981">
-          2. Match against available agents
-        </text>
-        <text x={280} y={208} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-          agents.filter(a =&gt; a.tags.contains_any(task.tags))
-        </text>
-
-        <line x1={280} y1={220} x2={280} y2={236} stroke="#8b5cf6" strokeWidth={1.5} markerEnd="url(#as-arr)" />
-
-        {/* Candidates */}
-        <rect x={80} y={238} width={400} height={58} rx={8}
-          fill="#8b5cf6" fillOpacity={0.15} stroke="#8b5cf6" strokeWidth={1.5} />
-        <text x={280} y={260} textAnchor="middle" fontSize={11} fontWeight={700} fill="#8b5cf6">
-          3. Rank + select top N (&quot;Best 7~11&quot;)
-        </text>
-        <text x={280} y={276} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          score = tag_match × 0.6 + domain_fit × 0.3 + recent_success × 0.1
-        </text>
-        <text x={280} y={290} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-          [Explore(0.92), code-guide(0.81), Plan(0.74), ...]
-        </text>
-
-        {/* Footer - concept */}
-        <rect x={80} y={304} width={400} height={28} rx={5}
-          fill="var(--muted)" opacity={0.4} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={322} textAnchor="middle" fontSize={10} fontWeight={600} fill="var(--foreground)">
-          수백개 agents 중 태스크에 맞는 소수만 활성화 (축구 &quot;베스트11&quot; 개념)
-        </text>
-      </svg>
-    </div>
+    <figure className="not-prose my-8 overflow-hidden rounded-md border border-border bg-background" data-agent-selection-lab data-viz-canvas>
+      <figcaption className="border-b border-border px-4 py-4">
+        <span className="text-[11px] font-bold uppercase text-muted-foreground">Source reconstruction</span>
+        <strong className="mt-1 block text-base">현재 구현은 후보를 채점하지 않고 요청된 type을 정규화한다</strong>
+      </figcaption>
+      <div role="group" aria-label="subagent type 입력 사례" className="grid grid-cols-3 gap-px border-b border-border bg-border">
+        {cases.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => setCaseKey(item.key)}
+            aria-pressed={caseKey === item.key}
+            className={`min-w-0 bg-background px-2 py-3 text-xs font-bold ${caseKey === item.key ? 'bg-foreground text-background' : 'hover:bg-muted'}`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="grid gap-px bg-border lg:grid-cols-[minmax(0,0.8fr)_auto_minmax(0,0.8fr)_auto_minmax(0,1.2fr)]">
+        <div className="min-w-0 bg-background p-4">
+          <span className="text-[10px] font-bold text-muted-foreground">INPUT</span>
+          <code className="mt-2 block break-words text-sm font-bold [overflow-wrap:anywhere]">{selected.input}</code>
+        </div>
+        <div className="hidden items-center bg-background px-2 lg:flex"><ArrowRight className="h-4 w-4" aria-hidden="true" /></div>
+        <div className="min-w-0 bg-background p-4">
+          <span className="text-[10px] font-bold text-muted-foreground">NORMALIZED</span>
+          <code className="mt-2 block break-words text-sm font-bold [overflow-wrap:anywhere]">{selected.normalized}</code>
+        </div>
+        <div className="hidden items-center bg-background px-2 lg:flex"><ArrowRight className="h-4 w-4" aria-hidden="true" /></div>
+        <div className="min-w-0 bg-background p-4">
+          <span className="text-[10px] font-bold text-muted-foreground">TOOL BRANCH</span>
+          <strong className="mt-2 block text-sm">{selected.branch}</strong>
+          <div className="mt-3 flex flex-wrap gap-1">
+            {selected.tools.map((tool) => <code key={tool} className="rounded-full border border-border px-2 py-1 text-[10px]">{tool}</code>)}
+          </div>
+        </div>
+      </div>
+      <div data-selection-outcome aria-live="polite" className="flex gap-3 border-t border-border bg-muted/15 px-4 py-4 text-xs leading-5">
+        {caseKey === 'custom' ? <ShieldQuestion className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> : <Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />}
+        <p>
+          {caseKey === 'custom'
+            ? '미등록 문자열도 오류가 아니라 기본 권한이 넓은 branch로 간다. strict registry가 필요하다면 별도 검증을 추가해야 한다.'
+            : `${selected.input} → ${selected.normalized}: source의 결정론적 alias 규칙이다.`}
+        </p>
+      </div>
+    </figure>
   );
 }

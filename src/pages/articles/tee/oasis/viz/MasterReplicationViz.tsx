@@ -63,7 +63,7 @@ export default function MasterReplicationViz() {
               <motion.circle cx={160} cy={150} r={10} fill="#a855f7"
                 animate={{ x: 0 }}
                 transition={{ duration: 0 }} />
-              <motion.circle cx={160} cy={150} r={10} fill="#a855f7"
+              <motion.circle initial={false} cx={160} cy={150} r={10} fill="#a855f7"
                 animate={{ cx: [160, 320] }}
                 transition={{ duration: 1.5, repeat: Infinity, repeatType: 'loop' }} />
               <text x={240} y={140} textAnchor="middle" fontSize={9} fill="#a855f7" fontWeight={600}>

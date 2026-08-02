@@ -42,7 +42,7 @@ export default function SGDViz() {
                   initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ ...sp, delay: i * 0.08 }} />
               );
             })}
-            <motion.circle r={4} fill={COLORS.path}
+            <motion.circle initial={false} r={4} fill={COLORS.path}
               animate={{ cx: path[path.length - 1].x, cy: path[path.length - 1].y }}
               transition={sp} />
             <motion.text x={path[path.length - 1].x + 10} y={path[path.length - 1].y - 8}

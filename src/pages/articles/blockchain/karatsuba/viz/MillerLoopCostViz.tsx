@@ -369,7 +369,7 @@ function Step6() {
           Groth16 batch verify N proofs → (N+1) pairings × 2.4x speedup
         </text>
         <text x={260} y={256} textAnchor="middle" fontSize={9} fill="#cbd5e1">
-          BLS aggregation (~1M sigs/epoch) → CPU/gas 비용 직접 절반 이하
+          BLS aggregation (~1M sigs/epoch) → CPU/gas 비용을 직접 절반 이하로 절감
         </text>
       </motion.g>
     </svg>

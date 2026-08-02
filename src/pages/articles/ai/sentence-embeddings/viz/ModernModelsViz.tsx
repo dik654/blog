@@ -270,7 +270,7 @@ export default function ModernModelsViz() {
                   <rect x={130} y={35 + i * 34} width={250} height={18} rx={4}
                     fill={m.color + '10'} />
                   {/* bar fill — scale 50-70 to 0-250 */}
-                  <motion.rect x={130} y={35 + i * 34}
+                  <motion.rect initial={false} x={130} y={35 + i * 34}
                     width={0} height={18} rx={4}
                     fill={m.color + '40'}
                     animate={{ width: ((m.score - 50) / 20) * 250 }}

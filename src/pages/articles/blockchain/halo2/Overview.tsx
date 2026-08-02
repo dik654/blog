@@ -112,7 +112,7 @@ export default function Overview({ title }: { title?: string }) {
         {/* Custom Gate */}
         <div className="not-prose rounded-lg border-l-4 border-l-purple-500 bg-card p-4 mb-4">
           <p className="font-semibold text-sm text-purple-400 mb-2">Custom Gate &mdash; 다항식 제약</p>
-          <M display>{'s(X) \\cdot \\bigl(a(X) + b(X) - c(X)\\bigr) = 0'}</M>
+          <M display>{'\\underbrace{s(X)}_{\\text{selector (게이트 활성화)}} \\cdot \\underbrace{\\bigl(a(X) + b(X) - c(X)\\bigr)}_{\\text{덧셈 게이트 제약}} = 0'}</M>
           <p className="text-xs text-muted-foreground mt-2">
             selector <M>{'s'}</M> 가 1인 행에서 <M>{'a + b = c'}</M> 를 강제.
             rotation을 사용하면 <M>{'a(X) \\cdot b(X \\cdot \\omega)'}</M> 처럼 인접 행 참조 가능

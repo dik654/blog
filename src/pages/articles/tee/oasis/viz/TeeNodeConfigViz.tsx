@@ -33,14 +33,16 @@ export default function TeeNodeConfigViz() {
       {(step) => (
         <svg viewBox="0 0 480 240" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* config.yaml block */}
-          <ModuleBox x={20} y={15} w={250} h={200} label="config.yaml" color="#6366f1" />
+          <rect x={20} y={15} width={250} height={200} rx={8}
+            fill="var(--card)" stroke="#6366f1" strokeWidth={0.9} />
+          <text x={35} y={35} fontSize={10} fontWeight={700} fill="#6366f1">config.yaml</text>
 
           {FIELDS.map((f, i) => {
             const lit = HIGHLIGHT[step].includes(i);
             return (
               <g key={f.name}>
                 <motion.g animate={{ opacity: lit ? 1 : 0.4 }}>
-                  <DataBox x={35} y={45 + i * 28} w={220} h={22}
+                  <DataBox x={35} y={49 + i * 27} w={220} h={22}
                     label={`${f.name}: ${f.value}`} color={f.color} outlined={lit} />
                 </motion.g>
               </g>

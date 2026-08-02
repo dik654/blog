@@ -16,7 +16,7 @@ export default function CometPackedViz() {
 
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 480 220" className="w-full h-auto" style={{ maxWidth: 640 }}>
+      <svg viewBox="0 0 480 230" className="w-full h-auto" style={{ maxWidth: 640 }}>
         <text x={240} y={18} textAnchor="middle" fontSize={11} fontWeight={700}
           fill="var(--foreground)">UserBasic — Packed Storage (1 slot = 32 bytes)</text>
 
@@ -33,17 +33,29 @@ export default function CometPackedViz() {
             <g key={field.label}>
               <rect x={x} y={50} width={width} height={40}
                 fill={field.color} fillOpacity={0.4} stroke={field.color} strokeWidth={0.8} />
-              <text x={x + width / 2} y={68} textAnchor="middle" fontSize={8}
-                fontWeight={700} fill="var(--foreground)">{field.label}</text>
-              <text x={x + width / 2} y={80} textAnchor="middle" fontSize={7}
-                fill="var(--muted-foreground)">{field.bytes}B</text>
+              {width >= 50 && (
+                <>
+                  <text x={x + width / 2} y={68} textAnchor="middle" fontSize={8}
+                    fontWeight={700} fill="var(--foreground)">{field.label}</text>
+                  <text x={x + width / 2} y={80} textAnchor="middle" fontSize={7}
+                    fill="var(--muted-foreground)">{field.bytes}B</text>
+                </>
+              )}
 
               {/* 상세 설명 */}
-              <text x={x + width / 2} y={107} textAnchor="middle" fontSize={6.5}
-                fill={field.color} fontWeight={600}>{field.desc}</text>
+              {width >= 50 && (
+                <text x={x + width / 2} y={107} textAnchor="middle" fontSize={6.5}
+                  fill={field.color} fontWeight={600}>{field.desc}</text>
+              )}
             </g>
           );
         })}
+        <text x={435} y={115} textAnchor="end" fontSize={7} fontWeight={600} fill="#f59e0b">
+          assetsIn · uint16 bitmap
+        </text>
+        <text x={435} y={127} textAnchor="end" fontSize={7} fontWeight={600} fill="#6b7280">
+          _res · uint8
+        </text>
 
         {/* 눈금 */}
         <text x={startX} y={45} fontSize={7} fill="var(--muted-foreground)">0</text>
@@ -51,13 +63,13 @@ export default function CometPackedViz() {
           fill="var(--muted-foreground)">256 bits</text>
 
         {/* 가스 효율 */}
-        <rect x={60} y={130} width={360} height={60} rx={8}
+        <rect x={60} y={140} width={360} height={60} rx={8}
           fill="#10b981" fillOpacity={0.1} stroke="#10b981" strokeWidth={1} />
-        <text x={240} y={150} textAnchor="middle" fontSize={10} fontWeight={700}
+        <text x={240} y={160} textAnchor="middle" fontSize={10} fontWeight={700}
           fill="#10b981">1 SLOAD = 전체 사용자 상태 조회</text>
-        <text x={240} y={166} textAnchor="middle" fontSize={8}
+        <text x={240} y={176} textAnchor="middle" fontSize={8}
           fill="var(--muted-foreground)">Cold: 2,100 gas · Warm: 100 gas</text>
-        <text x={240} y={180} textAnchor="middle" fontSize={8}
+        <text x={240} y={190} textAnchor="middle" fontSize={8}
           fill="var(--muted-foreground)">V3 대비 33-40% 가스 절감</text>
       </svg>
     </div>

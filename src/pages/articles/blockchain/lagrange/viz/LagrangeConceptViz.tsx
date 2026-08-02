@@ -31,7 +31,7 @@ export default function LagrangeConceptViz() {
           {/* Axes */}
           <defs>
             <marker id="arrow" viewBox="0 0 6 6" refX={5} refY={3}
-              markerWidth={5} markerHeight={5} orient="auto-start-auto">
+              markerWidth={5} markerHeight={5} orient="auto-start-reverse">
               <path d="M0,0 L6,3 L0,6" fill="none" stroke="currentColor" strokeWidth={1} />
             </marker>
           </defs>

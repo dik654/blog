@@ -1,15 +1,5 @@
-import Overview from './distributional-semantics/Overview';
-import Distributional from './distributional-semantics/Distributional';
-import Dimensionality from './distributional-semantics/Dimensionality';
-import NeuralApproach from './distributional-semantics/NeuralApproach';
+import RebuiltDistributionalSemantics from './distributional-semantics/Rebuilt';
 
 export default function DistributionalSemanticsArticle() {
-  return (
-    <>
-      <Overview />
-      <Distributional />
-      <Dimensionality />
-      <NeuralApproach />
-    </>
-  );
+  return <RebuiltDistributionalSemantics />;
 }

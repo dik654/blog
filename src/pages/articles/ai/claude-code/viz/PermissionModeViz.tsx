@@ -26,14 +26,14 @@ export default function PermissionModeViz() {
       {(step) => {
         const modeIdx = step === 0 ? -1 : step - 1;
         return (
-          <svg viewBox="0 0 480 128" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <svg data-permission-mode-viz viewBox="0 0 360 150" className="w-full max-w-2xl" style={{ height: 'auto' }}>
             {/* tool call source */}
-            <motion.rect x={10} y={40} width={55} height={34} rx={5}
+            <motion.rect x={10} y={43} width={60} height={34} rx={5}
               animate={{ fill: '#3b82f618', stroke: '#3b82f6', strokeWidth: step === 0 ? 2 : 1 }} />
-            <text x={37} y={61} textAnchor="middle" fontSize={9} fontWeight={600} fill="#3b82f6">Tool Call</text>
+            <text x={40} y={64} textAnchor="middle" fontSize={13} fontWeight={700} fill="#3b82f6">도구 호출</text>
             {/* 3 mode barriers */}
             {MODES.map((m, i) => {
-              const bx = 110 + i * 85, by = 90 - m.barrier;
+              const bx = 82 + i * 82, by = 94 - m.barrier;
               const active = modeIdx === i;
               return (
                 <g key={m.label}>
@@ -41,27 +41,27 @@ export default function PermissionModeViz() {
                     animate={{ fill: `${m.color}${active ? '30' : '10'}`,
                       stroke: m.color, strokeWidth: active ? 2 : 0.8 }}
                     transition={{ duration: 0.3 }} />
-                  <text x={bx + 25} y={100} textAnchor="middle" fontSize={9}
+                  <text x={bx + 25} y={104} textAnchor="middle" fontSize={13}
                     fontWeight={600} fill={m.color}>{m.label}</text>
-                  <text x={bx + 25} y={110} textAnchor="middle" fontSize={9}
+                  <text x={bx + 25} y={122} textAnchor="middle" fontSize={13}
                     fill="var(--muted-foreground)">장벽 {m.barrier}%</text>
                   {/* packet attempt */}
                   {active && (
                     <motion.circle r={5}
-                      initial={{ cx: bx - 15, cy: 57 }}
-                      animate={{ cx: m.pass ? bx + 65 : bx - 3, cy: 57 }}
+                      initial={{ cx: bx - 12, cy: 60 }}
+                      animate={{ cx: m.pass ? bx + 60 : bx - 3, cy: 60 }}
                       transition={{ duration: 0.6, ease: 'easeInOut' }}
                       fill={m.pass ? '#10b981' : '#ef4444'}
                       style={{ filter: `drop-shadow(0 0 4px ${m.pass ? '#10b981' : '#ef4444'}88)` }} />
                   )}
                   {active && !m.pass && (
-                    <motion.text x={bx - 5} y={50} textAnchor="middle" fontSize={9}
+                    <motion.text x={bx - 4} y={51} textAnchor="middle" fontSize={13}
                       fill="#ef4444" fontWeight={600} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                       차단
                     </motion.text>
                   )}
                   {active && m.pass && (
-                    <motion.text x={bx + 68} y={53} fontSize={9}
+                    <motion.text x={bx + 61} y={53} fontSize={13}
                       fill="#10b981" fontWeight={600} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                       통과
                     </motion.text>
@@ -71,16 +71,17 @@ export default function PermissionModeViz() {
             })}
             {/* step 0 arrow */}
             {step === 0 && (
-              <motion.path d="M 65 57 L 100 57" fill="none" stroke="#3b82f6"
+              <motion.path d="M 70 60 L 76 60" fill="none" stroke="#3b82f6"
                 strokeWidth={1.5} strokeDasharray="4 3"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                 transition={{ duration: 0.5 }} />
             )}
-            {/* inline body text */}
-            <motion.text x={375} y={57} fontSize={9}
-              fill="var(--muted-foreground)"
-              initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-              key={step}>{BODY[step]}</motion.text>
+            <motion.g key={step} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }}>
+              <rect x={10} y={128} width={340} height={18} rx={4}
+                fill="var(--muted)" fillOpacity={0.5} />
+              <text x={180} y={140} textAnchor="middle" fontSize={13}
+                fill="var(--foreground)" fontWeight={600}>{BODY[step]}</text>
+            </motion.g>
           </svg>
         );
       }}

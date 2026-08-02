@@ -18,7 +18,7 @@ export default function Encoding() {
         <p>
           메시지 <Math>{'[m_0, m_1, \\ldots, m_{k-1}]'}</Math>을 다항식의 계수로 해석한다:
         </p>
-        <Math display>{'f(x) = m_0 + m_1 x + m_2 x^2 + \\cdots + m_{k-1} x^{k-1}'}</Math>
+        <Math display>{'f(x) = \\underbrace{m_0}_{\\text{상수항}} + \\underbrace{m_1 x + m_2 x^2 + \\cdots + m_{k-2} x^{k-2}}_{\\text{중간 항}} + \\underbrace{m_{k-1} x^{k-1}}_{\\text{최고차항}}'}</Math>
         <p>
           이 다항식의 차수는 최대 <Math>{'k-1'}</Math>이다.
           <br />

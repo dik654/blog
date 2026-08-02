@@ -67,7 +67,8 @@ export function GateStep({ step }: { step: number }) {
         const color = p.active ? C.active : C.inactive;
         return (
           <motion.g key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
-            transition={{ ...sp, delay: 0.2 + i * 0.1 }}>
+            transition={{ ...sp, delay: 0.2 + i * 0.1 }}
+            style={{ transformOrigin: `${x}px ${y}px` }}>
             <circle cx={x} cy={y} r={16} fill={p.active ? `${color}20` : 'none'}
               stroke={color} strokeWidth={1.5} />
             <text x={x} y={y + 5} textAnchor="middle" fontSize={12}

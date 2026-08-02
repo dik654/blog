@@ -57,7 +57,7 @@ export default function TowerFlowViz() {
           })}
           {/* Dimension growth bar */}
           <rect x={20} y={68} width={338} height={3} rx={1.5} fill="var(--border)" opacity={0.2} />
-          <motion.rect x={20} y={68} height={3} rx={1.5}
+          <motion.rect initial={false} x={20} y={68} height={3} rx={1.5}
             animate={{ width: ((step + 1) / 5) * 338, fill: NODES[step].c }}
             transition={sp} />
         </svg>

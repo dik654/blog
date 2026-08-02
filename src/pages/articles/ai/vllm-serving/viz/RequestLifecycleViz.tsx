@@ -1,97 +1,130 @@
-import { motion } from 'framer-motion';
+import { ArrowDown, ArrowRight, Braces, Cpu, Database, Radio, Server } from 'lucide-react';
 import StepViz from '@/components/ui/step-viz';
 
-const sp = { type: 'spring' as const, bounce: 0.2, duration: 0.5 };
-const STAGES = [
-  { label: 'HTTP', x: 10, color: '#6366f1' },
-  { label: 'Tokenize', x: 65, color: '#3b82f6' },
-  { label: 'Scheduler', x: 125, color: '#10b981' },
-  { label: 'Prefill', x: 185, color: '#f59e0b' },
-  { label: 'Decode', x: 240, color: '#8b5cf6' },
-  { label: 'SSE 스트림', x: 300, color: '#ef4444' },
-];
-const SY = 40, SW = 48;
-const TOKENS = ['안', '녕', '하', '세', '요'];
 const STEPS = [
-  { label: '요청 수신 (HTTP)' },
-  { label: '토크나이징' },
-  { label: '스케줄링' },
-  { label: 'Prefill (프롬프트 처리)' },
-  { label: 'Decode → SSE 스트리밍' },
+  {
+    label: 'API Server가 서비스 입구를 소유한다',
+    body: 'HTTP payload를 검증하고 tokenization·multimodal preprocessing을 수행한다. 이 단계의 queue time은 아직 GPU 계산 시간이 아니다.',
+  },
+  {
+    label: 'EngineCore 경계로 request state를 넘긴다',
+    body: 'V1 문서의 멀티프로세스 구성에서는 API process와 EngineCore가 ZMQ socket으로 통신한다. 이 경계가 HTTP 처리와 model execution을 분리한다.',
+  },
+  {
+    label: 'Scheduler와 KV manager가 이번 step의 장부를 만든다',
+    body: 'Scheduler는 unified token budget을 나누고, KV manager는 필요한 block을 확보한다. free pool이 부족하면 실행 전에 admission 또는 preemption 문제가 된다.',
+  },
+  {
+    label: 'Worker가 GPU model execution을 수행한다',
+    body: '전용 worker가 model runner를 실행하고, prompt token은 KV state를 만들며 decode token은 기존 KV를 읽고 한 토큰씩 진행한다.',
+  },
+  {
+    label: '결과는 다시 API Server를 거쳐 stream된다',
+    body: 'Engine output은 request state에 반영된 뒤 API process로 돌아간다. 사용자는 이 전체 경로의 queue·prefill·decode 영향을 TTFT와 TPOT로 관찰한다.',
+  },
 ];
-const BODY = [
-  'OpenAI 호환 요청 수신',
-  '텍스트 → 토큰 ID 시퀀스 변환',
-  'waiting→running 배치 결정',
-  '프롬프트 일괄 처리 → KV 캐시 생성',
-  '자기회귀 생성 → 실시간 스트리밍',
+
+const NODES = [
+  {
+    owner: 'API process',
+    title: 'API Server',
+    detail: 'HTTP · validation · tokenize',
+    artifact: 'token IDs + request metadata',
+    icon: Server,
+  },
+  {
+    owner: 'IPC boundary',
+    title: 'ZMQ',
+    detail: 'frontend ↔ EngineCore',
+    artifact: 'serialized request state',
+    icon: Radio,
+  },
+  {
+    owner: 'EngineCore',
+    title: 'Scheduler + KV',
+    detail: 'token budget · free blocks',
+    artifact: 'scheduler output',
+    icon: Database,
+  },
+  {
+    owner: 'GPU worker',
+    title: 'Model runner',
+    detail: 'prefill · decode',
+    artifact: 'sampled token + KV update',
+    icon: Cpu,
+  },
+  {
+    owner: 'API process',
+    title: 'Stream output',
+    detail: 'detokenize · response',
+    artifact: 'client-visible token',
+    icon: Braces,
+  },
 ];
 
 export default function RequestLifecycleViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 480 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {STAGES.map((s, i) => {
-            const active = i <= step, current = i === step || (step === 4 && i >= 4);
-            return (
-              <motion.g key={s.label} animate={{ opacity: active ? 1 : 0.25 }} transition={sp}>
-                <rect x={s.x} y={SY} width={SW} height={24} rx={4}
-                  fill={current ? `${s.color}20` : `${s.color}08`}
-                  stroke={s.color} strokeWidth={current ? 2 : 0.8} />
-                <text x={s.x + SW / 2} y={SY + 14} textAnchor="middle" fontSize={7.5}
-                  fill={s.color} fontWeight={current ? 700 : 400}>{s.label}</text>
-                {i < STAGES.length - 1 && (
-                  <text x={s.x + SW + 3} y={SY + 15} fontSize={10}
-                    fill="var(--muted-foreground)" fillOpacity={active ? 0.6 : 0.2}>→</text>
-                )}
-              </motion.g>
-            );
-          })}
-          <motion.circle r={5} animate={{ cx: STAGES[Math.min(step, 5)].x + SW / 2, cy: SY - 8 }}
-            transition={sp} fill="#6366f140" stroke="#6366f1" strokeWidth={1.5} />
-          <motion.text animate={{ x: STAGES[Math.min(step, 5)].x + SW / 2, y: SY - 5 }}
-            transition={sp} textAnchor="middle" fontSize={9} fill="#6366f1" fontWeight={600}>req</motion.text>
-          {step >= 3 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <rect x={190} y={72} width={46} height={14} rx={3} fill="#f59e0b15" stroke="#f59e0b" strokeWidth={1} />
-              <text x={213} y={82} textAnchor="middle" fontSize={9} fill="#f59e0b">KV Cache</text>
-              <line x1={213} y1={64} x2={213} y2={72} stroke="#f59e0b" strokeWidth={0.8} strokeDasharray="2 2" />
-            </motion.g>
-          )}
-          {step >= 4 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <path d="M264,64 L264,75 L149,75 L149,64" fill="none"
-                stroke="#10b981" strokeWidth={1} strokeDasharray="3 2" markerEnd="url(#arrowGrn)" />
-              <text x={206} y={83} textAnchor="middle" fontSize={9} fill="#10b981">다음 iter</text>
-              {TOKENS.map((t, i) => (
-                <motion.g key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.12 }}>
-                  <rect x={300 + i * 12} y={92} width={10} height={12} rx={2}
-                    fill="#ef444420" stroke="#ef4444" strokeWidth={0.8} />
-                  <text x={305 + i * 12} y={101} textAnchor="middle" fontSize={9} fill="#ef4444">{t}</text>
-                </motion.g>
-              ))}
-            </motion.g>
-          )}
-          {step <= 1 && (
-            <motion.text x={35} y={82} fontSize={9} fill="var(--muted-foreground)"
-              initial={{ opacity: 0 }} animate={{ opacity: 0.6 }}>
-              "오늘 날씨 어때?" → [1045, 2387, 891, 42]
-            </motion.text>
-          )}
-          <defs>
-            <marker id="arrowGrn" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6" fill="#10b981" />
-            </marker>
-          </defs>
-          {/* inline body */}
-          <motion.text x={370} y={52} fontSize={9}
-            fill="var(--muted-foreground)"
-            initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-            key={step}>{BODY[step]}</motion.text>
-        </svg>
-      )}
-    </StepViz>
+    <div data-request-lifecycle>
+      <StepViz steps={STEPS}>
+        {(step) => (
+          <div className="w-full min-w-0">
+            <div className="grid min-w-0 gap-0 lg:grid-cols-5 lg:gap-5 lg:items-stretch">
+              {NODES.map((node, index) => {
+                const Icon = node.icon;
+                const active = index === step;
+                const complete = index < step;
+                return (
+                  <div key={node.title} className="relative min-w-0">
+                    <div
+                      data-lifecycle-owner={node.owner}
+                      data-active={active ? 'true' : 'false'}
+                      className={`h-full min-w-0 rounded-md border p-4 transition-colors ${
+                        active
+                          ? 'border-blue-600/50 bg-blue-500/[0.07]'
+                          : complete
+                            ? 'border-teal-600/25 bg-teal-500/[0.03]'
+                            : 'border-border bg-background'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-blue-700 dark:text-blue-300' : 'text-muted-foreground'}`} aria-hidden="true" />
+                        <span className="text-xs font-bold text-muted-foreground">{node.owner}</span>
+                      </div>
+                      <p className="mt-4 break-words text-sm font-black text-foreground">{node.title}</p>
+                      <p className="mt-1 break-words text-xs leading-relaxed text-muted-foreground">{node.detail}</p>
+                      <p className="mt-4 border-t border-border pt-3 text-xs leading-relaxed text-foreground">
+                        <strong>산출물</strong><br />{node.artifact}
+                      </p>
+                    </div>
+                    {index < NODES.length - 1 && (
+                      <div className="flex min-h-8 items-center justify-center text-muted-foreground lg:absolute lg:-right-[18px] lg:top-1/2 lg:min-h-0 lg:-translate-y-1/2">
+                        <ArrowDown className="h-4 w-4 lg:hidden" aria-hidden="true" />
+                        <ArrowRight className="hidden h-4 w-4 lg:block" aria-hidden="true" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-5 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-3">
+              <div className="bg-background p-4">
+                <p className="text-xs font-bold text-muted-foreground">현재 소유자</p>
+                <p data-lifecycle-current-owner className="mt-2 text-sm font-black text-foreground">{NODES[step].owner}</p>
+              </div>
+              <div className="bg-background p-4">
+                <p className="text-xs font-bold text-muted-foreground">경계 증거</p>
+                <p className="mt-2 text-sm font-semibold leading-relaxed text-foreground">{NODES[step].artifact}</p>
+              </div>
+              <div className="bg-background p-4">
+                <p className="text-xs font-bold text-muted-foreground">다음에 볼 지표</p>
+                <p className="mt-2 text-sm font-semibold leading-relaxed text-foreground">
+                  {step < 2 ? 'queue time · TTFT' : step === 2 ? 'free blocks · preemption' : 'TPOT · stream gap'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </StepViz>
+    </div>
   );
 }

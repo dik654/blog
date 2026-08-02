@@ -12,8 +12,8 @@ const C = {
 };
 
 const STEPS = [
-  { label: 'Application Layer: gnark, Polygon zkEVM, Scroll prover, custom ZK 앱이 ICICLE을 호출한다' },
-  { label: 'Language Bindings: Rust(icicle-rs), Go(icicle-go), Python — 동일 C API를 각 언어에서 감싼다' },
+  { label: 'Application Layer: gnark, Polygon zkEVM, Scroll prover, custom ZK 앱이 ICICLE을 호출' },
+  { label: 'Language Bindings: Rust(icicle-rs), Go(icicle-go), Python — 동일 C API를 각 언어에서 감쌈' },
   { label: 'C API Layer: icicle_msm(), icicle_ntt(), icicle_poseidon_hash() — 안정 ABI' },
   { label: 'Backend Dispatcher: 런타임에 CUDA / CPU 선택 — 향후 Metal, Vulkan 추가 예정' },
   { label: 'CUDA Core: msm_kernel<bn254_scalar, bn254_affine>, ntt_kernel<bls12_381_scalar> 등 C++ 템플릿' },

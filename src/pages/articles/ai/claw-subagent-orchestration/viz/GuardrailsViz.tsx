@@ -1,7 +1,7 @@
 export default function GuardrailsViz() {
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
+      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720, width: '100%' }}>
         <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
           fill="var(--foreground)">Sub-agent Guardrails — 일탈 방지 메커니즘</text>
 

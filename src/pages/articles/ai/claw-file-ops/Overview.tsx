@@ -1,250 +1,104 @@
+import { CodeViewButton } from '@/components/code';
+import type { CodeRef } from '@/components/code/types';
+import { codeRefs } from './codeRefs';
+import FileBoundaryLab from './viz/FileBoundaryLab';
 import FileOpsToolsViz from './viz/FileOpsToolsViz';
 
-export default function Overview() {
+export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">파일 연산 개요 &amp; 보안 모델</h2>
+      <h2 className="mb-6 text-2xl font-bold">파일 도구가 shell과 달라야 하는 이유</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <FileOpsToolsViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">파일 I/O 5개 도구</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">도구</th>
-                <th className="border border-border px-3 py-2 text-left">권한</th>
-                <th className="border border-border px-3 py-2 text-left">역할</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>read_file</code></td>
-                <td className="border border-border px-3 py-2">ReadOnly</td>
-                <td className="border border-border px-3 py-2">파일 읽기 (offset/limit 지원)</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>write_file</code></td>
-                <td className="border border-border px-3 py-2">WorkspaceWrite</td>
-                <td className="border border-border px-3 py-2">전체 파일 쓰기 (덮어쓰기)</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>edit_file</code></td>
-                <td className="border border-border px-3 py-2">WorkspaceWrite</td>
-                <td className="border border-border px-3 py-2">문자열 치환 기반 편집</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>glob_search</code></td>
-                <td className="border border-border px-3 py-2">ReadOnly</td>
-                <td className="border border-border px-3 py-2">파일명 패턴 매칭</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>grep_search</code></td>
-                <td className="border border-border px-3 py-2">ReadOnly</td>
-                <td className="border border-border px-3 py-2">파일 내용 정규식 검색</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">보안 모델 — 4단계 방어</h3>
-        <p className="mb-3">모든 파일 연산은 다음 4단계를 거친다:</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">1단계</div>
-            <div className="font-semibold text-sm mb-1">권한 모드 체크</div>
-            <div className="text-sm text-muted-foreground">ReadOnly 모드에서 <code className="text-xs bg-muted px-1 rounded">write</code> / <code className="text-xs bg-muted px-1 rounded">edit</code> 즉시 거부</div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">2단계</div>
-            <div className="font-semibold text-sm mb-1">워크스페이스 경계</div>
-            <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">path.starts_with(workspace_root)</code> 필수</div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">3단계</div>
-            <div className="font-semibold text-sm mb-1">블랙리스트</div>
-            <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">.env</code>, <code className="text-xs bg-muted px-1 rounded">.git/</code>, <code className="text-xs bg-muted px-1 rounded">*.pem</code> 등 보호</div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">4단계</div>
-            <div className="font-semibold text-sm mb-1">심링크 이스케이프</div>
-            <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">canonicalize()</code> 후 재검증</div>
-          </div>
-        </div>
         <p>
-          각 단계는 독립적 — 한 층을 우회해도 다른 층이 방어<br />
-          1, 2단계는 정적(문자열 비교), 3, 4단계는 동적(파일 시스템 호출)
+          에이전트가 “설정 파일 한 줄을 바꿔 줘”라는 요청을 받았다고 하자. shell 하나만 주면
+          <code>cat</code>, <code>sed</code>, redirection, 임시 파일 등 수많은 실행 경로가 생긴다.
+          반면 <code>read_file</code>, <code>write_file</code>, <code>edit_file</code>처럼 의도가 좁은
+          도구는 입력 스키마, 권한, 출력 크기와 감사 로그를 각각 고정할 수 있다.
         </p>
+        <p>
+          이것이 곧 안전을 보장한다는 뜻은 아니다. 전용 도구는 <strong>검사할 표면을 줄인다.</strong>
+          그 위에 permission gate, workspace boundary, 파일 형식·크기 제한, 실제 I/O semantics를
+          차례로 쌓아야 한다. 아래 그림은 기능 목록이 아니라 각 도구가 남기는 side effect의 크기를
+          읽는 지도다.
+        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">WorkspaceRoot 개념</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-600 text-white text-xs font-semibold px-4 py-2">Workspace 구조체 — 세션 생성 시 결정, 변경 불가</div>
-            <div className="p-4 space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="text-xs text-muted-foreground mb-1">필드</div>
-                  <div className="font-mono text-sm font-semibold">root: PathBuf</div>
-                  <div className="text-xs text-muted-foreground mt-1">절대 경로, canonicalize됨</div>
-                </div>
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="text-xs text-muted-foreground mb-1">필드</div>
-                  <div className="font-mono text-sm font-semibold">name: String</div>
-                  <div className="text-xs text-muted-foreground mt-1">표시용 이름</div>
-                </div>
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="text-xs text-muted-foreground mb-1">필드</div>
-                  <div className="font-mono text-sm font-semibold">git_root: Option&lt;PathBuf&gt;</div>
-                  <div className="text-xs text-muted-foreground mt-1">git 저장소 루트 (있으면)</div>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs text-muted-foreground mb-1">생성 — <code className="text-xs bg-muted px-1 rounded">from_cwd()</code></div>
-                <div className="text-sm space-y-1">
-                  <div>1. <code className="text-xs bg-muted px-1 rounded">current_dir()</code>로 현재 디렉토리 획득</div>
-                  <div>2. <code className="text-xs bg-muted px-1 rounded">canonicalize()</code>로 심링크 해제 → 실제 경로</div>
-                  <div>3. <code className="text-xs bg-muted px-1 rounded">find_git_root()</code>로 git 루트 탐지 (선택)</div>
-                </div>
-              </div>
+      <p className="not-prose my-5 text-sm leading-relaxed">
+        <strong>먼저 답할 질문.</strong> 경로가 workspace 안이라고 검사한 뒤 실제 파일을 열기 전에
+        ancestor symlink가 외부 대상으로 바뀌면, 방금 검사한 안전 판정은 여전히 유효한가?
+      </p>
+      <FileBoundaryLab />
+      <FileOpsToolsViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>먼저 구분할 세 종류의 계약</h3>
+        <div className="not-prose my-5 grid gap-px overflow-hidden rounded-md border border-border bg-border md:grid-cols-3">
+          {[
+            {
+              title: '정책 계약',
+              text: '이 사용자·모드가 read 또는 write action을 요청할 수 있는가. 권한 글이 담당한다.',
+              example: 'ReadOnly → write 거부',
+            },
+            {
+              title: '경계 계약',
+              text: '요청한 path가 workspace 내부의 대상을 가리키는가. 현재 helper가 계산하지만 production I/O 경로에는 아직 연결되지 않았다.',
+              example: 'link → /etc/passwd 차단',
+            },
+            {
+              title: '변경 계약',
+              text: '쓰기 도중 실패하거나 다른 프로세스가 수정해도 어떤 결과를 보장하는가. atomicity·durability·version check가 담당한다.',
+              example: 'temp + fsync + rename',
+            },
+          ].map((item) => (
+            <div key={item.title} className="min-w-0 bg-background p-4">
+              <p className="m-0 text-sm font-bold">{item.title}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+              <code className="mt-3 block break-words text-xs text-foreground">{item.example}</code>
             </div>
-          </div>
+          ))}
         </div>
         <p>
-          <strong>workspace_root은 세션 불변</strong>: 한 번 설정되면 세션 내내 고정<br />
-          시작 시 <code>canonicalize()</code>로 심링크 해제 — 실제 경로로 저장<br />
-          git 루트는 선택 — 있으면 "변경 파일 감지" 같은 고급 기능 활성화
+          기존 설명에서 가장 놓치기 쉬운 부분은 첫 두 계약을 통과하면 세 번째도 해결됐다고 생각하는
+          것이다. 현재 Claw의 production <code>read_file</code>은 파일 크기와 binary probe를 적용하고
+          write는 직접 <code>fs::write</code>를 호출한다. 경로 정규화와 workspace prefix helper도
+          같은 소스에 있지만 <strong>production read/write/edit에는 아직 배선되지 않은 dead-code
+          wrapper</strong>다. 따라서 경계 강제, 원자적 교체, 저장장치 내구성을 모두 별도 hardening
+          항목으로 봐야 한다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">기본 블랙리스트</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-red-600 text-white text-xs font-semibold px-4 py-2">default_blacklist() — 보호 카테고리 5가지</div>
-            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">환경 설정</div>
-                <div className="space-y-1">
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">.env</code>
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">.env.*</code>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">개인 키</div>
-                <div className="space-y-1">
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">*.pem, *.key</code>
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">*.p12, *.pfx</code>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">인증서</div>
-                <div className="space-y-1">
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">*.crt, *.cer</code>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">VCS &amp; 생성물</div>
-                <div className="space-y-1">
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">.git/**</code>
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">node_modules/**, target/**</code>
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">dist/**, build/**</code>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">SSH &amp; 클라우드</div>
-                <div className="space-y-1">
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">~/.ssh/**, id_rsa*</code>
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">id_ed25519*</code>
-                  <code className="block text-xs bg-muted px-2 py-1 rounded">.aws/credentials, .aws/config</code>
-                </div>
-              </div>
+        <h3>현재 구현을 읽는 출발점</h3>
+        <p>
+          읽기·쓰기·편집 함수는 같은 파일에 있지만 보장은 서로 다르다. 먼저 실제 코드를 열어 함수가
+          수행하는 순서만 확인하고, 뒤 섹션에서 각 단계의 실패 모드를 붙인다.
+        </p>
+        <div className="not-prose my-4 flex flex-wrap gap-2">
+          <CodeViewButton onClick={() => onCodeRef('production-wiring', codeRefs['production-wiring'])} label="production file dispatch 보기" />
+          <CodeViewButton onClick={() => onCodeRef('read-contract', codeRefs['read-contract'])} label="read_file 소스" />
+          <CodeViewButton onClick={() => onCodeRef('write-contract', codeRefs['write-contract'])} label="write_file 소스" />
+          <CodeViewButton onClick={() => onCodeRef('path-boundary', codeRefs['path-boundary'])} label="경로 경계 소스" />
+        </div>
+
+        <h3>왜 shell 대신 전용 도구인가</h3>
+        <div className="not-prose my-5 divide-y divide-border rounded-md border border-border">
+          {[
+            ['권한을 작게 준다', 'read는 관찰만, edit와 write는 workspace 변경, shell은 프로세스·네트워크까지 확장될 수 있다.'],
+            ['입력을 구조화한다', 'offset, limit, old_string처럼 허용된 동작을 schema로 제한한다.'],
+            ['출력을 예측 가능하게 만든다', '줄 창과 structured patch로 LLM context와 사용자 검토 범위를 제한한다.'],
+            ['감사를 쉽게 만든다', '“파일을 읽었다”와 “임의 명령을 실행했다”를 같은 로그 사건으로 취급하지 않는다.'],
+            ['플랫폼 차이를 줄인다', 'Unix 명령의 존재 여부와 quoting 규칙에 의존하지 않는다.'],
+          ].map(([title, text], index) => (
+            <div key={title} className="grid gap-2 px-4 py-3 sm:grid-cols-[28px_150px_1fr]">
+              <span className="text-xs font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+              <strong className="text-sm">{title}</strong>
+              <span className="text-sm leading-relaxed text-muted-foreground">{text}</span>
             </div>
-          </div>
+          ))}
         </div>
         <p>
-          <strong>보호 카테고리 5가지</strong>: 환경변수, 개인키, 인증서, VCS, 생성물<br />
-          사용자는 <code>settings.json</code>에서 블랙리스트 확장/축소 가능<br />
-          기본값은 <strong>과보호 편향</strong> — 의심스러우면 차단
+          결론은 “전용 도구라 샌드박스가 필요 없다”가 아니다. 전용 도구는 공격 표면을 줄이고 더
+          구체적인 invariants를 만들 수 있게 한다. 로컬에서 경로를 동시에 바꿀 수 있는 공격자까지
+          가정하면 open-time 강제나 OS sandbox가 여전히 필요하다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">PathBlacklist 매칭</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-orange-600 text-white text-xs font-semibold px-4 py-2">PathBlacklist — 2차원 매칭</div>
-            <div className="p-4 space-y-3">
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs text-muted-foreground mb-1">구조</div>
-                <div className="font-mono text-sm"><code className="bg-muted px-1 rounded">patterns: Vec&lt;glob::Pattern&gt;</code></div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">1차 — 파일명만 매칭</div>
-                  <div className="text-sm text-muted-foreground">
-                    <code className="text-xs bg-muted px-1 rounded">path.file_name()</code>을 추출, 각 패턴과 비교
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-2 italic">예: <code className="bg-muted px-1 rounded">.env</code>는 어느 경로에 있든 차단</div>
-                </div>
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-2">2차 — 전체 경로 매칭</div>
-                  <div className="text-sm text-muted-foreground">
-                    <code className="text-xs bg-muted px-1 rounded">path.to_string_lossy()</code>로 전체 경로 문자열 비교
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-2 italic">예: <code className="bg-muted px-1 rounded">.git/config</code>는 <code className="bg-muted px-1 rounded">.git/**</code> 패턴 필요</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>2차원 매칭</strong>: 파일명 단독 + 전체 경로<br />
-          <code>.env</code>는 어느 경로에 있든 차단 (파일명 매칭)<br />
-          <code>.git/config</code>는 경로 전체 매칭 필요 — <code>.git/**</code> 패턴
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">심링크 이스케이프 검증</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-purple-600 text-white text-xs font-semibold px-4 py-2">validate_path() — 2번 검증: 문자열 → canonicalize</div>
-            <div className="p-4 space-y-3">
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">1단계: 절대 경로화</div>
-                <div className="text-sm text-muted-foreground">상대 경로면 <code className="text-xs bg-muted px-1 rounded">workspace.join(path)</code>로 절대화</div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">2단계: 문자열 비교 (빠름)</div>
-                <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">absolute.starts_with(workspace)</code> 실패 시 즉시 <code className="text-xs bg-muted px-1 rounded">Err("outside workspace")</code></div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">3단계: 심링크 해제 후 재검증</div>
-                <div className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">absolute.canonicalize()</code> → 실제 경로가 workspace 밖이면 <code className="text-xs bg-muted px-1 rounded">Err("symlink escape")</code></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>2번 검증</strong>: 문자열 비교 → canonicalize 후 재비교<br />
-          공격 시나리오: <code>workspace/link → /etc/passwd</code><br />
-          1차 검증(문자열)은 통과 — <code>workspace/link</code>는 워크스페이스 안<br />
-          2차 검증(canonicalize)에서 차단 — 실제 경로는 <code>/etc/passwd</code>
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 왜 bash가 아닌 전용 도구인가</p>
-          <p>
-            이론적으로 <code>bash("cat file.txt")</code>로도 파일 읽기 가능<br />
-            그럼에도 claw-code가 전용 도구(<code>read_file</code>)를 제공하는 이유:
-          </p>
-          <p className="mt-2">
-            1. <strong>권한 분리</strong>: read_file은 ReadOnly, bash는 DangerFullAccess — 다른 신뢰 수준<br />
-            2. <strong>구조화된 출력</strong>: offset/limit 파라미터, 줄 번호 포함 — LLM이 정확히 참조 가능<br />
-            3. <strong>명시적 의도</strong>: "파일 읽기"라는 의도가 도구 이름에 표현됨 — 감사 로그 명료<br />
-            4. <strong>샌드박스 불필요</strong>: 전용 도구는 Rust 코드로 직접 실행 — bwrap 오버헤드 없음<br />
-            5. <strong>크로스 플랫폼</strong>: Windows에서도 동일 동작 (bash 없는 환경)
-          </p>
-          <p className="mt-2">
-            <strong>bash는 탈출구(escape hatch)로만 유지</strong> — 일상 작업은 전용 도구로 처리
-          </p>
-        </div>
-
       </div>
     </section>
   );

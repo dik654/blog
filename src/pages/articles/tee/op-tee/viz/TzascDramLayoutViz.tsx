@@ -48,7 +48,9 @@ export default function TzascDramLayoutViz() {
                   <rect x={r.x} y={40} width={r.w} height={42} rx={5} fill={`${r.color}20`} stroke={`${r.color}80`} strokeWidth={1} />
                   <text x={r.x + r.w / 2} y={58} textAnchor="middle" fontSize={10} fontWeight={700} fill={r.color}>{r.name}</text>
                   <text x={r.x + r.w / 2} y={72} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">{r.size}</text>
-                  <text x={r.x} y={94} fontSize={7.5} fill={r.color} fontFamily="monospace" fontWeight={600}>{r.start}</text>
+                  {i === 0 && (
+                    <text x={r.x} y={94} fontSize={7.5} fill={r.color} fontFamily="monospace" fontWeight={600}>{r.start}</text>
+                  )}
                   <text x={r.x + r.w} y={94} textAnchor="end" fontSize={7.5} fill={r.color} fontFamily="monospace" fontWeight={600}>{r.end}</text>
                 </motion.g>
               ))}

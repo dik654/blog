@@ -1,13 +1,13 @@
 import { CitationBlock } from '@/components/ui/citation';
 import M from '@/components/ui/math';
-import AdditiveAttnViz from './viz/AdditiveAttnViz';
+import BahdanauScene from './viz/BahdanauScene';
 import AdditiveDetailViz from './viz/AdditiveDetailViz';
 
 export default function Additive() {
   return (
     <section id="additive" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Bahdanau (Additive) Attention</h2>
-      <div className="not-prose mb-8"><AdditiveAttnViz /></div>
+      <BahdanauScene />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Bahdanau Attention(2015) — 최초의 어텐션 메커니즘<br />
@@ -32,31 +32,26 @@ export default function Additive() {
         <M display>{'c_i = \\underbrace{\\sum_j \\alpha_{ij} \\cdot h_j}_{\\text{인코더 출력의 가중합}}'}</M>
         <p className="text-sm text-muted-foreground mt-1 mb-4">디코더 입력에 concat: <M>{'[y_{i-1};\\; c_i]'}</M></p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 not-prose my-6">
-          <div className="rounded-lg border bg-sky-50 dark:bg-sky-950/30 p-3">
-            <p className="font-mono font-semibold text-sky-700 dark:text-sky-300 mb-1">v</p>
-            <p className="text-sm text-muted-foreground">학습 가능한 가중치 벡터 (d_attn → 1). tanh 출력을 스칼라 점수로 축소</p>
-          </div>
-          <div className="rounded-lg border bg-sky-50 dark:bg-sky-950/30 p-3">
-            <p className="font-mono font-semibold text-sky-700 dark:text-sky-300 mb-1">W_a</p>
-            <p className="text-sm text-muted-foreground">디코더 상태 투영 행렬 (d_s → d_attn). s를 정렬 공간으로 매핑</p>
-          </div>
-          <div className="rounded-lg border bg-sky-50 dark:bg-sky-950/30 p-3">
-            <p className="font-mono font-semibold text-sky-700 dark:text-sky-300 mb-1">U_a</p>
-            <p className="text-sm text-muted-foreground">인코더 상태 투영 행렬 (d_h → d_attn). h를 정렬 공간으로 매핑</p>
-          </div>
-          <div className="rounded-lg border bg-emerald-50 dark:bg-emerald-950/30 p-3">
-            <p className="font-mono font-semibold text-emerald-700 dark:text-emerald-300 mb-1">s_{'{i-1}'}</p>
-            <p className="text-sm text-muted-foreground">이전 시점 디코더 hidden state. 현재 번역 맥락을 담고 있음</p>
-          </div>
-          <div className="rounded-lg border bg-emerald-50 dark:bg-emerald-950/30 p-3">
-            <p className="font-mono font-semibold text-emerald-700 dark:text-emerald-300 mb-1">h_j</p>
-            <p className="text-sm text-muted-foreground">j번째 인코더 hidden state. 소스 문장의 j번째 위치 정보를 포함</p>
-          </div>
-          <div className="rounded-lg border bg-amber-50 dark:bg-amber-950/30 p-3">
-            <p className="font-mono font-semibold text-amber-700 dark:text-amber-300 mb-1">c_i</p>
-            <p className="text-sm text-muted-foreground">컨텍스트 벡터. 어텐션 가중합으로 현재 디코딩에 필요한 소스 정보를 집약</p>
-          </div>
+        <div className="not-prose my-5 overflow-hidden rounded-lg border border-border bg-card/40">
+          <dl className="grid grid-cols-[auto_1fr] gap-x-6 text-sm">
+            {[
+              { sym: 'v', desc: <>학습 가능한 가중치 벡터 (<M>{'d_{\\text{attn}} \\to 1'}</M>). tanh 출력을 스칼라 점수로 축소</> },
+              { sym: 'W_a', desc: <>디코더 상태 투영 행렬 (<M>{'d_s \\to d_{\\text{attn}}'}</M>). <M>{'s'}</M> 를 정렬 공간으로 매핑</> },
+              { sym: 'U_a', desc: <>인코더 상태 투영 행렬 (<M>{'d_h \\to d_{\\text{attn}}'}</M>). <M>{'h'}</M> 를 정렬 공간으로 매핑</> },
+              { sym: 's_{i-1}', desc: <>이전 시점 디코더 hidden state. 현재 번역 맥락을 담고 있음</> },
+              { sym: 'h_j', desc: <><M>{'j'}</M>번째 인코더 hidden state. 소스 문장의 <M>{'j'}</M>번째 위치 정보를 포함</> },
+              { sym: 'c_i', desc: <>컨텍스트 벡터. 어텐션 가중합으로 현재 디코딩에 필요한 소스 정보를 집약</> },
+            ].map((row, i, arr) => (
+              <div key={row.sym} className={`contents`}>
+                <dt className={`font-mono px-5 py-2.5 ${i < arr.length - 1 ? 'border-b border-border/40' : ''}`}>
+                  <M>{row.sym}</M>
+                </dt>
+                <dd className={`text-muted-foreground leading-relaxed px-5 py-2.5 ${i < arr.length - 1 ? 'border-b border-border/40' : ''}`}>
+                  {row.desc}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
 

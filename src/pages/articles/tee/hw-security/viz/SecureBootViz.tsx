@@ -59,7 +59,7 @@ export default function SecureBootViz() {
           })}
 
           {/* Animated measurement ball */}
-          <motion.circle r={5} fill={BOOT[step].color}
+          <motion.circle initial={false} r={5} fill={BOOT[step].color}
             animate={{ cx: 30 + step * 90 + 36, cy: 40 }}
             transition={{ type: 'spring', bounce: 0.25 }}
             style={{ filter: `drop-shadow(0 0 4px ${BOOT[step].color}88)` }} />

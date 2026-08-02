@@ -71,7 +71,7 @@ export default function StableDiffusionArchViz() {
           </text>
           {/* Moving packet */}
           {step >= 1 && (
-            <motion.circle r={4}
+            <motion.circle initial={false} r={4} cx={103} cy={40}
               animate={{ cx: step === 1 ? 103 : step === 2 ? 176 : 340, cy: 40 }}
               transition={{ type: 'spring', bounce: 0.2 }}
               fill={step === 1 ? '#ec4899' : step === 2 ? '#6366f1' : '#22c55e'}

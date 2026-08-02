@@ -304,7 +304,7 @@ export function AIUseCases() {
           <rect x={c.x + 30} y={40} width={40} height={32} rx={6}
             fill={`${c.color}15`} />
           <path d={c.icon} fill="none" stroke={c.color} strokeWidth={1.5}
-            transform={`translate(${c.x + 38}, ${c.y || 42})`} />
+            transform={`translate(${c.x + 38}, 42)`} />
 
           {/* 텍스트 */}
           <text x={c.x + 50} y={88} textAnchor="middle" fontSize={9}

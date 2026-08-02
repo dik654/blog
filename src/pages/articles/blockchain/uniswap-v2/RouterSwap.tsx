@@ -95,7 +95,7 @@ export default function RouterSwap() {
             <p className="text-sm font-mono mb-2">amountInWithFee = amountIn * 997</p>
             <p className="text-sm font-mono">amountOut = (amountInWithFee * reserveOut) / (reserveIn * 1000 + amountInWithFee)</p>
             <div className="mt-3">
-              <M display>{'\\Delta y = \\frac{997 \\cdot \\Delta x \\cdot y}{1000 \\cdot x + 997 \\cdot \\Delta x}'}</M>
+              <M display>{'\\Delta y = \\frac{\\overbrace{997 \\cdot \\Delta x \\cdot y}^{\\text{수수료 차감 분자}}}{\\underbrace{1000 \\cdot x + 997 \\cdot \\Delta x}_{\\text{스케일된 분모 (정수 산술)}}}'}</M>
             </div>
           </div>
         </div>

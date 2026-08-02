@@ -65,7 +65,7 @@ export default function LSTMArchViz() {
             const targetLayer = LAYERS[Math.min(step, LAYERS.length - 1)];
             const visible = step !== 2 || di % 5 !== 0; /* dropout hides some */
             return (
-              <motion.circle key={di} r={3.5}
+              <motion.circle initial={false} key={di} r={3.5}
                 animate={{
                   cx: CX + d.dx * (targetLayer.w / 260),
                   cy: targetLayer.y + targetLayer.h / 2,

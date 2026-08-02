@@ -12,11 +12,11 @@ const STEPS = [
 ];
 
 const STAGES = [
-  { name: 'BL1', sub: '1st-stage bootloader', color: '#6366f1', y: 30 },
-  { name: 'BL2', sub: 'Trusted Boot Firmware', color: '#10b981', y: 65 },
-  { name: 'BL31', sub: 'EL3 Runtime', color: '#f59e0b', y: 100 },
-  { name: 'BL32', sub: 'Secure World (OP-TEE)', color: '#0ea5e9', y: 135 },
-  { name: 'BL33', sub: 'Normal World bootloader', color: '#a855f7', y: 170 },
+  { name: 'BL1', sub: '1st-stage bootloader', color: '#6366f1', y: 62 },
+  { name: 'BL2', sub: 'Trusted Boot Firmware', color: '#10b981', y: 92 },
+  { name: 'BL31', sub: 'EL3 Runtime', color: '#f59e0b', y: 122 },
+  { name: 'BL32', sub: 'Secure World (OP-TEE)', color: '#0ea5e9', y: 152 },
+  { name: 'BL33', sub: 'Normal World bootloader', color: '#a855f7', y: 182 },
 ];
 
 const STAGE_DETAILS: { color: string; details: string[] }[] = [
@@ -89,13 +89,13 @@ export default function ChainOfTrustViz() {
           </text>
           {step === 0 ? (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <DataBox x={20} y={30} w={220} h={36}
+              <DataBox x={20} y={25} w={220} h={32}
                 label="Stage 0 — HW RoT" sub="Boot ROM + eFuse" color="#ef4444" outlined />
             </motion.g>
           ) : null}
           {STAGES.map((s, i) => (
             <motion.g key={i} animate={{ opacity: i + 1 === step ? 1 : 0.25 }}>
-              <ModuleBox x={20} y={s.y} w={220} h={28}
+              <ModuleBox x={20} y={s.y} w={220} h={24}
                 label={s.name} sub={s.sub} color={s.color} />
             </motion.g>
           ))}

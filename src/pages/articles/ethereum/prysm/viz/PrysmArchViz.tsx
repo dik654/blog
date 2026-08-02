@@ -13,18 +13,26 @@ export default function PrysmArchViz() {
           {ROUTES.map((r, i) => {
             const f = mid(r.from), t = mid(r.to);
             const show = ACTIVE[step].includes(i);
+            const routedAroundDb = i === 7;
+            const labelX = routedAroundDb ? 258 : (f.x + t.x) / 2;
+            const labelY = routedAroundDb ? 190 : (f.y + t.y) / 2 - 2;
             return (
               <motion.g key={i} animate={{ opacity: show ? 1 : 0.08 }}>
-                <line x1={f.x} y1={f.y} x2={t.x} y2={t.y}
-                  stroke="#666" strokeWidth={1.2} strokeDasharray="4 3" />
-                <rect x={(f.x + t.x) / 2 - 24} y={(f.y + t.y) / 2 - 11}
+                {routedAroundDb ? (
+                  <path d={`M ${f.x} ${f.y} C 185 188, 330 188, ${t.x} ${t.y}`}
+                    fill="none" stroke="#666" strokeWidth={1.2} strokeDasharray="4 3" />
+                ) : (
+                  <line x1={f.x} y1={f.y} x2={t.x} y2={t.y}
+                    stroke="#666" strokeWidth={1.2} strokeDasharray="4 3" />
+                )}
+                <rect x={labelX - 24} y={labelY - 9}
                   width={48} height={14} rx={2} fill="var(--card)" />
-                <text x={(f.x + t.x) / 2} y={(f.y + t.y) / 2 - 2}
+                <text x={labelX} y={labelY}
                   textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   {r.label}
                 </text>
                 {show && (
-                  <motion.circle r={2.5} fill={MODS[r.from].color}
+                  <motion.circle initial={false} r={2.5} fill={MODS[r.from].color}
                     animate={{ cx: [f.x, t.x], cy: [f.y, t.y] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1.5 }} />
                 )}

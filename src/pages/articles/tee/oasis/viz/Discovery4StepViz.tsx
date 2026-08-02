@@ -63,7 +63,7 @@ export default function Discovery4StepViz() {
           </text>
           <motion.rect x={345} y={28} width={100} height={14} rx={3}
             fill="var(--border)" opacity={0.3} />
-          <motion.rect x={345} y={28} width={(step + 1) * 25} height={14} rx={3}
+          <motion.rect initial={false} x={345} y={28} width={(step + 1) * 25} height={14} rx={3}
             fill="#10b981"
             animate={{ width: (step + 1) * 25 }}
             transition={{ duration: 0.4 }} />

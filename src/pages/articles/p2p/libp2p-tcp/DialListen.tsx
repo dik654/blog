@@ -35,14 +35,14 @@ export default function DialListen({ onCodeRef }: {
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
+              className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-3 gap-y-1 rounded-lg border px-4 py-2.5 sm:flex sm:items-center"
               style={{ borderColor: s.color + '40', background: s.color + '08' }}>
               <span className="text-[10px] font-mono font-bold rounded-full w-5 h-5
                 flex items-center justify-center shrink-0"
                 style={{ background: s.color + '20', color: s.color }}>{s.step}</span>
-              <span className="text-xs font-mono font-bold shrink-0 w-28"
+              <span className="min-w-0 text-xs font-mono font-bold sm:w-28 sm:shrink-0"
                 style={{ color: s.color }}>{s.label}</span>
-              <span className="text-xs text-foreground/60">{s.desc}</span>
+              <span className="col-start-2 min-w-0 text-xs text-foreground/60 [overflow-wrap:anywhere] sm:col-auto">{s.desc}</span>
             </motion.div>
           ))}
         </div>

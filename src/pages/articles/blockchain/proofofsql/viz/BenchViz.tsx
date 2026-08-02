@@ -21,7 +21,7 @@ export default function BenchViz() {
                 <text x={X0 - 5} y={y + 10} textAnchor="end"
                   fontSize={9} fontWeight={600} fill="var(--foreground)">{b.label}</text>
                 {/* CPU bar */}
-                <motion.rect x={X0} y={y} rx={3}
+                <motion.rect initial={false} x={X0} y={y} rx={3}
                   animate={{ width: step === 0 ? 0 : cpuW }} height={BAR_H / 2 - 1}
                   fill="#ef444480" transition={sp} />
                 <motion.text x={X0 + cpuW + 4} y={y + 6}
@@ -30,7 +30,7 @@ export default function BenchViz() {
                   {b.cpuMs >= 1000 ? `${(b.cpuMs / 1000).toFixed(0)}s` : `${b.cpuMs}ms`} (CPU)
                 </motion.text>
                 {/* GPU bar */}
-                <motion.rect x={X0} y={y + BAR_H / 2 + 1} rx={3}
+                <motion.rect initial={false} x={X0} y={y + BAR_H / 2 + 1} rx={3}
                   animate={{ width: showGpu ? gpuW : 0 }} height={BAR_H / 2 - 1}
                   fill="#10b98180" transition={sp} />
                 {showGpu && (

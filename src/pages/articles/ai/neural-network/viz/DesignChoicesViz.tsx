@@ -2,7 +2,7 @@ export default function DesignChoicesViz() {
   const dimensions = [
     {
       name: '깊이 (Depth)',
-      icon: '📏',
+      code: 'D',
       color: '#3b82f6',
       values: [
         { label: '얕은', val: '1~3 layers', note: '간단 태스크' },
@@ -13,7 +13,7 @@ export default function DesignChoicesViz() {
     },
     {
       name: '너비 (Width)',
-      icon: '📐',
+      code: 'W',
       color: '#10b981',
       values: [
         { label: '표준', val: '64 / 128 / 256', note: 'MLP 일반' },
@@ -23,7 +23,7 @@ export default function DesignChoicesViz() {
     },
     {
       name: '활성화',
-      icon: '⚡',
+      code: 'A',
       color: '#f59e0b',
       values: [
         { label: 'Hidden', val: 'ReLU, GELU, SwiGLU', note: '' },
@@ -32,7 +32,7 @@ export default function DesignChoicesViz() {
     },
     {
       name: '초기화',
-      icon: '🎯',
+      code: 'I',
       color: '#8b5cf6',
       values: [
         { label: 'Xavier', val: 'Sigmoid, Tanh', note: '분산 ∝ 1/n' },
@@ -42,7 +42,7 @@ export default function DesignChoicesViz() {
     },
     {
       name: '정규화',
-      icon: '🔧',
+      code: 'N',
       color: '#ef4444',
       values: [
         { label: 'BatchNorm', val: '배치 단위', note: 'CNN 표준' },
@@ -53,7 +53,7 @@ export default function DesignChoicesViz() {
     },
     {
       name: '구조',
-      icon: '🏗️',
+      code: 'S',
       color: '#06b6d4',
       values: [
         { label: 'Dense', val: 'FC / Conv / Attn', note: '' },
@@ -84,7 +84,8 @@ export default function DesignChoicesViz() {
                 fill={dim.color} fillOpacity={0.08} stroke={dim.color} strokeWidth={2} />
 
               {/* 제목 */}
-              <text x={x + 14} y={y + 26} fontSize={16}>{dim.icon}</text>
+              <circle cx={x + 22} cy={y + 23} r={9} fill={dim.color} fillOpacity={0.14} stroke={dim.color} strokeWidth={1} />
+              <text x={x + 22} y={y + 27} textAnchor="middle" fontSize={9} fontWeight={800} fill={dim.color}>{dim.code}</text>
               <text x={x + 40} y={y + 28} fontSize={13} fontWeight={700} fill={dim.color}>
                 {dim.name}
               </text>

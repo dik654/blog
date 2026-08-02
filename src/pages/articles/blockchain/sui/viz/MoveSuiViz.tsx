@@ -25,7 +25,7 @@ export default function MoveSuiViz({ onOpenCode }: { onOpenCode?: (key: string) 
               <text x={90} y={71} textAnchor="middle" fontSize={9} fill="#6366f1">NFT (under acct)</text>
             </motion.g>
             <motion.g animate={{ opacity: step >= 1 ? 1 : 0.15 }} transition={sp}>
-              <motion.rect x={200} y={10} width={75} height={35} rx={8}
+              <motion.rect initial={false} x={200} y={10} width={75} height={35} rx={8}
                 fill="#10b98115" stroke="#10b981" strokeWidth={1.5}
                 animate={{ x: step === 2 ? 290 : 200 }} transition={sp} />
               <motion.text textAnchor="middle" fontSize={9} fontWeight={600} fill="#10b981"

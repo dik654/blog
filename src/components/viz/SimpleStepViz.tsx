@@ -12,27 +12,23 @@ export interface SimpleStepItem {
 }
 
 function SimpleStep({ item }: { item: SimpleStepItem }) {
-  const n = item.rows.length;
-  const h = Math.min(22, 140 / n);
   return (
-    <g>
-      <text x={240} y={12} textAnchor="middle" fontSize={10} fontWeight={700} fill={item.color}>
+    <div className="w-full max-w-3xl">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold" style={{ color: item.color }}>
+        <span className="h-2 w-2 shrink-0 rounded-sm" style={{ backgroundColor: item.color }} aria-hidden="true" />
         {item.title}
-      </text>
-      {item.rows.map((r, i) => (
-        <motion.g key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.06 }}>
-          <rect x={25} y={18 + i * h} width={430} height={h - 3} rx={4}
-            fill={item.color + '06'} stroke={item.color + '30'} strokeWidth={0.5} />
-          <text x={35} y={18 + i * h + (h - 3) / 2 + 3} fontSize={8.5} fontWeight={600} fill={item.color}>
-            {r.label}
-          </text>
-          <text x={180} y={18 + i * h + (h - 3) / 2 + 3} fontSize={8} fill="var(--muted-foreground)">
-            {r.value}
-          </text>
-        </motion.g>
-      ))}
-    </g>
+      </div>
+      <dl className="divide-y divide-border border-y border-border/70">
+        {item.rows.map((row, index) => (
+          <motion.div key={index} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.06 }}
+            className="grid min-w-0 gap-1 py-2.5 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-4">
+            <dt className="text-sm font-semibold" style={{ color: item.color }}>{row.label}</dt>
+            <dd className="min-w-0 break-words text-sm leading-relaxed text-muted-foreground">{row.value}</dd>
+          </motion.div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
@@ -43,9 +39,7 @@ export default function SimpleStepViz({ steps, visuals }: {
   return (
     <StepViz steps={steps}>
       {(step) => (
-        <svg viewBox="0 0 480 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          <SimpleStep item={visuals[step]} />
-        </svg>
+        <SimpleStep item={visuals[step]} />
       )}
     </StepViz>
   );

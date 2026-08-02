@@ -12,7 +12,7 @@ const STEPS = [
   { label: '비동기 (Asynchronous)', body: 'Δ = ∞. 도착 시간 상한 없음 → 장애와 지연 구분 불가.\nFLP 불가능성: 단일 crash 만 있어도 결정적 합의 불가. 실제 인터넷에 가장 가까움.' },
   {
     label: '부분 동기 (Partial Synchrony)',
-    body: 'GST (Global Stabilization Time) — 어느 미지의 시점 이후로는 Δ 가 유지됨만 가정.\n언제 GST 인지는 모름 → 알고리즘은 GST 도래 후 결국 종료한다는 식으로 설계. BFT 프로토콜 대부분 채택.',
+    body: 'GST (Global Stabilization Time) — 어느 미지의 시점 이후로는 Δ 가 유지된다고만 가정.\n언제 GST 인지는 모름 → 알고리즘은 GST 도래 후 결국 종료한다는 식으로 설계. BFT 프로토콜 대부분 채택.',
   },
 ];
 

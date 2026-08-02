@@ -31,7 +31,7 @@ export default function TemplateSignalViz() {
                 <line x1={a.x} y1={a.y} x2={b.x} y2={b.y}
                   stroke="#666" strokeWidth={1.2} strokeDasharray="4 3" />
                 {vis && (
-                  <motion.circle r={3} fill={BOXES[f].color}
+                  <motion.circle initial={false} r={3} fill={BOXES[f].color}
                     animate={{ cx: [a.x, b.x], cy: [a.y, b.y] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1 }} />
                 )}

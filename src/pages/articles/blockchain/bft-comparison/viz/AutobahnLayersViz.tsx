@@ -45,7 +45,7 @@ export default function AutobahnLayersViz() {
                   stroke={C.lane} strokeWidth={1.5} strokeDasharray="6 4"
                   animate={{ opacity: step >= 1 ? 1 : 0.3 }} />
                 {step >= 1 && (
-                  <motion.circle r={4} fill={C.lane}
+                  <motion.circle initial={false} r={4} fill={C.lane}
                     animate={{ cx: [60, 340], cy: [y, y] }}
                     transition={{ duration: 1.5, delay: i * 0.2, repeat: Infinity, repeatDelay: 0.8 }} />
                 )}
@@ -56,7 +56,7 @@ export default function AutobahnLayersViz() {
           {step >= 2 && LANES.slice(0, 2).map((_, i) => {
             const y = 140 + i * 12;
             return (
-              <motion.circle key={`pb-${i}`} r={3} fill={C.ride}
+              <motion.circle initial={false} key={`pb-${i}`} r={3} fill={C.ride}
                 animate={{ cx: [80, 300], cy: [y, 80] }}
                 transition={{ duration: 1, delay: i * 0.3, repeat: Infinity, repeatDelay: 2 }} />
             );

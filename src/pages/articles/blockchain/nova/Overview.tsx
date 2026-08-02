@@ -48,7 +48,7 @@ export default function Overview({ title, onCodeRef }: { title?: string; onCodeR
             두 R1CS 인스턴스 <M>{'(U_1, W_1)'}</M> 와 <M>{'(U_2, W_2)'}</M> 가 모두 만족이라면,
             랜덤 도전값 <M>r</M> 로 선형 결합한:
           </p>
-          <M display>{'(U_1 + r \\cdot U_2, \\; W_1 + r \\cdot W_2)'}</M>
+          <M display>{'(\\underbrace{U_1 + r \\cdot U_2}_{\\text{instance 폴딩}}, \\; \\underbrace{W_1 + r \\cdot W_2}_{\\text{witness 폴딩}})'}</M>
           <p className="text-sm text-muted-foreground mt-2">
             도 (높은 확률로) 만족하는 단일 인스턴스가 된다. 단, 표준 R1CS 는 곱셈 제약 때문에
             그대로 결합이 불가능 → <strong>Relaxed R1CS</strong> 형태로 확장 후 가능.

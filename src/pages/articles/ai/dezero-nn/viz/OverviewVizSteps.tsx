@@ -40,58 +40,60 @@ export function ModelTraitStep() {
       {/* Trait box */}
       <motion.g initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
         transition={{ ...sp }}>
-        <rect x={140} y={5} width={160} height={22} rx={4}
+        <rect x={120} y={5} width={120} height={22} rx={4}
           fill={`${CV}15`} stroke={CV} strokeWidth={1.2} />
-        <text x={220} y={19} textAnchor="middle" fontSize={10} fontWeight={700} fill={CV}>
+        <text x={180} y={19} textAnchor="middle" fontSize={10} fontWeight={700} fill={CV}>
           trait Model
         </text>
       </motion.g>
 
       {/* User-implemented methods (left) */}
-      <text x={55} y={40} textAnchor="middle" fontSize={7} fill={CE} fontWeight={600}>직접 구현</text>
+      <text x={54} y={35} textAnchor="middle" fontSize={8} fill={CE} fontWeight={600}>직접 구현</text>
       {userMethods.map((m, i) => (
         <motion.g key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
           transition={{ ...sp, delay: 0.1 + i * 0.1 }}>
-          <rect x={10} y={48 + i * 32} width={100} height={26} rx={4}
+          <rect x={8} y={43 + i * 45} width={92} height={42} rx={4}
             fill={`${CE}10`} stroke={CE} strokeWidth={1} />
-          <text x={60} y={62 + i * 32} textAnchor="middle" fontSize={8} fontWeight={600} fill={CE}>
+          <text x={54} y={60 + i * 45} textAnchor="middle" fontSize={9} fontWeight={600} fill={CE}>
             {m.label}
           </text>
-          <text x={60} y={72 + i * 32} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">
+          <text x={54} y={81 + i * 45} textAnchor="middle" fontSize={7.5} fill="var(--muted-foreground)">
             {m.sub}
           </text>
-          <line x1={110} y1={61 + i * 32} x2={140} y2={20}
+          <line x1={100} y1={64 + i * 45} x2={120} y2={20}
             stroke={CE} strokeWidth={0.5} strokeDasharray="3 2" />
         </motion.g>
       ))}
 
       {/* Auto-provided methods (right) */}
-      <text x={370} y={40} textAnchor="middle" fontSize={7} fill={CV} fontWeight={600}>자동 제공</text>
+      <text x={306} y={35} textAnchor="middle" fontSize={8} fill={CV} fontWeight={600}>자동 제공</text>
       {autoMethods.map((m, i) => (
         <motion.g key={i} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
           transition={{ ...sp, delay: 0.2 + i * 0.1 }}>
-          <rect x={320} y={48 + i * 32} width={100} height={26} rx={4}
+          <rect x={260} y={43 + i * 45} width={92} height={42} rx={4}
             fill={`${CV}08`} stroke={CV} strokeWidth={0.5} strokeDasharray="3 2" />
-          <text x={370} y={62 + i * 32} textAnchor="middle" fontSize={8} fontWeight={600} fill={CV}>
+          <text x={306} y={60 + i * 45} textAnchor="middle" fontSize={9} fontWeight={600} fill={CV}>
             {m.label}
           </text>
-          <text x={370} y={72 + i * 32} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">
+          <text x={306} y={81 + i * 45} textAnchor="middle" fontSize={7.5} fill="var(--muted-foreground)">
             {m.sub}
           </text>
-          <line x1={320} y1={61 + i * 32} x2={300} y2={20}
+          <line x1={260} y1={64 + i * 45} x2={240} y2={20}
             stroke={CV} strokeWidth={0.5} strokeDasharray="3 2" />
         </motion.g>
       ))}
 
-      {/* Arrow: user provides → trait generates */}
-      <motion.line x1={160} y1={75} x2={310} y2={75}
-        stroke="var(--muted-foreground)" strokeWidth={0.6} markerEnd="url(#nnArrow)"
-        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-        transition={{ ...sp, delay: 0.4 }} />
-      <motion.text x={235} y={72} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...sp, delay: 0.45 }}>
-        layers() 기반 자동 생성
-      </motion.text>
+      {/* Relationship summary stays between the two method groups. */}
+      <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...sp, delay: 0.45 }}>
+        <rect x={120} y={66} width={120} height={46} rx={5}
+          fill="var(--background)" stroke="var(--border)" strokeWidth={0.8} strokeDasharray="3 2" />
+        <text x={180} y={84} textAnchor="middle" fontSize={8} fontWeight={600} fill="var(--foreground)">
+          layers() 기반
+        </text>
+        <text x={180} y={105} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+          자동 메서드 생성
+        </text>
+      </motion.g>
     </g>
   );
 }
@@ -107,8 +109,9 @@ export function LinearCapsuleStep() {
         strokeDasharray="3 2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
         transition={{ ...sp, delay: 0.3 }} />
       <VizBox x={180} y={50} w={160} h={50} label="Linear" sub="w + b + cleargrads + params" c={CV} delay={0.25} />
-      <motion.line x1={120} y1={100} x2={180} y2={80} stroke={CE} strokeWidth={0.8}
-        markerEnd="url(#nnArrow)" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+      <motion.path d="M 120 103 C 148 103 150 75 178 75" fill="none"
+        stroke={CE} strokeWidth={0.8} markerEnd="url(#nnArrow)"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
         transition={{ ...sp, delay: 0.4 }} />
     </g>
   );
@@ -133,11 +136,11 @@ export function LazyInitStep() {
       <motion.line x1={230} y1={71} x2={230} y2={85} stroke={CE} strokeWidth={0.8}
         markerEnd="url(#nnArrow)" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
         transition={{ ...sp, delay: 0.4 }} />
-      <motion.text x={345} y={60} fontSize={7} fill="var(--muted-foreground)"
+      <motion.text x={350} y={54} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...sp, delay: 0.5 }}>
         in_size = 784
       </motion.text>
-      <motion.text x={345} y={72} fontSize={7} fill="var(--muted-foreground)"
+      <motion.text x={350} y={76} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...sp, delay: 0.55 }}>
         자동 감지
       </motion.text>

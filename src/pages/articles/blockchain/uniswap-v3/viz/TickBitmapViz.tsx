@@ -35,8 +35,8 @@ export default function TickBitmapViz() {
             fill="var(--muted-foreground)">{i}</text>
         ))}
 
-        <text x={490} y={102} textAnchor="end" fontSize={10} fontStyle="italic" fill="var(--muted-foreground)">
-          ... 256 bits
+        <text x={496} y={72} textAnchor="end" fontSize={10} fontStyle="italic" fill="var(--muted-foreground)">
+          ... 256 bits total
         </text>
 
         {/* 초기화된 tick 강조 */}

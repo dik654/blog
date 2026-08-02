@@ -115,7 +115,7 @@ export default function NetworkSwitchViz() {
 
               {step === 4 && (
                 <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                  <motion.circle cx={150} cy={94} r={4} fill={C.cid}
+                  <motion.circle initial={false} cx={150} cy={94} r={4} fill={C.cid}
                     animate={{ cx: [150, 370] }}
                     transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }} />
                   <text x={240} y={148} textAnchor="middle" fontSize={9} fill={C.server}>

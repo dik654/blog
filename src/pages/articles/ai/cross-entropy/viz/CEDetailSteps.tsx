@@ -432,7 +432,7 @@ export function PerplexityStep() {
             transition={{ ...sp, delay: 0.2 + i * 0.12 }}>
             <text x={barStart - 8} y={y + 13} textAnchor="end" fontSize={8}
               fontWeight={600} fill="var(--foreground)">{m.name}</text>
-            <motion.rect x={barStart} y={y + 2} width={0} height={14} rx={3}
+            <motion.rect initial={false} x={barStart} y={y + 2} width={0} height={14} rx={3}
               fill={m.color} fillOpacity={0.2}
               stroke={m.color} strokeWidth={0.8}
               animate={{ width: barW }}

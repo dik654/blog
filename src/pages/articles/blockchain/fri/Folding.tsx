@@ -17,7 +17,7 @@ export default function Folding() {
         <p>
           다항식 <Math>{'f(x)'}</Math>를 짝수 차수 항과 홀수 차수 항으로 나눈다:
         </p>
-        <Math display>{'f(x) = f_{\\text{even}}(x^2) + x \\cdot f_{\\text{odd}}(x^2)'}</Math>
+        <Math display>{'f(x) = \\underbrace{f_{\\text{even}}(x^2)}_{\\text{짝수 차수 항}} + \\underbrace{x \\cdot f_{\\text{odd}}(x^2)}_{\\text{홀수 차수 항}}'}</Math>
         <p>
           <Math>{'f_{\\text{even}}'}</Math>은 짝수 계수만, <Math>{'f_{\\text{odd}}'}</Math>는 홀수 계수만 포함한다.
           <br />
@@ -30,7 +30,7 @@ export default function Folding() {
           <br />
           증명자는 새 다항식을 계산한다:
         </p>
-        <Math display>{'g(y) = f_{\\text{even}}(y) + \\alpha \\cdot f_{\\text{odd}}(y)'}</Math>
+        <Math display>{'\\underbrace{g(y)}_{\\text{접힌 다항식 (차수 절반)}} = \\underbrace{f_{\\text{even}}(y)}_{\\text{짝수 부분}} + \\underbrace{\\alpha}_{\\text{검증자 챌린지}} \\cdot \\underbrace{f_{\\text{odd}}(y)}_{\\text{홀수 부분}}'}</Math>
         <p>
           <Math>{'g'}</Math>의 차수는 <Math>{'f'}</Math>의 절반이고,
           도메인도 <Math>{'D \\to D^2 = \\{x^2 : x \\in D\\}'}</Math>로 절반이 된다.
@@ -83,7 +83,7 @@ export default function Folding() {
           <br />
           이 두 값으로 <Math>{'f_{\\text{even}}(x_0^2)'}</Math>와 <Math>{'f_{\\text{odd}}(x_0^2)'}</Math>를 복원한다:
         </p>
-        <Math display>{'f_{\\text{even}}(x_0^2) = \\frac{f(x_0) + f(-x_0)}{2}, \\quad f_{\\text{odd}}(x_0^2) = \\frac{f(x_0) - f(-x_0)}{2x_0}'}</Math>
+        <Math display>{'f_{\\text{even}}(x_0^2) = \\frac{\\overbrace{f(x_0) + f(-x_0)}^{\\text{홀수항 상쇄}}}{\\underbrace{2}_{\\text{정규화}}}, \\quad f_{\\text{odd}}(x_0^2) = \\frac{\\overbrace{f(x_0) - f(-x_0)}^{\\text{짝수항 상쇄}}}{\\underbrace{2x_0}_{x \\text{ 인수 제거}}}'}</Math>
         <p>
           복원한 값으로 <Math>{'g(x_0^2) = f_{\\text{even}}(x_0^2) + \\alpha \\cdot f_{\\text{odd}}(x_0^2)'}</Math>를 계산하고,
           증명자가 커밋한 <Math>{'g(x_0^2)'}</Math>와 비교한다.

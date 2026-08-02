@@ -4,6 +4,7 @@ import GlobalRegistry3LayerViz from './viz/GlobalRegistry3LayerViz';
 import DispatchMatchViz from './viz/DispatchMatchViz';
 import OnceLockRegistriesViz from './viz/OnceLockRegistriesViz';
 import PermissionResultViz from './viz/PermissionResultViz';
+import ToolSpecLifecycleStepViz from './viz/ToolSpecLifecycleStepViz';
 
 export default function Overview() {
   return (
@@ -20,6 +21,21 @@ export default function Overview() {
           LLM이 "어떤 도구를 호출할 수 있는가"를 판단하는 유일한 근거가 이 스펙이므로,
           name/description/input_schema 세 필드가 곧 도구의 전부다.
         </p>
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">원본과의 핵심 차이: ToolSpec 4필드 vs buildTool lifecycle 객체</p>
+          <p>
+            claw-code의 <code>ToolSpec</code>은 의도적으로 작다.
+            LLM에게 보여줄 이름, 설명, 입력 스키마, 최소 권한만 있으면 도구를 등록할 수 있다.
+            원본 Claude Code의 도구는 이보다 훨씬 무겁다.
+            각 도구가 <code>buildTool</code> 객체로 정의되고, output schema, feature flag, 동적 prompt, 권한 검사, 결과 렌더링, 진행 메시지, 검색 힌트, result size cap, 저장 경로까지 가진다.
+          </p>
+          <p className="mt-2">
+            이 차이는 개발 경험을 바꾼다.
+            claw에서는 새 도구를 추가할 때 spec과 <code>execute_tool()</code> match arm이면 충분하다.
+            원본에서는 도구 하나가 작은 제품 단위다.
+            대신 원본은 도구별 UX, tool search, auto mode classifier, per-tool permission을 정밀하게 조절할 수 있다.
+          </p>
+        </div>
         <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
           <div className="bg-muted/50 border border-border rounded-lg p-4">
             <p className="text-xs text-muted-foreground mb-1">필드</p>
@@ -53,6 +69,9 @@ export default function Overview() {
           반면 <code>input_schema</code>는 <code>serde_json::Value</code>로 런타임 유연성 확보.
           JSON Schema 자체가 도구마다 크게 다르기 때문에 정적 타입으로 표현하면 오히려 복잡해진다.
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">ToolSpec과 buildTool의 정보량 비교</h3>
+        <ToolSpecLifecycleStepViz />
 
         {/* ───────── 2. 40개 도구 카테고리 ───────── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">2. 40개 빌트인 도구 — 카테고리별 분류</h3>
@@ -137,6 +156,19 @@ export default function Overview() {
           임의 코드 실행(bash, PowerShell)은 DangerFullAccess.
           권한 단계가 높을수록 사용자 확인 빈도 증가.
         </p>
+        <div className="bg-muted/50 border border-border rounded-lg p-4 my-6">
+          <p className="font-semibold mb-2">숫자 읽기 보정</p>
+          <p>
+            "40개 도구"는 노출 spec 기준이다.
+            이 중 일부는 stub 성격이거나 alias로 처리된다.
+            예를 들어 <code>AskUser</code>, <code>RemoteTrigger</code>, 테스트 권한 도구는 parity 목적의 표면을 먼저 맞춘 항목이고,
+            <code>Brief</code>는 독립 spec이라기보다 <code>execute_tool()</code> 내부 alias에 가깝다.
+          </p>
+          <p className="mt-2">
+            반대로 원본 Claude Code는 도구 디렉토리 기준 약 42종이지만, 각 도구가 별도 UI와 권한 로직을 포함하므로 LOC와 복잡도는 훨씬 크다.
+            따라서 "40 vs 42"가 아니라 <strong>작은 spec 표면 vs 도구별 lifecycle 구현</strong>으로 비교해야 정확하다.
+          </p>
+        </div>
 
         {/* ───────── 3. GlobalToolRegistry 3계층 ───────── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">3. GlobalToolRegistry — 3계층 합성</h3>
@@ -205,21 +237,26 @@ export default function Overview() {
         {/* ───────── 6. 권한 게이팅 ───────── */}
         <h3 className="text-xl font-semibold mt-8 mb-3">6. 권한 게이팅 — PermissionEnforcer</h3>
         <p>
-          <code>execute_tool()</code> 진입 직후, 디스패치 전에 <code>PermissionEnforcer</code>가 개입한다.
+          <code>PermissionEnforcer</code>가 연결된 실행 경로에서는 디스패치 전에 권한을 판정한다.
+          다만 현재 구현의 모든 tool call이 이 enforcer를 지나는 것은 아니다.
+          <code>ConversationRuntime</code>은 policy를 직접 호출하고 public <code>execute_tool()</code>은
+          optional enforcer 없이 실행될 수 있으므로, 단일 gate는 현재 보장이 아니라 hardening 목표다.
         </p>
       </div>
       <PermissionResultViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          3단계 결과: <strong>Allow</strong>(즉시 실행), <strong>Deny</strong>(에러 반환),
-          <strong>Prompt</strong>(사용자 Y/N 입력 대기).<br />
+          실행 경로가 구분해야 할 결과는 <strong>Allow</strong>(즉시 실행),
+          <strong>Deny</strong>(에러 반환), <strong>Prompt</strong>(상위 interactive flow로 판정 위임)다.
+          enforcer의 <code>Allowed</code>만 보고 사용자 승인이 끝났다고 해석해서는 안 된다.<br />
           ReadOnly 모드에서 <code>write_file</code>을 호출하면 LLM에게 "권한 부족" 에러가 돌아가고,
           LLM은 이를 보고 사용자에게 권한 변경을 제안하거나 다른 접근법을 시도한다.
         </p>
         <p>
-          DangerFullAccess 도구(bash, PowerShell)는 기본 모드에서 항상 Prompt를 트리거한다.
-          사용자가 <code>--dangerously-skip-permissions</code> 플래그를 사용하면 AllowAll로 전환되어
-          모든 Prompt가 Allow로 바뀐다 — CI/CD 자동화 환경에서 사용.
+          production turn은 <code>PermissionPolicy::authorize_with_context</code>를 사용한다.
+          active mode가 Prompt여도 plain requirement가 mode 순서 비교로 허용될 수 있고, ask rule이나
+          hook Ask가 있을 때 prompter가 개입한다. 별도 <code>PermissionEnforcer</code>의 결과와
+          interactive authorization을 같은 상태 머신으로 해석하면 안 된다.
         </p>
 
         {/* ───────── 7. 인사이트 ───────── */}
@@ -241,6 +278,33 @@ export default function Overview() {
           claw-code는 구조체 + match 분기만으로 완결된다.
           Rust의 타입 시스템이 JSON Schema 역직렬화 시점에 타입 안전성을 강제하므로
           별도 validation 레이어가 불필요하다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">Agent 도구는 한 줄로 끝나지 않는다</h3>
+        <p>
+          카테고리 표에서 <code>Agent</code>는 통합 도구 한 칸으로 보인다.
+          하지만 원본 Claude Code에서 AgentTool은 별도 하위 시스템이다.
+          부모 컨텍스트를 fork하는 <code>forkSubagent</code>, 실제 실행을 맡는 <code>runAgent</code>, 중단된 세션을 잇는 <code>resumeAgent</code>,
+          에이전트별 영속 메모리, built-in agent 로딩, <code>.claude/agents/</code> 사용자 정의 agent, 동시 실행 UI 색상 관리까지 포함한다.
+        </p>
+        <p>
+          claw-code는 이 영역을 더 작게 잡는다.
+          Team/Task/Worker 레지스트리와 Agent 분기를 통해 orchestration 표면은 제공하지만,
+          원본의 "에이전트 하나가 독립 세션으로 살아 움직이는" UX와 memory/pane/backend 깊이는 아직 별도 구현 축이다.
+          그래서 Tool System 글에서 Agent를 단순 도구로만 보면 전체 복잡도를 과소평가하게 된다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">빠진 도구가 보여주는 운영 방향</h3>
+        <p>
+          원본에는 <code>EnterWorktreeTool</code>과 <code>ExitWorktreeTool</code>이 있다.
+          git worktree를 만들고 들어가고 정리하는 도구다.
+          이것은 단순 편의 기능이 아니라, 여러 브랜치와 여러 에이전트가 동시에 작업하는 운영 모델을 전제로 한다.
+          claw-code의 현재 도구 표면에는 이 축이 없다.
+        </p>
+        <p>
+          <code>SendMessageTool</code>도 비슷하다.
+          claw에는 Team/Task 개념이 있지만, 원본의 teammate mailbox와 pane backend는 실제 동시 작업자 간 메시징을 UI까지 연결한다.
+          도구 목록의 차이는 기능 체크리스트가 아니라 "어떤 협업 모델을 제품이 전제하는가"의 차이다.
         </p>
 
       </div>

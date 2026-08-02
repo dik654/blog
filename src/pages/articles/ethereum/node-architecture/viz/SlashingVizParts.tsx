@@ -15,8 +15,6 @@ export function Block({ x, y, label, color, show }: {
       {/* Divider */}
       <line x1={x - hw + 7} y1={y + 1} x2={x + hw - 7} y2={y + 1}
         stroke={color} strokeWidth={0.8} opacity={0.35} />
-      {/* Label for SIG area */}
-      <text x={x} y={y + 13} textAnchor="middle" fontSize={9} fill={`${color}88`}>signature</text>
     </g>
   );
 }

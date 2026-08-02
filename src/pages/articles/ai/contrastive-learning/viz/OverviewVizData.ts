@@ -13,7 +13,7 @@ export const STEPS = [
   },
   {
     label: '④ 대조 학습의 활용 범위',
-    body: '시각(SimCLR, MoCo): ImageNet self-supervised → linear eval 76.5%. 라벨 1%로도 준수한 성능.\nNLP(SimCSE): 문장 임베딩 품질 향상. STS 벤치마크에서 BERT baseline 대비 +5%.\n유전체(gLM): 변이 민감도 임베딩. wild-type과 변이 시퀀스의 cosine distance로 병원성 예측.\n추천(CL4Rec): 사용자-아이템 임베딩 대조 학습. 희소 데이터에서도 표현 품질 유지.',
+    body: '시각: 같은 image의 augmentation 또는 같은 원인의 defect pair.\nNLP: 같은 의미를 가진 sentence pair.\n유전체: 같은 기능을 보존하는 sequence pair와 기능이 다른 hard negative.\n추천: 같은 intent를 반영하는 user-item sequence pair.\n각 분야의 benchmark 수치는 서로 옮겨 비교하지 않고 pair 정의와 split을 먼저 확인한다.',
   },
 ];
 

@@ -188,10 +188,10 @@ export function Step2() {
 /* Step 3: 활용 범위 4개 도메인 */
 export function Step3() {
   const domains = [
-    { x: 60, label: 'Vision', sub: 'SimCLR / MoCo', metric: '76.5%', c: C.anchor },
-    { x: 180, label: 'NLP', sub: 'SimCSE', metric: '+5% STS', c: C.positive },
-    { x: 300, label: 'Genomics', sub: 'gLM + CL', metric: 'ρ=0.62', c: C.sup },
-    { x: 420, label: 'RecSys', sub: 'CL4Rec', metric: '희소 강건', c: C.negative },
+    { x: 60, label: 'Vision', sub: 'SimCLR / MoCo', metric: 'image pair', c: C.anchor },
+    { x: 180, label: 'NLP', sub: 'SimCSE', metric: 'sentence pair', c: C.positive },
+    { x: 300, label: 'Genomics', sub: 'gLM + CL', metric: 'variant pair', c: C.sup },
+    { x: 420, label: 'RecSys', sub: 'sequence CL', metric: 'intent pair', c: C.negative },
   ];
 
   return (
@@ -211,7 +211,7 @@ export function Step3() {
 
       <motion.text x={240} y={150} textAnchor="middle" fontSize={9} fill={C.muted}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...sp, delay: 0.5 }}>
-        "좋은 표현" → 모든 downstream task 성능 향상
+        좋은 pair 정의 → 목표 task에 맞는 neighborhood
       </motion.text>
     </g>
   );

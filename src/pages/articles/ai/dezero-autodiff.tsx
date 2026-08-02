@@ -1,32 +1,23 @@
-import Overview from './dezero-autodiff/Overview';
-import Forward from './dezero-autodiff/Forward';
-import Backward from './dezero-autodiff/Backward';
-import HigherOrder from './dezero-autodiff/HigherOrder';
-import Memory from './dezero-autodiff/Memory';
+import Article from './dezero-autodiff/Article';
 import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './dezero-autodiff/codeRefs';
-import { dezeroTree } from './dezero-autodiff/fileTrees';
+import { runtimeCodeRefs, runtimeFileTree } from './dezero-shared/runtimeCodeRefs';
 
 export default function DezeroAutodiff() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
-      <Overview onCodeRef={sidebar.open} />
-      <Forward onCodeRef={sidebar.open} />
-      <Backward onCodeRef={sidebar.open} />
-      <HigherOrder onCodeRef={sidebar.open} />
-      <Memory onCodeRef={sidebar.open} />
+      <Article onCodeRef={sidebar.open} />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef}
         onClose={sidebar.close} onNavigate={sidebar.navigate}
-        codeRefs={codeRefs}
-        fileTrees={{ dezero: dezeroTree }}
+        codeRefs={runtimeCodeRefs}
+        fileTrees={{ 'dezero-rs': runtimeFileTree }}
         projectMetas={{
-          dezero: {
-            id: 'dezero',
-            label: 'dezero_rs · Rust',
-            badgeClass: 'bg-[#fef3c7] border-[#f59e0b] text-[#92400e]',
+          'dezero-rs': {
+            id: 'dezero-rs',
+            label: '교육용 재구성 · Rust',
+            badgeClass: 'bg-cyan-50 border-cyan-600/35 text-cyan-900 dark:bg-cyan-950 dark:text-cyan-100',
           },
         }}
       />

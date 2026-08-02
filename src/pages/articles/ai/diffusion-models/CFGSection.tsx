@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import CFGDetailViz from './viz/CFGDetailViz';
+import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
+import CFGDetailScene from './viz/CFGDetailScene';
 
 const SCALES = [
-  { value: 1, label: 'w=1', desc: '조건 무시 — 무작위 생성' },
-  { value: 3, label: 'w=3', desc: '약한 가이던스 — 다양하지만 부정확' },
-  { value: 7.5, label: 'w=7.5', desc: '기본값 — 품질과 다양성 균형' },
-  { value: 15, label: 'w=15', desc: '강한 가이던스 — 정확하지만 과포화' },
+  { value: 1, label: 'w=1', desc: '조건 방향을 한 번만 사용' },
+  { value: 3, label: 'w=3', desc: '조건 방향을 약하게 더 밀기' },
+  { value: 7.5, label: 'w=7.5', desc: 'SD 계열에서 자주 쓰는 균형값' },
+  { value: 15, label: 'w=15', desc: '조건 방향 과증폭 — 다양성/질감 손상 가능' },
 ];
 
 export default function CFGSection() {
@@ -17,10 +19,23 @@ export default function CFGSection() {
     <>
       <h3 className="text-xl font-semibold mt-6 mb-3">Classifier-Free Guidance (CFG)</h3>
       <p>
-        CFG — 조건부/비조건부 예측을 혼합하여 텍스트 충실도를 제어<br />
-        <strong>epsilon = epsilon_uncond + w * (epsilon_cond - epsilon_uncond)</strong><br />
-        가중치 w가 클수록 텍스트에 충실하지만 다양성 감소
+        같은 <M>{'z_t'}</M> 에서 조건을 비우고 예측하면 <M>{'\\epsilon_\\emptyset'}</M>.
+        Prompt 조건 <M>{'c'}</M> 를 넣고 예측하면 <M>{'\\epsilon_c'}</M>.
+        두 값의 차이 <M>{'\\epsilon_c-\\epsilon_\\emptyset'}</M> 를 조건이 만든 방향으로 본다.
+        <M>{'w'}</M> 는 그 방향을 얼마나 더 밀지 정한다.
+        이 방식이 <strong>Classifier-Free Guidance</strong>.
       </p>
+      <M display>{'\\hat\\epsilon = \\epsilon_{\\emptyset} + w\\, (\\epsilon_c - \\epsilon_{\\emptyset})'}</M>
+      <FormulaNote
+        meaning={'CFG는 조건이 없을 때의 기본 denoise 방향에서 출발해, prompt를 넣었을 때 달라진 방향만 분리해서 더한다. 차이 epsilon_c - epsilon_emptyset을 쓰는 이유는 prompt가 만든 변화만 뽑기 위해서다. w는 그 방향의 세기를 키우지만, 너무 크면 다양성과 자연스러운 질감이 줄 수 있다.'}
+        symbols={[
+          ['epsilon_emptyset', '조건을 비운 기본 noise 예측이다. prompt 효과를 비교할 기준점이다.'],
+          ['epsilon_c', 'prompt 조건 c를 넣었을 때의 noise 예측이다.'],
+          ['epsilon_c - epsilon_emptyset', '조건이 만든 방향이다. 두 예측의 차이만 남겨 prompt 효과를 분리한다.'],
+          ['w', 'guidance scale. 조건 방향을 얼마나 강하게 밀지 정한다.'],
+          ['epsilon_hat', '샘플러가 실제로 사용할 최종 noise 예측이다.'],
+        ]}
+      />
       <div className="not-prose my-4 rounded-xl border border-border bg-card p-5 space-y-4">
         <p className="text-xs font-mono text-foreground/50">Guidance Scale 효과</p>
         <div className="flex gap-2 justify-center">
@@ -54,7 +69,7 @@ export default function CFGSection() {
       </div>
 
       <div className="not-prose mt-4">
-        <CFGDetailViz />
+        <CFGDetailScene />
       </div>
     </>
   );

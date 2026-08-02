@@ -27,7 +27,7 @@ export default function PLONKish({ onCodeRef }: { onCodeRef: (key: string, ref: 
         <div className="not-prose my-4">
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">PLONKish 범용 게이트</p>
-            <M display>{'q_L \\cdot a + q_R \\cdot b + q_O \\cdot c + q_M \\cdot a \\cdot b + q_C = 0'}</M>
+            <M display>{'\\underbrace{q_L \\cdot a + q_R \\cdot b + q_O \\cdot c}_{\\text{선형 항 (덧셈/뺄셈)}} + \\underbrace{q_M \\cdot a \\cdot b}_{\\text{곱셈 항}} + \\underbrace{q_C}_{\\text{상수}} = 0'}</M>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm mt-3">
               <div className="bg-muted/50 rounded p-2"><code>a, b, c</code><br /><span className="text-muted-foreground">3개 wire (left, right, output)</span></div>
               <div className="bg-muted/50 rounded p-2"><code>q_L</code><br /><span className="text-muted-foreground">left wire 선형 계수</span></div>
@@ -75,7 +75,7 @@ export default function PLONKish({ onCodeRef }: { onCodeRef: (key: string, ref: 
             <p className="text-sm text-muted-foreground mb-2">검증자가 랜덤 <M>{'\\beta, \\gamma'}</M>를 선택</p>
             <div className="my-2">
               <M display>{'Z(\\omega^0) = 1'}</M>
-              <M display>{'Z(\\omega^{i+1}) = Z(\\omega^i) \\cdot \\prod_j \\frac{w_j(\\omega^i) + \\beta \\cdot \\omega^i \\cdot k_j + \\gamma}{w_j(\\omega^i) + \\beta \\cdot \\sigma_j(\\omega^i) + \\gamma}'}</M>
+              <M display>{'Z(\\omega^{i+1}) = Z(\\omega^i) \\cdot \\prod_j \\frac{\\overbrace{w_j(\\omega^i) + \\beta \\cdot \\omega^i \\cdot k_j + \\gamma}^{\\text{원래 위치 인덱스}}}{\\underbrace{w_j(\\omega^i) + \\beta \\cdot \\sigma_j(\\omega^i) + \\gamma}_{\\sigma \\text{ 순열 적용 인덱스}}}'}</M>
             </div>
             <div className="mt-2 rounded border border-amber-500/30 p-2">
               <p className="text-sm text-amber-400 font-medium">Telescoping으로 상쇄</p>

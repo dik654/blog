@@ -30,7 +30,7 @@ type BP = { gx: number; vals: number[]; color: string; step: number; at: number 
 function Bars({ gx, vals, color, step, at }: BP) {
   const a = step === at, d = step > at;
   return <g>{vals.map((v, i) => (
-    <motion.rect key={i} x={bx(i, gx)} width={BW} rx={2} transition={sp} animate={{
+    <motion.rect initial={false} key={i} x={bx(i, gx)} width={BW} rx={2} transition={sp} animate={{
       y: v >= 0 ? BY - v * SC : BY, height: Math.abs(v) * SC,
       fill: a ? color : d ? `${color}66` : `${color}22`, opacity: a ? 1 : d ? 0.5 : 0.2,
     }} />

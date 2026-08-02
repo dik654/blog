@@ -12,7 +12,7 @@ const STEPS = [
 
 const NODE_R = 22;
 const TRI_R = 78;
-const CX = 175, CY = 110;
+const CX = 175, CY = 120;
 const angles = [-Math.PI / 2, Math.PI / 6, 5 * Math.PI / 6];
 const labels = ['C', 'A', 'P'];
 const fullLabels = ['Consistency', 'Availability', 'Partition Tol.'];
@@ -24,20 +24,13 @@ const vertices = angles.map(a => ({
   a,
 }));
 
-// 풀 레이블 위치 — 각 정점에서 충분히 바깥으로
-const labelOffset = NODE_R + 16;
-const labelPos = angles.map((a, i) => {
-  // 위쪽 정점은 위로, 아래 두 정점은 좌/우 바깥
+// 풀 레이블 위치 — 위쪽 정점은 원 위, 아래 두 정점은 원 아래로 배치
+const labelPos = angles.map((_a, i) => {
   if (i === 0) return { x: CX, y: vertices[0].y - NODE_R - 8, anchor: 'middle' as const };
-  if (i === 1) return {
-    x: vertices[1].x + labelOffset * 0.55,
-    y: vertices[1].y + 6,
-    anchor: 'start' as const,
-  };
   return {
-    x: vertices[2].x - labelOffset * 0.55,
-    y: vertices[2].y + 6,
-    anchor: 'end' as const,
+    x: vertices[i].x,
+    y: vertices[i].y + NODE_R + 14,
+    anchor: 'middle' as const,
   };
 });
 

@@ -3,18 +3,18 @@ import type { StepDef } from '@/components/ui/step-viz';
 export const STEPS: StepDef[] = [
   {
     label: '의미 있는 태그 이름',
-    body: '태그 이름 자체가 LLM에게 의미적 단서를 제공한다.',
+    body: '태그 이름이 역할을 드러내면 사람의 검토와 validator 연결이 쉬워진다.',
   },
   {
-    label: '닫는 태그 필수',
-    body: '여는 태그 + 닫는 태그 쌍이 경계 인식의 핵심 단서다.',
+    label: '완전한 문서로 파싱',
+    body: '여는 태그와 닫는 태그를 맞추고 응답 전체를 parser로 검증한다.',
   },
   {
-    label: '태그 깊이 3단계 이내',
-    body: '4단계 이상은 LLM이 구조를 놓칠 확률이 급증한다.',
+    label: '실제 소속 관계만 중첩',
+    body: '고정 깊이 숫자를 따르기보다 부모·자식 관계가 없으면 문서를 나눈다.',
   },
   {
-    label: '전체 프롬프트 템플릿',
-    body: 'role → rules → output_format → examples 구조를 템플릿으로 재사용한다.',
+    label: 'fixture로 형식 비교',
+    body: 'XML, Markdown, schema output을 같은 실패 집합에서 비교해 가장 단순한 계약을 고른다.',
   },
 ];

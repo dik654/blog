@@ -4,10 +4,10 @@ import StepViz from '@/components/ui/step-viz';
 const sp = { type: 'spring' as const, bounce: 0.12, duration: 0.5 };
 
 const LAYERS = [
-  { label: 'Group (군)', color: '#6366f1', y: 72, w: 280, axioms: '폐쇄·결합·항등·역원' },
-  { label: 'Abelian (아벨군)', color: '#10b981', y: 54, w: 220, axioms: '+ 교환법칙' },
-  { label: 'Ring (환)', color: '#f59e0b', y: 36, w: 160, axioms: '+ 곱셈·분배' },
-  { label: 'Field (체)', color: '#8b5cf6', y: 18, w: 100, axioms: '+ 곱셈역원' },
+  { label: 'Group (군)', color: '#6366f1', y: 120, w: 300, axioms: '폐쇄·결합·항등·역원' },
+  { label: 'Abelian (아벨군)', color: '#10b981', y: 84, w: 240, axioms: '+ 교환법칙' },
+  { label: 'Ring (환)', color: '#f59e0b', y: 48, w: 180, axioms: '+ 곱셈·분배' },
+  { label: 'Field (체)', color: '#8b5cf6', y: 12, w: 120, axioms: '+ 곱셈역원' },
 ];
 
 const STEPS = [
@@ -21,15 +21,15 @@ export default function AlgebraStructureViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 100" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 460 154" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {LAYERS.map((l, i) => {
             const active = i <= step;
             const highlighted = i === step;
-            const cx = 160;
+            const cx = 230;
             return (
               <g key={l.label}>
                 <motion.rect
-                  x={cx - l.w / 2} y={l.y} width={l.w} height={20} rx={4}
+                  x={cx - l.w / 2} y={l.y} width={l.w} height={30} rx={4}
                   animate={{
                     fill: highlighted ? `${l.color}25` : active ? `${l.color}10` : `${l.color}04`,
                     stroke: l.color,
@@ -39,11 +39,11 @@ export default function AlgebraStructureViz() {
                   transition={sp}
                 />
                 <motion.text
-                  x={cx} y={l.y + 9} textAnchor="middle" fontSize={9} fontWeight={600}
+                  x={cx} y={l.y + 12} textAnchor="middle" fontSize={9} fontWeight={600}
                   animate={{ fill: l.color, opacity: active ? 1 : 0.2 }} transition={sp}
                 >{l.label}</motion.text>
                 <motion.text
-                  x={cx} y={l.y + 16} textAnchor="middle" fontSize={9}
+                  x={cx} y={l.y + 25} textAnchor="middle" fontSize={8.5}
                   animate={{ fill: l.color, opacity: active ? 0.6 : 0.15 }} transition={sp}
                 >{l.axioms}</motion.text>
               </g>
@@ -52,7 +52,7 @@ export default function AlgebraStructureViz() {
           {/* containment arrows */}
           {[0, 1, 2].map(i => (
             <motion.line key={i}
-              x1={160} y1={LAYERS[i + 1].y + 20} x2={160} y2={LAYERS[i].y}
+              x1={230} y1={LAYERS[i + 1].y + 30} x2={230} y2={LAYERS[i].y}
               stroke="var(--border)" strokeWidth={0.6} strokeDasharray="2 2"
               animate={{ opacity: step > i ? 0.4 : 0.1 }} transition={sp}
             />

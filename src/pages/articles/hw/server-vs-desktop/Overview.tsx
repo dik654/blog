@@ -12,77 +12,50 @@ export default function Overview() {
           Filecoin mining, 24/7 infra에서 서버 부품 필수 이유.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">서버와 데스크톱의 설계 철학</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 설계 철학 차이:
+        <h3 className="text-xl font-semibold mt-8 mb-3">설계 철학 차이</h3>
+        <ul className="leading-7">
+          <li><strong>Desktop (consumer)</strong> — 1 사용자, interactive. 8~16h/day 가동. single failure = 불편. 달러당 성능 우선, 조용/컴팩트/스타일.</li>
+          <li><strong>Server (professional)</strong> — N 사용자, batch/service. 24/7 가동. single failure = 매출 손실. 신뢰성 + 확장성 우선, 시끄럽고 모듈러, 산업형.</li>
+        </ul>
 
-// Desktop (consumer):
-// - 1-user, interactive
-// - 8-16h/day operation
-// - single failure = inconvenience
-// - performance per dollar 우선
-// - quiet, compact, stylish
+        <h3 className="text-xl font-semibold mt-8 mb-3">실제 차이</h3>
+        <ul className="leading-7">
+          <li><strong>품질</strong> — Desktop consumer-grade 3년 보증, Server enterprise-grade 5~7년 보증.</li>
+          <li><strong>부품</strong> — Desktop 게이밍/생산성 최적화, Server throughput + 신뢰성 최적화.</li>
+          <li><strong>Redundancy</strong> — Desktop single path, Server dual PSU + ECC + hot-swap.</li>
+          <li><strong>관리</strong> — Desktop 로컬 (keyboard + monitor), Server 원격 (IPMI, KVM over IP).</li>
+          <li><strong>냉각</strong> — Desktop open-air 조용, Server 고 RPM fan + rack 최적화.</li>
+          <li><strong>전력</strong> — Desktop 500~850W, Server 1000~3000W + redundant.</li>
+        </ul>
 
-// Server (professional):
-// - N-user, batch/service
-// - 24/7 operation
-// - single failure = revenue loss
-// - reliability + scalability 우선
-// - noisy, modular, industrial
+        <h3 className="text-xl font-semibold mt-8 mb-3">비용 비교 (유사 compute)</h3>
+        <ul className="leading-7">
+          <li>Desktop workstation — $3K~$5K</li>
+          <li>동급 Server — $8K~$15K</li>
+          <li>신뢰성 프리미엄 — 2~3배</li>
+        </ul>
 
-// 결과적 차이:
-//
-// Build Quality:
-// Desktop: consumer-grade, 3-year warranty
-// Server: enterprise-grade, 5-7 year warranty
-//
-// Components:
-// Desktop: optimized for gaming/productivity
-// Server: optimized for throughput + reliability
-//
-// Redundancy:
-// Desktop: single path (minimal redundancy)
-// Server: dual PSU, ECC, hot-swap, etc.
-//
-// Management:
-// Desktop: local (keyboard + monitor)
-// Server: remote (IPMI, KVM over IP)
-//
-// Cooling:
-// Desktop: open-air, quiet
-// Server: high-RPM fans, rack-optimized
-//
-// Power:
-// Desktop: 500-850W
-// Server: 1000-3000W, redundant
+        <h3 className="text-xl font-semibold mt-8 mb-3">Desktop 적합 용도</h3>
+        <ul className="leading-7">
+          <li>홈 랩</li>
+          <li>단일 사용자 ML</li>
+          <li>경량 crypto mining</li>
+          <li>개발 머신</li>
+        </ul>
 
-// Cost comparison (similar compute):
-// Desktop workstation: $3-5K
-// Equivalent server: $8-15K
-// Premium: 2-3x for reliability
+        <h3 className="text-xl font-semibold mt-8 mb-3">Server 필요 용도</h3>
+        <ul className="leading-7">
+          <li>24/7 Filecoin mining</li>
+          <li>프로덕션 DB</li>
+          <li>웹 서비스</li>
+          <li>엔터프라이즈 워크로드</li>
+          <li>멀티테넌트 compute</li>
+        </ul>
 
-// When to use which?
-
-// Desktop suitable for:
-// - Home lab
-// - Single user ML
-// - Light crypto mining
-// - Development machines
-
-// Server required for:
-// - 24/7 Filecoin mining
-// - Production databases
-// - Web services
-// - Enterprise workloads
-// - Multi-tenant compute
-
-// Hybrid approach:
-// - HEDT (High-End Desktop)
-// - Threadripper / Xeon W
-// - some server features
-// - desktop form factor
-// - $5-10K range`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">중간 tier — HEDT</h3>
+        <p className="leading-7">
+          High-End Desktop. Threadripper / Xeon W. 일부 서버 기능 + desktop 폼팩터. $5K~$10K 가격대.
+        </p>
         <p className="leading-7">
           설계 철학: <strong>Desktop (performance/$) vs Server (reliability + scale)</strong>.<br />
           24/7 operation + failure = revenue loss → server parts 필수.<br />

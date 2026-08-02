@@ -20,7 +20,7 @@ const STEPS = [
   },
   {
     label: 'AES-GCM vs ChaCha20-Poly1305',
-    body: 'AES-GCM: AES-NI (Intel) / ARMv8 가속 시 압도적 빠름.\nChaCha20-Poly1305: 가속 없을 때 빠름 + 사이드채널 저항.\n→ 모바일·임베디드는 ChaCha20, 서버/데스크톱은 AES-GCM.',
+    body: 'AES-GCM: AES-NI (Intel) / ARMv8 가속 시 압도적으로 빠름.\nChaCha20-Poly1305: 가속 없을 때 빠름 + 사이드채널 저항.\n→ 모바일·임베디드는 ChaCha20, 서버/데스크톱은 AES-GCM.',
   },
   {
     label: 'AEAD 3대 속성',

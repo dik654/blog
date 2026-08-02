@@ -106,7 +106,7 @@ export default function EvalBenchViz() {
                       fill={m.color}>{m.name}</text>
                     <rect x={115} y={150 + i * 12} width={280} height={8} rx={2}
                       fill={m.color + '10'} />
-                    <motion.rect x={115} y={150 + i * 12}
+                    <motion.rect initial={false} x={115} y={150 + i * 12}
                       width={0} height={8} rx={2}
                       fill={m.color + '50'}
                       animate={{ width: (m.score / 100) * 280 }}

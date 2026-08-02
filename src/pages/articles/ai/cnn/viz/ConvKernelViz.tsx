@@ -47,7 +47,7 @@ export default function ConvKernelViz() {
               </g>
             )))}
             {pos && (
-              <motion.rect animate={{ x: pos.c * C, y: 20 + pos.r * C }}
+              <motion.rect initial={false} animate={{ x: pos.c * C, y: 20 + pos.r * C }}
                 transition={{ type: 'spring', bounce: 0.15, duration: 0.45 }}
                 width={3*C} height={3*C} rx={3} fill="#6366f118" stroke="#6366f1" strokeWidth={1.5} />
             )}

@@ -27,7 +27,7 @@ export default function RangeProofAggViz() {
               <g key={b.label}>
                 <text x={8} y={y + 14} fontSize={9} fill="var(--muted-foreground)"
                   opacity={active ? 0.8 : 0.3}>{b.label}</text>
-                <motion.rect x={90} y={y} rx={4} height={22}
+                <motion.rect initial={false} x={90} y={y} rx={4} height={22}
                   animate={{ width: active ? w : 8, fill: active ? `${b.color}30` : `${b.color}08`,
                     stroke: b.color, strokeWidth: active ? 1.5 : 0.5, opacity: active ? 1 : 0.2 }}
                   transition={sp} />

@@ -4,6 +4,53 @@ import { C } from '../PerceptronVizData';
 const sp = { type: 'spring' as const, bounce: 0.12, duration: 0.5 };
 const d = (i: number) => ({ ...sp, delay: i * 0.12 });
 
+function BiologicalNeuronGraphic() {
+  const dendrites = [
+    'M132 126 C91 112 79 75 46 58 M91 105 C72 91 60 89 34 96',
+    'M135 116 C112 82 119 50 91 28 M113 82 C92 72 83 57 72 43',
+    'M132 139 C92 151 76 188 43 205 M91 160 C71 171 55 170 28 160',
+  ];
+  return (
+    <svg viewBox="0 0 600 250" className="h-auto w-full max-w-3xl" role="img"
+      aria-label="수상돌기에서 세포체와 축삭을 거쳐 출력으로 전달되는 생물학적 뉴런">
+      <defs>
+        <marker id="neuron-flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0 0 L8 4 L0 8 Z" fill={C.output} />
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="598" height="248" rx="8" fill="var(--card)" stroke="var(--border)" />
+
+      {dendrites.map((path, index) => (
+        <motion.path key={path} d={path} fill="none" stroke={C.input} strokeWidth="5" strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.82 }} transition={{ duration: 0.55, delay: index * 0.08 }} />
+      ))}
+      <motion.ellipse cx="157" cy="130" rx="48" ry="42" fill={`${C.input}18`} stroke={C.input} strokeWidth="2"
+        initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={d(2)} />
+      <circle cx="154" cy="130" r="14" fill={C.sum} opacity="0.82" />
+
+      <motion.path d="M202 130 C275 117 342 143 420 127 C460 119 486 117 520 125" fill="none"
+        stroke={C.sum} strokeWidth="5" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.7, delay: 0.28 }} />
+      {[232, 286, 340, 394, 448].map((x, index) => (
+        <motion.rect key={x} x={x} y={112 + (index % 2) * 8} width="38" height="24" rx="12"
+          fill="#f5cf65" stroke="#a16207" strokeWidth="1.3"
+          initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.38 + index * 0.08 }} />
+      ))}
+
+      <motion.path d="M520 125 C545 105 555 82 575 69 M531 117 C556 119 570 110 588 101 M526 134 C552 148 559 169 580 181"
+        fill="none" stroke={C.output} strokeWidth="4" strokeLinecap="round" markerEnd="url(#neuron-flow-arrow)"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.65, delay: 0.65 }} />
+
+      <g fontSize="17" fontWeight="700">
+        <text x="48" y="232" fill={C.input}>1 입력</text>
+        <text x="139" y="73" fill={C.sum}>2 합산</text>
+        <text x="500" y="220" fill={C.output}>3 출력</text>
+      </g>
+      <motion.circle r="6" fill={C.output} initial={{ offsetDistance: '0%' }} animate={{ offsetDistance: '100%' }}
+        style={{ offsetPath: 'path("M 205 130 C 300 118 405 142 520 125")' }} transition={{ duration: 1.6, delay: 0.8 }} />
+    </svg>
+  );
+}
+
 /** Step 0: 생물학적 뉴런 이미지 + 매핑 */
 export function Step0() {
   const maps = [
@@ -13,9 +60,7 @@ export function Step0() {
   ];
   return (
     <div className="flex flex-col items-center gap-4">
-      <img
-        src="https://i.namu.wiki/i/3reaTfhg3ot4hd8m1Ne0MHz718HpK_ZL6nnu8eFPRPUIAHGr0BeWnxvNNCBIAs-9ef4uDS6DzI9jkw_pwzprJQ.svg"
-        alt="생물학적 뉴런 구조" className="w-full max-w-2xl rounded-lg border border-border/40" />
+      <BiologicalNeuronGraphic />
       <div className="flex gap-3 flex-wrap justify-center">
         {maps.map((m, i) => (
           <motion.div key={i} className="flex items-center gap-2 rounded-lg border px-3 py-2"

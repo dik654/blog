@@ -17,7 +17,7 @@ function CostBar({ y, value, max, color, label, show }: {
     <motion.g animate={{ opacity: show ? 1 : 0.12 }} transition={sp}>
       <text x={BX} y={y - 6} fontSize={11} fontWeight={600}
         fill={color}>{label}</text>
-      <motion.rect x={BX} y={y} rx={4}
+      <motion.rect initial={false} x={BX} y={y} rx={4}
         animate={{ width: show ? w : 0, height: BH,
           fill: `${color}18`, stroke: color }}
         strokeWidth={0.8} transition={sp} />

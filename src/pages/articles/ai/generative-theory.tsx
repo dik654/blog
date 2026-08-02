@@ -1,15 +1,17 @@
-import Overview from './generative-theory/Overview';
-import Likelihood from './generative-theory/Likelihood';
-import Latent from './generative-theory/Latent';
-import Implicit from './generative-theory/Implicit';
+import DistributionProblem from './generative-theory/DistributionProblem';
+import LikelihoodRoute from './generative-theory/LikelihoodRoute';
+import LatentRoute from './generative-theory/LatentRoute';
+import ImplicitRoute from './generative-theory/ImplicitRoute';
+import ModelDecision from './generative-theory/ModelDecision';
 
 export default function GenerativeTheoryArticle() {
   return (
     <>
-      <Overview />
-      <Likelihood />
-      <Latent />
-      <Implicit />
+      <DistributionProblem />
+      <LikelihoodRoute />
+      <LatentRoute />
+      <ImplicitRoute />
+      <ModelDecision />
     </>
   );
 }

@@ -35,7 +35,7 @@ export default function MemoryHierarchyViz() {
                 <text x={CX} y={l.y + 26} textAnchor="middle" fontSize={10}
                   fill={l.c} fillOpacity={0.5}>{l.sub}</text>
                 {active && (
-                  <motion.rect x={x + 3} y={l.y + 2} width={0} height={3} rx={1.5}
+                  <motion.rect initial={false} x={x + 3} y={l.y + 2} width={0} height={3} rx={1.5}
                     fill={l.c} fillOpacity={0.6}
                     animate={{ width: l.w - 6 }}
                     transition={{ duration: [0.2, 0.4, 0.8, 1.5][i] }} />

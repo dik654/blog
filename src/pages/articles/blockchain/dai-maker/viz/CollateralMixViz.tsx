@@ -41,9 +41,9 @@ export default function CollateralMixViz() {
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
       {/* 연도 선택 */}
-      <div className="mb-4 flex items-center gap-2">
+      <div className="mb-4 flex flex-wrap items-center gap-2 sm:flex-nowrap">
         <label className="text-xs font-semibold text-muted-foreground min-w-[60px]">연도</label>
-        <div className="flex gap-1 flex-1">
+        <div className="flex w-full flex-wrap gap-1 sm:w-auto sm:flex-1 sm:flex-nowrap">
           {years.map(y => (
             <button
               key={y}

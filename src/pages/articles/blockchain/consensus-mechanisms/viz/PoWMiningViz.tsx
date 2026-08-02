@@ -8,7 +8,7 @@ const TRIES = [
   { nonce: 3, hash: 'b205...d1', h: 58, ok: false },
   { nonce: 1049, hash: '0002...9f', h: 12, ok: true },
 ];
-const TARGET_Y = 28, BAR_BASE = 90, BAR_W = 28;
+const TARGET_Y = 55, BAR_BASE = 90, BAR_W = 28;
 
 const STEPS = [
   { label: '블록 데이터 + Nonce 준비', body: '블록 헤더(이전 해시, 트랜잭션 루트, 타임스탬프)와 Nonce를 입력으로 준비합니다.' },
@@ -22,10 +22,14 @@ export default function PoWMiningViz() {
     <StepViz steps={STEPS}>
       {(step) => (
         <svg viewBox="0 0 460 110" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* target difficulty line */}
-          <line x1={40} y1={TARGET_Y} x2={300} y2={TARGET_Y}
-            stroke="#ef4444" strokeWidth={1.5} strokeDasharray="4 3" />
-          <text x={305} y={TARGET_Y + 3} fontSize={10} fill="#ef4444">Target</text>
+          {/* target difficulty line — 파이프라인 소개 단계에선 불필요 */}
+          {step > 0 && (
+            <>
+              <line x1={40} y1={TARGET_Y} x2={300} y2={TARGET_Y}
+                stroke="#ef4444" strokeWidth={1.5} strokeDasharray="4 3" />
+              <text x={305} y={TARGET_Y + 3} fontSize={10} fill="#ef4444">Target</text>
+            </>
+          )}
           {/* hash pipeline at step 0 */}
           {step === 0 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>

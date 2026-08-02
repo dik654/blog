@@ -39,7 +39,7 @@ export default function TowerBFTViz({ onOpenCode }: { onOpenCode?: (key: string)
                 <motion.g key={i} animate={{ opacity: visible ? 1 : 0.08 }} transition={sp}>
                   <text x={10} y={y + 12} fontSize={9} fill={color} fontWeight={600}>S{s.slot}</text>
                   <text x={50} y={y + 12} fontSize={9} fill="var(--muted-foreground)">conf={s.conf}</text>
-                  <motion.rect x={100} y={y + 2} height={14} rx={3}
+                  <motion.rect initial={false} x={100} y={y + 2} height={14} rx={3}
                     animate={{ width: visible ? barW : 0, fill: `${color}30`, stroke: color }}
                     strokeWidth={1} transition={sp} />
                   <motion.text x={105 + barW} y={y + 12} fontSize={9} fill={color}

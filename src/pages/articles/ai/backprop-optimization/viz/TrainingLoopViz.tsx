@@ -8,12 +8,12 @@ export default function TrainingLoopViz() {
     { n: 6, name: '반복', detail: 'epoch/batch', color: '#06b6d4' },
   ];
 
-  const cx = 320, cy = 210, loopR = 140, nodeR = 36;
+  const cx = 320, cy = 235, loopR = 140, nodeR = 36;
 
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 640 390" className="w-full h-auto" style={{ maxWidth: 820 }}>
-        <text x={320} y={28} textAnchor="middle" fontSize={16} fontWeight={700}
+      <svg viewBox="0 0 640 420" className="w-full h-auto" style={{ maxWidth: 820 }}>
+        <text x={320} y={30} textAnchor="middle" fontSize={16} fontWeight={700}
           fill="var(--foreground)">학습 전체 루프 — 6단계</text>
 
         {/* 화살표 (원호) — 노드 뒤에 렌더 */}
@@ -52,7 +52,7 @@ export default function TrainingLoopViz() {
         })}
 
         {/* 중앙 라벨 */}
-        <text x={cx} y={cy - 6} textAnchor="middle" fontSize={13} fontWeight={700} fill="var(--foreground)">
+        <text x={cx} y={cy - 6} textAnchor="middle" fontSize={14} fontWeight={700} fill="var(--foreground)">
           학습 루프
         </text>
         <text x={cx} y={cy + 12} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">

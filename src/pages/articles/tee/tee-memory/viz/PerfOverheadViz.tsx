@@ -68,11 +68,11 @@ function BarChart({ items, title, color }: { items: BarItem[]; title: string; co
             <motion.rect x={150} y={y + 2} height={16} rx={3} fill={it.color} opacity={0.85}
               initial={{ width: 0 }} animate={{ width: w }}
               transition={{ delay: 0.05 + i * 0.1, duration: 0.4 }} />
-            <text x={155} y={y + 14} fontSize={8.5} fontWeight={700} fill="#fff">
+            <text x={155} y={y + 14} fontSize={8.5} fontWeight={700} fill={it.pct === 0 ? it.color : '#fff'}>
               {it.pct}%
             </text>
             {it.note && (
-              <text x={150 + w + 8} y={y + 14} fontSize={8} fill={C.muted}>{it.note}</text>
+              <text x={Math.max(190, 150 + w + 8)} y={y + 14} fontSize={8} fill={C.muted}>{it.note}</text>
             )}
           </motion.g>
         );

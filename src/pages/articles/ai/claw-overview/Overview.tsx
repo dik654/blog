@@ -1,169 +1,161 @@
-import ArchitectureViz from './viz/ArchitectureViz';
-import CrateMapViz from './viz/CrateMapViz';
-import MockScenariosViz from './viz/MockScenariosViz';
+import ArchitectureBoundaryViz from './viz/ArchitectureBoundaryViz';
+
+const crates = [
+  ['plugins', '독립 manifest·discovery 기반'],
+  ['telemetry', '독립 usage·event 기반'],
+  ['runtime', 'plugins·telemetry 사용'],
+  ['api', 'runtime·telemetry 사용'],
+  ['commands', 'plugins·runtime 사용'],
+  ['tools', 'api·commands·plugins·runtime 사용'],
+  ['compat-harness', 'commands·tools·runtime 사용'],
+  ['mock-anthropic-service', 'api와 Tokio로 로컬 HTTP service 제공'],
+  ['rusty-claude-cli', 'api·commands·compat·runtime·plugins·tools를 조립'],
+] as const;
+
+const scenarios = [
+  ['stream', 'streaming_text'],
+  ['file read/search', 'read_file_roundtrip · grep_chunk_assembly'],
+  ['file write policy', 'write_file_allowed · write_file_denied'],
+  ['multi tool', 'multi_tool_turn_roundtrip'],
+  ['bash', 'bash_stdout_roundtrip'],
+  ['permission', 'bash_permission_prompt_approved · bash_permission_prompt_denied'],
+  ['plugin', 'plugin_tool_roundtrip'],
+  ['state & usage', 'auto_compact_triggered · token_cost_reporting'],
+] as const;
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Claw Code 아키텍처 개요</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        {/* ── 배경 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">프로젝트 배경</h3>
-        <p>
-          2026-03-31, Claude Code 소스가 npm 패키지의 <strong>.map 파일</strong>로 유출<br />
-          Sigrid Jin(@instructkr)이 <strong>OmX(oh-my-codex)</strong> 오케스트레이션으로 하룻밤 만에 클린룸 Python 재작성을 완료<br />
-          OmX는 여러 LLM을 병렬 호출하여 모듈별 코드 생성을 자동화하는 워크플로우 — 사람이 직접 쓰는 것이 아니라 LLM이 역분석 결과를 기반으로 구조체를 생성<br />
-          Python 프로토타입 이후 <strong>Rust 포트</strong>가 진행되어 현재 9개 크레이트 Cargo workspace로 안착<br />
-          핵심 동기: 원본 Claude Code의 런타임 동작을 분리·재현하되, 프레임워크 종속(React/Ink) 없이 순수 시스템 프로그래밍 언어로 구현
-        </p>
-
-        {/* ── 크레이트 맵 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">9개 크레이트 맵 — Cargo Workspace</h3>
-        <p>
-          Rust 쪽 코드베이스는 <code>rust/crates/</code> 아래 9개 크레이트로 구성<br />
-          각 크레이트는 단일 책임 원칙을 따르며, 런타임(runtime)이 가장 큰 핵심 모듈
-        </p>
-      </div>
-      <CrateMapViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>runtime</strong> 크레이트가 전체 LOC의 약 40%를 차지 — 대화 상태, 도구 디스패치, 권한 검증, 세션 관리가 모두 여기에 집중<br />
-          <strong>tools</strong>는 개별 도구 구현체를 보유하되, 디스패치 로직은 runtime이 소유 — 의존 방향이 <code>runtime → tools</code> 단방향<br />
-          <strong>api</strong>는 Anthropic, OpenAI, xAI 등 복수 프로바이더를 추상화 — <code>ApiProvider</code> 트레이트로 통합
-        </p>
-
-        {/* ── Python 레이어 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Python 패리티 추적 엔진</h3>
-        <p>
-          <code>src/</code> 디렉토리는 Rust 포트와 별개로 유지되는 <strong>패리티 추적 엔진</strong><br />
-          37개 파일, 약 1,700 LOC의 Python 코드로 구성<br />
-          핵심 모듈: <strong>PortRuntime</strong>과 <strong>QueryEnginePort</strong>
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-4">
-          <div className="border border-border rounded-lg p-4 bg-muted/30">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">PortRuntime</div>
-            <p className="text-sm text-muted-foreground mb-2">원본 TypeScript 런타임의 동작을 Python으로 미러링</p>
-            <div className="space-y-1.5 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="shrink-0 text-muted-foreground">1.</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">registry.get(name)</code> 도구 이름으로 핸들러 조회</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="shrink-0 text-muted-foreground">2.</span>
-                <span>미등록 시 <code className="text-xs bg-muted px-1 py-0.5 rounded">ToolResult.error</code> 반환</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="shrink-0 text-muted-foreground">3.</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">handler.execute(input)</code> 실행 결과 반환</span>
-              </div>
-            </div>
-          </div>
-          <div className="border border-border rounded-lg p-4 bg-muted/30">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">QueryEnginePort</div>
-            <p className="text-sm text-muted-foreground mb-2">서브시스템별 쿼리 실행 시뮬레이션</p>
-            <div className="space-y-1.5 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="shrink-0 font-medium">필드</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">subsystems: dict[str, Subsystem]</code> — conversation, auth, mcp 등</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="shrink-0 font-medium">쿼리</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">query("conversation.turn_count")</code> — 점 구분 경로로 서브시스템 조회</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          20개 서브시스템 패키지가 원본 TypeScript 아카이브의 모듈 인벤토리를 미러링<br />
-          conversation, auth, tools, mcp, session, hooks, permissions 등<br />
-          Python 엔진은 Rust 포트의 <strong>동작 명세(behavioral spec)</strong> 역할 — Rust 구현과 Python 시뮬레이션의 결과를 교차 검증</p>
-
-        {/* ── Mock 패리티 하네스 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Mock 패리티 하네스</h3>
-        <p>
-          <strong>mock-anthropic-service</strong> 크레이트가 결정론적 Anthropic API를 제공<br />
-          실제 API 호출 없이 12개 시나리오를 재현하여 clean-env 테스트를 가능하게 함
-        </p>
-        <MockScenariosViz />
-        <p>
-          각 시나리오는 SSE 프레임 시퀀스를 결정론적으로 생성 — 동일 입력에 항상 동일 출력<br />
-          도구 호출 시뮬레이션: <code>tool_use</code> 블록과 <code>tool_result</code> 블록의 왕복을 재현<br />
-          CI 환경에서 API 키 없이 전체 에이전트 루프를 테스트할 수 있는 것이 핵심 가치</p>
-
-        {/* ── 설계 원칙 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">설계 원칙</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">원칙</th>
-                <th className="border border-border px-4 py-2 text-left">구현</th>
-                <th className="border border-border px-4 py-2 text-left">효과</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-4 py-2 font-medium">unsafe 금지</td>
-                <td className="border border-border px-4 py-2"><code>workspace.lints.rust: unsafe_code = &quot;forbid&quot;</code></td>
-                <td className="border border-border px-4 py-2">메모리 안전성 보장, 외부 크레이트도 감사 대상</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-4 py-2 font-medium">스레드 안전</td>
-                <td className="border border-border px-4 py-2"><code>Arc&lt;Mutex&lt;HashMap&gt;&gt;</code> 패턴 전역 레지스트리</td>
-                <td className="border border-border px-4 py-2">도구 레지스트리, 세션 스토어 동시 접근 안전</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-4 py-2 font-medium">상태 머신</td>
-                <td className="border border-border px-4 py-2"><code>worker_boot</code>, <code>mcp_lifecycle</code>, <code>session_control</code></td>
-                <td className="border border-border px-4 py-2">각 서브시스템이 명시적 상태 전이로 동작</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-4 py-2 font-medium">정책 기반</td>
-                <td className="border border-border px-4 py-2"><code>permission_enforcer</code>, <code>policy_engine</code></td>
-                <td className="border border-border px-4 py-2">도구 실행 전 정책 검증 — allow/deny/ask 3단 판정</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-4 py-2 font-medium">우아한 퇴화</td>
-                <td className="border border-border px-4 py-2">sandbox fallback, MCP degraded mode</td>
-                <td className="border border-border px-4 py-2">샌드박스 불가 시 제한 모드, MCP 서버 다운 시 로컬 도구만 사용</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* ── 아키텍처 계층도 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">아키텍처 계층도</h3>
-      </div>
-      <ArchitectureViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          최상위 CLI/REPL이 <strong>ConversationRuntime</strong>을 소유<br />
-          ConversationRuntime이 에이전트 루프의 핵심 — API 호출, 응답 파싱, 도구 디스패치를 반복<br />
-          <strong>Permission Enforcer</strong>가 모든 도구 호출을 가로채서 정책 검증 수행<br />
-          Hooks 시스템은 도구 실행 전후에 사용자 정의 스크립트를 실행하여 커스텀 검증/로깅 가능
-        </p>
-
-        {/* ── 인사이트 ── */}
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: LOC 압축 비율</p>
+    <>
+      <section id="overview" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>먼저 실행 코드와 검증 코드를 떼어 놓는다</h2>
           <p>
-            원본 Claude Code — 약 <strong>512K LOC</strong> TypeScript<br />
-            Rust 포트 — 약 <strong>55K LOC</strong> (원본 대비 ~10.7%)
+            이 저장소는 한 덩어리의 “Claude Code clone”이 아니다. 사용자가 실행하는 Rust CLI 경로,
+            이식 작업을 작게 모델링한 Python workspace, upstream TypeScript의 표면을 읽는
+            <code>compat-harness</code>, 실제 CLI를 deterministic API에 연결하는 mock parity
+            E2E가 함께 있다. 같은 개념을 다루지만 증거 수준과 실행 책임이 다르다.
           </p>
-          <p className="mt-2">
-            이 극적인 차이의 원인:<br />
-            1. <strong>프레임워크 제거</strong> — React, Ink, Yoga 레이아웃 등 UI 프레임워크가 전체의 약 60% 차지<br />
-            2. <strong>UI 컴포넌트 제거</strong> — 389개 TSX 컴포넌트(테마, 애니메이션, 접근성) 불필요<br />
-            3. <strong>타입 정의 통합</strong> — TypeScript의 별도 .d.ts / interface 파일이 Rust에서는 struct/enum으로 통합<br />
-            4. <strong>런타임 코어만 추출</strong> — 에이전트 루프, 도구 시스템, 권한 모델, 세션 관리만 재현
-          </p>
-          <p className="mt-2">
-            결론: 512K LOC 중 실제 <strong>런타임 동작에 기여하는 코드</strong>는 약 10% — 나머지는 UI, 번들링, 호환성 계층
+          <p>
+            아래에서 층을 바꾸면 입력·핵심 객체·출력·보장하지 않는 것이 함께 바뀐다. 아키텍처를 읽을
+            때 가장 먼저 해야 할 일은 “이 파일이 실제 요청을 실행하는가, 표면을 세는가, test fixture를
+            만드는가”를 정하는 것이다.
           </p>
         </div>
+        <ArchitectureBoundaryViz />
+      </section>
 
-      </div>
-    </section>
+      <section id="rust-workspace" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>Rust 9개 crate는 의존 방향으로 읽는다</h2>
+          <p>
+            루트 <code>rust/Cargo.toml</code>은 <code>crates/*</code>를 workspace member로 잡고,
+            각 crate의 Cargo manifest가 실제 의존 edge를 만든다. 예를 들어 runtime이 tools를
+            소유하는 것이 아니라 <strong>tools가 runtime과 api·commands를 의존</strong>한다.
+            최상위 CLI는 이 crate들을 조립해 binary <code>claw</code>를 만든다.
+          </p>
+        </div>
+        <div className="not-prose my-7 divide-y divide-border border-y border-border">
+          {crates.map(([name, detail], index) => (
+            <div key={name} className="grid gap-1 py-3 sm:grid-cols-[3rem_12rem_minmax(0,1fr)] sm:gap-4">
+              <span className="font-mono text-[10px] font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+              <code className="break-words text-xs font-bold">{name}</code>
+              <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <p>
+            workspace lint는 각 workspace crate에서 <code>unsafe_code = &quot;forbid&quot;</code>를
+            적용한다. 이는 이 저장소 코드의 unsafe 사용을 컴파일 단계에서 막는 규칙이다. 외부
+            dependency가 내부적으로 unsafe를 전혀 쓰지 않는다는 보증으로 확대하면 안 된다.
+          </p>
+          <h3>실제 한 turn은 crate 목록이 아니라 객체 조립과 두 번의 모델 호출로 읽는다</h3>
+          <p>
+            CLI는 plugin·runtime tool을 합쳐 registry를 만들고, permission policy·provider client·tool
+            executor를 <code>ConversationRuntime</code>에 주입한다. 사용자가 prompt를 보내면
+            <code>run_turn</code>이 User message를 Session에 넣고 첫 <code>ApiRequest</code>를 만든다.
+            assistant가 <code>ToolUse</code>를 내면 runtime은 hook·permission·executor 경계를 거쳐
+            결과를 <code>ToolResult</code> observation으로 Session에 추가한 뒤, 그 observation을 포함한
+            두 번째 <code>ApiRequest</code>를 보낸다.
+          </p>
+          <p>
+            이 spine이 중요한 이유는 ownership이 바뀌는 지점이 보이기 때문이다. provider stream은
+            제안을 만들고, permission은 authorization을 결정하며, executor만 외부 effect를 시도한다.
+            Session은 결과 observation을 보존하지만 effect truth를 소유하지 않는다. 이후 core 경로는
+            이 한 turn을 Session, compaction, tool dispatch로 나눠 확대한다.
+          </p>
+          <p>
+            그래서 오류를 찾을 때도 “도구가 안 됐다”에서 멈추지 않는다. model에 definition이
+            보였는지, permission에서 거부됐는지, executor가 호출됐는지, 반환 observation이 다음
+            request에 포함됐는지를 차례로 확인한다. permission denial은 executor 호출 없이도
+            ToolResult를 만들 수 있고, manifest에 tool 이름이 있다는 사실은 dispatch 성공을
+            증명하지 않는다. 이 반례 둘을 설명할 수 있어야 실제 실행 경로와 검증 표면을 구분한 것이다.
+          </p>
+        </div>
+      </section>
+
+      <section id="python-port" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>Python은 path query engine이 아니라 작은 turn simulator다</h2>
+          <p>
+            <code>PortRuntime.route_prompt()</code>는 prompt를 단어 집합으로 만들고 ported command와
+            tool의 name·source hint·responsibility에 포함되는 단어 수를 score로 쓴다. command와
+            tool에서 최고 후보를 하나씩 먼저 고른 뒤, 남은 후보를 score·kind·name 순으로 채워
+            기본 다섯 개까지 반환한다.
+          </p>
+          <p>
+            <code>bootstrap_session()</code>은 context와 setup을 만들고, 선택된 registry entry의
+            작은 execute 결과를 모은다. 이름에 bash가 들어간 tool은 Python port에서 permission
+            denial로 표시한다. 이어 <code>QueryEnginePort</code>로 stream event와 turn result를
+            만들고 session을 저장한다. 실제 provider API나 Rust <code>tool_dispatch</code>를
+            호출하는 연결은 이 클래스에 없다.
+          </p>
+          <p>
+            <code>QueryEnginePort</code>의 상태는 manifest, session id, mutable message,
+            permission denial, usage, transcript다. <code>submit_message()</code>는 max turn을 먼저
+            검사하고 출력·usage를 계산한 뒤 message와 transcript를 갱신한다. budget을 넘으면
+            <code>max_budget_reached</code>, message가 기준보다 많으면 최근
+            <code>compact_after_turns</code>개만 남긴다. 이것이 실제 필드와 method로 확인되는 경계다.
+          </p>
+        </div>
+      </section>
+
+      <section id="parity-evidence" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>표면 추출과 실행 패리티는 다른 질문에 답한다</h2>
+          <p>
+            <code>compat-harness</code>는 upstream의 <code>commands.ts</code>,
+            <code>tools.ts</code>, <code>entrypoints/cli.tsx</code> 문자열을 읽는다. import·feature
+            pattern으로 command와 tool manifest를 추출하고, 특정 flag 문자열의 존재로
+            <code>BootstrapPlan</code> phase를 구성한다. 이는 “표면이 발견되는가”에는 답하지만
+            command가 올바르게 실행되는지는 검증하지 않는다.
+          </p>
+          <p>
+            실행 증거는 <code>mock-anthropic-service</code>와
+            <code>mock_parity_harness.rs</code>에서 나온다. mock은 prompt 안의
+            <code>PARITY_SCENARIO:</code> marker를 읽고 12개 중 하나의 JSON 또는 SSE 응답을
+            결정적으로 돌려준다. CLI test는 깨끗한 환경에서 실제 <code>claw</code> binary를 그
+            endpoint에 연결하고 파일·permission·tool roundtrip·compaction·usage 결과를 검사한다.
+          </p>
+        </div>
+        <div className="not-prose my-7 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
+          {scenarios.map(([group, names], index) => (
+            <div key={group} className="min-w-0 bg-background p-4">
+              <p className="font-mono text-[10px] font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</p>
+              <p className="mt-2 text-sm font-bold">{group}</p>
+              <p className="mt-1 break-words font-mono text-[11px] leading-relaxed text-muted-foreground">{names}</p>
+            </div>
+          ))}
+        </div>
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <p>
+            이 12개는 전체 Claude Code 행동의 완전한 증명이 아니다. 대신 어떤 input, filesystem
+            fixture, permission 응답, mock usage를 주었을 때 CLI 전체 경로가 무엇을 출력해야 하는지
+            재현 가능한 계약으로 고정한다. 새 기능은 먼저 어느 층의 증거가 필요한지 정한 뒤,
+            manifest check와 E2E scenario를 구분해 추가해야 한다.
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

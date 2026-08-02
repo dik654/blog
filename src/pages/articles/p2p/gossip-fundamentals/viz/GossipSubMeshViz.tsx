@@ -46,7 +46,7 @@ export default function GossipSubMeshViz() {
             <motion.g key={`m${i}`} animate={{ opacity: show ? 1 : 0.12 }}>
               <line x1={f.x} y1={f.y} x2={t.x} y2={t.y} stroke="#6366f1" strokeWidth={1.3} />
               {show && (
-                <motion.circle r={3} fill="#ef4444"
+                <motion.circle initial={false} r={3} fill="#ef4444"
                   animate={{ cx: [f.x, t.x], cy: [f.y, t.y] }}
                   transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 1 }} />
               )}

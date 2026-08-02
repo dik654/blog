@@ -1,54 +1,40 @@
+const ROWS = [
+  ['01', 'validate_mode', 'Block·Warn', 'ReadOnly 또는 WorkspaceWrite mode heuristic', '호출 안 됨'],
+  ['02', 'validate_sed', 'Block', 'ReadOnly에서 첫 command가 sed이고 -i면 차단', '호출 안 됨'],
+  ['03', 'check_destructive', 'Warn', 'substring과 첫 command로 파괴 신호 생성', '호출 안 됨'],
+  ['04', 'validate_paths', 'Warn', '../, ~/와 $HOME 참조를 heuristic으로 경고', '호출 안 됨'],
+];
+
 export default function ValidationStagesViz() {
-  const stages = [
-    { num: 1, label: 'check_empty', cost: 'O(n)', speed: '빠름', color: '#10b981' },
-    { num: 2, label: 'check_length', cost: 'O(1)', speed: '즉시', color: '#10b981' },
-    { num: 3, label: 'check_banned_patterns', cost: 'O(n)', speed: '빠름', color: '#3b82f6' },
-    { num: 4, label: 'classify_intent', cost: 'O(n)', speed: '빠름', color: '#8b5cf6' },
-    { num: 5, label: 'check_working_dir', cost: 'fs 호출', speed: '느림', color: '#f59e0b' },
-    { num: 6, label: 'check_resource_limits', cost: 'O(1)', speed: '즉시', color: '#10b981' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">BashValidator — 6단계 (빠른 것 먼저)</text>
-
-        {/* 헤더 */}
-        <rect x={20} y={48} width={520} height={28} fill="var(--muted)" rx={4} />
-        <text x={70} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">단계</text>
-        <text x={230} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">검증</text>
-        <text x={400} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">비용</text>
-        <text x={490} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">속도</text>
-
-        {stages.map((s, i) => {
-          const y = 84 + i * 36;
-          return (
-            <g key={s.num}>
-              <rect x={20} y={y} width={520} height={30} rx={4}
-                fill={s.color} fillOpacity={0.06} stroke={s.color} strokeWidth={0.5} />
-              <rect x={20} y={y} width={3} height={30} fill={s.color} rx={1} />
-
-              <circle cx={70} cy={y + 15} r={12}
-                fill={s.color} fillOpacity={0.2} stroke={s.color} strokeWidth={1} />
-              <text x={70} y={y + 19} textAnchor="middle" fontSize={10} fontWeight={700}
-                fill={s.color}>{s.num}</text>
-
-              <text x={230} y={y + 19} textAnchor="middle" fontSize={10} fontFamily="monospace"
-                fontWeight={600} fill="var(--foreground)">{s.label}</text>
-
-              <text x={400} y={y + 19} textAnchor="middle" fontSize={9} fontFamily="monospace"
-                fill="var(--muted-foreground)">{s.cost}</text>
-
-              <text x={490} y={y + 19} textAnchor="middle" fontSize={9} fontWeight={600}
-                fill={s.color}>{s.speed}</text>
-            </g>
-          );
-        })}
-
-        <text x={280} y={318} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">전체 실행 ~0.1ms (fs 호출 있을 때 ~1ms)</text>
-      </svg>
-    </div>
+    <figure aria-label="현재 Bash validation 후보 함수의 네 단계와 production 미연결 상태" className="not-prose my-7 overflow-hidden rounded-md border border-border">
+      <figcaption className="border-b border-border px-4 py-3">
+        <p className="text-sm font-semibold">validate_command() 안의 네 단계</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          현재 repository 검색 기준 production execute_bash 경로에는 연결되지 않았다.
+        </p>
+      </figcaption>
+      <div className="divide-y divide-border">
+        {ROWS.map((row) => (
+          <div
+            key={row[0]}
+            className="grid grid-cols-[28px_minmax(0,1fr)] gap-x-3 gap-y-1.5 px-4 py-3 sm:grid-cols-[34px_150px_90px_minmax(0,1fr)_90px] sm:items-center"
+          >
+            <span className="row-span-4 text-xs font-bold text-muted-foreground sm:row-span-1">{row[0]}</span>
+            <code className="break-words whitespace-normal text-[13px] font-semibold">{row[1]}</code>
+            <span className={`w-fit rounded-sm border px-1.5 py-0.5 text-xs font-semibold sm:col-auto ${
+              row[2].includes('Warn')
+                ? 'border-amber-300 text-amber-700 dark:border-amber-800 dark:text-amber-300'
+                : 'border-rose-300 text-rose-700 dark:border-rose-800 dark:text-rose-300'
+            }`}>{row[2]}</span>
+            <span className="text-xs leading-relaxed text-muted-foreground sm:col-auto">{row[3]}</span>
+            <span className="text-xs text-muted-foreground sm:col-auto sm:text-right">{row[4]}</span>
+          </div>
+        ))}
+      </div>
+      <p className="border-t border-border bg-muted/15 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        먼저 연결하고, Warn을 누가 Ask·Deny·Allow로 닫는지 정의해야 한다. 그 뒤에도 OS containment는 별도로 필요하다.
+      </p>
+    </figure>
   );
 }

@@ -68,7 +68,7 @@ export function StepPoS() {
 
 /* Step 3: 삼각 딜레마 */
 export function StepTrilemma() {
-  const pts = [{ x: 200, y: 15 }, { x: 100, y: 105 }, { x: 300, y: 105 }];
+  const pts = [{ x: 200, y: 28 }, { x: 100, y: 108 }, { x: 300, y: 108 }];
   const labels = ['보안', '탈중앙화', '확장성'];
   return (<g>
     <motion.polygon
@@ -79,12 +79,17 @@ export function StepTrilemma() {
     {pts.map((p, i) => (
       <motion.g key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
         transition={{ delay: i * 0.15, type: 'spring' }}>
-        <circle cx={p.x} cy={p.y} r={12} fill={`${C.bft}15`}
+        <circle cx={p.x} cy={p.y} r={22} fill="var(--background)" />
+        <circle cx={p.x} cy={p.y} r={22} fill={`${C.bft}15`}
           stroke={C.bft} strokeWidth={1.2} />
         <text x={p.x} y={p.y + 4} textAnchor="middle" fontSize={10}
           fontWeight={600} fill={C.bft}>{labels[i]}</text>
       </motion.g>
     ))}
+    <motion.rect x={122} y={62} width={156} height={18} rx={3}
+      fill="var(--background)"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      transition={{ delay: 0.6 }} />
     <motion.text x={200} y={75} textAnchor="middle" fontSize={11}
       fill={C.err} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       transition={{ delay: 0.6 }}>

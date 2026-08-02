@@ -50,7 +50,7 @@ export default function ForwardPassViz() {
                   transition={sp} />
                 {/* weight label with opaque background */}
                 {(() => {
-                  const ly = ny + (i === 0 ? 8 : i === 2 ? 28 : 16);
+                  const ly = ny + (i === 0 ? 8 : i === 2 ? 28 : 2);
                   return (
                     <g>
                       <rect x={118} y={ly - 9} width={44} height={13} rx={3}

@@ -27,7 +27,7 @@ export default function ZKPropertyViz() {
             const op = step === 0 || active ? 1 : 0.25;
             return (
               <motion.g key={p.label} animate={{ opacity: op }} transition={{ duration: 0.3 }}>
-                <motion.circle cx={CX[i]} cy={CY} r={R} fill={`${p.color}10`}
+                <motion.circle initial={false} cx={CX[i]} cy={CY} r={R} fill={`${p.color}10`}
                   stroke={p.color} strokeWidth={active ? 1.5 : 0.8}
                   animate={{ r: active ? 44 : R }} transition={{ type: 'spring', bounce: 0.2 }} />
                 <text x={CX[i]} y={CY - 4} textAnchor="middle" fontSize={10}

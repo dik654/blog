@@ -1,7 +1,8 @@
 import { CitationBlock } from '@/components/ui/citation';
+import FormulaNote from '@/components/ui/formula-note';
 import M from '@/components/ui/math';
-import Seq2SeqViz from './viz/Seq2SeqViz';
-import AttnOverviewDetailViz from './viz/AttnOverviewDetailViz';
+import Seq2SeqScene from './viz/Seq2SeqScene';
+import AttnOverviewDetailScene from './viz/AttnOverviewDetailScene';
 
 export default function Overview() {
   return (
@@ -21,7 +22,7 @@ export default function Overview() {
         </CitationBlock>
       </div>
 
-      <div className="not-prose my-8"><Seq2SeqViz /></div>
+      <div className="not-prose my-8"><Seq2SeqScene /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-6 mb-3">어텐션 메커니즘의 발전 단계</h3>
@@ -55,24 +56,42 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Seq2Seq의 정보 병목과 Attention 프레임워크</h3>
         <p>
-          Seq2Seq에서 인코더 마지막 hidden state h_T만이 디코더에 전달된다.
-          10단어든 100단어든 동일한 고정 차원 벡터 하나에 압축 — 30단어 이상에서 BLEU 점수가 28.1에서 17.3으로 급락한다 (Cho et al. 2014).
-          Bahdanau(2015)는 디코더가 매 스텝마다 인코더의 모든 hidden state를 동적으로 참조하는 방식으로 이 병목을 해소했다.
+          가장 단순한 전달 방식은 인코더 마지막 hidden state <M>{'h_T'}</M> 하나만 디코더에 넘기는 것.
+          10단어든 100단어든 같은 크기의 <M>{'c'}</M> 하나에 압축된다.
+          문장이 길어지면 앞쪽 토큰 정보가 이 벡터 안에서 밀린다 — 30단어 이상에서 BLEU 점수가 28.1에서 17.3으로 급락한다 (Cho et al. 2014).
         </p>
         <M display>{'\\underbrace{c}_{\\text{고정 벡터}} = h_T \\in \\mathbb{R}^{512} \\quad \\Rightarrow \\quad \\underbrace{c_t = \\sum_i \\alpha_{ti} \\cdot h_i}_{\\text{동적 컨텍스트 (Attention)}}'}</M>
+        <FormulaNote
+          meaning="왼쪽은 마지막 위치 하나만 읽는 fixed context. 오른쪽은 모든 hidden state를 남겨 두고, 디코더 step마다 분포 α_t로 필요한 위치를 섞는다."
+          symbols={[
+            ['h_T', '인코더의 마지막 hidden state. 고정 Seq2Seq에서는 전체 입력이 이 벡터 하나로 압축된다.'],
+            ['α_ti', '디코더 step t가 입력 위치 i를 얼마나 볼지 나타내는 가중치. softmax로 합 1 분포가 된다.'],
+            ['c_t', '현재 step 전용 context. 매 step 새 α_t를 쓰므로 같은 입력에서도 다른 위치 조합을 읽을 수 있다.'],
+          ]}
+        />
         <p>
-          Attention의 본질은 3단계 — Score, Weight, Aggregate.
-          Query와 Key의 유사도를 측정하고, softmax로 확률 분포를 만든 뒤, Value의 가중합으로 출력을 생성한다.
+          새 조각은 <M>{'\\alpha_t'}</M> 하나.
+          각 <M>{'h_i'}</M>에 점수를 매기고, softmax로 합 1 분포를 만들고, 그 분포로 <M>{'h_i'}</M>들을 가중합한다.
+          fixed Seq2Seq는 <M>{'\\alpha_t=(0,0,\\ldots,1)'}</M>인 특수 케이스 — 마지막 위치만 보는 경우.
+          이 흐름에 나중 이름을 붙이면 Score, Weight, Aggregate다.
         </p>
-        <M display>{'e_{ti} = \\text{score}(s_t, h_i), \\quad \\alpha_{ti} = \\frac{\\exp(e_{ti})}{\\sum_j \\exp(e_{tj})}, \\quad c_t = \\sum_i \\alpha_{ti} \\cdot V_i'}</M>
+        <M display>{'\\underbrace{e_{ti} = \\text{score}(s_t, h_i)}_{\\text{① Score (유사도)}}, \\quad \\underbrace{\\alpha_{ti} = \\frac{\\exp(e_{ti})}{\\sum_j \\exp(e_{tj})}}_{\\text{② Weight (softmax 정규화)}}, \\quad \\underbrace{c_t = \\sum_i \\alpha_{ti} \\cdot V_i}_{\\text{③ Aggregate (가중합)}}'}</M>
+        <FormulaNote
+          meaning="score는 아직 비교 점수일 뿐이다. softmax가 이를 선택 비율로 바꾸고, 가중합이 여러 위치의 정보를 한 벡터로 모은다."
+          symbols={[
+            ['s_t', '현재 디코더 상태. 지금 출력하려는 토큰의 문맥을 담는다.'],
+            ['e_ti', 's_t와 h_i의 raw 비교 점수. score 함수 선택이 Bahdanau, Luong, scaled dot-product를 가른다.'],
+            ['V_i', '가중합으로 실제 전달되는 정보. 이 overview에서는 h_i와 같은 입력 위치 정보를 가리킨다.'],
+          ]}
+        />
       </div>
 
-      <div className="not-prose my-8"><AttnOverviewDetailViz /></div>
+      <div className="not-prose my-8"><AttnOverviewDetailScene /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <p className="leading-7">
           요약 1: Seq2Seq의 <strong>정보 병목</strong>이 attention 필요성을 만듦 — 30단어 이상 성능 급락.<br />
-          요약 2: Attention의 본질은 <strong>Query-Key 유사도로 Value 가중합</strong>.<br />
+          요약 2: Attention은 <strong>fixed c를 동적 α_t 가중합으로 일반화</strong>.<br />
           요약 3: Score 함수 선택이 attention 변형들을 구분 — additive/multiplicative/scaled.
         </p>
       </div>

@@ -29,7 +29,7 @@ export default function BlockSTMViz({ onOpenCode }: { onOpenCode?: (key: string)
               return (
                 <motion.g key={i} transition={sp}>
                   <text x={10} y={y + 14} fontSize={9} fontWeight={600} fill={COLORS[i]}>{tx}</text>
-                  <motion.rect x={60} y={y + 2} rx={4} height={18}
+                  <motion.rect initial={false} x={60} y={y + 2} rx={4} height={18}
                     animate={{ width: step >= 0 ? 160 : 0,
                       fill: conflict ? '#ef444425' : rerun ? `${COLORS[i]}30` : `${COLORS[i]}18`,
                       stroke: conflict ? '#ef4444' : COLORS[i] }}

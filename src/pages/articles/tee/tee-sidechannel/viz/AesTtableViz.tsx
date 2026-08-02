@@ -18,7 +18,7 @@ const STEPS = [
   },
   {
     label: '복구 시간 — 약 10⁶ encryption, 수 분',
-    body: '128-bit AES 키 전체 복구가 분 단위 가능.\nOpenSSL과거 구현이 이 패턴이었다.',
+    body: '128-bit AES 키 전체 복구가 분 단위 가능.\nOpenSSL 과거 구현이 이 패턴이었다.',
   },
   {
     label: '대응 — AES-NI / Bit-sliced AES',

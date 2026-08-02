@@ -141,7 +141,7 @@ function SoftmaxStep() {
             <g key={ci}>
               <rect x={80 + ci * (barW + 20)} y={24 + ri * 40} width={barW} height={20} rx={4}
                 fill={C.soft + '08'} stroke={C.soft} strokeWidth={0.5} />
-              <motion.rect x={80 + ci * (barW + 20)} y={24 + ri * 40}
+              <motion.rect initial={false} x={80 + ci * (barW + 20)} y={24 + ri * 40}
                 width={0} height={20} rx={4} fill={C.soft + '30'}
                 animate={{ width: barW * v }}
                 transition={{ delay: 0.3 + ri * 0.1 + ci * 0.05, duration: 0.5 }} />

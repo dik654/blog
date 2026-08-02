@@ -87,7 +87,7 @@ export default function ClientSdkViz() {
               <ActionBox x={130} y={140} w={220} h={32}
                 label='conn.submit_tx(tx).await' color="#ec4899" />
               <text x={240} y={190} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-                타입 안전 + 저수준 제어 (TEE-side 도 동일 crate)
+                타입 안전 + 저수준 제어 (TEE-side도 동일 crate)
               </text>
             </motion.g>
           )}

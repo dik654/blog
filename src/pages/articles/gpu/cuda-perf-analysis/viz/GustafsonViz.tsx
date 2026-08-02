@@ -105,7 +105,7 @@ export default function GustafsonViz() {
               <DataBox x={260} y={60} w={160} h={36} label="큰 문제 같은 시간에" sub="구스타프슨 적용" color="#10b981" outlined />
               <DataBox x={260} y={108} w={160} h={36} label="GPU 코어 증설 유효" sub="멀티 GPU 확장" color="#10b981" outlined />
 
-              <DataBox x={140} y={170} w={200} h={36} label="GPU 커널: 문제 크기 가변시 선형 확장" color="#6366f1" outlined />
+              <DataBox x={140} y={170} w={200} h={36} label="GPU 커널: 문제 크기 가변 시 선형 확장" color="#6366f1" outlined />
             </motion.g>
           )}
         </svg>

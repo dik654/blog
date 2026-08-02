@@ -285,8 +285,14 @@ export default function PluginTools() {
             - 표준화된 프로토콜 필요 — 외부 공개/공유 도구
           </p>
           <p className="mt-2">
-            <strong>구분 기준</strong>: "호출당 stateless → 플러그인, 연결당 stateful → MCP"<br />
-            claw-code는 이 이중 확장 구조로 <strong>간단한 확장(플러그인)과 복잡한 통합(MCP)</strong>을 모두 커버
+            <strong>구분 기준</strong>: 기능 목록보다 <strong>수명과 상태의 소유자</strong>를 먼저 본다.
+            호출마다 격리된 로컬 executable이면 플러그인, 초기화된 연결·discovery·공유 계약을
+            runtime이 유지해야 하면 MCP가 맞다. 두 번째 호출과 연결 실패 경로를 비교하면 이 차이가 선명해진다.
+          </p>
+          <p className="mt-2 text-sm">
+            <strong>근거 경계</strong>: 호출별 plugin child 생성은 <code>plugins.rs::PluginTool::execute</code>,
+            MCP manager 수명과 부분 실패 보고는 <code>cli_main.rs::RuntimeMcpState</code>에서 확인한다.
+            어떤 확장 방식을 택할지는 이 구현 사실을 바탕으로 한 운영 설계 판단이다.
           </p>
         </div>
 

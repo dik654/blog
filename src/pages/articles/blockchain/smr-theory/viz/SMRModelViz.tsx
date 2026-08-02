@@ -20,7 +20,7 @@ export default function SMRModelViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 175" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Client */}
           <motion.g animate={{ opacity: step >= 1 ? 1 : 0.4 }}>
             <rect x={20} y={60} width={70} height={30} rx={5} fill={`${C3}12`} stroke={C3} strokeWidth={1} />
@@ -56,7 +56,7 @@ export default function SMRModelViz() {
             );
           })}
           {/* Label */}
-          <text x={380} y={150} textAnchor="end" fontSize={10} fill="var(--muted-foreground)">
+          <text x={380} y={168} textAnchor="end" fontSize={10} fill="var(--muted-foreground)">
             동일 순서 → 동일 상태
           </text>
           <defs>

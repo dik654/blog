@@ -1,10 +1,13 @@
 import type { Category } from '../types';
 import { hwArticles } from './articlesHw';
+import { hwDeepArticles } from './articlesHwDeep';
+import { hpcArticles } from './articlesHpc';
 
 const gpu: Category = {
   slug: 'gpu',
-  name: 'HW / GPU',
+  name: '하드웨어 · GPU',
   description: 'GPU 병렬처리, CUDA, 서버 하드웨어, 스토리지',
+  group: 'foundation',
   subcategories: [
     {
       slug: 'hw-basics', name: 'Hardware Basics', description: '서버/워크스테이션 부품, 스토리지, 메모리', icon: '🔩',
@@ -15,48 +18,98 @@ const gpu: Category = {
         { slug: 'hw-infra', name: 'Infrastructure', description: '전력, 냉각, 네트워크, 랙마운트', icon: '🏗️' },
       ],
     },
-    { slug: 'gpu-fundamentals', name: 'GPU Fundamentals', description: 'SIMT, 메모리 계층, CUDA 기초', icon: '🖥️' },
+    {
+      slug: 'hw-deep', name: 'Hardware Deep', description: '아키텍처 진화 · bandwidth · 백업 전략 · 벤더 매트릭스', icon: '🧬',
+    },
+    { slug: 'gpu-cluster-hpc', name: 'GPU Cluster & HPC', description: '멀티 GPU, NCCL, RDMA, RoCEv2, InfiniBand, 스케줄링', icon: '🕸️' },
+    {
+      slug: 'gpu-fundamentals', name: 'GPU Fundamentals', description: 'SIMT에서 IO-aware ML kernel까지', icon: '🖥️',
+      children: [
+        { slug: 'gpu-core-execution', name: '00 · 실행 모델', description: 'SIMT, warp, memory hierarchy, tiling과 profiling', icon: '▦' },
+        { slug: 'gpu-ml-kernels', name: '01 · ML 커널', description: 'FlashAttention, Triton, fusion과 GPU-aware model design', icon: '⚡' },
+      ],
+    },
     { slug: 'zk-acceleration', name: 'ZK Acceleration', description: 'MSM, NTT, 증명 GPU 가속 기법', icon: '⚡' },
   ],
   articles: [
     ...hwArticles,
+    ...hwDeepArticles,
+    ...hpcArticles,
     {
-      slug: 'gpu-architecture', title: 'GPU 아키텍처 기초 (SIMT, 메모리 계층, 워프)', subcategory: 'gpu-fundamentals',
+      slug: 'flashattention-io-triton', title: 'FlashAttention · Triton: IO-aware Attention Kernel', subcategory: 'gpu-ml-kernels',
+      summary: 'Exact attention을 유지하면서 N×N HBM materialization을 없애는 online softmax, tile budget, Triton fusion과 성능 진단을 연결합니다.',
+      level: '중급', estimatedMinutes: 38,
+      prerequisites: ['CUDA memory hierarchy', 'shared-memory tiling', 'softmax와 attention'],
+      learningPath: 'gpu-ml-kernel-current-first',
+      sections: [
+        { id: 'io-bottleneck', title: 'Attention의 IO 병목' },
+        { id: 'online-softmax', title: 'Online softmax' },
+        { id: 'tiling', title: 'Tile 자원 계산' },
+        { id: 'fa2-triton', title: 'FlashAttention-2와 Triton' },
+        { id: 'diagnose', title: '성능 실패 진단' },
+      ],
+      component: () => import('@/pages/articles/gpu/flashattention-io-triton'),
+    },
+    {
+      slug: 'triton-kernel-programming', title: 'Triton Kernel Programming: Program · Mask · Autotune · Compiler', subcategory: 'gpu-ml-kernels',
+      summary: 'Triton의 block program 모델에서 offset·stride·mask, fusion, autotune, compiler lowering과 출시 검증까지 하나의 kernel 계약으로 연결합니다.',
+      level: '중급', estimatedMinutes: 46,
+      prerequisites: ['GPU memory hierarchy', 'Tensor shape와 stride', 'PyTorch reference 연산'],
+      learningPath: 'gpu-ml-kernel-current-first',
+      sections: [
+        { id: 'program-model', title: 'Program 실행 모델' },
+        { id: 'pointer-mask', title: 'Pointer · Stride · Mask' },
+        { id: 'fusion-reduction', title: 'Fusion과 Reduction' },
+        { id: 'autotune', title: 'Autotune의 측정 계약' },
+        { id: 'compiler-debug', title: 'Compiler · Debug · 출시 검증' },
+      ],
+      component: () => import('@/pages/articles/gpu/triton-kernel-programming'),
+    },
+    {
+      slug: 'gpu-architecture', title: 'GPU 아키텍처 기초 (SIMT, 메모리 계층, 워프)', subcategory: 'gpu-core-execution',
       sections: [{ id: 'overview', title: 'CPU vs GPU & SIMT 모델' }, { id: 'memory-hierarchy', title: '메모리 계층 구조' }, { id: 'warp', title: '워프 스케줄링 & 점유율' }, { id: 'optimization', title: 'GPU 최적화 기법' }],
       component: () => import('@/pages/articles/blockchain/gpu-architecture'),
     },
     {
-      slug: 'cuda-basics', title: 'CUDA 기초 (GPU 병렬처리와 블록체인)', subcategory: 'gpu-fundamentals',
+      slug: 'cuda-basics', title: 'CUDA 기초 (GPU 병렬처리와 블록체인)', subcategory: 'gpu-core-execution',
       sections: [{ id: 'overview', title: 'CUDA 기초 & 블록체인 활용' }, { id: 'memory-model', title: '메모리 계층 & 최적화' }, { id: 'blockchain-gpu', title: '블록체인 GPU 가속 실전' }],
       component: () => import('@/pages/articles/blockchain/cuda-basics'),
     },
     {
-      slug: 'cuda-thread-hierarchy', title: 'CUDA 스레드 계층: 그리드, 블록, 워프, 인덱싱', subcategory: 'gpu-fundamentals',
+      slug: 'cuda-thread-hierarchy', title: 'CUDA 스레드 계층: 그리드, 블록, 워프, 인덱싱', subcategory: 'gpu-core-execution',
+      summary: '하나의 kernel launch를 grid, block, warp와 thread 좌표로 분해하고 1D·2D 데이터 인덱스로 연결합니다.',
+      level: '기초', estimatedMinutes: 28,
+      prerequisites: ['배열 index와 반복문', 'CPU와 GPU의 역할 차이'],
+      learningPath: 'gpu-hpc-current-first',
       sections: [{ id: 'overview', title: '스레드 계층 구조' }, { id: 'builtin-vars', title: '내장 변수와 레이아웃 설정' }, { id: 'indexing-1d', title: '1D 인덱싱' }, { id: 'indexing-2d', title: '2D 인덱싱' }],
       component: () => import('@/pages/articles/gpu/cuda-thread-hierarchy'),
     },
     {
-      slug: 'cuda-matrix-multiply', title: 'CUDA 행렬 곱셈: 기초 → 공유메모리 타일링', subcategory: 'gpu-fundamentals',
+      slug: 'cuda-matrix-multiply', title: 'CUDA 행렬 곱셈: 기초 → 공유메모리 타일링', subcategory: 'gpu-core-execution', learningPath: 'gpu-ml-kernel-current-first',
       sections: [{ id: 'overview', title: '행렬 곱셈과 스레드 매핑' }, { id: 'naive', title: '나이브 구현' }, { id: 'tiled', title: '타일링: 공유 메모리' }, { id: 'performance', title: '성능 비교' }],
       component: () => import('@/pages/articles/gpu/cuda-matrix-multiply'),
     },
     {
-      slug: 'cuda-shared-memory', title: 'CUDA 공유 메모리: 뱅크 충돌, Coalescing', subcategory: 'gpu-fundamentals',
+      slug: 'cuda-shared-memory', title: 'CUDA 공유 메모리: 뱅크 충돌, Coalescing', subcategory: 'gpu-core-execution', learningPath: 'gpu-ml-kernel-current-first',
       sections: [{ id: 'overview', title: '공유 메모리란?' }, { id: 'bank-conflict', title: '뱅크 충돌' }, { id: 'coalescing', title: 'Coalescing' }, { id: 'aos-soa', title: 'AoS vs SoA' }],
       component: () => import('@/pages/articles/gpu/cuda-shared-memory'),
     },
     {
-      slug: 'cuda-sync-streams', title: 'CUDA 동기화 & 스트림', subcategory: 'gpu-fundamentals',
+      slug: 'cuda-sync-streams', title: 'CUDA 동기화 & 스트림', subcategory: 'gpu-core-execution',
+      summary: 'Block·device 동기화, stream과 event의 순서 보장, memory copy overlap과 multi-GPU 실행 경계를 구분합니다.',
+      level: '중급', estimatedMinutes: 30,
+      prerequisites: ['CUDA grid·block·thread 실행 단위', 'Kernel launch와 host/device memory copy'],
+      learningPath: 'gpu-hpc-current-first',
       sections: [{ id: 'overview', title: '동기화 메커니즘' }, { id: 'streams', title: 'CUDA 스트림' }, { id: 'events', title: 'CUDA 이벤트' }, { id: 'multi-gpu', title: '다중 GPU' }],
       component: () => import('@/pages/articles/gpu/cuda-sync-streams'),
     },
     {
-      slug: 'gpu-arch-hopper', title: 'Hopper 아키텍처: SM, TMA, Cluster', subcategory: 'gpu-fundamentals',
+      slug: 'gpu-arch-hopper', title: 'Hopper 아키텍처: SM, TMA, Cluster', subcategory: 'gpu-core-execution',
       sections: [{ id: 'overview', title: 'Hopper vs 이전 세대' }, { id: 'sm-structure', title: 'SM 구조' }, { id: 'tma', title: 'TMA' }, { id: 'cluster', title: 'Thread Block Cluster' }, { id: 'transformer-engine', title: 'Transformer Engine' }],
       component: () => import('@/pages/articles/gpu/gpu-arch-hopper'),
     },
     {
-      slug: 'cuda-perf-analysis', title: 'CUDA 성능 분석: 암달 법칙, 점유율', subcategory: 'gpu-fundamentals',
+      slug: 'cuda-perf-analysis', title: 'CUDA 성능 분석: 암달 법칙, 점유율', subcategory: 'gpu-core-execution', learningPath: 'gpu-ml-kernel-current-first',
       sections: [{ id: 'overview', title: '병렬 처리 성능 지표' }, { id: 'amdahl', title: '암달의 법칙' }, { id: 'occupancy', title: '점유율' }, { id: 'profiling', title: 'Nsight 프로파일링' }],
       component: () => import('@/pages/articles/gpu/cuda-perf-analysis'),
     },

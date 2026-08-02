@@ -153,7 +153,7 @@ export default function WafVpnViz() {
               <AlertBox x={292} y={78} w={80} h={28} label="403 차단" sub="SQLi/XSS" color={C.atk} />
 
               {/* 이중화 필수 */}
-              <AlertBox x={15} y={122} width={220} h={30} label="WAF 장애 → 서비스 중단 위험" sub="이중화(HA) 필수 구성" color={C.atk} />
+              <AlertBox x={15} y={122} w={220} h={30} label="WAF 장애 → 서비스 중단 위험" sub="이중화(HA) 필수 구성" color={C.atk} />
 
               {/* 클라우드 vs 온프레미스 */}
               <rect x={15} y={164} width={215} height={46} rx={6} fill="var(--card)" stroke={C.vpn} strokeWidth={0.5} />

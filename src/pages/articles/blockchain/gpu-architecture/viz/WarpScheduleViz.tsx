@@ -50,7 +50,7 @@ export default function WarpScheduleViz() {
                 <motion.g key={i} initial={{ x: -10 }} animate={{ x: 0 }} transition={{ delay: i * 0.1 }}>
                   <rect x={30} y={15 + i * 32} width={200} height={22} rx={4}
                     fill="none" strokeWidth={0} />
-                  <motion.rect x={30} y={15 + i * 32} width={0} height={22} rx={4}
+                  <motion.rect initial={false} x={30} y={15 + i * 32} width={0} height={22} rx={4}
                     fill={C.active + '30'} stroke={C.active} strokeWidth={1}
                     animate={{ width: pct * 2 }} transition={{ duration: 0.6, delay: i * 0.1 }} />
                   <text x={240} y={29 + i * 32} fontSize={10} fontWeight={600} fill={C.active}>{pct}%</text>

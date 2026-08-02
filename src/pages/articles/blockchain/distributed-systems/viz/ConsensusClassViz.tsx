@@ -25,9 +25,8 @@ export default function ConsensusClassViz() {
           {/* Axes */}
           <line x1={35} y1={25} x2={35} y2={130} stroke="var(--border)" strokeWidth={0.8} />
           <line x1={35} y1={80} x2={400} y2={80} stroke="var(--border)" strokeWidth={0.8} />
-          <text x={15} y={55} fontSize={10} fill="var(--muted-foreground)" transform="rotate(-90,15,55)">최종성</text>
-          <text x={20} y={50} fontSize={10} fill="var(--muted-foreground)">결정적</text>
-          <text x={20} y={110} fontSize={10} fill="var(--muted-foreground)">확률적</text>
+          <text x={32} y={50} textAnchor="end" fontSize={10} fill="var(--muted-foreground)">결정적</text>
+          <text x={32} y={110} textAnchor="end" fontSize={10} fill="var(--muted-foreground)">확률적</text>
           <text x={120} y={140} fontSize={10} fill="var(--muted-foreground)">CFT (f{'<'}n/2)</text>
           <text x={290} y={140} fontSize={10} fill="var(--muted-foreground)">BFT (f{'<'}n/3)</text>
           {/* Quadrant boxes */}

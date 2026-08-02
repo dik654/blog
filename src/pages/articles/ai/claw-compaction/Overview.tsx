@@ -1,257 +1,129 @@
-import CompactionTriggerViz from './viz/CompactionTriggerViz';
-import TokenBudgetViz from './viz/TokenBudgetViz';
-import SummaryFanInViz from './viz/SummaryFanInViz';
+import CompactPipelineViz from './viz/CompactPipelineViz';
+
+const factRows = [
+  ['규모', '제거되는 user·assistant·tool 메시지 수를 센다.'],
+  ['도구', 'ToolUse 이름과 ToolResult의 tool_name을 모아 정렬·중복 제거한다.'],
+  ['최근 요청', '제거 구간의 마지막 user 텍스트 최대 3개를 시간순으로 남긴다.'],
+  ['남은 일', 'todo, next, pending, follow up, remaining이 들어간 최근 텍스트 최대 3개를 남긴다.'],
+  ['파일', '경로에 /가 있고 rs·ts·tsx·js·json·md 확장자인 후보를 정렬해 최대 8개 남긴다.'],
+  ['현재 작업', '제거 구간에서 마지막으로 만나는 비어 있지 않은 텍스트를 최대 200자로 남긴다.'],
+  ['타임라인', '제거되는 모든 block을 역할과 함께 쓰되 각 block을 최대 160자로 자른다.'],
+] as const;
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">컨텍스트 압축</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+    <>
+      <section id="overview" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>압축은 메모리를 지우는 일이 아니라 경계를 다시 쓰는 일이다</h2>
+          <p>
+            긴 대화에는 사용자 문장만 쌓이지 않는다. assistant의 설명, 도구 호출, 도구 결과와 이미
+            만든 압축 요약이 한 배열에 함께 들어간다. 단순히 앞부분을 삭제하면 현재 작업의 이유를 잃고,
+            도구 결과만 홀로 남길 수도 있다. 그래서 <code>compact_session()</code>은 먼저
+            <strong> 압축해도 되는가</strong>, 다음으로 <strong>어디에서 자를 것인가</strong>,
+            마지막으로 <strong>무엇을 요약에 남길 것인가</strong>를 따로 결정한다.
+          </p>
+          <p>
+            기본 설정은 최근 메시지 4개 보존, 추정 토큰 10,000이다. 여기서 “토큰”은 tokenizer의
+            정확한 결과가 아니다. 각 block의 문자열 <strong>UTF-8 byte 길이를 4로 나누고 1을
+            더한 값</strong>을 합산한 근사치다. 한글 한 글자는 여러 byte이므로 영어 문자 수와 같은
+            감각으로 읽으면 안 된다.
+          </p>
+        </div>
 
-        <CompactionTriggerViz />
-      </div>
-      <TokenBudgetViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        {/* ── 1. 압축이 필요한 이유 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">압축이 필요한 이유</h3>
-        <p>
-          LLM 컨텍스트 윈도우는 유한 — Claude Code 기준 ~200K 토큰<br />
-          시스템 프롬프트, 도구 정의, CLAUDE.md 등 오버헤드를 빼면 실제 사용 가능량은 ~160-170K<br />
-          긴 대화에서 오래된 메시지를 그대로 두면 토큰 예산을 초과하여 API 호출이 실패하거나 응답 품질이 급락<br />
-          compact.rs(689 LOC)가 오래된 메시지를 구조화된 요약으로 교체하여 대화를 무한히 이어갈 수 있게 함
-        </p>
-        <p>
-          압축의 핵심 트레이드오프: <strong>정보 손실 vs 컨텍스트 연속성</strong><br />
-          모든 메시지를 보존하면 토큰 한계에 도달 → 대화 중단<br />
-          전부 삭제하면 맥락을 잃음 → 작업 반복<br />
-          요약으로 교체하면 핵심 맥락을 유지하면서 토큰을 60-80% 절감
-        </p>
-
-        {/* ── 2. CompactionConfig ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">CompactionConfig — 압축 설정</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">CompactionConfig</div>
-            <div className="font-semibold text-sm mb-2">preserve_recent_messages: <code className="text-xs bg-muted px-1 py-0.5 rounded">usize</code></div>
-            <p className="text-sm text-muted-foreground">보존할 최근 메시지 수 — 절대 압축하지 않는 마지막 N개</p>
+        <div className="not-prose my-7 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
+          <div className="bg-background p-4">
+            <p className="text-xs font-semibold text-muted-foreground">GATE 01 · 자를 수 있는가</p>
+            <p className="mt-2 text-sm font-bold"><code>compactable.len() &gt; preserve_recent_messages</code></p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">남길 개수보다 새 메시지가 많아야 한다. 같으면 아무것도 자르지 않는다.</p>
           </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">CompactionConfig</div>
-            <div className="font-semibold text-sm mb-2">max_estimated_tokens: <code className="text-xs bg-muted px-1 py-0.5 rounded">usize</code></div>
-            <p className="text-sm text-muted-foreground">최대 토큰 예산 — 이 값을 초과하면 압축 트리거</p>
+          <div className="bg-background p-4">
+            <p className="text-xs font-semibold text-muted-foreground">GATE 02 · 충분히 큰가</p>
+            <p className="mt-2 text-sm font-bold"><code>estimated_tokens &gt;= max_estimated_tokens</code></p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">첫 compact summary는 계산에서 제외하고, 그 뒤 원문만 합산한다.</p>
           </div>
         </div>
-        <p>
-          <code>preserve_recent_messages</code> — 절대 압축하지 않는 최근 메시지 개수<br />
-          LLM은 최근 컨텍스트에 가장 강한 attention을 보이므로 최근 메시지를 원본 그대로 보존<br />
-          <code>max_estimated_tokens</code> — 이 값을 초과하면 자동으로 압축이 트리거<br />
-          보통 컨텍스트 윈도우의 75-92% 수준으로 설정하여 안전 마진 확보
-        </p>
+      </section>
 
-        {/* ── 3. should_compact() 판정 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">should_compact() — 압축 판정</h3>
-        <div className="not-prose grid grid-cols-1 gap-3 my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">should_compact(session, config) → bool</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <code className="text-xs">estimate_session_tokens(session)</code>이 <code className="text-xs">config.max_estimated_tokens</code>를 초과하면 <code className="text-xs">true</code> 반환
-            </p>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">estimate_session_tokens(session) → usize</span>
-            </div>
-            <p className="text-sm text-muted-foreground mb-2">
-              메시지 텍스트의 총 문자 수를 4로 나눠 토큰 수를 근사
-            </p>
-            <div className="text-xs font-mono bg-muted rounded px-2 py-1 inline-block">
-              session.messages.iter().map(|m| m.content.len()).sum::&lt;usize&gt;() / 4
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">영어 기준 약 4바이트 = 1토큰 (BPE 토크나이저 근사)</p>
-          </div>
+      <section id="compact-pipeline" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>잘라낼 위치보다 역할 관계가 먼저다</h2>
+          <p>
+            보통 경계는 <code>전체 메시지 수 - 보존 개수</code>다. 하지만 첫 보존 메시지의 첫 block이
+            <code>ToolResult</code>이면 바로 앞을 확인한다. 앞 메시지에 <code>ToolUse</code>가
+            있으면 경계를 한 칸 뒤로 옮겨 호출과 결과를 함께 남긴다. 이미 결과가 고아 상태라면 더
+            뒤로 걸어가 안전한 시작점을 찾는다.
+          </p>
+          <p>
+            아래 실험은 세 가지 transcript와 수동·자동 적용 방식을 바꿔 본다. 숫자가 바뀌는 것보다
+            <strong> raw boundary와 safe boundary가 왜 달라지는지</strong>, 그리고 계산된 결과가
+            runtime에 실제 설치되는지를 확인하는 것이 핵심이다.
+          </p>
         </div>
-        <p>
-          <code>estimate_session_tokens()</code>는 텍스트 길이를 4로 나눠 토큰 수를 근사<br />
-          영어 기준 약 4바이트 = 1토큰이라는 경험적 근사 — 정확한 BPE 토큰화 없이도 실용적으로 작동<br />
-          한국어·중국어 등 다중바이트 문자는 바이트당 토큰 비율이 다르지만,
-          과대추정 방향이므로 안전 마진으로 기능 — 실제보다 일찍 압축을 트리거하여 한계 초과를 방지
-        </p>
+        <CompactPipelineViz />
+      </section>
 
-        {/* ── 4. compact_session() 파이프라인 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">compact_session() — 압축 파이프라인</h3>
-        <p>
-          파이프라인은 6단계로 구성되며, 각 단계가 명확한 단일 책임을 가짐<br />
-          <strong>1단계</strong>: 최근 N개 메시지를 분리하여 원본 그대로 보존 — 현재 진행 중인 작업 맥락 유지<br />
-          <strong>2단계</strong>: 나머지 오래된 메시지를 압축 대상으로 분류<br />
-          <strong>3단계</strong>: 오래된 메시지에서 scope(작업 범위), tools(도구 사용), timeline(이벤트 시간순)을 추출<br />
-          <strong>4단계</strong>: 구조화된 요약을 LLM이 이해할 수 있는 텍스트로 포맷<br />
-          <strong>5단계</strong>: 압축 후 연속 메시지를 생성하여 대화 흐름 유지<br />
-          <strong>6단계</strong>: 결과를 CompactionResult로 반환 — 압축된 세션 + 메타데이터
-        </p>
-
-        {/* ── 5. summarize_messages() 내부 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">summarize_messages() — 요약 생성 내부</h3>
-        <SummaryFanInViz />
-        <p>
-          <code>extract_file_candidates()</code>는 메시지 텍스트에서 파일 경로를 정규식으로 추출<br />
-          이 정보는 압축 후에도 "어떤 파일을 다뤘는지" 맥락을 보존하는 데 핵심적<br />
-          <code>infer_current_work()</code>와 <code>infer_pending_work()</code>는 작업 연속성을 보장 —
-          압축 후 LLM이 "지금 뭘 하고 있었는지" 즉시 파악 가능<br />
-          도구별 호출 횟수 집계는 작업 패턴을 요약 — 예를 들어 Read가 많으면 탐색 단계,
-          Edit가 많으면 구현 단계라는 맥락 제공
-        </p>
-
-        {/* ── 6. merge_compact_summaries() — 연속 압축 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">merge_compact_summaries() — 연속 압축</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-3">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">merge_compact_summaries(prev_summary, new_summary) → MergedSummary</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div className="flex items-start gap-2 text-sm">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-                <span className="text-muted-foreground"><code className="text-xs">&lt;prior-context&gt;</code> XML 태그에서 이전 요약 추출</span>
-              </div>
-              <div className="flex items-start gap-2 text-sm">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
-                <span className="text-muted-foreground">이전 요약의 scope, tools, timeline을 파싱</span>
-              </div>
-              <div className="flex items-start gap-2 text-sm">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
-                <span className="text-muted-foreground">새 요약과 병합: scope 통합, tools 누적, timeline 병합 정렬</span>
-              </div>
-              <div className="flex items-start gap-2 text-sm">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
-                <span className="text-muted-foreground">병합된 요약을 새 <code className="text-xs">&lt;prior-context&gt;</code>로 래핑</span>
-              </div>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground italic">대화가 아무리 길어도 전체 맥락의 연쇄 보존</p>
+      <section id="summary-merge" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>모델이 이해한 요약이 아니라 코드가 고른 증거 묶음이다</h2>
+          <p>
+            제거 구간은 다음 규칙으로 <code>&lt;summary&gt;</code> 문자열이 된다. 규칙이 단순해
+            결과는 재현 가능하지만, 동의어·숨은 의도·긴 인과관계를 이해하지는 못한다. 예를 들어
+            “다음 차례에 고치자”는 한국어 문장은 영문 keyword가 없으면 pending work로 분류되지 않는다.
+          </p>
         </div>
-        <p>
-          대화가 매우 길면 압축이 여러 번 발생<br />
-          1차 압축 → 요약 A 생성<br />
-          2차 압축 → 요약 A + 새 메시지 → 요약 B로 병합<br />
-          3차 압축 → 요약 B + 새 메시지 → 요약 C로 병합<br />
-          이 연쇄 구조 덕분에 아무리 긴 대화도 전체 맥락을 잃지 않음<br />
-          <code>&lt;prior-context&gt;</code> XML 태그는 이전 요약과 새 요약의 경계를 명확히 구분 —
-          파싱과 병합을 안정적으로 수행할 수 있게 함
-        </p>
 
-        {/* ── 7. get_compact_continuation_message() ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">get_compact_continuation_message() — 연속 메시지</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">get_compact_continuation_message() → Message</span>
-            </div>
-            <p className="text-sm text-muted-foreground mb-3">압축 후 LLM에게 전달하는 연속 메시지 — <code className="text-xs">SYSTEM_PROMPT_DYNAMIC_BOUNDARY</code> 마커로 삽입 위치 지정</p>
-            <div className="bg-background border border-border rounded p-3 space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-xs font-mono bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded">role</span>
-                <span className="font-mono text-sm">"user"</span>
-                <span className="text-xs text-muted-foreground">(시스템이 아닌 사용자 메시지로 삽입)</span>
+        <div className="not-prose my-7 divide-y divide-border border-y border-border">
+          {factRows.map(([label, detail], index) => (
+            <div key={label} className="grid gap-1 py-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4">
+              <div className="flex items-center gap-2 text-sm font-bold">
+                <span className="font-mono text-[10px] text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+                {label}
               </div>
-              <div className="text-sm">
-                <span className="text-xs font-mono bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded">content</span>
-                <div className="mt-1 ml-2 space-y-1 text-xs font-mono text-muted-foreground">
-                  <div>"--- 컨텍스트 압축 발생 ---"</div>
-                  <div className="text-foreground">formatted_summary</div>
-                  <div>"위 요약을 참고하여 이어서 작업하세요."</div>
-                </div>
-              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
             </div>
-          </div>
+          ))}
         </div>
-        <p>
-          연속 메시지는 <code>user</code> 역할로 삽입 — assistant 역할이 아닌 이유는
-          LLM이 사용자의 지시로 인식하여 요약을 더 적극적으로 참조하기 때문<br />
-          <code>SYSTEM_PROMPT_DYNAMIC_BOUNDARY</code> 마커는 시스템 프롬프트 내에서
-          동적으로 변하는 컨텍스트(압축 요약, 현재 작업 상태)가 삽입되는 위치를 표시<br />
-          이 설계로 정적 시스템 프롬프트와 동적 컨텍스트가 깔끔하게 분리
-        </p>
 
-        {/* ── 8. SummaryCompressor 보조 압축 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">SummaryCompressor — 2차 압축 레이어</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">summary_compression.rs (300 LOC)</div>
-            <div className="font-semibold text-sm mb-1">SummaryCompressor</div>
-            <p className="text-xs text-muted-foreground mb-3">
-              <code className="text-xs">max_summary_tokens: usize</code> — 요약의 최대 토큰 수
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-                  <span className="text-sm font-semibold">extract_key_facts()</span>
-                </div>
-                <p className="text-xs text-muted-foreground">핵심 사실만 추출</p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
-                  <span className="text-sm font-semibold">remove_noise()</span>
-                </div>
-                <p className="text-xs text-muted-foreground">반복, 불필요한 세부사항 제거</p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
-                  <span className="text-sm font-semibold">rank_by_relevance()</span>
-                </div>
-                <p className="text-xs text-muted-foreground">최근 작업과의 관련도로 정렬</p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
-                  <span className="text-sm font-semibold">truncate_to_budget()</span>
-                </div>
-                <p className="text-xs text-muted-foreground">토큰 예산에 맞게 자르기</p>
-              </div>
-            </div>
-          </div>
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h3>두 번째 압축은 이전 원문을 다시 볼 수 없다</h3>
+          <p>
+            첫 메시지가 Claw의 continuation preamble로 시작하면 이를 기존 압축 요약으로 인식한다.
+            다음 압축에서는 그 메시지를 제거 대상과 trigger token 계산에서 빼고, 이전 요약의
+            timeline 바깥 highlights를 <code>Previously compacted context</code>로 옮긴다. 새
+            요약의 highlights와 timeline을 그 뒤에 붙인다.
+          </p>
+          <p>
+            이는 “중복을 지능적으로 제거하고 최신 사실을 고른다”는 뜻이 아니다. 이전 요약을 다시
+            구조화해 누적하는 문자열 merge다. 별도 <code>max_summary_tokens</code>나 2차
+            compressor가 없으므로, 반복 압축에서 요약 자체가 계속 커질 가능성도 현재 경계로 남는다.
+          </p>
         </div>
-        <p>
-          1차 압축(compact.rs)이 메시지를 요약으로 교체한다면,
-          2차 압축(SummaryCompressor)은 요약 자체를 더 짧게 만듦<br />
-          <code>extract_key_facts()</code>는 요약에서 "파일 경로", "오류 메시지", "아키텍처 결정" 등
-          핵심 사실만 추출 — 서술적 문장은 제거<br />
-          <code>rank_by_relevance()</code>는 현재 작업과의 관련도를 기준으로 사실을 정렬 —
-          관련 없는 오래된 사실은 후순위로 밀려나 토큰 예산 초과 시 먼저 제거<br />
-          두 레이어 압축 구조: 메시지 → 요약(1차) → 핵심 사실(2차)
-        </p>
+      </section>
 
-        {/* ── 9. 인사이트 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">설계 인사이트</h3>
-        <p>
-          압축 전략의 핵심은 <strong>"최근 N개는 그대로, 나머지는 요약"</strong>이라는 슬라이딩 윈도우 패턴<br />
-          이는 LLM의 <strong>recency bias</strong>와 정확히 일치 — Transformer attention은
-          최근 토큰에 더 강한 가중치를 부여하므로, 최근 메시지를 원본 보존하는 것이 최적<br />
-          오래된 메시지는 요약만으로도 충분한 맥락을 제공
-        </p>
-        <p>
-          4자 = 1토큰 추정은 영어 기준 근사<br />
-          한국어는 UTF-8 인코딩에서 3바이트/자이고 BPE 분할도 다르지만,
-          <strong>과대추정 방향</strong>이라 안전 마진으로 작동 — 실제 토큰 수보다 높게 추정하여
-          한계 도달 전에 미리 압축을 트리거
-        </p>
-        <p>
-          연속 압축(merge_compact_summaries)은 <strong>무한 대화</strong>를 가능하게 하는 핵심 메커니즘<br />
-          매 압축마다 이전 요약을 병합하여 전체 대화 맥락의 연쇄를 유지<br />
-          정보 손실은 불가피하지만, "현재 작업에 관련된 핵심 사실"은 rank_by_relevance()가
-          높은 우선순위로 보존 — 실질적으로 중요한 맥락은 살아남는 구조
-        </p>
-
-      </div>
-    </section>
+      <section id="runtime-handoff" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>결과를 만들었다고 실행 중 세션이 바뀐 것은 아니다</h2>
+          <p>
+            <code>ConversationRuntime::compact(&amp;self, config)</code>는 현재 Session을 읽어
+            <code>CompactionResult</code>를 반환할 뿐이다. 호출자가
+            <code>result.compacted_session</code>을 채택하지 않으면 runtime state는 그대로다.
+          </p>
+          <p>
+            자동 경로는 다르다. 한 turn이 끝난 뒤 누적 API input token이 환경 변수
+            <code>CLAUDE_CODE_AUTO_COMPACT_INPUT_TOKENS</code>의 threshold 이상이면
+            <code>maybe_auto_compact()</code>가 실행된다. 이때 내부
+            <code>max_estimated_tokens</code>를 0으로 두어 메시지 수 gate만 통과하면 압축하고,
+            제거된 메시지가 있을 때만 <code>self.session</code>을 결과로 교체한다.
+          </p>
+          <p>
+            compacted Session의 첫 메시지는 합성 system continuation이고 뒤에는 보존한 원문이
+            이어진다. 동시에 Session metadata에는 압축 횟수, 마지막 summary와 제거 개수가 기록되어
+            JSONL 저장·복원 경로로 넘어간다. 따라서 성공 계약은 “문자열을 만들었다”가 아니라
+            <strong> 안전한 transcript와 metadata가 다음 요청에 실제 사용됐다</strong>까지다.
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

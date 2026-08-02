@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Section } from '@/content';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,6 +9,7 @@ interface Props {
 
 export default function TableOfContents({ sections }: Props) {
   const [activeId, setActiveId] = useState<string>('');
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,12 +35,21 @@ export default function TableOfContents({ sections }: Props) {
     return () => observer.disconnect();
   }, [sections]);
 
+  useEffect(() => {
+    if (!activeId) return;
+
+    const activeLink = navRef.current?.querySelector<HTMLAnchorElement>(
+      `[data-toc-id="${CSS.escape(activeId)}"]`,
+    );
+    activeLink?.scrollIntoView({ block: 'nearest' });
+  }, [activeId]);
+
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <ScrollArea className="h-[calc(100vh-8rem)]">
-      <nav className="space-y-0.5">
+    <ScrollArea className="max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
+      <nav ref={navRef} className="space-y-0.5 pb-4">
         <p className="mb-3 text-sm font-semibold text-foreground">목차</p>
         {sections.map((section) => {
           const sectionActive = activeId === section.id ||
@@ -48,6 +58,7 @@ export default function TableOfContents({ sections }: Props) {
             <div key={section.id}>
               <a
                 href={`#${section.id}`}
+                data-toc-id={section.id}
                 className={cn(
                   'block rounded-md px-3 py-1.5 text-sm transition-colors hover:text-foreground',
                   sectionActive
@@ -62,6 +73,7 @@ export default function TableOfContents({ sections }: Props) {
                 <a
                   key={sub.id}
                   href={`#${sub.id}`}
+                  data-toc-id={sub.id}
                   className={cn(
                     'block rounded-md pl-6 pr-3 py-1 text-xs transition-colors hover:text-foreground',
                     activeId === sub.id

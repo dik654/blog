@@ -1,19 +1,21 @@
+import MathText from '@/components/ui/math-text';
 import M from '@/components/ui/math';
-import AttentionScoreViz from './viz/AttentionScoreViz';
-import AttnScoreDetailViz from './viz/AttnScoreDetailViz';
+import AttentionScoreScene from './viz/AttentionScoreScene';
+import AttnScoreDetailScene from './viz/AttnScoreDetailScene';
 
 export default function AttentionScore() {
   return (
-    <section id="attention-score" className="mb-16 scroll-mt-20">
+    <MathText id="attention-score" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">어텐션 스코어 계산</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          Q, K, V가 준비되면 4단계로 셀프어텐션을 계산한다<br />
-          핵심 공식: <strong>Attention(Q,K,V) = softmax(QK<sup>T</sup>/√d_k)V</strong>
+          $Q$ 와 $K$ 는 먼저 모든 위치 쌍의 비교표 $QK^T$ 를 만든다<br />
+          그 점수를 sqrt(d_k) 로 나눠 softmax가 포화되지 않게 조정한다<br />
+          softmax 결과 $A$ 는 행별 선택 비율이고, 마지막 $A V$ 가 실제 문맥 벡터다
         </p>
       </div>
 
-      <AttentionScoreViz />
+      <AttentionScoreScene />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>4단계 과정</h3>
@@ -24,29 +26,28 @@ export default function AttentionScore() {
           <div><strong>4.</strong> × V(3×6) = 문맥 반영 출력(3×6)</div>
         </div>
         <p>
-          유사도 행렬의 (i,j) = 토큰 i가 토큰 j를 얼마나 주목하는지<br />
-          √d_k 스케일링 — 값이 커지면 softmax 기울기가 0에 수렴하는 문제 방지
+          점수 행렬의 $(i,j)$ 는 위치 $i$ 가 위치 $j$ 를 얼마나 맞는 상대로 보는지다<br />
+          d_k 가 커질수록 내적 분산이 커지므로 sqrt(d_k) 로 나눠 분산을 다시 낮춘다
         </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Attention Score 계산 예시</h3>
         <p className="leading-7">
-          3개 토큰, d_k=6일 때 Q·K^T로 3×3 유사도 행렬을 구한다.
-          scores[0][0] = 1.23으로 자기 참조가 가장 높고, √6 ≈ 2.449로 스케일링한 뒤
-          softmax를 적용하면 행별 확률 분포가 된다.
-          마지막으로 V와 가중 합산하여 문맥을 반영한 출력 벡터를 얻는다.
+          3개 토큰이면 각 위치가 세 위치를 모두 비교하므로 $3\\times3$ 점수표가 나온다.
+          첫 행은 첫 token이 자기 자신과 다른 두 token을 얼마나 볼지 정한다.
+          softmax는 그 행을 합 1인 분포로 바꾸고, $V$ 와의 곱은 “그 비율로 내용을 섞은 결과”를 만든다.
         </p>
         <M display>{'\\text{scores}[i][j] = \\underbrace{Q_i \\cdot K_j}_{\\text{내적}} \\xrightarrow{\\div\\sqrt{6}} \\underbrace{\\text{softmax}}_{\\text{행별 확률}} \\xrightarrow{\\times V} \\underbrace{\\text{context}_i}_{\\text{문맥 벡터}}'}</M>
       </div>
-      <div className="not-prose my-8"><AttnScoreDetailViz /></div>
+      <div className="not-prose my-8"><AttnScoreDetailScene /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: Q·K^T는 <strong>모든 쌍의 유사도</strong> 매트릭스 계산.<br />
-          요약 2: <strong>√d_k 스케일링</strong>이 softmax 포화 방지 — 필수.<br />
-          요약 3: 결과는 <strong>각 행의 확률 분포</strong> — 행별로 합=1.
+          요약 1: $QK^T$ 는 모든 위치 쌍 비교표.<br />
+          요약 2: sqrt(d_k) scaling은 softmax 포화를 줄이는 장치.<br />
+          요약 3: $A$ 의 각 행은 한 query 위치의 선택 분포.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

@@ -52,20 +52,22 @@ fn weighted_sum(encrypted: &[BigInt], weights: &[BigInt], N: &BigInt) -> BigInt 
         })
 }`;
 
-export const DISTRIBUTED_CODE = `// 비밀키 λ를 Shamir 분산으로 공유
-// λ = Σᵢ λᵢ × Lᵢ(0)  (라그랑주 계수 조합)
+export const DISTRIBUTED_CODE = `// 개념 API: 지수와 결합 계수는 선택한 threshold-Paillier 규격을 따른다.
+// 서로 다른 규격의 Δ, share domain, proof 식을 섞으면 안 된다.
 
-// 참가자 i의 부분 복호화:
-// cᵢ = c^(Δ × λᵢ) mod N²
-// Δ = n! (팩토리얼, 정수 계수 보정)
-
-fn partial_decrypt(c: &BigInt, lambda_i: &BigInt, delta: &BigInt, N: &BigInt) -> BigInt {
-    pow(c, delta * lambda_i, N * N)
+fn partial_decrypt(
+    ciphertext: &Ciphertext,
+    secret_share: &PaillierShare,
+    transcript: &Session,
+) -> (PartialDecryption, Proof) {
+    // 자신의 share로 partial result와 정당성 proof 생성
+    threshold_paillier::partial(ciphertext, secret_share, transcript)
 }
 
-// 최종 복호화 (t+1개의 부분 복호화로)
-// c^λ = ∏ᵢ cᵢ^(Lᵢ(0)/Δ) mod N²
-// L(c^λ) × μ mod N = 원래 평문
+fn combine(partials: &[(PartialDecryption, Proof)], public: &PublicParams) -> Plaintext {
+    // threshold 이상 proof를 검증한 뒤 protocol-defined 계수로 결합
+    assert!(partials.iter().all(|part| verify_partial(part, public)));
+    threshold_paillier::combine(partials, public)
+}
 
-// 어떤 단일 참가자도 λ를 알 필요 없음!
-// → 분산된 Paillier 복호화 완성`;
+// 원본 Paillier secret을 한 process에 복원하지 않는다.`;

@@ -40,7 +40,7 @@ export default function ThresholdViz() {
 
               {/* 확률 분포 축 */}
               <line x1={40} y1={180} x2={480} y2={180} stroke="var(--border)" strokeWidth={1} />
-              <text x={260} y={200} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+              <text x={260} y={216} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                 모델 예측 확률 P(이상)
               </text>
               {[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((v) => (

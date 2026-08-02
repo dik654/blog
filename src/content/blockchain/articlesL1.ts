@@ -1,7 +1,6 @@
 import type { Article } from '../types';
 
-// L1 Blockchains — 나중에 정리 후 추가 예정
-// 소분류(l1-chains)도 주석 처리됨
+// Chain-specific scaling systems
 export const l1Articles: Article[] = [
   // {
   //   slug: 'solana',
@@ -55,16 +54,19 @@ export const l1Articles: Article[] = [
   //   ],
   //   component: () => import('@/pages/articles/blockchain/monad'),
   // },
-  // {
-  //   slug: 'worldchain',
-  //   title: 'World Chain (OP Stack 기반 인간 우선 블록체인)',
-  //   subcategory: 'l1-chains',
-  //   sections: [
-  //     { id: 'overview', title: '개요' },
-  //     { id: 'world-id-verification', title: 'World ID 검증' },
-  //     { id: 'op-stack-integration', title: 'OP Stack 통합' },
-  //     { id: 'priority-blockspace', title: '우선순위 블록스페이스' },
-  //   ],
-  //   component: () => import('@/pages/articles/blockchain/worldchain'),
-  // },
+  {
+    slug: 'worldchain',
+    title: 'World Chain (OP Stack 기반 인간 우선 블록체인)',
+    subcategory: 'eth-scaling',
+    summary: 'OP Stack 위에서 World ID를 사용해 사람에게 우선 blockspace를 제공하는 구조와 trust boundary를 분석한다.',
+    level: '중급',
+    estimatedMinutes: 18,
+    sections: [
+      { id: 'overview', title: '개요' },
+      { id: 'world-id-verification', title: 'World ID 검증' },
+      { id: 'op-stack-integration', title: 'OP Stack 통합' },
+      { id: 'priority-blockspace', title: '우선순위 블록스페이스' },
+    ],
+    component: () => import('@/pages/articles/blockchain/worldchain'),
+  },
 ];

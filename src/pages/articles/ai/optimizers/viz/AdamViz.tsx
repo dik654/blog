@@ -26,7 +26,7 @@ export default function AdamViz() {
 
             return (
               <g key={i}>
-                <motion.rect x={x} width={BAR_W} rx={4}
+                <motion.rect initial={false} x={x} width={BAR_W} rx={4}
                   animate={{ y: BASE_Y - h, height: h, fill: p.color + '40' }}
                   stroke={p.color} strokeWidth={1.2} transition={sp} />
                 <text x={x + BAR_W / 2} y={BASE_Y + 14} textAnchor="middle"

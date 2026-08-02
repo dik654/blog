@@ -59,9 +59,11 @@ export default function SEVEnableSequenceViz() {
 
           {step === 0 && (
             <motion.g initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
-              <ModuleBox x={60} y={70} w={360} h={110} label="BIOS Setup" sub="Advanced → CPU Configuration" color={C.bios} />
-              <DataBox x={80} y={108} w={320} h={26} label="SMEE = Enabled" color={C.bios} outlined />
-              <DataBox x={80} y={142} w={320} h={26} label="SEV-SNP Support = Enabled" color={C.bios} outlined />
+              <rect x={60} y={70} width={360} height={110} rx={8} fill="var(--card)" stroke={C.bios} strokeWidth={0.9} />
+              <text x={80} y={89} fontSize={10} fontWeight={700} fill={C.bios}>BIOS Setup</text>
+              <text x={400} y={89} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">Advanced → CPU Configuration</text>
+              <DataBox x={80} y={102} w={320} h={26} label="SMEE = Enabled" color={C.bios} outlined />
+              <DataBox x={80} y={138} w={320} h={26} label="SEV-SNP Support = Enabled" color={C.bios} outlined />
             </motion.g>
           )}
 

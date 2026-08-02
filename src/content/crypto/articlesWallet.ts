@@ -1,0 +1,57 @@
+import type { Article } from '../types';
+
+export const walletKeyArticles: Article[] = [
+  {
+    slug: 'wallet-key-management-map',
+    title: '지갑 키 관리 지도: Custody에서 Embedded Wallet까지',
+    subcategory: 'wallet-key-current',
+    summary: '제품 이름을 서명·복구·정책·서비스 의존의 권한 그래프로 다시 읽습니다.',
+    level: '입문',
+    estimatedMinutes: 24,
+    learningPath: 'wallet-key-management-current-first',
+    sections: [
+      { id: 'current-question', title: '왜 지금 다시 중요한가' },
+      { id: 'authority-not-label', title: 'Custody는 권한 그래프다' },
+      { id: 'wallet-shapes', title: '문서에서 찾을 네 문장' },
+      { id: 'auth-signing', title: '로그인에서 서명까지' },
+      { id: 'bounded-route', title: '최소 학습 경로' },
+    ],
+    component: () => import('@/pages/articles/crypto/wallet-key-management-map'),
+  },
+  {
+    slug: 'threshold-wallet-signing',
+    title: 'SSS에서 MPC/TSS까지: 원본 키 없는 공동 서명',
+    subcategory: 'wallet-key-threshold',
+    summary: '복원용 secret sharing과 threshold signing을 분리하고 DKG·refresh·FROST·ECDSA의 경계를 잡습니다.',
+    level: '중급',
+    estimatedMinutes: 32,
+    prerequisites: ['wallet-key-management-map'],
+    learningPath: 'wallet-key-management-current-first',
+    sections: [
+      { id: 'sss', title: 'Shamir가 하는 일' },
+      { id: 'reconstruct-vs-sign', title: '복원과 공동 서명' },
+      { id: 'dkg', title: 'DKG와 share lifecycle' },
+      { id: 'signature-families', title: 'ECDSA·EdDSA·FROST' },
+      { id: 'operations', title: '운영 보안 계약' },
+    ],
+    component: () => import('@/pages/articles/crypto/threshold-wallet-signing'),
+  },
+  {
+    slug: 'browser-wallet-recovery',
+    title: '브라우저·Serverless Wallet: 키 격리와 복구 위협 모델',
+    subcategory: 'wallet-key-browser',
+    summary: '결정론적 share, OAuth, WASM, WebCrypto와 recovery channel의 실제 보장 범위를 검증합니다.',
+    level: '중급',
+    estimatedMinutes: 29,
+    prerequisites: ['wallet-key-management-map', 'threshold-wallet-signing'],
+    learningPath: 'wallet-key-management-current-first',
+    sections: [
+      { id: 'serverless-term', title: 'Serverless의 범위' },
+      { id: 'deterministic-trap', title: '결정론적 share 함정' },
+      { id: 'browser-boundary', title: 'WASM·WebCrypto 경계' },
+      { id: 'identity-intent', title: 'Identity와 거래 의도' },
+      { id: 'recovery', title: '복구·rotation·감사' },
+    ],
+    component: () => import('@/pages/articles/crypto/browser-wallet-recovery'),
+  },
+];

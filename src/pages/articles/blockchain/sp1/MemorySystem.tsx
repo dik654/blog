@@ -22,11 +22,11 @@ export default function MemorySystem() {
       </div>
       <div className="space-y-1.5 mt-4 mb-6">
         {LAYOUT.map(l => (
-          <div key={l.name} className="rounded-lg border border-border/60 p-3 flex gap-3">
-            <span className="font-mono text-[11px] text-indigo-400 w-52 flex-shrink-0">
+          <div key={l.name} className="flex min-w-0 flex-col gap-1 rounded-lg border border-border/60 p-3 sm:flex-row sm:gap-3">
+            <span className="break-all font-mono text-[11px] text-indigo-400 sm:w-52 sm:flex-shrink-0">
               {l.range}
             </span>
-            <span className="font-mono text-xs font-bold text-foreground/70 w-28 flex-shrink-0">
+            <span className="font-mono text-xs font-bold text-foreground/70 sm:w-28 sm:flex-shrink-0">
               {l.name}
             </span>
             <span className="text-xs text-foreground/60">{l.desc}</span>

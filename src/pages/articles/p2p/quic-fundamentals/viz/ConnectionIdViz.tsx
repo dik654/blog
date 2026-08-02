@@ -21,7 +21,7 @@ const STEPS = [
   },
   {
     label: 'CID 는 0~20 바이트 — 보통 8 바이트 랜덤',
-    body: '서버가 발급하고 충돌 방지로 충분한 엔트로피를 갖는다. 추측 어려운 값.',
+    body: '서버가 발급하고 충돌 방지에 충분한 엔트로피를 갖는다. 추측 어려운 값.',
   },
   {
     label: 'NEW_CONNECTION_ID — 다중 CID 발급',
@@ -29,7 +29,7 @@ const STEPS = [
   },
   {
     label: '경로별 CID — linkability 방지',
-    body: 'WiFi/4G/VPN 각 경로에 다른 CID 를 사용. 관찰자가 같은 사용자의 트래픽임을 잇기 어렵다.',
+    body: 'WiFi/4G/VPN 각 경로에 다른 CID 를 사용. 관찰자가 같은 사용자의 트래픽으로 잇기 어렵다.',
   },
 ];
 

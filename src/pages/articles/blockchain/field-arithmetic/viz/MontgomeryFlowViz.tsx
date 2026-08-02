@@ -48,7 +48,7 @@ export default function MontgomeryFlowViz() {
           })}
           {/* Progress bar at bottom */}
           <rect x={15} y={54} width={345} height={4} rx={2} fill="var(--border)" opacity={0.3} />
-          <motion.rect x={15} y={54} height={4} rx={2} fill={C[step]}
+          <motion.rect initial={false} x={15} y={54} height={4} rx={2} fill={C[step]}
             animate={{ width: ((step + 1) / 6) * 345 }} transition={sp} />
           <text x={15 + ((step + 1) / 6) * 345} y={66} textAnchor="middle" fontSize={9}
             fill={C[step]}>{step + 1}/6</text>

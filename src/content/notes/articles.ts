@@ -1,0 +1,96 @@
+import type { Article } from '../types';
+
+// fundamentals → blog notes 자동 미러 — fundamentals-to-blog.ts 가 매번 재생성. 직접 수정 금지.
+export const notesArticles: Article[] = [
+  {
+    slug: "software-verification-verified-boundary-slicing",
+    title: "Verified Boundary Slicing",
+    subcategory: "notes-fundamentals-misc",
+    sections: [],
+    component: () => import('@/pages/articles/notes/software-verification-verified-boundary-slicing'),
+  },
+  {
+    slug: "music-improvisation-트라이톤-서브스티튜션-tritone-substitution",
+    title: "트라이톤 서브스티튜션 (Tritone Substitution)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-트라이톤-서브스티튜션-tritone-substitution'),
+  },
+  {
+    slug: "music-improvisation-비정규-박자-74",
+    title: "비정규 박자 (7/4)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-비정규-박자-74'),
+  },
+  {
+    slug: "music-improvisation-도미넌트-7-샷-9-dominant-79",
+    title: "도미넌트 7 샷 9 (Dominant 7#9)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-도미넌트-7-샷-9-dominant-79'),
+  },
+  {
+    slug: "music-improvisation-메이저-타입-트라이톤-서브-major-type-tritone-sub",
+    title: "메이저 타입 트라이톤 서브 (Major-type Tritone Sub)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-메이저-타입-트라이톤-서브-major-type-tritone-sub'),
+  },
+  {
+    slug: "music-improvisation-backdoor-plagal-cadence-백도어-플라갈-코디스",
+    title: "백도어 (Backdoor) / 플라갈 코디스 (Plagal Cadence)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-backdoor-plagal-cadence-백도어-플라갈-코디스'),
+  },
+  {
+    slug: "music-improvisation-바꾸어-2-5-진행-backdoor-2-5",
+    title: "바꾸어 2-5 진행 (Backdoor 2-5)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-바꾸어-2-5-진행-backdoor-2-5'),
+  },
+  {
+    slug: "music-improvisation-secondary-dominant",
+    title: "Secondary Dominant",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-secondary-dominant'),
+  },
+  {
+    slug: "music-improvisation-dominant-chain-backcycle-지연음-진행-백사이클",
+    title: "Dominant Chain / Backcycle (지연음 진행 / 백사이클)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-dominant-chain-backcycle-지연음-진행-백사이클'),
+  },
+  {
+    slug: "music-improvisation-borrowed-chord",
+    title: "Borrowed Chord",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-borrowed-chord'),
+  },
+  {
+    slug: "music-improvisation-modal-interchange",
+    title: "Modal Interchange",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-modal-interchange'),
+  },
+  {
+    slug: "music-improvisation-parent-scale-부모-음계",
+    title: "Parent Scale (부모 음계)",
+    subcategory: "notes-fundamentals-music",
+    sections: [],
+    component: () => import('@/pages/articles/notes/music-improvisation-parent-scale-부모-음계'),
+  },
+  {
+    slug: "_misc-jepa-joint-embedding-predictive-architecture",
+    title: "JEPA (Joint Embedding Predictive Architecture)",
+    subcategory: "notes-fundamentals-misc",
+    sections: [],
+    component: () => import('@/pages/articles/notes/_misc-jepa-joint-embedding-predictive-architecture'),
+  },
+];

@@ -14,7 +14,7 @@ export default function TwoDErasureViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 480 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 480 235" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {Array.from({ length: step >= 1 ? 8 : 4 }).map((_, r) =>
             Array.from({ length: step >= 1 ? 8 : 4 }).map((_, c) => {
               const x = PAD + c * (GS + 2), y = 20 + r * (GS + 2);
@@ -44,7 +44,7 @@ export default function TwoDErasureViz() {
             </motion.text>
           )}
           {step === 2 && (
-            <motion.text x={240} y={150} textAnchor="middle" fontSize={9}
+            <motion.text x={240} y={225} textAnchor="middle" fontSize={9}
               fill={C[2]} fontWeight={600} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               DAS: 강조된 셀 = 랜덤 샘플
             </motion.text>
@@ -54,7 +54,7 @@ export default function TwoDErasureViz() {
               <line x1={PAD} y1={20 + 1 * (GS + 2) + GS / 2}
                 x2={PAD + 8 * (GS + 2)} y2={20 + 1 * (GS + 2) + GS / 2}
                 stroke="#ef4444" strokeWidth={1} strokeDasharray="4 2" />
-              <text x={240} y={150} textAnchor="middle" fontSize={9}
+              <text x={240} y={225} textAnchor="middle" fontSize={9}
                 fill="#ef4444" fontWeight={600}>행 단위 복구 가능</text>
             </motion.g>
           )}

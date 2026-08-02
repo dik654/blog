@@ -1,6 +1,9 @@
 import DeploymentViz from './viz/DeploymentViz';
 import ModelLoading from './ModelLoading';
 import HPACustomMetrics from './HPACustomMetrics';
+import DeploymentDeepDive from './DeploymentDeepDive';
+import ServingDepthGuide from './ServingDepthGuide';
+import ServingOpsDeepViz from './viz/ServingOpsDeepViz';
 
 export default function ServingDeployment() {
   return (
@@ -15,6 +18,9 @@ export default function ServingDeployment() {
         </p>
         <ModelLoading />
         <HPACustomMetrics />
+        <div className="not-prose my-8"><ServingOpsDeepViz variant="deployment" /></div>
+        <DeploymentDeepDive />
+        <ServingDepthGuide guideKey="deployment" />
       </div>
     </section>
   );

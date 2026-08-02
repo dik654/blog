@@ -6,6 +6,8 @@ import LinearCollapseViz from './viz/LinearCollapseViz';
 import ActivationCompareViz from './viz/ActivationCompareViz';
 import DepthVsWidthViz from './viz/DepthVsWidthViz';
 import ModernMLPViz from './viz/ModernMLPViz';
+import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
 export default function Multilayer() {
   return (
@@ -29,7 +31,8 @@ export default function Multilayer() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-6 mb-3">ReLU로 XOR 만들기 — 구체적 계산</h3>
         <p>
-          가장 단순한 2뉴런 구성: <code>h₁ = ReLU(x₁+x₂−0.5)</code>, <code>h₂ = ReLU(x₁+x₂−1.5)</code>, <code>y = h₁ − 2·h₂</code><br />
+          가장 단순한 2뉴런 구성: <code>h₁ = ReLU(x₁+x₂)</code>, <code>h₂ = ReLU(x₁+x₂−1)</code>, <code>y = h₁ − 2·h₂</code><br />
+          실제로 <code>(0,0)→0</code>, <code>(0,1)/(1,0)→1</code>, <code>(1,1)→0</code>이 되어 XOR 진리표와 일치<br />
           핵심 구조 — <strong>"OR에서 AND를 빼면 XOR"이라는 논리 대수의 기하학적 번역</strong><br />
           은닉층이 논리 게이트를 암묵적으로 학습하고, 출력층이 그것들을 조합
         </p>
@@ -64,9 +67,22 @@ export default function Multilayer() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-6 mb-3">Forward Propagation — 수식</h3>
-        <div className="not-prose"><ForwardPropDetailViz /></div>
+        <ForwardPropDetailViz />
+        <M display>{'z^{(l)} = W^{(l)}a^{(l-1)} + b^{(l)}, \\qquad a^{(l)} = \\sigma(z^{(l)})'}</M>
+        <FormulaNote
+          meaning={'이 식은 column-vector convention 기준이다. W^(l)의 행 하나가 다음 층의 뉴런 하나이고, 이전 층 activation 전체와 내적해 z^(l)의 한 원소를 만든다. activation은 선형층만 여러 번 쌓으면 결국 한 선형층으로 접히는 문제를 막기 위해 원소별 비선형을 넣는 단계다.'}
+          symbols={[
+            ['a^(0)=x', '입력 벡터. 첫 층은 원본 특징을 그대로 이전 activation으로 본다.'],
+            ['a^(l-1) ∈ R^{n_(l-1)}', '이전 층의 출력. 현재 층이 읽어야 하는 특징 묶음이다.'],
+            ['W^(l) ∈ R^{n_l × n_(l-1)}', '현재 층 가중치. 행 수 n_l은 다음 층 뉴런 수, 열 수 n_(l-1)은 이전 층 activation 크기다.'],
+            ['b^(l), z^(l), a^(l) ∈ R^{n_l}', '편향, 활성화 전 logit, 활성화 후 출력은 모두 현재 층 뉴런 수만큼 생긴다.'],
+            ['σ 또는 activation', 'ReLU, sigmoid 같은 원소별 함수. 깊은 층이 단일 선형 변환으로 붕괴하지 않게 만든다.'],
+          ]}
+        />
         <p>
-          선형 <code>W·a + b</code>와 비선형 <code>activation</code>의 교대 — <strong>이 쌍이 MLP의 최소 반복 단위</strong>
+          선형 <code>W·a + b</code>와 비선형 <code>activation</code>의 교대 — <strong>이 쌍이 MLP의 최소 반복 단위</strong>.
+          배치 구현에서는 샘플을 행으로 쌓아 <M>{'Z=XW_{batch}+b'}</M> 로 쓰기도 한다.
+          이때 <M>{'W_{batch}\\in\\mathbb R^{n_{l-1}\\times n_l}'}</M> 이라 위 column-vector 표기의 <M>{'W^{(l)}'}</M> 를 전치한 모양이다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">활성화 함수 비교</h3>

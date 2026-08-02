@@ -43,7 +43,7 @@ export default function ENRLayoutViz() {
               );
             })}
             {/* detail box for active field */}
-            <motion.g key={step} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.g key={`detail-${step}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
               <rect x={40} y={75} width={320} height={38} rx={6}
                 fill={FIELDS[step].c + '12'} stroke={FIELDS[step].c} strokeWidth={1.5} />
               <text x={200} y={92} textAnchor="middle" fontSize={10} fontWeight={600} fill={FIELDS[step].c}>
@@ -54,7 +54,7 @@ export default function ENRLayoutViz() {
               </text>
             </motion.g>
             <motion.text x={405} y={65} fontSize={9} fill="var(--foreground)"
-              initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} key={step}>{ANNOT[step]}</motion.text>
+              initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} key={`annotation-${step}`}>{ANNOT[step]}</motion.text>
           </svg>
         );
       }}

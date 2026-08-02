@@ -22,7 +22,7 @@ export default function RelaxedR1CS({ title, onCodeRef }: { title?: string; onCo
         <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
           <div className="rounded-lg border-l-4 border-l-sky-500 bg-card p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">Standard R1CS</p>
-            <M display>{'(A z) \\circ (B z) = C z'}</M>
+            <M display>{'\\underbrace{(A z) \\circ (B z)}_{\\text{좌·우변 곱 (Hadamard)}} = \\underbrace{C z}_{\\text{출력}}'}</M>
             <ul className="text-sm space-y-1 text-foreground/80 mt-2">
               <li><M>z</M> = (1, x, w) — public + witness</li>
               <li><M>A, B, C</M> ∈ <M>{'\\mathbb{F}^{m \\times n}'}</M> 희소 행렬</li>
@@ -31,7 +31,7 @@ export default function RelaxedR1CS({ title, onCodeRef }: { title?: string; onCo
           </div>
           <div className="rounded-lg border-l-4 border-l-emerald-500 bg-card p-4">
             <p className="font-semibold text-sm text-emerald-400 mb-2">Relaxed R1CS</p>
-            <M display>{'(A z) \\circ (B z) = u \\cdot (C z) + E'}</M>
+            <M display>{'(A z) \\circ (B z) = \\underbrace{u}_{\\text{스케일 스칼라}} \\cdot (C z) + \\underbrace{E}_{\\text{에러 벡터 (폴딩 누적용)}}'}</M>
             <ul className="text-sm space-y-1 text-foreground/80 mt-2">
               <li><M>{'u \\in \\mathbb{F}'}</M> — 스케일 (표준은 u=1)</li>
               <li><M>{'E \\in \\mathbb{F}^m'}</M> — 에러 벡터 (표준은 0)</li>
@@ -84,7 +84,7 @@ export default function RelaxedR1CS({ title, onCodeRef }: { title?: string; onCo
           <p className="text-sm text-muted-foreground mb-2">
             Nova 가 폴딩으로 충분한 이유 = Pedersen 커밋이 덧셈에 대해 동형 (homomorphic):
           </p>
-          <M display>{'\\mathrm{Commit}(W_1) + r \\cdot \\mathrm{Commit}(W_2) = \\mathrm{Commit}(W_1 + r W_2)'}</M>
+          <M display>{'\\underbrace{\\mathrm{Commit}(W_1) + r \\cdot \\mathrm{Commit}(W_2)}_{\\text{커밋 위에서 직접 결합}} = \\underbrace{\\mathrm{Commit}(W_1 + r W_2)}_{\\text{결합된 W 의 커밋과 동일}}'}</M>
           <p className="text-sm text-muted-foreground mt-2">
             덕분에 Verifier 는 <M>W</M> 자체를 보지 않고도 새 커밋을 직접 계산할 수 있다.
             KZG 도 동형이지만 trusted setup 이 필요해 Nova 는 IPA 기반 Pedersen 사용.

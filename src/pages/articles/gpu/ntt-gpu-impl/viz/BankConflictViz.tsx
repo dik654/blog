@@ -41,14 +41,14 @@ export default function BankConflictViz() {
 
           {/* uint64_t mapping (no padding) */}
           <motion.g initial={{ opacity: 0 }}
-            animate={{ opacity: step >= 1 && step <= 2 ? 1 : 0.22 }}
+            animate={{ opacity: step >= 1 && step <= 2 ? 1 : 0.08 }}
             transition={{ duration: 0.3 }}>
             <text x={20} y={56} fontSize={9} fontWeight={700} fill="var(--foreground)">
               패딩 없음: uint64_t s[BLOCK_SIZE]
             </text>
-            {[0, 1, 2, 15, 16].map((tid) => {
+            {[0, 1, 2, 15].map((tid) => {
               const bankStart = (tid * 2) % BANK_COUNT;
-              const conflict = tid === 16;
+              const conflict = tid === 0;
               return (
                 <motion.g key={tid}
                   initial={{ opacity: 0, x: -2 }}
@@ -60,7 +60,7 @@ export default function BankConflictViz() {
                     opacity={0.85} />
                   <text x={20 + bankStart * SLOT_W + SLOT_W} y={73} textAnchor="middle"
                     fontSize={6.5} fontWeight={700} fill="white">
-                    T{tid}
+                    {tid === 0 ? 'T0/16' : `T${tid}`}
                   </text>
                 </motion.g>
               );
@@ -76,7 +76,7 @@ export default function BankConflictViz() {
 
           {/* Padding solution */}
           <motion.g initial={{ opacity: 0 }}
-            animate={{ opacity: step === 3 ? 1 : 0.22 }}
+            animate={{ opacity: step === 3 ? 1 : 0.08 }}
             transition={{ duration: 0.3 }}>
             <text x={20} y={130} fontSize={9} fontWeight={700} fill={COL_PAD}>
               해결 1: +1 패딩 → s[BLOCK_SIZE + 1]
@@ -106,7 +106,7 @@ export default function BankConflictViz() {
 
           {/* XOR alternative */}
           <motion.g initial={{ opacity: 0 }}
-            animate={{ opacity: step >= 4 ? 1 : 0.22 }}
+            animate={{ opacity: step >= 4 ? 1 : 0.08 }}
             transition={{ duration: 0.3 }}>
             <text x={20} y={200} fontSize={9} fontWeight={700} fill={COL_XOR}>
               해결 2: XOR 인덱싱

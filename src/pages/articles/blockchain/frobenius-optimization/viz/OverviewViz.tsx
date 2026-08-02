@@ -70,7 +70,7 @@ export default function OverviewViz() {
             {/* Naive bar */}
             <rect x={60} y={190} width={400} height={24} rx={4}
               fill={`${C.red}08`} stroke={C.red} strokeWidth={0.5} />
-            <motion.rect x={61} y={191} height={22} rx={3} fill={`${C.red}30`}
+            <motion.rect initial={false} x={61} y={191} height={22} rx={3} fill={`${C.red}30`}
               animate={{ width: step === 2 ? 398 : 0 }} transition={sp} />
             <text x={260} y={206} textAnchor="middle" fontSize={11} fill={C.red} fontWeight={600}>
               Naive: 13,824 Fp곱
@@ -78,7 +78,7 @@ export default function OverviewViz() {
             {/* Frobenius bar */}
             <rect x={60} y={228} width={400} height={24} rx={4}
               fill={`${C.green}08`} stroke={C.green} strokeWidth={0.5} />
-            <motion.rect x={61} y={229} height={22} rx={3} fill={`${C.green}30`}
+            <motion.rect initial={false} x={61} y={229} height={22} rx={3} fill={`${C.green}30`}
               animate={{ width: step === 2 ? 18 : 0 }} transition={sp} />
             <text x={110} y={244} textAnchor="middle" fontSize={11} fill={C.green} fontWeight={600}>
               Frobenius: ~6

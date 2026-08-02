@@ -1,4 +1,5 @@
 import HookRunnerViz from './viz/HookRunnerViz';
+import HookEventScopeStepViz from './viz/HookEventScopeStepViz';
 
 export default function Overview() {
   return (
@@ -16,6 +17,24 @@ export default function Overview() {
           - 감사 로깅 (외부 시스템에 이력 전송)<br />
           - 자동화 (특정 도구 호출 시 사전 작업)
         </p>
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">원본과의 핵심 차이: 3 event hook vs event bus</p>
+          <p>
+            claw-code의 hook은 PreToolUse, PostToolUse, UserPromptSubmit 3개 이벤트를 셸 스크립트로 연결한다.
+            구조가 단순해서 사용자가 바로 이해할 수 있고, stdin/stdout JSON 프로토콜 덕분에 어떤 언어로도 hook을 작성할 수 있다.
+          </p>
+          <p className="mt-2">
+            원본 Claude Code의 hook 시스템은 훨씬 넓은 event bus다.
+            PostToolUseFailure, Notification, SessionStart/End/Setup/Stop, SubagentStart/Stop,
+            PreCompact/PostCompact, PermissionRequest/Denied, TeammateIdle, TaskCreated/Completed,
+            Elicitation, ConfigChange, WorktreeCreate/Remove, InstructionsLoaded, CwdChanged, FileChanged까지 다룬다.
+            transport도 shell script 하나가 아니라 shell, agent LLM, HTTP webhook, prompt injection 계열로 나뉜다.
+          </p>
+          <p className="mt-2">
+            즉 claw hook은 "도구 실행 주변 확장"에 집중하고,
+            원본 hook은 세션 lifecycle, subagent, MCP, permission, worktree, instruction 변화까지 관찰하는 운영 이벤트 인프라다.
+          </p>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">HookRunner 구조</h3>
         <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
@@ -146,6 +165,9 @@ export default function Overview() {
           <code>event</code> 필드로 이벤트 종류 구분 — 같은 훅이 여러 이벤트 처리 가능<br />
           <code>skip</code> 응답: 훅이 의도적으로 판정 거부 — 기본 엔진으로 폴백
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">이벤트 범위가 커지면 훅의 역할도 바뀐다</h3>
+        <HookEventScopeStepViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">훅 실행 순서 — 파이프라인</h3>
         <div className="not-prose my-4">

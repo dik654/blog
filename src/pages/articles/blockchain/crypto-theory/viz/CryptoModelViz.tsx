@@ -14,7 +14,7 @@ export default function CryptoModelViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 150" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Symmetric box */}
           <motion.g animate={{ opacity: step === 1 || step === 0 ? 1 : 0.25 }}>
             <rect x={20} y={20} width={170} height={50} rx={6} fill={`${C1}08`} stroke={C1}
@@ -25,12 +25,12 @@ export default function CryptoModelViz() {
             </text>
             {step === 1 && (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <text x={50} y={80} fontSize={10} fill={C3}>Alice</text>
-                <rect x={75} y={73} width={30} height={12} rx={2} fill={`${C3}15`} stroke={C3} strokeWidth={0.6} />
-                <text x={90} y={82} textAnchor="middle" fontSize={10} fill={C3}>K</text>
-                <text x={130} y={80} fontSize={10} fill={C3}>Bob</text>
-                <rect x={115} y={73} width={30} height={12} rx={2} fill={`${C3}15`} stroke={C3} strokeWidth={0.6} />
-                <text x={130} y={82} textAnchor="middle" fontSize={10} fill={C3}>K</text>
+                <text x={32} y={82} fontSize={10} fill={C3}>Alice</text>
+                <rect x={58} y={73} width={26} height={12} rx={2} fill={`${C3}15`} stroke={C3} strokeWidth={0.6} />
+                <text x={71} y={82} textAnchor="middle" fontSize={10} fill={C3}>K</text>
+                <text x={108} y={82} fontSize={10} fill={C3}>Bob</text>
+                <rect x={140} y={73} width={26} height={12} rx={2} fill={`${C3}15`} stroke={C3} strokeWidth={0.6} />
+                <text x={153} y={82} textAnchor="middle" fontSize={10} fill={C3}>K</text>
               </motion.g>
             )}
           </motion.g>

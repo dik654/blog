@@ -37,7 +37,7 @@ export default function BabyGiant() {
         </p>
         <p>
           <strong>② 양변에 g를 씌우기:</strong>
-          <Math display>{'g^x = g^{i \\cdot m + j} = g^{i \\cdot m} \\cdot g^j'}</Math>
+          <Math display>{'g^x = g^{\\overbrace{i \\cdot m + j}^{x \\text{ 분해}}} = \\underbrace{g^{i \\cdot m}}_{\\text{giant step}} \\cdot \\underbrace{g^j}_{\\text{baby step}}'}</Math>
         </p>
         <p>
           <strong>③</strong> <Math>{'y = g^x'}</Math> 이므로:
@@ -45,7 +45,7 @@ export default function BabyGiant() {
         </p>
         <p>
           <strong>④ 양변에서</strong> <Math>{'g^j'}</Math>를 이항:
-          <Math display>{'y \\cdot g^{-j} = g^{i \\cdot m} = (g^m)^i'}</Math>
+          <Math display>{'\\underbrace{y \\cdot g^{-j}}_{\\text{j 보정 (baby step 으로 검색)}} = g^{i \\cdot m} = \\underbrace{(g^m)^i}_{\\text{giant step 거듭제곱}}'}</Math>
         </p>
         <p>
           <strong>⑤ 알고리즘:</strong>

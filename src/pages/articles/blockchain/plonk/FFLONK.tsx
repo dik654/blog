@@ -40,10 +40,10 @@ export default function FFLONK() {
         <div className="not-prose my-4">
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">KZG 가법 동형성</p>
-            <M display>{'\\text{commit}(f) = [f(\\tau)]_1 = \\sum_i f_i \\cdot [\\tau^i]_1'}</M>
+            <M display>{'\\underbrace{\\text{commit}(f)}_{\\text{커밋먼트 (G₁ 점)}} = \\underbrace{[f(\\tau)]_1}_{f(\\tau) \\cdot G_1} = \\underbrace{\\sum_i f_i \\cdot [\\tau^i]_1}_{\\text{MSM 계산}}'}</M>
             <div className="mt-2 rounded border border-emerald-500/30 p-2">
               <p className="text-sm text-emerald-400 font-medium">Commitment 선형 결합</p>
-              <M display>{'\\text{commit}(f + \\nu \\cdot g + \\nu^2 \\cdot h) = \\text{commit}(f) + \\nu \\cdot \\text{commit}(g) + \\nu^2 \\cdot \\text{commit}(h)'}</M>
+              <M display>{'\\underbrace{\\text{commit}(f + \\nu \\cdot g + \\nu^2 \\cdot h)}_{\\text{결합된 다항식 commit}} = \\underbrace{\\text{commit}(f) + \\nu \\cdot \\text{commit}(g) + \\nu^2 \\cdot \\text{commit}(h)}_{\\text{개별 commit 의 } \\nu \\text{ 결합}}'}</M>
               <p className="text-sm text-muted-foreground mt-1">→ Verifier는 개별 commitment로부터 combined commitment를 스칼라 곱 + 덧셈만으로 재구성</p>
             </div>
             <div className="mt-2 rounded border border-amber-500/30 p-2">
@@ -62,7 +62,7 @@ export default function FFLONK() {
             <p className="text-sm text-muted-foreground mb-2"><M>{'\\zeta\\omega'}</M>에서 열리는 1개: <M>{'Z'}</M></p>
             <p className="text-sm text-muted-foreground mb-1"><M>{'\\nu \\leftarrow'}</M> Fiat-Shamir challenge</p>
             <div className="rounded border border-emerald-500/30 p-3 mt-2">
-              <M display>{'\\text{combined}(x) = r(x) + \\nu \\cdot a(x) + \\nu^2 \\cdot b(x) + \\nu^3 \\cdot c(x) + \\nu^4 \\cdot \\sigma_A(x) + \\nu^5 \\cdot \\sigma_B(x) + \\nu^6 \\cdot Z(x)'}</M>
+              <M display>{'\\text{combined}(x) = \\underbrace{r(x) + \\nu \\cdot a(x) + \\nu^2 \\cdot b(x) + \\nu^3 \\cdot c(x) + \\nu^4 \\cdot \\sigma_A(x) + \\nu^5 \\cdot \\sigma_B(x)}_{\\zeta \\text{에서 열리는 6개}} + \\underbrace{\\nu^6 \\cdot Z(x)}_{\\zeta\\omega \\text{에서 열림}}'}</M>
             </div>
             <p className="text-sm text-muted-foreground mt-2">→ <code>kzg::batch_open({'{'}&zeta;, &zeta;&omega;{'}'})</code>로 한 번에 증명</p>
           </div>

@@ -8,7 +8,7 @@ function Neuron({ cx, cy, active, color }: {
   cx: number; cy: number; active: boolean; color: string;
 }) {
   return (
-    <motion.circle cx={cx} cy={cy} r={active ? 8 : 6}
+    <motion.circle initial={false} cx={cx} cy={cy} r={active ? 8 : 6}
       fill={active ? `${color}44` : `${color}15`}
       stroke={color} strokeWidth={active ? 2 : 1}
       animate={{ r: active ? 8 : 6 }} transition={sp} />
