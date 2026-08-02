@@ -1,0 +1,255 @@
+{
+  "run_id": "2026-07-20-honglab-ai-landscape-video-reconstruction",
+  "status": "superseded_by_current_flow_gap_audit",
+  "correction": {
+    "date": "2026-07-20",
+    "observed": "The user clarified that the transcript was not meant to become a public summary article. It was an audit input for finding missing mechanisms in the existing current-first curriculum.",
+    "decision": "Remove the transcript-specific route, metadata, role, Viz, content spec and QA; preserve this ledger only as a failure record.",
+    "superseded_by": "knowledge/authoring/runs/2026-07-20-ai-current-flow-gap-audit.json"
+  },
+  "objective": "Compile a user-provided three-hour Korean AI landscape transcript into a source-responsible technical article that teaches mechanisms, routes each claim to primary evidence and existing foundations, and does not grow the required curriculum without a genuine mechanism delta.",
+  "source_contract": {
+    "input": "User-provided timestamped Korean transcript, approximately 3 hours 3 minutes.",
+    "exact_video_url": null,
+    "url_policy": "Do not invent or imply a video URL. Timestamps identify only positions in the supplied transcript.",
+    "document_type": "source_synthesis",
+    "excluded_from_fact_layer": [
+      "IPO and listing schedules",
+      "current hiring and labor-market forecasts",
+      "component price and supply forecasts",
+      "claims about executive intent or private company strategy"
+    ]
+  },
+  "reader_contract": {
+    "transfer_problem": "Given a fixed-budget 8B-model product that needs a long-context agent, an on-device helper, and a possible robot extension, classify MoE, 1.58-bit weights, Mamba, test-time compute, RAG, V-JEPA, and on-device inference by compute, memory traffic, data, verifier, and environment-feedback bottlenecks; then design the smallest useful experiments.",
+    "required_insights": [
+      "parameter count, active compute, stored bytes, transferred bytes, and latency are different quantities",
+      "post-training and test-time search occur at different times and require different evidence",
+      "agent quality is a system property of model, context, tools, state, and evaluator",
+      "world-model understanding, prediction, and planning are distinct contracts",
+      "a new source extends the lower curriculum only when it introduces a reusable mechanism the existing floor cannot explain"
+    ]
+  },
+  "claim_axes": [
+    {
+      "axis": "architecture_efficiency",
+      "timestamps": "37:13-50:58",
+      "mechanisms": ["MoE", "Mamba", "BitNet", "multi-token prediction", "cache"],
+      "existing_routes": ["llm-architecture-gallery", "research-deepseek-v3-2-2025", "quantization", "moe-ssd-streaming"],
+      "foundation_delta": "none"
+    },
+    {
+      "axis": "reasoning_and_data",
+      "timestamps": "51:06-59:16",
+      "mechanisms": ["post-training", "RLVR", "test-time compute", "distillation", "synthetic data"],
+      "existing_routes": ["post-training-rlvr", "rlhf", "open-r1", "knowledge-distillation"],
+      "foundation_delta": "none"
+    },
+    {
+      "axis": "agent_and_retrieval",
+      "timestamps": "83:25-100:56",
+      "mechanisms": ["workflow", "agent loop", "context engineering", "RAG", "evaluation"],
+      "existing_routes": ["context-engineering", "rag-pipeline", "knowledge-compiler"],
+      "foundation_delta": "none"
+    },
+    {
+      "axis": "world_models_and_robot",
+      "timestamps": "119:58-134:14",
+      "mechanisms": ["latent prediction", "action-conditioned planning", "simulation", "sim-to-real"],
+      "existing_routes": ["open-image-video-models", "video-model-runtime", "rl-model-based-world-models", "robot-ai-top-down"],
+      "foundation_delta": "none"
+    },
+    {
+      "axis": "infrastructure_and_on_device",
+      "timestamps": "104:06-119:16",
+      "mechanisms": ["KV cache", "memory bandwidth", "tiered memory", "device budget"],
+      "existing_routes": ["llm-serving-ops", "moe-ssd-streaming", "quantization"],
+      "foundation_delta": "none"
+    }
+  ],
+  "primary_sources": [
+    {
+      "source": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+      "url": "https://arxiv.org/abs/2312.00752",
+      "intent": "Verify the selective state-space alternative and avoid claiming universal Transformer replacement."
+    },
+    {
+      "source": "Better & Faster Large Language Models via Multi-token Prediction",
+      "url": "https://arxiv.org/abs/2404.19737",
+      "intent": "Anchor multi-token prediction as a specific training and decoding proposal."
+    },
+    {
+      "source": "The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits",
+      "url": "https://arxiv.org/abs/2402.17764",
+      "intent": "Separate ternary weights from generic post-training quantization."
+    },
+    {
+      "source": "BitNet b1.58 2B4T Technical Report",
+      "url": "https://arxiv.org/abs/2504.12285",
+      "intent": "Use a concrete native low-bit training report while preserving hardware and workload boundaries."
+    },
+    {
+      "source": "DeepSeek-R1 official release",
+      "url": "https://api-docs.deepseek.com/news/news250120",
+      "intent": "Anchor reasoning post-training and distillation claims to an official release rather than the transcript's interpretation."
+    },
+    {
+      "source": "Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters",
+      "url": "https://arxiv.org/abs/2408.03314",
+      "intent": "Separate inference-time compute allocation from training-time learning."
+    },
+    {
+      "source": "Textbooks Are All You Need II",
+      "url": "https://www.microsoft.com/en-us/research/?p=967830",
+      "intent": "Ground synthetic textbook data in a bounded research result rather than a universal data-quality rule."
+    },
+    {
+      "source": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "intent": "Distinguish workflows from autonomous agent loops and expose orchestration tradeoffs."
+    },
+    {
+      "source": "Contextual Retrieval",
+      "url": "https://www.anthropic.com/engineering/contextual-retrieval",
+      "intent": "Ground retrieval improvements in a concrete reported setup."
+    },
+    {
+      "source": "GraphRAG",
+      "url": "https://www.microsoft.com/en-us/research/project/graphrag/",
+      "intent": "Show that retrieval design extends beyond naive nearest-neighbor lookup without declaring one universal RAG architecture."
+    },
+    {
+      "source": "V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning",
+      "url": "https://ai.meta.com/research/publications/v-jepa-2-self-supervised-video-models-enable-understanding-prediction-and-planning/",
+      "intent": "Separate video representation, prediction, and planning claims and preserve the reported robot setup boundary."
+    },
+    {
+      "source": "Introducing Gemma 3n: The developer guide",
+      "url": "https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/",
+      "intent": "Anchor on-device techniques to an official model and runtime description."
+    },
+    {
+      "source": "Mastering LLM Techniques: Inference Optimization",
+      "url": "https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/",
+      "intent": "Connect cache and quantization claims to inference memory and throughput constraints."
+    }
+  ],
+  "events": [
+    {
+      "event_id": "source.contract.001",
+      "phase": "intake",
+      "observed": "The transcript mixes paper-derived mechanisms, personal engineering experience, current market claims, forecasts, and informal commentary, and no exact video URL was supplied.",
+      "inference": "A chronological summary would erase evidence boundaries and could turn unstable or speculative claims into apparent facts.",
+      "decision": "Treat the transcript as a source synthesis, label evidence status per claim, hold volatile claims, and never fabricate the video link.",
+      "verification": "The article opens with a source contract and the Viz exposes verified, partially supported, and held states."
+    },
+    {
+      "event_id": "narrative.reconstruct.001",
+      "phase": "content_design",
+      "observed": "The same mechanism appears at distant timestamps and adjacent timestamps often change from technology to employment or personal opinion.",
+      "inference": "Transcript order is optimized for a live conversation, not for cumulative technical learning.",
+      "decision": "Reconstruct five mechanism axes and write problem -> mechanism -> evidence -> boundary -> existing-route sections.",
+      "verification": "Eight article sections progress from classification through architecture, reasoning, agents, world models, infrastructure, and the curriculum decision."
+    },
+    {
+      "event_id": "curriculum.delta.001",
+      "phase": "dependency_audit",
+      "observed": "Every accepted mechanism already maps to existing architecture, post-training, agent, world-model, robot, or serving foundations.",
+      "inference": "Creating one required article per named paper would duplicate concepts and restart unbounded historical recursion.",
+      "decision": "Add this synthesis above existing routes and add no lower foundation node.",
+      "verification": "The delta Viz sends all five axes to current-landscape integration and records zero foundation deltas."
+    },
+    {
+      "event_id": "viz.claim_router.001",
+      "phase": "interaction_design",
+      "observed": "A static five-column map would be too dense on mobile and would not keep transcript claim, primary evidence, invariant, boundary, and route visible together.",
+      "inference": "The stable unit is one claim axis, selected through a segmented control.",
+      "decision": "Build five keyboard-accessible modes with a responsive one- or two-column evidence layout and a separate curriculum-delta gate.",
+      "verification": "All modes switch at 360, 390, 768, and 1440 pixels with no document or Viz horizontal overflow."
+    },
+    {
+      "event_id": "math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "The two-part KV-cache formula intermittently exceeded its 360-pixel container by about five pixels.",
+      "inference": "One display line contained both the allocation equation and the decoded-token scaling rule, forcing an unnecessary width competition.",
+      "decision": "Split the operations into two aligned rows while preserving symbol identities and Korean underbraces.",
+      "verification": "Five display formulas render as KaTeX with Korean role annotations, FormulaNotes, no raw LaTeX, and no material horizontal overflow across four viewports."
+    },
+    {
+      "event_id": "label.mobile.001",
+      "phase": "qa_repair",
+      "observed": "The primary-evidence label in the compact Viz was truncated on narrow screens.",
+      "inference": "A single-line flex and truncate rule treated the source name as decorative metadata even though it is part of the evidence contract.",
+      "decision": "Allow the evidence label to wrap in an inline grid.",
+      "verification": "The full source label remains readable in mobile screenshots without widening the card."
+    },
+    {
+      "event_id": "placement.hierarchy.001",
+      "phase": "information_architecture_revision",
+      "observed": "The synthesis lived in the overall-map subcategory but its research-* slug caused the generic listing to hide it inside optional primary evidence and ArticleLayout labeled it SOURCE DEEP DIVE.",
+      "inference": "The article's actual role is neither a required foundation nor one reconstructed primary source; it is the changing landscape layer between the stable map and goal-specific routes.",
+      "decision": "Add an explicit current-landscape article role and rebuild the overall-map page as 00 shared map -> 01 current landscape -> 02 six target routes.",
+      "verification": "The synthesis is always visible after the map, its article coordinate reads NOW / CURRENT LANDSCAPE, six destination rows follow it, and mobile/desktop screenshots show a stable hierarchy without overflow."
+    },
+    {
+      "event_id": "qa.typescript.001",
+      "phase": "qa_boundary",
+      "observed": "A forced repository-wide TypeScript build exposed one JSX set-notation error in this article and unrelated pre-existing type errors in other articles.",
+      "inference": "The local error must be fixed, while unrelated failures must not be attributed to or silently changed as part of this placement revision.",
+      "decision": "Render the ternary set as an explicit JSX string, rerun forced type checking, and record the remaining repository-wide errors as an existing boundary.",
+      "verification": "No TypeScript diagnostic references any file changed for the landscape placement; production build passes, while the pre-existing unrelated diagnostics remain."
+    }
+  ],
+  "small_model_replay": {
+    "immutable_inputs": [
+      "timestamped transcript segments",
+      "exact source URL or explicit null",
+      "five-axis taxonomy",
+      "primary-source allowlist",
+      "existing article-route inventory",
+      "foundation-delta gate",
+      "KaTeX equations and symbol identities",
+      "responsive design tokens and no-overflow invariant"
+    ],
+    "four_b_passes": [
+      "Extract no more than twelve claims and classify each as mechanism, evidence, experience, or forecast.",
+      "For one claim at a time, output status, primary source, existing route, and foundation delta using a fixed schema.",
+      "Explain one immutable equation with Korean operation labels without editing its notation.",
+      "Repair one normalized QA defect from viewport, selector, expected, and actual fields."
+    ],
+    "nine_b_passes": [
+      "Merge accepted claim packets into one problem-mechanism-evidence-boundary section per axis.",
+      "Design one interactive claim router with control, observable state, invariant, route, and failure boundary.",
+      "Audit whether the private transfer problem is solvable using only article premises.",
+      "Run the foundation-delta gate across all axes and reject duplicate lower nodes."
+    ],
+    "orchestrator_only": [
+      "retrieve and audit primary sources",
+      "resolve conflicts between transcript claims and source evidence",
+      "approve volatile-claim holds and source-budget exceptions",
+      "check cross-article prerequisite consistency",
+      "run whole-site browser QA and deployment"
+    ],
+    "event_schema": "observed -> inference -> decision -> changed artifact -> exact verification"
+  },
+  "qa": {
+    "production_build": "passed in 19.11 seconds after placement revision",
+    "focused_playwright": "5/5 passed locally in 7.0 seconds after placement revision",
+    "screenshot_review": "passed for the overall-map hierarchy at 390 and 1440 pixels and the CURRENT LANDSCAPE article header at 390 pixels",
+    "viewports": [360, 390, 768, 1440],
+    "full_local_playwright": "170/170 passed in 34.6 seconds after placement revision",
+    "forced_typescript": "changed files clean; repository-wide check remains blocked by pre-existing unrelated article diagnostics",
+    "public_focused_playwright": "5/5 passed in 6.9 seconds against https://heru.ragdoll-bigeye.ts.net after placement revision",
+    "deployment": "cm-blog.service active after restart at 2026-07-20 21:59:41 KST; revised systems-map and landscape routes returned HTTP 200"
+  },
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/research-honglab-ai-landscape-2026.md",
+    "article": "src/pages/articles/ai/research-honglab-ai-landscape-2026.tsx",
+    "viz": "src/pages/articles/ai/research-honglab-ai-landscape-2026/viz/TranscriptClaimRouter.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "placement_ui": "src/pages/category/SystemsFoundationPath.tsx",
+    "role_contract": "src/content/types.ts and src/components/ArticleLayout.tsx",
+    "qa": "tests/honglab-ai-landscape-qa.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-20-honglab-ai-landscape-video-reconstruction-report.md"
+  }
+}

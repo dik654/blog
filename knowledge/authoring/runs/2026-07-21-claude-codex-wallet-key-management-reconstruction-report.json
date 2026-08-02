@@ -1,0 +1,32 @@
+{
+  "run": "2026-07-21-wallet-key-management-current-first",
+  "objective": "Organize wallet cryptography by authority and failure boundaries instead of product labels.",
+  "articles": [
+    "wallet-key-management-map",
+    "threshold-wallet-signing",
+    "browser-wallet-recovery",
+    "mpc"
+  ],
+  "private_tests": [
+    "Stolen OAuth session without device share",
+    "HKDF(publicSalt,email)",
+    "2-of-3 Shamir reconstruct then ECDSA",
+    "2-of-3 FROST with one offline signer"
+  ],
+  "critic_fixes": [
+    "Added FROST online-threshold and restart semantics",
+    "Explained Lagrange coefficient use without reconstructing the secret",
+    "Canonicalized OpenID Connect URL",
+    "Verified NIST IR 8214C final date"
+  ],
+  "qa": {
+    "routes": 4,
+    "desktop_mobile_checks": 8,
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "katex_errors": 0,
+    "mobile_min_math_scale": 0.92,
+    "interactions": 5
+  },
+  "small_model_ir": ["asset", "authority", "quorum", "failure", "recovery", "source"]
+}

@@ -1,0 +1,37 @@
+{
+  "date": "2026-07-23",
+  "scope": "ai-speech-audio",
+  "observed": [
+    "four deep articles owned independent decisions but appeared as one mandatory sequence",
+    "the question-selection hub was incorrectly rendered as optional",
+    "OpenAI Presence added a newer production contract above GPT-Live interaction mechanics"
+  ],
+  "decided": {
+    "parent": "question-selection hub plus four independent child branches",
+    "branches": ["interaction", "generation", "recognition", "representation"],
+    "shared_foundation": "audio representation and signals are opened just in time",
+    "source_spine": ["OpenAI Presence", "GPT-Live", "Moshi"]
+  },
+  "claude": {
+    "transport": "context-manager /api/chat",
+    "model": "claude-sonnet-4-6",
+    "attempts": 2,
+    "result": "provider_error_all_providers_failed",
+    "direct_cli_used": false,
+    "review_incorporated": false
+  },
+  "verified": {
+    "focused_tests": "6/6",
+    "related_initial": "108/109 with one stale title expectation",
+    "viewports": [390, 768, 1440],
+    "routes": 3,
+    "document_overflow": 0,
+    "console_errors": 0,
+    "mobile_min_formula_scale": 0.9
+  },
+  "small_model_packet": {
+    "worker_4b": ["failure_owner", "entry_symptom", "exit_decision", "shared_foundation_trigger", "source_claim", "source_boundary", "hard_transfer_evidence"],
+    "reviewer_9b": ["branch_independence", "foundation_is_just_in_time", "product_claim_not_promoted_to_model_architecture"],
+    "orchestrator": ["subcategory_migration", "authored_paths", "freshness", "responsive_qa", "deployment"]
+  }
+}

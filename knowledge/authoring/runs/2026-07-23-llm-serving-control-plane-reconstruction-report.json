@@ -1,0 +1,93 @@
+{
+  "date": "2026-07-23",
+  "scope": "ai-llm-serving-control-plane",
+  "observed": [
+    "five operational articles were deep but did not pass one release through controller ownership",
+    "running, ready and warm capacity plus desired, allocatable and usable GPU capacity could be conflated",
+    "retry, fallback, latency symptoms, causes and recovery evidence needed separate owners"
+  ],
+  "decided": {
+    "entry": "llm-serving-ops",
+    "path": [
+      "target-and-ownership-map",
+      "rollback-ready-release",
+      "schedulable-gpu-capacity-lease",
+      "route-decision-evidence",
+      "verified-recovery"
+    ],
+    "incident_rule": "all five articles use one canary incident while each owns one decision and emits the next artifact",
+    "history_floor": "Kubernetes controller, probe, resource claim, gateway policy and SLO; older systems theory opens only for a concrete failure"
+  },
+  "claude": {
+    "transport": "context-manager /api/chat",
+    "model": "claude-sonnet-4-6",
+    "fresh": true,
+    "result": "http_500_provider_error_all_providers_failed_on_retry",
+    "direct_cli_used": false,
+    "review_incorporated": false
+  },
+  "claude_backfill": {
+    "date": "2026-07-23",
+    "transport": "context-manager runDelegatedPrompt",
+    "worker": "harness:claude-code:sonnet",
+    "articles_reviewed": 5,
+    "confirmed_fixes": [
+      "all five shared static diagrams rebuilt as interactive semantic StepViz flows",
+      "deployment count equation now explains rate-times-time semantics",
+      "Kubernetes overview heading and min/inequality operation meanings restored",
+      "SLO defined at first use in observability"
+    ],
+    "verification": "8/8 focused Playwright passed at 390, 768 and 1440 px with zero document overflow"
+  },
+  "verified": {
+    "focused_local_tests": "8/8",
+    "related_local_tests": "56/56",
+    "public_tests": "8/8",
+    "viewports": [390, 768, 1440],
+    "document_overflow": 0,
+    "visual_overflow": 0,
+    "mobile_formula_scales": [1, 0.84, 1, 1, 0.97, 1],
+    "katex_errors": 0,
+    "build_modules": 9355,
+    "public_http_200_urls": 6,
+    "service_active_timestamp": "2026-07-23 11:10:31 KST",
+    "learning_flow_registered": 589,
+    "ai_formula_gaps_remaining": 0,
+    "ai_release_blockers_remaining": 0,
+    "global_formula_blockers_remaining": 29,
+    "global_enrichment_backlog_remaining": 529
+  },
+  "small_model_packet": {
+    "worker_4b": [
+      "target_slo",
+      "input_artifact",
+      "controller_or_policy",
+      "numeric_oracle",
+      "output_evidence",
+      "failure_owner",
+      "source_claim",
+      "version_boundary",
+      "forbidden_inference",
+      "next_handoff"
+    ],
+    "reviewer_9b": [
+      "release_identity",
+      "ready_vs_running",
+      "desired_vs_allocatable",
+      "claim_vs_device",
+      "retry_vs_fallback",
+      "metric_vs_hypothesis",
+      "action_guardrail",
+      "rollback_evidence",
+      "cross_article_overlap"
+    ],
+    "orchestrator": [
+      "source_freshness",
+      "category_path_metadata",
+      "responsive_formula_oracle",
+      "build",
+      "deployment",
+      "public_regression"
+    ]
+  }
+}

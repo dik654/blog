@@ -1,0 +1,244 @@
+{
+  "date": "2026-07-23",
+  "objective": "Reconcile article-level Context Manager review coverage using recorded provider headers rather than self-claimed completion status.",
+  "acceptance_rule": {
+    "accepted_prefix": "[claude-code:sonnet",
+    "accepted_only_when_recorded_header_starts_with_prefix": true,
+    "rejected_identities": [
+      "codex:*",
+      "headerless response",
+      "timeout",
+      "HTTP or connector failure"
+    ],
+    "note": "A prose claim that a review used Claude is not evidence unless the report preserves the response header."
+  },
+  "inventory_reconciliation": {
+    "old_claimed_inventory": {
+      "count": 70,
+      "source": "knowledge/authoring/runs/2026-07-23-claude-review-backfill-report.json",
+      "field": "completed[].slug",
+      "identity_auditable": false
+    },
+    "identity_audited_ledgers": {
+      "serving_on_device": {
+        "count": 13,
+        "source": "knowledge/authoring/runs/2026-07-23-claude-review-backfill-serving-on-device.json"
+      },
+      "foundations_models": {
+        "count": 12,
+        "source": "knowledge/authoring/runs/2026-07-23-claude-review-backfill-foundations-models.json"
+      },
+      "systems_domains": {
+        "count": 32,
+        "source": "knowledge/authoring/runs/2026-07-23-claude-review-backfill-systems-domains.json"
+      },
+      "total_rows": 57,
+      "unique_slugs": 57,
+      "duplicate_slugs": []
+    },
+    "scope_delta": {
+      "new_since_old_70": [
+        "foundation-training-step"
+      ],
+      "old_70_absent_from_identity_audited_ledgers": [
+        "llm-architecture-dense-transformers",
+        "llm-architecture-gallery",
+        "llm-architecture-hybrid-linear",
+        "llm-architecture-kv-long-context",
+        "llm-architecture-sparse-moe",
+        "llm-pretraining-scaling",
+        "open-r1",
+        "post-training-rlvr",
+        "rl-mdp-bellman",
+        "rl-model-based-world-models",
+        "rl-policy-gradient-actor-critic",
+        "rl-pomdp-state-estimation",
+        "rl-temporal-difference-dqn",
+        "rlhf"
+      ]
+    },
+    "intended_inventory_decision": {
+      "count": 71,
+      "definition": "The explicit old 70-article inventory plus the subsequently added foundation-training-step article.",
+      "reason": "The three newer ledgers are identity-audited backfill batches, not a declaration that the 14 omitted old targets left the reconstruction scope."
+    }
+  },
+  "summary": {
+    "intended_targets": 71,
+    "accepted_true_claude": 57,
+    "missing_recorded_true_claude_evidence": 14,
+    "coverage_percent": 80.28,
+    "duplicate_target_assignments": 0,
+    "accepted_attempts": 57,
+    "rejected_or_failed_attempts": 18,
+    "total_attempts_in_identity_audited_ledgers": 75
+  },
+  "accepted_true_claude": {
+    "serving_on_device": [
+      "efficient-inference-on-device",
+      "k8s-gpu-fleet",
+      "litellm-gateway",
+      "llm-disaggregated-serving",
+      "llm-serving-ops",
+      "observability-aiops",
+      "on-device-llm-runtime",
+      "serving-deployment",
+      "vllm-paged-attention",
+      "vllm-scheduler",
+      "vllm-serving",
+      "vllm-spec-decode",
+      "vllm-vlm-serving"
+    ],
+    "foundations_models": [
+      "bert",
+      "foundation-training-step",
+      "llm-data-engine",
+      "lstm",
+      "reasoning-post-training-frontier",
+      "rl-decision-system-contracts",
+      "rl-imitation-offline-learning",
+      "rl-ppo-continuous-control",
+      "rl-safe-constrained-learning",
+      "rnn",
+      "training-pipeline",
+      "transformer-architecture"
+    ],
+    "systems_domains": [
+      "animation-captioning",
+      "animation-fps-vfi",
+      "animation-lora-training",
+      "animation-production-workflow",
+      "animation-video-dataset",
+      "animation-video-evaluation",
+      "audio-representation-neural-codecs",
+      "clip-vision-language-model",
+      "cnn",
+      "comfyui-core-graph",
+      "comfyui-custom-nodes-ops",
+      "comfyui-edit-models-flux-qwen",
+      "comfyui-ksampler-parameters",
+      "comfyui-loaders-gguf",
+      "comfyui-lora-control-conditioning",
+      "comfyui-upscale-postprocess",
+      "comfyui-workflow-map",
+      "deformable-detr",
+      "document-structure-assembly",
+      "html-table-structure-reconstruction",
+      "native-speech-generation",
+      "object-detection-systems",
+      "ocr-document-ai-map",
+      "ocr-runtime-evaluation",
+      "olmocr-2",
+      "paddleocr-vl",
+      "realtime-duplex-voice-systems",
+      "resnet",
+      "speech-audio-models",
+      "speech-recognition-objectives",
+      "vision-system-contracts",
+      "vision-transformer"
+    ]
+  },
+  "missing_or_unreviewed_by_record": [
+    "llm-architecture-dense-transformers",
+    "llm-architecture-gallery",
+    "llm-architecture-hybrid-linear",
+    "llm-architecture-kv-long-context",
+    "llm-architecture-sparse-moe",
+    "llm-pretraining-scaling",
+    "open-r1",
+    "post-training-rlvr",
+    "rl-mdp-bellman",
+    "rl-model-based-world-models",
+    "rl-policy-gradient-actor-critic",
+    "rl-pomdp-state-estimation",
+    "rl-temporal-difference-dqn",
+    "rlhf"
+  ],
+  "rejected_attempts": {
+    "serving_on_device": {
+      "count": 2,
+      "reasons": {
+        "required_header_not_first": 2
+      },
+      "affected_slugs": [
+        "observability-aiops",
+        "on-device-llm-runtime"
+      ],
+      "note": "Both targets later received accepted true-Claude headers."
+    },
+    "foundations_models": {
+      "count": 10,
+      "reasons": {
+        "explicit_codex_identity": 9,
+        "headerless_timeout": 1
+      },
+      "note": "All 12 targets later received accepted true-Claude headers."
+    },
+    "systems_domains": {
+      "count": 6,
+      "reasons": {
+        "explicit_codex_identity": 3,
+        "http_500_no_identity": 1,
+        "connector_failure_no_identity": 2
+      },
+      "note": "All 32 assigned targets later received accepted true-Claude headers."
+    }
+  },
+  "duplicate_analysis": {
+    "duplicate_target_slugs_across_three_ledgers": [],
+    "retry_attempts_are_not_duplicate_coverage": true,
+    "finding_deduplication_is_separate_from_target_coverage": true,
+    "systems_finding_clusters": [
+      "animation-production-contract",
+      "plain-js-latex-escapes",
+      "mineru-popo-source-verification",
+      "codex-animation-baselines",
+      "frame-duration-baseline-conflict"
+    ]
+  },
+  "accepted_review_but_source_verification_pending": [
+    {
+      "cluster": "comfy-cloud-submit-path",
+      "slugs": [
+        "comfyui-workflow-map"
+      ]
+    },
+    {
+      "cluster": "paddleocr-layout-pointer-details",
+      "slugs": [
+        "paddleocr-vl"
+      ]
+    },
+    {
+      "cluster": "mineru-popo-current-paper",
+      "slugs": [
+        "document-structure-assembly",
+        "ocr-runtime-evaluation"
+      ]
+    },
+    {
+      "cluster": "current-animation-and-image-product-sources",
+      "slugs": [
+        "animation-production-workflow",
+        "animation-video-dataset",
+        "animation-captioning",
+        "animation-video-evaluation",
+        "comfyui-edit-models-flux-qwen"
+      ]
+    }
+  ],
+  "resolved_external_verification": [
+    {
+      "cluster": "gpt-realtime-whisper-product-name",
+      "slug": "speech-recognition-objectives",
+      "status": "verified_by_root_against_official_source",
+      "url": "https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api/"
+    }
+  ],
+  "route_reviews": {
+    "count_in_old_report": 11,
+    "included_in_article_coverage_count": false,
+    "reason": "Route sequencing reviews are a separate unit and do not substitute for article-level identity evidence."
+  },
+  "final_status": "incomplete_until_14_targets_have_recorded_true_claude_headers"
+}

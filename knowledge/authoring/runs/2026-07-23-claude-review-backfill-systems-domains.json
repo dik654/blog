@@ -1,0 +1,591 @@
+{
+  "run": "2026-07-23-claude-review-backfill-systems-domains",
+  "date": "2026-07-23",
+  "mode": "read-only single-article review backfill",
+  "scope": {
+    "included": {
+      "Animation Production": 6,
+      "ComfyUI Runtime": 8,
+      "Computer Vision": 7,
+      "Document AI": 5,
+      "Document AI optional": 1,
+      "Speech/Audio": 5
+    },
+    "accepted_articles": 32,
+    "excluded_after_reassignment": {
+      "LLM Serving": 11,
+      "On-device": 2
+    },
+    "exclusion_reason": "Root reassigned LLM Serving and On-device to another reviewer while this run was active."
+  },
+  "transport": {
+    "connector": "context-manager",
+    "accepted_route": "cm_route_delegate",
+    "difficulty": "L3",
+    "workdir": "/home/heru/code/blog",
+    "parallel_batch_max": 4,
+    "attempted_executions": 38,
+    "accepted_true_claude": 32,
+    "rejected_or_failed": 6,
+    "accepted_identity_rule": "Only a transport header beginning with [claude-code:sonnet was accepted as a Claude review.",
+    "fallback_used_for_final_results": false,
+    "direct_claude_cli_used": false
+  },
+  "attempt_ledger": {
+    "accepted": {
+      "count": 32,
+      "provider_model": "claude-code:sonnet",
+      "reason": "Each result exposed an explicit [claude-code:sonnet ...] transport header."
+    },
+    "rejected_or_failed": [
+      {
+        "slug": "animation-production-workflow",
+        "route": "cm_delegate",
+        "agent_id": "ai-researcher",
+        "fresh": true,
+        "result": "HTTP 500: Provider error: All providers failed",
+        "reason": "No review result or provider identity was returned."
+      },
+      {
+        "slug": "animation-production-workflow",
+        "route": "cm_route_delegate",
+        "header": "[codex:gpt-5.5 · L3 · $0.0000 · 69339ms]",
+        "result": "baseline preserved",
+        "reason": "Explicit Codex identity; not Claude and not counted."
+      },
+      {
+        "slug": "animation-video-dataset",
+        "route": "cm_route_delegate",
+        "header": "[codex:gpt-5.5 · L3 · $0.0000 · 71846ms]",
+        "result": "baseline preserved",
+        "reason": "Explicit Codex identity; not Claude and not counted."
+      },
+      {
+        "slug": "animation-fps-vfi",
+        "route": "cm_route_delegate",
+        "header": "[codex:gpt-5.5 · L3 · $0.0000 · 56842ms]",
+        "result": "baseline preserved",
+        "reason": "Explicit Codex identity; not Claude and not counted."
+      },
+      {
+        "slug": "animation-captioning",
+        "route": "cm_route_delegate",
+        "result": "error: Unable to connect. Is the computer able to access the url?",
+        "reason": "Connector failure; no provider header and no accepted review."
+      },
+      {
+        "slug": "animation-lora-training",
+        "route": "cm_route_delegate",
+        "result": "error: Unable to connect. Is the computer able to access the url?",
+        "reason": "Connector failure; no provider header and no accepted review."
+      }
+    ]
+  },
+  "article_reviews": [
+    {
+      "group": "Animation Production",
+      "slug": "animation-production-workflow",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 170404ms]",
+      "raw_status": "findings",
+      "severity_counts": { "high": 1, "medium": 1, "low": 1 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "Animation Production",
+      "slug": "animation-video-dataset",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 80605ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 1 },
+      "disposition": "unverified_source_note_only"
+    },
+    {
+      "group": "Animation Production",
+      "slug": "animation-captioning",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 105573ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "Animation Production",
+      "slug": "animation-lora-training",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 72010ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass_with_external_sources_unverified"
+    },
+    {
+      "group": "Animation Production",
+      "slug": "animation-fps-vfi",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 70440ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 2 },
+      "disposition": "low_notes_not_escalated"
+    },
+    {
+      "group": "Animation Production",
+      "slug": "animation-video-evaluation",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 127609ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 2, "low": 2 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-workflow-map",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 78702ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1, "low": 1 },
+      "disposition": "provisional_unverified"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-core-graph",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 110561ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1, "low": 1 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-loaders-gguf",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 25237ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-ksampler-parameters",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 72452ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-lora-control-conditioning",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 24380ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-edit-models-flux-qwen",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 90166ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 1 },
+      "disposition": "current_product_claims_unverified"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-upscale-postprocess",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 91871ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 1 },
+      "disposition": "low_note_not_escalated"
+    },
+    {
+      "group": "ComfyUI Runtime",
+      "slug": "comfyui-custom-nodes-ops",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 127762ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass_with_external_sources_unverified"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "vision-system-contracts",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 96799ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "object-detection-systems",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 118227ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 2 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "clip-vision-language-model",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 88496ms]",
+      "raw_status": "pass",
+      "severity_counts": { "low": 1 },
+      "disposition": "pass_with_low_note"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "deformable-detr",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 140666ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 1 },
+      "disposition": "low_note_not_escalated"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "vision-transformer",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 90073ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "resnet",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 65164ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass"
+    },
+    {
+      "group": "Computer Vision",
+      "slug": "cnn",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 114443ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1 },
+      "disposition": "confirmed_then_fixed"
+    },
+    {
+      "group": "Document AI",
+      "slug": "ocr-document-ai-map",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 94049ms]",
+      "raw_status": "pass",
+      "severity_counts": {},
+      "disposition": "pass_with_external_sources_unverified"
+    },
+    {
+      "group": "Document AI",
+      "slug": "paddleocr-vl",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 104321ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1, "low": 2 },
+      "disposition": "provisional_unverified"
+    },
+    {
+      "group": "Document AI",
+      "slug": "document-structure-assembly",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 137256ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 2, "low": 1 },
+      "disposition": "confirmed_mediums_fixed_external_source_unverified"
+    },
+    {
+      "group": "Document AI",
+      "slug": "html-table-structure-reconstruction",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 102242ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1, "low": 1 },
+      "disposition": "confirmed_medium_fixed_low_note_not_escalated"
+    },
+    {
+      "group": "Document AI",
+      "slug": "ocr-runtime-evaluation",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 115892ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1 },
+      "disposition": "provisional_unverified"
+    },
+    {
+      "group": "Document AI optional",
+      "slug": "olmocr-2",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 114119ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1, "low": 1 },
+      "disposition": "confirmed_medium_fixed_low_note_not_escalated"
+    },
+    {
+      "group": "Speech/Audio",
+      "slug": "speech-audio-models",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 66564ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 3 },
+      "disposition": "low_notes_not_escalated"
+    },
+    {
+      "group": "Speech/Audio",
+      "slug": "realtime-duplex-voice-systems",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 177360ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 3, "low": 2 },
+      "disposition": "confirmed_mediums_fixed_low_notes_not_escalated"
+    },
+    {
+      "group": "Speech/Audio",
+      "slug": "native-speech-generation",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 87150ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 2 },
+      "disposition": "low_notes_not_escalated"
+    },
+    {
+      "group": "Speech/Audio",
+      "slug": "speech-recognition-objectives",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 117425ms]",
+      "raw_status": "findings",
+      "severity_counts": { "medium": 1, "low": 1 },
+      "disposition": "worker_unverified_then_root_official_source_verified_low_note_not_escalated"
+    },
+    {
+      "group": "Speech/Audio",
+      "slug": "audio-representation-neural-codecs",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 85497ms]",
+      "raw_status": "findings",
+      "severity_counts": { "low": 2 },
+      "disposition": "low_notes_not_escalated"
+    }
+  ],
+  "confirmed_findings": [
+    {
+      "id": "animation-intervention-order",
+      "severity": "high",
+      "slug": "animation-production-workflow",
+      "original_location": "src/pages/articles/ai/animation-production-workflow.tsx:113-121",
+      "finding": "Prose put LoRA before structural control while both teaching visuals used Prompt -> control -> LoRA -> full.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current prose tests structural control before LoRA; ProductionDecisionViz uses Prompt -> control -> LoRA -> full."
+    },
+    {
+      "id": "animation-seven-stage-contract",
+      "severity": "medium",
+      "slug": "animation-production-workflow",
+      "original_location": "src/pages/articles/ai/animation-production-workflow.tsx:36-41",
+      "finding": "Temporal finishing was named in the contract but absent from the six-stage visual.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current article says seven decisions and ProductionContractViz includes a Time representation stage."
+    },
+    {
+      "id": "animation-caption-field-dropout",
+      "severity": "medium",
+      "slug": "animation-captioning",
+      "original_location": "src/pages/articles/ai/animation-captioning.tsx:90-106",
+      "finding": "The loss defined masked condition c_i' but passed unmasked c_i to f_theta.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current loss passes c_i' to f_theta and labels it as the masked model input."
+    },
+    {
+      "id": "animation-evaluation-scalar-delta",
+      "severity": "medium",
+      "slug": "animation-video-evaluation",
+      "original_location": "src/pages/articles/ai/animation-video-evaluation.tsx:45-50,104-107",
+      "finding": "A vector q(B)-q(A) was compared with scalar delta even though scalar S(y) was already defined.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current paired delta is S(y_B)-S(y_A)."
+    },
+    {
+      "id": "animation-evaluation-hard-gates",
+      "severity": "medium",
+      "slug": "animation-video-evaluation",
+      "original_location": "src/pages/articles/ai/animation-video-evaluation.tsx:32-50",
+      "finding": "Runtime and rights appeared as visual hard gates but were not members of q while G indexed q_j.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current G separates quality gates, runtime budget, and a binary rights gate."
+    },
+    {
+      "id": "comfyui-target-closure-visual",
+      "severity": "medium",
+      "slug": "comfyui-core-graph",
+      "original_location": "src/pages/articles/ai/comfyui-core-graph.tsx:63-70",
+      "finding": "The article promised backward dependency expansion, but TypedDagViz only taught cache reuse/recompute.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "TypedDagViz now traces Save Image backward to the upstream dependency closure and then orders producers."
+    },
+    {
+      "id": "vision-tau-string-escapes",
+      "severity": "medium",
+      "slug": "object-detection-systems",
+      "original_location": "src/pages/articles/ai/object-detection-systems.tsx:84,99",
+      "finding": "Plain JavaScript strings parsed LaTeX tau prefixes as tab escapes.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "All affected tau symbols now use String.raw."
+    },
+    {
+      "id": "vision-transformer-second-layernorm",
+      "severity": "medium",
+      "slug": "vision-transformer",
+      "original_location": "src/pages/articles/ai/vision-transformer.tsx:61-69",
+      "finding": "The pre-LN encoder diagram omitted the second normalization before the MLP.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "The current six-step diagram includes Normalize before Attention and before MLP."
+    },
+    {
+      "id": "cnn-latex-symbol-escapes",
+      "severity": "medium",
+      "slug": "cnn",
+      "original_location": "src/pages/articles/ai/cnn.tsx:68",
+      "finding": "Plain JavaScript strings damaged delta and star LaTeX in the formula legend.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "The current legend uses String.raw for T_delta, K star X, and delta."
+    },
+    {
+      "id": "document-top-candidate-margin",
+      "severity": "medium",
+      "slug": "document-structure-assembly",
+      "original_location": "src/pages/articles/ai/document-structure-assembly.tsx:97-104",
+      "finding": "Margin notation reused generic S_ij while the decision rule only made sense for the top candidate.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current notation defines j_i^star, S_i^(1), S_i^(2), their margin, and decision(i,j_i^star)."
+    },
+    {
+      "id": "document-teds-first-use",
+      "severity": "medium",
+      "slug": "document-structure-assembly",
+      "original_location": "src/pages/articles/ai/document-structure-assembly.tsx:184",
+      "finding": "TEDS was first expanded only after its first body use.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "The current capability answer expands Tree-Edit-Distance-based Similarity at use."
+    },
+    {
+      "id": "document-table-overflow-wording",
+      "severity": "medium",
+      "slug": "html-table-structure-reconstruction",
+      "original_location": "src/pages/articles/ai/html-table-structure-reconstruction/viz/TableGridReconstructionLab.tsx:9",
+      "finding": "The overflow verdict called Q1+Q2 one new cell of width three.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "The verdict now states that the sum of newly starting cells is Q1 two columns plus Q2 one column."
+    },
+    {
+      "id": "olmocr-rlvr-first-use",
+      "severity": "medium",
+      "slug": "olmocr-2",
+      "original_location": "src/pages/articles/ai/olmocr-2.tsx:8",
+      "finding": "RLVR appeared before its English expansion.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "The first rendered step now expands Reinforcement Learning with Verifiable Rewards."
+    },
+    {
+      "id": "speech-first-use-acronyms",
+      "severity": "medium",
+      "slug": "realtime-duplex-voice-systems",
+      "original_location": "src/pages/articles/ai/realtime-duplex-voice-systems.tsx:19,80,94",
+      "finding": "VAD, ASR, and PII were never expanded.",
+      "disposition": "finding_confirmed_then_fixed",
+      "current_evidence": "Current first uses expand Voice Activity Detection, Automatic Speech Recognition, and Personally Identifiable Information."
+    }
+  ],
+  "provisional_unverified": [
+    {
+      "id": "comfy-cloud-submit-path",
+      "slugs": ["comfyui-workflow-map"],
+      "claim": "The exact Comfy Cloud submit path is POST /api/prompt.",
+      "reason": "The worker explicitly lacked live WebFetch and did not confirm the hosted Cloud API path.",
+      "disposition": "not_confirmed_not_escalated"
+    },
+    {
+      "id": "paddleocr-layout-pointer-details",
+      "slugs": ["paddleocr-vl"],
+      "claim": "PP-DocLayoutV2 uses a six-layer pointer network and the cited current benchmark details are exact.",
+      "reason": "The worker could not access the paper or live documentation.",
+      "disposition": "not_confirmed_not_escalated"
+    },
+    {
+      "id": "mineru-popo-current-paper",
+      "slugs": ["document-structure-assembly", "ocr-runtime-evaluation"],
+      "claim": "arXiv:2605.24973 and its document-stitching claims match the article.",
+      "reason": "The same source-verification limitation appeared twice and was deduplicated into one source task.",
+      "disposition": "not_confirmed_not_escalated"
+    },
+    {
+      "id": "gpt-realtime-whisper-product-name",
+      "slugs": ["speech-recognition-objectives"],
+      "claim": "GPT-Realtime-Whisper is the exact current OpenAI product/model label paired with the linked page.",
+      "reason": "The Claude worker explicitly stated that live search was unavailable. Root separately checked the official OpenAI page.",
+      "root_official_source_verification": {
+        "status": "verified",
+        "url": "https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api/",
+        "page_date": "2026-05-07",
+        "verified_claim": "The official page names GPT-Realtime-Whisper."
+      },
+      "disposition": "worker_unverified_then_root_official_source_verified"
+    },
+    {
+      "id": "current-animation-and-image-product-sources",
+      "slugs": [
+        "animation-production-workflow",
+        "animation-video-dataset",
+        "animation-captioning",
+        "animation-video-evaluation",
+        "comfyui-edit-models-flux-qwen"
+      ],
+      "claim": "Current AniMatrix, LTX-2, FLUX.2, and related repository/documentation details match their live sources.",
+      "reason": "Workers marked these current sources unavailable for live verification.",
+      "disposition": "deduplicated_source_followup_not_confirmed"
+    }
+  ],
+  "deduplication": [
+    {
+      "cluster": "animation-production-contract",
+      "members": [
+        "animation-intervention-order",
+        "animation-seven-stage-contract"
+      ],
+      "status": "kept_as_two_distinct_defects_same_article"
+    },
+    {
+      "cluster": "plain-js-latex-escapes",
+      "members": [
+        "vision-tau-string-escapes",
+        "cnn-latex-symbol-escapes"
+      ],
+      "status": "same_root_cause_distinct_files_both_fixed"
+    },
+    {
+      "cluster": "mineru-popo-source-verification",
+      "members": [
+        "document-structure-assembly",
+        "ocr-runtime-evaluation"
+      ],
+      "status": "deduplicated_to_one_provisional_source_task"
+    },
+    {
+      "cluster": "codex-animation-baselines",
+      "members": [
+        "animation-production-workflow",
+        "animation-video-dataset",
+        "animation-fps-vfi"
+      ],
+      "status": "preserved_but_rejected_for_identity"
+    },
+    {
+      "cluster": "frame-duration-baseline-conflict",
+      "members": [
+        "animation-video-dataset codex baseline",
+        "animation-video-dataset claude review"
+      ],
+      "status": "codex baseline not promoted; accepted Claude review treated (N-1)/f as the last-frame offset used by the article"
+    }
+  ],
+  "post_fix_verification": {
+    "current_source_re_read": [
+      "animation production now has seven stages and control before LoRA",
+      "animation caption loss now consumes c_i'",
+      "animation evaluation now uses scalar S deltas and separate runtime/rights gates",
+      "ComfyUI TypedDagViz now shows target-backward closure",
+      "object detection and CNN LaTeX symbols now use String.raw",
+      "ViT diagram now contains both pre-LN steps",
+      "document margin notation, TEDS expansion, table overflow wording, and olmOCR RLVR expansion are present",
+      "Speech VAD, ASR, and PII expansions are present"
+    ],
+    "tests_reported_by_root": [
+      "Animation production/caption and responsive checks: 20 passed",
+      "CNN and Document AI focused checks completed",
+      "Table/olmOCR checks: 4/4 passed",
+      "Speech acronym target test: 1/1 passed"
+    ],
+    "tests_run_by_this_read_only_reviewer": "none; this reviewer only re-read current source and validated the report artifacts"
+  },
+  "final_status": {
+    "assigned_articles_accepted": "32/32",
+    "confirmed_high_open": 0,
+    "confirmed_medium_open": 0,
+    "confirmed_findings_fixed": 14,
+    "provisional_unverified_clusters": 4,
+    "root_official_source_verified_clusters": 1,
+    "low_notes": "retained in per-article severity counts; not escalated as confirmed blockers",
+    "app_code_edited_by_this_reviewer": false
+  }
+}

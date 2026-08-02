@@ -1,0 +1,236 @@
+{
+  "run_id": "2026-07-19-robot-structural-mechanics",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing robot structural layer from actuator output loads through free-body diagrams, stress/strain, section mechanics, combined loading, local stability, bolted joints, mission fatigue, modes, FEA evidence, thermal mechanics and physical correlation; then reconstruct NASA's 2025 preloaded-bolt report and Manson et al.'s 1967 double-linear fatigue note as separate source-bound articles.",
+  "request_interpretation": {
+    "curriculum_intent": "Replace the actuator article's lumped link/housing stiffness with the physical load paths, geometry, material response, failure modes and evidence needed before controller claims can be trusted.",
+    "depth_intent": "Write a private forty-six-premise shoulder-joint transfer failure and require the public bundle to make every premise diagnosable without publishing the scenario as a quiz.",
+    "source_intent": "Read primary artifacts completely before reconstruction, preserve page-level author intent and admitted limits, and keep historical fatigue evidence separate from current fastener research and transferable mechanics.",
+    "formula_intent": "Give every display equation Korean operation annotations and exactly one adjacent FormulaNote; split long equations by semantic operation instead of using horizontal scroll or unreadable scaling.",
+    "visual_intent": "Use eleven mechanism-specific causal labs whose controls change loads, stresses, deformation, margin, clamp state, damage, modes, convergence, thermal drift or evidence acceptance rather than merely changing color.",
+    "small_model_intent": "Persist source slices, premise assignments, derivation order, Viz contracts, rejected sources, browser defects and repairs so 4B and 9B models can replay bounded passes."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-actuator-mechanics converts motor output into joint torque, inertia, compliance, bearing load and brake handover",
+      "robot-dynamics-feedback-control models feedback around an abstract plant",
+      "signals, systems, vectors, calculus and probability articles provide mathematical prerequisites"
+    ],
+    "missing_chain": [
+      "pose/event to load-case ledger, coordinate frame and free-body diagram",
+      "force and moment transport to local section resultants",
+      "stress, strain, modulus, strength and displacement as distinct quantities",
+      "area, second moment, bending, torsion and combined-stress reasoning",
+      "notch, allowable, buckling, contact and failure-mode-specific margins",
+      "preload, clamp, slip, separation, load introduction and thermal bolt load",
+      "mission history, rainflow, mean/amplitude, S-N boundary and order effects",
+      "structural modes, damping, excitation and controller interaction",
+      "FEA boundary/contact/mesh diagnostics and non-singular quantities of interest",
+      "thermal resistance, expansion, constraint stress, alignment and preload drift",
+      "physical correlation through reaction, strain, displacement, modal, thermal and preload measurements"
+    ],
+    "scope_split": {
+      "concept": "Transferable robot structural mechanics and the complete model-to-test evidence chain.",
+      "current_report": "NASA/TM-20250005284 preserves the stiffness-based load-introduction derivation, FEA/test comparisons and unconservative boundary.",
+      "foundational_paper": "NASA TN D-3839 preserves the Miner baseline failure, double-linear proposal, experimental revision and smooth-specimen boundary.",
+      "deferred": "Fracture mechanics/damage tolerance and composite structures require dedicated next layers rather than shallow add-on paragraphs."
+    }
+  },
+  "private_transfer_gate": {
+    "premise_count": 46,
+    "artifact": "src/pages/articles/ai/content-specs/robot-structural-mechanics-materials-fatigue-thermal.md",
+    "scenario": "A gravity-loaded shoulder link passes a peak von-Mises screenshot while its team mixes load planes, omits offset moments and emergency braking, confuses strength with stiffness, double-counts Kt, ignores buckling/contact/preload scatter and separation, reduces the mission to one peak, uses Miner as a universal law, accepts a singular FEA maximum, ignores thermal gradients and closes the claim without synchronized physical evidence.",
+    "coverage_groups": [
+      { "premises": "S01-S06", "public_resolution": "Load-case ledger, FBD, wrench transport and Load Path Lab." },
+      { "premises": "S07-S12", "public_resolution": "Stress-strain-displacement chain, material boundary and Stress-Strain Lab." },
+      { "premises": "S13-S18", "public_resolution": "Section geometry, bending, deflection, torsion and combined-stress labs." },
+      { "premises": "S19-S23", "public_resolution": "Notch, source-bound allowable, margin and buckling gates." },
+      { "premises": "S24-S30", "public_resolution": "Bolt stiffness share, load introduction, clamp/slip/separation and NASA source spine." },
+      { "premises": "S31-S36", "public_resolution": "Cycle decomposition, rainflow, Miner boundary, load order and Manson source spine." },
+      { "premises": "S37-S39", "public_resolution": "Mode, damping, excitation and controller-separation reasoning." },
+      { "premises": "S40-S43", "public_resolution": "FEA equilibrium, singularity, convergence, contact and analytical bracket gates." },
+      { "premises": "S44-S46", "public_resolution": "Thermal compatibility and multi-channel physical correlation closure." }
+    ],
+    "publication_policy": "The compound problem remains private. The public prose, formulas, controls, failure states and source boundaries supply the insight needed to solve it."
+  },
+  "source_decisions": [
+    {
+      "source": "NASA Fastener Design Manual, RP-1228",
+      "locator": "https://ntrs.nasa.gov/api/citations/19900009424/downloads/19900009424.pdf",
+      "identity": "1990, 100 PDF pages",
+      "used_for": ["preload and torque scatter", "fastener fatigue and combined loading", "thermal-cycle vocabulary"],
+      "boundary": "A design manual supplies mechanics and process cautions; current program standards and exact allowables still govern qualification."
+    },
+    {
+      "source": "John K. Ramsey, Mechanics of Preloaded Bolt Tensile Loading With Focus on Load Introduction Factor",
+      "locator": "https://ntrs.nasa.gov/api/citations/20250005284/downloads/TM-20250005284_final_06042025.pdf",
+      "identity": "NASA/TM-20250005284, May 2025, 112 PDF pages including Appendices A-J",
+      "used_for": ["clamping and relieving load paths", "SBLIF and stiffness-factor dependence", "thermal bolt load", "FEA slope extraction", "Boenick experiment comparison", "nonlinear unloading clue"],
+      "boundary": "SBLIF can be closer than GLIF but can also be unconservative when path stiffness is approximated poorly; the report is not a universal standard."
+    },
+    {
+      "source": "S. S. Manson, J. C. Freche and C. R. Ensign, Application of a Double Linear Damage Rule to Cumulative Fatigue",
+      "locator": "https://ntrs.nasa.gov/api/citations/19670013955/downloads/19670013955.pdf",
+      "identity": "NASA TN D-3839, April 1967, 41 PDF pages",
+      "used_for": ["Miner order blindness", "14 Nf^0.6 proposal", "two-phase ledger", "high-low versus low-high evidence", "experimental Phase I/II reinterpretation", "alternating-block execution"],
+      "boundary": "Evidence comes from limited smooth 1/4-inch specimens and two-level histories; coefficients and literal crack-stage language do not transfer directly to robot structures."
+    },
+    {
+      "source": "NBS Special Publication 702, Fatigue and Fracture",
+      "locator": "https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nbsspecialpublication702.pdf",
+      "used_for": ["fatigue, S-N, mean and alternating stress vocabulary"],
+      "boundary": "Vocabulary does not replace detail-specific modern fatigue or fracture qualification."
+    }
+  ],
+  "rejected_source_decisions": [
+    {
+      "source": "M. A. Miner, Cumulative Damage in Fatigue, 1945",
+      "reason": "The publisher PDF was inaccessible in this run and no fully auditable open primary copy was available. The result was not promoted to a standalone reconstruction merely from secondary summaries.",
+      "replacement": "Manson et al. 1967 was fully downloaded and read; it states the Miner baseline, demonstrates its order limitation, proposes an alternative and records the authors' own revision."
+    }
+  ],
+  "source_extraction": {
+    "local_documents": [
+      { "file": "/tmp/pdfs/structural-mechanics/nasa-fastener-design-manual-1990.pdf", "pages": 100 },
+      { "file": "/tmp/pdfs/structural-mechanics/nasa-preloaded-bolt-2025.pdf", "pages": 112 },
+      { "file": "/tmp/pdfs/structural-mechanics/manson-double-linear-damage-1967.pdf", "pages": 41 },
+      { "file": "/tmp/pdfs/structural-mechanics/manson-thermal-stress-1953.pdf", "pages": 108, "status": "read candidate, not selected for a standalone spine in this milestone" }
+    ],
+    "text_extracts": [
+      "/tmp/pdfs/structural-mechanics/nasa-preloaded-bolt-2025.txt",
+      "/tmp/pdfs/structural-mechanics/manson-double-linear-damage-1967.txt"
+    ],
+    "visual_artifacts": [
+      "/tmp/pdfs/structural-mechanics/bolt-contact.jpg",
+      "/tmp/pdfs/structural-mechanics/manson-contact.jpg"
+    ],
+    "full_read_claim": "All 112 pages of the selected NASA report, including Appendices A-J, and all 41 pages of the selected Manson note, including appendices, were included in the reconstruction pass."
+  },
+  "events": [
+    {
+      "event_id": "audit.structure.001",
+      "observed": "The actuator curriculum ended with lumped housing/link stiffness and the feedback curriculum began with an assumed plant.",
+      "inference": "A reader could calculate motor torque yet could not prove where the load travels, what fails, or which physical measurement falsifies the structural model.",
+      "decision": "Insert a structural mechanics layer before deeper fracture/composite and controller integration.",
+      "verification": "Eleven sections now form a load-case-to-physical-correlation chain and the learning graph links actuator, current report and foundational paper."
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "observed": "A single peak stress screenshot can pass while forty-six independent assumptions about loads, joints, fatigue, dynamics, thermal state and evidence are false.",
+      "inference": "A chapter outline alone would miss implementation-depth failure paths.",
+      "decision": "Use the private forty-six-premise shoulder problem as the authoring coverage gate.",
+      "verification": "The spec maps each premise group to prose, equation, causal lab, evidence state or source boundary."
+    },
+    {
+      "event_id": "source.identity.001",
+      "observed": "Current bolt research, a historical fatigue model and general mechanics carry different evidence and transfer limits.",
+      "inference": "Combining them into one narrative would make report-specific approximations look like universal laws.",
+      "decision": "Keep one transferable concept article and two source-bound reconstruction articles.",
+      "verification": "NASA exposes seven evidence states and six formulas; Manson exposes seven evidence states and six formulas, each with author intent and limits."
+    },
+    {
+      "event_id": "source.reject.001",
+      "observed": "The original 1945 Miner publisher PDF returned access denial.",
+      "inference": "A standalone reconstruction would violate the full-source reading policy.",
+      "decision": "Do not fabricate a Miner article from recollection; use the fully readable Manson primary source and keep Miner as a bounded baseline.",
+      "verification": "No Miner standalone metadata or page exists; the source decision is explicit in the run record."
+    },
+    {
+      "event_id": "visual.grammar.001",
+      "observed": "Generic cards and straight arrows cannot expose cross products, section geometry, clamp loss, fatigue order, mode crossing, FEA convergence or thermal compatibility.",
+      "inference": "A color-only restyle would not improve comprehension.",
+      "decision": "Use eleven distinct observables and require every control to change a computed conclusion or model state.",
+      "verification": "Browser QA changed all eleven labs; screenshot review found no clipping or internal scroll at 360 and 1440 pixels."
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "observed": "The first run measured 0.72 at 360 pixels and 0.79 at 390 pixels for a one-line mean/amplitude equation; the moment-transport equation also reached 0.79.",
+      "inference": "The formulas fit technically but the operations and annotations were too compressed to read comfortably.",
+      "decision": "Split mean and alternating stress into aligned semantic rows and shorten moment labels without removing the physical terms.",
+      "verification": "The concept article passed the 0.82/0.86 acceptance floors and public measurements became 0.83/0.92."
+    },
+    {
+      "event_id": "qa.math.concurrent.002",
+      "observed": "A Manson intersection formula passed alone at 0.86 but dipped to 0.81 during two-worker regression under font-load timing.",
+      "inference": "A boundary-value pass was not robust enough for production.",
+      "decision": "Shorten the Korean annotations to 단계 전환점, 실험선 교점, 작은 수명비 and 큰 수명비.",
+      "verification": "All four Manson viewport tests and the subsequent full connected regression passed."
+    },
+    {
+      "event_id": "deploy.public.001",
+      "observed": "Local build success does not prove that the public reverse-proxied asset graph changed.",
+      "inference": "Completion requires service restart, route checks and browser QA against the public host.",
+      "decision": "Restart cm-blog.service and rerun the complete structural suite at the public domain.",
+      "verification": "Service is active, all three routes return HTTP 200 and public Playwright passed 17/17 in 30.4 seconds."
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-structural-mechanics-materials-fatigue-thermal.md",
+    "concept_article": "src/pages/articles/ai/robot-structural-mechanics-materials-fatigue-thermal.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-structural-mechanics-materials-fatigue-thermal/viz/StructuralMechanicsLabs.tsx",
+    "current_report_article": "src/pages/articles/ai/research-nasa-preloaded-bolt-load-introduction-2025.tsx",
+    "foundational_paper_article": "src/pages/articles/ai/paper-manson-double-linear-fatigue-1967.tsx",
+    "source_specs": "src/pages/articles/ai/paper-spine/robotStructuralSpecs.tsx",
+    "source_viz": "src/pages/articles/ai/paper-spine/viz/StructuralSourceLabs.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "qa_test": "tests/structural-mechanics-qa.spec.ts",
+    "visual_captures": [
+      "/tmp/structural-qa/concept-top-m360.png",
+      "/tmp/structural-qa/concept-top-d1440.png",
+      "/tmp/structural-qa/concept-fatigue-m360.png",
+      "/tmp/structural-qa/concept-fatigue-d1440.png",
+      "/tmp/structural-qa/nasa-viz-m390.png",
+      "/tmp/structural-qa/manson-viz-m390.png"
+    ],
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-structural-mechanics.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-structural-mechanics-report.md",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "qa": {
+    "production_build": "passed; existing chunks above 900 kB warning remains",
+    "strict_typescript": "not green because of pre-existing unrelated errors; no structural-mechanics, NASA-bolt or Manson file error was reported",
+    "focused_local_playwright": "17 passed, then 4/4 affected Manson viewport checks passed after final annotation repair",
+    "connected_regression_playwright": "34 passed across actuator and structural bundles after final repair",
+    "public_playwright": "17 passed in 30.4 seconds",
+    "formula_counts": { "concept": 30, "concept_notes": 30, "current_report": 6, "current_report_notes": 6, "foundational_paper": 6, "foundational_paper_notes": 6 },
+    "viz_counts": { "concept_labs": 11, "current_report_mechanism_labs": 1, "current_report_evidence_states": 7, "foundational_paper_mechanism_labs": 1, "foundational_paper_evidence_states": 7 },
+    "public_viewports": {
+      "360": { "concept_min_scale": 0.83, "current_report_min_scale": 1, "foundational_paper_min_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "390": { "concept_min_scale": 0.92, "current_report_min_scale": 1, "foundational_paper_min_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "768": { "concept_min_scale": 1, "current_report_min_scale": 1, "foundational_paper_min_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "1440": { "concept_min_scale": 1, "current_report_min_scale": 1, "foundational_paper_min_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 }
+    },
+    "public_deployment": {
+      "service": "cm-blog.service active after explicit restart",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-structural-mechanics-materials-fatigue-thermal",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/research-nasa-preloaded-bolt-load-introduction-2025",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-manson-double-linear-fatigue-1967"
+      ],
+      "http_status": 200
+    }
+  },
+  "small_model_replay": {
+    "four_b_packet": {
+      "scope": "one premise-to-claim/formula/Viz transformation or one QA repair",
+      "required_fields": ["premise_id", "source_identity", "source_page", "load_case", "reference_plane", "units", "failure_mode", "claim", "assumptions", "does_not_prove", "equation", "Korean_annotations", "FormulaNote", "viz_state", "acceptance_metric"],
+      "required_order": ["normalize one source claim", "draw or declare one FBD boundary", "derive one atomic relation", "state one failure/non-transfer condition", "write intuition before mathematics", "add one causal observable", "run one deterministic check"],
+      "forbidden": ["treat FEA contour as evidence by itself", "mix force and stress", "mix stiffness and strength", "double-apply Kt", "turn Miner D=1 into a universal law", "copy historical coefficients into robot life", "treat SBLIF as always conservative", "lower mobile thresholds"]
+    },
+    "nine_b_packet": {
+      "scope": "one causal section or one source reconstruction state",
+      "required_fields": ["prerequisites", "reader_question", "misconception", "four_to_six_claims", "source_pages", "derivation_order", "counterexample", "model_boundary", "evidence_type", "viz_contract", "mobile_contract", "premise_subset", "critic_result"],
+      "required_order": ["read assigned source slice completely", "emit claim-condition-boundary IR", "connect load path to observable", "derive grouped formulas", "add failure or experiment evidence", "implement causal interaction", "audit only assigned premises"]
+    },
+    "orchestrator_only": ["curriculum gap audit", "multi-source retrieval", "full-document identity verification", "rejected-source decision", "private compound-problem construction", "scope split", "cross-section symbols and sign conventions", "source-versus-transfer provenance", "responsive browser QA", "deployment"],
+    "repair_protocol": "Return viewport, article slug, selector or math source, expected invariant, observed metric, screenshot, source boundary and allowed files. A repair model may split formulas, shorten labels or recompose layout but may not weaken a scientific claim, remove a failure boundary or lower the acceptance floor."
+  },
+  "next_milestone": {
+    "title": "Robot Fracture Mechanics and Damage Tolerance",
+    "reason": "The structural article stops at stress-life screening and explicitly defers crack-like flaws, crack growth, inspection intervals, residual strength and fail-safe damage tolerance.",
+    "planned_boundary": "flaw versus notch, stress-intensity factor, fracture toughness, crack-growth law, overload/history limits, residual strength, NDE probability of detection, inspection interval and model-test correlation",
+    "separate_later_layer": "Composite structures should follow as its own anisotropy, laminate, joint, manufacturing-defect and damage article rather than being merged shallowly with metallic fracture mechanics."
+  }
+}

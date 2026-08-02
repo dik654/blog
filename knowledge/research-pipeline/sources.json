@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "arxiv-cs-cl",
+      "name": "arXiv Computation and Language",
+      "organization": "arXiv",
+      "kind": "atom",
+      "url": "https://export.arxiv.org/api/query?search_query=cat%3Acs.CL&sortBy=submittedDate&sortOrder=descending&start=0&max_results=80",
+      "include": [".*"],
+      "exclude": [],
+      "maxCandidates": 25
+    },
+    {
+      "id": "arxiv-cs-lg",
+      "name": "arXiv Machine Learning",
+      "organization": "arXiv",
+      "kind": "atom",
+      "url": "https://export.arxiv.org/api/query?search_query=cat%3Acs.LG&sortBy=submittedDate&sortOrder=descending&start=0&max_results=80",
+      "include": [".*"],
+      "exclude": [],
+      "maxCandidates": 20
+    },
+    {
+      "id": "arxiv-cs-ro",
+      "name": "arXiv Robotics",
+      "organization": "arXiv",
+      "kind": "atom",
+      "url": "https://export.arxiv.org/api/query?search_query=cat%3Acs.RO&sortBy=submittedDate&sortOrder=descending&start=0&max_results=80",
+      "include": [".*"],
+      "exclude": [],
+      "maxCandidates": 25
+    },
+    {
+      "id": "arxiv-eess-sy",
+      "name": "arXiv Systems and Control",
+      "organization": "arXiv",
+      "kind": "atom",
+      "url": "https://export.arxiv.org/api/query?search_query=cat%3Aeess.SY&sortBy=submittedDate&sortOrder=descending&start=0&max_results=80",
+      "include": [".*"],
+      "exclude": [],
+      "maxCandidates": 25
+    },
+    {
+      "id": "anthropic-research",
+      "name": "Anthropic Research",
+      "organization": "Anthropic",
+      "kind": "sitemap",
+      "url": "https://www.anthropic.com/sitemap.xml",
+      "include": ["^https://www\\.anthropic\\.com/research/[^/]+$"],
+      "exclude": ["/research/team/"],
+      "maxCandidates": 20
+    },
+    {
+      "id": "openai-research",
+      "name": "OpenAI Research",
+      "organization": "OpenAI",
+      "kind": "sitemap",
+      "url": "https://openai.com/sitemap.xml/research/",
+      "include": ["^https://openai\\.com/index/", "^https://openai\\.com/research/"],
+      "exclude": [],
+      "maxCandidates": 20
+    },
+    {
+      "id": "google-research-blog",
+      "name": "Google Research Blog",
+      "organization": "Google Research",
+      "kind": "sitemap",
+      "url": "https://research.google/sitemap_main.xml",
+      "include": ["^https://research\\.google/blog/"],
+      "exclude": ["/blog/$"],
+      "maxCandidates": 25
+    },
+    {
+      "id": "google-deepmind",
+      "name": "Google DeepMind",
+      "organization": "Google DeepMind",
+      "kind": "sitemap",
+      "url": "https://deepmind.google/sitemap.xml",
+      "include": ["^https://deepmind\\.google/blog/", "^https://deepmind\\.google/research/publications/[^/]+/$"],
+      "exclude": ["/blog/$", "/publications/$"],
+      "maxCandidates": 25
+    },
+    {
+      "id": "nvidia-technical-blog",
+      "name": "NVIDIA Technical Blog",
+      "organization": "NVIDIA",
+      "kind": "atom",
+      "url": "https://developer.nvidia.com/blog/feed/",
+      "include": [".*"],
+      "exclude": [],
+      "maxCandidates": 20
+    }
+  ]
+}

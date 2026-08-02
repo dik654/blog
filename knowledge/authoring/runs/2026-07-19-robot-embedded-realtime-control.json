@@ -1,0 +1,213 @@
+{
+  "run_id": "2026-07-19-robot-embedded-realtime-control",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing bottom-up bridge from a host-side robot command to a bounded, time-aligned, numerically valid, physically acknowledged MCU and drive execution path.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue the robotics dependency graph after ROS 2 by owning the hardware-cycle assumptions that trajectory and feedback-control articles currently leave implicit.",
+    "content_intent": "Use one private compound failure to force coverage of command identity, latch deadlines, peripheral timing, NVIC/ISR/DMA, RTOS scheduling, blocking, fieldbus time, numeric bounds, and fault containment.",
+    "visual_intent": "Make every lab change a measurable physical or scheduling consequence rather than merely recoloring a diagram.",
+    "paper_intent": "Reconstruct Liu and Layland 1973 from its five assumptions through critical instants, rate-monotonic priority, utilization bounds, deadline-driven scheduling, mixed work, and author-stated limits.",
+    "provenance_intent": "Retain source, inclusion intent, boundary, public transformation, and QA repair decisions for later automatic knowledge compilation.",
+    "small_model_intent": "Keep decisions bounded enough for a 4B model to repair one formula or Viz and for a 9B model to assemble one causal section from source packets."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-ros2-runtime-communication ends at a bounded host actuator callback",
+      "robot-trajectory-generation produces timestamped feasible setpoints",
+      "robot-dynamics-feedback-control computes u_k and assumes it is applied at the intended sample",
+      "signals-systems-convolution explains sampling and delay without mapping them to MCU peripherals",
+      "robot-ai-top-down names RTOS, CAN, EtherCAT, encoder, PWM, and FOC without their execution contract"
+    ],
+    "missing_chain": [
+      "requested_accepted_applied_observed_command_identity",
+      "physical_pwm_latch_deadline",
+      "hardware_triggered_sample_compute_actuate",
+      "nvic_isr_dma_ownership",
+      "rtos_task_and_schedulability_model",
+      "priority_inversion_and_bounded_blocking",
+      "fieldbus_target_cycle_and_distributed_time",
+      "timer_wrap_fixed_point_stack_and_memory_bounds",
+      "hardware_firmware_host_fault_ladder"
+    ],
+    "scope_boundary": "Motor electromagnetic equations, Clarke and Park transforms, FOC current regulation, inverter switching, sensing circuitry, thermal design, EMI, and PCB layout are reserved for the next motor-drive foundation."
+  },
+  "source_decisions": [
+    {
+      "source": "Current FreeRTOS scheduling, interrupt, and mutex documentation",
+      "used_for": ["fixed-priority preemptive task behavior", "short ISR and handler-task boundary", "API-calling interrupt priority constraint", "simplified priority inheritance"],
+      "boundary": "API behavior alone does not prove application schedulability, bound nested locks, or include device and bus delay."
+    },
+    {
+      "source": "Arm Cortex-M and NVIC official documentation",
+      "used_for": ["nested vectored interrupt arbitration", "hardware priority before RTOS task scheduling"],
+      "boundary": "Implemented priority bits and numerical conventions vary by MCU and vendor."
+    },
+    {
+      "source": "ROS 2 Rolling rclc executor documentation",
+      "used_for": ["trigger conditions", "user-defined execution order", "Logical Execution Time bridge"],
+      "boundary": "The documented LET path does not automatically provide a fully implemented output-at-period-end physical latch contract."
+    },
+    {
+      "source": "EtherCAT Technology Group technology and implementation guides",
+      "used_for": ["distributed clocks", "local synchronized trigger time", "frame arrival versus target-cycle distinction"],
+      "boundary": "Clock synchronization does not by itself bound application execution, driver response, cable faults, or achieved deployment accuracy."
+    },
+    {
+      "source": "C. L. Liu and James W. Layland, Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment, JACM 1973",
+      "used_for": ["five assumptions", "critical instant", "rate-monotonic fixed-priority optimality", "sufficient least-upper utilization bound", "deadline-driven result", "mixed scheduling", "limitations"],
+      "boundary": "The theorems assume a single preemptive processor, independent periodic tasks, deadline equal to period, constant or maximum execution time, and restricted nonperiodic work; real MCU ISR, blocking, jitter, dependencies, I/O, cache, faults, and multicore require extensions."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 16,
+    "artifact": "src/pages/articles/ai/content-specs/robot-embedded-realtime-control.md",
+    "scenario": "A six-axis manipulator receives 1 kHz EtherCAT torque commands while 20 kHz current, 2 kHz velocity, and 1 kHz outer loops run on Cortex-M. The link and heartbeat remain healthy while stale restart commands, software-skewed ADC reads, early DMA reuse, ISR logging, priority inversion, incomplete WCET, wrong timebase, timestamp wrap, fixed-point overflow, early watchdog kick, hidden driver trip, queued emergency traffic, and multi-axis late application interact.",
+    "publication_policy": "Do not publish the compound problem as a quiz. Require all sixteen premises to map to public derivation, formula, measured lab state, evidence slice, or operational gate."
+  },
+  "source_extraction": {
+    "paper": "Liu and Layland 1973, Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment",
+    "doi": "https://doi.org/10.1145/321738.321743",
+    "accessible_pdf": "https://www.cs.cmu.edu/~ssaewong/research/liu_layland.pdf",
+    "local_pdf": "/tmp/pdfs/liu-layland-1973.pdf",
+    "pages_read": "1-16 through PDF-aware web extraction",
+    "local_text_boundary": "pdftotext and Python pypdf were unavailable, so no local text artifact was fabricated; the valid local PDF was retained and every page was read through the web PDF parser.",
+    "mechanism_notes": [
+      "The paper states five simplifying assumptions before deriving scheduling results.",
+      "For fixed priorities, a task's critical instant occurs when it is released with all higher-priority tasks.",
+      "Rate monotonic is optimal among fixed-priority assignments under the stated model.",
+      "The m-task sufficient utilization bound is m times (2 to the power 1/m minus 1), approaching ln 2; exceeding it is inconclusive rather than automatic failure.",
+      "Deadline-driven scheduling reaches utilization one only under the paper's restricted model, not as practical 100 percent MCU headroom.",
+      "The paper discusses mixed scheduling and explicitly identifies periodicity and execution-time assumptions as limitations."
+    ]
+  },
+  "events": [
+    {
+      "event_id": "audit.curriculum.001",
+      "phase": "gap_audit",
+      "observed": "The ROS 2 article could prove callback delivery while feedback control still assumed that u_k reached the plant on the intended hardware sample.",
+      "inference": "The next prerequisite had to own host-to-MCU-to-power causality before adding a deeper motor-control algorithm.",
+      "decision": "Implement embedded real-time execution now and reserve FOC, inverter, and PCB physics for the next milestone.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-embedded-realtime-control.md"],
+      "verification": { "expected": "One article owns every assumption from setpoint arrival through physical acknowledgement", "actual": "Nine causal sections cover command, timing, ownership, schedule, fieldbus, numeric, and fault boundaries." }
+    },
+    {
+      "event_id": "source.boundary.001",
+      "phase": "evidence_compile",
+      "observed": "Liu-Layland's well-known bounds are often quoted without the five assumptions that make them true.",
+      "inference": "Publishing only U and ln 2 would teach unsafe transfer to modern firmware.",
+      "decision": "Place assumptions before every theorem use, distinguish sufficient from necessary, and separate the paper's EDF result from practical headroom.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-embedded-realtime-control.md", "src/pages/articles/ai/paper-spine/robotEmbeddedSpecs.tsx"],
+      "verification": { "expected": "Readers can say when each theorem cannot be applied", "actual": "The paper article exposes five evidence slices, current-MCU failures, and explicit theorem boundaries." }
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "phase": "transfer_gate",
+      "observed": "A healthy EtherCAT link and MCU heartbeat can coexist with sixteen interacting causes of wrong or late torque.",
+      "inference": "Definitions and isolated examples would not force end-to-end timing, identity, ownership, numeric, and fault coverage.",
+      "decision": "Use a private sixteen-premise manipulator failure as a completeness gate before drafting prose.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-embedded-realtime-control.md"],
+      "verification": { "expected": "Every premise has public evidence", "actual": "The coverage table maps all sixteen premises to a section, formula, lab, or paper reconstruction." }
+    },
+    {
+      "event_id": "implementation.narrative.001",
+      "phase": "concept_implementation",
+      "observed": "The failure chain follows physical execution order rather than RTOS API taxonomy.",
+      "inference": "Requested-to-observed causality is easier to transfer to CAN, EtherCAT, different MCUs, and different controllers than a command reference manual.",
+      "decision": "Write nine causal chapters and pair each with a lab exposing a measured consequence.",
+      "changed_files": ["src/pages/articles/ai/robot-embedded-realtime-control.tsx", "src/pages/articles/ai/robot-embedded-realtime/viz/RobotEmbeddedRealtimeViz.tsx"],
+      "verification": { "expected": "All labs affect an operational invariant", "actual": "The labs change applied identity, latch cycle, sample error, IRQ margin, buffer integrity, schedule certificate, blocking, command age, axis skew, numeric state, and PWM gate." }
+    },
+    {
+      "event_id": "implementation.paper.001",
+      "phase": "paper_reconstruction",
+      "observed": "A summary would hide the proof environment, sufficient-versus-necessary distinction, mixed scheduling, and stated limitations needed to reproduce the paper responsibly.",
+      "inference": "The paper needed a mechanism-first reconstruction plus a finite schedule experiment that did not impersonate empirical paper evidence.",
+      "decision": "Create a dedicated paper spec, five evidence slices, six annotated equations, and a 1 ms educational RM/deadline-driven schedule simulator.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/robotEmbeddedSpecs.tsx", "src/pages/articles/ai/paper-spine/viz/LiuLaylandScheduleLab.tsx", "src/pages/articles/ai/paper-liu-layland-realtime-scheduling-1973.tsx"],
+      "verification": { "expected": "The reader can distinguish theorem certificate, finite trace, and modern operational advice", "actual": "The lab separately reports sufficient pass, bound inconclusive with trace pass, and trace deadline miss." }
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "The first mobile pass had zero page overflow but several semantically dense equations scaled to 0.52-0.69, making them technically fitted but unreadable.",
+      "inference": "The problem was too many annotated operations in the widest equation row, not KaTeX itself.",
+      "decision": "Split command gates, IRQ release, DMA ownership, RM bounds, response iteration, timer wrap, health gates, and host-to-physical response into operation-sized aligned rows; translate in-equation annotations into Korean.",
+      "changed_files": ["src/pages/articles/ai/robot-embedded-realtime-control.tsx"],
+      "verification": { "expected": "Minimum scale at least 0.75 at 360 px with no overflow or raw LaTeX", "actual": "Concept minimum scale is 0.84 and paper minimum is 0.76; overflow, KaTeX errors, annotation misses, and raw LaTeX are zero." }
+    },
+    {
+      "event_id": "qa.viz.density.001",
+      "phase": "qa_repair",
+      "observed": "Five command and DMA states forced into a narrow desktop half-panel broke words and weakened scan order despite acceptable colors.",
+      "inference": "This was a density and stable-width defect, not a palette defect.",
+      "decision": "Change the desktop state flow from five columns to a three-column 3+2 rhythm while preserving vertical causal order on mobile.",
+      "changed_files": ["src/pages/articles/ai/robot-embedded-realtime/viz/RobotEmbeddedRealtimeViz.tsx"],
+      "verification": { "expected": "Labels remain whole at desktop and mobile", "actual": "Forced word-break, clipped text, inner scroll, and overflow checks are zero at 360, 390, 768, and 1440 px; screenshots were re-inspected." }
+    },
+    {
+      "event_id": "deploy.public.001",
+      "phase": "deployment_verification",
+      "observed": "A passing local Vite build cannot prove that the public service serves the same assets or category metadata.",
+      "inference": "Deployment closes only after service restart and repeated public browser checks at the final URLs.",
+      "decision": "Restart cm-blog.service after lint and build, then repeat four-viewport formula/Viz checks, all interactions, and category integration on the public host.",
+      "changed_files": [],
+      "verification": { "expected": "HTTP 200, zero rendering defects, all interactions live, and both article links visible", "actual": "Service active since 2026-07-19 15:11:39 KST; all three URLs return 200; public QA matches local QA and the robotics category contains both links at 390 and 1440 px." }
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-embedded-realtime-control.md",
+    "concept_article": "src/pages/articles/ai/robot-embedded-realtime-control.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-embedded-realtime/viz/RobotEmbeddedRealtimeViz.tsx",
+    "paper_spec": "src/pages/articles/ai/paper-spine/robotEmbeddedSpecs.tsx",
+    "paper_viz": "src/pages/articles/ai/paper-spine/viz/LiuLaylandScheduleLab.tsx",
+    "paper_article": "src/pages/articles/ai/paper-liu-layland-realtime-scheduling-1973.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "top_down_bridge": "src/pages/articles/ai/robot-ai-top-down.tsx",
+    "research_tracking": "knowledge/research-pipeline/topics.json",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-embedded-realtime-control.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-embedded-realtime-control-report.md",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "implementation_decisions": [
+    "Treat a setpoint as meaning, identity, target time, validity, fallback, and applied acknowledgement rather than a scalar payload.",
+    "Define real time at the physical PWM latch or fault consequence, not function return or average duration.",
+    "Use a peripheral timer as the sample-compute-actuate origin and separate acquisition skew from task jitter.",
+    "Model DMA as an explicit ownership state transition and keep ISR work bounded.",
+    "Teach utilization as load and a theorem certificate only under its assumptions, never as a universal response proof.",
+    "Put resource blocking into response analysis and compare inheritance, ceiling-like ownership, and redesign choices.",
+    "Separate link health, frame arrival, synchronized target cycle, command freshness, and multi-axis actuation evidence.",
+    "Treat timer arithmetic, numeric saturation, stack, logging, and allocation as real-time safety contracts.",
+    "Require independent hardware trip, firmware latch, host observation, and supervised reset to agree before power returns.",
+    "Put Korean operation rationale inside every display formula and keep detailed symbols, units, assumptions, and failure boundaries in FormulaNote.",
+    "Use semantic color, restrained line weights, stable card geometry, and red only for violated invariants.",
+    "Defer continuous animation until static interaction, responsive fit, and causal legibility pass."
+  ],
+  "qa": {
+    "targeted_lint": "passed for concept, concept Viz, paper spec/Viz/wrapper, metadata, curriculum, learning paths, and top-down bridge",
+    "production_build": "passed after final math and Viz repairs; pre-existing chunks larger than 900 kB warning remains",
+    "local_viewports": {
+      "360": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 0.84, "paper_min_math_scale": 0.76, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 },
+      "390": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 0.89, "paper_min_math_scale": 0.86, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 },
+      "768": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 },
+      "1440": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 }
+    },
+    "formula_counts": { "concept": 14, "paper": 6 },
+    "interaction_checks": "All nine concept labs and the Liu-Layland paper schedule lab changed visible measured state.",
+    "visual_review": "All nine labs were captured at 390 and 1440 px; command/DMA density, timeline legibility, control wrapping, status hierarchy, spacing, and mobile card stacking were inspected after repair.",
+    "public_deployment": {
+      "service": "cm-blog.service active after restart at 2026-07-19 15:11:39 KST",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-embedded-realtime-control",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-liu-layland-realtime-scheduling-1973",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai?sub=ai-robotics"
+      ],
+      "http_status": 200,
+      "browser_checks": "At 360, 390, 768, and 1440 px, public article checks repeat zero overflow, KaTeX errors, annotation misses, inner scroll, clipped text, forced word breaks, raw LaTeX, and console errors; minimum 360 px formula scale is 0.84 for the concept and 0.76 for the paper.",
+      "interactions": "All nine concept labs and the Liu-Layland schedule lab changed visible state on the public host.",
+      "category_integration": "At 390 and 1440 px the ai-robotics list has zero overflow, no console errors, and contains both article links."
+    }
+  },
+  "next_phase": "Build the motor-drive and field-oriented-control foundation from torque command through phase current, inverter, motor, sensing, protection, thermal, EMI, and PCB boundaries, with a Park/Blaschke paper spine."
+}

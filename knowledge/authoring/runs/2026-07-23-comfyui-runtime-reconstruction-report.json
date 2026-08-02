@@ -1,0 +1,79 @@
+{
+  "date": "2026-07-23",
+  "scope": "ai-open-models-comfyui",
+  "observed": [
+    "eight articles existed as separate labels but did not form one reproducible execution trace",
+    "loader, sampling, conditioning and release ownership overlapped",
+    "workflow JSON could be mistaken for a complete replay artifact"
+  ],
+  "decided": {
+    "entry": "comfyui-workflow-map",
+    "path": [
+      "execution-contract",
+      "typed-dag",
+      "component-loading",
+      "sampling-trajectory",
+      "condition-routing",
+      "image-edit-runtime",
+      "postprocess-ownership",
+      "dependency-release"
+    ],
+    "runtime_rule": "each article emits the artifact needed by the next decision while a real debug trace follows the earliest failed owner",
+    "replay_bundle": "workflow plus API snapshot, environment, component manifest, immutable dependency versions, execution trace and before-after evidence"
+  },
+  "claude": {
+    "transport": "context-manager /api/chat",
+    "model": "claude-sonnet-4-6",
+    "fresh": true,
+    "result": "provider_error_all_providers_failed",
+    "direct_cli_used": false,
+    "review_incorporated": false
+  },
+  "verified": {
+    "related_tests": "59/59",
+    "viewports": [390, 768, 1440],
+    "document_overflow": 0,
+    "inner_horizontal_scroll": 0,
+    "formula_count": 4,
+    "mobile_min_formula_scale": 1,
+    "katex_errors": 0,
+    "build_modules": 9391,
+    "public_http_200_urls": 9,
+    "public_tests": "11/11",
+    "learning_flow_registered": 589,
+    "ai_registered": 279,
+    "ai_release_blockers_remaining": 0,
+    "global_formula_blockers_remaining": 29,
+    "global_enrichment_backlog_remaining": 529
+  },
+  "small_model_packet": {
+    "worker_4b": [
+      "reader_decision",
+      "input_artifact",
+      "output_artifact",
+      "typed_boundary",
+      "invariant",
+      "controlled_change",
+      "failure_owner",
+      "source_claim",
+      "source_boundary",
+      "next_handoff"
+    ],
+    "reviewer_9b": [
+      "workflow_vs_environment",
+      "type_vs_value",
+      "static_vs_peak_memory",
+      "trajectory_vs_condition",
+      "local_vs_global_coordinate",
+      "package_vs_node",
+      "replay_completeness"
+    ],
+    "orchestrator": [
+      "source_freshness",
+      "route_metadata",
+      "responsive_qa",
+      "build",
+      "deployment"
+    ]
+  }
+}

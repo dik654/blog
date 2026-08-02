@@ -1,0 +1,104 @@
+{
+  "run": "2026-07-23-llm-serving-current-first",
+  "objective": "Reconstruct LLM serving from current SLO and disaggregation decisions through engine runtime and production control-plane implementation.",
+  "information_architecture": {
+    "parent": "서빙 · 인프라",
+    "branches": [
+      "00 · Request Runtime",
+      "01 · 운영 제어면"
+    ],
+    "parent_aggregates_authored_child_paths": true,
+    "duplicate_path_navigation_removed": true
+  },
+  "learning_paths": {
+    "runtime": [
+      "llm-disaggregated-serving",
+      "vllm-serving",
+      "vllm-paged-attention",
+      "vllm-scheduler",
+      "vllm-spec-decode",
+      "vllm-vlm-serving"
+    ],
+    "control_plane": [
+      "llm-serving-ops",
+      "serving-deployment",
+      "k8s-gpu-fleet",
+      "litellm-gateway",
+      "observability-aiops"
+    ]
+  },
+  "source_boundaries": [
+    "NVIDIA Dynamo for current P/D orchestration and NIXL boundaries, not universal speedup",
+    "Mooncake for a production long-context case, not every chat workload",
+    "Orca 2022 as the bounded scheduler floor",
+    "PagedAttention for in-engine KV block ownership, not remote transfer",
+    "vLLM official examples as version-sensitive implementation evidence"
+  ],
+  "private_transfer_problem": {
+    "layers": 32,
+    "kv_heads": 8,
+    "head_dimension": 128,
+    "kv_dtype_bits": 16,
+    "prompt_tokens": 8192,
+    "expected_output_tokens": 512,
+    "concurrency": 24,
+    "fabric_gbps": 100,
+    "payload_efficiency": 0.8,
+    "oracles": {
+      "kv_per_token_kib": 128,
+      "prompt_handoff_gib": 1,
+      "handoff_lower_bound_ms": 107,
+      "decode_peak_kv_gib": 25.5
+    }
+  },
+  "qa": {
+    "focused_playwright": "36/36",
+    "local_production_contract": "5/5",
+    "public_contract": "5/5",
+    "viewports": [360, 390, 768, 1440],
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "malformed_svg_paths": 0,
+    "formula_count": 4,
+    "formula_note_count": 4,
+    "minimum_mobile_formula_px": 12.22,
+    "article_tables": 0,
+    "build": "passed"
+  },
+  "claude_collaboration": {
+    "transport": "context-manager only",
+    "requests": 2,
+    "successful": 0,
+    "failure": "Provider error: All providers failed (HTTP 500)",
+    "direct_cli_fallback_used": false
+  },
+  "claude_backfill": {
+    "date": "2026-07-23",
+    "transport": "context-manager runDelegatedPrompt",
+    "article": "vllm-serving",
+    "result": "completed_and_incorporated",
+    "confirmed_fixes": [
+      "removed fabricated and stale legacy source sidebars",
+      "aligned EngineCore, Scheduler, API server and GPU worker references to vendored source",
+      "corrected PagedAttention useful token-state share versus total memory waste"
+    ],
+    "verification": "1/1 source-fidelity Playwright passed on 390 px viewport"
+  },
+  "small_model_pipeline": [
+    "freeze one workload fixture",
+    "separate SLO symptom by request phase",
+    "derive KV byte and transfer oracles",
+    "declare state ownership and failure boundary",
+    "compare against an aggregated baseline",
+    "render one observable Viz state per decision",
+    "verify console, formula size, overflow and public deployment"
+  ],
+  "deployment": {
+    "status": "public-verified",
+    "service_restarted_at": "2026-07-23T00:21:30+09:00",
+    "chunk": "llm-disaggregated-serving-B4yEbsPq.js",
+    "chunk_bytes": 31523,
+    "chunk_sha256": "02086ce8c64ca7003e1016757dffee7ceb93d821982cf134d44b7a3a9047cad3",
+    "article_http_status": 200
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "date": "2026-07-23",
+  "scope": "ai-agent-prompt-injection-containment",
+  "observed": [
+    "prompt injection was described without a complete source-to-commit state handoff",
+    "tool metadata, peer authority, later quarantine retrieval, cross-action composition and commit drift were not executable cases",
+    "probabilistic detection and deterministic authorization needed distinct owners"
+  ],
+  "decided": {
+    "path": [
+      "threat-model",
+      "attack-chain",
+      "trust-lineage",
+      "history-aware-policy-gate",
+      "approval-and-commit-recheck",
+      "evidence-and-replay"
+    ],
+    "numeric_oracle": "6 global tools -> 2 task capabilities -> 5 proposals -> 2 allow + 3 deny -> 0 external writes",
+    "history_rule": "F(history, action) evaluates the composed flow whenever an artifact becomes a later action source",
+    "commit_rule": "prepare and commit gates must both pass after current resources and destinations are resolved"
+  },
+  "claude": {
+    "transport": "context-manager ExternalHarness through runDelegatedPrompt",
+    "worker": "harness:claude-code:sonnet",
+    "mode": "plan",
+    "direct_cli_used": false,
+    "independent_review_duration_ms": 194213,
+    "health_result": "CM_CLAUDE_COLLAB_OK",
+    "health_duration_ms": 6844,
+    "findings_incorporated": [
+      "tool metadata is not authority",
+      "child agents receive re-scoped grants",
+      "visual deny reasons map to I C F",
+      "quarantine retrieval preserves lineage",
+      "commit-time recheck closes TOCTOU",
+      "two allowed actions can compose into a forbidden flow"
+    ]
+  },
+  "verified": {
+    "focused_local_tests": "4/4",
+    "related_local_tests": "51/51",
+    "public_tests": "4/4",
+    "context_manager_tests": "17/17",
+    "context_manager_typescript": "pass",
+    "mobile_viz_heights_px": [806, 707.5, 562.1875],
+    "document_overflow": 0,
+    "visual_overflow": 0,
+    "mobile_formula_scale": 1,
+    "mobile_formula_overflow_px": -38.22,
+    "article_audit_score": 0,
+    "build_modules": 9352,
+    "public_http_200_urls": 2,
+    "service_active_timestamp": "2026-07-23 11:47:06 KST"
+  },
+  "small_model_packet": {
+    "worker_4b": [
+      "user_intent",
+      "authority_sources",
+      "untrusted_sources",
+      "sensitive_labels",
+      "candidate_sink",
+      "task_capability",
+      "action_history",
+      "data_flow_rule",
+      "approval_rule",
+      "commit_recheck",
+      "commit_evidence",
+      "forbidden_inference",
+      "next_handoff"
+    ],
+    "reviewer_9b": [
+      "source_vs_instruction",
+      "jailbreak_vs_injection",
+      "proposal_vs_authorization",
+      "tool_metadata_authority",
+      "peer_agent_grant",
+      "tool_visibility_vs_permission",
+      "session_vs_identity",
+      "classifier_vs_gate",
+      "draft_vs_commit",
+      "commit_toctou",
+      "memory_lineage",
+      "cross_action_composition",
+      "normal_task_regression",
+      "cross_article_overlap"
+    ],
+    "orchestrator": [
+      "source_freshness",
+      "path_metadata",
+      "katex_annotation",
+      "responsive_browser_oracle",
+      "build",
+      "deployment",
+      "public_regression"
+    ]
+  }
+}

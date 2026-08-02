@@ -1,0 +1,151 @@
+{
+  "run": "2026-07-23-claude-review-backfill-training-gap",
+  "date": "2026-07-23",
+  "mode": "read-only single-article true-Claude verification",
+  "scope": {
+    "requested_slugs": [
+      "open-r1",
+      "post-training-rlvr",
+      "rlhf",
+      "llm-pretraining-scaling"
+    ],
+    "unique_requested": 4,
+    "unique_accepted_true_claude": 4
+  },
+  "transport": {
+    "connector": "context-manager",
+    "accepted_route": "cm_route_delegate",
+    "workdir": "/home/heru/code/blog",
+    "accepted_identity_rule": "Only a first observed transport header beginning with [claude-code:sonnet was accepted.",
+    "direct_claude_cli_used": false,
+    "fallback_used_for_final_results": false
+  },
+  "summary": {
+    "attempted_executions": 13,
+    "accepted_true_claude": 4,
+    "rejected_or_failed": 9,
+    "confirmed_high": 0,
+    "confirmed_medium": 3,
+    "confirmed_low": 0,
+    "confirmed_then_fixed_by_root": 3,
+    "accepted_pass_or_not_reproduced": 1
+  },
+  "accepted_reviews": [
+    {
+      "slug": "post-training-rlvr",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 98404ms]",
+      "header_valid": true,
+      "review_focus": "RLVR/GRPO mechanism and formula source fidelity",
+      "raw_status": "medium finding",
+      "finding": {
+        "severity": "medium",
+        "location": "src/pages/articles/ai/post-training-rlvr.tsx:100-107",
+        "claim": "The generic RLVR objective averaged only over y sampled from the policy for a fixed x and omitted the prompt distribution.",
+        "independent_disposition": "confirmed_then_fixed_by_root",
+        "current_state": "The objective now includes E_{x~D} outside E_{y~pi_theta(.|x)}, and FormulaNote defines x ~ D."
+      }
+    },
+    {
+      "slug": "open-r1",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 93377ms]",
+      "header_valid": true,
+      "review_focus": "Open-R1 reward semantics against the vendored rewards.py excerpt",
+      "raw_status": "medium finding",
+      "finding": {
+        "severity": "medium",
+        "location": "src/pages/articles/ai/open-r1/codeRefs.ts:57; src/pages/articles/ai/open-r1/codebase/open-r1/src/open_r1/rewards.py:28-34",
+        "claim": "The annotation described whole-completion validation, but re.MULTILINE plus pattern.search lets ^/$ bind line boundaries and can accept separate-line leading or trailing garbage.",
+        "claude_location_correction": "The Claude response also named RewardSystem.tsx:28, but the independently verified claim locations were codeRefs.ts:57 and the vendored excerpt at rewards.py:28-34.",
+        "independent_disposition": "confirmed_then_fixed_by_root",
+        "current_state": "The original excerpt behavior remains visible for source fidelity, while the code comment, annotation, and article explain the weakness and the fullmatch or raw-string \\A...\\Z alternatives."
+      }
+    },
+    {
+      "slug": "rlhf",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 57966ms]",
+      "header_valid": true,
+      "review_focus": "PPO objective, KL/reference-policy semantics, and notation continuity",
+      "raw_status": "medium finding",
+      "finding": {
+        "severity": "medium",
+        "location": "src/pages/articles/ai/rlhf/PPO.tsx:20-40",
+        "claim": "The KL reward formula used pi_phi for the current actor while the clipped objective switched to r_t(theta) without stating phi equals theta.",
+        "independent_disposition": "confirmed_then_fixed_by_root",
+        "scope_note": "PPO.tsx is currently an unmounted legacy component, but the notation was corrected to prevent future reuse from reintroducing the mismatch.",
+        "current_state": "The clipped ratio now uses r_t(phi), and FormulaNote states that it is the same actor pi_phi used in the KL expression."
+      }
+    },
+    {
+      "slug": "llm-pretraining-scaling",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 139808ms]",
+      "header_valid": true,
+      "review_focus": "Pretraining/scaling-law arithmetic, formula fidelity, and cited current research",
+      "raw_status": "math pass with one unverified source concern",
+      "finding": {
+        "severity": "none confirmed",
+        "location": "src/pages/articles/ai/llm-pretraining-scaling.tsx:130-131",
+        "claim": "Claude found no arithmetic or scaling-law error, but could not browse and warned that the two 2026 arXiv citations might be fictional.",
+        "independent_disposition": "source_concern_not_reproduced",
+        "evidence": [
+          "https://arxiv.org/abs/2604.01411 resolves to Roberts et al., Test-Time Scaling Makes Overtraining Compute-Optimal.",
+          "https://arxiv.org/abs/2606.06888 resolves to Xu et al., Data-Constrained Language Model Pretraining: Improved Regularization and Scaling Laws."
+        ],
+        "current_state": "No correction required; titles, authors, IDs, and the article's scoped mechanism summaries agree with the primary arXiv abstracts."
+      }
+    }
+  ],
+  "rejected_or_failed_attempts": [
+    {
+      "slugs": [
+        "open-r1",
+        "post-training-rlvr",
+        "rlhf",
+        "llm-pretraining-scaling"
+      ],
+      "route": "cm_route_delegate parallel batch",
+      "result": "terminated after more than 180000ms with no observed result headers",
+      "counted_executions": 4,
+      "reason": "No first observed provider header; none was accepted or counted."
+    },
+    {
+      "slug": "open-r1",
+      "route": "cm_route_delegate",
+      "result": "error: The operation timed out.",
+      "duration_ms": 258362,
+      "reason": "Timeout; no provider header."
+    },
+    {
+      "slug": "open-r1",
+      "route": "cm_route_delegate",
+      "header": "[codex:gpt-5.5 · L2 · $0.0000 · 145569ms]",
+      "result": "fallback review preserved only as an uncounted baseline",
+      "reason": "Explicit Codex identity; not Claude."
+    },
+    {
+      "slug": "open-r1",
+      "route": "cm_route_delegate",
+      "header": "[codex:gpt-5.5 · L3 · $0.0000 · 236991ms]",
+      "result": "fallback review preserved only as an uncounted baseline",
+      "reason": "Explicit Codex identity; not Claude."
+    },
+    {
+      "slug": "open-r1",
+      "route": "cm_delegate",
+      "agent_id": "ai-researcher",
+      "fresh": true,
+      "result": "HTTP 500: Provider error: All providers failed",
+      "reason": "No review result or provider identity was returned."
+    },
+    {
+      "slug": "rlhf",
+      "route": "cm_route_delegate",
+      "result": "error: Unable to connect. Is the computer able to access the url?",
+      "reason": "Connector failure; no provider header."
+    }
+  ],
+  "coverage_note": {
+    "broad_prompts": "Initial broad prompts included current-first flow, source/math fidelity, first-use terminology, hidden transfer, mobile Viz, and learning handoffs, but returned no acceptable headers.",
+    "accepted_prompts": "To obtain auditable true-Claude identity, retries were narrowed to one highest-risk mechanism/source question per slug as authorized by the root task.",
+    "counting_rule": "The four unique slugs are identity-verified true-Claude reviews. The accepted results must not be represented as four exhaustive visual QA passes."
+  }
+}

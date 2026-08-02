@@ -1,0 +1,54 @@
+{
+  "runId": "2026-07-21-claude-codex-reasoning-post-training-reconstruction",
+  "scope": "ai-llm-post-training-current-first",
+  "status": "implemented-deployed-public-qa-passed",
+  "ownership": [
+    {"article": "reasoning-post-training-frontier", "owns": "2026 reasoning bottlenecks and compute axes"},
+    {"article": "post-training-rlvr", "owns": "post-training signal map and RLVR tradeoffs"},
+    {"article": "rlhf", "owns": "InstructGPT reward model and PPO minimum foundation"},
+    {"article": "rl-ppo-continuous-control", "owns": "optional policy optimization foundation"},
+    {"article": "open-r1", "owns": "GRPO and verifier implementation reading"}
+  ],
+  "sourceAnchors": [
+    "https://arxiv.org/abs/2605.06638",
+    "https://arxiv.org/abs/2505.22617",
+    "https://arxiv.org/abs/2606.11209",
+    "https://deepmind.google/research/publications/203490/",
+    "https://openai.com/index/evaluating-chain-of-thought-monitorability/",
+    "https://openai.com/index/instruction-hierarchy-challenge/",
+    "https://arxiv.org/abs/2501.12948",
+    "https://huggingface.co/docs/trl/main/grpo_trainer",
+    "https://github.com/huggingface/open-r1"
+  ],
+  "privateTransferTests": [
+    {"id": "combined-reward-exploit", "answerable": true},
+    {"id": "constant-reward-group-advantage", "answerable": true},
+    {"id": "reward-hacking-vs-disconnected-cot", "answerable": true}
+  ],
+  "claudeFindingsFixed": [
+    "script arguments were not instantiated",
+    "tag score visualization was inconsistent with exact match",
+    "PPO versus GRPO advantage explanation was inaccurate",
+    "mobile rollout boxes and reward SVG text were unreadable",
+    "epsilon notation overlapped"
+  ],
+  "verification": {
+    "eslint": "pass",
+    "productionBuild": "pass",
+    "pythonCompile": "pass",
+    "vizAudit": {"checks": 8, "surfaces": 30, "svgs": 30, "errors": 0, "warnings": 0},
+    "narrativeAudit": {"checks": 8, "stepViz": 36, "surfaces": 31, "errors": 0, "warnings": 0},
+    "mobileClippedText": 0,
+    "mobileHorizontalOverflow": 0,
+    "typescriptBuild": "blocked-by-pre-existing-unrelated-type-debt",
+    "publicVizAudit": {"checks": 8, "surfaces": 30, "svgs": 30, "errors": 0, "warnings": 0},
+    "publicNarrativeAudit": {"checks": 8, "stepViz": 36, "surfaces": 31, "errors": 0, "warnings": 0},
+    "publicInteractions": ["open-r1-grpo-step-3", "open-r1-reward-step-5", "frontier-cot-monitor-alert"],
+    "deployedAtKst": "2026-07-21T11:11:51+09:00"
+  },
+  "conceptTriage": {
+    "integrated": ["RL and reasoning", "RL compute scaling", "CoT", "search-based reasoning", "policy optimization"],
+    "existingOwnership": ["tokenization", "Mamba and SSM", "hybrid and linear attention", "CUDA and GPU optimization", "control foundations", "video and document AI"],
+    "nextIndependentRoutes": ["LLM interpretability", "wallet custody and threshold signing"]
+  }
+}

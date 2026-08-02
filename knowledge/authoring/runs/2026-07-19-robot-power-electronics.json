@@ -1,0 +1,293 @@
+{
+  "run_id": "2026-07-19-robot-power-electronics",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing robot motor-driver hardware foundation from a DC source through DC link, half bridge, gate loop, current sense, protection, thermal path and PCB evidence, then reconstruct TI TIDA-010956 without confusing a title claim with a measured operating point.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue the bottom-up robotics dependency graph after motor drive and FOC, closing the hardware assumptions hidden behind commanded voltage and measured phase current.",
+    "content_intent": "Use a private compound inverter failure to force energy, commutation, gate, parasitic, loss, thermal, sensing, protection and bring-up coverage without publishing the problem as article prose.",
+    "visual_intent": "A Viz improvement must change representation, hierarchy, spacing, observability or interaction. A palette swap is not accepted.",
+    "reference_intent": "Treat a company reference design with the same provenance discipline as a paper: reconstruct its question, architecture, measurements, assumptions and unsupported extrapolations.",
+    "formula_intent": "Every display equation must include a short Korean operation reason inside KaTeX and exactly one unit, assumption and failure note below it.",
+    "small_model_intent": "Preserve the narrowing decisions so a 4B model can repair one claim/formula/Viz packet and a 9B model can assemble one causal section without inventing electrical evidence."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-dynamics-feedback-control produces a bounded torque request",
+      "robot-embedded-realtime-control proves the command reaches the PWM latch on time",
+      "robot-motor-drive-foc maps torque through dq current, voltage, modulation and current observation",
+      "paper-blaschke-field-orientation-1973 establishes the historical coordinate-control principle"
+    ],
+    "missing_chain": [
+      "source_connector_fuse_reverse_protection_precharge_dc_link_inverter_motor_energy_contract",
+      "dc_link_inrush_regeneration_and_absorption_limits",
+      "half_bridge_switching_freewheel_dead_time_and_shoot_through_paths",
+      "gate_charge_bootstrap_miller_immunity_and_uvlo",
+      "power_loop_parasitic_ringing_and_measurement_loop_error",
+      "conduction_switching_gate_and_dead_time_loss_budget",
+      "junction_case_board_ambient_transient_thermal_network",
+      "shunt_amplifier_pwm_rejection_kelvin_and_adc_settling_contract",
+      "fault_detection_propagation_shutdown_and_fault_energy_budget",
+      "schematic_to_stackup_zoning_return_path_and_staged_bringup_evidence"
+    ],
+    "scope_boundary": "The milestone teaches a low-voltage robot inverter and evidence workflow. It does not certify an isolated high-voltage drive, creepage and clearance, EMC compliance, regenerative brake sizing, functional safety or STO. Those remain a separate hardware-safety foundation."
+  },
+  "source_decisions": [
+    {
+      "source": "Texas Instruments TIDA-010956 product page and Rev. B design guide",
+      "locator": "https://www.ti.com/tool/TIDA-010956",
+      "used_for": ["48 V class architecture", "85 Arms title claim", "DRV8162L gate path", "INA241 current sensing", "multilevel shutdown", "schematic, PCB, waveform and thermal evidence"],
+      "boundary": "The public thermal point is 48 V, 16 kHz, 26.2 Arms or 37 A peak, 28 C ambient, with no heatsink or fan. It does not prove 85 Arms continuous thermal operation, lifetime, arbitrary enclosure behavior or certified STO."
+    },
+    {
+      "source": "TI SLVAF66, Best Practices for Board Layout of Motor Drivers",
+      "locator": "https://www.ti.com/lit/an/slvaf66/slvaf66.pdf",
+      "used_for": ["high-current loop ownership", "bulk and local decoupling", "thermal copper", "ground and sense routing", "layout review order"],
+      "boundary": "Application guidance supplies mechanisms and layout heuristics, not a validated stack-up or current rating for the reader's board."
+    },
+    {
+      "source": "TI SLVA959B, Best Practices for Board Layout of Motor Drivers",
+      "locator": "https://www.ti.com/lit/an/slva959b/slva959b.pdf",
+      "used_for": ["power and gate loop minimization", "bypass placement", "thermal pad and via behavior", "current-sense routing"],
+      "boundary": "Reference layouts cannot be copied without the target package, layer stack, copper weight, assembly and thermal boundary conditions."
+    },
+    {
+      "source": "TI DRV8162 data sheet",
+      "locator": "https://www.ti.com/lit/ds/symlink/drv8162.pdf",
+      "used_for": ["gate-current control", "smart gate drive", "bootstrap and charge pump context", "UVLO", "fault response and programmable shutdown"],
+      "boundary": "Data-sheet limits must be checked at the selected supply, gate charge, PWM frequency, temperature and protection mode; feature presence does not establish system safety."
+    },
+    {
+      "source": "TI INA241A data sheet",
+      "locator": "https://www.ti.com/lit/ds/symlink/ina241a.pdf",
+      "used_for": ["enhanced PWM rejection", "common-mode transient context", "gain and output settling", "inline shunt evidence path"],
+      "boundary": "PWM rejection does not remove Kelvin, input-filter, layout, bandwidth, output swing, ADC aperture or settling requirements."
+    },
+    {
+      "source": "TI SDAA145A, DC-Link Capacitor Precharge Circuit",
+      "locator": "https://www.ti.com/lit/an/sdaa145a/sdaa145a.pdf",
+      "used_for": ["precharge time constant", "inrush current", "resistor energy", "contactor sequencing"],
+      "boundary": "The example topology is not a universal hot-plug, discharge, welding-detection or regenerative-energy solution."
+    },
+    {
+      "source": "Infineon, PCB Layout Guidelines for MOSFET Gate Driver Applications",
+      "locator": "https://www.infineon.com/assets/row/public/documents/24/42/infineon-applicationnote-gatedriver-mosfet-pcb-layout-guidelines-for-mosfet-gatedriver-applicationnotes-en.pdf",
+      "used_for": ["gate loop geometry", "Kelvin source return", "common-source inductance", "Miller coupling", "driver bypass placement"],
+      "boundary": "The mechanisms transfer, but numeric placement and impedance targets remain device, package and stack-up specific."
+    },
+    {
+      "source": "Analog Devices AN-1321 and AN-1308",
+      "locator": "https://www.analog.com/en/resources/app-notes/an-1321.html",
+      "used_for": ["high-side current-sense error mechanisms", "PWM common-mode rejection", "input filtering and settling tradeoffs"],
+      "boundary": "Amplifier guidance cannot prove end-to-end ADC accuracy or closed-loop current fidelity without target timing and calibration evidence."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 28,
+    "artifact": "src/pages/articles/ai/content-specs/robot-power-electronics-motor-driver.md",
+    "scenario": "A 48 V robot joint uses a large DC-link capacitor without bounded precharge, accepts regenerative current into a source that cannot absorb it, commutates a half bridge with incomplete dead-time reasoning, selects a MOSFET from Rds(on) alone, drives it through a long shared-source gate loop, probes the switch node with a large ground loop, estimates only conduction loss, infers junction temperature from an unqualified surface point, routes shunt and power current together, samples before the amplifier settles, relies on firmware after a desaturation event and jumps directly to full-current bring-up.",
+    "required_insights": [
+      "draw the complete energy and return path before choosing parts",
+      "separate source current, DC-link ripple current, phase current and regenerative current",
+      "derive precharge current, time and resistor energy",
+      "identify every half-bridge commutation and freewheel path",
+      "treat dead time as both shoot-through prevention and voltage distortion",
+      "derive gate-current and switching-edge tradeoffs from charge rather than nominal resistance",
+      "separate gate loop, power loop and measurement loop inductance",
+      "distinguish real switch-node ringing from probe-loop pickup",
+      "budget conduction, switching, gate, dead-time and passive losses",
+      "propagate loss through transient and steady thermal impedances",
+      "bind current-sense accuracy to shunt, Kelvin route, amplifier, PWM rejection, settling and ADC timing",
+      "budget independent fault detection, propagation and gate-discharge latency",
+      "convert shutdown latency into peak fault current and fault energy",
+      "read schematic, PCB, waveform and thermal evidence as one claim chain",
+      "commission from passive checks and current-limited power to bounded switching and load tests",
+      "keep title claim, shown test point, observation and extrapolation boundary separate"
+    ],
+    "publication_policy": "Do not publish the integrated problem as a quiz. Map every premise to causal prose, a derivation, Korean-annotated formula, interactive state, evidence card or operational gate."
+  },
+  "source_extraction": {
+    "local_documents": [
+      { "file": "/tmp/pdfs/ti-tida-010956-design-guide.pdf", "pages": 27 },
+      { "file": "/tmp/pdfs/ti-tida-010956-schematic.pdf", "pages": 7 },
+      { "file": "/tmp/pdfs/ti-tida-010956-pcb-layout.pdf", "pages": 13 },
+      { "file": "/tmp/pdfs/ti-high-power-motor-driver.pdf", "pages": 25 },
+      { "file": "/tmp/pdfs/ti-motor-driver-pcb-layout.pdf", "pages": 36 },
+      { "file": "/tmp/pdfs/ti-drv8162.pdf", "pages": 52 },
+      { "file": "/tmp/pdfs/ti-ina241.pdf", "pages": 44 },
+      { "file": "/tmp/pdfs/ti-dc-link-precharge.pdf", "pages": 18 }
+    ],
+    "visual_review": "Rendered guide, schematic and PCB pages were inspected where block boundaries, loop geometry, waveform conditions and thermal annotations could not be trusted from extracted text alone.",
+    "evidence_boundary": "The TIDA title/design claim is 85 Arms. The shown public thermal result is a bounded 26.2 Arms operating point. The reconstruction preserves both values and forbids interpolation from the second to the first."
+  },
+  "events": [
+    {
+      "event_id": "audit.curriculum.001",
+      "phase": "gap_audit",
+      "observed": "The FOC milestone ended at requested voltage, PWM, current observation and a brief gate-driver boundary, but did not own the physical circuit that makes those signals trustworthy.",
+      "inference": "The next dependency had to be motor-driver power electronics before custom robot hardware or higher-current commissioning.",
+      "decision": "Build a ten-section source-to-evidence hardware foundation and connect it directly after FOC.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-power-electronics-motor-driver.md", "src/content/ai/foundationCurriculum.ts", "src/content/learning-paths.ts"],
+      "verification": { "expected": "One node closes the hidden inverter hardware assumptions", "actual": "Ten sections cover energy, commutation, gate, parasitics, loss, thermal, sensing, protection, layout and bring-up." }
+    },
+    {
+      "event_id": "source.reference.001",
+      "phase": "evidence_compile",
+      "observed": "A current company reference design contains a more complete schematic-PCB-waveform-thermal evidence chain for this boundary than a single academic motor-control paper.",
+      "inference": "Company research and reference documents should enter the same reconstruction pipeline when they provide primary implementation evidence.",
+      "decision": "Use TIDA-010956 as a company reference spine and label the document kind explicitly instead of disguising it as a paper.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/FoundationalPaperStudy.tsx", "src/pages/articles/ai/paper-spine/robotPowerElectronicsSpecs.tsx", "src/pages/articles/ai/reference-ti-tida-010956-2025.tsx"],
+      "verification": { "expected": "The article carries author intent, evidence slices and limitations without false paper metadata", "actual": "The public header says company reference design and the evidence lab exposes source paths and boundaries." }
+    },
+    {
+      "event_id": "source.boundary.002",
+      "phase": "evidence_compile",
+      "observed": "The reference title states 85 Arms while the visible thermal result uses 26.2 Arms or 37 A peak at 48 V and 16 kHz.",
+      "inference": "Presenting 85 Arms beside the temperature result without test conditions would imply evidence the guide does not provide.",
+      "decision": "Render claim, test condition, observed result, supports and does-not-support as separate immutable fields.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/robotPowerElectronicsSpecs.tsx", "src/pages/articles/ai/paper-spine/viz/TidaReferenceLab.tsx"],
+      "verification": { "expected": "No continuous-current extrapolation from one thermal point", "actual": "The lab states 85 Arms CLAIM, 26.2 Arms shown point and NO EXTRAPOLATION." }
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "phase": "transfer_gate",
+      "observed": "An inverter can spin a motor while twenty-eight energy, timing, measurement, thermal and protection defects remain latent.",
+      "inference": "A taxonomy of MOSFET, shunt and capacitor definitions would not force cross-domain diagnosis.",
+      "decision": "Write the twenty-eight-premise private failure first and require a public insight or evidence gate for each premise.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-power-electronics-motor-driver.md"],
+      "verification": { "expected": "No hard transfer premise depends on omitted hardware reasoning", "actual": "The spec maps all premises to ten concept sections and the TIDA evidence reconstruction." }
+    },
+    {
+      "event_id": "implementation.concept.001",
+      "phase": "concept_implementation",
+      "observed": "The transferable explanation follows physical energy and fault propagation, not a catalog of components.",
+      "inference": "The reader needs to locate the first invalid contract from source to phase node and from shunt back to shutdown.",
+      "decision": "Implement ten causal sections and ten distinct labs with numerical and physical observables.",
+      "changed_files": ["src/pages/articles/ai/robot-power-electronics-motor-driver.tsx", "src/pages/articles/ai/robot-power-electronics-motor-driver/viz/PowerElectronicsLabs.tsx"],
+      "verification": { "expected": "Each lab interaction changes visible evidence", "actual": "All ten concept lab checks changed a value, path, plot or gate on the public host." }
+    },
+    {
+      "event_id": "implementation.reference.001",
+      "phase": "reference_reconstruction",
+      "observed": "A linear prose summary hides how TIDA evidence is distributed across guide, schematic, layout, waveform and thermal pages.",
+      "inference": "The reader must select a path and compare the claim against the exact document condition and observation.",
+      "decision": "Build a path-and-evidence lab with architecture, claim, condition, observation, support and exclusion states.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/viz/TidaReferenceLab.tsx", "src/pages/articles/ai/paper-spine/robotPowerElectronicsSpecs.tsx"],
+      "verification": { "expected": "Power, gate, sense and shutdown selections change the evidence chain", "actual": "Selector interaction changes visible path and evidence; mobile uses a dedicated four-node composition rather than a scaled desktop SVG." }
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "Initial equations fit their containers only by shrinking some dense rows to 0.52-0.71 on a 360 px viewport.",
+      "inference": "The defect was too many semantic operations in one formula, not merely KaTeX font size.",
+      "decision": "Split precharge, switching, edge-time, loss, thermal, sensing and fault-energy derivations into atomic equations with Korean underbraces and one FormulaNote each.",
+      "changed_files": ["src/pages/articles/ai/robot-power-electronics-motor-driver.tsx", "src/pages/articles/ai/paper-spine/robotPowerElectronicsSpecs.tsx"],
+      "verification": { "expected": "Minimum scale at least 0.75 at 360 and 0.85 at 390 with no raw LaTeX", "actual": "Concept minimum is 0.79 and 0.85; reference minimum is 0.85 and 0.96. Formula-note counts match 23 and 9 exactly." }
+    },
+    {
+      "event_id": "qa.viz.mobile.001",
+      "phase": "qa_repair",
+      "observed": "The first TIDA mobile architecture was a reduced desktop SVG, making labels technically bounded but too small to scan. Caption controls also competed with long titles.",
+      "inference": "Responsive repair required a different information composition, not further scaling.",
+      "decision": "Replace the mobile SVG with four compact ordered nodes, correct path arrows and reserve caption space for expansion controls.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/viz/TidaReferenceLab.tsx", "src/pages/articles/ai/robot-power-electronics-motor-driver/viz/PowerElectronicsLabs.tsx"],
+      "verification": { "expected": "Readable labels and no SVG, caption or viewport overflow", "actual": "360, 390, 768 and 1440 checks report zero overflow, zero inner scroll and no SVG label outside its viewBox." }
+    },
+    {
+      "event_id": "deploy.public.001",
+      "phase": "deployment_verification",
+      "observed": "Local browser success cannot prove that the reverse proxy serves the final formula and mobile-layout repair.",
+      "inference": "The milestone closes only after a production build, service restart and the same QA against public URLs.",
+      "decision": "Build, restart cm-blog.service, check all public routes and rerun the twelve-test suite on the public host.",
+      "changed_files": ["tests/power-electronics-qa.spec.ts"],
+      "verification": { "expected": "HTTP 200 and twelve public tests pass", "actual": "Both articles and the robotics category return 200; all twelve public tests passed in 21.0 seconds." }
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-power-electronics-motor-driver.md",
+    "concept_article": "src/pages/articles/ai/robot-power-electronics-motor-driver.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-power-electronics-motor-driver/viz/PowerElectronicsLabs.tsx",
+    "reference_spec": "src/pages/articles/ai/paper-spine/robotPowerElectronicsSpecs.tsx",
+    "reference_viz": "src/pages/articles/ai/paper-spine/viz/TidaReferenceLab.tsx",
+    "reference_article": "src/pages/articles/ai/reference-ti-tida-010956-2025.tsx",
+    "generic_reference_framework": "src/pages/articles/ai/paper-spine/FoundationalPaperStudy.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "previous_bridge": "src/pages/articles/ai/robot-motor-drive-foc.tsx",
+    "qa_test": "tests/power-electronics-qa.spec.ts",
+    "final_mobile_screenshot": "/tmp/tida-lab-390-final.png",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-power-electronics.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-power-electronics-report.md",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "implementation_decisions": [
+    "Follow the energy path before introducing component names.",
+    "Treat the DC link as an energy buffer with inrush and regeneration contracts, not as an ideal voltage source.",
+    "Teach half-bridge current paths before PWM abstractions.",
+    "Derive switching speed from gate charge and current while exposing Miller and bootstrap limits.",
+    "Separate power loop, gate loop, Kelvin sense loop and probe loop geometrically.",
+    "Treat loss as an operating-point budget and temperature as a boundary-conditioned thermal network.",
+    "Treat current sensing as a timed analog chain, not an ADC register read.",
+    "Convert protection latency into physical current and energy before discussing firmware recovery.",
+    "Read company reference designs through claim, condition, observation and exclusion fields.",
+    "Use short Korean reasons inside every display equation and one detailed FormulaNote per equation.",
+    "Use dedicated mobile compositions when a desktop topology cannot remain readable by scaling.",
+    "Defer ambient animation until static causal states, controls and responsive evidence pass."
+  ],
+  "qa": {
+    "production_build": "passed after the final edge-time formula repair; the pre-existing chunks larger than 900 kB warning remains",
+    "build_asset": "robot-power-electronics-motor-driver production chunk is approximately 82.81 kB, 25.82 kB gzip",
+    "local_playwright": "12 passed in 24.9 seconds",
+    "public_playwright": "12 passed in 21.0 seconds",
+    "public_viewports": {
+      "360": { "overflow_px": 0, "inner_scroll": 0, "concept_min_math_scale": 0.79, "reference_min_math_scale": 0.85, "formula_overflow": 0, "raw_latex": 0, "missing_korean_annotation": 0, "svg_label_overflow": 0, "console_errors": 0 },
+      "390": { "overflow_px": 0, "inner_scroll": 0, "concept_min_math_scale": 0.85, "reference_min_math_scale": 0.96, "formula_overflow": 0, "raw_latex": 0, "missing_korean_annotation": 0, "svg_label_overflow": 0, "console_errors": 0 },
+      "768": { "overflow_px": 0, "inner_scroll": 0, "concept_min_math_scale": 1, "reference_min_math_scale": 1, "formula_overflow": 0, "raw_latex": 0, "missing_korean_annotation": 0, "svg_label_overflow": 0, "console_errors": 0 },
+      "1440": { "overflow_px": 0, "inner_scroll": 0, "concept_min_math_scale": 1, "reference_min_math_scale": 1, "formula_overflow": 0, "raw_latex": 0, "missing_korean_annotation": 0, "svg_label_overflow": 0, "console_errors": 0 }
+    },
+    "formula_counts": { "concept": 23, "reference": 9, "concept_formula_notes": 23, "reference_formula_notes": 9 },
+    "interaction_checks": "All ten concept labs and the TIDA path selector changed visible evidence on the public host.",
+    "curriculum_checks": "The robotics category exposes both new links at 390 and 1440 px. FOC links to the concept article, and the concept article links to the TIDA reconstruction.",
+    "visual_review": "Representative labs were captured at 390 and 1440 px. The final TIDA mobile lab was visually inspected after its dedicated four-node recompose.",
+    "public_deployment": {
+      "service": "cm-blog.service active after final restart at 2026-07-19 16:57 KST",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-power-electronics-motor-driver",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/reference-ti-tida-010956-2025",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai?sub=ai-robotics"
+      ],
+      "http_status": 200
+    }
+  },
+  "small_model_handoff": {
+    "four_b_packet": {
+      "scope": "one claim-mechanism-formula-Viz-state packet",
+      "inputs": ["one source locator and exact excerpt boundary", "one private premise ID", "one immutable equation and symbol table", "one target component", "one allowed shared primitive", "one numeric acceptance metric"],
+      "output_order": ["claim IR", "two-paragraph causal explanation", "one Korean underbrace", "one FormulaNote", "one Viz state or repair"],
+      "example_acceptance": "At 360 px the formula scale is at least 0.75, no raw LaTeX appears and the selected gate-current state changes edge time."
+    },
+    "nine_b_packet": {
+      "scope": "one complete causal section",
+      "inputs": ["prerequisite and output contract", "four to six bounded source claims", "derivation order", "immutable equations", "one failure injection", "one Viz state machine", "mobile and evidence checklist"],
+      "output_order": ["structured knowledge IR", "source-bound claim table", "causal prose", "formula blocks", "Viz contract", "self-audit against the private premise subset"],
+      "example_acceptance": "The section explains why faster gate drive can reduce switching loss while increasing ringing, and its lab exposes both edge time and overshoot without changing the declared formula."
+    },
+    "orchestrator_owns": ["retrieval", "source conflict and claim boundary", "private hard-problem construction", "curriculum order", "cross-section symbols", "file allowlist", "browser QA", "public deployment"],
+    "forbidden_shortcuts": ["generate both full articles in one pass", "let a title claim stand in for a measured result", "silently change electrical units or operating conditions", "accept a palette swap as a Viz repair", "accept zero overflow when formula scale is below threshold", "claim safety certification from a shutdown feature"]
+  },
+  "rejected_alternatives": [
+    "Putting all power-electronics detail into the FOC article, which would hide a distinct hardware ownership boundary.",
+    "Using a generic academic converter paper while ignoring the richer schematic-PCB-waveform-thermal reference evidence.",
+    "Presenting the TIDA 85 Arms title beside the 26.2 Arms thermal result as if they were the same test.",
+    "Solving mobile formulas only with smaller fonts or horizontal scrolling.",
+    "Scaling the desktop TIDA architecture SVG until it technically fit on mobile.",
+    "Adding ambient animation before the static evidence states were legible and measurable."
+  ],
+  "remaining_risks": [
+    "The labs are deterministic educational models, not oscilloscope, thermal-camera, dynamometer, conducted-emissions or fault-injection measurements from a physical inverter.",
+    "The formulas use declared first-order approximations and must not be used as a substitute for device data-sheet integration or SPICE and hardware validation.",
+    "High-voltage isolation, creepage, clearance, brake chopper and dump resistor sizing, EMC qualification, PL or SIL allocation and certified STO remain out of scope.",
+    "Continuous animation remains optional and should be added only when time evolution contributes information beyond explicit controls."
+  ],
+  "next_phase": "Build the next robot hardware-safety dependency: isolation and auxiliary gate power, regenerative braking and discharge, creepage and clearance, EMC paths, independent torque shutdown and evidence needed before a power stage can become a production robot drive."
+}

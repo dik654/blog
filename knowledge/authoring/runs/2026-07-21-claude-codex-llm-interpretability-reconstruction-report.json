@@ -1,0 +1,33 @@
+{
+  "run": "2026-07-21-llm-interpretability-current-first",
+  "objective": "Turn interpretability terms into an observation-to-intervention evidence ladder.",
+  "cutoff": "Residual stream, unembedding, softmax, and local derivatives; older history is citation-only unless required.",
+  "articles": [
+    "llm-interpretability-frontier",
+    "llm-interpretability-readouts",
+    "sparse-autoencoder",
+    "llm-circuit-analysis"
+  ],
+  "private_tests": [
+    "High lens signal with null causal intervention",
+    "Refusal-correlated SAE feature requiring intervention controls",
+    "Graph display threshold must not change replacement fidelity"
+  ],
+  "critic_fixes": [
+    "Separated replacement fidelity from shown and omitted edge mass",
+    "Changed corrupted prompt from France/Rome to Italy/Rome"
+  ],
+  "qa": {
+    "routes": 4,
+    "desktop_mobile_checks": 8,
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "katex_errors": 0,
+    "mobile_min_math_scale": 0.83,
+    "interactions": 5
+  },
+  "small_model_contract": {
+    "4b": "One evidence rung, one equation, one counterexample, structured IR first.",
+    "9b": "Four-article ownership graph, three transfer tests, critic and responsive acceptance."
+  }
+}

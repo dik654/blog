@@ -1,0 +1,103 @@
+{
+  "runId": "2026-07-21-claude-codex-llm-current-first-reconstruction",
+  "objective": "Reconstruct the LLM architecture route from current bottlenecks down to a bounded Transformer foundation, with model-specific prose and causal responsive visualizations.",
+  "roles": {
+    "claude": "Read-only architecture and content critic before implementation and after the first implementation pass.",
+    "codex": "Repository analysis, decision ownership, implementation, arithmetic verification, browser QA, regression repair, build and deployment."
+  },
+  "events": [
+    {
+      "observed": "The gallery exposed branch labels and model facts before causal differences.",
+      "inference": "Readers could recognize categories but could not transfer the model to an unseen paper.",
+      "decision": "Make the gallery a current-first route and move detail into branch-owned causal articles.",
+      "verification": "No fact-sheet-first core flow remains in the five registered LLM architecture routes."
+    },
+    {
+      "observed": "Dense and KV catalogs repeated foundation models.",
+      "inference": "Article ownership was ambiguous and reading both branches felt like duplication.",
+      "decision": "Dense owns the common compute contract; KV owns memory-contract examples only.",
+      "verification": "Core model headings are unique across the two visible paths."
+    },
+    {
+      "observed": "Cluster-generated model cards repeated the same prose shape.",
+      "inference": "Chronology did not reveal why individual models mattered.",
+      "decision": "Attach a distinct why, execution, delta and tradeoff narrative to every core model.",
+      "verification": "KV, MoE and Hybrid each expose five unique core narratives before optional catalogs."
+    },
+    {
+      "observed": "The detailed Dense SVG technically fit but became unreadable on mobile.",
+      "inference": "No-overflow is weaker than legibility.",
+      "decision": "Render a six-step semantic HTML flow on mobile and retain the detailed SVG on desktop.",
+      "verification": "Mobile shows five step flows and no detailed SVG; desktop shows the detailed diagrams."
+    },
+    {
+      "observed": "MLA cache arithmetic used 70,656 bytes/token.",
+      "inference": "The stated dimensions and layer count imply a different result.",
+      "decision": "Use 61 * (512 + 64) * 2.",
+      "verification": "The interactive explorer reports 70,272 bytes/token."
+    },
+    {
+      "observed": "A full Viz audit found ten pre-existing narrow-screen overflow defects outside the LLM route.",
+      "inference": "The shared responsive contract needed repair before deployment.",
+      "decision": "Make slider controls two-row grids on mobile and repair vLLM/libp2p toolbars and long labels.",
+      "verification": "Eight affected routes pass 16 viewport checks with zero errors and warnings."
+    }
+  ],
+  "privateTransferGate": {
+    "mla": "Derive 70,272 bytes/token for a 61-layer FP16 latent cache with 512 latent and 64 RoPE dimensions; explain why cached and attention-time representations can differ and why compute cost remains.",
+    "moe": "Separate total and active parameters, then predict how routing imbalance changes communication and throughput.",
+    "linearAttention": "Explain the memory-growth advantage and information-compression cost of replacing an explicit KV history with recurrent state."
+  },
+  "artifacts": [
+    "src/content/learning-paths.ts",
+    "src/content/ai/articlesLLMArchitectures.ts",
+    "src/pages/CategoryPage.tsx",
+    "src/pages/articles/ai/llm-architecture-gallery.tsx",
+    "src/pages/articles/ai/llm-architecture-dense-transformers.tsx",
+    "src/pages/articles/ai/llm-architecture-kv-long-context.tsx",
+    "src/pages/articles/ai/llm-architecture-sparse-moe.tsx",
+    "src/pages/articles/ai/llm-architecture-hybrid-linear.tsx",
+    "src/pages/articles/ai/llm-architecture-viz/MlaCacheExplorer.tsx",
+    "src/pages/articles/ai/llm-architecture-viz/MoeRoutingExplorer.tsx",
+    "src/pages/articles/ai/llm-architecture-viz/LinearAttentionExplorer.tsx",
+    "src/pages/articles/ai/vllm-serving/Overview.tsx",
+    "src/pages/articles/ai/vllm-serving/PagedAttention.tsx",
+    "src/pages/articles/ai/vllm-serving/ServingArchitecture.tsx",
+    "src/pages/articles/p2p/libp2p-tcp/DialListen.tsx",
+    "src/index.css"
+  ],
+  "verification": {
+    "eslint": "passed for the changed reconstruction and responsive files",
+    "build": "passed; existing large-chunk warnings remain",
+    "targetNarrative": "5 routes, 10 checks, 0 errors, 0 warnings",
+    "targetViz": "5 routes, 10 checks, 15 surfaces, 7 SVGs, 0 errors, 0 warnings",
+    "fullNarrative": "541 routes, 1082 checks, 0 errors, 0 warnings",
+    "responsiveRegression": "8 routes, 16 checks, 222 surfaces, 224 SVGs, 0 errors, 0 warnings",
+    "publicBrowserQA": "8 routes at 390px and 1440px, 16 checks, HTTP 200, zero overflow, raw LaTeX and KaTeX errors",
+    "publicInteractionQA": "MLA and Linear sliders changed measured output; MoE routing changed expert load from 3/3/3/3 to 6/4/2/0",
+    "legacyRoute": "research-honglab-ai-landscape-2026 redirects to the current LLM architecture category with zero mobile overflow",
+    "deployment": "cm-blog.service restarted after the final build and active since 2026-07-21 09:58:41 KST",
+    "publicBaseUrl": "https://heru.ragdoll-bigeye.ts.net/lab/blog/"
+  },
+  "smallModelProtocol": {
+    "4B": [
+      "one claim-to-mechanism delta",
+      "one Korean formula explanation",
+      "one Viz state transition",
+      "one responsive defect packet"
+    ],
+    "9B": [
+      "one branch article or at most three model milestones",
+      "pinned source claims and predecessor contract",
+      "distinct why/execution/delta/tradeoff narratives",
+      "formula and browser acceptance bundle"
+    ],
+    "orchestratorRetains": [
+      "current target and historical stopping point",
+      "source provenance and claim conflict resolution",
+      "cross-article concept ownership",
+      "private transfer problem",
+      "critic verification, build, deployment and public QA"
+    ]
+  }
+}

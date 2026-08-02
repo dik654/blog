@@ -1,0 +1,205 @@
+{
+  "run_id": "2026-07-20-ai-current-flow-gap-audit",
+  "status": "complete_and_publicly_verified",
+  "objective": "Use the supplied AI landscape transcript as an audit signal, compare its mechanisms with the existing current-first curriculum, and add only the missing reusable flows rather than publishing a transcript summary.",
+  "intent_correction": {
+    "wrong_interpretation": "Create and place a public HongLab landscape synthesis article.",
+    "correct_interpretation": "Audit existing current topics against the transcript, retain sufficient paths, and write deep mechanism articles only for genuine gaps.",
+    "removed_artifacts": [
+      "src/pages/articles/ai/research-honglab-ai-landscape-2026.tsx",
+      "src/pages/articles/ai/research-honglab-ai-landscape-2026/viz/TranscriptClaimRouter.tsx",
+      "src/pages/articles/ai/content-specs/research-honglab-ai-landscape-2026.md",
+      "src/pages/category/SystemsFoundationPath.tsx",
+      "tests/honglab-ai-landscape-qa.spec.ts"
+    ]
+  },
+  "gap_decisions": [
+    {
+      "flow": "MoE and hybrid architecture",
+      "existing_evidence": ["llm-architecture-gallery", "llm-architecture-sparse-moe", "llm-architecture-hybrid-linear"],
+      "decision": "retain_existing",
+      "reason": "The existing route already exposes routing, active parameters, cache and hybrid sequence mechanisms."
+    },
+    {
+      "flow": "Reasoning RL, RLVR and distillation",
+      "existing_evidence": ["post-training-rlvr", "rlhf", "open-r1", "knowledge-distillation"],
+      "decision": "retain_existing",
+      "reason": "Training-time reward, verifiers, preference learning and distillation already have independent mechanism coverage."
+    },
+    {
+      "flow": "Agents, RAG and harness engineering",
+      "existing_evidence": ["context-engineering", "rag-pipeline", "claw-overview"],
+      "decision": "retain_existing",
+      "reason": "The curriculum already separates retrieval, context, tools, state and runtime orchestration."
+    },
+    {
+      "flow": "LLM data engine",
+      "decision": "add",
+      "article": "llm-data-engine",
+      "reason": "Collection, extraction, deduplication, mixture design, verified synthesis and contamination were scattered but not one executable data contract."
+    },
+    {
+      "flow": "Efficient inference and on-device placement",
+      "decision": "add",
+      "article": "efficient-inference-on-device",
+      "reason": "Quantization and serving existed, but native low-bit training, MTP/runtime separation, resident memory and CPU/GPU/NPU placement lacked one device-budget route."
+    },
+    {
+      "flow": "Speech and audio AI",
+      "decision": "add",
+      "article": "speech-audio-models",
+      "reason": "Signal foundations existed without the current audio-token, native speech-to-speech, realtime latency and turn-state system contract."
+    },
+    {
+      "flow": "World models and Physical AI",
+      "decision": "add",
+      "article": "world-model-physical-ai",
+      "reason": "Classical model-based RL and robot foundations existed without a current bridge from video representation to action-conditioned latent prediction and closed-loop planning evidence."
+    }
+  ],
+  "source_intents": [
+    {
+      "source": "DataComp-LM",
+      "url": "https://www.datacomp.ai/dclm/",
+      "intent": "Treat data curation as a controlled training intervention rather than an unmeasured cleanup step."
+    },
+    {
+      "source": "FineWeb",
+      "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "intent": "Ground extraction, filtering and deduplication in an inspectable open corpus pipeline."
+    },
+    {
+      "source": "Textbooks Are All You Need II",
+      "url": "https://www.microsoft.com/en-us/research/?p=967830",
+      "intent": "Use synthetic textbook data as a bounded result, not a universal claim that clean data alone solves pretraining."
+    },
+    {
+      "source": "BitNet b1.58 2B4T",
+      "url": "https://arxiv.org/abs/2504.12285",
+      "intent": "Separate native ternary-weight training from post-training quantization."
+    },
+    {
+      "source": "Better and Faster LLMs via Multi-token Prediction",
+      "url": "https://arxiv.org/abs/2404.19737",
+      "intent": "Separate a future-token training objective from an actual speculative verification runtime."
+    },
+    {
+      "source": "Gemma 3n developer guide",
+      "url": "https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/",
+      "intent": "Anchor on-device architecture and effective resident parameter claims to a concrete official design."
+    },
+    {
+      "source": "Qwen3-Omni",
+      "url": "https://github.com/QwenLM/Qwen3-Omni",
+      "intent": "Ground native omni speech architecture and multi-codebook generation in a public implementation."
+    },
+    {
+      "source": "OpenAI voice infrastructure",
+      "url": "https://openai.com/index/delivering-low-latency-voice-ai-at-scale/",
+      "intent": "Separate model latency from realtime transport, relay, jitter and session engineering."
+    },
+    {
+      "source": "V-JEPA 2",
+      "url": "https://ai.meta.com/research/vjepa/",
+      "intent": "Separate latent video representation, action-conditioned post-training and robot planning evidence."
+    },
+    {
+      "source": "Genie 3",
+      "url": "https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/",
+      "intent": "Use interactive visual-world evidence without upgrading visual consistency into metric physics or robot-control proof."
+    },
+    {
+      "source": "Cosmos 3 technical report",
+      "url": "https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf",
+      "intent": "Connect current omnimodal world foundation models to Physical AI while preserving task-specific evidence boundaries."
+    }
+  ],
+  "events": [
+    {
+      "id": "intent.correct.001",
+      "observed": "The first implementation turned the supplied transcript into a standalone public landscape article.",
+      "inference": "That artifact answered what the video said, not which mechanisms were absent from the user's existing latest-flow curriculum.",
+      "decision": "Delete the public synthesis and use the transcript only as an audit input.",
+      "changed_artifact": "Transcript route, role, metadata, Viz, spec and focused QA removed; old run marked superseded.",
+      "verification": "The old URL now resolves to the site's article-not-found state and no transcript title appears in the LLM route."
+    },
+    {
+      "id": "gap.audit.001",
+      "observed": "Architecture, reasoning, agent and GPU-serving themes already had deep routes, while data engineering, device-native inference, realtime audio and current world-model links were fragmented or absent.",
+      "inference": "Adding every transcript topic would duplicate the graph; adding four independent contracts closes the actual transfer gaps.",
+      "decision": "Retain three existing areas and add four current-first tracks and articles.",
+      "changed_artifact": "articlesCurrentFlows.ts, topdownResearchTracks.ts, AI subcategories and four article modules.",
+      "verification": "Each new route exposes current source, canonical stop, minimum concepts, just-in-time foundations, stop rule and update rule."
+    },
+    {
+      "id": "content.transfer.001",
+      "observed": "A readable explanation can still omit the decisions needed to solve an unfamiliar implementation problem.",
+      "inference": "Depth must be tested against private transfer problems rather than by article length.",
+      "decision": "Define one hard transfer problem per flow and make every section supply a required premise, calculation or evidence boundary.",
+      "changed_artifact": "ai-current-flow-gap-audit-2026-07.md and CapabilityCheck sections in all four articles.",
+      "verification": "The specs cover corpus mixtures, an 8GB device deployment, a duplex mobile voice assistant and action-conditioned robot planning."
+    },
+    {
+      "id": "math.readability.001",
+      "observed": "Some one-line Korean-underbrace equations technically fit only after shrinking into the 7-9px range, and late KaTeX font layout could briefly overflow.",
+      "inference": "No horizontal scroll is insufficient; the operation must remain readable on 360px screens.",
+      "decision": "Split data gates, token budget, dequantization, STFT, audio latency, JEPA and MPC into semantic rows; wait for stable fitting and audit rendered font size.",
+      "changed_artifact": "Four articles, shared math fitting and ai-current-flow-gaps.spec.ts.",
+      "verification": "All display equations render as KaTeX with Korean operation labels, at least 9.5px computed math size and no material overflow at 360, 390, 768 and 1440 pixels."
+    },
+    {
+      "id": "ia.cards.001",
+      "observed": "AI category cards without custom thumbnails used unsupported emoji glyphs and reserved a large empty image band.",
+      "inference": "The broken glyphs and excess whitespace made the new current paths look unrelated and unfinished.",
+      "decision": "Use semantic Lucide icons in compact fallback cards and give existing SVG thumbnails stable dimensions.",
+      "changed_artifact": "src/pages/category/SubcategoryCard.tsx",
+      "verification": "The AI map and target-stage cards render without missing glyphs at mobile and desktop widths."
+    }
+  ],
+  "small_model_replay": {
+    "four_b_passes": [
+      "Given one transcript claim and a route inventory excerpt, output retain, extend or add with one mechanism-based reason.",
+      "Given one primary source excerpt, extract claim, evidence level, assumptions and forbidden extrapolation into a fixed JSON packet.",
+      "Given one immutable equation, split it into aligned semantic rows while preserving every symbol and attach Korean operation labels.",
+      "Given one viewport defect packet, change one Viz or formula and return exact before/after measurements."
+    ],
+    "nine_b_passes": [
+      "Merge 4-6 claim packets into one problem-to-mechanism article section without source-order summarization.",
+      "Build one current/canonical/concepts/foundations/stop/update research track from audited sources.",
+      "Check whether the article premises solve the private transfer problem and list uncovered premises only.",
+      "Design one interactive Viz with control, observable output, invariant, failure boundary and responsive states."
+    ],
+    "orchestrator_only": [
+      "resolve the user's actual intent before choosing the public artifact",
+      "audit duplicates and prerequisite cycles across the whole curriculum",
+      "approve primary sources and distinguish author-reported evidence",
+      "keep notation and source claims immutable across parallel passes",
+      "run cross-viewport browser QA, screenshot review and deployment"
+    ],
+    "event_schema": "observed -> inference -> decision -> changed artifact -> verification"
+  },
+  "qa": {
+    "production_build": "passed; existing large-chunk warning remains",
+    "formula_stability": "36/36 repeated current-flow checks passed across 360, 390, 768 and 1440 pixels",
+    "focused_local": "40/40 current-flow, current-first and prior power-electronics regression checks passed",
+    "screenshot_review": "four Viz reviewed at 360 and 1440 pixels; AI category and compact fallback cards reviewed at 390 pixels",
+    "full_local": "183/183 passed in 34.6 seconds",
+    "public": "28/28 current-flow and current-first checks passed in 20.7 seconds; all four new routes returned HTTP 200",
+    "deployment": "cm-blog.service active after restart at 2026-07-20 22:45:02 KST"
+  },
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/ai-current-flow-gap-audit-2026-07.md",
+    "metadata": "src/content/ai/articlesCurrentFlows.ts",
+    "tracks": "src/content/ai/topdownResearchTracks.ts",
+    "articles": [
+      "src/pages/articles/ai/llm-data-engine.tsx",
+      "src/pages/articles/ai/efficient-inference-on-device.tsx",
+      "src/pages/articles/ai/speech-audio-models.tsx",
+      "src/pages/articles/ai/world-model-physical-ai.tsx"
+    ],
+    "viz": "src/pages/articles/ai/current-flows/viz/CurrentFlowExplorers.tsx",
+    "category_cards": "src/pages/category/SubcategoryCard.tsx",
+    "qa": "tests/ai-current-flow-gaps.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-20-ai-current-flow-gap-audit-report.md"
+  }
+}

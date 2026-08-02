@@ -1,0 +1,13 @@
+[Unit]
+Description=Discover new papers and official research posts for the blog
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/heru/code/blog
+Environment=PATH=/home/heru/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/heru/.local/bin/npm run research:discover -- --since-days=45
+
+[Install]
+WantedBy=default.target

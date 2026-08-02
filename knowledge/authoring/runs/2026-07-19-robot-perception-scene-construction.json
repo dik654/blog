@@ -1,0 +1,159 @@
+{
+  "run_id": "2026-07-19-robot-perception-scene-construction",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing bottom-up bridge from calibrated robot observations to persistent tracks and an atomic, conservative planning scene.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue after camera geometry and before motion planning's assumed collision-scene snapshot.",
+    "content_intent": "Use a private transfer problem to force coverage of observation, temporal identity, probabilistic free space, dynamic layers, uncertainty, and planner handoff.",
+    "visual_intent": "Use measurable interactive evidence, semantic color, restrained line weight, stable dimensions, and mobile compositions rather than scaled desktop diagrams.",
+    "provenance_intent": "Store why each section exists, the primary source supporting it, and what that source does not establish.",
+    "small_model_intent": "Persist artifact boundaries, decisions, defects, and verification so 4B-9B models can replay bounded passes without reconstructing hidden context."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-ai-top-down names detection, segmentation, fitting, outliers, and tracking at overview depth",
+      "robot-camera-geometry-calibration ends at one time-aligned metric observation",
+      "multiview-fusion covers generic feature fusion for classification",
+      "robot-motion-planning assumes a versioned collision scene already exists"
+    ],
+    "missing_chain": [
+      "model_output_to_observation_contract",
+      "mask_depth_to_3d_support",
+      "robot_self_filter",
+      "prediction_gating_assignment_update",
+      "track_lifecycle_and_occlusion",
+      "representation_by_planner_query",
+      "free_occupied_unknown_ray_model",
+      "bounded_log_odds_fusion",
+      "octree_pruning_and_multiresolution",
+      "static_dynamic_layering",
+      "uncertainty_collision_inflation",
+      "atomic_planning_scene_version"
+    ],
+    "scope_boundary": "Detector backbone training, full SLAM, learned occupancy, and full TSDF implementation remain independent articles."
+  },
+  "source_decisions": [
+    {
+      "source": "Mask R-CNN, ICCV 2017",
+      "used_for": ["instance mask versus box output", "parallel mask branch", "alignment sensitivity"],
+      "boundary": "A mask score is not 3D occupancy probability or persistent identity."
+    },
+    {
+      "source": "SORT 2016 and ByteTrack ECCV 2022",
+      "used_for": ["predict-gate-assign-update baseline", "one-to-one matching", "restricted low-score occlusion recovery"],
+      "boundary": "Image-space MOT benchmarks and thresholds do not certify robot 3D tracking or collision safety."
+    },
+    {
+      "source": "Hornung et al., OctoMap, Autonomous Robots 2013",
+      "used_for": ["free/occupied/unknown", "ray inverse sensor model", "log odds", "clamping", "pruning", "multi-resolution", "accuracy/memory/runtime evidence"],
+      "boundary": "The paper uses mostly static laser/RGB-D datasets and does not solve semantic tracking, dynamic-object lifecycle, or modern PlanningScene concurrency."
+    },
+    {
+      "source": "MoveIt Rolling Planning Scene Monitor and moveit_msgs",
+      "used_for": ["occupancy updater", "self-filter", "octomap collision world", "world/attached object and collision-policy fields"],
+      "boundary": "Application-level atomic versioning, covariance, freshness, and provenance still need explicit policy."
+    },
+    {
+      "source": "ROS 2 Rolling PointCloud2",
+      "used_for": ["acquisition frame/time", "organized versus unordered layout", "additional point fields"],
+      "boundary": "The message does not validate units, color-depth registration, invalid-depth policy, or object identity."
+    },
+    {
+      "source": "Curless and Levoy 1996",
+      "used_for": ["weighted signed-distance surface fusion", "representation comparison"],
+      "boundary": "Surface reconstruction is not identical to explicit planner free/unknown occupancy."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 13,
+    "artifact": "src/pages/articles/ai/content-specs/robot-perception-scene-construction.md",
+    "scenario": "Wrist RGB-D camera, overlapping mugs, partial hand occlusion, glossy invalid depth, mixed boundary pixels, robot self-points, motion, one miss, low-score return, and concurrent planning-scene update.",
+    "publication_policy": "Keep the integrated problem private; expose every needed insight as derivation, Viz, or operational gate."
+  },
+  "implementation_decisions": [
+    "Order nine sections by the physical state-construction path rather than by model family.",
+    "Use model-output capability comparison before presenting any algorithm so the evidence boundary is explicit.",
+    "Combine valid mask pixels into a 3D support set and preserve support count, contamination, covariance, frame, and time instead of using a box-center depth.",
+    "Separate high-score new-object creation from low-score recovery of existing tracks; never let every low-score box create an object.",
+    "Compare point cloud, TSDF, occupancy, and object tracks by planner query rather than calling one representation universally best.",
+    "Use ray clearing, bounded log odds, static/dynamic layers, and scene-version invalidation as distinct operational policies.",
+    "Use red only for violated invariants; use blue for observation/identity, emerald for accepted/free, amber for uncertainty, violet for probabilistic state.",
+    "Keep dense labels in responsive HTML and use SVG only where spatial geometry adds explanatory value.",
+    "Put Korean semantic labels directly inside article-specific LaTeX and let the shared registry recognize explicit annotated formulas.",
+    "Reconstruct OctoMap as prior bottleneck, author intent, mechanism, equations, evidence, assumptions, reproduction, failure, and legacy rather than a summary."
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-perception-scene-construction.md",
+    "concept_article": "src/pages/articles/ai/robot-perception-scene-construction.tsx",
+    "paper_spec": "src/pages/articles/ai/paper-spine/robotPerceptionSpecs.tsx",
+    "paper_viz": "src/pages/articles/ai/paper-spine/viz/OctoMapEvidenceLab.tsx",
+    "paper_article": "src/pages/articles/ai/paper-octomap-2013.tsx",
+    "formula_annotation_contract": "src/content/ai/foundationFormulaAnnotations.ts",
+    "font_contract": "src/index.css",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "research_tracking": "knowledge/research-pipeline/topics.json",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "qa": {
+    "production_build": "passed; existing large-chunk warning remains",
+    "targeted_lint": "passed for concept article, paper spec/Viz/wrapper, metadata, curriculum, and learning paths",
+    "viewports": {
+      "360": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 0.78, "paper_min_math_scale": 0.77 },
+      "390": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 0.87, "paper_min_math_scale": 0.86 },
+      "768": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1 },
+      "1440": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1 }
+    },
+    "interaction_checks": [
+      "all 9 concept Viz controls changed visible state and measured outputs",
+      "OctoMap leaf/parent query changed node count and conservative explanation",
+      "association and scene-version failure states remain visibly distinct",
+      "mobile timeline uses a 3x2 grid and has no internal horizontal scroll"
+    ],
+    "visual_review": "mobile and desktop element screenshots reviewed for whitespace, hierarchy, line weight, color semantics, text clipping, CJK fallback, and fixed-header artifacts",
+    "public_deployment": {
+      "service": "cm-blog.service restarted successfully",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-perception-scene-construction",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-octomap-2013"
+      ],
+      "http_status": 200,
+      "browser_checks": "390 and 1440 px: zero document overflow, KaTeX errors, missing annotations, clipped SVG text, tofu metric values, and console errors; concept has 9 Viz and paper page has 2 evidence explorers.",
+      "interaction_checks": "Public association gate and OctoMap parent-resolution controls changed visible state.",
+      "category_integration": "ai-robotics list contains concept and paper at 390 px with zero document overflow."
+    }
+  },
+  "repair_log": [
+    {
+      "defect": "Long Korean underbrace formulas reached the global 0.52 minimum scale on 360-390 px screens.",
+      "diagnosis": "Zero document overflow hid a readability failure; one display combined several semantic operations into a single wide row.",
+      "repair": "Split mask-depth support, Mahalanobis distance, assignment, inverse sensor, log-odds, clamping, uncertainty margin, and scene gate into aligned derivation rows.",
+      "verification": "Concept minimum scale improved from 0.52 to 0.78 at 360 and 0.87 at 390; paper minimum improved to 0.77 and 0.86."
+    },
+    {
+      "defect": "Track lifecycle used a 560 px minimum-width timeline with horizontal scrolling on phones.",
+      "diagnosis": "The six temporal samples are discrete and can wrap without losing order.",
+      "repair": "Changed mobile layout to a stable 3x2 grid and desktop to six columns.",
+      "verification": "No overflowing non-KaTeX elements and no document or internal timeline scroll at 360/390."
+    },
+    {
+      "defect": "Korean metric values rendered as tofu boxes under Tailwind's default monospace stack.",
+      "diagnosis": "The global sans token had Noto Sans KR fallback but the mono token did not.",
+      "repair": "Defined a mono font token that preserves Latin monospace faces and falls back to Noto Sans KR Variable for CJK glyphs.",
+      "verification": "Mobile and desktop screenshots show 없음, 높음, 증거 부족, 정책 없음, and 매움 correctly."
+    },
+    {
+      "defect": "The mobile 330x200 association SVG was scaled across the desktop article width, creating excessive whitespace and oversized marks.",
+      "diagnosis": "A single aspect ratio could not provide readable mobile labels and dense desktop trajectory framing.",
+      "repair": "Added a dedicated 700x240 desktop composition with recalculated path and object coordinates while keeping the mobile viewBox.",
+      "verification": "Desktop screenshot uses the width for crossing trajectories and keeps the metric ledger visible without a tall empty field."
+    },
+    {
+      "defect": "Directly Korean-annotated formulas were reported missing because the global registry only accepted exact mapped source strings.",
+      "diagnosis": "Article-specific formulas already contained underbrace/overbrace text, so duplicating the full string in a central map was bookkeeping without added semantics.",
+      "repair": "The shared annotation resolver now accepts explicit brace-plus-text formulas as annotated while retaining registry rewrites for legacy raw equations.",
+      "verification": "Missing annotation count and KaTeX error count are zero on both pages at all four viewports."
+    }
+  ]
+}

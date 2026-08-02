@@ -1,0 +1,311 @@
+{
+  "date": "2026-07-23",
+  "scope": "LLM Serving 11 articles and On-device 2 articles",
+  "transport": {
+    "orchestrator": "context-manager runDelegatedPrompt",
+    "candidate": "claude-code:sonnet",
+    "candidate_count_per_request": 1,
+    "workdir": "/home/heru/code/blog",
+    "harness_mode": "plan",
+    "worker_timeout_ms": 420000,
+    "direct_claude_cli_used_by_codex": false,
+    "codex_fallback_count": 0
+  },
+  "acceptance": {
+    "article_unit": "one article plus directly imported local components only when essential",
+    "required_response_prefix": "[claude-code:sonnet <slug>]",
+    "invalid_header_responses_are_not_counted": true,
+    "high_or_medium_findings_reported_immediately_to_root": true
+  },
+  "summary": {
+    "requested": 13,
+    "valid_claude_reviews": 13,
+    "pass": 3,
+    "findings": 10,
+    "high": 3,
+    "medium": 8,
+    "low": 8,
+    "fallbacks": 0,
+    "invalid_header_attempts_discarded": 2
+  },
+  "reviews": [
+    {
+      "slug": "llm-disaggregated-serving",
+      "header": "[claude-code:sonnet llm-disaggregated-serving]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 139222,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/llm-disaggregated-serving.tsx:59,64,69",
+          "claim": "GQA and MLA are central to the KV-byte argument but are never expanded or defined.",
+          "correction": "Define Grouped-Query Attention and Multi-head Latent Attention at first use or in the ConceptPrimer."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/llm-disaggregated-serving.tsx:48-49",
+          "claim": "GEMM and roofline are used without a first-use gloss.",
+          "correction": "Add short matrix-multiplication and performance-model definitions."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/llm-disaggregated-serving.tsx:83-84",
+          "claim": "RDMA, UCX, libfabric and NIXL are introduced without definitions.",
+          "correction": "Add a short transport-stack gloss at first use."
+        }
+      ]
+    },
+    {
+      "slug": "vllm-serving",
+      "header": "[claude-code:sonnet vllm-serving]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 402189,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "high",
+          "location": "src/pages/articles/ai/vllm-serving/ModelOptimization.tsx:51-56",
+          "claim": "The quoted FlashAttention abstract assigns 2.4x to GPT-2 and a general 20x memory claim.",
+          "evidence": "The linked abstract reports 3x on GPT-2 and 2.4x on Long Range Arena; the 20x sentence is not in the abstract.",
+          "correction": "Use the actual abstract figures or rewrite as a correctly scoped paraphrase."
+        },
+        {
+          "severity": "high",
+          "location": "src/pages/articles/ai/vllm-serving/SpeculativeDecoding.tsx:48-59",
+          "claim": "The quoted EAGLE abstract reports 2.13x-3.06x.",
+          "evidence": "The linked EAGLE abstract reports 2.7x-3.5x for LLaMA2-Chat 70B.",
+          "correction": "Use the linked paper's actual figure or cite the source that reports 2.13x-3.06x."
+        },
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/vllm-serving.tsx:23-24",
+          "claim": "The file tree exposes block-pool and speculative-decoding files but the sidebar receives only sharedCodeRefs, leaving many visible nodes disabled.",
+          "correction": "Merge the relevant CodeRef maps or restrict the tree to wired files."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/vllm-serving/BlockManagerSection.tsx:34,96",
+          "claim": "APC is not expanded.",
+          "correction": "Expand Automatic Prefix Caching at first use."
+        }
+      ]
+    },
+    {
+      "slug": "vllm-paged-attention",
+      "header": "[claude-code:sonnet vllm-paged-attention]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 178463,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/vllm-paged-attention/KVCacheManagerSection.tsx:36 and src/pages/articles/ai/vllm-serving/codeRefsBlockPool.ts:73",
+          "claim": "The allocation-layout ASCII diagram is attributed to vendored source lines 289-321.",
+          "evidence": "The diagram is at kv_cache_manager.py lines 250-271; lines 289-321 contain prose and executable allocation code.",
+          "correction": "Point the article and CodeRef to lines 250-271, or 250-282 including abbreviations."
+        }
+      ]
+    },
+    {
+      "slug": "vllm-scheduler",
+      "header": "[claude-code:sonnet vllm-scheduler]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 229618,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/vllm-scheduler/ScheduleMethod.tsx:26",
+          "claim": "The new-token equation omits num_output_placeholders.",
+          "evidence": "Vendored scheduler.py computes num_tokens_with_spec + num_output_placeholders - num_computed_tokens.",
+          "correction": "Add the placeholder term or explicitly scope the simplified equation to synchronous scheduling."
+        }
+      ]
+    },
+    {
+      "slug": "vllm-spec-decode",
+      "header": "[claude-code:sonnet vllm-spec-decode]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 242073,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/vllm-spec-decode/Overview.tsx and src/pages/articles/ai/vllm-serving/codeRefsSpecDecode.ts",
+          "claim": "The source link for SpecDecodeBaseProposer constructor logic exists only in an unrendered Overview component.",
+          "correction": "Add a reachable CodeViewButton in DraftVerify or EagleMtp, or remove the superseded dead component and re-home the link."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/vllm-spec-decode/DraftVerify.tsx:43-44",
+          "claim": "EAGLE3 is used before its later definition.",
+          "correction": "Define the EAGLE versus EAGLE3 distinction at first use."
+        }
+      ]
+    },
+    {
+      "slug": "vllm-vlm-serving",
+      "header": "[claude-code:sonnet vllm-vlm-serving]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 126155,
+      "verdict": "pass",
+      "findings": []
+    },
+    {
+      "slug": "llm-serving-ops",
+      "header": "[claude-code:sonnet llm-serving-ops]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 96535,
+      "verdict": "pass",
+      "findings": []
+    },
+    {
+      "slug": "serving-deployment",
+      "header": "[claude-code:sonnet serving-deployment]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 198430,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "high",
+          "location": "src/pages/articles/ai/serving-deployment.tsx:39",
+          "claim": "t_start=240s is defined as weight-load-to-readiness.",
+          "evidence": "The adjacent release visualization treats 240s as startup through engine-alive and places readiness warmup in a later gate.",
+          "correction": "Scope 240s to the startup lower bound or include the additional readiness duration."
+        }
+      ]
+    },
+    {
+      "slug": "k8s-gpu-fleet",
+      "header": "[claude-code:sonnet k8s-gpu-fleet]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 103245,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/k8s-gpu-fleet.tsx:24,70",
+          "claim": "DRA is said to have become stable in Kubernetes 1.35.",
+          "evidence": "DRA core graduated to GA/stable in 1.34; 1.35 locks the feature gate on.",
+          "correction": "Attribute stable graduation to 1.34 and optionally explain the 1.35 lock-on change."
+        }
+      ]
+    },
+    {
+      "slug": "litellm-gateway",
+      "header": "[claude-code:sonnet litellm-gateway]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 84146,
+      "verdict": "pass",
+      "findings": []
+    },
+    {
+      "slug": "observability-aiops",
+      "header": "[claude-code:sonnet observability-aiops]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 311695,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/observability-aiops.tsx:55,59",
+          "claim": "KV, preemption and canary are first used without definitions.",
+          "correction": "Add inline glosses or ConceptPrimer entries."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/observability-aiops.tsx:79",
+          "claim": "The OpenTelemetry GenAI attributes link is a legacy location.",
+          "correction": "Optionally update to the current semantic-conventions-genai canonical repository."
+        }
+      ]
+    },
+    {
+      "slug": "on-device-llm-runtime",
+      "header": "[claude-code:sonnet on-device-llm-runtime]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 172703,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/on-device-llm-runtime.tsx:29,39,49",
+          "claim": "KV is used as a load-bearing term without expanding Key-Value cache.",
+          "correction": "Add a first-use KV cache gloss."
+        }
+      ]
+    },
+    {
+      "slug": "efficient-inference-on-device",
+      "header": "[claude-code:sonnet efficient-inference-on-device]",
+      "header_valid": true,
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 224164,
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/efficient-inference-on-device.tsx:44-48,79-96",
+          "claim": "Several underbraced formula outputs and overhead terms are missing from adjacent FormulaNote symbol tables.",
+          "correction": "Add symbol rows for T_token, T_launch/T_sync, L_MTP and S."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/efficient-inference-on-device.tsx:41,46,100-111",
+          "claim": "TOPS and NPU are not expanded at first use.",
+          "correction": "Expand Tera Operations Per Second and Neural Processing Unit."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/efficient-inference-on-device.tsx:126",
+          "claim": "OOM is not expanded.",
+          "correction": "Expand Out Of Memory or use Korean wording."
+        }
+      ]
+    }
+  ],
+  "discarded_attempts": [
+    {
+      "slug": "observability-aiops",
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 116195,
+      "reason": "The response included prose before the required Claude header and was not counted."
+    },
+    {
+      "slug": "on-device-llm-runtime",
+      "worker": "claude-code:sonnet",
+      "fallback": false,
+      "duration_ms": 274378,
+      "reason": "The response included plan-mode prose before the required Claude header and was not counted."
+    }
+  ],
+  "article_sources_modified": false,
+  "formal_goal_complete": false
+}

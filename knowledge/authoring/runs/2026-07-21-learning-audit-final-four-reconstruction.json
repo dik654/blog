@@ -1,0 +1,106 @@
+{
+  "run_id": "2026-07-21-learning-audit-final-four-reconstruction",
+  "date": "2026-07-21",
+  "objective": "Resolve the remaining review-needed articles and integrate Ideogram 4 and Krea 2 into the current-to-foundation image model path.",
+  "targets": [
+    { "slug": "qwen-korean-consistency", "role": "diagnostic-teaching", "final_score": 0 },
+    { "slug": "comfyui-edit-models-flux-qwen", "role": "workflow-teaching", "final_score": 0 },
+    { "slug": "discrete-log", "role": "math-foundation", "final_score": 0 },
+    { "slug": "open-image-video-models", "role": "current-model-map", "final_score": 0 }
+  ],
+  "observations": [
+    "Qwen language consistency had to be split across prompt, emitted trace, weight, post-training, and runtime contracts.",
+    "Smoothie-Qwen and Korean RL use different model generations and intervention layers.",
+    "ComfyUI model lists are less useful than tracing image, mask, semantic, appearance, latent, and denoiser contracts.",
+    "DLP needed a complete small-number BSGS derivation before security-strength claims.",
+    "The current image map needed Ideogram 4, Krea 2, FLUX.2, and Qwen Image Edit placed by task and control surface.",
+    "A single annotated Qwen formula scaled to 0.52 on 390px and was technically contained but not legible."
+  ],
+  "decisions": [
+    "Use current goal to minimum foundation learning paths instead of chronological paper accumulation.",
+    "Replace fact-sheet tables with model-by-model causal narratives.",
+    "Use HTML StepViz flows that stack on mobile.",
+    "Split long formulas by semantic operation while preserving Korean underbrace annotations.",
+    "Separate open API, commercial use, open weights, and local execution claims.",
+    "Place discrete log before finite fields in the top-down ZK math path."
+  ],
+  "private_acceptance_questions": [
+    "How should an unwanted-language failure be narrowed across prompt, logits, post-training, and runtime?",
+    "Why does lower temperature not guarantee the desired output language?",
+    "Why can static token suppression damage valid translation requests?",
+    "Why are the Qwen2.5 Smoothie result and Qwen3 Korean RL result not one experiment series?",
+    "How are semantic and appearance conditions traced through a ComfyUI workflow?",
+    "How is x recovered in the mod-17 BSGS example?",
+    "Why does generic 128-bit EC security not imply the same key sizing for finite-field DLP?",
+    "How should Ideogram, Krea, FLUX, and Qwen be selected by production failure cost?"
+  ],
+  "current_model_integration": {
+    "Ideogram 4": "typography, layout, bounding-box and production-design control",
+    "Krea 2": "style reference, moodboard-oriented control, Raw and Turbo open-weight scope",
+    "FLUX.2": "unified generation and editing with multiple references",
+    "Qwen Image Edit": "semantic and appearance dual-conditioning edit path"
+  },
+  "claude_review": {
+    "mode": "safe-mode, read-only, target-file scope",
+    "accepted_findings": [
+      "split FLUX.2 klein into 4B and 9B and scope license and memory claims",
+      "make Qwen2.5 versus Qwen3 study boundaries explicit",
+      "separate current Ideogram layers from roadmap layers",
+      "move the 8-column DLP grid breakpoint to md"
+    ],
+    "rechecked_not_changed": [
+      "the paper reports identical AIME 2025 base and SFT values",
+      "the BSGS inverse direction and x=im+j derivation are correct"
+    ]
+  },
+  "verification": {
+    "eslint": "pass",
+    "diff_check": "pass",
+    "vite_build": "pass with existing large chunk warning",
+    "playwright_local": {
+      "result": "12/12 pass",
+      "viewports": ["390x844", "768x1024", "1440x900"],
+      "routes": 4
+    },
+    "playwright_public": {
+      "result": "12/12 pass",
+      "http_status": "4/4 routes returned 200",
+      "viewports": ["390x844", "768x1024", "1440x900"]
+    },
+    "formula_scale": {
+      "qwen_mobile_before": 0.52,
+      "qwen_mobile_after_min": 0.97,
+      "discrete_log_mobile_min": 0.82
+    },
+    "learning_flow_audit": {
+      "registered": 567,
+      "release_blockers": 0,
+      "review_needed": 0,
+      "target_scores": [0, 0, 0, 0]
+    },
+    "tsc": "blocked by pre-existing errors outside this batch",
+    "deployment": "cm-blog.service active after restart at 2026-07-21 14:40:18 KST"
+  },
+  "small_model_protocol": {
+    "4b": [
+      "metadata and learning-path extraction",
+      "claim volatility classification",
+      "formula and annotation inventory",
+      "DOM order and overflow measurements"
+    ],
+    "9b": [
+      "single-document role classification",
+      "private acceptance question generation",
+      "primary-source-bounded causal reconstruction",
+      "answerability gap detection"
+    ],
+    "integrator": [
+      "latest-to-foundation placement",
+      "license and reported-metric adjudication",
+      "minimum foundation cutoff",
+      "formula correctness and visual QA",
+      "deployment and public-host verification"
+    ]
+  },
+  "report": "knowledge/authoring/runs/2026-07-21-learning-audit-final-four-reconstruction-report.md"
+}

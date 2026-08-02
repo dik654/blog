@@ -1,0 +1,108 @@
+{
+  "run_id": "2026-07-20-navigation-connection-revision",
+  "status": "complete_and_publicly_verified",
+  "superseded_by": "2026-07-20-systematic-topdown-curriculum",
+  "objective": "Make every sidebar level and article route expose an intelligible local connection without inventing one universal reading chain.",
+  "navigation_contract": {
+    "root": "architectural layer",
+    "category_stage": "map, target, just-in-time foundation, or implementation",
+    "parent_subcategory": "independent branch selector",
+    "leaf_subcategory": "ordered core reading sequence",
+    "source_article": "optional evidence attached to a core concept",
+    "article": "linked parent, current position, previous step, and next step"
+  },
+  "audit": {
+    "categories": 9,
+    "subcategories": 159,
+    "articles": 541,
+    "declared_path_articles": 108,
+    "fallback_navigation_articles": 433,
+    "unresolved_navigation": 0,
+    "unknown_path_ids": 0,
+    "missing_path_steps": 0
+  },
+  "events": [
+    {
+      "id": "connection.ai-map.001",
+      "observed": "AI 전체 지도, 지식 시스템 and 로봇 AI were presented as three equivalent map entries.",
+      "inference": "The first is orientation while the other two are destination capabilities.",
+      "decision": "Keep AI 전체 지도 alone in stage 00 and move 지식 시스템 and 로봇 AI to stage 01.",
+      "verification": "Sidebar tests assert exact stage membership on mobile and desktop."
+    },
+    {
+      "id": "connection.parent.001",
+      "observed": "Parent routes flattened unrelated descendant articles into one implied sequence.",
+      "inference": "A parent with children must help readers choose a branch, not prescribe all branches.",
+      "decision": "Render child branches before any parent-owned material and suppress flattened descendant cards.",
+      "verification": "LLM renders five branches and zero descendant article cards; AML/CFT retains its direct article."
+    },
+    {
+      "id": "connection.leaf.001",
+      "observed": "Large leaves exposed many articles without a visible starting point or position.",
+      "inference": "A leaf is the narrowest trustworthy scope for deterministic local ordering.",
+      "decision": "Number core articles, summarize start/end, and fold source records into an optional evidence section.",
+      "verification": "Reth renders all 22 core entries with stable positions."
+    },
+    {
+      "id": "connection.article.001",
+      "observed": "433 articles had no hand-authored learning-path context.",
+      "inference": "Direct visits still need a truthful local route, but a global semantic chain cannot be inferred safely.",
+      "decision": "Generate same-subcategory fallback navigation and prefer a valid declared route when present.",
+      "verification": "All 541 articles resolve; unknown, missing and broken path counts are zero."
+    },
+    {
+      "id": "connection.overflow.001",
+      "observed": "A long next-article title exceeded its mobile card by 25 pixels.",
+      "inference": "An inline min-width rule did not create a shrinkable flex item, and truncation hid useful context.",
+      "decision": "Use a block flex item with min-width zero and wrapped title text.",
+      "verification": "The targeted formula/Viz mobile overflow test and the full suite pass."
+    }
+  ],
+  "fallback_algorithm": [
+    "find the exact containing subcategory recursively",
+    "separate source and paper records from core records",
+    "preserve authored order within each group",
+    "navigate only inside the article's matching group",
+    "use a valid declared learning path when it explicitly contains the article"
+  ],
+  "source_policy": {
+    "required_metadata": ["source identity", "publication date", "claim scope", "updated core concept"],
+    "frontier_update": "append the new item to the top of its target route",
+    "foundation_update": "add a lower prerequisite only when the new frontier item introduces a strict dependency",
+    "history_rule": "publication age alone never makes a source mandatory"
+  },
+  "small_model_replay": {
+    "four_b_scope": "classify one parent or leaf and return node_kind, reader_outcome, strict_prerequisites, core_articles, optional_sources, and placement_reason",
+    "nine_b_scope": "review one category for branch exclusivity, orphan articles, cycles, source links, and start-to-finish capability progression",
+    "orchestrator_only": [
+      "cross-category consistency",
+      "declared-path validation",
+      "fallback generation",
+      "responsive visual QA",
+      "full regression testing",
+      "deployment"
+    ]
+  },
+  "qa": {
+    "production_build": "passed; existing large-chunk warning remains",
+    "focused_playwright": "16/16 passed",
+    "full_local_playwright": "191/191 passed in 35.3 seconds",
+    "viewports": [390, 768, 1440],
+    "horizontal_overflow": 0,
+    "public_focused_playwright": "16/16 passed",
+    "public_targeted_overflow": "1/1 passed",
+    "public_http": "root, LLM branch, and direct article routes returned 200",
+    "deployment": "cm-blog.service active after restart at 2026-07-20 23:16:08 KST"
+  },
+  "artifacts": {
+    "structure": "src/content/sidebar-learning-structure.ts",
+    "ai_hierarchy": "src/content/ai/index.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "resolver": "src/content/article-navigation.ts",
+    "category_page": "src/pages/CategoryPage.tsx",
+    "article_layout": "src/components/ArticleLayout.tsx",
+    "connection_tests": "tests/article-learning-connections.spec.ts",
+    "sidebar_tests": "tests/sidebar-information-architecture.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-20-navigation-connection-revision-report.md"
+  }
+}

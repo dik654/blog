@@ -1,0 +1,149 @@
+{
+  "run_id": "2026-07-19-robot-contact-tribology",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing robot contact-to-release layer and reconstruct one canonical film-regime source plus one current company-research source without creating an unbounded historical paper chain.",
+  "request_interpretation": {
+    "depth": "A private 52-premise robot-joint failure is the coverage gate; the public prose must supply the insight required to solve it without printing the problem.",
+    "formula": "Every display equation has Korean causal annotations and one adjacent FormulaNote, with source equation identity and model limits preserved.",
+    "visual": "Twelve mechanism-specific causal labs change geometry, metrics and a diagnosis; styling or color change alone is insufficient.",
+    "source": "Read complete primary artifacts, retain author intent and non-transfer boundaries, and stop source recursion at a declared reader-capability floor.",
+    "small_model": "Persist premise packets, source slices, scientific corrections, Viz state contracts and QA defects for bounded 4B/9B replay."
+  },
+  "gap_audit": {
+    "upstream": ["actuator torque", "bearing and gear loads", "speed and duty", "housing temperature", "environment"],
+    "missing_chain": ["local contact geometry", "Hertz pressure and deformation", "roughness and running-in", "contact kinematics", "viscosity state", "film formation and starvation", "friction-thermal feedback", "life and wear modes", "debris and contamination", "seal trade", "staged evidence"],
+    "downstream_capability": "Diagnose cold drag, hot film loss, fretting, pitting, wear, debris, backlash growth and ingress with bounded calculations and tests."
+  },
+  "foundation_floor": {
+    "shared_floor": ["calculus", "signals and systems", "statistics", "actuator mechanics", "structural mechanics"],
+    "domain_floor": {"source": "Hamrock-Dowson 1978", "capability": "preserve four-regime and minimum-film equation identity"},
+    "current_evidence": "SKF RTD / Coatings 2023",
+    "standalone_source_budget": 2,
+    "embedded": ["NASA SP-8063", "NASA TM-102575"],
+    "cite_only": ["Hertz antecedents", "Reynolds antecedents", "Barus antecedents"],
+    "stop_reason": "Older sources add lineage but no premise absent from the shared concept floor or the private transfer gate."
+  },
+  "private_transfer_gate": {
+    "premise_count": 52,
+    "artifact": "src/pages/articles/ai/content-specs/robot-contact-tribology-lubrication-wear.md",
+    "groups": {
+      "T01-T07": "contact inventory, load sharing, curvature, Hertz state and alignment",
+      "T08-T13": "roughness, real area, running-in and rolling/sliding/spin/reversal",
+      "T14-T22": "viscosity, wedge balance, four regimes, dimensionless groups and film identity",
+      "T23-T32": "lambda boundary, starvation, grease, friction decomposition, heat and preload feedback",
+      "T33-T40": "rating life, RCF, surface distress, wear and debris feedback",
+      "T41-T44": "seal and grease tradeoffs",
+      "T45-T52": "observer limits, rig hierarchy, transfer and release evidence"
+    },
+    "publication_policy": "The compound scenario remains private; every premise maps to prose, a formula, a causal lab, a source boundary or an evidence gate."
+  },
+  "sources": [
+    {
+      "id": "hamrock-dowson-1978",
+      "identity": "NASA TP-1342, October 1978, 26 pages",
+      "read_scope": "complete PDF including equations, figures, conclusions and references",
+      "decision": "standalone_domain_floor",
+      "boundary": "smooth, isothermal, fully flooded theoretical elliptical contacts; not transient grease supply, wear or life"
+    },
+    {
+      "id": "nasa-sp-8063-1971",
+      "identity": "NASA SP-8063, 1971, 79 pages",
+      "read_scope": "complete design monograph",
+      "decision": "embedded",
+      "boundary": "mechanism logic transfers; historical data and space selections are not modern robot allowables"
+    },
+    {
+      "id": "zaretsky-1990",
+      "identity": "NASA TM-102575, April 1990, 12 pages",
+      "read_scope": "complete PDF",
+      "decision": "embedded",
+      "boundary": "first-order historical approximation, not current manufacturer rating or proof that lambda determines individual life"
+    },
+    {
+      "id": "skf-broitman-2023",
+      "identity": "Coatings 13(12):1980, DOI 10.3390/coatings13121980",
+      "read_scope": "complete official JATS XML, 14 TIFF figures and 9 tables",
+      "decision": "standalone_current_evidence",
+      "access_note": "Publisher HTML/PDF returned 403; official mdpi-res artifacts were complete and used instead of snippets.",
+      "boundary": "railway double cylindrical roller bearing conditions; friction reductions are test-specific and lubricant interactions were outside interpretation"
+    }
+  ],
+  "events": [
+    {
+      "id": "audit.contact.001",
+      "observed": "The actuator path ended at component load and catalog quantities.",
+      "inference": "Readers could size torque but could not explain changing friction, film, wear or ingress.",
+      "decision": "Insert a contact-to-evidence concept layer.",
+      "verification": "Twelve sections and labs cover the complete local-contact-to-release chain."
+    },
+    {
+      "id": "gate.transfer.001",
+      "observed": "Cold current, hot efficiency, debris, fretting and ingress can fit contradictory single-cause stories.",
+      "inference": "A vocabulary survey would not create diagnostic transfer.",
+      "decision": "Use a private 52-premise compound failure as the authoring gate.",
+      "verification": "Every premise group is mapped in the content spec and QA checks causal controls."
+    },
+    {
+      "id": "source.access.001",
+      "observed": "MDPI HTML/PDF returned 403 while the official JATS, figures and tables were accessible.",
+      "inference": "Search snippets would be incomplete, but the publisher artifacts were sufficient for a full reconstruction.",
+      "decision": "Parse the structured artifact and inspect all visual/table evidence.",
+      "verification": "The source page preserves methods, rigs, repeats, adverse variants, conclusions and admitted limits."
+    },
+    {
+      "id": "formula.identity.001",
+      "observed": "A draft combined coefficient 3.42 with U/G/W exponents from a different Hamrock-Dowson family.",
+      "inference": "Correct-looking notation can still be scientifically invalid when equation fragments are mixed.",
+      "decision": "Treat coefficient, exponents, dimensionless-group definitions and source equation number as one immutable record; restore equation 26 with coefficient 3.63.",
+      "verification": "The source spec now uses 3.63 U^0.68 G^0.49 W^-0.073(1-exp(-0.68k)) and explains E'=2E*, minimum versus central film and model family."
+    },
+    {
+      "id": "floor.stop.001",
+      "observed": "Every retained source cited older contact, flow and viscosity work.",
+      "inference": "Promoting every antecedent would make the reading path infinite without improving the hardest diagnosis.",
+      "decision": "Keep one canonical domain source, one current evidence source, embed two complete references and cite older lineage only.",
+      "verification": "The spec declares a fully used source budget of two and no older standalone routes were created."
+    },
+    {
+      "id": "qa.connected.001",
+      "observed": "Source collapsing changed category visibility expectations in older tests.",
+      "inference": "The regression contract had to encode the new reader policy, not preserve obsolete immediate exposure.",
+      "decision": "Require concept visibility, source invisibility by default and source visibility after explicit expansion.",
+      "verification": "The final connected local suite passed 100/100 and the public focused suite passed 32/32."
+    },
+    {
+      "id": "deploy.public.001",
+      "observed": "A local build does not prove the reverse-proxied site changed.",
+      "inference": "Service restart and public-host browser QA are required completion gates.",
+      "decision": "Restart cm-blog.service, curl all new routes and run Playwright against the public host.",
+      "verification": "Service active at 22:49 KST, all requested routes HTTP 200, public suite 32/32."
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-contact-tribology-lubrication-wear.md",
+    "concept": "src/pages/articles/ai/robot-contact-tribology-lubrication-wear.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-contact-tribology-lubrication-wear/viz/TribologyLabs.tsx",
+    "source_specs": "src/pages/articles/ai/paper-spine/robotTribologySpecs.tsx",
+    "source_viz": "src/pages/articles/ai/paper-spine/viz/TribologySourceLabs.tsx",
+    "qa": "tests/contact-tribology-qa.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-19-robot-contact-tribology-report.md"
+  },
+  "qa": {
+    "formula_counts": {"concept": 24, "concept_notes": 24, "hamrock": 6, "hamrock_notes": 6, "skf": 6, "skf_notes": 6},
+    "viz": {"concept_labs": 12, "source_mechanism_labs": 2, "source_evidence_states_each": 7},
+    "viewports": [360, 390, 768, 1440],
+    "invariants": ["zero page overflow", "zero inner Viz scroll", "zero raw LaTeX", "Korean equation annotations", "formula-note parity", "causal state change", "zero console errors"],
+    "local_connected_playwright": "100/100 passed",
+    "public_focused_playwright": "32/32 passed in 26.7 seconds",
+    "production_build": "passed; existing chunk-size warning remains",
+    "typescript": "repository-wide check remains non-green because of pre-existing unrelated diagnostics; no changed tribology, ODE or floor-policy file was reported",
+    "deployment": "cm-blog.service active after restart at 22:49 KST; public routes HTTP 200"
+  },
+  "small_model_replay": {
+    "four_b_scope": "one premise, exact source slice, equation identity, Korean annotations, counterexample, Viz state and assertion",
+    "nine_b_scope": "one causal chapter or one bounded source evidence reconstruction",
+    "immutable_fields": ["source identity", "page/section/table/figure", "coefficient and exponents", "symbol definitions", "units", "assumptions", "does not prove"],
+    "critic_checks": ["equation-family mixing", "viscosity reference-state loss", "fully flooded over-transfer", "lambda or L10 overclaim", "SKF percentage generalization", "no-op Viz", "mobile effective text"],
+    "orchestrator_only": ["gap audit", "hardest problem", "full-artifact verification", "source budget", "cross-section state", "conflict repair", "browser QA", "deployment"]
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "run": "2026-07-23-document-ai-assembly-current-first",
+  "objective": "Reconstruct Document AI from a release and evidence contract through page parsing, document assembly, table structure and minimum OCR foundations.",
+  "information_architecture": {
+    "parent": "OCR · 문서 AI",
+    "branches": [
+      "00 · 문서 계약",
+      "01 · Page Parser",
+      "02 · Document Assembly",
+      "03 · Release · RAG"
+    ],
+    "parent_aggregates_authored_child_paths": true,
+    "learning_path_id": "ai-document-runtime-current-first",
+    "learning_path": [
+      "ocr-document-ai-map",
+      "paddleocr-vl",
+      "document-structure-assembly",
+      "html-table-structure-reconstruction",
+      "ocr-runtime-evaluation"
+    ]
+  },
+  "source_boundaries": [
+    "PaddleOCR-VL-1.6 official docs for page-level text, formula, table and reading order claims, not whole-document hierarchy",
+    "MinerU-Popo for cross-page text and table truncation, title hierarchy, image-text association and overlap synchronization",
+    "DoclingDocument as a unified typed IR implementation example, not a mandatory standard",
+    "Ai2 olmOCR 2 and arXiv:2510.19817 for unit-test rewards and evaluation, not product-specific business rules",
+    "PubTabNet and TEDS for HTML table structure similarity, not semantic numeric correctness or provenance",
+    "PP-StructureV3 official docs for layout, table, formula, chart, reading order and Markdown modules, not document assembly"
+  ],
+  "private_transfer_problem": {
+    "document_pages": 180,
+    "languages": ["ko", "en"],
+    "cross_page_table": [47, 48],
+    "heading_paragraph_break": [90, 91],
+    "figure_caption_break": [132, 133],
+    "parser_disagreements": ["page 48 cell origin", "page 91 heading level"],
+    "required_decisions": [
+      "preserve typed blocks and provenance",
+      "score relations from independent evidence channels",
+      "abstain on small top-two margin",
+      "synchronize overlap before merge",
+      "distinguish missing, slot collision and schema overflow",
+      "release only when all source, relation, table and citation gates pass"
+    ]
+  },
+  "visual_contracts": [
+    "page-to-document assembly",
+    "cross-page relation evidence",
+    "overlap synchronization",
+    "table occupancy grid",
+    "document release gate"
+  ],
+  "qa": {
+    "document_contract": "6/6",
+    "information_architecture_and_current_first": "27/27",
+    "updated_route_contract": "8/8",
+    "full_related_regression": "109/109",
+    "local_production_contract": "6/6",
+    "public_contract": "6/6",
+    "visual_audit": "15 checks; 0 errors; 0 warnings",
+    "narrative_audit": "15 checks; 0 errors; 0 warnings",
+    "viewports": [390, 768, 1440],
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "raw_latex": 0,
+    "article_tables_in_rebuilt_map_and_paddle": 0,
+    "build": "passed",
+    "build_tsc": "blocked by pre-existing unrelated corpus errors"
+  },
+  "context_manager_collaboration": {
+    "transport": "context-manager only",
+    "direct_claude_cli_used": false,
+    "claude_delegate_attempts": 3,
+    "claude_delegate_successes": 0,
+    "claude_failure": "Provider error: All providers failed (HTTP 500)",
+    "route_review": {
+      "worker": "codex:gpt-5.5",
+      "verdict": "conditional pass",
+      "findings_applied": [
+        "connect runtime viz from page packet through document tree, verified table, RAG node and release gate",
+        "add primary SourceNotes to runtime evaluation",
+        "distinguish actual slot collision from schema overflow"
+      ]
+    }
+  },
+  "small_model_pipeline": [
+    "freeze one relation or one document transition",
+    "declare one source claim and forbidden extrapolation",
+    "normalize typed input and expected output",
+    "derive accept, review or reject oracle",
+    "render one observable Viz state",
+    "test formula, viewport, overflow, console and route contract",
+    "record stop rule and deployment evidence"
+  ],
+  "global_audit": {
+    "registered_articles": 585,
+    "global_continuity_coverage": 585,
+    "release_blockers": 29,
+    "review_needed": 1,
+    "enrichment_backlog": 525,
+    "formal_goal_complete": false
+  },
+  "deployment": {
+    "status": "public-verified",
+    "service_restarted_at": "2026-07-23T01:23:07+09:00",
+    "public_routes_verified": [
+      "/lab/blog/ai?sub=ai-ocr",
+      "/lab/blog/ai/document-structure-assembly",
+      "/lab/blog/ai/ocr-runtime-evaluation"
+    ],
+    "http_status": 200,
+    "chunks": [
+      {"name": "document-structure-assembly-BCZBzvbZ.js", "bytes": 20966, "sha256": "14a20dabba1f6869fdf2039a8e8fa54f71a748a7f59394041bf2f5cdc78efdd3"},
+      {"name": "ocr-runtime-evaluation-6FXtqb2N.js", "bytes": 20993, "sha256": "de1983da71003d0bfc012530d3e7b1d823e54ec40b2869c301939adc4be8f312"},
+      {"name": "html-table-structure-reconstruction-ytb1qpM4.js", "bytes": 14880, "sha256": "6ffa47542d1ae2b40fdec282f4d2c9794d401609224f4aa2cebf7b55e14f806e"}
+    ]
+  }
+}

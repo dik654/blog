@@ -1,0 +1,110 @@
+{
+  "run": "2026-07-23-reinforcement-learning-current-first",
+  "objective": "Reconstruct reinforcement learning from an application and data-access contract through one independent goal branch to the minimum MDP and TD foundations.",
+  "information_architecture": {
+    "parent": "강화학습 · 의사결정",
+    "branches": [
+      "00 · 적용 계약",
+      "01 · Policy · 제어",
+      "02 · Demonstration · Offline",
+      "03 · World Model · Planning",
+      "04 · State · Safety",
+      "05 · 최소 기반"
+    ],
+    "top_level_canonical_paper": "Proximal Policy Optimization Algorithms",
+    "hidden_branch_source_articles": 21,
+    "minimum_foundation_stop": "MDP, return, Bellman recursion, MC, TD and Q target only when the selected branch calculation blocks"
+  },
+  "source_boundaries": [
+    "Gymnasium Env API defines the execution interface, not robot safety guarantees",
+    "Gemini Robotics-ER 1.6 provides an embodied system boundary, not an RL method claim",
+    "DeepSeek-R1 supports reasoning-RL claims, not physical-control safety",
+    "RL Unplugged supports fixed-log benchmark contracts, not online deployment guarantees",
+    "Active Offline Policy Selection supports limited real policy selection after OPE, not unrestricted exploration",
+    "DreamerV3 supports learned world models and latent imagination, not automatic physical deployment readiness"
+  ],
+  "private_transfer_problem": {
+    "system": "warehouse robot handling fragile parcels",
+    "real_interaction_budget": "200 episodes per day",
+    "simulator_error": "friction is 15 percent lower than reality",
+    "logged_data_bias": "92 percent easy parcels",
+    "initial_metrics": {
+      "task_success_percent": 86,
+      "safety_violation_percent": 2,
+      "ood_success_gap_points": 11,
+      "p95_action_latency_ms": 74
+    },
+    "required_insight": "Do not choose PPO from the score alone; split simulator and fixed-log evidence, block release on safety violation, and open MDP or TD only when target calculation blocks."
+  },
+  "visual_contracts": [
+    "RL versus supervised fit decision",
+    "live, simulator, fixed log, expert and verifier access fork",
+    "fail-closed success, safety, shift and latency release gate"
+  ],
+  "formula_contracts": {
+    "display_formulas": 3,
+    "korean_internal_annotations": true,
+    "adjacent_formula_notes": true,
+    "minimum_scale": 0.7,
+    "minimum_font_px": 12,
+    "maximum_overflow_px": 1
+  },
+  "qa": {
+    "related_regression": "60/60",
+    "dedicated_local_contract": "11/11",
+    "dedicated_public_contract": "11/11",
+    "visual_audit": "12 checks; 0 console errors; 0 document overflow; 0 overlap",
+    "viewports": [390, 768, 1440],
+    "build": "passed; 9388 modules; 19.05s",
+    "git_diff_check": "passed"
+  },
+  "context_manager_collaboration": {
+    "transport": "context-manager only",
+    "direct_claude_cli_used": false,
+    "ai_researcher_attempts": 2,
+    "curator_attempts": 1,
+    "successful_reviews": 0,
+    "failure": "Provider error: All providers failed (HTTP 500)",
+    "result_incorporated_as_claude_review": false
+  },
+  "small_model_pipeline": {
+    "4b": [
+      "one problem fixture",
+      "one RL-fit decision",
+      "one data-access mode",
+      "one source claim and one forbidden extrapolation",
+      "one target or release gate",
+      "one failure shortcut",
+      "one interactive state and browser oracle"
+    ],
+    "9b": [
+      "application contract",
+      "environment interface",
+      "data-access boundary",
+      "one goal branch",
+      "minimum mathematical floor",
+      "hard transfer fixture",
+      "source boundary",
+      "release gate",
+      "prose, formula, visualization and test packet"
+    ],
+    "structured_output": "claim/evidence/boundary/observation/action/feedback/data_access/invariant/failure/viz_state/release_gate/test"
+  },
+  "deployment": {
+    "status": "public-verified",
+    "service_restarted_at": "2026-07-23T02:34:40+09:00",
+    "http_status": 200,
+    "public_chunk_hashes_match_local": true,
+    "routes_verified": 8,
+    "chunks": [
+      {"name": "rl-decision-system-contracts-DC0rQe-E.js", "bytes": 22905, "sha256": "94060e7bc5bfba4778366b219f94ece8e401f7ff1d15d660f22bb1b829f5edc6"},
+      {"name": "rl-imitation-offline-learning-vMc6BCDZ.js", "bytes": 37072, "sha256": "c3ca51ff7329573db0f1bcbaed17a056ff4ebbd7b2467e3c9516b6d58973949e"},
+      {"name": "rl-mdp-bellman-CUCk1sBe.js", "bytes": 26929, "sha256": "18f4674e2e6d369d006d239fa2979f94349f97554bb210cdbe4eccc26b8a5fa7"},
+      {"name": "rl-model-based-world-models-CnjTgqyx.js", "bytes": 39411, "sha256": "5059f17aa040fd4f4e4f8bbbcf90f1315688c1ac6af179633ad8b040556bd750"},
+      {"name": "rl-pomdp-state-estimation-B-xIyrHQ.js", "bytes": 35773, "sha256": "13c0ced526ac567dfa294a4b6c3a92f282873b13d381cbd7be501f6b70905bdb"},
+      {"name": "rl-ppo-continuous-control-DATMpsmF.js", "bytes": 31063, "sha256": "ecdd7bd765b12b86a2163f14bbd9e0e1ccbb05593047369dc2f4be902d1f37ea"},
+      {"name": "rl-safe-constrained-learning-wJWKFz95.js", "bytes": 38925, "sha256": "aeef4cd34a4876b2fafc6199bafe15724f33a6512ce441c7ab8dab74abb66cb9"}
+    ]
+  },
+  "formal_goal_complete": false
+}

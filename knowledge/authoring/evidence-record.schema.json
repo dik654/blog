@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://heru.ragdoll-bigeye.ts.net/schemas/article-evidence-record.json",
+  "title": "Article evidence record",
+  "type": "object",
+  "required": [
+    "sourceId",
+    "sourceType",
+    "locator",
+    "sourceLanguage",
+    "originalClaim",
+    "interpretation",
+    "inclusionIntent",
+    "readerOutcome",
+    "publicTransformation",
+    "scopeDecision"
+  ],
+  "properties": {
+    "sourceId": { "type": "string" },
+    "sourceType": { "enum": ["paper", "course", "documentation", "repository", "video", "spec", "dataset"] },
+    "locator": {
+      "type": "object",
+      "required": ["url", "anchor"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "anchor": { "type": "string", "description": "Page, section, figure, equation, timestamp, file or symbol." }
+      }
+    },
+    "sourceLanguage": { "type": "string" },
+    "originalClaim": { "type": "string" },
+    "interpretation": { "type": "string", "description": "What the source establishes and what it does not establish." },
+    "inclusionIntent": { "type": "string", "description": "Why this evidence is necessary in this article's learning chain." },
+    "readerOutcome": { "type": "string", "description": "What the reader can derive, compute or implement afterward." },
+    "publicTransformation": { "type": "string", "description": "How prose, equation, table or figure is reconstructed for the public article." },
+    "scopeDecision": { "enum": ["deep", "brief", "defer"] },
+    "articlePromotion": { "enum": ["standalone", "embed", "cite-only", "defer"] },
+    "dependencyRole": { "enum": ["shared-floor", "domain-floor", "current-evidence", "lineage", "optional-branch"] },
+    "stopReason": { "type": "string", "description": "Why backward tracing stops or why the source is not promoted to a standalone article." },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "crossChecks": { "type": "array", "items": { "type": "string" } },
+    "reviewedAt": { "type": "string", "format": "date" }
+  },
+  "additionalProperties": false
+}

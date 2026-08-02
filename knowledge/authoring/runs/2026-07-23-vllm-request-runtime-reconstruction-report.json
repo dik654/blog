@@ -1,0 +1,87 @@
+{
+  "date": "2026-07-23",
+  "scope": "ai-llm-serving-vllm-request-runtime",
+  "observed": [
+    "four feature articles existed but did not expose one request's state handoff",
+    "KV capacity, token scheduling, speculative commit and multimodal admission boundaries overlapped",
+    "acceptance ratio and universal speedup claims required correctness repair"
+  ],
+  "decided": {
+    "entry": "vllm-paged-attention",
+    "path": [
+      "physical-kv-ledger",
+      "one-step-work-plan",
+      "verified-token-commit",
+      "media-to-decoder-admission"
+    ],
+    "runtime_rule": "each article owns one state ledger and emits the artifact consumed by the next request-runtime decision",
+    "history_floor": "PagedAttention plus iteration-level scheduling; older theory opens only when a concrete calculation or failure requires it"
+  },
+  "claude": {
+    "transport": "context-manager /api/chat",
+    "model": "claude-sonnet-4-6",
+    "fresh": true,
+    "result": "provider_error_all_providers_failed_after_retries",
+    "direct_cli_used": false,
+    "review_incorporated": false
+  },
+  "claude_backfill": {
+    "date": "2026-07-23",
+    "transport": "context-manager runDelegatedPrompt",
+    "worker": "harness:claude-code:sonnet",
+    "direct_cli_used": false,
+    "article_reviews": {
+      "vllm-paged-attention": "fixed",
+      "vllm-scheduler": "fixed",
+      "vllm-spec-decode": "fixed",
+      "vllm-vlm-serving": "fixed"
+    },
+    "independent_verification": "vendored source comparison, focused ESLint and Playwright 9/9 at 390, 768 and 1440 px",
+    "result_incorporated": true
+  },
+  "verified": {
+    "focused_local_tests": "7/7",
+    "related_local_tests": "48/48",
+    "public_tests": "7/7",
+    "viewports": [390, 768, 1440],
+    "document_overflow": 0,
+    "visual_overflow": 0,
+    "mobile_formula_scales": [1, 0.89, 1, 0.91, 0.87],
+    "katex_errors": 0,
+    "build_modules": 9389,
+    "public_http_200_urls": 5,
+    "learning_flow_registered": 589,
+    "ai_formula_gaps_remaining": 0,
+    "ai_release_blockers_remaining": 0,
+    "global_formula_blockers_remaining": 29,
+    "global_enrichment_backlog_remaining": 529
+  },
+  "small_model_packet": {
+    "worker_4b": [
+      "input_state",
+      "calculation",
+      "unit",
+      "decision",
+      "output_artifact",
+      "failure_owner",
+      "source_claim",
+      "forbidden_generalization",
+      "next_handoff"
+    ],
+    "reviewer_9b": [
+      "byte_oracle",
+      "token_budget",
+      "commit_boundary",
+      "cache_identity",
+      "version_sensitive_claim",
+      "cross_article_overlap"
+    ],
+    "orchestrator": [
+      "source_freshness",
+      "route_metadata",
+      "responsive_browser_oracle",
+      "build",
+      "deployment"
+    ]
+  }
+}
