@@ -150,4 +150,3 @@ impl Embedding {
         self.rows[index].clone()
     }
 }
-

@@ -1,7 +1,7 @@
 # olmOCR 2 source-first reconstruction receipt
 
-Date: 2026-07-29  
-Article: `/lab/blog/ai/olmocr-2`  
+Date: 2026-07-29
+Article: `/lab/blog/ai/olmocr-2`
 Scope: article prose, equations, interactive visualizations, metadata, and
 responsive behavior
 

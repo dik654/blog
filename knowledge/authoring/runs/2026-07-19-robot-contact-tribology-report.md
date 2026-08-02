@@ -94,4 +94,3 @@ The orchestrator retains source identity, complete-artifact checks, private prob
 - Source Viz: `src/pages/articles/ai/paper-spine/viz/TribologySourceLabs.tsx`
 - QA: `tests/contact-tribology-qa.spec.ts`
 - Machine ledger: `knowledge/authoring/runs/2026-07-19-robot-contact-tribology.json`
-

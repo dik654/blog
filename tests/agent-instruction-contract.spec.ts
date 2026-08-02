@@ -97,4 +97,3 @@ test('XML remains a semantic boundary and hands off to Skills', async ({ page })
   );
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
-

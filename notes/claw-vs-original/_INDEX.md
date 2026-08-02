@@ -2,8 +2,8 @@
 
 블로그(이직용 지식베이스, `/home/heru/code/blog/src/pages/articles/ai/claw-*.tsx`)는 claw-code(Rust 포팅) 분석. 이 디렉토리는 각 글의 서술과 원본 Claude Code(`/home/heru/code/claude-analysis/src/`) 실 코드를 비교한 자료.
 
-작업 일자: 2026-05-05  
-참조 PARITY: `/home/heru/code/claw-code/PARITY.md`  
+작업 일자: 2026-05-05
+참조 PARITY: `/home/heru/code/claw-code/PARITY.md`
 원본 코드 출처: 2026-03-31 npm `.map` 유출 복원, 1902 TypeScript files
 
 ## 우선순위 1-7 (깊은 분석)

@@ -257,4 +257,3 @@ fn local_backward(op: &Op, inputs: &[Value], gy: &Value) -> Vec<Value> {
         }
     }
 }
-

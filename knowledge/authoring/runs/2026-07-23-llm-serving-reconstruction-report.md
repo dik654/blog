@@ -105,4 +105,3 @@ Context-manager의 `ai-researcher`에게 serving·on-device 원문 및 커리큘
 - `cm-blog.service` 재시작: 2026-07-23 00:21:30 KST.
 - 배포 chunk: `llm-disaggregated-serving-B4yEbsPq.js`, `31,523 bytes`.
 - SHA-256: `02086ce8c64ca7003e1016757dffee7ceb93d821982cf134d44b7a3a9047cad3`.
-

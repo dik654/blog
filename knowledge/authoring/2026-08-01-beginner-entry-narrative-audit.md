@@ -1,7 +1,7 @@
 # AI article beginner-entry narrative audit
 
-Date: 2026-08-01 KST  
-Scope: 305 registered AI article routes  
+Date: 2026-08-01 KST
+Scope: 305 registered AI article routes
 Browser receipt: `.codex-tmp/beginner-entry-narrative-audit-2026-08-01.json`
 
 ## Why this audit exists

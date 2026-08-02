@@ -1,6 +1,6 @@
 # AI blog reconstruction process
 
-Date: 2026-07-29  
+Date: 2026-07-29
 Purpose: current research → canonical idea → minimum foundations → implementation
 으로 이어지는 기술 학습 시스템을 작은 모델에서도 재현할 수 있게 남긴다.
 

@@ -1,7 +1,7 @@
 # Statistics and generalization reconstruction receipt
 
-Date: 2026-07-29  
-Article: `statistics-generalization`  
+Date: 2026-07-29
+Article: `statistics-generalization`
 Scope: article narrative, formulas, paired comparison lab, evidence claim lab,
 responsive behavior, primary-source boundaries, and reproducible review packets
 
@@ -227,43 +227,43 @@ output:
 
 ### Recommended passes
 
-1. **Target pass**  
+1. **Target pass**
    Input only the deployment scenario and the target-population section.
    Require population, estimand, loss, and independent unit.
 
-2. **Arithmetic pass**  
+2. **Arithmetic pass**
    Input the four paired cells. Require exact totals and
    `(59 - 52) / 1200`.
 
-3. **Dependence pass**  
+3. **Dependence pass**
    Add `80 users`. Require the group as the resampling boundary and reject a
    row-independent interval.
 
-4. **Selection pass**  
+4. **Selection pass**
    Add the 40-trial validation loop and the Cawley/Varma excerpt. Require a
    distinction between selection and audit evidence.
 
-5. **Shift pass**  
+5. **Shift pass**
    Add next month, new hospital, and new device plus the Ovadia/WILDS excerpt.
    Require a bounded future-site/group claim.
 
-6. **Guardrail pass**  
+6. **Guardrail pass**
    Add the rare subgroup regression and calibration excerpt. Require rejection
    of the universal average-only claim.
 
-7. **Narrative pass**  
+7. **Narrative pass**
    Join only the accepted learner decisions in causal order. Remove quiz
    wording and preserve the insights needed to solve the hidden problem.
 
-8. **Formula pass**  
+8. **Formula pass**
    Render each displayed expression, check Korean operation labels, and verify
    that the prose and `FormulaNote` explain the same execution order.
 
-9. **Viz pass**  
+9. **Viz pass**
    For every control state, compare semantic text attributes and visible claim
    copy. Reject a Viz whose only state change is color or motion.
 
-10. **Deterministic browser pass**  
+10. **Deterministic browser pass**
     Check 390, 768, and 1440px widths, formula scale, document overflow,
     control dimensions, and direct-scroll offset.
 

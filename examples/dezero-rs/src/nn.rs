@@ -142,4 +142,3 @@ pub fn mean_squared_error(prediction: &[Value], target: &[f64]) -> Value {
         .expect("MSE needs at least one value");
     sum.div(&Value::new(prediction.len() as f64))
 }
-

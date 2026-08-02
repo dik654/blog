@@ -16,4 +16,3 @@
 - 주제: 개념/기술/패턴
 - 흡수 위치: `knowledge/wiki/concepts/`
 - 중심 항목: `ImageRAG`, `DefectImageRAG`, `VisualEmbedding`, `TopKSimilaritySearch`
-

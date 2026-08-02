@@ -238,27 +238,27 @@ Agent 글은 프레임워크 이름보다 이 실행 계약을 해결해야 한�
 
 ### Pass A · Inventory
 
-입력: 한 category tree와 article metadata만 제공한다.  
+입력: 한 category tree와 article metadata만 제공한다.
 출력: 중복 slug, orphan, metadata gap, 최대 깊이, 공개되면 안 되는 internal item.
 
 ### Pass B · Route contract
 
-입력: 한 top-down track, 관련 learning path, 해당 글의 제목·요약만 제공한다.  
+입력: 한 top-down track, 관련 learning path, 해당 글의 제목·요약만 제공한다.
 출력: current → concepts → minimum foundation → source → implementation 순서와 stop rule.
 
 ### Pass C · Article reconstruction
 
-입력: 한 글, 직접 연결 글 2개, 원문 2–5개를 제공한다.  
+입력: 한 글, 직접 연결 글 2개, 원문 2–5개를 제공한다.
 출력: 독자 질문, 3–5개 깊은 섹션, 수식별 FormulaNote, prose-to-Viz spec, 출처 locator.
 
 ### Pass D · Adversarial problem
 
-입력: 완성 초안만 제공한다.  
+입력: 완성 초안만 제공한다.
 출력: 초안의 사실만으로 풀 수 있어야 하는 고난도 문제, 필요한 inference, 막히는 문장.
 
 ### Pass E · Independent verifier
 
-입력: 초안, source locator, 렌더 screenshot을 제공한다.  
+입력: 초안, source locator, 렌더 screenshot을 제공한다.
 출력: MUST/SHOULD, 사실 근거, 수식 raw/overflow, Viz clipping, 다음 경로 단절.
 
 각 pass는 JSON처럼 고정된 필드로 넘기고, 한 모델이 작성과 최종 승인을 동시에 맡지 않는다.

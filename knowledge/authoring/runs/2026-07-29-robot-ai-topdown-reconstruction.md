@@ -1,7 +1,7 @@
 # Robot AI top-down causal reconstruction receipt
 
-Date: 2026-07-29  
-Article: `/lab/blog/ai/robot-ai-top-down`  
+Date: 2026-07-29
+Article: `/lab/blog/ai/robot-ai-top-down`
 Scope: narrative, equations, source ownership, five interactive learning
 surfaces, responsive behavior, and minimum-foundation handoffs
 

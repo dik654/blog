@@ -23,4 +23,3 @@ Run every contract with:
 ```bash
 cargo test --manifest-path examples/dezero-rs/Cargo.toml
 ```
-

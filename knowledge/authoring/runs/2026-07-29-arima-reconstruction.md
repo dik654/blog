@@ -1,7 +1,7 @@
 # ARIMA causal reconstruction receipt
 
-Date: 2026-07-29  
-Article: `/lab/blog/ai/arima`  
+Date: 2026-07-29
+Article: `/lab/blog/ai/arima`
 Scope: transformation, differencing, intervention modeling, candidate
 selection, residual diagnosis, rolling-origin release evidence, two interactive
 learning surfaces, responsive behavior, and minimum-foundation handoffs

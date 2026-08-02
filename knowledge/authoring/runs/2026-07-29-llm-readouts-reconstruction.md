@@ -1,6 +1,6 @@
 # LLM readouts reconstruction receipt
 
-Date: 2026-07-29  
+Date: 2026-07-29
 Route: `/lab/blog/ai/llm-interpretability-readouts`
 
 ## Why this article was selected

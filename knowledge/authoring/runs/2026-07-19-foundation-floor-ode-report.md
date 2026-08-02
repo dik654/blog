@@ -94,4 +94,3 @@ The orchestrator decides whether the gap is real, whether an existing article al
 - Shin source spec: `src/pages/articles/ai/paper-spine/robotTrajectorySpecs.ts`
 - Category UI: `src/pages/CategoryPage.tsx`, `src/pages/category/FoundationLearningPath.tsx`, `NlpLearningPath.tsx`, `ReinforcementLearningPath.tsx`
 - QA: `tests/foundation-floor-ux.spec.ts`, `tests/differential-equations-qa.spec.ts`
-

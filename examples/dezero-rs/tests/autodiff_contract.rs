@@ -40,4 +40,3 @@ fn no_grad_restores_recording_and_weak_output_breaks_the_cycle() {
     let recorded_again = x.add(&Value::new(1.0));
     assert_eq!(recorded_again.generation(), 1);
 }
-

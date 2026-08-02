@@ -59,4 +59,3 @@ Context Manager `runDelegatedPrompt`로 LLM Serving 11개와 On-device 2개를 �
 ## Audit boundary
 
 Claude는 article source를 수정하지 않았다. High/medium finding은 도착 즉시 root 작업에 전달했다. 자세한 location, evidence, correction과 두 invalid-header 재시도 기록은 같은 이름의 JSON에 보존했다.
-

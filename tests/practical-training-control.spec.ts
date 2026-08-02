@@ -114,4 +114,3 @@ test('generalization lab changes intervention with the observed failure mode', a
   await expect(gate.getByText(/Label smoothing은 후보일 뿐이다/)).toBeVisible();
   await expect(gate.getByText('Calibration', { exact: true })).toBeVisible();
 });
-

@@ -55,4 +55,3 @@ fn repeated_token_ids_accumulate_into_the_same_embedding_row() {
     assert_eq!(embedding.row(4)[0].0.grad_value(), Some(2.0));
     assert_eq!(embedding.row(1)[0].0.grad_value(), Some(1.0));
 }
-

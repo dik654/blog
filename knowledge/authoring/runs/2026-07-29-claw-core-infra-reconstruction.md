@@ -1,7 +1,7 @@
 # Claw Core and Infra reconstruction receipt
 
-Date: 2026-07-29  
-Pinned Claw revision: `ab44985916cb0d53d2f7a55ea90e0d7be97d4626`  
+Date: 2026-07-29
+Pinned Claw revision: `ab44985916cb0d53d2f7a55ea90e0d7be97d4626`
 Scope: `claw-overview`, `claw-compaction`, `claw-config`, `claw-api-client`,
 `claw-cli`, `claw-mcp`
 
