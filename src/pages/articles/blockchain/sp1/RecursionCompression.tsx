@@ -18,14 +18,14 @@ export default function RecursionCompression() {
       </div>
       <div className="space-y-2 mt-4 mb-6">
         {STAGES.map(s => (
-          <div key={s.name} className="rounded-lg border border-border/60 p-3 flex gap-4">
-            <span className="font-mono text-xs font-bold text-indigo-400 w-24 flex-shrink-0">
+          <div key={s.name} className="flex min-w-0 flex-col gap-1 rounded-lg border border-border/60 p-3 sm:flex-row sm:gap-4">
+            <span className="font-mono text-xs font-bold text-indigo-400 sm:w-24 sm:flex-shrink-0">
               {s.name}
             </span>
-            <span className="font-mono text-[11px] text-foreground/45 w-20 flex-shrink-0">
+            <span className="font-mono text-[11px] text-foreground/45 sm:w-20 sm:flex-shrink-0">
               {s.field}
             </span>
-            <span className="font-mono text-[11px] text-foreground/45 w-24 flex-shrink-0">
+            <span className="font-mono text-[11px] text-foreground/45 sm:w-24 sm:flex-shrink-0">
               {s.size}
             </span>
             <span className="text-sm text-foreground/75">{s.desc}</span>

@@ -39,102 +39,50 @@ export default function Ethernet() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Ethernet 세대 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Ethernet 세대 progression:
+        <h3 className="text-xl font-semibold mt-8 mb-3">세대별 진화</h3>
+        <ul className="leading-7">
+          <li><strong>1 GbE (2000s)</strong> — RJ45 copper Cat5e. 컨슈머 기본, 레거시 서버, 점차 퇴장.</li>
+          <li><strong>10 GbE</strong> — SFP+ (fiber) 또는 10GBASE-T (copper). 포트당 $100~$200. 서버 NIC 표준. copper 30~50m, fiber 10km+.</li>
+          <li><strong>25 GbE</strong> — SFP28. 포트당 $200~$400. 10 GbE 를 대체 중. single-lane 25 Gbps signaling, 100G 업그레이드 여지.</li>
+          <li><strong>40 GbE</strong> — QSFP+. 4× 10 Gbps lane. 25/50/100 GbE 로 대체 중, bit 당 비싸다.</li>
+          <li><strong>50 GbE</strong> — 2× 25 Gbps lane. 고대역폭 서버용.</li>
+          <li><strong>100 GbE</strong> — QSFP28. 4× 25 Gbps 또는 2× 50 Gbps. spine switch, 스토리지 어레이.</li>
+          <li><strong>200/400 GbE</strong> — QSFP-DD, OSFP. 차세대 백본, AI cluster interconnect. 포트당 $2K~$5K. 2024~2025 rollout.</li>
+          <li><strong>800 GbE</strong> — 2024 표준 비준. 초고대역폭, AI 학습 fabric, early adoption.</li>
+        </ul>
 
-// 1. 1 GbE (2000s standard):
-// - RJ45 copper, Cat5e
-// - consumer default
-// - legacy server
-// - being phased out
+        <h3 className="text-xl font-semibold mt-8 mb-3">커넥터 타입</h3>
+        <ul className="leading-7">
+          <li><strong>SFP (Small Form-factor Pluggable)</strong> — 1G/10G/25G. hot-swap, transceiver 기반, fiber 또는 copper.</li>
+          <li><strong>QSFP (Quad SFP)</strong> — 40G/100G. 4 parallel lane. 더 큰 모듈.</li>
+          <li><strong>QSFP-DD (Double Density)</strong> — 200G/400G. 8 parallel lane. 포트당 최대 대역폭.</li>
+          <li><strong>OSFP (Octal SFP)</strong> — 400G/800G. 대규모 배포용 신 폼팩터.</li>
+        </ul>
 
-// 2. 10 GbE (server baseline):
-// - SFP+ (fiber) or 10GBASE-T (copper)
-// - ~$100-200 per port (2024)
-// - server NIC standard
-// - supports 30-50m copper, 10km+ fiber
-// - mature ecosystem
+        <h3 className="text-xl font-semibold mt-8 mb-3">광 모듈</h3>
+        <ul className="leading-7">
+          <li>DAC (Direct Attach Copper) — &lt;5m, 저가</li>
+          <li>AOC (Active Optical Cable) — &lt;100m, 중간</li>
+          <li>SR (Short Range) — 100m multimode fiber</li>
+          <li>LR (Long Range) — 10km single-mode</li>
+          <li>ER (Extended Range) — 40km+</li>
+        </ul>
 
-// 3. 25 GbE (datacenter workhorse):
-// - SFP28 connector
-// - ~$200-400 per port
-// - replacing 10 GbE at scale
-// - single-lane 25 Gbps signaling
-// - leaves room for 100G upgrade
+        <h3 className="text-xl font-semibold mt-8 mb-3">스위치 클래스</h3>
+        <ul className="leading-7">
+          <li>1U TOR — 32~48 × 25G + 4~8 × 100G uplink</li>
+          <li>2U TOR — 48~96 × 25G + 8 × 100G</li>
+          <li>1U Spine — 32~64 × 100G</li>
+          <li>Modular — 수백 포트</li>
+        </ul>
 
-// 4. 40 GbE (legacy datacenter):
-// - QSFP+ connector
-// - 4× 10 Gbps lanes
-// - being replaced by 25/50/100 GbE
-// - expensive per bit
-
-// 5. 50 GbE:
-// - 2× 25 Gbps lanes
-// - emerging
-// - for higher-bandwidth servers
-
-// 6. 100 GbE (modern backbone):
-// - QSFP28 connector
-// - 4× 25 Gbps or 2× 50 Gbps
-// - spine switches
-// - storage arrays
-
-// 7. 200 GbE / 400 GbE:
-// - QSFP-DD, OSFP connectors
-// - next-gen backbone
-// - AI cluster interconnect
-// - $2K-5K per port
-// - 2024-2025 rollout
-
-// 8. 800 GbE (emerging):
-// - standard ratified 2024
-// - ultra-high-bandwidth
-// - AI training fabric
-// - early adoption
-
-// Connector types:
-//
-// SFP (Small Form-factor Pluggable):
-// - 1G / 10G / 25G
-// - hot-swappable
-// - transceiver-based
-// - fiber or copper
-//
-// QSFP (Quad SFP):
-// - 40G / 100G
-// - 4 parallel lanes
-// - larger module
-//
-// QSFP-DD (Double Density):
-// - 200G / 400G
-// - 8 parallel lanes
-// - highest per-port
-//
-// OSFP (Octal SFP):
-// - 400G / 800G
-// - for scale deployments
-// - new form factor
-
-// Optics types:
-// - Direct Attach Copper (DAC): <5m, cheap
-// - Active Optical Cable (AOC): <100m, moderate
-// - SR (Short Range): 100m multimode fiber
-// - LR (Long Range): 10km single-mode
-// - ER (Extended Range): 40km+
-
-// Switch classes:
-// - 1U TOR: 32-48 × 25G + 4-8 × 100G uplinks
-// - 2U TOR: 48-96 × 25G + 8 × 100G
-// - 1U Spine: 32-64 × 100G
-// - Modular: 100s of ports
-
-// Cost comparison (2024):
-// - 10G SFP+ DAC cable: $20-50
-// - 25G SFP28 DAC: $50-150
-// - 100G QSFP28 DAC: $150-300
-// - 400G QSFP-DD: $500-1500`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">2024 케이블 가격</h3>
+        <ul className="leading-7">
+          <li>10G SFP+ DAC — $20~$50</li>
+          <li>25G SFP28 DAC — $50~$150</li>
+          <li>100G QSFP28 DAC — $150~$300</li>
+          <li>400G QSFP-DD — $500~$1,500</li>
+        </ul>
         <p className="leading-7">
           Ethernet: <strong>10G (server) → 25G (DC standard) → 100G (backbone) → 400G+ (AI)</strong>.<br />
           connectors: SFP+ (10G), SFP28 (25G), QSFP28 (100G), QSFP-DD (400G).<br />

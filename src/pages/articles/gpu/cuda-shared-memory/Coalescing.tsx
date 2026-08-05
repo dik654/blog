@@ -1,19 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
-
-const coalescingCode = `글로벌 메모리 Coalescing 원리:
-
-워프(32 스레드)의 메모리 요청을 하나의 트랜잭션으로 합침
-조건: 연속 스레드 → 연속 주소, 정렬(aligned)
-
-트랜잭션 크기: 32B / 64B / 128B (L1 캐시 라인)
-
-Coalesced (이상적):
-  Thread 0 → addr[0]   Thread 1 → addr[1]   ...  Thread 31 → addr[31]
-  → 128B 트랜잭션 1회 (float × 32 = 128B)
-
-Non-coalesced (최악):
-  Thread 0 → addr[0]   Thread 1 → addr[1000]  ...
-  → 스레드마다 별도 트랜잭션, 최대 32회 접근`;
+import CoalescingPrincipleViz from './viz/CoalescingPrincipleViz';
 
 const matrixAccessCode = `// 행렬 M[Height][Width], row-major 저장
 // M[row][col] → M[row * Width + col]
@@ -64,12 +50,7 @@ export default function Coalescing() {
           하드웨어가 같은 워프의 메모리 요청을 <strong>하나의 트랜잭션으로 합치는 것</strong>이 coalescing이다.<br />
           이 조건을 만족하면 대역폭 활용률이 최대가 된다.
         </p>
-        <CodePanel title="Coalescing 원리와 트랜잭션 크기" code={coalescingCode}
-          annotations={[
-            { lines: [3, 4], color: 'sky', note: '핵심 조건: 연속 + 정렬' },
-            { lines: [8, 10], color: 'emerald', note: 'Coalesced: 1회 트랜잭션' },
-            { lines: [12, 14], color: 'rose', note: 'Non-coalesced: 최대 32회' },
-          ]} />
+        <div className="not-prose mb-4"><CoalescingPrincipleViz /></div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">행렬 접근 패턴: Row vs Column</h3>
         <p>

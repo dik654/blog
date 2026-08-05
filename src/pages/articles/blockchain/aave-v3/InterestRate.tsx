@@ -13,7 +13,7 @@ export default function InterestRate() {
         <h3 className="text-xl font-semibold mt-6 mb-3">Utilization의 의미</h3>
         <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
           <p className="font-semibold text-sm mb-2">Utilization 공식</p>
-          <M display>{String.raw`U = \frac{\text{totalBorrowed}}{\text{totalDeposited}}`}</M>
+          <M display>{String.raw`\underbrace{U}_{\text{이용률}} = \frac{\overbrace{\text{totalBorrowed}}^{\text{대출 자금}}}{\underbrace{\text{totalDeposited}}_{\text{전체 예치금}}}`}</M>
           <div className="grid gap-2 sm:grid-cols-3 mt-3">
             <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
               <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">예시</p>
@@ -39,8 +39,8 @@ export default function InterestRate() {
         <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
           <p className="font-semibold text-sm mb-2">2단계 이자율 공식</p>
           <div className="space-y-2 mb-3">
-            <M display>{String.raw`U < U_{\text{opt}}: \quad r = R_0 + \text{slope}_1 \times \frac{U}{U_{\text{opt}}}`}</M>
-            <M display>{String.raw`U \geq U_{\text{opt}}: \quad r = R_0 + \text{slope}_1 + \text{slope}_2 \times \frac{U - U_{\text{opt}}}{1 - U_{\text{opt}}}`}</M>
+            <M display>{String.raw`U < U_{\text{opt}}: \quad r = \underbrace{R_0}_{\text{기본 이자}} + \underbrace{\text{slope}_1 \times \frac{U}{U_{\text{opt}}}}_{\text{선형 증가}}`}</M>
+            <M display>{String.raw`U \geq U_{\text{opt}}: \quad r = \underbrace{R_0 + \text{slope}_1}_{\text{최적점 이자}} + \underbrace{\text{slope}_2 \times \frac{U - U_{\text{opt}}}{1 - U_{\text{opt}}}}_{\text{급격한 페널티 (kink)}}`}</M>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
             <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
@@ -143,7 +143,7 @@ export default function InterestRate() {
         <h3 className="text-xl font-semibold mt-8 mb-3">Supply Rate 계산</h3>
         <div className="not-prose my-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 p-4">
           <p className="font-semibold text-sm mb-2">Supply Rate 공식</p>
-          <M display>{String.raw`\text{supplyRate} = \text{borrowRate} \times U \times (1 - \text{reserveFactor})`}</M>
+          <M display>{String.raw`\underbrace{\text{supplyRate}}_{\text{예치 이자율}} = \underbrace{\text{borrowRate}}_{\text{대출 이자율}} \times \underbrace{U}_{\text{이용률}} \times \underbrace{(1 - \text{reserveFactor})}_{\text{프로토콜 수수료 차감}}`}</M>
           <div className="grid gap-2 sm:grid-cols-2 mt-3">
             <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
               <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">USDC 예시</p>

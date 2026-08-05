@@ -1,4 +1,5 @@
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 import FTTransformerViz from './viz/FTTransformerViz';
 
 export default function FTTransformer() {
@@ -18,7 +19,16 @@ export default function FTTransformer() {
         </p>
 
         <p><strong>수치형 피처 토크나이징:</strong></p>
-        <M display>{'t_j^{\\text{num}} = x_j \\cdot W_j + b_j, \\quad W_j \\in \\mathbb{R}^d,\\; b_j \\in \\mathbb{R}^d'}</M>
+        <M display>{'\\underbrace{t_j^{\\text{num}}}_{\\text{j 번째 토큰 } \\in \\mathbb{R}^d} = \\underbrace{x_j}_{\\text{스칼라 입력}} \\cdot \\underbrace{W_j}_{\\text{피처별 가중치}} + \\underbrace{b_j}_{\\text{편향}}'}</M>
+        <FormulaNote
+          meaning="수치 하나 x_j를 j번째 피처 전용 방향 W_j에 따라 d차원 공간으로 늘리고 bias를 더한다. 같은 값 10이라도 나이와 소득은 서로 다른 W_j와 b_j를 사용하므로 다른 의미의 토큰이 된다. 결측값 처리는 이 식 바깥에서 별도 인코딩해야 한다."
+          symbols={[
+            ['x_j\\in\\mathbb{R}', 'j번째 수치형 피처의 스칼라 값'],
+            ['W_j\\in\\mathbb{R}^d', '그 피처의 값 변화가 토큰 공간에서 움직일 방향'],
+            ['b_j\\in\\mathbb{R}^d', '값과 무관하게 피처 정체성을 담는 offset'],
+            ['t_j^{\\mathrm{num}}', 'Transformer에 들어갈 d차원 수치 피처 토큰'],
+          ]}
+        />
         <p>
           각 수치형 피처 <M>{'x_j \\in \\mathbb{R}'}</M>에 <strong>피처별(feature-specific) 선형 투영</strong>을 적용한다.
           스칼라 값 하나를 d차원 벡터로 확장 — 피처마다 별도의 가중치 <M>{'W_j'}</M>를 학습하여
@@ -26,7 +36,16 @@ export default function FTTransformer() {
         </p>
 
         <p><strong>범주형 피처 토크나이징:</strong></p>
-        <M display>{'t_j^{\\text{cat}} = \\text{Embedding}_j(x_j), \\quad \\text{Embedding}_j \\in \\mathbb{R}^{C_j \\times d}'}</M>
+        <M display>{'\\underbrace{t_j^{\\text{cat}}}_{\\text{j 번째 토큰 } \\in \\mathbb{R}^d} = \\underbrace{\\text{Embedding}_j(x_j)}_{\\text{룩업 테이블 } \\in \\mathbb{R}^{C_j \\times d}}'}</M>
+        <FormulaNote
+          meaning="범주 ID x_j를 j번째 피처 전용 embedding table의 행 번호로 사용해 d차원 벡터 하나를 꺼낸다. 서로 다른 피처가 같은 정수 ID를 가져도 별도 table을 쓰므로 의미가 섞이지 않는다. 미등록 범주는 전용 unknown row가 필요하다."
+          symbols={[
+            ['x_j\\in\\{1,\\ldots,C_j\\}', 'j번째 범주형 피처에서 관측한 category ID'],
+            ['C_j', '그 피처가 가질 수 있는 범주의 수'],
+            ['\\mathrm{Embedding}_j', '크기 C_j×d인 학습 가능한 lookup table'],
+            ['t_j^{\\mathrm{cat}}', '선택된 행으로 만든 d차원 범주 피처 토큰'],
+          ]}
+        />
         <p>
           범주형 피처 <M>{'x_j \\in \\{1, \\dots, C_j\\}'}</M>는 룩업 테이블에서 d차원 임베딩 벡터를 추출한다.
           <M>{'C_j'}</M> = j번째 피처의 카디널리티(고유 값 개수).
@@ -46,7 +65,15 @@ export default function FTTransformer() {
         <p>
           BERT와 동일한 전략 — 학습 가능한 [CLS] 토큰을 피처 토큰 시퀀스 앞에 추가한다.
         </p>
-        <M display>{'T_0 = [\\;t_{\\text{CLS}} \\;|\\; t_1 \\;|\\; t_2 \\;|\\; \\cdots \\;|\\; t_k\\;] \\in \\mathbb{R}^{(k+1) \\times d}'}</M>
+        <M display>{'T_0 = [\\;\\underbrace{t_{\\text{CLS}}}_{\\text{학습 가능 시작 토큰}} \\;|\\; \\underbrace{t_1, t_2, \\ldots, t_k}_{\\text{k 개 피처 토큰}}\\;] \\in \\mathbb{R}^{(k+1) \\times d}'}</M>
+        <FormulaNote
+          meaning="k개 피처 토큰 앞에 학습 가능한 [CLS] 토큰 하나를 붙여 길이 k+1의 입력 행렬을 만든다. 각 행은 한 피처, 각 열은 embedding 차원이다. Transformer 뒤의 [CLS] 출력은 모든 피처와 attention을 주고받은 표 전체의 요약으로 사용된다."
+          symbols={[
+            ['t_{\\mathrm{CLS}}', '예측에 사용할 전역 표현을 모으는 학습 가능 토큰'],
+            ['t_1,\\ldots,t_k', '수치형과 범주형을 동일한 d차원으로 바꾼 피처 토큰'],
+            ['T_0\\in\\mathbb{R}^{(k+1)\\times d}', 'Transformer 첫 층에 들어가는 토큰 행렬'],
+          ]}
+        />
         <p>
           k = 전체 피처 수, d = 토큰 차원.
           Transformer를 L개 레이어 통과한 뒤 [CLS] 위치의 출력만 추출하여 예측 헤드(Linear → 분류/회귀)에 입력한다.
@@ -57,8 +84,17 @@ export default function FTTransformer() {
         <p>
           표준 Transformer encoder 블록을 사용하되, 테이블에 맞는 조정이 있다:
         </p>
-        <M display>{'\\text{MHSA}(T) = \\text{Concat}(\\text{head}_1, \\dots, \\text{head}_H) W^O'}</M>
-        <M display>{'\\text{head}_h = \\text{softmax}\\!\\left(\\frac{Q_h K_h^\\top}{\\sqrt{d/H}}\\right) V_h'}</M>
+        <M display>{'\\text{MHSA}(T) = \\underbrace{\\text{Concat}(\\text{head}_1, \\dots, \\text{head}_H)}_{H \\text{개 헤드 결과 이어붙이기}} \\cdot \\underbrace{W^O}_{\\text{출력 투영}}'}</M>
+        <M display>{'\\text{head}_h = \\underbrace{\\text{softmax}\\!\\left(\\frac{Q_h K_h^\\top}{\\sqrt{d/H}}\\right)}_{\\text{스케일된 attention 가중치}} \\cdot \\underbrace{V_h}_{\\text{값}}'}</M>
+        <FormulaNote
+          meaning="각 head는 피처 토큰 사이의 query-key 유사도를 계산해 어느 피처의 value를 얼마나 섞을지 정한다. H개 head가 서로 다른 상호작용을 병렬로 찾고, 이어 붙인 결과를 W^O로 다시 d차원에 합친다. attention weight가 곧 인과적 피처 중요도라는 뜻은 아니다."
+          symbols={[
+            ['Q_h,K_h,V_h', 'head h에서 입력 토큰을 각각 query, key, value로 투영한 행렬'],
+            ['\\sqrt{d/H}', 'head 차원이 커질 때 dot product가 과도해지는 것을 막는 scale'],
+            ['\\mathrm{head}_h', '한 종류의 피처 상호작용을 반영해 섞인 value'],
+            ['W^O', 'H개 head 결과를 모델 차원 d로 결합하는 출력 투영'],
+          ]}
+        />
         <p>
           Q, K, V = 피처 토큰 시퀀스에서 각각 투영.
           핵심: 각 피처 토큰이 <strong>다른 모든 피처 토큰과 attention</strong>을 교환한다.
@@ -67,7 +103,15 @@ export default function FTTransformer() {
         </p>
 
         <p>FFN(Feed-Forward Network):</p>
-        <M display>{'\\text{FFN}(x) = \\text{GELU}(xW_1 + b_1)W_2 + b_2'}</M>
+        <M display>{'\\text{FFN}(x) = \\underbrace{\\text{GELU}(xW_1 + b_1)}_{\\text{확장 + 비선형}} \\cdot W_2 + b_2 \\quad \\underbrace{}_{d \\to 4d \\to d}'}</M>
+        <FormulaNote
+          meaning="attention이 피처 사이에서 정보를 교환한 뒤, FFN은 각 토큰을 독립적으로 넓은 hidden 공간에 투영하고 GELU 비선형성을 적용한 다음 원래 d차원으로 압축한다. 4d는 대표적인 폭이며 반드시 고정된 규칙은 아니다."
+          symbols={[
+            ['W_1,b_1', '각 토큰을 d차원에서 넓은 hidden 차원으로 확장하는 파라미터'],
+            ['\\mathrm{GELU}', '작은 음수도 부드럽게 통과시키는 비선형 활성함수'],
+            ['W_2,b_2', 'hidden 표현을 다시 모델 차원 d로 되돌리는 파라미터'],
+          ]}
+        />
         <p>
           GELU 활성화 사용 — ReLU 대비 그래디언트 전달이 부드럽다.
           Pre-LayerNorm 구조 채택 — LayerNorm을 attention/FFN <strong>앞</strong>에 배치하여 학습 안정성 확보.

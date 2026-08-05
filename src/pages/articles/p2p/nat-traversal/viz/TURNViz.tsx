@@ -48,7 +48,7 @@ export default function TURNViz() {
           <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <line x1={80} y1={49} x2={150} y2={40} stroke={C.a} strokeWidth={1.3} />
             <line x1={210} y1={40} x2={280} y2={49} stroke={C.turn} strokeWidth={1.3} />
-            <motion.circle r={3} fill={C.a}
+            <motion.circle initial={false} r={3} fill={C.a}
               animate={{ cx: [80, 150, 210, 280], cy: [49, 40, 40, 49] }}
               transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 0.6 }} />
           </motion.g>

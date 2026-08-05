@@ -10,6 +10,12 @@ function toSlug(text: string): string {
     .slice(0, 60);
 }
 
+function headingText(element: HTMLElement): string {
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.querySelectorAll('.katex-mathml').forEach((node) => node.remove());
+  return clone.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+}
+
 function extractSections(root: HTMLElement): Section[] {
   const result: Section[] = [];
   const sectionEls = root.querySelectorAll<HTMLElement>('section[id]');
@@ -18,12 +24,12 @@ function extractSections(root: HTMLElement): Section[] {
     sectionEls.forEach((sec) => {
       const id = sec.id;
       const h2 = sec.querySelector('h2');
-      const title = h2?.textContent?.trim() ?? id;
+      const title = h2 ? headingText(h2) : id;
       if (!id) return;
 
       const subs: { id: string; title: string }[] = [];
       sec.querySelectorAll<HTMLElement>('h3').forEach((h3) => {
-        const text = h3.textContent?.trim();
+        const text = headingText(h3);
         if (!text) return;
         if (!h3.id) {
           h3.id = `${id}-${toSlug(text)}`;
@@ -38,7 +44,7 @@ function extractSections(root: HTMLElement): Section[] {
     const headings = root.querySelectorAll<HTMLElement>('h2, h3');
     let current: Section | null = null;
     headings.forEach((el) => {
-      const title = el.textContent?.trim() ?? '';
+      const title = headingText(el);
       if (!title) return;
       if (!el.id) { el.id = toSlug(title); el.classList.add('scroll-mt-20'); }
       if (el.tagName === 'H2') {

@@ -1,5 +1,6 @@
 import M from '@/components/ui/math';
 import CostViz from './viz/CostViz';
+import MillerLoopCostViz from './viz/MillerLoopCostViz';
 
 export default function CostComparison() {
   return (
@@ -82,21 +83,8 @@ export default function CostComparison() {
           <p className="text-sm text-muted-foreground text-center">20ns/Fp mult 기준: ~0.15 ms per pairing</p>
         </div>
 
-        {/* Karatsuba 영향 */}
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">Without Karatsuba</div>
-            <p className="text-sm text-muted-foreground">
-              Miller loop: 64 x 144 &asymp; 9,200m. Total: ~18,000m. ~0.36 ms/pairing.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">With Karatsuba</div>
-            <p className="text-sm text-muted-foreground">
-              Miller loop: 64 x 54 &asymp; 3,500m. Total: ~7,600m. ~0.15 ms/pairing. Speedup 2.4x.
-            </p>
-          </div>
-        </div>
+        {/* Miller Loop + Final Exp + Karatsuba 영향 — Viz */}
+        <div className="not-prose mb-4"><MillerLoopCostViz /></div>
 
         {/* 벤치마크 */}
         <div className="not-prose rounded-lg border bg-card p-4 mb-4">

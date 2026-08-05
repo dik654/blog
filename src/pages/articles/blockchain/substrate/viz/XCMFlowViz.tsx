@@ -42,7 +42,7 @@ export default function XCMFlowViz() {
                 <text x={(f.x+t.x)/2+6} y={(f.y+t.y)/2-4} textAnchor="middle"
                   fontSize={9} fill="var(--muted-foreground)">{e.label}</text>
                 {vis && (
-                  <motion.circle r={3} fill={NODES[e.from].color}
+                  <motion.circle initial={false} r={3} fill={NODES[e.from].color}
                     animate={{ cx: [f.x,t.x], cy: [f.y,t.y] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1.2 }} />
                 )}

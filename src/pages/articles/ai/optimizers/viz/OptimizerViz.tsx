@@ -40,7 +40,7 @@ export default function OptimizerViz() {
                   {o.label}
                 </text>
                 {/* 바 */}
-                <motion.rect x={90} y={y} rx={4}
+                <motion.rect initial={false} x={90} y={y} rx={4}
                   animate={{ width: active ? barW : barW * 0.6 }}
                   height={20} fill={`${o.color}20`} stroke={o.color} strokeWidth={1}
                   transition={sp} />

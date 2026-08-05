@@ -16,7 +16,7 @@ export default function Paillier({ title, onCodeRef }: { title?: string; onCodeR
           <br />
           암호문 상태에서 덧셈과 스칼라 곱셈을 수행할 수 있습니다.
           <br />
-          MPC의 분산 키 생성과 비공개 계산에 핵심적으로 사용됩니다.
+          일부 threshold ECDSA protocol의 MtA(Multiplicative-to-Additive)와 비공개 계산에 사용됩니다. 모든 MPC나 DKG가 Paillier를 요구하는 것은 아닙니다.
         </p>
 
         <h3>수학적 구조</h3>

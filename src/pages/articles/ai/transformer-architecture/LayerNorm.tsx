@@ -1,27 +1,28 @@
-import LayerNormViz from './viz/LayerNormViz';
-import LayerNormDetailViz from './viz/LayerNormDetailViz';
+import MathText from '@/components/ui/math-text';
+import LayerNormScene from './viz/LayerNormScene';
+import LayerNormDetailScene from './viz/LayerNormDetailScene';
 import M from '@/components/ui/math';
 
 export default function LayerNorm() {
   return (
-    <section id="layer-norm" className="mb-16 scroll-mt-20">
+    <MathText id="layer-norm" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Layer Normalization</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>Layer Normalization</strong> — 각 토큰의 특징 차원에 걸쳐 독립적으로 정규화<br />
-          Batch Normalization과 달리 시퀀스 길이나 배치 크기에 무관하게 동작<br />
-          트랜스포머의 어텐션 메커니즘과 잘 호환
+          깊은 layer를 지나면 token 벡터의 크기와 분포가 계속 흔들린다<br />
+          다음 sublayer가 매번 다른 scale을 받으면 학습이 불안정해진다<br />
+          그래서 각 token 안의 feature 차원으로 평균과 분산을 맞춘 뒤, $\\gamma,\\beta$ 로 필요한 scale을 다시 학습한다
         </p>
       </div>
 
-      <LayerNormViz />
+      <LayerNormScene />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Pre-LN vs Post-LN</h3>
         <p>
-          원본 Transformer는 Post-LN 사용<br />
-          GPT-2 이후 대부분의 모델이 <strong>Pre-LN</strong>으로 전환<br />
-          Pre-LN — 잔차 연결 전에 정규화하여 그래디언트 흐름이 안정적
+          residual은 원본 $x$ 를 더해 gradient가 지나갈 우회로를 남긴다<br />
+          Post-LN은 더한 뒤 정규화하고, Pre-LN은 sublayer 앞에서 정규화한 뒤 $x+F(LN(x))$ 를 만든다<br />
+          깊은 decoder stack에서는 Pre-LN이 원본 경로를 덜 막아 더 안정적이다
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mt-4">
@@ -49,17 +50,17 @@ export default function LayerNorm() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">LayerNorm vs BatchNorm</h3>
         <M display>
-          {`\\underbrace{y_i = \\gamma \\cdot \\frac{x_i - \\mu}{\\sqrt{\\sigma^2 + \\varepsilon}} + \\beta}_{\\text{LayerNorm: 특징 차원(d)으로 정규화}}`}
+          {`y_i = \\underbrace{\\gamma}_{\\text{학습 scale}} \\cdot \\frac{\\overbrace{x_i - \\mu}^{\\text{centering}}}{\\underbrace{\\sqrt{\\sigma^2 + \\varepsilon}}_{\\text{scaling, } \\varepsilon \\text{ 0 분산 방지}}} + \\underbrace{\\beta}_{\\text{학습 shift}}`}
         </M>
       </div>
-      <LayerNormDetailViz />
+      <LayerNormDetailScene />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
-          요약 1: LayerNorm은 <strong>특징 차원으로 정규화</strong> — BatchNorm과 대조.<br />
-          요약 2: <strong>Pre-LN이 현대 표준</strong> — gradient flow 안정적.<br />
-          요약 3: LLaMA는 <strong>RMSNorm</strong> 채택 — 7% 속도 향상.
+          요약 1: LayerNorm은 token별 feature 차원 평균과 분산을 맞춘다.<br />
+          요약 2: residual은 원본 경로를 더해 gradient 흐름을 보존한다.<br />
+          요약 3: 현대 decoder LLM은 대체로 Pre-LN 또는 RMSNorm 계열을 쓴다.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

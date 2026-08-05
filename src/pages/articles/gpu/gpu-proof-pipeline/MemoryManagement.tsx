@@ -1,6 +1,7 @@
 import { CitationBlock } from '@/components/ui/citation';
 import MemoryStrategyViz from './viz/MemoryStrategyViz';
-import { memoryStrategyCode, memoryBudgetRows } from './MemoryData';
+import MemoryBudgetViz from './viz/MemoryBudgetViz';
+import { memoryBudgetRows } from './MemoryData';
 
 export default function MemoryManagement() {
   return (
@@ -22,20 +23,7 @@ export default function MemoryManagement() {
             H2D 전송과 MSM 커널 실행을 오버랩합니다. 2^26 MSM에서 전송 오버헤드를 80% 감소시킵니다.
           </p>
         </CitationBlock>
-        <p>
-          GPU 메모리 관리 전략:<br />
-          메모리 예산 계산 (BN254, 2^23 constraints):<br />
-          CRS bases (G1): 2^23 × 64B = 512 MB<br />
-          CRS bases (G2): 2^23 × 128B = 1024 MB<br />
-          Witness scalars: 2^23 × 32B = 256 MB<br />
-          NTT workspace: 2^23 × 32B = 256 MB (×2 버퍼)<br />
-          MSM buckets: 2^16 × 96B = 6 MB (per window)<br />
-          합계: ~2.5 GB (G1 only) / ~3.5 GB (G1+G2)<br />
-          전략 1: 스트림 처리 (Stream Processing)<br />
-          for chunk in polynomial.chunks(CHUNK_SIZE):<br />
-          cudaMemcpyAsync(d_chunk, chunk, H2D, stream)<br />
-          {'ntt_kernel<<<grid, block, 0, stream>>>(d_chunk)'}
-        </p>
+        <div className="not-prose my-6"><MemoryBudgetViz /></div>
         <h3 className="text-xl font-semibold mt-6 mb-3">GPU별 최대 회로 크기</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">

@@ -3,7 +3,7 @@ import { ActionBox, DataBox } from '@/components/viz/boxes';
 export default function ObserveViz() {
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
+      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720, width: '100%' }}>
         <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
           fill="var(--foreground)">observe() — 화면 텍스트 기반 상태 추론</text>
 
@@ -38,7 +38,7 @@ export default function ObserveViz() {
           sub="최근 10줄"
           color="#3b82f6" />
 
-        <line x1={184} y1={104} x2={216} y2={104} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#ob-arr)" />
+        <line x1={190} y1={104} x2={210} y2={104} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#ob-arr)" />
 
         {/* Pattern matching */}
         <ActionBox x={366} y={68} w={164} h={72}
@@ -46,7 +46,7 @@ export default function ObserveViz() {
           sub="패턴 매칭"
           color="#f59e0b" />
 
-        <line x1={334} y1={104} x2={366} y2={104} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#ob-arr)" />
+        <line x1={340} y1={104} x2={360} y2={104} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#ob-arr)" />
 
         {/* 4개 패턴 */}
         <g transform="translate(20, 174)">

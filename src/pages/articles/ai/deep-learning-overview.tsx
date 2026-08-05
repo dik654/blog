@@ -1,15 +1,19 @@
 import Overview from './deep-learning-overview/Overview';
-import History from './deep-learning-overview/History';
-import Acceleration from './deep-learning-overview/Acceleration';
-import Applications from './deep-learning-overview/Applications';
+import Representation from './deep-learning-overview/Representation';
+import LearningLoop from './deep-learning-overview/LearningLoop';
+import Compute from './deep-learning-overview/Compute';
+import Limits from './deep-learning-overview/Limits';
+import Roadmap from './deep-learning-overview/Roadmap';
 
 export default function DeepLearningOverviewArticle() {
   return (
     <>
       <Overview />
-      <History />
-      <Acceleration />
-      <Applications />
+      <Representation />
+      <LearningLoop />
+      <Compute />
+      <Limits />
+      <Roadmap />
     </>
   );
 }

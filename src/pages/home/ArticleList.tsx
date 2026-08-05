@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { categories } from '@/content';
+import { categoryGroups } from '@/content/category-groups';
+import { articlePath } from '@/lib/paths';
 
 export default function ArticleList() {
   const allArticles = categories.flatMap((cat) =>
@@ -8,6 +10,7 @@ export default function ArticleList() {
       ...article,
       categorySlug: cat.slug,
       categoryName: cat.name,
+      groupName: categoryGroups[cat.group ?? 'domain'].name,
       subcategoryName:
         cat.subcategories.find((s) => s.slug === article.subcategory)?.name ?? '',
     })),
@@ -30,16 +33,19 @@ export default function ArticleList() {
             viewport={{ once: true }}
           >
             <Link
-              to={`/${article.categorySlug}/${article.slug}`}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors hover:bg-accent/50 group"
+              to={articlePath(article.categorySlug, article.slug)}
+              className="group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-1 rounded-md px-3 py-2.5 transition-colors hover:bg-accent/50 sm:grid-cols-[auto_auto_minmax(0,1fr)_auto]"
             >
               <span className="shrink-0 rounded bg-accent px-2 py-0.5 text-xs font-medium text-muted-foreground">
                 {article.categoryName}
               </span>
-              <span className="text-sm font-medium group-hover:text-foreground transition-colors">
+              <span className="hidden shrink-0 text-xs text-muted-foreground/70 sm:inline">
+                {article.groupName}
+              </span>
+              <span className="min-w-0 break-words text-sm font-medium transition-colors group-hover:text-foreground">
                 {article.title}
               </span>
-              <span className="ml-auto text-xs text-muted-foreground shrink-0">
+              <span className="col-start-2 row-start-2 min-w-0 break-words text-xs text-muted-foreground sm:col-start-4 sm:row-start-1 sm:justify-self-end">
                 {article.subcategoryName} · {article.sections.length}개 섹션
               </span>
             </Link>

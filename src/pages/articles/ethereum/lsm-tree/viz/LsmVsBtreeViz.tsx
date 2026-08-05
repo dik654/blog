@@ -35,7 +35,7 @@ export default function LsmVsBtreeViz() {
                   fill="var(--foreground)">{ax.name}</text>
 
                 {/* LSM bar */}
-                <motion.rect x={120} y={y} width={0} height={14} rx={3}
+                <motion.rect initial={false} x={120} y={y} width={0} height={14} rx={3}
                   fill={`${CL}30`} stroke={CL} strokeWidth={active ? 1 : 0.5}
                   animate={{ width: ax.lsm * 3.5 }} transition={{ duration: 0.6 }} />
                 <motion.text x={0} y={y + 11} fontSize={9} fontWeight={500} fill={CL}
@@ -44,7 +44,7 @@ export default function LsmVsBtreeViz() {
                 </motion.text>
 
                 {/* B+tree bar */}
-                <motion.rect x={120} y={y + 17} width={0} height={14} rx={3}
+                <motion.rect initial={false} x={120} y={y + 17} width={0} height={14} rx={3}
                   fill={`${CB}30`} stroke={CB} strokeWidth={active ? 1 : 0.5}
                   animate={{ width: ax.bt * 3.5 }} transition={{ duration: 0.6, delay: 0.1 }} />
                 <motion.text x={0} y={y + 28} fontSize={9} fontWeight={500} fill={CB}

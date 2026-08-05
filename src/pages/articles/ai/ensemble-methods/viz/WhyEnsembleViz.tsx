@@ -196,7 +196,7 @@ function Step3() {
             transition={{ delay: i * 0.15 }}>
             <text x={10} y={y + 14} fontSize={9} fontWeight={600} fill="var(--foreground)">{b.label}</text>
             <rect x={120} y={y} width={maxW} height={22} rx={4} fill="var(--muted)" fillOpacity={0.15} />
-            <motion.rect x={120} y={y} width={0} height={22} rx={4} fill={b.color} fillOpacity={0.3}
+            <motion.rect initial={false} x={120} y={y} width={0} height={22} rx={4} fill={b.color} fillOpacity={0.3}
               animate={{ width: w }} transition={{ delay: i * 0.15 + 0.2, duration: 0.5 }} />
             <text x={125 + w} y={y + 14} fontSize={9} fontWeight={700} fill={b.color}>{b.score}</text>
             <rect x={420} y={y + 1} width={50} height={20} rx={10} fill={b.color} fillOpacity={0.15}

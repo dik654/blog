@@ -20,6 +20,11 @@ export const zkpMathArticles: Article[] = [
     slug: 'discrete-log',
     title: '이산로그 문제 (DLP)',
     subcategory: 'zkp-math',
+    summary: '작은 mod 17 예제로 거듭제곱의 정방향과 역방향을 비교하고, BSGS의 시간·메모리 비용에서 유한체 DLP와 타원곡선 DLP의 실무 보안 강도까지 연결합니다.',
+    level: '기초',
+    estimatedMinutes: 30,
+    prerequisites: ['나머지 연산', '거듭제곱', '유한한 집합에서의 곱셈'],
+    learningPath: 'zkp-math-foundations',
     sections: [
       { id: 'overview', title: '이산로그 문제란?' },
       { id: 'power-table', title: '거듭제곱 테이블' },

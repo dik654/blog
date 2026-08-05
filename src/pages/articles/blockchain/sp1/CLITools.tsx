@@ -17,11 +17,11 @@ export default function CLITools() {
       </div>
       <div className="space-y-1.5 mt-4 mb-6">
         {WORKFLOW_STEPS.map(w => (
-          <div key={w.step} className="rounded-lg border border-border/60 p-3 flex gap-3">
-            <span className="font-mono text-xs font-bold text-indigo-400 w-36 flex-shrink-0">
+          <div key={w.step} className="flex min-w-0 flex-col gap-1 rounded-lg border border-border/60 p-3 sm:flex-row sm:gap-3">
+            <span className="font-mono text-xs font-bold text-indigo-400 sm:w-36 sm:flex-shrink-0">
               {w.step}
             </span>
-            <span className="font-mono text-[11px] text-foreground/50 w-40 flex-shrink-0">
+            <span className="break-all font-mono text-[11px] text-foreground/50 sm:w-40 sm:flex-shrink-0">
               {w.cmd}
             </span>
             <span className="text-sm text-foreground/75">{w.desc}</span>

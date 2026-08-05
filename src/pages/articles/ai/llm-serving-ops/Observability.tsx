@@ -1,6 +1,9 @@
 import AIOpsViz from './viz/AIOpsViz';
 import MetricsPipeline from './MetricsPipeline';
 import AIOpsAutomation from './AIOpsAutomation';
+import ObservabilityDeepDive from './ObservabilityDeepDive';
+import ServingDepthGuide from './ServingDepthGuide';
+import ServingOpsDeepViz from './viz/ServingOpsDeepViz';
 
 export default function Observability() {
   return (
@@ -16,6 +19,9 @@ export default function Observability() {
         </p>
         <MetricsPipeline />
         <AIOpsAutomation />
+        <div className="not-prose my-8"><ServingOpsDeepViz variant="observability" /></div>
+        <ObservabilityDeepDive />
+        <ServingDepthGuide guideKey="observability" />
       </div>
     </section>
   );

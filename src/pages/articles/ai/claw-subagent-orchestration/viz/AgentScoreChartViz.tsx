@@ -20,7 +20,7 @@ export default function AgentScoreChartViz() {
 
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 440" className="w-full h-auto" style={{ maxWidth: 720 }}>
+      <svg viewBox="0 0 560 440" className="w-full h-auto" style={{ maxWidth: 720, width: '100%' }}>
         <text x={280} y={22} textAnchor="middle" fontSize={13} fontWeight={700}
           fill="var(--foreground)">베스트11 스코어링 — &quot;Debug auth flow&quot; 태스크</text>
 

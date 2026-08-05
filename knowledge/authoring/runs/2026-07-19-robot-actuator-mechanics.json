@@ -1,0 +1,224 @@
+{
+  "run_id": "2026-07-19-robot-actuator-mechanics",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing mechanical robot-joint plant from motor shaft through ratio, reflected inertia, mission duty, precision error, compliance, resonance, encoders, output bearing, friction/backdrive and holding-brake handover; then reconstruct a current Harmonic Drive manufacturer catalog and Williamson's 1995 Series Elastic Actuators thesis as separate source-bound evidence spines.",
+  "request_interpretation": {
+    "curriculum_intent": "Insert the physical actuator between electromagnetic torque/STO and generic feedback control so the reader no longer treats a robot joint as an ideal torque multiplier.",
+    "depth_intent": "Write a private thirty-six-premise vertical-axis failure first and require the public bundle to provide enough insight to diagnose every premise without printing the problem as a quiz.",
+    "source_intent": "Separate transferable mechanics, current manufacturer selection evidence and a foundational primary-source reconstruction. Preserve artifact identity, author intent, page anchors, assumptions, admitted failures and prohibited transfer.",
+    "formula_intent": "Render every display equation with Korean operation annotations and one adjacent FormulaNote. Recompose long equations semantically when mobile scale falls rather than lowering the threshold or adding scroll.",
+    "visual_intent": "Use mechanism-specific observables: shaft boundary, ratio workbench, inertia bars, duty trace, hysteresis curve, compliance strip, resonance response, encoder residual, bearing load plane, torque-speed quadrant, brake timeline and change ledger.",
+    "small_model_intent": "Record atomic scope, source, premise, formula, Viz, critic, integration and QA-repair packets so 4B/9B models can replay bounded work without receiving the full curriculum in one prompt."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-motor-drive-foc produces electromagnetic motor-shaft torque",
+      "robot-power-electronics-motor-driver supplies current and protection",
+      "robot-drive-energy-braking-safety handles operational stop energy",
+      "robot-drive-isolation-emc-functional-safety separates STO, holding and motion-safe claims",
+      "robot-dynamics-feedback-control explains abstract state-space and feedback methods"
+    ],
+    "missing_chain": [
+      "a declared motor/output reference side for torque, speed, angle and inertia",
+      "ratio, efficiency and power accounting without free torque",
+      "pose-dependent reflected inertia and gravity/acceleration demand",
+      "peak, repeated peak, RMS, average speed and life on different clocks",
+      "backlash, lost motion, hysteresis, repeatability and transmission accuracy as different tests",
+      "series compliance, stored energy, structural stiffness and two-mass resonance",
+      "motor/output encoder observability and stiffness-calibrated torque estimation",
+      "radial, axial and offset-moment loads at the output bearing",
+      "direction-dependent friction, efficiency and backdrivability",
+      "holding-brake torque overlap, delay, wear and vertical-axis handover"
+    ],
+    "scope_split": {
+      "concept": "Robot Actuator Mechanics owns transferable physical reasoning and system evidence.",
+      "company_reference": "Harmonic Drive Mechatronics 05/2026 preserves exact selection order, product-bound values, page identity and disclaimer.",
+      "foundational_source": "Williamson 1995 reconstructs author intent, minimal model, saturation analysis, hardware evidence, mismatch and admitted limitations.",
+      "deferred": "Gear-tooth design, final vendor life, brake certification, full manipulator flexible dynamics and controller tuning for an actual robot remain exact-system work."
+    }
+  },
+  "private_transfer_gate": {
+    "premise_count": 36,
+    "artifact": "src/pages/articles/ai/content-specs/robot-actuator-mechanics-transmission-holding-brake.md",
+    "scenario": "A gravity-loaded seven-axis shoulder uses a 3 N·m motor, 100:1 strain-wave reducer, one motor encoder, integrated output bearing and motor brake. The team calls it a 300 N·m zero-error joint, sizes from one peak and a universal 5:1 inertia heuristic, copies catalog values across ratio/revision, ignores housing and two-mass modes, observes only motor angle, omits bearing moment and uses the holding brake for every stop while commanding STO before engagement.",
+    "coverage_groups": [
+      { "premises": "1-5", "public_resolution": "Actuator boundary and ratio/power section; Joint Labs 01-02; motor/output side and efficiency notes." },
+      { "premises": "6-10", "public_resolution": "Reflected inertia section and Lab 03; base inertia ledger, pose-dependent load and signed torque demand." },
+      { "premises": "11-13", "public_resolution": "Mission duty section and Lab 04; peak/repeated/RMS/average-speed clocks and life boundary." },
+      { "premises": "14-16", "public_resolution": "Accuracy section and Lab 05; stimulus-specific curve states and catalog non-transfer ledger." },
+      { "premises": "17-21", "public_resolution": "Compliance section and Lab 06; piecewise stiffness, stored energy and series structural compliance." },
+      { "premises": "20-23", "public_resolution": "Two-mass section and Lab 07; full relative mode versus manufacturer one-inertia shortcut and bandwidth warning." },
+      { "premises": "24-26", "public_resolution": "Dual-encoder section and Lab 08; link angle, deformation, torque estimate and calibration/synchronization failure." },
+      { "premises": "27-30", "public_resolution": "Output-bearing section and Lab 09; force offset, moment, dynamic L10 and static/shock boundary." },
+      { "premises": "31-32", "public_resolution": "Friction/backdrive section, Lab 10 and Williamson force/impedance trade." },
+      { "premises": "33-35", "public_resolution": "Brake handover section and Lab 11; operational stop, hold, STO, startup/shutdown sequence and wear state." },
+      { "premise": "36", "public_resolution": "Joint commissioning Lab 12 and evidence-intersection equation invalidate dependent rows after change." }
+    ],
+    "publication_policy": "The compound scenario remains private. Public prose, formulas, interactions, counterexamples and source boundaries contain the transferable insight needed to solve it."
+  },
+  "source_decisions": [
+    {
+      "source": "Harmonic Drive AG, Harmonic Drive Mechatronics",
+      "locator": "https://harmonicdrive.de/fileadmin/Downloads/Produkte/Kataloge/Harmonic_Drive_Mechatronics_EN_1053524.pdf",
+      "identity": "Issue 1053524 05/2026, 177 PDF pages",
+      "used_for": ["selection workflow", "cycle/RMS/average-speed inputs", "piecewise stiffness", "simplified resonance", "accuracy terms", "bearing checks", "holding brakes", "feedback options", "average-value disclaimer"],
+      "boundary": "All numeric values, factors, examples and recommendations remain tied to exact product, size, ratio, mounting, lubrication, test condition and revision. Averages are not silently converted to guaranteed minima."
+    },
+    {
+      "source": "Matthew M. Williamson, Series Elastic Actuators",
+      "locator": "https://hdl.handle.net/1721.1/6776",
+      "mirror": "https://bitsavers.trailing-edge.com/pdf/mit/ai/aim/AITR-1524.pdf",
+      "identity": "MIT AI Technical Report 1524 / M.S. thesis, January 1995, 83 PDF pages",
+      "used_for": ["stiff-actuator critique", "motor-spring-load model", "clamped force transfer", "output impedance", "current/velocity saturation", "sweep-sine identification", "hard/soft/moving contact", "admitted limits"],
+      "boundary": "The ideal clamped linear model is not projected over stiction, backlash, electronics, saturation, moving environments, modern controllers or full robot safety."
+    },
+    {
+      "source": "Kollmorgen Application Sizing and Holding Brake guidance",
+      "locator": "https://webhelp.kollmorgen.com/essentials/english/Content/Resources/_MOTORS-Common/EN-English/MOTORS-Standard-Features/MOTORS-Holding-Brake.htm",
+      "used_for": ["vertical-load release sequence", "standstill-brake operational-stopping limit", "reflected-inertia heuristic boundary"],
+      "boundary": "The drive brake-control function is not personal-safety proof; no fixed inertia ratio is treated as a universal stability theorem."
+    },
+    {
+      "source": "SKF Rolling Bearings catalog and ISO 281 workflow",
+      "locator": "https://www.skf.com/binaries/pub12/Images/0901d196802809de-Rolling-bearings---17000_1-EN_tcm_12-121486.pdf",
+      "used_for": ["C/P rating-life structure", "equivalent dynamic and static load distinction", "service-life boundary"],
+      "boundary": "Basic L10 does not guarantee service life under unmodeled shock, contamination, lubrication, mounting, preload, misalignment, seals or housing behavior."
+    },
+    {
+      "source": "M. W. Spong, Modeling and Control of Elastic Joint Robots, 1987",
+      "locator": "https://doi.org/10.1115/1.3143860",
+      "used_for": ["historical bridge from rigid to elastic-joint modeling", "next-reading boundary"],
+      "boundary": "No detailed equation reconstruction was attributed because the full primary text was not locally auditable in this run."
+    }
+  ],
+  "source_extraction": {
+    "local_documents": [
+      { "file": "/tmp/pdfs/actuator-mechanics/harmonic-drive-mechatronics.pdf", "pages": 177 },
+      { "file": "/tmp/pdfs/actuator-mechanics/williamson-series-elastic-actuators-1995.pdf", "pages": 83 }
+    ],
+    "text_extracts": [
+      "/tmp/pdfs/actuator-mechanics/harmonic-drive-mechatronics.txt",
+      "/tmp/pdfs/actuator-mechanics/williamson-series-elastic-actuators-1995.txt"
+    ],
+    "rendered_directories": [
+      "/tmp/pdfs/actuator-mechanics/rendered-harmonic",
+      "/tmp/pdfs/actuator-mechanics/rendered-williamson"
+    ],
+    "visually_inspected_pages": {
+      "harmonic_drive": [158, 160, 161, 166, 167, 172, 175, 177],
+      "williamson": [16, 23, 24, 31, 40, 59, 60, 65, 68, 69, 74, 77, 78]
+    },
+    "tooling": "pypdf/pdfplumber text inspection plus pypdfium2 rendered-page review; Poppler was unavailable and no privileged package installation was used."
+  },
+  "events": [
+    {
+      "event_id": "audit.plant.001",
+      "observed": "The curriculum could produce and remove motor torque but generic feedback control assumed an unexplained plant and actuator input.",
+      "inference": "Readers could tune a rigid ideal joint while missing ratio-side errors, compliance, bearing and brake mechanics.",
+      "decision": "Insert a mechanical actuator foundation before controller implementation and bind it to FOC, braking, STO and feedback paths.",
+      "verification": "The concept article supplies twelve causal sections and the learning graph links all five boundaries."
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "observed": "A joint can satisfy ideal torque multiplication while thirty-six duty, precision, dynamic, sensing, bearing and holding premises remain false.",
+      "inference": "A catalog summary would not force implementation-level understanding.",
+      "decision": "Use the private thirty-six-premise vertical-axis scenario as the pre-authoring coverage gate.",
+      "verification": "Every premise is mapped to public prose, equation, observable, source boundary or change-evidence gate."
+    },
+    {
+      "event_id": "source.split.001",
+      "observed": "Manufacturer catalog rules and a foundational research thesis answer different questions and carry different evidence types.",
+      "inference": "Mixing them into one concept article would make current product recommendations look universal and ideal theory look like a catalog guarantee.",
+      "decision": "Create separate Harmonic Drive company-reference and Williamson foundational-source articles around one transferable concept spine.",
+      "verification": "The catalog has seven page-bound states; the thesis follows intent, model, saturation, identification, contact and admitted-limit evidence."
+    },
+    {
+      "event_id": "visual.grammar.001",
+      "observed": "A repeated box-arrow pipeline could not make duty, hysteresis, resonance, bearing geometry and brake overlap visible.",
+      "inference": "Color changes would not produce a better mental model.",
+      "decision": "Match each concept to a different observable geometry and require state changes to alter a conclusion.",
+      "verification": "All twelve labs changed causal state; mobile and desktop screenshots showed chart, control, legend and status without clipping or inner scroll."
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "observed": "The first browser run measured concept/catalog minimum formula scales of 0.52/0.67 at 360 px and 0.56/0.73 at 390 px.",
+      "inference": "The formulas technically fit but the long one-line evidence intersection, inertia ledger and resonance assumption were not comfortably readable.",
+      "decision": "Split the inertia ledger into base and reflected stages, the evidence intersection into two semantic groups, and resonance into equation and assumption lines. Rewrite piecewise stiffness with per-region delta variables.",
+      "verification": "Public post-font-load minimum scales became concept/catalog/paper 0.84/0.89/0.85 at 360 px and 0.89/0.94/0.94 at 390 px."
+    },
+    {
+      "event_id": "visual.numbering.001",
+      "observed": "Screenshot review showed global Viz sequence V13 beside internal JOINT LAB 11, creating two competing number systems.",
+      "inference": "The section milestone and global scene sequence should orient rather than contradict each other.",
+      "decision": "Keep internal lab index in the accessible label and show only the global V number plus JOINT LAB role on screen.",
+      "verification": "The caption no longer presents a second visible numeric sequence."
+    },
+    {
+      "event_id": "deploy.public.001",
+      "observed": "A successful local build does not prove the reverse-proxied public site refreshed its asset graph.",
+      "inference": "Completion requires an explicit service restart and browser tests against the public host.",
+      "decision": "Restart cm-blog.service, check all three routes and rerun the seventeen-test suite publicly.",
+      "verification": "Service is active, all routes return HTTP 200 and public Playwright passed 17/17 in 26.2 seconds."
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-actuator-mechanics-transmission-holding-brake.md",
+    "concept_article": "src/pages/articles/ai/robot-actuator-mechanics-transmission-holding-brake.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-actuator-mechanics-transmission-holding-brake/viz/ActuatorMechanicsLabs.tsx",
+    "company_article": "src/pages/articles/ai/reference-harmonic-drive-mechatronics-2026.tsx",
+    "paper_article": "src/pages/articles/ai/paper-williamson-series-elastic-actuators-1995.tsx",
+    "source_specs": "src/pages/articles/ai/paper-spine/robotActuatorSpecs.tsx",
+    "source_viz": "src/pages/articles/ai/paper-spine/viz/ActuatorSourceLabs.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "qa_test": "tests/actuator-mechanics-qa.spec.ts",
+    "visual_captures": ["/tmp/concept-mobile.png", "/tmp/concept-desktop.png", "/tmp/brake-mobile.png", "/tmp/catalog-mobile.png", "/tmp/paper-desktop.png"],
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-actuator-mechanics.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-actuator-mechanics-report.md"
+  },
+  "qa": {
+    "production_build": "passed; existing chunks above 900 kB warning remains",
+    "strict_typescript": "not green because of pre-existing unrelated errors; no new actuator, Harmonic Drive or Williamson file error was reported",
+    "focused_local_playwright": "17 passed",
+    "connected_regression_playwright": "29 passed across isolation/STO and actuator mechanics bundles",
+    "public_playwright": "17 passed in 26.2 seconds",
+    "formula_counts": { "concept": 21, "concept_notes": 21, "company": 7, "company_notes": 7, "paper": 6, "paper_notes": 6 },
+    "viz_counts": { "concept_labs": 12, "company_explorer_states": 7, "paper_mechanism_labs": 1, "paper_evidence_states": 6 },
+    "public_viewports": {
+      "360": { "concept_min_scale": 0.84, "company_min_scale": 0.89, "paper_min_scale": 0.85, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "390": { "concept_min_scale": 0.89, "company_min_scale": 0.94, "paper_min_scale": 0.94, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "768": { "concept_min_scale": 1, "company_min_scale": 1, "paper_min_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "1440": { "concept_min_scale": 1, "company_min_scale": 1, "paper_min_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 }
+    },
+    "public_deployment": {
+      "service": "cm-blog.service active after explicit restart",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-actuator-mechanics-transmission-holding-brake",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/reference-harmonic-drive-mechatronics-2026",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-williamson-series-elastic-actuators-1995"
+      ],
+      "http_status": 200
+    }
+  },
+  "small_model_replay": {
+    "four_b_packet": {
+      "scope": "one premise-to-prose/formula/Viz or one QA repair",
+      "required_fields": ["premise_id", "claim", "source_identity", "source_page", "reference_side", "units", "assumptions", "does_not_prove", "equation", "Korean_annotations", "viz_state", "acceptance_metric"],
+      "required_order": ["normalize one source claim", "declare motor/output side", "derive one atomic relation", "name the failure", "write one FormulaNote", "change one observable", "run one deterministic check"],
+      "forbidden": ["universalize a vendor heuristic", "mix motor/output quantities", "replace full duty with peak", "turn zero backlash into zero error", "turn L10 into a warranty", "use a holding brake as an unverified service brake", "lower mobile thresholds"]
+    },
+    "nine_b_packet": {
+      "scope": "one causal section or one source explorer state",
+      "required_fields": ["prerequisites", "reader_question", "misconception", "four_to_six_claims", "derivation_order", "counterexample", "source_boundary", "viz_contract", "mobile_contract", "critic_result"],
+      "required_order": ["read source slice fully", "emit claim-condition-boundary IR", "write intuition", "derive grouped formulas", "add measured or failure evidence", "implement causal interaction", "audit assigned premises"]
+    },
+    "orchestrator_only": ["multi-source retrieval", "artifact/revision conflict resolution", "private compound-problem construction", "scope split", "cross-section terminology", "source-versus-transfer provenance", "responsive browser QA", "deployment"],
+    "repair_protocol": "Return viewport, selector/formula source, expected invariant, observed metric, screenshot and allowed files. The child may split a formula or recompose a layout but may not widen a source claim or reduce the acceptance floor."
+  },
+  "next_milestone": {
+    "title": "Robot Structural Mechanics, Materials, Fatigue & Thermal Design",
+    "reason": "The actuator article closes torque transmission inside one joint but still treats housing, link, fasteners, material, fatigue and thermal expansion as lumped stiffness or assumptions.",
+    "planned_boundary": "Free-body diagrams and load paths, stress/strain and safety factors, beam torsion/bending, stiffness versus strength, stress concentration, fasteners and joints, fatigue/S-N and load spectra, modal/FEA evidence, thermal expansion and tolerance stack, and physical test correlation. It will not issue a final structure rating without geometry, material lot, process, load spectrum and failure criterion."
+  }
+}

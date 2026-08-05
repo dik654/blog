@@ -1,45 +1,71 @@
 import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
+import type { ReactNode } from 'react';
 
 const d = 0.06;
-const B = '#3b82f6', G = '#10b981', W = '#f59e0b', P = '#6366f1', M = 'var(--muted-foreground)';
 
-function L({ y, text, color, delay = 0, bold }: {
-  y: number; text: string; color: string; delay?: number; bold?: boolean;
+function Line({ children, tone = 'default', delay = 0 }: {
+  children: ReactNode;
+  tone?: 'default' | 'muted' | 'blue' | 'green' | 'amber';
+  delay?: number;
 }) {
+  const toneClass = {
+    default: 'text-foreground',
+    muted: 'text-muted-foreground',
+    blue: 'text-blue-600 dark:text-blue-400',
+    green: 'text-emerald-600 dark:text-emerald-400',
+    amber: 'text-amber-700 dark:text-amber-400',
+  }[tone];
+
   return (
-    <motion.text x={18} y={y} fontSize={10} fontFamily="monospace" fill={color}
-      fontWeight={bold ? 700 : 400}
-      initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
-      transition={{ delay }}>
-      {text}
-    </motion.text>
+    <motion.div
+      className={`min-w-0 break-words text-[13px] leading-relaxed sm:text-sm ${toneClass}`}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+    >
+      {children}
+    </motion.div>
   );
 }
 
-const STEPS = [
-  { label: 'Forward Propagation 수식', body: 'z = W·a + b (선형 변환) → a = activation(z) (비선형)\n이 쌍이 MLP의 최소 반복 단위' },
-];
-
 export default function ForwardPropDetailViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 480 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {step === 0 && (
-            <g>
-              <L y={18} text="l번째 층의 계산 (벡터화):" color={B} delay={0} bold />
-              <L y={43} text="z^(l) = W^(l) · a^(l-1) + b^(l)" color={P} delay={d} />
-              <L y={58} text="  // 선형 변환" color={M} delay={d*2} />
-              <L y={78} text="a^(l) = activation(z^(l))" color={G} delay={d*3} />
-              <L y={93} text="  // 비선형 활성화" color={M} delay={d*4} />
-              <L y={118} text="W^(l): [다음_층_크기 × 현재_층_크기]" color={W} delay={d*5} />
-              <L y={133} text="b^(l): 편향 벡터" color={W} delay={d*6} />
-              <L y={148} text="a^(0) = 입력 x" color={W} delay={d*7} />
-            </g>
-          )}
-        </svg>
-      )}
-    </StepViz>
+    <div className="not-prose my-6 max-w-full rounded-lg border border-border/70 bg-card shadow-sm">
+      <div className="border-b border-border/60 bg-muted/20 px-4 py-3">
+        <p className="text-sm font-semibold text-foreground">Forward Propagation 수식</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          column-vector convention 기준. W^(l)의 행 하나가 다음 층의 뉴런 하나이고, a^(l-1)과 내적되어 z^(l)의 한 원소를 만든다.
+        </p>
+      </div>
+      <div className="space-y-4 px-4 py-5">
+        <Line tone="blue" delay={0}>
+          <strong>l번째 층 계산</strong> <span className="text-muted-foreground">(column-vector convention)</span>
+        </Line>
+        <div className="space-y-2 rounded-md border border-border/70 bg-muted/15 p-3">
+          <Line tone="default" delay={d}>
+            <code className="font-mono">z^(l) = W^(l) · a^(l-1) + b^(l)</code>
+          </Line>
+          <Line tone="muted" delay={d * 2}>선형 변환: 이전 activation 전체를 현재 층 logit으로 바꾼다.</Line>
+          <Line tone="green" delay={d * 3}>
+            <code className="font-mono">a^(l) = activation(z^(l))</code>
+          </Line>
+          <Line tone="muted" delay={d * 4}>비선형 활성화: 각 logit에 원소별로 적용한다.</Line>
+        </div>
+        <div className="grid gap-2 rounded-md border border-amber-200/70 bg-amber-50/50 p-3 dark:border-amber-500/25 dark:bg-amber-500/10">
+          <Line tone="amber" delay={d * 5}>
+            <code className="font-mono">a^(l-1): [n_(l-1) × 1]</code>
+          </Line>
+          <Line tone="amber" delay={d * 6}>
+            <code className="font-mono">W^(l): [n_l × n_(l-1)]</code>
+          </Line>
+          <Line tone="amber" delay={d * 7}>
+            <code className="font-mono">b^(l), z^(l), a^(l): [n_l × 1]</code>
+          </Line>
+          <Line tone="amber" delay={d * 8}>
+            <code className="font-mono">a^(0)=x, a^(L)=예측값</code>
+          </Line>
+        </div>
+      </div>
+    </div>
   );
 }

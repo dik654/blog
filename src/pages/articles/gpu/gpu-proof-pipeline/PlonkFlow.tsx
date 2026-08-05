@@ -1,7 +1,7 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
 import PlonkFlowViz from './viz/PlonkFlowViz';
-import { plonkPipelineCode, plonkVsGroth16 } from './PlonkFlowData';
+import PlonkRoundViz from './viz/PlonkRoundViz';
+import { plonkVsGroth16 } from './PlonkFlowData';
 
 export default function PlonkFlow() {
   return (
@@ -22,13 +22,7 @@ export default function PlonkFlow() {
             Round 3의 몫 다항식은 차수 3n이므로 3등분하여 각각 별도 MSM으로 커밋합니다.
           </p>
         </CitationBlock>
-        <CodePanel title="PLONK 5-Round GPU 커널 호출" code={plonkPipelineCode} annotations={[
-          { lines: [3, 7], color: 'sky', note: 'Round 1: Wire 커밋 (최대 MSM)' },
-          { lines: [9, 11], color: 'emerald', note: 'Round 2: 순열 커밋' },
-          { lines: [13, 17], color: 'amber', note: 'Round 3: 몫 다항식 (NTT 집중)' },
-          { lines: [19, 20], color: 'violet', note: 'Round 4: 스칼라 평가 (CPU)' },
-          { lines: [22, 24], color: 'rose', note: 'Round 5: KZG 오프닝 (MSM)' },
-        ]} />
+        <div className="not-prose my-6"><PlonkRoundViz /></div>
         <h3 className="text-xl font-semibold mt-6 mb-3">Groth16 vs PLONK GPU 패턴</h3>
         <p>
           Groth16은 소수의 대규모 MSM을 한꺼번에 실행하는 <strong>burst형</strong> 패턴입니다.

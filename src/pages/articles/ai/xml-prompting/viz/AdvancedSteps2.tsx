@@ -66,7 +66,7 @@ export function StepInjection() {
         <rect x={150} y={160} width={160} height={28} rx={5}
           fill={`${CE}15`} stroke={CE} strokeWidth={1.5} />
         <text x={230} y={178} textAnchor="middle" fontSize={9}
-          fontWeight={600} fill={CE}>태그 경계 = 방어선</text>
+          fontWeight={600} fill={CE}>읽기 경계 ≠ 권한 경계</text>
       </motion.g>
     </motion.g>
   );

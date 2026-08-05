@@ -47,7 +47,7 @@ export default function OperatorViz() {
             return (
               <motion.g key={`bar-${i}`}>
                 <rect x={x} y={65} width={52} height={10} rx={2} fill={`${o.c}08`} stroke={o.c} strokeWidth={0.3} />
-                <motion.rect x={x + 1} y={66} rx={1.5} height={8}
+                <motion.rect initial={false} x={x + 1} y={66} rx={1.5} height={8}
                   animate={{ width: step >= 1 ? barW : 0 }}
                   transition={{ ...sp, delay: i * 0.06 }} fill={`${o.c}50`} />
                 <text x={x + 26} y={73} textAnchor="middle" fontSize={9} fill={o.c}>{o.method}</text>

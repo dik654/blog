@@ -1,3 +1,7 @@
+import Discv4HistoryViz from './viz/Discv4HistoryViz';
+import Discv4PacketStructViz from './viz/Discv4PacketStructViz';
+import KademliaXorViz from './viz/KademliaXorViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -22,107 +26,13 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">discv4 프로토콜 역사</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Discv4 = "Discovery Protocol v4"
-// Ethereum 최초 node discovery (2016~)
-
-// 설계 목표
-// - Decentralized peer discovery
-// - No central bootstrap server 의존
-// - UDP 기반 (fast, stateless)
-// - Byzantine 저항 (Sybil 대응)
-
-// 기반 기술
-// Kademlia DHT (2002, Maymounkov & Mazières)
-// - XOR distance metric
-// - k-buckets (k=16)
-// - O(log n) lookup
-// - Probabilistic routing
-
-// Ethereum 특화 변형
-// - 256-bit node ID (Keccak of pubkey)
-// - ECDSA signatures on packets
-// - 1280 byte packet size limit
-// - UDP port 30303 (default)
-
-// Packet types
-// 0x01 PING      - liveness check
-// 0x02 PONG      - response to ping
-// 0x03 FINDNODE  - "누가 ID에 가까운지?"
-// 0x04 NEIGHBORS - list of nearby nodes
-// 0x05 ENRREQUEST - Ethereum Node Record 요청
-// 0x06 ENRRESPONSE - ENR 응답
-
-// 한계 (discv5에서 개선)
-// - Signature만 (no encryption)
-// - Amplification attack 가능 (small req → large resp)
-// - Topic discovery 없음`}</pre>
+        <div className="not-prose mb-4"><Discv4HistoryViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Packet 구조 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Packet format (wire)
-//
-// ┌─────────────────────────────────────────────┐
-// │ MAC (32 bytes)                              │
-// │ = keccak256(signature || payload)           │
-// ├─────────────────────────────────────────────┤
-// │ Signature (65 bytes)                        │
-// │ = ECDSA_sign(keccak256(type || payload))   │
-// ├─────────────────────────────────────────────┤
-// │ Type (1 byte)                               │
-// │ 0x01=PING 0x02=PONG 0x03=FINDNODE ...       │
-// ├─────────────────────────────────────────────┤
-// │ Payload (RLP encoded, variable)             │
-// │ Packet-specific fields                      │
-// └─────────────────────────────────────────────┘
-// Total: 98 bytes header + payload
-
-// Signature verification
-// 1) Receive packet
-// 2) Verify MAC: hash(sig || payload) == mac_field
-// 3) Recover pubkey from signature
-// 4) Pubkey → node_id (keccak256)
-
-// 핵심: sender identity 자동 도출
-// - 별도 handshake 불필요
-// - Every packet self-authenticating
-
-// Size limits
-// - Max UDP packet: 1280 bytes
-// - NEIGHBORS response: ~16 nodes × 79 bytes = 1264 bytes
-// - Careful sizing to fit IP MTU`}</pre>
+        <div className="not-prose mb-4"><Discv4PacketStructViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Kademlia in Ethereum Discovery</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Kademlia XOR metric
-// distance(a, b) = a XOR b
-
-// 왜 XOR?
-// - Symmetric: d(a,b) = d(b,a)
-// - Unidirectional (triangle inequality 변형)
-// - No concentric neighborhoods
-// - Routing table 구성 쉬움
-
-// K-buckets (bucket size k=16)
-// - Node ID space = 2^256
-// - 256 buckets, one per distance range
-// - Bucket[i]: distance in [2^i, 2^(i+1))
-// - LRU eviction when full
-
-// Routing table example
-// Our node ID: 0x1234...
-// Bucket[0]: nodes with ID ending in opposite bit (distance 2^0-2^1)
-// Bucket[255]: nodes very close to us (distance 2^255-2^256)
-
-// Lookup algorithm
-// "Find closest nodes to target T"
-// 1) Query 3 closest known nodes
-// 2) Each returns their closest nodes
-// 3) Repeat with new closer nodes
-// 4) O(log n) rounds
-
-// 성능
-// - Routing table size: O(k × log n)
-// - Ethereum mainnet: ~16 buckets populated × 16 nodes = ~256 total
-// - Small memory footprint
-// - Query latency: 3-5 rounds typical`}</pre>
+        <div className="not-prose mb-4"><KademliaXorViz /></div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: discv4의 단순성과 한계</p>

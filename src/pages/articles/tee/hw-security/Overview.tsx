@@ -1,5 +1,8 @@
 import ContextViz from './viz/ContextViz';
 import TCBViz from './viz/TCBViz';
+import HwTcbViz from './viz/HwTcbViz';
+import RootOfTrustViz from './viz/RootOfTrustViz';
+import ChainOfTrustViz from './viz/ChainOfTrustViz';
 
 export default function Overview() {
   return (
@@ -17,29 +20,9 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TCB (Trusted Computing Base)</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// TCB = 시스템 보안을 책임지는 HW + SW 합계
-
-// 일반 시스템 TCB
-// - Linux kernel: ~30M LoC
-// - Systemd, libc, drivers: ~10M LoC
-// - BIOS/UEFI: ~2M LoC
-// - 예상 버그: 수천~수만 개
-
-// TEE 시스템 TCB (SGX)
-// - CPU hardware (immutable)
-// - Microcode
-// - SGX SDK runtime: ~50K LoC
-// - Enclave 앱 코드: custom
-// - 예상 버그: 수십~수백 개
-
-// TCB 작을수록 보안 강함
-// - 각 라인이 공격 표면
-// - 모든 라인이 감사·검증 대상
-// - 한 버그 → 전체 침해
-
-// 심층 분석
-// → /tee/tee-tcb 참조
-`}</pre>
+      </div>
+      <div className="not-prose my-6"><HwTcbViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">위협 모델 3분류</h3>
         <div className="overflow-x-auto">
@@ -72,79 +55,14 @@ export default function Overview() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Root of Trust (RoT)</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 신뢰 체인의 시작점 = 변조 불가능한 HW 구성요소
-
-// 주요 Root of Trust 구현
-
-// Intel ME (Management Engine)
-// - 별도 x86 core (32-bit Quark)
-// - 시스템 부트 제어
-// - Firmware update 검증
-// - fTPM 제공
-
-// AMD ASP (Secure Processor, 구 PSP)
-// - ARM Cortex-A5 core
-// - SEV 암호 연산 담당
-// - Boot verification
-// - eFuse 관리
-
-// ARM TrustZone Secure ROM
-// - 1st-stage bootloader (BL1)
-// - TF-A (Trusted Firmware-A)
-// - Hash chain 시작점
-
-// Apple Secure Enclave Processor (SEP)
-// - Custom ARM core
-// - T2/M1 이상 Mac에 포함
-// - 자체 OS (sepOS)
-// - 지문/Face ID + 키 관리
-
-// Google Titan
-// - Custom RISC-V chip
-// - 데이터센터·Pixel phone
-// - Boot integrity
-// - Key provisioning
-
-// 공통 속성
-// 1. 메인 CPU보다 권한 높음
-// 2. eFuse로 고유 키 보유
-// 3. AMD/Intel/Arm 서명된 firmware만 실행
-// 4. 업데이트 제한적 (rollback 방어)`}</pre>
+      </div>
+      <div className="not-prose my-6"><RootOfTrustViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">신뢰 체인 (Chain of Trust)</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Secure Boot chain 예시 (ARM Cortex-A)
-
-// Stage 0: Hardware RoT (불변)
-// - Boot ROM (CPU 내부)
-// - eFuse에 해시·키 저장
-// - 변조 물리적으로 불가능
-
-// Stage 1: BL1 (First-stage bootloader)
-// - Boot ROM이 flash에서 BL1 로드
-// - BL1 서명 검증 (eFuse 공개키로)
-// - 통과하면 jump
-
-// Stage 2: BL2 (Trusted Boot Firmware)
-// - BL1이 BL2 로드 + 검증
-// - Platform 초기화 (DRAM, clock)
-// - 다음 단계 로더
-
-// Stage 3: BL31 (EL3 Runtime)
-// - PSCI, SMC handler
-// - World switching
-// - Always-resident
-
-// Stage 4: BL32 (Secure World image)
-// - OP-TEE OS
-// - Secure EL1에서 실행
-
-// Stage 5: BL33 (Normal World bootloader)
-// - U-Boot, GRUB, Windows Boot Manager
-// - OS kernel 로드
-
-// 각 단계가 다음을 검증 → 체인 무결성
-// 한 단계 bypass = 전체 무너짐
-// → Boot ROM이 가장 중요 (immutable)`}</pre>
+      </div>
+      <div className="not-prose my-6"><ChainOfTrustViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
       </div>
       <div className="not-prose mt-8">

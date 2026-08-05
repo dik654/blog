@@ -1,0 +1,249 @@
+{
+  "runId": "2026-07-20-llm-architecture-flow-reconstruction",
+  "objective": "Reconstruct LLM architecture and global article continuity as a current-first, bounded, causal learning system.",
+  "observations": [
+    {
+      "id": "O1",
+      "observation": "Model fact sheets and tables expose names before causal differences.",
+      "inference": "Readers cannot transfer understanding to a new architecture paper.",
+      "decision": "Use a Transformer baseline and chronological bottleneck lineage."
+    },
+    {
+      "id": "O2",
+      "observation": "Only some articles declare explicit learning paths.",
+      "inference": "Article-local fixes leave the majority of the site disconnected.",
+      "decision": "Render global previous/current/next continuity for every registered article and prefer declared paths when available."
+    },
+    {
+      "id": "O3",
+      "observation": "Raw formula counts misclassify one explanatory note shared by one causal formula group.",
+      "inference": "Formula QA must follow source order and heading boundaries.",
+      "decision": "Audit formula groups rather than require one note per display node."
+    },
+    {
+      "id": "O4",
+      "observation": "Paper wrapper files delegate citations to a shared reconstruction scaffold.",
+      "inference": "Entry-file-only source detection creates false release blockers.",
+      "decision": "Recognize FoundationalPaperStudy as a source-provenance renderer."
+    }
+  ],
+  "contentContract": [
+    "problem before terminology",
+    "predecessor contract before delta",
+    "execution order before catalog",
+    "gain and cost together",
+    "bounded historical stopping point",
+    "primary evidence and non-transfer boundary",
+    "Korean explanation adjacent to displayed formula groups",
+    "causal visual observable rather than decorative color"
+  ],
+  "privateTransferGate": {
+    "purpose": "Test whether article insight transfers to an unseen architecture rather than print a quiz in the article.",
+    "questions": [
+      "Given a new decoder architecture, identify inherited Transformer computations and changed blocks.",
+      "Trace one token through attention, cache, router or recurrent state in execution order.",
+      "Separate total parameters, active parameters, memory traffic and latency.",
+      "Predict the bottleneck when context, batch size, expert count or hardware topology changes.",
+      "Identify the evidence needed before accepting a claimed speedup.",
+      "Explain which mathematical foundation is missing without descending into unrelated historical papers."
+    ]
+  },
+  "smallModelProtocol": {
+    "4B": [
+      "one claim-to-mechanism transformation",
+      "one formula explanation group",
+      "one visual state transition",
+      "one metadata continuity packet",
+      "one browser defect packet"
+    ],
+    "9B": [
+      "one causal section or architecture milestone",
+      "four to six pinned source claims",
+      "one predecessor/delta execution trace",
+      "one formula and visual contract",
+      "one responsive verification bundle"
+    ],
+    "orchestratorRetains": [
+      "current target and bounded prerequisite DAG",
+      "primary-source retrieval and conflict resolution",
+      "private hard transfer problem",
+      "cross-article terminology and symbol consistency",
+      "browser QA, regression, deployment and public verification"
+    ]
+  },
+  "artifacts": [
+    "src/components/ArticleLayout.tsx",
+    "src/pages/articles/ai/llm-architecture-gallery.tsx",
+    "src/pages/articles/ai/llm-architecture-dense-transformers.tsx",
+    "src/pages/articles/ai/llm-architecture-kv-long-context.tsx",
+    "src/pages/articles/ai/llm-architecture-sparse-moe.tsx",
+    "src/pages/articles/ai/llm-architecture-hybrid-linear.tsx",
+    "scripts/audit-learning-flow.mjs",
+    "knowledge/authoring/runs/2026-07-20-learning-flow-audit.json"
+  ],
+  "enrichmentBatches": [
+    {
+      "id": "llm-architecture-hybrid-linear-2026-07-22",
+      "status": "implemented-verified-deployed",
+      "currentTarget": "Qwen3.6 3:1 Gated DeltaNet/full-attention cadence plus FlashQLA runtime",
+      "historicalStop": "Mamba/Mamba-2 -> DeltaNet -> Gated DeltaNet -> Kimi Linear -> Qwen3-Next/Qwen3.6; pre-S4 history and variant catalogs are not required",
+      "mechanismAxes": [
+        "token mixer layer type",
+        "persistent KV versus fixed-shape state",
+        "Sparse MoE capacity versus active path",
+        "recurrent decode versus chunkwise training/prefill runtime"
+      ],
+      "primarySources": [
+        "https://arxiv.org/abs/2312.00752",
+        "https://arxiv.org/abs/2405.21060",
+        "https://arxiv.org/abs/2406.06484",
+        "https://arxiv.org/abs/2412.06464",
+        "https://arxiv.org/abs/2510.26692",
+        "https://github.com/MoonshotAI/Kimi-Linear",
+        "https://qwen.ai/blog?id=e34c4305036ce60d55a0791b170337c2b70ae51d",
+        "https://qwen.ai/blog?id=flashqla",
+        "https://arxiv.org/abs/2604.21100"
+      ],
+      "privateTransferGate": [
+        "Compute 32K and 128K persistent-memory ledgers for a 48-layer 3:1 hybrid and explain the asymptotic reduction.",
+        "Derive additive collision and beta=1 exact delta overwrite for two values written to the same unit key.",
+        "Separate recurrent decode, intra-chunk parallel work and inter-chunk recurrence, then state the evidence needed for a runtime speedup claim."
+      ],
+      "numericOracles": {
+        "stateLayer": "0.25 MiB",
+        "attentionLayer32K": "128 MiB",
+        "hybrid32K": "1,545 MiB",
+        "allAttention32K": "6,144 MiB",
+        "reduction32K": "74.85%",
+        "hybrid128K": "6,153 MiB",
+        "allAttention128K": "24,576 MiB",
+        "reduction128K": "74.96%",
+        "additiveRead": "(1,1)",
+        "deltaRead": "(0,1)",
+        "retention10": "10.74%",
+        "retention20": "1.15%"
+      },
+      "visuals": [
+        "StateMemoryLedgerLab",
+        "DeltaRuleMemoryLab",
+        "LinearAttentionExplorer"
+      ],
+      "formulaContract": {
+        "displayEquations": 14,
+        "formulaNotes": 14,
+        "minimumMobileKatexPx": 12.68,
+        "formulaOverflow": 0
+      },
+      "collaboration": {
+        "channel": "context-manager only",
+        "requests": 4,
+        "result": "provider failure on all requests; no direct Claude CLI fallback",
+        "error": "Provider error: All providers failed"
+      },
+      "verification": {
+        "targetedEslint": "passed",
+        "diffCheck": "passed",
+        "productionBuild": "passed",
+        "localPlaywright": "23/23 passed",
+        "publicPlaywright": "23/23 passed",
+        "viewports": [390, 768, 1440],
+        "http": "article and chunk returned 200 locally and publicly"
+      },
+      "deployment": {
+        "serviceRestart": "2026-07-22T23:16:59+09:00",
+        "chunk": "llm-architecture-hybrid-linear-64nEvFXN.js",
+        "sha256": "406560cd0b14da4cc38feac26732b02b67caeb8f48b20a8c3b320f7b0e6f11ac"
+      }
+    },
+    {
+      "id": "llm-architecture-gallery-deepseek-case-study-2026-07-22",
+      "status": "implemented-verified-deployed",
+      "currentTarget": "2026 architecture deltas -> four stable foundations -> DeepSeek-V3.2 integrated report verification",
+      "informationArchitecture": {
+        "orderedRoute": [
+          "current architecture question",
+          "Dense baseline",
+          "KV and long context",
+          "Sparse MoE",
+          "Hybrid and state",
+          "integrated report verification"
+        ],
+        "sidebarStage": "05 · 실제 보고서 검산",
+        "catalogDecision": "removed more than 70 dead model fact rows and kept the overview as a current-first route rather than another catalog",
+        "classificationFix": "added explicit curriculumRole so a reconstructed research report can remain a core article instead of being hidden by the research-* source heuristic"
+      },
+      "primarySources": [
+        "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/blob/main/DeepSeek_V4.pdf",
+        "https://github.com/MoonshotAI/Attention-Residuals",
+        "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemma-4-12B/",
+        "https://huggingface.co/deepseek-ai/DeepSeek-V3.2/resolve/main/assets/paper.pdf",
+        "https://api-docs.deepseek.com/news/news251201"
+      ],
+      "privateTransferGate": [
+        "For L=131072 and k=2048, derive the 64x core-comparison reduction and 1.5625% selection ratio without claiming 64x end-to-end latency.",
+        "Explain why replaying a surface token through a different MoE route breaks the simple importance-ratio interpretation.",
+        "Design tests that prevent a synthetic agent from bypassing tools through database or verifier shortcuts.",
+        "Convert BrowseComp 140 to 364 steps and 53.4 to 60.2 score into 2.60x and +6.8 points, then list the runtime costs the result does not establish."
+      ],
+      "numericOracles": {
+        "sparseCoreComparison": "1 / 64",
+        "selectedFraction": "1.5625%",
+        "environments": 1827,
+        "tasks": 4417,
+        "tasksPerEnvironment": 2.42,
+        "browseCompStepMultiplier": "2.60x",
+        "browseCompScoreDelta": "+6.8 point"
+      },
+      "visuals": {
+        "component": "DeepSeekV32StudyViz",
+        "modes": 4,
+        "stagesPerMode": 4,
+        "interaction": "select a mechanism, then select an execution stage to read detail and the next handoff",
+        "responsiveLayout": "one compact column at mobile, 2x2 at tablet, four-step horizontal flow at desktop",
+        "screenshots": "qa-results/current-report-20260722"
+      },
+      "formulaContract": {
+        "displayEquations": 5,
+        "formulaNotes": 5,
+        "minimumMobileKatexPx": 12.1917,
+        "initialFailurePx": 11.8798,
+        "formulaOverflow": 0
+      },
+      "collaboration": {
+        "channel": "context-manager only",
+        "agents": ["curator", "ui-design-researcher"],
+        "requests": 3,
+        "result": "provider failure on all requests; no direct Claude CLI fallback",
+        "error": "Provider error: All providers failed"
+      },
+      "verification": {
+        "targetedEslint": "passed",
+        "diffCheck": "passed",
+        "productionBuild": "passed",
+        "localPlaywright": "27/27 passed",
+        "publicPlaywright": "27/27 passed",
+        "viewports": [360, 390, 768, 1440],
+        "http": "article and chunk returned 200 locally and publicly"
+      },
+      "deployment": {
+        "serviceRestart": "2026-07-22T23:38:57+09:00",
+        "chunk": "research-deepseek-v3-2-2025-BLM5WPb3.js",
+        "sha256": "7fd4d6481fd0528ff0f2265d0163275de8e1b16d2bef1a264ec73e161e85fca6"
+      }
+    }
+  ],
+  "latestAudit": {
+    "registered": 557,
+    "globalContinuityCoverage": 557,
+    "releaseBlockers": 0,
+    "uncoveredFormulaGroups": 0,
+    "renderReviewCandidates": 5
+  },
+  "verification": {
+    "build": "passed on 2026-07-21; Vite production build completed with the existing large-chunk warning",
+    "fullLocalBrowserQA": "217/217 passed after the final formula and font-load stabilization changes",
+    "focusedBrowserQA": "53/53 passed against the public host across 360, 390, 768 and 1440 px checks",
+    "publicDeployment": "cm-blog.service active after user-service restart at 2026-07-21 00:53:10 KST",
+    "publicBaseUrl": "https://heru.ragdoll-bigeye.ts.net/lab/blog/"
+  }
+}

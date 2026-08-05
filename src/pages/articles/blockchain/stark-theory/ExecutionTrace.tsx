@@ -99,7 +99,7 @@ export default function ExecutionTrace() {
             </div>
             <div className="rounded border bg-card p-3">
               <p className="font-semibold text-xs mb-2">Lagrange interpolation</p>
-              <M display>{'\\underbrace{a(\\omega^i)}_{\\text{다항식 a를 ω^i에서 평가}} = \\underbrace{a_i}_{\\text{trace i행의 a값}},\\quad \\underbrace{b(\\omega^i)}_{\\text{다항식 b를 ω^i에서 평가}} = \\underbrace{b_i}_{\\text{trace i행의 b값}}'}</M>
+              <M display>{'\\underbrace{a(\\omega^i)}_{\\text{다항식 a의 i번째 도메인 평가}} = \\underbrace{a_i}_{\\text{trace i행의 a값}},\\quad \\underbrace{b(\\omega^i)}_{\\text{다항식 b의 i번째 도메인 평가}} = \\underbrace{b_i}_{\\text{trace i행의 b값}}'}</M>
               <p className="text-sm text-muted-foreground mt-2">
                 <M>a(x)</M>, <M>b(x)</M>: 각 열의 값을 지나도록 보간한 다항식. <M>\omega^i</M>: <M>i</M>번째 행에 대응하는 도메인 원소. Lagrange 보간으로 <M>T+1</M>개 점을 모두 통과하는 유일한 <M>T</M>차 다항식을 구성.
               </p>

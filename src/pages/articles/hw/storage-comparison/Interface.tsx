@@ -38,101 +38,86 @@ export default function Interface() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">AHCI vs NVMe 큐 구조 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// AHCI (Advanced Host Controller Interface):
-//
-// Design (2004):
-// - designed for HDDs
-// - 1 queue × 32 commands
-// - register-based communication
-// - high CPU overhead
-// - sequential access optimized
-//
-// Limitations with SSDs:
-// - can't leverage parallelism
-// - queue depth bottleneck
-// - wasted SSD potential
-// - sub-optimal latency
-// - throughput capped
+        <h3 className="text-xl font-semibold mt-8 mb-3">AHCI 설계 (2004)</h3>
+        <ul className="leading-7">
+          <li>HDD 전용 설계</li>
+          <li>큐 1 개 × 32 command</li>
+          <li>register 기반 통신</li>
+          <li>높은 CPU 오버헤드</li>
+          <li>순차 접근 최적화</li>
+        </ul>
 
-// NVMe Queue Architecture:
-//
-// Admin Queue (setup):
-// - 1 queue pair
-// - management commands
-// - firmware updates
-// - feature configuration
-//
-// I/O Queues (data):
-// - up to 64K queue pairs
-// - each with up to 64K commands
-// - per-CPU dedicated queues
-// - lock-free design
-// - direct PCIe communication
+        <h3 className="text-xl font-semibold mt-8 mb-3">SSD 에서 AHCI 한계</h3>
+        <ul className="leading-7">
+          <li>병렬성 활용 불가</li>
+          <li>queue depth 병목</li>
+          <li>SSD 잠재력 낭비</li>
+          <li>sub-optimal latency</li>
+          <li>throughput 상한</li>
+        </ul>
 
-// NVMe Command Path:
-// 1. Application submits I/O
-// 2. OS kernel places in queue
-// 3. Writes to doorbell register
-// 4. SSD controller reads command
-// 5. DMA data transfer
-// 6. Completion notification
-// 7. Interrupt to CPU
+        <h3 className="text-xl font-semibold mt-8 mb-3">NVMe 큐 구조</h3>
+        <ul className="leading-7">
+          <li><strong>Admin Queue</strong> — 1 queue pair, 관리 command, firmware update, feature 설정.</li>
+          <li><strong>I/O Queue</strong> — 최대 64K queue pair, 각 64K command. per-CPU 전용 큐, lock-free 설계, PCIe 직접 통신.</li>
+        </ul>
 
-// Performance implications:
-//
-// Queue depth scaling:
-// AHCI QD32 max: ~90K IOPS
-// NVMe QD32: ~250K IOPS
-// NVMe QD256: ~1M IOPS
-// NVMe QD4096: ~1.5M IOPS
+        <h3 className="text-xl font-semibold mt-8 mb-3">NVMe Command Path</h3>
+        <ol className="leading-7 list-decimal ml-6">
+          <li>Application 이 I/O 제출</li>
+          <li>OS 커널이 큐에 배치</li>
+          <li>doorbell register 에 쓰기</li>
+          <li>SSD 컨트롤러가 command 읽기</li>
+          <li>DMA 데이터 전송</li>
+          <li>Completion 알림</li>
+          <li>CPU interrupt</li>
+        </ol>
 
-// Latency breakdown:
-// AHCI:
-// - command processing: 30 μs
-// - CPU overhead: 40 μs
-// - SSD processing: 20 μs
-// - total: ~90 μs
-//
-// NVMe:
-// - command processing: 2 μs
-// - CPU overhead: 5 μs
-// - SSD processing: 10 μs
-// - total: ~17 μs
+        <h3 className="text-xl font-semibold mt-8 mb-3">Queue Depth 스케일링</h3>
+        <ul className="leading-7">
+          <li>AHCI QD32 max — ~90K IOPS</li>
+          <li>NVMe QD32 — ~250K IOPS</li>
+          <li>NVMe QD256 — ~1M IOPS</li>
+          <li>NVMe QD4096 — ~1.5M IOPS</li>
+        </ul>
 
-// CPU efficiency:
-// AHCI: 1 core saturates at 250K IOPS
-// NVMe: 1 core handles 1.5M IOPS
-// 6x more efficient
+        <h3 className="text-xl font-semibold mt-8 mb-3">Latency 분해</h3>
+        <ul className="leading-7">
+          <li><strong>AHCI</strong> — command 처리 30 μs + CPU 오버헤드 40 μs + SSD 처리 20 μs = ~90 μs</li>
+          <li><strong>NVMe</strong> — command 처리 2 μs + CPU 오버헤드 5 μs + SSD 처리 10 μs = ~17 μs</li>
+        </ul>
 
-// Parallel scaling:
-// NVMe scales with CPU cores:
-// - 1 core: 1.5M IOPS
-// - 4 cores: 5M IOPS
-// - 8 cores: 10M IOPS
-// - near-linear scaling
+        <h3 className="text-xl font-semibold mt-8 mb-3">CPU 효율</h3>
+        <p className="leading-7">
+          AHCI 는 1 core 가 250K IOPS 에서 saturate. NVMe 는 1 core 로 1.5M IOPS 처리 — 6배 효율.
+        </p>
 
-// Modern NVMe features:
-// - ZNS (Zoned Namespaces): sequential-only zones
-// - SGL (Scatter-Gather Lists): efficient DMA
-// - Multi-stream: write hinting
-// - Directives: QoS hints
-// - CMB (Controller Memory Buffer)
+        <h3 className="text-xl font-semibold mt-8 mb-3">병렬 확장</h3>
+        <ul className="leading-7">
+          <li>1 core — 1.5M IOPS</li>
+          <li>4 core — 5M IOPS</li>
+          <li>8 core — 10M IOPS</li>
+          <li>거의 선형 확장</li>
+        </ul>
 
-// Kernel bypass (SPDK):
-// - user-space NVMe driver
-// - poll-mode (no interrupts)
-// - near-hardware performance
-// - used in storage systems
+        <h3 className="text-xl font-semibold mt-8 mb-3">현대 NVMe 기능</h3>
+        <ul className="leading-7">
+          <li>ZNS (Zoned Namespaces) — 순차 전용 zone</li>
+          <li>SGL (Scatter-Gather List) — 효율적 DMA</li>
+          <li>Multi-stream — write hinting</li>
+          <li>Directives — QoS hint</li>
+          <li>CMB (Controller Memory Buffer)</li>
+        </ul>
 
-// NVMe-oF (over Fabrics):
-// - NVMe over network
-// - RDMA (RoCE, iWARP)
-// - TCP
-// - FC
-// - enables disaggregated storage`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">SPDK (Kernel Bypass)</h3>
+        <p className="leading-7">
+          user-space NVMe 드라이버. poll-mode (interrupt 없음), near-hardware 성능. 스토리지 시스템에 사용.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">NVMe-oF (over Fabrics)</h3>
+        <p className="leading-7">
+          NVMe 를 네트워크 위에서. RDMA (RoCE, iWARP) / TCP / FC 전송. disaggregated storage 가능.
+        </p>
         <p className="leading-7">
           NVMe: <strong>64K queues × 64K commands, per-CPU lock-free</strong>.<br />
           CPU efficiency 6x, latency 5x lower.<br />

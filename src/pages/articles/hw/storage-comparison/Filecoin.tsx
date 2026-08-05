@@ -38,96 +38,63 @@ export default function Filecoin() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Filecoin SP Storage Architecture</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Filecoin SP Storage Tiers:
+        <h3 className="text-xl font-semibold mt-8 mb-3">4-tier 스토리지</h3>
+        <ul className="leading-7">
+          <li><strong>Tier 1 — Sealing Cache (NVMe)</strong> — PC1/PC2 작업 데이터. sector 당 352 GiB (layer) + ~30 GiB (tree R). heavy 순차 쓰기. NVMe U.2 2~4 TB, DWPD 3+, 지속 2+ GB/s.</li>
+          <li><strong>Tier 2 — Staging (NVMe)</strong> — ProveCommit tree (tree_c, tree_r_last). sector 당 ~60 GiB. proving 중 random access. NVMe M.2 또는 U.2, 10~30 TB.</li>
+          <li><strong>Tier 3 — Sealed Storage (HDD/SAS)</strong> — 완료 sector (32 GiB 단위). read-only, WindowPoSt random read. SAS HDD 16 TB+, 서버당 100+ TB.</li>
+          <li><strong>Tier 4 — Archive (HDD/Tape)</strong> — cold 데이터, 드문 접근, 대량 저장, TB 당 최저가.</li>
+        </ul>
 
-// Tier 1: Sealing Cache (NVMe)
-// - PC1/PC2 working data
-// - 352 GiB per sector (layers)
-// - ~30 GiB per sector (tree R)
-// - heavy sequential write
-// - requires: NVMe U.2 2-4 TB
-// - DWPD: 3+ minimum
-// - sustained write: 2+ GB/s
+        <h3 className="text-xl font-semibold mt-8 mb-3">전형적 SP 서버 구성</h3>
+        <ul className="leading-7">
+          <li>CPU — AMD EPYC 9654 (96-core)</li>
+          <li>RAM — 512 GB DDR5 ECC</li>
+          <li>NVMe cache — 8× U.2 3.84TB = 30 TB</li>
+          <li>HDD 스토리지 — 36× SAS 20TB = 720 TB</li>
+          <li>GPU — 2× A100 80GB</li>
+          <li>총합 — ~$100K</li>
+        </ul>
 
-// Tier 2: Staging (NVMe)
-// - ProveCommit trees
-// - tree_c, tree_r_last
-// - ~60 GiB per sector
-// - random access during proving
-// - requires: NVMe M.2 or U.2
-// - capacity: 10-30 TB
+        <h3 className="text-xl font-semibold mt-8 mb-3">스케일링 경제</h3>
+        <ul className="leading-7">
+          <li>Small SP — 100~200 TB</li>
+          <li>Mid SP — 1~5 PB</li>
+          <li>Large SP — 10+ PB</li>
+          <li>성장 방식 — horizontal (서버 수 증가)</li>
+        </ul>
 
-// Tier 3: Sealed Storage (HDD/SAS)
-// - completed sectors (32 GiB each)
-// - read-only access
-// - WindowPoSt random reads
-// - cost optimization
-// - requires: SAS HDD 16+ TB
-// - capacity: 100+ TB per server
+        <h3 className="text-xl font-semibold mt-8 mb-3">단계별 I/O 패턴</h3>
+        <ul className="leading-7">
+          <li><strong>PC1</strong> — 순차 쓰기 ~2 GB/s. 지속 성능 필수, thermal throttling 불가.</li>
+          <li><strong>PC2</strong> — tree 구축. 순차 + random 혼합. GPU 와 협조.</li>
+          <li><strong>C2</strong> — 입력 read + SNARK proof 생성. 쓰기 최소.</li>
+          <li><strong>WindowPoSt</strong> — sector 전체에 걸친 random read. partition 당 ~1,000 challenge. 낮은 latency + 높은 IOPS 필요.</li>
+        </ul>
 
-// Tier 4: Archive (HDD/Tape)
-// - cold data
-// - rare access
-// - bulk storage
-// - cheapest per TB
+        <h3 className="text-xl font-semibold mt-8 mb-3">TB 당 비용</h3>
+        <ul className="leading-7">
+          <li>NVMe (sealing) — amortized $300/TB</li>
+          <li>HDD (sealed) — $15/TB</li>
+          <li>전기료 — $0.1/TB/month</li>
+          <li>총합 — ~$50/TB-year</li>
+        </ul>
 
-// Typical SP server config:
-// - CPU: AMD EPYC 9654 (96-core)
-// - RAM: 512 GB DDR5 ECC
-// - NVMe cache: 8× U.2 3.84TB = 30 TB
-// - HDD storage: 36× SAS 20TB = 720 TB
-// - GPU: 2× A100 80GB
-// - total: ~$100K
+        <h3 className="text-xl font-semibold mt-8 mb-3">수익 구조</h3>
+        <ul className="leading-7">
+          <li>Storage deal — $0.50~$2/TB/year</li>
+          <li>Block reward — 변동</li>
+          <li>FIL+ verified — 10x 승수</li>
+          <li>2024 mainnet 순수익 — ~$10~$30/TB/year</li>
+        </ul>
 
-// Scaling economics:
-// - Small SP: 100-200 TB
-// - Mid SP: 1-5 PB
-// - Large SP: 10+ PB
-// - Growth: horizontal (more servers)
-
-// Performance requirements:
-//
-// PC1 I/O pattern:
-// - sequential write ~2 GB/s
-// - needs sustained performance
-// - no thermal throttling allowed
-//
-// PC2 I/O pattern:
-// - tree construction
-// - sequential + random
-// - GPU coordination
-//
-// C2 I/O pattern:
-// - read input data
-// - SNARK proof generation
-// - minimal writes
-//
-// WindowPoSt I/O pattern:
-// - random reads across sectors
-// - ~1000 challenges per partition
-// - need low latency
-// - high IOPS
-
-// Cost breakdown (per TB stored):
-// NVMe (sealing): $300/TB amortized
-// HDD (sealed): $15/TB
-// Electricity: $0.1/TB/month
-// Total: ~$50/TB-year
-
-// Revenue:
-// Storage deals: $0.50-2/TB/year
-// Block rewards: varies
-// FIL+ verified: 10x multiplier
-// 2024 mainnet: ~$10-30/TB/year net
-
-// ROI:
-// Hardware: $100K
-// Revenue: ~$30K-50K/year
-// Payback: 2-3 years
-// 5-year ROI: 100-250%`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">ROI</h3>
+        <ul className="leading-7">
+          <li>하드웨어 — $100K</li>
+          <li>연 수익 — ~$30K~$50K</li>
+          <li>payback — 2~3년</li>
+          <li>5년 ROI — 100~250%</li>
+        </ul>
         <p className="leading-7">
           Filecoin SP: <strong>4-tier storage (NVMe cache → HDD archive)</strong>.<br />
           typical config: 30 TB NVMe + 720 TB SAS HDD + 2× A100.<br />

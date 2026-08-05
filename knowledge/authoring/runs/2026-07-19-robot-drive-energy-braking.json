@@ -1,0 +1,224 @@
+{
+  "run_id": "2026-07-19-robot-drive-energy-braking",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing robot-drive energy and braking foundation from mechanical energy through DC-link headroom, runtime sink allocation, brake chopper, common bus, contactor lifecycle and commissioning, then reconstruct ABB Technical Guide No. 8 with source values separated from robot adaptation.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue the bottom-up robotics chain after FOC, power electronics and the TIDA-010956 board, closing the question of where regenerated energy goes during a requested stop.",
+    "depth_intent": "Write a private compound failure first and require the public article to supply enough causal insight to solve every premise without printing the problem as a quiz.",
+    "reference_intent": "Treat company technical guides as source spines when they provide durable mechanism and selection logic; preserve document revision, example conditions and unsupported transfer boundaries.",
+    "formula_intent": "Every display equation has Korean operation reasons inside KaTeX and exactly one FormulaNote. Long operations are split before text is shrunk.",
+    "visual_intent": "Use a different representation for topology, four-quadrant state, time headroom, feasibility intervals, common-bus allocation, contactor states and evidence gates. A color-only change is rejected.",
+    "small_model_intent": "Retain enough claim, source, boundary, repair and QA state to replay one claim-formula-Viz packet with a 4B model or one causal section with a 9B model."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-motor-drive-foc explains four-quadrant torque and current control",
+      "robot-power-electronics-motor-driver explains the DC link, switch path, sensing, protection and board bring-up",
+      "reference-ti-tida-010956-2025 provides a concrete 48 V robot inverter boundary"
+    ],
+    "missing_chain": [
+      "mechanical rotational, translational, gravitational and elastic energy inventory",
+      "peak power versus pulse energy versus repeated average power",
+      "capacitor squared-voltage headroom and time-to-limit",
+      "runtime battery, source, peer-axis and dump-sink availability",
+      "brake-resistor current-power-pulse feasibility interval",
+      "multi-axis common-bus arbitration under simultaneous braking",
+      "precharge, main contactor, isolation and discharge state evidence",
+      "sink-aware regenerative torque supervision",
+      "commissioning that closes mechanical and electrical energy ledgers"
+    ],
+    "scope_split": {
+      "decision": "Separate energy and braking from isolation, EMC and certified functional safety.",
+      "reason": "Energy routing needs mechanics, bus and thermal duty reasoning. Isolation/EMC/STO needs insulation coordination, interference paths, redundant shutdown architecture, diagnostic coverage and standards evidence. Combining both would make one article too broad to support a hard transfer problem or readable Viz sequence.",
+      "deferred_milestone": "Robot Drive Isolation, EMC & Functional Safety with TIDA-01599 as a company-reference spine."
+    }
+  },
+  "private_transfer_gate": {
+    "premise_count": 30,
+    "artifact": "src/pages/articles/ai/content-specs/robot-drive-energy-braking-safety.md",
+    "scenario": "A 48 V multi-axis robot must stop while descending with reflected inertia and a spring load. The battery charge allowance can vanish, the bench supply cannot sink current, every axis can regenerate together, the brake resistor is selected from average watts, contactors are sequenced by timers, only source-side voltage is measured, discharge is assumed after a command, and a battery disconnect occurs during regeneration.",
+    "required_insight_groups": [
+      "declare one mechanics and electrical sign boundary",
+      "inventory all stored energy without double counting",
+      "separate peak power, event energy and repeated average",
+      "derive capacitor headroom from squared voltage and turn it into a deadline",
+      "count only currently guaranteed sinks",
+      "build resistor lower and upper bounds plus pulse and thermal gates",
+      "treat peer-axis demand as measured reuse rather than guaranteed future absorption",
+      "verify contact and downstream bus state instead of command echo or elapsed time",
+      "reshape regenerative torque before hardware overvoltage containment",
+      "prove the envelope with staged fault injection and an energy ledger"
+    ],
+    "publication_policy": "The integrated scenario remains private. Each premise maps to causal prose, a Korean-annotated equation, an interactive observable, a failure boundary or an evidence gate."
+  },
+  "source_decisions": [
+    {
+      "source": "ABB Drives, Technical guide No. 8: Electrical braking",
+      "locator": "https://library.e.abb.com/public/20be376000f34dd6b9c513580cf56423/Technical_guide_No_8_3AFE64362534_RevC.pdf",
+      "identity": "3AFE64362534 REV C EN, 31 May 2018, 32 pages",
+      "used_for": ["mechanics-first selection order", "P=T omega and kinetic energy", "fan braking example", "5 mF 565-to-735 V 90 kW about-6-ms example", "flux, resistor and regenerative alternatives", "common DC topology"],
+      "boundary": "Industrial AC-drive voltages, load examples, economics and equipment selections do not establish a 48 V battery robot, BMS acceptance, contactor diagnostics, holding brake or certified stop."
+    },
+    {
+      "source": "TI SDAA145A, DC-Link Capacitor Pre-Charge Designs in Automotive Systems",
+      "locator": "https://www.ti.com/lit/an/sdaa145a/sdaa145a.pdf",
+      "identity": "October 2025, Revision A April 2026",
+      "used_for": ["current RC precharge equations", "initial current", "resistor energy", "relay, solid-state and converter alternatives"],
+      "boundary": "Automotive high-voltage values and timing targets are topology-specific and do not supply downstream discharge or complete weld diagnostics."
+    },
+    {
+      "source": "TI SLVAFB0, Why Pre-Charge Circuits are Necessary in High-Voltage Systems",
+      "locator": "https://www.ti.com/lit/an/slvafb0/slvafb0.pdf",
+      "used_for": ["contact arcing and welding mechanism", "initial, precharge and steady states"],
+      "boundary": "The introductory state sequence is not an independent contactor diagnostic or safety architecture."
+    },
+    {
+      "source": "Sensata, How to Design a Precharge Circuit for Hybrid and Electric Vehicle Applications",
+      "locator": "https://www.sensata.com/sites/default/files/a/sensata-how-to-design-precharge-circuits-evs-whitepaper.pdf",
+      "used_for": ["auxiliary feedback", "voltage-rise envelope", "open, welded and active-load diagnostic patterns"],
+      "boundary": "Vendor thresholds and targets are examples; target diagnostic coverage must be measured and allocated separately."
+    },
+    {
+      "source": "TI Stages of motor control and SLLA527",
+      "locator": "https://www.ti.com/video/6269668413001",
+      "used_for": ["coast, dynamic, regenerative and resistor braking distinctions", "source voltage-current acceptance", "back-EMF overvoltage cross-check"],
+      "boundary": "Introductory driver examples do not size a multi-axis robot braking system."
+    },
+    {
+      "source": "TI TIDA-010956 Rev. B",
+      "locator": "https://www.ti.com/tool/TIDA-010956",
+      "used_for": ["preceding 48 V robot inverter context", "bus capacitance, sensing and shutdown handoff"],
+      "boundary": "The board reference does not define the user's payload energy, battery charge allowance, chopper, contactor lifecycle or holding/safety stop."
+    }
+  ],
+  "source_extraction": {
+    "local_documents": [
+      { "file": "/tmp/pdfs/abb-technical-guide-8-electrical-braking.pdf", "pages": 32 },
+      { "file": "/tmp/pdfs/ti-tida-01599-sto-guide.pdf", "pages": 35, "purpose": "pinned for the deferred isolation/STO milestone" },
+      { "file": "/tmp/pdfs/ti-tida-01599-tuev-report.pdf", "pages": 9, "purpose": "pinned for the deferred isolation/STO milestone" }
+    ],
+    "text_extract": "/tmp/pdfs/abb-technical-guide-8-electrical-braking.txt",
+    "rendered_pages": [1, 2, 4, 5, 6, 10, 13, 14, 15, 23, 24, 25, 27, 28],
+    "visual_review": "Pages 4, 6, 10, 14, 15 and 23 were inspected as images to preserve the guide's stated purpose, power equation, fan example, capacitor/chopper diagram, listed limitations and common-DC topology.",
+    "evidence_boundary": "The public ABB lab keeps the published 5 mF, 565-to-735 V, 90 kW, approximately 6 ms example separate from an explicitly illustrative 2.2 mF, 50-to-56 V, 5 kW robot calculation."
+  },
+  "events": [
+    {
+      "event_id": "audit.scope.001",
+      "observed": "The power-electronics milestone left both regenerated-energy handling and isolation/EMC/STO as one future hardware-safety bucket.",
+      "inference": "The bucket contained two different causal and evidence systems and would become too broad for a readable bottom-up article.",
+      "decision": "Implement energy/braking first and defer isolation/EMC/STO to the next milestone.",
+      "verification": "The concept has ten energy-to-evidence sections and an explicit safety-certification boundary."
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "observed": "A robot can decelerate successfully in one battery state while thirty hidden energy, timing, sink and contactor premises remain false.",
+      "inference": "A list of braking modes would not force the reader to diagnose cross-domain failure.",
+      "decision": "Use a private thirty-premise transfer problem and map every premise before prose generation.",
+      "verification": "The content spec includes the full premise set, section map, formula contract and completion gate."
+    },
+    {
+      "event_id": "source.reference.001",
+      "observed": "ABB Technical Guide No. 8 supplies a durable mechanics-to-topology decision order but its numerical examples are industrial-drive-specific.",
+      "inference": "The method can become a reference spine only if source conditions and robot adaptation never share one evidence field.",
+      "decision": "Build an ABB evidence selector with source condition, observation, transfer and does-not-transfer fields.",
+      "verification": "The published about-6-ms example and the illustrative robot calculation are visibly separate on mobile and desktop."
+    },
+    {
+      "event_id": "implementation.concept.001",
+      "observed": "The mechanisms require different visual observables: topology, quadrant, time, allocation, feasibility, arbitration and state transition.",
+      "inference": "One repeated boxes-and-arrows scene would hide the actual decision variable in several sections.",
+      "decision": "Implement ten distinct interactive labs with stable dimensions and compact metric ledgers.",
+      "verification": "Every concept lab changes visible evidence after a slider or mode interaction on the public host."
+    },
+    {
+      "event_id": "qa.annotation.001",
+      "observed": "The first QA run found English-only underbraces such as chopper current, precharge trajectory and stop-time first estimate.",
+      "inference": "A formula could contain some Korean and still violate the requirement that each operation explain itself in Korean.",
+      "decision": "Translate every underbrace label and strengthen QA to inspect every LaTeX text annotation individually.",
+      "verification": "Twenty-five concept and eight reference formulas have no English-only text annotation and each has exactly one FormulaNote."
+    },
+    {
+      "event_id": "qa.mobile.table.001",
+      "observed": "The ABB four-column alternative matrix was bounded but too dense on a 390 px viewport.",
+      "inference": "Scaling or smaller typography would preserve geometry while losing scanability.",
+      "decision": "Use stacked option cards on mobile and retain the comparison table from the small breakpoint upward.",
+      "verification": "Mobile labels remain readable with zero document overflow and zero inner Viz scrolling."
+    },
+    {
+      "event_id": "qa.math.font.001",
+      "observed": "A post-deployment metric rerun exposed a font-load-dependent 0.83 formula scale at 390 px despite an earlier 0.85 pass.",
+      "inference": "The long sink list and compound torque equation were semantically overloaded, and QA was sampling before font readiness.",
+      "decision": "Normalize sink allocation as a sum over the valid-sink set, split power-to-torque conversion from the final min operation and wait for document.fonts.ready in QA.",
+      "verification": "Final public minimum scale is 0.78 at 360 px, 0.89 at 390 px and 1.0 at 768/1440 px."
+    },
+    {
+      "event_id": "deploy.public.001",
+      "observed": "Local browser evidence cannot prove the reverse proxy serves the last formula and responsive repair.",
+      "inference": "Completion requires final build, service restart, public route checks and the same browser suite against production.",
+      "decision": "Rebuild, restart cm-blog.service and rerun the strengthened twelve-test suite on the public host.",
+      "verification": "All public routes return 200 and all twelve public tests passed in 21.8 seconds."
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-drive-energy-braking-safety.md",
+    "concept_article": "src/pages/articles/ai/robot-drive-energy-braking-safety.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-drive-energy-braking-safety/viz/BrakingEnergyLabs.tsx",
+    "reference_spec": "src/pages/articles/ai/paper-spine/robotDriveEnergySpecs.tsx",
+    "reference_viz": "src/pages/articles/ai/paper-spine/viz/AbbBrakingReferenceLab.tsx",
+    "reference_article": "src/pages/articles/ai/reference-abb-electrical-braking-2018.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "qa_test": "tests/braking-energy-qa.spec.ts",
+    "visual_captures": "/tmp/braking-visual-qa",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-drive-energy-braking.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-drive-energy-braking-report.md"
+  },
+  "qa": {
+    "production_build": "passed; the repository's pre-existing warning for chunks larger than 900 kB remains",
+    "concept_chunk": "approximately 81 kB, 25 kB gzip before the final small formula split",
+    "local_playwright": "12 passed in 25.2 seconds after font readiness was added",
+    "public_playwright": "12 passed in 21.8 seconds",
+    "formula_counts": { "concept": 25, "concept_notes": 25, "reference": 8, "reference_notes": 8 },
+    "viz_counts": { "concept_labs": 10, "reference_surfaces": 2 },
+    "public_viewports": {
+      "360": { "concept_min_math_scale": 0.78, "reference_min_math_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "svg_label_overflow": 0, "console_errors": 0 },
+      "390": { "concept_min_math_scale": 0.89, "reference_min_math_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "svg_label_overflow": 0, "console_errors": 0 },
+      "768": { "concept_min_math_scale": 1, "reference_min_math_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "svg_label_overflow": 0, "console_errors": 0 },
+      "1440": { "concept_min_math_scale": 1, "reference_min_math_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "svg_label_overflow": 0, "console_errors": 0 }
+    },
+    "interaction_checks": "All ten concept labs and the ABB evidence selector changed visible state.",
+    "curriculum_checks": "The robotics category exposes both articles at 390 and 1440 px. Power electronics links to braking, and braking links to the ABB reconstruction.",
+    "visual_review": "Representative energy, quadrant, chopper, contactor, commissioning and ABB views were inspected at 390 and 1440 px. The ABB option matrix was recomposed for mobile.",
+    "public_deployment": {
+      "service": "cm-blog.service active after final restart at 2026-07-19 17:46 KST",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-drive-energy-braking-safety",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/reference-abb-electrical-braking-2018",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai?sub=ai-robotics"
+      ],
+      "http_status": 200
+    }
+  },
+  "small_model_replay": {
+    "four_b_packet": {
+      "scope": "one claim-mechanism-formula-Viz repair",
+      "inputs": ["one source locator and page", "one premise id", "one immutable sign and unit convention", "one equation or state transition", "one target component", "one screenshot or measured failure", "one deterministic acceptance metric"],
+      "required_order": ["emit claim-condition-boundary IR", "state the physical mechanism", "render one Korean operation annotation", "write one FormulaNote", "implement or repair one observable", "run the assigned metric"],
+      "forbidden": ["broad retrieval", "changing sign convention", "inventing component ratings", "copying source values into robot adaptation"]
+    },
+    "nine_b_packet": {
+      "scope": "one causal article section",
+      "inputs": ["prerequisite and output contract", "four to six source claims", "assigned premise subset", "derivation order", "formula contract", "counterexample", "Viz state machine", "mobile and evidence checklist"],
+      "required_order": ["normalize IR", "write intuition before math", "derive atomic formulas", "add failure case", "implement causal Viz", "self-audit every assigned premise"]
+    },
+    "orchestrator_only": ["source retrieval and conflict resolution", "private compound-problem construction", "scope split", "cross-section signs and symbols", "source-versus-adaptation provenance", "browser QA", "build and deployment"],
+    "repair_escalation": "A failed packet is returned with viewport, selector or formula id, expected invariant, observed value and allowed files. Scope is not silently widened."
+  },
+  "next_milestone": {
+    "title": "Robot Drive Isolation, EMC & Functional Safety",
+    "reference_spine": "TI TIDA-01599 with its TÜV assessment plus current IEC 61800-5-2, IEC 61800-3 and ISO 13849-1 scope checks",
+    "planned_boundary": "Isolation power and signal paths, creepage/clearance assumptions, common-mode and conducted/radiated interference, STO channel architecture, diagnostics, proof tests and the boundary between operational stop, holding and certified safe torque removal."
+  }
+}

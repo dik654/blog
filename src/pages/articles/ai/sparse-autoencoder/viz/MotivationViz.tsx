@@ -59,7 +59,7 @@ export default function MotivationViz() {
                 fontWeight={600} fill={C.steer}>강도 조절</text>
               <line x1={50} y1={65} x2={110} y2={65}
                 stroke={C.steer} strokeWidth={2} strokeLinecap="round" />
-              <motion.circle cx={50} cy={65} r={4} fill={C.steer}
+              <motion.circle initial={false} cx={50} cy={65} r={4} fill={C.steer}
                 animate={{ cx: 95 }} transition={{ duration: 0.8 }} />
               <text x={75} y={78} textAnchor="middle" fontSize={9}
                 fill={C.muted}>0 → 100</text>

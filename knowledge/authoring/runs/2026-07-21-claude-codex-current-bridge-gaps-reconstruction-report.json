@@ -1,0 +1,51 @@
+{
+  "run": "2026-07-21-current-bridge-gaps",
+  "inventory_policy": "Map to existing owners first; add an article only for a new computation contract, data structure, or failure diagnosis.",
+  "added": [
+    {"slug": "flashattention-io-triton", "path": "gpu-ml-kernel-current-first", "private_test": "1.1x speedup diagnosis"},
+    {"slug": "deformable-detr", "path": "ai-vision-detection-current-first", "private_test": "AP_small and Q*M*L*K"},
+    {"slug": "html-table-structure-reconstruction", "path": "ai-ocr-table-current-first", "private_test": "rowspan occupancy, missing, overlap, overflow, backfill"}
+  ],
+  "critic_fixes": [
+    "Added Amdahl, dispatch, and hardware fallback diagnosis",
+    "Added attention-head axis and corrected P3-P6 strides",
+    "Fixed table overflow mislabeled as overlap and fixed schema width",
+    "Separated active rowspan from unresolved missing cell",
+    "Split wide formulas for mobile",
+    "Corrected ScaleLogic provenance and date"
+  ],
+  "qa": {
+    "routes": 3,
+    "desktop_mobile_checks": 6,
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "katex_errors": 0,
+    "mobile_min_math_scale": 0.89,
+    "interactions": 6,
+    "category_links": 5,
+    "integrated_audit_errors": 0,
+    "integrated_audit_warnings": 0
+  },
+  "small_model_pipeline": [
+    "inventory",
+    "ownership_map",
+    "current_anchor",
+    "minimum_foundation",
+    "private_transfer_test",
+    "prose_contract",
+    "viz_contract",
+    "critic",
+    "responsive_audit",
+    "deploy"
+  ],
+  "production_acceptance": {
+    "service_restarted_at": "2026-07-21T12:30:59+09:00",
+    "public_routes": 10,
+    "desktop_mobile_checks": 20,
+    "failures": 0,
+    "public_min_math_scale": 0.84,
+    "learning_flow_registered": 567,
+    "learning_flow_release_blockers": 0,
+    "learning_flow_formula_gaps": 0
+  }
+}

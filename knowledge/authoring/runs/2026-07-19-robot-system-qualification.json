@@ -1,0 +1,193 @@
+{
+  "run_id": "2026-07-19-robot-system-qualification",
+  "status": "complete_and_publicly_verified",
+  "objective": "Close the missing system-level robot release layer while keeping papers below the minimum curriculum floor hidden by default.",
+  "request_interpretation": {
+    "curriculum": "The reader should reach current robot capability top-down through the smallest executable prerequisite ladder, not an unbounded chronology of papers.",
+    "depth": "A private 50-premise release failure is the coverage gate; the public article must provide the insight needed to diagnose it without printing the problem.",
+    "source": "Primary guidance must retain source intent, scope and non-transfer boundaries, but optional evidence must not dominate the visible reading path.",
+    "formula": "Every display equation requires Korean causal annotations and one adjacent FormulaNote; long relations split before shrinking.",
+    "visual": "Every lab must change mechanism, geometry, a derived metric or a decision, and remain readable without inner scroll at 360 pixels.",
+    "small_model": "Persist bounded premise, source, formula, Viz and QA packets so 4B/9B workers can replay chapters under orchestrator control."
+  },
+  "gap_audit": {
+    "existing_subsystems": [
+      "perception",
+      "localization",
+      "planning",
+      "control",
+      "ROS 2",
+      "embedded timing",
+      "motor drive and power",
+      "braking and functional safety",
+      "actuator mechanics",
+      "structures, fracture and composites",
+      "tribology"
+    ],
+    "missing_chain": [
+      "mission and ODD",
+      "measurable requirements and interface budgets",
+      "hazards and common causes",
+      "verification versus validation",
+      "qualification and test-article pedigree",
+      "environmental tailoring and sequencing",
+      "reliability confidence",
+      "AI TEVV",
+      "configuration and change impact",
+      "release case and field monitoring"
+    ],
+    "downstream_capability": "Audit whether one declared robot configuration has sufficient, applicable and configuration-bound evidence for a bounded mission and operating domain."
+  },
+  "foundation_floor": {
+    "shared_floor": [
+      "probability and statistics",
+      "signals and systems",
+      "robot top-down architecture",
+      "existing subsystem evidence articles"
+    ],
+    "domain_floor": null,
+    "current_evidence": null,
+    "standalone_source_budget": 0,
+    "embedded_primary_guidance": [
+      "NASA Systems Engineering Handbook Rev 2",
+      "MIL-STD-810H Change 1 official DLA scope",
+      "GSFC-STD-7000B GEVS",
+      "NIST AI RMF 1.0 and AIRC",
+      "NIST Response Robot Performance Standards",
+      "ISO 12100:2010 official scope",
+      "ISO 10218-1:2025 official scope"
+    ],
+    "visibility_contract": "Concept cards are visible. paper-*, research-* and reference-* cards are collapsed under 선택 원문 근거, while direct routes and search remain available.",
+    "stop_reason": "These sources supply process and applicability boundaries inside one concept node; standalone reconstructions would add optional reading volume without a new prerequisite capability."
+  },
+  "private_transfer_gate": {
+    "premise_count": 50,
+    "artifact": "src/pages/articles/ai/content-specs/robot-system-verification-validation-qualification.md",
+    "groups": {
+      "Q01-Q05": "mission, ODD, scenario strata and measurable success",
+      "Q06-Q08": "atomic requirements, budgets, timing, ownership and interfaces",
+      "Q09-Q12": "hazard chain, risk-reduction hierarchy, FMEA, FTA and common cause",
+      "Q13-Q17": "verification, validation, method and test-pedigree distinctions",
+      "Q18-Q25": "life-cycle environment, combined sequence and before/after state",
+      "Q26-Q30": "duty, reliability models, independence, confidence and maintenance",
+      "Q31-Q35": "AI TEVV, scenario coverage, closed loop, simulation boundary and thresholds",
+      "Q36-Q44": "evidence identity, anomaly, exclusions, waivers and control effectiveness",
+      "Q45-Q50": "recovery independence, human factors, monitoring, drift and release case"
+    },
+    "publication_policy": "Keep the compound problem private; map every premise to prose, a formula, a causal lab, a source boundary or a release gate."
+  },
+  "events": [
+    {
+      "id": "gap.system.001",
+      "observed": "Subsystem articles each ended with evidence, but no article joined those results into a configuration-specific mission claim.",
+      "inference": "More subsystem depth would not teach requirements, applicability, uncertainty or release decisions.",
+      "decision": "Add one system verification, validation and qualification concept node.",
+      "verification": "Twelve chapters cover mission through field feedback and a 50-premise private gate maps every missing capability."
+    },
+    {
+      "id": "floor.source.001",
+      "observed": "The system topic depends on multiple handbooks and standards rather than one foundational paper.",
+      "inference": "Making each source a visible article would confuse evidence with the required curriculum and restart the infinite-paper problem.",
+      "decision": "Set the standalone source budget to zero and embed official guidance with scope boundaries.",
+      "verification": "No source route was added; concept cards remain visible and existing source cards are collapsed by default."
+    },
+    {
+      "id": "formula.mobile.001",
+      "observed": "Long stop-time and evidence-set equations could leave their container or shrink below a useful mobile scale.",
+      "inference": "The relation must be decomposed causally, not hidden by horizontal scrolling or smaller type.",
+      "decision": "Split long relations into aligned rows and preserve Korean operation annotations plus FormulaNotes.",
+      "verification": "The article has 24 equations and 24 notes; mobile math scale stays at or above 0.78 in QA."
+    },
+    {
+      "id": "viz.mobile.001",
+      "observed": "SVG plot titles and data marks competed for the same vertical coordinates on narrow screens.",
+      "inference": "Changing colors cannot solve a composition defect.",
+      "decision": "Move plot headings to an HTML header band, stabilize plot height and localize/anchor short SVG labels.",
+      "verification": "All twelve labs were visually inspected at mobile size and pass overflow, inner-scroll, effective-text and state-change assertions."
+    },
+    {
+      "id": "regression.policy.001",
+      "observed": "Older power, braking and isolation tests expected source cards to be immediately visible.",
+      "inference": "Those assertions encoded the obsolete curriculum policy.",
+      "decision": "Assert concept-visible, source-hidden, reveal-on-expansion behavior instead.",
+      "verification": "The updated source-policy regression set passed 36/36."
+    },
+    {
+      "id": "regression.math.001",
+      "observed": "A TIDA source formula scaled to 0.71 at 360 pixels and the common formula test used a stale DOM relationship.",
+      "inference": "Both content composition and the regression locator needed repair.",
+      "decision": "Split the TIDA timing/evidence equations and bind FormulaNotes through the current data-math-fit wrapper.",
+      "verification": "TIDA formula scales are at least 0.93 and the formula suite passed 4/4."
+    },
+    {
+      "id": "deploy.public.001",
+      "observed": "Local screenshots and a build do not prove the reverse-proxied public bundle changed.",
+      "inference": "Service restart plus public-host browser checks are required.",
+      "decision": "Restart cm-blog.service and rerun floor, formula, isolation and system tests against the public host.",
+      "verification": "Service active since 23:35:49 KST and the public focused suite passed 32/32 in 24.0 seconds."
+    }
+  ],
+  "artifacts": {
+    "floor_policy": "knowledge/authoring/foundation-floor-policy.md",
+    "content_spec": "src/pages/articles/ai/content-specs/robot-system-verification-validation-qualification.md",
+    "article": "src/pages/articles/ai/robot-system-verification-validation-qualification.tsx",
+    "viz": "src/pages/articles/ai/robot-system-verification-validation-qualification/viz/SystemQualificationLabs.tsx",
+    "qa": "tests/system-qualification-qa.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-19-robot-system-qualification-report.md"
+  },
+  "qa": {
+    "formula_count": 24,
+    "formula_note_count": 24,
+    "causal_lab_count": 12,
+    "viewports": [360, 390, 768, 1440],
+    "invariants": [
+      "zero document overflow",
+      "zero inner Viz scroll",
+      "zero raw LaTeX",
+      "Korean equation annotations",
+      "formula-note parity",
+      "minimum mobile math scale 0.78",
+      "minimum effective SVG text 11 pixels",
+      "causal state change in every lab",
+      "zero console errors",
+      "sources collapsed by default"
+    ],
+    "focused_system_local": "7/7 passed",
+    "connected_local": "39/39 passed",
+    "source_policy_regression_local": "36/36 passed",
+    "formula_local": "4/4 passed",
+    "full_local_playwright": "147/147 passed in 50.5 seconds",
+    "public_focused_playwright": "32/32 passed in 24.0 seconds",
+    "production_build": "passed in 19.34 seconds; existing chunk-size warning remains",
+    "typescript": "repository-wide check remains non-green because of pre-existing unrelated diagnostics; no system-qualification, floor-policy or TIDA file was reported",
+    "deployment": "cm-blog.service active after restart at 23:35:49 KST; requested public routes HTTP 200"
+  },
+  "small_model_replay": {
+    "four_b_scope": "one premise, exact primary-source slice, one relation, one Korean-annotated equation and note, one counterexample, one Viz transition and one browser assertion",
+    "nine_b_scope": "one causal chapter with misconception, four to six source claims, a calculation boundary, failure example, premise subset, Viz state machine and QA contract",
+    "critic_checks": [
+      "vague or non-verifiable requirement",
+      "average-only evidence",
+      "dependent channels or samples",
+      "copied environmental levels",
+      "qualification and acceptance confusion",
+      "zero-failure overclaim",
+      "offline-to-system transfer",
+      "stale configuration evidence",
+      "no-op Viz",
+      "mobile formula or label shrinkage"
+    ],
+    "orchestrator_only": [
+      "curriculum gap audit",
+      "ODD and hazard severity scope",
+      "standard applicability",
+      "source budget and promotion",
+      "hardest-problem coverage",
+      "cross-chapter identity",
+      "legal and conformance boundaries",
+      "conflict repair",
+      "connected browser QA",
+      "deployment"
+    ]
+  }
+}

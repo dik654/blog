@@ -1,3 +1,6 @@
+import AcademicAttacksViz from './viz/AcademicAttacksViz';
+import SNPRoadmapViz from './viz/SNPRoadmapViz';
+
 export default function Evolution({ title }: { title?: string }) {
   const generations = [
     {
@@ -32,31 +35,8 @@ export default function Evolution({ title }: { title?: string }) {
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
 
         <h3 className="text-xl font-semibold mt-6 mb-3">진화 동인 — 학술 공격이 촉발</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 주요 학술 공격 → 각 세대 등장 배경
-
-// SEV 1.0의 취약점 (2018~2019)
-// [SEVered] (Morbitzer et al. 2018)
-//   - Hypervisor가 NPT(Nested Page Tables) 조작
-//   - 암호문 블록을 다른 VM으로 재매핑
-//   - 다른 VM이 복호화 시도 → 오작동 유도
-//   → 레지스터 상태 보호 필요 인식
-
-// SEV-ES의 취약점 (2020~2021)
-// [CrossLine] (Li et al. 2021)
-//   - VMSA(레지스터 저장 구조체) 재활용 공격
-//   - 다른 VM의 레지스터 블록을 주입
-// [Cipherleaks] (Li et al. 2021)
-//   - ciphertext 패턴 분석으로 AES 평문 일부 복구
-//   - 동일 키로 오래 암호화 시 누출
-//   → 메모리 무결성·replay 방어 필수
-
-// SEV-SNP의 대응 (2022~)
-//   - RMP로 페이지 소유권 강제
-//   - VMPL로 guest 내부 권한 분리
-//   - Version nonce로 replay 방어
-//   - 더 강력한 attestation (nonce 포함)`}</pre>
-
       </div>
+      <div className="not-prose mb-4"><AcademicAttacksViz /></div>
       <div className="not-prose space-y-4">
         {generations.map(g => (
           <div key={g.name} className="rounded-xl border p-5"
@@ -95,22 +75,9 @@ export default function Evolution({ title }: { title?: string }) {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-8">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SNP 이후 발전</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// SNP 마이너 개선 (2023~2024)
-
-// [Genoa 추가 기능]
-// - ASID 확장: 509 → 1006
-// - VMPL 개선: 4 levels → 더 세밀한 권한
-// - MPK(Memory Protection Keys) 통합
-
-// [Turin 추가 기능]
-// - Ciphertext Hiding (CH): 암호문 패턴 누출 방어
-// - XSAVES/XRSTORS 내장 보호
-// - 성능 개선: VMCB 캐싱
-
-// 향후 방향 (AMD 공개 로드맵)
-// - FS-SEV(File System SEV): disk 암호화 통합
-// - Multi-party attestation
-// - Confidential compute for PCIe devices`}</pre>
+      </div>
+      <div className="not-prose mb-4"><SNPRoadmapViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: AMD SEV의 개발 철학</p>

@@ -1,0 +1,226 @@
+{
+  "run_id": "2026-07-20-ai-current-first-curriculum",
+  "status": "complete_and_publicly_verified",
+  "objective": "Rebuild AI navigation and article authoring around current research, one canonical paper, minimum concepts, and just-in-time foundations while allowing new current work to add only genuinely new lower-level foundations.",
+  "reader_contract": {
+    "direction": "current top -> canonical paper -> minimum concepts -> just-in-time foundations",
+    "history_stop": "Do not recursively promote older cited papers when the reader already has the executable premise.",
+    "update_rule": "Replace or add the current pointer first. Add a lower foundation delta only when a reusable mechanism cannot be explained, implemented, or diagnosed with the existing floor.",
+    "visible_stages": [
+      "01 CURRENT TOP",
+      "02 CANONICAL PAPER",
+      "03 MINIMUM CONCEPTS",
+      "04 JUST-IN-TIME FOUNDATION"
+    ]
+  },
+  "track_audit": {
+    "count": 12,
+    "tracks": [
+      "knowledge-systems",
+      "robot-ai",
+      "llm-architecture",
+      "llm-post-training",
+      "generative-models",
+      "open-image-video",
+      "computer-vision",
+      "document-ai",
+      "nlp-attention",
+      "reinforcement-learning",
+      "time-series",
+      "ai-agents"
+    ],
+    "source_of_truth": "src/content/ai/topdownResearchTracks.ts"
+  },
+  "foundation_delta_gate": {
+    "all_required": [
+      "the current work changes a computation, data, runtime, or evidence contract",
+      "the existing concept floor cannot explain the new claim honestly",
+      "the reader must calculate, implement, or diagnose the mechanism",
+      "the mechanism is reusable beyond one checkpoint or product name"
+    ],
+    "reject_examples": [
+      "parameter-count or benchmark-only update",
+      "new product name with the same Transformer contract",
+      "checkpoint-specific prompt trick",
+      "historical priority without a new reader capability"
+    ],
+    "accepted_example": {
+      "track": "llm-architecture",
+      "current": "DeepSeek-V3.2",
+      "deltas": [
+        "KV and long-context memory contract",
+        "hybrid or sparse attention candidate-selection contract"
+      ]
+    }
+  },
+  "primary_sources": [
+    {
+      "track": "llm-architecture",
+      "source": "DeepSeek-V3.2 technical report and official release",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2/resolve/main/assets/paper.pdf",
+      "intent": "Reconstruct sparse attention, stable RL runtime parity, synthetic agent environments, and context management as separate falsifiable contracts."
+    },
+    {
+      "track": "llm-post-training",
+      "source": "DeepSeek-R1",
+      "url": "https://arxiv.org/abs/2501.12948",
+      "intent": "Anchor current reasoning RL above the InstructGPT and PPO floor."
+    },
+    {
+      "track": "computer-vision",
+      "source": "Meta SAM 3.1 and SAM 3",
+      "url": "https://ai.meta.com/blog/segment-anything-model-3/",
+      "intent": "Place current concept-driven segmentation above the ResNet representation floor."
+    },
+    {
+      "track": "document-ai",
+      "source": "PaddleOCR-VL-1.6",
+      "url": "https://www.paddleocr.ai/main/en/version3.x/algorithm/PaddleOCR-VL/PaddleOCR-VL-1.6.html",
+      "intent": "Expose current document parsing and verification above the Donut floor."
+    },
+    {
+      "track": "ai-agents",
+      "source": "Anthropic Trustworthy Agents",
+      "url": "https://www.anthropic.com/research/trustworthy-agents",
+      "intent": "Keep model, harness, tool, environment, and evaluation boundaries explicit above ReAct."
+    },
+    {
+      "track": "generative-models",
+      "source": "Google Research score smoothing study",
+      "url": "https://research.google/blog/towards-demystifying-the-creativity-of-diffusion-models/",
+      "intent": "Attach current evidence to the DDPM score and reverse-process floor without creating an unbounded lineage."
+    }
+  ],
+  "events": [
+    {
+      "event_id": "curriculum.audit.001",
+      "phase": "gap_audit",
+      "observed": "The sidebar named target fields, foundations, and implementation, but target pages did not declare one current source, one canonical stopping paper, or a lower dependency boundary.",
+      "inference": "Readers could see categories but could not know what to read now, how far back to go, or when to stop.",
+      "decision": "Create one current-first research route for each of twelve target tracks.",
+      "verification": "All twelve routes expose four fixed stages and an explicit history stop at 360, 390, 768, and 1440 pixels."
+    },
+    {
+      "event_id": "curriculum.floor.001",
+      "phase": "dependency_design",
+      "observed": "Recursively following citations created an unreadable and effectively infinite historical syllabus.",
+      "inference": "Historical ancestry is not the same as an executable prerequisite.",
+      "decision": "Keep one canonical paper per causal branch and hide older provenance below the declared foundation floor unless the promotion gate proves a unique capability.",
+      "verification": "Every track records a stopReason; source articles remain opt-in rather than expanding the default list."
+    },
+    {
+      "event_id": "curriculum.delta.001",
+      "phase": "dependency_design",
+      "observed": "A future current paper can introduce a mechanism absent from the existing lower curriculum.",
+      "inference": "A frozen lower graph would eventually make current articles incomprehensible, but automatically expanding it would recreate infinite history.",
+      "decision": "Add a four-question foundation-delta gate and label accepted additions as new deltas.",
+      "verification": "The LLM architecture route exposes two deltas and states that name or score changes do not grow the foundation graph."
+    },
+    {
+      "event_id": "source.deepseek.001",
+      "phase": "evidence_compile",
+      "observed": "The 23-page V3.2 report combines DSA, mixed GRPO, synthetic agents, benchmark harnesses, and context runtime in one release narrative.",
+      "inference": "Repeating the release summary would mix architectural, optimization, data, and test-time claims and overstate what each experiment supports.",
+      "decision": "Read the complete report including appendix and reconstruct six execution stages, five equations, four evidence slices, implementation checks, assumptions, and failure boundaries.",
+      "verification": "The source article distinguishes the remaining quadratic indexer term, runtime route/mask parity, verifier shortcuts, harness limits, and context-cost limits."
+    },
+    {
+      "event_id": "article.contract.001",
+      "phase": "integration",
+      "observed": "The new research article loaded correctly but did not show SOURCE DEEP DIVE because that coordinate was restricted to paper slugs inside foundation categories.",
+      "inference": "Source reconstruction is an article contract independent of whether the article belongs to a foundation or target category.",
+      "decision": "Treat both paper-* and research-* as source deep dives and enable the shared deep-article and math-annotation system.",
+      "verification": "The DeepSeek article exposes the R / SOURCE DEEP DIVE coordinate and current-research detail text."
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "At 360 pixels, the TopK plus attention equation scaled to 0.70 and the advantage plus importance-ratio equation scaled to 0.71.",
+      "inference": "Each display row combined two semantic operations, forcing the Korean underbraces and fractions into unreadable horizontal compression.",
+      "decision": "Split each equation into two named aligned rows rather than lowering the global minimum scale or adding horizontal scrolling.",
+      "verification": "All five formulas render with KaTeX, zero horizontal overflow, no visible raw LaTeX, and scale at or above 0.75 across four viewports."
+    },
+    {
+      "event_id": "qa.viz.001",
+      "phase": "visual_review",
+      "observed": "One horizontal four-stage diagram would become clipped or tiny on mobile.",
+      "inference": "The stable visual invariant is the causal order, not the horizontal orientation.",
+      "decision": "Use a horizontal 7-track stage/arrow grid only on large screens and a vertical causal flow below that breakpoint.",
+      "verification": "Four mechanism modes switch state with zero document and Viz overflow at 360, 390, 768, and 1440 pixels."
+    },
+    {
+      "event_id": "discovery.pipeline.001",
+      "phase": "automation",
+      "observed": "Discovery candidates previously suggested first-new-foundation-paper placement and had no explicit mechanism comparison state.",
+      "inference": "Automated discovery could grow the bottom of the curriculum before comparing a candidate to the current top.",
+      "decision": "Attach candidates to a track, compare the current pointer first, and record mechanismChanged, existingFoundationsSufficient, foundationDelta, and final decision.",
+      "verification": "A three-day dry run produced 65 candidates from nine sources with zero source failures and the new review schema."
+    }
+  ],
+  "private_transfer_gate": {
+    "question": "Given a later long-context MoE agent report, determine which claims change model architecture, sampling/training parity, environment generation, and context runtime; then decide which lower concepts must be added and which older citations remain hidden.",
+    "required_insights": [
+      "separate current evidence from the stable canonical computation contract",
+      "distinguish O(Lk) core attention from the remaining O(L^2) indexer",
+      "connect keep-routing and keep-sampling-mask to the validity of policy ratios",
+      "test verifier and solution shortcuts rather than trusting outcome reward",
+      "separate benchmark model quality from harness and test-time token budget",
+      "apply the four-question foundation-delta gate before adding a lower node"
+    ],
+    "coverage": "DeepSeek reconstruction sections 02-06 plus the route delta ledger provide every premise; the private question is not published as filler."
+  },
+  "small_model_replay": {
+    "four_b_jobs": [
+      "extract at most four claims from one paper section into fixed claim packets",
+      "explain one immutable equation and Korean annotations without changing notation",
+      "repair one normalized QA defect with a file allowlist",
+      "classify one foundation candidate using the four-question delta gate"
+    ],
+    "nine_b_jobs": [
+      "merge four to six claim packets into one section packet",
+      "construct one track's current-canonical-concept-foundation route",
+      "design one interactive Viz with control, observable, invariant, and failure",
+      "audit transfer-problem coverage for one article"
+    ],
+    "orchestrator_only": [
+      "primary-source retrieval and full-document completeness audit",
+      "cross-track canonical-paper and foundation consistency",
+      "immutable equation selection",
+      "promotion and source-budget exceptions",
+      "whole-site responsive QA",
+      "deployment"
+    ],
+    "immutable_inputs": [
+      "track id and reader outcome",
+      "current and canonical source URLs",
+      "source excerpts with evidence boundaries",
+      "equation strings and symbol identities",
+      "foundation floor and source budget",
+      "design tokens and browser invariants"
+    ],
+    "failure_replay_order": "observed -> inference -> decision -> changed artifact -> exact verification"
+  },
+  "qa": {
+    "production_build": "passed in 20.07 seconds; existing large-chunk warning remains",
+    "focused_playwright": "10/10 passed locally",
+    "full_local_playwright": "165/165 passed in 4.1 minutes after normalizing the legacy formula QA port",
+    "public_focused_playwright": "10/10 passed in 10.5 seconds",
+    "research_discovery_dry_run": "65 candidates, nine sources, zero source failures",
+    "viewports": [360, 390, 768, 1440],
+    "deployment": "cm-blog.service active after restart at 2026-07-20 20:55:41 KST; blog root, LLM route, and DeepSeek article returned HTTP 200"
+  },
+  "artifacts": {
+    "track_graph": "src/content/ai/topdownResearchTracks.ts",
+    "route_ui": "src/pages/category/TopDownResearchRoute.tsx",
+    "category_integration": "src/pages/CategoryPage.tsx",
+    "curriculum_spec": "src/pages/articles/ai/content-specs/ai-topdown-minimum-paper-curriculum.md",
+    "deepseek_spec": "src/pages/articles/ai/paper-spine/aiCurrentResearchSpecs.tsx",
+    "deepseek_viz": "src/pages/articles/ai/paper-spine/viz/DeepSeekV32StudyViz.tsx",
+    "deepseek_article": "src/pages/articles/ai/research-deepseek-v3-2-2025.tsx",
+    "article_contract": "src/components/ArticleLayout.tsx",
+    "discovery": "scripts/research-discover.mjs",
+    "discovery_topics": "knowledge/research-pipeline/topics.json",
+    "qa": "tests/ai-topdown-research-paths.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-20-ai-current-first-curriculum-report.md"
+  }
+}

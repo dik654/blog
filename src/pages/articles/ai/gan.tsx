@@ -1,13 +1,17 @@
-import Overview from './gan/Overview';
-import Training from './gan/Training';
-import Variants from './gan/Variants';
+import DistributionGame from './gan/DistributionGame';
+import GradientObjectives from './gan/GradientObjectives';
+import AlternatingUpdates from './gan/AlternatingUpdates';
+import FailureDiagnostics from './gan/FailureDiagnostics';
+import EvaluationAndHandoff from './gan/EvaluationAndHandoff';
 
 export default function GANArticle() {
   return (
-    <div className="space-y-12">
-      <Overview />
-      <Training />
-      <Variants />
-    </div>
+    <>
+      <DistributionGame />
+      <GradientObjectives />
+      <AlternatingUpdates />
+      <FailureDiagnostics />
+      <EvaluationAndHandoff />
+    </>
   );
 }

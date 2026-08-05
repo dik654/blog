@@ -55,7 +55,7 @@ export default function CompactionStallViz() {
           <motion.g animate={{ opacity: step === 3 ? 1 : 0.12 }}>
             <text x={260} y={24} textAnchor="middle" fontSize={11} fontWeight={600} fill={CR}>Write Stall</text>
             <rect x={60} y={50} width={400} height={30} rx={5} fill="var(--card)" stroke="var(--border)" strokeWidth={0.8} />
-            <motion.rect x={60} y={50} width={0} height={30} rx={5} fill={`${CR}20`}
+            <motion.rect initial={false} x={60} y={50} width={0} height={30} rx={5} fill={`${CR}20`}
               animate={{ width: 400 }} transition={{ duration: 1.5 }} />
             <text x={260} y={70} textAnchor="middle" fontSize={10} fontWeight={600} fill={CR}>L0 파일 수: 12/12 (한도 초과)</text>
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>

@@ -1,94 +1,67 @@
-"""Open-R1 GRPO (Group Relative Policy Optimization) 학습 스크립트
+"""Open-R1 GRPO control flow를 줄인 교육용 excerpt.
 
-핵심 아이디어:
-- PPO의 Critic(가치 함수) 모델을 제거 → 메모리 절약 (7B 기준 ~14GB)
-- 동일 프롬프트에 N개 응답 생성 → 그룹 내 상대적 보상 순위로 Advantage 계산
-- vLLM 백엔드로 다중 응답 고속 생성
-
-GRPO 손실 함수:
-  L = -E[ min(r(θ)·Â, clip(r(θ), 1±ε)·Â) - β·KL(π_θ || π_ref) ]
-  Â = (R_i - mean(R_group)) / std(R_group)  ← 그룹 정규화 Advantage
+Advantage 계산과 clipped objective는 TRL GRPOTrainer 내부에 있다.
 """
 
-import logging
-from dataclasses import dataclass, field
+import os
 
-from datasets import load_dataset
-from transformers import AutoTokenizer
-from trl import GRPOConfig, GRPOTrainer
+from transformers.trainer_utils import get_last_checkpoint
+from trl import GRPOTrainer, ModelConfig, TrlParser
 
-from open_r1.rewards import (
-    accuracy_reward,
-    format_reward,
-    tag_count_reward,
-)
-
-logger = logging.getLogger(__name__)
+from open_r1.configs import GRPOConfig, GRPOScriptArguments
+from open_r1.rewards import get_reward_funcs
+from open_r1.utils import get_dataset, get_model, get_tokenizer
 
 
-@dataclass
-class GRPOScriptArguments:
-    """GRPO 학습용 인자"""
-    dataset_name: str = field(default="open-r1/OpenR1-Math-220k")
-    max_prompt_length: int = field(default=2048)
-    max_completion_length: int = field(default=8192)
-    num_generations: int = field(default=14)  # 그룹 크기: 프롬프트당 14개 응답 생성
+def main(script_args, training_args, model_args):
+    checkpoint = None
+    if os.path.isdir(training_args.output_dir):
+        checkpoint = get_last_checkpoint(training_args.output_dir)
+    if training_args.resume_from_checkpoint is not None:
+        checkpoint = training_args.resume_from_checkpoint
 
+    dataset = get_dataset(script_args)
+    tokenizer = get_tokenizer(model_args, training_args)
+    model = get_model(model_args, training_args)
 
-def main():
-    # ── 1. GRPO 설정 ──
-    training_args = GRPOConfig(
-        output_dir="data/OpenR1-GRPO-7B",
-        learning_rate=1e-6,          # SFT보다 낮은 lr (정책 안정성)
-        num_train_epochs=1,
-        per_device_train_batch_size=2,
-        gradient_accumulation_steps=4,
-        max_prompt_length=2048,
-        max_completion_length=8192,
-        num_generations=14,           # ← 그룹 크기 N
-        temperature=1.0,              # 다양성 유지
-        beta=0.001,                   # KL 페널티 계수 β
-        # vLLM 백엔드 설정
-        use_vllm=True,
-        vllm_gpu_memory_utilization=0.7,
-    )
+    # 본문 대응: reward는 코드에 있는 모든 함수가 아니라 config가 고른 함수만 연결한다.
+    reward_funcs = get_reward_funcs(script_args)
 
-    # ── 2. 보상 함수 목록 정의 ──
-    # GRPO의 핵심: 이 함수들이 모델 응답의 품질을 평가
-    # 각 함수의 결과를 가중 합산하여 최종 보상 R_i 산출
-    reward_funcs = [
-        accuracy_reward,   # 가중치 0.7 — math_verify로 정답 검증
-        format_reward,     # 가중치 0.2 — <think>/<answer> 형식 준수
-        tag_count_reward,  # 가중치 0.1 — 4개 태그 정확도
-    ]
+    # 본문 대응: gold solution과 prompt를 섞지 않고 지정된 problem column만 대화로 만든다.
+    def make_conversation(example):
+        prompt = []
+        if training_args.system_prompt is not None:
+            prompt.append({"role": "system", "content": training_args.system_prompt})
+        prompt.append({
+            "role": "user",
+            "content": example[script_args.dataset_prompt_column],
+        })
+        return {"prompt": prompt}
 
-    # ── 3. 데이터셋 로드 ──
-    dataset = load_dataset(
-        training_args.dataset_name,
-        split="train",
-    )
+    dataset = dataset.map(make_conversation)
 
-    # ── 4. 토크나이저 ──
-    tokenizer = AutoTokenizer.from_pretrained(training_args.model_name_or_path)
-
-    # ── 5. GRPOTrainer 초기화 & 학습 ──
-    # GRPOTrainer 내부 동작:
-    #   (a) 프롬프트 q에 대해 N개 응답 생성: {o_1, ..., o_N} ~ π_old(·|q)
-    #   (b) 각 응답의 보상 계산: R_i = Σ(weight_k × reward_func_k(o_i))
-    #   (c) 그룹 정규화 Advantage: Â_i = (R_i - mean(R)) / std(R)
-    #   (d) 정책 업데이트: 높은 Â의 응답 확률 ↑, 낮은 Â의 응답 확률 ↓
+    # 본문 대응: G개 rollout, verifier, group advantage와 update는 trainer가 닫는다.
     trainer = GRPOTrainer(
-        model=training_args.model_name_or_path,
-        args=training_args,
-        train_dataset=dataset,
+        model=model,
         reward_funcs=reward_funcs,
+        args=training_args,
+        train_dataset=dataset[script_args.dataset_train_split],
+        eval_dataset=(
+            dataset[script_args.dataset_test_split]
+            if training_args.eval_strategy != "no"
+            else None
+        ),
         processing_class=tokenizer,
     )
 
-    trainer.train()
-    trainer.save_model()
-    trainer.push_to_hub()
+    result = trainer.train(resume_from_checkpoint=checkpoint)
+    trainer.log_metrics("train", result.metrics)
+    trainer.save_state()
+    trainer.model.generation_config.eos_token_id = tokenizer.eos_token_id
+    trainer.save_model(training_args.output_dir)
 
 
 if __name__ == "__main__":
-    main()
+    parser = TrlParser((GRPOScriptArguments, GRPOConfig, ModelConfig))
+    script_args, training_args, model_args = parser.parse_args_and_config()
+    main(script_args, training_args, model_args)

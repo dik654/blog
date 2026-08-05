@@ -46,7 +46,7 @@ export default function ECComparisonViz() {
                         <text x={6} y={barY + 8} fontSize={9}
                           fill="var(--muted-foreground)">{ATTRS[ai]}</text>
                       )}
-                      <motion.rect x={BX[i] - 40} y={barY} height={12} rx={3}
+                      <motion.rect initial={false} x={BX[i] - 40} y={barY} height={12} rx={3}
                         animate={{
                           width: (step === 0 || active) ? v * 0.8 : 25,
                           opacity: step === 0 || active ? 1 : 0.25,

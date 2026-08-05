@@ -84,13 +84,30 @@ export default function StateModel({ onCodeRef }: { onCodeRef: (key: string, ref
         </div>
 
         <h4 className="text-lg font-semibold mt-4 mb-2">EIP-4337 Account Abstraction</h4>
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 not-prose mb-4">
-          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-            <li>EOA/Contract 구분 흐릿해짐</li>
-            <li>Contract가 tx 시작 가능 (bundler 통해)</li>
-            <li>Smart wallet 기능: social recovery 등</li>
-          </ul>
-        </div>
+        <p>
+          EVM은 원래 <strong>EOA(외부 소유 계정)</strong>만 트랜잭션을 시작할 수 있고, 서명 로직은 secp256k1 ECDSA로 고정됩니다. EIP-4337은 이 제약을 <em>프로토콜 수정 없이</em> 풀어 컨트랙트 계정을 1급 발신자로 올립니다.
+        </p>
+        <p>
+          핵심은 새 mempool 계층. 사용자는 일반 트랜잭션 대신 <code>UserOperation</code>(sender, callData, signature, paymaster 등 포함 구조)을 별도 mempool에 제출하고, <strong>Bundler</strong>가 여러 개를 모아 <code>EntryPoint</code> 컨트랙트의 <code>handleOps</code>를 호출하는 일반 트랜잭션으로 포장해 체인에 올립니다.
+        </p>
+        <p>
+          검증은 스마트 컨트랙트가 직접 수행(<code>validateUserOp</code>) → 서명 방식을 자유롭게 선택:
+        </p>
+        <ul>
+          <li><strong>Multisig / Social recovery</strong> — 친구들이 서명해 계정 복구</li>
+          <li><strong>Session keys</strong> — 게임/dApp 전용 일회성 키, 유효 기간·범위 제한</li>
+          <li><strong>Paymaster 가스 대납</strong> — 사용자가 ETH 없어도 USDC로 가스 결제</li>
+          <li><strong>Batch execution</strong> — 여러 call을 원자적으로 묶음</li>
+          <li><strong>Post-Quantum 서명</strong> — ECDSA 대신 Dilithium/Falcon 적용 가능</li>
+        </ul>
+        <p>
+          Pectra(EIP-7702) 이후에는 기존 EOA도 임시로 contract code를 위임받아 AA 기능을 쓸 수 있어, EOA와 컨트랙트 계정의 경계가 사실상 사라집니다.
+        </p>
+        <p>
+          더 깊이:{' '}
+          <a href="/blog/blockchain/aa-fundamentals" className="underline">Account Abstraction 기초</a> ·{' '}
+          <a href="/blog/blockchain/pq-account" className="underline">Post-Quantum Account Abstraction</a>
+        </p>
 
       </div>
     </section>

@@ -13,7 +13,7 @@ export default function FailureClassesViz() {
 
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 360" className="w-full h-auto" style={{ maxWidth: 720 }}>
+      <svg viewBox="0 0 560 360" className="w-full h-auto" style={{ maxWidth: 720, width: '100%' }}>
         <text x={280} y={22} textAnchor="middle" fontSize={13} fontWeight={700}
           fill="var(--foreground)">FailureClass — 9종 실패 분류 + 복구 레시피</text>
 

@@ -1,4 +1,5 @@
 import R1CSGenViz from './viz/R1CSGenViz';
+import ConstraintRulesViz from './viz/ConstraintRulesViz';
 import M from '@/components/ui/math';
 
 export default function R1CSGen({ title }: { title?: string }) {
@@ -71,33 +72,8 @@ export default function R1CSGen({ title }: { title?: string }) {
           ))}
         </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-4">제약 생성 규칙</h3>
-        <div className="not-prose space-y-3 mb-6">
-          <div className="rounded-lg border p-4 text-sm">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3">
-                <p className="text-xs font-medium mb-1">c <code>{'<=='}</code> a * b</p>
-                <p className="text-xs text-muted-foreground">→ 1 R1CS 제약: A=a, B=b, C=c</p>
-              </div>
-              <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3">
-                <p className="text-xs font-medium mb-1">c <code>{'<=='}</code> a + b</p>
-                <p className="text-xs text-muted-foreground">→ 선형 제약 (a+b-c=0). R1CS 0개 (흡수 가능)</p>
-              </div>
-              <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3">
-                <p className="text-xs font-medium mb-1">c <code>{'<=='}</code> (a+b) * (d+e)</p>
-                <p className="text-xs text-muted-foreground">→ 1 R1CS: A=a+b, B=d+e, C=c</p>
-              </div>
-              <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3">
-                <p className="text-xs font-medium mb-1">c <code>{'<=='}</code> a * b + d</p>
-                <p className="text-xs text-muted-foreground">→ 2 R1CS: aux=a*b, c=aux+d(선형 흡수)</p>
-              </div>
-              <div className="bg-violet-50 dark:bg-violet-950/30 rounded p-3 sm:col-span-2">
-                <p className="text-xs font-medium mb-1">c <code>{'<=='}</code> a * b * d (삼중 곱)</p>
-                <p className="text-xs text-muted-foreground">→ 2 R1CS: aux=a*b, c=aux*d</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-4">제약 생성 규칙 & DAG 최적화</h3>
+        <div className="not-prose mb-6"><ConstraintRulesViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">최적화 패스</h3>
         <div className="not-prose grid gap-2 sm:grid-cols-2 mb-6">
@@ -130,27 +106,7 @@ export default function R1CSGen({ title }: { title?: string }) {
           <p className="text-xs text-muted-foreground mt-2">가능하면 LC를 A 또는 B 열에 병합 → R1CS 제약 수 ~30-50% 감소</p>
         </div>
 
-        <h4 className="font-semibold mt-6 mb-3">DAG 최적화 예시</h4>
-        <div className="not-prose rounded-lg border p-4 text-sm mb-6">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3">
-              <p className="text-xs font-semibold mb-1">최적화 전 (제약 2개)</p>
-              <div className="font-mono text-xs space-y-1">
-                <p>d <code>{'==='}</code> a + b + c</p>
-                <p>c <code>{'==='}</code> 2 * b</p>
-              </div>
-            </div>
-            <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3">
-              <p className="text-xs font-semibold mb-1">최적화 후 (제약 1개)</p>
-              <div className="font-mono text-xs space-y-1">
-                <p className="text-muted-foreground">c는 b에 대해 선형 → c 제거</p>
-                <p>d = a + b + 2b = a + 3b</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-4">실전 최적화 수치</h3>
+<h3 className="text-xl font-semibold mt-8 mb-4">실전 최적화 수치</h3>
         <div className="not-prose overflow-x-auto mb-6">
           <table className="w-full text-sm border-collapse">
             <thead>

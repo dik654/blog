@@ -46,7 +46,7 @@ export default function ProverVerifier({ onCodeRef }: { onCodeRef: (key: string,
           <div className="rounded-lg border border-amber-500/30 p-4">
             <p className="font-semibold text-sm text-amber-400 mb-2">Round 3: Quotient Polynomial</p>
             <p className="text-sm text-muted-foreground"><M>{'\\alpha \\leftarrow'}</M> Fiat-Shamir</p>
-            <M display>{'t(x) = \\frac{\\text{gate}(x) + \\alpha \\cdot \\text{perm}_1(x) + \\alpha^2 \\cdot \\text{perm}_2(x)}{Z_H(x)}'}</M>
+            <M display>{'t(x) = \\frac{\\overbrace{\\text{gate}(x)}^{\\text{게이트 제약}} + \\overbrace{\\alpha \\cdot \\text{perm}_1(x) + \\alpha^2 \\cdot \\text{perm}_2(x)}^{\\text{순열 제약 (} \\alpha \\text{로 결합)}}}{\\underbrace{Z_H(x)}_{\\text{vanishing 다항식}}}'}</M>
             <p className="text-sm text-muted-foreground"><M>{'Z_H(x) = x^n - 1'}</M> (vanishing polynomial). <M>{'t(x)'}</M>를 3등분 → <M>{'[t_{\\text{lo}}]_1, [t_{\\text{mid}}]_1, [t_{\\text{hi}}]_1'}</M> 전송</p>
           </div>
         </div>
@@ -63,8 +63,8 @@ export default function ProverVerifier({ onCodeRef }: { onCodeRef: (key: string,
             <p className="font-semibold text-sm text-rose-400 mb-2">Round 5: Opening Proofs</p>
             <p className="text-sm text-muted-foreground"><M>{'\\nu \\leftarrow'}</M> Fiat-Shamir</p>
             <p className="text-sm text-muted-foreground">linearization: <M>{'r(x)'}</M> = gate/perm 다항식들을 <M>{'\\bar{a}, \\bar{b}'}</M> 등으로 부분 평가</p>
-            <M display>{'W_\\zeta(x) = \\frac{r(x) + \\nu(a(x)-\\bar{a}) + \\nu^2(b(x)-\\bar{b}) + \\cdots}{x - \\zeta}'}</M>
-            <M display>{'W_{\\zeta\\omega}(x) = \\frac{Z(x) - \\bar{z}_\\omega}{x - \\zeta\\omega}'}</M>
+            <M display>{'W_\\zeta(x) = \\frac{\\overbrace{r(x) + \\nu(a(x)-\\bar{a}) + \\nu^2(b(x)-\\bar{b}) + \\cdots}^{\\zeta \\text{ 평가 차이를 } \\nu \\text{로 결합}}}{\\underbrace{x - \\zeta}_{\\text{KZG 몫 인수}}}'}</M>
+            <M display>{'W_{\\zeta\\omega}(x) = \\frac{\\overbrace{Z(x) - \\bar{z}_\\omega}^{\\zeta\\omega \\text{ 평가 차이}}}{\\underbrace{x - \\zeta\\omega}_{\\text{shifted 몫 인수}}}'}</M>
             <p className="text-sm text-muted-foreground">→ <M>{'[W_\\zeta]_1, [W_{\\zeta\\omega}]_1'}</M> 전송</p>
           </div>
         </div>
@@ -84,7 +84,7 @@ export default function ProverVerifier({ onCodeRef }: { onCodeRef: (key: string,
             </ol>
             <div className="mt-3 rounded border border-emerald-500/30 p-3">
               <p className="font-semibold text-sm text-emerald-400 mb-1">Pairing check (최종 검증)</p>
-              <M display>{'e([W_\\zeta]_1 + u \\cdot [W_{\\zeta\\omega}]_1,\\; [\\tau]_2) = e(\\zeta \\cdot [W_\\zeta]_1 + u\\zeta\\omega \\cdot [W_{\\zeta\\omega}]_1 + [F]_1 - [E]_1,\\; G_2)'}</M>
+              <M display>{'e(\\underbrace{[W_\\zeta]_1 + u \\cdot [W_{\\zeta\\omega}]_1}_{\\text{몫 결합 (좌변 G₁)}},\\; \\underbrace{[\\tau]_2}_{\\tau G_2}) = e(\\underbrace{\\zeta \\cdot [W_\\zeta]_1 + u\\zeta\\omega \\cdot [W_{\\zeta\\omega}]_1 + [F]_1 - [E]_1}_{\\text{평가 검증식 (우변 G₁)}},\\; G_2)'}</M>
             </div>
           </div>
         </div>

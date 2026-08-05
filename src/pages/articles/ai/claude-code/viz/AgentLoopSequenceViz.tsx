@@ -53,7 +53,7 @@ export default function AgentLoopSequenceViz() {
           })}
           {/* data packet */}
           {step <= 3 && (
-            <motion.circle r={5}
+            <motion.circle initial={false} r={5}
               animate={{ cx: NODES[step].x + BW / 2, cy: CY - BH / 2 - 9 }}
               transition={{ type: 'spring', bounce: 0.2 }}
               fill={NODES[step].color}

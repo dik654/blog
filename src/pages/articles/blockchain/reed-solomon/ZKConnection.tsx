@@ -37,7 +37,7 @@ export default function ZKConnection() {
           <br />
           이것이 STARK에서 "다항식 차수 바운드 검증"의 본질이다:
         </p>
-        <Math display>{'\\text{deg}(f) \\leq d \\;\\Longleftrightarrow\\; \\text{eval}(f) \\in \\text{RS}[\\mathbb{F}, D, d+1]'}</Math>
+        <Math display>{'\\underbrace{\\text{deg}(f) \\leq d}_{\\text{차수 d 이하 다항식}} \\;\\Longleftrightarrow\\; \\underbrace{\\text{eval}(f) \\in \\text{RS}[\\mathbb{F}, D, d+1]}_{\\text{도메인 D 위 RS 코드}}'}</Math>
         <p>
           <Math>{'D'}</Math>는 평가 도메인, <Math>{'d+1'}</Math>은 코드의 차원(메시지 길이)이다
         </p>

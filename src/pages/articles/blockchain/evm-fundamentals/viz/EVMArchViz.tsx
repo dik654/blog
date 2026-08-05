@@ -21,16 +21,16 @@ export default function EVMArchViz() {
         <text x={68} y={158} textAnchor="middle" fontSize={10} fill={C} opacity={0.7}>tx별 정보 — 매 tx마다 교체</text>
 
         {/* EVM — center */}
-        <rect x={160} y={5} width={160} height={159} rx={6} fill={`${C}10`} stroke={C} strokeWidth={1.2} />
+        <rect x={150} y={5} width={180} height={159} rx={6} fill={`${C}10`} stroke={C} strokeWidth={1.2} />
         <text x={240} y={24} textAnchor="middle" fontSize={11} fontWeight={700} fill={C}>EVM</text>
         <text x={240} y={42} textAnchor="middle" fontSize={10} fill={CF}>StateDB — 상태 읽기/쓰기</text>
         <text x={240} y={58} textAnchor="middle" fontSize={10} fill={CF}>JumpTable[256] — opcode 디스패치</text>
         <text x={240} y={74} textAnchor="middle" fontSize={10} fill={CF}>depth — 재귀 깊이 (max 1024)</text>
-        <line x1={170} y1={86} x2={310} y2={86} stroke={C} strokeWidth={0.4} opacity={0.3} />
+        <line x1={160} y1={86} x2={320} y2={86} stroke={C} strokeWidth={0.4} opacity={0.3} />
         <text x={206} y={104} textAnchor="middle" fontSize={10} fontWeight={600} fill={C}>Call()</text>
         <text x={274} y={104} textAnchor="middle" fontSize={10} fontWeight={600} fill={C}>Run()</text>
         <text x={240} y={122} textAnchor="middle" fontSize={10} fill={CM}>Create · DelegateCall · StaticCall</text>
-        <line x1={170} y1={132} x2={310} y2={132} stroke={C} strokeWidth={0.3} opacity={0.2} />
+        <line x1={160} y1={132} x2={320} y2={132} stroke={C} strokeWidth={0.3} opacity={0.2} />
         <text x={240} y={146} textAnchor="middle" fontSize={10} fill={C} opacity={0.7}>실행 엔진 — 블록 내내</text>
         <text x={240} y={158} textAnchor="middle" fontSize={10} fill={C} opacity={0.7}>하나의 인스턴스 재사용</text>
 
@@ -51,15 +51,13 @@ export default function EVMArchViz() {
         <text x={432} y={159} textAnchor="middle" fontSize={10} fill={C} opacity={0.7}>실행 대상 — 코드+호출 정보</text>
 
         {/* Arrows: left → center */}
-        {[[128, 38, 160, 50], [128, 130, 160, 100]].map(([x1, y1, x2, y2], i) => (
+        {[[128, 38, 150, 50], [128, 130, 150, 100]].map(([x1, y1, x2, y2], i) => (
           <line key={`l${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={C} strokeWidth={0.6} markerEnd="url(#aA)" />
         ))}
         {/* Arrows: center → right */}
-        {[[320, 38, 352, 38], [320, 130, 352, 130]].map(([x1, y1, x2, y2], i) => (
+        {[[330, 38, 352, 38], [330, 130, 352, 130]].map(([x1, y1, x2, y2], i) => (
           <line key={`r${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={C} strokeWidth={0.6} markerEnd="url(#aA)" />
         ))}
-        <text x={336} y={30} textAnchor="middle" fontSize={10} fill={CM}>per-call</text>
-        <text x={336} y={122} textAnchor="middle" fontSize={10} fill={CM}>per-call</text>
 
         {/* 전체 흐름 요약 */}
         <text x={260} y={182} textAnchor="middle" fontSize={10} fill={CM}>

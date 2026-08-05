@@ -7,12 +7,18 @@ interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 export default function EagleMtp({ onCodeRef }: Props) {
   return (
     <section id="eagle-mtp" className="mb-16 scroll-mt-20">
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold">EAGLE vs Draft Model vs MTP</h2>
-        <CodeViewButton
-          onClick={() => onCodeRef('spec-draft-model', specDecodeCodeRefs['spec-draft-model'])}
-          label="DraftModelProposer"
-        />
+        <div className="flex max-w-full flex-wrap gap-2">
+          <CodeViewButton
+            onClick={() => onCodeRef('spec-eagle-proposer', specDecodeCodeRefs['spec-eagle-proposer'])}
+            label="EAGLE slots"
+          />
+          <CodeViewButton
+            onClick={() => onCodeRef('spec-draft-model', specDecodeCodeRefs['spec-draft-model'])}
+            label="DraftModelProposer"
+          />
+        </div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -23,7 +29,8 @@ export default function EagleMtp({ onCodeRef }: Props) {
           <code>pass_hidden_states_to_model = True</code>로 Target → Draft 데이터 흐름이 발생합니다.
         </p>
         <p>
-          EAGLE3은 <code>combine_hidden_states()</code>로 멀티 레이어 feature를 결합합니다.<br />
+          <strong>EAGLE3</strong>은 target의 여러 layer hidden state를 함께 쓰도록 확장한 EAGLE 계열이며,
+          <code>combine_hidden_states()</code>로 이 멀티 레이어 feature를 결합합니다.<br />
           이전 단계의 hidden states를 활용하여 더 정확한 예측이 가능합니다.
         </p>
 
@@ -39,12 +46,16 @@ export default function EagleMtp({ onCodeRef }: Props) {
           다른 TP 크기를 사용하면 torch compile 캐시가 충돌합니다 (소스 주석 L37-51).
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Parallel Drafting</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">MTP와 Parallel Drafting</h3>
         <p>
-          기존 auto-regressive draft는 K개 토큰을 순차 생성합니다.
+          <strong>MTP(Multi-Token Prediction)</strong>는 한 위치의 다음 token 하나만이 아니라
+          여러 미래 위치를 함께 예측하도록 학습하거나 구성하는 계열을 뜻합니다.
+          기존 auto-regressive draft는 K개 토큰을 순차 생성하지만,
           <code>parallel_drafting = True</code>이면 K개 슬롯을 동시에 할당하여
           한 번의 forward pass로 K개를 생성합니다.<br />
-          DFlash(Qwen3 전용)가 이 방식을 사용합니다.
+          이 vLLM snapshot에서는 DFlash(Qwen3 전용)가 parallel drafting을 사용합니다.
+          MTP라는 넓은 모델 아이디어와 특정 runtime 구현을 같은 것으로 단정하지 않고,
+          실제 proposer가 어떤 logits와 KV slot을 만드는지 확인해야 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">KV 캐시 슬롯 관리</h3>

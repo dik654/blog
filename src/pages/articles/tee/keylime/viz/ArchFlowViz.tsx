@@ -45,7 +45,7 @@ export default function ArchFlowViz() {
             );
           })()}
           {/* Moving packet */}
-          <motion.circle r={6} fill={N[ARROWS[step][0]].color}
+          <motion.circle initial={false} r={6} fill={N[ARROWS[step][0]].color}
             animate={{ cx: N[ARROWS[step][1]].x, cy: 100 }}
             transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }} />
           <text x={N[ARROWS[step][1]].x} y={128} textAnchor="middle"

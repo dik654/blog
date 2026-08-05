@@ -1,67 +1,136 @@
-import { ActionBox, AlertBox } from '@/components/viz/boxes';
+import { motion } from 'framer-motion';
+
+const ACTORS = [
+  { id: 'llm', label: 'LLM', x: 80 },
+  { id: 'enforcer', label: 'Enforcer', x: 200 },
+  { id: 'preHook', label: 'PreHook', x: 320 },
+  { id: 'tool', label: 'execute_tool', x: 440 },
+  { id: 'postHook', label: 'PostHook', x: 520 },
+];
+
+const MESSAGES = [
+  { from: 'llm', to: 'enforcer', label: 'tool_use', kind: 'sync', t: 0 },
+  { from: 'enforcer', to: 'preHook', label: 'allow', kind: 'sync', t: 1 },
+  { from: 'preHook', to: 'tool', label: 'proceed', kind: 'sync', t: 2 },
+  { from: 'tool', to: 'postHook', label: 'output', kind: 'sync', t: 3 },
+  { from: 'postHook', to: 'llm', label: 'tool_result', kind: 'return', t: 4 },
+];
+
+const REJECTS = [
+  { from: 'enforcer', label: 'Deny → error', t: 1 },
+  { from: 'preHook', label: 'Abort → error', t: 2 },
+];
+
+const Y_TOP = 56;
+const Y_BOT = 320;
+const ROW = (t: number) => 100 + t * 36;
 
 export default function PrePostFlowViz() {
+  const xOf = (id: string) => ACTORS.find(a => a.id === id)!.x;
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 350" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Pre/Post Hook 흐름</text>
-
+    <div className="not-prose my-6 border border-border bg-card">
+      <div className="flex items-center justify-between border-b border-border px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+        <span>sequence · pre/post hook flow</span>
+        <span>UML</span>
+      </div>
+      <svg viewBox="0 0 560 360" className="block w-full h-auto" style={{ maxWidth: 720 }}>
         <defs>
-          <marker id="pph-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L4,2.5 L0,5" fill="#3b82f6" />
+          <marker id="seq-tip" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L8 4 L0 8" fill="none" stroke="var(--foreground)" strokeWidth="0.9" />
+          </marker>
+          <marker id="seq-tip-r" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L8 4 L0 8" fill="none" stroke="#ef4444" strokeWidth="0.9" />
           </marker>
         </defs>
 
-        {/* Flow steps */}
-        <ActionBox x={200} y={54} w={160} h={34}
-          label="LLM tool_use"
-          sub=""
-          color="#8b5cf6" />
-        <line x1={280} y1={88} x2={280} y2={96} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#pph-arr)" />
+        {/* actor heads + lifelines */}
+        {ACTORS.map(a => (
+          <g key={a.id}>
+            <rect x={a.x - 36} y={Y_TOP} width={72} height={26} fill="var(--card)" stroke="var(--foreground)" strokeWidth={0.9} />
+            <text x={a.x} y={Y_TOP + 17} textAnchor="middle" fontSize={10} fontFamily="monospace" fontWeight={700} fill="var(--foreground)">
+              {a.label}
+            </text>
+            <line x1={a.x} y1={Y_TOP + 26} x2={a.x} y2={Y_BOT} stroke="var(--muted-foreground)" strokeWidth={0.6} strokeDasharray="2 3" />
+            <rect x={a.x - 36} y={Y_BOT} width={72} height={4} fill="var(--foreground)" />
+          </g>
+        ))}
 
-        <ActionBox x={200} y={98} w={160} h={34}
-          label="1. Enforcer.check()"
-          sub="기본 권한 게이트"
-          color="#ef4444" />
-        <line x1={280} y1={132} x2={280} y2={140} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#pph-arr)" />
+        {/* messages */}
+        {MESSAGES.map((m, i) => {
+          const x1 = xOf(m.from);
+          const x2 = xOf(m.to);
+          const y = ROW(m.t);
+          const reverse = x2 < x1;
+          return (
+            <motion.g
+              key={i}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: '-10%' }}
+              transition={{ duration: 0.18, delay: 0.25 + i * 0.35 }}
+            >
+              <motion.line
+                x1={x1} y1={y} x2={x2} y2={y}
+                stroke="var(--foreground)" strokeWidth={1}
+                strokeDasharray={m.kind === 'return' ? '4 2' : ''}
+                markerEnd="url(#seq-tip)"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true, margin: '-10%' }}
+                transition={{ duration: 0.35, delay: 0.3 + i * 0.35 }}
+              />
+              <text
+                x={reverse ? x2 + (x1 - x2) / 2 : x1 + (x2 - x1) / 2}
+                y={y - 4}
+                textAnchor="middle"
+                fontSize={9.5}
+                fontFamily="monospace"
+                fontWeight={600}
+                fill="var(--foreground)"
+              >
+                {m.label}
+              </text>
+              {/* activation bar on receiver */}
+              <rect x={x2 - 3} y={y} width={6} height={28} fill="var(--card)" stroke="var(--foreground)" strokeWidth={0.6} />
+            </motion.g>
+          );
+        })}
 
-        <ActionBox x={200} y={142} w={160} h={34}
-          label="2. PreToolUse hook"
-          sub="사용자 커스텀 검증"
-          color="#3b82f6" />
-        <line x1={280} y1={176} x2={280} y2={184} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#pph-arr)" />
+        {/* reject arrows */}
+        {REJECTS.map((r, i) => {
+          const x1 = xOf(r.from);
+          const y = ROW(r.t) + 16;
+          return (
+            <motion.g
+              key={i}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: '-10%' }}
+              transition={{ duration: 0.18, delay: 0.45 + r.t * 0.35 }}
+            >
+              <motion.line
+                x1={x1} y1={y} x2={x1 - 60} y2={y}
+                stroke="#ef4444" strokeWidth={0.9} strokeDasharray="3 2"
+                markerEnd="url(#seq-tip-r)"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true, margin: '-10%' }}
+                transition={{ duration: 0.3, delay: 0.5 + r.t * 0.35 }}
+              />
+              <text x={x1 - 60} y={y - 4} fontSize={9} fontFamily="monospace" fill="#ef4444">
+                {r.label}
+              </text>
+            </motion.g>
+          );
+        })}
 
-        <ActionBox x={200} y={186} w={160} h={34}
-          label="3. execute_tool()"
-          sub="실제 도구 실행"
-          color="#f59e0b" />
-        <line x1={280} y1={220} x2={280} y2={228} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#pph-arr)" />
-
-        <ActionBox x={200} y={230} w={160} h={34}
-          label="4. PostToolUse hook"
-          sub="경고·로깅"
-          color="#10b981" />
-        <line x1={280} y1={264} x2={280} y2={272} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#pph-arr)" />
-
-        <ActionBox x={200} y={274} w={160} h={34}
-          label="5. tool_result"
-          sub="LLM 반환"
-          color="#10b981" />
-
-        {/* 차단 경로 */}
-        <AlertBox x={400} y={137} w={140} h={44}
-          label="Deny/Abort"
-          sub="Pre만 가능"
-          color="#ef4444" />
-        <line x1={360} y1={159} x2={400} y2={159} stroke="#ef4444" strokeWidth={1} strokeDasharray="3 2" markerEnd="url(#pph-arr)" />
-
-        <text x={30} y={159} textAnchor="start" fontSize={9} fill="var(--muted-foreground)">차단</text>
-        <text x={30} y={247} textAnchor="start" fontSize={9} fill="var(--muted-foreground)">이후 차단 불가</text>
-
-        <text x={280} y={336} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">Pre = 보안 게이트 · Post = 감사 로그</text>
+        <text x={30} y={Y_BOT + 22} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
+          Pre = blocks · Post = audit (cannot block) · → sync · ⇢ return
+        </text>
       </svg>
+      <div className="border-t border-border px-4 py-2 font-mono text-[10px] text-muted-foreground">
+        UML sequence · lifelines dashed · activation bar on receiver
+      </div>
     </div>
   );
 }

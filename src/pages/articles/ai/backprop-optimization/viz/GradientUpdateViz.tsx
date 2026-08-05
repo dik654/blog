@@ -36,7 +36,7 @@ export default function GradientUpdateViz() {
             <text x={60 + (2.35 / 2.5) * 280} y={19} textAnchor="middle"
               fontSize={7} fill="#10b981" fontWeight={600}>목표</text>
             {/* current position dot */}
-            <motion.circle
+            <motion.circle initial={false}
               cy={28} r={5}
               fill="#3b82f630" stroke="#3b82f6" strokeWidth={1.5}
               animate={{ cx: 60 + (snap.m2 / 2.5) * 280 }}
@@ -55,7 +55,7 @@ export default function GradientUpdateViz() {
             <rect x={60} y={54} width={92} height={16} rx={3}
               fill="color-mix(in oklch, var(--muted) 6%, transparent)"
               stroke="var(--border)" strokeWidth={0.4} />
-            <motion.rect x={60} y={54} rx={3}
+            <motion.rect initial={false} x={60} y={54} rx={3}
               height={16}
               fill={Math.abs(snap.grad) > 1 ? '#ef444430' :
                 Math.abs(snap.grad) > 0.3 ? '#f59e0b30' : '#10b98130'}
@@ -83,7 +83,7 @@ export default function GradientUpdateViz() {
                 <g key={c.name}>
                   <text x={60} y={by + 12} fontSize={8}
                     fill={c.color}>{c.name}</text>
-                  <motion.rect x={115} y={by + 2} rx={2}
+                  <motion.rect initial={false} x={115} y={by + 2} rx={2}
                     height={12}
                     fill={`${c.color}25`}
                     stroke={c.color}

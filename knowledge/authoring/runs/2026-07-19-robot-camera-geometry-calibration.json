@@ -1,0 +1,131 @@
+{
+  "run_id": "2026-07-19-robot-camera-geometry-calibration",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing bottom-up bridge from camera pixels to time-aligned, uncertainty-aware robot base-frame scene points.",
+  "request_interpretation": {
+    "curriculum_intent": "Build foundations before higher robot perception topics and make the article sufficient for hard transfer reasoning.",
+    "content_intent": "Reconstruct source claims, equations, assumptions, failures, and implementation contracts instead of summarizing.",
+    "visual_intent": "Use measurable interactive Viz with production visual polish, responsive framing, and no clipping.",
+    "provenance_intent": "Retain why each section exists, what source supports it, and what the source does not establish."
+  },
+  "gap_audit": {
+    "existing_coverage": "robot-ai-top-down briefly names camera intrinsics, extrinsics, depth, TF, and timestamps; robot-kinematics covers generic rigid frames.",
+    "missing_chain": [
+      "pixel_to_normalized_ray",
+      "distortion_to_pinhole_ray",
+      "resize_crop_intrinsic_update",
+      "planar_multiview_intrinsic_calibration",
+      "spatial_holdout_validation",
+      "hand_eye_fixed_extrinsic",
+      "acquisition_time_transform",
+      "depth_or_plane_scale",
+      "uncertainty_to_planning_scene"
+    ],
+    "scope_boundary": "Detection, segmentation, learned depth, temporal object fusion, and planning-scene construction remain the next article."
+  },
+  "source_decisions": [
+    {
+      "source": "OpenCV 4.x calib3d official documentation",
+      "used_for": ["pinhole model", "distortion model", "intrinsic image scaling", "calibrateHandEye API direction"],
+      "boundary": "An API fit is not evidence that a dataset is well conditioned or deployment-valid."
+    },
+    {
+      "source": "Zhang, MSR-TR-98-71 / PAMI 2000",
+      "used_for": ["planar homography constraints", "Vb=0 initialization", "reprojection refinement", "parallel-plane degeneracy", "non-planarity sensitivity"],
+      "boundary": "The reported simulations and real camera do not guarantee a modern robot deployment; the approximate 45-degree simulation result is not a universal collection rule."
+    },
+    {
+      "source": "Tsai and Lenz 1989",
+      "used_for": ["fixed hand-eye transform", "relative-motion loop", "rotation-axis diversity"],
+      "boundary": "Original accuracy and speed are specific to its equipment and experiment."
+    },
+    {
+      "source": "ROS 2 CameraInfo, tf2, and REP-103",
+      "used_for": ["acquisition stamp", "optical axis convention", "time-buffered transform query", "K/R/P/ROI contract"],
+      "boundary": "ROS conventions cannot repair a driver that publishes wrong stamps or frames."
+    },
+    {
+      "source": "Oth et al. CVPR 2013",
+      "used_for": ["rolling-shutter row time", "continuous-time moving-camera caveat"],
+      "boundary": "Only a bridge is included; full rolling-shutter calibration is deferred."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 11,
+    "artifact": "src/pages/articles/ai/content-specs/robot-camera-geometry-calibration.md",
+    "publication_policy": "Do not render the problem as filler; map every required insight to public evidence."
+  },
+  "implementation_decisions": [
+    "Use eight narrative sections matching the physical data path from pixel to planning scene.",
+    "Use HTML metric ledgers for dense labels and SVG only for geometry to preserve mobile readability.",
+    "Use red only for actual invariant failure and stable blue/violet/amber/emerald semantic roles.",
+    "Every interaction changes a numeric output such as ray angle, miss distance, pixel shift, condition proxy, residual, loop closure, point error, or covariance.",
+    "Use String.raw for every LaTeX display and add Korean in-equation mappings in the shared annotation registry."
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-camera-geometry-calibration.md",
+    "concept_article": "src/pages/articles/ai/robot-camera-geometry-calibration.tsx",
+    "paper_spec": "src/pages/articles/ai/paper-spine/robotCameraCalibrationSpecs.tsx",
+    "paper_article": "src/pages/articles/ai/paper-zhang-camera-calibration-2000.tsx",
+    "formula_annotations": "src/content/ai/foundationFormulaAnnotations.ts",
+    "learning_path": "src/content/learning-paths.ts"
+  },
+  "qa": {
+    "typecheck_or_build": "production build passed after responsive repairs; existing large-chunk warning remains",
+    "targeted_lint": "passed for the concept article, paper renderer/spec/Viz, shared MetricGrid, and formula annotation registry",
+    "viewports": {
+      "360": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 0.64, "paper_min_math_scale": 0.7 },
+      "390": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 0.75, "paper_min_math_scale": 0.8 },
+      "768": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1 },
+      "1440": { "document_overflow_px": 0, "katex_errors": 0, "missing_formula_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1 }
+    },
+    "interaction_checks": [
+      "image-geometry correct/stale intrinsic toggle changes the ray result",
+      "pose-diversity toggle changes independent constraints and residual estimates",
+      "time delay control changes point error and delay=0 returns 0.0 cm",
+      "diverse multi-axis mobile pose layouts remain non-overlapping"
+    ],
+    "category_integration": "ai-robotics list contains both articles at 390 and 1440 px with zero horizontal overflow",
+    "public_deployment": {
+      "service": "cm-blog.service restarted successfully",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-camera-geometry-calibration",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-zhang-camera-calibration-2000"
+      ],
+      "http_status": 200,
+      "browser_checks": "390 and 1440 px: zero overflow, KaTeX errors, missing annotations, clipped SVG text, and console errors; public pose-diversity interaction changes to 6/6"
+    }
+  },
+  "repair_log": [
+    {
+      "defect": "The first Playwright pass used viewportSize with browser.newPage, so Chromium silently stayed at 1280 px and produced a false mobile pass.",
+      "diagnosis": "innerWidth and document clientWidth were both 1280 while the requested width was 390.",
+      "repair": "Changed the option to viewport, invalidated the earlier screenshots, and reran every viewport.",
+      "verification": "The corrected run reported inner layout behavior at 360/390 and exposed the SVG readability defects below."
+    },
+    {
+      "defect": "Desktop 620-700 unit SVG scenes were scaled to about half size on phones, making embedded legends and geometry too small.",
+      "diagnosis": "Document overflow was zero, but visual inspection showed 5-7 px effective labels and weak scene emphasis.",
+      "repair": "Added mobile-specific compositions for image geometry, distortion, pose diversity, time alignment, ray-plane intersection, and Zhang constraints; moved explanatory legends to normal 12 px HTML text.",
+      "verification": "Corrected 390 px screenshots show readable geometry and captions with no clipped SVG text."
+    },
+    {
+      "defect": "Four metrics stacked as one column created excess vertical length; the hand-eye returned transform previously broke into nearly one character per line in the invalid desktop-only screenshot audit.",
+      "diagnosis": "The dense numeric outputs can safely use two mobile columns if long values are shortened semantically.",
+      "repair": "Added an opt-in mobileColumns mode to MetricGrid, used two columns in these Viz, and split the 3D point into x value plus y/z note.",
+      "verification": "360/390 px screenshots have stable two-column ledgers with no element or document overflow."
+    },
+    {
+      "defect": "Large multi-axis tilt rotations made Zhang target cards overlap in the first mobile-specific layout.",
+      "diagnosis": "The rotated bounding boxes were wider and taller than their unrotated grid cells.",
+      "repair": "Reduced board width, increased horizontal separation and row pitch, and made SVG height depend on the row count.",
+      "verification": "Separate diverse-state screenshots for both concept and paper Viz show no card overlap."
+    },
+    {
+      "defect": "Several in-equation underbrace explanations still used English phrases even though the surrounding prose was Korean.",
+      "diagnosis": "The source LaTeX and the responsive annotation registry must be updated together because the source string is the lookup key.",
+      "repair": "Localized all 12 concept and 5 paper equation explanations and synchronized the registry keys and mobile split renderings.",
+      "verification": "Missing formula annotations and KaTeX errors are zero at all four viewports."
+    }
+  ]
+}

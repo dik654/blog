@@ -35,7 +35,7 @@ export default function AttentionMechanism() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Attention 동작 원리</h3>
         <S2SAttnViz />
-        <M display>{'e_{tj} = \\text{score}(s_{t-1},\\, h_j), \\quad \\alpha_{tj} = \\frac{\\exp(e_{tj})}{\\sum_k \\exp(e_{tk})}, \\quad c_t = \\sum_j \\underbrace{\\alpha_{tj}}_{\\text{attention weight}} \\cdot h_j'}</M>
+        <M display>{'\\underbrace{e_{tj} = \\text{score}(s_{t-1},\\, h_j)}_{\\text{① Score (유사도)}}, \\quad \\underbrace{\\alpha_{tj} = \\frac{\\exp(e_{tj})}{\\sum_k \\exp(e_{tk})}}_{\\text{② Weight (softmax)}}, \\quad \\underbrace{c_t = \\sum_j \\alpha_{tj} \\cdot h_j}_{\\text{③ Context (가중합)}}'}</M>
         <p className="leading-7">
           Score 함수: Dot <M>{'s^\\top h'}</M>, General <M>{'s^\\top W h'}</M>, Additive <M>{'v^\\top \\tanh(W_1 s + W_2 h)'}</M><br />
           핵심 차이: 기존 <M>{'c = h_T'}</M> (고정) vs Attention <M>{'c_t'}</M> (매 스텝 동적 재조합)

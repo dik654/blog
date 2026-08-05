@@ -57,7 +57,7 @@ export default function Overview() {
           </div>
           <div className="bg-muted/50 rounded-xl p-5 border border-border">
             <p className="text-sm font-semibold text-muted-foreground mb-2">V3 수식</p>
-            <M display>{'\\left(x + \\frac{L}{\\sqrt{P_{upper}}}\\right) \\cdot \\left(y + L \\cdot \\sqrt{P_{lower}}\\right) = L^2'}</M>
+            <M display>{'\\underbrace{\\left(x + \\frac{L}{\\sqrt{P_{upper}}}\\right)}_{\\text{token0 + 가상 잔량}} \\cdot \\underbrace{\\left(y + L \\cdot \\sqrt{P_{lower}}\\right)}_{\\text{token1 + 가상 잔량}} = \\underbrace{L^2}_{\\text{유동성 제곱 (구간 불변량)}}'}</M>
             <p className="text-xs text-muted-foreground mt-2">P: 현재 가격, P_lower/P_upper: 구간 경계</p>
           </div>
           <div className="md:col-span-2 bg-muted/50 rounded-xl p-5 border border-border">

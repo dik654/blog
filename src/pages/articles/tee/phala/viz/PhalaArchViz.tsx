@@ -49,7 +49,7 @@ export default function PhalaArchViz() {
                 <text x={(f.x+t.x)/2+4} y={(f.y+t.y)/2-4} textAnchor="middle"
                   fontSize={10} fill="var(--muted-foreground)">{e.label}</text>
                 {vis && (
-                  <motion.circle r={3} fill={NODES[e.from].color}
+                  <motion.circle initial={false} r={3} fill={NODES[e.from].color}
                     animate={{ cx:[f.x,t.x], cy:[f.y,t.y] }}
                     transition={{ duration: 0.7, repeat: Infinity, repeatDelay: 1 }} />
                 )}

@@ -24,7 +24,7 @@ export default function ErrorCorrection() {
           <br />
           위치와 값을 동시에 찾아야 하므로, 에러 하나당 중복 심볼 2개가 필요하다:
         </p>
-        <Math display>{'t \\leq \\left\\lfloor \\frac{n - k}{2} \\right\\rfloor'}</Math>
+        <Math display>{'\\underbrace{t}_{\\text{정정 가능 에러 수}} \\leq \\lfloor \\frac{\\overbrace{n - k}^{\\text{redundancy}}}{\\underbrace{2}_{\\text{위치 + 값 둘 다 모름}}} \\rfloor'}</Math>
         <p>
           <Math>{'t'}</Math>는 정정 가능한 최대 에러 수다.
           <br />
@@ -65,7 +65,7 @@ export default function ErrorCorrection() {
           <br />
           핵심은 에러 위치 다항식(Error Locator Polynomial)을 찾는 것이다:
         </p>
-        <Math display>{'E(x) = \\prod_{i \\in \\text{errors}} (x - \\alpha_i)'}</Math>
+        <Math display>{'\\underbrace{E(x)}_{\\text{에러 위치 다항식}} = \\prod_{i \\in \\text{errors}} \\underbrace{(x - \\alpha_i)}_{\\text{에러 위치에서 0}}'}</Math>
         <p>
           <Math>{'E(x)'}</Math>의 근이 에러 위치를 알려준다.
           <br />

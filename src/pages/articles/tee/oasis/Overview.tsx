@@ -1,6 +1,8 @@
 import OasisLayerViz from './viz/OasisLayerViz';
 import OasisArchFlowViz from './viz/OasisArchFlowViz';
 import LayerDesignViz from './viz/LayerDesignViz';
+import LayerSeparationViz from './viz/LayerSeparationViz';
+import FullNodeEntryViz from './viz/FullNodeEntryViz';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
@@ -24,26 +26,9 @@ export default function Overview({ title, onCodeRef }: { title?: string; onCodeR
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">2계층 분리 설계</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 계층 책임 분리
-
-// Consensus Layer (합의 계층)
-// - CometBFT(구 Tendermint) BFT 합의
-// - 검증인 관리, 스테이킹, 거버넌스
-// - ParaTime의 루트 해시만 커밋
-// - 자체 트랜잭션 실행 X
-// - 수십~수백 TPS
-
-// Runtime Layer (ParaTime)
-// - 독립된 실행 환경 (shard와 유사하지만 heterogeneous)
-// - 각 ParaTime이 고유 VM·정책·TEE 설정
-// - 컴퓨트 노드가 병렬로 실행
-// - 결과를 Consensus에 batch commit
-// - 각 ParaTime별 수천 TPS 가능
-
-// 주요 ParaTime
-// - Sapphire: 기밀 EVM (TEE 필수)
-// - Emerald: 일반 EVM (TEE 선택)
-// - Cipher: Wasm 기반 기밀 (experimental)`}</pre>
+      </div>
+      <div className="not-prose mb-4"><LayerSeparationViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           <strong>분리의 의의</strong>: Consensus는 보안·안정성 최우선, Runtime은 성능·유연성 최우선<br />
           <strong>Cosmos와 유사</strong>: Oasis ParaTime ≈ Cosmos Zone<br />
@@ -79,35 +64,9 @@ export default function Overview({ title, onCodeRef }: { title?: string; onCodeR
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Full Node 진입점</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// go/oasis-node/cmd/node/node.go
-
-// 노드 실행 시
-func Run(cmd *cobra.Command, args []string) {
-    // 1) 설정 로드
-    cfg := config.GlobalConfig
-
-    // 2) Common infra 초기화 (Identity, P2P, IPC)
-    commonSvc := common.NewService()
-
-    // 3) Consensus backend 시작 (CometBFT)
-    consensusSvc := tendermint.New(cfg)
-
-    // 4) Runtime host 시작 (활성화된 경우)
-    if cfg.Runtime.Mode == RuntimeModeCompute {
-        runtimeHost := runtime.NewHost(cfg)
-        runtimeHost.Start()
-    }
-
-    // 5) Service 등록 & 메인 루프
-    node.Register(commonSvc, consensusSvc, runtimeHost)
-    node.Run()
-}
-
-// Node는 역할별 서비스 조합
-// - Consensus only  → 검증인 노드
-// - Compute + Consensus → ParaTime 실행 노드
-// - Storage → Storage 워커 노드
-// - Client → 쿼리 전용 게이트웨이`}</pre>
+      </div>
+      <div className="not-prose mb-4"><FullNodeEntryViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
             <CodeViewButton onClick={() => onCodeRef('full-service', codeRefs['full-service'])} />

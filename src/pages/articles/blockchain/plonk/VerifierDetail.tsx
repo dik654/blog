@@ -37,7 +37,7 @@ export default function VerifierDetail() {
           <div className="rounded-lg border border-amber-500/30 p-4">
             <p className="font-semibold text-sm text-amber-400 mb-2">선형화 커밋먼트</p>
             <p className="text-sm text-muted-foreground mb-1"><M>{'\\bar{r}'}</M> 스칼라 계산:</p>
-            <M display>{'\\bar{r} = \\bar{a} \\cdot \\bar{b} \\cdot \\nu_{q_m} + \\bar{a} \\cdot \\nu_{q_l} + \\bar{b} \\cdot \\nu_{q_r} + \\bar{c} \\cdot \\nu_{q_o} + \\nu_{q_c}'}</M>
+            <M display>{'\\bar{r} = \\underbrace{\\bar{a} \\cdot \\bar{b} \\cdot \\nu_{q_m}}_{\\text{곱셈 게이트 항}} + \\underbrace{\\bar{a} \\cdot \\nu_{q_l} + \\bar{b} \\cdot \\nu_{q_r} + \\bar{c} \\cdot \\nu_{q_o}}_{\\text{선형 게이트 항}} + \\underbrace{\\nu_{q_c}}_{\\text{상수 항}}'}</M>
             <M display>{'+ \\alpha \\cdot [\\bar{z}_\\omega(\\bar{a}+\\beta\\bar{\\sigma}_a+\\gamma)(\\bar{b}+\\beta\\bar{\\sigma}_b+\\gamma) \\cdot \\beta \\cdot \\nu_z]'}</M>
             <M display>{'+ \\alpha^2 \\cdot L_1(\\zeta) \\cdot \\nu_z'}</M>
             <div className="mt-3 rounded border border-violet-500/30 p-3">
@@ -58,7 +58,7 @@ export default function VerifierDetail() {
             </div>
             <div className="rounded border border-rose-500/30 p-3">
               <p className="text-sm text-rose-400 font-medium mb-1">페어링 등식 -- <M>{'O(1)'}</M> 검증</p>
-              <M display>{'e([W_\\zeta]_1 + u \\cdot [W_{\\zeta\\omega}]_1,\\; [\\tau]_2) = e(\\zeta \\cdot [W_\\zeta]_1 + u\\zeta\\omega \\cdot [W_{\\zeta\\omega}]_1 + [F]_1 - [E]_1,\\; G_2)'}</M>
+              <M display>{'e(\\underbrace{[W_\\zeta]_1 + u \\cdot [W_{\\zeta\\omega}]_1}_{\\text{몫 결합 (좌변)}},\\; \\underbrace{[\\tau]_2}_{\\tau G_2}) = e(\\underbrace{\\zeta \\cdot [W_\\zeta]_1 + u\\zeta\\omega \\cdot [W_{\\zeta\\omega}]_1 + [F]_1 - [E]_1}_{\\text{평가 검증식 (우변)}},\\; G_2)'}</M>
               <p className="text-sm text-muted-foreground mt-1">→ 페어링 2회로 모든 제약 동시 검증</p>
             </div>
           </div>

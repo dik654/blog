@@ -39,7 +39,7 @@ export function StepDeterministic() {
           transition={{ delay: i * 0.15 + 0.2 }} />
       </motion.g>
     ))}
-    <motion.text x={350} y={65} fontSize={11} fill={C.smr}
+    <motion.text x={415} y={65} textAnchor="end" fontSize={11} fill={C.smr}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       transition={{ delay: 0.6 }}>
       같은 순서 → 같은 결과

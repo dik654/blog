@@ -1,47 +1,35 @@
+const CATEGORIES = [
+  ['ReadOnly', 'ls · cat · grep · find', '관찰 후보'],
+  ['Write', 'cp · mv · mkdir · sed -i', '상태 변경'],
+  ['Destructive', 'rm · shred · wipefs', '데이터 손실 신호'],
+  ['Network', 'curl · wget · ssh · nc', '외부 통신 신호'],
+  ['ProcessManagement', 'kill · nohup · jobs', 'process 제어'],
+  ['PackageManagement', 'apt · pip · npm · cargo', '환경 변경'],
+  ['SystemAdmin', 'sudo · mount · systemctl', '시스템 변경'],
+  ['Unknown', '목록에 없는 첫 command', '추가 판정 필요'],
+];
+
 export default function IntentCategoriesViz() {
-  const categories = [
-    { name: 'Read', cmds: 'ls, cat, grep, find', color: '#10b981' },
-    { name: 'Write', cmds: 'mv, cp, mkdir, touch', color: '#3b82f6' },
-    { name: 'Destructive', cmds: 'rm, shred, dd, mkfs', color: '#ef4444' },
-    { name: 'Network', cmds: 'curl, wget, ssh, nc', color: '#8b5cf6' },
-    { name: 'Execute', cmds: 'python, node, bash', color: '#f59e0b' },
-    { name: 'Package', cmds: 'apt, npm, cargo', color: '#06b6d4' },
-    { name: 'System', cmds: 'sudo, systemctl', color: '#ec4899' },
-    { name: 'Unknown', cmds: '(분류 불가)', color: '#6b7280' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">CommandIntent — 8가지 명령 분류</text>
-
-        {categories.map((cat, i) => {
-          const col = i % 4;
-          const row = Math.floor(i / 4);
-          const x = 30 + col * 130;
-          const y = 60 + row * 120;
-          return (
-            <g key={cat.name}>
-              <rect x={x} y={y} width={120} height={100} rx={8}
-                fill={cat.color} fillOpacity={0.1}
-                stroke={cat.color} strokeWidth={1} />
-              <text x={x + 60} y={y + 26} textAnchor="middle" fontSize={11} fontWeight={700}
-                fill={cat.color}>{cat.name}</text>
-              <line x1={x + 12} y1={y + 34} x2={x + 108} y2={y + 34}
-                stroke={cat.color} strokeWidth={0.5} opacity={0.3} />
-              <foreignObject x={x + 10} y={y + 42} width={100} height={52}>
-                <div style={{ fontSize: 9, color: 'var(--muted-foreground)', textAlign: 'center', lineHeight: '1.35' }}>
-                  {cat.cmds}
-                </div>
-              </foreignObject>
-            </g>
-          );
-        })}
-
-        <text x={280} y={322} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">첫 단어 매칭 · 50+ 명령어 인식 · Destructive는 이중 확인</text>
-      </svg>
-    </div>
+    <figure
+      aria-label="첫 command를 기준으로 나누는 여덟 intent category"
+      className="not-prose my-7 overflow-hidden rounded-md border border-border"
+    >
+      <figcaption className="border-b border-border px-4 py-3">
+        <p className="text-sm font-semibold">Intent는 실행 효과가 아니라 첫 command의 label이다</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          redirect, substitution, pipeline의 뒤쪽 command는 이 category 하나로 완전히 설명되지 않는다.
+        </p>
+      </figcaption>
+      <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-4">
+        {CATEGORIES.map(([name, commands, role]) => (
+          <div key={name} className="min-w-0 bg-background p-4">
+            <code className="break-words text-[13px] font-semibold">{name}</code>
+            <p className="mt-3 break-words text-xs leading-relaxed">{commands}</p>
+            <p className="mt-2 text-xs text-muted-foreground">{role}</p>
+          </div>
+        ))}
+      </div>
+    </figure>
   );
 }

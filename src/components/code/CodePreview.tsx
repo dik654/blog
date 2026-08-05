@@ -8,8 +8,9 @@ export default function CodePreview({
 }) {
   const allLines = codeRef.code.split('\n');
   const MAX = 18;
-  const from = codeRef.highlight[0] - 1;
-  const to = Math.min(codeRef.highlight[1] - 1, from + MAX - 1);
+  const lineStart = codeRef.lineStart ?? 1;
+  const from = Math.max(0, codeRef.highlight[0] - lineStart);
+  const to = Math.min(allLines.length - 1, from + MAX - 1);
   const lines = allLines.slice(from, to + 1);
   const truncated = codeRef.highlight[1] - codeRef.highlight[0] > MAX;
   return (
@@ -21,7 +22,7 @@ export default function CodePreview({
         <table className="border-collapse w-full leading-5">
           <tbody>
             {lines.map((line, i) => {
-              const ln = codeRef.highlight[0] + i;
+              const ln = lineStart + from + i;
               return (
                 <tr key={ln} className="hover:bg-[#f6f8fa] dark:hover:bg-[#161b22]">
                   <td className="select-none text-right pr-2 pl-3 py-0 text-[#57606a] dark:text-[#636e7b] w-10 shrink-0 border-r border-[#eaecef] dark:border-[#21262d]">{ln}</td>

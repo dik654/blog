@@ -1,4 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
+import SinglePointEvalViz from './viz/SinglePointEvalViz';
+import MultiEvalUsageViz from './viz/MultiEvalUsageViz';
 
 const hornerKernel = `// 다점 평가: 각 스레드가 한 점에서 Horner 평가
 // p(z) = c[0] + c[1]*z + c[2]*z^2 + ... + c[n-1]*z^(n-1)
@@ -19,38 +21,6 @@ __global__ void multi_point_eval(
     }
     results[tid] = acc;  // p(z_tid)
 }`;
-
-const singlePointCode = `// 단일 점 평가 (k=1): dot product로 변환 가능
-// p(z) = sum(c[i] * z^i) = dot(coeffs, z_powers)
-//
-// 2단계 접근:
-//   1) z^0, z^1, ..., z^(n-1) 배열 생성 (parallel prefix product)
-//   2) coeffs[i] * z_powers[i] 원소별 곱 → parallel reduction (합산)
-//
-// Horner (단일 스레드, O(n)) vs dot product (다중 스레드, O(n/T + log T)):
-//   n = 2^24, T = 1024 스레드:
-//   Horner: 16M 순차 곱셈
-//   dot product: 16K 곱셈/스레드 + 10단계 reduction
-//
-// 실전에서는 KZG opening이 1~수개 점만 평가하므로
-// 단순 Horner로도 충분한 경우가 많다 (커널 오버헤드 < 병렬화 이득)`;
-
-const usageCode = `PLONK/KZG에서 다점 평가 사용처:
-
-1. KZG Opening Proof:
-   증명자가 다항식 f(x)를 challenge point z에서 평가
-   → f(z) 계산 (단일 점 Horner)
-   → 몫 q(x) = (f(x) - f(z)) / (x - z) 계산
-   → [q(x)] MSM 커밋
-
-2. PLONK Verifier Challenge:
-   라운드별 challenge alpha, beta, gamma, zeta에서 다항식 평가
-   → 4~6개 점: 스레드 4~6개로 병렬 Horner
-
-3. Batch Opening (여러 다항식, 같은 점):
-   f1(z), f2(z), ..., fm(z) 동시 평가
-   → 각 다항식마다 Horner 1회, m개 병렬 실행
-   → GPU 활용도: m이 클수록 유리`;
 
 export default function MultiEval() {
   return (
@@ -79,19 +49,10 @@ export default function MultiEval() {
           대안으로 p(z) = dot(coeffs, z_powers)로 변환하면 parallel reduction을 쓸 수 있다.<br />
           다만 실전에서는 평가점이 소수(1~6개)여서 Horner 커널의 단순함이 유리한 경우가 많다.
         </p>
-        <CodePanel title="단일 점 평가: Horner vs Dot Product" code={singlePointCode}
-          annotations={[
-            { lines: [4, 6], color: 'sky', note: 'dot product 2단계' },
-            { lines: [8, 11], color: 'emerald', note: 'Horner vs dot product 비교' },
-          ]} />
+        <SinglePointEvalViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">ZK 증명에서의 사용처</h3>
-        <CodePanel title="PLONK/KZG 다점 평가 사용처" code={usageCode}
-          annotations={[
-            { lines: [3, 7], color: 'sky', note: 'KZG opening: 단일 점' },
-            { lines: [9, 11], color: 'emerald', note: 'PLONK: 소수 challenge 점' },
-            { lines: [13, 16], color: 'amber', note: 'batch opening: 다항식 수만큼 병렬' },
-          ]} />
+        <MultiEvalUsageViz />
       </div>
     </section>
   );

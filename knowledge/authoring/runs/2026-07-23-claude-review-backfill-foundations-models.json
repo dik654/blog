@@ -1,0 +1,450 @@
+{
+  "date": "2026-07-23",
+  "objective": "Read-only single-article Context Manager review backfill for foundation, model, pre-training, and RL articles.",
+  "scope": [
+    "rnn",
+    "lstm",
+    "transformer-architecture",
+    "bert",
+    "reasoning-post-training-frontier",
+    "llm-data-engine",
+    "training-pipeline",
+    "rl-decision-system-contracts",
+    "rl-safe-constrained-learning",
+    "rl-ppo-continuous-control",
+    "rl-imitation-offline-learning",
+    "foundation-training-step"
+  ],
+  "review_contract": {
+    "transport": "Context Manager cm_route_delegate only",
+    "accepted_worker_identity": "claude-code:sonnet",
+    "fresh_bounded_sessions": true,
+    "app_code_edits_by_this_task": false,
+    "report_files_only": true,
+    "identity_rule": "Preserve the exact Context Manager response header. A result is accepted as the requested review only when the header explicitly starts with claude-code:sonnet."
+  },
+  "summary": {
+    "targets": 12,
+    "attempts": 22,
+    "accepted_claude_code_sonnet": 12,
+    "rejected_codex_fallbacks": 9,
+    "headerless_timeouts": 1,
+    "http_500_failures": 0,
+    "accepted_with_confirmed_defects": 6,
+    "accepted_pass_or_no_issue": 6,
+    "foundation_route_continuity": "pass"
+  },
+  "results": [
+    {
+      "slug": "rnn",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 119230ms]",
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/rnn/Rebuilt.tsx",
+          "line": 41,
+          "observed": "The preactivation note said '두 경로와 bias의 합' while lines 16 and 22 computed 0.8*x + w_h*h_prev with no bias term.",
+          "expected": "Either compute an explicit bias or state that the scalar example uses b=0.",
+          "disposition": "fixed_concurrently_by_parent",
+          "current_state": "The note now says '두 경로의 합 · 이 scalar 예제는 b=0'."
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 52091ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex, retained only as a baseline."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 119230ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "lstm",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 120436ms]",
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/lstm/Rebuilt.tsx",
+          "line": 154,
+          "related_file": "src/pages/articles/ai/nlp-shared.tsx",
+          "observed": "Absolute sigmoid gate activations in [0,1] used ProbabilityBars, whose width denominator was the maximum value in the current scenario. A gate value such as 0.61 could therefore render at 100% width.",
+          "expected": "Use a fixed maximum of 1 for gate openness.",
+          "disposition": "fixed_concurrently_by_parent",
+          "current_state": "ProbabilityBars now accepts scaleMax; the LSTM lab passes scaleMax={1} and labels the scale as absolute 0 to 1."
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 61711ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex, retained only as a baseline."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 120436ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "transformer-architecture",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 159234ms]",
+      "verdict": "pass",
+      "findings": [
+        {
+          "severity": "low",
+          "classification": "rejected_no_issue",
+          "file": "src/pages/articles/ai/transformer-architecture/Rebuilt.tsx",
+          "line": 201,
+          "claim": "The Stanford Winter 2025 a4.pdf link might be the wrong assignment.",
+          "rejection_evidence": "The official PDF at https://web.stanford.edu/class/cs224n/assignments_w25/a4.pdf is titled 'Self-Attention, Transformers, and Pretraining' and covers self-attention, positional embeddings, and Transformer pretraining.",
+          "disposition": "rejected"
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 55899ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex, retained only as a baseline."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 159234ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "bert",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 174564ms]",
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "low",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/nlp-shared.tsx",
+          "line": 161,
+          "related_file": "src/pages/articles/ai/bert/Rebuilt.tsx",
+          "observed": "The same fractional MLM expected count rendered as 1.500 in ProbabilityBars and 1.5 in the adjacent summary.",
+          "expected": "Use the article's exact one-decimal count formatter in both locations.",
+          "disposition": "fixed_and_reverified_by_parent",
+          "current_state": "ProbabilityBars accepts formatValue and BERT passes formatCount."
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 57526ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex, retained only as a baseline."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 174564ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "reasoning-post-training-frontier",
+      "accepted_header": "[claude-code:sonnet · L4 · $0.0000 · 92935ms]",
+      "verdict": "pass",
+      "findings": [],
+      "checked": [
+        "Reward and entropy formulas",
+        "Credit assignment and inference-compute explorers",
+        "Semantic interactive decision ladder",
+        "VQA process-reward claim boundary",
+        "Article handoff links"
+      ],
+      "attempts": [
+        {
+          "header": "[claude-code:sonnet · L4 · $0.0000 · 92935ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "llm-data-engine",
+      "accepted_header": "[claude-code:sonnet · L4 · $0.0000 · 103432ms]",
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "medium",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/current-flows/viz/CurrentFlowExplorers.tsx",
+          "line": 119,
+          "observed": "A single '데이터 구성 비율' group mixed kept, verifiedSynthetic, and 100-kept. Kept plus removed already equaled 100%, while verifiedSynthetic used a different candidate denominator; maximum settings yielded 38 + 62 + 36.5 = 136.5.",
+          "expected": "Separate the raw-corpus partition from the synthetic-candidate verification funnel.",
+          "disposition": "fixed_concurrently_by_parent",
+          "current_state": "The current explorer shows a 100% original-snapshot partition and a separate synthetic funnel explicitly labeled '합산하지 않음'."
+        },
+        {
+          "severity": "low",
+          "classification": "optional_suggestion",
+          "file": "src/pages/articles/ai/current-flows/viz/CurrentFlowExplorers.tsx",
+          "line": 111,
+          "observed": "The verified-synthetic metric used the positive tone even when the value was zero.",
+          "disposition": "accepted_and_fixed_concurrently_by_parent",
+          "current_state": "The tone is now positive only when verifiedSynthetic is greater than zero."
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[claude-code:sonnet · L4 · $0.0000 · 103432ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "training-pipeline",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 141590ms]",
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "high",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/training-pipeline/viz/LoopViz.tsx",
+          "line": 198,
+          "observed": "The desktop AMP scene hard-labeled forward and loss as FP16 despite the article correctly saying autocast selects dtype per operation.",
+          "disposition": "fixed_and_tested_by_parent",
+          "current_state": "The scene now labels forward as 'op별 dtype' and loss as '안정 dtype'."
+        },
+        {
+          "severity": "medium",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/training-pipeline/viz/OverviewVizData.ts",
+          "line": 28,
+          "observed": "The overview said the scheduler adjusts the learning rate every epoch, contradicting the article's batch-or-epoch contract.",
+          "disposition": "fixed_and_tested_by_parent",
+          "current_state": "The text now says the configured batch or epoch cadence controls scheduler calls."
+        },
+        {
+          "severity": "medium",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/training-pipeline/Logging.tsx",
+          "line": 11,
+          "related_file": "src/pages/articles/ai/training-pipeline/viz/LoggingViz.tsx",
+          "observed": "Epoch loss was shown as the mean of per-batch means via running_loss / len(loader), which biases unequal final batches.",
+          "disposition": "fixed_and_tested_by_parent",
+          "current_state": "The article and viz now accumulate compatible loss sums and divide by sample_count."
+        },
+        {
+          "severity": "low",
+          "classification": "optional_suggestion",
+          "file": "src/pages/articles/ai/training-pipeline/Loop.tsx",
+          "line": 30,
+          "claim": "State the conditions under which loss-scaled gradient accumulation exactly matches one large batch.",
+          "disposition": "optional"
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L4 · $0.0000 · 294310ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex. Its overlapping findings were retained as fallback evidence only."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 141590ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "rl-decision-system-contracts",
+      "accepted_header": "[claude-code:sonnet · L4 · $0.0000 · 109631ms]",
+      "verdict": "pass",
+      "findings": [],
+      "checked": [
+        "RL fit and trajectory formulas",
+        "Occupancy, importance-ratio, and ESS formulas",
+        "Private/public fixture separation",
+        "Held-out release contract",
+        "Internal route links"
+      ],
+      "attempts": [
+        {
+          "header": "[claude-code:sonnet · L4 · $0.0000 · 109631ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "rl-safe-constrained-learning",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 80738ms]",
+      "verdict": "pass",
+      "findings": [],
+      "checked": [
+        "Expected-cost and any-violation arithmetic",
+        "CMDP and Lagrangian sign convention",
+        "CPO local QCQP",
+        "Lyapunov feasible-set statements",
+        "Recovery RL risk recursion",
+        "Distinct CPO, Lyapunov, and Recovery primary-source handoffs"
+      ],
+      "uncertainties": [
+        "The accepted narrow review did not re-derive every coefficient in the CPO true-cost corollary from the paper."
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L4 · $0.0000 · 233214ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex, retained only as a baseline."
+        },
+        {
+          "header": null,
+          "accepted": false,
+          "failure": "error: The operation timed out.",
+          "rejected_reason": "No provider/model identity or review body was returned."
+        },
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 257095ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex, retained only as a baseline."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 80738ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "rl-ppo-continuous-control",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 155080ms]",
+      "verdict": "findings",
+      "findings": [
+        {
+          "severity": "high",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/rl-ppo-continuous-control/viz/PpoFoundationViz.tsx",
+          "line": 6,
+          "observed": "DONE was fixed to [0,0,0,1], so the final-step terminal branch always won and TRUNCATION_BOOTSTRAP_VALUE was dead code.",
+          "disposition": "fixed_and_tested_by_parent",
+          "current_state": "The lab now has terminal/time-limit controls and computes the done mask from the selected boundary."
+        },
+        {
+          "severity": "medium",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/rl-ppo-continuous-control/viz/PpoFoundationViz.tsx",
+          "line": 154,
+          "observed": "The label attributed a zero GAE tail to truncation rather than distinguishing rollout-window tail from next-value bootstrap.",
+          "disposition": "fixed_and_tested_by_parent",
+          "current_state": "The label now states that the rollout-edge tail is zero while V(s4) enters delta for truncation."
+        },
+        {
+          "severity": "low",
+          "classification": "confirmed_defect",
+          "file": "src/pages/articles/ai/rl-ppo-continuous-control.tsx",
+          "line": 337,
+          "observed": "The continuous-control article described a discrete probability example without explaining density ratios or tanh change-of-variables.",
+          "disposition": "fixed_concurrently_by_parent",
+          "current_state": "The example is explicitly labeled discrete and is followed by Gaussian density-ratio and tanh-Jacobian guidance."
+        },
+        {
+          "severity": "low",
+          "classification": "optional_suggestion",
+          "file": "src/pages/articles/ai/rl-ppo-continuous-control.tsx",
+          "line": 81,
+          "claim": "Plain-text 'Â' labels could be explained as advantage estimates.",
+          "disposition": "optional"
+        }
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 251595ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex. Its dead-branch observation was retained only as fallback evidence."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 155080ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "rl-imitation-offline-learning",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 142082ms]",
+      "verdict": "pass",
+      "findings": [],
+      "checked": [
+        "Behavior cloning and DAgger bounds",
+        "Compounding-error arithmetic",
+        "CQL and IQL formulas",
+        "OPE, self-normalized IS, and ESS arithmetic",
+        "Private/public fixture separation",
+        "Five-evidence release contract"
+      ],
+      "attempts": [
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 142082ms]",
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "slug": "foundation-training-step",
+      "accepted_header": "[claude-code:sonnet · L3 · $0.0000 · 132838ms]",
+      "verdict": "pass",
+      "route_continuity": "pass",
+      "findings": [
+        {
+          "severity": "low",
+          "classification": "optional_suggestion",
+          "source": "codex_fallback_plus_local_confirmation",
+          "file": "src/pages/articles/ai/foundation-training-step/content-spec.md",
+          "line": 109,
+          "claim": "The content spec still lists the activation-free two-linear-layer/XOR transfer check after the rendered CapabilityCheck was changed to validation-generalization.",
+          "disposition": "optional_documentation_follow_up",
+          "accepted_review_impact": "None. The current rendered article and AI Foundations route passed the accepted Claude review."
+        }
+      ],
+      "checked": [
+        "Default eta=0.10 ledger arithmetic",
+        "Generic learning-rate update formula including eta=0.20",
+        "Article assembly and four sections",
+        "Implementation order and capability checks",
+        "articlesDL registration and order",
+        "ai-foundations-core order",
+        "foundationCurriculum item and math bridges",
+        "optimizers -> foundation-training-step -> autoencoder continuity",
+        "Existing tests cover the article at 390, 768, and 1440 pixels and category visibility at 390 and 1440 pixels"
+      ],
+      "attempts": [
+        {
+          "header": "[codex:gpt-5.5 · L3 · $0.0000 · 271685ms]",
+          "accepted": false,
+          "rejected_reason": "Worker identity was Codex. Its content-spec drift observation was retained as an optional documentation follow-up."
+        },
+        {
+          "header": "[claude-code:sonnet · L3 · $0.0000 · 132838ms]",
+          "accepted": true
+        }
+      ]
+    }
+  ],
+  "failures_and_fallbacks": {
+    "policy": "Codex responses and headerless errors are never labeled as Claude reviews.",
+    "codex_headers": [
+      "[codex:gpt-5.5 · L3 · $0.0000 · 52091ms]",
+      "[codex:gpt-5.5 · L3 · $0.0000 · 61711ms]",
+      "[codex:gpt-5.5 · L3 · $0.0000 · 55899ms]",
+      "[codex:gpt-5.5 · L3 · $0.0000 · 57526ms]",
+      "[codex:gpt-5.5 · L4 · $0.0000 · 294310ms]",
+      "[codex:gpt-5.5 · L4 · $0.0000 · 233214ms]",
+      "[codex:gpt-5.5 · L3 · $0.0000 · 257095ms]",
+      "[codex:gpt-5.5 · L3 · $0.0000 · 251595ms]",
+      "[codex:gpt-5.5 · L3 · $0.0000 · 271685ms]"
+    ],
+    "timeouts": [
+      {
+        "slug": "rl-safe-constrained-learning",
+        "header": null,
+        "error": "error: The operation timed out."
+      }
+    ]
+  },
+  "verification_note": "This task did not edit application code. Fixes recorded as current were applied concurrently by the parent task and were checked statically here; parent-reported targeted tests are preserved as parent verification, not as commands run by this task."
+}

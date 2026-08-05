@@ -22,9 +22,10 @@ export function Citation({ source, citeKey, type = 'paper', children, href }: Ci
     <span className="relative inline-flex items-baseline gap-0.5">
       <button
         onClick={() => setOpen(o => !o)}
+        data-inline-hit-area="44"
         className={`
-          inline-flex items-center justify-center
-          w-[18px] h-[18px] rounded-full text-[10px] font-bold
+          relative inline-flex h-5 w-5 items-center justify-center
+          rounded-full text-xs font-bold after:absolute after:-inset-3 after:content-['']
           cursor-pointer select-none transition-all duration-200
           ${open
             ? 'bg-primary text-primary-foreground scale-110'

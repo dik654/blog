@@ -184,7 +184,7 @@ export default function AdvancedViz() {
               {/* 비교 */}
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 transition={{ ...sp, delay: 0.7 }}>
-                <DataBox x={90} y={205} w={150} h={28} label="CutOut: 정보 손실" sub="마스킹 영역 = 0" color={COLORS.erasing} />
+                <DataBox x={90} y={205} w={150} h={28} label="CutOut: 정보 손실" sub="마스킹 영역 = 0" color={COLORS.cutArea} />
                 <DataBox x={290} y={205} w={150} h={28} label="CutMix: 정보 보존" sub="다른 이미지로 채움" color={COLORS.mosaic} />
               </motion.g>
             </motion.g>

@@ -19,7 +19,8 @@ export const blockPoolCodeRefs: Record<string, CodeRef> = {
 `문제: 수천 개의 KV 캐시 블록을 빠르게 할당/해제하려면?
 
 해결: BlockPool은 이중 연결 리스트(FreeKVCacheBlockQueue)로 free 블록을 관리합니다.
-할당은 popleft() O(1), 해제는 append_n() O(n).
+일반 할당은 popleft_n(num_blocks), 해제는 append_n()으로 여러 블록을 묶어 처리합니다.
+초기화 시 예약하는 null_block만 popleft()로 한 개를 꺼냅니다.
 Prefix Caching 시 해시→블록 매핑(BlockHashToBlockMap)으로 O(1) 캐시 히트 검색.
 ref_cnt > 0인 블록은 해제해도 eviction 후보로만 이동합니다.`,
   },
@@ -66,11 +67,12 @@ Prefix Caching이 활성화되면 해제된 블록도 해시를 유지하여 evi
     path: 'vllm/v1/core/kv_cache_manager.py',
     code: kvCacheMgrPy,
     lang: 'python',
-    highlight: [257, 340],
+    highlight: [218, 388],
     annotations: [
-      { lines: [257, 267], color: 'sky',     note: 'allocate_slots() — 새 토큰에 필요한 블록 할당' },
-      { lines: [289, 321], color: 'emerald', note: '블록 레이아웃 다이어그램 — comp/new_comp/ext_comp/new/lookahead' },
-      { lines: [327, 335], color: 'amber',   note: '3단계: 불필요 해제 → prefix 처리 → 신규 할당' },
+      { lines: [218, 228], color: 'sky',     note: 'allocate_slots() — 새 토큰에 필요한 블록 할당' },
+      { lines: [250, 282], color: 'emerald', note: '블록 레이아웃 다이어그램 — comp/new_comp/ext_comp/new/lookahead' },
+      { lines: [288, 295], color: 'amber',   note: '3단계: 불필요 해제 → prefix 처리 → 신규 할당' },
+      { lines: [338, 388], color: 'violet',  note: '가용 블록 검사, 실제 할당과 검증된 token만 cache commit' },
     ],
     desc:
 `문제: Prefix Caching + Spec Decode + P/D 분리까지 고려한 블록 할당은?

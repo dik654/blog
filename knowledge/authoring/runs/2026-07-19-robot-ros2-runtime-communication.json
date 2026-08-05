@@ -1,0 +1,221 @@
+{
+  "run_id": "2026-07-19-robot-ros2-runtime-communication",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing bottom-up bridge from a visible ROS 2 graph to a semantically valid, fresh, schedulable, supervised, time-aligned, and deadline-bounded robot runtime.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue after localization and SLAM by owning the runtime assumptions shared by sensing, estimation, planning, control, and actuation.",
+    "content_intent": "Use one private compound robot failure to force coverage of interface meaning, QoS, overload, executor scheduling, lifecycle, ownership, time, TF, and end-to-end response.",
+    "visual_intent": "Replace decorative diagrams with measurable labs whose controls expose mismatch, stale age, starvation, deadlock, unsafe activation, buffer corruption, spatial time error, and deadline margin.",
+    "paper_intent": "Reconstruct Casini et al. 2019 from problem and scheduling model through equations, evidence, erratum, assumptions, and current ROS 2 limits.",
+    "provenance_intent": "Record why each source was used, which claims remain version-specific, and how each claim became public prose, math, Viz, or an operational gate.",
+    "small_model_intent": "Preserve bounded decisions and defect packets so a 4B model can repair one claim/formula/Viz and a 9B model can assemble one complete section."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-ai-top-down names ROS 2 concepts but does not own runtime failure semantics",
+      "robot-camera-geometry-calibration assumes typed, stamped, framed, fresh observations",
+      "robot-localization-slam assumes callbacks and TF queries execute against the intended sample and clock",
+      "robot-perception-scene-construction assumes large buffers are delivered with valid lifetime",
+      "robot-motion-planning assumes goals remain cancellable and version-consistent",
+      "robot-dynamics-feedback-control assumes middleware and executor delay fit the feedback budget"
+    ],
+    "missing_chain": [
+      "interface_semantics_and_message_validity",
+      "discovery_match_readiness_health_separation",
+      "requested_offered_qos",
+      "queue_overload_and_truth_age",
+      "executor_callback_group_starvation_and_deadlock",
+      "managed_lifecycle_and_command_gate",
+      "composition_copy_and_buffer_ownership",
+      "multi_clock_acquisition_time_tf",
+      "sensor_to_actuator_response_bound_and_health"
+    ],
+    "scope_boundary": "DDS wire internals, vendor-specific RMW tuning, DDS Security, kernel tuning, and complete real-time scheduling theory remain follow-up articles."
+  },
+  "source_decisions": [
+    {
+      "source": "Current ROS 2 Kilted interface and QoS documentation",
+      "used_for": ["topic/service/action semantics", "requested/offered compatibility", "history, durability, deadline, lifespan, and liveliness questions"],
+      "boundary": "Portable documentation does not provide a safety architecture or end-to-end latency guarantee."
+    },
+    {
+      "source": "Current ROS 2 Rolling executor and callback-group documentation",
+      "used_for": ["wait-set readiness", "non-FIFO overload behavior", "mutually-exclusive and reentrant groups", "hidden future done-callback deadlock"],
+      "boundary": "Executor implementations evolve; historical timer priority and the Crystal scheduler cannot be presented as current universal behavior."
+    },
+    {
+      "source": "ROS 2 managed-node lifecycle design",
+      "used_for": ["unconfigured/inactive/active/error/finalized states", "supervised transitions", "functional work gate"],
+      "boundary": "The state machine does not supply application-specific calibration, health, restart, or actuation policy."
+    },
+    {
+      "source": "ROS 2 deadline, liveliness, lifespan, clock/time, and intra-process design documents",
+      "used_for": ["RMW event boundaries", "ROS time jumps", "acquisition versus arrival time", "ownership and fan-out trade-offs"],
+      "boundary": "These designs do not synchronize devices, validate source timestamps, guarantee zero copy, or certify sensor-to-actuator response."
+    },
+    {
+      "source": "Casini et al., ECRTS 2019 revised paper",
+      "used_for": ["logical-to-runtime mapping", "arrival/request bounds", "reservation supply", "polling callback response", "subchain correction", "processing-chain bound", "move_base evidence"],
+      "boundary": "The analysis targets ROS 2 Crystal's built-in single-thread executor under fixed-DAG, known-WCET/arrival, and reservation assumptions; timer priority was later removed and current multi-thread scheduling is outside its proof."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 15,
+    "artifact": "src/pages/articles/ai/content-specs/robot-ros2-runtime-communication.md",
+    "scenario": "Warehouse robot under Wi-Fi disturbance and CPU overload with QoS mismatch, reliable backlog, default-group starvation, synchronous-call deadlock, inactive actuation, transient-local stale replay, backward ROS time, arrival-time TF, early buffer reuse, and blocked cancellation while the graph remains visible.",
+    "publication_policy": "Keep the compound question private; require every premise to map to public derivation, measurable Viz state, paper evidence, or runtime gate."
+  },
+  "source_extraction": {
+    "paper": "Casini et al. 2019, Response-Time Analysis of ROS 2 Processing Chains under Reservation-Based Scheduling",
+    "local_pdf": "/tmp/pdfs/ecrts19.pdf",
+    "local_text": "/tmp/pdfs/ecrts19.txt",
+    "pages_read": "1-24",
+    "mechanism_notes": [
+      "The paper maps logical callback DAGs to executor callbacks and processing chains running inside CPU reservations.",
+      "Event-driven and time-driven callbacks require different arrival and response reasoning.",
+      "Arrival curves and request-bound functions bound callback demand rather than relying on average rates.",
+      "Supply-bound functions represent the minimum CPU service delivered by a reservation budget and period.",
+      "Polling callback response is solved as a fixed point because releases can suffer supply delay and interference.",
+      "The revised Lemma 8 treats a continuous same-reservation callback sequence as a subchain so shared interference is not duplicated callback by callback.",
+      "Whole-chain latency combines callback/subchain response with communication and sampling delay under explicit assumptions.",
+      "The move_base study demonstrates trade-offs and bound precision for the analyzed historical runtime, not universal current ROS 2 guarantees."
+    ]
+  },
+  "events": [
+    {
+      "event_id": "audit.curriculum.001",
+      "phase": "gap_audit",
+      "observed": "Every existing robotics foundation article passed data through ROS 2 while leaving message meaning, queue freshness, callback scheduling, readiness, time, and response assumptions unowned.",
+      "inference": "The next dependency is not another robot algorithm but the runtime contract joining all algorithms to physical effects.",
+      "decision": "Implement one deep ROS 2 runtime article before moving further into navigation or embedded control.",
+      "changed_files": [],
+      "verification": { "expected": "All adjacent runtime assumptions have one explicit owner", "actual": "The content spec owns interface-to-actuator causality in nine sections." }
+    },
+    {
+      "event_id": "source.version-boundary.001",
+      "phase": "evidence_compile",
+      "observed": "Casini analyzes ROS 2 Crystal's single-thread executor, while current ROS 2 documentation states that historical timer prioritization was removed in Eloquent and documents newer executor choices.",
+      "inference": "The paper's analyzability method is durable, but its concrete scheduling order cannot be silently generalized to current ROS 2.",
+      "decision": "Label historical mechanics at every relevant paper section and compare them with current callback-group/executor boundaries.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-ros2-runtime-communication.md", "src/pages/articles/ai/paper-spine/robotRuntimeSpecs.tsx"],
+      "verification": { "expected": "A reader can separate theorem assumptions from current operational advice", "actual": "The paper reconstruction contains explicit historical/runtime and erratum boundary panels." }
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "phase": "transfer_gate",
+      "observed": "A visible graph and nominal topic rate can coexist with ten different unsafe runtime failures.",
+      "inference": "Definitions and isolated examples would miss the interaction among compatibility, freshness, scheduling, readiness, time, ownership, and cancellation.",
+      "decision": "Use a 15-premise warehouse failure and require one public evidence mapping per premise.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-ros2-runtime-communication.md"],
+      "verification": { "expected": "No compound premise depends on unstated prior knowledge", "actual": "The coverage gate maps all 15 premises to a section, equation, lab, or paper reconstruction." }
+    },
+    {
+      "event_id": "implementation.narrative.001",
+      "phase": "concept_implementation",
+      "observed": "Runtime failures follow the physical path from semantic message creation through transport, scheduling, process state, ownership, time alignment, and actuation.",
+      "inference": "A causal order is more transferable than organizing the article by ROS command or package name.",
+      "decision": "Implement nine causal chapters, each with an interactive measured lab and Korean-annotated display equations.",
+      "changed_files": ["src/pages/articles/ai/robot-ros2-runtime-communication.tsx", "src/pages/articles/ai/robot-ros2-runtime/viz/RobotRos2RuntimeViz.tsx"],
+      "verification": { "expected": "Every lab changes an operational consequence", "actual": "All nine labs change visible match, age, wait, deadlock, gate, copy, corruption, spatial error, or deadline state." }
+    },
+    {
+      "event_id": "implementation.paper.001",
+      "phase": "paper_reconstruction",
+      "observed": "A paper summary would omit the logical/runtime mapping, arrival and supply models, fixed points, revised subchain lemma, empirical evidence, and scope assumptions needed for reimplementation.",
+      "inference": "The paper must be rebuilt from prior bottleneck and author intent through mechanisms, equations, evidence slices, reproduction, failures, and current legacy.",
+      "decision": "Create a dedicated FoundationalPaperStudy spec and one processing-chain budget lab with five evidence slices.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/robotRuntimeSpecs.tsx", "src/pages/articles/ai/paper-spine/viz/CasiniProcessingChainLab.tsx", "src/pages/articles/ai/paper-casini-ros2-response-time-2019.tsx"],
+      "verification": { "expected": "Original evidence and educational reconstruction are distinguishable", "actual": "The lab says its values are an educational what-if, while evidence panels preserve the paper's measured claims and limits." }
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "Long semantic equations produced minimum visual scales below the 0.75 acceptance floor even though document overflow remained zero.",
+      "inference": "The defect came from packing multiple operations and Korean annotations into one widest row, not from the KaTeX renderer itself.",
+      "decision": "Split long displays into aligned semantic rows while keeping the operation rationale inside each formula.",
+      "changed_files": ["src/pages/articles/ai/robot-ros2-runtime-communication.tsx", "src/pages/articles/ai/paper-spine/robotRuntimeSpecs.tsx"],
+      "verification": { "expected": "minimum scale >= 0.75 at 360 px and no raw LaTeX or overflow", "actual": "concept 0.76 and paper 0.77 at 360 px; KaTeX errors, annotation misses, raw LaTeX, and overflow are zero." }
+    },
+    {
+      "event_id": "qa.executor-label.001",
+      "phase": "qa_repair",
+      "observed": "Full callback names inside short timeline bars clipped at narrow widths and the terminal 100 ms tick crossed the edge.",
+      "inference": "Time bars need stable glyph labels with an external legend; endpoint ticks need edge-aware alignment.",
+      "decision": "Use I/W/F bar glyphs with a legend and right-align the final tick inside the timeline.",
+      "changed_files": ["src/pages/articles/ai/robot-ros2-runtime/viz/RobotRos2RuntimeViz.tsx"],
+      "verification": { "expected": "No clipped label at 360-1440 px", "actual": "Automated clipping checks are zero and mobile/desktop screenshots preserve timeline identity." }
+    },
+    {
+      "event_id": "qa.lifecycle-layout.001",
+      "phase": "qa_repair",
+      "observed": "Five lifecycle states forced into one narrow desktop half-panel broke state names one letter at a time.",
+      "inference": "The problem was column density rather than font size; shrinking type would weaken hierarchy and still leave fragile wrapping.",
+      "decision": "Use a two-column mobile and three-column desktop state grid.",
+      "changed_files": ["src/pages/articles/ai/robot-ros2-runtime/viz/RobotRos2RuntimeViz.tsx"],
+      "verification": { "expected": "State names remain whole and the panel stays balanced", "actual": "UNCONFIGURED, INACTIVE, ACTIVE, ERROR, and FINALIZED render intact in the reviewed 1440 px screenshot." }
+    },
+    {
+      "event_id": "deploy.public.001",
+      "phase": "deployment_verification",
+      "observed": "Local implementation and QA cannot prove the public service is serving the same build.",
+      "inference": "The service must restart and the public host must repeat HTTP, viewport, math, interaction, and category checks.",
+      "decision": "Restart cm-blog.service only after lint/build pass, then run public Playwright QA at 390 and 1440 px.",
+      "changed_files": [],
+      "verification": { "expected": "HTTP 200 and zero public rendering defects", "actual": "Service active after restart at 14:30 KST; concept, paper, and robotics list return 200; public viewport, interaction, and category checks pass." }
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-ros2-runtime-communication.md",
+    "concept_article": "src/pages/articles/ai/robot-ros2-runtime-communication.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-ros2-runtime/viz/RobotRos2RuntimeViz.tsx",
+    "paper_spec": "src/pages/articles/ai/paper-spine/robotRuntimeSpecs.tsx",
+    "paper_viz": "src/pages/articles/ai/paper-spine/viz/CasiniProcessingChainLab.tsx",
+    "paper_article": "src/pages/articles/ai/paper-casini-ros2-response-time-2019.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "research_tracking": "knowledge/research-pipeline/topics.json",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-ros2-runtime-communication.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-ros2-runtime-communication-report.md",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "implementation_decisions": [
+    "Order the article by causal runtime flow, not ROS 2 command taxonomy.",
+    "Treat interface shape and semantic validity as separate contracts.",
+    "Separate discovery, match, readiness, freshness, health, and safety into observable gates.",
+    "Teach reliable delivery and fresh delivery as independent properties.",
+    "Represent executor behavior as readiness, group eligibility, thread availability, and non-preemptive callback execution rather than a global FIFO.",
+    "Keep lifecycle management visible while functional publications and actuation remain gated.",
+    "Present intra-process optimization as an ownership and fault-boundary decision, not free zero copy.",
+    "Use acquisition time for geometry and ROS/System/Steady clocks only for their defined responsibilities.",
+    "Distinguish middleware QoS events, empirical latency, and analytical end-to-end response bounds.",
+    "Put Korean operation rationale inside every display formula and use FormulaNote for symbols, units, assumptions, and failure boundaries.",
+    "Use semantic color, restrained line weights, stable dimensions, and measured outcomes; reserve red for violated invariants.",
+    "Separate Casini's historical executor model from current ROS 2 operational guidance."
+  ],
+  "qa": {
+    "targeted_lint": "passed for concept, concept Viz, paper spec/Viz/wrapper, metadata, curriculum, learning paths, and top-down bridge",
+    "production_build": "passed; pre-existing chunks larger than 900 kB warning remains",
+    "local_viewports": {
+      "360": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 0.76, "paper_min_math_scale": 0.77, "inner_scroll": 0, "clipped_text": 0, "console_errors": 0 },
+      "390": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 0.85, "paper_min_math_scale": 0.86, "inner_scroll": 0, "clipped_text": 0, "console_errors": 0 },
+      "768": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1, "inner_scroll": 0, "clipped_text": 0, "console_errors": 0 },
+      "1440": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1, "inner_scroll": 0, "clipped_text": 0, "console_errors": 0 }
+    },
+    "interaction_checks": "All nine concept labs and the paper processing-chain lab changed visible measured state.",
+    "visual_review": "Nine mobile and nine desktop concept labs plus the paper lab were inspected; the lifecycle desktop density defect was repaired and re-inspected.",
+    "public_deployment": {
+      "service": "cm-blog.service active after restart at 2026-07-19 14:30 KST",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-ros2-runtime-communication",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-casini-ros2-response-time-2019",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai?sub=ai-robotics"
+      ],
+      "http_status": 200,
+      "browser_checks": "360, 390, 768, and 1440 px public article checks repeat zero overflow, KaTeX errors, annotation misses, inner scroll, clipped text, raw LaTeX, and console errors; concept minimum math scale is 0.76 and paper minimum is 0.77 at 360 px.",
+      "interactions": "All nine concept labs and the paper processing-chain lab changed visible state on the public host.",
+      "category_integration": "At 390 and 1440 px the ai-robotics list has zero overflow, no console errors, and contains both article links."
+    }
+  },
+  "next_phase": "After public verification, audit the next unresolved robotics prerequisite and preserve the same source-bound, transfer-gated, paper-spine workflow."
+}

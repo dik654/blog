@@ -1,0 +1,52 @@
+import { useId, useState, type ReactNode } from 'react';
+import { BookOpenCheck, FlaskConical } from 'lucide-react';
+import { MetricGrid, SegmentedControl } from '../../nlp-shared';
+
+const clamp=(value:number,min:number,max:number)=>Math.min(max,Math.max(min,value));
+const fmt=(value:number,digits=1)=>Number.isFinite(value)?value.toFixed(digits):'n/a';
+
+function Range({label,value,min,max,step=1,unit='',onChange}:{label:string;value:number;min:number;max:number;step?:number;unit?:string;onChange:(value:number)=>void}){
+  return <label className="block min-w-0"><span className="mb-2 flex items-center justify-between gap-3 text-xs font-semibold"><span>{label}</span><span className="shrink-0 font-mono text-muted-foreground">{value}{unit}</span></span><input className="h-2 w-full cursor-pointer accent-blue-600" type="range" value={value} min={min} max={max} step={step} onChange={event=>onChange(Number(event.target.value))}/></label>;
+}
+
+function SourceLab({source,title,status,children,metrics}:{source:string;title:string;status:string;children:ReactNode;metrics:Array<{label:string;value:string;accent?:boolean}>}){
+  return <figure className="foundation-viz-explorer not-prose my-8 overflow-hidden rounded-md border border-border bg-background">
+    <figcaption className="grid min-w-0 gap-2 border-b border-border py-4 pl-4 pr-16 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:pl-6 sm:pr-20"><span className="flex items-center gap-2 font-mono text-xs font-black text-blue-700 dark:text-blue-300"><BookOpenCheck className="h-4 w-4"/>{source}</span><strong className="min-w-0 break-words text-sm leading-snug sm:text-center">{title}</strong><span className="whitespace-nowrap text-[10px] font-black text-teal-700 dark:text-teal-300 sm:text-right">{status}</span></figcaption>
+    {children}<div className="border-t border-border p-4 sm:p-6"><MetricGrid mobileColumns={2} items={metrics}/></div>
+  </figure>;
+}
+
+function PlotFrame({label,children}:{label:string;children:ReactNode}){
+  return <div className="relative h-72 min-w-0 overflow-hidden rounded-md border border-border bg-[linear-gradient(to_right,rgba(148,163,184,.14)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,.14)_1px,transparent_1px)] bg-[size:16.66%_25%]"><span className="absolute left-3 top-3 z-10 text-[10px] font-black text-muted-foreground">{label}</span>{children}</div>;
+}
+
+type HamrockRegime='IR'|'VR'|'IE'|'VE';
+const regimeData:Record<HamrockRegime,{ko:string;viscous:boolean;elastic:boolean;claim:string;color:string}>={
+  IR:{ko:'등점성-강체',viscous:false,elastic:false,claim:'geometry가 film parameter를 지배',color:'#64748b'},
+  VR:{ko:'점성-강체',viscous:true,elastic:false,claim:'pressure-viscosity 효과, elastic deformation 무시',color:'#7c3aed'},
+  IE:{ko:'등점성-탄성',viscous:false,elastic:true,claim:'elastic deformation, pressure-viscosity 변화 무시',color:'#2563eb'},
+  VE:{ko:'점성-탄성',viscous:true,elastic:true,claim:'viscosity and elastic effects 모두 중요',color:'#0d9488'},
+};
+
+export function HamrockDowson1978Lab(){
+  const[regime,setRegime]=useState<HamrockRegime>('VE');const[k,setK]=useState(3);const[contour,setContour]=useState(55);const d=regimeData[regime];const x=d.viscous?382+contour*.9:105+contour*.9,y=d.elastic?78+contour*.2:185+contour*.2;
+  return <SourceLab source="NASA TP-1342" title="네 limiting equation을 하나의 regime map으로 조립한다" status="26 PDF PAGES" metrics={[{label:'Selected regime',value:`${regime} · ${d.ko}`},{label:'Viscosity effect',value:d.viscous?'retained':'neglected in limit'},{label:'Elastic effect',value:d.elastic?'retained':'neglected in limit'},{label:'Author claim',value:d.claim}]}>
+    <div className="grid gap-6 p-4 sm:p-6 lg:grid-cols-[minmax(0,.78fr)_minmax(0,1.22fr)]"><div className="space-y-5"><SegmentedControl label="1978 film regime" value={regime} onChange={setRegime} options={[{value:'IR',label:'IR'},{value:'VR',label:'VR'},{value:'IE',label:'IE'},{value:'VE',label:'VE'}]}/><Range label="Ellipticity k" value={k} min={1} max={6} step={1} onChange={setK}/><Range label="Film contour proxy" value={contour} min={10} max={90} unit="%" onChange={setContour}/><p className="text-xs leading-relaxed text-muted-foreground">Figures 2-6은 k=1,2,3,4,6에서 gV-gE log grid에 H-hat contour and regime boundaries를 겹친다. 이 lab은 topology를 재구성하며 원문 좌표의 수치 digitization을 주장하지 않는다.</p></div><PlotFrame label={`REGIME MAP TOPOLOGY · k=${k}`}><svg viewBox="0 0 620 288" className="h-full w-full [&_text]:text-[23px] sm:[&_text]:text-[18px]"><rect x="72" y="52" width="238" height="98" fill="#dbeafe" opacity={regime==='IE'?.8:.3}/><rect x="310" y="52" width="238" height="98" fill="#ccfbf1" opacity={regime==='VE'?.8:.3}/><rect x="72" y="150" width="238" height="98" fill="var(--muted)" fillOpacity={regime==='IR'?.88:.35}/><rect x="310" y="150" width="238" height="98" fill="#ede9fe" opacity={regime==='VR'?.8:.3}/><path d={`M72 ${206-k*3}C190 ${194-k*4} 210 ${145-k*2} 310 148C402 148 438 ${112+k*2} 548 ${96+k*2}`} fill="none" stroke="#d97706" strokeWidth="4"/><path d={`M72 ${228-contour*.25}C220 ${206-contour*.35} 360 ${178-contour*.45} 548 ${92-contour*.35}`} fill="none" stroke="#2563eb" strokeWidth="3" strokeDasharray="8 5"/><circle cx={x} cy={y} r="10" fill="var(--background)" stroke={d.color} strokeWidth="5"/><text x="91" y="86" fontSize="18" fontWeight="800" fill="#1d4ed8">IE 등점성-탄성</text><text x="329" y="86" fontSize="18" fontWeight="800" fill="#0f766e">VE 점성-탄성</text><text x="91" y="224" fontSize="18" fontWeight="800" fill="var(--muted-foreground)">IR 등점성-강체</text><text x="329" y="224" fontSize="18" fontWeight="800" fill="#6d28d9">VR 점성-강체</text><text x="414" y="274" fontSize="17" fill="var(--muted-foreground)">gV 점성 변수 →</text><text x="25" y="150" fontSize="17" fill="var(--muted-foreground)" transform="rotate(-90 25 150)">gE 탄성 변수 →</text></svg></PlotFrame></div>
+  </SourceLab>;
+}
+
+type SkfRig='fretting'|'raceway'|'flange'|'bearing';
+type Surface='steel'|'TBO'|'MnPh'|'ZnCaPh';
+const skfData:Record<Surface,{label:string;outside:number;raceway:number;flange:number;hardness:number;color:string}>={
+  steel:{label:'Steel',outside:220,raceway:182,flange:198,hardness:8.98,color:'#64748b'},
+  TBO:{label:'TBO',outside:208,raceway:125,flange:80,hardness:2.5,color:'#2563eb'},
+  MnPh:{label:'MnPh',outside:1057,raceway:225,flange:150,hardness:1.49,color:'#d97706'},
+  ZnCaPh:{label:'ZnCaPh',outside:858,raceway:185,flange:185,hardness:2.73,color:'#7c3aed'},
+};
+
+export function SkfConversionLayers2023Lab(){
+  const id=useId().replaceAll(':','');const[rig,setRig]=useState<SkfRig>('bearing');const[surface,setSurface]=useState<Surface>('TBO');const d=skfData[surface];const track=rig==='flange'?d.flange:d.raceway;const smooth=(1-track/d.outside)*100;const pressure=rig==='fretting'?1:rig==='raceway'?1.3:rig==='flange'?.27:NaN;const result=surface==='TBO'?(rig==='bearing'?'lowest measured torque':'lowest friction from the start'):surface==='steel'?'baseline':track>d.outside*.5?'running-in dependent':'lower track roughness';
+  return <SourceLab source="SKF RTD · COATINGS 2023" title="Surface placement → running-in → roughness → friction torque를 추적한다" status="3 RIG LEVELS" metrics={[{label:'Selected surface',value:d.label},{label:'Track roughness',value:`${track} nm`},{label:'Roughness change',value:`${fmt(smooth,0)}% smoother`,accent:smooth>30},{label:'Bounded result',value:result}]}>
+    <div className="p-4 sm:p-6"><div className="flex flex-wrap gap-3"><SegmentedControl label="SKF test level" value={rig} onChange={setRig} options={[{value:'fretting',label:'Fretting'},{value:'raceway',label:'WAM raceway'},{value:'flange',label:'WAM flange'},{value:'bearing',label:'Double CRB'}]}/><SegmentedControl label="Conversion layer" value={surface} onChange={setSurface} options={[{value:'steel',label:'Steel'},{value:'TBO',label:'TBO'},{value:'MnPh',label:'MnPh'},{value:'ZnCaPh',label:'ZnCaPh'}]}/></div><div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,.78fr)_minmax(0,1.22fr)]"><div className="space-y-4"><div className="rounded-md border border-border p-4"><div className="flex items-center gap-2 text-xs font-black text-muted-foreground"><FlaskConical className="h-4 w-4"/>DECLARED TEST STATE</div><p className="mt-3 text-sm font-semibold leading-relaxed">{rig==='fretting'?'15.3 N · initial 1 GPa · 100 µm stroke · 20 Hz · room temperature':rig==='raceway'?'1.3 GPa · 0.5 m/s · SRR 5% · λ 0.3 · 60°C · 70 h':rig==='flange'?'0.27 GPa · 0.3 m/s · SRR 9.6% + spin · λ 0.3 · 60°C · 4.5 h':'NU2207 + NJ2207 · 7000 N radial · 300-4500 rpm · grease · 60°C'}</p></div><p className="text-xs leading-relaxed text-muted-foreground">Softer conversion layer를 rougher disk/ring에 놓는 hypothesis를 single-contact and full-bearing levels에서 반복한다. TBO의 낮은 initial roughness가 MnPh/ZnCaPh보다 중요한 차이로 남는다.</p><p className="text-xs leading-relaxed text-amber-700 dark:text-amber-300">{Number.isFinite(pressure)?`Initial contact pressure ${pressure} GPa. `:''}Lubricant chemistry interaction은 저자 해석 범위 밖이다.</p></div><PlotFrame label="OUTSIDE TRACK → RUNNING TRACK ROUGHNESS"><svg viewBox="0 0 620 288" className="h-full w-full [&_text]:text-[23px] sm:[&_text]:text-[18px]"><defs><marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#0d9488"/></marker></defs><g transform="translate(72 58)"><rect x="0" y="0" width="190" height="165" rx="7" fill="var(--muted)" stroke="var(--border)"/><rect x="286" y="0" width="190" height="165" rx="7" fill="#ccfbf1" fillOpacity=".42" stroke="#0d9488"/><path d={Array.from({length:15},(_,i)=>`${i?'L':'M'}${10+i*12} ${82+Math.sin(i*1.8)*clamp(d.outside/14,10,67)}`).join(' ')} fill="none" stroke={d.color} strokeWidth="4"/><path d={Array.from({length:15},(_,i)=>`${i?'L':'M'}${296+i*12} ${82+Math.sin(i*1.8)*clamp(track/14,6,67)}`).join(' ')} fill="none" stroke={d.color} strokeWidth="4"/><text x="18" y="145" fontSize="18" fontWeight="800" fill="var(--muted-foreground)">도포 뒤 {d.outside} nm</text><text x="304" y="145" fontSize="18" fontWeight="800" fill="#0f766e">흔적 {track} nm</text><path d="M204 82H272" stroke="#0d9488" strokeWidth="4" markerEnd={`url(#${id}-arrow)`}/><text x="218" y="66" fontSize="16" fontWeight="700" fill="#0f766e">적응</text></g><text x="74" y="263" fontSize="17" fill="var(--muted-foreground)">경도 {fmt(d.hardness,2)} GPa</text><text x="324" y="263" fontSize="17" fill="var(--muted-foreground)">배치·초기 표면 상태 보존</text></svg></PlotFrame></div></div>
+  </SourceLab>;
+}

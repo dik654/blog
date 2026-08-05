@@ -33,7 +33,7 @@ export default function ProofAggViz() {
                 stroke={c.color} strokeWidth={0.8}
                 animate={{ opacity: step >= 1 ? 0.5 : 0.1 }} transition={sp} />
               {i > 0 && step >= 0 && (
-                <motion.circle r={2} fill={c.color}
+                <motion.circle initial={false} r={2} fill={c.color}
                   animate={{ cx: [CHUNKS[i-1].x + 65, c.x], cy: [25, 25] }}
                   transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 2 }} />
               )}

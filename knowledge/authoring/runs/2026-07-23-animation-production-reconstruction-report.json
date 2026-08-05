@@ -1,0 +1,70 @@
+{
+  "date": "2026-07-23",
+  "scope": "ai-open-models-animation",
+  "observed": [
+    "a vendor-specific LTX project incorrectly opened a model-independent animation path",
+    "five short articles named stages without connecting failure ownership or release evidence",
+    "LoRA versus IC-LoRA and delivery FPS versus authored cadence were easy to conflate"
+  ],
+  "decided": {
+    "entry": "animation-production-workflow",
+    "path": [
+      "production-contract",
+      "dataset-unit",
+      "condition-signal",
+      "adaptation-control",
+      "temporal-finishing",
+      "evaluation-release"
+    ],
+    "runtime_rule": "the learning order defines shared vocabulary; a production trace may skip or repeat stages by earliest failure owner",
+    "history_cap": "LoRA, AnimeInterp and RIFE are the minimum mechanism spine; newer animation papers are scoped evidence rather than mandatory ancestry"
+  },
+  "claude": {
+    "transport": "context-manager /api/chat",
+    "model": "claude-sonnet-4-6",
+    "attempts": 1,
+    "result": "provider_error_all_providers_failed",
+    "direct_cli_used": false,
+    "review_incorporated": false
+  },
+  "verified": {
+    "focused_tests": "9/9",
+    "related_tests": "56/56",
+    "viewports": [390, 768, 1440],
+    "routes_sampled": 9,
+    "document_overflow": 0,
+    "console_errors": 0,
+    "mobile_min_formula_scale": 0.92,
+    "build_modules": 9390,
+    "public_routes_http_200": 7,
+    "public_tests": "9/9",
+    "learning_flow_registered": 589,
+    "global_release_blockers_remaining": 29,
+    "global_enrichment_backlog_remaining": 529
+  },
+  "small_model_packet": {
+    "worker_4b": [
+      "reader_decision",
+      "entry_failure",
+      "artifact",
+      "invariant",
+      "measurement",
+      "source_claim",
+      "source_boundary",
+      "next_handoff"
+    ],
+    "reviewer_9b": [
+      "failure_owner",
+      "stage_can_skip",
+      "stage_must_repeat",
+      "hard_gate",
+      "promotion_risk"
+    ],
+    "orchestrator": [
+      "metadata",
+      "responsive_qa",
+      "source_freshness",
+      "deployment"
+    ]
+  }
+}

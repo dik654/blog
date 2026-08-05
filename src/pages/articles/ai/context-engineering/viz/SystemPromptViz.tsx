@@ -46,7 +46,7 @@ export default function SystemPromptViz() {
           })}
 
           {/* active indicator dot */}
-          <motion.circle r={4}
+          <motion.circle initial={false} r={4}
             animate={{
               cx: LX - 12,
               cy: LAYERS[step].y + LH / 2,

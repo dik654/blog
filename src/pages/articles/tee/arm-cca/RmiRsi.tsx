@@ -1,4 +1,6 @@
 import RmiRsiViz from './viz/RmiRsiViz';
+import SmcHvcCompareViz from './viz/SmcHvcCompareViz';
+import RipasStateViz from './viz/RipasStateViz';
 
 export default function RmiRsi() {
   return (
@@ -18,32 +20,7 @@ export default function RmiRsi() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SMC / HVC 명령 차이</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// SMC (Secure Monitor Call) — EL3로 트랩
-// - Host(Non-secure EL2) → Monitor(EL3)
-// - Monitor가 RMM에 delegate
-//
-// HVC (Hypervisor Call) — EL2로 트랩
-// - Realm(EL1) → RMM(EL2 Realm)
-// - 직접 RMM 진입
-
-// Host의 RMI 호출 (arch/arm64/kvm/rme-io.c)
-static inline int arm_smccc_1_1_invoke(u32 func_id, unsigned long a1, ...) {
-    struct arm_smccc_res res;
-    arm_smccc_1_1_smc(func_id, a1, a2, a3, a4, a5, a6, a7, &res);
-    return res.a0;
-}
-
-// 예: Realm 생성
-int rmi_realm_create(u64 rd, u64 params_ptr) {
-    return arm_smccc_1_1_invoke(SMC_RMI_REALM_CREATE, rd, params_ptr);
-}
-
-// Realm Guest의 RSI 호출
-static inline void rsi_call(u64 fid, struct arm_smccc_res *res, ...) {
-    asm volatile("hvc #0"
-                 : "=r"(res->a0), "=r"(res->a1)
-                 : "r"(fid), "r"(a1), "r"(a2), ...);
-}`}</pre>
+        <div className="not-prose mb-4"><SmcHvcCompareViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">RMI 함수 카탈로그</h3>
         <div className="overflow-x-auto">
@@ -164,39 +141,7 @@ static inline void rsi_call(u64 fid, struct arm_smccc_res *res, ...) {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">RIPAS — Realm IPA State</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Realm Guest가 IPA 페이지 상태 관리
-
-enum ripas {
-    RIPAS_EMPTY,         // 미할당 (접근 시 fault)
-    RIPAS_RAM,           // 실제 메모리 (접근 가능)
-    RIPAS_DESTROYED      // 이전 RAM이었으나 제거됨
-};
-
-// Guest가 메모리 확장 요청
-// arch/arm64/kernel/rsi.c
-
-int set_memory_encrypted(unsigned long addr, int numpages) {
-    for (i = 0; i < numpages; i++) {
-        ipa = __pa(addr + i * PAGE_SIZE);
-        rsi_ipa_state_set(ipa, ipa + PAGE_SIZE, RIPAS_RAM);
-    }
-    return 0;
-}
-
-int set_memory_decrypted(unsigned long addr, int numpages) {
-    for (i = 0; i < numpages; i++) {
-        ipa = __pa(addr + i * PAGE_SIZE);
-        /* Unprotected IPA로 이동 (top bit 설정) */
-        unprotected_ipa = ipa | (1UL << (realm_ipa_bits - 1));
-        /* 매핑 변경 필요 → HOST_CALL */
-    }
-    return 0;
-}
-
-// Top bit = Unprotected 표시 (Shared)
-// Protected IPA: [0 .. 2^(ipa_bits-1))       → Realm private
-// Unprotected IPA: [2^(ipa_bits-1) .. 2^ipa_bits) → Host shared
-// → Intel TDX의 Shared bit와 대응`}</pre>
+        <div className="not-prose mb-4"><RipasStateViz /></div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: RMI/RSI 분리의 의의</p>

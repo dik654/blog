@@ -1,0 +1,41 @@
+{
+  "run": "2026-07-21-reasoning-post-training-current-first",
+  "objective": "Explain reasoning post-training through reward, exploration, compute axes, and monitorability instead of an algorithm glossary.",
+  "articles": [
+    "reasoning-post-training-frontier",
+    "post-training-rlvr",
+    "rlhf",
+    "rl-ppo-continuous-control",
+    "open-r1"
+  ],
+  "private_tests": [
+    "Format reward passes a wrong answer while outcome reward rejects it",
+    "All-equal group rewards produce zero GRPO advantages",
+    "Checker exploit versus correct answer with disconnected visible reasoning"
+  ],
+  "critic_fixes": [
+    "Connected script arguments to the mirrored GRPO config",
+    "Made exact tag reward and fail-closed parsing consistent with the article",
+    "Separated PPO clipping epsilon from GRPO standardization stabilizer",
+    "Rebuilt unreadable mobile rollout and reward visualizations"
+  ],
+  "qa": {
+    "routes": 4,
+    "desktop_mobile_checks": 8,
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "viz_audit_errors": 0,
+    "narrative_audit_errors": 0
+  },
+  "small_model_pipeline": [
+    "inventory",
+    "ownership_map",
+    "current_anchor",
+    "bounded_foundation",
+    "private_transfer_tests",
+    "prose_and_viz_contracts",
+    "code_fact_audit",
+    "responsive_and_katex_audit",
+    "deploy_and_public_acceptance"
+  ]
+}

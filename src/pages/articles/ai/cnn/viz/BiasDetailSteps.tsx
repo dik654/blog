@@ -177,7 +177,7 @@ export function DilatedAndDepthwise() {
         transition={{ delay: 0.5 }}>
         <rect x={245} y={70} width={235} height={56} rx={6}
           fill="var(--card)" stroke="var(--border)" strokeWidth={0.5} />
-        <text x={260} y={86} fontSize={9} fontWeight={600} fill={C.fc || '#ef4444'}>
+        <text x={260} y={86} fontSize={9} fontWeight={600} fill="#ef4444">
           일반 Conv
         </text>
         <text x={260} y={100} fontSize={7} fill="var(--muted-foreground)">

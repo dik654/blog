@@ -46,11 +46,11 @@ export function StepStructured({ cx }: { cx: number }) {
       <rect x={260} y={40} width={160} height={60} rx={6}
         fill="#10b98110" stroke="#10b981" strokeWidth={1.5} />
       <text x={340} y={60} textAnchor="middle" fontSize={9}
-        fontWeight={600} fill="#10b981">안정적 출력</text>
+        fontWeight={600} fill="#10b981">역할이 보이는 입력</text>
       <text x={340} y={78} textAnchor="middle" fontSize={9}
-        fill="var(--muted-foreground)">매 실행 동일 구조</text>
+        fill="var(--muted-foreground)">출력은 별도 검증</text>
       <text x={cx} y={140} textAnchor="middle" fontSize={9}
-        fill="#10b981" fontWeight={600}>역할 · 입력 · 출력 · 규칙 명확 분리</text>
+        fill="#10b981" fontWeight={600}>역할 표시 → parser · validator로 확인</text>
     </motion.g>
   );
 }

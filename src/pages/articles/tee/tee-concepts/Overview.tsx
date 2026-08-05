@@ -1,4 +1,7 @@
 import ContextViz from './viz/ContextViz';
+import TEEDefinitionViz from './viz/TEEDefinitionViz';
+import UseCasesViz from './viz/UseCasesViz';
+import AltTechViz from './viz/AltTechViz';
 
 export default function Overview() {
   return (
@@ -16,34 +19,9 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TEE란 무엇인가</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// TEE = Trusted Execution Environment
-// 정의: CPU 하드웨어가 강제하는 격리된 실행 환경
-
-// 3대 속성
-// 1) Confidentiality (기밀성)
-//    - TEE 내부 메모리가 암호화됨
-//    - 외부(Host, HV)는 암호문만 관측
-//
-// 2) Integrity (무결성)
-//    - TEE 코드·데이터 변조 탐지
-//    - 공격 시도 시 실행 중단
-//
-// 3) Attestation (증명)
-//    - TEE가 "나 이 코드 실행 중" 원격 증명
-//    - 원격 당사자가 암호학적 검증 가능
-
-// 4번째 필수 속성 (implicit)
-// 4) Tamper resistance
-//    - 물리 공격 방어 (제한적)
-//    - Cold boot, DRAM probe 등
-
-// TEE vs 일반 VM
-//                  일반 VM      TEE
-// 메모리 암호화      X            O
-// Host 메모리 접근    O            X
-// Hypervisor 신뢰    O            X
-// 원격 증명          X            O
-// CPU TCB 포함       X            O`}</pre>
+      </div>
+      <div className="not-prose my-6"><TEEDefinitionViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TEE 기술 스펙트럼</h3>
         <div className="overflow-x-auto">
@@ -104,60 +82,14 @@ export default function Overview() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주요 사용 사례</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 1. Confidential Computing (가장 널리 사용)
-//    - 클라우드 VM 내부 기밀 유지
-//    - 의료·금융 데이터 처리
-//    - Multi-party computation
-//    - Examples: Azure Confidential VMs, AWS Nitro
-
-// 2. 블록체인·Web3
-//    - 기밀 스마트 컨트랙트 (Oasis, Secret)
-//    - Off-chain computation (Phala)
-//    - Private voting, sealed-bid auctions
-//    - MEV 보호
-
-// 3. DRM (Digital Rights Management)
-//    - Netflix Widevine L1 (TrustZone)
-//    - Apple FairPlay (Secure Enclave)
-//    - 모바일 미디어 재생
-
-// 4. Key Management
-//    - Hardware-backed keystore
-//    - Digital signatures (code signing)
-//    - Certificate authority
-//    - Apple Secure Enclave, Google Titan
-
-// 5. Biometric authentication
-//    - Fingerprint, Face ID 처리
-//    - TrustZone Trusted Apps
-//    - Apple Secure Enclave Processor
-
-// 6. Federated Learning
-//    - 프라이버시 보존 ML 훈련
-//    - 개별 데이터 공개 없이 모델 학습
-//    - Intel SGX + homomorphic`}</pre>
+      </div>
+      <div className="not-prose my-6"><UseCasesViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TEE vs 대안 기술</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// TEE vs Homomorphic Encryption (FHE)
-//   TEE: 빠름 (native 성능의 90%+), HW 신뢰 필요
-//   FHE: 매우 느림 (10^4~10^6x), 수학적 보안만
-//   → 대부분 사용 사례는 TEE 현실적
-
-// TEE vs Multi-Party Computation (MPC)
-//   TEE: 단일 CPU, 하드웨어 TCB
-//   MPC: 여러 node 분산, 암호학 기반
-//   → TEE가 레이턴시 낮음
-//   → MPC는 collusion-resistant
-
-// TEE vs Zero-Knowledge Proof (ZKP)
-//   TEE: confidential execution
-//   ZKP: correctness 증명, input 공개 안 함
-//   → 보완적 관계 (TEE + ZKP 하이브리드 증가)
-
-// TEE + 다른 기술 조합
-// - TEE + HE: SGX 안에서 HE 연산 → 성능 10x
-// - TEE + MPC: 각 MPC 노드가 TEE → threshold 완화
-// - TEE + ZK: TEE 측정값 + ZK proof → 검증 단순화`}</pre>
+      </div>
+      <div className="not-prose my-6"><AltTechViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: TEE 신뢰 패러독스</p>

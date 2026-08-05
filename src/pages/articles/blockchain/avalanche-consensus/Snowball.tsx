@@ -18,7 +18,7 @@ function SnowballViz() {
             <text x={30} y={25 + i * 35} fontSize={10} fontWeight={600} fill={c.color}>{c.label}</text>
             <rect x={140} y={13 + i * 35} width={200} height={16} rx={4}
               fill="var(--border)" opacity={0.3} />
-            <motion.rect x={140} y={13 + i * 35} width={0} height={16} rx={4}
+            <motion.rect initial={false} x={140} y={13 + i * 35} width={0} height={16} rx={4}
               fill={`${c.color}40`} stroke={c.color} strokeWidth={1}
               animate={{ width: (c.value / c.max) * 200 }}
               transition={{ delay: i * 0.2, duration: 0.5 }} />

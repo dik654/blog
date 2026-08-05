@@ -44,7 +44,7 @@ export default function RAGPipelineViz() {
 
           {/* flowing packet */}
           {step <= 4 && (
-            <motion.circle r={5}
+            <motion.circle initial={false} r={5}
               animate={{ cx: PIPELINE_NODES[step].x + BW / 2, cy: CY - BH / 2 - 10 }}
               transition={{ type: 'spring', bounce: 0.2 }}
               fill={PIPELINE_NODES[step].color}

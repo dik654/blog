@@ -1,0 +1,128 @@
+{
+  "run_id": "2026-07-20-sidebar-information-architecture",
+  "status": "complete_and_publicly_verified",
+  "superseded_by": "2026-07-20-systematic-topdown-curriculum",
+  "correction": "AI 전체 지도 is the only map-stage item; 지식 시스템 and 로봇 AI are target-stage items.",
+  "objective": "Remove the mixed top-down and bottom-up implication from the blog sidebar and expose one coherent navigation model.",
+  "observed_conflicts": [
+    "all nine categories were flattened under 도메인 지식",
+    "AI Systems from Scratch appeared before bottom-up Foundations without a declared relationship",
+    "current capability, prerequisite and implementation tracks shared one undifferentiated list",
+    "category index order did not explain sidebar intent",
+    "active ?sub= routes did not highlight their exact sidebar location",
+    "category links were nested inside expand buttons"
+  ],
+  "navigation_contract": {
+    "root_semantics": "architectural layers, not a mandatory reading sequence",
+    "root_layers": [
+      {
+        "id": "foundation",
+        "label": "컴퓨팅 기반",
+        "categories": ["systems", "gpu", "crypto", "p2p"]
+      },
+      {
+        "id": "capability",
+        "label": "모델 · 신뢰 시스템",
+        "categories": ["ai", "blockchain", "tee"]
+      },
+      {
+        "id": "operations",
+        "label": "운영 · 통제",
+        "categories": ["ops", "isms-aml"]
+      }
+    ],
+    "category_semantics": "top-down route from map and target to just-in-time foundations and implementation",
+    "ai_stages": [
+      { "id": "map", "order": "00", "label": "전체 지도" },
+      { "id": "target", "order": "01", "label": "목표 분야" },
+      { "id": "foundation", "order": "02", "label": "필요한 기반" },
+      { "id": "build", "order": "03", "label": "구현 · 운영" }
+    ],
+    "fallback_count": 0
+  },
+  "events": [
+    {
+      "id": "ia.root.001",
+      "observed": "A flat domain list made category order look like an accidental learning sequence.",
+      "inference": "The root must answer where a subject sits in the system stack, not what every reader must study first.",
+      "decision": "Group categories into computing foundation, model/trust systems and operations/control.",
+      "verification": "Tests assert the three layer IDs and all nine category placements at four viewports."
+    },
+    {
+      "id": "ia.category.001",
+      "observed": "AI mixed top-down maps, foundational courses, modern systems and implementation tracks.",
+      "inference": "One explicit category-level direction is required.",
+      "decision": "Use map -> target -> required foundation -> implementation/operations.",
+      "verification": "Sidebar and AI category index expose the same four stage IDs and order."
+    },
+    {
+      "id": "ia.active.001",
+      "observed": "A category query highlighted AI but not the selected foundation subcategory.",
+      "inference": "A hierarchy is not useful if it cannot show the reader's current location.",
+      "decision": "Propagate the active sub query recursively through sidebar branches.",
+      "verification": "Mobile and desktop tests assert open state, foundation stage ancestry and active styling."
+    },
+    {
+      "id": "ia.accessibility.001",
+      "observed": "Category links were nested inside a button and expand icons were hand-drawn.",
+      "inference": "Navigation and disclosure are separate commands and need separate controls.",
+      "decision": "Split the link and disclosure button and use Lucide icons with explicit labels and aria-expanded.",
+      "verification": "Build and browser tests pass; the selected route remains reachable on mobile and desktop."
+    },
+    {
+      "id": "ia.visual.001",
+      "observed": "Long Korean labels competed with a narrow 224-pixel rail.",
+      "inference": "More hierarchy in the same width would create clipping or unreadably small text.",
+      "decision": "Use a 256-pixel desktop rail, compact numbered stage headers and stable row dimensions.",
+      "verification": "360, 390, 768 and 1440 pixel audits report zero horizontal overflow."
+    }
+  ],
+  "qa": {
+    "viewports": [360, 390, 768, 1440],
+    "focused_playwright": "8/8 passed",
+    "full_local_playwright": "155/155 passed in 34.4 seconds",
+    "public_focused_playwright": "8/8 passed in 7.0 seconds",
+    "production_build": "passed in 19.71 seconds; existing large-chunk warning remains",
+    "typescript": "21 pre-existing unrelated diagnostics remain; no changed sidebar, category or navigation file was reported",
+    "deployment": "cm-blog.service active after restart at 20:14:40 KST; blog root and AI foundation routes HTTP 200",
+    "invariants": [
+      "root layers appear in the declared order",
+      "all nine categories are claimed exactly once",
+      "AI stages appear in map-target-foundation-build order",
+      "active subcategory opens and highlights recursively",
+      "category index mirrors sidebar stages",
+      "zero document horizontal overflow",
+      "zero sidebar horizontal overflow"
+    ]
+  },
+  "small_model_replay": {
+    "four_b_scope": "classify one subcategory as map, target, foundation or build and justify one strict dependency",
+    "nine_b_scope": "classify and order one complete category, then audit unclaimed items and dependency cycles",
+    "immutable_fields": [
+      "subcategory slug",
+      "reader capability after completion",
+      "strict prerequisites",
+      "declared curriculum floor",
+      "public visibility"
+    ],
+    "orchestrator_only": [
+      "cross-category layer design",
+      "global top-down policy",
+      "dependency-cycle resolution",
+      "fallback audit",
+      "navigation naming consistency",
+      "responsive browser QA",
+      "deployment"
+    ]
+  },
+  "artifacts": {
+    "structure": "src/content/sidebar-learning-structure.ts",
+    "layers": "src/content/category-groups.ts",
+    "sidebar": "src/components/Sidebar.tsx",
+    "category_item": "src/components/sidebar/CategoryItem.tsx",
+    "subcategory_item": "src/components/sidebar/SubcategoryItem.tsx",
+    "category_page": "src/pages/CategoryPage.tsx",
+    "qa": "tests/sidebar-information-architecture.spec.ts",
+    "report": "knowledge/authoring/runs/2026-07-20-sidebar-information-architecture-report.md"
+  }
+}

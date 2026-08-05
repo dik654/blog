@@ -13,9 +13,10 @@ export default function Overview({ onCodeRef }: Props) {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          vLLM V1 스케줄러의 핵심 설계 — <strong>"phase 구분이 없다"</strong>.
-          기존 LLM 서빙은 Prefill(프롬프트 처리)과 Decode(토큰 생성) 단계를 분리했습니다.<br />
-          V1 스케줄러는 요청마다 <code>num_computed_tokens</code>와 <code>num_tokens_with_spec</code>만 추적합니다.
+          vLLM V1 스케줄러의 핵심 설계는 <strong>phase 이름 대신 남은 token work를 공통 장부로 계산</strong>하는 것입니다.
+          Prefill(프롬프트 처리)과 Decode(토큰 생성)는 물리 비용과 SLO가 다르지만,<br />
+          V1 스케줄러는 <code>num_tokens_with_spec + num_output_placeholders - num_computed_tokens</code>로 이번 work를 표현합니다.
+          동기 경로에서는 output placeholder가 0이고, async 경로에서는 아직 결과가 돌아오지 않은 예약 자리까지 센다.
         </p>
 
         <p>

@@ -44,7 +44,7 @@ export default function ByzantineViz() {
                     stroke={t ? C2 : C1} strokeWidth={1} />
                   <text x={g.x} y={g.y + 3} textAnchor="middle" fontSize={10}
                     fontWeight={500} fill={t ? C2 : C1}>G{i + 1}</text>
-                  {t && <text x={g.x} y={g.y + 15} textAnchor="middle" fontSize={10} fill={C2}>배신</text>}
+                  {t && <text x={g.x} y={g.y + 28} textAnchor="middle" fontSize={9} fill={C2}>배신</text>}
                 </motion.g>);
             })}
             <rect x={260} y={20} width={145} height={130} rx={6}

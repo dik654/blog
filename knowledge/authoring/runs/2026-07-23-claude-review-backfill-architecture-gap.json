@@ -1,0 +1,276 @@
+{
+  "run": "2026-07-23-claude-review-backfill-architecture-gap",
+  "date": "2026-07-23",
+  "mode": "read-only Context Manager true-Claude architecture review",
+  "scope": {
+    "requested_slugs": [
+      "llm-architecture-gallery",
+      "llm-architecture-dense-transformers",
+      "llm-architecture-kv-long-context",
+      "llm-architecture-sparse-moe",
+      "llm-architecture-hybrid-linear"
+    ],
+    "unique_requested": 5,
+    "unique_accepted_true_claude": 5
+  },
+  "transport": {
+    "connector": "context-manager",
+    "route": "cm_route_delegate",
+    "workdir": "/home/heru/code/blog",
+    "accepted_identity_rule": "Only a first observed response header beginning exactly with [claude-code:sonnet was accepted.",
+    "codex_fallback_accepted": false,
+    "missing_header_accepted": false,
+    "timeout_or_connector_failure_accepted": false
+  },
+  "summary": {
+    "attempted_executions": 19,
+    "accepted_true_claude_executions": 6,
+    "accepted_unique_slugs": 5,
+    "rejected_or_failed_executions": 13,
+    "confirmed_high": 0,
+    "confirmed_medium": 4,
+    "confirmed_low": 3,
+    "confirmed_then_fixed": 7,
+    "originally_open_at_first_report_time": 2,
+    "currently_open": 0,
+    "no_high_or_medium_slugs": [
+      "llm-architecture-dense-transformers",
+      "llm-architecture-kv-long-context",
+      "llm-architecture-sparse-moe"
+    ]
+  },
+  "accepted_reviews": [
+    {
+      "slug": "llm-architecture-gallery",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 176042ms]",
+      "header_valid": true,
+      "review_scope": "article, direct ArchitectureFingerprintLab, current-to-foundation flow, formulas, terminology, hidden transfer and responsive semantics",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/llm-architecture-gallery.tsx:109,201 before correction",
+          "claim": "mHC, DSA and stable GRPO appeared without a first-use expansion or a sufficiently precise functional gloss.",
+          "independent_disposition": "confirmed_then_fixed",
+          "current_state": "mHC is expanded as Manifold-Constrained Hyper-Connections; DSA is expanded as DeepSeek Sparse Attention; the GRPO phrase now states that the protocol stabilizes and extends GRPO-based RL."
+        },
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/llm-architecture-gallery.tsx:97-104,130-152 before correction",
+          "claim": "The five-axis current framework named input-boundary and depth-mixing changes without giving them a foundation contract comparable to the other axes.",
+          "independent_disposition": "confirmed_then_fixed",
+          "current_state": "Lines 142-151 now add an input-boundary equation and FormulaNote, then contrast the baseline previous-layer input, depth mixing, and the residual update."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/llm-architecture-gallery/viz/ArchitectureFingerprintLab.tsx:167-178 before correction",
+          "claim": "The 6-to-2 depth mixer was hardcoded while the surrounding lab invited the reader to change architecture numbers, leaving its static status unclear.",
+          "independent_disposition": "confirmed_then_fixed",
+          "current_state": "The metric and verdict now explicitly mark 6-to-2 depth mixing as a fixed property of the synthetic specification, separate from the adjustable controls."
+        }
+      ],
+      "hidden_transfer": {
+        "claim": "A cost reduction on one architecture axis may move pressure to another axis instead of eliminating it.",
+        "disposition": "supported_and_clarified",
+        "evidence": "The paper protocol asks the cost-shift question and the lab verdict now explicitly distinguishes independently adjustable memory and active-capacity axes from fixed input/depth properties."
+      },
+      "source_boundary": "The Claude pass did not independently browse 2026 current sources; the article itself labels the five-axis framework as an editorial reconstruction and separates vendor claims from independent evaluation."
+    },
+    {
+      "slug": "llm-architecture-dense-transformers",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 167727ms]",
+      "header_valid": true,
+      "review_scope": "article plus direct dense-block and GPT-2 flow Viz dependencies",
+      "findings": [],
+      "result": "No high or medium finding. Residual, SwiGLU, attention/FFN parameter, QK-Norm and GPT-2 worked arithmetic were recomputed and found internally consistent.",
+      "hidden_transfer": "The six-step closing checklist converts the model lineage into a reusable new-model reading procedure.",
+      "responsive_boundary": "Static responsive inspection found no semantic break; the five-column causal mask is tight at 390 px but remained legible."
+    },
+    {
+      "slug": "llm-architecture-kv-long-context",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 87549ms]",
+      "header_valid": true,
+      "review_scope": "single article, KV/GQA/MLA/local-global formulas, sources, flow and transfer",
+      "findings": [
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/llm-architecture-kv-long-context.tsx:40,284",
+          "claim": "The current-target figure is labeled DeepSeek V4 Pro while the nearby current source is the DeepSeek-V4-Flash technical report.",
+          "independent_disposition": "confirmed_then_fixed",
+          "history": "confirmed_open_at_initial_report_time",
+          "current_state": "The figure is now labeled as a Pro comparison diagram, its note says Pro and V4-Flash are not the same checkpoint, and the SourceNotes entry names V4-Flash exactly and forbids transferring its detailed config to Pro."
+        },
+        {
+          "severity": "low",
+          "location": "src/pages/articles/ai/llm-architecture-kv-long-context.tsx:35,285",
+          "claim": "The current-target figure is labeled Gemma 4 31B while the nearby current source is the Gemma 4 12B release.",
+          "independent_disposition": "confirmed_then_fixed",
+          "history": "confirmed_open_at_initial_report_time",
+          "current_state": "The figure is now labeled as a 31B comparison diagram, its note separates that variant from the 12B release, and SourceNotes limits the 12B source to the 12B public boundary rather than 31B config evidence."
+        }
+      ],
+      "result": "No high or medium finding. KV bytes, prefill/local-window sums, GQA ratio, MLA cache width, mixed local/global cache, receptive-field bound and Gemma layer counts were hand-checked and found consistent.",
+      "hidden_transfer": "The reader can compose GQA cache-width variables with the mixed local/global cache formula, but the article only implies this substitution rather than writing one combined equation.",
+      "responsive_boundary": "The accepted single-file pass did not inspect the imported MlaCacheExplorer or LongContextWindowLab source and is not a screenshot run."
+    },
+    {
+      "slug": "llm-architecture-sparse-moe",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 139144ms]",
+      "header_valid": true,
+      "review_scope": "article, direct MoE Viz dependencies, mechanism and source arithmetic",
+      "findings": [],
+      "result": "No high or medium finding. Core Switch, Mixtral, DeepSeek and Qwen source attribution and derived Viz arithmetic were reported consistent.",
+      "hidden_transfer": "V_roundtrip = 2*T*k*d*b is a reusable lower-bound method for dispatch/gather collectives, not only an MoE-specific formula.",
+      "source_boundary": "Primary paper/config evidence was checked within the accepted repository review; no new web browsing or independent benchmark reproduction was performed."
+    },
+    {
+      "slug": "llm-architecture-hybrid-linear",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 137872ms]",
+      "header_valid": true,
+      "review_scope": "SSM, DeltaNet, Gated DeltaNet, KDA and chunkwise recurrence mechanism/source fidelity",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/llm-architecture-hybrid-linear.tsx:145-146 before correction",
+          "claim": "The general matrix recurrence used a product notation whose multiplication order was ambiguous even though transition matrices need not commute.",
+          "independent_disposition": "confirmed_then_fixed",
+          "current_state": "Lines 141-147 now state non-commutativity, use A_t A_(t-1) ... A_(i+1), explain application order, and define the empty product at i=t."
+        }
+      ]
+    },
+    {
+      "slug": "llm-architecture-hybrid-linear",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 58423ms]",
+      "header_valid": true,
+      "review_scope": "content specification against the Playwright regression contract",
+      "findings": [
+        {
+          "severity": "medium",
+          "location": "src/pages/articles/ai/content-specs/llm-architecture-hybrid-linear.md:60,93; tests/llm-architecture-hybrid-linear-contract.spec.ts:67 before correction",
+          "claim": "The specification promised exact S,S,S,A cadence, but the test only counted 48 cells and would allow all-S, all-A or wrong-order regressions.",
+          "independent_disposition": "confirmed_then_fixed",
+          "current_state": "The test now asserts all 48 values in S,S,S,A order and separately asserts 36 S cells and 12 A cells."
+        }
+      ]
+    }
+  ],
+  "rejected_or_failed_attempts": [
+    {
+      "attempt_id": "A01",
+      "slug": "llm-architecture-gallery",
+      "route": "cm_route_delegate",
+      "scope": "initial five-request parallel L4 batch",
+      "result": "batch terminated after extended wait",
+      "reason": "No response or provider header was observed; not countable."
+    },
+    {
+      "attempt_id": "A02",
+      "slug": "llm-architecture-dense-transformers",
+      "route": "cm_route_delegate",
+      "scope": "initial five-request parallel L4 batch",
+      "result": "batch terminated after extended wait",
+      "reason": "No response or provider header was observed; not countable."
+    },
+    {
+      "attempt_id": "A03",
+      "slug": "llm-architecture-kv-long-context",
+      "route": "cm_route_delegate",
+      "scope": "initial five-request parallel L4 batch",
+      "result": "batch terminated after extended wait",
+      "reason": "No response or provider header was observed; not countable."
+    },
+    {
+      "attempt_id": "A04",
+      "slug": "llm-architecture-sparse-moe",
+      "route": "cm_route_delegate",
+      "scope": "initial five-request parallel L4 batch",
+      "result": "batch terminated after extended wait",
+      "reason": "No response or provider header was observed; not countable."
+    },
+    {
+      "attempt_id": "A05",
+      "slug": "llm-architecture-hybrid-linear",
+      "route": "cm_route_delegate",
+      "scope": "initial five-request parallel L4 batch",
+      "result": "batch terminated after extended wait",
+      "reason": "No response or provider header was observed; not countable."
+    },
+    {
+      "attempt_id": "A06",
+      "slug": "llm-architecture-gallery",
+      "route": "cm_route_delegate",
+      "scope": "single article plus local spec and Viz",
+      "result": "error: The operation timed out.",
+      "duration_ms": 277426,
+      "reason": "Timeout; no provider header was observed."
+    },
+    {
+      "attempt_id": "A07",
+      "slug": "llm-architecture-gallery",
+      "route": "cm_route_delegate",
+      "scope": "narrow article plus direct Viz",
+      "result": "error: The operation timed out.",
+      "duration_ms": 285416,
+      "reason": "Timeout; no provider header was observed."
+    },
+    {
+      "attempt_id": "A08",
+      "slug": "llm-architecture-dense-transformers",
+      "route": "cm_route_delegate",
+      "scope": "single-file L2 audit",
+      "result": "[codex:gpt-5.5 · L2 · $0.0000 · 100434ms]",
+      "duration_ms": 100445,
+      "reason": "Codex fallback header; identity gate rejected the otherwise usable review."
+    },
+    {
+      "attempt_id": "A09",
+      "slug": "llm-architecture-kv-long-context",
+      "route": "cm_route_delegate",
+      "scope": "single-file L4 audit",
+      "result": "error: Unable to connect. Is the computer able to access the url?",
+      "duration_ms": 60951,
+      "reason": "Connector failure; no provider header was observed."
+    },
+    {
+      "attempt_id": "A10",
+      "slug": "llm-architecture-dense-transformers",
+      "route": "cm_route_delegate",
+      "scope": "single-file L3 retry after first-use fixes",
+      "result": "error: The operation timed out.",
+      "duration_ms": 272557,
+      "reason": "Timeout; no provider header was observed."
+    },
+    {
+      "attempt_id": "A11",
+      "slug": "llm-architecture-kv-long-context",
+      "route": "cm_route_delegate",
+      "scope": "single-file L3 retry",
+      "result": "tool call timed out awaiting context-manager after 300 seconds",
+      "duration_ms": 300006,
+      "reason": "Timeout; no provider header was observed."
+    },
+    {
+      "attempt_id": "A12",
+      "slug": "llm-architecture-hybrid-linear",
+      "route": "cm_route_delegate",
+      "scope": "broad article, direct imports, spec and test review",
+      "result": "error: The operation timed out.",
+      "duration_ms": 257017,
+      "reason": "Timeout; no provider header was observed."
+    },
+    {
+      "attempt_id": "A13",
+      "slug": "llm-architecture-hybrid-linear",
+      "route": "cm_route_delegate",
+      "scope": "narrow spec-to-test contract review",
+      "result": "error: Unable to connect. Is the computer able to access the url?",
+      "reason": "Connector failure; no provider header was observed."
+    }
+  ],
+  "coverage_boundary": {
+    "read_only": true,
+    "app_code_edited_by_this_reviewer": false,
+    "visual_qa": "Claude reviewed responsive source semantics. This report is not a new Playwright screenshot run.",
+    "web_research": "No new external web research was performed by this reviewer. Current-source claims remain bounded by the linked primary/vendor materials and the article's explicit evidence notes.",
+    "hybrid_assist_source": "knowledge/authoring/runs/2026-07-23-claude-review-backfill-architecture-hybrid-assist.json"
+  }
+}

@@ -1,4 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
+import TiledMatMulViz from './viz/TiledMatMulViz';
 
 const tiledKernel = `#define TILE_SIZE 16
 
@@ -42,7 +43,11 @@ export default function Tiled() {
           각 블록의 스레드들이 협력하여 타일 하나를 공유 메모리에 로드한 뒤,
           그 데이터를 TILE_SIZE번 재사용하여 부분 내적을 계산합니다.
         </p>
+      </div>
 
+      <TiledMatMulViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-10">
         <CodePanel
           title="타일링 행렬 곱셈 커널"
           code={tiledKernel}

@@ -12,91 +12,53 @@ export default function Overview() {
           latency + throughput + CPU offload 3축.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">서버 네트워크 요구사항</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 서버 네트워크 요구사항:
+        <h3 className="text-xl font-semibold mt-8 mb-3">워크로드별 특성</h3>
+        <ul className="leading-7">
+          <li><strong>Blockchain Node</strong> — 블록 전파 ~100 KB, TX gossip ~1 KB, peer sync 주기적 burst. 10G Ethernet 충분, 낮은 latency 가 도움.</li>
+          <li><strong>Database Server</strong> — client query varied, replication steady, backup 주기적 대용량. 25G Ethernet 일반적.</li>
+          <li><strong>Distributed Storage (Filecoin)</strong> — 데이터 업로드 GB~TB burst, retrieval streaming, deal negotiation 소규모. 25~100G Ethernet 이상적.</li>
+          <li><strong>GPU Cluster (AI)</strong> — all-reduce 학습 대규모, parameter sync 연속, 대형 모델 배포. InfiniBand 400G 필수, chassis 내부 NVLink.</li>
+          <li><strong>HPC Cluster</strong> — tight coupling, latency 결정적, MPI collectives. InfiniBand 표준.</li>
+        </ul>
 
-// Workload별 특성:
+        <h3 className="text-xl font-semibold mt-8 mb-3">레이턴시 요구치</h3>
+        <ul className="leading-7">
+          <li>bulk transfer — 1~10 ms 수용</li>
+          <li>database — &lt;1 ms 목표</li>
+          <li>distributed DB — &lt;100 μs</li>
+          <li>HPC/AI — &lt;10 μs</li>
+          <li>trading — &lt;1 μs (특수 영역)</li>
+        </ul>
 
-// 1. Blockchain Node:
-// - 블록 전파: ~100 KB
-// - TX gossip: ~1 KB
-// - peer sync: periodic bursts
-// - 10G Ethernet 충분
-// - low latency helpful
+        <h3 className="text-xl font-semibold mt-8 mb-3">네트워크 토폴로지</h3>
+        <ul className="leading-7">
+          <li><strong>Spine-Leaf (표준)</strong> — Leaf = TOR (Top of Rack), Spine = inter-rack. East-West 트래픽 최적화. 이상적 non-blocking, 보통 3:1 oversubscription.</li>
+          <li><strong>Fat Tree</strong> — 계층형, 다중 path, HPC/AI 표준. equal-cost multipath.</li>
+          <li><strong>Dragonfly</strong> — HPC 최적화, 짧은 diameter, 특수 용도.</li>
+        </ul>
 
-// 2. Database Server:
-// - client queries: varied
-// - replication: steady
-// - backup: periodic large
-// - 25G Ethernet typical
+        <h3 className="text-xl font-semibold mt-8 mb-3">핵심 지표</h3>
+        <ul className="leading-7">
+          <li>bandwidth — 초당 bit</li>
+          <li>throughput — 실효 payload</li>
+          <li>latency — RTT 또는 one-way</li>
+          <li>jitter — 변동성</li>
+          <li>packet loss — 에러율</li>
+        </ul>
 
-// 3. Distributed Storage (Filecoin):
-// - data upload: GB-TB bursts
-// - retrieval: streaming
-// - deal negotiation: small
-// - 25-100G Ethernet ideal
+        <h3 className="text-xl font-semibold mt-8 mb-3">NIC 제품군</h3>
+        <ul className="leading-7">
+          <li>Mellanox ConnectX-6/7 (NVIDIA 인수)</li>
+          <li>Intel E810, X710</li>
+          <li>Broadcom NetXtreme</li>
+          <li>Chelsio T6</li>
+          <li>SmartNIC / DPU — BlueField, IPU</li>
+        </ul>
 
-// 4. GPU Cluster (AI):
-// - all-reduce training: massive
-// - parameter sync: continuous
-// - large model distribution
-// - InfiniBand 400G essential
-// - NVLink inside chassis
-
-// 5. HPC Cluster:
-// - tight coupling
-// - latency critical
-// - MPI collectives
-// - InfiniBand standard
-
-// Latency Requirements:
-// - bulk transfer: 1-10 ms OK
-// - database: <1 ms target
-// - distributed DB: <100 μs
-// - HPC/AI: <10 μs
-// - trading: <1 μs (specialty)
-
-// Network Topology:
-
-// Spine-Leaf (standard):
-// - Leaf switches: TOR (Top of Rack)
-// - Spine switches: inter-rack
-// - East-West traffic optimized
-// - non-blocking (ideally)
-// - 3:1 oversubscription common
-
-// Fat Tree:
-// - hierarchical
-// - multiple paths
-// - HPC/AI standard
-// - equal cost multipath
-
-// Dragonfly:
-// - HPC optimization
-// - shorter diameter
-// - specialized
-
-// Key metrics:
-// - bandwidth: bits/second
-// - throughput: effective payload
-// - latency: RTT or one-way
-// - jitter: variability
-// - packet loss: errors
-
-// Network cards (NICs):
-// - Mellanox ConnectX-6/7 (NVIDIA)
-// - Intel E810, X710
-// - Broadcom NetXtreme
-// - Chelsio T6
-// - SmartNICs (DPU): BlueField, IPU
-
-// DPU (Data Processing Unit):
-// - programmable NIC
-// - offloads: VPN, encryption, storage
-// - ARM cores on board
-// - datacenter acceleration`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">DPU (Data Processing Unit)</h3>
+        <p className="leading-7">
+          프로그래머블 NIC. VPN, 암호화, 스토리지 처리를 NIC 위에서 offload. 보드 위 ARM 코어로 데이터센터 가속.
+        </p>
         <p className="leading-7">
           Network: <strong>workload-dependent (10G → 400G)</strong>.<br />
           blockchain: 10G OK, AI cluster: InfiniBand 400G 필수.<br />

@@ -23,7 +23,8 @@ export default function ScheduleMethod({ onCodeRef }: Props) {
         <h3 className="text-xl font-semibold mt-6 mb-3">1단계: RUNNING 요청 처리</h3>
         <p>
           이미 실행 중인 요청부터 순회합니다.<br />
-          각 요청의 <code>num_tokens_with_spec - num_computed_tokens</code>가 새로 계산할 토큰 수입니다.
+          각 요청의 <code>num_tokens_with_spec + num_output_placeholders - num_computed_tokens</code>가 새로 계산할 토큰 수입니다.
+          <code>num_output_placeholders</code>는 async scheduling에서 아직 output processing이 끝나지 않은 예약 자리이며, 동기 경로에서는 0입니다.
           <code>token_budget</code>(기본값: <code>max_num_batched_tokens</code>)에서 차감하며 진행합니다.
         </p>
 
@@ -39,8 +40,9 @@ export default function ScheduleMethod({ onCodeRef }: Props) {
         <p>
           RUNNING 처리 후 남은 token_budget으로 waiting 큐에서 새 요청을 스케줄합니다.<br />
           새 요청은 <code>get_computed_blocks()</code>로 Prefix Cache 히트를 먼저 확인하고,
-          히트한 블록만큼 <code>num_computed_tokens</code>를 건너뜁니다.<br />
-          이것이 <strong>Chunked Prefill</strong> — 한 스텝에 프롬프트 일부만 처리하는 방식입니다.
+          히트한 블록만큼 <code>num_computed_tokens</code>를 건너뜁니다.
+          그 뒤 남은 prompt가 step budget보다 크면 일부만 배정하는 것이 <strong>Chunked Prefill</strong>입니다.<br />
+          Prefix hit는 이미 계산한 일을 줄이고, chunking은 아직 남은 일을 여러 step으로 나눈다는 점에서 서로 다른 판단입니다.
         </p>
       </div>
     </section>

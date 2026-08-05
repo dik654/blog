@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
+import TransportTraitDetailViz from './viz/TransportTraitDetailViz';
 
 const METHODS = [
   { name: 'listen_on()', desc: 'ListenerId + Multiaddr → 리스닝 시작', color: '#10b981' },
@@ -94,93 +95,8 @@ export default function TransportTrait({ onCodeRef }: {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Transport Trait 정의</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Transport Trait (libp2p-core)
-//
-// pub trait Transport {
-//     // Output type after successful connection
-//     type Output;
-//
-//     // Error type
-//     type Error: Error + Send + Sync + 'static;
-//
-//     // Listener stream
-//     type ListenerUpgrade: Future<Output = Result<Self::Output, Self::Error>>;
-//
-//     // Dial future
-//     type Dial: Future<Output = Result<Self::Output, Self::Error>>;
-//
-//     // Start listening on address
-//     fn listen_on(
-//         &mut self,
-//         id: ListenerId,
-//         addr: Multiaddr,
-//     ) -> Result<(), TransportError<Self::Error>>;
-//
-//     // Remove listener
-//     fn remove_listener(&mut self, id: ListenerId) -> bool;
-//
-//     // Dial peer at address
-//     fn dial(
-//         &mut self,
-//         addr: Multiaddr,
-//         opts: DialOpts,
-//     ) -> Result<Self::Dial, TransportError<Self::Error>>;
-//
-//     // Poll for events
-//     fn poll(
-//         self: Pin<&mut Self>,
-//         cx: &mut Context<'_>,
-//     ) -> Poll<TransportEvent<Self::ListenerUpgrade, Self::Error>>;
-// }
-
-// TransportEvent:
-//   Incoming {
-//     listener_id,
-//     upgrade,        // Future<Output = Connection>
-//     local_addr,
-//     send_back_addr,
-//   }
-//   NewAddress { listener_id, listen_addr }
-//   AddressExpired { listener_id, listen_addr }
-//   ListenerClosed { listener_id, reason }
-//   ListenerError { listener_id, error }
-
-// Transport 조합 (combinator pattern):
-//
-//   tcp::Transport                   // TCP only
-//     .upgrade(Version::V1)           // Upgrade layer
-//     .authenticate(noise)            // + Security
-//     .multiplex(yamux)               // + Mux
-//     .timeout(20s)                   // + Timeout
-//     .boxed()                        // Type erasure
-//
-// 최종 output: (PeerId, StreamMuxerBox)
-
-// OrTransport (여러 Transport 조합):
-//   tcp.or_transport(websocket)
-//     .or_transport(quic)
-//   → 각 Multiaddr에 맞는 transport 선택
-
-// MemoryTransport:
-//   테스트용 in-memory transport
-//   Multiaddr: /memory/<channel_id>
-//   네트워크 없이 peer 통신
-
-// DnsConfig:
-//   DNS 이름 → IP 변환
-//   /dns4/example.com/tcp/4001 지원
-//   Fresh resolution per connection
-
-// 주요 구현 (Rust):
-//   libp2p-tcp (TCP)
-//   libp2p-quic (QUIC)
-//   libp2p-websocket (WS)
-//   libp2p-webtransport (QUIC-based)
-//   libp2p-memory-connection-limits
-//   libp2p-dns`}
-        </pre>
       </div>
+      <div className="not-prose mb-4"><TransportTraitDetailViz /></div>
     </section>
   );
 }

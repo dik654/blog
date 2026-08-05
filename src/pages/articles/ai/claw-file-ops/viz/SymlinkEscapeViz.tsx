@@ -1,58 +1,74 @@
-import { AlertBox, ActionBox } from '@/components/viz/boxes';
+import { CheckCircle2, FolderTree, LockKeyhole, ScanSearch, TriangleAlert } from 'lucide-react';
+
+const PHASES = [
+  {
+    n: '01',
+    title: '문자열·경로 요소 필터',
+    text: '절대 경로와 .. 같은 명백한 이탈을 일찍 거른다. Path::starts_with는 전체 component를 비교하지만 실제 inode를 고정하지는 않는다.',
+    result: '빠른 거절',
+    icon: ScanSearch,
+  },
+  {
+    n: '02',
+    title: '해석된 실제 대상 확인',
+    text: 'canonicalize로 중간 심링크까지 해석한 현재 대상을 workspace root와 비교한다. 새 파일은 존재하는 부모를 기준으로 해석한다.',
+    result: '현재 대상 확인',
+    icon: FolderTree,
+  },
+  {
+    n: '03',
+    title: '파일을 여는 순간 경계 강제',
+    text: '검사한 경로 문자열을 다시 여는 대신 dirfd 기준 openat2 RESOLVE_* 같은 제약으로 kernel이 여는 순간 경계를 강제한다.',
+    result: 'race를 닫는 단계',
+    icon: LockKeyhole,
+  },
+];
 
 export default function SymlinkEscapeViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">심링크 이스케이프 공격 방어</text>
-
-        {/* 공격 시나리오 */}
-        <AlertBox x={30} y={56} w={240} h={52}
-          label="공격 시나리오"
-          sub="workspace/link → /etc/passwd"
-          color="#ef4444" />
-
-        {/* 1차 검증 (통과) */}
-        <rect x={290} y={56} width={240} height={52} rx={6}
-          fill="#f59e0b" fillOpacity={0.15} stroke="#f59e0b" strokeWidth={1} />
-        <text x={410} y={78} textAnchor="middle" fontSize={11} fontWeight={700} fill="#f59e0b">
-          1차 검증: 문자열 비교
-        </text>
-        <text x={410} y={96} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          path.starts_with(workspace) → OK (우회)
-        </text>
-
-        {/* 2차 검증 (차단) */}
-        <rect x={30} y={128} width={500} height={68} rx={8}
-          fill="#10b981" fillOpacity={0.1} stroke="#10b981" strokeWidth={1.2} />
-        <text x={280} y={150} textAnchor="middle" fontSize={12} fontWeight={700} fill="#10b981">
-          2차 검증: canonicalize() 호출
-        </text>
-        <text x={280} y={168} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          실제 경로 해석: workspace/link → /etc/passwd
-        </text>
-        <text x={280} y={184} textAnchor="middle" fontSize={9} fontWeight={600} fill="#ef4444">
-          !canonical.starts_with(workspace) → Deny
-        </text>
-
-        {/* 3중 방어 */}
-        <rect x={30} y={216} width={500} height={72} rx={8}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={236} textAnchor="middle" fontSize={11} fontWeight={700}
-          fill="var(--foreground)">3중 방어 (Defense in depth)</text>
-
-        <g transform="translate(48, 246)">
-          <text x={0} y={12} fontSize={9} fontWeight={600} fill="#3b82f6">1. 문자열 검증:</text>
-          <text x={98} y={12} fontSize={9} fill="var(--muted-foreground)">빠른 사전 차단 (90%)</text>
-
-          <text x={250} y={12} fontSize={9} fontWeight={600} fill="#8b5cf6">2. canonicalize:</text>
-          <text x={352} y={12} fontSize={9} fill="var(--muted-foreground)">심링크 해제</text>
-
-          <text x={0} y={30} fontSize={9} fontWeight={600} fill="#ef4444">3. 샌드박스:</text>
-          <text x={82} y={30} fontSize={9} fill="var(--muted-foreground)">커널 레벨 bind mount (bash 도구만)</text>
-        </g>
-      </svg>
-    </div>
+    <figure
+      aria-label="워크스페이스 경계를 세 단계로 강제하는 그림"
+      className="not-prose my-7 overflow-hidden rounded-md border border-border"
+    >
+      <figcaption className="border-b border-border bg-muted/15 px-4 py-3">
+        <div className="flex items-start gap-3">
+          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
+          <div>
+            <p className="text-sm font-semibold">workspace/link → /etc/passwd</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              문자열은 안쪽처럼 보여도 해석된 대상은 바깥일 수 있고, 확인한 뒤에도 다시 바뀔 수 있다.
+            </p>
+          </div>
+        </div>
+      </figcaption>
+      <div className="divide-y divide-border">
+        {PHASES.map((phase) => {
+          const Icon = phase.icon;
+          return (
+            <div
+              key={phase.n}
+              className="grid grid-cols-[28px_minmax(0,1fr)] gap-x-3 gap-y-2 px-4 py-4 sm:grid-cols-[36px_34px_minmax(0,1fr)_120px] sm:items-start"
+            >
+              <div className="flex flex-col items-center gap-2 sm:contents">
+                <span className="text-xs font-bold text-muted-foreground">{phase.n}</span>
+                <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 sm:col-start-3">
+                <p className="text-sm font-semibold">{phase.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{phase.text}</p>
+              </div>
+              <div className="col-start-2 flex items-center gap-2 text-xs font-medium sm:col-start-4 sm:justify-end">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
+                {phase.result === 'race를 닫는 단계' ? '경쟁 조건을 닫는 단계' : phase.result}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <p className="border-t border-border bg-amber-500/[0.04] px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        현재 Claw에는 1·2단계 helper가 있지만 production read/write/edit 경로에는 배선되지 않았다.
+        먼저 배선 invariant를 만들고, 3단계 open-time 강제를 추가해야 한다.
+      </p>
+    </figure>
   );
 }

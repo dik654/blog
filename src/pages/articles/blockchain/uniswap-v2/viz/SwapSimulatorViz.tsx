@@ -21,7 +21,7 @@ export default function SwapSimulatorViz() {
   return (
     <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
       {/* 입력 슬라이더 */}
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex flex-wrap items-center gap-3 sm:flex-nowrap">
         <label className="text-xs font-semibold text-muted-foreground min-w-[100px]">
           USDC 입력
         </label>
@@ -32,7 +32,7 @@ export default function SwapSimulatorViz() {
           step={1000}
           value={deltaX}
           onChange={(e) => setDeltaX(+e.target.value)}
-          className="flex-1 accent-blue-500"
+          className="order-last w-full accent-blue-500 sm:order-none sm:w-auto sm:flex-1"
         />
         <span className="text-sm font-bold text-foreground min-w-[90px] text-right">
           ${deltaX.toLocaleString()}

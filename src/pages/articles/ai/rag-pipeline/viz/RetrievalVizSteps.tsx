@@ -44,7 +44,7 @@ function DenseStep() {
             </text>
             {/* 유사도 바 */}
             <rect x={330} y={y + 4} width={120} height={12} rx={3} fill={C.muted + '10'} />
-            <motion.rect x={330} y={y + 4} width={0} height={12} rx={3}
+            <motion.rect initial={false} x={330} y={y + 4} width={0} height={12} rx={3}
               fill={d.sim > 0.7 ? C.dense + '40' : C.muted + '20'}
               animate={{ width: barW }}
               transition={{ delay: 0.3 + i * 0.08, duration: 0.3 }} />

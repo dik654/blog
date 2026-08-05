@@ -157,7 +157,7 @@ function Step2() {
             {/* 효과 바 */}
             <rect x={x + 12} y={y + 48} width={190} height={8} rx={4}
               fill="var(--muted)" fillOpacity={0.2} />
-            <motion.rect x={x + 12} y={y + 48} width={0} height={8} rx={4}
+            <motion.rect initial={false} x={x + 12} y={y + 48} width={0} height={8} rx={4}
               fill={a.color} fillOpacity={0.4}
               animate={{ width: [190, 170, 140, 120][i] }}
               transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }} />
@@ -198,7 +198,7 @@ function Step3() {
             <text x={30} y={y + 14} fontSize={9} fill="var(--foreground)">{p.a} + {p.b}</text>
             {/* Correlation bar track */}
             <rect x={140} y={y + 2} width={barMax} height={18} rx={4} fill="var(--muted)" fillOpacity={0.1} />
-            <motion.rect x={140} y={y + 2} width={0} height={18} rx={4} fill={p.color} fillOpacity={0.35}
+            <motion.rect initial={false} x={140} y={y + 2} width={0} height={18} rx={4} fill={p.color} fillOpacity={0.35}
               animate={{ width: barW }} transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }} />
             {/* Value label — in its own column, right of bar */}
             <text x={305} y={y + 15} textAnchor="end" fontSize={9} fontWeight={700} fill={p.color}>

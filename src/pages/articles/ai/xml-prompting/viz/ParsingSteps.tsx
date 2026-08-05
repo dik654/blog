@@ -24,7 +24,7 @@ export function StepSingleExtract() {
           stroke={CV} strokeWidth={1.5} />
         <polygon points="268,66 276,70 268,74" fill={CV} />
         <text x={245} y={60} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">regex</text>
+          fill="var(--muted-foreground)">XML parser</text>
       </motion.g>
       <motion.rect x={280} y={45} width={150} height={50} rx={6}
         fill={`${CE}10`} stroke={CE} strokeWidth={1.5}
@@ -37,7 +37,7 @@ export function StepSingleExtract() {
       <motion.text x={355} y={84} textAnchor="middle" fontSize={9}
         fill="var(--muted-foreground)"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}>→ 파이프라인 연결</motion.text>
+        transition={{ delay: 0.6 }}>→ syntax 통과</motion.text>
     </motion.g>
   );
 }

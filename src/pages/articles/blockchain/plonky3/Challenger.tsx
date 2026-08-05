@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import { DUPLEX_CODE, DUPLEX_ANNOTATIONS, USAGE_CODE, USAGE_ANNOTATIONS } from './ChallengerData';
+import SpongeDuplexViz from './viz/SpongeDuplexViz';
 
 export default function Challenger({ title }: { title?: string }) {
   return (
@@ -21,40 +22,7 @@ export default function Challenger({ title }: { title?: string }) {
           annotations={USAGE_ANNOTATIONS} />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Sponge Construction</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Sponge based on Poseidon2 permutation
-// State: width-W vector (예: 16 field elements)
-// Rate (r): 흡수/압축 bandwidth (예: 8)
-// Capacity (c): security margin (예: 8)
-
-// Absorb (observe)
-// 새 데이터를 rate 부분에 XOR/add
-// State = Permutation(State)
-
-// Squeeze (sample)
-// Rate 부분에서 output 추출
-// 필요 시 Permutation(State) 다시
-
-// Example sequence
-challenger = DuplexChallenger::new();
-
-challenger.observe(commitment_C1);
-alpha = challenger.sample();
-
-challenger.observe(commitment_C2);
-beta = challenger.sample();
-
-challenger.observe(polynomial_evals);
-z = challenger.sample();
-
-// Security
-// - c bits capacity → c/2 bits classical security
-// - Standard: 128-bit security → c = 256
-// - Poseidon2 BabyBear: 8 capacity elements × 31 bits = 248 bits
-
-// Interactive to non-interactive
-// Before: Verifier가 각 challenge 생성
-// After: Prover가 transcript에서 challenge 계산
-//        (Verifier도 동일 계산으로 verify)`}</pre>
+        <SpongeDuplexViz />
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Fiat-Shamir의 안전성</p>

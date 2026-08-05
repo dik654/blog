@@ -65,12 +65,12 @@ export default function SGXArchViz() {
           </motion.text>
 
           {/* Pointer ball */}
-          <motion.circle r={8} fill={P[step].color}
-            animate={{ cx: 60 + step * 85, cy: 70 }}
+          <motion.circle initial={false} r={8} fill={P[step].color}
+            animate={{ cx: 60 + step * 85, cy: 108 }}
             transition={{ duration: 0.45, type: 'spring', bounce: 0.25 }}>
           </motion.circle>
           <motion.text textAnchor="middle" fontSize={10} fontWeight={600} fill="white"
-            animate={{ x: 60 + step * 85, y: 73 }}
+            animate={{ x: 60 + step * 85, y: 111 }}
             transition={{ duration: 0.45, type: 'spring', bounce: 0.25 }}>
             {step + 1}
           </motion.text>

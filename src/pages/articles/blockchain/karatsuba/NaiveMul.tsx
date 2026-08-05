@@ -1,5 +1,6 @@
 import M from '@/components/ui/math';
 import NaiveViz from './viz/NaiveViz';
+import AlgorithmTraceViz from './viz/AlgorithmTraceViz';
 
 export default function NaiveMul() {
   return (
@@ -47,18 +48,8 @@ export default function NaiveMul() {
           <p className="text-sm text-muted-foreground mt-2 font-semibold">Total: 4 mults + 2 add/sub</p>
         </div>
 
-        {/* Pseudocode */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">Rust Pseudocode (naive)</div>
-          <div className="text-sm text-muted-foreground font-mono space-y-0.5">
-            <p><code>let t1 = a1 * a2;</code> <span className="text-xs text-muted-foreground/60">// mult #1</span></p>
-            <p><code>let t2 = b1 * b2;</code> <span className="text-xs text-muted-foreground/60">// mult #2</span></p>
-            <p><code>let t3 = a1 * b2;</code> <span className="text-xs text-muted-foreground/60">// mult #3</span></p>
-            <p><code>let t4 = a2 * b1;</code> <span className="text-xs text-muted-foreground/60">// mult #4</span></p>
-            <p><code>let real = t1 - t2;</code></p>
-            <p><code>let imag = t3 + t4;</code></p>
-          </div>
-        </div>
+        {/* Algorithm trace: Naive vs Karatsuba side-by-side */}
+        <div className="not-prose mb-4"><AlgorithmTraceViz /></div>
 
         {/* CPU 성능 */}
         <div className="not-prose rounded-lg border bg-card p-4 mb-4">

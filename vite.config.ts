@@ -4,10 +4,22 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 export default defineConfig({
+  // 배포 시 서브패스(/blog/ 등) 아래에 서빙할 경우 VITE_BASE_PATH 로 주입. 기본은 루트.
+  base: process.env.VITE_BASE_PATH || '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    // 블로그 편집 API 는 context-manager agent api-server (기본 :18002) 에 있다.
+    // 개발 서버에서 CORS·쿠키 문제없이 상대경로로 쏘기 위한 proxy.
+    proxy: {
+      '/api/blog-edits': {
+        target: process.env.BLOG_EDIT_API_TARGET || 'http://localhost:18002',
+        changeOrigin: true,
+      },
     },
   },
   build: {

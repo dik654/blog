@@ -20,7 +20,7 @@ export default function Performance() {
           </p>
           <div className="bg-sky-50 dark:bg-sky-950/30 rounded p-3 space-y-1">
             <p className="text-xs font-medium mb-1">최적 윈도우 크기</p>
-            <M display>{'w = \\lceil \\log_2(n) \\rceil + 2'}</M>
+            <M display>{'\\underbrace{w}_{\\text{윈도우 크기 (bits)}} = \\underbrace{\\lceil \\log_2(n) \\rceil + 2}_{\\text{Pippenger 최적 공식}}'}</M>
           </div>
           <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3">
             <p className="text-xs font-medium mb-1">버킷 분류 + 시프트 누적</p>

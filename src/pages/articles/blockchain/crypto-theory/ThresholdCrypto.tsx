@@ -28,10 +28,17 @@ export default function ThresholdCrypto() {
           <ol className="text-sm text-foreground/80 space-y-2 list-decimal list-inside">
             <li>
               <M>{'t-1'}</M>차 다항식 생성 (<M>{'a_i'}</M>는 랜덤 계수)
-              <M display>{'f(x) = s + a_1 x + a_2 x^2 + \\cdots + a_{t-1} x^{t-1}'}</M>
+              <M display>{'f(x) = \\underbrace{s}_{\\text{비밀 (상수항)}} + \\underbrace{a_1 x + a_2 x^2 + \\cdots + a_{t-1} x^{t-1}}_{\\text{랜덤 } t-1 \\text{개 계수}}'}</M>
+              <span className="block text-xs text-foreground/50 ml-5 mt-0.5">상수항이 비밀 <M>{'s'}</M>. 나머지 계수 <M>{'a_1, \\ldots, a_{t-1}'}</M>은 유한체에서 균일 랜덤 → 곡선 모양은 예측 불가.</span>
             </li>
-            <li><M>{'n'}</M>개 share 생성: <M>{'\\text{share}_i = (i,\\; f(i))'}</M></li>
-            <li><M>{'f(0) = s'}</M> — 상수항이 비밀</li>
+            <li>
+              <M>{'n'}</M>개 share 생성: <M>{'\\text{share}_i = (i,\\; f(i))'}</M>
+              <span className="block text-xs text-foreground/50 ml-5 mt-0.5">참여자 <M>{'i'}</M>는 점 <M>{'(i, f(i))'}</M>을 받음 — <M>{'x=0'}</M>은 배포하지 않음.</span>
+            </li>
+            <li>
+              <M>{'f(0) = s'}</M> — 상수항이 비밀
+              <span className="block text-xs text-foreground/50 ml-5 mt-0.5">비밀을 얻으려면 <M>{'x=0'}</M>에서 다항식 값을 알아야 함 (직접 전달되진 않음).</span>
+            </li>
           </ol>
         </div>
 
@@ -40,11 +47,13 @@ export default function ThresholdCrypto() {
           <p className="text-sm text-foreground/80 mb-2">
             <M>{'t'}</M>개의 <M>{'(x, y)'}</M> 점으로 라그랑주 보간
           </p>
-          <M display>{'f(0) = \\sum_i y_i \\cdot L_i(0)'}</M>
+          <M display>{'\\underbrace{f(0)}_{\\text{비밀 } s \\text{ 복원}} = \\sum_i \\underbrace{y_i}_{\\text{share 값}} \\cdot \\underbrace{L_i(0)}_{\\text{Lagrange 계수}}'}</M>
+          <p className="text-xs text-foreground/50 mt-1"><M>{'t-1'}</M>차 다항식은 서로 다른 <M>{'t'}</M>개 점으로 유일하게 결정됨 → <M>{'x=0'}</M>에서의 값도 선형 결합으로 즉시 계산.</p>
           <p className="text-sm text-foreground/80 mt-2">
             <M>{'L_i'}</M>는 라그랑주 기저 다항식:
           </p>
-          <M display>{'L_i(x) = \\prod_{j \\neq i} \\frac{x - x_j}{x_i - x_j}'}</M>
+          <M display>{'L_i(x) = \\prod_{j \\neq i} \\frac{\\overbrace{x - x_j}^{x_j \\text{에서 0}}}{\\underbrace{x_i - x_j}_{x_i \\text{에서 1 정규화}}}'}</M>
+          <p className="text-xs text-foreground/50 mt-1"><M>{'L_i(x_i) = 1'}</M>, <M>{'L_i(x_j) = 0\\ (j \\neq i)'}</M> — 각 점의 기여를 정확히 해당 <M>{'y_i'}</M>에만 실어주는 가중치.</p>
         </div>
       </div>
 
@@ -94,22 +103,41 @@ export default function ThresholdCrypto() {
         <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-5">
           <p className="font-semibold text-sm text-indigo-400 mb-2">1. DKG (분산 키 생성)</p>
           <ul className="text-sm text-foreground/80 space-y-1.5 list-disc list-inside">
-            <li>Distributed Key Generation</li>
-            <li>아무도 full private key를 보지 못함</li>
-            <li>각자 share만 보유</li>
+            <li>참여자 <M>{'j'}</M>가 각자 다항식 <M>{'f_j(x)'}</M> 생성</li>
+            <li>
+              <M>{'i'}</M>의 share:
+              <M display>{'s_i = \\sum_j f_j(i)'}</M>
+            </li>
+            <li>
+              암묵 비밀키:
+              <M display>{'\\text{sk} = \\sum_j f_j(0)'}</M>
+            </li>
           </ul>
+          <p className="text-xs text-foreground/50 mt-2">아무도 <M>{'\\text{sk}'}</M>를 단독 보유·관찰하지 않음. 각자 <M>{'s_i'}</M>만 가짐.</p>
         </div>
         <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-5">
-          <p className="font-semibold text-sm text-indigo-400 mb-2">2. Signing (분산 서명)</p>
+          <p className="font-semibold text-sm text-indigo-400 mb-2">2. Signing (분산 서명, BLS 예)</p>
           <ul className="text-sm text-foreground/80 space-y-1.5 list-disc list-inside">
-            <li><M>{'t'}</M>개 참여자가 partial sig 생성</li>
-            <li>Combine → full signature</li>
-            <li>Verifier는 표준 검증만 수행</li>
+            <li>
+              partial sig:
+              <M display>{'\\sigma_i = H(m)^{s_i}'}</M>
+            </li>
+            <li>
+              combine:
+              <M display>{'\\sigma = \\prod_{i \\in S} \\underbrace{\\sigma_i^{L_i(0)}}_{\\text{partial 서명을 Lagrange 가중치로 결합}}'}</M>
+            </li>
+            <li>
+              결과:
+              <M display>{'\\sigma = H(m)^{\\text{sk}}'}</M>
+            </li>
           </ul>
+          <p className="text-xs text-foreground/50 mt-2">라그랑주 계수 <M>{'L_i(0)'}</M>로 partial sig를 가중합 → sk 재조립 없이 표준 서명 산출.</p>
         </div>
         <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-5">
           <p className="font-semibold text-sm text-indigo-400 mb-2">3. 외부 관점</p>
-          <p className="text-sm text-foreground/80">일반 서명과 구분 불가 — 검증자는 threshold 구조를 알 필요 없음</p>
+          <p className="text-sm text-foreground/80 mb-2">검증은 일반 BLS와 동일:</p>
+          <M display>{'\\underbrace{e(g,\\; \\sigma)}_{\\text{서명 페어링}} \\stackrel{?}{=} \\underbrace{e(\\text{pk},\\; H(m))}_{\\text{공개키 × 메시지 해시}}'}</M>
+          <p className="text-xs text-foreground/50 mt-2"><M>{'\\text{pk} = \\text{sk} \\cdot G'}</M>는 DKG 산출물. 검증자는 threshold 구조를 알 필요 없음.</p>
         </div>
       </div>
 

@@ -51,7 +51,7 @@ export default function ModuleAutoFlowViz() {
                   {r.label}
                 </text>
                 {show && (
-                  <motion.circle r={3} fill={MODS[r.from].color}
+                  <motion.circle initial={false} r={3} fill={MODS[r.from].color}
                     animate={{ cx: [f.x, t.x], cy: [f.y, t.y] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1.5 }} />
                 )}

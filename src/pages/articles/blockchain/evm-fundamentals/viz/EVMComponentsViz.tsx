@@ -95,9 +95,9 @@ export default function EVMComponentsViz({ onOpenCode }: { onOpenCode?: (key: st
                     fill="var(--muted-foreground)">{p}</text>
                 </g>
               ))}
-              <motion.rect y={CY} width={CW} height={CH} rx={2} fill={`${CV}25`} stroke={CV} strokeWidth={0.8}
+              <motion.rect initial={false} y={CY} width={CW} height={CH} rx={2} fill={`${CV}25`} stroke={CV} strokeWidth={0.8}
                 animate={{ x: [cx(1), cx(1), cx(4)] }} transition={{ times: [0, 0.55, 0.7], duration: 2 }} />
-              <motion.line y1={54} y2={CY + CH / 2} stroke={CV} strokeWidth={0.6}
+              <motion.line initial={false} y1={54} y2={CY + CH / 2} stroke={CV} strokeWidth={0.6}
                 strokeDasharray="3,2" style={{ opacity: 0.6 }}
                 animate={{ x1: [74, 74, 74], x2: [ccx(1), ccx(1), ccx(4)] }}
                 transition={{ times: [0, 0.55, 0.7], duration: 2 }} />

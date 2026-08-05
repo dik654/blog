@@ -61,8 +61,8 @@ export default function EncoderDecoderViz() {
               strokeWidth={step === 4 ? 2 : 1} strokeDasharray={step === 4 ? 'none' : '4 3'}
               animate={{ opacity: step >= 4 ? 0.8 : 0.15 }} />
             {step === 4 && <motion.text x={(EX + W + DX) / 2} y={crossY - 6} textAnchor="middle" fontSize={9} fontWeight={600} fill="#8b5cf6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>K, V</motion.text>}
-            {step >= 1 && step <= 2 && <motion.circle r={5} animate={{ cx: EX + W / 2, cy: 16 + eS[step] * (LH + GAP) + LH / 2 }} transition={{ type: 'spring', bounce: 0.2 }} fill={ENC[eS[step]]?.color} style={{ filter: `drop-shadow(0 0 3px ${ENC[eS[step]]?.color}88)` }} />}
-            {step >= 3 && <motion.circle r={5} animate={{ cx: DX + W / 2, cy: 16 + dS[step] * (LH + GAP) + LH / 2 }} transition={{ type: 'spring', bounce: 0.2 }} fill={DEC[dS[step]]?.color} style={{ filter: `drop-shadow(0 0 3px ${DEC[dS[step]]?.color}88)` }} />}
+            {step >= 1 && step <= 2 && <motion.circle initial={false} r={5} animate={{ cx: EX + W / 2, cy: 16 + eS[step] * (LH + GAP) + LH / 2 }} transition={{ type: 'spring', bounce: 0.2 }} fill={ENC[eS[step]]?.color} style={{ filter: `drop-shadow(0 0 3px ${ENC[eS[step]]?.color}88)` }} />}
+            {step >= 3 && <motion.circle initial={false} r={5} animate={{ cx: DX + W / 2, cy: 16 + dS[step] * (LH + GAP) + LH / 2 }} transition={{ type: 'spring', bounce: 0.2 }} fill={DEC[dS[step]]?.color} style={{ filter: `drop-shadow(0 0 3px ${DEC[dS[step]]?.color}88)` }} />}
           {/* inline body */}
           <motion.text x={380} y={75} fontSize={9}
             fill="var(--muted-foreground)"

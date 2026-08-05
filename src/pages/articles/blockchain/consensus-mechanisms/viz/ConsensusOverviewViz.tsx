@@ -45,7 +45,7 @@ export default function ConsensusOverviewViz() {
                       )}
                       <rect x={CX[i] - 30} y={barY} width={60} height={12} rx={3}
                         fill="var(--border)" opacity={0.2} />
-                      <motion.rect x={CX[i] - 30} y={barY} height={12} rx={3}
+                      <motion.rect initial={false} x={CX[i] - 30} y={barY} height={12} rx={3}
                         animate={{ width: (active || step === 0) ? v * 0.6 : 20, opacity: op }}
                         transition={{ type: 'spring', bounce: 0.1 }}
                         fill={`${m.color}${active ? '60' : '30'}`} />

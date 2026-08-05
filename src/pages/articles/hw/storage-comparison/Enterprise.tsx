@@ -36,114 +36,98 @@ export default function Enterprise() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Enterprise SSD Metrics 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DWPD (Drive Writes Per Day):
-//
-// Calculation:
-// total_writes_per_day = DWPD × capacity × warranty_years × 365
-//
-// Example (3 DWPD × 1.92 TB × 5 years):
-// = 3 × 1.92 × 5 × 365
-// = 10,512 TB written
-// = 10.5 PB lifetime writes
-//
-// Consumer SSDs: 0.3 DWPD
-// - 1 TB × 0.3 × 3 years × 365 = 330 TB
-//
-// Read-intensive: 1 DWPD
-// - typical enterprise: databases, VMs
-//
-// Mixed-use: 3 DWPD
-// - file servers, caching
-//
-// Write-intensive: 10 DWPD
-// - transactional DBs, heavy logging
-// - Filecoin PC1 sealing
-//
-// Ultra-endurance: 25+ DWPD
-// - Optane P5800X
-// - specialty workloads
+        <h3 className="text-xl font-semibold mt-8 mb-3">DWPD 계산</h3>
+        <p className="leading-7">
+          total_writes_per_day = DWPD × capacity × warranty_years × 365
+        </p>
+        <p className="leading-7">
+          예시 — 3 DWPD × 1.92 TB × 5 년 = 10,512 TB = 10.5 PB lifetime writes.
+        </p>
 
-// NAND flash endurance:
-// - SLC: 100K P/E cycles
-// - MLC: 10K P/E cycles
-// - TLC: 1-3K P/E cycles
-// - QLC: 500-1K P/E cycles
-// - over-provisioning extends life
+        <h3 className="text-xl font-semibold mt-8 mb-3">DWPD 등급별 워크로드</h3>
+        <ul className="leading-7">
+          <li><strong>0.3 DWPD (consumer)</strong> — 1 TB × 0.3 × 3 년 = 330 TB.</li>
+          <li><strong>1 DWPD (read-intensive)</strong> — 일반 엔터프라이즈, DB, VM.</li>
+          <li><strong>3 DWPD (mixed-use)</strong> — 파일 서버, 캐싱.</li>
+          <li><strong>10 DWPD (write-intensive)</strong> — 트랜잭션 DB, heavy logging, Filecoin PC1 sealing.</li>
+          <li><strong>25+ DWPD (ultra-endurance)</strong> — Optane P5800X, 특수 워크로드.</li>
+        </ul>
 
-// Power Loss Protection (PLP):
-//
-// Problem:
-// - SSD has DRAM cache
-// - writes acknowledge when in cache
-// - power loss → cache lost
-// - corrupted transactions
+        <h3 className="text-xl font-semibold mt-8 mb-3">NAND flash 내구성</h3>
+        <ul className="leading-7">
+          <li>SLC — 100K P/E cycle</li>
+          <li>MLC — 10K P/E cycle</li>
+          <li>TLC — 1~3K P/E cycle</li>
+          <li>QLC — 500~1K P/E cycle</li>
+          <li>over-provisioning 으로 수명 연장</li>
+        </ul>
 
-// Solution: Capacitors
-// - large tantalum caps on PCB
-// - 5-15ms power reserve
-// - enough to flush cache to NAND
-// - ensures data durability
+        <h3 className="text-xl font-semibold mt-8 mb-3">PLP 가 필요한 이유</h3>
+        <p className="leading-7">
+          SSD 의 DRAM cache 에 write 가 ack 된 직후 정전이 일어나면 cache 데이터 손실 → transaction 손상. PLP 가 이 윈도를 봉쇄.
+        </p>
 
-// PLP implementations:
-// - Intel/Solidigm: power loss imminent (PLI)
-// - Samsung: Backup Power Module
-// - Kioxia: Power Loss Data Protection
+        <h3 className="text-xl font-semibold mt-8 mb-3">PLP 구현</h3>
+        <ul className="leading-7">
+          <li>PCB 위 대형 탄탈럼 커패시터</li>
+          <li>5~15ms 전력 예비</li>
+          <li>cache 를 NAND 로 flush 시간 확보</li>
+          <li>데이터 durability 보장</li>
+        </ul>
 
-// Consumer vs Enterprise PLP:
-// Consumer SSDs:
-// - no PLP typically
-// - rely on file system journals
-// - risk of corruption on outage
-//
-// Enterprise SSDs:
-// - full PLP standard
-// - tested reliability
-// - critical for databases, filesystems
+        <h3 className="text-xl font-semibold mt-8 mb-3">제조사별 PLP 명칭</h3>
+        <ul className="leading-7">
+          <li>Intel/Solidigm — Power Loss Imminent (PLI)</li>
+          <li>Samsung — Backup Power Module</li>
+          <li>Kioxia — Power Loss Data Protection</li>
+        </ul>
 
-// Over-Provisioning (OP):
-//
-// Consumer: 7% OP
-// - 1.024 TB raw → 1 TB usable
-// - basic wear leveling
-//
-// Enterprise: 28% OP
-// - 1.92 TB raw → 1.5 TB usable
-// - enhanced performance
-// - sustained write improvement
-// - longer endurance
+        <h3 className="text-xl font-semibold mt-8 mb-3">Consumer vs Enterprise PLP</h3>
+        <ul className="leading-7">
+          <li><strong>Consumer</strong> — 보통 PLP 없음. 파일시스템 저널 의존, 정전 시 손상 위험.</li>
+          <li><strong>Enterprise</strong> — full PLP 표준, 검증된 신뢰성. DB / 파일시스템에 결정적.</li>
+        </ul>
 
-// Benefits:
-// - spare blocks for wear leveling
-// - steady-state performance
-// - garbage collection efficiency
-// - longer life
+        <h3 className="text-xl font-semibold mt-8 mb-3">Over-Provisioning (OP)</h3>
+        <ul className="leading-7">
+          <li><strong>Consumer 7% OP</strong> — 1.024 TB raw → 1 TB usable. 기본 wear leveling.</li>
+          <li><strong>Enterprise 28% OP</strong> — 1.92 TB raw → 1.5 TB usable. 향상된 성능, 지속 쓰기 개선, 더 긴 수명.</li>
+        </ul>
 
-// Additional Enterprise Features:
-// - End-to-End Data Protection (T10-PI)
-// - Self-Encrypting Drives (SED)
-// - FIPS 140-2 certification
-// - multi-path I/O (dual-port SAS)
-// - namespaces (multi-tenant)
-// - SMART monitoring
+        <h3 className="text-xl font-semibold mt-8 mb-3">OP 의 효과</h3>
+        <ul className="leading-7">
+          <li>wear leveling 용 spare block</li>
+          <li>steady-state 성능</li>
+          <li>garbage collection 효율</li>
+          <li>수명 연장</li>
+        </ul>
 
-// Practical SSD selection:
-//
-// Workload: Filecoin PC1 cache
-// Writes: 352 GiB per sector
-// Sectors/day: 10-20
-// Daily writes: 3.5-7 TB
-// Drive: 3.84 TB, 3 DWPD
-// Lifetime: 5+ years
-// Choice: Samsung PM1733 or similar
+        <h3 className="text-xl font-semibold mt-8 mb-3">엔터프라이즈 추가 기능</h3>
+        <ul className="leading-7">
+          <li>End-to-End Data Protection (T10-PI)</li>
+          <li>Self-Encrypting Drive (SED)</li>
+          <li>FIPS 140-2 인증</li>
+          <li>multi-path I/O (dual-port SAS)</li>
+          <li>namespace (multi-tenant)</li>
+          <li>SMART 모니터링</li>
+        </ul>
 
-// Workload: Reth DB
-// - random I/O, not heavy writes
-// - 1 DWPD sufficient
-// - IOPS important
-// - $200-300/TB suitable`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">실전 SSD 선택 — Filecoin PC1 cache</h3>
+        <ul className="leading-7">
+          <li>sector 당 352 GiB 쓰기</li>
+          <li>일 10~20 sector → 일 3.5~7 TB</li>
+          <li>드라이브 — 3.84 TB, 3 DWPD</li>
+          <li>수명 — 5년+</li>
+          <li>선택 — Samsung PM1733 또는 동급</li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">실전 SSD 선택 — Reth DB</h3>
+        <ul className="leading-7">
+          <li>random I/O, write 부담 적음</li>
+          <li>1 DWPD 충분</li>
+          <li>IOPS 가 중요</li>
+          <li>$200~$300/TB 수준 적합</li>
+        </ul>
         <p className="leading-7">
           Enterprise SSD: <strong>DWPD 3-10x consumer, PLP capacitors, 28% OP</strong>.<br />
           lifetime writes: 10+ PB, 5년 warranty.<br />

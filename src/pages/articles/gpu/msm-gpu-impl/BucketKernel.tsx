@@ -1,20 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
-
-const sortApproach = `// 버킷 누적: 정렬 기반 접근 (race condition 회피)
-//
-// 문제: 여러 스레드가 같은 bucket[k]에 점을 더하면 충돌
-// 해법: (window_val, point_idx) 쌍을 window_val 기준 정렬
-//       → 같은 버킷의 점들이 연속 배치 → 순차 누적
-//
-// 단계:
-// 1. (window_val, point_idx) 쌍 생성
-// 2. cub::DeviceRadixSort::SortPairs — GPU 기수 정렬
-// 3. 연속된 같은 window_val 구간을 찾아 점 누적
-
-// 정렬 후 데이터 예시 (c=4, 16개 버킷):
-// window_val: [0, 0, 1, 1, 1, 3, 3, 5, ...]
-// point_idx:  [7, 2, 0, 5, 9, 1, 4, 8, ...]
-//             ↑ bucket 0  ↑ bucket 1   ↑ bucket 3`;
+import SortApproachViz from './viz/SortApproachViz';
 
 const accumKernel = `// 버킷 누적 커널 (정렬 후)
 // 각 스레드 블록이 하나의 버킷 범위를 처리
@@ -61,11 +46,7 @@ export default function BucketKernel() {
           실전 구현(sppark, ICICLE)은 방법 2를 주로 사용한다.<br />
           CUDA의 <code>cub::DeviceRadixSort</code>가 GPU 기수 정렬을 효율적으로 수행하기 때문이다.
         </p>
-        <CodePanel title="정렬 기반 버킷 분류 전략" code={sortApproach} annotations={[
-          { lines: [3, 5], color: 'sky', note: '문제와 해법' },
-          { lines: [7, 10], color: 'emerald', note: '3단계 파이프라인' },
-          { lines: [12, 15], color: 'amber', note: '정렬 후 데이터 배치' },
-        ]} />
+        <SortApproachViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">누적 커널 구현</h3>
         <p>

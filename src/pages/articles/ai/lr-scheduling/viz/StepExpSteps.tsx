@@ -13,8 +13,8 @@ function Axes() {
     <g>
       <line x1={40} y1={145} x2={445} y2={145} stroke="var(--border)" strokeWidth={1} />
       <line x1={40} y1={20} x2={40} y2={145} stroke="var(--border)" strokeWidth={1} />
-      <text x={445} y={160} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">epoch</text>
-      <text x={34} y={22} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">η</text>
+      <text x={472} y={160} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">epoch</text>
+      <text x={13} y={82} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)" transform="rotate(-90 13 82)">LR η</text>
       {[0, 25, 50, 75, 100].map(t => (
         <text key={t} x={px(t)} y={158} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">{t}</text>
       ))}
@@ -56,9 +56,9 @@ export function StepExpStep0() {
       ].map((a, i) => (
         <motion.g key={i} {...slideR(0.2 + i * 0.12)}>
           <circle cx={px(a.t)} cy={py(a.lr)} r={3} fill={C.step} />
-          <rect x={px(a.t) - 32} y={py(a.lr) - 18} width={64} height={14} rx={3}
+          <rect x={px(a.t) - 32} y={a.lr >= 0.9 ? py(a.lr) + 7 : py(a.lr) - 18} width={64} height={14} rx={3}
             fill="var(--card)" stroke={C.step} strokeWidth={0.8} />
-          <text x={px(a.t)} y={py(a.lr) - 8} textAnchor="middle"
+          <text x={px(a.t)} y={a.lr >= 0.9 ? py(a.lr) + 17 : py(a.lr) - 8} textAnchor="middle"
             fontSize={8} fontWeight={600} fill={C.step}>{a.label}</text>
         </motion.g>
       ))}

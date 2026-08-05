@@ -42,7 +42,7 @@ export default function KZG({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
         <div className="not-prose my-4">
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">다항식 인수정리 기반 증명</p>
-            <M display>{'f(z) = y \\iff (x - z) \\mid (f(x) - y)'}</M>
+            <M display>{'\\underbrace{f(z) = y}_{\\text{평가 결과 주장}} \\iff \\underbrace{(x - z) \\mid (f(x) - y)}_{(x-z) \\text{가 } (f(x)-y) \\text{를 나눔}}'}</M>
             <p className="text-sm text-muted-foreground mt-2">즉, <M>{'f(x) - y = q(x) \\cdot (x - z)'}</M>인 다항식 <M>{'q(x)'}</M>가 존재</p>
             <div className="mt-3 rounded border border-emerald-500/30 p-3">
               <p className="text-sm text-emerald-400 font-medium mb-1">증명자-검증자 흐름</p>
@@ -51,7 +51,7 @@ export default function KZG({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
                 <li><M>{'q(x) = (f(x) - y) / (x - z)'}</M>를 계산해서 제출</li>
                 <li>검증자: 타원곡선 위에서 pairing으로 확인</li>
               </ol>
-              <M display>{'e([q]_1,\\; [\\tau - z]_2) = e([f - y]_1,\\; G_2)'}</M>
+              <M display>{'e(\\underbrace{[q]_1}_{\\text{몫 커밋}},\\; \\underbrace{[\\tau - z]_2}_{\\text{인수}}) = e(\\underbrace{[f - y]_1}_{\\text{평가 차이 커밋}},\\; G_2)'}</M>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function KZG({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
         <div className="not-prose my-4">
           <div className="rounded-lg border border-border/60 p-4">
             <p className="font-semibold text-sm text-muted-foreground mb-2">SRS 구성</p>
-            <M display>{'\\text{SRS} = \\{ [\\tau^0]_1, [\\tau^1]_1, \\ldots, [\\tau^d]_1, [\\tau]_2 \\}'}</M>
+            <M display>{'\\text{SRS} = \\{ \\underbrace{[\\tau^0]_1, [\\tau^1]_1, \\ldots, [\\tau^d]_1}_{G_1 \\text{ 원소 d+1개 (commit 용)}}, \\underbrace{[\\tau]_2}_{G_2 \\text{ 원소 1개 (verify 용)}} \\}'}</M>
             <p className="text-sm text-muted-foreground mt-2">여기서 <M>{'[x]_1 = x \\cdot G_1,\\; [x]_2 = x \\cdot G_2'}</M>. <M>{'\\tau'}</M> 자체는 MPC 세레모니 후 폐기 (toxic waste)</p>
           </div>
         </div>
@@ -70,17 +70,17 @@ export default function KZG({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
         <div className="not-prose my-4 space-y-3">
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">Commit -- MSM 연산</p>
-            <M display>{'C = \\sum_i f_i \\cdot [\\tau^i]_1 = [f(\\tau)]_1'}</M>
+            <M display>{'\\underbrace{C}_{\\text{커밋먼트 (G₁ 점)}} = \\underbrace{\\sum_i f_i \\cdot [\\tau^i]_1}_{\\text{MSM (Multi-Scalar Mul)}} = \\underbrace{[f(\\tau)]_1}_{f(\\tau) \\text{의 곡선 인코딩}}'}</M>
           </div>
           <div className="rounded-lg border border-emerald-500/30 p-4">
             <p className="font-semibold text-sm text-emerald-400 mb-2">Open -- 다항식 나눗셈</p>
             <p className="text-sm text-muted-foreground"><M>{'y = f(z)'}</M></p>
-            <M display>{'q(x) = \\frac{f(x) - y}{x - z}'}</M>
+            <M display>{'q(x) = \\frac{\\overbrace{f(x) - y}^{x=z \\text{ 일 때 0}}}{\\underbrace{x - z}_{\\text{근 인수}}}'}</M>
             <p className="text-sm text-muted-foreground">증거: <M>{'\\pi = [q(\\tau)]_1'}</M> (G1 점 1개)</p>
           </div>
           <div className="rounded-lg border border-violet-500/30 p-4">
             <p className="font-semibold text-sm text-violet-400 mb-2">Verify -- 페어링 검증</p>
-            <M display>{'e(\\pi,\\; [\\tau - z]_2) \\stackrel{?}{=} e(C - [y]_1,\\; G_2)'}</M>
+            <M display>{'e(\\underbrace{\\pi}_{\\text{몫 증명}},\\; \\underbrace{[\\tau - z]_2}_{(\\tau-z) \\cdot G_2}) \\stackrel{?}{=} e(\\underbrace{C - [y]_1}_{\\text{커밋 - 평가값}},\\; G_2)'}</M>
             <p className="text-sm text-muted-foreground mt-1">양변 = <M>{'[q(\\tau)(\\tau - z)]_T = [(f(\\tau) - y)]_T'}</M></p>
           </div>
         </div>
@@ -92,8 +92,8 @@ export default function KZG({ onCodeRef }: { onCodeRef: (key: string, ref: CodeR
             <p className="font-semibold text-sm text-muted-foreground mb-2">Batch Opening</p>
             <div className="rounded border border-sky-500/30 p-3 mb-3">
               <p className="text-sm text-sky-400 font-medium mb-1">다항식 선형 결합</p>
-              <M display>{'\\text{combined}(x) = f_0(x) + \\nu \\cdot f_1(x) + \\nu^2 \\cdot f_2(x) + \\cdots'}</M>
-              <M display>{'\\text{combined\\_y} = y_0 + \\nu \\cdot y_1 + \\nu^2 \\cdot y_2 + \\cdots'}</M>
+              <M display>{'\\text{combined}(x) = \\underbrace{f_0(x) + \\nu \\cdot f_1(x) + \\nu^2 \\cdot f_2(x) + \\cdots}_{\\nu \\text{ 멱승으로 가중치 부여한 선형 결합}}'}</M>
+              <M display>{'\\text{combined\\_y} = \\underbrace{y_0 + \\nu \\cdot y_1 + \\nu^2 \\cdot y_2 + \\cdots}_{\\text{같은 } \\nu \\text{ 로 평가값도 결합}}'}</M>
               <p className="text-sm text-muted-foreground mt-1">하나의 quotient: <M>{'q(x) = (\\text{combined}(x) - \\text{combined\\_y}) / (x - z)'}</M></p>
             </div>
             <div className="rounded border border-emerald-500/30 p-3">

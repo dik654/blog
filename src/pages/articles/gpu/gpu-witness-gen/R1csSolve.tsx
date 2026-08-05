@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
+import DependencyGraphViz from './viz/DependencyGraphViz';
 
 const sequentialCode = `// R1CS: (A * w) ⊙ (B * w) = (C * w)
 // A, B, C는 희소 행렬, w는 witness 벡터, ⊙은 원소별 곱
@@ -20,21 +21,6 @@ fn solve_witness_sequential(constraints: &[R1CSConstraint], public: &[Fr]) -> Ve
 }
 // 문제: 제약 i가 제약 j의 출력에 의존하면, j를 먼저 풀어야 한다.
 // → 순차 실행이 강제되는 "의존성 체인"이 존재한다.`;
-
-const depCode = `// 의존성 그래프 예시 (산술 회로: x^3 + x + 5)
-//
-// Level 0:  w1 = x (public input, 의존성 없음)
-// Level 1:  w2 = w1 * w1        → w1에 의존
-// Level 2:  w3 = w2 * w1        → w2, w1에 의존
-// Level 3:  w4 = w3 + w1 + 5    → w3, w1에 의존
-//
-// Critical path = Level 0 → 1 → 2 → 3 (4단계)
-// 이 회로는 완전 순차적이다.
-//
-// 반면, 독립적인 서브회로가 많으면:
-// Level 0: w1=x1, w2=x2, w3=x3  (3개 동시 가능)
-// Level 1: w4=w1*w1, w5=w2*w2, w6=w3*w3  (3개 동시 가능)
-// → 병렬화 여지가 생긴다.`;
 
 export default function R1csSolve() {
   return (
@@ -70,12 +56,7 @@ export default function R1csSolve() {
           경로가 짧을수록 동시에 풀 수 있는 제약이 많아진다.
         </p>
 
-        <CodePanel title="의존성 그래프와 레벨 구조" code={depCode}
-          annotations={[
-            { lines: [3, 6], color: 'sky', note: '선형 의존 = 완전 순차' },
-            { lines: [8, 9], color: 'amber', note: 'Critical path = 레벨 수' },
-            { lines: [11, 13], color: 'emerald', note: '독립 서브회로 = 레벨 내 병렬' },
-          ]} />
+        <div className="not-prose my-6"><DependencyGraphViz /></div>
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 import InductiveBiasViz from './viz/InductiveBiasViz';
 import BiasDetailViz from './viz/BiasDetailViz';
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
 export default function InductiveBias() {
   return (
@@ -53,6 +54,14 @@ export default function InductiveBias() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">수용야 & 효율적 합성곱</h3>
         <M display>{'\\text{RF}_l = \\text{RF}_{l-1} + \\underbrace{(k_l - 1) \\times \\prod_{i=1}^{l-1} s_i}_{\\text{누적 stride 반영}}'}</M>
+        <FormulaNote
+          meaning="l번째 층의 이론적 수용야는 이전 층이 이미 보던 범위에, 새 커널이 이전 입력 좌표계에서 넓히는 범위를 더해 얻는다. 앞선 층의 stride가 클수록 현재 커널 한 칸이 원본 이미지에서 더 넓은 거리를 건너뛴다. 실제 영향력이 중앙에 몰리는 유효 수용야는 이론값보다 작을 수 있다."
+          symbols={[
+            ['\\mathrm{RF}_l', 'l번째 층의 한 출력이 원본 입력에서 볼 수 있는 이론적 범위'],
+            ['k_l-1', '현재 커널이 이전 수용야 바깥으로 추가하는 칸 수'],
+            ['\\prod_{i=1}^{l-1}s_i', '현재 한 칸을 원본 입력 좌표의 거리로 바꾸는 누적 stride'],
+          ]}
+        />
       </div>
       <div className="not-prose my-6">
         <BiasDetailViz />

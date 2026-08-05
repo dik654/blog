@@ -1,0 +1,242 @@
+{
+  "run_id": "2026-07-19-robot-drive-isolation-emc-safety",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing robot-drive isolation, EMC and functional-safety foundation from hazard contracts through insulation-coordination inputs, switching-transient coupling, CM/DM evidence, stop-function allocation, redundant STO timing and lifecycle safety cases, then reconstruct TI TIDA-01599 and its TÜV concept assessment without turning a reference design into a machine-certification claim.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue the bottom-up robotics chain after FOC, inverter hardware and regenerated-energy handling by proving what isolation, EMC integrity, operational braking, STO, mechanical holding and safe access each do and do not establish.",
+    "depth_intent": "Write a private compound failure first and require the public articles to supply enough causal insight to resolve all thirty-two premises without publishing the scenario as a quiz.",
+    "source_intent": "Use current official standard landing pages to define scope, purchased normative tables only as a bounded handoff, and TI/TÜV primary documents as a versioned company-reference spine whose assumptions and exclusions remain visible.",
+    "formula_intent": "Every display equation carries Korean operation reasons inside KaTeX and exactly one FormulaNote. If a formula becomes too small on mobile, split the reasoning into atomic lines instead of hiding it behind horizontal scrolling.",
+    "visual_intent": "Choose a different visual grammar for contract allocation, insulation readiness, transient coupling, return paths, source-path-victim mitigation, test evidence, function allocation, redundant diagnostics, timing and lifecycle evidence. Color changes alone do not count as redesign.",
+    "small_model_intent": "Preserve claim, condition, source, non-transfer boundary, derivation, visual state, failed metric and repair state so a 4B model can replay one atomic packet and a 9B model can replay one causal section."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-motor-drive-foc explains how a requested torque becomes current, voltage and PWM",
+      "robot-power-electronics-motor-driver explains the DC link, switches, gate drive, sensing, protection and board bring-up",
+      "robot-drive-energy-braking-safety explains mechanical-energy destinations, bus headroom, choppers, contactors and operational stop evidence",
+      "reference-ti-tida-010956-2025 and reference-abb-electrical-braking-2018 provide concrete inverter and braking evidence spines"
+    ],
+    "missing_chain": [
+      "hazard-first separation of protective isolation, functional/noise isolation, EMC, braking, STO, holding and safe access",
+      "insulation-coordination input readiness without fabricated universal millimetre values",
+      "barrier capacitance, CMTI, propagation skew, isolated-rail decay and false switching",
+      "closed common-mode current paths and explicit common/differential current conventions",
+      "source-path-victim diagnosis, loop area, shield/chassis/PE roles and filter-resonance boundaries",
+      "emissions and immunity evidence with setup, detector, bandwidth, load, cable, uncertainty and margin",
+      "controlled stop, coast/STO, mechanical holding, DC-link discharge and safe-access allocation",
+      "dual-channel independence, common-cause paths, diagnostic coverage, diagnostic-test interval and fault injection",
+      "electronic torque-off time versus physical motion-safe time",
+      "safety-case evidence that survives revision, firmware, component, production and lifecycle changes"
+    ],
+    "scope_split": {
+      "decision": "Keep mechanism-level isolation/EMC/STO education in one concept article and place TIDA-01599/TÜV source reconstruction in a separate reference article.",
+      "reason": "The concept article must teach transferable reasoning without inheriting vendor assumptions. The reference article must preserve board topology, test points, revision identity, exclusions and assessor scope without interrupting the causal curriculum.",
+      "deferred_boundary": "Final creepage/clearance tables, PL/SIL target selection, quantitative reliability, holding-brake sizing, machine risk assessment and conformity assessment remain system-specific work."
+    }
+  },
+  "private_transfer_gate": {
+    "premise_count": 32,
+    "artifact": "src/pages/articles/ai/content-specs/robot-drive-isolation-emc-functional-safety.md",
+    "scenario": "A seven-axis 48 V mobile manipulator uses undeclared isolation intent, copied spacing, incomplete barrier components, faster switching edges, uncontrolled CM paths, symptom-driven ferrites, two nominal STO channels with shared dependencies, timer-based rail removal and brake application, MCU-correlated READY feedback, no fault injection, a falling vertical axis and an unbounded SIL3/PL e claim inherited from TIDA-01599.",
+    "required_insight_groups": [
+      "name the hazard and boundary before choosing an isolation function",
+      "treat isolator, isolated power, connector and PCB geometry as one insulation system",
+      "collect voltage, impulse, environment, pollution, material and altitude inputs before normative lookup",
+      "connect C dv/dt, CMTI, skew, UVLO, rail decay and stored gate energy to transient failure",
+      "draw a full high-frequency return loop and decompose CM/DM current with a declared direction",
+      "map each mitigation to source, coupling path or victim and retain resonance, saturation and leakage boundaries",
+      "turn emissions/immunity measurements into setup-bound evidence rather than screenshots",
+      "allocate controlled stopping, STO, holding, discharge and safe access as separate functions",
+      "prove two-channel independence with common-cause analysis, diagnostics, DTI and injected faults",
+      "end reaction timing at the risk-defined physical endpoint rather than a READY bit",
+      "preserve TIDA revision, board observation, external assumption, diagnostic exclusion and TÜV concept-review scope",
+      "limit deployment to the intersection of current requirements, architecture, diagnostic, test and lifecycle evidence"
+    ],
+    "publication_policy": "The integrated scenario remains private. Every premise maps to causal prose, a Korean-annotated equation, an interactive observable, a counterexample, a source boundary or an evidence gate."
+  },
+  "source_decisions": [
+    {
+      "source": "IEC 61800-5-1:2022",
+      "locator": "https://webstore.iec.ch/en/publication/62103",
+      "used_for": ["power-drive product-safety scope", "insulation-coordination input handoff", "whole-boundary reasoning"],
+      "boundary": "The article does not reproduce proprietary normative tables or issue final creepage, clearance, impulse or dielectric ratings."
+    },
+    {
+      "source": "IEC 61800-3:2022 and COR1:2025",
+      "locator": "https://webstore.iec.ch/en/publication/62102",
+      "used_for": ["power-drive EMC scope", "installation-dependent emissions and immunity evidence"],
+      "boundary": "A board-level pre-compliance trace does not establish installed-machine conformity across cables, enclosure, load and operating modes."
+    },
+    {
+      "source": "IEC 61800-5-2:2016",
+      "locator": "https://webstore.iec.ch/en/publication/24556",
+      "used_for": ["safety-related drive-system scope", "STO function boundary", "electronics versus machine endpoint"],
+      "boundary": "The standard title and article do not select the reader's risk target or certify an architecture."
+    },
+    {
+      "source": "ISO 13849-1:2023",
+      "locator": "https://www.iso.org/standard/73481.html",
+      "used_for": ["current safety-related control-system context", "architecture, software and lifecycle handoff"],
+      "boundary": "PL/category selection and quantitative validation require the actual machine, mission profile, component data and current normative process."
+    },
+    {
+      "source": "TI TIDA-01599 design guide TIDUDS9B",
+      "locator": "https://www.ti.com/lit/ug/tiduds9/tiduds9.pdf",
+      "identity": "December 2017, revised November 2022, 35 pages",
+      "used_for": ["dual-channel de-energize-to-trip topology", "STO_1 and STO_2 path distinction", "test-pulse contract", "external assumptions", "measured board response", "E1.0 versus E2.1 revision trail"],
+      "boundary": "The reference design excludes or delegates quantitative reliability, MCU/software, final diagnostics, PCB common-cause controls, final supplies/protections, integration and machine certification."
+    },
+    {
+      "source": "TÜV SÜD report TF97657T Revision 1.1",
+      "locator": "https://www.ti.com/lit/cr/sffs085/sffs085.pdf",
+      "identity": "9 February 2022, 9 pages",
+      "used_for": ["concept-review scope", "block FMEA assessment", "end-user safety-management, DTI, diagnostic and integration duties"],
+      "boundary": "The report is not a certificate for the reader's machine and cites the historical ISO 13849-1:2015 basis rather than the current 2023 edition."
+    },
+    {
+      "source": "TI SLVA959B and TI isolated-gate-driver/CMTI technical material",
+      "locator": "https://www.ti.com/lit/an/slva959b/slva959b.pdf",
+      "used_for": ["CM/DM mechanisms", "high-current loop geometry", "barrier transient and CMTI intuition"],
+      "boundary": "Device and layout guidance is not an EMC certificate; CMTI must be read with the datasheet test conditions and system waveform."
+    }
+  ],
+  "source_extraction": {
+    "local_documents": [
+      { "file": "/tmp/pdfs/ti-tida-01599-sto-guide.pdf", "pages": 35 },
+      { "file": "/tmp/pdfs/ti-tida-01599-tuev-report.pdf", "pages": 9 }
+    ],
+    "text_extracts": [
+      "/tmp/pdfs/ti-tida-01599-sto-guide.txt",
+      "/tmp/pdfs/ti-tida-01599-tuev-report.txt"
+    ],
+    "rendered_directories": [
+      "/tmp/pdfs/rendered-tida01599",
+      "/tmp/pdfs/rendered-tida01599-tuev"
+    ],
+    "visually_inspected_pages": {
+      "design_guide": [4, 5, 11, 25, 27, 28, 32],
+      "tuev_report": [7, 8]
+    },
+    "evidence_boundary": "The public explorer labels architecture, assumptions, diagnostics, timing, revision and TÜV scope separately. The approximately 2.7 ms, 7.4 ms and 1.52 ms values remain board/revision/test-point observations, not universal STO or machine stop times."
+  },
+  "events": [
+    {
+      "event_id": "audit.contracts.001",
+      "observed": "The preceding curriculum used stop and safety language across FOC, braking, contactors and inverter protection without one place that separated the physical claim of each function.",
+      "inference": "A reader could incorrectly treat zero torque command, regenerative stop, STO, mechanical hold and zero bus voltage as interchangeable.",
+      "decision": "Begin with a hazard-contract matrix and keep operational braking, STO, holding and safe access as distinct outcomes throughout the article.",
+      "verification": "The first lab deliberately leaves motion, holding and stored-bus badges unresolved when STO is selected."
+    },
+    {
+      "event_id": "standards.boundary.001",
+      "observed": "Insulation and functional-safety decisions depend on normative classifications and current editions, while copied values would be both unsafe and misleading.",
+      "inference": "The blog should teach the input-completeness process and evidence contract, not impersonate the standard or a conformity assessor.",
+      "decision": "Implement an insulation-readiness gate with no universal millimetre output and state every PL/SIL and certification handoff explicitly.",
+      "verification": "No final spacing, voltage rating, PL, SIL, PFH or MTTFd value is issued by either article."
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "observed": "A dual-channel-looking robot can pass a nominal button test while thirty-two electrical, EMC, timing, diagnostic, common-cause and evidence premises remain false.",
+      "inference": "A component catalog or standards summary would not force enough depth to diagnose the compound failure.",
+      "decision": "Use the private thirty-two-premise scenario as a coverage gate before prose or Viz implementation.",
+      "verification": "The content spec maps every premise to one of ten concept sections or the company-reference reconstruction."
+    },
+    {
+      "event_id": "source.reference.001",
+      "observed": "TIDA-01599 presents a credible dual-channel STO concept but its diagnostic path, external rails/protections, revision provenance and TÜV scope are easy to flatten into a headline SIL3/PL e claim.",
+      "inference": "The source must be reconstructed as evidence states rather than summarized as a board feature list.",
+      "decision": "Build six selectable views for architecture, assumptions, diagnostics, timing, revision and TÜV scope.",
+      "verification": "STO_1 and STO_2 paths, MCU exclusion, E1.0/E2.1 distinction, fifteen major changes and concept-not-machine-cert boundaries remain visible."
+    },
+    {
+      "event_id": "implementation.visual.001",
+      "observed": "Topology, current return, fault sets, timing and evidence maturity cannot be explained well by one repeated box-arrow scene.",
+      "inference": "The observable and interaction must change with the causal mechanism, including a vertical recomposition on narrow screens.",
+      "decision": "Implement ten distinct concept labs with thin connectors, stable geometry, restrained color roles, compact ledgers and mobile-specific composition.",
+      "verification": "All ten public labs expose visible state change with no inner scrolling or clipped labels at 360, 390, 768 and 1440 px."
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "observed": "The first focused browser run measured minimum mobile formula scales near 0.54 and 0.60 for semantically overloaded equations.",
+      "inference": "Lowering the acceptance threshold or scrolling would preserve syntax while destroying reading order.",
+      "decision": "Recompose STO timing as front-end and power-off groups, split CM/DM definitions into aligned lines, and express the deployable claim as grouped intersections.",
+      "verification": "Post-font-load minimum scales are 0.78/0.87 for the concept article and 0.74/0.85 for the reference article at 360/390 px; tablet and desktop remain 1.0."
+    },
+    {
+      "event_id": "qa.typescript.001",
+      "observed": "The production Vite build passed, while the repository-wide strict TypeScript command still reports existing errors in unrelated legacy article visualizations and old ConceptPrimer props.",
+      "inference": "The milestone must not claim a green repository-wide type baseline, but directly connected files should not add avoidable failures.",
+      "decision": "Fix outdated ConceptPrimer props in the two connected drive articles and record the remaining pre-existing strict-type debt without widening this milestone.",
+      "verification": "The new isolation/reference files produce no reported strict-type error; production build and focused browser regression pass."
+    },
+    {
+      "event_id": "deploy.public.001",
+      "observed": "Local captures cannot prove that the reverse-proxied public bundle contains the final mobile formula repairs.",
+      "inference": "Completion requires a production build, user-service restart, public HTTP checks and the same browser suite against the public host.",
+      "decision": "Restart cm-blog.service and rerun the twelve-test isolation suite on production.",
+      "verification": "Both public routes return HTTP 200 and all twelve public tests passed in 25.7 seconds."
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-drive-isolation-emc-functional-safety.md",
+    "concept_article": "src/pages/articles/ai/robot-drive-isolation-emc-functional-safety.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-drive-isolation-emc-functional-safety/viz/IsolationSafetyLabs.tsx",
+    "reference_spec": "src/pages/articles/ai/paper-spine/robotDriveSafetySpecs.tsx",
+    "reference_viz": "src/pages/articles/ai/paper-spine/viz/TidaStoReferenceLab.tsx",
+    "reference_article": "src/pages/articles/ai/reference-ti-tida-01599-sto-2022.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "qa_test": "tests/isolation-emc-safety-qa.spec.ts",
+    "visual_captures": "/tmp/isolation-visual-qa",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-drive-isolation-emc-safety.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-drive-isolation-emc-safety-report.md"
+  },
+  "qa": {
+    "production_build": "passed; the repository's pre-existing warning for chunks larger than 900 kB remains",
+    "strict_typescript": "not green because of pre-existing unrelated errors; no new isolation/reference file error was reported",
+    "focused_local_playwright": "12 passed in 27.6 seconds",
+    "connected_regression_playwright": "36 passed in 29.7 seconds across power electronics, braking and isolation milestones",
+    "public_playwright": "12 passed in 25.7 seconds",
+    "formula_counts": { "concept": 16, "concept_notes": 16, "reference": 6, "reference_notes": 6 },
+    "viz_counts": { "concept_labs": 10, "reference_explorer_states": 6 },
+    "public_viewports": {
+      "360": { "concept_min_math_scale": 0.78, "reference_min_math_scale": 0.74, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "390": { "concept_min_math_scale": 0.87, "reference_min_math_scale": 0.85, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "768": { "concept_min_math_scale": 1, "reference_min_math_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 },
+      "1440": { "concept_min_math_scale": 1, "reference_min_math_scale": 1, "overflow": 0, "inner_scroll": 0, "raw_latex": 0, "english_only_formula_annotations": 0, "console_errors": 0 }
+    },
+    "interaction_checks": "All ten concept labs changed visible state; all six TIDA evidence views exposed their declared architecture, assumption, diagnostic, timing, revision or TÜV-scope boundary.",
+    "visual_review": "Mobile and desktop captures for the first contract lab, common-mode path, STO timing, safety case, TIDA architecture and revision were inspected. Narrow layouts recompose rather than crop or scroll.",
+    "public_deployment": {
+      "service": "cm-blog.service active after final production restart",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-drive-isolation-emc-functional-safety",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/reference-ti-tida-01599-sto-2022",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai?sub=ai-robotics"
+      ],
+      "http_status": 200
+    }
+  },
+  "small_model_replay": {
+    "four_b_packet": {
+      "scope": "one claim-mechanism-formula-Viz or QA-repair packet",
+      "inputs": ["one source locator and page", "one premise id", "one hazard and boundary", "one immutable sign/unit convention", "one atomic equation or state transition", "one target component", "one screenshot or measured failure", "one deterministic acceptance metric"],
+      "required_order": ["emit claim-condition-boundary IR", "name the controlled hazard", "state the physical or logical mechanism", "render one Korean operation annotation", "write exactly one FormulaNote", "implement or repair one visible observable", "run the assigned metric"],
+      "forbidden": ["broad standards retrieval", "inventing normative spacing", "issuing PL/SIL values", "converting TIDA timing into machine stop time", "treating an MCU READY echo as independent evidence"]
+    },
+    "nine_b_packet": {
+      "scope": "one causal article section or one TIDA evidence view",
+      "inputs": ["prerequisite and output contract", "four to six bounded source claims", "assigned premise subset", "derivation order", "formula contract", "one counterexample", "Viz state machine", "source/non-transfer fields", "mobile and evidence checklist"],
+      "required_order": ["normalize source IR", "write intuition before mathematics", "derive atomic formulas", "add failure boundary", "implement causal Viz", "self-audit every assigned premise", "emit unresolved integration assumptions"]
+    },
+    "packet_schema": ["claim", "hazard", "source", "source_condition", "mechanism", "equation", "assumptions", "does_not_prove", "viz_state", "mobile_metric", "repair_event"],
+    "orchestrator_only": ["source retrieval and edition conflict resolution", "private compound-problem construction", "scope split", "cross-section terminology and timing endpoints", "normative handoff", "source-versus-transfer provenance", "browser QA", "production deployment"],
+    "repair_escalation": "Return a failed packet with viewport, formula or selector id, expected invariant, observed metric, source boundary and allowed files. The child model may decompose the formula or composition but may not silently lower thresholds or broaden the safety claim."
+  },
+  "next_milestone": {
+    "title": "Robot Actuator Mechanics, Transmission & Holding Brake",
+    "reference_spine": "Primary engineering documentation for harmonic/strain-wave reducers and servo holding brakes, cross-checked with current motor-sizing and bearing-load sources",
+    "planned_boundary": "Gear ratio, reflected inertia, efficiency and backdrivability, backlash versus lost motion, torsional stiffness and resonance, bearing/load paths, encoder placement, spring-applied brake torque/engagement/thermal-wear limits and the handoff from STO to a physically held joint. It will not issue vendor-independent lifetime or safety ratings without an actual joint duty cycle and risk target."
+  }
+}

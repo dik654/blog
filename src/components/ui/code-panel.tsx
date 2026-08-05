@@ -41,7 +41,7 @@ export default function CodePanel({ title, code, lang, annotations, defaultOpen 
     <div className="not-prose my-4 rounded-lg border border-border/60 overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-accent transition-colors cursor-pointer text-left"
+        className="flex min-h-11 w-full items-center gap-2 px-4 py-2.5 text-left transition-colors hover:bg-accent cursor-pointer"
       >
         <span className="text-xs font-mono text-muted-foreground">{'</>'}</span>
         <span className="text-sm font-medium text-foreground/80 flex-1">{title}</span>
@@ -54,7 +54,7 @@ export default function CodePanel({ title, code, lang, annotations, defaultOpen 
             {annotations && annotations.length > 0 && (
               <div className="flex flex-wrap gap-2 px-4 py-2 border-b border-border/40">
                 {annotations.map((a, i) => (
-                  <span key={i} className={`text-[10px] px-2 py-0.5 rounded-full ${COLORS[a.color].badge}`}>
+                  <span key={i} className={`rounded-full px-2 py-0.5 text-xs ${COLORS[a.color].badge}`}>
                     L{a.lines[0]}–{a.lines[1]}: {a.note}
                   </span>
                 ))}

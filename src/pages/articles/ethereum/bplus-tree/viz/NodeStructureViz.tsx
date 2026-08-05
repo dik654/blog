@@ -16,9 +16,9 @@ export default function NodeStructureViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 180" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 460 195" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Internal Node */}
-          <motion.g animate={{ opacity: step === 0 ? 1 : 0.2 }}>
+          <motion.g animate={{ opacity: step === 0 ? 1 : 0.05 }}>
             <text x={230} y={18} textAnchor="middle" fontSize={11} fontWeight={600} fill={CI}>Internal Node</text>
             {['P₀', 'K₁', 'P₁', 'K₂', 'P₂', 'K₃', 'P₃'].map((lbl, i) => {
               const x = 80 + i * 44;
@@ -38,7 +38,7 @@ export default function NodeStructureViz() {
           </motion.g>
 
           {/* Leaf Node */}
-          <motion.g animate={{ opacity: step === 1 ? 1 : 0.2 }}>
+          <motion.g animate={{ opacity: step === 1 ? 1 : 0.05 }}>
             <text x={230} y={92} textAnchor="middle" fontSize={11} fontWeight={600} fill={CL}>Leaf Node</text>
             {['K₁:V₁', 'K₂:V₂', 'K₃:V₃', '→next'].map((lbl, i) => {
               const x = 90 + i * 80;
@@ -59,7 +59,7 @@ export default function NodeStructureViz() {
           </motion.g>
 
           {/* Fan-out */}
-          <motion.g animate={{ opacity: step === 2 ? 1 : 0.2 }}>
+          <motion.g animate={{ opacity: step === 2 ? 1 : 0.05 }}>
             <text x={230} y={160} textAnchor="middle" fontSize={11} fontWeight={600} fill={CF}>Fan-out (m=100)</text>
             {[
               { lbl: '1', w: 30, x: 195 },

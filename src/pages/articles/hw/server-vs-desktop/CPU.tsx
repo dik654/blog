@@ -1,11 +1,13 @@
-import { motion } from 'framer-motion';
+import PcieLanesViz from './viz/PcieLanesViz';
 
-const rows = [
-  { attr: '소켓', server: 'LGA 4677 (Xeon) / SP5 (EPYC)', desktop: 'LGA 1700 / AM5' },
-  { attr: 'PCIe 레인', server: '80 (Xeon) / 128 (EPYC)', desktop: '20~24' },
-  { attr: 'ECC 지원', server: '필수 (RDIMM)', desktop: '일부 (Ryzen PRO)' },
-  { attr: 'TDP', server: '250~350W', desktop: '65~170W' },
-  { attr: '코어 수', server: '최대 96코어 (EPYC)', desktop: '최대 24코어' },
+const cpuSpecs = [
+  { attr: '소켓', server: 'LGA 4710 (Xeon 6) / SP5 (EPYC)', desktop: 'LGA 1700 / AM5' },
+  { attr: '최대 코어', server: '128 P-core (Granite) / 192 (EPYC Turin)', desktop: '24 (i9) / 16 (Ryzen 9)' },
+  { attr: 'PCIe lane', server: '96 (Xeon) / 128 (EPYC)', desktop: '20~24' },
+  { attr: '메모리 채널', server: '12', desktop: '2' },
+  { attr: '최대 메모리', server: '6 TB', desktop: '192 GB' },
+  { attr: 'ECC', server: '필수 (RDIMM)', desktop: '제한적 (Ryzen PRO)' },
+  { attr: 'TDP', server: '350~500W', desktop: '65~253W' },
 ];
 
 export default function CPU() {
@@ -13,128 +15,63 @@ export default function CPU() {
     <section id="cpu" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">CPU: Xeon/EPYC vs Core/Ryzen</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          서버 CPU의 핵심 차이는 PCIe 레인 수와 ECC 메모리 지원입니다.<br />
-          EPYC은 단일 소켓에 128 PCIe 레인을 제공해 다중 GPU 구성에 유리합니다.
+        <p className="leading-7">
+          서버 CPU 의 본질 차이는 <strong>PCIe lane 수 + 메모리 채널 수 + ECC</strong> 의 셋이다.
+          <br />
+          데스크톱은 게이밍 / 단일 GPU 워크스테이션에 최적화돼 lane 이 부족 — multi-GPU 또는 대량 NVMe 가 필요한 워크로드에는 부적합.
         </p>
+      </div>
+
+      <PcieLanesViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-10">
+        <h3 className="text-xl font-semibold mt-6 mb-3">스펙 비교 (2024~2025 기준)</h3>
         <div className="overflow-x-auto not-prose">
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                {['속성', '서버 (Xeon/EPYC)', '데스크톱 (Core/Ryzen)'].map(h => (
+                {['속성', '서버 (Xeon 6 / EPYC Turin)', '데스크톱 (i9 14900K / Ryzen 9950X)'].map(h => (
                   <th key={h} className="border border-border px-3 py-2 text-left">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
-                <motion.tr key={r.attr} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {cpuSpecs.map((r) => (
+                <tr key={r.attr}>
                   <td className="border border-border px-3 py-2 font-medium">{r.attr}</td>
                   <td className="border border-border px-3 py-2">{r.server}</td>
                   <td className="border border-border px-3 py-2">{r.desktop}</td>
-                </motion.tr>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Server vs Desktop CPU 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Intel Xeon 6 Series (2024):
-// - Granite Rapids (performance cores)
-// - Sierra Forest (efficiency cores)
-// - socket: LGA 4710 / LGA 7529
-// - up to 128 P-cores or 288 E-cores
-// - up to 6 TB DDR5
-// - 96 PCIe 5.0 lanes
-// - max TDP: 500W
+        <h3 className="text-xl font-semibold mt-8 mb-3">왜 PCIe lane 이 결정적인가</h3>
+        <ul className="leading-7">
+          <li><strong>device 별 lane 점유</strong> — GPU x16, NVMe x4, 100G NIC x16. 한 번 연결되면 다른 device 는 줄여야 함.</li>
+          <li><strong>데스크톱 24 lane 의 의미</strong> — GPU x16 + NVMe x4 가 끝. 둘째 GPU 추가하면 첫 GPU 가 x8 로 떨어짐.</li>
+          <li><strong>서버 128 lane 의 의미</strong> — 8 GPU x16 동시 + NVMe 풀 + 다중 NIC. multi-GPU 학습의 표준.</li>
+          <li><strong>chipset 우회</strong> — 데스크톱은 chipset 을 통해 추가 device 연결 가능하지만 chipset uplink 가 병목 (DMI x8 정도).</li>
+        </ul>
 
-// AMD EPYC 9005 Series (Turin, 2024):
-// - Zen 5 architecture
-// - socket: SP5 (LGA 6096)
-// - up to 192 cores
-// - up to 6 TB DDR5
-// - 128 PCIe 5.0 lanes
-// - max TDP: 500W
-// - CCX architecture
+        <h3 className="text-xl font-semibold mt-8 mb-3">메모리 채널의 의미</h3>
+        <ul className="leading-7">
+          <li><strong>데스크톱 2 채널</strong> — 약 90 GB/s bandwidth. 최대 192 GB.</li>
+          <li><strong>서버 12 채널</strong> — 400+ GB/s bandwidth. 최대 6 TB.</li>
+          <li><strong>워크로드 영향</strong> — Filecoin sealing PC1 의 메모리 bandwidth 의존. AI 학습의 host RAM 도 큼. RPC 노드의 cache.</li>
+          <li><strong>NUMA</strong> — 듀얼 소켓 서버는 memory locality 인지 필수. <code>numactl</code> 로 워크로드 묶기.</li>
+        </ul>
 
-// Intel Core i9-14900K (desktop):
-// - socket: LGA 1700
-// - 24 cores (8P + 16E)
-// - 2 memory channels
-// - 20 PCIe lanes
-// - 253W max
-// - consumer focus
-
-// AMD Ryzen 9 9950X (desktop):
-// - socket: AM5
-// - 16 cores Zen 5
-// - 2 memory channels
-// - 24 PCIe 5.0 lanes
-// - 170W max
-// - single CCX (monolithic)
-
-// PCIe Lane Count 차이:
-//
-// Why lanes matter:
-// - each GPU: 16 lanes (x16)
-// - each NVMe: 4 lanes
-// - network card: 8-16 lanes
-// - lanes = direct paths to CPU
-//
-// Desktop limitations:
-// - 20-24 lanes total
-// - 1-2 GPUs at full speed
-// - some NVMe share with chipset
-// - bottleneck for multi-GPU
-//
-// Server advantage:
-// - 96-128 lanes per socket
-// - dual socket: 256 lanes
-// - 8-16 GPUs at full x16
-// - multiple NVMe arrays
-// - network cards
-// - no compromise
-
-// Memory Channels:
-// Desktop: 2 channels
-// - max ~90 GB/s bandwidth
-// - 2-4 DIMM slots
-// - 128 GB capacity max
-//
-// Server: 8-12 channels
-// - 400+ GB/s bandwidth
-// - 16-32 DIMM slots
-// - 6 TB capacity max
-// - multi-node NUMA
-
-// Workload fit:
-//
-// Desktop CPU suitable for:
-// - Gaming (high clock, low cores)
-// - Software development
-// - Content creation (small)
-// - Single-GPU AI training
-//
-// Server CPU required for:
-// - Multi-GPU workstations
-// - Filecoin sealing (PC1 CPU-bound)
-// - Database servers
-// - Virtualization hosts
-// - HPC workloads
-
-// Practical example (Filecoin SP):
-// - PC1 uses all CPU cores sequentially
-// - 64-core EPYC ideal
-// - ~3-5 hours per sector
-// - parallel sectors: need many cores
-// - server CPU nearly mandatory`}
-        </pre>
-        <p className="leading-7">
-          Server CPU: <strong>128 PCIe lanes, 8-12 memory channels, 192 cores</strong>.<br />
-          Desktop: 20-24 lanes, 2 channels, 16-24 cores.<br />
-          Filecoin PC1 = CPU-bound → EPYC 64-core+ 필수.
-        </p>
+        <h3 className="text-xl font-semibold mt-8 mb-3">워크로드별 CPU 선택</h3>
+        <ul className="leading-7">
+          <li><strong>게이밍 / 일반 개발</strong> — 데스크톱 충분. 단일 코어 boost clock 이 핵심.</li>
+          <li><strong>단일 GPU AI 실험</strong> — 데스크톱 OK. RTX 4090 + Ryzen 9950X.</li>
+          <li><strong>multi-GPU 워크스테이션 / 학습</strong> — 서버 CPU 의무 (lane).</li>
+          <li><strong>Filecoin SP (PC1 워커)</strong> — EPYC 64+ core. 단일 코어 + many-core 둘 다 필요.</li>
+          <li><strong>K8s 워커 / RPC 호스트</strong> — EPYC Bergamo (128 core) 또는 Sierra Forest (288 E-core). 코어 밀도 우위.</li>
+          <li><strong>이더리움 EL</strong> — 단일 코어 boost 가 핵심. 작은 EPYC 또는 high-clock Xeon.</li>
+        </ul>
       </div>
     </section>
   );

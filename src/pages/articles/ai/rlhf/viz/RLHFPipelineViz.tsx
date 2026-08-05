@@ -72,7 +72,7 @@ export default function RLHFPipelineViz() {
           <motion.path d="M 189 103 L 189 118 L 315 118" fill="none" stroke="#f59e0b" strokeWidth={0.8} strokeDasharray="3 2" animate={{ opacity: step >= 2 ? 0.5 : 0.1 }} />
           <text x={315} y={100} textAnchor="middle" fontSize={9} fill="#8b5cf6">정렬된 LLM</text>
           {/* Moving packet */}
-          <motion.circle r={5}
+          <motion.circle initial={false} r={5}
             animate={{ cx: PHASES[step].x + PW / 2, cy: 45 }}
             transition={{ type: 'spring', bounce: 0.2 }}
             fill={PHASES[step].color}

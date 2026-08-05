@@ -42,7 +42,7 @@ export default function GadgetCostViz() {
               <motion.g key={g.name} animate={{ opacity: show ? 1 : 0.12 }} transition={sp}>
                 <text x={OX - 4} y={y + 9} textAnchor="end" fontSize={9} fill={g.color}
                   fontWeight={show ? 600 : 400}>{g.name}</text>
-                <motion.rect x={OX} y={y} rx={2} height={RH}
+                <motion.rect initial={false} x={OX} y={y} rx={2} height={RH}
                   animate={{ width: show ? w : 0, fill: hi ? `${g.color}40` : `${g.color}20` }}
                   transition={{ ...sp, duration: 0.6 }} />
                 <motion.text x={OX + w + 4} y={y + 9} fontSize={9} fill={g.color}

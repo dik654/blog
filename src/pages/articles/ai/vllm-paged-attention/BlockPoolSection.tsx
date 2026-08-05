@@ -7,9 +7,9 @@ interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 export default function BlockPoolSection({ onCodeRef }: Props) {
   return (
     <section id="block-pool" className="mb-16 scroll-mt-20">
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold">BlockPool: 물리 블록 관리</h2>
-        <div className="flex gap-2">
+        <div className="flex min-w-0 flex-wrap gap-2">
           <CodeViewButton
             onClick={() => onCodeRef('block-pool', blockPoolCodeRefs['block-pool'])}
             label="BlockPool.__init__"
@@ -30,7 +30,8 @@ export default function BlockPoolSection({ onCodeRef }: Props) {
 
         <h3 className="text-xl font-semibold mt-6 mb-3">할당과 해제</h3>
         <p>
-          <strong>할당</strong>: <code>free_block_queue.popleft()</code> — O(1).
+          <strong>일반 할당</strong>: <code>free_block_queue.popleft_n(num_blocks)</code> — 요청한 수만큼 free block을 한 번에 꺼냅니다.
+          초기화할 때 예약하는 <code>null_block</code>만 <code>popleft()</code>를 사용합니다.
           Prefix Caching 활성화 시, 해시가 있는 블록을 꺼내면 캐시에서도 제거(eviction)합니다.
         </p>
         <p>

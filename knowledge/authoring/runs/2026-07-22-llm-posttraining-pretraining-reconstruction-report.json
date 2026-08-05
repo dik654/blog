@@ -1,0 +1,116 @@
+{
+  "run": "2026-07-22-llm-posttraining-pretraining-current-first",
+  "objective": "Separate post-training feedback, pre-training budgets, and serving concerns, then teach pre-training from deployment constraints through data and execution.",
+  "information_architecture": {
+    "posttraining": [
+      "00 · 현재 병목",
+      "01 · Feedback 계약",
+      "02 · 구현 · 검산"
+    ],
+    "pretraining": [
+      "00 · 모델·Token 예산",
+      "01 · 데이터 신호"
+    ],
+    "independent_llm_branches": [
+      "Reasoning · Post-training",
+      "데이터 · Pre-training",
+      "LLM 해석",
+      "효율 추론 · On-device",
+      "서빙 · 인프라"
+    ]
+  },
+  "learning_paths": {
+    "posttraining": [
+      "reasoning-post-training-frontier",
+      "post-training-rlvr",
+      "rlhf",
+      "rl-ppo-continuous-control",
+      "open-r1"
+    ],
+    "pretraining": [
+      "llm-pretraining-scaling",
+      "llm-data-engine",
+      "training-pipeline"
+    ]
+  },
+  "source_boundaries": [
+    "Kaplan 2020: empirical scaling starting point, not a universal fixed ratio",
+    "Hoffmann 2022: joint model-token compute optimum, not a deployment optimum",
+    "Muennighoff 2023: diminishing returns under repeated data, not a universal repeat cutoff",
+    "Sardana 2024: inference-aware selection under workload assumptions",
+    "Roberts 2026 and Xu 2026: explicitly labeled preprint extensions"
+  ],
+  "private_transfer_problem": {
+    "training_compute_zflops": 8,
+    "unique_tokens_billion": 140,
+    "deployment_memory_gb": 8,
+    "served_tokens_billion": 100,
+    "best_of_n": 4,
+    "candidate_models_billion": [4, 9],
+    "required_decisions": [
+      "derive train-token and repetition budgets",
+      "compare training-only and lifetime-compute choices",
+      "design an IsoFLOP pilot matrix",
+      "define data and deployment gates before a full run"
+    ]
+  },
+  "viz_oracles": {
+    "budget_default": {
+      "model_billion": 4,
+      "train_tokens_billion": 160,
+      "unique_tokens_billion": 120,
+      "served_tokens_billion": 10,
+      "samples": 1,
+      "training_zflops": 3.84,
+      "inference_zflops": 0.08,
+      "lifetime_zflops": 3.92,
+      "tokens_per_parameter": 40,
+      "repetitions": 1.3
+    },
+    "isoflop_demo_optima": {
+      "2_zflops": "4B",
+      "8_zflops": "9B",
+      "32_zflops": "18B"
+    }
+  },
+  "qa": {
+    "focused_playwright": 31,
+    "narrative_checks": 6,
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "formula_count": 5,
+    "formula_note_count": 5,
+    "minimum_mobile_formula_px": 13.6993,
+    "article_tables": 0,
+    "build": "passed"
+  },
+  "claude_collaboration": {
+    "transport": "context-manager only",
+    "requests": 3,
+    "successful": 0,
+    "failure": "Provider error: All providers failed (HTTP 500)",
+    "direct_cli_fallback_used": false
+  },
+  "small_model_pipeline": [
+    "inventory existing articles and ownership",
+    "separate independent decision axes",
+    "choose current target and bounded canonical floor",
+    "define private transfer problem",
+    "extract claim/evidence/boundary IR",
+    "write one causal section at a time",
+    "attach equations and observable Viz states",
+    "verify numeric oracles and responsive layout",
+    "deploy and repeat acceptance on the public build"
+  ],
+  "deployment": {
+    "status": "public-verified",
+    "service_restarted_at": "2026-07-23T00:02:40+09:00",
+    "chunk": "llm-pretraining-scaling-CeWSeeOD.js",
+    "chunk_bytes": 30200,
+    "chunk_sha256": "0f11e9c95620a18e9d25aab92669db198717e19de5352e7860778271d114048a",
+    "local_contract_tests": "5/5",
+    "public_contract_tests": "5/5",
+    "article_http_status": 200,
+    "chunk_http_status": 200
+  }
+}

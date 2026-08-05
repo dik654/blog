@@ -38,108 +38,75 @@ export default function ECC() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">ECC 메모리 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ECC (Error-Correcting Code) Memory:
+        <h3 className="text-xl font-semibold mt-8 mb-3">Soft Error 원인</h3>
+        <ul className="leading-7">
+          <li>우주선 (cosmic ray, alpha particle)</li>
+          <li>전기 노이즈</li>
+          <li>열 fluctuation</li>
+          <li>전압 변동</li>
+          <li>고도 올라갈수록 에러율 증가</li>
+        </ul>
 
-// Soft Error 원인:
-// - cosmic rays (alpha particles)
-// - electrical noise
-// - thermal fluctuations
-// - voltage variations
-// - higher altitude = more errors
+        <h3 className="text-xl font-semibold mt-8 mb-3">에러 빈도</h3>
+        <ul className="leading-7">
+          <li>해수면 — GB 당 연간 ~1 에러</li>
+          <li>고고도 — GB 당 연간 ~10 에러</li>
+          <li>1 TB 머신 — 연간 1,000~10,000 에러</li>
+          <li>데이터센터 규모 — 측정 가능한 수준</li>
+        </ul>
 
-// Error rates:
-// - ~1 error per GB per year (sea level)
-// - ~10 errors per GB per year (higher altitude)
-// - 1 TB machine: ~1000-10000 errors/year
-// - datacenters: measurable
+        <h3 className="text-xl font-semibold mt-8 mb-3">SECDED</h3>
+        <p className="leading-7">
+          Single Error Correct, Double Error Detect. 64-bit 데이터 + 8-bit parity = 72 bit transfer. Hamming code + parity 조합.
+        </p>
+        <ul className="leading-7">
+          <li>1 bit flip — 자동 정정</li>
+          <li>2 bit flip — 감지, 정정 불가</li>
+          <li>3 bit+ — 보장 없음</li>
+        </ul>
 
-// SECDED (Single Error Correct, Double Error Detect):
-//
-// Encoding:
-// - 64-bit data + 8-bit parity
-// - Hamming code + parity
-// - 72 bits total per transfer
-//
-// Correction:
-// - 1 bit flipped → corrected automatically
-// - 2 bits flipped → detected, not corrected
-// - 3+ bits → not guaranteed
-//
-// Hardware support:
-// - ECC memory controller in CPU
-// - RAS (Reliability, Availability, Serviceability)
-// - reported via OS
+        <h3 className="text-xl font-semibold mt-8 mb-3">Advanced ECC</h3>
+        <ul className="leading-7">
+          <li><strong>ChipKill (IBM)</strong> — chip 전체 고장 복구</li>
+          <li><strong>Intel SDDC</strong> — single device data correction</li>
+          <li><strong>AMD SEV-SNP</strong> — 확장 보호</li>
+          <li><strong>DDR5 on-die ECC</strong> — DIMM 레벨 보정</li>
+        </ul>
 
-// Advanced ECC:
-// - ChipKill (IBM): full chip failure recovery
-// - Intel SDDC: single device data correction
-// - AMD SEV-SNP: extended protection
-// - DDR5 on-die ECC: DIMM-level
+        <h3 className="text-xl font-semibold mt-8 mb-3">메모리 손상 결과</h3>
+        <ul className="leading-7">
+          <li><strong>Ethereum validator</strong> — 잘못된 서명 → slashing. bad state → fork 무효화. 32 ETH stake 위험.</li>
+          <li><strong>Bitcoin full node</strong> — 잘못된 hash → chain fork. mining 작업 낭비, 신뢰 침해.</li>
+          <li><strong>Database</strong> — 잘못된 query 결과, silent corruption, backup 무결성 손실.</li>
+          <li><strong>HPC/AI</strong> — 잘못된 gradient, 부정확한 모델, 연구 무효화.</li>
+        </ul>
 
-// Corrupted Memory Consequences:
+        <h3 className="text-xl font-semibold mt-8 mb-3">성능 오버헤드</h3>
+        <p className="leading-7">
+          64 bit 당 8 bit 추가 = 12.5% bit 오버헤드. 병렬 path 라 속도 패널티 없음, ~1 cycle 약간의 latency 추가. 신뢰성 대비 무시 가능한 비용.
+        </p>
 
-// Ethereum validator:
-// - wrong signature → slashed
-// - bad state → fork invalidated
-// - costs: 32 ETH stake at risk
-//
-// Bitcoin full node:
-// - wrong hash → chain fork
-// - mining wasted work
-// - trust violation
-//
-// Databases:
-// - wrong query results
-// - silent data corruption
-// - backup integrity lost
-//
-// HPC/AI:
-// - wrong training gradients
-// - incorrect ML models
-// - research invalidated
+        <h3 className="text-xl font-semibold mt-8 mb-3">ECC 지원</h3>
+        <ul className="leading-7">
+          <li><strong>CPU</strong> — Intel Xeon 전부, Intel Core 는 W-series 만, AMD Ryzen UDIMM 전부, EPYC 전부.</li>
+          <li><strong>Motherboard</strong> — 서버 칩셋 표준, 워크스테이션 W680/TRX40, 컨슈머는 칩셋별 상이.</li>
+          <li><strong>Memory</strong> — "ECC" 라벨 확인. Kingston, Micron, Samsung. non-ECC 대비 10~20% 비쌉니다.</li>
+        </ul>
 
-// ECC Performance:
-// - 8 extra bits per 64 = 12.5% overhead
-// - no speed penalty (parallel paths)
-// - slight latency (~1 cycle)
-// - reliability worth it
+        <h3 className="text-xl font-semibold mt-8 mb-3">ECC 가 필요한 경우</h3>
+        <ul className="leading-7">
+          <li>필수 — 서버, 블록체인 노드, 데이터베이스, AI/ML 학습</li>
+          <li>권장 — 워크스테이션</li>
+          <li>불필요 — 게이밍, 일상 데스크톱</li>
+        </ul>
 
-// ECC Support:
-
-// CPU:
-// - Intel Xeon: all support
-// - Intel Core: some (W-series)
-// - AMD Ryzen: all support (UDIMM)
-// - AMD EPYC: all support
-//
-// Motherboard:
-// - Server chipsets: standard
-// - Workstation: W680, TRX40
-// - Consumer: varies
-//
-// Memory:
-// - look for "ECC" label
-// - Kingston, Micron, Samsung brands
-// - premium over non-ECC
-// - 10-20% more expensive
-
-// When ECC 필요:
-// ✓ Servers (always)
-// ✓ Workstations (recommended)
-// ✓ Blockchain nodes (mandatory)
-// ✓ Databases
-// ✓ AI/ML training
-// ✗ Gaming (unnecessary)
-// ✗ Casual desktop use
-
-// Cost analysis:
-// - ECC premium: ~$10-20/16GB
-// - single error prevented: priceless
-// - data corruption recovery: $$$
-// - downtime: $1000+/hour`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">비용 분석</h3>
+        <ul className="leading-7">
+          <li>ECC premium — 16GB 당 $10~$20</li>
+          <li>방지된 에러 1건 — priceless</li>
+          <li>데이터 손상 복구 — $$$</li>
+          <li>downtime — 시간당 $1,000+</li>
+        </ul>
         <p className="leading-7">
           ECC: <strong>1 bit 자동 정정, 2 bit 감지 (SECDED)</strong>.<br />
           12.5% bit overhead, no speed penalty.<br />

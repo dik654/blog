@@ -38,7 +38,7 @@ export default function LowDegreeTest() {
         <p>
           FRI의 건전성(soundness)은 이 보조정리에 기반한다:
         </p>
-        <Math display>{'\\text{서로 다른 차수-}d\\text{ 다항식 }p, q \\text{는 최대 }d\\text{개 점에서만 일치한다}'}</Math>
+        <Math display>{'\\underbrace{\\text{서로 다른 차수-}d\\text{ 다항식 }p, q}_{\\text{두 다항식 차이가 0 아님}} \\text{는 최대 }\\underbrace{d\\text{개 점}}_{(p-q) \\text{의 근 수 한계}}\\text{에서만 일치한다}'}</Math>
         <p>
           도메인 크기 <Math>{'|D| = n'}</Math>이고 <Math>{'d \\ll n'}</Math>이면,
           랜덤 점 하나를 뽑았을 때 <Math>{'p'}</Math>와 <Math>{'q'}</Math>가 일치할 확률은 최대 <Math>{'d/n'}</Math>이다.

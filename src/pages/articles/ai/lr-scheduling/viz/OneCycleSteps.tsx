@@ -13,8 +13,8 @@ function Axes() {
     <g>
       <line x1={40} y1={145} x2={445} y2={145} stroke="var(--border)" strokeWidth={1} />
       <line x1={40} y1={20} x2={40} y2={145} stroke="var(--border)" strokeWidth={1} />
-      <text x={445} y={160} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">step</text>
-      <text x={34} y={22} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">η</text>
+      <text x={472} y={160} textAnchor="end" fontSize={8} fill="var(--muted-foreground)">step</text>
+      <text x={13} y={82} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)" transform="rotate(-90 13 82)">LR η</text>
       {[0, 25, 50, 75, 100].map(t => (
         <text key={t} x={px(t)} y={158} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">{t}</text>
       ))}
@@ -172,8 +172,6 @@ export function OneCycleStep2() {
   const testSteps = 60;
   const steps = Array.from({ length: testSteps + 1 }, (_, i) => i);
 
-  /* LR increases exponentially */
-  const lrRange = steps.map(t => Math.pow(10, -7 + t * 8 / testSteps));
   /* simulated loss: decreases then increases */
   const lossValues = steps.map(t => {
     if (t < 20) return 2.5 - t * 0.08;

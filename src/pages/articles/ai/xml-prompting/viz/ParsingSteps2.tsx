@@ -79,14 +79,14 @@ export function StepErrorRetry() {
         <rect x={80} y={95} width={300} height={70} rx={6}
           fill="var(--card)" stroke="var(--border)" strokeWidth={1} />
         <text x={230} y={115} textAnchor="middle" fontSize={9}
-          fontWeight={600} fill="var(--foreground)">재시도 전략</text>
+          fontWeight={600} fill="var(--foreground)">실패를 보존한 복구</text>
         <text x={100} y={135} fontSize={9}
           fill="var(--muted-foreground)">
-          태그 누락 → "반드시 태그로 감싸라" 강조
+          syntax 오류 + 요구 schema를 함께 전달
         </text>
         <text x={100} y={150} fontSize={9}
           fill="var(--muted-foreground)">
-          max_retries=3 — 보통 2회 이내 해결
+          제한 횟수 초과 → 명시적 실패 반환
         </text>
       </motion.g>
     </motion.g>

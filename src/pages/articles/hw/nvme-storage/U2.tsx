@@ -37,89 +37,89 @@ export default function U2() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">U.2 NVMe 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// U.2 NVMe SSD:
+        <h3 className="text-xl font-semibold mt-8 mb-3">물리 스펙</h3>
+        <ul className="leading-7">
+          <li>2.5 인치 금속 enclosure</li>
+          <li>15mm 두께 (HDD 7mm 대비)</li>
+          <li>SFF-8639 커넥터</li>
+          <li>PCIe 4 lane</li>
+          <li>hot-swap 가능</li>
+          <li>서버 chassis 전면 접근</li>
+        </ul>
 
-// 물리적 spec:
-// - 2.5-inch metal enclosure
-// - 15mm thickness (vs 7mm HDD)
-// - SFF-8639 connector
-// - 4 PCIe lanes
-// - hot-swap compatible
-// - front-accessible in server chassis
+        <h3 className="text-xl font-semibold mt-8 mb-3">M.2 대비 장점</h3>
+        <ul className="leading-7">
+          <li>더 나은 열 관리 (금속 enclosure)</li>
+          <li>hot-swap 가능</li>
+          <li>더 높은 전력 예산 (25W) → 더 빠른 NAND 구동</li>
+          <li>지속 성능 + thermal throttling 없음</li>
+          <li>엔터프라이즈 내구성</li>
+        </ul>
 
-// 장점 over M.2:
-// - better thermals (metal enclosure)
-// - hot-swap capable
-// - higher power budget (25W)
-// - can drive faster NAND
-// - sustained performance
-// - enterprise durability
+        <h3 className="text-xl font-semibold mt-8 mb-3">서버 통합</h3>
+        <ul className="leading-7">
+          <li>SFF-8639 백플레인</li>
+          <li>tool-less 트레이</li>
+          <li>indicator LED</li>
+          <li>RAID 컨트롤러</li>
+          <li>2U chassis 에 24~36 드라이브</li>
+        </ul>
 
-// Server integration:
-// - SFF-8639 backplane
-// - tool-less trays
-// - indicator LEDs
-// - RAID controllers
-// - 24-36 drives in 2U chassis
+        <h3 className="text-xl font-semibold mt-8 mb-3">엔터프라이즈 기능</h3>
+        <ul className="leading-7">
+          <li>Power Loss Protection (PLP)</li>
+          <li>Multi-namespace 지원</li>
+          <li>NVMe-MI 관리</li>
+          <li>end-to-end 데이터 보호</li>
+          <li>높은 DWPD (3~10)</li>
+        </ul>
 
-// Enterprise features:
-// - Power Loss Protection (PLP)
-// - Multi-namespace support
-// - NVMe-MI management
-// - end-to-end data protection
-// - higher DWPD (3-10)
+        <h3 className="text-xl font-semibold mt-8 mb-3">PLP 동작</h3>
+        <p className="leading-7">
+          보드 위 커패시터로 ~50ms 전력 예비. 정전 발생 시 write cache 를 NAND 로 flush 해 데이터 손실 방지. DB / 파일시스템에 결정적.
+        </p>
 
-// Power Loss Protection (PLP):
-// - capacitors on board
-// - ~50ms of power reserve
-// - flushes write cache to NAND
-// - prevents data loss on outage
-// - critical for databases/filesystems
+        <h3 className="text-xl font-semibold mt-8 mb-3">2024 인기 모델</h3>
+        <ul className="leading-7">
+          <li>Samsung PM9A3 U.2 — $250/TB</li>
+          <li>Intel D7-P5520 — $280/TB</li>
+          <li>Kioxia CD8-V — $300/TB</li>
+          <li>Micron 9400 MAX — $400/TB (고 DWPD)</li>
+        </ul>
 
-// Popular models (2024):
-// - Samsung PM9A3 U.2: $250/TB
-// - Intel D7-P5520: $280/TB
-// - Kioxia CD8-V: $300/TB
-// - Micron 9400 MAX: $400/TB (high DWPD)
+        <h3 className="text-xl font-semibold mt-8 mb-3">용량</h3>
+        <ul className="leading-7">
+          <li>960 GB, 1.92 TB, 3.84 TB, 7.68 TB</li>
+          <li>15.36 TB</li>
+          <li>30.72 TB (고밀도)</li>
+        </ul>
 
-// Capacities:
-// - 960 GB, 1.92 TB, 3.84 TB, 7.68 TB
-// - 15.36 TB (SSDs)
-// - 30.72 TB (high-density)
+        <h3 className="text-xl font-semibold mt-8 mb-3">용도</h3>
+        <ul className="leading-7">
+          <li>서버 스토리지, DB 서버</li>
+          <li>Filecoin sealing</li>
+          <li>가상화, 스토리지 어레이</li>
+          <li>고 IOPS 워크로드</li>
+        </ul>
 
-// Use cases:
-// ✓ Server storage
-// ✓ Database servers
-// ✓ Filecoin sealing
-// ✓ Virtualization
-// ✓ Storage arrays
-// ✓ High-IOPS workloads
+        <h3 className="text-xl font-semibold mt-8 mb-3">성능</h3>
+        <p className="leading-7">
+          엔터프라이즈 M.2 와 유사한 7 GB/s 순차 + 1.5M IOPS random. 단, <strong>지속 성능</strong>이 다릅니다 — thermal throttling 없음, 100% duty cycle 가능.
+        </p>
 
-// Performance:
-// Similar to enterprise M.2:
-// - 7 GB/s sequential
-// - 1.5M IOPS random
-// - BUT: sustained performance
-// - no thermal throttling
-// - 100% duty cycle
+        <h3 className="text-xl font-semibold mt-8 mb-3">Filecoin SP 시나리오</h3>
+        <p className="leading-7">
+          PC1 sealing — 64-core CPU 가 sector 당 ~352 GiB 생성, NVMe cache 로 쓰기. 지속 1~2 GB/s 필요. U.2 가 여유 있게 처리, 높은 DWPD 로 수년간 유지.
+        </p>
 
-// Filecoin SP scenario:
-// PC1 sealing throughput:
-// - 64-core CPU generates ~352 GiB per sector
-// - writes to NVMe cache
-// - needs 1-2 GB/s sustained
-// - U.2 handles this easily
-// - high DWPD survives years
-
-// Downsides vs M.2:
-// - more expensive ($250-400/TB)
-// - requires U.2 backplane
-// - not supported by most desktops
-// - larger physical footprint
-// - 25W power draw`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">M.2 대비 단점</h3>
+        <ul className="leading-7">
+          <li>더 비싸다 ($250~$400/TB)</li>
+          <li>U.2 백플레인 필요</li>
+          <li>대부분 데스크톱 미지원</li>
+          <li>물리 footprint 큼</li>
+          <li>25W 전력 사용</li>
+        </ul>
         <p className="leading-7">
           U.2: <strong>2.5-inch, 25W, hot-swap, 3-10 DWPD</strong>.<br />
           Power Loss Protection (PLP capacitors) 내장.<br />

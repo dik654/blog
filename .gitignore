@@ -24,3 +24,15 @@ dist-ssr
 *.sln
 *.sw?
 files/go-ethereum
+src/pages/core/codebase/go-ethereum/
+
+# Local research, build, and visual-QA outputs
+.artifacts/
+.codex-tmp/
+.scratch-audit/
+qa-results/
+test-results/
+tmp/
+.pw_check.cjs
+_build_tmp.sh
+_run_build.js

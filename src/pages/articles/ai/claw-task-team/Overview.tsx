@@ -1,5 +1,6 @@
 import TaskPacketViz from './viz/TaskPacketViz';
 import ConstraintKindViz from './viz/ConstraintKindViz';
+import TaskRuntimeComparisonStepViz from './viz/TaskRuntimeComparisonStepViz';
 
 export default function Overview() {
   return (
@@ -15,6 +16,22 @@ export default function Overview() {
           LLM이 처리할 task + 메타데이터를 묶은 구조체<br />
           Task 도구 호출, PolicyEngine Lane 생성, 크론 잡 등에서 공통 사용
         </p>
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
+          <p className="font-semibold mb-2">원본과의 핵심 차이: TaskPacket은 claw가 더 구조화한 부분이다</p>
+          <p>
+            이 글의 중요한 포인트는 단순히 "원본이 더 크다"가 아니다.
+            <strong>TaskPacket 자체는 claw-code가 원본보다 더 명시적으로 설계했다는 강점</strong>이 있다.
+            goal, constraint, acceptance criteria, dependency를 한 구조체에 넣으면 LLM 작업을 검증 가능한 계약으로 바꿀 수 있다.
+            원본 Claude Code의 LocalAgentTask는 이보다 자연어 task 중심이고, TaskPacket 같은 풍부한 계약 구조는 덜 전면화되어 있다.
+          </p>
+          <p className="mt-2">
+            반대로 실행 인프라는 원본이 훨씬 깊다.
+            LocalAgent, LocalShell, RemoteAgent, Dream, InProcessTeammate 같은 여러 task class가 있고,
+            실제 background spawn, multi-session cron lock, missed run recovery, recurring/durable scheduling,
+            swarm runner, permissionSync, teammate mailbox, iTerm/tmux pane backend까지 이어진다.
+            claw는 작업 명세를 잘 정리했고, 원본은 작업을 실제 장기 실행 제품으로 굴리는 운영 인프라가 깊다.
+          </p>
+        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TaskPacket 구조</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 not-prose my-4">
@@ -171,6 +188,9 @@ export default function Overview() {
           Review 단계: 자동 수용 기준 체크 + 사람 승인 (선택)<br />
           Rejected 시 InProgress로 복귀 — LLM이 rejected reason 보고 재작업
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">TaskPacket과 원본 task runtime 비교</h3>
+        <TaskRuntimeComparisonStepViz />
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 구조화 명세의 가치</p>

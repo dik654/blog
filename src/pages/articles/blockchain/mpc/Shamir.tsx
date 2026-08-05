@@ -52,16 +52,15 @@ export default function Shamir({ title, onCodeRef }: { title?: string; onCodeRef
           </div>
         )}
 
-        <h3>정수 위의 Shamir (MPC용)</h3>
+        <h3>큰 소수체를 쓰는 마스킹 예제</h3>
         <p>
           표준 Shamir는 유한체 위에서 동작합니다.
           <br />
-          MPC에서는 정수 위의 Shamir를 사용합니다.
-          <br />
-          마스킹 범위를 넓혀 통계적 보안을 보장합니다.
+          아래 교육 코드는 더 넓은 random mask를 담기 위해 큰 소수체를 고르지만 여전히 유한체 연산입니다.
+          일부 Paillier·RSA 계열 MPC protocol의 integer sharing과 같은 것으로 부르면 안 되며, modulus·범위·overflow와 statistical distance 조건은 선택한 protocol의 증명을 따라야 합니다.
         </p>
         <CodePanel
-          title="정수 위 Shamir (MPC용)"
+          title="큰 소수체 위 Shamir 마스킹 예제"
           code={INTEGER_CODE}
           annotations={[
             { lines: [2, 3], color: 'sky', note: 'Shamir 소수 계산' },

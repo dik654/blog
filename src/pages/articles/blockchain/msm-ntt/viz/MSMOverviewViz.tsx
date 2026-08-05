@@ -79,7 +79,7 @@ export default function MSMOverviewViz() {
                   style={{ transformOrigin: '40px 0' }} transition={{ delay: i * 0.15 }}>
                   <rect x={40} y={20 + i * 35} width={300} height={24} rx={4}
                     fill="none" />
-                  <motion.rect x={40} y={20 + i * 35} width={0} height={24} rx={4}
+                  <motion.rect initial={false} x={40} y={20 + i * 35} width={0} height={24} rx={4}
                     fill={item.c + '25'} stroke={item.c} strokeWidth={1}
                     animate={{ width: item.pct * 3 }} transition={{ duration: 0.6, delay: i * 0.15 }} />
                   <text x={350} y={35 + i * 35} fontSize={9} fontWeight={600} fill={item.c}>

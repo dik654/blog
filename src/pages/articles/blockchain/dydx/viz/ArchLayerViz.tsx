@@ -77,7 +77,7 @@ export default function ArchLayerViz() {
             ))}
             <text x={230} y={328} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">PostgreSQL</text>
           </motion.g>
-          <motion.circle r={5}
+          <motion.circle initial={false} r={5}
             animate={{ cx: 12, cy: [50, 140, 110, 254, 310][step] }}
             transition={sp} fill={C[step]} />
         </svg>

@@ -1,73 +1,107 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
+import { ModuleBox, DataBox, ActionBox, StatusBox } from '@/components/viz/boxes';
 
 const sp = { type: 'spring' as const, bounce: 0.12, duration: 0.5 };
-const C = { init: '#6366f1', prime: '#10b981', mul: '#f59e0b', key: '#8b5cf6' };
+const C = {
+  init: '#6366f1',
+  prime: '#10b981',
+  mul: '#f59e0b',
+  key: '#8b5cf6',
+  party: '#0ea5e9',
+  result: '#ec4899',
+};
 
 const STEPS = [
-  { label: '① 초기화 + 인덱스 결정', body: 'params = { key_bits: 2048, threshold: t, n: 3 }\n\n각 참가자 Pᵢ: rᵢ ← random()\nbroadcast(commit(rᵢ))\nreveal rᵢ → sort → index 할당\n// 공정한 인덱스: 누구도 위치 조작 불가.' },
-  { label: '② 분산 소수 생성 + Jacobi 검증', body: '각 Pᵢ: pᵢ ← random_prime_candidate(1024)\n소수 공유: p = Σ pᵢ mod N (Shamir 방식)\n\n분산 소수성 검사:\n  Jacobi(g, p) = Π Jacobi(g, pᵢ)  // 분산 곱\n  trial_division 후 Miller-Rabin 병렬 실행.\n// q도 동일한 절차로 독립 생성.' },
-  { label: '③ N = p × q 분산 곱셈', body: 'Shamir 곱셈 프로토콜:\n  p = Σ pᵢ,  q = Σ qᵢ (t-of-n 공유)\n  N = (Σ pᵢ)(Σ qᵢ) = Σ pᵢ·qⱼ\n  → 교차 항을 Paillier 동형 암호로 계산.\n\nBiprime 검증:\n  N이 정확히 두 소수의 곱인지 확인\n  φ(N) = (p-1)(q-1) 을 분산 계산.' },
-  { label: '④ Paillier 키 완성', body: 'λ(N) = lcm(p-1, q-1)  // 분산 계산\n  각 Pᵢ가 λᵢ 공유 보유 → λ = Σ λᵢ\n\ng = N + 1  // 표준 생성원\nθ = λ(N) mod N  // 비밀 복호화 키\nβ = rand()\n\n공개키: pk = (N, g)\n비밀키 공유: skᵢ = θᵢ  // t-of-n 임계값\n// 단일 참가자는 sk 복원 불가.' },
+  {
+    label: '1: 초기화 + commit-reveal 인덱스',
+    body: '각 Pᵢ 가 rᵢ 생성 → commit(rᵢ) broadcast → reveal → 정렬 후 인덱스 할당.\n공정한 인덱스 — 누구도 자기 위치 조작 불가.',
+  },
+  {
+    label: '2: 분산 소수 p 생성',
+    body: '각 Pᵢ: pᵢ ← random_prime_candidate(1024).\np = Σ pᵢ (Shamir 공유). Jacobi 분산 곱 + Miller-Rabin 병렬 검증.\nq 도 동일 절차.',
+  },
+  {
+    label: '3: N = p × q 분산 곱',
+    body: '(Σ pᵢ)(Σ qⱼ) = Σ pᵢ·qⱼ. 교차항을 Paillier 동형 암호로 계산.\nBiprime 검증: φ(N) = (p−1)(q−1) 분산 계산.',
+  },
+  {
+    label: '4: Paillier 키 완성',
+    body: 'λ = lcm(p−1, q−1). 각 Pᵢ 가 λᵢ 공유 보유.\npk = (N, g) 공개, skᵢ = θᵢ — t-of-n 임계값. 단일 참가자는 sk 복원 불가.',
+  },
 ];
 
 export default function DKGProtocolViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 490 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 500 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <defs>
+            <marker id="dkg-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill={C.prime} />
+            </marker>
+          </defs>
+
+          {/* 3 parties 공통 */}
+          <ModuleBox x={20} y={20} w={100} h={42} label="P₁" color={C.party} />
+          <ModuleBox x={200} y={20} w={100} h={42} label="P₂" color={C.party} />
+          <ModuleBox x={380} y={20} w={100} h={42} label="P₃" color={C.party} />
+
           {step === 0 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.init}>초기화</text>
-              {['params = {bits:2048, t:2, n:3}', '',
-                'P₁: r₁ ← random(), broadcast(H(r₁))',
-                'P₂: r₂ ← random(), broadcast(H(r₂))',
-                'P₃: r₃ ← random(), broadcast(H(r₃))', '',
-                'reveal → sort(r₁,r₂,r₃) → index'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.init}>{t}</text>
+              {[20, 200, 380].map((x, i) => (
+                <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 * i }}>
+                  <DataBox x={x} y={80} w={100} h={36} label={`r${i + 1} ← rand`} color={C.party} outlined />
+                  <ActionBox x={x} y={125} w={100} h={36} label={`commit(r${i + 1})`} color={C.init} />
+                </motion.g>
+              ))}
+
+              <ActionBox x={120} y={175} w={260} h={36} label="reveal → sort → index" color={C.init} />
+
+              {[80, 260, 440].map((x, i) => (
+                <motion.line key={i} x1={x} y1={161} x2={250} y2={175} stroke={C.init} strokeWidth={1} strokeDasharray="3 3"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + 0.1 * i }} />
               ))}
             </motion.g>
           )}
+
           {step === 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.prime}>분산 소수 생성</text>
-              {['각 Pᵢ: pᵢ ← rand_prime_candidate(1024)',
-                'p = Σ pᵢ  (Shamir 공유)', '',
-                'Jacobi 검증:',
-                '  J(g,p) = Π J(g,pᵢ)  // 분산 곱',
-                '  + Miller-Rabin 병렬 실행',
-                '// q도 동일 절차로 생성'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.prime}>{t}</text>
+              {[20, 200, 380].map((x, i) => (
+                <DataBox key={i} x={x} y={80} w={100} h={42}
+                  label={`p${i + 1} ← prime_cand`} sub="1024 bit" color={C.prime} outlined />
+              ))}
+
+              <ActionBox x={130} y={140} w={240} h={36} label="p = Σ pᵢ (Shamir 공유)" color={C.prime} />
+              <ActionBox x={130} y={180} w={240} h={32} label="Jacobi · Miller-Rabin 분산 검증" color={C.prime} />
+
+              {[70, 250, 430].map((x, i) => (
+                <motion.line key={i} x1={x} y1={122} x2={250} y2={140} stroke={C.prime} strokeWidth={1.2}
+                  markerEnd="url(#dkg-arr)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 + 0.1 * i }} />
               ))}
             </motion.g>
           )}
+
           {step === 2 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.mul}>N = p × q</text>
-              {['p = Σ pᵢ,  q = Σ qᵢ',
-                'N = (Σ pᵢ)(Σ qᵢ)',
-                '  = Σ pᵢ·qⱼ  // Paillier 동형 암호', '',
-                'Biprime 검증:',
-                '  φ(N) = (p-1)(q-1) 분산 계산',
-                '  N이 두 소수의 곱인지 확인'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.mul}>{t}</text>
-              ))}
+              <DataBox x={20} y={80} w={210} h={42} label="p = Σ pᵢ" sub="t-of-n 공유" color={C.prime} outlined />
+              <DataBox x={270} y={80} w={210} h={42} label="q = Σ qᵢ" sub="t-of-n 공유" color={C.prime} outlined />
+
+              <ActionBox x={130} y={135} w={240} h={42} label="Σ pᵢ·qⱼ (cross terms)" sub="Paillier 동형" color={C.mul} />
+              <DataBox x={130} y={185} w={240} h={28} label="Biprime check φ(N) = (p−1)(q−1)" color={C.mul} outlined />
             </motion.g>
           )}
+
           {step === 3 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.key}>Paillier 키 완성</text>
-              {['λ = lcm(p-1, q-1)  // λᵢ 공유 합산',
-                'g = N + 1', 'θ = λ mod N, β = rand()', '',
-                'pk = (N, g)           // 공개',
-                'skᵢ = θᵢ              // t-of-n 공유',
-                '// 단일 참가자: sk 복원 불가'].map((t, i) => (
-                <text key={i} x={20} y={38 + i * 16} fontSize={10} fontFamily="monospace"
-                  fill={C.key}>{t}</text>
-              ))}
+              <DataBox x={20} y={80} w={140} h={42} label="λ = lcm(p−1, q−1)" sub="분산 계산" color={C.key} outlined />
+              <DataBox x={170} y={80} w={140} h={42} label="g = N + 1" color={C.key} outlined />
+              <DataBox x={320} y={80} w={160} h={42} label="θ = λ mod N · β = rand" color={C.key} outlined />
+
+              <DataBox x={20} y={140} w={210} h={42} label="pk = (N, g)" sub="공개" color={C.result} outlined />
+              <DataBox x={270} y={140} w={210} h={42} label="skᵢ = θᵢ (t-of-n)" sub="단일 참가자 복원 불가" color={C.result} outlined />
+
+              <StatusBox x={130} y={190} w={240} h={20} label="Paillier 분산 키 완성" sub=" " color={C.result} progress={1} />
             </motion.g>
           )}
         </svg>

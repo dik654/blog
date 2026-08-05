@@ -22,7 +22,7 @@ export default function QAP() {
           </div>
           <div className="rounded-lg border-l-4 border-l-emerald-500 bg-card p-4">
             <p className="font-semibold text-sm text-emerald-400 mb-2">QAP: 단일 항등식 O(1)</p>
-            <M display>{'a(x) \\cdot b(x) - c(x) = h(x) \\cdot t(x)'}</M>
+            <M display>{'\\underbrace{a(x) \\cdot b(x) - c(x)}_{\\text{R1CS 위반 다항식}} = \\underbrace{h(x)}_{\\text{몫}} \\cdot \\underbrace{t(x)}_{\\text{vanishing}}'}</M>
           </div>
         </div>
 

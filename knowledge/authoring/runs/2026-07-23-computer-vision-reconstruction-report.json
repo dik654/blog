@@ -1,0 +1,97 @@
+{
+  "run": "2026-07-23-computer-vision-current-first",
+  "objective": "Reconstruct Computer Vision from product output contracts through detection and vision-language alignment to the minimum CNN, ResNet and ViT foundations.",
+  "information_architecture": {
+    "parent": "컴퓨터 비전",
+    "branches": [
+      "00 · 작업 계약",
+      "01 · Promptable · Tracking",
+      "02 · Object Detection",
+      "03 · 표현 · Backbone 기반"
+    ],
+    "learning_path_id": "ai-computer-vision-current-first",
+    "minimum_foundation_stop": "one convolution output cell and its geometry"
+  },
+  "source_boundaries": [
+    "PyTorch Conv2d for cross-correlation and geometry, not automatic translation invariance",
+    "ResNet and Identity Mappings for degradation and identity paths, not universal optimization guarantees",
+    "ConvNeXt for a modern convolutional design comparison, not universal superiority",
+    "ViT for patch tokens and encoder structure, not a universal small-data result",
+    "Swin for shifted windows and hierarchical representation, not guaranteed global preservation",
+    "CLIP for paired contrastive alignment and zero-shot transfer, not localization guarantees",
+    "DINOv2 to separate pretraining objective from backbone architecture, not automatic production readiness",
+    "DETR, Deformable DETR, Grounding DINO and SAM for distinct set prediction, sparse sampling, grounding and promptable-mask responsibilities"
+  ],
+  "private_transfer_problems": {
+    "cnn": "A 2px scratch in 3840x2160 may disappear after 224x224 resize; repair input geometry before swapping the backbone.",
+    "resnet": "A 56x56x64 to 28x28x128 stage requires a stride-2 projection shortcut before addition.",
+    "vit": "At 1024x1024, reducing patch size from 16 to 8 quadruples tokens and multiplies dense attention pairs by 16.",
+    "system": "Convert 'track the red part and stop on defect' into vocabulary, output, coordinates, latency, false-stop and abstention contracts."
+  },
+  "visual_contracts": [
+    "one-cell convolution probe",
+    "convolution output and receptive geometry",
+    "identity versus projection residual path",
+    "residual stage shape gate",
+    "patch token and attention-pair budget",
+    "global, window and hierarchical backbone comparison",
+    "task, vocabulary, coordinate, duplicate and release contracts"
+  ],
+  "qa": {
+    "full_related_regression": "157/157",
+    "foundation_contract": "9/9",
+    "formula_viz_contract": "4/4",
+    "visual_audit": "21 checks; 0 errors; 0 warnings",
+    "narrative_audit": "21 checks; 0 errors; 0 warnings",
+    "viewports": [390, 768, 1440],
+    "minimum_formula_font_px": 12,
+    "maximum_formula_overflow_px": 1,
+    "build": "passed",
+    "build_tsc": "blocked by pre-existing unrelated corpus errors",
+    "git_diff_check": "passed"
+  },
+  "context_manager_collaboration": {
+    "transport": "context-manager only",
+    "direct_claude_cli_used": false,
+    "claude_delegate_attempts": 3,
+    "claude_delegate_successes": 0,
+    "claude_failure": "Provider error: All providers failed (HTTP 500)",
+    "claude_only_route_attempts": 1,
+    "claude_only_route_result": "CLAUDE_UNAVAILABLE; no substitute review incorporated"
+  },
+  "small_model_pipeline": [
+    "freeze one computation or artifact handoff",
+    "declare one primary-source claim and forbidden extrapolation",
+    "provide one numeric shape or budget fixture",
+    "derive invariant and failure oracle",
+    "render one observable interactive state",
+    "test formula annotation, viewport, overflow and console",
+    "record minimum stopping line and deployment evidence"
+  ],
+  "deployment": {
+    "status": "public-verified",
+    "service_restarted_at": "2026-07-23T02:16:11+09:00",
+    "http_status": 200,
+    "public_contract": "19/19",
+    "public_chunk_hashes_match_local": true,
+    "public_routes_to_verify": [
+      "/lab/blog/ai?sub=ai-computer-vision",
+      "/lab/blog/ai/vision-system-contracts",
+      "/lab/blog/ai/object-detection-systems",
+      "/lab/blog/ai/clip-vision-language-model",
+      "/lab/blog/ai/cnn",
+      "/lab/blog/ai/resnet",
+      "/lab/blog/ai/vision-transformer"
+    ],
+    "chunks": [
+      {"name": "vision-system-contracts-ClXUq2r7.js", "bytes": 29848, "sha256": "bc31716de3d051799e5b1ced1b14bf2b54401a546636f5b8e703fe8a3674b3c1"},
+      {"name": "object-detection-systems-BJozHIMN.js", "bytes": 29927, "sha256": "aca821a9a97dd2f041e1df36af32846bf35025e052846ebd3980b91a1e585722"},
+      {"name": "clip-vision-language-model-Qpr2z-DQ.js", "bytes": 27294, "sha256": "d2355a22e14d80590197cba5b58d3d1557c248c58c5be980d9e0ebd8d4766a20"},
+      {"name": "deformable-detr-CNzbi1Kf.js", "bytes": 14552, "sha256": "baa221f613a2103498a2d323998ece613e42aff8ced37c83751514442e439c0b"},
+      {"name": "cnn-C3pnthl3.js", "bytes": 12899, "sha256": "d306f0f658d14e481aa0e4d6ba2cc4ef9d1a7fcf69fe0fb8cea09a8ea8407478"},
+      {"name": "resnet-CaecOwrf.js", "bytes": 12859, "sha256": "5afde545b465c419ebe4ffaa4a29829a3e57c2e902c4a84a794c99460ea71b1e"},
+      {"name": "vision-transformer-CsXjsqYu.js", "bytes": 13808, "sha256": "a3fae3d1b0e2f209860c36c47f0234acea8676c01ea92476cc6c59c0298c5fb5"}
+    ]
+  },
+  "formal_goal_complete": false
+}

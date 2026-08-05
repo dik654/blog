@@ -49,7 +49,7 @@ export default function RunTxViz({ onOpenCode }: { onOpenCode?: (key: string) =>
             )}
             {/* Packet flow */}
             {step >= 1 && step <= 4 && (
-              <motion.rect width={8} height={8} rx={2} y={40}
+              <motion.rect initial={false} width={8} height={8} rx={2} y={40}
                 fill={PIPE[step - 1].color}
                 animate={{ x: [PIPE[step - 1].x + 4, PIPE[Math.min(step, 4)].x + SW - 12] }}
                 transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1 }} />

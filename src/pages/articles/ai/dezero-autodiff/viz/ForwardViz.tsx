@@ -12,13 +12,15 @@ export default function ForwardViz({ onOpenCode }: { onOpenCode?: (key: string) 
         const R = RENDERERS[step];
         return (
           <div className="w-full">
-            <svg viewBox="0 0 400 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-              <R />
+            <svg data-dezero-forward-viz viewBox="0 0 400 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+              <g transform={step === 0 ? 'translate(30 0)' : undefined}>
+                <R />
+              </g>
             </svg>
             {onOpenCode && (
               <div className="flex items-center gap-2 mt-3 justify-end">
                 <CodeViewButton onClick={() => onOpenCode(STEP_REFS[step])} />
-                <span className="text-[10px] text-muted-foreground">{STEP_LABELS[step]}</span>
+                <span className="text-[11px] text-muted-foreground">{STEP_LABELS[step]}</span>
               </div>
             )}
           </div>

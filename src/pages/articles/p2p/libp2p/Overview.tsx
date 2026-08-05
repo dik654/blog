@@ -1,5 +1,6 @@
 import Libp2pLayerViz from './viz/Libp2pLayerViz';
 import Libp2pStackFlowViz from './viz/Libp2pStackFlowViz';
+import EcosystemViz from './viz/EcosystemViz';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from './codeRefs';
@@ -88,81 +89,8 @@ export default function Overview({ onCodeRef }: {
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">libp2p 생태계</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// libp2p Ecosystem (2024)
-//
-// Language Implementations:
-//
-//   go-libp2p (reference):
-//     - Most mature
-//     - Used by IPFS Kubo, Lotus (Filecoin)
-//     - Full protocol support
-//
-//   rust-libp2p:
-//     - Type safety, performance
-//     - Used by Parity, Substrate, Forest
-//     - Active development
-//
-//   js-libp2p:
-//     - Browser + Node.js
-//     - Used by Helia (IPFS v2)
-//     - WebRTC, WebSocket primary
-//
-//   py-libp2p: Python (less mature)
-//   jvm-libp2p: Java/Kotlin (Lodestar)
-//   nim-libp2p: Nim (Nimbus ETH)
-//   zig-libp2p: Zig (experimental)
-
-// Production Users:
-//
-//   Blockchain:
-//     - IPFS / Filecoin (Protocol Labs)
-//     - Ethereum 2.0 Consensus (Lighthouse, Prysm, Teku)
-//     - Polkadot / Kusama (Parity)
-//     - Near Protocol
-//     - Solana (partial)
-//     - Celestia
-//
-//   Other:
-//     - Radicle (P2P git)
-//     - Berty (messaging)
-//     - Drand (randomness beacon)
-//     - Pulsar
-//     - iroh (alt IPFS)
-
-// Protocol Modules:
-//
-//   Transport:
-//     tcp, quic, websocket, webtransport, memory
-//
-//   Security:
-//     noise, tls
-//
-//   Muxer:
-//     yamux, mplex
-//
-//   Core Protocols:
-//     identify, ping, autonat
-//     kad (Kademlia DHT)
-//     gossipsub, floodsub
-//     rendezvous
-//     relay (circuit), dcutr
-//     mdns
-//
-//   Advanced:
-//     request-response
-//     stream (generic)
-//     upnp (port forwarding)
-
-// libp2p 공통 개념:
-//   PeerId = hash(public_key)
-//   Multiaddr = layered addressing
-//   Multistream-select = protocol negotiation
-//   Swarm = central event loop
-//   NetworkBehaviour = app logic
-//   ConnectionHandler = per-connection state`}
-        </pre>
       </div>
+      <div className="not-prose mb-4"><EcosystemViz /></div>
     </section>
   );
 }

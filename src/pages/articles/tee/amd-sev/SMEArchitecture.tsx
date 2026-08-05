@@ -1,5 +1,7 @@
 import SMEArchitectureViz from './viz/SMEArchitectureViz';
 import SMECompareViz from './viz/SMECompareViz';
+import SMEEnableFlowViz from './viz/SMEEnableFlowViz';
+import SMELimitsViz from './viz/SMELimitsViz';
 
 export default function SMEArchitecture() {
   return (
@@ -19,34 +21,9 @@ export default function SMEArchitecture() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SME 활성화 & 사용</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// CPU 지원 확인
-cpuid(0x8000_001f);
-  → EAX[0] = SME supported
-  → EAX[1] = SEV supported
-  → EAX[3] = SEV-ES supported
-  → EAX[4] = SEV-SNP supported
-
-// MSR 활성화
-wrmsr(MSR_AMD64_SYSCFG, sysConfig | SYSCFG_MEM_ENCRYPT);
-  → 비트 23 설정 → SME 엔진 on
-  → 이후 C-bit 설정된 페이지만 암호화
-
-// Linux host 옵션
-// kernel boot: mem_encrypt=on force
-//   - 모든 kernel 할당 페이지에 C-bit 설정
-//   - 부트 후 전환 불가 (early init)
-//
-// kernel boot: mem_encrypt=active-by-default
-//   - 기본 C-bit 설정
-//   - 필요 시 평문 매핑 가능
-
-// C-bit 마스크 상수
-// arch/x86/include/asm/mem_encrypt.h
-#define sme_me_mask  (1UL << C_BIT_POS)
-//
-// 페이지 매핑 시
-pte_val = phys_addr | sme_me_mask | perms;
-set_pte(ptep, pte_val);`}</pre>
+      </div>
+      <div className="not-prose mb-4"><SMEEnableFlowViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SME vs TME 비교</h3>
       </div>
@@ -105,32 +82,9 @@ set_pte(ptep, pte_val);`}</pre>
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">SME의 한계 → SEV로 이어진 동기</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// SME만으로는 충분하지 않은 이유
-
-// 시나리오: 멀티 VM 클라우드 서버
-// Host + VM_A + VM_B가 같은 CPU에서 실행
-
-// SME만 있을 때
-// - 모든 메모리가 동일 키 K_SME로 암호화
-// - Hypervisor가 VM_A 페이지 읽기 → K_SME로 복호화 → 평문 접근
-// - 격리 없음, 공격자 = VM 간 공유
-//
-// → 물리 공격(cold boot) 방어만 가능
-// → 동일 시스템 내부 공격은 방어 불가
-
-// SEV 추가 시
-// - VM_A → K_A (별도 키)
-// - VM_B → K_B (별도 키)
-// - Host → K_H (별도 키)
-// - Hypervisor가 VM_A 페이지 접근 → K_H로 복호화 → 랜덤 바이트
-//
-// → Cross-VM 격리 보장
-// → 하이퍼바이저도 VM 내부 못 봄
-
-// 정리
-// SME = 물리 공격 방어
-// SEV = 물리 공격 + 논리적(Host/VM) 공격 방어
-// SEV-SNP = 위 전부 + 무결성·replay 방어`}</pre>
+      </div>
+      <div className="not-prose mb-4"><SMELimitsViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: C-bit의 설계 선택</p>

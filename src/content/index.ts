@@ -7,8 +7,22 @@ import p2p from './p2p';
 import gpu from './gpu';
 import tee from './tee';
 import ismsAml from './isms-aml';
+import ops from './ops';
+import systems from './systems';
 
-export const categories = [ai, blockchain, crypto, p2p, gpu, tee, ismsAml];
+// 정식 도메인 카테고리만 블로그에 노출한다. 검증 실천은 코어로 이동했고,
+// 자동 미러 노트는 공개 탐색 목록에서 제외한다.
+export const categories = [
+  systems,
+  gpu,
+  crypto,
+  p2p,
+  ai,
+  blockchain,
+  tee,
+  ops,
+  ismsAml,
+];
 
 export function getCategoryBySlug(slug: string) {
   return categories.find((c) => c.slug === slug);

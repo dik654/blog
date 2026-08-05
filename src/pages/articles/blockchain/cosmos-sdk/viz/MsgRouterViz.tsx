@@ -51,7 +51,7 @@ export default function MsgRouterViz({ onOpenCode }: { onOpenCode?: (key: string
             )}
             {/* Flow packet */}
             {step >= 1 && step <= 3 && (
-              <motion.circle r={4} fill={LAYERS[step - 1].color}
+              <motion.circle initial={false} r={4} fill={LAYERS[step - 1].color}
                 animate={{
                   cx: [LX + W / 2, LX + W / 2],
                   cy: [LAYERS[step - 1].y + H, LAYERS[Math.min(step, 3)].y],

@@ -1,0 +1,137 @@
+{
+  "date": "2026-07-23",
+  "objective": "Close every article-level true-Claude identity gap left by Context Manager HTTP 500, timeout, connector failure, headerless response, or Codex fallback.",
+  "supersedes_identity_counts_in": [
+    "knowledge/authoring/runs/2026-07-23-claude-review-backfill-report.json",
+    "knowledge/authoring/runs/2026-07-23-claude-review-coverage-reconciliation.json"
+  ],
+  "acceptance_rule": {
+    "accepted_prefix": "[claude-code:sonnet",
+    "required_position": "first observed transport header",
+    "rejected": [
+      "codex:* fallback",
+      "headerless response",
+      "timeout",
+      "HTTP 500 or other provider failure",
+      "connector failure"
+    ]
+  },
+  "inventory": {
+    "intended_unique_articles": 71,
+    "accepted_unique_articles": 71,
+    "missing_unique_articles": 0,
+    "coverage_percent": 100,
+    "duplicate_unique_assignments": 0
+  },
+  "executions": {
+    "total_attempts": 124,
+    "accepted_true_claude_headers": 74,
+    "rejected_or_failed": 50,
+    "accepted_repeat_reviews_for_same_slug": 3,
+    "counting_note": "Coverage is deduplicated by slug. Two extra Hybrid/Linear passes and two extra MDP passes produced three accepted executions beyond the 71 unique articles."
+  },
+  "ledger_contributions": [
+    {
+      "ledger": "2026-07-23-claude-review-coverage-reconciliation",
+      "unique_articles": 57,
+      "accepted_executions": 57,
+      "rejected_or_failed": 18,
+      "total_attempts": 75
+    },
+    {
+      "ledger": "2026-07-23-claude-review-backfill-training-gap",
+      "unique_articles": 4,
+      "accepted_executions": 4,
+      "rejected_or_failed": 9,
+      "total_attempts": 13
+    },
+    {
+      "ledger": "2026-07-23-claude-review-backfill-architecture-gap",
+      "unique_articles": 5,
+      "accepted_executions": 6,
+      "rejected_or_failed": 13,
+      "total_attempts": 19,
+      "deduplication_note": "The architecture-hybrid-assist ledger is a subsidiary source already consolidated here and is not added again."
+    },
+    {
+      "ledger": "2026-07-23-claude-review-backfill-rl-gap",
+      "unique_articles": 5,
+      "accepted_executions": 7,
+      "rejected_or_failed": 10,
+      "total_attempts": 17
+    }
+  ],
+  "closed_gap_slugs": {
+    "training": [
+      "llm-pretraining-scaling",
+      "open-r1",
+      "post-training-rlvr",
+      "rlhf"
+    ],
+    "architecture": [
+      "llm-architecture-dense-transformers",
+      "llm-architecture-gallery",
+      "llm-architecture-hybrid-linear",
+      "llm-architecture-kv-long-context",
+      "llm-architecture-sparse-moe"
+    ],
+    "reinforcement_learning": [
+      "rl-mdp-bellman",
+      "rl-model-based-world-models",
+      "rl-policy-gradient-actor-critic",
+      "rl-pomdp-state-estimation",
+      "rl-temporal-difference-dqn"
+    ]
+  },
+  "finding_disposition": {
+    "confirmed_gap_findings_currently_open": 0,
+    "claude_claims_independently_rejected": [
+      "Source-only formula overflow claims without browser reproduction",
+      "Policy-gradient baseline variance ambiguity contradicted by the adjacent sample-gradient lab",
+      "Dreamer lambda-return indexing claim contradicted by the cited Nature primary source"
+    ],
+    "important_fix": "The MDP hidden transfer fixture no longer reuses the public Viz histories, rewards, gamma, policy, Q values, or advantages."
+  },
+  "scope_boundary": {
+    "article_identity_complete": true,
+    "route_reviews_counted_as_articles": false,
+    "visual_qa_counted_as_claude_identity": false,
+    "accepted_review_source_followups_remain_separate": true,
+    "note": "This audit closes the requested true-Claude identity gaps. It does not convert every accepted source-verification follow-up or repository-wide enrichment backlog into completed work."
+  },
+  "verification": {
+    "production_build": {
+      "command": "npm run build",
+      "modules_transformed": 9357,
+      "status": "pass",
+      "warning": "Vite reported the existing large-chunk advisory; it was not a build failure."
+    },
+    "final_local_playwright": {
+      "tests": 83,
+      "passed": 83,
+      "failed": 0
+    },
+    "responsive_audits": {
+      "viz_checks": 24,
+      "viz_surfaces": 21,
+      "viz_errors": 0,
+      "viz_warnings": 0,
+      "narrative_checks": 24,
+      "narrative_step_viz": 15,
+      "narrative_surfaces": 21,
+      "narrative_errors": 0,
+      "narrative_warnings": 0
+    },
+    "production": {
+      "service": "cm-blog.service",
+      "service_status": "active",
+      "javascript_asset": "/lab/assets/index-DUuEljND.js",
+      "stylesheet_asset": "/lab/assets/index-yuuw-KUu.css",
+      "asset_http_status": 200,
+      "route_smoke_http_status": 200,
+      "legacy_blog_redirect_status": 308,
+      "production_playwright": "5/5 passed"
+    }
+  },
+  "final_status": "complete"
+}

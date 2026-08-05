@@ -18,8 +18,9 @@ import { defiArticles } from './articlesDeFi';
 
 const blockchain: Category = {
   slug: 'blockchain',
-  name: 'Blockchain',
+  name: '블록체인',
   description: '블록체인, 이더리움, 코스모스, 합의 알고리즘 학습 노트',
+  group: 'capability',
   subcategories,
   articles: [
     ...fundamentalsArticles,

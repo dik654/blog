@@ -1,0 +1,89 @@
+{
+  "date": "2026-07-23",
+  "scope": "Current-source clusters left provisional by true-Claude workers without live search",
+  "verification_rule": "A current claim is resolved only against the paper page, official product documentation, or the owning project's repository. This ledger is independent of Claude identity coverage.",
+  "clusters": [
+    {
+      "id": "comfy-cloud-submit",
+      "status": "verified",
+      "articles": ["comfyui-workflow-map"],
+      "claims": [
+        "Local ComfyUI submits with POST /prompt.",
+        "Comfy Cloud submits with POST /api/prompt and returns prompt_id.",
+        "The Cloud API is experimental and version-sensitive."
+      ],
+      "sources": [
+        "https://docs.comfy.org/development/comfyui-server/comms_routes",
+        "https://docs.comfy.org/development/cloud/api-reference"
+      ]
+    },
+    {
+      "id": "pp-doclayout-v2",
+      "status": "verified",
+      "articles": ["paddleocr-vl"],
+      "claims": [
+        "PP-DocLayoutV2 uses RT-DETR-L-based layout detection.",
+        "It cascades a lightweight pointer network with 6 Transformer layers.",
+        "Detected boxes and classes are ordered by the pointer-network stage."
+      ],
+      "sources": [
+        "https://www.paddleocr.ai/v3.3.1/en/version3.x/module_usage/layout_analysis.html"
+      ]
+    },
+    {
+      "id": "mineru-popo",
+      "status": "verified",
+      "articles": ["document-structure-assembly", "ocr-runtime-evaluation"],
+      "claims": [
+        "The paper defines four post-processing subtasks.",
+        "It reports 30K generated examples and Qwen3-VL-4B fine-tuning.",
+        "It introduces dynamic chunking with overlap-based synchronization and a document tree."
+      ],
+      "sources": [
+        "https://arxiv.org/abs/2605.24973",
+        "https://github.com/opendatalab/MinerU-Popo"
+      ]
+    },
+    {
+      "id": "animation-current",
+      "status": "verified",
+      "articles": [
+        "animation-production-workflow",
+        "animation-video-dataset",
+        "animation-captioning",
+        "animation-lora-training",
+        "animation-video-evaluation"
+      ],
+      "claims": [
+        "AniMatrix defines Style, Motion, Camera, and VFX production variables and dual-channel conditioning.",
+        "AniMatrix artifacts were still described as preparing for public release, so the article does not claim reproducibility.",
+        "The LTX-2 trainer supports LoRA, full fine-tuning, and IC-LoRA.",
+        "The LTX-2 dataset guide documents scene splitting, caption review, resolution buckets, latent caching, and decode verification."
+      ],
+      "sources": [
+        "https://arxiv.org/abs/2605.03652",
+        "https://github.com/Lightricks/LTX-2/tree/main/packages/ltx-trainer",
+        "https://github.com/Lightricks/LTX-2/blob/main/packages/ltx-trainer/docs/dataset-preparation.md"
+      ]
+    },
+    {
+      "id": "flux-2-current",
+      "status": "verified",
+      "articles": ["comfyui-edit-models-flux-qwen"],
+      "claims": [
+        "FLUX.2 unifies generation and editing and supports up to 10 references in the documented family boundary.",
+        "The official overview distinguishes API, playground, dev, and klein reference limits.",
+        "FLUX.2 klein has 4B and 9B variants; 4B is Apache 2.0 and is described at about 13GB VRAM, while 9B uses the FLUX non-commercial license."
+      ],
+      "sources": [
+        "https://bfl.ai/blog/flux-2",
+        "https://docs.bfl.ai/flux_2/flux2_overview"
+      ]
+    }
+  ],
+  "summary": {
+    "clusters": 5,
+    "verified": 5,
+    "open": 0
+  }
+}

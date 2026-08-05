@@ -11,12 +11,12 @@ const NODES = [
 ];
 
 const EDGES = [
-  { from: 0, to: 1, label: 'Stake' },
-  { from: 3, to: 1, label: 'Delegate' },
-  { from: 1, to: 2, label: 'Assign' },
-  { from: 2, to: 4, label: 'Execute' },
-  { from: 4, to: 5, label: 'Earn' },
-  { from: 5, to: 3, label: 'Share' },
+  { from: 0, to: 1, label: 'Stake', lx: 100, ly: 39 },
+  { from: 3, to: 1, label: 'Delegate', lx: 155, ly: 48 },
+  { from: 1, to: 2, label: 'Assign', lx: 105, ly: 94 },
+  { from: 2, to: 4, label: 'Execute', lx: 135, ly: 105 },
+  { from: 4, to: 5, label: 'Earn', lx: 145, ly: 145 },
+  { from: 5, to: 3, label: 'Share', lx: 240, ly: 102 },
 ];
 
 const STEPS = [
@@ -43,11 +43,11 @@ export default function TokenomicsViz() {
               <motion.g key={i} animate={{ opacity: vis ? 0.8 : 0.06 }}>
                 <line x1={f.x} y1={f.y} x2={t.x} y2={t.y}
                   stroke="#666" strokeWidth={1.2} strokeDasharray="4 3" />
-                <rect x={(f.x+t.x)/2+5-18} y={(f.y+t.y)/2-11} width={36} height={12} rx={2} fill="var(--card)" />
-                <text x={(f.x+t.x)/2+5} y={(f.y+t.y)/2-4} textAnchor="middle"
+                <rect x={e.lx - 22} y={e.ly - 10} width={44} height={13} rx={2} fill="var(--card)" />
+                <text x={e.lx} y={e.ly} textAnchor="middle"
                   fontSize={10} fill="var(--muted-foreground)">{e.label}</text>
                 {vis && (
-                  <motion.circle r={3} fill={NODES[e.from].color}
+                  <motion.circle initial={false} r={3} fill={NODES[e.from].color}
                     animate={{ cx:[f.x,t.x], cy:[f.y,t.y] }}
                     transition={{ duration: 0.7, repeat: Infinity, repeatDelay: 1 }} />
                 )}

@@ -28,7 +28,7 @@ export default function TickMath() {
             <span className="text-sm font-semibold">Tick &rarr; 가격 이산화</span>
           </div>
           <div className="p-5 space-y-3">
-            <M display>{'P(i) = 1.0001^i'}</M>
+            <M display>{'\\underbrace{P(i)}_{\\text{tick i 의 가격}} = \\underbrace{1.0001}_{\\text{1 basis point}}^{\\,i}'}</M>
             <p className="text-sm text-muted-foreground">각 tick이 1 basis point(0.01%) 가격 차이</p>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
               <div className="bg-muted rounded-lg px-3 py-2 text-center">
@@ -71,7 +71,7 @@ export default function TickMath() {
             <span className="text-xs text-muted-foreground ml-2">64비트 정수부 + 96비트 소수부</span>
           </div>
           <div className="p-5 space-y-3">
-            <M display>{'\\texttt{sqrtPriceX96} = \\sqrt{P} \\cdot 2^{96}'}</M>
+            <M display>{'\\underbrace{\\texttt{sqrtPriceX96}}_{\\text{Q64.96 고정소수}} = \\underbrace{\\sqrt{P}}_{\\text{가격 제곱근}} \\cdot \\underbrace{2^{96}}_{\\text{고정소수 스케일}}'}</M>
             <div className="bg-muted rounded-lg p-3 text-sm">
               <p className="text-muted-foreground text-xs mb-1">예시: P = 1.5</p>
               <p><M>{'\\sqrt{1.5} \\approx 1.22474'}</M></p>

@@ -4,8 +4,9 @@ import { p2pArticles2 } from './articles2';
 
 const p2p: Category = {
   slug: 'p2p',
-  name: 'P2P / Networking',
+  name: 'P2P · 네트워크',
   description: 'P2P 프로토콜, 콘텐츠 주소, DHT, 분산 전송 학습 노트',
+  group: 'foundation',
   subcategories: [
     { slug: 'p2p-fundamentals', name: 'Fundamentals', description: 'P2P 네트워크 기초, 토폴로지, 라우팅', icon: '🌐' },
     { slug: 'p2p-discovery', name: 'DHT & Discovery', description: 'Kademlia DHT, 피어 탐색 프로토콜', icon: '🔍' },

@@ -3,6 +3,7 @@ import ResBlockViz from './viz/ResBlockViz';
 import { blockSteps, variants } from './ArchitectureData';
 import ArchDetailViz from './viz/ArchDetailViz';
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
 export default function Architecture() {
   return (
@@ -54,6 +55,16 @@ export default function Architecture() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">ResNet-50 구조 & BatchNorm</h3>
         <M display>{'\\hat{x}_i = \\frac{\\overbrace{x_i - \\mu_B}^{\\text{평균 빼기}}}{\\underbrace{\\sqrt{\\sigma_B^2 + \\epsilon}}_{\\text{분산으로 나누기}}} \\qquad y_i = \\underbrace{\\gamma}_{\\text{스케일}} \\cdot \\hat{x}_i + \\underbrace{\\beta}_{\\text{시프트}}'}</M>
+        <FormulaNote
+          meaning="학습 중 BatchNorm은 미니배치의 채널별 평균과 분산으로 값을 표준화한 뒤, 학습 가능한 γ와 β로 필요한 스케일과 중심을 다시 복원한다. 추론 시에는 현재 배치 통계가 아니라 학습 중 누적한 running mean과 variance를 사용한다."
+          symbols={[
+            ['x_i', '미니배치 안의 i번째 활성값'],
+            ['\\mu_B,\\sigma_B^2', '현재 학습 미니배치에서 계산한 채널별 평균과 분산'],
+            ['\\epsilon', '분모가 0에 가까워지는 것을 막는 작은 상수'],
+            ['\\gamma,\\beta', '표준화 뒤 표현력을 되돌리는 학습 가능한 스케일과 이동량'],
+            ['y_i', '정규화와 affine 변환을 마친 출력'],
+          ]}
+        />
         <div className="not-prose grid grid-cols-2 gap-2 mt-3 text-sm">
           {[
             { sym: 'x − μ_B', name: '평균 빼기', defs: 'μ_B = 미니배치 평균 (배치 내 같은 채널 값의 평균)', why: '층마다 출력 분포가 달라지면 다음 층이 계속 적응해야 함 → 학습 불안정. 평균을 0으로 맞춰 분포 중심을 고정', color: 'text-blue-500' },

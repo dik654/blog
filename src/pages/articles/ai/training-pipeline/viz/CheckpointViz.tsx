@@ -1,13 +1,55 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
-import { ModuleBox, DataBox, ActionBox, StatusBox, AlertBox } from '@/components/viz/boxes';
+import { ModuleBox, DataBox, StatusBox, AlertBox } from '@/components/viz/boxes';
 import { STEPS, COLORS, sp } from './CheckpointVizData';
+import MobileTrainingScene, { type MobileTrainingSceneData } from './MobileTrainingScene';
+
+const MOBILE_SCENES: MobileTrainingSceneData[] = [
+  {
+    eyebrow: 'Checkpoint state contract',
+    items: [
+      { label: 'Model + optimizer state', detail: 'Weight뿐 아니라 momentum·adaptive statistics도 저장한다.', accent: COLORS.save },
+      { label: 'Epoch + scheduler + best metric', detail: '어디서 어떤 learning rate와 선택 상태로 재개할지 남긴다.', accent: COLORS.save },
+      { label: '명시적으로 load', detail: 'Code version과 schema를 확인한 뒤 각 state_dict를 복원한다.', accent: COLORS.load },
+    ],
+    oracle: '객체 전체 pickle보다 필요한 state와 provenance를 명시적으로 저장한다.',
+  },
+  {
+    eyebrow: 'Best와 last의 다른 책임',
+    items: [
+      { label: 'best_model.pt', detail: 'Validation 기준으로 선택된 held-out test 평가 후보다.', accent: COLORS.best },
+      { label: 'last_model.pt', detail: 'Crash나 timeout 뒤 같은 run을 이어 갈 resume 지점이다.', accent: COLORS.load },
+      { label: 'Untouched test', detail: '모든 선택을 닫은 뒤 best 후보를 한 번 평가한다.', accent: COLORS.save },
+    ],
+    oracle: 'Best는 선택 결과이고 test 결과 자체가 아니다.',
+  },
+  {
+    eyebrow: 'Seed로 통제할 source',
+    items: [
+      { label: 'Python + NumPy', detail: '전처리·sampling에서 쓰는 각 RNG를 명시적으로 seed한다.', accent: COLORS.load },
+      { label: 'PyTorch CPU + CUDA', detail: 'Tensor와 device별 RNG 흐름을 실험 설정에 남긴다.', accent: COLORS.best },
+      { label: 'Worker + environment', detail: 'DataLoader generator, library, driver와 hardware도 함께 기록한다.', accent: COLORS.seed },
+    ],
+    oracle: '같은 seed는 변동을 줄이지만 환경을 넘는 완전 재현을 혼자 보장하지 않는다.',
+  },
+  {
+    eyebrow: '결정론적 실행 경계',
+    items: [
+      { label: '알고리즘 선택 제한', detail: 'cuDNN benchmark를 끄고 deterministic 경로를 요구한다.', accent: COLORS.determ },
+      { label: '지원하지 않는 op 표면화', detail: 'use_deterministic_algorithms가 알려진 비결정 연산을 에러로 만든다.', accent: COLORS.seed },
+      { label: '비용과 범위 기록', detail: '성능 비용을 측정하고 release·hardware 차이는 별도 provenance로 남긴다.', accent: COLORS.best },
+    ],
+    oracle: 'Deterministic flag는 재현성 도구 중 하나이지 완전 보증 스위치가 아니다.',
+  },
+];
 
 export default function CheckpointViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 520 230" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <div className="w-full">
+          <MobileTrainingScene scene={MOBILE_SCENES[step]} />
+          <svg viewBox="0 0 520 230" className="hidden w-full max-w-2xl sm:block" style={{ height: 'auto' }}>
           <defs>
             <marker id="arrCk" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto">
               <path d="M0,0 L6,3 L0,6" fill="var(--muted-foreground)" />
@@ -28,7 +70,7 @@ export default function CheckpointViz() {
                 <rect x={80} y={100} width={120} height={44} rx={8} fill={COLORS.save} fillOpacity={0.08}
                   stroke={COLORS.save} strokeWidth={1.2} />
                 <text x={140} y={120} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS.save}>checkpoint.pt</text>
-                <text x={140} y={134} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                <text x={140} y={134} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   epoch + model + optim + sched
                 </text>
               </motion.g>
@@ -62,11 +104,11 @@ export default function CheckpointViz() {
                   <motion.g key={e} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ ...sp, delay: i * 0.06 }}>
                     <circle cx={x} cy={55} r={4} fill={isBest ? COLORS.best : 'var(--border)'} />
-                    <text x={x} y={45} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">E{e}</text>
+                    <text x={x} y={45} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">E{e}</text>
                     {isBest && (
                       <>
-                        <text x={x} y={75} textAnchor="middle" fontSize={8} fontWeight={700} fill={COLORS.best}>BEST</text>
-                        <text x={x} y={87} textAnchor="middle" fontSize={7} fill={COLORS.best}>val_loss=0.21</text>
+                        <text x={x} y={75} textAnchor="middle" fontSize={9} fontWeight={700} fill={COLORS.best}>BEST</text>
+                        <text x={x} y={87} textAnchor="middle" fontSize={9} fill={COLORS.best}>val_loss=0.21</text>
                       </>
                     )}
                   </motion.g>
@@ -78,20 +120,20 @@ export default function CheckpointViz() {
                 <rect x={40} y={105} width={200} height={55} rx={8} fill={COLORS.best} fillOpacity={0.06}
                   stroke={COLORS.best} strokeWidth={1.2} />
                 <text x={140} y={122} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS.best}>best_model.pt</text>
-                <text x={140} y={136} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                <text x={140} y={136} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   val_loss 최저일 때만 갱신
                 </text>
-                <text x={140} y={150} textAnchor="middle" fontSize={8} fill={COLORS.best}>용도: 최종 추론</text>
+                <text x={140} y={150} textAnchor="middle" fontSize={9} fill={COLORS.best}>용도: test 평가 후보</text>
               </motion.g>
 
               <motion.g initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ ...sp, delay: 0.6 }}>
                 <rect x={280} y={105} width={200} height={55} rx={8} fill={COLORS.load} fillOpacity={0.06}
                   stroke={COLORS.load} strokeWidth={1.2} />
                 <text x={380} y={122} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS.load}>last_model.pt</text>
-                <text x={380} y={136} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                <text x={380} y={136} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   매 epoch 덮어쓰기
                 </text>
-                <text x={380} y={150} textAnchor="middle" fontSize={8} fill={COLORS.load}>용도: 학습 재개 (resume)</text>
+                <text x={380} y={150} textAnchor="middle" fontSize={9} fill={COLORS.load}>용도: 학습 재개 (resume)</text>
               </motion.g>
 
               <text x={260} y={186} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
@@ -119,11 +161,11 @@ export default function CheckpointViz() {
                   <text x={78 + i * 125} y={56} textAnchor="middle" fontSize={11} fontWeight={700} fill={s.color}>
                     {s.label}
                   </text>
-                  <text x={78 + i * 125} y={70} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                  <text x={78 + i * 125} y={70} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                     {s.sub}
                   </text>
                   <rect x={28 + i * 125} y={80} width={99} height={22} rx={4} fill="var(--muted)" fillOpacity={0.2} />
-                  <text x={78 + i * 125} y={95} textAnchor="middle" fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">
+                  <text x={78 + i * 125} y={95} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
                     {s.detail}
                   </text>
                 </motion.g>
@@ -133,7 +175,7 @@ export default function CheckpointViz() {
                 <line key={i} x1={78 + i * 125} y1={120} x2={260} y2={148}
                   stroke={COLORS.seed} strokeWidth={0.8} strokeDasharray="3 2" />
               ))}
-              <StatusBox x={200} y={150} w={120} h={45} label="재현 가능" sub="동일 seed → 동일 결과" color={COLORS.seed} progress={1} />
+              <StatusBox x={200} y={150} w={120} h={45} label="변동 축소" sub="seed 흐름 통제" color={COLORS.seed} progress={1} />
             </motion.g>
           )}
 
@@ -155,7 +197,7 @@ export default function CheckpointViz() {
                   <text x={44} y={50 + i * 50} fontSize={9} fontWeight={700} fontFamily="monospace" fill={s.color}>
                     {s.label} = {s.val}
                   </text>
-                  <text x={44} y={64 + i * 50} fontSize={8} fill="var(--muted-foreground)">{s.desc}</text>
+                  <text x={44} y={64 + i * 50} fontSize={9} fill="var(--muted-foreground)">{s.desc}</text>
                 </motion.g>
               ))}
               {/* Speed trade-off */}
@@ -165,15 +207,15 @@ export default function CheckpointViz() {
                 <text x={435} y={52} textAnchor="middle" fontSize={10} fontWeight={700} fill="var(--foreground)">
                   Trade-off
                 </text>
-                <text x={435} y={72} textAnchor="middle" fontSize={9} fill={COLORS.determ}>속도 5~10% 감소</text>
+                <text x={435} y={72} textAnchor="middle" fontSize={9} fill={COLORS.determ}>비용은 직접 측정</text>
                 <line x1={390} y1={82} x2={480} y2={82} stroke="var(--border)" strokeWidth={0.5} />
-                <text x={435} y={98} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                <text x={435} y={98} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   대회: OFF (속도 우선)
                 </text>
-                <text x={435} y={114} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                <text x={435} y={114} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   논문: ON (재현 필수)
                 </text>
-                <text x={435} y={130} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                <text x={435} y={130} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                   디버깅: ON (버그 추적)
                 </text>
               </motion.g>
@@ -181,7 +223,8 @@ export default function CheckpointViz() {
               <AlertBox x={130} y={180} w={260} h={36} label="DataLoader num_workers>0 시 worker_init_fn 필요" sub="각 워커의 시드도 개별 고정" color={COLORS.determ} />
             </motion.g>
           )}
-        </svg>
+          </svg>
+        </div>
       )}
     </StepViz>
   );

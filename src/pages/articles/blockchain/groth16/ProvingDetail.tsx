@@ -31,7 +31,7 @@ export default function ProvingDetail() {
         <h3 className="text-xl font-semibold mt-8 mb-4">A 계산 상세</h3>
         <div className="rounded-lg border p-4 not-prose text-sm space-y-2">
           <h4 className="font-semibold text-base mb-2">A 계산 (G1 점)</h4>
-          <M display>{'A = [\\alpha]_1 + \\sum_j w_j \\cdot a\\_query[j] + r \\cdot [\\delta]_1'}</M>
+          <M display>{'A = \\underbrace{[\\alpha]_1}_{\\text{태그}} + \\underbrace{\\sum_j w_j \\cdot a\\_query[j]}_{\\text{MSM (O(n))}} + \\underbrace{r \\cdot [\\delta]_1}_{\\text{블라인딩}}'}</M>
           <div className="grid gap-2 sm:grid-cols-3 mt-2">
             <div className="rounded border p-3 bg-sky-50 dark:bg-sky-950/30 text-center">
               <p className="font-mono text-xs font-semibold">[α]₁</p>
@@ -56,8 +56,8 @@ export default function ProvingDetail() {
           <h4 className="font-semibold text-base mb-2">B (G2 + G1 이중 MSM)</h4>
           <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-3 space-y-1">
             <p className="text-xs font-medium mb-1">G2/G1 두 버전 동시 계산</p>
-            <M display>{'B_{g2} = [\\beta]_2 + \\sum_j w_j \\cdot b\\_g2\\_query[j] + s \\cdot [\\delta]_2'}</M>
-            <M display>{'B_{g1} = [\\beta]_1 + \\sum_j w_j \\cdot b\\_g1\\_query[j] + s \\cdot [\\delta]_1'}</M>
+            <M display>{'B_{g2} = \\underbrace{[\\beta]_2}_{\\text{태그}} + \\underbrace{\\sum_j w_j \\cdot b\\_g2\\_query[j]}_{\\text{MSM in } G_2} + \\underbrace{s \\cdot [\\delta]_2}_{\\text{블라인딩}}'}</M>
+            <M display>{'B_{g1} = \\underbrace{[\\beta]_1}_{\\text{태그 (G₁)}} + \\underbrace{\\sum_j w_j \\cdot b\\_g1\\_query[j]}_{\\text{MSM in } G_1} + \\underbrace{s \\cdot [\\delta]_1}_{\\text{블라인딩}}'}</M>
           </div>
           <div className="bg-violet-50 dark:bg-violet-950/30 rounded p-3 space-y-1">
             <p className="text-xs font-medium mb-1">rayon::join 병렬화</p>

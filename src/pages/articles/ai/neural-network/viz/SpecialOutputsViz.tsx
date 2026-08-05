@@ -3,7 +3,7 @@ export default function SpecialOutputsViz() {
     {
       name: 'Multi-Label',
       color: '#3b82f6',
-      icon: '🏷️',
+      code: 'ML',
       activation: 'Sigmoid × N',
       loss: 'Σ BCE per class',
       example: '영화 장르 (액션+코미디 동시)',
@@ -11,7 +11,7 @@ export default function SpecialOutputsViz() {
     {
       name: 'Bounded Regression',
       color: '#10b981',
-      icon: '📏',
+      code: 'BR',
       activation: 'Sigmoid(z)·(b−a)+a',
       loss: 'MSE',
       example: '출력 [a, b] 제한',
@@ -19,7 +19,7 @@ export default function SpecialOutputsViz() {
     {
       name: 'Ordinal',
       color: '#f59e0b',
-      icon: '⭐',
+      code: 'OR',
       activation: 'Multiple binary',
       loss: 'ordinal loss',
       example: '별점 1~5 (순서 있음)',
@@ -27,7 +27,7 @@ export default function SpecialOutputsViz() {
     {
       name: 'Count',
       color: '#8b5cf6',
-      icon: '🔢',
+      code: 'CT',
       activation: 'exp(z)',
       loss: 'Poisson',
       example: '양수 정수 예측',
@@ -35,7 +35,7 @@ export default function SpecialOutputsViz() {
     {
       name: 'Probabilistic',
       color: '#ef4444',
-      icon: '🎲',
+      code: 'PR',
       activation: '(μ, σ²) 출력',
       loss: 'Gaussian likelihood',
       example: '불확실성 추정',
@@ -55,8 +55,8 @@ export default function SpecialOutputsViz() {
               <rect x={x} y={48} width={115} height={185} rx={10}
                 fill={t.color} fillOpacity={0.08} stroke={t.color} strokeWidth={1.8} />
 
-              {/* 아이콘 */}
-              <text x={x + 57} y={76} textAnchor="middle" fontSize={22}>{t.icon}</text>
+              <circle cx={x + 57} cy={68} r={13} fill={t.color} fillOpacity={0.14} stroke={t.color} strokeWidth={1} />
+              <text x={x + 57} y={72} textAnchor="middle" fontSize={9} fontWeight={800} fill={t.color}>{t.code}</text>
 
               {/* 이름 */}
               <text x={x + 57} y={96} textAnchor="middle" fontSize={12} fontWeight={700} fill={t.color}>

@@ -1,0 +1,239 @@
+{
+  "run_id": "2026-07-19-robot-composite-structures",
+  "completed_at": "2026-07-19T21:26:37+09:00",
+  "objective": "Extend the robot physical-foundation curriculum after metallic fracture mechanics with a bottom-up composite structures, joints and damage layer, a fully accessible foundational source reconstruction, a current NASA handbook reconstruction, Korean-annotated KaTeX, causal responsive visualizations, public deployment and a replayable 4B/9B authoring record.",
+  "curriculum_decision": {
+    "observed_gap": "The structural and metallic-fracture layers could describe isotropic load paths, local stress, fatigue, cracks, residual strength and inspection, but they explicitly could not transfer those states to anisotropic laminates, interlaminar damage, bonded inserts, barely visible impact damage or composite-specific building-block evidence.",
+    "selected_layer": "Robot composite structures, joints and damage tolerance",
+    "causal_state_chain": "constituent -> lamina material axes -> transformed ply -> laminate ABD -> ply recovery -> detail/joint -> delamination/impact -> manufacturing/NDE -> building-block release",
+    "why_now": "The layer consumes loads, environments, FEA states and damage-tolerance reasoning already established by the previous milestones, while preventing a reader from treating carbon/epoxy as a light isotropic metal.",
+    "deferred": "Decorative motion remains deferred until the full physical foundation is stable. The next topic is selected only after a curriculum gap audit rather than by extending the current article opportunistically. Contact mechanics, tribology, lubrication, wear and sealing are the leading audit candidate because actuator and joint articles still lack a surface-life model."
+  },
+  "private_transfer_problem": {
+    "scenario": "An outdoor robot uses a 780 mm hollow carbon/epoxy shoulder link with a bonded-and-bolted titanium clevis insert, [0/+45/-45/90]s baseline layup, cutout pad-ups, ply drops, 120 C cure, -30 to 70 C wet marine service, combined emergency-stop loads, backlash/tool impacts, limited dry coupon properties, an inaccessible bondline region and a prototype delamination before ultimate load.",
+    "coverage_premises": 52,
+    "premise_groups": [
+      "constituent roles, material axes, engineering shear and transformed orthotropic response",
+      "ply z-order, A/B/D integration, symmetry/balance, coupling and ply-face recovery",
+      "cure-to-service temperature, moisture and conditioned material state",
+      "failure surfaces, mode evidence, first-ply state and progressive-damage boundary",
+      "holes, bolted/bonded inserts, load introduction, free edges and CLT model limits",
+      "Mode I/II delamination, VCCT/CZM inputs, mesh/process-zone and test verification",
+      "impact threat, BVID, hidden delamination, CAI and support/impactor dependence",
+      "manufacturing defects, traceability, NDE access and proof-test limits",
+      "coupon-to-component building blocks, statistics, model correlation and configuration release"
+    ],
+    "reader_gate": "An article-only reader should be able to construct and criticize the layup, joint, damage and evidence ledger for an unseen composite robot link without declaring a shell-FEA contour, FI=1, a small dent or one static prototype pass to be a product release.",
+    "authoring_rule": "The private problem and gates are not printed as exercises. They are used as a coverage oracle: each premise must be supported by prose, a formula, a causal Viz or an explicit non-transfer boundary."
+  },
+  "source_selection": [
+    {
+      "source": "S. W. Tsai, Strength Characteristics of Composite Materials, NASA CR-224, 1965",
+      "role": "Fully accessible foundational source",
+      "pages_read": 105,
+      "selection_reason": "It builds anisotropic off-axis strength into laminate A/B/D thermoelastic interaction and compares cross-ply/angle-ply calculations with experiments.",
+      "durable_claim": "Strength and deformation must be resolved in material axes and reintegrated through the ordered laminate; transverse and shear properties cannot be omitted simply because fibre-direction strength is high.",
+      "boundary_preserved": "The source uses early plane-stress, quasi-homogeneous glass/epoxy assumptions and explicitly limits equal tension/compression idealization, linear elasticity, unloading/reloading after cross-ply cracking and degradation after angle-ply transverse cracking.",
+      "url": "https://ntrs.nasa.gov/citations/19650020350"
+    },
+    {
+      "source": "NASA-HDBK-5010 Volume 1 Revision A, 2023",
+      "role": "Current process and evidence guidance",
+      "pages_read": 380,
+      "selection_reason": "It supplies composite building-block, NDE, proof, detected-flaw, traceability and program-process guidance.",
+      "durable_claim": "Composite damage-tolerance analysis is generally not sufficient without representative testing and an iterative building-block approach.",
+      "boundary_preserved": "The handbook is spaceflight fracture-control guidance, not a universal robot certification code or a replacement for program-specific allowables and qualification.",
+      "url": "https://standards.nasa.gov/standard/nasa/nasa-hdbk-5010"
+    },
+    {
+      "source": "NASA-HDBK-5010 Volume 2 Revision A, 2024",
+      "role": "Current analysis/test example source",
+      "pages_read": 527,
+      "selection_reason": "It exposes composite impact, delamination, COPV, joint, VCCT and CZM examples with the assumptions needed to criticize transfer.",
+      "durable_claim": "Interface calculations require representative toughness, mesh/model audits and test correlation; impact appearance does not uniquely bound residual strength.",
+      "boundary_preserved": "The 0.5-inch debond, less-than-5-percent strength-loss COPV result and 0.25/0.45/0.9-inch joint values are example-specific. Missing modes, toughness and geometry prevent automatic transfer.",
+      "url": "https://standards.nasa.gov/standard/nasa/nasa-hdbk-5010"
+    },
+    {
+      "source": "NASA-STD-5019A Change 4, revalidated 2025-09-05",
+      "role": "Active requirement boundary",
+      "pages_read": 120,
+      "selection_reason": "It connects building-block evidence, environment, inspection, traceability and technical-authority review as an active program requirement.",
+      "durable_claim": "Damage-tolerance release is a design-analysis-test-inspection-configuration process rather than a solver result.",
+      "boundary_preserved": "Requirements apply by NASA program scope and are used as a rigorous process example, not silently imposed on robot products.",
+      "url": "https://standards.nasa.gov/standard/nasa/nasa-std-5019"
+    }
+  ],
+  "source_accessibility_decision": {
+    "candidate": "S. W. Tsai and E. M. Wu, A General Theory of Strength for Anisotropic Materials, 1971",
+    "available_evidence": "Journal metadata and abstract were verified, but a complete primary full text was not openly accessible during this run.",
+    "decision": "Use the failure-criterion lineage only as bounded concept context. Do not create a standalone reconstruction from secondary summaries. Select the fully accessible NASA CR-224 as the foundational article spine.",
+    "reason": "A source reconstruction must preserve author intent, equations, figures, experiments and limitations across the complete artifact; metadata plus summaries cannot satisfy that contract."
+  },
+  "source_processing": {
+    "pdf_directory": "/tmp/pdfs/composite-structures",
+    "methods": [
+      "download and complete page-count verification",
+      "pypdf text extraction",
+      "section, equation, example and limitation reconstruction",
+      "cross-check against existing NASA-STD-5019A extracted text",
+      "claim-evidence-limit separation before prose generation"
+    ],
+    "important_boundaries_retained": [
+      "Tsai measured X around 150 ksi while a netting-only theoretical value was around 266 ksi; transverse Y and shear S remained structurally relevant.",
+      "NASA guidance says composite analysis is generally insufficient without tests and an iterative building-block approach.",
+      "DTA narrows threats through IDMP, then RTD represents what remains; mitigation is not erasure.",
+      "Proof testing alone is not a universal composite flaw screen and an uninspectable zone is not a zero-flaw zone.",
+      "A smaller edge flaw can be more severe than a larger central flaw in an example joint, so flaw size cannot be detached from geometry and load path.",
+      "CZM initiation can be mesh-sensitive and requires representative test validation."
+    ]
+  },
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-composite-structures-joints-damage.md",
+    "concept_article": "src/pages/articles/ai/robot-composite-structures-joints-damage.tsx",
+    "concept_visualizations": "src/pages/articles/ai/robot-composite-structures-joints-damage/viz/CompositeStructureLabs.tsx",
+    "source_specs": "src/pages/articles/ai/paper-spine/robotCompositeSpecs.tsx",
+    "source_visualizations": "src/pages/articles/ai/paper-spine/viz/CompositeSourceLabs.tsx",
+    "foundational_wrapper": "src/pages/articles/ai/paper-tsai-strength-characteristics-composites-1965.tsx",
+    "current_wrapper": "src/pages/articles/ai/reference-nasa-composite-fracture-control-handbook-2024.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "qa": "tests/composite-structures-qa.spec.ts"
+  },
+  "content_result": {
+    "concept_sections": 12,
+    "concept_formulas": 24,
+    "concept_formula_notes": 24,
+    "concept_causal_labs": 12,
+    "foundational_formulas": 6,
+    "foundational_evidence_states": 7,
+    "current_formulas": 6,
+    "current_evidence_states": 7,
+    "formula_policy": "Every display formula has exactly one adjacent FormulaNote. Every KaTeX text annotation is Korean and states the operation or design reason, not just the variable name.",
+    "narrative_policy": "Constituent direction precedes transformation; one transformed lamina precedes a laminate; laminate resultants precede ply recovery; environment precedes failure; failure precedes details/joints; delamination and impact precede NDE; building-block evidence closes the release decision.",
+    "source_policy": "Each source article separates what the author claimed, what evidence supported it, what still transfers and what must not be generalized."
+  },
+  "visual_design": {
+    "grammar": "Neutral grid surfaces with sparse blue for applied/selected states, teal for resistance/evidence, amber for coupling/model boundaries and red only for exceeded or damaged states.",
+    "interaction_rule": "Every lab control changes geometry, a curve, a point, a load share, a metric or the decision state. Color-only toggles do not count as causal interaction.",
+    "responsive_rule": "Controls stack before plots, captions reserve space for fullscreen controls, plots retain stable dimensions, SVG labels stay inside bounds and visualizations create no inner scroll.",
+    "mobile_coordinate_rule": "Dense overview diagrams use a 340-unit mobile SVG and a separate 620-unit desktop SVG. This preserves 10-13 px effective mobile text instead of shrinking a desktop diagram to 6-8 px.",
+    "overview_redesign": "The concept building-block view became a large 2x2 evidence loop. The NASA eight-stage view became a 4x2 desktop loop and 2x4 mobile loop, retaining test/inspection feedback rather than a one-way pyramid.",
+    "animation_boundary": "Static causal states and reduced layout risk were completed first. Time-based decorative motion remains deferred until all foundation articles are authored."
+  },
+  "failures_and_fixes": [
+    {
+      "failure": "The first formula audit found English underbrace annotations such as bearing, shear-out and pull-through.",
+      "signal": "The source-annotation QA rejected every KaTeX text label without Korean characters.",
+      "fix": "Replaced operation labels with Korean causal annotations and reran formula/note parity, raw-LaTeX and annotation checks."
+    },
+    {
+      "failure": "The Tsai source equation and two concept equations scaled below the mobile acceptance threshold.",
+      "signal": "Minimum math scale reached 0.77/0.84 for one source equation and 0.67/0.74 plus 0.77/0.78 for concept equations.",
+      "fix": "Split coupled definitions into aligned causal lines and shortened Korean labels without removing meaning. Final public minimum scales are 0.85/0.92 for the concept, 0.99/1.00 for Tsai and 0.86/0.97 for NASA at 360/390 px."
+    },
+    {
+      "failure": "Some SVG surfaces and labels rendered black even though automated overflow and console tests passed.",
+      "signal": "Visual screenshots showed invalid colors where CSS variables already contained complete oklch values but the SVG wrapped them in hsl(var(--token)).",
+      "fix": "Use var(--muted), var(--border), var(--background), var(--foreground) and var(--muted-foreground) directly, with explicit opacity when needed."
+    },
+    {
+      "failure": "Long visualization captions approached the right-side fullscreen controls.",
+      "signal": "Desktop and mobile screenshots showed tight spacing despite no DOM overflow.",
+      "fix": "Reserved right padding in both concept and source figcaptions, allowed title wrapping and preserved non-wrapping status labels."
+    },
+    {
+      "failure": "SVG explanatory text that was 9-16 units became 5-8 px when a 620-unit desktop viewBox was scaled to a 360/390 px phone.",
+      "signal": "The first visual review found technically present but practically unreadable labels, a defect not represented by overflow assertions.",
+      "fix": "Raised general SVG labels to 18-22 units and rebuilt dense overview diagrams with dedicated 340-unit mobile coordinate systems."
+    },
+    {
+      "failure": "The initial building-block diagrams used four narrow blocks or eight small circles and communicated a one-way checklist more strongly than an evidence-feedback loop.",
+      "signal": "Visual inspection showed weak hierarchy, excessive unused area and labels too small to communicate source intent.",
+      "fix": "Recomposed them into large numbered nodes with claim roles, directional arrows and an amber test-discrepancy feedback path."
+    }
+  ],
+  "verification": {
+    "build": "npm run build passed; only the pre-existing large-chunk warning remains.",
+    "typescript_scope": "No TypeScript diagnostics referenced the new composite files. The repository-wide build:tsc command retains 19 unrelated existing diagnostics.",
+    "local_composite_qa": "17/17 passed",
+    "local_structural_and_fracture_regression": "34/34 passed",
+    "combined_local_qa": "51/51 passed",
+    "public_composite_qa": "17/17 passed",
+    "public_http": {
+      "robot-composite-structures-joints-damage": 200,
+      "paper-tsai-strength-characteristics-composites-1965": 200,
+      "reference-nasa-composite-fracture-control-handbook-2024": 200
+    },
+    "public_scale_and_overflow": {
+      "concept": { "360": { "min_scale": 0.85, "overflow": 0 }, "390": { "min_scale": 0.92, "overflow": 0 }, "768": { "min_scale": 1, "overflow": 0 }, "1440": { "min_scale": 1, "overflow": 0 } },
+      "tsai": { "360": { "min_scale": 0.99, "overflow": 0 }, "390": { "min_scale": 1, "overflow": 0 }, "768": { "min_scale": 1, "overflow": 0 }, "1440": { "min_scale": 1, "overflow": 0 } },
+      "nasa": { "360": { "min_scale": 0.86, "overflow": 0 }, "390": { "min_scale": 0.97, "overflow": 0 }, "768": { "min_scale": 1, "overflow": 0 }, "1440": { "min_scale": 1, "overflow": 0 } }
+    },
+    "screenshots": [
+      "/tmp/composite-qa/thermal-lab-m360-v2.png",
+      "/tmp/composite-qa/abd-lab-d1440.png",
+      "/tmp/composite-qa/bba-lab-m390-v3.png",
+      "/tmp/composite-qa/tsai-lab-m390.png",
+      "/tmp/composite-qa/nasa-lab-m390-v3.png",
+      "/tmp/composite-qa/nasa-lab-d1440.png"
+    ],
+    "qa_dimensions": [360, 390, 768, 1440],
+    "qa_contract": [
+      "formula and FormulaNote count parity",
+      "Korean KaTeX annotations and no raw LaTeX",
+      "minimum formula scale",
+      "no material document overflow or inner Viz scroll",
+      "no browser console errors",
+      "all 12 concept labs expose causal state changes",
+      "both source reconstructions expose seven bounded evidence states",
+      "listing visibility and cross-article navigation"
+    ]
+  },
+  "small_model_replay": {
+    "four_b_packet": [
+      "one premise ID and one concrete transfer question",
+      "one bounded primary-source page slice with exact source identity",
+      "one equation with Korean why-term annotations",
+      "one adjacent FormulaNote for symbols, operation and non-transfer boundary",
+      "one counterexample that rejects a tempting shortcut",
+      "one causal Viz state with one or two controls",
+      "one machine-checkable acceptance selector",
+      "one critic pass for unsupported transfer, raw LaTeX, clipping and no-op interaction"
+    ],
+    "nine_b_packet": [
+      "one complete causal article section or one source evidence state",
+      "prerequisite bridge and exact narrative placement",
+      "coordinate/sign/state conventions that must remain stable",
+      "author intent separated into claim, evidence, durable insight and limitation",
+      "derivation order plus implementation/pseudocode implications",
+      "failure diagnostics and model-class handoff",
+      "responsive desktop/mobile Viz contract",
+      "formula/note/annotation/overflow/interaction test expectations"
+    ],
+    "orchestrator_only": [
+      "constructing the private hardest transfer problem and coverage gates",
+      "choosing sources after full-text accessibility checks",
+      "resolving conflicts and example-specific non-transfer across sources",
+      "maintaining state identity and prerequisite order across articles",
+      "visual screenshot criticism beyond DOM assertions",
+      "public deployment, cross-milestone regression and provenance"
+    ],
+    "recommended_generation_order": [
+      "source slice extraction",
+      "claim-evidence-limit record",
+      "premise coverage draft",
+      "formula plus FormulaNote",
+      "prose section",
+      "causal Viz implementation",
+      "critic and responsive QA",
+      "orchestrator reconciliation"
+    ]
+  },
+  "next_milestone": {
+    "action": "Run a new curriculum gap audit before authoring.",
+    "leading_candidate": "Robot contact mechanics, tribology, lubrication, wear and seals",
+    "reason": "The actuator, motor, structural, fracture and composite layers still lack the surface interaction that determines friction, efficiency, heat, backlash growth, lubricant regime, bearing/gear life, seal drag and contamination ingress.",
+    "do_not_assume": "The candidate is not final until the existing robotics article inventory, prerequisite graph and accessible primary-source spine are audited."
+  }
+}

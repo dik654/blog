@@ -1,0 +1,139 @@
+{
+  "run_id": "2026-07-19-foundation-floor-ode",
+  "status": "complete_and_publicly_verified",
+  "objective": "Stop unbounded backward paper recursion, make optional sources opt-in in the reader UI, and build only the missing ODE/phase-plane concept rung needed to execute the Shin-McKay source.",
+  "policy": {
+    "shared_floor": "smallest reusable concept articles needed to execute the branch",
+    "domain_floor": "at most one canonical source per causal branch",
+    "current_layer": "concept plus at most one current evidence source when it changes a decision",
+    "default_source_budget": 2,
+    "promotion_mandatory": [
+      "unique premise required by the hardest problem",
+      "premise absent from existing nodes",
+      "named executable capability gained",
+      "claim/evidence boundary too important for a short citation"
+    ],
+    "stop_conditions": [
+      "older source adds provenance but no executable premise",
+      "premise already exists in the shared or domain floor",
+      "hardest problem is solvable without another reconstruction",
+      "source only explains historical naming or equation origin",
+      "source exceeds budget without a capability-based exception"
+    ],
+    "reader_visibility": {
+      "concepts": "expanded by default",
+      "source_articles": "collapsed in listings; direct routes and search remain",
+      "lineage_only": "not present in the default public list"
+    }
+  },
+  "top_down_ladder": {
+    "top_source": "Shin and McKay 1985",
+    "blocked_operations": [
+      "convert second-order motion to a state trajectory",
+      "integrate maximum acceleration forward",
+      "integrate maximum deceleration backward",
+      "read the (s, s-dot) phase plane",
+      "detect switching events",
+      "separate numerical error from physical-model error"
+    ],
+    "existing_coverage": ["calculus: derivative and chain rule", "optimization: feasible inequalities", "robot trajectory: final retiming structure"],
+    "gap": "No article explained how a local rate rule plus an initial or boundary state becomes a numerical trajectory.",
+    "new_rung": "differential-equations-phase-plane-numerical-integration",
+    "source_budget": 0,
+    "stop_reason": "The reader can now reconstruct forward/backward state integration and switching without historical ODE papers."
+  },
+  "private_transfer_gate": {
+    "scenario": "Audit a nonlinear robot retiming implementation that combines adaptive forward integration, backward terminal integration, torque-derived acceleration bounds, event detection and a fixed-step Euler fallback.",
+    "required_diagnoses": [
+      "identify state and rate function",
+      "explain why position alone is insufficient for second-order motion",
+      "explain why forward acceleration can miss terminal speed",
+      "interpret backward integration physically and numerically",
+      "predict switching changes under asymmetric accel/brake",
+      "detect interval violations between passing endpoints",
+      "separate step size, tolerance, event and model failures",
+      "reject solver success as validation of units or dynamics"
+    ],
+    "publication_policy": "The scenario remains private; public intuition, derivations and labs provide the transferable insight."
+  },
+  "events": [
+    {
+      "id": "curriculum.recursion.001",
+      "observed": "Each foundational paper generated more predecessor paper cards and no obvious place to stop.",
+      "inference": "Chronology was overriding reader capability and increasing confusion.",
+      "decision": "Introduce a per-branch foundation floor, source budget, promotion gate and capability-based stop test.",
+      "verification": "The policy and authoring protocols now require the floor record before source discovery."
+    },
+    {
+      "id": "ui.sources.001",
+      "observed": "Optional source cards appeared alongside required concepts in category lists.",
+      "inference": "Readers could not distinguish the core route from evidence deep dives.",
+      "decision": "Keep concepts visible and collapse paper/research/reference routes behind explicit controls.",
+      "verification": "Foundations, NLP, RL and Robotics pass closed-then-open visibility tests at 390 and 1440 pixels."
+    },
+    {
+      "id": "shin.prose.001",
+      "observed": "Shin-McKay used raw-looking path-dynamics terms and jumped from substitution to switching curves.",
+      "inference": "The source reconstruction named operations but did not give the state-integration insight needed to follow them.",
+      "decision": "Rewrite the thesis and mechanism in fixed-path, progress, allowed-acceleration, forward-accel, backward-brake and meeting-point order.",
+      "verification": "The page renders q=q(s), s=s(t), projected dynamics and acceleration bounds with KaTeX and plain Korean explanations."
+    },
+    {
+      "id": "shin.layout.001",
+      "observed": "A four-column source reconstruction compressed text and hid execution order.",
+      "inference": "The flow was technically present but not scannable.",
+      "decision": "Use responsive numbered two-column reconstruction cards with optional KaTeX.",
+      "verification": "The reconstruction is readable at 390 and 1440 pixels without overflow."
+    },
+    {
+      "id": "prereq.ode.001",
+      "observed": "Calculus and optimization did not teach trajectory integration, phase-plane state or boundary meeting.",
+      "inference": "A reusable concept gap, not a missing historical paper, blocked the canonical source.",
+      "decision": "Create one ODE/phase-plane/numerical-integration article and link it into Math & Science and the Shin ladder.",
+      "verification": "Six formulas, six notes and four causal labs cover the blocked operations and explicitly return to Shin-McKay."
+    },
+    {
+      "id": "tests.contract.001",
+      "observed": "Eight old regression tests still required source cards to be immediately visible.",
+      "inference": "The old assertions contradicted the new intended UX.",
+      "decision": "Assert concept visible, source hidden by default and source visible after explicit expansion.",
+      "verification": "Affected 8/8 tests and complete 100/100 local regression passed."
+    },
+    {
+      "id": "deploy.public.001",
+      "observed": "A refreshed public page could still serve an older bundle if the service was not restarted.",
+      "inference": "Local success was not enough.",
+      "decision": "Restart the service, verify seven routes with curl and run public-host Playwright.",
+      "verification": "All routes HTTP 200 and public focused suite 32/32."
+    }
+  ],
+  "artifacts": {
+    "floor_policy": "knowledge/authoring/foundation-floor-policy.md",
+    "paper_protocol": "knowledge/authoring/paper-article-protocol.md",
+    "small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md",
+    "evidence_schema": "knowledge/authoring/evidence-record.schema.json",
+    "ode_spec": "src/pages/articles/ai/content-specs/differential-equations-phase-plane-numerical-integration.md",
+    "ode_article": "src/pages/articles/ai/differential-equations-phase-plane-numerical-integration.tsx",
+    "paper_renderer": "src/pages/articles/ai/paper-spine/FoundationalPaperStudy.tsx",
+    "shin_spec": "src/pages/articles/ai/paper-spine/robotTrajectorySpecs.ts",
+    "category_ui": ["src/pages/CategoryPage.tsx", "src/pages/category/FoundationLearningPath.tsx", "src/pages/category/NlpLearningPath.tsx", "src/pages/category/ReinforcementLearningPath.tsx"],
+    "tests": ["tests/foundation-floor-ux.spec.ts", "tests/differential-equations-qa.spec.ts"],
+    "report": "knowledge/authoring/runs/2026-07-19-foundation-floor-ode-report.md"
+  },
+  "qa": {
+    "ode_counts": {"formulas": 6, "formula_notes": 6, "causal_labs": 4},
+    "viewports": [360, 390, 768, 1440],
+    "focused_local": "15/15 passed",
+    "connected_local": "100/100 passed",
+    "public_focused": "32/32 passed in 26.7 seconds",
+    "production_build": "passed; existing large-chunk warning remains",
+    "typescript": "pre-existing unrelated diagnostics remain; no ODE, floor, category or Shin change appears in the reported errors",
+    "deployment": "cm-blog.service active after restart at 22:49 KST; all target routes HTTP 200"
+  },
+  "small_model_replay": {
+    "four_b_packet": ["one blocked source operation", "exact source formula or paragraph", "one concept bridge", "child-level intuition", "formal step", "one causal observable", "one browser assertion", "explicit stop reason"],
+    "nine_b_packet": ["complete prerequisite rung", "reader model", "blocked operations", "narrative order", "bounded formulas", "Viz contract", "evidence boundary", "stop test", "critic pass"],
+    "forbidden": ["choose historical predecessors automatically", "create a source article from citation count", "hide jargon behind an analogy without returning to formal notation", "print raw LaTeX", "lower responsive thresholds", "mark a color change as causal interaction"],
+    "orchestrator_only": ["gap existence", "reuse-versus-create decision", "foundation floor", "source promotion", "cross-category visibility", "hardest problem", "full connected QA", "deployment"]
+  }
+}

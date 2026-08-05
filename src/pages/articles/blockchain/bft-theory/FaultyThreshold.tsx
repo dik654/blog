@@ -71,7 +71,7 @@ export default function FaultyThreshold() {
           <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
             <p className="font-semibold text-sm mb-2">Quorum Intersection Property</p>
             <p className="text-sm mb-2">두 quorum <M>{'Q_1, Q_2'}</M>는 반드시 <M>{'f+1'}</M>명 이상 겹침 → 정직 노드 최소 1명 존재.</p>
-            <M display>{'|Q_1 \\cap Q_2| \\;\\geq\\; |Q_1| + |Q_2| - n \\;=\\; 2(2f+1) - (3f+1) \\;=\\; f+1'}</M>
+            <M display>{'\\underbrace{|Q_1 \\cap Q_2|}_{\\text{쿼럼 교집합}} \\;\\geq\\; \\underbrace{|Q_1| + |Q_2| - n}_{\\text{포함-배제}} \\;=\\; 2(2f+1) - (3f+1) \\;=\\; \\underbrace{f+1}_{\\text{정직 노드 1+ 보장}}'}</M>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg border p-4">

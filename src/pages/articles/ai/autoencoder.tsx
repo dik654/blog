@@ -1,21 +1,19 @@
-import Overview from './autoencoder/Overview';
-import Architecture from './autoencoder/Architecture';
-import ForwardExample from './autoencoder/ForwardExample';
-import LossAndBackprop from './autoencoder/LossAndBackprop';
-import DimensionReduction from './autoencoder/DimensionReduction';
-import Applications from './autoencoder/Applications';
-import Variants from './autoencoder/Variants';
+import ReconstructionObjective from './autoencoder/ReconstructionObjective';
+import BottleneckRepresentation from './autoencoder/BottleneckRepresentation';
+import ReconstructionExplorer from './autoencoder/ReconstructionExplorer';
+import ReconstructionBackprop from './autoencoder/ReconstructionBackprop';
+import EvaluationAndFailure from './autoencoder/EvaluationAndFailure';
+import VariantHandoff from './autoencoder/VariantHandoff';
 
 export default function AutoencoderArticle() {
   return (
     <>
-      <Overview />
-      <Architecture />
-      <ForwardExample />
-      <LossAndBackprop />
-      <DimensionReduction />
-      <Applications />
-      <Variants />
+      <ReconstructionObjective />
+      <BottleneckRepresentation />
+      <ReconstructionExplorer />
+      <ReconstructionBackprop />
+      <EvaluationAndFailure />
+      <VariantHandoff />
     </>
   );
 }

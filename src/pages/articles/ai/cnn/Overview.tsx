@@ -2,6 +2,7 @@ import CNNPipelineViz from './viz/CNNPipelineViz';
 import FCLimitViz from './viz/FCLimitViz';
 import OverviewDetailViz from './viz/OverviewDetailViz';
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
 export default function Overview() {
   return (
@@ -47,7 +48,16 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">FC vs CNN 파라미터 비교</h3>
-        <M display>{'\\underbrace{150{,}528 \\times 128}_{\\text{FC}} = 19{,}267{,}584 \\quad \\text{vs} \\quad \\underbrace{3^2 \\times 3 \\times 32 + 32}_{\\text{CNN}} = 896'}</M>
+        <M display>{'\\begin{aligned} \\mathrm{FC} &: \\quad 150{,}528\\times128 = 19{,}267{,}584 \\\\ \\mathrm{CNN} &: \\quad \\underbrace{3^2\\times3\\times32}_{\\text{공유 커널}} + \\underbrace{32}_{\\text{편향}} = 896 \\end{aligned}'}</M>
+        <FormulaNote
+          meaning="같은 224×224 RGB 입력을 처리한다고 가정해도 FC는 모든 입력과 출력 뉴런 사이에 서로 다른 가중치를 두지만, CNN은 하나의 3×3 필터를 모든 위치에서 재사용한다. 그래서 이 비교의 큰 차이는 지역 연결과 가중치 공유에서 나온다. 숫자는 입력 크기·출력 뉴런·채널 수를 고정한 예시다."
+          symbols={[
+            ['150{,}528', '224×224×3 픽셀을 일렬로 펼친 FC 입력 수'],
+            ['128', 'FC 출력 뉴런 수'],
+            ['3^2\\times3\\times32', '3×3 RGB 필터 32개의 가중치 수'],
+            ['32', '출력 채널마다 하나씩 더하는 편향 수'],
+          ]}
+        />
       </div>
       <div className="not-prose my-6">
         <OverviewDetailViz />

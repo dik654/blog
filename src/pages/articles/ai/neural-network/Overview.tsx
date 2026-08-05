@@ -9,21 +9,21 @@ export default function Overview() {
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">퍼셉트론에서 신경망으로</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="lead">
+          퍼셉트론 하나는 입력 공간을 직선 하나로 나눈다. 그렇다면 직선으로 나눌 수 없는 XOR 같은 문제를 풀려면
+          무엇을 바꿔야 할까?
+        </p>
         <p>
-          퍼셉트론(Perceptron) — 입력에 가중치를 곱해 임계값 함수로 0/1 출력<br />
-          <strong>신경망</strong> — 임계값 함수 대신 매끄러운 활성화 함수(sigmoid 등)를 사용<br />
-          이 차이가 "학습 가능한 모델"을 만드는 핵심
+          첫 번째 변화는 퍼셉트론을 여러 층으로 연결하는 것이다. 그러나 선형 변환만 연속해서 적용하면
+          여러 층도 결국 하나의 선형 변환으로 합쳐진다. 층 사이에 sigmoid나 ReLU 같은
+          <strong> 비선형 활성화 함수</strong>가 들어가야 앞 층이 만든 경계를 다음 층이 다시 구부릴 수 있다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">3층 구조</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">3층 구조는 무엇을 나누는가</h3>
         <p>
-          <strong>입력층(0층)</strong> — 데이터를 그대로 받는 층. 연산 없음<br />
-          <strong>은닉층(1층, 2층)</strong> — 중간에서 특징(Feature)을 추출하는 층<br />
-          <strong>출력층(3층)</strong> — 최종 판단을 내리는 층. 분류/회귀 결과 출력
-        </p>
-        <p>
-          핵심 차이: 은닉층이 여러 겹 쌓이면서 복잡한 패턴을 표현 가능<br />
-          퍼셉트론은 선형 분리만 가능 → 신경망은 비선형 경계까지 학습
+          입력층은 값을 받는다. 은닉층은 선형 변환과 활성화를 반복하며 새로운 특징을 만든다.
+          출력층은 그 특징을 분류 확률이나 회귀값으로 바꾼다. 아래 장면에서는 먼저 값이 어디서 들어오고,
+          각 층이 무엇을 추가해 최종 출력까지 전달하는지 순서대로 본다.
         </p>
       </div>
       <div className="not-prose mt-8">
@@ -31,6 +31,10 @@ export default function Overview() {
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
+        <p>
+          층의 수보다 중요한 것은 <strong>각 층이 이전 표현을 어떤 새 표현으로 바꾸는가</strong>다.
+          입력은 그대로 전달되지만 은닉층부터는 가중합과 활성화가 결합되고, 출력층은 태스크에 맞는 해석을 붙인다.
+        </p>
         <h3 className="text-xl font-semibold mt-6 mb-3">신경망의 수학적 정의 — 함수 합성</h3>
         <p>
           각 층은 <strong>선형 변환 + 비선형 활성화</strong>의 쌍<br />

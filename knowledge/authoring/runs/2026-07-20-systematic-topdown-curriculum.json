@@ -1,0 +1,82 @@
+{
+  "run_id": "2026-07-20-systematic-topdown-curriculum",
+  "status": "deployed_and_publicly_verified",
+  "objective": "Replace a connected but visually inconsistent navigation with one systematic current-first curriculum grammar.",
+  "diagnosis": [
+    "root and category directions were opposite",
+    "fourteen AI targets were an unstructured card grid",
+    "home promoted a bottom-up path",
+    "thumbnail-dependent cards implied false importance"
+  ],
+  "root_order": [
+    { "order": "01", "id": "capability", "label": "목표 시스템" },
+    { "order": "02", "id": "foundation", "label": "필요한 기반" },
+    { "order": "03", "id": "operations", "label": "구현 · 운영" }
+  ],
+  "stage_roles": ["map", "target", "foundation", "build"],
+  "ai_clusters": [
+    {
+      "id": "language-knowledge",
+      "label": "언어 · 지식",
+      "slugs": ["ai-llm-architectures", "ai-llm", "ai-nlp", "ai-speech-audio", "ai-knowledge-systems"]
+    },
+    {
+      "id": "perception-generation",
+      "label": "인식 · 생성",
+      "slugs": ["ai-generative", "ai-open-models", "ai-vision", "ai-ocr"]
+    },
+    {
+      "id": "action-prediction",
+      "label": "행동 · 예측",
+      "slugs": ["ai-agents", "ai-reinforcement-learning", "ai-world-models", "ai-robotics", "ai-timeseries"]
+    }
+  ],
+  "visual_contract": [
+    "two-digit position",
+    "semantic route heading",
+    "outcome-oriented description",
+    "leaf article count or descendant path count",
+    "single navigation arrow"
+  ],
+  "events": [
+    {
+      "id": "system.root.001",
+      "observed": "The root showed foundations before current target systems.",
+      "decision": "Use capability, foundation, operations order everywhere.",
+      "verification": "Sidebar tests assert layer and category order at four viewports."
+    },
+    {
+      "id": "system.ai.001",
+      "observed": "Fourteen target areas formed one undifferentiated grid.",
+      "decision": "Add three non-link semantic clusters and preserve fourteen independent routes.",
+      "verification": "Mobile and desktop tests assert exact cluster IDs and all 21 top-level AI nodes."
+    },
+    {
+      "id": "system.visual.001",
+      "observed": "Thumbnail-dependent cards varied in height and implied false hierarchy.",
+      "decision": "Replace navigation cards with stable numbered rows and a connected stage rail.",
+      "verification": "Nine-category node counts and mobile overflow checks pass."
+    },
+    {
+      "id": "system.article.001",
+      "observed": "Article breadcrumbs omitted the curriculum stage.",
+      "decision": "Expose category, stage order/label and leaf path on every direct article.",
+      "verification": "Direct article mobile test asserts AI, 03, 구현 · 운영 and 도메인 임베딩."
+    }
+  ],
+  "small_model_replay": {
+    "four_b_output": ["role", "capability_after_reading", "strict_prerequisite", "cluster", "evidence_only"],
+    "nine_b_checks": ["single ownership", "cluster overlap", "target-before-foundation", "article stage resolution"],
+    "forbidden_heuristics": ["publication year alone", "title similarity alone", "current sidebar position"],
+    "orchestrator_only": ["root ordering", "cross-category consistency", "responsive QA", "overflow audit", "full regression", "deployment"]
+  },
+  "qa": {
+    "production_build": "passed; existing large-chunk warning remains",
+    "focused_playwright": "16/16 passed",
+    "systematic_map_playwright": "3/3 passed",
+    "full_local_playwright": "217/217 passed after final formula and font-load stabilization",
+    "category_overflow_audit": "9/9 mobile category pages passed",
+    "viewports": [390, 768, 1440],
+    "public_verification": "53/53 focused continuity, LLM architecture, current-flow, power-electronics and formula tests passed on the public host after the 2026-07-21 00:53:10 KST cm-blog.service restart"
+  }
+}

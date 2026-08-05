@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "topics": [
+    {
+      "id": "ai-foundations",
+      "category": "ai-foundations",
+      "strongKeywords": ["neural network", "backpropagation", "optimization", "optimizer", "activation function", "representation learning", "autoencoder", "fourier transform", "word2vec"],
+      "keywords": ["gradient", "loss function", "generalization", "embedding", "signal processing"]
+    },
+    {
+      "id": "nlp-foundations",
+      "track": "nlp-attention",
+      "category": "ai-nlp",
+      "strongKeywords": ["tokenization", "embedding", "recurrent", "rnn", "lstm", "attention", "transformer", "bert", "language model", "multilingual"],
+      "keywords": ["token", "sequence", "context", "representation"]
+    },
+    {
+      "id": "reinforcement-learning",
+      "track": "reinforcement-learning",
+      "category": "ai-reinforcement-learning",
+      "strongKeywords": ["reinforcement learning", "markov decision process", "partially observable markov decision process", "pomdp", "belief state", "bayesian filter", "state estimation", "kalman filter", "recurrent reinforcement learning", "drqn", "bellman", "q-learning", "deep q-network", "dqn", "policy gradient", "actor-critic", "proximal policy optimization", "ppo", "deep deterministic policy gradient", "ddpg", "twin delayed", "td3", "soft actor-critic", "sac", "imitation learning", "behavior cloning", "dataset aggregation", "dagger", "offline reinforcement learning", "conservative q-learning", "decision transformer", "model-based reinforcement learning", "dyna", "world model", "muzero", "dreamer", "safe reinforcement learning", "constrained markov decision process", "constrained policy optimization", "lyapunov safe", "recovery rl", "safety critic"],
+      "keywords": ["reward", "return", "value function", "advantage", "temporal difference", "exploration", "partial observability", "observation model", "sensor fusion", "particle filter", "observability", "recurrent replay", "burn-in", "continuous control", "maximum entropy", "demonstration", "dataset support", "distribution shift", "latent dynamics", "planning", "imagination", "constraint cost", "safety budget", "shield", "recovery policy", "control barrier"]
+    },
+    {
+      "id": "llm-training-reasoning",
+      "track": "llm-post-training",
+      "category": "ai-llm-theory",
+      "strongKeywords": ["pretraining", "post-training", "reinforcement learning", "rlhf", "rlvr", "reasoning", "alignment", "reward model"],
+      "keywords": ["preference", "verifier", "reward"]
+    },
+    {
+      "id": "llm-systems",
+      "track": "llm-architecture",
+      "category": "ai-llm-serving",
+      "strongKeywords": ["inference", "serving", "kv cache", "quantization", "mixture of experts", "moe", "cuda", "distributed training"],
+      "keywords": ["gpu", "throughput", "latency", "memory"]
+    },
+    {
+      "id": "generative-models",
+      "track": "generative-models",
+      "category": "ai-generative",
+      "strongKeywords": ["diffusion", "flow matching", "image generation", "video generation", "vae", "gan", "denoising"],
+      "keywords": ["generative", "multimodal", "generator"]
+    },
+    {
+      "id": "robot-ai",
+      "track": "robot-ai",
+      "category": "ai-robotics",
+      "strongKeywords": ["robot", "robotic", "robotics", "vision-language-action", "vla", "manipulation", "sim-to-real", "embodied", "ros 2 executor", "ros2 executor", "ros 2 qos", "ros2 qos", "callback group", "managed lifecycle node", "ros 2 processing chain", "response-time analysis ros 2", "embedded real-time control", "real-time operating system", "rtos", "freertos", "rate monotonic scheduling", "earliest deadline first", "liu layland", "priority inversion", "interrupt service routine", "direct memory access", "ethercat distributed clocks", "field oriented control", "field-oriented control", "vector control motor", "permanent magnet synchronous motor", "pmsm", "interior permanent magnet", "ipmsm", "clarke transformation", "park transformation", "space vector pwm", "svpwm", "motor current control", "maximum torque per ampere", "mtpa", "field weakening", "motor inverter", "gate driver", "camera calibration", "pinhole camera", "planar calibration", "zhang calibration", "hand-eye calibration", "ax=xb", "rolling shutter calibration", "robot localization", "simultaneous localization and mapping", "slam", "pose graph", "factor graph", "loop closure", "scan matching", "globally consistent range scan alignment", "instance segmentation", "multi-object tracking", "data association", "bytetrack", "sort tracking", "occupancy mapping", "octomap", "probabilistic 3d mapping", "planning scene", "forward kinematics", "inverse kinematics", "robot jacobian", "denavit-hartenberg", "product of exponentials", "configuration space", "probabilistic roadmap", "rapidly-exploring random tree", "rrt-connect", "motion planning", "trajectory generation", "time parameterization", "time-optimal path parameterization", "minimum-time control", "jerk-limited trajectory", "ruckig", "topp", "model predictive control", "linear quadratic regulator", "feedback control", "optimal control"],
+      "keywords": ["dds discovery", "requested offered qos", "reliability durability deadline lifespan liveliness", "wait set", "events executor", "intra-process communication", "loaned message", "ros time", "steady time", "callback starvation", "callback deadlock", "wcet", "arrival curve", "resource reservation", "sched deadline", "end-to-end latency", "pwm latch", "adc trigger", "encoder capture", "nvic", "dma buffer ownership", "critical instant", "schedulability", "utilization bound", "deadline driven scheduling", "priority inheritance", "priority ceiling", "fieldbus target cycle", "can arbitration", "distributed clock", "timer wraparound", "fixed point numeric saturation", "watchdog", "gate driver fault", "electrical angle", "pole pairs", "rotor flux", "dq current", "current circle", "voltage ellipse", "dead time compensation", "current shunt", "single shunt reconstruction", "motor parameter identification", "regenerative braking", "camera intrinsic", "camera extrinsic", "lens distortion", "radial distortion", "homography", "reprojection error", "checkerboard", "camera info", "optical frame", "image acquisition timestamp", "line delay", "lidar deskew", "acquisition time", "clock offset", "dead reckoning", "wheel odometry", "inertial measurement unit", "imu bias", "map odom base_link", "rep-105", "innovation covariance", "normalized innovation squared", "mahalanobis gating", "information matrix", "gauge freedom", "graph slam", "pose network", "robust loss", "huber loss", "switchable constraints", "perceptual aliasing", "relocalization", "map revision", "ray plane intersection", "depth uncertainty", "point cloud", "depth support", "semantic segmentation", "instance mask", "hungarian assignment", "track lifecycle", "occlusion", "inverse sensor model", "free occupied unknown", "log odds", "voxel", "octree", "static dynamic layers", "collision object", "attached collision object", "scene version", "coordinate frame", "rigid transform", "se(3)", "so(3)", "tf2", "singularity", "pseudoinverse", "damped least squares", "c-space obstacle", "collision checking", "state validity", "path planning", "prm", "rrt", "a-star", "trajectory retiming", "quintic time scaling", "s-curve", "multi-dof synchronization", "path velocity decomposition", "torque constraints", "phase plane", "online trajectory generation", "ruckig", "navigation", "world model", "policy", "state estimation", "sensor fusion", "kalman", "pomdp", "state space", "controllability", "observability", "riccati", "mpc", "lqr", "pid", "closed-loop", "stability", "system identification"]
+    },
+    {
+      "id": "knowledge-systems",
+      "track": "knowledge-systems",
+      "category": "ai-knowledge-systems",
+      "strongKeywords": ["document understanding", "ocr", "retrieval augmented", "rag", "knowledge graph", "tool use", "research assistant"],
+      "keywords": ["retrieval", "provenance", "evaluation", "document"]
+    },
+    {
+      "id": "computer-vision",
+      "track": "computer-vision",
+      "category": "ai-vision",
+      "strongKeywords": ["computer vision", "image segmentation", "video segmentation", "object detection", "vision transformer", "segment anything", "visual tracking"],
+      "keywords": ["image", "video", "mask", "backbone", "open vocabulary", "visual prompt"]
+    },
+    {
+      "id": "document-ai",
+      "track": "document-ai",
+      "category": "ai-ocr-models",
+      "strongKeywords": ["optical character recognition", "ocr", "document ai", "document understanding", "document parsing", "layout analysis", "formula recognition"],
+      "keywords": ["table recognition", "reading order", "pdf", "multilingual document", "vision language model"]
+    },
+    {
+      "id": "time-series",
+      "track": "time-series",
+      "category": "ai-timeseries",
+      "strongKeywords": ["time series", "forecasting", "temporal foundation model", "probabilistic forecasting", "anomaly detection"],
+      "keywords": ["autoregressive", "seasonality", "covariate", "zero shot forecasting", "backtest"]
+    },
+    {
+      "id": "open-image-video",
+      "track": "open-image-video",
+      "category": "ai-open-models-overview",
+      "strongKeywords": ["open source image model", "open source video model", "image generation", "video generation", "diffusion transformer", "latent video"],
+      "keywords": ["checkpoint", "workflow", "comfyui", "diffusers", "sampler", "audio video"]
+    },
+    {
+      "id": "ai-agents",
+      "track": "ai-agents",
+      "category": "ai-agents",
+      "strongKeywords": ["ai agent", "agentic", "tool use", "model context protocol", "computer use", "coding agent", "agent evaluation"],
+      "keywords": ["harness", "autonomy", "oversight", "prompt injection", "trace", "permission"]
+    }
+  ]
+}

@@ -223,7 +223,7 @@ export function TrajectoryStep() {
                 stroke={p.color} strokeWidth={1.2} opacity={0.6} />
             );
           })}
-          <motion.circle r={3.5} fill={p.color}
+          <motion.circle initial={false} r={3.5} fill={p.color}
             animate={{ cx: p.pts[p.pts.length - 1].x, cy: p.pts[p.pts.length - 1].y }}
             transition={sp} />
         </motion.g>

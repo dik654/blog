@@ -1,0 +1,90 @@
+{
+  "run_id": "2026-07-21-learning-audit-top-five-reconstruction",
+  "date": "2026-07-21",
+  "objective": "Reconstruct the five highest-priority learning-flow audit targets according to their actual teaching or registry role.",
+  "targets": [
+    { "slug": "fm-boundary-practice", "role": "teaching", "final_score": 0 },
+    { "slug": "geth-blob-tx-fm", "role": "worked-example", "final_score": 0 },
+    { "slug": "stable-diffusion-open-models", "role": "teaching", "final_score": 0 },
+    { "slug": "geth-test-units", "role": "registry", "final_score": 0 },
+    { "slug": "vllm-test-units", "role": "registry", "final_score": 0 }
+  ],
+  "observations": [
+    "Core articles could not render article metadata because CoreArticlePage passed only the title to ArticleLayout.",
+    "The audit scanned reusable table helper definitions before the default render body and produced table-first false positives.",
+    "Registry documents need search and evidence handoffs, not forced linear prose.",
+    "The Stable Diffusion SVG was legible on desktop but became too small on mobile and left large empty areas in early scenes.",
+    "geth-blob-tx-fm used a title where getCoreItem required a slug."
+  ],
+  "decisions": [
+    "Add question, concept, capability, source, and local handoff structure to all five targets.",
+    "Preserve geth-test-units and vllm-test-units as registries.",
+    "Use desktop tables and mobile definition or article rows.",
+    "Use a mobile vertical phase flow instead of shrinking the Stable Diffusion SVG.",
+    "Keep the complete desktop graph visible and use contrast to show the current scene.",
+    "Audit only the default-export render body for table-first ordering."
+  ],
+  "private_acceptance_questions": [
+    "What can stateless geth Blob validation reject, and why are nonce and balance out of scope?",
+    "How do commitment hash mismatch and KZG proof failure differ in order and ownership?",
+    "Which tensor contract changes when checkpoint, scheduler, VAE, or text encoder changes?",
+    "Why can doubling image width and height produce non-linear attention cost growth?",
+    "How should a vLLM latency failure be narrowed across API, scheduler, KV allocation, forward, and sampling?",
+    "Why should chain reorg and RPC contract failures not share one verification unit?"
+  ],
+  "claude_review": {
+    "mode": "read-only, five-file scope, 120 second timeout",
+    "accepted_findings": [
+      "wrong tracing registry handoff",
+      "wrong RPC registry handoff",
+      "missing vLLM snapshot date",
+      "hardcoded geth unit count",
+      "unstable React cell key",
+      "wide mobile tensor annotation"
+    ]
+  },
+  "verification": {
+    "eslint": "pass",
+    "diff_check": "pass",
+    "vite_build": "pass with existing large chunk warning",
+    "playwright": {
+      "result": "15/15 local pass and 15/15 public-host pass",
+      "viewports": ["390x844", "768x1024", "1440x900"],
+      "routes": 5
+    },
+    "learning_flow_audit": {
+      "registered": 567,
+      "release_blockers": 0,
+      "review_needed": 3,
+      "target_scores": [0, 0, 0, 0, 0]
+    },
+    "tsc": "blocked by pre-existing errors outside this batch",
+    "deployment": "cm-blog.service active after restart at 2026-07-21 14:03:43 KST"
+  },
+  "small_model_protocol": {
+    "4b": [
+      "metadata and DOM signal extraction",
+      "default-export ordering checks",
+      "overflow candidate collection",
+      "volatile claim and source inventory"
+    ],
+    "9b": [
+      "single-document role classification",
+      "private acceptance question generation",
+      "source-bounded causal reconstruction",
+      "answerability reverse check"
+    ],
+    "integrator": [
+      "minimum foundation cutoff",
+      "primary-source adjudication",
+      "teaching versus registry merge decisions",
+      "visual QA and public deployment verification"
+    ]
+  },
+  "remaining_review_needed": [
+    "comfyui-edit-models-flux-qwen",
+    "discrete-log",
+    "qwen-korean-consistency"
+  ],
+  "report": "knowledge/authoring/runs/2026-07-21-learning-audit-top-five-reconstruction-report.md"
+}

@@ -44,7 +44,7 @@ export default function IAVLStoreViz() {
                 </motion.g>
               );
             })}
-            {step === 1 && <motion.circle r={4} fill={C.ins}
+            {step === 1 && <motion.circle initial={false} r={4} fill={C.ins}
               animate={{ cx: [180, 100, 140], cy: [20, 70, 120] }}
               transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }} />}
             {step === 2 && <motion.text x={310} y={140} fontSize={9} fill={C.proof} fontWeight="600"

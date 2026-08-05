@@ -1,4 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
+import WireHeaderViz from './viz/WireHeaderViz';
+import WireProtocolViz from './viz/WireProtocolViz';
 
 const ENCODE_CODE = `func Encode(priv *ecdsa.PrivateKey, req Packet) (packet, hash []byte, err error) {
     b := new(bytes.Buffer)
@@ -52,8 +54,7 @@ export default function Wire() {
         <p>
           모든 discv4 패킷은 동일한 97바이트 헤더를 공유합니다.
         </p>
-        <pre className="text-sm"><code>{`[32B MAC] [65B Signature] [1B Type] [RLP Payload]
- keccak256   ECDSA-secp256k1   1~6      구조체 직렬화`}</code></pre>
+        <div className="not-prose mb-4"><WireHeaderViz /></div>
         <p>
           MAC = <code>keccak256(sig + type + payload)</code>. 무결성 검증용이며, 암호학적 보호는 아닙니다.
           <br />
@@ -80,62 +81,7 @@ export default function Wire() {
         ]} />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">discv4 Wire Protocol</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// discv4 Packet Format
-//
-// 총 구조 (UDP payload):
-//   [32 bytes] MAC
-//   [65 bytes] Signature (ECDSA, secp256k1)
-//   [1 byte]   Packet type
-//   [variable] RLP payload
-//
-// Total header: 98 bytes
-// Max packet: 1280 bytes (UDP fragment 방지)
-
-// Packet Types:
-//   0x01 Ping
-//   0x02 Pong
-//   0x03 Findnode
-//   0x04 Neighbors
-//   0x05 ENRRequest  (EIP-868)
-//   0x06 ENRResponse (EIP-868)
-
-// MAC 계산:
-//   MAC = keccak256(sig || packet_type || rlp_payload)
-//
-//   역할:
-//     - 무결성 검증
-//     - 패킷 손상 감지
-//     - NOT 인증 (signature가 그 역할)
-
-// Signature (ECDSA secp256k1):
-//   data = keccak256(packet_type || rlp_payload)
-//   sig = ECDSA.sign(priv_key, data)
-//
-//   At verification:
-//     pubkey = ecrecover(data, sig)
-//     node_id = keccak256(pubkey)
-
-// RLP Encoding:
-//   Ethereum 표준 encoding
-//   Self-describing
-//   Length-prefixed
-
-// 예시 Ping RLP:
-//   [version, from_endpoint, to_endpoint,
-//    expiration, enr_seq]
-//
-//   encoded: 0xf8[length][items...]
-
-// 특성:
-//   ✓ No session state (stateless)
-//   ✓ Sender authentication (signature)
-//   ✓ Integrity (MAC)
-//   ✗ No confidentiality (plaintext)
-//   ✗ No replay protection (expiration만)
-//
-// → discv5가 confidentiality 추가`}
-        </pre>
+        <div className="not-prose mb-4"><WireProtocolViz /></div>
       </div>
     </section>
   );

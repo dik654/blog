@@ -45,7 +45,7 @@ export default function InteractionViz() {
               {/* Gauge visualization */}
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...sp, delay: 0.3 }}>
                 <rect x={355} y={135} width={110} height={10} rx={5} fill="var(--border)" opacity={0.3} />
-                <motion.rect x={355} y={135} width={0} height={10} rx={5} fill={COLORS.ratio}
+                <motion.rect initial={false} x={355} y={135} width={0} height={10} rx={5} fill={COLORS.ratio}
                   animate={{ width: 33 }} transition={{ ...sp, duration: 0.8 }} />
                 <text x={410} y={165} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">0%                    100%</text>
               </motion.g>

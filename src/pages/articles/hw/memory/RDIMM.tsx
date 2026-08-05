@@ -38,121 +38,65 @@ export default function RDIMM() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">DIMM Type 상세 분석</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DIMM Type 상세:
+        <h3 className="text-xl font-semibold mt-8 mb-3">UDIMM (Unbuffered)</h3>
+        <ul className="leading-7">
+          <li>memory controller 와 직접 연결, register buffering 없음.</li>
+          <li>최저 latency, GB 당 가격 최저.</li>
+          <li>DIMM 당 ~32 GB 한계.</li>
+          <li>채널당 2 DIMM 까지, 엄격한 timing 요구.</li>
+          <li>용도 — Desktop, Laptop (SODIMM), 소형 워크스테이션. 총 32~128 GB.</li>
+        </ul>
 
-// UDIMM (Unbuffered DIMM):
-// - direct connection to memory controller
-// - no register buffering
-// - lowest latency
-// - cheapest per GB
-// - capacity limit (~32 GB per DIMM)
-// - consumer + workstation
+        <h3 className="text-xl font-semibold mt-8 mb-3">RDIMM (Registered)</h3>
+        <ul className="leading-7">
+          <li>DIMM 위 register buffer 가 address/command 신호를 재구동.</li>
+          <li>memory controller 부담 완화 → 채널당 8+ DIMM 장착 가능.</li>
+          <li>약간의 latency 추가 (+1 cycle).</li>
+          <li>signal integrity 우수, 고밀도 지원.</li>
+          <li>용도 — 서버 표준 (128 GB~2 TB), 고용량 워크스테이션, DB 서버, 가상화 호스트.</li>
+        </ul>
 
-// Electrical characteristics:
-// - high current draw on CPU MC
-// - limits DIMMs per channel
-// - 2 DIMMs per channel max
-// - stricter timing requirements
+        <h3 className="text-xl font-semibold mt-8 mb-3">LRDIMM (Load Reduced)</h3>
+        <ul className="leading-7">
+          <li>address + data 모두 버퍼링 (Memory Buffer chip).</li>
+          <li>전기 부하 감소 → DIMM 당 4+ rank, 256 GB DIMM 가능.</li>
+          <li>가장 비싸고 latency 높지만 최대 용량.</li>
+          <li>용도 — in-memory DB (SAP HANA), 대형 가상화, 1~6 TB 시스템, HPC.</li>
+        </ul>
 
-// Use cases:
-// - Desktop
-// - Laptop (SODIMM)
-// - Small workstation
-// - 32-128 GB total
+        <h3 className="text-xl font-semibold mt-8 mb-3">용량 확장</h3>
+        <ul className="leading-7">
+          <li><strong>Desktop</strong> — 2 slot × 2 channel = 4 slot. 32 GB × 2 = 64 GB 보통, 64 GB × 2 = 128 GB high-end.</li>
+          <li><strong>Workstation</strong> — 8 slot × 4~8 channel. 64 GB × 8 = 512 GB. DDR5 UDIMM/RDIMM.</li>
+          <li><strong>Server (single-socket EPYC)</strong> — 12 channel × 2 = 24 slot. 64 GB × 24 = 1.5 TB (RDIMM), 256 GB × 24 = 6 TB (LRDIMM).</li>
+          <li><strong>Server (dual-socket)</strong> — 24 channel × 2 = 48 slot. 256 GB × 48 = 12 TB (LRDIMM).</li>
+        </ul>
 
-// RDIMM (Registered DIMM):
-// - register buffer on DIMM
-// - buffers address/command signals
-// - relieves memory controller
-// - allows 8+ DIMMs per channel
-// - slightly higher latency (+1 cycle)
-// - server standard
+        <h3 className="text-xl font-semibold mt-8 mb-3">2024 GB 당 가격</h3>
+        <ul className="leading-7">
+          <li>UDIMM non-ECC — $3/GB</li>
+          <li>UDIMM ECC — $4/GB</li>
+          <li>RDIMM — $5~$8/GB</li>
+          <li>LRDIMM — $10~$15/GB</li>
+        </ul>
 
-// Buffering mechanism:
-// - DIMM-side register
-// - re-drives signals
-// - better signal integrity
-// - supports higher density
+        <h3 className="text-xl font-semibold mt-8 mb-3">속도 vs 용량 trade-off</h3>
+        <p className="leading-7">
+          UDIMM &gt; RDIMM &gt; LRDIMM (속도), 반대로 UDIMM &lt; RDIMM &lt; LRDIMM (용량). 용도에 맞춰 선택.
+        </p>
 
-// Use cases:
-// - Server (128 GB - 2 TB)
-// - Workstation (high capacity)
-// - database servers
-// - virtualization hosts
+        <h3 className="text-xl font-semibold mt-8 mb-3">CPU/Motherboard 지원</h3>
+        <ul className="leading-7">
+          <li>Xeon / EPYC — RDIMM + LRDIMM</li>
+          <li>Core i — UDIMM only</li>
+          <li>Ryzen — UDIMM + 일부 RDIMM</li>
+          <li>Threadripper — RDIMM</li>
+        </ul>
 
-// LRDIMM (Load Reduced DIMM):
-// - buffers both address AND data
-// - memory buffer (MB) chip
-// - even higher density possible
-// - higher latency
-// - most expensive
-// - highest capacity
-
-// Load reduction:
-// - data signals also buffered
-// - reduces electrical load
-// - enables 4+ ranks per DIMM
-// - 256 GB DIMMs possible
-
-// Use cases:
-// - In-memory databases
-// - SAP HANA
-// - large virtualization
-// - 1-6 TB systems
-// - HPC
-
-// Capacity scaling:
-
-// Desktop:
-// - 2 DIMM slots × 2 channels
-// - 32 GB × 2 = 64 GB typical
-// - 64 GB × 2 = 128 GB high-end
-
-// Workstation:
-// - 8 DIMM slots × 4-8 channels
-// - 64 GB × 8 = 512 GB
-// - DDR5 UDIMM/RDIMM
-
-// Server (single-socket EPYC):
-// - 12 channels × 2 DIMMs = 24 slots
-// - 64 GB × 24 = 1.5 TB (RDIMM)
-// - 128 GB × 24 = 3 TB (RDIMM)
-// - 256 GB × 24 = 6 TB (LRDIMM)
-
-// Server (dual-socket):
-// - 24 channels × 2 = 48 slots
-// - 128 GB × 48 = 6 TB
-// - 256 GB × 48 = 12 TB (LRDIMM)
-
-// Cost per GB (2024):
-// UDIMM non-ECC: $3/GB
-// UDIMM ECC: $4/GB
-// RDIMM: $5-8/GB
-// LRDIMM: $10-15/GB
-// price scales with capacity
-
-// Performance hierarchy:
-// UDIMM > RDIMM > LRDIMM (speed)
-// UDIMM < RDIMM < LRDIMM (capacity)
-// trade-off by use case
-
-// Intel/AMD support:
-// - Xeon / EPYC: RDIMM + LRDIMM
-// - Core i: UDIMM only
-// - Ryzen: UDIMM + some RDIMM
-// - Threadripper: RDIMM
-// - motherboard determines
-
-// Future: CXL Memory:
-// - Compute Express Link
-// - PCIe 5.0 based memory expansion
-// - beyond DIMM slot limits
-// - up to 32 TB per node
-// - 2024+ enterprise
-// - memory pooling/sharing`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">CXL Memory (차세대)</h3>
+        <p className="leading-7">
+          Compute Express Link. PCIe 5.0 기반 메모리 확장. DIMM slot 한계를 넘어 노드당 최대 32 TB. 2024+ 엔터프라이즈, memory pooling/sharing 가능.
+        </p>
         <p className="leading-7">
           DIMM types: <strong>UDIMM (desktop) → RDIMM (server) → LRDIMM (enterprise)</strong>.<br />
           capacity scaling: 128 GB → 1.5 TB → 6 TB single-socket.<br />

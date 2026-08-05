@@ -45,7 +45,7 @@ export default function RollupCompareViz() {
                         <text x={10} y={barY + 8} fontSize={10}
                           fill="var(--muted-foreground)">{ATTRS[ai]}</text>
                       )}
-                      <motion.rect x={BX[i] - 45} y={barY} height={12} rx={3}
+                      <motion.rect initial={false} x={BX[i] - 45} y={barY} height={12} rx={3}
                         animate={{
                           width: (step === 0 || active) ? v * 0.9 : 25,
                           opacity: step === 0 || active ? 1 : 0.25,

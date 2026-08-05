@@ -1,212 +1,205 @@
-import ProviderViz from './viz/ProviderViz';
-import ChunkEnumViz from './viz/ChunkEnumViz';
+import ProviderContractViz from './viz/ProviderContractViz';
+
+const streamEvents = [
+  ['01', 'MessageStart', '응답 id·model·초기 usage가 생긴다.'],
+  ['02', 'ContentBlockStart', 'text 또는 tool-use block의 index와 초기 상태를 연다.'],
+  ['03', 'ContentBlockDelta', 'text·JSON·thinking·signature 조각을 열린 block에 붙인다.'],
+  ['04', 'ContentBlockStop', '해당 index의 block 조립을 닫는다.'],
+  ['05', 'MessageDelta', 'stop reason과 누적 usage 같은 message 수준 변경을 보낸다.'],
+  ['06', 'MessageStop', '한 응답 stream의 종료를 알린다.'],
+] as const;
+
+const cacheRules = [
+  ['로컬 completion 재사용', '같은 전체 request hash의 비스트리밍 응답을 기본 30초 동안 파일에서 다시 읽는다.'],
+  ['fingerprint 관측', 'model·system·tools·messages hash와 cache_read_input_tokens를 session state에 기록한다.'],
+  ['의미 있는 감소', '이전보다 cache read token이 2,000 이상 줄었을 때만 cache break 후보가 된다.'],
+  ['예상된 변경', 'fingerprint가 달라졌다면 model·system·tools·messages 중 변한 이유를 남긴다.'],
+  ['TTL 가능성', 'fingerprint가 같아도 5분이 넘었다면 prompt cache TTL 만료 가능성으로 분류한다.'],
+  ['예상 밖 break', 'fingerprint가 같고 5분 이내인데 2,000 이상 줄면 unexpected로 센다.'],
+] as const;
+
+const completionRules = [
+  ['Provider EOF', 'OpenAI-compatible parser는 열린 block을 닫고, message가 시작됐다면 기본 end_turn·usage 0을 포함한 MessageDelta와 MessageStop을 합성한다.'],
+  ['CLI 보정', 'provider가 stop을 주지 않았어도 text 또는 ToolUse가 하나라도 있으면 CLI adapter가 AssistantEvent::MessageStop을 추가한다.'],
+  ['빈 stream fallback', 'stop도 content도 없으면 같은 요청을 non-streaming으로 다시 보낸다. 첫 요청이 과금됐는지는 이 코드가 증명하지 못하므로 중복 비용 가능성을 관측해야 한다.'],
+] as const;
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ProviderClient 추상화</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <ProviderViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">멀티 프로바이더 지원 배경</h3>
-        <p>
-          claw-code는 3개 LLM 프로바이더 지원:<br />
-          - <strong>Anthropic</strong>: Claude 모델 (기본)<br />
-          - <strong>OpenAI</strong>: GPT 모델<br />
-          - <strong>xAI</strong>: Grok 모델 (OpenAI 호환)<br />
-          사용자는 설정으로 프로바이더 전환 — 같은 코드베이스에서 여러 모델 실험
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">ProviderClient 트레이트</h3>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-            ProviderClient — 4개 핵심 메서드
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
-            <div className="bg-card p-4">
-              <div className="text-xs font-semibold text-muted-foreground mb-1">스트리밍 전송</div>
-              <code className="text-sm">send_message(&self, req) → BoxStream&lt;Chunk&gt;</code>
-              <p className="text-xs text-muted-foreground mt-1">비동기 스트림 반환 — 각 청크가 SSE 프레임 하나</p>
-            </div>
-            <div className="bg-card p-4">
-              <div className="text-xs font-semibold text-muted-foreground mb-1">토큰 카운트</div>
-              <code className="text-sm">count_tokens(&self, text) → usize</code>
-              <p className="text-xs text-muted-foreground mt-1">입력 텍스트의 토큰 수 근사 계산</p>
-            </div>
-            <div className="bg-card p-4">
-              <div className="text-xs font-semibold text-muted-foreground mb-1">모델 정보</div>
-              <code className="text-sm">model_info(&self) → ModelInfo</code>
-              <p className="text-xs text-muted-foreground mt-1">context_window, max_output, supports_vision, pricing</p>
-            </div>
-            <div className="bg-card p-4">
-              <div className="text-xs font-semibold text-muted-foreground mb-1">비용 계산</div>
-              <code className="text-sm">estimate_cost(&self, usage) → f64</code>
-              <p className="text-xs text-muted-foreground mt-1">TokenUsage 기반 동기 비용 계산</p>
-            </div>
-          </div>
-          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
-            트레이트 바운드 <code>Send + Sync</code> — 멀티스레드 안전, Arc로 공유 가능
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">구현체 2개</h3>
-        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <div className="bg-violet-100 dark:bg-violet-950/40 px-4 py-2 border-b border-border font-semibold text-sm">
-              AnthropicClient — Messages API 전용
-            </div>
-            <div className="p-4 space-y-2 text-sm">
-              <div><code className="text-xs">api_key: Option&lt;String&gt;</code> <span className="text-muted-foreground text-xs">— API 키 인증</span></div>
-              <div><code className="text-xs">oauth_token: Option&lt;String&gt;</code> <span className="text-muted-foreground text-xs">— OAuth Bearer 인증</span></div>
-              <div><code className="text-xs">base_url: Url</code> <span className="text-muted-foreground text-xs">— api.anthropic.com</span></div>
-              <div><code className="text-xs">http: reqwest::Client</code></div>
-              <div><code className="text-xs">model: String</code></div>
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <div className="bg-emerald-100 dark:bg-emerald-950/40 px-4 py-2 border-b border-border font-semibold text-sm">
-              OpenAICompatClient — 호환 API 공용
-            </div>
-            <div className="p-4 space-y-2 text-sm">
-              <div><code className="text-xs">api_key: String</code></div>
-              <div><code className="text-xs">base_url: Url</code> <span className="text-muted-foreground text-xs">— OpenAI / xAI / Azure URL</span></div>
-              <div><code className="text-xs">http: reqwest::Client</code></div>
-              <div><code className="text-xs">model: String</code></div>
-              <div><code className="text-xs">provider_kind: OpenAIKind</code> <span className="text-muted-foreground text-xs">— OpenAI | Azure | xAI</span></div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>2개만 구현</strong>: Anthropic vs OpenAI 호환<br />
-          xAI, Azure, 자체 호스팅 LLM 모두 OpenAICompatClient 재사용<br />
-          <code>base_url</code>만 바꾸면 다른 프로바이더 — 확장 비용 최소
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">MessageRequest 통합 구조</h3>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-            MessageRequest — 프로바이더 중립 요청 구조
-          </div>
-          <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">model</code><div className="text-xs text-muted-foreground">String</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">messages</code><div className="text-xs text-muted-foreground">Vec&lt;Message&gt;</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">system</code><div className="text-xs text-muted-foreground">Option&lt;String&gt;</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">tools</code><div className="text-xs text-muted-foreground">Option&lt;Vec&lt;ToolSpec&gt;&gt;</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">max_tokens</code><div className="text-xs text-muted-foreground">usize</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">temperature</code><div className="text-xs text-muted-foreground">Option&lt;f32&gt;</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">stream</code><div className="text-xs text-muted-foreground">bool</div></div>
-          </div>
-          <div className="border-t border-border">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
-              <div className="bg-card p-4">
-                <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">Anthropic 변환</div>
-                <p className="text-xs text-muted-foreground">
-                  <code>system</code> 필드를 별도 최상위 키로 전달<br />
-                  <code>to_anthropic()</code>로 메시지 직렬화
-                </p>
-              </div>
-              <div className="bg-card p-4">
-                <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">OpenAI 변환</div>
-                <p className="text-xs text-muted-foreground">
-                  <code>system</code>을 messages 배열 첫 요소로 이동<br />
-                  <code>to_openai()</code>로 메시지 직렬화
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>내부 표현은 Anthropic 스타일</strong>: system 필드 분리<br />
-          OpenAI로 변환 시 system을 messages 배열 첫 요소로 이동<br />
-          포맷 차이를 <strong>클라이언트 내부에서만 처리</strong> — 호출자는 neutral 포맷 사용
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">스트리밍 차이 흡수</h3>
-        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-2">Anthropic SSE</div>
-            <div className="text-xs font-mono text-muted-foreground space-y-1">
-              <div><code>event: content_block_delta</code></div>
-              <div><code>data: {`{"type":"text_delta","text":"hello"}`}</code></div>
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">OpenAI SSE</div>
-            <div className="text-xs font-mono text-muted-foreground">
-              <code>data: {`{"choices":[{"delta":{"content":"hello"}}]}`}</code>
-            </div>
-          </div>
-        </div>
-        <p className="text-sm text-muted-foreground mb-2">두 포맷 모두 아래 Chunk enum으로 통합</p>
-        <ChunkEnumViz />
-        <p>
-          <strong>Chunk enum은 Anthropic SSE 구조를 따름</strong> — OpenAI는 클라이언트가 변환<br />
-          OpenAI는 단일 delta 스트림 — Anthropic의 block 개념 없음<br />
-          변환 레이어가 "가상 block" 만들어서 일관성 유지
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">클라이언트 선택 흐름</h3>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-            create_client(config) → Box&lt;dyn ProviderClient&gt;
-          </div>
-          <div className="divide-y divide-border">
-            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
-              <span className="text-xs font-semibold bg-violet-100 dark:bg-violet-950/40 rounded px-2 py-1 text-center">"anthropic"</span>
-              <div className="text-sm">
-                <code className="text-xs">AnthropicClient::new(api_key, model)</code>
-              </div>
-            </div>
-            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
-              <span className="text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/40 rounded px-2 py-1 text-center">"openai"</span>
-              <div className="text-sm">
-                <code className="text-xs">OpenAICompatClient::new(key, "api.openai.com/v1", model, OpenAI)</code>
-              </div>
-            </div>
-            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
-              <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-950/40 rounded px-2 py-1 text-center">"xai"</span>
-              <div className="text-sm">
-                <code className="text-xs">OpenAICompatClient::new(key, "api.x.ai/v1", model, XAI)</code>
-              </div>
-            </div>
-            <div className="grid grid-cols-[100px_1fr] gap-2 p-3 items-center">
-              <span className="text-xs font-semibold bg-orange-100 dark:bg-orange-950/40 rounded px-2 py-1 text-center">"azure"</span>
-              <div className="text-sm">
-                <code className="text-xs">OpenAICompatClient::new(key, "{`{resource}.openai.azure.com/...`}", model, Azure)</code>
-              </div>
-            </div>
-          </div>
-          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
-            반환: <code>Box&lt;dyn ProviderClient&gt;</code> — 트레이트 객체로 동적 디스패치
-          </div>
-        </div>
-        <p>
-          <strong>4개 프로바이더 팩토리</strong>: anthropic, openai, xai, azure<br />
-          Azure는 base_url이 복잡 — resource + deployment 조합
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 추상화의 경제성</p>
+    <>
+      <section id="overview" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>같은 질문을 보내도 서비스마다 길이 다르다</h2>
           <p>
-            4개 프로바이더 지원에 <strong>2개 클라이언트 구현</strong> — OpenAI 호환 덕분<br />
-            만약 각 프로바이더마다 별도 구현:<br />
-            - 4배 코드<br />
-            - 4배 테스트<br />
-            - 4배 유지보수 비용
+            runtime은 먼저 model alias를 canonical name으로 바꾸고 metadata로
+            <code> ProviderKind</code>를 찾는다. top-level <code>ProviderClient</code>는 이 결과를
+            <code> Anthropic</code>, <code>Xai</code>, <code>OpenAi</code> 중 하나로 보관하고,
+            <code>send_message()</code>와 <code>stream_message()</code>에서 enum match로 concrete
+            client에 위임한다.
           </p>
-          <p className="mt-2">
-            OpenAI가 사실상 표준 API 형식 — xAI, Groq, 많은 오픈소스 모델이 따름<br />
-            <strong>"OpenAI 호환"이 LLM API 생태계의 HTTP 1.1</strong> — 사실상 프로토콜<br />
-            claw-code는 이 사실상 표준을 활용하여 최소 코드로 최대 호환성 달성
+          <p>
+            여기서 <code>OpenAi</code>는 회사 이름만 뜻하지 않는다. Qwen과 Kimi는 Alibaba
+            DashScope가 제공하는 OpenAI-compatible wire를 쓰기 때문에 같은 variant로 들어간다.
+            그러나 metadata의 <code>auth_env</code>를 다시 확인해 OpenAI config 대신 DashScope
+            config를 고른다. 아래 모델을 바꾸며 세 분류가 어떻게 갈라지는지 확인하라.
           </p>
-          <p className="mt-2">
-            트레이드오프: Anthropic 전용 기능(prompt caching, computer use) 사용 시 Anthropic 전용 경로 필요<br />
-            하지만 이는 <strong>OpenAICompatClient 확장 없이 AnthropicClient에만 추가</strong> — 격리 유지
+        </div>
+        <ProviderContractViz />
+      </section>
+
+      <section id="provider-routing" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>회사, wire protocol, enum variant는 같은 축이 아니다</h2>
+          <p>
+            xAI·OpenAI·DashScope는 같은 <code>OpenAiCompatClient</code> 코드를 재사용하지만 config는
+            각각 API key 환경 변수, base URL, 요청 body 상한을 바꾼다. 상한은 xAI 50 MiB,
+            OpenAI 100 MiB, DashScope 6 MiB다. 따라서 “OpenAI 호환이면 URL만 바꾸면 끝”이 아니라,
+            endpoint가 받아들이는 크기와 model별 예외까지 config와 변환 함수가 흡수한다.
+          </p>
+          <p>
+            이름을 모르는 custom model은 더 조심해야 한다. model metadata가 없으면
+            <code>detect_provider_kind()</code>는 환경을 sniff한다. 우선순위는
+            <strong> OPENAI_BASE_URL+OpenAI key → Anthropic auth → OpenAI key → XAI key →
+            OPENAI_BASE_URL만 존재 → Anthropic 기본값</strong>이다. 같은 model 문자열도 실행
+            환경에 따라 다른 provider kind로 갈 수 있다. 마지막 두 fallback은 kind 선택일 뿐이며,
+            concrete client 생성에 필요한 credential이 없으면 그 다음 단계에서 실패한다.
+          </p>
+          <p>
+            Anthropic 인증도 API key와 OAuth 중 하나를 우선 선택하지 않는다.
+            <code>AuthSource::ApiKeyAndBearer</code>면 request에 <code>x-api-key</code>와
+            <code>Authorization: Bearer</code>를 모두 붙인다. 저장된 OAuth를 읽는 startup helper는
+            별도로 있지만 <code>AuthSource::from_env_or_saved()</code> 이름만 보고 자동 파일 로드를
+            가정해서는 안 된다. 이 revision의 해당 함수는 환경 변수 경로만 사용한다.
+          </p>
+          <h3>API key와 base URL은 같은 방식으로 .env를 읽지 않는다</h3>
+          <p>
+            Anthropic·OpenAI-compatible API key helper는 process environment가 비었을 때 현재
+            디렉터리의 <code>.env</code> 값을 보조로 읽는다. 반면
+            <code>ANTHROPIC_BASE_URL</code>·<code>OPENAI_BASE_URL</code> 같은 endpoint override는
+            process environment만 읽고 없으면 built-in URL로 돌아간다. “.env를 지원한다”는 한
+            문장으로 key와 URL을 함께 설명하면 실제 배포 결과가 달라질 수 있다.
+          </p>
+        </div>
+      </section>
+
+      <section id="wire-normalization" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>공통 메시지가 provider의 문법으로 번역된다</h2>
+          <p>
+            <code>MessageRequest</code>는 system, messages, tools, tool choice, sampling과 reasoning
+            옵션을 한 타입에 담는다. OpenAI-compatible 변환은 system을 첫 system message로 옮기고,
+            assistant의 text는 content로, <code>ToolUse</code>는
+            <code>tool_calls[].function.arguments</code> JSON 문자열로 바꾼다. user의
+            <code>ToolResult</code>는 별도 <code>role: tool</code> message가 된다.
+          </p>
+          <p>
+            model 이름도 wire 직전에 보정한다. <code>openai/gpt-5</code> 같은 routing prefix를
+            제거하고 GPT-5에는 <code>max_tokens</code> 대신
+            <code>max_completion_tokens</code>를 보낸다. reasoning model은 거부하는 sampling
+            parameter를 빼고, Kimi tool result는 400을 피하려 <code>is_error</code>를 생략한다.
+            tool schema는 object properties와 <code>additionalProperties: false</code> 규칙으로
+            정규화된다.
+          </p>
+          <p>
+            마지막 sanitizer는 모든 낯선 tool result를 공격적으로 버리지 않는다. 가까운 이전
+            non-tool message가 assistant일 때만 그 <code>tool_calls</code>에 같은 id가 없으면
+            orphan으로 제거한다. 이전 role이 user나 system이면 변환 산물일 가능성을 남겨 두고
+            통과시킨다.
+          </p>
+        </div>
+      </section>
+
+      <section id="stream-contract" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>서로 다른 SSE는 여섯 사건으로 수렴한다</h2>
+          <p>
+            Anthropic stream과 OpenAI-compatible stream은 별도 parser를 쓰지만
+            <code>MessageStream::next_event()</code> 밖으로는 같은 <code>StreamEvent</code>만
+            내보낸다. OpenAI 쪽 state machine은 delta를 받으며 가상의 block 시작과 종료를 만들고,
+            tool-call argument 조각도 index별로 조립한다.
+          </p>
+        </div>
+        <div className="not-prose my-7 divide-y divide-border border-y border-border">
+          {streamEvents.map(([index, name, detail]) => (
+            <div key={name} className="grid gap-1 py-3 sm:grid-cols-[3rem_11rem_minmax(0,1fr)] sm:gap-4">
+              <span className="font-mono text-[10px] font-bold text-muted-foreground">{index}</span>
+              <code className="text-xs font-bold">{name}</code>
+              <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <p>
+            순번은 모든 stream이 반드시 이 표의 한 줄씩 정확히 한 번 나온다는 뜻이 아니다.
+            content block은 여러 개일 수 있고 delta는 반복된다. 안정된 계약은
+            <strong> 사건의 종류와 block index를 통한 조립 규칙</strong>이다.
+          </p>
+          <h3>그 index 계약은 provider parser 다음 CLI 경계에서 약해진다</h3>
+          <p>
+            OpenAI-compatible parser는 tool call을 provider index별
+            <code>BTreeMap</code>에 두고 공통 <code>ContentBlock*</code> event에도 block index를
+            넣는다. 그러나 CLI adapter의 <code>push_output_block()</code>은 index를 받지 않고
+            <code>pending_tool: Option</code> 하나만 유지한다. interleaved tool block 두 개가
+            들어오면 뒤 start가 앞 pending tool을 덮을 수 있다. 또한 CLI는
+            <code>MessageStart</code>의 id·model·request metadata를 session event로 보존하지 않고,
+            <code>MessageDelta</code>에서는 stop reason 대신 usage만 옮긴다. “공통 event로
+            정규화됐다”와 “downstream이 모든 계약을 보존한다”는 다른 주장이다.
           </p>
         </div>
 
-      </div>
-    </section>
+        <div className="not-prose my-7 divide-y divide-border border-y border-border">
+          {completionRules.map(([label, detail], index) => (
+            <div key={label} className="grid gap-1 py-3 sm:grid-cols-[3rem_10rem_minmax(0,1fr)] sm:gap-4">
+              <span className="font-mono text-[10px] font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+              <p className="text-sm font-bold">{label}</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <p>
+            따라서 stream 완료를 판단할 때는 HTTP EOF, provider의 명시적 finish reason, 공통
+            <code>MessageStop</code>, CLI가 만든 synthetic stop, 빈 stream 뒤 두 번째 요청을
+            구분해야 한다. 사용자 화면에 “완료”가 보인다는 사실만으로 upstream이 정상 종료했다고
+            판정할 수 없다.
+          </p>
+        </div>
+      </section>
+
+      <section id="prompt-cache" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>PromptCache에는 서로 다른 두 시간이 있다</h2>
+          <p>
+            첫 시간은 <strong>30초 completion TTL</strong>이다. Anthropic 비스트리밍 요청은 전체
+            request hash가 같은 저장 응답을 짧게 재사용하고, miss나 expiry면 실제 API 응답을 기록한다.
+            streaming은 완성 응답을 replay하지 않고 <code>MessageStop</code>까지 관측한 usage만
+            기록한다. top-level <code>with_prompt_cache()</code>도 Anthropic variant에만 붙는다.
+          </p>
+          <p>
+            둘째 시간은 <strong>5분 prompt 관측 TTL</strong>이다. 이것은 응답을 5분 캐시한다는
+            뜻이 아니다. provider가 보고한 <code>cache_read_input_tokens</code>가 크게 줄었을 때
+            동일 prompt가 오래돼 만료됐을 가능성과 예상 밖 break를 가르는 휴리스틱이다.
+          </p>
+        </div>
+        <div className="not-prose my-7 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
+          {cacheRules.map(([label, detail], index) => (
+            <div key={label} className="min-w-0 bg-background p-4">
+              <p className="font-mono text-[10px] font-bold text-muted-foreground">{String(index + 1).padStart(2, '0')}</p>
+              <p className="mt-2 text-sm font-bold">{label}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <p>
+            예를 들어 이전 cache read가 12,000이고 현재가 9,500이면 감소량은 2,500이다.
+            fingerprint가 바뀌었다면 expected invalidation, 같고 301초가 지났다면 possible TTL
+            expiry, 같고 120초만 지났다면 unexpected cache break다. 감소가 1,999라면 세 경우
+            모두 break event 자체를 만들지 않는다.
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

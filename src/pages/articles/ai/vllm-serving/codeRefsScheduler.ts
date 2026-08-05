@@ -18,8 +18,8 @@ export const schedulerCodeRefs: Record<string, CodeRef> = {
 `문제: Prefill과 Decode를 어떻게 하나의 배치에 섞을까요?
 
 해결: vLLM V1은 "phase" 구분이 없습니다.
-각 요청은 num_computed_tokens와 num_tokens_with_spec만 갖고 있고,
-schedule()은 그 차이(= 새로 계산할 토큰 수)를 token_budget에서 차감합니다.
+schedule()은 num_tokens_with_spec에 async output placeholder를 더한 뒤
+num_computed_tokens를 빼서 새로 계산할 token 수를 정하고 token_budget에서 차감합니다.
 블록 할당 실패 시 가장 낮은 우선순위 요청을 프리엠션하여 메모리를 확보합니다.`,
   },
 
@@ -27,13 +27,13 @@ schedule()은 그 차이(= 새로 계산할 토큰 수)를 token_budget에서 �
     path: 'vllm/v1/core/sched/scheduler.py',
     code: schedulerPy,
     lang: 'python',
-    highlight: [1295, 1420],
+    highlight: [1275, 1420],
     annotations: [
-      { lines: [1295, 1307], color: 'sky',     note: 'update_from_output() — 모델 출력 수신' },
-      { lines: [1338, 1352], color: 'emerald', note: '요청별 루프 — 생성된 토큰 추출' },
-      { lines: [1362, 1383], color: 'amber',   note: 'Spec Decode 검증: 거부된 토큰만큼 num_computed_tokens 감소' },
-      { lines: [1393, 1396], color: 'violet',  note: '정지 조건 체크 + 요청 상태 업데이트' },
-      { lines: [1410, 1412], color: 'rose',    note: '완료된 요청 해제 → KV 블록 반환' },
+      { lines: [1275, 1287], color: 'sky',     note: 'update_from_output() — 모델 실행 결과 장부를 수신' },
+      { lines: [1312, 1336], color: 'emerald', note: '요청별 루프 — 생성된 토큰 ID 추출' },
+      { lines: [1338, 1362], color: 'amber',   note: 'Spec Decode 검증 — 거부된 토큰만큼 computed token 장부 롤백' },
+      { lines: [1371, 1391], color: 'violet',  note: '정지 조건 확인 뒤 완료된 요청의 KV 블록 해제' },
+      { lines: [1406, 1416], color: 'rose',    note: 'Structured Output grammar에 확정 토큰 반영' },
     ],
     desc:
 `문제: 모델 실행 결과를 스케줄러에 어떻게 반영할까요?
@@ -48,11 +48,11 @@ schedule()은 그 차이(= 새로 계산할 토큰 수)를 token_budget에서 �
     path: 'vllm/v1/core/sched/scheduler.py',
     code: schedulerPy,
     lang: 'python',
-    highlight: [949, 969],
+    highlight: [929, 949],
     annotations: [
-      { lines: [949, 957], color: 'sky',     note: '_preempt_request — RUNNING 상태만 프리엠션 가능' },
-      { lines: [958, 963], color: 'emerald', note: 'KV 캐시 + 인코더 캐시 해제, computed_tokens 초기화' },
-      { lines: [968, 969], color: 'amber',   note: 'waiting 큐 맨 앞에 삽입 → 최우선 재스케줄링' },
+      { lines: [929, 937], color: 'sky',     note: '_preempt_request — RUNNING 상태만 프리엠션 가능' },
+      { lines: [938, 944], color: 'emerald', note: 'KV·인코더 캐시 해제 뒤 computed token 장부 초기화' },
+      { lines: [948, 949], color: 'amber',   note: 'waiting 큐 맨 앞에 삽입 → 다음 스텝 우선 재시도' },
     ],
     desc:
 `문제: GPU 메모리가 부족하면 어떤 요청을 내보낼까요?

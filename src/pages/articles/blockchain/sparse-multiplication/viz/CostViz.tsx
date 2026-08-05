@@ -16,7 +16,7 @@ function Bar({ y, value, max, color, label, show }: {
     <motion.g animate={{ opacity: show ? 1 : 0.15 }} transition={sp}>
       <text x={BAR_X - 8} y={y + BAR_H / 2 + 4} textAnchor="end"
         fontSize={11} fill="hsl(var(--foreground))">{label}</text>
-      <motion.rect x={BAR_X} y={y} rx={4}
+      <motion.rect initial={false} x={BAR_X} y={y} rx={4}
         animate={{ width: show ? w : 0, height: BAR_H,
           fill: `${color}20`, stroke: color }}
         strokeWidth={0.8} transition={sp} />

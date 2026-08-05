@@ -45,11 +45,11 @@ export default function R1CS() {
         <div className="not-prose space-y-3 mb-4">
           <div className="rounded-lg border-l-4 border-l-sky-500 bg-card p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">단일 제약 형태</p>
-            <M display>{'\\langle \\mathbf{a}, \\mathbf{s} \\rangle \\cdot \\langle \\mathbf{b}, \\mathbf{s} \\rangle = \\langle \\mathbf{c}, \\mathbf{s} \\rangle'}</M>
+            <M display>{'\\underbrace{\\langle \\mathbf{a}, \\mathbf{s} \\rangle}_{\\text{좌변 내적}} \\cdot \\underbrace{\\langle \\mathbf{b}, \\mathbf{s} \\rangle}_{\\text{우변 내적}} = \\underbrace{\\langle \\mathbf{c}, \\mathbf{s} \\rangle}_{\\text{출력 내적}}'}</M>
           </div>
           <div className="rounded-lg border-l-4 border-l-emerald-500 bg-card p-4">
             <p className="font-semibold text-sm text-emerald-400 mb-2">행렬 형태</p>
-            <M display>{'(A \\cdot \\mathbf{s}) \\circ (B \\cdot \\mathbf{s}) = C \\cdot \\mathbf{s}'}</M>
+            <M display>{'\\underbrace{(A \\cdot \\mathbf{s})}_{\\text{좌변 벡터}} \\circ \\underbrace{(B \\cdot \\mathbf{s})}_{\\text{우변 벡터}} = \\underbrace{C \\cdot \\mathbf{s}}_{\\text{출력 벡터}}'}</M>
             <ul className="text-sm text-muted-foreground space-y-1 mt-2">
               <li><M>{'A, B, C \\in \\mathbb{F}^{m \\times n}'}</M> &mdash; <code>m</code> = 제약 수, <code>n</code> = 변수 수</li>
               <li><M>{'\\mathbf{s} = (1,\\, x_1, \\ldots, x_l,\\, w_1, \\ldots, w_m)'}</M> &mdash; witness 벡터</li>
@@ -238,7 +238,7 @@ export default function R1CS() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-lg border border-blue-500/30 p-4">
               <p className="font-semibold text-sm text-blue-400 mb-2">Plonkish (custom gates)</p>
-              <M display>{'q_L a + q_R b + q_M ab + q_O c + q_C = 0'}</M>
+              <M display>{'\\underbrace{q_L a + q_R b + q_O c}_{\\text{선형 항}} + \\underbrace{q_M ab}_{\\text{곱셈 항}} + \\underbrace{q_C}_{\\text{상수 항}} = 0'}</M>
               <ul className="text-sm text-muted-foreground space-y-0.5 mt-2">
                 <li>R1CS보다 유연한 커스텀 게이트</li>
                 <li>Lookup table로 range check 저렴</li>

@@ -1,3 +1,6 @@
+import NoSealingProblemViz from './viz/NoSealingProblemViz';
+import AttackScenariosViz from './viz/AttackScenariosViz';
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
@@ -13,45 +16,7 @@ export default function Overview() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">봉인 없이는 어떤 문제가 발생하는가</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 시나리오: 암호화폐 지갑 enclave
-
-// 봉인 없이
-void generate_wallet_in_enclave() {
-    // 1) 엔클레이브 안에서 안전하게 키 생성
-    PrivateKey pk = generate_random_key();
-
-    // 2) 어디에 저장?
-    //    - 메모리: 재부팅 시 손실
-    //    - 디스크 (평문): 공격자 파일 읽기 가능
-    //    - 디스크 (암호화): 암호화 키는 또 어디에?
-    //
-    //  → 계속 순환 논리 → 지속성 불가
-
-    // 최악: 재부팅마다 새 키 생성 → 이전 지갑 접근 불가
-}
-
-// 봉인 있을 때
-void generate_and_seal_wallet() {
-    // 1) 엔클레이브 안에서 키 생성
-    PrivateKey pk = generate_random_key();
-
-    // 2) CPU 하드웨어에서 파생된 Seal Key 요청
-    SealKey sk = EGETKEY(MRENCLAVE_POLICY);
-
-    // 3) Seal Key로 비밀을 AES-GCM 암호화
-    SealedData sealed = aes_gcm_seal(&pk, sk);
-
-    // 4) 디스크에 sealed bytes 저장 (안전)
-    fs_write("wallet.sealed", sealed);
-}
-
-// 재부팅 후
-void unseal_wallet() {
-    SealedData sealed = fs_read("wallet.sealed");
-    SealKey sk = EGETKEY(MRENCLAVE_POLICY);  // 같은 CPU, 같은 코드
-    PrivateKey pk = aes_gcm_unseal(&sealed, sk);  // 성공
-    use_key(&pk);
-}`}</pre>
+        <div className="not-prose mb-6"><NoSealingProblemViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">핵심 원칙 4가지</h3>
         <ul>
@@ -102,33 +67,7 @@ void unseal_wallet() {
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">공격 시나리오 &amp; 방어</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 시나리오 1: 공격자가 다른 서버로 sealed data 복사
-// - sealed.bin 파일 훔침
-// - 자기 CPU에서 unseal 시도
-// → 다른 CPU → 다른 Root Key → Seal Key 다름 → 복호화 실패 ✓
-
-// 시나리오 2: 공격자가 같은 서버에서 자기 enclave로 unseal 시도
-// - sealed.bin 파일 접근
-// - 자기 코드 MRENCLAVE_X로 EGETKEY 호출
-// → 다른 MRENCLAVE → 다른 Seal Key → 복호화 실패 ✓
-
-// 시나리오 3: 공격자가 sealed data 조작
-// - sealed.bin의 ciphertext 수정
-// - 정상 enclave가 unseal 시도
-// → AES-GCM MAC 검증 실패 → 에러 반환 ✓
-
-// 시나리오 4: 공격자가 old sealed data 주입 (rollback)
-// - 구버전 sealed.bin 보관
-// - 현재 enclave에 제공
-// → MAC 검증 성공 (같은 key)
-// → BUT: SVN 필드 체크로 탐지 가능
-// → 또는 monotonic counter 사용
-
-// 시나리오 5: 공격자가 CPU 자체 분석 (강력한 물리 공격)
-// - 칩 decapping + SEM/FIB
-// → Root Key 추출 가능성 (매우 어려움)
-// → 수십만 달러 장비·수개월 시간 필요
-// → 실전에선 무시 가능`}</pre>
+        <div className="not-prose mb-6"><AttackScenariosViz /></div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Sealing의 실전 패턴</p>

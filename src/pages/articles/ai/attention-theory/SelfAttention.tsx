@@ -1,18 +1,20 @@
 import { CitationBlock } from '@/components/ui/citation';
+import FormulaNote from '@/components/ui/formula-note';
 import M from '@/components/ui/math';
-import SelfAttnViz from './viz/SelfAttnViz';
-import SelfAttnDetailViz from './viz/SelfAttnDetailViz';
+import SelfAttnScene from './viz/SelfAttnScene';
+import SelfAttnDetailScene from './viz/SelfAttnDetailScene';
 
 export default function SelfAttention() {
   return (
     <section id="self-attention" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Self-Attention & Multi-Head</h2>
-      <div className="not-prose mb-8"><SelfAttnViz /></div>
+      <div className="not-prose mb-8"><SelfAttnScene /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Self-Attention — 입력 시퀀스가 <strong>자기 자신에 대해</strong> 어텐션 수행<br />
-          Q, K, V 모두 같은 입력 X에서 파생 → "Self"<br />
-          Multi-Head — 여러 헤드가 <strong>서로 다른 표현 부분공간</strong>에서 병렬로 어텐션 학습, 더 풍부한 패턴 포착
+          RNN은 이전 상태를 차례대로 넘기며 문맥을 만든다.
+          더 직접적인 방법은 모든 토큰을 한 행렬 <M>{'X'}</M>로 놓고, 각 토큰이 같은 시퀀스의 다른 토큰을 한 번에 보게 하는 것.
+          같은 <M>{'X'}</M>에서 찾는 표현, 비교되는 표현, 전달할 표현을 따로 만들면 이 직접 참조가 학습 가능해진다.
+          이 구조에 붙은 이름이 self-attention.
         </p>
 
         <CitationBlock source="Vaswani et al., 2017 — Attention Is All You Need"
@@ -23,12 +25,36 @@ export default function SelfAttention() {
 
         <h3 className="text-lg font-semibold mt-6 mb-3">Q, K, V 생성</h3>
         <M display>{'Q = X \\cdot \\underbrace{W_Q}_{d_{\\text{model}} \\times d_k}, \\quad K = X \\cdot \\underbrace{W_K}_{d_{\\text{model}} \\times d_k}, \\quad V = X \\cdot \\underbrace{W_V}_{d_{\\text{model}} \\times d_v}'}</M>
+        <FormulaNote
+          meaning="원본 X 하나를 그대로 비교와 전달에 모두 쓰면 역할이 섞인다. 세 투영은 같은 토큰을 질문하는 모습, 비교되는 모습, 전달하는 정보로 나눈다."
+          symbols={[
+            ['X', '입력 시퀀스 행렬. 각 행이 한 토큰 임베딩이다.'],
+            ['W_Q, W_K, W_V', '같은 X에서 서로 다른 역할의 표현을 뽑는 학습 행렬이다.'],
+            ['Q, K, V', 'Q는 찾는 쪽, K는 비교되는 쪽, V는 가중합으로 전달되는 쪽이다.'],
+          ]}
+        />
 
         <h3 className="text-lg font-semibold mt-6 mb-3">Scaled Dot-Product Attention</h3>
         <M display>{'\\text{Attention}(Q,K,V) = \\underbrace{\\text{softmax}\\!\\left(\\frac{Q K^\\top}{\\underbrace{\\sqrt{d_k}}_{\\text{스케일링}}}\\right)}_{\\text{주의 가중치}} \\cdot V'}</M>
+        <FormulaNote
+          meaning="QK^T는 모든 토큰 쌍을 비교한다. softmax는 각 토큰이 어느 위치를 볼지 분포로 만들고, V와의 곱은 그 분포대로 정보를 모은다."
+          symbols={[
+            ['QK^T', 'n개 토큰 사이의 n×n 점수표.'],
+            ['softmax', 'raw 점수를 합 1 분포로 바꾼다. 그래야 V를 비율로 섞을 수 있다.'],
+            ['·V', '선택 분포를 실제 전달 정보에 적용하는 가중합이다.'],
+          ]}
+        />
 
         <h3 className="text-lg font-semibold mt-6 mb-3">Multi-Head Attention</h3>
         <M display>{'\\text{MultiHead}(Q,K,V) = \\underbrace{\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)}_{\\text{모든 헤드 결과 이어붙이기}} \\cdot \\underbrace{W_O}_{d_{\\text{model}} \\times d_{\\text{model}}}'}</M>
+        <FormulaNote
+          meaning="한 head만 쓰면 한 score 공간에서 모든 관계를 처리해야 한다. 여러 head는 차원을 나눠 병렬로 보고, W_O가 그 결과를 다시 섞는다."
+          symbols={[
+            ['head_i', '한 부분공간에서 계산한 attention 출력.'],
+            ['Concat', '여러 head 결과를 원래 폭으로 이어 붙이는 단계.'],
+            ['W_O', 'head별 결과를 다음 layer가 쓰기 좋은 표현으로 다시 섞는 출력 투영.'],
+          ]}
+        />
 
         <div className="grid grid-cols-2 gap-3 my-6 not-prose">
           <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
@@ -53,23 +79,25 @@ export default function SelfAttention() {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Self-Attention 상세 분석</h3>
         <p>
-          입력 X에 세 가중치 행렬을 곱해 Q, K, V를 만든다 (BERT-base: d_model=768, d_k=64).
-          같은 X에서 Q, K, V 모두 파생되므로 "Self" — 시퀀스 내부 관계를 학습한다.
-          시간 복잡도 O(n²·d)이지만 완전 병렬화 가능하여 RNN의 O(n·d²) 순차 처리보다 n &lt; d일 때 유리하다.
+          입력 <M>{'X'}</M>는 토큰 수 <M>{'n'}</M>과 모델 차원 <M>{'d_{model}'}</M>을 가진 행렬.
+          BERT-base에서는 <M>{'d_{model}=768'}</M>, head 하나의 <M>{'d_k=64'}</M>.
+          모든 토큰 쌍을 비교하므로 비용은 <M>{'O(n^2\\cdot d)'}</M>.
+          대신 각 쌍 계산은 동시에 가능해 RNN의 순차 전달보다 병렬화가 쉽다.
         </p>
         <M display>{'\\text{Attention}(Q,K,V) = \\underbrace{\\text{softmax}\\!\\left(\\frac{\\overbrace{Q \\cdot K^\\top}^{\\text{유사도 행렬 (n×n)}}}{\\underbrace{\\sqrt{d_k}}_{\\text{스케일링}}}\\right)}_{\\text{주의 가중치 (확률 분포)}} \\cdot \\underbrace{V}_{\\text{값 (정보)}}'}</M>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Multi-Head의 역할</h3>
         <p>
-          12개 헤드가 독립 W_Q, W_K, W_V로 서로 다른 표현 부분공간에서 병렬 어텐션 학습.
-          구문 관계(주어-동사), 의미 관계(유의어), 위치 관계(직전 토큰), 공참조(대명사-선행어) 등 다양한 관계를 동시 포착한다.
-          블록당 파라미터 약 236만 — 같은 크기에서 단일 헤드 대비 더 풍부한 표현.
+          한 head는 <M>{'64'}</M>차원 폭에서 관계를 본다.
+          12개 head를 두면 서로 다른 <M>{'W_Q,W_K,W_V'}</M>가 병렬로 학습된다.
+          어떤 head는 주어-동사, 어떤 head는 직전 토큰, 어떤 head는 대명사-선행어 같은 패턴에 민감해질 수 있다.
+          마지막 <M>{'W_O'}</M>가 이 결과를 다시 <M>{'768'}</M>차원으로 섞는다.
         </p>
         <M display>{'\\underbrace{\\text{head}_i}_{\\text{i번째 헤드}} = \\text{Attention}(\\underbrace{XW_i^Q}_{\\text{질의}},\\; \\underbrace{XW_i^K}_{\\text{키}},\\; \\underbrace{XW_i^V}_{\\text{값}})'}</M>
         <M display>{'\\text{MultiHead} = \\underbrace{\\text{Concat}(\\text{head}_0, \\ldots, \\text{head}_{11})}_{\\text{12개 헤드 결과 이어붙이기}} \\cdot \\underbrace{W_O}_{\\text{원래 차원으로 복원}}'}</M>
       </div>
 
-      <div className="not-prose my-8"><SelfAttnDetailViz /></div>
+      <div className="not-prose my-8"><SelfAttnDetailScene /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <p className="leading-7">

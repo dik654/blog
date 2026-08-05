@@ -1,5 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import STARKPipelineViz from './viz/STARKPipelineViz';
+import STARKFivePhaseViz from './viz/STARKFivePhaseViz';
 import { PROVE_CODE, PROVE_ANNOTATIONS, VERIFY_CODE, VERIFY_ANNOTATIONS } from './UniSTARKData';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
@@ -32,46 +33,7 @@ export default function UniSTARK({ title, onCodeRef }: { title?: string; onCodeR
           annotations={VERIFY_ANNOTATIONS} />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">STARK 5단계 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// STARK prove pipeline
-
-// Phase 1: Trace commitment
-// - AIR execution trace M: matrix[rows × cols]
-// - M의 각 column을 polynomial로 interpolate
-// - Evaluation domain에서 평가 (LDE extension)
-// - Merkle tree commitment
-// - Root를 transcript에 추가
-
-// Phase 2: Constraint polynomial
-// - AIR constraints → polynomial C(X)
-// - C(X) = AIR_poly(M) / Z_H(X)
-// - Z_H: vanishing polynomial on trace domain
-// - C(X) should be low-degree if constraints hold
-
-// Phase 3: FRI low-degree test
-// - C(X)의 degree 검증
-// - Folding iterations (log N 단계)
-// - Each round: commitment + challenge
-
-// Phase 4: Opening proofs
-// - Random query points
-// - Merkle path + claimed values
-// - Consistency between trace and constraint
-
-// Phase 5: Final checks
-// - Last FRI folding value
-// - Should be constant (degree 0)
-// - Verifier 재검증
-
-// Complexity
-// - Prover: O(n log n) (FFTs)
-// - Verifier: O(log² n)
-// - Proof size: O(log² n × λ)  where λ = security
-
-// Plonky3의 최적화
-// - Polynomial batching
-// - DEEP-ALI variant
-// - Multi-threading
-// - SIMD vector operations`}</pre>
+        <div className="not-prose"><STARKFivePhaseViz /></div>
 
       </div>
     </section>

@@ -1,18 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
-
-const witnessCode = `// Witness = 모든 와이어 값의 할당 (public input + private input + 중간값)
-// 예: x^3 + x + 5 = 35  →  x=3 일 때
-//
-// 와이어:  w0=1(상수), w1=3(x), w2=9(x^2), w3=27(x^3), w4=30(x^3+x+5-5부분), w5=35(출력)
-//
-// 증명자가 해야 할 일:
-//   1. public input (x=3, out=35) 고정
-//   2. 제약 시스템(R1CS)을 순서대로 풀어서 중간 와이어 w2, w3, w4 계산
-//   3. 모든 와이어 값 = "witness"
-//
-// 이 과정이 witness generation이다.
-// 회로가 수백만 개 제약을 가지면, 수백만 개의 와이어를 순서대로 계산해야 한다.`;
+import WitnessConceptViz from './viz/WitnessConceptViz';
 
 const bottleneckData = [
   ['Groth16 (2^20)', '~1.2초', '~3.5초', '~4.7초', '25%'],
@@ -40,12 +27,7 @@ export default function Overview() {
           </p>
         </CitationBlock>
 
-        <CodePanel title="Witness 생성 개념" code={witnessCode}
-          annotations={[
-            { lines: [1, 4], color: 'sky', note: '회로 예시: x^3 + x + 5 = 35' },
-            { lines: [6, 9], color: 'emerald', note: '순서대로 중간 와이어 계산' },
-            { lines: [11, 12], color: 'amber', note: '대규모 회로 = 수백만 와이어' },
-          ]} />
+        <div className="not-prose my-6"><WitnessConceptViz /></div>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Witness 생성 비중</h3>
         <div className="overflow-x-auto">

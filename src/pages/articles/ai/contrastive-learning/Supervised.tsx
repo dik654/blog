@@ -1,4 +1,4 @@
-import SupervisedViz from './viz/SupervisedViz';
+import ContrastiveFormula from './ContrastiveFormula';
 
 export default function Supervised() {
   return (
@@ -13,19 +13,29 @@ export default function Supervised() {
 
         <h3>SupCon Loss 수식</h3>
         <p>
-          {'L_i = -1/|P(i)| · Σ_{p∈P(i)} log( exp(sim(z_i, z_p)/τ) / Σ_{k≠i} exp(sim(z_i, z_k)/τ) )'}<br />
-          P(i) = 배치 내에서 i와 같은 클래스인 샘플 집합.<br />
-          분모는 i를 제외한 모든 샘플(positive + negative) — InfoNCE와 동일 구조.<br />
-          분자에서 P(i)의 각 positive에 대해 개별적으로 log를 취한 뒤 평균 — 이것이 핵심 차이.
+          SimCLR의 한 positive view 대신 같은 label을 가진 batch sample 전체를 positive 집합으로 둔다.
+          따라서 한 batch에 class별 sample이 최소 두 개 이상 들어와야 학습 신호가 생긴다.
         </p>
-
+      </div>
+      <ContrastiveFormula
+        latex={String.raw`\underbrace{\mathcal L_i}_{\text{anchor i의 supervised contrastive 손실}}=-\underbrace{\frac{1}{|P(i)|}\sum_{p\in P(i)}}_{\text{같은 label positive를 평균}}\log\frac{\overbrace{\exp(\operatorname{sim}(z_i,z_p)/\tau)}^{\text{positive 점수}}}{\underbrace{\sum_{k\ne i}\exp(\operatorname{sim}(z_i,z_k)/\tau)}_{\text{batch의 모든 경쟁 후보}}}`}
+        meaning="이 식은 anchor와 같은 label을 가진 positive들을 하나씩 당기고 평균한다. positive 집합으로 평균하는 이유는 같은 class의 여러 변형을 하나의 neighborhood로 만들기 위해서이고, 분모에 모든 후보를 두는 이유는 다른 class와의 상대적 경계를 함께 학습하기 위해서다."
+        symbols={[
+          ['P(i)', 'batch에서 anchor i와 같은 label을 가진 positive index 집합'],
+          ['|P(i)|', 'anchor i가 가진 positive 개수'],
+          ['z_i, z_p', 'anchor와 positive의 normalized projection'],
+          ['tau', 'similarity score의 temperature'],
+          ['k', 'anchor를 제외한 batch의 모든 비교 후보'],
+        ]}
+      />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>CrossEntropy와의 비교</h3>
         <p>
           CE는 출력층 logit을 직접 최적화 — 표현 학습과 분류가 결합되어 있음.<br />
           SupCon은 표현(representation) 학습과 분류를 분리: 1단계에서 SupCon으로 인코더 학습 →
           2단계에서 frozen encoder 위에 linear classifier 학습.<br />
-          결과: CIFAR-10에서 CE 95.0% vs SupCon 96.0%. CIFAR-100에서 CE 75.3% vs SupCon 76.5%.
-          특히 라벨 노이즈(label noise)에 강건 — 노이즈 40%에서 CE 대비 8% 이상 우위.
+          원 논문은 고정된 CIFAR와 ImageNet protocol에서 cross-entropy baseline보다 나은 결과와 corruption robustness를 보고한다.
+          이 결과가 제조 데이터의 모든 label noise에 그대로 성립하는 것은 아니며, 동일 split과 동일 backbone으로 다시 검증해야 한다.
         </p>
 
         <h3>왜 더 Robust한가</h3>
@@ -39,13 +49,9 @@ export default function Supervised() {
         <h3>실전 적용 주의점</h3>
         <p>
           배치 내 클래스 다양성이 핵심 — 한 클래스만 가득하면 negative가 부족.<br />
-          Balanced sampling 필수: 클래스당 K개씩 균등 샘플링 (K=4~8 권장).<br />
-          Temperature τ = 0.07~0.1이 일반적. τ가 너무 작으면 hard negative에만 집중 → 불안정.
+          Batch에 class별 positive가 들어오도록 sampler를 설계하고 class imbalance와 minority oversampling을 별도 기록한다.<br />
+          Temperature가 너무 작으면 가까운 hard negative와 label noise에 집중해 불안정해질 수 있으므로 holdout과 gradient 지표로 고른다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <SupervisedViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

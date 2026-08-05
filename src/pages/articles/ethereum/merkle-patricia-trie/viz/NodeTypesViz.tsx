@@ -13,7 +13,7 @@ export default function NodeTypesViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 175" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Branch Node */}
           <motion.g animate={{ opacity: step === 0 ? 1 : 0.25, x: step === 0 ? 0 : -10 }}
             transition={{ type: 'spring', bounce: 0.2 }}>

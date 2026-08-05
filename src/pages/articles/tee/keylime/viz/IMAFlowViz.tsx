@@ -41,7 +41,7 @@ export default function IMAFlowViz() {
             );
           })}
           {/* Moving hash packet */}
-          <motion.circle r={7} fill={LAYERS[Math.min(step, 3)].color}
+          <motion.circle initial={false} r={7} fill={LAYERS[Math.min(step, 3)].color}
             animate={{
               cx: step < 3 ? 300 : 180,
               cy: LAYERS[Math.min(step, 3)].y + 13,

@@ -1,0 +1,89 @@
+{
+  "run": "2026-07-23-claude-review-backfill-architecture-hybrid-assist",
+  "date": "2026-07-23",
+  "mode": "read-only true-Claude assist review",
+  "scope": {
+    "slug": "llm-architecture-hybrid-linear",
+    "article": "src/pages/articles/ai/llm-architecture-hybrid-linear.tsx",
+    "content_spec": "src/pages/articles/ai/content-specs/llm-architecture-hybrid-linear.md",
+    "test": "tests/llm-architecture-hybrid-linear-contract.spec.ts",
+    "direct_component_consulted": "src/pages/articles/ai/llm-architecture-viz/StateMemoryLedgerLab.tsx",
+    "unique_requested": 1,
+    "unique_accepted_true_claude": 1
+  },
+  "transport": {
+    "connector": "context-manager",
+    "accepted_route": "cm_route_delegate",
+    "workdir": "/home/heru/code/blog",
+    "accepted_identity_rule": "Only a first observed transport header beginning with [claude-code:sonnet was accepted.",
+    "direct_claude_cli_used": false,
+    "fallback_used_for_final_results": false
+  },
+  "summary": {
+    "attempted_executions": 4,
+    "accepted_true_claude_executions": 2,
+    "accepted_unique_slugs": 1,
+    "rejected_or_failed": 2,
+    "confirmed_high": 0,
+    "confirmed_medium": 2,
+    "confirmed_then_fixed": 2,
+    "confirmed_open_at_report_time": 1,
+    "confirmed_open_current": 0
+  },
+  "accepted_reviews": [
+    {
+      "slug": "llm-architecture-hybrid-linear",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 137872ms]",
+      "header_valid": true,
+      "review_focus": "SSM, DeltaNet, Gated DeltaNet, KDA and chunkwise recurrence mathematical/source fidelity",
+      "raw_status": "medium finding",
+      "finding": {
+        "severity": "medium",
+        "location": "src/pages/articles/ai/llm-architecture-hybrid-linear.tsx:145-146 before correction",
+        "claim": "The general matrix-valued recurrence used an ambiguous product notation prod_{j=i+1}^t A_j even though the A_j need not commute.",
+        "minimal_correction": "Write the ordered product A_t A_{t-1} ... A_{i+1}, with later transitions leftmost, or define an explicit time-ordered product.",
+        "independent_disposition": "confirmed_then_fixed",
+        "current_state": "Lines 141-147 now state non-commutativity, write A_t A_{t-1} ... A_{i+1}, explain application order, and define the empty product for i=t."
+      }
+    },
+    {
+      "slug": "llm-architecture-hybrid-linear",
+      "header": "[claude-code:sonnet · L3 · $0.0000 · 58423ms]",
+      "header_valid": true,
+      "review_focus": "Written learning/mobile contract against Playwright enforcement",
+      "raw_status": "medium finding",
+      "finding": {
+        "severity": "medium",
+        "location": "src/pages/articles/ai/content-specs/llm-architecture-hybrid-linear.md:60,93; tests/llm-architecture-hybrid-linear-contract.spec.ts:67",
+        "claim": "The spec promises the exact S,S,S,A cadence, but the test only counts 48 child cells. An all-S, all-A, or wrong-order regression would still pass.",
+        "minimal_correction": "Assert 36 S cells, 12 A cells, and the ordered S,S,S,A sequence, preferably across all 48 cells.",
+        "original_report_time_disposition": "confirmed_open_at_report_time",
+        "independent_disposition": "confirmed_then_fixed",
+        "evidence": "StateMemoryLedgerLab.tsx:61-70 rendered the correct cadence, so the original issue was a regression-oracle gap rather than a current UI output defect.",
+        "current_state": "tests/llm-architecture-hybrid-linear-contract.spec.ts:67-71 now asserts the exact 48-element S,S,S,A sequence and separately requires 36 S cells and 12 A cells."
+      }
+    }
+  ],
+  "rejected_or_failed_attempts": [
+    {
+      "slug": "llm-architecture-hybrid-linear",
+      "route": "cm_route_delegate",
+      "scope": "broad article, direct imports, spec and test review",
+      "result": "error: The operation timed out.",
+      "duration_ms": 257017,
+      "reason": "Timeout; no provider header was observed."
+    },
+    {
+      "slug": "llm-architecture-hybrid-linear",
+      "route": "cm_route_delegate",
+      "scope": "narrow spec-to-test contract review",
+      "result": "error: Unable to connect. Is the computer able to access the url?",
+      "reason": "Connector failure; no provider header was observed."
+    }
+  ],
+  "coverage_note": {
+    "math_and_source_boundary": "The accepted formula pass covered the article's SSM-to-KDA mechanism range and found no other high/medium defect in that range.",
+    "learning_and_test_contract": "The second accepted pass compared the content spec to the contract test and consulted the direct cadence component.",
+    "visual_qa_boundary": "This assist inspected the responsive assertions but did not itself execute Playwright screenshots; it must not be represented as a new screenshot run."
+  }
+}

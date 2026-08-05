@@ -9,8 +9,8 @@ export default function PermissionGating() {
 
         <PermissionMatrixViz />
 
-        {/* ── PermissionMode 3단계 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">PermissionMode — 3단계 권한 모드</h3>
+        {/* ── PermissionMode 작업 범위 ── */}
+        <h3 className="text-xl font-semibold mt-6 mb-3">PermissionMode — 작업 범위 3개와 특수 상태 2개</h3>
         <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
           <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-center">
             <p className="text-sm font-bold text-blue-700 dark:text-blue-300">ReadOnly</p>
@@ -31,7 +31,9 @@ export default function PermissionGating() {
         <p>
           <strong>ReadOnly</strong>: 탐색·이해 단계 — 사용자가 코드베이스를 읽기만 원할 때<br />
           <strong>WorkspaceWrite</strong>: 일반 작업 모드 — 파일 편집 허용, 임의 명령은 사용자 확인<br />
-          <strong>DangerFullAccess</strong>: CI/자동화 모드 — 모든 확인 스킵, 신뢰된 환경 전제
+          <strong>DangerFullAccess</strong>: CI/자동화 모드 — 모든 확인 스킵, 신뢰된 환경 전제<br />
+          <strong>Prompt</strong>: 사용자 결정을 상위 interactive flow에 맡기는 특수 상태<br />
+          <strong>Allow</strong>: 정책이 명시적으로 허용한 특수 상태
         </p>
         <p>
           기본 모드는 <strong>WorkspaceWrite</strong> — 대부분의 개발 워크플로우에 적합<br />
@@ -122,23 +124,24 @@ export default function PermissionGating() {
               <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">3</span>
               <div>
                 <p className="text-sm font-semibold">차액 판정 &mdash; Prompt 승격</p>
-                <p className="text-xs text-muted-foreground"><code className="text-xs">can_prompt()</code> 가능 + DangerFullAccess 요구 시 &rarr; <strong>Prompt</strong> (<code className="text-xs">"Run: {cmd}?"</code>)</p>
+                <p className="text-xs text-muted-foreground"><code className="text-xs">can_prompt()</code> 가능 + DangerFullAccess 요구 시 &rarr; <strong>Prompt</strong> (<code className="text-xs">{`"Run: {cmd}?"`}</code>)</p>
               </div>
             </div>
             <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
               <span className="shrink-0 w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 flex items-center justify-center text-xs font-bold">4</span>
               <div>
                 <p className="text-sm font-semibold">차액 거부</p>
-                <p className="text-xs text-muted-foreground">승격 불가 시 <strong>Deny</strong> &mdash; <code className="text-xs">"{tool} requires {required} mode (current: {current})"</code></p>
+                <p className="text-xs text-muted-foreground">승격 불가 시 <strong>Deny</strong> &mdash; <code className="text-xs">{`"{tool} requires {required} mode (current: {current})"`}</code></p>
               </div>
             </div>
           </div>
         </div>
         <p>
-          <strong>비교 연산자</strong>: <code>PermissionMode</code>에 <code>PartialOrd</code> 구현 —
-          ReadOnly &lt; WorkspaceWrite &lt; DangerFullAccess<br />
-          <code>current &gt;= required</code>가 참이면 즉시 Allow<br />
-          차이가 있으면 Prompt 가능 여부 판단 — 사용자 승인으로 임시 승격 허용
+          현재 enum 선언 순서는 ReadOnly &lt; WorkspaceWrite &lt; DangerFullAccess &lt; Prompt &lt; Allow이고,
+          파생된 <code>PartialOrd</code>가 이 다섯 값을 그대로 비교한다. 이 때문에
+          <code>current &gt;= required</code>만으로 판정하면 Prompt가 DangerFullAccess보다 높은 권한처럼
+          취급되는 결함이 생긴다. <strong>Prompt와 Allow는 작업 범위의 서열이 아니므로</strong> 범위 비교 전에
+          별도 분기해야 한다. 현재 글은 이 수정이 이미 구현됐다고 가정하지 않는다.
         </p>
 
         {/* ── 경로 기반 게이팅 ── */}

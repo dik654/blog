@@ -1,4 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
+import MerkleTreeViz from './viz/MerkleTreeViz';
 
 const batchKernel = `// 배치 Poseidon 해싱 CUDA 커널
 // N개의 독립 해시 인스턴스를 동시 처리
@@ -47,19 +48,6 @@ __global__ void poseidon_batch(
     if (lane == 1) outputs[hash_id] = state[1];     // 출력: state[1]
 }`;
 
-const merkleCode = `// GPU Merkle 트리: 레벨별 배치 해싱 (2-ary, 리프 8개)
-//
-// Level 3 (리프):  [L0] [L1] [L2] [L3] [L4] [L5] [L6] [L7]
-// Level 2:         H(L0,L1)  H(L2,L3)  H(L4,L5)  H(L6,L7)  → N=4
-// Level 1:         H(H01,H23)    H(H45,H67)                  → N=2
-// Level 0 (루트):  H(H0123, H4567)                            → N=1
-//
-// Neptune: poseidon_batch<<<N, width>>> 를 레벨마다 호출
-// 전체 비용: O(리프 수)  — 레벨별 N이 반감
-//
-// 최적화: 상위 레벨(N 작음)은 GPU 활용도 저조
-// → 하위 레벨만 GPU, 상위 레벨은 CPU 처리 (하이브리드)`;
-
 export default function BatchHash() {
   return (
     <section id="batch-hash" className="mb-16 scroll-mt-20">
@@ -82,11 +70,7 @@ export default function BatchHash() {
           Neptune은 이 패턴으로 레벨마다 커널을 호출한다.<br />
           상위 레벨은 해시 수가 적어 GPU 활용도가 떨어지므로 CPU와 분담하기도 한다.
         </p>
-        <CodePanel title="GPU Merkle 트리 레벨별 구축" code={merkleCode} annotations={[
-          { lines: [3, 6], color: 'sky', note: '레벨별 해시 수 반감' },
-          { lines: [8, 9], color: 'emerald', note: 'Neptune: 레벨당 커널 1회' },
-          { lines: [11, 12], color: 'amber', note: '하이브리드: GPU + CPU 분담' },
-        ]} />
+        <MerkleTreeViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Neptune과 ec-gpu</h3>
         <p>

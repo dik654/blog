@@ -1,5 +1,6 @@
 import Plonky3CrateMapViz from '../components/Plonky3CrateMapViz';
 import CrateArchViz from './viz/CrateArchViz';
+import SmallFieldRevolutionViz from './viz/SmallFieldRevolutionViz';
 import CodePanel from '@/components/ui/code-panel';
 import { CRATE_MAP_CODE, BABYBEAR_CODE, CONFIG_CODE } from './OverviewData';
 import { crateMapAnnotations, babyBearAnnotations, configAnnotations } from './OverviewAnnotations';
@@ -85,32 +86,7 @@ export default function Overview({ title, onCodeRef }: { title?: string; onCodeR
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Small Field 혁명</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 전통 SNARK: large field (254-bit, 256-bit)
-// - BN254, BLS12-381
-// - Pairing-friendly
-// - EVM verify 가능
-
-// Plonky3 small field (31-bit, 64-bit)
-// - BabyBear: 2^31 - 2^27 + 1
-// - Mersenne31: 2^31 - 1
-// - Goldilocks: 2^64 - 2^32 + 1
-// - KoalaBear: 2^31 - 2^24 + 1
-
-// 장점
-// ✓ 메모리 효율 (4-8x 적음)
-// ✓ 연산 속도 (Montgomery mult 빠름)
-// ✓ GPU/AVX 친화적
-// ✓ 더 큰 circuit 가능
-
-// 단점
-// ✗ Extension field 필요 (최소 128-bit security)
-// ✗ Pairing 불가 (bridging 복잡)
-// ✗ EVM verify 비쌈 (non-native field)
-
-// 사용 사례
-// - zkVM (Succinct SP1, Valida, Risc Zero)
-// - Recursive proofs (intermediate)
-// - STARK-based prover acceleration`}</pre>
+        <div className="not-prose"><SmallFieldRevolutionViz /></div>
 
       </div>
     </section>

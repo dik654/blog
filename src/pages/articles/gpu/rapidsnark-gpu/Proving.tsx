@@ -1,29 +1,6 @@
 import CodePanel from '@/components/ui/code-panel';
 import { CitationBlock } from '@/components/ui/citation';
-
-const pipelineCode = `// rapidsnark Groth16 증명 파이프라인
-//
-// Step 1: 다항식 평가 (NTT)
-//   a(x) = NTT(A * witness)   // A 행렬과 witness 내적 → NTT
-//   b(x) = NTT(B * witness)   // B 행렬과 witness 내적 → NTT
-//   c(x) = NTT(C * witness)   // C 행렬과 witness 내적 → NTT
-//
-// Step 2: 몫 다항식 H(x) 계산
-//   h_eval = (a * b - c) / z   // evaluation domain에서 원소별 나눗셈
-//   // z = vanishing polynomial (모든 제약 루트의 곱)
-//
-// Step 3: 역변환 (INTT)
-//   H_coeffs = INTT(h_eval)    // H(x) 계수 형태로 복원
-//
-// Step 4: MSM (증명 원소 계산) ← 전체 시간의 70~80%
-//   pi_A = MSM(witness, pk.A_points)    // [A]_1 in G1
-//   pi_B = MSM(witness, pk.B_points)    // [B]_2 in G2
-//   pi_C = MSM(witness, pk.C_points)    // [C]_1 in G1
-//   pi_H = MSM(H_coeffs, pk.H_points)  // [H]_1 in G1
-//
-// Step 5: 증명 조립
-//   proof = { pi_A, pi_B, pi_C }       // 3개 타원곡선 점
-//   // pi_C에 pi_H가 합산됨`;
+import Groth16PipelineViz from './viz/Groth16PipelineViz';
 
 const gpuMsmCode = `// GPU MSM 오프로드 (rapidsnark GPU 백엔드)
 //
@@ -56,13 +33,7 @@ export default function Proving() {
           MSM으로 타원곡선 위의 증명 원소를 계산한다. MSM이 전체 시간의 <strong>70~80%</strong>를
           차지하므로, GPU 가속의 핵심 타깃이다.
         </p>
-        <CodePanel title="Groth16 증명 파이프라인 5단계" code={pipelineCode} annotations={[
-          { lines: [3, 6], color: 'sky', note: 'Step 1: NTT로 다항식 평가' },
-          { lines: [8, 10], color: 'emerald', note: 'Step 2: H(x) = (A*B - C) / Z' },
-          { lines: [12, 13], color: 'amber', note: 'Step 3: INTT로 계수 복원' },
-          { lines: [15, 19], color: 'violet', note: 'Step 4: MSM 4회 (병목)' },
-          { lines: [21, 23], color: 'rose', note: 'Step 5: 증명 조립' },
-        ]} />
+        <Groth16PipelineViz />
         <p>
           GPU 백엔드는 MSM을 CUDA 커널로 오프로드한다.<br />
           Pippenger 버킷 방식을 사용하며, 스칼라와 포인트를 GPU 메모리로 전송한 뒤

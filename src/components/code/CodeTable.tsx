@@ -13,11 +13,12 @@ export default function CodeTable({
   annotRefs: React.MutableRefObject<Map<number, HTMLTableRowElement>>;
   onFlowOpen: () => void;
 }) {
+  const lineStart = codeRef.lineStart ?? 1;
   return (
-    <table className="w-full border-collapse font-mono text-[12px] leading-5">
+    <table className="min-w-max w-full border-collapse font-mono text-[11px] leading-[17px] md:text-[12px] md:leading-5">
       <tbody>
         {codeRef.code.split('\n').map((line, i) => {
-          const ln      = i + 1;
+          const ln      = lineStart + i;
           const annot   = annotations.find(a => ln >= a.lines[0] && ln <= a.lines[1]);
           const annotIdx = annot ? annotations.indexOf(annot) : -1;
           const isStart = annot && ln === annot.lines[0];
@@ -33,14 +34,14 @@ export default function CodeTable({
               className={`${!c && !hl ? 'hover:bg-[#f6f8fa] dark:hover:bg-[#161b22]' : ''} ${c && flowNodes ? 'cursor-pointer' : ''}`}
               onClick={c && flowNodes ? () => onFlowOpen() : undefined}
             >
-              <td className="select-none text-right pr-2 pl-4 py-0 text-[11px] text-[#57606a] dark:text-[#636e7b] w-16 align-top border-r border-[#eaecef] dark:border-[#21262d]">
+              <td className="w-8 select-none border-r border-[#eaecef] py-0 pl-0.5 pr-1 text-right text-[9px] align-top text-[#57606a] dark:border-[#21262d] dark:text-[#636e7b] md:w-16 md:pl-4 md:pr-2 md:text-[11px]">
                 <span className="flex items-center justify-end gap-1">
-                  {isStart && <span className="text-[10px] font-bold leading-none" style={{ color: c!.dot }}>{CIRCLES[annotIdx]}</span>}
+                  {isStart && <span className="text-[9px] font-bold leading-none md:text-[10px]" style={{ color: c!.dot }}>{CIRCLES[annotIdx]}</span>}
                   <span>{ln}</span>
                 </span>
               </td>
-              <td className="pl-5 pr-5 py-0 whitespace-pre align-top text-[#24292f] dark:text-[#e6edf3]"
-                style={c ? { borderLeft: `3px solid ${c.border}` } : hl ? { borderLeft: '3px solid #d4a72c' } : { paddingLeft: '23px' }}>
+              <td className="whitespace-pre py-0 pl-1 pr-2 align-top text-[#24292f] dark:text-[#e6edf3] md:pl-5 md:pr-5"
+                style={c ? { borderLeft: `3px solid ${c.border}` } : hl ? { borderLeft: '3px solid #d4a72c' } : { borderLeft: '3px solid transparent' }}>
                 <CodeLine text={line} lang={codeRef.lang} />
               </td>
             </tr>

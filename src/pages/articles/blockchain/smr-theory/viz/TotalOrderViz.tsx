@@ -30,10 +30,10 @@ export default function TotalOrderViz() {
           {step >= 1 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {/* m1 from P1 */}
-              <circle cx={100} cy={Y[0]} r={6} fill={`${C3}20`} stroke={C3} strokeWidth={1} />
+              <circle cx={100} cy={Y[0]} r={10} fill={`${C3}20`} stroke={C3} strokeWidth={1} />
               <text x={100} y={Y[0] + 3} textAnchor="middle" fontSize={10} fontWeight={500} fill={C3}>m1</text>
               {/* m2 from P2 */}
-              <circle cx={130} cy={Y[1]} r={6} fill={`${C2}20`} stroke={C2} strokeWidth={1} />
+              <circle cx={130} cy={Y[1]} r={10} fill={`${C2}20`} stroke={C2} strokeWidth={1} />
               <text x={130} y={Y[1] + 3} textAnchor="middle" fontSize={10} fontWeight={500} fill={C2}>m2</text>
             </motion.g>
           )}
@@ -48,9 +48,9 @@ export default function TotalOrderViz() {
           {step >= 3 && PROCS.map((_, i) => (
             <motion.g key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1, type: 'spring', bounce: 0.2 }}>
-              <circle cx={300} cy={Y[i]} r={6} fill={`${C3}20`} stroke={C3} strokeWidth={0.8} />
+              <circle cx={300} cy={Y[i]} r={10} fill={`${C3}20`} stroke={C3} strokeWidth={0.8} />
               <text x={300} y={Y[i] + 3} textAnchor="middle" fontSize={10} fill={C3}>m1</text>
-              <circle cx={340} cy={Y[i]} r={6} fill={`${C2}20`} stroke={C2} strokeWidth={0.8} />
+              <circle cx={340} cy={Y[i]} r={10} fill={`${C2}20`} stroke={C2} strokeWidth={0.8} />
               <text x={340} y={Y[i] + 3} textAnchor="middle" fontSize={10} fill={C2}>m2</text>
               <text x={370} y={Y[i] + 3} fontSize={10} fill="var(--muted-foreground)">✓</text>
             </motion.g>

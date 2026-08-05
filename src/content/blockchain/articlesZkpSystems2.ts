@@ -1,11 +1,24 @@
 import type { Article } from '../types';
 
 export const zkpSystems2Articles: Article[] = [
-  // ── Bulletproofs (투명 셋업, 기초) ──
+  // ── Bulletproofs — 개념 ──
+  {
+    slug: 'bulletproofs-concept',
+    title: 'Bulletproofs 개념: IPA 와 Range Proof 이론',
+    subcategory: 'zkp-bp-concept',
+    sections: [
+      { id: 'overview', title: '왜 Bulletproofs 인가' },
+      { id: 'inner-product', title: 'Inner Product Argument — O(log n)' },
+      { id: 'range-proof', title: 'Range Proof 이론' },
+    ],
+    component: () => import('@/pages/articles/blockchain/bulletproofs-concept'),
+  },
+
+  // ── Bulletproofs — dalek 구현체 분석 ──
   {
     slug: 'bulletproofs',
-    title: 'Bulletproofs: 투명 셋업 범위 증명 (Inner Product Argument)',
-    subcategory: 'zkp-bp-concept',
+    title: 'Bulletproofs 구현체: dalek-cryptography/bulletproofs 분석',
+    subcategory: 'zkp-bp-impl',
     sections: [
       { id: 'overview', title: '개요 & 핵심 구조' },
       { id: 'inner-product', title: '내적 인수 증명 (O(log n))' },
@@ -43,14 +56,31 @@ export const zkpSystems2Articles: Article[] = [
     component: () => import('@/pages/articles/blockchain/proofofsql'),
   },
 
-  // ── Folding (재귀 증명) ──
+  // ── Folding (재귀 증명) — 개념 ──
   {
-    slug: 'nova',
-    title: 'Nova: NIFS 폴딩 기반 재귀 증명 (IVC)',
+    slug: 'nova-concept',
+    title: 'Nova 개념: IVC 와 NIFS 폴딩 이론',
     subcategory: 'zkp-nova-concept',
     sections: [
+      { id: 'overview', title: 'IVC & Folding Scheme' },
+      { id: 'relaxed-r1cs', title: 'Relaxed R1CS — 폴딩에 닫힌 형태' },
+      { id: 'nifs', title: 'NIFS — 비대화형 폴딩 프로토콜' },
+    ],
+    component: () => import('@/pages/articles/blockchain/nova-concept'),
+  },
+
+  // ── Folding — microsoft/Nova 구현체 분석 ──
+  {
+    slug: 'nova',
+    title: 'Nova 구현체: microsoft/Nova-snark 코드 분석',
+    subcategory: 'zkp-nova-impl',
+    sections: [
       { id: 'overview', title: '개요 & IVC 폴딩 구조' },
+      { id: 'relaxed-r1cs', title: 'Relaxed R1CS — 폴딩 가능한 형태' },
       { id: 'nifs', title: 'NIFS & prove_step (실제 구현)' },
+      { id: 'recursive-circuit', title: 'NovaAugmentedCircuit — 재귀 검증 회로' },
+      { id: 'spartan', title: 'Spartan 압축 SNARK — 최종 단계' },
+      { id: 'use-cases', title: '활용 & 비교 (Halo2 누적, ProtoStar)' },
     ],
     component: () => import('@/pages/articles/blockchain/nova'),
   },

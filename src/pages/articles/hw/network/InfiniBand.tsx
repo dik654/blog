@@ -64,115 +64,100 @@ export default function InfiniBand() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">InfiniBand 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// InfiniBand (IB):
+        <h3 className="text-xl font-semibold mt-8 mb-3">역사</h3>
+        <ul className="leading-7">
+          <li>1999 — IBTA (InfiniBand Trade Association) 결성</li>
+          <li>2000s — HPC 시스템 보급</li>
+          <li>2010s — Mellanox 지배</li>
+          <li>2019 — NVIDIA 가 Mellanox 인수</li>
+          <li>2020s — AI 클러스터 표준</li>
+        </ul>
 
-// History:
-// - 1999: IBTA (InfiniBand Trade Association)
-// - 2000s: HPC systems
-// - 2010s: Mellanox dominance
-// - 2019: NVIDIA acquires Mellanox
-// - 2020s: AI cluster standard
+        <h3 className="text-xl font-semibold mt-8 mb-3">아키텍처</h3>
+        <p className="leading-7">
+          switched fabric 구조. Ethernet 기반 아님. 네이티브 RDMA, 설계 자체가 lossless.
+        </p>
 
-// Architecture:
-// - switched fabric
-// - not Ethernet-based
-// - native RDMA
-// - lossless by design
+        <h3 className="text-xl font-semibold mt-8 mb-3">핵심 구성 요소</h3>
+        <ul className="leading-7">
+          <li><strong>HCA (Host Channel Adapter)</strong> — NIC 등가물. 하드웨어 RDMA. 서버당 1 개.</li>
+          <li><strong>Switch</strong> — fabric 스위치. low latency (&lt;100 ns), cut-through forwarding.</li>
+          <li><strong>Cables</strong> — copper DAC 또는 fiber AOC. Ethernet 보다 reach 짧고 비싸지만 빠르다.</li>
+        </ul>
 
-// Key components:
-// 1. HCA (Host Channel Adapter):
-//    - NIC equivalent
-//    - hardware RDMA
-//    - per-server
-//
-// 2. Switch:
-//    - fabric fabric
-//    - low latency (<100 ns)
-//    - cut-through forwarding
-//
-// 3. Cables:
-//    - copper (DAC) or fiber (AOC)
-//    - shorter reach than Ethernet
-//    - expensive but fast
+        <h3 className="text-xl font-semibold mt-8 mb-3">세대별 속도</h3>
+        <ul className="leading-7">
+          <li>SDR (2003) — 10 Gbps</li>
+          <li>DDR (2005) — 20 Gbps</li>
+          <li>QDR (2008) — 40 Gbps</li>
+          <li>FDR (2011) — 56 Gbps</li>
+          <li>EDR (2014) — 100 Gbps</li>
+          <li>HDR (2018) — 200 Gbps</li>
+          <li>NDR (2022) — 400 Gbps</li>
+          <li>XDR (2024) — 800 Gbps</li>
+        </ul>
 
-// Speed evolution:
-// - SDR (2003): 10 Gbps
-// - DDR (2005): 20 Gbps
-// - QDR (2008): 40 Gbps
-// - FDR (2011): 56 Gbps
-// - EDR (2014): 100 Gbps
-// - HDR (2018): 200 Gbps
-// - NDR (2022): 400 Gbps
-// - XDR (2024): 800 Gbps
+        <h3 className="text-xl font-semibold mt-8 mb-3">성능 특성</h3>
+        <ul className="leading-7">
+          <li>switch hop latency — 300~600 ns</li>
+          <li>end-to-end — &lt;1~2 μs</li>
+          <li>message rate — 2억+ msg/s</li>
+          <li>overhead — ~3% (Ethernet 의 ~10% 대비)</li>
+        </ul>
 
-// Performance characteristics:
-// - latency: 300-600 ns switch hop
-// - end-to-end: <1-2 μs
-// - message rate: 200M+ msg/s
-// - overhead: ~3% (vs ~10% Ethernet)
+        <h3 className="text-xl font-semibold mt-8 mb-3">NVLink vs InfiniBand</h3>
+        <ul className="leading-7">
+          <li><strong>NVLink (노드 내)</strong> — GPU-to-GPU 직접. 900 GB/s (H100), 1.8 TB/s (B200). 매우 짧은 거리. NVLink Switch 로 256-GPU 확장.</li>
+          <li><strong>InfiniBand (노드 간)</strong> — node-to-node. 400~800 Gbps. 100m+ 거리. 1000+ 노드 확장.</li>
+        </ul>
 
-// NVLink vs InfiniBand:
-//
-// NVLink (inside node):
-// - GPU-to-GPU direct
-// - 900 GB/s (H100)
-// - 1.8 TB/s (B200)
-// - very short distance
-// - NVLink Switch for 256-GPU
+        <h3 className="text-xl font-semibold mt-8 mb-3">NVIDIA DGX 토폴로지</h3>
+        <ul className="leading-7">
+          <li><strong>Single DGX H100</strong> — 8× H100 + NVLink (GPU 간 900 GB/s) + 4× ConnectX-7 (400G IB).</li>
+          <li><strong>DGX SuperPOD</strong> — 127 DGX H100 (1016 GPU). IB fat-tree, GPU 당 400 Gbps. 수백 개 IB switch.</li>
+        </ul>
 
-// InfiniBand (between nodes):
-// - node-to-node
-// - 400-800 Gbps
-// - longer distance (100m+)
-// - scales to 1000s of nodes
+        <h3 className="text-xl font-semibold mt-8 mb-3">용도</h3>
+        <ul className="leading-7">
+          <li>AI 학습 (필수)</li>
+          <li>HPC 시뮬레이션</li>
+          <li>금융 trading</li>
+          <li>과학 계산</li>
+          <li>일부 스토리지 시스템</li>
+        </ul>
 
-// NVIDIA DGX topology:
-// Single DGX H100:
-// - 8× H100 + NVLink
-// - 900 GB/s between GPUs
-// - 4× ConnectX-7 (400G IB)
-//
-// DGX SuperPOD:
-// - 127 DGX H100 (1016 GPUs)
-// - IB fat-tree topology
-// - 400 Gbps per GPU
-// - 100s of IB switches
+        <h3 className="text-xl font-semibold mt-8 mb-3">대안</h3>
+        <ul className="leading-7">
+          <li>Ultra Ethernet — 2024 신규</li>
+          <li>RoCE v2 — 성숙</li>
+          <li>Slingshot (HPE Cray)</li>
+        </ul>
 
-// Use cases:
-// ✓ AI training (required)
-// ✓ HPC simulations
-// ✓ Financial trading
-// ✓ Scientific computing
-// ✓ Some storage systems
+        <h3 className="text-xl font-semibold mt-8 mb-3">가격</h3>
+        <ul className="leading-7">
+          <li>NDR HCA — $2K~$3K</li>
+          <li>64-포트 스위치 — $50K~$100K</li>
+          <li>케이블 — 개당 $300~$1,000</li>
+          <li>full cluster — $1M+</li>
+        </ul>
 
-// Alternatives:
-// - Ultra Ethernet (new, 2024)
-// - RoCE v2 (mature)
-// - Slingshot (HPE Cray)
+        <h3 className="text-xl font-semibold mt-8 mb-3">2024 현황</h3>
+        <ul className="leading-7">
+          <li>InfiniBand NDR 표준</li>
+          <li>XDR rolling out (2024~2025)</li>
+          <li>Ethernet 800G 추격</li>
+          <li>BlueField DPU (smart NIC)</li>
+          <li>UEC (Ultra Ethernet Consortium)</li>
+        </ul>
 
-// Cost:
-// - NDR HCA: $2K-3K
-// - 64-port switch: $50K-100K
-// - cables: $300-1000 each
-// - full cluster: $1M+
-// - premium but required for AI
-
-// 2024 state:
-// - InfiniBand NDR standard
-// - XDR rolling out (2024-2025)
-// - Ethernet catching up (800G)
-// - BlueField DPUs (smart NICs)
-// - UEC (Ultra Ethernet Consortium)
-
-// Software stack:
-// - OFED (OpenFabrics Enterprise Distribution)
-// - MOFED (Mellanox OFED)
-// - UCX
-// - NCCL (NVIDIA)
-// - MPI implementations`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">소프트웨어 스택</h3>
+        <ul className="leading-7">
+          <li>OFED (OpenFabrics Enterprise Distribution)</li>
+          <li>MOFED (Mellanox OFED)</li>
+          <li>UCX</li>
+          <li>NCCL (NVIDIA)</li>
+          <li>MPI 구현체</li>
+        </ul>
         <p className="leading-7">
           InfiniBand: <strong>HPC/AI interconnect, 400-800 Gbps NDR/XDR</strong>.<br />
           latency &lt;1μs, 900 GB/s NVLink + 400G IB typical (DGX).<br />

@@ -56,10 +56,10 @@ function Step0() {
         <text x={357} y={118} textAnchor="middle" fontSize={9} fill="#8b5cf6" fontWeight={600}>상관: ~0.75</text>
         {/* 바 비교 */}
         <rect x={40} y={124} width={170} height={10} rx={5} fill="var(--muted)" fillOpacity={0.15} />
-        <motion.rect x={40} y={124} width={0} height={10} rx={5} fill="#3b82f6" fillOpacity={0.3}
+        <motion.rect initial={false} x={40} y={124} width={0} height={10} rx={5} fill="#3b82f6" fillOpacity={0.3}
           animate={{ width: 144 }} transition={{ delay: 0.5, duration: 0.4 }} />
         <rect x={275} y={124} width={170} height={10} rx={5} fill="var(--muted)" fillOpacity={0.15} />
-        <motion.rect x={275} y={124} width={0} height={10} rx={5} fill="#8b5cf6" fillOpacity={0.3}
+        <motion.rect initial={false} x={275} y={124} width={0} height={10} rx={5} fill="#8b5cf6" fillOpacity={0.3}
           animate={{ width: 127 }} transition={{ delay: 0.5, duration: 0.4 }} />
       </motion.g>
       {/* 최적 */}
@@ -146,7 +146,7 @@ function Step2() {
             transition={{ delay: i * 0.08 }}>
             <text x={15} y={y + 13} fontSize={8} fontWeight={600} fill="var(--foreground)">{d.n}개</text>
             <rect x={50} y={y} width={maxW} height={18} rx={3} fill="var(--muted)" fillOpacity={0.08} />
-            <motion.rect x={50} y={y} width={0} height={18} rx={3} fill={d.color} fillOpacity={0.25}
+            <motion.rect initial={false} x={50} y={y} width={0} height={18} rx={3} fill={d.color} fillOpacity={0.25}
               animate={{ width: barW }} transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }} />
             <text x={55 + barW} y={y + 13} fontSize={8} fontWeight={700} fill={d.color}>{d.score}</text>
             {d.delta !== '-' && (

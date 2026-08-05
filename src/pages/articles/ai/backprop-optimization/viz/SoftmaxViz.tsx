@@ -8,16 +8,16 @@ export default function SoftmaxViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 500 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* h bars */}
           {H.map((v, i) => {
             const by = 20 + i * 38;
             const barW = Math.abs(v) * 20;
             return (
               <g key={i}>
-                <text x={28} y={by + 14} textAnchor="end" fontSize={9} fontWeight={500} fill={COLORS[i]}>{LABELS[i]}</text>
-                <rect x={35} y={by} width={barW} height={20} rx={3} fill={`${COLORS[i]}25`} stroke={COLORS[i]} strokeWidth={0.8} />
-                <text x={40 + barW} y={by + 14} fontSize={9} fill={COLORS[i]}>h={v}</text>
+                <text x={55} y={by + 14} textAnchor="end" fontSize={9} fontWeight={500} fill={COLORS[i]}>{LABELS[i]}</text>
+                <rect x={62} y={by} width={barW} height={20} rx={3} fill={`${COLORS[i]}25`} stroke={COLORS[i]} strokeWidth={0.8} />
+                <text x={67 + barW} y={by + 14} fontSize={9} fill={COLORS[i]}>h={v}</text>
               </g>
             );
           })}
@@ -49,7 +49,7 @@ export default function SoftmaxViz() {
               <motion.g key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={sp}>
                 <rect x={260} y={by} width={barW} height={20} rx={3} fill={`${COLORS[i]}30`} stroke={COLORS[i]} strokeWidth={1} />
                 <text x={265 + barW} y={by + 14} fontSize={9} fontWeight={600} fill={COLORS[i]}>{(v * 100).toFixed(0)}%</text>
-                {i === 0 && <text x={395} y={by + 14} fontSize={9} fill="#ef4444">← 잘못된 예측!</text>}
+                {i === 0 && <text x={430} y={by + 14} fontSize={9} fill="#ef4444">← 잘못된 예측!</text>}
               </motion.g>
             );
           })}

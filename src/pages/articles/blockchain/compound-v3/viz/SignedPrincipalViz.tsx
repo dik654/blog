@@ -19,8 +19,10 @@ export default function SignedPrincipalViz() {
           return (
             <g key={v}>
               <line x1={x} y1={125} x2={x} y2={135} stroke="var(--foreground)" strokeWidth={0.8} />
-              <text x={x} y={150} textAnchor="middle" fontSize={7}
-                fill="var(--muted-foreground)">{v}</text>
+              {v !== 0 && (
+                <text x={x} y={150} textAnchor="middle" fontSize={7}
+                  fill="var(--muted-foreground)">{v}</text>
+              )}
             </g>
           );
         })}

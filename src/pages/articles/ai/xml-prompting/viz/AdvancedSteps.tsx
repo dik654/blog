@@ -9,15 +9,15 @@ export function StepThinking() {
       <rect x={80} y={20} width={300} height={150} rx={8}
         fill={`${CV}08`} stroke={CV} strokeWidth={1.5} />
       <text x={90} y={40} fontSize={9} fontFamily={MF}
-        fontWeight={600} fill={CV}>{'<thinking>'}</text>
-      {['1. 문제를 분석하면...', '2. 조건 A와 B를 비교하면...', '3. 따라서 결론은...'].map((t, i) => (
+        fontWeight={600} fill={CV}>{'<evidence>'}</text>
+      {['문서 A · 3절', '실험 B · 표 2', '반례 C · 입력 17'].map((t, i) => (
         <motion.text key={t} x={105} y={62 + i * 20}
           fontSize={9} fontFamily={MF} fill="var(--foreground)"
           initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.15 + i * 0.15 }}>{t}</motion.text>
       ))}
       <text x={90} y={130} fontSize={9} fontFamily={MF}
-        fontWeight={600} fill={CV}>{'</thinking>'}</text>
+        fontWeight={600} fill={CV}>{'</evidence>'}</text>
       <motion.text x={90} y={155} fontSize={9} fontWeight={600} fill={CE}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}>

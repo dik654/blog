@@ -13,7 +13,11 @@ export default function AggregationViz() {
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
               <text x={260} y={20} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">GroupBy: 그룹별 통계량 → 행 단위 피처</text>
               {/* Raw table */}
-              <ModuleBox x={20} y={35} w={130} h={135} label="주문 테이블" sub="" color={COLORS.group} />
+              <rect x={20} y={35} width={130} height={135} rx={8}
+                fill="var(--card)" stroke={COLORS.group} strokeWidth={0.8} />
+              <text x={85} y={54} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS.group}>
+                주문 테이블
+              </text>
               {[
                 { user: 'A', amount: '15,000' },
                 { user: 'A', amount: '22,000' },
@@ -23,8 +27,8 @@ export default function AggregationViz() {
               ].map((row, i) => (
                 <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   transition={{ ...sp, delay: i * 0.06 }}>
-                  <text x={40} y={73 + i * 20} fontSize={8} fill={row.user === 'A' ? COLORS.group : COLORS.agg}>{row.user}</text>
-                  <text x={100} y={73 + i * 20} textAnchor="end" fontSize={8} fill="var(--foreground)">{row.amount}</text>
+                  <text x={40} y={76 + i * 20} fontSize={8} fill={row.user === 'A' ? COLORS.group : COLORS.agg}>{row.user}</text>
+                  <text x={130} y={76 + i * 20} textAnchor="end" fontSize={8} fill="var(--foreground)">{row.amount}</text>
                 </motion.g>
               ))}
               {/* Arrow */}

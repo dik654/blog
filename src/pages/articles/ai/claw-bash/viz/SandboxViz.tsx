@@ -1,65 +1,59 @@
-import { ModuleBox, DataBox } from '@/components/viz/boxes';
+import { ArrowDown, ArrowRight, Box, Terminal, TriangleAlert } from 'lucide-react';
 
 export default function SandboxViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">bubblewrap 샌드박스 — 네임스페이스 격리</text>
-
-        {/* 전체 시스템 */}
-        <rect x={30} y={48} width={500} height={248} rx={10}
-          fill="var(--muted)" opacity={0.2} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={46} y={68} fontSize={11} fontWeight={700} fill="var(--foreground)">Host System</text>
-
-        {/* read-only 바인드 */}
-        <DataBox x={50} y={82} w={108} h={34}
-          label="/usr (ro)"
-          sub="read-only"
-          color="#10b981" />
-        <DataBox x={166} y={82} w={108} h={34}
-          label="/lib (ro)"
-          sub="read-only"
-          color="#10b981" />
-        <DataBox x={282} y={82} w={108} h={34}
-          label="/bin (ro)"
-          sub="read-only"
-          color="#10b981" />
-        <DataBox x={398} y={82} w={108} h={34}
-          label="/etc (ro)"
-          sub="read-only"
-          color="#10b981" />
-
-        {/* 샌드박스 컨테이너 */}
-        <rect x={50} y={134} width={460} height={150} rx={8}
-          fill="#3b82f6" fillOpacity={0.1} stroke="#3b82f6" strokeWidth={1.5} strokeDasharray="4 3" />
-        <text x={280} y={156} textAnchor="middle" fontSize={11} fontWeight={700} fill="#3b82f6">
-          bwrap 샌드박스 (격리)
-        </text>
-
-        <ModuleBox x={70} y={168} w={180} h={48}
-          label="/workspace (rw)"
-          sub="유일한 쓰기 경로"
-          color="#f59e0b" />
-
-        <DataBox x={270} y={174} w={110} h={36}
-          label="/tmp (tmpfs)"
-          sub="임시"
-          color="#8b5cf6" />
-        <DataBox x={390} y={174} w={110} h={36}
-          label="/proc"
-          sub="격리됨"
-          color="#8b5cf6" />
-
-        <rect x={70} y={228} width={420} height={36} rx={4}
-          fill="#ef4444" fillOpacity={0.1} stroke="#ef4444" strokeWidth={0.8} />
-        <text x={280} y={250} textAnchor="middle" fontSize={10} fontWeight={700} fill="#ef4444">
-          --unshare-net · --unshare-pid (네트워크·PID 격리)
-        </text>
-
-        <text x={280} y={316} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">macOS/Windows: 샌드박스 없이 권한 모델만 (graceful degradation)</text>
-      </svg>
-    </div>
+    <figure
+      aria-label="sandbox request가 unshare 실행 또는 일반 shell fallback으로 나뉘는 흐름"
+      className="not-prose my-7 overflow-hidden rounded-md border border-border"
+    >
+      <figcaption className="border-b border-border px-4 py-3">
+        <p className="text-sm font-semibold">현재 launcher는 bubblewrap이 아니라 Linux unshare다</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          requested, supported, active를 분리하고 fallback을 실제 보안 상태로 읽어야 한다.
+        </p>
+      </figcaption>
+      <div className="grid gap-3 p-4 md:grid-cols-[1fr_30px_1fr_30px_1fr] md:items-stretch">
+        <div className="rounded-md border border-border p-4">
+          <p className="text-xs font-bold text-muted-foreground">Request</p>
+          <p className="mt-2 text-sm font-semibold">namespace · network · filesystem mode</p>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            기본은 enabled, namespace 요청, network off, workspace-only mode다.
+          </p>
+        </div>
+        <div className="flex items-center justify-center text-muted-foreground">
+          <ArrowDown className="h-4 w-4 md:hidden" aria-hidden="true" />
+          <ArrowRight className="hidden h-4 w-4 md:block" aria-hidden="true" />
+        </div>
+        <div className="rounded-md border border-border p-4">
+          <p className="text-xs font-bold text-muted-foreground">Status</p>
+          <p className="mt-2 text-sm font-semibold">supported · active · fallback_reason</p>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            Linux user namespace 실행 가능 여부와 container marker를 계산한다.
+          </p>
+        </div>
+        <div className="flex items-center justify-center text-muted-foreground">
+          <ArrowDown className="h-4 w-4 md:hidden" aria-hidden="true" />
+          <ArrowRight className="hidden h-4 w-4 md:block" aria-hidden="true" />
+        </div>
+        <div className="grid gap-2">
+          <div className="rounded-md border border-emerald-600/30 bg-emerald-500/[0.035] p-3">
+            <Box className="h-4 w-4 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
+            <p className="mt-2 text-xs font-semibold">active → unshare ... sh -lc</p>
+          </div>
+          <div className="rounded-md border border-rose-600/30 bg-rose-500/[0.035] p-3">
+            <Terminal className="h-4 w-4 text-rose-700 dark:text-rose-300" aria-hidden="true" />
+            <p className="mt-2 text-xs font-semibold">inactive → 일반 sh -lc</p>
+          </div>
+        </div>
+      </div>
+      <div className="flex gap-2 border-t border-border bg-amber-500/[0.04] px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600" aria-hidden="true" />
+        <p className="m-0 min-w-0">
+          현재 <code className="text-xs">filesystemMode</code>와 allowed mounts는 launcher 환경변수로
+          전달되지만, 이 함수 안에서 bind mount allow-list를 강제하지 않는다. “filesystem_active”를
+          실제 차단 증거로 과대 해석하지 않는다.
+        </p>
+      </div>
+    </figure>
   );
 }

@@ -1,4 +1,5 @@
 import CircuitMapViz from './viz/CircuitMapViz';
+import SubCircuitArchViz from './viz/SubCircuitArchViz';
 import M from '@/components/ui/math';
 
 export default function CircuitOverview() {
@@ -17,28 +18,8 @@ export default function CircuitOverview() {
           사용하며, Poseidon 해시로 SNARK-friendly한 상태 증명을 제공합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">왜 서브회로로 분할하는가</h3>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4">
-            <p className="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">단일 거대 회로의 문제</p>
-            <ul className="text-sm space-y-2 text-foreground/80">
-              <li><strong>회로 크기 폭발</strong> — 140+ opcode, 단일 회로 시 rows 1B+ 필요, Prover memory 수백 GB</li>
-              <li><strong>변경 어려움</strong> — 하나 수정 시 전체 재검증, 디버깅 극히 어려움</li>
-              <li><strong>검증 비용</strong> — Proof 크기 선형 증가, Verifier gas 폭주</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4">
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-2">서브회로 분할 장점</p>
-            <ul className="text-sm space-y-2 text-foreground/80">
-              <li><strong>관심사 분리</strong> — EVM(opcode), Bytecode(코드 검증), Keccak(해시), MPT(상태 트리)</li>
-              <li><strong>병렬 증명</strong> — 독립 서브회로 동시 prove, Multi-core/GPU 활용</li>
-              <li><strong>Lookup 연결</strong> — 서브회로 간 일관성은 lookup table로 보장</li>
-            </ul>
-          </div>
-        </div>
-        <div className="not-prose rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/30 p-3 mb-6 text-sm text-center">
-          <strong>SuperCircuit</strong> = 11개 서브회로의 공통 constraint 묶음 = 단일 proof로 전체 EVM 실행 증명
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-3">왜 서브회로로 분할 + zkTrie 선택</h3>
+        <div className="not-prose mb-6"><SubCircuitArchViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">서브회로 역할 상세</h3>
         <div className="overflow-x-auto">

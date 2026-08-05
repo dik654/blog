@@ -1,4 +1,5 @@
 import SnarkjsFlowViz from './viz/SnarkjsFlowViz';
+import SnarkjsWorkflowViz from './viz/SnarkjsWorkflowViz';
 
 export default function SnarkjsIntegration({ title }: { title?: string }) {
   return (
@@ -15,38 +16,7 @@ export default function SnarkjsIntegration({ title }: { title?: string }) {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">snarkjs 전체 워크플로우</h3>
-        <div className="not-prose flex flex-col gap-2 mb-6">
-          <div className="rounded-lg border bg-sky-50 dark:bg-sky-950/30 p-4 text-sm">
-            <p className="text-xs font-semibold text-sky-700 dark:text-sky-300 mb-2">① Powers of Tau 세레모니 (신뢰 셋업)</p>
-            <div className="font-mono text-xs space-y-1">
-              <p>snarkjs.powersOfTau.<strong>newAccumulator</strong>("bn128", 12, "pot.ptau")</p>
-              <p>snarkjs.powersOfTau.<strong>contribute</strong>("pot.ptau", "pot1.ptau", "contrib")</p>
-              <p>snarkjs.powersOfTau.<strong>preparePhase2</strong>("pot1.ptau", "pot_final.ptau")</p>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-emerald-50 dark:bg-emerald-950/30 p-4 text-sm">
-            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 mb-2">② 회로별 키 생성</p>
-            <div className="font-mono text-xs space-y-1">
-              <p>snarkjs.zKey.<strong>newZKey</strong>("circuit.r1cs", "pot_final.ptau", "circuit.zkey")</p>
-              <p>snarkjs.zKey.<strong>contribute</strong>("circuit.zkey", "circuit_final.zkey", "contrib2")</p>
-              <p>snarkjs.zKey.<strong>exportVerificationKey</strong>("circuit_final.zkey") → vKey</p>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-amber-50 dark:bg-amber-950/30 p-4 text-sm">
-            <p className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-2">③ 증인 계산 (WASM)</p>
-            <div className="font-mono text-xs space-y-1">
-              <p>const wc = await WitnessCalculatorBuilder(wasmBuffer)</p>
-              <p>const witness = await wc.<strong>calculateWitness</strong>(input)</p>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-violet-50 dark:bg-violet-950/30 p-4 text-sm">
-            <p className="text-xs font-semibold text-violet-700 dark:text-violet-300 mb-2">④ 증명 생성 & 검증</p>
-            <div className="font-mono text-xs space-y-1">
-              <p>const {'{'} proof, publicSignals {'}'} = await snarkjs.groth16.<strong>prove</strong>(zkey, witness)</p>
-              <p>const valid = await snarkjs.groth16.<strong>verify</strong>(vKey, publicSignals, proof)</p>
-            </div>
-          </div>
-        </div>
+        <div className="not-prose mb-6"><SnarkjsWorkflowViz /></div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">

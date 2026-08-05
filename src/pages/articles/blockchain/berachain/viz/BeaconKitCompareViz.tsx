@@ -14,7 +14,7 @@ const L_BERA = [
   { label: 'No Fork', sub: 'BFT 포크 없음', color: '#10b981' },
   { label: 'MConnection', sub: 'Tendermint P2P', color: '#10b981' },
 ];
-const LY = [14, 38, 62, 86], LH = 18, LW = 72;
+const LY = [18, 51, 84, 117], LH = 28, LW = 92;
 
 const STEPS = [
   { label: '전체 아키텍처 비교', body: '왼쪽 이더리움 Beacon Chain vs 오른쪽 Berachain BeaconKit. 레이어별 차이를 비교합니다.' },
@@ -27,12 +27,12 @@ export default function BeaconKitCompareViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 490 110" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 490 150" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* column headers */}
           <text x={82} y={10} textAnchor="middle" fontSize={9} fontWeight={600} fill="#6366f1">Ethereum</text>
           <text x={268} y={10} textAnchor="middle" fontSize={9} fontWeight={600} fill="#10b981">BeaconKit</text>
           {/* center divider */}
-          <line x1={175} y1={12} x2={175} y2={106} stroke="var(--border)" strokeWidth={0.8} strokeDasharray="3 3" />
+          <line x1={175} y1={14} x2={175} y2={147} stroke="var(--border)" strokeWidth={0.8} strokeDasharray="3 3" />
           {/* layers */}
           {LY.map((y, i) => {
             const highlight = step === i + 1 || step === 0;
@@ -44,17 +44,17 @@ export default function BeaconKitCompareViz() {
                 <motion.rect x={82 - LW / 2} y={y} width={LW} height={LH} rx={4}
                   animate={{ fill: `${eth.color}${active ? '22' : '0c'}`, stroke: eth.color,
                     strokeWidth: active ? 2 : 0.8, opacity: highlight ? 1 : 0.2 }} transition={sp} />
-                <text x={82} y={y + 8} textAnchor="middle" fontSize={9} fontWeight={600}
+                <text x={82} y={y + 11} textAnchor="middle" fontSize={9} fontWeight={600}
                   fill={eth.color} opacity={highlight ? 1 : 0.2}>{eth.label}</text>
-                <text x={82} y={y + 15} textAnchor="middle" fontSize={9}
+                <text x={82} y={y + 23} textAnchor="middle" fontSize={8.5}
                   fill="var(--muted-foreground)" opacity={highlight ? 0.6 : 0.1}>{eth.sub}</text>
                 {/* BERA side */}
                 <motion.rect x={268 - LW / 2} y={y} width={LW} height={LH} rx={4}
                   animate={{ fill: `${bera.color}${active ? '22' : '0c'}`, stroke: bera.color,
                     strokeWidth: active ? 2 : 0.8, opacity: highlight ? 1 : 0.2 }} transition={sp} />
-                <text x={268} y={y + 8} textAnchor="middle" fontSize={9} fontWeight={600}
+                <text x={268} y={y + 11} textAnchor="middle" fontSize={9} fontWeight={600}
                   fill={bera.color} opacity={highlight ? 1 : 0.2}>{bera.label}</text>
-                <text x={268} y={y + 15} textAnchor="middle" fontSize={9}
+                <text x={268} y={y + 23} textAnchor="middle" fontSize={8.5}
                   fill="var(--muted-foreground)" opacity={highlight ? 0.6 : 0.1}>{bera.sub}</text>
                 {/* arrow between */}
                 {active && (

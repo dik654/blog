@@ -55,7 +55,7 @@ export default function PrimitivesViz() {
 
           {/* active indicator dot */}
           {step >= 1 && step <= 3 && (
-            <motion.circle r={4}
+            <motion.circle initial={false} r={4}
               animate={{
                 cx: BX - 12,
                 cy: PRIMITIVES[step - 1].y + BH / 2,

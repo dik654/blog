@@ -1,6 +1,9 @@
 import GPUFleetViz from './viz/GPUFleetViz';
 import GPUOperator from './GPUOperator';
 import GPUAutoscaling from './GPUAutoscaling';
+import GPUFleetDeepDive from './GPUFleetDeepDive';
+import ServingDepthGuide from './ServingDepthGuide';
+import ServingOpsDeepViz from './viz/ServingOpsDeepViz';
 
 export default function KubernetesFleet() {
   return (
@@ -15,6 +18,9 @@ export default function KubernetesFleet() {
         </p>
         <GPUOperator />
         <GPUAutoscaling />
+        <div className="not-prose my-8"><ServingOpsDeepViz variant="gpu" /></div>
+        <GPUFleetDeepDive />
+        <ServingDepthGuide guideKey="gpuFleet" />
       </div>
     </section>
   );

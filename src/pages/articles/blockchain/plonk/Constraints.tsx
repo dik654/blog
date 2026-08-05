@@ -33,7 +33,7 @@ export default function Constraints() {
         <div className="not-prose my-4">
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">게이트 제약 등식 (Gate Identity)</p>
-            <M display>{'q_M(X) \\cdot a(X) \\cdot b(X) + q_L(X) \\cdot a(X) + q_R(X) \\cdot b(X) + q_O(X) \\cdot c(X) + q_C(X) = 0 \\pmod{Z_H(X)}'}</M>
+            <M display>{'\\underbrace{q_M(X) \\cdot a(X) \\cdot b(X)}_{\\text{곱셈 게이트}} + \\underbrace{q_L(X) \\cdot a(X) + q_R(X) \\cdot b(X) + q_O(X) \\cdot c(X)}_{\\text{선형 게이트}} + \\underbrace{q_C(X)}_{\\text{상수}} = 0 \\pmod{\\underbrace{Z_H(X)}_{\\text{vanishing 다항식}}}'}</M>
             <div className="mt-2 rounded border border-amber-500/30 p-2">
               <p className="text-sm text-amber-400 font-medium">Vanishing polynomial</p>
               <p className="text-sm text-muted-foreground"><M>{'Z_H(X) = X^n - 1'}</M> → 모든 <M>{'\\omega^i'}</M>에서 등식이 성립해야 함</p>

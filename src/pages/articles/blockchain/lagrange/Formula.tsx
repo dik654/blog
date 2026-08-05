@@ -56,9 +56,9 @@ export default function Formula() {
           <br />
           <M>{'L_i(x_j) = 0'}</M> (<M>{'j \\neq i'}</M>)이 되려면 <M>{'L_i'}</M>는 모든 <M>{'x_j'}</M>를 근으로 가져야 한다:
           <M display>{'L_i(x) = \\underbrace{c}_{\\text{정규화 계수}} \\cdot \\underbrace{\\prod_{j \\neq i}(x - x_j)}_{\\text{다른 모든 점에서 0이 되는 곱}}'}</M>
-          <p className="text-sm text-muted-foreground mt-2">
+          <span className="mt-2 block text-sm text-muted-foreground">
             <M>{'c'}</M>: <M>{'L_i(x_i) = 1'}</M>을 만족시키기 위한 정규화 상수, <M>{'(x - x_j)'}</M>: j번째 점을 근으로 만드는 인수
-          </p>
+          </span>
           <M>{'L_i(x_i) = 1'}</M>을 만족시키려면 <M>{'c = 1 / \\prod_{j \\neq i}(x_i - x_j)'}</M>.
           <br />
           따라서 <M>{'f(x) = \\sum y_i \\cdot L_i(x)'}</M>가 보간한다

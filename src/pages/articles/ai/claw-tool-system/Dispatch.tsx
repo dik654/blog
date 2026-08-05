@@ -1,5 +1,4 @@
 import DispatchViz from './viz/DispatchViz';
-import Pipeline5StepViz from './viz/Pipeline5StepViz';
 
 export default function Dispatch() {
   return (
@@ -12,57 +11,18 @@ export default function Dispatch() {
         {/* ── 진입점 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">ConversationRuntime → execute_tool() 경로</h3>
         <p>
-          에이전트 루프는 LLM 응답에서 <code>tool_use</code> 블록을 발견하면 <code>execute_tool()</code>을 호출<br />
-          호출 사이트는 단일 — <code>conversation_runtime.rs</code>의 <code>handle_tool_use()</code> 함수<br />
-          이 단일 진입점이 모든 도구 실행의 게이트웨이 역할
+          에이전트 루프는 LLM 응답의 <code>tool_use</code> 블록마다 같은 경로를 탄다.
+          중요한 순서는 <strong>Pre-hook → 권한 판정 → 실행 → Post-hook → 결과 기록</strong>이다.
+          Pre-hook이 입력을 바꿀 수 있으므로, 권한 정책은 원본이 아니라
+          <code>effective_input</code>을 판정해야 한다.
         </p>
-        <div className="not-prose my-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">conversation_runtime.rs &mdash; handle_tool_use()</p>
-          <div className="grid grid-cols-1 gap-2">
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-              <div>
-                <p className="text-sm font-semibold">권한 게이트</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">enforcer.check(&name, &input)</code> — Deny 시 즉시 에러 반환, Prompt 시 사용자 Y/N 대기, Allow 시 통과</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">2</span>
-              <div>
-                <p className="text-sm font-semibold">Pre-hook 실행</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">hooks.pre_tool(&name, &input)</code> — 훅이 abort 반환 시 디스패치 스킵</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">3</span>
-              <div>
-                <p className="text-sm font-semibold">디스패치</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">execute_tool(&name, input.clone()).await</code> — 실제 도구 함수 호출</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">4</span>
-              <div>
-                <p className="text-sm font-semibold">Post-hook 실행</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">hooks.post_tool(&name, &input, &output)</code> — 실패해도 도구 결과는 반환</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold">5</span>
-              <div>
-                <p className="text-sm font-semibold">세션 로그 기록</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">session.log_tool_call(id, name, input, output)</code> — <code className="text-xs">id</code>로 tool_use와 tool_result 매칭</p>
-              </div>
-            </div>
-          </div>
-        </div>
         <p>
-          <strong>5단계 파이프라인</strong>: 권한 → Pre-hook → 디스패치 → Post-hook → 세션 로그<br />
-          각 단계는 독립적 — Pre-hook이 abort하면 디스패치 스킵, Post-hook 실패해도 도구 결과는 반환<br />
-          <code>id</code> 필드는 tool_use와 tool_result를 매칭하는 상관 관계 키 — LLM이 병렬 도구 호출 결과를 구분할 때 사용
+          조기 종료도 같은 계약으로 닫힌다. Pre-hook 또는 권한 정책이 거부하면 executor와 post-hook을 건너뛴다.
+          반면 미등록 도구는 실행 단계의 오류이므로 <code>PostToolUseFailure</code>가 관찰한다.
+          마지막에는 어느 경로든 <code>tool_use_id</code>를 보존한 <code>tool_result</code>가 세션에 추가된다.
+          이 상관 관계 키 덕분에 모델은 병렬 호출의 결과와 원인을 구분할 수 있다.
         </p>
       </div>
-      <Pipeline5StepViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         {/* ── match 분기 ── */}

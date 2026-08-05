@@ -51,7 +51,7 @@ export default function ExExFlowViz() {
 
           {/* Notification bubble */}
           {s >= 1 && (
-            <motion.circle r={4} fill={C.pipeline}
+            <motion.circle initial={false} r={4} fill={C.pipeline}
               animate={{ cx: [125, 165], cy: [102, 102] }}
               transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2 }} />
           )}

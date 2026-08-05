@@ -1,0 +1,192 @@
+{
+  "run_id": "2026-07-19-robot-fracture-mechanics",
+  "completed_at": "2026-07-19T20:31:47+09:00",
+  "objective": "Extend the robot structural foundation with a bottom-up metallic fracture-mechanics and damage-tolerance concept article, a foundational-paper reconstruction, a current-research reconstruction, causal responsive visualizations, Korean-annotated KaTeX, public deployment and a replayable small-model record.",
+  "curriculum_decision": {
+    "observed_gap": "The structural article stopped at nominal stress, S-N screening and cumulative damage. The curriculum only mentioned cracks incidentally and did not teach flaw idealization, crack driving force, resistance, growth, residual strength, NDE capability or inspection decisions.",
+    "selected_layer": "Metallic fracture mechanics and damage tolerance",
+    "why_now": "It consumes the load path, stress spectrum, material and FEA states already established by structural mechanics and produces the initial conditions needed by inspection and lifecycle management.",
+    "deferred": "Composite delamination, anisotropic laminate failure and barely visible impact damage require a separate next layer because metallic K-based transfer would create false competence."
+  },
+  "private_transfer_problem": {
+    "scenario": "A 7075-T73 hollow robot shoulder shaft has a bearing fillet, lubrication hole, qualified NDE limit, a detected semi-elliptical indication, bending/torsion spectrum, emergency brake load, residual stress, temperature range and chloride exposure. Coupon toughness/growth data and component thickness do not match exactly; FEA and NASGRO-style results require interpretation.",
+    "required_decisions": 22,
+    "coverage_premises": 46,
+    "premise_groups": [
+      "indication-to-crack idealization and geometry",
+      "modes, Griffith energy balance and G",
+      "K field, geometry factor and stress decomposition",
+      "plastic zone, constraint, thickness and toughness transfer",
+      "critical crack, residual strength and geometry transition",
+      "Delta K, R, threshold, full-range growth, sequence and environment",
+      "primary versus secondary stress and FAD",
+      "NDE POD, assumed flaw, inspection and proof test",
+      "verification, uncertainty, traceability and repair"
+    ],
+    "reader_gate": "An article-only reader should be able to construct and criticize a flaw-to-inspection ledger for an unseen metallic robot component without treating a solver pass/fail as certification."
+  },
+  "source_selection": [
+    {
+      "source": "A. A. Griffith, The Phenomena of Rupture and Flow in Solids, 1921",
+      "role": "Foundational paper",
+      "pages_read": 37,
+      "selection_reason": "It is the bottom-up origin of the energy-balance question and flaw-size scaling.",
+      "durable_claim": "Crack extension competes through released elastic energy and resistance; critical stress decreases with flaw size.",
+      "boundary_preserved": "The final Author's Note requires correction of the cracked-plate strain-energy calculation and numerical equations 6-13, and reconsideration of experimental verification. Molecular-orientation sections are historical speculation rather than current fracture mechanism.",
+      "url": "https://royalsocietypublishing.org/doi/10.1098/rsta.1921.0006"
+    },
+    {
+      "source": "NASA-TM-103591, Linear Elastic Fracture Mechanics Primer, 1992",
+      "role": "Concept bridge",
+      "pages_read": 82,
+      "selection_reason": "It bridges Griffith energy, Irwin K fields, plastic-zone screens, toughness, subcritical growth and fracture control without using a software black box.",
+      "boundary_preserved": "A primer and rules of thumb are not current product allowables or certification requirements.",
+      "url": "https://ntrs.nasa.gov/citations/19920021173"
+    },
+    {
+      "source": "NASA-STD-5019A w/Change 4, revalidated 2025-09-05",
+      "role": "Current process boundary",
+      "pages_read": 120,
+      "selection_reason": "It provides a rigorous design-analysis-test-NDE-tracking process, assumed-flaw linkage, spectrum requirements and 90/95 NDE relationship.",
+      "boundary_preserved": "It governs applicable human-rated spaceflight hardware and is used here as a process example, not automatically imposed on robots.",
+      "url": "https://standards.nasa.gov/standard/nasa/nasa-std-5019"
+    },
+    {
+      "source": "NASA/CR-20250011200, Fitness-For-Service Assessments of Crack-Like Flaws Using NASGRO, 2025",
+      "role": "Current research report",
+      "pages_read": 109,
+      "selection_reason": "It exposes current FAD, full-range crack growth, residual-stress input, material choices, four notional examples and unresolved cross-software differences.",
+      "boundary_preserved": "The report is guidance, not a substitute for the NASGRO reference manual or API 579. Examples are notional and the local/global Lr discrepancy remains unresolved.",
+      "url": "https://ntrs.nasa.gov/citations/20250011200"
+    }
+  ],
+  "source_processing": {
+    "pdf_directory": "/tmp/pdfs/fracture-mechanics",
+    "methods": [
+      "pypdf text extraction",
+      "pypdfium2 page rendering",
+      "Pillow contact sheets",
+      "visual inspection of all Griffith pages",
+      "section, equation, table and example reconstruction for NASA sources"
+    ],
+    "important_conflicts_retained": [
+      "Griffith durable energy principle versus his own final numerical correction",
+      "NASGRO database toughness 66.8 versus API lower-bound 40.1 in example 13.1",
+      "CC27 versus CC28 life difference greater than one order of magnitude in example 13.2",
+      "NASGRO versus INSPECT Lr mismatch despite reasonably good SIF/final-crack agreement"
+    ]
+  },
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-fracture-mechanics-damage-tolerance.md",
+    "concept_article": "src/pages/articles/ai/robot-fracture-mechanics-damage-tolerance.tsx",
+    "concept_visualizations": "src/pages/articles/ai/robot-fracture-mechanics-damage-tolerance/viz/FractureMechanicsLabs.tsx",
+    "source_specs": "src/pages/articles/ai/paper-spine/robotFractureSpecs.tsx",
+    "source_visualizations": "src/pages/articles/ai/paper-spine/viz/FractureSourceLabs.tsx",
+    "foundational_wrapper": "src/pages/articles/ai/paper-griffith-rupture-flow-solids-1921.tsx",
+    "current_wrapper": "src/pages/articles/ai/research-nasa-nasgro-fitness-for-service-2025.tsx",
+    "qa": "tests/fracture-mechanics-qa.spec.ts"
+  },
+  "content_result": {
+    "concept_sections": 12,
+    "concept_formulas": 24,
+    "concept_formula_notes": 24,
+    "concept_causal_labs": 12,
+    "foundational_formulas": 6,
+    "foundational_evidence_states": 7,
+    "current_formulas": 6,
+    "current_evidence_states": 7,
+    "formula_policy": "Every display formula has exactly one FormulaNote and every text annotation inside KaTeX is Korean.",
+    "narrative_policy": "Observation-to-flaw state precedes energy and K; validity precedes life; FAD precedes inspection; evidence and traceability close the article."
+  },
+  "visual_design": {
+    "grammar": "Neutral structural surfaces with sparse blue driving force, teal resistance/evidence, amber boundary and red failure states.",
+    "interaction_rule": "A control must move geometry, a curve, an assessment point, a calculated state or a decision sentence; color-only toggles do not count.",
+    "responsive_rule": "Controls stack on narrow screens, plots keep stable dimensions, all labels stay inside bounds and no visualization creates an inner scrolling surface.",
+    "shared_fix": "FlowRow changes from horizontal at 768px to horizontal at 1024px, preventing six-card plus arrow source reconstructions from creating tablet overflow.",
+    "animation_boundary": "Static causal states were completed first. Decorative motion remains deferred until the prose and all foundation layers are stable."
+  },
+  "failures_and_fixes": [
+    {
+      "failure": "Initial FractureSourceLabs JSX had one extra closing div.",
+      "signal": "Vite esbuild reported an unexpected closing div and unterminated expression.",
+      "fix": "Reconstructed the NASA source lab nesting and rebuilt."
+    },
+    {
+      "failure": "ConceptPrimer used the wrong item schema and produced duplicate undefined React keys.",
+      "signal": "Browser console warned that ConceptPrimer list children lacked unique keys.",
+      "fix": "Replaced label/value items with term/meaning/why items."
+    },
+    {
+      "failure": "FAD filled area used polyline point syntax as an SVG path d attribute.",
+      "signal": "Browser console rejected the path because d did not begin with a moveto command.",
+      "fix": "Changed the fill shape to a polygon while retaining the polyline boundary."
+    },
+    {
+      "failure": "NASA thickness-correction formula scaled to 0.76 at 360px and 0.82 at 390px.",
+      "signal": "QA minimum-scale threshold failed.",
+      "fix": "Split the coupled Kc/KIc and t0 definitions into two aligned causal lines and shortened Korean labels; final public scales are 0.85 and 0.99."
+    },
+    {
+      "failure": "NASA source reconstruction created 5px document overflow at 768px.",
+      "signal": "The FlowRow rendered six cards plus five arrow columns at the md breakpoint.",
+      "fix": "Moved the shared horizontal FlowRow breakpoint from md to lg, retaining vertical causality on tablets."
+    }
+  ],
+  "verification": {
+    "build": "npm run build passed; only the pre-existing large-chunk warning remains.",
+    "typescript_scope": "No TypeScript diagnostics referenced the new fracture files; the repository retains unrelated existing diagnostics.",
+    "local_fracture_qa": "17/17 passed",
+    "local_structural_regression": "17/17 passed",
+    "public_fracture_qa": "17/17 passed",
+    "public_http": {
+      "robot-fracture-mechanics-damage-tolerance": 200,
+      "paper-griffith-rupture-flow-solids-1921": 200,
+      "research-nasa-nasgro-fitness-for-service-2025": 200
+    },
+    "public_scale_and_overflow": {
+      "concept": { "360": { "min_scale": 0.85, "overflow": 0 }, "390": { "min_scale": 0.99, "overflow": 0 }, "768": { "min_scale": 1, "overflow": 0 }, "1440": { "min_scale": 1, "overflow": 0 } },
+      "griffith": { "360": { "min_scale": 1, "overflow": 0 }, "390": { "min_scale": 1, "overflow": 0 }, "768": { "min_scale": 1, "overflow": 0 }, "1440": { "min_scale": 1, "overflow": 0 } },
+      "nasa": { "360": { "min_scale": 0.85, "overflow": 0 }, "390": { "min_scale": 0.99, "overflow": 0 }, "768": { "min_scale": 1, "overflow": 0 }, "1440": { "min_scale": 1, "overflow": 0 } }
+    },
+    "screenshots": [
+      "/tmp/fracture-qa/concept-top-m360.png",
+      "/tmp/fracture-qa/concept-energy-lab-d1440.png",
+      "/tmp/fracture-qa/concept-fad-lab-m390.png",
+      "/tmp/fracture-qa/griffith-lab-m390.png",
+      "/tmp/fracture-qa/nasa-lab-d1440.png"
+    ]
+  },
+  "small_model_replay": {
+    "four_b_packet": [
+      "one premise ID and one question",
+      "one bounded primary-source page slice",
+      "one equation with Korean why-term annotations",
+      "one adjacent meaning/symbol note",
+      "one counterexample or model-class handoff",
+      "one causal control and acceptance state",
+      "critic checks for unsupported transfer and raw LaTeX"
+    ],
+    "nine_b_packet": [
+      "one complete causal section or evidence state",
+      "prerequisite bridge and narrative placement",
+      "author intent and claim-evidence-limit split",
+      "derivation order and state identity",
+      "implementation and failure diagnostics",
+      "responsive visualization contract",
+      "formula/note/overflow test expectations"
+    ],
+    "orchestrator_only": [
+      "constructing the private hardest transfer problem",
+      "resolving conflicts across primary sources",
+      "maintaining terminology and state across sections",
+      "public deployment and cross-article regression",
+      "provenance and curriculum sequencing"
+    ]
+  },
+  "next_milestone": {
+    "topic": "Robot Composite Structures, Joints and Damage",
+    "reason": "The metallic fracture article explicitly rejects direct transfer to anisotropic laminates, delamination and barely visible impact damage.",
+    "planned_boundary": "lamina versus laminate coordinates, ABD coupling, failure modes, joints/load introduction, manufacturing defects, impact/delamination, environmental conditioning, NDE and allowables/evidence",
+    "source_strategy": "Select one foundational laminate-mechanics paper or primary monograph-grade public source and one current NASA/FAA/company research artifact only after full-source accessibility is verified."
+  }
+}

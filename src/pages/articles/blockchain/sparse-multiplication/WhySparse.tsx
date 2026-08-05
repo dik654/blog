@@ -1,5 +1,6 @@
 import M from '@/components/ui/math';
 import WhySparseViz from './viz/WhySparseViz';
+import SparseSlotPatternViz from './viz/SparseSlotPatternViz';
 
 export default function WhySparse() {
   return (
@@ -63,42 +64,8 @@ export default function WhySparse() {
           </p>
         </div>
 
-        {/* Twist mapping */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">BN254 Sextic Twist &rarr; Fp12 매핑</div>
-          <p className="text-sm text-muted-foreground mb-2">
-            Fp12 basis: <M>{'\\{1, w, v, vw, v^2, v^2 w\\}'}</M> = 12개 Fp 계수.
-            Line function은 이 중 <strong>3개 슬롯만</strong> non-zero.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
-            <div className="rounded bg-muted/50 p-2">
-              <span className="font-medium">D-twist:</span> slots 0, 3, 4 non-zero &rarr; <code>mul_by_034</code>
-            </div>
-            <div className="rounded bg-muted/50 p-2">
-              <span className="font-medium">M-twist:</span> slots 0, 1, 4 non-zero &rarr; <code>mul_by_014</code>
-            </div>
-          </div>
-        </div>
-
-        {/* 왜 정확히 3 슬롯? */}
-        <div className="not-prose rounded-lg border-l-4 border-l-amber-500 bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">왜 정확히 3 슬롯?</div>
-          <p className="text-sm text-muted-foreground mb-2">
-            Line function 구조 = <M>{'a + bw + cw^2'}</M> (degree-2 in <M>w</M>). 3개 Fp6 계수 &rarr; 각각 Fp2 (2 Fp) &rarr; 총 6 Fp.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            그러나 Fp 점 <M>P</M>에서 평가할 때 추가 구조로 일부 Fp2 성분이 소멸 &rarr; 최종 3개 Fp 계수만 non-zero.
-          </p>
-        </div>
-
-        {/* Sparse mult 절감 */}
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">Sparse 곱셈 최적화</div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
-            <div className="rounded bg-muted/50 p-2">Standard Fp12 mult (Karatsuba): 18 Fp2 mults</div>
-            <div className="rounded bg-muted/50 p-2">Sparse line mult: ~9 Fp mults (0인 항 건너뜀)</div>
-          </div>
-        </div>
+        {/* Twist 슬롯 패턴 + Sparse 절감 — Viz */}
+        <div className="not-prose mb-4"><SparseSlotPatternViz /></div>
 
         {/* Embedding degree vs twist degree */}
         <div className="not-prose rounded-lg border bg-card p-4 mb-4">

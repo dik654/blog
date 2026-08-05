@@ -38,97 +38,85 @@ export default function TDP() {
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">TDP vs Real Power 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TDP (Thermal Design Power):
+        <h3 className="text-xl font-semibold mt-8 mb-3">TDP 정의</h3>
+        <p className="leading-7">
+          지속적 열 방출량. 냉각 설계 기준. peak power 가 아닌 <strong>sustained operation</strong> 기준.
+        </p>
 
-// Definition:
-// - 지속 heat 방출량
-// - cooling 설계 기준
-// - NOT peak power
-// - sustained operation
+        <h3 className="text-xl font-semibold mt-8 mb-3">TDP vs 실측 전력</h3>
+        <ul className="leading-7">
+          <li>TDP — 보수적 설계 지점</li>
+          <li>peak — 짧은 burst</li>
+          <li>sustained — TDP 의 80~100%</li>
+          <li>idle — 10~20W</li>
+        </ul>
 
-// TDP vs Actual Power:
-// - TDP: conservative design point
-// - Peak power: short bursts
-// - Sustained: 80-100% TDP
-// - Idle: 10-20 W
+        <h3 className="text-xl font-semibold mt-8 mb-3">GPU 전력 프로파일</h3>
+        <ul className="leading-7">
+          <li><strong>RTX 4090 (450W TDP)</strong> — idle 20W, 게이밍 300~400W, 지속 compute 450W, peak transient 600W+. PSU 1000W 필요.</li>
+          <li><strong>H100 SXM (700W TDP)</strong> — idle 70W, 추론 400~500W, 학습 sustained 700W, peak 900W+. liquid cooling 필요.</li>
+          <li><strong>A100 SXM (400W TDP)</strong> — idle 50W, sustained 380~400W, peak 500W. 4U 에서 air cooling 가능.</li>
+          <li><strong>B200 (1000W TDP)</strong> — idle 100W, sustained 900~1000W, peak 1200W+. liquid cooling 필수, direct-to-chip 권장.</li>
+        </ul>
 
-// GPU Power Profiles:
-//
-// NVIDIA RTX 4090 (450W TDP):
-// - idle: 20W
-// - gaming: 300-400W
-// - compute (sustained): 450W
-// - peak transient: 600W+
-// - requires 1000W PSU
-//
-// NVIDIA H100 SXM (700W TDP):
-// - idle: 70W
-// - inference: 400-500W
-// - training (sustained): 700W
-// - peak transient: 900W+
-// - requires liquid cooling
-//
-// NVIDIA A100 SXM (400W TDP):
-// - idle: 50W
-// - sustained: 380-400W
-// - peak: 500W
-// - air cooling possible in 4U
-//
-// NVIDIA B200 (1000W TDP):
-// - idle: 100W
-// - sustained: 900-1000W
-// - peak transient: 1200W+
-// - liquid cooling mandatory
-// - direct-to-chip preferred
+        <h3 className="text-xl font-semibold mt-8 mb-3">전력 부하 계산</h3>
+        <p className="leading-7">
+          Total = CPU + GPU + memory + drive + network + 보드.
+        </p>
+        <p className="leading-7">예시 — AI 학습 서버:</p>
+        <ul className="leading-7">
+          <li>2× EPYC (500W) = 1,000W</li>
+          <li>8× H100 (700W) = 5,600W</li>
+          <li>DDR5 (30W × 24) = 720W</li>
+          <li>NVMe (15W × 8) = 120W</li>
+          <li>network + fan = 200W</li>
+          <li>motherboard = 100W</li>
+          <li>총 IT = 7,740W</li>
+          <li>PSU 효율 85% → 9,100W input</li>
+        </ul>
 
-// Power delivery calculation:
-// Total load = CPU + GPU + memory + drives + network
-//
-// Example: AI training server
-// - 2× EPYC (500W): 1000W
-// - 8× H100 (700W): 5600W
-// - DDR5 (30W × 24): 720W
-// - NVMe (15W × 8): 120W
-// - network + fans: 200W
-// - motherboard: 100W
-// - total IT: 7740W
-// - PSU efficiency (85%): 9100W input
+        <h3 className="text-xl font-semibold mt-8 mb-3">PSU 사이징</h3>
+        <ul className="leading-7">
+          <li>nameplate IT 부하</li>
+          <li>20% 헤드룸</li>
+          <li>효율 계수</li>
+          <li>redundancy (2N 또는 N+1)</li>
+          <li>위 서버 예시 — 12 kW</li>
+        </ul>
 
-// PSU sizing:
-// - nameplate IT load
-// - 20% headroom
-// - efficiency factor
-// - redundancy (2N or N+1)
-// - example: 12 kW for above server
+        <h3 className="text-xl font-semibold mt-8 mb-3">PSU 효율</h3>
+        <ul className="leading-7">
+          <li>80 PLUS Gold — 87~90%</li>
+          <li>Platinum — 90~92%</li>
+          <li>Titanium — 94%+</li>
+          <li>높은 효율 = 폐열 감소</li>
+        </ul>
 
-// Efficiency:
-// - 80 PLUS Gold: 87-90%
-// - Platinum: 90-92%
-// - Titanium: 94%+
-// - higher efficiency = less waste heat
+        <h3 className="text-xl font-semibold mt-8 mb-3">전력 경제학</h3>
+        <ul className="leading-7">
+          <li>데이터센터 — $0.10/kWh 일반</li>
+          <li>1 kW continuous — $876/year</li>
+          <li>H100 서버 (10 kW) — $8,760/year</li>
+          <li>5년 TCO 상당</li>
+        </ul>
 
-// Power economics:
-// - datacenter: $0.10/kWh typical
-// - 1 kW continuous: $876/year
-// - H100 server (10 kW): $8,760/year
-// - 5-year TCO significant
+        <h3 className="text-xl font-semibold mt-8 mb-3">Filecoin SP 시나리오</h3>
+        <ul className="leading-7">
+          <li>A100 서버 — ~3 kW</li>
+          <li>10 서버/rack — 30 kW</li>
+          <li>24/7 운영</li>
+          <li>연간 전기료 — $26K</li>
+          <li>냉각 추가 — $8K~$12K</li>
+          <li>에너지 비용이 ROI 좌우</li>
+        </ul>
 
-// Filecoin SP scenario:
-// - A100 server: ~3 kW
-// - 10 servers/rack: 30 kW
-// - 24/7 operation
-// - annual: $26K electricity
-// - cooling adds: $8-12K
-// - ROI affected by energy cost
-
-// Heat dissipation:
-// - 1 kW heat = 3412 BTU/hr
-// - CRAC cooling: need 1-1.5 kW
-// - water cooling: 0.2-0.3 kW
-// - PUE impact massive`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">열 방출 환산</h3>
+        <ul className="leading-7">
+          <li>1 kW 열 = 3,412 BTU/hr</li>
+          <li>CRAC 냉각 — 1~1.5 kW 추가 필요</li>
+          <li>water cooling — 0.2~0.3 kW</li>
+          <li>PUE 영향 막대</li>
+        </ul>
         <p className="leading-7">
           TDP: <strong>sustained cooling 기준, peak는 120-150%</strong>.<br />
           AI server: 7.7 kW IT load, 12 kW PSU (2N redundant).<br />

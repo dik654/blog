@@ -1,47 +1,28 @@
-import LSTMCellFlowViz from './viz/LSTMCellFlowViz';
-import GateFlowViz from './viz/GateFlowViz';
+import {
+  ConceptPrimer,
+  Misconception,
+  QuestionLead,
+} from '@/components/learning/ArticleLearning';
 import GateEquations from './GateEquations';
-import CellUpdateDetailViz from './viz/CellUpdateDetailViz';
-import GateRolesDetailViz from './viz/GateRolesDetailViz';
+import { LSTMCellLab } from './viz/LSTMConceptExplorers';
 
 export default function CellArchitecture() {
   return (
     <section id="cell-architecture" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">LSTM 셀 구조</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          LSTM 셀 — <strong>세 개의 게이트</strong>와 <strong>셀 상태(Cell State)</strong>로 구성<br />
-          셀 상태는 시간축을 따라 정보를 전달하는 "고속도로"<br />
-          게이트들이 이 고속도로에 정보를 추가하거나 제거
-        </p>
-      </div>
-
-      <div className="not-prose my-6"><LSTMCellFlowViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">게이트 연산 상세</h3>
-        <p>
-          각 게이트는 <strong>sigmoid(σ)</strong> 함수를 사용하여 0~1 사이의 값 출력<br />
-          이 값이 정보의 "통과 비율" 결정 — 0이면 완전 차단, 1이면 완전 통과
-        </p>
-      </div>
-
-      <div className="not-prose my-6"><GateFlowViz /></div>
-
+      <h2 className="mb-6 text-2xl font-bold">한 시점의 LSTM cell을 실행 순서로 읽는다</h2>
+      <QuestionLead
+        question="이전 기억 Cₜ₋₁=0.8 중 75%를 남기고, 새 후보 0.6 중 40%만 기록하면 새 기억은 얼마일까?"
+        answer="과거에서 0.75×0.8=0.60을 남기고 새 후보에서 0.40×0.6=0.24를 기록한 뒤 더해 Cₜ=0.84를 만든다. Output gate는 이 내부 기억 전부를 바로 노출하지 않고 tanh(Cₜ) 중 필요한 성분만 hₜ로 내보낸다."
+      />
+      <ConceptPrimer items={[
+        { term: 'Forget gate fₜ', meaning: 'Cₜ₋₁의 각 성분을 얼마 남길지 정한다.', why: '오래된 state를 무조건 누적하면 쓸모없는 정보와 scale도 계속 남기 때문이다.' },
+        { term: 'Input gate iₜ', meaning: '새 후보 C̃ₜ의 각 성분을 얼마 기록할지 정한다.', why: '현재 입력의 모든 변화를 장기 기억에 덮어쓰지 않게 한다.' },
+        { term: 'Candidate C̃ₜ', meaning: '현재 xₜ와 이전 hₜ₋₁에서 만든 -1~1 범위의 새 내용이다.', why: 'Gate는 비율만 만들므로 기록할 실제 내용이 별도로 필요하다.' },
+        { term: 'Output gate oₜ', meaning: '갱신된 Cₜ 중 외부 hidden state로 보일 성분을 정한다.', why: '내부 기억과 현재 prediction·다음 layer에 전달할 표현을 분리한다.' },
+      ]} />
+      <LSTMCellLab />
       <GateEquations />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">셀 상태 업데이트 흐름 상세</h3>
-        <div className="not-prose"><CellUpdateDetailViz /></div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">각 게이트의 의미와 역할</h3>
-        <div className="not-prose"><GateRolesDetailViz /></div>
-        <p className="leading-7">
-          요약 1: LSTM 셀은 <strong>3 게이트 + 1 후보 + 1 셀 상태 + 1 히든</strong>으로 6개 변수가 상호작용.<br />
-          요약 2: <strong>셀 상태 C_t</strong>는 장기 기억 라인, <strong>히든 h_t</strong>는 외부 노출용.<br />
-          요약 3: forget gate bias를 +1로 초기화하면 초기 학습 안정성이 눈에 띄게 개선.
-        </p>
-      </div>
+      <Misconception><strong>Cₜ</strong>와 <strong>hₜ</strong>는 같은 값의 다른 이름이 아니다. Cₜ는 시간축 memory path이고, hₜ는 output gate를 거쳐 현재 step 밖으로 노출되는 state다. 둘 다 다음 LSTM step에는 입력된다.</Misconception>
     </section>
   );
 }

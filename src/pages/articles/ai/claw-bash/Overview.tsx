@@ -1,242 +1,117 @@
+import { CodeViewButton } from '@/components/code';
+import type { CodeRef } from '@/components/code/types';
+import { codeRefs } from './codeRefs';
+import BashExitSemanticsStepViz from './viz/BashExitSemanticsStepViz';
 import BashPipelineViz from './viz/BashPipelineViz';
+import ShellBoundaryLab from './viz/ShellBoundaryLab';
 
-export default function Overview() {
+export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Bash 실행 흐름 &amp; 샌드박스</h2>
+      <h2 className="mb-6 text-2xl font-bold">문자열 하나가 실행되기까지</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <BashPipelineViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Bash 도구의 위험성</h3>
         <p>
-          <code>bash</code>는 claw-code에서 가장 <strong>위험한 도구</strong><br />
-          임의 쉘 명령을 실행 — 파일 삭제, 네트워크 접근, 시스템 조작 모두 가능<br />
-          <code>DangerFullAccess</code> 권한 요구 — 기본 모드에서 항상 Prompt 발생
+          파일 도구는 <code>path</code>와 <code>operation</code>이 나뉘지만 shell command는 한
+          문자열 안에 pipeline, redirection, substitution, 새 process를 함께 담는다. 그래서
+          <code>rm</code> 같은 단어를 찾는 일과 실제 피해 범위를 제한하는 일은 서로 다른 문제다.
+          전자는 위험 <strong>신호</strong>이고, 후자는 OS가 강제하는 <strong>containment</strong>다.
         </p>
-        <div className="not-prose grid gap-3 my-4">
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">위험 예시 1</p>
-            <p className="text-sm mb-1">사용자: "임시 파일 정리해줘"</p>
-            <p className="text-sm mb-1">에이전트: <code className="bg-red-100 dark:bg-red-900/50 px-1.5 py-0.5 rounded text-xs">bash("rm -rf /tmp")</code></p>
-            <p className="text-sm text-red-600 dark:text-red-400">의도: 임시 디렉토리 정리 → 실제: /tmp 전체 삭제, 다른 프로세스 영향</p>
-          </div>
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">위험 예시 2</p>
-            <p className="text-sm mb-1">사용자: "로그 확인해줘"</p>
-            <p className="text-sm mb-1">에이전트: <code className="bg-red-100 dark:bg-red-900/50 px-1.5 py-0.5 rounded text-xs">bash("cat /var/log/*")</code></p>
-            <p className="text-sm text-red-600 dark:text-red-400">의도: 로그 읽기 → 실제: /etc/shadow 같은 파일도 접근 가능 (sudo 시)</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">BashCommandInput 구조</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold">BashCommandInput 구조체</p>
-            </div>
-            <div className="divide-y divide-border">
-              <div className="grid grid-cols-[140px_1fr] px-4 py-2.5 text-sm">
-                <span className="font-mono text-blue-600 dark:text-blue-400">command</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">String</code> — 실행할 명령 (필수)</span>
-              </div>
-              <div className="grid grid-cols-[140px_1fr] px-4 py-2.5 text-sm bg-muted/30">
-                <span className="font-mono text-blue-600 dark:text-blue-400">timeout</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">Option&lt;u64&gt;</code> — 밀리초, 기본 120000 (2분)</span>
-              </div>
-              <div className="grid grid-cols-[140px_1fr] px-4 py-2.5 text-sm">
-                <span className="font-mono text-blue-600 dark:text-blue-400">description</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">Option&lt;String&gt;</code> — 사용자에게 표시할 설명</span>
-              </div>
-              <div className="grid grid-cols-[140px_1fr] px-4 py-2.5 text-sm bg-muted/30">
-                <span className="font-mono text-blue-600 dark:text-blue-400">run_in_background</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">bool</code> — 백그라운드 실행 여부</span>
-              </div>
-              <div className="grid grid-cols-[140px_1fr] px-4 py-2.5 text-sm">
-                <span className="font-mono text-blue-600 dark:text-blue-400">working_directory</span>
-                <span><code className="text-xs bg-muted px-1 py-0.5 rounded">Option&lt;PathBuf&gt;</code> — 실행 디렉토리 (기본: workspace)</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <p>
-          <strong>5개 필드</strong>: command(필수) + 4개 선택<br />
-          <code>description</code>은 LLM이 "이 명령이 무엇을 하는지" 사용자에게 설명 — Prompt UI에 표시<br />
-          <code>run_in_background</code>: 장시간 실행 명령(서버 등)은 백그라운드로 — stdout 파일로 리다이렉션
+          아래 실험실은 production shell runner의 여섯 경계를 바꿔 보게 하고, 이어지는 호출 경로는
+          실제 실행을 일곱 단계로 펼친다. 색 표시는 현재 snapshot에서 확인된 구현 정도이며, 모든
+          경계가 이미 닫혔다는 뜻이 아니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">실행 파이프라인 전체 흐름</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold">execute_bash(input) 흐름</p>
-            </div>
-            <div className="divide-y divide-border text-sm">
-              <div className="grid grid-cols-[32px_140px_1fr] px-4 py-2.5 items-center">
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">1</span>
-                <span className="font-semibold">입력 파싱</span>
-                <span className="text-muted-foreground">BashCommandInput 역직렬화</span>
-              </div>
-              <div className="px-4 py-2.5 bg-muted/30">
-                <div className="grid grid-cols-[32px_140px_1fr] items-center">
-                  <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">2</span>
-                  <span className="font-semibold">6단계 검증</span>
-                  <span className="text-muted-foreground">(다음 섹션)</span>
-                </div>
-                <div className="ml-8 mt-2 grid gap-1.5 text-xs text-muted-foreground">
-                  <div className="grid grid-cols-[120px_1fr]"><span className="font-mono">a. Empty check</span><span>빈 명령 거부</span></div>
-                  <div className="grid grid-cols-[120px_1fr]"><span className="font-mono">b. Length check</span><span>10KB 초과 거부</span></div>
-                  <div className="grid grid-cols-[120px_1fr]"><span className="font-mono">c. Banned patterns</span><span>금지 패턴 매칭</span></div>
-                  <div className="grid grid-cols-[120px_1fr]"><span className="font-mono">d. CommandIntent</span><span>Destructive 감지 → Prompt</span></div>
-                  <div className="grid grid-cols-[120px_1fr]"><span className="font-mono">e. Path validation</span><span>작업 디렉토리 검증</span></div>
-                  <div className="grid grid-cols-[120px_1fr]"><span className="font-mono">f. Resource limits</span><span>rlimit 적용</span></div>
-                </div>
-              </div>
-              <div className="grid grid-cols-[32px_140px_1fr] px-4 py-2.5 items-center">
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">3</span>
-                <span className="font-semibold">샌드박스 결정</span>
-                <span className="text-muted-foreground">bubblewrap 가능 여부 확인</span>
-              </div>
-              <div className="grid grid-cols-[32px_140px_1fr] px-4 py-2.5 items-center bg-muted/30">
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">4</span>
-                <span className="font-semibold">서브프로세스 실행</span>
-                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">tokio::process::Command</code></span>
-              </div>
-              <div className="grid grid-cols-[32px_140px_1fr] px-4 py-2.5 items-center">
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">5</span>
-                <span className="font-semibold">타임아웃 감시</span>
-                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">tokio::time::timeout</code></span>
-              </div>
-              <div className="grid grid-cols-[32px_140px_1fr] px-4 py-2.5 items-center bg-muted/30">
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">6</span>
-                <span className="font-semibold">출력 절단</span>
-                <span className="text-muted-foreground">stdout 8KB, stderr 4KB 상한</span>
-              </div>
-              <div className="grid grid-cols-[32px_140px_1fr] px-4 py-2.5 items-center">
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">7</span>
-                <span className="font-semibold">결과 반환</span>
-                <span className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">ToolOutput {'{'} stdout, stderr, exit_code {'}'}</code></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">기본 실행 코드</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-violet-50 dark:bg-violet-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold"><code className="text-xs">execute_bash(input)</code> 핵심 로직</p>
-            </div>
-            <div className="divide-y divide-border text-sm">
-              <div className="px-4 py-3">
-                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">입력 역직렬화</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">serde_json::from_value(input)</code> → <code className="text-xs bg-muted px-1 py-0.5 rounded">BashCommandInput</code></p>
-              </div>
-              <div className="px-4 py-3 bg-muted/30">
-                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">6단계 검증</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">BashValidator::new(&cmd).validate()?</code></p>
-              </div>
-              <div className="px-4 py-3">
-                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">샌드박스 래핑</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">Sandbox::is_available()</code> 분기 — 가용하면 <code className="text-xs bg-muted px-1 py-0.5 rounded">wrap_command()</code>, 아니면 직접 실행</p>
-              </div>
-              <div className="px-4 py-3 bg-muted/30">
-                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">프로세스 생성</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">tokio::process::Command::new(&program)</code> — stdout/stderr piped, working_directory 설정</p>
-              </div>
-              <div className="px-4 py-3">
-                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">타임아웃 적용</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">tokio::time::timeout(timeout, child.wait_with_output())</code> — 기본 120초</p>
-              </div>
-              <div className="px-4 py-3 bg-muted/30">
-                <p className="font-semibold text-violet-700 dark:text-violet-400 mb-1">결과 반환</p>
-                <p className="text-muted-foreground">
-                  <code className="text-xs bg-muted px-1 py-0.5 rounded">ToolOutput</code>: stdout <code className="text-xs bg-muted px-1 py-0.5 rounded">truncate(8192)</code>, stderr <code className="text-xs bg-muted px-1 py-0.5 rounded">truncate(4096)</code>, exit_code
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">출력 절단 — truncate</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-orange-50 dark:bg-orange-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold"><code className="text-xs">truncate(text, max_bytes)</code> 동작</p>
-            </div>
-            <div className="divide-y divide-border text-sm">
-              <div className="px-4 py-3">
-                <p className="font-semibold text-orange-700 dark:text-orange-400 mb-1">길이 확인</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">text.len() &lt;= max_bytes</code> → 그대로 반환</p>
-              </div>
-              <div className="px-4 py-3 bg-muted/30">
-                <p className="font-semibold text-orange-700 dark:text-orange-400 mb-1">절단 + 꼬리 메시지</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">text[..max_bytes]</code> 슬라이스 후 <code className="text-xs bg-muted px-1 py-0.5 rounded">[... truncated, N bytes total ...]</code> 추가</p>
-              </div>
-              <div className="px-4 py-3">
-                <p className="font-semibold text-orange-700 dark:text-orange-400 mb-1">적용 한계</p>
-                <div className="flex gap-4 text-muted-foreground">
-                  <span>stdout: <code className="text-xs bg-muted px-1 py-0.5 rounded">8KB</code></span>
-                  <span>stderr: <code className="text-xs bg-muted px-1 py-0.5 rounded">4KB</code></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>절단 한계</strong>: stdout 8KB, stderr 4KB<br />
-          이유: LLM 컨텍스트에 들어가는 토큰 수 제한 — 10MB 로그가 대화를 오염시키는 것 방지<br />
-          사용자가 전체 출력 필요 시 <code>head</code>, <code>tail</code>, 파일 리다이렉션 사용 권장
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">백그라운드 실행 — run_in_background</h3>
-        <div className="not-prose my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-sky-50 dark:bg-sky-950/30 px-4 py-2 border-b border-border">
-              <p className="text-sm font-semibold">백그라운드 실행 흐름 (<code className="text-xs">run_in_background = true</code>)</p>
-            </div>
-            <div className="divide-y divide-border text-sm">
-              <div className="px-4 py-3">
-                <p className="font-semibold text-sky-700 dark:text-sky-400 mb-1">로그 파일 생성</p>
-                <p className="text-muted-foreground">경로: <code className="text-xs bg-muted px-1 py-0.5 rounded">.claw/bg-logs/{'{'}uuid{'}'}.log</code> — UUID로 고유 파일명</p>
-              </div>
-              <div className="px-4 py-3 bg-muted/30">
-                <p className="font-semibold text-sky-700 dark:text-sky-400 mb-1">stdout/stderr 리다이렉션</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">log_file.try_clone()</code>로 stdout과 stderr 모두 같은 파일에 기록</p>
-              </div>
-              <div className="px-4 py-3">
-                <p className="font-semibold text-sky-700 dark:text-sky-400 mb-1">프로세스 생성 + 즉시 반환</p>
-                <p className="text-muted-foreground"><code className="text-xs bg-muted px-1 py-0.5 rounded">spawn()</code> 후 종료 대기 없음 — PID + 로그 경로를 <code className="text-xs bg-muted px-1 py-0.5 rounded">ToolOutput::background()</code>로 반환</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>백그라운드 실행 사용 사례</strong>: <code>npm run dev</code>, <code>cargo watch</code>, 테스트 서버 등<br />
-          PID와 로그 파일 경로 반환 — 사용자가 후속 명령으로 로그 확인 가능<br />
-          세션 종료 시 백그라운드 프로세스는 <strong>자동 종료</strong> (tokio Child가 Drop 시 kill)
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: bash vs 전용 도구의 트레이드오프</p>
-          <p>
-            다른 에이전트 프레임워크는 bash를 금지하고 <strong>전용 도구만</strong> 제공<br />
-            - <code>git_commit</code>, <code>npm_install</code>, <code>test_run</code> 같은 한정 도구<br />
-            - 장점: 안전, 입력 검증 가능<br />
-            - 단점: 표현력 부족 — 복합 파이프(<code>grep | sort | uniq</code>) 불가
-          </p>
-          <p className="mt-2">
-            claw-code의 선택: <strong>bash 유지 + 다층 검증</strong><br />
-            - 6단계 검증 + 샌드박스 + Prompt로 위험 최소화<br />
-            - 대신 사용자가 bash를 쓸지 말지 선택 가능 (<code>--read-only</code>, Policy 규칙)<br />
-            - LLM이 복합 작업을 한 명령으로 표현할 수 있어 효율 ↑
-          </p>
-          <p className="mt-2">
-            이 선택은 "성인 사용자 가정" 철학 — "도구를 뺏기보다 안전 가드 제공"
-          </p>
-        </div>
-
       </div>
+
+      <ShellBoundaryLab />
+      <BashPipelineViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>현재 production 호출 경로</h3>
+        <p>
+          도구 dispatcher는 먼저 command의 첫 단어와 겉으로 드러난 path를 보고
+          <code>WorkspaceWrite</code> 또는 <code>DangerFullAccess</code>를 고른다. enforcer가 전달된
+          경우 permission을 확인한 뒤 <code>run_bash</code>로 간다. 여기서 먼저
+          <code>workspace_test_branch_preflight()</code>를 실행하며, stale/diverged branch 결과가
+          나오면 sandbox와 shell 실행 전에 직렬화된 결과를 즉시 반환한다. preflight가
+          <code>None</code>일 때만 <code>execute_bash</code>를 부른다. 별도 파일의
+          <code>validate_command()</code>는 이 경로에서 호출되지 않는다.
+        </p>
+        <div className="not-prose my-5 grid gap-3 md:grid-cols-2">
+          {[
+            ['1. 분류', '첫 command와 단순 path heuristic으로 필요한 permission mode를 추정한다.'],
+            ['2. 승인', 'enforcer가 있는 호출 경로에서만 mode와 policy를 검사한다. Deny면 execute_bash에 진입하지 않는다.'],
+            ['3. branch preflight', 'workspace test 명령이면 freshness를 검사하고 stale/diverged 결과를 조기 반환할 수 있다.'],
+            ['4. 상태 계산', 'preflight를 통과한 요청만 설정과 platform support를 합쳐 SandboxStatus를 만든다.'],
+            ['5. 실행', 'Linux unshare launcher가 생기면 사용하고, 없으면 sh -lc로 실행한다.'],
+            ['6. 관찰', 'foreground는 timeout과 stdout/stderr를, background는 PID만 반환한다.'],
+            ['7. 해석', '0이 아닌 정상 exit는 exit_code:N으로 남지만 signal 의미는 따로 남지 않는다.'],
+          ].map(([title, text]) => (
+            <div key={title} className="rounded-md border border-border p-4">
+              <p className="m-0 text-sm font-semibold">{title}</p>
+              <p className="mb-0 mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="not-prose my-4 flex flex-wrap gap-2">
+          <CodeViewButton
+            onClick={() => onCodeRef('tools-dispatch', codeRefs['tools-dispatch'])}
+            label="optional enforcer dispatch 보기"
+          />
+          <CodeViewButton
+            onClick={() => onCodeRef('tools-bash-gateway', codeRefs['tools-bash-gateway'])}
+            label="Bash 분류·preflight gateway 보기"
+          />
+          <CodeViewButton
+            onClick={() => onCodeRef('bash-execution', codeRefs['bash-execution'])}
+            label="Bash 입출력과 실행 진입점 보기"
+          />
+          <CodeViewButton
+            onClick={() => onCodeRef('sandbox-launch', codeRefs['sandbox-launch'])}
+            label="launcher와 fallback 분기 보기"
+          />
+        </div>
+
+        <h3>입력 schema가 말해 주는 것</h3>
+        <p>
+          입력에는 command와 timeout뿐 아니라 background 여부, sandbox 강제 해제,
+          namespace/network 요청, filesystem mode, 허용 mount가 들어간다. 이 필드들은
+          <strong>요청</strong>이다. 예를 들어 <code>filesystemMode=workspace-only</code>라고
+          적었다고 해서 실제 mount 경계가 강제됐다고 결론 내리면 안 된다. 뒤에서 status와 launcher를
+          확인해야 한다.
+        </p>
+
+        <h3>timeout은 응답 상태이지 process 종료 증명은 아니다</h3>
+        <p>
+          foreground 구현은 <code>tokio::time::timeout(command.output())</code>으로 기다림을 제한한다.
+          그러나 이 snapshot에는 새 process group을 만들고 timeout 때 전체 group에 signal을 보낸 뒤
+          reap하는 코드가 보이지 않는다. 따라서 “timeout 응답을 돌려줌”과 “shell의 모든 자식이
+          종료됨”을 구분해야 한다.
+        </p>
+        <p>
+          background 분기는 더 얇다. stdin/stdout/stderr를 null로 두고 spawn한 뒤 PID 문자열을 즉시
+          반환한다. task registry, 로그 경로, 취소 API, descendant cleanup은 이 함수에 없다. 장시간
+          서버 실행을 제품 기능으로 만들려면 별도 lifecycle manager가 필요하다.
+        </p>
+        <div className="not-prose my-4">
+          <CodeViewButton
+            onClick={() => onCodeRef('bash-timeout-output', codeRefs['bash-timeout-output'])}
+            label="timeout·출력·exit 처리 보기"
+          />
+        </div>
+
+        <h3>exit code를 성공/실패 한 비트로 줄일 수 없는 이유</h3>
+        <p>
+          <code>grep</code>과 <code>rg</code>의 1은 “match 없음”, <code>diff</code>의 1은 “서로
+          다름”, <code>test</code>의 1은 “조건이 거짓”이다. 현재 runner는 이들을 모두
+          <code>exit_code:1</code>로 기록한다. command별 의미를 붙이지 않으면 agent는 정상적인 탐색
+          결과를 장애로 오해하고 불필요한 재시도를 할 수 있다. 반대로 존재하지 않는 실행 파일처럼 shell이
+          명령 자체를 시작하지 못한 경우는 보통 127처럼 다른 exit code가 된다. 이 경우는 “정상 실행 뒤
+          결과가 없음”이 아니라 dispatch·environment 실패로 분류해야 한다.
+        </p>
+      </div>
+
+      <BashExitSemanticsStepViz />
     </section>
   );
 }

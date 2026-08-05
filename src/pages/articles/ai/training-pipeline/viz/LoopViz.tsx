@@ -1,13 +1,55 @@
 import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
-import { ModuleBox, DataBox, ActionBox, AlertBox } from '@/components/viz/boxes';
+import { ActionBox, AlertBox } from '@/components/viz/boxes';
 import { STEPS, COLORS, sp } from './LoopVizData';
+import MobileTrainingScene, { type MobileTrainingSceneData } from './MobileTrainingScene';
+
+const MOBILE_SCENES: MobileTrainingSceneData[] = [
+  {
+    eyebrow: 'Train loop',
+    items: [
+      { label: 'model.train() + forward', detail: 'Dropout과 BatchNorm을 학습 mode로 두고 logits를 만든다.', accent: COLORS.train },
+      { label: 'loss.backward()', detail: 'Loss에서 parameter까지 gradient를 계산해 누적한다.', accent: COLORS.grad },
+      { label: 'step() → zero_grad()', detail: 'Weight를 갱신한 뒤 다음 batch와 섞이지 않게 gradient를 비운다.', accent: COLORS.train },
+    ],
+    oracle: 'Train loop만 parameter를 바꾼다.',
+  },
+  {
+    eyebrow: 'Validation loop',
+    items: [
+      { label: 'model.eval()', detail: 'Dropout을 끄고 BatchNorm의 저장 통계를 사용한다.', accent: COLORS.val },
+      { label: 'torch.no_grad()', detail: 'Autograd graph를 만들지 않고 prediction과 metric만 계산한다.', accent: COLORS.val },
+      { label: 'optimizer.step() 없음', detail: 'Validation data가 weight update에 들어가면 선택 경계가 무너진다.', accent: COLORS.accum },
+    ],
+    oracle: 'Validation은 측정과 선택을 위한 data이지 학습 batch가 아니다.',
+  },
+  {
+    eyebrow: 'Gradient accumulation',
+    items: [
+      { label: 'Micro-batch마다 loss / N', detail: 'N번 합친 gradient의 scale을 큰 batch 평균과 맞춘다.', accent: COLORS.accum },
+      { label: 'Backward만 N번', detail: 'zero_grad 전까지 parameter.grad에 계속 더한다.', accent: COLORS.grad },
+      { label: 'N번째에 step + zero', detail: '한 번 weight를 갱신하고 다음 accumulation window를 시작한다.', accent: COLORS.accum },
+    ],
+    oracle: '실효 batch는 커지지만 activation memory는 micro-batch 크기에 맞춘다.',
+  },
+  {
+    eyebrow: 'Automatic mixed precision',
+    items: [
+      { label: 'FP32 baseline 측정', detail: '같은 batch의 step time, peak memory와 metric을 기록한다.', accent: COLORS.flow },
+      { label: 'autocast + dynamic scale', detail: 'Op별 dtype을 고르고 작은 gradient가 0이 되지 않게 scale을 조정한다.', accent: COLORS.amp },
+      { label: '같은 조건으로 비교', detail: 'Overflow, throughput, memory와 quality가 모두 허용될 때 채택한다.', accent: COLORS.grad },
+    ],
+    oracle: 'AMP의 speedup과 memory 절감률은 고정값이 아니다.',
+  },
+];
 
 export default function LoopViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 520 230" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <div className="w-full">
+          <MobileTrainingScene scene={MOBILE_SCENES[step]} />
+          <svg viewBox="0 0 520 230" className="hidden w-full max-w-2xl sm:block" style={{ height: 'auto' }}>
           <defs>
             <marker id="arrLp" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto">
               <path d="M0,0 L6,3 L0,6" fill="var(--muted-foreground)" />
@@ -45,9 +87,9 @@ export default function LoopViz() {
               ))}
               {/* tqdm */}
               <rect x={100} y={175} width={320} height={20} rx={4} fill="var(--muted)" fillOpacity={0.15} />
-              <motion.rect x={100} y={175} width={0} height={20} rx={4} fill={COLORS.train} opacity={0.3}
+              <motion.rect initial={false} x={100} y={175} width={0} height={20} rx={4} fill={COLORS.train} opacity={0.3}
                 animate={{ width: 220 }} transition={{ ...sp, duration: 1.2 }} />
-              <text x={260} y={189} textAnchor="middle" fontSize={8} fontFamily="monospace" fill="var(--muted-foreground)">
+              <text x={260} y={189} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
                 tqdm: Epoch 3/10 [====&gt;  ] 68% loss=0.342
               </text>
             </motion.g>
@@ -106,19 +148,19 @@ export default function LoopViz() {
                       stroke={isStep ? COLORS.accum : 'var(--border)'} strokeWidth={isStep ? 1.5 : 0.8} />
                     <text x={x + 55} y={54} textAnchor="middle" fontSize={9} fontWeight={600}
                       fill={isStep ? COLORS.accum : 'var(--foreground)'}>Batch {i + 1}</text>
-                    <text x={x + 55} y={70} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                    <text x={x + 55} y={70} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                       loss / 4
                     </text>
-                    <text x={x + 55} y={84} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                    <text x={x + 55} y={84} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                       backward()
                     </text>
                     {isStep && (
-                      <text x={x + 55} y={102} textAnchor="middle" fontSize={8} fontWeight={700} fill={COLORS.accum}>
+                      <text x={x + 55} y={102} textAnchor="middle" fontSize={9} fontWeight={700} fill={COLORS.accum}>
                         step() + zero_grad()
                       </text>
                     )}
                     {!isStep && (
-                      <text x={x + 55} y={102} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+                      <text x={x + 55} y={102} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                         grad 누적
                       </text>
                     )}
@@ -131,7 +173,7 @@ export default function LoopViz() {
               <text x={260} y={158} textAnchor="middle" fontSize={10} fontWeight={600} fill={COLORS.accum}>
                 실효 배치 = 32 x 4 = 128
               </text>
-              <text x={260} y={172} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+              <text x={260} y={172} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                 GPU 메모리는 batch_size=32만 필요 — 큰 배치 효과
               </text>
               <text x={260} y={200} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
@@ -152,11 +194,11 @@ export default function LoopViz() {
               <text x={140} y={52} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS.amp}>
                 autocast(dtype=float16)
               </text>
-              <ActionBox x={50} y={60} w={80} h={32} label="forward" sub="FP16 연산" color={COLORS.amp} />
-              <ActionBox x={150} y={60} w={80} h={32} label="loss" sub="FP16 계산" color={COLORS.amp} />
+              <ActionBox x={50} y={60} w={80} h={32} label="forward" sub="op별 dtype" color={COLORS.amp} />
+              <ActionBox x={150} y={60} w={80} h={32} label="loss" sub="안정 dtype" color={COLORS.amp} />
               <line x1={132} y1={76} x2={148} y2={76} stroke="var(--muted-foreground)" strokeWidth={0.8} markerEnd="url(#arrLp)" />
-              <text x={140} y={120} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
-                FP16: 메모리 절반, 연산 2배 빠름
+              <text x={140} y={120} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+                autocast가 op별로 dtype 선택 · 실제 이득은 측정
               </text>
 
               {/* GradScaler block */}
@@ -165,29 +207,21 @@ export default function LoopViz() {
               <text x={380} y={52} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS.grad}>
                 GradScaler
               </text>
-              <ActionBox x={290} y={60} w={80} h={32} label="scale" sub="loss * 1024" color={COLORS.grad} />
-              <ActionBox x={390} y={60} w={80} h={32} label="unscale" sub="grad / 1024" color={COLORS.grad} />
+              <ActionBox x={290} y={60} w={80} h={32} label="scale" sub="loss x 동적값" color={COLORS.grad} />
+              <ActionBox x={390} y={60} w={80} h={32} label="unscale" sub="grad / 같은 값" color={COLORS.grad} />
               <line x1={372} y1={76} x2={388} y2={76} stroke="var(--muted-foreground)" strokeWidth={0.8} markerEnd="url(#arrLp)" />
-              <text x={380} y={120} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">
+              <text x={380} y={120} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
                 FP16 underflow 방지: 큰 scale로 역전파
               </text>
 
-              {/* Comparison bars */}
-              <text x={80} y={158} fontSize={9} fontWeight={600} fill="var(--foreground)">FP32 only</text>
-              <rect x={180} y={148} width={300} height={14} rx={4} fill="var(--border)" opacity={0.2} />
-              <motion.rect x={180} y={148} width={0} height={14} rx={4} fill={COLORS.flow} opacity={0.5}
-                animate={{ width: 300 }} transition={{ ...sp, duration: 0.8 }} />
-              <text x={340} y={160} textAnchor="middle" fontSize={8} fill="#ffffff" fontWeight={600}>8GB VRAM</text>
-
-              <text x={80} y={186} fontSize={9} fontWeight={600} fill="var(--foreground)">AMP (FP16)</text>
-              <rect x={180} y={176} width={300} height={14} rx={4} fill="var(--border)" opacity={0.2} />
-              <motion.rect x={180} y={176} width={0} height={14} rx={4} fill={COLORS.amp} opacity={0.7}
-                animate={{ width: 165 }} transition={{ ...sp, duration: 0.6, delay: 0.2 }} />
-              <text x={270} y={188} textAnchor="middle" fontSize={8} fill="#ffffff" fontWeight={600}>4.5GB</text>
-              <text x={400} y={188} fontSize={8} fill={COLORS.amp} fontWeight={600}>44% 절약</text>
+              {/* Benchmark contract instead of a universal speed or memory claim */}
+              <ActionBox x={45} y={150} w={125} h={38} label="FP32 baseline" sub="time · peak memory" color={COLORS.flow} />
+              <ActionBox x={198} y={150} w={125} h={38} label="AMP run" sub="같은 batch · metric" color={COLORS.amp} />
+              <AlertBox x={350} y={150} w={125} h={38} label="비교 후 채택" sub="고정 배율 없음" color={COLORS.grad} />
             </motion.g>
           )}
-        </svg>
+          </svg>
+        </div>
       )}
     </StepViz>
   );

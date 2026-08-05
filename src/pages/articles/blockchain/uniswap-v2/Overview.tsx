@@ -38,12 +38,12 @@ export default function Overview() {
           </div>
           <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
             <p className="font-semibold text-sm mb-2">불변식</p>
-            <M display>{'x \\cdot y = k'}</M>
+            <M display>{'\\underbrace{x}_{\\text{token0 잔량}} \\cdot \\underbrace{y}_{\\text{token1 잔량}} = \\underbrace{k}_{\\text{불변량 (constant product)}}'}</M>
           </div>
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-2">스왑 시: <M>{'\\Delta x'}</M> 입력 → <M>{'\\Delta y'}</M> 출력</p>
-            <M display>{'(x + \\Delta x)(y - \\Delta y) = k'}</M>
-            <M display>{'\\Delta y = \\frac{y \\cdot \\Delta x}{x + \\Delta x} \\quad \\text{(수수료 제외)}'}</M>
+            <M display>{'\\underbrace{(x + \\Delta x)}_{\\text{새 token0 잔량}} \\cdot \\underbrace{(y - \\Delta y)}_{\\text{새 token1 잔량}} = \\underbrace{k}_{\\text{불변}}'}</M>
+            <M display>{'\\Delta y = \\frac{\\overbrace{y \\cdot \\Delta x}^{\\text{출력 비율}}}{\\underbrace{x + \\Delta x}_{\\text{입력 후 새 잔량}}} \\quad \\text{(수수료 제외)}'}</M>
           </div>
         </div>
         <p>
@@ -59,7 +59,7 @@ export default function Overview() {
         <div className="not-prose space-y-3 mb-4">
           <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
             <p className="font-semibold text-sm mb-2">가격 공식</p>
-            <M display>{'P = \\frac{y}{x} \\quad \\text{(token0 단위의 token1 가격)}'}</M>
+            <M display>{'\\underbrace{P}_{\\text{token0 단위 가격}} = \\frac{\\overbrace{y}^{\\text{token1 잔량}}}{\\underbrace{x}_{\\text{token0 잔량}}}'}</M>
           </div>
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-2">예시: USDC/ETH 풀</p>
@@ -93,8 +93,8 @@ export default function Overview() {
         <div className="not-prose space-y-3 mb-4">
           <div className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-4">
             <p className="font-semibold text-sm mb-2">수수료 포함 swap 공식</p>
-            <M display>{"\\Delta x' = \\Delta x \\times 0.997 \\quad \\text{(0.3\\% 수수료 차감)}"}</M>
-            <M display>{"\\Delta y = \\frac{y \\cdot \\Delta x'}{x + \\Delta x'}"}</M>
+            <M display>{"\\underbrace{\\Delta x'}_{\\text{유효 입력}} = \\Delta x \\times \\underbrace{0.997}_{\\text{0.3\\% 수수료 제거}}"}</M>
+            <M display>{"\\Delta y = \\frac{\\overbrace{y \\cdot \\Delta x'}^{\\text{출력 비율}}}{\\underbrace{x + \\Delta x'}_{\\text{새 잔량}}}"}</M>
           </div>
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-2">k 불변식 검증 (수수료 포함)</p>

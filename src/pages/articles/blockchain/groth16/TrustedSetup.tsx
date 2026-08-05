@@ -83,7 +83,7 @@ export default function TrustedSetup({ onCodeRef }: { onCodeRef: (key: string, r
           </div>
           <div className="bg-amber-50 dark:bg-amber-950/30 rounded p-3 space-y-1">
             <p className="text-xs font-medium">⑤ LC 계산 및 public/private 분리</p>
-            <M display>{'lc_j = \\beta \\cdot a_j(\\tau) + \\alpha \\cdot b_j(\\tau) + c_j(\\tau)'}</M>
+            <M display>{'lc_j = \\underbrace{\\beta \\cdot a_j(\\tau)}_{\\text{좌변 항 × β}} + \\underbrace{\\alpha \\cdot b_j(\\tau)}_{\\text{우변 항 × α}} + \\underbrace{c_j(\\tau)}_{\\text{출력 항}}'}</M>
             <p className="font-mono text-xs text-muted-foreground">공개: ic[j] = [lcⱼ / γ]₁</p>
             <p className="font-mono text-xs text-muted-foreground">비공개: l_query[j'] = [lcⱼ / δ]₁</p>
           </div>

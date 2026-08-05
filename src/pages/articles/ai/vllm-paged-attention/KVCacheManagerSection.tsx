@@ -7,9 +7,9 @@ interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 export default function KVCacheManagerSection({ onCodeRef }: Props) {
   return (
     <section id="kv-cache-manager" className="mb-16 scroll-mt-20">
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold">KVCacheManager: 할당 전략</h2>
-        <div className="flex gap-2">
+        <div className="flex max-w-full flex-wrap gap-2">
           <CodeViewButton
             onClick={() => onCodeRef('kv-coordinator', blockPoolCodeRefs['kv-coordinator'])}
             label="Coordinator"
@@ -33,7 +33,7 @@ export default function KVCacheManagerSection({ onCodeRef }: Props) {
         <h3 className="text-xl font-semibold mt-6 mb-3">allocate_slots() 5구간 레이아웃</h3>
         <p>
           allocate_slots()는 토큰을 5개 구간으로 나누어 처리합니다.<br />
-          소스 코드의 ASCII 다이어그램(L289-321)이 이를 명확히 보여줍니다.
+          소스 코드의 ASCII 다이어그램(L250-282)이 이를 명확히 보여줍니다.
         </p>
         <ol>
           <li><strong>computed</strong> — 이미 계산된 블록. SlidingWindow 밖이면 해제</li>

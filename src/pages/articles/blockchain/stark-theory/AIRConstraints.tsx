@@ -34,7 +34,7 @@ export default function AIRConstraints() {
                   <M>x</M>: 실행 도메인 <M>D</M> 위의 평가점(evaluation point).
                 </p>
               </div>
-              <p className="text-xs text-muted-foreground mt-2"><M>x \in D \setminus \{'{'}\omega^T\{'}'}</M> 에서 성립 &mdash; 마지막 행은 "다음 행"이 없으므로 제외</p>
+              <p className="text-xs text-muted-foreground mt-2"><M>{'x \\in D \\setminus \\{\\omega^T\\}'}</M> 에서 성립 &mdash; 마지막 행은 "다음 행"이 없으므로 제외</p>
             </div>
             <div className="rounded border bg-card p-3">
               <p className="font-semibold text-emerald-300">2. Boundary Constraints (경계 제약)</p>
@@ -74,13 +74,13 @@ export default function AIRConstraints() {
               <p className="text-xs text-muted-foreground mb-2">모든 제약을 verifier 챌린지 <M>\alpha_i</M>로 하나로 결합</p>
               <M display>{'\\underbrace{C_{\\text{comp}}(x)}_{\\text{합성 다항식}} = \\sum_i \\underbrace{\\alpha_i}_{\\text{랜덤 챌린지}} \\cdot \\underbrace{\\frac{C_i(x)}{V_i(x)}}_{\\text{제약 i의 몫}}'}</M>
               <p className="text-sm text-muted-foreground mt-2">
-                <M>C_{'{\\text{comp}}'}(x)</M>: 합성 다항식(Composition Polynomial) &mdash; 여러 제약을 하나의 다항식으로 결합.{' '}
+                <M>{'C_{\\text{comp}}(x)'}</M>: 합성 다항식(Composition Polynomial) &mdash; 여러 제약을 하나의 다항식으로 결합.{' '}
                 <M>\alpha_i</M>: Verifier가 보낸 랜덤 계수 &mdash; Prover가 개별 제약을 속이는 것을 방지(Schwartz-Zippel 보조정리).{' '}
                 <M>C_i(x)</M>: <M>i</M>번째 제약 다항식. <M>V_i(x)</M>: 해당 제약의 소거 다항식.
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                Prover가 <M>C_{'{\\text{comp}}'}</M>에 commit &rarr; Verifier가 FRI로 low-degree 검증.{' '}
-                <M>C_{'{\\text{comp}}'}</M>이 낮은 차수 &hArr; 모든 <M>C_i(x)/V_i(x)</M>가 다항식 &hArr; 모든 제약이 성립.
+                Prover가 <M>{'C_{\\text{comp}}'}</M>에 commit &rarr; Verifier가 FRI로 low-degree 검증.{' '}
+                <M>{'C_{\\text{comp}}'}</M>이 낮은 차수 &hArr; 모든 <M>{'C_i(x)/V_i(x)'}</M>가 다항식 &hArr; 모든 제약이 성립.
               </p>
             </div>
           </div>

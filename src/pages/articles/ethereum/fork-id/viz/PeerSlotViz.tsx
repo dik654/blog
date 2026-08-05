@@ -19,7 +19,7 @@ export default function PeerSlotViz() {
             const ok = step === 0 ? 30 : 40;
             const bad = step === 0 ? 15 : 0;
             const empty = 50 - ok - bad;
-            const cols = 10, size = 28, gap = 4, ox = 55;
+            const cols = 10, size = 20, gap = 3, ox = 55;
             return (
               <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 {Array.from({ length: 50 }).map((_, i) => {
@@ -28,13 +28,13 @@ export default function PeerSlotViz() {
                   return (
                     <motion.rect key={i}
                       x={ox + col * (size + gap)} y={10 + row * (size + gap)}
-                      width={size} height={size} rx={4}
+                      width={size} height={size} rx={3}
                       fill={c + '20'} stroke={c} strokeWidth={1} strokeOpacity={0.5}
                       initial={{ scale: 0 }} animate={{ scale: 1 }}
                       transition={{ delay: i * 0.008 }} />
                   );
                 })}
-                <g transform="translate(0, 135)">
+                <g transform="translate(0, 140)">
                   {[{ l: `호환 ${ok}`, c: OK_C }, { l: `비호환 ${bad}`, c: BAD_C }, { l: `빈 ${empty}`, c: EMPTY_C }].map((s, i) => (
                     <g key={s.l}>
                       <rect x={80 + i * 100} y={0} width={8} height={8} rx={2} fill={s.c} fillOpacity={0.5} />

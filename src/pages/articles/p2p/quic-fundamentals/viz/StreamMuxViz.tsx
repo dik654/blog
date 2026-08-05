@@ -23,7 +23,7 @@ export default function StreamMuxViz() {
                 TCP: 단일 바이트 스트림
               </text>
               {[0, 1, 2, 3, 4].map(i => (
-                <motion.rect key={i} x={60 + i * 64} y={90} width={48} height={16} rx={3}
+                <motion.rect initial={false} key={i} x={60 + i * 64} y={90} width={48} height={16} rx={3}
                   fill={C.tcp + '20'} stroke={C.tcp} strokeWidth={1}
                   animate={{ y: [90, 95, 90] }}
                   transition={{ duration: 1.2, delay: i * 0.15, repeat: Infinity }} />

@@ -72,7 +72,7 @@ function Step1() {
             <text x={10} y={43 + i * 50} fontSize={8} fill="var(--muted-foreground)">pred={m.pred}</text>
             {/* 가중치 바 */}
             <rect x={80} y={22 + i * 50} width={200} height={24} rx={4} fill="var(--muted)" fillOpacity={0.1} />
-            <motion.rect x={80} y={22 + i * 50} width={0} height={24} rx={4} fill={m.color} fillOpacity={0.2}
+            <motion.rect initial={false} x={80} y={22 + i * 50} width={0} height={24} rx={4} fill={m.color} fillOpacity={0.2}
               animate={{ width: barW }} transition={{ delay: 0.2 + i * 0.12, duration: 0.4 }} />
             <text x={85 + barW} y={38 + i * 50} fontSize={9} fontWeight={600} fill={m.color}>
               w={m.w}

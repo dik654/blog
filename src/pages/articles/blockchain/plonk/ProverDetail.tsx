@@ -14,7 +14,7 @@ export default function ProverDetail() {
             <p className="font-semibold text-sm text-sky-400 mb-2">Round 1: Wire Commits</p>
             <p className="text-sm text-muted-foreground mb-2">블라인딩 스칼라 <M>{'b_1, \\ldots, b_9'}</M> 선택 (랜덤)</p>
             <div className="my-2">
-              <M display>{'a(X) = (b_1 X + b_2) \\cdot Z_H(X) + \\sum_i a_i \\cdot L_i(X)'}</M>
+              <M display>{'a(X) = \\underbrace{(b_1 X + b_2) \\cdot Z_H(X)}_{\\text{블라인딩 (영지식)}} + \\underbrace{\\sum_i a_i \\cdot L_i(X)}_{\\text{Lagrange 보간 (witness 인코딩)}}'}</M>
               <M display>{'b(X) = (b_3 X + b_4) \\cdot Z_H(X) + \\sum_i b_i \\cdot L_i(X)'}</M>
               <M display>{'c(X) = (b_5 X + b_6) \\cdot Z_H(X) + \\sum_i c_i \\cdot L_i(X)'}</M>
             </div>
@@ -29,7 +29,7 @@ export default function ProverDetail() {
             <p className="text-sm text-muted-foreground mb-2">Fiat-Shamir 챌린지: <M>{'\\beta, \\gamma \\leftarrow \\text{transcript.squeeze}()'}</M></p>
             <div className="my-2">
               <M display>{'Z(\\omega^0) = 1'}</M>
-              <M display>{'Z(\\omega^{i+1}) = Z(\\omega^i) \\cdot \\prod_j \\frac{w_j(\\omega^i) + \\beta \\cdot \\omega^i \\cdot k_j + \\gamma}{w_j(\\omega^i) + \\beta \\cdot \\sigma_j(\\omega^i) + \\gamma}'}</M>
+              <M display>{'Z(\\omega^{i+1}) = Z(\\omega^i) \\cdot \\prod_j \\frac{\\overbrace{w_j(\\omega^i) + \\beta \\cdot \\omega^i \\cdot k_j + \\gamma}^{\\text{원래 위치 인덱스}}}{\\underbrace{w_j(\\omega^i) + \\beta \\cdot \\sigma_j(\\omega^i) + \\gamma}_{\\sigma \\text{ 순열 인덱스}}}'}</M>
             </div>
             <p className="text-sm text-muted-foreground"><M>{'Z(X)'}</M>에 블라인딩 추가 → <M>{'[Z]_1'}</M> 전송</p>
           </div>
@@ -41,10 +41,10 @@ export default function ProverDetail() {
             <p className="font-semibold text-sm text-amber-400 mb-2">Round 3: Quotient t(X)</p>
             <p className="text-sm text-muted-foreground mb-2">챌린지: <M>{'\\alpha \\leftarrow \\text{transcript.squeeze}()'}</M></p>
             <div className="my-2">
-              <M display>{'t(X) = \\frac{\\text{gate}(X) + \\alpha \\cdot \\text{perm}_1(X) + \\alpha^2 \\cdot \\text{perm}_2(X)}{Z_H(X)}'}</M>
+              <M display>{'t(X) = \\frac{\\overbrace{\\text{gate}(X)}^{\\text{게이트 제약}} + \\overbrace{\\alpha \\cdot \\text{perm}_1(X) + \\alpha^2 \\cdot \\text{perm}_2(X)}^{\\text{순열 제약 (} \\alpha \\text{로 결합)}}}{\\underbrace{Z_H(X)}_{\\text{vanishing 다항식 (전체 0이면 나누어 떨어짐)}}}'}</M>
             </div>
             <p className="text-sm text-muted-foreground mb-1"><M>{'\\deg(t) \\approx 3n'}</M> → 3등분:</p>
-            <M display>{'t(X) = t_{\\text{lo}}(X) + X^n \\cdot t_{\\text{mid}}(X) + X^{2n} \\cdot t_{\\text{hi}}(X)'}</M>
+            <M display>{'t(X) = \\underbrace{t_{\\text{lo}}(X)}_{\\deg < n} + \\underbrace{X^n \\cdot t_{\\text{mid}}(X)}_{\\text{중간 } n \\text{차수}} + \\underbrace{X^{2n} \\cdot t_{\\text{hi}}(X)}_{\\text{최상위 } n \\text{차수}}'}</M>
             <p className="text-sm text-muted-foreground mt-2">→ <M>{'[t_{\\text{lo}}]_1, [t_{\\text{mid}}]_1, [t_{\\text{hi}}]_1'}</M> 전송</p>
           </div>
         </div>
@@ -69,8 +69,8 @@ export default function ProverDetail() {
             <p className="text-sm text-muted-foreground mb-2">챌린지: <M>{'\\nu \\leftarrow \\text{transcript.squeeze}()'}</M></p>
             <p className="text-sm text-muted-foreground mb-1">선형화 다항식 <M>{'r(X)'}</M>: <M>{'\\bar{a}, \\bar{b}'}</M> 등으로 부분 평가</p>
             <div className="my-2">
-              <M display>{'W_\\zeta(X) = \\frac{r(X) + \\nu(a(X) - \\bar{a}) + \\nu^2(b(X) - \\bar{b}) + \\cdots}{X - \\zeta}'}</M>
-              <M display>{'W_{\\zeta\\omega}(X) = \\frac{Z(X) - \\bar{z}_\\omega}{X - \\zeta\\omega}'}</M>
+              <M display>{'W_\\zeta(X) = \\frac{\\overbrace{r(X) + \\nu(a(X) - \\bar{a}) + \\nu^2(b(X) - \\bar{b}) + \\cdots}^{\\zeta \\text{ 평가 차이를 } \\nu \\text{로 결합}}}{\\underbrace{X - \\zeta}_{\\text{근 인수 (KZG 몫)}}}'}</M>
+              <M display>{'W_{\\zeta\\omega}(X) = \\frac{\\overbrace{Z(X) - \\bar{z}_\\omega}^{\\zeta\\omega \\text{ 평가 차이}}}{\\underbrace{X - \\zeta\\omega}_{\\text{shifted 근 인수}}}'}</M>
             </div>
             <p className="text-sm text-muted-foreground">→ <M>{'[W_\\zeta]_1, [W_{\\zeta\\omega}]_1'}</M> 전송</p>
           </div>

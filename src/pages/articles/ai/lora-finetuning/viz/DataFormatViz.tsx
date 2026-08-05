@@ -36,26 +36,30 @@ export default function DataFormatViz() {
               </text>
               {/* Alpaca format */}
               <motion.g initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: d }}>
-                <ModuleBox x={20} y={28} w={210} h={78} label="Alpaca 포맷" sub="Stanford Alpaca" color={B} />
-                <rect x={28} y={58} width={194} height={44} rx={4} fill="var(--card)" stroke="var(--border)" strokeWidth={0.3} />
-                <text x={36} y={72} fontSize={7.5} fontFamily="monospace" fill={B}>instruction:</text>
-                <text x={110} y={72} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">번역해줘</text>
-                <text x={36} y={84} fontSize={7.5} fontFamily="monospace" fill={B}>input:</text>
-                <text x={110} y={84} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">Hello world</text>
-                <text x={36} y={96} fontSize={7.5} fontFamily="monospace" fill={G}>output:</text>
-                <text x={110} y={96} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">안녕 세상</text>
+                <rect x={20} y={28} width={210} height={82} rx={7} fill="var(--card)" stroke={B} strokeWidth={0.8} />
+                <text x={30} y={45} fontSize={9} fontWeight={700} fill={B}>Alpaca 포맷</text>
+                <text x={220} y={45} textAnchor="end" fontSize={7} fill="var(--muted-foreground)">Stanford Alpaca</text>
+                <rect x={28} y={54} width={194} height={50} rx={4} fill="var(--card)" stroke="var(--border)" strokeWidth={0.3} />
+                <text x={36} y={69} fontSize={7.5} fontFamily="monospace" fill={B}>instruction:</text>
+                <text x={110} y={69} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">번역해줘</text>
+                <text x={36} y={83} fontSize={7.5} fontFamily="monospace" fill={B}>input:</text>
+                <text x={110} y={83} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">Hello world</text>
+                <text x={36} y={97} fontSize={7.5} fontFamily="monospace" fill={G}>output:</text>
+                <text x={110} y={97} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">안녕 세상</text>
               </motion.g>
 
               {/* ChatML format */}
               <motion.g initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: d * 2 }}>
-                <ModuleBox x={250} y={28} w={210} h={78} label="ChatML 포맷" sub="OpenAI 대화형" color={P} />
-                <rect x={258} y={58} width={194} height={44} rx={4} fill="var(--card)" stroke="var(--border)" strokeWidth={0.3} />
-                <text x={266} y={72} fontSize={7.5} fontFamily="monospace" fill={P}>&lt;|system|&gt;</text>
-                <text x={340} y={72} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">번역기입니다</text>
-                <text x={266} y={84} fontSize={7.5} fontFamily="monospace" fill={B}>&lt;|user|&gt;</text>
-                <text x={340} y={84} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">Hello world</text>
-                <text x={266} y={96} fontSize={7.5} fontFamily="monospace" fill={G}>&lt;|assistant|&gt;</text>
-                <text x={358} y={96} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">안녕 세상</text>
+                <rect x={250} y={28} width={210} height={82} rx={7} fill="var(--card)" stroke={P} strokeWidth={0.8} />
+                <text x={260} y={45} fontSize={9} fontWeight={700} fill={P}>ChatML 포맷</text>
+                <text x={450} y={45} textAnchor="end" fontSize={7} fill="var(--muted-foreground)">OpenAI 대화형</text>
+                <rect x={258} y={54} width={194} height={50} rx={4} fill="var(--card)" stroke="var(--border)" strokeWidth={0.3} />
+                <text x={266} y={69} fontSize={7.5} fontFamily="monospace" fill={P}>&lt;|system|&gt;</text>
+                <text x={340} y={69} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">번역기입니다</text>
+                <text x={266} y={83} fontSize={7.5} fontFamily="monospace" fill={B}>&lt;|user|&gt;</text>
+                <text x={340} y={83} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">Hello world</text>
+                <text x={266} y={97} fontSize={7.5} fontFamily="monospace" fill={G}>&lt;|assistant|&gt;</text>
+                <text x={358} y={97} fontSize={7.5} fontFamily="monospace" fill="var(--muted-foreground)">안녕 세상</text>
               </motion.g>
 
               {/* Key point */}

@@ -44,7 +44,7 @@ export default function PrecisionLadderViz() {
                   <text x={50} y={p.y + 22} fontSize={12} fontWeight={700} fill={p.color}>{p.label}</text>
                   <text x={110} y={p.y + 22} fontSize={10} fill="var(--muted-foreground)">{p.bits}</text>
                   <text x={170} y={p.y + 22} fontSize={10} fill="var(--foreground)">{p.mem} (7B 모델)</text>
-                  <text x={40 + p.w - 8} y={p.y + 22} textAnchor="end" fontSize={9} fill={p.color}>{p.pct}</text>
+                  <text x={462} y={p.y + 22} textAnchor="end" fontSize={9} fontWeight={600} fill={p.color}>{p.pct}</text>
                 </motion.g>
               ))}
               <motion.text x={460} y={105} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)"

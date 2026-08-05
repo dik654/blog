@@ -20,7 +20,7 @@ export default function Training() {
           Teacher Forcing: decoder 입력 = <M>{'y^*_{t-1}'}</M> (정답) — 병렬 학습 가능, 빠른 수렴<br />
           Free Running: decoder 입력 = <M>{'\\hat{y}_{t-1}'}</M> (예측) — 오류 누적 위험
         </p>
-        <M display>{'\\text{Scheduled Sampling}: \\quad P(\\text{use\\_target}) = \\varepsilon, \\quad \\varepsilon: 1 \\to 0 \\text{ (점진 감소)}'}</M>
+        <M display>{'\\text{Scheduled Sampling}: \\quad \\underbrace{P(\\text{use\\_target}) = \\varepsilon}_{\\text{확률 } \\varepsilon \\text{ 로 정답 사용}}, \\quad \\underbrace{\\varepsilon: 1 \\to 0}_{\\text{초반 정답 100\\% → 점차 모델 예측 사용}}'}</M>
         <p className="leading-7">
           요약 1: <strong>Teacher Forcing</strong>이 학습 속도와 안정성의 핵심.<br />
           요약 2: 모든 타임스텝 병렬 학습으로 <strong>GPU 효율</strong> 확보.<br />

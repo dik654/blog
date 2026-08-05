@@ -1,0 +1,284 @@
+{
+  "run_id": "2026-07-19-robot-motor-drive-foc",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing electromagnetic and power-conversion foundation from a bounded robot-joint torque request through motor coordinates, current control, SVPWM, inverter and sensing constraints to physical commissioning evidence.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue the bottom-up robotics dependency graph after feedback control and embedded real-time execution, rather than jumping from a torque scalar directly to a robot-learning policy.",
+    "content_intent": "Use a private compound drive failure to force unit, frame, model, control, modulation, sensing, envelope, protection and commissioning coverage without publishing the problem as article prose.",
+    "visual_intent": "Each lab must expose geometry, a numerical consequence, a physical limit or an evidence gate; palette changes alone do not count as a Viz improvement.",
+    "paper_intent": "Reconstruct Blaschke 1973 from the original problem and DC-machine analogy through field coordinates, measured/model field variants, machine cases, stability limits and physical TRANSVEKTOR realization.",
+    "provenance_intent": "Preserve why each source was selected, which claims it supports, what it cannot prove, and how its material was transformed for the public article.",
+    "small_model_intent": "Produce source and section packets narrow enough for a 4B model to repair one claim/formula/Viz and a 9B model to assemble one causal section without inventing missing physics."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-dynamics-feedback-control computes a torque or actuator request",
+      "robot-embedded-realtime-control gets a fresh command to a bounded PWM latch cycle",
+      "signals-systems-convolution supplies sampling, delay and state-space intuition",
+      "robot-kinematics-coordinate-frames establishes explicit coordinate-map contracts",
+      "robot-ai-top-down names BLDC, PMSM, encoder, PWM and FOC without reconstructing them"
+    ],
+    "missing_chain": [
+      "torque_current_voltage_duty_gate_current_torque_identity",
+      "balanced_three_phase_rotating_field_geometry",
+      "clarke_scaling_and_zero_sequence_contract",
+      "electrical_angle_pole_pair_sign_offset_phase_order_contract",
+      "pmsm_dq_voltage_torque_and_parameter_units",
+      "discrete_current_pi_decoupling_vector_limit_anti_windup",
+      "svpwm_dc_bus_dead_time_minimum_pulse",
+      "current_and_encoder_calibration_pwm_sample_observability",
+      "current_circle_voltage_ellipse_mtpa_field_weakening_regeneration",
+      "independent_protection_and_physical_commissioning_evidence"
+    ],
+    "scope_boundary": "The milestone introduces gate-drive, switching, sensing, thermal and PCB evidence only far enough to close the FOC contract. Semiconductor sizing, isolated supplies, creepage, EMC qualification, STO certification and production power-PCB design remain a later power-electronics foundation."
+  },
+  "source_decisions": [
+    {
+      "source": "Felix Blaschke, Das Verfahren der Feldorientierung zur Regelung der Drehfeldmaschine, 1973 thesis",
+      "locator": "https://pure.tue.nl/ws/portalfiles/portal/132793355/167727.pdf",
+      "used_for": ["original coupled-machine problem", "DC-machine analogy", "field-parallel and perpendicular current coordinates", "measured versus model field tradeoff", "synchronous and induction specializations", "stability and missing-degree limits", "TRANSVEKTOR realization"],
+      "boundary": "The thesis uses period machine notation and analog/vector hardware. It does not prove the standard modern PMSM torque equation, digital PI, SVPWM linear limit, current-shunt timing, gate-driver behavior or robot-drive safety."
+    },
+    {
+      "source": "TI SPRABZ5, Single-Axis Motor Control and PFC",
+      "locator": "https://www.ti.com/lit/pdf/sprabz5",
+      "used_for": ["current space vector", "Clarke and Park data flow", "dq regulation", "inverse Park", "SVPWM bridge", "rotor-flux position dependency"],
+      "boundary": "Its introductory id*=0 PMSM treatment is not a universal IPM, MTPA or high-speed policy."
+    },
+    {
+      "source": "TI TIDUF67, Universal Motor Control Reference Design for AM263x, December 2024",
+      "locator": "https://www.ti.com/lit/ug/tiduf67/tiduf67.pdf",
+      "used_for": ["IPMSM dq voltage equations", "magnet and reluctance torque", "current and voltage constraints", "Vdc over sqrt(3) convention", "MTPA and field weakening"],
+      "boundary": "A reference design does not validate a reader's parameter definitions, sensor alignment, control gains, thermal path or safety case."
+    },
+    {
+      "source": "Microchip Sensored Encoder-Based FOC of Three-Phase PMSM",
+      "locator": "https://onlinedocs.microchip.com/oxy/GUID-AC0E172C-9656-4397-A490-08DF807DE2E8-en-US-2/index.html",
+      "used_for": ["encoder-based FOC flow", "PI loop structure", "back-calculation anti-windup", "alignment and implementation order"],
+      "boundary": "Device-specific gains, numeric formats, PWM polarity and startup states cannot be copied as universal values."
+    },
+    {
+      "source": "TI SPRACT7, Sensorless FOC for PMSM With Single DC-Link Shunt",
+      "locator": "https://www.ti.com/lit/an/spract7/spract7.pdf",
+      "used_for": ["PWM-state-dependent current observability", "minimum active-vector duration", "switch, amplifier, ADC and dead-time budget", "unmeasurable regions"],
+      "boundary": "Single-shunt reconstruction rules do not transfer unchanged to inline, two-shunt or three-shunt topologies."
+    },
+    {
+      "source": "TI SLUUDM5, MSPM0 FOC Motor Control User Guide, March 2026",
+      "locator": "https://www.ti.com/lit/ug/sluudm5/sluudm5.pdf",
+      "used_for": ["motor-disconnected PWM mapping", "limited-source current-probe checks", "alignment-before-current-control ordering", "dead-time applied-voltage distortion"],
+      "boundary": "Vendor firmware and compensation steps are evidence of workflow, not a generic algorithm specification or safety certification."
+    },
+    {
+      "source": "TI TIDA-010956 and current gate-driver/inverter/layout guidance",
+      "locator": "https://www.ti.com/tool/TIDA-010956",
+      "used_for": ["power-stage boundary", "programmable gate drive", "multilevel shutdown", "current sensing", "Kelvin routing and short physical fault path"],
+      "boundary": "Tested reference-design performance and layout guidance remain configuration-specific and do not replace target waveforms, stack-up, thermal analysis, hazard analysis or certification."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 22,
+    "artifact": "src/pages/articles/ai/content-specs/robot-motor-drive-foc.md",
+    "scenario": "A 48 V IPMSM robot joint mixes line-line and phase parameters, peak and RMS current, poles and pole pairs, incompatible Clarke conventions, reversed encoder direction, wrong phase order and an uncertain zero. It then combines continuous gains, missing sample-time integration, scalar axis clipping, windup, stale DC-bus assumptions, missing decoupling, early PWM latch, switching-edge ADC samples, two-shunt blind windows, dead-time and propagation mismatch, sensor saturation, regenerative bus rise, hidden gate-driver trip and an unsafe full-torque first commissioning attempt.",
+    "required_insights": [
+      "separate requested, limited, applied and observed actuation variables",
+      "normalize units and motor parameter definitions before gain calculation",
+      "derive the rotating current-vector geometry",
+      "declare Clarke scaling and zero-sequence assumptions",
+      "bind electrical angle to pole pairs, sign, offset and phase order",
+      "predict angle-error channel leakage",
+      "decompose PMSM voltage and torque terms",
+      "treat PI gains as a model-based discrete starting point",
+      "distinguish feedforward cancellation from feedback robustness",
+      "limit dq voltage as a shared vector and back-calculate saturation",
+      "synthesize a realizable average vector using measured DC bus",
+      "model dead time and minimum pulse as applied-voltage errors",
+      "prove a valid current-sample window for the sensing topology",
+      "calibrate current and encoder identity before closing q current",
+      "navigate current, voltage, thermal and regenerative constraints",
+      "separate command echo from gate, current, motion and torque evidence",
+      "commission from de-energized mapping to bounded full-envelope evidence",
+      "separate software, timing, parameter, power, PCB, thermal and safety ownership",
+      "attribute the historical field-orientation principle separately from modern implementation formulas"
+    ],
+    "publication_policy": "Do not publish the integrated problem as a quiz. Map every premise to public prose, derivation, Korean-annotated formula, interactive measured state, evidence slice or operational gate."
+  },
+  "source_extraction": {
+    "paper": "Felix Blaschke 1973, Das Verfahren der Feldorientierung zur Regelung der Drehfeldmaschine",
+    "local_pdf": "/tmp/pdfs/blaschke-field-orientation-1973.pdf",
+    "local_text": "/tmp/pdfs/blaschke-field-orientation-1973.txt",
+    "pages": 264,
+    "visual_pages_inspected": [5, 6, 10, 13, 46, 86],
+    "evidence_ranges": ["5-12 problem and DC analogy", "26-39 field coordinates", "42-46 measured field", "56-73 model field and tolerance", "86-96 machine cases", "96-153 variants, stability, leakage and general case", "154-173 TRANSVEKTOR and converter realization"],
+    "modern_documents": ["/tmp/pdfs/ti-sprabz5-foc.pdf", "/tmp/pdfs/ti-tiduf67-motor-control.pdf", "/tmp/pdfs/ti-spract7-single-shunt.pdf"],
+    "retrieval_boundary": "Park 1929 was retained only as bibliography/history because full primary text was not available. No exact Park derivation or author intent was reconstructed from secondary summaries."
+  },
+  "events": [
+    {
+      "event_id": "audit.curriculum.001",
+      "phase": "gap_audit",
+      "observed": "The previous milestones ended with a bounded PWM latch and a torque request but no article owned electromagnetic conversion or proof of physical torque.",
+      "inference": "The next dependency had to be motor-drive physics and FOC before deeper robot learning or custom electronics.",
+      "decision": "Build one end-to-end motor-drive foundation and explicitly defer full power electronics and PCB engineering.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-motor-drive-foc.md", "src/content/ai/foundationCurriculum.ts", "src/content/learning-paths.ts"],
+      "verification": { "expected": "One curriculum node closes torque-to-physical-evidence assumptions", "actual": "Ten causal sections cover geometry, frames, model, control, modulation, sensing, envelope and commissioning." }
+    },
+    {
+      "event_id": "source.primary.001",
+      "phase": "evidence_compile",
+      "observed": "The accessible Blaschke thesis contains the problem framing, coordinate mechanism, variants, tolerances, stability analysis and physical realization; an accessible full Park 1929 primary text was not secured.",
+      "inference": "A full reconstruction should follow the evidence-rich primary source rather than fabricate a Park reconstruction from secondary descriptions.",
+      "decision": "Use the complete Blaschke thesis as the paper spine and keep Park as a declared future source gap.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/robotMotorDriveSpecs.tsx", "src/pages/articles/ai/paper-blaschke-field-orientation-1973.tsx"],
+      "verification": { "expected": "Every paper claim has a primary page range and boundary", "actual": "Seven evidence slices span the thesis problem, mechanism, variants, limits and realization." }
+    },
+    {
+      "event_id": "source.boundary.002",
+      "phase": "evidence_compile",
+      "observed": "Blaschke's contribution is often collapsed into a modern Park matrix, while modern PMSM torque, SVPWM, PI and sensing details postdate the thesis.",
+      "inference": "Combining all claims under one historical citation would erase author intent and create false provenance.",
+      "decision": "Attribute representation-as-control-design to Blaschke and ground every modern motor, modulation, sensing and commissioning claim in current official documents.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-motor-drive-foc.md", "src/pages/articles/ai/robot-motor-drive-foc.tsx", "src/pages/articles/ai/paper-spine/robotMotorDriveSpecs.tsx"],
+      "verification": { "expected": "Historical and modern claim boundaries remain explicit", "actual": "The paper spec states what the thesis cannot prove and the concept article carries a separate current-source ledger." }
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "phase": "transfer_gate",
+      "observed": "A motor can rotate at low speed while twenty-two unit, frame, timing, sensing, saturation, regeneration and protection defects remain hidden.",
+      "inference": "Definitions and isolated derivations would not force a reader to diagnose the complete torque-to-power path.",
+      "decision": "Write the twenty-two-premise private joint-drive failure before prose and require visible public evidence for every premise.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-motor-drive-foc.md"],
+      "verification": { "expected": "No premise depends on unstated knowledge", "actual": "The spec coverage gate maps the full chain to ten concept sections and one paper reconstruction." }
+    },
+    {
+      "event_id": "implementation.concept.001",
+      "phase": "concept_implementation",
+      "observed": "The transferable story follows physical causality from torque request to measured actuation rather than a taxonomy of motor-control APIs.",
+      "inference": "A causal chain lets readers locate the first invalid contract across different motors, MCUs and inverters.",
+      "decision": "Implement ten sections and ten labs, each changing a geometric, numerical, timing, constraint or physical-evidence consequence.",
+      "changed_files": ["src/pages/articles/ai/robot-motor-drive-foc.tsx", "src/pages/articles/ai/robot-motor-drive-foc/viz/RobotMotorDriveFocViz.tsx"],
+      "verification": { "expected": "Every lab interaction changes a measured state", "actual": "All ten public concept-lab interaction checks changed visible output." }
+    },
+    {
+      "event_id": "implementation.paper.001",
+      "phase": "paper_reconstruction",
+      "observed": "A thesis summary would omit why the coordinate change exists, measured/model tradeoffs, parameter detuning, different machine cases and physical implementation.",
+      "inference": "The paper article required author intent, equations, evidence slices, limitations and a mechanism lab rather than a timeline card.",
+      "decision": "Create a dedicated six-equation paper spec and measured/model field-orientation reconstruction lab.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/robotMotorDriveSpecs.tsx", "src/pages/articles/ai/paper-spine/viz/BlaschkeFieldOrientationLab.tsx", "src/pages/articles/ai/paper-blaschke-field-orientation-1973.tsx"],
+      "verification": { "expected": "The reader can distinguish actual field, model field, orientation error and channel leakage", "actual": "The public paper lab exposes those quantities and changes state under source/machine/detuning controls." }
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "The first 360 px pass had zero horizontal overflow but several annotated equations scaled to 0.52-0.69, so fitting alone did not make them readable.",
+      "inference": "Wide matrix products and multiple semantic operations in one aligned block were the defect, not KaTeX or the container.",
+      "decision": "Expand transforms into scalar projections, split voltage, torque, sampling, gate and anti-windup operations, and retain Korean underbrace reasons plus one FormulaNote per display formula.",
+      "changed_files": ["src/pages/articles/ai/robot-motor-drive-foc.tsx", "src/pages/articles/ai/paper-spine/robotMotorDriveSpecs.tsx"],
+      "verification": { "expected": "Minimum public scale at least 0.75 at 360 px with no raw LaTeX", "actual": "Concept minimum is 0.78 and paper minimum is 0.77; formula-note counts exactly match 27 and 6 display formulas." }
+    },
+    {
+      "event_id": "qa.viz.overlap.001",
+      "phase": "qa_repair",
+      "observed": "Long labels placed at vector endpoints overlapped when rotor flux shared the d axis or original and model fields were close. A high-speed failed current response also fell below a fixed chart range and looked like a flat line.",
+      "inference": "The problems were label geometry and observable range, not palette selection.",
+      "decision": "Keep only compact d/q endpoint labels, move vector identity into solid/dashed color legends, start the current loop in a feasible state and derive chart bounds from actual response data.",
+      "changed_files": ["src/pages/articles/ai/robot-motor-drive-foc/viz/RobotMotorDriveFocViz.tsx", "src/pages/articles/ai/paper-spine/viz/BlaschkeFieldOrientationLab.tsx"],
+      "verification": { "expected": "No overlapping plot labels or clipped failure curve on mobile and desktop", "actual": "390 and 1440 px screenshots show separated legends and a legible bounded response; automated clipped-text and overflow counts remain zero." }
+    },
+    {
+      "event_id": "research.discovery.001",
+      "phase": "research_pipeline",
+      "observed": "The research tracker did not search robotics and control categories for future motor-control and robot-system work.",
+      "inference": "Automatic growth needs explicit topic vocabulary and primary research channels, not only manual article additions.",
+      "decision": "Add FOC, PMSM, SVPWM, MTPA, field-weakening and current-sensing keywords plus arXiv cs.RO and eess.SY sources.",
+      "changed_files": ["knowledge/research-pipeline/topics.json", "knowledge/research-pipeline/sources.json"],
+      "verification": { "expected": "Both discovery sources execute without schema failure", "actual": "Dry runs completed with 25 candidates from each source." }
+    },
+    {
+      "event_id": "deploy.public.001",
+      "phase": "deployment_verification",
+      "observed": "A local Vite render cannot prove the public reverse proxy serves the final formula and Viz repair.",
+      "inference": "The milestone closes only after rebuild, service restart and full browser QA on the public host.",
+      "decision": "Rebuild, restart cm-blog.service and repeat all viewport, formula, interaction and category checks against the public URLs.",
+      "changed_files": [],
+      "verification": { "expected": "HTTP 200, no render defects, all interactions live and both links listed", "actual": "All three URLs return 200; eight article viewport checks and twelve category/interaction checks pass on the public host." }
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-motor-drive-foc.md",
+    "concept_article": "src/pages/articles/ai/robot-motor-drive-foc.tsx",
+    "concept_viz": "src/pages/articles/ai/robot-motor-drive-foc/viz/RobotMotorDriveFocViz.tsx",
+    "paper_spec": "src/pages/articles/ai/paper-spine/robotMotorDriveSpecs.tsx",
+    "paper_viz": "src/pages/articles/ai/paper-spine/viz/BlaschkeFieldOrientationLab.tsx",
+    "paper_article": "src/pages/articles/ai/paper-blaschke-field-orientation-1973.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "top_down_bridge": "src/pages/articles/ai/robot-ai-top-down.tsx",
+    "previous_bridge": "src/pages/articles/ai/robot-embedded-realtime-control.tsx",
+    "research_topics": "knowledge/research-pipeline/topics.json",
+    "research_sources": "knowledge/research-pipeline/sources.json",
+    "local_qa": "/tmp/foc-qa-final.json",
+    "public_qa": "/tmp/foc-public-qa.json",
+    "build_log": "/tmp/foc-build-final.log",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-motor-drive-foc.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-motor-drive-foc-report.md",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "implementation_decisions": [
+    "Treat torque as a request that must retain identity through current, voltage, duty, gate, phase current and observed torque.",
+    "Teach balanced three-phase geometry before presenting Clarke and Park matrices.",
+    "Make scaling, zero sequence, pole pairs, sign, offset and phase order explicit contracts rather than library defaults.",
+    "Separate historical field-orientation intent from modern PMSM equations and implementation practice.",
+    "Model d and q PI outputs as one shared inverter voltage vector and expose delay, saturation and anti-windup.",
+    "Treat SVPWM as average-vector synthesis with measured DC bus, dead-time and pulse-width constraints.",
+    "Treat current sensing as a topology- and PWM-state-dependent observation window.",
+    "Make MTPA, field weakening, regeneration and thermal derating constrained policies rather than optional tuning tricks.",
+    "Require independent trip and physical commissioning evidence before widening the power envelope.",
+    "Put short Korean operation reasons inside every display equation and detailed units, assumptions and failures in FormulaNote.",
+    "Prefer legends over endpoint prose when vector directions can coincide.",
+    "Use dynamic plot domains for failure states so out-of-range behavior remains observable.",
+    "Defer ambient animation until static causal states, responsive fit and interactions pass."
+  ],
+  "qa": {
+    "targeted_lint": "passed for concept, concept Viz, paper wrapper/spec/Viz, metadata, curriculum, learning paths, top-down bridge and previous bridge",
+    "typecheck": "npx tsc --noEmit --pretty false passed",
+    "production_build": "passed after final formula and vector-label repair; pre-existing chunks larger than 900 kB warning remains",
+    "build_asset": "robot-motor-drive-foc production chunk is approximately 84.6 kB, 26.9 kB gzip",
+    "public_viewports": {
+      "360": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 0.78, "paper_min_math_scale": 0.77, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 },
+      "390": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 0.87, "paper_min_math_scale": 0.87, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 },
+      "768": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 },
+      "1440": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1, "inner_scroll": 0, "clipped_text": 0, "forced_word_break": 0, "console_errors": 0 }
+    },
+    "formula_counts": { "concept": 27, "paper": 6, "concept_formula_notes": 27, "paper_formula_notes": 6 },
+    "interaction_checks": "All ten concept labs and the Blaschke mechanism lab changed visible measured state on the public host.",
+    "visual_review": "All concept labs were captured at 390 and 1440 px; representative vector, current-loop, SVPWM, sample-window, operating-envelope, commissioning and paper-source labs were visually inspected after repair.",
+    "research_dry_run": "arxiv-cs-ro and arxiv-eess-sy discovery dry runs passed with 25 candidates each",
+    "public_deployment": {
+      "service": "cm-blog.service active after final restart at 2026-07-19 16:05 KST",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-motor-drive-foc",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-blaschke-field-orientation-1973",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai?sub=ai-robotics"
+      ],
+      "http_status": 200,
+      "category_integration": "At 390 and 1440 px the robotics list has zero overflow and console errors and contains both article links."
+    }
+  },
+  "small_model_handoff": {
+    "four_b_packet": ["one immutable source claim and page range", "one premise ID", "one formula or Viz contract", "target component plus one shared primitive", "one deterministic acceptance check"],
+    "nine_b_packet": ["one section question and prerequisite/output contract", "four to six bounded source claims", "derivation order and immutable equations", "one counterexample", "one Viz state machine", "coverage and mobile QA checklist"],
+    "orchestrator_owns": ["retrieval", "source conflict resolution", "curriculum order", "equation identity and units", "cross-section symbol table", "file allowlist", "browser QA", "public deployment"],
+    "forbidden_shortcuts": ["write the whole concept and paper article in one generation", "reconstruct inaccessible primary sources from secondary summaries", "let a small model silently change equations or conventions", "accept color changes as Viz repair", "accept overflow zero when formula scale is below 0.75", "claim physical validation from an educational simulation"]
+  },
+  "remaining_risks": [
+    "The labs are deterministic educational models, not oscilloscope, dynamometer, thermal or EMC measurements from a physical drive.",
+    "Full power-stage device sizing, gate-loop layout, isolated supplies, creepage, EMC, STO and certification remain deferred.",
+    "Induction-machine rotor-flux observers and sensorless estimation remain a separate track.",
+    "Continuous animation remains optional and should be added only where phase or PWM time evolution adds information beyond the current controls.",
+    "Park 1929 needs a full primary-source acquisition before a dedicated reconstruction is allowed."
+  ],
+  "next_phase": "Continue the robotics foundation with a dedicated robot power-electronics, motor-driver hardware, sensing, thermal, EMI and PCB article, while the research tracker supplies new primary research candidates for later source-bounded additions."
+}

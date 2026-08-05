@@ -24,9 +24,9 @@ const features = [
 
 /* DL 조건 */
 const dlConditions = [
-  { label: '100K+ 샘플', y: 40, icon: '📊' },
-  { label: '멀티모달', y: 100, icon: '🔗' },
-  { label: '고카디널리티', y: 160, icon: '🏷️' },
+  { label: '100K+ 샘플', y: 40 },
+  { label: '멀티모달', y: 100 },
+  { label: '고카디널리티', y: 160 },
 ];
 
 /* 모델 진화 타임라인 */
@@ -120,7 +120,10 @@ export default function OverviewViz() {
               {dlConditions.map((c, i) => (
                 <motion.g key={c.label} initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }} transition={{ ...sp, delay: i * 0.15 }}>
-                  <text x={40} y={c.y + 15} fontSize={20}>{c.icon}</text>
+                  <circle cx={43} cy={c.y + 18} r={14} fill={C.dl} fillOpacity={0.12} stroke={C.dl} strokeWidth={1} />
+                  <text x={43} y={c.y + 22} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.dl}>
+                    {String(i + 1).padStart(2, '0')}
+                  </text>
                   <DataBox x={75} y={c.y} w={140} h={36} label={c.label} color={C.dl} />
                   {/* 화살표 → 효과 */}
                   <line x1={220} y1={c.y + 18} x2={260} y2={c.y + 18}

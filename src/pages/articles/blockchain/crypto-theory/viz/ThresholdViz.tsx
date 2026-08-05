@@ -21,7 +21,7 @@ export default function ThresholdViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 155" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Secret */}
           <motion.g animate={{ opacity: step <= 1 ? 1 : (step === 2 ? 0.3 : 0.5) }}>
             <rect x={170} y={75} width={80} height={24} rx={5} fill={`${C3}10`} stroke={C3} strokeWidth={1} />
@@ -69,11 +69,11 @@ export default function ThresholdViz() {
           {/* TSS */}
           {step === 3 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <rect x={130} y={105} width={160} height={24} rx={5} fill={`${C2}10`} stroke={C2} strokeWidth={0.8} />
-              <text x={210} y={118} textAnchor="middle" fontSize={10} fontWeight={500} fill={C2}>
+              <rect x={130} y={105} width={160} height={40} rx={5} fill={`${C2}10`} stroke={C2} strokeWidth={0.8} />
+              <text x={210} y={121} textAnchor="middle" fontSize={10} fontWeight={500} fill={C2}>
                 partial sig 결합 → 유효 서명
               </text>
-              <text x={210} y={128} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
+              <text x={210} y={137} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
                 sk 재구성 없이 서명 생성 가능
               </text>
             </motion.g>

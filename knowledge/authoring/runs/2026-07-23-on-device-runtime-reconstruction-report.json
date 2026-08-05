@@ -1,0 +1,106 @@
+{
+  "run": "2026-07-23-on-device-runtime-current-first",
+  "objective": "Reconstruct on-device LLM deployment from a physical-device release gate through export, delegation, app runtime and minimum memory and hardware foundations.",
+  "information_architecture": {
+    "parent": "효율 추론 · On-device",
+    "branches": [
+      "00 · Device Runtime",
+      "01 · Memory·속도 예산"
+    ],
+    "parent_aggregates_authored_child_paths": true,
+    "runtime_article": "on-device-llm-runtime",
+    "budget_article": "efficient-inference-on-device"
+  },
+  "learning_path": [
+    "on-device-llm-runtime",
+    "efficient-inference-on-device",
+    "quantization",
+    "gpu/hardware-fundamentals"
+  ],
+  "source_boundaries": [
+    "ExecuTorch 1.3 docs for the current export and runner contract, not a permanent API guarantee",
+    "Custom LLM export docs for edge lowering, partition and delegation boundaries, not universal backend support",
+    "Inspector and memory planning docs for trace correlation and planned arenas, not all delegate, app or OS memory",
+    "Android runner docs for load, synchronous generation, callback, stop and reset lifecycle",
+    "Android and Apple profiler docs for physical-device evidence, not model-only power attribution"
+  ],
+  "private_transfer_problem": {
+    "cheap_shape_fallback": {
+      "node_coverage_pct": 42.6,
+      "time_coverage_pct": 85.7,
+      "boundary_mib": 96,
+      "trace_ms": 112
+    },
+    "attention_fallback": {
+      "node_coverage_pct": 94.2,
+      "time_coverage_pct": 50.3,
+      "boundary_mib": 768,
+      "trace_ms": 145
+    },
+    "release_fixture": {
+      "usable_gib": 6.2,
+      "model": "4B INT4",
+      "context_tokens": 8192,
+      "duration_minutes": 15,
+      "placement": "attention fallback",
+      "resident_gib": 4.10,
+      "ttft_seconds": 6.24,
+      "decode_tps": 5.8,
+      "energy_mj_per_token": 62,
+      "decision": "reject"
+    },
+    "diagnostic_full_delegate_cold": {
+      "ttft_seconds": 2.80,
+      "decode_tps": 14.8,
+      "energy_mj_per_token": 42,
+      "decision": "diagnostic pass only; sustained run required"
+    }
+  },
+  "qa": {
+    "focused_related_playwright": "56/56",
+    "local_production_contract": "6/6",
+    "public_contract": "6/6",
+    "viewports": [360, 390, 768, 1440],
+    "runtime_errors": 0,
+    "overflow_errors": 0,
+    "raw_latex": 0,
+    "formula_count": 4,
+    "formula_note_count": 4,
+    "minimum_formula_scale": 0.70,
+    "minimum_formula_px": 12,
+    "article_tables": 0,
+    "build": "passed"
+  },
+  "claude_collaboration": {
+    "transport": "context-manager only",
+    "agent": "curator",
+    "requests": 1,
+    "successful": 0,
+    "failure": "Provider error: All providers failed (HTTP 500)",
+    "direct_cli_fallback_used": false
+  },
+  "small_model_pipeline": [
+    "freeze one product and device fixture",
+    "declare one source claim and forbidden extrapolation",
+    "identify checkpoint, graph, delegate or app boundary",
+    "derive one numeric oracle",
+    "render one observable Viz state",
+    "test physical constraints, formulas, overflow and console",
+    "record stop rule and public deployment evidence"
+  ],
+  "global_audit": {
+    "registered_articles": 584,
+    "release_blockers": 29,
+    "missing_prerequisite_backlog": 405,
+    "local_connection_backlog": 474,
+    "formal_goal_complete": false
+  },
+  "deployment": {
+    "status": "public-verified",
+    "service_restarted_at": "2026-07-23T00:42:33+09:00",
+    "chunk": "on-device-llm-runtime-DmyJ9qXu.js",
+    "chunk_bytes": 37675,
+    "chunk_sha256": "ea3ccf7800cbe9df73d1955a2d7223a4bbc6f55428cb230bc7a0734ddae65429",
+    "article_http_status": 200
+  }
+}

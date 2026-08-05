@@ -1,27 +1,28 @@
-import FeedForwardViz from './viz/FeedForwardViz';
-import FFNDetailViz from './viz/FFNDetailViz';
+import MathText from '@/components/ui/math-text';
+import FeedForwardScene from './viz/FeedForwardScene';
+import FFNDetailScene from './viz/FFNDetailScene';
 import M from '@/components/ui/math';
 
 export default function FeedForward() {
   return (
-    <section id="feed-forward" className="mb-16 scroll-mt-20">
+    <MathText id="feed-forward" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Feed-Forward Network</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          FFN — 어텐션이 토큰 간 관계를 모델링한 후 각 토큰의 표현을 <strong>독립적으로 변환</strong><br />
-          포지션별(position-wise) 완전 연결 네트워크<br />
-          d_model 차원을 d_ff(보통 4배)로 확장 → 비선형 활성화 → 원래 차원으로 복원
+          attention은 token 사이 정보를 섞는다<br />
+          그 다음에는 각 위치의 벡터를 독립적으로 다시 변환해, 섞인 문맥에서 새 feature 조합을 만든다<br />
+          d_model을 더 넓은 d_ff로 확장하고, 한 번 휘게 한 뒤 다시 원래 차원으로 압축한다
         </p>
       </div>
 
-      <FeedForwardViz />
+      <FeedForwardScene />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>GELU vs SwiGLU</h3>
         <p>
-          원본 Transformer는 ReLU를 사용<br />
-          최신 모델은 <strong>GELU</strong>(BERT, GPT)나 <strong>SwiGLU</strong>(LLaMA, PaLM) 채택<br />
-          SwiGLU — 게이트 메커니즘을 추가하여 더 나은 성능 달성
+          두 선형층 사이가 선형이면 결국 한 선형층과 같다<br />
+          ReLU, GELU, SwiGLU 같은 활성화가 중간 표현을 휘게 만들어 확장층의 의미를 살린다<br />
+          SwiGLU는 별도 gate projection으로 어떤 feature를 통과시킬지도 같이 학습한다
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mt-4">
@@ -52,14 +53,14 @@ export default function FeedForward() {
           {`\\underbrace{\\text{FFN}(x) = \\max(0,\\, x W_1 + b_1)\\, W_2 + b_2}_{d_{\\text{model}} \\;\\to\\; 4 d_{\\text{model}} \\;\\to\\; d_{\\text{model}}}`}
         </M>
       </div>
-      <FFNDetailViz />
+      <FFNDetailScene />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
         <p className="leading-7">
-          요약 1: FFN은 <strong>d_model → 4·d_model → d_model</strong> 확장-압축 구조.<br />
-          요약 2: <strong>position-wise</strong> — 토큰 독립 처리, 완전 병렬.<br />
-          요약 3: Transformer 파라미터의 <strong>약 2/3이 FFN</strong> — 모델 용량의 핵심.
+          요약 1: FFN은 d_model → d_ff → d_model 확장-압축 구조.<br />
+          요약 2: token 사이 상호작용은 attention이 맡고, FFN은 위치별로 독립 처리.<br />
+          요약 3: 큰 모델에서는 FFN 파라미터 비중이 커서 모델 용량의 핵심이 된다.
         </p>
       </div>
-    </section>
+    </MathText>
   );
 }

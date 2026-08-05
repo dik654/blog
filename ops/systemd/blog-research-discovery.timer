@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily research discovery for the blog
+
+[Timer]
+OnCalendar=*-*-* 07:30:00 Asia/Seoul
+Persistent=true
+RandomizedDelaySec=20m
+Unit=blog-research-discovery.service
+
+[Install]
+WantedBy=timers.target

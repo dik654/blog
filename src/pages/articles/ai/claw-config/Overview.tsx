@@ -1,225 +1,206 @@
 import CascadeViz from './viz/CascadeViz';
 
+const phases = [
+  ['진입·관측', 'CliEntry', 'FastPathVersion', 'StartupProfiler'],
+  ['빠른 분기', 'SystemPromptFastPath', 'ChromeMcpFastPath', 'DaemonWorkerFastPath', 'BridgeFastPath', 'DaemonFastPath', 'BackgroundSessionFastPath', 'TemplateFastPath', 'EnvironmentRunnerFastPath'],
+  ['본 실행', 'MainRuntime'],
+] as const;
+
+const projections = [
+  ['model', '문자열 하나를 선택한다.'],
+  ['hooks', 'PreToolUse·PostToolUse·PostToolUseFailure 명령 배열로 읽는다.'],
+  ['plugins', '활성 플러그인·외부 디렉터리·설치 경로 등으로 읽는다.'],
+  ['permission', 'mode 별칭과 allow·deny·ask 규칙을 분리해 읽는다.'],
+  ['sandbox', 'filesystem mode와 격리 옵션을 타입으로 검증한다.'],
+  ['provider fallbacks', 'primary와 순서 있는 fallback 모델 목록을 읽는다.'],
+  ['trusted roots', '신뢰 경로 문자열 목록을 읽는다.'],
+] as const;
+
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ConfigLoader &amp; 3단계 캐스케이드</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <CascadeViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">3단계 설정 캐스케이드</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4 not-prose">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">우선순위 1 (최저)</div>
-            <div className="font-semibold text-sm mb-1">시스템 기본값</div>
-            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">/etc/claw/config.json</code>
-            <div className="text-xs text-muted-foreground mt-1">관리자 설정</div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">우선순위 2</div>
-            <div className="font-semibold text-sm mb-1">사용자 전역</div>
-            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">~/.claw/config.json</code>
-            <div className="text-xs text-muted-foreground mt-1">홈 디렉토리</div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">우선순위 3 (최고)</div>
-            <div className="font-semibold text-sm mb-1">프로젝트 로컬</div>
-            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">.claw/config.json</code>
-            <div className="text-xs text-muted-foreground mt-1">워크스페이스</div>
-          </div>
-        </div>
-        <p className="text-sm text-muted-foreground mt-2 not-prose">
-          병합 결과: 프로젝트 &gt; 사용자 &gt; 시스템 — 같은 키가 여러 파일에 있으면 하위 레벨이 이김
-        </p>
-        <p>
-          <strong>3단계 오버라이드</strong>: 시스템 &lt; 사용자 &lt; 프로젝트<br />
-          병합은 deep-merge — 중첩 객체도 재귀적으로 병합<br />
-          배열은 덮어쓰기 — <code>plugins: [...]</code> 같은 필드는 치환
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">AppConfig 구조</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4 not-prose">
-          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <div className="font-semibold text-sm mb-2 text-blue-700 dark:text-blue-300">프로바이더</div>
-            <ul className="text-sm space-y-1">
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">provider: String</code> — <code className="text-xs">"anthropic"</code> | <code className="text-xs">"openai"</code> | <code className="text-xs">"xai"</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">api_key: Option&lt;String&gt;</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">model: String</code> — <code className="text-xs">"claude-opus-4-6"</code> 등</li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">base_url: Option&lt;Url&gt;</code></li>
-            </ul>
-          </div>
-          <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
-            <div className="font-semibold text-sm mb-2 text-green-700 dark:text-green-300">권한</div>
-            <ul className="text-sm space-y-1">
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">permission_mode: PermissionMode</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">trusted_plugins: HashSet&lt;String&gt;</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">trusted_mcp_servers: HashSet&lt;String&gt;</code></li>
-            </ul>
-          </div>
-          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-            <div className="font-semibold text-sm mb-2 text-amber-700 dark:text-amber-300">동작</div>
-            <ul className="text-sm space-y-1">
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">compact_config: CompactionConfig</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">max_tool_chain_length: usize</code> — 기본 25</li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">temperature: f32</code> — 기본 1.0</li>
-            </ul>
-          </div>
-          <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
-            <div className="font-semibold text-sm mb-2 text-purple-700 dark:text-purple-300">훅 / 플러그인 / MCP</div>
-            <ul className="text-sm space-y-1">
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">hooks: HookConfig</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">plugin_paths: Vec&lt;PathBuf&gt;</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">mcp_servers: HashMap&lt;String, McpServerConfig&gt;</code></li>
-            </ul>
-          </div>
-          <div className="bg-gray-50 dark:bg-gray-950/30 border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:col-span-2">
-            <div className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">로깅 / 텔레메트리</div>
-            <ul className="text-sm space-y-1">
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">log_level: LogLevel</code></li>
-              <li><code className="text-xs bg-muted px-1 py-0.5 rounded">telemetry_sink: Option&lt;TelemetrySink&gt;</code></li>
-            </ul>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">ConfigLoader 구현</h3>
-        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
-          <div className="font-semibold text-sm mb-3">ConfigLoader 4단계 로드 흐름</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-background border border-border rounded p-3">
-              <div className="text-xs font-mono text-muted-foreground mb-1">초기화</div>
-              <div className="text-sm">경로 3개 등록: <code className="text-xs bg-muted px-1 py-0.5 rounded">/etc/claw/config.json</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">~/.claw/config.json</code>, <code className="text-xs bg-muted px-1 py-0.5 rounded">.claw/config.json</code></div>
-            </div>
-            <div className="bg-background border border-border rounded p-3">
-              <div className="text-xs font-mono text-muted-foreground mb-1">순회 병합</div>
-              <div className="text-sm">각 경로를 순회하며 <code className="text-xs bg-muted px-1 py-0.5 rounded">deep_merge(merged, layer)</code> 호출. 파일 없으면 스킵</div>
-            </div>
-            <div className="bg-background border border-border rounded p-3">
-              <div className="text-xs font-mono text-muted-foreground mb-1">환경 변수</div>
-              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">apply_env_overrides(&mut merged)</code> — 최우선 오버라이드</div>
-            </div>
-            <div className="bg-background border border-border rounded p-3">
-              <div className="text-xs font-mono text-muted-foreground mb-1">역직렬화</div>
-              <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">serde_json::from_value(merged)</code> — 최종 <code className="text-xs">AppConfig</code> 생성</div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>4단계 로드</strong>: 시스템 → 사용자 → 프로젝트 → 환경 변수<br />
-          파일 없으면 스킵 — 프로젝트 로컬 설정 없어도 문제없음<br />
-          환경 변수가 최우선 — CI/도커 환경에서 동적 오버라이드
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">deep_merge — 재귀 병합</h3>
-        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
-          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 py-0.5 rounded">fn deep_merge(base, overlay) -&gt; Value</code></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded p-3">
-              <div className="text-xs font-semibold text-green-700 dark:text-green-300 mb-1">Object + Object</div>
-              <div className="text-sm">재귀 병합 — 각 키를 순회하며 <code className="text-xs bg-muted px-1 py-0.5 rounded">deep_merge(entry, value)</code> 재귀 호출</div>
-            </div>
-            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded p-3">
-              <div className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">그 외 (배열, 원시값)</div>
-              <div className="text-sm">오버라이드 — overlay 값으로 치환. 배열은 병합하지 않고 대체</div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>객체만 재귀 병합, 나머지는 치환</strong><br />
-          이유: 배열을 병합하면 순서·중복 처리가 애매함 — 치환이 예측 가능<br />
-          사용자가 배열 전체를 커스터마이징 가능 — "확장이 아닌 대체"
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">환경 변수 오버라이드</h3>
-        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
-          <div className="font-semibold text-sm mb-3">CLAW_* 환경 변수 매핑</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_PROVIDER</code>
-              <span className="text-muted-foreground text-xs">&rarr;</span>
-              <code className="text-xs">config.provider</code>
-            </div>
-            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_API_KEY</code>
-              <span className="text-muted-foreground text-xs">&rarr;</span>
-              <code className="text-xs">config.api_key</code>
-            </div>
-            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_MODEL</code>
-              <span className="text-muted-foreground text-xs">&rarr;</span>
-              <code className="text-xs">config.model</code>
-            </div>
-            <div className="bg-background border border-border rounded p-2.5 flex items-center gap-2">
-              <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-semibold">CLAW_LOG_LEVEL</code>
-              <span className="text-muted-foreground text-xs">&rarr;</span>
-              <code className="text-xs">config.log_level</code>
-            </div>
-          </div>
-          <div className="mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded p-2.5">
-            <div className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">호환 변수</div>
-            <div className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">ANTHROPIC_API_KEY</code> — provider가 <code className="text-xs">"anthropic"</code>일 때 자동으로 <code className="text-xs">api_key</code>에 매핑</div>
-          </div>
-        </div>
-        <p>
-          <strong>CLAW_* 환경 변수</strong>: claw-code 전용 오버라이드<br />
-          기존 도구 환경 변수 호환: <code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code><br />
-          이미 환경 설정된 사용자가 별도 설정 없이 사용 가능
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">설정 검증</h3>
-        <div className="bg-muted/40 border border-border rounded-lg p-4 my-4 not-prose">
-          <div className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 py-0.5 rounded">AppConfig::validate()</code> — 5단계 검증</div>
-          <div className="space-y-2">
-            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
-              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">1</span>
-              <div className="text-sm"><strong>프로바이더 유효성</strong> — <code className="text-xs bg-muted px-1 py-0.5 rounded">"anthropic"</code> | <code className="text-xs">"openai"</code> | <code className="text-xs">"xai"</code> | <code className="text-xs">"azure"</code> 이외 거부</div>
-            </div>
-            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
-              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">2</span>
-              <div className="text-sm"><strong>API 키 존재</strong> — anthropic 외 프로바이더는 <code className="text-xs bg-muted px-1 py-0.5 rounded">api_key</code> 필수</div>
-            </div>
-            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
-              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">3</span>
-              <div className="text-sm"><strong>모델명 검증</strong> — 빈 문자열 거부</div>
-            </div>
-            <div className="bg-background border border-border rounded p-3 flex items-start gap-3">
-              <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">4</span>
-              <div className="text-sm"><strong>수치 범위</strong> — <code className="text-xs bg-muted px-1 py-0.5 rounded">temperature</code>: 0.0~2.0, <code className="text-xs bg-muted px-1 py-0.5 rounded">max_tool_chain_length</code>: ~100</div>
-            </div>
-            <div className="bg-background border border-amber-200 dark:border-amber-800 rounded p-3 flex items-start gap-3">
-              <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0">5</span>
-              <div className="text-sm"><strong>훅 파일 존재</strong> — 절대 경로 훅의 파일 존재 확인. 없으면 <span className="text-amber-600 dark:text-amber-400 font-medium">warn만</span> (거부 아님)</div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>5단계 검증</strong>: 프로바이더 → API 키 → 모델 → 수치 범위 → 훅 파일<br />
-          부트스트랩 시 1회 수행 — 실패 시 시작 거부<br />
-          훅 파일 누락은 warn만 — 선택적 기능이므로 비활성화 대신 경고
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 3단계가 "올바른" 숫자인가</p>
+    <>
+      <section id="overview" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>최종 값과 읽힌 파일은 보이지만, 모든 key의 출처가 남는 것은 아니다</h2>
           <p>
-            설정 캐스케이드 계층 수는 시스템마다 다름:<br />
-            - Git: 4단계 (system/global/local/worktree)<br />
-            - npm: 4단계 (builtin/global/user/project)<br />
-            - Vim: N단계 (.vimrc 재귀)
+            <code>ConfigLoader</code>는 “시스템·사용자·프로젝트”라는 추상적인 세 칸을 읽지 않는다.
+            실제로는 <strong>user 2개, project 2개, local 1개</strong>의 정확한 경로를 앞에서
+            뒤로 순회한다. 파일이 없으면 건너뛰고, 읽힌 파일은 먼저 형식과 schema, hook 구조를
+            검증한 뒤 병합한다.
           </p>
-          <p className="mt-2">
-            claw-code 3단계 선택 이유:<br />
-            ✓ <strong>단순성</strong>: 사용자가 어디에 무엇을 쓸지 명확<br />
-            ✓ <strong>개인-팀-조직</strong> 3축 매핑: 프로젝트(팀), 사용자(개인), 시스템(조직)<br />
-            ✓ <strong>환경 변수 추가</strong>: 실질적 4단계 — 일회성 오버라이드
+          <p>
+            반환값에는 최종 <code>merged</code> object와 <code>loaded_entries</code>가 있다.
+            따라서 어떤 파일을 읽었는지는 알 수 있지만, 일반 key 하나가 어느 파일에서 이겼는지
+            알려 주는 per-key provenance map은 없다. 예외는 MCP server다. 같은 이름을 덮어쓸 때
+            server 설정과 <code>ConfigSource</code>를 함께 저장한다.
           </p>
-          <p className="mt-2">
-            <strong>작위적 예외</strong>: worktree 같은 서브-프로젝트 계층 없음<br />
-            필요하면 프로젝트 설정에 <code>workspace_overrides</code> 배열로 표현 가능<br />
-            기본 설계는 <strong>"간단한 것부터"</strong> — 복잡한 요구는 확장으로
+          <p>
+            아래 실험은 원문 test fixture를 학습용으로 옮긴 것이다. local을 빼거나, legacy와 current
+            파일을 각각 망가뜨려 보라. 같은 “잘못된 JSON”도 호환용 <code>.claw.json</code>과
+            현재 <code>settings.json</code>에서 결과가 다른 이유가 보인다.
+          </p>
+        </div>
+        <CascadeViz />
+      </section>
+
+      <section id="merge-projection" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>먼저 JSON을 합치고, 그다음 runtime 타입으로 읽는다</h2>
+          <p>
+            <code>deep_merge_objects()</code>의 분기는 둘뿐이다. 양쪽 값이 모두 object면 같은
+            key 아래로 재귀 진입한다. 하나라도 object가 아니면 뒤 파일의 값으로 통째로 교체한다.
+            따라서 <code>env.A</code>와 <code>env.B</code>는 함께 남지만, 뒤 파일이
+            <code>plugins: [...]</code>를 다시 쓰면 앞 배열에 append하지 않는다.
+          </p>
+          <p>
+            여기서 <code>env</code>는 deep merge를 보여 주는 <strong>raw JSON 예시</strong>다.
+            <code>RuntimeFeatureConfig</code>가 process environment로 투영하는 필드가 아니다.
+            provider API key는 process environment를 먼저 읽고 일부 key만 현재 디렉터리의
+            <code>.env</code>를 보조 경로로 사용한다. 설정 JSON 병합과 provider 환경 변수 해석은
+            서로 다른 단계다.
+          </p>
+          <p>
+            각 파일에서 MCP server는 별도 map에도 넣는다. 같은 이름이 뒤에서 다시 나오면 server
+            설정과 <code>ConfigSource</code>가 함께 교체된다. 이 추가 경로 덕분에 최종 연결 설정뿐
+            아니라 user·project·local 중 누가 정의했는지도 남는다.
           </p>
         </div>
 
-      </div>
-    </section>
+        <div className="not-prose my-7 divide-y divide-border border-y border-border">
+          {projections.map(([label, detail], index) => (
+            <div key={label} className="grid gap-1 py-3 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-4">
+              <div className="flex items-center gap-2 text-sm font-bold">
+                <span className="font-mono text-[10px] text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+                {label}
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h3>permission 문자열은 runtime 의미로 정규화된다</h3>
+          <p>
+            <code>default</code>·<code>plan</code>·<code>read-only</code>는
+            <code> ReadOnly</code>, <code>acceptEdits</code>·<code>auto</code>·
+            <code>workspace-write</code>는 <code>WorkspaceWrite</code>,
+            <code> dontAsk</code>·<code>danger-full-access</code>는
+            <code> DangerFullAccess</code>가 된다. 최상위 <code>permissionMode</code>가 있으면
+            중첩된 <code>permissions.defaultMode</code>보다 먼저 선택된다.
+          </p>
+          <p>
+            중요한 실행 순서는 <strong>파일별 검증 → 파일별 MCP scope merge → 범용 deep merge →
+            최종 typed projection</strong>이다. current settings 하나라도 validation error가 나면
+            부분 결과를 반환하지 않고 load 전체가 실패한다.
+          </p>
+          <h3>다만 load 실패를 처리하는 방식은 호출자마다 다르다</h3>
+          <p>
+            <code>ConfigLoader::load()</code> 자체와 본 runtime 조립 경로는 오류를 반환해 시작을
+            중단한다. 반면 alias·model·permission을 편의상 읽는 일부 CLI helper는
+            <code>load().ok()?</code>로 오류를 “설정 없음”처럼 바꾼다. 특히 기본 permission helper는
+            환경 변수와 config가 모두 선택되지 않으면 <code>DangerFullAccess</code>로 fallback한다.
+            그러므로 “잘못된 current config는 언제나 같은 방식으로 안전하게 실패한다”라고 일반화할
+            수 없다. 어떤 호출자가 읽었는지까지 확인해야 한다.
+          </p>
+        </div>
+      </section>
+
+      <section id="bootstrap-plan" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>12개 이름은 실행 로그가 아니라 시작 경로의 지도다</h2>
+          <p>
+            <code>BootstrapPlan::claude_code_default()</code>는 아래 phase를 순서대로 담는다.
+            <code>from_phases()</code>는 같은 phase가 다시 나오면 처음 위치만 남긴다. 현재 파일에는
+            phase를 실행하거나 시간을 재거나 실패 상태로 전이하는 코드가 없다.
+          </p>
+        </div>
+
+        <div className="not-prose my-7 space-y-5 border-y border-border py-5">
+          {phases.map(([group, ...items], groupIndex) => (
+            <div key={group} className="grid gap-3 sm:grid-cols-[7rem_minmax(0,1fr)]">
+              <div>
+                <p className="font-mono text-[10px] text-muted-foreground">0{groupIndex + 1}</p>
+                <p className="mt-1 text-sm font-bold">{group}</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {items.map((item) => (
+                  <code key={item} className="max-w-full break-all rounded border border-border bg-muted/40 px-2 py-1 text-[11px]">
+                    {item}
+                  </code>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <p>
+            따라서 이 파일만 보고 “MCP가 시작의 병목이다”, “OAuth가 10번째에 실행된다” 같은
+            시간·실행 인과를 만들 수 없다. 답할 수 있는 것은 <strong>어떤 분기 이름을 어떤 순서로
+            모델링했고 중복을 어떻게 제거하는가</strong>까지다.
+          </p>
+          <h3>실제 CLI 조립 순서는 main.rs에서 따로 읽어야 한다</h3>
+          <p>
+            실제 경로는 config load 뒤 plugin registry와 plugin hook을 합치고, MCP tool을 발견해
+            runtime definition을 만든 다음 <code>GlobalToolRegistry</code>를 조립한다. 그 뒤
+            permission policy, provider client, tool executor를 <code>ConversationRuntime</code>에
+            주입한다. REPL의 매 turn은 기존 session을 복제해 이 runtime을 다시 만들고, 성공하면
+            새 runtime으로 교체하며 실패하면 새 plugin runtime을 종료한다. 즉
+            <code>BootstrapPlan</code>의 이름 목록과 production bootstrap의 실제 소유권은 다른
+            source에서 검증해야 한다.
+          </p>
+        </div>
+      </section>
+
+      <section id="oauth-boundary" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>OAuth 파일은 완성된 로그인 UI가 아니라 조립 가능한 부품이다</h2>
+          <p>
+            helper는 <code>/dev/urandom</code>에서 PKCE verifier와 state를 만들고, S256
+            challenge를 계산한다. authorization URL, code exchange form, refresh form을 만들며
+            <code>/callback</code> query를 구조체로 파싱한다. 이는 흐름의 데이터 계약이지,
+            브라우저를 열거나 callback HTTP server를 띄운다는 증거가 아니다.
+          </p>
+          <p>
+            token set은 <code>CLAW_CONFIG_HOME</code> 또는 <code>~/.claw</code> 아래
+            <code> credentials.json</code>의 <code>oauth</code> key에 저장된다. 저장할 때 다른
+            최상위 key는 유지하고 임시 파일을 쓴 뒤 rename한다. 이 파일만으로 자동 refresh loop,
+            OS keychain, 파일 mode 보장을 주장할 수는 없다.
+          </p>
+        </div>
+      </section>
+
+      <section id="remote-boundary" className="mb-16 scroll-mt-20">
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <h2>remote는 터미널 원격 제어가 아니라 Anthropic outbound 경로 준비다</h2>
+          <p>
+            활성화에는 네 조건이 모두 필요하다. <code>CLAUDE_CODE_REMOTE</code>,
+            <code>CCR_UPSTREAM_PROXY_ENABLED</code>, 비어 있지 않은 remote session ID, 읽을 수 있는
+            session token이다. 하나라도 없으면 <code>should_enable()</code>은 false이고 일반 직접
+            경로를 막지 않는다. 원문 test 이름도 이를 <strong>fails open</strong>으로 고정한다.
+          </p>
+          <p>
+            조건이 맞으면 WebSocket 목적지는 Anthropic base URL의
+            <code>/v1/code/upstreamproxy/ws</code>로 변환되고, local proxy port가 정해진 뒤
+            subprocess에 <code>HTTPS_PROXY</code>, CA bundle과 <code>NO_PROXY</code> 계열
+            환경을 만든다. 로컬 CLI input과 remote runtime event를 주고받는 별도 프로토콜은 이
+            소스에 없다.
+          </p>
+        </div>
+
+        <div className="not-prose my-7 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
+          <div className="bg-background p-4">
+            <p className="text-xs font-semibold text-muted-foreground">ENABLE CONTRACT</p>
+            <p className="mt-2 text-sm font-bold">remote ∧ proxy ∧ session_id ∧ token</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">네 조건이 모두 참일 때만 local upstream proxy 환경을 구성한다.</p>
+          </div>
+          <div className="bg-background p-4">
+            <p className="text-xs font-semibold text-muted-foreground">MISSING INPUT</p>
+            <p className="mt-2 text-sm font-bold">disabled state · empty subprocess env</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">인증 실패로 전체 runtime을 중단하는 보안 gateway가 아니다.</p>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

@@ -1,20 +1,20 @@
 const P = '#6366f1', S = '#10b981', A = '#f59e0b';
 
 export const COLS = [
-  { label: 'Advice', sub: '증인(비밀)', color: P, x: 40 },
-  { label: 'Fixed', sub: '상수', color: S, x: 110 },
-  { label: 'Instance', sub: '공개 입력', color: S, x: 180 },
+  { label: 'Advice', sub: '증인(비밀)', color: P, x: 48 },
+  { label: 'Fixed', sub: '상수', color: S, x: 132 },
+  { label: 'Instance', sub: '공개 입력', color: S, x: 216 },
 ];
 
 export const MID = [
-  { label: 'Selector', sub: '행 선택', color: A, x: 62, y: 58 },
-  { label: 'Gate', sub: 'Expression<F>', color: A, x: 150, y: 58 },
+  { label: 'Selector', sub: '행 선택', color: A, x: 72, y: 70 },
+  { label: 'Gate', sub: 'Expression<F>', color: A, x: 170, y: 70 },
 ];
 
 export const BOTTOM = [
-  { label: '복사 제약', sub: '퍼뮤테이션', color: P, x: 62, y: 82 },
-  { label: 'Plookup', sub: '테이블 룩업', color: S, x: 150, y: 82 },
-  { label: 'h(X)', sub: '소멸 다항식', color: A, x: 260, y: 70 },
+  { label: '복사 제약', sub: '퍼뮤테이션', color: P, x: 72, y: 116 },
+  { label: 'Plookup', sub: '테이블 룩업', color: S, x: 170, y: 116 },
+  { label: 'h(X)', sub: '소멸 다항식', color: A, x: 290, y: 94 },
 ];
 
 export const STEP_ACTIVE: Record<number, string[]> = {

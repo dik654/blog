@@ -68,7 +68,7 @@ export default function Overview() {
       <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-5">
           <p className="font-semibold text-sm text-amber-400 mb-1">1. Integer Factorization</p>
-          <M display>{'n = p \\times q \\;\\text{에서}\\; p, q \\;\\text{찾기}'}</M>
+          <M display>{'\\underbrace{n = p \\times q}_{\\text{공개 modulus}} \\;\\text{에서}\\; \\underbrace{p, q}_{\\text{비밀 소수 인수}} \\;\\text{찾기}'}</M>
           <ul className="text-sm text-foreground/80 space-y-1 list-disc list-inside mt-2">
             <li><code className="text-xs">RSA</code> 기반</li>
             <li>2048-bit: 고전 컴퓨터로 수천 년</li>
@@ -77,7 +77,7 @@ export default function Overview() {
         </div>
         <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-5">
           <p className="font-semibold text-sm text-amber-400 mb-1">2. Discrete Logarithm (DLP)</p>
-          <M display>{'g^x \\bmod p = y \\;\\text{에서}\\; x \\;\\text{찾기}'}</M>
+          <M display>{'\\underbrace{g^x \\bmod p = y}_{\\text{공개: } g, p, y} \\;\\text{에서}\\; \\underbrace{x}_{\\text{비밀 지수}} \\;\\text{찾기}'}</M>
           <ul className="text-sm text-foreground/80 space-y-1 list-disc list-inside mt-2">
             <li><code className="text-xs">DH</code>, <code className="text-xs">DSA</code> 기반</li>
             <li>고전: 어려움 / 양자: Shor로 해결</li>
@@ -85,7 +85,7 @@ export default function Overview() {
         </div>
         <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-5">
           <p className="font-semibold text-sm text-amber-400 mb-1">3. Elliptic Curve DLP (ECDLP)</p>
-          <M display>{'P = x \\cdot G \\;\\text{에서}\\; x \\;\\text{찾기}'}</M>
+          <M display>{'\\underbrace{P = x \\cdot G}_{\\text{공개: 점 } P, \\text{ 생성원 } G} \\;\\text{에서}\\; \\underbrace{x}_{\\text{비밀 스칼라}} \\;\\text{찾기}'}</M>
           <ul className="text-sm text-foreground/80 space-y-1 list-disc list-inside mt-2">
             <li><code className="text-xs">ECDSA</code>, <code className="text-xs">EdDSA</code> 기반</li>
             <li>256-bit ECC = RSA 3072-bit 동등 보안</li>

@@ -1,4 +1,5 @@
 import GadgetTreeViz from './viz/GadgetTreeViz';
+import MulAddLimbViz from './viz/MulAddLimbViz';
 import M from '@/components/ui/math';
 
 export default function GadgetSystem() {
@@ -98,52 +99,8 @@ export default function GadgetSystem() {
           </p>
         </div>
 
-        <h3 className="text-lg font-semibold mt-6 mb-3">MulAddGadget</h3>
-        <div className="not-prose rounded-lg border border-border bg-muted/30 p-4 mb-6">
-          <p className="text-sm font-semibold mb-2">256비트 곱셈+덧셈</p>
-          <div className="mb-3">
-            <M display>{'\\underbrace{a}_{\\text{피승수 (256bit)}} \\cdot \\underbrace{b}_{\\text{승수 (256bit)}} + \\underbrace{c}_{\\text{덧셈 항 (256bit)}} \\equiv \\underbrace{d}_{\\text{결과 (256bit)}} \\pmod{2^{256}}'}</M>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2 mb-3">
-            a, b, c, d = 각각 256비트 정수 (4개의 64비트 limb로 분해: a[0]~a[3])<br />
-            mod 2²⁵⁶ = EVM 워드 크기 내에서 오버플로우 처리. carry를 16비트 단위로 범위 검증
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-3">
-              <p className="font-semibold text-emerald-700 dark:text-emerald-300 mb-1">회로 레이아웃 (8행 x 4열)</p>
-              <div className="overflow-x-auto">
-                <table className="text-xs border-collapse">
-                  <thead>
-                    <tr className="text-muted-foreground">
-                      <th className="border border-border px-2 py-1">q_step</th>
-                      <th className="border border-border px-2 py-1">col0</th>
-                      <th className="border border-border px-2 py-1">col1</th>
-                      <th className="border border-border px-2 py-1">col2</th>
-                      <th className="border border-border px-2 py-1">col3</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td className="border border-border px-2 py-1">1</td><td className="border border-border px-2 py-1">a_limb0</td><td className="border border-border px-2 py-1">a_limb1</td><td className="border border-border px-2 py-1">a_limb2</td><td className="border border-border px-2 py-1">a_limb3</td></tr>
-                    <tr><td className="border border-border px-2 py-1">0</td><td className="border border-border px-2 py-1">b_limb0</td><td className="border border-border px-2 py-1">b_limb1</td><td className="border border-border px-2 py-1">b_limb2</td><td className="border border-border px-2 py-1">b_limb3</td></tr>
-                    <tr><td className="border border-border px-2 py-1">0</td><td className="border border-border px-2 py-1">c_lo</td><td className="border border-border px-2 py-1">c_hi</td><td className="border border-border px-2 py-1">d_lo</td><td className="border border-border px-2 py-1">d_hi</td></tr>
-                    <tr><td className="border border-border px-2 py-1">0</td><td className="border border-border px-2 py-1">carry0</td><td className="border border-border px-2 py-1">carry1</td><td className="border border-border px-2 py-1">carry2</td><td className="border border-border px-2 py-1">carry3</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-3">
-              <p className="font-semibold text-amber-700 dark:text-amber-300 mb-1">곱셈 전개 + carry 전파</p>
-              <div className="space-y-2">
-                <M display>{'\\underbrace{t_0}_{\\text{하위 부분곱}} = \\underbrace{a[0]}_{\\text{a의 limb0}} \\cdot \\underbrace{b[0]}_{\\text{b의 limb0}}'}</M>
-                <M display>{'\\underbrace{t_1}_{\\text{교차 부분곱}} = a[0] \\cdot b[1] + a[1] \\cdot b[0]'}</M>
-                <M display>{'\\underbrace{t_0 + t_1 \\cdot 2^{64}}_{\\text{부분곱 합산}} + \\underbrace{c_{\\text{lo}}}_{\\text{c 하위 128bit}} = \\underbrace{d_{\\text{lo}}}_{\\text{d 하위 128bit}} + \\underbrace{\\text{carry} \\cdot 2^{128}}_{\\text{올림}}'}</M>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                64비트 limb 간 교차 곱셈 → 128비트 부분합 → carry 전파로 256비트 결과 검증
-              </p>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-lg font-semibold mt-6 mb-3">MulAddGadget — 256비트 곱셈+덧셈</h3>
+        <div className="not-prose mb-6"><MulAddLimbViz /></div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Gadget Library의 철학</h3>
         <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">

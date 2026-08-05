@@ -1,5 +1,9 @@
 import TdLifecycleViz from './viz/TdLifecycleViz';
 import EnterExitViz from './viz/EnterExitViz';
+import TdCreateSeqViz from './viz/TdCreateSeqViz';
+import TdEnterExitDetailViz from './viz/TdEnterExitDetailViz';
+import TdcallExamplesViz from './viz/TdcallExamplesViz';
+import TdShutdownSeqViz from './viz/TdShutdownSeqViz';
 
 export default function LifecycleAbi() {
   return (
@@ -11,76 +15,13 @@ export default function LifecycleAbi() {
 
         <TdLifecycleViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// KVM-TDX가 TD 생성하는 흐름 (arch/x86/kvm/vmx/tdx.c)
-
-// Step 1: TDR 페이지 할당 & TD 생성
-page = alloc_page(GFP_KERNEL);
-ret = tdh_mng_create(tdr_pa, hkid);
-  → TDH.MNG.CREATE
-  → TDR(TD Root) 구조체 초기화
-  → hkid(Host Key ID) 할당
-
-// Step 2: TDCS 페이지 추가 & 키 설정
-for_each_tdcs_page { tdh_mng_addcx(tdr_pa, tdcs_pa); }
-tdh_mng_key_config(tdr_pa);
-  → TDH.MNG.KEYCONFIG
-  → MKTME 키 생성 & 활성화
-
-// Step 3: vCPU 생성
-tdh_vp_create(tdvpr_pa, tdr_pa);
-  → TDH.VP.CREATE
-tdh_vp_addcx(tdvpr_pa, tdvps_pa);
-  → 추가 페이지 바인딩
-
-// Step 4: TD 초기화
-tdh_mng_init(tdr_pa, td_params);
-  → TDH.MNG.INIT
-  → TD_PARAMS 입력 (ATTRIBUTES, XFAM, RTMR 초기화)
-
-// Step 5: 초기 메모리 페이지 추가 (측정 대상)
-for each page in TD initial image {
-    tdh_mem_page_add(tdr_pa, gpa, hpa);  → TDH.MEM.PAGE.ADD
-    tdh_mr_extend(tdr_pa, gpa);           → TDH.MR.EXTEND (MRTD 갱신)
-}
-
-// Step 6: TD 최종화 (측정값 확정)
-tdh_mr_finalize(tdr_pa);
-  → TDH.MR.FINALIZE
-  → MRTD 확정 → 이후 변경 불가
-
-// Step 7: vCPU 진입
-tdh_vp_enter(tdvpr_pa);
-  → TDH.VP.ENTER
-  → TD 실행 시작`}</pre>
+        <TdCreateSeqViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TD 실행 흐름 — TDENTER / TDEXIT</h3>
 
         <EnterExitViz />
 
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// TD 진입 (Host → TD)
-// Host는 TDH.VP.ENTER(tdvpr_pa) 호출
-//   └─> SEAM이 TD 레지스터 복원
-//   └─> SEAM이 TD로 resume
-//   └─> TD 코드 실행 시작
-
-// TD 탈출 경로 3가지
-
-Case 1: 비동기 Exit (외부 인터럽트)
-  - Timer 인터럽트, NIC 인터럽트 등
-  - TD Module이 레지스터 저장
-  - SEAM → Host 전달 (exit reason = INTR)
-
-Case 2: EPT Violation
-  - TD가 매핑 안 된 페이지 접근
-  - Host가 페이지 할당 필요
-  - exit reason = EPT_VIOLATION
-
-Case 3: TDVMCALL (의도적 호출)
-  - TD가 Host 서비스 요청 (I/O, MSR, CPUID 등)
-  - exit reason = TDG_VP_VMCALL
-
-// 핵심: 어떤 exit이든 TD Module이 중재
-// Host는 절대 TD 내부 레지스터 직접 못 봄`}</pre>
+        <TdEnterExitDetailViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">주요 TDG (Guest-side) 함수</h3>
         <div className="overflow-x-auto">
@@ -133,57 +74,10 @@ Case 3: TDVMCALL (의도적 호출)
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Linux Guest의 TDCALL 사용 예</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// arch/x86/coco/tdx/tdx.c
-
-static u64 __cpuidle __halt(const bool irq_disabled)
-{
-    struct tdx_module_args args = {
-        .r10 = TDX_HYPERCALL_STANDARD,
-        .r11 = hcall_func(EXIT_REASON_HLT),
-        .r12 = irq_disabled,
-    };
-
-    /* Hypercall: guest → host via TDVMCALL */
-    return __tdx_hypercall(&args);
-}
-
-// Page acceptance during boot
-void tdx_accept_memory(phys_addr_t start, phys_addr_t end)
-{
-    for (addr = start; addr < end; addr += PAGE_SIZE) {
-        struct tdx_module_args args = {
-            .rcx = addr,
-        };
-        ret = __tdcall(TDG_MEM_PAGE_ACCEPT, &args);
-        if (ret) { /* fatal */ }
-    }
-}
-
-// TDREPORT 생성 (증명용)
-int tdx_mcall_get_report0(u8 *reportdata, u8 *tdreport)
-{
-    struct tdx_module_args args = {
-        .rcx = virt_to_phys(tdreport),
-        .rdx = virt_to_phys(reportdata),
-        .r8  = TDREPORT_SUBTYPE_0,
-    };
-    return __tdcall(TDG_MR_REPORT, &args);
-}`}</pre>
+        <TdcallExamplesViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">TD 종료 시퀀스</h3>
-        <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Host가 TD 종료할 때
-
-1. TDH.VP.FLUSH      // 각 vCPU 캐시 flush
-2. TDH.MNG.VPFLUSHDONE  // 플러시 확인
-3. TDH.PHYMEM.PAGE.WBINVD  // 물리 메모리 쓰기 플러시
-4. TDH.MNG.KEY.FREEID  // 키 해제 (MKTME 슬롯 반환)
-5. TDH.PHYMEM.PAGE.RECLAIM  // 페이지 회수 (초기화됨)
-6. TDH.MNG.KEYCONFIG  // 새 TD용 키 재할당 가능
-
-// 주의사항
-- KEY.FREEID 전에 반드시 모든 페이지 WBINVD
-- 캐시에 남은 평문이 다른 TD로 유출 방지
-- 이 과정 생략 시 SEAMCALL이 ENTROPY_FAIL 반환`}</pre>
+        <TdShutdownSeqViz />
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: MRTD vs RTMR</p>

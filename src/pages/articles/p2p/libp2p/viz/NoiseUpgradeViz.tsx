@@ -49,7 +49,7 @@ export default function NoiseUpgradeViz() {
             transform="rotate(90, 370, 90)">업그레이드</text>
 
           {/* Moving upgrade ball */}
-          <motion.circle r={8} cx={355}
+          <motion.circle initial={false} r={8} cx={355}
             fill={LAYERS[step].color}
             animate={{ cy: 140 - step * 35 + 14 }}
             transition={{ duration: 0.5, type: 'spring', bounce: 0.25 }} />

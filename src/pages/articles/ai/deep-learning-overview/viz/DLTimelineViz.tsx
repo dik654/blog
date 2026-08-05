@@ -23,7 +23,7 @@ export default function DLTimelineViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 100" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 112" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* Timeline base line */}
           <line x1={20} y1={45} x2={400} y2={45} stroke="var(--border)" strokeWidth={1.5} />
 
@@ -46,7 +46,16 @@ export default function DLTimelineViz() {
                         fontWeight={600} fill={active ? COLORS[ei] : '#999'}>
                         {evt.year}
                       </text>
-                      <text x={ex} y={70} textAnchor="middle" fontSize={9}
+                      <line
+                        x1={ex}
+                        y1={50}
+                        x2={ex}
+                        y2={vi % 2 === 0 ? 65 : 83}
+                        stroke={active ? COLORS[ei] : '#999'}
+                        strokeWidth={0.6}
+                        opacity={active ? 0.5 : 0.2}
+                      />
+                      <text x={ex} y={vi % 2 === 0 ? 75 : 93} textAnchor="middle" fontSize={8.5}
                         fill={active ? 'var(--foreground)' : '#999'}>
                         {evt.name}
                       </text>

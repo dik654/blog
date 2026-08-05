@@ -42,7 +42,7 @@ export default function PaxosViz() {
               {/* Label */}
               {i === 0 && (
                 <g>
-                  <rect x={110} y={38} width={55} height={13} rx={2} fill="none" stroke={C1} strokeWidth={0.5} />
+                  <rect x={107} y={38} width={60} height={13} rx={2} fill="var(--card)" stroke={C1} strokeWidth={0.5} />
                   <text x={137} y={48} textAnchor="middle" fontSize={10} fill={C1}>Prepare(n)</text>
                 </g>
               )}
@@ -63,7 +63,7 @@ export default function PaxosViz() {
                 stroke={C2} strokeWidth={0.8} />
               {i === 2 && (
                 <g>
-                  <rect x={110} y={92} width={60} height={13} rx={2} fill="none" stroke={C2} strokeWidth={0.5} />
+                  <rect x={105} y={92} width={70} height={13} rx={2} fill="var(--card)" stroke={C2} strokeWidth={0.5} />
                   <text x={140} y={102} textAnchor="middle" fontSize={10} fill={C2}>Accept(n,v)</text>
                 </g>
               )}
@@ -76,8 +76,8 @@ export default function PaxosViz() {
                 <line key={i} x1={240} y1={ROLES[i + 1].y + 11} x2={330} y2={76}
                   stroke={C3} strokeWidth={0.6} strokeDasharray="2,2" />
               ))}
-              <rect x={135} y={126} width={80} height={12} rx={3} fill={`${C3}12`} stroke={C3} strokeWidth={0.6} />
-              <text x={175} y={135} textAnchor="middle" fontSize={10} fontWeight={500} fill={C3}>
+              <rect x={325} y={95} width={70} height={14} rx={3} fill={`${C3}12`} stroke={C3} strokeWidth={0.6} />
+              <text x={360} y={105} textAnchor="middle" fontSize={10} fontWeight={500} fill={C3}>
                 v = chosen
               </text>
             </motion.g>

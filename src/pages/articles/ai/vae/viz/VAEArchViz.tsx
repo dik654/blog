@@ -42,7 +42,7 @@ export default function VAEArchViz() {
           <text x={195} y={98} textAnchor="middle" fontSize={9} fill="#8b5cf680">Latent Space (2D)</text>
           {/* Data points */}
           {dots.map((d, i) => (
-            <motion.circle key={i} cx={d.x} cy={d.y} r={step >= 2 ? 3 : 1.5} fill={d.c}
+            <motion.circle initial={false} key={i} cx={d.x} cy={d.y} r={step >= 2 ? 3 : 1.5} fill={d.c}
               animate={{ opacity: step >= 2 ? 0.8 : 0.15, r: step >= 2 ? 3 : 1.5 }}
               transition={{ delay: step === 2 ? i * 0.04 : 0 }} />
           ))}

@@ -1,4 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
+import SparseMdsViz from './viz/SparseMdsViz';
 
 const mdsKernel = `// MDS 행렬 곱셈 CUDA 커널
 // state_out[i] = sum_j( MDS[i][j] * state_in[j] )  for 0 <= j < width
@@ -15,26 +16,6 @@ __device__ void mds_multiply(Fp* state, int width, int lane,
     }
     state[lane] = acc;  // 동기화 후 기록
 }`;
-
-const sparseMds = `// Partial round 최적화: Sparse MDS 분해
-//
-// 일반 MDS: width x width 행렬 → width^2 곱셈/라운드
-// Sparse MDS: M = M' * M''  (사전 계산)
-//   M'  = 첫 라운드에만 사용하는 밀집 행렬
-//   M'' = 나머지 Partial round용 희소 행렬
-//
-// 희소 행렬 M'' 구조 (width=4 예시):
-//   [ v0  v1  v2  v3 ]    ← 첫 행만 밀집
-//   [ w1   1   0   0 ]    ← 나머지는 대각 + 첫 열
-//   [ w2   0   1   0 ]
-//   [ w3   0   0   1 ]
-//
-// 곱셈 비용: width^2 → 2*width - 1
-//   state'[0] = dot(v, state)           // width 곱셈
-//   state'[i] = w[i]*state[0] + state[i] // 1 곱셈 (i>0)
-//
-// arity=11(width=12): 144 → 23 곱셈/라운드
-// 57 Partial round 합산: 8208 → 1311 곱셈 절감`;
 
 export default function MdsKernel() {
   return (
@@ -63,11 +44,7 @@ export default function MdsKernel() {
           Sparse MDS 분해는 이 비용을 2*width - 1로 줄인다.<br />
           Neptune과 ICICLE 모두 이 최적화를 적용한다.
         </p>
-        <CodePanel title="Sparse MDS 분해와 비용 절감" code={sparseMds} annotations={[
-          { lines: [3, 5], color: 'sky', note: 'M = M\' * M\'\' 분해' },
-          { lines: [7, 12], color: 'emerald', note: '희소 행렬: 첫 행 밀집 + 대각' },
-          { lines: [14, 17], color: 'amber', note: 'width^2 → 2w-1 곱셈으로 축소' },
-        ]} />
+        <SparseMdsViz />
       </div>
     </section>
   );

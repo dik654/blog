@@ -209,7 +209,7 @@ export default function CAIDetailViz() {
                   fill="var(--foreground)">GPT-4 judge</text>
                 <rect x={85} y={26} width={300} height={14} rx={3}
                   fill="var(--border)" opacity={0.15} />
-                <motion.rect x={85} y={26} width={0} height={14} rx={3}
+                <motion.rect initial={false} x={85} y={26} width={0} height={14} rx={3}
                   fill={P} opacity={0.5}
                   animate={{ width: 300 * 0.85 }}
                   transition={{ ...sp, delay: 0.15 }} />
@@ -223,7 +223,7 @@ export default function CAIDetailViz() {
                   fill="var(--foreground)">Claude 3.5</text>
                 <rect x={85} y={48} width={300} height={14} rx={3}
                   fill="var(--border)" opacity={0.15} />
-                <motion.rect x={85} y={48} width={0} height={14} rx={3}
+                <motion.rect initial={false} x={85} y={48} width={0} height={14} rx={3}
                   fill={B} opacity={0.5}
                   animate={{ width: 300 * 0.90 }}
                   transition={{ ...sp, delay: 0.2 }} />

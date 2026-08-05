@@ -1,0 +1,204 @@
+{
+  "run_id": "2026-07-19-robot-localization-slam",
+  "status": "complete_and_publicly_verified",
+  "objective": "Build the missing bottom-up bridge from time-aligned robot measurements to locally smooth odometry, globally consistent SLAM, and an atomic planner rebase contract.",
+  "request_interpretation": {
+    "curriculum_intent": "Continue the physical-state chain after camera geometry and perception, closing the pose/map assumption before deeper navigation and ROS 2 operations.",
+    "content_intent": "Use a private warehouse failure scenario to force coverage of time, drift, covariance, correlation, observability, graph optimization, loop robustness, and downstream revision consistency.",
+    "visual_intent": "Use production-style measurable interactions, stable responsive layouts, semantic color, restrained line weights, and animation only where time/order carries meaning.",
+    "provenance_intent": "Preserve each source claim, its evidence boundary, why it is included, and which public artifact it becomes.",
+    "small_model_intent": "Persist bounded artifact packets and failed/verified decisions so 4B and 9B models can replay one section, Viz, or defect at a time."
+  },
+  "gap_audit": {
+    "existing_coverage": [
+      "robot-camera-geometry-calibration produces acquisition-time metric observations but assumes the camera/base pose",
+      "robot-perception-scene-construction builds tracks and occupancy but treats map-frame pose/covariance as input",
+      "robot-kinematics-coordinate-frames composes rigid transforms without estimating uncertain global poses",
+      "robot-motion-planning consumes a versioned scene without explaining loop-closure rebase",
+      "robot-ai-top-down mentions ROS 2 and navigation only at overview depth"
+    ],
+    "missing_chain": [
+      "estimation_problem_contract",
+      "acquisition_interval_and_deskew",
+      "dead_reckoning_drift",
+      "anisotropic_covariance_propagation",
+      "innovation_gating_and_correlation",
+      "map_odom_base_link_split",
+      "front_end_constraint_and_degeneracy",
+      "pose_factor_graph_and_gauge",
+      "linearize_solve_retract",
+      "robust_loop_closure",
+      "map_scene_rebase_transaction",
+      "localization_health_gate"
+    ],
+    "scope_boundary": "Full EKF derivation, individual ICP/VIO algorithms, dense/neural SLAM, distributed multi-robot SLAM, and ROS 2 QoS remain independent articles."
+  },
+  "source_decisions": [
+    {
+      "source": "Cadena et al., TRO 2016 SLAM survey",
+      "used_for": ["SLAM definition", "front-end/back-end architecture", "robustness and scalability boundaries"],
+      "boundary": "A survey organizes claims but does not certify one estimator or deployment policy."
+    },
+    {
+      "source": "Smith, Self and Cheeseman 1990",
+      "used_for": ["uncertain spatial relationships", "covariance propagation", "cross-correlation warning"],
+      "boundary": "First-order Gaussian uncertainty can fail for nonlinear or multimodal posteriors."
+    },
+    {
+      "source": "Nav2 current Concepts, REP-105 convention, and robot_localization docs",
+      "used_for": ["map-odom-base_link contract", "smooth local drift versus global jumps", "predict-correct operational fusion"],
+      "boundary": "Frame conventions and a package API do not validate source semantics, covariance, or observability."
+    },
+    {
+      "source": "Lu and Milios, Autonomous Robots 1997",
+      "used_for": ["preserved local frames", "weak and strong pose relations", "maximum-likelihood graph solve", "gauge anchor", "linearization and iteration", "simulated and real evidence"],
+      "boundary": "The paper assumes practical independent Gaussian errors, correct pairwise matches and useful initialization; it is 2D stop-and-scan and excludes high-level map construction."
+    },
+    {
+      "source": "GTSAM factor graph tutorial and robust noise documentation",
+      "used_for": ["modern factor vocabulary", "loop factor", "whitening", "Huber reweighting", "batch/incremental/fixed-lag bridge"],
+      "boundary": "The library does not make a false measurement true or guarantee global convergence."
+    }
+  ],
+  "private_transfer_gate": {
+    "premise_count": 14,
+    "artifact": "src/pages/articles/ai/content-specs/robot-localization-slam.md",
+    "scenario": "Warehouse robot with wheel slip, biased timing, spinning-LiDAR deskew error, aisle degeneracy, correlated sensor fusion, false and true loop closures, concurrent path execution, and stale scene revision.",
+    "publication_policy": "Keep the integrated test private; expose every necessary insight through derivation, Viz, operational contract, or paper evidence boundary."
+  },
+  "source_extraction": {
+    "paper": "Lu and Milios 1997, Globally Consistent Range Scan Alignment for Environment Mapping",
+    "local_pdf": "/tmp/pdfs/lu-milios-1997.pdf",
+    "pages_read": "1-17",
+    "mechanism_notes": [
+      "Incremental scan-to-model integration becomes difficult to repair because local frames are permanently merged.",
+      "Nodes are scan poses; weak links come from odometry and strong links from overlapping pairwise scan matches.",
+      "Each relation contributes a covariance-weighted Mahalanobis energy; one pose is fixed because relative observations leave global reference unobservable.",
+      "The linear special case yields X=(H^T C^-1 H)^-1 H^T C^-1 D and covariance (H^T C^-1 H)^-1.",
+      "SE(2) pose relations are linearized around current estimates, solved globally, updated, and iterated; the paper reports four to five iterations to machine-accuracy convergence and more than 90 percent of correctable error removed in the first iteration.",
+      "Experiments use 13 simulated loop poses and 30 real scans with 84 matched-scan links; they show bounded corrected pose error and aligned scans, not production safety or modern runtime."
+    ]
+  },
+  "events": [
+    {
+      "event_id": "audit.curriculum.001",
+      "phase": "gap_audit",
+      "observed": "Camera and perception articles both require an acquisition-time global sensor pose, while motion planning assumes a coherent versioned map.",
+      "inference": "Localization and SLAM are the next missing physical-state dependency; a ROS 2 communication article would improve operations but would leave the central state-estimation assumption unexplained.",
+      "decision": "Implement Robot Localization & SLAM before the deeper ROS 2 graph/QoS article.",
+      "changed_files": [],
+      "verification": { "expected": "Every adjacent article input/output has an explicit bridge", "actual": "The content spec now owns observation-to-pose-to-map-to-scene revision." }
+    },
+    {
+      "event_id": "source.paper.001",
+      "phase": "evidence_compile",
+      "observed": "Lu and Milios preserve local scans and relative uncertain relations, fix one reference pose, solve all pose variables, then iterate a linearized system.",
+      "inference": "The durable teaching insight is reparability through provenance and global consistency, not merely the historical matrix formula.",
+      "decision": "Use Lu and Milios as the paper spine and connect it explicitly to modern factor graphs and atomic downstream rebase.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-localization-slam.md"],
+      "verification": { "expected": "Paper claim, evidence, assumptions, and modern boundary are separable", "actual": "The source ledger and paper scope state each boundary before implementation." }
+    },
+    {
+      "event_id": "gate.transfer.001",
+      "phase": "transfer_gate",
+      "observed": "Definitions alone do not expose timestamp, correlation, degeneracy, false loop, or concurrent rebase failures.",
+      "inference": "A hard test must combine multiple individually plausible sensor outputs with one high-impact global correction and an executing planner.",
+      "decision": "Use a 14-premise warehouse scenario and require visible public evidence for every premise without publishing the test itself.",
+      "changed_files": ["src/pages/articles/ai/content-specs/robot-localization-slam.md"],
+      "verification": { "expected": "Every premise maps to a section/formula/Viz/gate", "actual": "Coverage table contains 14 mapped rows." }
+    },
+    {
+      "event_id": "implementation.narrative.001",
+      "phase": "concept_implementation",
+      "observed": "The transfer gate dependencies follow physical state construction rather than algorithm or sensor family.",
+      "inference": "The reader should first identify the estimation problem, then fix time, predict drift, fuse evidence, split frames, create constraints, solve the graph, reject false loops, and rebase consumers.",
+      "decision": "Implement nine sections in that causal order with one measurable interactive Viz per section.",
+      "changed_files": ["src/pages/articles/ai/robot-localization-slam.tsx"],
+      "verification": { "expected": "All 14 private premises have public evidence", "actual": "Nine sections, 15 annotated displays, nine interactions, capability gate, and source notes cover every mapped premise." }
+    },
+    {
+      "event_id": "implementation.paper.001",
+      "phase": "paper_reconstruction",
+      "observed": "A summary would hide the paper's specific separation of local frames, weak/strong relations, linear special case, SE(2) linearization, experiments, and explicit scope exclusions.",
+      "inference": "The paper must be reconstructed by prior bottleneck, intent, mechanism, equations, evidence slices, reproduction, assumptions, failures, and legacy.",
+      "decision": "Use the shared FoundationalPaperStudy renderer with a dedicated pose-network Viz and four evidence slices.",
+      "changed_files": ["src/pages/articles/ai/paper-spine/robotLocalizationSpecs.tsx", "src/pages/articles/ai/paper-spine/viz/LuMiliosPoseNetworkLab.tsx", "src/pages/articles/ai/paper-lu-milios-scan-alignment-1997.tsx"],
+      "verification": { "expected": "Original and modern claims remain separated", "actual": "The spec labels Gaussian/independence/stop-and-scan/association boundaries and treats robust factors, sparse solvers, and atomic rebase as later extensions." }
+    },
+    {
+      "event_id": "qa.math.mobile.001",
+      "phase": "qa_repair",
+      "observed": "Zero document overflow concealed concept math scaled to 0.59 and paper math scaled to 0.52 at 360 px.",
+      "inference": "Several displays packed multiple semantic operations and long Korean underbraces into one widest row.",
+      "decision": "Split posterior/objective, deskew, unicycle/covariance, map-odom, robust loss, health gate, normal equation, correspondence cost, and iteration into semantic rows or displays.",
+      "changed_files": ["src/pages/articles/ai/robot-localization-slam.tsx", "src/pages/articles/ai/paper-spine/robotLocalizationSpecs.tsx"],
+      "verification": { "expected": "minimum scale >= 0.75 at 360 and no overflow", "actual": "concept minimum 0.76, paper minimum 0.75, overflow 0, KaTeX errors 0, annotation misses 0." }
+    },
+    {
+      "event_id": "qa.viz.geometry.001",
+      "phase": "qa_repair",
+      "observed": "The initial high-drift mobile path and covariance ellipse left the SVG viewBox; the desktop label overlapped the ellipse; mobile loop evidence used four tall single-column cells.",
+      "inference": "Dynamic values must be constrained by stable scene dimensions, and discrete evidence cells can wrap without losing execution order.",
+      "decision": "Clamp responsive endpoint geometry, shorten/reposition the ellipse label, use a 2x2 mobile evidence grid, and shorten rebase mode labels.",
+      "changed_files": ["src/pages/articles/ai/robot-localization-slam.tsx"],
+      "verification": { "expected": "no clipped SVG text or moving geometry and compact mobile hierarchy", "actual": "four viewports have zero clipped SVG labels; reviewed mobile/desktop screenshots keep path, ellipse, evidence, and segmented controls in bounds." }
+    },
+    {
+      "event_id": "deploy.public.001",
+      "phase": "deployment_verification",
+      "observed": "Local build and browser QA passed but the user previously encountered stale public output, so public state cannot be inferred from local success.",
+      "inference": "The service must be restarted and the public host must repeat browser, interaction, category-list, and HTTP checks.",
+      "decision": "Restart cm-blog.service and run public QA at 390 and 1440 px.",
+      "changed_files": [],
+      "verification": { "expected": "HTTP 200 plus zero public rendering defects and working interactions", "actual": "concept, paper, and ai-robotics list return 200; overflow, KaTeX errors, missing annotations, clipped SVG text, raw LaTeX, and console errors are zero; loop, rebase, and paper graph controls change state." }
+    }
+  ],
+  "artifacts": {
+    "content_spec": "src/pages/articles/ai/content-specs/robot-localization-slam.md",
+    "concept_article": "src/pages/articles/ai/robot-localization-slam.tsx",
+    "paper_spec": "src/pages/articles/ai/paper-spine/robotLocalizationSpecs.tsx",
+    "paper_viz": "src/pages/articles/ai/paper-spine/viz/LuMiliosPoseNetworkLab.tsx",
+    "paper_article": "src/pages/articles/ai/paper-lu-milios-scan-alignment-1997.tsx",
+    "metadata": "src/content/ai/articlesSystemsFoundation.ts",
+    "foundation_bridges": "src/content/ai/foundationCurriculum.ts",
+    "learning_paths": "src/content/learning-paths.ts",
+    "research_tracking": "knowledge/research-pipeline/topics.json",
+    "run_ledger": "knowledge/authoring/runs/2026-07-19-robot-localization-slam.json",
+    "human_report": "knowledge/authoring/runs/2026-07-19-robot-localization-slam-report.md",
+    "generic_small_model_protocol": "knowledge/authoring/small-model-deep-article-protocol.md"
+  },
+  "implementation_decisions": [
+    "Choose localization and SLAM before ROS 2 graph/QoS because adjacent physical-state articles depended on an unexplained map-frame pose and revision.",
+    "Order sections by causal data flow rather than sensor or algorithm taxonomy.",
+    "Treat time, covariance, correlation, observability, gauge, loop robustness, and revision consistency as separate acceptance contracts.",
+    "Keep map global accuracy and odom local continuity in separate transforms instead of presenting a single corrected pose.",
+    "Teach front-end matches as uncertain constraints and back-end optimization as inference over those constraints, not truth creation.",
+    "Preserve raw scans/submaps and pose provenance so loop corrections remain repairable downstream.",
+    "Use semantic colors and restrained curves; red appears only for drift, outlier, stale revision, or violated invariant.",
+    "Put Korean operation rationale inside every display equation and move longer boundary explanations into FormulaNote.",
+    "Separate the 1997 paper's evidence from modern robust, sparse, incremental, and planner-transaction extensions."
+  ],
+  "qa": {
+    "targeted_lint": "passed for concept, paper spec/Viz/wrapper, metadata, curriculum, and learning paths",
+    "production_build": "passed; pre-existing large-chunk warning remains",
+    "local_viewports": {
+      "360": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 0.76, "paper_min_math_scale": 0.75 },
+      "390": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 0.84, "paper_min_math_scale": 0.84 },
+      "768": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1 },
+      "1440": { "overflow_px": 0, "katex_errors": 0, "missing_annotations": 0, "clipped_svg_text": 0, "concept_min_math_scale": 1, "paper_min_math_scale": 1 }
+    },
+    "interaction_checks": "All nine concept Viz controls and the paper pose-network control changed visible measured state.",
+    "visual_review": "Nine mobile and nine desktop Viz screenshots plus the paper Viz were inspected for hierarchy, whitespace, label size, line weight, dynamic bounds, and responsive composition.",
+    "public_deployment": {
+      "service": "cm-blog.service active after restart at 2026-07-19 13:40 KST",
+      "urls": [
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/robot-localization-slam",
+        "https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/paper-lu-milios-scan-alignment-1997"
+      ],
+      "http_status": 200,
+      "browser_checks": "390 and 1440 px: zero overflow, KaTeX errors, annotation misses, clipped SVG labels, raw LaTeX, and console errors.",
+      "category_integration": "ai-robotics list contains both articles and has zero horizontal overflow at 390 px."
+    }
+  },
+  "next_phase": "Use the same recorded protocol for the next audited robotics foundation gap; candidate after this physical-state chain is a deep ROS 2 graph, QoS, lifecycle, executor, and real-time boundary article."
+}

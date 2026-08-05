@@ -1,32 +1,23 @@
-import Overview from './dezero-nn/Overview';
-import LinearLayer from './dezero-nn/LinearLayer';
-import Activation from './dezero-nn/Activation';
-import Optimizer from './dezero-nn/Optimizer';
-import Training from './dezero-nn/Training';
+import Article from './dezero-nn/Article';
 import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './dezero-nn/codeRefs';
-import { dezeroTree } from './dezero-nn/fileTrees';
+import { runtimeCodeRefs, runtimeFileTree } from './dezero-shared/runtimeCodeRefs';
 
 export default function DezeroNn() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
-      <Overview onCodeRef={sidebar.open} />
-      <LinearLayer onCodeRef={sidebar.open} />
-      <Activation onCodeRef={sidebar.open} />
-      <Optimizer onCodeRef={sidebar.open} />
-      <Training onCodeRef={sidebar.open} />
+      <Article onCodeRef={sidebar.open} />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef}
         onClose={sidebar.close} onNavigate={sidebar.navigate}
-        codeRefs={codeRefs}
-        fileTrees={{ dezero: dezeroTree }}
+        codeRefs={runtimeCodeRefs}
+        fileTrees={{ 'dezero-rs': runtimeFileTree }}
         projectMetas={{
-          dezero: {
-            id: 'dezero',
-            label: 'dezero_rs · Rust',
-            badgeClass: 'bg-[#fef3c7] border-[#f59e0b] text-[#92400e]',
+          'dezero-rs': {
+            id: 'dezero-rs',
+            label: '교육용 재구성 · Rust',
+            badgeClass: 'bg-cyan-50 border-cyan-600/35 text-cyan-900 dark:bg-cyan-950 dark:text-cyan-100',
           },
         }}
       />

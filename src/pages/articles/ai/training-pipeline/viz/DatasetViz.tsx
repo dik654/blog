@@ -2,12 +2,54 @@ import { motion } from 'framer-motion';
 import StepViz from '@/components/ui/step-viz';
 import { ModuleBox, DataBox, ActionBox } from '@/components/viz/boxes';
 import { STEPS, COLORS, sp } from './DatasetVizData';
+import MobileTrainingScene, { type MobileTrainingSceneData } from './MobileTrainingScene';
+
+const MOBILE_SCENES: MobileTrainingSceneData[] = [
+  {
+    eyebrow: 'Dataset interface',
+    items: [
+      { label: '__init__', detail: 'Path, metadata와 transform 설정을 보관한다.', accent: COLORS.dataset },
+      { label: '__len__', detail: 'Sampler가 사용할 전체 sample 수를 반환한다.', accent: COLORS.dataset },
+      { label: '__getitem__(idx)', detail: '한 sample을 읽고 transform한 뒤 feature와 label을 돌려준다.', accent: COLORS.image },
+    ],
+    oracle: 'Dataset은 sample 하나의 계약이고 batch 조립은 DataLoader 책임이다.',
+  },
+  {
+    eyebrow: 'DataLoader contract',
+    items: [
+      { label: 'Dataset에서 index 선택', detail: 'Shuffle과 sampler가 이번 batch의 index를 정한다.', accent: COLORS.dataset },
+      { label: 'Sample을 batch로 결합', detail: 'collate_fn이 tensor shape와 padding을 맞춘다.', accent: COLORS.loader },
+      { label: 'Iterator로 전달', detail: 'Training loop가 (X, y) batch를 차례로 받는다.', accent: COLORS.loader },
+    ],
+    oracle: 'batch_size, shuffle, worker, memory 설정은 서로 다른 책임이다.',
+  },
+  {
+    eyebrow: 'I/O 병목을 찾는 순서',
+    items: [
+      { label: 'GPU idle부터 측정', detail: 'Data 대기 때문에 compute가 비는지 profiler로 확인한다.', accent: COLORS.worker },
+      { label: 'Worker 수를 단계적으로 증가', detail: 'GPU당 2~4개에서 시작해 throughput plateau를 찾는다.', accent: COLORS.worker },
+      { label: 'Pinned transfer 비교', detail: 'Host memory 비용과 copy overlap 이득을 같은 workload에서 잰다.', accent: COLORS.pin },
+    ],
+    oracle: 'CPU core 배수나 고정 speedup 대신 측정값으로 설정을 고른다.',
+  },
+  {
+    eyebrow: 'Domain별 sample 변환',
+    items: [
+      { label: 'Image', detail: 'Decode → resize·augmentation → normalized tensor.', accent: COLORS.image },
+      { label: 'Tabular', detail: 'Row indexing → dtype·missing-value contract → tensor.', accent: COLORS.table },
+      { label: 'Text', detail: 'Tokenize → truncate·pad → ids와 attention mask.', accent: COLORS.text },
+    ],
+    oracle: '느린 deterministic 전처리는 미리 계산하고 stochastic augmentation만 runtime에 남길 수 있다.',
+  },
+];
 
 export default function DatasetViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 520 230" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <div className="w-full">
+          <MobileTrainingScene scene={MOBILE_SCENES[step]} />
+          <svg viewBox="0 0 520 230" className="hidden w-full max-w-2xl sm:block" style={{ height: 'auto' }}>
           <defs>
             <marker id="arrDs" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto">
               <path d="M0,0 L6,3 L0,6" fill="var(--muted-foreground)" />
@@ -76,7 +118,7 @@ export default function DatasetViz() {
                   transition={{ ...sp, delay: 0.2 + i * 0.08 }}>
                   <rect x={80 + i * 100} y={130} width={92} height={22} rx={11}
                     fill={p.color} fillOpacity={0.1} stroke={p.color} strokeWidth={0.8} />
-                  <text x={126 + i * 100} y={145} textAnchor="middle" fontSize={8} fontWeight={600} fill={p.color}>
+                  <text x={126 + i * 100} y={145} textAnchor="middle" fontSize={9} fontWeight={600} fill={p.color}>
                     {p.label}
                   </text>
                 </motion.g>
@@ -110,7 +152,7 @@ export default function DatasetViz() {
               <text x={140} y={117} textAnchor="middle" fontSize={10} fontWeight={600} fill={COLORS.pin}>
                 Pinned Memory (CPU)
               </text>
-              <text x={140} y={130} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">페이지 잠금 → DMA 전송</text>
+              <text x={140} y={130} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">페이지 잠금 → DMA 전송</text>
               {/* Arrow to GPU */}
               <motion.line x1={224} y1={118} x2={300} y2={118} stroke={COLORS.pin} strokeWidth={1.5}
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ ...sp, delay: 0.6 }}
@@ -125,13 +167,13 @@ export default function DatasetViz() {
               {/* Comparison bars */}
               <text x={80} y={168} fontSize={9} fontWeight={600} fill="var(--foreground)">num_workers=0</text>
               <rect x={210} y={158} width={250} height={12} rx={4} fill="var(--border)" opacity={0.2} />
-              <motion.rect x={210} y={158} width={0} height={12} rx={4} fill={COLORS.worker} opacity={0.3}
+              <motion.rect initial={false} x={210} y={158} width={0} height={12} rx={4} fill={COLORS.worker} opacity={0.3}
                 animate={{ width: 250 }} transition={{ ...sp, duration: 1 }} />
               <text x={80} y={192} fontSize={9} fontWeight={600} fill="var(--foreground)">num_workers=4</text>
               <rect x={210} y={182} width={250} height={12} rx={4} fill="var(--border)" opacity={0.2} />
-              <motion.rect x={210} y={182} width={0} height={12} rx={4} fill={COLORS.worker} opacity={0.7}
+              <motion.rect initial={false} x={210} y={182} width={0} height={12} rx={4} fill={COLORS.worker} opacity={0.7}
                 animate={{ width: 100 }} transition={{ ...sp, duration: 0.6 }} />
-              <text x={320} y={192} fontSize={8} fill={COLORS.worker} fontWeight={600}>2.5x 빠름</text>
+              <text x={320} y={192} fontSize={9} fill={COLORS.worker} fontWeight={600}>profiler로 결정</text>
             </motion.g>
           )}
 
@@ -168,7 +210,7 @@ export default function DatasetViz() {
                   <rect x={d.x + 10} y={d.y + 56} width={135} height={24} rx={5}
                     fill="var(--muted)" fillOpacity={0.2} />
                   <text x={d.x + 78} y={d.y + 72} textAnchor="middle"
-                    fontSize={8} fill="var(--muted-foreground)">{d.detail}</text>
+                    fontSize={9} fill="var(--muted-foreground)">{d.detail}</text>
                 </motion.g>
               ))}
               <text x={260} y={145} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
@@ -176,7 +218,8 @@ export default function DatasetViz() {
               </text>
             </motion.g>
           )}
-        </svg>
+          </svg>
+        </div>
       )}
     </StepViz>
   );

@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await page.goto('https://heru.ragdoll-bigeye.ts.net/lab/blog/ai/attention-theory', { waitUntil: 'networkidle' });
+await page.evaluate(() => document.getElementById('additive')?.scrollIntoView({ block: 'start' }));
+await page.waitForTimeout(700);
+const next = page.locator('section#additive button').nth(1);
+await next.click(); await page.waitForTimeout(900);
+await next.click(); await page.waitForTimeout(1700);
+await page.screenshot({ path: '/tmp/step2.png', clip: { x: 0, y: 0, width: 1400, height: 900 } });
+await browser.close();

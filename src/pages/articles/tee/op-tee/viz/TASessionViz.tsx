@@ -45,17 +45,17 @@ export default function TASessionViz() {
             );
           })}
           {/* Moving signal ball */}
-          <motion.circle r={7} fill={PHASE_CLR[step]}
+          <motion.circle initial={false} r={7} fill={PHASE_CLR[step]}
             animate={{ cy: [20 + 17, 65 + 17, 110 + 17, 155 + 17, 110 + 17, 65 + 17, 20 + 17] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} cx={180} />
           {/* Phase label */}
           <motion.text x={190} y={195} textAnchor="middle" fontSize={10} fontWeight={600}
-            fill={PHASE_CLR[step]} key={step}
+            fill={PHASE_CLR[step]} key={`phase-${step}`}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {['OpenSession', 'InvokeCommand', 'CloseSession'][step]}
           </motion.text>
           <motion.text x={385} y={100} fontSize={10} fill="var(--foreground)"
-            initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} key={step}>{ANNOT[step]}</motion.text>
+            initial={{ opacity: 0 }} animate={{ opacity: 0.8 }} key={`annotation-${step}`}>{ANNOT[step]}</motion.text>
         </svg>
       )}
     </StepViz>

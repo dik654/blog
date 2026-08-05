@@ -1,5 +1,6 @@
 import M from '@/components/ui/math';
 import OverviewViz from './viz/OverviewViz';
+import TowerExpansionViz from './viz/TowerExpansionViz';
 
 export default function Overview() {
   return (
@@ -73,33 +74,8 @@ export default function Overview() {
           </div>
         </div>
 
-        {/* 페어링 타워 적용 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-emerald-500 bg-card p-4 mb-4">
-          <div className="text-sm font-semibold mb-2">BN254/BLS12-381 확장체 타워 적용</div>
-          <p className="text-sm text-muted-foreground mb-3">
-            타워: <M>{'\\mathbb{F}_p \\to \\mathbb{F}_{p^2} \\to \\mathbb{F}_{p^6} \\to \\mathbb{F}_{p^{12}}'}</M>
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="rounded bg-muted/50 p-3">
-              <div className="text-xs font-mono text-red-500 mb-1">Without Karatsuba</div>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>Fp12: 4 Fp6 mults</li>
-                <li>Fp6: 9 Fp2 mults</li>
-                <li>Fp2: 4 Fp mults</li>
-                <li className="font-semibold">Total: 4 x 9 x 4 = 144 Fp mults</li>
-              </ul>
-            </div>
-            <div className="rounded bg-muted/50 p-3">
-              <div className="text-xs font-mono text-emerald-500 mb-1">With Karatsuba</div>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>Fp12: 3 Fp6 mults</li>
-                <li>Fp6: 6 Fp2 mults</li>
-                <li>Fp2: 3 Fp mults</li>
-                <li className="font-semibold">Total: 3 x 6 x 3 = 54 Fp mults (62% 절감)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        {/* 페어링 타워 적용 — Viz */}
+        <div className="not-prose mb-4"><TowerExpansionViz /></div>
 
         {/* Karatsuba가 유리한 범위 */}
         <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">

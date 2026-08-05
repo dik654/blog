@@ -1,0 +1,1265 @@
+{
+  "date": "2026-07-21",
+  "objective": "Preserve independent articles while reconstructing every AI topic as current -> core -> just-in-time foundation -> optional evidence -> implementation.",
+  "decisions": [
+    {
+      "observed": "ai-systems-foundation was presented as an AI-wide map although it contains a reusable system-reading lens.",
+      "inferred": "The label made a method article compete with target fields.",
+      "decided": "Rename the stage to reading method and the article to AI system common perspective.",
+      "changed": [
+        "src/content/ai/index.ts",
+        "src/content/sidebar-learning-structure.ts",
+        "src/pages/home/LearningPaths.tsx",
+        "src/content/ai/articlesSystemsFoundation.ts",
+        "src/pages/articles/ai/systems-foundation-map.tsx"
+      ],
+      "verified": ["production build", "local Playwright 11/11", "public Playwright 11/11", "390px and 1440px overflow = 0"]
+    },
+    {
+      "observed": "The learning audit read only article entry files and missed content split into imported section files.",
+      "inferred": "Article depth and formula coverage were undercounted.",
+      "decided": "Follow relative article imports and audit the complete source closure.",
+      "changed": ["scripts/audit-learning-flow.mjs"],
+      "verified": ["567 registered article entries", "sourceFiles and sourceBytes recorded per article"]
+    },
+    {
+      "observed": "Ten LLM serving articles and three Rust implementation articles were displayed as flat sibling lists; offscreen category cards also remained transparent until a viewport animation fired.",
+      "inferred": "Readers could not distinguish token runtime from deployment operations, and full-page/mobile navigation could contain blank-looking regions.",
+      "decided": "Author two serving paths, one Rust implementation path, explicit path display order, and always-visible navigation cards while retaining viewport prefetch.",
+      "changed": [
+        "src/content/learning-paths.ts",
+        "src/content/ai/articlesVLLM.ts",
+        "src/content/ai/articlesLLM.ts",
+        "src/content/ai/articlesFromScratch.ts",
+        "src/pages/CategoryPage.tsx",
+        "src/pages/category/ArticleCard.tsx",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": ["production build", "focused Playwright 25/25", "390px serving screenshot with no blank card regions", "document horizontal overflow = 0"]
+    },
+    {
+      "observed": "Agent, Knowledge Systems, Speech, World Model and Time Series mixed current targets, mechanisms, product examples and foundations without authored local routes.",
+      "inferred": "A single flat order would create false dependencies, especially between forecasting and anomaly detection or between agent mechanisms and vendor products.",
+      "decided": "Create goal-specific paths: agent executable core plus optional examples, Knowledge Compiler to RAG, current-first Speech and World Model foundation routes, and separate forecasting and anomaly routes.",
+      "changed": [
+        "src/content/learning-paths.ts",
+        "src/content/ai/articlesAgent.ts",
+        "src/content/ai/articlesSystemsFoundation.ts",
+        "src/content/ai/articlesPractical.ts",
+        "src/content/ai/articlesCurrentFlows.ts",
+        "src/content/ai/articlesTS.ts",
+        "src/pages/CategoryPage.tsx",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": ["production build", "authored topic Playwright 8/8", "390px Agent and Time Series visual review", "current-first Speech and World Model routes expose five steps without horizontal overflow"]
+    },
+    {
+      "observed": "Open model, Practical ML and Claw Code leaf categories still exposed flat sibling lists after the first route reconstruction.",
+      "inferred": "A single order would falsely connect independent targets such as static versus temporal tabular work, while no order would hide real execution dependencies inside ComfyUI and Claw runtime flows.",
+      "decided": "Author goal-specific leaf paths, keep independent targets separate, and demote only genuine optional examples instead of forcing one global sequence.",
+      "changed": [
+        "src/content/learning-paths.ts",
+        "src/content/ai/articlesGen.ts",
+        "src/content/ai/articlesPractical.ts",
+        "src/content/ai/articlesClawCode.ts",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": ["production build", "17 leaf-route browser checks", "390px Open Model, Practical CV and Claw Ops visual review", "Claude route audit: no high or medium findings"]
+    },
+    {
+      "observed": "The LLM Harness article mentioned metrics, judges and tests but could not explain whether a higher-scoring agent was safe to release or where a failed run first violated its contract.",
+      "inferred": "Agent evaluation owns an independent reader decision and needs its own task contract, trace, grader precedence, repeated reliability and paired regression loop.",
+      "decided": "Add Agent Evaluation & Trace as the sixth core agent step after containment, and derive the prose from a private refund-agent transfer problem plus primary-source claim ledger.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/agent-evaluation-trace.md",
+        "src/pages/articles/ai/agent-evaluation-trace.tsx",
+        "src/pages/articles/ai/agent-evaluation-trace/viz/AgentEvalExplorers.tsx",
+        "src/content/learning-paths.ts",
+        "src/content/ai/articlesAgent.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": [
+        "ESLint",
+        "production build",
+        "focused browser regression 47/47",
+        "agent browser regression 7/7 after mobile compaction",
+        "390px and 1440px visual review",
+        "three KaTeX formula notes with Korean operation and symbol explanations",
+        "Claude transfer audit: no high or medium findings; explicit budget breach and dual tool/harness ownership caveats incorporated"
+      ],
+      "collaboration_trace": {
+        "attempt_1": "No output; process interrupted after repeated empty polls.",
+        "attempt_2": "Stopped after exceeding the USD 0.40 budget without an audit result.",
+        "attempt_3": "Succeeded at the narrowed two-file scope; all nine expected reasoning items found. Visual contract was verified separately with Playwright screenshots."
+      }
+    },
+    {
+      "observed": "The Time Series section had ARIMA, Time Features, LSTM and ECOD but no article that could reject leaked one-origin evidence or select current forecasting foundation models by interface.",
+      "inferred": "The missing reader decision was evaluation, not another model catalog. ARIMA and LSTM should remain independent baselines while forecasting and anomaly detection need separate routes.",
+      "decided": "Add a current-first forecasting evaluation bridge driven by a private retail transfer problem, then order the route as current validation, information timing, statistical baseline and learned memory.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/time-series-forecasting-evaluation.md",
+        "src/pages/articles/ai/time-series-forecasting-evaluation.tsx",
+        "src/pages/articles/ai/time-series-forecasting-evaluation/viz/ForecastEvaluationExplorers.tsx",
+        "src/content/ai/articlesTS.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": [
+        "ESLint",
+        "production build",
+        "focused Time Series browser checks 2/2",
+        "390px document horizontal overflow = 0",
+        "four adjacent Korean formula notes and zero KaTeX parse errors",
+        "horizon control changes every rolling fold from two to four target cells while preserving equal width per origin"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "Reconstructed all ten private transfer insights. Found one high visual contradiction and four medium reasoning or labeling gaps.",
+        "incorporated": "Fixed constant target geometry, connected the horizon control to target width, defined fold, made the 61 percent calibration example self-contained, labeled the MASE delta sign, strengthened the default lucky-origin contrast and clarified quantile crossing, frozen zero-shot MASE history and model evidence boundaries."
+      }
+    },
+    {
+      "observed": "Knowledge Compiler already covered normalization and Knowledge IR, while RAG Pipeline already covered claim provenance and layerwise evaluation. The missing independent decision was how new papers, company posts, code releases and corrections may change a bounded curriculum over time. The active discovery script also discarded unreviewed candidates that fell outside a successful source refresh window.",
+      "inferred": "Adding separate provenance and evaluation articles would duplicate deep existing sections. A longitudinal research-watcher article and a non-destructive queue state transition were the smallest missing units.",
+      "decided": "Keep the two existing articles, append Research Watcher as the third Knowledge Systems step, compare candidate and current values on five contracts, cap each track at one current source and one canonical paper, require four gates for a foundation delta, and preserve non-refreshed queue candidates instead of deleting them.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/research-watcher-curriculum.md",
+        "src/pages/articles/ai/research-watcher-curriculum.tsx",
+        "src/pages/articles/ai/research-watcher-curriculum/viz/ResearchWatcherExplorers.tsx",
+        "src/content/ai/articlesSystemsFoundation.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "scripts/research-discover.mjs",
+        "scripts/research-queue-state.mjs",
+        "scripts/research-queue-state.test.mjs",
+        "knowledge/research-pipeline/README.md",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": [
+        "production build",
+        "focused Knowledge and Time Series Playwright checks 3/3",
+        "390px document horizontal overflow = 0",
+        "two adjacent Korean formula notes and zero KaTeX parse errors",
+        "source lineage and promotion scenario interaction screenshots at 390px",
+        "research queue state 10 assertions",
+        "official Anthropic research source dry-run without failures"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "Found semantic contradictions in the benchmark-only Viz, an axis-value error in the contract equation, source-specific correction coverage gaps, an unsigned model proposal schema, actual queue retention loss and accessibility issues.",
+        "incorporated": "Made benchmark-only evidence change no contracts or gates, compared values within five axes, separated arXiv revision from a distinct correction claim, aligned PROV and Crossref boundaries, split 9B proposal from editorial signature and rollback, exposed changed/same labels, documented current script states, and implemented lossless queue refresh semantics."
+      }
+    },
+    {
+      "observed": "The Vision category had strong CNN, ResNet, ViT, CLIP and Deformable DETR articles but no current-first route that separated single-object visual prompting, concept-wide prompting, temporal identity and multi-object runtime. The research-route UI also risked repeating one consolidated article as current, canonical, concept and implementation.",
+      "inferred": "A fact-sheet or one article per SAM release would reproduce the flat-list problem. The smallest independent unit is one failure-driven reconstruction from SAM 1 to SAM 3.1, while object queries, image-text alignment and patch attention remain reusable prerequisite articles. The route should link the consolidated article once as the current explanation and expose the canonical paper as primary evidence rather than another duplicate internal link.",
+      "decided": "Author one SAM 3.1 promptable segmentation and video tracking article with a private transfer problem, stop the segmentation paper spine at SAM 1, add a four-step current-first path, keep the existing detection path separate, and remove duplicate self-links from the canonical and minimum-concepts stages.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/vision-promptable-segmentation-tracking.md",
+        "src/pages/articles/ai/vision-promptable-segmentation-tracking.tsx",
+        "src/pages/articles/ai/vision-promptable-segmentation-tracking/viz/PromptableVisionExplorers.tsx",
+        "src/content/ai/articlesDL3.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/ai/index.ts",
+        "tests/ai-authored-topic-paths.spec.ts",
+        "tests/ai-topdown-research-paths.spec.ts"
+      ],
+      "verified": [
+        "official SAM 1, SAM 2, SAM 3, SAM 3.1 release and pinned repository source review",
+        "production build and focused ESLint",
+        "focused Playwright checks 2/2",
+        "390, 768 and 1440 pixel document horizontal overflow = 0",
+        "four Korean-annotated KaTeX formulas with minimum mobile scale 0.80 and zero parse errors",
+        "four interaction-focused Viz screenshots at 390 pixels",
+        "37 objects map to three capacity-16 buckets while max_num_objects remains an independent session setting"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "Claude Opus high exceeded a USD 1.20 cap and bounded Claude Sonnet medium exceeded a USD 0.80 cap before returning findings; neither run produced review text.",
+        "fallback": "The orchestrator performed direct primary-source PDF extraction, pinned-code API inspection, metric-definition correction, browser interaction tests, formula-scale measurement and visual QA. The failed attempts and their budgets are retained rather than presented as a successful model review."
+      }
+    },
+    {
+      "observed": "The generative category had deep VAE, GAN and Diffusion foundations plus many model-family pages, but no current article that separated latent representation, DiT or MMDiT backbone, probability path and target, solver budget and release evidence. The Diffusion article's modern-history table named these changes without giving a usable comparison method.",
+      "inferred": "Another model catalog would repeat the flat-list problem. One current decision article should own the five changing contracts, while DDPM, numerical ODE, ViT and VAE remain just-in-time foundations and vendor models remain optional runtime evidence.",
+      "decided": "Write one current-first DiT, Flow Matching and generative evaluation reconstruction, replace the shallow modern Diffusion table with a five-contract handoff, and route readers downward through Diffusion, numerical integration, ViT and VAE. Treat best-of-k and reranking as system budget rather than model quality.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/dit-flow-matching-evaluation.md",
+        "src/pages/articles/ai/dit-flow-matching-evaluation.tsx",
+        "src/pages/articles/ai/dit-flow-matching-evaluation/viz/GenerativeSystemExplorers.tsx",
+        "src/pages/articles/ai/diffusion-models/ModernDiffusion.tsx",
+        "src/pages/category/GenerativeLearningPath.tsx",
+        "src/content/ai/articlesGen.ts",
+        "src/content/ai/generativeCurriculum.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/learning-paths.ts",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": [
+        "primary DiT, Flow Matching, SD3, Meta flow and distillation, precision-recall, GenEval, VQAScore and current Google score-smoothing source review",
+        "focused ESLint and production build",
+        "focused generative and source-link Playwright checks 3/3",
+        "390, 768 and 1440 pixel document and five-figure horizontal overflow = 0",
+        "five Korean-annotated KaTeX formulas with minimum mobile scale 0.82 and zero parse errors",
+        "ten individual desktop and mobile Viz screenshots reviewed for hierarchy, labels, line weight and spacing",
+        "learning-flow audit: 572 registered, 572 global continuity coverage and 242 learning-path assignments"
+      ],
+      "collaboration_trace": {
+        "attempt_1": "A wide Claude review completed without output and was not counted as a successful audit.",
+        "attempt_2": "A bounded Claude Sonnet review returned no blockers and identified five beginner gaps: CFG, adaLN-Zero mechanism, mixed precision, reverse-integration delta-t sign and local truncation error.",
+        "incorporated": "Expanded all five terms in the article and kept visual verification separate through browser interaction, numeric overflow checks and screenshots."
+      }
+    },
+    {
+      "observed": "One 44-minute Speech and Audio article owned sampling, ASR, native generation, WebRTC, evaluation and edge deployment, while the five-step route forced Signals, Tokenizer, Transformer and Edge Runtime even when the reader only needed to diagnose an interaction or alignment failure.",
+      "inferred": "The overview contained four independent decisions: duplex interaction runtime, native speech generation, speech-recognition alignment objectives and audio representation. Signals and systems is the minimal lower cutoff, while Transformer and edge deployment are optional blocker-driven foundations.",
+      "decided": "Preserve the old slug as a concise route hub, absorb duplicate prose into four independent articles, order the required path from realtime duplex interaction down to signals, and validate the split against an 8 kHz bilingual interrupted-call transfer problem with packet loss, latency, intent and local-PII constraints.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/speech-audio-four-contracts.md",
+        "src/pages/articles/ai/speech-audio-models.tsx",
+        "src/pages/articles/ai/realtime-duplex-voice-systems.tsx",
+        "src/pages/articles/ai/native-speech-generation.tsx",
+        "src/pages/articles/ai/speech-recognition-objectives.tsx",
+        "src/pages/articles/ai/audio-representation-neural-codecs.tsx",
+        "src/pages/articles/ai/speech-audio-core/viz/SpeechSystemExplorers.tsx",
+        "src/content/ai/articlesCurrentFlows.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/components/learning/ArticleLearning.tsx",
+        "tests/ai-current-flow-gaps.spec.ts",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": [
+        "focused ESLint and production build",
+        "Speech article viewport matrix 16/16 at 360, 390, 768 and 1440 pixels",
+        "five-step current-first path check",
+        "zero KaTeX parse errors, raw commands, formula or figure horizontal overflow",
+        "minimum rendered mobile formula font 9.5 pixels",
+        "ten individual mobile and desktop Viz screenshots reviewed",
+        "8 kHz model-interface adaptation, packet-loss FEC and PLC handoff, and stable-prefix local PII ownership explicitly assigned"
+      ],
+      "collaboration_trace": {
+        "attempt_1": "Wide Claude Sonnet ended at USD 0.407322 without review text and was not counted as success.",
+        "attempt_2": "Bare fable did not authenticate and incurred no cost.",
+        "attempt_3": "Bounded Claude Sonnet completed at USD 0.179151 and identified three transfer-boundary risks.",
+        "incorporated": "Compared each finding with existing prose; retained the already-present 8 kHz Nyquist explanation, added missing model-interface adaptation, and added genuinely missing PLC/FEC and local partial-PII execution contracts."
+      }
+    },
+    {
+      "observed": "The World Model section was one overview that placed video generation, latent prediction, action-conditioned dynamics, planning and physical release evidence near the same level. Its former route also forced MDP, model-based RL and the whole robot stack before a reader could diagnose a coordinate-frame or replanning failure.",
+      "inferred": "A plausible future frame, an action-sensitive transition model and a controller that succeeds after repeated re-observation are three different capabilities. They need separate articles and separate evidence gates, while the overview should remain only as a current-family contract map.",
+      "decided": "Absorb the overview into a four-stage hub, author independent predictive-representation, action-dynamics and closed-loop-planning units, stop the required paper spine at V-JEPA 2 and V-JEPA 2-AC, and treat Cosmos 3 and Genie 3 as current system evidence with explicit non-robotics boundaries.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/world-model-three-contracts.md",
+        "src/pages/articles/ai/world-model-physical-ai.tsx",
+        "src/pages/articles/ai/predictive-world-representations.tsx",
+        "src/pages/articles/ai/action-conditioned-world-dynamics.tsx",
+        "src/pages/articles/ai/world-model-planning-closed-loop.tsx",
+        "src/pages/articles/ai/world-model-core/viz/WorldModelExplorers.tsx",
+        "src/content/ai/articlesCurrentFlows.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "tests/ai-current-flow-gaps.spec.ts",
+        "tests/ai-authored-topic-paths.spec.ts"
+      ],
+      "verified": [
+        "official Cosmos 3, V-JEPA 2 and Genie 3 project, report and paper review",
+        "focused ESLint and production build",
+        "three deep articles across 360, 390, 768 and 1440 pixels",
+        "four-stage route, interactive contract switches and current-first top-down route tests",
+        "zero document, figure and formula horizontal overflow after splitting the planning cost equation",
+        "mobile and desktop visual review of the hub and five interactive visual states",
+        "learning-flow audit: 579 registered, 579 global continuity coverage and 248 learning-path assignments"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "Bounded Claude Sonnet completed at USD 0.191085 and surfaced camera-frame ownership, metric grounding, partial observability, goal ambiguity and model-exploitation risks.",
+        "incorporated": "Added frame, unit and timestamp contracts; separated visual controllability from metric dynamics; required re-observation and residual monitoring; and added ambiguous-goal and model-exploitation checks.",
+        "rejected_or_corrected": "Did not claim mathematical equivariance as a requirement, did not merge EMA representation collapse with rollout exposure bias, and corrected the audit's V-JEPA 2 year from 2026 to 2025."
+      }
+    },
+    {
+      "observed": "Knowledge Compiler mixed source parsing, normalization, Knowledge IR, multilingual rendering and reliability in one short article, while RAG Pipeline still taught fixed-size chunking and product-shaped retrieval lists. Neither path made cross-page tables, formula qualifiers, immutable source coordinates, revision impact or evidence-budget failure independently testable.",
+      "inferred": "Source structure recovery, semantic lineage, query-time evidence assembly and longitudinal source maintenance have different artifacts and regression fixtures. Keeping them inside two broad pages would hide ownership and make the user read tables instead of following a failure-driven execution flow.",
+      "decided": "Reduce Knowledge Compiler to a five-contract hub, author independent Source Ingestion and Knowledge IR articles, rebuild RAG around dependency-aware routing and evidence coverage, retain Research Watcher for longitudinal promotion, and stop the required historical spine at RAG 2020.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/knowledge-system-four-contracts.md",
+        "src/pages/articles/ai/knowledge-compiler.tsx",
+        "src/pages/articles/ai/knowledge-source-ingestion.tsx",
+        "src/pages/articles/ai/knowledge-ir-evidence-lineage.tsx",
+        "src/pages/articles/ai/rag-pipeline.tsx",
+        "src/pages/articles/ai/knowledge-system-core/viz/KnowledgeSystemExplorers.tsx",
+        "src/content/ai/articlesSystemsFoundation.ts",
+        "src/content/ai/articlesPractical.ts",
+        "src/content/ai/index.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "tests/ai-authored-topic-paths.spec.ts",
+        "tests/ai-current-flow-gaps.spec.ts"
+      ],
+      "verified": [
+        "primary CoDaR, Docling, Late Chunking, ColBERTv2, Lost in the Middle, METIS, VeriTrail and canonical RAG source review",
+        "focused ESLint and production build",
+        "three deep articles across 360, 390, 768 and 1440 pixels: 12/12",
+        "five-stage authored route, knowledge interaction and four-viewport current-first route tests: 6/6",
+        "zero document, figure and formula horizontal overflow; minimum rendered mobile formula font 9.5 pixels",
+        "nine mobile and desktop Viz and category screenshots reviewed",
+        "learning-flow audit: 581 registered, 581 global continuity coverage and 250 learning-path assignments"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "Bounded Claude Sonnet completed at USD 0.280413 and separated ingestion relations, IR claim lineage, artifact alignment, build-time impact and runtime trace.",
+        "incorporated": "Added cross-page table stitching, formula qualifier scope, figure anchor versus claim-evidence ownership, manual-video-code alignment, learning-order versus runtime-order explanation and revision impact closure.",
+        "rejected_or_corrected": "Did not claim heterogeneous artifacts always require decomposition; CoDaR supports dependency-aware measurement. Constrained METIS to per-query quality-delay configuration, and assigned source discovery to Watcher, immutable version creation to ingestion and downstream impact to IR."
+      }
+    },
+    {
+      "observed": "The Open Image and Video section mixed current model families, checkpoint cases, workflow parameters and adaptation into many flat articles. A reader could not tell where image and video diverged, where they rejoined, or whether a model claim, a workflow file and a commercial release were different contracts.",
+      "inferred": "A production learner needs one discard-condition router, image and video sibling runtimes, a shared reproducibility manifest, a cross-cutting parameter budget and the smallest sufficient adaptation decision. Current model evidence should narrow choices without turning every release into a mandatory prerequisite.",
+      "decided": "Create a six-article fork-and-rejoin path, stop required history at Latent Diffusion 2021, keep family and checkpoint pages as optional evidence, and validate the prose against a private studio contract covering Korean text, product identity, five-second temporal stability, a 24 GB fallback, commercial terms and second-machine replay.",
+      "changed": [
+        "src/pages/articles/ai/content-specs/open-media-production-contracts.md",
+        "src/pages/articles/ai/open-image-video-models.tsx",
+        "src/pages/articles/ai/image-model-runtime.tsx",
+        "src/pages/articles/ai/video-model-runtime.tsx",
+        "src/pages/articles/ai/open-model-community-workflows.tsx",
+        "src/pages/articles/ai/open-model-workflow-parameters.tsx",
+        "src/pages/articles/ai/open-model-finetuning-theory.tsx",
+        "src/pages/articles/ai/open-model-core/viz/OpenModelExplorers.tsx",
+        "src/content/learning-paths.ts",
+        "src/content/ai/index.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/ai/articlesOpenModels.ts",
+        "tests/learning-audit-final-four-qa.spec.ts",
+        "tests/generative-formula-continuity.spec.ts",
+        "tests/ai-current-flow-gaps.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-open-media-reconstruction-report.md"
+      ],
+      "verified": [
+        "official Ideogram 4.0, Krea 2, FLUX.2, Qwen-Image, Wan2.2 and LTX-2.3 primary-source review with dated claim boundaries",
+        "focused ESLint and production build",
+        "open-media category and route QA across mobile, tablet and desktop: 3/3",
+        "formula continuity across the six core articles at mobile and desktop: 12/12",
+        "mobile current-flow and interactive state tests: 7/7",
+        "zero document, figure and formula horizontal overflow with minimum rendered formula scale at least 0.8",
+        "mobile and desktop review of category, goal router, image runtime, video runtime, workflow manifest and adaptation screenshots",
+        "learning-flow audit: 581 registered, 581 global continuity coverage and 250 learning-path assignments"
+      ],
+      "collaboration_trace": {
+        "attempt_1": "A wide Claude Sonnet pass read eight files, spent USD 0.7560207 and ended without review text; it was not counted as a successful audit.",
+        "attempt_2": "A bounded no-tool Claude Sonnet pass over the content spec and the overview, image runtime and video runtime completed at USD 0.2792034.",
+        "incorporated": "Separated Qwen-Image 2.0 announcement and open-weight status, added measurable acceptance gates and a 24 GB intervention order, recorded Wan and LTX license boundaries, made branch handoff fields explicit and distinguished joint audio-video from post-hoc TTS.",
+        "rejected_or_corrected": "Rejected a comparison table because it hides model-specific claim boundaries. Corrected the missing-rejoin and missing-OCR findings against files excluded from the bounded review, while retaining the useful request for explicit acceptance thresholds."
+      }
+    },
+    {
+      "observed": "The first corpus audit reported 137 formula gaps. Many were false positives caused by shared paper and NLP renderers, while the remaining AI gaps were real display equations without adjacent Korean operation notes. Representative legacy StepViz pages also had mobile blank space, semantic colors washed toward pink, a blank ResNet bar chart, missing emoji glyphs, tiny long formulas and a KaTeX floor-delimiter SVG error.",
+      "inferred": "Formula quality needs a source-closure audit plus a browser contract; counting only entry files or merely detecting KaTeX is insufficient. Visual quality also needs two separate gates: layout safety across the corpus and deliberate scene redesign by topic. Passing overflow checks must not be presented as completion of all legacy Viz polish.",
+      "decided": "Fix the shared audit/rendering causes first, then add adjacent Korean FormulaNote explanations to every remaining AI formula gap. Split long formulas by meaning instead of shrinking them, compact the shared mobile StepViz stage, preserve semantic SVG hues, repair representative rendering defects, and add a 12-route mobile/desktop regression test. Keep the broader legacy Viz redesign open as a separate P3 batch.",
+      "changed": [
+        "src/components/ui/step-viz.tsx",
+        "src/index.css",
+        "src/pages/articles/ai/arima",
+        "src/pages/articles/ai/cnn",
+        "src/pages/articles/ai/resnet",
+        "src/pages/articles/ai/sentence-embeddings",
+        "src/pages/articles/ai/tabular-deep-learning",
+        "src/pages/articles/ai/ecod",
+        "src/pages/articles/ai/gan/EvaluationAndHandoff.tsx",
+        "src/pages/articles/ai/generative-theory/ImplicitRoute.tsx",
+        "src/pages/articles/ai/vae/FromAutoencoder.tsx",
+        "src/pages/articles/ai/diffusion-models/ConditioningAndArchitecture.tsx",
+        "src/pages/articles/ai/wan22",
+        "src/pages/articles/ai/ltx-23",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "official learning-flow audit: 581 registered, 29 release blockers and 29 formula gaps, with zero AI formula gaps",
+        "focused ESLint and production build",
+        "12 representative routes at mobile and desktop: 24/24 Playwright checks",
+        "zero document, formula and StepViz stage horizontal overflow; minimum rendered formula scale at least 0.8",
+        "zero raw LaTeX commands, non-Korean FormulaNote blocks, console errors and page errors in the representative set",
+        "mobile screenshot review of repaired ResNet, Tabular, ECOD and LTX states"
+      ]
+    },
+    {
+      "observed": "The foundation sidebar used a different raw article order from the authored curriculum, activation duplicated neural-network ownership, Cross-Entropy conflated probability-space -1/p with the actual logit gradient, and Autoencoder stopped before a reader could numerically recover the encoder gradient or place PCA, ELBO and latent diffusion boundaries.",
+      "inferred": "A beginner-readable article is not deep enough when adjacent sections use the word gradient for different variables, when a proof is duplicated instead of linked, or when a worked forward example cannot be closed through backward. The core path needs one ownership chain and private transfer checks, not more glossary cards.",
+      "decided": "Order the runtime foundation corpus as learning loop, perceptron, neural network, activation, cross-entropy, backprop, optimizers and autoencoder. Give each article one owned calculation, annotate operation reasons inside KaTeX, split wide formulas instead of shrinking them, distinguish probability and logit derivatives, add CE versus MSE saturation, soft-target entropy floors and perplexity, and close the Autoencoder example through encoder gradients, PCA residual, negative ELBO and downstream boundaries.",
+      "changed": [
+        "src/content/ai/articlesDL.ts",
+        "src/content/ai/articlesDL3.ts",
+        "src/content/ai/foundationCurriculum.ts",
+        "src/content/learning-paths.ts",
+        "src/pages/category/FoundationLearningPath.tsx",
+        "src/pages/articles/ai/deep-learning-overview/Roadmap.tsx",
+        "src/pages/articles/ai/perceptron",
+        "src/pages/articles/ai/neural-network",
+        "src/pages/articles/ai/activation-functions",
+        "src/pages/articles/ai/backprop-optimization",
+        "src/pages/articles/ai/optimizers",
+        "src/pages/articles/ai/cross-entropy",
+        "src/pages/articles/ai/autoencoder",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "production build after source reconstruction",
+        "core foundation mobile and desktop formula/viz regression: 16/16 before the final Cross-Entropy and Autoencoder depth pass",
+        "Cross-Entropy and Autoencoder focused mobile and desktop regression: 4/4 after the depth pass",
+        "mobile and desktop screenshot review of perceptron, neural network, activation, backprop, optimizers, cross-entropy and autoencoder",
+        "zero document, formula and visual-stage horizontal overflow with minimum formula scale at least 0.8"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "A bounded read-only review of the two live entrypoint import closures found the -1/p versus p-y contradiction, missing CE versus MSE saturation, ambiguity of P for soft targets, absent perplexity and KL direction, and Autoencoder gaps in numeric backward, PCA residual, ELBO, posterior collapse and in-prose bridges.",
+        "incorporated": "Separated probability and logit derivatives, added bounded p-y and numeric CE/MSE comparison, label smoothing entropy floor, perplexity, KL direction, encoder-gradient numbers, discarded-eigenvalue MSE, likelihood ownership links, negative ELBO, beta weighting, posterior collapse, latent-diffusion loss rationale and distinct classical versus interpretability SAE boundaries.",
+        "deferred": "Restoring animation to every legacy StepViz remains deferred until static causal states and article ownership are complete; animation must add state change and reduced-motion fallback rather than decoration."
+      }
+    },
+    {
+      "observed": "FFT showed frequency-domain intuition without closing frequency-bin, real-FFT, aliasing, STFT-shape and linear-convolution calculations. Word2Vec showed its objectives but did not connect one sampled gradient to the shifted-PMI corpus optimum. A desktop signal table also used a figcaption grid that collided with the shared V-sequence pseudo-element.",
+      "inferred": "A visual foundation article is incomplete when a learner cannot recover the array shape or distinguish circular from linear convolution, and a representation article is incomplete when local updates and global geometry remain disconnected. Shared visual decoration must be treated as an extra layout child during component design.",
+      "decided": "Close FFT with numeric DFT, rFFT, Hz mapping, aliasing, STFT shape, true-resolution and padded linear-convolution checks. Close Word2Vec with pair-gradient direction, expected-gradient balance, sigmoid inversion, shifted PMI, actual 3/4 noise-distribution scope and low-rank interpretation. Separate the caption from the desktop column-header grid.",
+      "changed": [
+        "src/pages/articles/ai/fft/SignalSpectrum.tsx",
+        "src/pages/articles/ai/fft/DFTProjection.tsx",
+        "src/pages/articles/ai/fft/FFTDivideConquer.tsx",
+        "src/pages/articles/ai/fft/SamplingAndSTFT.tsx",
+        "src/pages/articles/ai/fft/AIPractice.tsx",
+        "src/pages/articles/ai/word2vec/ContextPairs.tsx",
+        "src/pages/articles/ai/word2vec/PredictionObjectives.tsx",
+        "src/pages/articles/ai/word2vec/NegativeSampling.tsx",
+        "src/pages/articles/ai/word2vec/GeometryAndLimits.tsx",
+        "src/pages/articles/ai/word2vec/ModernHandoff.tsx",
+        "src/content/ai/articlesDL.ts",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "production build",
+        "FFT and Word2Vec mobile/desktop regression 4/4",
+        "zero document overflow and minimum formula scale at least 0.87 on desktop and 0.92 on mobile in the FFT/Word2Vec batch",
+        "Word2Vec objective card height unchanged across tab state",
+        "desktop negative-sampling table columns aligned with scrollWidth equal to clientWidth"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "A bounded read-only review of the live FFT and Word2Vec import closures identified the false unconditional linear-convolution identity, missing bin-to-Hz mapping, STFT shape and n_fft ambiguity, negative-label ordering, absent local-gradient-to-shifted-PMI bridge and a five-column header defect.",
+        "incorporated": "All correctness and layout findings were incorporated, with natural-log scope, dynamic-window wording and mathematical tab labels added as optional improvements.",
+        "rejected": "Deleting legacy unimported FFT and Word2Vec files was rejected because the dirty shared worktree contains modified user-owned files and broad deletion was not required for runtime correctness."
+      }
+    },
+    {
+      "observed": "Word2Vec appeared both as a foundation transfer branch and as an optional NLP prerequisite, while Tokenizer and Distributional Semantics stopped before a reader could reconcile Unicode boundaries, vocabulary memory, attention cost, PMI reliability, SVD error and sampled-prediction geometry. Initial interactive examples also contained checkable numeric and visual contradictions.",
+      "inferred": "The first NLP route must have one axis-ownership chain: the tokenizer defines IDs, those IDs define word-context matrix axes, explicit count geometry motivates sampled Word2Vec, and only then should recurrent sequence models begin. Private transfer problems must use values generated by the visible corpus and drawings must preserve the geometry they claim to explain.",
+      "decided": "Make Tokenizer, Distributional Semantics and Word2Vec the first three NLP core articles; move Word2Vec and its paper out of foundations; keep the paper in an optional NLP source spine. Give Tokenizer explicit NFC/NFKC, grapheme/byte, vocabulary-budget and full-attention cost checks. Give Distributional Semantics row/column event ownership, rare-PMI warnings, exact SVD tail errors, angle-preserving cosine and a scoped shifted-PMI handoff.",
+      "changed": [
+        "src/content/ai/articlesDL.ts",
+        "src/content/ai/articlesDL2.ts",
+        "src/content/ai/articlesFoundationPapers.ts",
+        "src/content/ai/foundationCurriculum.ts",
+        "src/content/ai/nlpCurriculum.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/learning-paths.ts",
+        "src/pages/category/NlpLearningPath.tsx",
+        "src/pages/CategoryPage.tsx",
+        "src/pages/articles/ai/tokenizer/Rebuilt.tsx",
+        "src/pages/articles/ai/distributional-semantics/Rebuilt.tsx",
+        "src/pages/articles/ai/nlp-shared.tsx",
+        "src/pages/articles/ai/content-specs/tokenizer.md",
+        "src/pages/articles/ai/content-specs/distributional-semantics.md",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "tests/foundation-floor-ux.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint and production build",
+        "Tokenizer and Distributional Semantics mobile/desktop formula-viz regression 4/4",
+        "NLP and foundation route regression 19/19",
+        "zero document overflow and zero console/page errors at 390 and 1440 pixels",
+        "interactive checks for 2.00 GiB vocabulary weights, 42-byte fertility, 9x attention score cells, 4.322 rare PMI, 3.16 rank-1 error and angle-preserving 0.280 cosine"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "A bounded read-only audit found anisotropic cosine axes, corpus metrics that did not reproduce from the displayed string, ambiguous PMI marginal labels, precision that broke the rare-pair calculation, missing NFC/NFKC and tokenizer-axis contracts, an unconstrained shifted-PMI claim, mixed subword markers and a ZWJ-breaking heuristic.",
+        "incorporated": "All correctness and narrative findings were incorporated. The shared MetricGrid was also made item-count aware after screenshot review found two SVD metrics forced into four narrow columns.",
+        "deferred": "Animation remains deferred until the remaining NLP prose and static causal states are complete. The current interactives already expose meaningful state changes and will be candidates for motion with reduced-motion fallback."
+      }
+    },
+    {
+      "observed": "RNN and LSTM articles introduced recurrence and gates but did not fully close shared-weight gradients, batch-indexed masked language-model loss, signed vanishing/exploding plots, every TBPTT detach boundary, fused implementation shapes, direct-versus-total cell derivatives, quantitative retention or independent cell/direction contracts.",
+      "inferred": "A recurrent-model foundation is complete only when the reader can trace state, loss and gradient through time, reproduce failure symptoms at batching boundaries, and map conceptual equations to framework tensor shapes. Diagnostic correlations must not be presented as causal proof.",
+      "decided": "Rebuild RNN around shared recurrence, masked next-token NLL, ordered BPTT products and padding/reset/detach execution contracts. Rebuild LSTM around fused gate shapes, explicit sequential recurrent dependence, numeric gate arithmetic, scoped direct retention, half-life, independent cell/direction choices and intervention-aware diagnostics.",
+      "changed": [
+        "src/pages/articles/ai/rnn/Rebuilt.tsx",
+        "src/pages/articles/ai/lstm/Rebuilt.tsx",
+        "src/pages/articles/ai/content-specs/rnn.md",
+        "src/pages/articles/ai/content-specs/lstm.md",
+        "src/content/ai/articlesDL2.ts",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint and production build",
+        "RNN and LSTM mobile/desktop formula-viz regression 4/4",
+        "signed plot direction and numeric anchors for 0.8^40 and 1.1^40",
+        "all chunk-2 detach boundaries at t2, t4 and t6",
+        "LSTM retention, half-life, bidirectional and GRU shape/streaming interaction checks",
+        "zero console/page errors in the final interaction audit"
+      ],
+      "collaboration_trace": {
+        "claude_audit": "The bounded read-only review found a missing parallel-versus-sequential distinction in fused LSTM execution, missing runtime symptoms for reset/detach failures, and loose batch indexing in the RNN NLL.",
+        "incorporated": "All three findings were incorporated and then reverified in the browser.",
+        "provider_constraint": "All future Claude calls must use context-manager. The configured claude-sonnet-4-6 gateway currently fails because llm-wrapper Open WebUI login returns HTTP 400, causing gateway HTTP 500. Direct Claude CLI fallback is prohibited; review is deferred until context-manager authentication is restored."
+      }
+    },
+    {
+      "observed": "Seq2Seq used a generic fixed context vector and a table of already completed hypotheses, so readers could not recover LSTM bridge shapes, BOS/EOS shifting, exact feedback slots or actual beam expansion. Attention showed the operator but did not numerically close stable softmax, mask ordering, dimension scaling, cross-mask ownership or multi-head cost.",
+      "inferred": "The narrative hinge from recurrence to Transformer is a memory-interface change: final recurrent states condition a decoder, then target-step queries read the full encoder memory, then self-attention makes every sequence position a query. This transition must be proven with shared tensor axes and prefix calculations rather than model-name chronology.",
+      "decided": "Rebuild Seq2Seq around h/c bridge shapes, source-reversal path length, shifted targets, n-1 feedback slots and executable top-k prefix search. Rebuild Attention around raw/shifted/masked scores, a post-softmax masking counterexample, sqrt(d_k) variance normalization, self/cross source and mask contracts, multi-head shape/cost and a causal-interpretation boundary.",
+      "changed": [
+        "src/pages/articles/ai/seq2seq/Rebuilt.tsx",
+        "src/pages/articles/ai/attention-theory/Rebuilt.tsx",
+        "src/pages/articles/ai/content-specs/seq2seq.md",
+        "src/pages/articles/ai/content-specs/attention-theory.md",
+        "src/content/ai/articlesDL2.ts",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint and production build",
+        "Seq2Seq and Attention mobile/desktop formula-viz regression 4/4",
+        "zero document and formula overflow at 390, 768 and 1440 pixels with minimum formula scale 0.98",
+        "interaction checks for bridge shape, source reversal, feedback slots, beam pruning, mask mass, dimension scaling, cross mask ownership and multi-head cost",
+        "zero console/page errors"
+      ],
+      "collaboration_trace": {
+        "primary_research": "The design was checked against the original Seq2Seq, Bahdanau attention, Luong attention, scheduled sampling, Transformer and attention-interpretability papers rather than secondary summaries.",
+        "claude_provider": "Claude review remains deferred because the required context-manager route still fails at llm-wrapper authentication. No direct CLI fallback was used.",
+        "deferred": "Motion remains deferred until the remaining NLP prose and static causal states are complete; the current controls already expose every state transition needed for later animation."
+      }
+    },
+    {
+      "observed": "Transformer named position, masking and KV cache without proving permutation behavior, dense mask allocation, batch-aware cache size or GQA grouping. BERT rounded the MLM corruption counts, described NSP without an executable pair state and left raw CLS open to semantic-embedding misinterpretation.",
+      "inferred": "The Transformer-to-BERT handoff is complete only when a learner can recover order sensitivity, attention shapes and serving memory, then distinguish token-level MLM, pair-level NSP and downstream representation objectives. Default-state visual checks are insufficient because invalid visual tokens can fail only after interaction.",
+      "decided": "Add a position-order counterexample, numeric QKV ledger, fixed-width causal grid, batch-aware MHA/GQA/MQA cache calculator and projection-versus-read boundary. Rebuild BERT pretraining around exact expected MLM counts, switchable NSP pairs, Korean-annotated joint loss, subword label alignment and a Sentence-BERT handoff. Add non-default interaction regression tests.",
+      "changed": [
+        "src/pages/articles/ai/transformer-architecture/Rebuilt.tsx",
+        "src/pages/articles/ai/bert/Rebuilt.tsx",
+        "src/pages/articles/ai/content-specs/transformer-architecture.md",
+        "src/pages/articles/ai/content-specs/bert.md",
+        "src/content/ai/articlesDL2.ts",
+        "tests/ai-formula-viz-corpus-p3.spec.ts",
+        "tests/ai-transformer-bert-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "Transformer and BERT mobile/desktop formula-viz regression 4/4",
+        "tablet breakpoint and non-default interaction regression 4/4",
+        "zero document and formula overflow at 390, 768 and 1440 pixels with formula scale at least 0.8",
+        "numeric checks for attention shape and MAC, causal visibility, batch-aware GQA cache, MLM expectation counts, NSP labels and sentence-embedding objective",
+        "zero console/page errors after replacing an unsupported NotNext tone token"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by the original Transformer, LayerNorm, Pre-LN, GQA, BERT, RoBERTa and Sentence-BERT papers plus implementation documentation.",
+        "claude_provider": "Claude review remains deferred because context-manager cannot authenticate its llm-wrapper provider. The required route was respected and no direct Claude CLI was used.",
+        "small_model_rule": "A 4B/9B verifier must exercise every non-default control state and check the browser error channel; a static screenshot alone would have missed the unsupported NSP tone failure."
+      }
+    },
+    {
+      "observed": "The LLM architecture gallery had already replaced its fact sheet with five narrative milestones, but the current-first pointer still treated the December 2025 DeepSeek-V3.2 report as the present top. That omitted 2026 depth mixing and multimodal input-boundary changes. At 768 pixels, portrait source diagrams also stacked into visually excessive single-column regions even though image-load and overflow tests passed.",
+      "inferred": "A current architecture route cannot be anchored to one checkpoint when new releases change independent structural axes. The current layer should compare public deltas, the canonical layer should retain one minimum decoder baseline, and the integrated checkpoint report should move after the mechanism branches. Image naturalWidth proves transport, not readable composition.",
+      "decided": "Use DeepSeek V4, Attention Residuals and Gemma 4 as a bounded 2026 evidence bundle; reconstruct them as five explicit axes while labeling that taxonomy as author synthesis. Keep the minimum GPT-2-to-Kimi five-transition lineage, then read Dense, KV/context, Sparse MoE and Hybrid/state before returning to the DeepSeek-V3.2 integrated report. Rename the category from an overclaimed full map to a starting route, introduce the tablet two-column breakpoint and make every source diagram open at original size.",
+      "changed": [
+        "src/pages/articles/ai/llm-architecture-gallery.tsx",
+        "src/pages/articles/ai/llm-architecture-hybrid-linear.tsx",
+        "src/pages/articles/ai/paper-spine/aiCurrentResearchSpecs.tsx",
+        "src/pages/articles/ai/content-specs/llm-architecture-gallery.md",
+        "src/pages/articles/ai/content-specs/ai-topdown-minimum-paper-curriculum.md",
+        "src/content/ai/articlesLLMArchitectures.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/learning-paths.ts",
+        "src/content/ai/index.ts",
+        "tests/llm-architecture-learning-flow.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "LLM architecture overview plus four branches at mobile, tablet and desktop, with category route contract, 17/17",
+        "zero document overflow at 390, 768 and 1440 pixels",
+        "three primary source links, five milestone images, four Korean formula notes and original-size image links",
+        "scroll-into-view row screenshots for offscreen milestone paint and tablet readability"
+      ],
+      "collaboration_trace": {
+        "primary_research": "The current bundle is bounded by the official DeepSeek V4 report repository, Moonshot AI Attention Residuals repository and Google DeepMind Gemma 4 release material. The five-axis taxonomy is explicitly marked as article synthesis rather than a vendor consensus table.",
+        "claude_provider": "A bounded review was requested through context-manager ai-researcher only. The gateway returned HTTP 500 All providers failed, so no review result was incorporated and no direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author should first ask whether the current source changes an existing axis or opens a new independent axis. It must separate source claim from author taxonomy, solve one numeric transfer problem before adding visuals, and test transport, paint, readability and non-default interactions as separate gates."
+      }
+    },
+    {
+      "observed": "The Open-R1 article named SFT, GRPO and rewards but did not let a reader reconstruct one dataset row through serialization, grouped rollout, verifier output, policy update and held-out evaluation. It hardcoded reward weights as if they were universal and mixed product serving architecture into the upstream training repository boundary.",
+      "inferred": "An implementation article is complete only when the reader can execute one batch on paper, identify zero-variance reward groups, distinguish template failure from policy failure, budget rollout tokens, and keep training reward, held-out evaluation, sandboxing and product serving as separate contracts.",
+      "decided": "Pin the article to official Open-R1 commit 1416fa0, rebuild it as a one-row lifecycle, express SFT as template/mask/EOS ownership, add an interactive GRPO batch ledger with mixed and degenerate cases, render config-selected reward contracts, separate generation/decontamination/evaluation/runtime modes, and move product serving ownership to llm-serving-ops. Reorder the LLM sidebar from the current reasoning problem down through post-training foundations, implementation, data, interpretation, efficiency and serving.",
+      "changed": [
+        "src/pages/articles/ai/open-r1.tsx",
+        "src/pages/articles/ai/open-r1/Overview.tsx",
+        "src/pages/articles/ai/open-r1/SFTProcess.tsx",
+        "src/pages/articles/ai/open-r1/GRPOProcess.tsx",
+        "src/pages/articles/ai/open-r1/RewardSystem.tsx",
+        "src/pages/articles/ai/open-r1/DataPipeline.tsx",
+        "src/pages/articles/ai/open-r1/codeRefs.ts",
+        "src/pages/articles/ai/open-r1/content-spec.md",
+        "src/pages/articles/ai/open-r1/viz/GRPOBatchLedger.tsx",
+        "src/content/ai/articlesLLM.ts",
+        "src/content/ai/index.ts",
+        "tests/open-r1-implementation-flow.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "local and public mobile/tablet/desktop plus LLM route regression, 4/4 each",
+        "zero document overflow and browser console errors at 390, 768 and 1440 pixels",
+        "mixed, all-correct and all-wrong GRPO states plus the 262144-token rollout bound",
+        "five Korean formula notes, zero article tables and public article/chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "The lifecycle and recipe values were reconstructed from the official Open-R1 README, sft.py, grpo.py, rewards.py, generate.py, configs.py and official SFT/GRPO recipes at commit 1416fa0cf21595d2083b399a2a0bbddd7f6e9563.",
+        "claude_provider": "A bounded read-only review was requested through context-manager ai-researcher. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must pin repository ownership, trace one data row through ordered verbs, solve both informative and degenerate numeric cases, distinguish source fact from recipe example and inference, and exercise every non-default UI state with overflow and browser-error checks."
+      }
+    },
+    {
+      "observed": "The post-training article listed CPT, SFT, RLHF, DPO and RLVR but did not let a reader select a first signal from available evidence. Its GRPO mechanics duplicated Open-R1, reward failures duplicated the reasoning frontier, and RLHF dynamics duplicated the canonical RLHF floor.",
+      "inferred": "The independent decision is not which named method is newest, but whether the missing capability is knowledge, exact demonstrated behavior, human preference or executable success. These signals have incompatible row schemas, producers and exploration contracts, so collapsing them into generic post-training data destroys the provenance needed to debug learning.",
+      "decided": "Rebuild the article as an evidence-first feedback contract. Separate RAG from CPT, completion-masked SFT from preference learning, fixed-pair DPO from reward-model online RLHF, and verifier-based online RLVR. Use DeepSeek-R1-Zero to bound the claim that SFT is not universally mandatory, then hand execution mechanics and reward pathologies to their canonical owner articles.",
+      "changed": [
+        "src/pages/articles/ai/post-training-rlvr.tsx",
+        "src/pages/articles/ai/post-training-rlvr/viz/PostTrainingViz.tsx",
+        "src/pages/articles/ai/post-training-rlvr/content-spec.md",
+        "src/content/ai/articlesSystemsFoundation.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/learning-paths.ts",
+        "src/pages/articles/ai/reasoning-post-training-frontier.tsx",
+        "tests/post-training-feedback-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "local and public mobile, tablet, desktop and category-route regression 4/4 each",
+        "zero document overflow and browser console errors at 390, 768 and 1440 pixels",
+        "four Korean formula notes, four scenario decisions, four feedback contract tabs and zero article tables",
+        "mobile scene screenshots with no clipping, overlap, inner horizontal scroll or empty animation state",
+        "public article and post-training-rlvr-C9mvitey.js chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Gururangan et al. 2020 for continued pretraining, InstructGPT for demonstration/ranking/RM/PPO stages, DPO for fixed-pair preference optimization and DeepSeek-R1 for pure-RL versus cold-start boundaries.",
+        "claude_provider": "A bounded read-only review was requested only through context-manager ai-researcher. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must ask what capability is missing and what evidence exists, then record row schema, target, producer, exploration and failure boundary. It must not merge knowledge, imitation, preference and executable success into one unnamed post-training dataset."
+      }
+    },
+    {
+      "observed": "The canonical RLHF article named SFT, reward modeling and PPO but repeated the pipeline across many wide SVG scenes, collapsed ranking groups into generic pairs, omitted reward offset invariance and PPO-ptx, and ended in an alternative-method gallery. A reader could not reconstruct one human ranking into a token-level policy update.",
+      "inferred": "The article's independent value is the ranking-to-update execution contract. Method selection, generic PPO foundations, current reasoning failures and GRPO implementation already have separate owners. The missing bridge is correlated K-way ranking, Bradley-Terry score geometry, reward normalization, positive and negative clipping, and the distinct lifetimes of old and reference policies.",
+      "decided": "Rebuild RLHF around one InstructGPT prompt traced through SFT, RM and PPO row schemas. Add numeric K-way ranking and score-offset labs, a three-case PPO token lab, separate old-policy clipping from frozen-reference drift and pretraining-gradient retention, and bound the learned reward to its evaluator population. Remove alternative-method and repeated legacy scenes from the rendered article.",
+      "changed": [
+        "src/pages/articles/ai/rlhf.tsx",
+        "src/pages/articles/ai/rlhf/content-spec.md",
+        "src/pages/articles/ai/rlhf/viz/RLHFContractViz.tsx",
+        "src/content/ai/articlesLLM.ts",
+        "src/content/ai/topdownResearchTracks.ts",
+        "src/content/learning-paths.ts",
+        "src/pages/articles/ai/post-training-rlvr.tsx",
+        "src/pages/articles/ai/reasoning-post-training-frontier.tsx",
+        "tests/rlhf-execution-contract.spec.ts",
+        "tests/post-training-feedback-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "RLHF plus upstream post-training mobile/tablet/desktop and category-route regression 8/8 locally and publicly",
+        "zero document overflow and browser console/page errors at 390, 768 and 1440 pixels",
+        "seven Korean formula notes, K=4/5, +100 reward offset and positive/negative/in-range PPO states",
+        "mobile formula scales at least 0.76 and scene screenshots with no clipping, overlap, inner horizontal scroll or empty initial state",
+        "public article and rlhf-uBeXHZ7e.js chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Ouyang et al. 2022 for the InstructGPT datasets, K-way ranking batch, reward normalization, bandit/KL/PPO-ptx and evaluation scope; Schulman et al. 2017 for PPO clipping; and Christiano et al. 2017 for preference-learned reward.",
+        "claude_provider": "A bounded read-only review was requested only through context-manager ai-researcher. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must trace one prompt through distinct row schemas, preserve ranking-group correlation, prove reward shift invariance, solve both signs of PPO advantage, separate old and reference policy lifetimes, and scope the reward to the actual evaluator population before drawing any scene."
+      }
+    },
+    {
+      "observed": "The PPO article already had responsive clipping, lifecycle animation and a bounded algorithm chooser, but its hidden transfer problem was not solvable from the prose. Stored old log-probability never became a numeric ratio, GAE was named without terminal masking or reverse computation, mean KL outliers were not diagnosed, and two annotated mobile equations fell near 11 pixels.",
+      "inferred": "The existing scenes should remain because they own valid interaction and lifecycle roles. The missing article value is a stored-rollout-to-update execution contract: old log-prob to ratio, terminal-safe TD residual to reverse GAE and critic target, then signed clipping and a bounded on-policy versus off-policy choice.",
+      "decided": "Keep the existing PPO animation and explorers, add a four-step interactive GAE credit lab with numeric oracle, restore terminal and truncation boundaries, add a concrete log-prob ratio example and tail-ratio diagnostics, split long Korean formula annotations into readable aligned rows, and anchor GAE, PPO, DDPG, TD3 and SAC to their primary papers.",
+      "changed": [
+        "src/pages/articles/ai/rl-ppo-continuous-control.tsx",
+        "src/pages/articles/ai/rl-ppo-continuous-control/viz/PpoFoundationViz.tsx",
+        "src/pages/articles/ai/content-specs/rl-ppo-continuous-control.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "tests/ppo-foundation-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "PPO mobile/tablet/desktop interaction regression 3/3",
+        "PPO plus upstream RLHF and post-training regression 11/11 locally and publicly",
+        "zero document, formula and interactive-viz overflow with zero console or page errors at 390, 768 and 1440 pixels",
+        "lambda 0, 0.95 and 1 advantage oracle plus positive and negative clipping and all algorithm chooser branches",
+        "seven annotated display equations with a 12.09 pixel mobile minimum and no clipping in visual screenshots",
+        "public article and rl-ppo-continuous-control-BJiJzY4N.js chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Schulman et al. 2015 for GAE, Schulman et al. 2017 for PPO, Lillicrap et al. 2015 for DDPG, Fujimoto et al. 2018 for TD3 and Haarnoja et al. 2018 for SAC. Numeric GAE and clipping oracles were independently encoded in browser regression tests.",
+        "claude_provider": "The requested read-only review was routed only through context-manager ai-researcher after listing agents. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must audit existing scene ownership before replacement, trace actual stored fields through the update, solve terminal-safe GAE numerically, test both advantage signs and hyperparameter extremes, expose tail risks hidden by means, and split long Korean formula annotations rather than shrinking them below readable size."
+      }
+    },
+    {
+      "observed": "The Policy Gradient article had the right topic order and a useful Actor-Critic animation, but its bandit explorer showed only baseline-invariant mean gradients, never computed variance, and the prose overgeneralized that any action-independent baseline reduces variance. Trajectory factorization and reward-to-go causality were prose-only, terminal masking was absent, and the private transfer problem could not be solved from the article.",
+      "inferred": "The article's independent ownership is the causality-to-variance execution contract below PPO: factor a trajectory, apply the log-derivative identity, remove past rewards without bias, distinguish expectation preservation from variance reduction, then separate actor, critic, terminal-safe TD residual and conceptual GAE. Existing lifecycle animation should remain because it does not duplicate these numeric decisions.",
+      "decided": "Rebuild the derivation with eleven Korean-annotated equations, add a full-return versus reward-to-go causal-credit visualization and a binary-bandit baseline lab with exact variance, correct the bad-baseline boundary, restore the terminal mask and critic-bias condition, keep the Actor-Critic animation, and hand reverse GAE implementation and clipping to the PPO owner article.",
+      "changed": [
+        "src/pages/articles/ai/rl-policy-gradient-actor-critic.tsx",
+        "src/pages/articles/ai/rl-policy-gradient-actor-critic/viz/PolicyGradientFoundationViz.tsx",
+        "src/pages/articles/ai/content-specs/rl-policy-gradient-actor-critic.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "tests/policy-gradient-foundation-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "Policy Gradient mobile/tablet/desktop interaction regression 3/3",
+        "Policy Gradient through PPO, RLHF and Post-training regression 14/14 locally and publicly",
+        "zero document, formula and interactive-viz overflow with zero console or page errors at 390, 768 and 1440 pixels",
+        "baseline 0, optimal and deliberately bad variance oracles plus full versus causal return weights and four GAE traces",
+        "eleven annotated display equations, eight FormulaNotes, no missing annotations and a 13.32 pixel public mobile minimum",
+        "public article and rl-policy-gradient-actor-critic-B6JPsCmk.js chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Williams 1992 for REINFORCE, Sutton et al. 1999 for the policy-gradient theorem, Schulman et al. 2015 for GAE and OpenAI Spinning Up for the expected grad-log-prob lemma, causal reward-to-go and VPG execution order. Numeric expectation and variance oracles were encoded in browser regression tests.",
+        "claude_provider": "A bounded read-only review was requested only through context-manager ai-researcher after listing agents. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must preserve the factorization-to-score proof, solve full versus reward-to-go weights on one trajectory, calculate both good and bad baseline variance, avoid generalizing a toy optimal baseline, separate critic prediction from TD residual and advantage, keep valid lifecycle animation, and test non-default controls plus formula readability and overflow."
+      }
+    },
+    {
+      "observed": "The MC, TD and DQN article contained the right topic names and a useful DQN lifecycle animation, but its lambda explorer incorrectly interpolated one-step TD and full Monte Carlo as two numbers, terminal masks were absent, done conflated termination and truncation, Double DQN did not calculate separate selection and evaluation, and a synthetic risk score hid independent failure axes.",
+      "inferred": "The article should own a single target-ledger execution contract between Bellman foundations and Policy Gradient: construct MC, n-step and finite lambda returns, distinguish behavior and greedy control targets, preserve the termination boundary, then trace one replay row through DQN and Double DQN selection, evaluation, residual and loss. The existing animation remains useful because it owns temporal lifecycle rather than the new numeric comparisons.",
+      "decided": "Replace the false lambda interpolation and fake risk score with three shared-number interactive labs, add eight Korean-annotated equations, restore termination versus truncation, calculate DQN and Double DQN branches, keep and correct the DQN animation, cap the historical spine at Q-learning 1992, DQN 2015 and Double DQN 2016, and encode all numeric oracles and mobile readability in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/rl-temporal-difference-dqn.tsx",
+        "src/pages/articles/ai/rl-temporal-difference-dqn/viz/TdDqnFoundationViz.tsx",
+        "src/pages/articles/ai/rl-viz/RlAnimatedSequences.tsx",
+        "src/pages/articles/ai/content-specs/rl-temporal-difference-dqn.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "tests/td-dqn-foundation-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "TD and DQN mobile, tablet and desktop interaction regression 3/3",
+        "TD and DQN through Policy Gradient, PPO, RLHF and Post-training regression 17/17 locally and publicly",
+        "all lambda, boundary, DQN, Double DQN and terminal numeric oracles",
+        "eight annotated display equations, four FormulaNotes, zero missing annotations and no article table",
+        "zero document, formula and visualization overflow with zero console or page errors at 390, 768 and 1440 pixels",
+        "12.96 pixel minimum public mobile formula size and no clipping in visual screenshots",
+        "public article and rl-temporal-difference-dqn-BW_cNITr.js chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Sutton and Barto second edition for MC, n-step, TD lambda, SARSA and Q-learning, Watkins and Dayan 1992 for Q-learning, Mnih et al. 2015 for DQN, van Hasselt et al. 2016 for Double DQN and Farama for termination versus truncation. All target values were independently encoded as browser regression oracles.",
+        "claude_provider": "A bounded read-only review was requested only through context-manager ai-researcher after listing agents. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must pin one transition and numeric oracle, separate observed reward from bootstrap, derive finite lambda return from all n-step returns, split termination from truncation, name the action selector and evaluator, avoid synthetic aggregate risk scores, preserve valid lifecycle animation, and execute non-default controls plus formula and overflow checks."
+      }
+    },
+    {
+      "observed": "The MDP and Bellman article contained the right vocabulary and a useful Bellman lifecycle animation, but it lacked a numeric Markov sufficiency counterexample, a calculable return path, a shared-number proof of V as the policy average of Q and zero-mean advantage, and a finite-horizon clock boundary. Expectation and optimality backups were described but not compared under one transition model.",
+      "inferred": "The article should own the execution contract that every later RL method consumes: a state must preserve the history information required for the next-outcome distribution, return must be indexed by time and discount, V/Q/A must state what is fixed versus averaged, and Bellman must separate policy averaging from maximization. Hidden-state belief and sampled TD updates should remain explicit downstream boundaries.",
+      "decided": "Add a position-versus-velocity Markov counterexample, a start-time and discount return explorer, a policy-weighted V/Q/A ledger, and a shared Bellman expectation-versus-max lab; preserve the existing backup animation; add eight Korean-annotated equations and five FormulaNotes; state the finite-horizon clock and POMDP boundary; and encode all non-default numeric states and mobile readability in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/rl-mdp-bellman.tsx",
+        "src/pages/articles/ai/rl-mdp-bellman/viz/MdpBellmanFoundationViz.tsx",
+        "src/pages/articles/ai/content-specs/rl-mdp-bellman.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "tests/mdp-bellman-foundation-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "MDP and Bellman mobile, tablet and desktop interaction regression 3/3",
+        "MDP and Bellman through TD, Policy Gradient and PPO regression 12/12 locally and publicly",
+        "all Markov representation, return start and discount, policy weighting and Bellman probability numeric oracles",
+        "eight annotated display equations, five FormulaNotes, zero missing annotations and no article table",
+        "zero document, formula and visualization overflow with zero console or page errors at 390, 768 and 1440 pixels",
+        "12.14 pixel minimum public mobile formula size and no clipping in visual screenshots",
+        "public article and rl-mdp-bellman-CXbX4zaM.js chunk HTTP 200"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Sutton and Barto second edition for MDP, return, value and Bellman definitions and OpenAI Spinning Up for state versus observation, V/Q/A and Bellman relations. All transition and value calculations were independently encoded as browser regression oracles.",
+        "claude_provider": "A bounded read-only review was requested only through context-manager ai-researcher after listing agents. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must begin with a minimal same-observation different-next-distribution counterexample, bound state sufficiency to the stated dynamics, calculate return from one reward sequence, compare V/Q/A under one policy ledger, separate Bellman expectation from max on one model, state finite-horizon and POMDP boundaries, preserve valid lifecycle animation, and execute non-default controls plus formula and overflow checks."
+      }
+    },
+    {
+      "observed": "The POMDP article had the right topic order and a useful belief lifecycle animation, but its belief lab performed observation correction without action prediction, active sensing was qualitative, Kalman trust did not derive from process and sensor covariance, and NIS plus recurrent burn-in and masking were prose-only boundaries.",
+      "inferred": "The article should own the hidden-state execution contract between the Markov foundation and downstream policy learning: action first predicts a belief, observation likelihood produces evidence and a normalized posterior, information gathering is selected by expected decision value rather than entropy alone, estimator trust is derived from covariance, and recurrent policies must reconstruct hidden context without leaking terminal episodes or training loss into burn-in.",
+      "decided": "Upgrade the belief lab to a full prediction-correction-normalization filter, add a branch-complete active-sensing value lab, derive the Kalman gain from P/Q/R and expose posterior covariance, add NIS and recurrent burn-in/mask equations, preserve the existing lifecycle animation, annotate all 12 display equations in Korean with 12 FormulaNotes, and encode non-default numeric states and responsive readability in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/rl-pomdp-state-estimation.tsx",
+        "src/pages/articles/ai/rl-pomdp-state-estimation/viz/PomdpDecisionLabs.tsx",
+        "src/pages/articles/ai/content-specs/reinforcement-learning-pomdp-state-estimation.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "tests/pomdp-state-estimation-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "POMDP mobile, tablet and desktop interaction regression 3/3 locally and publicly",
+        "MDP through POMDP, TD, Policy Gradient and PPO regression 15/15 locally and publicly",
+        "all Bayes prediction, evidence and posterior, active-sensing threshold and Kalman Q/R numeric oracles",
+        "12 annotated display equations, 12 FormulaNotes, zero missing annotations and no article table",
+        "document, formula and visualization overflow within contract with zero console or page errors at 390, 768 and 1440 pixels",
+        "12.00 pixel minimum public mobile formula size and no clipping in visual screenshots",
+        "public article and rl-pomdp-state-estimation-BIFpOEcR.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by Kaelbling, Littman and Cassandra 1998 for belief sufficiency, Bayes updates and information-gathering actions, Welch and Bishop for Kalman prediction and correction, and Hausknecht and Stone for recurrent learning under partial observability. All posterior, sensing-value and covariance calculations were independently encoded as browser regression oracles.",
+        "claude_provider": "A bounded read-only review was requested only through context-manager ai-researcher. POST /api/agents/ai-researcher/chat returned gateway HTTP 500 Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must calculate transition prediction before observation correction, keep evidence and normalization explicit, separate information gain from expected decision value, derive Kalman trust from P/Q/R, pair innovation with covariance through NIS, specify recurrent burn-in, masking and reset order, preserve valid lifecycle animation, and execute non-default controls plus formula and overflow checks."
+      }
+    },
+    {
+      "observed": "The imitation and offline-learning article had the right BC, compounding-error, DAgger, CQL and Decision Transformer order plus a useful lifecycle animation, but its conservative-learning lab used an invented count penalty instead of the CQL objective, IQL was absent, and there was no executable off-policy evaluation or zero-support refusal boundary.",
+      "inferred": "The article should own the fixed-data execution contract between online policy learning and world-model planning: distribution shift must be visible at the trajectory level, conservative value learning must be derived from its actual regularizer, IQL must separate in-dataset value fitting from policy extraction, OPE must expose support and effective sample size before deployment, and sequence conditioning must not be mistaken for causal validation.",
+      "decided": "Replace the count heuristic with an exact CQL regularizer-and-gradient lab, add IQL expectile and advantage-weighted behavior-cloning equations, add an importance-sampling OPE lab that refuses zero-support estimates, deepen Decision Transformer with a causal prediction loss and support boundary, preserve the valid lifecycle animation, annotate all 12 equations in Korean with 12 FormulaNotes, and encode all numeric and responsive contracts in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/rl-imitation-offline-learning.tsx",
+        "src/pages/articles/ai/rl-imitation-offline-learning/viz/OfflineDecisionLabs.tsx",
+        "src/pages/articles/ai/content-specs/rl-imitation-offline-learning.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "src/content/ai/rlCurriculum.ts",
+        "tests/imitation-offline-learning-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "imitation and offline-learning mobile, tablet and desktop interaction regression 3/3 locally and publicly",
+        "MDP through POMDP, TD, Policy Gradient, PPO and offline learning regression 18/18 locally and publicly",
+        "all compounding-error, CQL regularizer, gradient and alpha, and supported versus unsupported OPE numeric oracles",
+        "12 annotated display equations, 12 FormulaNotes, zero missing annotations and no article table",
+        "document, formula and visualization overflow within contract with zero console or page errors at 390, 768 and 1440 pixels",
+        "12.00 pixel minimum public mobile formula size and no clipping in visual screenshots",
+        "public article and rl-imitation-offline-learning-6KwkNqAw.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by the DAgger, CQL, IQL and Decision Transformer papers plus a primary ICML source for importance-sampling off-policy evaluation. Every toy calculation and support refusal was independently encoded as a browser regression oracle.",
+        "claude_provider": "A bounded read-only review was requested through the context-manager gateway with model claude-sonnet-4-6. POST /v1/chat/completions returned Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must connect BC through distribution shift, DAgger, fixed-data conservative learning, OPE and sequence policy on one dataset; derive CQL rather than invent a count penalty; separate IQL value fit from actor extraction; refuse zero-support OPE; bound Decision Transformer conditioning by dataset support; preserve valid animation; and execute non-default controls plus formula and overflow checks."
+      }
+    },
+    {
+      "observed": "The model-based RL article had the right Dyna, model-bias, World Models, MuZero and Dreamer sequence plus a valid lifecycle animation, but its planning lab converted a model-accuracy percentage into invented correct-versus-biased update counts, World Models and MuZero targets were blended, and Dreamer had no executable posterior-to-prior or terminal-aware return contract.",
+      "inferred": "The article should own the action-conditioned planning contract after offline learning: planning compute must be shown as repeated trust in a model target, one-step model fit must be separated from closed-loop rollout fidelity, World Models, MuZero and Dreamer must be distinguished by inputs, outputs, targets and consumers, and terminal or target-provenance errors must be calculable before deployment.",
+      "decided": "Replace the accuracy heuristic with an exact stale-versus-refreshed Dyna backup lab, add a horizon-squared model-bias calculation, split World Models V/M/C from MuZero h/g/f and expose predicted prior versus MCTS policy target, add a posterior-anchor, prior-imagination and terminal-aware Dreamer lambda-return lab, preserve the valid sequence animation, annotate all 10 equations in Korean with 10 FormulaNotes, and encode every numeric and responsive contract in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/rl-model-based-world-models.tsx",
+        "src/pages/articles/ai/rl-model-based-world-models/viz/WorldModelDecisionLabs.tsx",
+        "src/pages/articles/ai/content-specs/rl-model-based-world-models.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "src/content/ai/rlCurriculum.ts",
+        "tests/model-based-world-models-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "model-based RL mobile, tablet and desktop interaction regression 3/3 locally and publicly",
+        "MDP through POMDP, TD, Policy Gradient, PPO, offline learning and model-based RL regression 21/21 locally and publicly",
+        "all stale and refreshed Dyna, horizon-bias, MuZero prior versus target, and terminal-aware Dreamer numeric oracles",
+        "10 annotated display equations, 10 FormulaNotes, zero missing annotations and no article table",
+        "document, formula and visualization overflow within contract with zero console or page errors at 390, 768 and 1440 pixels",
+        "12.00 pixel minimum public mobile formula size and no clipping in visual screenshots",
+        "public article and rl-model-based-world-models-CrIfNkmw.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by the original Dyna paper, the authors' official World Models article, the MuZero paper and the DreamerV3 publication. Every repeated backup, horizon drift, target provenance and lambda-return calculation was independently encoded as a browser regression oracle.",
+        "claude_provider": "Bounded read-only reviews were requested only through the context-manager gateway with model claude-sonnet-4-6. POST /v1/chat/completions returned Provider error: All providers failed, consistent with the upstream Anthropic wrapper credential failure. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must define the model quantity and its planning consumer, calculate Dyna rather than invent accuracy buckets, test freshness before increasing planning compute, separate V/M/C from h/g/f and posterior from prior, distinguish MuZero prediction from MCTS training targets, calculate terminal-aware Dreamer returns, split long Korean formula annotations into rows, preserve valid animation, and execute non-default controls plus formula and overflow checks."
+      }
+    },
+    {
+      "observed": "The Safe RL article had correct conceptual boundaries and primary sources for CMDPs, Lagrangian penalties, CPO, Lyapunov methods, Recovery RL and Safety Gym, but it only made expected violations and a fixed penalty ranking executable. Expected-cost and chance constraints were easy to conflate, CPO had no feasible-set calculation, Lyapunov had no local Bellman slack, Recovery had no physical intervention deadline, and the lifecycle scene appeared before the prose established its stages.",
+      "inferred": "The article should close the RL foundation path by separating three safety contracts: aggregate expected cost, a locally feasible policy update, and a real-time intervention that can still finish before impact. Each method needs its own guarantee boundary, while the final lifecycle animation should reassemble the stages only after the reader can calculate them.",
+      "decided": "Add an expected-count versus any-event probability lab, deepen the dual-pressure lab with three policy regimes, add an exact one-dimensional CPO interval-intersection lab including local infeasibility, add a stochastic Lyapunov backup-and-slack lab, add a Recovery risk-gate and detection-handoff-braking timing lab, move the existing lifecycle animation to deployment, annotate all 10 equations in Korean with 10 FormulaNotes, and encode every numeric and responsive contract in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/rl-safe-constrained-learning.tsx",
+        "src/pages/articles/ai/rl-safe-constrained-learning/viz/SafeDecisionLabs.tsx",
+        "src/pages/articles/ai/content-specs/reinforcement-learning-safety-curriculum.md",
+        "src/content/ai/foundationFormulaAnnotations.ts",
+        "src/content/ai/articlesReinforcementLearning.ts",
+        "src/content/ai/rlCurriculum.ts",
+        "tests/safe-constrained-learning-contract.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "Safe RL mobile, tablet and desktop interaction regression 3/3 locally and publicly",
+        "MDP through POMDP, TD, Policy Gradient, PPO, offline learning, model-based RL and Safe RL regression 24/24 locally and publicly",
+        "all expectation versus event probability, lambda ranking, CPO feasible and infeasible, Lyapunov slack, and Recovery timing numeric oracles",
+        "10 annotated display equations, 10 FormulaNotes, zero missing annotations and no article table",
+        "zero document, formula or visualization overflow and zero console or page errors at 390, 768 and 1440 pixels",
+        "12.00 pixel minimum public mobile formula size and no clipping in visual screenshots",
+        "public article and rl-safe-constrained-learning-Ck6aWOkQ.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by the official CPO PMLR paper, the NeurIPS Lyapunov paper, the Recovery RL paper and OpenAI's Safety Gym benchmark description. The article keeps near-constraint satisfaction, local-to-global expected-cost reasoning, empirical recovery gains and benchmark scope at their distinct evidence levels, and every toy calculation is encoded as a browser regression oracle.",
+        "claude_provider": "A bounded read-only review was requested only through the context-manager gateway with model claude-sonnet-4-6. POST /v1/chat/completions returned Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must separate expected cost, any-event probability and physical deadlines; calculate Lagrangian ranking without calling it a guarantee; solve CPO trust and safety interval intersections including infeasibility; expose the surrogate residual boundary; calculate Lyapunov backup slack; include detection, handoff and actuation latency in Recovery; place lifecycle animation after concepts; and execute non-default controls plus formula and overflow checks."
+      }
+    },
+    {
+      "observed": "The LLM architecture route had already removed its extracted fact sheet and default comparison table, established a current-first Dense to KV/long-context to sparse MoE to hybrid/linear path, and promoted five core model narratives per branch. The remaining gaps were transfer execution: readers could not calculate a new architecture fingerprint, three source diagrams were still tiny in a grid, and asynchronously loaded remote diagrams sometimes missed the shared detail controls.",
+      "inferred": "A model gallery becomes a learning path only when readers can transfer the axes to an unseen model. KV layout, layer cadence, routed experts and depth residual mixing must remain independent because they operate on different tensors and resource bottlenecks. Source figures should preserve inspectability without forcing horizontal scrolling in the normal reading flow.",
+      "decided": "Add an exact architecture fingerprint lab with KV-byte, actual cadence-tail, routed-expert and depth-mixer oracles; replace three-column diagram strips with one large selected figure and tabs; make remote bitmap discovery react to load events; center the optional fullscreen canvas after auto zoom; retain the core five model narratives and hide the long catalog; and encode default, non-default, image, fullscreen, formula and responsive contracts in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/llm-architecture-gallery.tsx",
+        "src/pages/articles/ai/llm-architecture-gallery/viz/ArchitectureFingerprintLab.tsx",
+        "src/pages/articles/ai/llm-architecture-figures.tsx",
+        "src/components/viz/ArticleVizTools.tsx",
+        "src/pages/articles/ai/content-specs/llm-architecture-gallery.md",
+        "src/content/ai/articlesLLMArchitectures.ts",
+        "tests/llm-architecture-learning-flow.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "overview plus four architecture branches at mobile, tablet and desktop 17/17 locally and publicly",
+        "default and non-default KV bytes, sharing, saving, layer cadence tail, routed expert fraction and depth-mixer numeric oracles",
+        "three source-figure tabs, remote image natural width, detail toolbar and fullscreen open/close",
+        "four annotated overview display equations, four FormulaNotes and no article table",
+        "no document, formula or visualization overflow and no console or page errors at 390, 768 and 1440 pixels",
+        "mobile and desktop visual inspection of the fingerprint lab, large figure viewer and centered fullscreen zoom",
+        "public article and five architecture chunks HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by the original GQA paper, DeepSeek-V3 report, official Moonshot Kimi Linear and Attention Residuals repositories, the official DeepSeek-V4 card/report and Google's official Gemma 4 release. New 2026 structures were used only to identify which architecture axis changes, without inferring unpublished implementation or generalized performance.",
+        "claude_provider": "A bounded read-only audit was requested only through the context-manager gateway with model claude-sonnet-4-6. Gateway, wrapper and agent services were active, but the wrapper's stored login credentials were rejected and POST /v1/chat/completions returned Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must build a current-first causal route instead of a model table; fingerprint unseen models across independent KV, layer-cadence, routed-FFN and depth-mixing axes; calculate full KV bytes; unfold cadence tails; refuse active-parameter estimates without expert widths/shared paths; distinguish the selected tensor axis; use one large source figure at a time; and execute non-default controls, image loading, fullscreen, formula and responsive checks."
+      }
+    },
+    {
+      "observed": "The Dense Transformer article collected GPT-2, Llama, Qwen, Gemma and OLMo facts, but it did not establish the actual two-stage residual execution contract before comparing models. Its shared equation skipped the attention-updated intermediate state, SwiGLU branch roles were ambiguous, per-model visualizations repeated the same large block, QK normalization was at risk of being simplified into cosine normalization, and source diagrams remained too small for inspection.",
+      "inferred": "A reusable Dense foundation must first make one decoder block executable, then show each later model as a bounded decision relative to a canonical baseline. Projection budgets, Q/K normalization, embedding rows and layer schedules need numeric oracles because model-name summaries do not transfer to an unseen configuration.",
+      "decided": "Rebuild the article around the correct two-residual decoder equations, split SwiGLU branches, add one five-preset DenseBlockDecisionLab, tell five sequential model chapters from GPT-2 XL through OLMo 3 7B, calculate exact projection and embedding budgets, model Qwen3 Q/K RMSNorm with an explicit learned-scale boundary, enlarge the shared source-figure viewer, stop the default history at GPT-2, annotate all 15 display equations in Korean, and encode content, numeric, responsive, source and handoff contracts in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/llm-architecture-dense-transformers.tsx",
+        "src/pages/articles/ai/llm-architecture-viz/DenseBlockDecisionLab.tsx",
+        "src/pages/articles/ai/llm-architecture-figures.tsx",
+        "src/pages/articles/ai/content-specs/llm-architecture-dense-transformers.md",
+        "src/content/ai/articlesLLMArchitectures.ts",
+        "tests/llm-architecture-dense-contract.spec.ts",
+        "tests/llm-architecture-learning-flow.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "Dense mobile, tablet, desktop, numeric and source handoff regression 5/5 locally and publicly",
+        "LLM overview plus four architecture branches regression 17/17 locally and publicly",
+        "five sequential core model chapters, one shared decision lab, no article table and five source-figure tabs",
+        "all projection, embedding and Q/K RMS-normalization numeric oracles",
+        "15 Korean-annotated display equations, 15 FormulaNotes and no raw LaTeX",
+        "12 pixel minimum inner KaTeX glyph size with zero formula or document overflow and no console or page errors",
+        "public article and llm-architecture-dense-transformers-PJBea5Hk.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims and exact dimensions were reconstructed from the official GPT-2 report, Meta Llama 3 release and reference code, Qwen3 report, config and implementation, Gemma 3 report and official PyTorch config, OLMo 3 report and config, and the original GLU Variants paper. Qwen3 implementation inspection corrected an early L2/cosine simplification to per-head RMSNorm with learned gamma, and every toy claim is bounded by browser numeric oracles.",
+        "claude_provider": "Bounded read-only technical and UI reviews were requested only through context-manager agents ai-researcher and ui-design-researcher. Both POST /api/agents/.../chat calls returned Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must establish the actual residual execution order before model names; narrate each model as baseline, changed decision, consequence and evidence; derive projection counts from matrix shapes; inspect the real Q/K norm type and axis; distinguish vocabulary from padded rows and tied from untied heads; unfold layer schedules; use one large source figure at a time; cap history at one canonical paper; and execute numeric, KaTeX, overflow, image and handoff checks."
+      }
+    },
+    {
+      "observed": "The KV and long-context article blurred advertised context length, cache capacity, attention visibility and retrieval quality. Its cache equation omitted batch size, prefill and decode were not operationally separated, GQA/MLA/sliding-window decisions were arranged as model facts, and the DeepSeek-V2 example incorrectly used 61 layers instead of the report's 60.",
+      "inferred": "A transferable long-context foundation must expose two independent ledgers: what every past token stores and which positions each layer reads. Capacity, prefill work, decode traffic, direct visibility and inherited reachability need separate equations and browser oracles; otherwise a reader cannot evaluate an unseen architecture or distinguish structural reach from retrieval quality.",
+      "decided": "Rebuild the article around batch-aware KV bytes, causal-triangle prefill, one-row decode, MHA/GQA/MLA storage coordinates and local/global cadence. Add two interactive labs, four minimal causal chapters from GQA through Gemma 3, direct-versus-inherited token states, corrected 60-layer DeepSeek-V2 dimensions and cache values, 11 Korean-annotated display equations, source boundaries, responsive checks and Dense-to-Sparse-MoE handoff tests.",
+      "changed": [
+        "src/pages/articles/ai/llm-architecture-kv-long-context.tsx",
+        "src/pages/articles/ai/llm-architecture-viz/MlaCacheExplorer.tsx",
+        "src/pages/articles/ai/llm-architecture-viz/LongContextWindowLab.tsx",
+        "src/pages/articles/ai/content-specs/llm-architecture-kv-long-context.md",
+        "src/content/ai/articlesLLMArchitectures.ts",
+        "tests/llm-architecture-kv-context-contract.spec.ts",
+        "tests/llm-architecture-learning-flow.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint, diff check and production build",
+        "KV and long-context mobile, tablet, desktop, numeric and source handoff regression 6/6 locally and publicly",
+        "LLM overview plus four architecture branches regression 17/17 locally and publicly",
+        "MHA/GQA/MLA 32K batch-2 cache oracles 240.00, 15.00 and 4.22 GiB with DeepSeek-V2 MLA cache 69,120 bytes per sequence token",
+        "full versus mixed cache 31.00 to 5.81 GiB, prefill 33.29B to 7.09B pair-layers and decode 2,031,616 to 380,928 read positions",
+        "11 Korean-annotated display equations, 11 FormulaNotes, no article table and four core lineage chapters",
+        "12 pixel minimum inner KaTeX glyph size with zero formula or document overflow and no console or page errors",
+        "public article and llm-architecture-kv-long-context-BqY6KGjE.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "The architecture and formulas were checked against the original GQA paper, Mistral 7B paper, DeepSeek-V2 PDF and Gemma 3 Technical Report. Re-reading the DeepSeek-V2 architecture table corrected the layer count from 61 to 60 and all dependent cache oracles; vendor performance numbers remain bounded to their reported deployment comparison.",
+        "claude_provider": "Fresh bounded read-only technical and UI reviews were requested only through context-manager agents ai-researcher and ui-design-researcher. Both POST /api/agents/.../chat calls returned Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must separate supported length, storage, direct visibility, inherited reachability and retrieval quality; calculate all KV byte factors; distinguish prefill from decode; separate GQA head sharing from MLA latent storage; unfold local/global layers; show direct and reachable tokens independently; cap the causal lineage; and execute non-default numeric, KaTeX, overflow, source and handoff checks."
+      }
+    },
+    {
+      "observed": "The Sparse MoE article led with a modern product catalog and total versus active model numbers, but it did not let a reader reconstruct the expert bank from matrix shapes or distinguish active expert weights, model-wide active parameters, FLOPs, latency and communication bytes. Its general Top-k load share was normalized by token count rather than assignment count, Switch Top-1 loss boundaries were blurred, and capacity overflow, no-drop stragglers and routing-only bias had no executable oracle.",
+      "inferred": "A transferable MoE foundation must preserve separate ledgers for stored expert capacity, the selected expert path, always-on decoder paths, assignment capacity and expert-parallel traffic. The visible history should stop at the five decisions required to explain a current config rather than expanding into an unbounded model list.",
+      "decided": "Rebuild the article from the dense FFN replacement point; derive gated expert, layer-bank and active-path weights; add DeepSeek-V3 and Qwen3 parameter presets; normalize general Top-k load by Tk while keeping Switch loss Top-1; execute capacity overflow and no-drop straggler policies; separate DeepSeek-V3 selection bias from output affinity; calculate a 896 MiB dispatch-return lower bound; narrate Switch, Mixtral, DeepSeekMoE, DeepSeek-V3 and Qwen3 as five causal chapters; compact the mobile labs; annotate all 12 display equations in Korean; and encode numeric, responsive, source and handoff contracts in Playwright.",
+      "changed": [
+        "src/pages/articles/ai/llm-architecture-sparse-moe.tsx",
+        "src/pages/articles/ai/llm-architecture-viz/MoeParameterLedgerLab.tsx",
+        "src/pages/articles/ai/llm-architecture-viz/MoeRoutingExplorer.tsx",
+        "src/pages/articles/ai/content-specs/llm-architecture-sparse-moe.md",
+        "src/content/ai/articlesLLMArchitectures.ts",
+        "tests/llm-architecture-sparse-moe-contract.spec.ts",
+        "tests/llm-architecture-learning-flow.spec.ts",
+        "knowledge/authoring/runs/2026-07-21-ai-formula-viz-corpus-p3-report.md",
+        "knowledge/authoring/runs/2026-07-21-ai-topic-flow-reconstruction-plan.json"
+      ],
+      "verified": [
+        "affected ESLint and production build",
+        "Sparse MoE mobile, tablet, desktop, numeric, routing and source handoff regression 6/6 locally and publicly",
+        "LLM overview plus four architecture branches regression 17/17 locally and publicly",
+        "DeepSeek and Qwen expert ledgers plus capacity 1.00 and 1.50, balanced and collapsed, no-drop and 896 MiB numeric oracles",
+        "12 Korean-annotated display equations, 12 FormulaNotes, no article table and five causal chapters",
+        "13.23 pixel minimum public mobile KaTeX glyph size with zero formula, visualization or document overflow and no console or page errors",
+        "mobile and desktop visual inspection of the compact parameter and routing labs",
+        "public article and llm-architecture-sparse-moe-CeC-A7Dr.js chunk HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims and dimensions were reconstructed from the original Switch Transformer, Mixtral of Experts, DeepSeekMoE, DeepSeek-V3 and Qwen3 reports plus official DeepSeek and Qwen configs. Author-reported performance was not generalized; the article uses only architecture decisions, public dimensions and explicitly bounded execution lower bounds.",
+        "claude_provider": "A fresh bounded read-only technical review was requested only through the context-manager ai-researcher agent. POST /api/agents/ai-researcher/chat returned Provider error: All providers failed. No direct Claude CLI fallback was used.",
+        "small_model_rule": "A 4B/9B author must locate the exact sparse sublayer; derive expert weights from matrix shapes; keep expert bank, selected path and always-on path separate; never equate active parameters with FLOPs or latency; normalize Top-k assignment load by Tk; separate capacity/drop from no-drop/straggler; inspect selection versus output gating; calculate communication lower bounds with topology boundaries; cap history at causal decisions; and execute non-default numeric, KaTeX, overflow, image and handoff checks."
+      }
+    },
+    {
+      "observed": "The PagedAttention, scheduler, speculative decoding and VLM serving articles existed as feature descriptions but did not expose one request's byte, token, commit and media-admission handoffs. Acceptance math, prefix identity and universal performance language also required correctness repair.",
+      "inferred": "A transferable serving foundation needs four independent state ledgers. Each article must consume a concrete request state, execute one calculation or decision, emit the next artifact and name the failure owner without turning workload evidence into an architecture guarantee.",
+      "decided": "Rebuild the route as physical KV ledger, one-step work plan, verified token commit and media-to-decoder admission. Use one shared numeric fixture, Korean-annotated equations, responsive artifact-oriented visuals, explicit misconception and handoff blocks, and stop history at PagedAttention plus iteration-level scheduling unless a concrete failure requires an older foundation.",
+      "changed": [
+        "src/pages/articles/ai/vllm-paged-attention.tsx",
+        "src/pages/articles/ai/vllm-scheduler.tsx",
+        "src/pages/articles/ai/vllm-spec-decode.tsx",
+        "src/pages/articles/ai/vllm-vlm-serving.tsx",
+        "src/pages/articles/ai/vllm-runtime/viz/VllmRuntimeViz.tsx",
+        "src/pages/articles/ai/content-specs/vllm-request-runtime-four-contracts.md",
+        "src/content/ai/articlesVLLM.ts",
+        "src/content/learning-paths.ts",
+        "tests/vllm-runtime-reconstruction.spec.ts",
+        "knowledge/authoring/runs/2026-07-23-vllm-request-runtime-reconstruction-report.md",
+        "knowledge/authoring/runs/2026-07-23-vllm-request-runtime-reconstruction-report.json"
+      ],
+      "verified": [
+        "focused request-runtime regression 7/7 locally and publicly",
+        "related disaggregated serving and authored path regression 48/48 locally",
+        "390, 768 and 1440 pixel visual and reading-order checks with zero formula, visualization or document overflow",
+        "mobile formula scales 1.00, 0.89, 1.00, 0.91 and 0.87 with no KaTeX, console or page errors",
+        "production build with 9389 modules",
+        "public category plus four article URLs HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "The boundaries and formulas were checked against the original PagedAttention, Orca, Sarathi-Serve and speculative decoding papers plus current vLLM optimization, speculative decoding and multimodal documentation. Current API and workload claims remain marked version-sensitive.",
+        "claude_provider": "Fresh bounded independent and post-implementation reviews were requested through context-manager /api/chat with claude-sonnet-4-6. Routing succeeded but the provider returned All providers failed after retries. No direct Claude CLI fallback was used and no Claude result is claimed.",
+        "small_model_rule": "A 4B worker owns one state ledger and emits input_state, calculation, unit, decision, output_artifact, failure_owner, source_claim, forbidden_generalization and next_handoff. A 9B reviewer checks byte_oracle, token_budget, commit_boundary, cache_identity, version_sensitive_claim and cross_article_overlap before browser and deployment orchestration."
+      }
+    },
+    {
+      "observed": "The Serving Ops, Deployment, Kubernetes GPU Fleet, LiteLLM Gateway and Observability articles were individually substantial but did not pass one release through ownership, rollout, schedulable capacity, routing and verified recovery. Running, Ready and warm capacity; desired, allocatable and usable GPU capacity; retry and fallback; TTFT and TPOT; and action versus recovery evidence could be conflated.",
+      "inferred": "A transferable serving control-plane path must keep controller ownership and state artifacts explicit. A reader should diagnose a shared canary incident from capacity and queue evidence before reaching for kernel tuning, and every mitigation must carry an observation window and undo condition.",
+      "decided": "Rebuild the five articles as target and ownership map, rollback-ready release, schedulable GPU capacity lease, route decision evidence and verified recovery. Use one canary fixture with desired 8, allocatable 6, Ready 5, 240-second startup, 800 requests per minute and fallback cost; make the numeric oracles executable; distinguish current DRA from device plugins, MIG from time slicing and retry from fallback; annotate every display equation in Korean; and add compact responsive evidence visuals plus explicit article handoffs.",
+      "changed": [
+        "src/pages/articles/ai/llm-serving-ops.tsx",
+        "src/pages/articles/ai/serving-deployment.tsx",
+        "src/pages/articles/ai/k8s-gpu-fleet.tsx",
+        "src/pages/articles/ai/litellm-gateway.tsx",
+        "src/pages/articles/ai/observability-aiops.tsx",
+        "src/pages/articles/ai/llm-serving-control/viz/ServingControlViz.tsx",
+        "src/pages/articles/ai/content-specs/llm-serving-control-plane-five-contracts.md",
+        "src/content/ai/articlesLLM.ts",
+        "src/content/learning-paths.ts",
+        "tests/llm-serving-control-plane-reconstruction.spec.ts",
+        "knowledge/authoring/runs/2026-07-23-llm-serving-control-plane-reconstruction-report.md",
+        "knowledge/authoring/runs/2026-07-23-llm-serving-control-plane-reconstruction-report.json"
+      ],
+      "verified": [
+        "focused control-plane regression 8/8 locally",
+        "focused control-plane regression 8/8 publicly",
+        "related vLLM, disaggregated serving and authored path regression 56/56 locally",
+        "390, 768 and 1440 pixel visual and reading-order checks with zero formula, visualization or document overflow",
+        "mobile formula scales 1.00, 0.84, 1.00, 1.00, 0.97 and 1.00 with no KaTeX, console or page errors",
+        "production build with 9355 modules",
+        "public category plus five article URLs HTTP 200 with cm-blog.service active"
+      ],
+      "collaboration_trace": {
+        "primary_research": "The path was checked against current official Kubernetes Deployment, probes, HPA, device-plugin and DRA documentation; current NVIDIA GPU Operator, MIG and time-slicing documentation; LiteLLM router and virtual-key documentation; vLLM metrics; OpenTelemetry GenAI semantic conventions; and Prometheus alert-rule documentation. Product and version-specific behavior remains bounded.",
+        "claude_provider": "A fresh bounded technical and learning-flow review was requested only through context-manager /api/chat with claude-sonnet-4-6, including a retry after implementation. Authentication and model override succeeded but the provider returned HTTP 500 All providers failed. No direct Claude CLI fallback was used and no Claude result is claimed.",
+        "small_model_rule": "A 4B worker owns one controller or policy and emits target_slo, input_artifact, numeric_oracle, output_evidence, failure_owner, source_claim, version_boundary, forbidden_inference and next_handoff. A 9B reviewer checks release identity, running versus Ready, desired versus allocatable, claim versus device, retry versus fallback, metric versus hypothesis, action guardrail, rollback evidence and cross-article overlap before browser and deployment orchestration."
+      }
+    },
+    {
+      "observed": "The Prompt Injection article named untrusted content and least privilege but did not pass one hostile email through source authority, derived-data lineage, task-scoped capability, cumulative data-flow authorization, action-specific approval, commit-time revalidation and replay evidence. Tool metadata, peer-agent authority claims, later retrieval of quarantined facts, cross-action composition and prepare-to-commit drift were not executable cases.",
+      "inferred": "A transferable agent-security foundation must assume probabilistic detection can fail and instead constrain impact at deterministic boundaries. Authorization must see prior action history because two individually allowed actions can compose into a forbidden flow, and an approval cannot survive a changed destination, resource, policy or grant without a commit-time re-check.",
+      "decided": "Rebuild the article around one vendor-email incident with 6 global tools, 2 task capabilities, 5 proposals, 2 allows, 3 denies and 0 external writes. Preserve trust lineage across transforms and later sessions, treat MCP metadata and peer messages as data rather than authority, issue a fresh grant to child agents, evaluate cumulative flow F(history, action), bind approval to an action hash, re-resolve resources immediately before commit, turn blocked cases into regression fixtures, and show fan-in and fan-out explicitly on mobile.",
+      "changed": [
+        "src/pages/articles/ai/prompt-injection-defense.tsx",
+        "src/pages/articles/ai/prompt-injection-defense/viz/PromptInjectionContainmentViz.tsx",
+        "src/pages/articles/ai/content-specs/agent-prompt-injection-containment.md",
+        "src/content/ai/articlesAgent.ts",
+        "src/content/learning-paths.ts",
+        "tests/agent-prompt-injection-containment.spec.ts",
+        "scripts/audit-learning-flow.mjs",
+        "knowledge/authoring/runs/2026-07-23-agent-prompt-injection-containment-report.md",
+        "knowledge/authoring/runs/2026-07-23-agent-prompt-injection-containment-report.json",
+        "/home/heru/code/context-manager/agent/src/harness/claude-code.ts",
+        "/home/heru/code/context-manager/agent/src/harness/registry.ts",
+        "/home/heru/code/context-manager/agent/tests/claude-code-harness.test.ts"
+      ],
+      "verified": [
+        "focused ESLint, diff check and production build with 9352 modules",
+        "prompt-injection containment regression 4/4 locally and publicly",
+        "related Agent and current-first route regression 51/51 locally",
+        "390 pixel visualization heights 806, 707.5 and 562.1875 with zero visualization or document overflow",
+        "history-aware Korean-annotated KaTeX at scale 1.00 with negative overflow",
+        "learning-flow audit score 0 for prompt-injection-defense with no blocker, review, enrichment or issue",
+        "Context Manager Claude end-to-end health result CM_CLAUDE_COLLAB_OK through harness:claude-code:sonnet in 6844 ms",
+        "Context Manager harness and routing tests 17/17 plus TypeScript",
+        "public category and article HTTP 200 with cm-blog.service active at 2026-07-23 11:47:06 KST"
+      ],
+      "collaboration_trace": {
+        "primary_research": "Claims were bounded by current OpenAI source-sink and Atlas hardening research, Anthropic adaptive browser-agent defenses, OWASP LLM01 and LLM06, MCP authorization and security best practices, and Microsoft indirect-injection guidance. Product defenses were not promoted into universal proofs.",
+        "claude_provider": "The earlier OpenWebUI-backed /api/chat route failed, so context-manager was completed with a registered claude-code ExternalHarness. A bounded read-only run through context-manager runDelegatedPrompt using harness:claude-code:sonnet succeeded in plan mode and identified five concrete gaps: tool metadata authority, peer-agent re-granting, gate-reason mapping, quarantine retrieval lineage and commit-time TOCTOU. Its hardest transfer case, two allowed actions composing into a forbidden flow, became the history-aware gate. A separate 6844 ms health run returned CM_CLAUDE_COLLAB_OK; no direct Claude CLI call was used.",
+        "small_model_rule": "A 4B worker emits user_intent, authority_sources, untrusted_sources, sensitive_labels, candidate_sink, task_capability, action_history, data_flow_rule, approval_rule, commit_recheck, commit_evidence, forbidden_inference and next_handoff. A 9B reviewer checks tool metadata authority, peer-agent grants, session versus identity, classifier versus gate, commit TOCTOU, memory lineage, cross-action composition, normal-task regression and cross-article overlap before browser and deployment orchestration."
+      }
+    }
+  ],
+  "article_policy": {
+    "keep": [
+      "one independent reader decision",
+      "reused by at least two learning paths",
+      "independent execution trace, equation, failure mode or experiment",
+      "volatile model/runtime evidence that should not destabilize a foundation article"
+    ],
+    "absorb": [
+      "glossary or product list without an independent decision",
+      "duplicate preamble, table or fact sheet",
+      "content that only becomes meaningful when the next article is also read",
+      "vendor-specific repetition of an unchanged mechanism"
+    ],
+    "migration": "Keep the existing slug as a summary entry or redirect until links and usage are verified."
+    ,
+    "history_cap": "Keep one visible canonical paper per leaf topic by default. Add an optional source spine only when a core article directly depends on distinct decisive evidence. Freeze new Robot AI paper spines until uncovered target paths are authored."
+  },
+  "reading_contract": [
+    "current target",
+    "core mechanism articles",
+    "just-in-time foundations",
+    "optional papers and company evidence",
+    "implementation and verification"
+  ],
+  "priorities": [
+    {
+      "id": "P0-A",
+      "status": "complete",
+      "goal": "Apply low-cost structural corrections to already authored sequences.",
+      "batches": [
+        "LLM serving engine path and serving control-plane path",
+        "DL Rust path",
+        "incorrect subcategory and learningPath metadata audit",
+        "add implementation dependencies to top-down research tracks"
+      ]
+    },
+    {
+      "id": "P0-B",
+      "status": "complete",
+      "goal": "Author missing route designs without pretending this is a metadata-only edit.",
+      "batches": [
+        "Agent core path",
+        "Knowledge, Speech, World Model and Time Series current-first paths",
+        "Practical ML, Open Models and Claw Code leaf paths"
+      ]
+    },
+    {
+      "id": "P1",
+      "status": "complete",
+      "goal": "Write missing core articles that existing prose cannot supply.",
+      "batches": [
+        "Agent evaluation and trace regression (complete)",
+        "Time-series problem setup, rolling backtest and foundation models (complete)",
+        "Knowledge provenance, evaluation and research watcher (complete)",
+        "Vision foundation models, promptable segmentation and video tracking (complete)",
+        "DiT, flow matching and generative evaluation (complete)"
+      ]
+    },
+    {
+      "id": "P2",
+      "status": "complete",
+      "goal": "Split broad overview articles only where independent reader decisions exist.",
+      "batches": [
+        "Speech representation, ASR, native generation and duplex runtime (complete)",
+        "World representation, action dynamics and planning evidence (complete)",
+        "Knowledge ingestion, IR and retrieval context packing (complete)",
+        "Open-model family core versus optional experiments (complete)",
+        "2D Animation production contract, dataset, condition, adaptation, temporal finishing and release evidence (complete)",
+        "ComfyUI execution contract, typed DAG, component loading, sampling, conditioning, edit, postprocess and dependency release (complete)",
+        "vLLM physical KV ledger, one-step schedule, verified token commit and multimodal admission (complete)",
+        "LLM Serving ownership map, rollback-ready release, GPU capacity lease, route evidence and verified recovery (complete)",
+        "Agent Prompt Injection source, authority, lineage, capability, cumulative flow, approval, commit and evidence containment (complete)"
+      ]
+    },
+    {
+      "id": "P3",
+      "status": "in_progress",
+      "goal": "Apply corpus-wide formula and visual quality after narrative structure stabilizes.",
+      "batches": [
+        "Korean term notes for uncovered display formulas (AI complete; 29 non-AI gaps remain)",
+        "responsive misconception-driven Viz (shared frame and representative defect pass complete; topic redesign remains)",
+        "360, 390, 768 and 1440 pixel layout audit (representative AI set complete; full visual corpus remains)",
+        "animation with reduced-motion fallback after static narrative QA"
+      ]
+    }
+  ],
+  "topic_actions": {
+    "llm-serving": "two explicit paths retained; request runtime owns KV, scheduling, verified token commit and media admission, while the completed control-plane route owns target and ownership, rollback-ready release, GPU capacity lease, route evidence and verified recovery",
+    "agents": "keep mechanism articles; demote product/framework examples; source-to-sink containment now covers metadata and peer authority, re-granted capability, history-aware flow, commit re-check and eval handoff",
+    "knowledge-systems": "Knowledge Compiler is a five-contract hub; Source Ingestion, Knowledge IR and RAG own independent artifacts and regressions; Research Watcher owns longitudinal identity, promotion and invalidation",
+    "speech-audio": "overview absorbed into a route hub; four independent units for duplex runtime, native generation, ASR objectives and audio representation completed",
+    "world-models": "overview absorbed into a current contract hub; predictive representation, action-conditioned dynamics and closed-loop planning evidence completed as three independent units",
+    "time-series": "keep ARIMA/LSTM/ECOD; setup/evaluation and current foundation-model bridge added with forecasting and anomaly kept as separate target paths",
+    "generative": "keep VAE/GAN/Diffusion; current-first DiT/flow/solver/distillation/evaluation bridge completed; model families remain optional runtime evidence",
+    "open-models": "six-article goal-to-release fork/rejoin path completed; image and video are sibling runtimes, workflow and parameter contracts are shared, and checkpoint-family pages remain optional evidence",
+    "comfyui": "eight-article reproducible execution path completed; workflow, typed graph, component manifest, sampling trajectory, condition routing, model-specific edit, earliest postprocess owner and immutable dependency release remain separate decisions",
+    "2d-animation": "model-independent six-stage learning path completed; production traces may skip or repeat stages by earliest failure owner; LTX remains an implementation case rather than the universal entry",
+    "vision": "keep CNN/ResNet/CLIP/Deformable DETR; surface ViT and add segmentation/tracking",
+    "robotics": "keep core system articles; collapse papers/company research as optional evidence",
+    "foundations": "stop at the first mathematical or physical primitive needed by a current target"
+  },
+  "completion_contract": [
+    "An authored path exposes start, core, foundation, evidence and implementation.",
+    "Every core article owns one independent reader decision.",
+    "Claims retain source, intent, scope and failure boundary.",
+    "A private transfer problem is solvable from the article alone.",
+    "KaTeX renders without raw commands and display equations have Korean term notes.",
+    "No horizontal overflow or forced inner scrolling at required viewports.",
+    "Production build and local/public Playwright checks pass."
+  ]
+}

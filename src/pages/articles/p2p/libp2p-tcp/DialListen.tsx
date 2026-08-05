@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { CodeViewButton } from '@/components/code';
 import type { CodeRef } from '@/components/code/types';
 import { codeRefs } from '../libp2p/codeRefs';
+import AsyncTcpViz from './viz/AsyncTcpViz';
 
 const DIAL_STEPS = [
   { step: 1, label: 'Multiaddr 파싱', desc: '/ip4/1.2.3.4/tcp/9000 → SocketAddr', color: '#64748b' },
@@ -34,14 +35,14 @@ export default function DialListen({ onCodeRef }: {
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
+              className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-3 gap-y-1 rounded-lg border px-4 py-2.5 sm:flex sm:items-center"
               style={{ borderColor: s.color + '40', background: s.color + '08' }}>
               <span className="text-[10px] font-mono font-bold rounded-full w-5 h-5
                 flex items-center justify-center shrink-0"
                 style={{ background: s.color + '20', color: s.color }}>{s.step}</span>
-              <span className="text-xs font-mono font-bold shrink-0 w-28"
+              <span className="min-w-0 text-xs font-mono font-bold sm:w-28 sm:shrink-0"
                 style={{ color: s.color }}>{s.label}</span>
-              <span className="text-xs text-foreground/60">{s.desc}</span>
+              <span className="col-start-2 min-w-0 text-xs text-foreground/60 [overflow-wrap:anywhere] sm:col-auto">{s.desc}</span>
             </motion.div>
           ))}
         </div>
@@ -105,78 +106,8 @@ export default function DialListen({ onCodeRef }: {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Async TCP Operations</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Async TCP Connect/Listen
-//
-// Non-blocking connect() 흐름:
-//
-//   socket = socket(AF_INET, SOCK_STREAM | O_NONBLOCK)
-//   result = connect(socket, addr)
-//
-//   if result == 0:
-//     "즉시 성공" (same host)
-//
-//   elif errno == EINPROGRESS:
-//     "처리 중" (정상)
-//     epoll_wait(socket, EPOLLOUT)
-//     getsockopt(SO_ERROR) 로 결과 확인
-//
-//   else:
-//     진짜 error (connection refused 등)
-
-// Tokio의 TcpSocket::connect:
-//
-//   pub async fn connect(self, addr: SocketAddr)
-//       -> io::Result<TcpStream>
-//   {
-//       let socket = self.inner.connect(addr).await?;
-//       Ok(TcpStream::from_std(socket)?)
-//   }
-//
-//   내부:
-//     - socket2로 connect 시작
-//     - EINPROGRESS → poll 등록
-//     - writable 이벤트 대기
-//     - SO_ERROR 체크
-
-// Listen socket 흐름:
-//
-//   socket()
-//   setsockopt(SO_REUSEADDR, SO_REUSEPORT)
-//   bind(addr)
-//   listen(backlog)
-//   accept() loop (non-blocking)
-
-// IfWatcher (네트워크 인터페이스 감시):
-//
-//   Operating system API:
-//     Linux: netlink (NETLINK_ROUTE)
-//     macOS: kqueue (PF_ROUTE)
-//     Windows: WNetGetConnection
-//
-//   감지 이벤트:
-//     - Interface up/down
-//     - IP address change
-//     - Default gateway change
-//
-//   libp2p 활용:
-//     - WiFi ↔ Mobile 전환
-//     - VPN 연결/해제
-//     - Dual-stack (IPv4/IPv6)
-//     - 자동 주소 업데이트
-
-// Connection lifecycle:
-//
-//   1. dial_socket() → TcpStream
-//   2. security upgrade → NoiseStream
-//   3. muxer upgrade → YamuxMuxer
-//   4. ConnectionPool 등록
-//   5. Behaviours 알림
-//   6. Streams 생성/사용
-//   7. Close (FIN or RST)
-//   8. Pool에서 제거`}
-        </pre>
       </div>
+      <div className="not-prose mb-4"><AsyncTcpViz /></div>
     </section>
   );
 }

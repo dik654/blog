@@ -1,40 +1,44 @@
+import { Activity, Braces, Clock3, LockKeyhole, ScrollText, ShieldCheck, TerminalSquare } from 'lucide-react';
+
+const STAGES = [
+  ['01', 'Parse', '구조화된 input', '현재', Braces],
+  ['02', 'Permission', '분류 후 선택적 enforcer', '부분', ShieldCheck],
+  ['03', 'Validate', '별도 모듈, 실행 경로 미연결', '미연결', ScrollText],
+  ['04', 'Sandbox', 'unshare, filesystem 강제 공백', '부분', LockKeyhole],
+  ['05', 'Spawn', 'process group 없이 spawn', '부분', TerminalSquare],
+  ['06', 'Watch', 'foreground timeout·후처리 절단', '부분', Clock3],
+  ['07', 'Audit', '일부 exit/status, signal 의미 공백', '부분', Activity],
+] as const;
+
 export default function BashPipelineViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">execute_bash() — 7단계 파이프라인</text>
-
-        <defs>
-          <marker id="bp-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {[
-          { label: '1. 입력 파싱', sub: 'BashCommandInput', color: '#3b82f6' },
-          { label: '2. 6단계 검증', sub: 'BashValidator', color: '#ef4444' },
-          { label: '3. 샌드박스 결정', sub: 'bubblewrap 가용성', color: '#8b5cf6' },
-          { label: '4. 서브프로세스 실행', sub: 'tokio::process', color: '#f59e0b' },
-          { label: '5. 타임아웃 감시', sub: '기본 120s', color: '#f59e0b' },
-          { label: '6. 출력 절단', sub: 'stdout 8KB / stderr 4KB', color: '#10b981' },
-          { label: '7. 결과 반환', sub: 'ToolOutput', color: '#10b981' },
-        ].map((step, i) => (
-          <g key={i}>
-            <rect x={90} y={50 + i * 38} width={380} height={32} rx={4}
-              fill={step.color} fillOpacity={0.1} stroke={step.color} strokeWidth={0.6} />
-            <rect x={90} y={50 + i * 38} width={3} height={32} fill={step.color} rx={1} />
-            <text x={108} y={70 + i * 38} fontSize={11} fontWeight={700}
-              fill={step.color}>{step.label}</text>
-            <text x={456} y={70 + i * 38} textAnchor="end" fontSize={9} fontFamily="monospace"
-              fill="var(--muted-foreground)">{step.sub}</text>
-            {i < 6 && (
-              <line x1={280} y1={82 + i * 38} x2={280} y2={88 + i * 38}
-                stroke="#3b82f6" strokeWidth={1} markerEnd="url(#bp-arr)" />
-            )}
-          </g>
+    <figure aria-label="Bash 실행을 parse부터 audit까지 일곱 단계로 보여 주는 그림" className="not-prose my-7 overflow-hidden rounded-md border border-border">
+      <figcaption className="border-b border-border px-4 py-3">
+        <p className="text-sm font-semibold">필요한 경계와 현재 snapshot의 구현 상태</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          “부분”은 field나 분기가 존재한다는 뜻이며 production 보장이 완성됐다는 뜻이 아니다.
+        </p>
+      </figcaption>
+      <div className="divide-y divide-border">
+        {STAGES.map(([number, title, text, status, Icon]) => (
+          <div
+            key={number}
+            className="grid grid-cols-[28px_24px_minmax(0,1fr)_58px] gap-x-3 gap-y-1 px-4 py-3 sm:grid-cols-[34px_28px_110px_minmax(0,1fr)_70px] sm:items-center"
+          >
+            <span className="text-xs font-bold text-muted-foreground">{number}</span>
+            <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            <strong className="text-sm">{title}</strong>
+            <span className="col-start-3 text-sm leading-relaxed text-muted-foreground sm:col-start-auto">{text}</span>
+            <span className={`col-start-4 row-span-2 row-start-1 h-fit self-center justify-self-end rounded-sm border px-1.5 py-0.5 text-xs font-semibold sm:col-start-auto sm:row-span-1 ${
+              status === '현재'
+                ? 'border-emerald-300 text-emerald-700 dark:border-emerald-800 dark:text-emerald-300'
+                : status === '미연결'
+                  ? 'border-rose-300 text-rose-700 dark:border-rose-800 dark:text-rose-300'
+                  : 'border-amber-300 text-amber-700 dark:border-amber-800 dark:text-amber-300'
+            }`}>{status}</span>
+          </div>
         ))}
-      </svg>
-    </div>
+      </div>
+    </figure>
   );
 }

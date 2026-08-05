@@ -75,7 +75,7 @@ export default function OverviewViz() {
             <text x={34} y={215} fontSize={11}
               fill={MUTED}>Full: 54 Fp곱</text>
             {/* Sparse bar */}
-            <motion.rect x={24} y={230} rx={4}
+            <motion.rect initial={false} x={24} y={230} rx={4}
               animate={{ width: 200 * (18 / 54), height: 22,
                 fill: `${WARN}25`, stroke: WARN }}
               strokeWidth={0.8} transition={sp} />

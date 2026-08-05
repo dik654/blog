@@ -21,14 +21,14 @@ const STEPS = [
   { label: '블록 확정', body: '유효한 블록을 네트워크에 전파하고 보상을 받습니다.' },
 ];
 
-const NW = 62, NH = 36, GAP = 66, SY = 55;
+const NW = 62, NH = 36, GAP = 130, SY = 55;
 function nx(i: number) { return 6 + i * GAP; }
 
 export default function PoWFlowViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 548 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 730 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           <defs>
             <marker id="pow-ah" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
               <path d="M0,0 L6,3 L0,6" fill="var(--muted-foreground)" opacity={0.5} />
@@ -40,7 +40,7 @@ export default function PoWFlowViz() {
               <motion.g key={`e-${i}`} initial={{ opacity: 0 }} animate={{ opacity: visible ? 0.6 : 0 }}>
                 <line x1={x1} y1={SY} x2={x2} y2={SY} stroke="var(--muted-foreground)"
                   strokeWidth={1.2} markerEnd="url(#pow-ah)" />
-                <rect x={(x1 + x2) / 2 - 16} y={SY - 15} width={32} height={11} rx={2} fill="var(--card)" />
+                <rect x={(x1 + x2) / 2 - 30} y={SY - 15} width={60} height={11} rx={2} fill="var(--card)" />
                 <text x={(x1 + x2) / 2} y={SY - 8} textAnchor="middle" fontSize={10}
                   fill="var(--muted-foreground)">{lbl}</text>
               </motion.g>

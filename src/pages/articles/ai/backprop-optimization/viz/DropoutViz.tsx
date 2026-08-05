@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 export default function DropoutViz() {
   const layers = [
     { n: 4, x: 80 },
@@ -35,7 +37,7 @@ export default function DropoutViz() {
         {/* 연결선 — 뉴런 뒤에 렌더링되도록 먼저 그림 */}
         {layers.slice(0, -1).map((layer, li) => {
           const next = layers[li + 1];
-          const lines: JSX.Element[] = [];
+          const lines: ReactElement[] = [];
           for (let i = 0; i < layer.n; i++) {
             const yA = neuronY(li, i);
             for (let j = 0; j < next.n; j++) {

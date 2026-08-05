@@ -72,13 +72,13 @@ EAGLE과 달리 임베딩/lm_head를 공유하지 않아 메모리를 더 사용
     annotations: [
       { lines: [30, 51], color: 'sky',     note: 'RejectionSampler — 수용/복원/보너스 토큰 3종류' },
       { lines: [60, 68], color: 'emerald', note: 'forward() 시그니처 — draft_probs + target logits 입력' },
-      { lines: [69, 90], color: 'amber',   note: '알고리즘 출처: Leviathan et al. 2022 (Speculative Decoding 원논문)' },
+      { lines: [69, 90], color: 'amber',   note: '입력·출력 계약 — draft 확률, target logits와 최종 token 배열의 shape' },
     ],
     desc:
 `문제: Draft 토큰을 어떤 기준으로 수용/거부할까요?
 
 해결: RejectionSampler는 세 종류의 토큰을 생성합니다.
-① accepted — draft_prob / target_prob 비율로 확률적 수용
+① accepted — min(1, target_prob / draft_prob) 비율로 확률적 수용
 ② recovered — 거부된 위치에서 (target - draft) 분포로 재샘플링
 ③ bonus — 모든 draft가 수용되면 target만으로 추가 토큰 생성
 최종 출력 = accepted + recovered + bonus (원논문 알고리즘 정확 구현)`,

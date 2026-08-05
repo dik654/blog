@@ -19,14 +19,15 @@ export default function Overview({ onCodeRef }: Props) {
         <p>
           Speculative Decoding(투기적 추론)은 LLM 추론의 <strong>지연 시간</strong>을 줄이는 기법입니다.<br />
           소형 Draft 모델이 K개 토큰을 빠르게 생성하고, 대형 Target 모델이 한 번에 검증합니다.<br />
-          Draft가 정확하면 K개 토큰을 한 스텝에 확정 — 최대 2~3배 가속 가능합니다.
+          Draft가 정확하고 제안·검증 비용이 충분히 작으면 target 호출당 여러 token을 확정할 수 있습니다.
+          실제 가속은 acceptance, QPS, batch, hardware와 proposer 비용을 함께 측정해야 합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">vLLM의 3가지 Draft 방식</h3>
         <ul>
           <li>
             <strong>EAGLE 1/3</strong> — Target의 hidden states를 입력으로 경량 모델이 feature-level draft.
-            가장 높은 수락률 (2.5~3x 가속)
+            Target feature를 재사용해 높은 acceptance를 노리는 방식
           </li>
           <li>
             <strong>독립 Draft 모델</strong> — Llama-70B + Llama-7B 같은 별도 소형 모델.

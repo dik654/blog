@@ -81,7 +81,7 @@ export default function DeploymentSecurityViz() {
               {/* 커밋 추적 */}
               <StatusBox x={100} y={165} w={280} h={34} label="GPG 서명 커밋 → 작성자 위조 방지" sub="누가·언제·무엇을·왜 변경했는가 완벽 기록" color={C.git} />
 
-              <text x={240} y={212} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">운영 서버 직접 SSH 코드 수정 — 절대 금지 (변경 추적 불가)</text>
+              <text x={240} y={219} textAnchor="middle" fontSize={8} fill="var(--muted-foreground)">운영 서버 직접 SSH 코드 수정 — 절대 금지 (변경 추적 불가)</text>
             </motion.g>
           )}
 

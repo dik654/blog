@@ -59,7 +59,7 @@ export default function GradientProblemViz() {
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} />
             )}
             {/* label */}
-            <motion.text key={step} x={200} y={18} textAnchor="middle" fontSize={11}
+            <motion.text key={`title-${step}`} x={200} y={18} textAnchor="middle" fontSize={11}
               fontWeight={600} fill={c}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {isLstm ? 'LSTM' : 'Vanilla RNN'}
@@ -67,7 +67,7 @@ export default function GradientProblemViz() {
             <motion.text x={410} y={85} fontSize={9}
               fill="var(--muted-foreground)"
               initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-              key={step}>{BODY[step]}</motion.text>
+              key={`annotation-${step}`}>{BODY[step]}</motion.text>
           </svg>
         );
       }}

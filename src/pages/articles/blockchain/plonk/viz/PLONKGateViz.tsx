@@ -22,7 +22,7 @@ export default function PLONKGateViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 420 100" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+        <svg viewBox="0 0 420 134" className="w-full max-w-2xl" style={{ height: 'auto' }}>
           {/* selector header */}
           {SELS.map((s, i) => (
             <text key={s} x={OX + i * (CW + GAP) + CW / 2} y={OY + 6} textAnchor="middle"
@@ -59,7 +59,8 @@ export default function PLONKGateViz() {
             );
           })}
           {/* formula header */}
-          <text x={140} y={96} textAnchor="middle" fontSize={9}
+          <line x1={76} y1={110} x2={344} y2={110} stroke="var(--border)" strokeWidth={0.7} />
+          <text x={210} y={126} textAnchor="middle" fontSize={9}
             fill="var(--muted-foreground)">
             q_L·a + q_R·b + q_M·a·b + q_O·c + q_C = 0
           </text>

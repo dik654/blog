@@ -13,11 +13,11 @@ export const overviewSteps = [
     body: 'CIFAR-10 실험 — 56층 plain 네트워크의 train/test 에러 모두 20층보다 높음',
   },
   {
-    label: '원인: 기울기 소실 (Vanishing Gradient)',
-    body: '역전파 시 기울기가 층을 거칠수록 지수적으로 작아져 앞쪽 가중치 갱신 불가',
+    label: '문제: 더 깊은 plain net의 최적화가 어렵다',
+    body: 'train error까지 높으므로 단순 과적합이 아니다. 기울기 경로의 조건과 identity 변환 학습 난도가 함께 문제를 만든다.',
   },
   {
     label: '해결: 스킵 커넥션 (Residual Connection)',
-    body: 'y = F(x) + x — 입력을 출력에 직접 더해 기울기가 소실 없이 전달되는 경로 확보',
+    body: 'y = F(x) + x — 입력을 출력에 직접 더해 residual branch와 별개의 짧은 정보·기울기 경로를 확보',
   },
 ];

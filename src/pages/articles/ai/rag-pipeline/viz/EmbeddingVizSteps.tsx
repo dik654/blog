@@ -32,7 +32,7 @@ function ModelCompareStep() {
             <text x={colX[2]} y={y + 10} fontSize={9} fill={C.muted}>{m.lang}</text>
             {/* Score bar */}
             <rect x={colX[3]} y={y + 2} width={70} height={10} rx={3} fill={C.muted + '10'} />
-            <motion.rect x={colX[3]} y={y + 2} width={0} height={10} rx={3}
+            <motion.rect initial={false} x={colX[3]} y={y + 2} width={0} height={10} rx={3}
               fill={isBest ? C.model : C.model + '60'}
               animate={{ width: m.score * 70 }}
               transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }} />
@@ -219,7 +219,7 @@ function DimensionStep() {
             <text x={255} y={y + 14} textAnchor="middle" fontSize={9} fill={C.tradeoff}>{d.speed}</text>
             {/* 품질 바 */}
             <rect x={330} y={y + 5} width={100} height={10} rx={3} fill={C.muted + '10'} />
-            <motion.rect x={330} y={y + 5} width={0} height={10} rx={3}
+            <motion.rect initial={false} x={330} y={y + 5} width={0} height={10} rx={3}
               fill={C.vector + '60'}
               animate={{ width: d.quality * 100 }}
               transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }} />

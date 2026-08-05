@@ -1,4 +1,5 @@
 import M from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 import PoolingCompareViz from './viz/PoolingCompareViz';
 
 export default function Overview() {
@@ -19,6 +20,13 @@ export default function Overview() {
           그래서 "문장 대표"로 쓰이지만, NSP는 두 문장의 연속 관계 판별용 — 의미 유사도와는 목적이 다름
         </p>
         <M display>{'\\text{sentence\\_vec} = h_{[\\text{CLS}]} \\in \\mathbb{R}^{768}'}</M>
+        <FormulaNote
+          meaning="마지막 BERT 층에서 [CLS] 위치의 hidden state 하나를 문장 전체의 벡터로 선택한다. 계산은 단순하지만 [CLS]가 의미 유사도를 잘 보존하는지는 사전학습과 파인튜닝 목표에 달려 있으며, 768차원은 BERT-base의 예시일 뿐이다."
+          symbols={[
+            ['h_{[\\mathrm{CLS}]}', '마지막 encoder 층의 [CLS] 위치 벡터'],
+            ['\\mathbb{R}^{768}', 'BERT-base에서 사용하는 768차원 실수 벡터 공간'],
+          ]}
+        />
 
         <h3 className="text-lg font-semibold mt-6 mb-3">2. 평균 풀링 (Mean Pooling)</h3>
         <p>
@@ -27,6 +35,14 @@ export default function Overview() {
           Attention mask를 적용하여 패딩 토큰은 평균에서 제외
         </p>
         <M display>{'\\text{sentence\\_vec} = \\frac{1}{n} \\sum_{i=1}^{n} h_i \\in \\mathbb{R}^{768}'}</M>
+        <FormulaNote
+          meaning="문장에 실제로 존재하는 n개 토큰 벡터를 좌표별로 더한 뒤 n으로 나눠 하나의 문장 벡터를 만든다. 구현에서는 padding을 attention mask로 제외해야 하며, 모든 토큰에 같은 비중을 주므로 중요한 단어와 불용어를 자동으로 구분하지는 않는다."
+          symbols={[
+            ['h_i', '마지막 encoder 층에서 i번째 실제 토큰의 hidden state'],
+            ['n', 'padding을 제외하고 평균에 포함한 토큰 수'],
+            ['\\frac{1}{n}\\sum_i h_i', '각 차원에서 토큰 표현을 산술평균하는 pooling 연산'],
+          ]}
+        />
 
         <h3 className="text-lg font-semibold mt-6 mb-3">3. BERT 임베딩의 근본 한계</h3>
         <p>

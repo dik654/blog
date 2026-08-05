@@ -48,7 +48,7 @@ export default function ModuleKeeperViz() {
                   {r.label}
                 </text>
                 {show && (
-                  <motion.circle r={3} fill={from.color}
+                  <motion.circle initial={false} r={3} fill={from.color}
                     animate={{ cx: [f.cx, t.cx], cy: [f.cy, t.cy] }}
                     transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1.5 }} />
                 )}

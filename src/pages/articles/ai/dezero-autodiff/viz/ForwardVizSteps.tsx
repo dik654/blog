@@ -7,15 +7,17 @@ export function Step0() {
     <g>
       <VizBox x={20} y={40} w={80} h={40} label="x = 3.0" sub="Variable" c={CV} />
       <VizBox x={20} y={95} w={80} h={40} label="y = 2.0" sub="Variable" c={CV} delay={0.1} />
-      <motion.text x={140} y={65} fontSize={8} fill="var(--muted-foreground)"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-        .borrow().data.clone()
-      </motion.text>
-      <motion.path d="M 100 60 L 210 60" stroke={CA} strokeWidth={0.8}
+      <motion.g initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <rect x={102} y={27} width={106} height={20} rx={4}
+          fill="var(--background)" stroke="var(--border)" strokeWidth={0.8} />
+        <text x={155} y={40} textAnchor="middle" fontSize={8} fontWeight={600}
+          fill="var(--muted-foreground)">.borrow().data.clone()</text>
+      </motion.g>
+      <motion.path d="M 100 60 L 230 60" stroke={CA} strokeWidth={0.8}
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.2 }} />
-      <motion.path d="M 100 115 L 210 80" stroke={CA} strokeWidth={0.8}
+      <motion.path d="M 100 115 L 230 80" stroke={CA} strokeWidth={0.8}
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3 }} />
-      <VizBox x={210} y={45} w={100} h={40} label="xs = [3.0, 2.0]" sub="Vec<ArrayD>" c={CA} delay={0.4} />
+      <VizBox x={230} y={45} w={100} h={40} label="xs = [3.0, 2.0]" sub="Vec<ArrayD>" c={CA} delay={0.4} />
     </g>
   );
 }
@@ -47,9 +49,10 @@ export function Step2() {
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.25 }} />
       <motion.path d="M 255 65 L 295 65" stroke={CE} strokeWidth={0.8}
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.35 }} />
-      <motion.text x={300} y={100} fontSize={7} fill={CE}
+      <motion.text x={342} y={100} textAnchor="middle" fontSize={7} fill={CE}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-        out.creator = FuncState
+        <tspan x={342}>out.creator =</tspan>
+        <tspan x={342} dy={15}>FuncState</tspan>
       </motion.text>
     </g>
   );
@@ -61,11 +64,11 @@ export function Step3() {
       <VizBox x={20} y={40} w={80} h={40} label="Variable" sub="Rc → VarInner" c={CV} />
       <motion.path d="M 100 55 L 140 55" stroke={CA} strokeWidth={1}
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.1 }} />
-      <text x={115} y={48} fontSize={7} fill={CA}>creator</text>
+      <text x={115} y={24} fontSize={7} fill={CA}>creator</text>
       <VizBox x={140} y={40} w={100} h={40} label="FuncState" sub="inputs: Vec<Var>" c={CA} delay={0.15} />
       <motion.path d="M 240 55 L 280 55" stroke={CE} strokeWidth={1} strokeDasharray="4 2"
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.25 }} />
-      <text x={250} y={48} fontSize={7} fill={CE}>Weak</text>
+      <text x={250} y={24} fontSize={7} fill={CE}>Weak</text>
       <VizBox x={280} y={40} w={90} h={40} label="output" sub="Weak<RefCell>" c={CE} delay={0.3} />
       <motion.text x={195} y={105} fontSize={8} fill="var(--muted-foreground)" textAnchor="middle"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>

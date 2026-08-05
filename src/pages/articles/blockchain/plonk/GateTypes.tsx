@@ -13,7 +13,7 @@ export default function GateTypes() {
           <div className="rounded-lg border border-sky-500/30 p-4">
             <p className="font-semibold text-sm text-sky-400 mb-2">산술 게이트 (Arithmetic Gate)</p>
             <div className="my-2 text-center">
-              <M display>{'q_m \\cdot a \\cdot b + q_l \\cdot a + q_r \\cdot b + q_o \\cdot c + q_4 \\cdot d + q_c = 0'}</M>
+              <M display>{'\\underbrace{q_m \\cdot a \\cdot b}_{\\text{곱셈 항}} + \\underbrace{q_l \\cdot a + q_r \\cdot b + q_o \\cdot c + q_4 \\cdot d}_{\\text{선형 항}} + \\underbrace{q_c}_{\\text{상수 항}} = 0'}</M>
             </div>
             <p className="text-sm text-muted-foreground">덧셈, 곱셈, 혼합 연산 모두 하나의 등식으로 표현</p>
           </div>

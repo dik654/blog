@@ -30,7 +30,7 @@ export default function BFTTheory() {
         <h4 className="text-lg font-semibold mt-5 mb-3">핵심 정리</h4>
         <div className="not-prose rounded-lg border bg-card p-4 mb-4">
           <div className="text-center mb-3">
-            <M display>{'n \\geq 3f + 1'}</M>
+            <M display>{'\\underbrace{n}_{\\text{전체 노드 수}} \\geq \\underbrace{3f + 1}_{\\text{비잔틴 } f \\text{명 허용 한계}}'}</M>
           </div>
           <p className="text-sm text-muted-foreground text-center mb-3">
             <M>f</M> = 최대 Byzantine 노드 수 &rarr; 1/3 미만의 악의적 노드만 허용

@@ -1,15 +1,5 @@
 import CodePanel from '@/components/ui/code-panel';
-
-const builtinCode = `// CUDA 내장 변수 (커널 내부에서 사용)
-threadIdx.x  threadIdx.y  threadIdx.z   // 블록 내 스레드 위치
-blockIdx.x   blockIdx.y   blockIdx.z    // 그리드 내 블록 위치
-blockDim.x   blockDim.y   blockDim.z    // 블록 크기 (스레드 수)
-gridDim.x    gridDim.y    gridDim.z     // 그리드 크기 (블록 수)
-
-// threadIdx : 현재 스레드가 블록 안에서 몇 번째인지
-// blockIdx  : 현재 블록이 그리드 안에서 몇 번째인지
-// blockDim  : 블록 하나에 스레드가 몇 개인지
-// gridDim   : 그리드에 블록이 몇 개인지`;
+import BuiltinVarsViz from './viz/BuiltinVarsViz';
 
 const layoutCode = `// dim3 타입으로 커널 실행 구성 설정
 // <<<gridDim, blockDim>>> 형태로 커널에 전달
@@ -48,14 +38,7 @@ export default function BuiltinVars() {
           <strong>blockDim</strong>과 <strong>gridDim</strong>은 크기를 나타낸다.<br />
           모두 <code>uint3</code> 타입이며 x, y, z 필드를 가진다.
         </p>
-        <CodePanel
-          title="CUDA 내장 변수 4종"
-          code={builtinCode}
-          annotations={[
-            { lines: [2, 5], color: 'sky', note: '4가지 내장 변수' },
-            { lines: [7, 10], color: 'emerald', note: '각 변수의 의미' },
-          ]}
-        />
+        <BuiltinVarsViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">dim3와 커널 실행 구성</h3>
         <p>

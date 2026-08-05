@@ -1,58 +1,61 @@
-import M from '@/components/ui/math';
+import MathFormula from '@/components/ui/math';
+import FormulaNote from '@/components/ui/formula-note';
 
-const GATES = [
+const groups = [
   {
-    name: 'Forget Gate',
-    latex: 'f_t = \\sigma(\\underbrace{W_f}_{\\text{가중치}} \\cdot [\\underbrace{h_{t-1}}_{\\text{이전 출력}},\\, \\underbrace{x_t}_{\\text{현재 입력}}] + b_f)',
-    desc: '이전 셀 상태에서 버릴 정보를 결정 — fₜ가 0에 가까우면 해당 정보 삭제, 1이면 유지',
-    color: '#ef4444',
+    title: '1 · 같은 입력에서 세 비율과 한 후보를 병렬 계산',
+    latex: String.raw`\begin{aligned}
+\underbrace{u_t}_{\text{게이트의 공통 입력}}&=[\underbrace{h_{t-1}}_{\text{이전 외부 state}};\underbrace{x_t}_{\text{현재 관측}}]\\
+\underbrace{f_t}_{\text{과거 보존 비율}}&=\sigma(W_fu_t+b_f)\\
+\underbrace{i_t}_{\text{새 기록 비율}}&=\sigma(W_iu_t+b_i)\\
+\underbrace{\tilde C_t}_{\text{기록할 새 내용}}&=\tanh(W_Cu_t+b_C)\\
+\underbrace{o_t}_{\text{외부 출력 비율}}&=\sigma(W_ou_t+b_o)
+\end{aligned}`,
+    meaning: '이전 hidden state와 현재 입력을 이어 붙인 같은 벡터 uₜ를 서로 다른 affine layer에 넣는다. Sigmoid는 0~1 통과 비율을, tanh는 -1~1 후보 내용을 만든다. 식을 순서대로 적어도 구현에서는 네 projection을 하나의 큰 matrix multiply로 합칠 수 있다.',
+    symbols: [
+      [String.raw`[h_{t-1};x_t]`, '두 벡터를 feature 축으로 이어 붙이는 concatenation'],
+      [String.raw`\sigma`, '값을 0~1로 바꿔 성분별 gate 비율을 만드는 sigmoid'],
+      [String.raw`\tanh`, '새 후보의 부호를 보존하면서 범위를 -1~1로 누르는 함수'],
+      [String.raw`W_f,W_i,W_C,W_o`, '각 gate와 candidate가 서로 다른 판단을 학습하는 weight'],
+    ] as [string, string][],
   },
   {
-    name: 'Input Gate',
-    latex: 'i_t = \\sigma(W_i \\cdot [h_{t-1},\\, x_t] + b_i)',
-    desc: '새 정보 중 셀 상태에 저장할 항목을 결정 — σ 출력이 0~1로 통과 비율 제어',
-    color: '#10b981',
+    title: '2 · 과거를 남긴 값과 새로 쓸 값을 더해 cell 갱신',
+    latex: String.raw`\underbrace{C_t}_{\text{갱신된 내부 기억}}
+=\underbrace{f_t\odot C_{t-1}}_{\text{선택해서 남긴 과거}}
++\underbrace{i_t\odot\tilde C_t}_{\text{선택해서 기록한 현재 후보}}`,
+    meaning: 'Forget gate는 이전 cell의 각 성분을 줄이고, input gate는 새 후보의 각 성분을 줄인다. 두 경로를 더하는 additive update가 LSTM memory path의 핵심이다. ⊙는 scalar 곱이 아니라 같은 위치끼리 곱하는 연산이다.',
+    symbols: [
+      [String.raw`\odot`, '동일한 feature 위치끼리 곱하는 element-wise product'],
+      [String.raw`f_t\odot C_{t-1}`, '지우고 남은 과거 기억'],
+      [String.raw`i_t\odot\tilde C_t`, '현재 step에서 새로 기록할 내용'],
+    ] as [string, string][],
   },
   {
-    name: 'Candidate',
-    latex: '\\tilde{C}_t = \\tanh(W_C \\cdot [h_{t-1},\\, x_t] + b_C)',
-    desc: '새 후보 셀 상태 생성 — tanh로 -1~1 범위 정규화하여 값 폭발 방지',
-    color: '#f59e0b',
-  },
-  {
-    name: 'Cell State',
-    latex: 'C_t = \\underbrace{f_t \\odot C_{t-1}}_{\\text{선택적 삭제}} + \\underbrace{i_t \\odot \\tilde{C}_t}_{\\text{새 정보 추가}}',
-    desc: 'LSTM의 핵심 연산 — forget gate로 기존 기억을 선택적 삭제 + input gate로 새 정보 추가. 덧셈 구조가 기울기 소실 방지',
-    color: '#8b5cf6',
-  },
-  {
-    name: 'Output Gate',
-    latex: 'o_t = \\sigma(W_o \\cdot [h_{t-1},\\, x_t] + b_o)',
-    desc: '셀 상태 중 외부로 출력할 부분을 결정',
-    color: '#ec4899',
-  },
-  {
-    name: 'Hidden State',
-    latex: 'h_t = \\underbrace{o_t}_{\\text{출력 비율}} \\odot \\underbrace{\\tanh(C_t)}_{\\text{셀 상태 정규화}}',
-    desc: 'Output Gate × tanh(Cₜ)로 최종 출력 생성 — tanh가 셀 상태를 -1~1로 스케일링',
-    color: '#0ea5e9',
+    title: '3 · 내부 기억 중 지금 밖으로 보일 state 생성',
+    latex: String.raw`\underbrace{h_t}_{\text{현재 외부 hidden state}}
+=\underbrace{o_t}_{\text{출력 gate}}\odot
+\underbrace{\tanh(C_t)}_{\text{내부 기억을 출력 범위로 변환}}`,
+    meaning: 'Cell state는 내부 memory로 남고, tanh로 범위를 바꾼 뒤 output gate가 현재 밖으로 내보낼 성분을 선택한다. 이 hₜ가 prediction head, 위 layer와 다음 시점의 gate 계산에 들어간다.',
+    symbols: [
+      [String.raw`C_t`, '시간축으로 이어지는 내부 cell state'],
+      [String.raw`h_t`, '현재 step에서 외부로 노출되는 hidden state'],
+      [String.raw`o_t`, '현재 기억을 얼마나 읽어낼지 정하는 0~1 비율'],
+    ] as [string, string][],
   },
 ];
 
 export default function GateEquations() {
   return (
-    <div className="not-prose grid gap-2 mt-6">
-      {GATES.map((g) => (
-        <div key={g.name} className="rounded-lg border px-4 py-3 flex items-start gap-3"
-          style={{ borderColor: g.color + '30', background: g.color + '06' }}>
-          <span className="text-xs font-bold w-24 flex-shrink-0 pt-1" style={{ color: g.color }}>
-            {g.name}
-          </span>
-          <div className="flex-1 min-w-0">
-            <M>{g.latex}</M>
-            <p className="text-[11px] text-foreground/50 mt-1">{g.desc}</p>
+    <div data-lstm-gate-equations className="not-prose my-8 space-y-5">
+      {groups.map((group) => (
+        <section key={group.title} className="min-w-0">
+          <h3 className="mb-3 text-sm font-bold">{group.title}</h3>
+          <div className="min-w-0 rounded-md border border-border p-3 sm:p-4">
+            <MathFormula display className="my-0 text-sm sm:text-base">{group.latex}</MathFormula>
           </div>
-        </div>
+          <FormulaNote meaning={group.meaning} symbols={group.symbols} />
+        </section>
       ))}
     </div>
   );
