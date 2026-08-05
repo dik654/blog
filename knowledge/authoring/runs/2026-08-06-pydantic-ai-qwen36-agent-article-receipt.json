@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-06T01:46:51+09:00",
+  "branch": "agent/blog-continuation",
+  "baseCommit": "aa105cde",
+  "article": {
+    "route": "/lab/blog/ai/pydantic-ai-qwen36-agent-system",
+    "source": "src/pages/articles/ai/pydantic-ai-qwen36-agent-system.tsx",
+    "learningPath": "ai-agent-runtime-cases",
+    "status": "implementation-documented-evaluation-pending"
+  },
+  "implementationSnapshot": {
+    "repository": "/home/ddd/ojs-agents",
+    "github": "https://github.com/dik654/ojs-agents",
+    "commit": "943be39",
+    "fleetManifestSha256": "264c41e18ee3e4f81af13f45c47f23a8213b44b13090fd1beab68ba2a78c80a3",
+    "worktreeCleanWhenRead": true
+  },
+  "claimBoundary": {
+    "architectureAndIntentDocumented": true,
+    "currentCodeDefaultsLabeledAsSnapshot": true,
+    "finalDefectCountsClaimed": false,
+    "finalPerformanceMetricsClaimed": false,
+    "historicalMeasurementsPromotedToCurrentFleetResult": false,
+    "productionRetestPerformedByThisAuthoringRun": false
+  },
+  "evaluationHandoff": {
+    "pendingExternalSession": true,
+    "evaluationDocumentPath": null,
+    "requiredFields": [
+      "source and fleet snapshot",
+      "case suite and paired arm",
+      "requested capabilities and actual model",
+      "invocation profile and output mode",
+      "trial count and task acceptance",
+      "forbidden effects and reconciliation",
+      "latency token wire-call distributions",
+      "failure owner",
+      "trace and artifact receipt",
+      "open defects and paired rerun"
+    ]
+  },
+  "validation": {
+    "typecheck": "pass",
+    "productionBuild": "pass with pre-existing large-chunk warning",
+    "aiInformationArchitecture": {
+      "viewports": 2,
+      "failures": 0,
+      "report": "/tmp/ai-ia-pydantic-qwen.json"
+    },
+    "visualGeometry": {
+      "routes": 1,
+      "checks": 2,
+      "viewports": ["desktop", "mobile"],
+      "articleVizSurfaces": 16,
+      "stepScenes": 0,
+      "errors": 0,
+      "warnings": 0,
+      "report": "/tmp/pydantic-ai-qwen36-agent-viz-both.json"
+    },
+    "manualReview": [
+      "desktop overview",
+      "desktop capability routing",
+      "mobile model adapter",
+      "mobile evaluation handoff",
+      "mobile interview portfolio"
+    ]
+  },
+  "completionContract": [
+    "a bounded loop failure is not task success",
+    "process recovery is not logical task completion",
+    "model capability is not serving-path support",
+    "structured syntax validity is not business acceptance",
+    "final measurement claims require the external evaluation document and raw receipts"
+  ]
+}

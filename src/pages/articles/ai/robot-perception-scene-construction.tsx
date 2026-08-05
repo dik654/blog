@@ -6,6 +6,7 @@ import {
   BeginnerOpening,
   CapabilityCheck,
   ConceptPrimer,
+  InternalLink,
   LearningHandoff,
   Misconception,
   QuestionLead,

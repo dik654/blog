@@ -1079,6 +1079,7 @@ export const learningPaths: LearningPath[] = [
     displayOrder: 2,
     steps: [
       { category: 'ai', slug: 'agent-frameworks', label: 'Runtime 선택', question: '직접 API, SDK, graph, data workflow와 crew 중 어떤 책임을 어디에 맡길 것인가?' },
+      { category: 'ai', slug: 'pydantic-ai-qwen36-agent-system', label: 'PydanticAI × Qwen3.6 사례', question: 'Typed output, capability routing, staged graph와 복구 증거를 실제 local agent에 어떻게 연결할까요?' },
       { category: 'ai', slug: 'claude-code', label: 'Coding Agent 사례', question: '코딩 제품은 model loop, tool surface와 permission을 어떤 사용자 경험으로 묶는가?' },
       { category: 'ai', slug: 'openclaw-assistant', label: 'Personal Agent 사례', question: '개인 assistant는 session, channel과 skill을 어떤 runtime 경계로 결합하는가?' },
     ],

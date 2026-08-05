@@ -28,7 +28,7 @@ export function InternalLink({
 }
 
 export interface LearningHandoffItem {
-  label: '막히면' | '이어 읽기' | '적용하기' | '원문으로';
+  label: '막히면' | '이어 읽기' | '되짚기' | '적용하기' | '원문으로';
   slug: string;
   title: string;
   reason: string;
