@@ -25,6 +25,9 @@ export default function Overview() {
       assumptions={["분모의 valid token 수와 pooled vector norm이 0이 아니어야 합니다.", "Special token을 평균에 포함할지는 model card의 학습 recipe와 같게 둡니다.", "Mean pooling이 CLS·last-token pooling보다 항상 우월한 것은 아니며 checkpoint objective와 함께 평가합니다."]}
       interpretation="Padding 5개를 실제 token처럼 평균하면 batch의 max length에 따라 같은 문장 vector가 달라질 수 있습니다. Pooling mask·special-token 처리·normalization은 checkpoint 이름만큼 중요한 배포 설정입니다."
     />
+    <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <p>두 embedding을 모두 unit vector로 만들었다면 cosine similarity는 단순한 내적과 같습니다. 예를 들어 query <code>(1, 0)</code>과 document <code>(0.6, 0.8)</code>의 score는 0.6이고, 반대 방향의 <code>(-1, 0)</code>은 -1이므로 앞 문서가 먼저 검색됩니다. 다만 이 순서는 학습한 relation의 유사도를 나타낼 뿐, 문서 내용이 사실이라는 증명은 아닙니다.</p>
+    </div>
     <div className="not-prose my-8"><PoolingCompareViz /></div>
     <div className="prose prose-neutral dark:prose-invert max-w-none">
       <p>문장 vector는 결국 학습한 relation을 압축한 artifact입니다. 같은 단어가 많다는 이유가 아니라, 어떤 query에 어떤 document가 답인지 또는 어떤 두 문장이 같은 의미인지 training pair가 정한 기준에 따라 공간이 만들어집니다.</p>

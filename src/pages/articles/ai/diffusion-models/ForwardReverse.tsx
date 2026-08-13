@@ -46,17 +46,17 @@ export default function ForwardReverse() {
         \end{aligned}`}
         terms={[
           {
-            symbol: "\alpha_t=1-\beta_t",
+            symbol: String.raw`\alpha_t=1-\beta_t`,
             name: "signal retention",
             description: "t번째 transition이 이전 signal을 남기는 비율입니다.",
           },
           {
-            symbol: "\bar\alpha_t=\prod_{s=1}^{t}\alpha_s",
+            symbol: String.raw`\bar\alpha_t=\prod_{s=1}^{t}\alpha_s`,
             name: "cumulative signal",
             description: "x₀가 t시점까지 남는 전체 scale입니다.",
           },
           {
-            symbol: "\epsilon\sim\mathcal N(0,I)",
+            symbol: String.raw`\epsilon\sim\mathcal N(0,I)`,
             name: "sampled noise",
             description: "reparameterization에 쓰는 standard Gaussian입니다.",
           },
@@ -78,7 +78,7 @@ export default function ForwardReverse() {
         formula={String.raw`\mathcal L_{\mathrm{simple}}=\mathbb E_{x_0,t,\epsilon}\!\left[\left\lVert\epsilon-\epsilon_\theta(x_t,t)\right\rVert_2^2\right]`}
         terms={[
           {
-            symbol: "\epsilon_\theta(x_t,t)",
+            symbol: String.raw`\epsilon_\theta(x_t,t)`,
             name: "noise predictor",
             description:
               "noisy sample과 noise level에서 추가된 noise를 예측합니다.",
@@ -90,7 +90,7 @@ export default function ForwardReverse() {
               "한 batch 안에서 서로 다른 noise level을 학습하게 합니다.",
           },
           {
-            symbol: "\mathbb E",
+            symbol: String.raw`\mathbb E`,
             name: "training expectation",
             description: "data, timestep과 noise sampling 전체의 평균입니다.",
           },
@@ -118,18 +118,18 @@ export default function ForwardReverse() {
         \end{aligned}`}
         terms={[
           {
-            symbol: "\nabla_{x_t}\log q",
+            symbol: String.raw`\nabla_{x_t}\log q`,
             name: "conditional score",
             description:
               "현재 noisy point에서 conditional log density가 커지는 방향입니다.",
           },
           {
-            symbol: "\sqrt{1-\bar\alpha_t}",
+            symbol: String.raw`\sqrt{1-\bar\alpha_t}`,
             name: "noise standard deviation",
             description: "Timestep t에서 추가된 Gaussian noise의 scale입니다.",
           },
           {
-            symbol: "\epsilon",
+            symbol: String.raw`\epsilon`,
             name: "noise target",
             description:
               "Forward sample을 만들 때 실제 사용해 training에서 아는 표준 Gaussian입니다.",

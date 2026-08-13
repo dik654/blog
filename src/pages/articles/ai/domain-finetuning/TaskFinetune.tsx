@@ -13,12 +13,16 @@ export default function TaskFinetune() {
     <ExplainedFormula
       question="Prompt는 읽게 하면서 원하는 response token만 학습하려면 어떤 mask를 사용할까요?"
       idea={<>전체 sequence를 context로 forward하되 assistant response target 위치에만 mt=1을 두어 NLL을 평균합니다. Attention mask와 달리 loss mask는 어떤 token을 채점할지를 정합니다.</>}
-      formula={String.raw`\mathcal L_{\mathrm{SFT}}=-\frac{1}{\sum_t m_t}\sum_{t=1}^{T}m_t\log\pi_\theta(y_t\mid y_{<t})`}
+      formula={String.raw`\begin{aligned}
+N_{\mathrm{resp}}&=\sum_t m_t\\
+\mathcal L_{\mathrm{SFT}}
+&=-\frac{1}{N_{\mathrm{resp}}}\sum_{t=1}^{T}m_t\log\pi_\theta(y_t\mid y_{<t})
+\end{aligned}`}
       terms={[
         { symbol: "πθ", name: "language-model policy", description: "현재 prefix에서 다음 token distribution을 출력합니다." },
         { symbol: "yt", name: "target token", description: "직렬화된 prompt-response sequence의 t번째 관측 token입니다." },
         { symbol: "mt", name: "response loss mask", description: "학습할 response target이면 1, prompt·padding이면 0입니다." },
-        { symbol: "Σmt", name: "valid response tokens", description: "Sample 길이와 padding에 무관하게 loss를 평균낼 분모입니다." },
+        { symbol: "Nresp", name: "valid response tokens", description: "Mask가 1인 response token 수이며 sample 길이와 padding에 무관하게 loss를 평균낼 분모입니다." },
       ]}
       assumptions={["Decoder-only teacher forcing과 response-only mean reduction을 가정합니다.", "Multi-turn에서 어느 assistant turn을 학습할지 template와 dataset contract에 고정합니다.", "Output schema를 정확히 재현하는 것과 내용의 사실성은 별도 평가합니다."]}
       interpretation="Mask가 0인 prompt도 attention context에는 남아 response probability에 영향을 줍니다. Full-sequence continued pretraining과 response-only SFT는 같은 token 파일을 써도 objective가 다릅니다."

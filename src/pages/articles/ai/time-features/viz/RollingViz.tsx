@@ -9,17 +9,17 @@ export default function RollingViz() {
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary/75">Half-open window [c−7d, c)</p>
         <p className="mt-2 text-lg font-semibold">양끝 포함 규칙이 어떤 관측을 평균에 넣는지 결정합니다</p>
       </figcaption>
-      <div className="mt-7 overflow-x-auto pb-2">
-        <div className="min-w-[610px]">
+      <div className="mt-7 min-w-0 pb-2">
+        <div className="min-w-0">
           <div className="relative mx-8 h-px bg-border">
             <div className="absolute left-[25%] right-[10%] top-0 h-px bg-primary/70" />
           </div>
-          <div className="mt-[-7px] grid grid-cols-5 gap-5">
+          <div className="mt-[-7px] grid min-w-0 grid-cols-5 gap-2 sm:gap-5">
             {days.map(([time, value, state]) => (
               <div key={time} className="text-center">
                 <span className={`mx-auto block h-3 w-3 rounded-full border ${state === "inside" ? "border-primary bg-primary" : state === "cutoff" ? "border-rose-500 bg-background" : "border-border bg-background"}`} />
                 <p className="mt-3 font-mono text-xs font-semibold">{time}</p>
-                <p className="mt-1 text-sm text-muted-foreground">value {value}</p>
+                <p className="mt-1 text-xs text-muted-foreground sm:text-sm">value {value}</p>
                 <p className="mt-1 text-[11px] text-muted-foreground">{state === "inside" ? "포함" : state === "cutoff" ? "오른쪽 제외" : "window 밖"}</p>
               </div>
             ))}

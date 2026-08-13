@@ -12,12 +12,15 @@ export default function Data() {
       <ExplainedFormula
         question="Assistant 답변만 학습할 때 prompt token을 loss에서 어떻게 제외할까요?"
         idea={<>각 token에 0/1 mask를 두고 assistant target 위치만 negative log-likelihood 합과 분모에 포함합니다. 분모도 mask 합을 써야 prompt가 긴 example 때문에 평균 scale이 달라지지 않습니다.</>}
-        formula={String.raw`\mathcal L_{\mathrm{resp}}=-\frac{1}{\sum_{t=1}^{T}m_t}\sum_{t=1}^{T}m_t\log p_\theta(x_t\mid x_{<t}),\qquad m_t\in\{0,1\}`}
+        formula={String.raw`\begin{aligned}
+Z&=\sum_{t=1}^{T}m_t,\qquad m_t\in\{0,1\}\\
+\mathcal L_{\mathrm{resp}}&=-\frac{1}{Z}\sum_{t=1}^{T}m_t\log p_\theta(x_t\mid x_{<t})
+\end{aligned}`}
         terms={[
           { symbol: "x_t", name: "target token", description: "Chat template으로 직렬화한 sequence의 t번째 다음-token target입니다." },
           { symbol: "m_t", name: "loss mask", description: "학습할 assistant response 위치는 1, prompt·padding은 0입니다." },
           { symbol: "p_theta", name: "model probability", description: "이전 token을 조건으로 현재 token에 부여한 probability입니다." },
-          { symbol: "sum m_t", name: "valid-token count", description: "실제로 채점한 response token 수입니다." },
+          { symbol: "Z = sum m_t", name: "valid-token count", description: "실제로 채점한 response token 수입니다." },
         ]}
         assumptions={["Shifted input/label index에서 mask가 정확히 target token과 맞는지 확인합니다.", "Multi-turn에서 어느 assistant turn을 학습할지와 tool/result token 처리 규칙을 고정합니다.", "Mask가 모두 0인 example을 제거하거나 명시적으로 처리합니다."]}
         interpretation="전체 100 token 중 assistant target 30개만 mask=1이면 loss는 그 30개 NLL의 평균입니다. Prompt 70개는 context로 읽지만 직접 맞히도록 채점하지 않습니다."

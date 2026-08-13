@@ -26,7 +26,13 @@ export default function Overview() {
       <ExplainedFormula
         question="여러 trial 가운데 무엇을 고르고, 최종 성능은 어느 데이터에서 확인해야 할까요?"
         idea={<>각 설정을 같은 training procedure로 학습해 validation risk가 가장 작은 설정을 고릅니다. 선택 결과의 성능은 별도의 evaluation data에서 계산합니다.</>}
-        formula={String.raw`\widehat\lambda=\arg\min_{\lambda\in\mathcal S_T}\widehat R_{\mathrm{val}}\!\left(A_\lambda\right),\qquad \widehat R_{\mathrm{final}}=\widehat R_{\mathrm{outer}}\!\left(A_{\widehat\lambda}\right)`}
+        formula={String.raw`\begin{aligned}
+          \widehat\lambda
+          &=\arg\min_{\lambda\in\mathcal S_T}
+            \widehat R_{\mathrm{val}}(A_\lambda) \\
+          \widehat R_{\mathrm{final}}
+          &=\widehat R_{\mathrm{outer}}(A_{\widehat\lambda})
+        \end{aligned}`}
         terms={[
           { symbol: "lambda", name: "hyperparameter configuration", description: "Learning rate·depth·optimizer처럼 한 trial을 규정하는 설정 묶음입니다." },
           { symbol: "S_T", name: "evaluated configurations", description: "정해진 예산 T 안에서 실제로 끝까지 또는 일부 평가한 설정 집합입니다." },

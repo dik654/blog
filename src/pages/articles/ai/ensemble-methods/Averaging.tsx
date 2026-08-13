@@ -21,7 +21,11 @@ export default function Averaging() {
       <ExplainedFormula
         question="Prediction scale을 보존하면서 여러 모델에 서로 다른 비중을 주려면 어떤 제약이 단순한 출발점일까요?"
         idea={<>각 row의 prediction을 non-negative weights로 평균하고 weight 합을 1로 둡니다. 그러면 결합값이 base predictions의 범위 안에 남습니다.</>}
-        formula={String.raw`\widehat y_i^{\mathrm{ens}}=\sum_{m=1}^{M}w_m\widehat y_{im},\qquad w_m\ge0,\quad \sum_{m=1}^{M}w_m=1`}
+        formula={String.raw`\begin{aligned}
+          \widehat y_i^{\mathrm{ens}}&=\sum_{m=1}^{M}w_m\widehat y_{im} \\
+          w_m&\ge 0 \\
+          \sum_{m=1}^{M}w_m&=1
+        \end{aligned}`}
         terms={[
           { symbol: "y-hat_im", name: "aligned prediction", description: "동일 row i와 동일 output/class 의미에 맞춘 m번째 model prediction입니다." },
           { symbol: "w_m", name: "simplex weight", description: "0 이상이고 전체 합이 1인 model별 비중입니다." },
@@ -38,7 +42,11 @@ export default function Averaging() {
       <ExplainedFormula
         question="점수 scale을 믿을 수 없고 순서만 결합하려면 각 모델의 rank를 어떻게 같은 범위로 맞출까요?"
         idea={<>각 model 안에서 prediction보다 작거나 같은 OOF 값의 비율을 구해 0–1 percentile rank로 바꾼 뒤 평균합니다.</>}
-        formula={String.raw`r_{im}=\frac{1}{n}\sum_{j=1}^{n}\mathbf 1[\widehat y_{jm}\le \widehat y_{im}],\qquad r_i^{\mathrm{ens}}=\sum_m w_m r_{im}`}
+        formula={String.raw`\begin{aligned}
+          r_{im}&=\frac{1}{n}\sum_{j=1}^{n}
+          \mathbf 1(\widehat y_{jm}\le\widehat y_{im}) \\
+          r_i^{\mathrm{ens}}&=\sum_m w_m r_{im}
+        \end{aligned}`}
         terms={[
           { symbol: "r_im", name: "empirical percentile rank", description: "Model m에서 row i prediction이 OOF sample 중 어느 percentile인지 나타냅니다." },
           { symbol: "indicator", name: "ordering comparison", description: "j번째 prediction이 i번째 이하이면 1, 아니면 0입니다." },
@@ -49,7 +57,7 @@ export default function Averaging() {
           "Rank average는 score 간 거리와 probability calibration 정보를 버립니다.",
           "Log loss·expected cost·fixed probability threshold가 목적이면 rank output을 그대로 probability로 쓰지 않습니다.",
         ]}
-        interpretation="한 모델의 score가 0–1이고 다른 모델이 −20–80이어도 percentile은 같은 0–1 범위가 됩니다. 대신 0.51과 0.99의 confidence 차이는 사라집니다."
+        interpretation="OOF score가 [0.10, 0.40, 0.40, 0.90]이고 ‘현재 값 이하’를 세면 0.40의 rank는 3/4=.75입니다. 모델마다 score 범위가 달라도 0–1 순서 척도로 맞출 수 있지만, 원래 값 사이의 거리와 probability calibration은 사라지므로 tie 규칙과 test-time mapping을 고정해야 합니다."
       />
 
       <div className="not-prose my-8"><AveragingViz /></div>

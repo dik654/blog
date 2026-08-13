@@ -18,6 +18,15 @@ export default function Overview() {
           모델은 p(x|c)에서 새 sample을 만들지만, density를 계산하는 능력과 좋은
           sample을 빠르게 만드는 능력은 서로 다른 요구입니다.
         </p>
+        <p className="leading-8">
+          <strong>Likelihood</strong>는 주어진 관측 x에 model이 부여한 probability
+          또는 density를 parameter의 함수로 읽은 값입니다. 여기서
+          <strong> tractable</strong>하다는 말은 “수학적으로 존재한다”가 아니라,
+          학습이나 평가에 필요한 likelihood·posterior·sample을 유한한 계산량으로
+          실제 구할 수 있다는 뜻입니다. Latent는 관측되지 않은 생성 원인 z,
+          adversarial signal은 real과 generated sample을 구분하는 비교 신호,
+          score는 log-density가 가장 빨리 증가하는 입력 방향입니다.
+        </p>
         <p>
           따라서 VAE·GAN·normalizing flow·diffusion을 시간순 진화나 하나의 성능
           순위로 외우면 선택 기준을 놓치기 쉽습니다. 어떤 family는 exact
@@ -51,6 +60,17 @@ export default function Overview() {
           set의 일부 geometry를, precision·recall은 quality와 coverage를 서로
           다른 방식으로 봅니다. Conditional generation이라면 condition
           adherence와 diversity도 따로 측정해야 합니다.
+        </p>
+        <h3>모델 family는 필요한 연산에서 고른다</h3>
+        <p className="leading-8">
+          Token likelihood와 prefix 제어가 중요하면 autoregressive factorization이
+          자연스럽지만 sample 길이만큼 순차 실행해야 합니다. Exact density와
+          양방향 변환이 필요하면 flow가 후보지만 같은 차원의 가역 구조를
+          받아들여야 합니다. 한 번의 generator forward가 중요하고 normalized
+          density가 필요 없다면 GAN을 검토할 수 있으며, 여러 network evaluation을
+          감수하면서 score 기반의 유연한 생성 경로가 필요하면 diffusion 계열을
+          봅니다. 어느 경우든 likelihood·quality·coverage·condition 충실도·실제
+          latency를 같은 data와 hardware에서 따로 측정해야 합니다.
         </p>
       </div>
     </section>

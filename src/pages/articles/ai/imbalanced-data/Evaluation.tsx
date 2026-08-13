@@ -4,13 +4,141 @@ import EvaluationViz from "./viz/EvaluationViz";
 export default function Evaluation() {
   return (
     <section id="evaluation" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Confusion matrix에서 ranking·decision·calibration을 따로 계산합니다</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Accuracy가 수학적으로 잘못된 metric은 아니지만 majority baseline이 높은 dataset에서는 failure를 숨기기 쉽습니다. 먼저 TP·FP·FN·TN과 class support를 보고, 선택한 threshold의 precision·recall을 계산합니다. ROC-AUC와 PR-AUC는 threshold 전체의 ordering을 보지만 probability가 calibrated되었는지나 실제 alert 비용을 알려주지는 않습니다.</p></div>
-      <ExplainedFormula question="Precision과 recall은 같은 confusion matrix에서 어떤 서로 다른 질문에 답할까?" idea={<>Precision은 positive라고 알린 것 중 실제 positive 비율을, recall은 실제 positive 중 찾아낸 비율을 계산합니다. 분모가 다르기 때문에 하나를 높이는 threshold 이동이 다른 하나를 낮출 수 있습니다.</>} formula={String.raw`\operatorname{Precision}=\frac{TP}{TP+FP},\qquad \operatorname{Recall}=\frac{TP}{TP+FN}`} terms={[{symbol:"TP",name:"true positives",description:"Positive를 올바르게 alert한 수입니다."},{symbol:"FP",name:"false positives",description:"실제 negative인데 alert한 수입니다."},{symbol:"FN",name:"false negatives",description:"실제 positive인데 놓친 수입니다."}]} assumptions={["Positive class와 evaluation unit이 명확합니다.","같은 threshold·time window·deduplication rule의 count를 사용합니다."]} interpretation="Prevalence가 낮아지면 같은 TPR·FPR에서도 precision이 낮아질 수 있습니다. Dataset 간 PR-AUC를 비교할 때 positive 비율을 함께 기록해야 합니다." />
-      <ExplainedFormula question="Fβ는 precision과 recall의 상대 중요도를 어떻게 한 수치에 넣을까?" idea={<>Harmonic mean에 β²를 넣어 recall의 상대 가중치를 조절합니다. β가 1보다 크면 recall을, 1보다 작으면 precision을 더 중시합니다.</>} formula={String.raw`F_{\beta}=(1+\beta^2)\frac{PR}{\beta^2P+R}`} terms={[{symbol:"P",name:"precision",description:"Alert의 positive purity입니다."},{symbol:"R",name:"recall",description:"실제 positive coverage입니다."},{symbol:"β",name:"relative recall weight",description:"1이면 F1, 2이면 recall에 더 큰 비중을 둡니다."}]} assumptions={["한 operating threshold의 precision과 recall을 요약합니다.","β가 실제 업무 비용과 capacity를 충분히 표현하는지 별도 확인합니다."]} interpretation="Fβ가 같아도 alert volume과 오류 비용은 다를 수 있습니다. 운영 제약을 직접 쓸 수 있다면 Fβ보다 그 constraint를 기준으로 threshold를 고르는 편이 명확합니다." />
-      <div id="paper-pr-roc" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · ROC space와 PR space</p><p className="mt-2 text-sm font-semibold">The Relationship Between Precision-Recall and ROC Curves</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Davis와 Goadrich는 fixed dataset에서 ROC dominance와 PR dominance의 관계를 분석하고 PR space에서 단순 선형 보간이 잘못될 수 있음을 보였습니다. 이는 PR-AUC 하나가 calibration·cost·shift까지 해결한다는 뜻이 아닙니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/1143844.1143874" target="_blank" rel="noreferrer">원 논문의 curve 관계와 조건 보기</a></div>
-      <div id="paper-calibration" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Probability calibration</p><p className="mt-2 text-sm font-semibold">On Calibration of Modern Neural Networks</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Modern neural network의 confidence calibration을 실험하고 held-out validation에서 scalar temperature를 fit하는 temperature scaling을 비교했습니다. 논문 dataset에서 효과적이었다는 근거이며 distribution shift 뒤에도 calibration이 유지된다는 보장은 아닙니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v70/guo17a.html" target="_blank" rel="noreferrer">원 논문의 reliability diagram과 calibration 방법 보기</a></div>
-      <div className="not-prose my-8"><EvaluationViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Confusion matrix에서 ranking·decision·calibration을 따로 계산합니다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Accuracy가 수학적으로 잘못된 metric은 아니지만 majority baseline이
+          높은 dataset에서는 failure를 숨기기 쉽습니다. 먼저 TP·FP·FN·TN과 class
+          support를 보고, 선택한 threshold의 precision·recall을 계산합니다.
+          ROC-AUC와 PR-AUC는 threshold 전체의 ordering을 보지만 probability가
+          calibrated되었는지나 실제 alert 비용을 알려주지는 않습니다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="Precision과 recall은 같은 confusion matrix에서 어떤 서로 다른 질문에 답할까?"
+        idea={
+          <>
+            Precision은 positive라고 알린 것 중 실제 positive 비율을, recall은
+            실제 positive 중 찾아낸 비율을 계산합니다. 분모가 다르기 때문에
+            하나를 높이는 threshold 이동이 다른 하나를 낮출 수 있습니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+N_{\mathrm{alert}}&=TP+FP,\\
+N_{\mathrm{positive}}&=TP+FN,\\
+\operatorname{Precision}&=TP/N_{\mathrm{alert}},\\
+\operatorname{Recall}&=TP/N_{\mathrm{positive}}.
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "TP",
+            name: "true positives",
+            description: "Positive를 올바르게 alert한 수입니다.",
+          },
+          {
+            symbol: "FP",
+            name: "false positives",
+            description: "실제 negative인데 alert한 수입니다.",
+          },
+          {
+            symbol: "FN",
+            name: "false negatives",
+            description: "실제 positive인데 놓친 수입니다.",
+          },
+        ]}
+        assumptions={[
+          "Positive class와 evaluation unit이 명확합니다.",
+          "같은 threshold·time window·deduplication rule의 count를 사용합니다.",
+        ]}
+        interpretation="Prevalence가 낮아지면 같은 TPR·FPR에서도 precision이 낮아질 수 있습니다. Dataset 간 PR-AUC를 비교할 때 positive 비율을 함께 기록해야 합니다."
+      />
+      <ExplainedFormula
+        question="Fβ는 precision과 recall의 상대 중요도를 어떻게 한 수치에 넣을까?"
+        idea={
+          <>
+            Harmonic mean에 β²를 넣어 recall의 상대 가중치를 조절합니다. β가
+            1보다 크면 recall을, 1보다 작으면 precision을 더 중시합니다.
+          </>
+        }
+        formula={String.raw`F_{\beta}=(1+\beta^2)\frac{PR}{\beta^2P+R}`}
+        terms={[
+          {
+            symbol: "P",
+            name: "precision",
+            description: "Alert의 positive purity입니다.",
+          },
+          {
+            symbol: "R",
+            name: "recall",
+            description: "실제 positive coverage입니다.",
+          },
+          {
+            symbol: "β",
+            name: "relative recall weight",
+            description: "1이면 F1, 2이면 recall에 더 큰 비중을 둡니다.",
+          },
+        ]}
+        assumptions={[
+          "한 operating threshold의 precision과 recall을 요약합니다.",
+          "β가 실제 업무 비용과 capacity를 충분히 표현하는지 별도 확인합니다.",
+        ]}
+        interpretation="Fβ가 같아도 alert volume과 오류 비용은 다를 수 있습니다. 운영 제약을 직접 쓸 수 있다면 Fβ보다 그 constraint를 기준으로 threshold를 고르는 편이 명확합니다."
+      />
+      <div
+        id="paper-pr-roc"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · ROC space와 PR space
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          The Relationship Between Precision-Recall and ROC Curves
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Davis와 Goadrich는 fixed dataset에서 ROC dominance와 PR dominance의
+          관계를 분석하고 PR space에서 단순 선형 보간이 잘못될 수 있음을
+          보였습니다. 이는 PR-AUC 하나가 calibration·cost·shift까지 해결한다는
+          뜻이 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://doi.org/10.1145/1143844.1143874"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 curve 관계와 조건 보기
+        </a>
+      </div>
+      <div
+        id="paper-calibration"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Probability calibration
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          On Calibration of Modern Neural Networks
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Modern neural network의 confidence calibration을 실험하고 held-out
+          validation에서 scalar temperature를 fit하는 temperature scaling을
+          비교했습니다. 논문 dataset에서 효과적이었다는 근거이며 distribution
+          shift 뒤에도 calibration이 유지된다는 보장은 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://proceedings.mlr.press/v70/guo17a.html"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 reliability diagram과 calibration 방법 보기
+        </a>
+      </div>
+      <div className="not-prose my-8">
+        <EvaluationViz />
+      </div>
     </section>
   );
 }

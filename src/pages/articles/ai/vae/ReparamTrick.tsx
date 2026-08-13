@@ -33,12 +33,17 @@ export default function ReparamTrick() {
       <ExplainedFormula
         question="posterior sample을 유지하면서 encoder parameter까지 ordinary backpropagation을 어떻게 연결할까?"
         idea={<>randomness를 parameterized distribution 안에 숨기지 않고, parameter와 독립인 standard Gaussian input으로 분리합니다. 그러면 sample z는 μ와 σ의 결정론적 함수가 됩니다.</>}
-        formula={String.raw`\ell_\phi(x)=\log\sigma^2,\qquad \sigma=\exp\!\left(\tfrac12\ell\right),\qquad z=\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon,\quad\epsilon\sim\mathcal N(0,I)`}
+        formula={String.raw`\begin{aligned}
+          \ell_\phi(x)&=\log\sigma_\phi^2(x) \\
+          \sigma_\phi(x)&=\exp\!\left(\tfrac12\ell_\phi(x)\right) \\
+          \epsilon&\sim\mathcal N(0,I) \\
+          z&=\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon
+        \end{aligned}`}
         terms={[
-          { symbol: "\mu_\phi(x)", name: "posterior mean", description: "encoder가 input별 latent 중심을 예측합니다." },
-          { symbol: "\ell_\phi(x)", name: "log variance", description: "양수 제약 없는 값을 출력한 뒤 exponentiation으로 variance를 만듭니다." },
-          { symbol: "\epsilon", name: "base noise", description: "encoder parameter와 독립적으로 뽑는 standard Gaussian sample입니다." },
-          { symbol: "\odot", name: "element-wise scale", description: "latent dimension마다 noise를 해당 standard deviation으로 늘립니다." },
+          { symbol: String.raw`\mu_\phi(x)`, name: "posterior mean", description: "encoder가 input별 latent 중심을 예측합니다." },
+          { symbol: String.raw`\ell_\phi(x)`, name: "log variance", description: "양수 제약 없는 값을 출력한 뒤 exponentiation으로 variance를 만듭니다." },
+          { symbol: String.raw`\epsilon`, name: "base noise", description: "encoder parameter와 독립적으로 뽑는 standard Gaussian sample입니다." },
+          { symbol: String.raw`\odot`, name: "element-wise scale", description: "latent dimension마다 noise를 해당 standard deviation으로 늘립니다." },
         ]}
         assumptions={["qφ(z|x)가 diagonal Gaussian인 기본 VAE입니다.", "한 forward sample에서 ε는 backpropagation이 미분하지 않는 external random input으로 다룹니다."]}
         interpretation="z에서 μ와 σ로 pathwise gradient가 흐릅니다. Monte Carlo noise가 없어지는 것은 아니며, discrete latent에는 이 Gaussian reparameterization을 그대로 적용할 수 없습니다."

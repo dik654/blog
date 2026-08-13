@@ -38,6 +38,14 @@ w_{t+1}&=(1-\eta_t\lambda)w_t-\eta_tg_t.
         assumptions={["Plain SGD처럼 모든 coordinates에 같은 scalar ηt를 적용한 단순 식입니다.", "Momentum·adaptive preconditioning·constraints는 포함하지 않았습니다.", "λ convention은 framework가 loss에 λ/2를 더하는지 λ를 더하는지에 따라 2배 차이가 날 수 있습니다."]}
         interpretation="SGD에서는 penalty gradient와 multiplicative decay가 같은 update로 정리되지만, coordinate별 preconditioner가 있는 Adam에서는 이 등가가 깨집니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Data gradient가 0인 가장 작은 예에서 w=10, η=0.1, λ=0.02이면 shrink
+          factor는 1−ηλ=0.998이고 다음 weight는 9.98입니다. 같은 λ라도 LR가
+          바뀌면 update마다 줄어드는 비율이 달라지므로 weight decay 강도는
+          scheduler와 training update 수를 분리한 상수가 아닙니다.
+        </p>
+      </div>
       <ExplainedFormula
         question="Adam의 L2 penalty와 AdamW의 decoupled decay는 어디에서 갈라질까?"
         idea={<>P_t를 Adam moment가 만든 coordinate별 preconditioner라고 두면, L2는 λw를 data gradient와 함께 P_t에 통과시킵니다. AdamW는 data direction만 precondition하고 weight 축소는 별도 경로로 적용합니다.</>}

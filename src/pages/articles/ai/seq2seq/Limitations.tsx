@@ -43,6 +43,14 @@ export default function Limitations() {
           따라서 “attention이 긴 문장을 해결했다”는 설명만으로 serving trade-off까지
           결론 내릴 수 없다.
         </p>
+        <p>
+          예를 들어 source 길이 S=40, target 길이 T=10이면 step별 attention은
+          10×40=400개의 compatibility score를 만들고 40개의 encoder state를 memory에
+          유지한다. Fixed context는 마지막 state 하나만 넘겨 이 직접 조회 비용을 줄이지만,
+          필요한 source 위치로 돌아가는 경로도 함께 잃는다. 따라서 state width만 늘린
+          실험과 source memory read를 추가한 실험을 같은 hardware·latency budget에서 두고,
+          length bucket별 quality와 memory를 함께 비교해야 한다.
+        </p>
         <p>Additive·dot-product·self-attention의 계산과 heatmap 해석은 여기에서 중복하지 않고 <Link to="/ai/attention-theory">Attention 이론 정본 글</Link>로 이어갑니다.</p>
       </div>
 

@@ -20,6 +20,14 @@ export default function Overview() {
           볼지에 따라 같은 corpus에서도 전혀 다른 vector space가 만들어집니다.
         </p>
         <p className="leading-8">
+          여기서 <strong>corpus</strong>는 분석 대상으로 모은 문장 집합이고,
+          <strong> context</strong>는 target 주변에서 실제로 셀 특징입니다. 예를
+          들어 “고양이가 우유를 마신다”에서 target을 “우유”로 잡고 좌우 한 token을
+          context로 정의하면 “고양이”와 “마신다”가 관측됩니다. Context는 단어의
+          뜻 그 자체가 아니라, 연구자가 정한 관측 규칙의 출력이라는 점이
+          출발점입니다.
+        </p>
+        <p className="leading-8">
           따라서 embedding은 단어의 사전적 의미를 그대로 담은 좌표가 아닙니다.
           Corpus, tokenization, window, weighting과 compression을 통과한 측정
           결과입니다. One-hot ID는 symbol을 구분하지만 단어 관계를 정의하지
@@ -49,7 +57,7 @@ export default function Overview() {
               "Vocabulary index i와 j에만 1이 있는 V차원 vector입니다.",
           },
           {
-            symbol: "e_i^\top e_j",
+            symbol: String.raw`e_i^\top e_j`,
             name: "dot product",
             description:
               "두 vector가 같은 active coordinate를 공유하는지 확인합니다.",

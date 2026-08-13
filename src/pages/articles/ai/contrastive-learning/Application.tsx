@@ -17,7 +17,13 @@ export default function Application() {
       <ExplainedFormula
         question="Hard-negative 후보가 실제 negative인지, 새 encoder가 실제로 좋아졌는지 어떻게 분리해 확인할까요?"
         idea={<>난이도 구간별 후보를 사람이 검토해 false-negative 비율을 계산하고, 동일 split과 seed에서 baseline 대비 downstream metric 차이를 구합니다. 둘을 함께 보아야 miner가 어려운 오답을 찾았는지 숨은 정답을 오염시켰는지 구분할 수 있습니다.</>}
-        formula={String.raw`\widehat r_{\mathrm{FN}}^{(b)}=\frac{F_b}{R_b},\qquad \Delta_s=M(\theta_{\mathrm{ctr}},s)-M(\theta_{\mathrm{base}},s),\qquad \overline\Delta=\frac1S\sum_{s=1}^{S}\Delta_s`}
+        formula={String.raw`\begin{aligned}
+\widehat r_{\mathrm{FN}}^{(b)}&=F_b/R_b,\\
+M_s^{(\mathrm{ctr})}&=M(\theta_{\mathrm{ctr}},s),\\
+M_s^{(\mathrm{base})}&=M(\theta_{\mathrm{base}},s),\\
+\Delta_s&=M_s^{(\mathrm{ctr})}-M_s^{(\mathrm{base})},\\
+\overline\Delta&=\frac1S\sum_{s=1}^{S}\Delta_s.
+\end{aligned}`}
         terms={[
           { symbol: "b", name: "difficulty or domain bucket", description: "Similarity·source·class 등으로 나눈 audit 구간입니다." },
           { symbol: "R_b", name: "reviewed candidates", description: "구간 b에서 사람이 관계를 확인한 negative 후보 수입니다." },

@@ -58,6 +58,16 @@ export default function Implicit() {
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-8">
+          한 위치 x에서 real density와 generated density가 3:1 비율이라면 이상적인
+          discriminator는 D*(x)=3/(3+1)=0.75를 냅니다. 두 density가 같으면
+          0.5지만, 실제 D가 0.5를 냈다는 관찰만으로 두 분포가 같다고 결론 내릴 수는
+          없습니다. D가 상수만 출력할 만큼 작거나 아직 최적화되지 않았어도 같은
+          값이 나오기 때문입니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Original minimax와 non-saturating loss, Wasserstein 계열과
           stabilization은
@@ -89,25 +99,25 @@ export default function Implicit() {
         formula={String.raw`\begin{aligned}x_t&=\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\,\varepsilon\\s_\theta(x_t,t)&\approx\nabla_{x_t}\log p_t(x_t)\\s_\theta(x_t,t)&=-\frac{\varepsilon_\theta(x_t,t)}{\sqrt{1-\bar\alpha_t}}\end{aligned}`}
         terms={[
           {
-            symbol: "\bar\alpha_t",
+            symbol: String.raw`\bar\alpha_t`,
             name: "signal schedule",
             description:
               "Noise level t에 남아 있는 clean signal의 누적 비율입니다.",
           },
           {
-            symbol: "\varepsilon",
+            symbol: String.raw`\varepsilon`,
             name: "injected noise",
             description:
               "Forward perturbation에 사용한 standard Gaussian sample입니다.",
           },
           {
-            symbol: "s_\theta",
+            symbol: String.raw`s_\theta`,
             name: "score model",
             description:
               "Noisy marginal pt의 log-density gradient를 근사합니다.",
           },
           {
-            symbol: "\varepsilon_\theta",
+            symbol: String.raw`\varepsilon_\theta`,
             name: "noise predictor",
             description:
               "DDPM에서 같은 정보를 다른 scale로 parameterize합니다.",
@@ -119,6 +129,16 @@ export default function Implicit() {
         ]}
         interpretation="Diffusion은 단순한 ‘implicit generator’ 한 칸으로 끝나지 않습니다. Score, variational bound, reverse stochastic process와 ODE 해석이 연결되며 실제 latency는 network evaluation 횟수와 solver에 달려 있습니다."
       />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-8">
+          Score 자체도 작은 예로 확인할 수 있습니다. 1차원 standard Gaussian은
+          log p(x)=상수−x²/2이므로 score는 그 미분인 −x입니다. x=2에서는
+          score가 −2여서 density가 높은 0 쪽, 즉 왼쪽을 가리킵니다. 이는 현재
+          위치의 local 방향이지 normalized density 값이나 전체 분포의 mode
+          coverage를 직접 주는 수치는 아닙니다.
+        </p>
+      </div>
 
       <SignalSamplingViz />
 

@@ -12,7 +12,7 @@ export default function SelfDistill() {
       <ExplainedFormula
         question="Teacher와의 일치도는 올라갔지만 정답 성능은 떨어지는 bias inheritance를 어떻게 측정할까요?"
         idea={<>각 slice에서 teacher와 student가 같은 prediction을 한 비율과 실제 정답 accuracy를 따로 계산합니다. 일치도 증가에서 accuracy 증가를 빼면 teacher 복제만 늘어난 위험 신호를 볼 수 있습니다.</>}
-        formula={String.raw`A_k^{(g)}=\frac{1}{n_k}\sum_{i\in k}\mathbf 1[\hat y_i^{(g)}=y_i],\quad G_k^{(g)}=\frac{1}{n_k}\sum_{i\in k}\mathbf 1[\hat y_i^{(g)}=\hat y_{t,i}],\quad R_k^{(g)}=\Delta G_k^{(g)}-\Delta A_k^{(g)}`}
+        formula={String.raw`\begin{aligned}A_k^{(g)}&=\frac1{n_k}\sum_{i\in k}\mathbf1[\widehat y_i^{(g)}=y_i],\\G_k^{(g)}&=\frac1{n_k}\sum_{i\in k}\mathbf1[\widehat y_i^{(g)}=\widehat y_{t,i}],\\R_k^{(g)}&=\Delta G_k^{(g)}-\Delta A_k^{(g)}.\end{aligned}`}
         terms={[
           { symbol: "A_k", name: "slice accuracy", description: "Generation g가 slice k의 ground truth를 맞힌 비율입니다." },
           { symbol: "G_k", name: "teacher agreement", description: "Student와 teacher prediction이 같은 비율입니다." },

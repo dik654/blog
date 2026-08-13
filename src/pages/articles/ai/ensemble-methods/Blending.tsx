@@ -16,12 +16,22 @@ export default function Blending() {
           합리적일 수 있습니다. 다만 holdout을 보며 base model·window·weight를 반복해서 고르면 그 구간도 search data가 됩니다.
           최종 평가는 더 나중 기간이나 별도 group에서 해야 합니다.
         </p>
+        <p>
+          예를 들어 마지막 2개월을 blend window로 쓴다면 base model은 그보다 앞선 시점의 feature와 당시 이미 확정된 label만 봅니다.
+          이 model이 2개월 구간에 낸 unseen prediction으로 meta-model을 학습하고, window와 weight를 다시 고르지 않은 채 더 나중의
+          final period에서 평가합니다. Entity가 기간을 가로지르면 group 경계도 함께 적용합니다. Artifact에는 base cutoff, label
+          availability cutoff, blend 시작·종료일, final period와 data revision을 남겨 drift와 label delay를 재현할 수 있게 합니다.
+        </p>
       </div>
 
       <ExplainedFormula
         question="전체 n개 행에서 α 비율을 blend holdout으로 남기면 base와 meta가 각각 몇 행을 보나요?"
         idea={<>겹치지 않는 두 집합으로 나누므로 base fit은 (1−α)n개, combiner fit은 αn개를 사용합니다. α는 두 추정 오차 사이의 직접적인 trade-off입니다.</>}
-        formula={String.raw`D=D_{\mathrm{base}}\sqcup D_{\mathrm{blend}},\qquad |D_{\mathrm{base}}|=(1-\alpha)n,\quad |D_{\mathrm{blend}}|=\alpha n`}
+        formula={String.raw`\begin{aligned}
+          D&=D_{\mathrm{base}}\sqcup D_{\mathrm{blend}} \\
+          |D_{\mathrm{base}}|&=(1-\alpha)n \\
+          |D_{\mathrm{blend}}|&=\alpha n
+        \end{aligned}`}
         terms={[
           { symbol: "alpha", name: "blend fraction", description: "전체 개발 데이터 중 combiner 학습 전용으로 남기는 비율입니다." },
           { symbol: "D_base", name: "base training set", description: "Base models의 parameter를 fit하는 행 집합입니다." },

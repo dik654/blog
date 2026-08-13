@@ -22,7 +22,7 @@ export default function ChunkingViz() {
         </div>
         <div className="hidden text-muted-foreground lg:block" aria-hidden="true">→</div>
         <div className="space-y-4">
-          <div className="border-l-2 border-primary pl-4">
+          <div className="border-l border-primary pl-4">
             <p className="text-xs font-semibold text-primary">검색 child</p>
             <p className="mt-1 text-sm">“기업 계약은 별도 표 적용”</p>
           </div>

@@ -17,7 +17,12 @@ export default function Practice() {
       <ExplainedFormula
         question="현재 앙상블 E에 후보 j를 추가할 실질적인 이유를 어떤 paired quantity로 볼 수 있을까요?"
         idea={<>같은 OOF 행에서 현재 ensemble loss와 후보를 더한 ensemble loss를 빼 개선량을 구하고, 추가 latency·memory와 함께 봅니다.</>}
-        formula={String.raw`\Delta_j=\widehat R_{\mathrm{OOF}}(E)-\widehat R_{\mathrm{OOF}}(E\oplus j),\qquad C_j=(\Delta p95_j,\Delta\mathrm{memory}_j,\Delta\mathrm{ops}_j)`}
+        formula={String.raw`\begin{aligned}
+          \Delta_j
+          &=\widehat R_{\mathrm{OOF}}(E)
+            -\widehat R_{\mathrm{OOF}}(E\oplus j) \\
+          C_j&=(\Delta p95_j,\Delta M_j,\Delta O_j)
+        \end{aligned}`}
         terms={[
           { symbol: "E", name: "current ensemble", description: "이미 채택된 base models와 고정 결합 규칙입니다." },
           { symbol: "E plus j", name: "candidate extension", description: "후보 j를 같은 결합 규칙으로 임시 추가한 ensemble입니다." },
@@ -29,7 +34,7 @@ export default function Practice() {
           "Gain의 fold·seed·slice 일관성과 최소 실질 개선 δ_min을 사전에 정합니다.",
           "Parallel serving에서는 latency 합산이 단순하지 않으므로 target runtime에서 end-to-end로 측정합니다.",
         ]}
-        interpretation="Δ가 양수여도 0.0001에 불과하고 p95가 40ms 늘면 채택하지 않을 수 있습니다. 앙상블은 quality만의 순위표가 아니라 운영 Pareto 문제입니다."
+        interpretation="A의 OOF loss·p95가 .214·8ms이고 C를 더해 .201·15ms가 되면 paired gain은 .013, 추가 p95는 7ms입니다. Hard SLA가 12ms라면 quality가 좋아져도 C는 현재 runtime에서는 제외하거나 최적화 뒤 다시 평가해야 합니다. 앙상블은 quality만의 순위표가 아니라 운영 Pareto 문제입니다."
       />
 
       <div className="not-prose my-8"><PracticeViz /></div>

@@ -7,7 +7,7 @@ export default function LoraMatrixViz() {
         <span className="hidden text-muted-foreground lg:block" aria-hidden="true">＋</span>
         <div className="border-y border-border py-4"><p className="text-xs font-semibold text-primary">Adapter branch · trainable</p><p className="mt-2 font-mono text-sm">x[4096] → A[8×4096] → z[8] → B[4096×8] → Δy[4096]</p><p className="mt-2 text-xs text-muted-foreground">65,536 scalars · full matrix의 약 0.39%</p></div>
       </div>
-      <div className="mt-5 grid gap-3 sm:grid-cols-3"><div className="border-l-2 border-primary pl-3"><p className="text-xs font-semibold">Rank</p><p className="mt-1 text-sm">update 독립 방향 ≤ 8</p></div><div className="border-l border-border pl-3"><p className="text-xs font-semibold">Scale</p><p className="mt-1 text-sm">α/r convention 고정</p></div><div className="border-l border-border pl-3"><p className="text-xs font-semibold">Target</p><p className="mt-1 text-sm">실제 module path 확인</p></div></div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-3"><div className="border-l border-primary pl-3"><p className="text-xs font-semibold">Rank</p><p className="mt-1 text-sm">update 독립 방향 ≤ 8</p></div><div className="border-l border-border pl-3"><p className="text-xs font-semibold">Scale</p><p className="mt-1 text-sm">α/r convention 고정</p></div><div className="border-l border-border pl-3"><p className="text-xs font-semibold">Target</p><p className="mt-1 text-sm">실제 module path 확인</p></div></div>
     </figure>
   );
 }

@@ -18,7 +18,7 @@ export default function Unstructured() {
       <ExplainedFormula
         question="왜 sparse tensor가 dense tensor보다 항상 작지는 않을까요?"
         idea={<>Dense format은 모든 값만 저장하지만, 일반 sparse format은 남은 값마다 위치 index도 보관합니다. 남은 비율이 충분히 낮아져야 index 비용을 상쇄합니다.</>}
-        formula={String.raw`B_{\mathrm{dense}}=N b_v,\qquad B_{\mathrm{sparse}}\approx \rho N(b_v+b_i)+B_{\mathrm{meta}},\qquad \rho<\frac{b_v-B_{\mathrm{meta}}/N}{b_v+b_i}`}
+        formula={String.raw`\begin{aligned}b_{\mathrm{pair}}&=b_v+b_i,\\B_{\mathrm{dense}}&=Nb_v,\\B_{\mathrm{sparse}}&\approx\rho Nb_{\mathrm{pair}}+B_{\mathrm{meta}},\\q&=b_v-B_{\mathrm{meta}}/N,\\\rho_{\max}&=q/b_{\mathrm{pair}},\\B_{\mathrm{sparse}}<B_{\mathrm{dense}}&\iff\rho<\rho_{\max}.\end{aligned}`}
         terms={[
           { symbol: "N", name: "dense element count", description: "원래 tensor의 전체 weight 수입니다." },
           { symbol: "b_v", name: "value bytes", description: "남은 weight 값 하나를 저장하는 byte 수입니다." },
@@ -36,7 +36,7 @@ export default function Unstructured() {
       <ExplainedFormula
         question="Movement score는 단순한 weight 크기와 무엇이 다를까요?"
         idea={<>Task loss의 gradient와 현재 weight를 곱하면 그 연결을 mask로 약하게 만들 때 loss가 어느 방향으로 변하는지 1차로 근사할 수 있습니다. 여러 update의 신호를 누적해 fine-tuning 동안의 움직임을 봅니다.</>}
-        formula={String.raw`S_i^{(T)}\;\propto\;-\sum_{t=0}^{T-1}\frac{\partial\mathcal L^{(t)}}{\partial w_i^{(t)}}\,w_i^{(t)},\qquad M_i=\mathbf 1\!\left[S_i^{(T)}\ \text{is selected}\right]`}
+        formula={String.raw`\begin{aligned}g_i^{(t)}&=\partial\mathcal L^{(t)}/\partial w_i^{(t)},\\S_i^{(T)}&\propto-\sum_{t=0}^{T-1}g_i^{(t)}w_i^{(t)},\\M_i&=\mathbf1[S_i^{(T)}\text{ selected}].\end{aligned}`}
         terms={[
           { symbol: "L^(t)", name: "task loss", description: "Fine-tuning update t에서 계산한 training objective입니다." },
           { symbol: "dL/dw", name: "weight gradient", description: "Weight를 조금 움직였을 때 loss가 변하는 국소 방향입니다." },

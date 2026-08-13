@@ -11,11 +11,16 @@ export default function GPTQAWQ() {
     <ExplainedFormula
       question="Weight 오차 자체보다 calibration input에서 layer output 오차를 최소화하는 이유는 무엇일까요?"
       idea={<>같은 weight difference도 거의 사용되지 않는 input channel보다 큰 activation이 자주 들어오는 channel에서 output을 더 크게 바꿉니다. 그래서 reconstruction은 calibration activation으로 error에 가중치를 줍니다.</>}
-      formula={String.raw`\min_{\widehat W\in\mathcal Q}\ \lVert XW-X\widehat W\rVert_F^2=\min_{\widehat W\in\mathcal Q}\operatorname{tr}\!\left((W-\widehat W)^\top X^\top X(W-\widehat W)\right)`}
+      formula={String.raw`\begin{aligned}
+E&=W-\widehat W\\
+\widehat W^*&=\operatorname*{arg\,min}_{\widehat W\in\mathcal Q}\lVert XE\rVert_F^2\\
+&=\operatorname*{arg\,min}_{\widehat W\in\mathcal Q}\operatorname{tr}(E^\top X^\top X E)
+\end{aligned}`}
       terms={[
         { symbol: "X", name: "calibration activations", description: "현재 linear layer에 실제 representative input을 넣어 얻은 input rows입니다." },
         { symbol: "W", name: "float weight matrix", description: "원 checkpoint의 high-precision linear transformation입니다." },
-        { symbol: "W-hat", name: "quantized weight", description: "허용된 low-bit codebook과 group layout에 속하는 근사 weight입니다." },
+        { symbol: String.raw`\widehat W`, name: "quantized weight", description: "허용된 low-bit codebook과 group layout에 속하는 근사 weight입니다." },
+        { symbol: "E", name: "weight error matrix", description: "Float weight와 quantized weight의 차이로, calibration input을 통과해 output error를 만듭니다." },
         { symbol: "X^T X", name: "input curvature proxy", description: "어떤 input direction의 weight error가 output에 크게 나타나는지 반영합니다." },
       ]}
       assumptions={["현재 layer의 calibration output reconstruction proxy이며 전체 network task loss와 동일하지 않습니다.", "GPTQ의 실제 blockwise algorithm·damping·ordering은 이 식을 효율적으로 근사하는 구현 세부입니다.", "Calibration distribution 밖의 activation과 unsupported kernel에서는 논문 결과를 그대로 일반화할 수 없습니다."]}

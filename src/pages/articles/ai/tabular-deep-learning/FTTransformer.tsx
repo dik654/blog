@@ -39,7 +39,11 @@ export default function FTTransformer() {
       <ExplainedFormula
         question="Categorical 값과 numerical token을 어떻게 하나의 row token matrix로 모을까?"
         idea={<>Categorical column은 one-hot을 직접 큰 vector로 유지하지 않고 column 전용 embedding table에서 해당 category vector를 lookup합니다. 모든 feature token과 [CLS]를 위아래로 쌓아 Transformer input을 만듭니다.</>}
-        formula={String.raw`T^{(\mathrm{cat})}_{i,j}=b_j+E_j[c_{i,j}],\qquad T_i=\operatorname{stack}([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k})\in\mathbb R^{(k+1)\times d}`}
+        formula={String.raw`\begin{aligned}
+T^{(\mathrm{cat})}_{i,j}&=b_j+E_j[c_{i,j}],\\
+T_i&=\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),\\
+T_i&\in\mathbb R^{(k+1)\times d}.
+\end{aligned}`}
         terms={[
           { symbol: "c_i,j", name: "category index", description: "j번째 column vocabulary 안에서 현재 category를 가리키는 discrete ID입니다." },
           { symbol: "E_j", name: "column embedding table", description: "j번째 categorical column의 category별 d차원 vector를 저장합니다." },

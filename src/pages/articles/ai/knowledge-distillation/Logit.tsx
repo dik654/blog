@@ -15,7 +15,7 @@ export default function Logit() {
       <ExplainedFormula
         question="Temperature는 teacher가 두 class에 주는 상대 확률을 어떻게 바꿀까요?"
         idea={<>두 class의 softmax 확률비에서는 공통 분모가 사라지고 logit 차이만 남습니다. 그 차이를 <code>T</code>로 나누므로 큰 temperature는 odds 차이를 줄이고 작은 class에도 학습 신호를 남깁니다.</>}
-        formula={String.raw`q_i^{(T)}=\frac{e^{z_i^{\mathrm{teacher}}/T}}{\sum_j e^{z_j^{\mathrm{teacher}}/T}},\qquad \frac{q_i^{(T)}}{q_k^{(T)}}=\exp\!\left(\frac{z_i-z_k}{T}\right)`}
+        formula={String.raw`\begin{aligned}a_i&=z_i^{\mathrm{teacher}}/T,\\Z&=\sum_j e^{a_j},\\q_i^{(T)}&=e^{a_i}/Z,\\\frac{q_i^{(T)}}{q_k^{(T)}}&=\exp((z_i-z_k)/T).\end{aligned}`}
         terms={[
           { symbol: "z_i", name: "teacher logit", description: "Softmax 전 class i의 실수 score입니다." },
           { symbol: "T", name: "temperature", description: "양수이며 logit 차이를 나누어 분포의 sharpness를 조절합니다." },
@@ -32,7 +32,7 @@ export default function Logit() {
       <ExplainedFormula
         question="Soft target만 따라가면 teacher의 오류까지 복제하므로 ground-truth와 어떻게 함께 학습할까요?"
         idea={<>정답 one-hot에 대한 cross-entropy는 실제 label에 model을 고정하고, temperature 분포의 forward KL은 teacher가 class 사이에 배분한 상대 probability를 전달합니다.</>}
-        formula={String.raw`\mathcal L=(1-\alpha)\,\operatorname{CE}(y,p_s^{(1)})+\alpha T^2\,D_{\mathrm{KL}}\!\left(q_t^{(T)}\,\Vert\,p_s^{(T)}\right)`}
+        formula={String.raw`\begin{aligned}\mathcal L_{\mathrm{hard}}&=\operatorname{CE}(y,p_s^{(1)}),\\\mathcal L_{\mathrm{soft}}&=T^2D_{\mathrm{KL}}(q_t^{(T)}\Vert p_s^{(T)}),\\\mathcal L&=(1-\alpha)\mathcal L_{\mathrm{hard}}+\alpha\mathcal L_{\mathrm{soft}}.\end{aligned}`}
         terms={[
           { symbol: "y", name: "hard label", description: "Dataset의 ground-truth one-hot 또는 target distribution입니다." },
           { symbol: "p_s^(1)", name: "student task distribution", description: "원래 temperature 1에서 student가 내는 배포용 probability입니다." },
@@ -51,7 +51,7 @@ export default function Logit() {
       <ExplainedFormula
         question="왜 큰 temperature를 쓸 때 distillation 항에 T²를 곱하나요?"
         idea={<>Temperature-softmax cross-entropy를 student logit으로 미분하면 먼저 <code>1/T</code>가 나옵니다. 큰 T에서는 teacher와 student probability 차이도 대략 <code>1/T</code>로 줄어 gradient가 약 <code>1/T²</code> 규모가 되므로 이를 보정합니다.</>}
-        formula={String.raw`\frac{\partial\,\operatorname{CE}(q^{(T)},p^{(T)})}{\partial z_{s,i}}=\frac{p_i^{(T)}-q_i^{(T)}}{T},\qquad p_i^{(T)}-q_i^{(T)}=O(T^{-1})\ \text{for large }T`}
+        formula={String.raw`\begin{aligned}r_i^{(T)}&=p_i^{(T)}-q_i^{(T)},\\\frac{\partial\operatorname{CE}}{\partial z_{s,i}}&=r_i^{(T)}/T,\\r_i^{(T)}&=O(T^{-1})\quad(T\text{ large}),\\\partial\operatorname{CE}/\partial z_{s,i}&=O(T^{-2}).\end{aligned}`}
         terms={[
           { symbol: "z_s,i", name: "student logit", description: "Student가 학습하는 class-i score입니다." },
           { symbol: "p-q", name: "probability residual", description: "Student와 teacher의 softened class probability 차이입니다." },
@@ -67,7 +67,7 @@ export default function Logit() {
       <ExplainedFormula
         question="KL의 두 인수 순서를 바꾸면 왜 같은 distillation loss가 되지 않을까요?"
         idea={<>Forward KL은 teacher가 probability를 둔 class를 student가 놓칠 때 크게 벌주며 teacher expectation으로 계산합니다. 순서를 바꾸면 student가 선택한 class 중심으로 teacher를 보게 되어 낮은 teacher probability를 피하는 쪽이 강해집니다.</>}
-        formula={String.raw`D_{\mathrm{KL}}(q_t\Vert p_s)=\sum_i q_{t,i}\log\frac{q_{t,i}}{p_{s,i}},\qquad D_{\mathrm{KL}}(p_s\Vert q_t)=\sum_i p_{s,i}\log\frac{p_{s,i}}{q_{t,i}}`}
+        formula={String.raw`\begin{aligned}D_{\mathrm{fwd}}&=D_{\mathrm{KL}}(q_t\Vert p_s),\\&=\sum_iq_{t,i}\log(q_{t,i}/p_{s,i}),\\D_{\mathrm{rev}}&=D_{\mathrm{KL}}(p_s\Vert q_t),\\&=\sum_ip_{s,i}\log(p_{s,i}/q_{t,i}).\end{aligned}`}
         terms={[
           { symbol: "q_t", name: "teacher distribution", description: "고정된 distillation target probability입니다." },
           { symbol: "p_s", name: "student distribution", description: "Student logit에서 나온 학습 대상 probability입니다." },

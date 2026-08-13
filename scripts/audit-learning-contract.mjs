@@ -2,12 +2,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { ARTICLE_LEARNING } from "../src/content/article-learning.ts";
 import { KNOWLEDGE_CONCEPTS, KNOWLEDGE_EDGES } from "../src/content/knowledge-graph.ts";
+import { loadPublicArticleCatalog } from "./lib/public-article-catalog.mjs";
 
 const strict = process.argv.includes("--strict");
 const requireRegistration = process.argv.includes("--require-registration");
 const evidenceHeavy = process.argv.includes("--evidence-heavy");
 const allArticles = process.argv.includes("--all-articles");
 const selectedRoutes = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
+const publicArticleCatalog = await loadPublicArticleCatalog();
+const publicArticleByRoute = new Map(
+  publicArticleCatalog.map((article) => [article.route, article]),
+);
 
 function collect(target, files = []) {
   if (!fs.existsSync(target)) return files;
@@ -21,11 +26,6 @@ function collect(target, files = []) {
 }
 
 const allArticleFiles = new Set(collect("src/pages/articles"));
-const routeSourceOverrides = {
-  "gpu/hw-network": "src/pages/articles/hw/network.tsx",
-  "gpu/b300-switchless-network":
-    "src/pages/articles/hw/b300-switchless-network.tsx",
-};
 
 function resolveImport(from, specifier) {
   if (!specifier.startsWith(".")) return undefined;
@@ -52,10 +52,25 @@ function routeFiles(route) {
   const entry = path.join("src/pages/articles", category, `${slug}.tsx`);
   const directory = path.join("src/pages/articles", category, slug);
   const files = [];
-  const override = routeSourceOverrides[route];
-  if (override && fs.existsSync(override)) files.push(...trace(override));
-  if (fs.existsSync(entry)) files.push(...trace(entry));
-  if (fs.existsSync(directory)) {
+  const catalogArticle = publicArticleByRoute.get(route);
+  if (catalogArticle) {
+    files.push(...trace(catalogArticle.sourcePath));
+    // Some legacy article contracts intentionally point at sections that are
+    // kept beside the route entry but are not currently imported by its render
+    // component. Preserve that selected-audit source scope while deriving the
+    // directory from the catalog source (not from the public route name).
+    const extension = path.extname(catalogArticle.sourcePath);
+    const sourceDirectory = catalogArticle.sourcePath.slice(0, -extension.length);
+    if (fs.existsSync(sourceDirectory) && fs.statSync(sourceDirectory).isDirectory()) {
+      for (const name of fs.readdirSync(sourceDirectory, { recursive: true })) {
+        const file = path.join(sourceDirectory, name);
+        if (fs.statSync(file).isFile() && /\.tsx?$/.test(file)) files.push(file);
+      }
+    }
+  } else if (fs.existsSync(entry)) {
+    files.push(...trace(entry));
+  }
+  if (!catalogArticle && fs.existsSync(directory)) {
     for (const name of fs.readdirSync(directory, { recursive: true })) {
       const file = path.join(directory, name);
       if (fs.statSync(file).isFile() && /\.tsx?$/.test(file)) files.push(file);
@@ -84,28 +99,7 @@ function evidenceHeavyRoutes() {
 }
 
 function allArticleRoutes() {
-  const routes = new Set();
-  for (const category of fs.readdirSync("src/pages/articles")) {
-    const categoryPath = path.join("src/pages/articles", category);
-    if (!fs.statSync(categoryPath).isDirectory()) continue;
-    for (const entry of fs.readdirSync(categoryPath)) {
-      const entryPath = path.join(categoryPath, entry);
-      if (entry.endsWith(".tsx")) {
-        const slug = entry.slice(0, -4);
-        // Category roots contain a small number of reusable visual components
-        // beside route entry files.  Counting `*Viz.tsx` as an article creates a
-        // phantom route (for example `ai/DezeroConceptViz`) and makes the global
-        // registration denominator misleading.
-        if (slug !== "index" && !slug.endsWith("Viz")) routes.add(`${category}/${slug}`);
-        continue;
-      }
-      if (fs.statSync(entryPath).isDirectory() && fs.existsSync(path.join(entryPath, "index.tsx"))) {
-        routes.add(`${category}/${entry}`);
-      }
-    }
-  }
-  for (const route of Object.keys(routeSourceOverrides)) routes.add(route);
-  return [...routes].sort();
+  return publicArticleCatalog.map((article) => article.route);
 }
 
 const routes = selectedRoutes.length

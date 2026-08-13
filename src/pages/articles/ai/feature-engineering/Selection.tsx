@@ -28,7 +28,11 @@ export default function Selection() {
       <ExplainedFormula
         question="Permutation importance는 무엇을 측정하며, 상관된 피처에서 왜 작아질 수 있을까?"
         idea={<>Validation에서 j번째 column만 무작위로 섞어 그 피처와 target·다른 피처의 대응을 끊은 뒤 loss가 얼마나 늘어나는지 봅니다. 같은 정보를 담은 다른 column이 남아 있으면 model이 그 대체재를 사용하므로 개별 중요도는 작게 나올 수 있습니다.</>}
-        formula={String.raw`I_j=\mathbb{E}_{\pi}\!\left[L\!\left(f(X_{-j},X_j^{\pi}),y\right)-L\!\left(f(X),y\right)\right]`}
+        formula={String.raw`\begin{aligned}
+L_0&=L\!\left(f(X),y\right),\\
+L_j^{\pi}&=L\!\left(f(X_{-j},X_j^{\pi}),y\right),\\
+I_j&=\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].
+\end{aligned}`}
         terms={[
           { symbol: "X_j^π", name: "permuted feature", description: "Row 순서를 random permutation π로 바꾼 j번째 validation column입니다." },
           { symbol: "X_−j", name: "remaining features", description: "섞지 않고 그대로 둔 나머지 validation columns입니다." },

@@ -23,7 +23,7 @@ export default function Overview() {
       <ExplainedFormula
         question="Weight를 제거했다는 말과 sparsity 60%라는 수치는 정확히 무엇을 뜻할까요?"
         idea={<>원래 weight <code>W</code>와 같은 shape의 binary mask <code>M</code>을 만들고, 0인 자리만 계산에서 제거합니다. Sparsity는 전체 자리 중 mask가 0인 비율입니다.</>}
-        formula={String.raw`W' = M\odot W,\qquad M_i\in\{0,1\},\qquad s=1-\frac{\lVert M\rVert_0}{N}`}
+        formula={String.raw`\begin{aligned}W'&=M\odot W,\\M_i&\in\{0,1\},\\\rho&=\lVert M\rVert_0/N,\\s&=1-\rho.\end{aligned}`}
         terms={[
           { symbol: "W", name: "dense weights", description: "Pruning 전의 원래 weight tensor입니다." },
           { symbol: "M", name: "binary mask", description: "1이면 weight를 남기고 0이면 제거하는, W와 같은 shape의 표시입니다." },

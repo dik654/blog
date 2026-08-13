@@ -16,7 +16,11 @@ export default function Triplet() {
       <ExplainedFormula
         question="Anchor에 대해 positive보다 negative를 margin만큼 멀게 두려면 무엇을 최소화할까요?"
         idea={<>현재 positive 거리에서 negative 거리를 빼고 원하는 여유 m을 더합니다. 조건을 이미 만족하면 0, 위반하면 그 차이만큼 loss를 내는 hinge 구조입니다.</>}
-        formula={String.raw`\mathcal L_{\mathrm{tri}}=\left[d(\mathbf z_a,\mathbf z_p)-d(\mathbf z_a,\mathbf z_n)+m\right]_+,\qquad [u]_+=\max(0,u)`}
+        formula={String.raw`\begin{aligned}
+u&=d(\mathbf z_a,\mathbf z_p)-d(\mathbf z_a,\mathbf z_n)+m,\\
+[u]_+&=\max(0,u),\\
+\mathcal L_{\mathrm{tri}}&=[u]_+.
+\end{aligned}`}
         terms={[
           { symbol: "z_a", name: "anchor", description: "비교의 기준이 되는 embedding입니다." },
           { symbol: "z_p", name: "positive", description: "Anchor와 같은 의미로 정의한 embedding입니다." },
@@ -40,7 +44,12 @@ export default function Triplet() {
       <ExplainedFormula
         question="정규화된 embedding에서 squared Euclidean distance와 cosine similarity는 왜 같은 순서를 만들까요?"
         idea={<>두 벡터 차이의 제곱을 전개하면 각 norm 제곱과 내적이 나옵니다. 두 norm이 모두 1이면 상수 2에서 cosine similarity의 두 배를 뺀 식이 됩니다.</>}
-        formula={String.raw`\lVert\mathbf z_i-\mathbf z_j\rVert_2^2=\lVert\mathbf z_i\rVert_2^2+\lVert\mathbf z_j\rVert_2^2-2\mathbf z_i^\top\mathbf z_j=2-2\operatorname{sim}(i,j)`}
+        formula={String.raw`\begin{aligned}
+d_{ij}^2&=\lVert\mathbf z_i-\mathbf z_j\rVert_2^2,\\
+&=\lVert\mathbf z_i\rVert_2^2+\lVert\mathbf z_j\rVert_2^2
+-2\mathbf z_i^\top\mathbf z_j,\\
+&=2-2\operatorname{sim}(i,j).
+\end{aligned}`}
         terms={[
           { symbol: "||z_i−z_j||²", name: "squared Euclidean distance", description: "두 정규화 embedding 사이 직선 거리의 제곱입니다." },
           { symbol: "z_i^T z_j", name: "inner product", description: "Unit vector에서는 cosine similarity와 같습니다." },

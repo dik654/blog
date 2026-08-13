@@ -22,7 +22,12 @@ export default function EarlyFusion() {
       <ExplainedFormula
         question="정렬된 sensor view를 channel로 합칠 때 실제 tensor에는 무엇이 들어갈까?"
         idea={<>각 sensor를 공통 image grid로 옮기는 변환 Tᵥ를 먼저 적용하고, 같은 좌표 u의 관측값과 availability mask를 channel axis에 쌓습니다.</>}
-        formula={String.raw`x_{\mathrm{cat}}(u)=\big[T_1(x_1)(u);\ldots;T_V(x_V)(u);m_1(u);\ldots;m_V(u)\big]`}
+        formula={String.raw`\begin{aligned}
+\widetilde x_v(u)&=T_v(x_v)(u),\\
+x_{\mathrm{obs}}(u)&=[\widetilde x_1(u);\ldots;\widetilde x_V(u)],\\
+m(u)&=[m_1(u);\ldots;m_V(u)],\\
+x_{\mathrm{cat}}(u)&=[x_{\mathrm{obs}}(u);m(u)].
+\end{aligned}`}
         terms={[
           { symbol: "u", name: "reference-grid coordinate", description: "Fusion tensor가 사용하는 공통 pixel 또는 voxel 좌표입니다." },
           { symbol: "Tᵥ", name: "registration transform", description: "v번째 sensor 관측을 calibration에 따라 reference grid로 옮기는 warp·projection입니다." },

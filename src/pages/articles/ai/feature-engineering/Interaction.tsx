@@ -26,7 +26,11 @@ export default function Interaction() {
       <ExplainedFormula
         question="선형 모델에 곱 피처 하나를 추가하면 표현할 수 있는 관계가 어떻게 달라질까?"
         idea={<>원래 선형 모델에서는 x₁의 효과 w₁이 x₂와 무관하게 고정됩니다. 곱 x₁x₂를 새 피처로 넣으면 x₁의 기울기가 w₁+w₁₂x₂가 되어, x₂의 값에 따라 x₁의 효과가 달라집니다.</>}
-        formula={String.raw`\hat y=b+w_1x_1+w_2x_2+w_{12}x_1x_2,\qquad \frac{\partial \hat y}{\partial x_1}=w_1+w_{12}x_2`}
+        formula={String.raw`\begin{aligned}
+\hat y&=b+w_1x_1+w_2x_2\\
+&\quad+w_{12}x_1x_2,\\
+\frac{\partial \hat y}{\partial x_1}&=w_1+w_{12}x_2.
+\end{aligned}`}
         terms={[
           { symbol: "x₁, x₂", name: "원본 피처", description: "같은 cutoff에서 사용할 수 있고 단위가 정의된 두 입력입니다." },
           { symbol: "x₁x₂", name: "interaction feature", description: "두 값이 함께 변할 때의 결합 효과를 담는 새 좌표입니다." },

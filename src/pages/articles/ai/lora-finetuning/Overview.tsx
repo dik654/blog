@@ -15,7 +15,11 @@ export default function Overview() {
       <ExplainedFormula
         question="Full fine-tuning과 LoRA에서 실제로 업데이트되는 파라미터 집합은 어떻게 다를까요?"
         idea={<>Loss는 같은 model output에서 계산할 수 있지만 gradient를 적용하는 집합이 다릅니다. Full fine-tuning은 모든 base parameter를, LoRA는 adapter와 명시적으로 저장한 module만 optimizer에 넘깁니다.</>}
-        formula={String.raw`\Theta_{\mathrm{train}}^{\mathrm{full}}=\Theta_{\mathrm{base}},\qquad \Theta_{\mathrm{train}}^{\mathrm{LoRA}}=\{A_m,B_m:m\in\mathcal T\}\cup\Theta_{\mathrm{save}}`}
+        formula={String.raw`\begin{aligned}
+\Theta_{\mathrm{train}}^{\mathrm{full}}&=\Theta_{\mathrm{base}}\\
+\Theta_{\mathrm{train}}^{\mathrm{LoRA}}&=\{A_m,B_m:m\in\mathcal T\}\\
+&\quad\cup\Theta_{\mathrm{save}}
+\end{aligned}`}
         terms={[
           { symbol: "Theta_base", name: "base parameters", description: "Pretrained checkpoint의 전체 weight와 bias입니다." },
           { symbol: "T", name: "target modules", description: "LoRA update를 삽입하기로 한 실제 linear module 경로 집합입니다." },

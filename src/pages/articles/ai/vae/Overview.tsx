@@ -100,6 +100,14 @@ export default function Overview() {
           문제를 tractable한 objective로 바꾸고, reparameterization trick이 두
           번째 문제에 pathwise gradient를 제공합니다.
         </p>
+        <p>
+          Tensor shape로 보면 batch가 <code>B</code>, latent dimension이
+          <code>d</code>일 때 encoder의 <code>μ</code>와 <code>log σ²</code>, base
+          noise <code>ε</code>, sample <code>z</code>는 모두
+          <code>B×d</code>입니다. Batch 32와 <code>d=16</code>이라면 네 tensor가
+          모두 32×16이고, decoder output은 관측값의 shape와 선택한 likelihood
+          parameter 수에 맞춰 정해집니다.
+        </p>
       </div>
     </section>
   );

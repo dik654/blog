@@ -85,6 +85,19 @@ export default function OdeSdeBoundary() {
         ]}
         interpretation="Noise 항을 Δt·ε로 쓰면 분산이 Δt²가 되어 Brownian scaling을 보존하지 못합니다. Diffusion model의 forward SDE를 읽을 때 drift와 diffusion coefficient를 분리하는 이유입니다."
       />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Noise scale은 한 step이 아니라 전체 시간에서 검산합니다</h3>
+        <p>
+          전체 시간을 <code>T</code>, step을 <code>Δt</code>라고 하면
+          독립 increment가 <code>T/Δt</code>개 생깁니다. 올바른
+          <code>√Δt·ε</code>의 한 step 분산은 <code>Δt</code>이므로
+          전체 분산은 <code>(T/Δt)Δt=T</code>로 유지됩니다. 반면
+          <code>Δt·ε</code>로 구현하면 한 step 분산이 <code>Δt²</code>이어서
+          전체 분산이 <code>TΔt</code>로 줄어듭니다. Step을 잘게 할수록
+          random path가 deterministic path로 붕괴하는 구현 반례입니다.
+        </p>
+      </div>
     </section>
   );
 }

@@ -7,7 +7,7 @@ export default function Embedding() {
       <h2 className="mb-6 text-2xl font-bold">Embedding model을 바꾸는 일은 파일 하나를 교체하는 일이 아니라 검색 공간 전체의 version을 바꾸는 일입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Query와 document는 checkpoint가 학습한 instruction·pooling·normalization 규약으로 encode합니다. 이 원리는 <a href="/ai/sentence-embeddings">문장 임베딩 정본</a>에서 다루며, 여기서는 corpus snapshot과 index를 함께 배포하는 계약에 집중합니다.</p>
-        <p>같은 dimension이라고 같은 좌표계는 아닙니다. Encoder checkpoint나 query prefix, truncation 또는 normalization을 바꾸면 기존 document vector와 새 query vector의 내적을 해석할 근거가 사라집니다. 새 version으로 corpus를 다시 encode하고, shadow index에서 exact-search subset과 ANN recall·latency를 확인한 뒤 alias를 전환합니다.</p>
+        <p>같은 dimension이라고 같은 좌표계는 아닙니다. Encoder checkpoint나 query prefix, truncation 또는 normalization을 바꾸면 기존 document vector와 새 query vector의 내적을 해석할 근거가 사라집니다. 기존 active index는 보존한 채 새 version으로 corpus를 다시 encode해 blue/green shadow index를 만들고, exact-search subset의 ANN recall, 동일 query의 paired retrieval 품질, latency와 storage를 함께 비교합니다. Gate를 통과하면 alias를 원자적으로 전환하고, 문제가 생기면 보존한 이전 index와 query encoder tuple로 즉시 rollback합니다.</p>
       </div>
       <ExplainedFormula
         question="어떤 값이 같아야 query와 index가 같은 검색 공간이라고 말할 수 있을까요?"

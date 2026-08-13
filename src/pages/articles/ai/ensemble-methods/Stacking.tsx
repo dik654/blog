@@ -21,7 +21,11 @@ export default function Stacking() {
       <ExplainedFormula
         question="Meta-model이 볼 OOF feature 한 칸은 어느 base model에서 나와야 할까요?"
         idea={<>Row i가 속한 fold k(i)를 학습에서 뺀 base model m의 prediction만 Z의 i,m 칸에 넣습니다. 그 뒤 meta-model h를 Z와 target으로 학습합니다.</>}
-        formula={String.raw`Z_{im}=f_m^{(-k(i))}(x_i),\qquad \widehat h=\arg\min_h\frac1n\sum_{i=1}^{n}\ell\!\left(h(Z_{i,:}),y_i\right)`}
+        formula={String.raw`\begin{aligned}
+          Z_{im}&=f_m^{(-k(i))}(x_i) \\
+          \widehat R(h)&=\frac1n\sum_{i=1}^{n}\ell(h(Z_{i,:}),y_i) \\
+          \widehat h&=\arg\min_h\widehat R(h)
+        \end{aligned}`}
         terms={[
           { symbol: "k(i)", name: "row fold", description: "Row i가 validation 역할을 맡은 fold 번호입니다." },
           { symbol: "f_m^(-k(i))", name: "cross-fitted base model", description: "Fold k(i)의 모든 row를 제외하고 학습한 m번째 base procedure입니다." },
@@ -39,11 +43,18 @@ export default function Stacking() {
       <ExplainedFormula
         question="Super Learner가 ‘oracle만큼 좋다’는 말은 어떤 비교를 뜻하며, 무엇을 보장하지 않을까요?"
         idea={<>Cross-validated risk로 결합 계수 α를 고르고, 같은 결합 family 안에서 true risk가 가장 작은 oracle α*와의 excess risk가 표본이 커질수록 사라지는지를 비교합니다.</>}
-        formula={String.raw`\widehat\alpha=\arg\min_{\alpha\in\mathcal A_n}\widehat R_{\mathrm{CV}}(h_\alpha),\qquad R(h_{\widehat\alpha})-\inf_{\alpha\in\mathcal A_n}R(h_\alpha)\xrightarrow[n\to\infty]{}0`}
+        formula={String.raw`\begin{aligned}
+          \widehat\alpha
+          &=\arg\min_{\alpha\in\mathcal A_n}
+            \widehat R_{\mathrm{CV}}(h_\alpha) \\
+          R_n^*&=\inf_{\alpha\in\mathcal A_n}R(h_\alpha) \\
+          R(h_{\widehat\alpha})-R_n^*&\xrightarrow[n\to\infty]{}0
+        \end{aligned}`}
         terms={[
           { symbol: "A_n", name: "candidate combination family", description: "Base library를 섞는 허용된 coefficient·meta-model family이며 표본 크기에 따라 달라질 수 있습니다." },
           { symbol: "alpha-hat", name: "CV-selected combination", description: "V-fold cross-validated risk가 가장 작은 결합 설정입니다." },
           { symbol: "R", name: "population risk", description: "새 deployment sample에서 같은 loss로 측정한 기대 오류입니다." },
+          { symbol: "R_n^*", name: "oracle risk", description: "표본 크기 n에서 선언한 combination family 안의 가장 작은 population risk입니다." },
           { symbol: "oracle", name: "best in the declared family", description: "세상의 모든 predictor가 아니라 A_n 안에서 population risk가 가장 작은 결합입니다." },
         ]}
         assumptions={[
@@ -55,6 +66,26 @@ export default function Stacking() {
       />
 
       <div className="not-prose my-8"><StackingViz /></div>
+
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
+        <h3>Training path와 serving path는 같은 meta-feature 의미를 만들어야 합니다</h3>
+        <p>
+          학습 때는 row가 빠진 fold model의 OOF prediction으로 Z를 만들고, test 때는 각 fold model의 prediction을 base model별로
+          집계합니다. Full-data refit 하나를 대신 쓰려면 그 prediction 분포가 OOF feature와 달라질 수 있음을 별도 outer test에서
+          확인합니다. Unit test에는 fold manifest와 row checksum, class order, inverse transform, model별 aggregation rule을 넣고,
+          전처리부터 meta-model 입력까지 train과 serving의 column 수·순서·단위를 비교합니다. Meta gain은 이 경로 전체를 고정한
+          nested 또는 untouched outer evaluation에서 판단합니다.
+        </p>
+        <h3>Oracle 결과의 증명 아이디어와 작은 표본 반례</h3>
+        <p>
+          핵심 증명 골격은 허용한 family 전체에서 cross-validated risk와 population risk의 차이가 균일하게 작아진다는 것입니다.
+          그러면 CV risk를 최소화한 조합의 true risk도 같은 family의 oracle risk보다 그 최대 오차 이상 크게 벗어나기 어렵습니다.
+          이 단계에는 bounded loss·prediction, 적절한 fold 구성, 표본보다 너무 빨리 커지지 않는 library 같은 조건이 필요합니다.
+          반대로 작은 데이터에서 수천 개의 meta 후보를 같은 OOF score로 반복 선택하거나 in-sample base prediction을 넣으면 우연한
+          최소값과 과신을 고를 수 있습니다. 이 경우 finite sample에서는 단일 모델보다 나빠질 수 있으며 asymptotic theorem이 이를
+          막아 주지 않습니다.
+        </p>
+      </div>
 
       <div id="paper-stacked-generalization" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">원 논문 · Stacked Generalization</p>

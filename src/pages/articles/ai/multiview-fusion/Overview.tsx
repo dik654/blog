@@ -54,7 +54,10 @@ X_i&=\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},\\
       <ExplainedFormula
         question="순서가 없는 view set이라는 말은 model output에 어떤 검사를 요구할까?"
         idea={<>같은 원소를 다른 순서로 나열한 permutation은 같은 set입니다. 그러므로 분류처럼 episode 전체에 한 값을 내는 함수는 어떤 permutation을 적용해도 output이 변하지 않아야 합니다.</>}
-        formula={String.raw`F_\theta(\pi X_i)=F_\theta(X_i)\qquad\text{for every permutation }\pi`}
+        formula={String.raw`\begin{aligned}
+X_i'&=\pi X_i,\\
+F_\theta(X_i')&=F_\theta(X_i)\quad(\forall\pi).
+\end{aligned}`}
         terms={[
           { symbol: "π", name: "permutation", description: "View 내용은 그대로 둔 채 나열 순서만 바꾸는 일대일 재배열입니다." },
           { symbol: "πXᵢ", name: "reordered episode", description: "Xᵢ와 같은 view들을 다른 순서로 입력한 sample입니다." },

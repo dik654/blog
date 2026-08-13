@@ -17,6 +17,14 @@ export default function Latent() {
           어려워진다. VAE는 tractable qφ(z|x)를 inference network로 학습해 log
           pθ(x)의 lower bound인 ELBO를 최적화한다.
         </p>
+        <p className="leading-8">
+          Latent가 무엇인지 작은 mixture로 보면 쉽습니다. z∈&#123;0,1&#125;이고
+          p(z=0)=0.75, p(z=1)=0.25, 어떤 x에 대해 p(x|z=0)=0.2,
+          p(x|z=1)=0.8이라면 z를 관측하지 않았을 때 p(x)는
+          0.75×0.2+0.25×0.8=0.35입니다. 가능한 원인을 모두 가중해 더하는 이
+          marginalization이 z가 연속이고 고차원이 되면 적분으로 바뀌며 계산이
+          어려워집니다.
+        </p>
       </div>
 
       <ExplainedFormula
@@ -32,13 +40,13 @@ export default function Latent() {
         formula={String.raw`\begin{aligned}R(x)&=\mathbb E_{q_\phi(z\mid x)}[\log p_\theta(x\mid z)]\\K(x)&=D_{KL}(q_\phi(z\mid x)\|p(z))\\\mathcal L_{ELBO}(x)&=R(x)-K(x)\\\log p_\theta(x)&=\mathcal L_{ELBO}(x)+D_{KL}(q_\phi\|p_\theta)\end{aligned}`}
         terms={[
           {
-            symbol: "q_\phi(z\mid x)",
+            symbol: String.raw`q_\phi(z\mid x)`,
             name: "approximate posterior",
             description:
               "Encoder가 observation별 latent distribution을 amortized inference합니다.",
           },
           {
-            symbol: "p_\theta(x\mid z)",
+            symbol: String.raw`p_\theta(x\mid z)`,
             name: "decoder likelihood",
             description:
               "Latent z에서 observation의 조건부 distribution을 정의합니다.",
@@ -50,7 +58,7 @@ export default function Latent() {
               "Generation 때 sample하는 latent 기준 distribution입니다.",
           },
           {
-            symbol: "D_{KL}(q_\phi\|p_\theta)",
+            symbol: String.raw`D_{KL}(q_\phi\|p_\theta)`,
             name: "inference gap",
             description: "ELBO가 true log evidence보다 낮은 정확한 차이입니다.",
           },

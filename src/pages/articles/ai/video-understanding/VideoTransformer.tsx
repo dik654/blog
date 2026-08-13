@@ -15,7 +15,12 @@ export default function VideoTransformer() {
       <ExplainedFormula
         question="Video를 tubelet으로 바꾸면 token 수와 joint attention pair는 얼마나 될까?"
         idea={<>시간 τ frame, 공간 P×P pixel을 한 tubelet로 묶습니다. 시간·높이·너비 축의 tubelet 개수를 곱하면 total token 수가 됩니다.</>}
-        formula={String.raw`N=\frac{T}{\tau}\frac{H}{P}\frac{W}{P},\qquad\text{joint score pairs}=N^2`}
+        formula={String.raw`\begin{aligned}
+N_t&=T/\tau,\\
+N_s&=(H/P)(W/P),\\
+N&=N_tN_s,\\
+C_{\mathrm{joint}}&=N^2.
+\end{aligned}`}
         terms={[
           { symbol: "τ", name: "tubelet temporal size", description: "Token 하나가 묶는 연속 frame 수입니다." },
           { symbol: "P", name: "spatial patch size", description: "Token 하나가 묶는 patch 한 변의 pixel 수입니다." },
@@ -39,7 +44,12 @@ export default function VideoTransformer() {
       <ExplainedFormula
         question="공간과 시간 attention을 나누면 score pair의 성장식은 어떻게 달라질까?"
         idea={<>한 frame의 S개 spatial token끼리 attention하는 일을 T번, 같은 spatial 위치의 T개 temporal token끼리 attention하는 일을 S번 수행합니다.</>}
-        formula={String.raw`C_{\mathrm{divided}}\propto TS^2+ST^2,\qquad C_{\mathrm{joint}}\propto(TS)^2`}
+        formula={String.raw`\begin{aligned}
+C_{\mathrm{space}}&\propto TS^2,\\
+C_{\mathrm{time}}&\propto ST^2,\\
+C_{\mathrm{divided}}&=C_{\mathrm{space}}+C_{\mathrm{time}},\\
+C_{\mathrm{joint}}&\propto(TS)^2.
+\end{aligned}`}
         terms={[
           { symbol: "T", name: "temporal token positions", description: "Tubelet 변환 뒤 시간축 위치 수입니다." },
           { symbol: "S", name: "spatial tokens per time", description: "한 temporal position 안의 patch token 수입니다." },

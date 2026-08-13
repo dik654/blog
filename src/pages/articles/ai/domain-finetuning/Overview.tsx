@@ -16,7 +16,11 @@ export default function Overview() {
     <ExplainedFormula
       question="Target 성능을 높이면서 일반 능력 회귀와 비용을 제한하려면 개입을 어떻게 고를까요?"
       idea={<>후보마다 같은 target holdout에서 얻은 gain, general regression set의 변화, 학습·서빙 비용을 측정합니다. 가장 높은 target gain을 고르되 허용한 회귀 ε와 예산 B 안에 있는 후보만 비교합니다.</>}
-      formula={String.raw`a^*=\operatorname*{arg\,max}_{a\in\mathcal A}\Delta_{\mathrm{target}}(a)\quad\text{s.t.}\quad \Delta_{\mathrm{general}}(a)\ge-\varepsilon,\; C(a)\le B`}
+      formula={String.raw`\begin{aligned}
+a^*&=\operatorname*{arg\,max}_{a\in\mathcal A}\Delta_{\mathrm{target}}(a)\\
+\text{s.t. }&\Delta_{\mathrm{general}}(a)\ge-\varepsilon\\
+&C(a)\le B
+\end{aligned}`}
       terms={[
         { symbol: "A", name: "intervention candidates", description: "No adaptation·RAG·DAPT/TAPT·SFT·PEFT 등 공정하게 비교할 후보 집합입니다." },
         { symbol: "Δtarget", name: "target gain", description: "같은 target split·seed에서 base 대비 도메인 주지표 변화입니다." },

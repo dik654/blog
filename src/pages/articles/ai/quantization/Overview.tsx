@@ -14,9 +14,14 @@ export default function Overview() {
     <ExplainedFormula
       question="실수 x를 b-bit 정수 code로 바꾸고 다시 근사 실수로 복원하려면 어떻게 계산할까요?"
       idea={<>Affine quantizer는 실수 한 칸의 폭을 <code>s</code>로 정하고, 실수 0이 대응할 integer 위치를 <code>z</code>로 옮깁니다. 반올림 뒤 표현 범위를 벗어난 code는 끝값으로 잘라내고, 실행할 때 scale을 곱해 근사값을 복원합니다.</>}
-      formula={String.raw`q(x)=\operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{x}{s}\right)+z,\;q_{\min},q_{\max}\right),\qquad \hat x=s\,(q-z)`}
+      formula={String.raw`\begin{aligned}
+u(x)&=\operatorname{round}(x/s)+z\\
+q(x)&=\operatorname{clip}(u(x),q_{\min},q_{\max})\\
+\hat x&=s\,(q-z)
+\end{aligned}`}
       terms={[
         { symbol: "x", name: "floating-point value", description: "원 checkpoint나 runtime tensor의 양자화 전 실수입니다." },
+        { symbol: "u(x)", name: "unclipped code", description: "Scale로 나눈 값을 반올림하고 zero-point를 더했지만 아직 표현 범위로 자르지 않은 정수입니다." },
         { symbol: "q", name: "quantized code", description: "b-bit가 표현할 수 있는 유한한 integer code입니다." },
         { symbol: "s", name: "scale", description: "Integer code 한 칸이 실수 축에서 나타내는 간격입니다." },
         { symbol: "z", name: "zero-point", description: "실수 0이 정확히 대응하도록 integer 축을 이동시키는 code입니다." },
@@ -28,7 +33,11 @@ export default function Overview() {
     <ExplainedFormula
       question="양자화 오차는 왜 rounding error와 clipping error를 나눠 봐야 할까요?"
       idea={<>Range 안의 값은 가까운 grid point로 반올림되어 오차가 대체로 scale 절반 이내지만, range 밖의 outlier는 끝 code에 고정되어 값이 멀수록 clipping error가 커집니다.</>}
-      formula={String.raw`e(x)=x-\hat x,\qquad |e(x)|\le \frac{s}{2}\ \text{if }x\text{ is representable and rounded to nearest};\quad |e(x)|=|x-x_{\mathrm{clip}}|\ \text{outside the range}`}
+      formula={String.raw`\begin{aligned}
+e(x)&=x-\hat x\\
+|e(x)|&\le s/2 && (x\text{ is in range})\\
+|e(x)|&=|x-x_{\mathrm{clip}}| && (x\text{ is clipped})
+\end{aligned}`}
       terms={[
         { symbol: "e(x)", name: "quantization error", description: "원래 값과 dequantized 근사값의 차이입니다." },
         { symbol: "s/2", name: "rounding bound", description: "Uniform grid 안에서 nearest rounding을 쓸 때의 최대 반 칸 오차입니다." },

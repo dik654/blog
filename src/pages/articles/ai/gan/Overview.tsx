@@ -145,6 +145,17 @@ export default function Overview() {
         ]}
         interpretation="D*(x)=1/2는 개별 sample이 ‘50% 진짜’라는 calibration 설명보다 두 density가 그 위치에서 같다는 뜻입니다. 실제 finite discriminator의 logit을 이 식의 정확한 density ratio로 취급하면 안 됩니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          예를 들어 한 위치에서 <code>pdata=0.6</code>, <code>pg=0.2</code>라면
+          ideal output은 <code>0.6/(0.6+0.2)=0.75</code>입니다. 이 계산은 현재
+          generator가 고정되고 discriminator가 충분한 capacity로 optimum에
+          도달했다는 조건에서만 density ratio로 읽을 수 있습니다. 실제
+          discriminator가 1/2를 냈더라도, 상수 1/2밖에 표현하지 못하거나 아직
+          underfit한 network라면 두 distribution이 같다는 결론은 나오지
+          않습니다.
+        </p>
+      </div>
       <DensityRatioViz />
       <ExplainedFormula
         question="Original GAN의 두 player는 어떤 하나의 value function을 반대 방향으로 움직일까?"
@@ -241,6 +252,16 @@ export default function Overview() {
         ]}
         interpretation="Non-saturating은 minimax value를 그대로 minimize하는 식은 아니지만 같은 pdata=pg equilibrium을 겨냥합니다. 논문·code를 비교할 때 discriminator loss와 generator loss를 따로 적어야 합니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          <code>D=σ(a)</code>인 logit <code>a</code>로 미분하면 saturating
+          minimax 항의 gradient 크기는 <code>D</code>, non-saturating 항의
+          gradient는 <code>|D−1|</code>입니다. 학습 초기에 <code>D=0.01</code>이면
+          각각 약 0.01과 0.99이므로 후자가 훨씬 강한 signal을 줍니다. 이는 한
+          step의 optimization을 돕는 차이일 뿐, global convergence나 mode
+          coverage를 보장하지는 않습니다.
+        </p>
+      </div>
       <GradientSignalViz />
     </section>
   );

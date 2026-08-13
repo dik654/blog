@@ -6,12 +6,17 @@ export default function Practice() {
     <h2 className="mb-6 text-2xl font-bold">배포에서는 weight·activation·KV·workspace를 분리하고 실제 kernel trace로 선택합니다</h2>
     <div className="prose prose-neutral dark:prose-invert max-w-none">
       <p>7B model의 weight를 FP16에서 nominal W4로 바꾸면 raw weight payload는 크게 줄지만 scale·zero-point·packing metadata가 더해지고, runtime activation·KV cache·temporary workspace는 그대로 남을 수 있습니다. 그래서 “model이 4분의 1 크기”와 “peak VRAM이 4분의 1”은 다른 주장입니다.</p>
+      <p>숫자로 보면 FP16은 weight 하나에 2 byte를 쓰므로 70억 개의 raw payload가 14GB이고, packed INT4는 weight 하나에 0.5 byte를 써 3.5GB입니다. 이 계산은 decimal GB 기준의 weight payload만 센 값이며, 실제 peak VRAM에는 scale·packing metadata와 activation·KV cache·workspace·headroom을 다시 더해야 합니다.</p>
       <p>Candidate마다 base hash, method, bit width, group shape, scale dtype, weight/activation/KV/compute/accumulation dtype, engine·kernel version과 fallback operator를 기록합니다. 품질은 perplexity뿐 아니라 instruction following·structured output·long context·worst slice를 보고, warmup 뒤 target concurrency의 p50/p95·throughput·power·peak memory를 같은 request trace에서 측정합니다.</p>
     </div>
     <ExplainedFormula
       question="Weight-only quantization 뒤에도 전체 VRAM이 bit 비율만큼 줄지 않는 이유를 어떻게 계산할까요?"
       idea={<>Resident memory를 quantized weight payload와 scale metadata, activation, KV cache, workspace, 안전 여유로 나눕니다. Weight 항만 줄었다면 나머지는 같은 크기로 남습니다.</>}
-      formula={String.raw`M_{\mathrm{peak}}=M_{W,q}+M_{\mathrm{scale}}+M_{\mathrm{act}}+M_{\mathrm{KV}}+M_{\mathrm{workspace}}+M_{\mathrm{headroom}}`}
+      formula={String.raw`\begin{aligned}
+M_{\mathrm{model}}&=M_{W,q}+M_{\mathrm{scale}}\\
+M_{\mathrm{work}}&=M_{\mathrm{act}}+M_{\mathrm{KV}}+M_{\mathrm{workspace}}\\
+M_{\mathrm{peak}}&=M_{\mathrm{model}}+M_{\mathrm{work}}+M_{\mathrm{headroom}}
+\end{aligned}`}
       terms={[
         { symbol: "M_W,q", name: "quantized weights", description: "Low-bit packed weight tensor의 resident payload입니다." },
         { symbol: "M_scale", name: "quantization metadata", description: "Group scale·zero-point·block header와 alignment 비용입니다." },

@@ -25,7 +25,11 @@ export default function StableDiffusion() {
           spatial latent로 압축하고 그 latent에서 diffusion을 수행한다. Pixel
           grid보다 작은 representation을 처리해 denoiser compute를 줄이는 대신,
           autoencoder가 보존하지 못한 detail은 diffusion이 되찾을 수 없다는
-          경계가 생긴다. Autoencoder의 probabilistic objective는{" "}
+          경계가 생긴다. 예를 들어 64×64 pixel grid를 8×8 spatial latent로
+          줄이면 denoiser가 훑는 위치 수는 4,096개에서 64개로 64배
+          감소합니다. 하지만 channel 수, network width, attention, NFE가 함께
+          달라지므로 실제 FLOPs와 latency가 정확히 64배 좋아진다는 뜻은
+          아닙니다. Autoencoder의 probabilistic objective는{" "}
           <Link to="/ai/vae">VAE 글</Link>
           에서 이어진다.
         </p>
@@ -34,6 +38,15 @@ export default function StableDiffusion() {
           version의 계약이다. Text encoder, token length, latent channel과
           spatial compression은 version마다 달라지므로 LDM의 일반 원리와
           checkpoint configuration을 구분해야 합니다.
+        </p>
+        <p>
+          Pixel diffusion과 latent diffusion을 공정하게 비교하려면 data와
+          resolution, condition, denoiser FLOPs 예산을 맞추고 autoencoder·latent
+          shape·scaling을 기록합니다. 그다음 autoencoder reconstruction을 별도로
+          측정해 품질 ceiling을 확인하고, denoiser NFE·wall-clock·memory와 sample
+          quality·coverage·condition adherence를 같은 evaluator에서 비교해야
+          합니다. Spatial 위치 수만 맞추거나 FID 하나만 보는 실험으로는 어느
+          stage가 만든 차이인지 분리할 수 없습니다.
         </p>
       </div>
 
@@ -95,6 +108,13 @@ export default function StableDiffusion() {
           같은 값도 보편적인 default가 아니라 checkpoint·sampler·step 수와 함께
           검증할 parameter입니다.
         </p>
+        <p>
+          예를 들어 unconditional prediction이 2이고 conditional prediction이
+          1.5라면, <code>w=1</code>의 guided prediction은
+          <code>2+1(1.5−2)=1.5</code>이고 <code>w=3</code>에서는
+          <code>2+3(1.5−2)=0.5</code>입니다. 두 branch를 별도로 계산하는지 한
+          batch로 묶는지에 따라 실제 NFE와 wall-clock 해석도 달라집니다.
+        </p>
 
         <h3>제품 이름보다 component contract를 본다</h3>
         <p>
@@ -125,7 +145,7 @@ export default function StableDiffusion() {
               "prompt encoder가 만든 conditioning representation입니다.",
           },
           {
-            symbol: "\varnothing",
+            symbol: String.raw`\varnothing`,
             name: "dropped condition",
             description:
               "training에서 condition을 비운 unconditional branch입니다.",

@@ -38,7 +38,7 @@ export default function AttentionResiduals() {
       <ExplainedFormula
         question="현재 layer가 embedding과 이전 depth source 가운데 필요한 표현을 어떻게 선택하는가?"
         idea={<>Source key를 RMSNorm으로 scale 정렬한 뒤 현재 layer의 learned pseudo-query와 dot product를 계산합니다. Depth source 전체에 softmax를 적용한 weight로 value를 합칩니다.</>}
-        formula={String.raw`\alpha_{i\rightarrow\ell}=\operatorname{softmax}_{i<\ell}\!\left(\frac{q_{\ell}^{\top}\operatorname{RMSNorm}(k_i)}{\sqrt d}\right),\qquad h_{\ell}=\sum_{i<\ell}\alpha_{i\rightarrow\ell}v_i`}
+        formula={String.raw`\begin{aligned}\widetilde k_i&=\operatorname{RMSNorm}(k_i),\\s_{i\to\ell}&=q_\ell^\top\widetilde k_i/\sqrt d,\\\alpha_{i\to\ell}&=\operatorname{softmax}_{i<\ell}(s_{i\to\ell}),\\h_\ell&=\sum_{i<\ell}\alpha_{i\to\ell}v_i.\end{aligned}`}
         terms={[
           { symbol: String.raw`q_{\ell}`, name: "depth pseudo-query", description: "현재 layer가 어떤 과거 source를 읽을지 학습하는 layer별 query입니다." },
           { symbol: "k_i,v_i", name: "depth source key·value", description: "Embedding 또는 이전 layer/block representation에서 만든 선택용 key와 전달할 value입니다." },
@@ -69,7 +69,7 @@ export default function AttentionResiduals() {
       <ExplainedFormula
         question="Block으로 묶으면 depth memory와 pipeline communication의 증가율이 어떻게 달라지는가?"
         idea={<>Layer L개를 모두 source로 보관하는 대신 block N개의 대표 state와 embedding source만 유지합니다. Hidden width d가 같다면 source state 규모는 Ld에서 (N+1)d로 줄어듭니다.</>}
-        formula={String.raw`M_{\mathrm{full}}\propto Ld,\qquad M_{\mathrm{block}}\propto (N+1)d,\qquad N=8`}
+        formula={String.raw`\begin{aligned}M_{\mathrm{full}}&\propto Ld,\\M_{\mathrm{block}}&\propto(N+1)d,\\N&=8,\\M_{\mathrm{block}}&\propto9d.\end{aligned}`}
         terms={[
           { symbol: "L", name: "layer position 수", description: "Full AttnRes에서 개별 source로 보관할 depth position 수입니다." },
           { symbol: "N", name: "block 수", description: "K3 Block AttnRes가 stage 사이에서 구분하는 8개 block입니다." },

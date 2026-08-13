@@ -28,13 +28,19 @@ export default function Categorical() {
       <ExplainedFormula
         question="Target encoding에서 자기 label을 보지 않으면서 드문 category의 평균을 안정화하려면 어떻게 할까?"
         idea={<>Row i가 속한 fold를 통째로 제외하고 같은 category c의 target 합과 count를 계산합니다. 관측이 적으면 전체 training 평균 μ 쪽으로 당기는 smoothing α를 더합니다. 이렇게 하면 해당 row의 정답이 곧바로 자기 입력이 되는 지름길을 막을 수 있습니다.</>}
-        formula={String.raw`\operatorname{TE}^{(-k(i))}(c_i)=\frac{\sum_{j\notin k(i)}\mathbf{1}[c_j=c_i]y_j+\alpha\mu_{\mathrm{train}}}{\sum_{j\notin k(i)}\mathbf{1}[c_j=c_i]+\alpha}`}
+        formula={String.raw`\begin{aligned}
+S_i&=\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]y_j,\\
+N_i&=\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],\\
+\operatorname{TE}^{(-k(i))}(c_i)
+&=\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.
+\end{aligned}`}
         terms={[
           { symbol: "k(i)", name: "row i의 fold", description: "Encoding 통계를 만들 때 i와 같은 validation fold 전체를 제외합니다." },
           { symbol: "1[c_j=c_i]", name: "category indicator", description: "Row j가 i와 같은 category일 때만 1이 됩니다." },
           { symbol: "y_j", name: "training target", description: "현재 mapping을 fit하는 fold 안에서만 사용할 target입니다." },
           { symbol: "μ_train", name: "global training mean", description: "해당 fold를 제외한 training target의 전체 평균입니다." },
           { symbol: "α", name: "smoothing strength", description: "Category count가 작을수록 전체 평균 쪽으로 더 당기는 pseudo-count입니다." },
+          { symbol: "Sᵢ, Nᵢ", name: "excluded-fold sum and count", description: "Row i의 fold를 제외한 같은 category의 target 합과 관측 수입니다." },
         ]}
         assumptions={["Fold는 실제 evaluation의 시간·entity 경계를 보존합니다.", "Validation·test mapping에는 해당 split의 target을 사용하지 않습니다.", "새 category에는 global mean이나 정해진 fallback을 적용합니다."]}
         interpretation="Cross-fitting은 같은 row의 label이 돌아오는 직접 누출을 막지만, 시간 순서를 무시한 fold나 반복 entity를 섞은 fold까지 자동으로 고치지는 않습니다. Split 설계가 먼저입니다."

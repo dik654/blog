@@ -12,7 +12,11 @@ export default function ContinuedPretrain() {
     <ExplainedFormula
       question="Domain corpus에 적응하면서 general text를 얼마나 함께 보여 줄까요?"
       idea={<>Domain token NLL과 general replay token NLL을 mixture weight λ로 평균합니다. λ가 1이면 domain-only continued pretraining이고, 낮추면 같은 update 안에서 general distribution도 다시 관측합니다.</>}
-      formula={String.raw`\mathcal L_{\mathrm{mix}}(\theta)=\lambda\,\mathbb E_{x\sim D_d}\!\left[\ell_{\mathrm{LM}}(x;\theta)\right]+(1-\lambda)\,\mathbb E_{x\sim D_g}\!\left[\ell_{\mathrm{LM}}(x;\theta)\right]`}
+      formula={String.raw`\begin{aligned}
+\mathcal L_{\mathrm{mix}}(\theta)
+&=\lambda\,\mathbb E_{x\sim D_d}[\ell_{\mathrm{LM}}(x;\theta)]\\
+&\quad +(1-\lambda)\,\mathbb E_{x\sim D_g}[\ell_{\mathrm{LM}}(x;\theta)]
+\end{aligned}`}
       terms={[
         { symbol: "Dd", name: "domain corpus distribution", description: "적응하려는 전문 언어·문서 구조를 담은 학습용 unlabeled distribution입니다." },
         { symbol: "Dg", name: "general replay distribution", description: "기존 일반 능력 유지를 확인하거나 학습에 섞는 대표 general distribution입니다." },
@@ -25,7 +29,11 @@ export default function ContinuedPretrain() {
     <ExplainedFormula
       question="Domain perplexity가 줄었다는 말은 언제 같은 척도로 비교할 수 있을까요?"
       idea={<>유효 target token의 평균 negative log-likelihood를 먼저 계산하고 지수함수로 되돌립니다. 같은 tokenizer·mask·context·reduction을 썼을 때만 두 checkpoint의 숫자를 직접 비교합니다.</>}
-      formula={String.raw`\overline{\mathrm{NLL}}_D=-\frac{1}{N_D}\sum_{t=1}^{N_D}\log p_\theta(x_t\mid x_{<t}),\qquad \mathrm{PPL}_D=\exp\!\left(\overline{\mathrm{NLL}}_D\right)`}
+      formula={String.raw`\begin{aligned}
+\overline{\mathrm{NLL}}_D
+&=-\frac{1}{N_D}\sum_{t=1}^{N_D}\log p_\theta(x_t\mid x_{<t})\\
+\mathrm{PPL}_D&=\exp(\overline{\mathrm{NLL}}_D)
+\end{aligned}`}
       terms={[
         { symbol: "ND", name: "valid domain tokens", description: "Padding·masked-out position을 제외하고 평가에 포함한 target token 수입니다." },
         { symbol: "pθ", name: "next-token probability", description: "동일 prefix와 tokenizer에서 model이 관측 token에 부여한 확률입니다." },
@@ -37,7 +45,10 @@ export default function ContinuedPretrain() {
     <ExplainedFormula
       question="Domain gain과 catastrophic forgetting을 checkpoint마다 어떻게 함께 기록할까요?"
       idea={<>같은 base checkpoint θ0를 기준으로 target metric의 향상과 general metric의 하락을 각각 계산합니다. 좋은 checkpoint는 target gain만 큰 것이 아니라 사전에 정한 forgetting budget 안에 있어야 합니다.</>}
-      formula={String.raw`G_t=M_d(\theta_t)-M_d(\theta_0),\qquad F_t=M_g(\theta_0)-M_g(\theta_t)`}
+      formula={String.raw`\begin{aligned}
+G_t&=M_d(\theta_t)-M_d(\theta_0)\\
+F_t&=M_g(\theta_0)-M_g(\theta_t)
+\end{aligned}`}
       terms={[
         { symbol: "Md", name: "domain metric", description: "Target task·domain slice에서 높을수록 좋은 주지표입니다." },
         { symbol: "Mg", name: "general regression metric", description: "Adaptation 이전에 유지해야 한다고 정한 일반 capability 지표입니다." },

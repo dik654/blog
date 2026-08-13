@@ -18,12 +18,20 @@ export default function XGBoost() {
       <ExplainedFormula
         question="Candidate split이 부모 leaf를 왼쪽·오른쪽으로 나눌 가치가 있는지 어떻게 계산할까?"
         idea={<>각 영역의 gradient 합 G와 Hessian 합 H로 최적인 leaf weight를 먼저 제거해 얻은 objective 개선량을 비교합니다. 두 child의 개선 합에서 부모의 개선과 새 leaf를 만드는 비용 γ를 빼면 split gain이 됩니다.</>}
-        formula={String.raw`\operatorname{Gain}=\frac12\!\left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right]-\gamma`}
+        formula={String.raw`\begin{aligned}
+Q(G,H)&=\frac{G^2}{H+\lambda},\\
+G_P&=G_L+G_R,\\
+H_P&=H_L+H_R,\\
+Q_C&=Q(G_L,H_L)+Q(G_R,H_R),\\
+\operatorname{Gain}&=\frac12\!\bigl[Q_C-Q(G_P,H_P)\bigr]-\gamma.
+\end{aligned}`}
         terms={[
           { symbol: "G_L, G_R", name: "gradient sums", description: "왼쪽·오른쪽 후보 영역 sample의 first derivative를 각각 더한 값입니다." },
           { symbol: "H_L, H_R", name: "Hessian sums", description: "각 영역의 second derivative를 더해 local curvature와 effective weight를 나타냅니다." },
           { symbol: "λ", name: "L2 leaf penalty", description: "Leaf weight가 너무 커지는 것을 줄이고 분모를 안정화합니다." },
           { symbol: "γ", name: "split penalty", description: "새 terminal leaf를 추가하기 위해 넘어야 하는 최소 objective 개선 비용입니다." },
+          { symbol: "Q(G,H)", name: "regularized leaf improvement", description: "한 영역의 gradient·Hessian 합으로 계산한 local objective 개선 항입니다." },
+          { symbol: "Q_C", name: "children improvement", description: "왼쪽과 오른쪽 child가 각각 얻는 local improvement를 합한 값입니다." },
         ]}
         assumptions={["Loss가 score에 대해 두 번 미분 가능하고 Hessian 합이 유효합니다.", "이 식은 L2 leaf penalty 중심의 standard derivation이며 L1·constraint가 있으면 해가 달라집니다.", "Histogram·approximate builder에서는 후보 threshold 자체가 bin으로 근사될 수 있습니다."]}
         interpretation="Gain이 양수여도 validation 성능 향상을 보장하지 않습니다. 이 값은 현재 round의 training objective를 local quadratic approximation 아래 개선하는 정도입니다."

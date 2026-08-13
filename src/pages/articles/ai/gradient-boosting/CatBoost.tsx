@@ -25,12 +25,18 @@ export default function CatBoost() {
       <ExplainedFormula
         question="Ordered boosting에서 row i의 pseudo-residual은 어떤 model prediction에서 계산할까?"
         idea={<>Random permutation σ에서 i보다 먼저 등장한 sample만 학습한 prefix model F⁽⁼i⁾를 만듭니다. Row i의 label은 이 model을 만드는 데 쓰지 않은 상태이므로, 그 prediction에서 loss derivative를 계산합니다.</>}
-        formula={String.raw`r_i^{\mathrm{ord}}=-\left.\frac{\partial\ell(y_i,z)}{\partial z}\right|_{z=F^{(<i)}(x_i)},\qquad F^{(<i)}\ \text{uses only}\ \{j:\sigma(j)<\sigma(i)\}`}
+        formula={String.raw`\begin{aligned}
+P_i&=\{j:\sigma(j)<\sigma(i)\},\\
+F^{(<i)}&=\operatorname{fit}(P_i),\\
+r_i^{\mathrm{ord}}
+&=-\left.\frac{\partial\ell(y_i,z)}{\partial z}\right|_{z=F^{(<i)}(x_i)}.
+\end{aligned}`}
         terms={[
           { symbol: "σ", name: "training permutation", description: "Row마다 과거 prefix를 정의하기 위한 random order입니다." },
           { symbol: "F^(<i)", name: "prefix model", description: "Permutation에서 row i보다 앞선 sample만 사용해 만든 prediction 함수입니다." },
           { symbol: "r_i^ord", name: "ordered pseudo-residual", description: "자기 row를 학습하지 않은 prefix prediction에서 구한 negative loss derivative입니다." },
           { symbol: "z", name: "model score", description: "Loss를 미분하는 regression value 또는 class logit입니다." },
+          { symbol: "Pᵢ", name: "permutation prefix", description: "Permutation에서 row i보다 앞에 있어 prefix model을 fit하는 데 사용할 수 있는 row 집합입니다." },
         ]}
         assumptions={["실제 implementation은 계산량을 줄이기 위해 여러 permutation·prefix 상태를 효율적으로 관리합니다.", "Ordered mode가 외부 validation split을 대체하지 않습니다.", "논문의 prediction-shift 분석과 현재 library option을 version별로 확인합니다."]}
         interpretation="목표는 training row를 한 번도 쓰지 않는 것이 아니라, 그 row의 gradient target을 만들 때 자기 자신을 이미 fit한 prediction을 사용하지 않는 것입니다."

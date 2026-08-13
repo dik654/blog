@@ -17,12 +17,32 @@ export default function Optuna() {
           크고 worker가 비동기로 끝나면 surrogate가 불완전한 history를 학습합니다. 같은 총 예산의 random study와 비교하고, 시작
           trial·seed·parallelism을 기록해야 sampler 자체의 이득을 판단할 수 있습니다.
         </p>
+        <p>
+          Trial 상태도 결과의 일부입니다. <strong>COMPLETE</strong>는 정해진 budget을 마치고 최종 objective를 반환한 실행이고,
+          <strong>PRUNED</strong>는 어느 resource step까지의 intermediate value를 남긴 뒤 정책에 따라 멈춘 실행입니다. 반면
+          <strong>FAIL</strong>은 OOM·data error·worker 종료처럼 비교 가능한 최종 objective가 없는 실행입니다. 예를 들어 8개 중
+          COMPLETE 5개·PRUNED 2개·FAIL 1개라면 8개 configuration과 sampling distribution, 상태, resource와 intermediate value,
+          실패 이유를 모두 보존합니다. FAIL을 나쁜 score로 임의 순위화하거나 행 자체를 지우면 sampler가 실제로 본 공간과 실패
+          경계를 재구성할 수 없습니다.
+        </p>
+        <p>
+          병렬 Study라면 저장 단위를 더 구체적으로 정합니다. 각 trial row에 study와 search-space revision, 고유 trial ID와
+          <code>retry_of</code>, configuration과 sampling distribution, sampler version·seed, 상태, 시작·종료 시각과 worker ID,
+          resource step별 intermediate value, 최종 objective, failure reason, checkpoint·log URI를 남깁니다. 아직 실행 중인
+          <strong>PENDING</strong>도 다른 worker에서 보여야 같은 후보를 불필요하게 중복 제안하는 일을 줄일 수 있습니다. Retry는 이전
+          행을 덮어쓰지 않고 새 ID로 연결해야 첫 실패와 재시도 결과를 모두 재현할 수 있습니다.
+        </p>
       </div>
 
       <ExplainedFormula
         question="Adaptive sampler는 과거 trial을 이용해 다음 후보를 어떤 형태로 고를까요?"
         idea={<>지금까지 관측한 설정과 score를 history로 모은 뒤, 유망함과 아직 모르는 정도를 수치화한 acquisition이 큰 후보를 선택합니다.</>}
-        formula={String.raw`\lambda_{t+1}=\arg\max_{\lambda\in\Lambda}\;a_t\!\left(\lambda\mid\mathcal H_t\right),\qquad \mathcal H_t=\{(\lambda_i,y_i,s_i)\}_{i=1}^{t}`}
+        formula={String.raw`\begin{aligned}
+          \mathcal H_t&=\{(\lambda_i,y_i,s_i)\}_{i=1}^{t} \\
+          \lambda_{t+1}
+          &=\arg\max_{\lambda\in\Lambda}
+            a_t(\lambda\mid\mathcal H_t)
+        \end{aligned}`}
         terms={[
           { symbol: "H_t", name: "trial history", description: "t시점까지의 configuration, 관측 score, COMPLETE·PRUNED·FAIL 상태를 모은 기록입니다." },
           { symbol: "a_t", name: "acquisition rule", description: "현재 좋은 후보를 활용할지, 불확실한 영역을 탐색할지를 정하는 sampler의 선택 기준입니다." },
@@ -40,7 +60,11 @@ export default function Optuna() {
       <ExplainedFormula
         question="TPE가 좋은 trial에서 자주 나온 설정을 어떻게 선호하는지 가장 짧게 표현하면 무엇일까요?"
         idea={<>관측 score를 기준으로 좋은 집합과 나머지로 나누고, 좋은 집합의 설정 밀도 l은 높고 나머지 밀도 g는 낮은 지점을 찾습니다.</>}
-        formula={String.raw`\ell(\lambda)=p(\lambda\mid y<y^*),\quad g(\lambda)=p(\lambda\mid y\ge y^*),\quad \text{prefer large }\frac{\ell(\lambda)}{g(\lambda)}`}
+        formula={String.raw`\begin{aligned}
+          \ell(\lambda)&=p(\lambda\mid y<y^*) \\
+          g(\lambda)&=p(\lambda\mid y\ge y^*) \\
+          \operatorname{score}(\lambda)&=\frac{\ell(\lambda)}{g(\lambda)}
+        \end{aligned}`}
         terms={[
           { symbol: "y*", name: "score quantile threshold", description: "Minimization에서 관측을 좋은 집합과 나머지로 나누는 quantile 경계입니다." },
           { symbol: "l(lambda)", name: "good density", description: "좋은 trial 집합에서 해당 설정 근처가 나타날 조건부 밀도입니다." },

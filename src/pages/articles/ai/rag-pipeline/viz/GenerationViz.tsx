@@ -19,7 +19,7 @@ export default function GenerationViz() {
         ))}
       </div>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <div className="border-l-2 border-primary pl-4"><p className="text-xs font-semibold text-primary">실행 가능한 것</p><p className="mt-1 text-sm leading-6">System과 application policy만 instruction으로 처리</p></div>
+        <div className="border-l border-primary pl-4"><p className="text-xs font-semibold text-primary">실행 가능한 것</p><p className="mt-1 text-sm leading-6">System과 application policy만 instruction으로 처리</p></div>
         <div className="border-l border-border pl-4"><p className="text-xs font-semibold text-muted-foreground">신뢰하지 않는 data</p><p className="mt-1 text-sm leading-6">검색 문서 안 명령문은 인용·요약 대상일 뿐 실행하지 않음</p></div>
       </div>
     </figure>

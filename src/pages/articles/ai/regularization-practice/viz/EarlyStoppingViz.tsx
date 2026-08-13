@@ -20,7 +20,7 @@ export default function EarlyStoppingViz() {
           </div>
           <ol className="divide-y divide-border">
             {evaluations.map(([step, loss, state, artifact]) => (
-              <li key={step} className={`grid grid-cols-[3rem_4rem_1fr] gap-2 px-0 py-3 text-sm sm:grid-cols-[5rem_5rem_1fr_1fr] sm:px-3 ${step === "02" ? "border-l-2 border-l-emerald-500" : step === "05" ? "border-l-2 border-l-amber-500" : "border-l-2 border-l-transparent"}`}>
+              <li key={step} className={`grid grid-cols-[3rem_4rem_1fr] gap-2 border-l px-0 py-3 text-sm sm:grid-cols-[5rem_5rem_1fr_1fr] sm:px-3 ${step === "02" ? "border-l-emerald-500" : step === "05" ? "border-l-amber-500" : "border-l-transparent"}`}>
                 <span className="font-mono text-xs">{step}</span><span className="font-mono font-semibold">{loss}</span><span>{state}</span><span className="col-start-2 text-xs text-muted-foreground sm:col-start-auto sm:text-sm">{artifact}</span>
               </li>
             ))}

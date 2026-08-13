@@ -2347,6 +2347,52 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "distributional",
       },
       {
+        level: "basic",
+        question:
+          "같은 corpus에서 symmetric window·directional window·dependency context·document context가 서로 어떤 관계를 관측하는지 비교할 수 있을까요?",
+        answerChecklist: [
+          "Symmetric window는 좌우 주변 token을 같은 feature로 센다고 설명한다.",
+          "Directional·dependency context는 순서나 문법 관계를 별도 feature로 보존한다고 설명한다.",
+          "Document context는 더 넓은 주제 관계를 얻지만 task와 무관한 동시 등장도 늘 수 있다고 제한한다.",
+        ],
+        requiredConcepts: [
+          "distributional-hypothesis",
+          "word-context-matrix",
+        ],
+        sectionId: "distributional",
+      },
+      {
+        level: "basic",
+        question:
+          "M=diag(3,1)을 k=1 truncated SVD로 근사하고 남는 matrix와 버리는 squared Frobenius error를 계산할 수 있을까요?",
+        answerChecklist: [
+          "Singular value가 3과 1임을 확인한다.",
+          "Rank-1 근사가 diag(3,0)임을 적는다.",
+          "버린 squared Frobenius error가 1²=1이며 이는 downstream 의미 보존 보장이 아니라고 설명한다.",
+        ],
+        requiredConcepts: [
+          "singular-value-decomposition",
+          "low-rank-approximation",
+          "distributional-svd-embedding",
+        ],
+        sectionId: "dimensionality",
+      },
+      {
+        level: "basic",
+        question:
+          "‘bank approved the loan’과 ‘sat on the river bank’에서 static embedding과 contextual representation이 각각 몇 개의 표현을 만드는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "Static table은 word type bank에 하나의 vector를 준다고 설명한다.",
+          "Contextual model은 두 token instance에 문장별 hidden state를 만든다고 설명한다.",
+          "Contextual representation도 tokenization·layer·pooling에 따라 달라지며 다의성을 자동으로 완벽히 분리하지는 않는다고 제한한다.",
+        ],
+        requiredConcepts: [
+          "one-hot-identifier",
+          "static-contextual-representation",
+        ],
+        sectionId: "neural-approach",
+      },
+      {
         level: "advanced",
         question:
           "Weighted matrix의 singular value가 9,4,1이고 k=2일 때 버리는 squared Frobenius error를 계산하고 이 선택이 synonym 평가에도 최적이라고 단정할 수 없는 이유를 설명할 수 있을까요?",
@@ -4183,6 +4229,69 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
+          "x′=−2x에서 λ의 단위와 h=0.1s의 무차원 step hλ를 계산하고, 지수의 입력과 Euler stability 조건에 단위가 왜 필요한지 설명할 수 있을까요?",
+        answerChecklist: [
+          "λ의 단위를 s⁻¹로 적는다.",
+          "hλ=(0.1s)(2s⁻¹)=0.2를 계산한다.",
+          "e^(−λt)의 지수와 1−hλ의 배율은 무차원이어야 한다고 설명한다.",
+        ],
+        requiredConcepts: [
+          "initial-value-problem",
+          "euler-stability-condition",
+          "exponentiation",
+        ],
+        sectionId: "initial-value",
+      },
+      {
+        level: "basic",
+        question:
+          "Euler method의 step size를 h=0.2에서 0.1로 줄일 때 fixed horizon의 global error와 계산 step 수가 대략 어떻게 바뀌는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "Smooth ODE에서 Euler의 local truncation error는 O(h²)라고 적는다.",
+          "Fixed horizon global error는 O(h)이므로 대략 절반으로 줄어든다고 설명한다.",
+          "T/h step이므로 계산 횟수는 대략 두 배가 된다고 적는다.",
+        ],
+        requiredConcepts: [
+          "explicit-euler-method",
+          "numerical-discretization-error",
+        ],
+        sectionId: "euler-method",
+      },
+      {
+        level: "basic",
+        question:
+          "Adaptive solver의 local error estimate가 tolerance보다 클 때와 충분히 작을 때 다음 step이 어떻게 바뀌는지, tolerance를 낮추면 NFE가 왜 늘어나는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "Error estimate가 tolerance보다 크면 step을 거절하고 h를 줄여 다시 계산한다고 적는다.",
+          "Error가 충분히 작으면 다음 h를 키울 수 있다고 적는다.",
+          "낮은 tolerance는 더 작은 step·거절 재시도를 늘려 NFE를 키지만 model error를 없애지는 못한다고 제한한다.",
+        ],
+        requiredConcepts: [
+          "heun-second-order-method",
+          "numerical-discretization-error",
+        ],
+        sectionId: "heun-runge-kutta",
+      },
+      {
+        level: "advanced",
+        question:
+          "전체 시간 T를 Δt step으로 나눠 독립 noise를 더할 때 √Δt·ε와 Δt·ε 구현의 accumulated variance를 비교해 후자가 왜 Brownian motion이 아닌지 증명할 수 있을까요?",
+        answerChecklist: [
+          "Step 수를 T/Δt로 적는다.",
+          "√Δt·ε의 한 step 분산 Δt를 더해 전체 분산 T를 얻는다.",
+          "Δt·ε의 전체 분산은 (T/Δt)Δt²=TΔt이므로 Δt→0에서 0으로 사라진다고 보인다.",
+          "Independent zero-mean increments와 variance additivity 전제를 명시한다.",
+        ],
+        requiredConcepts: [
+          "variance",
+          "brownian-increment-scaling",
+          "stochastic-differential-equation",
+        ],
+        sectionId: "ode-sde-boundary",
+      },
+      {
+        level: "basic",
+        question:
           "x′=−2x, x(0)=3의 exact trajectory를 쓰고 t=0.5의 값을 계산한 뒤 vector field와 trajectory를 구분할 수 있을까요?",
         answerChecklist: [
           "x(t)=3e^(−2t)를 적는다.",
@@ -4483,6 +4592,64 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     exercises: [
+      {
+        level: "basic",
+        question:
+          "f(x)=(x−3)²+2를 domain x∈[0,2]에서 최소화할 때 minimizer와 minimum value를 구하고 unconstrained 정답과 다른 이유를 설명할 수 있을까요?",
+        answerChecklist: [
+          "Unconstrained minimizer x=3은 domain 밖이라고 판정한다.",
+          "허용 구간에서 3에 가장 가까운 x*=2를 minimizer로 구한다.",
+          "f(2)=3을 minimum value로 계산하고 objective·domain이 함께 문제를 정의한다고 설명한다.",
+        ],
+        requiredConcepts: ["optimization-objective", "minimizer"],
+        sectionId: "objective",
+      },
+      {
+        level: "basic",
+        question:
+          "f(x)=3x²/2의 smoothness constant L을 구하고 x₀=2에서 η=1/L gradient step 한 번을 계산할 수 있을까요?",
+        answerChecklist: [
+          "Gradient f′(x)=3x를 구한다.",
+          "Gradient 차이가 3|x−y|이므로 L=3임을 적는다.",
+          "x₁=2−(1/3)·6=0을 계산한다.",
+        ],
+        requiredConcepts: [
+          "l-smoothness",
+          "gradient-descent",
+          "learning-rate",
+        ],
+        sectionId: "smoothness",
+      },
+      {
+        level: "basic",
+        question:
+          "Gradient가 0인 점이 minimum이라고 단정하면 안 되는 이유를 x², −x², x²−y²의 원점으로 구분할 수 있을까요?",
+        answerChecklist: [
+          "세 함수 모두 원점의 gradient가 0임을 확인한다.",
+          "x²의 원점은 minimum, −x²의 원점은 maximum으로 분류한다.",
+          "x²−y²의 원점은 방향에 따라 증가·감소가 갈리는 saddle라고 설명한다.",
+        ],
+        requiredConcepts: ["stationary-point", "gradient"],
+        sectionId: "nonconvex",
+      },
+      {
+        level: "advanced",
+        question:
+          "μ=2, L=8인 strongly convex·smooth objective에서 η=1/L을 쓸 때 condition number와 4 step 뒤 objective-gap bound를 초기 gap의 비율로 계산하고 이 bound의 전제를 적을 수 있을까요?",
+        answerChecklist: [
+          "Condition number L/μ=4를 계산한다.",
+          "한 step contraction upper bound 1−μ/L=3/4를 구한다.",
+          "4 step 후 gap이 초기 gap의 (3/4)⁴=81/256≈0.316 이하라고 계산한다.",
+          "전역 μ-strong convexity·L-smoothness·exact gradient·η=1/L 전제와 upper bound이 실제 경로의 등호를 뜻하지 않음을 명시한다.",
+        ],
+        requiredConcepts: [
+          "strong-convexity",
+          "l-smoothness",
+          "condition-number",
+          "optimization-convergence",
+        ],
+        sectionId: "convergence",
+      },
       {
         level: "basic",
         question:
@@ -5133,6 +5300,49 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "output-layer",
       },
       {
+        level: "basic",
+        question:
+          "Hidden layer가 ‘hidden’이라는 말이 값을 관찰할 수 없다는 뜻인지, 그리고 hidden representation은 무엇으로 학습되는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "Hidden activation은 기록하고 시각화할 수 있다고 설명한다.",
+          "Hidden unit별 직접 target이 보통 없다는 의미로 hidden이라고 구분한다.",
+          "최종 objective의 gradient가 모든 layer를 함께 조정한다고 설명한다.",
+          "Unit 하나가 사람이 붙인 concept 하나와 일대일 대응한다고 단정하지 않는다.",
+        ],
+        requiredConcepts: ["hidden-representation", "training-step"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "784→128→10 dense MLP의 weight와 bias를 layer별로 세어 전체 parameter 101,770개를 확인할 수 있을까요?",
+        answerChecklist: [
+          "첫 layer에서 784×128+128=100,480개를 계산한다.",
+          "출력 layer에서 128×10+10=1,290개를 계산한다.",
+          "두 값을 더해 101,770개를 얻는다.",
+          "Batch size는 parameter 수를 바꾸지 않는다고 설명한다.",
+        ],
+        requiredConcepts: ["affine-layer", "batch-linear-layer"],
+        sectionId: "mnist",
+      },
+      {
+        level: "basic",
+        question:
+          "Dense layer의 weight를 모두 0으로 시작하면 왜 unit들이 서로 다른 feature를 배우기 어렵고, fan-in을 초기 scale에 반영하는 이유는 무엇일까요?",
+        answerChecklist: [
+          "같은 layer의 unit이 같은 output과 같은 gradient를 받아 대칭이 유지된다고 설명한다.",
+          "Fan-in이 커지면 더 많은 독립 항이 합쳐져 preactivation variance가 커질 수 있다고 설명한다.",
+          "Xavier·He가 fan 값과 activation을 반영한 출발점이라고 말한다.",
+          "Initialization만으로 안정성이 보장되지 않고 activation·normalization·residual path와 함께 본다고 제한한다.",
+        ],
+        requiredConcepts: [
+          "affine-layer",
+          "initialization-scale",
+          "nonlinear-activation",
+        ],
+        sectionId: "forward",
+      },
+      {
         level: "advanced",
         question:
           "Activation 없는 affine layer 두 개가 하나로 collapse하는 과정을 전개하고 XOR 표현력과 연결할 수 있을까요?",
@@ -5181,6 +5391,24 @@ export const ARTICLE_LEARNING: Readonly<
           "prediction-contract",
         ],
         sectionId: "mnist",
+      },
+      {
+        level: "advanced",
+        question:
+          "깊은 MLP의 학습 초기에 위쪽 layer activation이 포화되고 gradient가 거의 0일 때 initialization 문제를 어떻게 계측하고, 어떤 비교 실험으로 원인을 분리할까요?",
+        answerChecklist: [
+          "Layer별 preactivation·activation의 mean과 variance, gradient norm을 같은 step에서 기록한다.",
+          "Fan-in 100에서 unit-variance weight를 쓰면 독립 입력 가정 아래 preactivation variance가 약 100까지 커질 수 있음을 설명한다.",
+          "Activation에 맞는 Xavier·He scale과 normalization·residual path를 각각 분리한 ablation으로 비교한다.",
+          "같은 initial seed·data order·optimizer·learning rate에서 train loss와 validation 결과까지 확인한다.",
+        ],
+        requiredConcepts: [
+          "initialization-scale",
+          "nonlinear-activation",
+          "hidden-representation",
+          "generalization",
+        ],
+        sectionId: "forward",
       },
     ],
     papers: [
@@ -6454,6 +6682,53 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "momentum",
       },
       {
+        level: "basic",
+        question:
+          "Backpropagation과 optimizer가 training step에서 각각 무엇을 계산하며, 같은 gradient를 받아도 SGD와 Adam의 update가 달라지는 이유를 설명할 수 있을까요?",
+        answerChecklist: [
+          "Backpropagation은 loss의 parameter별 gradient를 계산한다고 말한다.",
+          "Optimizer는 gradient와 자신의 state를 다음 parameter update로 바꾼다고 말한다.",
+          "SGD는 global learning rate를, Adam은 coordinate별 moment history scale을 사용한다고 구분한다.",
+          "Optimizer가 gradient 자체나 global optimum을 자동으로 만들어 주는 것은 아니라고 제한한다.",
+        ],
+        requiredConcepts: ["gradient", "optimizer-update", "sgd-update"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Adam에서 β₁=0.9, β₂=0.999, m₀=v₀=0, 첫 gradient g=2일 때 m₁·v₁과 bias-corrected m̂₁·v̂₁을 계산할 수 있을까요?",
+        answerChecklist: [
+          "m₁=(1−0.9)×2=0.2를 계산한다.",
+          "v₁=(1−0.999)×2²=0.004를 계산한다.",
+          "m̂₁=0.2/0.1=2와 v̂₁=0.004/0.001=4를 얻는다.",
+          "v가 centered variance가 아니라 squared-gradient raw moment라고 구분한다.",
+        ],
+        requiredConcepts: [
+          "raw-gradient-moments",
+          "ema-bias-correction",
+          "adaptive-preconditioning",
+        ],
+        sectionId: "adam",
+      },
+      {
+        level: "basic",
+        question:
+          "Task gradient가 0인 AdamW parameter θ=10에 η=0.01, λ=0.1을 적용하면 다음 θ는 얼마이고, 이 계산이 Adam 안의 L2 penalty와 다른 이유는 무엇일까요?",
+        answerChecklist: [
+          "Shrink factor 1−ηλ=0.999를 계산한다.",
+          "θ_next=0.999×10=9.99를 구한다.",
+          "AdamW decay가 task-gradient moment state와 별도 항이라고 설명한다.",
+          "Adam 내부 L2 penalty는 λθ가 m·v에 들어가 coordinate scaling을 받는다고 구분한다.",
+        ],
+        requiredConcepts: [
+          "decoupled-weight-decay",
+          "adaptive-preconditioning",
+          "optimizer-update",
+        ],
+        sectionId: "adamw",
+      },
+      {
         level: "advanced",
         question:
           "Adam의 v가 gradient variance와 같지 않은 이유를 first·second raw moment와 centered second moment로 설명할 수 있을까요?",
@@ -7585,6 +7860,52 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "training",
       },
       {
+        level: "basic",
+        question:
+          "SOS에서 token A를 고르고 다음 step에서 EOS를 고르는 autoregressive decoder가 state·input·종료 조건을 어떻게 갱신하는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "첫 step은 SOS embedding과 이전 decoder state에서 next-token distribution을 만든다고 설명한다.",
+          "선택한 A가 다음 step input이 되어 새 state와 distribution을 만든다고 설명한다.",
+          "EOS를 선택하면 generation이 종료된다고 말한다.",
+          "각 선택이 다음 조건이 되므로 recurrent inference가 순차적이라고 설명한다.",
+        ],
+        requiredConcepts: ["autoregressive-decoding", "probability-distribution"],
+        sectionId: "decoder",
+      },
+      {
+        level: "basic",
+        question:
+          "두 valid target token의 정답 probability가 0.8과 0.5이고 세 번째 위치가 padding일 때 masked token-average NLL을 계산할 수 있을까요?",
+        answerChecklist: [
+          "Mask를 (1,1,0)으로 두고 valid-token normalizer N=2를 계산한다.",
+          "Padding 위치는 loss 합에서 제외한다.",
+          "Loss를 −(log 0.8+log 0.5)/2≈0.458로 계산한다.",
+          "이 값은 gold prefix에서의 teacher-forced conditional loss라고 제한한다.",
+        ],
+        requiredConcepts: [
+          "cross-entropy-nll",
+          "teacher-forcing",
+          "log-product-rule",
+        ],
+        sectionId: "training",
+      },
+      {
+        level: "basic",
+        question:
+          "Attention weight가 (0.25,0.75)이고 source state가 h₁=(2,0), h₂=(0,4)일 때 context vector를 계산하고 weight의 의미를 설명할 수 있을까요?",
+        answerChecklist: [
+          "Attention weight가 source 축에서 0.25+0.75=1임을 확인한다.",
+          "c=0.25h₁+0.75h₂=(0.5,3)을 계산한다.",
+          "Target step마다 다른 source read를 만들 수 있다고 설명한다.",
+          "Weight만으로 prediction의 완전한 인과 설명을 단정하지 않는다.",
+        ],
+        requiredConcepts: [
+          "fixed-context-bottleneck",
+          "probability-distribution",
+        ],
+        sectionId: "limitations",
+      },
+      {
         level: "advanced",
         question:
           "첫 step 후보 a,b의 log score가 −0.1,−0.2이고 다음 후보 확장의 log score가 a→x −2.0, a→y −2.2, b→x −0.1, b→y −0.3일 때 beam width 2가 남길 prefix는 무엇일까요?",
@@ -7631,6 +7952,23 @@ export const ARTICLE_LEARNING: Readonly<
           "autoregressive-decoding",
         ],
         sectionId: "training",
+      },
+      {
+        level: "advanced",
+        question:
+          "Source 길이 S=40, target 길이 T=10인 recurrent Seq2Seq에서 fixed context와 step별 attention의 접근 경로·score 수·memory trade-off를 비교할 수 있을까요?",
+        answerChecklist: [
+          "Fixed context는 마지막 state 하나를 handoff한 뒤 source 위치를 직접 재조회하지 못한다고 설명한다.",
+          "Step별 attention은 T×S=400개의 compatibility score를 계산한다고 센다.",
+          "Attention은 S개의 encoder state를 memory에 유지한다고 설명한다.",
+          "Length bucket별 quality와 latency·memory를 같은 state width·hardware budget에서 비교한다고 제안한다.",
+        ],
+        requiredConcepts: [
+          "encoder-decoder-state-handoff",
+          "fixed-context-bottleneck",
+          "recurrent-deployment-contract",
+        ],
+        sectionId: "limitations",
       },
     ],
     papers: [
@@ -8325,6 +8663,68 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     exercises: [
+      {
+        level: "basic",
+        question:
+          "DFT와 FFT의 역할을 구분하고, 길이 N에서 direct DFT와 radix-2 FFT의 계산량이 각각 어떻게 커지는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "DFT는 sample vector를 frequency coefficient로 바꾸는 invertible transform이라고 적는다.",
+          "FFT는 같은 DFT coefficient를 재사용해 계산하는 algorithm family라고 구분한다.",
+          "Direct DFT는 O(N²), radix-2 FFT는 O(N log N) work임을 적고 결과를 근사해 얻는 것이 아님을 명시한다.",
+        ],
+        requiredConcepts: [
+          "discrete-fourier-transform",
+          "cooley-tukey-fft",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "16kHz audio에서 N=400, hop H=160인 STFT의 frame duration과 인접 frame 시간 간격을 계산하고 N과 H가 서로 다른 축을 바꾸는 이유를 설명할 수 있을까요?",
+        answerChecklist: [
+          "Frame duration N/fₛ=400/16000=25ms를 계산한다.",
+          "Frame 간격 H/fₛ=160/16000=10ms를 계산한다.",
+          "N은 local 관측 길이·frequency grid를, H는 time-axis sampling·계산량을 주로 바꾼다고 구분한다.",
+        ],
+        requiredConcepts: [
+          "short-time-fourier-transform",
+          "discrete-fourier-transform",
+        ],
+        sectionId: "ai-usage",
+      },
+      {
+        level: "basic",
+        question:
+          "길이 5 signal과 길이 3 filter의 linear convolution을 FFT로 계산할 때 최소 padding 길이와 결과 길이를 구하고 padding이 필요한 이유를 설명할 수 있을까요?",
+        answerChecklist: [
+          "Linear convolution 길이 Lx+Lh−1=7을 계산한다.",
+          "두 operand를 적어도 길이 7인 transform grid에 zero-padding한다고 적는다.",
+          "Padding이 부족하면 circular convolution의 끝 값이 앞으로 감기는 wrap-around가 생긴다고 설명한다.",
+        ],
+        requiredConcepts: [
+          "convolution-theorem",
+          "discrete-fourier-transform",
+        ],
+        sectionId: "ai-usage",
+      },
+      {
+        level: "advanced",
+        question:
+          "8kHz로 sampling한 1kHz와 7kHz cosine이 모든 integer sample index에서 같은 sequence를 만든다는 것을 삼각함수 식으로 보이고, 어떤 전제가 빠져 aliasing이 생겼는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "7kHz sample을 cos(2π·7n/8)=cos(2πn−2πn/8)로 적는다.",
+          "2π 주기성과 cosine의 짝함수 성질로 cos(2πn/8), 즉 1kHz sample과 같음을 보인다.",
+          "Source가 fₛ/2=4kHz 아래로 band-limited된다는 전제가 깨졌음을 적는다.",
+          "FFT 종류나 zero-padding을 바꾸어도 이미 같아진 sample에서 원래 frequency를 복구할 수 없다고 제한한다.",
+        ],
+        requiredConcepts: [
+          "sampling-nyquist-boundary",
+          "discrete-fourier-transform",
+          "radian-measure",
+        ],
+        sectionId: "fourier",
+      },
       {
         level: "basic",
         question:
@@ -9178,6 +9578,66 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "likelihood",
       },
       {
+        level: "basic",
+        question:
+          "Autoregressive·flow·GAN·diffusion을 likelihood 계산·구조 제약·sampling 경로·latency로 비교해 요구에 맞는 후보를 고를 수 있을까요?",
+        answerChecklist: [
+          "Autoregressive는 exact chain-rule likelihood와 sequential sampling을 함께 적는다.",
+          "Flow는 exact density·양방향 계산과 bijection/Jacobian 제약을 함께 적는다.",
+          "GAN은 normalized density 없이 빠른 generator sample을, diffusion은 score와 여러 network evaluation을 쓴다고 구분한다.",
+        ],
+        requiredConcepts: [
+          "density-sampling-tractability",
+          "autoregressive-generative-factorization",
+          "normalizing-flow-change-of-variables",
+          "adversarial-density-ratio",
+          "diffusion-score-parameterization",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "두 observation에 model probability 0.8과 0.25가 주어졌을 때 dataset likelihood·log-likelihood·평균 NLL을 계산할 수 있을까요?",
+        answerChecklist: [
+          "Likelihood 0.8×0.25=0.2를 계산한다.",
+          "Log-likelihood log 0.2≈−1.609를 계산한다.",
+          "평균 NLL이 약 0.805이며 NLL만으로 perceptual quality를 결론낼 수 없다고 말한다.",
+        ],
+        requiredConcepts: ["logarithm", "maximum-likelihood"],
+        sectionId: "likelihood",
+      },
+      {
+        level: "basic",
+        question:
+          "두 값의 discrete latent z에서 prior와 conditional probability가 주어졌을 때 p(x)를 marginalize할 수 있을까요?",
+        answerChecklist: [
+          "p(z=0)=0.75와 p(z=1)=0.25를 각각 conditional에 곱한다.",
+          "0.75×0.2+0.25×0.8=0.35를 계산한다.",
+          "Continuous high-dimensional z에서는 합이 적분으로 바뀌어 intractable할 수 있다고 설명한다.",
+        ],
+        requiredConcepts: [
+          "expectation",
+          "latent-variable-marginalization",
+        ],
+        sectionId: "latent",
+      },
+      {
+        level: "basic",
+        question:
+          "Real과 generated density 비가 3:1인 위치의 optimal discriminator와 standard Gaussian의 x=2에서 score를 각각 계산하고 두 신호의 차이를 설명할 수 있을까요?",
+        answerChecklist: [
+          "D*(x)=3/(3+1)=0.75를 계산한다.",
+          "Gaussian score ∇x log p(x)=−x이므로 x=2에서 −2를 계산한다.",
+          "Discriminator는 두 분포의 비교 비율, score는 한 분포 log-density의 local 방향이며 둘 다 normalized density 자체는 아니라고 구분한다.",
+        ],
+        requiredConcepts: [
+          "adversarial-density-ratio",
+          "score-function-field",
+        ],
+        sectionId: "implicit",
+      },
+      {
         level: "advanced",
         question:
           "Maximum likelihood의 NLL이 forward KL과 θ에 무관한 data entropy로 분해되는 식을 유도하고 coverage 해석의 한계를 말할 수 있을까요?",
@@ -9238,22 +9698,6 @@ export const ARTICLE_LEARNING: Readonly<
           "probability-distribution",
         ],
         sectionId: "implicit",
-      },
-      {
-        level: "advanced",
-        question:
-          "VAE·flow·GAN·diffusion 후보를 likelihood·sampling·coverage·condition·latency 관점으로 비교하는 재현 가능한 평가표를 설계할 수 있을까요?",
-        answerChecklist: [
-          "Family별 직접 계산 가능한 quantity와 approximation을 적는다.",
-          "NLL·quality·precision/recall·condition metric·NFE/latency를 분리한다.",
-          "Dataset·sample count·preprocessing·hardware·solver를 고정한다.",
-        ],
-        requiredConcepts: [
-          "density-sampling-tractability",
-          "generative-evaluation-boundary",
-          "diffusion-score-parameterization",
-        ],
-        sectionId: "overview",
       },
     ],
     papers: [
@@ -9587,6 +10031,34 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "numeric",
       },
       {
+        level: "basic",
+        question:
+          "거래액 50,000원을 `log(1 + amount / 10,000원)`으로 변환할 때 먼저 단위를 없애야 하는 이유와 거래액이 관측되지 않은 경우의 처리 계약을 설명하라.",
+        answerChecklist: [
+          "amount / 10,000원 = 5인 무차원 비율",
+          "log(6)으로 변환",
+          "결측과 실제 0을 구분",
+          "대치값과 missing indicator",
+          "training fold에서만 fit",
+        ],
+        requiredConcepts: ["fold-local-statistic", "feature-availability-contract"],
+        sectionId: "numeric",
+      },
+      {
+        level: "basic",
+        question:
+          "Bronze·Silver·Gold 등급과 서울·부산·제주 지역을 각각 어떤 categorical encoding으로 시작할지 고르고, 학습 때 없던 지역이 들어왔을 때의 fallback을 설명하라.",
+        answerChecklist: [
+          "등급에는 의미 있는 순서를 보존하는 ordinal encoding",
+          "지역 숫자 ID의 가짜 거리 금지",
+          "지역에는 one-hot 또는 명시적 categorical 처리",
+          "unknown token·other bucket 등 사전 정의 fallback",
+          "normalization·mapping version 고정",
+        ],
+        requiredConcepts: ["feature-availability-contract", "fold-local-statistic"],
+        sectionId: "categorical",
+      },
+      {
         level: "advanced",
         question:
           "세 fold target encoding에서 row 자신의 label이 피처로 돌아오지 않게 mapping을 만드는 순서와 새 category fallback을 작성하라.",
@@ -9612,6 +10084,23 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: ["interaction-feature-map"],
         sectionId: "interaction",
+      },
+      {
+        level: "basic",
+        question:
+          "Cutoff이 8월 31일 09시이고 30일 window 안에 cutoff 이전 사용 가능한 거래 42,000원·27,000원·51,000원이 있으며 cutoff 뒤 33,000원 거래가 있다. count와 mean을 계산하고 마지막 거래를 제외하는 이유를 설명하라.",
+        answerChecklist: [
+          "count=3",
+          "mean=40,000원",
+          "cutoff 뒤 33,000원 제외",
+          "event time과 available time 모두 확인",
+          "window 경계 (t₀-W,t₀] 명시",
+        ],
+        requiredConcepts: [
+          "point-in-time-aggregation",
+          "prediction-cutoff-time",
+        ],
+        sectionId: "aggregation",
       },
       {
         level: "advanced",
@@ -9952,6 +10441,23 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "boosting",
       },
       {
+        level: "basic",
+        question:
+          "XGBoost 설정에서 `max_depth`·`min_child_weight`와 `max_bin`·`device`를 model capacity에 직접 관여하는 항과 후보 탐색·실행 방식에 관여하는 항으로 나누고, 같은 값 비교가 왜 공정하지 않을 수 있는지 설명하라.",
+        answerChecklist: [
+          "max_depth·min_child_weight는 함수 capacity와 regularization에 관여",
+          "max_bin은 threshold 후보 해상도에 관여",
+          "device는 실행 경로와 비용에 관여",
+          "histogram은 threshold를 근사할 수 있음",
+          "동일 data·hardware에서 benchmark",
+        ],
+        requiredConcepts: [
+          "xgboost-second-order-gain",
+          "histogram-split-approximation",
+        ],
+        sectionId: "xgboost",
+      },
+      {
         level: "advanced",
         question:
           "Squared loss residual과 logistic loss pseudo-residual이 같은 공식이 아닌 이유를 derivative 정의에서 설명하라.",
@@ -10001,6 +10507,20 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
+          "현재 terminal leaf 세 개의 candidate gain이 각각 3·7·5라면 leaf-wise growth가 어느 leaf를 확장하는지 고르고, 작은 dataset에서 함께 제한할 항목을 설명하라.",
+        answerChecklist: [
+          "gain 7인 leaf 선택",
+          "같은 depth 전체가 아니라 현재 최고 gain 하나를 확장",
+          "한 branch가 깊어질 수 있음",
+          "num_leaves 제한",
+          "min_data_in_leaf와 max depth 검토",
+        ],
+        requiredConcepts: ["leaf-wise-tree-growth"],
+        sectionId: "lightgbm",
+      },
+      {
+        level: "basic",
+        question:
           "Permutation A,C,B,D에서 B의 ordered pseudo-residual을 만들 때 prefix model이 사용할 row와 제외할 row를 쓰라.",
         answerChecklist: [
           "use A,C",
@@ -10010,6 +10530,25 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: ["catboost-ordered-boosting"],
         sectionId: "catboost",
+      },
+      {
+        level: "basic",
+        question:
+          "XGBoost·LightGBM·CatBoost를 첫 비교할 때 depth와 round 수만 같게 두는 대신 반드시 고정해야 할 data·search·system 조건을 세 가지 이상 쓰고, 최종 test를 언제 여는지 설명하라.",
+        answerChecklist: [
+          "동일 group·time split과 leakage-free feature artifact",
+          "동일 metric·early stopping",
+          "같은 tuning trial 또는 wall-clock budget",
+          "같은 hardware·thread 조건",
+          "quality뿐 아니라 latency·memory 기록",
+          "library 선택과 tuning 뒤 최종 test 공개",
+        ],
+        requiredConcepts: [
+          "gbm-comparison-contract",
+          "feature-availability-contract",
+          "train-validation-test",
+        ],
+        sectionId: "comparison",
       },
       {
         level: "advanced",
@@ -10332,10 +10871,28 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "TabNet mask가 고객 A의 step 1에서 (.7,.2,.1,0)일 때 선택된 input을 쓰고 이것을 global importance로 부를 수 없는 이유를 설명하라.",
+          "Raw 고객 row가 `T_schema → Enc_θ → h_φ`를 지나 churn logit이 되는 경로를 설명하고, schema transform과 learned encoder가 각각 책임지는 일을 구분하라.",
+        answerChecklist: [
+          "T_schema가 단위·결측·category vocabulary·available-time을 고정",
+          "Enc_θ가 유용한 row representation을 학습",
+          "h_φ가 representation을 target 형식의 output으로 변환",
+          "schema state는 training fold에서 fit",
+          "encoder가 leakage나 serving skew를 자동 수정하지 않음",
+        ],
+        requiredConcepts: [
+          "tabular-row-schema-contract",
+          "representation-learning",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "고객 A의 input이 (10,20,30,40), TabNet step 1 mask가 (.7,.2,.1,0)일 때 선택된 input을 계산하고 이것을 global importance로 부를 수 없는 이유를 설명하라.",
         answerChecklist: [
           "element-wise product",
-          "one zeroed feature",
+          "selected input=(7,4,3,0)",
+          "마지막 feature가 현재 step에서 0",
           "row conditional",
           "step conditional",
           "not causal",
@@ -10390,6 +10947,23 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "ft-transformer",
       },
       {
+        level: "basic",
+        question:
+          "수치형 age·범주형 city·범주형 job 세 column을 d=8 token으로 바꾸고 [CLS]를 앞에 붙일 때 input shape를 계산하고, 학습 때 없던 city가 들어오면 어느 계약이 필요할지 설명하라.",
+        answerChecklist: [
+          "feature token 3개와 CLS 1개",
+          "input shape 4×8",
+          "categorical column별 embedding table",
+          "unknown·rare·missing category mapping",
+          "column identity는 tokenizer parameter에 보존",
+        ],
+        requiredConcepts: [
+          "tabular-feature-tokenizer",
+          "ft-transformer-column-interaction",
+        ],
+        sectionId: "ft-transformer",
+      },
+      {
         level: "advanced",
         question:
           "수치형 6개와 범주형 4개를 d=32로 token화할 때 CLS 포함 input shape와 head별 dense attention score 수를 계산하고 column permutation의 의미를 논하라.",
@@ -10406,6 +10980,24 @@ export const ARTICLE_LEARNING: Readonly<
           "self-attention",
         ],
         sectionId: "ft-transformer",
+      },
+      {
+        level: "basic",
+        question:
+          "수천 개의 수치형 row로 이루어진 threshold 문제와, stable seller ID를 여러 상품·이미지에서 재사용하는 문제 중 어느 쪽에서 neural representation을 먼저 시험할 이유가 큰지 설명하고 공정한 baseline 순서를 쓰라.",
+        answerChecklist: [
+          "단순 threshold 문제에서는 GBDT가 강한 출발점",
+          "공유 embedding·multimodal 구조는 neural 후보 근거",
+          "row 수 하나로 결정하지 않음",
+          "CatBoost·LightGBM과 simple MLP/ResNet baseline",
+          "동일 split·feature·tuning budget",
+          "품질·calibration·latency·memory 비교",
+        ],
+        requiredConcepts: [
+          "tabular-neural-representation-opportunity",
+          "gbm-comparison-contract",
+        ],
+        sectionId: "when-dl-wins",
       },
       {
         level: "advanced",
@@ -10728,6 +11320,20 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "lag",
       },
       {
+        level: "basic",
+        question:
+          "현재 available level이 120이고 7-step lag가 100일 때 difference feature를 계산하고 단위·missing 조건·target 차분과의 차이를 설명하라.",
+        answerChecklist: [
+          "120-100=20",
+          "same unit as level",
+          "missing when lag unavailable",
+          "input feature difference",
+          "not target differencing",
+        ],
+        requiredConcepts: ["lag-difference-feature"],
+        sectionId: "lag",
+      },
+      {
         level: "advanced",
         question:
           "Lag 7 ACF가 높지만 forecast gain이 없는 반례와 rolling-origin ablation을 설명하라.",
@@ -10787,6 +11393,38 @@ export const ARTICLE_LEARNING: Readonly<
           "unit-circle-trigonometry",
         ],
         sectionId: "cyclic",
+      },
+      {
+        level: "basic",
+        question:
+          "T=24에서 hour 23과 hour 0의 scalar gap과 짧은 angular gap을 비교하고 sin·cos pair가 모두 필요한 이유와 고정 period의 한계를 설명하라.",
+        answerChecklist: [
+          "scalar gap 23",
+          "angular gap 2π/24",
+          "boundary neighbors",
+          "sin and cos pair",
+          "irregular calendar caveat",
+        ],
+        requiredConcepts: ["cyclic-time-coordinate"],
+        sectionId: "cyclic",
+      },
+      {
+        level: "basic",
+        question:
+          "Cutoff 6월 1일·gap 7일·horizon 30일인 rolling-origin fold 하나의 training 끝과 validation 구간을 쓰고 final test를 어떻게 보존할지 설명하라.",
+        answerChecklist: [
+          "training ends before May 25",
+          "seven-day gap",
+          "validation June 1 to July 1",
+          "past-to-future order",
+          "final test untouched",
+        ],
+        requiredConcepts: [
+          "rolling-origin-evaluation",
+          "temporal-gap-purge",
+          "train-validation-test",
+        ],
+        sectionId: "leakage",
       },
       {
         level: "advanced",
@@ -11139,6 +11777,24 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
+          "Event 1,000개 history를 cap 128의 recent-only로 바꾸면 몇 개를 버리는지 계산하고 important-event 보존 정책과 비교할 두 evidence·system 지표를 쓰라.",
+        answerChecklist: [
+          "872 events discarded",
+          "precursor coverage",
+          "length slices",
+          "peak memory or latency",
+          "same cutoff and split",
+          "training-serving parity",
+        ],
+        requiredConcepts: [
+          "sequence-truncation-policy",
+          "train-validation-test",
+        ],
+        sectionId: "encoding",
+      },
+      {
+        level: "basic",
+        question:
           "Sequence ABACA의 transition counts를 구하고 α=1·|V|=3일 때 P̂(B|A)를 계산하라.",
         answerChecklist: [
           "AB BA AC CA once",
@@ -11171,6 +11827,24 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "aggregation",
       },
       {
+        level: "basic",
+        question:
+          "길이 4 sequence에서 query position 2가 whole-history objective와 next-event objective에서 각각 볼 수 있는 key를 쓰고 PAD·loss mask의 역할을 구분하라.",
+        answerChecklist: [
+          "whole-history keys 1 through 4",
+          "next-event keys 1 and 2",
+          "future keys masked causally",
+          "PAD always excluded",
+          "attention and loss masks differ",
+        ],
+        requiredConcepts: [
+          "event-sequence-visibility-mask",
+          "attention-visibility",
+          "sequence-padding-validity-mask",
+        ],
+        sectionId: "transformer",
+      },
+      {
         level: "advanced",
         question:
           "길이 4의 whole-history label과 next-event objective에 대한 visibility matrix를 만들고 pooling·order-shuffle 검증까지 포함한 비교 실험을 설계하라.",
@@ -11187,6 +11861,25 @@ export const ARTICLE_LEARNING: Readonly<
           "event-sequence-visibility-mask",
           "event-sequence-pooling",
           "order-shuffle-diagnostic",
+          "train-validation-test",
+        ],
+        sectionId: "transformer",
+      },
+      {
+        level: "advanced",
+        question:
+          "Original validation score .82와 entity·cutoff·event multiset·length를 유지한 다중 shuffle 평균 .74에서 순서 민감도를 계산하고 어떤 결론은 내릴 수 없는지 설명하라.",
+        answerChecklist: [
+          "delta .08",
+          "same entity/cutoff/multiset/length",
+          "multiple shuffles",
+          "higher-is-better metric",
+          "not causal proof",
+          "flat baseline and untouched test",
+        ],
+        requiredConcepts: [
+          "order-shuffle-diagnostic",
+          "sequence-summary-collision",
           "train-validation-test",
         ],
         sectionId: "transformer",
@@ -11511,6 +12204,35 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "loop",
       },
       {
+        level: "basic",
+        question:
+          "Training과 validation phase에서 model mode·autograd·backward·optimizer update를 표로 나누고 eval()과 inference_mode()가 서로 대체할 수 없는 이유를 쓰라.",
+        answerChecklist: [
+          "model.train for training",
+          "backward and optimizer update only in training",
+          "model.eval for validation",
+          "inference_mode or no_grad for validation",
+          "module behavior versus autograd recording",
+          "validation is read-only",
+        ],
+        requiredConcepts: ["training-phase-state-contract"],
+        sectionId: "loop",
+      },
+      {
+        level: "basic",
+        question:
+          "Loss scale 1,024로 얻은 scaled gradient 2.048의 실제 gradient를 계산하고 gradient clipping 시점과 autocast가 하지 않는 일을 설명하라.",
+        answerChecklist: [
+          "2.048/1024=.002",
+          "unscale before norm",
+          "clip unscaled gradient",
+          "autocast selects op dtypes",
+          "not whole-model half conversion",
+        ],
+        requiredConcepts: ["automatic-mixed-precision-contract"],
+        sectionId: "loop",
+      },
+      {
         level: "advanced",
         question:
           "FP16 autocast와 GradScaler에서 forward부터 unscale·gradient clipping·optimizer update까지의 순서를 쓰고 잘못 clip한 반례를 설명하라.",
@@ -11560,6 +12282,25 @@ export const ARTICLE_LEARNING: Readonly<
           "all-reduce before divide",
         ],
         requiredConcepts: ["global-metric-sufficient-statistics"],
+        sectionId: "logging",
+      },
+      {
+        level: "advanced",
+        question:
+          "best 파일 alias가 다른 weight를 가리키도록 바뀐 뒤에도 과거 evaluation report에서 exact checkpoint·data·code·config·environment를 복원하는 provenance test를 설계하라.",
+        answerChecklist: [
+          "immutable checkpoint digest",
+          "report stores exact digest",
+          "run ID manifest",
+          "data snapshot and split",
+          "code/config/environment",
+          "alias mutation does not change lineage",
+          "replay within declared tolerance",
+        ],
+        requiredConcepts: [
+          "run-artifact-provenance",
+          "reproducible-training-run-contract",
+        ],
         sectionId: "logging",
       },
     ],
@@ -11902,7 +12643,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "freezing",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
           "Lower norm 100/update .01과 head norm 2/update .02의 relative update ratio를 계산하고 discriminative LR 조정 근거를 설명하라.",
         answerChecklist: [
@@ -11914,6 +12655,26 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: ["layerwise-relative-update-ratio", "learning-rate"],
         sectionId: "lr-strategy",
+      },
+      {
+        level: "advanced",
+        question:
+          "Head-only→upper block→full model의 gradual-unfreezing stage를 설계하고 각 경계에서 optimizer·scheduler·buffer·checkpoint를 재현하는 test를 작성하라.",
+        answerChecklist: [
+          "stage별 trainable mask",
+          "optimizer membership",
+          "new/preserved optimizer state decision",
+          "layer-group LR and warmup",
+          "module mode and buffer checksum",
+          "stage receipt",
+          "continuous/resumed parity",
+        ],
+        requiredConcepts: [
+          "trainable-scope-mask",
+          "frozen-module-buffer-state",
+          "training-phase-state-contract",
+        ],
+        sectionId: "freezing",
       },
       {
         level: "advanced",
@@ -11950,6 +12711,41 @@ export const ARTICLE_LEARNING: Readonly<
         requiredConcepts: [
           "covariate-label-concept-shift",
           "conditional-probability",
+        ],
+        sectionId: "domain-shift",
+      },
+      {
+        level: "basic",
+        question:
+          "Fixed feature·partial·full fine-tuning을 trainable scope·memory·overfitting 위험으로 비교하고 첫 target baseline부터 확장 순서를 정하라.",
+        answerChecklist: [
+          "fixed는 head only",
+          "partial은 upper blocks and head",
+          "full은 all parameters",
+          "trainable parameters and optimizer/activation cost",
+          "fixed smoke test first",
+          "validation gain before scope expansion",
+        ],
+        requiredConcepts: [
+          "trainable-scope-mask",
+          "adaptation-scope-comparison",
+        ],
+        sectionId: "feature-vs-finetune",
+      },
+      {
+        level: "basic",
+        question:
+          "Adaptation 뒤 target accuracy .82→.84, source regression .90→.75이고 source guardrail이 .88일 때 negative transfer와 배포 결정을 판정하라.",
+        answerChecklist: [
+          "target gain .02",
+          "source regression loss .15",
+          "source .75 below .88 guardrail",
+          "candidate rejected or rolled back",
+          "target and source metrics reported separately",
+        ],
+        requiredConcepts: [
+          "negative-transfer-diagnostic",
+          "adaptation-scope-comparison",
         ],
         sectionId: "domain-shift",
       },
@@ -12277,6 +13073,19 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
+          "Scalar parameter θ=3, optimizer direction u=4, learning rate η=.05일 때 displacement와 다음 parameter를 계산하고 LR의 역할을 설명하라.",
+        answerChecklist: [
+          "Delta theta=-.2",
+          "theta next=2.8",
+          "LR scales optimizer direction",
+          "same LR can yield different displacement when direction changes",
+        ],
+        requiredConcepts: ["learning-rate", "optimizer-update"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
           "η0=.1, γ=.5, K=100인 step schedule의 t=99·100·250 LR를 계산하고 호출 단위를 적어라.",
         answerChecklist: [
           ".1",
@@ -12284,6 +13093,20 @@ export const ARTICLE_LEARNING: Readonly<
           ".025",
           "floor(t/K)",
           "optimizer-update clock",
+        ],
+        requiredConcepts: ["open-loop-lr-decay"],
+        sectionId: "step-exponential",
+      },
+      {
+        level: "basic",
+        question:
+          "Exponential schedule이 η0=.1에서 두 updates 뒤 η2=.01에 도달하도록 γ와 η1을 계산하고 epoch 호출이 다른 schedule인 이유를 설명하라.",
+        answerChecklist: [
+          "gamma=sqrt(.1) about .316",
+          "eta1 about .0316",
+          "eta2=.01",
+          "t is optimizer-update index",
+          "epoch invocation changes decay frequency",
         ],
         requiredConcepts: ["open-loop-lr-decay"],
         sectionId: "step-exponential",
@@ -12317,6 +13140,23 @@ export const ARTICLE_LEARNING: Readonly<
           "warmup-main-schedule-composition",
         ],
         sectionId: "cosine",
+      },
+      {
+        level: "basic",
+        question:
+          "Start LR 0, peak .1, W=2, total T=6인 warmup+main schedule에서 t=0·1·2 LR와 main length·t=3의 local cursor를 계산하라.",
+        answerChecklist: [
+          "warmup values 0, .05, .1",
+          "main length 4",
+          "local cursor k=t-W",
+          "t=3 gives k=1",
+          "resume restores global and local schedule state",
+        ],
+        requiredConcepts: [
+          "warmup-main-schedule-composition",
+          "learning-rate-schedule-contract",
+        ],
+        sectionId: "warmup",
       },
       {
         level: "advanced",
@@ -12711,6 +13551,26 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
+        level: "basic",
+        question:
+          "Dropout·weight decay·early stopping·label smoothing이 activation·parameter update·trajectory·target 중 어느 경계를 바꾸는지 구분하고 선택 기준을 적어라.",
+        answerChecklist: [
+          "dropout changes train-time activation paths",
+          "weight decay adds parameter shrinkage",
+          "early stopping selects a checkpoint on the trajectory",
+          "label smoothing changes target distribution",
+          "diagnose gap and underfitting before selection",
+          "one-change ablation",
+        ],
+        requiredConcepts: [
+          "inverted-dropout-mask",
+          "decoupled-adaptive-weight-decay",
+          "early-stopping-state-machine",
+          "uniform-label-smoothing",
+        ],
+        sectionId: "overview",
+      },
+      {
         level: "advanced",
         question:
           "Baseline과 regularizer 하나를 five seeds로 비교하는 paired ablation 표와 accept/reject 규칙을 설계하라.",
@@ -12740,6 +13600,20 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: ["inverted-dropout-mask", "expectation", "variance"],
         sectionId: "dropout",
+      },
+      {
+        level: "basic",
+        question:
+          "Data gradient가 0이고 w=10, η=.1, λ=.02인 plain-SGD decay에서 shrink factor와 다음 weight를 계산하고 LR가 decay에 미치는 영향을 설명하라.",
+        answerChecklist: [
+          "shrink factor 1-eta lambda=.998",
+          "next weight 9.98",
+          "zero data-gradient condition",
+          "per-update shrink changes with LR",
+          "training length changes cumulative shrink",
+        ],
+        requiredConcepts: ["l2-sgd-decay-equivalence"],
+        sectionId: "weight-decay",
       },
       {
         level: "advanced",
@@ -12777,24 +13651,6 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "weight-decay",
       },
       {
-        level: "advanced",
-        question:
-          "Custom model의 decay/no-decay groups를 module type과 shape로 만들고 coverage·intersection·resume-order test를 작성하라.",
-        answerChecklist: [
-          "all trainable union",
-          "empty intersection",
-          "normalization/bias policy",
-          "custom module review",
-          "stable manifest",
-          "optimizer load parity",
-        ],
-        requiredConcepts: [
-          "weight-decay-param-group-coverage",
-          "decoupled-adaptive-weight-decay",
-        ],
-        sectionId: "weight-decay",
-      },
-      {
         level: "basic",
         question:
           "Val losses .42,.38,.39,.40,.41, δ=0, P=2에서 best eval·stop eval·반환 checkpoint를 계산하라.",
@@ -12810,6 +13666,20 @@ export const ARTICLE_LEARNING: Readonly<
           "best-checkpoint-artifact",
         ],
         sectionId: "early-stopping",
+      },
+      {
+        level: "basic",
+        question:
+          "K=4, ε=.1이고 두 번째 class가 정답일 때 uniform label-smoothing target을 계산하고 합이 1인지 확인하라.",
+        answerChecklist: [
+          "off-target epsilon/K=.025",
+          "target 1-epsilon+epsilon/K=.925",
+          "vector (.025,.925,.025,.025)",
+          "sum equals 1",
+          "not an annotator-uncertainty model",
+        ],
+        requiredConcepts: ["uniform-label-smoothing", "cross-entropy-nll"],
+        sectionId: "label-smoothing",
       },
       {
         level: "advanced",
@@ -13191,17 +14061,17 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "backbone",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "EfficientNet·ConvNeXt·ViT 후보를 같은 target 조건에서 비교할 표와 선택 규칙을 만들고 architecture claim의 근거 범위를 설명하라.",
+          "같은 validation split에서 후보 A는 macro recall .84·p95 14ms·3.1GB, 후보 B는 .86·p95 27ms·4.6GB다. 배포 한도가 p95 20ms·4GB일 때 선택하고, 품질 하나만으로 고르면 안 되는 이유를 설명하라.",
         answerChecklist: [
-          "same input/split",
+          "same input and split",
           "same tuning budget",
-          "pretraining stated",
-          "quality uncertainty",
-          "p50/p95",
-          "throughput/memory",
-          "paper scope bounded",
+          "candidate A passes",
+          "candidate B fails latency",
+          "candidate B fails memory",
+          "pretraining revision stated",
+          "target runtime measurement",
         ],
         requiredConcepts: [
           "compound-model-scaling",
@@ -13209,6 +14079,36 @@ export const ARTICLE_LEARNING: Readonly<
           "pretrained-handoff-contract",
         ],
         sectionId: "backbone",
+      },
+      {
+        level: "basic",
+        question:
+          "좌우 방향이 진단 label을 바꾸는 의료 image에서 horizontal flip과 밝기 변화 중 어떤 augmentation을 baseline에 넣을지 정하고, transform과 target map을 함께 적어라.",
+        answerChecklist: [
+          "label semantics first",
+          "horizontal flip rejected or relabeled",
+          "brightness range bounded",
+          "target map stated",
+          "train only",
+          "validation unchanged",
+        ],
+        requiredConcepts: ["augmentation-risk-objective"],
+        sectionId: "training",
+      },
+      {
+        level: "basic",
+        question:
+          "160px stage에서 batch 256으로 학습하다 320px에서 memory 때문에 batch 64로 바꾼다. 새 stage manifest에 반드시 함께 바꿔 기록할 항목과 단순 upsampling의 한계를 설명하라.",
+        answerChecklist: [
+          "stage boundary",
+          "batch 256 to 64",
+          "crop and object scale",
+          "local learning-rate clock",
+          "checkpoint handoff",
+          "upsampling adds no detail",
+        ],
+        requiredConcepts: ["resolution-stage-boundary"],
+        sectionId: "training",
       },
       {
         level: "advanced",
@@ -13661,7 +14561,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "architecture",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
           "N=196, mask ratio .75 MAE에서 visible token과 attention-score ratio를 계산하고 전체 speedup과 다른 이유를 설명하라.",
         answerChecklist: [
@@ -13675,6 +14575,37 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: ["mae-visible-token-pretraining", "self-attention"],
         sectionId: "architecture",
+      },
+      {
+        level: "basic",
+        question:
+          "DeiT student의 class loss가 .8, distillation loss가 .4이고 lambda=.25일 때 total loss를 계산하고 두 supervision source가 어느 head로 들어가는지 적어라.",
+        answerChecklist: [
+          "(1-.25)×.8",
+          ".25×.4",
+          "total .7",
+          "class token head",
+          "distillation token head",
+          "teacher provenance retained",
+        ],
+        requiredConcepts: ["distillation-token-interface", "cross-entropy-nll"],
+        sectionId: "architecture",
+      },
+      {
+        level: "basic",
+        question:
+          "2×2 grayscale patch [1,2;3,4]와 projection weight [1,0;0,-1]의 dot product를 계산하고, kernel=2·stride=2 Conv2d가 같은 값을 내는 조건을 적어라.",
+        answerChecklist: [
+          "flatten order stated",
+          "1×1 plus 2×0 plus 3×0 minus 4",
+          "output -3",
+          "kernel size 2",
+          "stride 2",
+          "same weights and bias",
+          "no overlap or padding",
+        ],
+        requiredConcepts: ["patch-convolution-equivalence", "linear-map-matrix"],
+        sectionId: "patch-embedding",
       },
       {
         level: "advanced",
@@ -14150,6 +15081,36 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "attention-fusion",
       },
       {
+        level: "basic",
+        question:
+          "Depth pixel 값이 실제 0인 경우와 calibration warp 밖이라 관측이 없는 경우를 value·mask 두 칸으로 각각 표현하고, zero-fill만 쓸 때 생기는 혼동을 설명하라.",
+        answerChecklist: [
+          "observed zero value 0",
+          "observed zero mask 1",
+          "missing value placeholder 0",
+          "missing mask 0",
+          "zero-fill ambiguity",
+          "view-drop training boundary",
+        ],
+        requiredConcepts: ["explicit-view-availability-mask"],
+        sectionId: "early-fusion",
+      },
+      {
+        level: "basic",
+        question:
+          "Front patch와 side patch의 content vector가 같아도 token을 구분할 수 있도록 더할 metadata 네 가지를 적고, pose embedding이 geometric reprojection을 보장하지 않는 이유를 설명하라.",
+        answerChecklist: [
+          "within-view position",
+          "view identity",
+          "camera pose",
+          "timestamp or calibration",
+          "metadata travels with token",
+          "embedding is not reprojection",
+        ],
+        requiredConcepts: ["pose-aware-cross-view-token"],
+        sectionId: "attention-fusion",
+      },
+      {
         level: "advanced",
         question:
           "Mean pooling·gated fusion·cross-attention을 비교하는 full/drop/order/pose/quality evaluation과 attention-weight 해석 한계를 설계하라.",
@@ -14506,24 +15467,55 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "face-extraction",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "RGB error 20, frequency error 25, simultaneous error 18인 OOD 100 clips에서 joint error를 계산하고 fusion 채택에 필요한 추가 검사를 적어라.",
+          "OOD 100 clips에서 RGB branch가 20개, frequency branch가 25개, 둘 다 18개를 틀렸다. RGB만·frequency만·둘 중 하나 이상·동시 오류 수를 계산하라.",
         answerChecklist: [
-          "joint=.18",
+          "RGB-only=2",
+          "frequency-only=7",
+          "joint=18",
+          "union=27",
+          "joint rate=.18",
           "same held-out samples",
-          "codec slices",
-          "actual fused gain",
-          "calibration",
-          "latency",
-          "uncertainty",
-          "conditional signal",
+          "correlated-error boundary",
         ],
         requiredConcepts: [
           "forensic-branch-joint-error",
           "conditional-frequency-forensic-signal",
         ],
         sectionId: "frequency",
+      },
+      {
+        level: "basic",
+        question:
+          "Source frame 240에서 나온 face crop을 decode→detect→track→align→crop 단계로 추적할 lineage record를 만들고 detector 실패도 기록하라.",
+        answerChecklist: [
+          "source video and frame id",
+          "decoder revision",
+          "detector result",
+          "track identity",
+          "alignment transform",
+          "crop and interpolation",
+          "typed failure reason",
+        ],
+        requiredConcepts: ["forensic-preprocessing-lineage", "face-track-coverage"],
+        sectionId: "face-extraction",
+      },
+      {
+        level: "basic",
+        question:
+          "Generator A·B와 raw·JPEG의 2×2 coverage matrix에서 B×JPEG cell이 비어 있다. Manifest 필드와 이때 말할 수 없는 OOD 주장을 적어라.",
+        answerChecklist: [
+          "source identity",
+          "generator revision",
+          "codec and quality",
+          "license and consent",
+          "split lineage",
+          "empty B-by-JPEG cell",
+          "no robustness claim for empty cell",
+        ],
+        requiredConcepts: ["forensic-data-provenance-manifest", "forensic-coverage-matrix"],
+        sectionId: "external-data",
       },
       {
         level: "basic",
@@ -15026,6 +16018,38 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         sectionId: "video-transformer",
       },
+      {
+        level: "basic",
+        question:
+          "Slow pathway가 8 frames·256 channels를 쓸 때 alpha=8, beta=1/8인 SlowFast의 Fast frames와 channels를 계산하고 두 경로의 역할을 구분하라.",
+        answerChecklist: [
+          "Fast frames=64",
+          "Fast channels=32",
+          "same source duration",
+          "Slow semantics",
+          "Fast motion",
+          "lateral connection",
+          "ratios are hyperparameters",
+        ],
+        requiredConcepts: ["slowfast-rate-capacity-allocation"],
+        sectionId: "3dcnn",
+      },
+      {
+        level: "basic",
+        question:
+          "Tubelet token 1000개 중 VideoMAE가 90%를 가리고 visible token만 encoder에 넣는다. Visible 수와 attention score-pair 비율을 계산하라.",
+        answerChecklist: [
+          "visible fraction=.1",
+          "100 visible tokens",
+          "score ratio=.01",
+          "decoder remains",
+          "MLP and I-O remain",
+          "not guaranteed 100x speedup",
+          "downstream representation check",
+        ],
+        requiredConcepts: ["videomae-visible-tubelet-pretraining", "self-attention"],
+        sectionId: "video-transformer",
+      },
     ],
     papers: [
       {
@@ -15477,6 +16501,37 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         sectionId: "application",
       },
+      {
+        level: "basic",
+        question:
+          "Encoder가 h=(3,4), projection head가 z=(0,5)를 만들었다. 각각 normalize하고 contrastive loss와 downstream classifier가 어느 표현을 쓰는지 구분하라.",
+        answerChecklist: [
+          "normalized h=(.6,.8)",
+          "normalized z=(0,1)",
+          "contrastive loss uses z",
+          "downstream commonly uses h",
+          "projection boundary explicit",
+          "pooling and head in artifact",
+        ],
+        requiredConcepts: ["projection-head-boundary", "normalized-embedding-cosine"],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "새 miner의 high-similarity 후보 50개 중 12개가 실제 positive였고 paired seed gain은 [.02,-.01,0,.01,-.02]였다. 두 값을 계산하고 채택 여부를 정하라.",
+        answerChecklist: [
+          "false-negative rate=.24",
+          "mean paired gain=0",
+          "do not adopt yet",
+          "review pair policy",
+          "filter hidden positives",
+          "same split and seeds",
+          "bucket uncertainty",
+        ],
+        requiredConcepts: ["false-negative-pair-audit", "contrastive-downstream-evaluation-loop", "hard-negative-mining-snapshot"],
+        sectionId: "application",
+      },
     ],
     papers: [
       {
@@ -15776,6 +16831,24 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
+        level: "basic",
+        question:
+          "Prompt·RAG·DAPT의 (target gain, general change, cost)가 각각 (1,0,1)·(3,0,2)·(4,-2,4)이고 ε=1, B=3일 때 탈락 후보와 선택 후보를 계산하라.",
+        answerChecklist: [
+          "prompt eligible",
+          "RAG eligible",
+          "DAPT violates regression budget",
+          "DAPT exceeds cost budget",
+          "RAG selected",
+          "same evaluation conditions",
+        ],
+        requiredConcepts: [
+          "minimum-domain-intervention-selection",
+          "adaptation-scope-comparison",
+        ],
+        sectionId: "overview",
+      },
+      {
         level: "advanced",
         question:
           "No adaptation·RAG·DAPT·SFT 후보의 target gain·general regression·cost table과 epsilon/B 제약 기반 선택 규칙을 설계하라.",
@@ -15868,6 +16941,24 @@ export const ARTICLE_LEARNING: Readonly<
           "domain-task-demonstration-contract",
           "response-loss-mask",
           "adaptation-scope-comparison",
+        ],
+        sectionId: "task-finetune",
+      },
+      {
+        level: "basic",
+        question:
+          "길이 6인 SFT sequence의 loss mask가 [0,0,0,1,1,1]이고 response token NLL이 .2,.4,.8일 때 response-only mean loss를 계산하고 앞 세 token의 역할을 설명하라.",
+        answerChecklist: [
+          "response token count 3",
+          "loss 1.4/3",
+          "approximately .467",
+          "prompt excluded from loss",
+          "prompt remains attention context",
+          "loss mask differs from attention mask",
+        ],
+        requiredConcepts: [
+          "domain-task-demonstration-contract",
+          "response-loss-mask",
         ],
         sectionId: "task-finetune",
       },
@@ -16182,6 +17273,24 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
+        level: "basic",
+        question:
+          "Unit embedding zq=(1,0), zd=(.6,.8), zn=(-1,0)의 cosine score를 계산해 document 순위를 정하고, 높은 score가 사실성을 보장하지 않는 이유를 설명하라.",
+        answerChecklist: [
+          "all norms equal 1",
+          "cosine equals inner product",
+          "score zd .6",
+          "score zn -1",
+          "zd ranked first",
+          "score reflects learned relation not factual proof",
+        ],
+        requiredConcepts: [
+          "normalized-embedding-cosine",
+          "sentence-relation-objective-boundary",
+        ],
+        sectionId: "overview",
+      },
+      {
         level: "advanced",
         question:
           "일반 masked-LM BERT의 CLS 또는 mean pooling만으로 retrieval relation이 보장되지 않는 이유를 설명하고 pair objective ablation을 설계하라.",
@@ -16254,6 +17363,24 @@ export const ARTICLE_LEARNING: Readonly<
           "embedding-role-instruction-contract",
           "embedding-content-retention",
           "sequence-truncation-policy",
+          "tokenizer-checkpoint-compatibility",
+        ],
+        sectionId: "modern",
+      },
+      {
+        level: "basic",
+        question:
+          "Model card가 E5-style 직렬화를 요구할 때 질문 ‘연차 규정?’과 문서 ‘연차는 15일’의 query/document 입력을 쓰고, prefix 생략·양쪽 query prefix가 왜 잘못인지 분류하라.",
+        answerChecklist: [
+          "query: 연차 규정?",
+          "passage: 연차는 15일",
+          "asymmetric roles preserved",
+          "omission changes training serialization",
+          "two query prefixes swap document role",
+          "do not copy prefix to unsupported checkpoint",
+        ],
+        requiredConcepts: [
+          "embedding-role-instruction-contract",
           "tokenizer-checkpoint-compatibility",
         ],
         sectionId: "modern",
@@ -16586,6 +17713,25 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
+        level: "basic",
+        question:
+          "7B weight를 FP16에서 packed INT4로 바꿀 때 raw payload를 각각 계산하고, 14GB→3.5GB가 peak VRAM 4배 절감을 뜻하지 않는 이유를 적어라.",
+        answerChecklist: [
+          "FP16 2 bytes per weight",
+          "FP16 raw 14GB",
+          "INT4 .5 byte per weight",
+          "INT4 raw 3.5GB",
+          "scale and packing metadata",
+          "activation and KV unchanged",
+          "workspace and headroom",
+        ],
+        requiredConcepts: [
+          "bit-byte",
+          "quantized-resident-memory-ledger",
+        ],
+        sectionId: "practice",
+      },
+      {
         level: "advanced",
         question:
           "Per-tensor·per-channel·group-128 quantization을 scale 수·metadata·outlier 영향·target kernel layout로 비교하라.",
@@ -16639,6 +17785,26 @@ export const ARTICLE_LEARNING: Readonly<
           "actual kernel quality",
         ],
         requiredConcepts: ["qat-fake-quant-ste", "empirical-risk"],
+        sectionId: "qat",
+      },
+      {
+        level: "basic",
+        question:
+          "Label 없이 빠르게 변환해야 하는 후보와, PTQ가 quality gate를 넘지 못했지만 학습 data·compute가 있는 후보를 각각 PTQ·QAT에 배치하고 공통 배포 검증을 적어라.",
+        answerChecklist: [
+          "frozen checkpoint plus representative calibration to PTQ",
+          "failed PTQ plus training budget to QAT candidate",
+          "fake quant only training simulation",
+          "converted artifact",
+          "actual low-bit kernel",
+          "same quality workload",
+          "latency and peak memory",
+        ],
+        requiredConcepts: [
+          "ptq-calibration-coverage",
+          "qat-fake-quant-ste",
+          "quantization-method-format-boundary",
+        ],
         sectionId: "qat",
       },
       {
@@ -17151,6 +18317,37 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "recovery",
       },
       {
+        level: "basic",
+        question:
+          "Dense weight 1,000개를 FP16으로 저장할 때와 density .25 sparse format에서 value 2 byte·index 4 byte를 쓸 때 byte 수를 계산하고 어느 쪽이 더 작은지 판단하라.",
+        answerChecklist: [
+          "dense 2000 bytes",
+          "250 nonzeros",
+          "sparse 1500 bytes",
+          "500-byte saving",
+          "metadata excluded",
+          "latency separate",
+        ],
+        requiredConcepts: ["sparse-storage-break-even", "bit-byte", "pruning-mask-sparsity"],
+        sectionId: "unstructured",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 sparsity .5인 unstructured mask와 2:4 mask를 target engine에 빌드한다. 2:4만 sparse kernel을 지원할 때 eligibility→chosen tactic→실측 latency를 잇는 승인 receipt를 설계하라.",
+        answerChecklist: [
+          "same global sparsity",
+          "2:4 local eligibility",
+          "reduction axis",
+          "dtype and operator",
+          "builder flag",
+          "chosen tactic log",
+          "measure latency",
+        ],
+        requiredConcepts: ["nm-semi-structured-constraint", "pruning-deployment-frontier"],
+        sectionId: "structured",
+      },
+      {
         level: "advanced",
         question:
           "Unstructured 60%와 2:4 50%, channel-pruned 후보를 artifact byte·slice quality·build log·memory·prefill/decode p95로 비교하는 배포 receipt를 작성하라.",
@@ -17571,6 +18768,9 @@ export const ARTICLE_LEARNING: Readonly<
           "teacher fixed",
           "same T both sides",
           "teacher error conflict",
+          "softmax derivative (p-q)/T",
+          "large-T residual scale",
+          "T-squared correction boundary",
           "validation grid",
           "slice quality",
           "test untouched",
@@ -17578,6 +18778,8 @@ export const ARTICLE_LEARNING: Readonly<
         requiredConcepts: [
           "hard-soft-distillation-objective",
           "temperature-soft-target",
+          "distillation-temperature-gradient-scale",
+          "gradient",
           "cross-entropy-nll",
           "kl-divergence",
           "train-validation-test",
@@ -17585,27 +18787,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "logit",
       },
       {
-        level: "advanced",
-        question:
-          "Temperature-softmax CE의 logit derivative를 이용해 large-T 1/T² scale을 설명하고 T² 보정이 정확하지 않은 반례를 제시하라.",
-        answerChecklist: [
-          "(p-q)/T",
-          "residual O(1/T)",
-          "combined O(1/T^2)",
-          "centered logits",
-          "large T assumption",
-          "T near 1 or huge logits counterexample",
-          "T^2 not optimum guarantee",
-        ],
-        requiredConcepts: [
-          "distillation-temperature-gradient-scale",
-          "gradient",
-          "temperature-soft-target",
-        ],
-        sectionId: "logit",
-      },
-      {
-        level: "advanced",
+        level: "basic",
         question:
           "q=(.5,.5), p=(.99,.01) 예로 forward/reverse KL의 expectation weight를 비교하고 library input 순서 점검표를 작성하라.",
         answerChecklist: [
@@ -17694,30 +18876,6 @@ export const ARTICLE_LEARNING: Readonly<
         requiredConcepts: [
           "generalized-on-policy-distillation",
           "on-policy-token-teacher-feedback",
-        ],
-        sectionId: "on-policy",
-      },
-      {
-        level: "advanced",
-        question:
-          "같은 SFT checkpoint에서 fixed-sequence KD와 on-policy reverse-KL distillation을 비교하는 ablation receipt를 설계하라.",
-        answerChecklist: [
-          "same SFT start",
-          "same prompts/token budget",
-          "sampling policy",
-          "teacher scoring cost",
-          "KL direction",
-          "mask/reduction",
-          "task slices",
-          "invalid/tool rate",
-          "student-only runtime",
-          "independent test",
-        ],
-        requiredConcepts: [
-          "generalized-on-policy-distillation",
-          "on-policy-token-teacher-feedback",
-          "distillation-kl-direction",
-          "train-validation-test",
         ],
         sectionId: "on-policy",
       },
@@ -18138,6 +19296,36 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "benchmark",
       },
       {
+        level: "basic",
+        question:
+          "전체 추론 시간 100ms 중 target quantized kernel이 60ms를 차지하고 그 kernel만 2배 빨라진다. 새 총시간과 전체 speedup을 계산하라.",
+        answerChecklist: [
+          "kernel time 60 to 30ms",
+          "unchanged time 40ms",
+          "new total 70ms",
+          "speedup about 1.43x",
+          "operator coverage bound",
+          "measure fallback",
+        ],
+        requiredConcepts: ["quantized-kernel-amdahl-bound", "compression-lever-bottleneck-map"],
+        sectionId: "benchmark",
+      },
+      {
+        level: "basic",
+        question:
+          "Compression 후보가 quality·safety는 통과했지만 p95 22ms로 한도 20ms를 넘고 memory는 통과했다. Feasibility와 다음 진단 순서를 적어라.",
+        answerChecklist: [
+          "latency gate 0",
+          "feasibility product 0",
+          "no averaging away failure",
+          "profile bottleneck",
+          "inspect operator fallback",
+          "keep baseline artifact",
+        ],
+        requiredConcepts: ["compression-hard-feasibility", "compression-lever-bottleneck-map"],
+        sectionId: "benchmark",
+      },
+      {
         level: "advanced",
         question:
           "A(.5 loss,8ms,10GB), B(.7,9ms,12GB), C(.3,11ms,8GB)의 dominance를 판단하고 hard safety gate·noise tolerance를 포함한 frontier를 작성하라.",
@@ -18448,17 +19636,16 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "RAG·long-context·fine-tuning 중 환불 규정 갱신, 소수 안정 문서 요약, JSON 말투 학습에 맞는 intervention과 실패 추적 가능성을 비교하라.",
+          "‘매주 바뀌는 환불 규정+인용’, ‘변하지 않는 3쪽 문서 요약’, ‘답변을 항상 JSON으로 출력’을 각각 RAG·long-context prompting·fine-tuning에 하나씩 연결하고, 첫 번째 요구에 RAG가 필요한 이유를 설명하라.",
         answerChecklist: [
-          "freshness/citation RAG",
-          "small stable corpus long context",
-          "behavior SFT",
-          "ACL",
-          "update/delete path",
-          "evaluation trace",
-          "operational simplicity",
+          "refund policy to RAG",
+          "freshness and citation",
+          "three-page stable document to long context",
+          "JSON behavior to fine-tuning",
+          "source update/delete path",
+          "stage trace",
         ],
         requiredConcepts: ["rag-stage-success-trace"],
         sectionId: "overview",
@@ -18475,25 +19662,6 @@ export const ARTICLE_LEARNING: Readonly<
           "structure caveat",
         ],
         requiredConcepts: ["rag-chunk-span-coverage"],
-        sectionId: "chunking",
-      },
-      {
-        level: "advanced",
-        question:
-          "표 header·예외 문단·본문 row가 필요한 문서의 child retrieval/parent generation schema와 source deletion lineage를 설계하라.",
-        answerChecklist: [
-          "parser structure",
-          "child span",
-          "parent relation",
-          "header restoration",
-          "source revision/offset",
-          "ACL/valid time",
-          "chunk/vector deletion",
-        ],
-        requiredConcepts: [
-          "rag-chunk-span-coverage",
-          "rag-stage-success-trace",
-        ],
         sectionId: "chunking",
       },
       {
@@ -18987,17 +20155,16 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "lora",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "QLoRA layer의 NF4 code/scale·bf16 compute·fp32 optimizer에서 어느 값이 frozen/trainable이며 gradient가 어디로 흐르는지 diagram과 manifest로 작성하라.",
+          "QLoRA layer에서 ① 4-bit base code·scale, ② bf16으로 복원된 연산값, ③ LoRA A/B, ④ optimizer state를 ‘저장·임시 연산·학습’으로 분류하고, gradient가 받은 자와 안 받은 자를 표시하라.",
         answerChecklist: [
-          "code/scale frozen",
-          "dequant compute dtype",
-          "gradient through base op",
-          "A/B trainable",
-          "adapter gradient",
-          "optimizer adapter only",
-          "block/scale/kernel versions",
+          "code and scale are stored and frozen",
+          "bf16 value is temporary compute",
+          "A/B are trainable",
+          "gradient reaches A/B through base operation",
+          "no base gradient",
+          "optimizer state belongs to adapter",
         ],
         requiredConcepts: [
           "qlora-precision-path",
@@ -19348,17 +20515,14 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "같은 파일을 수정하는 세 task와 독립 repository 세 개를 조사하는 task에 single/coordinator/map-reduce/actor-reviewer를 배치하고 이유를 적어라.",
+          "‘동일한 파일 하나를 세 번 수정’과 ‘서로 다른 repository 세 개 조사’ 중 어느 작업을 병렬 worker에 나눌지 고르고, artifact conflict와 join 비용으로 이유를 설명하라.",
         answerChecklist: [
-          "shared-file conflict",
-          "single owner/coordinator",
-          "independent repos parallel",
-          "review only with rubric",
           "artifact boundaries",
           "baseline first",
           "join cost",
+          "same completion gate",
         ],
         requiredConcepts: [
           "multiagent-baseline-gain",
@@ -19496,20 +20660,16 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "crewai",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "설비 이상 보고서에서 sensor code·retrieval·LLM report·rule engine·operator·PLC interlock의 data/authority path와 audit log를 설계하라.",
+          "LLM 정지 권고=1, sensor validity=1, approved rule=1, operator approval=0, PLC interlock=1일 때 execute를 계산하고, LLM 권고만으로 실행하면 안 되는 이유를 설명하라.",
         answerChecklist: [
-          "sensor identity/time/version",
-          "deterministic analysis",
-          "source provenance",
-          "LLM advisory only",
-          "no PLC credential",
-          "approved rule",
-          "authorized human",
-          "interlock",
-          "fail-safe independent",
-          "audit receipt",
+          "1 times 1 times 0 times 1",
+          "execute 0",
+          "LLM indicator is not a gate",
+          "authorized human missing",
+          "no PLC write authority",
+          "interlock independent",
         ],
         requiredConcepts: [
           "manufacturing-advisory-control-boundary",
@@ -20681,27 +21841,23 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Validation noise가 있는 100-trial study의 selection optimism을 막는 split·seed·budget·outer-evaluation 계약과 artifact receipt를 설계하라.",
+          "한 Study의 trial 8개가 COMPLETE 5개·PRUNED 2개·FAIL 1개일 때, 세 상태가 뜻하는 결과와 Storage에 모두 남겨야 할 정보를 구분하라.",
         answerChecklist: [
-          "same fold/metric",
-          "same or comparable resource",
-          "seed policy",
-          "search-space version",
-          "all trial states",
-          "selected config",
-          "independent outer",
-          "no retuning",
-          "code/data/environment",
-          "uncertainty",
+          "COMPLETE final objective",
+          "PRUNED comparable resource step",
+          "PRUNED intermediate values",
+          "FAIL has no comparable objective",
+          "configuration and distribution",
+          "state and failure reason",
+          "do not delete or rank failures",
         ],
         requiredConcepts: [
-          "hpo-selection-evaluation-contract",
-          "model-selection-maximum-optimism",
+          "adaptive-trial-proposal-history",
           "reproducible-training-run-contract",
         ],
-        sectionId: "overview",
+        sectionId: "optuna",
       },
       {
         level: "basic",
@@ -21153,24 +22309,19 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "averaging",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "두 모델의 score scale이 다를 때 mean·calibration 후 mean·percentile-rank average 중 선택 기준과 test-time mapping을 설계하라.",
+          "OOF score [0.10, 0.40, 0.40, 0.90]에서 ‘현재 값 이하’를 세는 tie 규칙을 쓸 때 0.40의 percentile rank를 계산하고, rank 변환이 보존하는 정보와 잃는 정보를 설명하라.",
         answerChecklist: [
-          "prediction semantics",
-          "OOF empirical CDF",
-          "tie policy",
-          "test mapping",
-          "distance loss",
-          "calibration loss",
-          "threshold need",
-          "outer comparison",
+          "three of four values",
+          "rank 0.75",
+          "common zero-to-one scale",
+          "ordering preserved",
+          "distance lost",
+          "calibration lost",
+          "tie policy must be fixed",
         ],
-        requiredConcepts: [
-          "simplex-prediction-averaging",
-          "percentile-rank-averaging",
-          "hpo-selection-evaluation-contract",
-        ],
+        requiredConcepts: ["percentile-rank-averaging"],
         sectionId: "averaging",
       },
       {
@@ -21265,26 +22416,18 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "blending",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "A(.214,8ms), A+C(.201,15ms), A+C+B(.199,24ms)의 marginal gain을 계산하고 SLA·seed variance·failure policy를 포함한 선택표를 작성하라.",
+          "현재 앙상블의 OOF loss·p95가 .214·8ms이고 후보 C를 더하면 .201·15ms가 된다. Loss 개선량과 추가 latency를 계산하고 hard SLA가 12ms일 때 결정을 내려라.",
         answerChecklist: [
-          "C gain .013",
-          "B additional .002",
-          "incremental p95",
-          "delta min",
-          "fold/seed consistency",
-          "hard SLA",
-          "memory/ops",
-          "base failure mode",
-          "outer evaluation",
-          "manifest",
+          "loss gain .013",
+          "latency increase 7 ms",
+          "same OOF rows",
+          "SLA violated",
+          "reject or defer C",
+          "measure in target runtime",
         ],
-        requiredConcepts: [
-          "ensemble-marginal-gain-cost",
-          "hpo-pareto-dominance",
-          "hpo-selection-evaluation-contract",
-        ],
+        requiredConcepts: ["ensemble-marginal-gain-cost"],
         sectionId: "practice",
       },
     ],
@@ -22518,6 +23661,21 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "load-balancing",
       },
       {
+        level: "basic",
+        question:
+          "m=128, k=2, n=8, capacity factor φ=1.25일 때 expert당 capacity를 계산하고 한 expert의 실제 load가 46이면 overflow assignment 수와 가능한 처리 정책을 설명하라.",
+        answerChecklist: [
+          "balanced load 32",
+          "capacity 40",
+          "overflow 6",
+          "drop or reroute",
+          "larger buffer alternative",
+          "quality-memory trade off",
+        ],
+        requiredConcepts: ["expert-capacity-overflow-policy"],
+        sectionId: "load-balancing",
+      },
+      {
         level: "advanced",
         question:
           "특정 expert에 token이 몰리는 training run에서 auxiliary loss·routing bias·capacity factor를 각각 어느 지점에 적용하고 무엇을 함께 측정할지 설계하라.",
@@ -22586,21 +23744,6 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         requiredConcepts: ["expert-parallel-dispatch-cost"],
         sectionId: "system-cost",
-      },
-      {
-        level: "advanced",
-        question:
-          "Shared expert와 fine-grained routed expert가 specialization redundancy를 줄이려는 논리를 설명하고 반례를 제시하라.",
-        answerChecklist: [
-          "common path",
-          "smaller routed units",
-          "more combinations",
-          "routing learns end-to-end",
-          "specialization not interpretable guarantee",
-          "smaller GEMM or communication countercost",
-        ],
-        requiredConcepts: ["shared-fine-grained-expert-specialization"],
-        sectionId: "evolution",
       },
       {
         level: "advanced",
@@ -22979,18 +24122,17 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "hybrid-attention",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "KDA state update에서 α·β·k·v·q의 역할을 설명하고 α가 bounded여도 exact long-term memory가 보장되지 않는 반례를 제시하라.",
+          "Scalar KDA에서 S_prev=2, α=.5, β=.25, k=1, v=4, q=3일 때 새 state와 read output을 계산하고 각 항의 역할을 설명하라.",
         answerChecklist: [
-          "retain",
-          "write strength",
-          "key direction",
-          "value content",
-          "query read",
-          "fixed state compression",
-          "repeated product decay",
-          "collision",
+          "retained state .5×2=1",
+          "erase factor 1-.25=.75",
+          "old contribution .75",
+          "new write .25×1×4=1",
+          "new state 1.75",
+          "query read 3×1.75=5.25",
+          "fixed-state collision boundary",
         ],
         requiredConcepts: [
           "kda-channelwise-delta-state",
@@ -23410,9 +24552,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "kv-shape-formula",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Gemma 4의 local 50층·KV16·dim256·window1024와 global 10층·KV4·dim512를 T=65,536에서 layer별 식으로 쓰고 uniform 60×16×256 proxy가 놓치는 항을 설명하라.",
+          "Gemma 4의 local 50층·KV16·dim256·window1024와 global 10층·KV4·dim512를 T=65,536에서 local·global token factor로 나눠 KV 항을 계산하라.",
         answerChecklist: [
           "50 min(T,1024) local term",
           "10T global term",
@@ -26204,10 +27346,10 @@ export const ARTICLE_LEARNING: Readonly<
     exercises: [
       { level: "basic", question: "Issue tracker·filesystem·database를 AI host에 연결할 때 MCP가 표준화하는 부분과 각 integration에 여전히 남는 부분을 나누라.", answerChecklist: ["discovery", "message shape", "typed result", "domain semantics", "authorization", "sandbox", "not correctness guarantee"], requiredConcepts: ["mcp-integration-protocol-boundary"], sectionId: "overview" },
       { level: "basic", question: "Desktop host가 filesystem·issue server에 연결되는 구조에서 host·client·server가 소유하는 상태와 권한을 표시하라.", answerChecklist: ["host user/model/policy", "one client per server", "server domain capability", "context isolation", "not automatic sandbox"], requiredConcepts: ["mcp-host-client-server-boundary"], sectionId: "architecture" },
-      { level: "advanced", question: "2026-07-28 request envelope와 server/discover response를 설계하고 initialize session 없이 version mismatch를 처리하라.", answerChecklist: ["_meta", "protocolVersion", "clientCapabilities", "clientInfo", "server/discover", "supported versions", "optional client call", "self-reported not identity", "cache"], requiredConcepts: ["mcp-stateless-request-envelope", "mcp-version-capability-discovery"], sectionId: "architecture" },
+      { level: "basic", question: "Client가 protocolVersion=v2를 요청했지만 server가 v1만 지원한다. Stateless request envelope와 mismatch response에 넣을 필드를 분류하라.", answerChecklist: ["_meta", "requested version v2", "clientCapabilities", "clientInfo", "supported version v1", "server/discover", "reject mismatch", "self-reported info not identity", "cache by version"], requiredConcepts: ["mcp-stateless-request-envelope", "mcp-version-capability-discovery"], sectionId: "architecture" },
       { level: "advanced", question: "20분 걸리는 export job의 explicit handle 수명·caller binding·status·cancel·expiry 계약을 설계하라.", answerChecklist: ["opaque handle", "explicit request field", "owner", "authorization each call", "status", "cancel", "expiry", "not bearer capability"], requiredConcepts: ["mcp-explicit-application-handle"], sectionId: "architecture" },
       { level: "basic", question: "create_ticket·db://schema·review_code를 Tool·Resource·Prompt로 분류하고 control model과 side effect를 설명하라.", answerChecklist: ["tool action", "resource URI", "prompt template", "model/user/application control", "side effect", "ambiguous search case"], requiredConcepts: ["mcp-tool-resource-prompt-boundary"], sectionId: "primitives" },
-      { level: "advanced", question: "search_issues Tool의 inputSchema·outputSchema·structuredContent·resultType과 protocol error/tool execution error를 설계하라.", answerChecklist: ["JSON Schema 2020-12", "input constraints", "output schema", "validate structuredContent", "complete", "isError", "input_required", "protocol error", "tool error", "domain validation"], requiredConcepts: ["mcp-json-schema-result-contract", "mcp-mrtr-input-required"], sectionId: "primitives" },
+      { level: "basic", question: "search_issues 호출의 malformed JSON, 금지된 project, DB timeout, 추가 필드가 필요한 경우를 protocol error·domain error·tool error·input_required로 분류하라.", answerChecklist: ["malformed protocol error", "schema validation", "forbidden project authorization", "DB timeout tool error", "additional field input_required", "outputSchema", "structuredContent validation", "complete result", "JSON Schema 2020-12"], requiredConcepts: ["mcp-json-schema-result-contract", "mcp-mrtr-input-required"], sectionId: "primitives" },
       { level: "advanced", question: "Role별로 tool 목록이 다른 multi-tenant host에서 tools/list cache key·deterministic order·TTL·invalidation과 call-time auth를 설계하라.", answerChecklist: ["tenant/user/role", "server version", "deterministic order", "ttlMs", "cacheScope", "permission change invalidation", "auth every call"], requiredConcepts: ["mcp-list-cache-contract", "mcp-authorization-trust-boundary"], sectionId: "primitives" },
       { level: "basic", question: "Local formatter와 공유 CRM server에 각각 stdio·Streamable HTTP를 선택하고 lifecycle·auth·observability 차이를 설명하라.", answerChecklist: ["local subprocess", "stdin/stdout", "remote POST", "JSON/SSE", "TLS/OAuth", "origin", "process vs service lifecycle", "legacy distinction"], requiredConcepts: ["mcp-stdio-streamable-http-boundary"], sectionId: "transport" },
       { level: "advanced", question: "Streamable HTTP gateway가 요청을 routing하고 mismatch를 거부하며 cancellation과 subscription을 각각 처리하는 sequence를 작성하라.", answerChecklist: ["required headers", "body match", "HeaderMismatch", "request-scoped SSE", "close for cancel", "subscriptions/listen", "independent lifetime", "cleanup"], requiredConcepts: ["mcp-header-routing-integrity", "mcp-request-cancellation-subscription-boundary"], sectionId: "transport" },
@@ -26310,7 +27452,7 @@ export const ARTICLE_LEARNING: Readonly<
     exercises: [
       { level: "basic", question: "Alphabet·string·language를 괄호 예로 각각 정의하고 language에 속하는 string과 속하지 않는 string을 들라.", answerChecklist: ["finite symbols", "ordered string", "set of valid strings", "valid example", "invalid example", "empty string if relevant"], requiredConcepts: ["formal-alphabet-string-language"], sectionId: "formal-basics" },
       { level: "basic", question: "value→array→[values]를 이용해 [0]의 derivation을 terminal·nonterminal로 나누어 쓰라.", answerChecklist: ["start symbol", "production sequence", "terminal", "nonterminal", "final string"], requiredConcepts: ["grammar-production-derivation"], sectionId: "formal-basics" },
-      { level: "advanced", question: "최대 깊이 3 괄호와 임의 깊이 괄호를 finite automaton 관점에서 비교하고 후자에 필요한 memory를 설명하라.", answerChecklist: ["finite depth states", "unbounded depth", "finite state limit", "stack", "push/pop", "accept/reject"], requiredConcepts: ["finite-automaton-memory-boundary", "pushdown-automaton-stack"], sectionId: "cfg-pda" },
+      { level: "basic", question: "문자열 `(()())`를 왼쪽부터 읽으며 stack depth를 기록하고, `())`가 어느 위치에서 reject되는지 설명하라.", answerChecklist: ["push on open", "depths 1,2,1,2,1,0", "pop on close", "accept at empty end", "extra close in `())`", "negative-depth reject", "unbounded depth needs stack"], requiredConcepts: ["finite-automaton-memory-boundary", "pushdown-automaton-stack"], sectionId: "cfg-pda" },
       { level: "basic", question: "JSON array/object가 CFG recursion으로 중첩되는 production을 쓰고 CFG만으로 확인하기 어려운 semantic constraint를 하나 들라.", answerChecklist: ["recursive value", "array/object", "nested example", "type/name/cross-field semantic", "validator"], requiredConcepts: ["context-free-grammar-recursion"], sectionId: "cfg-pda" },
       { level: "basic", question: "Tree-sitter와 constrained decoder의 입력·출력·오류 처리 목표를 세 축으로 비교하라.", answerChecklist: ["source+old tree", "CST", "edit/error recovery", "prefix+logits", "token mask", "prevent invalid continuation"], requiredConcepts: ["incremental-parser-boundary"], sectionId: "tree-sitter" },
       { level: "advanced", question: "한 token이 ` 42}`를 담을 때 character grammar가 token 전체를 검사해야 하는 과정을 byte/character state transition으로 설명하라.", answerChecklist: ["multi-character token", "sequential consume", "number", "closing brace", "final state", "UTF-8/tokenizer", "cache key"], requiredConcepts: ["grammar-tokenizer-compilation"], sectionId: "tokenizer-compilation" },
@@ -26741,7 +27883,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "basic", question: "한 OSFP를 2×400G로 split한 뒤 physical label·PCI function·netdev·RDMA device를 어떤 순서로 inventory해야 하는지 쓰라.", answerChecklist: ["OSFP label", "PCI BDF .0/.1", "netdev", "mlx5 device", "cold power cycle", "before/after diff", "no copied names"], requiredConcepts: ["b300-port-split-identity"], sectionId: "ports" },
       { level: "advanced", question: "Split 변경의 안전한 rollout·rollback ledger를 설계하고 mlxconfig reset을 복구 기본값으로 쓰면 안 되는 이유를 설명하라.", answerChecklist: ["config dump", "target device", "LINK_TYPE", "planes", "module mapping", "PF count", "cold cycle", "inventory", "reset scope", "console"], requiredConcepts: ["b300-port-split-identity"], sectionId: "ports" },
       { level: "basic", question: "N=4,c=2와 N=8,c=1에서 전체 cable 수·node당 port·pair당 nominal physical rate를 계산하라.", answerChecklist: ["12 cables", "6 ports", "1.6Tb/s", "28 cables", "7 ports", "0.8Tb/s", "physical vs logical"], requiredConcepts: ["switchless-fullmesh-port-budget"], sectionId: "topology" },
-      { level: "advanced", question: "B300의 여덟 port 조건에서 N별 가능한 최대 정수 c를 구하고 node 수가 늘 때 pair bandwidth가 감소하는 이유를 설명하라.", answerChecklist: ["floor(8/(N-1))", "per-node constraint", "quadratic cable count", "uniform mesh", "unused port", "not application throughput"], requiredConcepts: ["switchless-fullmesh-port-budget"], sectionId: "topology" },
+      { level: "basic", question: "노드 5대가 각각 B300 port 8개를 쓸 때 균일 full mesh에서 node pair당 최대 cable c, 전체 cable 수, node당 사용 port를 계산하라.", answerChecklist: ["c=floor(8/4)=2", "10 node pairs", "20 cables total", "8 ports per node", "uniform mesh", "nominal link rate not application throughput"], requiredConcepts: ["switchless-fullmesh-port-budget"], sectionId: "topology" },
       { level: "basic", question: "Server 2↔3의 세 번째 cable에 대한 /30 network와 두 endpoint를 계산하고 manifest row에 필요한 identity를 쓰라.", answerChecklist: ["10.123.3.0/30", ".1", ".2", "sorted IDs", "OSFP", "BDF", "netdev", "RDMA", "link index"], requiredConcepts: ["point-to-point-subnet-manifest"], sectionId: "addressing" },
       { level: "advanced", question: "Cable·port·subnet 중복과 관리망 flush를 막는 manifest validator 및 staged apply 절차를 설계하라.", answerChecklist: ["unique endpoint", "unique physical port", "unique /30", "range", "inventory match", "dry run", "management exclusion", "console", "rollback", "pair ping/RDMA"], requiredConcepts: ["point-to-point-subnet-manifest", "switchless-failure-domain"], sectionId: "addressing" },
       { level: "basic", question: "Remote 10.112.1.2/30에 대해 local 10.112.1.1과 10.123.1.1 GID 중 하나를 선택하고 RoCE version 조건까지 설명하라.", answerChecklist: ["10.112.1.1", "/30 prefix equality", "IPv4 extraction", "RoCE v2", "GID index", "sender/receiver"], requiredConcepts: ["peer-aware-gid-selection"], sectionId: "peer-aware-gid-selection" },
@@ -27105,7 +28247,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "basic", question: "한국어 의료 장문 검색 example 하나를 여섯 robustness axis 값으로 표현하고 필요한 평가 slice를 작성하라.", answerChecklist: ["language", "domain", "query style", "length", "answer position", "positive multiplicity", "matching slice"], requiredConcepts: ["retrieval-robustness-axis"], sectionId: "overview" },
       { level: "advanced", question: "Benchmark 원문의 번역·요약·재배포본까지 고려한 corpus leakage 방지 manifest와 검수 절차를 설계하라.", answerChecklist: ["source lineage", "license", "exact hash", "near duplicate", "threshold audit", "quarantine reason", "split before generation"], requiredConcepts: ["corpus-lineage-leakage-boundary"], sectionId: "data" },
       { level: "basic", question: "한 code document에서 사실형·분석형·자연어 code retrieval query를 만들고 단순 paraphrase와 다른 이유를 설명하라.", answerChecklist: ["three intents", "source grounding", "different evidence need", "subset recipe", "dedup/filter"], requiredConcepts: ["synthetic-query-task-coverage"], sectionId: "paper-synthetic-query-recipes" },
-      { level: "advanced", question: "장문 answer-position bucket을 정의하고 domain·query style과 교차해 balanced sampling할 때의 장점과 위험을 설명하라.", answerChecklist: ["relative position", "front/middle/back", "stratify", "training counts", "deployment mismatch", "architecture residual bias"], requiredConcepts: ["answer-position-balanced-sampling"], sectionId: "paper-position-bias" },
+      { level: "basic", question: "정답 시작 위치가 문서 길이의 10%·55%·90%인 세 문서를 front·middle·back bucket으로 분류하고, 각 bucket을 같은 수로 학습할 때의 목적과 한계를 설명하라.", answerChecklist: ["relative position", "10 percent front", "55 percent middle", "90 percent back", "balanced counts", "deployment mismatch", "architecture residual bias"], requiredConcepts: ["answer-position-balanced-sampling"], sectionId: "paper-position-bias" },
       { level: "basic", question: "연차 규정과 계약 조항 예시를 사용해 1:N·N:1 query-document relevance graph를 그리고 false negative가 생기는 지점을 표시하라.", answerChecklist: ["bipartite nodes", "one-to-many", "many-to-one", "edge preservation", "unlabeled unknown", "not automatic negative"], requiredConcepts: ["query-document-relevance-graph"], sectionId: "paper-multi-positive" },
       { level: "basic", question: "Positive score .82와 margin .05일 때 후보 .80·.78·.76·.70의 채택 여부를 계산하고 margin tradeoff를 설명하라.", answerChecklist: ["threshold .77", ".76/.70 accepted", ".80/.78 excluded", "false-negative risk", "hardness", "strict inequality"], requiredConcepts: ["positive-aware-margin-mining"], sectionId: "paper-nv-retriever" },
       { level: "advanced", question: "두 teacher의 scalar score를 사전 계산하는 row schema와 teacher 결합식이 미공개일 때 허용할 수 없는 추론을 작성하라.", answerChecklist: ["query/candidate IDs", "raw scores", "teacher version", "calibration", "combination version", "cannot assume mean/max", "miner snapshot"], requiredConcepts: ["query-local-scalar-teacher-cache"], sectionId: "distillation" },
@@ -27384,9 +28526,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "roofline",
       },
       {
-        level: "advanced",
-        question: "Output CTA가 4개인 batch-1 GEMM에 Split-K 16을 적용할 때 기대 이득과 새 비용을 함께 설명하라.",
-        answerChecklist: ["more CTAs", "SM utilization", "memory-level parallelism", "partial sums", "reduction/atomic", "shape-specific tuning"],
+        level: "basic",
+        question: "Output CTA가 4개인 batch-1 GEMM의 K축을 16개로 나누면 partial CTA가 몇 개 생기는지 계산하고, B300의 148 SM을 모두 채우지 못하는 이유를 설명하라.",
+        answerChecklist: ["4×16=64 partial CTAs", "more than 4 CTAs", "64 below 148 SMs", "higher SM utilization", "partial sums", "reduction or atomic", "shape-specific tuning"],
         requiredConcepts: ["split-k-shape-parallelism"],
         sectionId: "kernel",
       },
@@ -27767,9 +28909,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "parallel-layout",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "10초에 1,000 output token을 만들었지만 SLO 통과 요청의 token이 700개인 run의 raw throughput과 goodput을 계산하고 설정 승인 ledger를 설계하라.",
+          "10초에 1,000 output token을 만들었지만 SLO 통과 요청의 token이 700개인 run의 raw throughput과 goodput을 계산하고 두 값이 다른 이유를 설명하라.",
         answerChecklist: [
           "100 tok/s raw",
           "70 tok/s goodput",
@@ -28701,7 +29843,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "draft-verify",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
           "K=3이고 P(A≥1)=.9, P(A≥2)=.6, P(A≥3)=.3일 때 E[A]를 구하고 개별 위치 정확도의 평균과 다른 이유를 설명하라.",
         answerChecklist: [
@@ -28751,7 +29893,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "native-mtp",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
           "E[Y]=3, target-only 10ms/token, proposal 5ms, verify 12ms, runtime 2ms일 때 근사 speedup을 계산하고 높은 QPS에서 결론이 바뀔 수 있는 이유를 설명하라.",
         answerChecklist: [
@@ -29104,9 +30246,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "최종 score는 비슷하지만 원 data가 비공개인 Open-R1 reproduction report의 supported claim과 unsupported claim을 작성하라.",
+          "최종 score는 비슷하지만 원 data가 비공개인 Open-R1 reproduction report에서 직접 재현한 것·대체한 것·검증할 수 없는 것을 세 칸으로 분류하라.",
         answerChecklist: [
           "public recipe reconstruction",
           "observed behavior range",
@@ -29144,9 +30286,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "sft-process",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Base policy의 parse rate 2%, group zero-std 94%인 RLVR run에서 cold-start 도입 여부를 판단할 측정·ablation을 설계하라.",
+          "Base policy의 parse rate가 2%이고 prompt group의 94%가 zero-std reward라면 RL signal이 약한 이유를 계산 결과로 분류하고 cold-start SFT 후보를 제안하라.",
         answerChecklist: [
           "parse accessibility",
           "reward histogram",
@@ -29580,9 +30722,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "sampling",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Group 5-fold CV에서 SMOTE leakage를 막는 pipeline과 실패 반례를 작성하라.",
+          "Group 5-fold CV에서 validation 환자를 먼저 분리한 뒤 train fold에만 SMOTE를 fit·적용하는 순서를 쓰고, split 전에 SMOTE했을 때 누출되는 정보를 설명하라.",
         answerChecklist: [
           "group split first",
           "fold-local fit",
@@ -29644,6 +30786,30 @@ export const ARTICLE_LEARNING: Readonly<
           "precision-recall-prevalence",
           "ranking-decision-calibration",
         ],
+        sectionId: "evaluation",
+      },
+      {
+        level: "basic",
+        question:
+          "Positive 50·negative 950에서 TP=30, FP=20, FN=20일 때 precision·recall·F1을 계산하고 accuracy와 함께 보아야 하는 이유를 설명하라.",
+        answerChecklist: ["precision .6", "recall .6", "F1 .6", "class prevalence", "confusion matrix", "threshold dependence"],
+        requiredConcepts: ["precision-recall-prevalence", "confusion-matrix-metrics"],
+        sectionId: "evaluation",
+      },
+      {
+        level: "advanced",
+        question:
+          "Validation에서 threshold를 선택한 뒤 prevalence 1% production으로 옮길 때 calibration·cost·precision drift를 검증하는 release receipt를 설계하라.",
+        answerChecklist: ["validation-only threshold", "prevalence shift", "calibration", "cost matrix", "precision and recall", "slice confidence interval", "rollback"],
+        requiredConcepts: ["precision-recall-prevalence", "cost-sensitive-threshold", "probability-calibration"],
+        sectionId: "evaluation",
+      },
+      {
+        level: "advanced",
+        question:
+          "Class weighting·focal loss·SMOTE·threshold 이동을 같은 split에서 한 축씩 비교하고, calibration과 minority false-negative cost를 함께 지키는 ablation을 설계하라.",
+        answerChecklist: ["same group split", "one changed axis", "training vs decision intervention", "precision recall", "calibration", "cost matrix", "multiple seeds", "rollback"],
+        requiredConcepts: ["class-weighted-risk", "focal-loss-modulation", "training-fold-resampling", "cost-sensitive-threshold"],
         sectionId: "evaluation",
       },
     ],
@@ -29936,9 +31102,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "geometric",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Rotation 후 image는 맞지만 detection 성능이 무너진 pipeline에서 annotation corruption을 재현하는 fixture를 설계하라.",
+          "100×100 image의 box (10,20,30,40)를 horizontal flip했을 때 새 x 좌표를 계산하고 image만 flip했을 때 생기는 annotation corruption을 설명하라.",
         answerChecklist: [
           "known geometry",
           "seed·parameter capture",
@@ -30008,6 +31174,30 @@ export const ARTICLE_LEARNING: Readonly<
           "augmentation-evaluation-boundary",
           "augmentation-risk-objective",
         ],
+        sectionId: "pipeline",
+      },
+      {
+        level: "basic",
+        question:
+          "Train에서는 random crop을 쓰고 validation에서는 center crop을 쓴다. 같은 validation image를 두 번 평가했을 때 prediction이 달라지는 fixture를 작성하고 transform manifest에 남길 항목을 적어라.",
+        answerChecklist: ["train stochastic", "validation deterministic", "seed or no randomness", "resize and crop revision", "same tensor hash", "prediction parity"],
+        requiredConcepts: ["augmentation-risk-objective", "augmentation-evaluation-boundary"],
+        sectionId: "pipeline",
+      },
+      {
+        level: "basic",
+        question:
+          "Minority 시계열 row에 SMOTE neighbor가 미래 timestamp에서 선택되는 경우를 찾아 왜 금지해야 하는지 설명하고 허용 neighbor 조건을 적어라.",
+        answerChecklist: ["query timestamp", "future neighbor rejected", "train fold only", "entity/group boundary", "feature constraints", "lineage"],
+        requiredConcepts: ["tabular-synthesis-validity", "train-validation-test"],
+        sectionId: "tabular",
+      },
+      {
+        level: "advanced",
+        question:
+          "Crop·Mixup·CutMix·TTA를 baseline에 순차 추가할 때 clean metric·shift slice·calibration·latency의 interaction을 분리하는 factorial release 실험을 설계하라.",
+        answerChecklist: ["same split and seeds", "single-stage candidates", "combined candidate", "label-map validity", "clean metric", "shift slices", "calibration", "TTA latency", "rollback"],
+        requiredConcepts: ["augmentation-risk-objective", "augmentation-evaluation-boundary", "mixup-convex-target", "cutmix-area-target"],
         sectionId: "pipeline",
       },
     ],
@@ -30748,6 +31938,46 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "reparam-trick",
       },
       {
+        level: "basic",
+        question:
+          "Standard normal에서 뽑은 z를 바로 decoder에 넣어 새 sample을 만들려 할 때, deterministic AE와 Gaussian VAE 중 어느 쪽이 그 sampling contract를 학습하는지 구분하고 한계를 말할 수 있을까요?",
+        answerChecklist: [
+          "AE는 input별 code와 reconstruction만 학습하므로 code 사이와 prior sample의 출력을 정하지 않는다고 말한다.",
+          "VAE는 input별 posterior와 prior의 KL을 함께 학습해 prior sampling 경로를 만든다고 말한다.",
+          "KL을 썼다는 사실만으로 disentanglement나 빈틈 없는 latent space가 보장되지는 않는다고 말한다.",
+        ],
+        requiredConcepts: [
+          "diagonal-gaussian-posterior",
+          "diagonal-gaussian-kl",
+          "vae-rate-distortion",
+        ],
+        sectionId: "ae-vs-vae",
+      },
+      {
+        level: "basic",
+        question:
+          "Binary mask·연속 센서값·세 범주 token을 복원하는 decoder가 각각 어떤 likelihood parameter를 출력해야 하는지 분류할 수 있을까요?",
+        answerChecklist: [
+          "Binary mask에는 Bernoulli probability와 BCE 형태의 NLL을 고른다.",
+          "연속 센서값에는 Gaussian mean·variance와 scaled MSE 형태의 NLL을 고른다.",
+          "세 범주 token에는 세 class의 categorical logits와 cross-entropy NLL을 고른다.",
+        ],
+        requiredConcepts: ["likelihood-contract", "vae-rate-distortion"],
+        sectionId: "reparam-trick",
+      },
+      {
+        level: "basic",
+        question:
+          "Checkpoint A의 dimension별 KL이 (0.40, 0.30), B가 (0.001, 0.002)이고 B의 z를 prior sample로 바꿔도 reconstruction이 거의 같다면 어느 쪽에서 posterior collapse를 먼저 의심해야 하며, 이 숫자만으로 확정할 수 없는 이유는 무엇일까요?",
+        answerChecklist: [
+          "KL이 거의 0이고 z ablation에도 둔감한 B를 먼저 의심한다.",
+          "Dimension별 KL·active unit와 latent 교체 전후 validation 변화를 함께 본다.",
+          "작은 rate만으로 충분한 task나 일부 dimension만 쓰는 반례가 있어 평균 KL 하나로 확정하지 않는다고 말한다.",
+        ],
+        requiredConcepts: ["posterior-collapse", "latent-usage-diagnostic"],
+        sectionId: "training",
+      },
+      {
         level: "advanced",
         question:
           "Diagonal Gaussian KL 공식을 유도하고 μ=(0,1), σ²=(1,1)의 KL을 계산한 뒤 적용할 수 없는 posterior 반례를 들 수 있을까요?",
@@ -30808,13 +32038,13 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "training",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Gaussian VAE·β-VAE·VQ-VAE를 posterior type·objective·sampling prior·failure mode·evaluation으로 구분할 수 있을까요?",
+          "Continuous Gaussian posterior·KL 가중치 β·discrete codebook이라는 설명을 각각 Gaussian VAE·β-VAE·VQ-VAE에 연결하고, 한 가지 실패 신호씩 말할 수 있을까요?",
         answerChecklist: [
-          "Continuous Gaussian과 discrete codebook을 구분한다.",
-          "β가 rate–distortion objective를 바꾸고 VQ-VAE는 별도 codebook objective임을 말한다.",
-          "Collapse·codebook usage·prior quality와 task metric을 따로 둔다.",
+          "기본 VAE는 continuous Gaussian posterior와 ELBO를 쓴다고 연결한다.",
+          "β-VAE는 KL 가중치로 rate–distortion 균형을 바꾸며 큰 β가 disentanglement를 보장하지 않는다고 말한다.",
+          "VQ-VAE는 discrete codebook과 별도 quantization objective를 쓰며 codebook usage를 점검한다고 말한다.",
         ],
         requiredConcepts: [
           "vae-rate-distortion",
@@ -31171,6 +32401,48 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "forward-reverse",
       },
       {
+        level: "basic",
+        question:
+          "두 forward step의 β₁=0.10, β₂=0.20일 때 α₁·α₂·ᾱ₂와 x₀·noise의 scale을 계산하고, β가 network parameter인지 구분할 수 있을까요?",
+        answerChecklist: [
+          "α₁=0.90, α₂=0.80, ᾱ₂=0.72를 계산한다.",
+          "Signal scale √0.72와 noise scale √0.28을 적는다.",
+          "β schedule은 학습 전에 정하는 corruption schedule이며 denoiser parameter가 아니라고 말한다.",
+        ],
+        requiredConcepts: [
+          "gaussian-forward-diffusion",
+          "cumulative-noise-schedule",
+        ],
+        sectionId: "forward-reverse",
+      },
+      {
+        level: "basic",
+        question:
+          "Diffusion U-Net의 down path·middle·up path·long skip·timestep embedding이 각각 맡는 역할을 입력→출력 순서로 설명할 수 있을까요?",
+        answerChecklist: [
+          "Down path는 resolution을 줄이며 context를 모으고 up path는 resolution을 복원한다고 말한다.",
+          "Long skip은 같은 spatial scale의 detail을 전달한다고 말한다.",
+          "Timestep embedding은 같은 noisy tensor라도 noise level에 맞는 denoising 방향을 고르게 한다고 말한다.",
+        ],
+        requiredConcepts: ["diffusion-backbone-contract"],
+        sectionId: "unet",
+      },
+      {
+        level: "basic",
+        question:
+          "64×64 pixel grid를 8×8 spatial latent로 줄이면 denoiser가 보는 위치 수가 몇 배 줄어드는지 계산하고, 이 값만으로 생성 속도와 품질을 확정할 수 없는 이유를 말할 수 있을까요?",
+        answerChecklist: [
+          "4096/64=64이므로 spatial 위치 수가 64배 줄어든다고 계산한다.",
+          "Channel 수·network width·attention·NFE가 달라 실제 FLOPs와 latency가 정확히 64배가 되지는 않는다고 말한다.",
+          "Autoencoder reconstruction ceiling과 latent scaling을 별도 평가한다고 말한다.",
+        ],
+        requiredConcepts: [
+          "latent-diffusion-bottleneck",
+          "generative-evaluation-boundary",
+        ],
+        sectionId: "stable-diffusion",
+      },
+      {
         level: "advanced",
         question:
           "Gaussian conditional score를 유도하고 conditional score와 marginal score가 다른 이유를 설명할 수 있을까요?",
@@ -31252,13 +32524,13 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "stable-diffusion",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "CFG scale sweep에서 w=1의 의미를 증명하고 품질·다양성·비용을 분리한 평가표를 설계할 수 있을까요?",
+          "Unconditional prediction εu=2, conditional prediction εc=1.5일 때 CFG의 w=1과 w=3 결과를 계산하고, 큰 w가 무조건 좋은 설정이 아닌 이유를 말할 수 있을까요?",
         answerChecklist: [
-          "εu+1(εc−εu)=εc를 보인다.",
-          "Alignment·artifact·precision/recall을 분리한다.",
-          "두 branch의 NFE·batching·wall-clock을 기록한다.",
+          "w=1에서 2+1(1.5−2)=1.5로 conditional prediction과 같음을 보인다.",
+          "w=3에서 2+3(1.5−2)=0.5를 계산한다.",
+          "큰 w는 alignment와 함께 artifact·diversity 감소를 만들 수 있고 두 branch의 실제 비용도 기록한다고 말한다.",
         ],
         requiredConcepts: [
           "classifier-free-guidance",
@@ -31654,13 +32926,56 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "training",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Optimal discriminator를 pointwise로 유도하고 D*=1/2가 finite discriminator에서는 distribution equality를 뜻하지 않는 반례를 만들 수 있을까요?",
+          "Original GAN의 한 mini-batch에서 real x·latent z·generated x̃가 어느 network를 통과하고, discriminator와 generator가 각각 어느 score를 바꾸려 하는지 분류할 수 있을까요?",
         answerChecklist: [
-          "pdata logD+pg log(1−D)를 D로 미분한다.",
-          "D*=pdata/(pdata+pg)를 얻는다.",
-          "상수·underfit discriminator class를 반례로 든다.",
+          "z를 G에 넣어 x̃를 만들고 x와 x̃를 D에 넣는 경로를 적는다.",
+          "D는 D(x)를 높이고 D(x̃)를 낮추도록 학습한다고 말한다.",
+          "Non-saturating G는 D(x̃)를 높이되 normalized density나 inverse encoder를 직접 얻는 것은 아니라고 말한다.",
+        ],
+        requiredConcepts: [
+          "implicit-generator-pushforward",
+          "alternating-adversarial-optimization",
+          "non-saturating-generator-objective",
+        ],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "Target이 같은 크기의 8개 mode인데 10,000개 generated sample의 95%가 2개 mode에 몰렸다면 어떤 실패를 의심하고, 선명한 sample 몇 장만으로 반박할 수 없는 이유를 말할 수 있을까요?",
+        answerChecklist: [
+          "Mode collapse 또는 낮은 target coverage를 의심한다.",
+          "Fidelity가 높아도 6개 mode를 놓치므로 quality와 coverage를 분리한다.",
+          "Mode별 count·generative recall·latent sensitivity를 보고 중복 sample 하나나 loss만으로 확정하지 않는다고 말한다.",
+        ],
+        requiredConcepts: ["gan-mode-collapse", "generative-precision-recall"],
+        sectionId: "training",
+      },
+      {
+        level: "basic",
+        question:
+          "두 점의 거리가 0.2인데 critic score 차이가 0.3이라면 1-Lipschitz 조건을 만족하는지 판단하고, sampled gradient penalty만으로 전체 공간의 조건을 보장할 수 없는 이유를 말할 수 있을까요?",
+        answerChecklist: [
+          "1-Lipschitz라면 score 차이가 0.2 이하여야 하므로 위반이라고 판단한다.",
+          "조건 |f(x)−f(y)|≤||x−y||을 적는다.",
+          "WGAN-GP는 real–fake interpolation의 일부 sampled point만 검사하므로 global guarantee가 아니라고 말한다.",
+        ],
+        requiredConcepts: [
+          "lipschitz-function-constraint",
+          "wgan-gradient-penalty",
+        ],
+        sectionId: "training",
+      },
+      {
+        level: "basic",
+        question:
+          "어떤 x에서 pdata(x)=0.6, pg(x)=0.2일 때 ideal D*(x)를 계산하고, 실제 discriminator가 1/2를 냈다는 사실만으로 두 분포가 같다고 결론 내릴 수 없는 이유를 말할 수 있을까요?",
+        answerChecklist: [
+          "D*=0.6/(0.6+0.2)=0.75를 계산한다.",
+          "D*=pdata/(pdata+pg)는 고정 G·충분한 capacity·optimal D라는 전제를 쓴다고 말한다.",
+          "상수 1/2만 출력하거나 underfit한 finite discriminator를 반례로 든다.",
         ],
         requiredConcepts: [
           "adversarial-density-ratio",
@@ -31669,13 +32984,13 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "overview",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "D=σ(a)일 때 minimax와 non-saturating generator logit gradient를 비교해 D→0에서 왜 후자가 강한지 설명할 수 있을까요?",
+          "D=0.01일 때 minimax와 non-saturating generator의 logit gradient 크기를 각각 약 0.01과 0.99로 비교하고, 이 차이가 보장하지 않는 것을 말할 수 있을까요?",
         answerChecklist: [
-          "Saturating derivative 크기가 D에 비례함을 보인다.",
-          "Non-saturating derivative가 D−1임을 보인다.",
-          "같은 equilibrium과 다른 optimization signal을 구분한다.",
+          "Saturating derivative 크기는 D에 비례해 약 0.01이라고 계산한다.",
+          "Non-saturating derivative |D−1|은 약 0.99라고 계산한다.",
+          "같은 equilibrium을 겨냥해도 강한 한 step의 signal이 global convergence나 mode coverage를 보장하지는 않는다고 말한다.",
         ],
         requiredConcepts: ["non-saturating-generator-objective", "chain-rule"],
         sectionId: "overview",
@@ -32121,9 +33436,9 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "skip-connection",
       },
       {
-        level: "advanced",
+        level: "basic",
         question:
-          "Post-activation v1과 full pre-activation v2의 forward graph를 쓰고 identity propagation이 달라지는 지점을 설명할 수 있을까요?",
+          "Post-activation v1은 add 뒤 ReLU를 통과하고 full pre-activation v2는 add 뒤 identity를 유지합니다. x=-2, F(x)=1인 scalar block의 두 output을 계산해 차이를 설명하세요.",
         answerChecklist: [
           "각 block의 BN·ReLU·conv·addition 순서를 쓴다.",
           "v1 addition 뒤 ReLU의 Jacobian을 지적한다.",
@@ -32152,6 +33467,38 @@ export const ARTICLE_LEARNING: Readonly<
           "resnet-block-family",
         ],
         sectionId: "impact",
+      },
+      {
+        level: "basic",
+        question:
+          "두 residual block이 모두 F(x)=0을 학습했다면 x0=3이 block 두 개 뒤 어디에 도달하는지 계산하고 identity shortcut이 제공하는 baseline path를 설명하세요.",
+        answerChecklist: ["first output 3", "second output 3", "identity composition", "zero residual", "optimization baseline", "not proof of learned optimum"],
+        requiredConcepts: ["residual-parameterization", "identity-residual-propagation"],
+        sectionId: "skip-connection",
+      },
+      {
+        level: "basic",
+        question:
+          "입력 56×56×64를 stride-2 stage로 28×28×128로 바꿀 때 main path와 shortcut의 shape를 맞추는 1×1 projection의 stride·입출력 channel을 적으세요.",
+        answerChecklist: ["main 28×28×128", "shortcut stride 2", "1×1 projection", "64 input channels", "128 output channels", "addition shape parity"],
+        requiredConcepts: ["residual-shape-contract", "identity-shortcut"],
+        sectionId: "skip-connection",
+      },
+      {
+        level: "advanced",
+        question:
+          "깊이 20·56·110 residual model의 train/validation error를 plain network와 paired 비교해 degradation과 overfitting을 분리하는 실험을 설계하세요.",
+        answerChecklist: ["same optimizer and budget", "plain baseline", "train error degradation", "validation gap overfitting", "multiple seeds", "depth slices", "receipt"],
+        requiredConcepts: ["optimization-degradation", "residual-interpretation-boundary"],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "BasicBlock·Bottleneck·pre-activation 후보를 동일 parameter·training budget에서 비교하고, shape projection·train error·latency를 함께 승인하는 표를 설계하세요.",
+        answerChecklist: ["matched parameter budget", "same optimizer schedule", "projection shortcut stated", "train error", "validation error", "activation memory", "p95 latency", "multiple seeds"],
+        requiredConcepts: ["resnet-block-family", "preactivation-residual-unit", "residual-shape-contract", "optimization-degradation"],
+        sectionId: "architecture",
       },
     ],
     papers: [

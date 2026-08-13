@@ -34,6 +34,15 @@ export default function Applications() {
           prior·posterior family, decoder likelihood와 latent hierarchy를 어떻게
           정하느냐가 변형을 나눕니다.
         </p>
+        <p>
+          기본 Gaussian VAE는 continuous posterior와 ELBO를 사용하며
+          dimension별 KL이 거의 0으로 가는 posterior collapse를 살핍니다.
+          β-VAE는 같은 KL에 β를 곱해 rate–distortion 균형을 바꾸지만, β를 크게
+          했다는 사실만으로 사람이 원하는 요인이 분리되지는 않습니다. VQ-VAE는
+          Gaussian sample 대신 가장 가까운 discrete code를 고르고 codebook·
+          commitment objective를 따로 사용하므로, posterior KL보다 codebook
+          usage와 별도 prior의 품질을 점검해야 합니다.
+        </p>
       </div>
 
       <figure className="not-prose my-8 grid gap-3 md:grid-cols-2">

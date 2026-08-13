@@ -15,7 +15,10 @@ export default function Overview() {
       <ExplainedFormula
         question="최종 답이 틀렸을 때 어느 단계부터 조사해야 할까요?"
         idea={<>성공에 필요한 네 조건을 indicator로 둡니다. 곱이 0이면 앞 단계부터 확인해 첫 실패 지점을 찾습니다. 이 식은 독립 확률을 곱하는 식이 아니라, 필수 조건이 모두 참인지 표현한 진단 계약입니다.</>}
-        formula={String.raw`S(q)=I_{\mathrm{source}}(q)\,I_{\mathrm{retrieve}}(q)\,I_{\mathrm{context}}(q)\,I_{\mathrm{support}}(q)`}
+        formula={String.raw`\begin{aligned}
+S(q)&=I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)\\
+&\quad I_{\mathrm{context}}(q)I_{\mathrm{support}}(q)
+\end{aligned}`}
         terms={[
           { symbol: "q", name: "query", description: "사용자의 질문과 요청 시점·권한을 포함한 평가 단위입니다." },
           { symbol: "I_source", name: "source available", description: "정답을 뒷받침하는 최신 허가 문서가 corpus에 있으면 1입니다." },

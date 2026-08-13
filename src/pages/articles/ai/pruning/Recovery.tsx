@@ -18,7 +18,7 @@ export default function Recovery() {
       <ExplainedFormula
         question="Optimizer가 update를 해도 제거된 weight를 계속 0으로 유지하려면 어떻게 해야 할까요?"
         idea={<>일반 update를 계산한 뒤 같은 binary mask를 다시 곱합니다. Momentum 같은 optimizer state도 mask 밖을 0으로 유지해야 다음 step에서 제거된 연결이 되살아나지 않습니다.</>}
-        formula={String.raw`W_{t+1}=M\odot\left(W_t-\eta\,g_t\right),\qquad U_{t+1}=M\odot\operatorname{OptStateUpdate}(U_t,g_t)`}
+        formula={String.raw`\begin{aligned}\widetilde W_{t+1}&=W_t-\eta g_t,\\W_{t+1}&=M\odot\widetilde W_{t+1},\\\widetilde U_{t+1}&=\operatorname{OptStateUpdate}(U_t,g_t),\\U_{t+1}&=M\odot\widetilde U_{t+1}.\end{aligned}`}
         terms={[
           { symbol: "W_t", name: "remaining weights", description: "Recovery step t의 parameter tensor입니다." },
           { symbol: "g_t", name: "gradient", description: "Fine-tuning 또는 distillation loss에서 계산한 update 방향입니다." },

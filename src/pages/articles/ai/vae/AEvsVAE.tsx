@@ -26,11 +26,16 @@ export default function AEvsVAE() {
       <ExplainedFormula
         question="같은 encoder–decoder 모양이어도 AE와 VAE의 latent contract는 어떻게 다를까?"
         idea={<>AE는 input마다 code 한 점을 정하지만, VAE는 input마다 latent distribution의 parameter를 정합니다. 후자는 prior와 비교할 수 있어 generative sampling objective를 구성할 수 있습니다.</>}
-        formula={String.raw`\text{AE: }z=f_\phi(x),\qquad \text{VAE: }q_\phi(z\mid x)=\mathcal N\!\left(\mu_\phi(x),\operatorname{diag}(\sigma_\phi^2(x))\right)`}
+        formula={String.raw`\begin{aligned}
+          \text{AE: }z&=f_\phi(x) \\
+          \text{VAE: }q_\phi(z\mid x)
+          &=\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right) \\
+          \Sigma_\phi(x)&=\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)
+        \end{aligned}`}
         terms={[
           { symbol: "f_\phi(x)", name: "deterministic code", description: "같은 input은 같은 latent point로 갑니다." },
           { symbol: "q_\phi(z\mid x)", name: "approximate posterior", description: "true posterior pθ(z|x)를 encoder가 근사합니다." },
-          { symbol: "\operatorname{diag}(\sigma^2)", name: "diagonal covariance", description: "latent dimension 사이 posterior covariance를 0으로 두는 tractable한 선택입니다." },
+          { symbol: String.raw`\Sigma_\phi(x)`, name: "diagonal covariance", description: "diag(σ²)로 두어 latent dimension 사이 posterior covariance를 0으로 만드는 tractable한 선택입니다." },
         ]}
         assumptions={["기본 Gaussian VAE와 deterministic autoencoder를 비교합니다.", "VAE라는 이름이 모든 stochastic autoencoder 변형을 뜻하지는 않습니다."]}
         interpretation="distribution을 출력한다는 사실만으로 latent가 disentangle되거나 빈틈 없이 채워지지는 않습니다. 그 효과는 ELBO의 KL, decoder likelihood와 model capacity에 함께 달려 있습니다."

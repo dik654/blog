@@ -18,7 +18,7 @@ export default function Structured() {
       <ExplainedFormula
         question="Linear layer의 input·output dimension을 줄이면 계산량이 어떻게 달라질까요?"
         idea={<>Batch와 token을 묶은 행 수를 <code>T</code>라고 하면 dense matrix multiplication은 각 output마다 모든 input을 곱합니다. 두 dimension을 각각 일정 비율로 남기면 주된 multiply-add 수도 그 비율의 곱으로 줄어듭니다.</>}
-        formula={String.raw`C_{\mathrm{dense}}\approx 2T d_{\mathrm{in}}d_{\mathrm{out}},\qquad \frac{C'}{C}\approx \alpha\beta\quad\text{when}\quad d'_{\mathrm{in}}=\alpha d_{\mathrm{in}},\ d'_{\mathrm{out}}=\beta d_{\mathrm{out}}`}
+        formula={String.raw`\begin{aligned}C&\approx2Td_{\mathrm{in}}d_{\mathrm{out}},\\d'_{\mathrm{in}}&=\alpha d_{\mathrm{in}},\\d'_{\mathrm{out}}&=\beta d_{\mathrm{out}},\\C'/C&\approx\alpha\beta.\end{aligned}`}
         terms={[
           { symbol: "T", name: "token rows", description: "Batch×sequence처럼 같은 linear layer를 통과하는 input row 수입니다." },
           { symbol: "d_in", name: "input width", description: "Weight matrix의 입력 channel 수입니다." },
@@ -36,7 +36,7 @@ export default function Structured() {
       <ExplainedFormula
         question="2:4 semi-structured sparsity는 전체 sparsity 50%와 무엇이 다를까요?"
         idea={<>Reduction axis를 연속된 4개씩 나눈 모든 묶음에서 정확히 2개만 남겨야 sparse MMA가 해석할 수 있는 규칙적인 layout이 됩니다. 전체 개수만 절반으로 맞춰도 한 묶음에 3개가 남으면 제약을 위반합니다.</>}
-        formula={String.raw`\forall g\in\mathcal G_M:\quad \sum_{i\in g} M_i=N,\qquad \text{2:4 means }(N,M)=(2,4)`}
+        formula={String.raw`\begin{aligned}\forall g\in\mathcal G_M:\quad&\sum_{i\in g}M_i=N,\\\text{2:4}:\quad&(N,M)=(2,4).\end{aligned}`}
         terms={[
           { symbol: "G_M", name: "local groups", description: "Kernel이 정한 reduction axis에서 연속된 M개 weight 묶음의 집합입니다." },
           { symbol: "M_i", name: "binary mask entry", description: "묶음 안에서 남긴 weight는 1, 제거한 weight는 0입니다." },

@@ -11,11 +11,19 @@ export default function Evaluation() {
     <ExplainedFormula
       question="Query마다 정답이 여러 개일 때 Recall@k와 NDCG@k는 각각 무엇을 측정할까요?"
       idea={<>Recall은 top-k에 들어온 relevant 문서 수를 전체 relevant 수로 나눕니다. NDCG는 높은 relevance grade를 앞 순위에 둘수록 크게 주고, 같은 label set에서 가능한 이상적 DCG로 나누어 0~1 scale로 만듭니다.</>}
-      formula={String.raw`\operatorname{Recall@}k(q)=\frac{|\mathcal R_q\cap \operatorname{Top}_k(q)|}{|\mathcal R_q|},\qquad \operatorname{NDCG@}k(q)=\frac{\sum_{r=1}^{k}\frac{2^{\mathrm{rel}_r}-1}{\log_2(r+1)}}{\operatorname{IDCG@}k(q)}`}
+      formula={String.raw`\begin{aligned}
+\operatorname{Recall@}k(q)
+&=\frac{|\mathcal R_q\cap \operatorname{Top}_k(q)|}{|\mathcal R_q|}\\
+\operatorname{DCG@}k(q)
+&=\sum_{r=1}^{k}\frac{2^{\mathrm{rel}_r}-1}{\log_2(r+1)}\\
+\operatorname{NDCG@}k(q)
+&=\frac{\operatorname{DCG@}k(q)}{\operatorname{IDCG@}k(q)}
+\end{aligned}`}
       terms={[
         { symbol: "R_q", name: "relevant set", description: "Query q에 대해 정답으로 인정되는 모든 문서 ID 집합입니다." },
         { symbol: "Top_k(q)", name: "retrieved top-k", description: "현재 retriever가 높은 score 순으로 반환한 k개 문서입니다." },
         { symbol: "rel_r", name: "graded relevance", description: "순위 r 문서의 0·1 또는 다단계 relevance label입니다." },
+        { symbol: "DCG", name: "discounted cumulative gain", description: "Relevance gain을 낮은 순위일수록 log로 할인해 더한 값입니다." },
         { symbol: "IDCG", name: "ideal DCG", description: "같은 relevance labels를 가장 좋은 순서로 놓았을 때의 DCG입니다." },
       ]}
       assumptions={["Query별 모든 known positive를 보존하고 unlabeled를 확정 negative로 과해석하지 않습니다.", "NDCG gain function과 log discount convention·tie handling을 고정합니다.", "Relevant set이 비거나 IDCG=0인 query의 포함 규칙을 평가 protocol에 명시합니다."]}
@@ -25,7 +33,11 @@ export default function Evaluation() {
     <ExplainedFormula
       question="품질이 비슷한 embedding 후보를 serving 비용까지 포함해 어떻게 비교할까요?"
       idea={<>후보 a가 다른 후보 b보다 품질은 낮지 않고 latency·memory·storage는 크지 않으며 적어도 하나는 더 좋다면 b는 지배당합니다. 남은 Pareto 후보에서 제품 제약으로 고릅니다.</>}
-      formula={String.raw`a\succ b\iff Q_a\ge Q_b,\;L_a\le L_b,\;R_a\le R_b,\;S_a\le S_b\quad\text{and at least one strict}`}
+      formula={String.raw`\begin{aligned}
+a\succ b\iff{}&Q_a\ge Q_b,\quad L_a\le L_b\\
+&R_a\le R_b,\quad S_a\le S_b\\
+&\exists\ \text{a strict inequality}
+\end{aligned}`}
       terms={[
         { symbol: "Q", name: "quality vector or gated score", description: "Domain Recall/NDCG·worst slice 등 배포에 필요한 품질 기준입니다." },
         { symbol: "L", name: "latency", description: "같은 hardware·batch·precision에서 측정한 p95 query encoding+search latency입니다." },

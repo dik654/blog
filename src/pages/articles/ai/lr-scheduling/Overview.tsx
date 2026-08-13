@@ -40,6 +40,14 @@ export default function Overview() {
         assumptions={["ηt의 의미는 optimizer와 parameter group마다 다를 수 있으므로 optimizer·group 설정을 함께 기록합니다.", "Weight decay처럼 gradient direction 밖에서 더해지는 update가 있는지 확인합니다.", "Schedule의 독립 변수 t는 micro-batch가 아니라 실제 optimizer update 횟수로 정의합니다."]}
         interpretation="같은 ηt라도 optimizer state와 parameter scale이 다르면 실제 Δθt는 달라지므로, LR curve와 함께 loss·gradient norm·relative update를 관측해야 합니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Scalar 예에서 θ=3, optimizer direction u=4, learning rate η=0.05라면
+          displacement는 Δθ=−0.05×4=−0.2이고 다음 parameter는 2.8입니다. Learning
+          rate는 목적함수의 값이 아니라 optimizer가 만든 방향에 곱하는 이동 scale이며,
+          같은 η라도 u가 두 배이면 실제 이동도 두 배가 됩니다.
+        </p>
+      </div>
       <ExplainedFormula
         question="Epoch 수를 scheduler가 사용할 총 optimizer update 수로 어떻게 바꿀까?"
         idea={<>한 update가 Bμ×A×W개의 sample을 소비한다고 가정하면 epoch당 update 수를 구할 수 있습니다. 마지막 batch 처리와 distributed sampler padding에 따라 실제 값은 달라질 수 있으므로 실행 로그와 맞춰 봅니다.</>}

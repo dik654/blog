@@ -21,7 +21,11 @@ export default function SearchSpace() {
       <ExplainedFormula
         question="a와 b 사이에서 자릿수마다 같은 비중으로 positive 값을 뽑으려면 어떻게 해야 할까요?"
         idea={<>원래 값이 아니라 log 공간에서 uniform하게 위치 u를 뽑은 뒤 exp로 되돌립니다. 그러면 곱셈 비율이 같은 구간들이 같은 확률을 가집니다.</>}
-        formula={String.raw`u\sim\operatorname{Uniform}(0,1),\qquad \lambda=\exp\!\left(\log a+u(\log b-\log a)\right),\quad 0<a<b`}
+        formula={String.raw`\begin{aligned}
+          u&\sim\operatorname{Uniform}(0,1) \\
+          \lambda&=\exp\!\bigl(\log a+u(\log b-\log a)\bigr) \\
+          &0<a<b
+        \end{aligned}`}
         terms={[
           { symbol: "a, b", name: "positive bounds", description: "0보다 큰 lower·upper bound이며 단위와 허용 이유를 함께 기록합니다." },
           { symbol: "u", name: "uniform position", description: "Log interval 안에서 뽑은 0과 1 사이의 위치입니다." },
@@ -38,7 +42,11 @@ export default function SearchSpace() {
       <ExplainedFormula
         question="조건부 parameter와 메모리 한도를 포함한 ‘실행 가능한 공간’을 어떻게 구분할까요?"
         idea={<>전체 조합을 만든 다음 실패시키지 않고, branch 조건과 resource estimator를 만족하는 설정만 feasible set에 포함합니다.</>}
-        formula={String.raw`\Lambda_{\mathrm{feasible}}=\left\{\lambda\in\Lambda:\;c_{\mathrm{branch}}(\lambda)=1,\;\widehat m(\lambda)\le M_{\max}\right\}`}
+        formula={String.raw`\begin{aligned}
+          \Lambda_{\mathrm{feasible}}=\{\lambda\in\Lambda:\;&
+          c_{\mathrm{branch}}(\lambda)=1,\\
+          &\widehat m(\lambda)\le M_{\max}\}
+        \end{aligned}`}
         terms={[
           { symbol: "c_branch", name: "branch validity", description: "선택한 optimizer·model family에서 해당 child parameter가 실제 의미를 가지면 1입니다." },
           { symbol: "m-hat", name: "resource estimate", description: "Batch·resolution·sequence length 조합의 예상 peak memory 같은 사전 추정값입니다." },
@@ -59,6 +67,13 @@ export default function SearchSpace() {
           Effective batch는 micro batch×gradient accumulation×data-parallel workers로 기록합니다. Batch만 바꾸면 update 수, learning-rate
           schedule, normalization 통계까지 달라질 수 있으므로 어떤 양을 고정했는지 밝혀야 합니다. Search-space version은 parameter
           이름·type·distribution·bounds·conditions·resource constraints의 digest로 남기면 재개한 study가 같은 실험인지 판별할 수 있습니다.
+        </p>
+        <p>
+          예를 들어 manifest는 optimizer를 categorical parent로 두고, SGD branch에만 float momentum과 범위를, AdamW branch에만
+          beta1·beta2와 decoupled weight decay의 의미를 적습니다. Depth는 integer, learning rate와 weight decay는 positive
+          log-scale float로 선언하며 각 bound가 baseline·pilot·memory estimate 중 어디에서 왔는지 기록합니다. 예상 peak memory에는
+          headroom을 두되 실제 OOM은 configuration과 함께 FAIL로 남깁니다. 이렇게 해야 같은 이름의 parameter가 branch마다 다른 뜻을
+          갖거나 effective batch가 몰래 달라지는 일을 막을 수 있습니다.
         </p>
       </div>
     </section>

@@ -32,6 +32,14 @@ export default function StepExponential() {
         assumptions={["식의 t와 K는 optimizer update 단위입니다. Epoch 단위 API라면 호출을 epoch마다 한 번만 해야 같은 식이 됩니다.", "Parameter groups가 여러 개라면 같은 factor를 적용해도 각 base LR는 다를 수 있습니다.", "Final LR는 optimization 성공을 보장하는 값이 아니라 비교할 schedule contract입니다."]}
         interpretation="Exponential γ를 관습적으로 복사하기보다 η0·ηT·T에서 계산하면 batch나 budget이 바뀌었을 때 같은 종료 의도를 유지할 수 있습니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          예를 들어 η₀=0.1에서 두 update 뒤 η₂=0.01에 도달하려면
+          γ=(0.01/0.1)¹ᐟ²≈0.316입니다. 따라서 η₁≈0.0316, η₂=0.01이 됩니다.
+          같은 γ를 epoch마다 호출하면 이 계산의 t는 update가 아니라 epoch가 되어
+          전혀 다른 감소 속도가 되므로 호출 단위를 config와 trace에 함께 적습니다.
+        </p>
+      </div>
       <div className="not-prose my-8"><StepExpViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ReduceLROnPlateau는 validation event에 반응합니다</h3>

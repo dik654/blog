@@ -316,7 +316,11 @@ export default function MixtureOfExpertsArticle() {
         <ExplainedFormula
           question="Router logit을 비교 가능한 weight와 실제 expert index로 어떻게 바꾸는가?"
           idea={<>Linear score를 softmax해 상대 크기를 유지한 probability를 만들고, 그중 가장 큰 k개를 선택합니다. 일부 구현은 선택한 score만 다시 정규화하고, 다른 구현은 sigmoid score나 routing bias를 사용하므로 식과 config를 함께 봐야 합니다.</>}
-          formula={String.raw`z=W_r x,\qquad p_i=\frac{e^{z_i}}{\sum_{j=1}^{n}e^{z_j}},\qquad T_k(x)=\operatorname{TopK}(p,k)`}
+          formula={String.raw`\begin{aligned}
+            z&=W_r x \\
+            p_i&=\frac{e^{z_i}}{\sum_{j=1}^{n}e^{z_j}} \\
+            T_k(x)&=\operatorname{TopK}(p,k)
+          \end{aligned}`}
           terms={[
             { symbol: "W_r", name: "router projection", description: "Hidden dimension을 n개 expert logit으로 바꾸는 학습 parameter입니다." },
             { symbol: "z_i", name: "router logit", description: "i번째 expert에 대한 정규화 전 score입니다." },
@@ -377,6 +381,27 @@ export default function MixtureOfExpertsArticle() {
           interpretation="예를 들어 m=8, k=2, n=4이면 q=4입니다. 최대 load가 7이라면 peak ratio는 1.75이고, 평균 compute가 같아도 가장 느린 expert가 step을 끌 수 있습니다."
         />
 
+        <ExplainedFormula
+          question="균등 load보다 여유를 둔 expert buffer가 넘치면 몇 개의 assignment를 따로 처리해야 할까요?"
+          idea={<>균등 기준 mk/n에 capacity factor φ를 곱해 expert당 buffer 상한을 정하고, 실제 load가 그 상한을 넘은 만큼을 overflow로 셉니다.</>}
+          formula={String.raw`\begin{aligned}
+            C&=\left\lceil\phi\frac{mk}{n}\right\rceil \\
+            o_i&=\max(0,c_i-C)
+          \end{aligned}`}
+          terms={[
+            { symbol: "phi", name: "capacity factor", description: "균등 load보다 buffer를 얼마나 넉넉하게 잡을지 정하는 1 이상의 배수입니다." },
+            { symbol: "C", name: "expert capacity", description: "한 expert buffer가 이번 batch에서 받을 수 있는 assignment 상한입니다." },
+            { symbol: "c_i", name: "actual load", description: "Router가 i번째 expert에 실제로 보낸 assignment 수입니다." },
+            { symbol: "o_i", name: "overflow", description: "Capacity를 넘어 drop·reroute·추가 buffer 중 하나의 정책이 필요한 assignment 수입니다." },
+          ]}
+          assumptions={[
+            "Capacity를 batch 전체 또는 expert-parallel group 중 어느 단위로 계산하는지 구현 계약에 명시합니다.",
+            "Drop과 reroute는 model quality와 routing semantics를 바꾸며, buffer 확장은 memory·padding cost를 늘립니다.",
+            "Capacity factor를 크게 잡아도 load imbalance와 all-to-all tail latency가 자동으로 사라지지는 않습니다.",
+          ]}
+          interpretation="m=128, k=2, n=8이면 균등 load는 32입니다. φ=1.25라면 C=40이고 실제 load가 46인 expert에는 overflow 6개가 생깁니다. 이 6개를 drop할지 다른 expert로 보낼지, buffer를 더 키울지는 quality와 memory를 함께 보고 정합니다."
+        />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Auxiliary loss, routing bias, capacity는 서로 다른 개입 지점이다</h3>
           <p className="leading-8">
@@ -408,7 +433,10 @@ export default function MixtureOfExpertsArticle() {
         <ExplainedFormula
           question="Expert 수 n과 Top-k k가 parameter 장부를 어떻게 갈라놓는가?"
           idea={<>모든 token이 공유하는 parameter와 expert 하나의 parameter를 분리하면, 전체 저장량에는 n개를 더하고 token별 활성 경로에는 k개만 더할 수 있습니다.</>}
-          formula={String.raw`P_{\mathrm{total}}\approx P_{\mathrm{shared}}+nP_e,\qquad P_{\mathrm{active}}\approx P_{\mathrm{shared}}+kP_e`}
+          formula={String.raw`\begin{aligned}
+            P_{\mathrm{total}}&\approx P_{\mathrm{shared}}+nP_e \\
+            P_{\mathrm{active}}&\approx P_{\mathrm{shared}}+kP_e
+          \end{aligned}`}
           terms={[
             { symbol: "P_{\mathrm{shared}}", name: "공유 parameter", description: "Attention·embedding·normalization·shared expert처럼 모든 token이 쓰는 parameter입니다." },
             { symbol: "P_e", name: "expert 하나의 parameter", description: "같은 폭을 가정한 routed expert FFN 하나의 parameter 수입니다." },

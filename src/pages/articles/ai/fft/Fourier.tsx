@@ -67,6 +67,14 @@ export default function Fourier() {
           일정한 간격의 sampling은 continuous spectrum을 sample rate 간격으로 반복한 사본으로 만듭니다. 원래 signal이 <code>fₛ/2</code> 아래로 band-limited되어 있으면 이 사본들이 겹치지 않아 원래 spectrum을 분리할 수 있지만, 더 높은 성분이 남아 있으면 사본이 겹쳐 서로 다른 continuous signal이 같은 sample sequence를 만들 수 있습니다. 예를 들어 8kHz로 sampling한 cosine에서 1kHz와 7kHz는 sample 시점마다 같은 값을 냅니다. 따라서 anti-alias filter와 source band 조건이 없으면 DFT coefficient만으로 둘을 되돌려 구분할 수 없습니다.
         </p>
         <p>
+          이 반례는 sample index <code>n</code>에서 직접 검산할 수 있습니다.
+          7kHz 성분은 <code>cos(2π·7n/8)</code>이고,
+          <code>2π·7n/8=2πn−2πn/8</code>입니다. Cosine의 2π 주기성과
+          짝함수 성질을 쓰면 이 값은 <code>cos(2πn/8)</code>, 즉 1kHz
+          sample과 같아집니다. FFT algorithm을 바꿔도 이미 같아진 관측값에서
+          원래 frequency를 복구할 수는 없습니다.
+        </p>
+        <p>
           Zero-padding도 이 정보 손실을 복구하지 않습니다. N개 관측 뒤에 0을 더하면 같은 finite observation의 spectrum을 더 많은 frequency 좌표에서 보간할 수 있지만, 실제 관측 시간은 <code>N/fₛ</code> 그대로입니다. 가까운 두 tone을 더 잘 분리하려면 일반적으로 더 긴 관측이나 다른 prior가 필요합니다.
         </p>
       </div>

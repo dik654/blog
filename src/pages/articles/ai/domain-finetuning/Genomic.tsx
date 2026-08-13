@@ -12,7 +12,12 @@ export default function Genomic() {
     <ExplainedFormula
       question="Entity·family·time 관계가 train과 test 사이에 새지 않았음을 어떻게 검사할까요?"
       idea={<>각 split의 row를 상위 group key 집합으로 바꾸고 교집합이 비었는지 확인합니다. 시간축이 있는 경우 training의 가장 늦은 event가 test의 가장 이른 event보다 앞서야 합니다.</>}
-      formula={String.raw`G_{\mathrm{train}}\cap G_{\mathrm{val}}=G_{\mathrm{train}}\cap G_{\mathrm{test}}=G_{\mathrm{val}}\cap G_{\mathrm{test}}=\varnothing,\qquad \max t_{\mathrm{train}}<\min t_{\mathrm{test}}`}
+      formula={String.raw`\begin{aligned}
+G_{\mathrm{train}}\cap G_{\mathrm{val}}&=\varnothing\\
+G_{\mathrm{train}}\cap G_{\mathrm{test}}&=\varnothing\\
+G_{\mathrm{val}}\cap G_{\mathrm{test}}&=\varnothing\\
+\max t_{\mathrm{train}}&<\min t_{\mathrm{test}}
+\end{aligned}`}
       terms={[
         { symbol: "Gsplit", name: "group-key set", description: "Patient·gene family·machine/lot·source lineage처럼 독립성 단위의 ID 집합입니다." },
         { symbol: "ttrain,t_test", name: "event time", description: "실제 prediction 시점에서 이용 가능성을 판정할 timestamp입니다." },
@@ -24,10 +29,15 @@ export default function Genomic() {
     <ExplainedFormula
       question="기관·계통·장비·희귀 조건 중 평가 근거가 비어 있는 곳을 어떻게 드러낼까요?"
       idea={<>Coverage cell마다 독립 group 수를 세고, 최소 기준 nmin 이상인 cell 비율을 계산합니다. Frame·row 수가 아니라 공유 원인을 제거한 group 수를 사용합니다.</>}
-      formula={String.raw`n_c=\left|\{g:\operatorname{slice}(g)=c\}\right|,\qquad \mathrm{Coverage}=\frac{1}{|\mathcal C|}\sum_{c\in\mathcal C}\mathbb 1[n_c\ge n_{\min}]`}
+      formula={String.raw`\begin{aligned}
+n_c&=|\{g:\operatorname{slice}(g)=c\}|\\
+I_c&=\mathbb 1[n_c\ge n_{\min}]\\
+\mathrm{Coverage}&=\frac{1}{|\mathcal C|}\sum_{c\in\mathcal C}I_c
+\end{aligned}`}
       terms={[
         { symbol: "C", name: "required slice cells", description: "기관×시기×장비×condition 등 사전에 평가해야 한다고 정한 cell 집합입니다." },
         { symbol: "n_c", name: "independent groups in cell", description: "Cell c에 속한 고유 환자·family·lot 등 독립 group 수입니다." },
+        { symbol: "I_c", name: "coverage indicator", description: "Cell c의 독립 group 수가 최소 근거 기준을 넘으면 1, 아니면 0입니다." },
         { symbol: "nmin", name: "minimum evidence count", description: "Metric을 보고할 최소 group 수로 통계적·운영적 요구에서 정합니다." },
       ]}
       assumptions={["Required cell 목록을 결과를 보기 전에 정하고 empty/unknown cell을 삭제하지 않습니다.", "Count threshold만으로 representative sampling과 confidence interval이 보장되지는 않습니다.", "민감 subgroup는 privacy 때문에 충분한 aggregation과 접근 통제가 필요합니다."]}

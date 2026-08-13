@@ -23,7 +23,10 @@ export default function Models() {
       <ExplainedFormula
         question="조작 흔적이 일부 frame에만 있을 때 mean·max·top-k pooling은 무엇을 다르게 가정할까?"
         idea={<>Frame score를 정렬하고 가장 큰 k개만 평균하면 전체 평균의 희석과 단일 max의 불안정을 절충합니다. k는 validation에서 고르되 video 길이에 따른 의미를 고정해야 합니다.</>}
-        formula={String.raw`s_{\mathrm{video}}^{(k)}=\frac1k\sum_{j=1}^{k}s_{(j)},\qquad s_{(1)}\ge\cdots\ge s_{(T)}`}
+        formula={String.raw`\begin{aligned}
+s_{(1)}&\ge\cdots\ge s_{(T)},\\
+s_{\mathrm{video}}^{(k)}&=\frac1k\sum_{j=1}^{k}s_{(j)}.
+\end{aligned}`}
         terms={[
           { symbol: "sₜ", name: "frame or clip score", description: "t번째 valid temporal unit에서 model이 낸 manipulation score입니다." },
           { symbol: "s(j)", name: "ordered score", description: "한 video 안에서 큰 값부터 정렬했을 때 j번째 score입니다." },

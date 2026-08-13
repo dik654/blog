@@ -39,6 +39,15 @@ u_k&=1/K,\\
         assumptions={["Single-label K-class classification과 uniform smoothing을 가정합니다.", "Targets의 각 coordinate는 0 이상이고 합이 1이어야 합니다.", "Class weighting·ignore_index·Mixup과 결합하면 reduction과 effective target을 다시 유도합니다."]}
         interpretation="정답 class target은 1−ε+ε/K이고 나머지는 ε/K입니다. 이는 annotator uncertainty의 정답 model이 아니라 uniform prior를 섞는 의도적 regularizer입니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          K=4, ε=0.1이고 두 번째 class가 정답이면 각 오답에는 0.1/4=0.025,
+          정답에는 0.9+0.025=0.925를 둡니다. Target은
+          (0.025, 0.925, 0.025, 0.025)이고 합은 1입니다. 정답 class probability를
+          0.9로만 두고 나머지에 0.1을 또 더하면 normalization이 깨지므로 구현의
+          convention을 식과 함께 확인해야 합니다.
+        </p>
+      </div>
       <div className="not-prose my-8"><LabelSmoothingViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Mixup·CutMix와 soft target이 겹치는지 확인합니다</h3>
@@ -48,6 +57,14 @@ u_k&=1/K,\\
           <a href="/ai/data-augmentation">데이터 증강 글</a>에서 설명하고,
           여기서는 label smoothing과 동시에 적용했을 때 target entropy가
           지나치게 커지는지만 확인합니다.
+        </p>
+        <p>
+          예를 들어 class 1과 2를 λ=0.7로 Mixup한 target은 (0.7,0.3,0,0)입니다.
+          여기에 K=4, ε=0.1의 uniform smoothing을 적용하면
+          0.9×(0.7,0.3,0,0)+0.1×(0.25,0.25,0.25,0.25) =
+          (0.655,0.295,0.025,0.025)가 됩니다. 먼저 smoothing한 두 label을
+          Mixup해도 이 선형 조합에서는 같지만 class weighting·ignore policy·다른
+          nonlinear target transform이 끼면 순서를 다시 유도해야 합니다.
         </p>
         <p>
           Ablation은 hard label, label smoothing, mix-based augmentation,

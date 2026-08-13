@@ -70,7 +70,12 @@ N_{\mathrm{total}}&=\sum_{v=1}^{V}m_vN_v,\\
       <ExplainedFormula
         question="View v를 제거했을 때 성능이 얼마나 나빠지는지 어떻게 paired metric으로 잴까?"
         idea={<>같은 sample을 full-view와 view-v-drop 조건에서 각각 평가해 loss 차이를 냅니다. Sample별 차이를 평균하면 data 난이도 차이를 줄인 paired ablation이 됩니다.</>}
-        formula={String.raw`\Delta_v=\frac1n\sum_{i=1}^{n}\Big[\ell\!\left(F(X_i\setminus v),y_i\right)-\ell\!\left(F(X_i),y_i\right)\Big]`}
+        formula={String.raw`\begin{aligned}
+\ell_i^{(-v)}&=\ell(F(X_i\setminus v),y_i),\\
+\ell_i^{(\mathrm{full})}&=\ell(F(X_i),y_i),\\
+\Delta_v&=\frac1n\sum_{i=1}^{n}
+\left(\ell_i^{(-v)}-\ell_i^{(\mathrm{full})}\right).
+\end{aligned}`}
         terms={[
           { symbol: "Xᵢ∖v", name: "view-drop episode", description: "같은 sample에서 view v와 그 token만 availability mask로 제거한 입력입니다." },
           { symbol: "ℓ", name: "evaluation loss", description: "Full-view와 view-drop condition에서 동일하게 계산하는 sample-level error입니다." },

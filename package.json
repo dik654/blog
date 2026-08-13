@@ -11,6 +11,7 @@
     "audit:articles": "node scripts/audit-article-contract.mjs",
     "audit:graph": "node scripts/audit-knowledge-graph.mjs",
     "audit:learning": "node scripts/audit-learning-contract.mjs",
+    "test:audit-learning-routes": "node --test scripts/audit-learning-routes.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -73,6 +73,17 @@ export default function Dimensionality() {
         interpretation="k는 압축률만이 아니라 어떤 작은 variation을 버릴지 정합니다. 너무 작으면 rare relation을 잃고 너무 크면 noise와 memory가 남으므로 downstream metric과 stability로 선택합니다."
       />
 
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          가장 단순한 예로 M=diag(3,1)이면 singular value도 3과 1입니다. k=1은
+          크기 3인 첫 방향만 남기므로 rank-1 근사는 diag(3,0)이 되고, 버린
+          squared Frobenius error는 1²=1입니다. 이 값이 최소라는 것은 같은 rank와
+          Frobenius norm에서 matrix를 가장 잘 복원한다는 뜻이지, 버린 두 번째
+          방향이 downstream label이나 희귀한 의미 관계에 쓸모없다는 뜻은
+          아닙니다.
+        </p>
+      </div>
+
       <div id="paper-lsa" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Explicit matrix compression</p>
         <p className="mt-2 text-sm font-semibold">Indexing by Latent Semantic Analysis</p>
@@ -105,7 +116,7 @@ export default function Dimensionality() {
               "같은 representation pipeline에서 만든 두 dense vector입니다.",
           },
           {
-            symbol: "u^\top v",
+            symbol: String.raw`u^\top v`,
             name: "alignment",
             description:
               "같은-sign coordinate contribution을 합한 dot product입니다.",

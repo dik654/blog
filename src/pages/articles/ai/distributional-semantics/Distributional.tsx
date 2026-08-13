@@ -17,6 +17,14 @@ export default function Distributional() {
           Dependency context는 “목적어-of-먹다”처럼 문법 관계를 보존하고,
           term–document matrix는 같은 문서에 등장하는 주제적 관계를 강조합니다.
         </p>
+        <p className="leading-8">
+          작은 계산을 해보면 구조가 선명해집니다. Token sequence를 [고양이,
+          우유, 마신다]로 단순화하고 방향을 구분하지 않는 window 1을 쓰면, target
+          “우유”에서 X(우유, 고양이)와 X(우유, 마신다)가 각각 1 증가합니다.
+          Window 2로 넓히면 더 먼 token도 열에 들어오므로 count가 늘지만, 그
+          관계가 현재 task에 필요한 문법 관계인지 단순한 같은 문서의 주제
+          관계인지는 별도로 검증해야 합니다.
+        </p>
       </div>
 
       <ContextMatrixViz />
@@ -119,6 +127,16 @@ export default function Distributional() {
         ]}
         interpretation="PPMI는 corpus frequency를 association으로 바꾸는 하나의 weighting입니다. Corpus가 작으면 희귀 pair가 과대평가될 수 있어 context distribution smoothing, shifted PPMI와 frequency threshold를 함께 비교합니다."
       />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          예를 들어 같은 event 표본공간에서 P(w,c)=0.02이고 P(w)=P(c)=0.1이면
+          독립 기대는 0.1×0.1=0.01입니다. 실제 joint가 그 두 배이므로 자연로그
+          PMI는 log(2)≈0.693이고, 양수라서 PPMI도 0.693입니다. 반대로 count가
+          0이면 log(0)을 계산할 수 없으므로 smoothing을 할지, 최소 count 아래를
+          버릴지, 해당 cell을 관측 불가로 둘지 정책을 먼저 고정해야 합니다.
+        </p>
+      </div>
     </section>
   );
 }

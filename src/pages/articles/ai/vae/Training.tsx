@@ -51,6 +51,15 @@ export default function Training() {
           decoder capacity 조절은 collapse를 완화할 수 있지만 각 방법이 ELBO와
           representation에 주는 trade-off를 validation해야 합니다.
         </p>
+        <p>
+          예를 들어 두 latent dimension의 KL이 <code>(0.40, 0.30)</code>인
+          checkpoint A와 <code>(0.001, 0.002)</code>인 checkpoint B를 비교해
+          봅시다. B에서 encoder의 <code>z</code>를 prior sample로 바꿔도 validation
+          reconstruction이 거의 변하지 않는다면 collapse를 먼저 의심할 근거가
+          됩니다. 다만 작은 rate만으로 충분한 task나 일부 dimension만 사용하는
+          경우도 있으므로, 평균 KL 하나가 아니라 dimension별 값과 latent 교체
+          전후의 성능 변화를 함께 봐야 합니다.
+        </p>
 
         <div
           id="paper-posterior-collapse"
@@ -100,6 +109,14 @@ export default function Training() {
           signal-to-noise 특성도 달라지므로 숫자 하나만 보고 기본 ELBO보다 항상
           낫다고 판단하지 않습니다.
         </p>
+        <p>
+          각 weight를 <code>w=pθ(x,z)/qφ(z|x)</code>로 두면 q 아래의 기대값은
+          <code>Eq[w]=pθ(x)</code>입니다. K개 weight 평균도 evidence의 unbiased
+          estimator이고, concave한 log에 Jensen inequality를 적용하면 그 평균의
+          log 기대값이 <code>log pθ(x)</code>보다 작거나 같아집니다. K=1에서는
+          바로 ELBO가 되지만, q가 posterior의 어떤 영역에 probability 0을 두면
+          sample 수를 늘려도 그 support gap을 복구할 수 없습니다.
+        </p>
 
         <ExplainedFormula
           question="여러 latent sample로 single-sample ELBO보다 더 tight한 lower bound를 어떻게 만들까요?"
@@ -110,7 +127,12 @@ export default function Training() {
               log를 취합니다. K=1이면 기본 ELBO와 같습니다.
             </>
           }
-          formula={String.raw`\mathcal L_K(x)=\mathbb E_{z_{1:K}\sim q_\phi}\!\left[\log\frac1K\sum_{k=1}^{K}\frac{p_\theta(x,z_k)}{q_\phi(z_k\mid x)}\right]\le \log p_\theta(x)`}
+          formula={String.raw`\begin{aligned}
+            w_k&=\frac{p_\theta(x,z_k)}{q_\phi(z_k\mid x)} \\
+            \overline w_K&=\frac1K\sum_{k=1}^{K}w_k \\
+            \mathcal L_K(x)&=\mathbb E[\log\overline w_K] \\
+            \mathcal L_K(x)&\le\log p_\theta(x)
+          \end{aligned}`}
           terms={[
             {
               symbol: "K",
@@ -125,7 +147,7 @@ export default function Training() {
                 "Proposal sample을 model joint 기준으로 다시 가중합니다.",
             },
             {
-              symbol: "\mathcal L_K",
+              symbol: String.raw`\mathcal L_K`,
               name: "IWAE bound",
               description:
                 "K=1에서는 ELBO이며 적절한 조건에서 K가 늘면 더 tight해집니다.",

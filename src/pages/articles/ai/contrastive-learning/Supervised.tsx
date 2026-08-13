@@ -17,7 +17,13 @@ export default function Supervised() {
       <ExplainedFormula
         question="같은 label의 positive가 여러 개라면 anchor loss를 어떻게 계산할까요?"
         idea={<>Anchor i와 같은 label을 가진 index 집합 P(i)를 만들고, 각 positive가 batch의 모든 다른 sample보다 높은 점수를 받도록 log-probability를 평균합니다.</>}
-        formula={String.raw`\mathcal L_i^{\mathrm{sup}}=-\frac{1}{|P(i)|}\sum_{p\in P(i)}\log\frac{\exp(\mathbf z_i^\top\mathbf z_p/\tau)}{\sum_{a\ne i}\exp(\mathbf z_i^\top\mathbf z_a/\tau)}`}
+        formula={String.raw`\begin{aligned}
+s_{ia}&=\mathbf z_i^\top\mathbf z_a/\tau,\\
+Z_i&=\sum_{a\ne i}\exp(s_{ia}),\\
+\mathcal L_i^{\mathrm{sup}}
+&=-\frac{1}{|P(i)|}\sum_{p\in P(i)}
+\log\frac{\exp(s_{ip})}{Z_i}.
+\end{aligned}`}
         terms={[
           { symbol: "P(i)", name: "positive index set", description: "Batch에서 anchor i를 제외하고 같은 positive 관계를 가진 sample index 집합입니다." },
           { symbol: "|P(i)|", name: "positive count", description: "Anchor loss에 기여하는 positive 개수입니다." },

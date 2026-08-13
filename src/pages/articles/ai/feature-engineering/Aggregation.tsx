@@ -27,11 +27,18 @@ export default function Aggregation() {
       <ExplainedFormula
         question="최근 W 기간의 event count를 현재 row와 미래 event 없이 어떻게 정의할까?"
         idea={<>Entity가 같은 record 중 event time과 available time이 모두 cutoff 이하이고, 왼쪽 경계보다 뒤인 것만 1로 셉니다. 구간을 (t₀−W, t₀]처럼 적으면 경계 시각의 중복 집계 여부까지 재현할 수 있습니다.</>}
-        formula={String.raw`\operatorname{count}_{W}(e,t_0)=\sum_r \mathbf{1}[e_r=e]\,\mathbf{1}[t_0-W<t_{\mathrm{event},r}\le t_0]\,\mathbf{1}[t_{\mathrm{available},r}\le t_0]`}
+        formula={String.raw`\begin{aligned}
+I_r={}&\mathbf 1[e_r=e]\\
+&\cdot\mathbf 1[t_0-W<t_{\mathrm{event},r}]\\
+&\cdot\mathbf 1[t_{\mathrm{event},r}\le t_0]\\
+&\cdot\mathbf 1[t_{\mathrm{available},r}\le t_0],\\
+\operatorname{count}_{W}(e,t_0)&=\sum_r I_r.
+\end{aligned}`}
         terms={[
           { symbol: "W", name: "lookback window", description: "7일·30일처럼 cutoff에서 과거로 돌아갈 관측 길이입니다." },
           { symbol: "r", name: "event record", description: "거래·로그인·센서 측정처럼 집계 후보가 되는 한 기록입니다." },
           { symbol: "1[·]", name: "indicator", description: "대괄호 안 조건을 만족하면 1, 아니면 0이 되어 허용된 event만 셉니다." },
+          { symbol: "Iᵣ", name: "eligible-event indicator", description: "Entity·window·available-time 조건을 모두 통과한 record만 1이 됩니다." },
           { symbol: "(t₀−W,t₀]", name: "window boundary", description: "왼쪽은 제외하고 cutoff는 포함하는 구간입니다. 다른 규칙을 쓰면 명시해야 합니다." },
         ]}
         assumptions={["Event time과 pipeline available time을 구분합니다.", "Entity key의 변경·병합 규칙이 학습과 serving에서 같습니다.", "현재 row의 target 또는 target 이후 처리 event는 source에 들어가지 않습니다."]}

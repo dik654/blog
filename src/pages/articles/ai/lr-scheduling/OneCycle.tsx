@@ -25,9 +25,9 @@ export default function OneCycle() {
         formula={String.raw`\begin{aligned}
 T_{\uparrow}&=\lfloor pT\rfloor,\\
 r_{\uparrow}&=t/T_{\uparrow},\\
-\eta_t&=I(\eta_{\mathrm{init}},\eta_{\max};r_{\uparrow}),\\[4pt]
+\eta_t&=I(\eta_{\mathrm{init}},\eta_{\mathrm{max}};r_{\uparrow}),\\[4pt]
 r_{\downarrow}&=(t-T_{\uparrow})/(T-T_{\uparrow}),\\
-\eta_t&=I(\eta_{\max},\eta_{\mathrm{final}};r_{\downarrow}).
+\eta_t&=I(\eta_{\mathrm{max}},\eta_{\mathrm{final}};r_{\downarrow}).
 \end{aligned}`}
         terms={[
           { symbol: "p", name: "rise fraction", description: "전체 updates 중 LR가 max에 도달할 때까지 사용하는 비율입니다." },

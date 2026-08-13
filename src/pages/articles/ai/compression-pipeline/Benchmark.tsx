@@ -1,3 +1,171 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BenchmarkViz from "./viz/BenchmarkViz";
-export default function Benchmark(){return <section id="benchmark" className="mb-16 scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">최종 승인은 baseline·단일 stage·결합 artifact를 동일 workload에서 비교해 interaction과 Pareto frontier를 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>File size나 theoretical FLOPs는 설명 변수이지 serving 결과가 아닙니다. 같은 hardware·engine·batch·length·concurrency·warmup에서 p50뿐 아니라 p95/p99, throughput, peak memory, load/compile time을 측정합니다. 생성 model은 prefill과 decode를 나누고 deterministic quality run과 representative sampling run을 구분합니다.</p><p>Baseline, A, B, A+B를 모두 남겨야 결합 이득이 단일 효과의 합인지 알 수 있습니다. Quality guardrail을 통과한 후보만 resource frontier에 올리며, 더 느리고 더 크면서 품질도 낮은 dominated artifact는 제거합니다.</p></div><ExplainedFormula question="두 compression stage가 단일 효과의 합보다 더 또는 덜 작동했는지 어떻게 분리할까요?" idea={<>Baseline 대비 같은 방향의 gain을 정의하고 결합 gain에서 두 단일 gain을 뺍니다. 0이면 additive, 양수면 synergy, 음수면 서로의 이득을 깎은 interaction입니다.</>} formula={String.raw`I_{A,B}=\bigl[m_{AB}-m_0\bigr]-\bigl[m_A-m_0\bigr]-\bigl[m_B-m_0\bigr]=m_{AB}-m_A-m_B+m_0`} terms={[{symbol:"m_0",name:"baseline metric",description:"압축 전 artifact의 paired metric입니다."},{symbol:"m_A,m_B",name:"single-stage metrics",description:"각 stage만 적용한 artifact의 metric입니다."},{symbol:"m_AB",name:"combined metric",description:"두 stage와 필요한 recovery/calibration을 적용한 최종 metric입니다."},{symbol:"I_A,B",name:"interaction",description:"Higher-is-better로 방향을 통일한 metric의 비가산 효과입니다."}]} assumptions={["모든 값은 같은 item·system condition에서 측정하고 higher-is-better 방향으로 변환합니다.","Latency처럼 lower-is-better이면 -latency 또는 baseline-minus-latency gain처럼 방향을 먼저 맞춥니다.","Ratio speedup을 그대로 더하지 말고 time·byte·quality point처럼 의미 있는 additive scale을 사용합니다."]} interpretation="Throughput이 baseline 100, A 130, B 120, A+B 145라면 interaction은 145−130−120+100=−5입니다. 결합은 빨라졌지만 단일 gain의 합보다 5만큼 덜 얻었습니다."/><ExplainedFormula question="Quality와 system cost가 여러 축일 때 한 숫자로 억지로 합치지 않고 어떻게 후보를 남길까요?" idea={<>한 후보가 다른 후보보다 모든 축에서 나쁘지 않고 적어도 한 축에서 좋으면 다른 후보를 지배합니다. 지배되지 않으며 hard guardrail을 통과한 후보만 frontier에 남깁니다.</>} formula={String.raw`a\succ b\iff \forall j:\ f_j(a)\le f_j(b)\ \land\ \exists j:\ f_j(a)<f_j(b),\qquad \mathcal P=\{a:F(a)=1,\ \nexists b\text{ with }b\succ a\}`} terms={[{symbol:"f_j",name:"cost-oriented metric",description:"Quality loss·memory·p95·energy처럼 작을수록 좋게 방향을 맞춘 j번째 축입니다."},{symbol:"a succeeds b",name:"Pareto dominance",description:"a가 모든 축에서 b보다 나쁘지 않고 적어도 하나에서 더 좋다는 뜻입니다."},{symbol:"F",name:"hard feasibility",description:"필수 quality·safety·compatibility guardrail 통과 여부입니다."},{symbol:"P",name:"Pareto frontier",description:"통과 후보 중 다른 후보에 지배되지 않는 집합입니다."}]} assumptions={["Metric·slice·uncertainty·workload가 동일하며 차이가 noise인지 판단하는 tolerance를 둡니다.","모든 운영 관심사를 축에 포함하지 않으면 숨겨진 비용에서 잘못된 dominance가 생깁니다.","Frontier는 최종 하나를 자동 선택하지 않으며 traffic 가치와 운영 복잡도로 마지막 결정을 내립니다."]} interpretation="A가 quality loss .5, p95 8ms, memory 10GB이고 B가 .7, 9ms, 12GB라면 A가 B를 지배합니다. C가 .3, 11ms, 8GB라면 A와 C는 tradeoff가 있어 둘 다 남습니다."/><div className="not-prose my-8"><BenchmarkViz /></div><div id="reading-compiler-survey" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">보충 읽기 · Deep Learning Compiler survey</p><p className="mt-2 text-sm leading-6 text-muted-foreground">이 survey의 핵심은 framework graph가 multi-level IR과 frontend/backend optimization을 거쳐 hardware code가 된다는 경계입니다. 그래서 parameter·FLOPs 변화만으로 kernel 선택과 end-to-end 성능을 확정할 수 없습니다. 특정 최신 compiler의 성능표가 아니라 compiler architecture taxonomy 범위의 근거로 사용합니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2002.03794" target="_blank" rel="noreferrer">Graph·IR·backend optimization taxonomy 보기</a></div><div id="standard-mlperf" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">공식 benchmark 참고 · MLPerf Inference</p><p className="mt-2 text-sm leading-6 text-muted-foreground">MLPerf Inference는 deployment scenario를 나누고 LoadGen으로 query scheduling·latency tracking·accuracy validation을 함께 관리합니다. 이 블로그의 내부 benchmark가 MLPerf submission이라는 뜻은 아니며, workload scenario와 accuracy/performance run을 분리하는 재현 원칙을 참고합니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.mlcommons.org/inference/index_gh/" target="_blank" rel="noreferrer">Scenario·LoadGen·submission evidence 보기</a></div></section>}
+export default function Benchmark() {
+  return (
+    <section id="benchmark" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        최종 승인은 baseline·단일 stage·결합 artifact를 동일 workload에서 비교해
+        interaction과 Pareto frontier를 확인합니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          File size나 theoretical FLOPs는 설명 변수이지 serving 결과가 아닙니다.
+          같은 hardware·engine·batch·length·concurrency·warmup에서 p50뿐 아니라
+          p95/p99, throughput, peak memory, load/compile time을 측정합니다. 생성
+          model은 prefill과 decode를 나누고 deterministic quality run과
+          representative sampling run을 구분합니다.
+        </p>
+        <p>
+          Baseline, A, B, A+B를 모두 남겨야 결합 이득이 단일 효과의 합인지 알 수
+          있습니다. Quality guardrail을 통과한 후보만 resource frontier에
+          올리며, 더 느리고 더 크면서 품질도 낮은 dominated artifact는
+          제거합니다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="두 compression stage가 단일 효과의 합보다 더 또는 덜 작동했는지 어떻게 분리할까요?"
+        idea={
+          <>
+            Baseline 대비 같은 방향의 gain을 정의하고 결합 gain에서 두 단일
+            gain을 뺍니다. 0이면 additive, 양수면 synergy, 음수면 서로의 이득을
+            깎은 interaction입니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+\Delta_A&=m_A-m_0,\\
+\Delta_B&=m_B-m_0,\\
+\Delta_{AB}&=m_{AB}-m_0,\\
+I_{A,B}&=\Delta_{AB}-\Delta_A-\Delta_B.
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "m_0",
+            name: "baseline metric",
+            description: "압축 전 artifact의 paired metric입니다.",
+          },
+          {
+            symbol: "m_A,m_B",
+            name: "single-stage metrics",
+            description: "각 stage만 적용한 artifact의 metric입니다.",
+          },
+          {
+            symbol: "m_AB",
+            name: "combined metric",
+            description:
+              "두 stage와 필요한 recovery/calibration을 적용한 최종 metric입니다.",
+          },
+          {
+            symbol: "I_A,B",
+            name: "interaction",
+            description:
+              "Higher-is-better로 방향을 통일한 metric의 비가산 효과입니다.",
+          },
+        ]}
+        assumptions={[
+          "모든 값은 같은 item·system condition에서 측정하고 higher-is-better 방향으로 변환합니다.",
+          "Latency처럼 lower-is-better이면 -latency 또는 baseline-minus-latency gain처럼 방향을 먼저 맞춥니다.",
+          "Ratio speedup을 그대로 더하지 말고 time·byte·quality point처럼 의미 있는 additive scale을 사용합니다.",
+        ]}
+        interpretation="Throughput이 baseline 100, A 130, B 120, A+B 145라면 interaction은 145−130−120+100=−5입니다. 결합은 빨라졌지만 단일 gain의 합보다 5만큼 덜 얻었습니다."
+      />
+      <ExplainedFormula
+        question="Quality와 system cost가 여러 축일 때 한 숫자로 억지로 합치지 않고 어떻게 후보를 남길까요?"
+        idea={
+          <>
+            한 후보가 다른 후보보다 모든 축에서 나쁘지 않고 적어도 한 축에서
+            좋으면 다른 후보를 지배합니다. 지배되지 않으며 hard guardrail을
+            통과한 후보만 frontier에 남깁니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+c_j&=f_j(a)-f_j(b),\\
+a\succeq b&\iff c_j\le0\quad(\forall j),\\
+a\succ b&\iff a\succeq b\ \land\ \min_j c_j<0,\\
+\mathcal A&=\{a:F(a)=1\},\\
+D(a)&=\mathbf1[\exists b\in\mathcal A:b\succ a],\\
+\mathcal P&=\{a\in\mathcal A:D(a)=0\}.
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "f_j",
+            name: "cost-oriented metric",
+            description:
+              "Quality loss·memory·p95·energy처럼 작을수록 좋게 방향을 맞춘 j번째 축입니다.",
+          },
+          {
+            symbol: "a succeeds b",
+            name: "Pareto dominance",
+            description:
+              "a가 모든 축에서 b보다 나쁘지 않고 적어도 하나에서 더 좋다는 뜻입니다.",
+          },
+          {
+            symbol: "F",
+            name: "hard feasibility",
+            description:
+              "필수 quality·safety·compatibility guardrail 통과 여부입니다.",
+          },
+          {
+            symbol: "P",
+            name: "Pareto frontier",
+            description: "통과 후보 중 다른 후보에 지배되지 않는 집합입니다.",
+          },
+        ]}
+        assumptions={[
+          "Metric·slice·uncertainty·workload가 동일하며 차이가 noise인지 판단하는 tolerance를 둡니다.",
+          "모든 운영 관심사를 축에 포함하지 않으면 숨겨진 비용에서 잘못된 dominance가 생깁니다.",
+          "Frontier는 최종 하나를 자동 선택하지 않으며 traffic 가치와 운영 복잡도로 마지막 결정을 내립니다.",
+        ]}
+        interpretation="A가 quality loss .5, p95 8ms, memory 10GB이고 B가 .7, 9ms, 12GB라면 A가 B를 지배합니다. C가 .3, 11ms, 8GB라면 A와 C는 tradeoff가 있어 둘 다 남습니다."
+      />
+      <div className="not-prose my-8">
+        <BenchmarkViz />
+      </div>
+      <div
+        id="reading-compiler-survey"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          보충 읽기 · Deep Learning Compiler survey
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 survey의 핵심은 framework graph가 multi-level IR과 frontend/backend
+          optimization을 거쳐 hardware code가 된다는 경계입니다. 그래서
+          parameter·FLOPs 변화만으로 kernel 선택과 end-to-end 성능을 확정할 수
+          없습니다. 특정 최신 compiler의 성능표가 아니라 compiler architecture
+          taxonomy 범위의 근거로 사용합니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/2002.03794"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Graph·IR·backend optimization taxonomy 보기
+        </a>
+      </div>
+      <div
+        id="standard-mlperf"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          공식 benchmark 참고 · MLPerf Inference
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          MLPerf Inference는 deployment scenario를 나누고 LoadGen으로 query
+          scheduling·latency tracking·accuracy validation을 함께 관리합니다. 이
+          블로그의 내부 benchmark가 MLPerf submission이라는 뜻은 아니며,
+          workload scenario와 accuracy/performance run을 분리하는 재현 원칙을
+          참고합니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://docs.mlcommons.org/inference/index_gh/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Scenario·LoadGen·submission evidence 보기
+        </a>
+      </div>
+    </section>
+  );
+}

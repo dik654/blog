@@ -11,7 +11,12 @@ export default function LoRA() {
       <ExplainedFormula
         question="LoRA forward와 두 adapter 행렬의 shape는 어떻게 연결될까요?"
         idea={<>Base output Wx는 그대로 두고 adapter branch BAx를 더합니다. α/r는 rank를 바꿀 때 update scale이 함께 커지는 정도를 조절하는 convention이며, 최적값을 보장하는 상수는 아닙니다.</>}
-        formula={String.raw`y=Wx+sBAx,\qquad A\in\mathbb R^{r\times d_{\mathrm{in}}},\ B\in\mathbb R^{d_{\mathrm{out}}\times r},\ s=\frac{\alpha}{r}`}
+        formula={String.raw`\begin{aligned}
+y&=Wx+sBAx\\
+A&\in\mathbb R^{r\times d_{\mathrm{in}}}\\
+B&\in\mathbb R^{d_{\mathrm{out}}\times r}\\
+s&=\frac{\alpha}{r}
+\end{aligned}`}
         terms={[
           { symbol: "W", name: "frozen base weight", description: "Shape dout×din인 pretrained linear weight입니다." },
           { symbol: "A", name: "down projection", description: "Input feature를 r차원 adapter coordinate로 줄입니다." },
@@ -25,7 +30,11 @@ export default function LoRA() {
       <ExplainedFormula
         question="왜 r이 작으면 parameter는 크게 줄고 update 자유도도 제한될까요?"
         idea={<>Full matrix는 din·dout개의 값을 가지지만 두 adapter는 r(din+dout)개만 가집니다. 또한 행렬 곱 BA의 rank는 A와 B 각각의 rank보다 클 수 없으므로 최대 r입니다.</>}
-        formula={String.raw`N_{\mathrm{LoRA}}=r(d_{\mathrm{in}}+d_{\mathrm{out}}),\qquad \operatorname{rank}(BA)\le \min(\operatorname{rank}A,\operatorname{rank}B)\le r`}
+        formula={String.raw`\begin{aligned}
+N_{\mathrm{LoRA}}&=r(d_{\mathrm{in}}+d_{\mathrm{out}})\\
+\operatorname{rank}(BA)&\le \min(\operatorname{rank}A,\operatorname{rank}B)\\
+&\le r
+\end{aligned}`}
         terms={[
           { symbol: "N_LoRA", name: "adapter parameters", description: "한 target weight에 추가되는 A와 B의 scalar 수입니다." },
           { symbol: "din·dout", name: "full update parameters", description: "같은 layer의 unrestricted full matrix가 가지는 scalar 수입니다." },
@@ -36,7 +45,7 @@ export default function LoRA() {
       />
       <div className="not-prose my-8"><LoraMatrixViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Rank 하나만 고르면 끝나지 않습니다. Attention의 q·k·v·o projection과 MLP의 gate·up·down projection 중 어디에 capacity를 배분할지 정해야 합니다. Model family마다 module 이름과 fused layout이 다르므로 문자열을 복사하지 말고 실제 named modules, trainable parameter 수와 forward hook을 확인합니다. Rank·target 범위·α·dropout·initialization은 같은 validation protocol에서 ablation합니다.</p>
+        <p>Rank 하나만 고르면 끝나지 않습니다. Attention의 q·k·v·o projection과 MLP의 gate·up·down projection 중 어디에 capacity를 배분할지 정해야 합니다. Model family마다 module 이름과 fused layout이 다르므로 문자열을 복사하지 말고 실제 named modules, trainable parameter 수와 forward hook을 확인합니다. 후보를 비교할 때는 data·update 수·α·dropout·initialization을 고정하고 seed를 반복하며, target/general metric과 peak memory·step time을 같은 validation protocol에서 기록합니다.</p>
       </div>
       <div id="reading-lora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · LoRA</p>

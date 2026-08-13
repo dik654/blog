@@ -11,7 +11,11 @@ export default function PTQ() {
     <ExplainedFormula
       question="Scale을 더 잘게 나누면 오차와 metadata는 어떻게 함께 바뀔까요?"
       idea={<>Tensor를 G개 group으로 나누고 각 group에 독립 scale과 zero-point를 둡니다. Group이 작아지면 local range에 맞는 촘촘한 grid를 쓸 수 있지만 저장하고 읽을 scale 수가 늘어납니다.</>}
-      formula={String.raw`q_i=Q(x_i;s_{g(i)},z_{g(i)}),\qquad S_{\mathrm{meta}}=G\,(b_s+b_z),\qquad G=\left\lceil\frac{N}{n_g}\right\rceil`}
+      formula={String.raw`\begin{aligned}
+q_i&=Q(x_i;s_{g(i)},z_{g(i)})\\
+G&=\left\lceil\frac{N}{n_g}\right\rceil\\
+S_{\mathrm{meta}}&=G\,(b_s+b_z)
+\end{aligned}`}
       terms={[
         { symbol: "g(i)", name: "group assignment", description: "Element i가 공유할 scale group의 index입니다." },
         { symbol: "N", name: "element count", description: "현재 quantized tensor의 전체 scalar 수입니다." },
@@ -24,10 +28,16 @@ export default function PTQ() {
     <ExplainedFormula
       question="Calibration 표본이 실제 activation range를 덮었는지 어떤 수치로 확인할까요?"
       idea={<>배포와 분리한 validation input에서 quantizer 범위를 벗어나 끝 code에 포화된 element 비율을 layer·input slice별로 셉니다. 평균만 보지 않고 가장 취약한 slice를 남깁니다.</>}
-      formula={String.raw`\rho_{\mathrm{sat}}^{(\ell,c)}=\frac{1}{N_{\ell,c}}\sum_{i=1}^{N_{\ell,c}}\mathbf 1[x_i<r_{\min}^{(\ell)}\ \lor\ x_i>r_{\max}^{(\ell)}],\qquad \rho_{\mathrm{worst}}=\max_{\ell,c}\rho_{\mathrm{sat}}^{(\ell,c)}`}
+      formula={String.raw`\begin{aligned}
+I_i^{(\ell,c)}&=\mathbf 1[x_i<r_{\min}^{(\ell)}\ \lor\ x_i>r_{\max}^{(\ell)}]\\
+\rho_{\mathrm{sat}}^{(\ell,c)}
+&=\frac{1}{N_{\ell,c}}\sum_{i=1}^{N_{\ell,c}}I_i^{(\ell,c)}\\
+\rho_{\mathrm{worst}}&=\max_{\ell,c}\rho_{\mathrm{sat}}^{(\ell,c)}
+\end{aligned}`}
       terms={[
         { symbol: "ell", name: "layer/operator", description: "Activation range와 sensitivity를 따로 기록할 model 위치입니다." },
         { symbol: "c", name: "traffic slice", description: "Language·length·image condition처럼 배포 분포를 나눈 구간입니다." },
+        { symbol: "I_i", name: "saturation indicator", description: "Element가 현재 layer range 밖이면 1, range 안이면 0입니다." },
         { symbol: "rho_sat", name: "saturation rate", description: "설정 range 밖으로 나가 endpoint에 clipping된 element 비율입니다." },
       ]}
       assumptions={["Range와 observer state를 고정한 뒤 calibration과 다른 validation input으로 측정합니다.", "Element saturation이 작은데도 중요한 channel 오차로 task quality가 나빠질 수 있어 layer bypass ablation을 함께 봅니다.", "NaN·Inf와 runtime fallback은 saturation과 별도 오류로 기록합니다."]}

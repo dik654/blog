@@ -166,7 +166,7 @@ export default function ContinuousTime() {
               "Initial noise가 정해지면 하나의 trajectory를 만드는 ODE field입니다.",
           },
           {
-            symbol: "\tfrac12 g(t)^2",
+            symbol: String.raw`\tfrac12 g(t)^2`,
             name: "half score coefficient",
             description:
               "Random diffusion term을 제거하며 marginal evolution을 보존하는 계수입니다.",

@@ -24,8 +24,11 @@ export default function HybridAttention() {
         question="과거를 모두 보관하지 않고도 현재 key–value association을 state에 어떻게 고쳐 쓰는가?"
         idea={<>먼저 channel별 retention α로 이전 state를 감쇠합니다. 이어서 현재 key 방향에서 기존 state가 예측한 value를 β만큼 지우고 새 value를 써서, 단순 누적보다 충돌을 줄이는 delta-rule update를 만듭니다.</>}
         formula={String.raw`\begin{aligned}
-S_t&=(I-\beta_t k_tk_t^{\top})\operatorname{Diag}(\alpha_t)S_{t-1}+\beta_t k_tv_t^{\top}\\
-o_t&=S_t^{\top}q_t
+A_t&=\operatorname{Diag}(\alpha_t)S_{t-1},\\
+E_t&=(I-\beta_tk_tk_t^\top)A_t,\\
+W_t&=\beta_tk_tv_t^\top,\\
+S_t&=E_t+W_t,\\
+o_t&=S_t^\top q_t
 \end{aligned}`}
         terms={[
           { symbol: "S_{t-1},S_t", name: "recurrent state", description: "과거 key→value association을 고정 shape matrix에 요약한 이전·현재 state입니다." },
@@ -45,7 +48,7 @@ o_t&=S_t^{\top}q_t
       <ExplainedFormula
         question="Retention이 너무 빨리 0이 되거나 BF16 범위에서 불안정해지는 일을 어떻게 제한하는가?"
         idea={<>학습된 score를 sigmoid로 0과 1 사이에 넣고 음수 하한 gmin을 곱해 log-decay 범위를 고정합니다. 그 값을 exponentiate하면 retention α가 0과 1 사이에서 유지됩니다.</>}
-        formula={String.raw`g_t=g_{\min}\,\sigma(e^A z_t)\in(g_{\min},0),\qquad \alpha_t=e^{g_t},\qquad g_{\min}=-5`}
+        formula={String.raw`\begin{aligned}a_t&=e^Az_t,\\g_t&=g_{\min}\sigma(a_t),\\g_{\min}&=-5,\\g_t&\in(g_{\min},0),\\\alpha_t&=e^{g_t}.\end{aligned}`}
         terms={[
           { symbol: "z_t", name: "decay input", description: "현재 token에서 channelwise decay를 만들기 위한 projection 값입니다." },
           { symbol: "A", name: "learned scale parameter", description: "Exponential parameterization으로 양수 scale을 제공하는 학습 값입니다." },

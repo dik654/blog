@@ -33,6 +33,13 @@ export default function AIUsage() {
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          예를 들어 16kHz audio에서 N=400은
+          <code>400/16000=0.025s</code>, 즉 25ms frame을 뜻합니다. Hop
+          H=160이면 frame 시작점은 <code>160/16000=0.01s</code>, 즉
+          10ms마다 이동합니다. N은 한 번에 보는 시간 범위와 frequency
+          grid를, H는 time-axis sampling 간격과 frame 수를 주로 바꾼니다.
+        </p>
         <h3>Audio: STFT에서 log-Mel까지</h3>
         <p>
           STFT power에 Mel filter bank를 곱고 log compression을 적용하면 log-Mel
@@ -58,6 +65,14 @@ export default function AIUsage() {
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          길이 5 signal과 길이 3 filter의 linear convolution 길이는
+          <code>5+3−1=7</code>입니다. 따라서 두 operand를 적어도 7칸의
+          transform grid에 padding해야 하며, 더 짧으면 circular convolution의 끝
+          부분이 앞으로 감기는 wrap-around가 생깁니다. 실제 library는 7보다
+          큰 계산 친화적 길이를 선택할 수 있지만, 결과에서 필요한 7개 구간만
+          취하는 linear-operator 계약은 같습니다.
+        </p>
         <h3>Token mixing과 long convolution은 같은 것이 아니다</h3>
         <p>
           <a href="https://arxiv.org/abs/2105.03824" target="_blank" rel="noreferrer">FNet</a>은 encoder의 self-attention sublayer를 parameter-free Fourier mixing으로

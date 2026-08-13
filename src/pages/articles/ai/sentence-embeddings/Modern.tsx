@@ -12,7 +12,11 @@ export default function Modern() {
     <ExplainedFormula
       question="Role instruction과 본문이 maximum length를 함께 사용할 때 실제 evidence는 얼마나 남을까요?"
       idea={<>Tokenizer가 만든 전체 token에서 special token과 instruction이 먼저 자리를 차지합니다. 남은 budget만 content에 사용할 수 있으므로 긴 instruction은 document evidence를 잘라낼 수 있습니다.</>}
-      formula={String.raw`L_{\mathrm{content}}^{\max}=L_{\max}-L_{\mathrm{special}}-L_{\mathrm{instruction}},\qquad \kappa_i=\frac{L_{\mathrm{kept},i}}{L_{\mathrm{content},i}}`}
+      formula={String.raw`\begin{aligned}
+L_{\mathrm{content}}^{\max}
+&=L_{\max}-L_{\mathrm{special}}-L_{\mathrm{instruction}}\\
+\kappa_i&=\frac{L_{\mathrm{kept},i}}{L_{\mathrm{content},i}}
+\end{aligned}`}
       terms={[
         { symbol: "Lmax", name: "model token limit", description: "Checkpoint와 runtime가 실제 encoder input으로 허용하는 최대 token 수입니다." },
         { symbol: "Linstruction", name: "role/task instruction tokens", description: "Query·passage prefix 또는 task prompt가 차지하는 token 수입니다." },
@@ -24,7 +28,10 @@ export default function Modern() {
     <ExplainedFormula
       question="Embedding dimension과 precision이 index의 raw vector storage를 얼마나 바꿀까요?"
       idea={<>문서 M개마다 d개 성분을 저장하고 성분당 b byte를 쓰므로 raw payload는 Mdb입니다. ANN graph·IDs·metadata·replica는 별도 overhead로 더해집니다.</>}
-      formula={String.raw`S_{\mathrm{raw}}=M\,d\,b,\qquad S_{\mathrm{index}}=S_{\mathrm{raw}}+S_{\mathrm{ANN}}+S_{\mathrm{meta}}`}
+      formula={String.raw`\begin{aligned}
+S_{\mathrm{raw}}&=M\,d\,b\\
+S_{\mathrm{index}}&=S_{\mathrm{raw}}+S_{\mathrm{ANN}}+S_{\mathrm{meta}}
+\end{aligned}`}
       terms={[
         { symbol: "M", name: "indexed vectors", description: "Document 또는 chunk embedding의 총개수입니다." },
         { symbol: "d", name: "embedding dimension", description: "Vector 하나의 scalar 성분 수입니다." },

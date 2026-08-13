@@ -27,7 +27,10 @@ export default function Retrieval() {
       <ExplainedFormula
         question="Reranker가 아무리 좋아도 첫 retrieval의 누락을 복구할 수 없는 이유는 무엇일까요?"
         idea={<>Reranker output은 candidate set의 부분집합입니다. 따라서 relevant set과의 교집합 크기는 candidate 단계보다 커질 수 없습니다.</>}
-        formula={String.raw`O_q\subseteq C_q\quad\Longrightarrow\quad |O_q\cap R_q|\le |C_q\cap R_q|`}
+        formula={String.raw`\begin{aligned}
+O_q&\subseteq C_q\\
+|O_q\cap R_q|&\le |C_q\cap R_q|
+\end{aligned}`}
         terms={[
           { symbol: "R_q", name: "relevant set", description: "질문 q에 답을 뒷받침하는 정답 문서 전체입니다." },
           { symbol: "C_q", name: "candidate set", description: "Dense·sparse·fusion이 reranker에 넘긴 문서입니다." },

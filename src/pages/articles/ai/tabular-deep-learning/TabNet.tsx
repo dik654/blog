@@ -24,7 +24,11 @@ export default function TabNet() {
       <ExplainedFormula
         question="TabNet은 이미 본 feature와 아직 보지 않은 feature를 다음 step의 mask에 어떻게 반영할까?"
         idea={<>직전 step의 context a⁽ˢ⁻¹⁾에서 feature score를 만들고 prior P⁽ˢ⁻¹⁾를 곱한 뒤 sparsemax로 mask를 만듭니다. Mask는 row별 feature 값에 element-wise로 곱해져 현재 step이 읽을 입력을 정합니다.</>}
-        formula={String.raw`M^{(s)}=\operatorname{sparsemax}\!\left(P^{(s-1)}\odot h_s(a^{(s-1)})\right),\qquad x^{(s)}=M^{(s)}\odot x`}
+        formula={String.raw`\begin{aligned}
+u^{(s)}&=P^{(s-1)}\odot h_s(a^{(s-1)}),\\
+M^{(s)}&=\operatorname{sparsemax}\!\left(u^{(s)}\right),\\
+x^{(s)}&=M^{(s)}\odot x.
+\end{aligned}`}
         terms={[
           { symbol: "s", name: "decision step", description: "같은 row를 선택하고 처리하는 반복 순서입니다." },
           { symbol: "h_s(a^(s−1))", name: "attentive score", description: "이전 step의 처리 결과에서 현재 feature별 선택 score를 만드는 학습 함수입니다." },
@@ -39,7 +43,10 @@ export default function TabNet() {
       <ExplainedFormula
         question="Relaxation parameter γ는 이미 선택한 feature의 재사용 가능성을 어떻게 바꿀까?"
         idea={<>각 step 뒤에 prior를 (γ−현재 mask)만큼 갱신합니다. γ=1이면 크게 선택한 feature의 다음 prior가 강하게 줄고, γ가 더 크면 여러 step에서 같은 feature를 다시 사용할 여지가 생깁니다.</>}
-        formula={String.raw`P^{(s)}=P^{(s-1)}\odot\left(\gamma-M^{(s)}\right),\qquad P^{(0)}=\mathbf 1`}
+        formula={String.raw`\begin{aligned}
+P^{(0)}&=\mathbf 1,\\
+P^{(s)}&=P^{(s-1)}\odot\left(\gamma-M^{(s)}\right).
+\end{aligned}`}
         terms={[
           { symbol: "γ", name: "relaxation parameter", description: "Feature를 여러 decision step에서 다시 선택할 수 있는 정도를 조절합니다." },
           { symbol: "P^(0)=1", name: "initial prior", description: "첫 step에서는 모든 사용 가능한 feature를 동일한 시작 prior에 둡니다." },

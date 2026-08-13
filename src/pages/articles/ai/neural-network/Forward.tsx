@@ -42,6 +42,15 @@ export default function Forward() {
           signal 경로를 함께 봐야 한다.
         </p>
         <p>
+          숫자로 보면 이유가 더 분명하다. 서로 독립이고 variance가 1인 input 100개를
+          variance 1인 weight와 합치면 preactivation variance는 단순화한 가정 아래 약
+          100까지 커질 수 있지만, weight variance를 fan-in의 역수인 1/100 수준으로
+          맞추면 약 1에서 시작한다. 실제 진단에서는 layer별 preactivation·activation의
+          mean과 variance, gradient norm을 같은 step에서 기록한다. 그다음 같은 seed·data
+          order·optimizer에서 activation에 맞는 초기화, normalization, residual path를
+          하나씩 바꿔 train loss와 validation 결과를 함께 비교해야 원인을 분리할 수 있다.
+        </p>
+        <p>
           Sigmoid saturation과 Jacobian singular value를 함께 분석한 근거는
           <a href="https://proceedings.mlr.press/v9/glorot10a.html" target="_blank" rel="noreferrer">Glorot와 Bengio의 연구</a>에서
           실험 조건과 함께 확인할 수 있다.

@@ -40,13 +40,19 @@ export default function Overview() {
       <ExplainedFormula
         question="한 피처가 미래 정보를 보지 않았다는 조건을 수식으로 어떻게 적을까?"
         idea={<>예측 대상 entity e와 cutoff time t₀를 먼저 고정합니다. 피처 함수 g<sub>j</sub>에는 event가 일어난 시각뿐 아니라 실제 system에 도착한 시각도 t₀ 이하인 record만 넣습니다. 뒤늦게 입력된 정보까지 과거 event라는 이유로 사용하면 당시에는 알 수 없었던 값을 보게 됩니다.</>}
-        formula={String.raw`x_j(e,t_0)=g_j\!\left(\left\{r:\operatorname{entity}(r)=e,\;t_{\mathrm{event}}(r)\le t_0,\;t_{\mathrm{available}}(r)\le t_0\right\}\right)`}
+        formula={String.raw`\begin{aligned}
+\mathcal R(e,t_0)=\{r:\;&\operatorname{entity}(r)=e,\\
+&t_{\mathrm{event}}(r)\le t_0,\\
+&t_{\mathrm{available}}(r)\le t_0\},\\
+x_j(e,t_0)&=g_j\!\left(\mathcal R(e,t_0)\right).
+\end{aligned}`}
         terms={[
           { symbol: "e", name: "prediction entity", description: "고객·설비·주문처럼 예측 한 건의 기준이 되는 대상입니다." },
           { symbol: "t₀", name: "cutoff time", description: "Prediction을 내린다고 가정한 시각입니다. 이후 정보는 피처 계산에서 제외합니다." },
           { symbol: "t_event", name: "event time", description: "거래나 측정이 현실에서 발생한 시각입니다." },
           { symbol: "t_available", name: "available time", description: "해당 record가 실제 feature pipeline에서 읽을 수 있게 된 시각입니다." },
           { symbol: "g_j", name: "feature transform", description: "허용된 record를 j번째 숫자 또는 category로 바꾸는 versioned 함수입니다." },
+          { symbol: "R(e,t₀)", name: "eligible records", description: "Entity와 두 시간 조건을 모두 만족해 cutoff에서 실제로 사용할 수 있는 record 집합입니다." },
         ]}
         assumptions={["모든 row에 entity와 cutoff time이 정의돼 있습니다.", "Backfill·지연 도착을 구분할 available time을 기록하거나 보수적으로 근사합니다.", "Target이 확정되는 시각과 prediction cutoff를 별도로 관리합니다."]}
         interpretation="Point-in-time correctness는 timestamp column 하나를 필터링하는 요령이 아니라, 당시 시스템이 알고 있던 세계를 재현하는 계약입니다. 이 계약을 만족하지 못하면 model이 아니라 dataset이 미래를 본 것입니다."

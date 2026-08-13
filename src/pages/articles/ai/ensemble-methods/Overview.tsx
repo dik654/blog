@@ -22,7 +22,11 @@ export default function Overview() {
       <ExplainedFormula
         question="여러 모델의 평균이 줄이는 오류는 각 모델 수보다 무엇에 달려 있을까요?"
         idea={<>가중 앙상블의 error는 개별 error의 가중합입니다. 그 분산을 전개하면 각 모델의 분산뿐 아니라 같은 행에서 함께 움직이는 covariance가 모두 남습니다.</>}
-        formula={String.raw`e_{\mathrm{ens}}=\sum_{m=1}^{M}w_m e_m,\qquad \operatorname{Var}(e_{\mathrm{ens}})=\mathbf w^{\top}\Sigma\mathbf w,\quad \Sigma_{jk}=\operatorname{Cov}(e_j,e_k)`}
+        formula={String.raw`\begin{aligned}
+          e_{\mathrm{ens}}&=\sum_{m=1}^{M}w_m e_m \\
+          \operatorname{Var}(e_{\mathrm{ens}})&=\mathbf w^{\top}\Sigma\mathbf w \\
+          \Sigma_{jk}&=\operatorname{Cov}(e_j,e_k)
+        \end{aligned}`}
         terms={[
           { symbol: "e_m", name: "row-aligned error", description: "같은 OOF 행에서 m번째 model prediction과 target으로 만든 residual 또는 loss signal입니다." },
           { symbol: "w_m", name: "ensemble weight", description: "Model m의 prediction에 곱하는 계수이며 보통 합이 1인 제약에서 시작합니다." },
@@ -34,7 +38,7 @@ export default function Overview() {
           "Squared-error 관점의 분산 분해이며 classification의 log loss·ranking에는 목적함수를 직접 다시 평가합니다.",
           "작은 OOF sample에서 covariance estimate가 불안정할 수 있으므로 fold·seed·slice별 결과를 함께 봅니다.",
         ]}
-        interpretation="두 모델이 같은 분산 σ², 같은 weight 1/2, correlation ρ라면 평균 error 분산은 σ²(1+ρ)/2입니다. ρ=1이면 줄지 않고, ρ=0이면 절반입니다."
+        interpretation="두 모델이 같은 분산 σ², 같은 weight 1/2, correlation ρ라면 평균 error 분산은 σ²(1+ρ)/2입니다. ρ=1이면 줄지 않고, ρ=0이면 절반이며, ρ=−1이면 이상적으로 0입니다. 다만 모든 행에서 크기가 같고 방향만 반대인 완전한 음의 상관은 실제 예측에서 매우 강한 조건입니다."
       />
 
       <div className="not-prose my-8"><WhyEnsembleViz /></div>
@@ -44,6 +48,12 @@ export default function Overview() {
           이 글은 서로 다른 model의 prediction을 결합하는 mean·weighted·rank averaging, OOF stacking, holdout blending과 greedy
           selection을 다룹니다. 한 model 안의 checkpoint averaging이나 data augmentation은 각각 training artifact와 augmentation
           글에서 다룹니다. 같은 말을 여러 글에 흩어 놓지 않기 위한 경계입니다.
+        </p>
+        <p>
+          Diversity audit에서는 먼저 OOF artifact를 row ID와 같은 fold·target으로 정렬한 뒤 residual covariance와 correlation,
+          두 모델이 함께 틀린 행을 봅니다. Accuracy 같은 전체 점수만 비교하지 않고 group·time·class slice마다 error 방향을 확인하며,
+          ranking·F1처럼 행별 loss로 단순 분해되지 않는 metric은 결합 prediction 전체에서 다시 계산합니다. 이 판단도 여러 seed에서
+          흔들릴 수 있으므로 후보 선택은 OOF에서 하고, 최종 이득은 탐색에 쓰지 않은 outer data에서 확인합니다.
         </p>
       </div>
 

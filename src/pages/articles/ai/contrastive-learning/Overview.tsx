@@ -22,7 +22,12 @@ export default function Overview() {
       <ExplainedFormula
         question="원본 입력 x는 어떤 두 벡터를 거쳐 비교 가능한 embedding이 될까요?"
         idea={<>Encoder는 downstream task에 넘길 표현 h를 만들고, projection head는 contrastive loss가 직접 작용할 z를 만듭니다. 마지막으로 길이를 1로 맞추면 내적이 cosine similarity가 되어 방향만 비교할 수 있습니다.</>}
-        formula={String.raw`\mathbf h_i=f_\theta(x_i),\qquad \mathbf z_i=\frac{g_\phi(\mathbf h_i)}{\lVert g_\phi(\mathbf h_i)\rVert_2},\qquad \operatorname{sim}(i,j)=\mathbf z_i^\top\mathbf z_j`}
+        formula={String.raw`\begin{aligned}
+\mathbf h_i&=f_\theta(x_i),\\
+\widetilde{\mathbf z}_i&=g_\phi(\mathbf h_i),\\
+\mathbf z_i&=\widetilde{\mathbf z}_i/\lVert\widetilde{\mathbf z}_i\rVert_2,\\
+\operatorname{sim}(i,j)&=\mathbf z_i^\top\mathbf z_j.
+\end{aligned}`}
         terms={[
           { symbol: "x_i", name: "input or augmented view", description: "Image·text·audio 등 encoder에 넣는 i번째 입력입니다." },
           { symbol: "fθ", name: "encoder", description: "입력을 downstream representation h로 바꾸는 학습 함수입니다." },

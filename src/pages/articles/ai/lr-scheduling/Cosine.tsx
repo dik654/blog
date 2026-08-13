@@ -22,12 +22,12 @@ export default function Cosine() {
       <ExplainedFormula
         question="Peak와 minimum을 고정했을 때 cosine LR는 update마다 어떻게 정해질까?"
         idea={<>현재 cycle에서 진행한 비율 t/T를 0에서 π까지 보내 cosine을 1에서 −1로 움직입니다. ½(1+cos)은 이를 1에서 0으로 바꾸므로 peak와 minimum 사이를 정확히 보간합니다.</>}
-        formula={String.raw`\begin{aligned}r_t&=\frac{t}{T},\\\eta_t&=\eta_{\min}+\frac{\eta_{\max}-\eta_{\min}}{2}\\&\qquad\cdot\left[1+\cos(\pi r_t)\right].\end{aligned}`}
+        formula={String.raw`\begin{aligned}r_t&=\frac{t}{T},\\\eta_t&=\eta_{\mathrm{min}}+\frac{\eta_{\mathrm{max}}-\eta_{\mathrm{min}}}{2}\\&\qquad\cdot\left[1+\cos(\pi r_t)\right].\end{aligned}`}
         terms={[
           { symbol: "r_t", name: "cycle progress", description: "현재 cycle에서 0부터 1까지 증가하는 무차원 진행률입니다." },
           { symbol: "T", name: "cycle length", description: "Peak에서 minimum까지 이동하는 scheduler 호출 횟수입니다." },
-          { symbol: "η_max", name: "peak LR", description: "Cosine 구간 첫 update에서 사용할 가장 큰 learning rate입니다." },
-          { symbol: "η_min", name: "minimum LR", description: "Cycle 끝에서 접근하는 learning-rate 하한입니다." },
+          { symbol: String.raw`\eta_{\mathrm{max}}`, name: "peak LR", description: "Cosine 구간 첫 update에서 사용할 가장 큰 learning rate입니다." },
+          { symbol: String.raw`\eta_{\mathrm{min}}`, name: "minimum LR", description: "Cycle 끝에서 접근하는 learning-rate 하한입니다." },
         ]}
         assumptions={["t는 warmup을 제외한 cosine 구간 내부의 update index입니다.", "T번째 값 포함 여부와 scheduler 호출 시점을 framework 구현에 맞춰 확인합니다.", "Cosine 모양이 non-convex neural-network objective의 수렴을 자동으로 보장하지는 않습니다."]}
         interpretation="Warmup W 뒤 cosine을 붙이면 T는 전체 updates가 아니라 남은 Ttotal−W여야 합니다. 그렇지 않으면 종료 시 ηmin에 도달하지 않습니다."

@@ -12,7 +12,12 @@ export default function SBERT() {
     <ExplainedFormula
       question="Corpus 문서가 M개일 때 cross-encoder와 bi-encoder의 online 계산 구조는 어떻게 다를까요?"
       idea={<>Cross-encoder는 새 query마다 M개의 query-document pair forward가 필요합니다. Bi-encoder는 문서 M개를 미리 encode하고, online에서는 query forward 한 번과 저장된 vector M개에 대한 similarity search를 수행합니다.</>}
-      formula={String.raw`C_{\mathrm{cross}}(q)=\sum_{j=1}^{M}C_{\mathrm{pair}}(q,d_j),\qquad C_{\mathrm{bi}}(q)=C_q+C_{\mathrm{ANN}}(\mathbf z_q,\{\mathbf z_{d_j}\}_{j=1}^{M})`}
+      formula={String.raw`\begin{aligned}
+C_{\mathrm{cross}}(q)
+&=\sum_{j=1}^{M}C_{\mathrm{pair}}(q,d_j)\\
+C_{\mathrm{bi}}(q)
+&=C_q+C_{\mathrm{ANN}}(\mathbf z_q,\{\mathbf z_{d_j}\})
+\end{aligned}`}
       terms={[
         { symbol: "M", name: "corpus size", description: "검색 대상 문서 또는 chunk의 총개수입니다." },
         { symbol: "C_pair", name: "pair-forward cost", description: "Query와 한 document를 함께 넣는 cross-encoder 한 번의 비용입니다." },
@@ -25,7 +30,11 @@ export default function SBERT() {
     <ExplainedFormula
       question="1단계 bi-encoder가 정답을 놓치면 2단계 reranker가 복구할 수 있을까요?"
       idea={<>Reranker는 candidate set Ck(q)에 들어온 문서만 순서를 바꿀 수 있습니다. 따라서 최종 top-k relevant 수는 candidate set이 포함한 relevant 수를 넘지 못합니다.</>}
-      formula={String.raw`\mathcal R_q\cap C_k(q)=\varnothing\;\Longrightarrow\;\mathcal R_q\cap \operatorname{Rerank}(C_k(q))=\varnothing`}
+      formula={String.raw`\begin{aligned}
+\mathcal R_q\cap C_k(q)&=\varnothing\\
+\Longrightarrow\quad
+\mathcal R_q\cap \operatorname{Rerank}(C_k(q))&=\varnothing
+\end{aligned}`}
       terms={[
         { symbol: "R_q", name: "relevant set", description: "Query q에 대해 label상 정답으로 인정되는 모든 문서 집합입니다." },
         { symbol: "C_k(q)", name: "candidate set", description: "Bi-encoder가 corpus에서 먼저 가져온 k개 문서입니다." },

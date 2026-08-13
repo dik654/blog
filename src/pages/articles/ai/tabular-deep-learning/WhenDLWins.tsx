@@ -42,7 +42,11 @@ export default function WhenDLWins() {
       <ExplainedFormula
         question="두 모델의 평균 점수 외에 ensemble 가치가 있는지 무엇을 확인할까?"
         idea={<>Validation row마다 prediction error를 기록하고 두 error vector의 correlation을 봅니다. 같은 방향으로 함께 틀리면 평균을 내도 오류가 잘 상쇄되지 않고, 상관이 낮거나 음수면 서로 보완할 가능성이 있습니다.</>}
-        formula={String.raw`\rho_{e_A,e_B}=\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}},\qquad e_{m,i}=y_i-\hat y_{m,i}`}
+        formula={String.raw`\begin{aligned}
+e_{m,i}&=y_i-\hat y_{m,i},\\
+\rho_{e_A,e_B}
+&=\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.
+\end{aligned}`}
         terms={[
           { symbol: "e_m,i", name: "out-of-fold error", description: "Model m이 해당 row를 training에 보지 않은 상태에서 만든 prediction error입니다." },
           { symbol: "Cov", name: "error covariance", description: "두 모델의 error가 같은 row에서 함께 움직이는 정도입니다." },

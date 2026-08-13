@@ -24,8 +24,11 @@ export default function StableLatentMoe() {
         question="Full-width shared expert와 latent-width routed expert의 결과를 어떻게 같은 hidden space에서 합치는가?"
         idea={<>Shared expert는 x를 직접 처리하고, routed path는 Wdown으로 latent에 내린 뒤 Top-k expert 출력을 합칩니다. Routed aggregate를 RMSNorm으로 정리하고 Wup으로 full width에 복원해 두 경로를 더합니다.</>}
         formula={String.raw`\begin{aligned}
-u&=\sum_{i\in T_k(x)}p_iE_i^{\mathrm{routed}}(W_{\downarrow}x)\\
-y&=\sum_{j=1}^{N_s}E_j^{\mathrm{shared}}(x)+W_{\uparrow}\operatorname{RMSNorm}(u)
+z&=W_{\downarrow}x,\\
+u&=\sum_{i\in T_k(x)}p_iE_i^{\mathrm{routed}}(z),\\
+r&=W_{\uparrow}\operatorname{RMSNorm}(u),\\
+s&=\sum_{j=1}^{N_s}E_j^{\mathrm{shared}}(x),\\
+y&=s+r
 \end{aligned}`}
         terms={[
           { symbol: String.raw`x\in\mathbb R^d`, name: "full-width token state", description: "K3에서는 d=7,168인 model hidden vector입니다." },
@@ -52,7 +55,7 @@ y&=\sum_{j=1}^{N_s}E_j^{\mathrm{shared}}(x)+W_{\uparrow}\operatorname{RMSNorm}(u
       <ExplainedFormula
         question="SwiGLU와 비슷한 0 근처 모양을 유지하면서 큰 activation product를 어떻게 제한하는가?"
         idea={<>Gate branch와 up branch의 linear factor에 각각 scaled tanh soft cap을 적용합니다. Sigmoid gate는 유지하므로 작은 값에서는 SwiGLU와 비슷하게 움직이고 큰 값에서는 두 factor가 β1·β2 안에 머뭅니다.</>}
-        formula={String.raw`\operatorname{SiTU\!\text{-}GLU}(x)=\left[\beta_1\tanh\!\left(\frac{W_gx}{\beta_1}\right)\odot\sigma(W_gx)\right]\odot\left[\beta_2\tanh\!\left(\frac{W_ux}{\beta_2}\right)\right]`}
+        formula={String.raw`\begin{aligned}a&=W_gx,\quad b=W_ux,\\g&=\beta_1\tanh(a/\beta_1),\\u&=\beta_2\tanh(b/\beta_2),\\y&=[g\odot\sigma(a)]\odot u.\end{aligned}`}
         terms={[
           { symbol: "W_gx", name: "gate branch preactivation", description: "Sigmoid gate와 첫 soft-capped linear factor를 함께 만듭니다." },
           { symbol: "W_ux", name: "up branch preactivation", description: "두 번째 soft-capped value factor입니다." },
@@ -78,7 +81,7 @@ y&=\sum_{j=1}^{N_s}E_j^{\mathrm{shared}}(x)+W_{\uparrow}\operatorname{RMSNorm}(u
       <ExplainedFormula
         question="Dispatch를 균형 있게 고치면서 expert output의 mixture weight에서 bias를 제외하려면 어떻게 계산하는가?"
         idea={<>Top-k index는 score+bias로 고르되, 선택 뒤 weight는 raw sigmoid score만 다시 정규화합니다. Bias는 줄을 배정하는 신호이고 expert 결과의 기여도는 아닙니다.</>}
-        formula={String.raw`s_i=\sigma(W_rx_i),\qquad T_i=\operatorname{argtopk}(s_i+b),\qquad p_{i,j}=\frac{s_{i,j}}{\sum_{r\in T_i}s_{i,r}}\;(j\in T_i)`}
+        formula={String.raw`\begin{aligned}s_i&=\sigma(W_rx_i),\\\widetilde s_i&=s_i+b,\\T_i&=\operatorname{argtopk}(\widetilde s_i),\\Z_i&=\sum_{r\in T_i}s_{i,r},\\p_{i,j}&=s_{i,j}/Z_i\quad(j\in T_i).\end{aligned}`}
         terms={[
           { symbol: "s_i", name: "raw router score", description: "Token i에 대해 sigmoid로 만든 expert별 0과 1 사이 score입니다." },
           { symbol: "b", name: "dispatch bias", description: "Expert load를 조절하기 위해 Top-k 순위에만 더하는 expert별 값입니다." },

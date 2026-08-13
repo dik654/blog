@@ -11,13 +11,13 @@ export default function LeakageViz() {
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary/75">Rolling-origin backtest</p>
         <p className="mt-2 text-lg font-semibold">각 fold는 과거로 fit하고 다음 origin의 미래만 평가합니다</p>
       </figcaption>
-      <div className="mt-6 overflow-x-auto rounded-lg border border-border/70">
-        <div className="min-w-[610px]">
-          <div className="grid grid-cols-[5rem_1.5fr_.65fr_.8fr] gap-3 bg-muted/35 px-4 py-3 text-xs font-semibold text-muted-foreground">
+      <div className="mt-6 min-w-0 rounded-lg border border-border/70">
+        <div className="min-w-0">
+          <div className="grid min-w-0 grid-cols-[3.5rem_1.35fr_.65fr_.8fr] gap-2 bg-muted/35 px-3 py-3 text-[11px] font-semibold text-muted-foreground sm:grid-cols-[5rem_1.5fr_.65fr_.8fr] sm:gap-3 sm:px-4 sm:text-xs">
             <span /><span>Train</span><span>Gap</span><span>Validate</span>
           </div>
           {folds.map(([name, train, gap, validation]) => (
-            <div key={name} className="grid grid-cols-[5rem_1.5fr_.65fr_.8fr] gap-3 border-t border-border/60 px-4 py-4 text-sm">
+            <div key={name} className="grid min-w-0 grid-cols-[3.5rem_1.35fr_.65fr_.8fr] gap-2 border-t border-border/60 px-3 py-4 text-xs sm:grid-cols-[5rem_1.5fr_.65fr_.8fr] sm:gap-3 sm:px-4 sm:text-sm">
               <p className="font-semibold">{name}</p>
               <p className="border-b border-sky-500/45 pb-2">{train}</p>
               <p className="border-b border-border pb-2 text-muted-foreground">{gap}</p>

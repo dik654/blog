@@ -21,7 +21,10 @@ export default function Pruning() {
       <ExplainedFormula
         question="Successive Halving 한 단계에서 몇 개를 남기고 각 후보의 자원을 얼마나 늘릴까요?"
         idea={<>현재 n개의 trial을 같은 resource r에서 비교하고 상위 약 1/η만 유지한 뒤, 살아남은 trial에는 η배 resource를 줍니다.</>}
-        formula={String.raw`n_{j+1}=\left\lceil\frac{n_j}{\eta}\right\rceil,\qquad r_{j+1}=\eta r_j,\qquad \eta>1`}
+        formula={String.raw`\begin{aligned}
+          n_{j+1}&=\left\lceil\frac{n_j}{\eta}\right\rceil \\
+          r_{j+1}&=\eta r_j,\qquad \eta>1
+        \end{aligned}`}
         terms={[
           { symbol: "n_j", name: "active configurations", description: "j번째 rung에서 같은 resource까지 평가한 후보 수입니다." },
           { symbol: "r_j", name: "comparable resource", description: "각 후보가 받은 optimizer updates·processed tokens·data fraction 같은 fidelity입니다." },
@@ -38,7 +41,10 @@ export default function Pruning() {
       <ExplainedFormula
         question="Quality·latency·memory를 함께 볼 때 어떤 후보를 Pareto frontier에서 제외할 수 있을까요?"
         idea={<>모든 비용 축에서 A가 B보다 나쁘지 않고 적어도 한 축에서 더 좋다면 A가 B를 지배합니다. 지배당한 B는 추가 선호가 없어도 제외할 수 있습니다.</>}
-        formula={String.raw`A\prec B\iff \left(\forall k,\;f_k(A)\le f_k(B)\right)\land\left(\exists k,\;f_k(A)<f_k(B)\right)`}
+        formula={String.raw`\begin{aligned}
+          A\prec B\iff {}&\forall k,\ f_k(A)\le f_k(B),\\
+                         &\exists k,\ f_k(A)<f_k(B)
+        \end{aligned}`}
         terms={[
           { symbol: "f_k", name: "minimized objective k", description: "Loss·latency·memory처럼 작을수록 좋게 방향을 맞춘 k번째 목적입니다." },
           { symbol: "A ≺ B", name: "A dominates B", description: "A가 모든 목적에서 B 이상이고 적어도 하나에서 더 좋다는 뜻입니다." },
@@ -70,6 +76,13 @@ export default function Pruning() {
           최종 후보는 pruning을 끄고 full budget·여러 seed로 다시 실행합니다. 선택된 checkpoint만 남기지 말고 PRUNED·FAIL까지 포함한
           trial table, intermediate curve, peak memory, wall time, code/data/search-space version을 보존해야 중단 정책이 어떤
           후보군을 체계적으로 불리하게 만들었는지 나중에 확인할 수 있습니다.
+        </p>
+        <p>
+          Pruner를 켜기 전에는 completed pilot에서 같은 resource step의 early rank와 final rank를 비교합니다. Warmup이 긴 후보에
+          grace period를 주고, 실제로 중단됐을 후보 일부를 full budget까지 보내 false-prune rate와 절약한 update·wall time을 함께
+          계산합니다. PRUNED cohort와 COMPLETE cohort의 schedule·model family 분포가 한쪽으로 치우쳤다면 policy를 수정하고 version을
+          올립니다. 마지막으로 hard constraint를 먼저 적용하고, 남은 Pareto 후보를 반복 seed와 untouched outer data에서 확인한 뒤
+          운영 담당자가 실질 차이 tolerance와 SLA에 맞춰 최종 configuration을 고릅니다.
         </p>
       </div>
     </section>

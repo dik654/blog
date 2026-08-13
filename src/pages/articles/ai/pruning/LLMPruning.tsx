@@ -18,7 +18,7 @@ export default function LLMPruning() {
       <ExplainedFormula
         question="SparseGPT가 개별 weight 차이 대신 layer output reconstruction을 푸는 이유는 무엇일까요?"
         idea={<>같은 weight 오차라도 calibration input이 자주 사용하는 방향에 놓이면 output을 크게 바꿉니다. Mask 제약 안에서 원래 출력 <code>XW</code>와 pruned 출력의 차이를 줄이면 activation-sensitive한 보정이 됩니다.</>}
-        formula={String.raw`\min_{M,\widehat W}\ \left\lVert XW-X(M\odot\widehat W)\right\rVert_F^2\qquad \text{s.t.}\qquad \lVert M\rVert_0\le (1-s)N`}
+        formula={String.raw`\begin{aligned}\widehat Y&=X(M\odot\widehat W),\\\mathcal E(M,\widehat W)&=\lVert XW-\widehat Y\rVert_F^2,\\\min_{M,\widehat W}\quad&\mathcal E(M,\widehat W),\\\text{s.t.}\quad&\lVert M\rVert_0\le(1-s)N.\end{aligned}`}
         terms={[
           { symbol: "X", name: "calibration activations", description: "현재 linear layer에 representative text를 통과시켜 얻은 input matrix입니다." },
           { symbol: "W", name: "original weights", description: "Pruning 전 layer의 dense weight matrix입니다." },
@@ -36,7 +36,7 @@ export default function LLMPruning() {
       <ExplainedFormula
         question="Wanda는 second-order reconstruction 없이 activation을 어떻게 score에 넣을까요?"
         idea={<>Output <code>j</code>로 들어가는 weight의 크기와 그 weight가 곱해지는 input channel <code>i</code>의 calibration norm을 곱합니다. 큰 activation이 자주 들어오는 연결의 작은 weight도 보호할 수 있습니다.</>}
-        formula={String.raw`I_{ij}=\lvert W_{ij}\rvert\,\lVert X_{:i}\rVert_2,\qquad \text{prune the smallest }I_{ij}\text{ within each output group}`}
+        formula={String.raw`\begin{aligned}a_i&=\lVert X_{:i}\rVert_2,\\I_{ij}&=\lvert W_{ij}\rvert a_i,\\M_{ij}&=\mathbf1[I_{ij}\text{ selected in group }j].\end{aligned}`}
         terms={[
           { symbol: "W_ij", name: "one connection", description: "Input channel i에서 output channel j로 가는 weight입니다." },
           { symbol: "X_:i", name: "channel activations", description: "Calibration token 전체에서 input channel i가 가진 값의 column입니다." },

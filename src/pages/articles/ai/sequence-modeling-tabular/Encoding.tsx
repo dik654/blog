@@ -47,6 +47,12 @@ export default function Encoding() {
           raw log에서 training과 serving tokenizer가 완전히 같은 token IDs·delta·mask를
           만드는 golden fixture가 필요합니다.
         </p>
+        <p>
+          예를 들어 event가 1,000개인 history를 최근 128개로 제한하면 872개를
+          버립니다. 이 숫자는 memory 절감량만 뜻하지 않습니다. Purchase 직전의
+          precursor가 오래된 구간에 있었다면 recent-only 정책은 그 evidence도 함께
+          없애므로, important-event 보존 정책과 같은 cutoff·split에서 비교해야 합니다.
+        </p>
         <div className="not-prose my-8 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">논문 따라 읽기 · Time2Vec</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">

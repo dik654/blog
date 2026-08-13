@@ -21,7 +21,7 @@ export default function OnPolicy() {
       <ExplainedFormula
         question="고정된 teacher sequence와 student가 만든 sequence를 한 식에서 어떻게 구분할까요?"
         idea={<>두 항의 차이는 divergence가 아니라 prefix의 표본 분포입니다. 첫 항은 dataset·teacher가 만든 고정 response에서 배우고, 둘째 항은 현재 student policy가 만든 response에서 teacher와 student의 token distribution을 비교합니다.</>}
-        formula={String.raw`\mathcal L_{\mathrm{GKD}}=(1-\lambda)\,\mathbb E_{(x,y)\sim\mathcal D}\!\left[D(p_T\Vert p_\theta)(y\mid x)\right]+\lambda\,\mathbb E_{x\sim\mathcal X}\mathbb E_{\tilde y\sim p_\theta(\cdot\mid x)}\!\left[D(p_T\Vert p_\theta)(\tilde y\mid x)\right]`}
+        formula={String.raw`\begin{aligned}\mathcal L_{\mathrm{fixed}}&=\mathbb E_{(x,y)\sim\mathcal D}[D(p_T\Vert p_\theta)(y\mid x)],\\\mathcal L_{\mathrm{on}}&=\mathbb E_{x\sim\mathcal X,\ \tilde y\sim p_\theta}[D(p_T\Vert p_\theta)(\tilde y\mid x)],\\\mathcal L_{\mathrm{GKD}}&=(1-\lambda)\mathcal L_{\mathrm{fixed}}+\lambda\mathcal L_{\mathrm{on}}.\end{aligned}`}
         terms={[
           { symbol: String.raw`\mathcal D`, name: "fixed sequence dataset", description: "Ground-truth 또는 teacher가 미리 생성한 prompt–response pair입니다." },
           { symbol: String.raw`p_\theta`, name: "current student policy", description: "현재 parameter θ로 response와 token distribution을 만드는 student입니다." },
@@ -40,7 +40,7 @@ export default function OnPolicy() {
       <ExplainedFormula
         question="Student가 만든 한 response에서 reverse KL은 무엇을 token마다 비교할까요?"
         idea={<>Student가 만든 prefix hₜ를 teacher와 student 양쪽에 넣고, 그 다음 token 전체 vocabulary 분포를 비교합니다. Reverse KL은 student가 probability를 둔 token을 teacher가 얼마나 지지하는지 student expectation으로 계산합니다.</>}
-        formula={String.raw`\mathcal L_{\mathrm{OPD}}(x,\tilde y)=\frac{1}{L}\sum_{t=0}^{L-1}D_{\mathrm{KL}}\!\left(p_\theta(\cdot\mid h_t)\,\Vert\,p_T(\cdot\mid h_t)\right),\qquad h_t=(x,\tilde y_{<t}),\ \tilde y\sim p_\theta`}
+        formula={String.raw`\begin{aligned}\tilde y&\sim p_\theta(\cdot\mid x),\\h_t&=(x,\tilde y_{<t}),\\d_t&=D_{\mathrm{KL}}(p_\theta(\cdot\mid h_t)\Vert p_T(\cdot\mid h_t)),\\\mathcal L_{\mathrm{OPD}}&=\frac1L\sum_{t=0}^{L-1}d_t.\end{aligned}`}
         terms={[
           { symbol: String.raw`\tilde y`, name: "student rollout", description: "현재 student가 직접 sampling한 길이 L의 response입니다." },
           { symbol: String.raw`h_t`, name: "student-visited prefix", description: "Prompt x와 student가 t 이전까지 만든 token을 합친 현재 state입니다." },
@@ -84,7 +84,7 @@ export default function OnPolicy() {
       <ExplainedFormula
         question="Domain teacher가 여러 명일 때 하나의 student objective는 어떻게 구성할까요?"
         idea={<>각 prompt에 domain d가 붙어 있다고 보고, student rollout은 하나의 공통 policy가 만들되 teacher distribution은 해당 domain의 frozen teacher T_d에서 가져옵니다. 최종 loss는 domain mixture의 기대값입니다.</>}
-        formula={String.raw`\mathcal L_{\mathrm{MOPD}}=\mathbb E_{d\sim\rho}\mathbb E_{x\sim\mathcal X_d}\mathbb E_{\tilde y\sim p_\theta(\cdot\mid x)}\!\left[\frac{1}{L}\sum_t D_{\mathrm{KL}}\!\left(p_\theta(\cdot\mid h_t)\Vert p_{T_d}(\cdot\mid h_t)\right)\right]`}
+        formula={String.raw`\begin{aligned}d&\sim\rho,\quad x\sim\mathcal X_d,\\\tilde y&\sim p_\theta(\cdot\mid x),\\r_{d,t}&=D_{\mathrm{KL}}(p_\theta(\cdot\mid h_t)\Vert p_{T_d}(\cdot\mid h_t)),\\\mathcal L_{\mathrm{MOPD}}&=\mathbb E_{d,x,\tilde y}\left[\frac1L\sum_t r_{d,t}\right].\end{aligned}`}
         terms={[
           { symbol: String.raw`\rho`, name: "domain sampling mixture", description: "Math·instruction·software 등 domain prompt를 training step에 배분하는 확률입니다." },
           { symbol: String.raw`\mathcal X_d`, name: "domain-d prompt set", description: "Domain label과 teacher routing이 고정된 prompt source입니다." },

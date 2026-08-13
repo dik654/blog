@@ -41,6 +41,14 @@ k&=t-W,\quad L=T-W,\\
         assumptions={["W<T이며 t는 optimizer update index입니다.", "S(0;T−W)=ηpeak가 되도록 경계 convention을 맞춥니다.", "Resume 시 global update와 두 scheduler의 state를 함께 복원합니다."]}
         interpretation="전체 T를 그대로 cosine T_max로 쓰고 앞에 W를 추가하면 의도한 종료점이 밀립니다. 본 schedule의 local clock은 t−W이고 길이는 T−W입니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Start LR가 0, peak가 0.1, W=2라면 linear warmup은 t=0·1·2에서
+          0·0.05·0.1을 냅니다. 전체 T=6이면 본 schedule의 길이는 4이고 t=3은
+          global step 3이 아니라 local cursor k=1로 평가합니다. 이 cursor를 resume
+          때 3으로 복원하면 같은 checkpoint에서도 다른 LR가 나옵니다.
+        </p>
+      </div>
       <div className="not-prose my-8"><WarmupViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Warmup은 필수가 아니라 안정성 도구입니다</h3>

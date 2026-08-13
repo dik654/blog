@@ -12,7 +12,7 @@ export default function LLMDistill() {
       <ExplainedFormula
         question="Teacher가 만든 response를 student가 학습할 때 실제 loss는 무엇일까요?"
         idea={<>Teacher sequence를 student tokenizer로 다시 나눈 뒤, prompt가 주어진 상태에서 다음 response token의 likelihood를 높입니다. Response-only mask를 쓰면 prompt token은 context로만 보고 loss 합에서는 제외합니다.</>}
-        formula={String.raw`\mathcal L_{\mathrm{seq}}=-\sum_{t=1}^{L_s}m_t\log p_s\!\left(u_t\mid u_{<t},\operatorname{Tok}_s(x)\right)`}
+        formula={String.raw`\begin{aligned}c&=\operatorname{Tok}_s(x),\\\ell_t&=-m_t\log p_s(u_t\mid u_{<t},c),\\\mathcal L_{\mathrm{seq}}&=\sum_{t=1}^{L_s}\ell_t.\end{aligned}`}
         terms={[
           { symbol: "x", name: "prompt", description: "Teacher response를 생성한 원 요청과 system/context입니다." },
           { symbol: "Tok_s", name: "student tokenizer", description: "Prompt와 teacher text를 student vocabulary로 다시 encode합니다." },
@@ -30,7 +30,7 @@ export default function LLMDistill() {
       <ExplainedFormula
         question="Synthetic dataset이 deployment 요청을 충분히 덮는지 어떻게 확인할까요?"
         idea={<>먼저 운영에 필요한 slice별 목표 비중을 정하고, 생성·filter 뒤 남은 dataset의 비중과 차이를 측정합니다. 전체 sample 수가 커도 중요한 slice가 0이면 coverage는 부족합니다.</>}
-        formula={String.raw`\hat\pi_k=\frac{n_k}{\sum_j n_j},\qquad \Delta_{\mathrm{cover}}=\frac{1}{2}\sum_k\left|\hat\pi_k-\pi_k^{\mathrm{target}}\right|`}
+        formula={String.raw`\begin{aligned}N&=\sum_jn_j,\\\widehat\pi_k&=n_k/N,\\\delta_k&=\widehat\pi_k-\pi_k^{\mathrm{target}},\\\Delta_{\mathrm{cover}}&=\frac12\sum_k|\delta_k|.\end{aligned}`}
         terms={[
           { symbol: "k", name: "deployment slice", description: "언어·domain·difficulty·tool type·safety category처럼 사전에 정의한 그룹입니다." },
           { symbol: "n_k", name: "accepted count", description: "Teacher 생성 뒤 filter·dedup을 통과한 slice-k sample 수입니다." },

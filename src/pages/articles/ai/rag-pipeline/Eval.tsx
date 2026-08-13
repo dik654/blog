@@ -31,7 +31,10 @@ export default function Eval() {
       <ExplainedFormula
         question="인용이 많다는 사실과 인용이 정확하고 빠짐없다는 사실을 어떻게 구분할까요?"
         idea={<>답변을 검증 가능한 atomic claim으로 나누고 각 citation의 support를 판정합니다. Precision은 붙인 인용 중 맞는 비율이고, recall은 근거가 필요한 주장 중 올바른 인용이 연결된 비율입니다.</>}
-        formula={String.raw`P_{\mathrm{cite}}=\frac{|E_{\mathrm{valid}}|}{|E_{\mathrm{all}}|},\qquad R_{\mathrm{cite}}=\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verifiable}}|}`}
+        formula={String.raw`\begin{aligned}
+P_{\mathrm{cite}}&=\frac{|E_{\mathrm{valid}}|}{|E_{\mathrm{all}}|}\\
+R_{\mathrm{cite}}&=\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verifiable}}|}
+\end{aligned}`}
         terms={[
           { symbol: "E_all", name: "all citation links", description: "답변이 주장에 연결한 모든 citation입니다." },
           { symbol: "E_valid", name: "valid support links", description: "Source가 해당 주장을 실제로 뒷받침하고 revision·ACL도 유효한 citation입니다." },

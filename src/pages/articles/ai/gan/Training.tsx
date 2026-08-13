@@ -18,11 +18,29 @@ export default function Training() {
           전체를 detach하면 generator가 배울 signal도 사라진다.
         </p>
         <p>
+          Batch 64, latent dimension 128, RGB 64×64 설정이라면
+          <code>z</code>는 64×128이고 <code>G(z)</code>는 64×3×64×64입니다.
+          Discriminator가 sample마다 logit 하나를 내면 output은 64 또는
+          64×1입니다. D step에서 generated tensor만 detach하며, G step에서 D의
+          weight update를 막더라도 generated input까지 이어지는 gradient는
+          남겨야 합니다.
+        </p>
+        <p>
           Update ratio, 두 learning rate, optimizer momentum과 regularization은
           독립적인 “팁”이 아니라 같은 dynamical system의 시간 scale을 정한다.
           TTUR 연구는 G와 D에 다른 learning rate를 두는 조건을 분석했지만, 그
           수렴 정리는 finite deep GAN의 모든 설정을 자동으로 보장하는 recipe가
           아니다.
+        </p>
+        <p>
+          TTUR의 stochastic-approximation 해석은 두 step-size sequence의 합은
+          무한, 제곱합은 유한이고 두 time scale의 비율이 0으로 가며, noise와
+          iterate가 제어되고 limiting ODE의 local equilibrium이 안정적이라는
+          전제를 둡니다. 고정 learning rate의 finite Adam run은 이 조건을 자동
+          만족하지 않습니다. 가장 단순한 bilinear game
+          <code>minₓ maxᵧ xy</code>에서도 simultaneous gradient update는 원점으로
+          곧장 내려가지 않고 회전하거나 step size에 따라 발산할 수 있으므로,
+          한 player의 loss 감소를 고정 scalar objective의 수렴으로 읽지 않습니다.
         </p>
       </div>
       <AlternatingGameViz />
@@ -73,6 +91,13 @@ export default function Training() {
           다시 다른 mode로 이동하며 oscillation할 수 있다. Average loss만으로
           quality·coverage·stability를 동시에 진단할 수 없는 이유다.
         </p>
+        <p>
+          같은 크기의 target mode가 8개인데 generated sample 10,000개의 95%가
+          2개 mode에 몰렸다면, 몇 장이 선명하더라도 먼저 낮은 coverage를
+          의심해야 합니다. Mode별 sample count와 generative recall, 서로 다른
+          latent를 넣었을 때 output이 달라지는지를 함께 보고, 중복 sample 한
+          쌍이나 흔들리는 loss 하나만으로 collapse를 확정하지는 않습니다.
+        </p>
       </div>
       <FailureDiagnosisViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -84,6 +109,14 @@ export default function Training() {
           Kantorovich–Rubinstein dual을 근사한다. 이때 critic 출력은
           probability가 아니며, 핵심 전제는 function이 1-Lipschitz family에
           머무는 것이다.
+        </p>
+        <p>
+          1-Lipschitz는 모든 두 입력에 대해
+          <code>|f(x)−f(y)|≤||x−y||₂</code>라는 뜻입니다. 두 점의 거리가 0.2인데
+          score 차이가 0.3이면 조건을 위반합니다. 반면 WGAN-GP는 real과 fake를
+          이은 선분에서 뽑은 일부 지점의 gradient만 검사하므로, 그 penalty가
+          작아도 전체 입력 공간에서 같은 부등식이 성립한다고 보장할 수는
+          없습니다.
         </p>
       </div>
       <ExplainedFormula
@@ -134,6 +167,16 @@ export default function Training() {
         ]}
         interpretation="WGAN의 장점은 이름을 바꾸는 데 있지 않고 distribution support가 떨어져도 generator parameter에 대해 더 연속적인 signal을 기대할 수 있다는 데 있습니다. Critic constraint가 깨지면 distance 해석도 함께 약해집니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          1차원 point mass <code>δ₀</code>와 <code>δ₂</code>는 질량 1을 거리 2만큼
+          옮겨야 하므로 primal transport cost가 2입니다. Dual에서도
+          <code>f(x)=−x</code>는 1-Lipschitz이고
+          <code>Eδ₀[f]−Eδ₂[f]=2</code>에 도달합니다. Lipschitz 제약이 없다면
+          <code>cf</code>로 scale을 계속 키워 expectation gap을 무한히 만들 수
+          있어 distance로 해석할 수 없습니다.
+        </p>
+      </div>
       <div
         id="paper-wgan"
         className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
@@ -207,6 +250,14 @@ export default function Training() {
         ]}
         interpretation="Gradient norm을 1로 만드는 penalty는 local sampled constraint입니다. 모든 GAN에 무조건 붙이는 안정성 보증서가 아니며 λ·critic steps·batch와 함께 검증합니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Sampled point에서 gradient norm이 1.5이고 <code>λ=10</code>이라면 해당
+          penalty는 <code>10(1.5−1)²=2.5</code>입니다. 이 계산은 input과 추가
+          backward가 필요한 local penalty이며, 아래 spectral normalization처럼
+          weight를 한 번 rescale하는 방식과 비용 구조가 다릅니다.
+        </p>
+      </div>
       <div
         id="paper-wgan-gp"
         className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
@@ -267,6 +318,15 @@ export default function Training() {
         ]}
         interpretation="Spectral normalization은 data point마다 gradient penalty를 계산하지 않고 weight의 global scale을 제어합니다. GP와 계산 비용·function constraint 방식이 다릅니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          예를 들어 <code>W=diag(3,1)</code>의 largest singular value는 3이므로
+          normalized weight는 <code>diag(1,1/3)</code>입니다. 한 linear layer의
+          L2 operator norm은 1이 되지만, bias·activation·skip addition과 여러
+          branch까지 합친 전체 critic의 tight Lipschitz constant가 자동으로
+          1이 되는 것은 아닙니다.
+        </p>
+      </div>
       <div
         id="paper-spectral-normalization"
         className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"

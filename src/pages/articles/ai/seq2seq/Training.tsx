@@ -32,6 +32,12 @@ export default function Training() {
       <TrainInferenceGapViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          작은 계산으로 mask의 역할을 확인할 수 있다. 정답 probability가 0.8, 0.5인
+          두 token 뒤에 padding 하나가 있다면 mask는 (1,1,0), 유효 token 수는 2다.
+          따라서 token-average NLL은 −(log 0.8+log 0.5)/2≈0.458이며 padding의
+          probability는 합과 분모에 모두 들어가지 않는다.
+        </p>
         <h3>Exposure bias는 진단할 현상이지 단일 원인으로 단정할 수 없다</h3>
         <p>
           Inference에서는 정답 prefix를 알 수 없으므로 model이 선택한 token을 다음 input으로

@@ -12,7 +12,12 @@ export default function QLoRA() {
       <ExplainedFormula
         question="QLoRA의 한 layer에서 저장값·연산값·학습값은 어떻게 나뉠까요?"
         idea={<>Quantized code와 scale로 base weight를 저장하고 forward 때 compute dtype으로 복원합니다. Base 쪽 gradient는 저장하지 않지만, 그 layer를 지난 loss gradient는 adapter A와 B까지 역전파됩니다.</>}
-        formula={String.raw`y=\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x+\frac{\alpha}{r}BAx,\qquad \nabla_{q_W,s_W}\mathcal L=0,\ \nabla_{A,B}\mathcal L\ne0`}
+        formula={String.raw`\begin{aligned}
+y&=\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x\\
+&\quad+\frac{\alpha}{r}BAx\\
+\nabla_{q_W,s_W}\mathcal L&=0\\
+\nabla_{A,B}\mathcal L&\ne0
+\end{aligned}`}
         terms={[
           { symbol: "q_W,s_W", name: "quantized base storage", description: "Low-bit code와 block/group별 quantization metadata입니다." },
           { symbol: "D", name: "dequantization", description: "Code와 scale을 approximate weight로 복원하는 연산입니다." },
@@ -25,7 +30,11 @@ export default function QLoRA() {
       <ExplainedFormula
         question="QLoRA가 peak memory를 줄이는 항과 그대로 남는 항을 어떻게 구분할까요?"
         idea={<>Base storage, quantization metadata, adapter parameter·gradient·optimizer, activation과 workspace를 별도 장부로 더합니다. Parameter bit만 계산하면 activation peak와 temporary dequant workspace를 놓칩니다.</>}
-        formula={String.raw`M_{\mathrm{train}}\approx \frac{N_Wb}{8}+M_{\mathrm{qmeta}}+M_{A,B}+M_{\mathrm{grad}}+M_{\mathrm{opt}}+M_{\mathrm{act}}+M_{\mathrm{workspace}}`}
+        formula={String.raw`\begin{aligned}
+M_{\mathrm{train}}&\approx \frac{N_Wb}{8}+M_{\mathrm{qmeta}}+M_{A,B}\\
+&\quad+M_{\mathrm{grad}}+M_{\mathrm{opt}}+M_{\mathrm{act}}\\
+&\quad+M_{\mathrm{workspace}}
+\end{aligned}`}
         terms={[
           { symbol: "N_W,b", name: "base count · storage bits", description: "Frozen base scalar 수와 scalar당 low-bit code 크기입니다." },
           { symbol: "M_qmeta", name: "quantization metadata", description: "Scale·zero-point·double-quant metadata와 alignment입니다." },
@@ -37,6 +46,9 @@ export default function QLoRA() {
         interpretation="Base storage가 16-bit에서 4-bit로 줄어도 activation이 peak의 절반이면 전체 memory가 4배 줄지 않습니다. 먼저 장부에서 가장 큰 항을 확인해야 합니다."
       />
       <div className="not-prose my-8"><QLoraDetailViz /></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Full-precision LoRA와 QLoRA의 차이를 base quantization 효과로 해석하려면 base revision·data/split·rank·target·α·optimizer·update 수를 같게 둡니다. Storage dtype과 compute dtype, seed를 기록하고 target·general·safety slice의 untouched test와 peak memory·step time을 함께 비교해야, 메모리 절감과 품질 차이를 같은 원인으로 섞지 않을 수 있습니다.</p>
+      </div>
       <div id="reading-qlora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · QLoRA</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">Dettmers 등은 frozen 4-bit quantized base를 통해 LoRA adapter로 gradient를 전달하고, NF4·double quantization·paged optimizer를 조합해 65B model을 단일 48GB GPU에서 fine-tuning한 결과를 보고했습니다. 논문의 LLaMA/T5·instruction dataset·Guanaco·당시 chatbot 평가 범위의 결과이며, 모든 hardware·kernel·task에서 full 16-bit fine-tuning과 동등하거나 judge benchmark가 충분하다는 뜻은 아닙니다.</p>

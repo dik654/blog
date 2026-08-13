@@ -11,7 +11,11 @@ export default function Generation() {
       <ExplainedFormula
         question="Context window를 넘지 않으면서 문서에 얼마를 쓸 수 있는지 어떻게 계산할까요?"
         idea={<>모델 최대 길이에서 문서가 아닌 입력과 예약한 출력 길이를 먼저 뺍니다. 남은 예산 안에서만 chunk를 선택해야 truncation이 마지막 근거를 조용히 잘라내지 않습니다.</>}
-        formula={String.raw`B_{\mathrm{docs}}=L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}-L_{\mathrm{query}}-L_{\mathrm{output}},\qquad \sum_{c\in K_q}\ell(c)\le B_{\mathrm{docs}}`}
+        formula={String.raw`\begin{aligned}
+B_{\mathrm{docs}}&=L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}\\
+&\quad-L_{\mathrm{query}}-L_{\mathrm{output}}\\
+\sum_{c\in K_q}\ell(c)&\le B_{\mathrm{docs}}
+\end{aligned}`}
         terms={[
           { symbol: "L_max", name: "model context limit", description: "Input과 output을 합친 tokenizer 기준 최대 길이입니다." },
           { symbol: "L_system,L_history,L_query", name: "non-document input", description: "System·대화·현재 질문이 차지하는 token 수입니다." },
@@ -23,7 +27,7 @@ export default function Generation() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>관련 근거가 prompt 가운데에 있을 때 활용률이 떨어지는 <em>lost in the middle</em>은 long-context model에서도 관찰될 수 있습니다. 따라서 정답 위치를 앞·중간·뒤로 바꾸는 intervention을 평가하고, 특정 ordering trick을 모든 query의 규칙으로 고정하지 않습니다.</p>
-        <p>Retrieved text는 instruction이 아니라 신뢰하지 않는 data로 경계를 표시합니다. “이전 지시를 무시하라” 같은 문장이 source 안에 있어도 실행하지 않도록 하고, citation ID는 모델이 자유롭게 만든 문자열이 아니라 제공한 chunk ID 목록에서만 허용합니다. 근거가 없거나 충돌하면 답을 꾸미기보다 부족한 근거와 확인할 source를 알려주는 abstention policy가 필요합니다.</p>
+        <p>Retrieved text는 instruction이 아니라 신뢰하지 않는 data로 경계를 표시합니다. “이전 지시를 무시하라” 같은 문장이 source 안에 있어도 실행하지 않도록 하고, citation ID는 모델이 자유롭게 만든 문자열이 아니라 제공한 chunk ID 목록에서만 허용합니다. Tool은 application이 허용한 권한과 egress allowlist 안에서만 호출하며, 생성 결과도 citation ID와 output schema validator를 통과시킵니다. 근거가 없거나 source끼리 충돌하면 답을 꾸미기보다 부족한 근거와 확인할 source를 알려주는 abstention policy가 필요합니다.</p>
       </div>
       <div className="not-prose my-8"><GenerationViz /></div>
       <div id="reading-lost-middle" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">

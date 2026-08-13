@@ -1,3 +1,90 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BudgetViz from "./viz/BudgetViz";
-export default function Budget(){return <section id="budget" className="mb-16 scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Memory budget은 weight 크기가 아니라 고정 resident와 요청별 state를 분리해야 동시 실행 수로 이어집니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Device memory에는 packed weights뿐 아니라 scale metadata, runtime workspace, allocator headroom, activation과 KV cache가 함께 들어갑니다. Weight quantization은 고정 resident를 줄이지만 요청별 KV가 그대로라면 긴 context에서 얻는 concurrency 이득은 제한됩니다.</p><p>Baseline receipt에는 hardware·driver·engine, model/tokenizer revision, batch·input/output length distribution, request arrival pattern과 decode policy를 포함합니다. Peak 한 점 외에 OOM 없는 지속 부하와 fragmentation도 확인합니다.</p></div><ExplainedFormula question="Device memory로 동시에 유지할 수 있는 요청 수를 어떻게 1차 계산할까요?" idea={<>전체 memory에서 model과 workspace처럼 요청 수와 무관한 고정 resident를 먼저 빼고, 남은 memory를 요청 하나의 KV·activation·scheduler state로 나눕니다.</>} formula={String.raw`c_{\max}=\left\lfloor\frac{M_{\mathrm{device}}-M_{\mathrm{weights}}-M_{\mathrm{workspace}}-M_{\mathrm{headroom}}}{M_{\mathrm{request}}(L_{\mathrm{in}},L_{\mathrm{out}})}\right\rfloor`} terms={[{symbol:"M_device",name:"usable device memory",description:"다른 process와 reserved 영역을 제외해 실제 engine이 사용할 수 있는 memory입니다."},{symbol:"M_weights",name:"model resident",description:"Packed weights·scale·metadata와 persistent model buffer입니다."},{symbol:"M_workspace",name:"runtime workspace",description:"Kernel·graph capture·temporary operator가 요구하는 memory입니다."},{symbol:"M_headroom",name:"safety reserve",description:"Allocator fragmentation과 workload fluctuation을 견디기 위해 남기는 여유입니다."},{symbol:"M_request",name:"per-request state",description:"Input/output length에 따른 KV cache·activation·scheduler state입니다."},{symbol:"c_max",name:"capacity estimate",description:"동시에 resident로 둘 수 있는 요청 수의 하한 지향 1차 견적입니다."}]} assumptions={["요청별 state가 같은 length profile이고 shared prefix·paged KV·eviction 효과를 단순화합니다.","Peak workspace가 요청 수와 독립이라는 근사이며 engine schedule이 바뀌면 항을 다시 측정합니다.","계산값은 OOM 상한 견적이지 latency SLA를 만족하는 concurrency가 아니므로 load test가 필요합니다."]} interpretation="24GB 중 weights 12GB, workspace 2GB, headroom 2GB가 고정이고 요청당 1GB라면 memory 상한은 floor(8/1)=8입니다. Weight를 6GB로 줄이면 상한은 14지만 p95가 이를 허용하는지는 별도입니다."/><div className="not-prose my-8"><BudgetViz /></div></section>}
+export default function Budget() {
+  return (
+    <section id="budget" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        Memory budget은 weight 크기가 아니라 고정 resident와 요청별 state를
+        분리해야 동시 실행 수로 이어집니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Device memory에는 packed weights뿐 아니라 scale metadata, runtime
+          workspace, allocator headroom, activation과 KV cache가 함께
+          들어갑니다. Weight quantization은 고정 resident를 줄이지만 요청별 KV가
+          그대로라면 긴 context에서 얻는 concurrency 이득은 제한됩니다.
+        </p>
+        <p>
+          Baseline receipt에는 hardware·driver·engine, model/tokenizer revision,
+          batch·input/output length distribution, request arrival pattern과
+          decode policy를 포함합니다. Peak 한 점 외에 OOM 없는 지속 부하와
+          fragmentation도 확인합니다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="Device memory로 동시에 유지할 수 있는 요청 수를 어떻게 1차 계산할까요?"
+        idea={
+          <>
+            전체 memory에서 model과 workspace처럼 요청 수와 무관한 고정
+            resident를 먼저 빼고, 남은 memory를 요청 하나의
+            KV·activation·scheduler state로 나눕니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+M_{\mathrm{base}}&=M_{\mathrm{weights}}+M_{\mathrm{workspace}},\\
+M_{\mathrm{fixed}}&=M_{\mathrm{base}}+M_{\mathrm{headroom}},\\
+M_{\mathrm{free}}&=M_{\mathrm{device}}-M_{\mathrm{fixed}},\\
+M_{\mathrm{req}}&=M_{\mathrm{request}}(L_{\mathrm{in}},L_{\mathrm{out}}),\\
+c_{\max}&=\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "M_device",
+            name: "usable device memory",
+            description:
+              "다른 process와 reserved 영역을 제외해 실제 engine이 사용할 수 있는 memory입니다.",
+          },
+          {
+            symbol: "M_weights",
+            name: "model resident",
+            description:
+              "Packed weights·scale·metadata와 persistent model buffer입니다.",
+          },
+          {
+            symbol: "M_workspace",
+            name: "runtime workspace",
+            description:
+              "Kernel·graph capture·temporary operator가 요구하는 memory입니다.",
+          },
+          {
+            symbol: "M_headroom",
+            name: "safety reserve",
+            description:
+              "Allocator fragmentation과 workload fluctuation을 견디기 위해 남기는 여유입니다.",
+          },
+          {
+            symbol: "M_request",
+            name: "per-request state",
+            description:
+              "Input/output length에 따른 KV cache·activation·scheduler state입니다.",
+          },
+          {
+            symbol: "c_max",
+            name: "capacity estimate",
+            description:
+              "동시에 resident로 둘 수 있는 요청 수의 하한 지향 1차 견적입니다.",
+          },
+        ]}
+        assumptions={[
+          "요청별 state가 같은 length profile이고 shared prefix·paged KV·eviction 효과를 단순화합니다.",
+          "Peak workspace가 요청 수와 독립이라는 근사이며 engine schedule이 바뀌면 항을 다시 측정합니다.",
+          "계산값은 OOM 상한 견적이지 latency SLA를 만족하는 concurrency가 아니므로 load test가 필요합니다.",
+        ]}
+        interpretation="24GB 중 weights 12GB, workspace 2GB, headroom 2GB가 고정이고 요청당 1GB라면 memory 상한은 floor(8/1)=8입니다. Weight를 6GB로 줄이면 상한은 14지만 p95가 이를 허용하는지는 별도입니다."
+      />
+      <div className="not-prose my-8">
+        <BudgetViz />
+      </div>
+    </section>
+  );
+}

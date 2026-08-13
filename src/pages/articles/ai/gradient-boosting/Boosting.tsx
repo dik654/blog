@@ -18,7 +18,10 @@ export default function Boosting() {
       <ExplainedFormula
         question="왜 squared-error에서는 residual을 맞히지만 다른 loss에서는 pseudo-residual이라고 부를까?"
         idea={<>매 round의 target은 y−prediction이라고 외워 정하는 값이 아니라 현재 score에서 loss의 음의 derivative로 정의합니다. Squared loss를 미분할 때만 그 값이 정확히 y−F와 같아집니다.</>}
-        formula={String.raw`r_{im}=-\left.\frac{\partial\ell(y_i,F(x_i))}{\partial F(x_i)}\right|_{F=F_{m-1}},\qquad F_m(x)=F_{m-1}(x)+\eta\,h_m(x)`}
+        formula={String.raw`\begin{aligned}
+r_{im}&=-\left.\frac{\partial\ell(y_i,z)}{\partial z}\right|_{z=F_{m-1}(x_i)},\\
+F_m(x)&=F_{m-1}(x)+\eta\,h_m(x).
+\end{aligned}`}
         terms={[
           { symbol: "r_im", name: "pseudo-residual", description: "Round m에서 sample i의 score를 어느 방향으로 고쳐야 loss가 줄어드는지 나타냅니다." },
           { symbol: "h_m", name: "weak tree", description: "Feature로 pseudo-residual을 구간별 근사하는 새 decision tree입니다." },

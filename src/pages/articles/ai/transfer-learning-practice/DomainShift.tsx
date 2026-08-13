@@ -59,6 +59,14 @@ export default function DomainShift() {
           Pseudo-label self-training 역시 confidence·class coverage·error amplification을
           추적하고 labeled target holdout에서 adaptation 전후를 비교합니다.
         </p>
+        <p>
+          Negative transfer는 “adaptation을 했는데 기대만큼 오르지 않았다”는 막연한
+          표현이 아니라 기준선보다 중요한 평가축이 악화된 경우로 판정합니다. 예를
+          들어 target accuracy가 0.82에서 0.84로 올라도 source regression accuracy가
+          0.90에서 0.75로 떨어지고 운영 guardrail이 0.88이라면 배포 후보로 받을 수
+          없습니다. Target slice·source regression·calibration의 rollback threshold를
+          adaptation 전에 정해야 평균 하나로 손실을 숨기지 않습니다.
+        </p>
         <div id="paper-dann" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
           <p className="text-xs font-bold text-primary">논문 읽기 · Domain-Adversarial Training</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">DANN은 labeled source와 unlabeled target을 사용해 source task에는 discriminative하면서 domain classifier에는 indistinguishable한 feature를 gradient reversal로 학습합니다. 논문의 sentiment·image classification·person re-identification 조건을 넘어 class-conditional alignment가 보장된다고 해석하면 안 됩니다.</p>
