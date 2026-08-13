@@ -31,7 +31,7 @@ export default function BatchVerification({
             합니다.
           </>
         }
-        formula={String.raw`e\!\left(G_1,\sum_{i=1}^{N}r_i\sigma_i\right)=\prod_{i=1}^{N}e\!\left(r_iPK_i,H(m_i)\right)`}
+        formula={String.raw`\begin{aligned}\sigma_r&=\sum_{i=1}^{N}r_i\sigma_i\\e(G_1,\sigma_r)&=\prod_{i=1}^{N}e(r_iPK_i,H(m_i))\end{aligned}`}
         terms={[
           {
             symbol: "N",

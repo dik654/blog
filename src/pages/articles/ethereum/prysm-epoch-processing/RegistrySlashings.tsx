@@ -1,205 +1,38 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function RegistrySlashings({ onCodeRef }: Props) {
+export default function RegistrySlashings({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="registry-slashings" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">레지스트리 & 슬래싱</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("process-slashings", codeRefs["process-slashings"])
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            AttestingBalance()
-          </span>
-        </div>
-
-        {/* ── Registry updates ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Registry Updates — activation/exit queue
-        </h3>
-        <div className="my-4 not-prose space-y-3">
-          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
-            <p className="font-semibold text-sm text-indigo-400 mb-3">
-              <code>ProcessRegistryUpdates(state)</code> — 매 epoch
-            </p>
-            <div className="space-y-2 text-xs text-foreground/70">
-              {[
-                {
-                  step: "1",
-                  label: "Activation eligibility",
-                  detail:
-                    "pending deposit → eligible status, ActivationEligibilityEpoch = currentEpoch + 1",
-                },
-                {
-                  step: "2",
-                  label: "Queue activations",
-                  detail:
-                    "churn limit까지만 활성화 — eligible validators를 eligibility epoch 순 정렬 후 제한",
-                },
-                {
-                  step: "3",
-                  label: "Voluntary exits",
-                  detail:
-                    "exit_epoch + MIN_VALIDATOR_WITHDRAWABILITY_DELAY 후 출금 가능 (slashing 포함)",
-                },
-              ].map((s) => (
-                <div key={s.step} className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">
-                    {s.step}
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground/80">
-                      {s.label}
-                    </p>
-                    <p className="text-foreground/60">{s.detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
-            <p className="font-semibold text-sm text-sky-400 mb-2">
-              Churn 규칙은 fork에 따라 달라진다
-            </p>
-            <div className="text-xs text-foreground/70 space-y-1">
-              <div>
-                이전 fork: active validator count로 validator 단위 churn limit
-                계산
-              </div>
-              <div>
-                Electra 이후: 총 활성 balance에서 balance 단위 activation/exit
-                churn을 계산하고 별도 상한을 적용
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {[
-              { label: "입력", value: "total active balance" },
-              { label: "단위", value: "validator 또는 Gwei" },
-              { label: "제약", value: "fork별 min/max" },
-              { label: "queue", value: "activation·exit 분리" },
-            ].map((h) => (
-              <div
-                key={h.label}
-                className="rounded-lg border border-border p-2 text-center"
-              >
-                <span className="text-xs font-bold text-muted-foreground">
-                  {h.label}
-                </span>
-                <p className="text-xs text-foreground/70">{h.value}</p>
-              </div>
-            ))}
-          </div>
-          <div className="rounded-lg border border-border p-4">
-            <p className="text-xs leading-5 text-foreground/70">
-              Queue 처리량을 “epoch당 validator 몇 명”으로 고정하면 balance-based churn을 설명할 수 없습니다. Electra 이후에는 compounding validator와 더 큰 effective balance를 고려해 Gwei 단위 activation·exit budget이 각 request에서 얼마나 소비되는지 추적해야 합니다.
-            </p>
-          </div>
-        </div>
-        <p>
-          <strong>Churn limit</strong>은 activation과 exit가 한 epoch에 validator set을 급격하게 바꾸지 못하도록 제한합니다. 정확한 단위와 formula는 활성 fork에 따라 validator count 또는 effective-balance budget을 사용하므로, queue position을 계산할 때 현재 network configuration과 pending request의 balance를 함께 봐야 합니다.
-        </p>
-
-        {/* ── Slashings processing ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Slashings Penalty — epoch offset 분산
-        </h3>
-        <div className="my-4 not-prose space-y-3">
-          <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
-            <p className="font-semibold text-sm text-red-400 mb-2">
-              Slashing 즉시 효과
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-foreground/70">
-              <div className="rounded border border-border p-2">
-                <code>validator.slashed = true</code>
-              </div>
-              <div className="rounded border border-border p-2">
-                초기 penalty: fork별 quotient로 effective balance에서 계산
-              </div>
-              <div className="rounded border border-border p-2">
-                <code>exit_epoch</code>, <code>withdrawable_epoch</code> 설정
-              </div>
-              <div className="rounded border border-border p-2">
-                blockchain에 slash record 기록
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
-            <p className="font-semibold text-sm text-amber-400 mb-2">
-              <code>ProcessSlashings(state)</code> — epoch offset 후 "큰
-              penalty"
-            </p>
-            <div className="space-y-2 text-xs text-foreground/70">
-              <div>
-                적용 시점:{" "}
-                <code>slashed_epoch + EPOCHS_PER_SLASHINGS_VECTOR/2</code>
-              </div>
-              <div>
-                <code>
-                  adjustedTotalSlashingBalance = min(sum(Slashings) *
-                  MULTIPLIER, totalBalance)
-                </code>
-              </div>
-              <div>
-                <code>
-                  penalty = (effectiveBalance / increment) * adjustedTotal /
-                  totalBalance * increment
-                </code>
-              </div>
-              <div className="text-foreground/50">
-                <code>PROPORTIONAL_SLASHING_MULTIPLIER</code>와 quotient는
-                fork별 상수이며 총 slashed balance 비율이 커질수록 상관 패널티가
-                커진다.
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border p-4">
-              <p className="text-xs font-semibold text-muted-foreground mb-2">
-                동시 slashing 시나리오
-              </p>
-              <div className="space-y-1 text-xs text-foreground/70">
-                <div>단독 slashing: 초기 penalty + exit까지의 미참여 영향</div>
-                <div>동시 slashing 증가: 상관 패널티 상승</div>
-                <div>대규모 위반: 총 slashed balance 비율에 따라 큰 손실</div>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border p-4">
-              <p className="text-xs font-semibold text-muted-foreground mb-2">
-                경제적 보안
-              </p>
-              <div className="space-y-1 text-xs text-foreground/70">
-                <div>
-                  상충하는 finalized checkpoint는 최소 1/3 지분의 slashable 위반
-                  증거를 뜻함
-                </div>
-                <div>
-                  비용은 validator 개수가 아니라 위반한 effective balance로 계산
-                </div>
-                <div>
-                  finality는 경제적 안전성과 사회적 복구 경계를 함께 제공
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          Slashed validator는 즉시 초기 penalty를 받고 정해진 epoch offset에서 주변 slashed balance에 비례한 correlation penalty를 추가로 받습니다. 같은 기간에 많은 effective balance가 slash될수록 penalty가 커지며, conflicting finality를 만들려면 validator 수가 아니라 최소 3분의 1 voting weight가 slashable violation에 참여해야 합니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>Churn과 slashing은 다른 제어입니다.</strong> Churn budget은 정상적인 entry·exit 속도를 제한하고, slashing formula는 위반 validator의 effective balance와 같은 기간의 total slashed balance를 사용해 penalty를 계산합니다. 둘 모두 fork별 specification을 기준으로 계산해야 합니다.
-        </p>
+      <h2 className="mb-6 text-2xl font-bold">Registry queue와 slashing은 membership과 accountability를 다른 clock으로 갱신한다</h2>
+      <div className="not-prose mb-5 flex flex-wrap items-center gap-3"><CodeViewButton onClick={() => onCodeRef("process-registry", codeRefs["process-registry"])} /><span className="text-xs text-muted-foreground">Prysm registry/slashing seam</span></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Registry update는 activation eligibility, activation epoch와 low-balance ejection을 처리합니다. Electra의 pending deposits·partial withdrawals·consolidations는 finality와 churn budget을 확인하는 queue로 들어가므로, request가 block에 포함됐다는 사실과 validator balance/lifecycle에 적용됐다는 사실은 다릅니다.</p>
+        <p>Slashing은 proposer·attester의 객관적 충돌 evidence가 block processing에서 확인될 때 시작되지만, 즉시 penalty와 correlated penalty·withdrawability는 여러 epoch에 걸쳐 적용됩니다. Evidence 수신, slashed flag, exit, penalty와 withdrawal을 한 이벤트로 합치지 않습니다.</p>
       </div>
+      <ExplainedFormula
+        question="왜 여러 validator가 함께 slash될수록 correlation penalty가 커질까요?"
+        idea={<>최근 slashing window의 총 slashed balance를 전체 active balance에 대한 비율로 만들고, fork가 정한 multiplier와 상한을 적용한 뒤 각 validator effective balance에 비례시킵니다.</>}
+        formula={String.raw`p_i \approx E_i\min\!\left(1,\frac{mS}{A}\right)`}
+        terms={[
+          { symbol: "p_i", name: "correlation penalty", description: "Validator i에 귀속되는 근사 penalty이며 단위는 Gwei입니다." },
+          { symbol: "E_i", name: "effective balance", description: "Validator i의 fork 규격상 유효 stake이며 Gwei입니다." },
+          { symbol: "S", name: "recent slashed balance", description: "규격의 slashing vector/window에 누적된 effective balance 합입니다." },
+          { symbol: "A", name: "total active balance", description: "같은 state snapshot의 활성 effective balance 총합입니다." },
+          { symbol: "m", name: "fork multiplier", description: "Fork가 정한 proportional-slashing multiplier입니다." },
+        ]}
+        assumptions={["실제 executable spec은 effective-balance increment와 integer division·penalty timing을 사용합니다.", "Slashing evidence validity와 immediate penalty는 이 근사식 밖의 별도 단계입니다."]}
+        interpretation="E=32, S/A=1%, m=3인 toy example은 약 0.96 stake-unit이지만 S/A=40%면 min 상한으로 E 전체를 넘지 않습니다. 시장 가격 손실이나 모든 slashing의 최종 손실을 이 식 하나로 예측할 수는 없습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Queue는 finality와 churn으로 처리 속도를 제한합니다</h3>
+        <p>Electra pending deposit은 legacy bridge deposit 선행 처리, queue position finalization, epoch당 개수와 activation/exit churn budget을 확인합니다. 작은 예로 budget이 64 balance-unit이고 queue 앞 요청이 40·32라면 첫 요청 뒤 24만 남아 두 번째를 이번 epoch에 모두 적용할 수 없습니다. 단순 FIFO pop이 아니라 fork rule에 따라 postpone·carry-over가 생깁니다.</p>
+        <h3>Release gate는 balance 합계만 보지 않습니다</h3>
+        <p>Fork 전·activation epoch·후 fixture에서 participation flags, checkpoints, per-validator reward/penalty, inactivity score, registry epochs, pending queue order, slashing vector와 post-state root를 base/candidate로 비교합니다. 1/3 미만·정확히 threshold·초과 participation, correlated slash, churn exhaustion, reorg와 epoch-boundary crash/restart를 포함하고 parity 뒤에 CPU·allocation·epoch-processing p99를 봅니다.</p>
+      </div>
+      <div id="paper-prysm-epoch-source" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">공식 구현 읽기 · Prysm epoch processing</p><p className="mt-2 text-sm font-semibold">OffchainLabs/prysm source repository</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Consensus spec의 ordered epoch transition이 선택한 Prysm release의 precompute·state mutation·error path로 구현되는 위치를 확인합니다. 특정 cache 또는 benchmark를 protocol guarantee로 일반화하지 않습니다.</p><a href="https://github.com/OffchainLabs/prysm" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">Prysm 공식 source 보기</a></div>
     </section>
   );
 }

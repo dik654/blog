@@ -1,142 +1,67 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
+const HANDLERS = [
+  ["on_tick", "현재 slot·epoch와 proposer-boost 수명을 갱신", "단조 시간·clock assumption"],
+  ["on_block", "검증된 block과 post-state·checkpoint를 store에 연결", "known parent·future block·execution status"],
+  ["on_attestation", "target state를 확인하고 validator별 latest message 갱신", "epoch/slot timing·known target·signature"],
+  ["on_attester_slashing", "equivocating validator를 weight 계산에서 제외", "두 indexed attestation의 slashability"],
+] as const;
 
-export default function OnBlock({ onCodeRef }: Props) {
+export default function OnBlock({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="on-block" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">OnBlock & OnAttestation</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("fc-insert", codeRefs["fc-insert"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            InsertNode()
-          </span>
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("fc-process-attest", codeRefs["fc-process-attest"])
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            ProcessAttestation()
-          </span>
-        </div>
-
-        {/* ── OnBlock ── */}
-        <h3 className="text-xl font-semibold mt-4 mb-3">
-          OnBlock — 새 블록 tree에 추가
-        </h3>
-        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              OnBlock 처리 흐름
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                <code>block.ParentRoot</code>로 부모 노드 조회 — 없으면{" "}
-                <code>ErrUnknownParent</code>
-              </li>
-              <li>
-                새 <code>Node</code> 생성: <code>Root</code>, <code>Slot</code>,{" "}
-                <code>Parent</code>, <code>Weight=0</code>,{" "}
-                <code>JustifiedEpoch</code>, <code>FinalizedEpoch</code>
-              </li>
-              <li>
-                <code>parent.Children</code>에 새 노드 추가 (양방향 링크)
-              </li>
-              <li>
-                <code>s.nodes[blockRoot]</code>에 등록
-              </li>
-              <li>
-                블록 body의 attestations 일괄 처리:{" "}
-                <code>s.OnAttestation(ctx, att)</code>
-              </li>
-              <li>
-                <code>updateBestDescendant(newNode)</code> — root 방향으로
-                재계산
-              </li>
-            </ol>
-          </div>
-          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-            <div className="text-xs font-semibold text-blue-400 mb-2">
-              시간 복잡도
-            </div>
-            <p className="text-sm">
-              삽입 자체뿐 아니라 블록에 포함된 투표 수, 갱신할 조상 경로와 현재
-              트리 모양에 따라 처리량이 달라진다.
-            </p>
-          </div>
-        </div>
+      <h2 className="mb-5 text-2xl font-bold">Handler는 검증된 event만 store transition으로 바꾼다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <code>OnBlock</code>은 block root와 parent relationship, justified·finalized checkpoint context를 fork-choice tree에 넣습니다. 새 node의 weight는 block 자체가 아니라 validator latest-message vote에서 오며, parent pointer와 child collection이 ancestor·descendant traversal을 지원합니다.
+          Fork choice는 network callback의 부수 효과가 아니라 명시적인 event-driven state machine으로 읽는 편이 안전합니다.
+          Block, attestation, clock tick과 slashing evidence는 서로 다른 validation과 state dependency를 가지며, handler가
+          실패하면 store를 부분 갱신하지 않아야 합니다. 이 원자성이 깨지면 같은 input replay에서 다른 head가 나올 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-6 grid min-w-0 gap-4 md:grid-cols-2">
+        {HANDLERS.map(([name, action, gate]) => (
+          <article key={name} className="min-w-0 rounded-lg border border-border p-4">
+            <p className="font-mono text-xs font-bold text-primary">{name}</p>
+            <p className="mt-2 text-sm leading-6">{action}</p>
+            <p className="mt-3 border-t border-border pt-3 text-xs leading-5 text-muted-foreground">gate · {gate}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("on-block", codeRefs["on-block"])} />
+        <span className="self-center text-xs text-muted-foreground">분석한 snapshot의 block handler 확인</span>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Block 한 개를 넣는 순서</h3>
+        <ol>
+          <li>Block root, parent root, slot과 source를 trace에 고정합니다.</li>
+          <li>Known parent, 시간·slot, finalized ancestry와 consensus validation을 확인합니다.</li>
+          <li>Parent state에서 transition한 post-state와 execution payload status를 연결합니다.</li>
+          <li>Block node와 checkpoint evidence를 같은 commit 단위로 store에 반영합니다.</li>
+          <li>Timely block이면 해당 slot에서만 proposer boost root를 설정하고 이후 tick에서 제거합니다.</li>
+        </ol>
+        <p>
+          Proposer boost는 제시간에 전파된 block이 network latency 때문에 아직 attestation을 충분히 받지 못한 짧은 구간을
+          보정하는 임시 weight입니다. 영구 stake나 proposer의 특권이 아니며 slot boundary와 timeliness 조건이 틀리면 다른
+          node와 head가 갈릴 수 있습니다.
         </p>
 
-        {/* ── OnAttestation ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          OnAttestation — validator vote 반영
-        </h3>
-        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              OnAttestation — vote 기록
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                <code>att.AttestingIndices</code> 순회 → 각 validator의 이전
-                vote 비교
-              </li>
-              <li>
-                <code>att.Data.Target.Epoch &gt; prev.Next.Epoch</code>이면{" "}
-                <code>VoteTracker</code> 업데이트 (LMD: 최신 vote만 유효)
-              </li>
-              <li>
-                최신 메시지를 저장하고, head 계산 경로에서 이전 vote와의 delta를
-                묶어 가중치에 반영
-              </li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              vote delta — 가중치 일괄 반영
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                old vote의 target 노드에서 <code>validatorBalance</code> 차감
-              </li>
-              <li>
-                new vote의 target 노드에 <code>validatorBalance</code> 추가
-              </li>
-              <li>
-                <code>vt.Current = vt.Next</code>로 상태 전진
-              </li>
-              <li>
-                영향받는 조상에 delta를 전파하고 best child/descendant 캐시 갱신
-              </li>
-            </ol>
-          </div>
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
-            <div className="text-xs font-semibold text-amber-400 mb-2">
-              핵심 최적화
-            </div>
-            <p className="text-sm">
-              매 attestation 수신마다 전체 tree를 다시 걷지 않고 최신 vote를
-              추적한 뒤 head 계산에 필요한 delta를 묶어 처리한다.
-            </p>
-          </div>
-        </div>
+        <h3>실패를 상태로 남겨야 하는 이유</h3>
         <p>
-          <code>OnAttestation</code>은 validator별 latest message를 갱신하고 이전 root에서 새 root로 이동한 effective-balance delta를 준비합니다. Implementation은 vote ingestion과 tree-weight propagation을 분리해 여러 update를 모을 수 있으며, head 계산 전에 필요한 delta가 반영되었는지 보장해야 합니다.
+          Future block, unknown parent, finalized checkpoint 충돌, invalid execution payload와 duplicate input은 모두 같은
+          “실패”가 아닙니다. 일부는 나중에 parent가 도착하면 retry할 수 있고 일부는 영구 reject이며 duplicate는 idempotent
+          no-op일 수 있습니다. Receipt에 reason, retryability, store generation과 pre/post head를 남겨야 restart 후 안전하게
+          재생할 수 있습니다.
         </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 양방향 링크</strong> — InsertNode()가 부모 루트로 기존
-          node를 찾고 새 node를 parent의 child collection에 연결합니다. 개별 link lookup과 전체 path traversal은 다른 비용이며 subtree 작업은 방문 node 수에 비례합니다. Attestation은 validator latest message로 기록되어 weight delta에 반영됩니다.
+        <p>
+          특히 execution client가 SYNCING인 상태와 INVALID를 합치면 안 됩니다. 전자는 optimistic path에서 재평가될 수 있지만
+          후자는 해당 payload와 descendants의 eligibility를 제한합니다. Fork-choice event는 Engine response와 consensus root를
+          같은 trace로 묶되 서로 다른 owner의 판단으로 유지합니다.
         </p>
       </div>
     </section>

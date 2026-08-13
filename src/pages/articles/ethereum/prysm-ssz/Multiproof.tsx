@@ -33,7 +33,7 @@ export default function Multiproof({
             복원합니다.
           </>
         }
-        formula={String.raw`g_{\mathrm{left}}=2g,\quad g_{\mathrm{right}}=2g+1,\quad g_{\mathrm{sibling}}=g\oplus1,\quad |P|=32d\ \mathrm{bytes}`}
+        formula={String.raw`\begin{aligned}g_L&=2g,&g_R&=2g+1\\g_{\rm sib}&=g\oplus1,&|P|&=32d\ \mathrm B\end{aligned}`}
         terms={[
           {
             symbol: "g",

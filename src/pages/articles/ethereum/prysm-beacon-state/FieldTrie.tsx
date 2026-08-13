@@ -28,7 +28,7 @@ export default function FieldTrie({
             없는 sibling subtree는 같은 generation의 cached hash를 재사용합니다.
           </>
         }
-        formula={String.raw`d=\lceil\log_2 L\rceil,\qquad C_{\mathrm{one\ leaf}}\approx d+1`}
+        formula={String.raw`d=\lceil\log_2L\rceil,\qquad C\approx d+1`}
         terms={[
           {
             symbol: "L",

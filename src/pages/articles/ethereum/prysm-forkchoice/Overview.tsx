@@ -1,196 +1,75 @@
-import ContextViz from "./viz/ContextViz";
-import ForkChoiceTreeViz from "./viz/ForkChoiceTreeViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
+import PrysmConsensusViz from "../prysm-consensus-viz";
 
-export default function Overview({
-  onCodeRef: _onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Fork choice는 attestation weight로 canonical head를 고른다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이 아티클에서는 LMD-GHOST 알고리즘과 doubly-linked-tree 자료구조의
-          가중치 전파 과정을 코드 수준으로 추적한다.
+      <h2 className="mb-5 text-2xl font-bold">Fork choice는 가장 긴 체인이 아니라 최신 attestation이 지지하는 head를 고른다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Beacon node는 동시에 여러 valid block branch를 볼 수 있습니다. State transition은 각 branch가 규칙에 맞는지만
+          판단할 뿐 어느 branch를 현재 head로 내보낼지는 정하지 않습니다. Prysm의 fork-choice store는 검증된 block,
+          validator별 최신 attestation, justified·finalized checkpoint와 시간을 모아 <strong>지금 따라갈 한 root</strong>를
+          계산합니다.
         </p>
-
-        {/* ── Fork choice 개요 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          LMD-GHOST — canonical chain 선택
-        </h3>
-        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              LMD-GHOST 기본 아이디어
-            </div>
-            <p className="text-sm mb-2">
-              Latest Message Driven - Greedy Heaviest Observed Sub-Tree
-            </p>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                각 validator의 latest message (most recent attestation) 추적
-              </li>
-              <li>block tree에서 가장 "무거운" subtree 선택</li>
-              <li>매 단계 greedy하게 최대 weight 자식으로 이동</li>
-              <li>리프에 도달하면 그 블록이 head</li>
-            </ol>
-            <p className="text-sm mt-2 text-muted-foreground">
-              가중치:{" "}
-              <code>node_weight = sum(validator.effective_balance)</code> for
-              each attestation on node
-            </p>
-          </div>
-          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-            <div className="text-xs font-semibold text-blue-400 mb-2">
-              GetHead 예시 — tree traversal
-            </div>
-            <div className="text-sm space-y-1">
-              <p>
-                Block A (root, weight:0) → 자식: B (weight:100), C (weight:80)
-              </p>
-              <p>
-                B &gt; C → <strong>B 선택</strong> → 자식: D (weight:50), E
-                (weight:50)
-              </p>
-              <p>
-                동률 → tie-break (<code>block_root</code> 바이트 비교) →{" "}
-                <strong>D 선택</strong> (리프) → Head = D
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              LMD vs GHOST 구분
-            </div>
-            <div className="text-sm grid grid-cols-2 gap-2">
-              <div>
-                <strong>LMD</strong> — 각 validator의 최신 vote만 사용
-              </div>
-              <div>
-                <strong>GHOST</strong> — 서브트리 weight 기반 greedy 탐색
-              </div>
-            </div>
-            <p className="text-sm mt-1 text-muted-foreground">
-              Prysm 구현:{" "}
-              <code>beacon-chain/forkchoice/doubly-linked-tree/</code>
-            </p>
-          </div>
-        </div>
-        <p className="leading-7">
-          LMD-GHOST는 각 validator의 최신 attestation만 반영해 block subtree의
-          가중치를 계산한다. Justified checkpoint에서 시작해 자식 중 가장 무거운
-          subtree를 반복해서 고르면 현재 head에 도달한다.
-        </p>
-
-        {/* ── forkchoice 동작 흐름 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Fork Choice Store — 동작 흐름
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4 sm:col-span-2">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              ForkChoiceStore 구조체
-            </div>
-            <div className="text-sm grid grid-cols-2 gap-x-4 gap-y-1">
-              <span>
-                <code>nodes map[BlockRoot]*Node</code> — tree 구조
-              </span>
-              <span>
-                <code>votes []*VoteTracker</code> — validator별 latest vote
-              </span>
-              <span>
-                <code>justified_checkpoint</code> — justified 체크포인트
-              </span>
-              <span>
-                <code>finalized_checkpoint</code> — finalized 체크포인트
-              </span>
-              <span>
-                <code>balance_cache</code> — 밸런스 캐시
-              </span>
-              <span>
-                <code>proposer_boost_root</code> — boost 대상 root
-              </span>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              새 블록 도착
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                <code>ValidateBlock()</code> → 기본 검증
-              </li>
-              <li>
-                <code>ProcessBlock()</code> → state transition
-              </li>
-              <li>
-                <code>OnBlock()</code> → store에 추가
-              </li>
-              <li>block body의 attestations 포함</li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              새 Attestation 도착
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                <code>ValidateAttestation()</code> → gossip validation
-              </li>
-              <li>
-                <code>OnAttestation()</code> → store에 추가
-              </li>
-              <li>
-                <code>votes[validator_index]</code> 업데이트
-              </li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              RPC Head 쿼리
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                <code>GetHead()</code> 호출
-              </li>
-              <li>모든 validator vote balance 계산</li>
-              <li>LMD-GHOST tree traversal</li>
-              <li>
-                canonical head <code>block_root</code> 반환
-              </li>
-            </ol>
-          </div>
-          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-            <div className="text-xs font-semibold text-blue-400 mb-2">
-              doubly-linked-tree 성능
-            </div>
-            <ul className="text-sm space-y-1">
-              <li>
-                parent/children 양방향 링크 + weight +{" "}
-                <code>best_descendant</code> 캐싱
-              </li>
-              <li>
-                노드 추가/제거 <strong>O(1)</strong> / head 계산{" "}
-                <strong>O(depth)</strong>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <p className="leading-7">
-          Fork choice store는 <code>on_block</code>,
-          <code>on_attestation</code>, <code>on_tick</code>으로 입력을 갱신하고
-          <code>get_head</code>에서 결과를 계산한다. 실제 비용은 tree 구조와
-          cache, 갱신해야 할 ancestor 범위에 따라 달라지므로 단순한 O(1)
-          삽입·삭제로 일반화하지 않는다.
+        <p>
+          이 글은 Ethereum client를 처음 보는 독자를 위해 <strong>event 수신→latest message 갱신→branch weight
+          계산→checkpoint로 branch 필터링→greedy head walk→reorg·prune</strong> 순서로 내려갑니다. SSZ decode와 BLS
+          검증은 선행 단계이며 여기서는 <Link to="/blockchain/prysm">Prysm 전체 lifecycle</Link>을 받은 뒤 head 판단만
+          소유합니다.
         </p>
       </div>
-      <div className="not-prose mt-6">
-        <ForkChoiceTreeViz />
+
+      <ContentBoundary article="prysm-forkchoice" />
+      <PrysmConsensusViz mode="forkchoice" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>핵심 아이디어: validator마다 가장 최근 vote 하나만 셉니다</h3>
+        <p>
+          LMD는 Latest Message Driven의 약자로 validator 한 명의 과거 attestation을 모두 누적하지 않고 관찰한 최신
+          message만 사용한다는 뜻입니다. GHOST는 Greedy Heaviest Observed SubTree의 약자로 justified checkpoint에서
+          시작해 현재 node의 자식 중 subtree weight가 가장 큰 자식을 반복 선택합니다. 따라서 “최다 block 수”나 “마지막에
+          도착한 block”이 아니라 active unslashed balance가 어느 subtree를 지지하는지가 기준입니다.
+        </p>
+        <p>
+          이 계산에는 신뢰 경계가 있습니다. Block과 attestation은 먼저 해당 fork의 validation을 통과해야 하고, equivocation이
+          확인된 validator는 weight에서 제외됩니다. 또한 finalized checkpoint와 충돌하는 branch는 아무리 무거워도 후보가
+          아닙니다. Network에서 보이는 모든 branch를 무조건 비교하는 알고리즘으로 이해하면 안 됩니다.
+        </p>
+
+        <h3>숫자로 먼저 보는 head 선택</h3>
+        <p>
+          Justified root J의 자식이 A와 B라고 합시다. 최신 vote의 effective balance가 A subtree에 64 ETH, B subtree에
+          48 ETH를 지지하면 첫 단계에서 A를 고릅니다. A의 자식 A1과 A2가 각각 24 ETH와 40 ETH라면 A2로 내려가고,
+          더 이상 eligible child가 없으면 A2가 head입니다. 이후 32 ETH validator의 최신 message가 A2에서 B1으로
+          이동하면 예전 32 ETH를 A2 ancestor에서 빼고 B1 ancestor에 더해야 하므로 head가 B1로 바뀔 수 있습니다.
+        </p>
+        <p>
+          동률은 root의 사전식 순서 같은 protocol tie-break로 결정합니다. Tie-break는 “더 안전한 branch”를 알아내는 별도
+          판단이 아니라 모든 honest node가 같은 store에서 같은 결과를 내게 하는 결정 규칙입니다.
+        </p>
+      </div>
+
+      <div id="paper-ethereum-forkchoice-spec" className="scroll-mt-24">
+        <CitationBlock
+          source="Ethereum Consensus Specifications — Phase 0 Fork Choice"
+          href="https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/fork-choice.md"
+          citeKey={1}
+        >
+          이 규격은 Store, on_tick·on_block·on_attestation handler, latest message weight, proposer boost와 get_head를
+          정의합니다. Protocol 정본이지만 Prysm의 자료구조·cache 비용을 정하지 않으며, 실제 분석에서는 spec commit과
+          active fork를 고정해야 합니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-forkchoice-source" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.prysm.repository} citeKey={2} type="code">
+          Prysm repository는 fork-choice store와 doubly-linked-tree 최적화의 implementation 근거입니다. Moving branch의
+          package 이름이나 성능을 모든 release의 사실로 일반화하지 않고 release 또는 git SHA를 함께 기록합니다.
+        </CitationBlock>
       </div>
     </section>
   );

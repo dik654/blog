@@ -33,7 +33,7 @@ export default function StateInterface({
             별도로 셉니다.
           </>
         }
-        formula={String.raw`B_{\mathrm{deep}}=\sum_{j=1}^{F}S_j,\qquad B_{\mathrm{COW}}\approx\sum_{j\in W,\,r_j>1}S_j+B_{\mathrm{meta}}`}
+        formula={String.raw`\begin{aligned}B_{\rm deep}&=\sum_{j=1}^{F}S_j\\B_{\rm COW}&\approx\sum_{j\in W,\ r_j>1}S_j+B_{\rm meta}\end{aligned}`}
         terms={[
           {
             symbol: "F",

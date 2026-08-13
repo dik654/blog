@@ -31,7 +31,7 @@ export default function EncodeDecode({
             놓입니다. 따라서 b는 fixed part가 끝나는 16에서 시작합니다.
           </>
         }
-        formula={String.raw`o_b=\operatorname{size}(a)+\operatorname{size}(o_b)+\operatorname{size}(c)=8+4+4=16\ \mathrm{bytes}`}
+        formula={String.raw`o_b=8+4+4=16\ \mathrm{B}`}
         terms={[
           {
             symbol: "o_b",

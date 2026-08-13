@@ -1,201 +1,65 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
+const BACKENDS = [
+  ["Local keystore", "암호화된 EIP-2335 file을 host에서 복호화", "filesystem·memory·password·backup"],
+  ["Remote signer", "인증된 API로 signing request를 보내 secret을 분리", "authorization·network·timeout·remote history"],
+  ["Derived wallet", "EIP-2334 path로 mnemonic에서 validator key를 파생", "seed custody·path·account discovery"],
+] as const;
 
-export default function KeyManagement({ onCodeRef }: Props) {
+export default function KeyManagement({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="key-management" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">키 관리 (Keymanager)</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("run-client", codeRefs["run-client"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            RunClient() — 키매니저 초기화
-          </span>
-        </div>
-
-        {/* ── Keymanager 구조 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Keymanager 인터페이스 — 서명 방식 분리
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              IKeymanager 인터페이스
-            </p>
-            <div className="grid grid-cols-1 gap-y-1 text-sm text-foreground/80">
-              <span>
-                <code>FetchValidatingPublicKeys(ctx) ([][48]byte, error)</code>
-              </span>
-              <span>
-                <code>Sign(ctx, req *SignRequest) (bls.Signature, error)</code>
-              </span>
-              <span>
-                <code>
-                  SubscribeAccountChanges(chan [][48]byte) event.Subscription
-                </code>
-              </span>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                1. Local Keymanager
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>EIP-2335 keystore JSON</p>
-                <p>AES-128-CTR + Scrypt KDF</p>
-                <p>로컬 디스크에서 키 읽기</p>
-              </div>
-              <div className="mt-2 text-xs text-foreground/60">
-                <code>LocalKeymanager</code> — <code>keysCache: sync.Map</code>{" "}
-                (pubkey &rarr; secret_key)
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                2. Web3Signer Keymanager
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>외부 서명 서비스에 delegate</p>
-                <p>키가 validator 프로세스 외부</p>
-                <p>엔터프라이즈/institutional 사용</p>
-              </div>
-              <div className="mt-2 text-xs text-foreground/60">
-                <code>Web3SignerKeymanager</code> — <code>url: string</code>,{" "}
-                <code>httpClient</code>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                3. Derived Keymanager
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>HD wallet (EIP-2334)</p>
-                <p>1개 mnemonic &rarr; N개 validator key</p>
-                <p>복구 용이성</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              초기화 분기 (initKeymanager)
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                <code>Web3SignerURL != ""</code> &rarr;{" "}
-                <code>NewWeb3SignerKeymanager(url)</code>
-              </p>
-              <p>
-                <code>DerivedMode == true</code> &rarr;{" "}
-                <code>NewDerivedKeymanager(mnemonic)</code>
-              </p>
-              <p>
-                기본 &rarr; <code>NewLocalKeymanager(walletDir)</code>
-              </p>
-            </div>
-          </div>
-        </div>
+      <h2 className="mb-5 text-2xl font-bold">Keymanager는 key storage보다 signing authority를 제한하는 경계다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 코드 스냅샷의 Keymanager는{" "}
-          <strong>key discovery와 signing 방식을 추상화</strong>합니다. Local keystore, remote signer와 derived wallet 같은 구성이 같은 public-key lookup·signing boundary 뒤에 놓이지만, 실제 지원 mode와 flag는 사용 중인 Prysm release에서 확인해야 합니다.
+          Keymanager의 공통 interface는 public-key discovery와 sign operation을 제공하지만, caller가 보낸 임의 bytes에
+          서명해도 된다는 뜻은 아닙니다. Validator client는 chain identity, fork domain, duty type, validator key와 signing
+          root를 검토하고 backend는 허용된 key와 request policy를 다시 적용합니다. Key 보관 위치가 달라도 이 context는
+          사라지지 않습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-6 grid min-w-0 gap-4 md:grid-cols-3">
+        {BACKENDS.map(([title, action, boundary], index) => (
+          <article key={title} className="min-w-0 rounded-lg border border-border p-4">
+            <p className="font-mono text-[10px] font-bold text-primary">0{index + 1}</p>
+            <h3 className="mt-2 text-sm font-bold">{title}</h3>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{action}</p>
+            <p className="mt-3 border-t border-border pt-3 text-xs leading-5"><strong>추가 경계</strong> · {boundary}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("run-client", codeRefs["run-client"])} />
+        <span className="self-center text-xs text-muted-foreground">분석한 snapshot의 keymanager 초기화 확인</span>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>EIP-2335 keystore는 암호화 format이지 signing policy가 아닙니다</h3>
+        <p>
+          Keystore JSON은 KDF, checksum, cipher, public key와 derivation path를 self-describing parameter로 기록합니다.
+          복호화할 때 file에 적힌 KDF로 derived key를 만들고 checksum을 먼저 확인한 뒤 cipher를 풉니다. 특정 scrypt 비용이나
+          cipher 조합을 모든 file의 상수로 가정하지 않고 schema와 parameter를 읽어야 합니다. 복호화 성공은 해당 key로 지금
+          이 duty에 서명해도 된다는 authorization을 제공하지 않습니다.
         </p>
 
-        {/* ── EIP-2335 Keystore ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          EIP-2335 Keystore — 표준 JSON 포맷
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              EIP-2335 Keystore JSON 구조
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
-              <span>
-                <code>crypto.kdf</code> — Scrypt (dklen=32, n=262144, r=8, p=1)
-              </span>
-              <span>
-                <code>crypto.checksum</code> — SHA-256
-              </span>
-              <span>
-                <code>crypto.cipher</code> — AES-128-CTR (iv + encrypted secret
-                key)
-              </span>
-              <span>
-                <code>path</code> — <code>m/12381/3600/0/0/0</code> (EIP-2334)
-              </span>
-              <span>
-                <code>pubkey</code> — validator 공개키
-              </span>
-              <span>
-                <code>version</code> — 4
-              </span>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              복호화 흐름
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>1. user password 입력</p>
-              <p>
-                2. <code>Scrypt(password, salt)</code> &rarr; derived key (32
-                bytes)
-              </p>
-              <p>3. 처음 16 bytes를 AES key로 사용</p>
-              <p>
-                4. <code>AES-128-CTR(cipher.message, iv)</code> &rarr;
-                secret_key
-              </p>
-              <p>
-                5. 검증:{" "}
-                <code>
-                  sha256(derived_key[16:] || cipher.message) == checksum
-                </code>
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                KDF 파라미터
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  keystore JSON이 Scrypt/PBKDF2 종류와 비용 파라미터를 함께 기록
-                </p>
-                <p>복호화 비용은 파라미터·라이브러리·하드웨어에 따라 달라짐</p>
-                <p>비밀번호 추측 비용을 높이되 운영 환경에서 직접 측정 필요</p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                Prysm 처리 방식
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  시작 시 password 프롬프트 (또는{" "}
-                  <code>--wallet-password-file</code>)
-                </p>
-                <p>keystore를 검증·복호화해 서명 가능한 계정으로 로드</p>
-                <p>디스크에는 암호화된 JSON만 보관</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h3>Remote signer request의 최소 필드</h3>
         <p>
-          <strong>EIP-2335</strong> keystore는 password-based key derivation, cipher와 checksum parameter를 JSON schema로 정의해 client 간 이식을 가능하게 합니다. Scrypt와 AES-128-CTR 조합이 널리 쓰이지만 keystore의 <code>kdf.function</code>과 parameter를 실제 file에서 읽어야 하며, interchange와 slashing history migration은 별도로 수행해야 합니다.
+          Request에는 public key, signing root, duty/object type, fork information, genesis validators root, slot 또는 epoch와
+          stable duty ID를 포함하고 mutually authenticated channel에서 전송합니다. Signer receipt에는 request digest,
+          accepted/rejected policy, signature 또는 기존 signature reference를 남깁니다. 단순 HTTP 200과 유효 BLS signature도
+          올바른 duty에 대한 authorization이 없으면 충분하지 않습니다.
         </p>
 
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 Keymanager 추상화</strong> — 로컬 파일, Web3Signer, 파생
-          key(EIP-2334) 같은 backend를 같은 interface로 다룹니다. Remote signer를 사용하면 validator client가 secret key를 보관하지 않는 대신 authentication, network availability와 signer-side slashing protection이 새로운 trust boundary가 됩니다.
+        <h3>운영 선택 기준</h3>
+        <p>
+          Local signer는 network dependency가 적지만 validator host 침해 범위가 커지고, remote signer는 key isolation과 중앙
+          policy를 얻는 대신 tail latency와 correlated outage가 생깁니다. 같은 key를 active-active로 실행하지 않고 fencing
+          token이나 단일 writer lease, shared slashing history와 tested failover runbook을 둡니다. 평균 signer latency보다 slot
+          deadline 초과율과 timeout 뒤 reconciliation 가능성을 함께 측정합니다.
         </p>
       </div>
     </section>

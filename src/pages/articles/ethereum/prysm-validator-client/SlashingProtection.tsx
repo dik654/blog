@@ -1,214 +1,70 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function SlashingProtection({ onCodeRef }: Props) {
+export default function SlashingProtection({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="slashing-protection" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">슬래싱 방지 DB</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("validator-loop", codeRefs["validator-loop"])
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            Run() — 슬래싱 체크 포함
-          </span>
-        </div>
-
-        {/* ── Slashing 조건 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Slashing 조건 — proposer와 attester
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                1. Proposer Slashing
-              </p>
-              <p className="text-sm text-foreground/80">
-                같은 slot에 2개 다른 block 서명
-              </p>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                2. Attester Slashing
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  <span className="font-semibold">Double Vote</span> — 같은
-                  target epoch에 2개 다른 attestation
-                </p>
-                <p>
-                  <span className="font-semibold">Surround Vote</span> — 범위가
-                  이전 투표를 감싸거나 감싸임
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              Surround Vote 판정 예시
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-foreground/80">
-              <div>
-                <p className="text-xs text-foreground/50 mb-1">
-                  안전 (no surround)
-                </p>
-                <p>Past: source=3, target=7 / Curr: source=5, target=9</p>
-                <p className="text-xs text-foreground/50">
-                  3&lt;5 &amp;&amp; 9&lt;7 = FALSE
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-foreground/50 mb-1">
-                  슬래싱 대상 (surround!)
-                </p>
-                <p>Past: source=3, target=10 / Curr: source=5, target=8</p>
-                <p className="text-xs text-foreground/50">
-                  3&lt;5 &amp;&amp; 8&lt;10 = TRUE
-                </p>
-              </div>
-            </div>
-            <p className="text-xs text-foreground/60 mt-2">
-              양방향 체크 — new가 old를 감쌈 + old가 new를 감쌈
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                슬래싱 페널티
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  즉시: 현재 fork의 penalty quotient로 effective balance에서
-                  계산
-                </p>
-                <p>epoch offset 후: proportional multiplier 적용</p>
-                <p>
-                  강제 exit와 withdrawable epoch 지연, 상관 패널티가 함께 적용
-                </p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                운영 위험
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  같은 키를 두 validator client에서 동시에 가동하면 충돌 서명
-                  위험
-                </p>
-                <p>key migration 전에 slashing protection interchange를 검증</p>
-                <p>
-                  과거 사건 수는 실시간 관측 데이터이지 프로토콜 상수가 아님
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <h2 className="mb-5 text-2xl font-bold">Slashing protection은 check와 record를 서명 권한 앞의 원자적 gate로 만든다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Slashing protection은 proposer가 같은 slot에 서로 다른 block을 서명하는 일과 attester의 double vote·surround vote를 막습니다. Surround condition은 두 source-target interval이 단순히 겹치는지가 아니라 하나가 다른 하나를 엄격히 포함하는지로 판정합니다. Key를 옮기거나 active/standby validator client를 운영할 때도 이 signing history의 연속성을 유지해야 합니다.
+          Proposer는 같은 slot에 서로 다른 block을 서명하면 안 되고, attester는 같은 target epoch에 서로 다른 vote를 내거나
+          과거 vote interval을 감싸는 vote를 내면 안 됩니다. Database는 최근 숫자 하나만 저장하는 cache가 아니라 과거 signing
+          intent와 root를 근거로 새 request를 허용하거나 거부하는 안전 상태입니다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="두 attestation 가운데 하나가 다른 하나를 surround하는지 어떻게 판정할까요?"
+        idea="각 vote를 source epoch에서 target epoch까지의 열린 방향 interval로 보고, 한 interval의 양 끝이 다른 interval 바깥에 엄격히 놓이는지 양방향으로 검사합니다."
+        formula={String.raw`(s_1<s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)`}
+        terms={[
+          { symbol: "s_1,t_1", name: "첫 투표 구간", description: "기존 또는 첫 attestation의 source·target epoch" },
+          { symbol: "s_2,t_2", name: "두 번째 투표 구간", description: "새 또는 두 번째 attestation의 source·target epoch" },
+          { symbol: "<", name: "엄격한 에폭 순서", description: "epoch의 엄격한 순서; 같은 endpoint는 surround 조건이 아님" },
+        ]}
+        assumptions={[
+          "같은 validator key가 서명한 valid attestation data를 비교합니다.",
+          "같은 target epoch에서 다른 data/root를 서명하는 double vote는 이 식과 별도로 검사합니다.",
+          "DB가 없다는 사실은 과거 vote가 없다는 증거가 아니므로 빈 history로 fail-open하지 않습니다.",
+        ]}
+        interpretation="기존 vote가 3→10이고 새 vote가 5→8이면 3<5<8<10이므로 surround vote입니다. 기존 3→7과 새 5→9는 interval이 교차하지만 포함하지 않으므로 이 조건만으로는 surround가 아닙니다."
+      />
+
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("validator-loop", codeRefs["validator-loop"])} />
+        <span className="self-center text-xs text-muted-foreground">분석한 snapshot의 서명 전 보호 경로 확인</span>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>안전한 transaction 경계</h3>
+        <ol>
+          <li>Key별 lock 또는 serializable transaction을 잡고 기존 proposal·attestation history를 읽습니다.</li>
+          <li>같은 slot의 다른 block, 같은 target의 다른 signing root와 양방향 surround를 검사합니다.</li>
+          <li>허용된 signing intent와 request digest를 durable하게 기록합니다.</li>
+          <li>Signer에 동일 digest를 보내고 signature receipt를 intent와 연결합니다.</li>
+          <li>Timeout이면 기존 intent/root 상태를 조회해 동일 root만 조정하고 새 root로 blind retry하지 않습니다.</li>
+        </ol>
+        <p>
+          Check와 record 사이에 다른 worker가 들어오면 두 request가 모두 “안전” 판정을 받은 뒤 conflicting signature를 만들 수
+          있습니다. 따라서 process-local mutex만으로는 다중 replica나 remote signer를 막지 못하며 single-writer fencing 또는
+          signer-side atomic protection까지 authority boundary를 이어야 합니다.
         </p>
 
-        {/* ── Slashing DB 구현 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Slashing Protection DB — 구현 상세
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              SlashingProtectionDB 구조
-            </p>
-            <p className="text-sm text-foreground/80 mb-2">
-              <code>db: *bolt.DB</code> — EIP-3076 compatible 독립 DB file
-            </p>
-            <p className="text-xs font-bold text-foreground/70 mb-1">
-              버킷 구조 (pubkeys_bucket)
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
-              <span>
-                <code>latest_signed_block_slot</code>
-              </span>
-              <span>
-                <code>min_source_epoch</code>
-              </span>
-              <span>
-                <code>max_target_epoch</code>
-              </span>
-              <span>
-                <code>attestations</code> — 서명 안전성에 필요한 history
-              </span>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              CheckAttestation — 서명 전 체크
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                1. <span className="font-semibold">Min source check</span> —{" "}
-                <code>data.Source.Epoch &lt; min_source_epoch</code> &rarr;{" "}
-                <code>ErrSlashable</code>
-              </p>
-              <p>
-                2. <span className="font-semibold">Max target check</span> —{" "}
-                <code>data.Target.Epoch &lt;= max_target_epoch</code>이면 같은
-                epoch의 signingRoot 비교 &rarr; 다르면{" "}
-                <code>ErrDoubleVote</code>
-              </p>
-              <p>
-                3.{" "}
-                <span className="font-semibold">Surround check (pairwise)</span>{" "}
-                — past가 현재를 감쌈 &rarr; <code>ErrSurroundingVote</code> /
-                현재가 past를 감쌈 &rarr; <code>ErrSurroundedVote</code>
-              </p>
-              <p>
-                4. 모두 통과 &rarr; <code>nil</code> (safe)
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              RecordAttestation — 서명 후 저장
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                <code>db.Update()</code> 트랜잭션 내에서 history에 attestation
-                추가
-              </p>
-              <p>
-                <code>min_source_epoch</code> / <code>max_target_epoch</code>{" "}
-                업데이트 후 <code>history.Save(tx, pubKey)</code>
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              백업 중요성
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                DB 손실 &rarr; 새 validator처럼 시작 &rarr; double-signing 위험
-              </p>
-              <p>검증한 backup과 EIP-3076 interchange를 별도 보관</p>
-              <p>migration 시 EIP-3076 JSON export 먼저</p>
-            </div>
-          </div>
-        </div>
+        <h3>Migration은 key와 history를 함께 옮깁니다</h3>
         <p>
-          Validator client는 서명 전에 slashing-protection database에서 같은 slot·target epoch의 기존 record와 양방향 surround condition을 확인합니다. Database를 잃으면 과거에 무엇을 서명했는지 판단할 수 없으므로 즉시 빈 database로 재시작하지 말고 backup 또는 신뢰할 수 있는 interchange history를 복구해야 합니다.
+          EIP-3076 interchange는 signed block·attestation history를 다른 client로 옮길 공통 format을 제공합니다. Source
+          validator를 중지하고 export snapshot을 고정한 뒤 destination에 import·검증하고, key별 highest/lowest epoch와 sample
+          root가 맞는지 확인한 다음에만 destination signing을 엽니다. Source와 destination이 겹쳐 실행되는 시간을 만들지
+          않습니다.
         </p>
 
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 서라운드 투표 방지</strong> — source/target 범위가 이전
-          vote를 엄격히 감싸거나 감싸이면 slashable합니다. <code>SlashingProtectionDB</code>가 이 interval과 double-vote condition을 검사하며, validator 이동 시에는 EIP-3076 interchange format으로 signing history를 함께 옮깁니다.
+        <h3>Adversarial release gate</h3>
+        <p>
+          동일 slot의 다른 block, 같은 target의 다른 vote, 양방향 surround, duplicate same-root, concurrent workers,
+          signer timeout-after-success, DB crash, stale replica와 EIP-3076 migration을 base/candidate에 주입합니다. Allow/deny,
+          persisted intent, signature count와 restart decision이 같아야 하며, missed-duty 개선은 이 안전성 gate 뒤에 비교합니다.
         </p>
       </div>
     </section>

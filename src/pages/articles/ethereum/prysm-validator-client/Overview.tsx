@@ -1,109 +1,81 @@
-import ContextViz from "./viz/ContextViz";
-import ValidatorClientViz from "./viz/ValidatorClientViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
+import PrysmConsensusViz from "../prysm-consensus-viz";
 
-export default function Overview({
-  onCodeRef: _onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Validator client는 duty·key·slashing protection을 한 루프로 묶는다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
+      <h2 className="mb-5 text-2xl font-bold">Validator client는 key를 가진 자동화 도구가 아니라 deadline 안에서 한 번만 안전하게 서명하는 실행기다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Validator는 모든 slot에 같은 일을 하지 않습니다. Beacon node가 계산한 proposer·attester·aggregator·sync-committee
+          duty를 받아 정해진 시간에 수행하고, fork domain과 signing root를 검토한 뒤 local key 또는 remote signer에 서명을
+          요청합니다. 이때 잘못된 재시도 한 번이 같은 slot의 conflicting block이나 같은 target epoch의 double vote를 만들어
+          slashable evidence가 될 수 있습니다.
+        </p>
+        <p>
+          이 글은 <strong>duty 조회→slot deadline→signing context→keymanager trust boundary→slashing-protection
+          transaction→submission receipt→failover</strong> 순서로 내려갑니다. Beacon state·head·finality 계산은
+          <Link to="/blockchain/prysm"> Prysm 개요</Link>와 세부 글이 소유하며, validator client는 그 결과를 검증 가능한
+          signing request로 바꾸는 경계만 소유합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이 아티클에서는 검증자 클라이언트의 슬롯 틱 루프, 역할 분배, 슬래싱
-          보호 메커니즘을 코드 수준으로 추적한다.
+
+      <ContentBoundary article="prysm-validator-client" />
+      <PrysmConsensusViz mode="validator" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>핵심 아이디어: duty ID와 signing history를 같은 원자적 결정으로 묶습니다</h3>
+        <p>
+          최소 duty identity에는 validator public key/index, duty type, slot 또는 source·target epoch, fork domain과 signing
+          root가 들어갑니다. 서명 전에 이 identity를 slashing-protection history와 비교하고, 허용된 signing root를 기록하는
+          시점과 실제 signature receipt의 관계를 명시해야 합니다. “Timeout이 났으니 다른 signer에서 다시 시도”하는 방식은 첫
+          요청이 성공했는지 모르는 상태에서 두 번째 signature를 만들 수 있으므로 안전하지 않습니다.
+        </p>
+        <p>
+          예를 들어 slot 100의 proposal root R1을 remote signer에 보낸 뒤 응답만 잃었다면, 같은 stable duty ID로 R1의
+          receipt를 조회하거나 동일 root 재요청만 허용해야 합니다. R2로 바꿔 blind retry하면 두 signed block이 network에
+          보이는 순간 proposer slashing 조건을 만족할 수 있습니다.
         </p>
 
-        {/* ── Validator Client 분리 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Validator Client — beacon-chain과 분리 프로세스
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                beacon-chain (노드)
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>P2P 네트워킹, state 관리, fork choice</p>
-                <p>validator 키 보유 안 함 — 보안에 덜 민감</p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                validator (검증자 클라이언트)
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>validator 개인키 보유 — 보안 critical</p>
-                <p>attestation/block 서명 + slashing protection DB</p>
-                <p>beacon-chain에 gRPC 연결</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              분리의 이점
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-foreground/80">
-              <div>
-                <span className="font-semibold text-foreground/70">
-                  키 노출 최소화
-                </span>{" "}
-                — beacon-chain에 키 없음 → P2P/RPC 공격 무력
-              </div>
-              <div>
-                <span className="font-semibold text-foreground/70">
-                  독립 스케일링
-                </span>{" "}
-                — 1개 beacon-chain ↔ N개 validator fleet
-              </div>
-              <div>
-                <span className="font-semibold text-foreground/70">
-                  키 관리 유연성
-                </span>{" "}
-                — validator만 재시작, beacon-chain 유지보수 중에도 서명 가능
-              </div>
-              <div>
-                <span className="font-semibold text-foreground/70">
-                  Remote signer
-                </span>{" "}
-                — Web3Signer / 하드웨어 wallet 통합
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              네트워크 아키텍처
-            </p>
-            <p className="text-sm text-foreground/80 font-mono">
-              EL (Reth) &larr; Engine API &rarr; beacon-chain &larr; gRPC &rarr;
-              validator
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs text-foreground/60 mt-2">
-              <span>
-                <code>
-                  beacon-chain --execution-endpoint=http://localhost:8551
-                </code>
-              </span>
-              <span>
-                <code>validator --beacon-rpc-provider=localhost:4000</code>
-              </span>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          Prysm은 beacon node와 validator client를 별도 binary로 운영할 수 있다.
-          Consensus state와 P2P를 처리하는 node에서 signing key 경계를 분리하므로,
-          remote signer와 독립 배포·업데이트 같은 운영 구성을 선택하기 쉽다.
+        <h3>Local key와 remote signer는 위험이 없어지는 대신 위치가 달라집니다</h3>
+        <p>
+          Local keymanager는 secret key를 validator host에서 복호화하므로 file permission, memory exposure와 backup이 핵심
+          경계입니다. Remote signer는 secret을 분리하지만 authentication, authorization, network partition, signer-side
+          slashing history와 timeout reconciliation이 새 dependency가 됩니다. 어느 방식이든 beacon node가 준 object를 그대로
+          서명하지 않고 domain·root·duty·chain identity를 확인해야 합니다.
         </p>
       </div>
-      <div className="not-prose mt-6">
-        <ValidatorClientViz />
+
+      <div id="paper-ethereum-validator-spec" className="scroll-mt-24">
+        <CitationBlock
+          source="Ethereum Consensus Specifications — Honest Validator"
+          href="https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/validator.md"
+          citeKey={1}
+        >
+          이 규격은 validator가 proposer·attester·aggregator duty를 언제 어떻게 수행하는지 설명합니다. Duty timing과 head
+          선택은 active fork·network configuration에 귀속하며 특정 client의 retry·key storage 구현을 정하지 않습니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-eip3076" className="scroll-mt-24">
+        <CitationBlock
+          source="EIP-3076 — Slashing Protection Interchange Format"
+          href="https://eips.ethereum.org/EIPS/eip-3076"
+          citeKey={2}
+        >
+          EIP-3076은 validator key를 client 사이에 옮길 때 signed block과 attestation history를 교환하는 JSON format을
+          정의합니다. 파일을 import했다는 사실만으로 source DB가 완전히 멈췄거나 active/standby 동시 서명이 차단됐다는 뜻은
+          아닙니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-validator-source" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.prysm.repository} citeKey={3} type="code">
+          Prysm repository는 duty loop, keymanager와 slashing-protection database의 implementation 근거입니다. 실제 flag,
+          schema와 backend는 release에 따라 바뀔 수 있으므로 binary version·SHA를 함께 기록합니다.
+        </CitationBlock>
       </div>
     </section>
   );

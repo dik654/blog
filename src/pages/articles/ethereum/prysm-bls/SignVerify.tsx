@@ -31,7 +31,7 @@ export default function SignVerify({
             key와 message point의 관계와 비교할 수 있습니다.
           </>
         }
-        formula={String.raw`PK=sk\,G_1,\qquad \sigma=sk\,H(m),\qquad e(G_1,\sigma)=e(PK,H(m))`}
+        formula={String.raw`\begin{aligned}PK&=skG_1\\\sigma&=skH(m)\\e(G_1,\sigma)&=e(PK,H(m))\end{aligned}`}
         terms={[
           {
             symbol: "sk",

@@ -1,213 +1,32 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function JustificationFinalization({ onCodeRef }: Props) {
+export default function JustificationFinalization({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="justification-finalization" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Justification & Finalization</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef(
-                "process-justification",
-                codeRefs["process-justification"],
-              )
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            ProcessJustification()
-          </span>
-        </div>
-
-        {/* ── Casper FFG ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Casper FFG — 2-phase finality
-        </h3>
-        <div className="my-4 not-prose space-y-3">
-          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
-            <p className="font-semibold text-sm text-indigo-400 mb-2">
-              Casper FFG (Friendly Finality Gadget)
-            </p>
-            <p className="text-xs text-foreground/60 mb-3">
-              Ethereum 2.0의 economic finality 메커니즘 — "Casper the Friendly
-              Finality Gadget" (Vitalik, 2017)
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-              <div className="rounded border border-border p-2">
-                <strong className="text-indigo-400">
-                  Justified checkpoint
-                </strong>
-                <span className="text-foreground/60">
-                  {" "}
-                  — 2/3+ validators가 지지
-                </span>
-              </div>
-              <div className="rounded border border-border p-2">
-                <strong className="text-indigo-400">
-                  Finalized checkpoint
-                </strong>
-                <span className="text-foreground/60">
-                  {" "}
-                  — justified의 supermajority link
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
-              <p className="font-semibold text-sm text-sky-400 mb-2">
-                FFG Finalization Rules
-              </p>
-              <div className="space-y-2 text-xs text-foreground/70">
-                <div>
-                  <strong>Rule 1:</strong> N과 N+1이 모두 justified + N → N+1
-                  supermajority link (연속 2 epoch)
-                </div>
-                <div>
-                  <strong>Rule 2:</strong> N, N+1, N+2가 justified + N → N+2
-                  supermajority link
-                </div>
-                <div className="text-foreground/50">
-                  Supermajority link = 전체 active balance 2/3+ validator가
-                  source=N, target=M 투표
-                </div>
-              </div>
-            </div>
-            <div className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
-              <p className="font-semibold text-sm text-violet-400 mb-2">
-                BeaconState 관련 필드
-              </p>
-              <div className="space-y-1 text-xs">
-                <div>
-                  <code className="text-violet-300">
-                    justification_bits: Bitvector[4]
-                  </code>{" "}
-                  <span className="text-foreground/60">
-                    — 최근 4 epoch 상태
-                  </span>
-                </div>
-                <div>
-                  <code className="text-violet-300">
-                    previous_justified_checkpoint: Checkpoint
-                  </code>
-                </div>
-                <div>
-                  <code className="text-violet-300">
-                    current_justified_checkpoint: Checkpoint
-                  </code>
-                </div>
-                <div>
-                  <code className="text-violet-300">
-                    finalized_checkpoint: Checkpoint
-                  </code>
-                </div>
-              </div>
-              <div className="mt-2 text-xs text-foreground/50">
-                bits[0]=epoch-4 (oldest) ... bits[3]=epoch-1 (recent)
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          Casper FFG는 supermajority link로 checkpoint를 먼저 justified하고 protocol condition을 만족한 이전 justified checkpoint를 finalized합니다. Conflicting finality를 만들려면 최소 3분의 1 voting weight가 slashable vote를 해야 하지만 경제적 금액은 현재 staked balance, penalty rule과 market price에 따라 달라집니다.
-        </p>
-
-        {/* ── processJustification 구현 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          processJustificationAndFinalization 로직
-        </h3>
-        <div className="my-4 not-prose space-y-3">
-          <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
-            <p className="font-semibold text-sm text-indigo-400 mb-3">
-              <code>ProcessJustificationAndFinalization(state)</code>
-            </p>
-            <p className="text-xs text-foreground/50 mb-3">
-              Guard: <code>currentEpoch &lt;= GENESIS_EPOCH + 1</code> → 첫 2
-              epoch skip
-            </p>
-            <div className="space-y-2 text-xs text-foreground/70">
-              {[
-                {
-                  step: "1",
-                  label: "참여 잔액 계산",
-                  detail:
-                    "getTotalActiveBalance + getAttestingBalance(previousEpoch, TARGET) / (currentEpoch, TARGET)",
-                },
-                {
-                  step: "2",
-                  label: "JustificationBits shift",
-                  detail:
-                    "기존 bits를 한 칸 shift — bits[3] → bits[2] → ... + newBits[3] = false",
-                },
-                {
-                  step: "3",
-                  label: "이전 epoch justified 체크",
-                  detail:
-                    "previousTargetBalance * 3 >= totalActiveBalance * 2 → 2/3+ supermajority → newBits[1] = true",
-                },
-                {
-                  step: "4",
-                  label: "현재 epoch justified 체크",
-                  detail:
-                    "currentTargetBalance * 3 >= totalActiveBalance * 2 → newBits[0] = true",
-                },
-              ].map((s) => (
-                <div key={s.step} className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-indigo-500/20 text-indigo-400 shrink-0">
-                    {s.step}
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground/80">
-                      {s.label}
-                    </p>
-                    <p className="text-foreground/60">
-                      <code>{s.detail}</code>
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
-            <p className="font-semibold text-sm text-emerald-400 mb-3">
-              Finalization 체크 (3 Rules)
-            </p>
-            <div className="space-y-2 text-xs text-foreground/70">
-              <div className="rounded border border-border p-2">
-                <strong>Rule 1:</strong> <code>bits[1:4]</code> all true +{" "}
-                <code>oldJustified.Epoch + 3 == currentEpoch</code> → N-3
-                finalized
-              </div>
-              <div className="rounded border border-border p-2">
-                <strong>Rule 2:</strong> <code>bits[1:3]</code> all true +{" "}
-                <code>oldJustified.Epoch + 2 == currentEpoch</code> → N-2
-                finalized
-              </div>
-              <div className="rounded border border-border p-2">
-                <strong>Rule 3:</strong> <code>bits[0:2]</code> all true +{" "}
-                <code>previousJustified.Epoch + 1 == currentEpoch</code> →
-                previousJustified finalized{" "}
-                <span className="text-foreground/50">
-                  (정상 동작 시 대부분 이 rule)
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          Epoch processing은 previous·current target attesting balance가 threshold를 넘는지 계산하고 <code>justification_bits</code>를 shift해 recent justification pattern을 기록합니다. Finalization은 단순히 “연속 두 epoch” 하나만 보는 것이 아니라 specification에 정의된 여러 bit pattern과 checkpoint-distance condition을 적용합니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 2/3 슈퍼 매저리티</strong> — 이전/현재 에폭의 타겟 투표
-          balance가 active balance의 3분의 2 threshold를 넘으면 candidate checkpoint를 justified합니다. Four-bit <code>JustificationBits</code>와 previous/current justified checkpoint의 epoch 관계를 함께 사용해 specification의 finalization cases를 판정합니다.
-        </p>
+      <h2 className="mb-6 text-2xl font-bold">Justification은 weight threshold이고 finalization은 checkpoint pattern이다</h2>
+      <div className="not-prose mb-5 flex flex-wrap items-center gap-3"><CodeViewButton onClick={() => onCodeRef("process-justification", codeRefs["process-justification"])} /><span className="text-xs text-muted-foreground">Prysm checkpoint transition seam</span></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Validator 수를 세는 대신 effective balance를 셉니다. 이전·현재 epoch의 timely target에 참여했고 slashed되지 않은 validator weight를 전체 active balance와 비교해 checkpoint를 justified합니다. 그 뒤 최근 justification pattern과 checkpoint epoch 거리 조건이 맞으면 더 오래된 checkpoint를 finalized로 옮깁니다.</p>
+      </div>
+      <ExplainedFormula
+        question="Target vote가 checkpoint를 justify할 만큼 충분한지 어떻게 판정할까요?"
+        idea={<>분수를 부동소수점으로 계산하지 않고 참여 weight의 세 배와 전체 active weight의 두 배를 정수로 비교합니다.</>}
+        formula={String.raw`3A_{\mathrm{target}} \ge 2A_{\mathrm{active}}`}
+        terms={[
+          { symbol: "A_{\mathrm{target}}", name: "target-attesting balance", description: "해당 epoch target에 timely하게 참여한 unslashed validator의 effective balance 합이며 단위는 Gwei입니다." },
+          { symbol: "A_{\mathrm{active}}", name: "total active balance", description: "그 epoch의 활성 validator effective balance 총합이며 같은 Gwei 단위를 씁니다." },
+        ]}
+        assumptions={["두 합은 같은 epoch·validator registry snapshot과 fork 규칙에서 계산합니다.", "Signature, committee membership, target root와 timeliness를 이미 검증한 participation만 셉니다."]}
+        interpretation="Active balance가 96 Gwei인 작은 예에서 target 참여가 64 Gwei면 192≥192로 threshold를 만족하지만 63 Gwei면 189<192로 실패합니다. 이 threshold 하나만으로 즉시 finalization되는 것은 아닙니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Justification bits는 최근 역사를 압축한 state입니다</h3>
+        <p>첫 두 epoch의 genesis stub 예외를 건너뛴 뒤 previous/current target balance를 계산하고, 기존 bitvector를 이동해 새 결과를 기록합니다. Finalization은 old previous/current justified checkpoint와 여러 bit pattern의 epoch 거리를 함께 검사합니다. 따라서 “두 epoch가 2/3이면 무조건 final”이라는 요약은 실패 recovery pattern을 설명하지 못합니다.</p>
+        <h3>Finalized는 현재 head와 다른 시간축입니다</h3>
+        <p>새 attestation으로 fork-choice head가 같은 slot 안에서도 바뀔 수 있지만 finalized checkpoint는 epoch-level supermajority pattern으로 움직입니다. API·cache·pruning에서 head·justified/safe·finalized identity를 명시하지 않으면 reorg 중 서로 다른 branch state를 섞게 됩니다.</p>
       </div>
     </section>
   );

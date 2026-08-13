@@ -30,7 +30,7 @@ export default function Merkleize({
             바꿉니다.
           </>
         }
-        formula={String.raw`h_{i}^{(k+1)}=\operatorname{SHA256}\!\left(h_{2i}^{(k)}\,\|\,h_{2i+1}^{(k)}\right),\qquad d=\lceil\log_2 L\rceil`}
+        formula={String.raw`\begin{aligned}h_i^{(k+1)}&=H\!\left(h_{2i}^{(k)}\|h_{2i+1}^{(k)}\right)\\d&=\lceil\log_2L\rceil\end{aligned}`}
         terms={[
           {
             symbol: "h_i^{(k)}",

@@ -1,126 +1,40 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import type { CodeRef } from "@/components/code/types";
 import ContextViz from "./viz/ContextViz";
 import EngineAPIFlowViz from "./viz/EngineAPIFlowViz";
-import { CitationBlock } from "@/components/ui/citation";
-import { OFFICIAL_SOURCES } from "@/content/official-sources";
-import type { CodeRef } from "@/components/code/types";
 
-export default function Overview({
-  onCodeRef: _onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Engine API는 consensus client와 execution client의 상태를 맞춘다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
+      <h2 className="mb-6 text-2xl font-bold">Engine API는 합의 결과와 EVM 실행 결과를 맞추는 상태 있는 경계다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">Prysm은 어떤 beacon block을 head·safe·finalized로 볼지 결정하지만 transaction을 EVM으로 실행하지 않습니다. 반대로 execution client는 payload의 state root와 receipts root를 계산할 수 있지만 validator vote로 canonical chain을 고르지 않습니다. Engine API는 이 두 판단을 합치지 않은 채 검증·chain pointer 갱신·다음 payload 생성을 순서대로 조정합니다.</p>
+        <p>이 글은 JSON-RPC 메서드 이름을 외우는 대신 <strong>수신 payload 검증 → fork-choice 적용 → build handle 발급 → payload 회수</strong>를 block hash 하나로 추적합니다. 먼저 <Link to="/blockchain/prysm">Prysm 전체 지도</Link>의 consensus/execution owner 경계를 짧게 재사용하고, 이 글에서는 method version·status·latestValidHash·payloadId·JWT가 만드는 Engine 전용 계약만 정의합니다.</p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          PoS Ethereum에서는 합의 계층(CL)이 정한 체인 선택과 실행 계층(EL)의
-          상태 전이가 분리되어 있다. Engine API는 두 계층이 서로의 내부 구현에
-          의존하지 않고 블록을 검증하고 제안하도록 만드는 인증된 JSON-RPC
-          경계다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          문제 — 체인 선택과 실행 유효성은 같은 판단이 아니다
-        </h3>
-        <p className="leading-7">
-          CL은 head·safe·finalized 지점을 알고 있지만 EVM 실행 결과는 계산하지
-          않는다. 반대로 EL은 트랜잭션을 실행할 수 있지만 어떤 포크를 합의
-          체인으로 선택할지는 결정하지 않는다. 따라서 호출 하나의 성공 여부가
-          아니라 <strong>포크별 메서드 버전, payload 상태, 빌드 작업</strong>을
-          나눠 추적해야 한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          아이디어 — 세 메서드 계열로 검증·선택·생성을 연결
-        </h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">
-              <code>engine_newPayloadVn</code>
-            </h4>
-            <p className="text-xs text-muted-foreground">
-              수신한 실행 페이로드와 포크별 부가 입력을 EL에서 검증하고{" "}
-              <code>PayloadStatus</code>를 돌려준다.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">
-              <code>engine_forkchoiceUpdatedVn</code>
-            </h4>
-            <p className="text-xs text-muted-foreground">
-              head·safe·finalized를 갱신하고 attributes가 있을 때만 payload 빌드
-              작업과 id를 만든다.
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">
-              <code>engine_getPayloadVn</code>
-            </h4>
-            <p className="text-xs text-muted-foreground">
-              앞서 받은 payload id로 현재 준비된 후보와 포크별 부가 결과를
-              회수한다.
-            </p>
-          </div>
-        </div>
-        <p className="leading-7">
-          여기서 <code>Vn</code>은 고정된 하나의 버전이 아니다. 포크가 추가되면
-          요청·응답 필드가 바뀌므로 CL은 활성 포크에 맞는 메서드 버전을 선택해야
-          한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          구현 경계 — JWT 인증과 상태 응답
-        </h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">인증 채널</h4>
-            <ul className="text-xs space-y-1 text-muted-foreground">
-              <li>CL과 EL이 256-bit JWT secret을 공유</li>
-              <li>
-                <code>HS256</code> 서명과 필수 <code>iat</code> claim 검증
-              </li>
-              <li>
-                EL은 현재 시각 기준 ±60초 범위의 <code>iat</code>를 수용하도록
-                권고
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">응답 해석</h4>
-            <ul className="text-xs space-y-1 text-muted-foreground">
-              <li>
-                <code>VALID</code>·<code>INVALID</code>·<code>SYNCING</code>{" "}
-                등을 구분
-              </li>
-              <li>
-                <code>latestValidHash</code>와 validation error를 함께 처리
-              </li>
-              <li>
-                transport 오류, 인증 실패, 실행 상태를 같은 retry로 뭉치지 않음
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <CitationBlock {...OFFICIAL_SOURCES.ethereum.engineApi} citeKey={1}>
-          Engine API 사양은 메서드를 포크별 버전으로 정의한다. 이 글도 특정 V3
-          호출을 전체 API로 일반화하지 않고 메서드 계열의 역할을 기준으로
-          설명한다.
-        </CitationBlock>
-        <CitationBlock
-          {...OFFICIAL_SOURCES.ethereum.engineAuthentication}
-          citeKey={2}
-        >
-          인증 사양은 256-bit secret과 HS256, 필수 iat를 정의하며 EL이 ±60초
-          범위를 허용하도록 권고한다. 고정 5초 만료 규칙은 사양이 아니다.
-        </CitationBlock>
+      <ContentBoundary article="prysm-engine-api" />
+      <ContextViz />
+      <EngineAPIFlowViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>메서드는 API 전체가 아니라 각각 독립적으로 versioning됩니다</h3>
+        <p><code>engine_newPayloadVn</code>, <code>engine_forkchoiceUpdatedVn</code>, <code>engine_getPayloadVn</code>의 <code>n</code>은 같은 숫자로 함께 올라가는 제품 버전이 아닙니다. Parameter·response·behavior·structure field 중 하나가 바뀌면 해당 메서드나 구조의 suffix가 올라가므로, client는 활성 execution fork와 <code>engine_exchangeCapabilities</code> 결과를 함께 보아 지원 조합을 선택해야 합니다.</p>
+        <p>예를 들어 Prague 계열 <code>newPayloadV4</code>는 execution payload 외에 expected blob versioned hashes, parent beacon block root, execution requests를 받습니다. V3 호출의 성공 경험을 V4 입력 검증으로 확대할 수 없고, 지원하지 않는 fork는 typed error로 중단해야 합니다.</p>
+        <h3>전송 성공과 protocol 성공을 분리합니다</h3>
+        <p>HTTP 200 또는 JSON-RPC result는 요청을 처리했다는 transport evidence일 뿐 payload가 canonical·valid하다는 뜻이 아닙니다. Payload status, <code>latestValidHash</code>, fork-choice pointer, <code>payloadId</code>와 request method/version을 한 receipt로 남겨야 timeout·sync·invalid branch·restart를 서로 다른 복구 경로로 보낼 수 있습니다.</p>
+        <h3>JWT는 caller authentication이지 암호화나 합의 증명이 아닙니다</h3>
+        <p>Engine endpoint는 기본 8551 포트의 별도 authenticated interface이며, CL과 EL은 256-bit secret으로 HS256 JWT를 사용합니다. 필수 <code>iat</code>는 EL 현재 시각에서 보통 ±60초 범위를 권고하므로, 시계가 75초 어긋난 노드는 올바른 secret을 가지고도 거절될 수 있습니다. JWT는 network sniffing이나 replay를 막도록 설계된 암호화 채널이 아니므로 host·network isolation과 secret file permission이 별도로 필요합니다.</p>
       </div>
-      <div className="not-prose mt-6">
-        <EngineAPIFlowViz />
+      <div id="paper-engine-api-spec" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">공식 규격 읽기 · Engine API</p>
+        <p className="mt-2 text-sm font-semibold">Ethereum Execution APIs — Engine namespace</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 CL과 EL의 독립 구현이 method version, message ordering, payload status와 build lifecycle을 같은 wire contract로 해석하는 것입니다. 규격은 protocol behavior를 정의하지만 Prysm 내부 package나 특정 EL의 latency·storage를 정하지 않습니다. 이 글은 2026-08-14 main commit 742d45d를 기준으로 읽었으며 배포 시에는 사용한 commit을 다시 고정해야 합니다.</p>
+        <a href="https://github.com/ethereum/execution-apis/tree/main/src/engine" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">Engine API 공식 규격 보기</a>
+      </div>
+      <div id="paper-engine-authentication" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">공식 규격 읽기 · authentication</p>
+        <p className="mt-2 text-sm font-semibold">Engine API Authentication</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">256-bit shared secret, HS256, 필수 iat와 공격 범위를 정의합니다. Caller가 인증됐다는 사실을 payload validity·confidentiality·replay protection으로 일반화하면 안 됩니다.</p>
+        <a href="https://github.com/ethereum/execution-apis/blob/main/src/engine/authentication.md" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">Authentication 규격 보기</a>
       </div>
     </section>
   );

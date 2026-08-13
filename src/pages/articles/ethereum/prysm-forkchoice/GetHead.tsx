@@ -1,125 +1,61 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function GetHead({ onCodeRef }: Props) {
+export default function GetHead({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="get-head" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">GetHead & 가중치 전파</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("fc-head", codeRefs["fc-head"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            computeHead()
-          </span>
-        </div>
+      <h2 className="mb-5 text-2xl font-bold">GetHead는 eligible tree를 만든 뒤 가장 무거운 자식을 반복 선택한다</h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("get-head", codeRefs["get-head"])} />
+        <span className="self-center text-xs text-muted-foreground">분석한 snapshot의 head traversal 확인</span>
+      </div>
 
-        {/* ── GetHead 알고리즘 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          GetHead — tie-breaking + proposer boost
-        </h3>
-        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              GetHead 알고리즘
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>
-                <code>justified_checkpoint.Root</code>에서 시작 →{" "}
-                <code>justifiedNode</code> 조회
-              </li>
-              <li>
-                <code>head.Children</code> 순회하며 최대 <code>Weight</code>{" "}
-                자식 선택
-              </li>
-              <li>
-                동률 시 block root 순서를 사용해 모든 노드가 같은 자식을 고르는
-                결정론적 tie-break 적용
-              </li>
-              <li>
-                리프 도달 시 <code>head.Root</code> 반환
-              </li>
-            </ol>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-lg border bg-card p-4">
-              <div className="text-xs font-semibold text-muted-foreground mb-2">
-                시간 복잡도
-              </div>
-              <p className="text-sm">
-                BestChild/BestDescendant 캐시를 활용하며, 실제 비용은 갱신된
-                vote와 트리의 깊이·분기 수에 좌우된다.
-              </p>
-            </div>
-            <div className="rounded-lg border bg-card p-4">
-              <div className="text-xs font-semibold text-muted-foreground mb-2">
-                호출 시점
-              </div>
-              <ul className="text-sm space-y-1">
-                <li>매 slot 시작 (attestation 대상 결정)</li>
-                <li>RPC head 쿼리</li>
-                <li>
-                  Engine API <code>forkchoiceUpdated</code>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <ExplainedFormula
+        question="한 node의 child 가운데 다음에 내려갈 branch를 어떤 score로 정할까요?"
+        idea="각 eligible child의 subtree를 지지하는 active·unslashed validator 최신 balance를 합하고, 조건을 만족한 현재 slot의 proposer boost가 그 subtree에 있으면 임시 score를 더합니다."
+        formula={String.raw`\begin{aligned}W(n)&=\sum_{i\in A\setminus E}b_i\,\mathbf{1}[n\preceq r_i]\\&\qquad+B\,\mathbf{1}[n\preceq r_{boost}]\end{aligned}`}
+        terms={[
+          { symbol: "A", name: "활성 검증자 집합", description: "기준 checkpoint state의 active validator 집합" },
+          { symbol: "E", name: "이중 투표 검증자 집합", description: "확인된 equivocating validator 집합" },
+          { symbol: "b_i", name: "검증자 잔액", description: "validator i의 effective balance(Gwei)" },
+          { symbol: "r_i", name: "최신 투표 루트", description: "validator i의 최신 message가 지지하는 root" },
+          { symbol: "B", name: "제안자 부스트", description: "현재 slot에만 적용되는 proposer-boost score(Gwei)" },
+        ]}
+        assumptions={[
+          "후보 node는 justified·finalized checkpoint와 양립하는 filtered tree에 포함됩니다.",
+          "모든 node가 같은 store time, balance snapshot, latest messages와 equivocation evidence를 봅니다.",
+          "동률은 규격이 정한 deterministic root ordering으로 해결합니다.",
+        ]}
+        interpretation="A=64, B=48이고 A 아래 A1=24, A2=40이면 J에서 A, 이어 A2를 고릅니다. Boost 20이 B subtree에 임시 적용되면 첫 선택은 B=68이 될 수 있지만 다음 slot에 boost가 사라지면 같은 결론을 보장하지 않습니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Eligibility가 weight보다 먼저입니다</h3>
         <p>
-          <code>GetHead</code>는 justified checkpoint에서 시작해 viable child 가운데 LMD-GHOST weight가 가장 큰 branch를 반복해서 선택합니다. 더 내려갈 child가 없으면 그 node가 head가 되며, 같은 score에서는 specification이 정한 root ordering으로 모든 client가 같은 tie-break를 적용합니다.
+          GetHead는 finalized checkpoint의 descendant가 아니거나 voting source가 현재 justified checkpoint와 양립하지 않는
+          leaf를 먼저 제거합니다. 그 뒤 justified root에서 시작해 child score를 비교합니다. 따라서 100 ETH가 지지하는
+          conflicting branch와 60 ETH가 지지하는 eligible branch가 있어도 100 ETH branch를 선택하지 않습니다.
         </p>
 
-        {/* ── Proposer Boost ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Proposer Boost — ex-ante reorg 방어
-        </h3>
-        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
-          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
-            <div className="text-xs font-semibold text-red-400 mb-2">
-              공격 시나리오 (without boost)
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>slot N proposer가 블록 생성 (시간 내)</li>
-              <li>공격자 (다음 proposer)가 다른 fork 생성</li>
-              <li>자기 validator들에게 attestation 투표 유도</li>
-              <li>공격자 fork가 더 무거워지면 reorg 성공</li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              방어 메커니즘
-            </div>
-            <p className="text-sm">
-              현재 슬롯의 정시 블록을 지정된 proposer boost root로 기록한다.
-              head 계산에서는 스펙 preset/config의{" "}
-              <code>PROPOSER_SCORE_BOOST</code>와 위원회 가중치로 임시 점수를
-              계산해 해당 가지에 더한다.
-            </p>
-          </div>
-          <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-            <div className="text-xs font-semibold text-blue-400 mb-2">
-              고정 숫자가 아닌 설정값
-            </div>
-            <p className="text-sm">
-              정시 판정 구간, 슬롯 길이, 위원회 총 가중치와 boost 비율은
-              네트워크 preset과 현재 스펙에서 읽는다. boost는 재조직 비용을
-              높이지만 공격을 수학적으로 불가능하게 만들지는 않는다.
-            </p>
-          </div>
-        </div>
+        <h3>Reorg와 prune은 같은 동작이 아닙니다</h3>
         <p>
-          <strong>Proposer boost</strong>는 current slot의 timely block에 temporary fork-choice weight를 더해 공격자가 이전 slot의 withheld block으로 honest head를 바꾸는 ex-ante reorg 전략을 어렵게 합니다. Boost는 slot이 지나면 사라지는 fork-choice mitigation이며 justification이나 finality를 대신하지 않습니다.
+          Head reorg는 아직 retained tree 안에서 canonical head가 다른 branch로 이동하는 일입니다. Prune은 finalized boundary
+          이전 또는 양립하지 않는 node와 cache를 더 이상 fork-choice 후보로 유지하지 않는 저장 수명 관리입니다. Reorg가
+          일어날 때마다 곧바로 과거를 삭제하면 late attestation 검증과 recovery에 필요한 evidence를 잃을 수 있습니다.
+        </p>
+        <p>
+          Release 비교에서는 full recomputation oracle과 optimized store가 같은 head를 내는지 먼저 봅니다. Equal-weight tie,
+          delayed attestation, validator vote 이동, equivocation, proposer boost expiry, checkpoint update, execution INVALID와 restart를
+          같은 event order로 재생해 event별 head·weight·eligible set parity를 검사한 뒤 처리량과 memory를 비교합니다.
         </p>
 
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 Proposer Boost</strong> — 현재 슬롯에서 정시에 관찰한
-          proposer block에 temporary weight를 더합니다. 구체적인 boost score와 timely condition은 현재 consensus specification을 따르고, 같은 final score는 deterministic root ordering으로 해소합니다.
+        <h3>읽으면 안 되는 과도한 결론</h3>
+        <p>
+          LMD-GHOST가 Byzantine network에서 어떤 조건 없이 최종성을 보장하는 것은 아닙니다. Head 선택은 Casper FFG finality와
+          validator slashing assumptions, message timing에 결합됩니다. 또한 optimized 자료구조의 benchmark는 특정 tree shape와
+          attestation churn에 좌우되므로 하나의 O 표기나 평균 latency를 production 전체로 확대하지 않습니다.
         </p>
       </div>
     </section>

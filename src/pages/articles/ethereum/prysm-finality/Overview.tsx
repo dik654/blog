@@ -1,108 +1,80 @@
-import ContextViz from "./viz/ContextViz";
-import FinalityFlowViz from "./viz/FinalityFlowViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
+import PrysmConsensusViz from "../prysm-consensus-viz";
 
-export default function Overview({
-  onCodeRef: _onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Casper FFG는 justified checkpoint를 irreversible finality로 올린다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
+      <h2 className="mb-5 text-2xl font-bold">Finality는 현재 head가 아니라 되돌리려면 slashable evidence가 필요한 checkpoint를 만든다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Fork choice의 head는 새 attestation에 따라 바뀔 수 있습니다. Casper FFG는 validator가 epoch 경계의 checkpoint
+          사이에 남긴 source→target vote를 모아 justified checkpoint를 만들고, 이어진 supermajority link가 생기면 더 오래된
+          checkpoint를 finalized로 올립니다. Finalized는 단순히 “오래된 head”가 아니라 conflicting finality를 만들 때
+          최소 1/3의 stake가 slashable 행동을 남기는 안전성 경계입니다.
+        </p>
+        <p>
+          이 글은 <strong>checkpoint→vote link→2/3 threshold→justification→finalization→prune→weak-subjectivity
+          sync</strong> 순서로 설명합니다. 현재 head를 고르는 계산은 <Link to="/blockchain/prysm-forkchoice">fork-choice
+          글</Link>이 소유하고, 여기서는 epoch-level evidence가 언제 되돌리기 어려운 경계가 되는지만 다룹니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이 아티클에서는 Casper FFG의 justified → finalized 전환 과정과 Prysm의
-          체크포인트 관리를 코드 수준으로 추적한다.
+
+      <ContentBoundary article="prysm-finality" />
+      <PrysmConsensusViz mode="finality" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Checkpoint는 epoch 번호와 그 경계 block root의 쌍입니다</h3>
+        <p>
+          Epoch은 여러 slot을 묶은 protocol 시간 단위이고 checkpoint는 <code>(epoch, root)</code>로 식별합니다. Validator의
+          attestation은 현재 보이는 head뿐 아니라 FFG source와 target checkpoint를 함께 담습니다. 같은 target epoch라도 root가
+          다르면 다른 checkpoint이며, 참여율을 셀 때는 attestation 개수가 아니라 해당 validator들의 effective balance를 합합니다.
+        </p>
+        <p>
+          예를 들어 active unslashed balance가 96 ETH라면 2/3 threshold는 64 ETH입니다. Justified checkpoint C2를
+          source로 C3를 target으로 한 valid vote가 68 ETH면 C2→C3가 supermajority link가 되어 C3를 justify할 수 있습니다.
+          이어지는 규격의 finalization pattern까지 만족해야 C2가 finalized가 되며, 68 ETH라는 수치만으로 C3 자체가 즉시
+          finalized되는 것은 아닙니다.
         </p>
 
-        {/* ── Finality 타임라인 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Finality 타임라인 — justified → finalized
-        </h3>
-        <div className="grid grid-cols-1 gap-3 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              체크포인트 투표 → Finalization
-            </div>
-            <div className="text-sm space-y-1">
-              <div>
-                <strong>1. Vote</strong> — attestation이 source checkpoint와
-                target checkpoint의 supermajority link를 표현
-              </div>
-              <div>
-                <strong>2. Tally</strong> — 이전·현재 epoch target에 투표한
-                effective balance 집계
-              </div>
-              <div>
-                <strong>3. Justify</strong> — 2/3 가중치 조건을 만족한 target을
-                justified로 표시하고 justification bits 이동
-              </div>
-              <div>
-                <strong>4. Finalize</strong> — 스펙이 허용하는 justification-bit
-                패턴과 checkpoint 거리 조건이 맞으면 이전 justified checkpoint
-                확정
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-              <div className="text-xs font-semibold text-green-400 mb-2">
-                Best Case
-              </div>
-              <p className="text-sm">
-                높은 참여율에서는 보통 <strong>약 두 epoch</strong>
-              </p>
-            </div>
-            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
-              <div className="text-xs font-semibold text-red-400 mb-2">
-                Worst Case (inactivity leak)
-              </div>
-              <p className="text-sm">
-                2/3 link가 회복될 때까지 <strong>고정 상한 없음</strong>
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-semibold text-muted-foreground mb-2">
-              Prysm Finality 단계
-            </div>
-            <ol className="text-sm space-y-1 list-decimal list-inside">
-              <li>Attestation 수집 (epoch 경계에서 집계)</li>
-              <li>
-                <code>processJustificationAndFinalization()</code> 실행
-              </li>
-              <li>
-                <code>state.current_justified_checkpoint</code> 업데이트
-              </li>
-              <li>
-                <code>state.finalized_checkpoint</code> 업데이트 (조건 충족 시)
-              </li>
-              <li>Fork choice store에 반영</li>
-              <li>
-                노드별 action — DB 저장, tree 프루닝, hot state cache 정리,
-                Engine API로 EL 알림
-              </li>
-            </ol>
-            <p className="text-sm mt-2 text-muted-foreground">
-              Notification 체인: consensus state change → stategen → fork choice
-              store → RPC subscribers
-            </p>
-          </div>
-        </div>
-        <p className="leading-7">
-          건강한 네트워크에서는 보통 <strong>약 두 epoch</strong>에 finality가
-          진행된다. 다만 단순히 “연속 두 epoch가 justified”만 보는 것이 아니라
-          justification bits의 여러 패턴과 checkpoint 거리를 평가하며,
-          2/3 link가 끊기면 finality는 무기한 지연될 수 있고 inactivity leak가
-          참여 quorum 회복을 돕는다.
+        <h3>Finality와 availability는 다른 질문입니다</h3>
+        <p>
+          Finalized root가 있다는 사실은 그 root와 충돌하는 다른 finalized history를 honest assumptions 아래 만들기 어렵다는
+          뜻입니다. 모든 node가 block body와 historical state를 영구 보관한다거나 application response가 성공했다는 뜻은
+          아닙니다. 반대로 participation이 2/3 아래로 떨어지면 chain이 즉시 잘못되는 것이 아니라 새 finality가 멈출 수 있으며,
+          이는 safety와 liveness를 분리해 읽어야 하는 대표적인 상황입니다.
         </p>
       </div>
-      <div className="not-prose mt-6">
-        <FinalityFlowViz />
+
+      <div id="paper-ethereum-finality-spec" className="scroll-mt-24">
+        <CitationBlock
+          source="Ethereum Consensus Specifications — Phase 0 Beacon Chain"
+          href="https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/beacon-chain.md"
+          citeKey={1}
+        >
+          이 규격은 checkpoint·attestation data·justification bits와 justification/finalization processing을 정의합니다.
+          안전성 주장을 current fork의 전체 규칙과 slashing conditions에서 읽어야 하며 한 threshold 문장만으로 구현을 대체하지
+          않습니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-ethereum-weak-subjectivity-spec" className="scroll-mt-24">
+        <CitationBlock
+          source="Ethereum Consensus Specifications — Weak Subjectivity"
+          href="https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/weak-subjectivity.md"
+          citeKey={2}
+        >
+          이 문서는 오래 offline이던 node가 recent trusted checkpoint를 필요로 하는 이유와 weak-subjectivity period 계산 경계를
+          설명합니다. 임의의 오래된 checkpoint가 안전하다는 보장이 아니며 network·validator-set 조건과 확인 시점을 함께 봅니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-finality-source" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.prysm.repository} citeKey={3} type="code">
+          Prysm source는 epoch processing 결과가 fork-choice store와 pruning에 반영되는 implementation 경로를 확인하는
+          근거입니다. Package layout과 cache 전략은 분석한 release·SHA 범위에만 귀속합니다.
+        </CitationBlock>
       </div>
     </section>
   );
