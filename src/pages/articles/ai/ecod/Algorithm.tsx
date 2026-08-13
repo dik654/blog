@@ -84,6 +84,19 @@ export default function Algorithm() {
         assumptions={["2026-08-12에 확인한 PyOD 3.6.4 공식 source의 decision_function 경로를 기준으로 합니다.", "Package version이 바뀌면 source와 golden score를 다시 확인해야 합니다."]}
         interpretation="일반적으로 sum(max)와 max(sum)는 같지 않으므로 논문 score와 PyOD score의 순위가 달라질 수 있습니다. 논문 재현용 구현과 운영 library 결과를 같은 것으로 기록하면 안 됩니다."
       />
+
+      <div id="paper-ecod" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · ECOD 원 방법</p>
+        <p className="mt-2 text-sm font-semibold">ECOD: Unsupervised Outlier Detection Using Empirical CDFs</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Li 등은 label 없이 feature별 empirical tail probability를 계산하고, negative log·skewness
+          correction·row aggregation으로 global outlier ranking을 만드는 parameter-free score를
+          제안했습니다. 논문의 비교는 선정한 tabular benchmark와 원문의 aggregation 식을 전제로
+          하며, feature dependence를 정확히 모델링하거나 score를 실제 anomaly probability로
+          calibration한다는 뜻은 아닙니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2201.00382" target="_blank" rel="noreferrer">원 논문의 score·복잡도·실험 범위 보기</a>
+      </div>
     </section>
   );
 }

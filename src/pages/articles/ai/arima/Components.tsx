@@ -26,9 +26,9 @@ export default function Components() {
         formula={String.raw`\begin{aligned}\operatorname{AR}_t&=\sum_{i=1}^{p}\phi_iZ_{t-i}\\\operatorname{MA}_t&=\varepsilon_t+\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\\Z_t&=c+\operatorname{AR}_t+\operatorname{MA}_t\\\phi(B)Z_t&=c+\theta(B)\varepsilon_t\end{aligned}`}
         terms={[
           { symbol: "Z_t=\Delta^dY_t", name: "modeled series", description: "d번 차분한 stationary representation입니다." },
-          { symbol: "\phi_i", name: "AR coefficients", description: "과거 관측값이 현재 conditional mean에 주는 가중치입니다." },
-          { symbol: "\theta_j", name: "MA coefficients", description: "과거 innovation이 현재 값에 남기는 가중치입니다." },
-          { symbol: "\varepsilon_t", name: "innovation", description: "과거 정보에 조건부인 평균 0의 새 error입니다." },
+          { symbol: "\\phi_i", name: "AR coefficients", description: "과거 관측값이 현재 conditional mean에 주는 가중치입니다." },
+          { symbol: "\\theta_j", name: "MA coefficients", description: "과거 innovation이 현재 값에 남기는 가중치입니다." },
+          { symbol: "\\varepsilon_t", name: "innovation", description: "과거 정보에 조건부인 평균 0의 새 error입니다." },
         ]}
         assumptions={["Innovation은 serially uncorrelated하며 보통 constant variance를 가정합니다.", "AR polynomial의 root가 unit circle 밖에 있어야 causal stationarity, MA root가 밖에 있어야 invertible representation을 얻습니다."]}
         interpretation="p와 q는 기억 길이를 그대로 뜻하지 않습니다. 반복되는 AR dynamics는 p보다 긴 impulse response를 만들고, invertible MA는 관측 가능한 과거로 innovation을 복원하게 해 줍니다."

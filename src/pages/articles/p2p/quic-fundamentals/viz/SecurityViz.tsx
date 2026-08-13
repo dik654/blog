@@ -51,7 +51,7 @@ export default function SecurityViz() {
                 rx={5}
                 fill={lv.c + "12"}
                 stroke={lv.c}
-                strokeWidth={i === step ? 1.5 : 1}
+                strokeWidth={1}
               />
               <text
                 x={50}

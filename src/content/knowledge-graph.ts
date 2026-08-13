@@ -7829,9 +7829,640 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "같은 로그인 401 command fixture와 workspace·environment·policy·sandbox profile에서 base/candidate full SHA를 비교하고 shell/argv 차이·expansion·path race·missing enforcer·timeout·truncation·descendant cleanup·duplicate effect를 주입해 unauthorized execution 0과 deterministic test receipt를 확인하는 paired release 계약입니다.",
     canonicalHref: "/ai/claw-bash#sandbox",
   },
+  "distributed-process-message-execution": {
+    id: "distributed-process-message-execution",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Distributed process·message·execution model",
+    definition:
+      "Local state를 가진 process, process 사이를 이동하는 message, state transition을 만드는 event와 그 순서인 execution으로 분산 계산을 표현하는 최소 모델입니다. 실제 server·container·thread와 이론 process가 반드시 일대일인 것은 아닙니다.",
+    canonicalHref: "/blockchain/distributed-systems#overview",
+  },
+  "distributed-timing-model": {
+    id: "distributed-timing-model",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Distributed timing model",
+    definition:
+      "Process step과 message delay의 upper bound가 항상 알려졌는지, 존재하지 않는지, unknown 값 또는 unknown GST 뒤에만 성립하는지 구분하는 protocol 전제입니다. Timeout 자체는 crash의 증명이 아닙니다.",
+    canonicalHref: "/blockchain/distributed-systems#overview",
+  },
+  "distributed-failure-model": {
+    id: "distributed-failure-model",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Crash·omission·Byzantine failure model",
+    definition:
+      "Process가 멈추는 crash, 일부 send·receive가 빠지는 omission, equivocation을 포함해 임의 행동하는 Byzantine fault를 구분해 adversary의 능력과 protocol 보장 범위를 고정하는 모델입니다.",
+    canonicalHref: "/blockchain/distributed-systems#overview",
+  },
+  "consensus-safety-liveness": {
+    id: "consensus-safety-liveness",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Consensus safety·liveness",
+    definition:
+      "Safety는 서로 모순된 결정 같은 나쁜 일이 한 번도 생기지 않는 성질이고, liveness는 정해진 timing·fault 조건에서 non-faulty process가 결국 결정하는 성질입니다. 평균 latency 하나로 둘을 대신 평가할 수 없습니다.",
+    canonicalHref: "/blockchain/distributed-systems#overview",
+  },
+  "flp-bivalence-impossibility": {
+    id: "flp-bivalence-impossibility",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "FLP bivalence impossibility",
+    definition:
+      "완전 비동기 deterministic binary consensus에서 process 하나가 crash 가능하면, agreement·validity를 지키면서도 termination하지 않는 admissible execution이 존재한다는 정리입니다. 모든 실제 실행이 실패하거나 합의 자체가 불가능하다는 뜻은 아닙니다.",
+    canonicalHref: "/blockchain/distributed-systems#flp",
+  },
+  "cap-partition-execution-tradeoff": {
+    id: "cap-partition-execution-tradeoff",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "CAP partition-execution trade-off",
+    definition:
+      "Replica 집합 사이 메시지가 손실되는 partition execution에서 linearizability와 모든 non-failing node 요청의 eventual response를 동시에 보장할 수 없다는 결과입니다. 정상 구간 latency나 제품 전체를 CP·AP 하나로 고정 분류하는 정리가 아닙니다.",
+    canonicalHref: "/blockchain/distributed-systems#cap",
+  },
+  "partial-synchrony-gst": {
+    id: "partial-synchrony-gst",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Partial synchrony·GST",
+    definition:
+      "Message·process bound가 존재하지만 protocol이 값을 모르거나, 알려진 bound가 unknown Global Stabilization Time 이후에만 성립하는 timing model입니다. Safety는 GST 전에도 지키고 liveness는 GST 뒤 조건부로 증명하는 데 사용됩니다.",
+    canonicalHref: "/blockchain/distributed-systems#consensus-class",
+  },
+  "consensus-assumption-escape-hatch": {
+    id: "consensus-assumption-escape-hatch",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Consensus assumption escape hatch",
+    definition:
+      "FLP 같은 불가능성 결과의 model을 숨겨서 무시하지 않고 partial synchrony·randomization·failure detector 또는 약한 문제 정의 중 어떤 추가 가정으로 진행 가능성을 얻었는지 선언하는 설계 규칙입니다.",
+    canonicalHref: "/blockchain/distributed-systems#consensus-class",
+  },
+  "weak-stationary-forecast-representation": {
+    id: "weak-stationary-forecast-representation",
+    domain: "statistics",
+    label: "Weakly stationary forecast representation",
+    definition:
+      "평균과 유한한 분산이 시간에 따라 일정하고 두 시점의 covariance가 절대 시각이 아니라 lag에만 의존하도록 원 시계열을 변환한 ARMA 입력 표현입니다.",
+    canonicalHref: "/ai/arima#overview",
+  },
+  "arima-difference-order": {
+    id: "arima-difference-order",
+    kind: "method",
+    domain: "statistics",
+    label: "ARIMA differencing · integration order",
+    definition:
+      "Backshift operator의 1−B를 d번 적용해 level의 stochastic trend를 increment 표현으로 바꾸고, forecast 뒤 누적해 원 scale로 복원하는 ARIMA의 integration 단계입니다.",
+    canonicalHref: "/ai/arima#overview",
+  },
+  "arma-innovation-filter": {
+    id: "arma-innovation-filter",
+    kind: "method",
+    domain: "statistics",
+    label: "ARMA observation · innovation filter",
+    definition:
+      "차분된 현재 값을 과거 p개 관측의 autoregressive 항과 현재·과거 q개 innovation의 moving-average 항으로 분해하는 선형 시계열 filter입니다.",
+    canonicalHref: "/ai/arima#components",
+  },
+  "arima-residual-diagnostic": {
+    id: "arima-residual-diagnostic",
+    kind: "method",
+    domain: "statistics",
+    label: "ARIMA residual diagnostic contract",
+    definition:
+      "선택한 ARIMA의 residual ACF·Ljung–Box·variance 변화와 rolling-origin error·interval coverage를 함께 확인해 남은 dependence와 forecast calibration을 구분하는 검증 절차입니다.",
+    canonicalHref: "/ai/arima#modeling",
+  },
+  "empirical-cdf-tail-rank": {
+    id: "empirical-cdf-tail-rank",
+    kind: "method",
+    domain: "statistics",
+    label: "Empirical CDF tail rank",
+    definition:
+      "Feature의 reference sample에서 현재 값 이하와 이상인 관측 비율을 직접 세어 단위가 다른 값을 0과 1 사이의 왼쪽·오른쪽 marginal tail rank로 바꾸는 추정입니다.",
+    canonicalHref: "/ai/ecod#overview",
+  },
+  "ecod-negative-log-tail-score": {
+    id: "ecod-negative-log-tail-score",
+    kind: "method",
+    domain: "statistics",
+    label: "ECOD negative-log tail score",
+    definition:
+      "Feature별 empirical tail probability에 negative log를 적용해 드문 tail 관측을 큰 additive anomaly contribution으로 바꾸는 ECOD score 단계입니다.",
+    canonicalHref: "/ai/ecod#algorithm",
+  },
+  "ecod-skewness-tail-selection": {
+    id: "ecod-skewness-tail-selection",
+    kind: "method",
+    domain: "statistics",
+    label: "ECOD skewness tail selection",
+    definition:
+      "Feature의 sample skewness 부호로 왼쪽 또는 오른쪽 tail contribution을 우선 선택하되 양방향 score를 함께 보존하는 ECOD의 방향 heuristic입니다.",
+    canonicalHref: "/ai/ecod#algorithm",
+  },
+  "ecod-aggregation-implementation-boundary": {
+    id: "ecod-aggregation-implementation-boundary",
+    domain: "computer-science",
+    label: "ECOD paper · PyOD aggregation boundary",
+    definition:
+      "원 논문의 row-level max-after-sum과 PyOD 3.6.4 source의 feature-level max-before-sum이 교환되지 않아 같은 입력의 score와 순위가 달라질 수 있다는 재현 경계입니다.",
+    canonicalHref: "/ai/ecod#algorithm",
+  },
+  "anomaly-score-decision-threshold": {
+    id: "anomaly-score-decision-threshold",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Anomaly score · decision threshold boundary",
+    definition:
+      "연속 anomaly score의 ordering과 contamination·review capacity·error cost로 정한 binary threshold를 분리하고, score를 사건 probability로 과해석하지 않는 운영 계약입니다.",
+    canonicalHref: "/ai/ecod#implementation",
+  },
+  "supervised-forecast-window": {
+    id: "supervised-forecast-window",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Supervised forecast window",
+    definition:
+      "Forecast origin 이전 L개 step의 available feature를 input으로, 이후 H개 target step을 label로 묶어 연속 시계열을 cutoff가 보존된 supervised sample로 바꾸는 방법입니다.",
+    canonicalHref: "/ai/lstm-timeseries#overview",
+  },
+  "recurrent-forecast-state-lifecycle": {
+    id: "recurrent-forecast-state-lifecycle",
+    domain: "computer-science",
+    label: "Recurrent forecast state lifecycle",
+    definition:
+      "LSTM hidden·cell state를 어느 entity·session·window에서 초기화하고 이어 쓰며 detach·reset할지 정해 sample 간 누출과 잘못된 state 공유를 막는 실행 계약입니다.",
+    canonicalHref: "/ai/lstm-timeseries#cell-architecture",
+  },
+  "direct-multihorizon-forecast-head": {
+    id: "direct-multihorizon-forecast-head",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Direct multi-horizon forecast head",
+    definition:
+      "마지막 recurrent representation을 H×target-dimension 값으로 한 번에 projection해 이전 예측을 다음 입력으로 되먹이지 않고 고정 horizon을 병렬 출력하는 head입니다.",
+    canonicalHref: "/ai/lstm-timeseries#cell-architecture",
+  },
+  "forecast-transform-fit-boundary": {
+    id: "forecast-transform-fit-boundary",
+    kind: "method",
+    domain: "statistics",
+    label: "Forecast transform fit boundary",
+    definition:
+      "각 rolling fold의 결측 처리·scaler·feature selection parameter를 forecast origin 이전 training data로만 fit하고 validation·test에는 고정 적용하는 누출 방지 규칙입니다.",
+    canonicalHref: "/ai/lstm-timeseries#training",
+  },
+  "mase-forecast-scale": {
+    id: "mase-forecast-scale",
+    kind: "metric",
+    domain: "statistics",
+    label: "Mean absolute scaled error (MASE)",
+    definition:
+      "Test absolute forecast error를 같은 fold의 training seasonal-naive one-step absolute error로 나눠 series scale을 제거하고 기준선 대비 오차를 비교하는 metric입니다.",
+    canonicalHref: "/ai/lstm-timeseries#applications",
+  },
+  "quantile-forecast-pinball-loss": {
+    id: "quantile-forecast-pinball-loss",
+    kind: "method",
+    domain: "statistics",
+    label: "Quantile forecast · pinball loss",
+    definition:
+      "실제값이 예측 quantile 위·아래에 놓인 방향에 따라 τ와 1−τ의 서로 다른 선형 기울기를 적용해 조건부 quantile을 학습하는 비대칭 forecast loss입니다.",
+    canonicalHref: "/ai/lstm-timeseries#training",
+  },
+  "cuda-launch-hierarchy": {
+    id: "cuda-launch-hierarchy",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA grid·block·thread launch hierarchy",
+    definition:
+      "Kernel launch의 전체 logical work를 grid로, 협력·resource ownership 단위를 block으로, 개별 data 위치를 처리하는 worker를 thread로 나누는 CUDA software execution contract입니다. Grid나 block을 physical core 수와 일대일로 매핑하지 않습니다.",
+    canonicalHref: "/gpu/cuda-thread-hierarchy#overview",
+  },
+  "cuda-warp-simt": {
+    id: "cuda-warp-simt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA warp·SIMT execution",
+    definition:
+      "SM이 block의 threads를 32 lanes인 warp로 묶어 같은 kernel instruction을 발행하되 lane별 register·address·branch state를 유지하는 execution model입니다. Branch divergence는 active lane을 mask하며 logical thread가 core 하나에 영구 고정된다는 뜻은 아닙니다.",
+    canonicalHref: "/gpu/cuda-thread-hierarchy#overview",
+  },
+  "cuda-block-resource-placement": {
+    id: "cuda-block-resource-placement",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA block resource·SM placement",
+    definition:
+      "한 block이 실행 동안 한 SM에 머물며 block당 threads·registers·shared memory를 소비하고, 이 자원 한도가 SM에 동시에 resident할 blocks·warps 수를 제한하는 scheduling 경계입니다.",
+    canonicalHref: "/gpu/cuda-thread-hierarchy#builtin-vars",
+  },
+  "cuda-global-index": {
+    id: "cuda-global-index",
+    kind: "method",
+    domain: "computer-science",
+    label: "CUDA global index·boundary mapping",
+    definition:
+      "Block coordinate와 block dimension으로 block 시작 offset을 만들고 thread-local coordinate를 더해 logical data index를 계산한 뒤, overprovisioned 마지막 block을 data boundary check로 제외하는 mapping입니다.",
+    canonicalHref: "/gpu/cuda-thread-hierarchy#indexing-1d",
+  },
+  "cuda-shared-scratchpad": {
+    id: "cuda-shared-scratchpad",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA block-shared scratchpad",
+    definition:
+      "같은 block threads가 함께 stage·exchange·reuse하는 SM의 programmer-managed on-chip memory입니다. Global traffic 감소와 address reordering 이득을 얻는 대신 capacity·barrier·occupancy 비용을 부담합니다.",
+    canonicalHref: "/gpu/cuda-shared-memory#overview",
+  },
+  "cuda-global-coalescing": {
+    id: "cuda-global-coalescing",
+    kind: "method",
+    domain: "computer-science",
+    label: "CUDA global-memory coalescing",
+    definition:
+      "한 warp memory instruction의 lane addresses를 가능한 적은 global-memory segments와 transactions로 충족해 옮긴 byte 중 useful byte 비율을 높이는 access 설계입니다.",
+    canonicalHref: "/gpu/cuda-shared-memory#coalescing",
+  },
+  "cuda-shared-bank-conflict": {
+    id: "cuda-shared-bank-conflict",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA shared-memory bank conflict",
+    definition:
+      "한 warp의 shared-memory instruction에서 여러 active lanes가 같은 bank의 서로 다른 addresses를 요구해 request가 여러 차례로 직렬화되는 현상입니다. 같은 address read broadcast와는 구분합니다.",
+    canonicalHref: "/gpu/cuda-shared-memory#bank-conflict",
+  },
+  "cuda-data-layout-aos-soa": {
+    id: "cuda-data-layout-aos-soa",
+    kind: "method",
+    domain: "computer-science",
+    label: "CUDA AoS·SoA data-layout choice",
+    definition:
+      "Record fields를 object별로 붙이는 Array of Structures와 field별로 모으는 Structure of Arrays를 warp의 실제 field subset·address stride·conversion cost에 맞춰 선택하는 memory-layout 방법입니다.",
+    canonicalHref: "/gpu/cuda-shared-memory#aos-soa",
+  },
+  "cuda-synchronization-scope": {
+    id: "cuda-synchronization-scope",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA synchronization scope·visibility",
+    definition:
+      "Producer write와 consumer read 사이 ordering·visibility를 warp·block·cluster·stream·device 중 필요한 최소 participant 범위에서 보장하는 계약입니다. Barrier는 같은 address의 concurrent update를 atomic하게 만들지 않습니다.",
+    canonicalHref: "/gpu/cuda-sync-streams#overview",
+  },
+  "cuda-stream-ordering": {
+    id: "cuda-stream-ordering",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA stream ordering·overlap",
+    definition:
+      "같은 stream에 enqueue한 operations는 순서를 지키고 다른 streams는 독립성을 표현하며, 실제 copy·compute overlap은 pinned memory·hardware engines·resources·dependency가 허용할 때만 생기는 asynchronous execution contract입니다.",
+    canonicalHref: "/gpu/cuda-sync-streams#streams",
+  },
+  "cuda-event-dependency": {
+    id: "cuda-event-dependency",
+    kind: "method",
+    domain: "computer-science",
+    label: "CUDA event dependency·timing",
+    definition:
+      "Stream timeline의 특정 producer 이후에 marker를 record하고 다른 stream이 그 marker를 기다리게 해 cross-stream edge를 만들거나, 두 timing markers 사이 device elapsed time을 재는 방법입니다.",
+    canonicalHref: "/gpu/cuda-sync-streams#events",
+  },
+  "cuda-multigpu-resource-ownership": {
+    id: "cuda-multigpu-resource-ownership",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CUDA multi-GPU resource ownership",
+    definition:
+      "Host thread의 current device에 allocation·stream·event·kernel launch가 연결됨을 추적하고, 방향별 peer capability와 physical topology를 확인해 device 간 data path를 구성하는 ownership 계약입니다.",
+    canonicalHref: "/gpu/cuda-sync-streams#multi-gpu",
+  },
+  "tls13-secure-channel": {
+    id: "tls13-secure-channel",
+    kind: "method",
+    domain: "computer-science",
+    label: "TLS 1.3 secure-channel contract",
+    definition:
+      "신뢰할 수 없는 network 위에서 handshake가 peer authentication·parameter negotiation·shared keying material을 만들고 record protocol이 그 합의로 application bytes의 confidentiality와 integrity를 보호하는 protocol 계약입니다.",
+    canonicalHref: "/p2p/tls-fundamentals#overview",
+  },
+  "tls13-transcript-authentication": {
+    id: "tls13-transcript-authentication",
+    kind: "method",
+    domain: "computer-science",
+    label: "TLS 1.3 transcript authentication",
+    definition:
+      "순서대로 직렬화한 handshake message의 transcript hash를 CertificateVerify signature와 Finished MAC에 넣어 identity·협상 내용·계산한 secret을 하나의 연결 상태로 묶는 방법입니다.",
+    canonicalHref: "/p2p/tls-fundamentals#handshake",
+  },
+  "tls13-aead-record-nonce": {
+    id: "tls13-aead-record-nonce",
+    kind: "method",
+    domain: "computer-science",
+    label: "TLS 1.3 AEAD record nonce",
+    definition:
+      "방향별 traffic key와 IV 아래 증가하는 record sequence number를 IV와 XOR해 nonce를 만들고 header를 associated data로 인증하는 record protection 계약입니다.",
+    canonicalHref: "/p2p/tls-fundamentals#record-protocol",
+  },
+  "tls13-hkdf-key-schedule": {
+    id: "tls13-hkdf-key-schedule",
+    kind: "method",
+    domain: "computer-science",
+    label: "TLS 1.3 HKDF key schedule",
+    definition:
+      "PSK·ECDHE input을 HKDF-Extract와 labeled Expand에 단계적으로 넣어 client/server, handshake/application, resumption 용도의 secret과 key를 분리하는 파생 tree입니다.",
+    canonicalHref: "/p2p/tls-fundamentals#key-schedule",
+  },
+  "quic-transport-state": {
+    id: "quic-transport-state",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "QUIC transport state",
+    definition:
+      "UDP datagram 위 userspace endpoint가 connection identity·packet/frame·ACK·loss recovery·congestion·flow control과 TLS-derived packet protection을 함께 유지하는 secure transport 상태입니다.",
+    canonicalHref: "/p2p/quic-fundamentals#overview",
+  },
+  "quic-packet-number-space": {
+    id: "quic-packet-number-space",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "QUIC packet-number space",
+    definition:
+      "Initial·Handshake·Application Data encryption stage별로 packet number와 ACK·loss-recovery state를 독립적으로 유지해 아직 사용할 수 없는 key phase와 recovery 신호를 섞지 않는 구획입니다.",
+    canonicalHref: "/p2p/quic-fundamentals#handshake",
+  },
+  "quic-stream-flow-control": {
+    id: "quic-stream-flow-control",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "QUIC stream and connection flow control",
+    definition:
+      "Stream ID와 byte offset으로 ordered data를 독립 재조립하고 MAX_STREAM_DATA·MAX_DATA·MAX_STREAMS credit으로 receiver memory와 concurrency를 제한하는 mechanism입니다.",
+    canonicalHref: "/p2p/quic-fundamentals#streams",
+  },
+  "quic-connection-id-path-validation": {
+    id: "quic-connection-id-path-validation",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "QUIC connection ID and path validation",
+    definition:
+      "IP·port가 바뀌어도 opaque connection ID로 state를 찾고 PATH_CHALLENGE/RESPONSE로 새 address의 return reachability를 확인하되 identity authentication과 구분하는 migration 계약입니다.",
+    canonicalHref: "/p2p/quic-fundamentals#migration",
+  },
+  "content-address-integrity": {
+    id: "content-address-integrity",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Content-address integrity",
+    definition:
+      "Canonical encoded bytes의 cryptographic digest를 주소로 삼고 수신 bytes를 다시 hash해 같은 digest인지 확인하는 무결성 방법이며 availability·publisher identity·semantic safety는 별도 문제입니다.",
+    canonicalHref: "/p2p/content-addressing#overview",
+  },
+  "cidv1-self-describing-format": {
+    id: "cidv1-self-describing-format",
+    kind: "concept",
+    domain: "computer-science",
+    label: "CIDv1 self-describing format",
+    definition:
+      "Version·content multicodec·hash algorithm code·digest length·digest를 minimal varint와 multihash로 담고 text 표현에는 multibase prefix를 더하는 typed content-address format입니다.",
+    canonicalHref: "/p2p/content-addressing#cid",
+  },
+  "merkle-dag-root-commitment": {
+    id: "merkle-dag-root-commitment",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Merkle DAG root commitment",
+    definition:
+      "Child CID를 parent의 canonical bytes에 link로 넣고 다시 CID를 계산해 leaf 변경이 ancestor와 root까지 전파되도록 하는 content-addressed DAG 구조입니다.",
+    canonicalHref: "/p2p/content-addressing#merkle-dag",
+  },
+  "mutable-content-name-resolution": {
+    id: "mutable-content-name-resolution",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Mutable content-name resolution",
+    definition:
+      "변경 때마다 새 CID가 생기는 immutable content 위에 signed IPNS record나 DNSLink를 두어 안정된 name을 최신 path로 해석하고 authority·sequence·validity·cache freshness를 검증하는 방법입니다.",
+    canonicalHref: "/p2p/content-addressing#resolution",
+  },
+  "smr-deterministic-transition": {
+    id: "smr-deterministic-transition",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "SMR deterministic transition",
+    definition:
+      "같은 initial state와 같은 total-ordered command prefix를 deterministic transition에 적용해 replica가 같은 state와 result를 만들게 하는 fault-tolerant service 구성법입니다. Log agreement만으로 non-deterministic input이 사라지지는 않습니다.",
+    canonicalHref: "/blockchain/smr-theory#overview",
+  },
+  "total-order-broadcast-contract": {
+    id: "total-order-broadcast-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Total-order broadcast contract",
+    definition:
+      "Agreement·total order·integrity와 조건부 validity를 통해 correct process가 같은 message를 같은 상대 순서로 deliver하게 하는 계약입니다. Network arrival과 protocol delivery는 다릅니다.",
+    canonicalHref: "/blockchain/smr-theory#total-order",
+  },
+  "replicated-log-commit-apply": {
+    id: "replicated-log-commit-apply",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Replicated-log append·commit·apply",
+    definition:
+      "Entry를 local durable log에 append한 상태, quorum evidence로 committed prefix가 된 상태, deterministic state machine에 apply한 상태와 client reply를 서로 다른 transition으로 추적하는 계약입니다.",
+    canonicalHref: "/blockchain/smr-theory#log-replication",
+  },
+  "crash-majority-quorum": {
+    id: "crash-majority-quorum",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Crash-fault majority quorum",
+    definition:
+      "고정된 n개 voting replica에서 floor(n/2)+1개를 quorum으로 사용해 서로 다른 두 quorum이 반드시 겹치게 하고 n=2f+1이면 f개 crash 뒤에도 한 quorum을 남기는 구성입니다.",
+    canonicalHref: "/blockchain/smr-theory#log-replication",
+  },
+  "raft-term-log-safety": {
+    id: "raft-term-log-safety",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Raft term·log safety",
+    definition:
+      "Term으로 leader epoch를 구분하고 prevLogTerm·prevLogIndex consistency check, election restriction, current-term commit rule을 결합해 committed log prefix가 다음 leader에서도 보존되게 하는 규칙입니다.",
+    canonicalHref: "/blockchain/smr-theory#log-replication",
+  },
+  "paxos-promise-chosen-invariant": {
+    id: "paxos-promise-chosen-invariant",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Paxos promise·chosen-value invariant",
+    definition:
+      "Acceptor promise가 낮은 proposal을 거절하고 새 Prepare quorum이 가장 높은 accepted proposal의 value를 이어받아, 한 slot에서 value 하나가 chosen될 수 있는 agreement invariant를 지키는 규칙입니다.",
+    canonicalHref: "/blockchain/smr-theory#paxos",
+  },
+  "smr-client-effect-boundary": {
+    id: "smr-client-effect-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "SMR client retry·external-effect boundary",
+    definition:
+      "Committed command reply가 손실돼 client가 retry할 때 stable request ID로 같은 result를 반환하고, replicated log 밖 external side effect는 idempotency key·outbox·receipt·reconciliation로 별도 제어하는 경계입니다.",
+    canonicalHref: "/blockchain/smr-theory#overview",
+  },
+  "permissionless-sybil-resource-weight": {
+    id: "permissionless-sybil-resource-weight",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Permissionless Sybil-resource weighting",
+    definition: "누구나 identity를 만들 수 있는 network에서 표를 identity 수로 세지 않고 hash work나 bonded stake처럼 희소하고 검증 가능한 자원 비용에 proposal·vote influence를 연결하는 membership 규칙입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#overview",
+  },
+  "pow-hash-target-lottery": {
+    id: "pow-hash-target-lottery",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "PoW hash-target lottery",
+    definition: "Block header의 hash가 target보다 작을 때 proof를 인정하고, 균등·독립 hash 근사에서 성공 확률 T/2^b와 기대 시도 수 2^b/T를 갖는 계산 자원 기반 추첨입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#pow",
+  },
+  "pow-chainwork-probabilistic-finality": {
+    id: "pow-chainwork-probabilistic-finality",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "PoW chainwork·probabilistic finality",
+    definition: "서로 경쟁하는 valid branch 가운데 cumulative proof-of-work가 큰 branch를 선택하고 후속 work가 쌓일수록 reorg 위험이 낮아지지만 일반적으로 0이 되지는 않는 fork-choice·confirmation 계약입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#pow",
+  },
+  "pos-stake-weighted-selection": {
+    id: "pos-stake-weighted-selection",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "PoS stake-weighted selection",
+    definition: "Protocol state의 eligible effective stake와 randomness를 이용해 proposer·committee·vote influence를 배분하는 선택 규칙입니다. Stake 비율은 장기 확률·weight이지 다음 slot 당첨 보장이 아닙니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#pos",
+  },
+  "pos-attestation-slashing-evidence": {
+    id: "pos-attestation-slashing-evidence",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "PoS attestation·slashing evidence",
+    definition: "Validator가 head·checkpoint 대상에 서명한 attestation을 fork choice와 finality에 사용하고, protocol이 정의한 모순 서명을 객관적 evidence로 만들어 경제적 penalty에 연결하는 accountability 계약입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#pos",
+  },
+  "fork-choice-finality-separation": {
+    id: "fork-choice-finality-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Fork choice·finality separation",
+    definition: "현재 관찰한 valid message로 canonical head를 갱신하는 fork-choice rule과, protocol 가정 아래 이전 history를 되돌리지 않겠다는 더 강한 finality 판단을 서로 다른 state와 evidence로 기록하는 경계입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#overview",
+  },
+  "consensus-resource-security-ledger": {
+    id: "consensus-resource-security-ledger",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Consensus resource·security ledger",
+    definition: "PoW의 hash·energy·propagation과 PoS의 bonded stake·custody·client diversity처럼 protocol 영향력의 비용·집중도·failure surface를 같은 축으로 기록하는 비교 모델입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#comparison",
+  },
+  "permissionless-consensus-release-gate": {
+    id: "permissionless-consensus-release-gate",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Permissionless consensus paired release gate",
+    definition: "같은 binary·config·membership·transaction workload·fault schedule에서 conflicting finality 0건을 hard gate로 두고 reorg depth·recovery time·resource cost·participation concentration을 paired 측정하는 채택 계약입니다.",
+    canonicalHref: "/blockchain/consensus-mechanisms#comparison",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
+  {
+    from: "cuda-launch-hierarchy",
+    to: "cuda-warp-simt",
+    relation: "produces",
+    reason:
+      "Launch한 block threads를 SM이 32-lane warps로 묶어 실제 instruction을 발행합니다.",
+  },
+  {
+    from: "cuda-launch-hierarchy",
+    to: "cuda-block-resource-placement",
+    relation: "constrains",
+    reason:
+      "Block shape와 kernel resource usage가 SM에 동시에 배치할 block·warp 수를 제한합니다.",
+  },
+  {
+    from: "cuda-launch-hierarchy",
+    to: "cuda-global-index",
+    relation: "produces",
+    reason:
+      "Grid·block·thread coordinates를 data의 고유 logical index로 바꿉니다.",
+  },
+  {
+    from: "cuda-global-index",
+    to: "cuda-global-coalescing",
+    relation: "constrains",
+    reason:
+      "인접 warp lanes에 어떤 data addresses를 매핑했는지가 global transaction 수를 결정합니다.",
+  },
+  {
+    from: "cuda-block-resource-placement",
+    to: "cuda-shared-scratchpad",
+    relation: "constrains",
+    reason:
+      "Shared-memory allocation은 block당 SM resource를 소비해 resident blocks와 occupancy를 제한합니다.",
+  },
+  {
+    from: "cuda-shared-scratchpad",
+    to: "cuda-global-coalescing",
+    relation: "optimizes",
+    reason:
+      "Shared tile은 global accesses를 연속 transaction에 맞게 stage·reorder할 수 있습니다.",
+  },
+  {
+    from: "cuda-shared-scratchpad",
+    to: "cuda-shared-bank-conflict",
+    relation: "constrains",
+    reason:
+      "Shared tile의 address stride가 같은 warp request의 bank parallelism을 제한합니다.",
+  },
+  {
+    from: "cuda-data-layout-aos-soa",
+    to: "cuda-global-coalescing",
+    relation: "optimizes",
+    reason:
+      "Kernel이 읽는 field를 연속 배치하면 warp가 옮긴 byte 중 useful byte 비율을 높일 수 있습니다.",
+  },
+  {
+    from: "cuda-shared-scratchpad",
+    to: "cuda-synchronization-scope",
+    relation: "prerequisite",
+    reason:
+      "다른 thread가 stage한 shared data를 읽기 전 producer completion과 visibility를 같은 block에 보장해야 합니다.",
+  },
+  {
+    from: "cuda-synchronization-scope",
+    to: "cuda-stream-ordering",
+    relation: "extends",
+    reason:
+      "Kernel 내부 group ordering을 넘어 host가 제출한 operations 사이 순서를 stream scope로 표현합니다.",
+  },
+  {
+    from: "cuda-stream-ordering",
+    to: "cuda-event-dependency",
+    relation: "extends",
+    reason:
+      "서로 다른 ordered queues 사이 필요한 producer→consumer edge만 event로 추가합니다.",
+  },
+  {
+    from: "cuda-event-dependency",
+    to: "cuda-multigpu-resource-ownership",
+    relation: "constrains",
+    reason:
+      "Event·stream의 owning device를 확인해야 multi-GPU dependency API와 timing의 의미가 유효합니다.",
+  },
   {
     from: "sft",
     to: "reasoning-recipe-reproduction-scope",
@@ -13436,7 +14067,8 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     from: "parameterized-model",
     to: "forward-pass",
     relation: "prerequisite",
-    reason: "현재 parameter θ를 고정하고 입력 x에서 fθ(x)를 계산해야 model output을 관측할 수 있습니다.",
+    reason:
+      "현재 parameter θ를 고정하고 입력 x에서 fθ(x)를 계산해야 model output을 관측할 수 있습니다.",
   },
   {
     from: "forward-pass",
@@ -15188,8 +15820,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     from: "sandbox-runtime-isolation-spectrum",
     to: "sandbox-workload-control-matrix",
     relation: "constrains",
-    reason:
-      "Code 신뢰도·호환성·기동 비용에 맞는 kernel boundary를 선택합니다.",
+    reason: "Code 신뢰도·호환성·기동 비용에 맞는 kernel boundary를 선택합니다.",
   },
   {
     from: "sandbox-writable-surface-lifetime",
@@ -16273,829 +16904,1469 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     from: "prompt-input-contract",
     to: "prompt-instruction-evidence-boundary",
     relation: "constrains",
-    reason: "Objective와 evidence를 분리해야 retrieved data나 example 안의 문장을 상위 instruction으로 오인하지 않습니다.",
+    reason:
+      "Objective와 evidence를 분리해야 retrieved data나 example 안의 문장을 상위 instruction으로 오인하지 않습니다.",
   },
   {
     from: "prompt-input-contract",
     to: "prompt-completion-verification-contract",
     relation: "produces",
-    reason: "누가 결과를 소비하는지에서 schema·completion criteria·validator를 도출합니다.",
+    reason:
+      "누가 결과를 소비하는지에서 schema·completion criteria·validator를 도출합니다.",
   },
   {
     from: "prompt-zero-few-shot-boundary",
     to: "in-context-learning-demonstration",
     relation: "produces",
-    reason: "Few-shot 경로는 현재 context의 demonstration을 조건으로 model behavior를 바꿉니다.",
+    reason:
+      "Few-shot 경로는 현재 context의 demonstration을 조건으로 model behavior를 바꿉니다.",
   },
   {
     from: "in-context-learning-demonstration",
     to: "demonstration-selection-order-sensitivity",
     relation: "constrains",
-    reason: "Demonstration의 내용·label balance·순서가 prediction에 영향을 줄 수 있어 permutation과 subset 평가가 필요합니다.",
+    reason:
+      "Demonstration의 내용·label balance·순서가 prediction에 영향을 줄 수 있어 permutation과 subset 평가가 필요합니다.",
   },
   {
     from: "chain-of-thought-elicitation",
     to: "self-consistency-answer-marginalization",
     relation: "extends",
-    reason: "하나의 reasoning path 대신 여러 path를 sampling해 answer별 지지를 합칩니다.",
+    reason:
+      "하나의 reasoning path 대신 여러 path를 sampling해 answer별 지지를 합칩니다.",
   },
   {
     from: "chain-of-thought-faithfulness-boundary",
     to: "chain-of-thought-elicitation",
     relation: "constrains",
-    reason: "출력 reasoning의 자연스러움과 실제 answer correctness·causal faithfulness를 별도로 검증합니다.",
+    reason:
+      "출력 reasoning의 자연스러움과 실제 answer correctness·causal faithfulness를 별도로 검증합니다.",
   },
   {
     from: "prompt-structured-output-contract",
     to: "syntactic-semantic-validity-boundary",
     relation: "extends",
-    reason: "Prompt가 소비자 schema를 정의한 뒤 constrained decoding과 domain validator가 syntax·semantics를 나눠 강제합니다.",
+    reason:
+      "Prompt가 소비자 schema를 정의한 뒤 constrained decoding과 domain validator가 syntax·semantics를 나눠 강제합니다.",
   },
   {
     from: "prompt-completion-verification-contract",
     to: "prompt-evaluation-regression-loop",
     relation: "evaluates",
-    reason: "완료 기준을 versioned eval case와 metric으로 바꿔 prompt 변경 전후를 비교합니다.",
+    reason:
+      "완료 기준을 versioned eval case와 metric으로 바꿔 prompt 변경 전후를 비교합니다.",
   },
   {
     from: "prompt-model-version-portability",
     to: "prompt-evaluation-regression-loop",
     relation: "constrains",
-    reason: "Model·snapshot·template·decoding 변경마다 같은 regression slice와 canary를 다시 실행합니다.",
+    reason:
+      "Model·snapshot·template·decoding 변경마다 같은 regression slice와 canary를 다시 실행합니다.",
   },
   {
     from: "prompt-instruction-evidence-boundary",
     to: "xml-prompt-delimiter-boundary",
     relation: "extends",
-    reason: "Prompt의 instruction·evidence 구분을 실제 start/end tag와 nested block으로 직렬화합니다.",
+    reason:
+      "Prompt의 instruction·evidence 구분을 실제 start/end tag와 nested block으로 직렬화합니다.",
   },
   {
     from: "xml-prompt-delimiter-boundary",
     to: "xml-prompt-role-tag-vocabulary",
     relation: "produces",
-    reason: "구분하려는 실제 역할에서 일관된 tag name과 block vocabulary를 도출합니다.",
+    reason:
+      "구분하려는 실제 역할에서 일관된 tag name과 block vocabulary를 도출합니다.",
   },
   {
     from: "xml-well-formedness-nesting",
     to: "xml-character-data-escaping",
     relation: "constrains",
-    reason: "Template 밖에서 들어오는 character data가 markup 구조를 깨지 않도록 직렬화해야 합니다.",
+    reason:
+      "Template 밖에서 들어오는 character data가 markup 구조를 깨지 않도록 직렬화해야 합니다.",
   },
   {
     from: "xml-prompt-role-tag-vocabulary",
     to: "xml-repeated-record-identity",
     relation: "extends",
-    reason: "여러 document·example을 반복할 때 collection·record·metadata 관계를 명시합니다.",
+    reason:
+      "여러 document·example을 반복할 때 collection·record·metadata 관계를 명시합니다.",
   },
   {
     from: "xml-prompt-structure-runtime-boundary",
     to: "xml-prompt-delimiter-boundary",
     relation: "constrains",
-    reason: "Tag가 설명하는 구조와 application runtime이 실제로 실행·승인하는 control flow를 분리합니다.",
+    reason:
+      "Tag가 설명하는 구조와 application runtime이 실제로 실행·승인하는 control flow를 분리합니다.",
   },
   {
     from: "xml-output-parser-validator-pipeline",
     to: "xml-wellformed-valid-semantic-boundary",
     relation: "evaluates",
-    reason: "Parser 성공 뒤에도 schema와 domain·policy validator가 서로 다른 실패를 판정합니다.",
+    reason:
+      "Parser 성공 뒤에도 schema와 domain·policy validator가 서로 다른 실패를 판정합니다.",
   },
   {
     from: "xml-external-entity-security-boundary",
     to: "xml-output-parser-validator-pipeline",
     relation: "constrains",
-    reason: "Untrusted output을 읽는 parser는 DTD·external entity·network access와 resource budget을 제한해야 합니다.",
+    reason:
+      "Untrusted output을 읽는 parser는 DTD·external entity·network access와 resource budget을 제한해야 합니다.",
   },
   {
     from: "prompt-structured-output-contract",
     to: "xml-output-parser-validator-pipeline",
     relation: "extends",
-    reason: "Consumer output contract를 XML parser와 typed validation 단계로 구현합니다.",
+    reason:
+      "Consumer output contract를 XML parser와 typed validation 단계로 구현합니다.",
   },
   {
     from: "xml-prompt-format-selection-evaluation",
     to: "prompt-evaluation-regression-loop",
     relation: "extends",
-    reason: "Format 선택도 같은 model·dataset·decoder에서 versioned regression으로 비교합니다.",
+    reason:
+      "Format 선택도 같은 model·dataset·decoder에서 versioned regression으로 비교합니다.",
   },
   {
     from: "mcp-integration-protocol-boundary",
     to: "mcp-host-client-server-boundary",
     relation: "produces",
-    reason: "공통 message contract를 실제 제품·연결·domain service의 세 책임으로 나눕니다.",
+    reason:
+      "공통 message contract를 실제 제품·연결·domain service의 세 책임으로 나눕니다.",
   },
   {
     from: "mcp-host-client-server-boundary",
     to: "mcp-stateless-request-envelope",
     relation: "constrains",
-    reason: "Client가 각 server 요청에 필요한 protocol context를 독립된 envelope로 전달합니다.",
+    reason:
+      "Client가 각 server 요청에 필요한 protocol context를 독립된 envelope로 전달합니다.",
   },
   {
     from: "mcp-version-capability-discovery",
     to: "mcp-stateless-request-envelope",
     relation: "produces",
-    reason: "Version과 capability 정보가 session handshake가 아니라 요청별 _meta와 discover 결과에 드러납니다.",
+    reason:
+      "Version과 capability 정보가 session handshake가 아니라 요청별 _meta와 discover 결과에 드러납니다.",
   },
   {
     from: "mcp-explicit-application-handle",
     to: "mcp-stateless-request-envelope",
     relation: "extends",
-    reason: "Core는 stateless로 유지하면서 후속 작업에 필요한 application state만 explicit handle로 전달합니다.",
+    reason:
+      "Core는 stateless로 유지하면서 후속 작업에 필요한 application state만 explicit handle로 전달합니다.",
   },
   {
     from: "mcp-tool-resource-prompt-boundary",
     to: "mcp-json-schema-result-contract",
     relation: "constrains",
-    reason: "동작 primitive인 Tool의 입력과 결과를 schema와 resultType으로 검증합니다.",
+    reason:
+      "동작 primitive인 Tool의 입력과 결과를 schema와 resultType으로 검증합니다.",
   },
   {
     from: "mcp-list-cache-contract",
     to: "mcp-tool-resource-prompt-boundary",
     relation: "optimizes",
-    reason: "Primitive 목록 discovery를 권한·scope·TTL 경계 안에서 재사용합니다.",
+    reason:
+      "Primitive 목록 discovery를 권한·scope·TTL 경계 안에서 재사용합니다.",
   },
   {
     from: "mcp-stdio-streamable-http-boundary",
     to: "mcp-header-routing-integrity",
     relation: "produces",
-    reason: "원격 HTTP 배포에서는 method·name·version을 gateway가 검사할 header 계약이 추가됩니다.",
+    reason:
+      "원격 HTTP 배포에서는 method·name·version을 gateway가 검사할 header 계약이 추가됩니다.",
   },
   {
     from: "mcp-json-schema-result-contract",
     to: "mcp-mrtr-input-required",
     relation: "extends",
-    reason: "완료·실패뿐 아니라 추가 입력이 필요한 중간 result를 typed contract로 표현합니다.",
+    reason:
+      "완료·실패뿐 아니라 추가 입력이 필요한 중간 result를 typed contract로 표현합니다.",
   },
   {
     from: "mcp-request-cancellation-subscription-boundary",
     to: "mcp-stdio-streamable-http-boundary",
     relation: "constrains",
-    reason: "Transport별 stream 수명에 따라 취소 신호와 독립 subscription channel의 구현이 달라집니다.",
+    reason:
+      "Transport별 stream 수명에 따라 취소 신호와 독립 subscription channel의 구현이 달라집니다.",
   },
   {
     from: "mcp-authorization-trust-boundary",
     to: "mcp-host-client-server-boundary",
     relation: "constrains",
-    reason: "Host consent와 server-side authorization이 self-reported metadata·model proposal과 분리돼야 합니다.",
+    reason:
+      "Host consent와 server-side authorization이 self-reported metadata·model proposal과 분리돼야 합니다.",
   },
   {
     from: "mcp-extension-deprecation-lifecycle",
     to: "mcp-version-capability-discovery",
     relation: "constrains",
-    reason: "선택 기능과 legacy 호환은 명시적 protocol revision·capability·deprecation 기간으로 관리합니다.",
+    reason:
+      "선택 기능과 legacy 호환은 명시적 protocol revision·capability·deprecation 기간으로 관리합니다.",
   },
   {
     from: "mcp-retry-idempotency-boundary",
     to: "mcp-json-schema-result-contract",
     relation: "extends",
-    reason: "Typed 결과와 effect receipt를 이용해 응답 손실 뒤 중복 실행 여부를 판정합니다.",
+    reason:
+      "Typed 결과와 effect receipt를 이용해 응답 손실 뒤 중복 실행 여부를 판정합니다.",
   },
   {
     from: "run-artifact-provenance",
     to: "devlog-raw-evidence-claim-boundary",
     relation: "prerequisite",
-    reason: "해석 문서의 claim은 code·input·config·run·evaluation을 다시 찾을 수 있는 provenance에서 시작합니다.",
+    reason:
+      "해석 문서의 claim은 code·input·config·run·evaluation을 다시 찾을 수 있는 provenance에서 시작합니다.",
   },
   {
     from: "content-addressed-artifact-reference",
     to: "devlog-raw-evidence-claim-boundary",
     relation: "extends",
-    reason: "움직이는 link뿐 아니라 digest·schema·producer를 보존해야 원문이 바뀌지 않았는지 확인할 수 있습니다.",
+    reason:
+      "움직이는 link뿐 아니라 digest·schema·producer를 보존해야 원문이 바뀌지 않았는지 확인할 수 있습니다.",
   },
   {
     from: "experiment-spec-attempt-identity",
     to: "devlog-raw-evidence-claim-boundary",
     relation: "extends",
-    reason: "같은 조건의 재실행과 서로 다른 attempt를 덮어쓰지 않아야 실패와 수정 전후를 재현할 수 있습니다.",
+    reason:
+      "같은 조건의 재실행과 서로 다른 attempt를 덮어쓰지 않아야 실패와 수정 전후를 재현할 수 있습니다.",
   },
   {
     from: "devlog-raw-evidence-claim-boundary",
     to: "devlog-record-question-ownership",
     relation: "prerequisite",
-    reason: "먼저 관찰 원문과 해석을 나눈 뒤 각 질문의 정본 문서를 정할 수 있습니다.",
+    reason:
+      "먼저 관찰 원문과 해석을 나눈 뒤 각 질문의 정본 문서를 정할 수 있습니다.",
   },
   {
     from: "devlog-record-question-ownership",
     to: "curated-changelog-entry-contract",
     relation: "produces",
-    reason: "‘언제 무엇이 달라졌나’라는 질문의 정본은 검증된 변화를 찾는 Changelog가 소유합니다.",
+    reason:
+      "‘언제 무엇이 달라졌나’라는 질문의 정본은 검증된 변화를 찾는 Changelog가 소유합니다.",
   },
   {
     from: "devlog-record-question-ownership",
     to: "architecture-decision-record-contract",
     relation: "produces",
-    reason: "‘왜 이 선택을 했나’라는 질문의 정본은 context와 consequence를 보존하는 ADR이 소유합니다.",
+    reason:
+      "‘왜 이 선택을 했나’라는 질문의 정본은 context와 consequence를 보존하는 ADR이 소유합니다.",
   },
   {
     from: "devlog-record-question-ownership",
     to: "reusable-lesson-contract",
     relation: "produces",
-    reason: "‘지금 어떤 판단 기준을 적용하나’라는 질문의 정본은 현재 rule을 유지하는 Lessons가 소유합니다.",
+    reason:
+      "‘지금 어떤 판단 기준을 적용하나’라는 질문의 정본은 현재 rule을 유지하는 Lessons가 소유합니다.",
   },
   {
     from: "curated-changelog-entry-contract",
     to: "devlog-record-promotion-threshold",
     relation: "prerequisite",
-    reason: "검증된 변화 중 장기 decision이나 재사용 rule이 있는 경우에만 다음 기록으로 확장합니다.",
+    reason:
+      "검증된 변화 중 장기 decision이나 재사용 rule이 있는 경우에만 다음 기록으로 확장합니다.",
   },
   {
     from: "architecture-decision-record-contract",
     to: "devlog-record-promotion-threshold",
     relation: "constrains",
-    reason: "ADR은 모든 수정이 아니라 이후 선택을 제약하는 significant decision에만 사용합니다.",
+    reason:
+      "ADR은 모든 수정이 아니라 이후 선택을 제약하는 significant decision에만 사용합니다.",
   },
   {
     from: "reusable-lesson-contract",
     to: "devlog-record-promotion-threshold",
     relation: "constrains",
-    reason: "Lesson은 scope·exception·verification을 말할 수 있는 반복 또는 고심각도 판단에만 사용합니다.",
+    reason:
+      "Lesson은 scope·exception·verification을 말할 수 있는 반복 또는 고심각도 판단에만 사용합니다.",
   },
   {
     from: "postmortem-lesson-boundary",
     to: "reusable-lesson-contract",
     relation: "contrasts",
-    reason: "사건의 timeline·impact·action과 현재 재사용할 rule을 서로 다른 정본에 남깁니다.",
+    reason:
+      "사건의 timeline·impact·action과 현재 재사용할 rule을 서로 다른 정본에 남깁니다.",
   },
   {
     from: "devlog-raw-evidence-claim-boundary",
     to: "agent-drafted-record-evidence-boundary",
     relation: "constrains",
-    reason: "Agent 초안의 모든 원인·수치·완료 claim은 실제 source와 verifier receipt로 돌아가야 합니다.",
+    reason:
+      "Agent 초안의 모든 원인·수치·완료 claim은 실제 source와 verifier receipt로 돌아가야 합니다.",
   },
   {
     from: "agent-drafted-record-evidence-boundary",
     to: "curated-changelog-entry-contract",
     relation: "constrains",
-    reason: "Agent가 만든 Changelog 초안도 verified result·실제 link·redaction·사람 승인을 통과해야 합니다.",
+    reason:
+      "Agent가 만든 Changelog 초안도 verified result·실제 link·redaction·사람 승인을 통과해야 합니다.",
   },
   {
     from: "agent-drafted-record-evidence-boundary",
     to: "architecture-decision-record-contract",
     relation: "constrains",
-    reason: "Agent는 option을 요약할 수 있지만 decision driver와 consequence를 발명하거나 accepted를 done으로 만들 수 없습니다.",
+    reason:
+      "Agent는 option을 요약할 수 있지만 decision driver와 consequence를 발명하거나 accepted를 done으로 만들 수 없습니다.",
   },
   {
     from: "agent-drafted-record-evidence-boundary",
     to: "reusable-lesson-contract",
     relation: "constrains",
-    reason: "Agent가 반복 pattern을 제안해도 evidence count·counterexample·scope·owner review 없이 현재 rule로 승격하지 않습니다.",
+    reason:
+      "Agent가 반복 pattern을 제안해도 evidence count·counterexample·scope·owner review 없이 현재 rule로 승격하지 않습니다.",
   },
   {
     from: "run-artifact-provenance",
     to: "claw-independent-reimplementation-snapshot-boundary",
     relation: "prerequisite",
-    reason: "Repository commit·fixture·harness version을 고정해야 project 관찰과 움직이는 main branch를 구분할 수 있습니다.",
+    reason:
+      "Repository commit·fixture·harness version을 고정해야 project 관찰과 움직이는 main branch를 구분할 수 있습니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-crate-responsibility-dependency-map",
     relation: "constrains",
-    reason: "Crate 책임과 의존 방향은 pinned Claw Code snapshot에서 확인한 범위로만 설명합니다.",
+    reason:
+      "Crate 책임과 의존 방향은 pinned Claw Code snapshot에서 확인한 범위로만 설명합니다.",
   },
   {
     from: "llm-harness-system-boundary",
     to: "claw-runtime-adapter-state-ownership",
     relation: "extends",
-    reason: "Model proposal과 runtime 강제를 분리하는 일반 harness 경계를 Claw Code의 runtime·adapter 책임에 적용합니다.",
+    reason:
+      "Model proposal과 runtime 강제를 분리하는 일반 harness 경계를 Claw Code의 runtime·adapter 책임에 적용합니다.",
   },
   {
     from: "agent-observation-action-loop",
     to: "claw-runtime-adapter-state-ownership",
     relation: "prerequisite",
-    reason: "Turn owner와 adapter를 나누려면 proposal→execution→typed observation→state update 순서를 먼저 구분해야 합니다.",
+    reason:
+      "Turn owner와 adapter를 나누려면 proposal→execution→typed observation→state update 순서를 먼저 구분해야 합니다.",
   },
   {
     from: "claw-crate-responsibility-dependency-map",
     to: "claw-runtime-adapter-state-ownership",
     relation: "produces",
-    reason: "Workspace dependency map에서 runtime이 orchestration state를, provider·tool crate가 adapter 결과를 소유하는 seam을 찾습니다.",
+    reason:
+      "Workspace dependency map에서 runtime이 orchestration state를, provider·tool crate가 adapter 결과를 소유하는 seam을 찾습니다.",
   },
   {
     from: "typed-tool-observation-contract",
     to: "claw-provider-stream-normalization-contract",
     relation: "extends",
-    reason: "Provider별 streaming frame도 success·error·source·order가 있는 typed runtime observation으로 바꿔야 합니다.",
+    reason:
+      "Provider별 streaming frame도 success·error·source·order가 있는 typed runtime observation으로 바꿔야 합니다.",
   },
   {
     from: "claw-runtime-adapter-state-ownership",
     to: "claw-provider-stream-normalization-contract",
     relation: "produces",
-    reason: "Provider adapter는 transport frame을 runtime event로 반환하고 session commit 여부는 runtime이 결정합니다.",
+    reason:
+      "Provider adapter는 transport frame을 runtime event로 반환하고 session commit 여부는 runtime이 결정합니다.",
   },
   {
     from: "agent-capability-runtime-boundary",
     to: "claw-runtime-adapter-state-ownership",
     relation: "constrains",
-    reason: "Tool registry의 schema 발견과 permission·workspace enforcement를 model proposal이나 adapter 내부 상태와 섞지 않습니다.",
+    reason:
+      "Tool registry의 schema 발견과 permission·workspace enforcement를 model proposal이나 adapter 내부 상태와 섞지 않습니다.",
   },
   {
     from: "claw-python-reference-oracle-boundary",
     to: "claw-observable-behavioral-parity-surface",
     relation: "constrains",
-    reason: "Python reference를 oracle로 쓸 수 있는 범위를 observable contract별로 먼저 선언합니다.",
+    reason:
+      "Python reference를 oracle로 쓸 수 있는 범위를 observable contract별로 먼저 선언합니다.",
   },
   {
     from: "claw-provider-stream-normalization-contract",
     to: "claw-observable-behavioral-parity-surface",
     relation: "produces",
-    reason: "Provider stream에서 조립된 event·tool call·error category는 Rust/Python parity의 주요 observable입니다.",
+    reason:
+      "Provider stream에서 조립된 event·tool call·error category는 Rust/Python parity의 주요 observable입니다.",
   },
   {
     from: "claw-observable-behavioral-parity-surface",
     to: "claw-deterministic-fixture-canonicalization",
     relation: "prerequisite",
-    reason: "무엇이 contract인지 정한 뒤에만 비결정적 field를 의미를 훼손하지 않고 정규화할 수 있습니다.",
+    reason:
+      "무엇이 contract인지 정한 뒤에만 비결정적 field를 의미를 훼손하지 않고 정규화할 수 있습니다.",
   },
   {
     from: "versioned-verifier-measurement",
     to: "claw-deterministic-fixture-canonicalization",
     relation: "constrains",
-    reason: "Fixture·normalizer·expected result를 versioned measurement program으로 기록해 golden update를 추적합니다.",
+    reason:
+      "Fixture·normalizer·expected result를 versioned measurement program으로 기록해 golden update를 추적합니다.",
   },
   {
     from: "claw-deterministic-fixture-canonicalization",
     to: "claw-parity-integration-test-boundary",
     relation: "prerequisite",
-    reason: "Deterministic mock이 검증하는 observable을 고정해야 실제 network·OS·sandbox가 남긴 공백을 알 수 있습니다.",
+    reason:
+      "Deterministic mock이 검증하는 observable을 고정해야 실제 network·OS·sandbox가 남긴 공백을 알 수 있습니다.",
   },
   {
     from: "layered-agent-verification",
     to: "claw-parity-integration-test-boundary",
     relation: "extends",
-    reason: "빠른 parity, 실제 provider contract, sandbox integration, end-to-end 검증을 위험과 비용에 따라 층으로 쌓습니다.",
+    reason:
+      "빠른 parity, 실제 provider contract, sandbox integration, end-to-end 검증을 위험과 비용에 따라 층으로 쌓습니다.",
   },
   {
     from: "agent-trajectory-effect-evaluation",
     to: "claw-parity-integration-test-boundary",
     relation: "evaluates",
-    reason: "최종 답뿐 아니라 permission path·workspace diff·test receipt·recovery를 층별 test에서 따로 확인합니다.",
+    reason:
+      "최종 답뿐 아니라 permission path·workspace diff·test receipt·recovery를 층별 test에서 따로 확인합니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-tool-registry-composition-contract",
     relation: "constrains",
-    reason: "Registry source·collision·실행 경로 주장은 pinned Claw commit에서 관찰한 범위로만 설명합니다.",
+    reason:
+      "Registry source·collision·실행 경로 주장은 pinned Claw commit에서 관찰한 범위로만 설명합니다.",
   },
   {
     from: "prompt-structured-output-contract",
     to: "claw-tool-spec-schema-domain-boundary",
     relation: "extends",
-    reason: "Tool input도 field·type·required·additional property를 schema로 고정하되 domain semantics와 authorization은 별도 판정합니다.",
+    reason:
+      "Tool input도 field·type·required·additional property를 schema로 고정하되 domain semantics와 authorization은 별도 판정합니다.",
   },
   {
     from: "syntactic-semantic-validity-boundary",
     to: "claw-tool-spec-schema-domain-boundary",
     relation: "prerequisite",
-    reason: "Schema-valid JSON과 실제 workspace path·command·business constraint가 유효한지는 서로 다른 질문입니다.",
+    reason:
+      "Schema-valid JSON과 실제 workspace path·command·business constraint가 유효한지는 서로 다른 질문입니다.",
   },
   {
     from: "claw-tool-registry-composition-contract",
     to: "claw-tool-dispatch-execution-contract",
     relation: "produces",
-    reason: "충돌 없이 고정된 registry entry가 있어야 name lookup부터 executor까지 하나의 dispatch contract를 적용할 수 있습니다.",
+    reason:
+      "충돌 없이 고정된 registry entry가 있어야 name lookup부터 executor까지 하나의 dispatch contract를 적용할 수 있습니다.",
   },
   {
     from: "claw-tool-spec-schema-domain-boundary",
     to: "claw-tool-dispatch-execution-contract",
     relation: "prerequisite",
-    reason: "Dispatch는 model이 본 schema와 같은 계약으로 input을 parse하고 domain error를 실행 오류와 구분해야 합니다.",
+    reason:
+      "Dispatch는 model이 본 schema와 같은 계약으로 input을 parse하고 domain error를 실행 오류와 구분해야 합니다.",
   },
   {
     from: "agent-capability-runtime-boundary",
     to: "claw-tool-effect-permission-enforcement-boundary",
     relation: "extends",
-    reason: "Tool schema를 생성하는 능력과 argument별 side effect를 host가 실제로 허용하는 권한을 분리합니다.",
+    reason:
+      "Tool schema를 생성하는 능력과 argument별 side effect를 host가 실제로 허용하는 권한을 분리합니다.",
   },
   {
     from: "claw-tool-dispatch-execution-contract",
     to: "claw-tool-effect-permission-enforcement-boundary",
     relation: "constrains",
-    reason: "모든 built-in·plugin·runtime call이 executor 전에 같은 effect·permission enforcement 지점을 거쳐야 합니다.",
+    reason:
+      "모든 built-in·plugin·runtime call이 executor 전에 같은 effect·permission enforcement 지점을 거쳐야 합니다.",
   },
   {
     from: "typed-tool-observation-contract",
     to: "claw-tool-result-receipt-envelope",
     relation: "extends",
-    reason: "Claw tool result에 stable error·truncation·artifact·effect receipt를 넣어 다음 turn이 빈 결과와 실패를 구분합니다.",
+    reason:
+      "Claw tool result에 stable error·truncation·artifact·effect receipt를 넣어 다음 turn이 빈 결과와 실패를 구분합니다.",
   },
   {
     from: "mcp-retry-idempotency-boundary",
     to: "claw-tool-result-receipt-envelope",
     relation: "constrains",
-    reason: "Timeout 뒤 retry 전에 operation identity와 effect receipt로 ambiguous completion을 판정해야 합니다.",
+    reason:
+      "Timeout 뒤 retry 전에 operation identity와 effect receipt로 ambiguous completion을 판정해야 합니다.",
   },
   {
     from: "claw-extension-tool-adapter-identity-boundary",
     to: "claw-tool-definition-generation-pin",
     relation: "prerequisite",
-    reason: "Source·version·instance identity를 보존해야 reload 전후 schema와 executor를 같은 generation에 묶을 수 있습니다.",
+    reason:
+      "Source·version·instance identity를 보존해야 reload 전후 schema와 executor를 같은 generation에 묶을 수 있습니다.",
   },
   {
     from: "mcp-json-schema-result-contract",
     to: "claw-extension-tool-adapter-identity-boundary",
     relation: "extends",
-    reason: "MCP input/output contract를 Claw model-facing definition과 typed result로 바꾸되 MCP lifecycle과 authorization은 별도로 유지합니다.",
+    reason:
+      "MCP input/output contract를 Claw model-facing definition과 typed result로 바꾸되 MCP lifecycle과 authorization은 별도로 유지합니다.",
   },
   {
     from: "skill-plugin-distribution-boundary",
     to: "claw-extension-tool-adapter-identity-boundary",
     relation: "constrains",
-    reason: "Plugin package의 discovery·distribution 책임과 registry에 합류한 executable tool의 runtime 계약을 구분합니다.",
+    reason:
+      "Plugin package의 discovery·distribution 책임과 registry에 합류한 executable tool의 runtime 계약을 구분합니다.",
   },
   {
     from: "claw-tool-effect-permission-enforcement-boundary",
     to: "claw-tool-parallel-dependency-boundary",
     relation: "constrains",
-    reason: "Effect가 겹치거나 approval·write dependency가 있는 call은 독립 병렬 node로 취급할 수 없습니다.",
+    reason:
+      "Effect가 겹치거나 approval·write dependency가 있는 call은 독립 병렬 node로 취급할 수 없습니다.",
   },
   {
     from: "code-mode-effect-atomicity",
     to: "claw-tool-parallel-dependency-boundary",
     relation: "prerequisite",
-    reason: "여러 call의 부분 성공·retry·compensation은 한 group 실행과 원자적 transaction을 구분해야 합니다.",
+    reason:
+      "여러 call의 부분 성공·retry·compensation은 한 group 실행과 원자적 transaction을 구분해야 합니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-permission-policy-evaluation-snapshot",
     relation: "constrains",
-    reason: "Mode·rule·prompt 순서는 pinned Claw commit에서 관찰한 구현에만 귀속하고 다른 agent 제품의 정책으로 일반화하지 않습니다.",
+    reason:
+      "Mode·rule·prompt 순서는 pinned Claw commit에서 관찰한 구현에만 귀속하고 다른 agent 제품의 정책으로 일반화하지 않습니다.",
   },
   {
     from: "claw-permission-rule-subject-matcher-snapshot",
     to: "claw-permission-policy-evaluation-snapshot",
     relation: "prerequisite",
-    reason: "어떤 rule이 match했는지 알려면 tool name과 input에서 실제 비교한 subject·matcher semantics를 먼저 알아야 합니다.",
+    reason:
+      "어떤 rule이 match했는지 알려면 tool name과 input에서 실제 비교한 subject·matcher semantics를 먼저 알아야 합니다.",
   },
   {
     from: "claw-permission-policy-evaluation-snapshot",
     to: "claw-permission-context-override-precedence",
     relation: "constrains",
-    reason: "Hook override는 독립적인 권한이 아니라 denied tool·deny·ask·mode 판정 안에서 결합됩니다.",
+    reason:
+      "Hook override는 독립적인 권한이 아니라 denied tool·deny·ask·mode 판정 안에서 결합됩니다.",
   },
   {
     from: "agent-capability-runtime-boundary",
     to: "claw-permission-authority-ceiling-gap",
     relation: "extends",
-    reason: "Model이 tool call을 제안하는 능력과 deployment가 실제로 가진 최대 authority를 분리해 approval도 ceiling 밖으로 나가지 못하게 합니다.",
+    reason:
+      "Model이 tool call을 제안하는 능력과 deployment가 실제로 가진 최대 authority를 분리해 approval도 ceiling 밖으로 나가지 못하게 합니다.",
   },
   {
     from: "skill-permission-non-escalation",
     to: "claw-permission-context-override-precedence",
     relation: "extends",
-    reason: "Hook·instruction이 기존 deny와 mode requirement를 우회해 새 capability를 만들지 않도록 합니다.",
+    reason:
+      "Hook·instruction이 기존 deny와 mode requirement를 우회해 새 capability를 만들지 않도록 합니다.",
   },
   {
     from: "claw-permission-authority-ceiling-gap",
     to: "claw-permission-policy-evaluation-snapshot",
     relation: "constrains",
-    reason: "Active mode·rule·interactive approval은 outer deployment ceiling 안에서만 유효해야 합니다.",
+    reason:
+      "Active mode·rule·interactive approval은 outer deployment ceiling 안에서만 유효해야 합니다.",
   },
   {
     from: "claw-permission-policy-evaluation-snapshot",
     to: "claw-permission-enforcer-dispatch-seam",
     relation: "produces",
-    reason: "Policy의 allow·deny outcome을 tool executor 직전 dispatch seam에서 소비해야 판정이 실제 실행을 통제합니다.",
+    reason:
+      "Policy의 allow·deny outcome을 tool executor 직전 dispatch seam에서 소비해야 판정이 실제 실행을 통제합니다.",
   },
   {
     from: "claw-tool-effect-permission-enforcement-boundary",
     to: "claw-permission-enforcer-dispatch-seam",
     relation: "extends",
-    reason: "일반적인 argument별 effect 분류를 pinned Claw tools dispatcher와 optional enforcer 경로에서 구체적으로 추적합니다.",
+    reason:
+      "일반적인 argument별 effect 분류를 pinned Claw tools dispatcher와 optional enforcer 경로에서 구체적으로 추적합니다.",
   },
   {
     from: "claw-approval-token-scope-lifecycle-snapshot",
     to: "claw-permission-policy-generation-receipt-gap",
     relation: "extends",
-    reason: "Approval scope·executor·expiry·use count를 실제 policy generation과 effect receipt에 연결해야 standalone ledger가 runtime authorization이 됩니다.",
+    reason:
+      "Approval scope·executor·expiry·use count를 실제 policy generation과 effect receipt에 연결해야 standalone ledger가 runtime authorization이 됩니다.",
   },
   {
     from: "agent-replay-idempotency",
     to: "claw-permission-policy-generation-receipt-gap",
     relation: "constrains",
-    reason: "승인 뒤 crash·retry가 같은 edit를 반복하지 않도록 call·approval·effect identity와 consume 상태를 함께 기록합니다.",
+    reason:
+      "승인 뒤 crash·retry가 같은 edit를 반복하지 않도록 call·approval·effect identity와 consume 상태를 함께 기록합니다.",
   },
   {
     from: "run-artifact-provenance",
     to: "claw-permission-policy-generation-receipt-gap",
     relation: "constrains",
-    reason: "Policy·rule·actor·canonical argument·effect digest를 versioned receipt로 남겨 stale authorization과 실제 실행을 재현합니다.",
+    reason:
+      "Policy·rule·actor·canonical argument·effect digest를 versioned receipt로 남겨 stale authorization과 실제 실행을 재현합니다.",
   },
   {
     from: "claw-permission-policy-generation-receipt-gap",
     to: "claw-permission-login-release-gate",
     relation: "prerequisite",
-    reason: "무슨 generation과 approval이 어떤 login edit·test effect를 허용했는지 알아야 base/candidate를 정확히 비교할 수 있습니다.",
+    reason:
+      "무슨 generation과 approval이 어떤 login edit·test effect를 허용했는지 알아야 base/candidate를 정확히 비교할 수 있습니다.",
   },
   {
     from: "layered-agent-verification",
     to: "claw-permission-login-release-gate",
     relation: "extends",
-    reason: "Rule unit test, dispatch negative test, deterministic login test와 사람 승인 audit을 위험에 따라 층으로 쌓습니다.",
+    reason:
+      "Rule unit test, dispatch negative test, deterministic login test와 사람 승인 audit을 위험에 따라 층으로 쌓습니다.",
   },
   {
     from: "agent-trajectory-effect-evaluation",
     to: "claw-permission-login-release-gate",
     relation: "evaluates",
-    reason: "최종 답뿐 아니라 approval path·unauthorized executor call·duplicate edit·test receipt·latency를 함께 측정합니다.",
+    reason:
+      "최종 답뿐 아니라 approval path·unauthorized executor call·duplicate edit·test receipt·latency를 함께 측정합니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-session-record-snapshot-boundary",
     relation: "constrains",
-    reason: "Session record와 persistence 주장은 pinned Claw commit의 실제 field·JSONL record·test가 보여 주는 범위로 제한합니다.",
+    reason:
+      "Session record와 persistence 주장은 pinned Claw commit의 실제 field·JSONL record·test가 보여 주는 범위로 제한합니다.",
   },
   {
     from: "claw-session-record-snapshot-boundary",
     to: "claw-session-typed-content-correlation-contract",
     relation: "produces",
-    reason: "Session record 안에서 role·content block·tool call/result identity를 잃지 않아야 transcript를 재구성할 수 있습니다.",
+    reason:
+      "Session record 안에서 role·content block·tool call/result identity를 잃지 않아야 transcript를 재구성할 수 있습니다.",
   },
   {
     from: "typed-tool-observation-contract",
     to: "claw-session-typed-content-correlation-contract",
     relation: "extends",
-    reason: "Tool observation의 call identity·success/error를 Claw의 ToolUse·ToolResult block correlation에 적용합니다.",
+    reason:
+      "Tool observation의 call identity·success/error를 Claw의 ToolUse·ToolResult block correlation에 적용합니다.",
   },
   {
     from: "claw-runtime-adapter-state-ownership",
     to: "claw-conversation-turn-persistence-order",
     relation: "produces",
-    reason: "Provider와 tool adapter가 반환한 event를 session에 반영하고 loop를 계속할 책임은 ConversationRuntime에 남습니다.",
+    reason:
+      "Provider와 tool adapter가 반환한 event를 session에 반영하고 loop를 계속할 책임은 ConversationRuntime에 남습니다.",
   },
   {
     from: "claw-session-typed-content-correlation-contract",
     to: "claw-conversation-turn-persistence-order",
     relation: "prerequisite",
-    reason: "User·assistant·tool message와 call/result identity가 있어야 실제 turn persistence 순서를 추적할 수 있습니다.",
+    reason:
+      "User·assistant·tool message와 call/result identity가 있어야 실제 turn persistence 순서를 추적할 수 있습니다.",
   },
   {
     from: "claw-conversation-turn-persistence-order",
     to: "claw-session-effect-commit-reconciliation-gap",
     relation: "constrains",
-    reason: "Tool 실행 뒤 result가 저장되는 실제 순서에서 crash cut을 놓으면 중복 effect 위험을 볼 수 없습니다.",
+    reason:
+      "Tool 실행 뒤 result가 저장되는 실제 순서에서 crash cut을 놓으면 중복 effect 위험을 볼 수 없습니다.",
   },
   {
     from: "agent-replay-idempotency",
     to: "claw-session-effect-commit-reconciliation-gap",
     relation: "extends",
-    reason: "Stable operation key·receipt 조회·deduplication으로 resume가 같은 edit나 external effect를 다시 만들지 않게 합니다.",
+    reason:
+      "Stable operation key·receipt 조회·deduplication으로 resume가 같은 edit나 external effect를 다시 만들지 않게 합니다.",
   },
   {
     from: "code-mode-effect-atomicity",
     to: "claw-session-effect-commit-reconciliation-gap",
     relation: "prerequisite",
-    reason: "Program·turn commit과 실제 filesystem·process·network effect의 transaction 경계는 같지 않습니다.",
+    reason:
+      "Program·turn commit과 실제 filesystem·process·network effect의 transaction 경계는 같지 않습니다.",
   },
   {
     from: "claw-session-record-snapshot-boundary",
     to: "claw-session-persistence-write-boundary",
     relation: "constrains",
-    reason: "Record append와 전체 snapshot rewrite를 구분해야 crash·rotation·concurrent writer의 복구 범위를 정확히 설명할 수 있습니다.",
+    reason:
+      "Record append와 전체 snapshot rewrite를 구분해야 crash·rotation·concurrent writer의 복구 범위를 정확히 설명할 수 있습니다.",
   },
   {
     from: "checkpoint-replay-boundary",
     to: "claw-session-workspace-store-resume-boundary",
     relation: "extends",
-    reason: "저장 파일을 다시 여는 것과 workspace·pending operation·현재 policy를 검증해 안전하게 실행을 재개하는 것은 다른 단계입니다.",
+    reason:
+      "저장 파일을 다시 여는 것과 workspace·pending operation·현재 policy를 검증해 안전하게 실행을 재개하는 것은 다른 단계입니다.",
   },
   {
     from: "run-artifact-provenance",
     to: "claw-session-workspace-store-resume-boundary",
     relation: "constrains",
-    reason: "Session ID뿐 아니라 workspace identity·source commit·artifact digest가 있어야 다른 작업 디렉터리로 잘못 resume하는 일을 막을 수 있습니다.",
+    reason:
+      "Session ID뿐 아니라 workspace identity·source commit·artifact digest가 있어야 다른 작업 디렉터리로 잘못 resume하는 일을 막을 수 있습니다.",
   },
   {
     from: "claw-session-record-snapshot-boundary",
     to: "claw-session-fork-provenance-copy-boundary",
     relation: "produces",
-    reason: "Pinned fork는 현재 session record를 복제하고 parent identity를 덧붙이는 방식이므로 immutable branch graph와 구분합니다.",
+    reason:
+      "Pinned fork는 현재 session record를 복제하고 parent identity를 덧붙이는 방식이므로 immutable branch graph와 구분합니다.",
   },
   {
     from: "content-addressed-artifact-reference",
     to: "claw-session-fork-provenance-copy-boundary",
     relation: "extends",
-    reason: "대화 branch와 workspace 결과를 함께 비교·merge하려면 artifact URI뿐 아니라 digest·producer branch를 보존해야 합니다.",
+    reason:
+      "대화 branch와 workspace 결과를 함께 비교·merge하려면 artifact URI뿐 아니라 digest·producer branch를 보존해야 합니다.",
   },
   {
     from: "agent-artifact-state-continuity",
     to: "claw-session-fork-provenance-copy-boundary",
     relation: "extends",
-    reason: "Branch가 transcript 복제에 그치지 않으려면 목표·결정·diff·검증 evidence·미완료 상태의 lineage가 필요합니다.",
+    reason:
+      "Branch가 transcript 복제에 그치지 않으려면 목표·결정·diff·검증 evidence·미완료 상태의 lineage가 필요합니다.",
   },
   {
     from: "claw-session-workspace-store-resume-boundary",
     to: "claw-session-lifecycle-state-machine-gap",
     relation: "constrains",
-    reason: "Session file을 찾고 load하는 기능만으로 pause·drain·effect reconciliation·closed 전이를 보장할 수 없습니다.",
+    reason:
+      "Session file을 찾고 load하는 기능만으로 pause·drain·effect reconciliation·closed 전이를 보장할 수 없습니다.",
   },
   {
     from: "interrupt-resume-contract",
     to: "claw-session-lifecycle-state-machine-gap",
     relation: "extends",
-    reason: "Pause와 사람 승인을 재개할 때 checkpoint identity·중단 이유·검증된 resume input을 durable lifecycle에 연결합니다.",
+    reason:
+      "Pause와 사람 승인을 재개할 때 checkpoint identity·중단 이유·검증된 resume input을 durable lifecycle에 연결합니다.",
   },
   {
     from: "agent-exit-state-machine",
     to: "claw-session-lifecycle-state-machine-gap",
     relation: "constrains",
-    reason: "Completed·failed·awaiting approval 같은 turn 결과와 Paused·Closed 같은 session lifecycle을 서로 다른 상태 층으로 유지합니다.",
+    reason:
+      "Completed·failed·awaiting approval 같은 turn 결과와 Paused·Closed 같은 session lifecycle을 서로 다른 상태 층으로 유지합니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-compaction-trigger-paths-snapshot",
     relation: "constrains",
-    reason: "Trigger threshold·오류 분류·retry schedule은 pinned Claw commit에서 관찰한 구현 범위로만 설명합니다.",
+    reason:
+      "Trigger threshold·오류 분류·retry schedule은 pinned Claw commit에서 관찰한 구현 범위로만 설명합니다.",
   },
   {
     from: "context-token-budget-allocation",
     to: "claw-compaction-trigger-paths-snapshot",
     relation: "prerequisite",
-    reason: "Input history뿐 아니라 output reserve와 실제 usage를 구분해야 수동·자동·오류 복구 trigger를 평가할 수 있습니다.",
+    reason:
+      "Input history뿐 아니라 output reserve와 실제 usage를 구분해야 수동·자동·오류 복구 trigger를 평가할 수 있습니다.",
   },
   {
     from: "claw-compaction-trigger-paths-snapshot",
     to: "claw-compaction-summary-projection-snapshot",
     relation: "produces",
-    reason: "수동·자동·복구 경로가 compaction을 결정하면 pinned projection이 오래된 history를 synthetic summary와 recent tail로 바꿉니다.",
+    reason:
+      "수동·자동·복구 경로가 compaction을 결정하면 pinned projection이 오래된 history를 synthetic summary와 recent tail로 바꿉니다.",
   },
   {
     from: "claw-session-typed-content-correlation-contract",
     to: "claw-compaction-tail-tool-pair-boundary",
     relation: "prerequisite",
-    reason: "ToolUse·ToolResult role과 identity를 알아야 recent-tail 경계에서 orphan result를 만들지 않을 수 있습니다.",
+    reason:
+      "ToolUse·ToolResult role과 identity를 알아야 recent-tail 경계에서 orphan result를 만들지 않을 수 있습니다.",
   },
   {
     from: "claw-compaction-tail-tool-pair-boundary",
     to: "claw-compaction-summary-projection-snapshot",
     relation: "constrains",
-    reason: "원문 보존 경계를 먼저 안전하게 정한 뒤 그 앞의 message만 summary 대상으로 보냅니다.",
+    reason:
+      "원문 보존 경계를 먼저 안전하게 정한 뒤 그 앞의 message만 summary 대상으로 보냅니다.",
   },
   {
     from: "context-curation-lifecycle",
     to: "claw-compaction-summary-projection-snapshot",
     relation: "extends",
-    reason: "일반적인 선택·압축 lifecycle을 pinned Claw의 deterministic role/tool/file/timeline projection으로 구체화합니다.",
+    reason:
+      "일반적인 선택·압축 lifecycle을 pinned Claw의 deterministic role/tool/file/timeline projection으로 구체화합니다.",
   },
   {
     from: "claw-compaction-summary-projection-snapshot",
     to: "claw-compaction-repeated-summary-merge",
     relation: "produces",
-    reason: "첫 projection이 만든 synthetic summary를 다음 cycle에서 찾아 highlight를 평평하게 유지하고 새 구간과 합칩니다.",
+    reason:
+      "첫 projection이 만든 synthetic summary를 다음 cycle에서 찾아 highlight를 평평하게 유지하고 새 구간과 합칩니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-summary-compression-line-policy",
     relation: "constrains",
-    reason: "Line normalization·dedupe·priority는 pinned summary_compression module의 실제 범위이며 session semantic compactor로 확대하지 않습니다.",
+    reason:
+      "Line normalization·dedupe·priority는 pinned summary_compression module의 실제 범위이며 session semantic compactor로 확대하지 않습니다.",
   },
   {
     from: "claw-summary-compression-line-policy",
     to: "claw-compaction-login-state-contract",
     relation: "contrasts",
-    reason: "Line priority로 크기를 줄이는 실제 helper와 goal·permission·receipt를 typed field로 보존해야 하는 hardening 계약을 구분합니다.",
+    reason:
+      "Line priority로 크기를 줄이는 실제 helper와 goal·permission·receipt를 typed field로 보존해야 하는 hardening 계약을 구분합니다.",
   },
   {
     from: "context-compaction-fidelity",
     to: "claw-compaction-login-state-contract",
     relation: "extends",
-    reason: "일반 objective·artifact·unresolved state fidelity를 로그인 401의 auth evidence·permission·edit/test receipt 보존 항목으로 구체화합니다.",
+    reason:
+      "일반 objective·artifact·unresolved state fidelity를 로그인 401의 auth evidence·permission·edit/test receipt 보존 항목으로 구체화합니다.",
   },
   {
     from: "run-artifact-provenance",
     to: "claw-compaction-login-state-contract",
     relation: "constrains",
-    reason: "긴 stdout을 context에서 줄여도 auth evidence·patch·test는 source URI·digest·producer와 함께 다시 찾을 수 있어야 합니다.",
+    reason:
+      "긴 stdout을 context에서 줄여도 auth evidence·patch·test는 source URI·digest·producer와 함께 다시 찾을 수 있어야 합니다.",
   },
   {
     from: "claw-compaction-context-effect-boundary",
     to: "claw-compaction-fidelity-release-gate",
     relation: "constrains",
-    reason: "Context fidelity 평가가 이미 실행된 edit·process·network effect의 undo나 permission rollback으로 오인되지 않게 합니다.",
+    reason:
+      "Context fidelity 평가가 이미 실행된 edit·process·network effect의 undo나 permission rollback으로 오인되지 않게 합니다.",
   },
   {
     from: "claw-compaction-login-state-contract",
     to: "claw-compaction-fidelity-release-gate",
     relation: "prerequisite",
-    reason: "어떤 login state를 반드시 보존할지 먼저 고정해야 candidate summary를 commit할지 deterministic하게 판정할 수 있습니다.",
+    reason:
+      "어떤 login state를 반드시 보존할지 먼저 고정해야 candidate summary를 commit할지 deterministic하게 판정할 수 있습니다.",
   },
   {
     from: "layered-agent-verification",
     to: "claw-compaction-fidelity-release-gate",
     relation: "extends",
-    reason: "Schema·tool pair·artifact identity 검사에서 replay next-action·사람 review까지 compaction risk에 맞춰 검증을 쌓습니다.",
+    reason:
+      "Schema·tool pair·artifact identity 검사에서 replay next-action·사람 review까지 compaction risk에 맞춰 검증을 쌓습니다.",
   },
   {
     from: "agent-trajectory-effect-evaluation",
     to: "claw-compaction-fidelity-release-gate",
     relation: "evaluates",
-    reason: "압축률뿐 아니라 반복 edit·permission drift·test 재실행·복구 개입과 token·latency를 별도 metric으로 비교합니다.",
+    reason:
+      "압축률뿐 아니라 반복 edit·permission drift·test 재실행·복구 개입과 token·latency를 별도 metric으로 비교합니다.",
   },
   {
     from: "claw-independent-reimplementation-snapshot-boundary",
     to: "claw-bash-shell-dispatch-snapshot",
     relation: "constrains",
-    reason: "Bash input·host cwd·`sh -lc` dispatch 주장을 pinned Claw commit에서 관찰한 source 범위로 제한합니다.",
+    reason:
+      "Bash input·host cwd·`sh -lc` dispatch 주장을 pinned Claw commit에서 관찰한 source 범위로 제한합니다.",
   },
   {
     from: "syntactic-semantic-validity-boundary",
     to: "claw-bash-shell-dispatch-snapshot",
     relation: "prerequisite",
-    reason: "Schema-valid command 문자열과 shell language가 expansion 뒤 만드는 executable·argv·effect의 의미를 분리합니다.",
+    reason:
+      "Schema-valid command 문자열과 shell language가 expansion 뒤 만드는 executable·argv·effect의 의미를 분리합니다.",
   },
   {
     from: "claw-bash-shell-dispatch-snapshot",
     to: "claw-bash-validation-integration-gap",
     relation: "constrains",
-    reason: "실제 `sh -lc` executor에 도달하는 call path를 따라가야 별도 validation module이 연결됐는지 판정할 수 있습니다.",
+    reason:
+      "실제 `sh -lc` executor에 도달하는 call path를 따라가야 별도 validation module이 연결됐는지 판정할 수 있습니다.",
   },
   {
     from: "claw-bash-validation-integration-gap",
     to: "claw-bash-command-intent-heuristic-boundary",
     relation: "produces",
-    reason: "별도 validation module은 lexical 검사 중 하나로 first-command 기반 intent classification 결과를 만듭니다.",
+    reason:
+      "별도 validation module은 lexical 검사 중 하나로 first-command 기반 intent classification 결과를 만듭니다.",
   },
   {
     from: "claw-bash-shell-dispatch-snapshot",
     to: "claw-bash-command-intent-heuristic-boundary",
     relation: "constrains",
-    reason: "Shell string 전체가 실행되므로 첫 executable 분류를 pipeline·subshell·expansion 뒤 실제 effect의 증명으로 확대하지 않습니다.",
+    reason:
+      "Shell string 전체가 실행되므로 첫 executable 분류를 pipeline·subshell·expansion 뒤 실제 effect의 증명으로 확대하지 않습니다.",
   },
   {
     from: "claw-tool-effect-permission-enforcement-boundary",
     to: "claw-bash-path-effect-toctou-gap",
     relation: "extends",
-    reason: "일반적인 canonical argument·effect 분류를 Bash의 cwd·environment·symlink·executable resolution과 실행 handle binding 문제로 구체화합니다.",
+    reason:
+      "일반적인 canonical argument·effect 분류를 Bash의 cwd·environment·symlink·executable resolution과 실행 handle binding 문제로 구체화합니다.",
   },
   {
     from: "claw-bash-command-intent-heuristic-boundary",
     to: "claw-bash-path-effect-toctou-gap",
     relation: "constrains",
-    reason: "Intent label만으로 target path와 check-use 사이 resource identity가 보존됐다고 판정할 수 없습니다.",
+    reason:
+      "Intent label만으로 target path와 check-use 사이 resource identity가 보존됐다고 판정할 수 없습니다.",
   },
   {
     from: "claw-permission-enforcer-dispatch-seam",
     to: "claw-bash-optional-permission-enforcement-seam",
     relation: "extends",
-    reason: "일반 Claw permission enforcer의 allowed/denied 결과를 Bash argument-specific required mode와 optional injection 경로에서 추적합니다.",
+    reason:
+      "일반 Claw permission enforcer의 allowed/denied 결과를 Bash argument-specific required mode와 optional injection 경로에서 추적합니다.",
   },
   {
     from: "claw-bash-path-effect-toctou-gap",
     to: "claw-bash-optional-permission-enforcement-seam",
     relation: "prerequisite",
-    reason: "Permission decision과 executor가 같은 canonical command·cwd·target identity를 사용해야 승인한 effect와 실제 effect를 묶을 수 있습니다.",
+    reason:
+      "Permission decision과 executor가 같은 canonical command·cwd·target identity를 사용해야 승인한 effect와 실제 effect를 묶을 수 있습니다.",
   },
   {
     from: "process-container-resource-boundary",
     to: "claw-bash-unshare-sandbox-boundary",
     relation: "extends",
-    reason: "Host kernel 위 process에 namespace를 적용하는 일반 경계를 pinned Claw의 util-linux `unshare` launcher와 status field로 구체화합니다.",
+    reason:
+      "Host kernel 위 process에 namespace를 적용하는 일반 경계를 pinned Claw의 util-linux `unshare` launcher와 status field로 구체화합니다.",
   },
   {
     from: "sandbox-workload-control-matrix",
     to: "claw-bash-unshare-sandbox-boundary",
     relation: "constrains",
-    reason: "Namespace active 표시는 filesystem mount policy·seccomp·cgroup·credential·egress 통제를 각각 확인하는 workload matrix를 대체하지 않습니다.",
+    reason:
+      "Namespace active 표시는 filesystem mount policy·seccomp·cgroup·credential·egress 통제를 각각 확인하는 workload matrix를 대체하지 않습니다.",
   },
   {
     from: "claw-bash-unshare-sandbox-boundary",
     to: "claw-bash-process-lifecycle-receipt-gap",
     relation: "constrains",
-    reason: "PID namespace와 `--fork` 사용만으로 timeout 뒤 모든 descendant가 종료되고 host에 effect가 남지 않았다고 결론내리지 않습니다.",
+    reason:
+      "PID namespace와 `--fork` 사용만으로 timeout 뒤 모든 descendant가 종료되고 host에 effect가 남지 않았다고 결론내리지 않습니다.",
   },
   {
     from: "typed-tool-observation-contract",
     to: "claw-bash-process-lifecycle-receipt-gap",
     relation: "extends",
-    reason: "Stdout·stderr·exit·timeout·truncation·sandbox status를 분리하되 process-tree identity와 cleanup evidence까지 observation에 포함해야 합니다.",
+    reason:
+      "Stdout·stderr·exit·timeout·truncation·sandbox status를 분리하되 process-tree identity와 cleanup evidence까지 observation에 포함해야 합니다.",
   },
   {
     from: "agent-replay-idempotency",
     to: "claw-bash-process-lifecycle-receipt-gap",
     relation: "constrains",
-    reason: "Timeout·응답 손실 뒤 동일 Bash command를 재실행하기 전에 stable operation key와 effect receipt로 기존 실행 상태를 조회해야 합니다.",
+    reason:
+      "Timeout·응답 손실 뒤 동일 Bash command를 재실행하기 전에 stable operation key와 effect receipt로 기존 실행 상태를 조회해야 합니다.",
   },
   {
     from: "claw-bash-optional-permission-enforcement-seam",
     to: "claw-bash-login-release-gate",
     relation: "prerequisite",
-    reason: "Missing enforcer와 deny path에서 executor가 호출되지 않는지 확인해야 login 수정 workflow의 authorization gate를 평가할 수 있습니다.",
+    reason:
+      "Missing enforcer와 deny path에서 executor가 호출되지 않는지 확인해야 login 수정 workflow의 authorization gate를 평가할 수 있습니다.",
   },
   {
     from: "claw-bash-process-lifecycle-receipt-gap",
     to: "claw-bash-login-release-gate",
     relation: "prerequisite",
-    reason: "Timeout·truncation·background child와 crash cut에서 effect와 cleanup을 식별할 receipt 항목을 먼저 고정해야 재시도와 rollback을 판정할 수 있습니다.",
+    reason:
+      "Timeout·truncation·background child와 crash cut에서 effect와 cleanup을 식별할 receipt 항목을 먼저 고정해야 재시도와 rollback을 판정할 수 있습니다.",
   },
   {
     from: "layered-agent-verification",
     to: "claw-bash-login-release-gate",
     relation: "extends",
-    reason: "Parser·classifier unit test에서 permission negative test·actual sandbox probe·login regression·canary까지 위험에 따라 검증을 쌓습니다.",
+    reason:
+      "Parser·classifier unit test에서 permission negative test·actual sandbox probe·login regression·canary까지 위험에 따라 검증을 쌓습니다.",
   },
   {
     from: "agent-trajectory-effect-evaluation",
     to: "claw-bash-login-release-gate",
     relation: "evaluates",
-    reason: "최종 test 통과뿐 아니라 unauthorized process·workspace diff·network effect·잔류 descendant·duplicate effect와 receipt를 함께 비교합니다.",
+    reason:
+      "최종 test 통과뿐 아니라 unauthorized process·workspace diff·network effect·잔류 descendant·duplicate effect와 receipt를 함께 비교합니다.",
+  },
+  {
+    from: "distributed-process-message-execution",
+    to: "distributed-timing-model",
+    relation: "prerequisite",
+    reason:
+      "어떤 event 순서가 execution을 이루는지 알아야 message delay와 process speed에 둔 timing bound를 해석할 수 있습니다.",
+  },
+  {
+    from: "distributed-process-message-execution",
+    to: "distributed-failure-model",
+    relation: "prerequisite",
+    reason:
+      "Process와 send·receive event의 정상 transition을 먼저 정해야 crash·omission·Byzantine deviation을 구분할 수 있습니다.",
+  },
+  {
+    from: "distributed-timing-model",
+    to: "consensus-safety-liveness",
+    relation: "constrains",
+    reason:
+      "Consensus termination은 message·process timing 조건에 의존하지만 conflicting decision을 막는 safety와는 별도 증명이 필요합니다.",
+  },
+  {
+    from: "distributed-failure-model",
+    to: "consensus-safety-liveness",
+    relation: "constrains",
+    reason:
+      "Adversary가 crash만 가능한지 equivocation도 가능한지에 따라 agreement와 termination의 threshold·certificate가 달라집니다.",
+  },
+  {
+    from: "distributed-timing-model",
+    to: "flp-bivalence-impossibility",
+    relation: "prerequisite",
+    reason:
+      "FLP는 알려진 delay·speed bound가 없는 완전 비동기 execution을 전제로 합니다.",
+  },
+  {
+    from: "consensus-safety-liveness",
+    to: "flp-bivalence-impossibility",
+    relation: "prerequisite",
+    reason:
+      "FLP의 결론은 agreement·validity를 지키는 deterministic protocol이 모든 admissible run의 termination까지 보장하지 못한다는 구분에 달려 있습니다.",
+  },
+  {
+    from: "distributed-process-message-execution",
+    to: "cap-partition-execution-tradeoff",
+    relation: "prerequisite",
+    reason:
+      "Partition 중 write와 뒤이은 read event의 real-time order를 구성해야 linearizability와 response availability의 충돌을 설명할 수 있습니다.",
+  },
+  {
+    from: "distributed-timing-model",
+    to: "partial-synchrony-gst",
+    relation: "extends",
+    reason:
+      "Partial synchrony는 동기·비동기 timing model 사이에서 bound 값 또는 bound 성립 시점이 unknown인 경우를 구체화합니다.",
+  },
+  {
+    from: "flp-bivalence-impossibility",
+    to: "consensus-assumption-escape-hatch",
+    relation: "constrains",
+    reason:
+      "불가능성 결과의 전제를 바꾸지 않은 채 universal deterministic termination을 주장하지 못하도록 추가 가정을 명시하게 합니다.",
+  },
+  {
+    from: "partial-synchrony-gst",
+    to: "consensus-assumption-escape-hatch",
+    relation: "extends",
+    reason:
+      "Partial synchrony는 GST 이후 timeout이 실제 delay를 덮는 round에서 deterministic progress를 얻는 대표 escape hatch입니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "distributed-process-message-execution",
+    relation: "extends",
+    reason:
+      "Lossy channel의 retry·duplicate delivery를 견디려면 message event를 stable ID와 idempotent effect에 연결해야 합니다.",
+  },
+  {
+    from: "expectation",
+    to: "weak-stationary-forecast-representation",
+    relation: "prerequisite",
+    reason:
+      "시점마다 같은 평균을 유지한다는 약정상성 조건을 population expectation으로 읽기 위해 필요합니다.",
+  },
+  {
+    from: "variance",
+    to: "weak-stationary-forecast-representation",
+    relation: "prerequisite",
+    reason:
+      "시간에 따라 일정한 유한 분산과 lag별 covariance라는 second-order 조건을 해석하게 합니다.",
+  },
+  {
+    from: "forecast-row-contract",
+    to: "arima-difference-order",
+    relation: "constrains",
+    reason:
+      "차분 차수는 target·sampling interval·forecast horizon과 예측 시점 정보 경계를 고정한 뒤 선택해야 합니다.",
+  },
+  {
+    from: "arima-difference-order",
+    to: "weak-stationary-forecast-representation",
+    relation: "produces",
+    reason:
+      "Stochastic trend가 차분으로 제거되는 조건에서는 level series를 ARMA가 다룰 안정된 increment 표현으로 바꿉니다.",
+  },
+  {
+    from: "weak-stationary-forecast-representation",
+    to: "arma-innovation-filter",
+    relation: "prerequisite",
+    reason:
+      "같은 AR·MA coefficient를 시간 전체에 적용하려면 입력 평균·분산·lag covariance가 안정적이어야 합니다.",
+  },
+  {
+    from: "autocorrelation-lag-diagnostic",
+    to: "arma-innovation-filter",
+    relation: "evaluates",
+    reason:
+      "ACF와 PACF의 lag pattern은 AR·MA 후보 차수를 좁히되 최종 선택을 대신하지 않는 진단값을 제공합니다.",
+  },
+  {
+    from: "arma-innovation-filter",
+    to: "arima-residual-diagnostic",
+    relation: "produces",
+    reason:
+      "Fitted conditional mean과 실제 관측의 차이가 innovation 가정과 남은 serial dependence를 확인할 residual이 됩니다.",
+  },
+  {
+    from: "rolling-origin-evaluation",
+    to: "arima-residual-diagnostic",
+    relation: "evaluates",
+    reason:
+      "In-sample residual 진단과 별도로 실제 horizon의 out-of-sample error와 interval coverage를 여러 origin에서 측정합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "empirical-cdf-tail-rank",
+    relation: "prerequisite",
+    reason:
+      "Reference population에서 값 이하·이상 event의 probability mass를 sample frequency로 추정하는 의미를 제공합니다.",
+  },
+  {
+    from: "random-variable",
+    to: "empirical-cdf-tail-rank",
+    relation: "prerequisite",
+    reason:
+      "Tabular feature 한 열을 population outcome을 실수로 대응시키는 random variable로 읽게 합니다.",
+  },
+  {
+    from: "empirical-cdf-tail-rank",
+    to: "ecod-negative-log-tail-score",
+    relation: "produces",
+    reason:
+      "왼쪽·오른쪽 empirical tail frequency를 negative log가 읽을 0과 1 사이 rarity 입력으로 만듭니다.",
+  },
+  {
+    from: "variance",
+    to: "ecod-skewness-tail-selection",
+    relation: "prerequisite",
+    reason:
+      "Signed third central moment를 표준편차의 세제곱으로 정규화하는 sample skewness 계산의 scale을 제공합니다.",
+  },
+  {
+    from: "ecod-negative-log-tail-score",
+    to: "ecod-skewness-tail-selection",
+    relation: "constrains",
+    reason:
+      "Skewness는 anomaly probability를 만들지 않고 이미 계산한 left·right contribution 중 우선 방향만 선택합니다.",
+  },
+  {
+    from: "ecod-negative-log-tail-score",
+    to: "ecod-aggregation-implementation-boundary",
+    relation: "prerequisite",
+    reason:
+      "Paper와 PyOD가 서로 다른 순서로 max와 sum을 적용하는 공통 feature contribution을 정의합니다.",
+  },
+  {
+    from: "ecod-skewness-tail-selection",
+    to: "ecod-aggregation-implementation-boundary",
+    relation: "prerequisite",
+    reason:
+      "Left·right와 함께 aggregation 후보에 들어가는 skew-selected contribution의 계산 위치를 고정합니다.",
+  },
+  {
+    from: "ecod-aggregation-implementation-boundary",
+    to: "anomaly-score-decision-threshold",
+    relation: "produces",
+    reason:
+      "선택한 paper 또는 PyOD aggregation contract가 threshold에 입력할 연속 row score와 ordering을 결정합니다.",
+  },
+  {
+    from: "ranking-decision-calibration",
+    to: "anomaly-score-decision-threshold",
+    relation: "constrains",
+    reason:
+      "ECOD score ordering, contamination threshold의 hard label, 사건 probability calibration을 같은 값으로 해석하지 못하게 합니다.",
+  },
+  {
+    from: "forecast-row-contract",
+    to: "supervised-forecast-window",
+    relation: "prerequisite",
+    reason:
+      "Entity·forecast origin·available feature·target horizon을 먼저 고정해야 L-step input과 H-step label을 안전하게 자를 수 있습니다.",
+  },
+  {
+    from: "supervised-forecast-window",
+    to: "recurrent-forecast-state-lifecycle",
+    relation: "constrains",
+    reason:
+      "각 window가 독립 sample인지 같은 entity의 연속 session인지에 따라 LSTM state의 reset·detach·carry 경계가 달라집니다.",
+  },
+  {
+    from: "lstm-dual-state",
+    to: "recurrent-forecast-state-lifecycle",
+    relation: "extends",
+    reason:
+      "LSTM이 가진 hidden·cell 두 state의 수학적 역할을 entity·batch·streaming 실행에서의 수명 관리로 확장합니다.",
+  },
+  {
+    from: "lstm-dual-state",
+    to: "direct-multihorizon-forecast-head",
+    relation: "prerequisite",
+    reason:
+      "Input window의 마지막 hidden representation을 고정 horizon output head가 읽는 interface를 제공합니다.",
+  },
+  {
+    from: "supervised-forecast-window",
+    to: "direct-multihorizon-forecast-head",
+    relation: "constrains",
+    reason:
+      "Window가 정의한 H와 target dimension이 direct head의 output shape와 horizon별 loss contract를 정합니다.",
+  },
+  {
+    from: "forecast-row-contract",
+    to: "forecast-transform-fit-boundary",
+    relation: "constrains",
+    reason:
+      "Forecast origin에서 이용 가능한 training rows만 transform parameter 추정에 포함하도록 시점 경계를 제공합니다.",
+  },
+  {
+    from: "rolling-origin-evaluation",
+    to: "forecast-transform-fit-boundary",
+    relation: "constrains",
+    reason:
+      "각 backtest origin마다 scaler·결측 처리·feature selection을 이전 training 구간으로 다시 fit하게 합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "quantile-forecast-pinball-loss",
+    relation: "prerequisite",
+    reason:
+      "Input history에 조건부인 outcome distribution에서 τ 누적확률 경계를 예측하는 목적을 해석하게 합니다.",
+  },
+  {
+    from: "quantile-forecast-pinball-loss",
+    to: "direct-multihorizon-forecast-head",
+    relation: "optimizes",
+    reason:
+      "Direct head가 horizon마다 point 값 대신 여러 conditional quantile을 출력하도록 비대칭 학습 신호를 제공합니다.",
+  },
+  {
+    from: "rolling-origin-evaluation",
+    to: "mase-forecast-scale",
+    relation: "evaluates",
+    reason:
+      "각 fold의 training naive scale과 이후 horizon error를 분리해 미래를 보지 않은 MASE를 계산하게 합니다.",
+  },
+  {
+    from: "supervised-forecast-window",
+    to: "mase-forecast-scale",
+    relation: "evaluates",
+    reason:
+      "동일 forecast origin과 horizon에서 model prediction error를 seasonal-naive training scale과 비교할 평가 단위를 제공합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "tls13-secure-channel",
+    relation: "prerequisite",
+    reason:
+      "TLS handshake와 record는 길이와 순서가 정해진 byte serialization을 transcript와 AEAD 입력으로 사용합니다.",
+  },
+  {
+    from: "tls13-secure-channel",
+    to: "tls13-transcript-authentication",
+    relation: "produces",
+    reason:
+      "Secure channel의 peer·parameter 합의를 transcript signature와 Finished 검증으로 구체화합니다.",
+  },
+  {
+    from: "tls13-hkdf-key-schedule",
+    to: "tls13-aead-record-nonce",
+    relation: "produces",
+    reason:
+      "방향별 application traffic secret에서 record protection에 사용할 AEAD key와 static IV를 파생합니다.",
+  },
+  {
+    from: "tls13-transcript-authentication",
+    to: "tls13-hkdf-key-schedule",
+    relation: "constrains",
+    reason:
+      "Transcript hash를 labeled derivation context에 넣어 협상 단계와 traffic secret을 같은 handshake에 묶습니다.",
+  },
+  {
+    from: "tls13-secure-channel",
+    to: "quic-transport-state",
+    relation: "prerequisite",
+    reason:
+      "QUIC은 TLS 1.3 handshake와 traffic secret을 재사용하되 record layer 대신 packet protection에 연결합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "quic-packet-number-space",
+    relation: "prerequisite",
+    reason:
+      "Packet number와 frame field는 variable-length integer와 byte offset으로 wire에 직렬화됩니다.",
+  },
+  {
+    from: "quic-packet-number-space",
+    to: "quic-transport-state",
+    relation: "constrains",
+    reason:
+      "Encryption stage별 ACK와 loss-recovery state를 분리해 key availability와 packet lifecycle을 섞지 않습니다.",
+  },
+  {
+    from: "quic-stream-flow-control",
+    to: "quic-transport-state",
+    relation: "constrains",
+    reason:
+      "Stream별 offset과 connection 전체 receive credit이 sender의 새 byte 전송 가능 범위를 제한합니다.",
+  },
+  {
+    from: "quic-connection-id-path-validation",
+    to: "quic-transport-state",
+    relation: "extends",
+    reason:
+      "4-tuple 변화 뒤에도 connection state를 이어가되 새 path의 return reachability와 amplification limit을 검증합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "content-address-integrity",
+    relation: "prerequisite",
+    reason:
+      "Content address가 가리키는 대상과 hash 입력은 codec으로 확정한 byte sequence입니다.",
+  },
+  {
+    from: "content-address-integrity",
+    to: "cidv1-self-describing-format",
+    relation: "produces",
+    reason:
+      "Digest만 저장하지 않고 version·codec·hash algorithm·length를 붙여 검증 가능한 typed identifier를 만듭니다.",
+  },
+  {
+    from: "cidv1-self-describing-format",
+    to: "merkle-dag-root-commitment",
+    relation: "produces",
+    reason:
+      "Child CID를 parent bytes에 포함해 leaf content 변경이 ancestor address와 root까지 전파되게 합니다.",
+  },
+  {
+    from: "merkle-dag-root-commitment",
+    to: "mutable-content-name-resolution",
+    relation: "extends",
+    reason:
+      "변경 때 새로 생기는 immutable root CID 위에 authority와 freshness가 있는 mutable pointer를 추가합니다.",
+  },
+  {
+    from: "distributed-process-message-execution",
+    to: "total-order-broadcast-contract",
+    relation: "extends",
+    reason: "서로 다른 network arrival order 위에 correct process가 공유하는 protocol delivery order를 추가합니다.",
+  },
+  {
+    from: "total-order-broadcast-contract",
+    to: "smr-deterministic-transition",
+    relation: "prerequisite",
+    reason: "모든 replica가 같은 command prefix를 같은 순서로 deliver해야 deterministic transition이 같은 state를 만듭니다.",
+  },
+  {
+    from: "consensus-safety-liveness",
+    to: "total-order-broadcast-contract",
+    relation: "constrains",
+    reason: "Agreement·order·integrity의 safety와 correct broadcast의 conditional validity를 별도 성질로 해석합니다.",
+  },
+  {
+    from: "smr-deterministic-transition",
+    to: "replicated-log-commit-apply",
+    relation: "produces",
+    reason: "Ordered command를 durable log에 기록하고 commit한 뒤 deterministic state machine에 차례로 apply합니다.",
+  },
+  {
+    from: "distributed-failure-model",
+    to: "crash-majority-quorum",
+    relation: "prerequisite",
+    reason: "Majority quorum의 f crash tolerance는 equivocation을 허용하지 않는 fixed crash-fault membership에 한정됩니다.",
+  },
+  {
+    from: "crash-majority-quorum",
+    to: "raft-term-log-safety",
+    relation: "prerequisite",
+    reason: "Raft election과 replication은 majority intersection 위에 term·log freshness·commit rule을 더합니다.",
+  },
+  {
+    from: "raft-term-log-safety",
+    to: "replicated-log-commit-apply",
+    relation: "produces",
+    reason: "Term·prefix consistency·commit rule로 다음 leader에서도 보존되는 committed log prefix를 만듭니다.",
+  },
+  {
+    from: "crash-majority-quorum",
+    to: "paxos-promise-chosen-invariant",
+    relation: "prerequisite",
+    reason: "Prepare·Accept quorum의 교집합이 이전 accepted value의 증거를 새 proposer에게 전달합니다.",
+  },
+  {
+    from: "paxos-promise-chosen-invariant",
+    to: "replicated-log-commit-apply",
+    relation: "produces",
+    reason: "각 slot의 chosen-value invariant를 연속 log position에 적용해 Multi-Paxos state-machine log를 구성합니다.",
+  },
+  {
+    from: "replicated-log-commit-apply",
+    to: "smr-client-effect-boundary",
+    relation: "constrains",
+    reason: "Commit·apply·reply crash cut을 stable request ID와 result receipt에 연결해 retry가 state-machine effect를 중복 적용하지 않게 합니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "smr-client-effect-boundary",
+    relation: "extends",
+    reason: "Replicated state transition 밖 payment·email 같은 side effect도 operation key·outbox·status reconciliation이 필요합니다.",
+  },
+  {
+    from: "distributed-process-message-execution",
+    to: "permissionless-sybil-resource-weight",
+    relation: "extends",
+    reason: "고정된 process membership 대신 누구나 identity를 만들 수 있을 때 영향력을 검증 가능한 희소 자원에 연결합니다.",
+  },
+  {
+    from: "distributed-failure-model",
+    to: "permissionless-sybil-resource-weight",
+    relation: "constrains",
+    reason: "Sybil identity와 Byzantine behavior를 허용하는 공개 membership에서 honest resource fraction 전제를 선언하게 합니다.",
+  },
+  {
+    from: "permissionless-sybil-resource-weight",
+    to: "pow-hash-target-lottery",
+    relation: "extends",
+    reason: "PoW는 영향력 비용을 target proof를 찾기 위해 소비한 hash work에 연결합니다.",
+  },
+  {
+    from: "pow-hash-target-lottery",
+    to: "pow-chainwork-probabilistic-finality",
+    relation: "produces",
+    reason: "각 valid target proof가 branch의 cumulative work를 늘리고 후속 work가 confirmation evidence가 됩니다.",
+  },
+  {
+    from: "permissionless-sybil-resource-weight",
+    to: "pos-stake-weighted-selection",
+    relation: "extends",
+    reason: "PoS는 proposal·vote influence를 protocol에 등록된 effective stake와 signing identity에 연결합니다.",
+  },
+  {
+    from: "pos-stake-weighted-selection",
+    to: "pos-attestation-slashing-evidence",
+    relation: "produces",
+    reason: "선택된 validator의 stake-weighted signed messages를 head·checkpoint vote와 accountability evidence로 사용합니다.",
+  },
+  {
+    from: "pow-chainwork-probabilistic-finality",
+    to: "fork-choice-finality-separation",
+    relation: "produces",
+    reason: "Cumulative-work head rule과 confirmation-depth risk policy가 canonical head와 probabilistic finality의 차이를 보여줍니다.",
+  },
+  {
+    from: "pos-attestation-slashing-evidence",
+    to: "fork-choice-finality-separation",
+    relation: "produces",
+    reason: "Attestation 기반 head update와 supermajority checkpoint finality를 서로 다른 state로 유지합니다.",
+  },
+  {
+    from: "consensus-safety-liveness",
+    to: "fork-choice-finality-separation",
+    relation: "constrains",
+    reason: "Conflicting finality가 없는 safety와 network recovery 뒤 head·checkpoint가 전진하는 liveness를 분리합니다.",
+  },
+  {
+    from: "permissionless-sybil-resource-weight",
+    to: "consensus-resource-security-ledger",
+    relation: "evaluates",
+    reason: "Hash work와 bonded stake가 실제로 누구에게 얼마나 집중됐고 어떤 운영 비용·failure surface를 만드는지 측정합니다.",
+  },
+  {
+    from: "fork-choice-finality-separation",
+    to: "permissionless-consensus-release-gate",
+    relation: "evaluates",
+    reason: "Head reorg와 conflicting finalized history를 다른 oracle로 기록해 candidate protocol을 검증합니다.",
+  },
+  {
+    from: "consensus-resource-security-ledger",
+    to: "permissionless-consensus-release-gate",
+    relation: "constrains",
+    reason: "Safety 결과뿐 아니라 자원 비용·집중도·recovery latency까지 같은 paired run의 채택 기준으로 고정합니다.",
   },
 ];
 

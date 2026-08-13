@@ -1,212 +1,72 @@
-import M from "@/components/ui/math";
+import { Link } from "react-router-dom";
 import ByzantineViz from "./viz/ByzantineViz";
 
 export default function BFTTheory() {
   return (
     <section id="bft-theory" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Byzantine 장군 문제</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">
+        Byzantine fault는 거짓말의 범위를 system model에 포함한다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Lamport, Shostak, Pease(1982) — 배신자가 있는 분산 합의의 형식화. n명
-          중 f명이 악의적일 때 합의 가능 조건.
+          Crash-fault process는 멈추지만 그 전까지 protocol을 따릅니다. Byzantine
+          process는 receiver마다 다른 값을 보내는 equivocation, 유효하지 않은
+          state 제안, 선택적 침묵처럼 임의로 행동할 수 있습니다. Digital signature는
+          발신자와 내용의 무결성을 확인해도, 서명한 발신자가 서로 모순된 값을
+          보냈다는 사실 자체를 막지는 않습니다.
         </p>
       </div>
-      <div className="not-prose">
-        <ByzantineViz />
+
+      <ByzantineViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Bound는 timing과 authentication 없이 적을 수 없습니다</h3>
+        <p>
+          흔히 보는 <code>n≥3f+1</code>과 <code>2f+1</code> quorum은 특정
+          partially synchronous authenticated BFT protocol에서 자주 쓰이는
+          구성입니다. 그러나 synchronous signed-message model, unauthenticated
+          oral-message model, asynchronous randomized protocol은 서로 다른 lower
+          bound와 진행 조건을 가집니다. 따라서 “Byzantine이면 항상 3f+1”로 외우지
+          않고 membership, timing, authentication, safety·liveness 목표를 함께
+          적어야 합니다.
+        </p>
+        <p>
+          이 글에서는 failure model의 차이만 소유합니다. Quorum 교집합에 정직한
+          voter가 남는 이유와 PBFT·Tendermint·HotStuff의 certificate rule은{" "}
+          <Link to="/blockchain/bft-theory">BFT 정본</Link>에서 다룹니다.
+        </p>
+
+        <h3>Failure injection도 공격 능력에 맞춰야 합니다</h3>
+        <p>
+          Process kill만 주입하고 Byzantine tolerance를 검증했다고 결론 내릴 수
+          없습니다. Crash suite에는 leader kill·restart·message delay를, Byzantine
+          suite에는 double vote·invalid proposal·selective send·stale certificate를
+          포함합니다. Oracle은 conflicting commit 0건, invalid state commit 0건,
+          network 회복 뒤 progress time, evidence receipt를 별도로 기록합니다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Byzantine Generals Problem
-        </h3>
-
-        {/* 시나리오 + 조건 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-red-500 bg-card p-4 mb-6">
-          <div className="text-sm font-semibold mb-2">시나리오</div>
-          <p className="text-sm text-muted-foreground mb-1">
-            <M>n</M>명의 장군이 도시 포위 &mdash; 공격 vs 후퇴 결정. 일부는
-            배신자(악의적). 목표: 정직한 장군끼리 같은 결정.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium">조건:</span> 모든 정직한 장군이 같은
-            계획 / 정직한 장군이 제안하면 모두 따름.
-          </p>
-        </div>
-
-        {/* 핵심 정리 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">핵심 정리</h4>
-        <div className="not-prose rounded-lg border bg-card p-4 mb-4">
-          <div className="text-center mb-3">
-            <M display>{"n \\geq 3f + 1"}</M>
-          </div>
-          <p className="text-sm text-muted-foreground text-center mb-3">
-            <M>f</M> = 최대 Byzantine 노드 수 &rarr; 1/3 미만의 악의적 노드만
-            허용
-          </p>
-          <div className="grid grid-cols-3 gap-2 text-center text-sm text-muted-foreground">
-            <div className="rounded bg-muted/50 p-2">
-              <M>f=1</M>: <M>{"n \\geq 4"}</M>
-            </div>
-            <div className="rounded bg-muted/50 p-2">
-              <M>f=2</M>: <M>{"n \\geq 7"}</M>
-            </div>
-            <div className="rounded bg-muted/50 p-2">
-              <M>f=3</M>: <M>{"n \\geq 10"}</M>
-            </div>
-          </div>
-        </div>
-
-        {/* 왜 3f+1? */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">왜 3f+1?</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              <M>n = 3f</M> 인 경우 (불가능)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                정직한 노드 <M>2f</M>, 악의적 <M>f</M>
-              </li>
-              <li>가상 분할 시나리오 구성 가능</li>
-              <li>정직한 노드들을 다른 결정으로 유도</li>
-              <li>&rarr; 합의 불가능</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              <M>n = 3f+1</M> 일 때 (가능)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                다수결: <M>{"2f+1 > f"}</M>
-              </li>
-              <li>Quorum intersection 보장</li>
-              <li>악의적 노드가 양쪽을 속일 수 없음</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* PBFT */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          PBFT (Castro-Liskov 1999)
-        </h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Phase 1
-            </div>
-            <div className="text-sm font-semibold mb-1">Pre-prepare</div>
-            <p className="text-sm text-muted-foreground">Leader가 제안</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Phase 2
-            </div>
-            <div className="text-sm font-semibold mb-1">Prepare</div>
-            <p className="text-sm text-muted-foreground">
-              모두 검증, <M>2f+1</M> prepare 수집
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Phase 3
-            </div>
-            <div className="text-sm font-semibold mb-1">Commit</div>
-            <p className="text-sm text-muted-foreground">
-              <M>2f+1</M> commit 수집 &rarr; finalize
-            </p>
-          </div>
-        </div>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold mb-1">View Change</div>
-            <p className="text-sm text-muted-foreground">
-              Leader 악의적 &rarr; 새 leader. <M>2f+1</M> view change 메시지
-              필요
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold mb-1">통신 복잡도</div>
-            <p className="text-sm text-muted-foreground">
-              Normal: <M>{"O(n^2)"}</M> / View change: <M>{"O(n^3)"}</M>
-            </p>
-          </div>
-        </div>
-
-        {/* 현대 BFT 개선 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">현대 BFT 개선</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              Tendermint (2016)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>2-phase (pre-vote + pre-commit)</li>
-              <li>Instant finality</li>
-              <li>Cosmos, Binance Chain</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              HotStuff (2019)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                Linear view change <M>O(n)</M>
-              </li>
-              <li>Pipelining</li>
-              <li>Diem (Meta), Aptos, Sui</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Fast BFT Variants
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>SBFT, Mir-BFT</li>
-              <li>Narwhal+Bullshark</li>
-              <li>Scalability 개선</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* 블록체인 관점 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">블록체인 관점</h4>
-        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-sm font-semibold mb-1">PoW</div>
-            <p className="text-xs text-muted-foreground">
-              "economic Byzantine" via cost
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-sm font-semibold mb-1">PoS</div>
-            <p className="text-xs text-muted-foreground">
-              slashing + BFT finality gadget
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-sm font-semibold mb-1">DPoS</div>
-            <p className="text-xs text-muted-foreground">
-              limited validator set + BFT
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-3 text-center">
-            <div className="text-sm font-semibold mb-1">BFT-direct</div>
-            <p className="text-xs text-muted-foreground">
-              Tendermint, HotStuff
-            </p>
-          </div>
-        </div>
-
-        {/* Limit */}
-        <div className="not-prose rounded-lg border-l-4 border-l-amber-500 bg-card p-4 mb-2">
-          <div className="text-sm font-semibold mb-1">Bound 정리</div>
-          <p className="text-sm text-muted-foreground">
-            <M>{"n \\geq 3f+1"}</M>은 asynchronous BFT의 tight bound.
-            Synchronous 환경에서는 <M>{"n \\geq 2f+1"}</M> (다수결)로 충분.
-          </p>
-        </div>
+      <div
+        id="paper-lamport-byzantine"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 읽기 · Byzantine model</p>
+        <p className="mt-2 text-sm font-semibold">The Byzantine Generals Problem</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 일부 participant가 모순된 정보를 보낼 수 있을 때 loyal participant가
+          같은 결정을 내리는 interactive consistency입니다. Oral message와
+          unforgeable signature 모델을 분리하고 각 조건의 algorithm과 bound를
+          제시합니다. 이 결과를 partial synchrony blockchain protocol의 liveness나
+          경제적 공격 비용으로 그대로 일반화하면 안 됩니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://lamport.azurewebsites.net/pubs/byz.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Lamport–Shostak–Pease 원문 보기
+        </a>
       </div>
     </section>
   );

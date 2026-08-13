@@ -1,114 +1,87 @@
 import CodePanel from "@/components/ui/code-panel";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
-const indexCode = `// 1D 글로벌 인덱스 계산
-//
-// blockIdx.x = 2, blockDim.x = 4, threadIdx.x = 1 일 때:
-// idx = 2 * 4 + 1 = 9  →  전체에서 9번째 스레드
-//
-// |  Block 0   |  Block 1   |  Block 2   |  Block 3   |
-// | 0  1  2  3 | 4  5  6  7 | 8 [9] 10 11| 12 13 14 15|
-//                              ↑ idx = 9
-
-__global__ void kernel(float* data, int N) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < N) {           // 경계 검사 필수
-        data[idx] = data[idx] * 2.0f;
-    }
-}`;
-
-const vecAddCode = `// 벡터 덧셈: C[i] = A[i] + B[i]
-__global__ void vecAdd(float* A, float* B, float* C, int N) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < N) {
-        C[idx] = A[idx] + B[idx];
-    }
+const vecAddCode = `__global__ void vecAdd(const float* a, const float* b,
+                       float* c, size_t n) {
+  size_t i = static_cast<size_t>(blockIdx.x) * blockDim.x + threadIdx.x;
+  if (i < n) c[i] = a[i] + b[i];
 }
 
-// 호스트 코드
-int N = 100000;
-int blockSize = 256;
-int gridSize = (N + blockSize - 1) / blockSize;  // = 391 블록
+int block = 256;
+int grid = static_cast<int>((n + block - 1) / block);
+vecAdd<<<grid, block>>>(d_a, d_b, d_c, n);
 
-// GPU 메모리 할당
-float *d_A, *d_B, *d_C;
-cudaMalloc(&d_A, N * sizeof(float));
-cudaMalloc(&d_B, N * sizeof(float));
-cudaMalloc(&d_C, N * sizeof(float));
-
-// 호스트 → 디바이스 복사
-cudaMemcpy(d_A, h_A, N * sizeof(float), cudaMemcpyHostToDevice);
-cudaMemcpy(d_B, h_B, N * sizeof(float), cudaMemcpyHostToDevice);
-
-// 커널 실행
-vecAdd<<<gridSize, blockSize>>>(d_A, d_B, d_C, N);
-
-// 디바이스 → 호스트 복사
-cudaMemcpy(h_C, d_C, N * sizeof(float), cudaMemcpyDeviceToHost);`;
+// Launch error와 비동기 실행 error를 분리해 확인한다.
+cudaError_t launchStatus = cudaGetLastError();
+cudaError_t executionStatus = cudaDeviceSynchronize();`;
 
 export default function Indexing1D() {
   return (
     <section id="indexing-1d" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">1D 인덱싱: 대규모 벡터 처리</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        1D index는 block의 시작 위치에 block 내부 offset을 더합니다
+      </h2>
+      <ExplainedFormula
+        question="서로 다른 block 안에서 같은 threadIdx.x를 가진 thread를 전체 배열의 고유 위치로 어떻게 바꿀까요?"
+        idea={
+          <>
+            blockIdx.x 앞에 있는 block들이 각각 blockDim.x개 자리를 차지하므로
+            그 길이를 건너뛴 뒤, 현재 block의 thread offset을 더합니다.
+          </>
+        }
+        formula={String.raw`i=\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x`}
+        terms={[
+          {
+            symbol: "blockIdx.x",
+            name: "block coordinate",
+            description: "0부터 시작하는 현재 block의 x 좌표입니다.",
+          },
+          {
+            symbol: "blockDim.x",
+            name: "block width",
+            description: "각 block에 있는 x축 thread 수입니다.",
+          },
+          {
+            symbol: "threadIdx.x",
+            name: "local offset",
+            description: "현재 block 안에서 0부터 시작하는 thread 위치입니다.",
+          },
+          {
+            symbol: "i",
+            name: "global logical index",
+            description: "전체 1D data에서 이 thread가 담당할 후보 위치입니다.",
+          },
+        ]}
+        assumptions={[
+          "모든 block이 같은 blockDim으로 launch됩니다.",
+          "Index 계산형은 최대 배열 길이를 담을 수 있어야 하므로 큰 data에는 size_t 같은 충분히 넓은 type을 사용합니다.",
+          "i가 존재한다고 해서 i < N인 것은 아니므로 별도 boundary check가 필요합니다.",
+        ]}
+        interpretation="blockIdx.x=2, blockDim.x=256, threadIdx.x=5이면 i=517입니다. N=515라면 이 thread는 만들어졌지만 memory를 읽거나 쓰면 안 됩니다."
+      />
+      <CodePanel
+        title="Boundary-safe vector addition"
+        code={vecAddCode}
+        annotations={[
+          { lines: [1, 5], color: "sky", note: "고유 index와 boundary check" },
+          { lines: [7, 9], color: "emerald", note: "Logical launch shape" },
+          {
+            lines: [11, 13],
+            color: "amber",
+            note: "Launch와 execution error 확인",
+          },
+        ]}
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          가장 기본적인 인덱싱 패턴이다.
-          <br />
-          전체 배열에서 현재 스레드가 담당할 원소의 위치를 계산하는 공식은 단 한
-          줄이다.
+          Boundary check는 성능을 망치는 예외 처리가 아니라 launch shape와 실제
+          data shape를 분리해 주는 안전 계약입니다. 마지막 warp 일부만 조건에서
+          빠지므로 대개 전체 grid를 복잡하게 맞추는 것보다 단순합니다. 다만
+          kernel launch는 host에 비동기로 돌아올 수 있어,{" "}
+          <code>cudaGetLastError()</code>는 잘못된 launch configuration을
+          확인하고 synchronization 뒤 status는 실행 중 illegal access를 확인하는
+          식으로 error 위치를 분리해야 합니다.
         </p>
-        <p>
-          <code>idx = blockIdx.x * blockDim.x + threadIdx.x</code>
-        </p>
-        <p>
-          blockIdx.x는 몇 번째 블록인지, blockDim.x는 블록 하나의 스레드 수,
-          threadIdx.x는 블록 안에서의 위치다. 세 값을 조합하면 전체 배열에서의
-          고유 인덱스가 나온다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">인덱스 계산 원리</h3>
-        <p>
-          배열 크기가 1024를 넘으면 블록 하나로 처리할 수 없다.
-          <br />
-          여러 블록으로 나누되, 마지막 블록에서는 남는 스레드가 배열 범위를
-          벗어날 수 있다.
-          <code>if (idx &lt; N)</code> 경계 검사를 빠뜨리면 잘못된 메모리에
-          접근해 프로그램이 비정상 종료한다.
-        </p>
-        <CodePanel
-          title="1D 글로벌 인덱스 계산"
-          code={indexCode}
-          annotations={[
-            { lines: [3, 4], color: "sky", note: "인덱스 계산 예시" },
-            { lines: [10, 11], color: "emerald", note: "핵심 공식" },
-            { lines: [12, 12], color: "amber", note: "경계 검사 필수" },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          완전한 벡터 덧셈 예제
-        </h3>
-        <p>
-          100,000개 원소의 벡터 덧셈을 256개 스레드씩 391개 블록으로 처리한다.
-          <br />
-          총 스레드 수는 256 x 391 = 100,096개이므로 96개 스레드는 경계 검사에서
-          걸러진다.
-          <br />
-          메모리 할당, 복사, 커널 실행, 결과 회수까지의 전체 흐름이다.
-        </p>
-        <CodePanel
-          title="벡터 덧셈 전체 코드"
-          code={vecAddCode}
-          annotations={[
-            { lines: [2, 6], color: "sky", note: "커널 함수" },
-            {
-              lines: [10, 11],
-              color: "emerald",
-              note: "블록/그리드 크기 계산",
-            },
-            { lines: [14, 17], color: "amber", note: "GPU 메모리 할당" },
-            { lines: [24, 24], color: "violet", note: "커널 실행" },
-          ]}
-        />
       </div>
     </section>
   );

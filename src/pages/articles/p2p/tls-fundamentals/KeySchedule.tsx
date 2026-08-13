@@ -1,141 +1,106 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 import TLSKeyScheduleViz from "./viz/TLSKeyScheduleViz";
-import CodePanel from "@/components/ui/code-panel";
-
-const keyCode = `// TLS 1.3 Key Schedule (RFC 8446 §7.1)
-// HKDF-Extract(salt, IKM) → PRK
-// HKDF-Expand-Label(Secret, Label, Context, Len) → 파생 키
-
-// 1단계: Early Secret
-Early Secret = HKDF-Extract(salt=0, IKM=PSK or 0)
-  → binder_key          // PSK 바인더 검증
-  → early_traffic_secret // 0-RTT 데이터 암호화
-
-// 2단계: Handshake Secret
-Handshake Secret = HKDF-Extract(salt=derived, IKM=ECDHE)
-  → client_handshake_traffic_secret  // 클라이언트 핸드셰이크 키
-  → server_handshake_traffic_secret  // 서버 핸드셰이크 키
-
-// 3단계: Master Secret
-Master Secret = HKDF-Extract(salt=derived, IKM=0)
-  → client_application_traffic_secret  // 클라이언트 앱 데이터 키
-  → server_application_traffic_secret  // 서버 앱 데이터 키
-  → resumption_master_secret           // 다음 세션 PSK 파생`;
-
-const annotations: {
-  lines: [number, number];
-  color: "sky" | "emerald" | "amber";
-  note: string;
-}[] = [
-  {
-    lines: [5, 8],
-    color: "amber",
-    note: "Early Secret: PSK 기반, 0-RTT 키 파생",
-  },
-  {
-    lines: [10, 13],
-    color: "sky",
-    note: "Handshake Secret: ECDHE 공유 비밀 투입",
-  },
-  {
-    lines: [15, 20],
-    color: "emerald",
-    note: "Master Secret: 최종 애플리케이션 키 + 세션 재개용 PSK",
-  },
-];
 
 export default function KeySchedule() {
   return (
     <section id="key-schedule" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">키 스케줄</h2>
-      <div className="not-prose mb-8">
+      <h2 className="mb-6 text-2xl font-bold">
+        Key schedule은 하나의 secret을 용도·방향·시점별 key로 분리합니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          ECDHE output을 그대로 모든 암호 연산에 쓰면 한 용도의 key 노출이나
+          protocol confusion이 다른 용도까지 번질 수 있습니다. HKDF(HMAC-based
+          Extract-and-Expand Key Derivation Function)는 입력 key material을 먼저
+          균일한 pseudorandom key로 추출하고, label과 transcript context를 넣어
+          client/server handshake·application·resumption secret을 따로
+          확장합니다.
+        </p>
+      </div>
+      <div className="not-prose my-8">
         <TLSKeyScheduleViz />
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          TLS 1.3은 HKDF(HMAC-based Key Derivation Function) 기반으로 모든 키를
-          파생함.
-          <br />
-          단일 공유 비밀에서 Extract → Expand 2단계로 다수의 독립 키를 생성함.
-          <br />키 파생 과정이 명확히 정의되어 구현 오류와 취약점 감소.
+      <ExplainedFormula
+        question="같은 ECDHE secret에서 나온 key가 서로 다른 용도로 재사용되지 않게 하려면 어떻게 할까요?"
+        idea={
+          <>
+            HKDF-Extract가 salt와 input key material을 PRK로 압축하고,
+            HKDF-Expand-Label이 protocol label·용도 label·transcript hash를 넣어
+            서로 다른 output을 만듭니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+PRK &= \operatorname{HKDF\!\text{-}Extract}(salt,IKM),\\
+S_{role,phase} &= \operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
+(PRK,label,H(T),L),\\
+K &= \operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "IKM",
+            name: "input keying material",
+            description:
+              "단계에 따라 PSK, ECDHE shared secret 또는 0이 들어갑니다.",
+          },
+          {
+            symbol: "PRK",
+            name: "pseudorandom key",
+            description: "Extract 결과로, 다음 단계 Expand의 key가 됩니다.",
+          },
+          {
+            symbol: "label",
+            name: "domain-separation label",
+            description:
+              "client/server와 handshake/application 같은 용도를 구분합니다.",
+          },
+          {
+            symbol: "H(T)",
+            name: "transcript context",
+            description: "현재 단계까지 합의한 handshake message hash입니다.",
+          },
+          {
+            symbol: "L, L_K",
+            name: "output lengths",
+            description: "선택한 hash와 AEAD가 요구하는 byte 길이입니다.",
+          },
+        ]}
+        assumptions={[
+          "HMAC과 선택한 hash가 안전하고 label·context·length encoding이 RFC 8446과 정확히 일치해야 합니다.",
+          "Forward secrecy는 fresh (EC)DHE를 실제로 사용하고 ephemeral private key를 보호·폐기한 handshake에서만 기대할 수 있습니다.",
+          "PSK-only mode와 0-RTT early data는 full (EC)DHE handshake와 같은 forward-secrecy·anti-replay 속성을 주지 않습니다.",
+        ]}
+        interpretation="같은 PRK라도 label이 c hs traffic과 s ap traffic으로 다르면 별도 secret이 나옵니다. 이 분리는 키가 우연히 같지 않게 하는 encoding 계약이며, 약한 PSK나 유출된 endpoint memory를 자동으로 복구해 주는 장치는 아닙니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>세 단계와 운영 경계를 함께 봅니다</h3>
+        <p>
+          Early secret은 PSK 또는 0에서 시작하고, handshake secret은 ECDHE
+          input을 섞어 handshake traffic key를 만듭니다. Master secret에서는
+          application traffic secret과 exporter·resumption master secret이
+          갈라집니다. KeyUpdate는 현재 application traffic secret에서 다음
+          generation을 만들지만, 이미 탈취된 endpoint가 계속 새 secret을 관찰할
+          수 있는 상황까지 스스로 치유한다고 보장하지 않습니다.
         </p>
-        <h3>3단계 키 파생</h3>
-        <p className="leading-7">
-          Early Secret — PSK에서 파생. 0-RTT 데이터 암호화에 사용.
-          <br />
-          Handshake Secret — ECDHE 공유 비밀을 투입. 핸드셰이크 메시지 암호화.
-          <br />
-          Master Secret — 최종 단계. 애플리케이션 데이터 암호화 + 세션 재개용
-          PSK 생성.
-        </p>
-        <h3>Forward Secrecy(전방 비밀성)</h3>
-        <p className="leading-7">
-          ECDHE 임시 키는 핸드셰이크 후 즉시 폐기함.
-          <br />
-          서버의 장기 개인 키가 노출되어도 과거 세션의 트래픽 복호화 불가능.
-          <br />
-          TLS 1.2의 정적 RSA 키 교환에서는 이 보장이 없었음.
-        </p>
-        <h3>Key Update 메커니즘</h3>
-        <p className="leading-7">
-          애플리케이션 단계에서 KeyUpdate 메시지로 트래픽 키 갱신 가능.
-          <br />
-          기존 application_traffic_secret에서 새 키를 파생함.
-          <br />
-          장기 연결에서도 키 노출 위험을 최소화함.
-        </p>
-        <CodePanel
-          title="TLS 1.3 Key Schedule — HKDF 파이프라인"
-          code={keyCode}
-          annotations={annotations}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">HKDF와 키 파생 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// HKDF (HMAC-based Key Derivation Function)
-// RFC 5869
-//
-// 2 Functions:
-//
-// HKDF-Extract(salt, IKM) → PRK
-//   PRK = HMAC(salt, IKM)  // Pseudo-Random Key
-//   IKM = Input Keying Material
-//
-// HKDF-Expand(PRK, info, L) → OKM
-//   OKM = T(1) || T(2) || ... || T(N)
-//   T(i) = HMAC(PRK, T(i-1) || info || i)
-//   L = desired output length
-
-// HKDF-Expand-Label (TLS 1.3):
-//   HKDFLabel struct:
-//     length: 2 bytes
-//     label: "tls13 " || protocol_label
-//     context: transcript hash
-//
-//   Derived keys:
-//     "tls13 derived"
-//     "tls13 c hs traffic"
-//     "tls13 s hs traffic"
-//     "tls13 c ap traffic"
-//     "tls13 s ap traffic"
-//     "tls13 res master"
-
-// Traffic Keys per direction:
-//   key  = HKDF-Expand-Label(secret, "key", "", key_length)
-//   iv   = HKDF-Expand-Label(secret, "iv", "", iv_length)
-//   finished = HKDF-Expand-Label(secret, "finished", "", hash_length)
-
-// Per-record nonce:
-//   nonce_i = iv XOR be_to_le(counter_i)
-//   counter incremented per record
-//   → 재사용 없음 (AEAD 요구사항)
-
-// Rekeying (Key Update):
-//   New secret = HKDF-Expand-Label(
-//       old_secret, "traffic upd", "", hash_length
-//   )
-//   → 새 key, iv 파생
-//   → 장기 연결 보호`}
-        </pre>
+        <div
+          id="paper-rfc5869"
+          className="scroll-mt-24 border-l border-primary/50 pl-4"
+        >
+          <p className="text-xs font-bold text-primary">명세 읽기 · RFC 5869</p>
+          <p>
+            RFC 5869은 generic HKDF의 Extract와 Expand를 정의합니다. TLS 1.3의
+            labeled tree는 RFC 8446이 그 primitive 위에 추가한 protocol-specific
+            구조이므로 두 문서의 책임을 구분해야 합니다.
+          </p>
+          <CitationBlock
+            source="IETF RFC 5869 — HMAC-based Extract-and-Expand Key Derivation Function"
+            citeKey={2}
+            href="https://www.rfc-editor.org/rfc/rfc5869.html"
+          >
+            Extract가 input key material을 PRK로 만들고 Expand가 context별
+            output keying material을 만드는 primitive 경계를 확인합니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ export default function Applications() {
         terms={[
           { symbol: "(p,d,q)", name: "non-seasonal order", description: "인접 lag의 AR, difference와 MA 차수입니다." },
           { symbol: "(P,D,Q)_s", name: "seasonal order", description: "s 간격 lag에 적용하는 AR, difference와 MA 차수입니다." },
-          { symbol: "\Phi,\Theta", name: "seasonal polynomials", description: "B^s, B^{2s}처럼 seasonal lag를 읽습니다." },
+          { symbol: "\\Phi,\\Theta", name: "seasonal polynomials", description: "B^s, B^{2s}처럼 seasonal lag를 읽습니다." },
           { symbol: "s", name: "season length", description: "관측 간격으로 표현한 실제 반복 주기입니다." },
         ]}
         assumptions={["하나의 안정된 season length가 있고 계절 구조가 forecasting 기간에도 유지됩니다.", "여러 계절성이나 이동하는 calendar effect는 이 단일 seasonal polynomial로 충분하지 않을 수 있습니다."]}
@@ -57,11 +57,29 @@ export default function Applications() {
           자동화하지만, forecast contract와 out-of-sample validation까지 대신하지는
           않는다.
         </p>
+        <div id="paper-auto-arima" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+          <p className="text-xs font-bold text-primary">논문 읽기 · Automatic ARIMA search</p>
+          <p className="mt-2 text-sm font-semibold">Automatic Time Series Forecasting: The forecast Package for R</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Hyndman과 Khandakar는 unit-root·seasonal-root test로 차분 후보를 정하고 AICc 기반
+            stepwise search로 ARIMA order를 탐색하는 실용 절차를 제시했습니다. 이는 논문의
+            likelihood·candidate space·implementation 조건에서 search 비용을 줄이는 방법이지,
+            선택된 model이 모든 horizon·structural break에서 최적이거나 rolling-origin 검증을
+            생략해도 된다는 결론은 아닙니다.
+          </p>
+          <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://www.jstatsoft.org/article/view/v027i03" target="_blank" rel="noreferrer">원 논문의 차분·AICc·stepwise 절차 보기</a>
+        </div>
         <p>
           순환 신경망으로 window와 hidden state를 학습하는 경로는
           <Link to="/ai/lstm-timeseries"> LSTM 시계열 글</Link>에서 이어진다.
           그 글에서도 ARIMA를 지우지 않고, 복잡한 model이 rolling-origin error와
           operational cost에서 실제 추가 가치를 주는지 확인할 기준선으로 남긴다.
+        </p>
+        <p>
+          실제 교체 판단은 같은 forecast origins·horizons·available features에서 point error와
+          interval coverage, event·structural-break slice, p95 latency와 memory를 함께 비교한다.
+          Automatic search 결과도 이 gate를 통과해야 하며, canary에서 중요한 horizon의 error나
+          coverage가 hard limit를 넘으면 이전 ARIMA order·transform artifact로 rollback한다.
         </p>
       </div>
     </section>

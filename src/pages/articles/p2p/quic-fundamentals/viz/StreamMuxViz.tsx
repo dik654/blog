@@ -42,7 +42,7 @@ export default function StreamMuxViz() {
                 rx={5}
                 fill={C.tcp + "12"}
                 stroke={C.tcp}
-                strokeWidth={1.3}
+                strokeWidth={1}
               />
               <text
                 x={210}
@@ -105,7 +105,7 @@ export default function StreamMuxViz() {
                     rx={5}
                     fill={s.c + "10"}
                     stroke={s.c}
-                    strokeWidth={1.3}
+                    strokeWidth={1}
                     strokeDasharray={step === 2 && si === 1 ? "4 3" : "0"}
                   />
                   <text

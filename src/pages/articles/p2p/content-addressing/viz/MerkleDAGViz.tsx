@@ -95,7 +95,7 @@ export default function MerkleDAGViz() {
                   rx={5}
                   fill={(changed ? C.changed : n.c) + "12"}
                   stroke={changed ? C.changed : n.c}
-                  strokeWidth={1.3}
+                  strokeWidth={1}
                 />
                 <text
                   x={n.x + BW / 2}

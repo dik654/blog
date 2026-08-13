@@ -61,7 +61,7 @@ export default function QUICStackViz() {
                   rx={4}
                   fill={l.c + "12"}
                   stroke={l.c}
-                  strokeWidth={1.3}
+                  strokeWidth={1}
                 />
                 <text
                   x={80}
@@ -105,7 +105,7 @@ export default function QUICStackViz() {
                   rx={4}
                   fill={l.c + "12"}
                   stroke={l.c}
-                  strokeWidth={1.3}
+                  strokeWidth={1}
                 />
                 <text
                   x={340}

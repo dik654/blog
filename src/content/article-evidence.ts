@@ -148,6 +148,49 @@ const withSeriesEvidence = (
 export const ARTICLE_EVIDENCE: Readonly<
   Record<string, readonly ArticleEvidenceItem[]>
 > = {
+  "gpu/cuda-thread-hierarchy": [
+    {
+      kind: "공식 문서",
+      label: "NVIDIA CUDA Programming Guide — Programming Model",
+      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html",
+      note: "Grid·block·thread hierarchy, 32-thread warp·SIMT, optional thread block cluster의 현재 정본",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA CUDA Programming Guide — Writing SIMT Kernels",
+      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html",
+      note: "Built-in variables, 1D/2D mapping, boundary-safe vector kernel과 memory-access 입구",
+    },
+  ],
+  "gpu/cuda-shared-memory": [
+    {
+      kind: "공식 문서",
+      label: "NVIDIA CUDA Programming Guide — Memory Performance",
+      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#memory-performance",
+      note: "32-byte global transaction, 32-bank shared access, broadcast와 transpose staging의 공식 설명",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA CUDA C++ Programming Guide — Shared Memory",
+      href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory",
+      note: "Shared-memory allocation·scope·architecture-specific performance 조건의 reference",
+    },
+  ],
+  "gpu/cuda-sync-streams": [
+    {
+      kind: "공식 문서",
+      label: "NVIDIA CUDA Programming Guide — Asynchronous Execution",
+      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html",
+      note: "Stream ordering, default-stream modes, events, pinned transfer와 실제 concurrency 조건",
+    },
+    {
+      kind: "공식 문서",
+      label:
+        "NVIDIA CUDA Programming Guide — Programming Systems with Multiple GPUs",
+      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/multi-gpu-systems.html",
+      note: "Current device별 allocation·stream·event ownership과 peer access 경계",
+    },
+  ],
   "ai/arima": [
     {
       kind: "핵심 논문",
@@ -2037,7 +2080,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
-      label: "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      label:
+        "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
       href: "https://arxiv.org/abs/2201.11903",
       note: "Worked reasoning demonstration으로 multi-step reasoning을 유도한 조건과 평가 범위",
     },
@@ -2307,7 +2351,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
-      label: "Smoothie-Qwen: Post-Hoc Smoothing to Reduce Language Bias in Multilingual LLMs",
+      label:
+        "Smoothie-Qwen: Post-Hoc Smoothing to Reduce Language Bias in Multilingual LLMs",
       href: "https://arxiv.org/abs/2507.05686",
       note: "Unicode·broken-token risk score와 lm_head row scaling을 이용한 post-hoc language suppression 방법",
     },
@@ -2911,7 +2956,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/vllm-serving": [
     {
       kind: "핵심 논문",
-      label: "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+      label:
+        "Orca: A Distributed Serving System for Transformer-Based Generative Models",
       href: "https://www.usenix.org/conference/osdi22/presentation/yu",
       note: "Iteration-level scheduling과 selective batching의 문제 정의·system evaluation",
     },
@@ -2943,7 +2989,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/vllm-scheduler": [
     {
       kind: "핵심 논문",
-      label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+      label:
+        "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
       href: "https://arxiv.org/abs/2403.02310",
       note: "Chunked prefill·stall-free scheduling과 throughput-tail-latency tradeoff",
     },
@@ -2987,7 +3034,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
-      label: "SGLang: Efficient Execution of Structured Language Model Programs",
+      label:
+        "SGLang: Efficient Execution of Structured Language Model Programs",
       href: "https://papers.nips.cc/paper_files/paper/2024/file/724be4472168f31ba1c9ac630f15dec8-Paper-Conference.pdf",
       note: "RadixAttention의 automatic KV prefix reuse와 cache-aware scheduling 대안",
     },
@@ -3637,6 +3685,141 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "NVIDIA nccl-tests performance semantics",
       href: "https://github.com/NVIDIA/nccl-tests/blob/master/doc/PERFORMANCE.md",
       note: "algbw와 collective별 busbw correction의 계산·해석 경계",
+    },
+  ],
+  "blockchain/distributed-systems": [
+    {
+      kind: "핵심 논문",
+      label:
+        "Fischer·Lynch·Paterson — Impossibility of Distributed Consensus with One Faulty Process",
+      href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf",
+      note: "완전 비동기 deterministic crash-consensus에서 nonterminating admissible execution이 존재하는 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Gilbert·Lynch — Brewer's Conjecture and CAP",
+      href: "https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf",
+      note: "Partition execution에서 atomic consistency와 formal availability를 함께 보장할 수 없는 model",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony",
+      href: "https://research.ibm.com/publications/consensus-in-the-presence-of-partial-synchrony",
+      note: "Unknown timing bound·unknown GST의 partial-synchrony model과 fault threshold",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Lamport·Shostak·Pease — The Byzantine Generals Problem",
+      href: "https://lamport.azurewebsites.net/pubs/byz.pdf",
+      note: "Oral·signed message model에서 Byzantine interactive consistency의 조건",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Chandra·Toueg — Unreliable Failure Detectors",
+      href: "https://www.cs.cornell.edu/home/rvr/papers/UnreliableFD.pdf",
+      note: "Asynchronous crash system의 completeness·accuracy failure-detector abstraction",
+    },
+  ],
+  "blockchain/smr-theory": [
+    {
+      kind: "핵심 논문",
+      label:
+        "Schneider — Implementing Fault-Tolerant Services Using the State Machine Approach",
+      href: "https://www.cs.cornell.edu/fbs/publications/SMSurvey.pdf",
+      note: "결정적 state machine과 ordered command를 복제해 fault-tolerant service를 만드는 조건",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Ongaro·Ousterhout — In Search of an Understandable Consensus Algorithm",
+      href: "https://raft.github.io/raft.pdf",
+      note: "Raft의 leader election·log replication·safety와 crash-majority 전제",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Lamport — Paxos Made Simple",
+      href: "https://www.microsoft.com/en-us/research/publication/paxos-made-simple/",
+      note: "Prepare·promise·Accept와 quorum 교집합으로 chosen value를 보존하는 invariant",
+    },
+  ],
+  "blockchain/consensus-mechanisms": [
+    {
+      kind: "핵심 논문",
+      label: "Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System",
+      href: "https://bitcoin.org/bitcoin.pdf",
+      note: "Hash-based proof-of-work·cumulative-work chain과 double-spend risk의 원문 범위",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Buterin et al. — Combining GHOST and Casper",
+      href: "https://arxiv.org/abs/2003.03052",
+      note: "Stake-weighted block-tree fork choice와 accountable finality gadget의 결합 분석",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Proof-of-Stake Consensus Specifications",
+      href: "https://ethereum.github.io/consensus-specs/",
+      note: "현재 PoS state transition·fork choice·validator operation의 versioned 정본",
+    },
+    {
+      kind: "공식 규격",
+      label: "EIP-3675 — Upgrade consensus to Proof-of-Stake",
+      href: "https://eips.ethereum.org/EIPS/eip-3675",
+      note: "Ethereum Mainnet execution layer의 PoW→PoS transition 경계",
+    },
+  ],
+  "p2p/tls-fundamentals": [
+    {
+      kind: "공식 규격",
+      label: "IETF RFC 8446 — TLS 1.3",
+      href: "https://www.rfc-editor.org/rfc/rfc8446.html",
+      note: "Handshake·record protocol·key schedule·0-RTT security의 normative 정본",
+    },
+    {
+      kind: "공식 규격",
+      label: "IETF RFC 5869 — HKDF",
+      href: "https://www.rfc-editor.org/rfc/rfc5869.html",
+      note: "Extract·Expand primitive와 input/output keying material의 범위",
+    },
+  ],
+  "p2p/quic-fundamentals": [
+    {
+      kind: "공식 규격",
+      label: "IETF RFC 9000 — QUIC transport",
+      href: "https://www.rfc-editor.org/rfc/rfc9000.html",
+      note: "Connection·packet·stream·flow control·migration의 normative 정본",
+    },
+    {
+      kind: "공식 규격",
+      label: "IETF RFC 9001 — TLS in QUIC",
+      href: "https://www.rfc-editor.org/rfc/rfc9001.html",
+      note: "TLS CRYPTO mapping과 encryption level별 packet protection",
+    },
+    {
+      kind: "공식 규격",
+      label: "IETF RFC 9002 — QUIC recovery",
+      href: "https://www.rfc-editor.org/rfc/rfc9002.html",
+      note: "Loss detection·PTO·congestion control의 기준 algorithm",
+    },
+  ],
+  "p2p/content-addressing": [
+    {
+      kind: "공식 규격",
+      label: "IPFS Standards — CID",
+      href: "https://specs.ipfs.tech/cid/",
+      note: "CIDv1 binary·string form과 strict decoding의 current specification",
+    },
+    {
+      kind: "공식 규격",
+      label: "IPFS Standards — IPNS Record and Protocol",
+      href: "https://specs.ipfs.tech/ipns/ipns-record/",
+      note: "Mutable name record의 key·signature·sequence·validity·verification 정본",
+    },
+    {
+      kind: "공식 문서",
+      label: "IPLD Data Model — Links",
+      href: "https://ipld.io/docs/data-model/kinds/#link-kind",
+      note: "IPLD Link와 CID가 data model graph를 연결하는 의미",
     },
   ],
 };

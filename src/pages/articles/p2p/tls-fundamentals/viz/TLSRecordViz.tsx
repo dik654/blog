@@ -65,7 +65,7 @@ export default function TLSRecordViz() {
                   rx={4}
                   fill={f.c + "12"}
                   stroke={f.c}
-                  strokeWidth={active ? 1.5 : 1}
+                  strokeWidth={1}
                 />
                 {f.label.split("\n").map((line, li) => (
                   <text

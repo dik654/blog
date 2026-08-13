@@ -41,7 +41,7 @@ export default function AddressingCompareViz() {
               rx={6}
               fill={C.loc + "08"}
               stroke={C.loc}
-              strokeWidth={1.3}
+              strokeWidth={1}
             />
             <text
               x={105}
@@ -82,7 +82,7 @@ export default function AddressingCompareViz() {
               rx={6}
               fill={C.content + "08"}
               stroke={C.content}
-              strokeWidth={1.3}
+              strokeWidth={1}
             />
             <text
               x={315}

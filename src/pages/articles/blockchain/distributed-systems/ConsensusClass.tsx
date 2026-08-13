@@ -1,217 +1,110 @@
-import M from "@/components/ui/math";
 import ConsensusClassViz from "./viz/ConsensusClassViz";
 
 export default function ConsensusClass() {
   return (
     <section id="consensus-class" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">합의 알고리즘 분류</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>장애 모델(CFT vs BFT)과 최종성 유형(결정적 vs 확률적)으로 분류.</p>
+      <h2 className="mb-6 text-2xl font-bold">
+        Partial synchrony는 safety를 timeout에 맡기지 않고 liveness 조건만 추가한다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Dwork–Lynch–Stockmeyer(DLS)의 partial synchrony는 동기와 비동기의
+          중간 모델입니다. 한 형태에서는 실제 delay bound가 존재하지만 protocol이
+          값을 모르고, 다른 형태에서는 알려진 bound가 unknown GST(Global
+          Stabilization Time) 뒤부터 성립합니다. GST 전에는 network가 오래
+          불안정할 수 있으므로 protocol은 보통 safety를 항상 지키고 liveness는 GST
+          이후 honest leader와 충분한 통신 조건에서 보장합니다.
+        </p>
       </div>
-      <div className="not-prose">
-        <ConsensusClassViz />
+
+      <ConsensusClassViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Timeout을 늘려 가는 이유</h3>
+        <p>
+          Actual stable delay가 300ms인데 timeout을 100ms로 두면 정직한 leader도
+          반복해서 교체됩니다. Round마다 100→200→400ms로 늘리면 GST 뒤에는
+          timeout이 실제 bound보다 커지는 round가 오며, 그때 proposal과 vote가
+          완료될 수 있습니다. 이 계산은 safety proof가 아니라 progress argument의
+          일부입니다. Stale round의 proposal을 막는 view number와 certificate
+          rule은 별도로 필요합니다.
+        </p>
+
+        <h3>가정 추가를 숨기지 않는 설계표</h3>
+        <div className="not-prose my-5 grid gap-5 md:grid-cols-2">
+          {[
+            ["Partial synchrony", "GST 뒤 delay bound와 rotating leader로 deterministic progress를 얻습니다."],
+            ["Randomization", "Common coin 같은 무작위성으로 adversarial scheduler의 deterministic 회피를 끊습니다."],
+            ["Failure detector", "의심 oracle의 completeness·accuracy 조건을 model에 추가합니다."],
+            ["Weaker problem", "Approximate agreement·eventual consistency처럼 요구 성질을 조정합니다."],
+          ].map(([title, body]) => (
+            <div key={title} className="border-l border-border pl-4">
+              <p className="text-sm font-semibold">{title}</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
+            </div>
+          ))}
+        </div>
+
+        <h3>Release gate: theorem 전제와 실측을 같은 표에 두지 않습니다</h3>
+        <p>
+          Model sheet에는 timing·failure·channel·membership 가정을 적고, run ledger에는
+          binary SHA, config, workload, seed, message schedule과 fault trace를 적습니다.
+          Safety gate는 conflicting decision과 invalid state가 0건이어야 합니다.
+          Liveness gate는 partition을 해제하고 honest leader가 나타난 뒤 p95
+          recovery time과 undecided request 수를 측정합니다. 같은 조건의 baseline과
+          candidate를 paired run으로 비교하고 safety violation 한 건이면 즉시
+          rollback합니다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">합의 알고리즘 분류</h3>
+      <div
+        id="paper-dls-partial-synchrony"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 읽기 · Partial synchrony</p>
+        <p className="mt-2 text-sm font-semibold">
+          Consensus in the Presence of Partial Synchrony
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 완전 동기와 완전 비동기 사이에서 timing bound가 unknown이거나
+          unknown time 뒤에 성립하는 system의 fault-tolerant consensus입니다.
+          여러 processor·communication·fault model에서 protocol과 lower bound를
+          제시합니다. “인터넷은 보통 빠르다”는 경험칙이나 특정 timeout 숫자를
+          증명하는 논문은 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://research.ibm.com/publications/consensus-in-the-presence-of-partial-synchrony"
+          target="_blank"
+          rel="noreferrer"
+        >
+          DLS abstract와 원문 보기
+        </a>
+      </div>
 
-        {/* 1. Fault Model */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          1. Fault Model별 분류
-        </h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              CFT (Crash Fault Tolerance)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                <M>{"n \\geq 2f+1"}</M> nodes
-              </li>
-              <li>노드가 멈추거나 연결 끊김만 허용</li>
-              <li>악의적 행동 없음</li>
-              <li>예: Paxos, Raft, ZAB (ZooKeeper)</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
-              BFT (Byzantine Fault Tolerance)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>
-                <M>{"n \\geq 3f+1"}</M> nodes
-              </li>
-              <li>악의적 노드 허용</li>
-              <li>블록체인 표준</li>
-              <li>예: PBFT, Tendermint, HotStuff</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* 2. Finality */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">2. Finality별 분류</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              Deterministic Finality
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>한번 확정 = 영원히 유효</li>
-              <li>즉시 또는 빠른 finality</li>
-              <li>예: Tendermint, HotStuff, Algorand</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Probabilistic Finality
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>시간이 지날수록 확실</li>
-              <li>Fork 가능성 점차 감소</li>
-              <li>예: Bitcoin (6 confirmations)</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-purple-600 dark:text-purple-400 mb-2">
-              Economic Finality
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>롤백 = 경제적 비용</li>
-              <li>Slashing mechanism</li>
-              <li>예: Ethereum 2.0 Casper</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* 3. Leader 선출 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">3. Leader 선출별</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              Rotating Leader
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>라운드마다 다른 리더</li>
-              <li>Round-robin 또는 random</li>
-              <li>예: PBFT, Tendermint</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              Stable Leader
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>실패 전까지 한 리더</li>
-              <li>View change on failure</li>
-              <li>예: Paxos, Raft</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Leaderless
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>리더 없음</li>
-              <li>Probabilistic</li>
-              <li>예: Avalanche, Snowflake</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* 4. Chain Structure */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">
-          4. Chain Structure별
-        </h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              Linear Chain
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>하나의 체인</li>
-              <li>예: Bitcoin, Ethereum, BFT</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              DAG (Directed Acyclic Graph)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>병렬 블록 &rarr; 높은 throughput</li>
-              <li>예: IOTA, Narwhal+Bullshark, Aleph</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* 블록체인 매핑 테이블 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">실제 블록체인 매핑</h4>
-        <div className="not-prose overflow-x-auto mb-6">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left p-2 font-semibold">Blockchain</th>
-                <th className="text-left p-2 font-semibold">Fault Model</th>
-                <th className="text-left p-2 font-semibold">Finality</th>
-                <th className="text-right p-2 font-semibold">Throughput</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-dashed">
-                <td className="p-2">Bitcoin</td>
-                <td className="p-2">PoW</td>
-                <td className="p-2">Probabilistic</td>
-                <td className="p-2 text-right">7 tps</td>
-              </tr>
-              <tr className="border-b border-dashed">
-                <td className="p-2">Ethereum</td>
-                <td className="p-2">PoS+BFT</td>
-                <td className="p-2">Deterministic</td>
-                <td className="p-2 text-right">15 tps</td>
-              </tr>
-              <tr className="border-b border-dashed">
-                <td className="p-2">Solana</td>
-                <td className="p-2">PoS</td>
-                <td className="p-2">Probabilistic</td>
-                <td className="p-2 text-right">65K tps</td>
-              </tr>
-              <tr className="border-b border-dashed">
-                <td className="p-2">Cosmos</td>
-                <td className="p-2">BFT</td>
-                <td className="p-2">Deterministic</td>
-                <td className="p-2 text-right">~10K tps</td>
-              </tr>
-              <tr className="border-b border-dashed">
-                <td className="p-2">Avalanche</td>
-                <td className="p-2">PoS</td>
-                <td className="p-2">Probabilistic</td>
-                <td className="p-2 text-right">4500 tps</td>
-              </tr>
-              <tr className="border-b border-dashed">
-                <td className="p-2">Aptos</td>
-                <td className="p-2">HotStuff</td>
-                <td className="p-2">Deterministic</td>
-                <td className="p-2 text-right">~160K tps</td>
-              </tr>
-              <tr>
-                <td className="p-2">Sui</td>
-                <td className="p-2">DAG BFT</td>
-                <td className="p-2">Deterministic</td>
-                <td className="p-2 text-right">120K+ tps</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Trade-offs */}
-        <div className="not-prose rounded-lg border-l-4 border-l-amber-500 bg-card p-4 mb-2">
-          <div className="text-sm font-semibold mb-2">Trade-offs</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
-            <div>Decentralization &harr; Throughput</div>
-            <div>Finality speed &harr; Finality certainty</div>
-            <div>Leader stability &harr; Fairness</div>
-            <div>Chain purity &harr; Parallelism</div>
-          </div>
-        </div>
+      <div
+        id="paper-chandra-toueg-failure-detectors"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 읽기 · Failure detector</p>
+        <p className="mt-2 text-sm font-semibold">
+          Unreliable Failure Detectors for Reliable Distributed Systems
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 asynchronous crash system에서 process suspicion을 어떤 oracle
+          property로 추상화해야 consensus를 풀 수 있는지입니다. Completeness와
+          accuracy로 detector class를 정의하고 reducibility를 분석합니다. 운영
+          health check가 곧 perfect detector라는 뜻이나 Byzantine detection을
+          보장하는 결과는 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://www.cs.cornell.edu/home/rvr/papers/UnreliableFD.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Chandra–Toueg 원문 보기
+        </a>
       </div>
     </section>
   );

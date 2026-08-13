@@ -67,7 +67,7 @@ export default function CIDStructViz() {
                   rx={5}
                   fill={p.c + "12"}
                   stroke={p.c}
-                  strokeWidth={active ? 1.5 : 1}
+                  strokeWidth={1}
                 />
                 <text
                   x={POSITIONS[i] + p.w / 2}
@@ -113,7 +113,7 @@ export default function CIDStructViz() {
             fill="var(--foreground)"
             opacity={0.4}
           >
-            bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
+            bafy…55fbzdi · full value는 본문 예제에서 확인
           </text>
         </svg>
       )}

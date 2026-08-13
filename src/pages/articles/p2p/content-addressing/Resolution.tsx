@@ -1,150 +1,66 @@
+import { CitationBlock } from "@/components/ui/citation";
 import ResolutionViz from "./viz/ResolutionViz";
-import CodePanel from "@/components/ui/code-panel";
-
-const resCode = `// 이름 해석 (Name Resolution)
-// CID는 불변이므로 "최신 버전"을 가리킬 수 없음
-// → 가변 포인터(Mutable Pointer) 필요
-
-// IPNS (InterPlanetary Name System):
-//   /ipns/<PeerID> → CID 매핑
-//   공개키로 서명된 레코드를 DHT에 발행
-//   레코드: { Value: "/ipfs/bafyNew", Seq: 42, Validity: ... }
-//   구독자가 DHT에서 최신 CID를 조회
-
-// DNSLink:
-//   _dnslink.example.com TXT "dnslink=/ipfs/bafyABC"
-//   DNS 레코드로 CID 매핑 → 브라우저 호환
-//   TLS 인증서와 결합 가능
-
-// iroh의 경우:
-//   NodeID(공개키) 기반 발견 → Pkarr DHT에 주소 발행
-//   CID 대신 BLAKE3 해시 사용, 별도 IPNS 없음`;
-
-const resAnnotations: {
-  lines: [number, number];
-  color: "sky" | "emerald" | "amber";
-  note: string;
-}[] = [
-  { lines: [4, 8], color: "sky", note: "IPNS — DHT 기반 가변 포인터" },
-  {
-    lines: [10, 13],
-    color: "emerald",
-    note: "DNSLink — DNS TXT 레코드로 CID 매핑",
-  },
-  { lines: [15, 17], color: "amber", note: "iroh — NodeID + Pkarr DHT" },
-];
 
 export default function Resolution() {
   return (
     <section id="resolution" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">이름 해석: IPNS & DNSLink</h2>
-      <div className="not-prose mb-8">
+      <h2 className="mb-6 text-2xl font-bold">
+        Mutable name은 최신 CID를 가리키되, freshness와 authority를 따로
+        검증합니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Content가 바뀌면 CID도 바뀌므로 “내 사이트의 최신 version”처럼
+          안정적인 이름을 제공하려면 mutable pointer가 필요합니다. IPNS name은
+          public key에서 파생되고, 해당 private key가 value
+          path·sequence·validity·TTL을 포함한 record에 서명합니다. Resolver는
+          signature가 맞는지만 볼 것이 아니라 validity가 남았는지와 후보 중 어떤
+          sequence가 최신인지 확인해야 합니다.
+        </p>
+      </div>
+      <div className="not-prose my-8">
         <ResolutionViz />
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          CID는 내용 기반이므로 불변입니다.
-          <br />
-          웹사이트처럼 "최신 버전"을 가리키려면 가변 포인터가 필요합니다.
-          <br />
-          IPNS는 DHT 기반 이름 시스템, DNSLink는 DNS 레코드를 사용합니다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>IPNS와 DNSLink의 trust anchor가 다릅니다</h3>
+        <p>
+          IPNS는 name의 key가 record signature authority가 되고 routing system은
+          record를 배포합니다. DHT에서 찾았다는 사실 자체가 record를 신뢰하게
+          만드는 것은 아닙니다. DNSLink는 _dnslink TXT record로 /ipfs/ 또는
+          /ipns/ path를 가리키며 DNS 운영 권한과 DNSSEC·HTTPS gateway 같은 기존
+          web trust chain을 사용합니다. 둘 다 resolver cache의 TTL 때문에 갱신
+          직후 old value를 볼 수 있습니다.
         </p>
-        <CodePanel
-          title="이름 해석 방식"
-          code={resCode}
-          annotations={resAnnotations}
-        />
-        <p className="leading-7">
-          IPFS Kubo는 IPNS 레코드를 DHT에 발행하고, ipfs.io 게이트웨이는
-          DNSLink로 도메인을 IPFS 콘텐츠에 매핑합니다.
+        <h3>Mutable pointer는 content integrity를 대체하지 않습니다</h3>
+        <p>
+          Name resolution이 CID를 돌려준 뒤에는 provider discovery와 block
+          fetch가 이어지고, 받은 block은 다시 CID로 검증합니다. Private key가
+          탈취되면 attacker가 유효한 새 IPNS record를 만들 수 있으므로 key
+          rotation·recovery policy가 필요합니다. 반대로 routing node가 거짓
+          bytes를 주어도 최종 CID 검사는 실패합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">이름 해석 비교</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// Name Resolution Systems
-//
-// 1. IPNS (InterPlanetary Name System)
-//
-// 구조:
-//   /ipns/<PeerID> → /ipfs/<CID>
-//
-// 레코드:
-//   {
-//     Value: "/ipfs/bafyXXX",  // 현재 CID
-//     Sequence: 42,             // 버전
-//     Validity: "2025-01-01T00:00:00Z",
-//     ValidityType: EOL,
-//     Signature: <bytes>,       // private key로 서명
-//     PublicKey: <bytes>,
-//     IpnsSignature_V2: <bytes>
-//   }
-//
-// 게시 과정:
-//   1. ipfs name publish <CID>
-//   2. 로컬에서 레코드 생성 + 서명
-//   3. DHT에 저장 (PeerID → Record)
-//   4. 구독자가 DHT 조회
-//
-// 문제:
-//   - DHT 느림 (수 초)
-//   - 레코드 갱신 느림
-//   - 오프라인 시 접근 불가
-//
-// 최적화:
-//   - Pubsub for instant updates
-//   - TTL 조정
-//   - IPNS over DHT + Pubsub
-
-// 2. DNSLink
-//
-// 구조:
-//   _dnslink.example.com  TXT "dnslink=/ipfs/bafyXXX"
-//   _dnslink.example.com  TXT "dnslink=/ipns/k51qzi..."
-//
-// 장점:
-//   - 기존 DNS infrastructure
-//   - 빠른 resolution (cache)
-//   - TLS cert 연동
-//   - 브라우저 친화적
-//
-// 단점:
-//   - 중앙화 (DNS 서버 신뢰)
-//   - 도메인 소유권 필요
-
-// 3. ENS (Ethereum Name Service)
-//
-// 구조:
-//   vitalik.eth → IPFS hash
-//   ENS Contract stores hash
-//
-// 장점:
-//   - 탈중앙화 (blockchain)
-//   - 권한 검증 명확
-//   - 다른 레코드 (ETH 주소, etc.)
-//
-// 4. iroh Approach:
-//
-// NodeID (Ed25519 pubkey) 기반
-// - 서명된 레코드 → Pkarr (DNS over DHT)
-// - Relay URL 전파
-// - Direct dial with NodeID
-
-// 5. 웹 게이트웨이 (Gateway)
-//
-//   https://ipfs.io/ipfs/<CID>
-//   https://dweb.link/ipfs/<CID>
-//   https://<CID>.ipfs.dweb.link  (subdomain)
-//
-//   - HTTP로 IPFS 접근
-//   - 중앙화 trade-off
-//   - 브라우저 호환성
-//   - Cloudflare, Fleek, Pinata
-
-// 미래 방향:
-//   - IPIP-366: IPNS on Pubsub (faster)
-//   - Trustless gateways
-//   - Browser native IPFS (Brave)`}
-        </pre>
+        <div
+          id="paper-ipns-spec"
+          className="scroll-mt-24 border-l border-primary/50 pl-4"
+        >
+          <p className="text-xs font-bold text-primary">
+            명세 읽기 · IPNS record
+          </p>
+          <p>
+            IPNS specification은 key type, name, signed record fields,
+            creation과 verification을 정의합니다. 특정 DHT가 언제나 빠르게 최신
+            record를 반환한다거나 DNSLink보다 더 안전하다는 일반 성능 결론은
+            포함하지 않습니다.
+          </p>
+          <CitationBlock
+            source="IPFS Standards — IPNS Record and Protocol"
+            citeKey={2}
+            href="https://specs.ipfs.tech/ipns/ipns-record/"
+          >
+            Signature, sequence, validity, TTL과 routing record 배포를 구분해
+            mutable pointer의 authority·freshness 경계를 확인합니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

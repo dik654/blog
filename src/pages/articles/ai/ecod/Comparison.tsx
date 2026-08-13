@@ -65,8 +65,23 @@ export default function Comparison() {
           ECDF는 reference population의 rank이므로 계절 변화·정책 변경·센서 교체가 생기면 정상
           row도 tail로 이동한다. Raw feature distribution, missing rate, tie rate, score quantile,
           alert rate와 reviewer precision을 함께 monitoring하고, 재학습 시에는 이전 model과 같은
-          golden rows의 순위 변화를 기록한다.
+          golden rows의 순위 변화를 기록한다. Candidate reference·package·batch policy를 versioning하고
+          같은 rows의 base/candidate 순위와 review budget을 paired 비교한 뒤 canary로 올린다. Reviewer
+          precision이나 alert-rate hard limit가 무너지면 이전 ECDF artifact와 threshold로 rollback한다.
         </p>
+      </div>
+
+      <div id="paper-unsupervised-outlier-evaluation" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Unsupervised detector 평가</p>
+        <p className="mt-2 text-sm font-semibold">On the Evaluation of Unsupervised Outlier Detection</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Campos 등은 benchmark의 outlier definition·class distribution·dataset 변형과 metric 선택이
+          unsupervised detector 순위를 크게 바꿀 수 있는 문제를 분석했습니다. 이 연구는 특정
+          detector가 항상 우월하다는 결론이 아니라, ground truth와 생성 과정을 확인하고 여러
+          dataset·metric에서 비교해야 한다는 평가 경계를 제공합니다. Label이 전혀 없는 production
+          population의 성능을 자동으로 인증해 주는 방법으로 읽으면 안 됩니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1007/s10618-015-0444-8" target="_blank" rel="noreferrer">원 논문의 benchmark·metric sensitivity 보기</a>
       </div>
     </section>
   );

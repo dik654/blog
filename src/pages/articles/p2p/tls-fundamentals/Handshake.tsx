@@ -1,137 +1,94 @@
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import TLSHandshakeViz from "./viz/TLSHandshakeViz";
-import CodePanel from "@/components/ui/code-panel";
-
-const handshakeCode = `// TLS 1.3 Full Handshake (RFC 8446)
-Client                              Server
-  |--- ClientHello ----------------->|  // 지원 암호 + key_share(ECDHE 공개값)
-  |<-- ServerHello ------------------|  // 선택 암호 + key_share
-  |<-- {EncryptedExtensions} --------|  // 암호화된 확장
-  |<-- {Certificate} ----------------|  // 서버 인증서
-  |<-- {CertificateVerify} ----------|  // 서명으로 인증서 소유 증명
-  |<-- {Finished} -------------------|  // 핸드셰이크 무결성 MAC
-  |--- {Finished} ------------------>|  // 클라이언트 확인
-  |<========= 1-RTT 완료 ==========>|  // 양방향 암호화 데이터
-
-// 0-RTT PSK Resumption
-Client                              Server
-  |--- ClientHello + early_data ---->|  // PSK + 0-RTT 데이터 동시 전송
-  |<-- ServerHello + {Finished} -----|  // 서버 응답
-  |<========= 0-RTT 완료 ==========>|  // 첫 패킷부터 데이터 포함`;
-
-const annotations: {
-  lines: [number, number];
-  color: "sky" | "emerald" | "amber";
-  note: string;
-}[] = [
-  {
-    lines: [2, 8],
-    color: "sky",
-    note: "1-RTT: key_share로 첫 메시지에 DH 파라미터 포함",
-  },
-  { lines: [9, 11], color: "emerald", note: "{}는 암호화된 메시지를 의미" },
-  {
-    lines: [14, 17],
-    color: "amber",
-    note: "0-RTT: PSK로 재연결 시 즉시 데이터 전송",
-  },
-];
 
 export default function Handshake() {
   return (
     <section id="handshake" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">핸드셰이크 흐름</h2>
-      <div className="not-prose mb-8">
+      <h2 className="mb-6 text-2xl font-bold">
+        Handshake는 shared secret, identity, transcript를 한 합의로 묶습니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          ClientHello는 지원 version·cipher suite·signature algorithm·key
+          share를 제안하고 ServerHello는 하나를 선택합니다. 두 key share로 ECDHE
+          shared secret을 계산할 수 있지만, 이것만으로 상대가 진짜 서버인지 알
+          수는 없습니다. 중간자가 자신의 key share 두 개로 각각 연결할 수 있기
+          때문입니다.{" "}
+          <Link to="/crypto/diffie-hellman#security">
+            인증 없는 DH의 중간자 경계
+          </Link>
+          가 TLS에서 certificate와 CertificateVerify가 필요한 이유입니다.
+        </p>
+      </div>
+      <div className="not-prose my-8">
         <TLSHandshakeViz />
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          TLS 1.3은 1-RTT 풀 핸드셰이크를 기본으로 함.
-          <br />
-          ClientHello에 key_share 확장을 포함하여 첫 메시지에서 ECDHE 공개값을
-          전송함.
-          <br />
-          TLS 1.2는 키 교환을 별도 라운드에서 수행하므로 2-RTT가 필요했음.
+      <ExplainedFormula
+        question="서버의 서명이 이번 연결에서 실제로 협상한 메시지 전체를 어떻게 묶을까요?"
+        idea={
+          <>
+            각 handshake message의 직렬화 bytes를 순서대로 누적해 transcript
+            hash를 만들고, 서버는 전용 context와 그 hash에 서명합니다. 메시지
+            하나가 바뀌면 hash가 달라져 같은 서명을 재사용할 수 없습니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+T_n &= \operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),\\
+\sigma &= \operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n),\\
+\operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)&=\mathrm{true}.
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "M_i",
+            name: "handshake message bytes",
+            description:
+              "ClientHello부터 현재 지점까지 wire에 직렬화된 i번째 메시지입니다.",
+          },
+          {
+            symbol: "T_n",
+            name: "transcript hash",
+            description: "순서와 내용을 고정하는 누적 hash입니다.",
+          },
+          {
+            symbol: "sk_cert, pk_cert",
+            name: "certificate key pair",
+            description:
+              "서버가 소유를 증명하는 개인 키와 인증서의 공개 키입니다.",
+          },
+          {
+            symbol: "context",
+            name: "TLS 1.3 signature context",
+            description:
+              "다른 protocol에서 만든 서명을 TLS 서명으로 오인하지 않게 하는 domain-separation 문자열입니다.",
+          },
+        ]}
+        assumptions={[
+          "Client가 certificate chain·유효 기간·의도한 server name을 별도 정책으로 검증해야 합니다.",
+          "Hash의 collision resistance와 signature의 unforgeability, 정확한 transcript 직렬화가 필요합니다.",
+          "식은 certificate-based server authentication 경로를 보이며 PSK-only mode에는 같은 certificate signature가 없습니다.",
+        ]}
+        interpretation="ClientHello의 ALPN이나 key share 한 byte만 바뀌어도 T_n이 달라집니다. 다만 서명이 참이라는 사실은 private key 소유를 증명할 뿐, 그 certificate가 사용자가 의도한 hostname에 유효한지는 application 검증이 결정합니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Finished는 양쪽이 같은 상태에 도달했는지 확인합니다</h3>
+        <p>
+          CertificateVerify가 server identity와 transcript를 묶는다면 Finished는
+          handshake traffic secret에서 파생한 finished key로 transcript MAC을
+          계산합니다. 따라서 한쪽이 다른 message sequence나 다른 key schedule을
+          계산했다면 검증이 실패합니다. Client Finished까지 확인한 후 양방향
+          application traffic secret을 사용합니다.
         </p>
-        <h3>ECDHE 키 교환</h3>
-        <p className="leading-7">
-          양측이 임시(ephemeral) 키 쌍을 생성하여 교환함.
-          <br />
-          공유 비밀(shared secret)은 양측의 개인 키와 상대방 공개 키로 계산함.
-          <br />
-          임시 키이므로 세션마다 새 키 생성 — Forward Secrecy 보장.
+        <h3>0‑RTT는 latency와 replay risk를 교환합니다</h3>
+        <p>
+          Resumption ticket의 PSK로 early traffic key를 만들면 ClientHello와
+          함께 early data를 보낼 수 있습니다. 하지만 공격자가 같은 encrypted
+          flight를 다시 전달할 수 있으므로, “GET이면 항상 안전” 같은 method
+          이름만으로 판정하면 안 됩니다. Payment·quota·logging처럼 재실행에 side
+          effect가 있는지 확인하고, ticket single-use·freshness window·replay
+          cache와 함께 application-level idempotency key를 설계하거나 0‑RTT를
+          거부해야 합니다.
         </p>
-        <h3>0-RTT PSK 재연결</h3>
-        <p className="leading-7">
-          이전 세션에서 협상된 PSK(Pre-Shared Key)를 보관함.
-          <br />
-          재연결 시 ClientHello와 함께 early_data를 즉시 전송 가능.
-          <br />
-          단, 0-RTT 데이터는 재전송 공격(replay attack)에 취약함.
-          <br />
-          서버는 멱등(idempotent) 요청에만 0-RTT를 허용해야 함.
-        </p>
-        <CodePanel
-          title="TLS 1.3 핸드셰이크 메시지 흐름"
-          code={handshakeCode}
-          annotations={annotations}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          핸드셰이크 상세 메시지
-        </h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// TLS 1.3 Handshake Messages
-//
-// ClientHello:
-//   - ProtocolVersion (0x0303 for compat)
-//   - Random (32 bytes)
-//   - LegacySessionId (empty in 1.3)
-//   - CipherSuites (TLS 1.3 suites only)
-//   - Extensions:
-//     * supported_versions (0x0304 = TLS 1.3)
-//     * supported_groups (curves)
-//     * key_share (ECDHE public keys)
-//     * signature_algorithms
-//     * pre_shared_key (for 0-RTT)
-//     * psk_key_exchange_modes
-//     * server_name (SNI)
-//     * application_layer_protocol_negotiation (ALPN)
-//
-// ServerHello:
-//   - Version, Random
-//   - Selected cipher suite
-//   - key_share (server's ECDHE pub key)
-//   - (PSK if resuming)
-//
-// EncryptedExtensions:
-//   - Server config (ALPN, server_name ack)
-//   - All 이후 메시지는 암호화됨
-//
-// Certificate:
-//   - Server의 X.509 인증서 체인
-//   - 암호화됨 (TLS 1.2 대비 개선)
-//
-// CertificateVerify:
-//   - 서버가 핸드셰이크 transcript 서명
-//   - 인증서 소유 증명
-//   - Algorithm: RSA-PSS, ECDSA, EdDSA
-//
-// Finished (both sides):
-//   - HMAC of full transcript
-//   - Handshake integrity check
-
-// Authentication flow:
-//   1. Client gets server cert
-//   2. Client verifies cert chain to trusted CA
-//   3. Client verifies CertificateVerify signature
-//   4. Both sides verify Finished MAC
-//   → Mutual authentication complete
-
-// Mutual TLS (mTLS):
-//   Server sends CertificateRequest
-//   Client responds with own Certificate + CertificateVerify
-//   사용: API security, zero trust networks`}
-        </pre>
       </div>
     </section>
   );

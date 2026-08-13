@@ -1,117 +1,97 @@
 import CodePanel from "@/components/ui/code-panel";
 
-const aosCode = `// AoS (Array of Structures): 구조체 배열
-struct Particle {
-  float x;    // offset 0
-  float y;    // offset 4
-  float z;    // offset 8
-};
-Particle particles[N];
+const layoutCode = `struct ParticleAoS { float x, y, z, mass; };
+ParticleAoS aos[N];
+// x addresses: base+0, base+16, base+32, ...
 
-// 메모리 레이아웃:
-// [x0 y0 z0] [x1 y1 z1] [x2 y2 z2] ...
+struct ParticleSoA { float *x, *y, *z, *mass; } soa;
+// x addresses: base+0, base+4, base+8, ...
 
-// x 좌표만 읽을 때:
-// Thread 0 → particles[0].x  (addr 0)
-// Thread 1 → particles[1].x  (addr 12)  ← stride = 12B!
-// Thread 2 → particles[2].x  (addr 24)
-// → 12바이트 간격, non-coalesced (128B 캐시라인에 float 10개만 유효)`;
-
-const soaCode = `// SoA (Structure of Arrays): 배열의 구조체
-struct ParticlesSoA {
-  float x[N];   // x 좌표 연속 저장
-  float y[N];   // y 좌표 연속 저장
-  float z[N];   // z 좌표 연속 저장
-};
-ParticlesSoA particles;
-
-// 메모리 레이아웃:
-// [x0 x1 x2 x3 ...] [y0 y1 y2 y3 ...] [z0 z1 z2 z3 ...]
-
-// x 좌표만 읽을 때:
-// Thread 0 → particles.x[0]  (addr 0)
-// Thread 1 → particles.x[1]  (addr 4)   ← stride = 4B!
-// Thread 2 → particles.x[2]  (addr 8)
-// → 4바이트 간격, coalesced (128B 캐시라인에 float 32개 모두 유효)`;
-
-const comparisonCode = `// AoS 커널: x 좌표 업데이트
-__global__ void updateAoS(Particle* p, float dt, int N) {
+__global__ void updateX(float* x, const float* velocity, int n, float dt) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i < N) p[i].x += p[i].vx * dt;   // stride=sizeof(Particle)
-}                                         // → non-coalesced
+  if (i < n) x[i] += velocity[i] * dt;
+}`;
 
-// SoA 커널: x 좌표 업데이트
-__global__ void updateSoA(float* x, float* vx, float dt, int N) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i < N) x[i] += vx[i] * dt;        // stride=4B
-}                                         // → coalesced
-
-// 성능 비교 (N=1M, A100 기준):
-//   AoS:  ~2.1ms  (대역폭 효율 ~30%)
-//   SoA:  ~0.4ms  (대역폭 효율 ~90%)
-//   차이: ~5x — coalescing이 핵심 원인
-
-// 실전 가이드:
-//   모든 필드를 함께 쓴다 → AoS도 가능 (stride=구조체 크기)
-//   일부 필드만 접근한다 → SoA 필수 (대부분의 GPU 워크로드)`;
+const decisions = [
+  [
+    "x 한 field만 scan",
+    "SoA",
+    "같은 field가 연속이어서 useful-byte 비율이 높음",
+  ],
+  [
+    "한 particle의 모든 field 사용",
+    "AoS 또는 AoSoA 측정",
+    "한 thread가 가져온 cache line의 여러 field를 실제 사용",
+  ],
+  [
+    "Vector load·library alignment 필요",
+    "AoSoA 후보",
+    "작은 structure tile로 field 연속성과 record locality 절충",
+  ],
+] as const;
 
 export default function AosSoa() {
   return (
     <section id="aos-soa" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">AoS vs SoA: 데이터 레이아웃</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        AoS와 SoA 선택은 object 취향이 아니라 kernel의 field access pattern
+        문제입니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          같은 데이터라도 메모리 배치에 따라 GPU 성능이 <strong>수 배</strong>{" "}
-          차이 난다.
-          <br />
-          핵심은 <strong>연속 스레드가 연속 주소를 접근</strong>하도록 설계하는
-          것이다.
+          AoS(Array of Structures)는 한 record의 fields를 붙여 저장하고,
+          SoA(Structure of Arrays)는 같은 field끼리 모읍니다. Warp lanes가
+          particle마다 x만 읽는다면 AoS의 y·z·mass bytes는 transaction에 함께
+          실려도 쓰이지 않을 수 있습니다. SoA에서는 x 값이 연속이므로 같은 byte
+          budget으로 더 많은 useful x를 가져옵니다. 그러나 한 thread가 record의
+          모든 field를 바로 쓴다면 AoS의 locality도 유용할 수 있습니다.
         </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">AoS: 구조체 배열</h3>
+      </div>
+      <CodePanel
+        title="같은 data, 다른 address stride"
+        code={layoutCode}
+        annotations={[
+          { lines: [1, 3], color: "amber", note: "AoS x stride = record size" },
+          {
+            lines: [5, 6],
+            color: "emerald",
+            note: "SoA x stride = sizeof(float)",
+          },
+          { lines: [8, 11], color: "sky", note: "Field-wise kernel" },
+        ]}
+      />
+      <div className="not-prose my-8 overflow-x-auto">
+        <table className="min-w-[680px] border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-border text-left">
+              <th className="px-3 py-3">Kernel access</th>
+              <th className="px-3 py-3">첫 후보</th>
+              <th className="px-3 py-3">판단 이유</th>
+            </tr>
+          </thead>
+          <tbody>
+            {decisions.map(([access, choice, reason]) => (
+              <tr key={access} className="border-b border-border/70 align-top">
+                <td className="px-3 py-3 font-medium">{access}</td>
+                <td className="px-3 py-3 text-primary">{choice}</td>
+                <td className="px-3 py-3 leading-6 text-muted-foreground">
+                  {reason}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          각 파티클의 모든 필드가 연속 저장된다. 직관적이지만, 특정 필드만
-          접근할 때 stride가 구조체 크기만큼 벌어진다.
+          고정된 “SoA가 몇 배 빠르다”는 수치는 model·record
+          size·alignment·cache·GPU·compiler가 없는 한 재현 가능한 근거가
+          아닙니다. 실제 kernel의 field subset과 access direction을 기록하고,
+          layout만 바꾼 paired benchmark에서 global load efficiency·transaction
+          수·kernel time·end-to-end conversion cost를 비교해야 합니다. CPU와 GPU
+          사이에서 매번 transpose한다면 kernel 이득보다 layout conversion이 더
+          클 수도 있습니다.
         </p>
-        <CodePanel
-          title="AoS 레이아웃과 접근 패턴"
-          code={aosCode}
-          annotations={[
-            { lines: [2, 8], color: "sky", note: "구조체 정의와 배열" },
-            { lines: [11, 11], color: "amber", note: "메모리 상 배치" },
-            {
-              lines: [14, 17],
-              color: "rose",
-              note: "stride=12B, non-coalesced",
-            },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">SoA: 배열의 구조체</h3>
-        <p>
-          같은 필드끼리 연속 저장된다. 특정 필드만 접근할 때 stride가
-          4바이트(float)여서 완전한 coalescing을 달성한다.
-        </p>
-        <CodePanel
-          title="SoA 레이아웃과 접근 패턴"
-          code={soaCode}
-          annotations={[
-            { lines: [2, 7], color: "sky", note: "배열의 구조체 정의" },
-            { lines: [10, 10], color: "emerald", note: "같은 필드가 연속" },
-            { lines: [13, 16], color: "emerald", note: "stride=4B, coalesced" },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">성능 비교</h3>
-        <CodePanel
-          title="AoS vs SoA 커널 성능 비교"
-          code={comparisonCode}
-          annotations={[
-            { lines: [1, 5], color: "rose", note: "AoS: non-coalesced 접근" },
-            { lines: [7, 11], color: "emerald", note: "SoA: coalesced 접근" },
-            { lines: [13, 17], color: "amber", note: "~5배 성능 차이" },
-            { lines: [19, 21], color: "violet", note: "실전 선택 기준" },
-          ]}
-        />
       </div>
     </section>
   );

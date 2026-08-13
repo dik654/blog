@@ -73,7 +73,7 @@ export default function ResolutionViz() {
                 rx={5}
                 fill={C.ipns + "12"}
                 stroke={C.ipns}
-                strokeWidth={1.3}
+                strokeWidth={1}
               />
               <text
                 x={90}
@@ -102,7 +102,7 @@ export default function ResolutionViz() {
                 x2={310}
                 y2={105}
                 stroke={C.ipns}
-                strokeWidth={1.3}
+                strokeWidth={1}
                 strokeDasharray="4 3"
               />
               <rect
@@ -140,7 +140,7 @@ export default function ResolutionViz() {
                 rx={5}
                 fill={C.dns + "12"}
                 stroke={C.dns}
-                strokeWidth={1.3}
+                strokeWidth={1}
               />
               <text
                 x={90}
@@ -168,7 +168,7 @@ export default function ResolutionViz() {
                 x2={310}
                 y2={105}
                 stroke={C.dns}
-                strokeWidth={1.3}
+                strokeWidth={1}
               />
             </motion.g>
           )}

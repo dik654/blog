@@ -21,6 +21,102 @@ export interface EditorialBoundary {
  * 신규 주제가 추가되면 먼저 이 manifest에서 소유 글과 참조 글을 정한 뒤 본문을 확장한다.
  */
 export const EDITORIAL_BOUNDARIES = {
+  "cuda-thread-hierarchy": {
+    title: "CUDA thread hierarchy 글이 소유하는 범위",
+    owns: [
+      "Grid·block·thread launch hierarchy와 warp·SIMT hardware execution 경계",
+      "Block resource usage와 SM placement·resident warp trade-off",
+      "1D·2D global index, ceiling division, boundary-safe row-major mapping",
+    ],
+    reuses: [
+      {
+        label: "Shared-memory transaction과 data layout",
+        href: "/gpu/cuda-shared-memory",
+      },
+      {
+        label: "Barrier·stream·event ordering",
+        href: "/gpu/cuda-sync-streams",
+      },
+      {
+        label: "Hopper cluster·TMA architecture",
+        href: "/gpu/gpu-arch-hopper",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Warp size·block/cluster limit·built-in variable semantics는 확인 시점 CUDA Programming Guide와 target device property를 함께 기록한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Block size 우위는 같은 kernel·input·compiler·GPU에서 occupancy·warp stall·memory throughput·kernel time을 paired 비교한 결과에만 귀속한다.",
+      },
+    ],
+  },
+  "cuda-shared-memory": {
+    title: "CUDA shared memory 글이 소유하는 범위",
+    owns: [
+      "Block-shared scratchpad의 stage·barrier·reuse·capacity 비용",
+      "Global coalescing의 32-byte transaction·useful-byte 해석",
+      "Shared-memory bank mapping·broadcast·padding과 AoS·SoA layout 선택",
+    ],
+    reuses: [
+      {
+        label: "Grid·block·warp·global index",
+        href: "/gpu/cuda-thread-hierarchy",
+      },
+      {
+        label: "Block barrier와 memory visibility",
+        href: "/gpu/cuda-sync-streams#overview",
+      },
+      {
+        label: "Tiled matrix multiplication 적용",
+        href: "/gpu/cuda-matrix-multiply",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Transaction segment와 bank mapping은 CUDA Programming Guide의 current architecture 범위로 제한하고 고정 latency·speedup 수치를 보편 법칙으로 쓰지 않는다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Padding·SoA·tiling 이득은 target GPU에서 transaction·bank-conflict·occupancy·kernel/end-to-end time을 함께 비교한다.",
+      },
+    ],
+  },
+  "cuda-sync-streams": {
+    title: "CUDA synchronization·streams 글이 소유하는 범위",
+    owns: [
+      "Warp·block·stream·device synchronization scope와 visibility·atomicity 경계",
+      "Stream in-order queue·pinned transfer·hardware overlap과 pipeline 하한",
+      "Event dependency·timing semantics와 multi-GPU resource ownership·P2P capability",
+    ],
+    reuses: [
+      {
+        label: "Thread block과 warp execution",
+        href: "/gpu/cuda-thread-hierarchy",
+      },
+      {
+        label: "Shared-memory staging과 bank conflict",
+        href: "/gpu/cuda-shared-memory",
+      },
+      {
+        label: "GPU–HCA·collective topology",
+        href: "/gpu/hw-network#gpudirect-topology",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Default stream·event·multi-GPU API semantics는 CUDA version·creation flag·owning device와 함께 기록한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Overlap과 scale-out은 Nsight timeline·copy/compute/idle time·link counter·correctness reference로 실측한다.",
+      },
+    ],
+  },
   "math-differential-equations-numerical-solvers": {
     title: "미분방정식·수치적분 글이 소유하는 범위",
     owns: [
@@ -92,12 +188,30 @@ export const EDITORIAL_BOUNDARIES = {
       "Framework·state schema·serializer·checkpointer version migration과 paired eval·canary·rollback 계약",
     ],
     reuses: [
-      { label: "ReAct state·action·observation과 exit state", href: "/ai/agentic-patterns#react" },
-      { label: "Objective·authority·artifact·verifier·workflow/checkpoint 경계", href: "/ai/llm-harness" },
-      { label: "LangGraph state/node/edge/reducer와 replay-safe side effect", href: "/ai/multi-agent-implementation#langgraph" },
-      { label: "Multi-agent delegation·join·Crew/Flow 구현", href: "/ai/multi-agent-implementation" },
-      { label: "RAG data source·citation·retrieval pipeline", href: "/ai/rag-pipeline" },
-      { label: "Tool permission·credential·egress·sandbox", href: "/ai/agent-sandbox-security" },
+      {
+        label: "ReAct state·action·observation과 exit state",
+        href: "/ai/agentic-patterns#react",
+      },
+      {
+        label: "Objective·authority·artifact·verifier·workflow/checkpoint 경계",
+        href: "/ai/llm-harness",
+      },
+      {
+        label: "LangGraph state/node/edge/reducer와 replay-safe side effect",
+        href: "/ai/multi-agent-implementation#langgraph",
+      },
+      {
+        label: "Multi-agent delegation·join·Crew/Flow 구현",
+        href: "/ai/multi-agent-implementation",
+      },
+      {
+        label: "RAG data source·citation·retrieval pipeline",
+        href: "/ai/rag-pipeline",
+      },
+      {
+        label: "Tool permission·credential·egress·sandbox",
+        href: "/ai/agent-sandbox-security",
+      },
     ],
     evidence: [
       {
@@ -129,14 +243,41 @@ export const EDITORIAL_BOUNDARIES = {
       "Direct file-edit snapshot·conversation rewind와 Bash·subagent·external effect를 나누는 checkpoint 경계",
     ],
     reuses: [
-      { label: "Agent observation/action loop·delegation·hook taxonomy", href: "/ai/agentic-patterns" },
-      { label: "하네스 objective·context·capability·artifact·verifier·recovery 계약", href: "/ai/llm-harness" },
-      { label: "Context discovery·memory·compaction·instruction/data/enforcement", href: "/ai/context-engineering" },
-      { label: "Skill authoring·progressive disclosure·permission non-escalation", href: "/ai/skills-anatomy" },
-      { label: "MCP tool·resource·prompt·runtime capability 경계", href: "/ai/mcp-protocol" },
-      { label: "OS·container·credential·egress·network sandbox", href: "/ai/agent-sandbox-security" },
-      { label: "Claude Code IDE integration", href: "https://code.claude.com/docs/en/vs-code" },
-      { label: "Claude Code GitHub Actions integration", href: "https://code.claude.com/docs/en/github-actions" },
+      {
+        label: "Agent observation/action loop·delegation·hook taxonomy",
+        href: "/ai/agentic-patterns",
+      },
+      {
+        label:
+          "하네스 objective·context·capability·artifact·verifier·recovery 계약",
+        href: "/ai/llm-harness",
+      },
+      {
+        label:
+          "Context discovery·memory·compaction·instruction/data/enforcement",
+        href: "/ai/context-engineering",
+      },
+      {
+        label:
+          "Skill authoring·progressive disclosure·permission non-escalation",
+        href: "/ai/skills-anatomy",
+      },
+      {
+        label: "MCP tool·resource·prompt·runtime capability 경계",
+        href: "/ai/mcp-protocol",
+      },
+      {
+        label: "OS·container·credential·egress·network sandbox",
+        href: "/ai/agent-sandbox-security",
+      },
+      {
+        label: "Claude Code IDE integration",
+        href: "https://code.claude.com/docs/en/vs-code",
+      },
+      {
+        label: "Claude Code GitHub Actions integration",
+        href: "https://code.claude.com/docs/en/github-actions",
+      },
     ],
     evidence: [
       {
@@ -167,17 +308,50 @@ export const EDITORIAL_BOUNDARIES = {
       "Korean language checker·judge threshold calibration과 base/candidate paired canary·rollback 계약",
     ],
     reuses: [
-      { label: "Code point·grapheme·UTF-8·Unicode normalization", href: "/ai/text-unicode-encoding" },
-      { label: "Tokenizer pipeline·vocabulary·checkpoint compatibility", href: "/ai/tokenizer" },
-      { label: "lm_head language-model policy와 output projection", href: "/ai/transformer-architecture#output-head" },
-      { label: "Logit·softmax normalization과 class coupling", href: "/ai/backprop-optimization#softmax" },
-      { label: "Prompt contract·few-shot·model-version regression", href: "/ai/prompt-engineering" },
-      { label: "SFT demonstration·response-only loss·data contract", href: "/ai/supervised-fine-tuning" },
-      { label: "Online rollout·reward·reference/KL와 RLHF 경계", href: "/ai/rlhf" },
-      { label: "GRPO·Dr.GRPO·verifier·sampling evaluation", href: "/ai/open-r1" },
-      { label: "Metric·threshold·guardrail·uncertainty", href: "/ai/evaluation-metrics" },
-      { label: "Run·artifact provenance와 reproducibility", href: "/ai/experiment-tracking" },
-      { label: "Layered deterministic·judge·human verification", href: "/ai/llm-harness#evaluation" },
+      {
+        label: "Code point·grapheme·UTF-8·Unicode normalization",
+        href: "/ai/text-unicode-encoding",
+      },
+      {
+        label: "Tokenizer pipeline·vocabulary·checkpoint compatibility",
+        href: "/ai/tokenizer",
+      },
+      {
+        label: "lm_head language-model policy와 output projection",
+        href: "/ai/transformer-architecture#output-head",
+      },
+      {
+        label: "Logit·softmax normalization과 class coupling",
+        href: "/ai/backprop-optimization#softmax",
+      },
+      {
+        label: "Prompt contract·few-shot·model-version regression",
+        href: "/ai/prompt-engineering",
+      },
+      {
+        label: "SFT demonstration·response-only loss·data contract",
+        href: "/ai/supervised-fine-tuning",
+      },
+      {
+        label: "Online rollout·reward·reference/KL와 RLHF 경계",
+        href: "/ai/rlhf",
+      },
+      {
+        label: "GRPO·Dr.GRPO·verifier·sampling evaluation",
+        href: "/ai/open-r1",
+      },
+      {
+        label: "Metric·threshold·guardrail·uncertainty",
+        href: "/ai/evaluation-metrics",
+      },
+      {
+        label: "Run·artifact provenance와 reproducibility",
+        href: "/ai/experiment-tracking",
+      },
+      {
+        label: "Layered deterministic·judge·human verification",
+        href: "/ai/llm-harness#evaluation",
+      },
     ],
     evidence: [
       {
@@ -210,13 +384,35 @@ export const EDITORIAL_BOUNDARIES = {
       "Legacy `pi` config와 `runEmbeddedPiAgent(...)` plugin helper를 현행 public OpenClaw 표기로 이관하는 계약",
     ],
     reuses: [
-      { label: "Agent state·action·observation loop와 exit state", href: "/ai/agentic-patterns#react" },
-      { label: "Harness objective·context·capability·artifact·verification 경계", href: "/ai/llm-harness" },
-      { label: "Working state·memory·compaction·context provenance", href: "/ai/context-engineering" },
-      { label: "Tool·Skill·Plugin과 scope·permission non-escalation", href: "/ai/skills-anatomy" },
-      { label: "MCP Tool·Resource·Prompt와 authorization·retry", href: "/ai/mcp-protocol" },
-      { label: "OS/container·credential·egress·filesystem sandbox 정본", href: "/ai/agent-sandbox-security" },
-      { label: "Replay idempotency·checkpoint·external effect 경계", href: "/ai/multi-agent-implementation#langgraph" },
+      {
+        label: "Agent state·action·observation loop와 exit state",
+        href: "/ai/agentic-patterns#react",
+      },
+      {
+        label:
+          "Harness objective·context·capability·artifact·verification 경계",
+        href: "/ai/llm-harness",
+      },
+      {
+        label: "Working state·memory·compaction·context provenance",
+        href: "/ai/context-engineering",
+      },
+      {
+        label: "Tool·Skill·Plugin과 scope·permission non-escalation",
+        href: "/ai/skills-anatomy",
+      },
+      {
+        label: "MCP Tool·Resource·Prompt와 authorization·retry",
+        href: "/ai/mcp-protocol",
+      },
+      {
+        label: "OS/container·credential·egress·filesystem sandbox 정본",
+        href: "/ai/agent-sandbox-security",
+      },
+      {
+        label: "Replay idempotency·checkpoint·external effect 경계",
+        href: "/ai/multi-agent-implementation#langgraph",
+      },
     ],
     evidence: [
       {
@@ -254,11 +450,26 @@ export const EDITORIAL_BOUNDARIES = {
       "Agent가 기록 초안을 만들 때 evidence 존재·접근 권한·redaction·사람 승인을 확인하는 계약",
     ],
     reuses: [
-      { label: "Run artifact provenance와 stable artifact identity", href: "/ai/experiment-tracking" },
-      { label: "Agent objective·artifact·verification 계약", href: "/ai/llm-harness" },
-      { label: "Working state·memory·compaction의 수명 경계", href: "/ai/context-engineering" },
-      { label: "Checkpoint·replay·external effect 경계", href: "/ai/agent-frameworks" },
-      { label: "Log·secret·tool effect의 보안 경계", href: "/ai/agent-sandbox-security" },
+      {
+        label: "Run artifact provenance와 stable artifact identity",
+        href: "/ai/experiment-tracking",
+      },
+      {
+        label: "Agent objective·artifact·verification 계약",
+        href: "/ai/llm-harness",
+      },
+      {
+        label: "Working state·memory·compaction의 수명 경계",
+        href: "/ai/context-engineering",
+      },
+      {
+        label: "Checkpoint·replay·external effect 경계",
+        href: "/ai/agent-frameworks",
+      },
+      {
+        label: "Log·secret·tool effect의 보안 경계",
+        href: "/ai/agent-sandbox-security",
+      },
     ],
     evidence: [
       {
@@ -288,15 +499,43 @@ export const EDITORIAL_BOUNDARIES = {
       "Deterministic mock fixture·canonicalization·parity harness와 실제 provider·sandbox integration test의 보장 범위",
     ],
     reuses: [
-      { label: "Model proposal과 runtime authorization을 나누는 LLM harness 정본", href: "/ai/llm-harness" },
-      { label: "Agent state·action·typed observation·exit state", href: "/ai/agentic-patterns" },
-      { label: "Direct loop와 framework runtime 선택", href: "/ai/agent-frameworks" },
-      { label: "Claw session·turn commit·resume 경계", href: "/ai/claw-session" },
-      { label: "Claw provider request·SSE parsing", href: "/ai/claw-api-client" },
-      { label: "Claw tool registry·schema·dispatch", href: "/ai/claw-tool-system" },
-      { label: "Claw permission policy와 executor enforcement", href: "/ai/claw-permissions" },
-      { label: "Claw workspace file operation과 boundary", href: "/ai/claw-file-ops" },
-      { label: "Layered verification과 run provenance", href: "/ai/experiment-tracking" },
+      {
+        label:
+          "Model proposal과 runtime authorization을 나누는 LLM harness 정본",
+        href: "/ai/llm-harness",
+      },
+      {
+        label: "Agent state·action·typed observation·exit state",
+        href: "/ai/agentic-patterns",
+      },
+      {
+        label: "Direct loop와 framework runtime 선택",
+        href: "/ai/agent-frameworks",
+      },
+      {
+        label: "Claw session·turn commit·resume 경계",
+        href: "/ai/claw-session",
+      },
+      {
+        label: "Claw provider request·SSE parsing",
+        href: "/ai/claw-api-client",
+      },
+      {
+        label: "Claw tool registry·schema·dispatch",
+        href: "/ai/claw-tool-system",
+      },
+      {
+        label: "Claw permission policy와 executor enforcement",
+        href: "/ai/claw-permissions",
+      },
+      {
+        label: "Claw workspace file operation과 boundary",
+        href: "/ai/claw-file-ops",
+      },
+      {
+        label: "Layered verification과 run provenance",
+        href: "/ai/experiment-tracking",
+      },
     ],
     evidence: [
       {
@@ -330,15 +569,42 @@ export const EDITORIAL_BOUNDARIES = {
       "Pinned source에서 확인되지 않은 revisioned event/view, effect receipt reconciliation, artifact/workspace branch merge, pause·resume·shutdown state machine을 구현 사실과 분리해 평가하는 project hardening gap",
     ],
     reuses: [
-      { label: "Agent working state와 durable artifact continuity", href: "/ai/llm-harness#composition" },
-      { label: "Typed tool observation과 turn exit state", href: "/ai/agentic-patterns#react" },
-      { label: "Checkpoint·replay·interrupt/resume의 정본", href: "/ai/agent-frameworks#langchain" },
-      { label: "External effect partial success·idempotency·compensation", href: "/ai/agent-code-mode#effect-atomicity" },
-      { label: "Context compaction fidelity", href: "/ai/context-engineering#memory" },
-      { label: "Artifact content digest와 run lineage", href: "/ai/experiment-tracking#overview" },
-      { label: "Claw tool dispatch·permission·result contract", href: "/ai/claw-tool-system" },
-      { label: "Claw file operation expected digest·workspace boundary", href: "/ai/claw-file-ops" },
-      { label: "Pinned Claw repository architecture·runtime owner", href: "/ai/claw-overview" },
+      {
+        label: "Agent working state와 durable artifact continuity",
+        href: "/ai/llm-harness#composition",
+      },
+      {
+        label: "Typed tool observation과 turn exit state",
+        href: "/ai/agentic-patterns#react",
+      },
+      {
+        label: "Checkpoint·replay·interrupt/resume의 정본",
+        href: "/ai/agent-frameworks#langchain",
+      },
+      {
+        label: "External effect partial success·idempotency·compensation",
+        href: "/ai/agent-code-mode#effect-atomicity",
+      },
+      {
+        label: "Context compaction fidelity",
+        href: "/ai/context-engineering#memory",
+      },
+      {
+        label: "Artifact content digest와 run lineage",
+        href: "/ai/experiment-tracking#overview",
+      },
+      {
+        label: "Claw tool dispatch·permission·result contract",
+        href: "/ai/claw-tool-system",
+      },
+      {
+        label: "Claw file operation expected digest·workspace boundary",
+        href: "/ai/claw-file-ops",
+      },
+      {
+        label: "Pinned Claw repository architecture·runtime owner",
+        href: "/ai/claw-overview",
+      },
     ],
     evidence: [
       {
@@ -376,15 +642,42 @@ export const EDITORIAL_BOUNDARIES = {
       "Registry reload generation pin, effect receipt가 있는 result envelope, dependency-aware parallel scheduling을 현재 구현 사실과 분리해 평가하는 hardening contract",
     ],
     reuses: [
-      { label: "JSON Schema 구조 계약과 syntax·domain validity 경계", href: "/ai/prompt-engineering#structured-output" },
-      { label: "Model proposal과 runtime capability·authorization 경계", href: "/ai/llm-harness#composition" },
-      { label: "Typed tool observation과 exit state", href: "/ai/agentic-patterns#react" },
-      { label: "Claw permission mode·rule·override의 정본", href: "/ai/claw-permissions" },
-      { label: "Claw Bash command validation·sandbox 경계", href: "/ai/claw-bash" },
-      { label: "Claw plugin discovery·install·health lifecycle", href: "/ai/claw-plugin" },
-      { label: "MCP Tool schema·result·authorization·retry 계약", href: "/ai/mcp-protocol" },
-      { label: "여러 external effect의 partial success·idempotency", href: "/ai/agent-code-mode#effect-atomicity" },
-      { label: "Pinned Claw repository 전체 architecture와 parity test", href: "/ai/claw-overview" },
+      {
+        label: "JSON Schema 구조 계약과 syntax·domain validity 경계",
+        href: "/ai/prompt-engineering#structured-output",
+      },
+      {
+        label: "Model proposal과 runtime capability·authorization 경계",
+        href: "/ai/llm-harness#composition",
+      },
+      {
+        label: "Typed tool observation과 exit state",
+        href: "/ai/agentic-patterns#react",
+      },
+      {
+        label: "Claw permission mode·rule·override의 정본",
+        href: "/ai/claw-permissions",
+      },
+      {
+        label: "Claw Bash command validation·sandbox 경계",
+        href: "/ai/claw-bash",
+      },
+      {
+        label: "Claw plugin discovery·install·health lifecycle",
+        href: "/ai/claw-plugin",
+      },
+      {
+        label: "MCP Tool schema·result·authorization·retry 계약",
+        href: "/ai/mcp-protocol",
+      },
+      {
+        label: "여러 external effect의 partial success·idempotency",
+        href: "/ai/agent-code-mode#effect-atomicity",
+      },
+      {
+        label: "Pinned Claw repository 전체 architecture와 parity test",
+        href: "/ai/claw-overview",
+      },
     ],
     evidence: [
       {
@@ -410,7 +703,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "claw-bash": {
-    title: "Claw Code Bash shell·validation·process boundary 글이 소유하는 범위",
+    title:
+      "Claw Code Bash shell·validation·process boundary 글이 소유하는 범위",
     owns: [
       "Pinned Claw snapshot의 BashCommandInput, host current directory와 Linux launcher 또는 `sh -lc`로 이어지는 shell-string dispatch 및 direct argv와의 의미 차이",
       "Pinned tools first-token/path permission classifier와 별도 runtime/bash_validation.rs의 lexical validator를 구분하고 production validate_command callsite가 확인되지 않는 integration gap",
@@ -420,13 +714,37 @@ export const EDITORIAL_BOUNDARIES = {
       "Login 401 command의 shell/argv·expansion·canonical path/TOCTOU·permission·sandbox·timeout/cleanup·idempotency를 같은 fixture로 검증하는 desired Bash hardening과 paired release gate",
     ],
     reuses: [
-      { label: "Pinned Claw repository architecture·runtime ownership", href: "/ai/claw-overview" },
-      { label: "Tool schema·registry·argument effect·typed result envelope", href: "/ai/claw-tool-system" },
-      { label: "PermissionMode·rule·approval·enforcer 정책 정본", href: "/ai/claw-permissions" },
-      { label: "Direct file operation의 canonical path·digest·atomic write 경계", href: "/ai/claw-file-ops" },
-      { label: "Process/container·namespace·filesystem·network·resource sandbox 정본", href: "/ai/agent-sandbox-security" },
-      { label: "External effect partial success·receipt·idempotency·compensation", href: "/ai/agent-code-mode#effect-atomicity" },
-      { label: "Run·artifact·command·verifier receipt provenance", href: "/ai/experiment-tracking#overview" },
+      {
+        label: "Pinned Claw repository architecture·runtime ownership",
+        href: "/ai/claw-overview",
+      },
+      {
+        label: "Tool schema·registry·argument effect·typed result envelope",
+        href: "/ai/claw-tool-system",
+      },
+      {
+        label: "PermissionMode·rule·approval·enforcer 정책 정본",
+        href: "/ai/claw-permissions",
+      },
+      {
+        label:
+          "Direct file operation의 canonical path·digest·atomic write 경계",
+        href: "/ai/claw-file-ops",
+      },
+      {
+        label:
+          "Process/container·namespace·filesystem·network·resource sandbox 정본",
+        href: "/ai/agent-sandbox-security",
+      },
+      {
+        label:
+          "External effect partial success·receipt·idempotency·compensation",
+        href: "/ai/agent-code-mode#effect-atomicity",
+      },
+      {
+        label: "Run·artifact·command·verifier receipt provenance",
+        href: "/ai/experiment-tracking#overview",
+      },
     ],
     evidence: [
       {
@@ -452,7 +770,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "claw-permissions": {
-    title: "Claw Code permission policy·approval·enforcement 글이 소유하는 범위",
+    title:
+      "Claw Code permission policy·approval·enforcement 글이 소유하는 범위",
     owns: [
       "Pinned Claw snapshot의 PermissionMode·tool requirement·denied tool·deny/ask/allow rule·context override·interactive prompt 판정 순서",
       "Pinned subject string matcher와 optional PermissionEnforcer·tools dispatch가 actual path·command required mode를 executor 전에 적용하는 범위 및 Prompt deferral·missing-enforcer 경계",
@@ -461,13 +780,35 @@ export const EDITORIAL_BOUNDARIES = {
       "같은 login 401 fixture의 read/search→edit approval→deterministic test에 deny 충돌·unknown input·approval replay·reload·missing enforcer를 주입하는 paired release 평가",
     ],
     reuses: [
-      { label: "Model proposal과 runtime capability·host enforcement 경계", href: "/ai/llm-harness#composition" },
-      { label: "Claw tool registry·argument effect classification·executor·result", href: "/ai/claw-tool-system" },
-      { label: "Claw Bash command validation과 process effect", href: "/ai/claw-bash" },
-      { label: "Claw hook lifecycle과 permission override source", href: "/ai/claw-hooks" },
-      { label: "Session effect receipt·crash reconciliation·replay idempotency", href: "/ai/claw-session" },
-      { label: "Agent sandbox·filesystem·network·credential outer boundary", href: "/ai/agent-sandbox-security" },
-      { label: "Run artifact·policy generation provenance", href: "/ai/experiment-tracking#overview" },
+      {
+        label: "Model proposal과 runtime capability·host enforcement 경계",
+        href: "/ai/llm-harness#composition",
+      },
+      {
+        label:
+          "Claw tool registry·argument effect classification·executor·result",
+        href: "/ai/claw-tool-system",
+      },
+      {
+        label: "Claw Bash command validation과 process effect",
+        href: "/ai/claw-bash",
+      },
+      {
+        label: "Claw hook lifecycle과 permission override source",
+        href: "/ai/claw-hooks",
+      },
+      {
+        label: "Session effect receipt·crash reconciliation·replay idempotency",
+        href: "/ai/claw-session",
+      },
+      {
+        label: "Agent sandbox·filesystem·network·credential outer boundary",
+        href: "/ai/agent-sandbox-security",
+      },
+      {
+        label: "Run artifact·policy generation provenance",
+        href: "/ai/experiment-tracking#overview",
+      },
     ],
     evidence: [
       {
@@ -502,14 +843,38 @@ export const EDITORIAL_BOUNDARIES = {
       "Context 교체가 permission·filesystem·process·network effect를 rollback하지 않는 경계와 base/candidate multi-cycle fidelity release 평가",
     ],
     reuses: [
-      { label: "Inference context·selection·compaction lifecycle 정본", href: "/ai/context-engineering#overview" },
-      { label: "Compaction state fidelity와 working-memory 경계", href: "/ai/context-engineering#memory" },
-      { label: "Output reserve를 포함한 context token budget", href: "/ai/context-engineering#optimization" },
-      { label: "Claw session message·tool correlation·effect reconciliation", href: "/ai/claw-session" },
-      { label: "Claw tool permission·result·effect receipt", href: "/ai/claw-tool-system" },
-      { label: "Permission mode·rule·approval의 정본", href: "/ai/claw-permissions" },
-      { label: "Layered verification과 recovery gate", href: "/ai/llm-harness#evaluation" },
-      { label: "Run artifact provenance·versioned verifier", href: "/ai/experiment-tracking#overview" },
+      {
+        label: "Inference context·selection·compaction lifecycle 정본",
+        href: "/ai/context-engineering#overview",
+      },
+      {
+        label: "Compaction state fidelity와 working-memory 경계",
+        href: "/ai/context-engineering#memory",
+      },
+      {
+        label: "Output reserve를 포함한 context token budget",
+        href: "/ai/context-engineering#optimization",
+      },
+      {
+        label: "Claw session message·tool correlation·effect reconciliation",
+        href: "/ai/claw-session",
+      },
+      {
+        label: "Claw tool permission·result·effect receipt",
+        href: "/ai/claw-tool-system",
+      },
+      {
+        label: "Permission mode·rule·approval의 정본",
+        href: "/ai/claw-permissions",
+      },
+      {
+        label: "Layered verification과 recovery gate",
+        href: "/ai/llm-harness#evaluation",
+      },
+      {
+        label: "Run artifact provenance·versioned verifier",
+        href: "/ai/experiment-tracking#overview",
+      },
     ],
     evidence: [
       {
@@ -757,10 +1122,19 @@ export const EDITORIAL_BOUNDARIES = {
       "Importance 진단·재학습 ablation·training-serving parity의 선택·배포 절차",
     ],
     reuses: [
-      { label: "Input feature·target와 train·validation·test", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "Expectation·variance·conditional probability", href: "/ai/math-probability-expectation-variance" },
+      {
+        label: "Input feature·target와 train·validation·test",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "Expectation·variance·conditional probability",
+        href: "/ai/math-probability-expectation-variance",
+      },
       { label: "EDA의 분포·결측·가설", href: "/ai/eda-workflow" },
-      { label: "Tabular augmentation의 split 경계", href: "/ai/data-augmentation#tabular" },
+      {
+        label: "Tabular augmentation의 split 경계",
+        href: "/ai/data-augmentation#tabular",
+      },
     ],
     evidence: [
       {
@@ -782,14 +1156,32 @@ export const EDITORIAL_BOUNDARIES = {
       "동일 feature·split·search·hardware budget의 GBM 비교 계약",
     ],
     reuses: [
-      { label: "Loss·gradient·validation", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "Derivative와 gradient", href: "/ai/math-functions-derivatives-gradients" },
-      { label: "Feature availability와 leakage", href: "/ai/feature-engineering#overview" },
-      { label: "Cross-fitted target encoding", href: "/ai/feature-engineering#categorical" },
+      {
+        label: "Loss·gradient·validation",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "Derivative와 gradient",
+        href: "/ai/math-functions-derivatives-gradients",
+      },
+      {
+        label: "Feature availability와 leakage",
+        href: "/ai/feature-engineering#overview",
+      },
+      {
+        label: "Cross-fitted target encoding",
+        href: "/ai/feature-engineering#categorical",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Gradient Boosting·XGBoost·LightGBM·CatBoost claim은 각 논문의 objective·algorithm·dataset·hardware·baseline 조건으로 제한한다." },
-      { kind: "standard", rule: "Loss·score/link·tree growth·leaf/depth·learning rate·round·sampling·bin·category/missing·split·search budget·hardware를 비교 계약으로 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Gradient Boosting·XGBoost·LightGBM·CatBoost claim은 각 논문의 objective·algorithm·dataset·hardware·baseline 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Loss·score/link·tree growth·leaf/depth·learning rate·round·sampling·bin·category/missing·split·search budget·hardware를 비교 계약으로 기록한다.",
+      },
     ],
   },
   "tabular-deep-learning": {
@@ -801,14 +1193,29 @@ export const EDITORIAL_BOUNDARIES = {
       "Representation 기회·OOF error correlation·system cost를 포함한 GBDT 대비 선택 절차",
     ],
     reuses: [
-      { label: "Prediction cutoff·누출·serving parity", href: "/ai/feature-engineering" },
+      {
+        label: "Prediction cutoff·누출·serving parity",
+        href: "/ai/feature-engineering",
+      },
       { label: "GBDT 원리와 공정 비교 계약", href: "/ai/gradient-boosting" },
-      { label: "Self-attention의 Q·K·V 계산", href: "/ai/attention-theory#self-attention" },
-      { label: "Embedding lookup과 Transformer block", href: "/ai/transformer-architecture" },
+      {
+        label: "Self-attention의 Q·K·V 계산",
+        href: "/ai/attention-theory#self-attention",
+      },
+      {
+        label: "Embedding lookup과 Transformer block",
+        href: "/ai/transformer-architecture",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "TabNet·FT-Transformer claim은 원 논문의 architecture·dataset·split·tuning·baseline 조건으로 제한한다." },
-      { kind: "standard", rule: "Entity·cutoff·schema artifact·split·search budget·seed·calibration·latency·memory를 GBDT와 neural model에 동일하게 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "TabNet·FT-Transformer claim은 원 논문의 architecture·dataset·split·tuning·baseline 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Entity·cutoff·schema artifact·split·search budget·seed·calibration·latency·memory를 GBDT와 neural model에 동일하게 기록한다.",
+      },
     ],
   },
   "time-features": {
@@ -820,14 +1227,29 @@ export const EDITORIAL_BOUNDARIES = {
       "Cyclic/harmonic time coordinates와 rolling-origin·gap/purge 평가",
     ],
     reuses: [
-      { label: "Feature available time·point-in-time aggregation", href: "/ai/feature-engineering#aggregation" },
-      { label: "Radian·sin·cos·complex rotation", href: "/ai/math-complex-numbers-oscillations" },
+      {
+        label: "Feature available time·point-in-time aggregation",
+        href: "/ai/feature-engineering#aggregation",
+      },
+      {
+        label: "Radian·sin·cos·complex rotation",
+        href: "/ai/math-complex-numbers-oscillations",
+      },
       { label: "Fourier basis와 frequency", href: "/ai/fft" },
-      { label: "Time-series modeling의 stationarity·forecasting", href: "/ai/time-series-overview" },
+      {
+        label: "Time-series modeling의 stationarity·forecasting",
+        href: "/ai/time-series-overview",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Rolling-origin·Time2Vec claim은 원 논문의 forecast design·dataset·model 조건으로 제한한다." },
-      { kind: "standard", rule: "Entity·timezone·event/available time·cutoff·horizon·window boundary·minimum periods·late arrival·split gap을 재현 가능한 계약으로 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Rolling-origin·Time2Vec claim은 원 논문의 forecast design·dataset·model 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Entity·timezone·event/available time·cutoff·horizon·window boundary·minimum periods·late arrival·split gap을 재현 가능한 계약으로 기록한다.",
+      },
     ],
   },
   "sequence-modeling-tabular": {
@@ -839,15 +1261,36 @@ export const EDITORIAL_BOUNDARIES = {
       "Whole-history·next-event visibility, sequence pooling과 within-entity order-shuffle 검증",
     ],
     reuses: [
-      { label: "Forecast origin·lag·rolling·Time2Vec", href: "/ai/time-features" },
-      { label: "Feature available time·point-in-time aggregation", href: "/ai/feature-engineering#aggregation" },
-      { label: "Q·K·V와 self-attention 계산", href: "/ai/attention-theory#self-attention" },
-      { label: "Transformer block·position·attention complexity", href: "/ai/transformer-architecture" },
-      { label: "GBDT와 neural model의 공정 비교", href: "/ai/tabular-deep-learning#when-dl-wins" },
+      {
+        label: "Forecast origin·lag·rolling·Time2Vec",
+        href: "/ai/time-features",
+      },
+      {
+        label: "Feature available time·point-in-time aggregation",
+        href: "/ai/feature-engineering#aggregation",
+      },
+      {
+        label: "Q·K·V와 self-attention 계산",
+        href: "/ai/attention-theory#self-attention",
+      },
+      {
+        label: "Transformer block·position·attention complexity",
+        href: "/ai/transformer-architecture",
+      },
+      {
+        label: "GBDT와 neural model의 공정 비교",
+        href: "/ai/tabular-deep-learning#when-dl-wins",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Transformer·Time2Vec claim은 원 논문의 task·architecture·dataset·objective 조건으로 제한한다." },
-      { kind: "standard", rule: "Entity·timezone·event/available time·cutoff·horizon·tie-break·vocabulary·max length·truncation·mask·pooling·split을 재현 가능한 artifact로 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Transformer·Time2Vec claim은 원 논문의 task·architecture·dataset·objective 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Entity·timezone·event/available time·cutoff·horizon·tie-break·vocabulary·max length·truncation·mask·pooling·split을 재현 가능한 artifact로 기록한다.",
+      },
     ],
   },
   "training-pipeline": {
@@ -860,15 +1303,33 @@ export const EDITORIAL_BOUNDARIES = {
       "Batch·rank별 metric sufficient statistics와 run-to-artifact provenance",
     ],
     reuses: [
-      { label: "Feature·target와 train/validation/test", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "Backpropagation·gradient clipping", href: "/ai/backprop-optimization" },
+      {
+        label: "Feature·target와 train/validation/test",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "Backpropagation·gradient clipping",
+        href: "/ai/backprop-optimization",
+      },
       { label: "SGD·momentum·Adam optimizer state", href: "/ai/optimizers" },
-      { label: "Schedule 종류와 learning-rate 변화", href: "/ai/lr-scheduling" },
-      { label: "Early stopping과 regularization 선택", href: "/ai/regularization-practice#early-stopping" },
+      {
+        label: "Schedule 종류와 learning-rate 변화",
+        href: "/ai/lr-scheduling",
+      },
+      {
+        label: "Early stopping과 regularization 선택",
+        href: "/ai/regularization-practice#early-stopping",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Dataset/DataLoader·AMP·checkpoint·reproducibility behavior는 현재 PyTorch stable 공식 문서와 사용 version을 기준으로 한다." },
-      { kind: "standard", rule: "Run ID·code·data·split·config·environment·sample order·update clock·checkpoint schema·metric reduction·artifact digest를 재현 가능한 manifest로 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Dataset/DataLoader·AMP·checkpoint·reproducibility behavior는 현재 PyTorch stable 공식 문서와 사용 version을 기준으로 한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Run ID·code·data·split·config·environment·sample order·update clock·checkpoint schema·metric reduction·artifact digest를 재현 가능한 manifest로 기록한다.",
+      },
     ],
   },
   "transfer-learning-practice": {
@@ -880,15 +1341,27 @@ export const EDITORIAL_BOUNDARIES = {
       "Covariate·label·concept shift에 따른 continued pretraining·domain alignment·negative-transfer 판정",
     ],
     reuses: [
-      { label: "Training phase·effective batch·checkpoint", href: "/ai/training-pipeline" },
+      {
+        label: "Training phase·effective batch·checkpoint",
+        href: "/ai/training-pipeline",
+      },
       { label: "Optimizer state와 learning rate", href: "/ai/optimizers" },
       { label: "Warmup·linear·cosine schedule", href: "/ai/lr-scheduling" },
-      { label: "Representation learning과 generalization", href: "/ai/deep-learning-overview" },
+      {
+        label: "Representation learning과 generalization",
+        href: "/ai/deep-learning-overview",
+      },
       { label: "Normalization layer의 계산", href: "/ai/normalization" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "ULMFiT·DAPT/TAPT·DANN claim은 각 논문의 architecture·data domain·objective·benchmark 범위로 제한한다." },
-      { kind: "standard", rule: "Pretrained revision·preprocessing·trainable scope·module mode·optimizer groups·update ratios·split·seed·budget·target/source regression·rollback을 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "ULMFiT·DAPT/TAPT·DANN claim은 각 논문의 architecture·data domain·objective·benchmark 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Pretrained revision·preprocessing·trainable scope·module mode·optimizer groups·update ratios·split·seed·budget·target/source regression·rollback을 기록한다.",
+      },
     ],
   },
   "lr-scheduling": {
@@ -900,14 +1373,29 @@ export const EDITORIAL_BOUNDARIES = {
       "Warmup과 본 schedule의 boundary·local clock, adaptive update magnitude 진단",
     ],
     reuses: [
-      { label: "Gradient descent와 smoothness", href: "/ai/math-optimization-convexity" },
+      {
+        label: "Gradient descent와 smoothness",
+        href: "/ai/math-optimization-convexity",
+      },
       { label: "SGD·momentum·Adam optimizer state", href: "/ai/optimizers" },
-      { label: "Effective batch·update clock·resume state", href: "/ai/training-pipeline" },
-      { label: "Early stopping과 best checkpoint", href: "/ai/regularization-practice#early-stopping" },
+      {
+        label: "Effective batch·update clock·resume state",
+        href: "/ai/training-pipeline",
+      },
+      {
+        label: "Early stopping과 best checkpoint",
+        href: "/ai/regularization-practice#early-stopping",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "SGDR·Super-Convergence·untuned warmup의 효과는 각 논문의 optimizer·architecture·dataset·budget 범위로 제한한다." },
-      { kind: "standard", rule: "Scheduler class·version·initial/peak/final LR·warmup·total updates·call event·state·resume trace를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "SGDR·Super-Convergence·untuned warmup의 효과는 각 논문의 optimizer·architecture·dataset·budget 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Scheduler class·version·initial/peak/final LR·warmup·total updates·call event·state·resume trace를 함께 기록한다.",
+      },
     ],
   },
   "regularization-practice": {
@@ -919,16 +1407,28 @@ export const EDITORIAL_BOUNDARIES = {
       "Early-stopping state와 best artifact 분리, uniform label smoothing과 soft-target composition",
     ],
     reuses: [
-      { label: "Train·validation·test와 empirical risk", href: "/ai/deep-learning-overview" },
-      { label: "Expectation·variance", href: "/ai/math-probability-expectation-variance" },
+      {
+        label: "Train·validation·test와 empirical risk",
+        href: "/ai/deep-learning-overview",
+      },
+      {
+        label: "Expectation·variance",
+        href: "/ai/math-probability-expectation-variance",
+      },
       { label: "SGD·Adam optimizer state", href: "/ai/optimizers" },
       { label: "Learning-rate scheduler와 plateau", href: "/ai/lr-scheduling" },
       { label: "Mixup·CutMix target", href: "/ai/data-augmentation" },
       { label: "Softmax cross-entropy", href: "/ai/cross-entropy" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Dropout·AdamW·early stopping·label smoothing claim은 각 논문의 architecture·data·objective·evaluation 범위로 제한한다." },
-      { kind: "standard", rule: "Split·baseline·regularizer scope/strength·seed·update budget·best/last artifact·calibration·slice·system cost를 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Dropout·AdamW·early stopping·label smoothing claim은 각 논문의 architecture·data·objective·evaluation 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Split·baseline·regularizer scope/strength·seed·update budget·best/last artifact·calibration·slice·system cost를 기록한다.",
+      },
     ],
   },
   "image-classification-pipeline": {
@@ -941,15 +1441,36 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Image tensor·convolution·spatial prior", href: "/ai/cnn" },
-      { label: "Train·validation·test와 empirical risk", href: "/ai/deep-learning-overview" },
-      { label: "Augmentation distribution과 target transform", href: "/ai/data-augmentation" },
-      { label: "Pretrained handoff와 fine-tuning scope", href: "/ai/transfer-learning-practice" },
-      { label: "Calibration·threshold·precision/recall", href: "/ai/imbalanced-data" },
-      { label: "Out-of-fold ensemble과 error diversity", href: "/ai/ensemble-methods" },
+      {
+        label: "Train·validation·test와 empirical risk",
+        href: "/ai/deep-learning-overview",
+      },
+      {
+        label: "Augmentation distribution과 target transform",
+        href: "/ai/data-augmentation",
+      },
+      {
+        label: "Pretrained handoff와 fine-tuning scope",
+        href: "/ai/transfer-learning-practice",
+      },
+      {
+        label: "Calibration·threshold·precision/recall",
+        href: "/ai/imbalanced-data",
+      },
+      {
+        label: "Out-of-fold ensemble과 error diversity",
+        href: "/ai/ensemble-methods",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "EfficientNet·ConvNeXt·ViT·RandAugment·FixMatch·temperature-scaling claim은 각 논문의 data·architecture·pretraining·evaluation 범위로 제한한다." },
-      { kind: "standard", rule: "Identity·split manifest·class mapping·input transform·weight revision·seed·metric·slice·latency·calibration·decision parameter를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "EfficientNet·ConvNeXt·ViT·RandAugment·FixMatch·temperature-scaling claim은 각 논문의 data·architecture·pretraining·evaluation 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Identity·split manifest·class mapping·input transform·weight revision·seed·metric·slice·latency·calibration·decision parameter를 함께 기록한다.",
+      },
     ],
   },
   "vision-transformer": {
@@ -961,15 +1482,33 @@ export const EDITORIAL_BOUNDARIES = {
       "CNN–ViT paired quality–runtime 비교와 registry→token→logit parity→export checkpoint handoff",
     ],
     reuses: [
-      { label: "Image tensor·convolution·translation equivariance", href: "/ai/cnn" },
+      {
+        label: "Image tensor·convolution·translation equivariance",
+        href: "/ai/cnn",
+      },
       { label: "Q·K·V와 self-attention", href: "/ai/attention-theory" },
-      { label: "Transformer block·position·output", href: "/ai/transformer-architecture" },
-      { label: "Pretrained handoff·fine-tuning scope", href: "/ai/transfer-learning-practice" },
-      { label: "Image pipeline split·resolution·decision", href: "/ai/image-classification-pipeline" },
+      {
+        label: "Transformer block·position·output",
+        href: "/ai/transformer-architecture",
+      },
+      {
+        label: "Pretrained handoff·fine-tuning scope",
+        href: "/ai/transfer-learning-practice",
+      },
+      {
+        label: "Image pipeline split·resolution·decision",
+        href: "/ai/image-classification-pipeline",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "ViT·DeiT·Swin·MAE claim은 각 논문의 pretraining data·teacher·architecture·task·compute 범위로 제한한다." },
-      { kind: "standard", rule: "Checkpoint revision·license·input transform·patch/grid·special token·position resize·class map·dtype·logit tolerance·runtime receipt를 함께 저장한다." },
+      {
+        kind: "primary-source",
+        rule: "ViT·DeiT·Swin·MAE claim은 각 논문의 pretraining data·teacher·architecture·task·compute 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Checkpoint revision·license·input transform·patch/grid·special token·position resize·class map·dtype·logit tolerance·runtime receipt를 함께 저장한다.",
+      },
     ],
   },
   "multiview-fusion": {
@@ -983,13 +1522,28 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Image tensor와 convolutional encoder", href: "/ai/cnn" },
       { label: "Q·K·V와 self-attention", href: "/ai/attention-theory" },
-      { label: "Identity group split", href: "/ai/image-classification-pipeline" },
-      { label: "Pretrained encoder handoff", href: "/ai/transfer-learning-practice" },
-      { label: "Expectation과 paired average", href: "/ai/math-probability-expectation-variance" },
+      {
+        label: "Identity group split",
+        href: "/ai/image-classification-pipeline",
+      },
+      {
+        label: "Pretrained encoder handoff",
+        href: "/ai/transfer-learning-practice",
+      },
+      {
+        label: "Expectation과 paired average",
+        href: "/ai/math-probability-expectation-variance",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "MVCNN·Set Transformer claim은 각 논문의 input representation·architecture·dataset·evaluation 범위로 제한한다." },
-      { kind: "standard", rule: "Episode identity·view metadata·registration revision·mask·ordering·encoder sharing·fusion point·drop pattern·runtime을 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "MVCNN·Set Transformer claim은 각 논문의 input representation·architecture·dataset·evaluation 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Episode identity·view metadata·registration revision·mask·ordering·encoder sharing·fusion point·drop pattern·runtime을 함께 기록한다.",
+      },
     ],
   },
   "deepfake-detection": {
@@ -1001,15 +1555,30 @@ export const EDITORIAL_BOUNDARIES = {
       "Frame score의 video aggregation·calibration·abstention과 provenance·consent·coverage manifest",
     ],
     reuses: [
-      { label: "Identity group split과 image pipeline", href: "/ai/image-classification-pipeline" },
+      {
+        label: "Identity group split과 image pipeline",
+        href: "/ai/image-classification-pipeline",
+      },
       { label: "FFT와 spectrum", href: "/ai/fft" },
-      { label: "Video sampling과 temporal model", href: "/ai/video-understanding" },
-      { label: "Calibration과 decision threshold", href: "/ai/imbalanced-data" },
+      {
+        label: "Video sampling과 temporal model",
+        href: "/ai/video-understanding",
+      },
+      {
+        label: "Calibration과 decision threshold",
+        href: "/ai/imbalanced-data",
+      },
       { label: "Ensemble error diversity", href: "/ai/ensemble-methods" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "FaceForensics++·DFDC·DeepfakeBench·CNNDetection·Fourier discrepancy claim은 각 manipulation·source·codec·benchmark 범위로 제한한다." },
-      { kind: "standard", rule: "Source·identity·consent·generator·codec·crop/track revision·coverage·aggregation·calibration·threshold·abstention을 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "FaceForensics++·DFDC·DeepfakeBench·CNNDetection·Fourier discrepancy claim은 각 manipulation·source·codec·benchmark 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Source·identity·consent·generator·codec·crop/track revision·coverage·aggregation·calibration·threshold·abstention을 함께 기록한다.",
+      },
     ],
   },
   "video-understanding": {
@@ -1025,11 +1594,20 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Image tensor와 convolution geometry", href: "/ai/cnn" },
       { label: "Patch token과 position", href: "/ai/vision-transformer" },
       { label: "Q·K·V와 self-attention", href: "/ai/attention-theory" },
-      { label: "Video score aggregation의 forensic 적용", href: "/ai/deepfake-detection" },
+      {
+        label: "Video score aggregation의 forensic 적용",
+        href: "/ai/deepfake-detection",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "I3D·R(2+1)D·SlowFast·TimeSformer·ViViT·VideoMAE claim은 각 data·pretraining·clip·architecture·task 범위로 제한한다." },
-      { kind: "standard", rule: "Source FPS/timestamps·frames·stride·clip intervals·crop·tubelet·token·test clips·pretraining·latency·memory를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "I3D·R(2+1)D·SlowFast·TimeSformer·ViViT·VideoMAE claim은 각 data·pretraining·clip·architecture·task 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Source FPS/timestamps·frames·stride·clip intervals·crop·tubelet·token·test clips·pretraining·latency·memory를 함께 기록한다.",
+      },
     ],
   },
   "contrastive-learning": {
@@ -1041,15 +1619,30 @@ export const EDITORIAL_BOUNDARIES = {
       "Supervised multi-positive batch 조건과 pair audit→downstream evaluation feedback loop",
     ],
     reuses: [
-      { label: "벡터·norm·내적·cosine", href: "/ai/math-vectors-inner-products" },
+      {
+        label: "벡터·norm·내적·cosine",
+        href: "/ai/math-vectors-inner-products",
+      },
       { label: "Softmax와 cross-entropy", href: "/ai/cross-entropy" },
-      { label: "Augmentation과 label preservation", href: "/ai/data-augmentation" },
-      { label: "Train·validation·test와 empirical risk", href: "/ai/deep-learning-overview" },
+      {
+        label: "Augmentation과 label preservation",
+        href: "/ai/data-augmentation",
+      },
+      {
+        label: "Train·validation·test와 empirical risk",
+        href: "/ai/deep-learning-overview",
+      },
       { label: "문장 embedding과 retrieval", href: "/ai/sentence-embeddings" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "SimCLR·FaceNet·Supervised Contrastive Learning의 주장은 각 논문의 data·architecture·batch·mining·evaluation 조건으로 제한한다." },
-      { kind: "standard", rule: "Pair relation·augmentation·normalization·temperature·margin·sampler·miner/index revision·seed·downstream metric을 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "SimCLR·FaceNet·Supervised Contrastive Learning의 주장은 각 논문의 data·architecture·batch·mining·evaluation 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Pair relation·augmentation·normalization·temperature·margin·sampler·miner/index revision·seed·downstream metric을 함께 기록한다.",
+      },
     ],
   },
   "domain-finetuning": {
@@ -1061,15 +1654,30 @@ export const EDITORIAL_BOUNDARIES = {
       "유전체·의료·제조의 family/entity/time split과 license·consent·deletion provenance·coverage",
     ],
     reuses: [
-      { label: "Pretrained handoff·distribution shift·negative transfer", href: "/ai/transfer-learning-practice" },
-      { label: "Response-only SFT·packing·chat template", href: "/ai/supervised-fine-tuning" },
+      {
+        label: "Pretrained handoff·distribution shift·negative transfer",
+        href: "/ai/transfer-learning-practice",
+      },
+      {
+        label: "Response-only SFT·packing·chat template",
+        href: "/ai/supervised-fine-tuning",
+      },
       { label: "RAG retrieval·citation·freshness", href: "/ai/rag-pipeline" },
-      { label: "LoRA parameterization과 target modules", href: "/ai/lora-finetuning" },
+      {
+        label: "LoRA parameterization과 target modules",
+        href: "/ai/lora-finetuning",
+      },
       { label: "Perplexity와 next-token LM", href: "/ai/rnn#language-model" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "DAPT/TAPT·catastrophic forgetting claim은 각 논문의 model·corpus·objective·task·evaluation 범위로 제한한다." },
-      { kind: "standard", rule: "Base checkpoint·tokenizer·corpus provenance·dedup/decontamination·mixture·token/update budget·loss mask·split·general regression·system cost를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "DAPT/TAPT·catastrophic forgetting claim은 각 논문의 model·corpus·objective·task·evaluation 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Base checkpoint·tokenizer·corpus provenance·dedup/decontamination·mixture·token/update budget·loss mask·split·general regression·system cost를 함께 기록한다.",
+      },
     ],
   },
   "sentence-embeddings": {
@@ -1081,17 +1689,32 @@ export const EDITORIAL_BOUNDARIES = {
       "Multi-positive Recall/NDCG와 language·length·query-style slice, 품질–latency–resource–storage frontier",
     ],
     reuses: [
-      { label: "BERT token visibility와 cross/bi encoder 경계", href: "/ai/bert" },
-      { label: "Pair semantics·cosine·hard negative", href: "/ai/contrastive-learning" },
+      {
+        label: "BERT token visibility와 cross/bi encoder 경계",
+        href: "/ai/bert",
+      },
+      {
+        label: "Pair semantics·cosine·hard negative",
+        href: "/ai/contrastive-learning",
+      },
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
-      { label: "Train·validation·test와 generalization", href: "/ai/deep-learning-overview" },
+      {
+        label: "Train·validation·test와 generalization",
+        href: "/ai/deep-learning-overview",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "SBERT·E5·MTEB 주장은 각 논문의 encoder·data·objective·task·metric·benchmark snapshot 범위로 제한한다." },
-      { kind: "standard", rule: "Checkpoint/tokenizer revision·prefix·pooling·normalization·max length·truncation·dimension/dtype·corpus/index revision·multi-positive label·latency/storage를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "SBERT·E5·MTEB 주장은 각 논문의 encoder·data·objective·task·metric·benchmark snapshot 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Checkpoint/tokenizer revision·prefix·pooling·normalization·max length·truncation·dimension/dtype·corpus/index revision·multi-positive label·latency/storage를 함께 기록한다.",
+      },
     ],
   },
-  "quantization": {
+  quantization: {
     title: "양자화 글이 소유하는 범위",
     owns: [
       "Affine INT quantizer의 scale·zero-point·round·clip과 rounding/clipping error 경계",
@@ -1101,18 +1724,36 @@ export const EDITORIAL_BOUNDARIES = {
       "Weight·activation·KV·workspace resident memory와 Amdahl 기반 end-to-end speedup 검증",
     ],
     reuses: [
-      { label: "Bit·byte와 code pattern", href: "/ai/text-unicode-encoding#bits-bytes" },
-      { label: "Matrix multiplication과 Frobenius norm", href: "/ai/math-matrices-svd" },
+      {
+        label: "Bit·byte와 code pattern",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+      {
+        label: "Matrix multiplication과 Frobenius norm",
+        href: "/ai/math-matrices-svd",
+      },
       { label: "Training loss와 gradient", href: "/ai/backprop-optimization" },
-      { label: "통합 compression stage와 benchmark", href: "/ai/compression-pipeline" },
+      {
+        label: "통합 compression stage와 benchmark",
+        href: "/ai/compression-pipeline",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Integer QAT·SmoothQuant·GPTQ·AWQ claim은 각 논문의 model·data·bit/group·kernel·hardware·task 범위로 제한한다." },
-      { kind: "primary-source", rule: "GGUF는 현재 공식 specification revision의 container·metadata·tensor encoding 규격으로만 설명한다." },
-      { kind: "standard", rule: "Base hash·target tensor·codebook·scale granularity/dtype·calibration·compute/accumulation/KV dtype·engine/kernel/fallback·quality·latency·memory를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Integer QAT·SmoothQuant·GPTQ·AWQ claim은 각 논문의 model·data·bit/group·kernel·hardware·task 범위로 제한한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "GGUF는 현재 공식 specification revision의 container·metadata·tensor encoding 규격으로만 설명한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Base hash·target tensor·codebook·scale granularity/dtype·calibration·compute/accumulation/KV dtype·engine/kernel/fallback·quality·latency·memory를 함께 기록한다.",
+      },
     ],
   },
-  "pruning": {
+  pruning: {
     title: "프루닝 글이 소유하는 범위",
     owns: [
       "Binary mask·density·sparsity의 정확한 분모와 zero value·removed connection의 구분",
@@ -1123,15 +1764,33 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Matrix multiplication·norm", href: "/ai/math-matrices-svd" },
-      { label: "Gradient와 optimizer state", href: "/ai/backprop-optimization" },
-      { label: "Bit·byte 저장량 계산", href: "/ai/text-unicode-encoding#bits-bytes" },
-      { label: "양자화의 artifact/kernel 및 Amdahl 경계", href: "/ai/quantization#practice" },
+      {
+        label: "Gradient와 optimizer state",
+        href: "/ai/backprop-optimization",
+      },
+      {
+        label: "Bit·byte 저장량 계산",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+      {
+        label: "양자화의 artifact/kernel 및 Amdahl 경계",
+        href: "/ai/quantization#practice",
+      },
       { label: "통합 compression pipeline", href: "/ai/compression-pipeline" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Movement Pruning·SparseGPT·Wanda claim은 각 논문의 model·data·sparsity pattern·calibration·task 범위로 제한한다." },
-      { kind: "primary-source", rule: "2:4 지원은 현재 target TensorRT/cuSPARSELt 문서의 axis·dtype·operator·shape·tactic 조건으로 확인한다." },
-      { kind: "standard", rule: "Base hash·target tensor·mask scope·score·sparsity schedule·calibration/recovery data·artifact format·engine build log·kernel coverage·quality·memory·latency를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Movement Pruning·SparseGPT·Wanda claim은 각 논문의 model·data·sparsity pattern·calibration·task 범위로 제한한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "2:4 지원은 현재 target TensorRT/cuSPARSELt 문서의 axis·dtype·operator·shape·tactic 조건으로 확인한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Base hash·target tensor·mask scope·score·sparsity schedule·calibration/recovery data·artifact format·engine build log·kernel coverage·quality·memory·latency를 함께 기록한다.",
+      },
     ],
   },
   "knowledge-distillation": {
@@ -1146,15 +1805,24 @@ export const EDITORIAL_BOUNDARIES = {
       "Self-distillation generation별 teacher agreement·ground-truth quality·bias inheritance 진단",
     ],
     reuses: [
-      { label: "Probability·softmax·cross-entropy·KL", href: "/ai/cross-entropy" },
+      {
+        label: "Probability·softmax·cross-entropy·KL",
+        href: "/ai/cross-entropy",
+      },
       { label: "Gradient와 optimization", href: "/ai/backprop-optimization" },
       { label: "Tokenizer/checkpoint compatibility", href: "/ai/tokenizer" },
       { label: "SFT response-only loss와 data contract", href: "/ai/sft" },
       { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Hinton KD·FitNets·Sequence KD·GKD·MOPD·Born-Again claim은 각 논문의 architecture·data·objective·task·metric 범위로 제한한다." },
-      { kind: "standard", rule: "Teacher/base hash·tokenizer·temperature·KL direction/reduction·alpha·feature layer/projection·prompt provenance·generation policy·on/off-policy mixture·domain routing·filter/template/loss mask·split·student-only runtime을 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Hinton KD·FitNets·Sequence KD·GKD·MOPD·Born-Again claim은 각 논문의 architecture·data·objective·task·metric 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Teacher/base hash·tokenizer·temperature·KL direction/reduction·alpha·feature layer/projection·prompt provenance·generation policy·on/off-policy mixture·domain routing·filter/template/loss mask·split·student-only runtime을 함께 기록한다.",
+      },
     ],
   },
   "compression-pipeline": {
@@ -1167,16 +1835,31 @@ export const EDITORIAL_BOUNDARIES = {
       "Baseline·단일 stage·결합 artifact의 interaction과 quality-gated Pareto frontier",
     ],
     reuses: [
-      { label: "양자화 method·artifact·kernel·memory", href: "/ai/quantization" },
+      {
+        label: "양자화 method·artifact·kernel·memory",
+        href: "/ai/quantization",
+      },
       { label: "프루닝 mask·pattern·runtime", href: "/ai/pruning" },
-      { label: "지식 증류 signal·student evaluation", href: "/ai/knowledge-distillation" },
+      {
+        label: "지식 증류 signal·student evaluation",
+        href: "/ai/knowledge-distillation",
+      },
       { label: "LoRA adaptation·merge", href: "/ai/lora-finetuning" },
       { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Compiler claim은 survey가 다루는 graph/IR/frontend/backend taxonomy 범위로 제한하고 실제 성능은 target engine trace로 확인한다." },
-      { kind: "primary-source", rule: "MLPerf는 scenario·accuracy/performance 분리·LoadGen 재현 원칙의 참고이며 내부 측정을 공식 submission으로 표현하지 않는다." },
-      { kind: "standard", rule: "Baseline/model/tokenizer·data/split·artifact chain·hardware/driver/engine/kernel·batch/length/arrival/concurrency·quality slice·memory·prefill/decode latency·throughput·load time를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "Compiler claim은 survey가 다루는 graph/IR/frontend/backend taxonomy 범위로 제한하고 실제 성능은 target engine trace로 확인한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "MLPerf는 scenario·accuracy/performance 분리·LoadGen 재현 원칙의 참고이며 내부 측정을 공식 submission으로 표현하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "Baseline/model/tokenizer·data/split·artifact chain·hardware/driver/engine/kernel·batch/length/arrival/concurrency·quality slice·memory·prefill/decode latency·throughput·load time를 함께 기록한다.",
+      },
     ],
   },
   "rag-pipeline": {
@@ -1190,16 +1873,34 @@ export const EDITORIAL_BOUNDARIES = {
       "Retrieval·context·answer·citation·system을 분리한 end-to-end evaluation trace",
     ],
     reuses: [
-      { label: "문장 embedding·multi-positive retrieval metric", href: "/ai/sentence-embeddings" },
-      { label: "Vector·cosine·normalization", href: "/ai/math-vectors-inner-products" },
+      {
+        label: "문장 embedding·multi-positive retrieval metric",
+        href: "/ai/sentence-embeddings",
+      },
+      {
+        label: "Vector·cosine·normalization",
+        href: "/ai/math-vectors-inner-products",
+      },
       { label: "Tokenizer와 truncation", href: "/ai/tokenizer" },
       { label: "Train·validation·test", href: "/ai/deep-learning-overview" },
-      { label: "도메인 적응과 RAG/fine-tuning 선택", href: "/ai/domain-finetuning" },
+      {
+        label: "도메인 적응과 RAG/fine-tuning 선택",
+        href: "/ai/domain-finetuning",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "RAG·DPR·RRF·lost-in-the-middle·NDCG·Ragas claim은 각 논문의 corpus·task·model·metric·시대 범위로 제한한다." },
-      { kind: "standard", rule: "Source/ACL/valid-time·parser/chunk/offset·encoder/tokenizer/input/vector/index·candidate/rerank/context/prompt/model·claim/citation trace와 query-level metric을 함께 기록한다." },
-      { kind: "project-claim", rule: "Formula의 stage indicator·index tuple·context ledger·citation contract는 운영 진단을 위한 이 글의 명시적 계약이며 특정 framework 표준으로 표현하지 않는다." },
+      {
+        kind: "primary-source",
+        rule: "RAG·DPR·RRF·lost-in-the-middle·NDCG·Ragas claim은 각 논문의 corpus·task·model·metric·시대 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Source/ACL/valid-time·parser/chunk/offset·encoder/tokenizer/input/vector/index·candidate/rerank/context/prompt/model·claim/citation trace와 query-level metric을 함께 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Formula의 stage indicator·index tuple·context ledger·citation contract는 운영 진단을 위한 이 글의 명시적 계약이며 특정 framework 표준으로 표현하지 않는다.",
+      },
     ],
   },
   "lora-finetuning": {
@@ -1212,16 +1913,37 @@ export const EDITORIAL_BOUNDARIES = {
       "Unmerged·merged·merged-requantized artifact의 algebra·호환성·parity·배포 승인 경로",
     ],
     reuses: [
-      { label: "행렬 rank·SVD·low-rank approximation", href: "/ai/math-matrices-svd" },
-      { label: "SFT demonstration·response loss mask", href: "/ai/supervised-fine-tuning" },
+      {
+        label: "행렬 rank·SVD·low-rank approximation",
+        href: "/ai/math-matrices-svd",
+      },
+      {
+        label: "SFT demonstration·response loss mask",
+        href: "/ai/supervised-fine-tuning",
+      },
       { label: "Quantizer·metadata·kernel·memory", href: "/ai/quantization" },
-      { label: "Domain adaptation intervention 선택", href: "/ai/domain-finetuning" },
-      { label: "Train·validation·test와 generalization", href: "/ai/deep-learning-overview" },
+      {
+        label: "Domain adaptation intervention 선택",
+        href: "/ai/domain-finetuning",
+      },
+      {
+        label: "Train·validation·test와 generalization",
+        href: "/ai/deep-learning-overview",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "LoRA·QLoRA의 품질·parameter·memory claim은 각 논문의 model·target module·optimizer·data·hardware·evaluation 범위로 제한한다." },
-      { kind: "primary-source", rule: "PEFT API/default는 현재 설치 version의 공식 문서·config·checkpoint format으로 pin하고 영구 표준처럼 쓰지 않는다." },
-      { kind: "standard", rule: "Base/tokenizer/template·target/rank/alpha/dropout/init/bias/modules_to_save·quant/storage/compute dtype·data/split/mask·optimizer/batch/sequence/peak·adapter/merge/requant checksum·quality/latency를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "LoRA·QLoRA의 품질·parameter·memory claim은 각 논문의 model·target module·optimizer·data·hardware·evaluation 범위로 제한한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "PEFT API/default는 현재 설치 version의 공식 문서·config·checkpoint format으로 pin하고 영구 표준처럼 쓰지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "Base/tokenizer/template·target/rank/alpha/dropout/init/bias/modules_to_save·quant/storage/compute dtype·data/split/mask·optimizer/batch/sequence/peak·adapter/merge/requant checksum·quality/latency를 함께 기록한다.",
+      },
     ],
   },
   "multi-agent-implementation": {
@@ -1234,16 +1956,31 @@ export const EDITORIAL_BOUNDARIES = {
       "제조 advisory artifact와 deterministic rule·human approval·PLC interlock control path의 분리",
     ],
     reuses: [
-      { label: "Agent run·delegation pattern·verification", href: "/ai/agentic-patterns" },
+      {
+        label: "Agent run·delegation pattern·verification",
+        href: "/ai/agentic-patterns",
+      },
       { label: "Harness·loop·graph vocabulary", href: "/ai/llm-harness" },
-      { label: "Tool permission과 sandbox", href: "/ai/agent-sandbox-security" },
+      {
+        label: "Tool permission과 sandbox",
+        href: "/ai/agent-sandbox-security",
+      },
       { label: "RAG source·citation trace", href: "/ai/rag-pipeline" },
       { label: "Serving concurrency·latency", href: "/ai/llm-serving-ops" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "LangGraph·CrewAI component/API claim은 현재 공식 문서와 설치 version 범위로 제한하고 framework 일반 우위로 확대하지 않는다." },
-      { kind: "standard", rule: "Task/input/model/tool/authority·artifact/checksum/schema/evidence·timeout/retry/idempotency·state/reducer/checkpoint·join/validator·cost/latency/quality/failure trace를 함께 기록한다." },
-      { kind: "project-claim", rule: "Gain·join·reducer·manufacturing formulas는 implementation audit를 위한 이 글의 계약이며 framework가 보장하는 theorem으로 표현하지 않는다." },
+      {
+        kind: "primary-source",
+        rule: "LangGraph·CrewAI component/API claim은 현재 공식 문서와 설치 version 범위로 제한하고 framework 일반 우위로 확대하지 않는다.",
+      },
+      {
+        kind: "standard",
+        rule: "Task/input/model/tool/authority·artifact/checksum/schema/evidence·timeout/retry/idempotency·state/reducer/checkpoint·join/validator·cost/latency/quality/failure trace를 함께 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Gain·join·reducer·manufacturing formulas는 implementation audit를 위한 이 글의 계약이며 framework가 보장하는 theorem으로 표현하지 않는다.",
+      },
     ],
   },
   "competition-workflow": {
@@ -1256,17 +1993,35 @@ export const EDITORIAL_BOUNDARIES = {
       "Adaptive leaderboard feedback budget과 최종 candidate·retrain·submission provenance",
     ],
     reuses: [
-      { label: "Train·validation·test의 역할", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "Group·time split과 CV–LB mismatch", href: "/ai/cross-validation" },
+      {
+        label: "Train·validation·test의 역할",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "Group·time split과 CV–LB mismatch",
+        href: "/ai/cross-validation",
+      },
       { label: "Metric 정의와 계산", href: "/ai/evaluation-metrics" },
-      { label: "Run·artifact provenance", href: "/ai/training-pipeline#logging" },
+      {
+        label: "Run·artifact provenance",
+        href: "/ai/training-pipeline#logging",
+      },
       { label: "OOF ensemble·error diversity", href: "/ai/ensemble-methods" },
       { label: "실험 tracking과 비교", href: "/ai/experiment-tracking" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Model-selection bias·Ladder·ML technical-debt claim은 각 논문의 finite-sample/adaptive setting과 system 사례 범위로 제한한다." },
-      { kind: "standard", rule: "Data/row/group/time·split/fold·metric/weight·code/config/seed/environment·OOF/test/submission checksum·feedback/decision을 함께 기록한다." },
-      { kind: "project-claim", rule: "Evaluation contract·OOF coverage·paired delta·feedback budget 수식은 대회 참가자의 audit를 위한 이 글의 계약이며 플랫폼 보장으로 표현하지 않는다." },
+      {
+        kind: "primary-source",
+        rule: "Model-selection bias·Ladder·ML technical-debt claim은 각 논문의 finite-sample/adaptive setting과 system 사례 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Data/row/group/time·split/fold·metric/weight·code/config/seed/environment·OOF/test/submission checksum·feedback/decision을 함께 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Evaluation contract·OOF coverage·paired delta·feedback budget 수식은 대회 참가자의 audit를 위한 이 글의 계약이며 플랫폼 보장으로 표현하지 않는다.",
+      },
     ],
   },
   "cross-validation": {
@@ -1279,16 +2034,40 @@ export const EDITORIAL_BOUNDARIES = {
       "CV–leaderboard parity·pairwise direction agreement·adaptive protocol 변경 audit",
     ],
     reuses: [
-      { label: "Train·validation·test와 loss", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "Expectation·variance", href: "/ai/math-probability-expectation-variance" },
-      { label: "Competition evaluation contract와 selection bias", href: "/ai/competition-workflow" },
-      { label: "Prediction cutoff와 available time", href: "/ai/competition-workflow#eda-phase" },
-      { label: "Fold manifest를 포함한 training run", href: "/ai/training-pipeline#overview" },
+      {
+        label: "Train·validation·test와 loss",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "Expectation·variance",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Competition evaluation contract와 selection bias",
+        href: "/ai/competition-workflow",
+      },
+      {
+        label: "Prediction cutoff와 available time",
+        href: "/ai/competition-workflow#eda-phase",
+      },
+      {
+        label: "Fold manifest를 포함한 training run",
+        href: "/ai/training-pipeline#overview",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "CV estimand·variance/interval claim은 Bates·Hastie·Tibshirani 논문의 OLS theorem·broader analysis·simulation 범위로 제한한다." },
-      { kind: "primary-source", rule: "Splitter semantics와 parameter는 현재 scikit-learn 공식 문서·설치 version 범위로 제한한다." },
-      { kind: "standard", rule: "Deployment unit/distribution·row/group/time metadata·fold manifest·fold-local fit·OOF row coverage·metric weight·origin/gap·candidate/leaderboard adaptation을 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "CV estimand·variance/interval claim은 Bates·Hastie·Tibshirani 논문의 OLS theorem·broader analysis·simulation 범위로 제한한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "Splitter semantics와 parameter는 현재 scikit-learn 공식 문서·설치 version 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Deployment unit/distribution·row/group/time metadata·fold manifest·fold-local fit·OOF row coverage·metric weight·origin/gap·candidate/leaderboard adaptation을 함께 기록한다.",
+      },
     ],
   },
   "hyperparameter-tuning": {
@@ -1302,18 +2081,45 @@ export const EDITORIAL_BOUNDARIES = {
       "Multi-objective Pareto dominance와 complete/pruned/failed trial lineage",
     ],
     reuses: [
-      { label: "Train·validation·test의 역할", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "확률분포·기댓값", href: "/ai/math-probability-expectation-variance" },
-      { label: "지수·로그와 orders of magnitude", href: "/ai/math-exponents-logarithms" },
+      {
+        label: "Train·validation·test의 역할",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "확률분포·기댓값",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "지수·로그와 orders of magnitude",
+        href: "/ai/math-exponents-logarithms",
+      },
       { label: "배포를 모사하는 교차검증", href: "/ai/cross-validation" },
-      { label: "Maximum-selection optimism", href: "/ai/competition-workflow#overview" },
-      { label: "재현 가능한 training run", href: "/ai/training-pipeline#overview" },
+      {
+        label: "Maximum-selection optimism",
+        href: "/ai/competition-workflow#overview",
+      },
+      {
+        label: "재현 가능한 training run",
+        href: "/ai/training-pipeline#overview",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Random search·TPE·Hyperband·Optuna claim은 각 원 논문의 search domain·task·resource·software version 범위로 제한한다." },
-      { kind: "standard", rule: "현재 Optuna Study API semantics는 stable 공식 문서와 설치 version 범위로 제한한다." },
-      { kind: "standard", rule: "Data/split/metric·space version·sampler/pruner/storage·trial state/resource/seed·code/environment/artifact·outer evaluation을 함께 기록한다." },
-      { kind: "project-claim", rule: "Hit probability·feasible set·Pareto 식은 탐색 계약을 설명하기 위한 일반 수학이며 특정 sampler의 성능 보장으로 표현하지 않는다." },
+      {
+        kind: "primary-source",
+        rule: "Random search·TPE·Hyperband·Optuna claim은 각 원 논문의 search domain·task·resource·software version 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "현재 Optuna Study API semantics는 stable 공식 문서와 설치 version 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Data/split/metric·space version·sampler/pruner/storage·trial state/resource/seed·code/environment/artifact·outer evaluation을 함께 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Hit probability·feasible set·Pareto 식은 탐색 계약을 설명하기 위한 일반 수학이며 특정 sampler의 성능 보장으로 표현하지 않는다.",
+      },
     ],
   },
   "ensemble-methods": {
@@ -1327,18 +2133,48 @@ export const EDITORIAL_BOUNDARIES = {
       "Greedy marginal gain·serving cost·failure policy·ensemble artifact lineage",
     ],
     reuses: [
-      { label: "Expectation·variance·covariance", href: "/ai/math-probability-expectation-variance" },
-      { label: "Train·validation·test의 역할", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "OOF prediction과 fold-local 경계", href: "/ai/cross-validation#kfold" },
-      { label: "Hyperparameter selection·outer evaluation", href: "/ai/hyperparameter-tuning" },
-      { label: "Probability calibration과 threshold", href: "/ai/imbalanced-data#evaluation" },
-      { label: "Run·artifact provenance", href: "/ai/training-pipeline#overview" },
+      {
+        label: "Expectation·variance·covariance",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Train·validation·test의 역할",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "OOF prediction과 fold-local 경계",
+        href: "/ai/cross-validation#kfold",
+      },
+      {
+        label: "Hyperparameter selection·outer evaluation",
+        href: "/ai/hyperparameter-tuning",
+      },
+      {
+        label: "Probability calibration과 threshold",
+        href: "/ai/imbalanced-data#evaluation",
+      },
+      {
+        label: "Run·artifact provenance",
+        href: "/ai/training-pipeline#overview",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Stacked Generalization·Super Learner·Ensemble Selection claim은 원 논문의 learner library·loss·CV·asymptotic/benchmark 조건으로 제한한다." },
-      { kind: "standard", rule: "scikit-learn StackingClassifier의 CV·prefit·final-estimator semantics는 현재 stable 문서와 설치 version 범위로 제한한다." },
-      { kind: "standard", rule: "Row/class/target mapping·OOF coverage·fold/base/meta revisions·weights·test aggregation·latency/memory/failure policy를 하나의 ensemble manifest로 기록한다." },
-      { kind: "project-claim", rule: "Error covariance·data allocation·marginal gain 수식은 결합 의사결정을 위한 일반 계약이며 특정 model 조합의 개선을 보장하지 않는다." },
+      {
+        kind: "primary-source",
+        rule: "Stacked Generalization·Super Learner·Ensemble Selection claim은 원 논문의 learner library·loss·CV·asymptotic/benchmark 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "scikit-learn StackingClassifier의 CV·prefit·final-estimator semantics는 현재 stable 문서와 설치 version 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Row/class/target mapping·OOF coverage·fold/base/meta revisions·weights·test aggregation·latency/memory/failure policy를 하나의 ensemble manifest로 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Error covariance·data allocation·marginal gain 수식은 결합 의사결정을 위한 일반 계약이며 특정 model 조합의 개선을 보장하지 않는다.",
+      },
     ],
   },
   "evaluation-metrics": {
@@ -1353,18 +2189,48 @@ export const EDITORIAL_BOUNDARIES = {
       "Training surrogate·validation selection·policy tuning·outer test와 hard guardrail 선택",
     ],
     reuses: [
-      { label: "기댓값·조건부확률", href: "/ai/math-probability-expectation-variance" },
-      { label: "Train·validation·test의 역할", href: "/ai/deep-learning-overview#learning-loop" },
-      { label: "Class prevalence·PR/ROC·confusion matrix·threshold·calibration", href: "/ai/imbalanced-data" },
-      { label: "Multi-positive retrieval의 Recall@k·NDCG@k", href: "/ai/sentence-embeddings#evaluation" },
-      { label: "Fold·OOF와 deployment-matched validation", href: "/ai/cross-validation" },
-      { label: "Configuration selection과 outer evaluation", href: "/ai/hyperparameter-tuning" },
+      {
+        label: "기댓값·조건부확률",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Train·validation·test의 역할",
+        href: "/ai/deep-learning-overview#learning-loop",
+      },
+      {
+        label: "Class prevalence·PR/ROC·confusion matrix·threshold·calibration",
+        href: "/ai/imbalanced-data",
+      },
+      {
+        label: "Multi-positive retrieval의 Recall@k·NDCG@k",
+        href: "/ai/sentence-embeddings#evaluation",
+      },
+      {
+        label: "Fold·OOF와 deployment-matched validation",
+        href: "/ai/cross-validation",
+      },
+      {
+        label: "Configuration selection과 outer evaluation",
+        href: "/ai/hyperparameter-tuning",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Regression quantile·proper scoring rule·NDCG claim은 각 원 논문의 loss·probability-space·relevance/discount 조건으로 제한한다." },
-      { kind: "standard", rule: "scikit-learn metric·scorer 이름과 parameter semantics는 현재 stable 공식 문서와 설치 version 범위로 제한한다." },
-      { kind: "standard", rule: "Decision unit/distribution·prediction/action·cost·target/positive/relevance·k/threshold·weight/reducer/slice·candidate/data checksum을 metric receipt에 함께 기록한다." },
-      { kind: "project-claim", rule: "Decision-risk·hierarchical reducer·feasible guardrail 수식은 평가 설계를 감사하기 위한 일반 계약이며 특정 metric이나 model의 성능 보장이 아니다." },
+      {
+        kind: "primary-source",
+        rule: "Regression quantile·proper scoring rule·NDCG claim은 각 원 논문의 loss·probability-space·relevance/discount 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "scikit-learn metric·scorer 이름과 parameter semantics는 현재 stable 공식 문서와 설치 version 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Decision unit/distribution·prediction/action·cost·target/positive/relevance·k/threshold·weight/reducer/slice·candidate/data checksum을 metric receipt에 함께 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Decision-risk·hierarchical reducer·feasible guardrail 수식은 평가 설계를 감사하기 위한 일반 계약이며 특정 metric이나 model의 성능 보장이 아니다.",
+      },
     ],
   },
   "experiment-tracking": {
@@ -1380,17 +2246,44 @@ export const EDITORIAL_BOUNDARIES = {
       "Clean environment에서 first divergence·artifact·metric을 검사하는 reproduction test",
     ],
     reuses: [
-      { label: "Training run·checkpoint·metric provenance", href: "/ai/training-pipeline" },
-      { label: "확률분포·기댓값·분산", href: "/ai/math-probability-expectation-variance" },
-      { label: "Evaluation metric reducer·guardrail", href: "/ai/evaluation-metrics" },
-      { label: "Hyperparameter study history·outer evaluation", href: "/ai/hyperparameter-tuning" },
-      { label: "Competition experiment decision log", href: "/ai/competition-workflow#iteration" },
+      {
+        label: "Training run·checkpoint·metric provenance",
+        href: "/ai/training-pipeline",
+      },
+      {
+        label: "확률분포·기댓값·분산",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Evaluation metric reducer·guardrail",
+        href: "/ai/evaluation-metrics",
+      },
+      {
+        label: "Hyperparameter study history·outer evaluation",
+        href: "/ai/hyperparameter-tuning",
+      },
+      {
+        label: "Competition experiment decision log",
+        href: "/ai/competition-workflow#iteration",
+      },
     ],
     evidence: [
-      { kind: "primary-source", rule: "MLflow component와 reproducibility-program claim은 초기 project paper와 JMLR report의 시대·program·observational 범위로 제한한다." },
-      { kind: "standard", rule: "W&B step/alias와 MLflow store/registry semantics는 현재 공식 문서와 설치 version 범위로 제한하고 stage deprecation을 반영한다." },
-      { kind: "standard", rule: "Spec/attempt ID·input/output digest/schema·progress axes·status/failure·alias/version event·store backup/access·reproduction level/tolerance를 함께 기록한다." },
-      { kind: "project-claim", rule: "Digest tuple·replayable predicate·seed derivation·acceptance 식은 추적 계약을 설명하는 일반 설계이며 tool이 자동으로 보장하는 theorem이 아니다." },
+      {
+        kind: "primary-source",
+        rule: "MLflow component와 reproducibility-program claim은 초기 project paper와 JMLR report의 시대·program·observational 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "W&B step/alias와 MLflow store/registry semantics는 현재 공식 문서와 설치 version 범위로 제한하고 stage deprecation을 반영한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Spec/attempt ID·input/output digest/schema·progress axes·status/failure·alias/version event·store backup/access·reproduction level/tolerance를 함께 기록한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Digest tuple·replayable predicate·seed derivation·acceptance 식은 추적 계약을 설명하는 일반 설계이며 tool이 자동으로 보장하는 theorem이 아니다.",
+      },
     ],
   },
   "imbalanced-data": {
@@ -1402,14 +2295,29 @@ export const EDITORIAL_BOUNDARIES = {
       "Precision·recall·PR/ROC·cost threshold·slice monitoring의 운영 평가 계약",
     ],
     reuses: [
-      { label: "Train·validation·test와 generalization", href: "/ai/deep-learning-overview" },
-      { label: "Probability·conditional probability", href: "/ai/math-probability-expectation-variance" },
-      { label: "Cross-entropy와 softmax probability", href: "/ai/cross-entropy" },
+      {
+        label: "Train·validation·test와 generalization",
+        href: "/ai/deep-learning-overview",
+      },
+      {
+        label: "Probability·conditional probability",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Cross-entropy와 softmax probability",
+        href: "/ai/cross-entropy",
+      },
       { label: "Augmentation과 split leakage", href: "/ai/data-augmentation" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "SMOTE·focal loss·PR/ROC·temperature scaling claim은 각 논문의 feature geometry·task·dataset·evaluation 조건으로 제한한다." },
-      { kind: "standard", rule: "Prevalence·split·resampler·loss weight·score definition·threshold·cost·capacity·calibration·slice를 재현 가능한 decision contract로 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "SMOTE·focal loss·PR/ROC·temperature scaling claim은 각 논문의 feature geometry·task·dataset·evaluation 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Prevalence·split·resampler·loss weight·score definition·threshold·cost·capacity·calibration·slice를 재현 가능한 decision contract로 기록한다.",
+      },
     ],
   },
   "data-augmentation": {
@@ -1421,11 +2329,20 @@ export const EDITORIAL_BOUNDARIES = {
       "Tabular synthesis validity와 train·validation·robustness·TTA pipeline 경계",
     ],
     reuses: [
-      { label: "Train·validation·test와 generalization", href: "/ai/deep-learning-overview" },
+      {
+        label: "Train·validation·test와 generalization",
+        href: "/ai/deep-learning-overview",
+      },
       { label: "Image tensor와 translation equivariance", href: "/ai/cnn" },
       { label: "Soft target cross-entropy", href: "/ai/cross-entropy" },
-      { label: "SMOTE·class imbalance와 threshold", href: "/ai/imbalanced-data" },
-      { label: "Regularization 선택과 validation", href: "/ai/regularization-practice" },
+      {
+        label: "SMOTE·class imbalance와 threshold",
+        href: "/ai/imbalanced-data",
+      },
+      {
+        label: "Regularization 선택과 validation",
+        href: "/ai/regularization-practice",
+      },
     ],
     evidence: [
       {
@@ -1447,10 +2364,22 @@ export const EDITORIAL_BOUNDARIES = {
       "Softmax–cross-entropy의 fused gradient와 log-sum-exp 수치 안정성",
     ],
     reuses: [
-      { label: "지수·로그와 곱셈을 합으로 바꾸는 법칙", href: "/ai/math-exponents-logarithms" },
-      { label: "확률분포·기댓값·표본평균", href: "/ai/math-probability-expectation-variance" },
-      { label: "Chain rule·backpropagation", href: "/ai/backprop-optimization" },
-      { label: "분류 output과 prediction contract", href: "/ai/neural-network" },
+      {
+        label: "지수·로그와 곱셈을 합으로 바꾸는 법칙",
+        href: "/ai/math-exponents-logarithms",
+      },
+      {
+        label: "확률분포·기댓값·표본평균",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Chain rule·backpropagation",
+        href: "/ai/backprop-optimization",
+      },
+      {
+        label: "분류 output과 prediction contract",
+        href: "/ai/neural-network",
+      },
     ],
     evidence: [
       {
@@ -1472,7 +2401,10 @@ export const EDITORIAL_BOUNDARIES = {
       "Sequence packing의 attention·position·label-shift boundary와 독립 behavior evaluation",
     ],
     reuses: [
-      { label: "Language-model policy·attention/loss mask", href: "/ai/transformer-architecture" },
+      {
+        label: "Language-model policy·attention/loss mask",
+        href: "/ai/transformer-architecture",
+      },
       { label: "Cross-entropy NLL·empirical risk", href: "/ai/cross-entropy" },
       { label: "Tokenizer·chat-template compatibility", href: "/ai/tokenizer" },
       { label: "Preference optimization·RLHF·DPO", href: "/ai/rlhf" },
@@ -1497,9 +2429,18 @@ export const EDITORIAL_BOUNDARIES = {
       "Denoising·sparse·anomaly detection·masked autoencoder의 목적과 평가 경계",
     ],
     reuses: [
-      { label: "신경망 학습 loop와 representation", href: "/ai/deep-learning-overview" },
-      { label: "Chain rule·backpropagation", href: "/ai/backprop-optimization" },
-      { label: "Matrix·rank·SVD·Eckart–Young 정리", href: "/ai/math-matrices-svd" },
+      {
+        label: "신경망 학습 loop와 representation",
+        href: "/ai/deep-learning-overview",
+      },
+      {
+        label: "Chain rule·backpropagation",
+        href: "/ai/backprop-optimization",
+      },
+      {
+        label: "Matrix·rank·SVD·Eckart–Young 정리",
+        href: "/ai/math-matrices-svd",
+      },
       { label: "Likelihood와 reconstruction loss", href: "/ai/cross-entropy" },
       { label: "확률적 latent model로의 확장", href: "/ai/vae" },
     ],
@@ -1628,8 +2569,14 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/ai/knowledge-distillation",
       },
       { label: "Code 실행 sandbox", href: "/ai/agent-sandbox-security" },
-      { label: "Run·artifact provenance와 재현 acceptance", href: "/ai/experiment-tracking" },
-      { label: "Metric reducer·sampling uncertainty·guardrail", href: "/ai/evaluation-metrics" },
+      {
+        label: "Run·artifact provenance와 재현 acceptance",
+        href: "/ai/experiment-tracking",
+      },
+      {
+        label: "Metric reducer·sampling uncertainty·guardrail",
+        href: "/ai/evaluation-metrics",
+      },
       { label: "Production serving SLO", href: "/ai/llm-serving-ops" },
     ],
     evidence: [
@@ -1710,9 +2657,18 @@ export const EDITORIAL_BOUNDARIES = {
       "Skill permission non-escalation과 trigger precision·recall 평가",
     ],
     reuses: [
-      { label: "Hook·Skill·Guardrail·Verifier의 실행 경계", href: "/ai/agentic-patterns#hooks-skills" },
-      { label: "Context selection과 progressive loading", href: "/ai/context-engineering" },
-      { label: "Runtime capability와 approval 계약", href: "/ai/llm-harness#composition" },
+      {
+        label: "Hook·Skill·Guardrail·Verifier의 실행 경계",
+        href: "/ai/agentic-patterns#hooks-skills",
+      },
+      {
+        label: "Context selection과 progressive loading",
+        href: "/ai/context-engineering",
+      },
+      {
+        label: "Runtime capability와 approval 계약",
+        href: "/ai/llm-harness#composition",
+      },
     ],
     evidence: [
       {
@@ -1733,7 +2689,10 @@ export const EDITORIAL_BOUNDARIES = {
       "Source별 token budget·lost-in-the-middle position 평가·stable-prefix cache의 운영 경계",
     ],
     reuses: [
-      { label: "RAG indexing·retrieval·reranking·citation 평가", href: "/ai/rag-pipeline" },
+      {
+        label: "RAG indexing·retrieval·reranking·citation 평가",
+        href: "/ai/rag-pipeline",
+      },
       { label: "하네스의 run contract·권한·검증", href: "/ai/llm-harness" },
       { label: "Compaction 구현과 상태 보존", href: "/ai/claw-compaction" },
     ],
@@ -1808,7 +2767,10 @@ export const EDITORIAL_BOUNDARIES = {
       "RDMA memory/queue path·RoCE v2 GID·GPUDirect topology·collective bandwidth 기초",
     ],
     reuses: [
-      { label: "Bit·byte와 단위 변환", href: "/ai/text-unicode-encoding#bits-bytes" },
+      {
+        label: "Bit·byte와 단위 변환",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
     ],
     evidence: [
       {
@@ -1881,9 +2843,18 @@ export const EDITORIAL_BOUNDARIES = {
       "Structured output 소비자 계약과 prompt·model·template·decoding regression loop",
     ],
     reuses: [
-      { label: "System instruction·untrusted data·runtime enforcement", href: "/ai/context-engineering#system-prompt" },
-      { label: "CFG·token mask와 syntax/semantic validity", href: "/ai/grammar-constrained-generation" },
-      { label: "Fine-tuning과 response loss", href: "/ai/supervised-fine-tuning" },
+      {
+        label: "System instruction·untrusted data·runtime enforcement",
+        href: "/ai/context-engineering#system-prompt",
+      },
+      {
+        label: "CFG·token mask와 syntax/semantic validity",
+        href: "/ai/grammar-constrained-generation",
+      },
+      {
+        label: "Fine-tuning과 response loss",
+        href: "/ai/supervised-fine-tuning",
+      },
       { label: "XML delimiter의 구체적 작성법", href: "/ai/xml-prompting" },
     ],
     evidence: [
@@ -1907,10 +2878,22 @@ export const EDITORIAL_BOUNDARIES = {
       "XML·JSON·Markdown·plain text를 task·model별 quality·validity·cost로 비교하는 format evaluation",
     ],
     reuses: [
-      { label: "Objective·evidence·output의 prompt request contract", href: "/ai/prompt-engineering#overview" },
-      { label: "Instruction과 untrusted evidence의 경계", href: "/ai/prompt-engineering#overview" },
-      { label: "CFG·token mask와 syntax/semantic validity", href: "/ai/grammar-constrained-generation" },
-      { label: "Tool permission·egress·credential·sandbox enforcement", href: "/ai/agent-sandbox-security" },
+      {
+        label: "Objective·evidence·output의 prompt request contract",
+        href: "/ai/prompt-engineering#overview",
+      },
+      {
+        label: "Instruction과 untrusted evidence의 경계",
+        href: "/ai/prompt-engineering#overview",
+      },
+      {
+        label: "CFG·token mask와 syntax/semantic validity",
+        href: "/ai/grammar-constrained-generation",
+      },
+      {
+        label: "Tool permission·egress·credential·sandbox enforcement",
+        href: "/ai/agent-sandbox-security",
+      },
     ],
     evidence: [
       {
@@ -1940,10 +2923,22 @@ export const EDITORIAL_BOUNDARIES = {
       "Authorization·retry·extension·deprecation을 production enforcement에 연결하는 방법",
     ],
     reuses: [
-      { label: "Agent의 tool proposal·runtime authorization", href: "/ai/agentic-patterns" },
-      { label: "하네스의 capability·verifier·recovery 계약", href: "/ai/llm-harness" },
-      { label: "Code Mode의 MCP tool orchestration", href: "/ai/agent-code-mode" },
-      { label: "Sandbox·egress·credential 격리", href: "/ai/agent-sandbox-security" },
+      {
+        label: "Agent의 tool proposal·runtime authorization",
+        href: "/ai/agentic-patterns",
+      },
+      {
+        label: "하네스의 capability·verifier·recovery 계약",
+        href: "/ai/llm-harness",
+      },
+      {
+        label: "Code Mode의 MCP tool orchestration",
+        href: "/ai/agent-code-mode",
+      },
+      {
+        label: "Sandbox·egress·credential 격리",
+        href: "/ai/agent-sandbox-security",
+      },
     ],
     evidence: [
       {
@@ -2005,9 +3000,18 @@ export const EDITORIAL_BOUNDARIES = {
       "Sparsely-Gated MoE·GShard·Switch·DeepSeekMoE의 문제와 claim 경계",
     ],
     reuses: [
-      { label: "Transformer block과 dense FFN", href: "/ai/transformer-architecture#transformer-block" },
-      { label: "Softmax 계산과 gradient", href: "/ai/backprop-optimization#softmax" },
-      { label: "Kimi K3의 LatentMoE 확장", href: "/ai/kimi-k3-architecture#stable-latent-moe" },
+      {
+        label: "Transformer block과 dense FFN",
+        href: "/ai/transformer-architecture#transformer-block",
+      },
+      {
+        label: "Softmax 계산과 gradient",
+        href: "/ai/backprop-optimization#softmax",
+      },
+      {
+        label: "Kimi K3의 LatentMoE 확장",
+        href: "/ai/kimi-k3-architecture#stable-latent-moe",
+      },
     ],
     evidence: [
       {
@@ -2117,10 +3121,22 @@ export const EDITORIAL_BOUNDARIES = {
       "KV pressure preemption·requeue·prefix reuse·recomputation 비용과 진단 순서",
     ],
     reuses: [
-      { label: "Online request lifecycle과 hard feasibility", href: "/ai/vllm-serving" },
-      { label: "KV block mapping과 prefix cache", href: "/ai/vllm-paged-attention" },
-      { label: "KV tensor shape와 runtime capacity", href: "/ai/hybrid-attention-serving" },
-      { label: "Speculative verification과 state commit", href: "/ai/vllm-spec-decode" },
+      {
+        label: "Online request lifecycle과 hard feasibility",
+        href: "/ai/vllm-serving",
+      },
+      {
+        label: "KV block mapping과 prefix cache",
+        href: "/ai/vllm-paged-attention",
+      },
+      {
+        label: "KV tensor shape와 runtime capacity",
+        href: "/ai/hybrid-attention-serving",
+      },
+      {
+        label: "Speculative verification과 state commit",
+        href: "/ai/vllm-spec-decode",
+      },
       { label: "Serving rollout과 SLO", href: "/ai/llm-serving-ops" },
     ],
     evidence: [
@@ -2144,10 +3160,22 @@ export const EDITORIAL_BOUNDARIES = {
       "Automatic Prefix Caching의 chained full-block hash·재사용 범위·운영 지표",
     ],
     reuses: [
-      { label: "Autoregressive decoding과 KV state", href: "/ai/seq2seq#decoder" },
-      { label: "Scheduler token budget과 preemption", href: "/ai/vllm-scheduler" },
-      { label: "MHA·GQA·MQA와 KV byte·hybrid capacity", href: "/ai/hybrid-attention-serving" },
-      { label: "Serving request lifecycle과 latency", href: "/ai/vllm-serving" },
+      {
+        label: "Autoregressive decoding과 KV state",
+        href: "/ai/seq2seq#decoder",
+      },
+      {
+        label: "Scheduler token budget과 preemption",
+        href: "/ai/vllm-scheduler",
+      },
+      {
+        label: "MHA·GQA·MQA와 KV byte·hybrid capacity",
+        href: "/ai/hybrid-attention-serving",
+      },
+      {
+        label: "Serving request lifecycle과 latency",
+        href: "/ai/vllm-serving",
+      },
     ],
     evidence: [
       {
@@ -2195,6 +3223,314 @@ export const EDITORIAL_BOUNDARIES = {
       {
         kind: "project-measurement",
         rule: "GLM/B300 acceptance·throughput·kernel 수치는 적용 사례 글이 소유하며 일반 이론의 보편적 speedup으로 확대하지 않는다.",
+      },
+    ],
+  },
+  "distributed-systems": {
+    title: "분산 시스템 기초 글이 소유하는 범위",
+    owns: [
+      "Process·local state·message·event·execution의 최소 system model",
+      "Synchronous·asynchronous·partial timing과 crash·omission·Byzantine failure의 분류",
+      "Consensus safety·liveness의 분리와 failure-injection oracle",
+      "FLP bivalence·CAP partition execution·partial synchrony GST의 전제와 결론 경계",
+      "Timing·randomness·failure detector·약한 문제 정의를 추가하는 assumption escape hatch",
+    ],
+    reuses: [
+      {
+        label: "상태 머신 복제·total-order log·Paxos·Raft",
+        href: "/blockchain/smr-theory",
+      },
+      {
+        label: "Byzantine quorum과 protocol별 fault threshold",
+        href: "/blockchain/bft-theory",
+      },
+      {
+        label: "공개 membership의 PoW·PoS와 fork choice",
+        href: "/blockchain/consensus-mechanisms",
+      },
+      {
+        label: "Retry 뒤 중복 side effect를 막는 idempotency",
+        href: "/ai/agentic-patterns#react",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "FLP·CAP·DLS·Byzantine·failure-detector claim은 각 논문의 process·timing·failure·channel model과 conclusion 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Safety와 liveness, consistency model과 SLA, authentication과 honesty를 서로 다른 계약으로 유지한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Protocol 비교는 같은 binary·config·membership·schedule·fault trace에서 conflicting decision 0건과 recovery time을 paired 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Timeout·throughput·validator 수 같은 배포 수치를 theorem의 보편적 결론으로 쓰지 않는다.",
+      },
+    ],
+  },
+  "smr-theory": {
+    title: "상태 머신 복제 글이 소유하는 범위",
+    owns: [
+      "같은 initial state·ordered command·deterministic transition으로 replica state를 맞추는 SMR 계약",
+      "Network receive와 total-order delivery, append·commit·apply·reply의 상태 경계",
+      "Crash-majority quorum과 Raft term·log-prefix safety의 연결",
+      "Paxos promise·highest accepted value adoption·chosen invariant",
+      "Client retry dedupe와 external effect를 replicated-log commit에서 분리하는 경계",
+    ],
+    reuses: [
+      {
+        label: "Process·execution·failure·safety/liveness 기초",
+        href: "/blockchain/distributed-systems",
+      },
+      {
+        label: "Byzantine quorum과 authenticated protocol",
+        href: "/blockchain/bft-theory",
+      },
+      {
+        label: "Retry idempotency와 effect receipt",
+        href: "/ai/agentic-patterns#react",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "SMR·Raft·Paxos claim은 각 논문의 crash model·durable state·quorum·determinism 전제로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Local append, quorum commit, state-machine apply, client reply, external side effect를 서로 다른 상태로 기록한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "채택 전 crash cut별 committed-prefix·state digest·reply dedupe·effect receipt를 같은 fixture에서 검증한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Replicated log를 external API까지의 exactly-once 또는 Byzantine tolerance로 확대 해석하지 않는다.",
+      },
+    ],
+  },
+  "consensus-mechanisms": {
+    title: "PoW·PoS 합의 메커니즘 글이 소유하는 범위",
+    owns: [
+      "Permissionless membership의 Sybil influence를 hash work·bonded stake에 연결하는 경계",
+      "PoW hash-target lottery와 cumulative-work fork choice·probabilistic confirmation",
+      "PoS stake-weighted selection·attestation·slashing evidence의 역할",
+      "Canonical head를 고르는 fork choice와 history를 확정하는 finality의 분리",
+      "같은 fault trace에서 security·resource·concentration을 비교하는 paired release gate",
+    ],
+    reuses: [
+      { label: "Process·failure·safety/liveness 전제", href: "/blockchain/distributed-systems" },
+      { label: "고정 membership의 log agreement", href: "/blockchain/smr-theory" },
+      { label: "Byzantine quorum과 partial synchrony", href: "/blockchain/bft-theory" },
+      { label: "Hash function·preimage resistance", href: "/crypto/hash-theory" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "PoW·Gasper claim은 원 논문의 network·resource·honesty·timing 전제와 분석 범위로 제한한다." },
+      { kind: "standard", rule: "현재 Ethereum constant·fork·handler는 배포 client와 stable consensus-spec version에 귀속한다." },
+      { kind: "project-measurement", rule: "Protocol 비교는 동일 binary·config·membership·workload·fault schedule에서 paired 측정한다." },
+      { kind: "project-claim", rule: "다른 chain·layer의 TPS·finality 숫자를 consensus family의 고정 성능으로 일반화하지 않는다." },
+    ],
+  },
+  "tls-fundamentals": {
+    title: "TLS 1.3 기초 글이 소유하는 범위",
+    owns: [
+      "TLS 1.3 handshake와 record protocol의 책임 분리",
+      "CertificateVerify·Finished·transcript hash가 협상과 identity를 묶는 경계",
+      "AEAD record의 방향별 traffic key·sequence number·nonce 수명",
+      "HKDF key schedule의 early·handshake·master secret과 용도 분리",
+      "0-RTT latency와 replay·forward-secrecy trade-off의 application 경계",
+    ],
+    reuses: [
+      {
+        label: "Bit·byte와 직렬화의 출발점",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+      {
+        label: "Diffie–Hellman key exchange와 unauthenticated MITM",
+        href: "/crypto/diffie-hellman",
+      },
+      {
+        label: "TLS를 transport에 결합하는 QUIC",
+        href: "/p2p/quic-fundamentals",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Handshake·record·key schedule·0-RTT 속성은 RFC 8446 상태 기계와 security considerations 범위에만 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Generic HKDF의 Extract·Expand는 RFC 5869, TLS-specific label·transcript tree는 RFC 8446의 별도 책임으로 구분한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "1-RTT·0-RTT는 protocol flight 표현이며 실제 wall-clock latency, replay 안전성이나 hostname 정책의 자동 보장을 뜻하지 않는다.",
+      },
+    ],
+  },
+  "quic-fundamentals": {
+    title: "QUIC transport 기초 글이 소유하는 범위",
+    owns: [
+      "UDP datagram 위 QUIC packet·frame·ACK·loss-recovery의 관측 가능한 경로",
+      "Packet-number space와 TLS CRYPTO frame·encryption level의 결합",
+      "Stream offset·stream/connection flow control과 cross-stream HOL 경계",
+      "Connection ID·path validation·migration·linkability의 책임 분리",
+      "TLS authentication·packet protection·transport protocol error의 실패 경계",
+    ],
+    reuses: [
+      { label: "TLS 1.3 handshake·AEAD·HKDF", href: "/p2p/tls-fundamentals" },
+      {
+        label: "Bit·byte와 wire encoding",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+      { label: "libp2p에서 QUIC을 쓰는 구현", href: "/p2p/libp2p-quic" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Transport·stream·migration은 RFC 9000, TLS mapping은 RFC 9001, loss와 congestion 기준은 RFC 9002에 각각 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Initial protection·Retry address validation·certificate authentication·path validation을 서로 다른 보안 주장으로 유지한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "QUIC이 TCP보다 항상 빠르거나 한 stream의 loss가 connection 전체 자원에 아무 영향도 주지 않는다고 일반화하지 않는다.",
+      },
+    ],
+  },
+  "content-addressing": {
+    title: "Content addressing·CID·Merkle DAG 글이 소유하는 범위",
+    owns: [
+      "Location address와 content address가 답하는 질문의 차이",
+      "Canonical bytes·cryptographic digest·integrity와 availability·identity의 경계",
+      "CIDv1 version·content multicodec·multihash·string multibase 구조",
+      "Child CID가 parent와 root로 전파되는 Merkle DAG 계산 경로",
+      "IPNS·DNSLink mutable pointer의 authority·freshness·resolution 경계",
+    ],
+    reuses: [
+      {
+        label: "Bit·byte와 encoding",
+        href: "/ai/text-unicode-encoding#bits-bytes",
+      },
+      { label: "Kademlia routing과 provider discovery", href: "/p2p/kademlia" },
+      { label: "Kubo의 blockstore·Bitswap·pinning 구현", href: "/p2p/kubo" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "CID binary/string format과 decoder rejection은 current IPFS CID specification, IPNS field와 verification은 IPNS specification에 귀속한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Digest equality는 canonical bytes의 integrity만 말하며 availability·publisher identity·semantic safety를 자동 보장하지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Chunking·codec·metadata가 다르면 같은 사용자-visible file도 다른 DAG root가 될 수 있음을 비교 조건에 포함한다.",
+      },
+    ],
+  },
+  arima: {
+    title: "ARIMA 시계열 예측 글이 소유하는 범위",
+    owns: [
+      "Weak stationarity와 차분 order를 forecast contract 안에서 선택하는 경계",
+      "AR(p) 관측 기억과 MA(q) innovation 기억을 분리한 ARMA filter",
+      "AIC·BIC 후보 비교와 residual·Ljung–Box·rolling-origin 검증의 역할 분담",
+      "SARIMA·dynamic regression 확장과 future covariate availability 경계",
+    ],
+    reuses: [
+      {
+        label: "Forecast row·lag·rolling-origin 정본",
+        href: "/ai/time-features",
+      },
+      {
+        label: "확률변수·평균·분산",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      { label: "LSTM forecasting pipeline", href: "/ai/lstm-timeseries" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Dickey–Fuller·Ljung–Box·Hyndman–Khandakar 결과는 각 모형 가정·candidate space·sample 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "ACF·PACF·AIC·unit-root test는 candidate와 diagnostic이며 원하는 horizon의 out-of-sample 우위를 자동으로 보장하지 않는다.",
+      },
+    ],
+  },
+  ecod: {
+    title: "ECOD 이상 탐지 글이 소유하는 범위",
+    owns: [
+      "Feature별 left·right empirical CDF와 negative-log tail contribution",
+      "Sample skewness를 이용한 tail 방향 선택과 independence approximation의 한계",
+      "ECOD 원 논문의 max-after-sum과 PyOD 3.6.4 max-before-sum 재현 경계",
+      "Continuous anomaly score·contamination threshold·binary alert·evaluation의 분리",
+    ],
+    reuses: [
+      {
+        label: "확률분포·random variable·평균·분산",
+        href: "/ai/math-probability-expectation-variance",
+      },
+      {
+        label: "Ranking·threshold·calibration 경계",
+        href: "/ai/imbalanced-data#overview",
+      },
+      { label: "EDA·reference population·split", href: "/ai/eda-workflow" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "ECOD score·복잡도·benchmark claim은 원 논문의 aggregation 식과 dataset 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "PyOD API와 score 경로는 확인한 package version을 고정하고 논문 식과 같은 것으로 이름만 보고 가정하지 않는다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Unlabeled detector의 success는 blind review·delayed label·drift slice 없이는 확정하지 않으며 score를 사건 probability로 표현하지 않는다.",
+      },
+    ],
+  },
+  "lstm-timeseries": {
+    title: "LSTM 시계열 예측 글이 소유하는 범위",
+    owns: [
+      "Forecast origin에서 L-step input과 H-step target을 만드는 supervised window 계약",
+      "Batch·entity·session에 따른 hidden·cell state reset·carry·detach lifecycle",
+      "Direct multi-output과 recursive horizon 전략의 exposure·shape·latency trade-off",
+      "Train-only transform·pinball loss·MASE·rolling-origin을 잇는 학습·평가 계약",
+    ],
+    reuses: [
+      { label: "LSTM gate와 cell-state 수학", href: "/ai/lstm" },
+      {
+        label: "Forecast row·temporal leakage·rolling-origin",
+        href: "/ai/time-features",
+      },
+      { label: "ARIMA 선형 기준선", href: "/ai/arima" },
+      { label: "Attention 계산", href: "/ai/attention-theory" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "MASE·Tashman evaluation·DLinear·PatchTST claim은 각 metric 정의와 dataset·horizon·normalization·training 조건으로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "PyTorch tensor shape는 공식 API version에 귀속하고 state reset·feature availability·forecast cutoff는 application이 별도로 보장한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "LSTM 채택은 같은 origin·horizon·feature·refit·hardware budget에서 naive·seasonal naive·ARIMA·단순 learned baseline과 비교한 결과에만 귀속한다.",
       },
     ],
   },

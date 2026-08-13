@@ -55,7 +55,7 @@ export default function MigrationViz() {
             rx={5}
             fill={C.client + "12"}
             stroke={C.client}
-            strokeWidth={1.3}
+            strokeWidth={1}
           />
           <text
             x={60}
@@ -86,7 +86,7 @@ export default function MigrationViz() {
           rx={5}
           fill={C.server + "12"}
           stroke={C.server}
-          strokeWidth={1.3}
+          strokeWidth={1}
         />
         <text
           x={300}
@@ -105,7 +105,7 @@ export default function MigrationViz() {
           x2={260}
           y2={44}
           stroke={isCell ? C.cell : C.wifi}
-          strokeWidth={1.3}
+          strokeWidth={1}
           strokeDasharray={step === 1 ? "4 3" : "0"}
           animate={{ opacity: step === 1 ? 0.4 : 1 }}
         />

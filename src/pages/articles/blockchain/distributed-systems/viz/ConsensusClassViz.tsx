@@ -1,134 +1,22 @@
-import { motion } from "framer-motion";
-import StepViz from "@/components/ui/step-viz";
-
-const C1 = "#6366f1",
-  C2 = "#10b981",
-  C3 = "#f59e0b";
-
-const STEPS = [
-  {
-    label: "합의 알고리즘 분류",
-    body: "장애 모델(CFT vs BFT)과 최종성 유형(결정적 vs 확률적)으로 분류.",
-  },
-  {
-    label: "CFT — Crash Fault Tolerant",
-    body: "노드가 멈추기만 하고 악의적 행동 없음. Raft, Paxos. f < n/2 허용.",
-  },
-  {
-    label: "BFT — Byzantine Fault Tolerant",
-    body: "임의의 악의적 행동 허용. PBFT, HotStuff, Tendermint. f < n/3 허용.",
-  },
-  {
-    label: "결정적 vs 확률적 최종성",
-    body: "결정적 — 커밋 즉시 확정(BFT). 확률적 — 시간이 지날수록 확정 확률 증가(Nakamoto).",
-  },
-];
-
-const QUADRANTS = [
-  { label: "CFT+결정적", examples: "Raft, Paxos", x: 40, y: 35, color: C1 },
-  { label: "BFT+결정적", examples: "PBFT, HotStuff", x: 220, y: 35, color: C2 },
-  { label: "CFT+확률적", examples: "(드묾)", x: 40, y: 90, color: C1 },
-  {
-    label: "BFT+확률적",
-    examples: "Nakamoto, Filecoin",
-    x: 220,
-    y: 90,
-    color: C3,
-  },
-];
+import { DistributedFrame, Ledger } from "./DistributedVizPrimitives";
 
 export default function ConsensusClassViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg
-          viewBox="0 0 420 150"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
-        >
-          {/* Axes */}
-          <line
-            x1={35}
-            y1={25}
-            x2={35}
-            y2={130}
-            stroke="var(--border)"
-            strokeWidth={0.8}
-          />
-          <line
-            x1={35}
-            y1={80}
-            x2={400}
-            y2={80}
-            stroke="var(--border)"
-            strokeWidth={0.8}
-          />
-          <text
-            x={15}
-            y={55}
-            fontSize={10}
-            fill="var(--muted-foreground)"
-            transform="rotate(-90,15,55)"
-          >
-            최종성
-          </text>
-          <text x={20} y={50} fontSize={10} fill="var(--muted-foreground)">
-            결정적
-          </text>
-          <text x={20} y={110} fontSize={10} fill="var(--muted-foreground)">
-            확률적
-          </text>
-          <text x={120} y={140} fontSize={10} fill="var(--muted-foreground)">
-            CFT (f{"<"}n/2)
-          </text>
-          <text x={290} y={140} fontSize={10} fill="var(--muted-foreground)">
-            BFT (f{"<"}n/3)
-          </text>
-          {/* Quadrant boxes */}
-          {QUADRANTS.map((q, i) => {
-            const highlight =
-              (step === 1 && (i === 0 || i === 2)) ||
-              (step === 2 && (i === 1 || i === 3)) ||
-              step === 3;
-            const op = step === 0 || highlight ? 1 : 0.2;
-            return (
-              <motion.g
-                key={q.label}
-                animate={{ opacity: op }}
-                transition={{ duration: 0.3 }}
-              >
-                <rect
-                  x={q.x}
-                  y={q.y}
-                  width={170}
-                  height={38}
-                  rx={5}
-                  fill={`${q.color}${highlight ? "12" : "06"}`}
-                  stroke={q.color}
-                  strokeWidth={highlight ? 1.2 : 0.6}
-                />
-                <text
-                  x={q.x + 8}
-                  y={q.y + 16}
-                  fontSize={10}
-                  fontWeight={500}
-                  fill={q.color}
-                >
-                  {q.label}
-                </text>
-                <text
-                  x={q.x + 8}
-                  y={q.y + 30}
-                  fontSize={10}
-                  fill="var(--muted-foreground)"
-                >
-                  {q.examples}
-                </text>
-              </motion.g>
-            );
-          })}
-        </svg>
-      )}
-    </StepViz>
+    <DistributedFrame
+      eyebrow="DESIGN CHOICE"
+      title="불가능성 결과를 피하는 방법은 가정을 명시적으로 추가하는 것이다"
+      description="실제 protocol은 정리를 무시하지 않고 timing·randomness·failure detector·문제 정의 중 무엇을 강화했는지 공개합니다."
+      note="성능 수치만 비교하면 숨은 system model 차이를 놓칩니다. 같은 failure injection과 decision rule에서 safety violation·time-to-recover를 함께 측정해야 합니다."
+    >
+      <Ledger
+        columns={4}
+        items={[
+          { label: "TIMING", title: "Partial synchrony", body: "GST 이후 delay bound가 성립할 때 timeout으로 leader를 교체합니다." },
+          { label: "RANDOM", title: "Randomized choice", body: "모든 adversarial schedule에서 deterministic step만 고집하지 않습니다." },
+          { label: "DETECT", title: "Failure detector", body: "의심의 completeness·accuracy를 별도 oracle 계약으로 둡니다." },
+          { label: "WEAKEN", title: "문제·보장 조정", body: "Approximate agreement나 probabilistic termination처럼 목표를 바꿉니다." },
+        ]}
+      />
+    </DistributedFrame>
   );
 }

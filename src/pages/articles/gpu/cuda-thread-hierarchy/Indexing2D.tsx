@@ -1,117 +1,105 @@
 import CodePanel from "@/components/ui/code-panel";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
-const index2DCode = `// 2D 인덱싱: 행(row)과 열(col) 계산
-//
-// 블록 (16x16) 기준, blockIdx = (1, 2) 일 때:
-// row = 2 * 16 + threadIdx.y = 32 + threadIdx.y
-// col = 1 * 16 + threadIdx.x = 16 + threadIdx.x
-//
-// ┌─────────┬─────────┬─────────┐
-// │ Block   │ Block   │ Block   │  gridDim.x = 3
-// │ (0,0)   │ (1,0)   │ (2,0)   │
-// ├─────────┼─────────┼─────────┤
-// │ Block   │ Block   │ Block   │
-// │ (0,1)   │*(1,1)*  │ (2,1)   │  gridDim.y = 3
-// ├─────────┼─────────┼─────────┤
-// │ Block   │ Block   │ Block   │
-// │ (0,2)   │ (1,2)   │ (2,2)   │
-// └─────────┴─────────┴─────────┘
-
-__global__ void kernel2D(float* data, int W, int H) {
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    if (col < W && row < H) {
-        int idx = row * W + col;   // Row-major 선형 인덱스
-        data[idx] = data[idx] + 1.0f;
-    }
-}`;
-
-const matAddCode = `// 행렬 덧셈: C[row][col] = A[row][col] + B[row][col]
-// 행렬은 1D 배열로 저장 (Row-major 순서)
-//
-// Row-major: matrix[row][col] = array[row * width + col]
-//   row=0: | a00 | a01 | a02 |
-//   row=1: | a10 | a11 | a12 |  →  [a00, a01, a02, a10, a11, a12]
-
-__global__ void matAdd(float* A, float* B, float* C,
-                       int W, int H) {
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    if (col < W && row < H) {
-        int idx = row * W + col;
-        C[idx] = A[idx] + B[idx];
-    }
+const imageCode = `__global__ void brighten(float* image, int width, int height) {
+  int col = blockIdx.x * blockDim.x + threadIdx.x;
+  int row = blockIdx.y * blockDim.y + threadIdx.y;
+  if (row < height && col < width) {
+    size_t offset = static_cast<size_t>(row) * width + col;
+    image[offset] = fminf(image[offset] + 0.1f, 1.0f);
+  }
 }
 
-// 호스트 코드
-int W = 1920, H = 1080;        // Full HD 해상도
-dim3 block(16, 16);             // 블록: 16x16 = 256 스레드
-dim3 grid(
-    (W + 15) / 16,              // = 120 블록
-    (H + 15) / 16               // = 68 블록 → 총 8,160 블록
-);
-matAdd<<<grid, block>>>(d_A, d_B, d_C, W, H);
-// 총 스레드: 120*16 x 68*16 = 1920 x 1088
-// 실제 행렬: 1920 x 1080 → 8줄분(8*1920 = 15,360개) 스레드는 경계 검사로 제외`;
+dim3 block(32, 8); // 256 threads; x축 인접 lane이 인접 pixel을 읽는다.
+dim3 grid((width + block.x - 1) / block.x,
+          (height + block.y - 1) / block.y);
+brighten<<<grid, block>>>(d_image, width, height);`;
 
 export default function Indexing2D() {
   return (
     <section id="indexing-2d" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">2D 인덱싱: 행렬과 이미지</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        2D 좌표와 memory address는 서로 다른 단계입니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          행렬, 이미지 등 2차원 데이터에는 Block과 Grid를 모두 2D로 설정한다.
-          <strong>x축은 열(col)</strong>, <strong>y축은 행(row)</strong>에
-          대응시키는 것이 관례다. 1D 공식을 x, y 각각에 적용하면{" "}
-          <code>col = blockIdx.x * blockDim.x + threadIdx.x</code>,
-          <code>row = blockIdx.y * blockDim.y + threadIdx.y</code>가 된다.
+          Image에서는 x축을 column, y축을 row에 대응시키면 좌표 계산이
+          직관적입니다. 하지만 C/C++의 flat row-major allocation에는 행 경계
+          표시가 없으므로, <code>(row, col)</code>을 마지막에 linear offset으로
+          바꿔야 합니다. 이 두 단계를 섞으면 width·height를 뒤집거나 rectangular
+          image에서만 드러나는 bug가 생깁니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          2D 그리드와 블록 배치
+      </div>
+      <ExplainedFormula
+        question="(row, col) 위치를 row-major 1D allocation의 몇 번째 원소로 바꿀까요?"
+        idea={
+          <>
+            완전히 지나온 row가 row개이고 각 row에 width개 원소가 있으므로 row ×
+            width만큼 건너간 뒤 현재 col을 더합니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+\mathrm{col}&=b_xB_x+t_x,\\
+\mathrm{row}&=b_yB_y+t_y,\\
+\mathrm{offset}&=\mathrm{row}\times W+\mathrm{col}.
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "b_x,b_y",
+            name: "block coordinates",
+            description: "blockIdx.x와 blockIdx.y입니다.",
+          },
+          {
+            symbol: "B_x,B_y",
+            name: "block dimensions",
+            description: "blockDim.x와 blockDim.y입니다.",
+          },
+          {
+            symbol: "t_x,t_y",
+            name: "thread coordinates",
+            description: "threadIdx.x와 threadIdx.y입니다.",
+          },
+          {
+            symbol: "W",
+            name: "row width",
+            description:
+              "한 row에 저장된 element 수입니다. Byte pitch가 있으면 단순 W 대신 pitch를 반영해야 합니다.",
+          },
+        ]}
+        assumptions={[
+          "Allocation이 contiguous row-major이고 element마다 같은 byte 크기를 가집니다.",
+          "row < H와 col < W를 확인한 뒤 접근합니다.",
+          "cudaMallocPitch 같은 pitched allocation이나 multi-channel interleaving에는 그 layout의 stride를 사용해야 합니다.",
+        ]}
+        interpretation="W=5, row=2, col=3이면 offset=13입니다. W와 H를 바꾸면 5×3처럼 직사각형 data에서 다른 주소를 가리킵니다."
+      />
+      <CodePanel
+        title="2D image mapping"
+        code={imageCode}
+        annotations={[
+          { lines: [1, 4], color: "sky", note: "독립적인 row·column boundary" },
+          { lines: [5, 7], color: "emerald", note: "Row-major linearization" },
+          {
+            lines: [10, 13],
+            color: "amber",
+            note: "x축을 warp-friendly하게 배치",
+          },
+        ]}
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3 className="mt-8 text-xl font-semibold">
+          정답 index와 빠른 index는 다릅니다
         </h3>
         <p>
-          16x16 블록이면 블록당 256개 스레드다.
-          <br />
-          경계 검사는 <code>col &lt; W && row &lt; H</code>로 두 방향 모두
-          확인해야 한다.
+          16×16과 32×8은 모두 256-thread block이고 같은 image를 올바르게 덮을 수
+          있지만 memory transaction과 neighborhood reuse는 달라질 수 있습니다.
+          Row-major image에서 <code>threadIdx.x</code>가 인접 column을 가리키면
+          같은 warp lane의 주소가 가까워져 coalescing에 유리합니다. 반면
+          stencil처럼 halo를 shared memory에 담는 kernel은 x·y tile 모양과 edge
+          overhead도 함께 봐야 합니다. 먼저 rectangular·non-multiple shape로
+          correctness를 검증한 뒤 Nsight Compute에서 global transaction
+          efficiency와 occupancy를 비교합니다.
         </p>
-        <CodePanel
-          title="2D 인덱싱 기본 패턴"
-          code={index2DCode}
-          annotations={[
-            { lines: [3, 5], color: "sky", note: "row, col 계산 예시" },
-            { lines: [18, 19], color: "emerald", note: "2D 인덱스 공식" },
-            { lines: [21, 21], color: "amber", note: "Row-major 선형화" },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">
-          Row-major 메모리 레이아웃
-        </h3>
-        <p>
-          C/C++과 CUDA는 행 우선(Row-major) 순서로 2D 배열을 저장한다.
-          <code>matrix[row][col]</code>은 <code>array[row * width + col]</code>{" "}
-          주소에 매핑된다.
-        </p>
-        <CodePanel
-          title="행렬 덧셈 전체 코드"
-          code={matAddCode}
-          annotations={[
-            { lines: [3, 6], color: "sky", note: "Row-major 메모리 배치" },
-            { lines: [10, 11], color: "emerald", note: "col, row 계산" },
-            {
-              lines: [19, 24],
-              color: "violet",
-              note: "호스트: 그리드/블록 설정",
-            },
-            {
-              lines: [26, 27],
-              color: "amber",
-              note: "경계 검사로 제외되는 스레드",
-            },
-          ]}
-        />
       </div>
     </section>
   );

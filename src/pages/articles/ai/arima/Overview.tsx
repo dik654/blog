@@ -48,8 +48,8 @@ export default function Overview() {
         formula={String.raw`\begin{aligned}\mathbb E[Z_t]&=\mu\\\operatorname{Var}(Z_t)&=\sigma^2<\infty\\\operatorname{Cov}(Z_t,Z_{t-k})&=\gamma(k)\end{aligned}`}
         terms={[
           { symbol: "Z_t", name: "stationary representation", description: "원 series Yt를 필요에 따라 변환·차분한 뒤 ARMA에 넣는 값입니다." },
-          { symbol: "\mu,\sigma^2", name: "constant moments", description: "시간 t에 따라 바뀌지 않는 평균과 유한한 분산입니다." },
-          { symbol: "\gamma(k)", name: "autocovariance", description: "두 관측 사이의 lag k에만 의존하는 공분산입니다." },
+          { symbol: "\\mu,\\sigma^2", name: "constant moments", description: "시간 t에 따라 바뀌지 않는 평균과 유한한 분산입니다." },
+          { symbol: "\\gamma(k)", name: "autocovariance", description: "두 관측 사이의 lag k에만 의존하는 공분산입니다." },
         ]}
         assumptions={["Second moment가 존재하고 sampling interval이 일관적입니다.", "이 조건은 Gaussianity나 strict stationarity를 의미하지 않습니다."]}
         interpretation="Stationarity는 plot이 평평해 보인다는 뜻이 아니라 parameter와 dependence가 시간에 따라 변하지 않는다는 모델링 가정입니다. Unit-root test 하나만으로 모든 형태의 stationarity를 증명할 수는 없습니다."
@@ -63,7 +63,7 @@ export default function Overview() {
         formula={String.raw`\begin{aligned}BY_t&=Y_{t-1}\\\Delta Y_t&=(1-B)Y_t=Y_t-Y_{t-1}\\Z_t&=\Delta^dY_t=(1-B)^dY_t\end{aligned}`}
         terms={[
           { symbol: "B", name: "backshift operator", description: "시계열을 한 lag 뒤로 이동시키는 연산자입니다." },
-          { symbol: "\Delta", name: "difference operator", description: "연속한 level의 차이를 계산하는 1−B입니다." },
+          { symbol: "\\Delta", name: "difference operator", description: "연속한 level의 차이를 계산하는 1−B입니다." },
           { symbol: "d", name: "integration order", description: "Stationary representation에 도달하기 위해 적용한 차분 횟수입니다." },
         ]}
         assumptions={["차분으로 제거할 수 있는 stochastic trend가 주요 nonstationarity라고 가정합니다.", "Deterministic trend·seasonal difference·variance stabilization은 별도 선택입니다."]}
@@ -80,6 +80,19 @@ export default function Overview() {
           비표준 분포가 필요한 이유는 <a href="https://doi.org/10.1080/01621459.1979.10482531" target="_blank" rel="noreferrer">Dickey–Fuller 원 논문</a>에서
           확인할 수 있다.
         </p>
+      </div>
+
+      <div id="paper-dickey-fuller" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Unit-root 검정의 출발점</p>
+        <p className="mt-2 text-sm font-semibold">Distribution of the Estimators for Autoregressive Time Series with a Unit Root</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Dickey와 Fuller는 AR coefficient가 unit root 경계에 있을 때 estimator와 test statistic이
+          통상적인 t 분포를 따르지 않는 문제를 다뤘습니다. 핵심 기여는 이 경계 상황의 비표준
+          limit distribution을 유도한 것이며, deterministic term과 error 가정이 정해진 모형 안에서
+          읽어야 합니다. ADF p-value 하나가 모든 추세·계절성·구조 변화를 진단하거나 stationarity를
+          보장한다는 결론으로 일반화하면 안 됩니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1080/01621459.1979.10482531" target="_blank" rel="noreferrer">원 논문의 unit-root 경계와 검정 분포 보기</a>
       </div>
     </section>
   );

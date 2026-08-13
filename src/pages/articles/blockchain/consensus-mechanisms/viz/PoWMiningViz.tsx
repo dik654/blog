@@ -1,195 +1,25 @@
-import { motion } from "framer-motion";
-import StepViz from "@/components/ui/step-viz";
-
-const sp = { type: "spring" as const, bounce: 0.15, duration: 0.5 };
-const TRIES = [
-  { nonce: 1, hash: "f8a3...e2", h: 82, ok: false },
-  { nonce: 2, hash: "c91b...47", h: 66, ok: false },
-  { nonce: 3, hash: "b205...d1", h: 58, ok: false },
-  { nonce: 1049, hash: "0002...9f", h: 12, ok: true },
-];
-const TARGET_Y = 28,
-  BAR_BASE = 90,
-  BAR_W = 28;
-
-const STEPS = [
-  {
-    label: "블록 데이터 + Nonce 준비",
-    body: "블록 헤더(이전 해시, 트랜잭션 루트, 타임스탬프)와 Nonce를 입력으로 준비합니다.",
-  },
-  {
-    label: "Nonce=1: 해시가 Target 초과",
-    body: "SHA256(header + nonce=1) 결과가 target 난이도보다 높아 실패합니다.",
-  },
-  {
-    label: "Nonce=2: 여전히 초과",
-    body: "nonce를 증가시켜 재시도하지만 해시값이 아직 target 아래로 떨어지지 않습니다.",
-  },
-  {
-    label: "Nonce=1049: Target 이하 성공!",
-    body: "수많은 시도 끝에 hash < target 조건 충족. 블록 채굴 완료!",
-  },
-];
+import {
+  DistributedFrame,
+  Ledger,
+} from "../../distributed-systems/viz/DistributedVizPrimitives";
 
 export default function PoWMiningViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg
-          viewBox="0 0 460 110"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
-        >
-          {/* target difficulty line */}
-          <line
-            x1={40}
-            y1={TARGET_Y}
-            x2={300}
-            y2={TARGET_Y}
-            stroke="#ef4444"
-            strokeWidth={1.5}
-            strokeDasharray="4 3"
-          />
-          <text x={305} y={TARGET_Y + 3} fontSize={10} fill="#ef4444">
-            Target
-          </text>
-          {/* hash pipeline at step 0 */}
-          {step === 0 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <rect
-                x={60}
-                y={42}
-                width={65}
-                height={22}
-                rx={4}
-                fill="#f59e0b0c"
-                stroke="#f59e0b"
-                strokeWidth={1.2}
-              />
-              <text
-                x={92}
-                y={55}
-                textAnchor="middle"
-                fontSize={10}
-                fill="#f59e0b"
-                fontWeight={600}
-              >
-                Block Header
-              </text>
-              <text x={140} y={55} fontSize={10} fill="var(--muted-foreground)">
-                +
-              </text>
-              <rect
-                x={155}
-                y={42}
-                width={40}
-                height={22}
-                rx={4}
-                fill="#6366f10c"
-                stroke="#6366f1"
-                strokeWidth={1.2}
-              />
-              <text
-                x={175}
-                y={55}
-                textAnchor="middle"
-                fontSize={10}
-                fill="#6366f1"
-                fontWeight={600}
-              >
-                Nonce
-              </text>
-              <text x={207} y={55} fontSize={10} fill="var(--muted-foreground)">
-                →
-              </text>
-              <rect
-                x={218}
-                y={42}
-                width={55}
-                height={22}
-                rx={4}
-                fill="#10b9810c"
-                stroke="#10b981"
-                strokeWidth={1.2}
-              />
-              <text
-                x={246}
-                y={55}
-                textAnchor="middle"
-                fontSize={10}
-                fill="#10b981"
-                fontWeight={600}
-              >
-                SHA256
-              </text>
-            </motion.g>
-          )}
-          {/* nonce bars for steps 1-3 */}
-          {step > 0 &&
-            TRIES.map((t, i) => {
-              const visible = i < step;
-              const cx = 80 + i * 60;
-              const barH = t.h * 0.7;
-              const barY = BAR_BASE - barH;
-              return visible ? (
-                <motion.g
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={sp}
-                >
-                  <motion.rect
-                    x={cx - BAR_W / 2}
-                    y={barY}
-                    width={BAR_W}
-                    height={barH}
-                    rx={3}
-                    animate={{ fill: t.ok ? "#10b98140" : "#f59e0b25" }}
-                    stroke={t.ok ? "#10b981" : "#f59e0b"}
-                    strokeWidth={t.ok ? 2 : 1}
-                  />
-                  <text
-                    x={cx}
-                    y={BAR_BASE + 10}
-                    textAnchor="middle"
-                    fontSize={10}
-                    fill={t.ok ? "#10b981" : "#f59e0b"}
-                    fontWeight={600}
-                  >
-                    N={t.nonce}
-                  </text>
-                  <text
-                    x={cx}
-                    y={barY - 4}
-                    textAnchor="middle"
-                    fontSize={10}
-                    fill="var(--muted-foreground)"
-                  >
-                    {t.hash}
-                  </text>
-                  {t.ok && (
-                    <motion.text
-                      x={cx}
-                      y={barY - 12}
-                      textAnchor="middle"
-                      fontSize={10}
-                      fill="#10b981"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      fontWeight={600}
-                    >
-                      OK
-                    </motion.text>
-                  )}
-                </motion.g>
-              ) : null;
-            })}
-        </svg>
-      )}
-    </StepViz>
+    <DistributedFrame
+      eyebrow="PoW lottery"
+      title="Hash 출력이 target 아래면 proof가 된다"
+      description="Miner는 header를 바꾸며 hash를 반복 계산합니다. 찾기는 확률적이지만 검증은 hash 한 번과 target 비교로 끝납니다."
+      note="Toy 8-bit 예는 확률 계산을 보여주기 위한 것입니다. Bitcoin의 실제 header·difficulty·double-SHA-256 규격은 원문에 귀속합니다."
+    >
+      <Ledger
+        columns={4}
+        items={[
+          { label: "header", title: "후보를 직렬화", body: "Previous hash·transaction commitment·time·difficulty·nonce를 합칩니다.", example: "candidate H₀" },
+          { label: "hash", title: "Uniform-like output", body: "Toy 8-bit hash는 0부터 255 사이 값으로 봅니다.", example: "H(H₀)=173" },
+          { label: "target", title: "조건을 검사", body: "T=16이면 0≤hash<16인 16개 출력만 성공입니다.", example: "p=16/256=1/16" },
+          { label: "retry", title: "Header를 바꿔 반복", body: "각 시도를 독립 근사하면 기대 시도 수는 1/p입니다.", example: "E[tries]=16" },
+        ]}
+      />
+    </DistributedFrame>
   );
 }

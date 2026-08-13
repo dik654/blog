@@ -19,6 +19,19 @@ export default function Modeling() {
         </p>
       </div>
 
+      <div id="paper-ljung-box" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Residual lack-of-fit</p>
+        <p className="mt-2 text-sm font-semibold">On a Measure of Lack of Fit in Time Series Models</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Ljung과 Box는 여러 residual lag의 autocorrelation을 한꺼번에 검사하는 Box–Pierce
+          statistic의 finite-sample 근사를 개선했습니다. 논문의 결과는 적합된 시계열 모형과 선택한
+          lag 범위에서 남은 선형 serial dependence를 진단하며, 작은 p-value는 누락된 구조의 신호일
+          뿐 추가해야 할 order를 자동으로 정하지 않습니다. 큰 p-value 역시 variance 변화·비선형성·
+          structural break가 없다는 증거는 아닙니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1093/biomet/65.2.297" target="_blank" rel="noreferrer">원 논문의 statistic과 finite-sample 보정 보기</a>
+      </div>
+
       <TemporalValidationViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -38,7 +51,7 @@ export default function Modeling() {
         idea={<>AIC와 BIC는 maximized log-likelihood에 complexity penalty를 더합니다. AIC는 parameter당 2, BIC는 sample size가 커질수록 log n만큼 벌점을 주어 서로 다른 목적의 근사 기준을 만듭니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{AIC}&=-2\log\hat L+2k\\\operatorname{BIC}&=-2\log\hat L+k\log n\end{aligned}`}
         terms={[
-          { symbol: "\hat L", name: "maximized likelihood", description: "같은 observations와 likelihood family에서 적합한 model의 최대 likelihood입니다." },
+          { symbol: "\\hat L", name: "maximized likelihood", description: "같은 observations와 likelihood family에서 적합한 model의 최대 likelihood입니다." },
           { symbol: "k", name: "estimated parameters", description: "AR·MA·trend·variance 등 실제 추정한 자유 parameter 수입니다." },
           { symbol: "n", name: "effective sample size", description: "차분과 missing 처리 뒤 likelihood에 기여한 관측 수와 구현 정의를 확인합니다." },
         ]}
@@ -51,7 +64,7 @@ export default function Modeling() {
         idea={<>Ljung–Box statistic은 lag 1부터 h까지 residual autocorrelation의 제곱을 sample-size correction과 함께 누적합니다. 개별 spike가 아니라 여러 lag의 공동 lack-of-fit을 검정합니다.</>}
         formula={String.raw`Q(h)=n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`}
         terms={[
-          { symbol: "\hat\rho_k", name: "residual autocorrelation", description: "Fitted model의 residual에서 계산한 lag-k sample correlation입니다." },
+          { symbol: "\\hat\\rho_k", name: "residual autocorrelation", description: "Fitted model의 residual에서 계산한 lag-k sample correlation입니다." },
           { symbol: "h", name: "diagnostic horizon", description: "공동으로 확인할 최대 lag이며 season과 sample size를 고려해 정합니다." },
           { symbol: "n", name: "residual sample size", description: "진단에 실제 사용된 residual 개수입니다." },
         ]}

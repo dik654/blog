@@ -1,142 +1,84 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
 import StreamMuxViz from "./viz/StreamMuxViz";
-import CodePanel from "@/components/ui/code-panel";
-
-const streamCode = `// QUIC 스트림 타입 (RFC 9000 Section 2)
-// Stream ID의 하위 2비트로 타입 결정:
-//   0x0: 클라이언트 시작, 양방향 (Client-Initiated Bidirectional)
-//   0x1: 서버 시작, 양방향 (Server-Initiated Bidirectional)
-//   0x2: 클라이언트 시작, 단방향 (Client-Initiated Unidirectional)
-//   0x3: 서버 시작, 단방향 (Server-Initiated Unidirectional)
-
-// 흐름 제어 (Flow Control)
-// 1) 스트림 레벨: MAX_STREAM_DATA 프레임
-//    → 개별 스트림의 수신 버퍼 크기 제어
-// 2) 연결 레벨: MAX_DATA 프레임
-//    → 전체 연결의 총 데이터량 제어
-// 3) 스트림 수: MAX_STREAMS 프레임
-//    → 동시 열린 스트림 개수 제한`;
-
-const streamAnnotations: {
-  lines: [number, number];
-  color: "sky" | "emerald";
-  note: string;
-}[] = [
-  {
-    lines: [1, 6],
-    color: "sky",
-    note: "4가지 스트림 타입 — ID 하위 2비트로 구분",
-  },
-  {
-    lines: [8, 15],
-    color: "emerald",
-    note: "3단계 흐름 제어 — 스트림, 연결, 스트림 수",
-  },
-];
 
 export default function Streams() {
   return (
     <section id="streams" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        스트림: 멀티플렉싱 & 흐름 제어
+      <h2 className="mb-6 text-2xl font-bold">
+        Stream은 순서를 보장하지만, packet과 같은 단위는 아닙니다
       </h2>
-      <div className="not-prose mb-8">
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          QUIC stream은 byte offset을 가진 ordered sequence입니다. 하나의
+          packet에 여러 stream frame이 들어갈 수 있고, 한 stream frame도 여러
+          packet으로 나뉠 수 있습니다. Receiver는 packet 도착 순서가 아니라
+          stream ID와 offset으로 bytes를 재조립하며, 중간 offset이 비면 그
+          stream만 해당 구간에서 기다립니다.
+        </p>
+      </div>
+      <div className="not-prose my-8">
         <StreamMuxViz />
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          QUIC 연결 하나에 수천 개의 독립 스트림을 열 수 있습니다.
-          <br />
-          각 스트림은 독립적으로 순서가 보장되며, 다른 스트림의 패킷 손실에
-          영향받지 않습니다.
-          <br />
-          이것이 TCP 대비 QUIC의 가장 큰 장점입니다.
+      <ExplainedFormula
+        question="Sender가 receiver memory를 넘지 않도록 어느 범위까지 보낼 수 있을까요?"
+        idea={
+          <>
+            Receiver는 stream별 최대 offset과 connection 전체 누적 byte limit을
+            credit으로 알립니다. Sender는 두 제한을 동시에 만족하는 범위만 새로
+            보낼 수 있습니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+o_s + \ell_s &\le M_s,\\
+\sum_s \Delta_s &\le M_{conn},\\
+\text{sendable}_s &= \min(M_s-o_s,\;M_{conn}-D_{conn}).
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "o_s",
+            name: "stream offset",
+            description: "stream s에서 보내려는 frame의 시작 byte 위치입니다.",
+          },
+          {
+            symbol: "ℓ_s",
+            name: "frame data length",
+            description: "이번 STREAM frame에 담는 새 byte 수입니다.",
+          },
+          {
+            symbol: "M_s",
+            name: "MAX_STREAM_DATA",
+            description: "Receiver가 stream s에 허용한 최대 offset입니다.",
+          },
+          {
+            symbol: "M_conn",
+            name: "MAX_DATA",
+            description:
+              "Connection 전체에서 허용한 새 stream byte 총량입니다.",
+          },
+          {
+            symbol: "D_conn",
+            name: "connection data used",
+            description:
+              "이미 flow-control budget에 반영된 새 byte 총량입니다.",
+          },
+        ]}
+        assumptions={[
+          "이 식은 receive flow control을 단순화한 것이며 congestion window와 packet pacing은 별도 제한입니다.",
+          "재전송된 같은 stream offset은 새 application byte로 다시 세지 않지만 구현은 overlap과 final size를 검증해야 합니다.",
+          "MAX_STREAMS는 byte credit이 아니라 peer가 열 수 있는 stream 개수의 별도 한도입니다.",
+        ]}
+        interpretation="Stream에 1,000 byte credit, connection에 300 byte credit만 남았다면 이번에 보낼 새 data는 최대 300 byte입니다. Credit을 크게 잡으면 throughput에는 유리하지만 slow consumer가 많은 memory를 점유할 수 있습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Loss isolation과 자원 격리는 다릅니다</h3>
+        <p>
+          Stream A의 offset 100–199가 유실돼도 Stream B의 연속 bytes는
+          application에 전달할 수 있습니다. 그러나 두 stream은 congestion
+          controller, connection MAX_DATA, CPU와 socket buffer를 공유하므로 A가
+          다른 자원까지 전혀 방해하지 않는 것은 아닙니다. Priority와 per-stream
+          quota는 application protocol이나 implementation scheduler가 추가로
+          설계해야 합니다.
         </p>
-        <h3>스트림 타입과 흐름 제어</h3>
-        <CodePanel
-          title="QUIC 스트림 구조"
-          code={streamCode}
-          annotations={streamAnnotations}
-        />
-        <p className="leading-7">
-          libp2p에서는 Yamux 멀티플렉서로 TCP 위 스트림을 구현하지만, QUIC 전송
-          사용 시 별도 멀티플렉서 없이 네이티브 스트림을 활용합니다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">QUIC Streams vs TCP</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// TCP의 Head-of-Line Blocking 문제
-//
-// TCP: 하나의 byte stream
-//
-//   Application data:
-//     [Request 1][Request 2][Request 3]
-//
-//   TCP segments:
-//     [Seg1][Seg2][Seg3][Seg4][Seg5]
-//
-//   If Seg2 lost:
-//     Seg3, Seg4, Seg5 도착해도 대기
-//     retransmit Seg2 완료 후 전달
-//     → Request 2, 3 delayed
-//
-//   HTTP/2 (TCP) 여전히 이 문제 있음
-
-// QUIC의 Independent Streams
-//
-// QUIC: 여러 독립 스트림
-//
-//   Stream 1: [S1.Seg1][S1.Seg2][S1.Seg3]
-//   Stream 2: [S2.Seg1][S2.Seg2][S2.Seg3]
-//   Stream 3: [S3.Seg1][S3.Seg2][S3.Seg3]
-//
-//   If S1.Seg2 lost:
-//     Stream 1만 대기
-//     Stream 2, 3은 계속 진행
-//     → Full Head-of-Line blocking 해결
-
-// Stream ID Structure:
-//   62-bit variable length integer
-//   Lower 2 bits encode type:
-//     0x00: client-initiated bidirectional
-//     0x01: server-initiated bidirectional
-//     0x02: client-initiated unidirectional
-//     0x03: server-initiated unidirectional
-//
-//   Upper bits: incremented per stream
-
-// Flow Control:
-//
-//   3-level hierarchy:
-//
-//   1. Stream-level
-//      MAX_STREAM_DATA frame
-//      Per-stream receive buffer limit
-//
-//   2. Connection-level
-//      MAX_DATA frame
-//      Total data across all streams
-//
-//   3. Stream count
-//      MAX_STREAMS frame
-//      Max concurrent streams
-//
-// Stream States:
-//   idle → open → half-closed → closed
-//   (sending or receiving)
-
-// 사용 예 (HTTP/3):
-//   Single QUIC connection
-//   Multiple concurrent HTTP requests
-//   Each request = 1 bidirectional stream
-//   → True parallelism
-//   → No head-of-line blocking
-
-// libp2p-quic 활용:
-//   Native QUIC streams
-//   No additional muxer needed
-//   Each protocol = own stream
-//   Kademlia, GossipSub, Identify 병렬`}
-        </pre>
       </div>
     </section>
   );

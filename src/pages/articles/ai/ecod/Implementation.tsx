@@ -79,6 +79,19 @@ print(detector.get_params())`}</code></pre>
           Latency·peak memory·batch size를 실제 production shape에서 측정하고 package version을 고정한다.
         </p>
       </div>
+
+      <div id="paper-pyod-ecod" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">구현 읽기 · PyOD ECOD 3.6.4</p>
+        <p className="mt-2 text-sm font-semibold">PyOD ECOD source와 BaseDetector threshold contract</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          공식 source는 논문 식을 이름만으로 추정하지 않고 <code>decision_function</code>의
+          concatenate·ECDF·feature-level max·sum 경로와 <code>BaseDetector</code>의 contamination
+          quantile을 직접 확인하게 해 줍니다. 여기서 설명한 batch-dependent score와 strict
+          threshold는 PyOD 3.6.4 snapshot에 한정되며, 다른 version·독자 구현까지 같은 semantics를
+          갖는다고 일반화하면 안 됩니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://pyod.readthedocs.io/en/latest/_modules/pyod/models/ecod.html" target="_blank" rel="noreferrer">공식 ECOD source의 실제 계산 경로 보기</a>
+      </div>
     </section>
   );
 }

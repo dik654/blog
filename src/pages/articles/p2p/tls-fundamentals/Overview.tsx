@@ -1,106 +1,82 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
 import TLSOverviewViz from "./viz/TLSOverviewViz";
 
 export default function Overview() {
-  const features = [
-    { metric: "1-RTT", desc: "풀 핸드셰이크", note: "TLS 1.2 대비 절반" },
-    { metric: "0-RTT", desc: "PSK 재연결", note: "이전 세션 키 재사용" },
-    { metric: "AEAD", desc: "모던 암호만 허용", note: "AES-GCM, ChaCha20" },
-  ];
-
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">개요</h2>
-      <div className="not-prose mb-8">
+      <h2 className="mb-6 text-2xl font-bold">
+        TLS 1.3은 암호 하나가 아니라, 안전한 채널을 합의하는 프로토콜입니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          카페 Wi‑Fi처럼 네트워크를 믿을 수 없는 곳에서도 서버의 응답을 읽고
+          바꾸지 못하게 하려면, 양 끝점이 같은 키를 만들고 상대의 신원을 확인한
+          뒤 모든 메시지를 그 합의에 묶어야 합니다. TLS(Transport Layer
+          Security)는 이 전체 절차를 담당합니다. 핵심은 “암호화했다”가 아니라
+          <strong> 누구와 어떤 조건으로 어떤 키를 합의했는지</strong>입니다.
+        </p>
+        <p>
+          TLS 1.3은 두 책임으로 나뉩니다. Handshake protocol은 version·cipher
+          suite·key share를 협상하고 서버를 인증해 traffic secret을 만듭니다.
+          Record protocol은 그 secret에서 만든 방향별 key와 nonce로 application
+          bytes를 보호합니다. Handshake가 실패하면 record layer가 대신 신뢰를
+          만들어 주지 못하며, 반대로 인증서를 확인했더라도 record nonce를
+          재사용하면 데이터 보호가 깨질 수 있습니다.
+        </p>
+        <p>
+          여기서는 byte가 직렬화된다는 최소 전제에서 출발합니다. ECDHE의 군 연산
+          자체는 <Link to="/crypto/diffie-hellman">Diffie–Hellman 정본</Link>
+          에서 더 깊게 다루고, 이 글은 그 shared secret이
+          transcript·certificate·HKDF와 어떻게 결합되는지 소유합니다. 다음 글인{" "}
+          <Link to="/p2p/quic-fundamentals">QUIC</Link>은 이 TLS handshake를 UDP
+          위 packet·loss recovery와 결합합니다.
+        </p>
+      </div>
+      <ContentBoundary article="tls-fundamentals" />
+      <div className="not-prose my-8">
         <TLSOverviewViz />
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          TLS(Transport Layer Security)는 전송 계층 보안 프로토콜입니다.
-          <br />
-          HTTPS, gRPC, QUIC 등 현대 프로토콜의 암호화 기반입니다.
-          <br />
-          TLS 1.3(RFC 8446)은 2018년 표준화되었으며, 이전 버전 대비 성능과 보안
-          모두 개선함.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 관측 가능한 흐름을 잡습니다</h3>
+        <p>
+          ClientHello와 ServerHello까지는 협상과 key share가 보이고, 이후
+          EncryptedExtensions·Certificate·CertificateVerify·Finished는 handshake
+          traffic key로 보호됩니다. Client가 서버의 certificate chain과
+          signature, Finished를 모두 검증한 뒤에야 “이 서버와 합의한
+          transcript”에 연결된 channel이 됩니다. TLS는 server identity 정책이나
+          hostname을 스스로 정하지 않으므로, 상위 protocol이 어떤 이름을
+          인증서와 비교할지 정해야 합니다.
         </p>
-        <h3>TLS 1.2 대비 주요 변경</h3>
-        <p className="leading-7">
-          핸드셰이크 RTT가 2에서 1로 절반 감소함.
-          <br />
-          위험한 레거시 암호 스위트(RC4, DES, CBC 모드, SHA-1 MAC)를 전면
-          제거함.
-          <br />
-          정적 RSA 키 교환 제거 — ECDHE(Elliptic Curve Diffie-Hellman
-          Ephemeral)만 허용.
-          <br />
-          모든 핸드셰이크 메시지가 ServerHello 이후 암호화됨.
+        <p>
+          TLS 1.3의 full handshake는 보통 1‑RTT에 application key를 만들지만,
+          HelloRetryRequest가 필요하거나 network loss가 나면 더 오래 걸립니다.
+          0‑RTT는 이전 PSK를 이용해 첫 flight에 early data를 보낼 수 있다는
+          뜻이지, 응답까지 0시간이거나 replay protection이 생긴다는 뜻은
+          아닙니다.
         </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 not-prose my-6">
-        {features.map(({ metric, desc, note }) => (
-          <div
-            key={desc}
-            className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-4 text-center"
+        <div
+          id="paper-rfc8446"
+          className="scroll-mt-24 border-l border-primary/50 pl-4"
+        >
+          <p className="text-xs font-bold text-primary">명세 읽기 · RFC 8446</p>
+          <p>
+            RFC 8446은 TLS 1.3의 handshake, record protection, HKDF key
+            schedule과 0‑RTT anti-replay 경계를 함께 정의합니다. 이 글의 메시지
+            순서와 보안 주장은 해당 상태 기계에 한정하며, 특정 library의 API나
+            모든 application의 hostname 정책까지 표준이 정한다고 일반화하지
+            않습니다.
+          </p>
+          <CitationBlock
+            source="IETF RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3"
+            citeKey={1}
+            href="https://www.rfc-editor.org/rfc/rfc8446.html"
           >
-            <p className="text-2xl font-mono font-bold text-indigo-400">
-              {metric}
-            </p>
-            <p className="text-sm font-medium mt-1">{desc}</p>
-            <p className="text-xs text-foreground/50 mt-0.5">{note}</p>
-          </div>
-        ))}
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          QUIC는 TLS 1.3을 전송 계층에 직접 통합함.
-          <br />
-          TLS 1.3을 이해하면 QUIC의 보안 모델이 자연스럽게 이해 가능.
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          TLS 역사와 버전별 특징
-        </h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-          {`// TLS Version History
-//
-// SSL 2.0 (1995, Netscape): 취약점 많음, 폐기
-// SSL 3.0 (1996): POODLE (2014), 폐기
-// TLS 1.0 (1999, RFC 2246): BEAST 공격, 폐기
-// TLS 1.1 (2006, RFC 4346): 주요 개선, 폐기 (2020)
-// TLS 1.2 (2008, RFC 5246): 현재 호환성, 광범위
-// TLS 1.3 (2018, RFC 8446): 현대 표준
-
-// TLS 1.3 주요 개선:
-//   - 1-RTT handshake (TLS 1.2 대비 RTT 절반)
-//   - 0-RTT resumption (PSK)
-//   - Legacy cipher 제거
-//   - Key exchange 강제 ephemeral (FS)
-//   - ServerHello 이후 모든 것 암호화
-
-// 제거된 cipher suites (TLS 1.3):
-//   ✗ RC4 (스트림 암호, 취약)
-//   ✗ 3DES (구식)
-//   ✗ SHA-1 MAC
-//   ✗ CBC 모드 (BEAST, POODLE, Lucky13)
-//   ✗ Static RSA key exchange (no FS)
-//   ✗ Static DH key exchange
-//   ✗ Export-grade crypto
-//   ✗ Compression (CRIME)
-//   ✗ Renegotiation
-
-// 허용되는 것:
-//   ✓ AES-GCM, ChaCha20-Poly1305 (AEAD)
-//   ✓ ECDHE (forward secrecy)
-//   ✓ RSA signatures, ECDSA, EdDSA
-
-// 브라우저 지원:
-//   Chrome 70 (2018)
-//   Firefox 63 (2018)
-//   Safari 12.1 (2019)
-//   Edge 79 (2020)
-//   → 2024: 95%+ 지원`}
-        </pre>
+            Handshake가 인증·협상·keying material을 만들고 record protocol이
+            이를 사용해 각 record를 보호한다는 두 책임을 확인합니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

@@ -1,212 +1,97 @@
-import M from "@/components/ui/math";
+import { Link } from "react-router-dom";
 import FLPViz from "./viz/FLPViz";
 
 export default function FLP() {
   return (
     <section id="flp" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">FLP 불가능성 정리</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
+      <h2 className="mb-6 text-2xl font-bold">
+        FLP는 합의가 항상 실패한다는 정리가 아니라 종료 보장의 한계다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Fischer, Lynch, Paterson(1985) — 비동기 시스템에서 단 하나의 crash
-          fault로도 결정적 합의 불가능.
+          FLP(Fischer–Lynch–Paterson) 정리는 완전 비동기 message-passing
+          system에서 process 하나가 crash할 수 있을 때, deterministic consensus
+          protocol이 모든 admissible execution에서 agreement·validity·termination을
+          함께 보장할 수 없다고 말합니다. 실제 cluster가 대체로 합의한다는 관찰과
+          모순되지 않습니다. 핵심은 한 번도 끝나지 않는 허용된 schedule이
+          <em> 존재</em>한다는 점입니다.
         </p>
       </div>
-      <div className="not-prose">
-        <FLPViz />
+
+      <FLPViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>정리의 입력 계약</h3>
+        <ul>
+          <li>Process는 결정적이며 binary input에서 시작합니다.</li>
+          <li>Process speed와 message delay에 고정 upper bound가 없습니다.</li>
+          <li>최대 한 process가 crash할 수 있고 non-faulty receiver의 메시지는 결국 전달됩니다.</li>
+          <li>Agreement·validity뿐 아니라 모든 admissible run의 termination을 요구합니다.</li>
+        </ul>
+        <p>
+          Timeout bound, synchronized clock, random coin, failure detector, Byzantine
+          behavior는 이 기본 모델에 없습니다. 이 중 하나를 추가하면 다른
+          theorem의 대상이 됩니다.
+        </p>
+
+        <h3>Bivalence로 읽는 증명 아이디어</h3>
+        <p>
+          Configuration은 모든 local state와 아직 전달되지 않은 message의
+          snapshot입니다. 앞으로 0만 결정할 수 있으면 0-valent, 1만 가능하면
+          1-valent, 둘 다 가능한 상태는 <strong>bivalent</strong>입니다. Validity
+          때문에 bivalent initial configuration이 하나는 존재합니다.
+        </p>
+        <p>
+          이제 어떤 event <code>e</code>가 bivalent state를 univalent하게 만들려
+          한다고 합시다. Scheduler는 <code>e</code>와 독립적인 다른 process의
+          event를 먼저 실행하고, 서로 commute하는 execution을 비교해 결정을
+          고정하지 않는 다음 bivalent state를 구성할 수 있습니다. 이 선택을
+          반복하면 non-faulty process의 message가 결국 전달되는 admissible run을
+          유지하면서도 termination을 피할 수 있습니다. 이것은 평균적인 network
+          behavior에 대한 확률 주장이 아니라 adversarial execution의 존재
+          증명입니다.
+        </p>
+
+        <h3>실제 protocol은 무엇을 추가하는가</h3>
+        <p>
+          Raft·Paxos 계열은 안전성 규칙과 별도로 timeout·leader election 같은
+          진행 메커니즘을 둡니다. Partial synchrony BFT는 unknown GST 이후
+          message delay가 bound 안으로 돌아온다는 조건에서 liveness를 얻습니다.
+          Randomized asynchronous consensus는 adversary가 다음 선택을 완전히
+          예측하지 못하게 합니다. 중요한 것은 “FLP를 해결했다”가 아니라 어떤
+          추가 가정에서 어떤 보장을 얻었는지 적는 것입니다.
+        </p>
+        <p>
+          이 글 다음에는 <Link to="/blockchain/smr-theory">SMR</Link>에서 safety
+          rule과 leader-based progress를 실제 log에 연결하고,{" "}
+          <Link to="/blockchain/bft-theory">BFT</Link>에서 partial synchrony와
+          quorum certificate를 더 엄밀하게 다룹니다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          FLP Impossibility 정리
-        </h3>
-
-        {/* 정리 정의 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-red-500 bg-card p-4 mb-6">
-          <div className="text-sm font-semibold mb-2">
-            FLP Impossibility Theorem (1985)
-          </div>
-          <p className="text-sm italic text-muted-foreground mb-2">
-            "In an asynchronous system where at least one process may fail by
-            crashing, there is no deterministic consensus protocol that can
-            guarantee termination."
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Async + 1 crash &rarr; 결정적 합의 불가능
-          </p>
-        </div>
-
-        {/* 합의의 3 필수 속성 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">합의의 3 필수 속성</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">
-              Agreement
-            </div>
-            <p className="text-sm text-muted-foreground">
-              모든 정직한 노드가 같은 값 결정
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
-              Validity
-            </div>
-            <p className="text-sm text-muted-foreground">
-              결정된 값은 제안된 값 중 하나
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-1">
-              Termination
-            </div>
-            <p className="text-sm text-muted-foreground">
-              모든 정직한 노드가 언젠가 결정
-            </p>
-          </div>
-        </div>
-
-        {/* 증명 아이디어 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">증명 아이디어</h4>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 1
-            </div>
-            <div className="text-sm font-semibold mb-1">
-              Bivalent Configuration
-            </div>
-            <p className="text-sm text-muted-foreground">
-              어떤 결과든 가능한 상태 — 0도 1도 결정될 수 있음
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 2
-            </div>
-            <div className="text-sm font-semibold mb-1">Critical Step</div>
-            <p className="text-sm text-muted-foreground">
-              메시지 도착 순서가 최종 결과를 결정
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 3
-            </div>
-            <div className="text-sm font-semibold mb-1">
-              Adversary Scheduling
-            </div>
-            <p className="text-sm text-muted-foreground">
-              메시지를 지연시켜 계속 bivalent 상태 유지
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-1">
-              Step 4
-            </div>
-            <div className="text-sm font-semibold mb-1">Infinite Execution</div>
-            <p className="text-sm text-muted-foreground">
-              영원히 결정 못 함 &rarr; Termination 위반
-            </p>
-          </div>
-        </div>
-
-        {/* 현실의 해결책 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">현실의 해결책</h4>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">
-              1. Synchrony 가정
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Message timeout 사용
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              예: Raft, Paxos (partial sync)
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
-              2. Randomization
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Ben-Or protocol — <M>{"O(\\text{expected rounds})"}</M>
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              예: Algorand, Dfinity
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-1">
-              3. Failure Detector
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <code className="text-xs bg-muted px-1 rounded">&#x25C7;P</code>{" "}
-              (eventually perfect) — Chandra-Toueg algorithm
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-1">
-              4. Probabilistic Termination
-            </div>
-            <p className="text-sm text-muted-foreground">
-              "eventually with high probability"
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              예: Bitcoin Nakamoto consensus
-            </p>
-          </div>
-        </div>
-
-        {/* 블록체인 해결 방식 */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">블록체인 해결 방식</h4>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
-              Bitcoin / PoW
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>Probabilistic consensus</li>
-              <li>Longest chain rule</li>
-              <li>No deterministic termination</li>
-              <li>6 confirmations = "effectively final"</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-              PBFT (Castro-Liskov 1999)
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>Partial sync assumption</li>
-              <li>View change mechanism</li>
-              <li>
-                <M>{"n \\geq 3f + 1"}</M>
-              </li>
-              <li>Deterministic when sync</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
-              HotStuff
-            </div>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>Linear view change</li>
-              <li>Pipelined consensus</li>
-              <li>Tendermint, Diem 기반</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* FLP의 의미 */}
-        <div className="not-prose rounded-lg border-l-4 border-l-amber-500 bg-card p-4 mb-2">
-          <div className="text-sm font-semibold mb-2">FLP의 의미</div>
-          <p className="text-sm text-muted-foreground mb-1">
-            "완벽한 비동기 결정적 합의는 불가" &rarr; 실용적 합의는 가정을
-            필요로 하며, 가정을 완화하며 progress 확보.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium">역설:</span> Bitcoin이 10년 이상
-            돌아가는 이유 = async + random + economic incentives
-          </p>
-        </div>
+      <div
+        id="paper-flp-consensus"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 읽기 · 불가능성의 범위</p>
+        <p className="mt-2 text-sm font-semibold">
+          Impossibility of Distributed Consensus with One Faulty Process
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          문제는 비동기 process가 crash 가능할 때 deterministic binary consensus의
+          total correctness입니다. Bivalence와 critical event를 이용해 종료하지
+          않는 admissible execution이 존재함을 보입니다. Byzantine fault,
+          probabilistic protocol, partial synchrony를 같은 결론으로 일반화하면 안
+          되며, 모든 실제 실행이 멈춘다는 실험 결과도 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          FLP 원문과 proof structure 보기
+        </a>
       </div>
     </section>
   );

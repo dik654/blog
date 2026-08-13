@@ -1,123 +1,110 @@
 import CodePanel from "@/components/ui/code-panel";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
-const streamCode = `// 스트림 생성 & 비동기 실행
-cudaStream_t stream1, stream2;
-cudaStreamCreate(&stream1);
-cudaStreamCreate(&stream2);
+const pipelineCode = `cudaStream_t streams[2];
+cudaStreamCreateWithFlags(&streams[0], cudaStreamNonBlocking);
+cudaStreamCreateWithFlags(&streams[1], cudaStreamNonBlocking);
 
-// 비동기 메모리 복사 (호스트 → 디바이스)
-cudaMemcpyAsync(d_A, h_A, size, cudaMemcpyHostToDevice, stream1);
-cudaMemcpyAsync(d_B, h_B, size, cudaMemcpyHostToDevice, stream2);
-
-// 각 스트림에서 커널 실행
-kernel<<<grid, block, 0, stream1>>>(d_A, d_result_A);
-kernel<<<grid, block, 0, stream2>>>(d_B, d_result_B);
-
-// 비동기 메모리 복사 (디바이스 → 호스트)
-cudaMemcpyAsync(h_result_A, d_result_A, size, cudaMemcpyDeviceToHost, stream1);
-cudaMemcpyAsync(h_result_B, d_result_B, size, cudaMemcpyDeviceToHost, stream2);
-
-// 정리
-cudaStreamDestroy(stream1);
-cudaStreamDestroy(stream2);`;
-
-const pipelineCode = `// 파이프라인 패턴: 청크 A 복사 중 청크 B 연산
-int chunkSize = N / NUM_CHUNKS;
-
-for (int i = 0; i < NUM_CHUNKS; i++) {
-    int offset = i * chunkSize;
-    int stream_idx = i % 2;  // 2개 스트림 교대 사용
-
-    // 1) 이번 청크 H→D 복사
-    cudaMemcpyAsync(d_in + offset, h_in + offset,
-        chunkSize * sizeof(float),
-        cudaMemcpyHostToDevice, streams[stream_idx]);
-
-    // 2) 이번 청크 커널 실행
-    process<<<grid, block, 0, streams[stream_idx]>>>(
-        d_in + offset, d_out + offset, chunkSize);
-
-    // 3) 이번 청크 D→H 복사
-    cudaMemcpyAsync(h_out + offset, d_out + offset,
-        chunkSize * sizeof(float),
-        cudaMemcpyDeviceToHost, streams[stream_idx]);
-}`;
+// h_in/h_out은 cudaMallocHost로 만든 pinned buffers라고 가정한다.
+for (int chunk = 0; chunk < chunks; ++chunk) {
+  int s = chunk % 2;
+  size_t offset = chunk * chunkElems;
+  cudaMemcpyAsync(d_in[s], h_in + offset, bytes,
+                  cudaMemcpyHostToDevice, streams[s]);
+  process<<<grid, block, 0, streams[s]>>>(d_in[s], d_out[s], chunkElems);
+  cudaMemcpyAsync(h_out + offset, d_out[s], bytes,
+                  cudaMemcpyDeviceToHost, streams[s]);
+}
+cudaStreamSynchronize(streams[0]);
+cudaStreamSynchronize(streams[1]);`;
 
 export default function Streams() {
   return (
     <section id="streams" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">CUDA 스트림 & 동시 실행</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Stream은 같은 queue 안의 순서를 보장하고, 다른 queue 사이 독립성을
+        표현합니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          CUDA 스트림(stream)은 순서대로 실행되는 연산의 큐입니다.
-          <br />
-          서로 다른 스트림에 속한 연산은 동시에 실행될 수 있습니다.
-          <br />
-          이를 통해 메모리 전송과 커널 실행을 중첩(overlap)시킬 수 있습니다.
+          같은 stream에 enqueue한 H2D copy → kernel → D2H copy는 제출 순서대로
+          실행됩니다. 서로 다른 streams의 작업은 dependency가 없다고 표현되며,
+          hardware copy engine·compute engine·memory bandwidth·kernel resource가
+          허용할 때 overlap할 수 있습니다. Default stream은 legacy와 per-thread
+          mode, blocking/non-blocking stream 조합에 따라 interaction이 달라질 수
+          있으므로 build option과 creation flag를 기록해야 합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          기본 스트림 vs 사용자 스트림
+      </div>
+      <ExplainedFormula
+        question="Copy와 compute를 pipeline했을 때 chunk당 steady-state 하한은 무엇일까요?"
+        idea={
+          <>
+            서로 완전히 겹칠 수 있다면 세 단계의 합이 아니라 가장 오래 걸리는
+            stage가 다음 chunk의 간격을 제한합니다. 처음 채우고 마지막 비우는
+            latency는 별도로 남습니다.
+          </>
+        }
+        formula={String.raw`T_{\mathrm{steady}}\ge\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})`}
+        terms={[
+          {
+            symbol: "T_H2D",
+            name: "host-to-device time",
+            description: "한 chunk를 device로 보내는 시간입니다.",
+          },
+          {
+            symbol: "T_kernel",
+            name: "compute time",
+            description: "한 chunk kernel 실행 시간입니다.",
+          },
+          {
+            symbol: "T_D2H",
+            name: "device-to-host time",
+            description: "한 chunk 결과를 host로 돌려보내는 시간입니다.",
+          },
+          {
+            symbol: "T_steady",
+            name: "steady-state interval",
+            description:
+              "Pipeline이 찬 뒤 chunk 결과가 나오는 최소 간격입니다.",
+          },
+        ]}
+        assumptions={[
+          "독립 copy/compute engine과 충분한 resource가 있고 chunk 사이 data dependency가 없습니다.",
+          "Host buffer는 pinned memory이며 async copy 조건을 충족합니다.",
+          "PCIe/NVLink bandwidth contention·launch overhead·pipeline fill/drain은 이 하한에 추가됩니다.",
+        ]}
+        interpretation="H2D=2 ms, kernel=5 ms, D2H=2 ms면 순차 합은 9 ms지만 이상적인 steady state는 chunk당 5 ms 아래로 갈 수 없습니다. 실제로 7 ms라면 overlap gap을 timeline에서 찾습니다."
+      />
+      <CodePanel
+        title="두 stream으로 chunk pipeline 구성"
+        code={pipelineCode}
+        annotations={[
+          { lines: [1, 3], color: "sky", note: "Non-blocking streams" },
+          {
+            lines: [5, 13],
+            color: "emerald",
+            note: "각 stream 안의 copy→kernel→copy 순서",
+          },
+          {
+            lines: [15, 16],
+            color: "amber",
+            note: "필요한 streams만 completion 대기",
+          },
+        ]}
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3 className="mt-8 text-xl font-semibold">
+          Pinned memory와 chunk size의 trade-off
         </h3>
         <p>
-          스트림을 지정하지 않으면 기본 스트림(stream 0)을 사용합니다.
-          <br />
-          기본 스트림은 동기적으로 동작하여 모든 이전 작업이 완료된 후
-          실행됩니다.
-          <br />
-          사용자가 생성한 스트림은 비동기적으로 동작하며, 다른 스트림과 동시
-          실행이 가능합니다.
-        </p>
-
-        <CodePanel
-          title="스트림 생성 & 비동기 실행"
-          code={streamCode}
-          annotations={[
-            { lines: [2, 3], color: "sky", note: "스트림 생성" },
-            {
-              lines: [6, 7],
-              color: "emerald",
-              note: "비동기 H→D 복사 (동시 실행)",
-            },
-            {
-              lines: [10, 11],
-              color: "amber",
-              note: "서로 다른 스트림에서 커널 동시 실행",
-            },
-            { lines: [14, 15], color: "violet", note: "비동기 D→H 복사" },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">파이프라인 패턴</h3>
-        <p>
-          데이터를 청크로 나누고, 청크 A의 전송과 청크 B의 연산을 동시에
-          수행합니다.
-          <br />
-          GPU의 복사 엔진과 연산 엔진은 별도의 하드웨어이므로, 두 작업이 실제로
-          병렬 실행됩니다.
-          <br />이 패턴으로 전체 처리 시간을 크게 단축할 수 있습니다.
-        </p>
-
-        <CodePanel
-          title="파이프라인 패턴: 복사와 연산 중첩"
-          code={pipelineCode}
-          annotations={[
-            { lines: [4, 4], color: "sky", note: "2개 스트림 교대 사용" },
-            { lines: [6, 9], color: "emerald", note: "H→D 비동기 복사" },
-            {
-              lines: [11, 13],
-              color: "amber",
-              note: "커널 실행 (복사와 동시)",
-            },
-            { lines: [15, 18], color: "violet", note: "D→H 비동기 복사" },
-          ]}
-        />
-
-        <p>
-          주의: <code>cudaMemcpyAsync</code>는 호스트 메모리가 pinned memory(
-          <code>cudaMallocHost</code>)여야 진정한 비동기 전송이 가능합니다.
-          <br />
-          일반 <code>malloc</code> 메모리는 내부적으로 동기 복사로 폴백됩니다.
+          Page-locked host memory는 DMA를 안정적으로 수행하게 해 async
+          transfer와 overlap에 필요하지만 OS가 paging할 수 없는 자원을
+          차지합니다. 전체 dataset을 무조건 pin하지 말고 재사용할 bounded
+          staging buffers를 만듭니다. Chunk가 너무 작으면 launch·API overhead가
+          지배하고, 너무 크면 pipeline을 채우는 시간이 길고 overlap 기회가
+          줄어듭니다. Nsight Systems timeline에서 copy engine과 kernel lane이
+          실제로 겹치는지, pageable fallback·implicit
+          synchronization·same-buffer reuse가 gap을 만드는지 확인합니다.
         </p>
       </div>
     </section>

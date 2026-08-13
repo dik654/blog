@@ -1,120 +1,95 @@
 import CodePanel from "@/components/ui/code-panel";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
-const bankLayoutCode = `공유 메모리 뱅크 구조 (32 banks, 4-byte stride):
+const paddingCode = `// float is one 32-bit word; bank count is 32 on the documented path.
+__shared__ float square[32][32];
+__shared__ float padded[32][33];
 
-주소(byte)   뱅크 번호
-  0 -  3  →  Bank 0      ← Thread 0
-  4 -  7  →  Bank 1      ← Thread 1
-  8 - 11  →  Bank 2      ← Thread 2
-  ...
-124 - 127 →  Bank 31     ← Thread 31
-128 - 131 →  Bank 0  (다시 Bank 0, 순환)
+int lane = threadIdx.x;
+float conflict = square[lane][0]; // word indices 0,32,64,... → bank 0
+float spread   = padded[lane][0]; // word indices 0,33,66,... → banks 0,1,2,...
 
-규칙: address / 4 % 32 = bank number
-연속된 4바이트 주소 → 서로 다른 뱅크 → 충돌 없음`;
-
-const conflictCode = `// 충돌 없음: 연속 접근 (stride = 1)
-__shared__ float s[256];
-float val = s[threadIdx.x];         // 각 스레드가 다른 뱅크
-
-// 2-way 충돌: stride = 2
-float val = s[threadIdx.x * 2];     // Thread 0→Bank 0, Thread 16→Bank 0
-
-// 32-way 충돌 (최악): stride = 32
-float val = s[threadIdx.x * 32];    // 모든 스레드가 Bank 0
-
-// 충돌 없음: 브로드캐스트
-float val = s[0];                   // 모든 스레드가 같은 주소 읽기
-                                    // → 하드웨어 브로드캐스트, 1회 접근`;
-
-const paddingCode = `// 문제: 행렬 열 접근 시 32-way 뱅크 충돌
-__shared__ float tile[32][32];
-float val = tile[threadIdx.x][col]; // stride=32, 모든 스레드가 같은 뱅크
-
-// 해결: 패딩(padding)으로 stride 변경
-__shared__ float tile[32][33];      // 열 크기를 33으로 +1
-float val = tile[threadIdx.x][col]; // stride=33, 뱅크가 매 행마다 1씩 밀림
-                                    // → 32개 스레드가 32개 다른 뱅크 접근
-
-// 메모리 레이아웃 변화:
-// [32][32]: Row0→Bank0-31, Row1→Bank0-31  (열 접근=같은 뱅크)
-// [32][33]: Row0→Bank0-31, Row1→Bank1-32  (열 접근=다른 뱅크)`;
+// 같은 address를 여러 lane이 읽는 broadcast는
+// 같은 bank의 서로 다른 address 충돌과 구분한다.`;
 
 export default function BankConflict() {
   return (
     <section id="bank-conflict" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">메모리 뱅크와 뱅크 충돌</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Bank conflict는 “같은 bank”가 아니라 “같은 bank의 서로 다른 address”에서
+        생깁니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          공유 메모리는 <strong>32개 뱅크</strong>로 나뉜다. 각 뱅크는
-          4바이트(32비트) 폭이다.
-          <br />
-          연속된 4바이트 주소가 연속된 뱅크에 매핑된다. 같은 워프(32 스레드)가
-          동시에 접근할 때, 서로 다른 뱅크를 사용하면{" "}
-          <strong>단일 사이클에 병렬 처리</strong>된다.
+          CUDA guide가 설명하는 32-bit bank mode에서는 연속된 32-bit word가 32
+          banks에 순환 배치됩니다. 한 warp instruction에서 서로 다른 banks를
+          읽으면 병렬로 서비스할 수 있지만, 여러 lane이 같은 bank의 서로 다른
+          word를 요구하면 hardware가 request를 여러 wave로 나눕니다. 반면 여러
+          lane이 정확히 같은 word를 읽으면 broadcast가 가능하므로 address
+          equality까지 확인해야 합니다.
         </p>
-        <CodePanel
-          title="공유 메모리 뱅크 매핑"
-          code={bankLayoutCode}
-          annotations={[
-            {
-              lines: [3, 10],
-              color: "sky",
-              note: "주소→뱅크 매핑 (4바이트 stride)",
-            },
-            { lines: [12, 13], color: "emerald", note: "뱅크 계산 공식" },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          N-way 충돌과 브로드캐스트
+      </div>
+      <ExplainedFormula
+        question="32-bit word index가 어느 shared-memory bank로 갈까요?"
+        idea={
+          <>
+            Byte address를 bank width인 4 B로 나눠 word index를 만들고, 32
+            banks를 순환하므로 나머지를 취합니다.
+          </>
+        }
+        formula={String.raw`\operatorname{bank}(a)=\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32`}
+        terms={[
+          {
+            symbol: "a",
+            name: "byte address offset",
+            description:
+              "Shared allocation 시작점에서 접근 word까지의 byte offset입니다.",
+          },
+          {
+            symbol: "4 B",
+            name: "documented bank width",
+            description: "여기서 계산하는 32-bit word의 byte 폭입니다.",
+          },
+          {
+            symbol: "32",
+            name: "bank count",
+            description:
+              "이 access model에서 병렬로 address를 분산하는 bank 수입니다.",
+          },
+        ]}
+        assumptions={[
+          "32-bit bank mapping을 설명하는 current CUDA guide의 일반 path입니다. Data width와 architecture-specific behavior는 target device 문서를 확인합니다.",
+          "Conflict degree는 한 warp의 한 memory instruction에 참여한 active lanes로 계산합니다.",
+          "같은 address read는 broadcast 예외이며 같은 bank의 다른 address와 구분합니다.",
+        ]}
+        interpretation="float index가 0, 32, 64이면 byte offset은 0, 128, 256이고 모두 bank 0입니다. Index가 0, 33, 66이면 bank 0, 1, 2로 분산됩니다."
+      />
+      <CodePanel
+        title="32×32 tile에 column padding 1개 추가"
+        code={paddingCode}
+        annotations={[
+          { lines: [1, 3], color: "sky", note: "Stride 32와 33 비교" },
+          {
+            lines: [5, 7],
+            color: "emerald",
+            note: "같은 column의 bank mapping 변화",
+          },
+          { lines: [9, 10], color: "amber", note: "Broadcast 예외" },
+        ]}
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3 className="mt-8 text-xl font-semibold">
+          Padding은 무료가 아닙니다
         </h3>
         <p>
-          같은 워프 내 N개 스레드가 같은 뱅크를 접근하면{" "}
-          <strong>N-way 충돌</strong>이 발생한다.
-          <br />
-          N번의 직렬 접근으로 분할되어 성능이 N배 저하된다.
-          <br />
-          단, 모든 스레드가 <strong>정확히 같은 주소</strong>를 읽으면
-          하드웨어가 브로드캐스트하여 충돌이 없다.
+          32×32 float tile은 4,096 B이고 32×33은 4,224 B이므로 block당 128 B를
+          더 씁니다. 작은 차이처럼 보여도 여러 tile과 double buffering을 합치면
+          resident block 수 경계를 넘을 수 있습니다. 먼저 profiler의 shared
+          load/store transactions per request로 conflict가 실제 bottleneck인지
+          확인하고, padding 뒤 kernel time과 occupancy가 함께 좋아졌는지
+          비교합니다. Access가 이미 broadcast이거나 compute-bound라면 padding은
+          성능을 바꾸지 않을 수 있습니다.
         </p>
-        <CodePanel
-          title="뱅크 충돌 예시"
-          code={conflictCode}
-          annotations={[
-            {
-              lines: [1, 3],
-              color: "sky",
-              note: "이상적: stride=1, 충돌 없음",
-            },
-            { lines: [5, 6], color: "amber", note: "stride=2, 2-way 충돌" },
-            { lines: [8, 9], color: "rose", note: "stride=32, 32-way 최악" },
-            {
-              lines: [11, 13],
-              color: "emerald",
-              note: "브로드캐스트: 같은 주소→무충돌",
-            },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          패딩 기법으로 충돌 제거
-        </h3>
-        <p>
-          행렬의 열(column)을 접근할 때 stride가 32가 되어 최악의 충돌이
-          발생한다.
-          <br />열 크기에 +1 패딩을 추가하면 stride가 33으로 바뀌어, 각 행의
-          같은 열이 서로 다른 뱅크에 매핑된다.
-        </p>
-        <CodePanel
-          title="패딩 기법: [32][32] vs [32][33]"
-          code={paddingCode}
-          annotations={[
-            { lines: [1, 3], color: "rose", note: "패딩 없음: 32-way 충돌" },
-            { lines: [5, 8], color: "emerald", note: "패딩 적용: 충돌 제거" },
-            { lines: [10, 12], color: "amber", note: "레이아웃 비교" },
-          ]}
-        />
       </div>
     </section>
   );

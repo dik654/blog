@@ -1,143 +1,102 @@
 import CodePanel from "@/components/ui/code-panel";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
-const coalescingCode = `글로벌 메모리 Coalescing 원리:
+const transposeCode = `__global__ void transpose(const float* in, float* out, int w, int h) {
+  __shared__ float tile[32][33]; // +1 avoids column bank conflict
+  int x = blockIdx.x * 32 + threadIdx.x;
+  int y = blockIdx.y * 32 + threadIdx.y;
 
-워프(32 스레드)의 메모리 요청을 하나의 트랜잭션으로 합침
-조건: 연속 스레드 → 연속 주소, 정렬(aligned)
-
-트랜잭션 크기: 32B / 64B / 128B (L1 캐시 라인)
-
-Coalesced (이상적):
-  Thread 0 → addr[0]   Thread 1 → addr[1]   ...  Thread 31 → addr[31]
-  → 128B 트랜잭션 1회 (float × 32 = 128B)
-
-Non-coalesced (최악):
-  Thread 0 → addr[0]   Thread 1 → addr[1000]  ...
-  → 스레드마다 별도 트랜잭션, 최대 32회 접근`;
-
-const matrixAccessCode = `// 행렬 M[Height][Width], row-major 저장
-// M[row][col] → M[row * Width + col]
-
-// 좋음: 행(row) 접근 — 연속 스레드가 연속 주소
-__global__ void rowAccess(float* M, float* out, int W) {
-  int row = blockIdx.x;
-  int col = threadIdx.x;         // 연속 스레드 → 연속 col
-  out[row * W + col] = M[row * W + col];  // coalesced!
-}
-// Thread 0 → M[row][0], Thread 1 → M[row][1], ...
-// 메모리 상 연속 → 1회 트랜잭션
-
-// 나쁨: 열(column) 접근 — 연속 스레드가 stride=Width 간격
-__global__ void colAccess(float* M, float* out, int W) {
-  int col = blockIdx.x;
-  int row = threadIdx.x;         // 연속 스레드 → stride=W
-  out[row * W + col] = M[row * W + col];  // non-coalesced!
-}
-// Thread 0 → M[0][col], Thread 1 → M[1][col], ...
-// 메모리 상 W칸 간격 → 32회 트랜잭션`;
-
-const fixCode = `// 해결: 공유 메모리로 전치(transpose)
-
-__global__ void colAccessFixed(float* M, float* out, int W, int H) {
-  __shared__ float tile[BLOCK][BLOCK];
-
-  int bx = blockIdx.x * BLOCK;
-  int by = blockIdx.y * BLOCK;
-
-  // 1단계: 행 방향으로 글로벌 → 공유 (coalesced 로드)
-  tile[threadIdx.y][threadIdx.x] = M[(by + threadIdx.y) * W + bx + threadIdx.x];
+  if (x < w && y < h) tile[threadIdx.y][threadIdx.x] = in[y * w + x];
   __syncthreads();
 
-  // 2단계: 전치된 위치에서 공유 → 글로벌 (coalesced 저장)
-  out[(bx + threadIdx.y) * H + by + threadIdx.x] = tile[threadIdx.x][threadIdx.y];
-}
-// 글로벌 접근은 항상 coalesced
-// 공유 메모리에서 전치 처리 (뱅크 충돌은 패딩으로 해결)`;
+  int ox = blockIdx.y * 32 + threadIdx.x;
+  int oy = blockIdx.x * 32 + threadIdx.y;
+  if (ox < h && oy < w) out[oy * h + ox] = tile[threadIdx.x][threadIdx.y];
+}`;
 
 export default function Coalescing() {
   return (
     <section id="coalescing" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">글로벌 메모리 Coalescing</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Coalescing은 useful byte를 적은 global transaction으로 가져오는
+        문제입니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          글로벌 메모리(DRAM)는 <strong>레이턴시가 400-800 사이클</strong>로
-          느리다.
-          <br />
-          하드웨어가 같은 워프의 메모리 요청을{" "}
-          <strong>하나의 트랜잭션으로 합치는 것</strong>이 coalescing이다.
-          <br />이 조건을 만족하면 대역폭 활용률이 최대가 된다.
+          Warp의 한 load instruction에는 최대 32개의 address가 생깁니다. Memory
+          coalescer는 이 address가 걸친 32-byte segment를 모아 필요한
+          transaction을 발행합니다. “연속이면 한 번”이라고 외우면 32 float가 128
+          B이므로 최소 네 개의 32 B transaction이 필요하다는 사실을 놓칩니다.
+          중요한 것은 requested byte 중 실제로 사용한 byte의 비율입니다.
         </p>
-        <CodePanel
-          title="Coalescing 원리와 트랜잭션 크기"
-          code={coalescingCode}
-          annotations={[
-            { lines: [3, 4], color: "sky", note: "핵심 조건: 연속 + 정렬" },
-            {
-              lines: [8, 10],
-              color: "emerald",
-              note: "Coalesced: 1회 트랜잭션",
-            },
-            {
-              lines: [12, 14],
-              color: "rose",
-              note: "Non-coalesced: 최대 32회",
-            },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          행렬 접근 패턴: Row vs Column
-        </h3>
+      </div>
+      <ExplainedFormula
+        question="Warp load가 옮긴 byte 중 kernel이 실제로 사용한 비율은 얼마일까요?"
+        idea={
+          <>
+            Active lane이 요구한 useful byte를 그 address들을 덮기 위해 발행된
+            32 B segment 수로 나눕니다.
+          </>
+        }
+        formula={String.raw`\eta_{\mathrm{global}}=\frac{B_{\mathrm{useful}}}{32\ \mathrm{B}\times T}`}
+        terms={[
+          {
+            symbol: "B_useful",
+            name: "requested useful bytes",
+            description:
+              "Active lanes가 결과 계산에 실제 사용하는 byte 합입니다.",
+          },
+          {
+            symbol: "T",
+            name: "32-byte transaction count",
+            description:
+              "Warp instruction의 address set을 충족하는 global memory transaction 수입니다.",
+          },
+          {
+            symbol: "η_global",
+            name: "load efficiency model",
+            description: "0과 1 사이의 단순화한 byte utilization입니다.",
+          },
+        ]}
+        assumptions={[
+          "Current guide의 32-byte transaction 관점으로 설명하며 cache hit·ECC·replay·architecture-specific path는 단순화합니다.",
+          "Address alignment와 active lane mask가 T를 바꿉니다.",
+          "높은 효율이 곧 compute throughput 향상을 보장하지는 않습니다.",
+        ]}
+        interpretation="Aligned float 32개면 useful 128 B, T=4라서 η=1입니다. 각 lane이 서로 다른 32 B segment의 float 하나만 읽으면 T=32이고 η=128/1024=12.5%입니다."
+      />
+      <CodePanel
+        title="Shared-memory transpose로 global read와 write를 모두 연속화"
+        code={transposeCode}
+        annotations={[
+          { lines: [1, 3], color: "sky", note: "Padded shared tile" },
+          {
+            lines: [6, 7],
+            color: "emerald",
+            note: "Row 방향 coalesced load 후 barrier",
+          },
+          {
+            lines: [9, 11],
+            color: "amber",
+            note: "좌표를 바꿔 coalesced store",
+          },
+        ]}
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          row-major 행렬에서 행 방향 접근은 coalesced, 열 방향 접근은
-          non-coalesced이다.
-          <br />열 접근이 필요하면 <strong>공유 메모리 타일링</strong>으로
-          해결한다.
+          Transpose tile은 global access 순서를 바꾸기 위해 shared memory를
+          사용한 예입니다. Load를 마치기 전에 다른 thread가 tile을 읽으면 race가
+          되므로 barrier가 필요하고, <code>tile[32][33]</code> padding은 전치된
+          column read의 bank conflict를 줄입니다. Edge block에서는 out-of-range
+          lane이 있어도 모든 thread가 barrier에 도달해야 하므로 barrier 자체를
+          조건문 안에 넣지 않습니다.
         </p>
-        <CodePanel
-          title="행(Row) 접근 vs 열(Column) 접근"
-          code={matrixAccessCode}
-          annotations={[
-            { lines: [4, 9], color: "emerald", note: "행 접근: coalesced" },
-            {
-              lines: [10, 11],
-              color: "emerald",
-              note: "연속 주소 → 1회 트랜잭션",
-            },
-            { lines: [13, 18], color: "rose", note: "열 접근: non-coalesced" },
-            {
-              lines: [19, 20],
-              color: "rose",
-              note: "stride=W → 32회 트랜잭션",
-            },
-          ]}
-        />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          공유 메모리 전치로 해결
-        </h3>
-        <CodePanel
-          title="공유 메모리 타일 전치"
-          code={fixCode}
-          annotations={[
-            { lines: [4, 4], color: "sky", note: "공유 메모리 타일 선언" },
-            {
-              lines: [9, 10],
-              color: "emerald",
-              note: "글로벌→공유: coalesced 로드",
-            },
-            {
-              lines: [13, 14],
-              color: "amber",
-              note: "공유→글로벌: 전치 후 coalesced 저장",
-            },
-            {
-              lines: [16, 17],
-              color: "violet",
-              note: "양방향 모두 coalesced 달성",
-            },
-          ]}
-        />
+        <p>
+          Profiler에서는 단순한 kernel time뿐 아니라 requested/actual sectors,
+          DRAM throughput, shared bank conflict, barrier stall을 함께 봅니다. L2
+          cache가 대부분을 흡수하거나 계산이 더 오래 걸리는 kernel에서는
+          coalescing 개선이 end-to-end latency에 거의 나타나지 않을 수 있습니다.
+        </p>
       </div>
     </section>
   );
