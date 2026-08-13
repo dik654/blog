@@ -1,109 +1,87 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
-import { OVERLAY_STEPS, STATE_ROOT_FIELDS } from "./StateRootData";
 
 export default function StateRoot({
   onCodeRef,
 }: {
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
-  const [active, setActive] = useState(0);
   return (
     <section id="state-root" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        StateRoot: base trie와 post-state overlay 합치기
+        Overlay는 parent trie를 바꾸지 않고 candidate root를 계산한다
       </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <h3>배경</h3>
+      <ExplainedFormula
+        question="Ethereum account state 하나는 state root에 어떻게 들어갈까요?"
+        idea={
+          <>
+            Address를 hash한 path에 account 네 필드를 RLP로 넣고, account가 가진
+            storage trie root도 그 value 안에 중첩합니다. 전체 trie의 root
+            commitment가 block header의 state root입니다.
+          </>
+        }
+        formula={
+          "r_{\\rm state}={\\rm TrieRoot}\\!\\left\\{ {\\rm keccak}(a)\\mapsto {\\rm RLP}(n,b,r_{\\rm storage},h_{\\rm code}) \\right\\}"
+        }
+        terms={[
+          {
+            symbol: "a",
+            name: "Address",
+            description: "20-byte account address입니다.",
+          },
+          {
+            symbol: "n,b",
+            name: "Nonce · balance",
+            description: "Account의 transaction nonce와 wei balance입니다.",
+          },
+          {
+            symbol: "r_{\\rm storage}",
+            name: "Storage root",
+            description: "해당 contract storage trie의 32-byte root입니다.",
+          },
+          {
+            symbol: "h_{\\rm code}",
+            name: "Code hash",
+            description: "Contract bytecode의 Keccak-256 hash입니다.",
+          },
+          {
+            symbol: "r_{\\rm state}",
+            name: "State root",
+            description:
+              "모든 account를 commitment한 32-byte header field입니다.",
+          },
+        ]}
+        assumptions={[
+          "활성 fork의 canonical account encoding과 trie node encoding을 사용합니다.",
+          "Parent state snapshot과 execution changes가 같은 block identity에 귀속됩니다.",
+          "Keccak collision resistance를 전제로 하지만 root 일치는 canonical-chain status를 보장하지 않습니다.",
+        ]}
+        interpretation="A의 balance만 바뀌어도 account RLP와 A path의 ancestor root가 달라집니다. 다른 subtree hash는 재사용할 수 있지만 계산된 root가 header와 다르면 최적화 여부와 무관하게 block을 거절해야 합니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Base snapshot과 hashed overlay를 결합합니다</h3>
         <p>
-          Execution 결과는 account와 storage의 post-state changes다. Root
-          계산기는 canonical base state의 trie artifacts와 이 overlay를 같은 key
-          order에서 결합해야 한다.
+          Reader는 parent root에 고정된 database trie를 base로 읽고 execution
+          bundle의 account/storage 변경을 overlay로 우선 적용합니다. Dirty
+          prefix 밖의 child는 기존 hash를 재사용하지만, overlay가 delete한
+          value를 base가 되살리거나 서로 다른 storage generation을 섞으면 안
+          됩니다.
         </p>
-        <h3>문제</h3>
+        <h3>Root 비교가 storage write보다 먼저입니다</h3>
         <p>
-          계정 삭제, storage wipe, slot update는 서로 다른 의미를 갖는다. 또한
-          base node를 재사용할 수 있는 경계와 overlay가 덮어쓰는 경계를 혼동하면
-          오래된 child hash가 새 root에 섞일 수 있다.
-        </p>
-        <h3>아이디어와 구현</h3>
-        <p>
-          주소·slot을 hashed key로 정규화하고 account prefix와 계정별 storage
-          prefix를 분리한다. walker는 prefix가 닿는 경로에서 새 leaves와 base
-          nodes를 merge하며, 닿지 않는 subtree는 저장된 node/hash를 그대로
-          builder에 넘긴다.
-        </p>
-        <div className="not-prose my-4 grid gap-3 sm:grid-cols-2">
-          {STATE_ROOT_FIELDS.map((field) => (
-            <div
-              key={field.name}
-              className="rounded-xl border border-border/60 p-4"
-            >
-              <code className="text-xs font-semibold text-indigo-500">
-                {field.name}
-              </code>
-              <p className="mt-2 text-sm leading-6 text-foreground/65">
-                {field.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-        <p>
-          내부 type과 field 이름은 Reth 버전에 따라 달라질 수 있다. 글의
-          안정적인 경계는{" "}
-          <strong>
-            base view, hashed overlay, changed prefixes, root output
-          </strong>{" "}
-          네 가지다.
+          Candidate root와 header root가 일치해야 changeset·trie
+          update·checkpoint를 publish할 수 있습니다. Mismatch 때는
+          address/storage key, old/new value, visited prefix, node encoding과
+          fork를 receipt에 남기며 잘못 계산한 root를 canonical marker에 연결하지
+          않습니다.
         </p>
       </div>
-      <h3 className="mb-3 text-lg font-semibold">Overlay 흐름</h3>
-      <div className="not-prose mb-6 space-y-2">
-        {OVERLAY_STEPS.map((item, index) => (
-          <motion.button
-            key={item.title}
-            type="button"
-            onClick={() => setActive(index)}
-            animate={{ opacity: active === index ? 1 : 0.6 }}
-            className="block w-full cursor-pointer rounded-xl border p-4 text-left"
-          >
-            <p className="text-sm font-semibold" style={{ color: item.color }}>
-              {item.title}
-            </p>
-            <AnimatePresence>
-              {active === index && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-2 text-sm leading-6 text-foreground/70"
-                >
-                  {item.desc}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        ))}
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <div className="rounded-r-lg border-l-4 border-amber-400 bg-amber-50 p-4 dark:bg-amber-950/30">
-          <p className="font-semibold">결과 검증</p>
-          <p className="mt-2">
-            계산 비용은 changed keys, prefix 공유, cache와 storage layout에 따라
-            달라진다. 속도 추정 대신 header state_root 일치와 재현 가능한
-            checkpoint를 완료 조건으로 삼는다.
-          </p>
-        </div>
-      </div>
-      <div className="not-prose flex flex-wrap gap-2">
+      <div className="not-prose my-4">
         <CodeViewButton
           onClick={() => onCodeRef("state-root", codeRefs["state-root"])}
         />
-        <span className="self-center text-xs text-muted-foreground">
-          bundled source snapshot
-        </span>
       </div>
     </section>
   );

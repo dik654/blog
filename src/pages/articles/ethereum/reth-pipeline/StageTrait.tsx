@@ -1,91 +1,79 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
-import StageTraitViz from "./viz/StageTraitViz";
-import { STAGE_METHODS } from "./StageTraitData";
 
 export default function StageTrait({
   onCodeRef,
 }: {
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
-  const [active, setActive] = useState(0);
   return (
     <section id="stage-trait" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Stage 계약: 진행과 되감기를 대칭으로 만들기
+        Stage 계약은 bounded progress·checkpoint·unwind를 한 상태 기계로 묶는다
       </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <h3>배경과 문제</h3>
+      <ExplainedFormula
+        question="Checkpoint c에서 target t로 갈 때 limit L인 다음 batch는 어디까지일까요?"
+        idea={
+          <>
+            이미 commit한 c 다음 block부터 시작하고, 한 번에 L개를 넘지 않도록
+            target과 batch 상한 중 작은 높이에서 멈춥니다.
+          </>
+        }
+        formula={"b_{\\rm start}=c+1,\\qquad b_{\\rm end}=\\min(c+L,t)"}
+        terms={[
+          {
+            symbol: "c",
+            name: "Committed checkpoint",
+            description:
+              "이 stage가 durable하게 완료한 마지막 block number입니다.",
+          },
+          {
+            symbol: "t",
+            name: "Target",
+            description: "이번 pipeline run이 도달하려는 block number입니다.",
+          },
+          {
+            symbol: "L",
+            name: "Batch limit",
+            description: "한 transaction에서 시도할 최대 block 수입니다.",
+          },
+          {
+            symbol: "b_{\\rm start},b_{\\rm end}",
+            name: "Inclusive range",
+            description: "다음 execute가 처리할 inclusive block 범위입니다.",
+          },
+        ]}
+        assumptions={[
+          "Checkpoint c의 output과 dependency가 durable하고 검증됐습니다.",
+          "L은 운영 tuning 값이며 protocol 상수가 아닙니다.",
+          "Missing input이나 resource limit으로 end 전에 멈추면 실제 committed end만 checkpoint로 씁니다.",
+        ]}
+        interpretation="c=99,t=250,L=64이면 첫 batch는 100…163입니다. 다음은 164…227, 마지막은 228…250이며 각 commit 뒤에만 checkpoint를 옮깁니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Crash receipt와 idempotent restart</h3>
         <p>
-          Headers, Bodies, Execution은 서로 다른 작업이지만 Pipeline은 각 구현의
-          내부 버퍼·다운로더·storage table을 알아서는 안 된다. 동시에 crash
-          recovery와 reorg는 모든 Stage에서 같은 의미를 가져야 한다.
+          Receipt에는 stage ID, input checkpoint, dependency checkpoint, target,
+          attempted/committed range, output checkpoint, transaction ID와 phase를
+          남깁니다. Commit 전 crash는 c에서 다시 시작하고 commit 후 marker 전
+          crash는 DB output과 checkpoint를 reconcile한 뒤 동일 범위를 중복
+          적용하지 않습니다.
         </p>
-        <h3>아이디어</h3>
+        <h3>Release gate</h3>
         <p>
-          <code>Stage</code>는 identity, forward execution, unwind를 공통
-          계약으로 노출한다. 실행 입력은 목표와 현재 checkpoint를, 출력은 실제로
-          완료한 progress와 추가 호출 필요 여부를 표현한다.
-        </p>
-        <h3>구현 불변조건</h3>
-        <ul>
-          <li>Stage는 선행 dependency가 확정한 범위를 넘어 진행하지 않는다.</li>
-          <li>
-            <code>done=false</code>는 실패가 아니라 bounded work 뒤에 다시
-            호출해 달라는 진행 상태다.
-          </li>
-          <li>
-            checkpoint는 처리 시도 위치가 아니라 재시작해도 안전한 영속 경계를
-            뜻한다.
-          </li>
-          <li>
-            unwind는 dependency 역순으로 실행하며 Stage가 만든 산출물과
-            progress를 같은 지점으로 되돌린다.
-          </li>
-        </ul>
-        <p>
-          checkpoint의 physical 저장 위치는 provider와 Storage mode의 책임이다.
-          Stage 계약을 MDBX table 하나와 동일시하면 Storage V2 같은 layout
-          변화가 실행 모델 설명까지 오염시킨다.
+          Missing header/body, invalid sender, execution failure, root mismatch,
+          stage 중간 crash, checkpoint corruption, reorg/unwind와 restart를
+          base/candidate에 주입합니다. Header/body/sender/receipt/state-root와
+          각 checkpoint parity를 통과한 뒤 blocks/s, commit latency, write
+          amplification과 recovery time을 비교합니다.
         </p>
       </div>
-      <div className="not-prose mb-6">
-        <StageTraitViz />
-      </div>
-      <h3 className="mb-3 text-lg font-semibold">공통 메서드</h3>
-      <div className="not-prose mb-6 space-y-2">
-        {STAGE_METHODS.map((item, index) => (
-          <motion.button
-            key={item.method}
-            type="button"
-            onClick={() => setActive(index)}
-            animate={{ opacity: active === index ? 1 : 0.6 }}
-            className="block w-full cursor-pointer rounded-xl border p-4 text-left"
-          >
-            <p className="font-mono text-sm font-semibold text-indigo-500">
-              {item.method}{" "}
-              <span className="font-sans font-normal text-foreground/60">
-                · {item.desc}
-              </span>
-            </p>
-            {active === index && (
-              <p className="mt-2 text-sm leading-6 text-foreground/70">
-                {item.detail}
-              </p>
-            )}
-          </motion.button>
-        ))}
-      </div>
-      <div className="not-prose flex flex-wrap gap-2">
+      <div className="not-prose my-4">
         <CodeViewButton
-          onClick={() => onCodeRef("stage-trait", codeRefs["stage-trait"])}
+          onClick={() => onCodeRef("pipeline-run", codeRefs["pipeline-run"])}
         />
-        <span className="self-center text-xs text-muted-foreground">
-          bundled source snapshot
-        </span>
       </div>
     </section>
   );

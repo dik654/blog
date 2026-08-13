@@ -1,72 +1,30 @@
-import { useState } from "react";
 import { CodeViewButton } from "@/components/code";
-import BundleStateViz from "./viz/BundleStateViz";
-import { BUNDLE_ROLES } from "./BundleStateData";
-import { codeRefs } from "./codeRefs";
 import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function BundleState({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  const [active, setActive] = useState(0);
-
+export default function BundleState({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="bundle-state" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        BundleState는 실행 결과를 보존하는 overlay
-      </h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          한 transaction의 변경을 즉시 영속 저장하면 다음 transaction이 같은
-          account를 읽을 때마다 storage transaction 경계를 오가고, block 단위
-          revert 정보를 만들기도 어렵습니다. BundleState는 revm transitions를
-          memory overlay로 누적해 이후 실행이 최신 in-memory 값을 보고,
-          persistence와 unwind가 같은 변경 집합을 소비하게 합니다.
+      <h2 className="mb-5 text-2xl font-bold">BundleState는 실행 결과와 되돌리기 evidence를 함께 들고 있는 overlay다</h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("bundle-state", codeRefs["bundle-state"])} />
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Block 1,001을 실행하면 account A의 balance 10→7, storage slot x의 0→5와 새 bytecode가 생길 수 있습니다. BundleState는
+          post value만 캐시하지 않고 original value, changed/touched/self-destruct 상태와 block별 revert journal을 같은 branch identity에
+          연결해 commit 전 query와 reorg unwind가 같은 evidence를 사용하게 합니다.
         </p>
-        <p className="leading-7">
-          이 구조를 특정 block 수·고정 메모리 크기·MDBX append 최적화와 묶어
-          설명하지 않습니다. flush threshold와 memory footprint는 workload와
-          configuration에 따라 달라지고, Storage V2에서는 physical persistence
-          route도 V1과 다릅니다. 불변인 것은 original/present state, changed
-          storage, code와 revert provenance를 잃지 않는다는 점입니다.{" "}
-          <CodeViewButton
-            onClick={() => onCodeRef("bundle-state", codeRefs["bundle-state"])}
-          />
+        <h3>Overlay revision과 승격</h3>
+        <p>
+          View receipt에는 parent hash, executed block hash/range, bundle revision과 base generation을 고정합니다. 새 block을 extend하면
+          revision이 증가하고, 다른 parent branch의 bundle은 섞지 않습니다. DB commit은 bundle write set·revert set·receipts와 canonical
+          marker를 원자적 generation으로 승격하며 성공 receipt 뒤에만 cache를 durable로 표시합니다.
         </p>
-      </div>
-
-      <div className="not-prose mb-8">
-        <BundleStateViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
-      </div>
-
-      <h3 className="text-lg font-semibold mb-3">Overlay가 보존하는 정보</h3>
-      <div className="not-prose grid grid-cols-1 gap-3 sm:grid-cols-2 mb-8">
-        {BUNDLE_ROLES.map((item, index) => (
-          <button
-            type="button"
-            key={item.name}
-            onClick={() => setActive(index)}
-            className={`cursor-pointer rounded-xl border p-4 text-left ${active === index ? "bg-muted/50" : "border-border"}`}
-            style={{ borderColor: active === index ? item.color : undefined }}
-          >
-            <p className="text-sm font-bold" style={{ color: item.color }}>
-              {item.name}
-            </p>
-            <p className="mt-2 text-xs leading-5 text-foreground/60">
-              {item.desc}
-            </p>
-          </button>
-        ))}
-      </div>
-
-      <div className="not-prose rounded-xl border border-border/60 p-4 text-sm leading-6 text-foreground/75">
-        읽을 때는 overlay entry가 base provider보다 우선합니다. commit할 때는
-        변경·revert를 backend가 요구하는 ordered batches로 변환하고, reorg 때는
-        block boundary를 역순으로 적용합니다. 이 세 경로가 같은 manifest를
-        소비해야 중복 상태가 갈라지지 않습니다.
+        <p>
+          Crash가 commit 전이면 bundle을 다시 실행할 수 있고, commit 성공 여부가 불명확하면 DB generation과 block marker를 조회해
+          reconcile합니다. 단순 retry로 같은 changeset을 두 번 적용하거나 revert journal 없이 post-state만 저장하면 reorg 안전성을 잃습니다.
+        </p>
       </div>
     </section>
   );

@@ -1,77 +1,45 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
-import EvmConfigDetailViz from "./viz/EvmConfigDetailViz";
 
-interface Props {
+export default function EvmConfig({
+  onCodeRef,
+}: {
   onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function EvmConfig({ onCodeRef }: Props) {
+}) {
   return (
     <section id="evm-config" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">EVM 설정과 chain 문맥</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          같은 transaction이라도 block number·timestamp·base fee와 활성
-          hardfork가 다르면 실행 의미가 달라질 수 있다. Reth의 EVM 설정 계층은
-          chain spec과 block 문맥을 revm 인스턴스 생성에 연결한다.
+      <h2 className="mb-6 text-2xl font-bold">
+        EvmConfig는 header·ChainSpec·transaction을 revm 입력으로 번역한다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          EVM은 “mainnet block 101” 같은 이름을 직접 이해하지 않습니다.
+          ChainSpec이 block number·timestamp에서 active fork를 고르고, adapter가
+          header의 coinbase, gas limit, base fee, prevrandao와 blob 관련 값을
+          block environment에 채웁니다. Transaction type에 맞춰 caller, nonce,
+          gas, value, calldata와 access/blob authorization을 구성합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Block environment</h3>
-        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 my-4 text-xs">
-          <div className="rounded-lg border bg-card p-3">
-            <strong>number / time</strong>
-            <p className="text-muted-foreground mt-1">fork activation 문맥</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <strong>beneficiary</strong>
-            <p className="text-muted-foreground mt-1">COINBASE 문맥</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <strong>base fee / gas</strong>
-            <p className="text-muted-foreground mt-1">fee와 resource limit</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <strong>prevRandao / blobs</strong>
-            <p className="text-muted-foreground mt-1">포크별 추가 환경</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Transaction environment
-        </h3>
-        <p className="leading-7">
-          recovered sender, transaction kind, destination, value, calldata,
-          access list와 fee fields를 현재 transaction type과 fork 규칙에 맞게
-          변환한다. legacy·EIP-1559·blob transaction을 하나의 고정 수식으로
-          축약하지 않는다.
+        <h3>같은 field도 fork에 따라 의미가 달라집니다</h3>
+        <p>
+          Pre-Merge difficulty와 post-Merge randomness, London 전후 base fee,
+          Cancun 이후 blob fields처럼 presence와 해석이 activation context에
+          묶입니다. Unknown future transaction이나 fork field를 가장 가까운 old
+          type으로 추측하지 않고 unsupported error로 거절합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          System call은 일반 사용자 transaction과 다르다
-        </h3>
-        <p className="leading-7">
-          활성 fork가 요구하는 beacon root·request 관련 system call은 sender,
-          gas와 fee 처리에 특별 규칙을 가질 수 있다. executor의 pre/post 단계가
-          이를 명시적으로 호출해 일반 transaction loop와 구분한다.
-        </p>
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("evm-config", codeRefs["evm-config"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            EVM configuration source
-          </span>
-        </div>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          trait과 메서드 이름은 Reth API 개편에 따라 바뀔 수 있다. 이 글은
-          header·fork·transaction·state provider가 EVM 생성으로 수렴하는 책임
-          경계를 기준으로 읽는다.
+        <h3>Config receipt</h3>
+        <p>
+          Chain ID·genesis hash·fork schedule digest, block
+          hash/number/timestamp, selected spec ID, recovered transaction type와
+          revm/Reth version을 남깁니다. Environment construction 성공은 state
+          access나 transaction execution 성공이 아니며 이후 executor 결과와
+          연결해야 합니다.
         </p>
       </div>
-      <div className="not-prose mb-6">
-        <EvmConfigDetailViz />
+      <div className="not-prose my-4">
+        <CodeViewButton
+          onClick={() => onCodeRef("evm-config", codeRefs["evm-config"])}
+        />
       </div>
     </section>
   );

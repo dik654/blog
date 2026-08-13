@@ -4,6 +4,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 import { LIVE_EVENTS, REORG_STEPS } from "./LiveSyncData";
+import RethRuntimeViz from "../reth-runtime-viz";
 
 export default function LiveSync({
   onCodeRef,
@@ -17,6 +18,7 @@ export default function LiveSync({
   return (
     <section id="live-sync" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Live Sync & Reorg 처리</h2>
+      <RethRuntimeViz mode="sync-handoff" />
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
         <div className="not-prose flex flex-wrap gap-2 mb-4">
           <CodeViewButton
@@ -181,7 +183,7 @@ export default function LiveSync({
 
       {/* ExEx events */}
       <h3 className="text-lg font-semibold mb-3">ExExNotification 이벤트</h3>
-      <div className="not-prose grid grid-cols-3 gap-3 mb-4">
+      <div className="not-prose grid grid-cols-1 gap-3 mb-4 sm:grid-cols-3">
         {LIVE_EVENTS.map((e) => (
           <button
             key={e.id}

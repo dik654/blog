@@ -1,5 +1,5 @@
-import ContextViz from "./viz/ContextViz";
-import PayloadViz from "./viz/PayloadViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import RethRuntimeViz from "../reth-runtime-viz";
 import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
@@ -12,9 +12,8 @@ export default function Overview({
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Payload builder는 forkchoice 요청을 block candidate로 바꾼다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
+      <ContentBoundary article="reth-payload-builder" />
+      <RethRuntimeViz mode="payload-flow" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           합의 계층은 다음 block의 timestamp, fee recipient, prevRandao와 포크별
@@ -72,23 +71,16 @@ export default function Overview({
           있다. service는 payload id를 job에 연결하고 활성 포크에 맞는 response
           형태로 결과를 반환한다.
         </p>
-        <CitationBlock
-          {...OFFICIAL_SOURCES.reth.payloadBuilder}
-          citeKey={1}
-          type="code"
-        >
-          Reth의 basic payload builder 문서는 service, job generator와 builder의
-          책임을 분리한다. 외부 MEV builder나 proposer 정책을 이 내부 trait
-          하나와 동일시하지 않는다.
-        </CitationBlock>
-        <CitationBlock {...OFFICIAL_SOURCES.ethereum.engineApi} citeKey={2}>
-          Engine API의 forkchoiceUpdated/getPayload 메서드는 포크별 버전과
-          조건을 가진다. 특정 초 단위 timeline이나 payload 수익을 protocol
-          보장으로 사용하지 않는다.
-        </CitationBlock>
-      </div>
-      <div className="not-prose mt-6">
-        <PayloadViz />
+        <div id="paper-reth-payload-builder-source" className="scroll-mt-24">
+          <CitationBlock {...OFFICIAL_SOURCES.reth.payloadBuilder} citeKey={1} type="code">
+            Reth의 basic payload builder 문서는 service, job generator와 builder의 책임을 분리합니다. 외부 MEV builder나 proposer 정책을 이 내부 trait 하나와 동일시하지 않습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-engine-api-payload" className="scroll-mt-24">
+          <CitationBlock {...OFFICIAL_SOURCES.ethereum.engineApi} citeKey={2}>
+            Engine API의 forkchoiceUpdated/getPayload 메서드는 포크별 버전과 조건을 가집니다. 특정 초 단위 timeline이나 payload 수익을 protocol 보장으로 사용하지 않습니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

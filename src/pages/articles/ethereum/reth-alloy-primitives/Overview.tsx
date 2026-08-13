@@ -1,107 +1,57 @@
-import ContextViz from "./viz/ContextViz";
-import RLPEncodingViz from "./viz/RLPEncodingViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
-import { codeRefs } from "./codeRefs";
+import RethStorageBoundaryViz from "../reth-storage-boundary-viz";
 
-export default function Overview({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">alloy primitive는 execution layer의 type과 wire encoding을 공유한다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
+      <h2 className="mb-5 text-2xl font-bold">Alloy primitive는 같은 32 bytes라도 주소·hash·정수를 섞지 않게 만든다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Ethereum node는 block hash, address, balance와 RLP bytes를 끊임없이 옮깁니다. 모두 메모리에서는 byte처럼 보일 수 있지만
+          길이·숫자 해석·wire encoding이 다르므로, 타입 경계를 잃으면 정상 데이터도 다른 값으로 읽히거나 잘못된 hash를 만들게 됩니다.
+        </p>
+        <p>
+          이 글은 <strong>Address 0x…01과 nonce 15를 typed value→canonical RLP→exact decode→hash·DB key</strong>로 보내는 한
+          사례를 따라갑니다. Bit·byte의 기초는 <Link to="/ai/text-unicode-encoding#bits-bytes">bit·byte 정본</Link>을 재사용하지만,
+          여기서도 byte는 8 bit이고 byte order가 정수 값 해석을 바꾼다는 직관부터 설명합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          실행 클라이언트의 거의 모든 경로는 주소, 해시, 256-bit 정수와 바이트를
-          주고받는다. 이 값들을 단순한 byte slice로만 취급하면 길이·의미·직렬화
-          규칙이 호출부마다 흩어지고 잘못된 타입 혼용이 늦게 발견된다.
+      <ContentBoundary article="reth-alloy-primitives" />
+      <RethStorageBoundaryViz mode="alloy" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>고정 사례와 네 개의 서로 다른 경계</h3>
+        <p>
+          Address는 정확히 20 bytes, B256은 정확히 32 bytes이며 U256은 0부터 2²⁵⁶−1까지의 unsigned integer입니다. U256의 내부
+          limb 배치와 RLP의 외부 big-endian minimal integer는 같은 개념이 아닙니다. 따라서 receipt에는 Rust type, logical value,
+          encoded bytes, consumed length와 decode result를 함께 남깁니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          아이디어 — 프로토콜 의미를 작은 타입에 고정
-        </h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <strong className="text-sm">Address</strong>
-            <p className="text-xs text-muted-foreground mt-1">
-              20-byte 주소를 <code>FixedBytes&lt;20&gt;</code> 위의 의미 있는
-              wrapper로 표현
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <strong className="text-sm">B256</strong>
-            <p className="text-xs text-muted-foreground mt-1">
-              32-byte hash·root·identifier를 고정 길이 값으로 표현
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <strong className="text-sm">U256</strong>
-            <p className="text-xs text-muted-foreground mt-1">
-              EVM word와 잔액·storage 값을 고정 폭 정수로 표현
-            </p>
-          </div>
-        </div>
-        <p className="leading-7">
-          고정 크기 내부 표현은 값 자체에 별도 allocation이 필요 없다는 뜻이지,
-          값이 항상 CPU stack에 놓인다거나 전체 실행에서 heap allocation이
-          사라진다는 보장은 아니다. 실제 배치는 소유 컨테이너와 최적화 결과에
-          달려 있다.
+        <p>
+          RLP decode가 성공해도 그 bytes가 block hash나 address라는 의미는 상위 schema가 정합니다. 반대로 타입이 맞아도 crate
+          version·feature·encoding rule이 달라지면 byte identity가 달라질 수 있으므로, current source fact는 pinned Alloy/Reth
+          version에 귀속하고 exact-consume·round-trip·boundary fixture는 별도의 hardening contract로 둡니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          공통 타입과 도메인 wrapper의 균형
-        </h3>
-        <ul>
-          <li>
-            <code>FixedBytes&lt;N&gt;</code>가 길이 검사, hex 변환, 비교·hash
-            같은 기계적 동작을 공유한다.
-          </li>
-          <li>
-            <code>Address</code>처럼 의미가 다른 값은 wrapper로 분리해 API가
-            잘못된 타입을 받지 않게 한다.
-          </li>
-          <li>
-            <code>U256</code>은 연산의 폭과 overflow 정책을 호출부에서 명시하게
-            한다.
-          </li>
-          <li>
-            RLP, serde, database codec은 같은 타입의 canonical 경계를 한곳에서
-            재사용한다.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          직렬화는 용도별로 다르다
-        </h3>
-        <p className="leading-7">
-          실행 계층의 legacy 구조에는 RLP가 널리 쓰이지만 Ethereum 전체에 단
-          하나의 직렬화 형식만 있는 것은 아니다. typed transaction envelope,
-          Engine API JSON, consensus 계층의 SSZ처럼 문맥마다 framing과 타입
-          규칙이 다르다. Alloy는 각 도메인의 타입과 codec을 조합해 이 경계를
-          명시한다.
-        </p>
-        <CitationBlock
-          {...OFFICIAL_SOURCES.alloy.primitives}
-          citeKey={1}
-          type="code"
-        >
-          alloy-primitives 문서는 Address, FixedBytes, B256, U256 등 현재 공개
-          타입과 기능을 정의한다. 메모리 위치나 다른 클라이언트 대비 성능 배수는
-          API 보장이 아니다.
+      </div>
+      <div id="paper-alloy-primitives-source" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.alloy.primitives} citeKey={1}>
+          Alloy primitive 문서는 Address·B256·U256과 FixedBytes API의 현재 공개 계약을 제공합니다. 구체적인 layout·feature는 사용한
+          crate version 또는 git SHA에 귀속하며 문서의 타입 안전성을 application schema 안전 전체로 확대하지 않습니다.
         </CitationBlock>
+      </div>
+      <div id="paper-ethereum-rlp-spec" className="scroll-mt-24">
         <CitationBlock {...OFFICIAL_SOURCES.ethereum.rlp} citeKey={2}>
-          RLP는 byte array와 list의 canonical encoding을 정의한다. 이 글은 RLP를
-          “비결정적” 또는 “Ethereum의 유일한 직렬화”로 설명하지 않는다.
+          Ethereum RLP 규격은 byte string과 list의 prefix·length·canonical integer encoding을 정의합니다. Field order와 각 field의
+          의미는 transaction·block 같은 상위 schema가 별도로 소유합니다.
         </CitationBlock>
       </div>
-      <div className="not-prose mt-6">
-        <RLPEncodingViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
+      <div id="paper-reth-alloy-source" className="scroll-mt-24">
+        <CitationBlock source="Reth · Alloy pinned source" href="https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/primitives" citeKey={3} type="code">
+          Reth v2.2.0 source는 어떤 Alloy type과 codec을 실제 storage·execution 경계에서 사용하는지 확인하는 implementation 근거입니다.
+          Moving main의 경로나 benchmark를 v2.2.0 또는 모든 custom node의 고정 동작으로 읽지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

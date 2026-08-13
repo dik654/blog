@@ -15,7 +15,7 @@ export default function PrecompileMapViz() {
 
           {/* Arrow EVM → dispatch */}
           {s >= 2 && (
-            <motion.line x1={90} y1={98} x2={130} y2={98} stroke="#6366f1" strokeWidth={1.5}
+            <motion.line x1={90} y1={98} x2={130} y2={98} stroke="#6366f1" strokeWidth={1.25}
               initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4 }} />
           )}
 
@@ -53,7 +53,7 @@ export default function PrecompileMapViz() {
           {/* Result arrow */}
           {s === 4 && (
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <line x1={440} y1={100} x2={460} y2={100} stroke="#10b981" strokeWidth={1.5} />
+              <line x1={440} y1={100} x2={460} y2={100} stroke="#10b981" strokeWidth={1.25} />
               <rect x={442} y={86} width={30} height={28} rx={4} fill="#10b98115" stroke="#10b981" strokeWidth={1} />
               <text x={457} y={104} textAnchor="middle" fontSize={10} fontWeight="600" fill="#10b981">32B</text>
             </motion.g>

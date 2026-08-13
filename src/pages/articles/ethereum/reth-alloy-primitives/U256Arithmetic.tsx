@@ -1,93 +1,34 @@
+import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
-import U256ArithViz from "./viz/U256ArithViz";
 
-export default function U256Arithmetic({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function U256Arithmetic({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="u256-arithmetic" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">U256 산술 연산</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-        <p className="leading-7">
-          U256은 256 bits를 고정 수의 machine-word limb로 표현한다. 덧셈은 낮은
-          limb에서 높은 limb로 carry를 전파하고, 마지막 carry는 256-bit 범위를
-          넘었다는 신호가 된다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          같은 덧셈, 다른 overflow 의미
-        </h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4 text-xs">
-          <div className="rounded-lg border bg-card p-4">
-            <code>wrapping_add</code>
-            <p className="text-muted-foreground mt-1">
-              mod 2²⁵⁶ 결과. EVM ADD처럼 protocol이 wrapping을 요구할 때 사용
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <code>checked_add</code>
-            <p className="text-muted-foreground mt-1">
-              범위를 넘으면 실패를 반환. 검증·회계 경계에서 사용
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <code>overflowing_add</code>
-            <p className="text-muted-foreground mt-1">
-              wrapped 결과와 overflow flag를 함께 반환
-            </p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <code>saturating_add</code>
-            <p className="text-muted-foreground mt-1">
-              최댓값에서 고정. protocol 의미가 정말 clamp일 때만 사용
-            </p>
-          </div>
-        </div>
-        <p className="leading-7">
-          타입이 안전성을 자동으로 결정해 주지는 않는다. EVM opcode, gas 계산,
-          잔액 검증은 서로 다른 overflow 의미를 가지므로 호출부가 올바른 연산을
-          선택해야 한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Encoding 경계를 놓치지 않기
-        </h3>
-        <ul>
-          <li>
-            내부 limb 순서와 wire의 big-endian bytes를 같은 것으로 가정하지
-            않는다.
-          </li>
-          <li>
-            RLP integer는 불필요한 leading zero를 허용하지 않는 canonical 규칙을
-            따른다.
-          </li>
-          <li>
-            JSON-RPC quantity는 hex prefix와 최소 표현 규칙을 따로 적용한다.
-          </li>
-          <li>EVM stack word는 필요에 따라 정확히 32 bytes로 zero-pad한다.</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          성능 주장을 검증하는 방법
-        </h3>
-        <p className="leading-7">
-          고정 폭 표현은 반복되는 길이 처리와 값 내부의 동적 buffer를 피할 수
-          있지만, 다른 언어의 임의 정밀도 구현보다 항상 일정 배수 빠르다는
-          결론은 나오지 않는다. 비교하려면 동일한 overflow 의미, receiver
-          재사용, compiler와 CPU, allocation 포함 범위를 맞춘 benchmark가
-          필요하다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          EVM 전체 실행에는 state lookup, hashing, memory expansion,
-          precompile과 container allocation도 포함된다. U256의 내부 표현만으로
-          블록 실행 전체의 allocation이나 latency를 단정하지 않는다.
-        </p>
+      <h2 className="mb-5 text-2xl font-bold">U256은 네 개의 64-bit limb를 하나의 unsigned value로 읽는다</h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("u256-limbs", codeRefs["u256-limbs"])} />
+        <CodeViewButton onClick={() => onCodeRef("u256-overflowing", codeRefs["u256-overflowing"])} />
       </div>
-      <div className="not-prose">
-        <U256ArithViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
+      <ExplainedFormula
+        question="Little-endian limb 네 개는 어떤 U256 값을 나타낼까요?"
+        idea="각 limb를 2⁶⁴ 자리 하나로 보고 낮은 자리부터 가중해 더합니다. 이는 내부 산술 표현이며 RLP wire bytes의 순서와 구분합니다."
+        formula={String.raw`x=\sum_{i=0}^{3}\ell_i2^{64i},\qquad 0\leq \ell_i<2^{64}`}
+        terms={[
+          { symbol: "x", name: "U256 값", description: "0부터 2²⁵⁶−1 사이의 unsigned integer" },
+          { symbol: "\\ell_i", name: "i번째 limb", description: "배열의 i번째 64-bit unsigned word" },
+          { symbol: "2^{64i}", name: "자리 가중치", description: "limb i가 담당하는 64-bit radix 위치" },
+          { symbol: "i", name: "limb index", description: "little-endian 내부 배열에서 0·1·2·3" },
+        ]}
+        assumptions={["정확히 네 개의 64-bit limb를 사용합니다.", "식은 수학적 value 해석이며 memory byte order·RLP encoding을 직접 규정하지 않습니다.", "덧셈 결과가 2²⁵⁶ 이상이면 API가 checked·wrapping·saturating 중 무엇인지 명시해야 합니다."]}
+        interpretation="limbs=[5,1,0,0]이면 x=5+2⁶⁴입니다. MAX+1은 수학적으로 범위 밖이므로 checked_add는 실패하고 wrapping_add는 0이 됩니다. 두 결과를 같은 business rule로 쓰면 안 됩니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Multi-limb 덧셈은 낮은 limb에서 생긴 carry를 다음 limb로 전달합니다. EVM arithmetic은 256-bit modulo가 필요한 곳이 있지만
+          balance 합산·length 계산처럼 overflow를 오류로 봐야 하는 경계도 있으므로 함수 이름만이 아니라 호출 목적을 확인합니다.
+        </p>
       </div>
     </section>
   );

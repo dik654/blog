@@ -3,6 +3,7 @@ import { CodeViewButton } from "@/components/code";
 import EffectiveTipViz from "./viz/EffectiveTipViz";
 import { ORDERING_BOUNDARIES, TIP_CASES } from "./EffectiveTipData";
 import { codeRefs } from "./codeRefs";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 
 export default function EffectiveTip({
@@ -38,6 +39,27 @@ export default function EffectiveTip({
       <div className="not-prose mb-8">
         <EffectiveTipViz />
       </div>
+
+      <ExplainedFormula
+        question="Alice가 실제로 낸 금액 중 얼마가 burn되고 얼마가 proposer에게 갈까?"
+        idea="Fee cap은 총 per-gas 가격의 상한이고 priority cap은 tip의 상한입니다. 먼저 두 상한 안에서 유효 tip을 정한 뒤 실제 gas used를 곱해 burn과 tip을 분리합니다."
+        formula={String.raw`\begin{aligned}P_e&=\min(P_m,F_m-B)\\&=3\ \mathrm{gwei/gas}\\[2pt]C_b&=BU\\&=512{,}500\ \mathrm{gwei}\\[2pt]C_t&=P_eU\\&=75{,}000\ \mathrm{gwei}\\[2pt]C&=C_b+C_t\\&=587{,}500\ \mathrm{gwei}\end{aligned}`}
+        terms={[
+          { symbol: "F_m", name: "Max fee cap", description: "Sender가 허용한 총 가격 상한입니다. 예시는 40 gwei/gas입니다." },
+          { symbol: "P_m", name: "Priority fee cap", description: "Sender가 허용한 tip 상한이며 예시는 3 gwei/gas입니다." },
+          { symbol: "B", name: "Current base fee", description: "현재 block의 합의 가격이며 예시는 20.5 gwei/gas입니다." },
+          { symbol: "P_e", name: "Effective tip", description: "두 cap을 모두 만족해 beneficiary에 귀속되는 실제 tip입니다." },
+          { symbol: "U", name: "Transaction gas used", description: "Receipt에서 확정되는 실제 사용량입니다. 예시는 25,000 gas입니다." },
+          { symbol: "C", name: "Execution fee", description: "Refund 이후 실제 gas used에 대한 총 수수료입니다. 단위는 gwei입니다." },
+          { symbol: "C_b, C_t", name: "Burn·tip 금액", description: "각각 protocol이 burn하는 base-fee 금액과 beneficiary에게 귀속되는 tip입니다." },
+        ]}
+        assumptions={[
+          "Transaction의 max fee가 current base fee 이상이라 이 block에서 fee-eligible합니다.",
+          "Blob gas fee와 value transfer는 이 execution-gas 예시에서 제외합니다.",
+          "Tip만으로 block 포함 순서가 정해지지 않으며 sender nonce와 builder constraints가 남습니다.",
+        ]}
+        interpretation="Alice는 587,500 gwei(0.0005875 ETH)를 내고 그중 512,500 gwei는 burn, 75,000 gwei는 beneficiary 몫입니다. Max fee 40 gwei 전부를 내는 것이 아니라 현재 base fee와 유효 tip의 합만 냅니다."
+      />
 
       <h3 className="text-lg font-semibold mb-3">fee-cap 관계별 결과</h3>
       <div className="not-prose grid grid-cols-1 gap-3 sm:grid-cols-2 mb-8">

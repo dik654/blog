@@ -4,6 +4,8 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 import { PIPELINE_STAGES } from "./FullSyncData";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import RethRuntimeViz from "../reth-runtime-viz";
 
 export default function FullSync({
   onCodeRef,
@@ -16,6 +18,7 @@ export default function FullSync({
   return (
     <section id="full-sync" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Full Pipeline 동기화</h2>
+      <RethRuntimeViz mode="sync-pipeline" />
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
         <div className="not-prose flex flex-wrap gap-2 mb-4">
           <CodeViewButton
@@ -87,6 +90,18 @@ export default function FullSync({
         <h3 className="text-xl font-semibold mt-6 mb-3">
           Pipeline 비용을 읽는 법
         </h3>
+        <ExplainedFormula
+          question="여러 stage가 서로 다른 높이까지 끝났을 때 전체 pipeline의 안전한 commit cursor는 어디일까요?"
+          idea="뒤 stage가 소비하는 모든 authoritative 입력이 준비되어야 하므로, 필요한 stage checkpoint 가운데 가장 작은 연속 높이를 선택합니다."
+          formula={String.raw`H_{\mathrm{safe}}=\min_{s\in S_{\mathrm{required}}} H_s`}
+          terms={[
+            { symbol: "H_s", name: "stage checkpoint", description: "stage s가 검증하고 durable commit한 마지막 연속 block 높이" },
+            { symbol: "S_required", name: "required stages", description: "현재 sync 완료 판단에 반드시 필요한 authoritative stage 집합" },
+            { symbol: "H_safe", name: "safe pipeline cursor", description: "다음 consumer나 live handoff가 신뢰할 수 있는 공통 prefix" },
+          ]}
+          assumptions={["Checkpoint는 같은 chain identity·fork·storage generation에 속합니다.", "각 stage write와 checkpoint는 원자적으로 commit됩니다.", "Derived index를 완료 조건에서 제외했다면 그 사실을 profile에 명시합니다."]}
+          interpretation="Headers=120, bodies=118, execution=115라면 안전한 cursor는 115입니다. 120을 내려받았다는 이유로 state가 120까지 실행됐다고 보고해서는 안 됩니다."
+        />
         <div className="not-prose space-y-3 my-4">
           <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
             <p className="text-xs font-bold text-foreground/70 mb-2">

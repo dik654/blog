@@ -21,28 +21,28 @@ export default function Validation({
         <h3>배경</h3>
         <p>
           Pool 입구에서는 transaction envelope를 해석하고 sender를 복구한 뒤
-          현재 chain state와 비교해야 한다. legacy, access-list, dynamic-fee,
-          blob 등 type마다 필수 fields와 fork availability가 다르다.
+          현재 chain state와 비교해야 합니다. Legacy, access-list, dynamic-fee,
+          blob 등 type마다 필수 fields와 fork availability가 다릅니다.
         </p>
         <h3>문제</h3>
         <p>
-          signature 오류처럼 영구 invalid한 입력과, 미래 nonce·현재 base fee처럼
-          head가 바뀌면 실행 가능해질 조건은 결과가 다르다. 검사를 단순
+          Signature 오류처럼 영구 invalid한 입력과, 미래 nonce·현재 base fee처럼
+          head가 바뀌면 실행 가능해질 조건은 결과가 다릅니다. 검사를 단순
           boolean으로 만들면 보관·propagation·peer policy를 정확히 결정할 수
-          없다.
+          없습니다.
         </p>
         <h3>아이디어와 구현</h3>
         <p>
           먼저 decode/type/fork와 크기·fee field 같은 stateless checks를
-          수행하고 signature에서 sender를 복구한다. 그다음 provider의 일관된
+          수행하고 signature에서 sender를 복구합니다. 그다음 provider의 일관된
           account view로 nonce와 balance를 확인하고 blob transaction은 versioned
-          hashes·sidecar availability와 blob-specific policy를 적용한다.
+          hashes·sidecar availability와 blob-specific policy를 적용합니다.
         </p>
         <p>
           검사 순서는 cheap-before-expensive 원칙을 따를 수 있지만 정확한 호출
-          순서와 비용은 구현 버전에 따라 달라진다. 핵심은 expensive work 전에
+          순서와 비용은 구현 버전에 따라 달라집니다. 핵심은 expensive work 전에
           명백한 invalid input을 제거하고, 결과 reason을 pool classification과
-          연결하는 것이다.
+          연결하는 것입니다.
         </p>
       </div>
       <div className="not-prose mb-6">

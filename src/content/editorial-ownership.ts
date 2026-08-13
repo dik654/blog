@@ -3604,6 +3604,190 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "CheckTx·P2P receive·consensus commit을 application disk commit이나 external effect exactly-once로 확대하지 않는다." },
     ],
   },
+  "reth-rpc": {
+    title: "Reth RPC·Engine endpoint 글이 소유하는 범위",
+    owns: [
+      "Public RPC transport·namespace·method-cost exposure policy",
+      "Block selector를 pinned provider view와 typed availability outcome에 연결하는 조회 경계",
+      "Listener·auth·body·concurrency·rate·timeout을 겹치는 middleware budget",
+      "RPC request/error/view/auth failure release gate",
+    ],
+    reuses: [
+      { label: "Reth provider consistent snapshot", href: "/blockchain/reth-provider" },
+      { label: "Engine API version·status·JWT contract", href: "/blockchain/prysm-engine-api" },
+      { label: "Reth payloadId handoff", href: "/blockchain/reth-payload-builder#engine-api" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "JSON-RPC·Engine method·field·error semantics는 pinned execution-apis revision과 active fork에 귀속한다." },
+      { kind: "primary-source", rule: "Module·middleware·provider wiring과 default는 pinned Reth SHA·features·runtime config에 귀속한다." },
+      { kind: "project-measurement", rule: "Snapshot·auth·quota·timeout·restart parity 뒤 latency와 throughput을 비교한다." },
+      { kind: "project-claim", rule: "CORS·JWT·rate limit 하나를 confidentiality·authorization·bounded resource 전체 보장으로 확대하지 않는다." },
+    ],
+  },
+  "reth-exex": {
+    title: "Reth Execution Extensions 글이 소유하는 범위",
+    owns: [
+      "Canonical commit·revert·reorg notification consumer lifecycle",
+      "Derived-state transaction·checkpoint·WAL replay와 external-effect idempotency",
+      "Finished-height aggregation·bounded backpressure·pruning coordination",
+      "Reorg·crash·slow consumer·external ambiguity release gate",
+    ],
+    reuses: [
+      { label: "Reth live-sync·ExEx producer boundary", href: "/blockchain/reth-sync#live-sync" },
+      { label: "Reth provider pinned view", href: "/blockchain/reth-provider" },
+      { label: "Reth reorg·unwind reconciliation", href: "/blockchain/reth#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Notification·WAL·finished-height claim은 pinned Reth SHA와 ExEx documentation에 귀속한다." },
+      { kind: "standard", rule: "Canonical notification과 derived DB/external effect commit을 하나의 exactly-once transaction으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Duplicate·gap·reorg·crash·slow consumer·restart에서 derived state와 receipt parity 뒤 throughput을 비교한다." },
+      { kind: "project-claim", rule: "In-process access를 무손실 event·낮은 latency·node failure isolation의 자동 보장으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-mev": {
+    title: "Reth local payload·external builder·MEV 경계 글이 소유하는 범위",
+    owns: [
+      "Local payload와 external PBS bid의 병렬 readiness·fallback 경계",
+      "Builder API caller·relay·blinded block·payload delivery lifecycle",
+      "Context·signature·fork·value·deadline 기반 bid validation과 proposer selection",
+      "Private bundle intake와 proposer Builder API의 trust-surface 분리",
+      "No-bid·invalid-bid·non-delivery·deadline release gate",
+    ],
+    reuses: [
+      { label: "Reth local payload build lifecycle", href: "/blockchain/reth-payload-builder" },
+      { label: "Engine API payload handoff", href: "/blockchain/prysm-engine-api" },
+      { label: "Validator proposal deadline", href: "/blockchain/prysm-block-proposal" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Builder endpoints·messages·signatures는 pinned builder-specs revision에 귀속한다." },
+      { kind: "primary-source", rule: "Relay aggregation·external builder implementation은 pinned mev-boost·rbuilder SHA에 귀속한다." },
+      { kind: "project-measurement", rule: "같은 slot·parent·relay schedule에서 validation·selection·delivery·fallback parity 뒤 value와 latency를 비교한다." },
+      { kind: "project-claim", rule: "Highest advertised bid를 valid payload·actual payment·neutral relay·on-time delivery 보장으로 확대하지 않는다." },
+    ],
+  },
+  "reth-precompiles": {
+    title: "Reth precompile 글이 소유하는 범위",
+    owns: [
+      "Fork별 precompile address registry와 CALL dispatch",
+      "입력별 protocol gas 선계산과 out-of-gas 경계",
+      "EIP ABI·오류·출력과 native backend parity",
+      "Pinned registry snapshot과 adversarial release gate",
+    ],
+    reuses: [
+      { label: "EVM deterministic execution", href: "/blockchain/evm" },
+      { label: "Reth block execution lifecycle", href: "/blockchain/reth-block-execution" },
+      { label: "ChainSpec fork activation", href: "/blockchain/reth-chainspec" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "주소·입력·gas·실패·출력은 활성 fork의 EIP와 execution rule에 귀속한다." },
+      { kind: "primary-source", rule: "Registry·crate·backend claim은 pinned Reth git SHA와 dependency snapshot에 귀속한다." },
+      { kind: "project-measurement", rule: "Backend 후보는 official vector·differential output·gas·panic isolation parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Native 연산이라는 이유로 gas를 wall-clock 비용이나 library safety 보장으로 확대하지 않는다." },
+    ],
+  },
+  "reth-trie": {
+    title: "Reth Merkle Patricia trie·state-root 글이 소유하는 범위",
+    owns: [
+      "Secure key의 nibble path와 branch·extension·leaf의 canonical encoding",
+      "Account trie 안에 contract storage root를 넣는 nested commitment",
+      "Dirty prefix·overlay·clean sibling reuse와 deterministic parallel merge",
+      "State-root parity를 먼저 확인하는 trie optimization release gate",
+    ],
+    reuses: [
+      { label: "BundleState 변경·revert journal", href: "/blockchain/reth-provider#bundle-state" },
+      { label: "Provider pinned state view", href: "/blockchain/reth-provider" },
+      { label: "DB transaction commit boundary", href: "/blockchain/reth-db" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Node encoding·secure key·state-root semantics는 pinned Yellow Paper와 활성 Ethereum execution specification에 귀속한다." },
+      { kind: "primary-source", rule: "Prefix set·cursor·parallel root implementation claim은 Reth v2.2.0 source snapshot에 제한한다." },
+      { kind: "project-measurement", rule: "Candidate는 create/delete·storage wipe·shared prefix·inline/hash·reorg fixture에서 sequential oracle과 root·node-set parity를 먼저 통과한다." },
+      { kind: "project-claim", rule: "Dirty prefix 수나 worker 수를 실제 DB read·latency·speedup의 보편적 대리값으로 확대하지 않는다." },
+    ],
+  },
+  "reth-pipeline": {
+    title: "Reth staged sync·checkpoint 글이 소유하는 범위",
+    owns: [
+      "Headers→Bodies→Senders→Execution→Merkle dependency order",
+      "Stage별 durable checkpoint와 bounded forward progress",
+      "Common ancestor까지의 reverse-dependency unwind",
+      "Crash/restart receipt와 execution-root recovery release gate",
+    ],
+    reuses: [
+      { label: "Historical·live sync 경계", href: "/blockchain/reth-sync" },
+      { label: "Ordered block transition", href: "/blockchain/reth-block-execution" },
+      { label: "State-root 계산", href: "/blockchain/reth-trie" },
+      { label: "DB atomic commit", href: "/blockchain/reth-db" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Block·receipt·state-root validity는 pinned Ethereum execution specification과 활성 fork에 귀속한다." },
+      { kind: "primary-source", rule: "Stage 이름·checkpoint·execute/unwind seam은 Reth v2.2.0 source snapshot에 제한한다." },
+      { kind: "project-measurement", rule: "Missing input·root mismatch·commit 전후 crash·checkpoint corruption·reorg에서 output과 cursor parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "현재 stage 순서·batch size·sync throughput을 모든 release·storage·network의 고정 동작으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-block-execution": {
+    title: "Reth EVM block transition 글이 소유하는 범위",
+    owns: [
+      "Parent state·block·fork를 묶는 authoritative pre-state context",
+      "Fork-aware EVM environment와 pre/transaction/post ordered transition",
+      "Receipt·gas·logs·receipts root·post-state root의 block postcondition",
+      "Execution parity와 rollback을 먼저 확인하는 release gate",
+    ],
+    reuses: [
+      { label: "EVM opcode·gas semantics", href: "/blockchain/evm" },
+      { label: "ChainSpec fork activation", href: "/blockchain/reth-chainspec" },
+      { label: "Provider overlay·BundleState journal", href: "/blockchain/reth-provider" },
+      { label: "State-root calculation", href: "/blockchain/reth-trie" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Transaction·system operation·receipt·root semantics는 pinned Yellow Paper와 Ethereum execution specification의 활성 fork에 귀속한다." },
+      { kind: "primary-source", rule: "Executor·EVM adapter·state-change ownership claim은 Reth v2.2.0 source snapshot에 제한한다." },
+      { kind: "project-measurement", rule: "Invalid/revert/halt·create/delete/wipe·fork boundary·root mismatch·reorg를 base/candidate에 주입해 receipt·root·journal parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "로컬 execute 성공을 canonical 채택·durable commit·finality로 확대하지 않는다." },
+    ],
+  },
+  "reth-eip1559": {
+    title: "Reth EIP-1559 글이 소유하는 범위",
+    owns: [
+      "Parent target 기반 next base fee 정수 계산과 변화 bound",
+      "Max fee·priority cap·effective tip과 fee eligibility",
+      "Base-fee burn·beneficiary tip의 단위별 accounting",
+      "ChainSpec parameter와 fork-boundary release gate",
+    ],
+    reuses: [
+      { label: "EVM gas accounting", href: "/blockchain/evm-gas" },
+      { label: "ChainSpec fork activation", href: "/blockchain/reth-chainspec" },
+      { label: "Payload transaction selection", href: "/blockchain/reth-payload-builder" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Base fee arithmetic·transaction validity·burn은 EIP-1559와 활성 execution rules에 귀속한다." },
+      { kind: "primary-source", rule: "함수·integer type·ChainSpec 연결은 pinned Reth SHA에 귀속한다." },
+      { kind: "project-measurement", rule: "Fork boundary·target±1·zero·overflow fixture의 header/result parity 뒤 최적화를 비교한다." },
+      { kind: "project-claim", rule: "Tip을 transaction의 유일한 ordering 기준이나 max fee 전액 지불로 해석하지 않는다." },
+    ],
+  },
+  "reth-txpool": {
+    title: "Reth transaction pool 글이 소유하는 범위",
+    owns: [
+      "Admission reject와 보관 가능한 dependency 상태 분리",
+      "Sender nonce chain·replacement·subpool·resource eviction 정책",
+      "Eligible sender-head ordering과 builder consumption 경계",
+      "Canonical update·mined removal·reorg reinjection lifecycle",
+      "Pinned policy provenance와 adversarial release gate",
+    ],
+    reuses: [
+      { label: "EIP-1559 base fee·effective tip", href: "/blockchain/reth-eip1559" },
+      { label: "Reth provider pinned state view", href: "/blockchain/reth-provider" },
+      { label: "Payload builder constraints", href: "/blockchain/reth-payload-builder" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Envelope·signature·nonce·balance·fee validity는 해당 transaction EIP와 execution rules에 귀속한다." },
+      { kind: "primary-source", rule: "Subpool 이름·default·replacement·maintenance behavior는 pinned Reth SHA와 runtime config에 귀속한다." },
+      { kind: "project-measurement", rule: "Admission flood·replacement·nonce gap·repricing·reorg·restart parity 뒤 throughput을 비교한다." },
+      { kind: "project-claim", rule: "Local pool membership·ordering·retention을 consensus나 eventual inclusion 보장으로 확대하지 않는다." },
+    ],
+  },
   "reth-cli": {
     title: "Reth CLI·NodeBuilder 글이 소유하는 범위",
     owns: [
@@ -3623,6 +3807,70 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "CLI parse success와 compile-time assembly success를 runtime readiness·chain correctness로 확대하지 않는다." },
       { kind: "project-measurement", rule: "같은 normalized config·chain spec·storage snapshot에서 failure matrix와 lifecycle receipt parity를 먼저 비교한다." },
       { kind: "project-claim", rule: "Moving main·old crate layout·README 성능을 모든 release·custom node의 고정 동작으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-alloy-primitives": {
+    title: "Reth Alloy primitive·RLP 글이 소유하는 범위",
+    owns: [
+      "Address·B256·U256의 fixed width·semantic type·checked conversion 경계",
+      "RLP byte string/list prefix와 minimal integer canonical form",
+      "U256 limb/value mapping과 checked·wrapping overflow 선택",
+      "Bounded exact RLP decode와 typed error·trailing-byte rejection",
+      "CREATE·CREATE2·bloom hash domain과 paired type/codec release gate",
+    ],
+    reuses: [
+      { label: "Bit·byte의 기초", href: "/ai/text-unicode-encoding#bits-bytes" },
+      { label: "Reth block·storage lifecycle", href: "/blockchain/reth" },
+      { label: "Typed DB codec 소비자", href: "/blockchain/reth-db" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "RLP canonical form·Ethereum hash/address derivation은 고정한 protocol specification·schema에 귀속한다." },
+      { kind: "primary-source", rule: "Primitive layout·trait·method·codec claim은 표시한 Alloy/Reth crate semver 또는 SHA와 feature에 귀속한다." },
+      { kind: "project-measurement", rule: "Boundary value·wrong width·malformed encoding·hash domain fixture의 typed value·bytes·error·digest parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "같은 width·round-trip·hash collision resistance를 semantic schema·canonical input·application validity 전체로 확대하지 않는다." },
+    ],
+  },
+  "reth-db": {
+    title: "Reth typed DB·static history 글이 소유하는 범위",
+    owns: [
+      "Typed table의 key/value codec·ordering·duplicate policy·schema version",
+      "Mutable latest·immutable history·secondary index의 physical route와 lifetime",
+      "Block write set·canonical marker·commit/sync/stable-media durability 경계",
+      "Transaction snapshot cursor ordering·borrow lifetime",
+      "Static segment coverage manifest와 crash/migration release gate",
+    ],
+    reuses: [
+      { label: "Reth storage-tier owner", href: "/blockchain/reth" },
+      { label: "Alloy typed value·canonical bytes", href: "/blockchain/reth-alloy-primitives" },
+      { label: "MDBX B+tree·MVCC·mmap", href: "/blockchain/mdbx-internals" },
+      { label: "Provider pinned read view", href: "/blockchain/reth-provider" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Table·transaction·cursor·static-file·Storage V2 claim은 표시한 Reth release/SHA와 backend version에 귀속한다." },
+      { kind: "standard", rule: "Engine commit·sync semantics는 해당 DB engine·OS/filesystem·flags 범위로 제한하고 Reth logical schema와 구분한다." },
+      { kind: "project-measurement", rule: "같은 chain snapshot·schema에서 crash·corruption·migration·reorg parity를 먼저 통과한 뒤 amplification·disk·latency를 비교한다." },
+      { kind: "project-claim", rule: "Storage V2 default·commit return·segment 존재를 자동 migration·power-loss durability·complete history로 확대하지 않는다." },
+    ],
+  },
+  "reth-provider": {
+    title: "Reth provider consistent read 글이 소유하는 범위",
+    owns: [
+      "Block hash·state root·storage generation·overlay revision의 provider view identity",
+      "Overlay value/tombstone과 pinned base snapshot의 read precedence",
+      "Valid absence·unknown·pruned·corrupt·stale-view·backend error의 typed outcome",
+      "Bundle post-state·original/revert journal과 historical reconstruction",
+      "Reorg·migration·crash·concurrent query provider release gate",
+    ],
+    reuses: [
+      { label: "Reth provider consistent-view 상위 invariant", href: "/blockchain/reth#overview" },
+      { label: "Reth typed transaction·storage route", href: "/blockchain/reth-db" },
+      { label: "Reth reorg·unwind reconciliation", href: "/blockchain/reth#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Provider trait·overlay·historical route claim은 표시한 Reth release/SHA·features·storage/prune config에 귀속한다." },
+      { kind: "standard", rule: "DB transaction capability를 provider의 block/root identity·archive completeness·proof validity로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 query·chain fixture에서 reorg·tombstone·prune·corruption·generation switch·crash outcome parity 뒤 latency를 비교한다." },
+      { kind: "project-claim", rule: "Trait compile·cache hit·None·latest label을 consistent snapshot·valid absence·canonical answer의 보장으로 일반화하지 않는다." },
     ],
   },
   "reth-chainspec": {
@@ -3665,6 +3913,69 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "Address discovery·signature·TCP·encrypted channel·Status를 peer honesty나 block validity로 확대하지 않는다." },
       { kind: "project-measurement", rule: "같은 signed record·DNS·clock·seed·fault schedule에서 state·cleanup·message parity를 먼저 검사한다." },
       { kind: "project-claim", rule: "특정 ETH version·queue size·peer limit·Discv5 default를 모든 release·deployment의 고정값으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-eip4844": {
+    title: "Reth EIP-4844 blob transaction 글이 소유하는 범위",
+    owns: [
+      "Type-3 transaction의 versioned hash와 sidecar artifact 분리",
+      "Reth blob pool admission·BlobStore·reorg·finalization cleanup 경계",
+      "Fork-aware excess blob gas와 정수 fee feedback 계산",
+      "Blob artifact lifecycle correctness·availability release gate",
+    ],
+    reuses: [
+      { label: "KZG commitment와 polynomial opening", href: "/crypto/polycommit#kzg10" },
+      { label: "EIP-1559 execution fee market", href: "/blockchain/reth-eip1559" },
+      { label: "Reth transaction pool ordering과 admission", href: "/blockchain/reth-txpool" },
+      { label: "Prysm blob sidecar consensus path", href: "/blockchain/prysm-blob-sidecar" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Blob transaction·gas·versioned hash claim은 활성 fork의 EIP-4844·execution spec과 pinned Reth source에 귀속한다." },
+      { kind: "standard", rule: "Execution txpool sidecar retention을 consensus-layer data-availability 기간이나 장기 archive 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 fork parameter·tx/sidecar·KZG fixture와 reorg schedule에서 admission·fee·cleanup parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "Blob fee 감소를 rollup 총비용의 고정 배수 감소나 blob data의 영구 가용성으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-payload-builder": {
+    title: "Reth payload builder 글이 소유하는 범위",
+    owns: [
+      "Payload attributes·parent state·pool generation을 묶은 build identity",
+      "Build job snapshot·deadline·cancellation과 candidate overlay 경계",
+      "Gas·blob·dependency budget 안의 transaction selection과 best payload 교체",
+      "Engine payload ID 조회·restart·fork mismatch와 payload release gate",
+    ],
+    reuses: [
+      { label: "Reth transaction pool ordering", href: "/blockchain/reth-txpool" },
+      { label: "Reth block execution과 state transition", href: "/blockchain/reth-block-execution" },
+      { label: "Engine API execution/consensus handoff", href: "/blockchain/prysm-engine-api" },
+      { label: "Blob gas와 sidecar boundary", href: "/blockchain/reth-eip4844" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Payload job·attribute·builder API claim은 pinned Reth release/source와 활성 Engine API fork specification에 귀속한다." },
+      { kind: "standard", rule: "Local candidate value·payload ID·job completion을 canonical block이나 proposer 채택 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 parent/state/pool snapshot·attributes·deadline에서 payload bytes·receipts·value·terminal status parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "특정 ordering·timeout·parallelism을 모든 Reth release와 builder customization의 고정 동작으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-sync": {
+    title: "Reth staged·backfill·live sync 글이 소유하는 범위",
+    owns: [
+      "Sync anchor·target·source와 검증된 contiguous commit cursor",
+      "Staged pipeline checkpoint의 ordering·atomic commit·unwind 경계",
+      "Backfill과 live canonical notification 사이의 handoff fence",
+      "Reorg·crash·gap recovery와 sync release gate",
+    ],
+    reuses: [
+      { label: "Reth pipeline stage와 checkpoint", href: "/blockchain/reth-pipeline" },
+      { label: "Reth network peer/session boundary", href: "/blockchain/reth-net" },
+      { label: "Reth provider pinned view", href: "/blockchain/reth-provider" },
+      { label: "ExEx external consumer boundary", href: "/blockchain/reth-exex" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Stage·checkpoint·notification claim은 pinned Reth source와 실행한 release의 storage schema에 귀속한다." },
+      { kind: "standard", rule: "Downloaded range·peer majority·process liveness를 executed canonical prefix나 finalized correctness로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 chain snapshot·peer ranges·reorg/crash schedule에서 stage cursor·state root·handoff receipt parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "Batch size·stage order detail·sync 속도를 모든 network·database·hardware profile의 상수로 일반화하지 않는다." },
     ],
   },
   reth: {

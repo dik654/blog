@@ -1,7 +1,7 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import EngineDetailViz from "./viz/EngineDetailViz";
+import RethRuntimeViz from "../reth-runtime-viz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -11,6 +11,7 @@ export default function EngineApi({ onCodeRef }: Props) {
   return (
     <section id="engine-api" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Engine API에서 build job까지</h2>
+      <RethRuntimeViz mode="engine-handoff" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-2 mb-3">
           forkchoiceUpdated 입력
@@ -67,9 +68,6 @@ export default function EngineApi({ onCodeRef }: Props) {
           있어도 이것만으로 외부 bid의 유효성 검증과 선택 로직 전체가 대체되지는
           않는다.
         </p>
-      </div>
-      <div className="not-prose mb-6">
-        <EngineDetailViz />
       </div>
     </section>
   );

@@ -1,6 +1,8 @@
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function Kzg({
   onCodeRef,
@@ -104,6 +106,18 @@ export default function Kzg({
         <h3 className="text-xl font-semibold mt-6 mb-3">
           Versioned Hash — 미래 호환성
         </h3>
+        <ExplainedFormula
+          question="48-byte KZG commitment를 transaction이 참조하는 32-byte identifier로 어떻게 바꿀까요?"
+          idea="Commitment를 SHA-256으로 hash한 뒤 첫 byte를 scheme version으로 예약합니다. 이 값은 blob 원문을 압축한 것이 아니라 commitment 종류와 digest를 묶은 식별자입니다."
+          formula={String.raw`h_v=\mathrm{0x01}\ \Vert\ \mathrm{SHA256}(C)[1{:}32]`}
+          terms={[
+            { symbol: "C", name: "KZG commitment", description: "blob polynomial에 결속된 48-byte G1 encoding" },
+            { symbol: "0x01", name: "version byte", description: "현재 KZG commitment scheme을 식별하는 첫 byte" },
+            { symbol: String.raw`\Vert`, name: "concatenation", description: "version byte와 digest의 뒤 31 bytes를 이어 붙이는 연산" },
+          ]}
+          assumptions={["Commitment encoding과 SHA-256 규칙은 활성 EIP-4844 specification을 따릅니다.", "입력 commitment와 sidecar proof는 별도로 검증합니다."]}
+          interpretation="같은 commitment는 같은 versioned hash를 만들지만, hash만으로 blob을 복원하거나 KZG proof의 유효성을 대신 확인할 수는 없습니다."
+        />
         <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
           <div className="rounded-lg border border-border/60 p-4">
             <p className="text-xs font-semibold text-indigo-400 mb-2">
@@ -181,6 +195,11 @@ export default function Kzg({
         <p className="mt-3 border-l-2 border-amber-500/50 pl-3 text-sm">
           <strong>Point-evaluation precompile(0x0A)</strong>은 L2가 L1 blob의 특정 evaluation을 검증할 수 있게 하지만, blob data 자체를 EVM에 다시 제공하지는 않습니다. Fraud proof나 bridge logic이 사용할 때도 data availability 경로와 proof 검증 경로를 구분해야 합니다.
         </p>
+        <div id="paper-kzg-ceremony" className="not-prose scroll-mt-24">
+          <CitationBlock source="Ethereum KZG Ceremony specifications" href="https://github.com/ethereum/kzg-ceremony-specs" citeKey={3}>
+            Ceremony 자료는 KZG public parameter 생성과 contribution 검증의 근거입니다. 한 명의 정직한 참여자가 기여를 안전하게 폐기했다는 보안 가정은 node의 setup file 배포·checksum·library correctness까지 자동 보장하지 않습니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

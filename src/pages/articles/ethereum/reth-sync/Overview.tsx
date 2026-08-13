@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ContextViz from "./viz/ContextViz";
-import SyncStrategyViz from "./viz/SyncStrategyViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import RethRuntimeViz from "../reth-runtime-viz";
 import type { CodeRef } from "@/components/code/types";
 import { SYNC_MODES, SYNC_COMPARISONS } from "./OverviewData";
 
@@ -16,9 +17,8 @@ export default function Overview({
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Reth sync는 catch-up pipeline을 live import로 handoff한다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
+      <ContentBoundary article="reth-sync" />
+      <RethRuntimeViz mode="sync-paths" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p className="leading-7">
@@ -150,7 +150,7 @@ export default function Overview({
         </p>
       </div>
 
-      <div className="not-prose grid grid-cols-3 gap-3 mb-4">
+      <div className="not-prose grid grid-cols-1 gap-3 mb-4 sm:grid-cols-3">
         {SYNC_MODES.map((m) => (
           <button
             key={m.id}
@@ -228,8 +228,15 @@ export default function Overview({
         </table>
       </div>
 
-      <div className="not-prose mt-6">
-        <SyncStrategyViz />
+      <div id="paper-reth-sync-source" className="scroll-mt-24">
+        <CitationBlock source="paradigmxyz/reth — staged sync and engine tree" href="https://github.com/paradigmxyz/reth" citeKey={1} type="code">
+          Reth source는 pipeline, backfill orchestrator와 live engine path의 구현 근거입니다. Stage 구성·threshold·package layout은 고정한 release 또는 SHA 범위로만 읽습니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-engine-api-sync" className="scroll-mt-24">
+        <CitationBlock source="Ethereum Engine API specification" href="https://github.com/ethereum/execution-apis/tree/main/src/engine" citeKey={2}>
+          Engine API는 consensus client가 head·safe·finalized와 payload를 execution client에 전달하는 표준 경계입니다. Reth의 internal backfill scheduling이나 database checkpoint를 규정하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

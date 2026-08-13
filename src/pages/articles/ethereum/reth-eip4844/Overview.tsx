@@ -1,5 +1,6 @@
-import ContextViz from "./viz/ContextViz";
-import BlobTxViz from "./viz/BlobTxViz";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import RethRuntimeViz from "../reth-runtime-viz";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import type { CodeRef } from "@/components/code/types";
@@ -27,9 +28,8 @@ export default function Overview({
           </span>
         </div>
       </div>
-      <div className="not-prose my-8">
-        <ContextViz />
-      </div>
+      <ContentBoundary article="reth-eip4844" />
+      <RethRuntimeViz mode="blob-boundary" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         {/* ── Blob TX 동기 ── */}
@@ -219,8 +219,15 @@ export default function Overview({
           Header의 <code>blob_gas_used</code>는 현재 block의 사용량을 기록하고, <code>excess_blob_gas</code>는 이전 block에서 이어진 초과 수요를 기록합니다. 이 두 값으로 blob fee market은 execution gas와 독립된 가격 신호를 만들지만, blob transaction도 block 검증과 networking 자원을 사용하므로 두 시장의 운영 영향까지 완전히 분리되는 것은 아닙니다.
         </p>
       </div>
-      <div className="not-prose mt-6">
-        <BlobTxViz />
+      <div id="paper-eip4844" className="scroll-mt-24">
+        <CitationBlock source="EIP-4844 — Shard Blob Transactions" href="https://eips.ethereum.org/EIPS/eip-4844" citeKey={1}>
+          이 규격은 type-3 transaction, versioned hash, blob gas와 point-evaluation precompile의 규범적 의미를 정의합니다. Reth의 pool·store 구조나 처리량을 정하는 문서는 아닙니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-reth-eip4844-source" className="scroll-mt-24">
+        <CitationBlock source="paradigmxyz/reth — EIP-4844 implementation" href="https://github.com/paradigmxyz/reth" citeKey={2} type="code">
+          Reth source는 transaction validation, blob store와 canonical tracker의 구현 근거입니다. 함수명·경로·성능은 고정한 release 또는 git SHA 범위로만 읽습니다.
+        </CitationBlock>
       </div>
     </section>
   );

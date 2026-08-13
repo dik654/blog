@@ -1,6 +1,6 @@
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import BlobPoolDetailViz from "./viz/BlobPoolDetailViz";
+import RethRuntimeViz from "../reth-runtime-viz";
 import type { CodeRef } from "@/components/code/types";
 
 export default function BlobPool({
@@ -12,7 +12,7 @@ export default function BlobPool({
     <section id="blob-pool" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">BlobPool 관리</h2>
       <div className="not-prose mb-8">
-        <BlobPoolDetailViz />
+        <RethRuntimeViz mode="blob-pool" />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div className="not-prose flex flex-wrap gap-2 mb-4">

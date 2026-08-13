@@ -1,7 +1,8 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import BuildJobDetailViz from "./viz/BuildJobDetailViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import RethRuntimeViz from "../reth-runtime-viz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -11,6 +12,7 @@ export default function BuildJob({ onCodeRef }: Props) {
   return (
     <section id="build-job" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Build job 내부</h2>
+      <RethRuntimeViz mode="payload-job" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           Build job은 txpool 목록을 단순히 fee 순으로 복사하지 않는다. parent
@@ -42,6 +44,19 @@ export default function BuildJob({ onCodeRef }: Props) {
         <h3 className="text-xl font-semibold mt-6 mb-3">
           Best candidate의 기준
         </h3>
+        <ExplainedFormula
+          question="한 candidate가 block의 execution gas와 blob gas 예산 안에 들어오는지 어떻게 판정할까요?"
+          idea="서로 단위가 다른 두 자원을 한 숫자로 더하지 않고 각각 독립된 상한으로 검사합니다. 유효성 검사를 통과한 후보끼리만 value를 비교합니다."
+          formula={String.raw`G(C)=\sum_{t\in C}g_t\le G_{\max},\qquad B(C)=\sum_{t\in C}b_t\le B_{\max}`}
+          terms={[
+            { symbol: "C", name: "candidate", description: "현재 snapshot에서 순서대로 실행해 성공한 transaction 집합" },
+            { symbol: "g_t", name: "execution gas", description: "transaction t가 실제 사용한 execution gas" },
+            { symbol: "b_t", name: "blob gas", description: "transaction t가 소비한 blob gas" },
+            { symbol: "G_max, B_max", name: "fork budgets", description: "활성 fork와 parent context가 정한 독립 상한" },
+          ]}
+          assumptions={["모든 transaction은 같은 parent-state overlay에서 순서대로 실행합니다.", "Nonce·balance·fork rule·block size 같은 다른 validity 조건도 별도로 통과해야 합니다.", "Pool ordering은 탐색 순서이지 포함 보장이 아닙니다."]}
+          interpretation="예를 들어 execution gas가 21k+50k이고 상한이 100k이면 첫 조건은 통과합니다. 그러나 blob gas가 상한을 넘으면 value가 커도 candidate에는 넣을 수 없습니다."
+        />
         <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
           <div className="rounded-lg border bg-card p-4">
             <strong className="text-sm">Validity</strong>
@@ -87,9 +102,6 @@ export default function BuildJob({ onCodeRef }: Props) {
           다른 지표다. 시점에 따라 변하는 APR·MEV 수치를 build job의 동작 설명에
           넣지 않는다.
         </p>
-      </div>
-      <div className="not-prose mb-6">
-        <BuildJobDetailViz />
       </div>
     </section>
   );

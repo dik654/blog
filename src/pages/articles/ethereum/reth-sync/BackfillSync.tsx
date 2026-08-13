@@ -1,4 +1,5 @@
 import type { CodeRef } from "@/components/code/types";
+import RethRuntimeViz from "../reth-runtime-viz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -31,6 +32,7 @@ export default function BackfillSync({ onCodeRef: _onCodeRef }: Props) {
   return (
     <section id="backfill-sync" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Backfill Sync와 Live handoff</h2>
+      <RethRuntimeViz mode="sync-handoff" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           Reth의 실행 경로는 사용자에게{" "}

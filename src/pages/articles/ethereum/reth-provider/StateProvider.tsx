@@ -1,96 +1,37 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { CodeViewButton } from "@/components/code";
-import StateProviderViz from "./viz/StateProviderViz";
-import { codeRefs } from "./codeRefs";
-import { IMPLEMENTORS, TRAIT_METHODS } from "./StateProviderData";
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { codeRefs } from "./codeRefs";
 
-export default function StateProvider({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  const [active, setActive] = useState(0);
-
+export default function StateProvider({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="state-provider" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        StateProvider는 state view의 계약
-      </h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          StateProvider의 핵심은 메서드 수가 세 개라는 점이 아니라 모든 조회가
-          같은 시점의 state view를 본다는 점입니다. account를 latest에서 읽고
-          storage를 다른 transaction snapshot에서 읽으면 조합된 결과가 실제 어느
-          block에도 존재하지 않을 수 있습니다.
+      <h2 className="mb-5 text-2xl font-bold">StateProvider는 account·storage·bytecode를 같은 view identity 아래에서 읽는다</h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("provider-trait", codeRefs["provider-trait"])} />
+      </div>
+      <ExplainedFormula
+        question="Execution overlay가 있는 query는 key k를 어느 source에서 읽어야 할까요?"
+        idea="이번 실행에서 k가 변경됐다면 overlay 값을 우선하고, 변경 기록이 없을 때만 pinned base snapshot으로 내려갑니다. 삭제 tombstone도 ‘없음’과 구분된 overlay 값입니다."
+        formula={String.raw`R_V(k)=\begin{cases}O_V(k),&k\in\operatorname{dom}(O_V)\\B_V(k),&\text{otherwise}\end{cases}`}
+        terms={[
+          { symbol: "R_V(k)", name: "view read 결과", description: "view V에서 key k를 조회한 value 또는 typed absence" },
+          { symbol: "O_V", name: "overlay", description: "view V의 미커밋·실행 중 변경과 tombstone" },
+          { symbol: "B_V", name: "base snapshot", description: "같은 block/root/generation에 고정한 DB·history view" },
+          { symbol: "\\operatorname{dom}(O_V)", name: "overlay key 집합", description: "값 변경 또는 삭제가 명시된 key들" },
+        ]}
+        assumptions={["Overlay와 base가 같은 parent/block context에 속합니다.", "Tombstone·not-found·pruned·I/O error를 서로 다른 outcome으로 보존합니다.", "View V가 stale해지면 다른 generation을 조용히 섞지 않고 retryable error를 반환합니다."]}
+        interpretation="Base balance가 10이고 overlay가 7이면 7을 읽습니다. Overlay tombstone이면 base의 10으로 fallback하지 않고 삭제된 account로 읽어야 합니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Provider factory는 latest·pending·historical 요청을 canonical hash와 state root로 resolve한 뒤 view handle을 만듭니다. Account와
+          storage slot 두 번의 호출 사이에도 같은 handle을 써야 하며, latest를 매 method에서 다시 resolve하면 reorg 중 mixed state가 됩니다.
         </p>
-        <p className="leading-7">
-          Provider factory는 latest, historical 또는 in-memory overlay 문맥을
-          고정하고 그 수명 안에서 필요한 capability를 제공합니다. revm adapter는
-          이 contract를 실행 엔진의 database interface로 변환하며 physical
-          MDBX·RocksDB·static-file 경로를 알 필요가 없습니다.{" "}
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("provider-trait", codeRefs["provider-trait"])
-            }
-          />
+        <p>
+          `None`은 존재하지 않음일 수 있지만 pruned history, unknown block, corrupt segment와 backend error는 별도입니다. Caller가
+          archive query 실패를 zero balance로 바꾸지 않도록 typed outcome과 source tier·coverage를 반환합니다.
         </p>
-      </div>
-
-      <div className="not-prose mb-8">
-        <StateProviderViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
-      </div>
-
-      <h3 className="text-lg font-semibold mb-3">조회 capability</h3>
-      <div className="not-prose space-y-2 mb-8">
-        {TRAIT_METHODS.map((method, index) => (
-          <div
-            key={method.name}
-            className="overflow-hidden rounded-xl border border-border/60"
-          >
-            <button
-              type="button"
-              onClick={() => setActive(index)}
-              className="flex w-full cursor-pointer flex-wrap items-center gap-2 px-4 py-3 text-left"
-            >
-              <code className="text-sm font-semibold text-indigo-400">
-                {method.name}
-              </code>
-              <span className="text-xs text-foreground/45">
-                → {method.returns}
-              </span>
-            </button>
-            <AnimatePresence initial={false}>
-              {active === index && (
-                <motion.p
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden border-t border-border/40 px-4 py-3 text-sm leading-6 text-foreground/70"
-                >
-                  {method.desc}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-
-      <h3 className="text-lg font-semibold mb-3">같은 trait, 다른 시점</h3>
-      <div className="not-prose grid grid-cols-2 gap-2 mb-8">
-        {IMPLEMENTORS.map((item) => (
-          <div
-            key={item.name}
-            className="rounded-xl border border-border/60 p-3"
-          >
-            <p className="text-sm font-semibold" style={{ color: item.color }}>
-              {item.name}
-            </p>
-            <p className="mt-1 text-xs text-foreground/55">{item.desc}</p>
-          </div>
-        ))}
       </div>
     </section>
   );

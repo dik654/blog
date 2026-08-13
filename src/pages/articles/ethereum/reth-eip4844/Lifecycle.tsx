@@ -1,6 +1,6 @@
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import LifecycleViz from "./viz/LifecycleViz";
+import RethRuntimeViz from "../reth-runtime-viz";
 import type { CodeRef } from "@/components/code/types";
 
 export default function Lifecycle({
@@ -12,7 +12,7 @@ export default function Lifecycle({
     <section id="lifecycle" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Blob 생명주기</h2>
       <div className="not-prose mb-8">
-        <LifecycleViz />
+        <RethRuntimeViz mode="blob-lifecycle" />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div className="not-prose flex flex-wrap gap-2 mb-4">

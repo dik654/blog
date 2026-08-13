@@ -1,91 +1,37 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import CodeViewButton from "@/components/code/CodeViewButton";
-import CursorDetailViz from "./viz/CursorDetailViz";
-import CursorWalkViz from "./viz/CursorWalkViz";
-import { CURSOR_OPS } from "./CursorData";
-import { codeRefs } from "./codeRefs";
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { codeRefs } from "./codeRefs";
 
-export default function Cursor({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  const [active, setActive] = useState(0);
-
+export default function Cursor({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="cursor" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        Cursor와 transaction이 보장하는 조회 경계
-      </h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          Cursor는 정렬된 key space에서 위치를 잡고 연속 항목을 순회하는
-          API입니다. 특히 Storage V1의 MDBX tables에서는 <code>seek</code>,{" "}
-          <code>next</code>, DupSort와 read/write transaction을 직접 반영합니다.
-          다만 이 동작을 모든 Storage V2 query의 physical 구현으로 일반화하면 안
-          됩니다.
+      <h2 className="mb-5 text-2xl font-bold">Cursor는 정렬된 key를 transaction snapshot 안에서만 걷는다</h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("db-cursor", codeRefs["db-cursor"])} />
+      </div>
+      <ExplainedFormula
+        question="Half-open range [a,b)를 걷는 cursor가 반환해야 할 key 순서는 무엇일까요?"
+        idea="처음 key는 a 이상인 가장 작은 key이고, 이후 key는 엄격히 증가하되 b에 도달하기 전에 멈춥니다. 같은 read transaction이 유지돼야 중간 writer 때문에 순서가 섞이지 않습니다."
+        formula={String.raw`a\leq k_0<k_1<\cdots<k_r<b`}
+        terms={[
+          { symbol: "a", name: "시작 key", description: "seek가 찾을 inclusive lower bound" },
+          { symbol: "b", name: "끝 key", description: "walk가 포함하지 않는 exclusive upper bound" },
+          { symbol: "k_i", name: "반환 key", description: "같은 snapshot에서 i번째로 decode한 typed key" },
+          { symbol: "r", name: "마지막 index", description: "range 안에서 실제 반환된 record 수보다 하나 작은 값" },
+        ]}
+        assumptions={["Disk codec의 lexicographic order가 logical key order와 일치합니다.", "Cursor 수명 동안 같은 read/write transaction과 database generation을 유지합니다.", "DupSort table은 동일 primary key 안의 subkey ordering을 별도로 정의합니다."]}
+        interpretation="Keys 2·4·7·9에서 [4,9)는 4·7만 반환합니다. Walk 중 transaction을 닫거나 다른 generation cursor를 섞으면 이 순서 보장을 사용할 수 없습니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Seek는 exact match와 lower-bound를 구분하고, next/prev는 현재 cursor position을 바꿉니다. Returned slice가 mmap page를
+          borrow한다면 transaction 종료 뒤 참조하면 안 되므로 decode/복사 ownership도 API lifetime에 포함됩니다.
         </p>
-        <p className="leading-7">
-          중요한 공통 규칙은 조회가 일관된 transaction 또는 immutable segment
-          경계 안에서 이뤄지고, iterator 수명이 그 경계를 넘지 않는다는
-          점입니다. provider는 RocksDB index나 static file을 사용할 때도 같은
-          domain-level ordering과 availability를 제공하지만 내부 자료구조까지
-          B+tree cursor일 필요는 없습니다.{" "}
-          <CodeViewButton
-            onClick={() => onCodeRef("db-cursor", codeRefs["db-cursor"])}
-          />
+        <p>
+          Write cursor의 put·upsert·append에는 정렬 precondition과 duplicate policy가 다릅니다. 오류나 panic이 나면 transaction을
+          abort하고 cursor·borrow를 모두 폐기하며, retry는 stable operation ID와 같은 input에서 새 transaction으로 시작합니다.
         </p>
-      </div>
-
-      <div className="not-prose mb-8">
-        <CursorWalkViz />
-      </div>
-
-      <h3 className="text-lg font-semibold mb-3">주요 연산과 precondition</h3>
-      <div className="not-prose space-y-2 mb-8">
-        {CURSOR_OPS.map((item, index) => (
-          <div
-            key={item.title}
-            className="overflow-hidden rounded-xl border border-border/60"
-          >
-            <button
-              type="button"
-              onClick={() => setActive(index)}
-              className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left"
-            >
-              <span
-                className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${active === index ? "bg-sky-500 text-white" : "bg-muted text-muted-foreground"}`}
-              >
-                {index + 1}
-              </span>
-              <code className="text-sm font-semibold">{item.title}</code>
-            </button>
-            <AnimatePresence initial={false}>
-              {active === index && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden border-t border-border/40 px-4 py-3"
-                >
-                  <p className="text-sm leading-6 text-foreground/75">
-                    {item.desc}
-                  </p>
-                  <p className="mt-1 text-xs text-foreground/50">
-                    사용 문맥: {item.useCase}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-
-      <div className="not-prose">
-        <CursorDetailViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import BlobStoreViz from "./viz/BlobStoreViz";
+import RethRuntimeViz from "../reth-runtime-viz";
 import type { CodeRef } from "@/components/code/types";
 
 export default function BlobStore({
@@ -12,7 +12,7 @@ export default function BlobStore({
     <section id="blob-store" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">BlobStore 저장소</h2>
       <div className="not-prose mb-8">
-        <BlobStoreViz />
+        <RethRuntimeViz mode="blob-store" />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div className="not-prose flex flex-wrap gap-2 mb-4">

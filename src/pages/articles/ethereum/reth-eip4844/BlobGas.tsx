@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import BlobGasDetailViz from "./viz/BlobGasDetailViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import RethRuntimeViz from "../reth-runtime-viz";
 import type { CodeRef } from "@/components/code/types";
 
 export default function BlobGas({
@@ -25,7 +26,7 @@ export default function BlobGas({
         </div>
       </div>
       <div className="not-prose my-8">
-        <BlobGasDetailViz />
+        <RethRuntimeViz mode="blob-gas" />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div className="not-prose flex flex-wrap gap-2 mb-4">
@@ -43,6 +44,18 @@ export default function BlobGas({
         <h3 className="text-xl font-semibold mt-6 mb-3">
           excess_blob_gas — 누적 초과분
         </h3>
+        <ExplainedFormula
+          question="부모 block의 사용량으로 다음 block이 이어받을 초과 수요를 어떻게 계산할까요?"
+          idea="부모가 이미 갖고 있던 excess에 실제 사용량을 더한 뒤 활성 fork의 target을 빼되, 수요가 target보다 작았을 때는 음수가 아니라 0에서 멈춥니다."
+          formula={String.raw`E_{n+1}=\max\!\left(0,\ E_n+U_n-T_n\right)`}
+          terms={[
+            { symbol: "E_n", name: "parent excess", description: "부모 header가 보존한 누적 초과 blob gas" },
+            { symbol: "U_n", name: "parent usage", description: "부모 block이 실제 사용한 blob gas" },
+            { symbol: "T_n", name: "active target", description: "부모 시점의 fork schedule이 정한 target blob gas" },
+          ]}
+          assumptions={["세 값은 모두 blob gas 단위입니다.", "Fork activation과 header validation이 먼저 끝나야 합니다.", "정수 overflow는 구현의 checked/saturating contract로 다룹니다."]}
+          interpretation="예를 들어 E=2, U=5, T=3이면 다음 excess는 4입니다. U가 0이면 max(0,2-3)=0이므로 초과 상태가 음수로 내려가지는 않습니다. 이 식만으로 현재 transaction의 총 수수료나 rollup 총비용을 알 수는 없습니다."
+        />
         <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
           <div className="rounded-lg border border-border/60 p-4">
             <p className="text-xs font-semibold text-indigo-400 mb-2">

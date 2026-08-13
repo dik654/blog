@@ -2,6 +2,8 @@ import { useState } from "react";
 import ContextViz from "./viz/ContextViz";
 import BaseFeeViz from "./viz/BaseFeeViz";
 import { DESIGN_CHOICES, FEE_COMPONENTS } from "./OverviewData";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation-block";
 import type { CodeRef } from "@/components/code/types";
 
 export default function Overview({
@@ -35,7 +37,18 @@ export default function Overview({
           integer multiplication, division 순서, rounding과 increase branch의
           최소 1 wei 규칙입니다.
         </p>
+        <p className="leading-7">
+          고정 예시를 먼저 잡겠습니다. Parent gas limit은 30,000,000 gas,
+          target은 절반인 15,000,000 gas, 실제 사용량은 18,000,000 gas이고
+          parent base fee는 20 gwei입니다. Alice의 nonce 7 transaction은
+          <code>maxFeePerGas=40 gwei</code>,
+          <code>maxPriorityFeePerGas=3 gwei</code>를 제시합니다. 다음 절에서는 이
+          숫자만으로 다음 base fee 20.5 gwei, 유효 tip 3 gwei와 실제 burn을
+          차례대로 계산합니다.
+        </p>
       </div>
+
+      <ContentBoundary article="reth-eip1559" />
 
       <div className="not-prose grid grid-cols-1 gap-3 sm:grid-cols-3 mb-4">
         {DESIGN_CHOICES.map((item, index) => (
@@ -84,6 +97,33 @@ export default function Overview({
 
       <div className="not-prose">
         <BaseFeeViz />
+      </div>
+
+      <div id="paper-eip1559-spec" className="mt-8 scroll-mt-24">
+        <CitationBlock
+          citeKey={1}
+          source="EIP-1559 — fee market change for ETH 1.0 chain"
+          href="https://eips.ethereum.org/EIPS/eip-1559"
+        >
+          <p>
+            Header base fee의 정수 계산, elasticity, fee cap 유효성, burn과
+            beneficiary tip의 protocol semantics는 EIP-1559를 정본으로 삼습니다.
+          </p>
+        </CitationBlock>
+      </div>
+      <div id="paper-reth-eip1559-source" className="scroll-mt-24">
+        <CitationBlock
+          citeKey={2}
+          type="code"
+          source="Reth source snapshot — fee calculation @ 4cf0face"
+          href="https://github.com/paradigmxyz/reth/tree/4cf0facecda7b4d474c739acef1c0fc2c69a122c"
+        >
+          <p>
+            함수명·integer type·ChainSpec 연결은 이 SHA에 고정한 구현 사실입니다.
+            채택 여부는 fork-boundary fixture와 base/candidate 결과 parity를 먼저
+            확인하는 별도 release gate로 판단합니다.
+          </p>
+        </CitationBlock>
       </div>
     </section>
   );

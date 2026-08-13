@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MIDDLEWARE_STACK } from "./MiddlewareData";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Middleware() {
   const [active, setActive] = useState(MIDDLEWARE_STACK[0].id);
@@ -37,6 +38,20 @@ export default function Middleware() {
           permissions와 rotation 운영을 별도로 관리한다.
         </p>
       </div>
+      <ExplainedFormula
+        question="Burst 20개를 허용하면서 평균 초당 5개로 제한하려면 요청을 언제 받아야 할까?"
+        idea="Token bucket은 시간에 따라 token을 보충하고 요청 cost만큼 차감합니다. Global bucket만 두지 않고 caller·method cost에 맞는 budget을 겹쳐 expensive query가 값싼 조회를 굶기지 않게 합니다."
+        formula={String.raw`\begin{aligned}T'&=\min(C,T+r\Delta t)\\ \mathrm{allow}(q)&\iff T'\ge w_q\\ T_{\mathrm{next}}&=T'-w_q\end{aligned}`}
+        terms={[
+          { symbol: "T,T'", name: "Token balance", description: "보충 전후 남은 request-cost token입니다." },
+          { symbol: "C", name: "Bucket capacity", description: "순간 burst 상한입니다. 예시는 20 token입니다." },
+          { symbol: "r", name: "Refill rate", description: "초당 보충량입니다. 예시는 5 token/s입니다." },
+          { symbol: "\\Delta t", name: "Elapsed time", description: "마지막 보충 이후 흐른 시간이며 단위는 second입니다." },
+          { symbol: "w_q", name: "Request weight", description: "Method·range·body size에 따른 local policy cost입니다." },
+        ]}
+        assumptions={["Token accounting은 monotonic clock을 사용합니다.", "Capacity·refill·weight는 deployment policy이며 Ethereum protocol 상수가 아닙니다.", "허용 뒤에도 body·response·concurrency·timeout·auth 제한을 별도로 적용합니다."]}
+        interpretation="Bucket이 비어도 2초 뒤 10 token이 보충되지만 capacity 20을 넘지 않습니다. 이 식은 평균 유입을 제한할 뿐, 단일 요청의 메모리 사용량이나 Engine endpoint 인증을 대신하지 않습니다."
+      />
       <h3 className="mb-3 text-lg font-semibold">Policy layers</h3>
       <div className="not-prose mb-6 space-y-2">
         {MIDDLEWARE_STACK.map((item) => {
