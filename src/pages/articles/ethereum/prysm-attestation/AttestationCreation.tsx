@@ -97,6 +97,21 @@ export default function AttestationCreation({ onCodeRef }: Props) {
           intervals-per-slot 설정을 기준으로 계산한다.
         </p>
 
+        <h3 className="text-xl font-semibold mt-6 mb-3">고정 사례: reorg와 늦은 block이 겹친 slot</h3>
+        <p className="leading-7">
+          Root A에서 validator 9가 slot 35, committee 2, position 17 duty를
+          받았다고 합시다. 서명 전에 dependent root가 B로 바뀌면 A의 duty와
+          bit position을 폐기하고 B에서 assignment와 head·source·target을 다시
+          구합니다. 같은 epoch라는 이유로 A의 cache를 재사용하면 안 됩니다.
+        </p>
+        <p className="leading-7">
+          Expected block이 protocol due time 전에 도착하면 그때의 head를
+          관찰하고, 그렇지 않으면 due time의 현재 view로 slashing check와
+          signing intent 저장을 거쳐 한 번 서명합니다. 뒤늦게 더 좋은 head를
+          받았더라도 같은 target epoch의 conflicting attestation을 다시
+          서명하지 않습니다.
+        </p>
+
         {/* ── Slashing protection DB ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">
           Slashing Protection — EIP-3076

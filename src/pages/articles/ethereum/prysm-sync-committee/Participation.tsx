@@ -1,5 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
 interface Props {
@@ -84,6 +85,24 @@ export default function Participation({ onCodeRef }: Props) {
         <p>
           Sync committee member는 active validator에서 effective balance에 가중된 sampling으로 뽑습니다. Sampling은 preset size만큼 position을 채우며 replacement를 허용하므로 같은 validator가 두 position 이상에 선정될 수 있습니다. 개별 확률은 active set과 balance distribution, 활성 fork의 effective-balance rule에 따라 달라집니다.
         </p>
+
+        <ExplainedFormula
+          question="같은 block root에 대한 attestation 서명을 sync-committee 서명으로 재사용하지 못하게 하려면 무엇이 달라야 할까요?"
+          idea={<>객체 root에 역할과 fork를 담은 domain을 결합한 signing root를 만든 뒤 BLS로 서명합니다.</>}
+          formula={String.raw`\begin{aligned}
+R_{sign}&=\operatorname{HTR}(\\&\quad R_{block},D_{sync})\\
+\sigma&=\operatorname{BLS.Sign}(\\&\quad sk,R_{sign})
+\end{aligned}`}
+          terms={[
+            { symbol: "R_{block}", name: "beacon block root", description: "위원회 구성원이 관찰한 32-byte head root입니다." },
+            { symbol: "D_{sync}", name: "sync domain", description: "DOMAIN_SYNC_COMMITTEE와 fork/genesis context로 만든 32-byte domain입니다." },
+            { symbol: "R_{sign}", name: "signing root", description: "SSZ SigningData의 32-byte hash-tree-root입니다." },
+            { symbol: "sk", name: "validator secret key", description: "외부에 공개하지 않는 BLS scalar key입니다." },
+            { symbol: "\\sigma", name: "BLS signature", description: "Validator secret key가 만든 96-byte 서명입니다." },
+          ]}
+          assumptions={["신뢰한 fork schedule과 genesis validators root로 domain을 계산합니다.", "서명 검증 성공은 해당 root에 대한 위원회 표를 뜻하며 full state transition이나 finality를 단독 증명하지 않습니다."]}
+          interpretation="block root가 같아도 attester domain과 sync domain이 다르면 signing root와 signature가 달라져 역할 간 replay가 차단됩니다."
+        />
 
         {/* ── SyncCommitteeMessage ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">

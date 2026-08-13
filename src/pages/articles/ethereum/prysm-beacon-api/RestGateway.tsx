@@ -2,143 +2,28 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function RestGateway({ onCodeRef }: Props) {
+export default function RestGateway({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="rest-gateway" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">REST Gateway</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">gRPC-gateway 변환</h3>
-        <p>
-          Prysm의 gRPC gateway는 protobuf service definition의 <code>google.api.http</code> annotation을 읽어 HTTP path·query·body를 gRPC request로 변환합니다. Core handler를 공유할 수 있지만 표준 Beacon API의 JSON·SSZ representation과 error semantics까지 자동으로 같아지는 것은 아니므로 compatibility layer의 test가 필요합니다.
-        </p>
-
-        {/* ── proto 매핑 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          proto 매핑 — google.api.http 어노테이션
-        </h3>
-        <div className="not-prose grid gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">proto 매핑 예시</h4>
-            <div className="grid gap-2 text-xs">
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-medium shrink-0 text-blue-500">GET</span>
-                <div>
-                  <code>GetBlockV2</code> →{" "}
-                  <code>/eth/v2/beacon/blocks/{"{block_id}"}</code>
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-medium shrink-0 text-green-500">
-                  POST
-                </span>
-                <div>
-                  <code>SubmitBlock</code> → <code>/eth/v1/beacon/blocks</code>{" "}
-                  (body: "*")
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-medium shrink-0 text-blue-500">GET</span>
-                <div>
-                  <code>GetStateV2</code> →{" "}
-                  <code>/eth/v2/debug/beacon/states/{"{state_id}"}</code>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">
-              grpc-gateway 자동 생성 흐름
-            </h4>
-            <div className="grid gap-2 text-xs">
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  1
-                </span>
-                <div>HTTP handler 함수 생성</div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  2
-                </span>
-                <div>
-                  URL path param 추출 (<code>mux.Vars(r)</code> →{" "}
-                  <code>block_id</code>, <code>state_id</code>)
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  3
-                </span>
-                <div>
-                  query string → gRPC request 변환 / POST body JSON → protobuf
-                  변환
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  4
-                </span>
-                <div>
-                  <code>grpcClient.GetBlockV2(ctx, req)</code> — gRPC 호출
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  5
-                </span>
-                <div>
-                  gRPC response → HTTP JSON 변환 (
-                  <code>json.NewEncoder(w).Encode(resp)</code>)
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Content Negotiation</h4>
-            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-              <span>
-                <code>Accept: application/json</code> → JSON response
-              </span>
-              <span>
-                <code>Accept: application/octet-stream</code> → SSZ binary
-                response
-              </span>
-            </div>
-          </div>
-        </div>
-        <p>
-          <code>grpc-gateway</code>는 annotation에서 HTTP handler와 path·query·body mapping code를 생성하므로 gRPC implementation을 REST entry point에서도 재사용할 수 있습니다. Prysm-specific gRPC method와 표준 endpoint의 versioning이 다를 수 있어 generated mapping 위에 별도 adapter가 필요한 경로도 있습니다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Beacon API 스펙</h3>
+      <h2 className="mb-6 text-2xl font-bold">REST compatibility는 path 변환이 아니라 schema·media·snapshot parity다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Gateway는 HTTP path·query·body를 typed request로 바꿔 공통 service를 호출할 수 있습니다. 그러나 generated mapping만으로 표준 Beacon API의 JSON field, SSZ bytes, fork header, endpoint version과 HTTP error semantics가 자동으로 일치하지는 않습니다.</p>
+        <h3>Content-Type과 Accept는 서로 다른 질문입니다</h3>
         <ul>
-          <li><code>GET /eth/v2/beacon/blocks/{"{block_id}"}</code>는 versioned beacon block을 조회합니다.</li>
-          <li><code>GET /eth/v2/debug/beacon/states/{"{state_id}"}</code>는 debug state representation을 조회합니다.</li>
-          <li>Signed block publish endpoint의 version은 object fork와 현재 Beacon API specification을 기준으로 선택해야 합니다.</li>
+          <li><code>Content-Type</code>은 caller가 보낸 body 형식입니다. Endpoint가 그 형식을 받을 수 없으면 415로 구분합니다.</li>
+          <li><code>Accept</code>는 caller가 원하는 response 형식입니다. 만들 수 없으면 406이고, 없으면 JSON을 기본으로 해석합니다.</li>
+          <li>SSZ는 지원한다고 명시된 endpoint에서만 선택하며 response <code>Content-Type</code>과 fork/schema metadata를 함께 확인합니다.</li>
         </ul>
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton
-            onClick={() => onCodeRef("get-block-v2", codeRefs["get-block-v2"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            GetBlockV2()
-          </span>
-          <CodeViewButton
-            onClick={() => onCodeRef("get-state-v2", codeRefs["get-state-v2"])}
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            GetStateV2()
-          </span>
+        <p>모든 v2 endpoint가 v1보다 한 세대 새 API라는 뜻도 아닙니다. Endpoint는 독립적으로 versioning되므로 client는 path 이름이 아니라 사용한 OpenAPI schema와 response field를 기준으로 decode해야 합니다.</p>
+        <div className="not-prose my-4 flex flex-wrap gap-2">
+          <CodeViewButton onClick={() => onCodeRef("get-block-v2", codeRefs["get-block-v2"])} />
+          <CodeViewButton onClick={() => onCodeRef("get-state-v2", codeRefs["get-state-v2"])} />
         </div>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 응답 포맷 자동 전환</strong> — Accept:
-          <code>application/octet-stream</code>을 요청하면 지원 endpoint에서 SSZ response를 받을 수 있고 JSON은 schema-aware representation을 사용합니다. Fork version은 response의 <code>Eth-Consensus-Version</code> 같은 protocol header와 object schema로 확인해야 하며 client가 임의로 fork를 지정하는 값으로 이해하면 안 됩니다.
-        </p>
+        <h3>State identifier는 한 snapshot으로 resolve합니다</h3>
+        <p><code>head</code> 요청을 처리하는 사이 chain이 A에서 B로 reorg될 수 있습니다. Handler가 body는 A에서, optimistic/finalized metadata는 B에서 읽으면 각 field는 valid해도 response 전체가 존재한 적 없는 혼합 snapshot이 됩니다. Resolve한 block/state root, slot, fork/version, dependent root와 execution-optimistic/finalized flag를 한 read view에서 만들고 receipt로 남겨야 합니다.</p>
+        <p>HTTP 200, slot 일치 또는 SSZ decode 성공은 canonical·finalized evidence가 아닙니다. Client가 강한 consistency를 요구하면 symbolic <code>head</code> 대신 returned root를 후속 요청에 pin하거나 response 사이 root 변화를 명시적으로 처리합니다.</p>
+        <h3>세 transport를 같은 의미로 비교합니다</h3>
+        <p>REST JSON, 지원 endpoint의 REST SSZ와 gRPC에 같은 resolved root를 넣고 공통 typed value·SSZ hash-tree-root·fork metadata·optimistic/finalized flag를 비교합니다. Malformed JSON/SSZ, unknown field, unsupported media와 missing state가 각 transport의 typed status로 일관되게 매핑된 뒤에만 serialization latency를 비교합니다.</p>
       </div>
     </section>
   );

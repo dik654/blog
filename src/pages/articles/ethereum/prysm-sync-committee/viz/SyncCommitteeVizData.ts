@@ -1,8 +1,8 @@
 export const C = { why: '#8b5cf6', select: '#6366f1', sign: '#10b981', agg: '#f59e0b', block: '#ef4444', reward: '#3b82f6' };
 
 export const STEPS = [
-  { label: '왜 싱크 위원회가 필요한가', body: 'Altair 도입, 라이트 클라이언트가 512명 서명으로 헤드를 검증' },
-  { label: '① 512명 선정', body: '전체 활성 검증자에서 무작위 512명, 256 에폭(~27시간) 고정' },
+  { label: '왜 싱크 위원회가 필요한가', body: 'Altair 도입, trusted committee의 집계 서명으로 최근 header를 추적' },
+  { label: '① period membership', body: 'Mainnet preset은 balance 가중 sampling으로 512 positions을 채우고 256 epochs 유지' },
   { label: '② SubmitSyncCommitteeMessage', body: '매 슬롯 헤드 블록 루트에 BLS 서명, DomainSyncCommittee 사용' },
   { label: '③ 블록 루트 서명', body: 'HeadBlockRoot 조회 후 어테스테이션과 별도 도메인으로 서명' },
   { label: '④ Contribution 집계', body: '서브넷별 BLS aggregate — 비트필드 + 집계 서명' },
@@ -11,7 +11,7 @@ export const STEPS = [
 
 export const NODES = [
   { id: 'validators', label: '전체 검증자', x: 15, y: 20 },
-  { id: 'committee', label: '512명 선정', x: 225, y: 20 },
+  { id: 'committee', label: '512 positions', x: 225, y: 20 },
   { id: 'slot', label: '매 슬롯 서명', x: 435, y: 20 },
   { id: 'headroot', label: 'HeadBlockRoot', x: 80, y: 110 },
   { id: 'contrib', label: 'Contribution', x: 290, y: 110 },

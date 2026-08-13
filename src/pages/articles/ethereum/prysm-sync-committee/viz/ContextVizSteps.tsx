@@ -19,8 +19,8 @@ export function StepLightClient() {
 
 export function StepFullVerification() {
   return (<g>
-    <AlertBox x={110} y={18} w={200} h={50} label="58만 검증자 투표"
-      sub="전부 다운로드 → 라이트가 아님" color={C.err} />
+    <AlertBox x={110} y={18} w={200} h={50} label="전체 validator state"
+      sub="모두 실행하면 light client가 아님" color={C.err} />
     <motion.text x={210} y={92} textAnchor="middle" fontSize={11} fill={C.err}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
       소수의 대표 서명으로 증명해야 함
@@ -39,7 +39,7 @@ export function StepCollusion() {
 
 export function StepCommittee512() {
   return (<g>
-    <ModuleBox x={25} y={18} w={130} h={45} label="512명 위원회" sub="256 에폭 = ~27시간" color={C.sync} />
+    <ModuleBox x={25} y={18} w={130} h={45} label="512 positions" sub="mainnet: 256 epochs" color={C.sync} />
     <motion.line x1={160} y1={40} x2={210} y2={40} stroke={C.sync} strokeWidth={1}
       initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.3 }} />
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
@@ -47,7 +47,7 @@ export function StepCommittee512() {
     </motion.g>
     <motion.text x={210} y={85} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-      라이트 클라이언트는 512개 공개키(48B x 512 = 24KB)만 추적
+      trusted root에 연결된 public-key positions를 추적
     </motion.text>
   </g>);
 }

@@ -1,103 +1,58 @@
-import ContextViz from "./viz/ContextViz";
-import SyncModesViz from "./viz/SyncModesViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
+import PrysmNetworkViz from "../prysm-network-viz";
 
-export default function Overview({
-  onCodeRef: _onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
+export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Prysm sync는 finalized checkpoint에서 head까지 경로를 바꾼다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이 아티클에서는 각 동기화 모드의 내부 동작과 모드 전환 로직을 코드
-          수준으로 추적한다.
+      <h2 className="mb-5 text-2xl font-bold">Prysm sync는 block을 많이 받는 작업이 아니라 검증된 연속 state cursor를 head까지 옮기는 작업이다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          새 beacon node는 local state가 network head보다 멀리 뒤에 있어 gossip block을 곧바로 처리할 수 없습니다. Genesis부터
+          검증하거나 recent trusted checkpoint에서 시작한 뒤, peer에게 block range를 요청하고 parent·signature·state transition을
+          순서대로 검증해 contiguous prefix만 durable commit해야 합니다.
         </p>
-
-        {/* ── 동기화 단계 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          시작 전략과 live 추격 단계
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-              <p className="text-xs font-bold text-blue-500 mb-1">
-                1. Initial Sync (Full Sync)
-              </p>
-              <p className="text-sm text-foreground/80">
-                로컬 시작점 이후의 역사 블록을 범위 요청으로 받아 검증·적용한다.
-                완료 시간은 시작점, 피어와 DB 성능에 좌우된다.
-              </p>
-            </div>
-            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-              <p className="text-xs font-bold text-green-500 mb-1">
-                2. Checkpoint Sync
-              </p>
-              <p className="text-sm text-foreground/80">
-                신뢰 가능한 finalized state/block에서 시작해 과거 재실행을
-                줄인다. checkpoint root의 출처가 명시적 신뢰 경계다.
-              </p>
-            </div>
-            <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-4">
-              <p className="text-xs font-bold text-purple-500 mb-1">
-                3. Regular Sync (Live)
-              </p>
-              <p className="text-sm text-foreground/80">
-                초기 추격 뒤 gossip과 누락 블록 RPC를 함께 사용해 head 부근을
-                유지한다. 처리 지연은 실제 부하에서 측정한다.
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              <code>decideSyncMode()</code> — 모드 결정 로직
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                <code>checkpointURL != ""</code> → Checkpoint Sync
-              </p>
-              <p>
-                <code>dbHead != 0</code> → Regular Sync (기존 DB 존재)
-              </p>
-              <p>그 외 → Initial Sync (genesis부터)</p>
-            </div>
-            <p className="text-xs text-foreground/60 mt-2">
-              이 분기는 읽기용 모델이며 실제 Prysm의 service 상태, DB 초기화와
-              head 근접 판정은 현재 릴리스 코드를 따른다.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              신뢰 anchor 보유 → Checkpoint
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              이력 재검증 → Initial range
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              head 근접 → Regular
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              오프라인 복귀 → gap 크기로 판단
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          Prysm 동기화는{" "}
-          <strong>시작점을 고르는 단계와 head를 유지하는 단계</strong>로 나누어
-          보면 확장하기 쉽다.
-          Initial과 Checkpoint는 시작 신뢰·작업량의 선택이고, Regular는 head
-          근처에서 이어지는 live 동작이다. 따라서
-          운영 목적만으로 고정 매핑하지 말고 신뢰 anchor, 보관 정책과 복구
-          시간을 함께 결정한다.
+        <p>
+          이 글은 <strong>anchor→peer target→range request→out-of-order response→ordered validation→commit cursor→regular
+          gossip handoff</strong> 순서로 내려갑니다. Checkpoint trust는 <Link to="/blockchain/prysm-finality#weak-subjectivity">weak
+          subjectivity</Link>, block transition은 <Link to="/blockchain/prysm">Prysm 전체 lifecycle</Link>을 재사용합니다.
         </p>
       </div>
-      <div className="not-prose mt-6">
-        <SyncModesViz />
+      <ContentBoundary article="prysm-sync" />
+      <PrysmNetworkViz mode="sync" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>고정 사례: slot 100 anchor에서 112 head까지</h3>
+        <p>
+          Local committed cursor가 slot 100이고 peer target이 112라고 합시다. Client는 101부터 bounded range를 여러 peer에
+          요청할 수 있지만 empty slot 때문에 모든 slot에 block이 오지는 않습니다. Response를 slot/root로 정렬·dedupe한 뒤
+          parent가 이어지는 block만 state transition하고, 검증된 마지막 block/state root를 cursor와 같은 transaction에 기록합니다.
+        </p>
+        <p>
+          Slot 106 block이 invalid이면 107 이후를 먼저 받아 두었더라도 committed cursor를 105 너머로 옮기지 않습니다. 다른
+          peer에서 106을 다시 구하고 같은 root가 계속 invalid면 peer fault와 chain candidate fault를 구분하며, 106이 empty slot인지도
+          range semantics와 descendant parent/slot로 확인합니다.
+        </p>
+      </div>
+      <div id="paper-ethereum-sync-network-spec" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.ethereum.p2p} citeKey={1}>
+          Ethereum networking spec은 Status와 BeaconBlocksByRange/Root Req/Resp, response chunk와 minimum serving range를
+          정의합니다. Sync scheduler·batch·parallelism은 client implementation이므로 spec과 Prysm source를 구분합니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-ethereum-sync-anchor-spec" className="scroll-mt-24">
+        <CitationBlock source="Ethereum Consensus Specifications — Weak Subjectivity" href="https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/weak-subjectivity.md" citeKey={2}>
+          이 문서는 checkpoint sync의 trust anchor와 freshness 경계를 제공합니다. Endpoint가 반환한 snapshot 자체를 신뢰 근거로
+          삼지 않고 checkpoint root·state root·network identity와 확인 시점을 외부에서 검증합니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-sync-source" className="scroll-mt-24">
+        <CitationBlock {...OFFICIAL_SOURCES.prysm.repository} citeKey={3} type="code">
+          Prysm source는 initial-sync scheduler, range handler와 regular sync handoff의 implementation 근거입니다. Batch size,
+          peer selection과 package layout은 고정한 release·SHA 범위이며 본문의 recovery gate는 별도 운영 계약입니다.
+        </CitationBlock>
       </div>
     </section>
   );

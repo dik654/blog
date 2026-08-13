@@ -1,268 +1,36 @@
 import type { CodeRef } from "@/components/code/types";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function ConnectionGating({ onCodeRef: _ }: Props) {
+export default function ConnectionGating({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="connection-gating" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">연결 게이팅</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          <code>ConnectionGater</code>는 libp2p의 인터페이스로, 연결 수립
-          전·후에 필터링 로직을 삽입한다.
-        </p>
-
-        {/* ── ConnectionGater 인터페이스 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          ConnectionGater — 5단계 필터링
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-3">
-              <code>ConnectionGater</code> 인터페이스 — 5단계 필터링
-            </p>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
-                <span className="font-mono text-xs text-blue-500 shrink-0">
-                  1
-                </span>
-                <div className="text-foreground/80">
-                  <code>InterceptPeerDial(p peer.ID) bool</code> — dial 시작 전,{" "}
-                  <code>peer.ID</code> 기반 차단
-                </div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
-                <span className="font-mono text-xs text-green-500 shrink-0">
-                  2
-                </span>
-                <div className="text-foreground/80">
-                  <code>InterceptAddrDial(p peer.ID, addr Multiaddr) bool</code>{" "}
-                  — 특정 주소로 dial 전, multiaddr 기반
-                </div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
-                <span className="font-mono text-xs text-purple-500 shrink-0">
-                  3
-                </span>
-                <div className="text-foreground/80">
-                  <code>InterceptAccept(connAddrs ConnMultiaddrs) bool</code> —
-                  인바운드 accept 전, 소켓 수준
-                </div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
-                <span className="font-mono text-xs text-orange-500 shrink-0">
-                  4
-                </span>
-                <div className="text-foreground/80">
-                  <code>InterceptSecured(dir, p, conn) bool</code> — security
-                  handshake 후, <code>peer.ID</code> 확인 후
-                </div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-red-500/50 pl-3">
-                <span className="font-mono text-xs text-red-400 shrink-0">
-                  5
-                </span>
-                <div className="text-foreground/80">
-                  <code>
-                    InterceptUpgraded(conn Conn) (bool, DisconnectReason)
-                  </code>{" "}
-                  — 전체 연결 upgrade 후(multiplexer까지)
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              Prysm <code>Gater</code> 구현
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-foreground/80 mb-3">
-              <span>
-                <code>banned: *bannedPeers</code> — ban 목록
-              </span>
-              <span>
-                <code>ipLimiter: *RateLimiter</code> — IP당 제한
-              </span>
-              <span>
-                <code>s: *Service</code> — P2P 서비스 참조
-              </span>
-            </div>
-            <div className="space-y-1 text-sm text-foreground/70">
-              <p>
-                <strong>1단계:</strong> <code>InterceptPeerDial</code> —{" "}
-                <code>banned.Contains(p)</code>로 ban 체크
-              </p>
-              <p>
-                <strong>2단계:</strong> <code>InterceptAddrDial</code> —{" "}
-                <code>IsPrivate()</code> / <code>IsLoopback()</code> /{" "}
-                <code>IsMulticast()</code> 필터 → 공인 IP만 허용
-              </p>
-              <p>
-                <strong>3단계:</strong> <code>InterceptAccept</code> — IP당 분당
-                3회 연결 시도만 허용 (<code>ipLimiter.Allow</code>)
-              </p>
-            </div>
-          </div>
-        </div>
+      <h2 className="mb-5 text-2xl font-bold">Connection gate는 candidate·pending·active peer마다 다른 예산과 권한을 준다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Connection gating은 peer ID와 multiaddress 검사, connection limit, security handshake와 protocol negotiation처럼 비용이 커지는 순서대로 여러 방어선을 둡니다. 값싼 정보로 거부할 수 있는 peer를 앞 단계에서 끊어 handshake CPU, file descriptor와 stream memory가 악성 connection에 소모되는 일을 줄입니다.
+          하나의 최대 peer 수만 두면 inbound flood가 dial slot과 handshake CPU를 모두 차지할 수 있습니다. Candidate queue,
+          concurrent dial, unauthenticated inbound handshake, authenticated-but-unchecked connection과 active protocol stream에
+          별도 count·byte·deadline budget을 둡니다. State 승격은 단계의 validation receipt가 있을 때만 허용합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">게이팅 규칙</h3>
-        <ul>
-          <li>
-            <strong>InterceptPeerDial</strong> — 아웃바운드 연결 시 밴 리스트
-            확인
-          </li>
-          <li>
-            <strong>InterceptAccept</strong> — 인바운드 연결 속도 제한 (IP당
-            N/분)
-          </li>
-          <li>
-            <strong>InterceptSecured</strong> — 핸드셰이크 후 피어 ID 밴 확인
-          </li>
-        </ul>
-
-        {/* ── Eclipse attack 방어 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Eclipse Attack 방어 — IP Colocation 탐지
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-4">
-            <p className="text-xs font-bold text-red-400 mb-1">
-              Eclipse Attack
-            </p>
-            <p className="text-sm text-foreground/80">
-              공격자가 타겟 노드의 모든 피어 연결을 자기 노드로 대체 → 타겟을
-              네트워크에서 격리(eclipse) → 잘못된 블록/state 전달 가능.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-              <p className="text-xs font-bold text-green-500 mb-1">
-                방어 1: IP Colocation 패널티
-              </p>
-              <p className="text-sm text-foreground/80">
-                같은 <code>/16</code> 서브넷에서 3개 이상 피어 →{" "}
-                <code>(count-3) * 10</code> 점수 감점.{" "}
-                <code>IPColocationPenalty()</code>
-              </p>
-            </div>
-            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-              <p className="text-xs font-bold text-blue-500 mb-1">
-                방어 2: 아웃바운드 비율 유지
-              </p>
-              <p className="text-sm text-foreground/80">
-                Node가 직접 dial한 outbound peer를 충분히 유지해 inbound 연결만으로
-                peer table이 채워지지 않게 한다. 목표 비율은 현재 config와 peer
-                manager 구현을 기준으로 확인한다.
-              </p>
-            </div>
-            <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-4">
-              <p className="text-xs font-bold text-purple-500 mb-1">
-                방어 3: 다양성 요구
-              </p>
-              <p className="text-sm text-foreground/80">
-                여러 ASN(Autonomous System Number) + 여러 국가 + 여러 클라이언트
-                구현체(Prysm/Lighthouse/Teku).
-              </p>
-            </div>
-          </div>
-          <p className="text-xs text-foreground/60">
-            Prysm peer selection — ENR discovery 무작위 탐색 → 위 규칙 적용 선별
-            → 주기적 peer churn(rotation) 수행.
-          </p>
-        </div>
+        <h3>Gate 순서와 실패 owner</h3>
+        <ol>
+          <li>Address·source·backoff·diversity policy로 dial admission을 결정합니다.</li>
+          <li>Transport timeout과 socket/resource cap을 적용합니다.</li>
+          <li>Noise/TLS에서 expected PeerId와 authenticated identity를 대조합니다.</li>
+          <li>Multiplexer·protocol ID를 협상하고 Ethereum Status compatibility를 확인합니다.</li>
+          <li>Active peer에 gossip·Req/Resp별 queue와 rate budget을 부여합니다.</li>
+        </ol>
         <p>
-          Eclipse resistance는 한 operator나 network range가 peer table을 대부분 차지하지 못하게 만드는 문제입니다. IP colocation penalty, outbound connection 유지와 peer diversity를 함께 사용하면 공격 비용을 높일 수 있지만, cloud·NAT 환경에서는 정상 peer도 같은 prefix에 모일 수 있으므로 threshold와 exception을 현재 deployment에 맞춰 검증해야 합니다.
+          Reject reason은 local-capacity, stale/backoff, identity mismatch, no common protocol, wrong network/fork, bad status와
+          protocol abuse로 나눕니다. Local-capacity close를 permanent ban으로 feedback하면 혼잡 때 좋은 peer를 잃고, identity
+          mismatch를 일시적 timeout처럼 retry하면 공격자가 handshake 자원을 반복 소비할 수 있습니다.
         </p>
 
-        {/* ── Resource Manager ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Resource Manager — DoS 방어
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              <code>ResourceManager</code> 인터페이스 — 리소스 소비 제한
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-foreground/80 mb-3">
-              <span>
-                <code>ViewSystem(f func(SystemScope))</code>
-              </span>
-              <span>
-                <code>ViewPeer(p peer.ID, f func(PeerScope))</code>
-              </span>
-              <span>
-                <code>ViewProtocol(proto, f func(ProtocolScope))</code>
-              </span>
-            </div>
-            <p className="text-xs font-bold text-foreground/70 mb-1">
-              <code>Limit</code> 구조체 — 스코프별 한도
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-foreground/70">
-              <span>
-                <code>Streams: int</code> — 최대 동시 스트림
-              </span>
-              <span>
-                <code>Conns: int</code> — 최대 동시 연결
-              </span>
-              <span>
-                <code>FD: int</code> — 최대 file descriptor
-              </span>
-              <span>
-                <code>Memory: int64</code> — 최대 메모리(bytes)
-              </span>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              스코프 계층
-            </p>
-            <p className="text-sm text-foreground/70 font-mono">
-              System(전체 노드) → Transient / Protocol / Service / Peer →
-              Connection → Stream
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-              <p className="text-xs font-bold text-blue-500 mb-1">
-                System Limits
-              </p>
-              <p className="text-sm text-foreground/80">
-                <code>Streams: 16384</code> / <code>Conns: 512</code> /{" "}
-                <code>Memory: 2GB</code>
-              </p>
-            </div>
-            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-              <p className="text-xs font-bold text-green-500 mb-1">
-                Peer Limits
-              </p>
-              <p className="text-sm text-foreground/80">
-                <code>Streams: 32</code> / <code>Conns: 2</code>
-                (inbound+outbound) / <code>Memory: 8MB</code>
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-center">
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              수천 연결 시도 → 거부
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              대량 stream → 피어당 32 제한
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              메모리 exhaustion → 8MB 격리
-            </div>
-          </div>
-        </div>
+        <h3>Release gate</h3>
         <p>
-          Libp2p <code>ResourceManager</code>는 system, service, protocol과 peer scope별로 connection·stream·memory limit을 적용합니다. 한 peer가 quota를 소진해도 다른 scope의 예산을 모두 가져가지 못하게 해 memory와 file descriptor exhaustion의 blast radius를 줄이지만, limit이 실제 workload보다 작으면 정상 sync도 거부할 수 있으므로 metric과 함께 조정해야 합니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>IP colocation은 하나의 신호일 뿐입니다.</strong> 같은 network prefix에 peer가 몰리면 score를 낮추고 outbound·inbound 및 ASN·subnet 다양성을 함께 관찰합니다. 구체적인 prefix와 threshold는 Prysm과 GossipSub parameter version에 따라 달라질 수 있습니다.
+          Base와 candidate에 stale ENR·same-prefix flood·unreachable address·wrong PeerId·no common protocol·wrong fork
+          Status·slowloris·valid reconnect를 같은 순서로 주입합니다. Candidate/pending/active count, open sockets/streams,
+          reason-coded close, backoff와 useful-peer diversity parity를 hard gate로 둔 뒤 discovery-to-active p95와 CPU·memory를
+          비교합니다. 설정 변경은 version receipt와 rollback 가능한 previous peer DB snapshot을 함께 배포합니다.
         </p>
       </div>
     </section>

@@ -6,7 +6,7 @@ export const STEPS = [
   { label: '② AttestationData 생성', body: 'source(이전 justified CP) + target(현재 에폭 CP) + head(블록 루트)' },
   { label: '③ BLS 서명', body: '슬래싱 방지 DB로 이중 투표 확인 후 BLS 서명 생성' },
   { label: '④ 서브넷 + 집계', body: 'CommitteeIndex로 서브넷 결정, gossip 전파 후 BLS aggregate' },
-  { label: '⑤ 블록에 포함', body: '블록 제안자가 풀에서 최대 128개 집계 어테스테이션 선택' },
+  { label: '⑤ 블록에 포함', body: '블록 제안자가 동일 data의 중복을 줄이고 활성 fork의 operation limit 안에서 선택' },
 ];
 
 export const NODES = [

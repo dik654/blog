@@ -2,142 +2,27 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function GrpcServer({ onCodeRef }: Props) {
+export default function GrpcServer({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="grpc-server" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">gRPC 서버</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">서버 초기화</h3>
-        <p className="leading-7">
-          <code>Service.Start()</code> — TCP 리스너 바인딩 → gRPC 서버 생성 →
-          인터셉터 체인 설정 순서로 초기화하며, unary와 stream interceptor에서
-          로깅·인증·metrics·에러 처리를 공통 적용한다.
-        </p>
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("register-services", codeRefs["register-services"])
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            registerServices()
-          </span>
+      <h2 className="mb-6 text-2xl font-bold">서버 초기화보다 먼저 exposure와 authority를 정합니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Listener를 열고 service를 등록하는 것만으로 API가 안전해지지는 않습니다. Health read, debug state dump, validator duty read와 signed-object publish는 data sensitivity와 side effect가 다르므로 bind network·authentication·authorization·rate/body budget을 endpoint family별로 정해야 합니다.</p>
+        <div className="not-prose my-4 flex flex-wrap gap-2">
+          {codeRefs["service-start"] && <CodeViewButton onClick={() => onCodeRef("service-start", codeRefs["service-start"])} />}
         </div>
-
-        {/* ── gRPC Server 초기화 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          gRPC Server 초기화 흐름
-        </h3>
-        <div className="not-prose grid gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">
-              <code>Service.Start()</code> 초기화 흐름
-            </h4>
-            <div className="grid gap-2 text-xs">
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  1
-                </span>
-                <div>
-                  <code>net.Listen("tcp", host:port)</code> — TCP listener 생성
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  2
-                </span>
-                <div>
-                  gRPC ServerOption 설정 — <code>ChainUnaryInterceptor</code>{" "}
-                  (logging, recovery, auth, metrics) +{" "}
-                  <code>ChainStreamInterceptor</code> +{" "}
-                  <code>MaxRecvMsgSize</code> (20 MB) + KeepaliveParams
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  3
-                </span>
-                <div>
-                  <code>grpc.NewServer(opts...)</code> — gRPC 서버 생성
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  4
-                </span>
-                <div>
-                  <code>registerServices()</code> — 서비스 등록
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  5
-                </span>
-                <div>
-                  <code>reflection.Register()</code> — 디버깅용 Reflection 등록
-                </div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">
-                  6
-                </span>
-                <div>
-                  <code>go grpcServer.Serve(listener)</code> — 백그라운드 서버
-                  실행
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">
-              등록 서비스 (registerServices)
-            </h4>
-            <div className="flex flex-wrap gap-2 text-xs">
-              <span className="rounded bg-muted px-2 py-1">
-                BeaconChainService
-              </span>
-              <span className="rounded bg-muted px-2 py-1">
-                ValidatorService
-              </span>
-              <span className="rounded bg-muted px-2 py-1">NodeService</span>
-              <span className="rounded bg-muted px-2 py-1">DebugService</span>
-              <span className="rounded bg-muted px-2 py-1">HealthService</span>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          gRPC server는 listener를 열고 interceptor를 구성한 다음 server와
-          service를 등록하는 순서로 시작한다. 공통 관심사는 unary·stream
-          interceptor로 분리하기 때문에 개별 handler는 API 로직에 집중할 수
-          있다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">서비스 도메인</h3>
-        <ul>
-          <li>
-            <strong>BeaconChainServer</strong> — 블록, 상태, 검증자 조회
-          </li>
-          <li>
-            <strong>ValidatorServer</strong> — 의무 할당, 블록 제안,
-            어테스테이션
-          </li>
-          <li>
-            <strong>NodeServer</strong> — 피어 정보, 동기화 상태
-          </li>
-          <li>
-            <strong>DebugServer</strong> — 포크 선택 덤프, 상태 디버그
-          </li>
-        </ul>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 인터셉터 체인</strong> — 요청 → 로깅 → 인증(JWT) → 메트릭 →
-          handler → 에러 복구 → 응답의 경계를 만든다. 각 관심사를 gRPC
-          interceptor로 분리하면 handler가 비즈니스 로직에 집중할 수 있다.
-        </p>
+        <h3>Request가 effect에 닿기 전 순서</h3>
+        <ol>
+          <li>Listener·TLS/network boundary와 enabled service 목록을 고정합니다.</li>
+          <li>Message/header size, deadline와 concurrency budget을 먼저 적용합니다.</li>
+          <li>Caller identity와 endpoint별 action 권한을 확인합니다.</li>
+          <li>Logging·metrics에는 request digest와 decision을 남기되 key·token·full sensitive body는 남기지 않습니다.</li>
+          <li>Typed request를 common service에 넘기고 panic/error를 transport status로 일관되게 매핑합니다.</li>
+        </ol>
+        <h3>인증과 protocol validity는 다릅니다</h3>
+        <p>올바른 TLS certificate나 token은 caller identity evidence일 뿐 submitted block·attestation이 valid하다는 뜻은 아닙니다. 반대로 valid SSZ·BLS object도 그 caller가 publish endpoint를 호출할 권한이 있음을 증명하지 않습니다. Authorization은 effect 전에 fail closed하고 consensus validation은 handler 안에서 별도로 수행합니다.</p>
+        <h3>Negative fixture가 exposure를 검증합니다</h3>
+        <p>Untrusted network caller의 debug dump, unauthorized publish, oversized body, slow stream, deadline 초과와 invalid protobuf를 주입합니다. 기대 결과는 handler effect 0, bounded resource use, secret-free audit receipt와 typed deny/error입니다. Public bind 한 번이나 happy-path health check만으로 이 경계를 입증할 수 없습니다.</p>
       </div>
     </section>
   );

@@ -41,16 +41,16 @@ export function Step1() {
 
 export function Step2() {
   return (<g>
-    <ModuleBox x={10} y={10} w={100} h={40} label="Attest Pool" sub="어테스테이션 풀" color={C.attest} />
+    <ModuleBox x={10} y={10} w={100} h={40} label="Operation pool" sub="fork별 후보" color={C.attest} />
     <motion.g {...fade(0.3)}>
       <motion.line x1={110} y1={30} x2={145} y2={30} stroke={C.attest} strokeWidth={0.7}
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3 }} />
-      <ActionBox x={150} y={10} w={110} h={40} label="호환성 필터" sub="에폭·루트 일치" color={C.attest} />
+      <ActionBox x={150} y={10} w={110} h={40} label="Schema·limit 검사" sub="활성 fork 기준" color={C.attest} />
     </motion.g>
     <motion.g {...fade(0.5)}>
       <motion.line x1={260} y1={30} x2={295} y2={30} stroke={C.attest} strokeWidth={0.7}
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.5 }} />
-      <DataBox x={300} y={17} w={90} h={26} label="최대 128개" color={C.attest} />
+      <DataBox x={300} y={17} w={90} h={26} label="조립 후보" color={C.attest} />
     </motion.g>
   </g>);
 }

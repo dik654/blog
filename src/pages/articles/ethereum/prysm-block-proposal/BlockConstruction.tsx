@@ -125,6 +125,22 @@ export default function BlockConstruction({ onCodeRef }: Props) {
           block에 서명해 전파한다.
         </p>
 
+        <h3 className="text-xl font-semibold mt-6 mb-3">고정 사례: 무엇으로 이 block을 만들었는가</h3>
+        <p className="leading-7">
+          Slot 321을 예로 들면 먼저 duty의 <code>dependent_root</code> A와
+          fork version을 고정하고, fork choice가 고른 parent P를 기록합니다.
+          이어 local 또는 builder payload의 identity, operation pool snapshot Q,
+          조립 deadline을 하나의 build receipt로 묶습니다. 이 receipt가 있어야
+          reorg나 timeout 뒤 “어떤 입력으로 어느 candidate를 만들었는가”를
+          재현할 수 있습니다.
+        </p>
+        <p className="text-sm border-l border-sky-500/60 pl-3">
+          Consensus spec가 정의하는 것은 block field, list limit과 transition
+          규칙입니다. Receipt, builder cancellation, local fallback deadline은
+          Prysm 운영을 더 안전하게 만들기 위한 hardening 설계이며 wire
+          protocol의 자동 보장이 아닙니다.
+        </p>
+
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>💡 임시 상태 전이</strong> — 조립된 블록으로 임시 상태 전이를
           실행하고 결과 state의 HashTreeRoot를 block.StateRoot에 설정한다.

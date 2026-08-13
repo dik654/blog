@@ -3711,6 +3711,72 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Gossip accept·state transition·head selection·finality·execution validity·signature를 하나의 success로 합치거나 repository 설명을 모든 deployment의 성능·안전으로 일반화하지 않는다." },
     ],
   },
+  "prysm-p2p-libp2p": {
+    title: "Prysm libp2p peer lifecycle 글이 소유하는 범위",
+    owns: [
+      "ENR 후보에서 transport·Noise identity·mux·Status-compatible active peer까지의 단계별 권한",
+      "ENR freshness·fork/subnet·endpoint diversity admission과 candidate/active 분리",
+      "Peer outcome score·decay와 remote fault/local overload reason feedback",
+      "Candidate·pending·active connection·stream·byte budget과 cleanup",
+      "Prysm/libp2p/spec provenance와 adversarial P2P release gate",
+    ],
+    reuses: [
+      { label: "Prysm consensus client owner 경계", href: "/blockchain/prysm" },
+      { label: "libp2p transport upgrade pipeline", href: "/p2p/libp2p" },
+      { label: "TCP socket lifecycle", href: "/p2p/libp2p-tcp" },
+      { label: "Noise identity binding", href: "/p2p/libp2p-noise" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Fork digest·Status·transport requirement는 고정한 Ethereum consensus P2P spec commit·fork·network에 귀속한다." },
+      { kind: "primary-source", rule: "Peer manager·discovery·score·gate 구현은 표시한 Prysm release/SHA와 libp2p version 범위에만 귀속한다." },
+      { kind: "project-measurement", rule: "같은 ENR·clock·peer·fault schedule에서 active set·failure reason·resource cleanup parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Discovery·socket·encrypted session을 active consensus peer로 확대하거나 peer count를 network safety로 일반화하지 않는다." },
+    ],
+  },
+  "prysm-gossipsub": {
+    title: "Prysm Gossipsub validation 글이 소유하는 범위",
+    owns: [
+      "Fork digest·message name·encoding으로 구성한 Ethereum gossip topic identity",
+      "Snappy compressed/decompressed bound와 fork-specific SSZ envelope",
+      "Cheap-first stateless·signature·stateful validation과 accept/reject/ignore semantics",
+      "Topic·peer·stage별 dedupe·backpressure·fairness budget",
+      "Gossipsub/Prysm/spec provenance와 adversarial gossip release gate",
+    ],
+    reuses: [
+      { label: "Prysm active peer lifecycle", href: "/blockchain/prysm-p2p-libp2p" },
+      { label: "SSZ typed bounded decoding", href: "/blockchain/prysm-ssz" },
+      { label: "BLS signature validation", href: "/blockchain/prysm-bls" },
+      { label: "Beacon block state transition", href: "/blockchain/prysm-block-processing" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Topic·encoding·message validation은 고정한 Ethereum consensus spec commit·fork·preset에 귀속한다." },
+      { kind: "primary-source", rule: "Mesh/scoring mechanics와 Prysm validator·queue 동작은 Gossipsub version과 표시한 Prysm release/SHA에 귀속한다." },
+      { kind: "project-measurement", rule: "같은 bytes·topic·peer·clock·overload fixture에서 decision·score·memory·fairness parity 뒤 throughput을 비교한다." },
+      { kind: "project-claim", rule: "Topic match·decode·signature·gossip accept·state validity를 하나의 success로 합치지 않는다." },
+    ],
+  },
+  "prysm-sync": {
+    title: "Prysm beacon sync 글이 소유하는 범위",
+    owns: [
+      "Genesis·weak-subjectivity checkpoint·local-finalized anchor와 sync mode 경계",
+      "BlocksByRange의 start/count/step·empty-slot omission·server branch semantics",
+      "병렬 range fetch·ordered transition과 contiguous durable commit cursor",
+      "Range와 live gossip의 block-root dedupe·gap·reorg handoff",
+      "Prysm/spec/database provenance와 fault·crash recovery release gate",
+    ],
+    reuses: [
+      { label: "Prysm peer lifecycle·req/resp transport", href: "/blockchain/prysm-p2p-libp2p" },
+      { label: "Prysm gossip validation decisions", href: "/blockchain/prysm-gossipsub" },
+      { label: "Weak-subjectivity·finalized checkpoint", href: "/blockchain/prysm-finality" },
+      { label: "Beacon block state transition", href: "/blockchain/prysm-block-processing" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Req/resp·checkpoint·state-transition semantics는 고정한 Ethereum consensus spec commit·fork·network에 귀속한다." },
+      { kind: "primary-source", rule: "Range scheduler·peer selection·DB commit·handoff 동작은 표시한 Prysm release/SHA 범위에만 귀속한다." },
+      { kind: "project-measurement", rule: "같은 anchor·peer·clock·range·reorg·crash fixture에서 cursor root·state/head·restart parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Highest downloaded/seen slot을 committed progress로, download endpoint를 checkpoint trust source로 일반화하지 않는다." },
+    ],
+  },
   "prysm-forkchoice": {
     title: "Prysm LMD-GHOST fork-choice 글이 소유하는 범위",
     owns: [
@@ -3842,6 +3908,72 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Toy reward를 APR로, 2/3 justification을 즉시 finalization으로, slashed flag를 최종 손실 전체로 일반화하지 않는다." },
     ],
   },
+  "prysm-block-proposal": {
+    title: "Prysm block proposal 글이 소유하는 범위",
+    owns: [
+      "State-dependent proposer duty identity와 effective-balance sampling",
+      "Parent·payload·operation snapshot·deadline proposal build receipt",
+      "Fork-specific BeaconBlockBody 조립과 post-state-root backfill",
+      "완성 block의 single sign·durable publish commit 경계",
+      "Duty reorg·builder timeout·crash를 포함한 proposal release gate",
+    ],
+    reuses: [
+      { label: "Fork-choice head 선택", href: "/blockchain/prysm-forkchoice" },
+      { label: "Engine payload build lifecycle", href: "/blockchain/prysm-engine-api" },
+      { label: "Block state transition과 root", href: "/blockchain/prysm-block-processing" },
+      { label: "Validator duty·slashing protection", href: "/blockchain/prysm-validator-client" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Proposer selection·block schema·domain은 consensus-spec v1.6.1의 활성 fork와 preset에 귀속한다." },
+      { kind: "primary-source", rule: "Prysm RPC·pool·assembly behavior는 표시한 SHA source에만 귀속한다." },
+      { kind: "project-measurement", rule: "같은 duty·parent·payload·pool fixture에서 root·signed bytes·restart parity 뒤 latency를 비교한다." },
+      { kind: "project-claim", rule: "Receipt·deadline fencing은 hardening 제안이며 publish 성공을 canonical head나 finality로 확대하지 않는다." },
+    ],
+  },
+  "prysm-attestation": {
+    title: "Prysm attestation lifecycle 글이 소유하는 범위",
+    owns: [
+      "Attestation head·source·target triple과 dependent-root duty",
+      "Block observation·slashing check·sign/publish deadline",
+      "Fork-specific committee-to-subnet routing과 aggregator selection",
+      "같은-data bitlist/BLS aggregation과 pool subsumption",
+      "Reorg·conflict·restart를 포함한 attestation release gate",
+    ],
+    reuses: [
+      { label: "LMD-GHOST weight", href: "/blockchain/prysm-forkchoice" },
+      { label: "Casper checkpoint finality", href: "/blockchain/prysm-finality" },
+      { label: "BLS domain과 aggregate verification", href: "/blockchain/prysm-bls" },
+      { label: "Validator slashing protection", href: "/blockchain/prysm-validator-client#slashing-protection" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Attestation schema·timing·subnet·selection proof는 consensus-spec v1.6.1의 활성 fork/preset에 귀속한다." },
+      { kind: "primary-source", rule: "Prysm validator·gossip·pool behavior는 표시한 SHA source에만 귀속한다." },
+      { kind: "project-measurement", rule: "같은 duty/data/signature fixture에서 accept·aggregate·pool·restart parity 뒤 처리량을 비교한다." },
+      { kind: "project-claim", rule: "Pool receipt와 release fixture는 hardening 제안이며 subnet이나 aggregate를 finality로 일반화하지 않는다." },
+    ],
+  },
+  "prysm-sync-committee": {
+    title: "Prysm sync committee 글이 소유하는 범위",
+    owns: [
+      "Period membership과 effective-balance sampling with replacement",
+      "Sync message의 role-separated signing domain",
+      "Subcommittee contribution과 global participant-position binding",
+      "Trusted checkpoint에서 light-client update까지의 신뢰 경계",
+      "Participant/proposer reward 분리와 sync release gate",
+    ],
+    reuses: [
+      { label: "BLS aggregate signature", href: "/blockchain/prysm-bls" },
+      { label: "SSZ Merkle branch", href: "/blockchain/prysm-ssz" },
+      { label: "BeaconState current/next committee", href: "/blockchain/prysm-beacon-state" },
+      { label: "Casper finalized checkpoint", href: "/blockchain/prysm-finality" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Committee·message·contribution·light-client rule은 consensus-spec v1.6.1 Altair+와 preset에 귀속한다." },
+      { kind: "primary-source", rule: "Prysm validator·sync aggregate behavior는 표시한 SHA source에만 귀속한다." },
+      { kind: "project-measurement", rule: "같은 membership·positions·root·branch fixture에서 contribution/update/restart parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "Release gate는 hardening 제안이며 sync aggregate를 full-node 검증이나 자동 finality와 같다고 하지 않는다." },
+    ],
+  },
   "prysm-ssz": {
     title: "Prysm SSZ serialization·Merkle proof 글이 소유하는 범위",
     owns: [
@@ -3900,6 +4032,90 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "COW·FieldTrie·interface·cache claim은 표시한 Prysm release/SHA의 source에만 귀속한다." },
       { kind: "project-measurement", rule: "Full SSZ root를 oracle로 COW branch·dirty path·fork boundary·reorg·restart parity 뒤 memory/hash/latency를 비교한다." },
       { kind: "project-claim", rule: "Post-state 계산을 canonical head·finality로, reference count를 state 전체 thread safety로 확대하지 않는다." },
+    ],
+  },
+  "prysm-slot-processing": {
+    title: "Prysm slot processing ordered replay 글이 소유하는 범위",
+    owns: [
+      "현재 slot에서 target slot까지 빈 slot도 빠뜨리지 않는 ordered replay",
+      "Per-slot root backfill과 epoch-boundary trigger의 정확한 실행 순서",
+      "Historical-root ring index와 slot generation을 함께 확인하는 조회 경계",
+      "Replay receipt·full-transition oracle·fork/restart를 포함한 release gate",
+    ],
+    reuses: [
+      { label: "BeaconState value·root·fork schema", href: "/blockchain/prysm-beacon-state" },
+      { label: "Epoch boundary의 fork별 transition", href: "/blockchain/prysm-epoch-processing" },
+      { label: "Target slot 뒤 block transition", href: "/blockchain/prysm-block-processing" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Slot·epoch 순서는 고정한 Ethereum consensus-spec release/commit·fork·network preset에 귀속한다." },
+      { kind: "primary-source", rule: "Loop·cache·error path는 표시한 Prysm release/SHA의 source snapshot에만 귀속한다." },
+      { kind: "project-measurement", rule: "Empty slot·epoch/fork boundary·reorg·restart에서 full transition의 post-state/root와 일치한 뒤 latency를 비교한다." },
+      { kind: "project-claim", rule: "Target slot 도달을 block validity·canonical head·finality로, ring entry를 영구 archive로 확대하지 않는다." },
+    ],
+  },
+  "prysm-beacon-db": {
+    title: "Prysm Beacon DB schema·atomicity·pruning 글이 소유하는 범위",
+    owns: [
+      "Root-addressed primary record와 slot·parent 등 secondary index의 cardinality",
+      "Primary·index·checkpoint를 함께 공개하는 atomic write와 consistent read snapshot",
+      "Commit 전후 crash를 구분하는 idempotent recovery receipt",
+      "Finality fence·logical delete·compaction·retention replay budget과 release gate",
+    ],
+    reuses: [
+      { label: "SSZ canonical bytes와 root", href: "/blockchain/prysm-ssz" },
+      { label: "BeaconState value와 state-root identity", href: "/blockchain/prysm-beacon-state" },
+      { label: "Finalized checkpoint와 prune 하한", href: "/blockchain/prysm-finality" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Bucket·transaction·cache·migration·pruning 동작은 표시한 Prysm release/SHA에만 귀속한다." },
+      { kind: "standard", rule: "bbolt transaction·single-writer·page lifecycle은 고정한 official release/documentation에 귀속한다." },
+      { kind: "project-measurement", rule: "Commit 전후 crash injection, reopen, index/primary/root parity와 backup reader를 통과한 뒤 bytes·latency를 비교한다." },
+      { kind: "project-claim", rule: "Transaction commit을 remote replica의 exactly-once나 disk 물리 overwrite로, finality를 모든 historical evidence 삭제 허가로 읽지 않는다." },
+    ],
+  },
+  "prysm-state-cache": {
+    title: "Prysm state retrieval·cache 글이 소유하는 범위",
+    owns: [
+      "Root·slot·fork/schema를 함께 고정하는 state identity와 cache-generation receipt",
+      "Hot state의 immutable return·copy boundary와 cache/DB/replay lookup order",
+      "State summary에서 anchor와 ordered slot/block replay plan을 만드는 경계",
+      "Replay distance·transition cost와 cold-state retention trade-off",
+      "Reorg·corruption·restart를 포함한 state-cache parity release gate",
+    ],
+    reuses: [
+      { label: "BeaconState value·Copy-on-Write·incremental root", href: "/blockchain/prysm-beacon-state" },
+      { label: "Slot·epoch transition", href: "/blockchain/prysm-slot-processing" },
+      { label: "Beacon block transition", href: "/blockchain/prysm-block-processing" },
+      { label: "Finalized checkpoint와 weak-subjectivity anchor", href: "/blockchain/prysm-finality" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Cache·stategen·DB path와 copy/replay behavior는 표시한 Prysm release 또는 git SHA에만 귀속한다." },
+      { kind: "standard", rule: "State transition·root·finality 전제는 고정한 consensus-spec commit·fork·network preset에 귀속한다." },
+      { kind: "project-measurement", rule: "같은 root/slot/fork fixture에서 full transition oracle과 bytes/root parity를 먼저 확인한 뒤 hit rate·replay p95·memory를 비교한다." },
+      { kind: "project-claim", rule: "Cache hit를 canonical head·finality로, pruning을 historical evidence 전체 삭제로, 평균 hit rate를 모든 workload의 지연으로 일반화하지 않는다." },
+    ],
+  },
+  "prysm-beacon-api": {
+    title: "Prysm Beacon API transport·duty 글이 소유하는 범위",
+    owns: [
+      "REST/gRPC transport adapter와 공통 consensus service owner 경계",
+      "JSON·SSZ content negotiation, endpoint별 version과 typed error mapping",
+      "State identifier·dependent root·optimistic/finalized metadata consistency",
+      "Duty 조회→unsigned object→local signing→publish의 deadline·retry lifecycle",
+      "SSE gap reconciliation, exposure/authorization와 API release gate",
+    ],
+    reuses: [
+      { label: "Validator duty·key·slashing protection", href: "/blockchain/prysm-validator-client" },
+      { label: "Block proposal assembly", href: "/blockchain/prysm-block-proposal" },
+      { label: "Attestation creation·aggregation", href: "/blockchain/prysm-attestation" },
+      { label: "SSZ wire schema", href: "/blockchain/prysm-ssz" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Endpoint·field·media type·status claim은 고정한 Beacon API OpenAPI commit과 endpoint version에 귀속한다." },
+      { kind: "primary-source", rule: "Prysm gRPC/REST package·interceptor·handler wiring은 표시한 release/SHA에만 귀속한다." },
+      { kind: "project-measurement", rule: "같은 state/duty fixture에서 REST·gRPC schema/status/effect parity와 reconnect reconciliation을 통과한 뒤 latency를 비교한다." },
+      { kind: "project-claim", rule: "HTTP 2xx를 duty inclusion·finality로, SSE를 durable log로, bind address를 caller authorization으로 일반화하지 않는다." },
     ],
   },
   libp2p: {

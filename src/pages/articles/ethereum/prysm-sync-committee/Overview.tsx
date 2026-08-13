@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ContextViz from "./viz/ContextViz";
 import SyncCommitteeViz from "./viz/SyncCommitteeViz";
 import type { CodeRef } from "@/components/code/types";
@@ -15,8 +18,16 @@ export default function Overview({
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          이 아티클에서는 싱크 위원회 선정, 매 슬롯 서명, 라이트 클라이언트 증명
-          생성 과정을 코드 수준으로 추적한다.
+          이 글은 전체 BeaconState를 실행하지 않는 기기가 새 header를 어떻게
+          따라갈 수 있는지부터 설명합니다. 위원회 membership, 매 슬롯의
+          domain-separated message, 네 subnet의 contribution, 최종
+          SyncAggregate와 light-client update의 신뢰 경계를 차례로 연결합니다.
+        </p>
+        <p className="leading-7">
+          Sync committee 서명은 full-node 검증의 축약판이지 finality 그 자체가
+          아닙니다. BLS 집계는 <Link to="/blockchain/prysm-bls">BLS</Link>,
+          Merkle branch는 <Link to="/blockchain/prysm-ssz">SSZ</Link>,
+          finalized checkpoint의 의미는 <Link to="/blockchain/prysm-finality">finality</Link> 정본을 재사용합니다.
         </p>
 
         {/* ── Sync Committee 배경 ── */}
@@ -40,7 +51,7 @@ export default function Overview({
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
               <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">512 members</p>
+                <p className="text-foreground/70 font-semibold">512 positions</p>
                 <p className="text-foreground/50">mainnet preset</p>
               </div>
               <div className="rounded border border-border/40 p-2">
@@ -95,15 +106,30 @@ export default function Overview({
         </div>
         <p className="leading-7">
           Sync Committee는 light client가 매 slot header를 저렴하게 확인할 수
-          있도록 선택된 <strong>validator 대표단</strong>이다.
-          mainnet preset에서는 512명과 256 epochs를 사용하지만 구현은 preset
+          있도록 선택된 <strong>validator position 목록</strong>이다.
+          mainnet preset에서는 512 positions와 256 epochs를 사용하지만 구현은 preset
           값을 읽어야 하며,
           light client는 집계 서명뿐 아니라 참여도, branch, committee 전환과
           finality 조건을 함께 검증한다.
         </p>
       </div>
+      <ContentBoundary article="prysm-sync-committee" />
       <div className="not-prose mt-6">
         <SyncCommitteeViz />
+      </div>
+      <div id="paper-consensus-sync-committee-spec" className="scroll-mt-24">
+        <CitationBlock source="Ethereum Consensus Specifications v1.6.1 — Altair validator and light-client rules" citeKey={1} href="https://github.com/ethereum/consensus-specs/tree/v1.6.1/specs/altair">
+          Sync committee membership, message·selection-proof domain,
+          contribution과 light-client update 검증의 protocol 기준입니다. 512 positions,
+          256 epochs 같은 값은 mainnet preset에 귀속합니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-sync-source" className="scroll-mt-24">
+        <CitationBlock source="OffchainLabs/prysm — pinned sync-committee implementation" citeKey={2} type="code" href="https://github.com/OffchainLabs/prysm/tree/ea3fbe48b48170e7f7252fbc15e9591d462a0f87">
+          Prysm validator client와 beacon-chain sync aggregate 처리의 source
+          snapshot입니다. 운영상 timeout·dedupe·release fixture는 별도의
+          hardening 설계이며 moving master의 동작으로 일반화하지 않습니다.
+        </CitationBlock>
       </div>
     </section>
   );

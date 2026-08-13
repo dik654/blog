@@ -19,6 +19,6 @@ export const STEPS = [
   },
   {
     label: '해결: 패킹 → 서명 → 전파',
-    body: '어테스테이션 패킹(최대 128개) → RANDAO 서명 → BeaconBlock 조립 → gossipsub 전파합니다.',
+    body: '활성 fork의 body schema로 operation·payload·RANDAO를 조립하고, 한 signed block을 gossipsub으로 전파합니다.',
   },
 ];

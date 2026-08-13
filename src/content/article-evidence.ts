@@ -3433,8 +3433,22 @@ export const ARTICLE_EVIDENCE: Readonly<
       OFFICIAL_SOURCES.ethereum.beaconApi,
       "beacon node REST endpoint와 request·response schema",
     ),
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs/prysm — beacon-chain/rpc",
+      href: "https://github.com/OffchainLabs/prysm/tree/develop/beacon-chain/rpc",
+      note: "선택한 source snapshot의 gRPC·REST service wiring과 handler seam",
+    },
   ),
-  "blockchain/prysm-beacon-db": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
+  "blockchain/prysm-beacon-db": withSeriesEvidence(
+    PRYSM_SERIES_EVIDENCE,
+    {
+      kind: "공식 문서",
+      label: "etcd-io/bbolt v1.4.3 — official repository and documentation",
+      href: "https://github.com/etcd-io/bbolt/tree/v1.4.3",
+      note: "read/write transaction·single-writer·page lifecycle의 storage-engine contract",
+    },
+  ),
   "blockchain/prysm-beacon-state": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
     {
@@ -3486,7 +3500,15 @@ export const ARTICLE_EVIDENCE: Readonly<
       "Ethereum consensus networking의 topic·subnet 규칙",
     ),
   ),
-  "blockchain/prysm-slot-processing": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
+  "blockchain/prysm-slot-processing": withSeriesEvidence(
+    PRYSM_SERIES_EVIDENCE,
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications v1.6.1 — slot processing",
+      href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/phase0/beacon-chain.md",
+      note: "process_slots·process_slot·process_epoch 실행 순서의 정본",
+    },
+  ),
   "blockchain/prysm-ssz": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
     source(
@@ -3501,8 +3523,35 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "generalized index와 single/multiproof helper-node 계산 형식",
     },
   ),
-  "blockchain/prysm-state-cache": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
-  "blockchain/prysm-sync": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
+  "blockchain/prysm-state-cache": withSeriesEvidence(
+    PRYSM_SERIES_EVIDENCE,
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs/prysm — beacon-chain/state/stategen",
+      href: "https://github.com/OffchainLabs/prysm/tree/develop/beacon-chain/state/stategen",
+      note: "선택한 source snapshot의 state lookup·summary·ordered replay seam",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications",
+      href: "https://ethereum.github.io/consensus-specs/",
+      note: "Fork별 BeaconState·slot/block/epoch transition과 state-root postcondition",
+    },
+  ),
+  "blockchain/prysm-sync": withSeriesEvidence(
+    PRYSM_SERIES_EVIDENCE,
+    source(
+      "공식 규격",
+      OFFICIAL_SOURCES.ethereum.p2p,
+      "BeaconBlocksByRange·Status·response chunk의 sync wire contract",
+    ),
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications — weak subjectivity",
+      href: "https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/weak-subjectivity.md",
+      note: "Checkpoint sync의 trust anchor·freshness 경계",
+    },
+  ),
   "blockchain/prysm-sync-committee": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
   "blockchain/prysm-validator-client": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,

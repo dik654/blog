@@ -70,7 +70,7 @@ export default function PoolInclusion({ onCodeRef }: Props) {
           </div>
           <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
             <p className="text-xs font-bold text-foreground/70 mb-2">
-              tryMerge — 집계 병합 (Boyer-Moore 기반)
+              tryMerge — 동일 data의 disjoint 집계 병합
             </p>
             <div className="space-y-1 text-sm text-foreground/80">
               <p>
@@ -83,7 +83,7 @@ export default function PoolInclusion({ onCodeRef }: Props) {
               </p>
               <p>
                 3. <code>AggregationBits.Or()</code>로 bit 합침 +{" "}
-                <code>bls.AggregatePublicKeys()</code>로 서명 합침
+                BLS signature aggregation으로 서명 합침
               </p>
             </div>
           </div>
@@ -159,6 +159,23 @@ export default function PoolInclusion({ onCodeRef }: Props) {
           포함 지연은 timely source/target/head 규칙과 proposer reward에 영향을
           준다. 따라서 투표자의 정확도와 제안자의 선택 정책을 함께 봐야 실제
           보상 흐름을 이해할 수 있다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">포함 관계와 겹치는 bit를 구분한다</h3>
+        <p>
+          같은 AttestationData에서 A의 bits가 <code>{`{1,4,7}`}</code>, C가
+          <code>{`{1,4}`}</code>이면 A가 C를 subsume하므로 C는 별도 block
+          후보로 남길 필요가 없습니다. 그러나 B가
+          <code>{`{4,8}`}</code>이면 새 participant 8을 담으면서 4가 겹칩니다.
+          두 aggregate signatures를 그대로 더하면 4를 중복 계산하므로,
+          disjoint한 원본 vote로 재구성할 수 없다면 merge하지 않습니다.
+        </p>
+        <p>
+          Release fixture는 stale duty, wrong subnet, bad selection proof,
+          invalid signature, overlapping bits, 서로 다른 target root와
+          crash/restart를 포함합니다. 같은 fixture에서 accept/reject,
+          aggregate bits·signature, pool 잔여 후보가 baseline과 같아야
+          throughput 최적화를 채택합니다.
         </p>
       </div>
     </section>

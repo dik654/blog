@@ -1,5 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
 interface Props {
@@ -114,6 +115,41 @@ export default function Contribution({ onCodeRef }: Props) {
           Sync committee는 preset이 정한 subnet 수와 subcommittee 크기에 따라 나뉩니다. 각 subnet의 aggregator가 같은 beacon block root에 대한 signature를 contribution으로 묶고, block proposer는 선택한 contribution을 통합해 전체 participation bitvector와 하나의 aggregate signature를 <code>SyncAggregate</code>에 넣습니다.
         </p>
 
+        <h3 className="text-xl font-semibold mt-6 mb-3">Position은 validator index가 아니다</h3>
+        <p>
+          Mainnet preset의 512 positions와 4 subnet을 예로 들면 한
+          subcommittee는 128 positions입니다. Subnet 2의 local bit 5는 전체
+          bitvector의 <code>2 × 128 + 5 = 261</code> 위치에 놓입니다. 같은
+          validator가 sampling with replacement로 두 position에 뽑혔다면 public
+          key도 두 위치에 나타날 수 있으므로 unique validator 수로 bitvector를
+          다시 만들면 안 됩니다.
+        </p>
+
+        <ExplainedFormula
+          question="각 sync subcommittee에서 slot마다 소수의 aggregator를 선택하는 기준은 무엇일까요?"
+          idea={<>Subcommittee 한 칸의 크기를 목표 aggregator 수로 나눠 modulo를 만들고, domain-separated selection proof hash가 0번 residue에 들어온 validator를 선택합니다.</>}
+          formula={String.raw`\begin{aligned}
+q&=C/N\\
+a&=\left\lfloor q/A\right\rfloor\\
+m&=\max(1,a)\\
+z&=H(\sigma)\\
+h&=\operatorname{u64}(z_{0:8})\\
+h\bmod m&=0
+\end{aligned}`}
+          terms={[
+            { symbol: "C", name: "sync committee size", description: "Mainnet preset에서 512 positions입니다." },
+            { symbol: "N", name: "sync subnet count", description: "Mainnet preset에서 4개 subcommittee입니다." },
+            { symbol: "A", name: "target aggregators per subcommittee", description: "Subcommittee별 기대 aggregator 수를 정하는 preset 값입니다." },
+            { symbol: "q", name: "subcommittee size", description: "전체 committee positions를 subnet 수로 나눈 값입니다." },
+            { symbol: "a", name: "raw modulo", description: "Subcommittee 크기를 목표 aggregator 수로 나눈 정수 몫입니다." },
+            { symbol: "z", name: "proof hash bytes", description: "Selection proof에 hash 함수를 적용한 byte string입니다." },
+            { symbol: "h", name: "proof hash integer", description: "Selection proof hash의 앞 8 bytes를 uint64로 읽은 값입니다." },
+            { symbol: "\\sigma", name: "sync selection proof", description: "slot과 subcommittee index에 DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF로 서명한 값입니다." },
+          ]}
+          assumptions={["C/N이 subcommittee position 수를 이루며 preset·fork를 고정합니다.", "동일 validator가 여러 committee position에 들어갈 수 있으므로 participant identity와 bit position을 구분합니다."]}
+          interpretation="Mainnet의 512 positions를 4개 subnet으로 나누면 contribution bitvector는 subnet당 128 bits입니다. 이후 proposer가 네 구간을 올바른 offset에 놓아 전체 bitvector를 만듭니다."
+        />
+
         {/* ── Light Client 활용 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">
           Light Client — SyncAggregate로 head 검증
@@ -212,6 +248,23 @@ export default function Contribution({ onCodeRef }: Props) {
         <p className="mt-4 border-l-2 border-violet-500/50 pl-3 text-sm">
           <strong>💡 보상 & 패널티</strong> — sync committee reward는 total
           active balance와 preset constant, proposer·participant 역할을 사용해 계산합니다. 불참 delta도 현재 fork formula를 따르는 값이지 고정 금액이 아닙니다. Light client는 SyncAggregate만 보는 것이 아니라 trusted root, Merkle branch와 update selection rule까지 검증합니다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">Light client가 믿는 범위와 release gate</h3>
+        <p>
+          신뢰는 공격자가 건넨 committee의 자기서명에서 시작하지 않습니다.
+          사용자가 고정한 trusted block root에서 current committee Merkle
+          branch를 확인하고, update의 participant-position public keys와 BLS
+          signature, finalized·next-committee branch, update selection rule을
+          차례로 검증합니다. 이 경로는 full execution과 모든 BeaconState
+          transition을 대신하지 않습니다.
+        </p>
+        <p>
+          Release 전에는 period 전환, duplicate positions, wrong domain·root,
+          잘못된 subnet offset, 부족한 participation, 깨진 Merkle branch,
+          reorg와 restart를 동일 fixture로 paired 실행합니다. Contribution
+          bytes와 light-client optimistic/finalized header가 baseline과 같아야
+          BLS batch나 pool 성능 개선을 비교합니다.
         </p>
       </div>
     </section>

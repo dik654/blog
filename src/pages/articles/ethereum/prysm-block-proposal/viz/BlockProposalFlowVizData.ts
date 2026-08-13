@@ -6,9 +6,9 @@ export const C = {
 export const STEPS = [
   { label: '왜 제안자 선정이 중요한가', body: '매 슬롯 1명, RANDAO 기반 유효 잔액 비례 공정 추첨' },
   { label: '① ComputeProposerIndex', body: 'RANDAO 시드 + 활성 검증자 목록으로 제안자 결정' },
-  { label: '② 어테스테이션 수집', body: '풀에서 호환 어테스테이션을 필터링하여 최대 128개 포함' },
-  { label: '③ 예치금 & eth1 데이터', body: 'eth1 예치금 수집 + eth1_data_votes용 블록 해시 결정' },
-  { label: '④ BeaconBlock 조립', body: 'RANDAO reveal, attestations, deposits 등을 모아 구조체 완성' },
+  { label: '② consensus operation 수집', body: '활성 fork의 body schema와 list limit에 맞는 attestation·slashing·request를 선별' },
+  { label: '③ execution payload 결정', body: 'local EL 또는 builder 경로의 payload를 deadline·fork contract에 맞춰 선택' },
+  { label: '④ BeaconBlock 조립', body: 'RANDAO reveal, sync aggregate, payload·blob commitment을 fork schema로 결합' },
   { label: '⑤ BLS 서명 & 브로드캐스트', body: 'BLS 개인키로 서명 후 gossipsub에 브로드캐스트' },
 ];
 

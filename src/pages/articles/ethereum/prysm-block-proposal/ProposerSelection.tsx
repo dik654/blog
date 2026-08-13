@@ -1,5 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
 interface Props {
@@ -101,6 +102,20 @@ export default function ProposerSelection({ onCodeRef }: Props) {
           balance 비율로 정해지며, 같은 state와 slot을 가진 모든 노드는 같은
           proposer를 계산한다.
         </p>
+
+        <ExplainedFormula
+          question="유효 잔액이 큰 검증자에게 더 높은 제안 확률을 주면서도 모든 노드가 같은 사람을 고르려면 어떻게 할까요?"
+          idea={<>같은 seed로 후보 순서를 섞고, 후보의 <strong>effective balance 비율</strong>만큼 acceptance test를 통과시킵니다. 실패하면 다음 결정적 후보를 검사합니다.</>}
+          formula={String.raw`b_i\cdot255\;\ge\;B_{\max}\cdot r_i`}
+          terms={[
+            { symbol: "b_i", name: "후보 effective balance", description: "후보 i의 protocol 가중치이며 단위는 Gwei입니다." },
+            { symbol: "255", name: "최대 random byte", description: "8-bit 표본의 최댓값입니다." },
+            { symbol: "B_{\\max}", name: "fork별 최대 effective balance", description: "가중치를 정규화하는 Gwei 기준입니다." },
+            { symbol: "r_i", name: "random byte", description: "seed와 반복 번호에서 결정적으로 얻는 0~255 정수입니다." },
+          ]}
+          assumptions={["Active validator 집합, BeaconState, slot, fork version과 seed가 모든 정상 노드에서 같습니다.", "여기 적은 255 비교는 v1.6.1 Phase 0 helper를 설명하는 식이며 활성 fork가 바꾼 helper와 상수는 그 fork 규격을 따릅니다."]}
+          interpretation="예를 들어 최대값이 32 ETH이고 후보가 24 ETH라면 약 75%의 random-byte 구간을 통과합니다. 이는 장기 선택 확률의 직관이지 특정 slot 당첨을 미리 보장하지 않습니다."
+        />
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>💡 잔액 비례 확률</strong> — effectiveBalance × maxRandom ≥

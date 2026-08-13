@@ -1,208 +1,41 @@
-import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function Topics({ onCodeRef }: Props) {
+export default function Topics({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="topics" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">토픽 & 포크 다이제스트</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-5 text-2xl font-bold">Topic은 fork·message kind·encoding을 wire routing key로 고정한다</h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton onClick={() => onCodeRef("message-handler", codeRefs["message-handler"])} />
+        <span className="self-center text-xs text-muted-foreground">분석한 snapshot의 topic handler 확인</span>
+      </div>
+      <ExplainedFormula
+        question="서로 다른 chain·fork의 같은 message 이름을 topic에서 어떻게 분리할까요?"
+        idea="Fork version과 genesis validators root를 SSZ ForkData로 commitment한 뒤 hash의 앞 4 bytes를 routing digest로 씁니다. 이 짧은 값은 실용적 domain separation이며 cryptographic identity 전체를 대체하지 않습니다."
+        formula={String.raw`d_f=\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}`}
+        terms={[
+          { symbol: "d_f", name: "포크 다이제스트", description: "topic에 들어가는 4-byte fork digest" },
+          { symbol: "v_f", name: "포크 버전", description: "해당 epoch에서 활성인 4-byte fork version" },
+          { symbol: "g", name: "제네시스 검증자 루트", description: "network identity를 묶는 genesis_validators_root" },
+          { symbol: "0{:}4", name: "앞 네 바이트", description: "32-byte hash 결과에서 선택하는 prefix" },
+        ]}
+        assumptions={["활성 epoch·fork schedule과 genesis root가 local network에서 정확합니다.", "Topic의 message name과 encoding suffix도 exact match로 검사합니다.", "4-byte digest 일치는 signature·SSZ·state validity나 hash collision 불가능을 보장하지 않습니다."]}
+        interpretation="같은 beacon_block 이름도 fork version 또는 genesis root가 바뀌면 다른 digest가 되어 다른 topic에 놓입니다. Digest가 맞더라도 body는 이후 validation을 모두 통과해야 합니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Topic string의 세 축</h3>
         <p>
-          Prysm을 포함한 consensus client는 GossipSub topic 이름에 <strong>fork digest</strong>를 넣습니다. Digest는 current fork version과 genesis validators root를 protocol의 <code>compute_fork_digest</code> rule로 결합한 4-byte 값이므로 같은 network·fork의 peer만 같은 topic namespace에서 message를 교환합니다.
+          Ethereum gossip topic은 보통 fork digest, message name과 encoding으로 구성됩니다. Beacon block처럼 global topic이 있는
+          반면 attestation은 subnet ID가 message name에 포함돼 traffic을 나눕니다. Node가 자신의 validator duty와 persistent
+          subnet metadata를 바꿀 때 subscribe/unsubscribe generation을 기록해야 fork transition에서 old/new topic이 겹치는
+          기간을 설명할 수 있습니다.
         </p>
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton
-            onClick={() =>
-              onCodeRef("message-handler", codeRefs["message-handler"])
-            }
-          />
-          <span className="text-xs text-muted-foreground self-center">
-            subscribe()
-          </span>
-        </div>
-
-        {/* ── 전체 토픽 목록 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Ethereum 2.0 토픽 전체 목록
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-1">
-              토픽 이름 형식
-            </p>
-            <p className="text-sm text-foreground/80 font-mono mb-2">
-              /eth2/{"{fork_digest}"}/{"{name}"}/ssz_snappy
-            </p>
-            <p className="text-xs text-foreground/60">
-              <code>fork_digest</code> = SHA256(current_fork_version ||
-              genesis_validators_root)[:4]. 예: <code>"6a95a1a9"</code> (Deneb,
-              mainnet)
-            </p>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              글로벌 토픽 (모든 노드 구독 필수)
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>beacon_block</code> — 블록 전파
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>aggregate_and_proof</code> — 집계 attestation
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>voluntary_exit</code> — validator 종료
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>proposer_slashing</code> — proposer 슬래싱
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>attester_slashing</code> — attester 슬래싱
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>bls_to_execution_change</code> — withdrawal 변경(Capella+)
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>blob_sidecar_{"{0-5}"}</code> — blob(Deneb+, 6 subnets)
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>sync_contribution_and_proof</code> — sync 집계
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              서브넷 토픽 (validator 선택 구독)
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>beacon_attestation_{"{0-63}"}</code> — 64 attestation
-                subnets
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                <code>sync_committee_{"{0-3}"}</code> — 4 sync committee subnets
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-center">
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              global topics
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              duty subnets
-            </div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">
-              persistent subscriptions
-            </div>
-          </div>
-        </div>
         <p>
-          Beacon block처럼 모든 node가 관심을 갖는 global topic과 attestation·sync committee처럼 duty를 subnet에 나누는 topic을 함께 사용합니다. Subnet은 모든 node가 모든 signature를 받지 않게 bandwidth를 분산하지만 validator뿐 아니라 network health를 위한 persistent-subnet subscriber와 aggregator도 topic에 참여할 수 있습니다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">주요 토픽</h3>
-        <ul>
-          <li>
-            <code>/eth2/{"{digest}"}/beacon_block/ssz_snappy</code> — 블록 전파
-          </li>
-          <li>
-            <code>
-              /eth2/{"{digest}"}/beacon_attestation_{"{subnet}"}/ssz_snappy
-            </code>{" "}
-            — 어테스테이션
-          </li>
-          <li>
-            <code>
-              /eth2/{"{digest}"}/sync_committee_{"{subnet}"}/ssz_snappy
-            </code>{" "}
-            — 싱크 커미티
-          </li>
-        </ul>
-
-        {/* ── 포크 다이제스트 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          포크 다이제스트 — 네트워크 자동 격리
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              <code>computeForkDigest(forkVersion, genesisValidatorsRoot)</code>
-            </p>
-            <p className="text-sm text-foreground/80">
-              <code>ForkData</code> SSZ container를 <code>HashTreeRoot</code>
-              하여 처음 4바이트 추출. 네트워크 + 포크 조합의 고유 식별자.
-            </p>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              메인넷 fork_digest 연대기
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                Phase0 (2020-12) — <code>b5303f2a</code>
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                Altair (2021-10) — <code>afcaaba0</code>
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                Bellatrix (2022-09) — <code>4a26c58b</code> (The Merge)
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                Capella (2023-04) — <code>bba4da96</code>
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                Deneb (2024-03) — <code>6a95a1a9</code>
-              </div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">
-                Electra (2025 예정) — TBD
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-3">
-              하드포크 전환 흐름
-            </p>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
-                <span className="font-mono text-xs text-blue-500 shrink-0">
-                  1
-                </span>
-                <div className="text-foreground/80">포크 epoch N 설정</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
-                <span className="font-mono text-xs text-green-500 shrink-0">
-                  2
-                </span>
-                <div className="text-foreground/80">
-                  epoch N-1까지 old fork_digest 사용
-                </div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
-                <span className="font-mono text-xs text-purple-500 shrink-0">
-                  3
-                </span>
-                <div className="text-foreground/80">
-                  fork transition부터 new fork_digest의 topic 사용
-                </div>
-              </div>
-            </div>
-            <p className="text-xs text-foreground/60 mt-2">
-              업그레이드하지 않은 node는 새 digest topic의 message를 정상
-              decode·validate할 수 없으므로 compatible peer와 traffic이 분리됩니다.
-            </p>
-          </div>
-        </div>
-        <p>
-          Fork digest가 바뀌면 새 fork의 object는 새로운 topic namespace로 이동하므로 old client가 schema가 다른 message를 정상 topic으로 받아들이는 일을 막습니다. 다만 fork transition의 성공은 digest만이 아니라 client upgrade, dual-subscription timing과 state-transition correctness에도 달려 있습니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 포크 자동 격리</strong> — 하드포크 시 포크 다이제스트가
-          바뀌어 old-fork message가 current-fork topic validation을 통과하지 못하게 합니다. Object 내부 fork-aware validation도 여전히 필요하므로 topic 이름만으로 모든 version check가 사라지는 것은 아닙니다.
+          Unknown fork topic을 generic SSZ object로 추측 decode하지 않습니다. Topic이 선택한 exact fork schema와 size bound가
+          준비되지 않았다면 ignore/reject 정책에 따라 fail closed합니다. Future fork support는 binary·spec commit과 함께
+          배포하며 old topic unsubscribe 전에 duty와 propagation overlap을 검증합니다.
         </p>
       </div>
     </section>

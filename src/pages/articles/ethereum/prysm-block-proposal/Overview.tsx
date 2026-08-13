@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ContextViz from "./viz/ContextViz";
 import BlockProposalFlowViz from "./viz/BlockProposalFlowViz";
 import type { CodeRef } from "@/components/code/types";
@@ -15,8 +18,18 @@ export default function Overview({
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          이 아티클에서는 제안자 선정부터 블록 조립, 서명, 전파까지의 전체
-          파이프라인을 코드 수준으로 추적한다.
+          이 글은 먼저 한 슬롯의 질문부터 시작합니다. <strong>누가 어떤
+          parent 위에 무엇을 조립하고, 어느 시점에 서명해야 하는가?</strong>
+          제안자 duty 확인, fork-choice head, execution payload, consensus
+          operation, post-state root를 하나의 제안 receipt로 연결한 뒤 Prysm
+          코드로 내려갑니다.
+        </p>
+        <p className="leading-7">
+          블록을 만드는 경로와 받은 블록을 검증하는 경로는 다릅니다. 이 글은
+          전자를 소유하며, 후자는 <Link to="/blockchain/prysm-block-processing">블록 처리</Link>,
+          head 선택은 <Link to="/blockchain/prysm-forkchoice">fork choice</Link>,
+          서명 domain은 <Link to="/blockchain/prysm-bls">BLS</Link> 정본을
+          재사용합니다.
         </p>
 
         {/* ── Block proposal 흐름 ── */}
@@ -141,8 +154,32 @@ export default function Overview({
           builder)에 따라 해석한다.
         </p>
       </div>
+      <ContentBoundary article="prysm-block-proposal" />
       <div className="not-prose mt-6">
         <BlockProposalFlowViz />
+      </div>
+      <div id="paper-consensus-proposer-spec" className="scroll-mt-24">
+        <CitationBlock
+          source="Ethereum Consensus Specifications v1.6.1 — proposer duties"
+          citeKey={1}
+          href="https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/phase0/validator.md#block-proposal"
+        >
+          제안자 선택, parent 선택, RANDAO와 서명에 관한 protocol 사실의
+          기준입니다. 수치와 함수는 v1.6.1 tag 및 활성 fork·network preset에
+          한정되며, Prysm의 cache나 builder timeout을 규정하지 않습니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-proposal-source" className="scroll-mt-24">
+        <CitationBlock
+          source="OffchainLabs/prysm — pinned proposal implementation"
+          citeKey={2}
+          type="code"
+          href="https://github.com/OffchainLabs/prysm/tree/ea3fbe48b48170e7f7252fbc15e9591d462a0f87"
+        >
+          Prysm의 RPC·validator client·pool 조립 경계를 확인한 source
+          snapshot입니다. 운영상 deadline·receipt·paired release gate는 이
+          글의 hardening 제안이며 protocol이 자동으로 보장하는 성질이 아닙니다.
+        </CitationBlock>
       </div>
     </section>
   );

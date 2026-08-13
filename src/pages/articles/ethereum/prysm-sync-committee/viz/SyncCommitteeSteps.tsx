@@ -8,7 +8,7 @@ export function Step0() {
     <motion.line x1={170} y1={27} x2={210} y2={27} stroke={C.why} strokeWidth={0.8}
       initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.2 }} />
     <motion.g initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 }}>
-      <DataBox x={215} y={15} w={115} h={26} label="512명 서명 확인" color={C.select} />
+      <DataBox x={215} y={15} w={115} h={26} label="위원회 집계 확인" color={C.select} />
     </motion.g>
     <motion.text x={210} y={62} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
@@ -16,7 +16,7 @@ export function Step0() {
     </motion.text>
     <motion.text x={210} y={78} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }}>
-      전체 검증자 서명 검증 대신 512명만으로 충분
+      full state 실행과는 다른 축약 검증 경로
     </motion.text>
   </g>);
 }
@@ -25,7 +25,7 @@ export function Step1() {
   const validators = Array.from({ length: 12 }, (_, i) => i);
   const selected = [2, 5, 7, 10];
   return (<g>
-    <text x={210} y={14} textAnchor="middle" fontSize={10} fontWeight={600} fill={C.select}>전체 검증자에서 512명 무작위 선정</text>
+    <text x={210} y={14} textAnchor="middle" fontSize={10} fontWeight={600} fill={C.select}>Mainnet preset: 512 positions 선정</text>
     {validators.map((v, i) => (
       <motion.g key={v} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: i * 0.04 + 0.1 }}>
@@ -39,7 +39,7 @@ export function Step1() {
     ))}
     <motion.text x={210} y={66} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-      256 에폭 (~27시간) 동안 고정
+      balance 가중·중복 position 허용·period 동안 유지
     </motion.text>
   </g>);
 }

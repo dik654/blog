@@ -21,7 +21,7 @@ export function Step1() {
     <ModuleBox x={10} y={8} w={90} h={42} label="에폭 시작" sub="셔플 시드" color={C.commit} />
     <motion.line x1={100} y1={29} x2={135} y2={29} stroke={C.commit} strokeWidth={1} {...fade(0.2)} />
     <motion.g {...fade(0.3)}>
-      <ActionBox x={140} y={8} w={105} h={42} label="위원회 배정" sub="64개 위원회" color={C.commit} />
+      <ActionBox x={140} y={8} w={105} h={42} label="위원회 배정" sub="slot·index 결정" color={C.commit} />
     </motion.g>
     {slots.map((s, i) => (
       <motion.g key={i} {...fade(0.4 + i * 0.1)}>

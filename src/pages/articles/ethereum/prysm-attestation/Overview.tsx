@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ContextViz from "./viz/ContextViz";
 import AttestationFlowViz from "./viz/AttestationFlowViz";
 import type { CodeRef } from "@/components/code/types";
@@ -15,8 +18,16 @@ export default function Overview({
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          이 아티클에서는 어테스테이션 생성부터 집계, 블록 포함, 보상 수령까지의
-          전체 생명주기를 코드 수준으로 추적한다.
+          이 글은 “검증자 한 명이 본 head가 어떻게 네트워크의 합의 입력이
+          되는가?”에서 시작합니다. 같은 한 표 안의 head·source·target을
+          구분하고, duty의 dependent root, signing domain, subnet, aggregation
+          bits를 고정한 사례 하나로 끝까지 추적합니다.
+        </p>
+        <p className="leading-7">
+          어테스테이션은 head 선택과 finality에 함께 쓰이지만 두 판단은 같지
+          않습니다. 가중치 계산은 <Link to="/blockchain/prysm-forkchoice">fork choice</Link>,
+          checkpoint 규칙은 <Link to="/blockchain/prysm-finality">finality</Link>,
+          double/surround vote 방지는 <Link to="/blockchain/prysm-validator-client#slashing-protection">validator slashing protection</Link> 정본으로 이어집니다.
         </p>
 
         {/* ── Attestation 역할 ── */}
@@ -211,8 +222,23 @@ export default function Overview({
           따른다.
         </p>
       </div>
+      <ContentBoundary article="prysm-attestation" />
       <div className="not-prose mt-6">
         <AttestationFlowViz />
+      </div>
+      <div id="paper-consensus-attestation-spec" className="scroll-mt-24">
+        <CitationBlock source="Ethereum Consensus Specifications v1.6.1 — attesting and aggregation" citeKey={1} href="https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/phase0/validator.md#attesting">
+          AttestationData, subnet 계산, selection proof와 aggregation의 protocol
+          기준입니다. Electra 이후 committee 식별 방식처럼 fork별 schema가
+          달라질 수 있으므로 v1.6.1과 활성 fork를 함께 고정합니다.
+        </CitationBlock>
+      </div>
+      <div id="paper-prysm-attestation-source" className="scroll-mt-24">
+        <CitationBlock source="OffchainLabs/prysm — pinned attestation implementation" citeKey={2} type="code" href="https://github.com/OffchainLabs/prysm/tree/ea3fbe48b48170e7f7252fbc15e9591d462a0f87">
+          Prysm validator·pool·gossip 구현의 실제 경계를 확인합니다. Deadline,
+          deduplication receipt와 장애 주입 release gate는 source 사실과 구분한
+          운영 hardening 제안입니다.
+        </CitationBlock>
       </div>
     </section>
   );

@@ -1,84 +1,41 @@
 import type { CodeRef } from "@/components/code/types";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function SnappyEncoding({ onCodeRef: _onCodeRef }: Props) {
+export default function SnappyEncoding({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="snappy-encoding" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">SSZ-Snappy 인코딩</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          Ethereum consensus gossip topic은 포크에 맞는 SSZ 객체를 Snappy로
-          압축한 <code>ssz_snappy</code> payload를 운반한다. SSZ가 타입과
-          canonical bytes를 결정하고 Snappy는 그 바이트열의 전송량을 줄이는 별도
-          계층이다.
+      <h2 className="mb-5 text-2xl font-bold">SSZ-Snappy는 압축률이 아니라 압축 해제 전 allocation 경계를 먼저 정한다</h2>
+      <ExplainedFormula
+        question="최대 raw payload n bytes를 허용할 때 Snappy wire input을 어디까지 읽을 수 있을까요?"
+        idea="Snappy의 worst-case compressed length upper bound를 사용해 압축 bytes부터 제한하고, header가 선언한 decoded length와 실제 output도 raw cap 이하인지 별도로 검사합니다."
+        formula={String.raw`C_{max}(n)=32+n+\left\lfloor\frac{n}{6}\right\rfloor`}
+        terms={[
+          { symbol: "n", name: "최대 원문 크기", description: "규격이 허용하는 uncompressed application payload(bytes)" },
+          { symbol: "C_{max}(n)", name: "최대 압축 입력", description: "허용할 Snappy compressed bytes의 worst-case 상한" },
+          { symbol: "32", name: "고정 오버헤드", description: "Snappy bound의 고정 bytes 항" },
+          { symbol: "\\lfloor n/6\\rfloor", name: "크기 비례 오버헤드", description: "원문 크기에 비례하는 worst-case 추가 bytes" },
+        ]}
+        assumptions={["Current Ethereum networking spec의 MAX_PAYLOAD_SIZE와 Snappy framing 규칙을 사용합니다.", "Compressed cap·declared decoded length·actual output cap을 모두 검사합니다.", "압축 성공이나 SSZ decode 성공은 signature·state validity를 보장하지 않습니다."]}
+        interpretation="설명용 n=600 bytes이면 Cmax=32+600+100=732 bytes입니다. 100-byte compressed input도 header가 20 MiB output을 선언하면 allocation 전에 거절해야 합니다."
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Decompression bomb을 막는 순서</h3>
+        <p>
+          먼저 transport/pubsub frame에서 compressed bytes를 bounded reader로 받고, Snappy decoded length를 allocation 전에
+          확인합니다. Streaming decoder가 cap을 넘는 output을 쓰려 하면 즉시 중단하고, 정확히 한 frame을 소비했는지 trailing
+          data와 truncation도 검사합니다. 그다음 fork-specific SSZ decoder에 제한된 bytes만 넘깁니다.
+        </p>
+        <p>
+          “압축 후 1 MiB” 같은 단일 cap만 두면 작은 input이 큰 output을 만드는 공격을 막지 못합니다. 반대로 raw cap만 너무
+          이르게 적용해 legitimate worst-case Snappy overhead를 빼먹으면 valid 최대 payload를 거절할 수 있습니다. Spec-derived
+          두 cap과 per-peer/global queued byte budget을 함께 사용합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">수신 파이프라인</h3>
-        <div className="not-prose grid gap-2 my-4 text-xs">
-          {[
-            [
-              "1",
-              "Topic 확인",
-              "fork digest와 message type이 현재 validation 문맥에 맞는지 확인",
-            ],
-            [
-              "2",
-              "크기 제한",
-              "압축 입력과 해제 후 예상 길이에 한도를 적용해 allocation 폭증을 방지",
-            ],
-            [
-              "3",
-              "Snappy 해제",
-              "지원하는 framing·encoding 규칙에 따라 bytes 복원",
-            ],
-            [
-              "4",
-              "SSZ decode",
-              "포크별 concrete type으로 canonical 구조를 역직렬화",
-            ],
-            [
-              "5",
-              "Gossip validation",
-              "시기·서명·부모·중복 등 객체별 규칙을 적용",
-            ],
-          ].map(([n, title, body]) => (
-            <div
-              key={n}
-              className="flex items-start gap-3 rounded-lg border bg-card p-3"
-            >
-              <span className="font-mono font-semibold">{n}</span>
-              <div>
-                <strong>{title}</strong>
-                <p className="text-muted-foreground mt-1">{body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          왜 압축 benchmark를 본문 상수로 두지 않는가
-        </h3>
-        <ul>
-          <li>
-            압축률은 beacon block, attestation, blob sidecar처럼 입력 분포가
-            다른 객체마다 달라진다.
-          </li>
-          <li>
-            처리량은 CPU, library 버전, framing 방식과 buffer 재사용 여부에
-            좌우된다.
-          </li>
-          <li>
-            DoS 안전성은 평균 속도보다 해제 전 길이 확인, 최대 크기, 실패 시
-            allocation 경로에 달려 있다.
-          </li>
-        </ul>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          “gzip보다 몇 배 빠르다” 같은 수치는 특정 benchmark의 결과일 뿐
-          프로토콜 보장이 아니다. 운영에서는 실제 gossip corpus로 encode·decode
-          latency, 압축률, allocation을 함께 측정한다.
+        <h3>Release gate</h3>
+        <p>
+          Valid boundary payload, compressed cap ±1, declared raw cap ±1, truncated stream, trailing bytes, malformed varint,
+          expansion bomb와 valid-Snappy-but-invalid-SSZ를 같은 fixture로 재생합니다. Accept/reject/ignore, allocated peak bytes,
+          worker cleanup, message ID와 peer score signal parity를 통과한 뒤 decode throughput을 비교합니다.
         </p>
       </div>
     </section>

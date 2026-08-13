@@ -10,7 +10,7 @@ export function StepSlotProposal() {
       <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.1 }}>
         <rect x={20 + i * 100} y={30} width={80} height={30} rx={6}
           fill={s === 4830 ? `${C.propose}18` : 'var(--card)'}
-          stroke={s === 4830 ? C.propose : 'var(--border)'} strokeWidth={s === 4830 ? 1.5 : 0.7} />
+          stroke={s === 4830 ? C.propose : 'var(--border)'} strokeWidth={s === 4830 ? 1.1 : 0.7} />
         <text x={60 + i * 100} y={49} textAnchor="middle" fontSize={11}
           fill={s === 4830 ? C.propose : 'var(--muted-foreground)'}>{s}</text>
       </motion.g>
@@ -43,7 +43,7 @@ export function StepMEV() {
     <ModuleBox x={280} y={20} w={110} h={42} label="빌더 블록" sub="MEV-Boost" color={C.mev} />
     <motion.text x={210} y={85} textAnchor="middle" fontSize={11} fill={C.mev}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-      수익이 높은 쪽을 선택
+      유효성·정책·deadline을 통과한 후보 선택
     </motion.text>
   </g>);
 }
@@ -55,7 +55,7 @@ export function StepRANDAO() {
     <motion.line x1={115} y1={42} x2={155} y2={42} stroke={C.propose} strokeWidth={1}
       initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.3 }} />
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-      <ActionBox x={160} y={22} w={120} h={40} label="ComputeIndex" sub="32 ETH 비례 추첨" color={C.propose} />
+      <ActionBox x={160} y={22} w={120} h={40} label="ComputeIndex" sub="유효 잔액 비례" color={C.propose} />
     </motion.g>
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
       <DataBox x={300} y={28} w={110} h={28} label="Idx #347,921" color={C.ok} />
@@ -71,7 +71,7 @@ export function StepPackSign() {
       <motion.g key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         transition={{ delay: i * 0.15 }}>
         <ActionBox x={20 + i * 138} y={25} w={110} h={40} label={s}
-          sub={['attest 128개', 'BLS sign', 'gossipsub'][i]} color={C.sign} />
+          sub={['fork별 body', 'single sign', '같은 bytes'][i]} color={C.sign} />
         {i < 2 && (
           <motion.line x1={130 + i * 138} y1={45} x2={158 + i * 138} y2={45}
             stroke={C.sign} strokeWidth={1}
