@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const PVALIDATE_RMPCHECK = `/* arch/x86/kernel/sev.c — PVALIDATE 구현 */
 static int pvalidate(unsigned long vaddr, bool rmp_psize,
@@ -26,18 +26,25 @@ static int pvalidate(unsigned long vaddr, bool rmp_psize,
 // → 게스트가 자신의 메모리 보호 상태를 확인`;
 
 export const pvalidateCodeRefs: Record<string, CodeRef> = {
-  'pvalidate': {
-    path: 'linux/arch/x86/kernel/sev.c',
+  pvalidate: {
+    path: "linux/arch/x86/kernel/sev.c",
     code: PVALIDATE_RMPCHECK,
     highlight: [2, 20],
-    lang: 'c',
+    lang: "c",
     annotations: [
-      { lines: [2, 4], color: 'sky', note: 'PVALIDATE 함수 시그니처' },
-      { lines: [9, 14], color: 'emerald', note: '인라인 ASM — 전용 CPU 명령어 호출' },
-      { lines: [23, 26], color: 'amber', note: 'RMPCHECK — RMP 상태 읽기 전용 조회' },
+      { lines: [2, 4], color: "sky", note: "PVALIDATE 함수 시그니처" },
+      {
+        lines: [9, 14],
+        color: "emerald",
+        note: "인라인 ASM — 전용 CPU 명령어 호출",
+      },
+      {
+        lines: [23, 26],
+        color: "amber",
+        note: "RMPCHECK — RMP 상태 읽기 전용 조회",
+      },
     ],
-    desc:
-`PVALIDATE는 SEV-SNP 전용 CPU 명령어로, 게스트가 자신의 메모리 페이지를
+    desc: `PVALIDATE는 SEV-SNP 전용 CPU 명령어로, 게스트가 자신의 메모리 페이지를
 유효(validated)로 표시하는 데 사용합니다.
 
 하이퍼바이저는 이 명령을 실행할 수 없어, 게스트의 메모리 무결성이 보장됩니다.

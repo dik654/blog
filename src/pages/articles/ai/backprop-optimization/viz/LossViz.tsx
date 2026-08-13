@@ -1,98 +1,55 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { CEPanel, MSEPanel, ComparePanel } from './LossComparePanel';
+import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
-  { label: 'Cross-Entropy: −log(ŷ), 정답 확률이 낮으면 급격히 증가' },
-  { label: 'MSE: (y−ŷ)², 오차에 비례하여 부드럽게 증가' },
-  { label: '우리 모델: CE → −log(0.09)=2.41, MSE → (1−0.09)²=0.83' },
-];
+  { label: "Cross-entropy: 정답 확률이 낮으면 loss가 빠르게 증가" },
+  { label: "MSE: 정답과의 수치 차이를 제곱해 부드럽게 증가" },
+  { label: "같은 예측 ŷ=0.09에서 두 objective의 gradient 신호 비교" },
+] as const;
 
-const CE = [3.0, 2.3, 1.9, 1.6, 1.2, 0.9, 0.7, 0.5, 0.3, 0.1];
-const MSE_V = [0.9, 0.81, 0.64, 0.49, 0.36, 0.25, 0.16, 0.09, 0.04, 0.01];
+const probabilities = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
 
-const CURVES = [
-  { data: CE, color: '#0ea5e9', label: 'Cross-Entropy', scale: 28 },
-  { data: MSE_V, color: '#10b981', label: 'MSE', scale: 85 },
-];
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.4 };
+function pointsFor(values: number[], maximum: number) {
+  return values.map((value, index) => {
+    const x = 8 + (index / (values.length - 1)) * 284;
+    const y = 150 - Math.min(value / maximum, 1) * 136;
+    return `${x},${y}`;
+  }).join(" ");
+}
 
 export default function LossViz() {
+  const ce = probabilities.map((value) => -Math.log(value));
+  const mse = probabilities.map((value) => (1 - value) ** 2);
+
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 480 165" className="w-full max-w-2xl"
-          style={{ height: 'auto' }}>
+        <div className="grid w-full max-w-4xl gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(14rem,0.65fr)] md:items-center">
+          <section className="min-w-0">
+            <div className="mb-3 flex flex-wrap gap-x-5 gap-y-2 text-xs">
+              <span className={`flex items-center gap-2 font-semibold ${step === 1 ? "opacity-25" : ""}`}><i className="h-1.5 w-5 rounded-sm bg-sky-500" />Cross-entropy</span>
+              <span className={`flex items-center gap-2 font-semibold ${step === 0 ? "opacity-25" : ""}`}><i className="h-1.5 w-5 rounded-sm bg-emerald-500" />MSE</span>
+            </div>
+            <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-3">
+              <span className="self-center text-[10px] font-semibold text-muted-foreground [writing-mode:vertical-rl] rotate-180">LOSS</span>
+              <div className="min-w-0">
+                <svg viewBox="0 0 300 158" className="block h-auto w-full" aria-label="정답 확률에 따른 cross-entropy와 MSE 곡선">
+                  <line x1="8" y1="150" x2="296" y2="150" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.8" />
+                  <line x1="8" y1="8" x2="8" y2="150" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.8" />
+                  <polyline points={pointsFor(ce, 3)} fill="none" stroke="#0ea5e9" strokeWidth="1.2" opacity={step === 1 ? 0.16 : 0.9} />
+                  <polyline points={pointsFor(mse, 1)} fill="none" stroke="#10b981" strokeWidth="1.2" opacity={step === 0 ? 0.16 : 0.9} />
+                  {step === 2 && <line x1="20" y1="12" x2="20" y2="150" stroke="currentColor" strokeOpacity="0.35" strokeWidth="0.8" strokeDasharray="3 4" />}
+                </svg>
+                <div className="mt-1 flex justify-between text-[9px] text-muted-foreground"><span>정답 확률 0</span><span>정답 확률 1</span></div>
+              </div>
+            </div>
+          </section>
 
-          {/* axes */}
-          <line x1={40} y1={15} x2={40} y2={100}
-            stroke="var(--border)" strokeWidth={0.8} />
-          <line x1={40} y1={100} x2={260} y2={100}
-            stroke="var(--border)" strokeWidth={0.8} />
-          <text x={150} y={114} textAnchor="middle" fontSize={8}
-            fill="var(--muted-foreground)">정답 클래스 확률 ŷ →</text>
-          <text x={14} y={58} fontSize={8}
-            fill="var(--muted-foreground)"
-            transform="rotate(-90 14 58)">Loss</text>
-
-          {CURVES.map((c, ci) => {
-            const active = ci === step || step === 2;
-            const pts = c.data.map((v, i) => {
-              const x = 40 + (i + 1) * 22;
-              const y = 100 - v * (ci === 0 ? 24 : 75);
-              return `${x},${y}`;
-            }).join(' ');
-            return (
-              <motion.g key={ci}
-                animate={{ opacity: active ? 1 : 0.12 }}
-                transition={sp}>
-                <polyline points={pts} fill="none"
-                  stroke={c.color}
-                  strokeWidth={active ? 1.5 : 0.8} />
-                {active && c.data.map((v, i) => (
-                  <circle key={i}
-                    cx={40 + (i + 1) * 22}
-                    cy={100 - v * (ci === 0 ? 24 : 75)}
-                    r={2} fill={c.color} opacity={0.7} />
-                ))}
-              </motion.g>
-            );
-          })}
-
-          {/* legend */}
-          <line x1={44} y1={20} x2={56} y2={20} stroke="#0ea5e9" strokeWidth={1.5} />
-          <text x={60} y={23} fontSize={7} fill="#0ea5e9">CE</text>
-          <line x1={44} y1={30} x2={56} y2={30} stroke="#10b981" strokeWidth={1.5} />
-          <text x={60} y={33} fontSize={7} fill="#10b981">MSE</text>
-
-          {/* Our model marker at y=0.09 (step 2) */}
-          {step === 2 && (
-            <motion.g initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }} transition={sp}>
-              <line x1={62} y1={100 - 1.9 * 24}
-                x2={62} y2={100}
-                stroke="#0ea5e9" strokeWidth={0.8}
-                strokeDasharray="3 2" />
-              <circle cx={62} cy={100 - 1.9 * 24}
-                r={4} fill="#0ea5e920" stroke="#0ea5e9"
-                strokeWidth={1.2} />
-              <circle cx={62} cy={100 - 0.64 * 75}
-                r={4} fill="#10b98120" stroke="#10b981"
-                strokeWidth={1.2} />
-              <text x={62} y={100 - 1.9 * 24 - 6} textAnchor="middle"
-                fontSize={7} fill="#0ea5e9">ŷ=0.09</text>
-            </motion.g>
-          )}
-
-          {/* Comparison panel (right side, clearly separated) */}
-          <rect x={280} y={10} width={190} height={148} rx={6}
-            fill="var(--card)"
-            stroke="var(--border)" strokeWidth={0.6} />
-
-          {step === 0 && <CEPanel />}
-          {step === 1 && <MSEPanel />}
-          {step === 2 && <ComparePanel />}
-        </svg>
+          <section className="min-w-0 border-t border-border/60 pt-6 md:border-l md:border-t-0 md:pl-7 md:pt-0">
+            {step === 0 && <><p className="text-xs font-bold text-sky-600 dark:text-sky-300">−log(ŷ)</p><p className="mt-3 text-sm font-semibold leading-6">낮은 정답 확률을 강하게 벌점합니다.</p><p className="mt-2 text-xs leading-5 text-muted-foreground">ŷ=0.09이면 loss는 약 2.41입니다. categorical probability model의 negative log-likelihood와 맞닿아 있습니다.</p></>}
+            {step === 1 && <><p className="text-xs font-bold text-emerald-600 dark:text-emerald-300">(1−ŷ)²</p><p className="mt-3 text-sm font-semibold leading-6">수치 차이를 제곱해 대칭적으로 벌점합니다.</p><p className="mt-2 text-xs leading-5 text-muted-foreground">ŷ=0.09이면 loss는 약 0.83입니다. Gaussian noise를 둔 회귀 likelihood와 자연스럽게 연결됩니다.</p></>}
+            {step === 2 && <><p className="text-xs font-bold text-primary">같은 숫자, 다른 objective</p><div className="mt-4 space-y-4"><div><div className="flex justify-between text-xs"><span>Cross-entropy</span><b className="font-mono">2.41</b></div><div className="mt-1 h-1.5 rounded-sm bg-sky-500/75" /></div><div><div className="flex justify-between text-xs"><span>MSE</span><b className="font-mono">0.83</b></div><div className="mt-1 h-1.5 w-[34%] rounded-sm bg-emerald-500/75" /></div></div><p className="mt-4 text-xs leading-5 text-muted-foreground">크기만 비교해 loss를 고르면 안 됩니다. 출력이 어떤 확률 모형을 나타내는지 먼저 정해야 합니다.</p></>}
+          </section>
+        </div>
       )}
     </StepViz>
   );

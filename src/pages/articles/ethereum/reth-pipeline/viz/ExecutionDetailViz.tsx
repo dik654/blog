@@ -10,7 +10,7 @@ function Step0() {
     <motion.rect x={50} y={58} height={6} rx={3} fill={C.range}
       initial={{ width: 0 }} animate={{ width: 200 }} transition={{ duration: 0.8, ease: 'easeOut' }} />
     <rect x={50} y={58} width={320} height={6} rx={3} fill="var(--border)" opacity={0.2} />
-    <motion.text x={255} y={55} fontSize={11} fill={C.range} fontWeight={600}
+    <motion.text x={378} y={55} textAnchor="end" fontSize={11} fill={C.range} fontWeight={600}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
       start=18,399,501 → end=18,400,000
     </motion.text>

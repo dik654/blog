@@ -1,50 +1,50 @@
-import { DataBox } from '@/components/viz/boxes';
+import {
+  SessionFrame,
+  SessionRule,
+  SessionSteps,
+} from "./SessionVizPrimitives";
 
 export default function SessionStructViz() {
-  const fields = [
-    { label: 'id', type: 'SessionId', color: '#3b82f6' },
-    { label: 'parent', type: 'Option<SessionId>', color: '#8b5cf6' },
-    { label: 'messages', type: 'Vec<Message>', color: '#10b981' },
-    { label: 'tool_calls', type: 'Vec<ToolCallLog>', color: '#10b981' },
-    { label: 'permission_log', type: 'Vec<PermDecision>', color: '#ef4444' },
-    { label: 'token_usage', type: 'TokenUsage', color: '#f59e0b' },
-    { label: 'workspace_root', type: 'PathBuf', color: '#6b7280' },
-    { label: 'started_at', type: 'DateTime<Utc>', color: '#6b7280' },
-    { label: 'metadata', type: 'SessionMeta', color: '#6b7280' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 400" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Session 구조체 — 대화 상태의 단일 소스</text>
-
-        {/* Session 박스 */}
-        <rect x={90} y={54} width={380} height={330} rx={10}
-          fill="var(--card)" stroke="#3b82f6" strokeWidth={1.5} />
-        <rect x={90} y={54} width={380} height={34} rx={10}
-          fill="#3b82f6" fillOpacity={0.15} />
-        <text x={280} y={76} textAnchor="middle" fontSize={12} fontWeight={700} fill="#3b82f6">
-          pub struct Session
-        </text>
-
-        {/* 필드들 */}
-        {fields.map((field, i) => {
-          const y = 104 + i * 30;
-          return (
-            <g key={field.label}>
-              <rect x={104} y={y} width={352} height={26} rx={3}
-                fill={field.color} fillOpacity={0.08} stroke={field.color} strokeWidth={0.5} />
-              <rect x={104} y={y} width={4} height={26} fill={field.color} rx={1} />
-              <text x={124} y={y + 17} fontSize={10.5} fontWeight={600} fill={field.color}>
-                {field.label}
-              </text>
-              <text x={444} y={y + 17} textAnchor="end" fontSize={9.5} fontFamily="monospace"
-                fill="var(--muted-foreground)">{field.type}</text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
+    <SessionFrame
+      label="DURABLE FACTS VS TRANSIENT BYTES"
+      title="commit된 작업 기록과 진행 중 stream buffer를 분리한다"
+      description="로그인 실패 수정 세션은 message뿐 아니라 permission, tool result와 test receipt를 revision에 묶되 아직 완성되지 않은 provider stream은 별도 buffer에 둡니다."
+      note="세션 객체 하나에 모든 mutable state를 넣으라는 뜻은 아닙니다. append-only event, derived view와 transient runtime buffer를 서로 다른 수명으로 관리하되 session·turn·attempt identity로 연결합니다."
+    >
+      <SessionSteps
+        items={[
+          {
+            label: "COMMITTED · MESSAGE",
+            title: "요청과 응답 block",
+            body: "로그인 실패 요청, 완성된 assistant message와 call/result 대응을 보존합니다.",
+            tone: "blue",
+          },
+          {
+            label: "COMMITTED · EFFECT",
+            title: "실행과 검증 ledger",
+            body: "permission decision, edit result, idempotency key와 deterministic test receipt를 남깁니다.",
+            tone: "violet",
+          },
+          {
+            label: "COMMITTED · BOUNDARY",
+            title: "Authority & recovery",
+            body: "workspace·policy·tool generation, approval scope와 checkpoint revision을 참조합니다.",
+            tone: "amber",
+          },
+          {
+            label: "TRANSIENT · ATTEMPT",
+            title: "Stream buffer",
+            body: "partial text·JSON delta·in-flight process handle은 완성 전 session event가 아닙니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <SessionRule>
+        crash가 나면 transient buffer는 버릴 수 있지만 commit된 message, effect와
+        receipt는 rollback하지 않습니다. 세션은 대용량 artifact·telemetry의
+        identity만 참조하고 원본 수명은 각 저장소가 관리합니다.
+      </SessionRule>
+    </SessionFrame>
   );
 }

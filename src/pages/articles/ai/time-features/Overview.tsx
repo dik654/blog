@@ -1,60 +1,71 @@
-import OverviewViz from './viz/OverviewViz';
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import ExplainedFormula from "@/components/ui/explained-formula";
+
+const stages = [
+  ["예측 행", "entity i · cutoff c · horizon h · target y(i,c,h)"],
+  ["과거 원장", "event time과 available time이 기록된 관측만 선택"],
+  ["시간 표현", "lag · rolling · elapsed time · calendar/cyclic basis"],
+  ["평가", "rolling-origin backtest와 point-in-time replay"],
+];
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">시계열 피처가 왜 특별한가</h2>
+      <h2 className="mb-6 text-2xl font-bold">시계열 feature는 “현재 row에서 알 수 있던 과거”를 고정하는 일입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          일반 테이블에서 행 순서는 무의미하다 — 셔플해도 모델 성능에 영향 없음<br />
-          시계열은 다르다. <strong>시간 순서 자체가 정보</strong>이며 셔플하면 예측 능력이 사라짐
+        <p className="text-lg leading-8">
+          8월 1일 자정에 매장 A의 다음 7일 매출을 예측한다고 해보겠습니다. 이
+          문제의 한 row는 단순히 날짜 하나가 아니라 <em>매장 A, cutoff 8월 1일,
+          horizon 7일</em>이라는 질문입니다. Lag와 rolling statistic은 이 질문보다
+          먼저 이용할 수 있었던 event history를 고정 길이의 표로 요약합니다.
         </p>
         <p>
-          시계열 피처 엔지니어링의 핵심 — <strong>시간 축을 따라 새로운 입력 변수를 만드는 것</strong><br />
-          과거 값(래그), 구간 통계(롤링), 시간의 주기성(sin/cos)이 대표적인 세 갈래
+          여기에는 서로 다른 네 시간이 있습니다. Event time은 현상이 일어난
+          시점이고, available time은 시스템이 값을 알게 된 시점이며, cutoff는
+          model이 결정을 내리는 시점입니다. Label horizon은 정답을 측정할 미래
+          구간입니다. Calendar상 과거라도 available time이 cutoff보다 늦으면
+          feature로 사용할 수 없습니다.
         </p>
-
-        <h3>일반 피처와의 차이</h3>
         <p>
-          키, 몸무게, 성별 같은 피처는 관측 시점과 무관하게 존재<br />
-          시계열 피처는 <strong>관측 시점(t)이 정의의 일부</strong> — "어제 매출", "최근 7일 평균"처럼 기준점이 변하면 값도 변함<br />
-          따라서 <strong>시간 순서를 깨지 않고</strong> 피처를 구성해야 하며, 이를 어기면 미래 누출(Data Leakage)이 발생
+          이 글은 <Link to="/ai/feature-engineering#aggregation">point-in-time aggregation과 feature availability</Link>,{" "}
+          <Link to="/ai/math-complex-numbers-oscillations">radian·sin·cos의 수학</Link>을
+          재사용합니다. 여기서는 lag와 window의 인덱스 의미, rolling-origin 평가,
+          cyclic basis가 forecasting row에 연결되는 방법만 소유합니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <OverviewViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>실전에서의 역할</h3>
-        <p>
-          수요 예측 — 래그 피처(어제/지난주 판매량)가 가장 강력한 단일 예측 인자인 경우가 많음<br />
-          K리그 분석 — 최근 5경기 승점 이동 평균으로 팀 폼을 정량화<br />
-          금융 — 20일/60일 이동 평균선 교차가 매매 시그널
-        </p>
 
-        <h3>이 글에서 다루는 범위</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            { title: '래그 & 차분', desc: '이전 시점 값과 변화량으로 관성·추세 포착' },
-            { title: '롤링 통계', desc: '이동 평균·표준편차·EMA로 구간 특성 요약' },
-            { title: '주기 인코딩', desc: 'sin/cos 변환으로 시간의 순환 구조 표현' },
-            { title: '미래 누출 방지', desc: 'TimeSeriesSplit과 올바른 피처 계산 순서' },
-          ].map((item) => (
-            <div key={item.title} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-semibold text-foreground text-xs">{item.title}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.desc}</div>
+      <ContentBoundary article="time-features" />
+
+      <ExplainedFormula
+        question="Forecasting용 table의 한 row는 어떤 질문을 하나의 target으로 고정할까?"
+        idea={<>Entity i에서 forecast origin c까지 알 수 있는 history로, c 뒤의 horizon h 동안 정의된 target을 예측합니다. 따라서 input과 label 양쪽에 시간 경계가 들어갑니다.</>}
+        formula={String.raw`\hat y_{i,c,h}=f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)`}
+        terms={[
+          { symbol: "i", name: "entity", description: "서로 history가 섞이면 안 되는 매장·사용자·센서 같은 예측 단위입니다." },
+          { symbol: "c", name: "cutoff · forecast origin", description: "Prediction을 실제로 만들어야 하는 기준 시점입니다." },
+          { symbol: "h", name: "forecast horizon", description: "Cutoff 뒤 얼마 동안 또는 몇 step 뒤의 target을 맞힐지 정합니다." },
+          { symbol: "Φ", name: "time-feature map", description: "유효한 과거 record를 lag·window·calendar coordinates로 바꿉니다." },
+        ]}
+        assumptions={["Entity key·timezone·event/available timestamp의 clock 기준이 고정돼 있습니다.", "Target interval은 input history와 겹치지 않도록 문제별로 명시합니다.", "Training과 serving은 같은 cutoff rule과 late-arrival policy를 사용합니다."]}
+        interpretation="좋은 시계열 feature는 미래를 잘 요약한 값이 아니라 prediction 당시 재현할 수 있는 과거를 잘 요약한 값입니다."
+      />
+
+      <figure data-viz="time-feature-topdown" className="not-prose my-8 min-w-0 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
+        <figcaption>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary/75">Forecast row contract</p>
+          <p className="mt-2 text-lg font-semibold">모델보다 먼저 네 단계의 시간 경계를 고정합니다</p>
+        </figcaption>
+        <div className="mt-6 overflow-hidden rounded-lg border border-border/70">
+          {stages.map(([title, body], index) => (
+            <div key={title} className={`grid gap-2 px-4 py-4 sm:grid-cols-[2.5rem_8rem_1fr] ${index ? "border-t border-border/60" : ""}`}>
+              <span className="text-xs font-bold text-primary/70">0{index + 1}</span>
+              <p className="font-semibold">{title}</p>
+              <p className="text-sm leading-6 text-muted-foreground">{body}</p>
             </div>
           ))}
         </div>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">핵심 원칙</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            시계열 피처를 만들 때는 항상 <strong>"이 시점에서 과거만 볼 수 있는가?"</strong>를 자문해야 한다.
-            미래 정보가 한 방울이라도 섞이면 모델은 실전에서 무용지물이 된다.
-          </p>
-        </div>
-      </div>
+      </figure>
     </section>
   );
 }

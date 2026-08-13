@@ -1,30 +1,78 @@
-import { motion } from 'framer-motion';
-import { ModuleBox } from '@/components/viz/boxes';
+import { motion } from "framer-motion";
+import { ModuleBox } from "@/components/viz/boxes";
 
-const C = { ec: '#f59e0b', f3: '#6366f1', ok: '#10b981' };
+const C = { ec: "#f59e0b", f3: "#6366f1", ok: "#10b981" };
 
 function IntegrationViz() {
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">EC + F3 통합 구조</p>
-      <svg viewBox="0 0 420 100" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
-        <ModuleBox x={20} y={10} w={120} h={35}
-          label="EC (블록 생산)" sub="30초/에폭" color={C.ec} />
-        <motion.line x1={140} y1={27} x2={170} y2={27}
-          stroke={C.ok} strokeWidth={1.2}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ delay: 0.2 }} />
-        <ModuleBox x={175} y={10} w={120} h={35}
-          label="F3 (확정)" sub="수 분" color={C.f3} />
-        <motion.line x1={295} y1={27} x2={320} y2={27}
-          stroke={C.ok} strokeWidth={1.2}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ delay: 0.4 }} />
-        <ModuleBox x={325} y={10} w={80} h={35}
-          label="확정 체인" sub="되돌릴 수 없음" color={C.ok} />
-        <motion.text x={210} y={70} textAnchor="middle" fontSize={11}
-          fill={C.f3} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}>
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        EC + F3 통합 구조
+      </p>
+      <svg
+        viewBox="0 0 420 100"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
+        <ModuleBox
+          x={20}
+          y={10}
+          w={120}
+          h={35}
+          label="EC (블록 생산)"
+          sub="30초/에폭"
+          color={C.ec}
+        />
+        <motion.line
+          x1={140}
+          y1={27}
+          x2={170}
+          y2={27}
+          stroke={C.ok}
+          strokeWidth={1.2}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.2 }}
+        />
+        <ModuleBox
+          x={175}
+          y={10}
+          w={120}
+          h={35}
+          label="F3 (확정)"
+          sub="수 분"
+          color={C.f3}
+        />
+        <motion.line
+          x1={295}
+          y1={27}
+          x2={320}
+          y2={27}
+          stroke={C.ok}
+          strokeWidth={1.2}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.4 }}
+        />
+        <ModuleBox
+          x={325}
+          y={10}
+          w={80}
+          h={35}
+          label="확정 체인"
+          sub="되돌릴 수 없음"
+          color={C.ok}
+        />
+        <motion.text
+          x={210}
+          y={70}
+          textAnchor="middle"
+          fontSize={11}
+          fill={C.f3}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
           💡 EC가 생산한 tipset을 F3가 확정 → 확정 이전 체인은 reorg 가능
         </motion.text>
       </svg>
@@ -40,15 +88,17 @@ export default function FilecoinIntegration() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          EC는 기존대로 30초마다 tipset 생산 (변경 없음).<br />
-          F3는 EC 생산 tipset 중 <strong>2/3+ power 동의한 것 확정</strong>.<br />
+          EC는 기존대로 30초마다 tipset 생산 (변경 없음).
+          <br />
+          F3는 EC 생산 tipset 중 <strong>2/3+ power 동의한 것 확정</strong>.
+          <br />
           확정 이전 체인 reorg 불가 → 빠른 확정성 달성.
         </p>
 
         {/* ── EC + F3 통합 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">EC + F3 통합 구조</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Filecoin 2-layer consensus:
+          {`// Filecoin 2-layer consensus:
 
 // Layer 1: EC (Expected Consensus)
 // - block production (30s per epoch)
@@ -106,14 +156,17 @@ export default function FilecoinIntegration() {
         </pre>
         <p className="leading-7">
           EC + F3: <strong>EC가 생산, F3가 확정</strong>.<br />
-          finalized tipset은 revert 불가.<br />
+          finalized tipset은 revert 불가.
+          <br />
           cross-chain: 7.5h → 2-5min (100x faster).
         </p>
 
         {/* ── F3 영향 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">F3의 Filecoin 생태계 영향</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          F3의 Filecoin 생태계 영향
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// F3 영향:
+          {`// F3 영향:
 
 // 1. Cross-chain bridges:
 //    - 기존: 7.5시간 대기 → 2분
@@ -184,16 +237,23 @@ export default function FilecoinIntegration() {
 // - Filecoin 특성 최적화`}
         </pre>
         <p className="leading-7">
-          F3 영향: <strong>cross-chain, DeFi, data economy 활성화</strong>.<br />
-          7.5h → 2-5min finality → bridge/DeFi 가능.<br />
+          F3 영향: <strong>cross-chain, DeFi, data economy 활성화</strong>.
+          <br />
+          7.5h → 2-5min finality → bridge/DeFi 가능.
+          <br />
           2024-2025 phased rollout.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 F3는 EC 대체 안 하고 layering인가</strong> — backward compatibility.<br />
-          EC: 3+ 년간 production, 검증된 코드.<br />
-          EC 대체 = 대대적 upgrade, 복잡도.<br />
-          F3 layering = 점진적 + 안전 + existing node 호환.<br />
+          <strong>💡 왜 F3는 EC 대체 안 하고 layering인가</strong> — backward
+          compatibility.
+          <br />
+          EC: 3+ 년간 production, 검증된 코드.
+          <br />
+          EC 대체 = 대대적 upgrade, 복잡도.
+          <br />
+          F3 layering = 점진적 + 안전 + existing node 호환.
+          <br />
           blockchain upgrade의 pragmatic 접근.
         </p>
       </div>

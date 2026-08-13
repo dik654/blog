@@ -1,5 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
 
 const templateCode = `// ec-gpu-gen이 생성하는 OpenCL 커널 (BN254 예시, 실제 생성 출력 요약)
 //
@@ -48,37 +48,75 @@ const montConstCode = `// Montgomery 상수 계산 (build.rs 내부, Rust)
 export default function Codegen() {
   return (
     <section id="codegen" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">코드 생성: 템플릿 &rarr; 커브 전용 커널</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        코드 생성: 템플릿 &rarr; 커브 전용 커널
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          ec-gpu-gen의 핵심은 <strong>템플릿 + 파라미터 주입</strong> 패턴이다.<br />
-          필드 연산(add, sub, mul, inv)과 곡선 연산(point_add, point_double, point_mul)의
-          알고리즘 로직은 공통이고, <strong>소수 p의 limb 값과 Montgomery 상수만</strong> 커브마다 다르다.
+          ec-gpu-gen의 핵심은 <strong>템플릿 + 파라미터 주입</strong> 패턴이다.
+          <br />
+          필드 연산(add, sub, mul, inv)과 곡선 연산(point_add, point_double,
+          point_mul)의 알고리즘 로직은 공통이고,{" "}
+          <strong>소수 p의 limb 값과 Montgomery 상수만</strong> 커브마다 다르다.
         </p>
-        <CodePanel title="생성된 OpenCL 커널 예시 (BN254)" code={templateCode} annotations={[
-          { lines: [3, 14], color: 'sky', note: '주입된 상수: p, R, R2, inv (BN254 고유값)' },
-          { lines: [16, 22], color: 'emerald', note: '필드 연산: add, sub, mul' },
-          { lines: [24, 26], color: 'amber', note: '곡선 연산: point_add, double, mul' },
-        ]} />
+        <CodePanel
+          title="생성된 OpenCL 커널 예시 (BN254)"
+          code={templateCode}
+          annotations={[
+            {
+              lines: [3, 14],
+              color: "sky",
+              note: "주입된 상수: p, R, R2, inv (BN254 고유값)",
+            },
+            {
+              lines: [16, 22],
+              color: "emerald",
+              note: "필드 연산: add, sub, mul",
+            },
+            {
+              lines: [24, 26],
+              color: "amber",
+              note: "곡선 연산: point_add, double, mul",
+            },
+          ]}
+        />
 
-        <CitationBlock source="ec-gpu -- GpuField trait" citeKey={2} type="code"
-          href="https://github.com/filecoin-project/ec-gpu">
+        <CitationBlock
+          source="ec-gpu -- GpuField trait"
+          citeKey={2}
+          type="code"
+          href="https://github.com/filecoin-project/ec-gpu"
+        >
           <p className="text-xs">
-            GpuField 트레이트는 one(), modulus(), r(), r2(), inv() 메서드를 정의한다.<br />
-            이 트레이트를 구현한 모든 필드 타입에 대해 ec-gpu-gen이 자동으로 GPU 커널을 생성한다.
+            GpuField 트레이트는 one(), modulus(), r(), r2(), inv() 메서드를
+            정의한다.
+            <br />이 트레이트를 구현한 모든 필드 타입에 대해 ec-gpu-gen이
+            자동으로 GPU 커널을 생성한다.
           </p>
         </CitationBlock>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Montgomery 상수 계산</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Montgomery 상수 계산
+        </h3>
         <p>
-          세 가지 Montgomery 상수 <code>R</code>, <code>R2</code>, <code>inv</code>는 빌드 타임에 정확히 한 번 계산된다.<br />
-          이 상수들이 GPU 커널의 모든 필드 곱셈에서 사용되므로, 정확성이 전체 증명의 정합성을 결정한다.
+          세 가지 Montgomery 상수 <code>R</code>, <code>R2</code>,{" "}
+          <code>inv</code>는 빌드 타임에 정확히 한 번 계산된다.
+          <br />이 상수들이 GPU 커널의 모든 필드 곱셈에서 사용되므로, 정확성이
+          전체 증명의 정합성을 결정한다.
         </p>
-        <CodePanel title="Montgomery 상수 계산 (build.rs)" code={montConstCode} annotations={[
-          { lines: [4, 8], color: 'sky', note: 'R, R2, inv 세 상수의 정의' },
-          { lines: [10, 13], color: 'emerald', note: 'BN254: 4-limb 상수값' },
-          { lines: [15, 17], color: 'amber', note: 'BLS12-381: 6-limb 상수값' },
-        ]} />
+        <CodePanel
+          title="Montgomery 상수 계산 (build.rs)"
+          code={montConstCode}
+          annotations={[
+            { lines: [4, 8], color: "sky", note: "R, R2, inv 세 상수의 정의" },
+            { lines: [10, 13], color: "emerald", note: "BN254: 4-limb 상수값" },
+            {
+              lines: [15, 17],
+              color: "amber",
+              note: "BLS12-381: 6-limb 상수값",
+            },
+          ]}
+        />
       </div>
     </section>
   );

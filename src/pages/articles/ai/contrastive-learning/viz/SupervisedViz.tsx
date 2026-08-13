@@ -1,20 +1,4 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './SupervisedVizData';
-import { Step0, Step1, Step2, Step3 } from './SupervisedSteps';
-
-const views = [Step0, Step1, Step2, Step3];
-
-export default function SupervisedViz() {
-  return (
-    <StepViz steps={STEPS}>
-      {(step) => {
-        const View = views[step];
-        return (
-          <svg viewBox="0 0 480 200" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-            <View />
-          </svg>
-        );
-      }}
-    </StepViz>
-  );
-}
+import VizFrame from "@/components/viz/VizFrame";
+const cols=["A₁","A₂","A₃","B₁","C₁"];
+const rows=[["A₁","—","+","+","−","−"],["B₁","−","−","−","—","−"],["C₁","−","−","−","−","—"]];
+export default function SupervisedViz(){return <VizFrame eyebrow="Batch relation matrix" title="Label이 같다는 사실을 anchor별 positive 집합으로 바꿉니다" description="A₁에는 두 positive가 있지만, batch에 같은 class가 하나뿐인 C₁에는 positive가 없습니다."><div className="overflow-x-auto"><table className="w-full min-w-[520px] border-collapse text-center text-sm"><thead><tr className="border-y border-border"><th className="px-3 py-3 text-left">anchor \ candidate</th>{cols.map(c=><th key={c} className="px-3 py-3">{c}</th>)}</tr></thead><tbody>{rows.map(row=><tr key={row[0]} className="border-b border-border last:border-b-0">{row.map((v,i)=><td key={`${row[0]}-${i}`} className={`px-3 py-4 ${i===0?'text-left font-semibold':v==='—'?'text-muted-foreground':v==='+'?'font-bold text-primary':''}`}>{v}</td>)}</tr>)}</tbody></table></div></VizFrame>}

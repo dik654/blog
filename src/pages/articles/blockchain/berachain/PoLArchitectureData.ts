@@ -60,4 +60,3 @@ export const beaconKitArchCode = `BeaconKit 아키텍처 (Cosmos SDK 모듈 없�
 
 직렬화: SSZ (Protobuf 제거) → EIP-4788 지원
 EIP-4844: Blob 트랜잭션 지원 (proto-danksharding)`;
-

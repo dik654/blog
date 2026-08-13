@@ -1,55 +1,57 @@
-import { CitationBlock } from '@/components/ui/citation';
-import GenTaxonomyViz from './viz/GenTaxonomyViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import DistributionTargetViz from "./viz/DistributionTargetViz";
+import TractabilityMapViz from "./viz/TractabilityMapViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">판별 vs 생성 모델</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          <strong>판별 모델</strong>은 입력 x가 주어졌을 때 레이블 y의 조건부 확률 P(y|x)를 학습합니다.
-          <br />
-          <strong>생성 모델</strong>은 데이터 자체의 분포 P(x)를 학습하여 새로운 샘플을 생성합니다.
-          <br />
-          핵심 과제는 고차원 데이터의 복잡한 확률 분포를 효과적으로 근사하는 것입니다.
-        </p>
+      <h2 className="mb-6 text-2xl font-bold">
+        생성 모델은 무엇을 생성하느냐보다 확률분포를 어떻게 다루느냐에서
+        갈립니다
+      </h2>
 
-        <CitationBlock source="Goodfellow et al., 2014 — Generative Adversarial Networks"
-          citeKey={1} type="paper" href="https://arxiv.org/abs/1406.2661">
-          <p className="italic">"Generative models provide an explicit or implicit representation
-          of the probability distribution over the data space."</p>
-        </CitationBlock>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          얼굴 사진 dataset에서 새로운 얼굴을 만들거나 prompt에 맞는 이미지를
+          생성하려면, 관측한 sample을 외우는 대신 그 뒤에 있는 data
+          distribution을 근사해야 합니다. 조건이 없는 모델은 p(x), 조건을 받는
+          모델은 p(x|c)에서 새 sample을 만들지만, density를 계산하는 능력과 좋은
+          sample을 빠르게 만드는 능력은 서로 다른 요구입니다.
+        </p>
+        <p>
+          따라서 VAE·GAN·normalizing flow·diffusion을 시간순 진화나 하나의 성능
+          순위로 외우면 선택 기준을 놓치기 쉽습니다. 어떤 family는 exact
+          log-likelihood를 얻기 위해 sequential order나 invertibility를
+          받아들이고, 다른 family는 normalized density를 직접 계산하는 대신
+          discriminator의 비교 신호나 score를 학습합니다. 이 글은 각 모델의 세부
+          유도를 반복하지 않고 distribution representation, tractable objective,
+          sampling path와 evaluation이라는 공통 비교 축을 정리합니다.
+        </p>
       </div>
 
-      <div className="not-prose my-8"><GenTaxonomyViz /></div>
+      <ContentBoundary article="generative-theory" />
+
+      <DistributionTargetViz />
+      <TractabilityMapViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">생성 모델 분류</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">분류</th>
-                <th className="border border-border px-4 py-2 text-left">대표 모델</th>
-                <th className="border border-border px-4 py-2 text-left">핵심 원리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['우도 기반', 'GPT, PixelCNN', 'MLE로 P(x)를 직접 최대화'],
-                ['잠재 변수', 'VAE, Normalizing Flow', '잠재 공간 z를 통한 P(x) 모델링'],
-                ['암시적', 'GAN, Score Matching', '분포를 직접 정의하지 않고 샘플링'],
-                ['확산', 'DDPM, Stable Diffusion', '노이즈 추가/제거 과정으로 학습'],
-              ].map(([cat, models, principle]) => (
-                <tr key={cat}>
-                  <td className="border border-border px-4 py-2 font-medium">{cat}</td>
-                  <td className="border border-border px-4 py-2">{models}</td>
-                  <td className="border border-border px-4 py-2">{principle}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <h3>Explicit와 implicit이라는 한 줄 분류만으로는 부족하다</h3>
+        <p>
+          “Explicit model은 density를 정의하고 implicit model은 sample만
+          만든다”는 구분은 출발점으로 쓸 수 있지만, diffusion처럼 variational
+          bound, denoising score matching과 probability-flow ODE 해석이 겹치는
+          family를 한 칸에 가두기는 어렵습니다. Density가 수학적으로
+          존재하는지만 묻기보다 실제로 normalized likelihood를 계산할 수 있는지,
+          어떤 surrogate를 직접 최적화하는지, sample 하나에 몇 번의 network
+          evaluation이 필요한지를 함께 적어야 정확합니다.
+        </p>
+        <p>
+          Evaluation도 같은 이유로 하나의 숫자로 합치지 않습니다. Held-out
+          likelihood는 density assignment를, FID 같은 feature statistic은 sample
+          set의 일부 geometry를, precision·recall은 quality와 coverage를 서로
+          다른 방식으로 봅니다. Conditional generation이라면 condition
+          adherence와 diversity도 따로 측정해야 합니다.
+        </p>
       </div>
     </section>
   );

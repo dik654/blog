@@ -1,275 +1,294 @@
-import ParityHarnessViz from './viz/ParityHarnessViz';
-import SseFlowViz from './viz/SseFlowViz';
-import ParityPipelineViz from './viz/ParityPipelineViz';
+import { CitationBlock } from "@/components/ui/citation";
+import ParityHarnessViz from "./viz/ParityHarnessViz";
+import SseFlowViz from "./viz/SseFlowViz";
+import ParityPipelineViz from "./viz/ParityPipelineViz";
+
+const LOGIN_FIXTURE = [
+  ["Arrange", "고정 workspace에 failing login test, source file과 before hash를 준비합니다."],
+  ["Script", "mock provider가 read→edit→test tool call과 마지막 설명을 정해진 SSE frame으로 보냅니다."],
+  ["Enforce", "registry와 permission decision을 기록하고 denied case에서는 executor가 호출되지 않았음을 확인합니다."],
+  ["Assert effect", "허용 case의 diff가 예상 범위인지, test exit code와 receipt가 완료 조건을 만족하는지 검사합니다."],
+  ["Assert state", "tool result·test evidence·final response가 올바른 순서로 session에 commit됐는지 확인합니다."],
+] as const;
+
+const TEST_LAYERS = [
+  {
+    layer: "Parser / unit",
+    proves: "frame 조립, JSON parse, permission function 같은 작은 invariant",
+    misses: "실제 CLI composition과 file/process side effect",
+    cadence: "모든 commit에서 빠르게 실행",
+  },
+  {
+    layer: "Deterministic parity",
+    proves: "고정 fixture에서 request·trace·decision·effect의 재현 가능한 equivalence",
+    misses: "새로운 login variant와 실제 provider·OS 차이",
+    cadence: "모든 pull request에서 paired run",
+  },
+  {
+    layer: "Provider contract",
+    proves: "실제 provider의 인증, request schema, SSE·error·rate-limit protocol, proxy와 cancellation 경로",
+    misses: "workspace permission과 patch의 의미적 정답",
+    cadence: "격리한 credential로 scheduled test·release canary",
+  },
+  {
+    layer: "Sandbox / OS integration",
+    proves: "실제 filesystem permission, symlink, process signal과 sandbox enforcement",
+    misses: "live provider drift와 여러 사용자 요청에 대한 일반화",
+    cadence: "지원 OS별 integration run·release candidate",
+  },
+  {
+    layer: "Semantic / E2E evaluation",
+    proves: "실제 request부터 verified response까지와 unseen login case에서 patch의 의미·부작용",
+    misses: "host permission invariant와 모든 장기 code quality를 단독 보장",
+    cadence: "사전 등록한 slice로 release 전·canary 후 비교",
+  },
+] as const;
+
+const FAILURE_INJECTIONS = [
+  {
+    fault: "SSE가 block 종료 전에 끊김",
+    result: "incomplete_stream",
+    invariant: "미완성 assistant/tool message를 commit하지 않고 executor를 호출하지 않음",
+    exit: "retryable 또는 failed",
+  },
+  {
+    fault: "완성된 tool input이 malformed JSON",
+    result: "invalid_tool_input",
+    invariant: "executor·workspace mutation이 0이고 invalid input을 session tool call로 확정하지 않음",
+    exit: "failed",
+  },
+  {
+    fault: "edit 또는 test permission 거부",
+    result: "permission_denied",
+    invariant: "process·file handle을 열지 않고 before hash를 유지함",
+    exit: "denied 또는 approval-required",
+  },
+  {
+    fault: "file write가 중간에 실패",
+    result: "partial_write",
+    invariant: "원본 보존·rollback 여부와 남은 diff를 기록하고 완료로 표시하지 않음",
+    exit: "failed 또는 needs-review",
+  },
+  {
+    fault: "수정 뒤 login regression test 실패",
+    result: "verification_failed",
+    invariant: "diff·test log를 보존하되 완료 response와 success state를 만들지 않음",
+    exit: "needs-review",
+  },
+] as const;
 
 export default function ParityHarness() {
   return (
     <section id="parity-harness" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Mock 패리티 하네스 — 결정론적 검증 인프라</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Deterministic parity는 실행 계약을 고정하지만 답의 품질 전체를 증명하지는 않습니다
+      </h2>
 
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Deterministic harness는 같은 input에 같은 provider frame, 같은 tool result와
+          같은 clock·ID를 공급해 실행할 때마다 같은 관찰을 만드는 test 환경입니다.
+          Network와 live model의 변동을 제거하므로 provider stream parser,
+          tool roundtrip, permission과 session transition의 회귀를 정확히
+          재현할 수 있습니다.
+        </p>
+        <p>
+          하지만 “두 실행 trace가 같다”와 “login bug를 올바르게 고쳤다”는 다른
+          질문입니다. 전자는 정해 둔 contract의 deterministic equivalence이고,
+          후자는 unseen login condition, 보안, 유지보수성과 user intent까지 보는
+          semantic quality입니다. Harness가 scripted patch 하나만 기대한다면
+          엉뚱한 hard-coded fix도 parity를 통과할 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
         <ParityHarnessViz />
+      </div>
 
-        {/* ── 하네스 개요 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">mock-anthropic-service 크레이트</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>로그인 버그를 하나의 acceptance fixture로 고정합니다</h3>
         <p>
-          <code>mock-anthropic-service</code>는 Anthropic Messages API를 완벽히 모사하는 로컬 HTTP 서버<br />
-          포트 바인딩: 기본값 <code>localhost:3070</code> — 환경 변수 <code>ANTHROPIC_BASE_URL</code>로 리다이렉션<br />
-          핵심 가치: <strong>API 키 없이 전체 에이전트 루프를 재현</strong> — CI 환경에서 네트워크 격리 상태로 테스트 가능
+          아래는 현재 repository에 동일한 이름으로 들어 있다고 주장하는 기존
+          scenario가 아니라, 공개 mock harness의 메커니즘으로 고정 사례를 검증할
+          때 추가할 설계입니다. Fixture는 model이 낼 법한 답을 흉내 내는 데서
+          끝나지 않고 host가 지켜야 할 precondition과 artifact를 포함해야 합니다.
         </p>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">mock-anthropic-service/main.rs</span>
-          </div>
-          <div className="p-4 space-y-2 text-sm">
-            <div className="flex items-start gap-2">
-              <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">1</span>
-              <span><code className="text-xs bg-muted px-1 py-0.5 rounded">TcpListener::bind("127.0.0.1:3070")</code> 로컬 서버 바인딩</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">2</span>
-              <span><code className="text-xs bg-muted px-1 py-0.5 rounded">parse_scenario_from_headers()</code> 요청의 <code className="text-xs bg-muted px-1 py-0.5 rounded">X-Mock-Scenario</code> 헤더에서 시나리오 선택</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">3</span>
-              <span><code className="text-xs bg-muted px-1 py-0.5 rounded">serve_scenario(stream, scenario)</code> 해당 시나리오의 SSE 스트림 재생</span>
-            </div>
-          </div>
-        </div>
-        <p>
-          클라이언트가 <code>X-Mock-Scenario: streaming-text</code> 헤더를 보내면 서버가 해당 시나리오의
-          SSE 스트림을 재생<br />
-          시나리오 미지정 시 기본값 <code>streaming-text</code> 사용<br />
-          요청-응답이 1:1 결정론 — 동일 시나리오는 항상 동일 바이트 시퀀스 반환
-        </p>
+      </div>
 
-        {/* ── 12개 시나리오 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">12개 시나리오 상세</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-violet-50 dark:bg-violet-950/30 px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">enum Scenario</span>
-            <span className="text-xs text-muted-foreground ml-2">scenarios.rs — 12개 시나리오</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">1</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">StreamingText</code> <span className="text-muted-foreground">— 순수 텍스트 스트리밍 (제어군)</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">2</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">ReadFileRoundtrip</code> <span className="text-muted-foreground">— tool_use → tool_result 왕복</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">3</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">BashPermissionPrompt</code> <span className="text-muted-foreground">— bash 호출 → Prompt → 재시도</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">4</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">MultiToolParallel</code> <span className="text-muted-foreground">— 병렬 3개 도구 호출</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">5</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">McpToolCall</code> <span className="text-muted-foreground">— MCP 브릿지 경유</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">6</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">SessionCompact</code> <span className="text-muted-foreground">— 토큰 초과 → 압축 트리거</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">7</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">HookPreExec</code> <span className="text-muted-foreground">— pre-exec 훅 차단</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">8</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">SubAgentSpawn</code> <span className="text-muted-foreground">— 서브에이전트 생성</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">9</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">ErrorRecovery</code> <span className="text-muted-foreground">— API 429 → 재시도 → 성공</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">10</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">TokenLimitExceeded</code> <span className="text-muted-foreground">— 토큰 한계 초과</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">11</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">ToolResultTruncation</code> <span className="text-muted-foreground">— 결과 절단 (&gt;8K)</span></div>
-            </div>
-            <div className="bg-background p-2.5 text-xs flex items-start gap-2">
-              <span className="shrink-0 w-5 text-muted-foreground text-right">12</span>
-              <div><code className="bg-muted px-1 py-0.5 rounded">ConversationFork</code> <span className="text-muted-foreground">— 대화 분기 & 되감기</span></div>
-            </div>
-          </div>
-        </div>
+      <ol className="not-prose my-7 min-w-0 space-y-3">
+        {LOGIN_FIXTURE.map(([title, body], index) => (
+          <li key={title} className="grid min-w-0 gap-3 rounded-lg border border-border/70 bg-background p-4 sm:grid-cols-[2rem_7rem_minmax(0,1fr)]">
+            <span className="text-xs font-semibold tabular-nums text-primary">{String(index + 1).padStart(2, "0")}</span>
+            <h3 className="break-words text-sm font-semibold">{title}</h3>
+            <p className="min-w-0 break-words text-xs leading-5 text-muted-foreground">{body}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <strong>시나리오 선정 기준</strong>: 에이전트 루프의 모든 주요 경로를 망라<br />
-          1. 정상 흐름 — #1, #2, #4<br />
-          2. 보안 경로 — #3(권한), #7(훅)<br />
-          3. 확장 경로 — #5(MCP), #8(서브에이전트)<br />
-          4. 예외 경로 — #6(압축), #9(재시도), #10(한계), #11(절단), #12(포크)
+          성공 case만 두면 permission과 rollback 경계를 검증할 수 없습니다. 같은
+          fixture를 <code>workspace-write</code> 허용과 read-only 거부로 나누고,
+          거부 case에서는 file hash, process start count와 session exit state가
+          변하지 않았는지 검사합니다. Test가 실패하는 variant에서는 edit가
+          있었더라도 final response가 “완료”가 아니라 failed 또는 needs-review로
+          끝나야 합니다. Write 도중 일부 byte만 반영되는 partial-write variant도
+          넣어 원본 보존 또는 명시적 rollback 상태를 검사합니다.
         </p>
 
-        {/* ── SSE 프레임 구조 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">SSE 프레임 구조 — content_block_* 이벤트</h3>
+        <h3>SSE는 token 문자열이 아니라 순서가 있는 protocol입니다</h3>
+        <p>
+          Server-Sent Events(SSE)는 server가 HTTP connection 위로 여러 event를
+          순서대로 밀어 보내는 형식입니다. Text response라면 message와 content
+          block의 시작·delta·종료를 조립하고, tool call이라면 여러
+          <code>input_json_delta</code> 조각을 모은 뒤 block이 완성됐을 때 한 번만
+          JSON으로 parse해야 합니다. 중간 조각을 곧바로 실행하면 incomplete input이
+          side effect로 이어질 수 있습니다.
+        </p>
+      </div>
 
+      <div className="not-prose my-8 min-w-0">
         <SseFlowViz />
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">SSE 프레임 순서 — 단순 텍스트</span>
-          </div>
-          <div className="divide-y divide-border">
-            <div className="flex items-center gap-3 px-4 py-2 text-xs">
-              <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">1</span>
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">message_start</code>
-              <span className="text-muted-foreground">메시지 ID + role:assistant 초기화</span>
-            </div>
-            <div className="flex items-center gap-3 px-4 py-2 text-xs">
-              <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">2</span>
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">content_block_start</code>
-              <span className="text-muted-foreground">type:text 블록 시작 (빈 텍스트)</span>
-            </div>
-            <div className="flex items-center gap-3 px-4 py-2 text-xs bg-emerald-50/50 dark:bg-emerald-950/10">
-              <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">3</span>
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">content_block_delta</code>
-              <span className="text-muted-foreground">text_delta: "..." (N회 반복, 토큰 단위 청크)</span>
-            </div>
-            <div className="flex items-center gap-3 px-4 py-2 text-xs">
-              <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">4</span>
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">content_block_stop</code>
-              <span className="text-muted-foreground">블록 종료</span>
-            </div>
-            <div className="flex items-center gap-3 px-4 py-2 text-xs">
-              <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">5</span>
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">message_delta</code>
-              <span className="text-muted-foreground">stop_reason:end_turn + output_tokens 집계</span>
-            </div>
-            <div className="flex items-center gap-3 px-4 py-2 text-xs">
-              <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">6</span>
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">message_stop</code>
-              <span className="text-muted-foreground">스트림 종료</span>
-            </div>
-          </div>
-        </div>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <strong>프레임 6단계</strong>: message_start → content_block_start → (delta × N) →
-          content_block_stop → message_delta → message_stop<br />
-          각 프레임은 <code>event:</code> 이름과 <code>data:</code> JSON 페이로드로 구성<br />
-          <code>content_block_delta</code>가 실제 텍스트를 청크 단위로 전달 — 토큰 단위 스트리밍 구현
+          Failure fixture에는 block 종료 전 disconnect, 잘못된 JSON, 뒤섞인 block
+          index, provider error와 tool call 뒤 text-only 종료를 포함합니다. Parser는
+          이를 정상 final answer로 꾸미지 말고 typed error와 incomplete state를
+          반환해야 하며, executor 호출 수가 0인지도 함께 확인합니다. 완성되지 않은
+          tool input을 정상 assistant tool-call message로 session에 commit해서도 안
+          됩니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 min-w-0 space-y-3">
+        {FAILURE_INJECTIONS.map((item) => (
+          <article
+            key={item.fault}
+            className="grid min-w-0 gap-4 rounded-lg border border-border/70 bg-background p-4 md:grid-cols-[minmax(0,1fr)_minmax(0,.7fr)_minmax(0,1.35fr)_minmax(0,.65fr)]"
+          >
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">주입한 실패</p>
+              <h3 className="mt-1 break-words text-sm font-semibold">{item.fault}</h3>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Typed result</p>
+              <p className="mt-1 break-words font-mono text-xs text-primary">{item.result}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">지켜야 할 state·effect</p>
+              <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">{item.invariant}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">종료 상태</p>
+              <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">{item.exit}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Typed error와 다음 행동은 같은 개념이 아닙니다. 예를 들어 일시적인
+          disconnect는 bounded retry 대상일 수 있지만 malformed input을 같은
+          내용으로 반복해서는 안 됩니다. <code>approval-required</code>는 사용자
+          결정 전까지 side effect를 멈추는 상태이고, <code>fatal</code>은 자동
+          retry 없이 실패 evidence를 반환하는 상태입니다. Retry 가능 여부·최대
+          횟수·backoff는 error type과 별도의 host policy로 고정합니다.
         </p>
 
-        {/* ── tool_use SSE ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">tool_use SSE 프레임 — JSON 델타 스트리밍</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-amber-50 dark:bg-amber-950/30 px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">tool_use SSE 프레임 — JSON 델타 스트리밍</span>
-          </div>
-          <div className="divide-y divide-border">
-            <div className="px-4 py-2.5 text-xs">
-              <div className="flex items-center gap-2 mb-1">
-                <code className="bg-muted px-1 py-0.5 rounded font-medium">content_block_start</code>
-                <span className="text-amber-600 dark:text-amber-400 font-medium">type: tool_use</span>
-              </div>
-              <span className="text-muted-foreground">도구 이름(<code className="bg-muted px-1 py-0.5 rounded">read_file</code>)과 ID 전달, input은 빈 객체</span>
-            </div>
-            <div className="px-4 py-2.5 text-xs bg-amber-50/50 dark:bg-amber-950/10">
-              <div className="flex items-center gap-2 mb-1">
-                <code className="bg-muted px-1 py-0.5 rounded font-medium">content_block_delta</code>
-                <span className="text-amber-600 dark:text-amber-400 font-medium">input_json_delta</span>
-              </div>
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <span>partial_json 조각:</span>
-                <code className="bg-muted px-1 py-0.5 rounded">{`{"path"`}</code>
-                <span>+</span>
-                <code className="bg-muted px-1 py-0.5 rounded">{`:"/tmp/x"}`}</code>
-                <span>→ 누적 결과:</span>
-                <code className="bg-muted px-1 py-0.5 rounded">{`{"path":"/tmp/x"}`}</code>
-              </div>
-            </div>
-            <div className="px-4 py-2.5 text-xs">
-              <code className="bg-muted px-1 py-0.5 rounded font-medium">content_block_stop</code>
-              <span className="text-muted-foreground ml-2">입력 JSON 완성, 도구 실행 트리거</span>
-            </div>
-          </div>
-        </div>
+        <h3>Byte equality와 semantic trace equality를 구분합니다</h3>
         <p>
-          <code>input_json_delta</code>는 도구 입력 JSON을 부분 문자열로 스트리밍<br />
-          클라이언트는 이 조각들을 이어붙여 완전한 JSON으로 파싱 — 중간 스트리밍 중에는 파싱 불가<br />
-          <code>partial_json</code> 누적값: <code>{`{"path":"/tmp/x"}`}</code> (두 델타 병합 결과)
+          Wire protocol 자체를 검사할 때는 frame byte가 중요할 수 있습니다.
+          그러나 UUID, timestamp, temp path, map iteration order와 자연어 문장까지
+          byte로 비교하면 의미 없는 실패가 늘어납니다. Login fixture의 semantic
+          trace에는 tool name·canonical arguments, permission result, edit target,
+          diff digest, test exit code와 turn exit state를 남기고 비결정적 field는
+          사전에 정의한 normalizer로 바꿉니다.
         </p>
         <p>
-          <strong>설계 의도</strong>: 사용자에게 "LLM이 도구 호출 중"이라는 진행 상황을 실시간 표시하기 위함<br />
-          UI는 <code>content_block_start</code>에서 도구 아이콘 표시, <code>content_block_stop</code>에서
-          입력 완성 표시
+          자연어 final response는 필수 evidence를 포함하는지와 성공·실패를 정확히
+          표현하는지 구조적으로 검사할 수 있지만, 단어 순서가 같다고 patch 품질이
+          좋아지는 것은 아닙니다. 반대로 문장이 다르더라도 동일 diff와 test
+          evidence를 정확히 보고하면 deterministic host contract는 지킬 수
+          있습니다.
         </p>
+      </div>
 
-        {/* ── 패리티 검증 흐름 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">Rust ↔ Python 패리티 검증 파이프라인</h3>
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2">
+        {TEST_LAYERS.map((item) => (
+          <article key={item.layer} className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+            <h3 className="break-words text-sm font-semibold">{item.layer}</h3>
+            <p className="mt-1 break-words text-[11px] leading-5 text-primary">{item.cadence}</p>
+            <dl className="mt-3 grid min-w-0 gap-3 text-xs leading-5 sm:grid-cols-2">
+              <div className="min-w-0">
+                <dt className="font-semibold text-emerald-700 dark:text-emerald-300">말할 수 있는 것</dt>
+                <dd className="mt-1 break-words text-muted-foreground">{item.proves}</dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="font-semibold text-rose-700 dark:text-rose-300">남는 사각지대</dt>
+                <dd className="mt-1 break-words text-muted-foreground">{item.misses}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
         <ParityPipelineViz />
-        <p>
-          <strong>검증 주기</strong>: 매 PR마다 12개 시나리오 × (Rust, Python) 조합 실행 — 총 24회<br />
-          실행 시간: 약 3초 (시나리오당 250ms) — 실제 LLM 호출 대비 수백 배 빠름<br />
-          <strong>검증 범위</strong>: Session 전체 상태 — 메시지, 도구 호출, 권한 체크, 토큰 사용량
-        </p>
+      </div>
 
-        {/* ── 확장성 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">하네스 확장성</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Semantic quality는 fixture 밖의 반례로 검사합니다</h3>
         <p>
-          새로운 에이전트 기능 추가 시 절차:<br />
-          1. <code>Scenario</code> enum에 새 variant 추가<br />
-          2. <code>scenarios/&lt;name&gt;.sse</code> 파일에 SSE 프레임 시퀀스 작성<br />
-          3. Python PortRuntime에 시뮬레이션 로직 추가<br />
-          4. Rust runtime에 구현 추가<br />
-          5. CI에서 패리티 검증 자동 실행
+          Login patch가 정말 유효한지 보려면 expired token, malformed response,
+          concurrent refresh, network timeout처럼 scripted happy path에 없던 case를
+          추가하고 기존 인증 test 전체를 실행해야 합니다. Patch가 authentication
+          check를 통째로 우회했다면 한 fixture의 401은 사라져도 보안 품질은
+          악화됩니다. 그래서 deterministic parity receipt와 semantic evaluation
+          report를 별도 artifact로 남깁니다.
         </p>
         <p>
-          <strong>시나리오 파일 포맷</strong>:
+          Release decision은 두 결과를 함께 봅니다. Host contract mismatch는
+          regression이므로 먼저 고치고, semantic slice가 나빠졌다면 원인과 영향
+          범위를 조사합니다. Live provider canary에서는 protocol drift와 latency를
+          관찰하되 secret을 fixture에 복사하지 않고, 실패 시 pinned binary와
+          permission·runtime config, fixture·normalizer를 한 묶음으로 rollback할 수
+          있어야 합니다.
         </p>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">시나리오 파일 포맷</span>
-            <span className="text-xs text-muted-foreground ml-2">scenarios/read_file_roundtrip.sse</span>
+        <p>
+          이관이나 큰 refactor 전후에는 base와 candidate의 Rust·Python full commit
+          SHA, fixture·normalizer version, workspace digest, 동일 request와 permission
+          config를 고정한 paired run을 남깁니다. 의도된 차이는 단순 snapshot 갱신이 아니라 ADR이나
+          compatibility note에 이유를 기록하고 양쪽 fixture의 expected result를
+          review한 뒤 함께 바꿉니다. Canary가 실제 provider contract, deny path 또는
+          사전 등록한 semantic slice의 acceptance threshold를 벗어나면 이전
+          binary·config·fixture·normalizer 조합으로
+          rollback하고 두 run의 request·trace·diff·test receipt와 artifact digest를
+          release provenance로 보존합니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-claw-parity-harness"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">근거 읽기 · Mock parity harness</p>
+        <CitationBlock
+          source="ultraworkers/claw-code — pinned mock_parity_harness.rs"
+          citeKey={5}
+          type="code"
+          href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/tests/mock_parity_harness.rs"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> Live provider와 real network만으로는 streaming·tool·permission 실패를 같은 조건에서 반복하기 어려워 port regression의 원인을 분리하기 어렵습니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Clean environment의 CLI를 scripted provider service에 연결하고 tool roundtrip, allow·deny와 captured request를 scenario별 assertion으로 검사합니다.</p>
+            <p><strong>전제·조건:</strong> 지정한 commit의 fixture와 assertion이 표현하는 behavior만 검증하며 mock service·workspace·permission mode·normalization을 고정해야 합니다.</p>
+            <p><strong>근거 범위:</strong> 이 절의 deterministic provider, clean workspace, permission branch와 structured report 패턴을 실제 test code로 뒷받침합니다.</p>
+            <p><strong>비주장:</strong> 이 글의 login fixture가 현재 file에 이미 존재하거나, scenario 통과가 Claude Code·Codex 전체 parity, 실제 provider compatibility, patch의 semantic correctness와 보안을 증명한다는 뜻은 아닙니다.</p>
           </div>
-          <div className="p-4 space-y-2 text-sm">
-            <div className="flex items-start gap-2">
-              <span className="shrink-0 text-xs text-muted-foreground font-mono w-12">구분자</span>
-              <span><code className="text-xs bg-muted px-1 py-0.5 rounded">---</code> 로 프레임 분리 — 읽기 쉬운 텍스트 포맷</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="shrink-0 text-xs text-muted-foreground font-mono w-12">주석</span>
-              <span><code className="text-xs bg-muted px-1 py-0.5 rounded">#</code> 라인은 파서가 무시 — 시나리오 문서화 가능</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="shrink-0 text-xs text-muted-foreground font-mono w-12">프레임</span>
-              <span><code className="text-xs bg-muted px-1 py-0.5 rounded">event:</code> + <code className="text-xs bg-muted px-1 py-0.5 rounded">data:</code> JSON 페이로드 쌍</span>
-            </div>
-          </div>
-        </div>
-        <p>
-          <code>---</code> 구분자로 프레임 분리 — 읽기 쉬운 텍스트 포맷<br />
-          주석 라인(<code>#</code>)은 파서가 무시 — 시나리오 문서화 가능<br />
-          신규 시나리오 작성 난이도 낮음 — 기존 프레임 복사 후 수정
-        </p>
-
-        {/* ── 인사이트 ── */}
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 결정론적 Mock의 3가지 가치</p>
-          <p>
-            <strong>1. API 비용 절감</strong>:<br />
-            실제 LLM 호출은 토큰당 과금 — CI 매 PR마다 12개 시나리오 × 각 수천 토큰 = 누적 비용 상당<br />
-            Mock은 비용 0 — 제한 없는 테스트 가능
-          </p>
-          <p className="mt-2">
-            <strong>2. 결정론 보장</strong>:<br />
-            실제 LLM은 샘플링으로 비결정론적 응답 — 같은 입력에 다른 결과<br />
-            Mock은 항상 동일 바이트 시퀀스 — 회귀 탐지가 정확
-          </p>
-          <p className="mt-2">
-            <strong>3. 오프라인 개발</strong>:<br />
-            네트워크 없는 환경(비행기, 격리 VPC)에서도 개발 가능<br />
-            API 키 부재 기여자도 즉시 PR 가능
-          </p>
-        </div>
-
+        </CitationBlock>
       </div>
     </section>
   );

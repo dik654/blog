@@ -1,7 +1,13 @@
 export const VDF_PROPERTIES = [
-  { name: '순차성', desc: '병렬화로 가속 불가. 고성능 GPU/ASIC이 유리하지 않음.' },
-  { name: '검증 가능성', desc: '체크포인트로 빠른 검증. 전체 재계산 없이 정확성 확인.' },
-  { name: '유일성', desc: '주어진 입력에 대해 항상 동일한 출력. 결정론적.' },
+  {
+    name: "순차성",
+    desc: "병렬화로 가속 불가. 고성능 GPU/ASIC이 유리하지 않음.",
+  },
+  {
+    name: "검증 가능성",
+    desc: "체크포인트로 빠른 검증. 전체 재계산 없이 정확성 확인.",
+  },
+  { name: "유일성", desc: "주어진 입력에 대해 항상 동일한 출력. 결정론적." },
 ];
 
 export const VDF_SHA_CODE = `// irys-vdf/src/lib.rs

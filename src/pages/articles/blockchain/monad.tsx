@@ -1,10 +1,10 @@
-import Overview from './monad/Overview';
-import ParallelExecution from './monad/ParallelExecution';
-import NativeCompilation from './monad/NativeCompilation';
-import TrieDB from './monad/TrieDB';
-import Performance from './monad/Performance';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './monad/codeRefs';
+import Overview from "./monad/Overview";
+import ParallelExecution from "./monad/ParallelExecution";
+import NativeCompilation from "./monad/NativeCompilation";
+import TrieDB from "./monad/TrieDB";
+import Performance from "./monad/Performance";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./monad/codeRefs";
 
 export default function MonadArticle() {
   const sidebar = useCodeSidebar();

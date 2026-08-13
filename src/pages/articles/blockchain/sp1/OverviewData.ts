@@ -30,8 +30,24 @@ fn main() {
 }`;
 
 export const usageAnnotations = [
-  { lines: [1, 10] as [number, number], color: 'sky' as const, note: 'Guest — zkVM 내부 실행 코드' },
-  { lines: [12, 18] as [number, number], color: 'emerald' as const, note: 'Host — SDK 초기화 + 입력' },
-  { lines: [20, 22] as [number, number], color: 'amber' as const, note: '실행 모드 — 증명 없이 테스트' },
-  { lines: [24, 29] as [number, number], color: 'violet' as const, note: '증명 생성 + 검증' },
+  {
+    lines: [1, 10] as [number, number],
+    color: "sky" as const,
+    note: "Guest — zkVM 내부 실행 코드",
+  },
+  {
+    lines: [12, 18] as [number, number],
+    color: "emerald" as const,
+    note: "Host — SDK 초기화 + 입력",
+  },
+  {
+    lines: [20, 22] as [number, number],
+    color: "amber" as const,
+    note: "실행 모드 — 증명 없이 테스트",
+  },
+  {
+    lines: [24, 29] as [number, number],
+    color: "violet" as const,
+    note: "증명 생성 + 검증",
+  },
 ];

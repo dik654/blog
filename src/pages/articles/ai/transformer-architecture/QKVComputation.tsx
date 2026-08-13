@@ -1,52 +1,106 @@
-import M from '@/components/ui/math';
-import QKVComputationViz from './viz/QKVComputationViz';
-import QKVRoleDetailViz from './viz/QKVRoleDetailViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import AttentionContractViz from "./viz/AttentionContractViz";
 
 export default function QKVComputation() {
   return (
-    <section id="qkv-computation" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Q, K, V 행렬 생성</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          입력 행렬 X(3×6)를 <strong>3개 복사</strong>한다<br />
-          각 복사본에 다른 가중치 행렬(W_Q, W_K, W_V)을 곱한다<br />
-          결과: Q(3×6), K(3×6), V(3×6) — 같은 크기, 다른 역할
+    <section id="attention-boundary" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        Attention 계약: Q의 위치가 어떤 K·V source를 읽을 수 있는지 mask가
+        결정한다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          Q·K·V라는 이름보다 먼저 source와 visibility를 확인해야 합니다. Encoder
+          self-attention은 보통 같은 입력의 모든 유효 위치를 읽고, decoder
+          causal self-attention은 미래 key를 가립니다. Cross-attention에서는 Q가
+          decoder에서 오지만 K·V는 encoder output에서 옵니다. Attention
+          score·multi-head의 상세 유도는
+          <Link to="/ai/attention-theory"> Attention 이론 정본 글</Link>이
+          소유합니다.
         </p>
       </div>
 
-      <QKVComputationViz />
+      <AttentionContractViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>행렬 곱 계산</h3>
-        <div className="rounded-lg border p-3 font-mono text-sm space-y-1 mb-4">
-          <div>Q = X(3×6) × W_Q(6×6) = (3×6)</div>
-          <div>K = X(3×6) × W_K(6×6) = (3×6)</div>
-          <div>V = X(3×6) × W_V(6×6) = (3×6)</div>
-        </div>
-        <p>
-          W_Q, W_K, W_V는 학습으로 업데이트되는 파라미터<br />
-          Q — "내가 찾는 정보" / K — "내가 가진 정보" / V — "실제 전달 정보"
-        </p>
-      </div>
+      <ExplainedFormula
+        question="Attention mask는 허용하지 않은 key가 softmax 확률을 받지 못하게 어떻게 막는가?"
+        idea={
+          <>
+            QKᵀ score에 additive mask를 더한 뒤 row별 softmax를 적용합니다.
+            허용된 pair는 0을 더하고, 미래나 padding key처럼 금지된 pair는 −∞를
+            더해 확률을 0으로 만듭니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}A&=\operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}+M\right)\\Y&=AV\end{aligned}`}
+        terms={[
+          {
+            symbol: "Q,K,V",
+            name: "query·key·value tensors",
+            description:
+              "한 head에서 각각 [n_q,d_k], [n_k,d_k], [n_k,d_v] shape를 갖습니다.",
+          },
+          {
+            symbol: "M",
+            name: "additive visibility mask",
+            description:
+              "읽을 수 있는 pair는 0, 가릴 pair는 매우 작은 값 또는 −∞입니다.",
+          },
+          {
+            symbol: "A",
+            name: "attention weights",
+            description: "각 query row가 읽을 key 위치에 만든 확률 분포입니다.",
+          },
+          {
+            symbol: "Y",
+            name: "mixed values",
+            description: "Query마다 허용된 value vector를 가중합한 출력입니다.",
+          },
+        ]}
+        assumptions={[
+          "한 head를 표기했으며 multi-head는 head별 결과를 concat하고 output projection을 적용합니다.",
+          "Softmax 구현은 all-masked row와 낮은 precision에서 NaN이 나지 않도록 별도 처리가 필요합니다.",
+        ]}
+        interpretation="Mask는 attention 뒤에 결과를 지우는 장치가 아니라 softmax 정규화에 들어가기 전에 visibility를 정의합니다. Causal mask와 padding mask를 결합할 때 query·key 축 방향을 잘못 잡으면 leakage가 생깁니다."
+      />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Q/K/V의 역할 구분</h3>
-        <p className="leading-7">
-          Q는 "무엇을 찾을까"(검색어), K는 "나는 무엇인가"(인덱스), V는 "내 정보"(데이터).
-          같은 입력 X에서 세 가지 다른 가중치 행렬로 투영하여 다른 역할을 부여한다.
-          Self-Attention에서는 Q, K, V가 같은 시퀀스에서 파생되고,
-          Cross-Attention에서는 Q가 디코더, K/V가 인코더에서 온다.
-        </p>
-        <M display>{'\\underbrace{X \\cdot W_Q}_{\\text{Query (검색어)}} \\;\\;\\; \\underbrace{X \\cdot W_K}_{\\text{Key (인덱스)}} \\;\\;\\; \\underbrace{X \\cdot W_V}_{\\text{Value (데이터)}}'}</M>
-      </div>
-      <div className="not-prose my-8"><QKVRoleDetailViz /></div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: Q/K/V는 같은 입력에서 파생된 <strong>세 가지 역할의 투영</strong>.<br />
-          요약 2: <strong>정보 검색 비유</strong> — Query로 Key 검색 후 Value 가져옴.<br />
-          요약 3: Self-attention에서 <strong>모든 토큰이 모든 토큰</strong>을 조회.
-        </p>
-      </div>
+      <ExplainedFormula
+        question="Standard full attention의 긴 context 병목은 어느 tensor에서 생기는가?"
+        idea={
+          <>
+            Query n개가 key n개를 모두 비교하면 QKᵀ와 attention probability가
+            n×n입니다. Projection과 FFN은 대체로 n에 선형이지만
+            score·probability materialization은 n²로 증가합니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}\operatorname{cost}_{\mathrm{attn}}&=O(n^2d)\\\operatorname{memory}_{\mathrm{scores}}&=O(n^2)\end{aligned}`}
+        terms={[
+          {
+            symbol: "n",
+            name: "sequence length",
+            description:
+              "Attention에서 동시에 비교하는 query와 key position 수입니다.",
+          },
+          {
+            symbol: "d",
+            name: "hidden/head dimension",
+            description:
+              "Dot product와 value aggregation에 들어가는 feature 폭입니다.",
+          },
+          {
+            symbol: "n^2",
+            name: "pair count",
+            description:
+              "모든 query–key 조합 수이며 full visibility일 때의 핵심 병목입니다.",
+          },
+        ]}
+        assumptions={[
+          "Standard dense full attention의 asymptotic cost입니다.",
+          "FlashAttention은 IO와 materialization을 줄이지만 모든 pair를 계산하는 exact attention의 n² arithmetic 자체를 선형으로 바꾸지는 않습니다.",
+        ]}
+        interpretation="긴 context 구조를 비교할 때는 kernel 최적화와 attention pattern 변경을 구분합니다. Sliding-window·linear/recurrent attention은 계산 graph를 바꾸고, FlashAttention은 같은 exact 결과를 더 효율적으로 계산합니다."
+      />
     </section>
   );
 }

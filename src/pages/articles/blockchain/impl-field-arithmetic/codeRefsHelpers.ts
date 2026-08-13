@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const helperCodeRefs: Record<string, CodeRef> = {
-  'fp-helpers': {
-    path: 'field/mod.rs — adc, sbb, mac',
-    lang: 'rust',
+  "fp-helpers": {
+    path: "field/mod.rs — adc, sbb, mac",
+    lang: "rust",
     highlight: [1, 27],
-    desc: '64비트 산술 빌딩 블록.\nadc(add-carry), sbb(sub-borrow), mac(multiply-accumulate) — 모든 필드 연산의 기반.',
+    desc: "64비트 산술 빌딩 블록.\nadc(add-carry), sbb(sub-borrow), mac(multiply-accumulate) — 모든 필드 연산의 기반.",
     code: `/// a + b + carry → (합, carry)
 #[inline(always)]
 pub(crate) fn adc(a: u64, b: u64, carry: bool) -> (u64, bool) {
@@ -30,9 +30,21 @@ pub(crate) fn mac(acc: u64, a: u64, b: u64, carry: u64) -> (u64, u64) {
     (wide as u64, (wide >> 64) as u64)
 }`,
     annotations: [
-      { lines: [1, 7], color: 'sky', note: 'adc — 캐리 전파 덧셈. limb 간 올림을 bool로 전달' },
-      { lines: [9, 15], color: 'emerald', note: 'sbb — 빌림 전파 뺄셈. 모듈러 뺄셈의 underflow 감지용' },
-      { lines: [17, 23], color: 'amber', note: 'mac — 곱셈+누적. u128로 확장해 오버플로 방지. Montgomery 곱셈의 핵심' },
+      {
+        lines: [1, 7],
+        color: "sky",
+        note: "adc — 캐리 전파 덧셈. limb 간 올림을 bool로 전달",
+      },
+      {
+        lines: [9, 15],
+        color: "emerald",
+        note: "sbb — 빌림 전파 뺄셈. 모듈러 뺄셈의 underflow 감지용",
+      },
+      {
+        lines: [17, 23],
+        color: "amber",
+        note: "mac — 곱셈+누적. u128로 확장해 오버플로 방지. Montgomery 곱셈의 핵심",
+      },
     ],
   },
 };

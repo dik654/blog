@@ -1,17 +1,17 @@
-import type { Article } from '../types';
+import type { Article } from "../types";
 
 export const agentOpsArticles: Article[] = [
   {
-    slug: 'agent-devlog-patterns',
-    title: '에이전트 개발 로그 패턴: Changelog, ADR, Lessons',
-    subcategory: 'ai-agents-ops',
+    slug: "agent-devlog-patterns",
+    title: "에이전트 개발 기록: Changelog·ADR·Lessons",
+    subcategory: "ai-agents-ops",
     sections: [
-      { id: 'overview', title: '왜 git log만으로 부족한가' },
-      { id: 'changelog', title: 'Changelog — 시간순 단일 파일' },
-      { id: 'adr', title: 'ADR — 결정의 근거 기록' },
-      { id: 'lessons', title: 'Lessons — 주제별 원칙 저장소' },
-      { id: 'three-layers', title: '세 층의 역할 분담과 유지 규칙' },
+      { id: "overview", title: "Evidence와 문서 소유권" },
+      { id: "changelog", title: "Changelog: 검증된 변화" },
+      { id: "adr", title: "ADR: 선택과 Trade-off" },
+      { id: "lessons", title: "Lessons: 재사용할 원칙" },
+      { id: "three-layers", title: "작성·조회·승격 흐름" },
     ],
-    component: () => import('@/pages/articles/ai/agent-devlog-patterns'),
+    component: () => import("@/pages/articles/ai/agent-devlog-patterns"),
   },
 ];

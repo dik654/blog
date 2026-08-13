@@ -21,9 +21,21 @@ static struct memaccess_area nsec_shared[] = {
 };`;
 
 export const mmuAnnotations = [
-  { lines: [2, 9] as [number, number], color: 'sky' as const, note: '메모리 영역 타입 열거형' },
-  { lines: [12, 15] as [number, number], color: 'emerald' as const, note: 'Secure 전용 물리 영역' },
-  { lines: [18, 20] as [number, number], color: 'amber' as const, note: 'Normal World 공유 영역' },
+  {
+    lines: [2, 9] as [number, number],
+    color: "sky" as const,
+    note: "메모리 영역 타입 열거형",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "emerald" as const,
+    note: "Secure 전용 물리 영역",
+  },
+  {
+    lines: [18, 20] as [number, number],
+    color: "amber" as const,
+    note: "Normal World 공유 영역",
+  },
 ];
 
 export const allocCode = `// core/mm/page_alloc.c — 보안 페이지 할당자
@@ -47,7 +59,19 @@ struct pgt_cache {
 // - 페이지 테이블 자체를 Secure 메모리에 저장`;
 
 export const allocAnnotations = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: '가상 메모리 풀 분리' },
-  { lines: [8, 13] as [number, number], color: 'emerald' as const, note: '페이지 테이블 캐시 구조' },
-  { lines: [16, 19] as [number, number], color: 'violet' as const, note: '보안 메모리 보호 메커니즘' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "가상 메모리 풀 분리",
+  },
+  {
+    lines: [8, 13] as [number, number],
+    color: "emerald" as const,
+    note: "페이지 테이블 캐시 구조",
+  },
+  {
+    lines: [16, 19] as [number, number],
+    color: "violet" as const,
+    note: "보안 메모리 보호 메커니즘",
+  },
 ];

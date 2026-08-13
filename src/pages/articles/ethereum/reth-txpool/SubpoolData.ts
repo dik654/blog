@@ -1,47 +1,51 @@
 export interface SubpoolInfo {
   name: string;
   condition: string;
-  promoteTo: string;
-  demoteFrom: string;
   detail: string;
   color: string;
 }
-
-export const SUBPOOLS: SubpoolInfo[] = [
+export const SUBPOOLS: readonly SubpoolInfo[] = [
   {
-    name: 'Pending',
-    condition: 'nonce 연속 + max_fee >= base_fee',
-    promoteTo: '-',
-    demoteFrom: 'base fee 상승 시 BaseFee로 강등',
-    detail: 'PayloadBuilder가 best_transactions()로 여기서 TX를 꺼낸다. 블록에 즉시 포함 가능한 TX만 존재한다. 정렬은 TransactionOrdering이 결정한다.',
-    color: '#10b981',
+    name: "Pending",
+    condition: "nonce chain ready · fee eligible",
+    detail:
+      "현재 account state에서 sender chain의 다음 실행 가능한 transactions. Builder ordering의 후보가 된다.",
+    color: "#10b981",
   },
   {
-    name: 'BaseFee',
-    condition: 'nonce 연속 + max_fee < base_fee',
-    promoteTo: 'base fee 하락 시 Pending으로 승격',
-    demoteFrom: '-',
-    detail: 'nonce는 연속이지만 현재 base fee를 감당하지 못하는 TX다. base fee가 하락하면 자동 승격된다. base fee가 더 오르면 계속 대기한다.',
-    color: '#0ea5e9',
+    name: "BaseFee",
+    condition: "nonce chain ready · fee blocked",
+    detail:
+      "nonce dependency는 충족하지만 현재 base fee 때문에 실행할 수 없다. 새 head에서 fee eligibility를 다시 평가한다.",
+    color: "#0ea5e9",
   },
   {
-    name: 'Queued',
-    condition: 'nonce gap 존재',
-    promoteTo: 'gap 해소 시 Pending/BaseFee로 승격',
-    demoteFrom: '-',
-    detail: '선행 nonce TX가 도착하지 않아 실행 순서가 맞지 않는 TX다. gap이 해소되면 fee 조건에 따라 Pending 또는 BaseFee로 승격한다.',
-    color: '#ef4444',
+    name: "Queued",
+    condition: "sender nonce gap or blocked ancestor",
+    detail:
+      "앞선 nonce가 없거나 같은 sender의 ancestor가 아직 eligible하지 않아 후속 transaction을 실행할 수 없다.",
+    color: "#ef4444",
   },
-];
-
-export interface StateChangeEvent {
-  event: string;
-  action: string;
-}
-
-export const STATE_CHANGES: StateChangeEvent[] = [
-  { event: '새 블록 도착 (base fee 변동)', action: 'BaseFee ↔ Pending 승격/강등' },
-  { event: 'nonce gap 해소', action: 'Queued → Pending/BaseFee 승격' },
-  { event: '서브풀 한도 초과', action: '낮은 priority TX 퇴출 (eviction)' },
-  { event: 'TX replacement (같은 nonce, 높은 fee)', action: '기존 TX 대체, 차이가 10% 미만이면 거부' },
-];
+] as const;
+export const STATE_CHANGES = [
+  {
+    event: "New canonical block",
+    action:
+      "mined transactions를 제거하고 nonce·balance·base fee로 affected sender chains를 재분류한다.",
+  },
+  {
+    event: "Reorg",
+    action:
+      "reverted transactions를 재검증해 넣고 새 canonical branch에서 이미 소비된 transactions를 제거한다.",
+  },
+  {
+    event: "Replacement",
+    action:
+      "같은 sender·nonce의 기존 transaction과 type-aware bump policy를 비교한 뒤 descendants를 다시 평가한다.",
+  },
+  {
+    event: "Resource pressure",
+    action:
+      "configured limits와 local/type policy로 eviction하되 sender dependency가 바뀐 후속 transactions를 재분류한다.",
+  },
+] as const;

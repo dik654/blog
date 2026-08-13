@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './OverviewVizData';
-import { Step0, Step1, Step2 } from './OverviewVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./OverviewVizData";
+import { Step0, Step1, Step2 } from "./OverviewVizSteps";
 
 const RENDERERS = [Step0, Step1, Step2];
 const VIEW_HEIGHTS = [140, 175, 160];

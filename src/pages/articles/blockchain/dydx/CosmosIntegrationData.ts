@@ -20,9 +20,21 @@ Support Modules:
   sending/      → 전송 관리`;
 
 export const moduleAnnotations = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: '거래 핵심 모듈' },
-  { lines: [9, 13] as [number, number], color: 'emerald' as const, note: '인프라 모듈' },
-  { lines: [15, 20] as [number, number], color: 'amber' as const, note: '지원 모듈' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "sky" as const,
+    note: "거래 핵심 모듈",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "emerald" as const,
+    note: "인프라 모듈",
+  },
+  {
+    lines: [15, 20] as [number, number],
+    color: "amber" as const,
+    note: "지원 모듈",
+  },
 ];
 
 export const lifecycleCode = `블록 생명주기 (BeginBlocker → EndBlocker):
@@ -45,7 +57,19 @@ Genesis 초기화 순서:
   → clob (마지막: 가장 많은 의존성)`;
 
 export const lifecycleAnnotations = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: 'BeginBlocker: 상태 초기화' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: 'EndBlocker: 정리 작업' },
-  { lines: [15, 18] as [number, number], color: 'amber' as const, note: 'Genesis: 의존성 순서 초기화' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "BeginBlocker: 상태 초기화",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "EndBlocker: 정리 작업",
+  },
+  {
+    lines: [15, 18] as [number, number],
+    color: "amber" as const,
+    note: "Genesis: 의존성 순서 초기화",
+  },
 ];

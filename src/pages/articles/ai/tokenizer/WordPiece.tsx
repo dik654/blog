@@ -1,82 +1,74 @@
-import WordPieceViz from './viz/WordPieceViz';
-import { WordPieceScoreViz, WordPieceHashViz } from './viz/WordPieceDetailViz';
-import M from '@/components/ui/math';
+import WordPieceViz from "./viz/WordPieceViz";
 
 export default function WordPiece() {
   return (
     <section id="wordpiece" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">WordPiece (BERT)</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        WordPiece는 학습법보다 encoding 계약을 먼저 확인한다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>WordPiece</strong> — Google이 BERT에 사용한 토크나이저<br />
-          BPE와 구조적으로 유사하나, 병합 기준을 <strong>우도(likelihood)</strong>로 변경<br />
-          개별적으로 흔하지만 함께 나오면 드문 쌍보다, 함께 나올 때 정보가 큰 쌍을 우선
-        </p>
-
-        <h3>## 접두사 규칙</h3>
-        <p>
-          단어의 첫 번째 토큰에는 접두사 없음, 이후 조각에 "##" 부착<br />
-          이 규칙으로 디코딩 시 원래 단어 경계를 복원 가능
-        </p>
-        <h3 className="text-lg font-semibold mt-6 mb-3">BPE vs WordPiece — 점수 비교</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
-          <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-5">
-            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300 mb-3">BPE — 단순 빈도 기준</p>
-            <M display>{`\\text{score}_{\\text{BPE}} = \\text{count}(\\text{pair})`}</M>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-3">
-              가장 많이 등장하는 인접 쌍부터 병합.<br />
-              빈도가 높으면 무조건 우선 — 개별 토큰의 빈도는 고려하지 않음.
-            </p>
-          </div>
-          <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-5">
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-3">WordPiece — 우도(likelihood) 기준</p>
-            <M display>{`\\text{score}_{\\text{WP}} = \\frac{\\text{count}(\\text{"ab"})}{\\text{count}(\\text{"a"}) \\times \\text{count}(\\text{"b"})}`}</M>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-3">
-              개별 빈도 대비 함께 나타날 때의 정보 이득이 큰 쌍을 우선 병합.<br />
-              흔한 글자끼리의 우연한 조합보다, 의미 단위 결합이 높은 점수를 받음.
-            </p>
-          </div>
-        </div>
-
-        <div className="not-prose rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-5 mb-2">
-          <p className="text-sm font-semibold text-amber-700 dark:text-amber-300 mb-3">## 접두사 — 토큰화 예시</p>
-          <div className="flex items-center gap-2 flex-wrap text-sm mb-3">
-            <span className="font-mono bg-white dark:bg-neutral-800 px-2 py-1 rounded border border-neutral-200 dark:border-neutral-700">"unhappiness"</span>
-            <span className="text-neutral-400">→</span>
-            <span className="font-mono bg-white dark:bg-neutral-800 px-2 py-1 rounded border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200">un</span>
-            <span className="font-mono bg-white dark:bg-neutral-800 px-2 py-1 rounded border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200">##happy</span>
-            <span className="font-mono bg-white dark:bg-neutral-800 px-2 py-1 rounded border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200">##ness</span>
-          </div>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            첫 번째 토큰(<code className="text-amber-700 dark:text-amber-300">un</code>)에는 접두사 없음 — 단어의 시작.<br />
-            이후 조각에 <code className="text-amber-700 dark:text-amber-300">##</code> 부착 — "이 토큰은 단어 시작이 아님"을 표시.<br />
-            디코딩 시 <code className="text-amber-700 dark:text-amber-300">##</code>을 제거하고 이전 토큰에 붙이면 원래 단어 복원.
-          </p>
-        </div>
-      </div>
-      <div className="not-prose mt-8">
-        <WordPieceViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">WordPiece의 우도 점수 원리</h3>
-        <M display>
-          {`\\underbrace{\\text{score}(a, b) = \\frac{\\text{freq}(ab)}{\\text{freq}(a) \\times \\text{freq}(b)}}_{\\text{PMI (Pointwise Mutual Information) 구조}}`}
-        </M>
-      </div>
-      <WordPieceScoreViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">## 접두사와 디코딩</h3>
-      </div>
-      <WordPieceHashViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-2">
         <p className="leading-7">
-          요약 1: WordPiece는 <strong>우도(likelihood) 비율</strong>로 병합 — 의미 단위에 가까운 토큰 우선.<br />
-          요약 2: <strong>## 접두사</strong>로 단어 경계를 복원 — 디코딩 시 공백 위치 자동 결정.<br />
-          요약 3: BERT 계열의 핵심 선택 — 의미 이해 태스크(분류, NER)에 적합.
+          WordPiece는 speech recognition에서 출발했고 BERT tokenizer로 널리
+          알려졌습니다. BERT-style encoding은 먼저 공백·구두점 규칙으로 word의
+          탐색 범위를 정한 뒤, 현재 cursor에서 시작하는 vocabulary 조각 가운데
+          가장 긴 것을 고릅니다. 선택한 조각 뒤로 cursor를 옮기고 같은 과정을
+          반복하기 때문에 이 절차를 longest-match-first 또는 maximum matching이라
+          부릅니다.
         </p>
+        <p>
+          <code>##</code> prefix는 형태소 label이 아니라 “현재 word의 시작이
+          아니다”라는 vocabulary 관례입니다. 예를 들어 <code>unhappiness</code>가
+          <code>un · ##happy · ##ness</code>로 나뉘었다고 해서 세 조각이 언제나
+          언어학적 형태소라는 뜻은 아닙니다. Vocabulary와 pre-tokenizer가 달라지면
+          같은 문자열의 결과도 달라집니다.
+        </p>
+      </div>
+
+      <WordPieceViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Greedy match가 실패했을 때의 정책도 model 입력의 일부다</h3>
+        <p>
+          남은 substring을 완전히 덮는 조각을 찾지 못하면 전통적인 BERT
+          WordPiece는 word 전체를 <code>[UNK]</code>로 바꿀 수 있습니다. 앞부분에서
+          찾은 조각만 남기고 뒤를 버리는 방식이 아닙니다. 따라서 byte fallback을
+          가진 tokenizer와 coverage 성질이 다르며, vocabulary에 없는 글자·emoji·
+          오타·혼합 script를 실제로 넣어 확인해야 합니다.
+        </p>
+        <h3>Vocabulary training과 빠른 encoding은 서로 다른 문제다</h3>
+        <p>
+          WordPiece vocabulary의 원 학습 절차는 현대 BPE의 merge file처럼 하나의
+          공개 규격으로 완전히 고정되어 있지 않습니다. 자주 소개되는
+          <code>count(ab)/(count(a)·count(b))</code> score는 pair의 결합 정도를
+          설명하는 직관에는 유용하지만 모든 trainer가 따라야 하는 공식은
+          아닙니다. 반면 이미 만들어진 vocabulary를 longest-match-first로 읽는
+          절차는 trie와 failure link를 사용해 입력 길이에 선형인 탐색으로 구현할
+          수 있습니다. 재현할 때에는 알고리즘 이름만 적지 말고 trainer와 library
+          version, normalizer, pre-tokenizer, vocabulary artifact를 함께 남겨야 합니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-fast-wordpiece"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 읽기 · Encoding algorithm</p>
+        <p className="mt-2 text-sm font-semibold">Fast WordPiece Tokenization</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 논문의 핵심은 WordPiece vocabulary를 새로 학습하는 score가 아니라,
+          이미 주어진 vocabulary로 maximum matching을 수행하는 비용을 trie와
+          Aho–Corasick식 failure link로 선형화한 것입니다. 따라서 논문의 속도
+          결론을 WordPiece training recipe의 표준화로 확대해 읽으면 안 됩니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+          href="https://aclanthology.org/2021.emnlp-main.160/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          논문의 문제 정의와 complexity 비교 보기
+        </a>
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
 
 const montMulCode = `// Montgomery 곱셈: CIOS (Coarsely Integrated Operand Scanning)
 // 입력: a, b (Montgomery form: aR mod p, bR mod p)
@@ -41,36 +41,62 @@ export default function FpMontgomery() {
       <h2 className="text-2xl font-bold mb-6">Fp Montgomery 곱셈 커널</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          모듈러 곱셈 <code>a * b mod p</code>를 직접 구현하면 매번 나눗셈이 필요하다.
-          <strong>Montgomery form</strong>은 원소를 <code>aR mod p</code> (R = 2^256)로 변환해두면,
-          곱셈 결과에서 R을 제거할 때 <strong>shift와 덧셈만으로</strong> 환원이 가능하다.
+          모듈러 곱셈 <code>a * b mod p</code>를 직접 구현하면 매번 나눗셈이
+          필요하다.
+          <strong>Montgomery form</strong>은 원소를 <code>aR mod p</code> (R =
+          2^256)로 변환해두면, 곱셈 결과에서 R을 제거할 때{" "}
+          <strong>shift와 덧셈만으로</strong> 환원이 가능하다.
         </p>
 
-        <CitationBlock source="Montgomery (1985) -- Modular Multiplication Without Trial Division"
-          citeKey={2} type="paper" href="https://doi.org/10.1090/S0025-5718-1985-0777282-X">
-          <p className="italic">"We present a method for multiplying two integers modulo N while avoiding division by N."</p>
+        <CitationBlock
+          source="Montgomery (1985) -- Modular Multiplication Without Trial Division"
+          citeKey={2}
+          type="paper"
+          href="https://doi.org/10.1090/S0025-5718-1985-0777282-X"
+        >
+          <p className="italic">
+            "We present a method for multiplying two integers modulo N while
+            avoiding division by N."
+          </p>
         </CitationBlock>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">CIOS 알고리즘</h3>
         <p>
-          <strong>CIOS</strong>(Coarsely Integrated Operand Scanning)는 부분곱 누적과 Montgomery 환원을 같은 루프에서 수행한다.<br />
-          GPU에서는 레지스터 사용량이 핵심이다.
-          4-limb CIOS는 약 <strong>40개 레지스터</strong>를 사용하며, SM당 점유율과 직접 트레이드오프된다.
+          <strong>CIOS</strong>(Coarsely Integrated Operand Scanning)는 부분곱
+          누적과 Montgomery 환원을 같은 루프에서 수행한다.
+          <br />
+          GPU에서는 레지스터 사용량이 핵심이다. 4-limb CIOS는 약{" "}
+          <strong>40개 레지스터</strong>를 사용하며, SM당 점유율과 직접
+          트레이드오프된다.
         </p>
-        <CodePanel title="Montgomery 곱셈 CIOS 커널 (CUDA C++)" code={montMulCode}
+        <CodePanel
+          title="Montgomery 곱셈 CIOS 커널 (CUDA C++)"
+          code={montMulCode}
           annotations={[
-            { lines: [4, 6], color: 'sky', note: 'Montgomery form 입출력' },
-            { lines: [10, 16], color: 'emerald', note: 'Step 1: 부분곱 누적 (4x4 = 16 곱셈)' },
-            { lines: [19, 27], color: 'amber', note: 'Step 2: Montgomery 환원 (나눗셈 없이 shift)' },
-            { lines: [30, 31], color: 'violet', note: 'Step 3: 조건부 감산' },
-          ]} />
+            { lines: [4, 6], color: "sky", note: "Montgomery form 입출력" },
+            {
+              lines: [10, 16],
+              color: "emerald",
+              note: "Step 1: 부분곱 누적 (4x4 = 16 곱셈)",
+            },
+            {
+              lines: [19, 27],
+              color: "amber",
+              note: "Step 2: Montgomery 환원 (나눗셈 없이 shift)",
+            },
+            { lines: [30, 31], color: "violet", note: "Step 3: 조건부 감산" },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">성능 특성</h3>
         <p>
-          H100 기준 단일 Fp 곱셈은 약 <strong>50 클럭</strong>이다.<br />
-          SM 132개 x 워프 64개 x 파이프라인 활용을 감안하면,
-          이론적 처리량은 <strong>~10억 Fp mul/sec</strong>에 달한다.<br />
-          실제 MSM/NTT에서는 메모리 대역폭이 병목이 되어 이론치의 30-50%를 달성한다.
+          H100 기준 단일 Fp 곱셈은 약 <strong>50 클럭</strong>이다.
+          <br />
+          SM 132개 x 워프 64개 x 파이프라인 활용을 감안하면, 이론적 처리량은{" "}
+          <strong>~10억 Fp mul/sec</strong>에 달한다.
+          <br />
+          실제 MSM/NTT에서는 메모리 대역폭이 병목이 되어 이론치의 30-50%를
+          달성한다.
         </p>
       </div>
     </section>

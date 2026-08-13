@@ -1,51 +1,42 @@
-import BlendingViz from './viz/BlendingViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import BlendingViz from "./viz/BlendingViz";
 
 export default function Blending() {
   return (
     <section id="blending" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Blending &amp; 다양성 확보</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">Blending은 계산을 단순하게 만드는 대신, base 학습 데이터와 meta 근거를 나눠 씁니다</h2>
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          <strong>Blending</strong> — Stacking의 간소화 버전<br />
-          전체 데이터를 train(70%) + holdout(30%)로 나누고, holdout 예측으로 메타 모델을 학습<br />
-          OOF 루프가 없어 구현이 단순하지만, holdout만큼 학습 데이터가 줄어든다
+          Blending은 training data에서 별도 holdout을 떼어 base model은 나머지에서 학습하고, holdout prediction으로 combiner를
+          학습합니다. OOF matrix를 만들 필요가 없어 구현은 단순하지만 base model은 더 적은 데이터를 보고 meta-model은 한 holdout의
+          분포와 seed에 민감합니다.
         </p>
         <p>
-          아래 Viz에서 <strong>Stacking vs Blending 차이 → 4단계 워크플로우 → 다양성 4축 → 상관계수 기반 측정</strong>까지 순서대로 확인한다.
+          미래 예측에서 마지막 calibration window가 자연스럽거나 site/group 경계상 meta holdout을 명확히 만들 수 있다면 이 비용이
+          합리적일 수 있습니다. 다만 holdout을 보며 base model·window·weight를 반복해서 고르면 그 구간도 search data가 됩니다.
+          최종 평가는 더 나중 기간이나 별도 group에서 해야 합니다.
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <BlendingViz />
-      </div>
+      <ExplainedFormula
+        question="전체 n개 행에서 α 비율을 blend holdout으로 남기면 base와 meta가 각각 몇 행을 보나요?"
+        idea={<>겹치지 않는 두 집합으로 나누므로 base fit은 (1−α)n개, combiner fit은 αn개를 사용합니다. α는 두 추정 오차 사이의 직접적인 trade-off입니다.</>}
+        formula={String.raw`D=D_{\mathrm{base}}\sqcup D_{\mathrm{blend}},\qquad |D_{\mathrm{base}}|=(1-\alpha)n,\quad |D_{\mathrm{blend}}|=\alpha n`}
+        terms={[
+          { symbol: "alpha", name: "blend fraction", description: "전체 개발 데이터 중 combiner 학습 전용으로 남기는 비율입니다." },
+          { symbol: "D_base", name: "base training set", description: "Base models의 parameter를 fit하는 행 집합입니다." },
+          { symbol: "D_blend", name: "combiner training set", description: "Fit된 base models의 unseen prediction과 target으로 combiner를 fit하는 집합입니다." },
+          { symbol: "disjoint union", name: "no row overlap", description: "한 행이 두 집합에 동시에 들어가지 않는다는 뜻입니다." },
+        ]}
+        assumptions={[
+          "Row보다 group/time이 독립 단위라면 해당 단위로 disjoint split합니다.",
+          "Preprocessing과 base fit은 blend holdout을 사용하지 않습니다.",
+          "α의 선택과 holdout seed도 validation decision이므로 별도 final data가 필요합니다.",
+        ]}
+        interpretation="n=10,000, α=.2이면 base는 8,000행, combiner는 2,000행을 봅니다. α를 키우면 meta 근거는 늘지만 base learner의 데이터는 줄어듭니다."
+      />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">다양성 4축 요약</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            { title: '다른 모델', desc: 'GBM + NN + LR → 알고리즘 자체가 다른 편향을 가짐' },
-            { title: '다른 피처', desc: '피처 세트 A + 세트 B → 같은 문제를 다른 관점에서 바라봄' },
-            { title: '다른 시드', desc: '같은 모델이라도 초기화/샘플링이 다르면 수렴점이 달라짐' },
-            { title: '다른 fold', desc: '5-fold vs 10-fold → 학습에 사용되는 샘플 집합이 달라짐' },
-          ].map((item) => (
-            <div key={item.title} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-bold text-foreground text-xs">{item.title}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-green-50 dark:bg-green-950/30 border-l-4 border-green-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">다양성 확보 우선순위</p>
-        <p className="text-sm">
-          <strong>가장 큰 다양성</strong>: 다른 모델 + 다른 피처 (상관 ~0.65)<br />
-          <strong>중간 다양성</strong>: 다른 모델 + 같은 피처 (상관 ~0.75)<br />
-          <strong>작은 다양성</strong>: 같은 모델 + 다른 시드 (상관 ~0.95)<br />
-          실전: GBM 3개 + NN 2개 + LR 1개, 각각 다른 피처 세트 조합 추천
-        </p>
-      </div>
+      <div className="not-prose my-8"><BlendingViz /></div>
     </section>
   );
 }

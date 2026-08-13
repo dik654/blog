@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const TCP_TRANSPORT = `impl<T> libp2p_core::Transport for Transport<T>
 where T: Provider + Send + 'static,
@@ -74,26 +74,46 @@ const TCP_CREATE_SOCKET = `fn create_socket(&self, socket_addr: SocketAddr, port
 }`;
 
 export const transportCodeRefs2: Record<string, CodeRef> = {
-  'tcp-transport': {
-    path: 'transports/tcp/src/lib.rs — impl Transport for Transport<T>',
+  "tcp-transport": {
+    path: "transports/tcp/src/lib.rs — impl Transport for Transport<T>",
     code: TCP_TRANSPORT,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 52],
     annotations: [
-      { lines: [11, 19], color: 'sky', note: 'listen_on — Multiaddr→SocketAddr 변환 후 리스닝' },
-      { lines: [22, 28], color: 'emerald', note: 'dial — 소켓 생성 + 포트 재사용 판단' },
-      { lines: [31, 34], color: 'amber', note: '포트 재사용 — NAT 홀펀칭 시 리스닝 포트로 바인드' },
+      {
+        lines: [11, 19],
+        color: "sky",
+        note: "listen_on — Multiaddr→SocketAddr 변환 후 리스닝",
+      },
+      {
+        lines: [22, 28],
+        color: "emerald",
+        note: "dial — 소켓 생성 + 포트 재사용 판단",
+      },
+      {
+        lines: [31, 34],
+        color: "amber",
+        note: "포트 재사용 — NAT 홀펀칭 시 리스닝 포트로 바인드",
+      },
     ],
     desc: `TCP Transport 구현입니다. listen_on은 Multiaddr→SocketAddr 변환 후 OS 리스너 생성, dial은 포트 재사용을 시도하되 실패 시 새 포트로 폴백합니다. EINPROGRESS는 비동기 connect의 정상 응답입니다.`,
   },
-  'tcp-socket': {
-    path: 'transports/tcp/src/lib.rs — create_socket()',
+  "tcp-socket": {
+    path: "transports/tcp/src/lib.rs — create_socket()",
     code: TCP_CREATE_SOCKET,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 23],
     annotations: [
-      { lines: [14, 14], color: 'sky', note: 'SO_REUSEADDR — TIME_WAIT 소켓 재바인드 허용' },
-      { lines: [13, 13], color: 'emerald', note: 'TCP_NODELAY — P2P 메시지의 지연 최소화' },
+      {
+        lines: [14, 14],
+        color: "sky",
+        note: "SO_REUSEADDR — TIME_WAIT 소켓 재바인드 허용",
+      },
+      {
+        lines: [13, 13],
+        color: "emerald",
+        note: "TCP_NODELAY — P2P 메시지의 지연 최소화",
+      },
     ],
     desc: `소켓 생성 옵션입니다. TCP_NODELAY로 Nagle을 끄고, SO_REUSEADDR로 재시작 시 즉시 바인드, SO_REUSEPORT(Unix)로 NAT 홀펀칭용 포트 공유를 허용합니다.`,
   },

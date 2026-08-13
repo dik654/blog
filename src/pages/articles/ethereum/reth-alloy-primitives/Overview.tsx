@@ -1,180 +1,107 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import ContextViz from './viz/ContextViz';
-import RLPEncodingViz from './viz/RLPEncodingViz';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
-import { WHY_ALLOY } from './OverviewData';
+import ContextViz from "./viz/ContextViz";
+import RLPEncodingViz from "./viz/RLPEncodingViz";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
-  const [step, setStep] = useState(0);
-
+export default function Overview({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">alloy 생태계 개요</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-        <p className="leading-7">
-          이더리움 노드는 Address, Hash, U256 같은 기본 타입을 블록 실행 중 수천 번 생성한다.<br />
-          Geth는 Go의 <code>big.Int</code>(임의 정밀도 정수)를 사용하는데, 내부적으로 힙 슬라이스를 할당하므로 GC(Garbage Collection, 사용하지 않는 메모리를 자동 회수하는 메커니즘) 압박이 누적된다.
-        </p>
-        <p className="leading-7">
-          <strong>alloy-primitives</strong>는 Rust의 const 제네릭(컴파일 타임에 크기가 결정되는 제네릭 파라미터)으로 고정 크기 타입을 스택에 할당한다.<br />
-          <code>{'FixedBytes<20>'}</code>이 Address, <code>{'FixedBytes<32>'}</code>가 B256이 된다.<br />
-          하나의 구조체로 모든 고정 크기 바이트 타입을 표현하므로 코드 중복이 사라진다.
-        </p>
-        <p className="leading-7">
-          직렬화도 마찬가지다.<br />
-          Geth의 RLP 패키지는 리플렉션(런타임에 타입 정보를 조회하는 기법) 기반이라 컴파일러가 최적화할 수 없다.<br />
-          alloy-rlp의 derive 매크로는 컴파일 타임에 인코더 코드를 생성하므로 LLVM이 함수를 인라인할 수 있다.
-        </p>
-
-        {/* ── alloy 크레이트 계보 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">alloy 크레이트 계보 — ethers-rs 후계</h3>
-        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
-          <p className="text-sm font-semibold mb-3">ethers-rs (2021~2023) → alloy (2023~)</p>
-          <p className="text-sm leading-6 mb-4">
-            ethers-rs의 교훈: ABI 코드 생성(<code>Abigen</code>)은 유용 → 유지했지만,
-            Types/Providers/Signers가 하나의 거대 크레이트였던 문제 → alloy는 ~40개 크레이트로 분할.
-          </p>
-          <p className="text-sm font-semibold mb-2">alloy 주요 크레이트 (Reth가 사용하는 것)</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-primitives</code> — Address, B256, U256, Bytes, Bloom</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-rlp</code> — RLP 인코딩/디코딩 (derive 매크로)</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-rlp-derive</code> — <code>#[derive(RlpEncodable)]</code> 프로시저 매크로</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-trie</code> — MPT 헬퍼 (HashBuilder, Nibbles)</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-eips</code> — EIP-1559/2930/4844 타입 정의</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-consensus</code> — TxEnvelope, Header, Receipt 타입</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-genesis</code> — Genesis 구조체 파싱</div>
-            <div className="rounded border border-border bg-background px-3 py-2"><code>alloy-signer</code> — ECDSA 서명 (Ledger/AWS KMS 등)</div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-3">Reth는 ~30개 alloy 크레이트를 직접 의존 → 공유 타입 기반 구축</p>
-        </div>
-        <p className="leading-7">
-          alloy의 가치: <strong>이더리움 Rust 생태계의 공통 타입</strong>.<br />
-          Reth, Foundry, ethers-rs 후속 도구, 개인 프로젝트 모두 같은 Address/B256/U256 타입 공유.<br />
-          Geth의 go-ethereum common 패키지와 유사한 역할이지만 스택 할당 중심 설계.
-        </p>
-
-        {/* ── const 제네릭 설계 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">const 제네릭 — FixedBytes&lt;N&gt; 통합 설계</h3>
-        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
-          <p className="text-sm font-semibold mb-2">하나의 구조체로 모든 고정 크기 타입 표현</p>
-          <div className="rounded border border-border bg-background px-3 py-2 text-sm mb-4">
-            <code>{'#[derive(Clone, Copy, PartialEq, Eq, Hash)]'}</code><br />
-            <code>{'pub struct FixedBytes<const N: usize>(pub [u8; N]);'}</code>
-          </div>
-          <p className="text-sm font-semibold mb-2">타입 별칭으로 의미 부여</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm mb-4">
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B8</code> = 1B</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B32</code> = 4B (selector)</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B64</code> = 8B (nonce)</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B160</code> = 20B (Address)</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B256</code> = 32B (keccak256)</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B512</code> = 64B (공개키)</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>B2048</code> = 256B (Bloom)</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5"><code>Address(B160)</code> — newtype</div>
-          </div>
-          <p className="text-sm font-semibold mb-2">장점</p>
-          <div className="space-y-1.5 text-sm">
-            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">1.</span> 코드 중복 0 — trait impl 한 번으로 모든 크기 지원</div>
-            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">2.</span> 스택 할당 — <code>[u8; N]</code>은 <code>Copy</code>, 힙 없음</div>
-            <div className="flex items-start gap-2"><span className="text-emerald-500 font-bold">3.</span> 컴파일 타임 크기 검증 — <code>keccak256()</code>이 <code>B256</code> 반환 보장</div>
-          </div>
-        </div>
-        <p className="leading-7">
-          <code>const N: usize</code>는 Rust 1.51부터 안정화된 기능 — 컴파일 타임에 결정되는 정수 제네릭.<br />
-          Geth에서 <code>Hash [32]byte</code>와 <code>Address [20]byte</code>를 각각 선언하고 각각 메서드 구현하는 것과 대조.<br />
-          Rust는 <code>impl&lt;const N: usize&gt; ... for FixedBytes&lt;N&gt;</code> 한 번으로 모든 크기에 공통 동작 제공.
-        </p>
-
-        {/* ── 성능 비교 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">스택 vs 힙 — 할당 비용 비교</h3>
-        <div className="rounded-lg border border-border bg-muted/30 p-5 my-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
-            <div className="rounded border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-3">
-              <p className="font-semibold mb-2 text-red-700 dark:text-red-400">Geth: <code>big.Int</code> 사용</p>
-              <p className="leading-6"><code>balance := new(big.Int).Add(oldBalance, tx.Value())</code></p>
-              <ul className="mt-2 space-y-1 text-sm list-disc list-inside">
-                <li><code>big.Int</code> 구조체 힙 할당 (~48B)</li>
-                <li>가변 <code>[]Word</code> 슬라이스 할당 (~32B)</li>
-                <li>연산 결과로 새 슬라이스 할당 가능</li>
-                <li>GC가 나중에 추적 + 회수</li>
-              </ul>
-            </div>
-            <div className="rounded border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-3">
-              <p className="font-semibold mb-2 text-emerald-700 dark:text-emerald-400">Reth: <code>U256</code> 사용</p>
-              <p className="leading-6"><code>let balance = old_balance + tx.value;</code></p>
-              <ul className="mt-2 space-y-1 text-sm list-disc list-inside">
-                <li><code>U256 = [u64; 4]</code> = 32B → 스택에 배치</li>
-                <li>덧셈은 <code>wrapping_add</code> + carry → 명령어 수 개</li>
-                <li>결과도 스택 변수로 저장</li>
-                <li>함수 종료 시 스택 포인터만 감소 (GC 없음)</li>
-              </ul>
-            </div>
-          </div>
-          <p className="text-sm font-semibold mb-2">블록 실행 1회 U256 연산 규모</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
-            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">가스 계산 ~1000회</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">잔고 변경 ~500회</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5 text-center">스토리지 ~5000회</div>
-            <div className="rounded border border-border bg-background px-3 py-1.5 text-center font-semibold">합계 ~10K+</div>
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="rounded border border-red-200 dark:border-red-900 bg-background px-3 py-1.5">Geth: GC 압박 누적 → 간헐적 GC 휴지(~100ms)</div>
-            <div className="rounded border border-emerald-200 dark:border-emerald-900 bg-background px-3 py-1.5">Reth: 스택 할당만 → 일정한 응답 시간</div>
-          </div>
-        </div>
-        <p className="leading-7">
-          블록체인 실행은 <strong>짧은 생존 객체 수천 개</strong>를 빠르게 생성/소멸하는 워크로드.<br />
-          Go의 GC는 이런 패턴에서 간헐적 휴지(pause)를 발생시킴 — RPC p99 latency에 반영.<br />
-          Rust의 스택 할당 + 명시적 lifetime은 이 문제를 근본적으로 제거.
-        </p>
+      <h2 className="text-2xl font-bold mb-6">alloy primitive는 execution layer의 type과 wire encoding을 공유한다</h2>
+      <div className="not-prose mb-8">
+        <ContextViz />
       </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          실행 클라이언트의 거의 모든 경로는 주소, 해시, 256-bit 정수와 바이트를
+          주고받는다. 이 값들을 단순한 byte slice로만 취급하면 길이·의미·직렬화
+          규칙이 호출부마다 흩어지고 잘못된 타입 혼용이 늦게 발견된다.
+        </p>
 
-      <h3 className="text-lg font-semibold mb-3">왜 alloy인가?</h3>
-      <div className="space-y-2 mb-8">
-        {WHY_ALLOY.map((s, i) => (
-          <motion.div key={i} onClick={() => setStep(i)}
-            className={`rounded-lg border p-4 cursor-pointer transition-colors ${i === step ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-border'}`}
-            animate={{ opacity: i === step ? 1 : 0.6 }}>
-            <div className="flex items-center gap-3">
-              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i === step ? 'bg-indigo-500 text-white' : 'bg-muted text-muted-foreground'}`}>{i + 1}</span>
-              <span className="font-semibold text-sm">{s.title}</span>
-            </div>
-            <AnimatePresence>
-              {i === step && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-                  <p className="text-sm text-foreground/70 mt-2 ml-10">{s.desc}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        ))}
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          아이디어 — 프로토콜 의미를 작은 타입에 고정
+        </h3>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <strong className="text-sm">Address</strong>
+            <p className="text-xs text-muted-foreground mt-1">
+              20-byte 주소를 <code>FixedBytes&lt;20&gt;</code> 위의 의미 있는
+              wrapper로 표현
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <strong className="text-sm">B256</strong>
+            <p className="text-xs text-muted-foreground mt-1">
+              32-byte hash·root·identifier를 고정 길이 값으로 표현
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <strong className="text-sm">U256</strong>
+            <p className="text-xs text-muted-foreground mt-1">
+              EVM word와 잔액·storage 값을 고정 폭 정수로 표현
+            </p>
+          </div>
+        </div>
+        <p className="leading-7">
+          고정 크기 내부 표현은 값 자체에 별도 allocation이 필요 없다는 뜻이지,
+          값이 항상 CPU stack에 놓인다거나 전체 실행에서 heap allocation이
+          사라진다는 보장은 아니다. 실제 배치는 소유 컨테이너와 최적화 결과에
+          달려 있다.
+        </p>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          공통 타입과 도메인 wrapper의 균형
+        </h3>
+        <ul>
+          <li>
+            <code>FixedBytes&lt;N&gt;</code>가 길이 검사, hex 변환, 비교·hash
+            같은 기계적 동작을 공유한다.
+          </li>
+          <li>
+            <code>Address</code>처럼 의미가 다른 값은 wrapper로 분리해 API가
+            잘못된 타입을 받지 않게 한다.
+          </li>
+          <li>
+            <code>U256</code>은 연산의 폭과 overflow 정책을 호출부에서 명시하게
+            한다.
+          </li>
+          <li>
+            RLP, serde, database codec은 같은 타입의 canonical 경계를 한곳에서
+            재사용한다.
+          </li>
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          직렬화는 용도별로 다르다
+        </h3>
+        <p className="leading-7">
+          실행 계층의 legacy 구조에는 RLP가 널리 쓰이지만 Ethereum 전체에 단
+          하나의 직렬화 형식만 있는 것은 아니다. typed transaction envelope,
+          Engine API JSON, consensus 계층의 SSZ처럼 문맥마다 framing과 타입
+          규칙이 다르다. Alloy는 각 도메인의 타입과 codec을 조합해 이 경계를
+          명시한다.
+        </p>
+        <CitationBlock
+          {...OFFICIAL_SOURCES.alloy.primitives}
+          citeKey={1}
+          type="code"
+        >
+          alloy-primitives 문서는 Address, FixedBytes, B256, U256 등 현재 공개
+          타입과 기능을 정의한다. 메모리 위치나 다른 클라이언트 대비 성능 배수는
+          API 보장이 아니다.
+        </CitationBlock>
+        <CitationBlock {...OFFICIAL_SOURCES.ethereum.rlp} citeKey={2}>
+          RLP는 byte array와 list의 canonical encoding을 정의한다. 이 글은 RLP를
+          “비결정적” 또는 “Ethereum의 유일한 직렬화”로 설명하지 않는다.
+        </CitationBlock>
       </div>
-
       <div className="not-prose mt-6">
         <RLPEncodingViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">💡 설계 인사이트: 작은 타입의 큰 차이</p>
-          <p className="mt-2">
-            Address는 20바이트, B256은 32바이트 — 작은 타입이지만 블록 실행에서 수만 번 사용.<br />
-            이 타입의 할당 방식이 전체 성능 특성을 결정.
-          </p>
-          <p className="mt-2">
-            const 제네릭의 다른 이점:<br />
-            1. <strong>메서드 공유</strong> — from_slice, to_vec 등이 모든 N에 자동 적용<br />
-            2. <strong>trait impl 한 번</strong> — Debug, Hash, Serialize 등 1회 구현<br />
-            3. <strong>타입 안전</strong> — 잘못된 크기 혼합 방지 (B256 자리에 Address 넣으면 컴파일 에러)
-          </p>
-          <p className="mt-2">
-            결론: 언어 기능(const generics)이 도메인 설계(이더리움 primitives)와 깔끔히 맞물림.
-          </p>
-        </div>
       </div>
     </section>
   );

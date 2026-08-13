@@ -1,165 +1,124 @@
-import ContextViz from './viz/ContextViz';
-import GossipsubMeshViz from './viz/GossipsubMeshViz';
-import type { CodeRef } from '@/components/code/types';
+import ContextViz from "./viz/ContextViz";
+import GossipsubMeshViz from "./viz/GossipsubMeshViz";
+import { CitationBlock } from "@/components/ui/citation";
+import { OFFICIAL_SOURCES } from "@/content/official-sources";
+import type { CodeRef } from "@/components/code/types";
 
-export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function Overview({
+  onCodeRef: _onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">GossipSub 프로토콜</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
+      <h2 className="text-2xl font-bold mb-6">GossipSub는 topic별 mesh와 validation으로 consensus message를 전파한다</h2>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          이 아티클에서는 GossipSub 토픽 구독, 메시 구성, 메시지 검증 파이프라인을 코드 수준으로 추적한다.
+          합의 메시지는 특정 서버를 거치지 않고 여러 구현의 노드 사이에 빠르게
+          퍼져야 한다. 모든 peer에게 매번 직접 보내면 중복 트래픽이 커지고,
+          임의의 소수 peer만 믿으면 단절과 공격에 취약해진다.
         </p>
 
-        {/* ── GossipSub 개요 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">GossipSub — publish-subscribe 프로토콜</h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">GossipSub 1.1 — libp2p publish-subscribe 프로토콜</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Topic</span> — 메시지 채널 이름</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Mesh</span> — 토픽당 peer 그래프(D=8)</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">Gossip</span> — mesh 외부에 ID만 광고</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><span className="font-bold">IHAVE/IWANT</span> — 메시지 교환</div>
-            </div>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          아이디어 — topic별 mesh와 보완 gossip
+        </h3>
+        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-3 my-4 text-xs">
+          <div className="rounded-lg border bg-card p-3">
+            <strong>Topic</strong>
+            <p className="text-muted-foreground mt-1">
+              메시지 종류·fork digest로 분리
+            </p>
           </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-3">동작 방식 — 5단계</p>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
-                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
-                <div className="text-foreground/80">Publisher가 topic에 메시지 전송</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
-                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
-                <div className="text-foreground/80">mesh 내 peers에게 직접 forward</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
-                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
-                <div className="text-foreground/80">각 peer가 자기 mesh에 re-forward → 지수 확산</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
-                <span className="font-mono text-xs text-orange-500 shrink-0">4</span>
-                <div className="text-foreground/80">주기적으로 mesh 외부에 IHAVE 광고</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-red-500/50 pl-3">
-                <span className="font-mono text-xs text-red-400 shrink-0">5</span>
-                <div className="text-foreground/80">필요한 peer가 IWANT로 요청 → 추가 전달</div>
-              </div>
-            </div>
+          <div className="rounded-lg border bg-card p-3">
+            <strong>Mesh</strong>
+            <p className="text-muted-foreground mt-1">
+              선택한 peer에 본문 전달
+            </p>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-center">
-            <div className="rounded border border-border/40 p-2 text-foreground/60">Propagation: O(log N)</div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">Bandwidth: O(D)/peer</div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">안정성: D_lo=6 유지</div>
+          <div className="rounded-lg border bg-card p-3">
+            <strong>IHAVE/IWANT</strong>
+            <p className="text-muted-foreground mt-1">mesh 밖 누락 보완</p>
           </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">Ethereum 2.0 토픽 &amp; 네트워크 부하(메인넷)</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>beacon_block</code> — 슬롯당 1개</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>beacon_attestation_{'{0-63}'}</code> — ~30K/slot</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>aggregate_and_proof</code> — ~500/slot</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>voluntary_exit</code> / slashing — 드문</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>sync_committee_{'{0-3}'}</code> — 서브넷</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70">피어당 대역폭 ~1 MB/s</div>
-            </div>
+          <div className="rounded-lg border bg-card p-3">
+            <strong>Score</strong>
+            <p className="text-muted-foreground mt-1">
+              전달 품질과 악성 행동 반영
+            </p>
           </div>
         </div>
         <p className="leading-7">
-          GossipSub는 <strong>mesh + gossip 이중 구조</strong>.<br />
-          mesh가 빠른 전파 담당, gossip이 안정성/완전성 보장.<br />
-          O(log N) propagation time으로 대규모 네트워크 지원.
+          mesh의 목표 크기와 하한·상한은 프로토콜에 박힌 보편 상수가 아니라
+          애플리케이션 설정이다. Prysm의 현재 값은 해당 릴리스 설정에서
+          확인하고, 글의 개념 흐름은 숫자 변경과 독립적으로 유지한다.
         </p>
 
-        {/* ── mesh 관리 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Mesh 관리 — Heartbeat 프로토콜</h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">Mesh 파라미터</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>D = 8</code> — 목표 degree</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>D_lo = 6</code> — 최소</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>D_hi = 12</code> — 최대</div>
-              <div className="rounded border border-border/40 p-2 text-foreground/70"><code>D_lazy = 6</code> — gossip 대상</div>
-            </div>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Heartbeat — 연결을 고정하지 않고 조정
+        </h3>
+        <ol>
+          <li>
+            mesh가 부족하면 점수와 다양성 조건을 만족하는 peer에{" "}
+            <code>GRAFT</code>를 보낸다.
+          </li>
+          <li>
+            과도하거나 품질이 낮은 연결은 <code>PRUNE</code>으로 정리하고 재접속
+            backoff를 적용한다.
+          </li>
+          <li>
+            mesh 밖 peer에는 최근 message id를 <code>IHAVE</code>로 알리고
+            필요한 항목만 <code>IWANT</code>로 회수한다.
+          </li>
+          <li>
+            점수·opportunistic graft·IP/peer 다양성 규칙으로 eclipse와 저품질
+            mesh 위험을 줄인다.
+          </li>
+        </ol>
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Ethereum 메시지 검증 경계
+        </h3>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <div className="rounded-lg border bg-card p-4">
+            <strong className="text-sm">1. Decode</strong>
+            <p className="text-xs text-muted-foreground mt-1">
+              topic의 포크·타입과 <code>ssz_snappy</code> payload를 확인
+            </p>
           </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-3"><code>heartbeat()</code> — 1초 간격 mesh 조정</p>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
-                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
-                <div className="text-foreground/80"><strong>부족</strong> (<code>len(mesh) &lt; D_lo</code>) → 새 peer 추가 + <code>sendGRAFT()</code> ("mesh 추가 요청")</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-orange-500/50 pl-3">
-                <span className="font-mono text-xs text-orange-500 shrink-0">2</span>
-                <div className="text-foreground/80"><strong>과다</strong> (<code>len(mesh) &gt; D_hi</code>) → score 낮은 순 제거 + <code>sendPRUNE()</code> ("mesh 제거 알림")</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
-                <span className="font-mono text-xs text-green-500 shrink-0">3</span>
-                <div className="text-foreground/80"><strong>Gossip</strong> — mesh 외부 <code>D_lazy</code>개 peer에게 최근 5개 <code>IHAVE</code> 전송</div>
-              </div>
-            </div>
+          <div className="rounded-lg border bg-card p-4">
+            <strong className="text-sm">2. Validate</strong>
+            <p className="text-xs text-muted-foreground mt-1">
+              시기, 중복, 서명과 객체별 gossip 규칙을 적용
+            </p>
           </div>
-          <div className="grid grid-cols-4 gap-2 text-xs text-center">
-            <div className="rounded border border-border/40 p-2 text-foreground/60">GRAFT</div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">PRUNE</div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">IHAVE</div>
-            <div className="rounded border border-border/40 p-2 text-foreground/60">IWANT</div>
+          <div className="rounded-lg border bg-card p-4">
+            <strong className="text-sm">3. Decide</strong>
+            <p className="text-xs text-muted-foreground mt-1">
+              Accept·Ignore·Reject를 구분해 전달과 scoring을 결정
+            </p>
           </div>
         </div>
         <p className="leading-7">
-          Heartbeat(1초)가 <strong>mesh 동적 관리</strong> 수행.<br />
-          GRAFT/PRUNE으로 mesh 확장/축소 → D_lo~D_hi 범위 유지.<br />
-          IHAVE/IWANT로 mesh 외부 메시지 보완 전파.
+          Ignore와 Reject를 같은 실패로 처리하면 이미 본 메시지나 시기가 맞지
+          않는 메시지 때문에 정상 peer를 벌점 처리할 수 있다. 반대로 검증 전에
+          본문을 재전파하면 공격 비용을 네트워크 전체에 증폭시킨다.
         </p>
 
-        {/* ── Validation Pipeline ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">메시지 검증 파이프라인</h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-3"><code>validateBeaconBlock()</code> — beacon_block 토픽 validator</p>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3 items-start border-l-2 border-blue-500/50 pl-3">
-                <span className="font-mono text-xs text-blue-500 shrink-0">1</span>
-                <div className="text-foreground/80">SSZ-Snappy 디코딩 — <code>snappy.Decode</code> → <code>UnmarshalSSZ</code>. 실패 시 <code>ValidationReject</code></div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-green-500/50 pl-3">
-                <span className="font-mono text-xs text-green-500 shrink-0">2</span>
-                <div className="text-foreground/80">gossip validation rules — slot 범위, signature, proposer_index, parent_root 존재, 중복 확인</div>
-              </div>
-              <div className="flex gap-3 items-start border-l-2 border-purple-500/50 pl-3">
-                <span className="font-mono text-xs text-purple-500 shrink-0">3</span>
-                <div className="text-foreground/80">성공 → <code>msg.ValidatorData = block</code> 캐싱 후 <code>ValidationAccept</code></div>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-3 text-center">
-              <p className="text-xs font-bold text-green-500">Accept</p>
-              <p className="text-xs text-foreground/60">forward to mesh</p>
-              <p className="text-xs text-foreground/50">+1 first_delivery</p>
-            </div>
-            <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3 text-center">
-              <p className="text-xs font-bold text-yellow-500">Ignore</p>
-              <p className="text-xs text-foreground/60">keep, no forward</p>
-              <p className="text-xs text-foreground/50">영향 없음</p>
-            </div>
-            <div className="rounded-lg border border-red-500/30 bg-red-500/5 p-3 text-center">
-              <p className="text-xs font-bold text-red-400">Reject</p>
-              <p className="text-xs text-foreground/60">peer penalty</p>
-              <p className="text-xs text-foreground/50">-80 invalid_message</p>
-            </div>
-          </div>
-          <p className="text-xs text-foreground/60">검증 완료 전까지 forward 안 함 → 악의적 메시지 전파 차단.</p>
-        </div>
-        <p className="leading-7">
-          <strong>3단계 검증</strong>: 디코딩 → spec 규칙 → forward 결정.<br />
-          ValidationReject는 peer score -80 → 악의적 피어 강력 처벌.<br />
-          검증 완료 전까지 forward 안 함 → 잘못된 메시지 전파 방지.
-        </p>
+        <CitationBlock {...OFFICIAL_SOURCES.libp2p.gossipsub} citeKey={1}>
+          GossipSub v1.1 사양은 GRAFT·PRUNE, peer scoring, gossip과
+          opportunistic graft의 관계를 정의한다. mesh 수치는 애플리케이션
+          설정으로 취급한다.
+        </CitationBlock>
+        <CitationBlock {...OFFICIAL_SOURCES.ethereum.p2p} citeKey={2}>
+          Ethereum P2P 사양은 fork digest가 포함된 topic과 ssz_snappy 인코딩,
+          메시지별 검증 결과와 제한을 정의한다.
+        </CitationBlock>
       </div>
-      <div className="not-prose mt-6"><GossipsubMeshViz /></div>
+      <div className="not-prose mt-6">
+        <GossipsubMeshViz />
+      </div>
     </section>
   );
 }

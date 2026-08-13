@@ -1,7 +1,7 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './SszInternalVizData';
-import { Step0, Step1 } from './SszInternalVizSteps';
-import { Step2, Step3 } from './SszInternalVizSteps2';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./SszInternalVizData";
+import { Step0, Step1 } from "./SszInternalVizSteps";
+import { Step2, Step3 } from "./SszInternalVizSteps2";
 
 const R = [Step0, Step1, Step2, Step3];
 

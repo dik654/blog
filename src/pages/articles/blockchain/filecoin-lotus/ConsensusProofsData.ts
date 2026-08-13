@@ -63,4 +63,3 @@ Sealing 세부:
   → proverId + sectorId로 유일성 보장
   → CommR (replica hash)을 온체인 제출
   → zk-SNARK로 정확한 실링 수행 증명 (온체인 검증용 압축)`;
-

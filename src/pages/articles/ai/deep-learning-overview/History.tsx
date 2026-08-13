@@ -1,102 +1,98 @@
-import DLTimelineViz from './viz/DLTimelineViz';
-import DLHistoryViz from './viz/DLHistoryViz';
+const milestones = [
+  {
+    period: "1943–1958",
+    title: "계산 가능한 뉴런과 퍼셉트론",
+    detail:
+      "뉴런을 논리 계산으로 단순화하고, Rosenblatt의 퍼셉트론이 데이터로 weight를 조정하는 학습 규칙을 제시했습니다.",
+  },
+  {
+    period: "1969–1986",
+    title: "단층의 한계에서 다층 학습으로",
+    detail:
+      "XOR 같은 선형 분리 불가능 문제와 계산 자원의 제약이 드러났고, backpropagation이 hidden representation을 학습하는 실용적 경로를 열었습니다.",
+  },
+  {
+    period: "1989–2011",
+    title: "CNN·LSTM과 표현 학습의 축적",
+    detail:
+      "LeNet, LSTM, unsupervised pretraining처럼 이미지와 sequence에 맞는 구조가 발전했지만 데이터와 compute가 여전히 병목이었습니다.",
+  },
+  {
+    period: "2012–현재",
+    title: "대규모 데이터·accelerator·architecture의 결합",
+    detail:
+      "AlexNet 이후 GPU 학습이 보편화됐고, residual network와 Transformer가 더 큰 모델을 안정적으로 학습하는 기반을 만들었습니다.",
+  },
+] as const;
 
 export default function History() {
   return (
     <section id="history" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">딥러닝의 초기 역사</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        80년에 걸친 연구, 좌절, 재발견의 반복.<br />
-        1943 인공 뉴런 → 1986 역전파 → 2012 AlexNet → 2017 Transformer.
-      </p>
-      <DLTimelineViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">주요 이정표 + AI Winters</h3>
-      </div>
-      <div className="not-prose mt-4 mb-4">
-        <DLHistoryViz />
-      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          딥러닝의 역사는 하나의 알고리즘이 갑자기 등장한 이야기가 아닙니다.
+          미분 가능한 network, 충분한 데이터, 병렬 hardware와 안정적인
+          optimization이 서로 다른 시기에 축적되다가 함께 작동하기 시작한
+          과정입니다. 연구 침체를 특정 논문이나 한 사람의 선택으로만 설명하면 이
+          상호작용을 놓치게 됩니다.
+        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">핵심 연구자들</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">인물</th>
-                <th className="border border-border px-3 py-2 text-left">주요 기여</th>
-                <th className="border border-border px-3 py-2 text-left">기간</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-3 py-2">Geoffrey Hinton</td>
-                <td className="border border-border px-3 py-2">Backprop, DBN, Dropout, Capsule</td>
-                <td className="border border-border px-3 py-2">1986~</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">Yann LeCun</td>
-                <td className="border border-border px-3 py-2">CNN, LeNet, MNIST</td>
-                <td className="border border-border px-3 py-2">1989~</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">Yoshua Bengio</td>
-                <td className="border border-border px-3 py-2">Deep learning theory, attention</td>
-                <td className="border border-border px-3 py-2">1990s~</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">Jürgen Schmidhuber</td>
-                <td className="border border-border px-3 py-2">LSTM, highway network</td>
-                <td className="border border-border px-3 py-2">1991~</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">Ian Goodfellow</td>
-                <td className="border border-border px-3 py-2">GAN</td>
-                <td className="border border-border px-3 py-2">2014~</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">Ilya Sutskever</td>
-                <td className="border border-border px-3 py-2">Seq2Seq, GPT, o1</td>
-                <td className="border border-border px-3 py-2">2014~</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">Andrej Karpathy</td>
-                <td className="border border-border px-3 py-2">CNN viz, Tesla AP, nanoGPT</td>
-                <td className="border border-border px-3 py-2">2014~</td>
-              </tr>
-            </tbody>
-          </table>
+      <figure data-viz="modern" className="not-prose my-12 min-w-0">
+        <figcaption className="mb-5 px-1">
+          <p className="text-xs font-bold text-primary">병목의 이동</p>
+          <p className="text-sm font-bold text-foreground">
+            네 시기로 보는 발전 흐름
+          </p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            각 시기는 이전 방법을 폐기한 것이 아니라 다음 규모의 학습 조건을
+            추가했습니다.
+          </p>
+        </figcaption>
+        <div data-viz-canvas className="grid gap-6 rounded-xl border border-border/70 bg-muted/15 p-5 sm:grid-cols-2 sm:gap-7 sm:p-7">
+          {milestones.map((milestone, index) => (
+            <div
+              key={milestone.period}
+              className="min-w-0 border-l border-border/80 pl-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-mono text-xs font-bold text-primary">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="text-xs font-semibold text-muted-foreground">
+                  {milestone.period}
+                </span>
+              </div>
+              <h3 className="mt-3 text-sm font-bold leading-5 text-foreground">
+                {milestone.title}
+              </h3>
+              <p className="mt-2 text-xs leading-5 text-foreground/70">
+                {milestone.detail}
+              </p>
+            </div>
+          ))}
         </div>
+      </figure>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 2012년 AlexNet의 3가지 혁명</p>
-          <p>
-            <strong>1. 하드웨어</strong>:<br />
-            - GPU 훈련 (CUDA)<br />
-            - CPU 대비 50x 빠름<br />
-            - "Deep learning = parallelizable math"
-          </p>
-          <p className="mt-2">
-            <strong>2. 데이터</strong>:<br />
-            - ImageNet 1.4M labeled images<br />
-            - Fei-Fei Li의 비전<br />
-            - "Data is the new oil"
-          </p>
-          <p className="mt-2">
-            <strong>3. 알고리즘</strong>:<br />
-            - ReLU (vanishing gradient 해결)<br />
-            - Dropout (regularization)<br />
-            - Data augmentation<br />
-            - Weight initialization
-          </p>
-          <p className="mt-2">
-            <strong>결과</strong>: 이론 50% + 엔지니어링 50%<br />
-            Hinton 그룹이 ImageNet 우승 → 전 산업 전환
-          </p>
-        </div>
-
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          2012년의 변화는 세 조건이 동시에 맞은 결과다
+        </h3>
+        <p className="leading-7">
+          AlexNet은 ImageNet 규모의 labeled data, GPU에서 병렬화한 convolution,
+          ReLU와 data augmentation 같은 training recipe를 함께 사용했습니다.
+          성능 향상을 “GPU가 빨라서” 또는 “새 activation 하나 덕분에”라고만
+          설명할 수 없는 이유입니다. 이후에도 model quality는 architecture뿐
+          아니라 data pipeline, numerical precision과 distributed system을 함께
+          설계할 때 확장됐습니다.
+        </p>
+        <p className="leading-7">
+          역사적 인물 목록을 외우기보다 어떤 병목이 다음 변화를 만들었는지 보는
+          편이 이후 글을 이해하는 데 유용합니다. 단층의 표현 한계는 다층
+          network로, 긴 gradient path는 residual connection으로, 순차 계산의
+          병목은 attention과 병렬 학습으로 이어졌습니다.
+        </p>
       </div>
     </section>
   );

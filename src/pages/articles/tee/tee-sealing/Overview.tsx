@@ -3,16 +3,25 @@ export default function Overview() {
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">봉인이 필요한 이유</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">봉인(Sealing)의 필요성</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          봉인(Sealing)의 필요성
+        </h3>
         <p>
-          TEE 내부에서 생성된 <strong>비밀</strong>(개인키, 설정, 세션 토큰)은 재부팅 후에도 유지 필요<br />
-          그러나 TEE 메모리는 <strong>휘발성</strong>: EPC/TD 메모리는 전원 차단 시 소멸<br />
-          <strong>해결</strong>: CPU 고유 키로 암호화(봉인) → 디스크 저장<br />
-          재부팅 후 <strong>동일 CPU + 동일 enclave</strong>에서만 복호화(개봉) 가능
+          TEE 내부에서 생성된 <strong>비밀</strong>(개인키, 설정, 세션 토큰)은
+          재부팅 후에도 유지 필요
+          <br />
+          그러나 TEE 메모리는 <strong>휘발성</strong>: EPC/TD 메모리는 전원 차단
+          시 소멸
+          <br />
+          <strong>해결</strong>: CPU 고유 키로 암호화(봉인) → 디스크 저장
+          <br />
+          재부팅 후 <strong>동일 CPU + 동일 enclave</strong>에서만 복호화(개봉)
+          가능
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">봉인 없이는 어떤 문제가 발생하는가</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          봉인 없이는 어떤 문제가 발생하는가
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 시나리오: 암호화폐 지갑 enclave
 
 // 봉인 없이
@@ -55,33 +64,61 @@ void unseal_wallet() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">핵심 원칙 4가지</h3>
         <ul>
-          <li><strong>CPU 바운드</strong> — Seal Key는 CPU 칩에 물리적 내장된 Root Key에서 파생. 다른 CPU는 같은 키 못 얻음</li>
-          <li><strong>코드 바운드</strong> — 키 파생에 enclave 측정값(MRENCLAVE/MRSIGNER) 포함. 다른 코드는 같은 키 못 얻음</li>
-          <li><strong>무결성 보장</strong> — AES-GCM MAC 태그로 변조 탐지. 1비트 수정도 개봉 거부</li>
-          <li><strong>버전 바운드</strong> — SVN(Security Version Number) 포함 가능. downgrade 방어</li>
+          <li>
+            <strong>CPU 바운드</strong> — Seal Key는 CPU 칩에 물리적 내장된 Root
+            Key에서 파생. 다른 CPU는 같은 키 못 얻음
+          </li>
+          <li>
+            <strong>코드 바운드</strong> — 키 파생에 enclave
+            측정값(MRENCLAVE/MRSIGNER) 포함. 다른 코드는 같은 키 못 얻음
+          </li>
+          <li>
+            <strong>무결성 보장</strong> — AES-GCM MAC 태그로 변조 탐지. 1비트
+            수정도 개봉 거부
+          </li>
+          <li>
+            <strong>버전 바운드</strong> — SVN(Security Version Number) 포함
+            가능. downgrade 방어
+          </li>
         </ul>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">봉인 vs 다른 데이터 보호 방법</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          봉인 vs 다른 데이터 보호 방법
+        </h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">방식</th>
-                <th className="border border-border px-3 py-2 text-left">키 저장</th>
-                <th className="border border-border px-3 py-2 text-left">CPU 의존</th>
-                <th className="border border-border px-3 py-2 text-left">코드 의존</th>
+                <th className="border border-border px-3 py-2 text-left">
+                  방식
+                </th>
+                <th className="border border-border px-3 py-2 text-left">
+                  키 저장
+                </th>
+                <th className="border border-border px-3 py-2 text-left">
+                  CPU 의존
+                </th>
+                <th className="border border-border px-3 py-2 text-left">
+                  코드 의존
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-border px-3 py-2">암호 기반 (PBKDF2)</td>
-                <td className="border border-border px-3 py-2">사용자 머릿속</td>
+                <td className="border border-border px-3 py-2">
+                  암호 기반 (PBKDF2)
+                </td>
+                <td className="border border-border px-3 py-2">
+                  사용자 머릿속
+                </td>
                 <td className="border border-border px-3 py-2">No</td>
                 <td className="border border-border px-3 py-2">No</td>
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2">HSM</td>
-                <td className="border border-border px-3 py-2">외부 하드웨어</td>
+                <td className="border border-border px-3 py-2">
+                  외부 하드웨어
+                </td>
                 <td className="border border-border px-3 py-2">Partial</td>
                 <td className="border border-border px-3 py-2">No</td>
               </tr>
@@ -92,16 +129,26 @@ void unseal_wallet() {
                 <td className="border border-border px-3 py-2">PCR 기반</td>
               </tr>
               <tr>
-                <td className="border border-border px-3 py-2"><strong>TEE Sealing</strong></td>
-                <td className="border border-border px-3 py-2">CPU 하드 root</td>
-                <td className="border border-border px-3 py-2"><strong>Yes</strong></td>
-                <td className="border border-border px-3 py-2"><strong>Yes (MRENCLAVE)</strong></td>
+                <td className="border border-border px-3 py-2">
+                  <strong>TEE Sealing</strong>
+                </td>
+                <td className="border border-border px-3 py-2">
+                  CPU 하드 root
+                </td>
+                <td className="border border-border px-3 py-2">
+                  <strong>Yes</strong>
+                </td>
+                <td className="border border-border px-3 py-2">
+                  <strong>Yes (MRENCLAVE)</strong>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">공격 시나리오 &amp; 방어</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          공격 시나리오 &amp; 방어
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 시나리오 1: 공격자가 다른 서버로 sealed data 복사
 // - sealed.bin 파일 훔침
 // - 자기 CPU에서 unseal 시도
@@ -134,24 +181,26 @@ void unseal_wallet() {
           <p className="font-semibold mb-2">인사이트: Sealing의 실전 패턴</p>
           <p>
             <strong>계층적 봉인</strong>:<br />
-            - Level 1: 마스터 키만 봉인 (32B seal)<br />
-            - Level 2: 마스터 키로 파생한 데이터 키들 (대량)<br />
-            - 이유: enclave 재빌드 시 마스터만 재봉인
+            - Level 1: 마스터 키만 봉인 (32B seal)
+            <br />
+            - Level 2: 마스터 키로 파생한 데이터 키들 (대량)
+            <br />- 이유: enclave 재빌드 시 마스터만 재봉인
           </p>
           <p className="mt-2">
             <strong>MRSIGNER 기반 upgrade</strong>:<br />
-            - MRENCLAVE 기반: 코드 한 바이트 변경해도 unseal 불가<br />
-            - MRSIGNER 기반: 서명자 동일하면 OK → 업데이트 가능<br />
-            - 대부분 앱은 MRSIGNER + SVN 조합 사용
+            - MRENCLAVE 기반: 코드 한 바이트 변경해도 unseal 불가
+            <br />
+            - MRSIGNER 기반: 서명자 동일하면 OK → 업데이트 가능
+            <br />- 대부분 앱은 MRSIGNER + SVN 조합 사용
           </p>
           <p className="mt-2">
             <strong>백업 전략</strong>:<br />
-            - Sealed data는 해당 CPU에서만 복구 가능<br />
-            - CPU 하드웨어 실패 시 복구 불가<br />
-            - 실전: multi-party sealing (threshold SSS) 또는 분산 KMS
+            - Sealed data는 해당 CPU에서만 복구 가능
+            <br />
+            - CPU 하드웨어 실패 시 복구 불가
+            <br />- 실전: multi-party sealing (threshold SSS) 또는 분산 KMS
           </p>
         </div>
-
       </div>
     </section>
   );

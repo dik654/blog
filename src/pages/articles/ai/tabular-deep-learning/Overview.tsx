@@ -1,100 +1,76 @@
-import M from '@/components/ui/math';
-import OverviewViz from './viz/OverviewViz';
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import ExplainedFormula from "@/components/ui/explained-formula";
+
+const routes = [
+  ["데이터 계약", "한 row가 누구의 어느 시점을 나타내며 어떤 column을 사용할 수 있는가"],
+  ["강한 출발점", "동일 split의 CatBoost·LightGBM과 단순 MLP/ResNet은 어느 정도인가"],
+  ["표현 기회", "embedding·interaction·multimodal·pretraining이 실제 병목을 해결하는가"],
+  ["운영 판정", "여러 seed의 품질·calibration·latency·memory가 추가 복잡성을 정당화하는가"],
+];
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">GBM vs 딥러닝: 테이블에서의 대결</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        테이블 딥러닝은 “row를 어떤 표현으로 바꿀 것인가”에서 출발합니다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          테이블(tabular) 데이터 — 행이 샘플, 열이 피처인 가장 전통적인 데이터 형식<br />
-          이미지·텍스트에서 딥러닝이 압도적이지만, 테이블에서는 <strong>GBM(Gradient Boosted
-          Machine)</strong>이 여전히 지배적 위치를 유지하고 있다
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold text-amber-800 dark:text-amber-200 mb-1">핵심 질문</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            "Do we really need deep learning models for tabular data?" — Shwartz-Ziv & Armon (2022)<br />
-            45개 벤치마크 데이터셋 실험 결과, 중간 규모(10K~50K)에서 XGBoost가 DL 모델을 일관되게 능가
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">테이블 데이터가 특별한 이유</h3>
-        <p>
-          이미지: 인접 픽셀 간 공간 상관관계 존재 → CNN이 이를 활용<br />
-          텍스트: 단어 간 순서 의존성 → RNN/Transformer가 이를 활용<br />
-          테이블: <strong>피처 간 공간적·시간적 관계 없음</strong> — 열 순서를 바꿔도 의미 동일
+        <p className="text-lg leading-8">
+          은행의 고객 표 한 줄에는 나이 42세, 지역 서울, 최근 30일 결제액
+          37만 원처럼 뜻과 단위가 다른 column이 나란히 놓입니다. 순서가 의미인
+          문장이나 가까운 pixel이 연결된 이미지와 달리, 표에는 모든 문제에
+          공통인 이웃 구조가 없습니다. 따라서 모델은 column의 의미를 보존하면서
+          한 row 안의 조건부 관계를 찾아야 합니다.
         </p>
         <p>
-          이 "불규칙 피처(irregular features)" 특성 때문에 DL의 귀납 편향(inductive bias)이
-          오히려 방해가 된다.
-          GBM은 결정 경계를 split으로 직접 학습하므로 적은 데이터에서도 강건한 성능을 보인다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">GBM이 유리한 구조적 이유</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">요인</th>
-                <th className="border border-border px-4 py-2 text-left">GBM</th>
-                <th className="border border-border px-4 py-2 text-left">DL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['이질적 피처', '수치+범주 자연 처리', '인코딩 필요 (원핫/임베딩)'],
-                ['피처 수 대비 샘플', '적은 데이터에 강건', '과적합 위험'],
-                ['학습 속도', 'CPU에서 수 분', 'GPU 필요, 수 시간'],
-                ['하이퍼파라미터', '상대적 적음', '아키텍처+옵티마이저 조합 폭발'],
-                ['해석 가능성', 'SHAP/feature importance 내장', '별도 기법 필요'],
-              ].map(([factor, gbm, dl]) => (
-                <tr key={factor}>
-                  <td className="border border-border px-4 py-2 font-medium">{factor}</td>
-                  <td className="border border-border px-4 py-2">{gbm}</td>
-                  <td className="border border-border px-4 py-2">{dl}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">DL이 접근하는 3가지 조건</h3>
-        <p>
-          그럼에도 DL이 GBM에 근접하거나 추월하는 조건이 존재한다.
+          수치형·범주형 feature가 섞인 중소 규모 표에서는 tree boosting이 강한
+          baseline인 경우가 많습니다. Tree는 scale 정규화 없이 threshold를 찾고,
+          불규칙한 구간 경계를 작은 data에서도 직접 만들 수 있기 때문입니다.
+          TabNet은 row마다 여러 차례 feature를 골라 처리하고, FT-Transformer는
+          각 column을 vector token으로 바꿔 상호작용을 학습하지만 어느 구조도
+          모든 표에서 기본 승자는 아닙니다.
         </p>
         <p>
-          <strong>① 대규모 데이터</strong> — 100K 샘플 이상에서 DL의 파라미터 용량이 빛을 발한다.
-          GBM은 트리 깊이·개수 한계로 복잡한 패턴 포착에 한계가 있다.
-        </p>
-        <p>
-          <strong>② 멀티모달 입력</strong> — 텍스트(상품 설명) + 이미지(상품 사진) + 테이블(가격, 카테고리)을
-          하나의 모델로 결합할 때 DL이 유일한 선택지.
-          GBM은 비정형 데이터를 직접 처리할 수 없다.
-        </p>
-        <p>
-          <strong>③ 고카디널리티 범주형</strong> — 유니크 값 10,000개 이상인 범주형 피처(사용자 ID,
-          상품 코드 등)에 엔티티 임베딩(entity embedding)을 적용하면 GBM 대비 표현력이 확대된다.
+          이 글은 <Link to="/ai/feature-engineering">예측 시점과 누출 없는 feature</Link>,{" "}
+          <Link to="/ai/gradient-boosting">GBDT의 계산과 비교 계약</Link>,{" "}
+          <Link to="/ai/attention-theory#self-attention">self-attention의 정본 설명</Link>을
+          재사용합니다. 전처리와 attention을 다시 정의하지 않고, 이들이 tabular
+          representation에서 맡는 역할과 선택 근거만 확장합니다.
         </p>
       </div>
 
-      <div className="not-prose my-8"><OverviewViz /></div>
+      <ContentBoundary article="tabular-deep-learning" />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">테이블 DL 모델의 진화</h3>
-        <p>
-          Wide&Deep(2016) — 추천 시스템에서 선형 + DNN 결합의 시초<br />
-          DeepFM(2017) — FM(Factorization Machine) + DNN으로 피처 교차 자동화<br />
-          TabNet(2019) — 어텐션 기반 피처 선택, 해석 가능한 DL<br />
-          FT-Transformer(2021) — 각 피처를 토큰으로 취급, self-attention 적용<br />
-          TabPFN(2022) — prior-data fitted network, 학습 없이 추론 시점에 적응
-        </p>
-        <p>
-          이 아티클에서는 가장 영향력 있는 두 모델 — <strong>TabNet</strong>과 <strong>FT-Transformer</strong>의
-          구조를 깊이 분석하고, DL이 GBM을 이기는 구체적 조건을 정리한다.
-        </p>
-      </div>
+      <ExplainedFormula
+        question="서로 뜻이 다른 column을 neural model은 어떤 공통 경로로 prediction까지 보낼까?"
+        idea={<>먼저 schema가 raw row를 단위와 category가 명확한 feature vector로 바꾸고, encoder가 task에 유용한 representation을 학습합니다. Prediction head는 그 representation만 받아 target 형식의 output을 냅니다.</>}
+        formula={String.raw`\hat y_i=h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)`}
+        terms={[
+          { symbol: "x_i", name: "raw row", description: "한 entity와 cutoff에 해당하는 수치형·범주형 관측값입니다." },
+          { symbol: "T_schema", name: "schema transform", description: "단위·결측·category vocabulary·available-time 규칙을 적용하며 training과 serving에서 같아야 합니다." },
+          { symbol: "Enc_θ", name: "learned encoder", description: "TabNet step이나 FT-Transformer block으로 row representation을 만드는 학습 함수입니다." },
+          { symbol: "h_φ", name: "prediction head", description: "Representation을 class logit이나 regression value로 바꿉니다." },
+        ]}
+        assumptions={["각 row의 entity·cutoff·target horizon이 먼저 정의돼 있습니다.", "Schema transform은 training fold에서만 fit하고 serving artifact로 고정합니다.", "Representation의 복잡성은 같은 split과 tuning budget의 baseline에서 검증합니다."]}
+        interpretation="딥러닝의 추가 가치는 schema 규칙을 없애는 데 있지 않습니다. 같은 유효 input에서 encoder가 baseline보다 재사용 가능한 representation을 학습하는지가 핵심입니다."
+      />
+
+      <figure data-viz="tabular-reading-route" className="not-prose my-8 min-w-0 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
+        <figcaption>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary/75">Reading route</p>
+          <p className="mt-2 text-lg font-semibold">Architecture 이름보다 네 질문을 순서대로 확인합니다</p>
+        </figcaption>
+        <div className="mt-6 overflow-hidden rounded-lg border border-border/70">
+          {routes.map(([title, body], index) => (
+            <div key={title} className={`grid min-w-0 gap-2 px-4 py-4 sm:grid-cols-[2.5rem_9rem_1fr] ${index ? "border-t border-border/60" : ""}`}>
+              <p className="text-xs font-bold text-primary/70">0{index + 1}</p>
+              <p className="font-semibold">{title}</p>
+              <p className="text-sm leading-6 text-muted-foreground">{body}</p>
+            </div>
+          ))}
+        </div>
+      </figure>
     </section>
   );
 }

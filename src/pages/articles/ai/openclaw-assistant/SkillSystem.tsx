@@ -1,71 +1,105 @@
-import { CitationBlock } from '../../../../components/ui/citation';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { Link } from "react-router-dom";
+import { CitationBlock } from "@/components/ui/citation";
+import type { CodeRef } from "@/components/code/types";
 
-export default function SkillSystem({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
+const SKILL_PIPELINE = [
+  ["Discover", "workspace·project·personal·managed·bundled·plugin 위치에서 후보 탐색"],
+  ["Resolve precedence", "workspace → project-agent → personal → managed → bundled → extra/plugin 순서"],
+  ["Eligibility", "OS, binary, env, configuration 조건을 만족하는지 판정"],
+  ["Prompt snapshot", "session 시작 때 적격 skill의 이름·설명을 compact 목록으로 고정"],
+  ["Progressive disclosure", "model이 필요할 때 SKILL.md와 연결 자료를 읽고 tool을 사용"],
+] as const;
+
+export default function SkillSystem({
+  onCodeRef: _onCodeRef,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <>
-      <h3 className="text-xl font-semibold mt-6 mb-3">스킬 시스템</h3>
-      {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton onClick={() => onCodeRef('oc-skill-engine', codeRefs['oc-skill-engine'])} />
-          <span className="text-[10px] text-muted-foreground self-center">skill-engine.ts</span>
-        </div>
-      )}
+      <h3 className="mt-8 text-xl font-semibold">
+        skill은 실행 파일 목록이 아니라 context loading 규칙입니다
+      </h3>
+      <p>
+        SKILL.md는 model에게 특정 작업을 언제, 어떤 순서로, 어떤 tool을 사용해
+        수행할지 알려 주는 markdown 지침입니다. OpenClaw는 session 시작 때 적격
+        후보의 compact 목록을 prompt snapshot으로 만들고 후속 turn에서
+        재사용합니다. watcher·configuration·node 상태로 후보가 달라지면 다음
+        turn에 snapshot을 새로 고치며, 선택된 skill의 상세 지침은 필요할 때
+        읽습니다. 자세한
+        구조는 <Link to="/ai/skills-anatomy">Skills anatomy</Link>에서 이어집니다.
+      </p>
 
-      <div className="not-prose mb-4">
-        <p className="text-sm font-semibold mb-3">스킬 = OpenClaw의 플러그인 시스템</p>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
-          {[
-            'coding-agent', 'github', 'notion', 'obsidian', 'spotify-player',
-            'weather', 'slack', 'openai-whisper', 'openai-image-gen', 'canvas',
-          ].map((skill) => (
-            <div key={skill} className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-center">
-              <p className="text-xs font-mono">{skill}</p>
-            </div>
-          ))}
-        </div>
+      <ol className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {SKILL_PIPELINE.map(([title, body], index) => (
+          <li
+            key={title}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <p className="text-xs font-semibold text-primary">
+              {String(index + 1).padStart(2, "0")}
+            </p>
+            <p className="mt-1 break-words text-sm font-semibold">{title}</p>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+              {body}
+            </p>
+          </li>
+        ))}
+      </ol>
+
+      <p>
+        여기서 allowlist의 의미를 구분해야 합니다. skill 후보를 걸러 prompt에
+        보이지 않게 하는 설정은 유용한 제어 수단이지만 host shell authorization을
+        대신하지 않습니다. third-party skill은 untrusted code와 지침으로
+        취급하고, 실제 tool 호출은 별도의 tool policy와 sandbox 경계를 통과시켜야
+        합니다. 또한 host 환경 변수를 잠시 주입하는 skill 설정이 sandbox 내부에
+        자동으로 secret을 전달한다는 뜻도 아닙니다.
+      </p>
+
+      <div className="not-prose my-6 min-w-0 rounded-lg border border-border/70 bg-muted/20 p-4">
+        <h4 className="text-sm font-semibold">Resource discovery는 skill 하나보다 넓습니다</h4>
+        <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+          현재 runtime generation은 extension·skill·prompt·theme 같은 resource를
+          하나의 snapshot으로 준비합니다. package는 <code>package.json</code>의
+          <code>openclaw.extensions</code>, <code>skills</code>, <code>prompts</code>,
+          <code>themes</code>에 상대 경로나 glob을 선언할 수 있고, 선언하지 않은
+          종류는 conventional directory를 탐색할 수 있습니다. workspace skill은
+          project·personal·managed·bundled source와 precedence를 비교한 뒤
+          eligibility를 통과해야 prompt 후보가 됩니다.
+        </p>
+        <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+          <strong className="text-foreground">tool</strong>은 실행 capability,
+          <strong className="text-foreground"> skill</strong>은 workflow 지침,
+          <strong className="text-foreground"> plugin</strong>은 runtime·tool·resource를
+          등록할 수 있는 trusted in-process code입니다. prompt와 theme는 표현
+          resource일 뿐 실행 권한을 만들지 않습니다. 발견된 source, 선택된
+          version, eligibility 이유를 trace에 남겨야 update 전후를 비교할 수
+          있습니다.
+        </p>
       </div>
 
-      <CitationBlock source="ClawHub — 커뮤니티 스킬 레지스트리" citeKey={4} type="code"
-        href="https://github.com/openclaw/clawhub">
-        <div className="not-prose">
-          <p className="text-sm font-semibold mb-3">SKILL.md 형식 &amp; ClawHub</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-            <div className="rounded-xl border border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950 p-4">
-              <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">SKILL.md (유일한 필수 파일)</p>
-              <p className="text-sm">YAML frontmatter + 마크다운 지침</p>
-              <div className="mt-2 rounded-md bg-white/60 dark:bg-black/20 p-2 text-xs font-mono leading-relaxed">
-                <p>---</p>
-                <p>name: github-review</p>
-                <p>version: 1.0.0</p>
-                <p>requirements: [gh CLI]</p>
-                <p>---</p>
-              </div>
-            </div>
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 p-4">
-              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">ClawHub 레지스트리</p>
-              <p className="text-sm">13,729+ 커뮤니티 스킬</p>
-              <div className="mt-2 text-xs text-muted-foreground space-y-1">
-                <p><code>openclaw skills install &lt;name&gt;</code></p>
-                <p><code>openclaw skills search &lt;keyword&gt;</code></p>
-                <p>동적 로드 — 설치 후 재시작 없이 다음 턴부터 사용</p>
-                <p>VirusTotal 연동 스킬 스캐닝 (보안)</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 p-4">
-            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">시스템 프롬프트 통합</p>
-            <p className="text-sm">적격 스킬이 XML 목록으로 시스템 프롬프트에 주입 — 스킬당 ~24 토큰</p>
-          </div>
-        </div>
-        <p className="mt-2 text-xs">
-          SKILL.md — YAML frontmatter + 마크다운 지침으로 구성된 선언적 스킬 포맷.
-          ClawHub 등록 13,729+ 스킬은 동적 로드 지원으로 설치 즉시 사용 가능하며,
-          적격 스킬이 시스템 프롬프트에 XML 목록으로 주입 (스킬당 ~24 토큰)
+      <div
+        id="paper-openclaw-skills"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Skills
         </p>
-      </CitationBlock>
+        <CitationBlock
+          source="OpenClaw Docs — Skills"
+          citeKey={6}
+          type="paper"
+          href="https://docs.openclaw.ai/tools/skills"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> 도구 사용 지침과 참고 자료를 모두 system prompt에 넣으면 context가 커지고, 어떤 skill이 실제 환경에서 실행 가능한지 알기 어렵습니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> SKILL.md를 여러 scope에서 발견하고 precedence와 eligibility를 적용한 뒤 compact 목록을 run의 prompt snapshot에 넣습니다.</p>
+            <p><strong>전제·조건:</strong> skill이 요구하는 binary·environment·configuration을 host와 sandbox 각각에서 확인해야 하며, third-party skill은 신뢰하지 않은 코드로 검토해야 합니다.</p>
+            <p><strong>근거 범위:</strong> skill discovery, precedence, eligibility, system prompt 주입과 session snapshot 갱신의 현재 동작을 설명하는 공식 근거입니다.</p>
+            <p><strong>비주장:</strong> skill allowlist가 tool policy, shell 승인, sandbox, secret boundary를 대신한다는 주장은 하지 않습니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
     </>
   );
 }

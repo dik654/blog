@@ -35,7 +35,19 @@ Model Catalog:
   → 사용자가 models.json으로 커스텀 설정 가능`;
 
 export const authProfileAnnotations = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: '4개 프로바이더 동시 지원' },
-  { lines: [9, 18] as [number, number], color: 'emerald' as const, note: '자동 페일오버 설정' },
-  { lines: [20, 23] as [number, number], color: 'amber' as const, note: '쿨다운으로 무한 재시도 방지' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "sky" as const,
+    note: "4개 프로바이더 동시 지원",
+  },
+  {
+    lines: [9, 18] as [number, number],
+    color: "emerald" as const,
+    note: "자동 페일오버 설정",
+  },
+  {
+    lines: [20, 23] as [number, number],
+    color: "amber" as const,
+    note: "쿨다운으로 무한 재시도 방지",
+  },
 ];

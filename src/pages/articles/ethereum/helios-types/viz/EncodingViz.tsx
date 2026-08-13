@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './EncodingVizData';
-import { Step0, Step1, Step2 } from './EncodingVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./EncodingVizData";
+import { Step0, Step1, Step2 } from "./EncodingVizSteps";
 
 const R = [Step0, Step1, Step2];
 

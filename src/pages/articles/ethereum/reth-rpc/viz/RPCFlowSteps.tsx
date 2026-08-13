@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { ModuleBox } from '@/components/viz/boxes';
 
 const C = {
   http: '#6b7280', rpsee: '#6366f1', eth: '#10b981',
@@ -8,11 +9,11 @@ const C = {
 /* Step 0: 전체 흐름 — 5단계 파이프라인 */
 export function StepOverview() {
   const stages = [
-    { label: 'HTTP/WS', color: C.http, x: 20 },
-    { label: 'jsonrpsee', color: C.rpsee, x: 110 },
-    { label: 'EthApi', color: C.eth, x: 200 },
-    { label: 'Provider', color: C.provider, x: 290 },
-    { label: 'Response', color: C.http, x: 370 },
+    { label: 'HTTP/WS', color: C.http, x: 10 },
+    { label: 'jsonrpsee', color: C.rpsee, x: 94 },
+    { label: 'EthApi', color: C.eth, x: 178 },
+    { label: 'Provider', color: C.provider, x: 262 },
+    { label: 'Response', color: C.http, x: 346 },
   ];
   return (<g>
     <defs><marker id="rf-a" markerWidth={5} markerHeight={4} refX={4} refY={2} orient="auto">
@@ -20,18 +21,15 @@ export function StepOverview() {
     {stages.map((s, i) => (
       <motion.g key={s.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
         transition={{ delay: i * 0.1 }}>
-        <rect x={s.x} y={35} width={70} height={36} rx={6}
-          fill={`${s.color}12`} stroke={s.color} strokeWidth={1} />
-        <text x={s.x + 35} y={58} textAnchor="middle" fontSize={11} fontWeight={700} fill={s.color}>
-          {s.label}</text>
-        {i < 4 && <line x1={s.x + 73} y1={53} x2={stages[i + 1].x - 3} y2={53}
+        <ModuleBox x={s.x} y={33} w={64} h={40} label={s.label} color={s.color} />
+        {i < 4 && <line x1={s.x + 67} y1={53} x2={stages[i + 1].x - 3} y2={53}
           stroke="var(--muted-foreground)" strokeWidth={0.8} markerEnd="url(#rf-a)" />}
       </motion.g>
     ))}
     {/* 흐르는 점 */}
     <motion.circle r={3} fill={C.rpsee}
       initial={{ cx: 30, cy: 53 }}
-      animate={{ cx: 405, cy: 53 }}
+      animate={{ cx: 378, cy: 53 }}
       transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }} />
     <text x={220} y={95} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
       Geth: 리플렉션 라우팅 / Reth: 컴파일 타임 검증

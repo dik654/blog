@@ -1,18 +1,20 @@
-import Stage2Viz from './viz/Stage2Viz';
+import Stage2Viz from "./viz/Stage2Viz";
 
 export default function Stage2Mmu() {
   return (
     <section id="stage2-mmu" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Realm Stage 2 — RTT 관리</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <h3 className="text-xl font-semibold mt-6 mb-3">메모리 변환 3단계</h3>
 
         <Stage2Viz />
 
         <p>
-          Realm 메모리 접근은 <strong>Stage 1 + Stage 2 + GPC</strong> 3단 검사 통과<br />
-          <strong>Stage 2 = RTT(Realm Translation Table)</strong> — RMM이 관리<br />
+          Realm 메모리 접근은 <strong>Stage 1 + Stage 2 + GPC</strong> 3단 검사
+          통과
+          <br />
+          <strong>Stage 2 = RTT(Realm Translation Table)</strong> — RMM이 관리
+          <br />
           Host VMM은 Realm의 Stage 2 직접 수정 불가 → RMI 경유
         </p>
 
@@ -41,7 +43,9 @@ struct rtt_entry {
 // UNASSIGNED: IPA가 EMPTY (접근 시 fault)
 // DESTROYED : 이전 RAM이었으나 destroy됨`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">RTT_CREATE — 테이블 계층 확장</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          RTT_CREATE — 테이블 계층 확장
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// runtime/core/rtt.c
 
 int smc_rtt_create(u64 rtt_pa, u64 rd_pa, u64 ipa, u64 level) {
@@ -75,7 +79,9 @@ int smc_rtt_create(u64 rtt_pa, u64 rd_pa, u64 ipa, u64 level) {
     return RMI_SUCCESS;
 }`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">DATA_CREATE vs DATA_CREATE_UNKNOWN</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          DATA_CREATE vs DATA_CREATE_UNKNOWN
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 2가지 방식으로 Realm에 메모리 추가
 
 // [1] DATA_CREATE — 측정에 포함 (Realm NEW 상태만)
@@ -116,7 +122,9 @@ int smc_data_create_unknown(u64 data_pa, u64 rd_pa, u64 ipa) {
 // - DATA_CREATE_UNKNOWN: 런타임 할당 (heap, swap)
 //   → Realm이 Accept 의사를 RSI_IPA_STATE_SET으로 표시 필요`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Protected vs Unprotected IPA</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Protected vs Unprotected IPA
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Realm의 IPA 공간 분할
 //
 // Protected IPA:   [0 .. 2^(ipa_bits - 1))
@@ -142,7 +150,9 @@ rmi_rtt_map_unprotected(rd, unprot_ipa, level, host_pa);
 //   → Stage 2 엔트리에 NS=1 설정
 //   → Host 메모리(GPT=NS) 바인딩`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">TLB 관리 — Realm 격리</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          TLB 관리 — Realm 격리
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Realm에 VMID 할당
 // 일반 VM의 VMID와 별도 네임스페이스
 
@@ -167,30 +177,35 @@ isb
 // - TLB entry에 World 비트 포함 → 혼동 없음`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 왜 Stage 2를 RMM이 관리하는가</p>
+          <p className="font-semibold mb-2">
+            인사이트: 왜 Stage 2를 RMM이 관리하는가
+          </p>
           <p>
-            일반 ARM 가상화: <strong>Host Hypervisor(EL2)가 Stage 2 관리</strong><br />
+            일반 ARM 가상화:{" "}
+            <strong>Host Hypervisor(EL2)가 Stage 2 관리</strong>
+            <br />
             CCA Realm: <strong>RMM(EL2 Realm)이 Stage 2 관리</strong>
           </p>
           <p className="mt-2">
             <strong>이유</strong>:<br />
-            - Host Hypervisor는 untrusted<br />
-            - Host가 S2 조작하면 Realm 메모리 우회 가능<br />
-            - 대안: RMM이 소유 + RMI로 호출 중재
+            - Host Hypervisor는 untrusted
+            <br />
+            - Host가 S2 조작하면 Realm 메모리 우회 가능
+            <br />- 대안: RMM이 소유 + RMI로 호출 중재
           </p>
           <p className="mt-2">
             <strong>비용</strong>:<br />
-            - 모든 S2 수정이 SMC/HVC 오버헤드<br />
-            - 페이지 매핑 지연 — 대량 할당 시 bottleneck<br />
-            - 완화: RTT batch API, 큰 granule 지원
+            - 모든 S2 수정이 SMC/HVC 오버헤드
+            <br />
+            - 페이지 매핑 지연 — 대량 할당 시 bottleneck
+            <br />- 완화: RTT batch API, 큰 granule 지원
           </p>
           <p className="mt-2">
             <strong>TDX 비교</strong>:<br />
-            - TDX도 S-EPT를 TD Module이 관리<br />
-            - 구조는 거의 동일 — naming만 RTT vs S-EPT
+            - TDX도 S-EPT를 TD Module이 관리
+            <br />- 구조는 거의 동일 — naming만 RTT vs S-EPT
           </p>
         </div>
-
       </div>
     </section>
   );

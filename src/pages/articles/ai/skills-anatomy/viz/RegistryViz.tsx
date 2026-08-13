@@ -1,43 +1,37 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, REGISTRY_STATS } from './RegistryData';
-import { VersionTimeline, ContributionPipeline } from './RegistryParts';
-import { SkillChaining } from './RegistryParts2';
+import VizFrame from "@/components/viz/VizFrame";
 
-const W = 460;
-const CX = W / 2;
+const scopes = [
+  ["REPO", "$CWD/.agents/skills → $REPO_ROOT/.agents/skills", "module·repository workflow"],
+  ["USER", "$HOME/.agents/skills", "개인의 여러 repository 공통 workflow"],
+  ["ADMIN", "/etc/codex/skills", "machine·container·조직 기본 automation"],
+  ["SYSTEM", "OpenAI bundled", "모든 사용자가 받는 broad capability"],
+] as const;
 
 export default function RegistryViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox={`0 0 ${W} 230`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* Registry box */}
-          <rect x={CX - 110} y={20} width={220} height={40} rx={6}
-            fill="#6366f110" stroke="#6366f1" strokeWidth={1.5} />
-          <text x={CX} y={44} textAnchor="middle" fontSize={10}
-            fontWeight={700} fill="#6366f1">Skill Registry</text>
-
-          {/* Step 0: stats */}
-          {step === 0 && REGISTRY_STATS.map((s, i) => (
-            <motion.g key={s.label}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}>
-              <rect x={40 + i * 140} y={80} width={120} height={44} rx={5}
-                fill={`${s.color}10`} stroke={s.color} strokeWidth={1} />
-              <text x={100 + i * 140} y={100} textAnchor="middle"
-                fontSize={14} fontWeight={700} fill={s.color}>{s.value}</text>
-              <text x={100 + i * 140} y={116} textAnchor="middle"
-                fontSize={9} fill="var(--muted-foreground)">{s.label}</text>
-            </motion.g>
-          ))}
-
-          {step === 1 && <VersionTimeline />}
-          {step === 2 && <ContributionPipeline />}
-          {step === 3 && <SkillChaining />}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="Discovery scope"
+      title="파일 위치는 현재 session의 후보 범위와 owner를 함께 정합니다"
+      description="Repository에서는 CWD부터 root까지 탐색하며, 같은 name이 있어도 merge되지 않으므로 path를 포함한 discovery 결과를 확인합니다."
+    >
+      <div className="border-y border-border/70">
+        <div className="hidden grid-cols-[5rem_minmax(0,1.5fr)_minmax(0,1fr)] gap-5 border-b border-border/70 py-3 text-[11px] font-bold text-muted-foreground md:grid">
+          <span>Scope</span><span>Location</span><span>Suggested owner</span>
+        </div>
+        {scopes.map(([scope, location, owner]) => (
+          <div
+            key={scope}
+            className="grid min-w-0 gap-2 border-b border-border/60 py-4 last:border-b-0 md:grid-cols-[5rem_minmax(0,1.5fr)_minmax(0,1fr)] md:gap-5"
+          >
+            <strong className="text-xs text-primary">{scope}</strong>
+            <code className="break-all text-xs leading-5 text-foreground">{location}</code>
+            <span className="break-words text-xs leading-5 text-muted-foreground">{owner}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 border-l border-border pl-4 text-xs leading-5 text-muted-foreground">
+        다른 사용자가 설치할 package가 필요하면 local discovery 경로를 늘리는 대신 Plugin distribution으로 책임을 옮깁니다.
+      </p>
+    </VizFrame>
   );
 }

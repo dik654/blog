@@ -1,138 +1,87 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
-interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
+interface Props {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}
 
-export default function ColdArchive({ onCodeRef: _ }: Props) {
+export default function ColdArchive({ onCodeRef: _onCodeRef }: Props) {
   return (
     <section id="cold-archive" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Cold State 아카이브</h2>
+      <h2 className="text-2xl font-bold mb-6">Historical 상태 보존</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Finalized된 에폭의 상태는 Hot 캐시에서 제거되고 Cold 영역으로 이동한다.<br />
-          Cold 상태는 매 <strong>K 슬롯</strong>마다 DB에 저장된다 (기본 K = 2048).
+          최근 상태가 hot cache에서 빠지는 것과 DB의 과거 상태가 삭제되는 것은
+          다른 사건이다. 전자는 메모리 재사용 정책이고 후자는
+          동기화·P2P·RPC·복구 요구를 만족해야 하는 영속 보존 정책이다.
         </p>
 
-        {/* ── Cold state 저장 정책 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Cold State 저장 정책 — K-slot interval</h3>
-        <div className="not-prose grid gap-3 my-4">
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          저장 anchor를 선택하는 기준
+        </h3>
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
           <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2"><code>saveColdState</code> 흐름</h4>
-            <p className="text-xs text-muted-foreground mb-2"><code>DEFAULT_SLOTS_PER_COLD_STATE = 2048</code> (~6.8시간)</p>
-            <div className="grid gap-2 text-xs">
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">1</span>
-                <div><code>slot % K == 0</code> 체크 — 아니면 <code>saveStateSummary()</code> 만 기록</div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">2</span>
-                <div><code>state.MarshalSSZ()</code> — SSZ 직렬화 (~250 MB)</div>
-              </div>
-              <div className="flex items-start gap-2 rounded bg-muted/50 p-2">
-                <span className="font-mono font-medium shrink-0 w-6 text-center">3</span>
-                <div><code>beaconDB.SaveState(root, encoded)</code> — full state 저장</div>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">추가 조건: epoch boundary (64 slot), finalized checkpoint slot</p>
+            <h4 className="font-semibold text-sm mb-2">재생 거리</h4>
+            <p className="text-xs text-muted-foreground">
+              anchor가 성기면 저장량은 줄지만 historical 요청이 적용해야 할
+              블록과 빈 슬롯이 늘어난다.
+            </p>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">모드별 저장량 (1년 기준)</h4>
-            <div className="grid grid-cols-3 gap-3 text-xs text-muted-foreground">
-              <div className="rounded border p-2">
-                <p className="font-medium text-foreground">Archive</p>
-                <p>K=1 효과 / ~5000개 state</p>
-                <p>~1.2 TB</p>
-              </div>
-              <div className="rounded border p-2">
-                <p className="font-medium text-foreground">Non-archive</p>
-                <p>K=8192 (~1일) / ~365개</p>
-                <p>~90 GB</p>
-              </div>
-              <div className="rounded border p-2">
-                <p className="font-medium text-foreground">Prune</p>
-                <p>수 주만 유지 / ~100개</p>
-                <p>~25 GB</p>
-              </div>
-            </div>
+            <h4 className="font-semibold text-sm mb-2">조회 수요</h4>
+            <p className="text-xs text-muted-foreground">
+              validator 운영과 분석 API는 요구하는 과거 범위와 지연 목표가
+              다르다.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">finality·backfill</h4>
+            <p className="text-xs text-muted-foreground">
+              확정 경계와 역사 데이터 backfill 상태를 고려해 필요한 데이터를
+              먼저 지우지 않는다.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="font-semibold text-sm mb-2">복구 목표</h4>
+            <p className="text-xs text-muted-foreground">
+              스냅샷·체크포인트 동기화·백업에서 실제로 복구 가능한 경로를 운영
+              전에 시험한다.
+            </p>
           </div>
         </div>
-        <p className="leading-7">
-          Cold state는 <strong>K-slot 간격으로만 저장</strong>.<br />
-          2048 slot(~6.8시간) = 기본값 → 디스크 사용량과 조회 속도 균형.<br />
-          모드에 따라 K 조정 가능 (archive, default, prune).
-        </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Hot → Cold 전환</h3>
-        <ul>
-          <li><strong>트리거</strong> — Finalized 체크포인트 갱신 시</li>
-          <li><strong>대상</strong> — 이전 Finalized 에폭까지의 Hot 상태</li>
-          <li><strong>저장</strong> — K 슬롯 간격으로 선택적 저장</li>
-          <li><strong>정리</strong> — 나머지 상태는 Hot 캐시에서 삭제</li>
-        </ul>
-
-        {/* ── Archive 모드 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">저장 모드 3가지</h3>
-        <div className="not-prose grid gap-3 my-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded-lg border bg-card p-4 border-blue-500/30 bg-blue-500/5">
-              <h4 className="font-semibold text-sm mb-2">Default <span className="text-xs text-muted-foreground font-normal">대부분의 validator</span></h4>
-              <ul className="text-xs space-y-1 text-muted-foreground">
-                <li>K = 2048 (6.8시간)</li>
-                <li>Finalized 이전 ~1달 유지</li>
-                <li>디스크: ~100 GB</li>
-                <li>Replay max: K-1 = 2047 slots</li>
-                <li>Replay 비용: ~수 초</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border bg-card p-4">
-              <h4 className="font-semibold text-sm mb-2">Archive <span className="text-xs text-muted-foreground font-normal">--archive</span></h4>
-              <ul className="text-xs space-y-1 text-muted-foreground">
-                <li>모든 slot의 state 저장 (K=1)</li>
-                <li>디스크: ~5 TB (연 ~2 TB 증가)</li>
-                <li>Replay max: 0 (항상 hit)</li>
-                <li>Replay 비용: 0</li>
-                <li>단점: 디스크 비용 큼</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border bg-card p-4">
-              <h4 className="font-semibold text-sm mb-2">Minimal <span className="text-xs text-muted-foreground font-normal">--minimal</span></h4>
-              <ul className="text-xs space-y-1 text-muted-foreground">
-                <li>K = 8192 (~27시간)</li>
-                <li>Finalized 이전 ~1주만 유지</li>
-                <li>디스크: ~30 GB</li>
-                <li>Replay max: 8191 slots (~27h)</li>
-                <li>Replay 비용: 최대 수 분</li>
-              </ul>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border bg-card p-4">
-              <h4 className="font-semibold text-sm mb-2">선택 기준</h4>
-              <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
-                <span>Solo validator → default / minimal</span>
-                <span>Staking pool → default</span>
-                <span>RPC provider → archive</span>
-                <span>Explorer → archive</span>
-              </div>
-            </div>
-            <div className="rounded-lg border bg-card p-4">
-              <h4 className="font-semibold text-sm mb-2">모드 전환</h4>
-              <ul className="text-xs space-y-1 text-muted-foreground">
-                <li>default → archive: missing slot state 복원 필요 (시간 소요)</li>
-                <li>archive → default: 추가 삭제만 수행 (즉시)</li>
-              </ul>
-            </div>
-          </div>
+        <h3 className="text-xl font-semibold mt-6 mb-3">운영 프로파일</h3>
+        <div className="not-prose overflow-x-auto my-4">
+          <table className="w-full text-xs border-collapse">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left p-2">목적</th>
+                <th className="text-left p-2">우선순위</th>
+                <th className="text-left p-2">추가 계층</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b">
+                <td className="p-2">Validator</td>
+                <td className="p-2">안정적 동기화와 제한된 디스크</td>
+                <td className="p-2">checkpoint·백업</td>
+              </tr>
+              <tr className="border-b">
+                <td className="p-2">RPC</td>
+                <td className="p-2">명시한 historical 조회 범위</td>
+                <td className="p-2">인덱서·읽기 복제본</td>
+              </tr>
+              <tr>
+                <td className="p-2">분석·감사</td>
+                <td className="p-2">재현 가능한 장기 이력</td>
+                <td className="p-2">별도 데이터 레이크·스냅샷</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p className="leading-7">
-          Prysm은 <strong>3가지 저장 모드</strong> 지원.<br />
-          Default(100GB) → Archive(5TB) → Minimal(30GB).<br />
-          노드 용도에 따라 디스크 vs 조회 속도 trade-off.
-        </p>
-
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 K값과 재생 비용</strong> — K=2048이면 최대 2047슬롯(~6.8시간)을 재생해야 함.<br />
-          자주 조회되는 인프라는 K값을 줄이거나 아카이벌 모드를 사용.<br />
-          K값이 작을수록 디스크 사용량은 늘지만 조회 속도는 향상.
+          보존 간격, CLI flag, 기본 용량을 고정값으로 문서화하면 릴리스 변경 때
+          바로 낡는다. 배포 중인 Prysm의 help와 릴리스 문서를 확인하고 실제 DB
+          증가율·재생 지연으로 설정을 검증한다.
         </p>
       </div>
     </section>

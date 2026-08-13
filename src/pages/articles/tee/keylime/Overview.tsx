@@ -1,11 +1,27 @@
-import ArchFlowViz from './viz/ArchFlowViz';
+import ArchFlowViz from "./viz/ArchFlowViz";
 
 export default function Overview() {
   const components = [
-    { name: 'Agent', color: '#10b981', desc: '검증 대상 시스템에서 실행. TPM과 직접 통신하여 Quote 생성, IMA 로그 수집, 페이로드 복호화를 수행.' },
-    { name: 'Verifier', color: '#6366f1', desc: 'Tornado 기반 검증 서버. 등록된 Agent들의 TPM 상태를 주기적으로 검증하고 정책 위반 시 철회 처리.' },
-    { name: 'Registrar', color: '#f59e0b', desc: 'TPM 공개키 데이터베이스. 모든 Agent의 EK/AIK 공개키를 저장하고 Verifier에 제공.' },
-    { name: 'Tenant', color: '#8b5cf6', desc: 'CLI 관리 도구. 에이전트 프로비저닝, TPM/IMA 정책 설정, 암호화된 페이로드 전송을 담당.' },
+    {
+      name: "Agent",
+      color: "#10b981",
+      desc: "검증 대상 시스템에서 실행. TPM과 직접 통신하여 Quote 생성, IMA 로그 수집, 페이로드 복호화를 수행.",
+    },
+    {
+      name: "Verifier",
+      color: "#6366f1",
+      desc: "Tornado 기반 검증 서버. 등록된 Agent들의 TPM 상태를 주기적으로 검증하고 정책 위반 시 철회 처리.",
+    },
+    {
+      name: "Registrar",
+      color: "#f59e0b",
+      desc: "TPM 공개키 데이터베이스. 모든 Agent의 EK/AIK 공개키를 저장하고 Verifier에 제공.",
+    },
+    {
+      name: "Tenant",
+      color: "#8b5cf6",
+      desc: "CLI 관리 도구. 에이전트 프로비저닝, TPM/IMA 정책 설정, 암호화된 페이로드 전송을 담당.",
+    },
   ];
 
   return (
@@ -14,9 +30,13 @@ export default function Overview() {
 
       <h3 className="text-xl font-semibold mt-6 mb-3">Keylime이란</h3>
       <p className="leading-7 mb-4">
-        <strong>Keylime</strong>: TPM 기반 오픈소스 원격 증명 프레임워크 (MIT 2015 시작)<br />
-        <strong>CNCF Incubating</strong> 프로젝트 — 2022년 CNCF 채택<br />
-        <strong>용도</strong>: 원격 머신 무결성 검증 + 암호화 페이로드 안전 배포<br />
+        <strong>Keylime</strong>: TPM 기반 오픈소스 원격 증명 프레임워크 (MIT
+        2015 시작)
+        <br />
+        <strong>CNCF Incubating</strong> 프로젝트 — 2022년 CNCF 채택
+        <br />
+        <strong>용도</strong>: 원격 머신 무결성 검증 + 암호화 페이로드 안전 배포
+        <br />
         <strong>IMA 통합</strong>: 런타임 파일 무결성 지속 모니터링
       </p>
 
@@ -40,16 +60,28 @@ export default function Overview() {
 
       <h3 className="text-xl font-semibold mt-8 mb-3">주요 구성요소</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        {components.map(c => (
-          <div key={c.name} className="rounded-xl border p-4"
-            style={{ borderColor: c.color + '40', background: c.color + '08' }}>
-            <p className="font-mono font-bold text-sm" style={{ color: c.color }}>{c.name}</p>
-            <p className="text-sm mt-2 text-foreground/80 leading-relaxed">{c.desc}</p>
+        {components.map((c) => (
+          <div
+            key={c.name}
+            className="rounded-xl border p-4"
+            style={{ borderColor: c.color + "40", background: c.color + "08" }}
+          >
+            <p
+              className="font-mono font-bold text-sm"
+              style={{ color: c.color }}
+            >
+              {c.name}
+            </p>
+            <p className="text-sm mt-2 text-foreground/80 leading-relaxed">
+              {c.desc}
+            </p>
           </div>
         ))}
       </div>
 
-      <h3 className="text-xl font-semibold mt-8 mb-3">컴포넌트 간 데이터 흐름</h3>
+      <h3 className="text-xl font-semibold mt-8 mb-3">
+        컴포넌트 간 데이터 흐름
+      </h3>
       <ArchFlowViz />
 
       <h3 className="text-xl font-semibold mt-8 mb-3">실전 배포 시나리오</h3>
@@ -103,23 +135,28 @@ export default function Overview() {
         <p className="font-semibold mb-2">인사이트: Keylime의 독특한 위치</p>
         <p className="text-sm">
           <strong>HW TEE가 아닌 TPM 기반</strong>:<br />
-          - SGX/TDX/SEV와 다른 범주 (측정 부팅 → attestation)<br />
-          - TPM은 측정만, 실행은 일반 CPU<br />
-          - "Measured computing" vs "Confidential computing"
+          - SGX/TDX/SEV와 다른 범주 (측정 부팅 → attestation)
+          <br />
+          - TPM은 측정만, 실행은 일반 CPU
+          <br />- "Measured computing" vs "Confidential computing"
         </p>
         <p className="text-sm mt-2">
           <strong>Keylime만의 가치</strong>:<br />
-          ✓ TEE 없는 레거시 서버도 원격 증명<br />
-          ✓ 런타임 monitoring (IMA) — 한 번이 아닌 지속<br />
-          ✓ 암호화 payload 배포 자동화<br />
-          ✓ 풍부한 정책 표현력
+          ✓ TEE 없는 레거시 서버도 원격 증명
+          <br />
+          ✓ 런타임 monitoring (IMA) — 한 번이 아닌 지속
+          <br />
+          ✓ 암호화 payload 배포 자동화
+          <br />✓ 풍부한 정책 표현력
         </p>
         <p className="text-sm mt-2">
           <strong>한계</strong>:<br />
-          ✗ 메모리 기밀성 없음 (TEE 아님)<br />
-          ✗ Root-compromised 시스템에서 우회 가능<br />
-          ✗ TPM 성능 한계 (quote 초당 1~2회)<br />
-          → TEE + Keylime 조합이 이상적
+          ✗ 메모리 기밀성 없음 (TEE 아님)
+          <br />
+          ✗ Root-compromised 시스템에서 우회 가능
+          <br />
+          ✗ TPM 성능 한계 (quote 초당 1~2회)
+          <br />→ TEE + Keylime 조합이 이상적
         </p>
       </div>
     </section>

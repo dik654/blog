@@ -1,127 +1,119 @@
-import { motion } from 'framer-motion';
+import { CitationBlock } from "@/components/ui/citation";
+import M2ThermalViz from "./viz/M2ThermalViz";
 
-const specs = [
-  { attr: '크기', val: '22mm x 80mm (2280)' },
-  { attr: '인터페이스', val: 'PCIe 4.0 x4 (최대 5.0 x4)' },
-  { attr: '최대 순차 읽기', val: '~7 GB/s (PCIe 4.0)' },
-  { attr: '전력', val: '~5-8W' },
-  { attr: '내구성', val: '~0.3-1 DWPD (컨슈머)' },
-  { attr: '히트싱크', val: '메인보드 부착 또는 별도 구매' },
+const properties = [
+  {
+    axis: "크기 표기",
+    value: "2230·2242·2260·2280·22110 — 22mm 폭과 길이 조합",
+  },
+  {
+    axis: "장착 방식",
+    value: "보드 위 소켓에 삽입하고 반대쪽을 나사 또는 래치로 고정",
+  },
+  {
+    axis: "호스트 연결",
+    value: "제품과 슬롯에 따라 SATA 또는 PCIe, NVMe SSD는 PCIe 사용",
+  },
+  {
+    axis: "정비 경로",
+    value: "대부분 섀시 내부 접근, 외부 베이형 핫플러그에는 부적합",
+  },
+  { axis: "열 경로", value: "기판 → thermal pad → heatsink → chassis airflow" },
+];
+
+const testPoints = [
+  ["사전 상태", "빈 드라이브의 짧은 측정과 사용 중인 드라이브의 결과를 분리"],
+  ["지속 시간", "캐시가 소진되고 온도가 안정될 때까지 같은 부하를 유지"],
+  ["온도·전력", "컨트롤러 온도와 스로틀 이벤트, 실제 소비 전력을 함께 기록"],
+  ["실제 I/O", "애플리케이션의 블록 크기·큐 깊이·읽기/쓰기 비율로 재측정"],
 ];
 
 export default function M2() {
   return (
     <section id="m2" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">M.2: 컨슈머 표준 (2280, 히트싱크)</h2>
+      <h2 className="text-2xl font-bold mb-6">M.2: 작은 내부 모듈의 열 설계</h2>
+      <div className="not-prose mb-8">
+        <M2ThermalViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          M.2 2280은 가장 보편적인 NVMe 폼팩터입니다.<br />
-          작은 기판에 컨트롤러와 NAND가 밀집되어 발열 관리가 중요합니다.
+        <p className="leading-7">
+          M.2는 얇은 기판을 메인보드에 직접 장착해 공간과 케이블을 줄이는 폼팩터
+          <br />
+          가장 흔한 2280은 22mm × 80mm를 뜻하며, 더 짧거나 긴 모듈도 있으므로
+          슬롯의 고정 위치와 단면·양면 허용 높이를 확인해야 함
         </p>
-        <div className="overflow-x-auto not-prose">
+
+        <div className="overflow-x-auto not-prose my-6">
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">속성</th>
-                <th className="border border-border px-3 py-2 text-left">M.2 2280</th>
+                <th className="border border-border px-3 py-2 text-left">
+                  설계 축
+                </th>
+                <th className="border border-border px-3 py-2 text-left">
+                  M.2에서 확인할 것
+                </th>
               </tr>
             </thead>
             <tbody>
-              {specs.map((s) => (
-                <motion.tr key={s.attr} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <td className="border border-border px-3 py-2 font-medium">{s.attr}</td>
-                  <td className="border border-border px-3 py-2">{s.val}</td>
-                </motion.tr>
+              {properties.map((row) => (
+                <tr key={row.axis}>
+                  <td className="border border-border px-3 py-2 font-medium whitespace-nowrap">
+                    {row.axis}
+                  </td>
+                  <td className="border border-border px-3 py-2">
+                    {row.value}
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">M.2 NVMe 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// M.2 NVMe SSD:
-
-// 물리적 spec:
-// - PCB board (not enclosed)
-// - key M (PCIe x4)
-// - common length: 2280 (22×80mm)
-// - also: 2230, 2242, 2260, 22110
-// - single-sided vs double-sided NAND
-
-// Thermal challenges:
-// - small surface area
-// - controller hot (80°C+)
-// - NAND hot (70°C)
-// - sustained write throttles
-// - burst performance OK
-
-// Cooling solutions:
-// - motherboard heatsink (common)
-// - aftermarket heatsink ($10-50)
-// - active fan (rare)
-// - thermal pads critical
-// - airflow matters
-
-// Popular models (2024):
-// Consumer:
-// - Samsung 990 Pro: $100/TB
-// - WD SN850X: $95/TB
-// - Crucial T700: $110/TB
-// - Sabrent Rocket 5: $120/TB
-//
-// Enterprise:
-// - Samsung PM9A3: $180/TB
-// - Micron 7450 PRO: $170/TB
-// - Solidigm P44 Pro: $200/TB
-// - DWPD: 1-3
-
-// Use cases:
-// ✓ Desktop OS drive
-// ✓ Laptop storage
-// ✓ Workstation scratch
-// ✓ Gaming (fast loading)
-// ✗ Server 24/7 sealing (thermal)
-// ✗ High DWPD requirements
-// ✗ Hot-swap needed
-
-// Performance (typical):
-// Sequential:
-// - read: 7000 MB/s
-// - write: 6800 MB/s
-//
-// Random (4K QD32):
-// - read: 1.4M IOPS
-// - write: 1.3M IOPS
-//
-// Latency:
-// - read: 20-40 μs
-// - write: 15-30 μs
-
-// Sustained performance:
-// - burst: full speed (30s)
-// - SLC cache fills
-// - falls to TLC speed (~1.5 GB/s)
-// - QLC drops to ~500 MB/s
-
-// Form factor sizes:
-// 2230: 22×30mm (Steam Deck, laptops)
-// 2242: 22×42mm (laptops)
-// 2260: 22×60mm (rare)
-// 2280: 22×80mm (standard)
-// 22110: 22×110mm (enterprise)
-
-// Power states:
-// L0: active, full power (~8W)
-// L0s: idle (~2W)
-// L1: deeper idle (~0.5W)
-// L1.2: power saving (~5mW)
-// APST: automatic transitions`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          작은 면적보다 열 경로가 중요하다
+        </h3>
         <p className="leading-7">
-          M.2: <strong>PCB form factor, thermal challenges, consumer-focused</strong>.<br />
-          $80-200/TB, 7 GB/s burst, 1.5 GB/s sustained.<br />
-          desktop/laptop primary, server 24/7 비적합.
+          컨트롤러가 만든 열은 패드를 통해 히트스프레더로 이동하고 섀시의 공기가
+          이를 밖으로 운반함. 히트싱크가 커도 패드가 닿지 않거나 그래픽카드 배기
+          열을 받으면 정상 상태 성능이 낮아질 수 있음
+          <br />
+          반대로 서버용 M.2도 전용 캐리어와 강제 풍량이 있으면 지속 부하에
+          사용할 수 있으므로 “M.2는 24/7에 부적합”처럼 폼팩터만으로 단정할 수
+          없음
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          버스트 성능을 정상 상태와 구분
+        </h3>
+        <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {testPoints.map(([title, body], index) => (
+            <div key={title} className="rounded-lg border border-border/60 p-4">
+              <p className="text-xs font-semibold text-indigo-500 mb-2">
+                {index + 1}. {title}
+              </p>
+              <p className="text-sm leading-6">{body}</p>
+            </div>
+          ))}
+        </div>
+
+        <CitationBlock
+          source="NVM Express — NVMe Form Factors Building Blocks"
+          citeKey={3}
+          href="https://nvmexpress.org/nvme-form-factors-blog-series-part-ii-nvme-building-blocks-controller-buffer-memory-media-and-form-factors/"
+        >
+          M.2의 2230·2242·2280·22110 등 크기와 SATA 또는 PCIe 연결 가능성을
+          구분하며, 폼팩터와 호스트 인터페이스가 같은 개념이 아님을 설명.
+        </CitationBlock>
+        <CitationBlock
+          source="Samsung Semiconductor — PM9A3"
+          citeKey={4}
+          href="https://semiconductor.samsung.com/ssd/datacenter-ssd/pm9a3/"
+        >
+          하나의 데이터센터 SSD 제품군을 E1.S·U.2·M.2로 제공하는 사례로, M.2
+          자체가 소비자 등급을 의미하지 않음을 보여 줌.
+        </CitationBlock>
       </div>
     </section>
   );

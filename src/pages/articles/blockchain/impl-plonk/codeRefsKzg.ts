@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const kzgCodeRefs: Record<string, CodeRef> = {
-  'kzg-srs': {
-    path: 'kzg.rs — SRS + Trusted Setup',
-    lang: 'rust',
+  "kzg-srs": {
+    path: "kzg.rs — SRS + Trusted Setup",
+    lang: "rust",
     highlight: [1, 28],
-    desc: 'Universal SRS 구조체와 setup.\nGroth16은 회로마다 새 CRS가 필요하지만 KZG는 한 번이면 충분.',
+    desc: "Universal SRS 구조체와 setup.\nGroth16은 회로마다 새 CRS가 필요하지만 KZG는 한 번이면 충분.",
     code: `/// SRS — Universal Setup 결과
 pub struct SRS {
     pub g1_powers: Vec<G1>,  // [t^0]_1, [t^1]_1, ..., [t^d]_1
@@ -31,16 +31,28 @@ pub fn setup<R: Rng>(
     SRS { g1_powers, g2_powers }
 }`,
     annotations: [
-      { lines: [2, 5], color: 'sky', note: 'SRS = t의 거듭제곱을 커브 포인트로 인코딩한 배열' },
-      { lines: [13, 13], color: 'emerald', note: 'tau(t) = toxic waste — setup 후 반드시 삭제' },
-      { lines: [17, 21], color: 'amber', note: 'scalar_mul 반복 — O(d) 시간, d = 최대 차수' },
+      {
+        lines: [2, 5],
+        color: "sky",
+        note: "SRS = t의 거듭제곱을 커브 포인트로 인코딩한 배열",
+      },
+      {
+        lines: [13, 13],
+        color: "emerald",
+        note: "tau(t) = toxic waste — setup 후 반드시 삭제",
+      },
+      {
+        lines: [17, 21],
+        color: "amber",
+        note: "scalar_mul 반복 — O(d) 시간, d = 최대 차수",
+      },
     ],
   },
-  'kzg-commit': {
-    path: 'kzg.rs — commit + open + verify',
-    lang: 'rust',
+  "kzg-commit": {
+    path: "kzg.rs — commit + open + verify",
+    lang: "rust",
     highlight: [1, 38],
-    desc: 'commit: 다항식을 G1 점 하나로.\nopen: f(z)=y 증명 생성.\nverify: 페어링으로 검증.',
+    desc: "commit: 다항식을 G1 점 하나로.\nopen: f(z)=y 증명 생성.\nverify: 페어링으로 검증.",
     code: `/// commit(f) = Sum f_i * [t^i]_1
 pub fn commit(srs: &SRS, poly: &Polynomial) -> Commitment {
     let mut result = G1::identity();
@@ -76,9 +88,21 @@ pub fn verify(srs: &SRS, commitment: &Commitment,
     lhs == rhs
 }`,
     annotations: [
-      { lines: [2, 10], color: 'sky', note: 'commit — MSM: 다항식 계수와 SRS 점의 선형 결합' },
-      { lines: [14, 20], color: 'emerald', note: 'open — f(z)=y 이면 (x-z) | (f(x)-y) → 몫 q 존재' },
-      { lines: [23, 33], color: 'amber', note: '2-pairing 최적화: G2 scalar_mul 회피로 검증 고속화' },
+      {
+        lines: [2, 10],
+        color: "sky",
+        note: "commit — MSM: 다항식 계수와 SRS 점의 선형 결합",
+      },
+      {
+        lines: [14, 20],
+        color: "emerald",
+        note: "open — f(z)=y 이면 (x-z) | (f(x)-y) → 몫 q 존재",
+      },
+      {
+        lines: [23, 33],
+        color: "amber",
+        note: "2-pairing 최적화: G2 scalar_mul 회피로 검증 고속화",
+      },
     ],
   },
 };

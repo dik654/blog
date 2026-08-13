@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './PersistenceVizData';
-import { Step0, Step1 } from './PersistenceVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./PersistenceVizData";
+import { Step0, Step1 } from "./PersistenceVizSteps";
 
 const R = [Step0, Step1];
 

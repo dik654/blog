@@ -14,8 +14,16 @@ pub struct Poseidon2<F, ExternalPerm, InternalPerm,
 //   총 21 라운드 (BabyBear, WIDTH=16)`;
 
 export const POSEIDON2_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '외부/내부 퍼뮤테이션 분리' },
-  { lines: [12, 14] as [number, number], color: 'emerald' as const, note: '라운드 구성: Full → Partial → Full' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "외부/내부 퍼뮤테이션 분리",
+  },
+  {
+    lines: [12, 14] as [number, number],
+    color: "emerald" as const,
+    note: "라운드 구성: Full → Partial → Full",
+  },
 ];
 
 export const SBOX_CODE = `// S-box 최적화: x^7 = x * x^2 * x^4
@@ -32,6 +40,14 @@ pub struct SBox<T, const DEGREE: u64, const REGISTERS: usize>(
 // 내부 라운드의 MDS를 대각 행렬로 교체 → ~30% 성능 향상`;
 
 export const SBOX_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: 'S-box 중간 결과 캐싱' },
-  { lines: [10, 12] as [number, number], color: 'emerald' as const, note: 'Poseidon2 핵심 개선점' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "S-box 중간 결과 캐싱",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "emerald" as const,
+    note: "Poseidon2 핵심 개선점",
+  },
 ];

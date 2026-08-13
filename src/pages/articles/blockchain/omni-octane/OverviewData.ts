@@ -16,7 +16,19 @@ export const OCTANE_ARCH_CODE = `이더리움 (Post-Merge)              Omni (Oc
   → 이더리움의 EL 클라이언트를 거의 수정 없이 재활용!`;
 
 export const OCTANE_ARCH_ANNOTATIONS = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: '합의 레이어' },
-  { lines: [5, 7] as [number, number], color: 'emerald' as const, note: 'Engine API (동일!)' },
-  { lines: [8, 10] as [number, number], color: 'amber' as const, note: 'EVM 실행 레이어' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "합의 레이어",
+  },
+  {
+    lines: [5, 7] as [number, number],
+    color: "emerald" as const,
+    note: "Engine API (동일!)",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "amber" as const,
+    note: "EVM 실행 레이어",
+  },
 ];

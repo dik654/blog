@@ -1,79 +1,111 @@
-import { CitationBlock } from '@/components/ui/citation';
-import M from '@/components/ui/math';
-import Seq2SeqViz from './viz/Seq2SeqViz';
-import AttnOverviewDetailViz from './viz/AttnOverviewDetailViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import AttentionPipelineViz from "./viz/AttentionPipelineViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Seq2Seq 한계와 어텐션의 등장</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Seq2Seq — 인코더가 입력을 <strong>하나의 고정 길이 벡터</strong>로 압축, 디코더가 이를 참조해 출력 생성<br />
-          문장이 길어지면 <strong>정보 병목(Bottleneck, 하나의 벡터에 모든 정보를 담아야 하는 제약)</strong> 발생<br />
-          어텐션 — 디코더가 매 출력 스텝마다 인코더의 <strong>모든 히든 스테이트를 동적으로 참조</strong>하여 병목 해소
-        </p>
+      <h2 className="mb-6 text-2xl font-bold">
+        Attention은 필요한 정보를 그때그때 다시 고르는 방법이다
+      </h2>
 
-        <CitationBlock source="Bahdanau et al., 2015 — Neural Machine Translation by Jointly Learning to Align and Translate"
-          citeKey={1} type="paper" href="https://arxiv.org/abs/1409.0473">
-          <p className="italic">"A potential issue with this encoder-decoder approach is that a neural
-          network needs to compress all information into a fixed-length vector."</p>
-        </CitationBlock>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          초기 Seq2Seq 모델은 입력 문장 전체를 마지막 hidden state 하나에 담아
+          decoder로 넘겼다. 짧은 문장에서는 잘 작동했지만, 입력이 길어질수록
+          하나의 고정 길이 vector가 보존해야 할 정보가 많아졌다. Attention은 이
+          병목을 없애기 위해 출력 token을 만들 때마다 입력의 어느 위치를 참고할지
+          다시 계산한다.
+        </p>
+        <p>
+          출발점은 “attention이 중요한 곳을 본다”는 비유가 아니라, query마다
+          source memory를 다시 읽는 <strong>differentiable lookup</strong>이다. 주소를
+          key로 비교하고, softmax weight로 value를 섞기 때문에 hard index를 고르지
+          않아도 전체 경로를 end-to-end로 학습할 수 있다.
+        </p>
+        <p>
+          이 글은 Seq2Seq의 구현을 반복하지 않고, attention에 공통으로 남는
+          <strong> score → weight → aggregate</strong> 구조와 score 함수의 변화를
+          설명한다. Encoder–decoder의 기본 흐름이 낯설다면 먼저{" "}
+          <Link to="/ai/seq2seq">Seq2Seq 글</Link>을 읽는 편이 자연스럽다.
+        </p>
       </div>
 
-      <div className="not-prose my-8"><Seq2SeqViz /></div>
+      <AttentionPipelineViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">어텐션 메커니즘의 발전 단계</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">이름</th>
-                <th className="border border-border px-4 py-2 text-left">연도</th>
-                <th className="border border-border px-4 py-2 text-left">핵심 아이디어</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Bahdanau (Additive)', '2015', 'MLP로 정렬 점수 계산'],
-                ['Luong (Multiplicative)', '2015', '내적(dot-product)으로 점수 계산'],
-                ['Self-Attention', '2017', '입력 자신에 대한 어텐션'],
-                ['Multi-Head', '2017', '여러 어텐션 헤드 병렬 적용'],
-              ].map(([name, year, idea]) => (
-                <tr key={name}>
-                  <td className="border border-border px-4 py-2 font-medium">{name}</td>
-                  <td className="border border-border px-4 py-2">{year}</td>
-                  <td className="border border-border px-4 py-2">{idea}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <h3>모든 attention이 공유하는 세 단계</h3>
+        <p>
+          먼저 query와 각 key가 얼마나 관련 있는지 score를 계산한다. 그 score를
+          softmax로 정규화하면 합이 1인 weight가 되고, 마지막으로 같은 위치의
+          value를 가중합해 현재 query에 필요한 context를 만든다. 여기서 query는
+          “무엇을 찾는가”, key는 “각 위치가 어떤 정보를 대표하는가”, value는
+          “선택했을 때 실제로 가져올 정보”라고 이해하면 된다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="현재 query가 여러 memory slot 중 필요한 정보를 differentiable하게 읽으려면?"
+        idea={<>각 key와의 score를 같은 query 안에서 softmax로 비교한 뒤, 그 probability로 value를 평균냅니다. hard argmax 대신 weighted sum을 쓰므로 score가 모든 후보 경로에서 gradient를 받습니다.</>}
+        formula={String.raw`\begin{aligned}e_{ti}&=\operatorname{score}(q_t,k_i)\\[2pt]\alpha_{ti}&=\frac{\exp e_{ti}}{\sum_j\exp e_{tj}}\\[2pt]c_t&=\sum_i\alpha_{ti}v_i\end{aligned}`}
+        terms={[
+          { symbol: "q_t", name: "query", description: "출력 시점 t가 현재 찾는 조건입니다." },
+          { symbol: "k_i", name: "key", description: "source i번째 slot을 query와 비교할 주소 representation입니다." },
+          { symbol: "v_i", name: "value", description: "해당 slot을 선택했을 때 실제로 가져오는 content입니다." },
+          { symbol: "\\alpha_{ti}", name: "attention weight", description: "고정된 t에서 i축으로 합이 1인 nonnegative weight입니다." },
+        ]}
+        assumptions={["softmax가 적용되는 축은 source/key position i입니다.", "mask가 있으면 softmax 전에 허용하지 않는 score에 −∞를 더합니다."]}
+        interpretation="attention은 score·normalize·aggregate 세 단계입니다. Weight는 value를 섞는 coefficient이지, 그 자체가 모델의 완전한 인과 설명은 아닙니다."
+      />
+
+      <ExplainedFormula
+        question="Score 두 개가 log 2와 0일 때 실제 weight와 context vector는 어떻게 계산될까?"
+        idea={<>Softmax는 score를 양수로 바꾼 뒤 같은 query row의 합으로 나눕니다. 따라서 exp(log 2):exp(0)=2:1이고, value 두 개를 그 비율로 섞습니다.</>}
+        formula={String.raw`\begin{aligned}e&=(\log 2,0)\\\alpha&=\left(\frac23,\frac13\right)\\v_1&=(3,0),\quad v_2=(0,6)\\c&=\frac23v_1+\frac13v_2=(2,2)\end{aligned}`}
+        terms={[
+          { symbol: "e", name: "score row", description: "Query 하나와 key 두 개의 정규화 전 compatibility입니다." },
+          { symbol: "\\alpha", name: "softmax weights", description: "양수이고 합이 1인 두 read coefficient입니다." },
+          { symbol: "v_1,v_2", name: "values", description: "Key와 같은 slot에 저장된 실제 content vector입니다." },
+          { symbol: "c", name: "context", description: "2v₁/3+v₂/3으로 얻은 query별 weighted sum입니다." },
+        ]}
+        assumptions={["두 key 모두 mask로 허용됐다고 가정합니다.", "log는 자연로그이며 exp와 서로 역함수입니다."]}
+        interpretation="Weight가 더 큰 첫 slot은 context에 더 크게 기여하지만, 둘째 value도 1/3만큼 남습니다. 이것이 hard lookup과 다른 점입니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Additive attention과 dot-product attention의 차이는 첫 단계인 score를
+          만드는 방식에 있다. Self-attention은 이 틀을 그대로 두되 query, key,
+          value를 모두 같은 sequence에서 만든다. 따라서 attention을 특정 모델
+          하나의 이름으로 외우기보다, 세 단계로 분해해 보는 편이 이후
+          Transformer를 이해하기 쉽다.
+        </p>
+
+        <div className="not-prose grid gap-3 sm:grid-cols-3">
+          {[
+            ["1 · Score", "query와 각 key의 관련도를 계산한다."],
+            ["2 · Weight", "softmax로 비교 가능한 weight를 만든다."],
+            ["3 · Aggregate", "value의 가중합으로 context를 구성한다."],
+          ].map(([title, description]) => (
+            <div key={title} className="rounded-lg border border-border/70 bg-card p-4">
+              <p className="font-semibold">{title}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                {description}
+              </p>
+            </div>
+          ))}
         </div>
-      </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Seq2Seq의 정보 병목과 Attention 프레임워크</h3>
+        <h3>원 논문에서 무엇이 바뀌었는지 따라가기</h3>
         <p>
-          Seq2Seq에서 인코더 마지막 hidden state h_T만이 디코더에 전달된다.
-          10단어든 100단어든 동일한 고정 차원 벡터 하나에 압축 — 30단어 이상에서 BLEU 점수가 28.1에서 17.3으로 급락한다 (Cho et al. 2014).
-          Bahdanau(2015)는 디코더가 매 스텝마다 인코더의 모든 hidden state를 동적으로 참조하는 방식으로 이 병목을 해소했다.
-        </p>
-        <M display>{'\\underbrace{c}_{\\text{고정 벡터}} = h_T \\in \\mathbb{R}^{512} \\quad \\Rightarrow \\quad \\underbrace{c_t = \\sum_i \\alpha_{ti} \\cdot h_i}_{\\text{동적 컨텍스트 (Attention)}}'}</M>
-        <p>
-          Attention의 본질은 3단계 — Score, Weight, Aggregate.
-          Query와 Key의 유사도를 측정하고, softmax로 확률 분포를 만든 뒤, Value의 가중합으로 출력을 생성한다.
-        </p>
-        <M display>{'e_{ti} = \\text{score}(s_t, h_i), \\quad \\alpha_{ti} = \\frac{\\exp(e_{ti})}{\\sum_j \\exp(e_{tj})}, \\quad c_t = \\sum_i \\alpha_{ti} \\cdot V_i'}</M>
-      </div>
-
-      <div className="not-prose my-8"><AttnOverviewDetailViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: Seq2Seq의 <strong>정보 병목</strong>이 attention 필요성을 만듦 — 30단어 이상 성능 급락.<br />
-          요약 2: Attention의 본질은 <strong>Query-Key 유사도로 Value 가중합</strong>.<br />
-          요약 3: Score 함수 선택이 attention 변형들을 구분 — additive/multiplicative/scaled.
+          <a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noreferrer">Bahdanau et al.</a>은
+          fixed-length encoder bottleneck을 soft alignment로 바꿨고,
+          <a href="https://arxiv.org/abs/1508.04025" target="_blank" rel="noreferrer"> Luong et al.</a>은
+          dot·general score와 global·local attention을 비교했다. 이후
+          <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noreferrer"> Transformer 논문</a>은
+          scaled dot-product와 multi-head self-attention을 recurrent encoder 밖의
+          주된 계산으로 확장했다. 다음 절은 이 세 변화에서 score 함수와 tensor
+          source가 각각 어떻게 달라졌는지를 분리해 본다.
         </p>
       </div>
     </section>

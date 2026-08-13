@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import type { CodeRef } from './types';
+import { useState, useCallback } from "react";
+import type { CodeRef } from "./types";
 
 export function useCodeSidebar() {
   const [codeRefKey, setCodeRefKey] = useState<string | null>(null);

@@ -1,57 +1,64 @@
-import EarlyStoppingViz from './viz/EarlyStoppingViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import EarlyStoppingViz from "./viz/EarlyStoppingViz";
 
 export default function EarlyStopping() {
   return (
     <section id="early-stopping" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Early Stopping 전략</h2>
+      <h2 className="mb-6 text-2xl font-bold">Early stopping은 validation policy로 checkpoint를 선택합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>Early Stopping</strong> — 검증 성능이 더 이상 개선되지 않으면 학습을 조기 종료하는 기법<br />
-          가장 단순하면서도 효과적인 정규화 — 추가 계산 비용이 거의 없고 구현이 쉬움<br />
-          Goodfellow et al.(2016): "Early Stopping은 L2 정규화와 유사한 효과를 가진다"
+          Early stopping은 감시 metric이 충분히 개선되지 않는 상태가 일정
+          evaluation 횟수 동안 이어지면 학습을 멈춥니다. 종료 자체보다 중요한
+          것은 최적 step의 checkpoint를 별도로 저장하는 것입니다. Patience를
+          기다린 마지막 model이 best model과 같지는 않습니다.
         </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">모니터링 지표</h3>
         <p>
-          <strong>val_loss</strong> 기준이 가장 보편적 — 손실이 낮으면 일반화 성능이 높다고 판단<br />
-          <strong>val_metric</strong> 기준도 가능 — F1, AUC 등 실제 목적 지표로 판단. 다만 지표에 따라 노이즈가 클 수 있음<br />
-          분류 문제에서 val_accuracy가 정체되는데 val_loss는 계속 올라가면 → 이미 오버피팅 중
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Patience (인내)</h3>
-        <p>
-          patience = N → val_loss가 N 에폭 연속 개선되지 않으면 종료<br />
-          patience=1이면 너무 민감 — 한 에폭의 우연한 상승에 바로 종료<br />
-          patience가 너무 크면 오버피팅을 방치하고 GPU 시간을 낭비<br />
-          핵심: "충분히 기다리되, 너무 오래 기다리지 않기"
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">min_delta: 개선의 최소 기준</h3>
-        <p>
-          val_loss가 0.0001만큼 줄어도 "개선"으로 볼 것인가? → min_delta 파라미터로 제어<br />
-          min_delta = 0 → 아주 미미한 개선도 인정. min_delta = 0.001 → 의미 있는 개선만 인정<br />
-          학습 후반에 손실이 거의 변하지 않을 때 유용
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Restore Best Weights</h3>
-        <p>
-          학습 종료 시점의 모델이 최적이 아닐 수 있음 — patience 동안 성능이 악화되었을 수 있으므로<br />
-          <strong>restore_best_weights=True</strong> → 학습 종료 후 val_loss가 최소였던 시점의 가중치로 자동 복원<br />
-          PyTorch에서는 직접 구현 필요: best_state = model.state_dict().copy()를 저장했다가 복원<br />
-          Keras에서는 EarlyStopping 콜백에 restore_best_weights 옵션이 내장
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">LR Scheduler와의 관계</h3>
-        <p>
-          ReduceLROnPlateau + Early Stopping → 시너지: LR 감소로 잠시 개선 → 다시 정체 → 종료<br />
-          주의: LR을 줄이면 손실이 일시적으로 개선되므로 patience를 넉넉히 잡아야 함<br />
-          Cosine Annealing 사용 시 → warm restart마다 loss가 요동 → patience를 restart 주기보다 크게 설정
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">실전 권장 설정</h3>
-        <p>
-          작은 데이터셋(수천~수만): patience 5~10, min_delta 1e-4<br />
-          큰 데이터셋(수십만+): patience 10~20, min_delta 1e-3<br />
-          LR Scheduler 병행 시: patience 15~30 (LR 감소 후 개선 가능성을 기다림)<br />
-          항상 restore_best_weights 사용 — 사용하지 않을 이유가 없음
+          Monitor, direction, <code>min_delta</code>, patience와 evaluation
+          frequency를 실험 전에 고정합니다. AUC나 F1처럼 noisy한 metric은 작은
+          validation set에서 쉽게 흔들리므로 반복 실행의 분산과 confidence
+          interval을 고려하고, test set을 stopping signal로 사용하지 않습니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <EarlyStoppingViz />
+      <ExplainedFormula
+        question="Best checkpoint와 stop 시점을 어떻게 서로 다른 state로 관리할까?"
+        idea={<>Evaluation index j마다 validation loss v_j를 읽습니다. 이전 best보다 δ 이상 좋아지면 best와 counter를 갱신하고 snapshot을 저장하며, 그렇지 않으면 counter를 늘립니다. Counter가 patience P를 넘는 시점은 stop이고, 반환할 model은 j*의 snapshot입니다.</>}
+        formula={String.raw`\begin{aligned}
+j^*&=\arg\min_{0\le k\le j}v_k,\\
+c_j&=\begin{cases}
+0,&v_j<v_{j^*-1}-\delta,\\
+c_{j-1}+1,&\text{otherwise},
+\end{cases}\\
+j_{\mathrm{stop}}&=\min\{j:c_j>P\}.
+\end{aligned}`}
+        terms={[
+          { symbol: "v_j", name: "validation metric", description: "j번째 evaluation에서 같은 frozen policy로 계산한 loss입니다. Max metric이면 부등호 방향을 바꿉니다." },
+          { symbol: "δ", name: "minimum improvement", description: "Noise와 무의미한 작은 변화를 새 best로 인정하지 않는 임계값입니다." },
+          { symbol: "c_j", name: "bad-evaluation counter", description: "의미 있는 개선 없이 이어진 evaluation event 수입니다." },
+          { symbol: "P", name: "patience", description: "Stop 전에 허용할 bad evaluations 수이며 training updates가 아닙니다." },
+        ]}
+        assumptions={["식은 minimize하는 metric을 예로 들며 best-before-current indexing convention을 구현 test로 고정합니다.", "Evaluation cadence와 validation sample은 run 동안 동일합니다.", "Best snapshot은 deep copy 또는 durable checkpoint로 저장하고 마지막 in-memory model과 분리합니다."]}
+        interpretation="Early stopping은 마지막 checkpoint를 선택하는 규칙이 아닙니다. Stop은 더 기다리지 않을 시점이고, deploy candidate는 그보다 앞선 best evaluation의 snapshot입니다."
+      />
+      <div className="not-prose my-8"><EarlyStoppingViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Scheduler와 stopping의 순서를 정합니다</h3>
+        <p>
+          ReduceLROnPlateau가 먼저 learning rate를 낮추고 개선을 기다리도록
+          설계했다면 early stopping patience가 그 기회를 포함해야 합니다.
+          Cosine restart처럼 metric이 주기적으로 흔들리는 schedule에서는 cycle
+          경계를 무시한 단순 patience가 너무 일찍 종료할 수 있습니다.
+        </p>
+        <p>
+          PyTorch에서는 best <code>state_dict</code>를 메모리의 얕은 참조로
+          보관하면 이후 update와 함께 값이 바뀔 수 있습니다. 디스크 checkpoint나
+          deep copy로 snapshot을 남기고, 종료 후 새 process에서 불러와 동일한
+          metric을 재현하는지 확인합니다.
+        </p>
+      </div>
+      <div id="paper-early-stopping" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Early Stopping — but when?</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Prechelt는 validation trajectory를 이용한 여러 stopping criteria를 비교하며 더 오래 기다리는 기준이 평균적으로 작은 generalization 개선과 훨씬 긴 training time을 맞바꿀 수 있음을 분석했습니다. 당시 neural-network 실험의 수치를 현대 model의 patience 기본값으로 그대로 옮겨서는 안 됩니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://pubmed.ncbi.nlm.nih.gov/12662814/" target="_blank" rel="noreferrer">Stopping criterion과 cost trade-off 보기</a>
       </div>
     </section>
   );

@@ -27,8 +27,16 @@ pub fn recovery_symbol_for_sliver(
 //   - proof: MerkleProof<Blake2b256> — metadata의 해시와 대조 검증 가능`;
 
 export const RECOVERY_SYMBOL_ANNOTATIONS = [
-  { lines: [10, 12] as [number, number], color: 'sky' as const, note: '직교 방향 RS 인코딩' },
-  { lines: [14, 21] as [number, number], color: 'emerald' as const, note: '타겟 심볼 + Merkle 증명' },
+  {
+    lines: [10, 12] as [number, number],
+    color: "sky" as const,
+    note: "직교 방향 RS 인코딩",
+  },
+  {
+    lines: [14, 21] as [number, number],
+    color: "emerald" as const,
+    note: "타겟 심볼 + Merkle 증명",
+  },
 ];
 
 export const RECOVER_SLIVER_CODE = `// walrus-core/src/encoding/slivers.rs
@@ -59,9 +67,21 @@ pub fn try_recover_sliver_from_decoding_symbols<I>(
 }`;
 
 export const RECOVER_SLIVER_ANNOTATIONS = [
-  { lines: [13, 16] as [number, number], color: 'sky' as const, note: '복구 심볼 수 검증' },
-  { lines: [19, 21] as [number, number], color: 'emerald' as const, note: 'RS 디코딩 실행' },
-  { lines: [23, 24] as [number, number], color: 'amber' as const, note: 'Merkle 루트 검증' },
+  {
+    lines: [13, 16] as [number, number],
+    color: "sky" as const,
+    note: "복구 심볼 수 검증",
+  },
+  {
+    lines: [19, 21] as [number, number],
+    color: "emerald" as const,
+    note: "RS 디코딩 실행",
+  },
+  {
+    lines: [23, 24] as [number, number],
+    color: "amber" as const,
+    note: "Merkle 루트 검증",
+  },
 ];
 
 export const BLOB_RECOVERY_CODE = `// 클라이언트가 블롭을 읽을 때:
@@ -83,7 +103,19 @@ export const BLOB_RECOVERY_CODE = `// 클라이언트가 블롭을 읽을 때:
 // → 각 노드는 원본의 1/k₁ (≈3%) 저장, 4.5배 총 저장 비용`;
 
 export const BLOB_RECOVERY_ANNOTATIONS = [
-  { lines: [6, 8] as [number, number], color: 'sky' as const, note: '슬라이버 요청 임계값' },
-  { lines: [10, 11] as [number, number], color: 'emerald' as const, note: 'Merkle 증명 검증' },
-  { lines: [16, 17] as [number, number], color: 'amber' as const, note: '저장 비용 분석' },
+  {
+    lines: [6, 8] as [number, number],
+    color: "sky" as const,
+    note: "슬라이버 요청 임계값",
+  },
+  {
+    lines: [10, 11] as [number, number],
+    color: "emerald" as const,
+    note: "Merkle 증명 검증",
+  },
+  {
+    lines: [16, 17] as [number, number],
+    color: "amber" as const,
+    note: "저장 비용 분석",
+  },
 ];

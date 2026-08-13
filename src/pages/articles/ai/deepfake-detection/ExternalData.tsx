@@ -1,77 +1,62 @@
-import ExternalDataViz from './viz/ExternalDataViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ExternalDataViz from "./viz/ExternalDataViz";
 
 export default function ExternalData() {
   return (
     <section id="external-data" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">외부 데이터 구축 전략</h2>
+      <h2 className="mb-6 text-2xl font-bold">외부 데이터는 양보다 provenance와 독립성이 중요합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          딥페이크 탐지 대회에서 학습 데이터가 주어지지 않는다면 — <strong>외부 데이터 구축이 성패를 결정</strong><br />
-          공개 데이터셋 조합 + 자체 합성 데이터 생성이 핵심 전략
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">3대 공개 데이터셋</h3>
-        <p>
-          <strong>FaceForensics++ (FF++)</strong> — 학술 연구의 표준 벤치마크<br />
-          1,000개 원본 영상 x 5가지 조작 기법(Face2Face, FaceSwap, DeepFakes, NeuralTextures, FaceShifter)<br />
-          압축 수준별(raw, c23, c40) 제공 — JPEG 압축 환경 대비 학습에 유용
+          FaceForensics++, DFDC, Celeb-DF 같은 benchmark는 manipulation, actor,
+          recording과 compression 구성이 다릅니다. 단순히 합치면 같은 source
+          video의 파생본이나 identity가 split을 넘을 수 있으므로 dataset ID,
+          source clip, person, generator, codec과 license를 manifest로 관리합니다.
         </p>
         <p>
-          <strong>DFDC</strong>(DeepFake Detection Challenge, Facebook) — 대규모 데이터셋<br />
-          10만 클립, 3,426명, 다양한 환경(조명, 포즈, 배경)<br />
-          Kaggle 대회용으로 제작 — 실전 대회 환경에 가장 근접
-        </p>
-        <p>
-          <strong>CelebDF-v2</strong> — 고품질 합성 전용 데이터셋<br />
-          590개 원본 + 5,639개 합성 영상 — 개선된 합성 알고리즘 사용<br />
-          기존 데이터셋보다 합성 품질이 높아 — 고난도 탐지 벤치마크로 활용
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">다양한 조작 기법 커버</h3>
-        <p>
-          학습 데이터가 특정 조작 기법에 편향되면 — 미지의 기법에 취약<br />
-          Face2Face(표정 전이), FaceSwap(얼굴 교체), NeuralTextures(텍스처 합성),
-          FaceShifter(고충실도 교체)... 기법마다 남기는 아티팩트가 다르다<br />
-          전략: 조작 기법 x 데이터셋 매핑 테이블 작성 → 빈 셀을 자체 합성으로 채우기<br />
-          최소 3~5가지 조작 기법을 커버해야 일반화 성능 확보
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">자체 합성 데이터 생성</h3>
-        <p>
-          공개 데이터셋만으로는 부족한 조작 기법이 있다 — 자체 합성으로 보완<br />
-          <strong>SimSwap</strong>: 고품질 얼굴 교체, 표정 보존<br />
-          <strong>DeepFaceLab</strong>: 커뮤니티 표준 도구, 다양한 파라미터 제어<br />
-          <strong>FaceSwap</strong>: 오픈소스, 자동화 파이프라인 구축 가능
-        </p>
-        <p>
-          핵심 주의점: 합성 품질이 테스트와 유사해야 효과가 있다<br />
-          쉬운 합성(저품질)으로만 학습하면 — 고품질 딥페이크 앞에서 무력<br />
-          합성 파라미터(해상도, 블렌딩 강도, 후처리)를 다양하게 설정하여 난이도 분포 확보
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">라벨 품질 관리</h3>
-        <p>
-          공개 데이터셋의 라벨 오류율 1~5% — 무시하면 모델 성능에 직접적 영향<br />
-          검증: 모델 예측과 라벨이 불일치하는 샘플을 추출 → 수동 검수<br />
-          <strong>Confident Learning</strong>(cleanlab 라이브러리) — 라벨 노이즈 자동 탐지<br />
-          교차 검증 기반으로 "모델이 확신하지만 라벨이 다른" 샘플을 식별
-        </p>
-        <p>
-          대응 전략 3가지<br />
-          1. <strong>Label Smoothing</strong>: hard label(0/1) 대신 soft label(0.05/0.95) — 라벨 노이즈에 강건<br />
-          2. <strong>노이즈 라벨 제거</strong>: cleanlab으로 탐지 후 해당 샘플 제거<br />
-          3. <strong>MixUp 학습</strong>: 두 샘플의 이미지와 라벨을 보간 — 라벨 불확실성에 자연스럽게 대응
+          DFDC처럼 참여자가 likeness manipulation에 동의한 dataset은 provenance의
+          좋은 기준을 보여줍니다. 자체 수집·합성 데이터도 명시적인 consent와 이용
+          범위, 삭제 정책을 갖춰야 하며 공개 인물 영상을 임의로 수집해 조작하는
+          방식을 기본 recipe로 두지 않습니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <ExternalDataViz />
-      </div>
+      <ExplainedFormula
+        question="Generator·codec·resolution coverage가 많아 보인다는 말을 재현 가능한 표로 어떻게 바꿀까?"
+        idea={<>각 source-independent clip을 하나의 coverage cell에 세고 train·validation·OOD test를 분리합니다. Frame 수가 아니라 독립 source 수를 세어 긴 video 하나가 coverage를 부풀리지 않게 합니다.</>}
+        formula={String.raw`\begin{aligned}
+z_i^{g,c,r,s}&=I(g_i=g,\ c_i=c,\ r_i=r),\\
+N_{g,c,r}^{(s)}&=\sum_{i:\,\operatorname{split}_i=s}z_i^{g,c,r,s}.
+\end{aligned}`}
+        terms={[
+          { symbol: "g,c,r", name: "coverage axes", description: "Generator family, codec·bitrate condition, resolution bin입니다." },
+          { symbol: "s", name: "split", description: "Training, selection validation 또는 untouched OOD test를 구분합니다." },
+          { symbol: "N", name: "independent source count", description: "해당 cell에 속하는 source-independent clip 또는 identity group의 개수입니다." },
+          { symbol: "zᵢ", name: "cell membership", description: "Source i의 generator·codec·resolution metadata가 현재 cell과 일치하면 1입니다." },
+          { symbol: "I(·)", name: "membership indicator", description: "Sample metadata가 해당 cell 조건을 모두 만족하면 1입니다." },
+        ]}
+        assumptions={["한 source의 여러 frame·crop·re-encode를 독립 sample처럼 중복 계산하지 않습니다.", "Unknown generator나 codec은 unknown category로 보존하며 추정값을 사실처럼 채우지 않습니다.", "Demographic·capture-condition coverage는 consent와 적정성 범위 안에서 별도 축·slice로 검토합니다."]}
+        interpretation="빈 cell은 data limitation을 드러냅니다. Test의 unseen generator cell을 채우기 위해 같은 source를 training에 넣으면 coverage는 늘지만 일반화 질문은 사라집니다."
+      />
+      <div className="not-prose my-8"><ExternalDataViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: FF++ + DFDC + CelebDF 조합이 기본 — 각각 커버하는 기법이 다르다<br />
-          요약 2: 자체 합성 시 테스트 수준의 품질을 맞추는 것이 핵심<br />
-          요약 3: cleanlab + label smoothing으로 라벨 노이즈 대응 — 1~5% 오류도 성능에 영향
+        <h3>Coverage matrix에서 빈 영역을 찾습니다</h3>
+        <p>
+          Generator family × codec × resolution × demographic·capture condition을
+          matrix로 만들고 train과 evaluation coverage를 구분합니다. 빈 cell을
+          채우더라도 evaluation generator와 source identity를 training에
+          섞지 않아야 unseen-manipulation 성능을 측정할 수 있습니다.
         </p>
+        <h3>Label review도 out-of-fold evidence로 진행합니다</h3>
+        <p>
+          Duplicate detection, decode failure와 face-track coverage를 먼저
+          점검하고, model–label disagreement는 검수 우선순위를 정하는 신호로만
+          사용합니다. Model prediction과 다르다는 이유만으로 label을 자동 변경하면
+          기존 model bias를 dataset에 다시 주입할 수 있습니다.
+        </p>
+      </div>
+      <div id="paper-dfdc" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · DFDC dataset</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Dolhansky 등은 참여자가 촬영과 likeness manipulation에 동의한 대규모 face-swap video dataset과 challenge를 구축했습니다. 규모뿐 아니라 consent·capture·manipulation provenance가 중요한 contribution이며, DFDC-only 결과를 모든 실제 조작의 진위 증명으로 확대하면 안 됩니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2006.07397" target="_blank" rel="noreferrer">Dataset 구성·consent·challenge 분석 보기</a>
       </div>
     </section>
   );

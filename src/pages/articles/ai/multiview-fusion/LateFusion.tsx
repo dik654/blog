@@ -1,51 +1,60 @@
-import LateFusionViz from './viz/LateFusionViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import LateFusionViz from "./viz/LateFusionViz";
 
 export default function LateFusion() {
   return (
     <section id="late-fusion" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Late Fusion: 피처 결합</h2>
+      <h2 className="mb-6 text-2xl font-bold">Late fusion은 view별 표현을 독립적으로 만든 뒤, 결측을 아는 집계 함수로 합칩니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Late Fusion — 각 뷰를 <strong>독립적인 백본</strong>으로 인코딩한 뒤 피처 벡터를 결합하여 분류<br />
-          각 백본이 뷰 고유의 특성을 자유롭게 학습 → 정면은 형태, 측면은 깊이 등 서로 다른 표현 가능<br />
-          ImageNet pretrained 모델을 <strong>수정 없이</strong> 그대로 사용 가능 — 실무에서 가장 많이 사용되는 기본선(baseline)
+          각 view를 encoder로 처리한 뒤 pooled feature나 prediction을 concat,
+          mean, max 또는 learned gate로 결합합니다. View의 modality와 image
+          statistics가 비슷하면 encoder weight를 공유해 parameter를 줄일 수 있고,
+          서로 다르면 독립 encoder가 각 분포에 맞게 표현을 학습할 수 있습니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">기본 구조: 독립 인코딩 → Concat → FC</h3>
         <p>
-          View 1 → Backbone A → f1 (2048-d for ResNet-50)<br />
-          View 2 → Backbone B → f2 (2048-d)<br />
-          f = [f1 ; f2] → FC(4096, num_classes) → softmax → 예측<br />
-          Backbone A와 B는 같은 아키텍처일 수도, 다른 아키텍처일 수도 있다<br />
-          같은 아키텍처 + 다른 가중치(독립 학습)가 일반적 — Siamese와의 차이점
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">가중 결합 (Weighted Late Fusion)</h3>
-        <p>
-          단순 concat 대신 <strong>학습 가능한 가중치</strong>로 피처를 선형 결합:<br />
-          <code>f = w1 * f1 + w2 * f2</code> (w1, w2는 softmax로 정규화)<br />
-          유용한 뷰에 높은 가중치를 자동 부여 — 정면이 유용하면 w1이 커지고 측면이 유용하면 w2가 커짐<br />
-          concat 대비 파라미터 절약: 4096→2048로 FC 입력 차원 감소<br />
-          변형: 샘플별로 다른 가중치를 예측하는 <strong>Gating Network</strong> — 입력에 따라 동적 결합
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Late Fusion의 한계</h3>
-        <p>
-          각 뷰가 독립적으로 인코딩되므로 <strong>저수준 피처 간 상호작용이 불가</strong><br />
-          예: 정면의 균열 패턴과 측면의 변형 패턴이 같은 위치에서 발생하는지 파악하려면 고수준 피처 결합 후에만 가능<br />
-          파라미터 수 = 백본 × 뷰 수 → 2뷰면 2배, 6뷰면 6배 (Siamese와 대조적)<br />
-          정보 병목: 각 뷰가 d차원 벡터로 압축된 후 결합 → 공간 정보(어디에서 무엇이 보이는지) 손실
+          Prediction-level averaging은 가장 단순한 baseline이고 pretrained model을
+          거의 수정하지 않습니다. Feature-level fusion은 더 많은 interaction을
+          학습하지만 concat dimension과 head capacity가 커질 수 있으므로 projection
+          뒤 공통 dimension으로 맞추는 방법도 비교합니다.
         </p>
       </div>
-
+      <ExplainedFormula
+        question="일부 view가 없을 때 learned gate는 어떻게 유효한 view 사이에서만 weight를 나눌까?"
+        idea={<>각 encoder output hᵥ에서 gate score aᵥ를 만들되, mask가 0인 view는 softmax의 분자와 분모에서 제외합니다. 그 결과 남은 weight의 합은 1이 됩니다.</>}
+        formula={String.raw`\begin{aligned}
+h_v&=e_v(x_v),\\
+\alpha_v&=\frac{m_v\exp(a_v)}{\sum_j m_j\exp(a_j)},\\
+h&=\sum_v\alpha_v h_v.
+\end{aligned}`}
+        terms={[
+          { symbol: "eᵥ", name: "view encoder", description: "v번째 view를 공통 dimension의 feature hᵥ로 바꿉니다. Modality에 따라 weight를 공유하거나 분리합니다." },
+          { symbol: "aᵥ", name: "gate score", description: "현재 sample에서 view v에 배정할 상대 weight의 logit입니다." },
+          { symbol: "mᵥ", name: "view mask", description: "사용 가능한 view는 1, 결측 view는 0인 표시입니다." },
+          { symbol: "αᵥ", name: "masked normalized weight", description: "사용 가능한 view끼리 합이 1이 되도록 정규화된 집계 weight입니다." },
+        ]}
+        assumptions={["각 hᵥ의 dimension과 scale이 집계 가능하도록 맞춰져 있습니다.", "Sample마다 최소 한 개의 view가 존재해 분모가 0이 되지 않습니다.", "Gate score는 prediction을 위한 내부 변수이며 그 자체를 causal importance로 해석하지 않습니다."]}
+        interpretation="Mask가 [1,0,1]이면 두 번째 view의 weight는 정확히 0이고, 첫째와 셋째만 다시 정규화됩니다. 모든 encoder가 shared이고 view metadata도 원소와 함께 이동한다면 이 weighted sum은 입력 나열 순서에 영향을 받지 않습니다."
+      />
       <div className="not-prose my-8"><LateFusionViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: Late Fusion은 <strong>pretrained 모델을 그대로 활용</strong>할 수 있어 구현이 간편하고 baseline으로 적합<br />
-          요약 2: 가중 결합(Weighted Fusion)으로 <strong>뷰별 중요도</strong>를 학습 가능하지만 저수준 상호작용은 여전히 불가<br />
-          요약 3: 파라미터 효율과 뷰 간 상호작용 사이의 <strong>트레이드오프</strong> — Attention Fusion이 이 한계를 해소
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>View mask와 permutation contract를 명시합니다</h3>
+        <p>
+          View 위치가 의미를 갖는 고정 camera라면 view ID embedding을 넣고 순서를
+          고정할 수 있습니다. 반대로 unordered set이라면 mean pooling이나
+          permutation-invariant aggregator를 사용해 입력 순서를 바꿔도 prediction이
+          유지되는지 test합니다.
         </p>
+        <p>
+          Gating weight는 “설명 가능한 중요도”로 곧바로 해석하지 않습니다.
+          특정 view를 가렸을 때의 metric drop과 sample별 error를 함께 봐야 model이
+          실제로 어떤 정보에 의존하는지 확인할 수 있습니다.
+        </p>
+      </div>
+      <div id="paper-mvcnn" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Multi-view CNN</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Su 등은 3D shape를 여러 2D rendering으로 표현하고, 각 view에 CNN을 적용한 뒤 view pooling으로 compact shape descriptor를 만들었습니다. 이 결과는 rendered-view 기반 3D shape recognition 조건의 근거이며, 서로 다른 modality의 calibration이나 임의의 missing-view 조합까지 해결했다는 뜻은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content_iccv_2015/html/Su_Multi-View_Convolutional_Neural_ICCV_2015_paper.html" target="_blank" rel="noreferrer">View pooling 위치와 평가 범위 보기</a>
       </div>
     </section>
   );

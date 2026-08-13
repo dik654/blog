@@ -1,56 +1,94 @@
-import { CitationBlock } from '@/components/ui/citation';
-import UNetArchViz from './viz/UNetArchViz';
-import UNetCodeSection from './UNetCodeSection';
-import UNetDetailViz from './viz/UNetDetailViz';
+import { Link } from "react-router-dom";
+
+const path = [
+  [
+    "Down path",
+    "Spatial resolution을 줄이며 넓은 receptive field의 feature를 만듭니다.",
+  ],
+  ["Middle", "가장 낮은 resolution에서 global context와 condition을 섞습니다."],
+  ["Up path", "Resolution을 복원하며 같은 scale의 skip feature를 결합합니다."],
+];
 
 export default function UNet() {
   return (
     <section id="unet" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">U-Net 아키텍처</h2>
-      <div className="not-prose mb-8"><UNetArchViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Denoiser는 noisy sample과 noise level을 함께 읽습니다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Diffusion 모델의 노이즈 예측기로 <strong>U-Net</strong> 사용<br />
-          인코더-디코더 구조에 <strong>Skip Connection</strong> 추가<br />
-          고해상도 디테일과 저해상도 의미 정보를 동시에 활용
+        <p className="leading-7">
+          Image DDPM은 전통적으로 multi-scale U-Net을 denoiser로 사용해
+          왔습니다. Contracting path가 넓은 context를 모으고 expanding path가
+          resolution을 복원하며, skip connection은 같은 spatial scale의 detail을
+          다시 전달합니다. 이는 ResNet의 identity shortcut과 목적이 완전히
+          같지는 않습니다. U-Net skip은 encoder feature를 decoder로 전달하는
+          long skip이라는 점이 핵심입니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">시간 임베딩 (Timestep Embedding)</h3>
-        <p>
-          U-Net은 현재 시점 t를 입력으로 받아야 함<br />
-          Transformer의 positional encoding과 유사한 <strong>사인파 임베딩</strong>으로 t를 고차원 벡터로 변환<br />
-          각 ResBlock에 주입하여 네트워크가 노이즈 수준을 인식
-        </p>
-
-        <CitationBlock source="Ronneberger et al., MICCAI 2015 — U-Net" citeKey={3} type="paper"
-          href="https://arxiv.org/abs/1505.04597">
-          <p className="italic">
-            "The contracting path captures context while the symmetric expanding path
-            enables precise localization through skip connections."
-          </p>
-          <p className="mt-2 text-xs">
-            원래 의료 영상 분할용으로 설계된 U-Net이 Diffusion에서 노이즈 예측기로 채택되어
-            핵심 아키텍처가 되었습니다.
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Cross-Attention (텍스트 조건)</h3>
-        <p>
-          텍스트 조건부 생성을 위해 U-Net 내부에 <strong>Cross-Attention 레이어</strong> 삽입<br />
-          이미지 특징이 Query, 텍스트 임베딩이 Key/Value<br />
-          텍스트의 의미가 이미지 생성 과정에 반영
-        </p>
-
-        <UNetCodeSection />
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">U-Net 구조 상세</h3>
-        <div className="not-prose"><UNetDetailViz /></div>
-        <p className="leading-7">
-          요약 1: U-Net의 <strong>skip connection</strong>이 다양한 스케일 정보 보존.<br />
-          요약 2: <strong>time/text embedding</strong>이 생성 제어 핵심.<br />
-          요약 3: 최근 SD3는 <strong>DiT (Diffusion Transformer)</strong>로 이동 — U-Net 대체.
+      <div
+        id="paper-unet"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Multi-scale backbone
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          U-Net: Convolutional Networks for Biomedical Image Segmentation
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          원 U-Net은 biomedical segmentation을 위해 contracting path와 symmetric
+          expanding path, 같은 scale의 feature를 잇는 long skip을 제안했습니다.
+          Diffusion U-Net은 여기에 timestep embedding·residual block·attention을
+          더한 후속 backbone이므로 원 논문의 구조와 DDPM 구현을 같은 것으로 보면
+          안 됩니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/1505.04597"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 U-Net의 contracting·expanding path 보기
+        </a>
+      </div>
+
+      <figure
+        data-viz="unet-path"
+        className="not-prose my-8 grid gap-4 rounded-xl border border-border/75 bg-card p-4 md:grid-cols-3 md:p-6"
+      >
+        {path.map(([title, body], index) => (
+          <div key={title} className="min-w-0 border-t border-border pt-4">
+            <p className="text-xs font-bold text-primary/70">0{index + 1}</p>
+            <p className="mt-2 font-semibold">{title}</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              {body}
+            </p>
+          </div>
+        ))}
+      </figure>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Timestep conditioning</h3>
+        <p>
+          같은 <code>xₜ</code>처럼 보여도 noise level에 따라 제거할 signal의
+          scale이 다르므로 denoiser는 <code>t</code> 또는 continuous noise
+          embedding을 입력받습니다. Sinusoidal feature를 쓰는 경우가 많지만
+          Transformer positional encoding과 “동일한 원리”로 단정할 필요는
+          없습니다. 둘 다 scalar를 여러 frequency의 feature로 확장하지만 주입
+          위치와 학습 목적이 다릅니다.
+        </p>
+
+        <h3>Text conditioning과 architecture 변화</h3>
+        <p>
+          Text-to-image U-Net은 image feature를 query, text embedding을
+          key/value로 쓰는 cross-attention 등을 통해 condition을 주입할 수 있다.
+          그러나 모든 diffusion model이 U-Net이나 cross-attention을 쓰는 것은
+          아니며, DiT 계열은 patch token을 처리하는 Transformer backbone을
+          사용합니다. Attention 계산 자체는{" "}
+          <Link to="/ai/attention-theory">Attention 이론 글</Link>에서 이어서 볼
+          수 있습니다.
         </p>
       </div>
     </section>

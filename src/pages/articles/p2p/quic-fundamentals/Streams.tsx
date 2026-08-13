@@ -1,5 +1,5 @@
-import StreamMuxViz from './viz/StreamMuxViz';
-import CodePanel from '@/components/ui/code-panel';
+import StreamMuxViz from "./viz/StreamMuxViz";
+import CodePanel from "@/components/ui/code-panel";
 
 const streamCode = `// QUIC 스트림 타입 (RFC 9000 Section 2)
 // Stream ID의 하위 2비트로 타입 결정:
@@ -16,33 +16,55 @@ const streamCode = `// QUIC 스트림 타입 (RFC 9000 Section 2)
 // 3) 스트림 수: MAX_STREAMS 프레임
 //    → 동시 열린 스트림 개수 제한`;
 
-const streamAnnotations: { lines: [number, number]; color: 'sky' | 'emerald'; note: string }[] = [
-  { lines: [1, 6], color: 'sky', note: '4가지 스트림 타입 — ID 하위 2비트로 구분' },
-  { lines: [8, 15], color: 'emerald', note: '3단계 흐름 제어 — 스트림, 연결, 스트림 수' },
+const streamAnnotations: {
+  lines: [number, number];
+  color: "sky" | "emerald";
+  note: string;
+}[] = [
+  {
+    lines: [1, 6],
+    color: "sky",
+    note: "4가지 스트림 타입 — ID 하위 2비트로 구분",
+  },
+  {
+    lines: [8, 15],
+    color: "emerald",
+    note: "3단계 흐름 제어 — 스트림, 연결, 스트림 수",
+  },
 ];
 
 export default function Streams() {
   return (
     <section id="streams" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">스트림: 멀티플렉싱 & 흐름 제어</h2>
-      <div className="not-prose mb-8"><StreamMuxViz /></div>
+      <h2 className="text-2xl font-bold mb-6">
+        스트림: 멀티플렉싱 & 흐름 제어
+      </h2>
+      <div className="not-prose mb-8">
+        <StreamMuxViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          QUIC 연결 하나에 수천 개의 독립 스트림을 열 수 있습니다.<br />
-          각 스트림은 독립적으로 순서가 보장되며, 다른 스트림의 패킷 손실에 영향받지 않습니다.<br />
+          QUIC 연결 하나에 수천 개의 독립 스트림을 열 수 있습니다.
+          <br />
+          각 스트림은 독립적으로 순서가 보장되며, 다른 스트림의 패킷 손실에
+          영향받지 않습니다.
+          <br />
           이것이 TCP 대비 QUIC의 가장 큰 장점입니다.
         </p>
         <h3>스트림 타입과 흐름 제어</h3>
-        <CodePanel title="QUIC 스트림 구조" code={streamCode}
-          annotations={streamAnnotations} />
+        <CodePanel
+          title="QUIC 스트림 구조"
+          code={streamCode}
+          annotations={streamAnnotations}
+        />
         <p className="leading-7">
-          libp2p에서는 Yamux 멀티플렉서로 TCP 위 스트림을 구현하지만,
-          QUIC 전송 사용 시 별도 멀티플렉서 없이 네이티브 스트림을 활용합니다.
+          libp2p에서는 Yamux 멀티플렉서로 TCP 위 스트림을 구현하지만, QUIC 전송
+          사용 시 별도 멀티플렉서 없이 네이티브 스트림을 활용합니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">QUIC Streams vs TCP</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TCP의 Head-of-Line Blocking 문제
+          {`// TCP의 Head-of-Line Blocking 문제
 //
 // TCP: 하나의 byte stream
 //

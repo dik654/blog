@@ -35,8 +35,16 @@ Filecoin (저장 인센티브 & 보장):
 └─────────────────────────────────────────┘`;
 
 export const IPFS_FILECOIN_ANNOTATIONS = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: 'IPFS: 콘텐츠 발견 & P2P 전송' },
-  { lines: [10, 14] as [number, number], color: 'emerald' as const, note: 'Filecoin: 인센티브 & 증명' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "IPFS: 콘텐츠 발견 & P2P 전송",
+  },
+  {
+    lines: [10, 14] as [number, number],
+    color: "emerald" as const,
+    note: "Filecoin: 인센티브 & 증명",
+  },
 ];
 
 export const CID_CODE = `Content Identifier (CID):
@@ -73,8 +81,24 @@ Merkle DAG (데이터 구조):
   └── Chunk 3 (CID_3)  128KB (마지막)`;
 
 export const CID_ANNOTATIONS = [
-  { lines: [3, 6] as [number, number], color: 'rose' as const, note: '위치 기반 주소의 한계' },
-  { lines: [8, 12] as [number, number], color: 'sky' as const, note: '콘텐츠 기반 주소' },
-  { lines: [14, 21] as [number, number], color: 'emerald' as const, note: 'CID v1 구조 분석' },
-  { lines: [23, 32] as [number, number], color: 'amber' as const, note: 'Merkle DAG 청킹' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "rose" as const,
+    note: "위치 기반 주소의 한계",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "sky" as const,
+    note: "콘텐츠 기반 주소",
+  },
+  {
+    lines: [14, 21] as [number, number],
+    color: "emerald" as const,
+    note: "CID v1 구조 분석",
+  },
+  {
+    lines: [23, 32] as [number, number],
+    color: "amber" as const,
+    note: "Merkle DAG 청킹",
+  },
 ];

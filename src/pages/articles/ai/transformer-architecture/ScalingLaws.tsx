@@ -1,62 +1,85 @@
-import ScalingLawsViz from './viz/ScalingLawsViz';
-import ScalingDetailViz from './viz/ScalingDetailViz';
-import M from '@/components/ui/math';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ScalingDecisionViz from "./viz/ScalingDecisionViz";
 
 export default function ScalingLaws() {
   return (
     <section id="scaling-laws" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">스케일링 법칙</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Transformer의 성능 — <strong>파라미터 수(N)</strong>, <strong>데이터양(D)</strong>, <strong>연산량(C)</strong>의 멱법칙(Power Law, 변수 간 거듭제곱 관계)을 따라 예측 가능하게 향상<br />
-          Chinchilla 논문 — 고정 연산 예산에서 <strong>N:D=1:20</strong>이 최적임을 입증<br />
-          LLM 학습 패러다임을 근본적으로 변화시킴
+      <h2 className="mb-6 text-2xl font-bold">
+        Scaling law는 model 크기 정답표가 아니라 관측 범위 안에서 예산을
+        배분하는 경험 모델이다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          Language-model validation loss는 일정 범위에서 parameter 수와 training
+          token 수에 대해 매끄러운 power-law 경향을 보였습니다. 이 곡선은 작은
+          pilot run에서 큰 run의 loss를 추정하고 고정 compute를 model과 data에
+          나누는 데 유용하지만, architecture·data mixture·optimizer·evaluation
+          domain이 바뀌면 coefficient도 다시 추정해야 합니다.
         </p>
       </div>
 
-      <ScalingLawsViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>스케일링 법칙 & Chinchilla</h3>
-
-        <M display>
-          {`L(N) = \\underbrace{\\left(\\frac{N_c}{N}\\right)^{0.076}}_{\\text{파라미터 스케일링}}, \\quad L(D) = \\underbrace{\\left(\\frac{D_c}{D}\\right)^{0.095}}_{\\text{데이터 스케일링}}, \\quad L(C) = \\underbrace{\\left(\\frac{C_c}{C}\\right)^{0.050}}_{\\text{연산량 스케일링}}`}
-        </M>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mt-4">
-          <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
-            <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-2">Kaplan (2020)</h4>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              Loss가 <M>{'N, D, C'}</M> 각각에 대해 멱법칙(power law)을 따름. 지수 <M>{'\\alpha{=}0.076'}</M>이 가장 작아 파라미터 증가 대비 수익이 가장 낮음
-            </p>
-          </div>
-          <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4">
-            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-2">Chinchilla (2022)</h4>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              고정 FLOP에서 최적 비율 <M>{'N{:}D = 1{:}20'}</M>. GPT-3(175B, 300B토큰)보다 Chinchilla(70B, 1.4T토큰)가 더 나은 성능 달성
-            </p>
-          </div>
-          <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4">
-            <h4 className="font-semibold text-amber-700 dark:text-amber-300 mb-2">실전 N:D 비율</h4>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              GPT-3 <M>{'1{:}1.7'}</M>(과대 파라미터) → Chinchilla <M>{'1{:}20'}</M>(최적) → LLaMA-2 <M>{'1{:}29'}</M> → LLaMA-3 <M>{'1{:}1875'}</M>(극단적 오버트레이닝)
-            </p>
-          </div>
-        </div>
+      <div id="paper-scaling-laws" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
+        <p className="text-xs font-bold text-primary">논문 해설 · Scaling Laws for Neural Language Models</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Kaplan 등은 고정된 실험 family에서 loss가 model size·data·compute에 대해 power-law로 변하는 경향과 compute allocation을 분석했습니다. Fitted exponent는 architecture·data·optimization 범위에 의존하며, 특정 capability나 serving cost까지 직접 예측하는 universal law가 아닙니다.</p>
+      </div>
+      <div id="paper-chinchilla" className="not-prose mt-6 scroll-mt-24 border-l border-border/80 pl-4">
+        <p className="text-xs font-bold text-primary">논문 해설 · Training Compute-Optimal Large Language Models</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Chinchilla 연구는 고정 training compute에서 model parameter와 training token을 함께 늘려야 한다는 배분을 재추정하고 70B model을 1.4T token으로 학습해 비교했습니다. 이 비율은 당시 model family·data·FLOP 회계의 training-optimal 결과이며 inference traffic과 latency까지 포함한 product optimum은 아닙니다.</p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Scaling Laws 주요 발견</h3>
-        <M display>
-          {`L(N,D,C) \\approx \\underbrace{a \\cdot N^{-\\alpha}}_{\\text{파라미터}} + \\underbrace{b \\cdot D^{-\\beta}}_{\\text{데이터}} + \\underbrace{c \\cdot C^{-\\gamma}}_{\\text{연산량}}`}
-        </M>
-      </div>
-      <ScalingDetailViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
-        <p className="leading-7">
-          요약 1: <strong>Kaplan 2020</strong>이 scaling laws 정식화 — 성능 예측 가능해짐.<br />
-          요약 2: <strong>Chinchilla (1:20 비율)</strong>이 GPT-3 시대 통념 전복.<br />
-          요약 3: <strong>Emergent abilities</strong>는 scaling의 질적 전환 — 아직도 연구 중.
+      <ScalingDecisionViz />
+
+      <ExplainedFormula
+        question="Parameter N과 training token D가 늘어날 때 reducible loss를 어떻게 근사하는가?"
+        idea={
+          <>
+            무한한 model·data에서도 남는 irreducible term에 parameter-limited
+            term과 data-limited term을 더합니다. 각 term은 power law로 줄어들며
+            exponent와 coefficient는 실험 family에 fit합니다.
+          </>
+        }
+        formula={String.raw`L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}`}
+        terms={[
+          {
+            symbol: "L_\infty",
+            name: "irreducible floor",
+            description:
+              "주어진 data distribution과 objective에서 scale만으로 없애기 어려운 loss floor입니다.",
+          },
+          {
+            symbol: "N",
+            name: "model parameters",
+            description:
+              "연구마다 non-embedding parameter 등 counting contract가 다를 수 있습니다.",
+          },
+          {
+            symbol: "D",
+            name: "training tokens",
+            description:
+              "Deduplication·quality·epoch reuse를 포함한 실제 학습 token budget입니다.",
+          },
+          {
+            symbol: "\\alpha,\\beta",
+            name: "empirical exponents",
+            description:
+              "Observed range의 run에 fit한 감소율이며 universal constant가 아닙니다.",
+          },
+        ]}
+        assumptions={[
+          "같은 model family·data distribution·training recipe 안에서의 근사입니다.",
+          "FLOPs budget·inference cost·memory·latency constraint는 이 두-variable 식 밖에서 별도로 고려합니다.",
+        ]}
+        interpretation="Chinchilla의 parameter당 약 20 token은 해당 실험 범위의 compute-optimal 근사입니다. 반복 serving 비용이나 data scarcity가 중요하면 training-optimal 지점과 product-optimal 지점은 달라질 수 있습니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          Aggregate loss가 매끄럽게 감소해도 특정 benchmark capability가 언제
+          나타날지는 바로 나오지 않습니다. Metric threshold, prompt format,
+          sampling variance와 contamination이 겉보기의 emergent jump를 만들 수
+          있으므로 scale claim에는 evaluation protocol과 confidence interval을
+          함께 남깁니다.
         </p>
       </div>
     </section>

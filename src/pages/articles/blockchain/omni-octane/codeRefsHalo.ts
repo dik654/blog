@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const haloRefs: Record<string, CodeRef> = {
-  'octane-xmsg': {
-    path: 'omni/halo/attest/keeper.go',
-    lang: 'go',
+  "octane-xmsg": {
+    path: "omni/halo/attest/keeper.go",
+    lang: "go",
     highlight: [1, 20],
-    desc: 'XMsg 크로스체인 어테스테이션 — 검증자가 롤업 이벤트를 관찰하고 합의.',
+    desc: "XMsg 크로스체인 어테스테이션 — 검증자가 롤업 이벤트를 관찰하고 합의.",
     code: `// halo/attest/keeper.go — 크로스체인 어테스테이션
 
 type Keeper struct {
@@ -27,16 +27,20 @@ func (k Keeper) Add(ctx context.Context, msg *MsgAddVotes) error {
 
 // XMsg: srcChainId → destChainId → data`,
     annotations: [
-      { lines: [3, 7], color: 'sky', note: 'Keeper — voter + portal + namer' },
-      { lines: [10, 17], color: 'emerald', note: 'Add — 어테스테이션 수집 + 2/3 투표' },
+      { lines: [3, 7], color: "sky", note: "Keeper — voter + portal + namer" },
+      {
+        lines: [10, 17],
+        color: "emerald",
+        note: "Add — 어테스테이션 수집 + 2/3 투표",
+      },
     ],
   },
 
-  'octane-dual-staking': {
-    path: 'omni/halo/valsync/keeper.go',
-    lang: 'go',
+  "octane-dual-staking": {
+    path: "omni/halo/valsync/keeper.go",
+    lang: "go",
     highlight: [1, 16],
-    desc: '이중 스테이킹 — OMNI + EigenLayer restaked ETH.',
+    desc: "이중 스테이킹 — OMNI + EigenLayer restaked ETH.",
     code: `// halo/valsync/keeper.go — 이중 스테이킹 동기화
 
 type Keeper struct {
@@ -52,8 +56,12 @@ func (k Keeper) SyncValidatorSet(ctx context.Context) error {
     return k.broadcastUpdate(ctx, merged)
 }`,
     annotations: [
-      { lines: [3, 6], color: 'sky', note: 'OMNI + EigenLayer AVS 키퍼' },
-      { lines: [9, 13], color: 'emerald', note: '투표 파워 합산 + Portal 동기화' },
+      { lines: [3, 6], color: "sky", note: "OMNI + EigenLayer AVS 키퍼" },
+      {
+        lines: [9, 13],
+        color: "emerald",
+        note: "투표 파워 합산 + Portal 동기화",
+      },
     ],
   },
 };

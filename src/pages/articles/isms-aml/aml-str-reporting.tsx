@@ -1,7 +1,7 @@
-import Overview from './aml-str-reporting/Overview';
-import SarProcess from './aml-str-reporting/SarProcess';
-import TippingOff from './aml-str-reporting/TippingOff';
-import RecordKeeping from './aml-str-reporting/RecordKeeping';
+import Overview from "./aml-str-reporting/Overview";
+import SarProcess from "./aml-str-reporting/SarProcess";
+import TippingOff from "./aml-str-reporting/TippingOff";
+import RecordKeeping from "./aml-str-reporting/RecordKeeping";
 
 export default function AmlStrReporting() {
   return (

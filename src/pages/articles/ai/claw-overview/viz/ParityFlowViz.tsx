@@ -1,71 +1,49 @@
+import {
+  OverviewFrame,
+  OverviewRule,
+  OverviewSteps,
+} from "./OverviewVizPrimitives";
+
 export default function ParityFlowViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Python 패리티 검증 — Rust ↔ Python 교차 체크</text>
-
-        <defs>
-          <marker id="pf-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#8b5cf6" />
-          </marker>
-        </defs>
-
-        {/* Input scenario */}
-        <rect x={210} y={50} width={140} height={40} rx={6}
-          fill="#ec4899" fillOpacity={0.15} stroke="#ec4899" strokeWidth={1.8} />
-        <text x={280} y={75} textAnchor="middle" fontSize={11} fontWeight={700} fill="#ec4899">
-          Mock Scenario
-        </text>
-
-        <line x1={210} y1={80} x2={160} y2={120} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pf-arr)" />
-        <line x1={350} y1={80} x2={400} y2={120} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pf-arr)" />
-
-        {/* Python engine */}
-        <rect x={40} y={124} width={220} height={80} rx={6}
-          fill="#3b82f6" fillOpacity={0.15} stroke="#3b82f6" strokeWidth={1.8} />
-        <text x={150} y={147} textAnchor="middle" fontSize={12} fontWeight={700} fill="#3b82f6">
-          Python PortRuntime
-        </text>
-        <text x={150} y={164} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          behavioral spec
-        </text>
-        <text x={150} y={178} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          MockFs · MockShell
-        </text>
-        <text x={150} y={194} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-          ~1,700 LOC
-        </text>
-
-        {/* Rust engine */}
-        <rect x={300} y={124} width={220} height={80} rx={6}
-          fill="#ef4444" fillOpacity={0.15} stroke="#ef4444" strokeWidth={1.8} />
-        <text x={410} y={147} textAnchor="middle" fontSize={12} fontWeight={700} fill="#ef4444">
-          Rust runtime
-        </text>
-        <text x={410} y={164} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          production impl
-        </text>
-        <text x={410} y={178} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          real I/O · async
-        </text>
-        <text x={410} y={194} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-          ~55K LOC
-        </text>
-
-        <line x1={150} y1={204} x2={240} y2={240} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pf-arr)" />
-        <line x1={410} y1={204} x2={320} y2={240} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pf-arr)" />
-
-        {/* Comparator */}
-        <rect x={170} y={244} width={220} height={40} rx={6}
-          fill="#10b981" fillOpacity={0.15} stroke="#10b981" strokeWidth={1.8} />
-        <text x={280} y={264} textAnchor="middle" fontSize={12} fontWeight={700} fill="#10b981">
-          Byte-level Comparator
-        </text>
-        <text x={280} y={278} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          CI: 불일치 시 build fail
-        </text>
-      </svg>
-    </div>
+    <OverviewFrame
+      label="REFERENCE ≠ ORACLE"
+      title="Python과 Rust를 같은 contract 위에 놓는다"
+      description="언어별 내부 구조를 복제하는 대신 같은 fixture에서 외부에 드러나는 의미를 canonical form으로 비교합니다."
+      note="Python reference는 선택한 동작을 읽기 쉽게 표현한 비교 기준이지 자동으로 옳은 명세가 아닙니다. mismatch가 나면 fixture, 정규화 규칙, product contract와 의도된 변경을 차례로 확인합니다."
+    >
+      <OverviewSteps
+        items={[
+          {
+            label: "01",
+            title: "Shared fixture",
+            body: "입력, mock I/O와 지켜야 할 invariant를 두 구현에 똑같이 제공합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02A",
+            title: "Python reference",
+            body: "선택한 behavior를 작고 읽기 쉬운 형태로 재현합니다.",
+            tone: "violet",
+          },
+          {
+            label: "02B",
+            title: "Rust runtime",
+            body: "정본 Rust host loop의 public contract를 실행합니다.",
+            tone: "emerald",
+          },
+          {
+            label: "03",
+            title: "Canonical diff",
+            body: "시간·UUID 같은 비결정 필드를 정규화한 semantic result를 비교합니다.",
+            tone: "amber",
+          },
+        ]}
+      />
+      <OverviewRule>
+        같은 결과란 같은 내부 class나 field가 아니라 같은 permission outcome,
+        tool result, session state와 계약된 event order를 뜻합니다.
+      </OverviewRule>
+    </OverviewFrame>
   );
 }

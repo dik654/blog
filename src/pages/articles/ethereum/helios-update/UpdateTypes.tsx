@@ -1,4 +1,4 @@
-import UpdateTypesViz from './viz/UpdateTypesViz';
+import UpdateTypesViz from "./viz/UpdateTypesViz";
 
 export default function UpdateTypes({ title }: { title: string }) {
   return (
@@ -11,7 +11,9 @@ export default function UpdateTypes({ title }: { title: string }) {
           OptimisticUpdate(빠름, reorg 가능)와 FinalityUpdate(느림, 확정).
         </p>
       </div>
-      <div className="not-prose"><UpdateTypesViz /></div>
+      <div className="not-prose">
+        <UpdateTypesViz />
+      </div>
     </section>
   );
 }

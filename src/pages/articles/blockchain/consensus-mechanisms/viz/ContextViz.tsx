@@ -1,6 +1,11 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './ContextVizData';
-import { StepWhyConsensus, StepPoW, StepPoS, StepTrilemma } from './ContextVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./ContextVizData";
+import {
+  StepWhyConsensus,
+  StepPoW,
+  StepPoS,
+  StepTrilemma,
+} from "./ContextVizSteps";
 
 const R = [StepWhyConsensus, StepPoW, StepPoS, StepTrilemma];
 
@@ -10,7 +15,11 @@ export default function ContextViz() {
       {(step) => {
         const S = R[step];
         return (
-          <svg viewBox="0 0 420 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
+          <svg
+            viewBox="0 0 420 130"
+            className="w-full max-w-2xl"
+            style={{ height: "auto" }}
+          >
             <S />
           </svg>
         );

@@ -1,49 +1,45 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, CURVE, toSvg } from './crossEntropyData';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS, CURVE } from "./crossEntropyData";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
+function point([probability, loss]: [number, number]) {
+  return { x: 8 + probability * 284, y: 150 - (loss / 4.2) * 138 };
+}
 
 export default function CrossEntropyViz() {
+  const curve = CURVE.map((entry) => {
+    const { x, y } = point(entry);
+    return `${x},${y}`;
+  }).join(" ");
+  const current = point([0.09, 2.41]);
+  const perfect = point([1, 0]);
+
   return (
     <StepViz steps={STEPS}>
-      {(step) => {
-        const pts = CURVE.map(toSvg);
-        const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
-        const current = toSvg([0.09, 2.41]);
-        const perfect = toSvg([1.0, 0.0]);
-        return (
-          <svg viewBox="0 0 460 155" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-            <line x1={80} y1={20} x2={80} y2={120} stroke="var(--border)" strokeWidth={0.8} />
-            <line x1={80} y1={120} x2={350} y2={120} stroke="var(--border)" strokeWidth={0.8} />
-            <text x={215} y={135} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">정답 클래스 확률 →</text>
-            <text x={55} y={70} fontSize={9} fill="var(--muted-foreground)" transform="rotate(-90 55 70)">Loss</text>
-            <path d={d} fill="none" stroke="#8b5cf6" strokeWidth={1.5} opacity={0.8} />
+      {(step) => (
+        <div className="grid w-full max-w-4xl gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(14rem,0.65fr)] md:items-center">
+          <section className="min-w-0">
+            <div className="grid grid-cols-[1rem_minmax(0,1fr)] gap-3">
+              <span className="self-center text-[10px] font-semibold text-muted-foreground [writing-mode:vertical-rl] rotate-180">−LOG(P)</span>
+              <div className="min-w-0">
+                <svg viewBox="0 0 300 158" className="block h-auto w-full" aria-label="정답 확률에 따른 negative log loss 곡선">
+                  <line x1="8" y1="150" x2="296" y2="150" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.8" />
+                  <line x1="8" y1="8" x2="8" y2="150" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.8" />
+                  <polyline points={curve} fill="none" stroke="#8b5cf6" strokeWidth="1.2" />
+                  {step >= 1 && <><line x1={current.x} y1={current.y} x2={current.x} y2="150" stroke="#ef4444" strokeWidth="0.8" strokeDasharray="3 4" /><circle cx={current.x} cy={current.y} r="3.5" fill="var(--background)" stroke="#ef4444" strokeWidth="1.1" /></>}
+                  {step >= 2 && <circle cx={perfect.x} cy={perfect.y} r="3.5" fill="var(--background)" stroke="#10b981" strokeWidth="1.1" />}
+                </svg>
+                <div className="mt-1 flex justify-between text-[9px] text-muted-foreground"><span>정답 확률 0</span><span>정답 확률 1</span></div>
+              </div>
+            </div>
+          </section>
 
-            {step >= 1 && (
-              <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-                <circle cx={current.x} cy={current.y} r={5} fill="#ef444430" stroke="#ef4444" strokeWidth={1.2} />
-                <line x1={current.x} y1={current.y} x2={current.x} y2={120} stroke="#ef4444" strokeWidth={0.8} strokeDasharray="3 2" />
-                <text x={current.x} y={current.y - 8} textAnchor="middle" fontSize={9} fontWeight={600} fill="#ef4444">L=2.41</text>
-                <text x={current.x + 5} y={126} fontSize={9} fill="#ef4444">0.09</text>
-              </motion.g>
-            )}
-            {step >= 2 && (
-              <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-                <circle cx={perfect.x} cy={perfect.y} r={5} fill="#10b98130" stroke="#10b981" strokeWidth={1.2} />
-                <text x={perfect.x - 10} y={perfect.y - 8} textAnchor="middle" fontSize={9} fontWeight={600} fill="#10b981">L=0</text>
-                <text x={perfect.x} y={126} fontSize={9} fill="#10b981">1.0</text>
-              </motion.g>
-            )}
-
-            <rect x={360} y={30} width={90} height={70} rx={6} fill="color-mix(in oklch, var(--muted) 8%, transparent)" stroke="var(--border)" strokeWidth={0.6} />
-            <text x={405} y={48} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--foreground)">L = -log(y)</text>
-            <text x={405} y={64} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">y=정답 확률</text>
-            <text x={405} y={78} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">y↑ → L↓</text>
-            <text x={405} y={90} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">y↓ → L↑↑</text>
-          </svg>
-        );
-      }}
+          <section className="min-w-0 border-t border-border/60 pt-6 md:border-l md:border-t-0 md:pl-7 md:pt-0">
+            {step === 0 && <><p className="text-xs font-bold text-violet-600 dark:text-violet-300">곡선의 모양</p><p className="mt-3 text-sm font-semibold leading-6">확신 있게 틀릴수록 loss가 빠르게 커집니다.</p><p className="mt-2 text-xs leading-5 text-muted-foreground">−log(p)는 p=1에서 0이고 p가 0에 가까워질수록 발산합니다. 확률 0을 그대로 넣지 않도록 logits 기반 fused 구현을 사용합니다.</p></>}
+            {step === 1 && <><p className="text-xs font-bold text-rose-600 dark:text-rose-300">현재 예측 · p=0.09</p><p className="mt-3 font-mono text-2xl font-bold">L ≈ 2.41</p><p className="mt-2 text-xs leading-5 text-muted-foreground">정답 class에 9%만 배정했으므로 큰 correction signal이 필요합니다.</p></>}
+            {step === 2 && <><p className="text-xs font-bold text-emerald-600 dark:text-emerald-300">이상적인 예측 · p=1</p><p className="mt-3 font-mono text-2xl font-bold">L = 0</p><p className="mt-2 text-xs leading-5 text-muted-foreground">정답에 probability mass를 모두 배정하면 추가로 줄일 negative log-likelihood가 없습니다.</p></>}
+          </section>
+        </div>
+      )}
     </StepViz>
   );
 }

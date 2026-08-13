@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { ARCH_STEPS } from './AutobahnDetailData';
-import { HighwayStep, LanesStep, RideSharingStep } from './AutobahnArchSteps';
+import StepViz from "@/components/ui/step-viz";
+import { ARCH_STEPS } from "./AutobahnDetailData";
+import { HighwayStep, LanesStep, RideSharingStep } from "./AutobahnArchSteps";
 
 const RENDERERS = [HighwayStep, LanesStep, RideSharingStep];
 

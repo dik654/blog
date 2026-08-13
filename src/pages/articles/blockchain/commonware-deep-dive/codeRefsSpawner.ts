@@ -1,11 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const spawnerCodeRef: Record<string, CodeRef> = {
-  'spawner-trait': {
-    path: 'commonware/runtime/src/lib.rs — Spawner trait',
-    lang: 'rust',
+  "spawner-trait": {
+    path: "commonware/runtime/src/lib.rs — Spawner trait",
+    lang: "rust",
     highlight: [1, 18],
-    desc: 'Spawner — 태스크 생성/관리의 핵심 trait.\nshared(blocking) vs dedicated() 두 모드 지원.\n부모 종료 시 자식도 자동 abort (Mandatory Supervision).',
+    desc: "Spawner — 태스크 생성/관리의 핵심 trait.\nshared(blocking) vs dedicated() 두 모드 지원.\n부모 종료 시 자식도 자동 abort (Mandatory Supervision).",
     code: `/// Interface that any task scheduler must implement
 /// to spawn tasks.
 pub trait Spawner: Clone + Send + Sync + 'static {
@@ -37,10 +37,26 @@ pub trait Spawner: Clone + Send + Sync + 'static {
     fn stopped(&self) -> signal::Signal;
 }`,
     annotations: [
-      { lines: [3, 3], color: 'sky', note: 'Clone + Send + Sync — 모든 태스크 간 자유롭게 전달·공유 가능' },
-      { lines: [6, 10], color: 'emerald', note: 'shared vs dedicated — CPU-bound는 dedicated, I/O-bound는 shared(false)' },
-      { lines: [18, 22], color: 'amber', note: 'spawn(FnOnce(Self)) — 클로저에 자식 Context를 넘겨 계층적 감독 트리 구성' },
-      { lines: [25, 26], color: 'violet', note: 'stop() — 모든 태스크에 종료 신호 전송. idempotent' },
+      {
+        lines: [3, 3],
+        color: "sky",
+        note: "Clone + Send + Sync — 모든 태스크 간 자유롭게 전달·공유 가능",
+      },
+      {
+        lines: [6, 10],
+        color: "emerald",
+        note: "shared vs dedicated — CPU-bound는 dedicated, I/O-bound는 shared(false)",
+      },
+      {
+        lines: [18, 22],
+        color: "amber",
+        note: "spawn(FnOnce(Self)) — 클로저에 자식 Context를 넘겨 계층적 감독 트리 구성",
+      },
+      {
+        lines: [25, 26],
+        color: "violet",
+        note: "stop() — 모든 태스크에 종료 신호 전송. idempotent",
+      },
     ],
   },
 };

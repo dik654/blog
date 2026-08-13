@@ -1,59 +1,73 @@
-import Math from '@/components/ui/math';
-import FourierViz from './viz/FourierViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SamplingWindowViz from "./viz/SamplingWindowViz";
 
 export default function Fourier() {
   return (
     <section id="fourier" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">푸리에 변환 직관</h2>
+      <h2 className="mb-6 text-2xl font-bold">연속 신호를 유한한 DFT로 만들 때 측정 조건이 들어온다</h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>핵심 아이디어: 모든 신호는 사인파의 합</h3>
         <p>
-          조제프 푸리에(1807년)의 발견 — 아무리 복잡한 주기 신호라도
-          서로 다른 주파수의 사인파(정현파)를 적절히 더하면 재현할 수 있다<br />
-          사각파, 톱니파, 음성 파형 모두 사인파의 중첩으로 분해 가능
+          Fourier analysis는 “모든 signal이 몇 개의 sine wave로만 이루어진다”는
+          단순한 주장이 아니다. 적절한 함수 공간에서 signal을 서로 orthogonal한
+          oscillatory basis의 coefficient로 표현한다는 관점이다. Euler identity가
+          cosine과 sine을 하나의 complex exponential에 묶어 magnitude와 phase를
+          동시에 다룰 수 있게 한다.
         </p>
       </div>
-      <FourierViz />
+      <div id="nyquist-boundary" className="scroll-mt-24" />
+
+      <ExplainedFormula
+        question="연속 시간 signal의 각 angular frequency 성분을 어떻게 분해하고 다시 합칠까?"
+        idea={<>Forward transform은 f(t)를 ω로 회전하는 basis와 전체 시간에 걸쳐 내적하고, inverse transform은 모든 coefficient에 basis를 다시 곱해 합성합니다.</>}
+        formula={String.raw`\begin{aligned}F(\omega)&=\int_{-\infty}^{\infty}f(t)e^{-i\omega t}\,dt\\[3pt]f(t)&=\frac1{2\pi}\int_{-\infty}^{\infty}F(\omega)e^{i\omega t}\,d\omega\end{aligned}`}
+        terms={[
+          { symbol: "f(t)", name: "continuous signal", description: "시간 t마다 정의된 원래 함수입니다." },
+          { symbol: "F(\omega)", name: "spectrum", description: "Angular frequency ω 성분의 complex coefficient입니다." },
+          { symbol: "e^{\pm i\omega t}", name: "complex basis", description: "Euler identity로 cosine과 sine phase를 함께 표현합니다." },
+          { symbol: "1/(2\pi)", name: "inverse normalization", description: "Angular-frequency convention에서 생기며 다른 convention에서는 위치가 달라집니다." },
+        ]}
+        assumptions={["적분과 역변환이 성립하려면 signal class에 맞는 integrability 또는 distribution 조건이 필요합니다.", "이 식은 angular frequency ω를 사용합니다. Hz frequency를 쓰면 exponent와 normalization에 2π가 이동합니다."]}
+        interpretation="Forward와 inverse transform은 lossless representation pair다. 실제 ML pipeline에서 magnitude, band aggregation 또는 quantization만 남길 때 정보 손실이 생깁니다."
+      />
+
+      <SamplingWindowViz />
+
+      <ExplainedFormula
+        question="Sample rate와 frame length가 FFT에서 보이는 frequency 좌표를 어떻게 정할까?"
+        idea={<>Continuous signal을 fₛ번/초로 sampling하고 N개씩 잘라 DFT하면, positive frequency의 관측 한계는 Nyquist frequency fₛ/2이고 adjacent bin 간격은 fₛ/N이 됩니다.</>}
+        formula={String.raw`\begin{aligned}f_k&=\frac{k f_s}{N}\\[2pt]\Delta f&=\frac{f_s}{N}\\[2pt]|f|&<\frac{f_s}{2}\quad\text{(alias-free band)}\end{aligned}`}
+        terms={[
+          { symbol: "f_s", name: "sample rate", description: "초당 관측한 sample 수입니다." },
+          { symbol: "N", name: "frame length", description: "한 번의 DFT에 넣는 sample 수이며 frame duration은 N/fₛ입니다." },
+          { symbol: "f_k", name: "bin center", description: "Index k가 나타내는 physical frequency입니다." },
+          { symbol: "\\Delta f", name: "bin spacing", description: "인접 DFT bin 사이의 Hz 간격입니다." },
+        ]}
+        assumptions={["Original continuous signal이 sampling 전에 fₛ/2 아래로 band-limited되었다고 가정합니다.", "Real signal의 unique non-negative bins는 DC와 Nyquist를 포함해 대략 N/2+1개입니다."]}
+        interpretation="Sample rate는 관측 band를, frame duration은 frequency grid를 정한다. 높은 sample rate만으로 세밀한 frequency resolution이 생기지는 않습니다."
+      />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>연속 푸리에 변환 (Continuous FT)</h3>
+        <h3>유한 frame은 signal에 rectangular window를 곱한 것이다</h3>
         <p>
-          연속 신호 <Math>{'f(t)'}</Math>에 대해:
-          <Math display>{'F(\\omega) = \\int_{-\\infty}^{\\infty} f(t) \\, e^{-i\\omega t} \\, dt'}</Math>
-          <Math>{'\\omega'}</Math>는 각주파수(angular frequency) — 특정 주파수 성분이 신호에 얼마나 포함되어 있는지를 추출<br />
-          역변환은 주파수 성분을 다시 더해서 원래 신호를 복원:
-          <Math display>{'f(t) = \\frac{1}{2\\pi} \\int_{-\\infty}^{\\infty} F(\\omega) \\, e^{i\\omega t} \\, d\\omega'}</Math>
+          관측 구간의 시작과 끝이 자연스럽게 이어지지 않으면 DFT의 periodic
+          assumption에서 경계 discontinuity가 생기고 energy가 여러 bin으로 퍼지는
+          spectral leakage가 나타난다. Hann 같은 taper window는 경계를 부드럽게
+          만들어 side lobe를 줄이지만 main lobe를 넓힌다. 따라서 leakage 감소와
+          가까운 tone 분리 능력 사이에 trade-off가 있다.
         </p>
-
-        <h3>오일러 공식이 연결하는 것</h3>
         <p>
-          <Math display>{'e^{i\\theta} = \\cos\\theta + i\\sin\\theta'}</Math>
-          복소 지수(complex exponential) 하나로 코사인과 사인을 동시에 표현<br />
-          푸리에 변환에서 <Math>{'e^{-i\\omega t}'}</Math>를 쓰는 이유: 크기(진폭)와 위상(시작점)을
-          하나의 복소수로 깔끔하게 인코딩하기 위함
+          Aliasing, leakage와 zero-padding은 서로 다른 현상이다. Aliasing은
+          sampling 전 band limit 위의 성분이 낮은 frequency로 접히는 문제이고,
+          leakage는 유한 frame과 window의 문제이며, zero-padding은 이미 관측한
+          sequence의 DFT grid를 더 촘촘하게 읽는 방법이다.
         </p>
-
-        <h3>연속 → 이산: DFT</h3>
+        <h3>Nyquist 조건은 FFT가 만들어 주는 보장이 아니다</h3>
         <p>
-          컴퓨터는 연속 신호를 직접 다룰 수 없다 — 일정 간격으로 샘플링한 이산 데이터만 처리<br />
-          적분 <Math>{'\\int'}</Math>이 합 <Math>{'\\sum'}</Math>으로 바뀌고,
-          연속 주파수 <Math>{'\\omega'}</Math>가 이산 인덱스 k로 바뀐 것이 DFT
+          일정한 간격의 sampling은 continuous spectrum을 sample rate 간격으로 반복한 사본으로 만듭니다. 원래 signal이 <code>fₛ/2</code> 아래로 band-limited되어 있으면 이 사본들이 겹치지 않아 원래 spectrum을 분리할 수 있지만, 더 높은 성분이 남아 있으면 사본이 겹쳐 서로 다른 continuous signal이 같은 sample sequence를 만들 수 있습니다. 예를 들어 8kHz로 sampling한 cosine에서 1kHz와 7kHz는 sample 시점마다 같은 값을 냅니다. 따라서 anti-alias filter와 source band 조건이 없으면 DFT coefficient만으로 둘을 되돌려 구분할 수 없습니다.
         </p>
-
-        <h3>수치 예시: 2개 사인파의 합성</h3>
         <p>
-          신호: <Math>{'f(t) = 3\\sin(2\\pi \\cdot 5t) + 1.5\\sin(2\\pi \\cdot 12t)'}</Math><br />
-          5Hz 성분(진폭 3)과 12Hz 성분(진폭 1.5)의 합<br />
-          시간 영역에서는 두 파형이 겹쳐 복잡한 모양 —
-          FFT를 적용하면 주파수 5와 12에서만 뾰족한 피크가 나타난다<br />
-          피크의 높이가 각 성분의 진폭에 비례 — 이것이 스펙트럼(spectrum)
-        </p>
-
-        <h3>위상(phase)의 의미</h3>
-        <p>
-          DFT 결과 <Math>{'X_k'}</Math>는 복소수 — 크기 <Math>{'|X_k|'}</Math>는 진폭,
-          편각 <Math>{'\\angle X_k'}</Math>는 위상<br />
-          같은 주파수라도 시작 시점이 다르면 위상이 달라진다<br />
-          오디오 처리에서는 보통 크기 스펙트럼(magnitude spectrum)만 사용하고 위상은 버린다
+          Zero-padding도 이 정보 손실을 복구하지 않습니다. N개 관측 뒤에 0을 더하면 같은 finite observation의 spectrum을 더 많은 frequency 좌표에서 보간할 수 있지만, 실제 관측 시간은 <code>N/fₛ</code> 그대로입니다. 가까운 두 tone을 더 잘 분리하려면 일반적으로 더 긴 관측이나 다른 prior가 필요합니다.
         </p>
       </div>
     </section>

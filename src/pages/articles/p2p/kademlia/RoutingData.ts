@@ -19,9 +19,21 @@ fn bucket_index(local: &NodeId, other: &NodeId) -> usize {
 }`;
 
 export const kBucketAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: 'KBucket — LRU 리스트 + 대체 캐시' },
-  { lines: [8, 11] as [number, number], color: 'emerald' as const, note: '라우팅 테이블 — 버킷 배열' },
-  { lines: [14, 19] as [number, number], color: 'amber' as const, note: '선행 0비트로 버킷 인덱스 계산' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "KBucket — LRU 리스트 + 대체 캐시",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "emerald" as const,
+    note: "라우팅 테이블 — 버킷 배열",
+  },
+  {
+    lines: [14, 19] as [number, number],
+    color: "amber" as const,
+    note: "선행 0비트로 버킷 인덱스 계산",
+  },
 ];
 
 export const bucketUpdateCode = `fn on_node_seen(&mut self, node: NodeInfo) {
@@ -50,9 +62,21 @@ export const bucketUpdateCode = `fn on_node_seen(&mut self, node: NodeInfo) {
 }`;
 
 export const bucketUpdateAnnotations = [
-  { lines: [5, 8] as [number, number], color: 'sky' as const, note: '기존 노드 → 최근 사용 위치로 이동' },
-  { lines: [9, 11] as [number, number], color: 'emerald' as const, note: '공간 있으면 추가' },
-  { lines: [12, 22] as [number, number], color: 'amber' as const, note: '꽉 찬 경우 — 핑 후 교체 결정' },
+  {
+    lines: [5, 8] as [number, number],
+    color: "sky" as const,
+    note: "기존 노드 → 최근 사용 위치로 이동",
+  },
+  {
+    lines: [9, 11] as [number, number],
+    color: "emerald" as const,
+    note: "공간 있으면 추가",
+  },
+  {
+    lines: [12, 22] as [number, number],
+    color: "amber" as const,
+    note: "꽉 찬 경우 — 핑 후 교체 결정",
+  },
 ];
 
 export const bucketSplitCode = `// 거리별 버킷 → 가까운 노드일수록 더 세밀한 해상도
@@ -66,6 +90,14 @@ export const bucketSplitCode = `// 거리별 버킷 → 가까운 노드일수�
 // 먼 네트워크는 대략적으로만 앎 (지수적으로 조잡해짐)`;
 
 export const bucketSplitAnnotations = [
-  { lines: [1, 6] as [number, number], color: 'sky' as const, note: '거리별 버킷 분포 — 지수적 분할' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: '가까울수록 세밀, 멀수록 조잡' },
+  {
+    lines: [1, 6] as [number, number],
+    color: "sky" as const,
+    note: "거리별 버킷 분포 — 지수적 분할",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "가까울수록 세밀, 멀수록 조잡",
+  },
 ];

@@ -1,136 +1,66 @@
-import M from '@/components/ui/math';
-import WhenDLWinsViz from './viz/WhenDLWinsViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import WhenDLWinsViz from "./viz/WhenDLWinsViz";
 
 export default function WhenDLWins() {
   return (
     <section id="when-dl-wins" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">딥러닝이 이기는 조건</h2>
+      <h2 className="mb-6 text-2xl font-bold">딥러닝 선택은 row 수 임계값이 아니라 추가로 배울 구조로 판단합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          "테이블 데이터에 DL을 써야 하는가?" — 정답은 <strong>조건부</strong>다.
-          모든 상황에서 GBM이 이기는 것도, DL이 이기는 것도 아니다.
-          실무에서는 데이터 특성과 제약 조건에 따라 선택해야 한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">조건 1: 데이터 크기 (100K+ 샘플)</h3>
-        <p>
-          Shwartz-Ziv & Armon (2022) 실험에서 데이터 크기별 승률:
-        </p>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">데이터 크기</th>
-                <th className="border border-border px-4 py-2 text-left">GBM 승률</th>
-                <th className="border border-border px-4 py-2 text-left">DL 승률</th>
-                <th className="border border-border px-4 py-2 text-left">분석</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['~10K', '85%', '15%', 'DL 과적합 위험 높음'],
-                ['10K~50K', '70%', '30%', 'DL 접근, 앙상블 시 유리'],
-                ['50K~100K', '55%', '45%', '거의 동등, 도메인 의존'],
-                ['100K+', '40%', '60%', 'DL 우세, 특히 범주형 풍부 시'],
-              ].map(([size, gbm, dl, note]) => (
-                <tr key={size}>
-                  <td className="border border-border px-4 py-2 font-medium">{size}</td>
-                  <td className="border border-border px-4 py-2">{gbm}</td>
-                  <td className="border border-border px-4 py-2">{dl}</td>
-                  <td className="border border-border px-4 py-2 text-muted-foreground">{note}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p>
-          DL의 파라미터 용량은 데이터가 많을수록 빛을 발한다.
-          XGBoost는 트리 1,000개 × 깊이 8 = 약 200K 리프노드가 상한 — 이를 넘는 복잡도의 패턴은 포착하기 어렵다.
-          반면 FT-Transformer는 L=3, d=192, H=8 설정에서도 수백만 파라미터 → 복잡한 피처 상호작용 모델링 가능.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">조건 2: 고카디널리티 범주형 + 엔티티 임베딩</h3>
-        <p>
-          범주형 피처의 카디널리티(고유 값 수)가 높을수록 DL의 이점이 커진다.
+          “10만 row 이상이면 딥러닝” 같은 경계는 dataset과 validation budget이
+          바뀌면 유지되지 않습니다. 중간 규모의 전형적인 표에서는 GBDT가
+          irregular decision boundary와 중요하지 않은 feature에 강한 baseline인
+          경우가 많고, neural model은 optimization과 preprocessing에 더 민감할
+          수 있습니다.
         </p>
         <p>
-          <strong>GBM 접근</strong> — 원핫 인코딩 → 차원 폭발 / 타겟 인코딩 → 과적합 위험 / CatBoost의 순서형 인코딩이 최선이지만 한계 존재<br />
-          <strong>DL 접근</strong> — 엔티티 임베딩(Entity Embedding, Guo & Berkhahn, 2016): 범주를 저차원 밀집 벡터로 학습<br />
-          "서울"과 "경기"가 가까운 벡터, "서울"과 "제주"가 먼 벡터로 학습 — 지리적·의미적 유사도를 자동 포착
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold text-amber-800 dark:text-amber-200 mb-1">실전 팁: 임베딩 차원 공식</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            <M>{'d_j = \\min(600, \\; \\text{round}(1.6 \\times C_j^{0.56}))'}</M><br />
-            fastai 라이브러리의 경험적 공식. 카디널리티 <M>{'C_j'}</M>가 높을수록 임베딩 차원도 커지되 600을 상한으로 제한.
-            예: 도시(100개) → d=16, 사용자 ID(100K) → d=600
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">조건 3: 멀티모달 입력</h3>
-        <p>
-          상품 추천: 상품 테이블(가격, 카테고리) + 상품 이미지 + 리뷰 텍스트<br />
-          의료 진단: 환자 정보(나이, 혈압) + CT 이미지 + 의사 소견<br />
-          이런 멀티모달 시나리오에서 GBM은 비정형 데이터를 직접 처리할 수 없다.
-          DL은 각 모달리티에 적합한 인코더(ResNet, BERT)를 결합하여 end-to-end 학습이 가능하다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">조건 4: 사전학습 데이터 풍부</h3>
-        <p>
-          TabNet의 자기지도 사전학습, FT-Transformer의 전이 학습 —
-          레이블 없는 대규모 데이터가 존재할 때 DL이 유리하다.
-          GBM은 사전학습 개념 자체가 부재 — 항상 주어진 레이블 데이터에서 scratch 학습.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">실전 전략: GBM + DL 하이브리드</h3>
-        <p>
-          대부분의 Kaggle 상위 솔루션은 GBM과 DL을 <strong>대립이 아닌 협업</strong>으로 사용한다.
-        </p>
-        <p>
-          <strong>전략 A: 앙상블</strong> — GBM 예측 + DL 예측을 가중 평균 또는 스태킹(stacking).
-          오차 패턴이 상이하여 상호 보완 → 단독 대비 1~3% 향상이 일반적.
-        </p>
-        <p>
-          <strong>전략 B: 임베딩 → GBM</strong> — DL(특히 엔티티 임베딩)을 피처 추출기로 사용.
-          고카디널리티 범주형을 밀집 벡터로 변환 → 이 벡터를 LightGBM 입력에 추가.
-          원핫 인코딩 대비 차원이 작고 의미적 유사도를 반영하여 GBM 성능 향상.
-        </p>
-        <p>
-          <strong>전략 C: pseudo-labeling</strong> — DL의 softmax 출력(확률)을 unlabeled 데이터의
-          pseudo label로 생성 → GBM 학습 데이터에 추가. 준지도 학습(semi-supervised) 효과.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">미래 방향: 학습 없는 추론</h3>
-        <p>
-          <strong>TabPFN</strong> (Hollmann et al., 2022) — Prior-Data Fitted Network<br />
-          대규모 합성 데이터셋으로 사전학습된 Transformer.
-          새 데이터셋을 context로 입력하면 학습 없이(zero-shot) 예측 — in-context learning.
-          소규모(~10K) 데이터에서 XGBoost와 동등한 성능을 학습 시간 0으로 달성.
-        </p>
-        <p>
-          <strong>TabR</strong> (Gorishniy et al., 2023) — Retrieval-augmented 접근<br />
-          학습 데이터에서 유사 샘플을 검색(retrieval)하여 예측에 활용.
-          kNN의 아이디어를 DL에 결합 — 비모수적(non-parametric) 요소 추가로 robustness 향상.
+          반대로 stable vocabulary의 고 cardinality category에서 embedding을
+          재사용하거나, image·text·event sequence와 end-to-end로 결합하거나,
+          같은 schema의 많은 unlabeled row로 pretraining할 수 있다면 neural
+          representation을 시험할 이유가 생깁니다. 다만 후보가 생겼다는 뜻이지
+          승리가 확정됐다는 뜻은 아닙니다.
         </p>
       </div>
 
       <div className="not-prose my-8"><WhenDLWinsViz /></div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold text-amber-800 dark:text-amber-200 mb-1">최종 판단 기준</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            ① 피처 엔지니어링이 모델 선택보다 중요 — 어떤 모델이든 좋은 피처가 성능의 70%를 결정<br />
-            ② 교차 검증(cross-validation)으로 공정하게 비교 — 단일 split 결과는 편향될 수 있음<br />
-            ③ 확신이 없으면 앙상블 — GBM + DL 조합이 단일 모델보다 항상 안전한 선택
-          </p>
-        </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>선택 순서</h3>
+        <ol>
+          <li>CatBoost·LightGBM과 simple MLP/ResNet으로 비용 대비 baseline을 만듭니다.</li>
+          <li>Embedding·attention·pretraining이 해결할 구체적인 representation 병목을 적습니다.</li>
+          <li>동일 fold·trial budget에서 여러 seed, worst group과 calibration을 비교합니다.</li>
+          <li>Training cost, peak memory, latency와 train-serving preprocessing도 판정에 넣습니다.</li>
+        </ol>
+        <p>
+          GBDT와 neural model의 error가 실제로 다를 때는 ensemble이 이득일 수
+          있습니다. 그러나 평균 점수 두 개만 보고 고정 비율 blending을 적용하면
+          같은 row에서 함께 틀리는 모델을 중복 운영할 수 있습니다.
+        </p>
+      </div>
 
-        <p className="leading-7">
-          요약 1: 데이터 <strong>100K+, 고카디널리티, 멀티모달</strong> 중 하나라도 해당 → DL 고려<br />
-          요약 2: 임베딩 → GBM 파이프라인이 실전에서 가장 빈번한 <strong>하이브리드 전략</strong><br />
-          요약 3: TabPFN·TabR 등 차세대 모델은 학습 없이 추론 — <strong>테이블 DL의 새로운 패러다임</strong>
+      <ExplainedFormula
+        question="두 모델의 평균 점수 외에 ensemble 가치가 있는지 무엇을 확인할까?"
+        idea={<>Validation row마다 prediction error를 기록하고 두 error vector의 correlation을 봅니다. 같은 방향으로 함께 틀리면 평균을 내도 오류가 잘 상쇄되지 않고, 상관이 낮거나 음수면 서로 보완할 가능성이 있습니다.</>}
+        formula={String.raw`\rho_{e_A,e_B}=\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}},\qquad e_{m,i}=y_i-\hat y_{m,i}`}
+        terms={[
+          { symbol: "e_m,i", name: "out-of-fold error", description: "Model m이 해당 row를 training에 보지 않은 상태에서 만든 prediction error입니다." },
+          { symbol: "Cov", name: "error covariance", description: "두 모델의 error가 같은 row에서 함께 움직이는 정도입니다." },
+          { symbol: "σ_e", name: "error standard deviation", description: "각 model error의 scale을 표준화해 correlation을 −1과 1 사이로 만듭니다." },
+          { symbol: "ρ", name: "error correlation", description: "1에 가까울수록 같은 방향의 error가 반복된다는 진단값입니다." },
+        ]}
+        assumptions={["두 error vector는 같은 untouched out-of-fold rows와 같은 target 단위에서 계산합니다.", "Regression error correlation만으로 classification ranking·calibration의 ensemble gain을 모두 판정하지 않습니다.", "Blend weight는 별도 validation에서 선택하고 최종 test는 마지막까지 보존합니다."]}
+        interpretation="낮은 error correlation은 ensemble 후보를 찾는 신호이지 성능 보장이 아닙니다. 실제 blend gain과 두 배가 될 수 있는 latency·memory·monitoring 비용을 함께 측정합니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          TabPFN 같은 pretrained tabular model도 별도의 비교 후보일 뿐 모든 작은
+          dataset의 자동 정답은 아닙니다. 최종 선택은 동일한 entity·time split,
+          feature artifact, tuning trial 또는 wall-clock, hardware, metric으로 만든
+          표에서 이루어져야 합니다. 평균과 seed 분산, worst group, calibration,
+          peak memory, single-row·batch latency를 함께 남기면 구조 이름이 아니라
+          재현 가능한 증거로 선택할 수 있습니다.
         </p>
       </div>
     </section>

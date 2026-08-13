@@ -1,53 +1,18 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, COT_ROWS } from './CoTData';
+import VizFrame from "@/components/viz/VizFrame";
 
-const W = 460, H = 220;
-const BAR_X = 130, BAR_W = 280, BAR_H = 28;
+const rows = [
+  ["Fact lookup", "Source retrieval → citation", "긴 CoT보다 evidence 확인"],
+  ["Arithmetic", "식 → 단위 → 계산 → answer", "Executable calculation"],
+  ["Planning", "State → action → observation", "Environment feedback"],
+  ["Tool effect", "Proposal → authorization → receipt", "Runtime enforcement"],
+] as const;
 
 export default function CoTViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* accuracy bar chart */}
-          {COT_ROWS.map((row, i) => {
-            const y = 25 + i * 48;
-            const active = step === i;
-            const fillW = (row.accuracy / 100) * BAR_W;
-            return (
-              <motion.g key={row.label}
-                animate={{ opacity: active ? 1 : step > i ? 0.5 : 0.25 }}
-                transition={{ duration: 0.3 }}>
-                {/* label */}
-                <text x={BAR_X - 10} y={y + 18} textAnchor="end"
-                  fontSize={10} fontWeight={active ? 700 : 400}
-                  fill={active ? row.color : 'var(--muted-foreground)'}>
-                  {row.label}
-                </text>
-                {/* bg bar */}
-                <rect x={BAR_X} y={y} width={BAR_W} height={BAR_H} rx={4}
-                  fill="var(--muted)" opacity={0.15} />
-                {/* fill bar */}
-                <motion.rect x={BAR_X} y={y} height={BAR_H} rx={4}
-                  fill={row.color}
-                  initial={{ width: 0 }}
-                  animate={{ width: active || step > i ? fillW : 0 }}
-                  transition={{ duration: 0.5, delay: active ? 0.1 : 0 }}
-                  opacity={active ? 0.8 : 0.4} />
-                {/* value */}
-                {(active || step > i) && (
-                  <motion.text x={BAR_X + fillW + 8} y={y + 18}
-                    fontSize={10} fontWeight={700} fill={row.color}
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    {row.accuracy}%
-                  </motion.text>
-                )}
-              </motion.g>
-            );
-          })}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame eyebrow="Reasoning strategy" title="Task마다 useful intermediate artifact가 다릅니다" description="자연어 reasoning을 늘리는 대신 외부에서 검증할 수 있는 산출물을 선택합니다.">
+      <div className="divide-y divide-border/70">
+        {rows.map(([task, path, check]) => <section key={task} className="grid min-w-0 gap-2 py-4 first:pt-0 last:pb-0 sm:grid-cols-[7rem_1fr_1fr] sm:items-baseline"><h4 className="text-sm font-bold">{task}</h4><p className="text-xs leading-5 text-primary">{path}</p><p className="text-xs leading-5 text-muted-foreground">{check}</p></section>)}
+      </div>
+    </VizFrame>
   );
 }

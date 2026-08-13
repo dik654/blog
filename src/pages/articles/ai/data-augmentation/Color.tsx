@@ -1,57 +1,45 @@
-import ColorViz from './viz/ColorViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ColorViz from "./viz/ColorViz";
 
 export default function Color() {
   return (
     <section id="color" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">색상 변환: Jitter, Normalize, CLAHE</h2>
-
+      <h2 className="mb-6 text-2xl font-bold">색상 증강과 normalization은 서로 다른 단계입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>색상 변환</strong> — 픽셀 위치는 고정하고 값(밝기, 색상)을 변형<br />
-          조명 조건, 카메라 설정, 계절 변화에 따른 색상 차이에 강건한 모델을 만든다<br />
-          기하학적 변환과 함께 사용하면 변형 조합이 기하급수적으로 증가
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">ColorJitter</h3>
-        <p>
-          밝기(brightness), 대비(contrast), 채도(saturation), 색조(hue) 4가지를 독립적으로 변형<br />
-          각 파라미터에 변형 범위를 설정 — brightness=0.2이면 [0.8, 1.2] 범위에서 랜덤 스케일링<br />
-          4가지가 독립적이므로 0.2 × 0.2 × 0.2 × 0.1 = 수천 가지 색상 조합 가능
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Normalization</h3>
-        <p>
-          증강이 아닌 <strong>전처리</strong>지만 파이프라인에서 필수 — 항상 마지막에 적용<br />
-          사전학습 모델(ResNet, EfficientNet)은 ImageNet의 mean/std로 학습되었으므로,
-          전이학습 시 동일한 통계를 사용해야 첫 레이어 입력 분포가 맞는다<br />
-          mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225] — ImageNet RGB 채널별 통계
+          ColorJitter는 brightness, contrast, saturation, hue를 random하게 바꿔
+          조명과 camera 차이에 대한 robustness를 학습시킵니다. 반면 normalization은
+          pixel range와 channel statistics를 model이 기대하는 좌표로 맞추는
+          deterministic preprocessing입니다. 둘을 같은 “색 처리”로 묶으면 train과
+          serving에서 normalization이 달라지거나, normalized tensor에 잘못된
+          range의 jitter를 적용하기 쉽습니다.
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <ColorViz />
-      </div>
+      <ExplainedFormula
+        question="Normalization은 pixel channel을 어떤 좌표로 바꾸며 왜 train·serving에서 같아야 할까?"
+        idea={<>각 channel에서 정해 둔 center μ를 빼고 scale σ로 나눕니다. Pretrained weight는 이 좌표계의 input을 보고 학습됐으므로 다른 통계를 쓰면 첫 layer가 전혀 다른 값 범위를 받습니다.</>}
+        formula={String.raw`x'_{c,h,w}=\frac{x_{c,h,w}-\mu_c}{\sigma_c}`}
+        terms={[
+          { symbol: "x_{c,h,w}", name: "input pixel", description: "Channel c와 spatial position (h,w)의 원래 값입니다." },
+          { symbol: "μc", name: "channel center", description: "Weight metadata나 training contract에서 정한 channel별 기준값입니다." },
+          { symbol: "σc", name: "channel scale", description: "0이 아닌 channel별 scale이며 표준편차를 쓰는 경우가 많습니다." },
+          { symbol: "x′", name: "normalized input", description: "Model이 실제로 받는 좌표값입니다." },
+        ]}
+        assumptions={["x, μ, σ가 모두 0–1 또는 0–255 등 같은 pixel 단위를 사용합니다.", "Training·validation·serving에서 같은 normalization contract를 사용합니다."]}
+        interpretation="Normalization은 새 sample을 만들지 않습니다. ImageNet mean·std도 특정 pretrained weight의 입력 계약이지 모든 sensor와 domain의 보편 상수는 아닙니다."
+      />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">CLAHE</h3>
-        <p>
-          <strong>CLAHE</strong>(Contrast Limited Adaptive Histogram Equalization) — 적응적 히스토그램 평활화<br />
-          이미지를 8×8 타일로 나누고 각 타일의 히스토그램을 독립적으로 평활화<br />
-          전역 평활화의 문제(밝은 영역 과포화)를 방지하면서 어두운 영역의 디테일을 살린다<br />
-          clip_limit=2.0으로 과도한 히스토그램 증폭을 제한 — 의료 영상에서 특히 효과적
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Random Erasing</h3>
-        <p>
-          이미지의 랜덤 영역을 0(검정) 또는 랜덤 노이즈로 채운다<br />
-          물체가 부분적으로 가려진(occluded) 상황을 시뮬레이션 — 모델이 물체의 전체가 아닌 부분 특징으로도 인식하도록 강제<br />
-          p=0.5, scale=(0.02, 0.33), ratio=(0.3, 3.3)이 표준 설정
-        </p>
-      </div>
+      <div className="not-prose my-8"><ColorViz /></div>
 
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 색상 증강 순서</p>
-        <p className="text-sm">
-          반드시 기하학적 변환 → 색상 변환 → Normalize 순서<br />
-          Normalize 이후에 색상 변환을 적용하면 평균/분산이 맞지 않아 학습 불안정<br />
-          Albumentations는 Compose 순서를 그대로 실행하므로 파이프라인 정의 시 주의
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Color가 nuisance인지 signal인지 먼저 확인합니다</h3>
+        <p>
+          피부색, 병변 색, 위성 spectral band처럼 색 자체가 label signal이면 강한
+          jitter가 정답 정보를 지웁니다. CLAHE는 local contrast와 함께 noise를
+          증폭할 수 있고, random erasing은 작은 object 전체를 없앨 수 있습니다.
+          각 transform을 단독으로 ablation하고 class별 성능과 worst-group slice를
+          함께 확인해야 합니다.
         </p>
       </div>
     </section>

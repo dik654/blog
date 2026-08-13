@@ -23,10 +23,26 @@ export const archCode = `World Chain 전체 아키텍처:
       검증된 World ID 보유자에게 블록 상단 우선순위 부여`;
 
 export const archAnnotations = [
-  { lines: [4, 7] as [number, number], color: 'sky' as const, note: 'OP Stack Consensus Layer' },
-  { lines: [9, 9] as [number, number], color: 'emerald' as const, note: 'rollup-boost 프록시' },
-  { lines: [13, 18] as [number, number], color: 'amber' as const, note: 'EL + External Builder' },
-  { lines: [22, 23] as [number, number], color: 'rose' as const, note: 'PBH 핵심 가치' },
+  {
+    lines: [4, 7] as [number, number],
+    color: "sky" as const,
+    note: "OP Stack Consensus Layer",
+  },
+  {
+    lines: [9, 9] as [number, number],
+    color: "emerald" as const,
+    note: "rollup-boost 프록시",
+  },
+  {
+    lines: [13, 18] as [number, number],
+    color: "amber" as const,
+    note: "EL + External Builder",
+  },
+  {
+    lines: [22, 23] as [number, number],
+    color: "rose" as const,
+    note: "PBH 핵심 가치",
+  },
 ];
 
 export const problemCode = `기존 블록체인의 문제점 vs World Chain 해결책:
@@ -45,6 +61,14 @@ World Chain (PBH 정렬):
   → 네트워크 혼잡 시에도 접근성 보장`;
 
 export const problemAnnotations = [
-  { lines: [3, 7] as [number, number], color: 'rose' as const, note: '기존 문제점' },
-  { lines: [9, 14] as [number, number], color: 'emerald' as const, note: 'PBH 해결책' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "rose" as const,
+    note: "기존 문제점",
+  },
+  {
+    lines: [9, 14] as [number, number],
+    color: "emerald" as const,
+    note: "PBH 해결책",
+  },
 ];

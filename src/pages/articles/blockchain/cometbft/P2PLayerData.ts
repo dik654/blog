@@ -13,10 +13,22 @@ type MConnection struct {
 }`;
 
 export const P2P_TABLE_ROWS = [
-  { layer: '노드 발견', eth: 'Discv4/v5 (Kademlia DHT)', cmt: 'PEX (Peer Exchange) Reactor' },
-  { layer: '전송', eth: 'RLPx (EL) / libp2p (CL)', cmt: 'MConnection (멀티플렉스 TCP)' },
-  { layer: '메시지 전파', eth: 'Gossip (eth, snap 프로토콜)', cmt: 'Reactor 패턴 기반 Gossip' },
-  { layer: '노드 ID', eth: 'secp256k1 공개키', cmt: 'Ed25519 공개키' },
+  {
+    layer: "노드 발견",
+    eth: "Discv4/v5 (Kademlia DHT)",
+    cmt: "PEX (Peer Exchange) Reactor",
+  },
+  {
+    layer: "전송",
+    eth: "RLPx (EL) / libp2p (CL)",
+    cmt: "MConnection (멀티플렉스 TCP)",
+  },
+  {
+    layer: "메시지 전파",
+    eth: "Gossip (eth, snap 프로토콜)",
+    cmt: "Reactor 패턴 기반 Gossip",
+  },
+  { layer: "노드 ID", eth: "secp256k1 공개키", cmt: "Ed25519 공개키" },
 ] as const;
 
 export const REACTOR_CODE = `CometBFT Reactor들:

@@ -1,57 +1,57 @@
-import FrequencyViz from './viz/FrequencyViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import FrequencyViz from "./viz/FrequencyViz";
 
 export default function Frequency() {
   return (
     <section id="frequency" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">주파수 분석: FFT 기반 아티팩트</h2>
+      <h2 className="mb-6 text-2xl font-bold">주파수 특징은 generator와 codec에 조건부인 보조 신호입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          딥페이크 탐지의 강력한 보조 수단 — <strong>주파수 도메인 분석</strong><br />
-          사람 눈에는 보이지 않지만, 생성 모델이 남기는 통계적 흔적이 주파수 영역에 존재한다
+          FFT는 spatial image를 주파수 성분으로 바꾸고 magnitude spectrum에서
+          반복적인 upsampling pattern이나 비정상 에너지 분포를 관찰하게 합니다.
+          변환의 수학적 원리와 spectrum 읽기는
+          <Link to="/ai/fft">FFT 정본</Link>에서 설명하며, 여기서는 detector feature로
+          쓸 때의 가정에 집중합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">FFT와 주파수 스펙트럼</h3>
         <p>
-          <strong>FFT</strong>(Fast Fourier Transform) — 공간 도메인 이미지를 주파수 도메인으로 변환<br />
-          변환 결과의 magnitude(크기) — 각 주파수 성분의 에너지를 표현<br />
-          저주파: 이미지의 부드러운 영역(배경, 피부 톤)<br />
-          고주파: 경계선, 질감, 미세한 디테일 — 딥페이크 아티팩트가 숨어 있는 영역
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">실제 vs 딥페이크 주파수 차이</h3>
-        <p>
-          자연 이미지는 <strong>1/f 법칙</strong>을 따른다 — 주파수가 높아질수록 에너지가 자연스럽게 감쇠<br />
-          GAN 기반 딥페이크 — 업샘플링(transposed conv) 과정에서 <strong>체커보드 패턴</strong> 발생<br />
-          이 패턴은 주파수 스펙트럼에서 특정 대역의 비정상적 피크로 나타난다<br />
-          Diffusion 기반 — 체커보드는 없지만, 특정 주파수 대역의 에너지 분포가 자연 이미지와 다름
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">주파수 피처 결합 전략</h3>
-        <p>
-          RGB만 입력하면 공간 정보만 활용 — 미세한 주파수 패턴을 놓칠 수 있다<br />
-          <strong>채널 결합</strong>: RGB(3ch) + FFT magnitude(3ch) = 6채널 입력<br />
-          <strong>듀얼 브랜치</strong>: RGB 인코더 + FFT 인코더를 병렬로 → 피처 레벨에서 결합<br />
-          <strong>어텐션 퓨전</strong>: 주파수 피처로 공간 피처의 어텐션 가중치를 조절<br />
-          실험적으로 주파수 채널 추가만으로 AUC 2~5% 향상이 보고됨
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">한계와 보완</h3>
-        <p>
-          <strong>JPEG 압축</strong>이 고주파 정보를 파괴 — SNS 업로드 시 압축으로 아티팩트 소실<br />
-          최신 생성 모델은 주파수 일관성까지 학습 — GAN 초기의 명확한 패턴이 점차 사라짐<br />
-          보완: <strong>DCT</strong>(Discrete Cosine Transform), <strong>Wavelet</strong> 등 다중 스케일 분석<br />
-          결론: 주파수는 강력한 보조 피처이지만 단독으로는 부족 — RGB 모델과 앙상블이 필수
+          초기 GAN의 checkerboard artifact처럼 특정 generator family에서 잘
+          보이는 신호가 있어도 JPEG, resize, blur와 새로운 generation method가
+          spectrum을 바꿀 수 있습니다. 따라서 frequency-only detector의 높은
+          in-domain 점수를 general deepfake signal로 해석하지 않습니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <FrequencyViz />
-      </div>
+      <ExplainedFormula
+        question="주파수 branch가 RGB branch에 새 정보를 주는지 정확도 두 개만으로 판단할 수 있을까?"
+        idea={<>두 detector가 같은 sample에서 함께 틀리는 비율을 계산합니다. Frequency model이 단독으로 좋아도 RGB와 늘 같은 sample에서 틀리면 ensemble이 보완할 여지가 작습니다.</>}
+        formula={String.raw`Q_{\mathrm{joint}}=\frac1n\sum_{i=1}^{n}I(e_i^{\mathrm{rgb}}=1\ \land\ e_i^{\mathrm{freq}}=1)`}
+        terms={[
+          { symbol: "eᵢrgb", name: "RGB error indicator", description: "RGB branch가 sample i를 틀리면 1, 맞히면 0입니다." },
+          { symbol: "eᵢfreq", name: "frequency error indicator", description: "동일 sample i에서 frequency branch가 틀리면 1인 값입니다." },
+          { symbol: "Qjoint", name: "joint error rate", description: "두 branch가 동시에 실패한 sample 비율입니다." },
+        ]}
+        assumptions={["두 prediction은 같은 held-out source·identity sample에서 out-of-fold 또는 untouched test 방식으로 얻습니다.", "Threshold·label·video aggregation 정의를 동일하게 맞춥니다.", "Joint error가 작아도 latency·calibration·slice 성능을 포함한 실제 ensemble gain을 별도로 확인합니다."]}
+        interpretation="Frequency branch의 단독 AUC보다 codec·resize별 joint error와 실제 fused prediction의 paired gain이 더 직접적인 추가 가치의 근거입니다."
+      />
+      <div className="not-prose my-8"><FrequencyViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: GAN의 업샘플링 아티팩트가 주파수 스펙트럼에 명확히 드러난다<br />
-          요약 2: RGB + FFT 듀얼 입력으로 AUC 2~5% 향상 가능<br />
-          요약 3: JPEG 압축 환경에서는 주파수 단독 분석의 효과가 감소 — 앙상블 필수
+        <h3>공간 신호와 같은 corruption matrix에서 비교합니다</h3>
+        <p>
+          RGB branch와 FFT·DCT·wavelet branch를 각각 평가하고 feature 또는
+          prediction 수준에서 결합합니다. Codec, bitrate, resolution과 social-media
+          re-encoding별 성능을 matrix로 보면 frequency branch가 manipulation이
+          아니라 compression source를 분류하는지 확인할 수 있습니다.
         </p>
+        <p>
+          결합 효과는 같은 video split의 out-of-fold prediction으로 측정합니다.
+          주파수 branch가 RGB model과 같은 sample에서 틀린다면 계산만 늘고,
+          error가 보완적일 때만 ensemble이나 fusion의 근거가 생깁니다.
+        </p>
+      </div>
+      <div id="paper-fourier-discrepancy" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Fourier spectrum discrepancy 재검토</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Chandrasegaran 등은 CNN-generated image의 high-frequency decay 차이가 생성 모델의 본질적·robust 특징이라는 해석을 재검토하고, 해당 단서만으로 synthetic image를 안정적으로 검출하기 어렵다고 보였습니다. 따라서 spectrum pattern은 generator·post-processing에 조건부인 feature로 다뤄야 합니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content/CVPR2021/html/Chandrasegaran_A_Closer_Look_at_Fourier_Spectrum_Discrepancies_for_CNN-Generated_Images_CVPR_2021_paper.html" target="_blank" rel="noreferrer">주파수 단서의 robustness 한계 보기</a>
       </div>
     </section>
   );

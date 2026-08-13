@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const evmRefs: Record<string, CodeRef> = {
-  'ev-keeper': {
-    path: 'cosmos-evm/x/vm/keeper/keeper.go',
-    lang: 'go',
+  "ev-keeper": {
+    path: "cosmos-evm/x/vm/keeper/keeper.go",
+    lang: "go",
     highlight: [1, 18],
-    desc: 'EVM Keeper — Cosmos SDK 체인에서 이더리움 가상머신 실행.',
+    desc: "EVM Keeper — Cosmos SDK 체인에서 이더리움 가상머신 실행.",
     code: `// x/vm/keeper/keeper.go — EVM Keeper
 
 type Keeper struct {
@@ -24,16 +24,16 @@ func (k Keeper) ApplyMessage(ctx sdk.Context, msg core.Message) (*types.MsgEther
     return result, err
 }`,
     annotations: [
-      { lines: [3, 8], color: 'sky', note: 'Keeper 구조체' },
-      { lines: [11, 16], color: 'emerald', note: 'ApplyMessage — EVM 실행' },
+      { lines: [3, 8], color: "sky", note: "Keeper 구조체" },
+      { lines: [11, 16], color: "emerald", note: "ApplyMessage — EVM 실행" },
     ],
   },
 
-  'ev-feemarket': {
-    path: 'cosmos-evm/x/feemarket/keeper/keeper.go',
-    lang: 'go',
+  "ev-feemarket": {
+    path: "cosmos-evm/x/feemarket/keeper/keeper.go",
+    lang: "go",
     highlight: [1, 16],
-    desc: 'Fee Market — EIP-1559 동적 수수료. Base Fee 조정.',
+    desc: "Fee Market — EIP-1559 동적 수수료. Base Fee 조정.",
     code: `// x/feemarket/keeper/keeper.go — EIP-1559
 
 func (k Keeper) UpdateBaseFee(
@@ -54,9 +54,9 @@ func (k Keeper) UpdateBaseFee(
     return baseFee
 }`,
     annotations: [
-      { lines: [3, 8], color: 'sky', note: '목표 50% 사용률' },
-      { lines: [10, 12], color: 'emerald', note: '과부하: Fee 상승' },
-      { lines: [13, 15], color: 'amber', note: '여유: Fee 하락' },
+      { lines: [3, 8], color: "sky", note: "목표 50% 사용률" },
+      { lines: [10, 12], color: "emerald", note: "과부하: Fee 상승" },
+      { lines: [13, 15], color: "amber", note: "여유: Fee 하락" },
     ],
   },
 };

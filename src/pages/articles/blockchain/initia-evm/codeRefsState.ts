@@ -1,12 +1,12 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const stateRefs: Record<string, CodeRef> = {
-  'mini-statedb': {
-    path: 'minievm/x/evm/state/statedb.go',
-    lang: 'go',
+  "mini-statedb": {
+    path: "minievm/x/evm/state/statedb.go",
+    lang: "go",
 
     highlight: [1, 36],
-    desc: 'StateDB — go-ethereum vm.StateDB를 Cosmos KVStore로 구현.',
+    desc: "StateDB — go-ethereum vm.StateDB를 Cosmos KVStore로 구현.",
     code: `// x/evm/state/statedb.go — StateDB 구조체
 
 var _ vm.StateDB = &StateDB{}  // go-ethereum 인터페이스 구현
@@ -45,10 +45,26 @@ func (s *StateDB) GetBalance(addr common.Address) *uint256.Int {
     // ABI 디코딩 후 uint256 반환
 }`,
     annotations: [
-      { lines: [3, 3], color: 'sky' as const, note: 'go-ethereum의 vm.StateDB 인터페이스 구현' },
-      { lines: [11, 11], color: 'emerald' as const, note: 'vmStore — IAVL 트리 기반 영구 저장소' },
-      { lines: [14, 20], color: 'amber' as const, note: '임시 메모리 스토어 — TX 종료 후 폐기' },
-      { lines: [30, 36], color: 'rose' as const, note: 'GetBalance — ERC20 balanceOf() 호출로 잔액 조회' },
+      {
+        lines: [3, 3],
+        color: "sky" as const,
+        note: "go-ethereum의 vm.StateDB 인터페이스 구현",
+      },
+      {
+        lines: [11, 11],
+        color: "emerald" as const,
+        note: "vmStore — IAVL 트리 기반 영구 저장소",
+      },
+      {
+        lines: [14, 20],
+        color: "amber" as const,
+        note: "임시 메모리 스토어 — TX 종료 후 폐기",
+      },
+      {
+        lines: [30, 36],
+        color: "rose" as const,
+        note: "GetBalance — ERC20 balanceOf() 호출로 잔액 조회",
+      },
     ],
   },
 };

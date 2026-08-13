@@ -1,68 +1,57 @@
-import OrderedBoostingViz from './viz/OrderedBoostingViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import OrderedBoostingViz from "./viz/OrderedBoostingViz";
 
 export default function CatBoost() {
   return (
     <section id="catboost" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">CatBoost: 순서형 부스팅</h2>
+      <h2 className="mb-6 text-2xl font-bold">CatBoost는 현재 row를 보지 않은 prediction으로 gradient를 계산하려 합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>CatBoost</strong>(Categorical Boosting, 2018) — Yandex가 개발<br />
-          핵심 문제의식: 기존 GBM의 <strong>target leakage</strong>(타겟 정보 누출)를 근본적으로 해결<br />
-          3가지 혁신: Ordered Boosting + Symmetric Tree + Ordered Target Statistics
+          일반 boosting은 같은 training sample로 이전 tree를 학습한 뒤 그 sample의
+          gradient를 다시 계산합니다. Flexible learner에서는 training prediction과
+          unseen prediction의 분포가 달라지는 prediction shift가 생길 수 있습니다.
+          Ordered boosting은 permutation에서 row i보다 앞선 prefix로 만든 model만
+          사용해 i의 prediction과 gradient를 계산하는 방식으로 이 경로를 줄입니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Target Leakage 문제</h3>
         <p>
-          일반 GBM에서 잔차를 계산할 때 — 모든 훈련 샘플을 사용한 모델로 잔차를 구함<br />
-          이는 예측 대상 샘플의 정보가 이미 모델에 포함된 상태에서 잔차를 계산하는 셈<br />
-          교차 검증에서도 잡히지 않는 미묘한 과적합 — 특히 데이터가 작을수록 심각<br />
-          CatBoost는 이 문제를 <strong>순서(ordering)</strong>로 해결
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Ordered Boosting</h3>
-        <p>
-          데이터를 랜덤 순열 σ로 정렬<br />
-          샘플 σ(i)의 잔차: σ(1)~σ(i-1)까지만으로 학습한 모델의 예측 오차<br />
-          각 샘플이 "자기 자신과 미래"를 보지 못함 — leave-one-out의 효율적 근사<br />
-          복수 순열을 사용하여 분산 감소 (기본 4개 순열)<br />
-          메모리 비용: 순열 수 × 모델 수 → CatBoost의 메모리 사용량이 큰 이유
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Symmetric Tree (Oblivious Decision Tree)</h3>
-        <p>
-          CatBoost의 기본 트리: 같은 깊이의 모든 노드가 <strong>동일한 분할 조건</strong> 사용<br />
-          깊이 d → 분할 조건 d개, 리프 2^d개 — 매우 규칙적인 구조<br />
-          일반 트리 대비 표현력은 제한되지만 강력한 정규화 효과<br />
-          규칙적 구조 → GPU SIMD 연산 최적화 + 비트 연산으로 O(d) 예측<br />
-          grow_policy='Depthwise'(기본), 비대칭 트리가 필요하면 'Lossguide' 선택
+          Category별 target statistic도 같은 ordering 문제를 갖습니다. 그 계산과
+          smoothing은 <Link to="/ai/feature-engineering#categorical">cross-fitted·ordered target encoding</Link>에서
+          자세히 다뤘으므로 여기서는 반복하지 않습니다. 외부 group·time split과
+          prediction 시점의 category availability가 ordered algorithm보다 먼저입니다.
         </p>
       </div>
-      <OrderedBoostingViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Ordered Target Statistics — 범주형의 정석</h3>
-        <p>
-          범주형 피처를 수치로 변환할 때도 순서 기반 통계 사용<br />
-          {'TS(xᵢ) = (Σ_{j<i}[xⱼ=xᵢ]·yⱼ + a·p) / (Σ_{j<i}[xⱼ=xᵢ] + a)'}<br />
-          a = smoothing 계수 (사전 가중치), p = 전체 타겟 평균 (prior)<br />
-          "이전 샘플까지만" 참조 → target leakage를 인코딩 단계에서도 차단<br />
-          기존 target encoding의 문제(타겟 누출)를 구조적으로 해결한 유일한 방법
-        </p>
+      <ExplainedFormula
+        question="Ordered boosting에서 row i의 pseudo-residual은 어떤 model prediction에서 계산할까?"
+        idea={<>Random permutation σ에서 i보다 먼저 등장한 sample만 학습한 prefix model F⁽⁼i⁾를 만듭니다. Row i의 label은 이 model을 만드는 데 쓰지 않은 상태이므로, 그 prediction에서 loss derivative를 계산합니다.</>}
+        formula={String.raw`r_i^{\mathrm{ord}}=-\left.\frac{\partial\ell(y_i,z)}{\partial z}\right|_{z=F^{(<i)}(x_i)},\qquad F^{(<i)}\ \text{uses only}\ \{j:\sigma(j)<\sigma(i)\}`}
+        terms={[
+          { symbol: "σ", name: "training permutation", description: "Row마다 과거 prefix를 정의하기 위한 random order입니다." },
+          { symbol: "F^(<i)", name: "prefix model", description: "Permutation에서 row i보다 앞선 sample만 사용해 만든 prediction 함수입니다." },
+          { symbol: "r_i^ord", name: "ordered pseudo-residual", description: "자기 row를 학습하지 않은 prefix prediction에서 구한 negative loss derivative입니다." },
+          { symbol: "z", name: "model score", description: "Loss를 미분하는 regression value 또는 class logit입니다." },
+        ]}
+        assumptions={["실제 implementation은 계산량을 줄이기 위해 여러 permutation·prefix 상태를 효율적으로 관리합니다.", "Ordered mode가 외부 validation split을 대체하지 않습니다.", "논문의 prediction-shift 분석과 현재 library option을 version별로 확인합니다."]}
+        interpretation="목표는 training row를 한 번도 쓰지 않는 것이 아니라, 그 row의 gradient target을 만들 때 자기 자신을 이미 fit한 prediction을 사용하지 않는 것입니다."
+      />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">실전에서의 CatBoost</h3>
+      <div className="not-prose my-8"><OrderedBoostingViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div id="paper-catboost-boosting" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+          <p className="text-xs font-bold text-primary">논문 읽기 · Prediction shift와 ordering</p>
+          <p className="mt-2 text-sm font-semibold">CatBoost: Unbiased Boosting with Categorical Features</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Prokhorenkova 등은 target statistic과 standard boosting에서 생기는 prediction shift를 분석하고 ordered variants를 제안했습니다. 논문 benchmark의 우위가 categorical column이 있는 모든 dataset에서 automatic winner를 뜻하지 않으며, category mapping·hardware·tuning budget을 맞춘 비교가 필요합니다.</p>
+          <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html" target="_blank" rel="noreferrer">원 논문의 ordered boosting과 실험 보기</a>
+        </div>
+        <h3>대칭 트리도 별도의 inductive bias입니다</h3>
         <p>
-          <strong>범주형 피처가 많은 데이터</strong>에서 최고 성능 — 클릭 예측, 추천 시스템, 광고<br />
-          <strong>기본 하이퍼파라미터가 좋음</strong> — 튜닝 없이도 경쟁력 있는 성능<br />
-          <strong>결측값</strong>: 자동으로 최적 방향 결정 (XGBoost와 유사)<br />
-          <strong>GPU 학습</strong>: Symmetric Tree의 규칙적 구조 덕분에 효율적<br />
-          단점: 메모리 사용량이 높음 (ordered boosting의 순열별 모델 유지) + 순수 수치 데이터에서는 LightGBM 대비 속도 열위
-        </p>
-      </div>
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="text-sm">
-          <strong>실전 팁:</strong> CatBoost의 최대 강점은 cat_features 파라미터에 범주형 컬럼 인덱스를 넘기는 것.
-          One-hot이나 target encoding 없이 원본 범주를 직접 입력하면 된다.
-          iterations=3000 + early_stopping_rounds=100이 안전한 출발점.
+          Oblivious tree는 같은 depth의 모든 node에서 같은 split condition을
+          사용합니다. 규칙적인 path는 inference와 regularization에 이점이 있지만,
+          비대칭적인 data 관계를 같은 leaf budget으로 표현하는 방식은 leaf-wise
+          tree와 다릅니다. Category가 많다는 이유만으로 선택하지 말고 quality,
+          training time, batch·single-row latency와 artifact size를 함께 비교합니다.
         </p>
       </div>
     </section>

@@ -1,61 +1,65 @@
-import StructuredViz from './viz/StructuredViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import StructuredViz from "./viz/StructuredViz";
 
 export default function Structured() {
   return (
     <section id="structured" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Structured Pruning: 채널/헤드 제거</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Structured pruning은 tensor shape를 줄이고, N:M sparsity는 정해진 묶음 안에서만 weight를 남깁니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Unstructured — 개별 가중치를 0으로 → 행렬은 여전히 같은 크기, 0이 많을 뿐<br />
-          <strong>Structured Pruning</strong> — 필터·채널·헤드를 통째로 제거 → 텐서 shape 자체가 축소<br />
-          핵심 차이: Dense 행렬곱이 유지되므로 기존 하드웨어에서 바로 속도 향상
+          Channel·neuron을 제거하면 현재 layer의 output dimension과 다음 layer의 input dimension이 함께 줄어듭니다. 이 변화가 graph 전체에 전파되면 일반 dense kernel도 더 작은 matrix를 계산할 수 있습니다. 대신 residual add, normalization, grouped convolution, attention projection처럼 같은 dimension을 공유하는 경로를 함께 고쳐야 합니다.
+        </p>
+        <p>
+          Attention head를 지운다고 항상 hidden size가 줄어드는 것도 아닙니다. 남은 head output을 원래 크기로 다시 투영하거나 0으로 채우면 parameter는 줄어도 dense GEMM shape가 유지될 수 있습니다. 따라서 “head 25% 제거”가 아니라 export된 tensor shape와 compiler가 선택한 kernel을 확인해야 합니다.
         </p>
       </div>
+      <ExplainedFormula
+        question="Linear layer의 input·output dimension을 줄이면 계산량이 어떻게 달라질까요?"
+        idea={<>Batch와 token을 묶은 행 수를 <code>T</code>라고 하면 dense matrix multiplication은 각 output마다 모든 input을 곱합니다. 두 dimension을 각각 일정 비율로 남기면 주된 multiply-add 수도 그 비율의 곱으로 줄어듭니다.</>}
+        formula={String.raw`C_{\mathrm{dense}}\approx 2T d_{\mathrm{in}}d_{\mathrm{out}},\qquad \frac{C'}{C}\approx \alpha\beta\quad\text{when}\quad d'_{\mathrm{in}}=\alpha d_{\mathrm{in}},\ d'_{\mathrm{out}}=\beta d_{\mathrm{out}}`}
+        terms={[
+          { symbol: "T", name: "token rows", description: "Batch×sequence처럼 같은 linear layer를 통과하는 input row 수입니다." },
+          { symbol: "d_in", name: "input width", description: "Weight matrix의 입력 channel 수입니다." },
+          { symbol: "d_out", name: "output width", description: "Weight matrix가 만드는 출력 channel 수입니다." },
+          { symbol: "alpha, beta", name: "retention ratios", description: "Pruning 뒤 각각 남은 input·output dimension 비율입니다." },
+          { symbol: "C", name: "operation estimate", description: "곱셈과 덧셈을 각각 하나로 센 주된 dense 연산량 근사입니다." },
+        ]}
+        assumptions={[
+          "표준 dense GEMM의 산술량만 센 식이며 bias·activation·memory traffic·launch·communication은 포함하지 않습니다.",
+          "Graph dependency를 실제로 제거해 weight shape가 바뀌었다고 가정합니다.",
+          "Alignment가 깨지거나 작은 matrix가 되어 occupancy가 낮아지면 FLOPs 비율과 latency 비율이 달라집니다.",
+        ]}
+        interpretation="Input과 output width를 각각 75% 남기면 주된 계산량은 .75×.75=.5625, 즉 원래의 56.25%가 됩니다. 다만 end-to-end latency가 43.75% 줄었다는 뜻은 아닙니다."
+      />
+      <ExplainedFormula
+        question="2:4 semi-structured sparsity는 전체 sparsity 50%와 무엇이 다를까요?"
+        idea={<>Reduction axis를 연속된 4개씩 나눈 모든 묶음에서 정확히 2개만 남겨야 sparse MMA가 해석할 수 있는 규칙적인 layout이 됩니다. 전체 개수만 절반으로 맞춰도 한 묶음에 3개가 남으면 제약을 위반합니다.</>}
+        formula={String.raw`\forall g\in\mathcal G_M:\quad \sum_{i\in g} M_i=N,\qquad \text{2:4 means }(N,M)=(2,4)`}
+        terms={[
+          { symbol: "G_M", name: "local groups", description: "Kernel이 정한 reduction axis에서 연속된 M개 weight 묶음의 집합입니다." },
+          { symbol: "M_i", name: "binary mask entry", description: "묶음 안에서 남긴 weight는 1, 제거한 weight는 0입니다." },
+          { symbol: "N:M", name: "semi-structured pattern", description: "각 M개 묶음마다 N개를 남기는 local constraint입니다." },
+        ]}
+        assumptions={[
+          "N:M 표기에서 N을 남은 수로 쓰는 convention이며 문서·library의 축과 layout을 함께 확인합니다.",
+          "Hardware와 runtime이 해당 dtype·operation·shape의 sparse tactic을 지원해야 합니다.",
+          "Mask가 적격이어도 dense tactic이 더 빠르면 compiler가 sparse tactic을 선택하지 않을 수 있습니다.",
+        ]}
+        interpretation="Mask [1,1,0,0 | 1,0,1,0]은 두 묶음 모두 2개를 남겨 2:4입니다. [1,1,1,0 | 1,0,0,0]도 전체로는 4/8이 남지만 첫 묶음이 3개라 2:4가 아닙니다."
+      />
       <div className="not-prose my-8">
         <StructuredViz />
       </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Channel Pruning (CNN)</h3>
-        <p>
-          CNN의 Conv layer — 입력 C_in 채널 × 출력 C_out 필터<br />
-          Channel Pruning: C_out 필터 중 "중요하지 않은" 필터를 통째로 제거<br />
-          중요도 기준: L1-norm(Σ|w|), Taylor expansion, 또는 BN의 γ 파라미터<br />
-          Li et al. (2017): L1-norm이 가장 단순하면서도 경쟁력 있음
+      <div id="spec-tensorrt-sparsity" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">공식 구현 문서 읽기 · TensorRT structured sparsity</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          TensorRT 문서는 convolution과 constant-input MatrixMultiply에서 2:4를 검사하는 축, 지원 precision과 builder flag를 명시합니다. 중요한 점은 적격 layer 수와 실제 sparse tactic 선택 수가 다를 수 있다는 설명입니다. Pattern을 만족해도 problem size에서는 dense tactic이 더 빠를 수 있으므로 verbose build log와 같은 engine의 benchmark가 최종 근거입니다.
         </p>
-        <p>
-          결과: 출력 텐서의 채널 수가 줄어듦 → 다음 layer의 입력도 축소<br />
-          ResNet-56 on CIFAR-10: 필터 30% 제거 → 정확도 0.3% 하락, 속도 1.4배 향상
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Head Pruning (Transformer)</h3>
-        <p>
-          Multi-Head Attention의 각 head — 서로 다른 관점의 attention 패턴 학습<br />
-          하지만 모든 head가 필수적이지는 않음 — 일부는 redundant<br />
-          Michel et al. (2019): 16개 head 중 절반 제거해도 BLEU 0.5 이내 하락
-        </p>
-        <p>
-          Head 중요도 측정: 해당 head를 마스킹(출력을 0으로)했을 때 loss 변화량<br />
-          변화가 작은 head = 제거해도 무방<br />
-          Voita et al. (2019): 위치 head, 구문 head, 드문 토큰 head — 역할별로 중요도가 다름
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Structured vs Unstructured: 현실적 비교</h3>
-        <p>
-          Unstructured 90% 희소 → 이론 10배 연산 감소, 실측 1.2~1.5배 (GPU 비효율)<br />
-          Structured 50% → 이론 2배 감소, 실측 1.8~2배 (Dense 유지, cuBLAS 호환)<br />
-          배포 환경에서는 Structured가 압도적으로 유리
-        </p>
-
-        <div className="bg-green-50 dark:bg-green-950/30 border-l-4 border-green-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Structured Pruning의 핵심</p>
-          <p>
-            <strong>CNN</strong>: 채널 프루닝 → 모바일 배포의 사실상 표준 (MobileNet, EfficientNet과 결합)<br />
-            <strong>Transformer</strong>: 헤드 프루닝 → DistilBERT, TinyBERT 등에서 활용<br />
-            <strong>공통</strong>: 프루닝 비율은 layer마다 다르게 설정 (sensitivity analysis 필수)<br />
-            얕은 layer는 범용 특징 → 적게 프루닝, 깊은 layer는 태스크 특화 → 많이 프루닝
-          </p>
-        </div>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/data-formats-tensors.html#sparsity" target="_blank" rel="noreferrer">
+          2:4 검사 규칙·tactic 선택 조건 보기
+        </a>
       </div>
     </section>
   );

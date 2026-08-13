@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const handleMsgRefs: Record<string, CodeRef> = {
-  'handle-msg': {
-    path: 'consensus/state.go — handleMsg()',
-    lang: 'go',
+  "handle-msg": {
+    path: "consensus/state.go — handleMsg()",
+    lang: "go",
     highlight: [1, 3],
-    desc: 'handleMsg — 메시지 타입별 디스패치.\nProposal → 제안 저장, BlockPart → 블록 조립, Vote → tryAddVote로 집계.',
+    desc: "handleMsg — 메시지 타입별 디스패치.\nProposal → 제안 저장, BlockPart → 블록 조립, Vote → tryAddVote로 집계.",
     code: `func (cs *State) handleMsg(mi msgInfo) {
     cs.mtx.Lock()
     defer cs.mtx.Unlock()
@@ -31,21 +31,33 @@ export const handleMsgRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [2, 3], color: 'sky',
-        note: '뮤텍스 잠금: handleMsg 내 상태 변경을 직렬화' },
-      { lines: [8, 10], color: 'emerald',
-        note: 'Proposal: 서명·높이·라운드 검증 후 저장' },
-      { lines: [12, 18], color: 'amber',
-        note: 'BlockPart: PartSet 조립 → 완성 + Propose 단계면 즉시 enterPrevote' },
-      { lines: [20, 23], color: 'violet',
-        note: 'Vote: tryAddVote → addVote → +2/3 감지 시 enterPrecommit/enterCommit' },
+      {
+        lines: [2, 3],
+        color: "sky",
+        note: "뮤텍스 잠금: handleMsg 내 상태 변경을 직렬화",
+      },
+      {
+        lines: [8, 10],
+        color: "emerald",
+        note: "Proposal: 서명·높이·라운드 검증 후 저장",
+      },
+      {
+        lines: [12, 18],
+        color: "amber",
+        note: "BlockPart: PartSet 조립 → 완성 + Propose 단계면 즉시 enterPrevote",
+      },
+      {
+        lines: [20, 23],
+        color: "violet",
+        note: "Vote: tryAddVote → addVote → +2/3 감지 시 enterPrecommit/enterCommit",
+      },
     ],
   },
-  'handle-timeout': {
-    path: 'consensus/state.go — handleTimeout()',
-    lang: 'go',
+  "handle-timeout": {
+    path: "consensus/state.go — handleTimeout()",
+    lang: "go",
     highlight: [1, 3],
-    desc: 'handleTimeout — 단계별 타임아웃 처리.\n각 타임아웃이 다음 단계 진입을 트리거.',
+    desc: "handleTimeout — 단계별 타임아웃 처리.\n각 타임아웃이 다음 단계 진입을 트리거.",
     code: `func (cs *State) handleTimeout(
     ti timeoutInfo, rs cstypes.RoundState,
 ) {
@@ -80,14 +92,26 @@ export const handleMsgRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [4, 8], color: 'sky',
-        note: '가드절: 과거 높이/라운드의 타임아웃은 무시' },
-      { lines: [15, 16], color: 'emerald',
-        note: 'NewHeight: 다음 블록 높이의 첫 라운드 시작' },
-      { lines: [20, 22], color: 'amber',
-        note: 'Propose 타임아웃: 제안이 안 오면 nil prevote로 진행' },
-      { lines: [24, 30], color: 'violet',
-        note: 'PrevoteWait/PrecommitWait: 투표 수집 실패 → 다음 단계/라운드로 전환' },
+      {
+        lines: [4, 8],
+        color: "sky",
+        note: "가드절: 과거 높이/라운드의 타임아웃은 무시",
+      },
+      {
+        lines: [15, 16],
+        color: "emerald",
+        note: "NewHeight: 다음 블록 높이의 첫 라운드 시작",
+      },
+      {
+        lines: [20, 22],
+        color: "amber",
+        note: "Propose 타임아웃: 제안이 안 오면 nil prevote로 진행",
+      },
+      {
+        lines: [24, 30],
+        color: "violet",
+        note: "PrevoteWait/PrecommitWait: 투표 수집 실패 → 다음 단계/라운드로 전환",
+      },
     ],
   },
 };

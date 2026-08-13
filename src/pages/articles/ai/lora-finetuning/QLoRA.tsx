@@ -1,54 +1,46 @@
-import QLoraDetailViz from './viz/QLoraDetailViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import QLoraDetailViz from "./viz/QLoraDetailViz";
 
 export default function QLoRA() {
   return (
-    <section id="qlora" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">QLoRA: 4비트 양자화 + LoRA</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          <strong>QLoRA(Quantized LoRA)</strong> — Dettmers et al.(2023)이 제안한 기법으로,
-          사전학습 모델을 4비트로 양자화한 뒤 그 위에 LoRA 어댑터를 학습한다.
-          LoRA만으로도 메모리가 크게 줄지만, base 모델 자체가 FP16(16비트)이므로 여전히 대형 모델에는 부담.
-          QLoRA는 base 모델을 4비트로 압축하여 메모리를 추가로 75% 절감한다.
-        </p>
-        <p>
-          <strong>NF4(Normal Float 4-bit)</strong> — QLoRA의 핵심 혁신.
-          신경망 가중치는 정규분포(Normal distribution)를 따르므로, 양자화 구간을 정규분포 분위수에 맞추면
-          균등 분할(FP4)보다 정보 손실이 적다.
-          같은 4비트에서 NF4가 FP4보다 이론적 정보 보존량이 높음이 증명되었다.
-        </p>
-        <p>
-          <strong>Double Quantization(DQ)</strong> — 블록별 양자화에서 발생하는 양자화 상수(scale factor)도
-          2차 양자화하여 추가 메모리를 절감한다.
-          64개 가중치당 1개 FP32 scale → 이를 FP8로 2차 양자화하면 파라미터당 0.37비트 절감.
-          전체적으로 약 3% 추가 메모리 절약 효과.
-        </p>
-        <p>
-          <strong>Paged Optimizers</strong> — 긴 시퀀스에서 활성화 메모리가 급증할 때
-          NVIDIA unified memory를 활용하여 옵티마이저 상태를 CPU↔GPU 간 자동 페이징한다.
-          GPU OOM(Out-Of-Memory) 없이 학습을 지속할 수 있게 하는 안전장치.
-        </p>
+    <section id="qlora" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">QLoRA는 4-bit로 학습하는 LoRA가 아니라, 4-bit로 저장한 frozen base를 연산 시 복원하며 높은 precision adapter에 gradient를 보내는 방법입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>여기서는 세 precision을 나눠야 합니다. Base weight는 NF4 같은 low-bit representation과 scale metadata로 저장하고, matmul 전에 지정된 compute dtype으로 dequantize하며, LoRA parameter·gradient·optimizer state는 별도의 training dtype을 사용합니다. 그래서 “base가 4-bit”라는 말만으로 전체 training memory나 output artifact dtype을 알 수 없습니다.</p>
+        <p>NF4·block quantization·double quantization의 일반 원리와 quantization error는 <a href="/ai/quantization">양자화 정본</a>을 재사용합니다. QLoRA에서는 quantized base가 frozen이므로 일반 QAT처럼 base quantizer error를 gradient로 직접 수정하지 않습니다. Adapter가 task loss 아래에서 일부 오차를 우회할 수 있을 뿐입니다.</p>
       </div>
-
-      <div className="not-prose"><QLoraDetailViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">QLoRA의 성능과 한계</h3>
-        <p>
-          논문 실험 결과: QLoRA(4-bit)로 학습한 모델이 16-bit full fine-tuning 대비
-          97~99% 성능을 유지한다.
-          Guanaco 65B(QLoRA)는 ChatGPT의 99.3% 수준 성능을 단일 GPU에서 달성했다.
-        </p>
-        <p>
-          한계: 4비트 역양자화(dequantization) 과정에서 연산이 추가되어
-          학습 속도는 FP16 LoRA보다 약 20~30% 느리다.
-          그러나 메모리 절감으로 더 큰 배치 사이즈를 사용할 수 있어 실질적 처리량은 비슷하거나 오히려 높을 수 있다.
-        </p>
-        <p className="leading-7">
-          핵심 1: <strong>NF4</strong>는 정규분포에 최적화된 4비트 타입 — 동일 비트에서 최소 정보 손실.<br />
-          핵심 2: <strong>Double Quantization</strong>으로 양자화 오버헤드까지 압축.<br />
-          핵심 3: <strong>단일 A100 80GB로 65B 모델 학습</strong> — QLoRA 이전에는 불가능했던 규모.
-        </p>
+      <ExplainedFormula
+        question="QLoRA의 한 layer에서 저장값·연산값·학습값은 어떻게 나뉠까요?"
+        idea={<>Quantized code와 scale로 base weight를 저장하고 forward 때 compute dtype으로 복원합니다. Base 쪽 gradient는 저장하지 않지만, 그 layer를 지난 loss gradient는 adapter A와 B까지 역전파됩니다.</>}
+        formula={String.raw`y=\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x+\frac{\alpha}{r}BAx,\qquad \nabla_{q_W,s_W}\mathcal L=0,\ \nabla_{A,B}\mathcal L\ne0`}
+        terms={[
+          { symbol: "q_W,s_W", name: "quantized base storage", description: "Low-bit code와 block/group별 quantization metadata입니다." },
+          { symbol: "D", name: "dequantization", description: "Code와 scale을 approximate weight로 복원하는 연산입니다." },
+          { symbol: "c", name: "compute dtype", description: "bf16·fp16 등 matmul에 사용하는 연산 precision입니다." },
+          { symbol: "A,B", name: "trainable adapter", description: "더 높은 training precision으로 유지하며 gradient를 받는 LoRA parameter입니다." },
+        ]}
+        assumptions={["Base quantizer·block size·scale dtype·compute dtype·kernel을 함께 기록합니다.", "Frozen base에 gradient/optimizer state를 만들지 않는지 runtime에서 확인합니다.", "Dequantized weight는 원래 full-precision W와 같지 않으므로 full-precision LoRA와 paired quality를 비교합니다."]}
+        interpretation="GPU에는 4-bit code만 영구 저장하더라도 matmul 경로는 bf16 값을 사용하거나 fused dequantize를 수행할 수 있습니다. Adapter는 그 위에서 학습되며 base code는 바뀌지 않습니다."
+      />
+      <ExplainedFormula
+        question="QLoRA가 peak memory를 줄이는 항과 그대로 남는 항을 어떻게 구분할까요?"
+        idea={<>Base storage, quantization metadata, adapter parameter·gradient·optimizer, activation과 workspace를 별도 장부로 더합니다. Parameter bit만 계산하면 activation peak와 temporary dequant workspace를 놓칩니다.</>}
+        formula={String.raw`M_{\mathrm{train}}\approx \frac{N_Wb}{8}+M_{\mathrm{qmeta}}+M_{A,B}+M_{\mathrm{grad}}+M_{\mathrm{opt}}+M_{\mathrm{act}}+M_{\mathrm{workspace}}`}
+        terms={[
+          { symbol: "N_W,b", name: "base count · storage bits", description: "Frozen base scalar 수와 scalar당 low-bit code 크기입니다." },
+          { symbol: "M_qmeta", name: "quantization metadata", description: "Scale·zero-point·double-quant metadata와 alignment입니다." },
+          { symbol: "M_A,B,grad,opt", name: "adapter training state", description: "Adapter weight·gradient·optimizer state의 실제 dtype별 byte입니다." },
+          { symbol: "M_act", name: "saved activations", description: "Sequence·batch·checkpointing에 따라 달라지는 backward용 activation입니다." },
+          { symbol: "M_workspace", name: "runtime workspace", description: "Kernel temporary buffer·paged optimizer·allocator reserve 등입니다." },
+        ]}
+        assumptions={["Byte 단위를 통일하고 allocator가 보고한 peak와 비교합니다.", "Gradient checkpointing·sequence packing·batch와 optimizer가 같을 때 후보를 비교합니다.", "식은 1차 ledger이며 fragmentation·offload·communication·kernel별 temporary peak를 profile로 보완합니다."]}
+        interpretation="Base storage가 16-bit에서 4-bit로 줄어도 activation이 peak의 절반이면 전체 memory가 4배 줄지 않습니다. 먼저 장부에서 가장 큰 항을 확인해야 합니다."
+      />
+      <div className="not-prose my-8"><QLoraDetailViz /></div>
+      <div id="reading-qlora" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">핵심 논문 · QLoRA</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Dettmers 등은 frozen 4-bit quantized base를 통해 LoRA adapter로 gradient를 전달하고, NF4·double quantization·paged optimizer를 조합해 65B model을 단일 48GB GPU에서 fine-tuning한 결과를 보고했습니다. 논문의 LLaMA/T5·instruction dataset·Guanaco·당시 chatbot 평가 범위의 결과이며, 모든 hardware·kernel·task에서 full 16-bit fine-tuning과 동등하거나 judge benchmark가 충분하다는 뜻은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noreferrer">NF4·double quantization·paged optimizer와 평가 보기</a>
       </div>
     </section>
   );

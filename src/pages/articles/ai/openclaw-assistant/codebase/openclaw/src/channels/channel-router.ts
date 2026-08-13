@@ -9,13 +9,13 @@
  * 6. 응답 전달 — 플랫폼별 리치 메시지로 변환
  */
 
-import type { Channel, MsgContext } from './types';
-import { runEmbeddedPiAgent } from '../agents/pi-embedded-runner';
-import type { SessionManager } from '@mariozechner/pi-coding-agent';
+import type { Channel, MsgContext } from "./types";
+import { runEmbeddedPiAgent } from "../agents/pi-embedded-runner";
+import type { SessionManager } from "@mariozechner/pi-coding-agent";
 
 export interface ChannelRouterConfig {
-  dmPolicy: 'always' | 'allowlist';
-  groupPolicy: 'mention' | 'trigger' | 'always';
+  dmPolicy: "always" | "allowlist";
+  groupPolicy: "mention" | "trigger" | "always";
   triggerWords: string[];
 }
 
@@ -47,10 +47,14 @@ export class ChannelRouter {
 
     // 5. 에이전트 처리
     await runEmbeddedPiAgent({
-      message: { ...msg, sessionKey, resolvedModel: 'anthropic/claude-opus-4-6' },
+      message: {
+        ...msg,
+        sessionKey,
+        resolvedModel: "anthropic/claude-opus-4-6",
+      },
       sessionManager: this.sessionManager,
       tools: [],
-      systemPrompt: '',
+      systemPrompt: "",
     });
 
     // 6. 응답 전달 (스트리밍으로 처리됨)
@@ -62,9 +66,9 @@ export class ChannelRouter {
   }
 
   private checkAccess(msg: MsgContext): boolean {
-    if (msg.isDM) return this.config.dmPolicy === 'always';
-    if (this.config.groupPolicy === 'mention') return msg.isMentioned;
-    if (this.config.groupPolicy === 'trigger') {
+    if (msg.isDM) return this.config.dmPolicy === "always";
+    if (this.config.groupPolicy === "mention") return msg.isMentioned;
+    if (this.config.groupPolicy === "trigger") {
       return this.config.triggerWords.some((w) => msg.text.includes(w));
     }
     return true;

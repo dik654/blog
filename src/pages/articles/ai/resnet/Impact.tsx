@@ -1,51 +1,94 @@
-import StepViz from '@/components/ui/step-viz';
-import ImageNetTrendViz from './viz/ImageNetTrendViz';
-import { impactSteps } from './ImpactData';
-import ImpactDetailViz from './viz/ImpactDetailViz';
+import { Link } from "react-router-dom";
+import InterpretationViz from "./viz/InterpretationViz";
 
 export default function Impact() {
   return (
     <section id="impact" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ResNet의 영향</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          ILSVRC 2015 우승 — top-5 에러 <strong>3.57%</strong> (인간 5.1% 돌파)<br />
-          152층이라는 압도적 깊이로 깊은 네트워크의 시대를 열음
+      <h2 className="mb-6 text-2xl font-bold">
+        Residual connection은 공통 primitive가 됐지만 설명 하나로 환원되지는
+        않는다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          ResNet은 ImageNet classification뿐 아니라 detection·segmentation
+          backbone으로 확장됐고, identity path는 ResNeXt·Wide ResNet·DenseNet과
+          현대 CNN 설계에 영향을 주었습니다. Transformer도 sublayer update를
+          residual stream에 더하지만, convolutional ResNet block을 그대로
+          복사했다기보다 residual learning이라는 더 넓은 parameterization 원리를
+          공유한다고 보는 편이 정확합니다.
         </p>
-        <h3>후속 발전</h3>
-        <p>
-          <strong>DenseNet</strong>(2017): 모든 층을 연결 → 특성 재사용 극대화<br />
-          <strong>ResNeXt</strong>(2017): 그룹 합성곱으로 너비 확장<br />
-          <strong>EfficientNet</strong>(2019): 깊이·너비·해상도 동시 스케일링
-        </p>
-        <p>
-          <strong>Transformer</strong>의 스킵 커넥션 = ResNet에서 유래<br />
-          Self-Attention + FFN 각 서브레이어에 잔차 연결 적용<br />
-          GPT, BERT 등 현대 LLM의 필수 구조가 된 스킵 커넥션
-        </p>
-        <h3>손실 평면 매끄러움 효과</h3>
-        <p>
-          스킵 커넥션이 손실 함수의 지형(landscape)을 매끄럽게 만듦<br />
-          → 옵티마이저가 더 안정적으로 최적점을 찾을 수 있음
-        </p>
-      </div>
-      <div className="not-prose my-8">
-        <StepViz steps={impactSteps}>
-          {(step) => <ImageNetTrendViz step={step} />}
-        </StepViz>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">학계 영향력 & Loss Landscape</h3>
+      <InterpretationViz />
+
+      <div id="paper-residual-ensemble" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">후속 논문 읽기 · Path 관점</p>
+        <p className="mt-2 text-sm font-semibold">Residual Networks Behave Like Ensembles of Relatively Shallow Networks</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Residual network를 서로 다른 길이의 computational path 모음으로 해석하고
+          lesion 실험으로 짧은 path의 역할을 분석합니다. 이는 유용한 후속 설명이지만
+          trained ResNet이 독립 model의 확률적 ensemble과 정확히 같다는 정의는 아닙니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1605.06431" target="_blank" rel="noreferrer">원 논문의 path 전개·lesion 실험 보기</a>
       </div>
-      <div className="not-prose my-6">
-        <ImpactDetailViz />
+
+      <div id="paper-residual-landscape" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">후속 논문 읽기 · Loss landscape</p>
+        <p className="mt-2 text-sm font-semibold">Visualizing the Loss Landscape of Neural Nets</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Filter-wise normalization을 포함한 1D·2D slice로 architecture별 loss surface를
+          비교하고 skip connection과 landscape의 관계를 관찰합니다. 고차원 objective
+          전체를 2D 그림 하나로 완전히 증명하거나 모든 optimizer 경로를 설명하지는 않습니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1712.09913" target="_blank" rel="noreferrer">원 논문의 시각화 방법·비교 보기</a>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: ResNet은 <strong>인용 수 20만+</strong>, AI 역사상 가장 영향력 있는 논문 중 하나.<br />
-          요약 2: <strong>Loss landscape 평활화</strong>가 skip connection의 본질적 효과.<br />
-          요약 3: Transformer·LLM의 모든 residual block은 <strong>ResNet의 직계 후손</strong>.
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>“얕은 network의 ensemble”은 유용한 후속 관점이지 정의가 아니다</h3>
+        <p className="leading-8">
+          Shortcut을 선택하는 여러 computational path로 network를 전개해 짧은
+          path가 gradient에 기여한다는 분석은 residual 구조의 직관을 넓힙니다.
+          Loss landscape가 더 부드럽다는 시각화도 optimization 차이를 설명하는
+          증거입니다. 다만 어느 하나를 ResNet의 유일한 작동 원리로 단정하지
+          않고, 원 논문의 degradation 실험·identity mapping ablation·후속 분석을
+          서로 다른 증거로 구분합니다.
+        </p>
+
+        <div id="paper-torchvision-resnet" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+          <p className="text-xs font-bold text-primary">공식 구현 읽기 · Torchvision</p>
+          <p className="mt-2 text-sm font-semibold">Torchvision ResNet source</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            BasicBlock·Bottleneck의 stride 위치, expansion, projection과
+            zero-init residual option을 현재 source에서 확인합니다. 원 논문의 표기와
+            현재 library default, 내려받은 checkpoint recipe를 같은 것으로 가정하면 안 됩니다.
+          </p>
+          <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.pytorch.org/vision/stable/_modules/torchvision/models/resnet.html" target="_blank" rel="noreferrer">공식 source와 현재 구현 계약 보기</a>
+        </div>
+
+        <h3>
+          Backbone을 고를 때는 stage feature와 deployment 비용을 함께 본다
+        </h3>
+        <p className="leading-8">
+          Classification top-1만 비교하지 않고 downstream head가 필요한
+          resolution, feature pyramid의 stage output, batch size에서의
+          normalization, latency와 activation memory를 확인합니다. Pretrained
+          checkpoint를 쓸 때는 resize·crop·mean·std 전처리와 model variant를
+          함께 가져와야 합니다. CNN 전체의 inductive bias와 modern architecture
+          선택은 <Link to="/ai/cnn">CNN 정본 글</Link>, transformer backbone과의
+          비교는 <Link to="/ai/vision-transformer">Vision Transformer</Link>에서
+          이어집니다.
+        </p>
+
+        <h3>
+          Residual path도 architecture·data·training recipe를 대신하지 않는다
+        </h3>
+        <p className="leading-8">
+          Skip connection을 추가했다고 generalization이나 robustness가
+          보장되지는 않습니다. Width, downsampling 위치, normalization,
+          augmentation과 optimizer가 함께 결과를 만듭니다. 따라서 새 block을
+          평가할 때는 parameter·FLOPs·activation memory와 training budget을 맞춘
+          plain 또는 기존 residual baseline을 함께 둡니다.
         </p>
       </div>
     </section>

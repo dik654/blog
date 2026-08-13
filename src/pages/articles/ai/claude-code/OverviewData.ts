@@ -26,7 +26,19 @@ export const agentLoopCode = `Claude Code 에이전트 루프:
   claude --fork-session: 세션 분기 (원본 유지)`;
 
 export const agentLoopAnnotations = [
-  { lines: [5, 14] as [number, number], color: 'sky' as const, note: 'API 호출 → 응답 분석 → 도구 실행 루프' },
-  { lines: [16, 20] as [number, number], color: 'emerald' as const, note: '핵심 특성 4가지' },
-  { lines: [22, 26] as [number, number], color: 'amber' as const, note: '세션 영속성 — JSONL 저장' },
+  {
+    lines: [5, 14] as [number, number],
+    color: "sky" as const,
+    note: "API 호출 → 응답 분석 → 도구 실행 루프",
+  },
+  {
+    lines: [16, 20] as [number, number],
+    color: "emerald" as const,
+    note: "핵심 특성 4가지",
+  },
+  {
+    lines: [22, 26] as [number, number],
+    color: "amber" as const,
+    note: "세션 영속성 — JSONL 저장",
+  },
 ];

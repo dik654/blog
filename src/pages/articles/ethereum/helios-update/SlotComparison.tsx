@@ -9,9 +9,11 @@ export default function SlotComparison({ title }: { title: string }) {
           <code>optimistic.slot &gt;= finalized.slot</code>이 불변 조건.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 safe/finalized/latest 3가지 블록 태그를 구분한다.
+          <strong>💡 Reth vs Helios:</strong> Reth는 safe/finalized/latest 3가지
+          블록 태그를 구분한다.
           <br />
-          Helios도 동일한 구분 — optimistic이 latest, finalized가 finalized에 대응.
+          Helios도 동일한 구분 — optimistic이 latest, finalized가 finalized에
+          대응.
         </p>
       </div>
     </section>

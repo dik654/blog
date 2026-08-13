@@ -9,8 +9,16 @@ export const SYNC_STATE_CODE = `pub struct ChainSyncState {
 }`;
 
 export const SYNC_STATE_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '동기화 진행 상태 추적' },
-  { lines: [6, 8] as [number, number], color: 'emerald' as const, note: '가십 제어 플래그' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "동기화 진행 상태 추적",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "emerald" as const,
+    note: "가십 제어 플래그",
+  },
 ];
 
 export const BATCH_SYNC_CODE = `const BLOCK_BATCH_SIZE: usize = 10;
@@ -42,9 +50,21 @@ async fn sync_chain(sync_state: ChainSyncState, api_client: impl ApiClient,
 }`;
 
 export const BATCH_SYNC_ANNOTATIONS = [
-  { lines: [6, 10] as [number, number], color: 'sky' as const, note: '피어에서 블록 인덱스 수신' },
-  { lines: [16, 22] as [number, number], color: 'emerald' as const, note: '큐 기반 순차 블록 처리' },
-  { lines: [25, 26] as [number, number], color: 'amber' as const, note: '동기화 완료 대기' },
+  {
+    lines: [6, 10] as [number, number],
+    color: "sky" as const,
+    note: "피어에서 블록 인덱스 수신",
+  },
+  {
+    lines: [16, 22] as [number, number],
+    color: "emerald" as const,
+    note: "큐 기반 순차 블록 처리",
+  },
+  {
+    lines: [25, 26] as [number, number],
+    color: "amber" as const,
+    note: "동기화 완료 대기",
+  },
 ];
 
 export const NODE_MODE_CODE = `// 노드 동기화 모드
@@ -64,6 +84,14 @@ if matches!(node_mode, NodeMode::TrustedPeerSync) {
 }`;
 
 export const NODE_MODE_ANNOTATIONS = [
-  { lines: [6, 8] as [number, number], color: 'sky' as const, note: 'Genesis 모드: 즉시 완료' },
-  { lines: [9, 14] as [number, number], color: 'emerald' as const, note: 'TrustedPeerSync: 신뢰 피어 전용' },
+  {
+    lines: [6, 8] as [number, number],
+    color: "sky" as const,
+    note: "Genesis 모드: 즉시 완료",
+  },
+  {
+    lines: [9, 14] as [number, number],
+    color: "emerald" as const,
+    note: "TrustedPeerSync: 신뢰 피어 전용",
+  },
 ];

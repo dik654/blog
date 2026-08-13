@@ -1,102 +1,41 @@
-import { codeRefs } from './codeRefs';
-import PC2DetailViz from './viz/PC2DetailViz';
-import type { CodeRef } from '@/components/code/types';
+import { codeRefs } from "./codeRefs";
+import PC2DetailViz from "./viz/PC2DetailViz";
+import type { CodeRef } from "@/components/code/types";
 
-export default function PC2({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function PC2({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="pc2" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">PreCommit2: 칼럼 해시 + 트리 R</h2>
-      <div className="not-prose mb-8">
+      <h2 className="mb-6 text-2xl font-bold">
+        PC2는 label column을 replica와 Merkle commitment로 접는다
+      </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          PC1이 만든 여러 layer의 label을 node별 column으로 모으고 hash해
+          encoding key를 만듭니다. 이 key를 원본 데이터에 적용해 replica를
+          만들고, data·column·replica에 대응하는 Merkle commitment를
+          계산합니다.
+        </p>
+        <p>
+          Poseidon은 유한체 연산으로 구성돼 proof circuit 안에서 다루기
+          유리하지만, “SHA-256보다 언제나 수백 배 빠르다”는 일반 성능 주장은
+          아닙니다. Native hashing 비용과 circuit constraint 비용을 구분해서
+          비교해야 합니다.
+        </p>
+      </div>
+      <div className="not-prose my-8">
         <PC2DetailViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3">
-          <strong>{'💡'} 왜 Poseidon인가?</strong> — SHA256은 비트 연산 → ZK 회로 비효율
-          <br />
-          Poseidon은 유한체 산술 연산 → SNARK 회로 크기 수백 배 감소
-        </p>
-
-        {/* ── PC2 Algorithm ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">PC2 Algorithm 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PC2 Algorithm (Column hashing + Tree R):
-
-// Input:
-// - 11 layers from PC1 (352 GiB)
-// - original data D (32 GiB)
-
-// Step 1: Column hashing
-// for each column (leaf position):
-//     column = [layer_0[j], layer_1[j], ..., layer_10[j]]
-//     column_hash = Poseidon(column)
-//     column_tree[j] = column_hash
-//
-// - 11 values per column
-// - ~10^9 columns
-// - Poseidon hash per column
-// - parallelizable
-
-// Step 2: Encoded data
-// for each node j:
-//     encoded[j] = D[j] + layer_10[j]  (mod BLS12-381 scalar field)
-// - original + last layer label
-// - "encryption" of original data
-
-// Step 3: Tree D (original data)
-// - binary Merkle tree over D
-// - Poseidon hash
-// - root: comm_d
-
-// Step 4: Tree R_last (encoded data)
-// - binary Merkle tree over encoded
-// - Poseidon hash
-// - root: comm_r_last
-
-// Step 5: Tree C (column tree)
-// - Merkle tree over column hashes
-// - root: comm_c
-
-// Step 6: comm_r computation
-// comm_r = Poseidon(comm_c || comm_r_last)
-// - final replica commitment
-// - committed on-chain (PreCommit)
-
-// GPU Acceleration:
-// - Poseidon on GPU (CUDA)
-// - column hashing batched
-// - ~1024 columns per kernel
-// - A100: ~5-10 min for PC2
-// - A6000: ~15-30 min
-
-// Memory:
-// - stream process columns
-// - chunked Merkle construction
-// - peak: ~32 GiB VRAM needed
-// - tree nodes written to disk incrementally
-
-// Output:
-// - tree R_last (~32 GiB)
-// - tree C (~30 GiB)
-// - comm_r (32 bytes, on-chain)
-
-// Why Poseidon for SNARK:
-// - SHA256: bit operations (expensive in ZK)
-// - Poseidon: field operations (cheap)
-// - 100-1000x fewer constraints
-// - enables efficient SNARK proofs
-
-// Poseidon details:
-// - width: 2, 4, 8, 11+ (input arity)
-// - rounds: 57-65 (optimized)
-// - MDS matrix
-// - S-box: x^5
-// - BLS12-381 scalar field
-// - 128-bit security`}
-        </pre>
-        <p className="leading-7">
-          PC2: <strong>column hash → tree R → tree C → comm_r</strong>.<br />
-          Poseidon hash (SNARK-friendly, 100-1000x SHA256 constraint ratio).<br />
-          GPU acceleration: A100 5-10min, A6000 15-30min.
+        <h3>GPU 처리량과 storage I/O를 함께 본다</h3>
+        <p>
+          Column hash와 tree construction을 GPU로 옮겨도 layer data를 읽고
+          replica와 tree를 쓰는 경로가 병목이면 전체 시간은 줄지 않습니다.
+          Kernel time, host-device transfer, disk throughput와 peak VRAM을 같은
+          sector fixture에서 기록해야 최적화 효과를 설명할 수 있습니다.
         </p>
       </div>
     </section>

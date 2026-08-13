@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const FINDNODE_STRUCTS = `type Findnode struct {
     Target     Pubkey   // 찾고 싶은 대상의 64바이트 공개키
@@ -62,36 +62,91 @@ export default function FindNode() {
       <h2 className="text-2xl font-bold mb-6">FindNode / Neighbors</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Kademlia lookup의 핵심 RPC입니다. Target 공개키에 가까운 노드들을 요청하면, 상대방이 자신의 라우팅 테이블에서 가장 가까운 노드들을 <strong>Neighbors</strong> 패킷으로 응답합니다.
+          Kademlia lookup의 핵심 RPC입니다. Target 공개키에 가까운 노드들을
+          요청하면, 상대방이 자신의 라우팅 테이블에서 가장 가까운 노드들을{" "}
+          <strong>Neighbors</strong> 패킷으로 응답합니다.
         </p>
-        <CodePanel title="Findnode & Neighbors 구조체 -- v4wire.go" code={FINDNODE_STRUCTS} startLine={75} annotations={[
-          { lines: [76, 76], color: 'sky', note: '64바이트 secp256k1 공개키' },
-          { lines: [82, 82], color: 'emerald', note: '패킷 크기 1280B 제한으로 최대 12개' },
-        ]} />
-        <h3 className="text-xl font-semibold mt-6 mb-3">요청 측: 다중 패킷 수집</h3>
+        <CodePanel
+          title="Findnode & Neighbors 구조체 -- v4wire.go"
+          code={FINDNODE_STRUCTS}
+          startLine={75}
+          annotations={[
+            {
+              lines: [76, 76],
+              color: "sky",
+              note: "64바이트 secp256k1 공개키",
+            },
+            {
+              lines: [82, 82],
+              color: "emerald",
+              note: "패킷 크기 1280B 제한으로 최대 12개",
+            },
+          ]}
+        />
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          요청 측: 다중 패킷 수집
+        </h3>
         <p>
-          16개(bucketSize) 노드를 채울 때까지 <strong>여러 Neighbors 패킷</strong>을 수집합니다.
-          <code>replyMatcher</code> 콜백이 <code>requestDone=false</code>를 반환하면 큐에서 제거되지 않아 추가 응답을 계속 받습니다.<br />
+          16개(bucketSize) 노드를 채울 때까지{" "}
+          <strong>여러 Neighbors 패킷</strong>을 수집합니다.
+          <code>replyMatcher</code> 콜백이 <code>requestDone=false</code>를
+          반환하면 큐에서 제거되지 않아 추가 응답을 계속 받습니다.
+          <br />
           타임아웃이 발생해도 하나라도 응답이 있었으면 에러를 무시합니다.
         </p>
-        <CodePanel title="findnode() -- v4_udp.go:320" code={FINDNODE_FUNC} startLine={320} annotations={[
-          { lines: [322, 322], color: 'sky', note: 'bond가 없으면 먼저 ping/pong 수행' },
-          { lines: [334, 334], color: 'emerald', note: 'bucketSize(16)개 수신 시 완료' },
-          { lines: [340, 340], color: 'amber', note: '타임아웃이어도 응답이 있으면 성공 처리' },
-        ]} />
-        <h3 className="text-xl font-semibold mt-6 mb-3">응답 측: 12개씩 분할 전송</h3>
+        <CodePanel
+          title="findnode() -- v4_udp.go:320"
+          code={FINDNODE_FUNC}
+          startLine={320}
+          annotations={[
+            {
+              lines: [322, 322],
+              color: "sky",
+              note: "bond가 없으면 먼저 ping/pong 수행",
+            },
+            {
+              lines: [334, 334],
+              color: "emerald",
+              note: "bucketSize(16)개 수신 시 완료",
+            },
+            {
+              lines: [340, 340],
+              color: "amber",
+              note: "타임아웃이어도 응답이 있으면 성공 처리",
+            },
+          ]}
+        />
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          응답 측: 12개씩 분할 전송
+        </h3>
         <p>
-          라우팅 테이블에서 XOR 거리 기준 가장 가까운 노드를 찾고, MaxNeighbors(12)개 단위로 패킷을 나눠 전송합니다.
-          bond가 없는 요청은 <code>verifyFindnode</code>에서 거절하여 DDoS 증폭을 차단합니다.
+          라우팅 테이블에서 XOR 거리 기준 가장 가까운 노드를 찾고,
+          MaxNeighbors(12)개 단위로 패킷을 나눠 전송합니다. bond가 없는 요청은{" "}
+          <code>verifyFindnode</code>에서 거절하여 DDoS 증폭을 차단합니다.
         </p>
-        <CodePanel title="handleFindnode -- v4_udp.go:751" code={HANDLE_FINDNODE} startLine={751} annotations={[
-          { lines: [757, 757], color: 'sky', note: 'Target 공개키를 keccak256으로 node ID 변환' },
-          { lines: [763, 763], color: 'emerald', note: '12개 도달 시 즉시 전송 후 버퍼 초기화' },
-        ]} />
+        <CodePanel
+          title="handleFindnode -- v4_udp.go:751"
+          code={HANDLE_FINDNODE}
+          startLine={751}
+          annotations={[
+            {
+              lines: [757, 757],
+              color: "sky",
+              note: "Target 공개키를 keccak256으로 node ID 변환",
+            },
+            {
+              lines: [763, 763],
+              color: "emerald",
+              note: "12개 도달 시 즉시 전송 후 버퍼 초기화",
+            },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">FINDNODE 보안 고려사항</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          FINDNODE 보안 고려사항
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// FINDNODE RPC Security
+          {`// FINDNODE RPC Security
 //
 // DDoS Amplification Attack:
 //

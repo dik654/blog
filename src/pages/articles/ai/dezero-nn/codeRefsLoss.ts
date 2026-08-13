@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const lossCodeRefs: Record<string, CodeRef> = {
-  'loss-fn': {
-    path: 'src/lib.rs — MSE + Softmax Cross-Entropy',
-    lang: 'rust',
+  "loss-fn": {
+    path: "src/lib.rs — MSE + Softmax Cross-Entropy",
+    lang: "rust",
     highlight: [1, 42],
-    desc: 'MSE는 기존 연산 조합 → 역전파 자동.\nSoftmax CE는 수치 안정성 위해 전용 Function으로 구현.',
+    desc: "MSE는 기존 연산 조합 → 역전파 자동.\nSoftmax CE는 수치 안정성 위해 전용 Function으로 구현.",
     code: `/// MSE: 기존 연산(sub, pow, sum, div) 조합
 /// 역전파가 자동으로 따라옴 — 별도 backward 불필요
 pub fn mean_squared_error(x0: &Variable, x1: &Variable) -> Variable {
@@ -49,9 +49,21 @@ impl Function for SoftmaxCrossEntropyFn {
     }
 }`,
     annotations: [
-      { lines: [1, 6], color: 'sky', note: 'MSE: sub→pow→sum→div 조합 — 자동 미분이 역전파 처리' },
-      { lines: [16, 17], color: 'emerald', note: 'log-sum-exp trick: max 빼기로 exp overflow 방지' },
-      { lines: [33, 37], color: 'amber', note: 'backward: softmax - one_hot 공식 — 간결하고 수치 안정적' },
+      {
+        lines: [1, 6],
+        color: "sky",
+        note: "MSE: sub→pow→sum→div 조합 — 자동 미분이 역전파 처리",
+      },
+      {
+        lines: [16, 17],
+        color: "emerald",
+        note: "log-sum-exp trick: max 빼기로 exp overflow 방지",
+      },
+      {
+        lines: [33, 37],
+        color: "amber",
+        note: "backward: softmax - one_hot 공식 — 간결하고 수치 안정적",
+      },
     ],
   },
 };

@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const gossipsubCodeRefs: Record<string, CodeRef> = {
-  'gossipsub-publish': {
-    path: 'protocols/gossipsub/src/behaviour.rs — publish()',
-    lang: 'rust',
+  "gossipsub-publish": {
+    path: "protocols/gossipsub/src/behaviour.rs — publish()",
+    lang: "rust",
     highlight: [1, 44],
-    desc: 'publish()는 메시지를 빌드하고, mesh/fanout에서 수신자를 선택한 뒤 IDONTWANT를 먼저 보내고 메시지를 전송합니다.',
+    desc: "publish()는 메시지를 빌드하고, mesh/fanout에서 수신자를 선택한 뒤 IDONTWANT를 먼저 보내고 메시지를 전송합니다.",
     code: `pub fn publish(&mut self, topic: impl Into<TopicHash>, data: impl Into<Vec<u8>>)
     -> Result<MessageId, PublishError>
 {
@@ -43,18 +43,34 @@ export const gossipsubCodeRefs: Record<string, CodeRef> = {
     Ok(msg_id)
 }`,
     annotations: [
-      { lines: [4, 15], color: 'sky', note: '메시지 구성: transform → build → msg_id 계산' },
-      { lines: [20, 22], color: 'emerald', note: 'mesh/fanout에서 수신 피어 선택' },
-      { lines: [29, 35], color: 'amber', note: 'IDONTWANT 선 브로드캐스트 — 중복 수신 방지' },
-      { lines: [36, 41], color: 'violet', note: 'RpcOut::Publish로 실제 메시지 전송' },
+      {
+        lines: [4, 15],
+        color: "sky",
+        note: "메시지 구성: transform → build → msg_id 계산",
+      },
+      {
+        lines: [20, 22],
+        color: "emerald",
+        note: "mesh/fanout에서 수신 피어 선택",
+      },
+      {
+        lines: [29, 35],
+        color: "amber",
+        note: "IDONTWANT 선 브로드캐스트 — 중복 수신 방지",
+      },
+      {
+        lines: [36, 41],
+        color: "violet",
+        note: "RpcOut::Publish로 실제 메시지 전송",
+      },
     ],
   },
 
-  'gossipsub-heartbeat': {
-    path: 'protocols/gossipsub/src/behaviour.rs — heartbeat()',
-    lang: 'rust',
+  "gossipsub-heartbeat": {
+    path: "protocols/gossipsub/src/behaviour.rs — heartbeat()",
+    lang: "rust",
     highlight: [1, 28],
-    desc: 'heartbeat()는 주기적으로 mesh를 유지보수합니다. 백오프 정리, IWANT 페널티, 메시 리밸런싱을 순서대로 수행합니다.',
+    desc: "heartbeat()는 주기적으로 mesh를 유지보수합니다. 백오프 정리, IWANT 페널티, 메시 리밸런싱을 순서대로 수행합니다.",
     code: `fn heartbeat(&mut self) {
     self.heartbeat_ticks += 1;
     let mut to_graft = HashMap::new();
@@ -89,9 +105,17 @@ export const gossipsubCodeRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [6, 8], color: 'sky', note: '백오프·IHAVE 카운터 정리' },
-      { lines: [9, 9], color: 'emerald', note: 'IWANT 약속 미이행 피어에 페널티' },
-      { lines: [12, 32], color: 'amber', note: '메시 유지보수: 음수 스코어 제거 → 부족하면 랜덤 추가' },
+      { lines: [6, 8], color: "sky", note: "백오프·IHAVE 카운터 정리" },
+      {
+        lines: [9, 9],
+        color: "emerald",
+        note: "IWANT 약속 미이행 피어에 페널티",
+      },
+      {
+        lines: [12, 32],
+        color: "amber",
+        note: "메시 유지보수: 음수 스코어 제거 → 부족하면 랜덤 추가",
+      },
     ],
   },
 };

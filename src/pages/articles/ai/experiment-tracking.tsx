@@ -1,7 +1,7 @@
-import Overview from './experiment-tracking/Overview';
-import WandB from './experiment-tracking/WandB';
-import MLflow from './experiment-tracking/MLflow';
-import Reproducibility from './experiment-tracking/Reproducibility';
+import Overview from "./experiment-tracking/Overview";
+import WandB from "./experiment-tracking/WandB";
+import MLflow from "./experiment-tracking/MLflow";
+import Reproducibility from "./experiment-tracking/Reproducibility";
 
 export default function ExperimentTrackingArticle() {
   return (

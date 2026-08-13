@@ -1,10 +1,10 @@
 export interface LineNote {
   lines: [number, number];
-  color: 'sky' | 'emerald' | 'amber' | 'violet' | 'rose';
+  color: "sky" | "emerald" | "amber" | "violet" | "rose";
   note: string;
 }
 
-export type Lang = 'rust' | 'go' | 'python' | 'typescript' | 'c';
+export type Lang = "rust" | "go" | "python" | "typescript" | "c";
 
 export interface CodeRef {
   path: string;
@@ -17,7 +17,7 @@ export interface CodeRef {
 
 export interface FileNode {
   name: string;
-  type: 'dir' | 'file';
+  type: "dir" | "file";
   path?: string;
   codeKey?: string;
   children?: FileNode[];
@@ -33,7 +33,7 @@ export interface FlowNode {
   id: string;
   fn: string;
   desc: string;
-  color: 'sky' | 'emerald' | 'amber' | 'violet' | 'rose' | 'slate';
+  color: "sky" | "emerald" | "amber" | "violet" | "rose" | "slate";
   detail?: string;
   codeRefKey?: string;
   children?: FlowNode[];

@@ -72,4 +72,3 @@ impl<...> Pcs<Challenge, Challenger> for TwoAdicFriPcs<...> {
     // verify: FRI 증명 + Merkle 경로 검증
     fn verify(&self, ...) -> Result<(), Error> { ... }
 }`;
-

@@ -1,50 +1,51 @@
-import EarlyFusionViz from './viz/EarlyFusionViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import EarlyFusionViz from "./viz/EarlyFusionViz";
 
 export default function EarlyFusion() {
   return (
     <section id="early-fusion" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Early Fusion: 채널 결합</h2>
+      <h2 className="mb-6 text-2xl font-bold">Early fusion은 “같은 좌표”라는 강한 가정을 model 입구에서 사용합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Early Fusion — 입력 단계에서 뷰를 결합하여 <strong>하나의 텐서</strong>로 만든 뒤 단일 백본으로 처리<br />
-          가장 직관적인 방법: 두 장의 RGB 이미지(3채널)를 채널 축(dim=1)으로 concat하여 6채널 텐서 생성<br />
-          백본의 <code>conv1</code> 레이어만 <code>in_channels=6</code>으로 수정하면 나머지 구조는 동일하게 사용 가능
+          RGB와 depth가 동일한 장면을 보더라도 pixel (u, v)가 같은 물리 지점을
+          가리킨다는 보장은 없습니다. Camera calibration과 reprojection으로 공통
+          좌표계에 옮긴 뒤에야 channel concat이 의미를 갖습니다. 이 조건이 맞으면
+          첫 layer부터 색·거리처럼 low-level 신호의 조합을 학습할 수 있습니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Channel Concatenation</h3>
         <p>
-          구현이 가장 간단 — <code>torch.cat([view1, view2], dim=1)</code> 한 줄<br />
-          문제: ImageNet pretrained 가중치는 3채널 입력 기준 — conv1을 초기화하거나 3채널 가중치를 복제하여 6채널로 확장하는 트릭 사용<br />
-          뷰 수가 N이면 입력이 3N 채널 → N=8이면 24채널, conv1의 파라미터가 8배 증가
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Siamese Network 변형</h3>
-        <p>
-          Siamese(샴) 네트워크 — <strong>동일한 가중치를 공유</strong>하는 두 개의 백본으로 각 뷰를 인코딩<br />
-          "같은 렌즈로 다른 각도를 보는 것"과 유사 — 구조적 유사성(structural similarity)을 자연스럽게 학습<br />
-          각 뷰의 피처 벡터 f1, f2를 추출한 뒤 concat → 공유 분류 헤드로 전달<br />
-          장점: pretrained 백본의 가중치를 그대로 사용 가능 (입력이 3채널 유지)<br />
-          장점: 뷰 수가 늘어도 백본은 하나 — 파라미터 효율적
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">구현 핵심</h3>
-        <p>
-          Channel Concat 방식의 conv1 초기화 전략:<br />
-          전략 1: pretrained conv1 가중치(3ch)를 2번 복제하여 6ch 가중치 생성 → 초기 수렴 빠름<br />
-          전략 2: 새 conv1을 랜덤 초기화 → 나머지 레이어만 pretrained. lr 분리(conv1은 높은 lr)<br />
-          Siamese 방식의 피처 결합:<br />
-          <code>f = torch.cat([backbone(view1), backbone(view2)], dim=1)</code><br />
-          concat 대신 element-wise addition <code>f = f1 + f2</code>나 max pooling도 가능하지만, concat이 정보 보존량이 가장 높다
+          Input channel이 바뀌면 pretrained first-layer weight도 그대로 사용할 수
+          없습니다. Weight를 복제·평균하거나 새 layer를 학습하는 방법을 비교하고,
+          각 channel의 range와 normalization을 따로 보존합니다. 단순히 RGB
+          normalization을 모든 sensor에 적용하지 않습니다.
         </p>
       </div>
-
+      <ExplainedFormula
+        question="정렬된 sensor view를 channel로 합칠 때 실제 tensor에는 무엇이 들어갈까?"
+        idea={<>각 sensor를 공통 image grid로 옮기는 변환 Tᵥ를 먼저 적용하고, 같은 좌표 u의 관측값과 availability mask를 channel axis에 쌓습니다.</>}
+        formula={String.raw`x_{\mathrm{cat}}(u)=\big[T_1(x_1)(u);\ldots;T_V(x_V)(u);m_1(u);\ldots;m_V(u)\big]`}
+        terms={[
+          { symbol: "u", name: "reference-grid coordinate", description: "Fusion tensor가 사용하는 공통 pixel 또는 voxel 좌표입니다." },
+          { symbol: "Tᵥ", name: "registration transform", description: "v번째 sensor 관측을 calibration에 따라 reference grid로 옮기는 warp·projection입니다." },
+          { symbol: "[ ; ]", name: "channel concatenation", description: "공간 좌표는 유지하고 sensor channel을 뒤에 이어 붙입니다." },
+          { symbol: "mᵥ(u)", name: "pixel availability", description: "Warp 범위 밖, 가림, sensor failure처럼 해당 좌표의 값이 유효하지 않은 경우를 구분합니다." },
+        ]}
+        assumptions={["Tᵥ의 calibration과 timestamp 동기화 오차가 task가 허용하는 범위 안에 있습니다.", "각 sensor의 단위·range·normalization을 따로 기록합니다.", "Interpolation으로 만들어진 값과 실제 관측값의 차이가 품질 mask 또는 evaluation에 반영됩니다."]}
+        interpretation="RGB 3 channel, depth 1 channel, 두 availability mask를 합치면 입력은 6 channel입니다. 단순 zero-fill만 하면 실제 depth 0과 결측 0이 같아지지만 mask를 함께 넣으면 model이 구분할 근거가 생깁니다."
+      />
       <div className="not-prose my-8"><EarlyFusionViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: Channel Concat은 <strong>구현이 가장 간단</strong>하지만 conv1 재학습과 채널 비례 증가가 단점<br />
-          요약 2: Siamese Network는 <strong>가중치 공유</strong>로 파라미터 효율적이며 pretrained 호환 유지<br />
-          요약 3: Early Fusion의 핵심 강점은 <strong>저수준 피처 간 상호작용</strong> — 엣지·텍스처 정보가 초기 레이어부터 결합
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Missing view에 취약한 입력 계약입니다</h3>
+        <p>
+          Channel 수가 고정되므로 view 하나가 없을 때 zero-fill만 하면 “관측되지
+          않음”과 실제 값 0을 구분하지 못합니다. Availability mask를 추가하고 view
+          dropout으로 이 상태를 학습해야 하며, 결측 조합이 많다면 view별 encoder를
+          두는 late fusion이 더 자연스럽습니다.
+        </p>
+        <p>
+          Shared encoder로 각 image를 먼저 처리한 뒤 feature를 합치는 Siamese
+          방식은 input-level early fusion이 아니라 representation-level fusion에
+          가깝습니다. 이 구분을 유지해야 비교에서 parameter와 interaction 위치가
+          무엇 때문에 달라졌는지 해석할 수 있습니다.
         </p>
       </div>
     </section>

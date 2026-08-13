@@ -1,70 +1,45 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, C } from './BackpropVizData';
+import StepViz from "@/components/ui/step-viz";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
+const STEPS = [
+  { label: "1. 출력층", body: "복원 오차가 decoder weight에 미치는 영향을 계산합니다." },
+  { label: "2. Latent", body: "Decoder Jacobian을 거쳐 latent gradient가 생깁니다." },
+  { label: "3. Encoder", body: "Chain rule로 encoder까지 책임을 전달합니다." },
+];
 
-const GRADS = [
-  { label: 'w_dec₁', grad: -0.0313, color: C.dec },
-  { label: 'w_dec₂', grad: 0.031, color: C.dec },
-  { label: 'w_enc₁', grad: -0.0025, color: C.enc },
-  { label: 'w_enc₂', grad: -0.0012, color: C.enc },
+const gradients = [
+  { label: "decoder w₁", value: "−0.0313", size: "w-full", tone: "bg-emerald-500/65" },
+  { label: "decoder w₂", value: "+0.0310", size: "w-[99%]", tone: "bg-emerald-500/65" },
+  { label: "encoder w₁", value: "−0.0025", size: "w-[32%]", tone: "bg-sky-500/65" },
+  { label: "encoder w₂", value: "−0.0012", size: "w-[16%]", tone: "bg-sky-500/65" },
 ];
 
 export default function BackpropViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 440 150" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* Loss box */}
-          <rect x={160} y={6} width={120} height={26} rx={6}
-            fill={`${C.loss}12`} stroke={C.loss} strokeWidth={1} />
-          <text x={220} y={23} textAnchor="middle" fontSize={9}
-            fontWeight={600} fill={C.loss}>L = 0.043 (MSE)</text>
-
-          {/* Gradient bars */}
-          {GRADS.map((g, i) => {
-            const y = 48 + i * 22;
-            const show = i < 2 ? step >= i + 1 : step >= 3;
-            const barW = Math.abs(g.grad) * 1600;
-            const isNeg = g.grad < 0;
-            return (
-              <g key={i}>
-                <text x={10} y={y + 12} fontSize={9} fontWeight={500}
-                  fill={g.color}>{g.label}</text>
-                {show && (
-                  <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    transition={sp}>
-                    <rect x={90} y={y + 2} width={barW} height={14} rx={3}
-                      fill={`${g.color}20`} stroke={g.color} strokeWidth={0.8} />
-                    <text x={95 + barW} y={y + 13} fontSize={9}
-                      fontWeight={600} fill={g.color}>
-                      {g.grad > 0 ? '+' : ''}{g.grad}
-                    </text>
-                    {/* Arrow showing direction */}
-                    <text x={200 + barW} y={y + 13} fontSize={9}
-                      fill={C.muted}>
-                      {isNeg ? 'w↑ → 손실↓' : 'w↓ → 손실↓'}
-                    </text>
-                  </motion.g>
-                )}
-              </g>
-            );
-          })}
-
-          {/* Update formula */}
-          {step >= 3 && (
-            <motion.g initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }} transition={sp}>
-              <rect x={80} y={125} width={280} height={20} rx={4}
-                fill={`${C.enc}08`} stroke={C.enc} strokeWidth={0.6} />
-              <text x={220} y={139} textAnchor="middle" fontSize={9}
-                fontWeight={500} fill={C.enc}>
-                w_new = w_old - 0.01 × gradient (반복 학습)
-              </text>
-            </motion.g>
-          )}
-        </svg>
+        <figure data-viz="autoencoder-backprop" className="min-w-0">
+          <figcaption className="mb-5 flex flex-wrap items-baseline justify-between gap-2 text-sm font-semibold">
+            <span>복원 loss에서 encoder까지 이어지는 gradient</span>
+            <span className="font-mono text-xs text-muted-foreground">MSE = 0.043</span>
+          </figcaption>
+          <div className="space-y-4">
+            {gradients.map((gradient, index) => {
+              const visible = index < 2 ? step >= 0 : step >= 2;
+              return (
+                <div key={gradient.label} className={`grid min-w-0 gap-2 transition-opacity sm:grid-cols-[8rem_minmax(0,1fr)_4.5rem] sm:items-center ${visible ? "opacity-100" : "opacity-25"}`}>
+                  <p className="text-sm font-medium">{gradient.label}</p>
+                  <div className="h-2 overflow-hidden rounded-full bg-muted">
+                    <div className={`h-full rounded-full ${gradient.size} ${gradient.tone}`} />
+                  </div>
+                  <p className="font-mono text-xs text-muted-foreground sm:text-right">{gradient.value}</p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-5 border-t border-border/70 pt-4 text-sm leading-6 text-muted-foreground">
+            부호는 어느 방향으로 weight를 움직일지, 절댓값은 같은 learning rate에서 얼마나 크게 움직일지를 정합니다.
+          </p>
+        </figure>
       )}
     </StepViz>
   );

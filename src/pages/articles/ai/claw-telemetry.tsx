@@ -1,7 +1,6 @@
-import Overview from './claw-telemetry/Overview';
-import SessionTracer from './claw-telemetry/SessionTracer';
-import Usage from './claw-telemetry/Usage';
-import Sse from './claw-telemetry/Sse';
+import Overview from "./claw-telemetry/Overview";
+import SessionTracer from "./claw-telemetry/SessionTracer";
+import Usage from "./claw-telemetry/Usage";
 
 export default function ClawTelemetryArticle() {
   return (
@@ -9,7 +8,6 @@ export default function ClawTelemetryArticle() {
       <Overview />
       <SessionTracer />
       <Usage />
-      <Sse />
     </>
   );
 }

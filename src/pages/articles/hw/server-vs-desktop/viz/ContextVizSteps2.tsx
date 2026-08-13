@@ -1,41 +1,134 @@
-import { motion } from 'framer-motion';
-import { C } from './ContextVizData';
-const f = (d: number) => ({ initial: { opacity: 0, x: -8 }, animate: { opacity: 1, x: 0 }, transition: { delay: d } });
-const mono = { fontFamily: 'monospace' };
+import { motion } from "framer-motion";
+import { AlertBox, DataBox, ModuleBox } from "@/components/viz/boxes";
+import { C } from "./ContextVizData";
 
-export function StepDiff() {
-  const lines = [
-    { line: '// 서버 CPU 스펙 비교', c: C.server, y: 38 },
-    { line: 'EPYC 9654: 128 PCIe 5.0, 12ch DDR5, 360W TDP', c: C.server, y: 58 },
-    { line: 'Xeon w9-3495X: 112 PCIe 5.0, 8ch DDR5, 350W', c: C.server, y: 78 },
-    { line: 'IPMI/BMC: 전원 꺼져도 원격 KVM + 전원 제어', c: C.ok, y: 98 },
+const enter = (delay: number) => ({
+  initial: { opacity: 0, x: -8 },
+  animate: { opacity: 1, x: 0 },
+  transition: { delay },
+});
+
+export function StepFailure() {
+  const layers = [
+    { label: "메모리 오류", action: "ECC 교정 · 감지", color: C.server },
+    { label: "PSU 고장", action: "다른 전원 경로", color: C.ok },
+    { label: "드라이브 고장", action: "중복본 + 핫스왑", color: C.desktop },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.server}>EPYC vs Xeon 스펙</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.12)}>
-        <rect x={15} y={l.y - 13} width={410} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={25} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
-      </motion.g>
-    ))}
-  </g>);
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        장애를 교체 가능한 단위로 제한
+      </text>
+      {layers.map((layer, i) => {
+        const y = 47 + i * 47;
+        return (
+          <motion.g key={layer.label} {...enter(0.08 + i * 0.12)}>
+            <AlertBox
+              x={25}
+              y={y}
+              w={126}
+              h={34}
+              label={layer.label}
+              color={C.err}
+            />
+            <line
+              x1={157}
+              y1={y + 17}
+              x2={196}
+              y2={y + 17}
+              stroke={layer.color}
+              strokeWidth={1.2}
+            />
+            <ModuleBox
+              x={202}
+              y={y - 3}
+              w={158}
+              h={40}
+              label={layer.action}
+              color={layer.color}
+            />
+            <DataBox
+              x={377}
+              y={y + 3}
+              w={78}
+              h={28}
+              label="서비스 유지"
+              color={C.ok}
+            />
+          </motion.g>
+        );
+      })}
+      <text
+        x={240}
+        y={194}
+        textAnchor="middle"
+        fontSize={9}
+        fill="var(--muted-foreground)"
+      >
+        중복 구성도 용량·배선·복구 절차가 맞아야 동작
+      </text>
+    </g>
+  );
 }
 
-export function StepFilecoin() {
-  const lines = [
-    { line: '// Filecoin 마이닝 PCIe 요구량', c: C.server, y: 38 },
-    { line: 'GPU 8장 × PCIe x16 = 128 레인', c: C.server, y: 58 },
-    { line: 'NVMe 4개 × PCIe x4  =  16 레인', c: C.desktop, y: 78 },
-    { line: '합계: 144+ 레인 → EPYC(128) 또는 듀얼 Xeon', c: C.ok, y: 98 },
-    { line: '// 데스크톱 CPU(20 레인) → 물리적 불가능', c: C.err, y: 118 },
+export function StepDecision() {
+  const choices = [
+    { x: 18, label: "Desktop", sub: "1 GPU · 로컬 운영", color: C.desktop },
+    { x: 174, label: "Workstation", sub: "확장 I/O · ECC", color: C.hw },
+    { x: 330, label: "Server", sub: "원격 · 중복 · 밀도", color: C.server },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.server}>Filecoin: PCIe 레인 요구</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={15} y={l.y - 13} width={410} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={25} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        요구량을 적고 가장 작은 플랫폼부터 검증
+      </text>
+      {choices.map((choice, i) => (
+        <motion.g key={choice.label} {...enter(0.08 + i * 0.13)}>
+          <ModuleBox
+            x={choice.x}
+            y={58}
+            w={132}
+            h={66}
+            label={choice.label}
+            sub={choice.sub}
+            color={choice.color}
+          />
+          {i < choices.length - 1 && (
+            <line
+              x1={choice.x + 134}
+              y1={91}
+              x2={choice.x + 153}
+              y2={91}
+              stroke="var(--muted-foreground)"
+              strokeWidth={1}
+            />
+          )}
+        </motion.g>
+      ))}
+      <motion.g {...enter(0.56)}>
+        <DataBox
+          x={86}
+          y={148}
+          w={308}
+          h={32}
+          label="장치 수 · 메모리 · RTO · 현장 접근성으로 결정"
+          color={C.ok}
+        />
       </motion.g>
-    ))}
-  </g>);
+    </g>
+  );
 }

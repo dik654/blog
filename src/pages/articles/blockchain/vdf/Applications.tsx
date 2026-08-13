@@ -1,4 +1,4 @@
-import ApplicationsViz from './viz/ApplicationsViz';
+import ApplicationsViz from "./viz/ApplicationsViz";
 
 export default function Applications() {
   return (
@@ -6,16 +6,22 @@ export default function Applications() {
       <h2 className="text-2xl font-bold mb-6">응용: DRAND, Irys, Ethereum</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          "시간의 증명"이 필요한 모든 곳에 적용.<br />
-          핵심 가정: 병렬화 불가능한 순차 연산 = 실제 시간이 흘렀다는 물리적 보장
+          "시간의 증명"이 필요한 모든 곳에 적용.
+          <br />
+          핵심 가정: 병렬화 불가능한 순차 연산 = 실제 시간이 흘렀다는 물리적
+          보장
         </p>
       </div>
-      <div className="not-prose"><ApplicationsViz /></div>
+      <div className="not-prose">
+        <ApplicationsViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">VDF Applications 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          VDF Applications 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// VDF 응용 사례:
+          {`// VDF 응용 사례:
 
 // 1. DRAND (Randomness Beacon):
 // - collect validator contributions
@@ -103,8 +109,10 @@ export default function Applications() {
 // - quantum considerations`}
         </pre>
         <p className="leading-7">
-          VDF 응용: <strong>DRAND beacons, Chia, time-lock encryption</strong>.<br />
-          VDF Alliance research, ASIC acceleration.<br />
+          VDF 응용: <strong>DRAND beacons, Chia, time-lock encryption</strong>.
+          <br />
+          VDF Alliance research, ASIC acceleration.
+          <br />
           Ethereum도 RANDAO + VDF 고려 중.
         </p>
       </div>

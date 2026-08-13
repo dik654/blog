@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const TDX_QUOTE_GEN = `// guest-agent/src/rpc_service.rs — TDX Quote 생성
 async fn get_quote(request: RawQuoteArgs) -> Result<GetQuoteResponse> {
@@ -47,37 +47,51 @@ async fn verify_tdx_quote(quote_bytes: &[u8]) -> Result<VerifiedReport> {
 }`;
 
 export const attestCodeRefs: Record<string, CodeRef> = {
-  'tdx-quote-gen': {
-    path: 'dstack/guest-agent/src/rpc_service.rs',
+  "tdx-quote-gen": {
+    path: "dstack/guest-agent/src/rpc_service.rs",
     code: TDX_QUOTE_GEN,
     highlight: [2, 19],
-    lang: 'rust',
+    lang: "rust",
     annotations: [
-      { lines: [5, 8], color: 'sky', note: 'report_data 64바이트 패딩 — nonce 또는 공개키' },
-      { lines: [10, 12], color: 'emerald', note: '/dev/tdx_guest → SEAM → ECDSA-P256 서명' },
-      { lines: [14, 16], color: 'amber', note: 'RTMR Event Log — 런타임 측정 이력' },
+      {
+        lines: [5, 8],
+        color: "sky",
+        note: "report_data 64바이트 패딩 — nonce 또는 공개키",
+      },
+      {
+        lines: [10, 12],
+        color: "emerald",
+        note: "/dev/tdx_guest → SEAM → ECDSA-P256 서명",
+      },
+      {
+        lines: [14, 16],
+        color: "amber",
+        note: "RTMR Event Log — 런타임 측정 이력",
+      },
     ],
-    desc:
-`Guest Agent의 TDX Quote 생성 과정입니다.
+    desc: `Guest Agent의 TDX Quote 생성 과정입니다.
 
 /dev/tdx_guest 디바이스를 통해 SEAM 모듈에 Quote를 요청합니다.
 SEAM은 TD의 측정값(MRTD, RTMR)을 포함한 TD Report를 생성하고,
 Intel QGS가 ECDSA-P256으로 서명하여 Quote를 완성합니다.`,
   },
 
-  'tdx-verify': {
-    path: 'dstack/kms/src/verify.rs',
+  "tdx-verify": {
+    path: "dstack/kms/src/verify.rs",
     code: TDX_VERIFY,
     highlight: [2, 25],
-    lang: 'rust',
+    lang: "rust",
     annotations: [
-      { lines: [6, 7], color: 'sky', note: 'Intel PCS에서 TCB 정보 다운로드' },
-      { lines: [10, 14], color: 'emerald', note: '인증서 체인 + 서명 검증' },
-      { lines: [16, 18], color: 'amber', note: 'MRTD 검증 — 코드 무결성 확인' },
-      { lines: [21, 23], color: 'violet', note: 'RTMR 재생 — Event Log 일관성 확인' },
+      { lines: [6, 7], color: "sky", note: "Intel PCS에서 TCB 정보 다운로드" },
+      { lines: [10, 14], color: "emerald", note: "인증서 체인 + 서명 검증" },
+      { lines: [16, 18], color: "amber", note: "MRTD 검증 — 코드 무결성 확인" },
+      {
+        lines: [21, 23],
+        color: "violet",
+        note: "RTMR 재생 — Event Log 일관성 확인",
+      },
     ],
-    desc:
-`KMS의 TDX Quote 검증 과정입니다.
+    desc: `KMS의 TDX Quote 검증 과정입니다.
 
 5단계 검증: Quote 파싱 → TCB 확인 → 인증서 체인 → 서명 → MRTD/RTMR
 MRTD가 예상값과 다르면 변조된 코드가 실행 중이므로 키 발급을 거부합니다.`,

@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const guardCodeRefs: Record<string, CodeRef> = {
-  'no-grad': {
-    path: 'src/lib.rs — no_grad & thread_local',
-    lang: 'rust',
+  "no-grad": {
+    path: "src/lib.rs — no_grad & thread_local",
+    lang: "rust",
     highlight: [1, 33],
-    desc: 'thread_local로 전역 상태 관리.\nRAII 가드로 스코프 종료 시 자동 복원.',
+    desc: "thread_local로 전역 상태 관리.\nRAII 가드로 스코프 종료 시 자동 복원.",
     code: `thread_local! {
     static ENABLE_BACKPROP: Cell<bool> = const { Cell::new(true) };
     static TRAINING: Cell<bool> = const { Cell::new(true) };
@@ -41,10 +41,26 @@ fn using_backprop(enable: bool) -> NoGradGuard {
 // let _g = no_grad();
 // let y = &x + &x;  // 그래프 기록 안 함`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'thread_local — 멀티스레드 안전, 스레드별 독립 상태' },
-      { lines: [7, 7], color: 'emerald', note: 'prev 저장 — 중첩된 no_grad() 호출에서도 올바르게 복원' },
-      { lines: [18, 21], color: 'amber', note: 'RAII Drop — 스코프 종료 시 자동 복원, panic에도 안전' },
-      { lines: [27, 30], color: 'violet', note: 'using_backprop — backward()에서 create_graph 플래그 전달용' },
+      {
+        lines: [1, 3],
+        color: "sky",
+        note: "thread_local — 멀티스레드 안전, 스레드별 독립 상태",
+      },
+      {
+        lines: [7, 7],
+        color: "emerald",
+        note: "prev 저장 — 중첩된 no_grad() 호출에서도 올바르게 복원",
+      },
+      {
+        lines: [18, 21],
+        color: "amber",
+        note: "RAII Drop — 스코프 종료 시 자동 복원, panic에도 안전",
+      },
+      {
+        lines: [27, 30],
+        color: "violet",
+        note: "using_backprop — backward()에서 create_graph 플래그 전달용",
+      },
     ],
   },
 };

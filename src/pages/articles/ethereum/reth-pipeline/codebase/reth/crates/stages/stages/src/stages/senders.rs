@@ -18,7 +18,7 @@ where Provider: DBProvider + TransactionProvider,
 
         // 3. rayon par_iter로 멀티코어 병렬 ecrecover 실행
         //    secp256k1 서명 복구: (v, r, s) + tx_hash → sender 공개키 → 주소
-        //    CPU 집약적 작업이라 병렬화 효과가 큼 (10만 TX → 수초)
+        //    독립 recovery는 병렬화 가능하되 결과 순서를 보존해야 함
         let senders: Vec<Address> = transactions
             .par_iter()
             .map(|tx| {

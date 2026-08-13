@@ -1,4 +1,4 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview({ title }: { title: string }) {
   return (
@@ -13,15 +13,17 @@ export default function Overview({ title }: { title: string }) {
         <p className="leading-7">
           Helios는 <strong>블록 실행 없이</strong> 동일한 신뢰를 달성한다.
           <br />
-          Sync Committee BLS 서명으로 헤더를 검증하고, Merkle 증명으로 상태를 검증한다.
+          Sync Committee BLS 서명으로 헤더를 검증하고, Merkle 증명으로 상태를
+          검증한다.
         </p>
         <p className="leading-7">
           아래 8개 아티클에서 Helios의 모든 경로를 라인 단위로 추적한다.
-          <br />
-          각 섹션마다 Reth 풀 노드와의 차이를 비교한다.
+          <br />각 섹션마다 Reth 풀 노드와의 차이를 비교한다.
         </p>
       </div>
-      <div className="not-prose"><ContextViz /></div>
+      <div className="not-prose">
+        <ContextViz />
+      </div>
     </section>
   );
 }

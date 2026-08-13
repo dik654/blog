@@ -1,63 +1,64 @@
-import CNNPipelineViz from './viz/CNNPipelineViz';
-import FCLimitViz from './viz/FCLimitViz';
-import OverviewDetailViz from './viz/OverviewDetailViz';
-import M from '@/components/ui/math';
+import ContentBoundary from "@/components/articles/content-boundary";
+import InductiveBiasViz from "./viz/InductiveBiasViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">CNN 개요</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>합성곱 신경망(Convolutional Neural Network, CNN)</strong> — 이미지 인식 분야에 혁명을 가져온 딥러닝 아키텍처<br />
-          2012년 AlexNet이 ImageNet 대회에서 압도적 성능을 기록하며 딥러닝 시대를 개막<br />
-          이후 컴퓨터 비전의 핵심 도구로 자리잡음
-        </p>
-
-        <h3>왜 전결합층(FC)만으로는 부족한가?</h3>
-        <p>
-          <strong>전결합층(FC, Fully Connected)</strong>이란?<br />
-          입력의 <strong>모든 뉴런</strong>이 다음 층의 <strong>모든 뉴런</strong>과 연결되는 가장 기본적인 신경망 구조<br />
-          각 연결마다 고유한 가중치(weight)가 존재 → 입력 크기에 비례하여 파라미터 수가 폭발적으로 증가
+      <h2 className="mb-6 text-2xl font-bold">
+        CNN은 image grid의 구조를 parameterization에 넣는다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Image는 단순히 숫자를 길게 늘어놓은 vector가 아니라 channel과 세로·가로
+          좌표를 가진 tensor입니다. 가까운 pixel끼리 관련되고 같은 visual pattern이
+          다른 위치에도 나타날 수 있다는 가정이 맞다면, 모든 pixel pair를 별도
+          parameter로 연결할 필요는 없습니다. Convolutional neural network(CNN)는
+          작은 local window를 읽는 kernel을 image 전체에 공유해 이 가정을 계산
+          구조에 넣습니다.
         </p>
         <p>
-          28×28 흑백 이미지 = 784개 픽셀, 224×224 컬러 이미지 = <strong>150,528개</strong> 입력<br />
-          FC 128 뉴런이면 784×128 = <strong>100,352개</strong> 파라미터 (28×28만으로도)<br />
-          2D 이미지를 1D로 펼치는 순간 <strong>공간적 구조(인접 픽셀 관계)</strong>가 완전히 소실됨
+          이 글의 핵심은 CNN architecture 이름을 외우는 데 있지 않습니다. 먼저 한
+          output pixel이 어떤 input 좌표를 읽는지 계산한 뒤, weight sharing이 왜
+          translation equivariance를 만들고 stride·padding이 어디서 그 성질을
+          깨뜨리는지 살펴봅니다. 그 위에서 receptive field·dilation·depthwise
+          convolution을 이해하면 ResNet이나 ConvNeXt도 같은 설계 언어로 비교할 수
+          있습니다.
         </p>
-      </div>
-      <div className="not-prose mt-4 mb-8">
-        <FCLimitViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>CNN의 핵심 아이디어</h3>
-        <ul>
-          <li><strong>지역 연결(Local Connectivity)</strong> — 각 뉴런이 입력의 작은 영역(수용야)만 봄</li>
-          <li><strong>가중치 공유(Weight Sharing)</strong> — 동일한 필터를 전체 이미지에 적용, 파라미터 대폭 감소</li>
-          <li><strong>평행 이동 불변성(Translation Invariance)</strong> — 객체가 어디 있든 동일하게 감지</li>
-        </ul>
         <p>
-          이 세 가지 원리로 CNN은 전결합망 대비 파라미터 수를 수백~수천 배 감소<br />
-          이미지의 공간 패턴을 효과적으로 학습 가능
+          예를 들어 batch 8개의 32×32 RGB image는 NCHW convention에서는
+          <code>(8,3,32,32)</code>, NHWC에서는 <code>(8,32,32,3)</code>으로
+          기록합니다. 숫자는 같아도 channel 축을 잘못 읽으면 kernel이 전혀 다른
+          위치와 값을 처리하므로 tensor layout은 model 입력 계약에 포함해야 합니다.
         </p>
-      </div>
-      <div className="not-prose mt-8">
-        <CNNPipelineViz />
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">FC vs CNN 파라미터 비교</h3>
-        <M display>{'\\underbrace{150{,}528 \\times 128}_{\\text{FC}} = 19{,}267{,}584 \\quad \\text{vs} \\quad \\underbrace{3^2 \\times 3 \\times 32 + 32}_{\\text{CNN}} = 896'}</M>
-      </div>
-      <div className="not-prose my-6">
-        <OverviewDetailViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: CNN은 <strong>지역성·가중치 공유·계층 구조</strong>로 이미지 구조를 보존.<br />
-          요약 2: FC 대비 <strong>수천~수만 배 파라미터 감소</strong> — 학습 가능한 범위 극적 확대.<br />
-          요약 3: "<strong>해상도↓ + 채널수↑</strong>" 패턴이 표준 — 추상화 수준 상승의 직접 구현.
+      <ContentBoundary article="cnn" />
+      <InductiveBiasViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          224×224 RGB image를 128 unit에 완전히 연결하면 bias를 제외해 약 1,927만
+          weight가 필요하지만, 3×3·3→32 convolution에는 864개만 필요합니다. 두
+          layer의 output shape과 역할은 다르므로 정확도 비교로 읽으면 안 됩니다.
+          이 숫자는 local connectivity와 weight sharing이 parameterization을 얼마나
+          바꾸는지 보여 주는 출발점입니다.
         </p>
+      </div>
+
+      <div id="paper-lenet" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · LeNet 계열</p>
+        <p className="mt-2 text-sm font-semibold">
+          Gradient-Based Learning Applied to Document Recognition
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Convolution·subsampling·gradient-based learning을 실제 문서 인식 pipeline에
+          연결한 연구입니다. 오늘날의 모든 CNN 구성 요소를 처음 제안한 논문으로
+          단순화하기보다, 당시 사용한 입력·architecture·문서 인식 조건 안에서
+          읽어야 합니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1109/5.726791" target="_blank" rel="noreferrer">
+          원 논문의 문제·구조·평가 보기
+        </a>
       </div>
     </section>
   );

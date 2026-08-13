@@ -18,9 +18,21 @@ pub type WorldChainTransactionPool<Provider, BlobStore> =
   Flashblocks Context → 고성능 블록 빌딩 활성화`;
 
 export const txPoolAnnotations = [
-  { lines: [3, 9] as [number, number], color: 'sky' as const, note: 'reth Pool을 커스텀 Validator/Ordering으로 래핑' },
-  { lines: [11, 14] as [number, number], color: 'emerald' as const, note: '3개 핵심 컴포넌트' },
-  { lines: [16, 18] as [number, number], color: 'amber' as const, note: '두 가지 운영 모드' },
+  {
+    lines: [3, 9] as [number, number],
+    color: "sky" as const,
+    note: "reth Pool을 커스텀 Validator/Ordering으로 래핑",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "emerald" as const,
+    note: "3개 핵심 컴포넌트",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "amber" as const,
+    note: "두 가지 운영 모드",
+  },
 ];
 
 export const builderCode = `World Chain Builder (외부 블록 빌더):
@@ -46,6 +58,14 @@ pub struct WorldChainPayloadBuilder<Client, S, Txs> {
   7. ExecutionPayload 반환`;
 
 export const builderAnnotations = [
-  { lines: [3, 12] as [number, number], color: 'sky' as const, note: 'PayloadBuilder 구조체' },
-  { lines: [14, 21] as [number, number], color: 'emerald' as const, note: '블록 생성 7단계' },
+  {
+    lines: [3, 12] as [number, number],
+    color: "sky" as const,
+    note: "PayloadBuilder 구조체",
+  },
+  {
+    lines: [14, 21] as [number, number],
+    color: "emerald" as const,
+    note: "블록 생성 7단계",
+  },
 ];

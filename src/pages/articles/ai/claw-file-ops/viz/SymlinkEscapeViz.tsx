@@ -1,58 +1,45 @@
-import { AlertBox, ActionBox } from '@/components/viz/boxes';
+import { FileFrame, FileRule, FileSteps } from "./FileVizPrimitives";
 
 export default function SymlinkEscapeViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">심링크 이스케이프 공격 방어</text>
-
-        {/* 공격 시나리오 */}
-        <AlertBox x={30} y={56} w={240} h={52}
-          label="공격 시나리오"
-          sub="workspace/link → /etc/passwd"
-          color="#ef4444" />
-
-        {/* 1차 검증 (통과) */}
-        <rect x={290} y={56} width={240} height={52} rx={6}
-          fill="#f59e0b" fillOpacity={0.15} stroke="#f59e0b" strokeWidth={1} />
-        <text x={410} y={78} textAnchor="middle" fontSize={11} fontWeight={700} fill="#f59e0b">
-          1차 검증: 문자열 비교
-        </text>
-        <text x={410} y={96} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          path.starts_with(workspace) → OK (우회)
-        </text>
-
-        {/* 2차 검증 (차단) */}
-        <rect x={30} y={128} width={500} height={68} rx={8}
-          fill="#10b981" fillOpacity={0.1} stroke="#10b981" strokeWidth={1.2} />
-        <text x={280} y={150} textAnchor="middle" fontSize={12} fontWeight={700} fill="#10b981">
-          2차 검증: canonicalize() 호출
-        </text>
-        <text x={280} y={168} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          실제 경로 해석: workspace/link → /etc/passwd
-        </text>
-        <text x={280} y={184} textAnchor="middle" fontSize={9} fontWeight={600} fill="#ef4444">
-          !canonical.starts_with(workspace) → Deny
-        </text>
-
-        {/* 3중 방어 */}
-        <rect x={30} y={216} width={500} height={72} rx={8}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={236} textAnchor="middle" fontSize={11} fontWeight={700}
-          fill="var(--foreground)">3중 방어 (Defense in depth)</text>
-
-        <g transform="translate(48, 246)">
-          <text x={0} y={12} fontSize={9} fontWeight={600} fill="#3b82f6">1. 문자열 검증:</text>
-          <text x={98} y={12} fontSize={9} fill="var(--muted-foreground)">빠른 사전 차단 (90%)</text>
-
-          <text x={250} y={12} fontSize={9} fontWeight={600} fill="#8b5cf6">2. canonicalize:</text>
-          <text x={352} y={12} fontSize={9} fill="var(--muted-foreground)">심링크 해제</text>
-
-          <text x={0} y={30} fontSize={9} fontWeight={600} fill="#ef4444">3. 샌드박스:</text>
-          <text x={82} y={30} fontSize={9} fill="var(--muted-foreground)">커널 레벨 bind mount (bash 도구만)</text>
-        </g>
-      </svg>
-    </div>
+    <FileFrame
+      label="REAL TARGET BOUNDARY"
+      title="입력 path가 아니라 실제로 열 object를 판정한다"
+      description="lexical normalization과 canonicalization 뒤에도 race-resistant open과 sandbox mount가 필요합니다."
+      note="문자열 prefix 비교만으로는 비슷한 directory 이름, symlink·junction과 검사 후 교체를 막을 수 없습니다."
+    >
+      <FileSteps
+        items={[
+          {
+            label: "INPUT",
+            title: "Normalize syntax",
+            body: "separator·dot component·platform special form을 해석합니다.",
+            tone: "blue",
+          },
+          {
+            label: "TARGET",
+            title: "Resolve existing parent",
+            body: "symlink·junction을 따라 실제 parent identity를 확인합니다.",
+            tone: "violet",
+          },
+          {
+            label: "BOUNDARY",
+            title: "Compare components",
+            body: "canonical root와 target의 tree 관계를 판정합니다.",
+            tone: "amber",
+          },
+          {
+            label: "OPEN",
+            title: "Use handle safely",
+            body: "no-follow·directory handle·final identity를 재검증합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <FileRule>
+        writable mount 자체를 workspace로 제한해 application check 실패의 피해를
+        줄입니다.
+      </FileRule>
+    </FileFrame>
   );
 }

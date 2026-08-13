@@ -1,209 +1,117 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import ContextViz from './viz/ContextViz';
-import TxPoolViz from './viz/TxPoolViz';
-import { DESIGN_CHOICES, POOL_DEFAULTS } from './OverviewData';
-import type { CodeRef } from '@/components/code/types';
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import type { CodeRef } from "@/components/code/types";
+import ContextViz from "./viz/ContextViz";
+import TxPoolViz from "./viz/TxPoolViz";
+import { DESIGN_CHOICES } from "./OverviewData";
 
-export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
-  const [selected, setSelected] = useState<string | null>(null);
-  const sel = DESIGN_CHOICES.find(d => d.id === selected);
-
+export default function Overview({
+  onCodeRef: _onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
+  const [selected, setSelected] = useState(DESIGN_CHOICES[0].id);
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">풀 아키텍처</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
-
+      <h2 className="mb-6 text-2xl font-bold">
+        Txpool: 아직 실행되지 않은 의존성 그래프
+      </h2>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          트랜잭션 풀(mempool)은 블록에 포함되기 전 TX가 대기하는 인메모리 저장소다.<br />
-          단순한 큐가 아니다.<br />
-          TX를 검증하고, 우선순위를 매기고, nonce gap을 관리하고, base fee 변동에 따라 재분류해야 한다.
+        <h3>배경</h3>
+        <p>
+          Transaction pool은 block 포함 전의 signed transactions를 보관한다.
+          같은 sender의 transaction은 nonce 순서에 묶이고 fee eligibility는 다음
+          block의 base fee에 따라 바뀐다.
         </p>
-        <p className="leading-7">
-          Reth는 TX 풀을 세 개의 서브풀로 나눈다.<br />
-          <strong>Pending</strong>(즉시 실행 가능), <strong>BaseFee</strong>(nonce OK, fee 부족), <strong>Queued</strong>(nonce gap 존재).<br />
-          블록이 도착하면 base fee와 nonce 상태가 바뀌고, TX가 서브풀 간에 승격(promote)되거나 강등(demote)된다.
+        <h3>문제</h3>
+        <p>
+          현재 실행 가능한 transaction만 남기면 nonce gap이나 일시적인 fee
+          부족을 복구할 수 없다. 반대로 모든 입력을 보관하면 invalid signature,
+          잔액 부족, replacement spam과 blob sidecar resource가 pool을 고갈시킬
+          수 있다.
         </p>
-        <p className="leading-7">
-          <strong>핵심 설계: trait 기반 교체.</strong><br />
-          <code>TransactionValidator</code>가 검증 로직을, <code>TransactionOrdering</code>이 정렬 기준을 담당한다.<br />
-          Geth는 이 로직이 하드코딩되어 있어 변경하려면 포크가 필요하다.<br />
-          Reth는 trait 구현체를 교체하여 L2 검증이나 MEV 정렬을 주입할 수 있다.
+        <h3>아이디어</h3>
+        <p>
+          validation 결과와 sender state로 transaction의 조건을 표현하고, 실행
+          가능성에 따라 logical subpool로 분류한다. canonical head가 바뀌면
+          nonce, balance, base fee와 mined/reorged transactions를 반영해 다시
+          분류한다.
         </p>
-
-        {/* ── TransactionPool trait ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">TransactionPool trait — 핵심 API</h3>
-        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
-          <p className="font-mono font-bold text-sm mb-3">TransactionPool: <code>Send + Sync</code></p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-indigo-400">add_transaction(<code>origin</code>, <code>tx</code>)</p>
-              <p className="text-[11px] text-foreground/50">TX 풀에 추가 (검증 후). origin: Local / External / Private</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-indigo-400">get(<code>tx_hash</code>)</p>
-              <p className="text-[11px] text-foreground/50">해시로 TX 조회 &#8594; <code>Option&lt;Arc&lt;Tx&gt;&gt;</code></p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-amber-400">best_transactions()</p>
-              <p className="text-[11px] text-foreground/50">블록 생성용 priority 정렬 iterator</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-amber-400">on_new_block(<code>block_info</code>)</p>
-              <p className="text-[11px] text-foreground/50">블록 확정 후 포함된 TX 제거</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-emerald-400">on_reorg(<code>reverted_txs</code>)</p>
-              <p className="text-[11px] text-foreground/50">reorg 시 TX 재삽입</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-emerald-400">stats()</p>
-              <p className="text-[11px] text-foreground/50">풀 통계 (PoolStats)</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="text-xs font-semibold text-foreground/70 mb-1">주요 구현체</p>
-              <p className="text-xs text-foreground/50"><code>PoolInner&lt;V, T&gt;</code> (기본 in-memory), <code>BlobPool</code> (EIP-4844), <code>NoopTransactionPool</code> (테스트)</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="text-xs font-semibold text-foreground/70 mb-1">TransactionOrigin</p>
-              <p className="text-xs text-foreground/50">Local (노드 RPC), External (피어 전파), Private (Flashbots 등)</p>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          <code>TransactionPool</code>은 <strong>모든 mempool 구현의 공통 API</strong>.<br />
-          PayloadBuilder, RPC, Network 등 상위 모듈이 trait 뒤에서 동작 → 구현 교체 자유.<br />
-          <code>best_transactions()</code>가 핵심 — priority 정렬된 iterator 제공.
-        </p>
-
-        {/* ── TX 상태 전이 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">TX 상태 전이 — 3개 서브풀 간 이동</h3>
-        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#22c55e' }}>
-              <p className="text-xs font-bold text-emerald-400">Pending</p>
-              <p className="text-[11px] text-foreground/50">nonce OK + fee OK &#8594; 즉시 블록 포함</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#f59e0b' }}>
-              <p className="text-xs font-bold text-amber-400">BaseFee</p>
-              <p className="text-[11px] text-foreground/50">nonce OK + fee 부족 &#8594; base_fee 하락 대기</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3" style={{ borderLeftWidth: 3, borderLeftColor: '#6366f1' }}>
-              <p className="text-xs font-bold text-indigo-400">Queued</p>
-              <p className="text-[11px] text-foreground/50">nonce gap 존재 &#8594; 이전 nonce 대기</p>
-            </div>
-          </div>
-          <div className="space-y-2 mb-3">
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="text-xs font-semibold text-foreground/70 mb-1">새 TX 도착</p>
-              <p className="text-xs text-foreground/60"><code>sender.nonce == tx.nonce</code> &#8594; Pending or BaseFee / <code>&lt;</code> &#8594; Queued / <code>&gt;</code> &#8594; Rejected</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="text-xs font-semibold text-foreground/70 mb-1">새 블록 도착 (base_fee 변동)</p>
-              <p className="text-xs text-foreground/60">하락: BaseFee &#8594; Pending 승격 / 상승: Pending &#8594; BaseFee 강등</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="text-xs font-semibold text-foreground/70 mb-1">이전 TX 확정 (nonce 증가)</p>
-              <p className="text-xs text-foreground/60">Queued에서 gap 해소 &#8594; Pending 승격. 잔고 부족 시 &#8594; 제거</p>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          3개 서브풀이 <strong>실시간으로 TX를 재분류</strong>.<br />
-          블록마다 base_fee 변동 → Pending/BaseFee 간 이동 발생.<br />
-          이전 TX 확정 → Queued의 gap 해소된 TX들 Pending으로 승격.
-        </p>
-
-        {/* ── pool 기본값 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Pool 기본 설정값 & 의미</h3>
-        <div className="not-prose rounded-lg border border-border/60 bg-muted/30 p-4 mb-4">
-          <p className="font-mono font-bold text-sm mb-3">PoolConfig</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-indigo-400 mb-1">max_tx_count: <code>usize</code></p>
-              <p className="text-xs text-foreground/60">전체 TX 개수 상한. 기본: <strong className="text-foreground/80">10,000</strong></p>
-              <p className="text-xs text-foreground/50">~200B/TX = 최대 2MB. 현대 노드에서 부담 없음</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-indigo-400 mb-1">max_account_slots: <code>usize</code></p>
-              <p className="text-xs text-foreground/60">sender별 최대 TX 수. 기본: <strong className="text-foreground/80">16</strong></p>
-              <p className="text-xs text-foreground/50">이상은 거부 (spam 방지). 대부분 EOA는 2~3개만 사용</p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-amber-400 mb-1">max_tx_input_bytes: <code>usize</code></p>
-              <p className="text-xs text-foreground/60">총 TX 크기 상한. 기본: <strong className="text-foreground/80">128KB</strong></p>
-            </div>
-            <div className="rounded-md border border-border/40 bg-background/60 p-3">
-              <p className="font-mono text-xs text-amber-400 mb-1">blob_transactions: <code>BlobTxConfig</code></p>
-              <p className="text-xs text-foreground/60">max_blob_count: <strong>6</strong> / max_blob_size: <strong>128KB</strong></p>
-            </div>
-          </div>
-          <div className="rounded-md border border-border/40 bg-background/60 p-3">
-            <p className="font-mono text-xs text-emerald-400 mb-1">price_bumps: <code>PriceBumpConfig</code></p>
-            <div className="grid grid-cols-2 gap-2 text-xs text-foreground/60">
-              <p>일반 TX: <strong>10%</strong> 상승 필요 (같은 nonce 교체)</p>
-              <p>blob TX: <strong>100%</strong> 상승 필요 (저장소 비용 큼)</p>
-            </div>
-            <p className="text-xs text-foreground/50 mt-1">스팸 replacement 공격 방지</p>
-          </div>
-        </div>
-        <p className="leading-7">
-          기본값은 <strong>메모리 안전성 + 스팸 방지</strong>의 타협.<br />
-          10K TX 풀 크기가 현실적 수요 대응 (일반적으로 수천 TX 활성).<br />
-          price_bump 10%가 정당한 TX 교체와 스팸 공격의 경계.
+        <h3>구현 경계</h3>
+        <ul>
+          <li>
+            Validator는 transaction type·fork·state를 기준으로 reject와 accepted
+            classification inputs를 만든다.
+          </li>
+          <li>
+            Pool은 sender/nonce dependency, replacement와 configurable resource
+            limits를 유지한다.
+          </li>
+          <li>
+            Ordering은 <em>eligible candidates</em> 사이의 우선순위를 정하며
+            nonce dependency를 무시하지 못한다.
+          </li>
+          <li>
+            Payload builder는 iterator 결과를 실행하며 gas, blob gas와 block
+            validity에 맞지 않는 후보를 건너뛴다.
+          </li>
+        </ul>
+      </div>
+      <div className="not-prose mb-8">
+        <TxPoolViz />
+      </div>
+      <h3 className="mb-3 text-lg font-semibold">변화에 강한 설계 포인트</h3>
+      <div className="not-prose mb-6 space-y-2">
+        {DESIGN_CHOICES.map((item) => {
+          const open = selected === item.id;
+          return (
+            <motion.button
+              key={item.id}
+              type="button"
+              onClick={() => setSelected(item.id)}
+              animate={{ opacity: open ? 1 : 0.6 }}
+              className="block w-full cursor-pointer rounded-xl border p-4 text-left"
+            >
+              <p
+                className="text-sm font-semibold"
+                style={{ color: item.color }}
+              >
+                {item.title}
+              </p>
+              <AnimatePresence>
+                {open && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mt-2 space-y-1 text-sm leading-6 text-foreground/70"
+                  >
+                    <p>
+                      <strong>문제:</strong> {item.problem}
+                    </p>
+                    <p>
+                      <strong>처리:</strong> {item.solution}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          );
+        })}
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          서브풀 이름, 기본 개수·메모리 한도와 replacement bump는 설정과
+          transaction type에 따라 달라질 수 있다. 글은 숫자를 복제하지 않고{" "}
+          <strong>
+            validation → dependency classification → repricing/reorg → builder
+            consumption
+          </strong>{" "}
+          흐름을 기준으로 확장한다.
         </p>
       </div>
-
-      {/* 설계 판단 카드 */}
-      <h3 className="text-lg font-semibold mb-3">핵심 설계 판단</h3>
-      <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        {DESIGN_CHOICES.map(d => (
-          <button key={d.id} onClick={() => setSelected(selected === d.id ? null : d.id)}
-            className="rounded-lg border p-3 text-left transition-all duration-200 cursor-pointer"
-            style={{ borderColor: selected === d.id ? d.color : 'var(--color-border)', background: selected === d.id ? `${d.color}10` : undefined }}>
-            <p className="font-bold text-sm" style={{ color: d.color }}>{d.title}</p>
-          </button>
-        ))}
-      </div>
-      <AnimatePresence mode="wait">
-        {sel && (
-          <motion.div key={sel.id} initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}
-            className="not-prose rounded-lg border border-border/60 bg-background/60 px-5 py-4 mb-6 overflow-hidden">
-            <p className="font-semibold text-sm mb-2" style={{ color: sel.color }}>{sel.title}</p>
-            <p className="text-sm text-foreground/60 leading-relaxed mb-2"><strong>문제:</strong> {sel.problem}</p>
-            <p className="text-sm text-foreground/80 leading-relaxed"><strong>해결:</strong> {sel.solution}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 풀 기본값 */}
-      <h3 className="text-lg font-semibold mb-3">풀 기본 설정</h3>
-      <div className="overflow-x-auto mb-8">
-        <table className="w-full text-sm border border-border rounded-lg">
-          <thead>
-            <tr className="bg-muted/50">
-              <th className="text-left p-3 font-semibold">항목</th>
-              <th className="text-left p-3 font-semibold">값</th>
-              <th className="text-left p-3 font-semibold">비고</th>
-            </tr>
-          </thead>
-          <tbody>
-            {POOL_DEFAULTS.map((r, i) => (
-              <tr key={i} className="border-t border-border">
-                <td className="p-3">{r.metric}</td>
-                <td className="p-3 font-mono text-amber-400">{r.value}</td>
-                <td className="p-3 text-foreground/60">{r.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="not-prose mt-6"><TxPoolViz /></div>
     </section>
   );
 }

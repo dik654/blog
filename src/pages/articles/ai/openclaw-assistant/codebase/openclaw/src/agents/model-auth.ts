@@ -7,7 +7,7 @@
 
 export interface AuthProfile {
   id: string;
-  provider: 'anthropic' | 'openai' | 'google' | 'ollama' | string;
+  provider: "anthropic" | "openai" | "google" | "ollama" | string;
   apiKey?: string;
   baseUrl?: string;
   cooldownUntil?: number;
@@ -43,7 +43,7 @@ export class AuthProfileManager {
   async resolveModel(): Promise<AuthProfile> {
     const available = this.getAvailableProfiles();
     if (available.length === 0) {
-      throw new Error('All model profiles are in cooldown');
+      throw new Error("All model profiles are in cooldown");
     }
     return available[0];
   }

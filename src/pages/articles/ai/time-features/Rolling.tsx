@@ -1,74 +1,62 @@
-import RollingViz from './viz/RollingViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import RollingViz from "./viz/RollingViz";
 
 export default function Rolling() {
   return (
     <section id="rolling" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">롤링 통계: 이동 평균, 표준편차</h2>
+      <h2 className="mb-6 text-2xl font-bold">Rolling statistic은 window의 양끝과 관측 수까지 포함한 계약입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>롤링 통계(Rolling Statistics)</strong> — 고정 크기 윈도우를 시간 축을 따라 슬라이딩하며 통계량을 계산<br />
-          래그 피처가 "특정 시점의 값"이라면, 롤링 통계는 <strong>"최근 구간의 요약"</strong>
+          최근 7일 평균이라는 문장만으로는 구현을 재현할 수 없습니다. Cutoff
+          자체를 포함하는지, 정확히 7일 전 record를 포함하는지, available time과
+          event time 중 어느 clock으로 자르는지, 관측이 몇 개 이상이어야 값을
+          낼지 정해야 합니다. 일반적인 forecasting feature는 target 시점의 값을
+          제외하도록 오른쪽이 열린 과거 window를 사용합니다.
         </p>
-
-        <h3>이동 평균 (Rolling Mean)</h3>
         <p>
-          rolling_mean(t, w) = (1/w) * [y(t) + y(t-1) + ... + y(t-w+1)]<br />
-          노이즈를 제거하고 추세를 드러냄 — 윈도우 크기가 클수록 부드러운 곡선<br />
-          pandas: <code>df['rmean_7'] = df['y'].rolling(7).mean()</code>
-        </p>
-
-        <h3>이동 표준편차 (Rolling Std)</h3>
-        <p>
-          <strong>변동성(Volatility)</strong>의 정량적 지표<br />
-          rolling_std가 급격히 증가하는 구간 = 구조적 변화(regime change) 또는 이상치(anomaly)<br />
-          금융에서 볼린저 밴드(Bollinger Band) = 이동 평균 ± 2 * 이동 표준편차
+          Row-count window는 최근 N개 사건의 상태를, duration window는 최근 Δ시간의
+          활동량을 묻습니다. Event가 불규칙하면 둘의 표본 수가 달라지므로 mean과
+          함께 count·coverage·time-since-last-event를 기록하면 “평균 10”이 한 번의
+          관측인지 백 번의 관측인지 구분할 수 있습니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <RollingViz />
-      </div>
+
+      <ExplainedFormula
+        question="Cutoff c 직전 W시간 동안 확정된 값의 평균을 어떻게 정의할까?"
+        idea={<>Entity i의 record 중 event time은 왼쪽 경계 c−W 이상, 오른쪽 경계 c보다 작고 available time도 c 이하인 집합만 선택합니다. 그 집합의 count로 합을 나눕니다.</>}
+        formula={String.raw`\mathcal W_{i,c}=\{r_i:c-W\le t^{\mathrm{event}}_r<c,\ t^{\mathrm{avail}}_r\le c\},\qquad \mu_{i,c,W}=\frac{1}{|\mathcal W_{i,c}|}\sum_{r\in\mathcal W_{i,c}}v_r`}
+        terms={[
+          { symbol: "[c−W,c)", name: "half-open window", description: "정확히 왼쪽 경계는 포함하고 현재 cutoff는 제외하는 시간 구간입니다." },
+          { symbol: "t_event", name: "event time", description: "현상이 실제로 발생한 시각으로 duration 범위를 정합니다." },
+          { symbol: "t_avail", name: "available time", description: "Feature system이 record를 사용할 수 있게 된 시각이며 반드시 cutoff 이하여야 합니다." },
+          { symbol: "|W_i,c|", name: "window count", description: "선택된 유효 record 수이며 0이면 mean을 정의할 별도 fallback이 필요합니다." },
+        ]}
+        assumptions={["Timezone·daylight-saving·boundary equality 처리가 명시돼 있습니다.", "Late update와 duplicate record의 version selection이 deterministic합니다.", "min_periods와 empty-window fallback을 training·serving에 동일하게 적용합니다."]}
+        interpretation="Rolling mean 값만 저장하지 말고 window count와 freshness를 함께 두면 sparse history와 실제 낮은 level을 구분하기 쉽습니다."
+      />
+
+      <ExplainedFormula
+        question="EMA는 과거를 모두 쓰면서 최근 값에 더 큰 비중을 어떻게 줄까?"
+        idea={<>현재 cutoff 이전에 확정된 새 값이 들어올 때 이전 상태를 (1−α)만큼 남기고 새 값을 α만큼 섞습니다. α가 크면 빠르게 반응하고 작으면 오래 기억합니다.</>}
+        formula={String.raw`s_n=\alpha y_{n-1}+(1-\alpha)s_{n-1},\qquad 0<\alpha\le1`}
+        terms={[
+          { symbol: "s_n", name: "EMA state", description: "n번째 prediction row에서 사용할 cutoff 이전의 exponentially weighted summary입니다." },
+          { symbol: "y_(n−1)", name: "latest available value", description: "현재 target이 아니라 직전에 확정돼 사용할 수 있는 관측값입니다." },
+          { symbol: "α", name: "smoothing factor", description: "새 관측에 줄 weight이며 반응 속도와 noise suppression을 함께 바꿉니다." },
+        ]}
+        assumptions={["Observation 간격이 일정하거나 irregular interval을 반영한 time-decay version을 사용합니다.", "Initial state와 warm-up policy를 기록합니다.", "α는 validation horizon과 regime 변화에 맞춰 선택합니다."]}
+        interpretation="EMA는 고정 길이 window가 아니라 먼 과거의 weight가 지수적으로 작아지는 stateful summary입니다."
+      />
+
+      <div className="not-prose my-8"><RollingViz /></div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>윈도우 크기 선택 전략</h3>
         <p>
-          도메인 주기에 맞추는 것이 원칙 — 일별 데이터에서 주간 패턴이 있으면 w=7<br />
-          작은 윈도우(3~5): 빠른 반응, 노이즈에 민감 — 단기 시그널 포착<br />
-          큰 윈도우(20~30): 안정적 추세, 지연(lag) 발생 — 장기 트렌드 포착<br />
-          여러 윈도우 크기를 동시에 사용하는 것이 일반적 — rmean_3, rmean_7, rmean_30
+          짧은 window는 변화에 빠르게 반응하지만 noise가 크고, 긴 window는
+          안정적이지만 regime change를 늦게 반영합니다. 여러 window를 늘어놓기
+          전에 각 window가 나타내는 업무 시간 척도를 적고 seeded ablation으로
+          품질·latency·feature freshness를 비교합니다.
         </p>
-
-        <h3>지수 이동 평균 (EMA)</h3>
-        <p>
-          <strong>EMA(Exponential Moving Average)</strong> — 최근 값에 더 큰 가중치를 부여<br />
-          EMA(t) = alpha * y(t) + (1 - alpha) * EMA(t-1), alpha = 2/(span+1)<br />
-          단순 이동 평균(SMA) 대비 장점: 추세 전환에 <strong>빠르게 반응</strong> + NaN 없이 첫 값부터 계산 가능
-        </p>
-        <p>
-          pandas: <code>df['ema_5'] = df['y'].ewm(span=5).mean()</code><br />
-          span=5이면 alpha=0.333 — 최근 3~4개 값이 전체 가중치의 대부분을 차지
-        </p>
-
-        <h3>롤링 최대/최소 & 범위</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 text-sm">
-          {[
-            { title: 'rolling max', desc: '구간 내 최고점. 저항선 분석, 피크 탐지에 활용' },
-            { title: 'rolling min', desc: '구간 내 최저점. 지지선 분석, 바닥 탐지에 활용' },
-            { title: 'range = max - min', desc: '구간 변동 폭. 변동성의 직관적 지표' },
-          ].map((item) => (
-            <div key={item.title} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-mono font-semibold text-foreground text-xs">{item.title}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.desc}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">롤링 통계의 미래 누출 함정</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            <code>df['y'].rolling(7).mean()</code>은 현재 시점 포함 과거 7개의 평균이므로 안전하다.
-            그러나 <strong>center=True</strong> 옵션을 쓰면 미래 값이 포함되어 누출이 발생한다.
-            시계열 피처 생성 시 center=False(기본값)를 반드시 확인할 것.
-          </p>
-        </div>
       </div>
     </section>
   );

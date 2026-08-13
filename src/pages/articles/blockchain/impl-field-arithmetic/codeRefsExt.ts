@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const extCodeRefs: Record<string, CodeRef> = {
-  'fp2-struct': {
-    path: 'field/fp2.rs — Fp2 struct + mul + inv',
-    lang: 'rust',
+  "fp2-struct": {
+    path: "field/fp2.rs — Fp2 struct + mul + inv",
+    lang: "rust",
     highlight: [1, 34],
-    desc: 'Fp2 이차 확장체.\na0 + a1*u (u^2 = -1). 복소수와 동일한 구조.',
+    desc: "Fp2 이차 확장체.\na0 + a1*u (u^2 = -1). 복소수와 동일한 구조.",
     code: `/// Fp2 = Fp[u] / (u^2 + 1)
 /// 구조: a0 + a1*u  (a0, a1 in Fp)
 pub struct Fp2 {
@@ -35,9 +35,21 @@ pub fn conjugate(&self) -> Fp2 {
     Fp2 { c0: self.c0, c1: -self.c1 }
 }`,
     annotations: [
-      { lines: [3, 6], color: 'sky', note: 'Fp2 = 복소수. c0이 실수부, c1이 허수부' },
-      { lines: [8, 15], color: 'emerald', note: 'Karatsuba — 곱셈 3회로 줄임. v0, v1 재사용' },
-      { lines: [17, 23], color: 'amber', note: 'norm으로 차원을 내림 — Fp2 역원을 Fp 역원으로 환원' },
+      {
+        lines: [3, 6],
+        color: "sky",
+        note: "Fp2 = 복소수. c0이 실수부, c1이 허수부",
+      },
+      {
+        lines: [8, 15],
+        color: "emerald",
+        note: "Karatsuba — 곱셈 3회로 줄임. v0, v1 재사용",
+      },
+      {
+        lines: [17, 23],
+        color: "amber",
+        note: "norm으로 차원을 내림 — Fp2 역원을 Fp 역원으로 환원",
+      },
     ],
   },
 };

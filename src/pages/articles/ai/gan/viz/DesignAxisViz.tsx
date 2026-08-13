@@ -1,0 +1,5 @@
+import VizFrame from "@/components/viz/VizFrame";
+
+const axes = [["Condition","cGAN · Pix2Pix","무엇을 생성할지 지정"],["Architecture","DCGAN · StyleGAN","resolution·control·inductive bias"],["Discrepancy","logistic · WGAN","generator에 보낼 distribution signal"],["Constraint","GP · spectral norm · R1","critic의 gradient와 capacity 제어"],["Evaluation","FID · precision/recall · human","quality·coverage·task utility 분리"]] as const;
+
+export default function DesignAxisViz(){return <VizFrame eyebrow="Design axes" title="GAN 변형은 연도보다 무엇을 바꿨는지로 읽습니다"><div className="space-y-3">{axes.map(([axis,examples,role])=><div key={axis} className="grid min-w-0 gap-2 rounded-lg border border-border/70 bg-background p-4 sm:grid-cols-[7rem_1fr_1fr] sm:items-center sm:gap-4"><p className="text-sm font-bold text-foreground">{axis}</p><p className="break-words font-mono text-xs text-primary">{examples}</p><p className="border-t border-border/60 pt-2 text-xs leading-5 text-muted-foreground sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">{role}</p></div>)}</div></VizFrame>}

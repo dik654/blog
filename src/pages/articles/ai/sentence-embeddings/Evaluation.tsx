@@ -1,115 +1,44 @@
-import M from '@/components/ui/math';
-import EvalBenchViz from './viz/EvalBenchViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import EvalBenchViz from "./viz/EvalBenchViz";
 
 export default function Evaluation() {
-  return (
-    <section id="evaluation" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">임베딩 품질 평가법</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          문장 임베딩 모델의 품질은 단일 지표로 판단할 수 없음 — 검색, 분류, 유사도, 클러스터링 등 다양한 태스크에서의 성능을 종합 평가<br />
-          MTEB(Massive Text Embedding Benchmark)가 2023년부터 사실상 표준 벤치마크로 자리잡음
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">1. MTEB: 종합 벤치마크</h3>
-        <p>
-          Muennighoff et al. (2023)이 제안한 <strong>8개 카테고리, 56개 데이터셋</strong> 벤치마크<br />
-          분류(Classification), 클러스터링(Clustering), 쌍 분류(Pair Classification), 재순위(Reranking),
-          검색(Retrieval), STS, 요약(Summarization), 다국어 분류<br />
-          MTEB 리더보드: Hugging Face에서 실시간 순위 공개 — 모델 선택의 핵심 참고 자료
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">2. STS (Semantic Textual Similarity)</h3>
-        <p>
-          가장 직관적인 평가 — 두 문장의 의미 유사도를 0~5 스케일로 측정<br />
-          cosine similarity와 인간 평가 간의 <strong>Spearman 순위 상관계수(ρ)</strong> 또는 Pearson 상관계수(r)를 계산<br />
-          STSb(STS Benchmark): 8,628개 문장 쌍 — 뉴스, 포럼, 이미지 캡션 도메인에서 수집
-        </p>
-        <M display>{'\\rho = 1 - \\frac{6 \\sum d_i^2}{n(n^2 - 1)}'}</M>
-        <p className="text-sm text-muted-foreground mt-1">
-          Spearman ρ: 순위 기반 상관 — 예측값의 절대 크기보다 순서의 일치를 측정. d_i = 순위 차이
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">3. 검색 정확도</h3>
-        <p>
-          쿼리가 주어졌을 때 관련 문서를 얼마나 정확히 찾는지 측정<br />
-          <strong>Recall@k</strong>: 상위 k개 결과에 정답이 포함된 비율 — k=10이면 상위 10개 중 정답 포함 여부<br />
-          <strong>MRR(Mean Reciprocal Rank)</strong>: 정답의 평균 역순위 — 1위에 있으면 1.0, 2위면 0.5, 3위면 0.33
-        </p>
-        <M display>{'\\text{MRR} = \\frac{1}{|Q|} \\sum_{i=1}^{|Q|} \\frac{1}{\\text{rank}_i}'}</M>
-        <p>
-          <strong>NDCG(Normalized Discounted Cumulative Gain)</strong>: 순위 품질의 표준 지표<br />
-          상위에 관련성 높은 문서가 배치될수록 높은 점수 — 이진 관련성뿐 아니라 등급별 관련성도 반영<br />
-          대표 벤치마크: MS-MARCO(검색), Natural Questions(QA), BEIR(다양한 도메인)
-        </p>
-        <M display>{'\\text{DCG@k} = \\sum_{i=1}^{k} \\frac{2^{\\text{rel}_i} - 1}{\\log_2(i+1)}, \\quad \\text{NDCG@k} = \\frac{\\text{DCG@k}}{\\text{IDCG@k}}'}</M>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">4. 클러스터링 품질</h3>
-        <p>
-          임베딩 벡터로 k-means 또는 Agglomerative Clustering 수행 후 실제 라벨과 비교<br />
-          <strong>V-measure</strong>: 동질성(한 클러스터 안에 같은 클래스)과 완전성(같은 클래스가 한 클러스터에)의 조화평균<br />
-          <strong>ARI(Adjusted Rand Index)</strong>: 우연의 일치를 보정한 클러스터 일치도 — 0이면 랜덤 수준, 1이면 완벽<br />
-          20 Newsgroups, Reddit 클러스터링 데이터셋이 대표적
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">5. Probing Tasks</h3>
-        <p>
-          임베딩이 어떤 정보를 담고 있는지 분석하는 기법<br />
-          방법: 임베딩 벡터 위에 <strong>간단한 선형 분류기(Wx + b)</strong>만 올려서 특정 속성 예측<br />
-          선형 분류기가 높은 정확도를 보이면 → 해당 정보가 벡터 공간에 <strong>선형적으로 인코딩</strong>되어 있다는 증거
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 not-prose my-6">
-          <div className="rounded-lg border bg-blue-50 dark:bg-blue-950/30 p-3">
-            <p className="font-semibold text-blue-700 dark:text-blue-300 mb-1">구문 정보 (Syntactic)</p>
-            <p className="text-sm text-muted-foreground">
-              트리 깊이(parse tree depth), 최상위 구성 성분(top constituent), 문장 길이(word count)
-            </p>
-          </div>
-          <div className="rounded-lg border bg-emerald-50 dark:bg-emerald-950/30 p-3">
-            <p className="font-semibold text-emerald-700 dark:text-emerald-300 mb-1">의미 정보 (Semantic)</p>
-            <p className="text-sm text-muted-foreground">
-              시제(tense), 주어 수(subject number), 목적어 수(object number), 감성(sentiment)
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="not-prose my-8"><EvalBenchViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-lg font-semibold mt-6 mb-3">실전 모델 선택 가이드</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">태스크</th>
-                <th className="border border-border px-4 py-2 text-left">주요 지표</th>
-                <th className="border border-border px-4 py-2 text-left">추천 모델</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['시맨틱 검색', 'NDCG@10, Recall@100', 'E5-large-v2, BGE-large'],
-                ['문장 유사도', 'STS Spearman ρ', 'SBERT, GTE-large'],
-                ['텍스트 클러스터링', 'V-measure, ARI', 'GTE-base, E5-base'],
-                ['다국어 검색', 'mMTEB 평균', 'BGE-m3, E5-multilingual'],
-                ['RAG 파이프라인', 'Recall@k + 생성 품질', 'E5-mistral, BGE-large'],
-              ].map(([task, metric, model]) => (
-                <tr key={task}>
-                  <td className="border border-border px-4 py-2 font-medium">{task}</td>
-                  <td className="border border-border px-4 py-2">{metric}</td>
-                  <td className="border border-border px-4 py-2">{model}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-4 leading-7">
-          요약 1: MTEB가 <strong>임베딩 품질의 종합 성적표</strong> — 56개 데이터셋에서 8개 카테고리 평가.<br />
-          요약 2: 검색에는 NDCG@k, 유사도에는 STS ρ, 클러스터링에는 V-measure가 핵심 지표.<br />
-          요약 3: Probing tasks로 <strong>임베딩 내부의 언어 정보 인코딩</strong>을 분석 — 모델 해석가능성의 열쇠.
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="evaluation" className="mb-16 scroll-mt-20">
+    <h2 className="mb-6 text-2xl font-bold">평가는 leaderboard 평균이 아니라 정답 집합·순위·slice·운영 비용을 같은 조건에서 재현합니다</h2>
+    <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <p>MTEB는 retrieval·semantic textual similarity(STS)·classification·clustering·reranking 등 서로 다른 embedding task를 한 framework에서 비교하는 출발점입니다. 그러나 task 평균은 서비스의 한국어 비율·짧은 사실 질문·분석형 query·긴 document·최신 corpus를 대표하지 않으므로 실제 traffic에서 분리한 domain evaluation을 반드시 둡니다.</p>
+      <p>Retrieval label은 query당 하나만 있다고 가정하지 않습니다. 여러 문서가 답이면 relevant set 전체를 보존하고, source document와 near-duplicate가 split을 넘지 않게 합니다. Recall은 정답을 후보에 포함했는지, NDCG는 relevance grade가 높은 문서를 위에 두었는지 측정합니다.</p>
+    </div>
+    <ExplainedFormula
+      question="Query마다 정답이 여러 개일 때 Recall@k와 NDCG@k는 각각 무엇을 측정할까요?"
+      idea={<>Recall은 top-k에 들어온 relevant 문서 수를 전체 relevant 수로 나눕니다. NDCG는 높은 relevance grade를 앞 순위에 둘수록 크게 주고, 같은 label set에서 가능한 이상적 DCG로 나누어 0~1 scale로 만듭니다.</>}
+      formula={String.raw`\operatorname{Recall@}k(q)=\frac{|\mathcal R_q\cap \operatorname{Top}_k(q)|}{|\mathcal R_q|},\qquad \operatorname{NDCG@}k(q)=\frac{\sum_{r=1}^{k}\frac{2^{\mathrm{rel}_r}-1}{\log_2(r+1)}}{\operatorname{IDCG@}k(q)}`}
+      terms={[
+        { symbol: "R_q", name: "relevant set", description: "Query q에 대해 정답으로 인정되는 모든 문서 ID 집합입니다." },
+        { symbol: "Top_k(q)", name: "retrieved top-k", description: "현재 retriever가 높은 score 순으로 반환한 k개 문서입니다." },
+        { symbol: "rel_r", name: "graded relevance", description: "순위 r 문서의 0·1 또는 다단계 relevance label입니다." },
+        { symbol: "IDCG", name: "ideal DCG", description: "같은 relevance labels를 가장 좋은 순서로 놓았을 때의 DCG입니다." },
+      ]}
+      assumptions={["Query별 모든 known positive를 보존하고 unlabeled를 확정 negative로 과해석하지 않습니다.", "NDCG gain function과 log discount convention·tie handling을 고정합니다.", "Relevant set이 비거나 IDCG=0인 query의 포함 규칙을 평가 protocol에 명시합니다."]}
+      interpretation="정답 4개 중 top-10에 3개가 있으면 Recall@10=.75입니다. 세 문서가 모두 있어도 가장 중요한 문서를 뒤에 두면 NDCG는 낮아질 수 있으므로 candidate coverage와 ranking quality를 분리해 봅니다."
+    />
+    <div className="not-prose my-8"><EvalBenchViz /></div>
+    <ExplainedFormula
+      question="품질이 비슷한 embedding 후보를 serving 비용까지 포함해 어떻게 비교할까요?"
+      idea={<>후보 a가 다른 후보 b보다 품질은 낮지 않고 latency·memory·storage는 크지 않으며 적어도 하나는 더 좋다면 b는 지배당합니다. 남은 Pareto 후보에서 제품 제약으로 고릅니다.</>}
+      formula={String.raw`a\succ b\iff Q_a\ge Q_b,\;L_a\le L_b,\;R_a\le R_b,\;S_a\le S_b\quad\text{and at least one strict}`}
+      terms={[
+        { symbol: "Q", name: "quality vector or gated score", description: "Domain Recall/NDCG·worst slice 등 배포에 필요한 품질 기준입니다." },
+        { symbol: "L", name: "latency", description: "같은 hardware·batch·precision에서 측정한 p95 query encoding+search latency입니다." },
+        { symbol: "R", name: "runtime resources", description: "Peak accelerator/CPU memory와 throughput capacity입니다." },
+        { symbol: "S", name: "index storage", description: "Vector·ANN structure·metadata·replica를 포함한 실제 저장량입니다." },
+      ]}
+      assumptions={["Corpus snapshot·index settings·hardware·batch·precision·warmup·load를 동일하게 맞춥니다.", "Quality를 scalar 평균 하나로 합치기 전에 필수 language/domain slice minimum을 통과시킵니다.", "Offline latency가 production concurrency·update cost를 완전히 대표하지 않으므로 canary 측정이 필요합니다."]}
+      interpretation="MTEB 평균 1점 상승만 보고 dimension·latency가 몇 배 큰 model을 고르지 않습니다. 반대로 작은 비용 차이로 critical slice가 크게 좋아지면 Pareto 후보로 남아 제품 제약에서 선택할 수 있습니다."
+    />
+    <div id="paper-mteb" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+      <p className="text-xs font-bold text-primary">논문 읽기 · MTEB</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">Muennighoff 등은 여러 embedding task와 dataset을 공통 API·metric으로 평가하는 MTEB를 제안했습니다. Benchmark 평균은 포함된 task·language·dataset snapshot의 집계이며 특정 서비스의 query distribution, corpus freshness와 system cost를 대신하지 않습니다.</p>
+      <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2210.07316" target="_blank" rel="noreferrer">Task taxonomy와 benchmark 범위 보기</a>
+    </div>
+  </section>;
 }

@@ -1,7 +1,7 @@
-import Overview from './smr-theory/Overview';
-import TotalOrder from './smr-theory/TotalOrder';
-import LogReplication from './smr-theory/LogReplication';
-import Paxos from './smr-theory/Paxos';
+import Overview from "./smr-theory/Overview";
+import TotalOrder from "./smr-theory/TotalOrder";
+import LogReplication from "./smr-theory/LogReplication";
+import Paxos from "./smr-theory/Paxos";
 
 export default function SMRTheory() {
   return (

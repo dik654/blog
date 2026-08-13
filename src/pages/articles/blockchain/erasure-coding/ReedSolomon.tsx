@@ -1,4 +1,4 @@
-import RSCodingViz from './viz/RSCodingViz';
+import RSCodingViz from "./viz/RSCodingViz";
 
 export default function ReedSolomon() {
   return (
@@ -8,15 +8,20 @@ export default function ReedSolomon() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          데이터를 유한체 위 다항식 계수로 매핑, n개 평가점에서 코드워드 생성. MDS 코드.
+          데이터를 유한체 위 다항식 계수로 매핑, n개 평가점에서 코드워드 생성.
+          MDS 코드.
         </p>
       </div>
-      <div className="not-prose"><RSCodingViz /></div>
+      <div className="not-prose">
+        <RSCodingViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Reed-Solomon 코딩 원리</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Reed-Solomon 코딩 원리
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Reed-Solomon (RS) Coding:
+          {`// Reed-Solomon (RS) Coding:
 
 // 기본 아이디어:
 // - data를 finite field GF(q) polynomial로 표현
@@ -87,7 +92,8 @@ export default function ReedSolomon() {
         </pre>
         <p className="leading-7">
           RS: <strong>polynomial evaluation in finite field</strong>.<br />
-          MDS optimal (k of n), O(nk) encoding, O(k²) decoding.<br />
+          MDS optimal (k of n), O(nk) encoding, O(k²) decoding.
+          <br />
           SIMD accelerated to 10+ GB/s (ISA-L).
         </p>
       </div>

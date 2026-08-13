@@ -1,39 +1,25 @@
-import OverviewViz from './viz/OverviewViz';
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import OverviewViz from "./viz/OverviewViz";
 
 export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
+
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Layer 트레이트 설계</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-        <p className="leading-7">
-          dezero_rs의 신경망 레이어는 <code>Model</code> trait으로 통합
-          <br />
-          <code>forward()</code>와 <code>layers()</code> 두 메서드만 구현하면
-          cleargrads, params, save/load가 자동 제공
-          <br />
-          Python DeZero는 <code>__setattr__</code>로 레이어를 자동 등록하지만
-          Rust에서는 사용자가 <code>layers()</code>에서 명시적으로 나열
-        </p>
-        <p className="leading-7">
-          <code>Linear</code>은 W를 <code>RefCell&lt;Option&lt;Variable&gt;&gt;</code>로 감싸서 lazy init
-          <br />
-          생성 시점에 in_size를 모르기 때문 — 첫 forward 호출 시 <code>x.shape()[1]</code>로 자동 결정
-        </p>
-      </div>
-      <div className="not-prose mb-8">
-        <OverviewViz onOpenCode={open} />
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">자동 미분 다음에는 파라미터와 학습 상태를 관리해야 합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h4>구현 인사이트</h4>
-        <p className="leading-7">
-          Python의 동적 속성 등록(<code>__setattr__</code>)을 Rust에서는 trait의 명시적 메서드로 대체
-          <br />
-          자유도는 줄지만 컴파일 타임에 레이어 누락을 잡을 수 있는 장점
-          <br />
-          <code>&apos;a</code> 라이프타임으로 SGD가 Model을 빌리는 관계를 컴파일러가 보장
+        <p>
+          앞 글의 자동 미분 엔진만으로도 개별 함수의 gradient는 구할 수 있습니다. 그러나 신경망을 학습하려면 모델에 속한 파라미터를 빠짐없이 찾고, 예측과 loss를 계산한 뒤, optimizer가 같은 파라미터를 반복해서 갱신하도록 공통 구조를 만들어야 합니다.
+        </p>
+        <p>
+          이 글에서는 <code>Layer</code>와 <code>Model</code>의 역할을 먼저 정한 뒤 Linear, activation, SGD·Adam, 전체 학습 루프 순서로 확장합니다. PyTorch API를 그대로 복제하기보다 각 상태가 어느 객체에 속해야 하는지와, 다음 단계가 이전 단계의 어떤 계약에 의존하는지를 중심으로 봅니다.
+        </p>
+      </div>
+      <div className="not-prose my-8"><OverviewViz onOpenCode={open} /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          구현을 따라갈 때는 매 단계마다 shape test와 수치 gradient check를 유지하는 편이 좋습니다. forward 값이 맞아도 broadcasting이나 gradient 누적이 틀릴 수 있기 때문입니다. 이 기본 학습 루프가 안정적으로 동작한 다음에야 시퀀스 상태, normalization, dropout 같은 기능을 추가할 수 있습니다.
         </p>
       </div>
     </section>

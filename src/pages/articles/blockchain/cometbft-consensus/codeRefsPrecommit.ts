@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const precommitRefs: Record<string, CodeRef> = {
-  'enter-precommit': {
-    path: 'consensus/state.go — enterPrecommit()',
-    lang: 'go',
+  "enter-precommit": {
+    path: "consensus/state.go — enterPrecommit()",
+    lang: "go",
     highlight: [1, 5],
-    desc: 'enterPrecommit — +2/3 Prevote(Polka) 결과로 Lock/Unlock 결정.\nPolka for block → Lock, Polka for nil → Unlock.',
+    desc: "enterPrecommit — +2/3 Prevote(Polka) 결과로 Lock/Unlock 결정.\nPolka for block → Lock, Polka for nil → Unlock.",
     code: `func (cs *State) enterPrecommit(height int64, round int32) {
     defer func() {
         cs.updateRoundStep(round, cstypes.RoundStepPrecommit)
@@ -53,14 +53,26 @@ export const precommitRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [6, 6], color: 'sky',
-        note: 'TwoThirdsMajority: Prevotes에서 +2/3 다수결 블록 조회' },
-      { lines: [9, 14], color: 'emerald',
-        note: 'Polka 미달성 → nil Precommit' },
-      { lines: [16, 26], color: 'amber',
-        note: '+2/3 nil → Lock 해제. 다음 라운드에서 다른 블록 투표 가능' },
-      { lines: [37, 45], color: 'violet',
-        note: '새 블록 Polka → ValidateBlock → Lock & Precommit (핵심 경로)' },
+      {
+        lines: [6, 6],
+        color: "sky",
+        note: "TwoThirdsMajority: Prevotes에서 +2/3 다수결 블록 조회",
+      },
+      {
+        lines: [9, 14],
+        color: "emerald",
+        note: "Polka 미달성 → nil Precommit",
+      },
+      {
+        lines: [16, 26],
+        color: "amber",
+        note: "+2/3 nil → Lock 해제. 다음 라운드에서 다른 블록 투표 가능",
+      },
+      {
+        lines: [37, 45],
+        color: "violet",
+        note: "새 블록 Polka → ValidateBlock → Lock & Precommit (핵심 경로)",
+      },
     ],
   },
 };

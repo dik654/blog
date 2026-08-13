@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, AlertBox, ActionBox } from '@/components/viz/boxes';
+import { AnnotationBox, AlertBox, ActionBox, DataBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 /* Step 0: 수십 개 서비스 */
@@ -10,15 +10,12 @@ export function StepManyServices() {
     {svc.map((s, i) => (
       <motion.g key={s} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
         transition={{ delay: i * 0.08 }}>
-        <rect x={150} y={8 + i * 20} width={65} height={16} rx={8}
-          fill={`${C.comp}12`} stroke={C.comp} strokeWidth={0.7} />
-        <text x={182} y={19 + i * 20} textAnchor="middle" fontSize={10} fill={C.comp}>{s}</text>
+        <DataBox x={150} y={8 + i * 20} w={65} h={16} label={s} color={C.comp} />
       </motion.g>
     ))}
-    <motion.text x={300} y={55} fontSize={11} fill="var(--muted-foreground)"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-      수십 개 서비스를 올바른 순서로 조합
-    </motion.text>
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+      <AnnotationBox x={270} y={24} w={135} h={62} label="수십 개 서비스를 올바른 순서로 조합" color={C.cli} eyebrow="조립 책임" />
+    </motion.g>
   </g>);
 }
 

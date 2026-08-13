@@ -1,71 +1,46 @@
-import RegularizationViz from './viz/RegularizationViz';
-import L1L2Viz from './viz/L1L2Viz';
-import DropoutViz from './viz/DropoutViz';
-import RegTechViz from './viz/RegTechViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import TrainingInterventionViz from "./viz/TrainingInterventionViz";
 
 export default function Regularization() {
   return (
     <section id="regularization" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">정규화 기법</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        과적합(overfitting) 방지 — 의도적 방해로 일반화 성능 향상.<br />
-        L1/L2, Dropout, Early Stopping 등 다양한 기법이 존재한다.
-      </p>
-      <RegularizationViz />
+      <h2 className="mb-6 text-2xl font-bold">Regularization은 training loop의 서로 다른 지점에 개입한다</h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">L1 vs L2 Regularization</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          L2 = 원형 제약 (모든 θ 작게 유지), L1 = 마름모 제약 (많은 θ=0, sparse)<br />
-          기하학적으로 L1의 꼭짓점이 축 위에 있어 해가 축에 닿음 → feature selection 효과
+          Regularization은 모델을 막연히 “방해”하는 기법의 목록이 아니다. 어떤
+          objective를 최적화할지, activation에 어떤 noise를 넣을지, data
+          distribution을 어떻게 확장할지, 어느 checkpoint를 선택할지처럼 개입
+          지점이 서로 다르다. 같은 validation gain을 보여도 계산 비용과 실패 mode가
+          다르므로 이름보다 training loop에서의 위치를 먼저 봐야 한다.
         </p>
       </div>
-      <L1L2Viz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Dropout</h3>
+      <TrainingInterventionViz />
+
+      <ExplainedFormula
+        question="adaptive optimizer에서 L2 penalty와 weight decay를 왜 같은 것으로 취급하면 안 될까?"
+        idea={<>L2 penalty는 λθ를 loss gradient에 더하므로 Adam의 moment normalization을 함께 거칩니다. AdamW는 data gradient update와 별도로 parameter를 직접 shrink해 두 효과를 분리합니다.</>}
+        formula={String.raw`\begin{aligned}g_t^{\rm L2}&=g_t+\lambda\theta_t\\u_t&=\operatorname{Adam}(g_t)\\\theta_{t+1}^{\rm AdamW}&=(1-\eta_t\lambda)\theta_t-\eta_tu_t\end{aligned}`}
+        terms={[
+          { symbol: "\\lambda", name: "regularization / decay coefficient", description: "두 식에서 같은 기호를 써도 optimizer와 결합되는 방식은 다릅니다." },
+          { symbol: "g_t+\\lambda\\theta_t", name: "coupled L2 gradient", description: "penalty gradient가 data gradient와 함께 optimizer state에 들어갑니다." },
+          { symbol: "(1-\\eta_t\\lambda)\\theta_t", name: "decoupled shrink", description: "loss gradient transform과 분리해 parameter를 직접 줄입니다." },
+        ]}
+        assumptions={["개념 비교를 위한 AdamW형 update이며 bias correction 등 Adam 내부 식은 생략했습니다."]}
+        interpretation="SGD에서는 적절한 scale 아래 두 방식이 대응하지만 adaptive optimizer에서는 일반적으로 같지 않습니다. AdamW가 ‘decoupled’라고 부르는 이유입니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          훈련 시 뉴런을 확률 p로 랜덤하게 0으로 만들어 <strong>ensemble 효과</strong> 발생<br />
-          Co-adaptation 방지 → 추론 시엔 full network 사용 (inverted dropout: 출력×1/(1−p) 스케일)
+          이 구분은
+          <a href="https://arxiv.org/abs/1711.05101" target="_blank" rel="noreferrer"> AdamW 원 논문</a>에서
+          확인할 수 있다. Dropout은 parameter penalty가 아니라 training 중 unit과
+          connection을 확률적으로 제거하는 방법이며,
+          <a href="https://www.jmlr.org/papers/v15/srivastava14a.html" target="_blank" rel="noreferrer"> 원 논문</a>의
+          ensemble approximation 관점과 현재 architecture에서의 실제 ablation을
+          함께 보는 편이 정확하다.
         </p>
-      </div>
-      <DropoutViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">BatchNorm · Early Stopping · Data Augmentation</h3>
-        <p>
-          정규화 수식, Normalization 변형, 조기 종료, 데이터 증강 기법.
-        </p>
-      </div>
-      <RegTechViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 정규화는 귀납적 편향(inductive bias)</p>
-          <p>
-            <strong>철학적 관점</strong>:<br />
-            - Regularization = "모델에게 특정 가정을 강제"<br />
-            - L2: "weights should be small" 가정<br />
-            - Dropout: "no single neuron is indispensable" 가정<br />
-            - BatchNorm: "features should have similar scale" 가정
-          </p>
-          <p className="mt-2">
-            <strong>조합 전략 (modern DL)</strong>:<br />
-            ✓ Always: Weight decay (L2) 작게 (1e-4 ~ 1e-5)<br />
-            ✓ Always: Batch/Layer Norm<br />
-            ✓ Often: Dropout (0.1 ~ 0.5)<br />
-            ✓ Always: Data augmentation<br />
-            ✓ Always: Early stopping (safety)
-          </p>
-          <p className="mt-2">
-            <strong>스케일 고려</strong>:<br />
-            - 작은 모델: 강한 regularization 필요<br />
-            - 대형 LLM: 적은 regularization (데이터 자체로 충분)<br />
-            - Transfer learning: regularization 줄이기 (pre-trained 가깝게)
-          </p>
-        </div>
-
       </div>
     </section>
   );

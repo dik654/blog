@@ -1,87 +1,68 @@
-import KFoldViz from './viz/KFoldViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import KFoldViz from "./viz/KFoldViz";
 
 export default function KFold() {
   return (
     <section id="kfold" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">K-Fold & Stratified K-Fold</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        K-fold는 행의 순서를 바꿔도 문제의 의미가 유지되는 경우에만 자연스럽습니다
+      </h2>
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          <strong>K-Fold</strong> — 가장 기본적인 교차 검증<br />
-          데이터를 K등분 → 각 fold를 돌아가며 검증 세트로 사용 → K번 학습-평가<br />
-          K=5 또는 K=10이 일반적 — K가 클수록 평가 안정적이지만 계산 비용 증가
+          K-fold는 n개 행을 겹치지 않는 K개 validation fold로 나누고, 매번 K−1개로 학습해 남은 하나를 예측합니다. 핵심
+          가정은 단순한 “shuffle 가능” 옵션이 아니라 행들이 독립에 가깝고 교환 가능(exchangeable)하다는 것입니다. 즉 행의
+          순서를 바꾸어도 공동 데이터 생성 과정의 의미가 달라지지 않아야 합니다.
         </p>
         <p>
-          아래 Viz에서 5개 스텝으로 <strong>K-Fold의 기본 동작 → Stratified K-Fold의 필요성 → Repeated K-Fold로 분산 축소</strong>를 차례로 확인한다.
+          Classification에서 class 수가 적으면 stratification으로 fold별 label 비율을 비슷하게 만들 수 있습니다. 하지만
+          stratification은 같은 환자나 세션을 갈라 놓는 문제, 미래가 과거 train에 들어가는 문제를 해결하지 않습니다. 여러
+          제약이 있다면 group·time 경계를 먼저 지킨 뒤 가능한 범위에서 label 균형을 맞춥니다.
         </p>
       </div>
+
+      <ExplainedFormula
+        question="Fold 크기가 달라도 전체 OOF loss를 같은 행 기준으로 계산하려면 어떻게 합칠까요?"
+        idea={
+          <>
+            Fold score를 무조건 1/K로 평균내지 않고, 각 행이 자신을 학습하지 않은 model에서 받은 loss를 모두 더해 전체 행 수로
+            나눕니다. 그러면 큰 fold와 작은 fold가 실제 행 수만큼 반영됩니다.
+          </>
+        }
+        formula={String.raw`\widehat R_{\mathrm{OOF}}=\frac{1}{n}\sum_{k=1}^{K}\sum_{i\in V_k}\ell\!\left(A(D_{-k}),z_i\right),\qquad \bigsqcup_{k=1}^{K}V_k=\{1,\ldots,n\}`}
+        terms={[
+          { symbol: "V_k", name: "validation fold k", description: "k번째 실행에서 model이 보지 않고 예측한 행의 집합입니다." },
+          { symbol: "D_-k", name: "fold-k training data", description: "V_k를 제외하고 transform과 model을 fit하는 데이터입니다." },
+          { symbol: "A(D_-k)", name: "fold model", description: "동일한 학습 절차 A를 k번째 train data에 적용해 얻은 model입니다." },
+          { symbol: "disjoint union", name: "exact partition", description: "모든 행이 validation fold 하나에만 정확히 포함된다는 뜻입니다." },
+        ]}
+        assumptions={[
+          "각 fold model은 해당 validation 행과 그 행에서 유도된 fitted statistic을 전혀 사용하지 않습니다.",
+          "Sample weight가 있으면 loss 합과 분모 모두 같은 weight를 사용합니다.",
+          "Repeated CV는 한 행에 여러 OOF prediction이 생기므로 반복별 prediction 집계와 uncertainty 단위를 따로 정합니다.",
+        ]}
+        interpretation="Fold 크기가 20과 80인데 fold metric을 반반 평균내면 20개 행이 과도하게 반영됩니다. Pooled OOF는 20:80으로 반영합니다."
+      />
 
       <div className="not-prose my-8">
         <KFoldViz />
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">K값 선택 기준</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 text-sm">
-          {[
-            {
-              k: 'K=5',
-              desc: '기본값. 학습 데이터 80% 사용. 대부분의 상황에 적합',
-              when: '데이터 1만~100만건',
-            },
-            {
-              k: 'K=10',
-              desc: '더 안정적 추정. 학습 데이터 90% 사용. 계산 2배',
-              when: '데이터 1만건 이하',
-            },
-            {
-              k: 'LOOCV (K=N)',
-              desc: 'Leave-One-Out. 극단적으로 안정적이지만 계산 비용 N배',
-              when: '데이터 100건 미만',
-            },
-          ].map((p) => (
-            <div key={p.k} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-mono font-bold text-foreground text-xs">{p.k}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-              <div className="text-xs text-muted-foreground mt-1 italic">{p.when}</div>
-            </div>
-          ))}
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">실전 팁</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            {
-              title: 'shuffle=True 필수',
-              desc: '데이터가 정렬되어 있으면(시간순, 클래스순) 셔플 없이 분할하면 편향 발생. 단, 시계열은 셔플 금지',
-            },
-            {
-              title: 'random_state 고정',
-              desc: '실험 재현성 확보. 같은 seed → 같은 분할 → 모델 간 공정한 비교 가능',
-            },
-            {
-              title: '검증 metric 일치',
-              desc: 'CV metric과 대회 평가 metric 일치 필수. AUC 대회인데 accuracy로 CV하면 의미 없음',
-            },
-            {
-              title: 'fold별 점수 분석',
-              desc: '평균만 보지 말고 fold별 편차 확인. 특정 fold만 낮으면 → 해당 데이터 구간에 문제 있음',
-            },
-          ].map((p) => (
-            <div key={p.title} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-bold text-foreground text-xs">{p.title}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-            </div>
-          ))}
-        </div>
+      <div id="paper-cv-estimand" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">핵심 논문 · Cross-Validation: What Does It Estimate and How Well Does It Do It?</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 논문의 핵심은 보통의 CV가 관측 데이터 전체로 fit한 특정 model 하나의 conditional error보다, 같은 모집단에서 다시
+          뽑은 학습셋들로 fit한 model의 평균 prediction error에 더 가깝다는 점입니다. 또한 fold accuracy들이 독립이 아니어서
+          단순 fold 표준편차로 만든 confidence interval이 과도하게 좁을 수 있음을 보이고 nested CV 기반 variance 추정을
+          제안합니다. 이 결과를 “CV는 쓸모없다”거나 모든 model에 동일한 exact theorem이 성립한다고 확대하지 않습니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/" target="_blank" rel="noreferrer">논문 전문과 전제 보기</a>
       </div>
 
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 분류는 무조건 Stratified</p>
-        <p className="text-sm">
-          sklearn의 <code>cross_val_score</code>는 분류기에 대해 기본적으로 Stratified K-Fold를 사용 — 하지만 수동으로
-          <code>KFold</code>를 지정하면 이 안전장치가 풀림<br />
-          분류 문제에서는 항상 <code>StratifiedKFold</code>를 명시하거나 <code>cross_val_score</code>에 맡겨라
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
+        <p>
+          Fold 수에는 보편적인 정답이 없습니다. K를 늘리면 fold model의 train set은 커지지만 계산 비용과 fold model 사이의
+          상관도 커집니다. 후보 선택에는 pooled OOF, fold·seed·slice table을 함께 쓰고, 최종 성능 주장은 선택에 쓰지 않은
+          holdout에서 확인합니다.
         </p>
       </div>
     </section>

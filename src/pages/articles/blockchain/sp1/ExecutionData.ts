@@ -10,10 +10,13 @@ pub struct Executor<'a> {
 }`;
 
 export const EXEC_MODES = [
-  { name: 'Simple', desc: '추적 없는 빠른 실행. 오버헤드 최소. 결과 확인용.' },
-  { name: 'Checkpoint', desc: '메모리 체크포인트 포함. 중간 상태 저장 가능.' },
-  { name: 'Trace', desc: '완전한 이벤트 추적. 증명 생성용. 가장 느림.' },
-  { name: 'ShapeCollection', desc: '회로 최적화용 크기 정보 수집. setup() 전 사용.' },
+  { name: "Simple", desc: "추적 없는 빠른 실행. 오버헤드 최소. 결과 확인용." },
+  { name: "Checkpoint", desc: "메모리 체크포인트 포함. 중간 상태 저장 가능." },
+  { name: "Trace", desc: "완전한 이벤트 추적. 증명 생성용. 가장 느림." },
+  {
+    name: "ShapeCollection",
+    desc: "회로 최적화용 크기 정보 수집. setup() 전 사용.",
+  },
 ];
 
 export const INSTRUCTION_CODE = `// RISC-V RV32IM 명령어 실행

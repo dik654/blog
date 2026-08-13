@@ -1,11 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const sealingRefs2: Record<string, CodeRef> = {
-  'report-body': {
-    path: 'linux-sgx/common/inc/sgx_report.h — sgx_report_body_t',
-    lang: 'c',
+  "report-body": {
+    path: "linux-sgx/common/inc/sgx_report.h — sgx_report_body_t",
+    lang: "c",
     highlight: [1, 18],
-    desc: 'EREPORT가 생성하는 보고서 본문 구조체.\nCPU가 하드웨어 수준에서 mr_enclave, mr_signer, cpu_svn 등을 채웁니다.\nreport_data 64바이트는 사용자가 자유롭게 설정 (예: 공개키 해시).',
+    desc: "EREPORT가 생성하는 보고서 본문 구조체.\nCPU가 하드웨어 수준에서 mr_enclave, mr_signer, cpu_svn 등을 채웁니다.\nreport_data 64바이트는 사용자가 자유롭게 설정 (예: 공개키 해시).",
     code: `// common/inc/sgx_report.h (L93-118)
 typedef struct _report_body_t
 {
@@ -35,10 +35,26 @@ typedef struct _report_t            // 432 bytes
     sgx_mac_t         mac;          // (416) CMAC 128-bit
 } sgx_report_t;`,
     annotations: [
-      { lines: [4, 5], color: 'sky', note: 'CPU 보안 버전: 마이크로코드 패치 수준 반영' },
-      { lines: [10, 12], color: 'emerald', note: 'MRENCLAVE + MRSIGNER: 엔클레이브 신원 증명 핵심 필드' },
-      { lines: [15, 17], color: 'amber', note: 'ISV 버전 정보: 롤백 방어 + 최소 버전 정책' },
-      { lines: [23, 27], color: 'violet', note: 'sgx_report_t: body + key_id + CMAC 태그 (432B)' },
+      {
+        lines: [4, 5],
+        color: "sky",
+        note: "CPU 보안 버전: 마이크로코드 패치 수준 반영",
+      },
+      {
+        lines: [10, 12],
+        color: "emerald",
+        note: "MRENCLAVE + MRSIGNER: 엔클레이브 신원 증명 핵심 필드",
+      },
+      {
+        lines: [15, 17],
+        color: "amber",
+        note: "ISV 버전 정보: 롤백 방어 + 최소 버전 정책",
+      },
+      {
+        lines: [23, 27],
+        color: "violet",
+        note: "sgx_report_t: body + key_id + CMAC 태그 (432B)",
+      },
     ],
   },
 };

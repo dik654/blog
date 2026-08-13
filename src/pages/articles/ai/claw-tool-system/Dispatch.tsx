@@ -1,282 +1,168 @@
-import DispatchViz from './viz/DispatchViz';
-import Pipeline5StepViz from './viz/Pipeline5StepViz';
+import { CitationBlock } from "@/components/ui/citation";
+import DispatchViz from "./viz/DispatchViz";
+import Pipeline5StepViz from "./viz/Pipeline5StepViz";
+
+const CALL_ENVELOPE = [
+  ["Identity", "turn ID · call ID · attempt · tool name · source version/instance"],
+  ["Contract", "schema dialect/version · schema digest · registry generation"],
+  ["Context", "actor · session · canonical workspace · permission mode"],
+  ["Budget", "deadline · output limit · cancellation token · idempotency key"],
+] as const;
+
+const RESULT_ENVELOPE = [
+  ["Succeeded", "typed content · artifact refs · observed effect · test receipt"],
+  ["Rejected", "unknown_tool · invalid_input · domain_error · permission_denied"],
+  ["Interrupted", "timeout · cancelled · source_restarted · retryable 여부"],
+  ["Partial", "이미 생긴 effect · 남은 diff · cleanup/rollback 상태 · needs-review"],
+] as const;
 
 export default function Dispatch() {
   return (
     <section id="dispatch" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">execute_tool() 디스패치 파이프라인</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Dispatch는 이름 조회부터 결과 receipt까지 한 실행 계약으로 묶습니다
+      </h2>
 
-        <DispatchViz />
-
-        {/* ── 진입점 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">ConversationRuntime → execute_tool() 경로</h3>
-        <p>
-          에이전트 루프는 LLM 응답에서 <code>tool_use</code> 블록을 발견하면 <code>execute_tool()</code>을 호출<br />
-          호출 사이트는 단일 — <code>conversation_runtime.rs</code>의 <code>handle_tool_use()</code> 함수<br />
-          이 단일 진입점이 모든 도구 실행의 게이트웨이 역할
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          로그인 오류 사례에서 모델이 <code>read_file</code>을 제안했다고 해서
+          host가 같은 이름의 Rust function을 바로 부르면 안 됩니다. 어느
+          source의 어느 schema를 보고 만든 call인지 먼저 고정하고, 구조·의미·권한
+          검사를 차례로 통과시킨 뒤에만 executor를 호출해야 합니다. 이 공통
+          진입점이 dispatch입니다.
         </p>
-        <div className="not-prose my-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">conversation_runtime.rs &mdash; handle_tool_use()</p>
-          <div className="grid grid-cols-1 gap-2">
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-              <div>
-                <p className="text-sm font-semibold">권한 게이트</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">enforcer.check(&name, &input)</code> — Deny 시 즉시 에러 반환, Prompt 시 사용자 Y/N 대기, Allow 시 통과</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">2</span>
-              <div>
-                <p className="text-sm font-semibold">Pre-hook 실행</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">hooks.pre_tool(&name, &input)</code> — 훅이 abort 반환 시 디스패치 스킵</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">3</span>
-              <div>
-                <p className="text-sm font-semibold">디스패치</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">execute_tool(&name, input.clone()).await</code> — 실제 도구 함수 호출</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">4</span>
-              <div>
-                <p className="text-sm font-semibold">Post-hook 실행</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">hooks.post_tool(&name, &input, &output)</code> — 실패해도 도구 결과는 반환</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-bold">5</span>
-              <div>
-                <p className="text-sm font-semibold">세션 로그 기록</p>
-                <p className="text-xs text-muted-foreground mt-0.5"><code className="text-xs">session.log_tool_call(id, name, input, output)</code> — <code className="text-xs">id</code>로 tool_use와 tool_result 매칭</p>
-              </div>
-            </div>
-          </div>
-        </div>
         <p>
-          <strong>5단계 파이프라인</strong>: 권한 → Pre-hook → 디스패치 → Post-hook → 세션 로그<br />
-          각 단계는 독립적 — Pre-hook이 abort하면 디스패치 스킵, Post-hook 실패해도 도구 결과는 반환<br />
-          <code>id</code> 필드는 tool_use와 tool_result를 매칭하는 상관 관계 키 — LLM이 병렬 도구 호출 결과를 구분할 때 사용
+          Dispatch가 필요한 이유는 built-in, plugin과 MCP마다 검사 순서가 달라지는
+          것을 막기 위해서입니다. Tool implementation은 domain logic을 알지만
+          session owner가 아니며, permission engine은 policy를 알지만 JSON을
+          임의로 고치는 parser가 아닙니다. Call envelope가 이 component들을 같은
+          identity로 연결합니다.
         </p>
       </div>
-      <Pipeline5StepViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        {/* ── match 분기 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">execute_tool() 내부 — 40개 match 분기</h3>
-        <div className="not-prose my-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">execute_tool() &mdash; match name 분기 (40개 중 발췌)</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div className="bg-muted/50 border border-border rounded-lg p-3">
-              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">파일 I/O (3개)</p>
-              <p className="text-sm font-mono"><code className="text-xs">"read_file"</code> &rarr; <code className="text-xs">read_file(p).await</code></p>
-              <p className="text-sm font-mono"><code className="text-xs">"write_file"</code> &rarr; <code className="text-xs">write_file(input).await</code></p>
-              <p className="text-sm font-mono"><code className="text-xs">"edit_file"</code> &rarr; <code className="text-xs">edit_file(input).await</code></p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3">
-              <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">검색 (2개)</p>
-              <p className="text-sm font-mono"><code className="text-xs">"glob_search"</code> &rarr; <code className="text-xs">glob_search(input).await</code></p>
-              <p className="text-sm font-mono"><code className="text-xs">"grep_search"</code> &rarr; <code className="text-xs">grep_search(input).await</code></p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3">
-              <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">실행 (4개)</p>
-              <p className="text-sm font-mono"><code className="text-xs">"bash"</code> / <code className="text-xs">"PowerShell"</code> / <code className="text-xs">"REPL"</code> / <code className="text-xs">"Sleep"</code></p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3">
-              <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">태스크 (6개)</p>
-              <p className="text-sm font-mono"><code className="text-xs">"TaskCreate"</code> / <code className="text-xs">Get</code> / <code className="text-xs">List</code> / <code className="text-xs">Stop</code> / <code className="text-xs">Update</code> / <code className="text-xs">Output</code></p>
-              <p className="text-xs text-muted-foreground mt-1">모두 <code className="text-xs">global_task_registry()</code> 메서드 위임</p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3">
-              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">UI (4개)</p>
-              <p className="text-sm font-mono"><code className="text-xs">"SendUserMessage"</code> / <code className="text-xs">"Config"</code> / <code className="text-xs">"EnterPlanMode"</code> / <code className="text-xs">"ExitPlanMode"</code></p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3">
-              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">fallback</p>
-              <p className="text-sm font-mono"><code className="text-xs">_ =&gt; Err("unknown tool")</code></p>
-              <p className="text-xs text-muted-foreground mt-1">존재하지 않는 도구 호출 시 에러 반환 (세션 유지)</p>
-            </div>
+      <div className="not-prose my-8 min-w-0">
+        <DispatchViz />
+      </div>
+
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {CALL_ENVELOPE.map(([title, body]) => (
+          <article key={title} className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+            <h3 className="break-words text-sm font-semibold">{title}</h3>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{body}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>구문·schema·domain validation은 서로 다른 질문입니다</h3>
+        <p>
+          먼저 JSON parser는 문자열이 object로 해석되는지 확인합니다. 그다음 JSON
+          Schema validator는 <code>path</code>가 required string인지, mode가 허용된
+          enum인지, 미지원 field가 있는지를 registry snapshot의 schema로 검사합니다.
+          이 단계는 입력의 모양을 다룰 뿐, <code>../secrets</code>가 workspace 밖을
+          가리키는지나 login test command가 state를 바꾸는지는 알지 못합니다.
+        </p>
+        <p>
+          Domain validation에서는 path를 canonicalize하고 file 존재 여부, edit의
+          before hash, command와 working directory 같은 application 조건을
+          검사합니다. 이어 effect descriptor가 filesystem read/write, process,
+          network와 credential 접근 가능성을 arguments에서 계산합니다. Schema를
+          통과했더라도 domain 또는 effect 검사가 실패하면 permission layer까지
+          보내지 않고 typed error로 끝냅니다.
+        </p>
+        <p>
+          모델 편의를 이유로 unknown field를 버리거나 문자열을 숫자로 몰래
+          바꾸면 어떤 contract가 실행됐는지 모호해집니다. 오류에는 secret을
+          제외한 instance path, 실패한 keyword, 기대 type과 schema digest를 넣고,
+          수정된 call은 새 attempt로 다시 검증합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <Pipeline5StepViz />
+      </div>
+
+      <div
+        id="paper-json-schema"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">근거 읽기 · JSON Schema Validation</p>
+        <CitationBlock
+          source="JSON Schema Draft 2020-12 — Validation vocabulary"
+          citeKey={2}
+          href="https://json-schema.org/draft/2020-12/json-schema-validation"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> JSON instance가 tool input contract의 type·required·enum·길이·object 제약을 만족하는지 구현 언어와 분리해 표현할 방법이 필요합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Validation vocabulary는 instance 구조에 assertion을 적용하고 어느 위치가 어떤 keyword를 위반했는지 표현하는 공통 규칙을 정의합니다.</p>
+            <p><strong>전제·조건:</strong> 선택한 dialect와 vocabulary 지원 범위를 고정해야 하며, <code>format</code>은 구성에 따라 annotation일 뿐 assertion이 아닐 수 있습니다.</p>
+            <p><strong>근거 범위:</strong> 이 절에서 schema validation을 JSON 구조 제약으로 설명하고 domain·permission validation과 분리하는 근거입니다.</p>
+            <p><strong>비주장:</strong> Schema 통과가 path 안전성, 사용자 권한, command 무해성, tool implementation correctness를 보장하거나 Claw snapshot이 모든 Draft 2020-12 keyword를 지원한다는 뜻은 아닙니다.</p>
           </div>
-        </div>
-        <p>
-          <strong>match 분기 구조</strong>: 문자열 패턴 매칭 + 입력 역직렬화 + 도구 함수 호출<br />
-          각 분기는 <code>serde_json::from_value::&lt;T&gt;(input)</code>로 타입 안전 변환 — 역직렬화 실패 시 즉시 에러<br />
-          unknown tool 분기는 <strong>대화를 종료하지 않음</strong> — LLM에게 에러를 돌려주고 재시도 기회 제공
-        </p>
+        </CitationBlock>
+      </div>
 
-        {/* ── 입력 타입 시스템 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">도구 입력 타입 — struct 매핑</h3>
-        <div className="not-prose my-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">도구별 입력 struct 매핑</p>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <div className="bg-muted/50 border border-border rounded-lg p-4">
-              <p className="text-sm font-bold mb-2">TextFilePayload</p>
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">path</code>
-                  <span className="text-xs text-muted-foreground">절대 경로</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">offset?</code>
-                  <span className="text-xs text-muted-foreground">시작 줄 (0-indexed)</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">limit?</code>
-                  <span className="text-xs text-muted-foreground">읽을 줄 수</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-4">
-              <p className="text-sm font-bold mb-2">BashCommandInput</p>
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">command</code>
-                  <span className="text-xs text-muted-foreground">셸 명령</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">timeout?</code>
-                  <span className="text-xs text-muted-foreground">ms, 기본 120000</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">description?</code>
-                  <span className="text-xs text-muted-foreground">사용자 표시용</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">run_in_background</code>
-                  <span className="text-xs text-muted-foreground">백그라운드 실행</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-4">
-              <p className="text-sm font-bold mb-2">GrepSearchInput</p>
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">pattern</code>
-                  <span className="text-xs text-muted-foreground">정규식</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">path?</code>
-                  <span className="text-xs text-muted-foreground">검색 디렉토리</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">output_mode?</code>
-                  <span className="text-xs text-muted-foreground">content | files | count</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">head_limit?</code>
-                  <span className="text-xs text-muted-foreground">최대 결과 수</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-2">
-                  <code className="text-xs font-mono">case_insensitive</code>
-                  <span className="text-xs text-muted-foreground">-i 플래그</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Result는 model text가 아니라 실행 evidence를 담는 envelope입니다</h3>
         <p>
-          <strong>타입 시스템의 역할</strong>: JSON Schema 역직렬화 시점에 타입 안전성 강제<br />
-          <code>Option&lt;T&gt;</code>는 선택 파라미터 — LLM이 생략해도 컴파일 에러 없음<br />
-          <code>enum OutputMode</code>는 허용 값 제한 — 잘못된 문자열 전달 시 역직렬화 실패
+          Read 결과라면 content와 truncation 여부, source artifact digest를 남기고,
+          edit 결과라면 target, before/after digest와 diff reference를 남깁니다.
+          Login test는 command, canonical cwd, exit code, 제한된 stdout/stderr와
+          duration을 receipt로 돌려줘야 runtime이 “완료”를 evidence로 판정할 수
+          있습니다. Exit code가 실패면 patch가 이미 적용됐더라도
+          <code>verification_failed</code>이지 완료가 아닙니다. 큰 output과 secret은 artifact storage로 분리하고 model
+          context에는 redacted summary와 reference만 넣습니다.
         </p>
         <p>
-          <strong>설계 판단</strong>: JSON Schema → Rust struct 대응 관계를 수동으로 유지<br />
-          자동 생성(코드젠)을 쓰지 않는 이유 — 도구가 40개로 고정적이고 수동 관리가 더 명시적<br />
-          스키마 변경 시 struct도 함께 수정 — 두 곳 동기화 부담은 있지만 타입 안전성 확보
+          아래 envelope는 견고한 구현과 평가를 위해 이 글이 요구하는 contract이며,
+          pinned Claw source가 모든 field와 error taxonomy를 그대로 구현했다고
+          주장하지 않습니다. 특히 retryable, partial effect, artifact provenance를
+          분리하지 않으면 실패 뒤 같은 call을 안전하게 반복하기 어렵습니다.
         </p>
+      </div>
 
-        {/* ── 비동기 디스패치 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">async 디스패치 — tokio 런타임</h3>
-        <div className="not-prose my-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">execute_bash() &mdash; async 프로세스 실행</p>
-          <div className="grid grid-cols-1 gap-2">
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-              <div>
-                <p className="text-sm font-semibold">입력 역직렬화</p>
-                <p className="text-xs text-muted-foreground"><code className="text-xs">serde_json::from_value::&lt;BashCommandInput&gt;(input)</code></p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 flex items-center justify-center text-xs font-bold">2</span>
-              <div>
-                <p className="text-sm font-semibold">async 프로세스 실행</p>
-                <p className="text-xs text-muted-foreground"><code className="text-xs">tokio::process::Command::new("/bin/bash").arg("-c").arg(&cmd.command)</code> &mdash; stdout/stderr 캡처</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs font-bold">3</span>
-              <div>
-                <p className="text-sm font-semibold">타임아웃 적용</p>
-                <p className="text-xs text-muted-foreground"><code className="text-xs">tokio::time::timeout(Duration::from_millis(cmd.timeout.unwrap_or(120_000)))</code> &mdash; 기본 2분</p>
-              </div>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">4</span>
-              <div>
-                <p className="text-sm font-semibold">결과 반환</p>
-                <p className="text-xs text-muted-foreground"><code className="text-xs">ToolOutput::text(String::from_utf8_lossy(&output.stdout))</code></p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2">
+        {RESULT_ENVELOPE.map(([title, body]) => (
+          <article key={title} className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+            <h3 className="break-words text-sm font-semibold">{title}</h3>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{body}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Timeout·cancel·retry는 이미 생긴 effect부터 확인합니다</h3>
         <p>
-          <code>async fn</code>은 tokio 런타임에서 협력적 멀티태스킹으로 실행<br />
-          <strong>병렬 도구 호출 지원</strong>: LLM이 여러 tool_use 블록을 한 번에 보내면 <code>tokio::join!</code>으로 동시 실행<br />
-          예: Read 3개 파일 병렬 호출 시, 순차 대비 3배 빠름 (I/O bound)
+          Read가 timeout된 경우에는 같은 snapshot에서 bounded retry할 수 있지만,
+          edit가 timeout됐다고 무조건 반복하면 patch가 두 번 적용될 수 있습니다.
+          Executor는 cancellation을 child process에 전달하고 종료를 기다리되,
+          deadline 뒤 늦게 온 result도 attempt와 generation을 확인한 뒤 받아들입니다.
+          완료 여부가 모호하면 같은 idempotency key와 effect receipt로 기존 operation을
+          조회한 뒤에만 retry합니다.
+          File이 일부만 쓰였다면 <code>partial_effect</code>와 남은 diff를 먼저
+          기록하고 rollback 또는 사람 검토가 끝날 때까지 success로 commit하지
+          않습니다.
         </p>
 
-        {/* ── 병렬 실행 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">병렬 도구 실행</h3>
-        <div className="not-prose my-4">
-          <p className="text-xs font-mono text-muted-foreground mb-2">handle_tool_uses_parallel() &mdash; 병렬 디스패치</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground mb-1">Step 1</p>
-              <p className="text-sm font-semibold">Future 수집</p>
-              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">blocks.map(handle_tool_use)</code></p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground mb-1">Step 2</p>
-              <p className="text-sm font-semibold">동시 실행</p>
-              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">join_all(futures).await</code></p>
-            </div>
-            <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground mb-1">Step 3</p>
-              <p className="text-sm font-semibold">에러 격리</p>
-              <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">unwrap_or_else(error_raw)</code></p>
-            </div>
-          </div>
-        </div>
+        <h3>병렬화는 tool 이름이 아니라 dependency DAG로 결정합니다</h3>
         <p>
-          <code>join_all</code>은 모든 future를 동시 실행 후 Vec 순서대로 결과 반환<br />
-          <strong>순서 보장</strong>: 결과 순서는 입력 순서와 동일 — tool_use_id로 LLM이 매칭<br />
-          <strong>에러 격리</strong>: 한 도구가 실패해도 다른 도구는 계속 실행 — <code>unwrap_or_else</code>로 에러도 결과로 변환
+          고정 사례를 DAG로 쓰면 <code>read_file(auth.ts)</code>와
+          <code>grep_search(401)</code>은 같은 immutable workspace snapshot을 보므로
+          병렬 후보이고, <code>edit_file</code>은 두 결과를 모두 dependency로
+          받습니다. Login test는 edit receipt 뒤에만 시작합니다. 같은 file을 쓰는
+          두 edit는 충돌 가능성이 있어 직렬화해야 합니다.
         </p>
-
-        {/* ── 인사이트 ── */}
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: match 분기 vs 트레이트 기반 디스패치</p>
-          <p>
-            <strong>선택지 A — match 분기 (현재 구현)</strong>:<br />
-            - 장점: 컴파일러가 모든 분기를 한눈에 볼 수 있음, cold path 최적화 가능<br />
-            - 단점: 도구 추가 시 여러 파일 수정 필요 (ToolSpec + execute_tool + struct)
-          </p>
-          <p className="mt-2">
-            <strong>선택지 B — 트레이트 객체 (<code>Box&lt;dyn ToolExecutor&gt;</code>)</strong>:<br />
-            - 장점: 도구 추가가 단일 파일로 완결 (impl ToolExecutor 블록만 추가)<br />
-            - 단점: 동적 디스패치 오버헤드, 컴파일 타임에 전체 도구 목록 확인 불가
-          </p>
-          <p className="mt-2">
-            claw-code는 <strong>A를 선택</strong> — 도구가 40개로 고정적이고, 컴파일 타임 검증이 런타임 유연성보다
-            중요하다는 판단<br />
-            실제로 <code>_ =&gt; Err("unknown tool")</code> 분기가 LLM 환각 대응으로도 활용됨
-          </p>
-        </div>
-
+        <p>
+          병렬 group은 original call order, shared deadline, cancellation 전파와
+          각 call의 effect receipt를 유지해야 합니다. 하나가 실패했을 때 이미
+          끝난 read 결과와 side effect를 숨기지 않고, dependent call은
+          <code>blocked_by_dependency</code>로 끝냅니다. Partial write가 있었다면
+          compensation·rollback 또는 사람 review를 별도 node로 만들고 test를
+          실행하지 않습니다. Pinned OpenAI-compatible
+          adapter의 test에는 <code>parallel_tool_calls=false</code>가 명시돼 있으므로,
+          이 설계를 현재 project 전체의 generic parallel support로 읽어서는 안
+          됩니다.
+        </p>
       </div>
     </section>
   );

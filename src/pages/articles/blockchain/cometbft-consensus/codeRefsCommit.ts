@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const commitRefs: Record<string, CodeRef> = {
-  'enter-commit': {
-    path: 'consensus/state.go — enterCommit() + finalizeCommit()',
-    lang: 'go',
+  "enter-commit": {
+    path: "consensus/state.go — enterCommit() + finalizeCommit()",
+    lang: "go",
     highlight: [1, 3],
-    desc: 'enterCommit — +2/3 Precommit → 블록 확정.\nblockStore 저장 → ABCI ApplyBlock → 다음 높이.',
+    desc: "enterCommit — +2/3 Precommit → 블록 확정.\nblockStore 저장 → ABCI ApplyBlock → 다음 높이.",
     code: `func (cs *State) enterCommit(height int64, commitRound int32) {
     defer func() {
         cs.updateRoundStep(cs.Round, cstypes.RoundStepCommit)
@@ -47,14 +47,26 @@ func (cs *State) finalizeCommit(height int64) {
     cs.scheduleRound0(&cs.RoundState)
 }`,
     annotations: [
-      { lines: [2, 8], color: 'sky',
-        note: 'defer: CommitRound/Time 기록 후 tryFinalizeCommit 호출' },
-      { lines: [10, 14], color: 'emerald',
-        note: '+2/3 Precommit 다수결 확인 — 없으면 panic' },
-      { lines: [27, 31], color: 'amber',
-        note: 'blockStore 영구 저장: ExtendedCommit 포함' },
-      { lines: [36, 39], color: 'violet',
-        note: 'ABCI ApplyBlock → updateToState → 다음 높이' },
+      {
+        lines: [2, 8],
+        color: "sky",
+        note: "defer: CommitRound/Time 기록 후 tryFinalizeCommit 호출",
+      },
+      {
+        lines: [10, 14],
+        color: "emerald",
+        note: "+2/3 Precommit 다수결 확인 — 없으면 panic",
+      },
+      {
+        lines: [27, 31],
+        color: "amber",
+        note: "blockStore 영구 저장: ExtendedCommit 포함",
+      },
+      {
+        lines: [36, 39],
+        color: "violet",
+        note: "ABCI ApplyBlock → updateToState → 다음 높이",
+      },
     ],
   },
 };

@@ -20,7 +20,19 @@ export const BEACON_COMPARE_CODE = `이더리움 (Post-Merge)              Berac
   4. PoS 대신 PoL(Proof of Liquidity)로 경제적 보안 확보`;
 
 export const BEACON_COMPARE_ANNOTATIONS = [
-  { lines: [2, 7] as [number, number], color: 'sky' as const, note: '합의 레이어 비교' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: 'Engine API 동일 사용' },
-  { lines: [10, 13] as [number, number], color: 'amber' as const, note: 'EL 클라이언트 재활용' },
+  {
+    lines: [2, 7] as [number, number],
+    color: "sky" as const,
+    note: "합의 레이어 비교",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "Engine API 동일 사용",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "amber" as const,
+    note: "EL 클라이언트 재활용",
+  },
 ];

@@ -1,39 +1,55 @@
-import CodePanel from '@/components/ui/code-panel';
-import NoiseXXHandshakeViz from './viz/NoiseXXHandshakeViz';
+import CodePanel from "@/components/ui/code-panel";
+import NoiseXXHandshakeViz from "./viz/NoiseXXHandshakeViz";
 import {
-  noisePayloadCode, noisePayloadAnnotations,
-  keyExchangeCode, keyExchangeAnnotations,
-} from './SecurityLayerData';
+  noisePayloadCode,
+  noisePayloadAnnotations,
+  keyExchangeCode,
+  keyExchangeAnnotations,
+} from "./SecurityLayerData";
 
 export default function SecurityLayer({ title }: { title?: string }) {
   return (
     <section id="security-layer" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title ?? '보안 계층: Noise 프로토콜'}</h2>
-      <div className="not-prose mb-8"><NoiseXXHandshakeViz /></div>
+      <h2 className="text-2xl font-bold mb-6">
+        {title ?? "보안 계층: Noise 프로토콜"}
+      </h2>
+      <div className="not-prose mb-8">
+        <NoiseXXHandshakeViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          libp2p — <strong>Noise Framework</strong> XX 패턴으로 보안 채널 수립<br />
-          X.509 인증서 없이 공개키 기반 신원 인증 +
-          전방향 비밀(Forward Secrecy) 달성
+          libp2p — <strong>Noise Framework</strong> XX 패턴으로 보안 채널 수립
+          <br />
+          X.509 인증서 없이 공개키 기반 신원 인증 + 전방향 비밀(Forward Secrecy)
+          달성
         </p>
 
         <h3>신원 바인딩 Payload</h3>
         <p>
-          Noise 핸드셰이크 중 libp2p Ed25519 키로
-          DH 공개키 서명 — DH 키교환과 PeerId 인증을 동시 수행
+          Noise 핸드셰이크 중 libp2p Ed25519 키로 DH 공개키 서명 — DH 키교환과
+          PeerId 인증을 동시 수행
         </p>
-        <CodePanel title="Noise 핸드셰이크 Payload" code={noisePayloadCode}
-          annotations={noisePayloadAnnotations} />
+        <CodePanel
+          title="Noise 핸드셰이크 Payload"
+          code={noisePayloadCode}
+          annotations={noisePayloadAnnotations}
+        />
 
         <h3>X25519 키 교환 상세</h3>
         <p>
-          XX 패턴 — 총 3번의 DH 연산(ee, es, se) 수행<br />
+          XX 패턴 — 총 3번의 DH 연산(ee, es, se) 수행
+          <br />
           양방향 인증 + 전방향 비밀 동시 달성
         </p>
-        <CodePanel title="X25519 DH 키 교환" code={keyExchangeCode}
-          annotations={keyExchangeAnnotations} />
+        <CodePanel
+          title="X25519 DH 키 교환"
+          code={keyExchangeCode}
+          annotations={keyExchangeAnnotations}
+        />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Noise Protocol Framework</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Noise Protocol Framework
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Noise Framework (2016, Trevor Perrin)
 // 암호 프로토콜 구성 블록
 // Signal, WireGuard, libp2p 등 사용
@@ -75,7 +91,9 @@ export default function SecurityLayer({ title }: { title?: string }) {
 // - Forward secrecy (ephemeral keys)
 // - 1.5 RTT (faster than TLS 1.2)`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">libp2p Peer Identity Binding</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          libp2p Peer Identity Binding
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// libp2p의 핵심: PeerId == identity
 // PeerId = hash(libp2p pubkey)
 // - Ed25519, RSA, or Secp256k1 key
@@ -108,7 +126,6 @@ export default function SecurityLayer({ title }: { title?: string }) {
 // ✓ Session keys forward-secret
 // ✓ No static CA needed
 // ✓ Works over any transport`}</pre>
-
       </div>
     </section>
   );

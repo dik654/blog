@@ -1,6 +1,6 @@
-import Overview from './crt/Overview';
-import NumericalExample from './crt/NumericalExample';
-import CryptoUsage from './crt/CryptoUsage';
+import Overview from "./crt/Overview";
+import NumericalExample from "./crt/NumericalExample";
+import CryptoUsage from "./crt/CryptoUsage";
 
 export default function CRT() {
   return (

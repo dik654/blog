@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const normCodeRefs: Record<string, CodeRef> = {
-  'layer-norm-fn': {
-    path: 'src/lib.rs — LayerNormFn forward + backward',
-    lang: 'rust',
+  "layer-norm-fn": {
+    path: "src/lib.rs — LayerNormFn forward + backward",
+    lang: "rust",
     highlight: [1, 30],
-    desc: 'LayerNorm: feature 축으로 정규화.\ny = gamma * (x - mean) / sqrt(var + eps) + beta.',
+    desc: "LayerNorm: feature 축으로 정규화.\ny = gamma * (x - mean) / sqrt(var + eps) + beta.",
     code: `struct LayerNormFn {
     eps: f64,
     x_hat: RefCell<ArrayD<f64>>,   // 정규화된 값 (backward용)
@@ -37,16 +37,28 @@ impl Function for LayerNormFn {
     fn name(&self) -> &str { "LayerNorm" }
 }`,
     annotations: [
-      { lines: [3, 4], color: 'sky', note: 'RefCell로 forward 결과 저장 → backward에서 재계산 없이 재사용' },
-      { lines: [14, 18], color: 'emerald', note: 'last axis(feature) 기준 정규화 — 배치 크기와 무관. Transformer 표준' },
-      { lines: [20, 21], color: 'amber', note: 'gamma(스케일) * 정규화값 + beta(시프트) — 정규화 후 표현력 복원' },
+      {
+        lines: [3, 4],
+        color: "sky",
+        note: "RefCell로 forward 결과 저장 → backward에서 재계산 없이 재사용",
+      },
+      {
+        lines: [14, 18],
+        color: "emerald",
+        note: "last axis(feature) 기준 정규화 — 배치 크기와 무관. Transformer 표준",
+      },
+      {
+        lines: [20, 21],
+        color: "amber",
+        note: "gamma(스케일) * 정규화값 + beta(시프트) — 정규화 후 표현력 복원",
+      },
     ],
   },
-  'layer-norm-struct': {
-    path: 'src/lib.rs — LayerNorm 레이어',
-    lang: 'rust',
+  "layer-norm-struct": {
+    path: "src/lib.rs — LayerNorm 레이어",
+    lang: "rust",
     highlight: [1, 14],
-    desc: 'LayerNorm 레이어: gamma=1, beta=0으로 초기화.\n정규화된 값을 처음에는 그대로 통과 → 학습으로 최적 스케일/시프트 습득.',
+    desc: "LayerNorm 레이어: gamma=1, beta=0으로 초기화.\n정규화된 값을 처음에는 그대로 통과 → 학습으로 최적 스케일/시프트 습득.",
     code: `pub struct LayerNorm {
     gamma: Variable,  // 스케일 파라미터 (초기값: 1)
     beta: Variable,   // 시프트 파라미터 (초기값: 0)
@@ -63,8 +75,16 @@ impl LayerNorm {
     }
 }`,
     annotations: [
-      { lines: [2, 3], color: 'sky', note: 'gamma=1, beta=0 → 초기에는 정규화된 값이 그대로 통과 (항등 변환)' },
-      { lines: [12, 12], color: 'emerald', note: 'eps=1e-5로 0 나누기 방지 — 분산이 극히 작은 경우에도 수치 안정' },
+      {
+        lines: [2, 3],
+        color: "sky",
+        note: "gamma=1, beta=0 → 초기에는 정규화된 값이 그대로 통과 (항등 변환)",
+      },
+      {
+        lines: [12, 12],
+        color: "emerald",
+        note: "eps=1e-5로 0 나누기 방지 — 분산이 극히 작은 경우에도 수치 안정",
+      },
     ],
   },
 };

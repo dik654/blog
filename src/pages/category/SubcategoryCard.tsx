@@ -1,34 +1,45 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import type { Category, Subcategory } from '@/content';
-import { thumbnailUrls } from '@/components/thumbnails/urls';
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import type { Category, Subcategory } from "@/content";
+import { thumbnails } from "@/components/thumbnails";
+import {
+  getArticlesInSubcategory,
+  getSubcategoryHref,
+} from "@/content/subcategory-navigation";
 
-export function findSubcategory(subs: Subcategory[], slug: string): Subcategory | null {
-  for (const sub of subs) {
-    if (sub.slug === slug) return sub;
-    if (sub.children) { const f = findSubcategory(sub.children, slug); if (f) return f; }
-  }
-  return null;
-}
-
-export function countArticles(cat: Category, sub: Subcategory): number {
-  if (sub.children) return sub.children.reduce((s, c) => s + countArticles(cat, c), 0);
-  return cat.articles.filter((a) => a.subcategory === sub.slug).length;
-}
-
-export default function SubcategoryCard({ cat, sub }: { cat: Category; sub: Subcategory }) {
-  const count = countArticles(cat, sub);
-  const url = thumbnailUrls[sub.slug];
+export default function SubcategoryCard({
+  cat,
+  sub,
+}: {
+  cat: Category;
+  sub: Subcategory;
+}) {
+  const articles = getArticlesInSubcategory(cat, sub);
+  const count = articles.length;
+  const onlyArticle = count === 1 ? articles[0] : undefined;
+  const Thumb = thumbnails[sub.slug];
   return (
-    <Link to={`/${cat.slug}?sub=${sub.slug}`}>
-      <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}
-        className="rounded-xl border bg-card hover:border-primary/40 hover:shadow-sm transition-colors h-full overflow-hidden">
+    <Link to={getSubcategoryHref(cat, sub)}>
+      <motion.div
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.2 }}
+        className="rounded-xl border bg-card hover:border-primary/40 hover:shadow-sm transition-colors h-full overflow-hidden"
+      >
         <div className="bg-muted/20 flex items-center justify-center h-24 border-b border-border/50 p-3">
-          {url && <img src={url} alt={sub.name} className="max-h-16 max-w-[80px] object-contain" loading="lazy" />}
+          {Thumb && (
+            <div className="max-h-16 max-w-[80px]">
+              <Thumb />
+            </div>
+          )}
         </div>
         <div className="p-4">
           <h3 className="font-semibold text-sm mb-1">{sub.name}</h3>
-          <p className="text-xs text-muted-foreground">{sub.description ?? `${count}개의 글`}</p>
+          <p className="text-xs text-muted-foreground">
+            {sub.description ?? `${count}개의 글`}
+          </p>
+          <p className="mt-2 text-xs font-semibold text-primary/80">
+            {onlyArticle ? "단일 가이드 · 바로 읽기 →" : `${count}개 글 묶음 →`}
+          </p>
         </div>
       </motion.div>
     </Link>

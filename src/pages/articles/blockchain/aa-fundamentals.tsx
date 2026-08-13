@@ -1,7 +1,7 @@
-import Overview from './aa-fundamentals/Overview';
-import ERC4337 from './aa-fundamentals/ERC4337';
-import NativeAA from './aa-fundamentals/NativeAA';
-import UseCases from './aa-fundamentals/UseCases';
+import Overview from "./aa-fundamentals/Overview";
+import ERC4337 from "./aa-fundamentals/ERC4337";
+import NativeAA from "./aa-fundamentals/NativeAA";
+import UseCases from "./aa-fundamentals/UseCases";
 
 export default function AAFundamentals() {
   return (

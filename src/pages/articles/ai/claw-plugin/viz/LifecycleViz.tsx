@@ -1,58 +1,46 @@
+import { PluginFrame, PluginRule, PluginSteps } from "./PluginVizPrimitives";
+
 export default function LifecycleViz() {
-  const states = [
-    { name: 'Discovered', color: '#6b7280', x: 70, y: 90 },
-    { name: 'Loaded', color: '#3b82f6', x: 175, y: 90 },
-    { name: 'Validated', color: '#8b5cf6', x: 280, y: 90 },
-    { name: 'Enabled', color: '#10b981', x: 385, y: 90 },
-    { name: 'Disabled', color: '#f59e0b', x: 490, y: 90 },
-    { name: 'Failed', color: '#ef4444', x: 280, y: 190 },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 280" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">PluginLifecycle — 6단계 상태</text>
-
-        <defs>
-          <marker id="lc-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L4,2.5 L0,5" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {/* 주요 경로 */}
-        <line x1={96} y1={90} x2={149} y2={90} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#lc-arr)" />
-        <line x1={201} y1={90} x2={254} y2={90} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#lc-arr)" />
-        <line x1={306} y1={90} x2={359} y2={90} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#lc-arr)" />
-
-        {/* Enabled ⇄ Disabled */}
-        <path d="M 411 84 Q 448 72 464 84" stroke="#3b82f6" strokeWidth={1}
-          fill="none" markerEnd="url(#lc-arr)" />
-        <path d="M 464 100 Q 448 108 411 100" stroke="#3b82f6" strokeWidth={1}
-          fill="none" markerEnd="url(#lc-arr)" />
-
-        {/* Failed edges */}
-        <line x1={175} y1={116} x2={254} y2={170} stroke="#ef4444" strokeWidth={0.8} strokeDasharray="3 2" markerEnd="url(#lc-arr)" />
-        <line x1={280} y1={116} x2={280} y2={164} stroke="#ef4444" strokeWidth={0.8} strokeDasharray="3 2" markerEnd="url(#lc-arr)" />
-
-        {/* 상태 노드 */}
-        {states.map(s => (
-          <g key={s.name}>
-            <circle cx={s.x} cy={s.y} r={26}
-              fill={s.color} fillOpacity={0.15}
-              stroke={s.color} strokeWidth={1.5} />
-            <text x={s.x} y={s.y + 3} textAnchor="middle" fontSize={9} fontWeight={700}
-              fill={s.color}>{s.name}</text>
-          </g>
-        ))}
-
-        {/* 헬스체크 */}
-        <rect x={30} y={236} width={500} height={32} rx={6}
-          fill="#3b82f6" fillOpacity={0.08} stroke="#3b82f6" strokeWidth={0.5} />
-        <text x={280} y={256} textAnchor="middle" fontSize={10} fontWeight={600} fill="#3b82f6">
-          주기적 헬스체크 (5분) · unhealthy 시 자동 Disabled 전이
-        </text>
-      </svg>
-    </div>
+    <PluginFrame
+      label="RUNTIME LIFECYCLE"
+      title="Ready와 Draining을 분리해야 안전하게 교체할 수 있다"
+      description="새 generation은 readiness를 통과한 뒤 트래픽을 받고, 이전 generation은 신규 호출을 막은 채 진행 중 호출이 끝나면 종료합니다."
+      note="health check 실패가 곧 무한 재시작을 뜻하지는 않습니다. 실패 원인과 restart policy에 따라 backoff·circuit open·quarantine 중 하나를 선택합니다."
+    >
+      <PluginSteps
+        items={[
+          {
+            label: "01 · STARTING",
+            title: "프로세스 시작",
+            body: "handshake와 protocol version을 확인하며 아직 호출은 받지 않습니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · READY",
+            title: "호출 수락",
+            body: "readiness가 성공한 generation만 registry에서 선택됩니다.",
+            tone: "emerald",
+          },
+          {
+            label: "03 · DRAINING",
+            title: "신규 호출 차단",
+            body: "진행 중 요청과 취소 신호를 추적하면서 deadline까지 기다립니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · STOPPED",
+            title: "자원 회수",
+            body: "process tree·pipe·temp file·credential을 정리하고 종료를 기록합니다.",
+            tone: "slate",
+          },
+        ]}
+      />
+      <PluginRule>
+        Failed와 Quarantined는 같은 상태가 아닙니다. 일시적 장애는 정책에 따라
+        재시도할 수 있지만 integrity 위반이나 protocol 오염은 재승인 전까지
+        격리해야 합니다.
+      </PluginRule>
+    </PluginFrame>
   );
 }

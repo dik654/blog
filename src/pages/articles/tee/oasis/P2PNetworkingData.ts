@@ -22,7 +22,19 @@ func (d *peerDiscovery) findPeers(ctx, topic) {
 }`;
 
 export const discoveryAnnotations = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: 'Bootstrap: 시드 노드 기반' },
-  { lines: [10, 15] as [number, number], color: 'emerald' as const, note: 'Registry: 합의 레지스트리 기반' },
-  { lines: [18, 22] as [number, number], color: 'amber' as const, note: 'DHT: 분산 해시 테이블 기반' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "Bootstrap: 시드 노드 기반",
+  },
+  {
+    lines: [10, 15] as [number, number],
+    color: "emerald" as const,
+    note: "Registry: 합의 레지스트리 기반",
+  },
+  {
+    lines: [18, 22] as [number, number],
+    color: "amber" as const,
+    note: "DHT: 분산 해시 테이블 기반",
+  },
 ];

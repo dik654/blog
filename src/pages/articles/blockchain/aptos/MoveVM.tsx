@@ -1,9 +1,11 @@
-import MoveVMViz from './viz/MoveVMViz';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import MoveVMViz from "./viz/MoveVMViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function MoveVM({ onCodeRef }: {
+export default function MoveVM({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   return (
@@ -11,13 +13,17 @@ export default function MoveVM({ onCodeRef }: {
       <h2 className="text-2xl font-bold mb-6">Move VM</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Move — 리소스 안전성을 타입 시스템에서 보장하는 스마트 컨트랙트 언어<br />
+          Move — 리소스 안전성을 타입 시스템에서 보장하는 스마트 컨트랙트 언어
+          <br />
           이중 지출, 자산 소멸 같은 버그를 컴파일 타임에 원천 차단
         </p>
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
-            <CodeViewButton onClick={() =>
-              onCodeRef('apt-move-abilities', codeRefs['apt-move-abilities'])} />
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef("apt-move-abilities", codeRefs["apt-move-abilities"])
+              }
+            />
             <span className="text-[10px] text-muted-foreground self-center">
               coin.move — Coin 구조체
             </span>
@@ -25,15 +31,19 @@ export default function MoveVM({ onCodeRef }: {
         )}
       </div>
       <div className="not-prose my-8">
-        <MoveVMViz onOpenCode={onCodeRef
-          ? (k: string) => onCodeRef(k, codeRefs[k])
-          : undefined} />
+        <MoveVMViz
+          onOpenCode={
+            onCodeRef ? (k: string) => onCodeRef(k, codeRefs[k]) : undefined
+          }
+        />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Move 언어 자원 안전성</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Move 언어 자원 안전성
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Move Language Resource Safety
+          {`// Move Language Resource Safety
 //
 // Philosophy:
 //   "Digital assets as first-class resources"

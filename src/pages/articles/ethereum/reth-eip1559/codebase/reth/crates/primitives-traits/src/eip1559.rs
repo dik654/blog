@@ -1,7 +1,7 @@
 // reth-primitives-traits — EIP-1559 base fee 계산 (reth v1.x)
 
 /// 다음 블록의 base fee를 계산한다.
-/// u128 산술로 오버플로 없이 처리 (Geth의 big.Int 대비 힙 할당 없음)
+/// widened integer 산술과 명시적 narrowing으로 중간 곱의 범위를 처리
 pub fn calc_next_block_base_fee(
     gas_used: u64,    // 이전 블록의 가스 사용량
     gas_limit: u64,   // 이전 블록의 가스 한도

@@ -1,4 +1,4 @@
-import CheckpointViz from './viz/CheckpointViz';
+import CheckpointViz from "./viz/CheckpointViz";
 
 export default function CheckpointSources({ title }: { title: string }) {
   return (
@@ -11,12 +11,16 @@ export default function CheckpointSources({ title }: { title: string }) {
           Helios는 3가지 소스를 우선순위로 탐색한다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 제네시스 해시가 하드코딩되어 있다.
+          <strong>💡 Reth vs Helios:</strong> Reth는 제네시스 해시가
+          하드코딩되어 있다.
           <br />
-          Helios는 <em>최근</em> 체크포인트를 사용하므로 Weak Subjectivity 가정이 필요하다.
+          Helios는 <em>최근</em> 체크포인트를 사용하므로 Weak Subjectivity
+          가정이 필요하다.
         </p>
       </div>
-      <div className="not-prose"><CheckpointViz /></div>
+      <div className="not-prose">
+        <CheckpointViz />
+      </div>
     </section>
   );
 }

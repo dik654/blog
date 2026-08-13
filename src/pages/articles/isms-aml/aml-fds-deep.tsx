@@ -1,7 +1,7 @@
-import Overview from './aml-fds-deep/Overview';
-import DetectionPatterns from './aml-fds-deep/DetectionPatterns';
-import BlockchainAnalysis from './aml-fds-deep/BlockchainAnalysis';
-import AiFds from './aml-fds-deep/AiFds';
+import Overview from "./aml-fds-deep/Overview";
+import DetectionPatterns from "./aml-fds-deep/DetectionPatterns";
+import BlockchainAnalysis from "./aml-fds-deep/BlockchainAnalysis";
+import AiFds from "./aml-fds-deep/AiFds";
 
 export default function AmlFdsDeep() {
   return (

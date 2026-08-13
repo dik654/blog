@@ -1,6 +1,6 @@
-import Overview from './isms-incident-response/Overview';
-import DetectionContainment from './isms-incident-response/DetectionContainment';
-import RecoveryLessons from './isms-incident-response/RecoveryLessons';
+import Overview from "./isms-incident-response/Overview";
+import DetectionContainment from "./isms-incident-response/DetectionContainment";
+import RecoveryLessons from "./isms-incident-response/RecoveryLessons";
 
 export default function IsmsIncidentResponse() {
   return (

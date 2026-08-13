@@ -5,47 +5,40 @@ export interface MiddlewareLayer {
   desc: string;
   color: string;
 }
-
-export const MIDDLEWARE_STACK: MiddlewareLayer[] = [
+export const MIDDLEWARE_STACK: readonly MiddlewareLayer[] = [
   {
-    id: 'jwt',
-    name: 'JWT 인증',
-    target: 'Engine API (8551)',
-    desc: 'shared secret 기반 JWT 토큰을 검증한다. CL과 EL이 같은 비밀 키를 공유하며, 매 요청마다 토큰의 유효성과 만료 시간을 확인.',
-    color: '#ef4444',
+    id: "bind",
+    name: "Listener exposure",
+    target: "HTTP·WS·auth RPC",
+    desc: "loopback/private address를 기본 경계로 삼고 필요한 listener와 namespaces만 명시적으로 활성화한다.",
+    color: "#6366f1",
   },
   {
-    id: 'cors',
-    name: 'CORS',
-    target: 'JSON-RPC (8545)',
-    desc: '브라우저 요청의 Origin 헤더를 검증한다. 허용된 도메인만 접근 가능. DApp이 직접 노드에 접속할 때 필요.',
-    color: '#6366f1',
+    id: "jwt",
+    name: "JWT bearer authentication",
+    target: "Engine API",
+    desc: "CL과 EL이 공유한 256-bit secret으로 HS256 token과 freshness를 검증한다. TLS와 network isolation은 별도 책임이다.",
+    color: "#ef4444",
   },
   {
-    id: 'rate-limit',
-    name: 'Rate Limiting',
-    target: 'JSON-RPC (8545)',
-    desc: 'IP별 요청 빈도를 제한한다. eth_call 같은 무거운 메서드의 남용을 방지. Governor 알고리즘으로 버스트를 허용하면서 평균 속도를 제어.',
-    color: '#f59e0b',
+    id: "shape",
+    name: "Host·origin·payload shape",
+    target: "transport",
+    desc: "Host/origin policy와 configurable request·response size limits로 decode 전후의 자원 사용을 제한한다.",
+    color: "#0ea5e9",
   },
   {
-    id: 'logging',
-    name: 'Logging',
-    target: '전체',
-    desc: '요청/응답 메타데이터를 tracing 크레이트로 기록한다. 메서드명, 소요 시간, 에러 코드를 포함. 운영 환경 디버깅에 필수.',
-    color: '#10b981',
+    id: "budget",
+    name: "Concurrency·timeout·method limits",
+    target: "server and handlers",
+    desc: "동시 실행, timeout, block ranges와 result counts를 method 비용에 맞게 제한한다.",
+    color: "#f59e0b",
   },
-];
-
-export interface GethVsRethRpc {
-  aspect: string;
-  geth: string;
-  reth: string;
-}
-
-export const GETH_VS_RETH_RPC: GethVsRethRpc[] = [
-  { aspect: '라우팅', geth: '리플렉션 (런타임)', reth: '매크로 (컴파일 타임)' },
-  { aspect: '미들웨어', geth: '커스텀 핸들러', reth: 'tower 미들웨어 스택' },
-  { aspect: '타입 안전', geth: 'interface{} 캐스팅', reth: '제네릭 trait 바운드' },
-  { aspect: 'WS 지원', geth: '별도 핸들러', reth: 'jsonrpsee 통합 처리' },
-];
+  {
+    id: "observe",
+    name: "Tracing·metrics",
+    target: "all endpoints",
+    desc: "method, status, latency와 rejection reason을 기록하되 JWT·params 같은 secrets와 민감 데이터는 노출하지 않는다.",
+    color: "#10b981",
+  },
+] as const;

@@ -1,41 +1,200 @@
-import { motion } from 'framer-motion';
-import { C } from './ContextVizData';
-const f = (d: number) => ({ initial: { opacity: 0, x: -8 }, animate: { opacity: 1, x: 0 }, transition: { delay: d } });
-const mono = { fontFamily: 'monospace' };
+import { motion } from "framer-motion";
+import {
+  ActionBox,
+  DataBox,
+  ModuleBox,
+  StatusBox,
+} from "@/components/viz/boxes";
+import { C } from "./ContextVizData";
 
-export function StepSameProto() {
-  const lines = [
-    { line: '// NVMe 폼팩터 스펙 비교', c: C.m2, y: 38 },
-    { line: 'M.2 2280:  22×80mm, PCIe x4, 컨슈머용', c: C.m2, y: 58 },
-    { line: 'U.2 2.5":  69×100mm 금속, PCIe x4, 핫스왑', c: C.u2, y: 78 },
-    { line: 'E1.S:      31.5×111mm, PCIe x4, 1U 고밀도', c: C.e1s, y: 98 },
+const reveal = (delay: number) => ({
+  initial: { opacity: 0, y: 7 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay },
+});
+
+export function StepLayers() {
+  const packages = [
+    { x: 18, label: "M.2", sub: "내부 모듈", color: C.m2 },
+    { x: 174, label: "U.2 / U.3", sub: "2.5-inch bay", color: C.u2 },
+    { x: 330, label: "EDSFF", sub: "E1 · E3 family", color: C.e1s },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.m2}>NVMe 폼팩터 비교</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.12)}>
-        <rect x={20} y={l.y - 13} width={390} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={30} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        같은 명령 · 다른 물리 패키지
+      </text>
+      <motion.g {...reveal(0.08)}>
+        <DataBox
+          x={82}
+          y={40}
+          w={316}
+          h={30}
+          label="Application → NVMe commands → PCIe transport"
+          color={C.ok}
+        />
       </motion.g>
-    ))}
-  </g>);
+      <motion.path
+        d="M240 73 V94 M84 94 H396"
+        fill="none"
+        stroke={C.ok}
+        strokeWidth={1.5}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ delay: 0.2 }}
+      />
+      {packages.map((item, index) => (
+        <motion.g key={item.label} {...reveal(0.3 + index * 0.12)}>
+          <line
+            x1={item.x + 66}
+            y1={94}
+            x2={item.x + 66}
+            y2={110}
+            stroke={item.color}
+          />
+          <ModuleBox
+            x={item.x}
+            y={112}
+            w={132}
+            h={58}
+            label={item.label}
+            sub={item.sub}
+            color={item.color}
+          />
+        </motion.g>
+      ))}
+      <text
+        x={240}
+        y={193}
+        textAnchor="middle"
+        fontSize={9}
+        fill="var(--muted-foreground)"
+      >
+        폼팩터만으로 NAND 종류·내구성·실성능을 알 수 없음
+      </text>
+    </g>
+  );
 }
 
-export function StepHeat() {
-  const lines = [
-    { line: '// M.2 발열 프로파일', c: C.err, y: 38 },
-    { line: '면적: 22 × 80 = 1,760 mm² (열 분산 한계)', c: C.m2, y: 58 },
-    { line: '유휴: ~40℃  →  쓰기 시작: ~55℃', c: C.m2, y: 78 },
-    { line: '연속 5분: ~85℃ → 쓰로틀링 시작', c: C.err, y: 98 },
-    { line: '봉인(PC1): 수시간 연속 쓰기 → 속도 70% 감소', c: C.err, y: 118 },
+export function StepWorkload() {
+  const metrics = [
+    {
+      label: "접근 패턴",
+      sub: "sequential · random",
+      color: C.m2,
+      progress: 0.72,
+    },
+    {
+      label: "읽기 / 쓰기",
+      sub: "ratio · write amp",
+      color: C.u2,
+      progress: 0.58,
+    },
+    { label: "큐 깊이", sub: "latency · IOPS", color: C.ok, progress: 0.44 },
+    {
+      label: "부하 시간",
+      sub: "burst · sustained",
+      color: C.e1s,
+      progress: 0.86,
+    },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.err}>M.2 발열 쓰로틀링</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={15} y={l.y - 13} width={410} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={25} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        벤치마크 전에 I/O 프로파일 작성
+      </text>
+      {metrics.map((metric, index) => (
+        <motion.g key={metric.label} {...reveal(0.08 + index * 0.1)}>
+          <StatusBox
+            x={18 + (index % 2) * 231}
+            y={45 + Math.floor(index / 2) * 70}
+            w={213}
+            h={56}
+            label={metric.label}
+            sub={metric.sub}
+            color={metric.color}
+            progress={metric.progress}
+          />
+        </motion.g>
+      ))}
+      <text
+        x={240}
+        y={193}
+        textAnchor="middle"
+        fontSize={9}
+        fill="var(--muted-foreground)"
+      >
+        같은 SSD도 큐 깊이와 지속 시간에 따라 결과가 달라짐
+      </text>
+    </g>
+  );
+}
+
+export function StepThermal() {
+  const stages = [
+    { x: 16, label: "write load", sub: "controller + NAND", color: C.m2 },
+    { x: 132, label: "heat", sub: "power → temperature", color: C.u2 },
+    { x: 248, label: "cooling path", sub: "spreader · airflow", color: C.e1s },
+    { x: 364, label: "steady rate", sub: "지속 처리량", color: C.ok },
+  ];
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        지속 성능을 만드는 열 경로
+      </text>
+      {stages.map((stage, index) => (
+        <motion.g key={stage.label} {...reveal(0.08 + index * 0.12)}>
+          <ActionBox
+            x={stage.x}
+            y={67}
+            w={100}
+            h={54}
+            label={stage.label}
+            sub={stage.sub}
+            color={stage.color}
+          />
+          {index < stages.length - 1 && (
+            <line
+              x1={stage.x + 101}
+              y1={94}
+              x2={stage.x + 115}
+              y2={94}
+              stroke="var(--muted-foreground)"
+            />
+          )}
+        </motion.g>
+      ))}
+      <motion.g {...reveal(0.58)}>
+        <DataBox
+          x={85}
+          y={151}
+          w={310}
+          h={32}
+          label="열 배출량 < 발생량이면 온도 제한으로 성능 하향"
+          color={C.err}
+        />
       </motion.g>
-    ))}
-  </g>);
+    </g>
+  );
 }

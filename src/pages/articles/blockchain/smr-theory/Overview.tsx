@@ -1,5 +1,5 @@
-import ContextViz from './viz/ContextViz';
-import SMRModelViz from './viz/SMRModelViz';
+import ContextViz from "./viz/ContextViz";
+import SMRModelViz from "./viz/SMRModelViz";
 
 export default function Overview() {
   return (
@@ -10,8 +10,12 @@ export default function Overview() {
           블록체인은 SMR의 구현체 — 트랜잭션=명령, 블록=배치, 합의=순서 결정.
         </p>
       </div>
-      <div className="not-prose mb-8"><ContextViz /></div>
-      <div className="not-prose"><SMRModelViz /></div>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
+      <div className="not-prose">
+        <SMRModelViz />
+      </div>
     </section>
   );
 }

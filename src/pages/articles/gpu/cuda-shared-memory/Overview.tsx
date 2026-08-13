@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const allocCode = `// 정적 할당: 컴파일 시점에 크기 결정
 __shared__ float tile[BLOCK_SIZE][BLOCK_SIZE];
@@ -38,35 +38,54 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">공유 메모리란?</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          공유 메모리(Shared Memory)는 GPU SM(Streaming Multiprocessor) 위에 내장된 <strong>온칩(on-chip) SRAM</strong>이다.<br />
-          같은 블록 내 모든 스레드가 접근할 수 있고, 글로벌 메모리(DRAM) 대비 <strong>약 100배 빠르다</strong>.
+          공유 메모리(Shared Memory)는 GPU SM(Streaming Multiprocessor) 위에
+          내장된 <strong>온칩(on-chip) SRAM</strong>이다.
+          <br />
+          같은 블록 내 모든 스레드가 접근할 수 있고, 글로벌 메모리(DRAM) 대비{" "}
+          <strong>약 100배 빠르다</strong>.
         </p>
         <p>
-          레이턴시 비교 -- 레지스터: ~1 사이클, 공유 메모리: ~5 사이클, L2 캐시: ~200 사이클, 글로벌 메모리: ~400-800 사이클.
+          레이턴시 비교 -- 레지스터: ~1 사이클, 공유 메모리: ~5 사이클, L2 캐시:
+          ~200 사이클, 글로벌 메모리: ~400-800 사이클.
           <br />
-          공유 메모리는 레지스터 다음으로 빠른 메모리이며, 프로그래머가 직접 제어할 수 있는 유일한 캐시 계층이다.
+          공유 메모리는 레지스터 다음으로 빠른 메모리이며, 프로그래머가 직접
+          제어할 수 있는 유일한 캐시 계층이다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">__shared__ 키워드와 할당 방식</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          __shared__ 키워드와 할당 방식
+        </h3>
         <p>
-          <strong>정적 할당</strong> -- 컴파일 시점에 크기가 확정된다. 상수 크기 배열에 사용한다.
+          <strong>정적 할당</strong> -- 컴파일 시점에 크기가 확정된다. 상수 크기
+          배열에 사용한다.
           <br />
-          <strong>동적 할당</strong> -- 커널 실행 시 세 번째 인자로 바이트 수를 전달한다. 실행 시점에 크기를 결정할 수 있다.
+          <strong>동적 할당</strong> -- 커널 실행 시 세 번째 인자로 바이트 수를
+          전달한다. 실행 시점에 크기를 결정할 수 있다.
         </p>
-        <CodePanel title="공유 메모리 할당: 정적 vs 동적" code={allocCode}
+        <CodePanel
+          title="공유 메모리 할당: 정적 vs 동적"
+          code={allocCode}
           annotations={[
-            { lines: [1, 2], color: 'sky', note: '정적 할당' },
-            { lines: [4, 6], color: 'emerald', note: '동적 할당' },
-            { lines: [8, 11], color: 'amber', note: '동적 메모리 분할 기법' },
-          ]} />
+            { lines: [1, 2], color: "sky", note: "정적 할당" },
+            { lines: [4, 6], color: "emerald", note: "동적 할당" },
+            { lines: [8, 11], color: "amber", note: "동적 메모리 분할 기법" },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">핵심 활용 패턴</h3>
-        <CodePanel title="공유 메모리 3가지 용도" code={useCasesCode}
+        <CodePanel
+          title="공유 메모리 3가지 용도"
+          code={useCasesCode}
           annotations={[
-            { lines: [3, 7], color: 'sky', note: '리덕션 등 블록 내 협업' },
-            { lines: [9, 13], color: 'emerald', note: '글로벌 접근 최소화' },
-            { lines: [15, 19], color: 'amber', note: '타일링으로 재사용 극대화' },
-          ]} />
+            { lines: [3, 7], color: "sky", note: "리덕션 등 블록 내 협업" },
+            { lines: [9, 13], color: "emerald", note: "글로벌 접근 최소화" },
+            {
+              lines: [15, 19],
+              color: "amber",
+              note: "타일링으로 재사용 극대화",
+            },
+          ]}
+        />
       </div>
     </section>
   );

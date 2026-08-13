@@ -1,22 +1,27 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Tendermint BFT 개요</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           Jae Kwon (2014) — <strong>PBFT를 블록체인에 최적화</strong>.<br />
-          Propose → Prevote → Precommit → Commit 라운드 기반.<br />
+          Propose → Prevote → Precommit → Commit 라운드 기반.
+          <br />
           CometBFT로 발전, Cosmos 생태계 100+ 체인의 합의 엔진.
         </p>
 
         {/* ── Tendermint 등장 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Tendermint의 등장 배경</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Tendermint의 등장 배경
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 2014년 블록체인 BFT 부족:
+          {`// 2014년 블록체인 BFT 부족:
 //
 // Bitcoin (2009): PoW, 10분 finality
 // Ethereum (2015): PoW, 15초 block time
@@ -60,14 +65,17 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           Tendermint = <strong>blockchain 친화적 BFT</strong>.<br />
-          PBFT의 client-centric 모델 → continuous consensus로 변환.<br />
+          PBFT의 client-centric 모델 → continuous consensus로 변환.
+          <br />
           Cosmos SDK와 결합하여 100+ chain 구동.
         </p>
 
         {/* ── 핵심 컨셉 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Tendermint 핵심 컨셉</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Tendermint 핵심 컨셉
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Tendermint 핵심 컨셉:
+          {`// Tendermint 핵심 컨셉:
 //
 // 1. Height (blockchain height)
 //    - 각 height는 하나의 block 결정
@@ -110,15 +118,19 @@ export default function Overview() {
 // Borda-style scheduling (accum increment)`}
         </pre>
         <p className="leading-7">
-          <strong>Height × Round × 4 steps</strong> 구조.<br />
-          proposer는 deterministic round-robin — 선거 없음.<br />
+          <strong>Height × Round × 4 steps</strong> 구조.
+          <br />
+          proposer는 deterministic round-robin — 선거 없음.
+          <br />
           voting은 stake-weighted, 2/3+ 필요.
         </p>
 
         {/* ── PBFT vs Tendermint ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">PBFT vs Tendermint 비교</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          PBFT vs Tendermint 비교
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 주요 차이점:
+          {`// 주요 차이점:
 //
 // 1. Consensus instance:
 //    PBFT: single consensus, sequence number 증가
@@ -165,14 +177,20 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           본질은 PBFT와 동일 — <strong>이름과 구조만 재정비</strong>.<br />
-          prepare → prevote, commit → precommit, execute → commit.<br />
+          prepare → prevote, commit → precommit, execute → commit.
+          <br />
           stake-weighted + height-based가 blockchain 친화적.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 Tendermint가 Cosmos 생태계를 만들 수 있었나</strong> — ABCI의 힘.<br />
-          Application Blockchain Interface로 합의 엔진과 앱 로직 분리.<br />
-          앱 개발자는 BFT 구현 안 해도 됨 — state machine만 정의하면 Tendermint가 합의 제공.<br />
+          <strong>💡 왜 Tendermint가 Cosmos 생태계를 만들 수 있었나</strong> —
+          ABCI의 힘.
+          <br />
+          Application Blockchain Interface로 합의 엔진과 앱 로직 분리.
+          <br />
+          앱 개발자는 BFT 구현 안 해도 됨 — state machine만 정의하면
+          Tendermint가 합의 제공.
+          <br />
           이것이 "application-specific blockchain"의 시대를 엶.
         </p>
       </div>

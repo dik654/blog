@@ -21,7 +21,7 @@ pub struct TransactionSigned {
     pub input: Bytes,
 }
 
-/// 고정 크기 타입 최적화 — 힙 할당 없이 스택에서 인코딩
+/// 고정 용량 buffer를 사용하는 인코딩 경로의 개념 예시
 pub fn encode_fixed_size<T: Encodable>(t: &T) -> ArrayVec<u8, MAX_LEN> {
     let mut buf = ArrayVec::new();
     t.encode(&mut buf);

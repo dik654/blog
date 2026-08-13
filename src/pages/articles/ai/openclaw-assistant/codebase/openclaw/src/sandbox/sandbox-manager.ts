@@ -10,44 +10,46 @@
  * 컨테이너 수명: 24시간 유휴 또는 7일 경과 시 자동 제거
  */
 
-export type SandboxMode = 'all' | 'non-main' | 'off';
+export type SandboxMode = "all" | "non-main" | "off";
 
 export interface SandboxConfig {
   mode: SandboxMode;
-  elevated: string[];        // 호스트 실행 허용 도구
-  idleTimeoutMin: number;    // 기본 1440 (24h)
-  maxAgeMin: number;         // 기본 10080 (7d)
+  elevated: string[]; // 호스트 실행 허용 도구
+  idleTimeoutMin: number; // 기본 1440 (24h)
+  maxAgeMin: number; // 기본 10080 (7d)
 }
 
 export interface SubAgentConfig {
-  maxSpawnDepth: number;          // 기본 1
-  maxChildrenPerAgent: number;    // 기본 5
-  archiveAfterMinutes: number;    // 기본 60
+  maxSpawnDepth: number; // 기본 1
+  maxChildrenPerAgent: number; // 기본 5
+  archiveAfterMinutes: number; // 기본 60
   subagentModel?: string;
 }
 
 export class SandboxManager {
-  private containers: Map<string, { id: string; createdAt: number; lastUsed: number }> =
-    new Map();
+  private containers: Map<
+    string,
+    { id: string; createdAt: number; lastUsed: number }
+  > = new Map();
 
   constructor(private config: SandboxConfig) {}
 
   /** Fail-closed: 런타임 없으면 호스트 실행 대신 에러 */
   async ensureRuntime(): Promise<void> {
-    if (this.config.mode === 'off') return;
+    if (this.config.mode === "off") return;
     const hasDocker = await this.checkDockerAvailable();
     if (!hasDocker) {
       throw new Error(
-        'Sandbox mode is enabled but Docker runtime is not available. ' +
-        'Install Docker or set sandbox.mode to "off".',
+        "Sandbox mode is enabled but Docker runtime is not available. " +
+          'Install Docker or set sandbox.mode to "off".',
       );
     }
   }
 
   /** 세션에 대해 샌드박스가 필요한지 판단 */
   needsSandbox(isMainSession: boolean): boolean {
-    if (this.config.mode === 'all') return true;
-    if (this.config.mode === 'non-main') return !isMainSession;
+    if (this.config.mode === "all") return true;
+    if (this.config.mode === "non-main") return !isMainSession;
     return false;
   }
 
@@ -62,8 +64,10 @@ export class SandboxManager {
     for (const [key, c] of this.containers) {
       const idleMs = now - c.lastUsed;
       const ageMs = now - c.createdAt;
-      if (idleMs > this.config.idleTimeoutMin * 60_000 ||
-          ageMs > this.config.maxAgeMin * 60_000) {
+      if (
+        idleMs > this.config.idleTimeoutMin * 60_000 ||
+        ageMs > this.config.maxAgeMin * 60_000
+      ) {
         await this.removeContainer(c.id);
         this.containers.delete(key);
       }

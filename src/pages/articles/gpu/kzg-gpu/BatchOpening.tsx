@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const singleOpen = `// Single Opening: 점 z에서 p(z) = v 증명
 //
@@ -56,41 +56,76 @@ export default function BatchOpening() {
       <h2 className="text-2xl font-bold mb-6">Batch Opening 최적화</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          KZG의 진정한 강점은 <strong>batch opening</strong>이다.
-          k개의 다항식을 같은 점 z에서 열 때, 랜덤 선형 결합으로 하나의 몫 다항식을 만들면
+          KZG의 진정한 강점은 <strong>batch opening</strong>이다. k개의 다항식을
+          같은 점 z에서 열 때, 랜덤 선형 결합으로 하나의 몫 다항식을 만들면
           증명이 G1 점 단 하나로 압축된다. 검증도 pairing 2회로 동일하다.
         </p>
-        <CodePanel title="Single Opening 과정" code={singleOpen} annotations={[
-          { lines: [3, 5], color: 'sky', note: '몫 다항식 계산 (GPU)' },
-          { lines: [7, 9], color: 'emerald', note: '증명 = MSM 1회' },
-          { lines: [11, 13], color: 'amber', note: '검증 = pairing 2회' },
-        ]} />
+        <CodePanel
+          title="Single Opening 과정"
+          code={singleOpen}
+          annotations={[
+            { lines: [3, 5], color: "sky", note: "몫 다항식 계산 (GPU)" },
+            { lines: [7, 9], color: "emerald", note: "증명 = MSM 1회" },
+            { lines: [11, 13], color: "amber", note: "검증 = pairing 2회" },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Batch Opening: k개를 하나로</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Batch Opening: k개를 하나로
+        </h3>
         <p>
-          PLONK Round 5에서는 11개 이상의 다항식을 동시에 연다.<br />
-          Fiat-Shamir로 챌린지 gamma를 추출한 뒤, 다항식을 gamma의 거듭제곱으로 선형 결합한다.<br />
+          PLONK Round 5에서는 11개 이상의 다항식을 동시에 연다.
+          <br />
+          Fiat-Shamir로 챌린지 gamma를 추출한 뒤, 다항식을 gamma의 거듭제곱으로
+          선형 결합한다.
+          <br />
           GPU에서는 계수별 스칼라곱과 벡터 덧셈이므로 O(k*n)에 완료된다.
         </p>
-        <CodePanel title="Batch Opening: 선형 결합 + 단일 증명" code={batchOpen} annotations={[
-          { lines: [3, 4], color: 'sky', note: '입력: k개 다항식 + 챌린지' },
-          { lines: [6, 8], color: 'emerald', note: '선형 결합 (GPU 벡터 연산)' },
-          { lines: [10, 11], color: 'amber', note: '몫 다항식 (GPU division)' },
-          { lines: [13, 14], color: 'violet', note: '증명 = MSM 1회' },
-        ]} />
+        <CodePanel
+          title="Batch Opening: 선형 결합 + 단일 증명"
+          code={batchOpen}
+          annotations={[
+            { lines: [3, 4], color: "sky", note: "입력: k개 다항식 + 챌린지" },
+            {
+              lines: [6, 8],
+              color: "emerald",
+              note: "선형 결합 (GPU 벡터 연산)",
+            },
+            {
+              lines: [10, 11],
+              color: "amber",
+              note: "몫 다항식 (GPU division)",
+            },
+            { lines: [13, 14], color: "violet", note: "증명 = MSM 1회" },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">GPU 파이프라인 전체 흐름</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          GPU 파이프라인 전체 흐름
+        </h3>
         <p>
-          Step 6의 MSM이 전체 시간의 80% 이상을 차지한다.<br />
-          Step 2의 선형 결합은 element-wise 연산이므로 GPU 메모리 대역폭에 바운드된다.<br />
-          Step 5의 synthetic division은 순차적이지만 n개 Fp 곱셈-뺄셈으로 GPU에서도 빠르다.
+          Step 6의 MSM이 전체 시간의 80% 이상을 차지한다.
+          <br />
+          Step 2의 선형 결합은 element-wise 연산이므로 GPU 메모리 대역폭에
+          바운드된다.
+          <br />
+          Step 5의 synthetic division은 순차적이지만 n개 Fp 곱셈-뺄셈으로
+          GPU에서도 빠르다.
         </p>
-        <CodePanel title="GPU Batch Opening 6단계" code={gpuPipeline} annotations={[
-          { lines: [3, 4], color: 'sky', note: 'gamma 전처리' },
-          { lines: [6, 7], color: 'emerald', note: '다항식 합성 (메모리 바운드)' },
-          { lines: [12, 16], color: 'amber', note: '뺄셈 + 나눗셈' },
-          { lines: [18, 19], color: 'violet', note: 'MSM: 전체의 80%+' },
-        ]} />
+        <CodePanel
+          title="GPU Batch Opening 6단계"
+          code={gpuPipeline}
+          annotations={[
+            { lines: [3, 4], color: "sky", note: "gamma 전처리" },
+            {
+              lines: [6, 7],
+              color: "emerald",
+              note: "다항식 합성 (메모리 바운드)",
+            },
+            { lines: [12, 16], color: "amber", note: "뺄셈 + 나눗셈" },
+            { lines: [18, 19], color: "violet", note: "MSM: 전체의 80%+" },
+          ]}
+        />
       </div>
     </section>
   );

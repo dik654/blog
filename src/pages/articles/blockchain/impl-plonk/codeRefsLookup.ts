@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const lookupCodeRefs: Record<string, CodeRef> = {
-  'lookup-sort': {
-    path: 'plonk/lookup.rs — sorted merge + LookupTable',
-    lang: 'rust',
+  "lookup-sort": {
+    path: "plonk/lookup.rs — sorted merge + LookupTable",
+    lang: "rust",
     highlight: [1, 34],
-    desc: 'f(조회값)와 T(테이블)를 T 순서로 정렬 후\nh1, h2로 분리 (1개 원소 중첩).',
+    desc: "f(조회값)와 T(테이블)를 T 순서로 정렬 후\nh1, h2로 분리 (1개 원소 중첩).",
     code: `/// Range 테이블: {0, 1, 2, ..., 2^n - 1}
 pub fn range_table(n: u32) -> Self {
     let size = 1u64 << n;
@@ -38,17 +38,33 @@ pub fn compute_sorted_list(
     Ok((h1, h2))
 }`,
     annotations: [
-      { lines: [1, 6], color: 'sky', note: 'range_table — n비트 범위 검증용 사전 테이블' },
-      { lines: [14, 17], color: 'emerald', note: 'f의 값이 T에 없으면 즉시 에러 반환' },
-      { lines: [22, 25], color: 'amber', note: 'T 순서 유지하며 f 삽입 — 인접 차이 패턴 보장' },
-      { lines: [28, 30], color: 'violet', note: 'h1[last]=h2[0] 중첩 — grand product closure 필수 조건' },
+      {
+        lines: [1, 6],
+        color: "sky",
+        note: "range_table — n비트 범위 검증용 사전 테이블",
+      },
+      {
+        lines: [14, 17],
+        color: "emerald",
+        note: "f의 값이 T에 없으면 즉시 에러 반환",
+      },
+      {
+        lines: [22, 25],
+        color: "amber",
+        note: "T 순서 유지하며 f 삽입 — 인접 차이 패턴 보장",
+      },
+      {
+        lines: [28, 30],
+        color: "violet",
+        note: "h1[last]=h2[0] 중첩 — grand product closure 필수 조건",
+      },
     ],
   },
-  'lookup-grand': {
-    path: 'plonk/lookup.rs — lookup grand product',
-    lang: 'rust',
+  "lookup-grand": {
+    path: "plonk/lookup.rs — lookup grand product",
+    lang: "rust",
     highlight: [1, 24],
-    desc: 'Plookup grand product Z_lookup(x).\n(1+b)(g+f)(g(1+b)+t+b*t_next) / (h1 쌍)(h2 쌍).',
+    desc: "Plookup grand product Z_lookup(x).\n(1+b)(g+f)(g(1+b)+t+b*t_next) / (h1 쌍)(h2 쌍).",
     code: `pub fn compute_lookup_grand_product(
     f: &[Fr], t: &[Fr], h1: &[Fr], h2: &[Fr],
     beta: Fr, gamma: Fr, domain: &Domain,
@@ -70,10 +86,26 @@ pub fn compute_sorted_list(
     Polynomial::lagrange_interpolate(&points)
 }`,
     annotations: [
-      { lines: [5, 6], color: 'sky', note: '(1+b), g(1+b) — 연속 쌍을 랜덤 선형 결합으로 압축' },
-      { lines: [10, 12], color: 'emerald', note: 'num: 원본 f, t의 연속 쌍 — 이 구조가 맞으면' },
-      { lines: [14, 15], color: 'amber', note: 'den: 정렬된 h1, h2의 연속 쌍 — 이 구조도 동일해야' },
-      { lines: [17, 17], color: 'violet', note: '누적곱 → Z(w^(n-1))=1이면 정렬 올바름 증명 완료' },
+      {
+        lines: [5, 6],
+        color: "sky",
+        note: "(1+b), g(1+b) — 연속 쌍을 랜덤 선형 결합으로 압축",
+      },
+      {
+        lines: [10, 12],
+        color: "emerald",
+        note: "num: 원본 f, t의 연속 쌍 — 이 구조가 맞으면",
+      },
+      {
+        lines: [14, 15],
+        color: "amber",
+        note: "den: 정렬된 h1, h2의 연속 쌍 — 이 구조도 동일해야",
+      },
+      {
+        lines: [17, 17],
+        color: "violet",
+        note: "누적곱 → Z(w^(n-1))=1이면 정렬 올바름 증명 완료",
+      },
     ],
   },
 };

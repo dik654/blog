@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const loopRefs: Record<string, CodeRef> = {
-  'receive-routine': {
-    path: 'consensus/state.go — receiveRoutine()',
-    lang: 'go',
+  "receive-routine": {
+    path: "consensus/state.go — receiveRoutine()",
+    lang: "go",
     highlight: [1, 5],
-    desc: 'receiveRoutine — 합의 전체를 하나의 goroutine에서 직렬 처리.\n3개 채널(peer·internal·timeout)에서 메시지를 받아 handleMsg/handleTimeout으로 디스패치.',
+    desc: "receiveRoutine — RoundState를 바꾸는 주요 합의 이벤트를 한 loop에서 직렬 처리.\npeer·internal·timeout 채널의 메시지를 받아 handleMsg/handleTimeout으로 디스패치한다.",
     code: `func (cs *State) receiveRoutine(maxSteps int) {
     defer func() {
         if r := recover(); r != nil {
@@ -43,14 +43,26 @@ export const loopRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [2, 7], color: 'sky',
-        note: 'panic 복구: 합의 실패 시 체인을 안전하게 중단 — 비잔틴 서명 방지' },
-      { lines: [17, 21], color: 'emerald',
-        note: 'peerMsgQueue: P2P에서 수신한 Proposal/Vote/BlockPart. WAL 비동기 기록' },
-      { lines: [23, 26], color: 'amber',
-        note: 'internalMsgQueue: 자신의 투표. WriteSync로 fsync — 크래시 후 이중 서명 방지' },
-      { lines: [28, 31], color: 'violet',
-        note: 'timeoutTicker: Propose/Prevote/Precommit 타임아웃 → 다음 단계 전환' },
+      {
+        lines: [2, 7],
+        color: "sky",
+        note: "panic을 기록하고 loop를 종료하는 장애 경계. 서명 안전성 자체를 대신하지는 않는다",
+      },
+      {
+        lines: [17, 21],
+        color: "emerald",
+        note: "peerMsgQueue: P2P에서 수신한 Proposal/Vote/BlockPart. WAL 비동기 기록",
+      },
+      {
+        lines: [23, 26],
+        color: "amber",
+        note: "internalMsgQueue: 로컬 메시지를 상태 전이 전에 동기 WAL 기록해 crash recovery를 돕는다",
+      },
+      {
+        lines: [28, 31],
+        color: "violet",
+        note: "timeoutTicker: Propose/Prevote/Precommit 타임아웃 → 다음 단계 전환",
+      },
     ],
   },
 };

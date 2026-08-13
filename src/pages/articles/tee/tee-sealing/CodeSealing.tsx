@@ -1,6 +1,6 @@
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -37,12 +37,16 @@ export default function CodeSealing({ onCodeRef }: Props) {
           첫째, 암호문이 디스크에서 변조된 경우.
           <br />
           둘째, 다른 enclave(다른 MRENCLAVE/MRSIGNER)에서 개봉을 시도한 경우.
-          <br />
-          두 경우 모두 파생된 Seal Key가 봉인 시와 다르므로 MAC이 불일치합니다.
+          <br />두 경우 모두 파생된 Seal Key가 봉인 시와 다르므로 MAC이
+          불일치합니다.
         </p>
         <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton onClick={() => onCodeRef('seal-unseal', codeRefs['seal-unseal'])} />
-          <span className="text-[10px] text-muted-foreground self-center">sgx_seal_data_ex + sgx_unseal_data</span>
+          <CodeViewButton
+            onClick={() => onCodeRef("seal-unseal", codeRefs["seal-unseal"])}
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            sgx_seal_data_ex + sgx_unseal_data
+          </span>
         </div>
       </div>
     </section>

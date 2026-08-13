@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './NetworkConfigVizData';
-import { Step0, Step1, Step2 } from './NetworkConfigVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./NetworkConfigVizData";
+import { Step0, Step1, Step2 } from "./NetworkConfigVizSteps";
 
 const R = [Step0, Step1, Step2];
 

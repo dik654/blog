@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const evmCodeRef: Record<string, CodeRef> = {
-  'evm-struct': {
-    path: 'core/vm/evm.go — EVM struct',
-    lang: 'go',
+  "evm-struct": {
+    path: "core/vm/evm.go — EVM struct",
+    lang: "go",
     highlight: [1, 20],
-    desc: 'EVM 인스턴스.\n블록 컨텍스트, 상태DB, 점프 테이블, 호출 깊이 등을 보유.',
+    desc: "EVM 인스턴스.\n블록 컨텍스트, 상태DB, 점프 테이블, 호출 깊이 등을 보유.",
     code: `type EVM struct {
     Context   BlockContext   // 블록 정보 (Coinbase, GasLimit, Time ...)
     TxContext               // 트랜잭션 정보 (Origin, GasPrice)
@@ -28,17 +28,33 @@ export const evmCodeRef: Record<string, CodeRef> = {
     returnData []byte   // 마지막 CALL의 반환 데이터
 }`,
     annotations: [
-      { lines: [2, 4], color: 'sky', note: 'Context — 블록/트랜잭션 메타데이터 (COINBASE, GASPRICE 등 오피코드에 사용)' },
-      { lines: [6, 7], color: 'emerald', note: 'table — 하드포크별 JumpTable[256], depth — 재귀 호출 깊이 제한' },
-      { lines: [15, 16], color: 'amber', note: 'callGasTemp — EIP-150 63/64 규칙으로 하위 호출에 전달할 가스' },
-      { lines: [19, 20], color: 'violet', note: 'readOnly — STATICCALL 중 SSTORE 등 상태 변경 시 revert' },
+      {
+        lines: [2, 4],
+        color: "sky",
+        note: "Context — 블록/트랜잭션 메타데이터 (COINBASE, GASPRICE 등 오피코드에 사용)",
+      },
+      {
+        lines: [6, 7],
+        color: "emerald",
+        note: "table — 하드포크별 JumpTable[256], depth — 재귀 호출 깊이 제한",
+      },
+      {
+        lines: [15, 16],
+        color: "amber",
+        note: "callGasTemp — EIP-150 63/64 규칙으로 하위 호출에 전달할 가스",
+      },
+      {
+        lines: [19, 20],
+        color: "violet",
+        note: "readOnly — STATICCALL 중 SSTORE 등 상태 변경 시 revert",
+      },
     ],
   },
-  'evm-call': {
-    path: 'core/vm/evm.go — Call()',
-    lang: 'go',
+  "evm-call": {
+    path: "core/vm/evm.go — Call()",
+    lang: "go",
     highlight: [1, 36],
-    desc: '컨트랙트 호출의 핵심 함수.\n스냅샷 → 값 전송 → 프리컴파일 or Run() → 에러 시 롤백.',
+    desc: "컨트랙트 호출의 핵심 함수.\n스냅샷 → 값 전송 → 프리컴파일 or Run() → 에러 시 롤백.",
     code: `func (evm *EVM) Call(caller, addr common.Address,
     input []byte, gas uint64, value *uint256.Int,
 ) (ret []byte, leftOverGas uint64, err error) {
@@ -78,11 +94,31 @@ export const evmCodeRef: Record<string, CodeRef> = {
     return ret, gas, err
 }`,
     annotations: [
-      { lines: [4, 6], color: 'sky', note: '깊이 제한 — 재귀 호출 1024 초과 시 ErrDepth' },
-      { lines: [12, 13], color: 'emerald', note: 'Snapshot — StateDB의 현재 상태를 저장, 에러 시 여기로 되돌림' },
-      { lines: [19, 21], color: 'amber', note: '프리컴파일 — 0x01~0x11 주소는 네이티브 Go 코드로 실행' },
-      { lines: [26, 29], color: 'violet', note: 'Contract 생성 → Run() — 인터프리터 루프 진입' },
-      { lines: [33, 35], color: 'rose', note: '롤백 — RevertToSnapshot으로 상태 복원, ErrExecutionReverted만 가스 보존' },
+      {
+        lines: [4, 6],
+        color: "sky",
+        note: "깊이 제한 — 재귀 호출 1024 초과 시 ErrDepth",
+      },
+      {
+        lines: [12, 13],
+        color: "emerald",
+        note: "Snapshot — StateDB의 현재 상태를 저장, 에러 시 여기로 되돌림",
+      },
+      {
+        lines: [19, 21],
+        color: "amber",
+        note: "프리컴파일 — 0x01~0x11 주소는 네이티브 Go 코드로 실행",
+      },
+      {
+        lines: [26, 29],
+        color: "violet",
+        note: "Contract 생성 → Run() — 인터프리터 루프 진입",
+      },
+      {
+        lines: [33, 35],
+        color: "rose",
+        note: "롤백 — RevertToSnapshot으로 상태 복원, ErrExecutionReverted만 가스 보존",
+      },
     ],
   },
 };

@@ -1,143 +1,148 @@
-import { motion } from 'framer-motion';
+import { CitationBlock } from "@/components/ui/citation";
+import InterfaceViz from "./viz/InterfaceViz";
 
-const rows = [
-  { proto: 'SATA (AHCI)', queue: '1큐 x 32커맨드', bw: '~550 MB/s', conn: 'SATA 커넥터', latency: '~100us' },
-  { proto: 'NVMe', queue: '64K큐 x 64K커맨드', bw: '~7 GB/s (PCIe 4.0 x4)', conn: 'M.2 / U.2 / PCIe', latency: '~10us' },
-  { proto: 'SAS', queue: '듀얼 포트', bw: '~2.4 GB/s (12Gbps)', conn: 'SFF-8644', latency: '~50us' },
+const queueModels = [
+  {
+    family: "SATA + NCQ",
+    placement: "AHCI port의 장치 queue",
+    concurrency: "규격상 최대 32 outstanding commands",
+    topology: "주로 host와 device 직접 연결",
+  },
+  {
+    family: "SAS + SCSI",
+    placement: "tagged command queue",
+    concurrency: "장치·컨트롤러가 협상한 범위",
+    topology: "expander, dual-port, multipath 가능",
+  },
+  {
+    family: "NVMe",
+    placement: "host memory의 Submission/Completion Queue",
+    concurrency: "controller·OS가 허용한 queue 수와 깊이",
+    topology: "PCIe 직결·switch 또는 NVMe-oF",
+  },
+];
+
+const benchmark = [
+  ["실제 QD", "평균 queue depth와 순간 최고값, queue별 분포"],
+  ["지연시간 분포", "평균뿐 아니라 p95·p99와 timeout 발생"],
+  ["정상 상태", "캐시 소진·garbage collection·열 제한 이후 결과"],
+  ["호스트 비용", "IOPS당 CPU 사용량, interrupt/polling과 NUMA 배치"],
 ];
 
 export default function Interface() {
   return (
     <section id="interface" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">인터페이스: AHCI vs NVMe 큐 구조</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        큐와 전송 경로: AHCI·SCSI·NVMe
+      </h2>
+      <div className="not-prose mb-8">
+        <InterfaceViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          SATA의 AHCI는 HDD 시대 설계입니다. 큐 1개에 커맨드 32개만 처리합니다.<br />
-          NVMe는 PCIe에 직결되어 64K 큐로 I/O 병렬성을 극대화합니다.
+        <p className="leading-7">
+          큐는 여러 I/O 요청을 장치가 처리할 순서로 보관하는 구조
+          <br />
+          SATA NCQ는 한 장치에서 최대 32개 outstanding command를 다루고, NVMe는
+          호스트 메모리에 Submission Queue와 Completion Queue를 만들어 여러 CPU
+          문맥의 요청을 나눌 수 있음
         </p>
-        <div className="overflow-x-auto not-prose">
+        <p className="leading-7">
+          SAS의 가치는 NVMe와 큐 숫자를 겨루는 데 있지 않음. SCSI의 tagged
+          command와 expander, dual-port 장치를 이용해 많은 베이와 장애 시 대체
+          경로를 운영하는 데 강점이 있음
+        </p>
+
+        <div className="overflow-x-auto not-prose my-6">
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                {['프로토콜', '큐 구조', '최대 대역폭', '커넥터', '레이턴시'].map(h => (
-                  <th key={h} className="border border-border px-3 py-2 text-left">{h}</th>
+                {[
+                  "명령 경로",
+                  "queue 위치",
+                  "동시성 범위",
+                  "대표 토폴로지",
+                ].map((heading) => (
+                  <th
+                    key={heading}
+                    className="border border-border px-3 py-2 text-left"
+                  >
+                    {heading}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
-                <motion.tr key={r.proto} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <td className="border border-border px-3 py-2 font-medium">{r.proto}</td>
-                  <td className="border border-border px-3 py-2">{r.queue}</td>
-                  <td className="border border-border px-3 py-2">{r.bw}</td>
-                  <td className="border border-border px-3 py-2">{r.conn}</td>
-                  <td className="border border-border px-3 py-2">{r.latency}</td>
-                </motion.tr>
+              {queueModels.map((row) => (
+                <tr key={row.family}>
+                  <td className="border border-border px-3 py-2 font-medium whitespace-nowrap">
+                    {row.family}
+                  </td>
+                  <td className="border border-border px-3 py-2">
+                    {row.placement}
+                  </td>
+                  <td className="border border-border px-3 py-2">
+                    {row.concurrency}
+                  </td>
+                  <td className="border border-border px-3 py-2">
+                    {row.topology}
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">AHCI vs NVMe 큐 구조 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// AHCI (Advanced Host Controller Interface):
-//
-// Design (2004):
-// - designed for HDDs
-// - 1 queue × 32 commands
-// - register-based communication
-// - high CPU overhead
-// - sequential access optimized
-//
-// Limitations with SSDs:
-// - can't leverage parallelism
-// - queue depth bottleneck
-// - wasted SSD potential
-// - sub-optimal latency
-// - throughput capped
-
-// NVMe Queue Architecture:
-//
-// Admin Queue (setup):
-// - 1 queue pair
-// - management commands
-// - firmware updates
-// - feature configuration
-//
-// I/O Queues (data):
-// - up to 64K queue pairs
-// - each with up to 64K commands
-// - per-CPU dedicated queues
-// - lock-free design
-// - direct PCIe communication
-
-// NVMe Command Path:
-// 1. Application submits I/O
-// 2. OS kernel places in queue
-// 3. Writes to doorbell register
-// 4. SSD controller reads command
-// 5. DMA data transfer
-// 6. Completion notification
-// 7. Interrupt to CPU
-
-// Performance implications:
-//
-// Queue depth scaling:
-// AHCI QD32 max: ~90K IOPS
-// NVMe QD32: ~250K IOPS
-// NVMe QD256: ~1M IOPS
-// NVMe QD4096: ~1.5M IOPS
-
-// Latency breakdown:
-// AHCI:
-// - command processing: 30 μs
-// - CPU overhead: 40 μs
-// - SSD processing: 20 μs
-// - total: ~90 μs
-//
-// NVMe:
-// - command processing: 2 μs
-// - CPU overhead: 5 μs
-// - SSD processing: 10 μs
-// - total: ~17 μs
-
-// CPU efficiency:
-// AHCI: 1 core saturates at 250K IOPS
-// NVMe: 1 core handles 1.5M IOPS
-// 6x more efficient
-
-// Parallel scaling:
-// NVMe scales with CPU cores:
-// - 1 core: 1.5M IOPS
-// - 4 cores: 5M IOPS
-// - 8 cores: 10M IOPS
-// - near-linear scaling
-
-// Modern NVMe features:
-// - ZNS (Zoned Namespaces): sequential-only zones
-// - SGL (Scatter-Gather Lists): efficient DMA
-// - Multi-stream: write hinting
-// - Directives: QoS hints
-// - CMB (Controller Memory Buffer)
-
-// Kernel bypass (SPDK):
-// - user-space NVMe driver
-// - poll-mode (no interrupts)
-// - near-hardware performance
-// - used in storage systems
-
-// NVMe-oF (over Fabrics):
-// - NVMe over network
-// - RDMA (RoCE, iWARP)
-// - TCP
-// - FC
-// - enables disaggregated storage`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          64K×64K를 성능 수치로 읽지 않는다
+        </h3>
         <p className="leading-7">
-          NVMe: <strong>64K queues × 64K commands, per-CPU lock-free</strong>.<br />
-          CPU efficiency 6x, latency 5x lower.<br />
-          ZNS, SGL, NVMe-oF 등 현대 기능.
+          NVMe 규격은 큰 queue 수와 깊이를 표현할 수 있지만 실제 controller가
+          제공하는 queue, OS가 생성하는 queue와 애플리케이션이 채우는 깊이는
+          훨씬 작을 수 있음
+          <br />
+          낮은 QD의 동기 I/O에서는 매체 지연이 중요하고, 높은 QD에서는 처리량이
+          늘어도 개별 요청의 tail latency가 악화될 수 있음
         </p>
+
+        <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {benchmark.map(([title, body], index) => (
+            <div key={title} className="rounded-lg border border-border/60 p-4">
+              <p className="text-xs font-semibold text-cyan-500 mb-2">
+                {index + 1}. {title}
+              </p>
+              <p className="text-sm leading-6">{body}</p>
+            </div>
+          ))}
+        </div>
+
+        <CitationBlock
+          source="SATA-IO — NCQ Feature Set Clarification"
+          citeKey={4}
+          type="paper"
+          href="https://sata-io.org/sites/default/files/ECN080v3_SATA32_NCQFeatureSetClarification.pdf"
+        >
+          NCQ가 최대 32개의 pending command 상태를 표현하는 단순한 command
+          queuing 모델임을 정의.
+        </CitationBlock>
+        <CitationBlock
+          source="NVM Express — Base NVMe Architecture"
+          citeKey={5}
+          href="https://nvmexpress.org/base-nvm-express-part-one/"
+        >
+          NVMe driver가 host memory의 Submission·Completion Queue와 MMIO
+          register를 사용하며, controller별 실제 queue 구성은 구현에 따라
+          달라짐을 설명.
+        </CitationBlock>
+        <CitationBlock
+          source="NVM Express Base Specification 2.0a"
+          citeKey={6}
+          type="paper"
+          href="https://nvmexpress.org/wp-content/uploads/NVMe-NVM-Express-2.0a-2021.07.26-Ratified.pdf"
+        >
+          Submission Queue가 command를 전달하고 Completion Queue가 처리 결과를
+          돌려주는 queue pair 모델을 규정.
+        </CitationBlock>
       </div>
     </section>
   );

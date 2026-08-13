@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const permCodeRefs: Record<string, CodeRef> = {
-  'perm-poly': {
-    path: 'plonk/permutation.rs — permutation 다항식',
-    lang: 'rust',
+  "perm-poly": {
+    path: "plonk/permutation.rs — permutation 다항식",
+    lang: "rust",
     highlight: [1, 30],
-    desc: 'copy constraint를 Union-Find로 cycle 구성 후\nposition tag를 Lagrange 보간하여 sigma 다항식 생성.',
+    desc: "copy constraint를 Union-Find로 cycle 구성 후\nposition tag를 Lagrange 보간하여 sigma 다항식 생성.",
     code: `/// sigma = cycle 표현: 같은 class의 position들이 순환
 fn compute_sigma(n: usize,
     copy_constraints: &[(WirePosition, WirePosition)],
@@ -36,16 +36,28 @@ pub fn compute_permutation_polynomials(
     // 각 column별 Lagrange 보간...
 }`,
     annotations: [
-      { lines: [5, 8], color: 'sky', note: 'Union-Find — copy constraint를 equivalence class로 병합' },
-      { lines: [12, 19], color: 'emerald', note: 'cycle 구성 — class 내 원소를 순환 연결' },
-      { lines: [23, 29], color: 'amber', note: 'tag → 다항식 — position_tag를 도메인 점에서 보간' },
+      {
+        lines: [5, 8],
+        color: "sky",
+        note: "Union-Find — copy constraint를 equivalence class로 병합",
+      },
+      {
+        lines: [12, 19],
+        color: "emerald",
+        note: "cycle 구성 — class 내 원소를 순환 연결",
+      },
+      {
+        lines: [23, 29],
+        color: "amber",
+        note: "tag → 다항식 — position_tag를 도메인 점에서 보간",
+      },
     ],
   },
-  'perm-grand': {
-    path: 'plonk/permutation.rs — grand product Z(x)',
-    lang: 'rust',
+  "perm-grand": {
+    path: "plonk/permutation.rs — grand product Z(x)",
+    lang: "rust",
     highlight: [1, 30],
-    desc: 'grand product Z(x).\ncopy constraint 만족 시 Z가 telescope하여 Z(w^n)=1.',
+    desc: "grand product Z(x).\ncopy constraint 만족 시 Z가 telescope하여 Z(w^n)=1.",
     code: `/// Z(w^0) = 1
 /// Z(w^(i+1)) = Z(w^i) * num(i) / den(i)
 pub fn compute_grand_product(
@@ -73,10 +85,26 @@ pub fn compute_grand_product(
     Polynomial::lagrange_interpolate(&points)
 }`,
     annotations: [
-      { lines: [1, 2], color: 'sky', note: 'Z(w^0)=1에서 시작, 매 행마다 num/den 누적곱' },
-      { lines: [13, 16], color: 'emerald', note: 'num: identity permutation 가정 — 코셋 tag 사용' },
-      { lines: [18, 20], color: 'amber', note: 'den: 실제 sigma permutation — copy constraint 반영' },
-      { lines: [22, 22], color: 'violet', note: '만족 시 num=den → telescope → Z(w^n)=1' },
+      {
+        lines: [1, 2],
+        color: "sky",
+        note: "Z(w^0)=1에서 시작, 매 행마다 num/den 누적곱",
+      },
+      {
+        lines: [13, 16],
+        color: "emerald",
+        note: "num: identity permutation 가정 — 코셋 tag 사용",
+      },
+      {
+        lines: [18, 20],
+        color: "amber",
+        note: "den: 실제 sigma permutation — copy constraint 반영",
+      },
+      {
+        lines: [22, 22],
+        color: "violet",
+        note: "만족 시 num=den → telescope → Z(w^n)=1",
+      },
     ],
   },
 };

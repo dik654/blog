@@ -1,20 +1,4 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './SimCLRVizData';
-import { Step0, Step1, Step2, Step3 } from './SimCLRSteps';
+import VizFrame from "@/components/viz/VizFrame";
 
-const views = [Step0, Step1, Step2, Step3];
-
-export default function SimCLRViz() {
-  return (
-    <StepViz steps={STEPS}>
-      {(step) => {
-        const View = views[step];
-        return (
-          <svg viewBox="0 0 480 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-            <View />
-          </svg>
-        );
-      }}
-    </StepViz>
-  );
-}
+const rows=[["01","Source ID 17","원본 sample","두 view의 관계를 추적"],["02","x₁₇ᵃ · x₁₇ᵇ","독립 augmentation","positive label 생성"],["03","h₁₇ᵃ · h₁₇ᵇ","shared encoder fθ","downstream representation"],["04","z₁₇ᵃ · z₁₇ᵇ","projection + normalize","contrastive comparison"],["05","NT-Xent","2B−1 후보 중 짝 식별","symmetric loss"]];
+export default function SimCLRViz(){return <VizFrame eyebrow="SimCLR trace" title="Source ID가 두 view를 지나 loss까지 유지되는지 추적합니다" note="학습이 끝나면 보통 projection output z가 아니라 encoder representation h를 downstream에 넘깁니다."><div className="border-y border-border">{rows.map(([n,value,operation,contract])=><div key={n} className="grid gap-2 border-b border-border py-5 last:border-b-0 sm:grid-cols-[3rem_9rem_minmax(0,1fr)_minmax(0,1.2fr)] sm:gap-5"><span className="text-xs font-semibold text-muted-foreground">{n}</span><strong className="break-words">{value}</strong><span>{operation}</span><span className="text-muted-foreground">{contract}</span></div>)}</div></VizFrame>}

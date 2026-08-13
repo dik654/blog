@@ -4,12 +4,18 @@ export default function ZKPSystemsThumbnail() {
       {/* Shield shape */}
       <path
         d="M60 12 L85 24 L85 48 Q85 64 60 72 Q35 64 35 48 L35 24 Z"
-        stroke="#6366f1" strokeWidth={1.5} fill="#6366f1" fillOpacity={0.1}
+        stroke="#6366f1"
+        strokeWidth={1.5}
+        fill="#6366f1"
+        fillOpacity={0.1}
       />
       {/* Checkmark */}
       <polyline
         points="48,42 56,52 72,34"
-        stroke="#10b981" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+        stroke="#10b981"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

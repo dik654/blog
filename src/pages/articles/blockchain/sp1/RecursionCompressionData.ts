@@ -26,13 +26,41 @@ pub fn compress(
 }`;
 
 export const STAGES = [
-  { name: 'Core', field: 'BabyBear', size: '~수 MB/샤드', desc: '각 샤드의 AIR STARK 증명' },
-  { name: 'Compress', field: 'BabyBear', size: '~수백 KB', desc: '이진 트리 재귀 압축. N개 → 1개' },
-  { name: 'Shrink', field: 'BN254', size: '~수십 KB', desc: 'BabyBear → BN254 필드 전환' },
-  { name: 'Wrap', field: 'BN254', size: '~수 KB', desc: 'Groth16 회로 입력 형식 준비' },
+  {
+    name: "Core",
+    field: "BabyBear",
+    size: "~수 MB/샤드",
+    desc: "각 샤드의 AIR STARK 증명",
+  },
+  {
+    name: "Compress",
+    field: "BabyBear",
+    size: "~수백 KB",
+    desc: "이진 트리 재귀 압축. N개 → 1개",
+  },
+  {
+    name: "Shrink",
+    field: "BN254",
+    size: "~수십 KB",
+    desc: "BabyBear → BN254 필드 전환",
+  },
+  {
+    name: "Wrap",
+    field: "BN254",
+    size: "~수 KB",
+    desc: "Groth16 회로 입력 형식 준비",
+  },
 ];
 
 export const compressAnnotations = [
-  { lines: [8, 13] as [number, number], color: 'sky' as const, note: '1단계: 개별 검증 (First Layer)' },
-  { lines: [15, 22] as [number, number], color: 'emerald' as const, note: '2단계: 이진 트리 축소' },
+  {
+    lines: [8, 13] as [number, number],
+    color: "sky" as const,
+    note: "1단계: 개별 검증 (First Layer)",
+  },
+  {
+    lines: [15, 22] as [number, number],
+    color: "emerald" as const,
+    note: "2단계: 이진 트리 축소",
+  },
 ];

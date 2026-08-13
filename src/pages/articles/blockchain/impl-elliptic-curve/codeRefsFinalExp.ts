@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const finalExpCodeRefs: Record<string, CodeRef> = {
-  'final-exp': {
-    path: 'curve/pairing.rs — final_exponentiation()',
-    lang: 'rust',
+  "final-exp": {
+    path: "curve/pairing.rs — final_exponentiation()",
+    lang: "rust",
     highlight: [1, 28],
-    desc: 'f^((p¹²-1)/r) — 3단계로 분해.\nEasy part: conjugate·inv + frob². Hard part: 761비트 지수 거듭제곱.',
+    desc: "f^((p¹²-1)/r) — 3단계로 분해.\nEasy part: conjugate·inv + frob². Hard part: 761비트 지수 거듭제곱.",
     code: `/// f^((p^12-1)/r) = f^((p^6-1)(p^2+1)·(p^4-p^2+1)/r)
 fn final_exponentiation(f: Fp12) -> Fp12 {
     // ── Easy part 1: f^(p^6-1) ──
@@ -38,17 +38,33 @@ pub fn pairing(p: &G1, q: &G2) -> Fp12 {
     final_exponentiation(f)
 }`,
     annotations: [
-      { lines: [3, 6], color: 'sky', note: 'Easy part 1: Fp12 conjugate = p^6승. inv와 곱하면 p^6-1승 완료' },
-      { lines: [8, 9], color: 'emerald', note: 'Easy part 2: Frobenius² = p²승. 곱하면 p²+1승 완료' },
-      { lines: [11, 21], color: 'amber', note: 'Hard part: 761비트 지수. square-and-multiply ~1500회 Fp12 곱셈' },
-      { lines: [25, 30], color: 'violet', note: 'pairing() = to_affine → miller_loop → final_exp. 전체 파이프라인' },
+      {
+        lines: [3, 6],
+        color: "sky",
+        note: "Easy part 1: Fp12 conjugate = p^6승. inv와 곱하면 p^6-1승 완료",
+      },
+      {
+        lines: [8, 9],
+        color: "emerald",
+        note: "Easy part 2: Frobenius² = p²승. 곱하면 p²+1승 완료",
+      },
+      {
+        lines: [11, 21],
+        color: "amber",
+        note: "Hard part: 761비트 지수. square-and-multiply ~1500회 Fp12 곱셈",
+      },
+      {
+        lines: [25, 30],
+        color: "violet",
+        note: "pairing() = to_affine → miller_loop → final_exp. 전체 파이프라인",
+      },
     ],
   },
-  'frobenius-g2': {
-    path: 'curve/pairing.rs — frobenius_g2()',
-    lang: 'rust',
+  "frobenius-g2": {
+    path: "curve/pairing.rs — frobenius_g2()",
+    lang: "rust",
     highlight: [1, 18],
-    desc: 'Frobenius 자기동형사상 π: (x,y) → (conj(x)·γ₁, conj(y)·γ₂).\nγ 상수는 ξ^((p-1)/3) 등 — 미리 계산된 고정 상수.',
+    desc: "Frobenius 자기동형사상 π: (x,y) → (conj(x)·γ₁, conj(y)·γ₂).\nγ 상수는 ξ^((p-1)/3) 등 — 미리 계산된 고정 상수.",
     code: `/// π(x,y) = (conj(x)·γ₁₁, conj(y)·γ₂₁)
 fn frobenius_g2(q: &G2Affine) -> G2Affine {
     // γ₁₁ = ξ^((p-1)/3) — 미리 계산된 상수
@@ -70,9 +86,21 @@ fn frobenius_g2_sq(q: &G2Affine) -> G2Affine {
     G2Affine::new(q.x * g12, -q.y) // conjugate 불필요 (p² ≡ 1 mod 2)
 }`,
     annotations: [
-      { lines: [1, 6], color: 'sky', note: 'π: Frobenius. conjugate(a+bu)=a-bu (Fp2 켤레) 후 γ 보정' },
-      { lines: [8, 11], color: 'emerald', note: 'γ 상수들: ξ의 거듭제곱 — 미리 계산해 하드코딩' },
-      { lines: [16, 19], color: 'amber', note: 'π²: conjugate가 상쇄되어 곱셈 1회 + 부호 반전만 필요' },
+      {
+        lines: [1, 6],
+        color: "sky",
+        note: "π: Frobenius. conjugate(a+bu)=a-bu (Fp2 켤레) 후 γ 보정",
+      },
+      {
+        lines: [8, 11],
+        color: "emerald",
+        note: "γ 상수들: ξ의 거듭제곱 — 미리 계산해 하드코딩",
+      },
+      {
+        lines: [16, 19],
+        color: "amber",
+        note: "π²: conjugate가 상쇄되어 곱셈 1회 + 부호 반전만 필요",
+      },
     ],
   },
 };

@@ -28,9 +28,21 @@ export const streamMuxerCode = `pub trait StreamMuxer {
 }`;
 
 export const streamMuxerAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: 'Substream = AsyncRead + AsyncWrite' },
-  { lines: [5, 9] as [number, number], color: 'emerald' as const, note: 'poll_outbound — 새 스트림 요청' },
-  { lines: [11, 15] as [number, number], color: 'amber' as const, note: 'poll_inbound — 원격 스트림 수신' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "Substream = AsyncRead + AsyncWrite",
+  },
+  {
+    lines: [5, 9] as [number, number],
+    color: "emerald" as const,
+    note: "poll_outbound — 새 스트림 요청",
+  },
+  {
+    lines: [11, 15] as [number, number],
+    color: "amber" as const,
+    note: "poll_inbound — 원격 스트림 수신",
+  },
 ];
 
 export const yamuxFrameCode = `// Yamux 프레임 구조 (12 바이트 헤더)
@@ -49,13 +61,46 @@ export const yamuxFrameCode = `// Yamux 프레임 구조 (12 바이트 헤더)
 //   - 윈도우 0이면 송신 측 대기 (백프레셔)`;
 
 export const yamuxFrameAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: '12바이트 프레임 헤더 레이아웃' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: 'Type + Flags 필드' },
-  { lines: [11, 14] as [number, number], color: 'amber' as const, note: '흐름 제어 (백프레셔)' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "12바이트 프레임 헤더 레이아웃",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "Type + Flags 필드",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "amber" as const,
+    note: "흐름 제어 (백프레셔)",
+  },
 ];
 
 export const comparisonData = [
-  { name: 'Yamux', status: '권장', maxStreams: '8192', flowControl: 'WindowUpdate', overhead: '12B/프레임', color: '#f59e0b' },
-  { name: 'Mplex', status: '폐기됨', maxStreams: '1000', flowControl: '없음', overhead: '가변', color: '#6b7280' },
-  { name: 'QUIC 스트림', status: '내장', maxStreams: '제한없음', flowControl: 'QUIC FC', overhead: '0 (프로토콜 내장)', color: '#06b6d4' },
+  {
+    name: "Yamux",
+    status: "권장",
+    maxStreams: "8192",
+    flowControl: "WindowUpdate",
+    overhead: "12B/프레임",
+    color: "#f59e0b",
+  },
+  {
+    name: "Mplex",
+    status: "폐기됨",
+    maxStreams: "1000",
+    flowControl: "없음",
+    overhead: "가변",
+    color: "#6b7280",
+  },
+  {
+    name: "QUIC 스트림",
+    status: "내장",
+    maxStreams: "제한없음",
+    flowControl: "QUIC FC",
+    overhead: "0 (프로토콜 내장)",
+    color: "#06b6d4",
+  },
 ];

@@ -36,20 +36,40 @@ pub fn wrap_groth16_bn254(
 }`;
 
 export const COMPARE = [
-  { item: '증명 크기', groth16: '~192 bytes (3 포인트)', plonk: '~500 bytes' },
-  { item: '검증 가스', groth16: '~250k gas', plonk: '~500k gas' },
-  { item: '신뢰 셋업', groth16: '필요 (회로별)', plonk: '범용 SRS' },
-  { item: '증명 시간', groth16: '더 빠름', plonk: '약간 느림' },
-  { item: '사용 곡선', groth16: 'BN254', plonk: 'BN254' },
+  { item: "증명 크기", groth16: "~192 bytes (3 포인트)", plonk: "~500 bytes" },
+  { item: "검증 가스", groth16: "~250k gas", plonk: "~500k gas" },
+  { item: "신뢰 셋업", groth16: "필요 (회로별)", plonk: "범용 SRS" },
+  { item: "증명 시간", groth16: "더 빠름", plonk: "약간 느림" },
+  { item: "사용 곡선", groth16: "BN254", plonk: "BN254" },
 ];
 
 export const shrinkAnnotations = [
-  { lines: [6, 9] as [number, number], color: 'sky' as const, note: '필드 변환 이유: Groth16 ↔ BN254' },
-  { lines: [11, 13] as [number, number], color: 'emerald' as const, note: '재증명: BN254 AIR 프로그램 실행' },
+  {
+    lines: [6, 9] as [number, number],
+    color: "sky" as const,
+    note: "필드 변환 이유: Groth16 ↔ BN254",
+  },
+  {
+    lines: [11, 13] as [number, number],
+    color: "emerald" as const,
+    note: "재증명: BN254 AIR 프로그램 실행",
+  },
 ];
 
 export const wrapAnnotations = [
-  { lines: [6, 7] as [number, number], color: 'sky' as const, note: '래핑: 회로 입력 변환' },
-  { lines: [9, 16] as [number, number], color: 'emerald' as const, note: 'Groth16 증명 생성' },
-  { lines: [18, 19] as [number, number], color: 'amber' as const, note: '최종 크기 + 온체인 가스' },
+  {
+    lines: [6, 7] as [number, number],
+    color: "sky" as const,
+    note: "래핑: 회로 입력 변환",
+  },
+  {
+    lines: [9, 16] as [number, number],
+    color: "emerald" as const,
+    note: "Groth16 증명 생성",
+  },
+  {
+    lines: [18, 19] as [number, number],
+    color: "amber" as const,
+    note: "최종 크기 + 온체인 가스",
+  },
 ];

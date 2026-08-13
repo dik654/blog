@@ -1,12 +1,12 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const cosmosRefs: Record<string, CodeRef> = {
-  'mini-precompile': {
-    path: 'minievm/x/evm/precompiles/cosmos/contract.go',
-    lang: 'go',
+  "mini-precompile": {
+    path: "minievm/x/evm/precompiles/cosmos/contract.go",
+    lang: "go",
 
     highlight: [1, 38],
-    desc: 'CosmosPrecompile — EVM에서 Cosmos 기능 호출. IBC, 쿼리, 주소 변환.',
+    desc: "CosmosPrecompile — EVM에서 Cosmos 기능 호출. IBC, 쿼리, 주소 변환.",
     code: `// x/evm/precompiles/cosmos/contract.go
 
 type CosmosPrecompile struct {
@@ -48,10 +48,26 @@ func (e *CosmosPrecompile) ExtendedRun(
     }
 }`,
     annotations: [
-      { lines: [3, 13], color: 'sky' as const, note: 'CosmosPrecompile — ABI + Cosmos keeper 참조' },
-      { lines: [25, 28], color: 'emerald' as const, note: 'execute_cosmos — EVM에서 Cosmos TX 실행' },
-      { lines: [29, 31], color: 'amber' as const, note: 'query_cosmos — 화이트리스트 기반 Cosmos 쿼리' },
-      { lines: [32, 37], color: 'rose' as const, note: '주소·denom 변환 — 두 세계 브릿지' },
+      {
+        lines: [3, 13],
+        color: "sky" as const,
+        note: "CosmosPrecompile — ABI + Cosmos keeper 참조",
+      },
+      {
+        lines: [25, 28],
+        color: "emerald" as const,
+        note: "execute_cosmos — EVM에서 Cosmos TX 실행",
+      },
+      {
+        lines: [29, 31],
+        color: "amber" as const,
+        note: "query_cosmos — 화이트리스트 기반 Cosmos 쿼리",
+      },
+      {
+        lines: [32, 37],
+        color: "rose" as const,
+        note: "주소·denom 변환 — 두 세계 브릿지",
+      },
     ],
   },
 };

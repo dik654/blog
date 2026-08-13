@@ -1,83 +1,140 @@
-import StepViz from '@/components/ui/step-viz';
-import ResBlockViz from './viz/ResBlockViz';
-import { blockSteps, variants } from './ArchitectureData';
-import ArchDetailViz from './viz/ArchDetailViz';
-import M from '@/components/ui/math';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import BlockFamilyViz from "./viz/BlockFamilyViz";
 
 export default function Architecture() {
   return (
     <section id="architecture" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ResNet 아키텍처</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Residual Block = Conv + BN + ReLU + Conv + BN + <strong>(+x)</strong> + ReLU<br />
-          이 블록을 반복 적층하여 깊은 네트워크 구성
+      <h2 className="mb-6 text-2xl font-bold">
+        BasicBlock과 Bottleneck은 같은 residual 원리를 다른 compute shape로
+        구현한다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          ResNet은 stem 뒤에 residual block을 stage별로 쌓고, stage가 바뀔 때
+          spatial resolution을 줄이며 channel을 늘립니다. ResNet-18·34의
+          BasicBlock은 같은 width의 3×3 convolution 두 개를 사용하고,
+          ResNet-50·101·152의 Bottleneck은 1×1로 내부 width를 조절한 뒤 3×3을
+          수행하고 마지막 1×1로 output channel을 확장합니다.
         </p>
-        <h3>Batch Normalization (BN)</h3>
-        <p>
-          각 층의 출력을 정규화 → 학습 안정화 + 빠른 수렴<br />
-          ResNet에서 BN은 Conv 직후, ReLU 직전에 배치
-        </p>
-      </div>
-      <div className="not-prose my-8">
-        <StepViz steps={blockSteps}>
-          {(step) => <ResBlockViz step={step} />}
-        </StepViz>
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>변형 비교</h3>
-      </div>
-      <div className="not-prose my-6 overflow-x-auto">
-        <table className="w-full max-w-2xl text-sm border-collapse">
-          <thead>
-            <tr className="border-b border-border">
-              {['모델', '블록 수', '블록 타입', '파라미터', '층 수'].map(h => (
-                <th key={h} className="py-2 px-3 text-left text-xs font-medium
-                  text-muted-foreground">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {variants.map(v => (
-              <tr key={v.name} className="border-b border-border/50">
-                <td className="py-2 px-3 font-medium text-xs">{v.name}</td>
-                <td className="py-2 px-3 text-xs">{v.blocks}</td>
-                <td className="py-2 px-3 text-xs">{v.type}</td>
-                <td className="py-2 px-3 text-xs">{v.params}</td>
-                <td className="py-2 px-3 text-xs">{v.layers}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">ResNet-50 구조 & BatchNorm</h3>
-        <M display>{'\\hat{x}_i = \\frac{\\overbrace{x_i - \\mu_B}^{\\text{평균 빼기}}}{\\underbrace{\\sqrt{\\sigma_B^2 + \\epsilon}}_{\\text{분산으로 나누기}}} \\qquad y_i = \\underbrace{\\gamma}_{\\text{스케일}} \\cdot \\hat{x}_i + \\underbrace{\\beta}_{\\text{시프트}}'}</M>
-        <div className="not-prose grid grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            { sym: 'x − μ_B', name: '평균 빼기', defs: 'μ_B = 미니배치 평균 (배치 내 같은 채널 값의 평균)', why: '층마다 출력 분포가 달라지면 다음 층이 계속 적응해야 함 → 학습 불안정. 평균을 0으로 맞춰 분포 중심을 고정', color: 'text-blue-500' },
-            { sym: '÷ √(σ²+ε)', name: '분산으로 나누기', defs: 'σ²_B = 미니배치 분산, ε = 0 나누기 방지 상수 (1e-5)', why: '어떤 채널은 값이 수천, 어떤 채널은 0.01 → 스케일 차이가 기울기를 왜곡. 분산 1로 통일하여 모든 채널이 동등한 학습 속도 확보', color: 'text-blue-500' },
-            { sym: 'γ · x̂', name: '스케일 복원', defs: 'γ = 학습 가능한 스케일 파라미터 (초기값 1)', why: '정규화가 항상 최적은 아님 — 네트워크가 γ를 학습하여 필요한 만큼 분산을 키우거나 줄임', color: 'text-purple-500' },
-            { sym: '+ β', name: '시프트 복원', defs: 'β = 학습 가능한 시프트 파라미터 (초기값 0)', why: '평균 0이 항상 좋지 않음 — ReLU 직전이면 음수가 절반이 죽음. β로 평균을 이동하여 활성화 함수에 최적 입력 제공', color: 'text-purple-500' },
-          ].map((p) => (
-            <div key={p.sym} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className={`font-mono font-bold ${p.color}`}>{p.sym}</span>
-              <span className="text-muted-foreground ml-1.5 text-xs font-semibold">{p.name}</span>
-              <div className="text-xs text-muted-foreground/70 mt-0.5">{p.defs}</div>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.why}</div>
-            </div>
-          ))}
-        </div>
+      <div id="paper-identity-mappings" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Identity propagation</p>
+        <p className="mt-2 text-sm font-semibold">Identity Mappings in Deep Residual Networks</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Shortcut과 addition 뒤 mapping을 identity로 유지할 때 forward state와
+          backward signal이 직접 전개되는 관계를 제시하고 pre-activation unit을
+          실험했습니다. 이 algebra가 finite-precision training에서 gradient 크기의
+          절대 하한이나 최적해 도달을 보장하는 정리는 아닙니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1603.05027" target="_blank" rel="noreferrer">원 논문의 전개·unit ablation 보기</a>
       </div>
-      <div className="not-prose my-6">
-        <ArchDetailViz />
+
+      <BlockFamilyViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Bottleneck은 parameter를 무조건 줄이는 장치가 아니다</h3>
+        <p className="leading-8">
+          Input·output channel이 C이고 내부 width가 B인 단순 bottleneck을
+          생각하면, 두 1×1 convolution은 각각 CB parameter, 가운데 3×3은 9B²
+          parameter를 사용합니다. B를 얼마나 줄였는지와 output expansion에 따라
+          비용이 달라지므로 “1×1이 있으니 항상 더 싸다”라고 판단하지 않고 실제
+          stage shape를 계산합니다.
+        </p>
       </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: ResNet-50은 <strong>Stem → 4 Stages (3+4+6+3 blocks) → GAP → FC</strong> 구조.<br />
-          요약 2: <strong>BatchNorm</strong>은 학습 안정화의 핵심 — ResNet v2에서 pre-activation으로 진화.<br />
-          요약 3: Bottleneck + BN + Skip의 조합이 <strong>현대 CNN 표준 빌딩 블록</strong>.
+
+      <ExplainedFormula
+        question="먼저 same-width BasicBlock의 convolution parameter를 계산하면 얼마인가?"
+        idea={
+          <>
+            Bias를 생략한 convolution parameter는 kernel area×input
+            channel×output channel입니다. C→C인 3×3 convolution 두 개가 있으므로
+            한 층의 9C²를 두 번 더합니다.
+          </>
+        }
+        formula={String.raw`P_{\mathrm{basic}}=2(3^2C^2)=18C^2`}
+        terms={[
+          {
+            symbol: "C",
+            name: "외부 channel width",
+            description: "Block 입력과 출력이 갖는 channel 수입니다.",
+          },
+          {
+            symbol: "P_{\\mathrm{basic}}",
+            name: "BasicBlock parameter",
+            description: "C→C인 3×3 convolution 두 개의 weight 수입니다.",
+          },
+        ]}
+        assumptions={[
+          "Bias·normalization parameter와 projection shortcut은 제외했습니다.",
+          "FLOPs는 여기에 output spatial size를 곱하며 stage transition의 stride까지 반영해야 합니다.",
+        ]}
+        interpretation="BasicBlock은 모든 3×3 연산을 외부 width C에서 수행합니다. 따라서 high-width stage에서는 parameter와 FLOPs가 C²에 따라 빠르게 증가합니다."
+      />
+
+      <ExplainedFormula
+        question="C→B→B→C Bottleneck은 내부 width를 줄여 비용을 어떻게 재배분하는가?"
+        idea={
+          <>
+            첫 1×1은 C에서 B로 channel을 줄이고, 3×3은 더 작은 B width에서
+            spatial mixing을 수행한 뒤 마지막 1×1이 C로 복원합니다. 세 layer의
+            weight 수를 순서대로 더합니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}P_{\mathrm{bottle}}&=CB+9B^2+BC\\&=2CB+9B^2\end{aligned}`}
+        terms={[
+          {
+            symbol: "C",
+            name: "외부 channel width",
+            description: "Block 입력과 출력이 갖는 channel 수입니다.",
+          },
+          {
+            symbol: "B",
+            name: "bottleneck width",
+            description:
+              "가운데 3×3 convolution이 사용하는 내부 channel 수입니다.",
+          },
+          {
+            symbol: "2CB",
+            name: "두 1×1 projection",
+            description: "C→B와 B→C channel projection의 weight 합입니다.",
+          },
+          {
+            symbol: "9B^2",
+            name: "3×3 spatial mixing",
+            description:
+              "B channel 안에서 수행하는 가운데 convolution 비용입니다.",
+          },
+        ]}
+        assumptions={[
+          "Bias·normalization parameter와 projection shortcut은 제외했습니다.",
+          "FLOPs는 여기에 output spatial size를 곱하며 stage transition의 stride까지 반영해야 합니다.",
+        ]}
+        interpretation="B가 C보다 충분히 작을 때 비싼 3×3 연산을 줄일 수 있습니다. Torchvision의 expansion 4처럼 외부·내부 width 계약을 확인해야 실제 비용을 정확히 비교할 수 있습니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Post-activation과 pre-activation은 activation 위치가 다르다</h3>
+        <p className="leading-8">
+          Original ResNet v1은 residual과 shortcut을 더한 뒤 ReLU를 적용합니다.
+          Identity Mappings 논문의 pre-activation ResNet v2는 normalization과
+          ReLU를 convolution 앞에 두어 addition 뒤의 identity path를 더
+          직접적으로 유지했습니다. 두 구현은 checkpoint-compatible하지 않으며
+          “BN 순서만 조금 바꾼 것” 이상으로 forward·backward mapping이
+          달라집니다.
+        </p>
+
+        <h3>
+          구현에서는 stride 위치와 zero initialization까지 version 차이를 본다
+        </h3>
+        <p className="leading-8">
+          Torchvision의 현재 Bottleneck은 원 논문 표기와 달리 stride를 첫 1×1이
+          아닌 3×3 convolution에 두는 ResNet v1.5 변형을 사용합니다. 또한 마지막
+          normalization scale을 0으로 초기화하면 residual branch가 처음에 0에
+          가까워져 block을 identity 근처에서 시작시킬 수 있습니다. Architecture
+          이름만으로 이런 recipe 차이가 결정되지는 않으므로 source와 checkpoint
+          metadata를 함께 확인합니다.
         </p>
       </div>
     </section>

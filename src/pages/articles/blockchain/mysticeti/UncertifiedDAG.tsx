@@ -1,44 +1,82 @@
-import { motion } from 'framer-motion';
-import { ModuleBox } from '@/components/viz/boxes';
+import { motion } from "framer-motion";
+import { ModuleBox } from "@/components/viz/boxes";
 
-const C = { r1: '#6366f1', r2: '#10b981', r3: '#f59e0b' };
+const C = { r1: "#6366f1", r2: "#10b981", r3: "#f59e0b" };
 
 function UncertDAGViz() {
   const rounds = [
-    { x: 30, label: 'R1', color: C.r1 },
-    { x: 170, label: 'R2', color: C.r2 },
-    { x: 310, label: 'R3', color: C.r3 },
+    { x: 30, label: "R1", color: C.r1 },
+    { x: 170, label: "R2", color: C.r2 },
+    { x: 310, label: "R3", color: C.r3 },
   ];
   const nodes = [0, 1, 2];
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">Uncertified DAG: 블록이 이전 라운드 블록을 직접 참조</p>
-      <svg viewBox="0 0 420 110" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
-        {rounds.map((r, ri) => nodes.map((n) => (
-          <motion.g key={`${ri}-${n}`} initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: ri * 0.15 + n * 0.05 }}>
-            <ModuleBox x={r.x} y={10 + n * 32} w={80} h={26}
-              label={`V${n + 1}`} sub={r.label} color={r.color} />
-          </motion.g>
-        )))}
-        {nodes.map((n) => nodes.map((m) => (
-          <motion.line key={`e1-${n}-${m}`}
-            x1={170} y1={23 + n * 32} x2={110} y2={23 + m * 32}
-            stroke={C.r2} strokeWidth={0.5} opacity={0.4}
-            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-            transition={{ delay: 0.5 + n * 0.05 }} />
-        )))}
-        {nodes.map((n) => nodes.map((m) => (
-          <motion.line key={`e2-${n}-${m}`}
-            x1={310} y1={23 + n * 32} x2={250} y2={23 + m * 32}
-            stroke={C.r3} strokeWidth={0.5} opacity={0.4}
-            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-            transition={{ delay: 0.7 + n * 0.05 }} />
-        )))}
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        Uncertified DAG: 블록이 이전 라운드 블록을 직접 참조
+      </p>
+      <svg
+        viewBox="0 0 420 110"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
+        {rounds.map((r, ri) =>
+          nodes.map((n) => (
+            <motion.g
+              key={`${ri}-${n}`}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: ri * 0.15 + n * 0.05 }}
+            >
+              <ModuleBox
+                x={r.x}
+                y={10 + n * 32}
+                w={80}
+                h={26}
+                label={`V${n + 1}`}
+                sub={r.label}
+                color={r.color}
+              />
+            </motion.g>
+          )),
+        )}
+        {nodes.map((n) =>
+          nodes.map((m) => (
+            <motion.line
+              key={`e1-${n}-${m}`}
+              x1={170}
+              y1={23 + n * 32}
+              x2={110}
+              y2={23 + m * 32}
+              stroke={C.r2}
+              strokeWidth={0.5}
+              opacity={0.4}
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: 0.5 + n * 0.05 }}
+            />
+          )),
+        )}
+        {nodes.map((n) =>
+          nodes.map((m) => (
+            <motion.line
+              key={`e2-${n}-${m}`}
+              x1={310}
+              y1={23 + n * 32}
+              x2={250}
+              y2={23 + m * 32}
+              stroke={C.r3}
+              strokeWidth={0.5}
+              opacity={0.4}
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: 0.7 + n * 0.05 }}
+            />
+          )),
+        )}
       </svg>
       <p className="text-xs text-center text-foreground/75 mt-2">
-        💡 각 블록이 이전 라운드의 {'≥'} 2f+1 블록을 참조 → 참조 = 암시적 투표
+        💡 각 블록이 이전 라운드의 {"≥"} 2f+1 블록을 참조 → 참조 = 암시적 투표
       </p>
     </div>
   );
@@ -52,15 +90,19 @@ export default function UncertifiedDAG() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          기존 Narwhal: 블록마다 <strong>2f+1 서명 수집 → certificate</strong>.<br />
-          Mysticeti: 이 과정 생략 — 블록이 이전 라운드 블록 참조하면 유효.<br />
+          기존 Narwhal: 블록마다 <strong>2f+1 서명 수집 → certificate</strong>.
+          <br />
+          Mysticeti: 이 과정 생략 — 블록이 이전 라운드 블록 참조하면 유효.
+          <br />
           참조 행위 자체가 투표 → 인증 라운드 1개 절약.
         </p>
 
         {/* ── Certified vs Uncertified ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Certified vs Uncertified DAG</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Certified vs Uncertified DAG
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Narwhal (Certified DAG):
+          {`// Narwhal (Certified DAG):
 //
 // Vertex creation:
 // 1. Author broadcasts Header
@@ -124,14 +166,17 @@ export default function UncertifiedDAG() {
         </pre>
         <p className="leading-7">
           Uncertified DAG: <strong>reference = implicit vote</strong>.<br />
-          certificate round 제거 → 3x 빠름 per round.<br />
+          certificate round 제거 → 3x 빠름 per round.
+          <br />
           safety equivalent to certified (quorum intersection).
         </p>
 
         {/* ── Uncertified의 Trade-off ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Uncertified DAG의 Trade-offs</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Uncertified DAG의 Trade-offs
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Uncertified DAG Trade-offs:
+          {`// Uncertified DAG Trade-offs:
 
 // 장점:
 // 1. Lower latency:
@@ -189,14 +234,15 @@ export default function UncertifiedDAG() {
         </pre>
         <p className="leading-7">
           Uncertified: <strong>3x 빠름 + 30% bandwidth 절약</strong>.<br />
-          trade-off: 복잡한 proof, slower failure detection.<br />
+          trade-off: 복잡한 proof, slower failure detection.
+          <br />
           Mysticeti는 uncertified base + optional certified votes.
         </p>
 
         {/* ── Safety Proof Sketch ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Safety Proof Sketch</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Mysticeti Safety Claim:
+          {`// Mysticeti Safety Claim:
 // committed block B는 revert 불가
 
 // Uncertified safety 증명 sketch:
@@ -241,15 +287,22 @@ export default function UncertifiedDAG() {
 // → equivalent safety`}
         </pre>
         <p className="leading-7">
-          Uncertified safety: <strong>reference = implicit vote</strong> + quorum intersection.<br />
-          2f+1 references → f+1 honest → conflicting commit 불가.<br />
+          Uncertified safety: <strong>reference = implicit vote</strong> +
+          quorum intersection.
+          <br />
+          2f+1 references → f+1 honest → conflicting commit 불가.
+          <br />
           certified와 equivalent safety guarantee.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 Mysticeti 이전엔 certified DAG가 표준이었나</strong> — explicit &gt; implicit.<br />
-          초기 DAG-BFT 연구 (Narwhal 2021): safety 증명 용이성 우선.<br />
-          Mysticeti (2024): safety는 reference로 충분 증명 가능.<br />
+          <strong>💡 왜 Mysticeti 이전엔 certified DAG가 표준이었나</strong> —
+          explicit &gt; implicit.
+          <br />
+          초기 DAG-BFT 연구 (Narwhal 2021): safety 증명 용이성 우선.
+          <br />
+          Mysticeti (2024): safety는 reference로 충분 증명 가능.
+          <br />
           학문적 발견 → 실무 최적화 — 3년 걸린 breakthrough.
         </p>
       </div>

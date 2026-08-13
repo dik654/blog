@@ -1,156 +1,115 @@
-import PrePostFlowViz from './viz/PrePostFlowViz';
+import PrePostFlowViz from "./viz/PrePostFlowViz";
+
+const eventIdentity = [
+  ["event", "event ID·type·causal parent"],
+  ["action", "tool·canonical arguments·resource digest"],
+  ["context", "session·workspace·actor·attempt"],
+  ["budget", "deadline·hook depth·output limit"],
+] as const;
 
 export default function PrePost() {
   return (
     <section id="pre-post" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">PreToolUse / PostToolUse 흐름</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        Pre hook은 실행을 제한하고 Post hook은 결과를 관찰한다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <PrePostFlowViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">도구 호출 흐름 속 훅 위치</h3>
-        <p>
-          훅 위치는 위 다이어그램 참조 — Permission Enforcer 체크 직후 Pre 훅, 도구 실행 직후 Post 훅<br />
-          Pre 훅은 <strong>도구 실행 차단 가능</strong> — abort·deny 시 실행 스킵<br />
-          Post 훅은 <strong>경고·로깅만</strong> — 이미 실행됐으므로 되돌릴 수 없음<br />
-          Pre는 보안 게이트, Post는 감사 로그 — 역할 분리 명확
+        <p className="leading-7">
+          <code>PreToolUse</code>는 side effect가 생기기 전에 policy를 더
+          엄격하게 만들거나 사용자 확인을 요구할 수 있습니다. 반면
+          <code>PostToolUse</code>는 이미 끝난 실행의 result를 기록·검사하는
+          지점이므로, 실패를 발견해도 원래 작업을 없던 일로 만들 수는 없습니다.
+        </p>
+        <p className="leading-7">
+          이 차이를 흐리면 post hook의 “deny”가 rollback처럼 보이거나 pre hook이
+          기본 permission을 넓히는 우회 통로가 됩니다. event type별로 가능한
+          outcome과 failure policy를 제한해야 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Pre-tool 훅 실제 예시 — rm 차단</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-3">no-rm.sh — rm 명령 차단 훅</div>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">1</span>
-                <div>stdin에서 JSON 읽기 — <code className="text-xs">INPUT=$(cat)</code>으로 전체 입력 캡처, <code className="text-xs">jq -r '.tool_name'</code>으로 도구 이름 추출</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">2</span>
-                <div>도구가 <code className="text-xs">bash</code>인지 확인 후 명령 문자열에서 <code className="text-xs">grep -qE "\brm\b"</code>로 rm 패턴 탐지 (<code className="text-xs">-q</code> silent, <code className="text-xs">-E</code> 확장 regex)</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">deny</span>
-                <div>매칭 시 <code className="text-xs">{'{"permission": "deny", "reason": "rm 명령 금지"}'}</code> 출력 후 <code className="text-xs">exit 0</code></div>
-              </div>
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-neutral-200 dark:bg-neutral-700 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">skip</span>
-                <div>해당 없음 시 <code className="text-xs">{'{"permission":"skip"}'}</code> — 다른 훅 또는 기본 Enforcer에 위임</div>
-              </div>
-            </div>
-          </div>
+        <div className="not-prose my-8">
+          <PrePostFlowViz />
         </div>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Post-tool 훅 예시 — git status 경고</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-3">git-dirty.sh — write/edit 후 git 변경 파일 수 경고</div>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">1</span>
-                <div>도구 이름 확인 — <code className="text-xs">write_file</code> 또는 <code className="text-xs">edit_file</code>인지 분기</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">2</span>
-                <div><code className="text-xs">workspace_root</code>로 이동 후 <code className="text-xs">git status --porcelain | wc -l</code>로 변경 파일 수 집계</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm">
-                <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">warn</span>
-                <div>20개 초과 시 <code className="text-xs">[warning] N files modified</code> 출력 — 사용자 터미널에 표시</div>
-              </div>
-            </div>
-            <div className="mt-3 pt-3 border-t border-border text-sm text-muted-foreground">
-              Post 훅은 JSON 프로토콜 불필요 — stdout 텍스트가 경고로 표시. <code className="text-xs">exit 0</code> 필수 (비정상 종료 시 "hook failed" 로그)
-            </div>
-          </div>
-        </div>
+      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {eventIdentity.map(([title, body]) => (
+          <article
+            key={title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {body}
+            </p>
+          </article>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Pre 훅 실행 코드</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">execute_hook — 5단계 실행 파이프라인</div>
-            <div className="space-y-2">
-              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">1</span>
-                <div><strong>JSON 입력 준비</strong> — <code className="text-xs">event</code>, <code className="text-xs">tool_name</code>, <code className="text-xs">tool_input</code>, <code className="text-xs">session_id</code>, <code className="text-xs">workspace_root</code>, <code className="text-xs">timestamp</code> 조합</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">2</span>
-                <div><strong>서브프로세스 생성</strong> — <code className="text-xs">/bin/sh -c hook.command</code>로 실행, <code className="text-xs">stdin/stdout/stderr</code> 파이프 연결, 환경 변수 주입</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">3</span>
-                <div><strong>stdin 전송</strong> — payload JSON 바이트 기록 후 <code className="text-xs">shutdown()</code>으로 EOF 전송</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">4</span>
-                <div><strong>타임아웃 적용</strong> — <code className="text-xs">tokio::time::timeout</code>으로 감싸서 <code className="text-xs">hook.timeout</code> 또는 <code className="text-xs">default_timeout</code> 초과 시 중단</div>
-              </div>
-              <div className="flex items-start gap-3 text-sm bg-white dark:bg-neutral-900 rounded p-3">
-                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded px-2 py-0.5 text-xs font-mono shrink-0 mt-0.5">5</span>
-                <div><strong>stdout JSON 파싱</strong> — <code className="text-xs">serde_json::from_slice</code>로 응답 파싱, 실패 시 <code className="text-xs">skip</code> 기본값</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <code>/bin/sh -c</code>: 셸 명령 문자열 실행 — 경로/인자 분리 불필요<br />
-          파싱 실패 시 <code>skip</code> 기본값 — 훅 버그가 시스템 차단으로 이어지지 않음
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          matcher는 canonical event를 대상으로 평가한다
+        </h3>
+        <p className="leading-7">
+          raw command string에 정규식 하나만 적용하면 quoting과 path 표현에 따라
+          같은 action이 다르게 매칭될 수 있습니다. dispatch가 tool input과
+          resource를 정규화한 뒤 tool name, effect class, canonical path와 event
+          type을 matcher에 전달하는 편이 안정적입니다.
+        </p>
+        <p className="leading-7">
+          hook config를 읽는 시점에 matcher를 compile하고 잘못된 표현은
+          fail-fast합니다. 실행 시점에는 matching hook의 stable order와 config
+          version을 event에 남겨 같은 요청의 결정을 재현할 수 있게 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">타임아웃 기본값 &amp; 실패 처리</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-center">
-                <div className="text-lg font-bold text-blue-600 dark:text-blue-400">2000ms</div>
-                <div className="text-xs text-muted-foreground mt-1"><code className="text-xs">DEFAULT_HOOK_TIMEOUT</code></div>
-              </div>
-              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-center">
-                <div className="text-lg font-bold text-red-600 dark:text-red-400">kill</div>
-                <div className="text-xs text-muted-foreground mt-1">초과 시 프로세스 강제 종료</div>
-              </div>
-              <div className="bg-white dark:bg-neutral-900 rounded p-3 text-center">
-                <div className="text-lg font-bold text-amber-600 dark:text-amber-400">Error</div>
-                <div className="text-xs text-muted-foreground mt-1"><code className="text-xs">skip</code>과 동일 취급 — 다음 훅으로</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>기본 2초</strong>: 훅은 경량이어야 함 — 무거운 연산 금지<br />
-          2초 초과 시 훅 프로세스 강제 종료 + Error 응답<br />
-          Error는 <code>skip</code>과 같이 취급 — 다음 훅으로
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Pre hook 결과와 기본 policy는 가장 제한적인 쪽으로 합친다
+        </h3>
+        <p className="leading-7">
+          기본 permission decision과 모든 pre hook 결과를 모은 뒤
+          <code>Deny &gt; Prompt &gt; Allow</code> 순으로 결합합니다. 앞 hook이
+          deny한 action을 뒤 hook이 allow로 되돌릴 수 없으며, permission
+          prompt가 필요하다면 모든 제한 결과가 확정된 뒤 한 번만 사용자에게
+          보여줍니다.
+        </p>
+        <p className="leading-7">
+          hook이 arguments를 수정할 수 있게 설계했다면 수정된 action은 새로운
+          identity를 가져야 합니다. schema·domain validation과 permission을
+          처음부터 다시 통과시키지 않은 채 기존 approval을 재사용해서는 안
+          됩니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">훅 실행 중 세션 차단</h3>
-        <p>
-          훅이 실행되는 동안 <strong>세션 진행 차단</strong> — LLM 응답이 blocking되지 않도록 빠른 응답 필수<br />
-          Pre 훅: 2초 지연 → LLM이 도구 실행 응답 기다리는 동안 추가 지연<br />
-          Post 훅: 실행 결과 돌아오기 전 2초 지연<br />
-          → 훅이 많으면 체감 응답 속도 저하 — <strong>훅 개수 최소화 권장</strong>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Post hook의 실패는 원래 result와 분리한다
+        </h3>
+        <p className="leading-7">
+          audit 전송 실패 때문에 이미 성공한 file write를 실패로 바꾸면 모델이
+          같은 write를 다시 실행할 수 있습니다. 원래 tool result와 post hook
+          result를 별도 field로 반환하고, 필수 compliance hook이 실패했다면 다음
+          action을 block하거나 escalation하되 완료된 side effect는 그대로
+          보고합니다.
+        </p>
+        <p className="leading-7">
+          단순 telemetry hook은 명시적으로 fail-open할 수 있지만, secret
+          scanner나 release gate처럼 보안·배포를 막는 hook은 fail-closed해야
+          합니다. 이 선택은 hook code가 아니라 config의 criticality contract에
+          둡니다.
         </p>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Pre 훅의 남용 위험</p>
-          <p>
-            Pre 훅에 복잡한 로직을 넣으면 <strong>매 도구 호출마다 2초 지연</strong><br />
-            예: 50턴 대화, 도구 호출 평균 3개 = 150회 훅 실행 = 5분 지연
-          </p>
-          <p className="mt-2">
-            <strong>훅 작성 가이드라인</strong>:<br />
-            - Pre 훅은 &lt;500ms 응답 보장<br />
-            - 복잡한 판정은 Policy에 표현 (정적)<br />
-            - 네트워크 호출 금지 (타임아웃 위험)<br />
-            - DB 조회는 캐시 사용 필수
-          </p>
-          <p className="mt-2">
-            <strong>Post 훅은 상대적으로 자유</strong>: 경고만 출력, 지연은 UI에만 영향<br />
-            그럼에도 100ms 이내 권장 — 사용자 대기 최소화<br />
-            무거운 작업은 훅 내부에서 백그라운드 프로세스 spawn 후 즉시 return
-          </p>
-        </div>
-
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          재귀 호출과 중첩 깊이를 제한한다
+        </h3>
+        <p className="leading-7">
+          hook이 다시 tool을 호출하면 같은 hook이 재실행돼 무한 루프가 생길 수
+          있습니다. causal chain과 hook depth를 event에 넣고, 기본적으로 hook
+          process에서 시작된 내부 call은 동일 hook을 다시 호출하지 않게 합니다.
+          필요한 중첩은 명시적 allowlist와 작은 depth limit로만 허용합니다.
+        </p>
+        <p className="leading-7">
+          여러 hook은 config에 고정된 순서로 실행하되, 독립적인 read-only hook은
+          deadline 안에서 병렬화할 수 있습니다. 결과 결합은 completion order가
+          아니라 stable hook order를 사용합니다.
+        </p>
       </div>
     </section>
   );

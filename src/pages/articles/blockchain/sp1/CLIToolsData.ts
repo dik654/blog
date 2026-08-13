@@ -21,12 +21,32 @@ SP1_PROVER=cpu cargo run --release
 SP1_PROVER=cuda cargo run --release`;
 
 export const WORKFLOW_STEPS = [
-  { step: '1. 프로젝트 생성', cmd: 'cargo prove new', desc: 'program + script 템플릿 생성' },
-  { step: '2. Guest 코드 작성', cmd: 'program/src/main.rs', desc: 'sp1_zkvm::entrypoint!(main)' },
-  { step: '3. ELF 빌드', cmd: 'cargo prove build', desc: 'riscv32im 크로스 컴파일' },
-  { step: '4. 실행 테스트', cmd: 'client.execute()', desc: '증명 없이 빠른 결과 확인' },
-  { step: '5. 증명 생성', cmd: 'client.prove()', desc: 'Core/Compressed/Groth16 선택' },
-  { step: '6. 검증', cmd: 'client.verify()', desc: '로컬 또는 온체인 검증' },
+  {
+    step: "1. 프로젝트 생성",
+    cmd: "cargo prove new",
+    desc: "program + script 템플릿 생성",
+  },
+  {
+    step: "2. Guest 코드 작성",
+    cmd: "program/src/main.rs",
+    desc: "sp1_zkvm::entrypoint!(main)",
+  },
+  {
+    step: "3. ELF 빌드",
+    cmd: "cargo prove build",
+    desc: "riscv32im 크로스 컴파일",
+  },
+  {
+    step: "4. 실행 테스트",
+    cmd: "client.execute()",
+    desc: "증명 없이 빠른 결과 확인",
+  },
+  {
+    step: "5. 증명 생성",
+    cmd: "client.prove()",
+    desc: "Core/Compressed/Groth16 선택",
+  },
+  { step: "6. 검증", cmd: "client.verify()", desc: "로컬 또는 온체인 검증" },
 ];
 
 export const PROJECT_STRUCT_CODE = `# 프로젝트 구조
@@ -42,15 +62,47 @@ my-project/
 └── elf/               # 빌드된 RISC-V ELF 바이너리`;
 
 export const cliAnnotations = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: '도구체인 설치' },
-  { lines: [6, 9] as [number, number], color: 'emerald' as const, note: '프로젝트 생성' },
-  { lines: [11, 12] as [number, number], color: 'amber' as const, note: 'Guest 빌드' },
-  { lines: [14, 15] as [number, number], color: 'violet' as const, note: '실행 테스트' },
-  { lines: [17, 21] as [number, number], color: 'rose' as const, note: '증명 생성 (CPU/CUDA)' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "도구체인 설치",
+  },
+  {
+    lines: [6, 9] as [number, number],
+    color: "emerald" as const,
+    note: "프로젝트 생성",
+  },
+  {
+    lines: [11, 12] as [number, number],
+    color: "amber" as const,
+    note: "Guest 빌드",
+  },
+  {
+    lines: [14, 15] as [number, number],
+    color: "violet" as const,
+    note: "실행 테스트",
+  },
+  {
+    lines: [17, 21] as [number, number],
+    color: "rose" as const,
+    note: "증명 생성 (CPU/CUDA)",
+  },
 ];
 
 export const projectAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: 'Guest — zkVM 내부 실행 코드' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: 'Host — SDK + 증명 관리' },
-  { lines: [11, 11] as [number, number], color: 'amber' as const, note: '빌드 산출물 (ELF)' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "Guest — zkVM 내부 실행 코드",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "Host — SDK + 증명 관리",
+  },
+  {
+    lines: [11, 11] as [number, number],
+    color: "amber" as const,
+    note: "빌드 산출물 (ELF)",
+  },
 ];

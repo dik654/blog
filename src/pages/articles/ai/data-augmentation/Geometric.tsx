@@ -1,55 +1,48 @@
-import GeometricViz from './viz/GeometricViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import GeometricViz from "./viz/GeometricViz";
 
 export default function Geometric() {
   return (
     <section id="geometric" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">기하학적 변환: Flip, Rotate, Crop</h2>
-
+      <h2 className="mb-6 text-2xl font-bold">기하 변환에서는 pixel과 annotation이 같은 좌표계를 써야 합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          이미지 증강의 기본 — <strong>기하학적 변환</strong>(Geometric Transform)<br />
-          픽셀 값은 그대로 두고 위치만 변경. 물체의 본질적 특징은 유지하면서 위치·크기·방향 불변성을 학습
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Flip (반전)</h3>
-        <p>
-          <strong>Horizontal Flip</strong>(좌우 반전) — 가장 널리 사용되는 증강. p=0.5로 설정하면 50% 확률로 적용<br />
-          자연 이미지에서 "고양이의 왼쪽"과 "고양이의 오른쪽"은 동일한 의미<br />
-          <strong>Vertical Flip</strong>(상하 반전) — 항공·위성 이미지에서 유용. 일반 사진에서는 비현실적
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Rotation (회전)</h3>
-        <p>
-          허용 각도 범위가 핵심 — 얼굴 인식은 ±15°, 자연 이미지는 ±30°, 항공 사진은 0~360°<br />
-          각도가 너무 크면 가장자리에 빈 픽셀이 생긴다 — reflect(반사), constant(검정), wrap(반복) 중 선택<br />
-          border_mode에 따라 모델이 학습하는 패턴이 달라지므로 검증 성능을 확인
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Crop & Resize</h3>
-        <p>
-          <strong>RandomResizedCrop</strong> — ImageNet 학습의 표준 증강<br />
-          scale=(0.08, 1.0) 범위에서 랜덤 영역을 잘라내고 224×224로 복원<br />
-          작은 crop은 확대(zoom-in) 효과, 큰 crop은 미세 이동(shift) 효과
+          Flip, rotation, crop, affine transform은 위치·크기·방향이 달라져도 task의
+          의미가 유지된다는 가정을 넣습니다. Classification에서는 label 하나가
+          그대로일 수 있지만 detection의 box, segmentation mask, pose keypoint는
+          pixel과 똑같은 geometric map을 적용해야 합니다. Random parameter를
+          image와 annotation에 따로 뽑으면 눈으로는 그럴듯해도 target이 틀린
+          training pair가 됩니다.
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <GeometricViz />
-      </div>
+      <ExplainedFormula
+        question="Affine transform을 적용할 때 한 점과 bounding box 좌표를 어떻게 함께 옮길까?"
+        idea={<>회전·scale·shear를 2×2 matrix A에, 평행 이동을 vector t에 넣습니다. Box는 네 모서리를 모두 같은 식으로 옮긴 뒤 transformed points를 감싸는 새 axis-aligned 범위를 계산합니다.</>}
+        formula={String.raw`\begin{aligned}
+p' &= Ap+t,\qquad p=\begin{bmatrix}u\\v\end{bmatrix} \\
+B' &= \operatorname{bbox}\!\left(\{Ap_j+t\}_{j=1}^{4}\right)
+\end{aligned}`}
+        terms={[
+          { symbol: "p=(u,v)", name: "image point", description: "Pixel·keypoint·box corner의 원래 image coordinates입니다." },
+          { symbol: "A", name: "linear geometric map", description: "Rotation·scale·shear를 조합한 2×2 matrix입니다." },
+          { symbol: "t", name: "translation", description: "Crop origin과 canvas 이동을 반영하는 2D vector입니다." },
+          { symbol: "B′", name: "transformed box", description: "변환된 네 corner를 감싸는 axis-aligned bounding box입니다." },
+        ]}
+        assumptions={["Image와 annotation에 동일한 A와 t를 적용합니다.", "Coordinate convention·crop origin·inclusive/exclusive boundary를 library 설정과 맞춥니다."]}
+        interpretation="회전한 box는 원래 box의 두 점만 옮겨서는 구할 수 없습니다. 네 corner를 모두 옮기고 crop 밖 좌표를 clip한 뒤 남은 object area 기준을 검사해야 합니다."
+      />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Affine & Elastic</h3>
+      <div className="not-prose my-8"><GeometricViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>변환 범위는 camera와 object 통계에서 정합니다</h3>
         <p>
-          <strong>Affine Transform</strong> — translate, scale, rotate, shear를 하나의 2×3 행렬로 통합<br />
-          개별 변환을 따로 적용하는 것보다 연산 효율이 높고, 변환 조합의 일관성을 보장<br />
-          <strong>Elastic Deformation</strong> — 의료 영상에서 특히 유효한 비정형 왜곡<br />
-          가우시안 필터로 부드러운 변위 필드를 생성, alpha와 sigma 두 파라미터로 강도를 제어
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 증강 강도 판단법</p>
-        <p className="text-sm">
-          Train accuracy가 높은데 Val accuracy가 낮으면(갭 {'>'} 5%) → 증강 강도를 높일 시점<br />
-          반대로 Train accuracy 자체가 낮으면 → 증강이 너무 강해서 학습이 어려운 상태.
-          증강 확률(p)이나 범위를 줄여야 한다
+          모든 task에 통하는 rotation angle이나 crop ratio는 없습니다. 배포 camera
+          pose, horizon, object size와 위치 분포에서 plausible range를 정하고 작은
+          object가 crop 밖으로 사라지는 비율, interpolation blur, padding artifact를
+          측정합니다. 의료 영상에서는 좌우 표기와 anatomical orientation처럼
+          pixel 외 metadata까지 함께 확인해야 합니다.
         </p>
       </div>
     </section>

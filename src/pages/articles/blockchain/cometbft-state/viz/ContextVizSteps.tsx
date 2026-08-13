@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ModuleBox, DataBox, AlertBox, ActionBox } from '@/components/viz/boxes';
+import { ModuleBox, DataBox, AlertBox, ActionBox, AnnotationBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 export function Step0() {
@@ -10,14 +10,9 @@ export function Step0() {
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
       <ModuleBox x={200} y={20} w={90} h={48} label="State DB" sub="영구 저장" color={C.db} />
     </motion.g>
-    <motion.text x={345} y={38} fontSize={10} fill={C.err}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-      {'없으면?'}
-    </motion.text>
-    <motion.text x={345} y={52} fontSize={10} fill="var(--muted-foreground)"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-      크래시 → 제네시스부터
-    </motion.text>
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
+      <AnnotationBox x={315} y={14} w={100} h={62} label="없으면 크래시 후 제네시스부터 다시 처리" color={C.err} eyebrow="State DB 부재" />
+    </motion.g>
     <text x={210} y={95} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
       재시작 시 마지막 확정 블록부터 이어서 합의
     </text>
@@ -81,4 +76,3 @@ export function Step3() {
     </motion.text>
   </g>);
 }
-

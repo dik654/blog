@@ -17,9 +17,21 @@ bind_ip = "0.0.0.0"
 bind_port = 8080`;
 
 export const CONFIG_ANNOTATIONS = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: '노드 모드 & 데이터 경로' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: '가십 네트워크 설정' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'HTTP API 설정' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "노드 모드 & 데이터 경로",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "가십 네트워크 설정",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "HTTP API 설정",
+  },
 ];
 
 export const PERFORMANCE_CODE = `# 성능 최적화 설정
@@ -39,8 +51,16 @@ chunk_request_timeout = "15s"           # 청크 요청 타임아웃
 cache_clean_lag = 2            # 캐시 정리 지연 블록 수`;
 
 export const PERFORMANCE_ANNOTATIONS = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: '패킹 성능 설정' },
-  { lines: [9, 12] as [number, number], color: 'emerald' as const, note: '데이터 동기화 튜닝' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "패킹 성능 설정",
+  },
+  {
+    lines: [9, 12] as [number, number],
+    color: "emerald" as const,
+    note: "데이터 동기화 튜닝",
+  },
 ];
 
 export const METRICS_CODE = `// 메트릭 구조체 (irys-metrics)
@@ -64,7 +84,19 @@ pub struct ChainMetrics {
 // irys_peer_count 8`;
 
 export const METRICS_ANNOTATIONS = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: 'VDF 성능 메트릭' },
-  { lines: [8, 14] as [number, number], color: 'emerald' as const, note: '블록체인 상태 메트릭' },
-  { lines: [16, 19] as [number, number], color: 'amber' as const, note: 'Prometheus 형식 내보내기' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "VDF 성능 메트릭",
+  },
+  {
+    lines: [8, 14] as [number, number],
+    color: "emerald" as const,
+    note: "블록체인 상태 메트릭",
+  },
+  {
+    lines: [16, 19] as [number, number],
+    color: "amber" as const,
+    note: "Prometheus 형식 내보내기",
+  },
 ];

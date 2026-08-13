@@ -12,8 +12,16 @@ struct RmpEntry {
 // → 메모리 재매핑 공격(Confused Deputy Attack) 원천 차단`;
 
 export const rmpEntryAnnotations = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: '페이지 소유권 메타데이터' },
-  { lines: [9, 11] as [number, number], color: 'amber' as const, note: '재매핑 공격 방어 메커니즘' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "페이지 소유권 메타데이터",
+  },
+  {
+    lines: [9, 11] as [number, number],
+    color: "amber" as const,
+    note: "재매핑 공격 방어 메커니즘",
+  },
 ];
 
 export const vmplCode = `// VMPL 사용 시나리오 예
@@ -35,8 +43,16 @@ bitflags! {
 // → 계층적 privilege delegation`;
 
 export const vmplAnnotations = [
-  { lines: [2, 4] as [number, number], color: 'emerald' as const, note: 'VMPL 계층별 역할' },
-  { lines: [7, 14] as [number, number], color: 'violet' as const, note: '비트 마스크 권한 정의' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "emerald" as const,
+    note: "VMPL 계층별 역할",
+  },
+  {
+    lines: [7, 14] as [number, number],
+    color: "violet" as const,
+    note: "비트 마스크 권한 정의",
+  },
 ];
 
 export const measurementCode = `// 게스트 런치 다이제스트 축적
@@ -48,6 +64,14 @@ for each page in guest_image:
 // → 원격 verifier가 예상 이미지와 비교하여 무결성 검증`;
 
 export const measurementAnnotations = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: 'SHA-384 해시 체인 축적' },
-  { lines: [6, 7] as [number, number], color: 'amber' as const, note: '원격 검증에 사용' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "SHA-384 해시 체인 축적",
+  },
+  {
+    lines: [6, 7] as [number, number],
+    color: "amber" as const,
+    note: "원격 검증에 사용",
+  },
 ];

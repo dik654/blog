@@ -1,11 +1,31 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const heads = [
-  { name: 'Head 1', focus: '문법적 관계', color: '#3b82f6', desc: '주어-동사, 수식어-피수식어 관계를 포착' },
-  { name: 'Head 2', focus: '의미적 유사성', color: '#10b981', desc: '의미가 비슷한 토큰 간 높은 가중치 부여' },
-  { name: 'Head 3', focus: '위치 기반 패턴', color: '#f59e0b', desc: '인접한 토큰에 높은 가중치를 부여하는 패턴' },
-  { name: 'Head 4', focus: '장거리 의존성', color: '#ef4444', desc: '문장 시작과 끝, 멀리 떨어진 토큰 간 관계 포착' },
+  {
+    name: "Head 1",
+    focus: "문법적 관계",
+    color: "#3b82f6",
+    desc: "주어-동사, 수식어-피수식어 관계를 포착",
+  },
+  {
+    name: "Head 2",
+    focus: "의미적 유사성",
+    color: "#10b981",
+    desc: "의미가 비슷한 토큰 간 높은 가중치 부여",
+  },
+  {
+    name: "Head 3",
+    focus: "위치 기반 패턴",
+    color: "#f59e0b",
+    desc: "인접한 토큰에 높은 가중치를 부여하는 패턴",
+  },
+  {
+    name: "Head 4",
+    focus: "장거리 의존성",
+    color: "#ef4444",
+    desc: "문장 시작과 끝, 멀리 떨어진 토큰 간 관계 포착",
+  },
 ];
 
 export default function MultiHeadDemo() {
@@ -23,9 +43,9 @@ export default function MultiHeadDemo() {
             onClick={() => setActiveHead(i)}
             className="rounded-lg border p-3 text-center text-sm font-medium cursor-pointer"
             animate={{
-              borderColor: activeHead === i ? head.color : '#e5e5e5',
+              borderColor: activeHead === i ? head.color : "#e5e5e5",
               backgroundColor:
-                activeHead === i ? `${head.color}10` : 'transparent',
+                activeHead === i ? `${head.color}10` : "transparent",
             }}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}

@@ -1,33 +1,80 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const C = { chain: '#6366f1', ok: '#10b981' };
+const C = { chain: "#6366f1", ok: "#10b981" };
 
 function FinalityViz() {
   const data = [
-    { confirms: 1, minutes: '10분', prob: '번복 가능' },
-    { confirms: 3, minutes: '30분', prob: '거의 안전' },
-    { confirms: 6, minutes: '60분', prob: '사실상 확정' },
+    { confirms: 1, minutes: "10분", prob: "번복 가능" },
+    { confirms: 3, minutes: "30분", prob: "거의 안전" },
+    { confirms: 6, minutes: "60분", prob: "사실상 확정" },
   ];
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">Bitcoin 확인 수와 안전성</p>
-      <svg viewBox="0 0 420 100" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        Bitcoin 확인 수와 안전성
+      </p>
+      <svg
+        viewBox="0 0 420 100"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
         {data.map((d, i) => (
-          <motion.g key={d.confirms} initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15 }}>
-            <rect x={15 + i * 135} y={10} width={115} height={50} rx={8}
-              fill="var(--card)" stroke={C.chain} strokeWidth={0.5} />
-            <text x={72 + i * 135} y={30} textAnchor="middle"
-              fontSize={12} fontWeight={700} fill={C.chain}>{d.confirms} confirm</text>
-            <text x={72 + i * 135} y={43} textAnchor="middle"
-              fontSize={10} fill="var(--muted-foreground)">{d.minutes}</text>
-            <text x={72 + i * 135} y={55} textAnchor="middle"
-              fontSize={10} fill={C.ok}>{d.prob}</text>
+          <motion.g
+            key={d.confirms}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.15 }}
+          >
+            <rect
+              x={15 + i * 135}
+              y={10}
+              width={115}
+              height={50}
+              rx={8}
+              fill="var(--card)"
+              stroke={C.chain}
+              strokeWidth={0.5}
+            />
+            <text
+              x={72 + i * 135}
+              y={30}
+              textAnchor="middle"
+              fontSize={12}
+              fontWeight={700}
+              fill={C.chain}
+            >
+              {d.confirms} confirm
+            </text>
+            <text
+              x={72 + i * 135}
+              y={43}
+              textAnchor="middle"
+              fontSize={10}
+              fill="var(--muted-foreground)"
+            >
+              {d.minutes}
+            </text>
+            <text
+              x={72 + i * 135}
+              y={55}
+              textAnchor="middle"
+              fontSize={10}
+              fill={C.ok}
+            >
+              {d.prob}
+            </text>
           </motion.g>
         ))}
-        <motion.text x={210} y={82} textAnchor="middle" fontSize={11}
-          fill={C.chain} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}>
+        <motion.text
+          x={210}
+          y={82}
+          textAnchor="middle"
+          fontSize={11}
+          fill={C.chain}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
           💡 기하급수적으로 안전성 증가 — 하지만 절대적 확정은 아님
         </motion.text>
       </svg>
@@ -43,15 +90,20 @@ export default function Finality() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Nakamoto 합의는 <strong>확률적 최종성</strong> — 시간이 지날수록 번복 확률이 기하급수 감소.<br />
-          k confirmation 후 reorg 확률: (q/p)^k, q=공격자, p=정직.<br />
+          Nakamoto 합의는 <strong>확률적 최종성</strong> — 시간이 지날수록 번복
+          확률이 기하급수 감소.
+          <br />
+          k confirmation 후 reorg 확률: (q/p)^k, q=공격자, p=정직.
+          <br />
           Bitcoin은 k=6 (60분) 관례 — 99.9%+ 안전.
         </p>
 
         {/* ── 수학적 분석 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Reorg 확률 수학 분석</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Reorg 확률 수학 분석
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Nakamoto whitepaper Section 11:
+          {`// Nakamoto whitepaper Section 11:
 // Attack scenario 분석
 
 // 변수:
@@ -103,15 +155,18 @@ export default function Finality() {
 // - 25%+ 해시파워로 효율 극대화`}
         </pre>
         <p className="leading-7">
-          reorg 확률 = <strong>(q/p)^z</strong> — q는 공격자, p는 정직, z는 confirmation.<br />
-          z=6, q=10% → 0.04% — Bitcoin 기본값의 근거.<br />
+          reorg 확률 = <strong>(q/p)^z</strong> — q는 공격자, p는 정직, z는
+          confirmation.
+          <br />
+          z=6, q=10% → 0.04% — Bitcoin 기본값의 근거.
+          <br />
           공격자 45%+: z=6도 58% 성공 — 51% 근접 시 매우 위험.
         </p>
 
         {/* ── 실제 reorg 사례 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">실제 reorg 사례</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bitcoin reorg 역사:
+          {`// Bitcoin reorg 역사:
 //
 // 2010-08: block #74638 reorg
 // - integer overflow 버그 exploit
@@ -160,15 +215,19 @@ export default function Finality() {
 // - Finality는 결코 "절대적"이지 않음 (확률적)`}
         </pre>
         <p className="leading-7">
-          실제 reorg는 <strong>해시파워 약한 체인</strong>에서 빈번.<br />
-          ETC는 51% 공격 이후 Coinbase가 conf 80,000 요구 (24시간+).<br />
+          실제 reorg는 <strong>해시파워 약한 체인</strong>에서 빈번.
+          <br />
+          ETC는 51% 공격 이후 Coinbase가 conf 80,000 요구 (24시간+).
+          <br />
           exchange별 confirmation 기준이 실무적 "finality" 정의.
         </p>
 
         {/* ── Hybrid approach ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Hybrid: longest-chain + BFT finality</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Hybrid: longest-chain + BFT finality
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 현대 블록체인의 하이브리드:
+          {`// 현대 블록체인의 하이브리드:
 
 // Ethereum 2.0 (Casper FFG + LMD-GHOST):
 //
@@ -224,15 +283,21 @@ export default function Finality() {
 // - 합의 단축`}
         </pre>
         <p className="leading-7">
-          Ethereum 2.0 = <strong>LMD-GHOST(liveness) + Casper FFG(safety)</strong>.<br />
-          12초 block + 12.8분 finality — 두 세계의 장점 결합.<br />
+          Ethereum 2.0 ={" "}
+          <strong>LMD-GHOST(liveness) + Casper FFG(safety)</strong>.<br />
+          12초 block + 12.8분 finality — 두 세계의 장점 결합.
+          <br />
           미래는 single-slot finality — 매 slot이 즉시 finalized.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 확률적 vs 결정론적 finality 선택</strong> — 블록체인 규모 trade-off.<br />
-          확률적: 수백만 노드 가능, but 긴 대기.<br />
-          결정론적: 수백 노드 한계, but 즉시 finalize.<br />
+          <strong>💡 확률적 vs 결정론적 finality 선택</strong> — 블록체인 규모
+          trade-off.
+          <br />
+          확률적: 수백만 노드 가능, but 긴 대기.
+          <br />
+          결정론적: 수백 노드 한계, but 즉시 finalize.
+          <br />
           Ethereum 2.0은 둘 결합 — 대규모 + 빠른 finality.
         </p>
       </div>

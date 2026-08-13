@@ -1,22 +1,32 @@
-import LockingViz from './viz/LockingViz';
-import { CitationBlock } from '@/components/ui/citation';
+import LockingViz from "./viz/LockingViz";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function Locking() {
   return (
     <section id="locking" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Polka 잠금 메커니즘</h2>
-      <div className="not-prose mb-8"><LockingViz /></div>
+      <div className="not-prose mb-8">
+        <LockingViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <CitationBlock source="Buchman — Tendermint 논문 §2.3" citeKey={2} type="paper">
+        <CitationBlock
+          source="Buchman — Tendermint 논문 §2.3"
+          citeKey={2}
+          type="paper"
+        >
           <p className="italic">
-            "Once a validator sees a polka for block B, it locks on B and will only precommit B in future rounds until it sees a polka for a different block at a higher round."
+            "Once a validator sees a polka for block B, it locks on B and will
+            only precommit B in future rounds until it sees a polka for a
+            different block at a higher round."
           </p>
         </CitationBlock>
 
         {/* ── Locking 필요성 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">왜 Locking이 필요한가</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          왜 Locking이 필요한가
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Locking 없는 시나리오 (safety violation):
+          {`// Locking 없는 시나리오 (safety violation):
 //
 // Round 0:
 //   proposer A가 block B1 제안
@@ -65,14 +75,17 @@ export default function Locking() {
         </pre>
         <p className="leading-7">
           Locking의 목적: <strong>view change 간 safety 유지</strong>.<br />
-          이전 round의 polka를 다음 round에서도 존중.<br />
+          이전 round의 polka를 다음 round에서도 존중.
+          <br />
           PBFT의 "prepared" 상태와 본질적으로 동일.
         </p>
 
         {/* ── Unlock 조건 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Unlock 조건 (Liveness)</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Unlock 조건 (Liveness)
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Unlock 없으면 deadlock 가능:
+          {`// Unlock 없으면 deadlock 가능:
 //
 // Round 0:
 //   validator A, B, C: lock on B1
@@ -122,14 +135,15 @@ export default function Locking() {
         </pre>
         <p className="leading-7">
           Unlock = <strong>더 최근 polka 증거 봤을 때</strong>.<br />
-          pol_round ≥ lockedRound이면 이전 polka 존재 증거.<br />
+          pol_round ≥ lockedRound이면 이전 polka 존재 증거.
+          <br />
           proposer가 POL로 증명 제공 → 다른 validator unlock 허용.
         </p>
 
         {/* ── Formal proof sketch ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Safety 증명 sketch</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Safety: 같은 height에 두 다른 block commit 불가능
+          {`// Safety: 같은 height에 두 다른 block commit 불가능
 //
 // 가정:
 // round r1에서 block B1 commit
@@ -174,7 +188,8 @@ export default function Locking() {
         </pre>
         <p className="leading-7">
           Safety 증명 핵심: <strong>2/3+ lock은 과반수 고정</strong>.<br />
-          나머지 1/3은 polka 형성 불가 → 다른 block commit 불가.<br />
+          나머지 1/3은 polka 형성 불가 → 다른 block commit 불가.
+          <br />
           Tendermint safety의 수학적 기반.
         </p>
 
@@ -183,37 +198,44 @@ export default function Locking() {
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-1">잠금 획득</p>
             <p className="text-sm">
-              +2/3 Prevote(B) 수신(Polka) 시 블록 B에 잠금.<br />
+              +2/3 Prevote(B) 수신(Polka) 시 블록 B에 잠금.
+              <br />
               lockedRound = 현재 라운드, lockedValue = B
             </p>
           </div>
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-1">잠금 해제</p>
             <p className="text-sm">
-              더 높은 라운드에서 다른 블록 B'에 대한 Polka 관찰 시.<br />
+              더 높은 라운드에서 다른 블록 B'에 대한 Polka 관찰 시.
+              <br />
               lockedRound과 validRound 비교로 안전하게 전환
             </p>
           </div>
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-1">Safety 보장</p>
             <p className="text-sm">
-              잠긴 노드는 해당 블록만 Precommit 가능.<br />
+              잠긴 노드는 해당 블록만 Precommit 가능.
+              <br />
               2/3 이상이 같은 블록에 잠기면 분기 불가능
             </p>
           </div>
           <div className="rounded-lg border p-4">
             <p className="font-semibold text-sm mb-1">Liveness 보장</p>
             <p className="text-sm">
-              잠금 해제가 가능하므로 교착 상태 없음.<br />
+              잠금 해제가 가능하므로 교착 상태 없음.
+              <br />
               GST 이후 정직 제안자가 잠긴 블록 재제안
             </p>
           </div>
         </div>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 Locking vs Unlock 균형</strong> — safety/liveness 절충.<br />
-          Lock이 너무 강하면 deadlock (liveness 위협).<br />
-          Lock이 너무 약하면 fork (safety 위협).<br />
+          <strong>💡 Locking vs Unlock 균형</strong> — safety/liveness 절충.
+          <br />
+          Lock이 너무 강하면 deadlock (liveness 위협).
+          <br />
+          Lock이 너무 약하면 fork (safety 위협).
+          <br />
           POL round 메커니즘이 둘 다 보장 — Tendermint의 핵심 기여.
         </p>
       </div>

@@ -1,18 +1,34 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const runMsgsCodeRefs: Record<string, CodeRef> = {
-  'abci-runmsgs': {
-    path: 'baseapp/baseapp.go',
-    lang: 'go',
+  "abci-runmsgs": {
+    path: "baseapp/baseapp.go",
+    lang: "go",
     highlight: [1, 32],
     desc: `runMsgs는 트랜잭션 내 메시지들을 순차 실행합니다.
 MsgServiceRouter로 각 Msg 타입에 맞는 핸들러를 찾아 호출하고,
 결과 이벤트와 응답을 수집합니다.`,
     annotations: [
-      { lines: [1, 4], color: 'sky', note: '함수 시그니처 — Context, Msgs, 실행모드를 받음' },
-      { lines: [6, 12], color: 'emerald', note: '메시지 순회 — Finalize/Simulate 모드에서만 실행' },
-      { lines: [14, 18], color: 'amber', note: 'MsgServiceRouter에서 핸들러 조회 → 모듈 MsgServer 호출' },
-      { lines: [20, 32], color: 'violet', note: '이벤트 수집 + 응답 직렬화 → sdk.Result 조립' },
+      {
+        lines: [1, 4],
+        color: "sky",
+        note: "함수 시그니처 — Context, Msgs, 실행모드를 받음",
+      },
+      {
+        lines: [6, 12],
+        color: "emerald",
+        note: "메시지 순회 — Finalize/Simulate 모드에서만 실행",
+      },
+      {
+        lines: [14, 18],
+        color: "amber",
+        note: "MsgServiceRouter에서 핸들러 조회 → 모듈 MsgServer 호출",
+      },
+      {
+        lines: [20, 32],
+        color: "violet",
+        note: "이벤트 수집 + 응답 직렬화 → sdk.Result 조립",
+      },
     ],
     code: `func (app *BaseApp) runMsgs(
 	ctx sdk.Context, msgs []sdk.Msg,

@@ -1,21 +1,21 @@
 export const PROTOCOLS = [
   {
-    name: 'iroh-blobs',
-    alpn: 'iroh-blobs/0',
-    color: '#6366f1',
-    desc: '콘텐츠 주소(Blake3 해시) 기반 블롭 전송. 청크 단위 병렬 다운로드, 부분 검증. BitTorrent와 유사하지만 QUIC 위에서 동작.',
+    name: "iroh-blobs",
+    alpn: "iroh-blobs/0",
+    color: "#6366f1",
+    desc: "콘텐츠 주소(Blake3 해시) 기반 블롭 전송. 청크 단위 병렬 다운로드, 부분 검증. BitTorrent와 유사하지만 QUIC 위에서 동작.",
   },
   {
-    name: 'iroh-gossip',
-    alpn: 'iroh-gossip/0',
-    color: '#10b981',
-    desc: 'GossipSub 스타일 메시지 브로드캐스트. 주제(topic) 기반 구독. 검증자 알림·이벤트 전파에 활용.',
+    name: "iroh-gossip",
+    alpn: "iroh-gossip/0",
+    color: "#10b981",
+    desc: "GossipSub 스타일 메시지 브로드캐스트. 주제(topic) 기반 구독. 검증자 알림·이벤트 전파에 활용.",
   },
   {
-    name: 'iroh-docs',
-    alpn: 'iroh-docs/0',
-    color: '#f59e0b',
-    desc: '멀티-사용자 키-값 문서 동기화. Automerge CRDT 기반. 오프라인 편집 후 재연결 시 자동 병합.',
+    name: "iroh-docs",
+    alpn: "iroh-docs/0",
+    color: "#f59e0b",
+    desc: "멀티-사용자 키-값 문서 동기화. Automerge CRDT 기반. 오프라인 편집 후 재연결 시 자동 병합.",
   },
 ];
 

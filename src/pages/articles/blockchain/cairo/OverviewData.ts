@@ -18,8 +18,16 @@ pub struct RootDatabase {
 }`;
 
 export const PIPELINE_ANNOTATIONS = [
-  { lines: [4, 8] as [number, number], color: 'sky' as const, note: '5개 컴파일 단계 (Database Group)' },
-  { lines: [14, 17] as [number, number], color: 'emerald' as const, note: 'Salsa 쿼리 DB: 증분 컴파일 지원' },
+  {
+    lines: [4, 8] as [number, number],
+    color: "sky" as const,
+    note: "5개 컴파일 단계 (Database Group)",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "emerald" as const,
+    note: "Salsa 쿼리 DB: 증분 컴파일 지원",
+  },
 ];
 
 export const TYPE_CODE = `// Cairo 핵심 타입 시스템
@@ -39,7 +47,19 @@ struct Point { x: felt252, y: felt252 }
 fn swap<T, +Drop<T>>(ref a: T, ref b: T) { ... }`;
 
 export const TYPE_ANNOTATIONS = [
-  { lines: [2, 2] as [number, number], color: 'sky' as const, note: 'felt252: 251비트 소수체 원소' },
-  { lines: [4, 8] as [number, number], color: 'emerald' as const, note: '재귀 함수 — 가스 카운팅 자동 삽입' },
-  { lines: [11, 12] as [number, number], color: 'amber' as const, note: 'Copy/Drop 트레이트 = 소유권 제어' },
+  {
+    lines: [2, 2] as [number, number],
+    color: "sky" as const,
+    note: "felt252: 251비트 소수체 원소",
+  },
+  {
+    lines: [4, 8] as [number, number],
+    color: "emerald" as const,
+    note: "재귀 함수 — 가스 카운팅 자동 삽입",
+  },
+  {
+    lines: [11, 12] as [number, number],
+    color: "amber" as const,
+    note: "Copy/Drop 트레이트 = 소유권 제어",
+  },
 ];

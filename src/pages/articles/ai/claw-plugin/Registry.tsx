@@ -1,239 +1,123 @@
-import RegistryViz from './viz/RegistryViz';
+import RegistryViz from "./viz/RegistryViz";
+
+const validationRows = [
+  ["Path", "manifest와 entrypoint의 canonical path가 plugin root 안에 있음"],
+  ["Schema", "manifest·tool schema·protocol version이 지원 범위와 맞음"],
+  ["Artifact", "digest와 선택적 signature가 설치 기록과 일치함"],
+  ["Capability", "요청한 effect와 resource가 host policy 안에 있음"],
+  ["Collision", "plugin·tool·hook namespace 충돌이 명시적으로 해결됨"],
+];
 
 export default function Registry() {
   return (
     <section id="registry" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">PluginRegistry — 발견·등록·활성화</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        발견·검증·활성화를 서로 다른 단계로 둔다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          검색 경로에서 manifest를 찾았다는 사실은 실행 자격이 생겼다는 뜻이
+          아닙니다. Discovery는 후보와 출처를 수집하는 read-only 단계이고,
+          verification은 artifact와 호환성을 검사하며, activation은 사용자가
+          승인한 exact artifact를 runtime registry에 공개하는 단계입니다.
+        </p>
 
         <RegistryViz />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">플러그인 발견 경로</h3>
-        <div className="not-prose my-4 space-y-2">
-          <div className="flex items-center gap-3 bg-muted/50 border border-border rounded-lg p-3">
-            <span className="text-xs font-bold bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 px-2 py-0.5 rounded">3순위</span>
-            <div>
-              <code className="text-sm">/etc/claw/plugins/</code>
-              <span className="text-sm text-muted-foreground ml-2">시스템 전역 (관리자 설치)</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 bg-muted/50 border border-border rounded-lg p-3">
-            <span className="text-xs font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded">2순위</span>
-            <div>
-              <code className="text-sm">~/.claw/plugins/</code>
-              <span className="text-sm text-muted-foreground ml-2">사용자 홈 (개인 설치)</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 bg-muted/50 border border-border rounded-lg p-3">
-            <span className="text-xs font-bold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">1순위</span>
-            <div>
-              <code className="text-sm">&lt;workspace&gt;/.claw/plugins/</code>
-              <span className="text-sm text-muted-foreground ml-2">프로젝트 로컬 (팀 공유)</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 bg-muted/30 border border-dashed border-border rounded-lg p-3">
-            <span className="text-xs font-bold bg-muted text-muted-foreground px-2 py-0.5 rounded">추가</span>
-            <div>
-              <span className="text-sm text-muted-foreground">settings.json의 <code className="text-xs bg-muted px-1 py-0.5 rounded">plugin_paths</code> 배열로 커스텀 경로 지정</span>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          검색 우선순위보다 출처를 보존한다
+        </h3>
         <p>
-          같은 이름의 플러그인이 여러 경로에 있으면 프로젝트 로컬이 우선<br />
-          팀 협업 시: 프로젝트 로컬 경로에 커밋된 플러그인을 팀 전체가 공유
+          system·user·workspace 경로를 둘 수는 있지만 같은 이름이 나오면 높은
+          우선순위가 조용히 덮어쓰게 해서는 안 됩니다. 특히 clone한 저장소의
+          plugin이 사용자 plugin을 shadow하면 공급망 공격으로 이어질 수
+          있습니다. registry key에는 canonical plugin ID와 publisher를 사용하고,
+          여러 후보가 충돌하면 경로·version·digest를 보여준 뒤 하나를 명시적으로
+          선택합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">PluginRegistry 구조</h3>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border text-sm font-semibold">PluginRegistry</div>
-            <div className="p-4 space-y-2 text-sm">
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">plugins</code>: <code className="text-xs">HashMap&lt;String, Plugin&gt;</code> — name으로 조회</div>
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">search_paths</code>: <code className="text-xs">Vec&lt;PathBuf&gt;</code> — 검색 경로 목록</div>
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">trusted_plugins</code>: <code className="text-xs">HashSet&lt;String&gt;</code> — 이름 기반 신뢰 리스트</div>
-            </div>
-          </div>
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-green-50 dark:bg-green-950/30 px-4 py-2 border-b border-border text-sm font-semibold">Plugin</div>
-            <div className="p-4 space-y-2 text-sm">
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">manifest</code>: <code className="text-xs">PluginManifest</code> — 파싱된 매니페스트</div>
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">plugin_dir</code>: <code className="text-xs">PathBuf</code> — 플러그인 루트 디렉토리</div>
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">enabled</code>: <code className="text-xs">bool</code> — 활성화 상태</div>
-              <div><code className="text-xs bg-muted px-1 py-0.5 rounded">last_used</code>: <code className="text-xs">Option&lt;DateTime&lt;Utc&gt;&gt;</code> — 마지막 사용 시간</div>
-            </div>
-          </div>
+        <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
+          {[
+            [
+              "System",
+              "관리자가 배포한 후보이며 signer와 정책으로 신뢰를 표현합니다.",
+            ],
+            [
+              "User",
+              "사용자가 설치한 후보지만 이름만으로 자동 활성화하지 않습니다.",
+            ],
+            [
+              "Workspace",
+              "팀과 공유할 수 있어도 checkout만으로 실행 권한은 얻지 않습니다.",
+            ],
+          ].map(([title, description]) => (
+            <section key={title} className="rounded-2xl border bg-card p-4">
+              <h4 className="text-sm font-bold">{title}</h4>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {description}
+              </p>
+            </section>
+          ))}
         </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">discover() — 전체 경로 스캔</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          코드를 실행하기 전에 정적으로 검증한다
+        </h3>
         <p>
-          <code>discover()</code>는 <code>search_paths</code> 전체를 순회하며 플러그인을 발견.
+          verification은 plugin을 실행해 “정상인지 물어보는” 단계가 아닙니다.
+          manifest parsing, symlink를 해소한 path boundary, digest, signature,
+          API compatibility와 namespace collision을 부수 효과 없이 확인해야
+          합니다. 지원하지 않는 필드는 무시하기보다 version 정책에 따라
+          거부하거나 명시적인 warning을 남깁니다.
         </p>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border text-sm font-semibold">discover() 스캔 절차</div>
-          <div className="p-4 space-y-2">
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">1</span>
-              <p className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">search_paths</code> 순회 — 디렉토리가 아니면 스킵</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">2</span>
-              <p className="text-sm">각 <strong>서브디렉토리</strong>를 <code className="text-xs bg-muted px-1 py-0.5 rounded">read_dir</code>로 순회</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">3</span>
-              <p className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">plugin-manifest.json</code> 존재 확인 — 없으면 플러그인 아닌 디렉토리로 간주</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center">4</span>
-              <p className="text-sm"><code className="text-xs bg-muted px-1 py-0.5 rounded">load_from_dir</code> 성공 시 <code className="text-xs bg-muted px-1 py-0.5 rounded">try_register</code> 호출, 실패 시 로그 + 스킵</p>
-            </div>
-          </div>
-        </div>
-        <p>
-          로드 실패한 플러그인은 로그 + 스킵 — 전체 시스템 중단 방지
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">try_register() — 등록 시도</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border text-sm font-semibold">try_register() 3단계</div>
-          <div className="p-4 space-y-3">
-            <div className="bg-muted/30 rounded-lg p-3">
-              <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">1. 이름 충돌 확인</div>
-              <p className="text-sm text-muted-foreground">
-                같은 이름 플러그인 존재 시 <code className="text-xs bg-muted px-1 py-0.5 rounded">Version::parse</code>로 semver 비교 — 더 높은 버전이 교체. 낮으면 기존 유지.
-              </p>
-            </div>
-            <div className="bg-muted/30 rounded-lg p-3">
-              <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">2. 도구 이름 충돌 (ToolProvider만)</div>
-              <p className="text-sm text-muted-foreground">
-                <code className="text-xs bg-muted px-1 py-0.5 rounded">has_tool_name_conflict</code>로 빌트인 40개 + 다른 플러그인 도구명과 중복 검사 — 충돌 시 에러
-              </p>
-            </div>
-            <div className="bg-muted/30 rounded-lg p-3">
-              <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">3. HashMap 등록</div>
-              <p className="text-sm text-muted-foreground">
-                <code className="text-xs bg-muted px-1 py-0.5 rounded">plugins.insert(name, Plugin {"{"} ... {"}"})</code> — trusted_plugins 리스트에 있으면 <code className="text-xs bg-muted px-1 py-0.5 rounded">enabled: true</code>
-              </p>
-            </div>
-          </div>
-        </div>
-        <p>
-          semver 비교: <code>0.2.1</code> vs <code>0.3.0</code> → 0.3.0 승리
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">신뢰 기반 자동 활성화</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border text-sm font-semibold">settings.json — trusted_plugins</div>
-          <div className="p-4">
-            <p className="text-sm mb-3">
-              <code className="text-xs bg-muted px-1 py-0.5 rounded">is_trusted(name)</code>: <code className="text-xs">trusted_plugins.contains(name)</code>로 이름 기반 판별
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                company-linter
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                project-context
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                그 외 → 비활성
-              </span>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>opt-in 모델</strong>: 기본적으로 모든 플러그인 비활성<br />
-          신규 플러그인 설치 시: 발견됨 → 목록 표시 → 사용자 승인 → 리스트 추가 → 활성화
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">활성화 흐름 — enable()</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border text-sm font-semibold">enable() 3단계 활성화</div>
-          <div className="p-4 space-y-3">
-            <div className="bg-muted/30 rounded-lg p-3">
-              <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">1. 해시 검증</div>
-              <p className="text-sm text-muted-foreground">
-                <code className="text-xs bg-muted px-1 py-0.5 rounded">compute_plugin_hash</code>로 SHA-256 산출 후 매니페스트의 <code className="text-xs bg-muted px-1 py-0.5 rounded">sha256</code> 필드와 비교 — 불일치 시 에러
-              </p>
-            </div>
-            <div className="bg-muted/30 rounded-lg p-3">
-              <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">2. 권한 확인</div>
-              <p className="text-sm text-muted-foreground">
-                <code className="text-xs bg-muted px-1 py-0.5 rounded">required_mode &gt; current_mode()</code>이면 권한 부족 에러 — 플러그인이 현재 모드보다 상위 권한을 요구하면 거부
-              </p>
-            </div>
-            <div className="bg-muted/30 rounded-lg p-3">
-              <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">3. Kind별 레지스트리 등록</div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
-                <div className="text-xs bg-muted/50 rounded p-2">
-                  <div className="font-semibold mb-0.5">ToolProvider</div>
-                  <span className="text-muted-foreground"><code className="text-xs">global_tool_registry()</code>에 도구 등록</span>
-                </div>
-                <div className="text-xs bg-muted/50 rounded p-2">
-                  <div className="font-semibold mb-0.5">HookProvider</div>
-                  <span className="text-muted-foreground"><code className="text-xs">global_hook_runner()</code>에 훅 등록</span>
-                </div>
-                <div className="text-xs bg-muted/50 rounded p-2">
-                  <div className="font-semibold mb-0.5">ContextProvider</div>
-                  <span className="text-muted-foreground"><code className="text-xs">global_context_provider()</code>에 등록</span>
-                </div>
+        <div className="not-prose my-6 overflow-hidden rounded-2xl border border-border/70">
+          <div className="divide-y divide-border/70">
+            {validationRows.map(([name, rule]) => (
+              <div
+                key={name}
+                className="grid gap-1 p-4 sm:grid-cols-[120px_1fr] sm:gap-4"
+              >
+                <code className="text-xs font-bold text-primary">{name}</code>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  {rule}
+                </p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          신뢰는 이름이 아니라 artifact와 capability에 묶는다
+        </h3>
         <p>
-          해시 검증: 매니페스트에 <code>sha256</code> 필드가 있으면 무결성 확인<br />
-          Kind별 다른 레지스트리에 등록 — 도구는 tool_registry, 훅은 hook_runner
+          <code>trusted_plugins = ["company-linter"]</code>처럼 이름만 저장하면
+          같은 이름의 다른 binary나 업데이트된 버전이 승인을 상속합니다. 승인
+          record에는 digest 또는 signer, plugin API version, 허용한 capability,
+          scope와 만료를 포함해야 합니다. update가 새 capability를 요청하거나
+          signer가 바뀌면 다시 승인받습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">비활성화 &amp; 제거</h3>
-        <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-amber-50 dark:bg-amber-950/30 px-4 py-2 border-b border-border text-sm font-semibold">disable(name)</div>
-            <div className="p-4 text-sm space-y-1">
-              <p>Kind별 레지스트리에서 <strong>등록 해제</strong></p>
-              <p className="text-muted-foreground">예: <code className="text-xs bg-muted px-1 py-0.5 rounded">unregister_plugin_tool</code></p>
-              <p><code className="text-xs bg-muted px-1 py-0.5 rounded">enabled = false</code></p>
-              <p className="text-xs text-muted-foreground mt-2">플러그인 정보는 HashMap에 유지 — 재활성화 가능</p>
-            </div>
-          </div>
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-red-50 dark:bg-red-950/30 px-4 py-2 border-b border-border text-sm font-semibold">remove(name)</div>
-            <div className="p-4 text-sm space-y-1">
-              <p>내부적으로 <code className="text-xs bg-muted px-1 py-0.5 rounded">disable()</code> 호출 후</p>
-              <p><code className="text-xs bg-muted px-1 py-0.5 rounded">plugins.remove(name)</code>으로 완전 삭제</p>
-              <p className="text-xs text-muted-foreground mt-2">HashMap에서 제거 — 다시 쓰려면 재발견 필요</p>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          registry는 완성된 snapshot만 공개한다
+        </h3>
         <p>
-          런타임 비활성화 가능 — 세션 재시작 없이 플러그인 추가/제거
+          plugin 하나를 enable하면서 tool은 등록됐지만 hook 등록이 실패하면
+          runtime이 반쪽 상태가 됩니다. 새 registry generation을 별도로 만들고
+          모든 schema·collision·permission 검사를 통과한 뒤 pointer를 원자적으로
+          교체해야 합니다. 진행 중 호출은 자신이 시작한 generation을 계속
+          사용하고, 이전 generation은 reference가 사라질 때까지 draining합니다.
         </p>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 옵트인 모델의 보안 가치</p>
-          <p>
-            플러그인이 <strong>발견되어도 자동 실행되지 않음</strong> — 사용자 명시 승인 필수<br />
-            이 보수적 설계가 주는 이점:
-          </p>
-          <p className="mt-2">
-            1. <strong>공격 면적 축소</strong>: 악의적 플러그인이 경로에 설치되어도 실행 안 됨<br />
-            2. <strong>사용자 통제권</strong>: "어떤 플러그인이 활성화됐는지" 명확<br />
-            3. <strong>업그레이드 투명성</strong>: 새 버전 도입 시 명시 승인 필요
-          </p>
-          <p className="mt-2">
-            반대 극(opt-out): "플러그인 설치 = 자동 활성화"<br />
-            - 편리하지만 악의적 패키지 공격에 취약<br />
-            - "어디서 이상한 동작이 오는지" 추적 어려움
-          </p>
-          <p className="mt-2">
-            claw-code의 선택: 편의성보다 안전성 — "한 번 승인, 영구 사용" 패턴으로 균형
-          </p>
-        </div>
-
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          disable·update·remove는 서로 다른 동작이다
+        </h3>
+        <p>
+          disable은 새 호출만 막고 설치 artifact와 승인 기록은 유지합니다.
+          update는 새 artifact를 검증해 별도 generation으로 올린 뒤 실패하면
+          이전 generation으로 rollback합니다. remove는 호출이 모두 끝난 뒤
+          registry와 artifact를 제거하되, 감사 기록과 사용자가 만든 데이터까지
+          임의로 지우지 않습니다. 이 구분이 있어야 운영 중 교체와 문제 조사 모두
+          가능합니다.
+        </p>
       </div>
     </section>
   );

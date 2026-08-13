@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const ATTEST_REPORT = `/* drivers/virt/coco/sev-guest/sev-guest.h */
 struct snp_report_resp {
@@ -50,37 +50,55 @@ static int get_report(struct snp_guest_dev *snp_dev,
 }`;
 
 export const attestCodeRefs: Record<string, CodeRef> = {
-  'attest-report': {
-    path: 'linux/drivers/virt/coco/sev-guest/sev-guest.h',
+  "attest-report": {
+    path: "linux/drivers/virt/coco/sev-guest/sev-guest.h",
     code: ATTEST_REPORT,
     highlight: [2, 21],
-    lang: 'c',
+    lang: "c",
     annotations: [
-      { lines: [3, 10], color: 'sky', note: '게스트 식별 + 정책 필드' },
-      { lines: [13, 13], color: 'emerald', note: 'measurement — 런치 다이제스트 (핵심 필드)' },
-      { lines: [15, 16], color: 'amber', note: 'report_data — nonce/challenge 전달' },
-      { lines: [17, 20], color: 'violet', note: 'VCEK ECDSA P-384 서명' },
+      { lines: [3, 10], color: "sky", note: "게스트 식별 + 정책 필드" },
+      {
+        lines: [13, 13],
+        color: "emerald",
+        note: "measurement — 런치 다이제스트 (핵심 필드)",
+      },
+      {
+        lines: [15, 16],
+        color: "amber",
+        note: "report_data — nonce/challenge 전달",
+      },
+      { lines: [17, 20], color: "violet", note: "VCEK ECDSA P-384 서명" },
     ],
-    desc:
-`SNP Attestation Report는 PSP(Platform Security Processor)가 생성하는 서명된 보고서입니다.
+    desc: `SNP Attestation Report는 PSP(Platform Security Processor)가 생성하는 서명된 보고서입니다.
 
 measurement: 게스트 런치 시 SHA-384로 축적된 다이제스트. 이미지 해시와 비교하여 무결성 검증.
 report_data: 게스트가 넣는 64바이트. 보통 nonce를 넣어 재전송 공격을 방지합니다.
 signature: 칩 고유 VCEK(Versioned Chip Endorsement Key)로 서명. AMD KDS로 검증.`,
   },
 
-  'guest-request': {
-    path: 'linux/drivers/virt/coco/sev-guest/sev-guest.c',
+  "guest-request": {
+    path: "linux/drivers/virt/coco/sev-guest/sev-guest.c",
     code: GUEST_REQUEST,
     highlight: [2, 27],
-    lang: 'c',
+    lang: "c",
     annotations: [
-      { lines: [10, 12], color: 'sky', note: 'report_data 복사 — 사용자 공간에서 nonce 전달' },
-      { lines: [15, 18], color: 'emerald', note: 'VMGEXIT로 PSP에 요청 — 하이퍼바이저 우회' },
-      { lines: [23, 26], color: 'amber', note: '서명된 보고서를 사용자 공간으로 반환' },
+      {
+        lines: [10, 12],
+        color: "sky",
+        note: "report_data 복사 — 사용자 공간에서 nonce 전달",
+      },
+      {
+        lines: [15, 18],
+        color: "emerald",
+        note: "VMGEXIT로 PSP에 요청 — 하이퍼바이저 우회",
+      },
+      {
+        lines: [23, 26],
+        color: "amber",
+        note: "서명된 보고서를 사용자 공간으로 반환",
+      },
     ],
-    desc:
-`게스트 커널의 SNP Guest Request 드라이버입니다.
+    desc: `게스트 커널의 SNP Guest Request 드라이버입니다.
 
 /dev/sev-guest ioctl을 통해 사용자 프로세스가 증명 보고서를 요청합니다.
 SVM_VMGEXIT_GUEST_REQUEST로 PSP에 직접 통신하며,

@@ -1,17 +1,16 @@
-import PsmViz from './viz/PsmViz';
-import PsmTimelineViz from './viz/PsmTimelineViz';
-import SellGemFlowViz from './viz/SellGemFlowViz';
-import PsmArbitrageViz from './viz/PsmArbitrageViz';
-import CollateralMixViz from './viz/CollateralMixViz';
-import EndgameViz from './viz/EndgameViz';
-import EsmViz from './viz/EsmViz';
+import PsmViz from "./viz/PsmViz";
+import PsmTimelineViz from "./viz/PsmTimelineViz";
+import SellGemFlowViz from "./viz/SellGemFlowViz";
+import PsmArbitrageViz from "./viz/PsmArbitrageViz";
+import CollateralMixViz from "./viz/CollateralMixViz";
+import EndgameViz from "./viz/EndgameViz";
+import EsmViz from "./viz/EsmViz";
 
 export default function PegStability() {
   return (
     <section id="peg-stability" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">PSM — 페그 안정성 모듈</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <PsmViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">PSM 도입 배경</h3>
@@ -74,8 +73,10 @@ contract DssPsm {
     }
 }`}</pre>
         <p>
-          <strong>내부는 여전히 CDP</strong>: USDC 담보 + DAI 발행<br />
-          차이: 사용자는 즉시 교환 경험 — 수수료 0 ~ 0.01%<br />
+          <strong>내부는 여전히 CDP</strong>: USDC 담보 + DAI 발행
+          <br />
+          차이: 사용자는 즉시 교환 경험 — 수수료 0 ~ 0.01%
+          <br />
           담보 비율: 101% (minimum overcollateralization)
         </p>
 
@@ -106,7 +107,9 @@ contract DssPsm {
 - 차익거래 기회 즉시 해소
 - 페그 $1 근처 유지 (±0.1%)`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">PSM의 부작용 — 중앙화</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          PSM의 부작용 — 중앙화
+        </h3>
 
         <CollateralMixViz />
 
@@ -138,12 +141,15 @@ contract DssPsm {
   기타: 15%
   → 다각화 진행`}</pre>
         <p>
-          <strong>SVB 사태가 전환점</strong>: USDC 의존의 위험 현실화<br />
+          <strong>SVB 사태가 전환점</strong>: USDC 의존의 위험 현실화
+          <br />
           이후 RWA 담보 확대 — 미국 국채, 민간 대출 등<br />
           하지만 여전히 <strong>중앙화 자산 비중 50%+</strong>
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">MakerDAO Endgame — 탈중앙화 회귀</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          MakerDAO Endgame — 탈중앙화 회귀
+        </h3>
 
         <EndgameViz />
 
@@ -168,7 +174,9 @@ Phase 3: New Stable Token
 - ETH + RWA + 암호자산 담보만
 - 진정한 탈중앙 스테이블`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Emergency Shutdown Module (ESM)</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Emergency Shutdown Module (ESM)
+        </h3>
 
         <EsmViz />
 
@@ -201,31 +209,40 @@ trigger 조건:
             MakerDAO는 <strong>"이상과 현실 사이 끊임없는 줄다리기"</strong>:
           </p>
           <p className="mt-2">
-            이상 (2017):<br />
-            - 순수 탈중앙 스테이블코인<br />
-            - 암호자산 담보만<br />
-            - 중앙 권한 0
+            이상 (2017):
+            <br />
+            - 순수 탈중앙 스테이블코인
+            <br />
+            - 암호자산 담보만
+            <br />- 중앙 권한 0
           </p>
           <p className="mt-2">
-            현실 (2024):<br />
-            - USDC 담보 50% (과거)<br />
-            - RWA 담보 도입 (국채)<br />
-            - MKR 보유 집중<br />
-            - PSM이 페그의 핵심
+            현실 (2024):
+            <br />
+            - USDC 담보 50% (과거)
+            <br />
+            - RWA 담보 도입 (국채)
+            <br />
+            - MKR 보유 집중
+            <br />- PSM이 페그의 핵심
           </p>
           <p className="mt-2">
-            미래 (Endgame):<br />
-            - USDC 의존 제거<br />
-            - ETH + RWA 중심<br />
-            - Free-float DAI (USD에서 분리)
+            미래 (Endgame):
+            <br />
+            - USDC 의존 제거
+            <br />
+            - ETH + RWA 중심
+            <br />- Free-float DAI (USD에서 분리)
           </p>
           <p className="mt-2">
-            <strong>교훈</strong>: 7년 운영 후에도 <strong>탈중앙 스테이블은 미완성</strong><br />
-            Maker가 증명하는 것: "안정성과 탈중앙화는 tension 관계"<br />
+            <strong>교훈</strong>: 7년 운영 후에도{" "}
+            <strong>탈중앙 스테이블은 미완성</strong>
+            <br />
+            Maker가 증명하는 것: "안정성과 탈중앙화는 tension 관계"
+            <br />
             사용자는 각 순간의 트레이드오프 이해 후 선택해야
           </p>
         </div>
-
       </div>
     </section>
   );

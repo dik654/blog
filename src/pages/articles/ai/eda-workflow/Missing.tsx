@@ -1,50 +1,40 @@
-import MissingViz from './viz/MissingViz';
+import MissingViz from "./viz/MissingViz";
 
 export default function Missing() {
   return (
     <section id="missing" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">결측치 패턴 분석</h2>
-
+      <h2 className="text-2xl font-bold mb-6">결측률보다 왜 비어 있는지를 추적한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          결측치(missing value)는 단순한 빈 칸이 아니다 — <strong>왜 비어 있는가</strong>가 핵심 정보<br />
-          결측 메커니즘(mechanism)에 따라 처리 전략이 완전히 다르다
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">3가지 결측 메커니즘</h3>
-        <p>
-          <strong>MCAR(Missing Completely At Random)</strong> — 결측이 완전히 무작위. 센서 일시 오작동 등<br />
-          <strong>MAR(Missing At Random)</strong> — 관측된 다른 변수에 의존. 특정 로봇 타입에 센서가 없는 경우<br />
-          <strong>MNAR(Missing Not At Random)</strong> — 결측값 자체에 의존. 배터리가 낮으면 배터리 센서가 꺼지는 경우
+          결측값은 단순한 빈칸이 아니라 수집 과정의 결과입니다. MCAR은 결측이
+          관측값과 결측값 모두와 무관한 경우, MAR은 관측된 변수로 설명할 수 있는
+          경우, MNAR은 관측되지 않은 값 자체와 결측 확률이 연결된 경우를
+          가리킵니다. 이 구분은 heatmap만 보고 확정할 수 없으며, 수집 시스템과
+          업무 규칙을 함께 확인해야 합니다.
         </p>
         <p>
-          MNAR일 때 결측 여부 자체가 예측 변수 — <code>is_missing</code> 이진 피처를 만들면 성능이 오르는 이유
+          먼저 column별 비율만 보지 말고 시간, 장비, 사용자군과 label별로
+          결측 패턴을 나눠 봅니다. 특정 센서가 없는 장비에서만 비어 있거나
+          장애 직전에 기록이 끊긴다면 결측 여부 자체가 유용한 신호일 수 있어
+          missing indicator를 별도 피처로 남깁니다.
         </p>
       </div>
-
-      <div className="not-prose my-8">
-        <MissingViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">결측 처리 실전 전략</h3>
+      <div className="not-prose my-8"><MissingViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>대체 방법도 validation pipeline 안에서 학습한다</h3>
         <p>
-          결측률 50% 이상 — 피처 자체를 제거하되, <code>is_missing</code> 피처만 남길 수 있음<br />
-          결측률 10~50% — 메커니즘에 따라 대체 방법 선택:
+          평균·중앙값 대체, KNN imputation, iterative imputation 중 무엇이
+          적절한지는 결측 메커니즘과 downstream model에 따라 달라집니다.
+          대체값과 scaler를 전체 데이터에서 계산하면 validation 정보가 training
+          fold로 들어가므로, 모든 전처리는 fold 내부에서 fit하고 validation과
+          test에는 transform만 적용합니다.
         </p>
-        <ul>
-          <li><strong>중앙값/평균 대체</strong> — 가장 단순. MCAR이고 결측이 적을 때 적합</li>
-          <li><strong>KNN Imputer</strong> — 유사한 샘플의 값으로 대체. MAR에 효과적</li>
-          <li><strong>Iterative Imputer</strong> — 다른 피처를 입력으로 결측을 예측. MICE 알고리즘 기반</li>
-          <li><strong>-999 대체</strong> — GBM 전용. 트리가 결측을 별도 분기로 학습</li>
-        </ul>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: LightGBM의 결측 처리</p>
-        <p className="text-sm">
-          LightGBM은 결측값을 별도로 처리하는 로직이 내장 — NaN을 그대로 넣어도 학습 가능<br />
-          트리 분할 시 결측 샘플을 왼쪽/오른쪽 중 손실이 작은 쪽으로 보내는 방식<br />
-          그래서 -999 대체보다 NaN 유지가 더 나은 경우가 많다 (불필요한 정보 주입 방지)
+        <p>
+          피처를 제거할지 여부도 “결측률 50%” 같은 일괄 기준으로 정하지 않습니다.
+          적은 관측만으로도 안정적인 신호가 있는지, 수집 시점이 inference에서도
+          같은지, 유지 비용이 어떤지를 함께 평가합니다. LightGBM처럼 missing
+          value를 자체 처리하는 모델에는 NaN을 유지하는 baseline을 먼저 두고,
+          임의의 sentinel 값은 실제 값 범위와 충돌하지 않는지 확인합니다.
         </p>
       </div>
     </section>

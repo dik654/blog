@@ -1,14 +1,15 @@
-import ReservesViz from './viz/ReservesViz';
+import ReservesViz from "./viz/ReservesViz";
 
 export default function ReservesAttestation() {
   return (
     <section id="reserves-attestation" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">준비금 증명 &amp; 감사</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <ReservesViz />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Attestation vs Audit</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Attestation vs Audit
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Attestation (월간)
 목적: 특정 시점의 잔액 확인
 범위: 지정된 절차에 대한 "합리적 확신"
@@ -28,12 +29,16 @@ export default function ReservesAttestation() {
 - 내부 통제 평가
 - Going concern 의견`}</pre>
         <p>
-          <strong>Attestation ≠ Audit</strong>: 범위·깊이 크게 다름<br />
-          USDC는 <strong>월간 attestation</strong> 공개 — 2018년부터 지속<br />
+          <strong>Attestation ≠ Audit</strong>: 범위·깊이 크게 다름
+          <br />
+          USDC는 <strong>월간 attestation</strong> 공개 — 2018년부터 지속
+          <br />
           Audit는 Circle IPO(2025년) 준비 과정에서 강화
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Deloitte Attestation 샘플 (2024)</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Deloitte Attestation 샘플 (2024)
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`Independent Accountant's Report
 Deloitte & Touche LLP
 
@@ -56,7 +61,9 @@ Banking relationships:
 
 We conclude that Circle's assertion is fairly stated.`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">BlackRock USDXX Money Market Fund</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          BlackRock USDXX Money Market Fund
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Circle Reserve Fund (USDXX) - BlackRock 운용
 SEC 규제: 2a-7 Money Market Fund 규정 준수
 
@@ -76,7 +83,9 @@ USDC 공급량의 80%가 이 펀드에 예치
 → Circle의 실질적 "은행"
 → BlackRock 신뢰가 USDC 백업의 핵심`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Proof of Reserves — 암호학적 증명?</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Proof of Reserves — 암호학적 증명?
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 이상적인 PoR 시스템
 1. 은행 잔액 증명 (은행 → 실시간 signed statement)
 2. 블록체인 supply 증명 (온체인에서 자동 계산)
@@ -100,7 +109,9 @@ Kraken: Merkle tree로 고객 예치금 증명
 // 미래
 CBDC 발행 시 실시간 온체인 연결 가능성`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">규제 준수 — 주요 라이선스</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          규제 준수 — 주요 라이선스
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Circle의 규제 라이선스 (2024)
 
 미국:
@@ -147,28 +158,32 @@ Circle은 MiCA-compliant 버전 준비:
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: 투명성의 한계와 진화</p>
           <p>
-            USDC의 투명성은 <strong>전통 금융보다 높고, 암호학적 이상보다 낮음</strong>
+            USDC의 투명성은{" "}
+            <strong>전통 금융보다 높고, 암호학적 이상보다 낮음</strong>
           </p>
           <p className="mt-2">
-            비교:<br />
-            - 전통 은행: 분기별 10-K filing, 고객 잔액 비공개<br />
-            - USDC: 월간 attestation, 총 공급량 온체인 가시<br />
-            - 이상적 PoR: 실시간 + 개별 암호학적 증명
+            비교:
+            <br />
+            - 전통 은행: 분기별 10-K filing, 고객 잔액 비공개
+            <br />
+            - USDC: 월간 attestation, 총 공급량 온체인 가시
+            <br />- 이상적 PoR: 실시간 + 개별 암호학적 증명
           </p>
           <p className="mt-2">
             <strong>USDC의 포지션</strong>:<br />
-            - "Good enough" 투명성 — 규제 수용 가능<br />
-            - 기관 투자자 신뢰 획득<br />
-            - DeFi 생태계 기축통화 역할
+            - "Good enough" 투명성 — 규제 수용 가능
+            <br />
+            - 기관 투자자 신뢰 획득
+            <br />- DeFi 생태계 기축통화 역할
           </p>
           <p className="mt-2">
             <strong>트레이드오프</strong>:<br />
-            - 진정한 "무신뢰" 스테이블코인은 아직<br />
-            - 탈중앙 대안(DAI, LUSD)과의 긴장 지속<br />
-            - 규제 강화 시 Circle 우위 유지 가능
+            - 진정한 "무신뢰" 스테이블코인은 아직
+            <br />
+            - 탈중앙 대안(DAI, LUSD)과의 긴장 지속
+            <br />- 규제 강화 시 Circle 우위 유지 가능
           </p>
         </div>
-
       </div>
     </section>
   );

@@ -45,9 +45,21 @@ type State struct {
 }`;
 
 export const COMPARISON_TABLE = [
-  { attr: '최종성', tendermint: '즉시 (1블록)', casper: '~12.8분 (2 에폭)' },
-  { attr: '내결함성', tendermint: '1/3 미만 비잔틴', casper: '1/3 미만 비잔틴' },
-  { attr: '리더 선출', tendermint: '가중 라운드 로빈', casper: 'RANDAO 기반' },
-  { attr: '포크 가능성', tendermint: '없음 (safety 우선)', casper: '있음 (liveness 우선)' },
-  { attr: '검증자 수', tendermint: '~150 (실용적 한계)', casper: '~1,000,000+' },
+  { attr: "최종성", tendermint: "commit 시 결정적", casper: "checkpoint 기반(보통 약 2 epoch)" },
+  {
+    attr: "내결함성",
+    tendermint: "1/3 미만 비잔틴",
+    casper: "1/3 미만 비잔틴",
+  },
+  { attr: "리더 선출", tendermint: "가중 라운드 로빈", casper: "RANDAO 기반" },
+  {
+    attr: "포크 가능성",
+    tendermint: "가정 아래 conflicting commit 방지",
+    casper: "head fork 후 finality로 수렴",
+  },
+  {
+    attr: "검증자 수",
+    tendermint: "chain의 validator-set 정책",
+    casper: "활성 validator registry",
+  },
 ] as const;

@@ -1,4 +1,4 @@
-import PaxosViz from './viz/PaxosViz';
+import PaxosViz from "./viz/PaxosViz";
 
 export default function Paxos() {
   return (
@@ -9,7 +9,9 @@ export default function Paxos() {
           Lamport(1998) — Prepare-Accept 2단계 합의. Multi-Paxos로 SMR 구현.
         </p>
       </div>
-      <div className="not-prose"><PaxosViz /></div>
+      <div className="not-prose">
+        <PaxosViz />
+      </div>
     </section>
   );
 }

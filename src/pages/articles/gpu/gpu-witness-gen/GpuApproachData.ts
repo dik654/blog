@@ -35,7 +35,17 @@ struct SparseMatrixCSR {
 // - R1CS 대비 메모리 사용량 3-5배 절감`;
 
 export const comparisonData = [
-  ['R1CS (Groth16)', '제약당 3개 희소 행/벡터 내적', 'CSR 행렬', '레벨 병렬화'],
-  ['Plonkish (Halo2)', '고정 너비 게이트 (fan-in 2-3)', '배열 인덱싱', '행 단위 병렬'],
-  ['AIR (STARK)', '전이 제약: 행 t와 t+1 관계', '밀집 상태 행렬', '행 단위 SIMD'],
+  ["R1CS (Groth16)", "제약당 3개 희소 행/벡터 내적", "CSR 행렬", "레벨 병렬화"],
+  [
+    "Plonkish (Halo2)",
+    "고정 너비 게이트 (fan-in 2-3)",
+    "배열 인덱싱",
+    "행 단위 병렬",
+  ],
+  [
+    "AIR (STARK)",
+    "전이 제약: 행 t와 t+1 관계",
+    "밀집 상태 행렬",
+    "행 단위 SIMD",
+  ],
 ];

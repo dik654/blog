@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const clobRefs: Record<string, CodeRef> = {
-  'dx-memclob': {
-    path: 'protocol/x/clob/memclob/memclob.go',
-    lang: 'go',
+  "dx-memclob": {
+    path: "protocol/x/clob/memclob/memclob.go",
+    lang: "go",
     highlight: [1, 18],
-    desc: 'MemCLOB — 인메모리 CLOB. Price-Time Priority 매칭 엔진.',
+    desc: "MemCLOB — 인메모리 CLOB. Price-Time Priority 매칭 엔진.",
     code: `// x/clob/memclob/memclob.go
 type MemClobPriceTimePriority struct {
     openOrders         *OpenOrders
@@ -24,17 +24,17 @@ type Level struct {
     LevelOrders list.List[ClobOrder]  // 시간순 FIFO
 }`,
     annotations: [
-      { lines: [3, 7], color: 'sky', note: 'MemCLOB 핵심 구조체' },
-      { lines: [9, 14], color: 'emerald', note: 'Orderbook — Bids/Asks' },
-      { lines: [16, 18], color: 'amber', note: 'Level — 동일 가격 FIFO' },
+      { lines: [3, 7], color: "sky", note: "MemCLOB 핵심 구조체" },
+      { lines: [9, 14], color: "emerald", note: "Orderbook — Bids/Asks" },
+      { lines: [16, 18], color: "amber", note: "Level — 동일 가격 FIFO" },
     ],
   },
 
-  'dx-match-order': {
-    path: 'protocol/x/clob/memclob/match_order.go',
-    lang: 'go',
+  "dx-match-order": {
+    path: "protocol/x/clob/memclob/match_order.go",
+    lang: "go",
     highlight: [1, 20],
-    desc: 'matchOrder — 매칭 엔진 메인 함수. CacheContext로 롤백.',
+    desc: "matchOrder — 매칭 엔진 메인 함수. CacheContext로 롤백.",
     code: `// x/clob/memclob/match_order.go
 func (m *MemClobPriceTimePriority) matchOrder(
     ctx sdk.Context, order types.MatchableOrder,
@@ -55,17 +55,17 @@ func (m *MemClobPriceTimePriority) matchOrder(
     return takerOrderStatus, offchainUpdates, nil
 }`,
     annotations: [
-      { lines: [7, 7], color: 'sky', note: 'CacheContext — 원자적 롤백' },
-      { lines: [9, 10], color: 'emerald', note: 'Taker 매칭 실행' },
-      { lines: [18, 18], color: 'amber', note: 'writeCache 커밋' },
+      { lines: [7, 7], color: "sky", note: "CacheContext — 원자적 롤백" },
+      { lines: [9, 10], color: "emerald", note: "Taker 매칭 실행" },
+      { lines: [18, 18], color: "amber", note: "writeCache 커밋" },
     ],
   },
 
-  'dx-taker-match': {
-    path: 'protocol/x/clob/memclob/taker_match.go',
-    lang: 'go',
+  "dx-taker-match": {
+    path: "protocol/x/clob/memclob/taker_match.go",
+    lang: "go",
     highlight: [1, 22],
-    desc: 'mustPerformTakerOrderMatching — 가격-시간 우선순위 매칭.',
+    desc: "mustPerformTakerOrderMatching — 가격-시간 우선순위 매칭.",
     code: `// x/clob/memclob/taker_match.go
 func (m *MemClobPriceTimePriority) mustPerformTakerOrderMatching(
     ctx sdk.Context, takerOrder types.MatchableOrder,
@@ -90,10 +90,10 @@ func (m *MemClobPriceTimePriority) mustPerformTakerOrderMatching(
     }
 }`,
     annotations: [
-      { lines: [8, 10], color: 'sky', note: '최적 가격 탐색' },
-      { lines: [12, 12], color: 'emerald', note: '가격 교차 확인' },
-      { lines: [16, 18], color: 'amber', note: '담보 부족 → Maker 제거' },
-      { lines: [21, 22], color: 'rose', note: '체결 후 잔량 업데이트' },
+      { lines: [8, 10], color: "sky", note: "최적 가격 탐색" },
+      { lines: [12, 12], color: "emerald", note: "가격 교차 확인" },
+      { lines: [16, 18], color: "amber", note: "담보 부족 → Maker 제거" },
+      { lines: [21, 22], color: "rose", note: "체결 후 잔량 업데이트" },
     ],
   },
 };

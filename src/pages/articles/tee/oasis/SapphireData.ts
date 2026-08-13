@@ -31,9 +31,21 @@ contract SecretBallot {
 }`;
 
 export const contractAnnotations = [
-  { lines: [7, 11] as [number, number], color: 'sky' as const, note: 'SGX 내에서만 복호화되는 상태' },
-  { lines: [22, 25] as [number, number], color: 'emerald' as const, note: 'SGX 기밀 난수 생성' },
-  { lines: [28, 30] as [number, number], color: 'amber' as const, note: '집계만 공개, 개별 투표 비공개' },
+  {
+    lines: [7, 11] as [number, number],
+    color: "sky" as const,
+    note: "SGX 내에서만 복호화되는 상태",
+  },
+  {
+    lines: [22, 25] as [number, number],
+    color: "emerald" as const,
+    note: "SGX 기밀 난수 생성",
+  },
+  {
+    lines: [28, 30] as [number, number],
+    color: "amber" as const,
+    note: "집계만 공개, 개별 투표 비공개",
+  },
 ];
 
 export const keyDerivationCode = `// 키 파생 구조
@@ -50,8 +62,16 @@ KM Root Secret (SGX에 봉인)
 // 4. 상태 변경은 Contract Key로 암호화해서 저장`;
 
 export const keyAnnotations = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: 'HKDF 키 계층 구조' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: '기밀 실행 흐름' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "HKDF 키 계층 구조",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "기밀 실행 흐름",
+  },
 ];
 
 export const ethCompatCode = `// Sapphire는 ethers.js, viem, MetaMask와 호환됨
@@ -71,7 +91,19 @@ const signer = await provider.getSigner();
 // Chain ID: 0x5afe (23294)`;
 
 export const ethCompatAnnotations = [
-  { lines: [4, 5] as [number, number], color: 'sky' as const, note: 'sapphire-paratime 패키지 임포트' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '래퍼로 자동 암호화' },
-  { lines: [12, 15] as [number, number], color: 'amber' as const, note: 'RPC 엔드포인트 정보' },
+  {
+    lines: [4, 5] as [number, number],
+    color: "sky" as const,
+    note: "sapphire-paratime 패키지 임포트",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "래퍼로 자동 암호화",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "amber" as const,
+    note: "RPC 엔드포인트 정보",
+  },
 ];

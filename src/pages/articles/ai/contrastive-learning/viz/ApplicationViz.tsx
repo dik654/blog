@@ -1,20 +1,3 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './ApplicationVizData';
-import { Step0, Step1, Step2, Step3 } from './ApplicationSteps';
-
-const views = [Step0, Step1, Step2, Step3];
-
-export default function ApplicationViz() {
-  return (
-    <StepViz steps={STEPS}>
-      {(step) => {
-        const View = views[step];
-        return (
-          <svg viewBox="0 0 480 190" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-            <View />
-          </svg>
-        );
-      }}
-    </StepViz>
-  );
-}
+import VizFrame from "@/components/viz/VizFrame";
+const loop=[["01","Pair contract","positive·negative·unknown 규칙","relation spec"],["02","Pair audit","난이도·domain별 false negative 검수","audit table"],["03","Training","norm·variance·similarity 기록","run manifest"],["04","Downstream eval","retrieval·probe·slice·seed 비교","paired report"],["05","Error review","실패 쌍을 다음 data revision에 반영","new pair version"]];
+export default function ApplicationViz(){return <VizFrame eyebrow="Closed-loop evaluation" title="각 단계가 다음 판단에 필요한 artifact를 남깁니다"><div className="border-y border-border">{loop.map(([n,name,action,artifact])=><div key={n} className="grid gap-2 border-b border-border py-5 last:border-b-0 sm:grid-cols-[3rem_8rem_minmax(0,1fr)_9rem] sm:gap-5"><span className="text-xs font-semibold text-muted-foreground">{n}</span><strong>{name}</strong><span>{action}</span><span className="text-muted-foreground">{artifact}</span></div>)}</div></VizFrame>}

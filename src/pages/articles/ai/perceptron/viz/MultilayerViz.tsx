@@ -1,122 +1,18 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, NAND_C, OR_C, AND_C } from './MultilayerVizData';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./MultilayerVizData";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
+const rows = [
+  { input: "(0,0)", nand: 1, or: 0, xor: 0 },
+  { input: "(0,1)", nand: 1, or: 1, xor: 1 },
+  { input: "(1,0)", nand: 1, or: 1, xor: 1 },
+  { input: "(1,1)", nand: 0, or: 1, xor: 0 },
+];
 
-function GateNode({ x, y, label, color, delay }: {
-  x: number; y: number; label: string; color: string; delay: number;
-}) {
-  return (
-    <motion.g initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ ...sp, delay }}>
-      <circle cx={x} cy={y} r={22} fill={color + '18'} stroke={color} strokeWidth={1.5} />
-      <text x={x} y={y + 4} textAnchor="middle" fontSize={9} fill={color} fontWeight={600}>{label}</text>
-    </motion.g>
-  );
+function Flow() {
+  const blocks = [["입력", "x₁, x₂"], ["은닉 feature 1", "NAND(x)"], ["은닉 feature 2", "OR(x)"], ["출력", "AND(h₁,h₂)"]];
+  return <div className="grid gap-3 sm:grid-cols-4">{blocks.map(([name,value],i)=><div key={name} className="relative rounded-xl border border-border/75 bg-background p-4"><p className="text-xs text-muted-foreground">{name}</p><p className="mt-2 font-mono text-sm font-semibold">{value}</p>{i<3&&<span className="absolute -right-2.5 top-1/2 hidden -translate-y-1/2 bg-background px-1 text-muted-foreground sm:block">→</span>}</div>)}</div>;
 }
 
 export default function MultilayerViz() {
-  return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 460 180" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {step === 0 && (
-            <g>
-              <rect x={80} y={30} width={300} height={120} rx={8}
-                fill="#ef444410" stroke="#ef4444" strokeWidth={1} />
-              <text x={230} y={55} textAnchor="middle" fontSize={11} fill="#ef4444" fontWeight={600}>
-                단층 퍼셉트론
-              </text>
-              <line x1={120} y1={80} x2={340} y2={130} stroke="#ef4444" strokeWidth={1.5} />
-              {[{ x: 160, y: 100, v: '(0,0)=0' }, { x: 260, y: 90, v: '(0,1)=1' },
-                { x: 200, y: 120, v: '(1,0)=1' }, { x: 300, y: 110, v: '(1,1)=0' }].map((p, i) => (
-                <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.15 }}>
-                  <circle cx={p.x} cy={p.y} r={5}
-                    fill={i === 0 || i === 3 ? '#ef444440' : '#10b98140'}
-                    stroke={i === 0 || i === 3 ? '#ef4444' : '#10b981'} strokeWidth={1} />
-                  <text x={p.x} y={p.y - 10} textAnchor="middle" fontSize={8} fill="#888">{p.v}</text>
-                </motion.g>
-              ))}
-              <motion.text x={230} y={165} textAnchor="middle" fontSize={10} fill="#ef4444"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                직선 하나로 분리 불가
-              </motion.text>
-            </g>
-          )}
-          {step === 1 && (
-            <g>
-              {/* 입력값 */}
-              <GateNode x={50} y={50} label="1" color="#888" delay={0} />
-              <GateNode x={50} y={130} label="0" color="#888" delay={0.05} />
-              <text x={50} y={20} textAnchor="middle" fontSize={10} fill="#888">x₁, x₂</text>
-
-              {/* 연결선 */}
-              {[[72, 50, 158, 50], [72, 130, 158, 130], [72, 50, 158, 130], [72, 130, 158, 50],
-                [222, 50, 318, 90], [222, 130, 318, 90]].map((c, i) => (
-                <motion.line key={i} x1={c[0]} y1={c[1]} x2={c[2]} y2={c[3]}
-                  stroke="#88888850" strokeWidth={1}
-                  initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                  transition={{ delay: i * 0.04 + 0.1 }} />
-              ))}
-
-              {/* Layer 1: NAND, OR */}
-              <GateNode x={190} y={50} label="NAND" color={NAND_C} delay={0.15} />
-              <GateNode x={190} y={130} label="OR" color={OR_C} delay={0.2} />
-              <text x={190} y={18} textAnchor="middle" fontSize={10} fill="#999">은닉층</text>
-
-              {/* 중간 결과 */}
-              <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                <rect x={228} y={38} width={30} height={18} rx={3} fill={NAND_C + '20'} stroke={NAND_C} strokeWidth={0.8} />
-                <text x={243} y={51} textAnchor="middle" fontSize={10} fontWeight={700} fill={NAND_C}>1</text>
-                <rect x={228} y={118} width={30} height={18} rx={3} fill={OR_C + '20'} stroke={OR_C} strokeWidth={0.8} />
-                <text x={243} y={131} textAnchor="middle" fontSize={10} fontWeight={700} fill={OR_C}>1</text>
-              </motion.g>
-
-              {/* Layer 2: AND */}
-              <GateNode x={340} y={90} label="AND" color={AND_C} delay={0.35} />
-              <text x={340} y={60} textAnchor="middle" fontSize={10} fill="#999">출력</text>
-
-              {/* 최종 결과 */}
-              <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                <rect x={378} y={78} width={40} height={24} rx={5} fill={AND_C + '20'} stroke={AND_C} strokeWidth={1.5} />
-                <text x={398} y={94} textAnchor="middle" fontSize={12} fontWeight={700} fill={AND_C}>1</text>
-              </motion.g>
-
-              {/* 추적 설명 */}
-              <motion.text x={230} y={170} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                (1,0) → NAND=1, OR=1 → AND(1,1) = 1 ✓ XOR 정답
-              </motion.text>
-            </g>
-          )}
-          {step === 2 && (
-            <g>
-              <motion.g initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                <rect x={40} y={20} width={380} height={55} rx={8}
-                  fill={NAND_C + '10'} stroke={NAND_C} strokeWidth={1} />
-                <text x={230} y={42} textAnchor="middle" fontSize={10} fill={NAND_C} fontWeight={600}>
-                  NAND만으로 모든 논리 회로 구성 가능
-                </text>
-                <text x={230} y={60} textAnchor="middle" fontSize={9} fill={NAND_C}>
-                  = 범용 계산기 (Universal Computer)
-                </text>
-              </motion.g>
-              <motion.g initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}>
-                <rect x={40} y={95} width={380} height={55} rx={8}
-                  fill={AND_C + '10'} stroke={AND_C} strokeWidth={1} />
-                <text x={230} y={117} textAnchor="middle" fontSize={10} fill={AND_C} fontWeight={600}>
-                  퍼셉트론도 동일 — 층을 깊게 쌓으면 어떤 함수든 근사
-                </text>
-                <text x={230} y={135} textAnchor="middle" fontSize={9} fill={AND_C}>
-                  Universal Approximation Theorem의 직관적 출발점
-                </text>
-              </motion.g>
-            </g>
-          )}
-        </svg>
-      )}
-    </StepViz>
-  );
+  return <StepViz steps={STEPS}>{(step)=><div className="w-full max-w-4xl">{step===0?<div className="grid gap-4 sm:grid-cols-2"><div className="rounded-xl border border-rose-500/30 bg-background p-5"><p className="text-xs font-semibold text-rose-600">입력 공간</p><p className="mt-2 text-lg font-semibold">XOR은 한 half-space가 아니다</p><p className="mt-3 text-sm leading-6 text-muted-foreground">affine score 하나와 step function 하나로는 대각선 positive pattern을 만들 수 없습니다.</p></div><div className="rounded-xl border border-border/75 bg-background p-5"><p className="text-xs font-semibold text-primary">필요한 변화</p><p className="mt-2 text-lg font-semibold">입력을 새 feature로 다시 표현한다</p><p className="mt-3 text-sm leading-6 text-muted-foreground">두 은닉 경계의 출력을 다음 층이 받으면 결정 영역을 조합할 수 있습니다.</p></div></div>:step===1?<><Flow/><div className="mt-5 grid grid-cols-4 gap-2 text-center text-xs"><span className="text-muted-foreground">input</span><span>NAND</span><span>OR</span><span className="font-semibold">XOR</span>{rows.flatMap(r=>[r.input,r.nand,r.or,r.xor]).map((v,i)=><span key={i} className="rounded-lg border border-border/65 bg-background px-2 py-2 font-mono">{v}</span>)}</div></>:<div className="rounded-xl border border-border/75 bg-background p-6"><p className="text-xs font-semibold text-primary">표현 가능성 ≠ 학습 보장</p><h4 className="mt-2 text-lg font-semibold">충분한 hidden unit은 넓은 함수 집합을 근사할 수 있다</h4><p className="mt-3 text-sm leading-6 text-muted-foreground">Universal approximation theorem은 특정 activation과 compact domain 같은 조건 아래의 표현 가능성을 말합니다. 필요한 width, sample 수, optimizer가 그 해를 찾는 시간까지 보장하지 않습니다.</p></div>}</div>}</StepViz>;
 }

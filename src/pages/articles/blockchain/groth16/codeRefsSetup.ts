@@ -1,12 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const setupCodeRefs: Record<string, CodeRef> = {
-  'groth16-keygen': {
-    path: 'arkworks-rs/groth16/src/generator.rs',
-    lang: 'rust',
+  "groth16-keygen": {
+    path: "arkworks-rs/groth16/src/generator.rs",
+    lang: "rust",
     highlight: [1, 35],
-    desc:
-`generate_random_parameters()는 R1CS 회로로부터 ProvingKey와 VerifyingKey를 생성합니다.
+    desc: `generate_random_parameters()는 R1CS 회로로부터 ProvingKey와 VerifyingKey를 생성합니다.
 
 1. toxic waste (α, β, γ, δ, τ) 5개 랜덤 생성
 2. τ의 거듭제곱으로 QAP 다항식 평가
@@ -53,11 +52,26 @@ where
     Ok(ProvingKey { vk, /* ... */ })
 }`,
     annotations: [
-      { lines: [10, 15], color: 'sky', note: 'Toxic waste 5개 랜덤 생성 — setup 후 반드시 삭제' },
-      { lines: [17, 21], color: 'emerald', note: 'R1CS 제약 생성 → QAP 행렬 변환' },
-      { lines: [23, 28], color: 'amber', note: 'τ 거듭제곱 계산 — QAP 다항식 평가용' },
-      { lines: [30, 37], color: 'violet', note: 'VK 조립: [α]₁, [β]₂, [γ]₂, [δ]₂ + IC(공개 입력)' },
+      {
+        lines: [10, 15],
+        color: "sky",
+        note: "Toxic waste 5개 랜덤 생성 — setup 후 반드시 삭제",
+      },
+      {
+        lines: [17, 21],
+        color: "emerald",
+        note: "R1CS 제약 생성 → QAP 행렬 변환",
+      },
+      {
+        lines: [23, 28],
+        color: "amber",
+        note: "τ 거듭제곱 계산 — QAP 다항식 평가용",
+      },
+      {
+        lines: [30, 37],
+        color: "violet",
+        note: "VK 조립: [α]₁, [β]₂, [γ]₂, [δ]₂ + IC(공개 입력)",
+      },
     ],
   },
-
 };

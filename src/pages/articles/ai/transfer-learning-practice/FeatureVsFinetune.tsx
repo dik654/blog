@@ -1,66 +1,45 @@
-import FeatureVsFinetuneViz from './viz/FeatureVsFinetuneViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import FeatureVsFinetuneViz from "./viz/FeatureVsFinetuneViz";
 
 export default function FeatureVsFinetune() {
   return (
     <section id="feature-vs-finetune" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Feature Extraction vs Full Fine-tuning</h2>
+      <h2 className="mb-6 text-2xl font-bold">Fixed·partial·full은 같은 validation 질문과 budget에서 비교합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          전이학습에는 두 가지 주요 접근법이 존재한다<br />
-          <strong>Feature Extraction</strong> — pretrained backbone을 완전히 동결하고, 마지막 분류 헤드만 학습<br />
-          <strong>Full Fine-tuning</strong> — 모든 레이어를 작은 LR로 미세조정
+          Fixed feature는 새 head만 학습하므로 가장 싼 data·metric smoke test입니다.
+          Partial은 target에 가까운 upper blocks까지, full은 전체 backbone까지
+          representation을 바꿉니다. Trainable parameter가 늘어날수록 target에
+          적응할 자유도와 optimizer state·activation memory·overfitting 위험이 함께
+          늘어납니다.
         </p>
         <p>
-          Feature Extraction에서 backbone은 고정된 피처 추출기 역할 — 입력을 2048차원(ResNet) 또는 768차원(BERT) 벡터로 변환<br />
-          이 벡터 위에 간단한 분류기(FC + Softmax)를 얹어 학습<br />
-          학습 파라미터가 전체의 1% 미만이므로 빠르고, 과적합 위험이 낮다
+          세 실험은 같은 pretrained checkpoint·preprocessing·entity/time split,
+          augmentation family와 metric을 사용합니다. Search trial 수 또는 wall-clock
+          budget, seed 수도 맞추고, validation mean뿐 아니라 seed variance·worst
+          group·calibration·peak memory·training time을 보고 선택합니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <FeatureVsFinetuneViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">데이터 규모에 따른 성능 교차점</h3>
-        <p>
-          데이터 &lt; 1K — Feature Extraction이 안전한 선택<br />
-          적은 데이터로 전체 파라미터를 학습하면 과적합이 불가피<br />
-          고정 피처 + 간단한 분류기가 일반화 성능에서 우위
-        </p>
-        <p>
-          데이터 &gt; 10K — Fine-tuning이 우세해지기 시작<br />
-          충분한 데이터가 있으면 backbone의 피처를 도메인에 맞게 조정하는 것이 이득<br />
-          특히 도메인 차이가 클 때(ImageNet → 의료) — 고정 피처로는 표현력 한계
-        </p>
-        <p>
-          데이터 1K~10K — 그레이존<br />
-          Gradual Unfreezing으로 상위 블록만 선택적으로 해동하는 절충안이 가장 효과적<br />
-          Validation loss를 모니터링하며 과적합 조짐이 보이면 더 많이 동결
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">실전 결정 프로세스</h3>
-        <p>
-          1단계: <strong>Feature Extraction으로 시작</strong> — 기준선(baseline) 확보. 5분이면 결과 확인<br />
-          2단계: 성능 부족 시 <strong>Gradual Unfreezing</strong> — 상위 블록부터 순차 해동<br />
-          3단계: 데이터 충분 + 도메인 차이 큰 경우 <strong>Full Fine-tuning</strong> — 작은 LR + Warmup 필수
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">컴퓨팅 자원 고려</p>
-        <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-          Feature Extraction: GPU 메모리 적게 사용 (gradient 저장 불필요) → 노트북 GPU로도 가능<br />
-          Fine-tuning: 전체 gradient 저장 필요 → VRAM 2~3배 증가. Mixed Precision(fp16)으로 절반 절약 가능<br />
-          Edge device 배포 시 — Feature Extraction으로 backbone을 ONNX 변환 후 분류기만 온디바이스 학습
-        </p>
-      </div>
-
+      <div className="not-prose my-8"><FeatureVsFinetuneViz /></div>
+      <ExplainedFormula
+        question="더 큰 fine-tuning scope가 실제로 baseline보다 나아졌는지 seed 불확실성과 함께 어떻게 표시할까?"
+        idea={<>같은 split에서 candidate와 fixed baseline의 metric 차이를 seed마다 계산하고, 그 paired differences의 평균과 표준오차를 봅니다. 독립 평균 두 개보다 공통 seed·data 조건의 차이를 직접 비교합니다.</>}
+        formula={String.raw`\begin{aligned}d_s&=M_s^{\mathrm{candidate}}-M_s^{\mathrm{fixed}},\\\bar d&=\frac1S\sum_{s=1}^{S}d_s,\\\operatorname{SE}(\bar d)&=\frac{\operatorname{sd}(d_1,\ldots,d_S)}{\sqrt S}.\end{aligned}`}
+        terms={[
+          { symbol: "d_s", name: "paired gain", description: "Seed s의 같은 split·budget에서 candidate가 fixed baseline보다 얻은 metric 차이입니다." },
+          { symbol: "S", name: "replicate count", description: "독립 초기화·sampling seed로 반복한 실험 수입니다." },
+          { symbol: "SE", name: "standard error", description: "관측한 mean gain의 seed-to-seed 불확실성을 요약합니다." },
+        ]}
+        assumptions={["각 pair는 같은 data split·preprocessing·search budget에서 비교합니다.", "Seed 표본이 매우 작으면 normal approximation보다 개별 점과 bootstrap interval을 함께 봅니다.", "Metric gain과 memory·latency·training cost를 별도 축으로 보존합니다."]}
+        interpretation="Mean gain이 작고 SE와 같은 크기인데 full fine-tuning 비용만 크게 늘면 fixed 또는 partial이 더 나은 운영 선택일 수 있습니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약: <strong>단순한 것부터 시작</strong>이 원칙 — Feature Extraction → Gradual Unfreezing → Full Fine-tuning 순서<br />
-          데이터 규모와 도메인 유사도가 결정 기준 — 과적합 모니터링이 전환 시점의 핵심 신호
+        <p>
+          Head-only가 training data에도 fit하지 못하면 representation 부족을 바로
+          결론내리지 않습니다. Label·head shape·normalization·optimizer와 metric을
+          먼저 확인합니다. 반대로 partial의 이득이 특정 deployment slice에서만
+          생기면 전체 평균과 함께 그 slice의 sample 수와 confidence interval을
+          남깁니다.
         </p>
       </div>
     </section>

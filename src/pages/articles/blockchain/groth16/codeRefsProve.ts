@@ -1,12 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const proveCodeRefs: Record<string, CodeRef> = {
-  'groth16-create-proof': {
-    path: 'arkworks-rs/groth16/src/prover.rs',
-    lang: 'rust',
+  "groth16-create-proof": {
+    path: "arkworks-rs/groth16/src/prover.rs",
+    lang: "rust",
     highlight: [1, 32],
-    desc:
-`create_random_proof()는 ProvingKey와 witness로 Proof(A, B, C)를 생성합니다.
+    desc: `create_random_proof()는 ProvingKey와 witness로 Proof(A, B, C)를 생성합니다.
 
 1. r, s 랜덤 블라인딩 → 같은 witness라도 매번 다른 증명 (영지식)
 2. A = [α + Σaᵢ·uᵢ(τ) + r·δ]₁ — MSM으로 계산
@@ -48,19 +47,34 @@ where
     let g_b_g1 = pk.beta_g1
         + E::G1::msm_unchecked(&pk.b_g1_query, &assignment);`,
     annotations: [
-      { lines: [11, 13], color: 'sky', note: 'r, s 랜덤 — 매 증명마다 다른 블라인딩 (영지식 보장)' },
-      { lines: [15, 19], color: 'emerald', note: 'witness 계산 + h(x) = QAP quotient polynomial' },
-      { lines: [21, 24], color: 'amber', note: 'A ∈ G1: α + Σaᵢ·uᵢ(τ) + rδ — 핵심 MSM 연산' },
-      { lines: [26, 29], color: 'violet', note: 'B ∈ G2: β + Σaᵢ·vᵢ(τ) + sδ — G2 MSM' },
+      {
+        lines: [11, 13],
+        color: "sky",
+        note: "r, s 랜덤 — 매 증명마다 다른 블라인딩 (영지식 보장)",
+      },
+      {
+        lines: [15, 19],
+        color: "emerald",
+        note: "witness 계산 + h(x) = QAP quotient polynomial",
+      },
+      {
+        lines: [21, 24],
+        color: "amber",
+        note: "A ∈ G1: α + Σaᵢ·uᵢ(τ) + rδ — 핵심 MSM 연산",
+      },
+      {
+        lines: [26, 29],
+        color: "violet",
+        note: "B ∈ G2: β + Σaᵢ·vᵢ(τ) + sδ — G2 MSM",
+      },
     ],
   },
 
-  'groth16-c-calc': {
-    path: 'arkworks-rs/groth16/src/prover.rs',
-    lang: 'rust',
+  "groth16-c-calc": {
+    path: "arkworks-rs/groth16/src/prover.rs",
+    lang: "rust",
     highlight: [1, 20],
-    desc:
-`C 계산은 Groth16 증명에서 가장 복잡한 부분입니다.
+    desc: `C 계산은 Groth16 증명에서 가장 복잡한 부분입니다.
 
 C = [비공개 LC]/δ + [h(τ)·t(τ)]/δ + A·s + B'·r - r·s·[δ]₁
 
@@ -91,10 +105,26 @@ A·s + B'·r - rsδ: 블라인딩 상쇄 항`,
         c: g_c.into_affine(),
     })`,
     annotations: [
-      { lines: [2, 5], color: 'sky', note: 'MSM: 비공개 witness × L_query (γ,δ로 분리된 부분)' },
-      { lines: [7, 10], color: 'emerald', note: 'MSM: h(x) × [τⁱ·t(τ)/δ]₁ — QAP quotient 항' },
-      { lines: [12, 17], color: 'amber', note: 'A·s + B\'·r - rsδ — 검증 시 상쇄되는 블라인딩' },
-      { lines: [19, 22], color: 'violet', note: 'Proof(A, B, C) — BN254 기준 256 bytes' },
+      {
+        lines: [2, 5],
+        color: "sky",
+        note: "MSM: 비공개 witness × L_query (γ,δ로 분리된 부분)",
+      },
+      {
+        lines: [7, 10],
+        color: "emerald",
+        note: "MSM: h(x) × [τⁱ·t(τ)/δ]₁ — QAP quotient 항",
+      },
+      {
+        lines: [12, 17],
+        color: "amber",
+        note: "A·s + B'·r - rsδ — 검증 시 상쇄되는 블라인딩",
+      },
+      {
+        lines: [19, 22],
+        color: "violet",
+        note: "Proof(A, B, C) — BN254 기준 256 bytes",
+      },
     ],
   },
 };

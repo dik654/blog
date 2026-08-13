@@ -1,70 +1,16 @@
-import EvaluationViz from './viz/EvaluationViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import EvaluationViz from "./viz/EvaluationViz";
 
 export default function Evaluation() {
   return (
     <section id="evaluation" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">평가: PR곡선, F1, Cohen Kappa</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          불균형 데이터에서 <strong>Accuracy</strong>(정확도)는 무의미한 지표<br />
-          "전부 정상" 예측이 95% Accuracy를 달성하는 상황에서, 97% Accuracy가 좋은 성능인지 판단 불가<br />
-          평가 지표 선택이 곧 모델의 실질적 성능 판단을 결정한다
-        </p>
-        <p>
-          <strong>Confusion Matrix</strong>(혼동 행렬) — 평가의 출발점<br />
-          TP(True Positive): 이상을 이상으로 탐지 — 올바른 탐지<br />
-          FP(False Positive): 정상을 이상으로 오탐 — 불필요한 경보<br />
-          FN(False Negative): 이상을 정상으로 놓침 — 가장 치명적<br />
-          TN(True Negative): 정상을 정상으로 판정 — 불균형에서 이것이 Accuracy를 지배
-        </p>
-        <p>
-          <strong>Precision</strong> = TP / (TP + FP): 양성 예측 중 실제 양성 비율 — "경보의 신뢰도"<br />
-          <strong>Recall</strong> = TP / (TP + FN): 실제 양성 중 탐지 비율 — "놓치지 않는 능력"<br />
-          <strong>F1-Score</strong> = 2 * P * R / (P + R): Precision과 Recall의 조화 평균<br />
-          산술 평균이 아닌 <strong>조화 평균</strong>인 이유: 둘 중 하나가 0이면 F1도 0이 되어, 한쪽만 높은 편향 모델을 걸러냄
-        </p>
-      </div>
-      <EvaluationViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">PR-AUC가 ROC-AUC보다 유용한 이유</h3>
-        <p>
-          <strong>ROC Curve</strong>: FPR(x축) vs TPR(y축) — TN이 많으면 FPR이 항상 낮게 유지<br />
-          불균형에서 ROC-AUC가 0.96처럼 높게 나와도, 실제 소수 클래스 성능은 낮을 수 있음<br />
-          <strong>PR Curve</strong>: Recall(x축) vs Precision(y축) — TN을 사용하지 않음<br />
-          소수 클래스의 탐지 능력(Recall)과 정밀도(Precision)만으로 평가 → 불균형에서 현실적
-        </p>
-        <p>
-          같은 모델이 ROC-AUC 0.96, PR-AUC 0.68을 보일 수 있다<br />
-          ROC-AUC는 "다수 클래스를 잘 맞추는 능력"이 점수를 부풀리고<br />
-          PR-AUC는 "소수 클래스만의 진짜 성능"을 보여준다
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Cohen's Kappa와 MCC</h3>
-        <p>
-          <strong>Cohen's Kappa</strong> = (p_o - p_e) / (1 - p_e)<br />
-          p_o(관측 일치율, 즉 Accuracy)를 p_e(우연 일치율)로 보정<br />
-          "우연히 맞출 확률"을 빼서 <strong>실제 학습 효과</strong>만 측정<br />
-          0.0=우연 수준, 0.4+=보통, 0.6+=상당, 0.8+=거의 완벽
-        </p>
-        <p>
-          <strong>MCC</strong>(Matthews Correlation Coefficient)<br />
-          = (TP*TN - FP*FN) / sqrt((TP+FP)(TP+FN)(TN+FP)(TN+FN))<br />
-          범위: -1(완전 반대) ~ 0(랜덤) ~ +1(완벽 예측)<br />
-          TP, FP, FN, TN 4가지를 모두 사용하는 <strong>유일한 단일 지표</strong><br />
-          "전부 정상" 예측 → MCC = 0 (우연 수준으로 정확히 판단)
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">평가 지표 실전 조합</p>
-        <p className="text-sm text-amber-700 dark:text-amber-300">
-          경미한 불균형(1:5) → <strong>F1-Score</strong>로 충분.
-          보통(1:20) → <strong>PR-AUC + F1</strong> 조합.
-          심각(1:100+) → <strong>MCC + PR-AUC</strong>가 가장 편향 없는 조합.
-          Kaggle 대회에서도 불균형 문제는 F1 또는 PR-AUC로 평가하며,
-          Accuracy로 평가하는 대회에서도 불균형이 있으면 반드시 F1과 MCC를 함께 확인해야 한다.
-        </p>
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">Confusion matrix에서 ranking·decision·calibration을 따로 계산합니다</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Accuracy가 수학적으로 잘못된 metric은 아니지만 majority baseline이 높은 dataset에서는 failure를 숨기기 쉽습니다. 먼저 TP·FP·FN·TN과 class support를 보고, 선택한 threshold의 precision·recall을 계산합니다. ROC-AUC와 PR-AUC는 threshold 전체의 ordering을 보지만 probability가 calibrated되었는지나 실제 alert 비용을 알려주지는 않습니다.</p></div>
+      <ExplainedFormula question="Precision과 recall은 같은 confusion matrix에서 어떤 서로 다른 질문에 답할까?" idea={<>Precision은 positive라고 알린 것 중 실제 positive 비율을, recall은 실제 positive 중 찾아낸 비율을 계산합니다. 분모가 다르기 때문에 하나를 높이는 threshold 이동이 다른 하나를 낮출 수 있습니다.</>} formula={String.raw`\operatorname{Precision}=\frac{TP}{TP+FP},\qquad \operatorname{Recall}=\frac{TP}{TP+FN}`} terms={[{symbol:"TP",name:"true positives",description:"Positive를 올바르게 alert한 수입니다."},{symbol:"FP",name:"false positives",description:"실제 negative인데 alert한 수입니다."},{symbol:"FN",name:"false negatives",description:"실제 positive인데 놓친 수입니다."}]} assumptions={["Positive class와 evaluation unit이 명확합니다.","같은 threshold·time window·deduplication rule의 count를 사용합니다."]} interpretation="Prevalence가 낮아지면 같은 TPR·FPR에서도 precision이 낮아질 수 있습니다. Dataset 간 PR-AUC를 비교할 때 positive 비율을 함께 기록해야 합니다." />
+      <ExplainedFormula question="Fβ는 precision과 recall의 상대 중요도를 어떻게 한 수치에 넣을까?" idea={<>Harmonic mean에 β²를 넣어 recall의 상대 가중치를 조절합니다. β가 1보다 크면 recall을, 1보다 작으면 precision을 더 중시합니다.</>} formula={String.raw`F_{\beta}=(1+\beta^2)\frac{PR}{\beta^2P+R}`} terms={[{symbol:"P",name:"precision",description:"Alert의 positive purity입니다."},{symbol:"R",name:"recall",description:"실제 positive coverage입니다."},{symbol:"β",name:"relative recall weight",description:"1이면 F1, 2이면 recall에 더 큰 비중을 둡니다."}]} assumptions={["한 operating threshold의 precision과 recall을 요약합니다.","β가 실제 업무 비용과 capacity를 충분히 표현하는지 별도 확인합니다."]} interpretation="Fβ가 같아도 alert volume과 오류 비용은 다를 수 있습니다. 운영 제약을 직접 쓸 수 있다면 Fβ보다 그 constraint를 기준으로 threshold를 고르는 편이 명확합니다." />
+      <div id="paper-pr-roc" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · ROC space와 PR space</p><p className="mt-2 text-sm font-semibold">The Relationship Between Precision-Recall and ROC Curves</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Davis와 Goadrich는 fixed dataset에서 ROC dominance와 PR dominance의 관계를 분석하고 PR space에서 단순 선형 보간이 잘못될 수 있음을 보였습니다. 이는 PR-AUC 하나가 calibration·cost·shift까지 해결한다는 뜻이 아닙니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/1143844.1143874" target="_blank" rel="noreferrer">원 논문의 curve 관계와 조건 보기</a></div>
+      <div id="paper-calibration" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Probability calibration</p><p className="mt-2 text-sm font-semibold">On Calibration of Modern Neural Networks</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Modern neural network의 confidence calibration을 실험하고 held-out validation에서 scalar temperature를 fit하는 temperature scaling을 비교했습니다. 논문 dataset에서 효과적이었다는 근거이며 distribution shift 뒤에도 calibration이 유지된다는 보장은 아닙니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v70/guo17a.html" target="_blank" rel="noreferrer">원 논문의 reliability diagram과 calibration 방법 보기</a></div>
+      <div className="not-prose my-8"><EvaluationViz /></div>
     </section>
   );
 }

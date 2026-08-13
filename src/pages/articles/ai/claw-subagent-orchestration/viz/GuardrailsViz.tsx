@@ -1,29 +1,49 @@
+import {
+  OrchestrationFrame,
+  OrchestrationRule,
+  OrchestrationSteps,
+} from "./OrchestrationVizPrimitives";
+
 export default function GuardrailsViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Sub-agent Guardrails — 일탈 방지 메커니즘</text>
-
-        {/* 4 guardrail layers */}
-        {[
-          { y: 50, title: 'Guard 1 · Token Budget Cap', desc: 'Worker별 max tokens 설정 · 초과 시 강제 종료', color: '#ef4444' },
-          { y: 120, title: 'Guard 2 · Tool Allowlist', desc: 'Worker 타입별 허용 도구만 · Agent 재귀 금지', color: '#f59e0b' },
-          { y: 190, title: 'Guard 3 · Scope Restriction', desc: 'Worker는 Main context 모름 · 명시적 prompt만', color: '#8b5cf6' },
-          { y: 260, title: 'Guard 4 · Result Validation', desc: 'Worker 출력 format 검증 · 비정상 결과 거부', color: '#10b981' },
-        ].map((g, i) => (
-          <g key={i}>
-            <rect x={30} y={g.y} width={500} height={58} rx={8}
-              fill={g.color} fillOpacity={0.15} stroke={g.color} strokeWidth={1.8} />
-            <text x={50} y={g.y + 25} fontSize={12} fontWeight={700} fill={g.color}>
-              {g.title}
-            </text>
-            <text x={50} y={g.y + 45} fontSize={10} fill="var(--muted-foreground)">
-              {g.desc}
-            </text>
-          </g>
-        ))}
-      </svg>
-    </div>
+    <OrchestrationFrame
+      label="RUNTIME GUARDRAILS"
+      title="계약을 실행 제약과 검증으로 바꾼다"
+      description="prompt는 방향을 설명하고 runtime은 budget, capability, topology와 종료 상태를 강제합니다."
+      note="취소와 종료에는 process, credential, writable workspace 회수가 포함됩니다."
+    >
+      <OrchestrationSteps
+        items={[
+          {
+            label: "BUDGET",
+            title: "Time · token · cost",
+            body: "상한을 넘으면 partial 상태로 중단합니다.",
+            tone: "amber",
+          },
+          {
+            label: "ACCESS",
+            title: "Least capability",
+            body: "tool뿐 아니라 path와 network 범위를 제한합니다.",
+            tone: "rose",
+          },
+          {
+            label: "SHAPE",
+            title: "Depth · concurrency",
+            body: "spawn 폭증과 dependency 위반을 막습니다.",
+            tone: "violet",
+          },
+          {
+            label: "DONE",
+            title: "Artifact verification",
+            body: "evidence가 완료 조건을 만족하는지 검사합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <OrchestrationRule>
+        “완료했다”는 문장은 terminal condition이 아니며, verifier가 확인한
+        artifact가 필요합니다.
+      </OrchestrationRule>
+    </OrchestrationFrame>
   );
 }

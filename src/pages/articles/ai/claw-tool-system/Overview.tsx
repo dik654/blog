@@ -1,249 +1,220 @@
-import RegistryLayersViz from './viz/RegistryLayersViz';
-import ToolCategoriesViz from './viz/ToolCategoriesViz';
-import GlobalRegistry3LayerViz from './viz/GlobalRegistry3LayerViz';
-import DispatchMatchViz from './viz/DispatchMatchViz';
-import OnceLockRegistriesViz from './viz/OnceLockRegistriesViz';
-import PermissionResultViz from './viz/PermissionResultViz';
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import RegistryLayersViz from "./viz/RegistryLayersViz";
+
+const TRACE_STEPS = [
+  ["1 · 제안", "모델이 로그인 401을 조사하려고 read_file이나 grep_search 호출과 JSON 인자를 제안합니다."],
+  ["2 · 조회", "Host가 turn 시작 때 고정한 registry snapshot에서 이름, schema, source identity를 찾습니다."],
+  ["3 · 구조 검사", "그 snapshot의 JSON Schema로 required field, type, enum과 허용되지 않은 field를 검사합니다."],
+  ["4 · 의미·영향 분석", "Path를 정규화하고 read·write·process·network 중 실제로 생길 effect를 arguments에서 계산합니다."],
+  ["5 · 권한 판정", "현재 policy가 canonical effect를 allow·deny·ask 중 하나로 판정하며, ask는 승인 전까지 멈춥니다."],
+  ["6 · 실행", "허용된 call만 executor와 sandbox 경계로 넘어가 file을 읽거나 수정하고 login test를 실행합니다."],
+  ["7 · 결과·반영", "Typed result, artifact reference, effect receipt를 runtime에 돌려주면 session owner가 observation을 commit합니다."],
+] as const;
+
+const TOOL_ROLES = [
+  ["읽기·탐색", "read_file · glob_search · grep_search", "원인을 찾되 workspace를 바꾸지 않습니다."],
+  ["변경", "edit_file · write_file", "Canonical target과 before/after evidence가 필요한 side effect입니다."],
+  ["실행·검증", "bash · deterministic login test", "Process와 filesystem effect를 분리해 기록하고 exit code로 완료 조건을 확인합니다."],
+  ["확장", "plugin · MCP runtime tool", "서로 다른 lifecycle을 공통 definition으로 노출하되 source identity는 잃지 않습니다."],
+] as const;
+
+const LOGIN_TOOL_SPECS = [
+  {
+    name: "read_file",
+    schema: '{path: string} · required: ["path"] · additionalProperties: false',
+    hint: "read-only",
+    domain: "Canonical path가 허용된 workspace/read scope 안인지 확인",
+  },
+  {
+    name: "grep_search",
+    schema: '{pattern: string, path?: string} · required: ["pattern"]',
+    hint: "read-only",
+    domain: "Pattern budget과 search root, binary/secret 제외 규칙 확인",
+  },
+  {
+    name: "edit_file",
+    schema: '{path: string, old_text: string, new_text: string} · 세 field required',
+    hint: "workspace-write",
+    domain: "Canonical target, before hash와 old_text의 현재 일치 여부 확인",
+  },
+  {
+    name: "bash · login test",
+    schema: '{command: string, cwd?: string} · required: ["command"]',
+    hint: "arguments에서 재분류",
+    domain: "Canonical cwd, command effect와 deterministic test identity 확인",
+  },
+] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">도구 시스템 &amp; 디스패치</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Tool call은 모델의 제안을 검증 가능한 host operation으로 바꾸는 과정입니다
+      </h2>
 
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          사용자가 “로그인 버튼을 누르면 401이 납니다. 원인을 찾아 최소 수정한
+          뒤 test해 주세요”라고 요청했다고 가정하겠습니다. 모델은 먼저 인증
+          설정과 error 처리 코드를 읽거나 검색하자고 제안할 수 있지만, 이 제안이
+          곧 파일 접근 권한은 아닙니다. Host가 등록된 tool contract와 실제
+          arguments를 확인하고 권한을 허용한 뒤에야 executor가 움직입니다.
+        </p>
+        <p>
+          이 글에서 registry는 실행 가능한 tool definition을 이름으로 찾는
+          색인이고, schema는 JSON input의 모양을 검사하는 규칙이며, executor는
+          허용된 operation을 실제 filesystem이나 process로 옮기는 component입니다.
+          Runtime은 이 셋을 소유하는 대신, 반환된 observation을 session에
+          반영하고 다음 model call 또는 종료를 결정합니다.
+        </p>
+      </div>
+
+      <ContentBoundary article="claw-tool-system" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>로그인 오류 한 건을 일곱 경계로 추적합니다</h3>
+        <p>
+          첫 read부터 마지막 regression test까지 같은 call identity와 registry
+          snapshot을 따라가면 “모델이 무엇을 원했는가”와 “host가 실제로 무엇을
+          허용하고 실행했는가”를 나눌 수 있습니다. 각 단계가 남기는 artifact도
+          다음 단계의 입력이 됩니다.
+        </p>
+      </div>
+
+      <ol className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2">
+        {TRACE_STEPS.map(([title, body]) => (
+          <li key={title} className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+            <h3 className="break-words text-sm font-semibold">{title}</h3>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{body}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          이 흐름을 재현하려면 원 request, registry snapshot 또는 digest, schema
+          validation 결과, canonical effect, permission decision, executor result,
+          workspace diff, test receipt와 session exit state를 같은 call ID로 묶어야
+          합니다. Final response만 남기면 denied call이 실제로 실행되지 않았는지,
+          test가 수정 뒤에 실행됐는지 확인할 수 없습니다. Artifact에는 stable run
+          ID를 두되 token·credential과 source의 secret은 redaction하고, 원문은
+          접근 통제된 저장소의 digest/reference로 연결합니다.
+        </p>
+
+        <h3>Tool 이름은 기능 분류이지 risk 등급이 아닙니다</h3>
+        <p>
+          <code>bash</code>처럼 같은 이름이라도 <code>git status</code>와 외부로
+          데이터를 전송하는 command는 effect가 다르고, <code>read_file</code>도
+          workspace 안 source와 credential path를 같은 위험으로 볼 수 없습니다.
+          따라서 registry metadata는 후보를 찾는 데 쓰고, 최종 risk는 canonical
+          arguments와 실행 환경을 바탕으로 다시 계산합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2">
+        {TOOL_ROLES.map(([title, examples, boundary]) => (
+          <article key={title} className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+            <h3 className="break-words text-sm font-semibold">{title}</h3>
+            <p className="mt-1 break-words font-mono text-xs text-primary">{examples}</p>
+            <p className="mt-3 break-words text-xs leading-5 text-muted-foreground">{boundary}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>최소 ToolSpec은 구조와 permission hint까지만 약속합니다</h3>
+        <p>
+          아래는 로그인 사례를 설명하기 위한 최소 contract입니다. Name·description,
+          input schema와 required permission hint를 model-facing definition으로
+          제공하되, schema가 잡는 실패와 domain·authorization이 잡는 실패를
+          구분합니다. 예를 들어 숫자 <code>path</code>는 schema error이고,
+          존재하지 않는 old text는 domain error이며, workspace 밖의 정상 문자열
+          path는 authorization error입니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 min-w-0 space-y-3">
+        {LOGIN_TOOL_SPECS.map((item) => (
+          <article key={item.name} className="grid min-w-0 gap-4 rounded-lg border border-border/70 bg-background p-4 md:grid-cols-[9rem_minmax(0,1.25fr)_minmax(0,.7fr)_minmax(0,1fr)]">
+            <h3 className="break-words font-mono text-xs font-semibold text-primary">{item.name}</h3>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Input schema</p>
+              <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">{item.schema}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Permission hint</p>
+              <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">{item.hint}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Domain check</p>
+              <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">{item.domain}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
         <RegistryLayersViz />
+      </div>
 
-        {/* ───────── 1. ToolSpec 구조 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">1. 도구 스펙 구조 — ToolSpec</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Pinned source와 이 글이 제안하는 hardening을 구분합니다</h3>
         <p>
-          Claw Code의 모든 도구는 <strong>ToolSpec</strong> 하나로 정의된다.<br />
-          LLM이 "어떤 도구를 호출할 수 있는가"를 판단하는 유일한 근거가 이 스펙이므로,
-          name/description/input_schema 세 필드가 곧 도구의 전부다.
+          이 글이 고정한 Claw Code commit의 <code>GlobalToolRegistry</code>는
+          built-in, plugin, runtime tool 이름이 충돌하면 등록을 거부하고, 모델에
+          보낼 name·description·input schema definition을 만듭니다. Built-in과
+          plugin 실행은 registry 경로에서 분기하며, runtime/MCP tool의 발견과
+          실행 state는 CLI composition에서 별도로 연결됩니다. 그러므로 “모든
+          source가 완전히 같은 lifecycle로 합쳐졌다”고 말하면 실제 code보다
+          넓은 주장입니다.
         </p>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <p className="text-xs text-muted-foreground mb-1">필드</p>
-            <p className="font-mono text-sm font-semibold">name: <code className="text-xs bg-muted px-1 py-0.5 rounded">&amp;'static str</code></p>
-            <p className="text-sm text-muted-foreground mt-1">LLM이 호출하는 이름 (예: <code className="text-xs">"bash"</code>, <code className="text-xs">"read_file"</code>)</p>
+        <p>
+          반면 call마다 source identity, schema digest와 registry generation을
+          고정하는 방식은 reload 중 계약이 바뀌는 문제를 막기 위해 이 글이
+          요구하는 hardening contract입니다. Pinned source가 그 풍부한 snapshot
+          envelope를 이미 모두 구현한다고 주장하지 않으며, release test에서
+          gap으로 따로 확인합니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-claw-tool-snapshot"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">근거 읽기 · Claw Code tool registry snapshot</p>
+        <CitationBlock
+          source="ultraworkers/claw-code — pinned tools/src/lib.rs"
+          citeKey={1}
+          type="code"
+          href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/tools/src/lib.rs"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> Built-in, plugin과 runtime source가 tool 이름과 schema를 함께 노출할 때 충돌·dispatch·permission 책임이 어디에 있는지 source로 확인해야 합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Pinned file은 ToolSpec·RuntimeToolDefinition·GlobalToolRegistry, source 간 이름 충돌 거부, definition 합성, allowed-tool normalization과 실행 분기를 공개합니다.</p>
+            <p><strong>전제·조건:</strong> Commit b71afddae100ced324457337925a694686b8fef2의 Rust implementation snapshot이며 이름·구조·지원 tool은 이후 바뀔 수 있습니다.</p>
+            <p><strong>근거 범위:</strong> 이 절의 project-specific registry composition, name/schema exposure와 충돌 거부 behavior를 뒷받침합니다.</p>
+            <p><strong>비주장:</strong> 고정된 tool 개수, 모든 source의 동일 lifecycle, schema generation pin·풍부한 receipt·일반 병렬 실행이 이미 구현됐거나 이 공개 project가 실서비스 적합성을 보장한다는 뜻은 아닙니다.</p>
           </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <p className="text-xs text-muted-foreground mb-1">필드</p>
-            <p className="font-mono text-sm font-semibold">description: <code className="text-xs bg-muted px-1 py-0.5 rounded">&amp;'static str</code></p>
-            <p className="text-sm text-muted-foreground mt-1">도구 설명 — LLM 프롬프트에 삽입</p>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <p className="text-xs text-muted-foreground mb-1">필드</p>
-            <p className="font-mono text-sm font-semibold">input_schema: <code className="text-xs bg-muted px-1 py-0.5 rounded">Value</code></p>
-            <p className="text-sm text-muted-foreground mt-1">JSON Schema — 파라미터 타입 및 필수 여부 정의</p>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <p className="text-xs text-muted-foreground mb-1">필드</p>
-            <p className="font-mono text-sm font-semibold">required_permission: <code className="text-xs bg-muted px-1 py-0.5 rounded">PermissionMode</code></p>
-            <p className="text-sm text-muted-foreground mt-1">최소 권한 모드 — ReadOnly | WorkspaceWrite | DangerFullAccess</p>
-          </div>
-        </div>
-        <p>
-          <code>mvp_tool_specs()</code> 함수가 40개 빌트인 도구 스펙을 <code>Vec&lt;ToolSpec&gt;</code>로 반환한다.<br />
-          이 벡터가 LLM에게 전달되는 <code>tools</code> 배열의 원본이며,
-          런타임에 플러그인·MCP 도구가 추가되어 최종 도구 목록이 완성된다.
-        </p>
-        <p>
-          <strong>설계 판단</strong>: <code>name</code>이 <code>&amp;'static str</code>인 이유 —
-          빌트인 도구 이름은 컴파일 타임에 확정되므로 힙 할당 불필요.
-          반면 <code>input_schema</code>는 <code>serde_json::Value</code>로 런타임 유연성 확보.
-          JSON Schema 자체가 도구마다 크게 다르기 때문에 정적 타입으로 표현하면 오히려 복잡해진다.
-        </p>
-
-        {/* ───────── 2. 40개 도구 카테고리 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">2. 40개 빌트인 도구 — 카테고리별 분류</h3>
-        <p>
-          40개 도구는 10개 카테고리로 나뉜다.
-          권한 열은 <code>PermissionMode</code> — <strong>R</strong>(ReadOnly),
-          <strong>W</strong>(WorkspaceWrite), <strong>D</strong>(DangerFullAccess)로 축약.
-        </p>
+        </CitationBlock>
       </div>
-      <ToolCategoriesViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">카테고리</th>
-                <th className="border border-border px-3 py-2 text-left">도구</th>
-                <th className="border border-border px-3 py-2 text-left">권한</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">파일 I/O</td>
-                <td className="border border-border px-3 py-2"><code>read_file</code>, <code>write_file</code>, <code>edit_file</code></td>
-                <td className="border border-border px-3 py-2">R / W / W</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">검색</td>
-                <td className="border border-border px-3 py-2"><code>glob_search</code>, <code>grep_search</code></td>
-                <td className="border border-border px-3 py-2">R</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">실행</td>
-                <td className="border border-border px-3 py-2"><code>bash</code>, <code>PowerShell</code>, <code>REPL</code>, <code>Sleep</code></td>
-                <td className="border border-border px-3 py-2">D</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">UI</td>
-                <td className="border border-border px-3 py-2"><code>SendUserMessage</code>, <code>Config</code>, <code>EnterPlanMode</code>, <code>ExitPlanMode</code></td>
-                <td className="border border-border px-3 py-2">R</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">태스크 관리</td>
-                <td className="border border-border px-3 py-2"><code>TaskCreate</code> / <code>Get</code> / <code>List</code> / <code>Stop</code> / <code>Update</code> / <code>Output</code></td>
-                <td className="border border-border px-3 py-2">R</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">팀</td>
-                <td className="border border-border px-3 py-2"><code>TeamCreate</code>, <code>TeamDelete</code></td>
-                <td className="border border-border px-3 py-2">W</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">크론</td>
-                <td className="border border-border px-3 py-2"><code>CronCreate</code>, <code>CronDelete</code>, <code>CronList</code></td>
-                <td className="border border-border px-3 py-2">W</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">통합</td>
-                <td className="border border-border px-3 py-2"><code>Agent</code>, <code>ToolSearch</code>, <code>Skill</code>, <code>WebFetch</code>, <code>WebSearch</code></td>
-                <td className="border border-border px-3 py-2">varies</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">MCP</td>
-                <td className="border border-border px-3 py-2"><code>MCP</code>, <code>ListMcpResources</code>, <code>ReadMcpResource</code>, <code>McpAuth</code></td>
-                <td className="border border-border px-3 py-2">varies</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">LSP</td>
-                <td className="border border-border px-3 py-2"><code>LSP</code> (symbols, references, diagnostics, definition, hover)</td>
-                <td className="border border-border px-3 py-2">R</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">기타</td>
-                <td className="border border-border px-3 py-2"><code>NotebookEdit</code>, <code>Brief</code>, <code>StructuredOutput</code>, <code>TodoWrite</code></td>
-                <td className="border border-border px-3 py-2">varies</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>
-          <strong>패턴</strong>: 검색·읽기 계열은 ReadOnly, 파일 변경·리소스 생성 계열은 WorkspaceWrite,
-          임의 코드 실행(bash, PowerShell)은 DangerFullAccess.
-          권한 단계가 높을수록 사용자 확인 빈도 증가.
-        </p>
 
-        {/* ───────── 3. GlobalToolRegistry 3계층 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">3. GlobalToolRegistry — 3계층 합성</h3>
-      </div>
-      <GlobalRegistry3LayerViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          최종 도구 목록 = <strong>빌트인</strong>(<code>mvp_tool_specs()</code> 40개)
-          + <strong>플러그인</strong>(<code>plugin_tools</code>)
-          + <strong>런타임</strong>(<code>runtime_tools</code>).<br />
-          등록 시 이름 충돌 검사가 발생한다 —
-          플러그인 도구 이름이 빌트인과 동일하면 <code>Err("duplicate tool name")</code> 반환.
-          플러그인끼리 이름이 겹쳐도 동일하게 거부.
-          이 검사가 없으면 LLM이 같은 이름의 도구 두 개를 보고 어느 쪽을 호출할지 결정할 수 없다.
-        </p>
-        <p>
-          <strong>설계 판단</strong>: 런타임 도구(MCP)는 프로세스 시작 후에도 추가·제거 가능하지만,
-          플러그인은 <code>settings.json</code> 파싱 시점에 고정.
-          "플러그인 = 정적 확장, MCP = 동적 확장" 이중 레이어 구조.
-        </p>
-
-        {/* ───────── 4. execute_tool() 디스패치 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">4. execute_tool() — 디스패치 흐름</h3>
-        <p>
-          LLM 응답에 <code>tool_use</code> 블록이 포함되면 메인 루프가 <code>execute_tool(name, input)</code>을 호출한다.
-          내부는 단일 <code>match</code> 문으로 40개 분기를 처리.
-        </p>
-      </div>
-      <DispatchMatchViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          각 분기의 입력은 <code>serde_json::from_value::&lt;T&gt;(input)</code>으로 역직렬화된다.<br />
-          <code>BashCommandInput</code>에는 <code>command</code>(필수), <code>timeout</code>(옵션, 밀리초),
-          <code>description</code>(옵션, 사용자 표시용) 필드가 존재한다.
-          <code>TextFilePayload</code>에는 <code>path</code>(절대 경로), <code>offset</code>(시작 줄),
-          <code>limit</code>(읽을 줄 수) — offset/limit이 대용량 파일 부분 읽기를 가능하게 한다.
-        </p>
-        <p>
-          <strong>unknown tool</strong> 분기: LLM이 존재하지 않는 도구를 호출하면 에러 메시지를 반환하되,
-          세션을 종료하지 않고 LLM에게 재시도 기회를 준다.
-          이는 LLM 환각(hallucination)에 대한 방어 — 잘못된 도구 이름을 한 번 호출해도 대화가 계속된다.
-        </p>
-
-        {/* ───────── 5. 전역 레지스트리 패턴 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">5. 전역 레지스트리 — OnceLock 싱글턴</h3>
-      </div>
-      <OnceLockRegistriesViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          6개 전역 레지스트리가 동일한 패턴을 따른다:
-          <strong>LSP</strong>(언어 서버), <strong>MCP</strong>(모델 컨텍스트 프로토콜),
-          <strong>Team</strong>(에이전트 팀), <strong>Cron</strong>(스케줄러),
-          <strong>Task</strong>(하위 태스크), <strong>Worker</strong>(병렬 실행).<br />
-          <code>OnceLock</code>은 <code>std::sync</code> 제공 — <code>lazy_static!</code> 매크로 없이 표준 라이브러리만으로
-          스레드 안전 싱글턴을 구현한다.
-          첫 <code>get_or_init()</code> 호출에서만 초기화가 실행되고, 이후 모든 호출은 동일한
-          <code>&amp;'static T</code> 참조를 반환하므로 락 경합이 없다.
-        </p>
-        <p>
-          <strong>세션 수명과 레지스트리 수명이 동일</strong>하다는 점이 핵심.
-          태스크 레지스트리에 생성된 하위 태스크 상태, MCP 서버 연결 핸들, LSP 클라이언트 인스턴스 등
-          모든 상태가 프로세스 종료 시 자연스럽게 해제된다.
-          별도 cleanup 로직이 불필요 — "프로세스 = 세션" 모델의 장점.
-        </p>
-
-        {/* ───────── 6. 권한 게이팅 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">6. 권한 게이팅 — PermissionEnforcer</h3>
-        <p>
-          <code>execute_tool()</code> 진입 직후, 디스패치 전에 <code>PermissionEnforcer</code>가 개입한다.
-        </p>
-      </div>
-      <PermissionResultViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          3단계 결과: <strong>Allow</strong>(즉시 실행), <strong>Deny</strong>(에러 반환),
-          <strong>Prompt</strong>(사용자 Y/N 입력 대기).<br />
-          ReadOnly 모드에서 <code>write_file</code>을 호출하면 LLM에게 "권한 부족" 에러가 돌아가고,
-          LLM은 이를 보고 사용자에게 권한 변경을 제안하거나 다른 접근법을 시도한다.
-        </p>
-        <p>
-          DangerFullAccess 도구(bash, PowerShell)는 기본 모드에서 항상 Prompt를 트리거한다.
-          사용자가 <code>--dangerously-skip-permissions</code> 플래그를 사용하면 AllowAll로 전환되어
-          모든 Prompt가 Allow로 바뀐다 — CI/CD 자동화 환경에서 사용.
-        </p>
-
-        {/* ───────── 7. 인사이트 ───────── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">7. 설계 인사이트</h3>
-        <p>
-          원본 Claude Code(TypeScript)는 921개 도구 관련 모듈이 존재하지만,
-          Claw Code(Rust)는 <strong>40개 핵심 도구</strong>에 집중한다.<br />
-          나머지 기능은 MCP 서버(외부 프로세스) 또는 플러그인(<code>settings.json</code>)으로 확장 가능한 구조.
-        </p>
-        <p>
-          <strong>"도구는 많되 코어는 작게"</strong> — 이것이 claw-code 도구 시스템의 핵심 원칙이다.<br />
-          빌트인 40개는 LLM 코딩 에이전트의 <em>최소 필수 집합</em>이고,
-          GlobalToolRegistry의 3계층 구조가 무한 확장을 보장한다.
-          도구를 추가할 때 <code>ToolSpec</code>을 정의하고 <code>execute_tool()</code>에 분기를 추가하면 끝 —
-          프레임워크 수준의 보일러플레이트가 없다.
-        </p>
-        <p>
-          비교: LangChain은 도구를 클래스로 정의하고 데코레이터로 감싸야 하지만,
-          claw-code는 구조체 + match 분기만으로 완결된다.
-          Rust의 타입 시스템이 JSON Schema 역직렬화 시점에 타입 안전성을 강제하므로
-          별도 validation 레이어가 불필요하다.
-        </p>
-
-      </div>
+      <nav aria-label="도구 시스템 정본 경계" className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {[
+          ["전체 harness", "/ai/claw-overview", "tool result를 session과 최종 response로 연결하는 owner"],
+          ["Permission", "/ai/claw-permissions", "mode·rule·override와 approval의 정본"],
+          ["Bash", "/ai/claw-bash", "command parsing·process·cancellation의 세부 경계"],
+          ["Plugin", "/ai/claw-plugin", "발견·설치·활성화·health lifecycle"],
+          ["MCP", "/ai/claw-mcp", "initialize·tools/list·tools/call·transport lifecycle"],
+          ["Sandbox security", "/ai/agent-sandbox-security", "OS·credential·filesystem·egress enforcement"],
+        ].map(([label, href, note]) => (
+          <Link key={href} to={href} className="min-w-0 rounded-lg border border-border/70 bg-background p-4 hover:border-primary/50">
+            <span className="break-words text-sm font-semibold text-foreground">{label}</span>
+            <span className="mt-1 block break-words text-xs leading-5 text-muted-foreground">{note}</span>
+          </Link>
+        ))}
+      </nav>
     </section>
   );
 }

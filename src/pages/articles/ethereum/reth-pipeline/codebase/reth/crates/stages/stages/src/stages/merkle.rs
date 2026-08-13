@@ -18,7 +18,7 @@ where Provider: DBProvider + TrieProvider,
 
         // 2. 증분 상태 루트 계산 — 변경된 서브트리만 재해시
         //    기존 DB의 트라이 노드 + PrefixSet으로 변경 경로만 골라서 계산
-        //    전체 재계산 대비 10~100배 빠름
+        //    영향받지 않은 subtree node와 hash는 재사용
         let state_root = StateRoot::overlay_root(
             provider,            // DB에 저장된 기존 트라이 노드 접근
             prefix_sets.clone(), // 변경된 키 접두사 → 해당 경로만 재계산

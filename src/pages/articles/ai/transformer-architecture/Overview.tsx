@@ -1,38 +1,57 @@
-import { RoughNotation } from 'react-rough-notation';
-import M from '@/components/ui/math';
-import TransformerBlockViz from './viz/TransformerBlockViz';
-import OverviewDetailViz from './viz/OverviewDetailViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import TransformerBlockViz from "./viz/TransformerBlockViz";
 
 export default function Overview() {
   return (
-    <section id="overview">
-      <h2 className="text-2xl font-semibold mb-4 scroll-mt-20">개요</h2>
-      <div className="not-prose mb-8"><TransformerBlockViz /></div>
-      <p className="leading-7">
-        Transformer — 2017년{' '}
-        <RoughNotation type="highlight" show color="#fef08a" animationDelay={300}>
-          "Attention Is All You Need"
-        </RoughNotation>{' '}
-        논문에서 제안된 아키텍처<br />
-        기존 RNN/LSTM 기반 시퀀스 모델의 한계를 극복<br />
-        병렬 처리가 가능하고, 긴 시퀀스에서도 효과적으로 의존성을 포착
-      </p>
+    <section id="overview" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        Transformer의 출발점은 attention이 아니라 sequence 계산 경로를 바꾼
+        것이다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Transformer 전체 구조</h3>
-        <p className="leading-7">
-          Encoder 6층 + Decoder 6층이 원 논문의 기본 구성.
-          각 층은 Self-Attention + FFN + Residual + LayerNorm으로 이루어진다.
-          RNN의 순차 처리를 제거하고, Attention만으로 시퀀스 전체를 병렬 처리한다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          RNN은 앞 time step의 state가 준비되어야 다음 token을 처리할 수
+          있습니다. Transformer는 학습할 때 sequence의 모든 위치를 행렬로 놓고,
+          attention으로 필요한 위치의 정보를 직접 모읍니다. 이 때문에 token 사이
+          path length가 짧아지고 sequence 축 병렬화가 가능해졌지만, standard
+          full attention은 길이 n에 대해 score matrix가 n×n이므로 긴 context
+          비용은 커집니다.
         </p>
-        <M display>{'\\underbrace{\\text{Encoder}(\\times 6)}_{\\text{Self-Attn + FFN}} \\;\\longrightarrow\\; \\underbrace{\\text{Decoder}(\\times 6)}_{\\text{Masked Attn + Cross-Attn + FFN}}'}</M>
+        <p className="leading-8">
+          한 block을 attention 하나로 이해하면 절반만 본 셈입니다. Attention은
+          <strong> token 축</strong>을 섞고, FFN은 각 위치의
+          <strong> feature 축</strong>을 섞으며, residual과 normalization이 두
+          update를 반복해서 쌓는 경로를 만듭니다.
+          Encoder-only·decoder-only·encoder–decoder의 차이는 이 block을 버리는
+          것이 아니라 어떤 source를 읽고 어느 위치를 가리는지에 있습니다.
+        </p>
       </div>
-      <div className="not-prose my-8"><OverviewDetailViz /></div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: <strong>Encoder 6 + Decoder 6</strong> 층 구조가 원 논문 기본.<br />
-          요약 2: <strong>No Recurrence</strong>, Attention만으로 시퀀스 처리 — 병렬화 혁명.<br />
-          요약 3: GPT/BERT/LLaMA 모두 Transformer의 <strong>encoder 또는 decoder 부분</strong>.
+
+      <ContentBoundary article="transformer-architecture" />
+      <TransformerBlockViz />
+
+      <div
+        id="paper-transformer"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 해설 · Attention Is All You Need</p>
+        <h3 className="mt-2 text-base font-bold">기여는 attention 하나가 아니라 recurrence 없이 sequence transduction 경로를 구성한 것이다</h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          원 논문은 encoder–decoder machine translation에서 self-attention·cross-attention·position-wise FFN·residual·normalization을 결합해 recurrence와 convolution 없이 sequence를 처리했습니다. WMT 2014 번역과 constituency parsing 결과는 해당 architecture와 training recipe의 근거이며, 모든 sequence task와 decoder-only LLM에서 원 구성이 그대로 최선이라는 결론은 아닙니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>이 글은 block을 외우는 대신 실행 계약을 따라간다</h3>
+        <p className="leading-8">
+          먼저 문자열이 아니라 token ID와 mask에서 시작해 위치 신호를 넣습니다.
+          그다음 Q·K·V의 source와 visibility를 고정하고,
+          attention·FFN·residual·norm을 지나 logits와 loss로 나갑니다.
+          마지막에는 같은 architecture라도 결과를 바꾸는 training recipe와
+          scaling law의 적용 범위를 분리합니다. Attention score의 상세 유도와
+          tokenizer algorithm은 정본 글에 맡겨 설명이 여러 곳에 흩어지지 않게
+          합니다.
         </p>
       </div>
     </section>

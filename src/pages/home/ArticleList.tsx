@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { categories } from '@/content';
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { categories } from "@/content";
 
 export default function ArticleList() {
   const allArticles = categories.flatMap((cat) =>
@@ -9,7 +9,8 @@ export default function ArticleList() {
       categorySlug: cat.slug,
       categoryName: cat.name,
       subcategoryName:
-        cat.subcategories.find((s) => s.slug === article.subcategory)?.name ?? '',
+        cat.subcategories.find((s) => s.slug === article.subcategory)?.name ??
+        "",
     })),
   );
 

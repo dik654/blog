@@ -20,7 +20,19 @@ type AccountKeeper interface {
 // → 이더리움의 컨트랙트 간 CALL과 달리 컴파일 타임 검증`;
 
 export const KEEPER_ANNOTATIONS = [
-  { lines: [4, 10] as [number, number], color: 'sky' as const, note: 'BankKeeper 구조체 (필드별 역할)' },
-  { lines: [12, 16] as [number, number], color: 'emerald' as const, note: '인터페이스 기반 의존성' },
-  { lines: [18, 21] as [number, number], color: 'amber' as const, note: '느슨한 결합의 장점' },
+  {
+    lines: [4, 10] as [number, number],
+    color: "sky" as const,
+    note: "BankKeeper 구조체 (필드별 역할)",
+  },
+  {
+    lines: [12, 16] as [number, number],
+    color: "emerald" as const,
+    note: "인터페이스 기반 의존성",
+  },
+  {
+    lines: [18, 21] as [number, number],
+    color: "amber" as const,
+    note: "느슨한 결합의 장점",
+  },
 ];

@@ -1,257 +1,337 @@
-import SessionStructViz from './viz/SessionStructViz';
-import MessageTypesViz from './viz/MessageTypesViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import SessionStructViz from "./viz/SessionStructViz";
+
+const SCENARIO_TRACE = [
+  [
+    "PINNED RECORD",
+    "1 · Session",
+    "session_id와 workspace_root가 작업의 바깥 identity를 이룹니다.",
+  ],
+  [
+    "PINNED RECORD",
+    "2 · User",
+    "401 수정 요청을 typed user message로 저장합니다.",
+  ],
+  [
+    "PINNED RECORD",
+    "3 · Assistant",
+    "read/search·edit·test 제안을 ToolUse block과 call id로 저장합니다.",
+  ],
+  [
+    "PINNED LOOP",
+    "4 · Permission·effect",
+    "Host가 권한을 판정하고 허용된 tool을 실행합니다. 결정 actor는 message schema에 없습니다.",
+  ],
+  [
+    "PINNED RECORD",
+    "5 · ToolResult",
+    "tool_use_id로 결과와 원래 call을 연결합니다.",
+  ],
+  [
+    "HARDENING",
+    "6 · Test receipt",
+    "Command·cwd·exit code·artifact digest를 검증 evidence로 남겨야 합니다.",
+  ],
+  [
+    "PINNED RECORD",
+    "7 · Final response",
+    "더는 ToolUse가 없는 assistant message로 결과를 설명합니다.",
+  ],
+] as const;
+
+const RECORD_TERMS = [
+  [
+    "Session",
+    "여러 turn을 같은 작업으로 이어 주는 durable identity와 저장 record",
+  ],
+  [
+    "Turn",
+    "사용자 입력 하나에서 최종 assistant 응답까지 이어지는 한 번의 처리",
+  ],
+  ["Attempt", "한 turn 안의 개별 model request 또는 tool 실행 시도"],
+  ["Effect", "파일 수정·process 실행처럼 workspace나 외부 세계를 바꾸는 결과"],
+] as const;
+
+const MESSAGE_BLOCKS = [
+  ["System · User · Assistant · Tool", "누가 만든 message인지 구분하는 role"],
+  ["Text", "사용자 입력과 최종 설명처럼 일반 text를 담는 block"],
+  ["ToolUse", "call id·tool name·input을 묶어 실행 제안을 식별하는 block"],
+  [
+    "ToolResult",
+    "tool_use_id로 원래 call과 연결하고 output·오류 여부를 담는 block",
+  ],
+  [
+    "Thinking",
+    "provider가 제공하고 runtime이 저장하기로 한 경우의 typed block",
+  ],
+] as const;
+
+const SCHEMA_BOUNDARY = [
+  [
+    "저장됨 · session_meta",
+    "version · session_id · timestamps · fork · workspace_root · model",
+  ],
+  [
+    "저장됨 · message",
+    "role · typed blocks · optional usage · tool call/result correlation",
+  ],
+  ["저장됨 · compaction", "count · removed_message_count · summary"],
+  ["저장됨 · history", "timestamp가 있는 prompt history record"],
+  [
+    "확인되지 않음",
+    "attempt revision · policy actor/decision · effect receipt · artifact bytes",
+  ],
+] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Session 구조 &amp; 메시지 모델</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        세션은 모델의 기억이 아니라 작업을 다시 찾는 durable record입니다
+      </h2>
 
-        <SessionStructViz />
+      <ContentBoundary article="claw-session" />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Session — 대화 단위 상태 컨테이너</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <code>Session</code>은 "하나의 대화 턴 집합 + 연관 메타데이터"를 담는 최상위 구조체<br />
-          생명주기: 프로세스 시작 ~ 종료, 또는 <code>fork</code>로 분기된 시점 ~ 병합<br />
-          모든 메시지·도구 호출·권한 결정·토큰 사용량이 하나의 Session에 누적
+          사용자가 로그인 401 오류 수정을 요청했다고 해 보겠습니다. 모델이
+          원인을 설명하는 것만으로는 작업이 끝나지 않습니다. Runtime은 어떤
+          요청에서 시작했는지, 어느 workspace를 읽었는지, 어떤 tool call이
+          허용됐고 실제로 무엇을 바꿨는지, 마지막 test가 통과했는지를 서로
+          연결해야 합니다. 이 연결을 process가 종료된 뒤에도 찾게 해 주는 단위가
+          session입니다.
         </p>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">식별</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">id: SessionId</code></p>
-            <p className="text-xs text-muted-foreground">UUID v4 — 세션 식별자, 로그·추적 키</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">분기</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">parent: Option&lt;SessionId&gt;</code></p>
-            <p className="text-xs text-muted-foreground">fork로 파생된 경우 원본 세션 참조</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">대화</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">messages: Vec&lt;Message&gt;</code></p>
-            <p className="text-xs text-muted-foreground">대화 메시지 배열 (아래 Message 구조)</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">도구</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">tool_calls: Vec&lt;ToolCallLog&gt;</code></p>
-            <p className="text-xs text-muted-foreground">도구 호출 로그 — 디버깅·텔레메트리용</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">권한</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">permission_log: Vec&lt;PermDecision&gt;</code></p>
-            <p className="text-xs text-muted-foreground">모든 권한 판정 이력 — Allow/Deny/Prompt</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">비용</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">token_usage: TokenUsage</code></p>
-            <p className="text-xs text-muted-foreground">입력·출력·캐시 토큰 누적</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">경로</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">workspace_root: PathBuf</code></p>
-            <p className="text-xs text-muted-foreground">워크스페이스 경계 검증 기준</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">시각</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">started_at: DateTime&lt;Utc&gt;</code></p>
-            <p className="text-xs text-muted-foreground">세션 시작 시각 (UTC)</p>
-          </div>
-          <div className="rounded-lg border bg-card p-3">
-            <div className="text-xs font-mono text-muted-foreground mb-1">메타</div>
-            <p className="text-sm font-semibold mb-1"><code className="text-xs">metadata: SessionMeta</code></p>
-            <p className="text-xs text-muted-foreground">사용자 정의 태그·플래그</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Message — 대화 턴의 기본 단위</h3>
-        <div className="not-prose my-4 space-y-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm font-semibold mb-2">Message 구조체</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <div className="rounded border bg-muted/50 p-2 text-center">
-                <code className="text-xs">role: Role</code>
-                <p className="text-[11px] text-muted-foreground mt-1">User | Assistant | System | Tool</p>
-              </div>
-              <div className="rounded border bg-muted/50 p-2 text-center">
-                <code className="text-xs">content: Vec&lt;ContentBlock&gt;</code>
-                <p className="text-[11px] text-muted-foreground mt-1">멀티모달 콘텐츠 블록</p>
-              </div>
-              <div className="rounded border bg-muted/50 p-2 text-center">
-                <code className="text-xs">timestamp</code>
-                <p className="text-[11px] text-muted-foreground mt-1">DateTime&lt;Utc&gt;</p>
-              </div>
-              <div className="rounded border bg-muted/50 p-2 text-center">
-                <code className="text-xs">metadata</code>
-                <p className="text-[11px] text-muted-foreground mt-1">MessageMeta</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border bg-card p-4">
-              <p className="text-sm font-semibold mb-2">Role (4종)</p>
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-blue-500" /><span className="text-sm"><code className="text-xs">User</code> — 사용자 입력</span></div>
-                <div className="flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-green-500" /><span className="text-sm"><code className="text-xs">Assistant</code> — LLM 응답</span></div>
-                <div className="flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-gray-400" /><span className="text-sm"><code className="text-xs">System</code> — 시스템 프롬프트</span></div>
-                <div className="flex items-center gap-2"><span className="inline-block w-2 h-2 rounded-full bg-orange-500" /><span className="text-sm"><code className="text-xs">Tool</code> — 도구 실행 결과</span></div>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">Anthropic Messages API 스키마와 정렬</p>
-            </div>
-
-            <div className="rounded-lg border bg-card p-4">
-              <p className="text-sm font-semibold mb-2">ContentBlock (4종)</p>
-              <div className="space-y-1.5">
-                <div className="flex items-start gap-2"><span className="text-sm font-mono text-muted-foreground shrink-0">Text</span><span className="text-sm">일반 텍스트 (<code className="text-xs">String</code>)</span></div>
-                <div className="flex items-start gap-2"><span className="text-sm font-mono text-muted-foreground shrink-0">ToolUse</span><span className="text-sm">도구 호출 요청 (<code className="text-xs">id, name, input</code>)</span></div>
-                <div className="flex items-start gap-2"><span className="text-sm font-mono text-muted-foreground shrink-0">ToolResult</span><span className="text-sm">도구 결과 (<code className="text-xs">tool_use_id, output, is_error</code>)</span></div>
-                <div className="flex items-start gap-2"><span className="text-sm font-mono text-muted-foreground shrink-0">Image</span><span className="text-sm">이미지 (<code className="text-xs">media_type, data</code>)</span></div>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">하나의 Message에 여러 ContentBlock 가능 — 예: 텍스트 + 병렬 도구 호출 3개</p>
-            </div>
-          </div>
-        </div>
+        <p>
+          여기서 session은 모델 내부의 장기 기억도, 현재 model context도
+          아닙니다. Context는 다음 model request에 넣을 입력이고, session은 그
+          context를 다시 만들 때 참고하는 저장 record입니다. 어떤 정보를
+          context에 선택하고 compaction하는지는{" "}
+          <a href="/ai/context-engineering">context engineering</a>이 소유하며,
+          이 글은 저장된 대화와 실행이 어디까지 같은 작업인지 식별하는 경계를
+          다룹니다.
+        </p>
       </div>
-      <MessageTypesViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">TokenUsage — 세부 토큰 회계</h3>
-        <div className="not-prose my-4 space-y-3">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold"><code className="text-xs">input_tokens</code></p>
-              <p className="text-xs text-muted-foreground mt-1">입력 토큰 (누적)</p>
-              <p className="text-[11px] text-blue-600 dark:text-blue-400 mt-1">표준 요금</p>
-            </div>
-            <div className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold"><code className="text-xs">output_tokens</code></p>
-              <p className="text-xs text-muted-foreground mt-1">출력 토큰 (누적)</p>
-              <p className="text-[11px] text-blue-600 dark:text-blue-400 mt-1">표준 요금</p>
-            </div>
-            <div className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold"><code className="text-xs">cache_creation</code></p>
-              <p className="text-xs text-muted-foreground mt-1">프롬프트 캐시 생성 비용</p>
-              <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">1.25배 요금</p>
-            </div>
-            <div className="rounded-lg border bg-card p-3">
-              <p className="text-sm font-semibold"><code className="text-xs">cache_read</code></p>
-              <p className="text-xs text-muted-foreground mt-1">캐시 적중으로 절약</p>
-              <p className="text-[11px] text-green-600 dark:text-green-400 mt-1">0.1배 요금 — 대폭 절감</p>
-            </div>
-          </div>
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {SCENARIO_TRACE.map(([status, step, detail]) => (
+          <article
+            key={step}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <p className="break-words text-[0.65rem] font-bold tracking-wide text-muted-foreground">
+              {status}
+            </p>
+            <p className="mt-1 break-words text-xs font-bold text-primary">
+              {step}
+            </p>
+            <p className="mt-2 break-words text-sm leading-6 text-muted-foreground">
+              {detail}
+            </p>
+          </article>
+        ))}
+      </div>
 
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm font-semibold mb-2"><code className="text-xs">total_cost_usd()</code> — USD 비용 계산</p>
-            <p className="text-xs text-muted-foreground">
-              모델별 단가 테이블(<code className="text-xs">ModelInfo::pricing</code>) 조회 후, 4종 토큰 각각에 단가를 곱하여 합산.
-              Anthropic API 응답의 <code className="text-xs">usage</code> 필드 구조와 동일. 사용자에게 실시간 표시.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 session·turn·attempt·effect를 구분합니다</h3>
+        <p>
+          이 네 단어를 모두 “대화”라고 부르면 crash가 났을 때 무엇을 다시
+          실행해도 되는지 판단할 수 없습니다. Session은 여러 turn의 바깥
+          identity이고, 한 turn에는 provider retry나 여러 tool attempt가 들어갈
+          수 있습니다. Effect는 attempt와도 다릅니다. Edit attempt가
+          timeout됐더라도 파일은 이미 바뀌었을 수 있기 때문입니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 divide-y divide-border/70 rounded-lg border border-border/70">
+        {RECORD_TERMS.map(([term, meaning]) => (
+          <div
+            key={term}
+            className="grid min-w-0 gap-1 p-4 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4"
+          >
+            <code className="break-words text-xs font-bold text-primary">
+              {term}
+            </code>
+            <p className="break-words text-sm leading-6 text-muted-foreground">
+              {meaning}
             </p>
           </div>
-        </div>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">세션 생성 & 초기화</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm font-semibold mb-2"><code className="text-xs">Session::new(workspace_root)</code></p>
-            <p className="text-xs text-muted-foreground mb-2">빈 세션 생성 — 워크스페이스 경로만 필수</p>
-            <div className="space-y-1 text-xs">
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" /><span><code className="text-[11px]">SessionId::new()</code> — UUID v4 생성</span></div>
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" /><span><code className="text-[11px]">parent: None</code></span></div>
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" /><span>모든 컬렉션 빈 상태</span></div>
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" /><span><code className="text-[11px]">Utc::now()</code> 시작 시각</span></div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm font-semibold mb-2"><code className="text-xs">Session::fork()</code></p>
-            <p className="text-xs text-muted-foreground mb-2">현재 상태를 복제 후 부모 링크 설정 — "대화 분기"</p>
-            <div className="space-y-1 text-xs">
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" /><span>새 <code className="text-[11px]">SessionId</code> 발급</span></div>
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" /><span><code className="text-[11px]">parent = Some(self.id)</code></span></div>
-              <div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" /><span><code className="text-[11px]">messages.clone()</code> — 전체 복사</span></div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">가설 탐색에 유용 — 원본 대화를 깨뜨리지 않고 실험 가능</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">ContentBlock 직렬화 — Anthropic API 매핑</h3>
-        <div className="not-prose my-4 space-y-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm font-semibold mb-3">ContentBlock 직렬화 — Rust enum → JSON</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="rounded border bg-muted/50 p-3">
-                <p className="text-xs font-semibold mb-1">Text</p>
-                <p className="text-xs font-mono text-muted-foreground">{"{"} "type": "text", "text": "..." {"}"}</p>
-              </div>
-              <div className="rounded border bg-muted/50 p-3">
-                <p className="text-xs font-semibold mb-1">ToolUse</p>
-                <p className="text-xs font-mono text-muted-foreground">{"{"} "type": "tool_use", "id": "toolu_01", "name": "read_file", "input": {"{"}"path":"src/main.rs"{"}"} {"}"}</p>
-              </div>
-              <div className="rounded border bg-muted/50 p-3">
-                <p className="text-xs font-semibold mb-1">ToolResult</p>
-                <p className="text-xs font-mono text-muted-foreground">{"{"} "type": "tool_result", "tool_use_id": "...", "output": "..." {"}"}</p>
-              </div>
-              <div className="rounded border bg-muted/50 p-3">
-                <p className="text-xs font-semibold mb-1">Image</p>
-                <p className="text-xs font-mono text-muted-foreground">{"{"} "type": "image", "media_type": "image/png", "data": "..." {"}"}</p>
-              </div>
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            <code className="text-xs">type</code> 필드가 discriminator — 수신 측에서 enum 분기 결정.
-            Rust 내부 표현과 API wire format 사이에 <strong>변환 층 없음</strong> → 오버헤드 최소
-          </p>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Session Lifecycle 상태 전이</h3>
-        <div className="not-prose my-4 space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded-lg border-2 border-green-500/50 bg-green-50 dark:bg-green-950/20 p-4">
-              <p className="text-sm font-semibold text-green-700 dark:text-green-400">Active</p>
-              <p className="text-xs text-muted-foreground mt-1">정상 동작 — 메시지 수신·처리</p>
-              <p className="text-[11px] font-mono text-muted-foreground mt-2">저장: 메모리 (핫 데이터)</p>
-            </div>
-            <div className="rounded-lg border-2 border-amber-500/50 bg-amber-50 dark:bg-amber-950/20 p-4">
-              <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">Suspended</p>
-              <p className="text-xs text-muted-foreground mt-1">일시 정지 — UI 닫혔지만 복원 가능</p>
-              <p className="text-[11px] font-mono text-muted-foreground mt-2">저장: 메모리 + 디스크 (checkpoint)</p>
-            </div>
-            <div className="rounded-lg border-2 border-red-500/50 bg-red-50 dark:bg-red-950/20 p-4">
-              <p className="text-sm font-semibold text-red-700 dark:text-red-400">Terminated</p>
-              <p className="text-xs text-muted-foreground mt-1">종료 — 리소스 해제, 복원 불가</p>
-              <p className="text-[11px] font-mono text-muted-foreground mt-2">저장: 디스크 전용 (immutable archive)</p>
-            </div>
-          </div>
-
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs font-semibold mb-2">상태 전이</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
-              <div><span className="text-green-600 dark:text-green-400">Active</span> → <span className="text-amber-600 dark:text-amber-400">Suspended</span>: 사용자가 UI 닫음 or 네트워크 끊김</div>
-              <div><span className="text-amber-600 dark:text-amber-400">Suspended</span> → <span className="text-green-600 dark:text-green-400">Active</span>: 사용자 재연결</div>
-              <div><span className="text-green-600 dark:text-green-400">Active</span> → <span className="text-red-600 dark:text-red-400">Terminated</span>: /exit 또는 에러</div>
-              <div><span className="text-amber-600 dark:text-amber-400">Suspended</span> → <span className="text-red-600 dark:text-red-400">Terminated</span>: 24시간 경과</div>
-            </div>
-          </div>
-        </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <strong>3단계 lifecycle</strong>로 메모리 사용량과 복원 가능성의 균형<br />
-          Suspended 상태의 세션은 토큰 사용량이 합산되지 않음 — 비용 절감<br />
-          Terminated 후에도 archive에서 세션 로그 조회 가능 — 디버깅 지원
+          아래 그림은 pinned 구조체를 그대로 옮긴 class diagram이 아니라, 실제
+          typed record와 운영에 필요한 effect·authority·attempt 경계를 함께 놓은
+          <strong> 목표 architecture</strong>입니다. Pinned source에서 확인된
+          범위는 이어지는 source block과 schema ledger에서 따로 표시합니다.
         </p>
+      </div>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Session 중심 아키텍처의 장점</p>
-          <p>
-            "모든 상태를 Session 하나에 모음" → 디버깅·재현·테스트가 간결<br />
-            - <strong>재현</strong>: Session을 JSON으로 직렬화하여 버그 리포트에 첨부 가능<br />
-            - <strong>테스트</strong>: 원하는 Session 상태를 만들어 특정 시나리오 재현<br />
-            - <strong>fork</strong>: 상태 복제 비용이 낮음 (clone 가능한 구조체만)
-          </p>
-          <p className="mt-2">
-            반대 극: "상태를 여러 서비스에 분산" — 관측은 편하지만 재현 어려움<br />
-            claw-code는 단일 프로세스·단일 세션 모델로 복잡도 최소화
-          </p>
-        </div>
+      <div className="not-prose my-8 min-w-0">
+        <SessionStructViz />
+      </div>
 
+      <div className="not-prose my-7 divide-y divide-border/70 rounded-lg border border-border/70">
+        {SCHEMA_BOUNDARY.map(([scope, fields]) => (
+          <div
+            key={scope}
+            className="grid min-w-0 gap-1 p-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-4"
+          >
+            <p className="break-words text-sm font-semibold">{scope}</p>
+            <code className="break-words text-xs leading-6 text-primary">
+              {fields}
+            </code>
+          </div>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Pinned snapshot이 실제로 저장하는 범위부터 확인합니다</h3>
+        <p>
+          분석 대상 commit의 <code>Session</code>에는 session identity,
+          생성·수정 시각, typed message, compaction metadata, fork metadata,
+          workspace root, prompt history와 model 정보가 있습니다. Message는
+          하나의 문자열이 아니라 role과 content block 배열입니다. 따라서
+          assistant가 text와 tool call을 함께 반환하더라도 구조를 잃지 않고,{" "}
+          <code>ToolResult.tool_use_id</code>로 어느 호출의 결과인지 다시 찾을
+          수 있습니다.
+        </p>
+        <p>
+          <code>Thinking</code> block이 type으로 존재한다는 사실은 제품이 숨겨진
+          chain-of-thought를 사용자에게 공개해야 한다는 뜻이 아닙니다.
+          Provider가 반환하고 저장 정책이 허용한 block을 구분할 수 있다는 schema
+          사실일 뿐이며, 민감한 reasoning·secret·대용량 output의 보존 여부는
+          별도 정책이 결정해야 합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {MESSAGE_BLOCKS.map(([type, meaning]) => (
+          <article
+            key={type}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <code className="break-words text-xs font-bold text-primary">
+              {type}
+            </code>
+            <p className="mt-2 break-words text-sm leading-6 text-muted-foreground">
+              {meaning}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div
+        id="paper-claw-session-record-source"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Claw Code session record
+        </p>
+        <CitationBlock
+          source="Claw Code pinned session.rs"
+          citeKey={1}
+          type="code"
+          href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/session.rs"
+        >
+          <div className="space-y-2 font-sans">
+            <p>
+              <strong>문제:</strong> 대화와 tool call을 process 종료 뒤에도 같은
+              session으로 복원하려면 안정적인 record type과 저장 형식이
+              필요합니다.
+            </p>
+            <p>
+              <strong>핵심 아이디어·기여:</strong> Pinned source는 role·content
+              block·compaction·fork provenance를 typed 구조로 두고 JSONL
+              record와 snapshot으로 직렬화합니다.
+            </p>
+            <p>
+              <strong>전제·조건:</strong> 링크된 commit SHA의 Rust source를 읽은
+              결과이며 이후 schema·field·저장 동작은 바뀔 수 있습니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> 이 절의 실제 <code>Session</code>,{" "}
+              <code>ConversationMessage</code>, <code>ContentBlock</code>, fork
+              metadata와 JSONL 형식을 뒷받침합니다.
+            </p>
+            <p>
+              <strong>비주장:</strong> 이 구조가 Claude Code·Codex의 내부
+              schema이거나, full effect receipt·revisioned event
+              store·multi-writer transaction까지 구현한다는 뜻은 아닙니다.
+            </p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>JSONL record와 event sourcing은 같은 말이 아닙니다</h3>
+        <p>
+          Pinned 구현은 metadata와 message를 JSONL record로 저장하고, 일부
+          write는 뒤에 append합니다. 그렇다고 모든 model attempt, permission
+          decision, 외부 effect와 lifecycle transition을 immutable event로
+          보존해 임의의 revision view를 재구성할 수 있는 것은 아닙니다. “한 줄씩
+          저장한다”는 파일 형식과 “모든 상태 변화를 event가 소유한다”는
+          event-sourcing architecture를 구분해야 합니다.
+        </p>
+        <p>
+          더 강한 운영 계약에서는 원본 event와 현재 view를 분리하고, snapshot은
+          어느 event revision에서 파생됐는지 기록합니다. 복원할 때는 snapshot
+          뒤의 event만 replay하고, optimistic concurrency로 같은 base revision의
+          동시 update를 검출합니다. 이 방식은 감사에 유리하지만 event schema
+          version과 migration, ordering, secret redaction과 storage 비용도 함께
+          설계해야 합니다. 아래 문서는 이 일반 pattern의 근거이며 Claw
+          snapshot의 구현 사실을 늘려 주는 근거가 아닙니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-azure-event-sourcing"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Event Sourcing pattern
+        </p>
+        <CitationBlock
+          source="Microsoft Azure Architecture Center — Event Sourcing pattern"
+          citeKey={2}
+          href="https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing"
+        >
+          <div className="space-y-2 font-sans">
+            <p>
+              <strong>문제:</strong> 현재 state만 덮어쓰면 어떤 변경 순서와
+              이유로 그 상태가 됐는지 복원하거나 감사하기 어렵습니다.
+            </p>
+            <p>
+              <strong>핵심 아이디어·기여:</strong> 상태 변경을 append-only
+              event로 저장하고 현재 state는 event를 replay하거나 snapshot에서
+              이어 계산합니다.
+            </p>
+            <p>
+              <strong>전제·조건:</strong> Event order·versioning·projection
+              consistency·snapshot과 개인정보 삭제 전략을 함께 운영해야 합니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> 원본 event와 derived view, snapshot의
+              역할을 구분하는 일반 설계 근거입니다.
+            </p>
+            <p>
+              <strong>비주장:</strong> JSONL 파일을 사용하면 자동으로 event
+              sourcing이 되거나 pinned Claw source가 revision
+              replay·projection을 완성했다는 뜻은 아닙니다.
+            </p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>이제 한 turn의 실제 순서를 따라갑니다</h3>
+        <p>
+          다음 절에서는 401 사례의 user message가 저장된 뒤 provider stream,
+          assistant tool call, permission, edit와 test result가 어떤 순서로
+          session에 추가되는지 살펴봅니다. 이 순서를 알아야 저장됐다는 사실과
+          외부 effect가 완료됐다는 사실 사이의 빈틈도 찾을 수 있습니다.
+        </p>
       </div>
     </section>
   );

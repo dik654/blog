@@ -1,4 +1,4 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview() {
   return (
@@ -6,16 +6,20 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">VDF 개요 &amp; 동기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          VDF(Verifiable Delay Function) — "일정 시간이 흘렀다"를 수학적으로 증명하는 함수.<br />
+          VDF(Verifiable Delay Function) — "일정 시간이 흘렀다"를 수학적으로
+          증명하는 함수.
+          <br />
           계산에 T 스텝이 반드시 필요하고, 검증은 짧은 증명으로 빠르게 가능
         </p>
       </div>
-      <div className="not-prose"><ContextViz /></div>
+      <div className="not-prose">
+        <ContextViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">VDF 정의 &amp; 동기</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// VDF (Verifiable Delay Function):
+          {`// VDF (Verifiable Delay Function):
 // Boneh et al., CRYPTO 2018
 
 // Definition:
@@ -91,7 +95,8 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           VDF: <strong>T sequential steps + quick verify</strong>.<br />
-          Boneh et al. 2018, "time has passed" 증명.<br />
+          Boneh et al. 2018, "time has passed" 증명.
+          <br />
           randomness beacons, leader election, fair ordering 사용.
         </p>
       </div>

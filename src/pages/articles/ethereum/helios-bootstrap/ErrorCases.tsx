@@ -1,4 +1,4 @@
-import ErrorViz from './viz/ErrorViz';
+import ErrorViz from "./viz/ErrorViz";
 
 export default function ErrorCases({ title }: { title: string }) {
   return (
@@ -13,10 +13,13 @@ export default function ErrorCases({ title }: { title: string }) {
         <p className="leading-7">
           <strong>💡 Reth vs Helios:</strong> Reth는 피어 연결 실패만 에러다.
           <br />
-          Helios는 신뢰 검증 실패가 더 위험하다 — 가짜 체인을 따라갈 수 있기 때문.
+          Helios는 신뢰 검증 실패가 더 위험하다 — 가짜 체인을 따라갈 수 있기
+          때문.
         </p>
       </div>
-      <div className="not-prose"><ErrorViz /></div>
+      <div className="not-prose">
+        <ErrorViz />
+      </div>
     </section>
   );
 }

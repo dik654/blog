@@ -17,8 +17,16 @@ pub trait PolynomialCommitment<F: PrimeField, P: Polynomial<F>> {
 }`;
 
 export const TRAIT_ANNOTATIONS = [
-  { lines: [4, 10] as [number, number], color: 'sky' as const, note: '5개 연관 타입: 파라미터/키/커밋먼트/증명' },
-  { lines: [12, 16] as [number, number], color: 'emerald' as const, note: '4개 핵심 연산: setup/commit/open/check' },
+  {
+    lines: [4, 10] as [number, number],
+    color: "sky" as const,
+    note: "5개 연관 타입: 파라미터/키/커밋먼트/증명",
+  },
+  {
+    lines: [12, 16] as [number, number],
+    color: "emerald" as const,
+    note: "4개 핵심 연산: setup/commit/open/check",
+  },
 ];
 
 export const DIR_CODE = `// poly-commit 디렉토리 구조
@@ -38,7 +46,19 @@ poly-commit/src/
 // 핵심 의존성: ark-ff, ark-ec, ark-poly, ark-serialize`;
 
 export const DIR_ANNOTATIONS = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '공통 인터페이스 + 데이터 구조' },
-  { lines: [6, 8] as [number, number], color: 'emerald' as const, note: '페어링 기반: KZG10, Marlin, Sonic' },
-  { lines: [9, 11] as [number, number], color: 'amber' as const, note: '비페어링: IPA, Hyrax, Linear Codes' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "공통 인터페이스 + 데이터 구조",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "emerald" as const,
+    note: "페어링 기반: KZG10, Marlin, Sonic",
+  },
+  {
+    lines: [9, 11] as [number, number],
+    color: "amber" as const,
+    note: "비페어링: IPA, Hyrax, Linear Codes",
+  },
 ];

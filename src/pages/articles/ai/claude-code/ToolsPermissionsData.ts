@@ -25,9 +25,21 @@ export const toolCatalogCode = `Claude Code 도구 카탈로그:
   MCP 도구   — MCP 서버에서 제공하는 도구`;
 
 export const toolCatalogAnnotations = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: '파일 시스템 도구 5종' },
-  { lines: [10, 12] as [number, number], color: 'emerald' as const, note: '실행 도구 — Bash + Notebook' },
-  { lines: [18, 21] as [number, number], color: 'amber' as const, note: '협업 도구 — 에이전트 & 사용자 질문' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "파일 시스템 도구 5종",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "emerald" as const,
+    note: "실행 도구 — Bash + Notebook",
+  },
+  {
+    lines: [18, 21] as [number, number],
+    color: "amber" as const,
+    note: "협업 도구 — 에이전트 & 사용자 질문",
+  },
 ];
 
 export const permissionModelCode = `3단계 권한 모드:
@@ -46,7 +58,19 @@ OS 수준 샌드박싱:
   → 샌드박싱으로 권한 프롬프트 84% 감소`;
 
 export const permissionAnnotations = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: 'Ask — 모든 호출 승인 필요' },
-  { lines: [7, 9] as [number, number], color: 'amber' as const, note: 'YOLO — 자동 허용 모드' },
-  { lines: [11, 14] as [number, number], color: 'emerald' as const, note: 'OS 샌드박싱으로 안전성 확보' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "Ask — 모든 호출 승인 필요",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "amber" as const,
+    note: "YOLO — 자동 허용 모드",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "emerald" as const,
+    note: "OS 샌드박싱으로 안전성 확보",
+  },
 ];

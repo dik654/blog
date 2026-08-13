@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const optimizerCodeRefs: Record<string, CodeRef> = {
-  'sgd': {
-    path: 'src/lib.rs — SGD optimizer',
-    lang: 'rust',
+  sgd: {
+    path: "src/lib.rs — SGD optimizer",
+    lang: "rust",
     highlight: [1, 22],
-    desc: 'SGD 옵티마이저: p -= lr * grad.\nModel trait 참조로 모든 파라미터를 자동 순회.',
+    desc: "SGD 옵티마이저: p -= lr * grad.\nModel trait 참조로 모든 파라미터를 자동 순회.",
     code: `pub struct SGD<'a> {
     lr: f64,
     target: Option<&'a dyn Model>,
@@ -32,15 +32,23 @@ impl<'a> SGD<'a> {
     }
 }`,
     annotations: [
-      { lines: [3, 3], color: 'sky', note: '&dyn Model — trait object로 어떤 모델이든 수용' },
-      { lines: [18, 23], color: 'emerald', note: 'update: model.params() 순회 → p -= lr * grad' },
+      {
+        lines: [3, 3],
+        color: "sky",
+        note: "&dyn Model — trait object로 어떤 모델이든 수용",
+      },
+      {
+        lines: [18, 23],
+        color: "emerald",
+        note: "update: model.params() 순회 → p -= lr * grad",
+      },
     ],
   },
-  'adam': {
-    path: 'src/lib.rs — Adam optimizer',
-    lang: 'rust',
+  adam: {
+    path: "src/lib.rs — Adam optimizer",
+    lang: "rust",
     highlight: [1, 38],
-    desc: 'Adam: 1차 모멘트(m) + 2차 모멘트(v) + 바이어스 보정.\n파라미터별 적응적 학습률.',
+    desc: "Adam: 1차 모멘트(m) + 2차 모멘트(v) + 바이어스 보정.\n파라미터별 적응적 학습률.",
     code: `pub struct Adam {
     lr: f64,
     beta1: f64,   // 1차 모멘트 감쇠율 (기본 0.9)
@@ -82,10 +90,26 @@ impl Adam {
 let wd_update = p.data().mapv(|w| w * self.lr * self.weight_decay);
 p.set_data(&(&p.data() - &adam_update) - &wd_update);`,
     annotations: [
-      { lines: [6, 8], color: 'sky', note: 'ms, vs — 파라미터별 모멘트를 Vec으로 관리. lazy init (첫 update 시 shape 결정)' },
-      { lines: [15, 18], color: 'emerald', note: '바이어스 보정: t가 작을 때 m, v가 0 편향 → lr_t로 보정' },
-      { lines: [22, 27], color: 'amber', note: '1차 모멘트(방향) + 2차 모멘트(크기) 이동평균 갱신' },
-      { lines: [37, 39], color: 'violet', note: 'AdamW: wd 항을 모멘트 밖에서 분리 적용 → 정확한 감쇠' },
+      {
+        lines: [6, 8],
+        color: "sky",
+        note: "ms, vs — 파라미터별 모멘트를 Vec으로 관리. lazy init (첫 update 시 shape 결정)",
+      },
+      {
+        lines: [15, 18],
+        color: "emerald",
+        note: "바이어스 보정: t가 작을 때 m, v가 0 편향 → lr_t로 보정",
+      },
+      {
+        lines: [22, 27],
+        color: "amber",
+        note: "1차 모멘트(방향) + 2차 모멘트(크기) 이동평균 갱신",
+      },
+      {
+        lines: [37, 39],
+        color: "violet",
+        note: "AdamW: wd 항을 모멘트 밖에서 분리 적용 → 정확한 감쇠",
+      },
     ],
   },
 };

@@ -17,9 +17,21 @@ lib/             <- libutee (TA용 라이브러리, TEE Internal API)
 ta/              <- 내장 TA (PKCS#11, FTPM, APDU 등)`;
 
 export const repoAnnotations = [
-  { lines: [2, 8] as [number, number], color: 'sky' as const, note: 'ARM 아키텍처별 코드' },
-  { lines: [9, 14] as [number, number], color: 'emerald' as const, note: '커널 서비스 & 메모리 관리' },
-  { lines: [16, 17] as [number, number], color: 'amber' as const, note: 'TA 라이브러리 & 내장 TA' },
+  {
+    lines: [2, 8] as [number, number],
+    color: "sky" as const,
+    note: "ARM 아키텍처별 코드",
+  },
+  {
+    lines: [9, 14] as [number, number],
+    color: "emerald" as const,
+    note: "커널 서비스 & 메모리 관리",
+  },
+  {
+    lines: [16, 17] as [number, number],
+    color: "amber" as const,
+    note: "TA 라이브러리 & 내장 TA",
+  },
 ];
 
 export const trustzoneCode = `// ARM TrustZone 하드웨어 격리
@@ -43,9 +55,21 @@ Normal World (EL0/EL1)         Secure World (S.EL0/S.EL1)
 // - 주변 장치도 Secure/Non-Secure로 구분 (TrustZone PAS)`;
 
 export const trustzoneAnnotations = [
-  { lines: [1, 9] as [number, number], color: 'sky' as const, note: '2개 세계 구조 + Secure Monitor' },
-  { lines: [11, 14] as [number, number], color: 'emerald' as const, note: 'SMC 세계 전환 흐름' },
-  { lines: [16, 19] as [number, number], color: 'amber' as const, note: '하드웨어 격리 보장' },
+  {
+    lines: [1, 9] as [number, number],
+    color: "sky" as const,
+    note: "2개 세계 구조 + Secure Monitor",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "emerald" as const,
+    note: "SMC 세계 전환 흐름",
+  },
+  {
+    lines: [16, 19] as [number, number],
+    color: "amber" as const,
+    note: "하드웨어 격리 보장",
+  },
 ];
 
 export const entryAsmCode = `// core/arch/arm/kernel/entry_a64.S
@@ -81,6 +105,14 @@ export const entryAsmCode = `// core/arch/arm/kernel/entry_a64.S
 .endm`;
 
 export const entryAnnotations = [
-  { lines: [4, 20] as [number, number], color: 'sky' as const, note: 'set_sp: CPU별 스택 초기화' },
-  { lines: [22, 31] as [number, number], color: 'emerald' as const, note: 'set_sctlr_el1: 시스템 제어 레지스터' },
+  {
+    lines: [4, 20] as [number, number],
+    color: "sky" as const,
+    note: "set_sp: CPU별 스택 초기화",
+  },
+  {
+    lines: [22, 31] as [number, number],
+    color: "emerald" as const,
+    note: "set_sctlr_el1: 시스템 제어 레지스터",
+  },
 ];

@@ -71,6 +71,20 @@ async fn lookup(target: &PublicKey) -> Vec<NodeRecord> {
 }`;
 
 export const discvComparison = [
-  { label: 'discv4', items: ['ECDSA secp256k1 서명 (비암호화 UDP)', '본딩: Ping → Pong 교환', 'FindNode: 압축 공개키 대상'] },
-  { label: 'discv5', items: ['AES-128-GCM 암호화 (모든 패킷)', 'ECDH Handshake 개선 (Session)', 'Topic Discovery (서비스 광고)'] },
+  {
+    label: "discv4",
+    items: [
+      "ECDSA secp256k1 서명 (비암호화 UDP)",
+      "본딩: Ping → Pong 교환",
+      "FindNode: 압축 공개키 대상",
+    ],
+  },
+  {
+    label: "discv5",
+    items: [
+      "AES-128-GCM 암호화 (모든 패킷)",
+      "ECDH Handshake 개선 (Session)",
+      "Topic Discovery (서비스 광고)",
+    ],
+  },
 ];

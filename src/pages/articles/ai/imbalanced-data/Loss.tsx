@@ -1,62 +1,15 @@
-import FocalLossViz from './viz/FocalLossViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import FocalLossViz from "./viz/FocalLossViz";
 
 export default function Loss() {
   return (
     <section id="loss" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">손실 함수: Focal Loss, Class Weight</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          리샘플링이 <strong>데이터</strong>를 조정한다면, 손실 함수는 <strong>학습 신호</strong>를 조정한다<br />
-          소수 클래스의 오분류에 더 큰 벌점을 부여하여 모델이 소수 클래스에 집중하게 만든다<br />
-          데이터를 건드리지 않으므로 리샘플링의 과적합/정보손실 문제를 피할 수 있다
-        </p>
-        <p>
-          <strong>Class Weight</strong>(클래스 가중치) — 가장 단순한 접근<br />
-          w_i = N / (K * n_i): 전체 샘플 수 N, 클래스 수 K, 클래스 i의 샘플 수 n_i<br />
-          소수 클래스(n_i 작음) → w_i 큼 → loss 기여가 증가<br />
-          sklearn의 class_weight="balanced"로 자동 적용 가능
-        </p>
-        <p>
-          <strong>Cross-Entropy의 한계</strong> — easy sample이 loss를 지배<br />
-          CE = -log(p_t)에서 p_t는 정답 클래스의 예측 확률<br />
-          다수 클래스(easy): p_t ≈ 0.95 → loss ≈ 0.05 (작지만 개수가 많음)<br />
-          소수 클래스(hard): p_t ≈ 0.2 → loss ≈ 1.6 (크지만 개수가 적음)<br />
-          결과적으로 easy sample의 누적 loss가 전체 gradient를 지배 → 소수 클래스 학습 방해
-        </p>
-        <p>
-          <strong>Focal Loss</strong>(Lin et al., 2017, RetinaNet) — easy sample 가중치 감소<br />
-          FL = -(1 - p_t)^gamma * log(p_t)<br />
-          (1 - p_t)^gamma가 핵심: p_t가 높은(쉬운) 샘플일수록 loss를 기하급수적으로 줄임<br />
-          gamma=0이면 표준 CE, gamma=2(기본값)이면 easy sample의 loss가 수백 배 감소<br />
-          모델이 "이미 잘 맞추는 샘플"은 무시하고 "어려운 샘플"에 집중하게 된다
-        </p>
-      </div>
-      <FocalLossViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Focal Loss 변형과 실전 조합</h3>
-        <p>
-          <strong>alpha-balanced Focal Loss</strong>: alpha_t * (1-p_t)^gamma * log(p_t)<br />
-          alpha(클래스 가중치) + gamma(난이도 조절)를 동시 적용 — 가장 강력한 단일 손실 함수<br />
-          RetinaNet 논문의 기본 설정: alpha=0.25, gamma=2
-        </p>
-        <p>
-          <strong>Asymmetric Loss</strong>(Ben-Baruch et al., 2020) — FP와 FN에 다른 gamma<br />
-          양성 손실에 gamma_plus=0(감소 없음), 음성 손실에 gamma_minus=4(강한 감소)<br />
-          Multi-label 분류에서 특히 효과적: 대부분의 레이블이 0인 극심한 불균형 처리
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">실전 팁</p>
-        <p className="text-sm text-amber-700 dark:text-amber-300">
-          Focal Loss와 SMOTE를 동시에 적용하면 효과가 중첩된다.
-          하지만 <strong>과도한 보정은 역효과</strong> — 소수 클래스를 너무 강조하면
-          다수 클래스의 정밀도가 떨어지는 "역불균형" 발생.
-          gamma와 alpha는 반드시 검증 세트에서 튜닝해야 하며,
-          gamma=2, alpha=0.25에서 시작하여 점진적으로 조정하는 것이 실전의 정석.
-        </p>
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">Class weight는 class를, focal loss는 현재 난이도를 가중합니다</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Inverse-frequency class weight는 minority sample의 평균 기여를 키울 수 있지만 실제 오류 비용이나 label quality까지 알려주지는 않습니다. 너무 큰 weight는 잘못된 minority label의 gradient도 함께 증폭합니다. Focal loss는 class 빈도만 보는 대신 model이 이미 쉽게 맞힌 example의 loss를 줄입니다.</p></div>
+      <ExplainedFormula question="Focal loss는 easy example의 cross-entropy 기여를 어떻게 줄일까?" idea={<>정답 class에 준 probability pt가 1에 가까울수록 modulation factor (1−pt)^γ가 0에 가까워집니다. γ=0이면 factor가 1이므로 ordinary cross-entropy로 돌아옵니다.</>} formula={String.raw`\operatorname{FL}(p_t)=-\alpha_t(1-p_t)^{\gamma}\log p_t`} terms={[{symbol:"pₜ",name:"target-class probability",description:"Binary이면 y=1일 때 p, y=0일 때 1−p입니다."},{symbol:"αₜ",name:"class balance factor",description:"Target class별 loss scale을 선택적으로 조정합니다."},{symbol:"γ",name:"focusing parameter",description:"Easy example down-weighting의 강도를 정하는 0 이상의 값입니다."},{symbol:"−log pₜ",name:"cross-entropy term",description:"정답 probability가 작을수록 커지는 기본 NLL입니다."}]} assumptions={["Probability와 target mapping이 올바른 classification loss입니다.","Hard example이 informative하다는 전제이며 label noise가 hard set을 지배하지 않습니다."]} interpretation="γ가 클수록 easy negative의 영향은 빠르게 줄지만 probability calibration과 optimization이 달라질 수 있습니다. RetinaNet의 α·γ는 해당 dense detection recipe이지 보편 기본값이 아닙니다." />
+      <div id="paper-focal-loss" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Dense detector의 easy negative</p><p className="mt-2 text-sm font-semibold">Focal Loss for Dense Object Detection</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Dense one-stage detector에서 수많은 easy background example이 학습을 지배하는 문제를 분석하고 well-classified example을 줄이는 focal loss와 RetinaNet을 제안했습니다. 이 결과는 dense detection 조건이며 일반적인 tabular imbalance의 최적 loss를 보장하지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content_ICCV_2017/html/Lin_Focal_Loss_for_ICCV_2017_paper.html" target="_blank" rel="noreferrer">원 논문의 loss와 RetinaNet 실험 보기</a></div>
+      <div className="not-prose my-8"><FocalLossViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Resampling과 weighted loss를 동시에 적용하면 minority 신호를 두 번 보정할 수 있습니다. 한 번에 하나씩 추가하고 ranking, calibration, class별 gradient와 error slice를 비교해야 어느 intervention이 이득을 만들었는지 알 수 있습니다.</p></div>
     </section>
   );
 }

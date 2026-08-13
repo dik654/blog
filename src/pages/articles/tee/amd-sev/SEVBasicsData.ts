@@ -14,7 +14,19 @@ CPU Write(data, GPA) {
 // 성능: 메모리 컨트롤러 통합으로 ~2% 오버헤드`;
 
 export const encAnnotations = [
-  { lines: [3, 3] as [number, number], color: 'sky' as const, note: 'C-bit로 암호화 여부 결정' },
-  { lines: [5, 6] as [number, number], color: 'emerald' as const, note: 'VM별 고유 AES-128 키' },
-  { lines: [13, 14] as [number, number], color: 'amber' as const, note: '투명 암호화, 낮은 오버헤드' },
+  {
+    lines: [3, 3] as [number, number],
+    color: "sky" as const,
+    note: "C-bit로 암호화 여부 결정",
+  },
+  {
+    lines: [5, 6] as [number, number],
+    color: "emerald" as const,
+    note: "VM별 고유 AES-128 키",
+  },
+  {
+    lines: [13, 14] as [number, number],
+    color: "amber" as const,
+    note: "투명 암호화, 낮은 오버헤드",
+  },
 ];

@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const tokens = ['The', 'cat', 'sat', 'on', 'mat'];
+const tokens = ["The", "cat", "sat", "on", "mat"];
 
 const weights: Record<number, number[]> = {
   0: [0.1, 0.5, 0.1, 0.2, 0.1],
@@ -29,8 +29,8 @@ export default function AttentionDemo() {
             whileTap={{ scale: 0.97 }}
             animate={{
               backgroundColor:
-                selected === i ? 'oklch(0.205 0 0)' : 'oklch(1 0 0)',
-              color: selected === i ? 'white' : 'oklch(0.205 0 0)',
+                selected === i ? "oklch(0.205 0 0)" : "oklch(1 0 0)",
+              color: selected === i ? "white" : "oklch(0.205 0 0)",
             }}
           >
             {token}
@@ -55,7 +55,7 @@ export default function AttentionDemo() {
                     className="rounded bg-primary"
                     initial={{ height: 0 }}
                     animate={{ height: w * 100 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     style={{ width: 40 }}
                   />
                   <span className="text-xs font-mono text-foreground/75">

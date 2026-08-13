@@ -1,33 +1,73 @@
-import FewShotViz from './viz/FewShotViz';
-import { DesignViz, ICLViz } from './viz/FewShotDetailViz';
+import { CitationBlock } from "@/components/ui/citation";
+import FewShotViz from "./viz/FewShotViz";
+import { DesignViz, ICLViz } from "./viz/FewShotDetailViz";
 
 export default function FewShot() {
   return (
     <section id="few-shot" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Few-shot 예시 설계</h2>
-      <div className="not-prose mb-8"><FewShotViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Few-shot은 예시 개수보다 경계 coverage와 순서 민감도가 중요하다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>Few-shot</strong>(소수 예시 학습) — 입출력 쌍을 프롬프트에 포함해 LLM이 패턴을 학습하도록 유도<br />
-          0-shot → 1-shot에서 가장 큰 점프, 3-shot 이후 수확 체감
+          <strong>In-context learning(ICL)</strong>은 model weight를 update하지 않고
+          현재 request의 instruction과 demonstration을 조건으로 completion behavior가
+          달라지는 사용 방식입니다. Instruction만 주면 zero-shot, 입력·출력 example을
+          함께 주면 few-shot입니다. Context가 끝나면 demonstration도 사라지므로
+          영구적으로 학습한 것과 같다고 보면 안 됩니다.
         </p>
         <p>
-          예시 품질이 핵심 — 다양한 카테고리 + 엣지케이스 포함이 필수<br />
-          LLM은 마지막 예시에 더 큰 영향을 받는 Recency Bias(최신성 편향) 존재<br />
-          대표적 예시를 마지막에 배치하거나 순서를 셔플해 편향 완화
+          Few-shot은 label 의미나 output format을 설명만으로 전달하기 어려울 때
+          유용하지만, example을 많이 넣는다고 단조롭게 좋아지지는 않습니다. 운영
+          distribution을 대표하는 사례, 서로 헷갈리는 decision boundary, minority
+          class와 abstention을 포함하고 실제 request와 같은 serialization을 사용해야
+          합니다.
         </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Few-shot 예시 설계 원칙</h3>
-        <div className="not-prose mb-6"><DesignViz /></div>
+      <div className="not-prose my-8"><FewShotViz /></div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">In-Context Learning 메커니즘</h3>
-        <div className="not-prose mb-6"><ICLViz /></div>
-        <p className="leading-7">
-          요약 1: <strong>3~5 shot</strong>이 실무 표준 — 그 이상은 수확 체감.<br />
-          요약 2: <strong>다양성·형식 일관성·순서</strong>가 성능에 결정적.<br />
-          요약 3: ICL의 본질은 <strong>패턴 학습</strong> — 라벨 정확도보다 형식 중요.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div id="paper-gpt3-few-shot" className="not-prose scroll-mt-24">
+          <CitationBlock source="Language Models are Few-Shot Learners" citeKey={4} href="https://arxiv.org/abs/2005.14165">
+            GPT-3 논문은 gradient update 없이 text instruction과 demonstration으로
+            여러 task를 수행하는 zero·one·few-shot evaluation을 대규모로 제시했습니다.
+            해당 model family와 dataset의 결과이며 ICL이 영구 학습이거나 모든 task에서
+            fine-tuning보다 낫다는 뜻은 아닙니다.
+          </CitationBlock>
+        </div>
+      </div>
+
+      <div className="not-prose my-8"><DesignViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Example order와 label prior를 흔들어 본다</h3>
+        <p>
+          Few-shot prediction은 마지막 example, label frequency, prompt format에 민감할
+          수 있습니다. 그래서 zero-shot baseline을 먼저 저장하고, example subset과
+          순서를 여러 번 바꾸며 class별 accuracy·prediction variance를 측정합니다.
+          한 ordering에서만 좋아진다면 task rule을 배운 것이 아니라 recency나 label
+          prior에 기대고 있을 수 있습니다.
+        </p>
+        <div id="paper-calibrate-before-use" className="not-prose scroll-mt-24">
+          <CitationBlock source="Calibrate Before Use" citeKey={5} href="https://arxiv.org/abs/2102.09690">
+            이 논문은 few-shot text classification이 prompt format·example·ordering에
+            민감한 문제를 다루고 content-free input으로 output bias를 보정하는
+            contextual calibration을 제안했습니다. 해당 GPT-3 시점의 classification
+            설정이며 모든 generative task의 example selection 문제를 해결한 것은 아닙니다.
+          </CitationBlock>
+        </div>
+      </div>
+
+      <div className="not-prose my-8"><ICLViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Few-shot은 즉시 고치기 쉽지만 매 request에 example token과 prefill cost가
+          반복됩니다. 같은 behavior를 높은 volume에서 오래 유지해야 하고 example이
+          계속 늘어난다면 fine-tuning이나 별도 classifier를 비교합니다. 이때 prompt로
+          다듬은 examples와 failure cases는 학습 데이터와 evaluation set의 출발점이
+          될 수 있지만, train/eval leakage는 분리해야 합니다.
         </p>
       </div>
     </section>

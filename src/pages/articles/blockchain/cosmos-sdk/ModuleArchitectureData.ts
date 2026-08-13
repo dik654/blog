@@ -11,8 +11,16 @@ x/distribution ↔ 블록 보상 분배
 x/ibc        ↔ (이더리움에 없음) 체인 간 통신`;
 
 export const MODULES_ANNOTATIONS = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '핵심 모듈 (bank, staking, slashing)' },
-  { lines: [11, 11] as [number, number], color: 'emerald' as const, note: 'Cosmos 고유: IBC' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "핵심 모듈 (bank, staking, slashing)",
+  },
+  {
+    lines: [11, 11] as [number, number],
+    color: "emerald" as const,
+    note: "Cosmos 고유: IBC",
+  },
 ];
 
 export const KEEPER_CODE = `// Keeper = 모듈의 상태 접근 객체
@@ -33,9 +41,21 @@ type BankKeeper struct {
 // → 하지만 컴파일 타임에 의존성이 결정됨 (정적 vs 동적)`;
 
 export const KEEPER_ANNOTATIONS = [
-  { lines: [4, 8] as [number, number], color: 'sky' as const, note: 'BankKeeper 구조체' },
-  { lines: [10, 12] as [number, number], color: 'emerald' as const, note: '이더리움 StateDB 비교' },
-  { lines: [14, 16] as [number, number], color: 'amber' as const, note: '정적 의존성 관리' },
+  {
+    lines: [4, 8] as [number, number],
+    color: "sky" as const,
+    note: "BankKeeper 구조체",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "emerald" as const,
+    note: "이더리움 StateDB 비교",
+  },
+  {
+    lines: [14, 16] as [number, number],
+    color: "amber" as const,
+    note: "정적 의존성 관리",
+  },
 ];
 
 export const ROUTING_CODE = `트랜잭션 라우팅 비교:
@@ -51,6 +71,14 @@ Cosmos SDK:
   Cosmos:   MsgDelegate{validator_addr, amount} → x/staking MsgServer`;
 
 export const ROUTING_ANNOTATIONS = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '이더리움: EVM calldata 라우팅' },
-  { lines: [6, 7] as [number, number], color: 'emerald' as const, note: 'Cosmos: Msg 타입 라우팅' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "이더리움: EVM calldata 라우팅",
+  },
+  {
+    lines: [6, 7] as [number, number],
+    color: "emerald" as const,
+    note: "Cosmos: Msg 타입 라우팅",
+  },
 ];

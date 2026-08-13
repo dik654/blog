@@ -1,53 +1,74 @@
-import { CitationBlock } from '@/components/ui/citation';
-import KTOViz from './viz/KTOViz';
-import KTOProspectDetailViz from './viz/KTOProspectDetailViz';
-import KTOPracticalDetailViz from './viz/KTOPracticalDetailViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import MethodChoiceViz from "../rlhf/viz/MethodChoiceViz";
 
 export default function KTO() {
   return (
     <section id="kto" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">KTO: Kahneman-Tversky Optimization</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p>
-          <strong>핵심 아이디어</strong> — 쌍별 비교(y_w vs y_l) 대신 단일 응답의 좋음/나쁨 이진 피드백<br />
-          Kahneman-Tversky 전망이론: 손실 회피(loss aversion) 비대칭을 손실 함수에 반영
-        </p>
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">
+        KTO는 paired ranking 없이 binary feedback을 사용한다
+      </h2>
 
-      <KTOViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <CitationBlock source="Ethayarajh et al., 2024 — KTO" citeKey={5} type="paper"
-          href="https://arxiv.org/abs/2402.01306">
-          <p className="italic text-sm">
-            "KTO does not need paired preference data. It can learn from binary 'good'/'bad'
-            signals, making it applicable to existing thumbs-up/down feedback."
-          </p>
-          <p className="mt-2 text-xs">
-            전망이론의 핵심: v(loss) {'>'} v(gain) — 같은 크기의 손실이 이득보다 심리적 영향이 큼<br />
-            KTO는 이를 반영하여 나쁜 응답 억제에 더 큰 가중치를 부여
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">DPO vs KTO 비교</h3>
-        <p>
-          <strong>데이터</strong> — DPO: (y_w, y_l) 쌍 필수 / KTO: 단일 응답 + 이진 피드백<br />
-          <strong>성능</strong> — Llama-7B 기준 동등 (MT-Bench, AlpacaEval)<br />
-          <strong>효율</strong> — KTO가 데이터 효율 ~25% 더 높음 (동일 데이터 양 대비)<br />
-          <strong>활용</strong> — 기존 평점/좋아요 데이터 직접 사용 가능
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">전망이론 (Prospect Theory) 배경</h3>
-        <div className="not-prose"><KTOProspectDetailViz /></div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">KTO 실무 장점</h3>
-        <div className="not-prose"><KTOPracticalDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: KTO는 <strong>Kahneman-Tversky 전망이론</strong> 영감 — 손실 회피 내재화.<br />
-          요약 2: <strong>Binary feedback</strong>만으로 학습 — 기존 프로덕션 데이터 활용.<br />
-          요약 3: 데이터 효율 <strong>25% 향상</strong> — 불균형·노이즈에 강함.
+          실제 제품 log에는 같은 prompt에 대한 두 응답의 ranking보다 개별 응답의
+          thumbs-up/down이 더 많이 쌓일 수 있다. Kahneman–Tversky
+          Optimization(KTO)은 response마다 desirable 또는 undesirable label만
+          있어도 학습할 수 있도록, policy와 reference의 log-ratio를 KL reference
+          point와 비교한다. Prospect theory는 이름의 배경이지만, 핵심 구현 계약은
+          gain과 loss를 기준점 양쪽에서 비대칭적으로 다루는 binary objective다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="Pair가 없는 desirable·undesirable label을 reference 대비 policy update로 어떻게 바꿀까?"
+        idea={<>Response의 policy/reference log-ratio를 암묵적 reward로 보고, batch에서 추정한 KL을 reference point z0로 둡니다. Desirable이면 그 기준보다 높아질수록 utility가 커지고, undesirable이면 기준보다 낮아질수록 utility가 커지도록 sigmoid 방향을 반대로 둡니다.</>}
+        formula={String.raw`\begin{aligned}r_\theta&=\log\pi_\theta(y\mid x)-\log\pi_{ref}(y\mid x)\\z_0&=D_{KL}(\pi_\theta\|\pi_{ref})\\z&=r_\theta-z_0\\v_D&=\lambda_D\sigma(\beta z),\quad v_U=\lambda_U\sigma(-\beta z)\\\mathcal L_{KTO}&=\mathbb E_{\mathcal D}[\lambda_y-v_y]\end{aligned}`}
+        terms={[
+          { symbol: "r_\theta", name: "implicit reward", description: "현재 policy가 reference보다 response y를 얼마나 더 선호하는지 나타내는 log-ratio입니다." },
+          { symbol: "z_0", name: "reference point", description: "Policy와 reference의 KL을 batch에서 추정해 gain·loss 기준으로 사용합니다." },
+          { symbol: "\lambda_D,\lambda_U", name: "class weights", description: "Desirable·undesirable feedback의 비대칭과 class imbalance를 조절합니다." },
+          { symbol: "\beta", name: "utility scale", description: "Reference point 주변 sigmoid의 민감도를 정합니다." },
+        ]}
+        assumptions={["각 example에는 binary label이 있지만 같은 prompt의 짝이 반드시 필요하지는 않습니다.", "표준 KTO는 reference model과 KL estimate를 사용하며 z0를 통한 gradient는 stop-gradient로 다룹니다."]}
+        interpretation="KTO는 pair collection 비용을 줄일 수 있지만 binary log가 자동으로 깨끗해지는 것은 아닙니다. 노출되지 않은 응답, 무응답과 실제 dislike를 구분하고 사용자별 feedback propensity를 점검해야 합니다."
+      />
+
+      <MethodChoiceViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>방법 선택은 확보 가능한 feedback에서 시작한다</h3>
+        <p>
+          Online exploration과 새 response scoring이 필요하면 PPO 계열, 정제된
+          pairwise preference가 있으면 DPO, SFT와 preference를 한 stage로 묶으려면
+          ORPO, 독립적인 binary feedback이 중심이면 KTO를 후보로 둔다. 다만 이
+          분류는 첫 필터일 뿐이며, 최종 선택은 같은 base checkpoint와 data budget,
+          decoding·judge 조건에서 capability·preference·safety regression을 함께
+          비교해 결정한다.
+        </p>
+        <p>
+          <a href="https://arxiv.org/abs/2402.01306" target="_blank" rel="noreferrer">KTO 논문</a>은
+          1B~30B 실험에서 DPO와 경쟁하는 결과와 심한 class imbalance 조건을
+          보고했지만, 동시에 어떤 human-aware loss도 보편적으로 우월하지 않으며
+          setting에 맞는 inductive bias를 선택해야 한다고 명시한다. 이 제한을 빼고
+          “binary feedback이 pair보다 항상 낫다”로 요약하면 논문의 결론보다 강한
+          주장이 된다.
+        </p>
+      </div>
+
+      <div
+        id="paper-kto"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 해설 · KTO</p>
+        <h3 className="mt-2 text-base font-bold text-foreground">
+          핵심 기여는 pair를 복원하지 않고 binary label을 기준점 양쪽에서 학습한 것이다
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Policy/reference log-ratio를 implicit reward로 보고 batch KL을 reference
+          point로 사용해 desirable과 undesirable example의 utility 방향을 나눕니다.
+          Prospect theory는 이 비대칭 utility의 동기이며, 실제 제품 log에서는
+          exposure bias·class imbalance·사용자별 click propensity를 별도로 다뤄야
+          논문의 clean label 가정을 운영 환경에 옮길 수 있습니다.
         </p>
       </div>
     </section>

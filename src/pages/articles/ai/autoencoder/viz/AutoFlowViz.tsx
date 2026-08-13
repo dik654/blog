@@ -1,76 +1,36 @@
-import { LAYERS, LABELS } from './AutoFlowVizData';
-
-const W = 440, H = 160;
-const LX = [40, 130, 210, 290, 380]; // x positions per layer
-
-function nodeY(count: number, idx: number) {
-  const gap = 28;
-  const top = (H - (count - 1) * gap) / 2;
-  return top + idx * gap;
-}
+const layers = [
+  { title: "입력", shape: "4 features", width: "md:col-span-2", tone: "border-sky-500/45" },
+  { title: "Encoder", shape: "4 → 3", width: "md:col-span-2", tone: "border-sky-500/45" },
+  { title: "Bottleneck", shape: "3 → 2", width: "md:col-span-1", tone: "border-amber-500/55" },
+  { title: "Decoder", shape: "2 → 3", width: "md:col-span-2", tone: "border-emerald-500/45" },
+  { title: "복원", shape: "3 → 4", width: "md:col-span-2", tone: "border-emerald-500/45" },
+];
 
 export default function AutoFlowViz() {
   return (
-    <div className="not-prose rounded-xl border p-5 mb-6">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-        {/* Connections between layers */}
-        {LAYERS.slice(0, -1).map((layer, li) => {
-          const next = LAYERS[li + 1];
-          return Array.from({ length: layer.dim }).flatMap((_, si) =>
-            Array.from({ length: next.dim }).map((_, di) => (
-              <line key={`${li}-${si}-${di}`}
-                x1={LX[li] + 20} y1={nodeY(layer.dim, si)}
-                x2={LX[li + 1] - 10} y2={nodeY(next.dim, di)}
-                stroke={layer.color} strokeWidth={0.5} strokeOpacity={0.25} />
-            ))
-          );
-        })}
-
-        {/* Nodes */}
-        {LAYERS.map((layer, li) => (
-          <g key={li}>
-            {Array.from({ length: layer.dim }).map((_, ni) => {
-              const y = nodeY(layer.dim, ni);
-              const labels = li === 0 ? LABELS.input
-                : li === 2 ? LABELS.latent
-                : li === 4 ? LABELS.output : null;
-              return (
-                <g key={ni}>
-                  <circle cx={LX[li]} cy={y} r={10}
-                    fill={`${layer.color}18`} stroke={layer.color} strokeWidth={1.2} />
-                  {labels && (
-                    <text x={LX[li]} y={y + 3} textAnchor="middle"
-                      fontSize={9} fontWeight={500} fill={layer.color}>
-                      {labels[ni]}
-                    </text>
-                  )}
-                </g>
-              );
-            })}
-            <text x={LX[li]} y={H - 8} textAnchor="middle"
-              fontSize={9} fill={layer.color} fontWeight={600}>
-              {layer.label}({layer.dim})
-            </text>
-          </g>
+    <figure data-viz="autoencoder-architecture" className="not-prose my-8 min-w-0 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
+      <figcaption className="mb-5 text-sm font-semibold">차원은 줄었다가 다시 늘지만, 함수는 서로 독립적으로 학습됩니다</figcaption>
+      <div className="grid gap-3 md:grid-cols-9">
+        {layers.map((layer, index) => (
+          <div key={layer.title} className={`min-w-0 border-t bg-background px-3 py-4 ${layer.tone} ${layer.width}`}>
+            <p className="text-xs font-bold text-muted-foreground">0{index + 1}</p>
+            <p className="mt-2 font-semibold">{layer.title}</p>
+            <p className="mt-1 font-mono text-xs text-muted-foreground">{layer.shape}</p>
+          </div>
         ))}
-
-        {/* Region labels */}
-        <rect x={95} y={4} width={82} height={16} rx={4}
-          fill="#6366f108" stroke="#6366f1" strokeWidth={0.6} />
-        <text x={136} y={15} textAnchor="middle" fontSize={9}
-          fill="#6366f1" fontWeight={500}>Encoder</text>
-
-        <rect x={260} y={4} width={82} height={16} rx={4}
-          fill="#10b98108" stroke="#10b981" strokeWidth={0.6} />
-        <text x={301} y={15} textAnchor="middle" fontSize={9}
-          fill="#10b981" fontWeight={500}>Decoder</text>
-
-        <rect x={182} y={4} width={56} height={16} rx={4}
-          fill="#f59e0b08" stroke="#f59e0b" strokeWidth={0.6}
-          strokeDasharray="3 2" />
-        <text x={210} y={15} textAnchor="middle" fontSize={9}
-          fill="#f59e0b" fontWeight={500}>Bottleneck</text>
-      </svg>
-    </div>
+      </div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        {[
+          ["Undercomplete", "k < n · 크기로 압축"],
+          ["Overcomplete", "k ≥ n · 다른 regularization 필요"],
+          ["비대칭 가능", "Encoder와 decoder가 거울일 필요 없음"],
+        ].map(([title, body]) => (
+          <div key={title} className="min-w-0 border-l border-border pl-3">
+            <p className="text-sm font-semibold">{title}</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">{body}</p>
+          </div>
+        ))}
+      </div>
+    </figure>
   );
 }

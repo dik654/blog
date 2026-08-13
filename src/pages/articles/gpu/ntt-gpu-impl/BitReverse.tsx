@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const bitReverseCode = `// 비트 리버스 순열 CUDA 커널
 __device__ uint32_t bit_reverse(uint32_t x, int log_n) {
@@ -54,43 +54,71 @@ const pipelineCode = `void ntt_full(uint64_t* d_data, int n, uint64_t p) {
 export default function BitReverse() {
   return (
     <section id="bit-reverse" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">비트 리버스 순열과 Twiddle 전처리</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        비트 리버스 순열과 Twiddle 전처리
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Cooley-Tukey NTT는 입력을 <strong>비트 리버스 순서</strong>로 재배치한 뒤 나비 연산을 수행한다.<br />
-          인덱스 i의 log2(n)비트를 뒤집어 새 위치를 구한다.
-          tid &lt; rev 조건으로 중복 교환을 방지하여 n개 스레드 중 실제 교환은 절반 미만이다.
+          Cooley-Tukey NTT는 입력을 <strong>비트 리버스 순서</strong>로 재배치한
+          뒤 나비 연산을 수행한다.
+          <br />
+          인덱스 i의 log2(n)비트를 뒤집어 새 위치를 구한다. tid &lt; rev
+          조건으로 중복 교환을 방지하여 n개 스레드 중 실제 교환은 절반 미만이다.
         </p>
-        <CodePanel title="비트 리버스 순열 커널" code={bitReverseCode}
+        <CodePanel
+          title="비트 리버스 순열 커널"
+          code={bitReverseCode}
           annotations={[
-            { lines: [2, 10], color: 'sky', note: '비트 리버스 함수' },
-            { lines: [13, 22], color: 'emerald', note: 'tid < rev 조건으로 중복 방지' },
-            { lines: [24, 25], color: 'amber', note: '3비트 교환 예시' },
-          ]} />
+            { lines: [2, 10], color: "sky", note: "비트 리버스 함수" },
+            {
+              lines: [13, 22],
+              color: "emerald",
+              note: "tid < rev 조건으로 중복 방지",
+            },
+            { lines: [24, 25], color: "amber", note: "3비트 교환 예시" },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Twiddle Factor 전처리</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Twiddle Factor 전처리
+        </h3>
         <p>
-          Twiddle factor w^k는 나비 연산마다 필요하다. 사전 계산(n*8바이트)과 on-the-fly 계산(메모리 0, 연산 증가) 두 전략이 있다.<br />
-          대부분의 구현은 메모리 비용 대비 연산 절약이 크므로 사전 계산을 선택한다.
+          Twiddle factor w^k는 나비 연산마다 필요하다. 사전 계산(n*8바이트)과
+          on-the-fly 계산(메모리 0, 연산 증가) 두 전략이 있다.
+          <br />
+          대부분의 구현은 메모리 비용 대비 연산 절약이 크므로 사전 계산을
+          선택한다.
         </p>
-        <CodePanel title="Twiddle 사전 계산 vs on-the-fly" code={twiddleCode}
+        <CodePanel
+          title="Twiddle 사전 계산 vs on-the-fly"
+          code={twiddleCode}
           annotations={[
-            { lines: [2, 7], color: 'sky', note: '사전 계산 커널' },
-            { lines: [8, 9], color: 'emerald', note: 'on-the-fly 트레이드오프' },
-          ]} />
+            { lines: [2, 7], color: "sky", note: "사전 계산 커널" },
+            {
+              lines: [8, 9],
+              color: "emerald",
+              note: "on-the-fly 트레이드오프",
+            },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">전체 파이프라인</h3>
         <p>
-          비트 리버스, twiddle 전처리, 공유 메모리 스테이지, 글로벌 스테이지를 순서대로 실행한다.<br />
+          비트 리버스, twiddle 전처리, 공유 메모리 스테이지, 글로벌 스테이지를
+          순서대로 실행한다.
+          <br />
           ICICLE 등 ZK 가속 라이브러리도 이 구조를 따른다.
         </p>
-        <CodePanel title="NTT 전체 파이프라인" code={pipelineCode}
+        <CodePanel
+          title="NTT 전체 파이프라인"
+          code={pipelineCode}
           annotations={[
-            { lines: [3, 3], color: 'sky', note: '비트 리버스' },
-            { lines: [5, 8], color: 'emerald', note: 'twiddle 전처리' },
-            { lines: [10, 11], color: 'amber', note: '공유 메모리 스테이지' },
-            { lines: [13, 14], color: 'violet', note: '글로벌 스테이지' },
-          ]} />
+            { lines: [3, 3], color: "sky", note: "비트 리버스" },
+            { lines: [5, 8], color: "emerald", note: "twiddle 전처리" },
+            { lines: [10, 11], color: "amber", note: "공유 메모리 스테이지" },
+            { lines: [13, 14], color: "violet", note: "글로벌 스테이지" },
+          ]}
+        />
       </div>
     </section>
   );

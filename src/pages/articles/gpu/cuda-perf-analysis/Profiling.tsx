@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const nsightCode = `// Nsight Systems — 시스템 수준 타임라인 프로파일러
 //   nsys profile --stats=true ./my_cuda_app
@@ -54,17 +54,32 @@ export default function Profiling() {
     <section id="profiling" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Nsight 프로파일링 실전</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>성능 최적화는 측정에서 시작한다. NVIDIA는 <strong>Nsight Systems</strong>(시스템 타임라인)와 <strong>Nsight Compute</strong>(커널 상세 메트릭) 두 가지 프로파일러를 제공한다.</p>
+        <p>
+          성능 최적화는 측정에서 시작한다. NVIDIA는{" "}
+          <strong>Nsight Systems</strong>(시스템 타임라인)와{" "}
+          <strong>Nsight Compute</strong>(커널 상세 메트릭) 두 가지 프로파일러를
+          제공한다.
+        </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Nsight Systems & Compute</h3>
-        <p>Nsight Systems로 전체 CPU-GPU 상호작용을 타임라인에서 파악한 뒤, 병목 커널을 Nsight Compute로 상세 분석한다. SOL 섹션의 연산/메모리 활용률로 bound 유형을 즉시 판별할 수 있다.</p>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Nsight Systems & Compute
+        </h3>
+        <p>
+          Nsight Systems로 전체 CPU-GPU 상호작용을 타임라인에서 파악한 뒤, 병목
+          커널을 Nsight Compute로 상세 분석한다. SOL 섹션의 연산/메모리 활용률로
+          bound 유형을 즉시 판별할 수 있다.
+        </p>
         <CodePanel
           title="Nsight Systems & Compute 사용법"
           code={nsightCode}
           annotations={[
-            { lines: [1, 3], color: 'sky', note: 'Nsight Systems: 타임라인' },
-            { lines: [5, 7], color: 'emerald', note: 'Nsight Compute: 커널 분석' },
-            { lines: [14, 17], color: 'amber', note: 'SOL 판별 기준' },
+            { lines: [1, 3], color: "sky", note: "Nsight Systems: 타임라인" },
+            {
+              lines: [5, 7],
+              color: "emerald",
+              note: "Nsight Compute: 커널 분석",
+            },
+            { lines: [14, 17], color: "amber", note: "SOL 판별 기준" },
           ]}
         />
 
@@ -73,23 +88,28 @@ export default function Profiling() {
           title="4대 성능 병목 진단 & 해결"
           code={bottleneckCode}
           annotations={[
-            { lines: [3, 5], color: 'sky', note: '낮은 점유율' },
-            { lines: [7, 9], color: 'emerald', note: '비정렬 접근' },
-            { lines: [11, 13], color: 'amber', note: '뱅크 충돌' },
-            { lines: [15, 17], color: 'violet', note: '워프 분기' },
+            { lines: [3, 5], color: "sky", note: "낮은 점유율" },
+            { lines: [7, 9], color: "emerald", note: "비정렬 접근" },
+            { lines: [11, 13], color: "amber", note: "뱅크 충돌" },
+            { lines: [15, 17], color: "violet", note: "워프 분기" },
           ]}
         />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">프로파일링 워크플로우</h3>
-        <p>최적화는 측정-분석-변경-재측정의 순환으로 진행한다. 한 번에 하나의 변경만 적용해야 어떤 최적화가 효과적이었는지 구분할 수 있다.</p>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          프로파일링 워크플로우
+        </h3>
+        <p>
+          최적화는 측정-분석-변경-재측정의 순환으로 진행한다. 한 번에 하나의
+          변경만 적용해야 어떤 최적화가 효과적이었는지 구분할 수 있다.
+        </p>
         <CodePanel
           title="4단계 프로파일링 워크플로우"
           code={workflowCode}
           annotations={[
-            { lines: [3, 4], color: 'sky', note: 'Step 1: 전체 타임라인' },
-            { lines: [6, 6], color: 'emerald', note: 'Step 2: 병목 커널 식별' },
-            { lines: [8, 10], color: 'amber', note: 'Step 3: 상세 분석' },
-            { lines: [12, 12], color: 'violet', note: 'Step 4: 최적화 & 반복' },
+            { lines: [3, 4], color: "sky", note: "Step 1: 전체 타임라인" },
+            { lines: [6, 6], color: "emerald", note: "Step 2: 병목 커널 식별" },
+            { lines: [8, 10], color: "amber", note: "Step 3: 상세 분석" },
+            { lines: [12, 12], color: "violet", note: "Step 4: 최적화 & 반복" },
           ]}
         />
       </div>

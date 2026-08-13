@@ -31,7 +31,7 @@ where
             }
             batch.push((header, body));
 
-            // 5. 배치 삽입 — MDBX 트랜잭션으로 묶어서 효율화
+            // 5. 설정된 작업 경계에서 provider를 통해 배치 삽입
             if batch.len() >= self.commit_threshold {
                 provider.insert_block_bodies(batch.drain(..))?;
             }

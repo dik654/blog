@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const linearCodeRefs: Record<string, CodeRef> = {
-  'linear-struct': {
-    path: 'src/lib.rs — Linear struct + forward',
-    lang: 'rust',
+  "linear-struct": {
+    path: "src/lib.rs — Linear struct + forward",
+    lang: "rust",
     highlight: [1, 38],
-    desc: 'Linear 레이어: y = x @ W + b.\nW는 lazy init — 첫 forward 호출 시 입력 크기를 감지해 Xavier 초기화.',
+    desc: "Linear 레이어: y = x @ W + b.\nW는 lazy init — 첫 forward 호출 시 입력 크기를 감지해 Xavier 초기화.",
     code: `pub struct Linear {
     out_size: usize,
     // 첫 forward 호출 전까지 None (lazy init)
@@ -50,17 +50,33 @@ impl Linear {
     }
 }`,
     annotations: [
-      { lines: [3, 5], color: 'sky', note: 'lazy init — forward 전까지 W가 None. 입력 shape를 몰라도 레이어 생성 가능' },
-      { lines: [14, 14], color: 'emerald', note: 'Xavier 초기화: sqrt(1/in_size) — 층마다 분산이 일정하게 유지' },
-      { lines: [29, 34], color: 'amber', note: 'LCG(Linear Congruential Generator) — 외부 RNG 없이 재현 가능한 난수' },
-      { lines: [37, 41], color: 'violet', note: 'Box-Muller: 균등분포 2개 → 정규분포 1개 변환' },
+      {
+        lines: [3, 5],
+        color: "sky",
+        note: "lazy init — forward 전까지 W가 None. 입력 shape를 몰라도 레이어 생성 가능",
+      },
+      {
+        lines: [14, 14],
+        color: "emerald",
+        note: "Xavier 초기화: sqrt(1/in_size) — 층마다 분산이 일정하게 유지",
+      },
+      {
+        lines: [29, 34],
+        color: "amber",
+        note: "LCG(Linear Congruential Generator) — 외부 RNG 없이 재현 가능한 난수",
+      },
+      {
+        lines: [37, 41],
+        color: "violet",
+        note: "Box-Muller: 균등분포 2개 → 정규분포 1개 변환",
+      },
     ],
   },
-  'matmul-fn': {
-    path: 'src/lib.rs — MatMulFn',
-    lang: 'rust',
+  "matmul-fn": {
+    path: "src/lib.rs — MatMulFn",
+    lang: "rust",
     highlight: [1, 15],
-    desc: '행렬 곱셈 함수와 역전파.\ngx = gy @ W^T, gw = x^T @ gy — 행렬 전치로 방향 역전.',
+    desc: "행렬 곱셈 함수와 역전파.\ngx = gy @ W^T, gw = x^T @ gy — 행렬 전치로 방향 역전.",
     code: `struct MatMulFn;
 
 impl Function for MatMulFn {
@@ -77,8 +93,16 @@ impl Function for MatMulFn {
     fn name(&self) -> &str { "MatMul" }
 }`,
     annotations: [
-      { lines: [10, 10], color: 'sky', note: 'gx = gy @ W^T — 입력에 대한 기울기 (다음 레이어로 전파)' },
-      { lines: [11, 11], color: 'emerald', note: 'gw = x^T @ gy — 가중치에 대한 기울기 (옵티마이저가 사용)' },
+      {
+        lines: [10, 10],
+        color: "sky",
+        note: "gx = gy @ W^T — 입력에 대한 기울기 (다음 레이어로 전파)",
+      },
+      {
+        lines: [11, 11],
+        color: "emerald",
+        note: "gw = x^T @ gy — 가중치에 대한 기울기 (옵티마이저가 사용)",
+      },
     ],
   },
 };

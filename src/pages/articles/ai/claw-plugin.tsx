@@ -1,7 +1,7 @@
-import Overview from './claw-plugin/Overview';
-import Registry from './claw-plugin/Registry';
-import ToolExecution from './claw-plugin/ToolExecution';
-import Lifecycle from './claw-plugin/Lifecycle';
+import Overview from "./claw-plugin/Overview";
+import Registry from "./claw-plugin/Registry";
+import ToolExecution from "./claw-plugin/ToolExecution";
+import Lifecycle from "./claw-plugin/Lifecycle";
 
 export default function ClawPluginArticle() {
   return (

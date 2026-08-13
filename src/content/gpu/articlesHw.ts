@@ -1,46 +1,110 @@
-import type { Article } from '../types';
+import type { Article } from "../types";
 
 export const hwArticles: Article[] = [
   /* ── Compute ── */
   {
-    slug: 'hw-gpu-comparison', title: 'GPU 비교: RTX 4090 vs 5090 vs A100 vs H100', subcategory: 'hw-compute',
-    sections: [{ id: 'overview', title: '왜 GPU를 비교해야 하는가' }, { id: 'consumer', title: '컨슈머 GPU (4090, 5090)' }, { id: 'datacenter', title: '데이터센터 GPU (A100, H100)' }, { id: 'blockchain', title: '블록체인 워크로드별 선택' }],
-    component: () => import('@/pages/articles/hw/gpu-comparison'),
+    slug: "hw-gpu-comparison",
+    title: "GPU 비교: RTX 4090 vs 5090 vs A100 vs H100",
+    subcategory: "hw-compute",
+    sections: [
+      { id: "overview", title: "왜 GPU를 비교해야 하는가" },
+      { id: "consumer", title: "컨슈머 GPU (4090, 5090)" },
+      { id: "datacenter", title: "데이터센터 GPU (A100, H100)" },
+      { id: "blockchain", title: "블록체인 워크로드별 선택" },
+    ],
+    component: () => import("@/pages/articles/hw/gpu-comparison"),
   },
   {
-    slug: 'hw-server-vs-desktop', title: '서버 vs 데스크톱: 부품 차이 완전 정리', subcategory: 'hw-compute',
-    sections: [{ id: 'overview', title: '왜 서버 부품이 다른가' }, { id: 'cpu', title: 'CPU: Xeon/EPYC vs Core/Ryzen' }, { id: 'motherboard', title: '메인보드: 듀얼 소켓, IPMI, PCIe 레인' }, { id: 'reliability', title: '안정성: ECC, 핫스왑, 이중 전원' }],
-    component: () => import('@/pages/articles/hw/server-vs-desktop'),
+    slug: "hw-server-vs-desktop",
+    title: "서버 vs 데스크톱: 부품 차이 완전 정리",
+    subcategory: "hw-compute",
+    sections: [
+      { id: "overview", title: "왜 서버 부품이 다른가" },
+      { id: "cpu", title: "CPU: 클럭보다 플랫폼 한계를 본다" },
+      { id: "motherboard", title: "메인보드: 연결과 관리의 설계도" },
+      { id: "reliability", title: "안정성: 고장을 서비스 중단과 분리한다" },
+    ],
+    component: () => import("@/pages/articles/hw/server-vs-desktop"),
   },
 
   /* ── Storage ── */
   {
-    slug: 'hw-nvme-storage', title: 'NVMe 스토리지: M.2 vs U.2 vs E1.S', subcategory: 'hw-storage',
-    sections: [{ id: 'overview', title: '왜 폼팩터가 중요한가' }, { id: 'm2', title: 'M.2: 컨슈머 표준 (2280, 히트싱크)' }, { id: 'u2', title: 'U.2: 서버/엔터프라이즈 (핫스왑, 전력)' }, { id: 'e1s', title: 'E1.S/E3.S: 차세대 데이터센터' }],
-    component: () => import('@/pages/articles/hw/nvme-storage'),
+    slug: "hw-nvme-storage",
+    title: "NVMe 스토리지: M.2 vs U.2 vs E1.S",
+    subcategory: "hw-storage",
+    sections: [
+      { id: "overview", title: "왜 폼팩터가 중요한가" },
+      { id: "m2", title: "M.2: 작은 내부 모듈의 열 설계" },
+      { id: "u2", title: "U.2/U.3: 전면 베이와 정비 경로" },
+      { id: "e1s", title: "E1.S/E3.S: 밀도와 공기 흐름을 함께 설계" },
+    ],
+    component: () => import("@/pages/articles/hw/nvme-storage"),
   },
   {
-    slug: 'hw-storage-comparison', title: '스토리지 비교: SATA vs NVMe vs SAS', subcategory: 'hw-storage',
-    sections: [{ id: 'overview', title: '프로토콜별 특성' }, { id: 'interface', title: '인터페이스: AHCI vs NVMe 큐 구조' }, { id: 'enterprise', title: '엔터프라이즈 SSD: 내구성(DWPD), 전력 손실 보호' }, { id: 'filecoin', title: 'Filecoin 마이닝: 스토리지 선택 가이드' }],
-    component: () => import('@/pages/articles/hw/storage-comparison'),
+    slug: "hw-storage-comparison",
+    title: "스토리지 비교: SATA vs NVMe vs SAS",
+    subcategory: "hw-storage",
+    sections: [
+      { id: "overview", title: "SATA·SAS·NVMe는 무엇이 다른가" },
+      { id: "interface", title: "큐와 전송 경로: AHCI·SCSI·NVMe" },
+      { id: "enterprise", title: "엔터프라이즈 SSD: 쓰기 예산과 실패 복구" },
+      { id: "filecoin", title: "Filecoin: scratch·sector·metadata를 분리한다" },
+    ],
+    component: () => import("@/pages/articles/hw/storage-comparison"),
   },
 
   /* ── Memory ── */
   {
-    slug: 'hw-memory', title: '메모리: DDR4 vs DDR5, ECC, RDIMM', subcategory: 'hw-memory',
-    sections: [{ id: 'overview', title: '왜 메모리 선택이 중요한가' }, { id: 'ddr', title: 'DDR4 vs DDR5: 대역폭, 레이턴시, 채널' }, { id: 'ecc', title: 'ECC: 에러 정정 (서버 필수, 왜?)' }, { id: 'rdimm', title: 'RDIMM vs UDIMM vs LRDIMM' }],
-    component: () => import('@/pages/articles/hw/memory'),
+    slug: "hw-memory",
+    title: "메모리: DDR4 vs DDR5, ECC, RDIMM",
+    subcategory: "hw-memory",
+    sections: [
+      { id: "overview", title: "왜 메모리 선택이 중요한가" },
+      { id: "ddr", title: "DDR4와 DDR5: 채널·대역폭·지연시간" },
+      { id: "ecc", title: "ECC: 보호 범위와 오류 운영" },
+      { id: "rdimm", title: "UDIMM·RDIMM·3DS·MRDIMM" },
+    ],
+    component: () => import("@/pages/articles/hw/memory"),
   },
 
   /* ── Infrastructure ── */
   {
-    slug: 'hw-power-cooling', title: '전력 & 냉각: TDP, 블로워 vs 오픈에어, 랙 설계', subcategory: 'hw-infra',
-    sections: [{ id: 'overview', title: '왜 전력/냉각이 중요한가' }, { id: 'tdp', title: 'TDP & 전력 소비: GPU별 실측' }, { id: 'cooling', title: '냉각: 블로워 vs 오픈에어 vs 수냉' }, { id: 'rack', title: '랙마운트: 1U/2U/4U, 전력 분배' }],
-    component: () => import('@/pages/articles/hw/power-cooling'),
+    slug: "hw-power-cooling",
+    title: "서버 전력·냉각: 입력 전력부터 랙 열 제거까지",
+    subcategory: "hw-infra",
+    sections: [
+      { id: "overview", title: "왜 전력과 냉각을 함께 설계하는가" },
+      { id: "tdp", title: "정격에서 입력 전력·열 부하까지" },
+      { id: "cooling", title: "공랭·직접수냉·침지냉각의 열 경로" },
+      { id: "rack", title: "랙·전원 분배·장애 상태 설계" },
+    ],
+    component: () => import("@/pages/articles/hw/power-cooling"),
   },
   {
-    slug: 'hw-network', title: '서버 네트워크: 10G/25G/100G, RDMA, InfiniBand', subcategory: 'hw-infra',
-    sections: [{ id: 'overview', title: '왜 서버 네트워크가 다른가' }, { id: 'ethernet', title: '10G/25G/100G 이더넷' }, { id: 'rdma', title: 'RDMA & RoCE v2' }, { id: 'infiniband', title: 'InfiniBand: GPU 클러스터 연결' }],
-    component: () => import('@/pages/articles/hw/network'),
+    slug: "hw-network",
+    title: "서버 네트워크: Ethernet·RDMA·InfiniBand 설계",
+    subcategory: "hw-infra",
+    sections: [
+      { id: "overview", title: "서버 네트워크는 workload에서 시작한다" },
+      { id: "ethernet", title: "Ethernet 링크와 leaf-spine fabric" },
+      { id: "rdma", title: "RDMA와 RoCE v2의 실제 데이터 경로" },
+      { id: "infiniband", title: "InfiniBand와 GPU collective fabric" },
+    ],
+    component: () => import("@/pages/articles/hw/network"),
+  },
+  {
+    slug: "b300-switchless-network",
+    title: "DGX B300 Switchless: ConnectX-8 직결 RoCE 클러스터",
+    subcategory: "hw-infra",
+    sections: [
+      { id: "overview", title: "스위치를 없애면 fabric을 직접 구현한다" },
+      { id: "ports", title: "8 OSFP와 16 logical 400GbE" },
+      { id: "topology", title: "노드 수·케이블 수·대역폭 설계" },
+      { id: "addressing", title: "링크별 /30과 자동 설정" },
+      { id: "nccl", title: "Peer-aware GID 선택 patch" },
+      { id: "measurement", title: "787GB/s가 의미하는 범위" },
+      { id: "operations", title: "지원·복구·확장 한계" },
+    ],
+    component: () => import("@/pages/articles/hw/b300-switchless-network"),
   },
 ];

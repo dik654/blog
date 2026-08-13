@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const amdahlCode = `// 암달의 법칙 (Amdahl's Law)
 // Speedup = 1 / ((1 - P) + P / N)
@@ -48,49 +48,61 @@ export default function Amdahl() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           병렬 프로그램의 이론적 속도 향상 한계를 결정하는 법칙이 두 가지 있다.
-          <strong>암달의 법칙</strong>은 문제 크기가 고정일 때, <strong>구스타프슨의 법칙</strong>은 문제를 확장할 때 적용된다.
+          <strong>암달의 법칙</strong>은 문제 크기가 고정일 때,{" "}
+          <strong>구스타프슨의 법칙</strong>은 문제를 확장할 때 적용된다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">암달의 법칙</h3>
         <p>
-          프로그램의 95%를 병렬화해도 최대 속도 향상은 20x에 불과하다.<br />
-          코어 수를 1,000개로 늘려도 19.6x, 무한대로 늘려도 20x이다.<br />
+          프로그램의 95%를 병렬화해도 최대 속도 향상은 20x에 불과하다.
+          <br />
+          코어 수를 1,000개로 늘려도 19.6x, 무한대로 늘려도 20x이다.
+          <br />
           직렬 비율 (1-P)이 전체 성능의 상한을 결정한다.
         </p>
         <CodePanel
           title="암달의 법칙: Speedup = 1 / ((1-P) + P/N)"
           code={amdahlCode}
           annotations={[
-            { lines: [2, 2], color: 'sky', note: '핵심 공식' },
-            { lines: [6, 8], color: 'emerald', note: 'N을 늘려도 상한 수렴' },
-            { lines: [10, 11], color: 'amber', note: '5% 직렬 = 20x 상한' },
+            { lines: [2, 2], color: "sky", note: "핵심 공식" },
+            { lines: [6, 8], color: "emerald", note: "N을 늘려도 상한 수렴" },
+            { lines: [10, 11], color: "amber", note: "5% 직렬 = 20x 상한" },
           ]}
         />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">구스타프슨의 법칙</h3>
         <p>
-          현실에서는 프로세서가 늘면 더 큰 문제를 푼다.<br />
-          데이터셋을 2배로 키우고, GPU 코어도 2배로 늘리면 실행 시간은 거의 동일하다.<br />
-          이 관점에서는 코어 수에 비례하는 확장이 가능하다.
+          현실에서는 프로세서가 늘면 더 큰 문제를 푼다.
+          <br />
+          데이터셋을 2배로 키우고, GPU 코어도 2배로 늘리면 실행 시간은 거의
+          동일하다.
+          <br />이 관점에서는 코어 수에 비례하는 확장이 가능하다.
         </p>
         <CodePanel
           title="구스타프슨의 법칙: Scaled Speedup = N - (1-P)*(N-1)"
           code={gustafsonCode}
           annotations={[
-            { lines: [2, 2], color: 'sky', note: '핵심 공식' },
-            { lines: [7, 9], color: 'emerald', note: '같은 조건에서 950x vs 19.6x' },
-            { lines: [11, 14], color: 'violet', note: '실무 판단 기준' },
+            { lines: [2, 2], color: "sky", note: "핵심 공식" },
+            {
+              lines: [7, 9],
+              color: "emerald",
+              note: "같은 조건에서 950x vs 19.6x",
+            },
+            { lines: [11, 14], color: "violet", note: "실무 판단 기준" },
           ]}
         />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">직렬 구간 최소화</h3>
-        <p>CUDA에서 직렬 구간은 커널 런치 오버헤드, CPU-GPU 전송, 전역 동기화 등에서 발생한다. 이를 줄이는 것이 실질적 성능 향상의 핵심이다.</p>
+        <p>
+          CUDA에서 직렬 구간은 커널 런치 오버헤드, CPU-GPU 전송, 전역 동기화
+          등에서 발생한다. 이를 줄이는 것이 실질적 성능 향상의 핵심이다.
+        </p>
         <CodePanel
           title="CUDA 직렬 구간 & 최소화 전략"
           code={practicalCode}
           annotations={[
-            { lines: [3, 7], color: 'amber', note: '직렬 구간 5대 원인' },
-            { lines: [9, 13], color: 'emerald', note: '최소화 전략' },
+            { lines: [3, 7], color: "amber", note: "직렬 구간 5대 원인" },
+            { lines: [9, 13], color: "emerald", note: "최소화 전략" },
           ]}
         />
       </div>

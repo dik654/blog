@@ -13,8 +13,16 @@ pub struct GossipRequest<T> {
 }`;
 
 export const GOSSIP_DATA_ANNOTATIONS = [
-  { lines: [1, 8] as [number, number], color: 'sky' as const, note: '6가지 가십 데이터 유형' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: '가십 요청 래퍼 (송신자 + 페이로드)' },
+  {
+    lines: [1, 8] as [number, number],
+    color: "sky" as const,
+    note: "6가지 가십 데이터 유형",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "가십 요청 래퍼 (송신자 + 페이로드)",
+  },
 ];
 
 export const BROADCAST_CODE = `const MAX_PEERS_PER_BROADCAST: usize = 5;
@@ -41,8 +49,16 @@ async fn broadcast_data(&self, message: GossipBroadcastMessage,
 }`;
 
 export const BROADCAST_ANNOTATIONS = [
-  { lines: [10, 12] as [number, number], color: 'sky' as const, note: '중복 전송 방지 (캐시 검사)' },
-  { lines: [15, 18] as [number, number], color: 'emerald' as const, note: '라운드별 최대 5개 피어 전송' },
+  {
+    lines: [10, 12] as [number, number],
+    color: "sky" as const,
+    note: "중복 전송 방지 (캐시 검사)",
+  },
+  {
+    lines: [15, 18] as [number, number],
+    color: "emerald" as const,
+    note: "라운드별 최대 5개 피어 전송",
+  },
 ];
 
 export const CACHE_CODE = `pub struct GossipCache {
@@ -63,6 +79,14 @@ async fn handle_transaction(&self, req: GossipRequest<DataTransactionHeader>) {
 }`;
 
 export const CACHE_ANNOTATIONS = [
-  { lines: [1, 7] as [number, number], color: 'sky' as const, note: '데이터 유형별 TTL 캐시' },
-  { lines: [11, 15] as [number, number], color: 'emerald' as const, note: '2단계 중복 검사 (캐시 + 멤풀)' },
+  {
+    lines: [1, 7] as [number, number],
+    color: "sky" as const,
+    note: "데이터 유형별 TTL 캐시",
+  },
+  {
+    lines: [11, 15] as [number, number],
+    color: "emerald" as const,
+    note: "2단계 중복 검사 (캐시 + 멤풀)",
+  },
 ];

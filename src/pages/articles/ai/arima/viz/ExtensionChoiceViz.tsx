@@ -1,0 +1,4 @@
+const choices = [
+  ["ARIMA", "비계절 단일 series"], ["SARIMA", "한 개의 명확한 season"], ["Dynamic regression", "미래에 알 수 있는 exogenous X"], ["다른 family", "구조 변화·다중 season·비선형 interaction"],
+] as const;
+export default function ExtensionChoiceViz(){return <figure data-viz="arima-extension-choice" className="not-prose my-8 overflow-hidden rounded-xl border border-border/70 bg-card"><figcaption className="border-b border-border/60 px-4 py-4 sm:px-6"><p className="text-sm font-bold">관측한 data-generating structure가 확장을 정한다</p></figcaption><div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-6">{choices.map(([name,when])=><div key={name} className="rounded-lg border border-border/70 bg-background p-4"><p className="font-mono text-sm font-black text-primary">{name}</p><p className="mt-2 text-xs leading-5 text-muted-foreground">{when}</p></div>)}</div></figure>}

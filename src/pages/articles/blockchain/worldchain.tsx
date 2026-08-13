@@ -1,9 +1,9 @@
-import Overview from './worldchain/Overview';
-import WorldIdVerification from './worldchain/WorldIdVerification';
-import OpStackIntegration from './worldchain/OpStackIntegration';
-import PriorityBlockspace from './worldchain/PriorityBlockspace';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './worldchain/codeRefs';
+import Overview from "./worldchain/Overview";
+import WorldIdVerification from "./worldchain/WorldIdVerification";
+import OpStackIntegration from "./worldchain/OpStackIntegration";
+import PriorityBlockspace from "./worldchain/PriorityBlockspace";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./worldchain/codeRefs";
 
 export default function WorldChainArticle() {
   const sidebar = useCodeSidebar();

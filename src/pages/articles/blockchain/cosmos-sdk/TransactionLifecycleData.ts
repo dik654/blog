@@ -11,8 +11,16 @@ export const TX_FLOW_CODE = `이더리움 TX 흐름                     Cosmos T
 6. stateRoot 업데이트                6. app_hash 업데이트`;
 
 export const TX_FLOW_ANNOTATIONS = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '인코딩 & 멤풀 진입' },
-  { lines: [6, 9] as [number, number], color: 'emerald' as const, note: '실행 & 상태 변경' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "인코딩 & 멤풀 진입",
+  },
+  {
+    lines: [6, 9] as [number, number],
+    color: "emerald" as const,
+    note: "실행 & 상태 변경",
+  },
 ];
 
 export const ANTE_CODE = `AnteHandler 체인 (이더리움 TX 검증과 비교):
@@ -28,9 +36,21 @@ SigVerificationDecorator  ← 서명 검증 (secp256k1/ed25519)
 IncrementSequenceDecorator ← nonce 증가`;
 
 export const ANTE_ANNOTATIONS = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '기본 설정 & 형식 검증' },
-  { lines: [7, 8] as [number, number], color: 'emerald' as const, note: '가스 & 수수료 처리' },
-  { lines: [9, 11] as [number, number], color: 'amber' as const, note: '서명 검증 & nonce' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "기본 설정 & 형식 검증",
+  },
+  {
+    lines: [7, 8] as [number, number],
+    color: "emerald" as const,
+    note: "가스 & 수수료 처리",
+  },
+  {
+    lines: [9, 11] as [number, number],
+    color: "amber" as const,
+    note: "서명 검증 & nonce",
+  },
 ];
 
 export const IBC_CODE = `IBC vs 이더리움 크로스체인:
@@ -53,6 +73,14 @@ IBC 핸드셰이크:
      │                       │←── Acknowledgement ───│`;
 
 export const IBC_ANNOTATIONS = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: '롤업 vs IBC 비교' },
-  { lines: [10, 18] as [number, number], color: 'emerald' as const, note: 'IBC 핸드셰이크 시퀀스' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "롤업 vs IBC 비교",
+  },
+  {
+    lines: [10, 18] as [number, number],
+    color: "emerald" as const,
+    note: "IBC 핸드셰이크 시퀀스",
+  },
 ];

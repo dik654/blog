@@ -1,41 +1,199 @@
-import { motion } from 'framer-motion';
-import { C } from './ContextVizData';
-const f = (d: number) => ({ initial: { opacity: 0, x: -8 }, animate: { opacity: 1, x: 0 }, transition: { delay: d } });
-const mono = { fontFamily: 'monospace' };
+import { motion } from "framer-motion";
+import {
+  ActionBox,
+  AlertBox,
+  DataBox,
+  ModuleBox,
+  StatusBox,
+} from "@/components/viz/boxes";
+import { C } from "./ContextVizData";
 
-export function StepWhy() {
-  const lines = [
-    { line: '// 데스크톱 vs 서버 네트워크', c: C.eth, y: 38 },
-    { line: '데스크톱: RJ45 1Gbps (Cat6), ~200us RTT', c: C.hw, y: 58 },
-    { line: '서버:    SFP+ 10Gbps (DAC/광), ~3us RTT', c: C.eth, y: 78 },
-    { line: 'DC:      QSFP28 100Gbps (4×25G), ~1.5us', c: C.ib, y: 98 },
-  ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.eth}>네트워크 대역폭 단계</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.12)}>
-        <rect x={15} y={l.y - 13} width={410} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={25} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
-      </motion.g>
-    ))}
-  </g>);
+const reveal = (delay: number) => ({
+  initial: { opacity: 0, y: 7 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay },
+});
+
+export function StepTraffic() {
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        workload traffic matrix
+      </text>
+      <ModuleBox
+        x={20}
+        y={54}
+        w={112}
+        h={54}
+        label="Node A"
+        sub="source"
+        color={C.host}
+      />
+      <ModuleBox
+        x={20}
+        y={130}
+        w={112}
+        h={54}
+        label="Node B"
+        sub="source"
+        color={C.host}
+      />
+      <motion.path
+        d="M132 81 C202 81 208 61 274 61 M132 157 C202 157 208 137 274 137 M132 81 C203 81 210 137 274 137"
+        fill="none"
+        stroke={C.fabric}
+        strokeWidth={1.2}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+      />
+      <ModuleBox
+        x={280}
+        y={34}
+        w={112}
+        h={54}
+        label="Storage"
+        sub="bulk read/write"
+        color={C.fabric}
+      />
+      <ModuleBox
+        x={280}
+        y={110}
+        w={112}
+        h={54}
+        label="Workers"
+        sub="fan-in · all-to-all"
+        color={C.rdma}
+      />
+      <DataBox
+        x={334}
+        y={171}
+        w={126}
+        h={22}
+        label="bytes · flows · time"
+        color={C.good}
+      />
+    </g>
+  );
 }
 
-export function StepEthernet() {
-  const lines = [
-    { line: '// 이더넷 스펙 비교', c: C.eth, y: 38 },
-    { line: '10GBASE-SR: SFP+ MMF,   10Gbps, ~300m', c: C.hw, y: 58 },
-    { line: '25GBASE-SR: SFP28 MMF,  25Gbps, ~100m', c: C.eth, y: 78 },
-    { line: '100GBASE-SR4: QSFP28,  100Gbps, ~100m', c: C.ib, y: 98 },
-    { line: '// 서버 → DC → 백본 순서로 대역폭 증가', c: C.ib, y: 118 },
+export function StepGoodput() {
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        line rate에서 application 완료까지
+      </text>
+      <ModuleBox
+        x={20}
+        y={64}
+        w={112}
+        h={62}
+        label="line rate"
+        sub="PHY bits / second"
+        color={C.host}
+      />
+      <motion.line
+        x1={132}
+        y1={95}
+        x2={172}
+        y2={95}
+        stroke={C.host}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+      />
+      <ActionBox
+        x={178}
+        y={57}
+        w={124}
+        h={76}
+        label="data path"
+        sub="headers · queue · retry"
+        color={C.rdma}
+      />
+      <motion.line
+        x1={302}
+        y1={95}
+        x2={342}
+        y2={95}
+        stroke={C.rdma}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+      />
+      <ModuleBox
+        x={348}
+        y={64}
+        w={112}
+        h={62}
+        label="goodput"
+        sub="payload / completion"
+        color={C.good}
+      />
+      <AlertBox
+        x={72}
+        y={154}
+        w={336}
+        h={34}
+        label="p50만큼 p99와 CPU·GPU wait가 중요"
+        color={C.risk}
+      />
+    </g>
+  );
+}
+
+export function StepFabric() {
+  const rows = [
+    {
+      y: 42,
+      label: "host-facing capacity",
+      sub: "NIC × active hosts",
+      progress: 0.88,
+      color: C.host,
+    },
+    {
+      y: 95,
+      label: "leaf uplinks",
+      sub: "ECMP paths · oversubscription",
+      progress: 0.66,
+      color: C.fabric,
+    },
+    {
+      y: 148,
+      label: "failure state",
+      sub: "one path removed",
+      progress: 0.52,
+      color: C.risk,
+    },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.eth}>이더넷 규격 상세</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={15} y={l.y - 13} width={410} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={25} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
-      </motion.g>
-    ))}
-  </g>);
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        fabric 계층별 usable capacity
+      </text>
+      {rows.map((row, index) => (
+        <motion.g key={row.label} {...reveal(0.08 + index * 0.13)}>
+          <StatusBox x={52} w={376} h={48} {...row} />
+        </motion.g>
+      ))}
+    </g>
+  );
 }

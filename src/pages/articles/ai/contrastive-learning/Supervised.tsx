@@ -1,60 +1,45 @@
-import SupervisedViz from './viz/SupervisedViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SupervisedViz from "./viz/SupervisedViz";
 
 export default function Supervised() {
   return (
     <section id="supervised" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Supervised Contrastive Loss</h2>
+      <h2 className="mb-6 text-2xl font-bold">Supervised contrastive loss는 같은 label의 여러 sample을 positive로 사용합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>SupCon(Supervised Contrastive Learning)</strong> — Khosla et al. (2020).
-          라벨 정보를 활용해 같은 클래스의 <strong>모든 샘플</strong>을 positive로 취급.<br />
-          SimCLR는 positive가 1쌍뿐이지만, SupCon은 배치 내 같은 클래스 전부가 positive.
+          SimCLR이 같은 원본의 두 view만 연결한다면 supervised contrastive learning은 batch 안에서 같은 label을 가진 sample을 모두 positive로 봅니다. 이렇게 하면 한 class의 여러 표현을 한 공간에 모을 수 있지만, label이 실제 의미 유사성을 충분히 나타낼 때만 이 가정이 성립합니다.
         </p>
-
-        <h3>SupCon Loss 수식</h3>
         <p>
-          {'L_i = -1/|P(i)| · Σ_{p∈P(i)} log( exp(sim(z_i, z_p)/τ) / Σ_{k≠i} exp(sim(z_i, z_k)/τ) )'}<br />
-          P(i) = 배치 내에서 i와 같은 클래스인 샘플 집합.<br />
-          분모는 i를 제외한 모든 샘플(positive + negative) — InfoNCE와 동일 구조.<br />
-          분자에서 P(i)의 각 positive에 대해 개별적으로 log를 취한 뒤 평균 — 이것이 핵심 차이.
-        </p>
-
-        <h3>CrossEntropy와의 비교</h3>
-        <p>
-          CE는 출력층 logit을 직접 최적화 — 표현 학습과 분류가 결합되어 있음.<br />
-          SupCon은 표현(representation) 학습과 분류를 분리: 1단계에서 SupCon으로 인코더 학습 →
-          2단계에서 frozen encoder 위에 linear classifier 학습.<br />
-          결과: CIFAR-10에서 CE 95.0% vs SupCon 96.0%. CIFAR-100에서 CE 75.3% vs SupCon 76.5%.
-          특히 라벨 노이즈(label noise)에 강건 — 노이즈 40%에서 CE 대비 8% 이상 우위.
-        </p>
-
-        <h3>왜 더 Robust한가</h3>
-        <p>
-          CE는 잘못된 라벨 하나가 gradient를 직접 오염시킴.<br />
-          SupCon은 같은 클래스의 <strong>여러 positive와 평균</strong>으로 학습 → 개별 노이즈 라벨의 영향이 희석.<br />
-          또한 임베딩 공간에서 클래스 내 분산(intra-class variance)을 줄이는 방향으로 학습하므로,
-          결정 경계(decision boundary)가 더 넓고 안정적.
-        </p>
-
-        <h3>실전 적용 주의점</h3>
-        <p>
-          배치 내 클래스 다양성이 핵심 — 한 클래스만 가득하면 negative가 부족.<br />
-          Balanced sampling 필수: 클래스당 K개씩 균등 샘플링 (K=4~8 권장).<br />
-          Temperature τ = 0.07~0.1이 일반적. τ가 너무 작으면 hard negative에만 집중 → 불안정.
+          Hierarchical label이나 multi-label 문제에서 최상위 class만 같다는 이유로 모든 sample을 동일한 positive로 묶으면 세부 의미가 사라질 수 있습니다. Positive set을 label hierarchy, annotation confidence와 pair relation에 맞춰 구성하고, 같은 class 안의 subgroup 성능을 따로 확인합니다.
         </p>
       </div>
-
-      <div className="not-prose my-8">
-        <SupervisedViz />
-      </div>
-
+      <div className="not-prose my-8"><SupervisedViz /></div>
+      <ExplainedFormula
+        question="같은 label의 positive가 여러 개라면 anchor loss를 어떻게 계산할까요?"
+        idea={<>Anchor i와 같은 label을 가진 index 집합 P(i)를 만들고, 각 positive가 batch의 모든 다른 sample보다 높은 점수를 받도록 log-probability를 평균합니다.</>}
+        formula={String.raw`\mathcal L_i^{\mathrm{sup}}=-\frac{1}{|P(i)|}\sum_{p\in P(i)}\log\frac{\exp(\mathbf z_i^\top\mathbf z_p/\tau)}{\sum_{a\ne i}\exp(\mathbf z_i^\top\mathbf z_a/\tau)}`}
+        terms={[
+          { symbol: "P(i)", name: "positive index set", description: "Batch에서 anchor i를 제외하고 같은 positive 관계를 가진 sample index 집합입니다." },
+          { symbol: "|P(i)|", name: "positive count", description: "Anchor loss에 기여하는 positive 개수입니다." },
+          { symbol: "a≠i", name: "comparison set", description: "Anchor 자신을 제외한 모든 view 또는 sample입니다." },
+          { symbol: "τ", name: "temperature", description: "Similarity logit의 상대 차이를 조절합니다." },
+        ]}
+        assumptions={["P(i)가 비어 있지 않도록 class-aware batching을 하거나 빈 anchor를 명시적으로 제외합니다.", "같은 label이 contrastive task에서 같은 의미를 나타낸다는 전제가 필요합니다.", "Multi-label·hierarchical label에서는 positive relation을 별도로 정의해야 합니다."]}
+        interpretation="A₁의 batch에 A₂·A₃가 있으면 두 항을 평균합니다. 같은 class가 하나도 없다면 1/|P(i)|가 정의되지 않으므로 구현에서 조용히 NaN이 나거나 anchor가 사라지지 않도록 sampler와 유효 anchor 수를 기록해야 합니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm leading-relaxed">
-            <strong>핵심 인사이트:</strong> SupCon은 "CE의 상위 호환"이 아니라 "표현 학습 전용 도구".
-            최종 분류기는 여전히 CE로 학습. 두 단계 파이프라인이 번거롭지만, 표현 품질에서 일관된 우위.
-          </p>
-        </div>
+        <h3>Batch composition이 loss의 관측 범위를 정합니다</h3>
+        <p>
+          Anchor와 같은 class의 sample이 batch에 없으면 supervised positive를 만들 수 없고, 한 class가 batch 대부분을 차지하면 negative 다양성이 줄어듭니다. Class-aware sampler를 사용하되 실제 배포 분포와 다른 균형 batch가 calibration을 바꿀 수 있으므로 downstream classifier는 원래 분포에서도 평가합니다.
+        </p>
+        <p>
+          이 loss는 cross-entropy의 자동 대체제가 아니라 representation 학습 도구입니다. Frozen linear probe, full fine-tuning과 retrieval을 같은 encoder checkpoint에서 비교해 class compactness가 실제 task 성능으로 이어지는지 확인합니다.
+        </p>
+      </div>
+      <div id="paper-supcon" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Supervised Contrastive Learning</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Khosla 등은 같은 class의 여러 sample을 positive로 사용하는 supervised contrastive objective를 제시하고 cross-entropy baseline과 비교했습니다. ImageNet·ResNet·논문의 augmentation과 batch recipe에서 나온 결과를 label hierarchy가 다른 모든 domain의 보장으로 확대하지 않습니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html" target="_blank" rel="noreferrer">Multi-positive 식과 실험 조건 보기</a>
       </div>
     </section>
   );

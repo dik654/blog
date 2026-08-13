@@ -1,36 +1,46 @@
-import M from '@/components/ui/math';
-import ConsensusClassViz from './viz/ConsensusClassViz';
+import M from "@/components/ui/math";
+import ConsensusClassViz from "./viz/ConsensusClassViz";
 
 export default function ConsensusClass() {
   return (
     <section id="consensus-class" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">합의 알고리즘 분류</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          장애 모델(CFT vs BFT)과 최종성 유형(결정적 vs 확률적)으로 분류.
-        </p>
+        <p>장애 모델(CFT vs BFT)과 최종성 유형(결정적 vs 확률적)으로 분류.</p>
       </div>
-      <div className="not-prose"><ConsensusClassViz /></div>
+      <div className="not-prose">
+        <ConsensusClassViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">합의 알고리즘 분류</h3>
 
         {/* 1. Fault Model */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">1. Fault Model별 분류</h4>
+        <h4 className="text-lg font-semibold mt-5 mb-3">
+          1. Fault Model별 분류
+        </h4>
         <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">CFT (Crash Fault Tolerance)</div>
+            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
+              CFT (Crash Fault Tolerance)
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li><M>{'n \\geq 2f+1'}</M> nodes</li>
+              <li>
+                <M>{"n \\geq 2f+1"}</M> nodes
+              </li>
               <li>노드가 멈추거나 연결 끊김만 허용</li>
               <li>악의적 행동 없음</li>
               <li>예: Paxos, Raft, ZAB (ZooKeeper)</li>
             </ul>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">BFT (Byzantine Fault Tolerance)</div>
+            <div className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
+              BFT (Byzantine Fault Tolerance)
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li><M>{'n \\geq 3f+1'}</M> nodes</li>
+              <li>
+                <M>{"n \\geq 3f+1"}</M> nodes
+              </li>
               <li>악의적 노드 허용</li>
               <li>블록체인 표준</li>
               <li>예: PBFT, Tendermint, HotStuff</li>
@@ -42,7 +52,9 @@ export default function ConsensusClass() {
         <h4 className="text-lg font-semibold mt-5 mb-3">2. Finality별 분류</h4>
         <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Deterministic Finality</div>
+            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
+              Deterministic Finality
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>한번 확정 = 영원히 유효</li>
               <li>즉시 또는 빠른 finality</li>
@@ -50,7 +62,9 @@ export default function ConsensusClass() {
             </ul>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">Probabilistic Finality</div>
+            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
+              Probabilistic Finality
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>시간이 지날수록 확실</li>
               <li>Fork 가능성 점차 감소</li>
@@ -58,7 +72,9 @@ export default function ConsensusClass() {
             </ul>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-purple-600 dark:text-purple-400 mb-2">Economic Finality</div>
+            <div className="text-sm font-semibold text-purple-600 dark:text-purple-400 mb-2">
+              Economic Finality
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>롤백 = 경제적 비용</li>
               <li>Slashing mechanism</li>
@@ -71,7 +87,9 @@ export default function ConsensusClass() {
         <h4 className="text-lg font-semibold mt-5 mb-3">3. Leader 선출별</h4>
         <div className="not-prose grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">Rotating Leader</div>
+            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
+              Rotating Leader
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>라운드마다 다른 리더</li>
               <li>Round-robin 또는 random</li>
@@ -79,7 +97,9 @@ export default function ConsensusClass() {
             </ul>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Stable Leader</div>
+            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
+              Stable Leader
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>실패 전까지 한 리더</li>
               <li>View change on failure</li>
@@ -87,7 +107,9 @@ export default function ConsensusClass() {
             </ul>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">Leaderless</div>
+            <div className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-2">
+              Leaderless
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>리더 없음</li>
               <li>Probabilistic</li>
@@ -97,17 +119,23 @@ export default function ConsensusClass() {
         </div>
 
         {/* 4. Chain Structure */}
-        <h4 className="text-lg font-semibold mt-5 mb-3">4. Chain Structure별</h4>
+        <h4 className="text-lg font-semibold mt-5 mb-3">
+          4. Chain Structure별
+        </h4>
         <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">Linear Chain</div>
+            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
+              Linear Chain
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>하나의 체인</li>
               <li>예: Bitcoin, Ethereum, BFT</li>
             </ul>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">DAG (Directed Acyclic Graph)</div>
+            <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
+              DAG (Directed Acyclic Graph)
+            </div>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>병렬 블록 &rarr; 높은 throughput</li>
               <li>예: IOTA, Narwhal+Bullshark, Aleph</li>
@@ -128,13 +156,48 @@ export default function ConsensusClass() {
               </tr>
             </thead>
             <tbody className="text-muted-foreground">
-              <tr className="border-b border-dashed"><td className="p-2">Bitcoin</td><td className="p-2">PoW</td><td className="p-2">Probabilistic</td><td className="p-2 text-right">7 tps</td></tr>
-              <tr className="border-b border-dashed"><td className="p-2">Ethereum</td><td className="p-2">PoS+BFT</td><td className="p-2">Deterministic</td><td className="p-2 text-right">15 tps</td></tr>
-              <tr className="border-b border-dashed"><td className="p-2">Solana</td><td className="p-2">PoS</td><td className="p-2">Probabilistic</td><td className="p-2 text-right">65K tps</td></tr>
-              <tr className="border-b border-dashed"><td className="p-2">Cosmos</td><td className="p-2">BFT</td><td className="p-2">Deterministic</td><td className="p-2 text-right">~10K tps</td></tr>
-              <tr className="border-b border-dashed"><td className="p-2">Avalanche</td><td className="p-2">PoS</td><td className="p-2">Probabilistic</td><td className="p-2 text-right">4500 tps</td></tr>
-              <tr className="border-b border-dashed"><td className="p-2">Aptos</td><td className="p-2">HotStuff</td><td className="p-2">Deterministic</td><td className="p-2 text-right">~160K tps</td></tr>
-              <tr><td className="p-2">Sui</td><td className="p-2">DAG BFT</td><td className="p-2">Deterministic</td><td className="p-2 text-right">120K+ tps</td></tr>
+              <tr className="border-b border-dashed">
+                <td className="p-2">Bitcoin</td>
+                <td className="p-2">PoW</td>
+                <td className="p-2">Probabilistic</td>
+                <td className="p-2 text-right">7 tps</td>
+              </tr>
+              <tr className="border-b border-dashed">
+                <td className="p-2">Ethereum</td>
+                <td className="p-2">PoS+BFT</td>
+                <td className="p-2">Deterministic</td>
+                <td className="p-2 text-right">15 tps</td>
+              </tr>
+              <tr className="border-b border-dashed">
+                <td className="p-2">Solana</td>
+                <td className="p-2">PoS</td>
+                <td className="p-2">Probabilistic</td>
+                <td className="p-2 text-right">65K tps</td>
+              </tr>
+              <tr className="border-b border-dashed">
+                <td className="p-2">Cosmos</td>
+                <td className="p-2">BFT</td>
+                <td className="p-2">Deterministic</td>
+                <td className="p-2 text-right">~10K tps</td>
+              </tr>
+              <tr className="border-b border-dashed">
+                <td className="p-2">Avalanche</td>
+                <td className="p-2">PoS</td>
+                <td className="p-2">Probabilistic</td>
+                <td className="p-2 text-right">4500 tps</td>
+              </tr>
+              <tr className="border-b border-dashed">
+                <td className="p-2">Aptos</td>
+                <td className="p-2">HotStuff</td>
+                <td className="p-2">Deterministic</td>
+                <td className="p-2 text-right">~160K tps</td>
+              </tr>
+              <tr>
+                <td className="p-2">Sui</td>
+                <td className="p-2">DAG BFT</td>
+                <td className="p-2">Deterministic</td>
+                <td className="p-2 text-right">120K+ tps</td>
+              </tr>
             </tbody>
           </table>
         </div>

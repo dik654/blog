@@ -1,38 +1,6 @@
-import ArchitectureViz from './viz/ArchitectureViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ArchitectureViz from "./viz/ArchitectureViz";
 
 export default function Architecture() {
-  return (
-    <section id="architecture" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">아키텍처 패턴: 계층형, 수평형, 파이프라인</h2>
-      <div className="not-prose mb-8"><ArchitectureViz /></div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">계층형 (Hierarchical)</h3>
-        <p className="leading-7">
-          <strong>Orchestrator Agent</strong>가 사용자 요청을 분석하고, 하위 Worker Agent에게 작업을 위임한다.<br />
-          Worker 간 직접 통신은 없으며 모든 결과가 Orchestrator를 경유한다.<br />
-          장점: 흐름 추적이 명확하고 디버그가 용이. 책임 소재가 분명.<br />
-          단점: Orchestrator가 병목이 될 수 있으며, 단일 실패 지점(SPOF)이 된다.
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">수평형 (Peer-to-Peer)</h3>
-        <p className="leading-7">
-          모든 에이전트가 동등한 권한으로 메시지를 주고받는다.<br />
-          토론(debate), 합의(consensus) 패턴에 적합. 예: 코드 리뷰에서 여러 에이전트가 의견을 교환.<br />
-          장점: 유연하고 분산적. 한 에이전트 실패가 전체에 영향이 적다.<br />
-          단점: 대화가 발산할 위험이 크고, 명시적 종료 조건을 설정해야 한다.
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">파이프라인형 (Pipeline)</h3>
-        <p className="leading-7">
-          Agent A 출력이 Agent B 입력이 되고, Agent B 출력이 Agent C 입력이 되는 순차 구조.<br />
-          ETL(Extract-Transform-Load)과 유사한 데이터 변환 흐름에 적합.<br />
-          장점: 각 단계의 입출력이 명확하여 디버그가 가장 쉽다.<br />
-          단점: 앞 단계 오류를 뒤에서 수정할 수 없다. 피드백 루프가 없다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>제조 현장 권장</strong> — 대부분 <strong>계층형</strong>이 적합하다.<br />
-          이유: 제조 공정은 책임 추적(audit trail)이 필수이며, Orchestrator가 모든 판단 근거를 로깅할 수 있다.<br />
-          예외: 단순 데이터 변환(센서 → 전처리 → 저장)은 파이프라인형이 더 경제적.
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="architecture" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">분해 패턴을 고르기 전에 worker가 무엇을 받아 무엇을 반환하고, 누가 합칠지부터 계약합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Coordinator–worker는 범위와 owner를 나누기 쉽고, map–reduce는 같은 schema의 독립 작업에 적합합니다. Actor–reviewer는 작성과 검증 context를 분리하지만 test나 rubric이 없으면 의견만 한 번 더 생성합니다. Debate는 열린 판단에서 관점 차이가 실제 가치가 있을 때만 round·budget·최종 판정자를 제한합니다.</p><p>Worker output은 자연어 보고 하나가 아니라 task ID, input snapshot, artifact URI/hash, evidence, validation status, uncertainty와 retry-safe receipt를 가집니다. Coordinator가 원문 전체를 다시 읽지 않고 schema와 충돌·누락만 확인할 수 있어야 분리 효과가 남습니다.</p></div><ExplainedFormula question="여러 worker 결과를 합친 output이 완료됐다고 언제 판정할까요?" idea={<>필수 task ID 집합과 성공 receipt가 있는 task ID 집합이 같고, artifact 충돌이 없으며 전역 validator가 통과해야 합니다.</>} formula={String.raw`\operatorname{join\_ok}=\mathbf 1[R=K]\,\mathbf 1[\operatorname{conflicts}(A)=\varnothing],\mathbf 1[V(A)=1]`} terms={[{symbol:"R",name:"required tasks",description:"계획에서 반드시 완료해야 한다고 고정한 task ID 집합입니다."},{symbol:"K",name:"successful receipts",description:"Schema·checksum·local validation을 통과한 receipt의 task ID 집합입니다."},{symbol:"A",name:"artifacts",description:"Worker가 반환한 file·record·report 등 versioned 결과 집합입니다."},{symbol:"V",name:"global validator",description:"합친 결과의 test·rubric·policy를 검사하는 결정적 또는 audited 판정입니다."}]} assumptions={["Task ID와 input snapshot이 retry마다 안정적이며 중복 receipt를 dedup합니다.","부분 성공을 허용한다면 required/optional과 degraded-output policy를 사전에 구분합니다.","Validator가 보지 않는 의미 오류는 join_ok=1이어도 남을 수 있으므로 audit 표본을 둡니다."]} interpretation="필수 10개 중 9개만 성공하면 보고서가 그럴듯해도 완료가 아닙니다. 10개가 모두 있어도 같은 파일을 서로 다르게 수정했거나 전체 test가 실패하면 join을 승인하지 않습니다."/><div className="not-prose my-8"><ArchitectureViz /></div></section>;
 }

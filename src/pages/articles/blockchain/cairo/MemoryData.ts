@@ -24,9 +24,21 @@ impl Default for MemoryConfig {
 }`;
 
 export const MEMORY_ANNOTATIONS = [
-  { lines: [4, 8] as [number, number], color: 'sky' as const, note: 'Memory: 주소-ID 매핑 + 이중 값 저장소' },
-  { lines: [11, 13] as [number, number], color: 'emerald' as const, note: 'MemoryValue: Small(u128) | F252([u32;8])' },
-  { lines: [17, 22] as [number, number], color: 'amber' as const, note: '72비트 임계값으로 공간 효율 최적화' },
+  {
+    lines: [4, 8] as [number, number],
+    color: "sky" as const,
+    note: "Memory: 주소-ID 매핑 + 이중 값 저장소",
+  },
+  {
+    lines: [11, 13] as [number, number],
+    color: "emerald" as const,
+    note: "MemoryValue: Small(u128) | F252([u32;8])",
+  },
+  {
+    lines: [17, 22] as [number, number],
+    color: "amber" as const,
+    note: "72비트 임계값으로 공간 효율 최적화",
+  },
 ];
 
 export const BUILTIN_CODE = `// Cairo 빌트인 시스템 (암호학적 특수 함수)
@@ -45,6 +57,14 @@ pub struct BuiltinSegments {
 // 크기를 다음 2의 거듭제곱으로 확장 → FFT 효율성`;
 
 export const BUILTIN_ANNOTATIONS = [
-  { lines: [2, 9] as [number, number], color: 'sky' as const, note: '9종 빌트인: 각각 전용 메모리 세그먼트' },
-  { lines: [12, 14] as [number, number], color: 'emerald' as const, note: '2의 거듭제곱 패딩: SIMD + FFT 최적화' },
+  {
+    lines: [2, 9] as [number, number],
+    color: "sky" as const,
+    note: "9종 빌트인: 각각 전용 메모리 세그먼트",
+  },
+  {
+    lines: [12, 14] as [number, number],
+    color: "emerald" as const,
+    note: "2의 거듭제곱 패딩: SIMD + FFT 최적화",
+  },
 ];

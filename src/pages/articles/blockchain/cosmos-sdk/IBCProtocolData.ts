@@ -24,7 +24,19 @@ Channel       ← 앱 간 채널 (ORDERED / UNORDERED)
    → OnAcknowledgementPacket 콜백`;
 
 export const IBC_ANNOTATIONS = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: 'IBC 3계층 구조' },
-  { lines: [6, 9] as [number, number], color: 'emerald' as const, note: '송신 단계' },
-  { lines: [15, 20] as [number, number], color: 'amber' as const, note: '수신 & 검증 단계' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "IBC 3계층 구조",
+  },
+  {
+    lines: [6, 9] as [number, number],
+    color: "emerald" as const,
+    note: "송신 단계",
+  },
+  {
+    lines: [15, 20] as [number, number],
+    color: "amber" as const,
+    note: "수신 & 검증 단계",
+  },
 ];

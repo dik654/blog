@@ -24,10 +24,26 @@ export const LIFECYCLE_CODE = `블록 생명주기 (ABCI++ v0.38+)
    → RetainHeight로 이전 블록 정리 가능`;
 
 export const LIFECYCLE_ANNOTATIONS = [
-  { lines: [3, 4] as [number, number], color: 'violet' as const, note: '초기화' },
-  { lines: [6, 8] as [number, number], color: 'sky' as const, note: '블록 구성' },
-  { lines: [14, 16] as [number, number], color: 'emerald' as const, note: 'Vote Extension (ABCI++)' },
-  { lines: [18, 20] as [number, number], color: 'amber' as const, note: '핵심: FinalizeBlock' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "violet" as const,
+    note: "초기화",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "sky" as const,
+    note: "블록 구성",
+  },
+  {
+    lines: [14, 16] as [number, number],
+    color: "emerald" as const,
+    note: "Vote Extension (ABCI++)",
+  },
+  {
+    lines: [18, 20] as [number, number],
+    color: "amber" as const,
+    note: "핵심: FinalizeBlock",
+  },
 ];
 
 export const LEGACY_VS_ABCIPP = `ABCI 진화: 레거시 → ABCI++
@@ -46,6 +62,14 @@ ABCI++ (v0.38+):
   Commit()`;
 
 export const LEGACY_ANNOTATIONS = [
-  { lines: [3, 7] as [number, number], color: 'rose' as const, note: '레거시: 개별 TX 호출' },
-  { lines: [9, 14] as [number, number], color: 'emerald' as const, note: 'ABCI++: 통합 + 신규 메서드' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "rose" as const,
+    note: "레거시: 개별 TX 호출",
+  },
+  {
+    lines: [9, 14] as [number, number],
+    color: "emerald" as const,
+    note: "ABCI++: 통합 + 신규 메서드",
+  },
 ];

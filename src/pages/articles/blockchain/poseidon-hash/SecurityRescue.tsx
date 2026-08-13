@@ -1,4 +1,4 @@
-import SecurityViz from './viz/SecurityViz';
+import SecurityViz from "./viz/SecurityViz";
 
 export default function SecurityRescue() {
   return (
@@ -11,7 +11,9 @@ export default function SecurityRescue() {
           Rescue는 역방향 S-box가 느려 Poseidon이 실전 채택.
         </p>
       </div>
-      <div className="not-prose"><SecurityViz /></div>
+      <div className="not-prose">
+        <SecurityViz />
+      </div>
     </section>
   );
 }

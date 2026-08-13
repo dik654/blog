@@ -1,59 +1,50 @@
+import {
+  TelemetryFrame,
+  TelemetryRule,
+  TelemetrySteps,
+} from "./TelemetryVizPrimitives";
+
 export default function UsageTrackerViz() {
-  const pricing = [
-    { model: 'Opus 4.6', input: 15, output: 75, color: '#ec4899' },
-    { model: 'Sonnet 4.6', input: 3, output: 15, color: '#3b82f6' },
-    { model: 'Haiku 4.5', input: 1, output: 5, color: '#10b981' },
-    { model: 'GPT-4o', input: 2.5, output: 10, color: '#8b5cf6' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">UsageTracker — 모델별 단가 ($ per 1M)</text>
-
-        {/* 테이블 헤더 */}
-        <rect x={30} y={50} width={500} height={28} fill="var(--muted)" rx={4} />
-        <text x={115} y={69} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">모델</text>
-        <text x={280} y={69} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">Input</text>
-        <text x={445} y={69} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">Output</text>
-
-        {/* 행들 */}
-        {pricing.map((p, i) => {
-          const y = 84 + i * 40;
-          return (
-            <g key={p.model}>
-              <rect x={30} y={y} width={500} height={34} rx={4}
-                fill={p.color} fillOpacity={0.06} stroke={p.color} strokeWidth={0.5} />
-              <rect x={30} y={y} width={3} height={34} fill={p.color} rx={1} />
-              <text x={115} y={y + 22} textAnchor="middle" fontSize={10} fontWeight={700}
-                fill={p.color}>{p.model}</text>
-
-              {/* Input bar */}
-              <rect x={210} y={y + 10} width={Math.round(p.input * 3)} height={14} rx={2}
-                fill={p.color} opacity={0.5} />
-              <text x={215 + Math.round(p.input * 3) + 5} y={y + 22} fontSize={9}
-                fontWeight={600} fill="var(--foreground)">${p.input}</text>
-
-              {/* Output bar */}
-              <rect x={395} y={y + 10} width={Math.round(p.output * 1)} height={14} rx={2}
-                fill={p.color} opacity={0.8} />
-              <text x={400 + Math.round(p.output * 1) + 5} y={y + 22} fontSize={9}
-                fontWeight={600} fill="var(--foreground)">${p.output}</text>
-            </g>
-          );
-        })}
-
-        {/* 총 비용 공식 */}
-        <rect x={30} y={260} width={500} height={52} rx={8}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={281} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          총 비용 = Σ (tokens × price / 1,000,000)
-        </text>
-        <text x={280} y={299} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          cache_creation: 1.25× · cache_read: 0.1× (90% 절감)
-        </text>
-      </svg>
-    </div>
+    <TelemetryFrame
+      label="USAGE LEDGER"
+      title="provider가 반환한 사용량을 원장에 한 번만 기록한다"
+      description="응답 identity와 가격표 버전을 함께 저장하면 retry·stream 재연결의 중복 집계를 막고, 나중에 단가가 바뀌어도 당시 추정값을 재현할 수 있습니다."
+      note="요청 전 tokenizer로 센 값은 예산 예약용 estimate이고, 응답 usage는 관측값입니다. 두 값을 같은 필드에 덮어쓰지 않아야 오차와 누락을 찾을 수 있습니다."
+    >
+      <TelemetrySteps
+        items={[
+          {
+            label: "01 · OBSERVE",
+            title: "응답 usage",
+            body: "provider·model·response ID와 input·output·cache usage를 보존합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · DEDUPE",
+            title: "중복 방지",
+            body: "retry와 재연결이 같은 응답을 다시 전달해도 한 번만 반영합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03 · PRICE",
+            title: "버전된 단가 적용",
+            body: "effective_at·currency·unit이 있는 catalog로 비용을 계산합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · RECONCILE",
+            title: "청구와 대조",
+            body: "추정 비용을 provider invoice와 비교해 누락·할인·반올림 차이를 표시합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <TelemetryRule>
+        budget alert는 화면 경고와 실행 차단을 분리해야 합니다. 경고는
+        추정치로도 가능하지만 hard limit은 동시 요청의 예약 비용과 실패 시 환급
+        규칙까지 있어야 일관됩니다.
+      </TelemetryRule>
+    </TelemetryFrame>
   );
 }

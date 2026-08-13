@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const NETWORK_BEHAVIOUR = `pub trait NetworkBehaviour: 'static {
     /// Handler for all the protocols the network behaviour supports.
@@ -67,19 +67,30 @@ const NETWORK_BEHAVIOUR = `pub trait NetworkBehaviour: 'static {
 }`;
 
 export const behaviourCodeRefs: Record<string, CodeRef> = {
-  'network-behaviour': {
-    path: 'swarm/src/behaviour.rs — NetworkBehaviour 트레이트',
+  "network-behaviour": {
+    path: "swarm/src/behaviour.rs — NetworkBehaviour 트레이트",
     code: NETWORK_BEHAVIOUR,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 67],
     annotations: [
-      { lines: [4, 5], color: 'sky', note: 'ConnectionHandler 연관 타입 — 프로토콜별 핸들러' },
-      { lines: [23, 29], color: 'emerald', note: '인바운드 연결 핸들러 생성' },
-      { lines: [53, 60], color: 'amber', note: '이벤트 수신 — Swarm과 Handler에서 오는 이벤트 처리' },
-      { lines: [65, 67], color: 'violet', note: 'ToSwarm 커맨드 생성 — Behaviour→Swarm 명령 발행' },
+      {
+        lines: [4, 5],
+        color: "sky",
+        note: "ConnectionHandler 연관 타입 — 프로토콜별 핸들러",
+      },
+      { lines: [23, 29], color: "emerald", note: "인바운드 연결 핸들러 생성" },
+      {
+        lines: [53, 60],
+        color: "amber",
+        note: "이벤트 수신 — Swarm과 Handler에서 오는 이벤트 처리",
+      },
+      {
+        lines: [65, 67],
+        color: "violet",
+        note: "ToSwarm 커맨드 생성 — Behaviour→Swarm 명령 발행",
+      },
     ],
-    desc:
-`NetworkBehaviour 트레이트는 libp2p 프로토콜의 핵심 추상화입니다.
+    desc: `NetworkBehaviour 트레이트는 libp2p 프로토콜의 핵심 추상화입니다.
 
 ConnectionHandler 연관 타입으로 연결당 핸들러를 지정하고,
 handle_established_inbound/outbound_connection에서 핸들러 인스턴스를 생성합니다.

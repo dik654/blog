@@ -14,7 +14,8 @@ export default function ErrorCases({ title }: { title: string }) {
           Merkle 불일치는 RPC가 위변조된 증명을 보냈을 때 감지된다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 로컬 DB 조회이므로 증명 에러가 없다.
+          <strong>💡 Reth vs Helios:</strong> Reth는 로컬 DB 조회이므로 증명
+          에러가 없다.
           <br />
           Helios는 원격 RPC 의존이므로 증명 검증이 보안의 핵심이다.
         </p>

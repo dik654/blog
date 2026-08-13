@@ -1,4 +1,4 @@
-import type { Annotation } from '@/components/ui/code-panel';
+import type { Annotation } from "@/components/ui/code-panel";
 
 export const headerCode = `#[derive(Encode, Decode, TreeHash)]
 pub struct BeaconBlockHeader {
@@ -10,9 +10,9 @@ pub struct BeaconBlockHeader {
 }`;
 
 export const headerAnnotations: Annotation[] = [
-  { lines: [1, 1], color: 'sky', note: 'SSZ + Merkle derive' },
-  { lines: [3, 4], color: 'emerald', note: '슬롯·제안자 식별' },
-  { lines: [5, 7], color: 'amber', note: '3개 루트 해시' },
+  { lines: [1, 1], color: "sky", note: "SSZ + Merkle derive" },
+  { lines: [3, 4], color: "emerald", note: "슬롯·제안자 식별" },
+  { lines: [5, 7], color: "amber", note: "3개 루트 해시" },
 ];
 
 export const updateCode = `pub struct LightClientUpdate {
@@ -31,8 +31,8 @@ export const updateCode = `pub struct LightClientUpdate {
 }`;
 
 export const updateAnnotations: Annotation[] = [
-  { lines: [2, 3], color: 'sky', note: '증명된 헤더' },
-  { lines: [4, 7], color: 'emerald', note: '다음 위원회 + 증명' },
-  { lines: [8, 10], color: 'amber', note: '최종성 헤더 + 증명' },
-  { lines: [11, 13], color: 'violet', note: 'BLS 서명' },
+  { lines: [2, 3], color: "sky", note: "증명된 헤더" },
+  { lines: [4, 7], color: "emerald", note: "다음 위원회 + 증명" },
+  { lines: [8, 10], color: "amber", note: "최종성 헤더 + 증명" },
+  { lines: [11, 13], color: "violet", note: "BLS 서명" },
 ];

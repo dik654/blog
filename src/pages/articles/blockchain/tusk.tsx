@@ -1,6 +1,6 @@
-import Overview from './tusk/Overview';
-import AsyncProtocol from './tusk/AsyncProtocol';
-import Comparison from './tusk/Comparison';
+import Overview from "./tusk/Overview";
+import AsyncProtocol from "./tusk/AsyncProtocol";
+import Comparison from "./tusk/Comparison";
 
 export default function TuskArticle() {
   return (

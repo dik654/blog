@@ -1,46 +1,45 @@
+import { PolicyFrame, PolicyRule, PolicySteps } from "./PolicyVizPrimitives";
+
 export default function RulesDslViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 310" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">PolicyCondition DSL — 조합 연산자</text>
-
-        {/* 조건 카테고리 */}
-        <text x={280} y={54} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          조건 타입
-        </text>
-
-        <g transform="translate(30, 64)">
-          {[
-            { category: '조합', items: ['And', 'Or', 'Not'], color: '#8b5cf6' },
-            { category: '상태', items: ['StatusIs', 'StatusFor'], color: '#3b82f6' },
-            { category: '빌드', items: ['BuildGreen', 'TestsPass', 'LintClean'], color: '#10b981' },
-            { category: '시간', items: ['FailureCount', 'TimeElapsed'], color: '#f59e0b' },
-            { category: '고급', items: ['Custom (Lua)'], color: '#ef4444' },
-          ].map((cat, i) => (
-            <g key={cat.category} transform={`translate(0, ${i * 44})`}>
-              <rect x={0} y={0} width={100} height={34} rx={4}
-                fill={cat.color} fillOpacity={0.15} stroke={cat.color} strokeWidth={0.8} />
-              <text x={50} y={22} textAnchor="middle" fontSize={10.5} fontWeight={700}
-                fill={cat.color}>{cat.category}</text>
-
-              <g transform="translate(110, 3)">
-                {cat.items.map((item, j) => (
-                  <g key={item} transform={`translate(${j * 125}, 0)`}>
-                    <rect x={0} y={0} width={120} height={28} rx={3}
-                      fill={cat.color} fillOpacity={0.08} stroke={cat.color} strokeWidth={0.4} />
-                    <text x={60} y={19} textAnchor="middle" fontSize={9} fontWeight={600}
-                      fontFamily="monospace" fill={cat.color}>{item}</text>
-                  </g>
-                ))}
-              </g>
-            </g>
-          ))}
-        </g>
-
-        <text x={280} y={300} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">YAML 선언형 + Lua 임베디드 (고급 케이스)</text>
-      </svg>
-    </div>
+    <PolicyFrame
+      label="DECLARATIVE RULE"
+      title="condition은 snapshot을 읽고 action proposal만 만든다"
+      description="평가와 실행을 분리하면 같은 evidence에서 같은 decision을 재현하고 action 직전에 최신 state를 다시 확인할 수 있습니다."
+      note="DSL은 범용 표준이 아니라 이 저장소의 내부 표현이며, custom code는 별도 sandbox boundary로 취급합니다."
+    >
+      <PolicySteps
+        items={[
+          {
+            label: "01",
+            title: "Snapshot",
+            body: "version과 provenance가 있는 immutable evidence입니다.",
+            tone: "blue",
+          },
+          {
+            label: "02",
+            title: "Evaluate",
+            body: "True·False·Unknown으로 condition을 계산합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03",
+            title: "Arbitrate",
+            body: "여러 proposal의 priority와 충돌을 해결합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04",
+            title: "Execute",
+            body: "expected version과 권한을 재검증한 뒤 적용합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <PolicyRule>
+        action은 rule·resource·state version으로 만든 idempotency key를
+        사용합니다.
+      </PolicyRule>
+    </PolicyFrame>
   );
 }

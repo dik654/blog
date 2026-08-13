@@ -1,67 +1,46 @@
-import { ActionBox, AlertBox } from '@/components/viz/boxes';
+import { ToolFrame, ToolRule, ToolSteps } from "./ToolVizPrimitives";
 
 export default function DispatchViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 350" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">handle_tool_use() — 5단계 파이프라인</text>
-
-        <defs>
-          <marker id="dp-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {/* 입력 */}
-        <ActionBox x={20} y={55} w={140} h={46}
-          label="LLM 응답"
-          sub="tool_use block"
-          color="#8b5cf6" />
-
-        <line x1={160} y1={78} x2={184} y2={78} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#dp-arr)" />
-
-        {/* 5단계 */}
-        {[
-          { label: '1. 권한 게이트', sub: 'Enforcer.check()', color: '#ef4444' },
-          { label: '2. Pre-hook', sub: 'hooks.pre_tool()', color: '#f59e0b' },
-          { label: '3. 디스패치', sub: 'execute_tool()', color: '#3b82f6' },
-          { label: '4. Post-hook', sub: 'hooks.post_tool()', color: '#f59e0b' },
-          { label: '5. 세션 로그', sub: 'log_tool_call()', color: '#10b981' },
-        ].map((step, i) => (
-          <g key={i}>
-            <rect x={184} y={58 + i * 52} width={192} height={40} rx={6}
-              fill={step.color} fillOpacity={0.1} stroke={step.color} strokeWidth={0.8} />
-            <rect x={184} y={58 + i * 52} width={3} height={40} fill={step.color} rx={1} />
-            <text x={280} y={77 + i * 52} textAnchor="middle" fontSize={10} fontWeight={700}
-              fill={step.color}>{step.label}</text>
-            <text x={280} y={91 + i * 52} textAnchor="middle" fontSize={9}
-              fill="var(--muted-foreground)">{step.sub}</text>
-            {i < 4 && (
-              <line x1={280} y1={98 + i * 52} x2={280} y2={110 + i * 52}
-                stroke="#3b82f6" strokeWidth={1} markerEnd="url(#dp-arr)" />
-            )}
-          </g>
-        ))}
-
-        {/* 출력 */}
-        <ActionBox x={400} y={148} w={140} h={46}
-          label="tool_result"
-          sub="LLM에 반환"
-          color="#10b981" />
-
-        <line x1={376} y1={171} x2={400} y2={171} stroke="#3b82f6" strokeWidth={1.2} markerEnd="url(#dp-arr)" />
-
-        {/* Deny 경로 */}
-        <AlertBox x={400} y={55} w={140} h={42}
-          label="Deny 경로"
-          sub="Error 반환"
-          color="#ef4444" />
-        <line x1={376} y1={72} x2={400} y2={72} stroke="#ef4444" strokeWidth={0.8} strokeDasharray="3 2" markerEnd="url(#dp-arr)" />
-
-        <text x={280} y={336} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">각 단계 독립 · Pre-hook abort 시 디스패치 스킵</text>
-      </svg>
-    </div>
+    <ToolFrame
+      label="MODEL PROPOSAL → HOST EFFECT"
+      title="모델의 tool call은 실행 명령이 아니라 검증할 제안이다"
+      description="host는 이름·schema·registry generation을 고정하고 domain·effect·permission을 검증한 뒤에만 executor를 호출합니다."
+      note="model, hook, cron과 recovery에서 온 call도 같은 entry를 사용합니다. call source가 내부라는 이유로 schema·permission·deadline 검사를 생략하지 않습니다."
+    >
+      <ToolSteps
+        items={[
+          {
+            label: "01 · PROPOSE",
+            title: "read / search",
+            body: "모델이 로그인 실패 위치를 찾을 tool name과 JSON arguments를 제안합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · BIND",
+            title: "Registry identity",
+            body: "host가 name·schema digest·generation과 call budget을 고정합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03 · HOST GATE",
+            title: "Validate & authorize",
+            body: "schema·workspace boundary를 검사하고 구체적 effect의 permission을 강제합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · OBSERVE",
+            title: "Execute & result",
+            body: "executor가 edit와 deterministic test를 수행하고 stable result envelope를 반환합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <ToolRule>
+        로그인 실패 수정은 read/search → edit → deterministic test 순서를
+        지킵니다. 독립적인 read끼리는 병렬화할 수 있지만 edit 결과에 의존하는
+        test를 함께 실행하면 검증 전 상태를 읽는 race가 생깁니다.
+      </ToolRule>
+    </ToolFrame>
   );
 }

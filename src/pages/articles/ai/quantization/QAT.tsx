@@ -1,49 +1,30 @@
-import QATTrainViz from './viz/QATTrainViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import QATTrainViz from "./viz/QATTrainViz";
 
 export default function QAT() {
-  return (
-    <section id="qat" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">QAT: 양자화 인식 학습</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          <strong>Quantization-Aware Training</strong> — 학습 과정에서 양자화를 시뮬레이션하여
-          모델이 양자화 오차에 적응하도록 만드는 기법.
-          PTQ 대비 정확도 우수하지만, 추가 학습 비용이 수반
-        </p>
-        <p>
-          핵심 구조: Forward에서 <strong>Fake Quantization 노드</strong>를 삽입하여
-          FP32 가중치를 INT8로 양자화했다가 다시 FP32로 복원.
-          이 과정에서 발생하는 양자화 오차가 손실 함수에 반영되고,
-          역전파를 통해 모델이 이 오차를 줄이는 방향으로 학습
-        </p>
-        <p>
-          역전파의 난제: round() 함수의 gradient가 0 (계단 함수)이므로 직접 역전파가 불가능.
-          <strong>STE(Straight-Through Estimator)</strong>로 해결 — forward는 round() 적용,
-          backward는 round()를 건너뛰고 gradient를 직접 전달.
-          Bengio(2013)가 제안한 경험적 해법으로, 수학적으로는 정확하지 않지만 실전에서 잘 작동
-        </p>
-      </div>
-
-      <QATTrainViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">QAT의 실전 위치</h3>
-        <p>
-          INT8에서 QAT는 PTQ 대비 0.3~0.7% 추가 정확도를 확보.
-          INT4에서는 그 격차가 2~5%로 벌어짐 — 비트 수가 줄수록 QAT의 가치가 커짐.
-          하지만 7B 모델 QAT는 GPU 8장 × 수시간이 필요하여 <strong>LLM에서는 비용 대비 효과가 낮음</strong>
-        </p>
-        <p>
-          실무에서의 역할 분담: <strong>LLM = PTQ(GPTQ/AWQ)</strong>가 표준,
-          <strong>소형 모델(MobileNet, EfficientNet) + 엣지 디바이스 = QAT</strong>가 표준.
-          엣지에서는 INT4/INT2까지 내려가야 하므로 QAT의 정확도 이점이 결정적
-        </p>
-        <p className="leading-7">
-          요약 1: QAT = <strong>학습 중 양자화 시뮬레이션</strong> → 모델이 오차에 적응<br />
-          요약 2: STE는 round()의 gradient 문제를 <strong>"그냥 통과시키는"</strong> 경험적 해법<br />
-          요약 3: LLM에서는 비용 과다 → <strong>GPTQ/AWQ가 대안</strong>, 소형 모델에서는 QAT가 최적
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="qat" className="mb-16 scroll-mt-20">
+    <h2 className="mb-6 text-2xl font-bold">QAT는 forward에서 배포 오차를 보여 주되, backward에는 근사 gradient를 흘립니다</h2>
+    <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <p>Quantization-aware training(QAT)은 float master weight를 유지하면서 forward에 fake quantize–dequantize를 넣습니다. Model은 rounding과 clipping이 포함된 출력을 보고 loss를 줄이도록 weight와 경우에 따라 scale을 조정할 수 있지만, round 함수의 진짜 derivative는 거의 모든 위치에서 0이므로 그대로 미분하면 학습 신호가 사라집니다.</p>
+      <p>그래서 straight-through estimator(STE)는 representable range 안에서 fake quantizer를 identity처럼 미분하는 근사를 사용합니다. 이는 forward 계산의 수학적으로 정확한 gradient가 아니라 학습을 가능하게 하는 surrogate이며, observer freeze 시점·batch normalization 통계·loss·data budget까지 QAT recipe에 포함됩니다.</p>
+    </div>
+    <ExplainedFormula
+      question="반올림 때문에 gradient가 끊기는 QAT에서 STE는 어떤 근사를 사용할까요?"
+      idea={<>Forward에는 실제와 같은 clip·round·dequantize를 사용하고, backward에서는 range 안의 입력 변화가 출력에 그대로 전달된다고 가정합니다. Range 밖에서는 gradient를 0으로 두어 계속 포화되는 값을 구분할 수 있습니다.</>}
+      formula={String.raw`\hat x=\operatorname{FQ}(x),\qquad \frac{\partial\hat x}{\partial x}\approx \mathbf 1[r_{\min}\le x\le r_{\max}]`}
+      terms={[
+        { symbol: "FQ", name: "fake quantization", description: "Low-bit code로 round·clip한 뒤 즉시 float로 dequantize하는 training operator입니다." },
+        { symbol: "r_min,r_max", name: "representable range", description: "현재 scale·zero-point가 표현할 수 있는 float 구간입니다." },
+        { symbol: "indicator", name: "STE gate", description: "Range 안에서는 upstream gradient를 통과시키고 밖에서는 막는 근사입니다." },
+      ]}
+      assumptions={["STE variant에 따라 clipping 밖 gradient와 scale gradient 정의가 달라질 수 있습니다.", "Float master weights와 optimizer state를 유지하는 일반적인 QAT를 가정합니다.", "Surrogate gradient의 수렴이 실제 discrete objective의 최적해나 배포 품질을 보장하지 않습니다."]}
+      interpretation="Forward output은 계단 모양인데 backward만 직선처럼 취급합니다. 그러므로 fake-quant checkpoint score 외에 convert된 graph와 실제 low-bit kernel 결과를 반드시 비교해야 합니다."
+    />
+    <div className="not-prose my-8"><QATTrainViz /></div>
+    <div id="paper-integer-qat" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+      <p className="text-xs font-bold text-primary">논문 읽기 · Integer-arithmetic-only inference와 QAT</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">Jacob 등은 integer-only hardware에서 효율적인 inference를 목표로 affine quantization과 training procedure를 함께 설계했습니다. 결과는 당시 MobileNet·ImageNet·COCO와 CPU 구현 조건에 속하며, 같은 QAT recipe가 현대 LLM·FP8·모든 accelerator에서 같은 이득을 낸다는 뜻은 아닙니다.</p>
+      <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1712.05877" target="_blank" rel="noreferrer">Affine scheme·training·integer inference 범위 보기</a>
+    </div>
+  </section>;
 }

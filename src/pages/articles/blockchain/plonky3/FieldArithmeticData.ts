@@ -14,8 +14,16 @@ impl Mul for BabyBear {
 }`;
 
 export const BABYBEAR_ANNOTATIONS = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: 'BabyBear 소수: 2-adic 친화적' },
-  { lines: [9, 13] as [number, number], color: 'emerald' as const, note: 'Montgomery 곱셈' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "BabyBear 소수: 2-adic 친화적",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "emerald" as const,
+    note: "Montgomery 곱셈",
+  },
 ];
 
 export const MERSENNE_CODE = `// mersenne-31/src/mersenne_31.rs
@@ -31,8 +39,16 @@ pub struct Mersenne31 { pub value: u32 }
 // Mersenne31에서 i^2 = -1인 복소수 확장으로 circle 정의`;
 
 export const MERSENNE_ANNOTATIONS = [
-  { lines: [2, 2] as [number, number], color: 'sky' as const, note: 'Mersenne 소수' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: 'Circle FFT 사용 이유' },
+  {
+    lines: [2, 2] as [number, number],
+    color: "sky" as const,
+    note: "Mersenne 소수",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "Circle FFT 사용 이유",
+  },
 ];
 
 export const EXTENSION_CODE = `// 확장체: BinomialExtensionField<BabyBear, 4>
@@ -47,6 +63,14 @@ export const EXTENSION_CODE = `// 확장체: BinomialExtensionField<BabyBear, 4>
 // - FRI 쿼리 응답: EF에서 평가`;
 
 export const EXTENSION_ANNOTATIONS = [
-  { lines: [2, 2] as [number, number], color: 'sky' as const, note: '4차 확장으로 128비트 보안' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: 'STARK 프로토콜 내 사용처' },
+  {
+    lines: [2, 2] as [number, number],
+    color: "sky" as const,
+    note: "4차 확장으로 128비트 보안",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "STARK 프로토콜 내 사용처",
+  },
 ];

@@ -1,6 +1,6 @@
-import Overview from './drand/Overview';
-import Protocol from './drand/Protocol';
-import FilecoinIntegration from './drand/FilecoinIntegration';
+import Overview from "./drand/Overview";
+import Protocol from "./drand/Protocol";
+import FilecoinIntegration from "./drand/FilecoinIntegration";
 
 export default function DrandArticle() {
   return (

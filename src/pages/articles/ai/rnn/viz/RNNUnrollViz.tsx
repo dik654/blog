@@ -1,68 +1,55 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, TOKENS, RNN_C, HIDDEN_C, INPUT_C } from './RNNUnrollVizData';
-import { FoldedCellView } from './RNNFoldedCell';
-import { HiddenValueFlow } from './RNNUnrollVizParts';
+import M from "@/components/ui/math";
+import VizFrame from "@/components/viz/VizFrame";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
-const OUT_C = '#8b5cf6';
+const steps = [
+  { index: "01", input: "x₁ · 개가", previous: "h₀", state: "h₁", output: "y₁" },
+  { index: "02", input: "x₂ · 사람을", previous: "h₁", state: "h₂", output: "y₂" },
+  { index: "03", input: "x₃ · 물었다", previous: "h₂", state: "h₃", output: "y₃" },
+] as const;
 
 export default function RNNUnrollViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 500 220" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          <defs>
-            <marker id="arr-h" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={5} markerHeight={5} orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill={HIDDEN_C} />
-            </marker>
-            <marker id="arr-i" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={5} markerHeight={5} orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill={INPUT_C} />
-            </marker>
-            <marker id="arr-o" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={5} markerHeight={5} orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill={OUT_C} />
-            </marker>
-          </defs>
-
-          {step === 0 && <FoldedCellView />}
-          {(step === 1 || step === 2) && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              {TOKENS.map((tok, i) => {
-                const cx = 90 + i * 150;
-                return (
-                  <motion.g key={i} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-                    transition={{ ...sp, delay: i * 0.12 }}>
-                    <rect x={cx - 35} y={85} width={70} height={44} rx={6}
-                      fill={RNN_C + '18'} stroke={RNN_C} strokeWidth={step >= 2 ? 2 : 1.5} />
-                    <text x={cx} y={112} textAnchor="middle" fontSize={11} fill={RNN_C} fontWeight={600}>RNN</text>
-                    <line x1={cx} y1={160} x2={cx} y2={129} stroke={INPUT_C} strokeWidth={1.5} markerEnd="url(#arr-i)" />
-                    <text x={cx} y={174} textAnchor="middle" fontSize={11} fill={INPUT_C} fontWeight={500}>{tok}</text>
-                    <text x={cx} y={188} textAnchor="middle" fontSize={10} fill="#999">x_{i + 1}</text>
-                    <line x1={cx} y1={85} x2={cx} y2={55} stroke={OUT_C} strokeWidth={1.5} markerEnd="url(#arr-o)" />
-                    <text x={cx} y={46} textAnchor="middle" fontSize={11} fill={OUT_C} fontWeight={500}>y_{i + 1}</text>
-                    {i < 2 && (
-                      <line x1={cx + 35} y1={107} x2={cx + 115} y2={107}
-                        stroke={HIDDEN_C} strokeWidth={2} markerEnd="url(#arr-h)" />
-                    )}
-                    <text x={cx} y={80} textAnchor="middle" fontSize={10} fill={HIDDEN_C} fontWeight={600}>
-                      h_{i + 1}
-                    </text>
-                  </motion.g>
-                );
-              })}
-              <text x={25} y={112} textAnchor="middle" fontSize={10} fill={HIDDEN_C}>h_0</text>
-              <line x1={38} y1={107} x2={55} y2={107} stroke={HIDDEN_C} strokeWidth={1.5} markerEnd="url(#arr-h)" />
-              {step >= 2 && (
-                <motion.text x={240} y={210} textAnchor="middle" fontSize={11} fill={RNN_C} fontWeight={600}
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  W_h, W_x — 모든 시간 단계에서 동일 가중치 공유
-                </motion.text>
-              )}
-            </motion.g>
-          )}
-          {step === 3 && <HiddenValueFlow />}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="시간축으로 펼치기"
+      title="보이는 cell은 세 개지만 학습하는 weight는 한 벌이다"
+      description="각 시점은 현재 input과 직전 state를 기다립니다. 같은 transition을 반복 호출하므로 time depth가 늘어도 parameter set은 늘지 않습니다."
+      note="Stacked layer의 depth와 sequence를 펼친 time depth는 다른 축입니다. 아래 세 column은 서로 다른 layer가 아닙니다."
+    >
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
+        {steps.map((step) => (
+          <div key={step.index} className="min-w-0 border-l border-border pl-4">
+            <p className="text-xs font-bold text-primary">STEP {step.index}</p>
+            <dl className="mt-4 grid min-w-0 gap-3 text-sm">
+              <div className="min-w-0">
+                <dt className="text-xs text-muted-foreground">현재 input</dt>
+                <dd className="mt-1 break-words font-semibold">{step.input}</dd>
+              </div>
+              <div className="rounded-lg border border-border/70 bg-background p-4">
+                <dt className="text-xs text-muted-foreground">공유 transition</dt>
+                <dd className="mt-2 font-mono text-xs leading-5">
+                  <M>{`${step.state}=\tanh(W_{xh}x_t+W_{hh}${step.previous}+b_h)`}</M>
+                </dd>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <dt className="text-xs text-muted-foreground">다음 state</dt>
+                  <dd className="mt-1 font-semibold text-primary">{step.state}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs text-muted-foreground">시점 output</dt>
+                  <dd className="mt-1 font-semibold">{step.output}</dd>
+                </div>
+              </div>
+            </dl>
+          </div>
+        ))}
+      </div>
+      <div className="mt-7 border-t border-border/60 pt-5">
+        <p className="text-xs font-bold text-muted-foreground">모든 시점이 공유</p>
+        <p className="mt-2 break-words font-mono text-sm font-semibold text-foreground">
+          W<sub>xh</sub> · W<sub>hh</sub> · b<sub>h</sub>
+        </p>
+      </div>
+    </VizFrame>
   );
 }

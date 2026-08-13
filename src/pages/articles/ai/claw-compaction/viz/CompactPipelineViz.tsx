@@ -1,44 +1,50 @@
-import { ActionBox } from '@/components/viz/boxes';
+import {
+  CompactFrame,
+  CompactRule,
+  CompactSteps,
+} from "./CompactionPrimitives";
 
 export default function CompactPipelineViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 370" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">compact_session() 6단계 파이프라인</text>
-
-        <defs>
-          <marker id="cp-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L4,2.5 L0,5" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {[
-          { label: '1. preserve_recent 분리', sub: '최근 N=15 메시지 보존', color: '#3b82f6' },
-          { label: '2. system 메시지 격리', sub: 'Role::System 제외', color: '#8b5cf6' },
-          { label: '3. summarize_messages()', sub: 'scope + tool_usage + timeline', color: '#f59e0b' },
-          { label: '4. format_compact_summary()', sub: '<prior-context> XML 래핑', color: '#10b981' },
-          { label: '5. 새 Session 조립', sub: 'system + summary + recent', color: '#3b82f6' },
-          { label: '6. CompactionResult 반환', sub: 'compacted_session + meta', color: '#10b981' },
-        ].map((step, i) => (
-          <g key={i}>
-            <rect x={70} y={54 + i * 48} width={420} height={40} rx={6}
-              fill={step.color} fillOpacity={0.1} stroke={step.color} strokeWidth={0.8} />
-            <rect x={70} y={54 + i * 48} width={4} height={40} fill={step.color} rx={1} />
-            <text x={86} y={73 + i * 48} fontSize={11} fontWeight={700}
-              fill={step.color}>{step.label}</text>
-            <text x={86} y={87 + i * 48} fontSize={9}
-              fill="var(--muted-foreground)">{step.sub}</text>
-            {i < 5 && (
-              <line x1={280} y1={94 + i * 48} x2={280} y2={102 + i * 48}
-                stroke="#3b82f6" strokeWidth={1} markerEnd="url(#cp-arr)" />
-            )}
-          </g>
-        ))}
-
-        <text x={280} y={354} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">LLM 호출 없음 · 결정론적 · 수 ms 내 완료</text>
-      </svg>
-    </div>
+    <CompactFrame
+      label="COMPACTION PIPELINE"
+      title="raw history를 검증 가능한 compacted state로 바꾼다"
+      description="로그인 실패 수정 기록에서 보존할 사실과 외부 evidence를 먼저 고른 뒤 구조화하고, 복원 검사를 통과한 경우에만 다음 model context를 교체합니다."
+      note="Compaction은 context representation을 바꾸는 작업입니다. 이미 내려진 permission decision, 실행된 edit와 외부 effect를 취소하거나 rollback하지 않으며 durable ledger와 receipt를 참조합니다."
+    >
+      <CompactSteps
+        steps={[
+          {
+            label: "01 · RAW HISTORY",
+            title: "보존 경계 계산",
+            body: "로그인 요청, call/result pair와 최근 turn을 요약 대상에서 분리합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · SELECT / SUMMARIZE",
+            title: "작업 상태 추출",
+            body: "목표·auth file·실패 원인·permission·edit/test receipt를 구조화합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03 · COMPACTED STATE",
+            title: "Prior state + recent",
+            body: "구조화된 오래된 상태와 최근 원문, artifact reference를 합칩니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · VERIFY / RESTORE",
+            title: "검증 뒤 교체",
+            body: "schema·budget·tool pair·핵심 fact를 검사하고 실패하면 기존 context를 유지합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <CompactRule>
+        <strong>복원 질문:</strong> 다음 model이 수정한 파일, test 결과, 미완료
+        작업과 사용자가 거부한 권한을 다시 말할 수 있는가? 답할 수 없다면 새
+        state를 commit하지 않습니다.
+      </CompactRule>
+    </CompactFrame>
   );
 }

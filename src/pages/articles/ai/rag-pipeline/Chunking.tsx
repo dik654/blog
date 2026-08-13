@@ -1,45 +1,30 @@
-import ChunkingViz from './viz/ChunkingViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ChunkingViz from "./viz/ChunkingViz";
 
 export default function Chunking() {
   return (
-    <section id="chunking" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">문서 청킹 전략</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          청킹(chunking)은 RAG 품질의 첫 번째 분기점 — 너무 작으면 맥락 손실, 너무 크면 검색 정밀도 하락<br />
-          문서를 어떻게 나누느냐에 따라 동일한 임베딩 모델로도 검색 정확도가 크게 달라진다
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">청킹 전략 4가지</h3>
-        <ul>
-          <li><strong>고정 크기(Fixed-size)</strong> — 512 토큰 등 일정 크기로 자름, 가장 단순</li>
-          <li><strong>재귀 청킹(Recursive)</strong> — 단락 → 문장 → 단어 순서로 분할, 의미 경계 유지</li>
-          <li><strong>의미 단위(Semantic)</strong> — 임베딩 유사도 변화 지점에서 분할, 가장 정교</li>
-          <li><strong>계층적(Hierarchical)</strong> — 문서 → 섹션 → 단락 계층 구조 유지, 요약과 세부 모두 검색 가능</li>
-        </ul>
+    <section id="chunking" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">Chunking은 글자 수를 맞추는 전처리가 아니라, 검색 단위와 인용 가능한 근거 단위의 경계를 정하는 작업입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>문서 전체를 vector 하나로 만들면 서로 다른 주제가 섞이고, 한 문장씩 자르면 조건과 예외가 흩어질 수 있습니다. 먼저 parser가 제목·문단·목록·표·code block과 원문 offset을 보존해야 합니다. 그 위에서 고정 token chunk를 baseline으로 두고 structure-aware 또는 parent–child 방식을 비교합니다.</p>
+        <p>Parent–child 방식은 작은 child로 검색 정밀도를 확보한 뒤, 그 child가 속한 더 큰 parent를 generation context로 복원합니다. 이때 overlap이 크다고 정답 coverage가 자동으로 좋아지지는 않습니다. 중복 chunk가 top-k를 차지해 서로 다른 근거를 밀어낼 수 있기 때문입니다.</p>
       </div>
-
-      <div className="not-prose my-8">
-        <ChunkingViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">오버랩 설정</h3>
-        <p>
-          청크 간 오버랩 — 청크 경계에 있는 문맥을 보존하기 위해 10~20% 중첩을 둔다<br />
-          예: 512 토큰 청크 + 50 토큰 오버랩 → 이전 청크의 마지막 50토큰이 다음 청크 시작에 포함
-        </p>
-        <p>
-          제조 매뉴얼처럼 "이전 단계 설명 → 현재 단계 실행" 흐름이 강한 문서에서는 오버랩이 특히 중요
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 청크 크기 실험</p>
-        <p className="text-sm">
-          128/256/512/1024 토큰으로 동일 쿼리를 실험해 검색 정확도를 비교하라<br />
-          기술 문서·법률 문서는 작은 청크(256), 서술형 보고서는 큰 청크(1024)가 유리한 경향이 있다
-        </p>
+      <ExplainedFormula
+        question="Chunk 길이가 정답을 실제로 보존하는지 어떻게 계산할까요?"
+        idea={<>평가 질문마다 사람이 표시한 정답 근거 span을 두고, 검색 또는 parent 복원 뒤 prompt에 남은 문자 구간과의 교집합을 잽니다. 여러 구간의 합집합을 사용해야 overlap을 두 번 세지 않습니다.</>}
+        formula={String.raw`C_{\mathrm{span}}(q)=\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}`}
+        terms={[
+          { symbol: "A_q", name: "answer-support span", description: "질문 q의 답을 뒷받침하는 원문 문자 또는 token 위치 집합입니다." },
+          { symbol: "K_q", name: "retained chunks", description: "검색·dedup·budgeting을 거쳐 최종 context에 남은 chunk 집합입니다." },
+          { symbol: "span(c)", name: "source interval", description: "Chunk c가 원문에서 차지한 위치입니다." },
+          { symbol: "C_span", name: "span coverage", description: "필요한 근거 중 최종 context가 보존한 비율이며 0부터 1 사이입니다." },
+        ]}
+        assumptions={["정답 span label이 source revision과 같은 좌표계를 사용합니다.", "중복 overlap은 합집합으로 한 번만 셉니다.", "문자 coverage가 1이어도 표 header·앞 문단 조건 같은 구조적 문맥이 충분하다는 보장은 없습니다."]}
+        interpretation="정답 근거가 원문 100자이고 최종 context가 그중 80자를 보존했다면 coverage는 0.8입니다. 이 값을 chunk length·overlap·parent 복원 방식별로 비교합니다."
+      />
+      <div className="not-prose my-8"><ChunkingViz /></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>각 chunk에는 source ID·revision·heading path·원문 offset·parser version·valid-time·ACL을 남깁니다. 표는 셀만 떼지 않고 header와 row 관계를 복원할 수 있어야 하며, 삭제된 원문에서 파생된 chunk와 vector까지 찾을 수 있어야 합니다.</p>
       </div>
     </section>
   );

@@ -1,9 +1,9 @@
-import Overview from './lsm-tree/Overview';
-import WriteFlow from './lsm-tree/WriteFlow';
-import ReadFlow from './lsm-tree/ReadFlow';
-import Compaction from './lsm-tree/Compaction';
-import CompactionStall from './lsm-tree/CompactionStall';
-import LsmVsBtree from './lsm-tree/LsmVsBtree';
+import Overview from "./lsm-tree/Overview";
+import WriteFlow from "./lsm-tree/WriteFlow";
+import ReadFlow from "./lsm-tree/ReadFlow";
+import Compaction from "./lsm-tree/Compaction";
+import CompactionStall from "./lsm-tree/CompactionStall";
+import LsmVsBtree from "./lsm-tree/LsmVsBtree";
 
 export default function LsmTree() {
   return (

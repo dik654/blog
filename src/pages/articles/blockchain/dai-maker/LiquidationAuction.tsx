@@ -1,19 +1,20 @@
-import DutchAuctionViz from './viz/DutchAuctionViz';
-import BlackThursdayViz from './viz/BlackThursdayViz';
-import ClipperViz from './viz/ClipperViz';
-import PriceDecayViz from './viz/PriceDecayViz';
-import KeeperIncentiveViz from './viz/KeeperIncentiveViz';
-import LiquidationPenaltyViz from './viz/LiquidationPenaltyViz';
+import DutchAuctionViz from "./viz/DutchAuctionViz";
+import BlackThursdayViz from "./viz/BlackThursdayViz";
+import ClipperViz from "./viz/ClipperViz";
+import PriceDecayViz from "./viz/PriceDecayViz";
+import KeeperIncentiveViz from "./viz/KeeperIncentiveViz";
+import LiquidationPenaltyViz from "./viz/LiquidationPenaltyViz";
 
 export default function LiquidationAuction() {
   return (
     <section id="liquidation-auction" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">청산 경매 (Liquidations 2.0)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <DutchAuctionViz />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">블랙서스데이 (2020.03.12) — 역사적 실패</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          블랙서스데이 (2020.03.12) — 역사적 실패
+        </h3>
 
         <BlackThursdayViz />
 
@@ -33,7 +34,9 @@ export default function LiquidationAuction() {
   - $4.5M 손실 (bad debt)
   - User는 담보 전액 손실`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Liquidations 2.0 — Dutch Auction</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Liquidations 2.0 — Dutch Auction
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 2020년 10월 배포 - 네덜란드식 경매
 
 흐름:
@@ -54,12 +57,15 @@ export default function LiquidationAuction() {
   낙찰: 10 ETH × $2,970 = $29,700 지불`}</pre>
         <p>
           <strong>Dutch auction의 장점</strong>:<br />
-          ✓ 단일 트랜잭션으로 완료 (gas 경쟁 완화)<br />
-          ✓ 자동 가격 발견 (시장이 적정가 결정)<br />
-          ✓ 짧은 경매 시간 (수 분 ~ 수 시간)
+          ✓ 단일 트랜잭션으로 완료 (gas 경쟁 완화)
+          <br />
+          ✓ 자동 가격 발견 (시장이 적정가 결정)
+          <br />✓ 짧은 경매 시간 (수 분 ~ 수 시간)
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Clipper.sol — 경매 컨트랙트</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Clipper.sol — 경매 컨트랙트
+        </h3>
 
         <ClipperViz />
 
@@ -117,7 +123,9 @@ export default function LiquidationAuction() {
     }
 }`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">가격 감소 곡선 — StairstepExponentialDecrease</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          가격 감소 곡선 — StairstepExponentialDecrease
+        </h3>
 
         <PriceDecayViz />
 
@@ -140,8 +148,10 @@ t=300:   3300 × 0.99^5 = 3138
 t=600:   3300 × 0.99^10 = 2983 → 시장가 도달`}</pre>
         <p>
           <strong>파라미터 선택</strong>:<br />
-          - cut 낮음: 빠른 하락 → 빠른 낙찰 (하지만 싼 가격)<br />
-          - cut 높음: 천천히 하락 → 더 비싸게 낙찰<br />
+          - cut 낮음: 빠른 하락 → 빠른 낙찰 (하지만 싼 가격)
+          <br />
+          - cut 높음: 천천히 하락 → 더 비싸게 낙찰
+          <br />
           ETH-A: cut=0.99, step=90s → ~10분에 10% 하락
         </p>
 
@@ -171,7 +181,9 @@ Incentives:
   Keeper가 redo() 호출 → 가격 재설정
   redo 호출자에게도 tip 지급`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">청산 페널티 & 남은 담보</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          청산 페널티 & 남은 담보
+        </h3>
 
         <LiquidationPenaltyViz />
 
@@ -200,26 +212,36 @@ Incentives:
 → 전통 margin call과 유사`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Liquidations 2.0의 학습</p>
+          <p className="font-semibold mb-2">
+            인사이트: Liquidations 2.0의 학습
+          </p>
           <p>
             블랙서스데이는 MakerDAO에게 <strong>근본적 교훈</strong>:
           </p>
           <p className="mt-2">
-            1. <strong>시장 극한에 대응 설계</strong>: Gas 경쟁 환경 가정<br />
-            2. <strong>단일 트랜잭션 청산</strong>: 여러 블록 거치면 실패<br />
-            3. <strong>네트워크 지연 버퍼</strong>: Oracle 업데이트 지연 대비<br />
+            1. <strong>시장 극한에 대응 설계</strong>: Gas 경쟁 환경 가정
+            <br />
+            2. <strong>단일 트랜잭션 청산</strong>: 여러 블록 거치면 실패
+            <br />
+            3. <strong>네트워크 지연 버퍼</strong>: Oracle 업데이트 지연 대비
+            <br />
             4. <strong>Keeper 인센티브 다양화</strong>: flat + 비례 조합
           </p>
           <p className="mt-2">
-            결과: Liquidations 2.0은 <strong>Terra 붕괴(2022), FTX(2022), Silicon Valley Bank(2023)</strong> 모두 견뎌냄
+            결과: Liquidations 2.0은{" "}
+            <strong>
+              Terra 붕괴(2022), FTX(2022), Silicon Valley Bank(2023)
+            </strong>{" "}
+            모두 견뎌냄
           </p>
           <p className="mt-2">
-            <strong>배운 것</strong>: 경매 설계는 극한 시나리오 먼저 고려<br />
-            평소에는 간단하지만, 위기에는 강건해야<br />
+            <strong>배운 것</strong>: 경매 설계는 극한 시나리오 먼저 고려
+            <br />
+            평소에는 간단하지만, 위기에는 강건해야
+            <br />
             이것이 "battle-tested DeFi" 의 진정한 의미
           </p>
         </div>
-
       </div>
     </section>
   );

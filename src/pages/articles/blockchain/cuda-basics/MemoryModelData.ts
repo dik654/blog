@@ -38,9 +38,29 @@ Warp (32 스레드 단위):
   -> 블록체인: 모든 스레드가 동일 연산이므로 분기 없음 = 최적`;
 
 export const memoryAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: '레지스터: 가장 빠름 (~1 cycle)' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '공유 메모리: 블록 내 공유' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: '전역 메모리: 가장 느림 (~400 cycles)' },
-  { lines: [22, 27] as [number, number], color: 'violet' as const, note: '블록체인 최적화 패턴' },
-  { lines: [34, 38] as [number, number], color: 'rose' as const, note: 'Warp: SIMT 실행 단위' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "레지스터: 가장 빠름 (~1 cycle)",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "공유 메모리: 블록 내 공유",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "전역 메모리: 가장 느림 (~400 cycles)",
+  },
+  {
+    lines: [22, 27] as [number, number],
+    color: "violet" as const,
+    note: "블록체인 최적화 패턴",
+  },
+  {
+    lines: [34, 38] as [number, number],
+    color: "rose" as const,
+    note: "Warp: SIMT 실행 단위",
+  },
 ];

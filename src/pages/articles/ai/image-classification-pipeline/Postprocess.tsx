@@ -1,79 +1,67 @@
-import PostprocessViz from './viz/PostprocessViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import PostprocessViz from "./viz/PostprocessViz";
 
 export default function Postprocess() {
   return (
     <section id="postprocess" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">후처리: Threshold, Ensemble</h2>
+      <h2 className="mb-6 text-2xl font-bold">후처리는 logit을 확률로 보정하고, 확률을 운영 decision으로 바꾸는 별도 단계입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          모델 학습이 끝나면 <strong>후처리</strong>에서 추가 성능을 뽑아낸다<br />
-          Threshold 최적화, 앙상블(Soft/Hard Voting), Rank Averaging — 세 가지 핵심 기법<br />
-          후처리만으로 0.5~2% 향상 가능 — 대회 상위권과 중위권의 분기점
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Threshold 최적화</h3>
-        <p>
-          이진/다중라벨 분류에서 기본 threshold는 0.5 — 그러나 최적은 데이터에 따라 다름<br />
-          Validation set에서 threshold를 0.3~0.7 구간, 0.01 단위로 스캔<br />
-          F1 = 2·Precision·Recall / (Precision + Recall)을 최대화하는 지점 선택<br />
-          불균형 데이터일수록 최적 threshold가 0.5에서 크게 벗어남 — 양성 비율이 5%라면 threshold 0.3~0.4가 최적일 수 있음<br />
-          반드시 Validation set에서 탐색 후 Test에 적용 — Test로 직접 튜닝하면 과적합
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Soft Voting vs Hard Voting</h3>
-        <p>
-          <strong>Hard Voting</strong> — 각 모델이 예측한 클래스를 수집하고 다수결<br />
-          Model A: cat, Model B: cat, Model C: dog → 2:1로 cat 선택<br />
-          단순하지만 확률 정보를 버림 — A가 cat에 99%인지 51%인지 구분 불가
-        </p>
-        <p>
-          <strong>Soft Voting</strong> — 각 모델의 확률 출력(softmax)을 평균한 뒤 argmax<br />
-          A: [cat:0.7], B: [cat:0.6], C: [cat:0.3] → 평균 0.53 → cat<br />
-          신뢰도(confidence)가 반영되어 거의 항상 Hard보다 우수<br />
-          모델 수는 3~5개가 최적. 7개 이상은 수확 체감(diminishing returns), 추론 비용만 증가
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Cross-Model + Cross-Fold 앙상블</h3>
-        <p>
-          <strong>Cross-Model</strong>: 서로 다른 아키텍처(EfficientNet + ConvNeXt + ViT)를 앙상블<br />
-          각 모델의 귀납 편향(inductive bias)이 달라 실수 패턴이 다름 → 보완 효과<br />
-          CNN은 로컬 패턴에 강하고, ViT는 글로벌 구조에 강함 — 두 관점을 합산
-        </p>
-        <p>
-          <strong>Cross-Fold</strong>: 동일 모델을 5-Fold CV로 학습 → 5개 예측 평균<br />
-          각 fold가 다른 20% 데이터를 validation으로 사용 → 5개 모델이 서로 다른 패턴 학습<br />
-          분산(variance) 감소가 주 효과 — 단일 모델의 운(randomness)을 제거
-        </p>
-        <p>
-          <strong>최강 조합</strong>: 3모델 × 5Fold = 15개 예측 앙상블<br />
-          주의: 상관관계가 높은 모델끼리(EfficientNet-B4 + EfficientNet-B5) 앙상블은 효과 미미<br />
-          다양성(diversity)이 앙상블의 핵심 — 서로 다른 계열의 모델을 조합
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Rank Averaging</h3>
-        <p>
-          <strong>문제</strong>: 모델마다 확률 출력의 스케일이 다름 — calibration이 안 된 모델의 0.9와 잘 된 모델의 0.7은 비교 불가<br />
-          <strong>해법</strong>: 확률 대신 순위(rank)를 사용<br />
-          각 모델의 예측값을 0~1 구간의 rank로 변환 → rank 평균 → 최종 순서 결정<br />
-          Rank = (해당 샘플의 순위) / (전체 샘플 수)<br />
-          AUC, Precision@K 등 순위 기반 메트릭에서 특히 효과적<br />
-          확률 평균이 잘 안 맞을 때의 안전망 — 대회 마지막 제출에서 보험으로 사용
+          Multi-class argmax만 필요할 때도 confidence를 사용자에게 보여주거나 reject
+          option을 두면 probability의 의미가 중요해집니다. Accuracy가 높다는 사실은
+          “confidence 0.8인 예측 중 약 80%가 맞는다”는 calibration을 보장하지
+          않습니다. Calibration set에서 temperature를 선택하고, threshold와
+          ensemble weight는 같은 data를 끝없이 재사용하지 않도록 선택 단계를 남깁니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <PostprocessViz />
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">후처리 체크리스트</p>
-        <p className="text-sm text-amber-700 dark:text-amber-300">
-          1) Threshold 탐색: F1/AUC 기준, Val set에서 최적 threshold 찾기<br />
-          2) 단일 모델 TTA 적용 — 추론 비용 2× 이내<br />
-          3) Cross-Model 앙상블 (2~3개 다른 아키텍처)<br />
-          4) Cross-Fold 앙상블 (5-Fold 기본)<br />
-          5) Soft Voting 기본 + Rank Averaging 백업 제출<br />
-          6) 최종 제출: Soft Voting과 Rank Averaging 중 Val 성능 좋은 쪽 선택
+      <ExplainedFormula
+        question="Temperature scaling은 class 순서를 바꾸지 않고 confidence를 어떻게 조절할까?"
+        idea={<>모델의 logit vector를 양수 T로 나눈 뒤 softmax를 적용합니다. T가 1보다 크면 분포가 평평해지고, 1보다 작으면 더 뾰족해집니다. 모든 logit에 같은 양의 scale을 쓰므로 argmax class는 유지됩니다.</>}
+        formula={String.raw`\begin{aligned}
+p_T(c\mid x)&=\operatorname{softmax}(z(x)/T)_c,\\
+T^*&=\arg\min_{T>0}\mathcal L_{\mathrm{cal}}(T),\\
+\mathcal L_{\mathrm{cal}}(T)&=-\sum_{i\in\mathrm{cal}}\log p_T(y_i\mid x_i).
+\end{aligned}`}
+        terms={[
+          { symbol: "z_c", name: "class logit", description: "Softmax 전에 모델이 class c에 부여한 실수 score입니다." },
+          { symbol: "T", name: "temperature", description: "Calibration split의 NLL로 맞추는 하나의 양수 scale parameter입니다." },
+          { symbol: "K", name: "class count", description: "서로 배타적인 multi-class output의 class 개수입니다." },
+          { symbol: "cal", name: "calibration split", description: "Model weight 학습과 최종 test에서 분리해 post-processing parameter만 고르는 examples입니다." },
+        ]}
+        assumptions={["Temperature는 모든 class와 examples에 공통인 scalar이며 base logits는 고정합니다.", "Calibration split이 deployment confidence distribution을 대표한다고 가정합니다.", "Distribution shift 뒤에는 이전 T의 calibration이 유지된다고 보장할 수 없습니다."]}
+        interpretation="Temperature scaling은 argmax accuracy를 고치는 방법이 아니라 confidence scale을 맞추는 post-hoc calibration입니다. Class별 구조적 오류나 ranking 실패는 그대로 남습니다."
+      />
+      <ExplainedFormula
+        question="TTA와 ensemble은 여러 prediction을 어떤 단위에서 합쳐야 할까?"
+        idea={<>Label을 보존하는 transform과 model 후보의 probability를 가중 평균합니다. Class order가 같고 각 output이 같은 의미의 probability여야 하며, 합친 뒤 업무 비용으로 threshold를 적용합니다.</>}
+        formula={String.raw`\begin{aligned}
+\bar p_c(x)&=\sum_{m=1}^{M}w_m\frac1A\sum_{a=1}^{A}p_{m,c}(t_a(x)),\\
+w_m&\ge0,\qquad \sum_{m=1}^{M}w_m=1,\\
+\widehat y_c&=\mathbf1[\bar p_c(x)\ge\tau_c].
+\end{aligned}`}
+        terms={[
+          { symbol: "t_a", name: "TTA transform", description: "Serving 때 추가로 적용하며 label 의미를 보존한다고 검증한 A개 변환입니다." },
+          { symbol: "w_m", name: "ensemble weight", description: "M개 model prediction에 주는 비음수 가중치이며 합은 1입니다." },
+          { symbol: "τ_c", name: "class decision threshold", description: "Binary·multi-label에서 class별 비용·용량·precision/recall 목표로 선택한 경계입니다." },
+        ]}
+        assumptions={["모든 model의 class index와 probability semantics가 같습니다.", "TTA operation이 target label을 보존하며 추가 latency를 budget에 포함합니다.", "Multi-class argmax task에서는 마지막 indicator 대신 argmax를 쓰고 threshold/reject policy를 별도로 정의합니다."]}
+        interpretation="Model 수나 TTA 횟수를 늘리는 것이 목적이 아닙니다. Out-of-fold prediction의 error diversity와 marginal gain이 추가 latency·memory·운영 복잡도를 넘을 때만 채택합니다."
+      />
+      <div className="not-prose my-8"><PostprocessViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Threshold·precision·recall·업무 비용은 <Link to="/ai/imbalanced-data">불균형 데이터 정본</Link>,
+          error diversity와 out-of-fold 결합은 <Link to="/ai/ensemble-methods">ensemble 정본</Link>이
+          담당합니다. 최종 artifact에는 class mapping, preprocessing, calibration
+          temperature, TTA list, ensemble weights, threshold와 이 값을 고른 split
+          digest를 함께 넣습니다. Untouched test에는 이 결정을 고친 뒤 한 번만 접근합니다.
         </p>
+      </div>
+      <div id="paper-calibration" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Temperature scaling</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Guo 등은 당시 modern neural networks의 confidence calibration을 분석하고 여러 post-hoc 방법 중 scalar temperature scaling이 다수의 image·document classification dataset에서 효과적임을 보였습니다. 이 결과는 모든 shift·class·metric에서 scalar T가 충분하다는 보장이 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v70/guo17a.html" target="_blank" rel="noreferrer">Calibration 정의와 비교 실험 보기</a>
       </div>
     </section>
   );

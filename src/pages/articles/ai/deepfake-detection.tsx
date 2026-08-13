@@ -1,17 +1,17 @@
-import Overview from './deepfake-detection/Overview';
-import FaceExtraction from './deepfake-detection/FaceExtraction';
-import Frequency from './deepfake-detection/Frequency';
-import Models from './deepfake-detection/Models';
-import ExternalData from './deepfake-detection/ExternalData';
+import Overview from "./deepfake-detection/Overview";
+import FaceExtraction from "./deepfake-detection/FaceExtraction";
+import Frequency from "./deepfake-detection/Frequency";
+import Models from "./deepfake-detection/Models";
+import ExternalData from "./deepfake-detection/ExternalData";
 
 export default function DeepfakeDetectionArticle() {
   return (
-    <>
+    <div className="space-y-12">
       <Overview />
       <FaceExtraction />
       <Frequency />
       <Models />
       <ExternalData />
-    </>
+    </div>
   );
 }

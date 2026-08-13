@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const lstmCodeRefs: Record<string, CodeRef> = {
-  'lstm-struct': {
-    path: 'src/lib.rs — LSTM struct',
-    lang: 'rust',
+  "lstm-struct": {
+    path: "src/lib.rs — LSTM struct",
+    lang: "rust",
     highlight: [1, 26],
-    desc: 'LSTM 셀: 4개 게이트(f,i,o,g)와 2개 상태(h,c).\nRNN과 달리 셀 상태 c가 장기 기억을 보존.',
+    desc: "LSTM 셀: 4개 게이트(f,i,o,g)와 2개 상태(h,c).\nRNN과 달리 셀 상태 c가 장기 기억을 보존.",
     code: `pub struct LSTM {
     // 입력 → 게이트 (bias 포함)
     x2f: Linear,  // forget gate
@@ -33,16 +33,28 @@ impl LSTM {
     fn init_w_h(&self) -> Variable { /* ... */ }
 }`,
     annotations: [
-      { lines: [3, 6], color: 'sky', note: 'x→gate: Linear 4개. 각각 forget/input/output/candidate 역할' },
-      { lines: [8, 11], color: 'emerald', note: 'h→gate: 은닉 상태를 게이트에 연결. lazy init으로 hidden_size 자동 감지' },
-      { lines: [13, 14], color: 'amber', note: 'RNN(h만)과 달리 h + c 두 경로 — c가 장기 기억을 직접 전달' },
+      {
+        lines: [3, 6],
+        color: "sky",
+        note: "x→gate: Linear 4개. 각각 forget/input/output/candidate 역할",
+      },
+      {
+        lines: [8, 11],
+        color: "emerald",
+        note: "h→gate: 은닉 상태를 게이트에 연결. lazy init으로 hidden_size 자동 감지",
+      },
+      {
+        lines: [13, 14],
+        color: "amber",
+        note: "RNN(h만)과 달리 h + c 두 경로 — c가 장기 기억을 직접 전달",
+      },
     ],
   },
-  'lstm-forward': {
-    path: 'src/lib.rs — LSTM forward',
-    lang: 'rust',
+  "lstm-forward": {
+    path: "src/lib.rs — LSTM forward",
+    lang: "rust",
     highlight: [1, 36],
-    desc: '4개 게이트 계산 → 셀 상태 업데이트 → 은닉 상태 출력.\n첫 스텝에서는 h가 없으므로 x→gate만 사용.',
+    desc: "4개 게이트 계산 → 셀 상태 업데이트 → 은닉 상태 출력.\n첫 스텝에서는 h가 없으므로 x→gate만 사용.",
     code: `pub fn forward(&self, x: &Variable) -> Variable {
     // h→gate 가중치 lazy init
     if self.w_hf.borrow().is_none() {
@@ -85,9 +97,21 @@ impl LSTM {
     h_new
 }`,
     annotations: [
-      { lines: [11, 17], color: 'sky', note: '첫 스텝: h=None이므로 x→gate만 계산. sigmoid(0~1) / tanh(-1~1) 범위' },
-      { lines: [28, 33], color: 'emerald', note: 'c = f*c_prev + i*g — forget이 기존 기억 비율, input이 새 정보 비율 결정' },
-      { lines: [36, 36], color: 'amber', note: 'h = o * tanh(c) — output gate가 장기 기억에서 무엇을 출력할지 필터링' },
+      {
+        lines: [11, 17],
+        color: "sky",
+        note: "첫 스텝: h=None이므로 x→gate만 계산. sigmoid(0~1) / tanh(-1~1) 범위",
+      },
+      {
+        lines: [28, 33],
+        color: "emerald",
+        note: "c = f*c_prev + i*g — forget이 기존 기억 비율, input이 새 정보 비율 결정",
+      },
+      {
+        lines: [36, 36],
+        color: "amber",
+        note: "h = o * tanh(c) — output gate가 장기 기억에서 무엇을 출력할지 필터링",
+      },
     ],
   },
 };

@@ -1,64 +1,50 @@
-import FaceExtractionViz from './viz/FaceExtractionViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import FaceExtractionViz from "./viz/FaceExtractionViz";
 
 export default function FaceExtraction() {
   return (
     <section id="face-extraction" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">얼굴 검출 & 정렬</h2>
+      <h2 className="mb-6 text-2xl font-bold">Face extraction은 중립적인 전처리가 아니라, detector가 볼 수 있는 evidence를 선택하는 첫 번째 model입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          딥페이크 탐지의 첫 단계 — 이미지/영상에서 <strong>얼굴 영역만 정확히 추출</strong><br />
-          전체 이미지를 모델에 넣으면 배경 노이즈가 압도적 — 얼굴 영역 크롭이 성능의 전제 조건
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">얼굴 검출기 3종 비교</h3>
-        <p>
-          <strong>MTCNN</strong>(Multi-Task Cascaded CNN) — 3단계 캐스케이드 구조<br />
-          P-Net(12x12 후보 생성) → R-Net(24x24 정제) → O-Net(48x48 + 랜드마크)<br />
-          작은 얼굴도 검출 가능, 속도와 정확도의 균형
+          Face crop은 background shortcut을 줄이고 조작 영역을 크게 보여주지만,
+          검출기가 실패한 frame을 조용히 제거하면 쉬운 sample만 남습니다.
+          Detector 이름을 정확도 순위로 고르기보다 target의 face size·pose·occlusion과
+          hardware에서 recall, latency와 track continuity를 비교합니다.
         </p>
         <p>
-          <strong>RetinaFace</strong> — FPN(Feature Pyramid Network) 기반 단일 패스 검출<br />
-          5점 랜드마크를 동시에 예측, WiderFace 벤치마크 최고 정확도<br />
-          GPU 환경에서 대회용으로 최적 — 속도보다 정확도 우선 시 선택
-        </p>
-        <p>
-          <strong>MediaPipe Face Detection</strong> — Google의 모바일 최적화 검출기<br />
-          BlazeFace 아키텍처, 실시간 처리 가능하지만 대회용으로는 정확도 부족
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">랜드마크 정렬 (Alignment)</h3>
-        <p>
-          5점 랜드마크(양쪽 눈, 코끝, 양쪽 입꼬리)로 얼굴 기울기 계산<br />
-          <strong>Affine Transform</strong>: 기준 좌표(template)에 맞춰 회전 + 스케일 + 이동<br />
-          정렬이 없으면 — 같은 사람이라도 촬영 각도에 따라 완전히 다른 피처가 추출된다<br />
-          dlib의 shape_predictor_68_face_landmarks 또는 RetinaFace 내장 랜드마크 사용
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">크롭 + 리사이즈</h3>
-        <p>
-          얼굴 바운딩 박스에 <strong>마진 1.3배 확장</strong> — 턱, 이마, 귀를 포함<br />
-          마진이 너무 작으면 경계 아티팩트가 잘리고, 너무 크면 배경 노이즈 증가<br />
-          224x224(EfficientNet) 또는 299x299(XceptionNet) — 백본 입력 규격에 맞춰 리사이즈<br />
-          비율 유지: 짧은 변 기준 리사이즈 후 center crop으로 왜곡 방지
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">비디오 프레임 샘플링</h3>
-        <p>
-          비디오는 수백~수천 프레임 — 전부 처리하면 시간과 메모리 낭비<br />
-          <strong>균등 샘플링</strong>: 전체 N프레임에서 K개 등간격 추출 (K=16~32가 일반적)<br />
-          <strong>품질 기반</strong>: 블러/가림이 없는 선명한 프레임 우선 선택<br />
-          <strong>키프레임 기반</strong>: 장면 전환 근처 — 조작 경계가 드러나기 쉬운 지점<br />
-          프레임별 예측 → 비디오 단위 집계(확률 평균 / 최대값 / 다수결 투표)
+          Video에서는 frame별 box를 독립적으로 자르기보다 identity track으로
+          연결해 crop jitter를 줄입니다. Landmark alignment는 pose variation을
+          줄일 수 있지만 resampling artifact를 새로 만들 수 있으므로 aligned와
+          unaligned baseline을 같은 compression 조건에서 비교합니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <FaceExtractionViz />
-      </div>
+      <ExplainedFormula
+        question="얼굴을 찾지 못한 frame을 조용히 버리지 않고 coverage로 어떻게 남길까?"
+        idea={<>평가 가능한 전체 frame 수를 분모에 두고, 유효한 identity track과 crop이 만들어진 frame만 분자에 둡니다. Model score와 coverage를 함께 보고해야 쉬운 frame만 남기는 selection을 확인할 수 있습니다.</>}
+        formula={String.raw`C_{\mathrm{track}}=\frac{\sum_{t=1}^{T}I(\text{valid track at }t)}{T}`}
+        terms={[
+          { symbol: "T", name: "eligible frames", description: "Decode에 성공하고 평가 시간 구간에 속하는 전체 frame 수입니다." },
+          { symbol: "I(·)", name: "indicator", description: "해당 frame에서 요구한 identity의 valid detection·track·crop이 있으면 1, 아니면 0입니다." },
+          { symbol: "Ctrack", name: "track coverage", description: "원본 video 시간축 가운데 detector input까지 도달한 비율입니다." },
+        ]}
+        assumptions={["Frame sampling policy와 denominator T를 모든 model에서 동일하게 유지합니다.", "Track switch·중복 face·작은 face의 validity rule을 사전에 정합니다.", "Coverage가 낮은 video를 삭제하지 않고 failure 또는 abstention으로 별도 보고합니다."]}
+        interpretation="100 frame 중 62 frame만 유효한 crop을 만들었다면 coverage는 .62입니다. 남은 62 frame에서 분류가 정확해도 전체 video를 안정적으로 판정했다고 볼 수 없습니다."
+      />
+      <div className="not-prose my-8"><FaceExtractionViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: RetinaFace가 정확도 최고 — 대회 1순위 선택<br />
-          요약 2: 랜드마크 정렬 없이는 피처 일관성을 확보할 수 없다<br />
-          요약 3: 마진 1.3배 크롭 → 모델 입력 규격 리사이즈가 표준 파이프라인
+        <h3>Crop margin과 sampling은 model hyperparameter입니다</h3>
+        <p>
+          얼굴만 너무 타이트하게 자르면 blending boundary와 hair·ear 주변 신호를
+          잃고, 넓게 자르면 background와 dataset shortcut이 들어옵니다. 고정된
+          배수를 표준으로 두지 않고 margin별 OOD 성능과 detector failure rate를
+          기록합니다.
+        </p>
+        <p>
+          Frame 수는 임의의 범위로 정하지 않고 짧은 artifact와 긴 temporal
+          inconsistency 중 무엇을 잡아야 하는지에 맞춥니다. Uniform clip baseline에
+          quality-aware sampling을 추가하되, blur frame을 모두 버리면 실제
+          유통 영상의 성능을 과대평가할 수 있습니다.
         </p>
       </div>
     </section>

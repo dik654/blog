@@ -1,65 +1,76 @@
-import CompositionViz from './viz/CompositionViz';
-import CompositionDetailViz from './viz/CompositionDetailViz';
+import CompositionViz from "./viz/CompositionViz";
+import RunContractViz from "./viz/RunContractViz";
 
 export default function Composition() {
   return (
     <section id="composition" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">
-        하네스 구성: 시스템 프롬프트 + 도구 + 가드레일
+      <h2 className="mb-6 text-2xl font-bold">
+        구성: 요청을 실행 가능한 run contract로 바꾼다
       </h2>
-      <div className="not-prose mb-8"><CompositionViz /></div>
+      <div className="not-prose mb-8">
+        <CompositionViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">하네스 3대 요소 상세</h3>
-        <div className="not-prose mb-6"><CompositionDetailViz /></div>
         <p className="leading-7">
-          3 elements: <strong>system prompt + tools + guardrails</strong>.<br />
-          system prompt: role/persona/instructions/format.<br />
-          guardrails: input validation + output filtering.
+          여기서 contract는 모델과 약속을 맺는다는 비유가 아니라, 소프트웨어에서
+          말하는 입력·출력·권한·오류 조건의 명세다. 자연어 요청을 그대로 agent에
+          넘기면 “완료”의 뜻과 허용된 영향 범위가 매 run마다 달라진다. 반면 아래
+          여섯 경계를 명시하면 모델이 바뀌어도 runtime이 지켜야 할 조건은
+          안정적으로 남는다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">하네스 엔지니어링의 3기둥</h3>
+        <h3 className="mb-3 mt-6 text-xl font-semibold">
+          1. Objective와 acceptance: 무엇이 끝인가
+        </h3>
         <p className="leading-7">
-          위의 구성 요소와 별개로, 에이전틱 하네스는 <strong>세 가지 기둥</strong>으로 구성됨 (2026 업계 합의)
+          “앱을 완성해라”는 방향은 주지만 종료 조건은 주지 않는다. 대신 어떤
+          사용자 흐름이 동작해야 하고, 어떤 테스트와 품질 기준을 통과해야 하며,
+          결과물은 어디에 남아야 하는지를 함께 적는다. 큰 목표를 issue나 execution
+          plan으로 나눌 때도 각 항목에 산출물과 완료 evidence가 있어야 조기 완료를
+          막을 수 있다.
         </p>
 
-        <h3 className="text-lg font-semibold mt-6 mb-3">기둥 ① — 컨텍스트 파일</h3>
+        <h3 className="mb-3 mt-6 text-xl font-semibold">
+          2. Context discovery: 문서 묶음보다 찾는 경로
+        </h3>
         <p className="leading-7">
-          <code>CLAUDE.md</code>, <code>AGENTS.md</code> 같이 AI가 작업 시작 시 가장 먼저 읽는 파일<br />
-          OpenAI 팀 원칙: <strong>"1,000페이지 설명서가 아니라 지도를 줘야 한다"</strong><br />
-          &nbsp;&nbsp;- 60줄 이하로 유지, 보편적·항상 적용되는 내용만<br />
-          &nbsp;&nbsp;- 세부 내용은 별도 파일로 분리하여 필요할 때만 로드<br />
-          &nbsp;&nbsp;- 처음부터 완벽하게 설계하는 게 아니라 <em>실패할 때마다 한 줄씩 추가</em>하며 점진적 진화<br /><br />
-          Hashimoto의 Ghostty 프로젝트 AGENTS.md: 에이전트가 저질렀던 실수를 한 줄씩 누적해 나가며 개선됨
+          AGENTS.md 같은 진입 문서에는 항상 적용되는 규칙과 상세 문서의 위치를
+          두고, 코드 구조·운영 절차·실험 기록은 각 원본으로 찾아가게 한다. 긴
+          지침 하나에 모든 내용을 넣으면 관련 없는 정보가 현재 task를 밀어내고
+          문서도 금세 낡는다. 그래서 context engineering은 많이 넣는 기술이
+          아니라, 필요한 순간에 정본을 발견하고 오래된 context를 compaction하는
+          기술에 가깝다.
         </p>
 
-        <h3 className="text-lg font-semibold mt-6 mb-3">기둥 ② — 자동 강제 시스템</h3>
+        <h3 className="mb-3 mt-6 text-xl font-semibold">
+          3. Tool schema와 capability: 호출 가능과 실행 허용은 다르다
+        </h3>
         <p className="leading-7">
-          "좋은 코드 작성해줘"라고 <em>말하는 것</em>이 아니라 <em>기계적으로 강제</em>하는 것<br />
-          구성: <strong>Linter + Pre-commit Hook + 자동 교정 루프</strong><br />
-          &nbsp;&nbsp;- Linter: 코드 맞춤법 검사 — 규칙 위반 시 빨간 에러<br />
-          &nbsp;&nbsp;- Pre-commit Hook: 저장 직전 자동 실행 스크립트 — "잠깐, 이거부터 확인"<br />
-          &nbsp;&nbsp;- 자동 교정 루프: Linter가 빨간 불 → 에이전트가 스스로 수정 → 사람 개입 불필요<br /><br />
-          핵심 원칙: <strong>"성공은 조용히, 실패만 시끄럽게"</strong> (Success is quiet, failure is loud)<br />
-          &nbsp;&nbsp;- 테스트 통과 시 출력 없음<br />
-          &nbsp;&nbsp;- 실패 시에만 에이전트에게 알림<br />
-          &nbsp;&nbsp;- 통과한 4,000줄 로그를 다 보여주면 AI가 그걸 읽느라 할 일을 잊음
+          모델이 함수 이름과 argument를 생성할 수 있다는 사실은 실제 실행 권한을
+          의미하지 않는다. 읽기 전용, workspace write, 외부 전송, 배포·삭제처럼
+          영향도가 다른 동작은 별도 capability로 나누고, runtime이 대상 경로와
+          identity, rate limit, 승인 여부를 다시 검사해야 한다. 재시도 가능한
+          tool은 idempotency key를 받고, 외부 상태를 바꾼 호출은 결과와 대상,
+          실행 주체가 담긴 receipt를 남기는 편이 안전하다.
         </p>
 
-        <h3 className="text-lg font-semibold mt-6 mb-3">기둥 ③ — 가비지 컬렉션</h3>
+        <h3 className="mb-3 mt-6 text-xl font-semibold">
+          4–6. State·artifact, verifier, recovery가 run을 이어 준다
+        </h3>
         <p className="leading-7">
-          원래는 프로그래밍 용어로 안 쓰는 메모리를 자동 청소하는 개념<br />
-          하네스 맥락: AI가 만든 품질 낮은 코드를 <strong>주기적으로 자동 청소</strong><br />
-          필요 이유: 기존 코드의 나쁜 패턴을 에이전트가 그대로 따라 함 → 나쁜 패턴이 눈덩이처럼 증식<br /><br />
-          주기적으로 돌아가는 청소 에이전트가 확인하는 것:<br />
-          &nbsp;&nbsp;- 문서가 실제 코드와 달라진 부분<br />
-          &nbsp;&nbsp;- 규칙을 위반한 코드<br />
-          &nbsp;&nbsp;- 사용하지 않는 죽은 코드<br /><br />
-          <strong>진화 메커니즘</strong>: 에이전트가 실수할 때마다 그 실수는 새로운 규칙이 됨<br />
-          → Linter 규칙 추가, 테스트 추가, 제약 추가<br />
-          → 시간이 지날수록 하네스가 점점 정교해짐<br />
-          → 말이 한 번 넘으려 했던 울타리가 점점 높아져 두 번 다시 같은 실수 불가
+          대화 기록은 작업 상태의 유일한 정본이 될 수 없다. 현재 plan, 생성한
+          파일, 결정 이유와 미완료 항목을 versioned artifact에 남겨야 새 세션이나
+          다른 agent가 이어받을 수 있다. 그다음 test·schema·policy verifier가
+          성공 여부를 판정하고, 실패하면 어떤 조건이 어긋났는지를 행동 가능한
+          feedback으로 돌려준다. retry budget, checkpoint, rollback, 사람에게
+          escalation할 조건까지 정해야 실패가 무한 loop나 조용한 데이터 손상으로
+          이어지지 않는다.
         </p>
+      </div>
+
+      <div className="not-prose mt-8">
+        <RunContractViz />
       </div>
     </section>
   );

@@ -1,23 +1,25 @@
 export const PARALLEL_STRATEGY = [
   {
-    title: 'Storage trie 독립성',
-    desc: '각 계정의 storage trie는 완전히 별도의 서브트리다. 계정 A의 스토리지 변경은 계정 B의 storage trie에 영향을 주지 않는다. 데이터 의존성이 없으므로 병렬화가 가능하다.',
-    color: '#8b5cf6',
+    title: "Account별 storage work item",
+    desc: "서로 다른 account의 storage trie는 별도 root를 가지므로 같은 base checkpoint에서 독립 계산할 수 있다.",
+    color: "#8b5cf6",
   },
   {
-    title: 'rayon 병렬 계산',
-    desc: '변경된 계정의 storage trie를 rayon(Rust의 데이터 병렬 라이브러리)으로 동시에 계산한다. 코어 수에 비례하여 처리량이 증가한다. 8코어에서 대규모 블록 처리 시 약 3~5배 빨라진다.',
-    color: '#6366f1',
+    title: "Bounded worker execution",
+    desc: "구현은 work size와 resource limits에 맞춰 worker 수와 parallel threshold를 선택해야 한다.",
+    color: "#6366f1",
   },
   {
-    title: 'Account trie 순차 합산',
-    desc: 'storage root가 모두 준비되면 account trie를 순차적으로 갱신한다. account trie는 단일 트리이므로 병렬화할 수 없다. 하지만 storage trie 계산이 전체 시간의 대부분을 차지하므로 영향이 작다.',
-    color: '#10b981',
+    title: "Deterministic account merge",
+    desc: "storage root 결과를 원래 account key와 결합하고 account trie의 공통 paths는 결정적인 order로 처리한다.",
+    color: "#10b981",
   },
-];
-
+] as const;
 export const PARALLEL_BENEFIT = {
-  sequential: '블록 내 변경된 N개 계정의 storage trie를 하나씩 계산',
-  parallel: 'N개 storage trie를 동시에 계산 → account trie에 합산',
-  bottleneck: 'account trie 갱신은 순차적이지만, 전체 시간의 10~20%에 불과',
-};
+  opportunity:
+    "서로 다른 account storage roots는 직접적인 state dependency가 없다.",
+  constraint:
+    "shared cache, storage readers, skewed work size와 scheduling overhead가 실제 처리량을 제한한다.",
+  invariant:
+    "순차·병렬 어느 경로든 동일한 storage roots와 최종 state_root를 반환해야 한다.",
+} as const;

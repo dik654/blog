@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const routerRefs: Record<string, CodeRef> = {
-  'handle-connection': {
-    path: 'iroh/iroh/src/protocol.rs',
-    lang: 'rust',
+  "handle-connection": {
+    path: "iroh/iroh/src/protocol.rs",
+    lang: "rust",
     highlight: [1, 18],
-    desc: '개별 연결 처리 함수입니다. incoming → accept → ALPN 추출 → 핸들러 조회 순서로\n진행됩니다. ALPN은 TLS 핸드셰이크 중 협상되므로 핸드셰이크 전에는 알 수 없습니다.',
+    desc: "개별 연결 처리 함수입니다. incoming → accept → ALPN 추출 → 핸들러 조회 순서로\n진행됩니다. ALPN은 TLS 핸드셰이크 중 협상되므로 핸드셰이크 전에는 알 수 없습니다.",
     code: `async fn handle_connection(
     incoming: Incoming, protocols: Arc<ProtocolMap>,
 ) {
@@ -34,10 +34,26 @@ export const routerRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [5, 8] as [number, number], color: 'sky' as const, note: 'QUIC 연결 수락 (Incoming → Accepting)' },
-      { lines: [10, 13] as [number, number], color: 'emerald' as const, note: 'TLS 핸드셰이크에서 ALPN 추출' },
-      { lines: [15, 17] as [number, number], color: 'amber' as const, note: 'ALPN → ProtocolMap에서 핸들러 조회' },
-      { lines: [19, 25] as [number, number], color: 'violet' as const, note: 'on_accepting → accept 파이프라인' },
+      {
+        lines: [5, 8] as [number, number],
+        color: "sky" as const,
+        note: "QUIC 연결 수락 (Incoming → Accepting)",
+      },
+      {
+        lines: [10, 13] as [number, number],
+        color: "emerald" as const,
+        note: "TLS 핸드셰이크에서 ALPN 추출",
+      },
+      {
+        lines: [15, 17] as [number, number],
+        color: "amber" as const,
+        note: "ALPN → ProtocolMap에서 핸들러 조회",
+      },
+      {
+        lines: [19, 25] as [number, number],
+        color: "violet" as const,
+        note: "on_accepting → accept 파이프라인",
+      },
     ],
   },
 };

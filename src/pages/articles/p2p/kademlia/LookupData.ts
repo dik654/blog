@@ -69,8 +69,8 @@ async fn store(key: Key, value: Value) {
 }`;
 
 export const rpcMessages = [
-  { name: 'PING', desc: '노드 생존 확인' },
-  { name: 'STORE', desc: '키-값 저장 요청' },
-  { name: 'FIND_NODE', desc: '가장 가까운 k개 노드 반환' },
-  { name: 'FIND_VALUE', desc: 'FIND_NODE + 값 있으면 즉시 반환' },
+  { name: "PING", desc: "노드 생존 확인" },
+  { name: "STORE", desc: "키-값 저장 요청" },
+  { name: "FIND_NODE", desc: "가장 가까운 k개 노드 반환" },
+  { name: "FIND_VALUE", desc: "FIND_NODE + 값 있으면 즉시 반환" },
 ];

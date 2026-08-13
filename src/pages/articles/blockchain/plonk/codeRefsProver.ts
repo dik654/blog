@@ -1,12 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const proverCodeRefs: Record<string, CodeRef> = {
-  'plonk-round1-3': {
-    path: 'ZK-Garage/plonk/src/proof_system/prover.rs',
-    lang: 'rust',
+  "plonk-round1-3": {
+    path: "ZK-Garage/plonk/src/proof_system/prover.rs",
+    lang: "rust",
     highlight: [1, 32],
-    desc:
-`PLONK 5-Round 프로토콜의 Round 1-3입니다.
+    desc: `PLONK 5-Round 프로토콜의 Round 1-3입니다.
 
 Round 1: witness wire 다항식(a,b,c,d)을 KZG로 commit
 Round 2: Fiat-Shamir β,γ → permutation accumulator Z(x) commit
@@ -44,18 +43,29 @@ Round 3: Fiat-Shamir α → quotient polynomial t(x) 계산 후 3분할 commit`,
     let (t_lo, t_mid, t_hi) = t_poly.split_into_3(self.n);
     let t_lo_comm = self.commit(&t_lo)?;`,
     annotations: [
-      { lines: [7, 12], color: 'sky', note: 'Round 1: 4개 wire 다항식 KZG commit → [a]₁,[b]₁,[c]₁,[d]₁' },
-      { lines: [14, 22], color: 'emerald', note: 'Round 2: β,γ 챌린지 → Z(x) accumulator commit' },
-      { lines: [24, 32], color: 'amber', note: 'Round 3: α 챌린지 → t(x) 3분할 commit (degree 3n)' },
+      {
+        lines: [7, 12],
+        color: "sky",
+        note: "Round 1: 4개 wire 다항식 KZG commit → [a]₁,[b]₁,[c]₁,[d]₁",
+      },
+      {
+        lines: [14, 22],
+        color: "emerald",
+        note: "Round 2: β,γ 챌린지 → Z(x) accumulator commit",
+      },
+      {
+        lines: [24, 32],
+        color: "amber",
+        note: "Round 3: α 챌린지 → t(x) 3분할 commit (degree 3n)",
+      },
     ],
   },
 
-  'plonk-round4-5': {
-    path: 'ZK-Garage/plonk/src/proof_system/prover.rs',
-    lang: 'rust',
+  "plonk-round4-5": {
+    path: "ZK-Garage/plonk/src/proof_system/prover.rs",
+    lang: "rust",
     highlight: [1, 30],
-    desc:
-`Round 4: 평가점 ζ에서 모든 다항식의 값을 전송
+    desc: `Round 4: 평가점 ζ에서 모든 다항식의 값을 전송
 Round 5: linearisation trick 적용 후 KZG opening proof 생성`,
     code: `    // ── Round 4: Evaluations ──
     let zeta = transcript.challenge_scalar(b"zeta");
@@ -85,10 +95,26 @@ Round 5: linearisation trick 적용 후 KZG opening proof 생성`,
     let w_zeta_omega = self.compute_single_opening(&z_poly, &(zeta * omega));
     Ok(Proof { a_comm, b_comm, c_comm, d_comm, z_comm, /* ... */ })`,
     annotations: [
-      { lines: [1, 10], color: 'sky', note: 'Round 4: ζ에서 a,b,c,d,z(ζω),σ₁,σ₂,σ₃ 평가' },
-      { lines: [14, 18], color: 'emerald', note: 'Linearisation: r(x) — 검증자가 commit 연산으로 재구성 가능' },
-      { lines: [20, 24], color: 'amber', note: 'W_ζ: 여러 다항식을 ζ에서 batch opening' },
-      { lines: [26, 27], color: 'violet', note: 'W_{ζω}: Z(x)를 ζ·ω에서 단독 opening' },
+      {
+        lines: [1, 10],
+        color: "sky",
+        note: "Round 4: ζ에서 a,b,c,d,z(ζω),σ₁,σ₂,σ₃ 평가",
+      },
+      {
+        lines: [14, 18],
+        color: "emerald",
+        note: "Linearisation: r(x) — 검증자가 commit 연산으로 재구성 가능",
+      },
+      {
+        lines: [20, 24],
+        color: "amber",
+        note: "W_ζ: 여러 다항식을 ζ에서 batch opening",
+      },
+      {
+        lines: [26, 27],
+        color: "violet",
+        note: "W_{ζω}: Z(x)를 ζ·ω에서 단독 opening",
+      },
     ],
   },
 };

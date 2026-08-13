@@ -1,182 +1,137 @@
-import ValidateBlockViz from './viz/ValidateBlockViz';
-import WeightViz from './viz/WeightViz';
-import ConsensusProofFlowViz from './viz/ConsensusProofFlowViz';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import ConsensusProofFlowViz from "./viz/ConsensusProofFlowViz";
+import ValidateBlockViz from "./viz/ValidateBlockViz";
+import WeightViz from "./viz/WeightViz";
 
-export default function ConsensusProofs({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
+const RESPONSIBILITIES = [
+  {
+    title: "Expected Consensus",
+    question: "지금 어떤 chain을 따라갈까?",
+    answer:
+      "storage power를 바탕으로 block producer를 선출하고, 유효한 tipset의 누적 weight로 head를 선택합니다.",
+  },
+  {
+    title: "F3 finality",
+    question: "어디까지 되돌리지 않을까?",
+    answer:
+      "EC가 만든 chain의 checkpoint를 별도 finality 프로토콜로 확정합니다. head 선택과 finality를 같은 단계로 보면 안 됩니다.",
+  },
+  {
+    title: "Storage proofs",
+    question: "provider가 실제로 저장하고 있나?",
+    answer:
+      "PoRep은 sector가 고유하게 준비됐다는 근거를 만들고, PoSt는 이후에도 저장 상태가 유지됨을 증명합니다.",
+  },
+] as const;
+
+export default function ConsensusProofs({
+  onCodeRef,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   const openCode = onCodeRef
     ? (key: string) => onCodeRef(key, codeRefs[key])
     : undefined;
 
   return (
     <section id="consensus-proofs" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">합의 &amp; 저장 증명</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p className="leading-7">
-          Lotus 합의 흐름: <strong>VRF 선출 → ValidateBlock → 체인 확정</strong>.<br />
-          Expected Consensus (EC) + 저장 증명 (PoRep/PoSt)의 통합.<br />
-          storage power 비례 block 생성 확률.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h2>합의·finality·저장 증명을 한 덩어리로 보지 않는다</h2>
+        <p>
+          Filecoin block에는 producer 선출 근거와 저장 증명이 함께 등장하지만,
+          세 메커니즘의 질문은 다릅니다. EC는 chain head를 고르고, F3는 이미
+          선택된 chain의 checkpoint를 확정하며, PoRep·PoSt는 provider의 저장
+          약속을 검증합니다.
         </p>
       </div>
 
-      <h3 className="text-lg font-semibold mb-3">합의 + 증명 흐름</h3>
+      <div className="not-prose my-8 grid gap-3 lg:grid-cols-3">
+        {RESPONSIBILITIES.map((item, index) => (
+          <article
+            key={item.title}
+            className="min-w-0 rounded-2xl border bg-card p-5"
+          >
+            <span className="font-mono text-xs font-semibold text-primary">
+              0{index + 1}
+            </span>
+            <h3 className="mt-3 font-semibold">{item.title}</h3>
+            <p className="mt-2 text-xs font-semibold text-foreground/70">
+              {item.question}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {item.answer}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>검증 경로를 먼저 한 번에 본다</h3>
+        <p>
+          아래 Viz는 producer 선출, block 검증, chain state 전이를 한 흐름으로
+          보여줍니다. “chain 확정”은 로컬 head 선택을 뜻하는지 F3 finality를
+          뜻하는지 문맥에 따라 구분해 읽어야 합니다.
+        </p>
+      </div>
       <ConsensusProofFlowViz />
 
-      <h3 className="text-lg font-semibold mt-8 mb-3">ValidateBlock() — 블록 검증 6단계</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>ValidateBlock은 후보가 규칙을 만족하는지 확인한다</h3>
+        <p>
+          height·timestamp·parent weight 같은 구조 조건과 election·WinningPoSt
+          근거를 검증합니다. 여기서 통과했다고 곧바로 finality가 생기는 것은
+          아닙니다. 유효한 후보가 된 뒤 chain selection과 F3가 각자의 역할을
+          수행합니다.
+        </p>
+      </div>
       <ValidateBlockViz onOpenCode={openCode} />
 
-      <h3 className="text-lg font-semibold mt-8 mb-3">Weight() — 체인 가중치 계산</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Weight는 유효한 후보 사이에서 head를 고르는 값이다</h3>
+        <p>
+          Lotus의 <code>Weight</code> 구현은 parent weight에 network power와
+          tipset의 win count가 반영된 증가분을 더합니다. 정확한 상수나 산술식은
+          프로토콜·코드 버전에 종속되므로, 아래 도식은 항의 관계를 읽고 실제
+          값은 연결된 코드에서 확인하는 용도로 사용합니다.
+        </p>
+      </div>
       <WeightViz onOpenCode={openCode} />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        {/* ── Expected Consensus ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Expected Consensus (EC) 메커니즘</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">설계 원리</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>Storage power 비례 leader election</li>
-              <li>VRF (Verifiable Random Function) 기반</li>
-              <li>DRAND randomness beacon 통합</li>
-              <li>Tipset (여러 blocks) per epoch</li>
-              <li>Probabilistic finality</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Leader Election (Sortition)</h4>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li><code className="text-xs">VRF(secret_key, epoch, ticket)</code> → random value</li>
-              <li><code className="text-xs">random_value / MAX &lt; storage_power / total_power</code> → 당선</li>
-              <li>독립 결정 (coordination 불필요)</li>
-              <li>epoch당 복수 winner 가능</li>
-            </ol>
-          </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>PoRep과 PoSt는 시점이 다르다</h3>
+        <div className="not-prose grid gap-3 md:grid-cols-2">
+          <article className="rounded-2xl border bg-card p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
+              Setup evidence
+            </p>
+            <h4 className="mt-2 font-semibold">PoRep</h4>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              piece를 sector에 배치하고 복제·봉인한 결과가 provider와 sector에
+              결합됐음을 증명합니다. sealing 단계의 산출물이 on-chain commit
+              경로로 들어갑니다.
+            </p>
+          </article>
+          <article className="rounded-2xl border bg-card p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
+              Ongoing evidence
+            </p>
+            <h4 className="mt-2 font-semibold">PoSt</h4>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              활성 sector 집합에서 protocol이 정한 challenge에 응답해 데이터가
+              계속 저장돼 있음을 증명합니다. 세부 proof 종류와 parameter는 현재
+              network version을 기준으로 확인해야 합니다.
+            </p>
+          </article>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Poisson 분포 (E[winners]=5)</h4>
-            <div className="text-sm space-y-1 text-muted-foreground">
-              <div className="flex justify-between"><span>P(0 winners)</span><strong>0.67%</strong></div>
-              <div className="flex justify-between"><span>P(5 winners)</span><strong>17.5%</strong></div>
-              <div className="flex justify-between"><span>P(10 winners)</span><strong>1.8%</strong></div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Tipset</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>같은 epoch의 모든 winning blocks</li>
-              <li>공통 parents (같은 이전 tipset)</li>
-              <li>모두 valid면 tipset 형성</li>
-              <li>여러 blocks → throughput 증가</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Chain Weight & Finality</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li><code className="text-xs">w_epoch = log2(power) * (blocks * wR + wP)</code></li>
-              <li>log scaling: large power 증가 억제</li>
-              <li>Finality: 900 epochs (~7.5h)</li>
-              <li>F3: fast finality (2024+)</li>
-            </ul>
-          </div>
-        </div>
-        <p className="leading-7">
-          EC = <strong>Poisson Sortition + VRF + Tipset</strong>.<br />
-          epoch당 ~5 winners, storage power 비례.<br />
-          probabilistic finality 7.5h, F3로 가속 가능.
-        </p>
-
-        {/* ── PoRep & PoSt ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">PoRep &amp; PoSt 저장 증명</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">PoRep (Proof of Replication)</h4>
-            <p className="text-xs text-muted-foreground mb-2">목적: unique physical storage 보유 증명 (1회 생성)</p>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <div className="rounded bg-muted p-2"><strong>PC1</strong> — Stacked DRG 11 layers, CPU, 2-4h (32 GiB → ~352 GiB)</div>
-              <div className="rounded bg-muted p-2"><strong>PC2</strong> — Merkle tree + column commitments, GPU, ~30m</div>
-              <div className="rounded bg-muted p-2"><strong>C1</strong> — VDF challenge + Merkle proofs, &lt;1m</div>
-              <div className="rounded bg-muted p-2"><strong>C2</strong> — SNARK (Groth16 + GPU), 30-90m, ~10MB → ~200B</div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">PoSt (Proof of Spacetime)</h4>
-            <p className="text-xs text-muted-foreground mb-2">목적: 지속적 저장 증명 (정기 제출)</p>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <div className="rounded bg-muted p-2">
-                <strong>WindowPoSt</strong> — 24h window (2880 epochs)<br />
-                <span className="text-xs">random sectors challenge + Merkle proofs + SNARK, miss → penalty</span>
-              </div>
-              <div className="rounded bg-muted p-2">
-                <strong>WinningPoSt</strong> — leader election 시 즉시 생성<br />
-                <span className="text-xs">tight deadline ~40s, 1 sector sampled, quick proof</span>
-              </div>
-            </div>
-            <div className="mt-3 pt-2 border-t border-border text-xs text-muted-foreground">
-              <strong>경제:</strong> FIL+ = reward x10 (verified deals) / slashing (faulty) / initial pledge per sector
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          PoRep: <strong>sealing 증명 (4-phase)</strong>, 1회 생성.<br />
-          PoSt: <strong>지속 저장 증명</strong>, 정기 제출.<br />
-          Groth16 SNARK로 compressed, GPU 가속.
-        </p>
-
-        {/* ── Chain Weight 상세 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Chain Weight 계산 상세</h3>
-        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
-          <h4 className="font-semibold text-sm mb-2">Weight 수식</h4>
-          <div className="text-sm text-muted-foreground space-y-1 mb-3">
-            <p><code className="text-xs">w(chain) = Sum w_epoch</code></p>
-            <p><code className="text-xs">wForce = floor(log2(network_power))</code></p>
-            <p><code className="text-xs">w_epoch = 256 * wForce + wForce * num_blocks * W_RATIO_NUM * 256 / expectedLeaders / W_RATIO_DEN</code></p>
-            <p className="text-xs">W_RATIO_NUM=1, W_RATIO_DEN=2, expectedLeaders=5</p>
-          </div>
-          <div className="rounded bg-muted p-3 text-sm text-muted-foreground">
-            <p className="font-medium text-xs mb-1">예시: network_power = 2^60 bytes (1 ExaByte)</p>
-            <p className="text-xs">wForce = 60 / base = 60 x 256 = 15,360 / per block = 1,536 / 5 blocks tipset = <strong>23,040</strong></p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">왜 log2(power)?</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>linear scaling → large chain 공격 가능</li>
-              <li>log scaling → 모든 validator 참여 incentive</li>
-              <li>storage power 의미 유지</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Fork Choice</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>Heaviest chain wins</li>
-              <li>Weight is deterministic</li>
-              <li>Reorg: 더 무거운 체인 발견 시</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Bitcoin vs Filecoin</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>Bitcoin: chain work (sum of difficulty)</li>
-              <li>Filecoin: tipset weight (log scaled)</li>
-              <li>Tipset: 1 epoch에 여러 blocks → throughput 증가</li>
-            </ul>
-          </div>
-        </div>
-        <p className="leading-7">
-          Chain Weight: <strong>log2(network_power) × blocks</strong>.<br />
-          log scaling으로 fork 공격 방지.<br />
-          heaviest chain wins (Bitcoin과 유사).
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 tipset 구조인가</strong> — throughput + fairness.<br />
-          single leader → bottleneck + censorship 가능.<br />
-          multiple leaders per epoch → throughput + 다양성.<br />
-          Poisson sortition으로 각 epoch 5+ 승자 → 공정 분배.
+        <p>
+          핵심은 proof 생성 시간이나 특정 GPU 모델을 외우는 것이 아닙니다.
+          <strong>
+            {" "}
+            provider의 off-chain 계산이 어떤 commitment와 message를 통해 검증
+            가능한 chain state로 들어오는지
+          </strong>
+          를 추적하는 것입니다.
         </p>
       </div>
     </section>

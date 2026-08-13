@@ -1,4 +1,4 @@
-import Overview from './prysm/Overview';
+import Overview from "./prysm/Overview";
 
 export default function Prysm() {
   return <Overview />;

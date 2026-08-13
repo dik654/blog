@@ -38,7 +38,19 @@ Filecoin만의 고유 레이어:
   → split-markets (Boost), Curio (차세대 마이너)`;
 
 export const ETH_VS_FIL_ANNOTATIONS = [
-  { lines: [1, 11] as [number, number], color: 'sky' as const, note: '공통 레이어 비교' },
-  { lines: [12, 17] as [number, number], color: 'emerald' as const, note: 'Filecoin 고유 레이어' },
-  { lines: [24, 28] as [number, number], color: 'amber' as const, note: '노드 구성요소' },
+  {
+    lines: [1, 11] as [number, number],
+    color: "sky" as const,
+    note: "공통 레이어 비교",
+  },
+  {
+    lines: [12, 17] as [number, number],
+    color: "emerald" as const,
+    note: "Filecoin 고유 레이어",
+  },
+  {
+    lines: [24, 28] as [number, number],
+    color: "amber" as const,
+    note: "노드 구성요소",
+  },
 ];

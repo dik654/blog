@@ -1,68 +1,55 @@
-import InductiveBiasViz from './viz/InductiveBiasViz';
-import BiasDetailViz from './viz/BiasDetailViz';
-import M from '@/components/ui/math';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ReceptiveFieldViz from "./viz/ReceptiveFieldViz";
 
 export default function InductiveBias() {
   return (
     <section id="inductive-bias" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">귀납적 편향 & CNN의 한계</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          CNN이 이미지를 처리하는 방식에는 <strong>세 가지 강한 가정</strong>이 내장되어 있음<br />
-          이를 <strong>귀납적 편향(Inductive Bias)</strong>이라 함 — 모델이 탐색할 수 있는 함수 공간을 제한
-        </p>
-
-        <h3>1. 지역성(Locality)</h3>
-        <p>
-          작은 커널이 이미지 위를 슬라이딩하며 <strong>인접 픽셀만</strong> 결합<br />
-          단일 합성곱 층에서 한 픽셀은 자신의 근방에만 영향 가능 = 좁은 수용야(Receptive Field)<br />
-          결과적으로 CNN은 <strong>텍스처를 구조보다 우선시</strong>하는 경향이 있음
-        </p>
-        <p>
-          예: 앵무새 깃털을 가진 고양이 이미지 → ResNet(CNN)은 "macaw"로 분류<br />
-          깃털 디테일을 줄이면 "cat"으로 바뀜 — 지역적 텍스처에 강하게 의존하기 때문
-        </p>
-
-        <h3>2. 평행이동 불변성(Translation Invariance)</h3>
-        <p>
-          눈을 감지하는 커널은 이미지 전체를 슬라이딩하며 <strong>어디서나 같은 패턴</strong>을 찾음<br />
-          물체가 이미지의 어느 위치에 있든 동일하게 인식 = 위치에 무관한 감지<br />
-          유용하지만, 물체의 <strong>상대적 배치(spatial arrangement)</strong> 정보는 잃을 수 있음
-        </p>
-
-        <h3>3. 계층적 구조(Hierarchy)</h3>
-        <p>
-          합성곱 + 풀링을 반복하며 해상도를 점진적으로 축소<br />
-          저수준 피처(엣지) → 중수준(도형) → 고수준(물체 부분) 순으로 조합<br />
-          이미지가 이런 계층적 구조를 가진다는 가정 자체는 합리적이나,<br />
-          <strong>장거리 의존성(long-range dependency)</strong>을 포착하려면 수십 층이 필요
-        </p>
-      </div>
-      <div className="not-prose my-8">
-        <InductiveBiasViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>편향-분산 트레이드오프</h3>
-        <p>
-          <strong>높은 편향</strong> = 강한 가정 → 나쁜 함수 공간을 미리 제거, 학습 효율적<br />
-          <strong>높은 분산</strong> = 적은 가정 → 더 넓은 함수 공간 탐색, 표현력 높음<br />
-          CNN은 높은 편향, Transformer(Self-Attention)는 높은 분산 — 정반대 설계 철학
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">수용야 & 효율적 합성곱</h3>
-        <M display>{'\\text{RF}_l = \\text{RF}_{l-1} + \\underbrace{(k_l - 1) \\times \\prod_{i=1}^{l-1} s_i}_{\\text{누적 stride 반영}}'}</M>
-      </div>
-      <div className="not-prose my-6">
-        <BiasDetailViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Equivariance와 invariance, 이론적·실효 receptive field를 구분한다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
-          요약 1: <strong>Receptive Field</strong>가 클수록 전역 정보 활용 — 깊이/stride/dilation으로 조정.<br />
-          요약 2: <strong>Dilated Conv</strong>는 파라미터 증가 없이 RF 확장 — segmentation 핵심.<br />
-          요약 3: <strong>Depthwise Separable</strong>은 모바일 CNN의 표준 — 연산/파라미터 대폭 절감.
+          같은 kernel을 위치에 공유하면 input을 이동했을 때 feature map도 대응해
+          이동하는 translation equivariance가 생깁니다. Prediction이 이동 전후에
+          완전히 같아지는 invariance와는 다릅니다. Global pooling과 augmentation이
+          위치 민감도를 줄일 수 있지만 stride·padding·유한한 image boundary는 정확한
+          equivariance를 깨뜨릴 수 있습니다.
         </p>
+      </div>
+      <ExplainedFormula question="Stride 1의 이상적인 convolution은 input translation에 어떻게 반응할까?" idea={<>Input을 a만큼 이동시키는 operator Tₐ를 먼저 적용해 convolution하든, convolution output을 같은 만큼 이동시키든 결과가 같다는 관계입니다.</>} formula={String.raw`f(T_a\mathbf x)=T_a f(\mathbf x)`} terms={[{symbol:"f",name:"convolutional map",description:"위치에 같은 kernel을 쓰는 stride-1 operator입니다."},{symbol:"T_a",name:"translation",description:"Spatial grid를 a만큼 이동시키는 연산입니다."}]} assumptions={["무한·주기 grid 또는 translation과 일관된 boundary 처리의 이상적 경우입니다.","Stride>1 sampling, zero padding과 nonlinear downsampling은 exact equality를 깨뜨릴 수 있습니다."]} interpretation="Equivariance는 object가 이동하면 feature 위치도 이동한다는 뜻입니다. Classification head가 그 위치를 집계해야 최종 class score의 invariance에 가까워집니다."/>
+      <ReceptiveFieldViz />
+      <ExplainedFormula question="여러 convolution layer를 지날 때 한 unit이 연결되는 input 범위는 얼마나 넓어질까?" idea={<>현재 layer의 kernel이 이전 feature map에서 늘리는 범위에 이전 layer까지 누적된 jump, 즉 stride 곱을 곱합니다.</>} formula={String.raw`R_l=R_{l-1}+(k_l-1)\delta_l\prod_{m<l}s_m`} terms={[{symbol:"R_l",name:"theoretical receptive field",description:"Layer l unit과 graph상 연결된 input 좌표 범위입니다."},{symbol:"\prod_{m<l}s_m",name:"input jump",description:"이전 feature map 한 칸이 원 input에서 떨어진 간격입니다."},{symbol:"\delta_l",name:"dilation",description:"해상도를 줄이지 않고 kernel span을 넓힙니다."}]} assumptions={["한 spatial 축의 정규 grid를 다루며 branch·skip 연결은 path별 receptive field를 합쳐 해석합니다.","연결 범위와 실제 gradient 영향의 크기는 다릅니다."]} interpretation="Theoretical receptive field 안의 모든 pixel이 같은 비중으로 쓰인다는 뜻은 아닙니다. Effective receptive field 연구는 실제 영향이 중심에 더 집중될 수 있음을 보였으므로 dense prediction에서는 context와 해상도를 함께 측정합니다."/>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Dilation은 kernel tap 사이를 벌려 해상도를 즉시 낮추지 않고 더 넓은 context를
+          읽게 합니다. 다만 sampling pattern이 성기면 gridding artifact가 나타날 수
+          있고, stride로 grid를 줄이기 전에 high-frequency 성분을 충분히 제한하지
+          않으면 aliasing이 생깁니다. Sampling의 물리적 전제와 구분은
+          <Link to="/ai/fft#nyquist-boundary"> FFT 글의 Nyquist 정본</Link>에서 이어집니다.
+        </p>
+      </div>
+
+      <div id="paper-effective-receptive-field" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · 실제 영향 범위</p>
+        <p className="mt-2 text-sm font-semibold">Understanding the Effective Receptive Field in Deep Convolutional Neural Networks</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Graph상 연결된 theoretical receptive field와 실제 output에 대한 gradient 영향
+          분포를 분리하고, 후자가 전체 범위의 일부에 집중되는 현상을 분석합니다.
+          특정 architecture의 분석 결과를 모든 trained CNN의 고정 법칙으로 읽으면 안 됩니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1701.04128" target="_blank" rel="noreferrer">원 논문의 정의·분석·실험 보기</a>
+      </div>
+
+      <div id="paper-dilated-convolution" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Dilation</p>
+        <p className="mt-2 text-sm font-semibold">Multi-Scale Context Aggregation by Dilated Convolutions</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Dense prediction에서 resolution을 유지하면서 multi-scale context를 모으기 위해
+          dilated convolution을 구성한 연구입니다. Dilation 하나가 aliasing이나 모든
+          segmentation 경계 문제를 자동으로 해결한다는 주장은 아닙니다.
+        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1511.07122" target="_blank" rel="noreferrer">원 논문의 구조·context module·평가 보기</a>
       </div>
     </section>
   );

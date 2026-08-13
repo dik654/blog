@@ -1,10 +1,10 @@
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './prysm-beacon-state/codeRefs';
-import { prysmTree } from './prysm-beacon-state/fileTrees';
-import Overview from './prysm-beacon-state/Overview';
-import StateInterface from './prysm-beacon-state/StateInterface';
-import FieldTrie from './prysm-beacon-state/FieldTrie';
-import StateFork from './prysm-beacon-state/StateFork';
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prysm-beacon-state/codeRefs";
+import { prysmTree } from "./prysm-beacon-state/fileTrees";
+import Overview from "./prysm-beacon-state/Overview";
+import StateInterface from "./prysm-beacon-state/StateInterface";
+import FieldTrie from "./prysm-beacon-state/FieldTrie";
+import StateFork from "./prysm-beacon-state/StateFork";
 
 export default function PrysmBeaconState() {
   const sidebar = useCodeSidebar();
@@ -22,7 +22,11 @@ export default function PrysmBeaconState() {
         codeRefs={codeRefs}
         fileTrees={{ prysm: prysmTree }}
         projectMetas={{
-          prysm: { id: 'prysm', label: 'Prysm · Go', badgeClass: 'bg-violet-500/10 border-violet-500 text-violet-700' },
+          prysm: {
+            id: "prysm",
+            label: "Prysm · Go",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
         }}
       />
     </>

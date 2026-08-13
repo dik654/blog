@@ -1,15 +1,28 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
-const steps: StepDef[] = [
-  { label: 'Host · Client · Server 3계층 + 통신 흐름', body: 'Host (LLM Application): Claude Desktop, Zed, Cursor — LLM 실행, 사용자 상호작용\nClient (Protocol Manager): Host 내부, MCP 프로토콜 처리, 1:1 Server 연결\nServer (Tool Provider): 독립 프로세스, tools/resources/prompts 제공, 격리(보안)\n\nTopology: Host ├── Client 1 ↔ Server 1 (filesystem)\n              ├── Client 2 ↔ Server 2 (database)\n              └── Client 3 ↔ Server 3 (github)\n\n통신 흐름: User → Host → LLM decides tool → Client sends MCP → Server executes → 반환\n보안: Server = 별도 프로세스 (격리), 명시적 permissions, user consent\nLifecycle: Host starts → reads configs → launches Servers → discovers capabilities → ready' },
-];
-const visuals = [
-  { title: 'Host · Client · Server', color: '#10b981', rows: [
-    { label: 'Host', value: 'LLM 앱 (Claude Desktop, Cursor)' },
-    { label: 'Client', value: 'Host 내부, 프로토콜 관리, 1:1' },
-    { label: 'Server', value: '독립 프로세스, tools 제공, 격리' },
-    { label: 'Topology', value: '1 Host ↔ many Clients ↔ many Servers' },
-    { label: '보안', value: '프로세스 격리, permissions, consent' },
-  ]},
-];
-export default function ArchitectureDetailViz() { return <SimpleStepViz steps={steps} visuals={visuals} />; }
+import VizFrame from "@/components/viz/VizFrame";
+
+const fields = [
+  ["Request _meta", "Protocol version · client capability · client info", "매 요청"],
+  ["server/discover", "지원 version · capability · serverInfo · cache hint", "선택 조회"],
+  ["Explicit handle", "Cursor · job · basket처럼 이어지는 application state", "필요할 때"],
+  ["Authorization", "Caller·scope·resource ACL·expiry 재검사", "매 호출"],
+] as const;
+
+export default function ArchitectureDetailViz() {
+  return (
+    <VizFrame
+      eyebrow="Stateless core"
+      title="숨은 session 대신 해석 정보와 상태 참조를 message에 드러냅니다"
+      description="Stateless는 state 금지가 아니라 protocol connection에 묵시적으로 기대지 않는다는 뜻입니다."
+    >
+      <div className="divide-y divide-border/70">
+        {fields.map(([label, body, cadence]) => (
+          <section key={label} className="grid min-w-0 gap-2 py-4 first:pt-0 last:pb-0 sm:grid-cols-[9rem_1fr_5rem] sm:items-baseline">
+            <h4 className="text-sm font-bold">{label}</h4>
+            <p className="text-xs leading-5 text-muted-foreground">{body}</p>
+            <p className="text-xs font-semibold text-primary sm:text-right">{cadence}</p>
+          </section>
+        ))}
+      </div>
+    </VizFrame>
+  );
+}

@@ -1,5 +1,5 @@
-import TLSKeyScheduleViz from './viz/TLSKeyScheduleViz';
-import CodePanel from '@/components/ui/code-panel';
+import TLSKeyScheduleViz from "./viz/TLSKeyScheduleViz";
+import CodePanel from "@/components/ui/code-panel";
 
 const keyCode = `// TLS 1.3 Key Schedule (RFC 8446 §7.1)
 // HKDF-Extract(salt, IKM) → PRK
@@ -21,24 +21,42 @@ Master Secret = HKDF-Extract(salt=derived, IKM=0)
   → server_application_traffic_secret  // 서버 앱 데이터 키
   → resumption_master_secret           // 다음 세션 PSK 파생`;
 
-const annotations: { lines: [number, number]; color: 'sky' | 'emerald' | 'amber'; note: string }[] = [
-  { lines: [5, 8], color: 'amber', note: 'Early Secret: PSK 기반, 0-RTT 키 파생' },
-  { lines: [10, 13], color: 'sky', note: 'Handshake Secret: ECDHE 공유 비밀 투입' },
-  { lines: [15, 20], color: 'emerald', note: 'Master Secret: 최종 애플리케이션 키 + 세션 재개용 PSK' },
+const annotations: {
+  lines: [number, number];
+  color: "sky" | "emerald" | "amber";
+  note: string;
+}[] = [
+  {
+    lines: [5, 8],
+    color: "amber",
+    note: "Early Secret: PSK 기반, 0-RTT 키 파생",
+  },
+  {
+    lines: [10, 13],
+    color: "sky",
+    note: "Handshake Secret: ECDHE 공유 비밀 투입",
+  },
+  {
+    lines: [15, 20],
+    color: "emerald",
+    note: "Master Secret: 최종 애플리케이션 키 + 세션 재개용 PSK",
+  },
 ];
 
 export default function KeySchedule() {
   return (
     <section id="key-schedule" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">키 스케줄</h2>
-      <div className="not-prose mb-8"><TLSKeyScheduleViz /></div>
+      <div className="not-prose mb-8">
+        <TLSKeyScheduleViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          TLS 1.3은 HKDF(HMAC-based Key Derivation Function) 기반으로 모든 키를 파생함.
+          TLS 1.3은 HKDF(HMAC-based Key Derivation Function) 기반으로 모든 키를
+          파생함.
           <br />
           단일 공유 비밀에서 Extract → Expand 2단계로 다수의 독립 키를 생성함.
-          <br />
-          키 파생 과정이 명확히 정의되어 구현 오류와 취약점 감소.
+          <br />키 파생 과정이 명확히 정의되어 구현 오류와 취약점 감소.
         </p>
         <h3>3단계 키 파생</h3>
         <p className="leading-7">
@@ -46,7 +64,8 @@ export default function KeySchedule() {
           <br />
           Handshake Secret — ECDHE 공유 비밀을 투입. 핸드셰이크 메시지 암호화.
           <br />
-          Master Secret — 최종 단계. 애플리케이션 데이터 암호화 + 세션 재개용 PSK 생성.
+          Master Secret — 최종 단계. 애플리케이션 데이터 암호화 + 세션 재개용
+          PSK 생성.
         </p>
         <h3>Forward Secrecy(전방 비밀성)</h3>
         <p className="leading-7">
@@ -64,12 +83,15 @@ export default function KeySchedule() {
           <br />
           장기 연결에서도 키 노출 위험을 최소화함.
         </p>
-        <CodePanel title="TLS 1.3 Key Schedule — HKDF 파이프라인" code={keyCode}
-          annotations={annotations} />
+        <CodePanel
+          title="TLS 1.3 Key Schedule — HKDF 파이프라인"
+          code={keyCode}
+          annotations={annotations}
+        />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">HKDF와 키 파생 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HKDF (HMAC-based Key Derivation Function)
+          {`// HKDF (HMAC-based Key Derivation Function)
 // RFC 5869
 //
 // 2 Functions:

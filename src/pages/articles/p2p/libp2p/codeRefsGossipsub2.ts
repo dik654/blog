@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const gossipsubCodeRefs2: Record<string, CodeRef> = {
-  'gossipsub-struct': {
-    path: 'protocols/gossipsub/src/behaviour.rs — Behaviour<D, F> 구조체',
-    lang: 'rust',
+  "gossipsub-struct": {
+    path: "protocols/gossipsub/src/behaviour.rs — Behaviour<D, F> 구조체",
+    lang: "rust",
     highlight: [1, 30],
-    desc: 'Gossipsub Behaviour는 mesh 오버레이, fanout, 메시지 캐시, 피어 스코어링을 관리하는 핵심 구조체입니다.',
+    desc: "Gossipsub Behaviour는 mesh 오버레이, fanout, 메시지 캐시, 피어 스코어링을 관리하는 핵심 구조체입니다.",
     code: `pub struct Behaviour<D = IdentityTransform, F = AllowAllSubscriptionFilter> {
     config: Config,
     events: VecDeque<ToSwarm<Event, HandlerIn>>,
@@ -31,18 +31,26 @@ export const gossipsubCodeRefs2: Record<string, CodeRef> = {
     failed_messages: HashMap<PeerId, FailedMessages>,
 }`,
     annotations: [
-      { lines: [12, 12], color: 'sky', note: '토픽별 메시 피어 관리' },
-      { lines: [14, 14], color: 'emerald', note: 'fanout — 구독 없이 발행만 하는 토픽의 피어' },
-      { lines: [18, 18], color: 'amber', note: '최근 메시지 캐시 — IHAVE/IWANT 교환에 사용' },
-      { lines: [20, 20], color: 'violet', note: '피어 스코어링 시스템' },
+      { lines: [12, 12], color: "sky", note: "토픽별 메시 피어 관리" },
+      {
+        lines: [14, 14],
+        color: "emerald",
+        note: "fanout — 구독 없이 발행만 하는 토픽의 피어",
+      },
+      {
+        lines: [18, 18],
+        color: "amber",
+        note: "최근 메시지 캐시 — IHAVE/IWANT 교환에 사용",
+      },
+      { lines: [20, 20], color: "violet", note: "피어 스코어링 시스템" },
     ],
   },
 
-  'gossipsub-handle-msg': {
-    path: 'protocols/gossipsub/src/behaviour.rs — handle_received_message()',
-    lang: 'rust',
+  "gossipsub-handle-msg": {
+    path: "protocols/gossipsub/src/behaviour.rs — handle_received_message()",
+    lang: "rust",
     highlight: [1, 40],
-    desc: '수신 메시지를 검증하고, 중복 체크 후 mcache에 저장하고 mesh 피어에게 전파합니다.',
+    desc: "수신 메시지를 검증하고, 중복 체크 후 mcache에 저장하고 mesh 피어에게 전파합니다.",
     code: `fn handle_received_message(
     &mut self, mut raw_message: RawMessage, propagation_source: &PeerId,
 ) {
@@ -91,10 +99,26 @@ export const gossipsubCodeRefs2: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [4, 11], color: 'sky', note: '메시지 검증 — transform 실패 시 즉시 거부' },
-      { lines: [19, 25], color: 'emerald', note: '중복 체크 — duplicate_cache로 이미 본 메시지 필터링' },
-      { lines: [32, 33], color: 'amber', note: 'mcache에 삽입 — 이후 IHAVE 교환에 활용' },
-      { lines: [43, 46], color: 'violet', note: 'mesh 피어에게 전파 (validate_messages 비활성 시)' },
+      {
+        lines: [4, 11],
+        color: "sky",
+        note: "메시지 검증 — transform 실패 시 즉시 거부",
+      },
+      {
+        lines: [19, 25],
+        color: "emerald",
+        note: "중복 체크 — duplicate_cache로 이미 본 메시지 필터링",
+      },
+      {
+        lines: [32, 33],
+        color: "amber",
+        note: "mcache에 삽입 — 이후 IHAVE 교환에 활용",
+      },
+      {
+        lines: [43, 46],
+        color: "violet",
+        note: "mesh 피어에게 전파 (validate_messages 비활성 시)",
+      },
     ],
   },
 };

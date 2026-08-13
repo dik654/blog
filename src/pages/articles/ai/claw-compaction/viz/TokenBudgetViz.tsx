@@ -1,87 +1,49 @@
+import {
+  CompactFrame,
+  CompactRule,
+  CompactSteps,
+} from "./CompactionPrimitives";
+
 export default function TokenBudgetViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 320" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Token Budget — 200K 컨텍스트 활용</text>
-
-        {/* Labels for top bar */}
-        <text x={30} y={58} fontSize={10} fontWeight={700} fill="var(--foreground)">Context Window (200K)</text>
-        <text x={530} y={58} textAnchor="end" fontSize={9} fill="var(--muted-foreground)">claude-opus-4-6</text>
-
-        {/* Context window bar */}
-        <rect x={30} y={68} width={500} height={50} rx={4}
-          fill="var(--muted)" stroke="var(--border)" strokeWidth={1} />
-
-        {/* System prompt (~5K) */}
-        <rect x={30} y={68} width={15} height={50}
-          fill="#6366f1" fillOpacity={0.6} stroke="#6366f1" strokeWidth={1} />
-
-        {/* Tools (~8K) */}
-        <rect x={45} y={68} width={22} height={50}
-          fill="#10b981" fillOpacity={0.6} stroke="#10b981" strokeWidth={1} />
-
-        {/* Accumulated messages (~120K) */}
-        <rect x={67} y={68} width={300} height={50}
-          fill="#3b82f6" fillOpacity={0.6} stroke="#3b82f6" strokeWidth={1} />
-        <text x={217} y={97} textAnchor="middle" fontSize={10} fontWeight={700} fill="#fff">Messages accumulated (120K · 60%)</text>
-
-        {/* Safety margin (~27K) */}
-        <rect x={367} y={68} width={68} height={50}
-          fill="#f59e0b" fillOpacity={0.4} stroke="#f59e0b" strokeWidth={1} />
-
-        {/* Response reserve (~40K) */}
-        <rect x={435} y={68} width={95} height={50}
-          fill="#ec4899" fillOpacity={0.4} stroke="#ec4899" strokeWidth={1} />
-
-        {/* Trigger threshold */}
-        <line x1={367} y1={56} x2={367} y2={128} stroke="#ef4444" strokeWidth={2.5} strokeDasharray="4 2" />
-        <text x={367} y={51} textAnchor="middle" fontSize={10} fontWeight={700} fill="#ef4444">⚠ trigger at 70%</text>
-
-        {/* Labels below bar */}
-        <text x={37} y={135} fontSize={9} fill="var(--muted-foreground)">System 5K</text>
-        <text x={56} y={145} fontSize={9} fill="var(--muted-foreground)">Tools 8K</text>
-        <text x={400} y={135} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">Safety 27K</text>
-        <text x={482} y={135} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">Response 40K</text>
-
-        {/* Arrow */}
-        <line x1={280} y1={165} x2={280} y2={190} stroke="#8b5cf6" strokeWidth={2} />
-        <text x={280} y={182} textAnchor="middle" fontSize={10} fontWeight={700} fill="#8b5cf6">compact</text>
-        <polygon points="275,188 280,198 285,188" fill="#8b5cf6" />
-
-        {/* Labels for bottom bar */}
-        <text x={30} y={216} fontSize={10} fontWeight={700} fill="var(--foreground)">After compaction</text>
-
-        {/* Compaction result bar */}
-        <rect x={30} y={226} width={500} height={50} rx={4}
-          fill="var(--muted)" stroke="var(--border)" strokeWidth={1} />
-
-        <rect x={30} y={226} width={15} height={50}
-          fill="#6366f1" fillOpacity={0.6} stroke="#6366f1" strokeWidth={1} />
-        <rect x={45} y={226} width={22} height={50}
-          fill="#10b981" fillOpacity={0.6} stroke="#10b981" strokeWidth={1} />
-
-        {/* Summary */}
-        <rect x={67} y={226} width={52} height={50}
-          fill="#8b5cf6" fillOpacity={0.6} stroke="#8b5cf6" strokeWidth={1} />
-        <text x={93} y={250} textAnchor="middle" fontSize={9} fontWeight={700} fill="#fff">Summary</text>
-        <text x={93} y={263} textAnchor="middle" fontSize={9} fill="#fff">20K</text>
-
-        {/* Recent messages kept */}
-        <rect x={119} y={226} width={78} height={50}
-          fill="#3b82f6" fillOpacity={0.6} stroke="#3b82f6" strokeWidth={1} />
-        <text x={158} y={250} textAnchor="middle" fontSize={9} fontWeight={700} fill="#fff">Recent</text>
-        <text x={158} y={263} textAnchor="middle" fontSize={9} fill="#fff">30K</text>
-
-        {/* Free space */}
-        <text x={363} y={255} textAnchor="middle" fontSize={10} fontWeight={700} fill="var(--muted-foreground)">
-          freed ~70K tokens
-        </text>
-
-        <text x={280} y={300} textAnchor="middle" fontSize={10} fontWeight={600} fill="var(--muted-foreground)">
-          compaction = 최근 메시지 유지 + 과거 대화 20K summary로 압축
-        </text>
-      </svg>
-    </div>
+    <CompactFrame
+      label="TOKEN BUDGET"
+      title="입력 한도 전체를 대화에 쓰지 않는다"
+      description="system prompt, tool schema, 최근 대화뿐 아니라 다음 응답과 안전 여유까지 같은 context window를 나눠 씁니다."
+      note="정확한 비율은 모델 context, 평균 출력 길이와 tool schema를 실측해 정합니다. 중요한 permission·effect fact는 token 예산을 이유로 사실과 다르게 축약하지 않습니다."
+    >
+      <CompactSteps
+        steps={[
+          {
+            label: "FIXED",
+            title: "system·tools",
+            body: "매 호출에 반복되는 고정 비용",
+            tone: "violet",
+          },
+          {
+            label: "STATE",
+            title: "prior summary",
+            body: "오래된 대화를 대신하는 압축 상태",
+            tone: "blue",
+          },
+          {
+            label: "RECENT",
+            title: "최근 원문",
+            body: "현재 작업의 세부 문맥",
+            tone: "emerald",
+          },
+          {
+            label: "RESERVE",
+            title: "출력·안전 여유",
+            body: "응답과 추정 오차를 위한 공간",
+            tone: "amber",
+          },
+        ]}
+      />
+      <CompactRule>
+        <strong>시작 조건:</strong> 현재 입력만 맞는지가 아니라 예상 출력까지
+        넣을 수 있는지를 봅니다.
+      </CompactRule>
+    </CompactFrame>
   );
 }

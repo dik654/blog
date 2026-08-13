@@ -1,42 +1,77 @@
-import DataPrepViz from './viz/DataPrepViz';
-import DataPrepDetailViz from './viz/DataPrepDetailViz';
-import M from '@/components/ui/math';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import InputContractViz from "./viz/InputContractViz";
 
 export default function DataPrep() {
   return (
-    <section id="data-prep" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">데이터 준비</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          Transformer에 텍스트를 넣으려면 숫자로 변환해야 한다<br />
-          <strong>단어장(Vocabulary)</strong> — 모델이 아는 모든 단어의 목록<br />
-          11개 단어장 예시로 전체 과정을 추적한다
+    <section id="input-contract" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        입력 계약: token ID·position·padding mask를 서로 다른 tensor로 보존한다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          Transformer가 직접 받는 것은 문자열이나 one-hot vector가 아니라
+          tokenizer가 만든 정수 ID입니다. Embedding layer는 각 ID에 대응하는
+          row를 조회해 dense vector로 바꿉니다. 문자열 normalization·subword
+          분할·special token ID는
+          <Link to="/ai/tokenizer"> Tokenizer 정본 글</Link>이 소유하며, 이 글은
+          그 결과가 model tensor가 되는 경계부터 다룹니다.
         </p>
       </div>
 
-      <DataPrepViz />
+      <InputContractViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>변환 과정</h3>
-        <p>
-          문장 → 토큰 분리 → 인덱스 변환 → 원-핫 벡터 → 임베딩 벡터<br />
-          원-핫 벡터는 차원이 vocab_size(11)로 크고 희소하다<br />
-          임베딩 행렬(11×6)을 곱해 <strong>d_model=6</strong>의 밀집 벡터로 압축한다
-        </p>
-      </div>
+      <ExplainedFormula
+        question="Token ID 하나가 첫 Transformer block의 hidden state가 되려면 무엇을 합하는가?"
+        idea={
+          <>
+            Token embedding table에서 ID에 해당하는 row를 고르고, 같은 d_model
+            차원의 position signal을 더합니다. 일부 encoder model은 segment
+            embedding도 더하지만 모든 Transformer의 필수 항은 아닙니다.
+          </>
+        }
+        formula={String.raw`X^{(0)}_{b,t,:}=E_{\mathrm{tok}[b,t],:}+P_{t,:}`}
+        terms={[
+          {
+            symbol: "b,t",
+            name: "batch·position index",
+            description: "Batch 안의 sample과 그 안의 token 위치를 가리킵니다.",
+          },
+          {
+            symbol: "E",
+            name: "token embedding table",
+            description:
+              "Vocabulary size×d_model shape의 학습 가능한 lookup table입니다.",
+          },
+          {
+            symbol: "P",
+            name: "position signal",
+            description:
+              "Absolute embedding일 수도 있고 다른 위치 방식에서는 이 합이 생략될 수도 있습니다.",
+          },
+          {
+            symbol: "X^{(0)}",
+            name: "initial hidden states",
+            description:
+              "Shape [batch, sequence, d_model]로 block에 들어가는 tensor입니다.",
+          },
+        ]}
+        assumptions={[
+          "설명을 위해 absolute position signal을 더하는 구조로 썼습니다. RoPE·ALiBi는 다른 위치에 적용됩니다.",
+          "Padding token도 embedding row는 갖지만 attention mask와 loss mask로 영향 범위를 제한해야 합니다.",
+        ]}
+        interpretation="Embedding lookup은 one-hot×E와 수학적으로 같지만 one-hot을 materialize하지 않습니다. Model·tokenizer checkpoint가 어긋나면 같은 ID가 다른 row를 가리키므로 shape가 맞아도 의미는 깨집니다."
+      />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Vocabulary 구축 과정</h3>
-        <M display>
-          {`\\underbrace{\\text{텍스트} \\;\\to\\; \\text{토큰} \\;\\to\\; \\text{ID}}_{\\text{word2idx 매핑}} \\;\\to\\; \\underbrace{\\text{One-hot} \\times E}_{\\text{임베딩 (vocab} \\times d_{\\text{model}}\\text{)}}`}
-        </M>
-      </div>
-      <DataPrepDetailViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
-        <p className="leading-7">
-          요약 1: 텍스트 → 토큰 → ID → 임베딩 — <strong>4단계 변환 파이프라인</strong>.<br />
-          요약 2: <strong>특수 토큰</strong>(PAD, UNK, SOS, EOS)은 시퀀스 경계 표시 필수.<br />
-          요약 3: <strong>Vocabulary 크기</strong>가 임베딩 테이블 크기 결정 — 모델 파라미터의 큰 비중.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Padding mask와 loss mask는 같은 질문에 답하지 않는다</h3>
+        <p className="leading-8">
+          Attention mask는 어떤 key position을 읽을 수 있는지 정하고, loss
+          mask는 어떤 target token을 objective에 포함할지 정합니다. Padding을
+          attention에서 가렸다고 자동으로 loss에서도 제외되는 것은 아닙니다.
+          Batch padding side, position ID, causal mask와 label shift를 따로
+          검사해야 silent training bug를 막을 수 있습니다.
         </p>
       </div>
     </section>

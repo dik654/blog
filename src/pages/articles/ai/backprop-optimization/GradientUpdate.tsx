@@ -1,71 +1,49 @@
-import GradientUpdateViz from './viz/GradientUpdateViz';
-import SGDVariantsViz from './viz/SGDVariantsViz';
-import LRSchedulingViz from './viz/LRSchedulingViz';
-import GradTrainViz from './viz/GradTrainViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function GradientUpdate() {
   return (
     <section id="gradient-update" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">경사 하강법 업데이트</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        θ_new = θ_old - η × ∇L — 기울기 반대 방향으로 파라미터 이동.<br />
-        학습률 η로 이동 크기를 제어한다.
-      </p>
-      <GradientUpdateViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">SGD 변형 계열</h3>
-        <p>
-          GD(전체) → SGD(샘플 1개) → Mini-batch(B=32~512) → Momentum(관성) → NAG(예측)<br />
-          각 변형이 이전의 단점을 해결하며 진화
-        </p>
-      </div>
-      <SGDVariantsViz />
+      <h2 className="mb-6 text-2xl font-bold">Optimizer가 gradient를 parameter 변화로 바꾼다</h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-8 mb-3">Learning Rate Scheduling</h3>
         <p>
-          η 너무 크면 발산, 너무 작으면 수렴 느림 — 동적 조절이 필수<br />
-          2023~ 표준: <strong>Warmup + Cosine decay</strong> (LLM 훈련 기본)
+          가장 단순한 gradient descent는 현재 gradient의 반대 방향으로 learning
+          rate만큼 움직인다. 실제 training은 mini-batch noise, parameter별 scale과
+          곡률 때문에 momentum, adaptive second moment, schedule을 함께 사용할 수
+          있지만, 어느 경우든 backward가 계산한 gradient를 update로 변환하는 별도
+          단계라는 구조는 같다.
         </p>
       </div>
-      <LRSchedulingViz />
+
+      <ExplainedFormula
+        question="backward가 만든 local slope를 실제 parameter 변화로 어떻게 바꿀까?"
+        idea={<>가장 단순한 SGD는 현재 mini-batch gradient의 반대 방향으로 learning rate만큼 움직입니다. Optimizer는 이 자리에 history와 scale transform을 추가합니다.</>}
+        formula={String.raw`g_t=\nabla_\theta L_{\mathcal B_t}(\theta_t),\qquad \theta_{t+1}=\theta_t-\eta_t g_t`}
+        terms={[
+          { symbol: "\\mathcal B_t", name: "mini-batch", description: "t step에서 stochastic gradient를 추정하는 sample 집합입니다." },
+          { symbol: "g_t", name: "batch gradient", description: "backpropagation이 계산해 parameter.grad에 누적한 값입니다." },
+          { symbol: "\\eta_t", name: "learning rate", description: "schedule이 정하는 현재 step size입니다." },
+        ]}
+        assumptions={["gradient descent 표기이며 maximize objective에서는 부호가 반대입니다."]}
+        interpretation="gradient는 현재 위치의 1차 local 정보이고, optimizer는 그것을 update로 변환합니다. Backpropagation과 Adam을 같은 알고리즘으로 부르면 이 경계가 흐려집니다."
+      />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">훈련 루프 · Momentum · Gradient Clipping</h3>
         <p>
-          Forward → Backward → Update 루프부터 momentum, gradient clipping까지 전체 흐름.
+          Warmup과 cosine decay는 여러 대규모 학습에서 흔하지만 모든 architecture와
+          batch regime의 필수 조건은 아니다. Optimizer·batch size·training horizon을
+          고정한 뒤 loss spike, gradient norm, validation metric을 함께 비교해야 한다.
         </p>
       </div>
-      <GradTrainViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Momentum이 왜 효과적인가</p>
-          <p>
-            <strong>물리적 직관</strong>:<br />
-            - 공이 경사면을 구를 때 관성(momentum) 가짐<br />
-            - 작은 bump나 noise에 덜 흔들림<br />
-            - 경사 방향으로 가속
-          </p>
-          <p className="mt-2">
-            <strong>수학적 효과</strong>:<br />
-            - Gradient의 exponential moving average<br />
-            - Noise cancellation (반대 방향 상쇄)<br />
-            - Ravines/saddle points 탈출<br />
-            - 수렴 속도 증가 (보통 2-3배)
-          </p>
-          <p className="mt-2">
-            <strong>β 값 선택</strong>:<br />
-            - β = 0: momentum 없음 (vanilla SGD)<br />
-            - β = 0.9: 표준 (약 10 step 평균)<br />
-            - β = 0.99: longer memory (LLM 훈련)<br />
-            - β = 1: overshooting 위험
-          </p>
-        </div>
-
+      <div className="not-prose mt-6 rounded-xl border border-border/75 bg-card p-5">
+        <p className="text-sm font-semibold">SGD·Momentum·Adam·AdamW의 state와 update 차이는 별도 글이 소유합니다</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 글은 backward와 optimizer의 경계까지만 다루고, bias correction·moment
+          estimate·optimizer memory는 다음 글에서 같은 parameter budget으로 비교합니다.
+        </p>
+        <Link to="/ai/optimizers" className="mt-3 inline-flex text-sm font-semibold text-primary hover:underline">Optimizer 글 바로 보기 →</Link>
       </div>
     </section>
   );

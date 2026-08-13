@@ -1,86 +1,51 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, C } from './OverviewVizData';
+import StepViz from "@/components/ui/step-viz";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
+const STEPS = [
+  { label: "1. 압축", body: "Encoder가 입력에서 복원에 필요한 정보를 추립니다." },
+  { label: "2. 병목", body: "제한된 latent code가 정보 선택을 강제합니다." },
+  { label: "3. 복원", body: "Decoder가 code만 보고 입력을 다시 구성합니다." },
+];
+
+const stages = [
+  { label: "입력 x", detail: "관측값 · n차원", tone: "border-sky-500/45" },
+  { label: "Encoder fθ", detail: "필요한 특징을 추림", tone: "border-sky-500/45" },
+  { label: "Latent z", detail: "제약된 표현 · k차원", tone: "border-amber-500/55" },
+  { label: "Decoder gφ", detail: "표현에서 관측값 복원", tone: "border-emerald-500/45" },
+  { label: "복원 x̂", detail: "입력과 같은 shape", tone: "border-emerald-500/45" },
+];
 
 export default function OverviewViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 440 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* Input */}
-          <rect x={10} y={20} width={80} height={80} rx={6}
-            fill={`${C.enc}10`} stroke={C.enc} strokeWidth={1.2} />
-          <text x={50} y={55} textAnchor="middle" fontSize={9} fontWeight={600} fill={C.enc}>
-            입력 (n차원)
-          </text>
-          <text x={50} y={70} textAnchor="middle" fontSize={9} fill={C.muted}>
-            200쪽 원고
-          </text>
-
-          {/* Encoder arrow */}
-          {step >= 0 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <line x1={90} y1={60} x2={145} y2={60}
-                stroke={C.enc} strokeWidth={1} markerEnd="url(#ae-arr-enc)" />
-              <rect x={100} y={35} width={50} height={28} rx={4}
-                fill={`${C.enc}15`} stroke={C.enc} strokeWidth={1} />
-              <text x={125} y={53} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill={C.enc}>인코더</text>
-            </motion.g>
-          )}
-
-          {/* Latent space */}
-          {step >= 1 && (
-            <motion.g initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }} transition={sp}>
-              <rect x={155} y={30} width={70} height={60} rx={8}
-                fill={`${C.lat}15`} stroke={C.lat} strokeWidth={1.2}
-                strokeDasharray="4 2" />
-              <text x={190} y={55} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill={C.lat}>잠재 공간</text>
-              <text x={190} y={70} textAnchor="middle" fontSize={9} fill={C.muted}>
-                k차원 (k{'<<'}n)
-              </text>
-            </motion.g>
-          )}
-
-          {/* Decoder arrow + block */}
-          {step >= 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <line x1={225} y1={60} x2={280} y2={60}
-                stroke={C.dec} strokeWidth={1} markerEnd="url(#ae-arr-dec)" />
-              <rect x={240} y={35} width={50} height={28} rx={4}
-                fill={`${C.dec}15`} stroke={C.dec} strokeWidth={1} />
-              <text x={265} y={53} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill={C.dec}>디코더</text>
-
-              {/* Output */}
-              <rect x={290} y={20} width={80} height={80} rx={6}
-                fill={`${C.dec}10`} stroke={C.dec} strokeWidth={1.2} />
-              <text x={330} y={55} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill={C.dec}>출력 (n차원)</text>
-              <text x={330} y={70} textAnchor="middle" fontSize={9} fill={C.muted}>
-                복원된 책
-              </text>
-
-              {/* Loss label */}
-              <text x={390} y={56} fontSize={9} fill={C.muted}>
-                입력 ≈ 출력
-              </text>
-            </motion.g>
-          )}
-
-          <defs>
-            <marker id="ae-arr-enc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6 Z" fill={C.enc} />
-            </marker>
-            <marker id="ae-arr-dec" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6 Z" fill={C.dec} />
-            </marker>
-          </defs>
-        </svg>
+        <figure data-viz="autoencoder-overview" className="min-w-0">
+          <figcaption className="mb-5 text-sm font-semibold">
+            복사 장치가 아니라, 제약을 둔 복원 학습
+          </figcaption>
+          <div className="grid gap-3 md:grid-cols-5">
+            {stages.map((stage, index) => {
+              const visible = index === 0 || index <= step + 2;
+              return (
+                <div
+                  key={stage.label}
+                  className={`min-w-0 border-t bg-background px-1 pt-4 transition-opacity ${stage.tone} ${visible ? "opacity-100" : "opacity-25"}`}
+                >
+                  <p className="text-xs font-bold text-muted-foreground">0{index + 1}</p>
+                  <p className="mt-2 font-semibold">{stage.label}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{stage.detail}</p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-5 grid gap-3 border-t border-border/70 pt-4 sm:grid-cols-2">
+            <p className="text-sm leading-6 text-muted-foreground">
+              학습 신호: <strong className="text-foreground">x와 x̂의 차이</strong>
+            </p>
+            <p className="text-sm leading-6 text-muted-foreground">
+              핵심 조건: <strong className="text-foreground">병목·noise·sparsity 중 하나 이상의 제약</strong>
+            </p>
+          </div>
+        </figure>
       )}
     </StepViz>
   );

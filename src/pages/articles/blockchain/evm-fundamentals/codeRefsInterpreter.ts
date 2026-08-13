@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const interpreterCodeRef: Record<string, CodeRef> = {
-  'scope-context': {
-    path: 'core/vm/interpreter.go — ScopeContext',
-    lang: 'go',
+  "scope-context": {
+    path: "core/vm/interpreter.go — ScopeContext",
+    lang: "go",
     highlight: [1, 12],
-    desc: '각 호출(call frame)마다 생성되는 실행 컨텍스트.\nMemory, Stack, Contract 세 가지를 보유.',
+    desc: "각 호출(call frame)마다 생성되는 실행 컨텍스트.\nMemory, Stack, Contract 세 가지를 보유.",
     code: `// ScopeContext contains the things that are per-call,
 // such as stack and memory, but not transients like pc and gas
 type ScopeContext struct {
@@ -20,17 +20,33 @@ type Stack struct { data []uint256.Int }
 // Memory — []byte, 32바이트 워드 단위 확장
 type Memory struct { store []byte; lastGasCost uint64 }`,
     annotations: [
-      { lines: [4, 4], color: 'sky', note: 'Memory — 동적 []byte, 확장 시 가스 = 3*words + words²/512' },
-      { lines: [5, 5], color: 'emerald', note: 'Stack — 256비트 정수 배열, push/pop/peek/dup/swap 지원' },
-      { lines: [6, 6], color: 'amber', note: 'Contract — 실행 중인 코드, 잔여 가스, 호출자 주소 보유' },
-      { lines: [9, 10], color: 'violet', note: 'sync.Pool — 호출마다 새로 할당하지 않고 풀에서 재사용 (GC 부담 감소)' },
+      {
+        lines: [4, 4],
+        color: "sky",
+        note: "Memory — 동적 []byte, 확장 시 가스 = 3*words + words²/512",
+      },
+      {
+        lines: [5, 5],
+        color: "emerald",
+        note: "Stack — 256비트 정수 배열, push/pop/peek/dup/swap 지원",
+      },
+      {
+        lines: [6, 6],
+        color: "amber",
+        note: "Contract — 실행 중인 코드, 잔여 가스, 호출자 주소 보유",
+      },
+      {
+        lines: [9, 10],
+        color: "violet",
+        note: "sync.Pool — 호출마다 새로 할당하지 않고 풀에서 재사용 (GC 부담 감소)",
+      },
     ],
   },
-  'interp-run': {
-    path: 'core/vm/interpreter.go — Run()',
-    lang: 'go',
+  "interp-run": {
+    path: "core/vm/interpreter.go — Run()",
+    lang: "go",
     highlight: [1, 42],
-    desc: 'EVM 인터프리터 메인 루프.\n바이트코드를 한 opcode씩 fetch → decode → execute.',
+    desc: "EVM 인터프리터 메인 루프.\n바이트코드를 한 opcode씩 fetch → decode → execute.",
     code: `func (evm *EVM) Run(contract *Contract, input []byte, readOnly bool) (ret []byte, err error) {
     evm.depth++                    // 호출 깊이 증가
     defer func() { evm.depth-- }()
@@ -82,18 +98,38 @@ type Memory struct { store []byte; lastGasCost uint64 }`,
     return res, err
 }`,
     annotations: [
-      { lines: [2, 5], color: 'sky', note: '초기화 — depth 증가, 빈 코드 early return' },
-      { lines: [7, 16], color: 'emerald', note: 'ScopeContext 생성 — Memory, Stack을 sync.Pool에서 할당 (성능 최적화)' },
-      { lines: [20, 21], color: 'amber', note: 'Fetch-Decode — pc 위치의 opcode를 읽고 jumpTable[256]에서 O(1) 조회' },
-      { lines: [30, 34], color: 'violet', note: '고정 가스 — 각 opcode의 constantGas를 먼저 차감' },
-      { lines: [37, 41], color: 'rose', note: '동적 가스 — 메모리 확장 비용 등 런타임에 계산하여 추가 차감' },
+      {
+        lines: [2, 5],
+        color: "sky",
+        note: "초기화 — depth 증가, 빈 코드 early return",
+      },
+      {
+        lines: [7, 16],
+        color: "emerald",
+        note: "ScopeContext 생성 — Memory, Stack을 sync.Pool에서 할당 (성능 최적화)",
+      },
+      {
+        lines: [20, 21],
+        color: "amber",
+        note: "Fetch-Decode — pc 위치의 opcode를 읽고 jumpTable[256]에서 O(1) 조회",
+      },
+      {
+        lines: [30, 34],
+        color: "violet",
+        note: "고정 가스 — 각 opcode의 constantGas를 먼저 차감",
+      },
+      {
+        lines: [37, 41],
+        color: "rose",
+        note: "동적 가스 — 메모리 확장 비용 등 런타임에 계산하여 추가 차감",
+      },
     ],
   },
-  'jump-table': {
-    path: 'core/vm/jump_table.go — operation struct',
-    lang: 'go',
+  "jump-table": {
+    path: "core/vm/jump_table.go — operation struct",
+    lang: "go",
     highlight: [1, 22],
-    desc: '각 opcode의 메타데이터를 담는 구조체.\n실행 함수, 가스, 스택 요구사항을 정의.',
+    desc: "각 opcode의 메타데이터를 담는 구조체.\n실행 함수, 가스, 스택 요구사항을 정의.",
     code: `type (
     executionFunc  func(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error)
     gasFunc        func(*EVM, *Contract, *Stack, *Memory, uint64) (uint64, error)
@@ -118,10 +154,26 @@ type JumpTable [256]*operation
 // → Constantinople(+CREATE2) → Berlin(EIP-2929) → London(BASEFEE)
 // → Shanghai(PUSH0) → Cancun(TLOAD/TSTORE, MCOPY) → Prague`,
     annotations: [
-      { lines: [2, 2], color: 'sky', note: 'executionFunc — 모든 opcode가 동일한 시그니처 (pc, evm, scope) → ([]byte, error)' },
-      { lines: [8, 9], color: 'emerald', note: 'execute + constantGas — 실행 함수와 고정 비용을 한 쌍으로' },
-      { lines: [10, 10], color: 'amber', note: 'dynamicGas — SSTORE, CALL 등은 런타임에 가스가 달라짐' },
-      { lines: [18, 18], color: 'violet', note: '[256]*operation — opcode 1바이트 → 배열 인덱스로 O(1) 디스패치' },
+      {
+        lines: [2, 2],
+        color: "sky",
+        note: "executionFunc — 모든 opcode가 동일한 시그니처 (pc, evm, scope) → ([]byte, error)",
+      },
+      {
+        lines: [8, 9],
+        color: "emerald",
+        note: "execute + constantGas — 실행 함수와 고정 비용을 한 쌍으로",
+      },
+      {
+        lines: [10, 10],
+        color: "amber",
+        note: "dynamicGas — SSTORE, CALL 등은 런타임에 가스가 달라짐",
+      },
+      {
+        lines: [18, 18],
+        color: "violet",
+        note: "[256]*operation — opcode 1바이트 → 배열 인덱스로 O(1) 디스패치",
+      },
     ],
   },
 };

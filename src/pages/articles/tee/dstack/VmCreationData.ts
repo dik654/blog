@@ -17,9 +17,21 @@ pub struct Manifest {
 }`;
 
 export const manifestAnnotations = [
-  { lines: [4, 6] as [number, number], color: 'sky' as const, note: 'VM 식별 정보' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '리소스 설정' },
-  { lines: [12, 13] as [number, number], color: 'amber' as const, note: '인프라 연결 정보' },
+  {
+    lines: [4, 6] as [number, number],
+    color: "sky" as const,
+    note: "VM 식별 정보",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "리소스 설정",
+  },
+  {
+    lines: [12, 13] as [number, number],
+    color: "amber" as const,
+    note: "인프라 연결 정보",
+  },
 ];
 
 export const createVmCode = `// vmm/src/main_service.rs
@@ -54,9 +66,21 @@ async fn create_vm(request: VmConfiguration) -> Result<Id> {
 }`;
 
 export const createVmAnnotations = [
-  { lines: [6, 10] as [number, number], color: 'sky' as const, note: 'App ID 결정 (SHA-256)' },
-  { lines: [15, 16] as [number, number], color: 'emerald' as const, note: 'CID 할당 (vsock)' },
-  { lines: [24, 27] as [number, number], color: 'amber' as const, note: 'TDX TD 시작' },
+  {
+    lines: [6, 10] as [number, number],
+    color: "sky" as const,
+    note: "App ID 결정 (SHA-256)",
+  },
+  {
+    lines: [15, 16] as [number, number],
+    color: "emerald" as const,
+    note: "CID 할당 (vsock)",
+  },
+  {
+    lines: [24, 27] as [number, number],
+    color: "amber" as const,
+    note: "TDX TD 시작",
+  },
 ];
 
 export const portMapCode = `// 포트 매핑: host:port -> guest:port (TCP/UDP)
@@ -71,8 +95,16 @@ let port_map = request.ports.iter().map(|p| {
 }).collect::<Result<Vec<_>>>()?;`;
 
 export const portMapAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '포트 변환' },
-  { lines: [6, 8] as [number, number], color: 'amber' as const, note: '허용 포트 검사' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "포트 변환",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "amber" as const,
+    note: "허용 포트 검사",
+  },
 ];
 
 export const tdxQemuCode = `# QEMU TDX 실행 예시
@@ -86,6 +118,14 @@ qemu-system-x86_64 \\
   -drive file={rootfs},if=virtio,format=qcow2`;
 
 export const tdxQemuAnnotations = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: 'TDX 기밀 게스트 설정' },
-  { lines: [8, 8] as [number, number], color: 'emerald' as const, note: 'vsock 통신 채널' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "TDX 기밀 게스트 설정",
+  },
+  {
+    lines: [8, 8] as [number, number],
+    color: "emerald" as const,
+    note: "vsock 통신 채널",
+  },
 ];

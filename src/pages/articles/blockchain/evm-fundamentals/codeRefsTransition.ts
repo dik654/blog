@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const transitionCodeRef: Record<string, CodeRef> = {
-  'st-execute': {
-    path: 'core/state_transition.go — execute()',
-    lang: 'go',
+  "st-execute": {
+    path: "core/state_transition.go — execute()",
+    lang: "go",
     highlight: [1, 42],
-    desc: '트랜잭션의 상태 전이 메인 함수.\npreCheck → IntrinsicGas 차감 → EVM 호출 → 가스 환불 순서.',
+    desc: "트랜잭션의 상태 전이 메인 함수.\npreCheck → IntrinsicGas 차감 → EVM 호출 → 가스 환불 순서.",
     code: `func (st *stateTransition) execute() (*ExecutionResult, error) {
     // 1. preCheck: nonce 검증 + 잔액 확인 + 가스 구매
     if err := st.preCheck(); err != nil {
@@ -48,18 +48,38 @@ export const transitionCodeRef: Record<string, CodeRef> = {
     }, nil
 }`,
     annotations: [
-      { lines: [2, 4], color: 'sky', note: 'preCheck — nonce 일치 확인, 잔액 >= gasLimit*gasPrice + value 검증' },
-      { lines: [13, 14], color: 'emerald', note: 'IntrinsicGas — 기본 21000 + data 바이트당 4/16 gas' },
-      { lines: [17, 27], color: 'amber', note: 'EVM 호출 — msg.To == nil이면 Create, 아니면 Call' },
-      { lines: [30, 31], color: 'violet', note: '환불 — EIP-3529 이후 사용 가스의 1/5 상한' },
-      { lines: [34, 36], color: 'rose', note: '블록 제안자 수수료 — 실질 팁(gasPrice - baseFee) × 사용 가스' },
+      {
+        lines: [2, 4],
+        color: "sky",
+        note: "preCheck — nonce 일치 확인, 잔액 >= gasLimit*gasPrice + value 검증",
+      },
+      {
+        lines: [13, 14],
+        color: "emerald",
+        note: "IntrinsicGas — 기본 21000 + data 바이트당 4/16 gas",
+      },
+      {
+        lines: [17, 27],
+        color: "amber",
+        note: "EVM 호출 — msg.To == nil이면 Create, 아니면 Call",
+      },
+      {
+        lines: [30, 31],
+        color: "violet",
+        note: "환불 — EIP-3529 이후 사용 가스의 1/5 상한",
+      },
+      {
+        lines: [34, 36],
+        color: "rose",
+        note: "블록 제안자 수수료 — 실질 팁(gasPrice - baseFee) × 사용 가스",
+      },
     ],
   },
-  'intrinsic-gas': {
-    path: 'core/state_transition.go — IntrinsicGas()',
-    lang: 'go',
+  "intrinsic-gas": {
+    path: "core/state_transition.go — IntrinsicGas()",
+    lang: "go",
     highlight: [1, 24],
-    desc: '트랜잭션 실행 전 차감하는 최소 가스 비용.\ndata 바이트 수, 컨트랙트 생성 여부에 따라 달라짐.',
+    desc: "트랜잭션 실행 전 차감하는 최소 가스 비용.\ndata 바이트 수, 컨트랙트 생성 여부에 따라 달라짐.",
     code: `func IntrinsicGas(data []byte, accessList types.AccessList,
     authList []types.SetCodeAuthorization,
     isContractCreation, isHomestead, isEIP2028, isEIP3860 bool,
@@ -86,9 +106,21 @@ export const transitionCodeRef: Record<string, CodeRef> = {
     return gas, nil
 }`,
     annotations: [
-      { lines: [6, 10], color: 'sky', note: '기본 가스 — 일반 tx 21,000 / 컨트랙트 생성 53,000' },
-      { lines: [12, 16], color: 'emerald', note: 'data 비용 — zero byte 4gas, non-zero byte 16gas' },
-      { lines: [19, 22], color: 'amber', note: 'EIP-3860 — init code 32바이트 워드당 2gas 추가' },
+      {
+        lines: [6, 10],
+        color: "sky",
+        note: "기본 가스 — 일반 tx 21,000 / 컨트랙트 생성 53,000",
+      },
+      {
+        lines: [12, 16],
+        color: "emerald",
+        note: "data 비용 — zero byte 4gas, non-zero byte 16gas",
+      },
+      {
+        lines: [19, 22],
+        color: "amber",
+        note: "EIP-3860 — init code 32바이트 워드당 2gas 추가",
+      },
     ],
   },
 };

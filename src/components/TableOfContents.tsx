@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import type { Section } from '@/content';
-import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useEffect, useState } from "react";
+import type { Section } from "@/content";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
   sections: Section[];
 }
 
 export default function TableOfContents({ sections }: Props) {
-  const [activeId, setActiveId] = useState<string>('');
+  const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -19,7 +19,7 @@ export default function TableOfContents({ sections }: Props) {
           }
         }
       },
-      { rootMargin: '-80px 0px -80% 0px' },
+      { rootMargin: "-80px 0px -80% 0px" },
     );
 
     for (const section of sections) {
@@ -35,26 +35,30 @@ export default function TableOfContents({ sections }: Props) {
   }, [sections]);
 
   const scrollTo = (id: string) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <ScrollArea className="h-[calc(100vh-8rem)]">
       <nav className="space-y-0.5">
         <p className="mb-3 text-sm font-semibold text-foreground">목차</p>
         {sections.map((section) => {
-          const sectionActive = activeId === section.id ||
-            (section.subsections?.some(s => s.id === activeId) ?? false);
+          const sectionActive =
+            activeId === section.id ||
+            (section.subsections?.some((s) => s.id === activeId) ?? false);
           return (
             <div key={section.id}>
               <a
                 href={`#${section.id}`}
                 className={cn(
-                  'block rounded-md px-3 py-1.5 text-sm transition-colors hover:text-foreground',
+                  "block rounded-md px-3 py-1.5 text-sm transition-colors hover:text-foreground",
                   sectionActive
-                    ? 'font-medium text-foreground bg-accent'
-                    : 'text-muted-foreground',
+                    ? "font-medium text-foreground bg-accent"
+                    : "text-muted-foreground",
                 )}
-                onClick={(e) => { e.preventDefault(); scrollTo(section.id); }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollTo(section.id);
+                }}
               >
                 {section.title}
               </a>
@@ -63,12 +67,15 @@ export default function TableOfContents({ sections }: Props) {
                   key={sub.id}
                   href={`#${sub.id}`}
                   className={cn(
-                    'block rounded-md pl-6 pr-3 py-1 text-xs transition-colors hover:text-foreground',
+                    "block rounded-md pl-6 pr-3 py-1 text-xs transition-colors hover:text-foreground",
                     activeId === sub.id
-                      ? 'font-medium text-foreground'
-                      : 'text-muted-foreground/70',
+                      ? "font-medium text-foreground"
+                      : "text-muted-foreground/70",
                   )}
-                  onClick={(e) => { e.preventDefault(); scrollTo(sub.id); }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo(sub.id);
+                  }}
                 >
                   {sub.title}
                 </a>

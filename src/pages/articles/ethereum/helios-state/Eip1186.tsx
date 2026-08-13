@@ -10,11 +10,11 @@ export default function Eip1186({ title }: { title: string }) {
         </p>
         <p className="leading-7">
           응답에는 nonce, balance, storageHash, codeHash와
-          <br />
-          각 필드까지의 Merkle-Patricia 트라이 경로가 포함된다.
+          <br />각 필드까지의 Merkle-Patricia 트라이 경로가 포함된다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 이 API를 <em>제공</em>한다 (서버 측).
+          <strong>💡 Reth vs Helios:</strong> Reth는 이 API를 <em>제공</em>한다
+          (서버 측).
           <br />
           Helios는 이 API를 <em>호출하고 검증</em>한다 (클라이언트 측).
         </p>

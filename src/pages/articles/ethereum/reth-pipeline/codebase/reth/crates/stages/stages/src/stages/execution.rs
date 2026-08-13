@@ -26,7 +26,7 @@ where E: BlockExecutorProvider,
             //    gas 계산, 잔고 이동, 컨트랙트 코드 실행 등 전부 여기서 처리
             executor.execute_and_verify_one((&block).into())?;
 
-            // 5. commit_threshold(기본 10,000블록)마다 BundleState를 DB에 중간 저장
+            // 5. 설정된 작업 경계에서 검증된 overlay와 progress를 영속화
             //    크래시 시 최대 threshold 블록만 재실행하면 됨
             if block_number % self.commit_threshold == 0 {
                 executor.finalize().write_to_storage(provider)?;

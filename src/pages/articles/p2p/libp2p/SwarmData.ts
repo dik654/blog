@@ -66,11 +66,11 @@ export const connectionHandlerCode = `pub trait ConnectionHandler: Send + 'stati
 }`;
 
 export const eventFlowSteps = [
-  'Transport: TCP/QUIC 연결 수락',
-  'Swarm: Security + Mux 업그레이드 실행',
-  'Swarm: NetworkBehaviour.handle_established_inbound_connection() 호출',
-  'Handler: listen_protocol()로 지원 프로토콜 광고',
-  'Handler: 스트림 협상 완료 → 프로토콜 동작 시작',
-  'NetworkBehaviour.poll(): 이벤트 생성 → ToSwarm 반환',
-  '애플리케이션: swarm.select_next_some() 처리',
+  "Transport: TCP/QUIC 연결 수락",
+  "Swarm: Security + Mux 업그레이드 실행",
+  "Swarm: NetworkBehaviour.handle_established_inbound_connection() 호출",
+  "Handler: listen_protocol()로 지원 프로토콜 광고",
+  "Handler: 스트림 협상 완료 → 프로토콜 동작 시작",
+  "NetworkBehaviour.poll(): 이벤트 생성 → ToSwarm 반환",
+  "애플리케이션: swarm.select_next_some() 처리",
 ];

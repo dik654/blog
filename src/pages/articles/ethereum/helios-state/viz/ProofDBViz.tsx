@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './ProofDBVizData';
-import { Step0, Step1 } from './ProofDBVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./ProofDBVizData";
+import { Step0, Step1 } from "./ProofDBVizSteps";
 
 const R = [Step0, Step1];
 

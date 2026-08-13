@@ -11,7 +11,19 @@ fn prepare_send(transmit: &Transmit) -> SmallVec<[Addr; 3]> {
 }`;
 
 export const PREPARE_SEND_ANNOTATIONS = [
-  { lines: [4, 5] as [number, number], color: 'sky' as const, note: '직접 UDP 경로' },
-  { lines: [7, 8] as [number, number], color: 'emerald' as const, note: 'relay 백업 경로' },
-  { lines: [10, 10] as [number, number], color: 'amber' as const, note: '두 경로 동시 전송' },
+  {
+    lines: [4, 5] as [number, number],
+    color: "sky" as const,
+    note: "직접 UDP 경로",
+  },
+  {
+    lines: [7, 8] as [number, number],
+    color: "emerald" as const,
+    note: "relay 백업 경로",
+  },
+  {
+    lines: [10, 10] as [number, number],
+    color: "amber" as const,
+    note: "두 경로 동시 전송",
+  },
 ];

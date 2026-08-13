@@ -1,106 +1,25 @@
+import VizFrame from "@/components/viz/VizFrame";
+
+const decisions = [
+  { question: "Output이 독립 binary probability인가?", choice: "Sigmoid + logits-based BCE", warning: "Exclusive class라면 softmax 경로" },
+  { question: "Hidden layer가 기존 checkpoint와 호환돼야 하나?", choice: "원래 activation 유지", warning: "교체하면 weight distribution도 달라짐" },
+  { question: "CNN rectifier에서 dead unit이 확인됐나?", choice: "Leaky/PReLU를 controlled test", warning: "먼저 LR·initialization 원인 확인" },
+  { question: "Transformer FFN 구조를 바꿀 수 있나?", choice: "GELU/SiLU 또는 gated FFN 비교", warning: "SwiGLU는 width·parameter 예산 조정" },
+] as const;
+
 export default function ActivationDecisionViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 640 440" className="w-full h-auto" style={{ maxWidth: 820 }}>
-        <text x={320} y={24} textAnchor="middle" fontSize={16} fontWeight={700}
-          fill="var(--foreground)">활성화 함수 선택 Decision Tree</text>
-
-        <defs>
-          <marker id="ad-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#8b5cf6" />
-          </marker>
-        </defs>
-
-        {/* Root */}
-        <rect x={250} y={46} width={140} height={40} rx={8}
-          fill="#8b5cf6" fillOpacity={0.15} stroke="#8b5cf6" strokeWidth={2} />
-        <text x={320} y={64} textAnchor="middle" fontSize={12} fontWeight={700} fill="#8b5cf6">
-          Q: 어떤 위치?
-        </text>
-        <text x={320} y={78} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
-          (layer type / task)
-        </text>
-
-        {/* Branch 1: Hidden vs Output */}
-        <line x1={290} y1={86} x2={180} y2={120} stroke="#8b5cf6" strokeWidth={1.5} markerEnd="url(#ad-arr)" />
-        <line x1={350} y1={86} x2={460} y2={120} stroke="#8b5cf6" strokeWidth={1.5} markerEnd="url(#ad-arr)" />
-
-        <text x={220} y={108} fontSize={10} fontWeight={700} fill="#3b82f6">Hidden Layer</text>
-        <text x={410} y={108} fontSize={10} fontWeight={700} fill="#ef4444">Output Layer</text>
-
-        {/* Hidden branch */}
-        <rect x={30} y={125} width={310} height={200} rx={10}
-          fill="#3b82f6" fillOpacity={0.06} stroke="#3b82f6" strokeWidth={1.8} />
-        <text x={185} y={148} textAnchor="middle" fontSize={12} fontWeight={700} fill="#3b82f6">
-          Hidden Layer — 어떤 아키텍처?
-        </text>
-
-        {[
-          { arch: 'CNN (일반)', fn: 'ReLU', why: '빠름·검증됨', y: 170 },
-          { arch: 'CNN (mobile)', fn: 'Hard Swish', why: 'ReLU>·빠름', y: 194 },
-          { arch: 'Transformer (NLP)', fn: 'GELU', why: 'BERT/GPT', y: 218 },
-          { arch: 'LLM (decoder)', fn: 'SwiGLU', why: 'LLaMA 이후', y: 242 },
-          { arch: 'RNN/LSTM', fn: 'Tanh+Sigmoid', why: 'Gating', y: 266 },
-          { arch: 'GAN', fn: 'LeakyReLU', why: '안정 학습', y: 290 },
-          { arch: 'MLP (일반)', fn: 'ReLU', why: '기본', y: 314 },
-        ].map((r, i) => (
-          <g key={i}>
-            <text x={45} y={r.y} fontSize={10} fill="var(--foreground)">{r.arch}</text>
-            <text x={170} y={r.y} fontSize={10} fontFamily="monospace" fontWeight={700} fill="#3b82f6">
-              → {r.fn}
-            </text>
-            <text x={260} y={r.y} fontSize={9} fill="var(--muted-foreground)">
-              ({r.why})
-            </text>
-          </g>
+    <VizFrame eyebrow="Decision path" title="위치와 출력 계약을 먼저 정한 뒤 optimization 선택지를 좁힙니다" description="Activation 이름의 인기보다 model contract·checkpoint·budget을 먼저 고정합니다.">
+      <ol className="space-y-7">
+        {decisions.map((item, index) => (
+          <li key={item.question} className="grid min-w-0 gap-4 border-b border-border/60 pb-7 last:border-0 last:pb-0 md:grid-cols-[2rem_minmax(0,1.2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)] md:items-start md:gap-6">
+            <span className="font-mono text-xs font-bold text-primary">0{index + 1}</span>
+            <p className="text-sm font-bold leading-6 text-foreground">{item.question}</p>
+            <div className="min-w-0"><p className="text-[10px] font-bold text-primary">선택</p><p className="mt-1 text-xs leading-5 text-foreground">{item.choice}</p></div>
+            <div className="min-w-0"><p className="text-[10px] font-bold text-muted-foreground">주의</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{item.warning}</p></div>
+          </li>
         ))}
-
-        {/* Output branch */}
-        <rect x={350} y={125} width={260} height={200} rx={10}
-          fill="#ef4444" fillOpacity={0.06} stroke="#ef4444" strokeWidth={1.8} />
-        <text x={480} y={148} textAnchor="middle" fontSize={12} fontWeight={700} fill="#ef4444">
-          Output Layer — 어떤 task?
-        </text>
-
-        {[
-          { task: 'Binary 분류', fn: 'Sigmoid', y: 172 },
-          { task: 'Multi-class', fn: 'Softmax', y: 196 },
-          { task: 'Multi-label', fn: 'Sigmoid × N', y: 220 },
-          { task: 'Regression (bounded)', fn: 'Tanh/Sigmoid', y: 244 },
-          { task: 'Regression (unbounded)', fn: 'Identity', y: 268 },
-        ].map((r, i) => (
-          <g key={i}>
-            <text x={365} y={r.y} fontSize={10} fill="var(--foreground)">{r.task}</text>
-            <text x={590} y={r.y} fontSize={10} fontFamily="monospace" fontWeight={700} fill="#ef4444" textAnchor="end">
-              → {r.fn}
-            </text>
-          </g>
-        ))}
-
-        <text x={365} y={302} fontSize={10} fontWeight={700} fill="var(--foreground)">디버깅:</text>
-        <text x={365} y={316} fontSize={9} fill="var(--muted-foreground)">
-          Dying ReLU → LeakyReLU + He init
-        </text>
-
-        {/* 초기화 매칭 */}
-        <rect x={30} y={338} width={580} height={90} rx={10}
-          fill="#10b981" fillOpacity={0.08} stroke="#10b981" strokeWidth={1.8} />
-        <text x={320} y={358} textAnchor="middle" fontSize={13} fontWeight={700} fill="#10b981">
-          초기화 × 활성화 매칭
-        </text>
-
-        {[
-          { init: 'Xavier/Glorot', formula: 'W~N(0, 2/(fanₐ+fanb))', fns: 'Sigmoid, Tanh', x: 45 },
-          { init: 'He/Kaiming', formula: 'W~N(0, 2/fan_in)', fns: 'ReLU 계열', x: 230 },
-          { init: 'Orthogonal', formula: '직교 행렬', fns: 'RNN/LSTM', x: 445 },
-        ].map((m, i) => (
-          <g key={i}>
-            <text x={m.x} y={378} fontSize={11} fontWeight={700} fill="#10b981">{m.init}</text>
-            <text x={m.x} y={394} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">{m.formula}</text>
-            <text x={m.x} y={410} fontSize={10} fontWeight={600} fill="var(--foreground)">→ {m.fns}</text>
-          </g>
-        ))}
-      </svg>
-    </div>
+      </ol>
+    </VizFrame>
   );
 }

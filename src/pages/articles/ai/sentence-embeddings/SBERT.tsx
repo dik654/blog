@@ -1,103 +1,43 @@
-import { CitationBlock } from '@/components/ui/citation';
-import M from '@/components/ui/math';
-import SBERTArchViz from './viz/SBERTArchViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SBERTArchViz from "./viz/SBERTArchViz";
 
 export default function SBERT() {
-  return (
-    <section id="sbert" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Sentence-BERT: 샴 네트워크</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Sentence-BERT(SBERT) — Reimers & Gurevych (2019)가 제안한 문장 임베딩 모델<br />
-          핵심: BERT를 <strong>샴(Siamese) 네트워크</strong>로 재구성하여 문장 단위 벡터를 효율적으로 생성<br />
-          "샴(Siamese)" = 쌍둥이 — 동일한 BERT 가중치를 공유하는 두 인코더가 각각 독립적으로 문장을 처리
-        </p>
-
-        <CitationBlock source="Reimers & Gurevych, 2019 — Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks"
-          citeKey={1} type="paper" href="https://arxiv.org/abs/1908.10084">
-          <p className="italic">"SBERT adds a pooling operation to the output of BERT to derive a fixed
-          sized sentence embedding."</p>
-        </CitationBlock>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">1. 샴 네트워크 구조</h3>
-        <p>
-          두 문장을 각각 동일한 BERT에 통과 → 풀링(Mean Pooling) → 고정 벡터 u, v 생성<br />
-          추론 시: cosine similarity <M>{'\\cos(u, v)'}</M>로 비교<br />
-          가중치를 공유하므로 파라미터 증가 없음 — BERT-base 기준 110M개
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">2. 풀링 전략</h3>
-        <p>
-          논문에서 3가지 비교: [CLS], Mean Pooling, Max Pooling<br />
-          <strong>Mean Pooling이 최고 성능</strong> — 모든 토큰의 정보를 균등하게 반영<br />
-          핵심: 사전학습된 BERT 위에 풀링을 추가하고, <strong>유사도 태스크로 파인튜닝</strong>하는 것이 차이
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">3. 학습 목표 — Classification (NLI)</h3>
-        <p>
-          NLI(Natural Language Inference, 자연어 추론) 데이터셋: SNLI(570K) + MultiNLI(430K)<br />
-          두 문장의 관계를 entailment(함의) / contradiction(모순) / neutral(중립)로 분류<br />
-          입력: 두 벡터 u, v와 element-wise 차이 |u-v|를 concat
-        </p>
-        <M display>{'\\text{input} = [u; v; |u-v|] \\in \\mathbb{R}^{3d}, \\quad \\text{output} = \\text{softmax}(W \\cdot \\text{input})'}</M>
-        <p className="text-sm text-muted-foreground mt-1">
-          |u-v|: 두 벡터의 element-wise 절대 차이 — 의미 차이를 명시적으로 포착하는 피처
-        </p>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">4. 학습 목표 — Regression (STS)</h3>
-        <p>
-          STS(Semantic Textual Similarity) 데이터셋: 문장 쌍 + 유사도 점수(0~5)<br />
-          cosine similarity를 직접 최적화 — MSE 손실 사용
-        </p>
-        <M display>{'\\mathcal{L} = \\text{MSE}(\\cos(u, v), y) = (\\cos(u, v) - y)^2'}</M>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">5. 학습 목표 — Triplet Loss</h3>
-        <p>
-          세 문장 (anchor, positive, negative)으로 구성<br />
-          anchor와 positive 사이 거리를 줄이고, anchor와 negative 사이 거리를 늘림
-        </p>
-        <M display>{'\\mathcal{L} = \\max(0, \\|a - p\\| - \\|a - n\\| + \\varepsilon)'}</M>
-        <p className="text-sm text-muted-foreground mt-1">
-          <M>{'\\varepsilon'}</M>(margin) = 보통 1.0 — positive와 negative 사이 최소 거리를 보장하는 여유값
-        </p>
-      </div>
-
-      <div className="not-prose my-8"><SBERTArchViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-lg font-semibold mt-6 mb-3">Cross-Encoder vs Bi-Encoder</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">항목</th>
-                <th className="border border-border px-4 py-2 text-left">Cross-Encoder</th>
-                <th className="border border-border px-4 py-2 text-left">Bi-Encoder (SBERT)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['입력', '[CLS] A [SEP] B [SEP]', 'A, B 독립 인코딩'],
-                ['출력', '유사도 점수 (0~1)', '벡터 u, v → cos(u,v)'],
-                ['복잡도', 'O(n²) — 쌍마다 추론', 'O(n) — 벡터 사전 계산'],
-                ['정확도', '높음 (STS ρ≈90+)', '약간 낮음 (STS ρ≈85)'],
-                ['용도', '리랭킹 (상위 후보 재정렬)', '검색, 클러스터링, 대규모 비교'],
-              ].map(([item, cross, bi]) => (
-                <tr key={item}>
-                  <td className="border border-border px-4 py-2 font-medium">{item}</td>
-                  <td className="border border-border px-4 py-2">{cross}</td>
-                  <td className="border border-border px-4 py-2">{bi}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-4 leading-7">
-          요약 1: SBERT는 <strong>샴 네트워크 + Mean Pooling</strong>으로 문장 벡터 생성 — BERT 대비 STS ρ가 29→85로 도약.<br />
-          요약 2: NLI 분류 학습이 가장 효과적 — |u-v| 피처가 <strong>의미 차이를 명시적으로</strong> 학습.<br />
-          요약 3: 실전에서는 <strong>Bi-Encoder로 검색 → Cross-Encoder로 리랭킹</strong>하는 2단계 파이프라인이 표준.
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="sbert" className="mb-16 scroll-mt-20">
+    <h2 className="mb-6 text-2xl font-bold">SBERT의 핵심은 문서 표현을 query와 독립적으로 계산할 수 있게 만든 것입니다</h2>
+    <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <p>Cross-encoder는 query와 document token을 한 sequence에 넣기 때문에 모든 token이 서로 상호작용할 수 있습니다. 정교한 pair score를 만들 수 있지만 query가 바뀔 때마다 corpus 문서를 다시 읽어야 합니다. Bi-encoder는 query와 document를 각각 encode해 vector로 비교하므로 문서 vector를 offline에서 한 번 계산해 index에 저장할 수 있습니다.</p>
+      <p>SBERT는 shared BERT encoder와 pooling을 siamese 또는 triplet 구조로 학습해 이 독립 vector가 semantic relation을 보존하도록 했습니다. NLI classification·STS regression·triplet objective는 서로 다른 supervision이므로 checkpoint의 pooling·normalization·training relation을 함께 확인해야 합니다.</p>
+    </div>
+    <div className="not-prose my-8"><SBERTArchViz /></div>
+    <ExplainedFormula
+      question="Corpus 문서가 M개일 때 cross-encoder와 bi-encoder의 online 계산 구조는 어떻게 다를까요?"
+      idea={<>Cross-encoder는 새 query마다 M개의 query-document pair forward가 필요합니다. Bi-encoder는 문서 M개를 미리 encode하고, online에서는 query forward 한 번과 저장된 vector M개에 대한 similarity search를 수행합니다.</>}
+      formula={String.raw`C_{\mathrm{cross}}(q)=\sum_{j=1}^{M}C_{\mathrm{pair}}(q,d_j),\qquad C_{\mathrm{bi}}(q)=C_q+C_{\mathrm{ANN}}(\mathbf z_q,\{\mathbf z_{d_j}\}_{j=1}^{M})`}
+      terms={[
+        { symbol: "M", name: "corpus size", description: "검색 대상 문서 또는 chunk의 총개수입니다." },
+        { symbol: "C_pair", name: "pair-forward cost", description: "Query와 한 document를 함께 넣는 cross-encoder 한 번의 비용입니다." },
+        { symbol: "C_q", name: "query-encoding cost", description: "새 query를 embedding 하나로 만드는 online encoder 비용입니다." },
+        { symbol: "C_ANN", name: "vector-search cost", description: "Approximate nearest-neighbor index에서 가까운 문서 vector를 찾는 비용입니다." },
+      ]}
+      assumptions={["Document embedding 계산과 index build 비용은 offline으로 분리했습니다.", "ANN cost는 index type·dimension·recall setting·hardware에 따라 달라져 O(1)로 간주할 수 없습니다.", "Cross-encoder와 bi-encoder는 interaction capacity가 달라 같은 품질을 보장하지 않습니다."]}
+      interpretation="Bi-encoder의 장점은 Transformer가 빨라진 것이 아니라 document-side 계산을 query 사이에서 재사용한다는 점입니다. 그래서 대규모 corpus 후보 검색에 쓰고 cross-encoder는 상위 후보만 다시 읽는 방식이 자연스럽습니다."
+    />
+    <ExplainedFormula
+      question="1단계 bi-encoder가 정답을 놓치면 2단계 reranker가 복구할 수 있을까요?"
+      idea={<>Reranker는 candidate set Ck(q)에 들어온 문서만 순서를 바꿀 수 있습니다. 따라서 최종 top-k relevant 수는 candidate set이 포함한 relevant 수를 넘지 못합니다.</>}
+      formula={String.raw`\mathcal R_q\cap C_k(q)=\varnothing\;\Longrightarrow\;\mathcal R_q\cap \operatorname{Rerank}(C_k(q))=\varnothing`}
+      terms={[
+        { symbol: "R_q", name: "relevant set", description: "Query q에 대해 label상 정답으로 인정되는 모든 문서 집합입니다." },
+        { symbol: "C_k(q)", name: "candidate set", description: "Bi-encoder가 corpus에서 먼저 가져온 k개 문서입니다." },
+        { symbol: "Rerank", name: "second-stage reranker", description: "Candidate 내부의 pair score를 다시 계산해 순서를 바꾸는 함수입니다." },
+      ]}
+      assumptions={["Reranker는 candidate 밖의 corpus를 새로 검색하지 않습니다.", "Query당 여러 positive가 있으면 relevant set 전체를 label에 보존합니다.", "Generation model이 외부 지식으로 답을 맞힐 수 있어도 retrieval groundedness 관점에서는 누락으로 봅니다."]}
+      interpretation="Reranker NDCG를 높이기 전에 candidate Recall@k가 충분한지 확인해야 합니다. k를 키우면 recall은 오를 수 있지만 reranking latency와 context selection 비용도 늘어납니다."
+    />
+    <div id="paper-sbert" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+      <p className="text-xs font-bold text-primary">논문 읽기 · Sentence-BERT</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">Reimers와 Gurevych는 BERT pair scoring의 조합 비용을 문제로 두고 siamese·triplet network로 독립 sentence embedding을 학습했습니다. 논문의 STS·transfer 결과와 10,000문장 비교 예시는 당시 BERT/SBERT·hardware·task 조건의 측정이며 모든 현대 ANN system의 고정 speedup 비율은 아닙니다.</p>
+      <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://aclanthology.org/D19-1410/" target="_blank" rel="noreferrer">Architecture·objective·평가 범위 보기</a>
+    </div>
+  </section>;
 }

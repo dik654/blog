@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { AnnotationBox } from '@/components/viz/boxes';
 import { C } from './PipelineVizData';
 
 /* Step 3: Senders — TX에서 서명 복구하는 장면 */
@@ -109,15 +110,10 @@ export function StepMerkle() {
       </motion.g>
     ))}
     {/* 재해시 표시 */}
-    <motion.text x={380} y={30} fontSize={11} fill={C.merkle}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-      변경된 경로만
-    </motion.text>
-    <motion.text x={380} y={44} fontSize={11} fill={C.merkle}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-      재해시 ↻
-    </motion.text>
-    <text x={210} y={118} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+      <AnnotationBox x={330} y={10} w={86} h={58} label="변경된 경로만 재해시 ↻" color={C.merkle} eyebrow="재계산 범위" />
+    </motion.g>
+    <text x={210} y={112} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
       PrefixSet 추적 — 전체 트라이 순회 없이 O(변경 수)
     </text>
   </g>);

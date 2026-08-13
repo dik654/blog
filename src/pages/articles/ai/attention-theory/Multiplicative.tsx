@@ -1,92 +1,85 @@
-import { CitationBlock } from '@/components/ui/citation';
-import M from '@/components/ui/math';
-import DotProductViz from './viz/DotProductViz';
-import MultiplicativeDetailViz from './viz/MultiplicativeDetailViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import AttentionScoreChoiceViz from "./viz/AttentionScoreChoiceViz";
 
 export default function Multiplicative() {
   return (
     <section id="multiplicative" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Luong & Scaled Dot-Product Attention</h2>
-      <div className="not-prose mb-8"><DotProductViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Dot-product attention: score를 행렬 곱으로 계산하기
+      </h2>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          Luong 계열 attention은 별도의 MLP 대신 decoder state와 encoder
+          state의 내적으로 score를 계산한다. 여러 query와 key를 행렬로 묶으면
+          모든 위치의 score를 한 번의 matrix multiplication으로 구할 수 있어
+          현대 accelerator에 잘 맞는다.
+        </p>
+      </div>
+
+      <AttentionScoreChoiceViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>세 score 함수의 차이</h3>
+      </div>
+
+      <ExplainedFormula
+        question="query와 key의 compatibility를 어느 정도의 parameter와 비선형성으로 계산할까?"
+        idea={<>dot은 현재 representation의 좌표계를 그대로 비교하고, bilinear는 learned metric W를 사이에 두며, additive는 공통 hidden space에서 nonlinear scorer를 학습합니다.</>}
+        formula={String.raw`\begin{aligned}e_{\rm dot}&=q^\top k\\e_{\rm bilinear}&=q^\top Wk\\z&=W_qq+W_kk\\e_{\rm additive}&=v_a^\top\tanh(z)\end{aligned}`}
+        terms={[
+          { symbol: "q^\\top k", name: "dot score", description: "추가 parameter 없이 같은 차원의 두 vector를 비교합니다." },
+          { symbol: "W", name: "bilinear metric", description: "key를 query와 비교하기 좋은 좌표계로 학습해 변환합니다." },
+          { symbol: "W_q,W_k,v_a", name: "additive scorer", description: "projection·nonlinearity·readout으로 구성된 작은 neural network입니다." },
+        ]}
+        assumptions={["세 식 뒤의 softmax와 value aggregation contract는 동일하다고 비교합니다."]}
+        interpretation="score family를 바꾸는 것은 attention 전체를 바꾸는 것이 아닙니다. 비교할 때 parameter 수뿐 아니라 batching·matmul 효율과 input 차원 조건을 함께 봅니다."
+      />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Luong Attention(2015) — MLP 대신 <strong>내적(dot-product, 두 벡터를 곱해 합산하는 연산)</strong>으로 정렬 점수 계산<br />
-          행렬 곱 한 번으로 배치 처리 가능 → Bahdanau 대비 연산 효율 대폭 향상<br />
-          Transformer(2017) — 여기에 <strong>√d_k 스케일링</strong> 추가, 차원이 커져도 softmax 안정 동작
+          단순 dot product는 추가 parameter가 없지만 query와 key의 마지막 차원이
+          같아야 한다. General 또는 bilinear score는 학습 가능한 행렬로 한쪽을
+          변환하고, additive score는 비선형 network를 통과시킨다. 어느 방식이
+          항상 우월하다기보다 모델 구조와 계산 경로에 따라 선택이 달라진다.
         </p>
 
-        <CitationBlock source="Luong et al., 2015 — Effective Approaches to Attention-based NMT"
-          citeKey={3} type="paper" href="https://arxiv.org/abs/1508.04025">
-          <p className="italic">"We propose and compare various attention-based models:
-          global attention which always attends to all source positions,
-          and local attention that only looks at a subset."</p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Score 함수 3가지</h3>
-
-        <p className="font-semibold text-sm text-sky-500 mb-1">1. Dot-Product</p>
-        <M display>{'\\text{score}(s_t, h_s) = \\underbrace{s_t^\\top}_{\\text{디코더 상태}} \\cdot \\underbrace{h_s}_{\\text{인코더 상태}}'}</M>
-
-        <p className="font-semibold text-sm text-emerald-500 mb-1">2. General (Bilinear)</p>
-        <M display>{'\\text{score}(s_t, h_s) = s_t^\\top \\cdot \\underbrace{W_a}_{\\text{학습 가중치 행렬}} \\cdot h_s'}</M>
-
-        <p className="font-semibold text-sm text-amber-500 mb-1">3. Scaled Dot-Product (Transformer)</p>
-        <M display>{'\\text{Attention}(Q,K,V) = \\underbrace{\\text{softmax}\\!\\left(\\frac{\\overbrace{QK^\\top}^{\\text{유사도 행렬}}}{\\underbrace{\\sqrt{d_k}}_{\\text{스케일링}}}\\right)}_{\\text{주의 가중치}} \\cdot V'}</M>
-
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-4 text-sm">
-          <div className="rounded-lg border border-border bg-card px-3 py-2">
-            <span className="font-bold text-xs text-sky-500">Dot-Product</span>
-            <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              추가 파라미터 없음 — 가장 빠름.<br />
-              인코더·디코더 차원이 같아야 사용 가능.<br />
-              소규모 모델에서 빠른 프로토타이핑에 적합.
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card px-3 py-2">
-            <span className="font-bold text-xs text-emerald-500">General (Bilinear)</span>
-            <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              W_a 행렬이 차원 간 관계를 학습.<br />
-              인코더·디코더 차원이 달라도 동작.<br />
-              파라미터 d×d개 추가 — 유연하지만 비용 증가.
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card px-3 py-2">
-            <span className="font-bold text-xs text-amber-500">Scaled Dot-Product</span>
-            <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              √d_k 스케일링으로 softmax 포화 방지.<br />
-              행렬 곱 한 번 → GPU 병렬화 최적.<br />
-              Transformer 이후 사실상 표준.
-            </div>
-          </div>
-        </div>
+        <h3>왜 √dₖ로 나누는가</h3>
+        <p>
+          Query와 key의 성분이 평균 0, 분산 1이며 서로 독립이라는 단순한 가정
+          아래에서 내적의 분산은 차원 <code>dₖ</code>에 비례한다. 차원이 커질수록
+          score의 크기도 커져 softmax가 지나치게 뾰족해질 수 있으므로,
+          Transformer의 scaled dot-product attention은 내적을
+          <code>√dₖ</code>로 나눈다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">√d_k 스케일링이 필요한 이유</h3>
-        <p>
-          Q와 K의 각 원소가 독립 N(0,1)을 따를 때, dot product Q·K의 분산은 d_k에 비례한다.
-          d_k=64이면 내적 값이 ±8 범위로 퍼져, softmax가 one-hot에 수렴하고 gradient가 거의 0이 된다.
-          √d_k로 나누면 분산이 1로 정규화되어 softmax가 안정적으로 동작한다.
-        </p>
-        <M display>{'\\text{Var}[Q \\cdot K] = d_k \\quad \\Rightarrow \\quad \\text{Var}\\!\\left[\\frac{Q \\cdot K}{\\sqrt{d_k}}\\right] = \\frac{d_k}{d_k} = 1'}</M>
+      <ExplainedFormula
+        question="key dimension이 커질 때 dot-product logits가 softmax를 지나치게 포화시키지 않게 하려면?"
+        idea={<>초기화 근처에서 q와 k 성분이 독립이고 분산이 1이라고 보면, dk개 곱의 합인 qᵀk의 분산은 dk입니다. √dk로 나누면 logit variance의 차원 의존성을 줄일 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}\operatorname{Var}(q^\top k)&=d_k\\S&=\frac{QK^\top+M}{\sqrt{d_k}}\\\operatorname{Attention}(Q,K,V)&=\operatorname{softmax}(S)V\end{aligned}`}
+        terms={[
+          { symbol: "d_k", name: "key/query head dimension", description: "multi-head attention에서 한 head의 query와 key 마지막 차원입니다." },
+          { symbol: "QK^\\top", name: "score matrix", description: "각 query와 모든 key의 pairwise dot product이며 shape은 nq×nk입니다." },
+          { symbol: "M", name: "attention mask", description: "허용 위치는 0, 차단 위치는 −∞에 가까운 값을 더합니다." },
+          { symbol: "V", name: "value matrix", description: "softmax row별 weight로 읽어올 content입니다." },
+        ]}
+        assumptions={["Var(qj)=Var(kj)=1이고 성분 간 correlation을 무시하는 초기화 직관입니다.", "학습된 activation에서 정확히 분산 1을 보장한다는 뜻은 아닙니다."]}
+        interpretation="√dk scaling은 softmax 입력의 typical scale을 안정시키는 설계입니다. Attention output의 전체 variance나 training stability를 단독으로 보장하지는 않습니다."
+      />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">세 가지 score 함수 비교</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Dot-product는 파라미터 없이 가장 빠르지만 같은 차원 필수.
-          General(Bilinear)은 학습 행렬 W로 유사도 함수 자체를 학습한다.
-          Luong은 Global/Local attention 구분과 input-feeding 접근법도 제안하여 Transformer 표준의 토대를 놓았다.
+          이 스케일링은 모든 상황에서 분산을 정확히 1로 “보장”하는 규칙이 아니라,
+          초기화 단계의 분포를 바탕으로 softmax 입력 크기를 안정시키는 설계다.
         </p>
-        <M display>{'\\underbrace{s^\\top h}_{\\text{Dot}} \\quad \\underbrace{\\frac{s^\\top h}{\\sqrt{d_k}}}_{\\text{Scaled}} \\quad \\underbrace{s^\\top W h}_{\\text{General}} \\quad \\underbrace{v^\\top \\tanh(W[s;h])}_{\\text{Concat}}'}</M>
       </div>
 
-      <div className="not-prose my-8"><MultiplicativeDetailViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: <strong>√d_k 스케일링</strong>은 dot product의 분산을 1로 정규화 — softmax 포화 방지.<br />
-          요약 2: Dot-product 방식은 <strong>행렬 연산 한 번</strong>으로 완결 — Transformer의 핵심 효율성.<br />
-          요약 3: Luong의 <strong>general·concat 변형</strong>이 Transformer의 multi-head로 확장됨.
-        </p>
+      <div id="paper-luong" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Score와 attention 범위 비교</p>
+        <p className="mt-2 text-sm font-semibold">Effective Approaches to Attention-based Neural Machine Translation</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Global·local attention과 dot·general·concat score를 같은 neural machine translation 맥락에서 비교했습니다. 이 결과는 해당 architecture와 translation setting의 경험적 비교이며, dot product가 모든 hardware·dimension·task에서 additive scorer보다 우월하다는 보편 순위는 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1508.04025" target="_blank" rel="noreferrer">원 논문과 score 함수 표 보기</a>
       </div>
     </section>
   );

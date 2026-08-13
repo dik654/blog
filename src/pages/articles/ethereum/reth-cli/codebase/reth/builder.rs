@@ -3,7 +3,7 @@
 /// 노드 빌더 — 제네릭으로 DB, ChainSpec 타입을 추적
 pub struct NodeBuilder<DB, ChainSpec> {
     config: NodeConfig<ChainSpec>,   // CLI 파싱 결과
-    database: DB,                     // MDBX 인스턴스
+    database: DB,                     // 선택된 storage handle
     rocksdb_provider: Option<RocksDBProvider>,
 }
 

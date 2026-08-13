@@ -1,210 +1,141 @@
-import PythonSubsystemsViz from './viz/PythonSubsystemsViz';
-import ParityFlowViz from './viz/ParityFlowViz';
+import { CitationBlock } from "@/components/ui/citation";
+import ParityFlowViz from "./viz/ParityFlowViz";
+import PythonSubsystemsViz from "./viz/PythonSubsystemsViz";
+
+const COMPARISON_SURFACES = [
+  ["Request", "같은 login fixture, workspace snapshot, model/tool catalog와 permission mode"],
+  ["Trace", "정규화한 provider event, tool name·input, permission outcome와 call order"],
+  ["State", "turn 전후 session message와 exit state; 내부 class layout은 제외"],
+  ["Effect", "workspace diff, test exit code·stdout와 실패 시 side effect 부재"],
+  ["Reply", "근거 artifact와 성공·실패 의미; 문장 byte 일치는 보통 제외"],
+] as const;
 
 export default function PythonLayer() {
   return (
     <section id="python-layer" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Python 레이어 — 패리티 추적 엔진</h2>
-      <ParityFlowViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        Python reference는 비교용 oracle 후보이지 실행 경로의 자동 정본이 아닙니다
+      </h2>
 
-        {/* ── 왜 Python을 유지하나 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Rust 포트 이후에도 Python을 유지하는 이유</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Rust 포트 완성 후에도 <code>src/</code>의 Python 코드(37 파일, ~1,700 LOC)는 의도적으로 유지<br />
-          역할: <strong>Rust 구현의 동작 명세(behavioral spec)</strong> — Rust와 Python이 같은 입력에 같은 출력을 내는지 교차 검증<br />
-          Python이 가벼운 이유: 실제 LLM 호출 없이 상태 머신과 디스패치 로직만 시뮬레이션
+          Oracle은 test에서 “이 입력의 기대 결과는 이것이다”라고 판정하는 기준을
+          뜻합니다. Claw Code root의 <code>src/</code>에는 Python companion/reference
+          code와 audit helper가 남아 있지만, repository는 현재 구현 정본을
+          <code>rust/</code>라고 밝힙니다. 따라서 Python output을 보았다는
+          이유만으로 Rust가 무조건 따라야 하는 명세가 되지는 않습니다.
         </p>
         <p>
-          <strong>Python = 읽기 쉬운 명세, Rust = 배포 가능한 구현</strong><br />
-          언어 설계 철학이 반대 — Python은 명세를 빠르게 표현, Rust는 타입 안전성과 성능 보장<br />
-          같은 동작을 두 언어로 유지하면 명세와 구현의 불일치를 자동 탐지
-        </p>
-
-        {/* ── PortRuntime 구조 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">PortRuntime — 중앙 디스패처</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-blue-50 dark:bg-blue-950/30 px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">PortRuntime</span>
-            <span className="text-xs text-muted-foreground ml-2">src/port_runtime.py</span>
-          </div>
-          <div className="p-4 space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-              <div className="border border-border rounded p-2 bg-muted/20">
-                <div className="font-medium mb-1">registry</div>
-                <code className="bg-muted px-1 py-0.5 rounded">dict[str, ToolHandler]</code>
-                <div className="text-muted-foreground mt-0.5">도구 레지스트리</div>
-              </div>
-              <div className="border border-border rounded p-2 bg-muted/20">
-                <div className="font-medium mb-1">session</div>
-                <code className="bg-muted px-1 py-0.5 rounded">Session</code>
-                <div className="text-muted-foreground mt-0.5">현재 세션</div>
-              </div>
-              <div className="border border-border rounded p-2 bg-muted/20">
-                <div className="font-medium mb-1">enforcer</div>
-                <code className="bg-muted px-1 py-0.5 rounded">PermissionEnforcer</code>
-                <div className="text-muted-foreground mt-0.5">권한 강제기</div>
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">route_tool_call(name, input) → ToolResult</div>
-              <div className="space-y-1.5 text-sm">
-                <div className="flex items-start gap-2">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">1</span>
-                  <span>권한 게이트 — <code className="text-xs bg-muted px-1 py-0.5 rounded">enforcer.check()</code> 거부 시 즉시 에러</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">2</span>
-                  <span>도구 조회 — <code className="text-xs bg-muted px-1 py-0.5 rounded">registry.get(name)</code> 미등록 시 unknown tool 에러</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-medium">3</span>
-                  <span>실행 & 로깅 — <code className="text-xs bg-muted px-1 py-0.5 rounded">handler.execute(input)</code> + 세션 로그 기록</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <code>PortRuntime</code>은 Rust의 <code>tool_dispatch.rs</code>와 1:1 대응<br />
-          <strong>route_tool_call()</strong> 3단계 흐름:<br />
-          1. 권한 체크 → 거부 시 즉시 에러<br />
-          2. 레지스트리 조회 → 미등록 시 unknown tool 에러<br />
-          3. 실행 & 세션 로그 기록
-        </p>
-        <p>
-          Rust 버전과의 차이: <strong>I/O 격리</strong> — Python은 실제 파일 시스템을 건드리지 않고
-          가짜 파일 시스템(<code>MockFs</code>)으로 시뮬레이션<br />
-          덕분에 CI에서 격리된 환경 없이도 전체 에이전트 루프를 재현 가능
-        </p>
-
-        {/* ── QueryEnginePort ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">QueryEnginePort — 서브시스템 쿼리</h3>
-        <div className="not-prose my-4 border border-border rounded-lg overflow-hidden">
-          <div className="bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2 border-b border-border">
-            <span className="text-sm font-semibold">QueryEnginePort</span>
-            <span className="text-xs text-muted-foreground ml-2">src/query_engine.py — 서브시스템별 상태 조회 & 시뮬레이션</span>
-          </div>
-          <div className="p-4 space-y-3">
-            <div className="border border-border rounded p-2 bg-muted/20 text-xs">
-              <span className="font-medium">subsystems</span>: <code className="bg-muted px-1 py-0.5 rounded">dict[str, Subsystem]</code>
-              <span className="text-muted-foreground ml-1">— 20개 서브시스템 인벤토리</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="border border-border rounded p-3 bg-muted/20">
-                <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">query(path) → Any</div>
-                <div className="space-y-1 text-xs text-muted-foreground">
-                  <div><code className="bg-muted px-1 py-0.5 rounded">"conversation.turn_count"</code> → 대화 턴 수</div>
-                  <div><code className="bg-muted px-1 py-0.5 rounded">"mcp.server_count"</code> → 연결된 MCP 서버 수</div>
-                  <div><code className="bg-muted px-1 py-0.5 rounded">"session.token_usage"</code> → 토큰 사용량</div>
-                </div>
-                <p className="text-xs mt-2">점 구분 경로를 namespace + key로 분리하여 서브시스템 조회</p>
-              </div>
-              <div className="border border-border rounded p-3 bg-muted/20">
-                <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">mutate(path, value) → None</div>
-                <p className="text-xs">서브시스템 상태를 변경 — 동일한 점 구분 경로 규칙 사용</p>
-                <p className="text-xs text-muted-foreground mt-1">Rust에서는 <code className="bg-muted px-1 py-0.5 rounded">SessionState</code> 구조체 필드로 매핑</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          20개 서브시스템 인벤토리가 원본 TypeScript 아카이브의 모듈 구조를 미러링<br />
-          <strong>네이밍 컨벤션</strong>: <code>&lt;namespace&gt;.&lt;key&gt;</code> 점 구분 경로<br />
-          Rust에서는 이 경로가 <code>SessionState</code> 구조체의 필드로 매핑 — 예: <code>session.token_usage</code> → <code>session.token_usage: usize</code>
+          Reference가 유용한 이유는 같은 login bug fixture를 더 독립적인 경로로
+          실행해 Rust port가 놓친 behavior를 찾을 수 있기 때문입니다. 그러나 두
+          구현이 같은 public behavior를 추정해 만들었다면 같은 오해를 공유할 수도
+          있습니다. 어떤 field를 비교하고 어느 쪽을 oracle로 받아들일지는 test
+          작성자가 public contract와 product intent를 바탕으로 먼저 정해야 합니다.
         </p>
       </div>
-      <PythonSubsystemsViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+
+      <div className="not-prose my-8 min-w-0">
+        <ParityFlowViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>내부 class가 아니라 관찰 가능한 contract를 비교합니다</h3>
         <p>
-          각 서브시스템은 독립 Python 모듈로 구현 — <code>src/subsystems/&lt;name&gt;.py</code><br />
-          네임스페이스별로 단일 책임: 예를 들어 <code>conversation</code>은 대화 턴만, <code>permissions</code>는 정책 판정만
+          Python의 <code>QueryEngine</code> class와 Rust의
+          <code>ConversationRuntime</code> type을 1:1로 맞추면 언어별 구현 선택까지
+          고정됩니다. 대신 사용자가 관찰하거나 다음 component가 소비하는 request,
+          event, permission decision, state transition, file effect와 result를
+          비교합니다. 자료구조가 달라도 같은 의미와 side effect를 만들면 contract
+          수준에서는 parity일 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 min-w-0 space-y-3">
+        {COMPARISON_SURFACES.map(([surface, contract]) => (
+          <article key={surface} className="grid min-w-0 gap-3 rounded-lg border border-border/70 bg-background p-4 sm:grid-cols-[7rem_minmax(0,1fr)]">
+            <h3 className="break-words text-sm font-semibold text-primary">{surface}</h3>
+            <p className="min-w-0 break-words text-xs leading-5 text-muted-foreground">{contract}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>로그인 실패 사례를 paired fixture로 만듭니다</h3>
+        <ol>
+          <li>동일한 repository snapshot에 실패하는 login test와 수정 전 file hash를 준비합니다.</li>
+          <li>같은 user request, tool catalog와 permission mode를 Python과 Rust 경로에 입력합니다.</li>
+          <li>시간, UUID, temp path처럼 의미가 없는 차이는 canonicalization rule로 정규화합니다.</li>
+          <li>tool call 순서, deny·allow 판정, 최종 diff와 test receipt를 비교합니다.</li>
+          <li>mismatch가 나면 한쪽 expected output을 바로 덮지 않고 contract owner가 원인을 분류합니다.</li>
+        </ol>
+        <p>
+          Canonicalization은 다른 값을 억지로 같게 만드는 작업이 아닙니다. 매번
+          달라지는 UUID와 timestamp는 각각 <code>$RUN_ID</code>와
+          <code>$TIME</code>으로 바꾸고, 임시 workspace의 절대 경로는
+          <code>$WORKSPACE</code>로 치환할 수 있습니다. Windows의 역슬래시와
+          Unix의 슬래시는 같은 논리 경로로 통일하고, 의미상 순서가 없는 map은
+          key를 정렬한 뒤 비교합니다. 그러나 허용된 경로와 workspace 밖 경로를
+          모두 같은 문자열로 지우거나 tool call 순서를 정렬하면 보안·제어 흐름의
+          차이가 사라집니다. Normalizer 자체도 version과 test가 필요한 verifier
+          component입니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <PythonSubsystemsViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Mock I/O가 보여 주는 것과 보이지 않는 것을 나눕니다</h3>
+        <p>
+          In-memory file map이나 scripted shell을 쓰면 login file의 초기 내용,
+          edit 결과와 test exit code를 매번 똑같이 만들 수 있습니다. 이 방식은
+          denied edit가 실제 mutation을 만들지 않는지, test failure가 완료 상태로
+          바뀌지 않는지 같은 control-flow invariant를 빠르게 검사합니다.
+        </p>
+        <p>
+          반면 symlink resolution, filesystem permission, process signal, locale,
+          shell quoting과 network timeout은 실제 운영체제에서 달라집니다. 이런
+          위험은 temp repository integration test와 sandboxed end-to-end test로
+          넘겨야 합니다. “Python reference와 같았다”는 결과만으로 host security나
+          실제 provider compatibility를 인증할 수 없습니다.
         </p>
 
-        {/* ── 시뮬레이션 레벨 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">시뮬레이션 레벨 3단계</h3>
-        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="border border-border rounded-lg p-4 bg-blue-50/50 dark:bg-blue-950/20">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs flex items-center justify-center font-bold">1</span>
-              <span className="text-sm font-semibold">상태 머신 추적</span>
-            </div>
-            <div className="space-y-1 text-xs">
-              <p>각 서브시스템의 상태 전이 기록</p>
-              <p className="text-muted-foreground">예: WorkerBoot Idle → Launching → Ready → Working</p>
-            </div>
+        <h3>Mismatch는 다섯 갈래로 분류합니다</h3>
+        <ul>
+          <li><strong>Fixture drift:</strong> 두 실행의 input·workspace·tool catalog가 처음부터 달랐습니다.</li>
+          <li><strong>Normalizer bug:</strong> 의미 있는 차이를 지우거나 비결정적 field를 남겼습니다.</li>
+          <li><strong>Rust regression:</strong> 합의한 contract와 Rust observation이 다릅니다.</li>
+          <li><strong>Reference defect:</strong> Python이 오래됐거나 public contract를 잘못 모델링했습니다.</li>
+          <li><strong>Intentional change:</strong> contract 자체를 바꾸기로 했으며 migration과 새 evidence가 필요합니다.</li>
+        </ul>
+        <p>
+          어느 경우든 expected snapshot만 새로 저장하고 끝내면 안 됩니다. 선택한
+          근거, 두 implementation SHA, fixture·normalizer version과 review 결과를
+          parity receipt에 남겨야 다음 차이가 regression인지 다시 판단할 수
+          있습니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-claw-python-reference"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">근거 읽기 · Python companion/reference snapshot</p>
+        <CitationBlock
+          source="ultraworkers/claw-code — pinned src/ snapshot"
+          citeKey={4}
+          type="code"
+          href="https://github.com/ultraworkers/claw-code/tree/b71afddae100ced324457337925a694686b8fef2/src"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> Rust port와 Python tree가 함께 있으면 어느 쪽이 project 구현 정본이고 어느 동작을 비교할 수 있는지 모호해집니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Pinned source tree는 Python query/runtime/permission/tool 관련 reference surface를 실제 code로 확인하고 Rust와 독립적으로 관찰 가능한 contract를 뽑게 합니다.</p>
+            <p><strong>전제·조건:</strong> 지정한 commit의 companion/reference·audit workspace이며 각 file의 존재가 정확성이나 현재 실행 경로에서의 사용을 뜻하지 않습니다.</p>
+            <p><strong>근거 범위:</strong> 이 절에서 Python을 비교 implementation으로 다룰 수 있는 source surface와 snapshot 경계를 뒷받침합니다.</p>
+            <p><strong>비주장:</strong> Python output이 자동 oracle이거나 원 Claude Code source이고, Rust와 내부 class·field까지 같아야 하며, mock parity가 semantic quality를 증명한다는 뜻은 아닙니다.</p>
           </div>
-          <div className="border border-border rounded-lg p-4 bg-emerald-50/50 dark:bg-emerald-950/20">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs flex items-center justify-center font-bold">2</span>
-              <span className="text-sm font-semibold">도구 호출 & 결과</span>
-            </div>
-            <div className="space-y-1 text-xs">
-              <p><code className="bg-muted px-1 py-0.5 rounded">tool_use</code> → <code className="bg-muted px-1 py-0.5 rounded">tool_result</code> 왕복 시뮬레이션</p>
-              <p className="text-muted-foreground">MockFs + MockShell로 파일/명령 결과 생성</p>
-            </div>
-          </div>
-          <div className="border border-border rounded-lg p-4 bg-violet-50/50 dark:bg-violet-950/20">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-xs flex items-center justify-center font-bold">3</span>
-              <span className="text-sm font-semibold">LLM 응답 시나리오</span>
-            </div>
-            <div className="space-y-1 text-xs">
-              <p>mock-anthropic-service 12개 시나리오와 동일 응답 재현</p>
-              <p className="text-muted-foreground">Python ↔ Rust 응답 바이트 단위 비교</p>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>Level 1</strong>: 상태 머신만 추적 — 가장 빠른 단위 테스트에 사용<br />
-          <strong>Level 2</strong>: 도구 호출 시뮬레이션 — 파일 I/O 없이 MockFs로 재현<br />
-          <strong>Level 3</strong>: 전체 대화 루프 — Rust와의 크로스 체크 목적
-        </p>
-        <p>
-          각 레벨은 독립적으로 실행 가능 — 단위 테스트는 Level 1, 통합 테스트는 Level 2,
-          Rust 패리티 검증은 Level 3
-        </p>
-
-        {/* ── 사용 사례 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">Python 엔진의 실제 사용 사례</h3>
-        <p>
-          <strong>1. 버그 재현</strong> — Rust에서 예상 외 동작 발생 시, Python으로 동일 시나리오를 재현하여
-          스펙 위반인지 확인<br />
-          Python은 디버거 친화적 — <code>pdb</code> breakpoint로 상태 추적이 Rust GDB보다 빠름
-        </p>
-        <p>
-          <strong>2. 명세 변경 제안</strong> — 새로운 도구·기능 추가 시 Python에 먼저 구현하여
-          동작을 정의, 이후 Rust에 포팅<br />
-          "동작이 올바른가?" 질문을 Python에서 먼저 답한 뒤 Rust에서 "구현이 효율적인가?"만 고민
-        </p>
-        <p>
-          <strong>3. CI 스모크 테스트</strong> — PR마다 Python PortRuntime과 Rust runtime의 출력을
-          12개 시나리오로 비교<br />
-          불일치 발생 시 빌드 실패 — 자동으로 회귀 탐지
-        </p>
-
-        {/* ── 인사이트 ── */}
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 이중 언어 아키텍처의 비용 vs 편익</p>
-          <p>
-            <strong>비용</strong>:<br />
-            - 두 언어로 같은 로직 유지 — 변경 시 동기화 부담<br />
-            - Python 엔진이 커질수록 유지보수 비용 증가<br />
-            - 언어 간 타입 시스템 차이(Option, Result 등) 변환 오버헤드
-          </p>
-          <p className="mt-2">
-            <strong>편익</strong>:<br />
-            - Rust 구현 실수를 Python 스펙과 교차 검증으로 자동 탐지<br />
-            - 신규 기여자는 Python만 읽어도 아키텍처 이해 가능<br />
-            - API 키 없는 CI 환경에서도 E2E 테스트 가능
-          </p>
-          <p className="mt-2">
-            claw-code는 이 트레이드오프를 받아들였다 — <strong>"명세-구현 분리"가 유출 소스 클린룸 재현이라는
-            특수 요구사항에 부합</strong>하기 때문<br />
-            원본 Claude Code 동작을 Python으로 정의하고, Rust로 효율적으로 구현하는 이중 구조
-          </p>
-        </div>
-
+        </CitationBlock>
       </div>
     </section>
   );

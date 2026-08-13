@@ -1,71 +1,59 @@
-import LagViz from './viz/LagViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import LagViz from "./viz/LagViz";
 
 export default function Lag() {
   return (
     <section id="lag" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">래그 피처 & 차분</h2>
+      <h2 className="mb-6 text-2xl font-bold">Lag를 만들기 전에 “k step 전”과 “Δ시간 전”을 구분합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>래그 피처(Lag Feature)</strong> — 이전 시점의 관측값을 현재 행의 입력 변수로 사용하는 것<br />
-          가장 단순하면서도 가장 강력한 시계열 피처. 대부분의 시계열에서 "어제 값"이 가장 좋은 예측 인자
-        </p>
-
-        <h3>래그 피처의 원리</h3>
-        <p>
-          y(t-1): 한 시점 전의 값 — "어제 판매량은 오늘 판매량의 가장 좋은 힌트"<br />
-          y(t-2): 두 시점 전의 값 — 더 먼 과거까지 참조할수록 다양한 패턴 포착 가능<br />
-          pandas에서는 <code>df['lag_1'] = df['y'].shift(1)</code>로 간단히 생성
+          매일 정확히 한 번 측정된 series에서는 한 row 전과 하루 전이 같습니다.
+          그러나 거래처럼 event 간격이 불규칙하면 이전 7개 거래와 최근 7일은
+          전혀 다른 질문입니다. Observation lag는 정렬된 같은 entity의 k번째
+          이전 값을, duration lag는 cutoff−Δ 부근에 존재하거나 as-of join으로
+          확정된 값을 가져옵니다.
         </p>
         <p>
-          <strong>주의점</strong> — shift 결과 첫 k행은 NaN. dropna() 또는 fillna()로 처리 필요<br />
-          래그 수가 많으면 차원이 늘어나므로 상관분석(ACF)으로 유의미한 래그만 선택
-        </p>
-
-        <h3>차분 (Differencing)</h3>
-        <p>
-          <strong>차분(diff)</strong> = y(t) - y(t-1) — 값 자체가 아닌 <strong>변화량</strong>을 피처로 사용<br />
-          추세(trend)가 있는 비정상 시계열에서 특히 유용 — 차분하면 추세가 제거되어 정상 시계열에 근접<br />
-          pandas: <code>df['diff_1'] = df['y'].diff(1)</code>
-        </p>
-        <p>
-          2차 차분(diff of diff)도 가능 — 변화량의 변화량 = 가속도에 해당<br />
-          ARIMA 모델의 I(Integrated)가 바로 이 차분 횟수
+          Target 자체가 늦게 확정되는 문제에서는 event time만 빠르다고 사용할 수
+          없습니다. 예를 들어 7월 매출이 8월 5일에 정산된다면 8월 1일 cutoff의
+          lag-1 “7월 매출”은 아직 모르는 값입니다. Available time 조건을 통과한
+          record 중 무엇을 lag로 삼을지 tie·duplicate·late-arrival 규칙까지 정해야
+          재현할 수 있습니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <LagViz />
-      </div>
+
+      <ExplainedFormula
+        question="같은 entity의 k번째 이전 관측값을 현재 forecasting row에 어떻게 붙일까?"
+        idea={<>Entity별로 유효한 record를 시간순으로 정렬한 뒤 현재 index n보다 k칸 앞의 값을 선택합니다. Difference는 두 확정된 lag level을 빼 level보다 변화를 강조합니다.</>}
+        formula={String.raw`\operatorname{lag}_k(i,n)=y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}`}
+        terms={[
+          { symbol: "i", name: "entity", description: "Lag가 다른 매장·사용자·sensor history로 넘어가지 않게 하는 group key입니다." },
+          { symbol: "n", name: "ordered observation index", description: "Event/available-time 정책으로 정렬하고 중복을 처리한 뒤의 entity 내부 순서입니다." },
+          { symbol: "k", name: "observation lag", description: "시간 길이가 아니라 몇 개의 관측을 뒤로 갈지 정하는 양의 정수입니다." },
+          { symbol: "Δ_k y", name: "k-step difference", description: "현재 level과 k-step 전 level의 차이이며 y와 같은 단위를 가집니다." },
+        ]}
+        assumptions={["Series가 entity 내부에서 안정적으로 정렬되고 timestamp tie 규칙이 있습니다.", "선택된 두 값 모두 prediction cutoff에 available합니다.", "Irregular events에서 k steps를 k hours/days로 해석하지 않습니다."]}
+        interpretation="Lag는 model이 기억을 갖게 하는 것이 아니라 과거 값을 현재 row의 별도 column으로 복사하는 feature map입니다."
+      />
+
+      <div className="not-prose my-8"><LagViz /></div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>자기상관(ACF)으로 래그 선택</h3>
+        <h3>History 부족과 lag 후보 선택도 정보입니다</h3>
         <p>
-          <strong>ACF(AutoCorrelation Function)</strong> — 시차 k에서의 자기상관계수: corr(y(t), y(t-k))<br />
-          ACF가 높은 시차 → 예측력이 높은 래그 피처<br />
-          PACF(Partial ACF) — 중간 시차의 영향을 제거한 순수 상관. AR 모델의 차수 결정에 사용
+          첫 k개 row에는 lag-k가 없습니다. 0이 실제 관측값인 domain이라면 이를
+          임의로 0으로 채우지 않고 missing value와 <code>history_length</code> 또는
+          <code>lag_available</code> indicator를 함께 둡니다. Duration lag에서 정확한
+          timestamp가 없을 때 forward fill을 허용할지, 최대 허용 stale time은
+          얼마인지도 artifact에 기록합니다.
         </p>
-
-        <h3>실전 가이드라인</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            { title: '일별 데이터', desc: 'lag-1, lag-7(주간 주기), lag-14, lag-28 등 주기 배수 래그' },
-            { title: '주별 데이터', desc: 'lag-1, lag-4(월간), lag-13(분기), lag-52(연간)' },
-            { title: '차분 vs 래그', desc: '래그 = 절대 수준 정보, 차분 = 변화 방향 정보. 둘 다 포함이 유리' },
-            { title: '래그 수 제한', desc: 'ACF 기준 유의미한 래그만 선택. 과도한 래그는 과적합 유발' },
-          ].map((item) => (
-            <div key={item.title} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-semibold text-foreground text-xs">{item.title}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.desc}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">래그 피처와 미래 누출</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            래그 피처 자체는 미래 누출이 아니다 — 과거 값만 참조하기 때문이다.
-            단, <strong>target encoding을 래그와 함께 사용할 때</strong> 전체 데이터로 인코딩하면 누출이 발생한다.
-            항상 학습/검증/테스트 분할 후에 피처를 계산할 것.
-          </p>
-        </div>
+        <p>
+          ACF는 같은 series의 값이 lag k만큼 떨어졌을 때 선형적으로 함께 움직이는
+          정도를 보여 주므로 후보를 좁히는 진단입니다. Trend·seasonality와 split
+          경계를 그대로 둔 높은 ACF가 새로운 기간의 예측력을 보장하지는 않습니다.
+          업무 주기에서 제안한 lag set을 horizon별 rolling-origin validation으로
+          비교합니다.
+        </p>
       </div>
     </section>
   );

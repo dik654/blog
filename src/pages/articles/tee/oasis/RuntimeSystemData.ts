@@ -21,7 +21,19 @@ type Component struct {
 }`;
 
 export const bundleAnnotations = [
-  { lines: [1, 7] as [number, number], color: 'sky' as const, note: '.orc 번들 파일 구조' },
-  { lines: [9, 14] as [number, number], color: 'emerald' as const, note: '매니페스트 타입 정의' },
-  { lines: [16, 21] as [number, number], color: 'amber' as const, note: '컴포넌트 SGX/ELF 분기' },
+  {
+    lines: [1, 7] as [number, number],
+    color: "sky" as const,
+    note: ".orc 번들 파일 구조",
+  },
+  {
+    lines: [9, 14] as [number, number],
+    color: "emerald" as const,
+    note: "매니페스트 타입 정의",
+  },
+  {
+    lines: [16, 21] as [number, number],
+    color: "amber" as const,
+    note: "컴포넌트 SGX/ELF 분기",
+  },
 ];

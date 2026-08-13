@@ -1,6 +1,6 @@
-import Overview from './isms-auth-management/Overview';
-import PasswordPolicy from './isms-auth-management/PasswordPolicy';
-import AccountLifecycle from './isms-auth-management/AccountLifecycle';
+import Overview from "./isms-auth-management/Overview";
+import PasswordPolicy from "./isms-auth-management/PasswordPolicy";
+import AccountLifecycle from "./isms-auth-management/AccountLifecycle";
 
 export default function IsmsAuthManagement() {
   return (

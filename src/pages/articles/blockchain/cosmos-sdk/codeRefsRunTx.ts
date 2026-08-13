@@ -1,19 +1,35 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const runTxCodeRefs: Record<string, CodeRef> = {
-  'runtx': {
-    path: 'baseapp/baseapp.go',
-    lang: 'go',
+  runtx: {
+    path: "baseapp/baseapp.go",
+    lang: "go",
     highlight: [1, 28],
     desc: `RunTx — 트랜잭션 실행 파이프라인의 핵심.
 AnteHandler → cacheTxContext → runMsgs → PostHandler → msCache.Write() 순서.
 CacheMultiStore 분기를 통해 실패 시 롤백이 가능한 원자적 실행 보장.`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'context 생성 + tracing span 시작' },
-      { lines: [6, 9], color: 'emerald', note: 'AnteHandler — 캐시 분기 후 실행, 실패 시 자동 롤백' },
-      { lines: [12, 14], color: 'amber', note: 'runMsgs — 메시지별 핸들러 실행' },
-      { lines: [16, 19], color: 'violet', note: 'PostHandler — 실행 성공/실패 무관하게 항상 호출' },
-      { lines: [22, 28], color: 'rose', note: 'Finalize 모드 성공 시에만 캐시를 원본에 Write' },
+      { lines: [1, 3], color: "sky", note: "context 생성 + tracing span 시작" },
+      {
+        lines: [6, 9],
+        color: "emerald",
+        note: "AnteHandler — 캐시 분기 후 실행, 실패 시 자동 롤백",
+      },
+      {
+        lines: [12, 14],
+        color: "amber",
+        note: "runMsgs — 메시지별 핸들러 실행",
+      },
+      {
+        lines: [16, 19],
+        color: "violet",
+        note: "PostHandler — 실행 성공/실패 무관하게 항상 호출",
+      },
+      {
+        lines: [22, 28],
+        color: "rose",
+        note: "Finalize 모드 성공 시에만 캐시를 원본에 Write",
+      },
     ],
     code: `func (app *BaseApp) RunTx(
 	mode sdk.ExecMode, txBytes []byte, tx sdk.Tx,

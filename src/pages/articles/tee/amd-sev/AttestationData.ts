@@ -16,9 +16,21 @@ export const reportStructCode = `struct AttestationReport {
 }`;
 
 export const reportAnnotations = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: '게스트 식별 정보' },
-  { lines: [11, 11] as [number, number], color: 'emerald' as const, note: '런치 다이제스트 (핵심 측정값)' },
-  { lines: [15, 15] as [number, number], color: 'amber' as const, note: 'VCEK 서명 (신뢰 앵커)' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "게스트 식별 정보",
+  },
+  {
+    lines: [11, 11] as [number, number],
+    color: "emerald" as const,
+    note: "런치 다이제스트 (핵심 측정값)",
+  },
+  {
+    lines: [15, 15] as [number, number],
+    color: "amber" as const,
+    note: "VCEK 서명 (신뢰 앵커)",
+  },
 ];
 
 export const verifyFlowCode = `// 1. 게스트: nonce 기반 증명 보고서 요청
@@ -45,7 +57,19 @@ assert_eq!(&report.report_data[..64], &nonce);         // 재전송 공격 방�
 assert!(report.policy.debug_disabled());                // 디버그 모드 차단`;
 
 export const verifyAnnotations = [
-  { lines: [1, 4] as [number, number], color: 'sky' as const, note: '게스트 측 보고서 생성' },
-  { lines: [8, 14] as [number, number], color: 'emerald' as const, note: 'AMD KDS 인증서 체인 검증' },
-  { lines: [18, 21] as [number, number], color: 'amber' as const, note: '핵심 필드 검증 단계' },
+  {
+    lines: [1, 4] as [number, number],
+    color: "sky" as const,
+    note: "게스트 측 보고서 생성",
+  },
+  {
+    lines: [8, 14] as [number, number],
+    color: "emerald" as const,
+    note: "AMD KDS 인증서 체인 검증",
+  },
+  {
+    lines: [18, 21] as [number, number],
+    color: "amber" as const,
+    note: "핵심 필드 검증 단계",
+  },
 ];

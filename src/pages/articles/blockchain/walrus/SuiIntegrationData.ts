@@ -17,8 +17,16 @@ pub fn register_blob(
 }`;
 
 export const SUI_OBJECTS_ANNOTATIONS = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: 'Sui 온체인 핵심 오브젝트' },
-  { lines: [7, 13] as [number, number], color: 'emerald' as const, note: 'Blob 등록: BlobId + 비용 지불' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "Sui 온체인 핵심 오브젝트",
+  },
+  {
+    lines: [7, 13] as [number, number],
+    color: "emerald" as const,
+    note: "Blob 등록: BlobId + 비용 지불",
+  },
 ];
 
 export const EPOCH_CODE = `// 에포크 관리 (committee.rs)
@@ -38,6 +46,14 @@ pub struct Committee {
 // 3. 이전 에포크 데이터 마이그레이션`;
 
 export const EPOCH_ANNOTATIONS = [
-  { lines: [5, 10] as [number, number], color: 'sky' as const, note: '위원회 구조 (에포크별)' },
-  { lines: [12, 15] as [number, number], color: 'emerald' as const, note: '에포크 전환 3단계' },
+  {
+    lines: [5, 10] as [number, number],
+    color: "sky" as const,
+    note: "위원회 구조 (에포크별)",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "emerald" as const,
+    note: "에포크 전환 3단계",
+  },
 ];

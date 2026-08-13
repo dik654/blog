@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const butterflyCode = `// 단일 스테이지 NTT 나비 커널
 __global__ void ntt_butterfly_stage(
@@ -57,40 +57,64 @@ export default function ButterflyKernel() {
       <h2 className="text-2xl font-bold mb-6">Butterfly CUDA 커널</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          나비 연산의 핵심: <strong>a' = a + w*b, b' = a - w*b</strong>.
-          각 스레드가 하나의 나비를 담당하며 2개 원소를 읽고 2개를 쓴다.<br />
-          스레드 인덱스(tid)에서 (a_index, b_index) 쌍을 계산하는 것이 커널 설계의 핵심이다.
+          나비 연산의 핵심: <strong>a' = a + w*b, b' = a - w*b</strong>. 각
+          스레드가 하나의 나비를 담당하며 2개 원소를 읽고 2개를 쓴다.
+          <br />
+          스레드 인덱스(tid)에서 (a_index, b_index) 쌍을 계산하는 것이 커널
+          설계의 핵심이다.
         </p>
-        <CodePanel title="단일 스테이지 나비 커널 (CUDA)" code={butterflyCode}
+        <CodePanel
+          title="단일 스테이지 나비 커널 (CUDA)"
+          code={butterflyCode}
           annotations={[
-            { lines: [9, 10], color: 'sky', note: '스레드 ID → 나비 1개' },
-            { lines: [12, 18], color: 'emerald', note: '스테이지별 인덱스 매핑' },
-            { lines: [21, 28], color: 'amber', note: '나비 연산: mod p 산술' },
-          ]} />
+            { lines: [9, 10], color: "sky", note: "스레드 ID → 나비 1개" },
+            {
+              lines: [12, 18],
+              color: "emerald",
+              note: "스테이지별 인덱스 매핑",
+            },
+            { lines: [21, 28], color: "amber", note: "나비 연산: mod p 산술" },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">스테이지별 인덱스 패턴</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          스테이지별 인덱스 패턴
+        </h3>
         <p>
-          스테이지가 올라갈수록 나비 쌍(a, b)의 거리가 2배씩 증가한다.<br />
-          Stage 0에서는 인접 원소끼리, 마지막 스테이지에서는 n/2 거리의 원소끼리 연산한다.<br />
-          큰 stride는 캐시 활용이 어려워 글로벌 메모리 대역폭이 병목이 된다.
+          스테이지가 올라갈수록 나비 쌍(a, b)의 거리가 2배씩 증가한다.
+          <br />
+          Stage 0에서는 인접 원소끼리, 마지막 스테이지에서는 n/2 거리의 원소끼리
+          연산한다.
+          <br />큰 stride는 캐시 활용이 어려워 글로벌 메모리 대역폭이 병목이
+          된다.
         </p>
-        <CodePanel title="n=8 나비 인덱스 예시" code={indexCode}
+        <CodePanel
+          title="n=8 나비 인덱스 예시"
+          code={indexCode}
           annotations={[
-            { lines: [3, 4], color: 'sky', note: 'stride=1: 인접 쌍' },
-            { lines: [6, 7], color: 'emerald', note: 'stride=2: 2칸 건너뜀' },
-            { lines: [9, 10], color: 'amber', note: 'stride=4: 절반 거리' },
-          ]} />
+            { lines: [3, 4], color: "sky", note: "stride=1: 인접 쌍" },
+            { lines: [6, 7], color: "emerald", note: "stride=2: 2칸 건너뜀" },
+            { lines: [9, 10], color: "amber", note: "stride=4: 절반 거리" },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">호스트에서 스테이지 루프</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          호스트에서 스테이지 루프
+        </h3>
         <p>
-          가장 단순한 구현은 스테이지마다 커널을 실행하는 것이다.<br />
-          커널 사이 암묵적 동기화로 스테이지 간 의존성을 해결한다. n=2^24이면 24번 실행이 필요하다.
+          가장 단순한 구현은 스테이지마다 커널을 실행하는 것이다.
+          <br />
+          커널 사이 암묵적 동기화로 스테이지 간 의존성을 해결한다. n=2^24이면
+          24번 실행이 필요하다.
         </p>
-        <CodePanel title="호스트 루프: 스테이지별 실행" code={launchCode}
+        <CodePanel
+          title="호스트 루프: 스테이지별 실행"
+          code={launchCode}
           annotations={[
-            { lines: [5, 7], color: 'sky', note: '그리드/블록 크기 계산' },
-            { lines: [9, 12], color: 'emerald', note: 'log_n 번 커널 실행' },
-          ]} />
+            { lines: [5, 7], color: "sky", note: "그리드/블록 크기 계산" },
+            { lines: [9, 12], color: "emerald", note: "log_n 번 커널 실행" },
+          ]}
+        />
       </div>
     </section>
   );

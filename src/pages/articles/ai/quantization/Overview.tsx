@@ -1,64 +1,46 @@
-import PrecisionLadderViz from './viz/PrecisionLadderViz';
-
-const FORMATS = [
-  { format: 'FP32', bits: 32, mem: '28 GB', speed: '1×', use: '학습 기본', color: '#ef4444' },
-  { format: 'FP16 / BF16', bits: 16, mem: '14 GB', speed: '~2×', use: '학습·추론 표준', color: '#f59e0b' },
-  { format: 'INT8', bits: 8, mem: '7 GB', speed: '~3×', use: 'PTQ/QAT 서빙', color: '#3b82f6' },
-  { format: 'INT4', bits: 4, mem: '3.5 GB', speed: '~4×', use: 'GPTQ/AWQ 서빙', color: '#10b981' },
-  { format: 'FP4/NF4', bits: 4, mem: '3.5 GB', speed: '~3×', use: 'QLoRA 학습', color: '#8b5cf6' },
-];
+import ContentBoundary from "@/components/articles/content-boundary";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import PrecisionLadderViz from "./viz/PrecisionLadderViz";
 
 export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">양자화가 왜 필요한가</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          <strong>핵심 질문</strong> — 모델 정밀도를 낮추면 메모리·속도가 얼마나 개선되고, 정확도는 얼마나 잃는가?<br />
-          양자화(Quantization): 신경망 가중치·활성값을 높은 정밀도(FP32)에서 낮은 정밀도(INT8, INT4)로 변환하는 기법.
-          비트 수가 절반이 될 때마다 메모리와 연산 대역폭이 절반으로 감소
-        </p>
-        <p>
-          7B 모델 기준 FP32 = 28GB, INT4 = 3.5GB — <strong>8배 차이</strong>.
-          VRAM 22.4GB 제약이 있는 대회 환경에서 양자화는 선택이 아닌 필수.
-          1.2B 모델도 FP16(2.4GB)에서 INT4(0.6GB)로 줄이면 같은 VRAM에서 batch size를 4배 키울 수 있음
-        </p>
-      </div>
-
-      <div className="not-prose overflow-x-auto mb-8">
-        <table className="w-full text-sm border-collapse">
-          <thead>
-            <tr className="border-b">
-              <th className="text-left py-2 px-3">포맷</th>
-              <th className="text-left py-2 px-3">비트</th>
-              <th className="text-left py-2 px-3">메모리 (7B)</th>
-              <th className="text-left py-2 px-3">속도 향상</th>
-              <th className="text-left py-2 px-3">주 용도</th>
-            </tr>
-          </thead>
-          <tbody>
-            {FORMATS.map(f => (
-              <tr key={f.format} className="border-b border-border/40">
-                <td className="py-2 px-3 font-semibold" style={{ color: f.color }}>{f.format}</td>
-                <td className="py-2 px-3 font-mono text-xs">{f.bits}bit</td>
-                <td className="py-2 px-3">{f.mem}</td>
-                <td className="py-2 px-3">{f.speed}</td>
-                <td className="py-2 px-3 text-muted-foreground">{f.use}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <PrecisionLadderViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: 양자화의 핵심은 <strong>실수 → 정수 매핑</strong> — scale과 zero_point로 범위를 압축<br />
-          요약 2: 신경망 가중치가 0 근처 정규분포를 따르기 때문에 <strong>적은 비트로도 충분히 근사</strong> 가능<br />
-          요약 3: 이후 섹션에서 PTQ → QAT → GPTQ/AWQ → 실전 순으로 깊이 있게 다룸
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="overview" className="mb-16 scroll-mt-20">
+    <h2 className="mb-6 text-2xl font-bold">양자화는 숫자를 줄이는 일이 아니라, 허용할 오차와 실제 실행 경로를 함께 정하는 일입니다</h2>
+    <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <p className="text-lg leading-8">신경망은 weight와 activation을 실수 tensor로 계산합니다. 양자화(quantization)는 이 연속적인 값을 제한된 codebook에 대응시킨 뒤 더 적은 bit로 저장하거나 계산하는 근사입니다. 따라서 먼저 물어야 할 것은 “4-bit인가?”가 아니라 어떤 tensor를, 어느 범위와 scale로, 몇 값마다 함께 묶고, 어떤 kernel에서 어느 precision으로 누산할 것인가입니다.</p>
+      <p>Weight-only W4는 weight 저장량과 읽기 traffic을 줄이지만 activation과 KV cache까지 4-bit가 되는 것은 아닙니다. W8A8처럼 activation도 줄이려면 input-dependent range와 outlier를 다뤄야 하며, target hardware에 해당 operator가 없으면 dequantize 뒤 FP kernel로 돌아가 latency가 오히려 늘 수 있습니다.</p>
+      <p>이 글은 float 값이 integer code로 바뀌는 한 번의 계산에서 시작해 PTQ calibration, QAT의 fake quantization, GPTQ·AWQ의 서로 다른 보정, GGUF 같은 artifact format, 마지막으로 실제 memory·quality·latency 검증까지 내려갑니다.</p>
+    </div>
+    <ContentBoundary article="quantization" />
+    <ExplainedFormula
+      question="실수 x를 b-bit 정수 code로 바꾸고 다시 근사 실수로 복원하려면 어떻게 계산할까요?"
+      idea={<>Affine quantizer는 실수 한 칸의 폭을 <code>s</code>로 정하고, 실수 0이 대응할 integer 위치를 <code>z</code>로 옮깁니다. 반올림 뒤 표현 범위를 벗어난 code는 끝값으로 잘라내고, 실행할 때 scale을 곱해 근사값을 복원합니다.</>}
+      formula={String.raw`q(x)=\operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{x}{s}\right)+z,\;q_{\min},q_{\max}\right),\qquad \hat x=s\,(q-z)`}
+      terms={[
+        { symbol: "x", name: "floating-point value", description: "원 checkpoint나 runtime tensor의 양자화 전 실수입니다." },
+        { symbol: "q", name: "quantized code", description: "b-bit가 표현할 수 있는 유한한 integer code입니다." },
+        { symbol: "s", name: "scale", description: "Integer code 한 칸이 실수 축에서 나타내는 간격입니다." },
+        { symbol: "z", name: "zero-point", description: "실수 0이 정확히 대응하도록 integer 축을 이동시키는 code입니다." },
+        { symbol: "x-hat", name: "dequantized value", description: "Code와 scale로 복원한 근사 실수이며 일반적으로 원래 x와 다릅니다." },
+      ]}
+      assumptions={["s는 양수이며 qmin·qmax와 signed/unsigned convention을 고정합니다.", "Round의 tie-breaking, clipping range, zero-point dtype도 artifact 규약에 포함합니다.", "Floating-point FP8/FP4와 block-scaled format은 exponent·mantissa·scale 구조가 달라 이 affine INT 식과 동일하지 않습니다."]}
+      interpretation="예를 들어 s=.5,z=0이면 x=.7은 q=1, x-hat=.5가 되어 .2의 오차가 남습니다. 같은 4-bit 이름이라도 scale 공유 범위와 codebook이 다르면 다른 근사입니다."
+    />
+    <ExplainedFormula
+      question="양자화 오차는 왜 rounding error와 clipping error를 나눠 봐야 할까요?"
+      idea={<>Range 안의 값은 가까운 grid point로 반올림되어 오차가 대체로 scale 절반 이내지만, range 밖의 outlier는 끝 code에 고정되어 값이 멀수록 clipping error가 커집니다.</>}
+      formula={String.raw`e(x)=x-\hat x,\qquad |e(x)|\le \frac{s}{2}\ \text{if }x\text{ is representable and rounded to nearest};\quad |e(x)|=|x-x_{\mathrm{clip}}|\ \text{outside the range}`}
+      terms={[
+        { symbol: "e(x)", name: "quantization error", description: "원래 값과 dequantized 근사값의 차이입니다." },
+        { symbol: "s/2", name: "rounding bound", description: "Uniform grid 안에서 nearest rounding을 쓸 때의 최대 반 칸 오차입니다." },
+        { symbol: "x_clip", name: "range endpoint", description: "표현 범위를 벗어난 값이 고정되는 최소 또는 최대 복원값입니다." },
+      ]}
+      assumptions={["Uniform step과 round-to-nearest를 가정한 국소 bound입니다.", "Saturation 뒤 clipping error에는 s/2 bound가 적용되지 않습니다.", "작은 element-wise error가 곧 작은 task loss라는 보장은 없으며 layer와 input sensitivity를 측정해야 합니다."]}
+      interpretation="Range를 넓히면 clipping은 줄지만 같은 bit 수에서 s가 커져 대부분 값의 rounding이 거칠어집니다. Calibration과 outlier 처리는 이 두 오차 사이의 선택입니다."
+    />
+    <div className="not-prose my-8"><PrecisionLadderViz /></div>
+    <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <p>Symmetric quantization은 보통 zero-point를 0에 고정하고 양수·음수 range를 대칭으로 잡아 실행이 단순한 대신 한쪽으로 치우친 분포의 code를 낭비할 수 있습니다. Asymmetric quantization은 zero-point를 옮겨 관측 range를 더 촘촘히 덮지만 offset correction과 kernel 지원을 확인해야 합니다.</p>
+      <p>Static quantization은 calibration에서 scale을 정해 artifact에 저장하고, dynamic quantization은 실행할 input에서 activation scale을 다시 계산합니다. Dynamic 방식은 input 변화에 대응하지만 매번 range reduction과 quantization 비용이 생깁니다. 따라서 이 이름들은 품질 등급이 아니라 scale의 위치와 계산 시점을 설명합니다.</p>
+    </div>
+  </section>;
 }

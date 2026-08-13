@@ -1,16 +1,30 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
-const steps: StepDef[] = [
-  { label: 'MCP Server 구현 — TypeScript/Python SDK', body: '1. Server 생성: new Server({name, version}, {capabilities: {tools, resources}})\n2. Tool handler 등록: setRequestHandler(ListToolsRequestSchema, ...)\n→ name + description + inputSchema (JSON Schema)\n3. Tool 호출 처리: CallToolRequestSchema → arguments 추출 → 실행 → content 반환\n4. Resource 등록: uri + name + mimeType\n5. Transport 시작: new StdioServerTransport() → server.connect(transport)\n\nPython SDK: @server.list_tools() + @server.call_tool() 데코레이터 방식\n\nClaude Desktop 설치: claude_desktop_config.json에 mcpServers 추가\n{command: "node", args: ["path/to/server.js"]}\n\nTesting: @modelcontextprotocol/inspector (GUI), CLI tools, unit tests\nBest: input 검증, typed content, 에러 핸들링, logging, versioning' },
-];
-const visuals = [
-  { title: 'MCP Server 구현 단계', color: '#6366f1', rows: [
-    { label: '1. Create', value: 'new Server({name, version, capabilities})' },
-    { label: '2. List Tools', value: 'name + description + inputSchema' },
-    { label: '3. Call Tool', value: 'arguments 추출 → 실행 → 반환' },
-    { label: '4. Resources', value: 'uri + name + mimeType 등록' },
-    { label: '5. Transport', value: 'StdioServerTransport → connect' },
-    { label: 'Install', value: 'claude_desktop_config.json 등록' },
-  ]},
-];
-export default function ImplementationDetailViz() { return <SimpleStepViz steps={steps} visuals={visuals} />; }
+import VizFrame from "@/components/viz/VizFrame";
+
+const cases = [
+  ["Unauthorized", "Token audience·scope·resource ACL", "Effect 없음 + audit"],
+  ["Invalid request", "JSON-RPC·header·schema", "Protocol error"],
+  ["Domain failure", "업무 규칙·외부 API", "complete + isError"],
+  ["Response lost", "Operation id·effect receipt", "중복 없이 기존 결과"],
+  ["Legacy peer", "Revision·capability matrix", "격리된 fallback 또는 거부"],
+] as const;
+
+export default function ImplementationDetailViz() {
+  return (
+    <VizFrame
+      eyebrow="Acceptance matrix"
+      title="Happy path가 아니라 실패 뒤 남는 상태로 production readiness를 판단합니다"
+      description="검사 항목마다 입력 신호, 차단 위치와 외부 effect가 남았는지를 함께 기록합니다."
+      note="Tool이 한 번 호출됐다는 log보다 operation id와 effect receipt가 retry·incident 분석에 더 중요합니다."
+    >
+      <div className="divide-y divide-border/70">
+        {cases.map(([failure, check, expected]) => (
+          <section key={failure} className="grid min-w-0 gap-2 py-4 first:pt-0 last:pb-0 sm:grid-cols-[8rem_1fr_1fr] sm:items-baseline">
+            <h4 className="text-sm font-bold">{failure}</h4>
+            <p className="text-xs leading-5 text-muted-foreground">{check}</p>
+            <p className="text-xs font-semibold leading-5 text-primary">{expected}</p>
+          </section>
+        ))}
+      </div>
+    </VizFrame>
+  );
+}

@@ -1,56 +1,83 @@
-import Math from '@/components/ui/math';
+import Math from "@/components/ui/math";
 
 export default function ErrorCorrection() {
   return (
     <section id="error-correction" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">에러 감지 & 복구</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">에러 감지: 왜 가능한가?</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          에러 감지: 왜 가능한가?
+        </h3>
         <p>
-          차수 <Math>{'k-1'}</Math> 다항식은 <Math>{'k'}</Math>개 점으로 완전히 결정된다.
+          차수 <Math>{"k-1"}</Math> 다항식은 <Math>{"k"}</Math>개 점으로 완전히
+          결정된다.
           <br />
-          수신된 <Math>{'n'}</Math>개 값이 어떤 차수 <Math>{'k-1'}</Math> 다항식 위에도 놓이지 않으면
-          → 오류가 발생한 것이다
+          수신된 <Math>{"n"}</Math>개 값이 어떤 차수 <Math>{"k-1"}</Math> 다항식
+          위에도 놓이지 않으면 → 오류가 발생한 것이다
         </p>
         <p>
-          기하학적으로: 2차 다항식(포물선) 위의 6개 점 중 하나가 포물선을 벗어나면 즉시 감지된다.
+          기하학적으로: 2차 다항식(포물선) 위의 6개 점 중 하나가 포물선을
+          벗어나면 즉시 감지된다.
           <br />
-          <Math>{'n - k'}</Math>개의 중복 심볼이 있으면 최대 <Math>{'n - k'}</Math>개의 에러를 <strong>감지</strong>할 수 있다
+          <Math>{"n - k"}</Math>개의 중복 심볼이 있으면 최대{" "}
+          <Math>{"n - k"}</Math>개의 에러를 <strong>감지</strong>할 수 있다
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">에러 정정: 한계</h3>
         <p>
           에러를 <strong>정정</strong>하려면 "어디가 틀렸는지"도 알아내야 한다.
           <br />
-          위치와 값을 동시에 찾아야 하므로, 에러 하나당 중복 심볼 2개가 필요하다:
+          위치와 값을 동시에 찾아야 하므로, 에러 하나당 중복 심볼 2개가
+          필요하다:
         </p>
-        <Math display>{'t \\leq \\left\\lfloor \\frac{n - k}{2} \\right\\rfloor'}</Math>
+        <Math display>
+          {"t \\leq \\left\\lfloor \\frac{n - k}{2} \\right\\rfloor"}
+        </Math>
         <p>
-          <Math>{'t'}</Math>는 정정 가능한 최대 에러 수다.
+          <Math>{"t"}</Math>는 정정 가능한 최대 에러 수다.
           <br />
-          앞의 예시에서 <Math>{'n=6, k=3'}</Math>이면 <Math>{'t = \\lfloor 3/2 \\rfloor = 1'}</Math>.
+          앞의 예시에서 <Math>{"n=6, k=3"}</Math>이면{" "}
+          <Math>{"t = \\lfloor 3/2 \\rfloor = 1"}</Math>.
           <br />
           1개 위치의 에러를 찾아서 고칠 수 있다
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
-          구체적 예시: 에러 1개 복구 (<Math>{'\\mathbb{F}_7'}</Math>)
+          구체적 예시: 에러 1개 복구 (<Math>{"\\mathbb{F}_7"}</Math>)
         </h3>
         <p>
-          올바른 코드워드: <Math>{'[1,\\; 6,\\; 3,\\; 6,\\; 1,\\; 2]'}</Math>.
+          올바른 코드워드: <Math>{"[1,\\; 6,\\; 3,\\; 6,\\; 1,\\; 2]"}</Math>.
           <br />
-          전송 중 위치 2에서 에러 발생 → 수신: <Math>{'[1,\\; 6,\\; \\mathbf{5},\\; 6,\\; 1,\\; 2]'}</Math>
+          전송 중 위치 2에서 에러 발생 → 수신:{" "}
+          <Math>{"[1,\\; 6,\\; \\mathbf{5},\\; 6,\\; 1,\\; 2]"}</Math>
         </p>
       </div>
 
       <div className="not-prose grid grid-cols-1 gap-3 my-4">
         {[
-          { step: '1. 에러 감지', desc: '6개 값으로 차수 2 다항식을 피팅하면 불일치 발생 → 에러 존재 확인', color: 'indigo' },
-          { step: '2. 에러 위치 탐색', desc: '임의의 5개 점 조합으로 차수 2 다항식을 보간. 나머지 1개 점과 일치하는 조합을 찾는다', color: 'emerald' },
-          { step: '3. 복구', desc: '위치 2를 제외한 5개 점 {(0,1),(1,6),(3,6),(4,1),(5,2)}로 보간 → f(x) = 1+2x+3x² 복원. f(2) = 3으로 정정', color: 'amber' },
-        ].map(p => (
-          <div key={p.step} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
-            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.step}</p>
+          {
+            step: "1. 에러 감지",
+            desc: "6개 값으로 차수 2 다항식을 피팅하면 불일치 발생 → 에러 존재 확인",
+            color: "indigo",
+          },
+          {
+            step: "2. 에러 위치 탐색",
+            desc: "임의의 5개 점 조합으로 차수 2 다항식을 보간. 나머지 1개 점과 일치하는 조합을 찾는다",
+            color: "emerald",
+          },
+          {
+            step: "3. 복구",
+            desc: "위치 2를 제외한 5개 점 {(0,1),(1,6),(3,6),(4,1),(5,2)}로 보간 → f(x) = 1+2x+3x² 복원. f(2) = 3으로 정정",
+            color: "amber",
+          },
+        ].map((p) => (
+          <div
+            key={p.step}
+            className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
+          >
+            <p className={`font-semibold text-sm text-${p.color}-400`}>
+              {p.step}
+            </p>
             <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
           </div>
         ))}
@@ -59,95 +86,123 @@ export default function ErrorCorrection() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 className="text-xl font-semibold mt-8 mb-3">실전 알고리즘</h3>
         <p>
-          위의 "모든 조합을 시도하는" 방식은 <Math>{'O(\\binom{n}{k})'}</Math>로 느리다.
+          위의 "모든 조합을 시도하는" 방식은 <Math>{"O(\\binom{n}{k})"}</Math>로
+          느리다.
           <br />
-          실제로는 Berlekamp-Welch 알고리즘이나 유클리드 알고리즘으로 <Math>{'O(n^2)'}</Math>에 해결한다.
+          실제로는 Berlekamp-Welch 알고리즘이나 유클리드 알고리즘으로{" "}
+          <Math>{"O(n^2)"}</Math>에 해결한다.
           <br />
           핵심은 에러 위치 다항식(Error Locator Polynomial)을 찾는 것이다:
         </p>
-        <Math display>{'E(x) = \\prod_{i \\in \\text{errors}} (x - \\alpha_i)'}</Math>
+        <Math display>
+          {"E(x) = \\prod_{i \\in \\text{errors}} (x - \\alpha_i)"}
+        </Math>
         <p>
-          <Math>{'E(x)'}</Math>의 근이 에러 위치를 알려준다.
+          <Math>{"E(x)"}</Math>의 근이 에러 위치를 알려준다.
           <br />
-          에러 위치를 알면{' '}
-          <a href="/crypto/lagrange" className="text-indigo-400 hover:underline">Lagrange 보간</a>으로
-          올바른 다항식을 복원한다
+          에러 위치를 알면{" "}
+          <a
+            href="/crypto/lagrange"
+            className="text-indigo-400 hover:underline"
+          >
+            Lagrange 보간
+          </a>
+          으로 올바른 다항식을 복원한다
         </p>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">디코딩 알고리즘 심층</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          디코딩 알고리즘 심층
+        </h3>
 
         <h4 className="text-lg font-semibold mt-5 mb-2">문제 정의</h4>
         <p>
-          수신: <Math>{'r(x) = c(x) + e(x)'}</Math>.
-          <Math>{'c(x)'}</Math>는 원본 코드워드(미지), <Math>{'e(x)'}</Math>는 에러 다항식(희소, 가중치 <Math>{'\\leq t'}</Math>).
-          목표: <Math>{'c(x)'}</Math> 복원
+          수신: <Math>{"r(x) = c(x) + e(x)"}</Math>.<Math>{"c(x)"}</Math>는 원본
+          코드워드(미지), <Math>{"e(x)"}</Math>는 에러 다항식(희소, 가중치{" "}
+          <Math>{"\\leq t"}</Math>). 목표: <Math>{"c(x)"}</Math> 복원
         </p>
       </div>
 
       <div className="not-prose grid grid-cols-1 gap-3 my-3">
         {[
           {
-            step: '1단계: Syndrome 계산',
-            desc: 'S_j = r(α^j) = c(α^j) + e(α^j) = e(α^j). c(α^j) = 0 (BCH 정의)이므로 syndrome은 에러 정보만 담는다. 2t개 필요: S₁, ..., S_{2t}',
-            color: 'indigo',
+            step: "1단계: Syndrome 계산",
+            desc: "S_j = r(α^j) = c(α^j) + e(α^j) = e(α^j). c(α^j) = 0 (BCH 정의)이므로 syndrome은 에러 정보만 담는다. 2t개 필요: S₁, ..., S_{2t}",
+            color: "indigo",
           },
           {
-            step: '2단계: 에러 위치 다항식',
-            desc: 'Σ(x) = Π(1 - X_i·x). X_i = α^{i_j} (에러 위치). Newton 항등식으로 Σ 계수에 대한 선형 시스템을 구성',
-            color: 'emerald',
+            step: "2단계: 에러 위치 다항식",
+            desc: "Σ(x) = Π(1 - X_i·x). X_i = α^{i_j} (에러 위치). Newton 항등식으로 Σ 계수에 대한 선형 시스템을 구성",
+            color: "emerald",
           },
           {
-            step: '3단계: Berlekamp-Massey',
-            desc: 'Syndrome 수열을 생성하는 최소 LFSR을 반복적으로 찾는다. 복잡도: O(t²) = O((n-k)²/4)',
-            color: 'amber',
+            step: "3단계: Berlekamp-Massey",
+            desc: "Syndrome 수열을 생성하는 최소 LFSR을 반복적으로 찾는다. 복잡도: O(t²) = O((n-k)²/4)",
+            color: "amber",
           },
           {
-            step: '4단계: Chien 탐색',
-            desc: 'Σ(x)의 근을 체의 모든 원소에서 탐색. 근 α^{-i_j} → 위치 i_j. O(n·t)',
-            color: 'indigo',
+            step: "4단계: Chien 탐색",
+            desc: "Σ(x)의 근을 체의 모든 원소에서 탐색. 근 α^{-i_j} → 위치 i_j. O(n·t)",
+            color: "indigo",
           },
           {
-            step: '5단계: Forney 알고리즘',
-            desc: '위치가 알려지면 에러 값 계산: Y_i = -X_i^{1-b} · Ω(X_i⁻¹) / Σ\'(X_i⁻¹). Ω(x) = S(x)·Σ(x) mod x^{2t}',
-            color: 'emerald',
+            step: "5단계: Forney 알고리즘",
+            desc: "위치가 알려지면 에러 값 계산: Y_i = -X_i^{1-b} · Ω(X_i⁻¹) / Σ'(X_i⁻¹). Ω(x) = S(x)·Σ(x) mod x^{2t}",
+            color: "emerald",
           },
-        ].map(p => (
-          <div key={p.step} className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}>
-            <p className={`font-semibold text-sm text-${p.color}-400`}>{p.step}</p>
+        ].map((p) => (
+          <div
+            key={p.step}
+            className={`rounded-lg border border-${p.color}-500/20 bg-${p.color}-500/5 p-4`}
+          >
+            <p className={`font-semibold text-sm text-${p.color}-400`}>
+              {p.step}
+            </p>
             <p className="text-sm mt-1.5 text-foreground/75">{p.desc}</p>
           </div>
         ))}
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-4">
-        <h4 className="text-lg font-semibold mt-5 mb-2">Berlekamp-Welch (대안, 더 깔끔)</h4>
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          Berlekamp-Welch (대안, 더 깔끔)
+        </h4>
         <p>
-          다항식 <Math>{'E(x)'}</Math>(에러 위치), <Math>{'N(x)'}</Math>(분자)를 찾는다:
-          <Math>{'N(a_i) = r_i \\cdot E(a_i)'}</Math> (모든 i에 대해).
+          다항식 <Math>{"E(x)"}</Math>(에러 위치), <Math>{"N(x)"}</Math>(분자)를
+          찾는다:
+          <Math>{"N(a_i) = r_i \\cdot E(a_i)"}</Math> (모든 i에 대해).
           <br />
-          <Math>{'\\deg(N) < k + t'}</Math>, <Math>{'\\deg(E) \\leq t'}</Math>, E는 monic.
+          <Math>{"\\deg(N) < k + t"}</Math>, <Math>{"\\deg(E) \\leq t"}</Math>,
+          E는 monic.
           <br />
-          n개 등식, n개 미지수의 선형 시스템. 가우스 소거 <Math>{'O(n^3)'}</Math>, 최적화 <Math>{'O(n^2)'}</Math>.
+          n개 등식, n개 미지수의 선형 시스템. 가우스 소거{" "}
+          <Math>{"O(n^3)"}</Math>, 최적화 <Math>{"O(n^2)"}</Math>.
           <br />
-          원본 메시지: <Math>{'m(x) = N(x) / E(x)'}</Math>
+          원본 메시지: <Math>{"m(x) = N(x) / E(x)"}</Math>
         </p>
 
-        <h4 className="text-lg font-semibold mt-5 mb-2">Guruswami-Sudan 리스트 디코딩</h4>
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          Guruswami-Sudan 리스트 디코딩
+        </h4>
         <p>
-          <Math>{'t = (d-1)/2'}</Math> 한계를 초과하여 <Math>{'n - \\sqrt{kn}'}</Math>개 에러까지 정정 가능.
-          최대 <Math>{'O(n)'}</Math>개의 후보 리스트를 반환한다.
-          복잡도 <Math>{'O(n^4)'}</Math> (트릭으로 <Math>{'O(n^2)'}</Math>).
-          코드 기반 암호, 심우주 연접 코드에 사용
+          <Math>{"t = (d-1)/2"}</Math> 한계를 초과하여{" "}
+          <Math>{"n - \\sqrt{kn}"}</Math>개 에러까지 정정 가능. 최대{" "}
+          <Math>{"O(n)"}</Math>개의 후보 리스트를 반환한다. 복잡도{" "}
+          <Math>{"O(n^4)"}</Math> (트릭으로 <Math>{"O(n^2)"}</Math>). 코드 기반
+          암호, 심우주 연접 코드에 사용
         </p>
 
-        <h4 className="text-lg font-semibold mt-5 mb-2">소거(Erasure) 디코딩</h4>
+        <h4 className="text-lg font-semibold mt-5 mb-2">
+          소거(Erasure) 디코딩
+        </h4>
         <p>
-          소거 = 위치는 알지만 값을 모르는 경우.
-          에러의 2배인 <Math>{'n - k'}</Math>개까지 정정 가능하다 — 위치를 찾을 필요가 없으므로.
+          소거 = 위치는 알지만 값을 모르는 경우. 에러의 2배인{" "}
+          <Math>{"n - k"}</Math>개까지 정정 가능하다 — 위치를 찾을 필요가
+          없으므로.
           <br />
-          에러 + 소거 혼합: <Math>{'2 \\times \\text{에러} + \\text{소거} \\leq n - k'}</Math>
+          에러 + 소거 혼합:{" "}
+          <Math>{"2 \\times \\text{에러} + \\text{소거} \\leq n - k"}</Math>
         </p>
       </div>
     </section>

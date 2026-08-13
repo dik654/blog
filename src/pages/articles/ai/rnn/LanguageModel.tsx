@@ -1,33 +1,92 @@
-import LanguageModelViz from './viz/LanguageModelViz';
-import RNNLMDetailViz from './viz/RNNLMDetailViz';
-import M from '@/components/ui/math';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import M from "@/components/ui/math";
+import LanguageModelViz from "./viz/LanguageModelViz";
 
 export default function LanguageModel() {
   return (
-    <section id="language-model" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">언어 모델</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        <M>{'P(w_t \\mid w_1 \\ldots w_{t-1})'}</M> — 다음 단어 예측이 핵심 과제.<br />
-        n-gram은 직전 n-1개만 참조. RNN 은닉 상태는 이론적으로 무한 맥락 압축.
-      </p>
-      <LanguageModelViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">RNN Language Model</h3>
-        <RNNLMDetailViz />
-        <p className="leading-7">RNN 언어 모델:</p>
-        <M display>{'P(w_t \\mid w_1 \\ldots w_{t-1}) = \\text{softmax}(\\underbrace{W_{hy}}_{\\text{출력 가중치}} \\cdot \\underbrace{h_t}_{\\text{문맥 압축}})'}</M>
-        <p className="leading-7">
-          은닉 상태 <M>{'h_t'}</M>가 전체 이전 문맥을 압축. 학습 목표:
+    <section id="language-model" className="mb-20 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">RNN language model: context를 state로 접어 다음 token을 예측한다</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Language modeling에서는 token ID를 embedding으로 바꾸고, 지금까지의 context를
+          반영한 hidden state를 vocabulary 크기의 logits로 투영합니다. softmax가 만든
+          distribution에서 실제 다음 token에 배정한 probability가 높아지도록 모든
+          시점의 cross-entropy를 학습합니다.
         </p>
-        <M display>{'\\underbrace{L = -\\frac{1}{T} \\sum_{t=1}^{T} \\log P(w_t)}_{\\text{평균 Cross-Entropy}}, \\quad \\underbrace{\\text{PPL} = e^L}_{\\text{후보 단어 수}}'}</M>
-        <p className="leading-7">
-          Perplexity(PPL) = 모델이 각 위치에서 "고려하는 후보 단어 수"로 해석. PPL=100이면 100개 중 하나를 고르는 수준.<br />
-          n-gram(직전 n-1개만 참조)과 달리 RNN은 이론상 무한 과거를 참조하지만, vanishing gradient로 실제 10~20스텝이 한계.<br />
-          생성 전략: greedy(argmax), temperature(<M>{'T<1'}</M> sharp / <M>{'T>1'}</M> 다양), top-k, top-p(nucleus sampling).<br />
-          2017년 Transformer 등장 이후 대부분 대체되었으나, CE·PPL·샘플링 개념은 GPT 시대에도 그대로 적용.
+        <p>
+          중요한 indexing은 입력과 정답이 한 칸 어긋난다는 점입니다. 입력
+          <M>{"w_t"}</M>까지 처리해 만든 <M>{"h_t"}</M>로 <M>{"w_{t+1}"}</M>를 맞힙니다.
+          그림에서 cell 위의 예측과 아래의 입력을 같은 token으로 표시하면 teacher forcing의
+          흐름이 잘못 보일 수 있습니다.
         </p>
       </div>
+
+      <LanguageModelViz />
+
+      <div id="paper-rnn-lm" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
+        <p className="text-xs font-bold text-primary">논문 해설 · Recurrent Neural Network Based Language Model</p>
+        <h3 className="mt-2 text-base font-bold">고정 n-gram 대신 recurrent state로 가변 길이 문맥을 조건화했다</h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Mikolov 등의 모델은 이전 word와 hidden state로 다음 word distribution을 만들고, 당시 speech-recognition language-model 평가에서 n-gram과 feed-forward baseline을 비교했습니다. 이 결과는 해당 vocabulary·corpus·model scale의 근거이며, hidden state가 긴 문맥을 완전하게 복원하거나 현대 Transformer보다 일반적으로 우수하다는 결론은 아닙니다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="고정 크기 hidden state를 vocabulary 전체의 다음-token probability로 어떻게 바꿀까?"
+        idea={<>output projection이 state를 token별 score인 logit으로 바꾸고, softmax가 score의 상대적 차이를 합이 1인 distribution으로 정규화합니다.</>}
+        formula={String.raw`e_t=E[w_t],\quad h_t=\operatorname{RNN}(e_t,h_{t-1}),\quad z_t=W_{yh}h_t+b_y,\quad p_t=\operatorname{softmax}(z_t)`}
+        terms={[
+          { symbol: "E[w_t]", name: "token embedding", description: "discrete token ID를 D차원 연속 vector로 lookup합니다." },
+          { symbol: "z_t\\in\\mathbb{R}^{|V|}", name: "logits", description: "vocabulary의 각 token에 대한 정규화 전 score입니다." },
+          { symbol: "p_t", name: "다음-token distribution", description: "p_t[j]는 context w1:t 뒤에 vocabulary token j가 올 model probability입니다." },
+        ]}
+        interpretation="모델은 원문 context에 직접 attention하지 않습니다. vocabulary distribution은 과거가 압축된 ht만으로 만들어집니다."
+      />
+
+      <ExplainedFormula
+        question="한 문장에서 어느 시점의 예측을 학습 신호로 사용할까?"
+        idea={<>각 시점에서 실제 다음 token의 negative log-probability를 구해 평균냅니다. 한 문장으로 여러 shifted training pair가 생깁니다.</>}
+        formula={String.raw`\mathcal{L}_{\text{NLL}}=-\frac{1}{T}\sum_{t=1}^{T}\log p_t\!\left[w_{t+1}\right]`}
+        terms={[
+          { symbol: "p_t[w_{t+1}]", name: "정답 token probability", description: "t까지 본 뒤 실제 t+1 token에 model이 배정한 확률입니다." },
+          { symbol: "T", name: "loss를 계산한 token 수", description: "padding position은 mask로 합계에서 제외합니다." },
+        ]}
+        assumptions={["training 입력에는 실제 이전 token을 넣는 teacher forcing을 기준으로 합니다.", "BOS/EOS 처리와 padding mask는 dataset contract에 따라 달라집니다."]}
+        interpretation="한 token의 오차는 해당 시점 output뿐 아니라 BPTT를 통해 그 state를 만든 과거 transition의 공유 weight에도 기여합니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>training과 generation의 입력 분포가 달라진다</h3>
+        <p>
+          training에서는 직전 model prediction이 틀렸더라도 다음 입력으로 정답 token을
+          넣습니다. 반면 generation에서는 방금 sample한 token을 다시 입력하므로, 한 번의
+          실수가 이후 state와 입력 분포를 바꿉니다. 이를 exposure bias라고 부르며,
+          teacher forcing을 사용했다는 사실과 inference 품질은 별도로 평가해야 합니다.
+          이 train–inference 경계의 정본 설명과 문제는{" "}
+          <Link to="/ai/supervised-fine-tuning#teacher-forcing">teacher forcing·exposure bias 글</Link>에 모았습니다.
+        </p>
+        <h3>Perplexity는 tokenization까지 같을 때 비교한다</h3>
+        <p>
+          perplexity는 평균 negative log-likelihood의 exponential입니다. 균등 분포라는
+          단순한 경우에는 “동등하게 헷갈리는 후보 수”로 직관화할 수 있지만, 일반 분포에서
+          실제 후보 개수를 뜻하지는 않습니다. token 하나가 담는 문자열 길이가 tokenizer마다
+          다르기 때문에 서로 다른 vocabulary와 tokenization의 PPL을 숫자만으로 비교하면
+          공정하지 않습니다.
+          평균 negative log-likelihood가 무엇을 측정하는지는{" "}
+          <Link to="/ai/cross-entropy#cross-entropy">cross-entropy 정본 글</Link>에서 probability·log부터 이어집니다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="평균 token loss를 사람이 읽기 쉬운 양의 척도로 바꾸려면?"
+        idea={<>natural log 단위의 cross-entropy를 exponential로 되돌립니다. lower is better이지만 data와 tokenization이 같다는 조건이 붙습니다.</>}
+        formula={String.raw`\operatorname{PPL}=\exp\!\left(\mathcal{L}_{\text{NLL}}\right)`}
+        terms={[
+          { symbol: "\\mathcal{L}_{\\text{NLL}}", name: "평균 token NLL", description: "동일한 corpus와 masking convention에서 계산한 평균 loss입니다." },
+        ]}
+        interpretation="PPL은 같은 evaluation contract 안에서 model distribution이 정답 token에 얼마나 probability를 모았는지 비교하는 척도입니다."
+      />
     </section>
   );
 }

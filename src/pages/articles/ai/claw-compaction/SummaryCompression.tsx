@@ -1,344 +1,246 @@
-import SummaryCompressorViz from './viz/SummaryCompressorViz';
-import HeuristicFilterViz from './viz/HeuristicFilterViz';
+import { CitationBlock } from "@/components/ui/citation";
+import HeuristicFilterViz from "./viz/HeuristicFilterViz";
+import SummaryCompressorViz from "./viz/SummaryCompressorViz";
+
+const PRIORITIES = [
+  ["0 · core", "Summary heading 또는 - Scope:, - Current work:, - Pending work:, - Key files referenced: 같은 고정 prefix"],
+  ["1 · section", "colon으로 끝나는 section heading"],
+  ["2 · bullets", "- 또는 들여쓴 - 로 시작하는 항목"],
+  ["3 · other", "위 조건에 들지 않는 나머지 line"],
+] as const;
+
+const ACTUAL_HELPER = [
+  ["Normalize", "각 line의 연속 whitespace를 한 칸으로 합치고 빈 line을 버립니다."],
+  ["Truncate", "각 line을 max_line_chars 안으로 자르며 default snapshot은 160자입니다."],
+  ["Dedupe", "잘린 line을 ASCII lowercase key로 비교해 같은 line을 한 번만 남깁니다."],
+  ["Select", "priority 0→3 순서로 훑고 max_lines와 max_chars를 넘지 않는 line index를 선택합니다."],
+  ["Notice", "예산에 공간이 남으면 ‘N additional lines omitted’ notice를 마지막에 넣습니다."],
+] as const;
+
+const FIDELITY_CHECKS = [
+  ["Goal", "요청 identity와 ‘최소 수정 후 동일 test’라는 종료 조건이 그대로인가?"],
+  ["Evidence", "auth log URI·digest·401 관찰이 모두 복원되는가?"],
+  ["Policy", "permission denial과 policy version이 짧은 성공 문장에 덮이지 않았는가?"],
+  ["Effect", "edit operation·before/after digest와 test command·exit code가 이어지는가?"],
+  ["Unresolved", "최신 401 실패와 다음 검증 행동을 candidate만 보고 말할 수 있는가?"],
+  ["Boundary", "ToolUse/ToolResult가 orphan 없이 남고 외부 effect를 다시 실행하지 않는가?"],
+] as const;
+
+const EVAL_PLAN = [
+  ["고정 입력", "Base/candidate build의 full SHA를 receipt에 남기고 동일 transcript, workspace snapshot, permission policy, model/token estimator와 seed·config를 함께 사용합니다."],
+  ["반복 깊이", "1·3·5회 compaction 뒤 상태를 각각 비교해 한 번에는 보이지 않는 누적 손실을 찾습니다."],
+  ["Hard gate", "goal·permission·latest test failure·effect receipt·tool pair 중 하나라도 빠지면 token 절감과 무관하게 실패입니다."],
+  ["Soft metrics", "context token, model latency, task completion, 사람 개입, 반복 tool/effect 수를 함께 봅니다."],
+  ["배포", "Shadow canary에서 candidate를 만들되 base를 정본으로 유지하고, 사전 등록한 invariant 위반 threshold를 넘으면 candidate summary·state diff·metric artifact를 남기고 즉시 rollback합니다."],
+] as const;
 
 export default function SummaryCompression() {
   return (
     <section id="summary-compression" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">SummaryCompressor — 2차 압축 보조 레이어</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        summary_compression.rs는 의미 요약기가 아니라 line budget helper입니다
+      </h2>
 
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          이름만 보면 <code>compact_session</code>이 이 module을 호출해 두 번째
+          semantic compression을 수행할 것처럼 보입니다. Pinned source는 그렇지
+          않습니다. <code>summary_compression.rs</code>는 text를 line 단위로
+          정규화하고, 중복을 제거하고, prefix priority와 문자 예산으로 일부 line을
+          고르는 독립 helper입니다. Runtime의 <code>compact_session</code> 호출
+          경로에는 연결되어 있지 않으며 <code>SummaryCompressor</code>라는 class도
+          없습니다.
+        </p>
+        <p>
+          이 차이는 단순한 이름 문제가 아닙니다. Helper가 줄인 결과는 더 짧고
+          재현 가능하지만 “최신 login test 실패가 더 중요하다”는 의미를 이해하지
+          못합니다. 따라서 actual source의 보장과, compaction fidelity를 위해
+          설계해야 할 검증을 분리해서 읽어야 합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8">
         <SummaryCompressorViz />
       </div>
-      <HeuristicFilterViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
-        {/* ── 왜 2차 압축이 필요한가 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">2차 압축의 역할</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>실제 helper의 기본 예산과 처리 순서</h3>
         <p>
-          1차 압축(<code>compact.rs</code>)은 <strong>메시지 → 요약</strong> 변환<br />
-          2차 압축(<code>summary_compression.rs</code>, 300 LOC)은 <strong>요약 → 더 짧은 요약</strong> 변환<br />
-          호출 조건: 연쇄 압축으로 요약 자체가 커져 <code>max_summary_tokens</code> 초과 시 자동 실행
+          Default snapshot은 전체 1,200자, 최대 24개 line, line당 160자입니다.
+          여기서 <strong>char budget</strong>은 model token budget과 다릅니다.
+          Unicode 문자, tokenizer와 chat template에 따라 같은 1,200자도 token 수가
+          달라지므로, 이 값만으로 provider request가 들어간다고 보장할 수 없습니다.
         </p>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="text-xs font-mono text-muted-foreground mb-2">compact.rs — 2차 압축 트리거</div>
-            <div className="space-y-2">
-              <div className="flex items-start gap-2 text-sm">
-                <span className="shrink-0 font-mono text-xs text-muted-foreground mt-0.5">1.</span>
-                <span className="text-muted-foreground"><code className="text-xs">merge_compact_summaries()</code>로 이전+새 요약 병합</span>
-              </div>
-              <div className="flex items-start gap-2 text-sm">
-                <span className="shrink-0 font-mono text-xs text-muted-foreground mt-0.5">2.</span>
-                <span className="text-muted-foreground"><code className="text-xs">estimate_summary_tokens(&merged)</code> &gt; <code className="text-xs">config.max_summary_tokens</code> 확인</span>
-              </div>
-              <div className="flex items-start gap-2 text-sm ml-4">
-                <span className="shrink-0 text-xs text-green-600 dark:text-green-400 mt-0.5">초과 시</span>
-                <span className="text-muted-foreground"><code className="text-xs">SummaryCompressor::new().compress(&merged)</code> 실행</span>
-              </div>
-              <div className="flex items-start gap-2 text-sm ml-4">
-                <span className="shrink-0 text-xs text-muted-foreground mt-0.5">이내 시</span>
-                <span className="text-muted-foreground"><code className="text-xs">merged</code> 그대로 사용 — 불필요한 정보 손실 방지</span>
-              </div>
-            </div>
+      </div>
+
+      <div className="not-prose my-7 divide-y divide-border rounded-lg border border-border">
+        {ACTUAL_HELPER.map(([step, behavior]) => (
+          <div
+            key={step}
+            className="grid min-w-0 gap-1 p-4 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-5"
+          >
+            <p className="break-words text-xs font-bold text-primary">{step}</p>
+            <p className="break-words text-sm leading-6 text-muted-foreground">{behavior}</p>
           </div>
-        </div>
-        <p>
-          <strong>조건부 호출</strong>: 요약이 예산 이내면 2차 압축 스킵 — 불필요한 정보 손실 방지<br />
-          2차 압축은 <strong>Lossy</strong> — 저우선순위 항목이 삭제됨<br />
-          1차는 Lossy하지만 2차는 Lossier — "요약의 요약"이 되므로 정보 농도 ↑
-        </p>
+        ))}
+      </div>
 
-        {/* ── SummaryCompressor 구조 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">SummaryCompressor 4단계 파이프라인</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4 mb-3">
-            <div className="font-semibold text-sm mb-3">SummaryCompressor 구조체 + 가중치</div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold">max_summary_tokens</div>
-                <p className="text-xs text-muted-foreground mt-1">요약 최대 토큰</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold">current_work_weight</div>
-                <p className="text-xs text-muted-foreground mt-1">기본 3.0</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold">error_weight</div>
-                <p className="text-xs text-muted-foreground mt-1">기본 2.5</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold">milestone_weight</div>
-                <p className="text-xs text-muted-foreground mt-1">기본 2.0</p>
-              </div>
-            </div>
-            <div className="font-semibold text-sm mb-2">compress() — 4단계 파이프라인</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-                  <span className="text-xs font-semibold">Extract</span>
-                </div>
-                <p className="text-xs text-muted-foreground">핵심 사실 추출</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
-                  <span className="text-xs font-semibold">Clean</span>
-                </div>
-                <p className="text-xs text-muted-foreground">노이즈 제거</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
-                  <span className="text-xs font-semibold">Rank</span>
-                </div>
-                <p className="text-xs text-muted-foreground">관련도 순위</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
-                  <span className="text-xs font-semibold">Truncate</span>
-                </div>
-                <p className="text-xs text-muted-foreground">예산 내 절단</p>
-              </div>
-            </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>작은 예제로 normalize와 dedupe를 직접 계산해 봅니다</h3>
+        <p>
+          입력에 <code>- Current work: fix login 401.</code>과 whitespace만 다른
+          <code>- Current   work: fix login 401.</code>이 함께 있으면 먼저 공백이
+          한 칸으로 정리됩니다. 그 뒤 lowercase key가 같으므로 두 번째 line은
+          제거됩니다. 아주 긴 test output은 dedupe 전에 160자로 잘리고,
+          <code>- CURRENT WORK:</code>처럼 ASCII 대소문자만 다른 line도 같은 key로
+          취급됩니다.
+        </p>
+        <p>
+          반면 <code>exit=0</code>과 <code>exit=1, 401 remains</code>는 서로 다른
+          line이므로 둘 다 후보가 됩니다. 제한된 budget에서 무엇이 먼저 들어갈지는
+          시간 순서가 아니라 아래 prefix priority가 결정합니다. 따라서 latest
+          failure를 반드시 남기려면 별도 typed invariant가 필요합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 divide-y divide-border rounded-lg border border-border">
+        {PRIORITIES.map(([priority, rule]) => (
+          <div
+            key={priority}
+            className="grid min-w-0 gap-1 p-4 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-5"
+          >
+            <code className="break-words text-xs font-bold text-primary">{priority}</code>
+            <p className="break-words text-sm leading-6 text-muted-foreground">{rule}</p>
           </div>
-        </div>
-        <p>
-          <strong>4단계 파이프라인</strong>: Extract → Clean → Rank → Truncate<br />
-          각 단계는 순수 함수 — 입력만 보고 출력 결정, 전역 상태 의존 없음<br />
-          가중치 필드(<code>current_work_weight</code> 등)가 우선순위를 조절 — 튜닝 가능
-        </p>
+        ))}
+      </div>
 
-        {/* ── 1단계: extract_key_facts ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">1단계 — extract_key_facts()</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">extract_key_facts(summary) → Vec&lt;Fact&gt;</span>
-            </div>
-            <div className="font-semibold text-xs text-muted-foreground mb-2">Fact 타입 5가지 — Summary에서 추출</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">FilePath</div>
-                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">summary.file_candidates</code>에서 추출</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold text-red-600 dark:text-red-400">ErrorEvent</div>
-                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">timeline</code>에서 <code className="text-xs">EventKind::Error</code> 필터</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold text-green-600 dark:text-green-400">Milestone</div>
-                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">timeline</code>에서 <code className="text-xs">EventKind::Milestone</code> 필터</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold text-purple-600 dark:text-purple-400">CurrentWork</div>
-                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">summary.current_work</code> (있을 때만)</p>
-              </div>
-              <div className="bg-background border border-border rounded p-2.5">
-                <div className="text-xs font-mono font-semibold text-amber-600 dark:text-amber-400">Pending</div>
-                <p className="text-xs text-muted-foreground mt-1"><code className="text-xs">summary.pending_work</code> 각 항목</p>
-              </div>
-            </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Selection은 priority별로 source order를 훑되, 최종 출력은 선택된 원래
+          index 순서로 정렬됩니다. Budget 때문에 빠진 line이 있어도 notice를 넣을
+          공간이 없으면 omission 사실조차 출력되지 않을 수 있습니다. 이 module은
+          loss를 알려 주는 통계값을 반환하지만 누락된 의미를 복구하지는 않습니다.
+        </p>
+        <pre className="overflow-x-auto text-xs">
+          {`입력
+Conversation summary:                 # priority 0
+- Current   work: fix login 401.      # normalize 후 priority 0
+- current work: FIX LOGIN 401.        # lowercase key 중복 → 제거
+- Key timeline:                       # priority 1
+  - tool: test exit=1; 401 remains.   # priority 2
+<아주 긴 stdout 한 줄>                # 160자로 잘린 priority 3
+
+예: max_lines=5, char budget은 core/header/bullet+notice까지만 허용
+출력
+Conversation summary:
+- Current work: fix login 401.
+- Key timeline:
+  - tool: test exit=1; 401 remains.
+- … 1 additional line(s) omitted.`}
+        </pre>
+        <p>
+          이 예에서 whitespace collapse와 case-insensitive dedupe가 먼저 일어나고,
+          긴 stdout은 per-line truncate 뒤에도 전체 char budget에 들어가지 못해
+          빠집니다. 공간이 남아 omission notice는 추가되지만, 무엇이 빠졌는지를
+          semantic fact로 설명하지는 못합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <HeuristicFilterViz />
+      </div>
+
+      <div
+        id="paper-claw-summary-compression-source"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Pinned line-budget helper
+        </p>
+        <CitationBlock
+          source="ultraworkers/claw-code — summary_compression.rs at b71afdd…"
+          citeKey={4}
+          type="code"
+          href="https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/summary_compression.rs"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> 임의의 summary text를 제한된 문자·line budget 안에 재현 가능하게 맞출 helper가 필요합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Source는 whitespace normalize, per-line truncate, case-insensitive dedupe, prefix priority selection과 omission 통계를 순수 함수로 제공합니다.</p>
+            <p><strong>전제·조건:</strong> 링크된 commit의 ASCII prefix와 character-count budget, default 1,200/24/160 snapshot에 한정됩니다.</p>
+            <p><strong>근거 범위:</strong> Priority 0–3, line 선택 순서, duplicate·omitted·truncated 통계와 helper API의 실제 동작을 뒷받침합니다.</p>
+            <p><strong>비주장:</strong> 이 파일이 <code>compact_session</code>의 semantic compressor이거나, typed fact를 이해하거나, 최신 failure·permission·effect receipt 보존을 보장한다는 뜻은 아닙니다.</p>
           </div>
-        </div>
-        <p>
-          <strong>Fact 타입 5가지</strong>: FilePath, ErrorEvent, Milestone, CurrentWork, Pending<br />
-          사실 단위로 분해 — 각 사실은 독립적으로 삭제/보존 결정 가능<br />
-          <strong>버려지는 정보</strong>: <code>scope</code>, <code>tool_usage</code>, UserMsg/ToolCall 타임라인 이벤트 — 2차 압축에서 제거
-        </p>
+        </CitationBlock>
+      </div>
 
-        {/* ── 2단계: remove_noise ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">2단계 — remove_noise()</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">remove_noise(facts) → Vec&lt;Fact&gt;</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div className="bg-background border border-border rounded p-3">
-                <div className="text-xs font-semibold mb-1">1. 중복 제거</div>
-                <p className="text-xs text-muted-foreground">
-                  <code className="text-xs">sort_by()</code> + <code className="text-xs">dedup_by()</code><br />
-                  같은 텍스트의 사실 → 1회로
-                </p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="text-xs font-semibold mb-1">2. 임시 파일 필터</div>
-                <p className="text-xs text-muted-foreground">
-                  <code className="text-xs">/tmp/</code>, <code className="text-xs">.cache/</code>, dotfile 제외<br />
-                  장기 맥락과 무관한 경로
-                </p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="text-xs font-semibold mb-1">3. 짧은 텍스트 필터</div>
-                <p className="text-xs text-muted-foreground">
-                  10자 미만 제거<br />
-                  의미 추출 어려운 항목
-                </p>
-              </div>
-            </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Glob health probe와 semantic fidelity 검사는 목적이 다릅니다</h3>
+        <p>
+          Conversation runtime은 compaction record가 있는 session을 시작할 때
+          <code>glob_search</code>에 결과가 없을 pattern을 보내 tool executor가
+          응답하는지 확인합니다. 이것은 runtime과 tool plumbing의
+          <strong>liveness probe</strong>입니다. 새 context가 login goal을 기억하는지,
+          permission denial과 마지막 401을 보존했는지는 검사하지 않습니다.
+        </p>
+        <p>
+          Semantic fidelity를 확인하려면 candidate compacted state에서 아래 질문에
+          exact field로 답하게 하고, 원 session의 typed record와 비교해야 합니다.
+          Model judge의 자연어 평가는 보조 지표로 둘 수 있지만, permission과 effect
+          receipt 같은 safety field는 deterministic equality와 schema validation을
+          통과해야 합니다.
+        </p>
+        <p>
+          Artifact lookup은 secret이 redaction된 URI와 source digest를 사용하고,
+          tool call/result identity는 ID까지 정확히 비교합니다. Candidate가 근거 없이
+          “로그인 수정 완료”를 만들어 내면 schema가 유효하더라도 실패이며, old
+          context를 유지한 채 next-action replay가 실제 unresolved 401에서 test로
+          이어지는지 확인합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 divide-y divide-border rounded-lg border border-border">
+        {FIDELITY_CHECKS.map(([field, question]) => (
+          <div
+            key={field}
+            className="grid min-w-0 gap-1 p-4 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-5"
+          >
+            <p className="break-words text-xs font-bold text-primary">{field}</p>
+            <p className="break-words text-sm leading-6 text-muted-foreground">{question}</p>
           </div>
-        </div>
-        <p>
-          <strong>3가지 노이즈 제거</strong>:<br />
-          1. <strong>중복</strong>: 같은 파일 여러 번 언급 → 1회로<br />
-          2. <strong>임시 파일</strong>: <code>/tmp/</code>, <code>.cache/</code>, dotfile → 장기 맥락 아님<br />
-          3. <strong>짧은 텍스트</strong>: 10자 미만 → 의미 추출 어려움
-        </p>
-        <p>
-          <code>dedup_by()</code>는 <strong>정렬된 벡터에서만 작동</strong> — 선행 <code>sort_by()</code> 필수<br />
-          <code>retain()</code>은 술어가 true인 요소만 보존 — 인플레이스 필터링
-        </p>
+        ))}
+      </div>
 
-        {/* ── 3단계: rank_by_relevance ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">3단계 — rank_by_relevance()</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">rank_by_relevance(summary, facts) → Vec&lt;(Fact, f32)&gt;</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-background border border-border rounded p-3">
-                <div className="text-xs font-semibold mb-2">타입별 기본 가중치</div>
-                <div className="space-y-1 text-xs">
-                  <div className="flex justify-between"><span className="font-mono text-purple-600 dark:text-purple-400">CurrentWork</span><span className="font-semibold">3.0</span></div>
-                  <div className="flex justify-between"><span className="font-mono text-red-600 dark:text-red-400">ErrorEvent</span><span className="font-semibold">2.5</span></div>
-                  <div className="flex justify-between"><span className="font-mono text-green-600 dark:text-green-400">Milestone</span><span className="font-semibold">2.0</span></div>
-                  <div className="flex justify-between"><span className="font-mono text-muted-foreground">기타</span><span className="font-semibold">1.0</span></div>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="text-xs font-semibold mb-2">키워드 매칭 보너스</div>
-                <p className="text-xs text-muted-foreground">
-                  <code className="text-xs">current_work</code>에서 4자 이상 단어 추출<br />
-                  사실 텍스트에 키워드 N개 포함 시 <code className="text-xs">N x 0.3</code> 보너스<br />
-                  최종 점수 = 기본 가중치 + 보너스
-                </p>
-              </div>
-            </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>배포 전에는 base와 candidate를 1·3·5회 반복해서 비교합니다</h3>
+        <p>
+          압축률만 높이는 변경은 쉽게 좋은 결과처럼 보입니다. 평가에서는 현재
+          production policy를 base, 새 selection·schema를 candidate로 두고 모든
+          외부 조건을 고정합니다. 특히 compaction 직후 agent가 같은 edit를 다시
+          실행했는지까지 세어야 token 절감이 duplicate effect 비용으로 바뀌는
+          회귀를 잡을 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-7 divide-y divide-border rounded-lg border border-border">
+        {EVAL_PLAN.map(([stage, detail]) => (
+          <div
+            key={stage}
+            className="grid min-w-0 gap-1 p-4 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-5"
+          >
+            <p className="break-words text-xs font-bold text-primary">{stage}</p>
+            <p className="break-words text-sm leading-6 text-muted-foreground">{detail}</p>
           </div>
-        </div>
-        <p>
-          <strong>점수 계산</strong>: 타입별 기본 가중치 + 키워드 매칭 보너스<br />
-          현재 작업 텍스트에서 4자 이상 단어를 키워드로 추출 — stop-word 같은 짧은 단어 제외<br />
-          사실 텍스트에 키워드가 N개 포함되면 <code>N × 0.3</code> 보너스 — 관련도 반영
-        </p>
-        <p>
-          <strong>점수 예시</strong>: 현재 작업 "main.rs 리팩토링"<br />
-          - Fact::FilePath("src/main.rs") → 1.0 + 0.3 (main 매칭) = 1.3<br />
-          - Fact::ErrorEvent("compile error in main.rs") → 2.5 + 0.3 = 2.8<br />
-          - Fact::FilePath("docs/readme.md") → 1.0 + 0 = 1.0 (키워드 없음)
-        </p>
+        ))}
+      </div>
 
-        {/* ── 4단계: truncate_to_budget ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">4단계 — truncate_to_budget()</h3>
-        <div className="not-prose my-4">
-          <div className="bg-muted/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-mono bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">fn</span>
-              <span className="font-semibold text-sm">truncate_to_budget(ranked, budget) → Summary</span>
-            </div>
-            <div className="space-y-2">
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-                  <span className="text-xs font-semibold">점수 내림차순 정렬</span>
-                </div>
-                <p className="text-xs text-muted-foreground">높은 점수부터 우선 선택 대상</p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
-                  <span className="text-xs font-semibold">그리디 선택</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  예산 내에서 점수 높은 것부터 포함 — <code className="text-xs">estimate_fact_tokens()</code>로 비용 계산 후 <code className="text-xs">tokens_used + cost &lt;= budget</code> 확인
-                </p>
-              </div>
-              <div className="bg-background border border-border rounded p-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
-                  <span className="text-xs font-semibold">Summary 재조립</span>
-                </div>
-                <p className="text-xs text-muted-foreground"><code className="text-xs">Summary::from_facts(chosen)</code> — 각 Fact 타입이 원래 필드로 재배치</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <strong>그리디 knapsack</strong>: 0/1 knapsack은 NP-hard지만 근사 해법으로 충분<br />
-          점수/비용 비율 순으로 정렬하지 않고 <strong>점수 단독 정렬</strong> — 단순성 우선<br />
-          토큰 cost는 <code>estimate_fact_tokens()</code>가 계산 — 사실 타입별 평균 길이 사용
+          이 평가를 통과해야 “context가 작아졌다”를 “작업을 안전하게 이어갈 수
+          있다”로 바꿔 말할 수 있습니다. Source heuristic 자체를 존중하되,
+          production에서는 typed lineage, exact receipt 검증과 rollback 가능한 canary를
+          별도 계층으로 둬야 합니다.
         </p>
-        <p>
-          <strong>재조립 단계</strong>: <code>Summary::from_facts()</code>가 선택된 Fact들을 원래 Summary 구조로 되돌림<br />
-          각 Fact 타입이 자기가 속할 필드로 배치 — FilePath → file_candidates, ErrorEvent → timeline 등
-        </p>
-
-        {/* ── 극한 상황 ── */}
-        <h3 className="text-xl font-semibold mt-8 mb-3">극한 상황 — 예산 너무 작을 때</h3>
-        <div className="not-prose my-4">
-          <div className="bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-            <div className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-2">폴백 — 예산이 최소 사실 하나도 담을 수 없을 때</div>
-            <div className="bg-background border border-border rounded p-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div>
-                  <span className="font-mono font-semibold">scope</span>
-                  <span className="text-muted-foreground ml-1">"요약 극한 절단: " + top-1 사실</span>
-                </div>
-                <div>
-                  <span className="font-mono font-semibold">current_work</span>
-                  <span className="text-muted-foreground ml-1">None</span>
-                </div>
-                <div>
-                  <span className="font-mono font-semibold">pending_work</span>
-                  <span className="text-muted-foreground ml-1">"(생략됨 -- 예산 부족)"</span>
-                </div>
-                <div>
-                  <span className="font-mono font-semibold">나머지 필드</span>
-                  <span className="text-muted-foreground ml-1">전부 빈 값</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>폴백 동작</strong>: 예산이 매우 작아도 최소한 top-1 사실은 보존<br />
-          UI/LLM에게 "정보가 절단됨"을 명시 — ⚠️ 기호로 표시<br />
-          이 상태에 도달하면 <code>max_summary_tokens</code> 설정값이 부적절 — 설정 재검토 필요
-        </p>
-
-        {/* ── 인사이트 ── */}
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 결정론적 요약이 LLM 요약보다 나은 이유</p>
-          <p>
-            대부분의 에이전트 프레임워크는 "LLM을 불러서 요약 생성"하는 방식을 씀<br />
-            claw-code는 <strong>Rust 코드로 직접 요약 압축</strong> — LLM 호출 0회
-          </p>
-          <p className="mt-2">
-            <strong>장점</strong>:<br />
-            - <strong>비용 0</strong>: 토큰 사용량 없음, 무제한 호출 가능<br />
-            - <strong>결정론</strong>: 같은 입력 → 같은 출력, 디버깅 용이<br />
-            - <strong>속도</strong>: 수 ms 내 완료, LLM 호출(수 초) 대비 1000배 빠름<br />
-            - <strong>오프라인</strong>: 네트워크 없어도 동작
-          </p>
-          <p className="mt-2">
-            <strong>단점</strong>:<br />
-            - 자연어 서술 능력 없음 — "이 코드베이스의 목적은 X이다"를 Rust로 작성 불가<br />
-            - 의미 기반 중복 제거 불가 — 텍스트 리터럴 매칭만<br />
-            - 새로운 도메인(다국어 등) 대응 어려움 — 하드코딩된 필터 수정 필요
-          </p>
-          <p className="mt-2">
-            trade-off 결론: <strong>claw-code는 "작업 메타데이터 압축"이 목적이지 "이야기 요약"이 아님</strong><br />
-            파일 경로·오류·이정표 같은 구조화 데이터는 LLM 없이도 충분히 압축 가능<br />
-            이것이 claw-code가 추구하는 "effective but simple" 설계의 전형
-          </p>
-        </div>
-
       </div>
     </section>
   );

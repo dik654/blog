@@ -1,104 +1,179 @@
-import OverviewViz from './viz/OverviewViz';
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import OverviewViz from "./viz/OverviewViz";
+
+const FOUNDATIONS = [
+  ["tokenizer", "/ai/tokenizer", "문자열을 token ID로 나누는 규칙"],
+  ["Transformer architecture", "/ai/transformer-architecture", "hidden state와 lm_head까지의 계산 경로"],
+  ["SFT", "/ai/supervised-fine-tuning", "정답 예시를 따라 하도록 weight를 갱신하는 학습"],
+  ["RLHF", "/ai/rlhf", "reward로 policy의 상대 선호를 바꾸는 큰 그림"],
+  ["Open-R1", "/ai/open-r1", "reasoning post-training을 재현하는 도구와 실험 계약"],
+] as const;
+
+const TEXT_UNITS = [
+  {
+    term: "Code point · script",
+    meaning:
+      "Code point는 Unicode가 문자 요소에 붙인 번호이고, script는 Han·Hangul처럼 표기 체계를 묶은 분류입니다. 둘 다 그 span이 어느 언어로 쓰였는지나 사용 의도를 단독으로 확정하지 못합니다.",
+  },
+  {
+    term: "Grapheme cluster",
+    meaning:
+      "화면에서 한 글자로 보이는 단위입니다. 하나의 grapheme이 여러 code point의 조합일 수 있으므로 화면 글자 수와 code point 수가 항상 같지는 않습니다.",
+  },
+  {
+    term: "Normalization → tokenizer",
+    meaning:
+      "겉보기에 같은 문자열도 Unicode 조합이 다를 수 있습니다. NFC 같은 normalization으로 표현을 맞춘 뒤에도 tokenizer는 이를 한 token, 여러 subword 또는 byte 조각으로 나눌 수 있습니다.",
+  },
+] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">한자 leakage는 왜 발생하는가</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        먼저 “한국어 문제”를 출력 구간별 실패로 다시 정의합니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          Qwen으로 한국어 에이전트를 만들어 본 사람은 한 번쯤 마주친다.<br />
-          평범한 문장 사이에 갑자기 <strong>分析</strong>, <strong>結果</strong>, <strong>問題</strong> 같은 한자가 끼어든다.<br />
-          심한 경우 <code>&lt;think&gt;</code> 블록 전체가 중국어로 바뀐다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          다국어 모델이 한국어 질문에 영어·중국어를 섞는 현상을 넓게는
+          <strong> language confusion</strong>이라고 부릅니다. 이 글에서
+          <strong> language leakage</strong>는 그중에서도 요청과 정책이 허용하지
+          않은 언어 span이 출력에 새어 나온 경우를 뜻합니다. 두 용어를 구분해야
+          “외국 문자가 하나라도 있으면 실패”라는 잘못된 규칙을 피할 수 있습니다.
         </p>
-        <p className="leading-7">
-          처음에는 프롬프트 탓이라고 생각하기 쉽다.<br />
-          "한국어로만 답변하세요"를 시스템 프롬프트에 넣고, few-shot에 한국어 예시를 박고, 그래도 새는 토큰만 regex로 잘라낸다.<br />
-          하지만 곧 깨닫는다 — 이건 프롬프트로 막을 수 있는 종류의 문제가 아니다.
+        <p>
+          고정 사례의 “首尔”은 중국어 문자이지만 사용자가 번역을 명시했으므로
+          정상입니다. 반면 계산 설명 중에 이유 없이 “因此”가 끼면 문자 단위
+          leakage이고, 연구용 reasoning trace 전체가 중국어로 바뀌면 구간 단위
+          language confusion입니다. 최종 답변만 검사하면 두 번째 실패를 놓치고,
+          문자 집합만 검사하면 정상 번역을 오탐합니다.
         </p>
-        <p className="leading-7">
-          원인은 한 줄로 요약된다.<br />
-          <strong>Qwen lm_head의 한자 토큰 logit이 한국어 토큰 logit을 자주 이긴다.</strong><br />
-          그게 전부다. 나머지는 이 사실에서 파생된 증상일 뿐이다.
+      </div>
+
+      <ContentBoundary article="qwen-korean-consistency" />
+
+      <div className="not-prose my-8">
+        <OverviewViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>문자열이 다음 token으로 바뀌는 경로</h3>
+        <p>
+          계산 경로를 보기 전에 화면의 글자, Unicode 번호, tokenizer token을 같은
+          단위로 취급하지 않아야 합니다. 아래 세 단위는 서로 연결되지만 어느 것도
+          그 자체로 “중국어 오류”라는 판정은 아닙니다.
+        </p>
+      </div>
+
+      <dl className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-3">
+        {TEXT_UNITS.map((item) => (
+          <div
+            key={item.term}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <dt className="break-words text-sm font-semibold">{item.term}</dt>
+            <dd className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+              {item.meaning}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          모델은 글자를 통째로 이해한 뒤 언어를 고르는 것이 아닙니다. 먼저
+          <strong> tokenizer</strong>가 입력 문자열을 vocabulary의 token ID
+          배열로 바꾸고, Transformer가 현재 문맥을 요약한
+          <strong> hidden state</strong>를 만듭니다. 마지막 <code>lm_head</code>는
+          vocabulary의 모든 후보에 <strong>logit</strong>, 즉 softmax 이전의
+          정규화되지 않은 점수를 부여합니다.
+        </p>
+        <p>
+          <strong>softmax</strong>는 각 logit을 독립적으로 확률로 바꾸는 함수가
+          아니라, vocabulary 전체 후보를 한 분모에서 비교해 상대 확률을
+          만듭니다. 따라서 중국어 token 하나의 logit을 낮추면 그 token만 사라지는
+          것이 아니라 다른 모든 후보의 상대 확률도 조금씩 달라집니다. 실제 다음
+          token은 이 확률과 temperature·top-p 같은 decoding 설정을 거쳐
+          선택됩니다.
+        </p>
+        <p>
+          이 계산 경로 때문에 원인을 <code>lm_head</code> 한 행으로만 돌릴 수는
+          없습니다. tokenizer가 “首尔”을 몇 조각으로 나누는지, 앞서 생성한
+          문맥이 어떤 hidden state를 만드는지, 학습 데이터와 post-training이
+          어떤 언어 선호를 남겼는지가 모두 logit에 반영됩니다. Smoothie-Qwen은
+          이 경로의 마지막 부분을 고치는 방법이고, SFT와 RL은 앞선 표현과 policy
+          자체를 다시 학습하는 방법입니다.
         </p>
 
-        <div className="not-prose my-8"><OverviewViz /></div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">vocab과 사전학습 분포의 비대칭</h3>
-        <p className="leading-7">
-          Qwen 토크나이저는 BBPE(Byte-level BPE) 기반의 약 152K 토큰 vocab을 가진다.<br />
-          이 vocab 안에 한글 음절(U+AC00~D7A3)과 CJK 통합 한자(U+4E00~9FFF)가 같은 ID 공간을 공유한다.<br />
-          토큰 ID 그 자체는 언어 정보를 모른다 — 그냥 정수 인덱스다.
+        <h3>reasoning과 final은 같은 출력이 아닙니다</h3>
+        <p>
+          연구 논문은 종종 응답을 reasoning trace와 final answer로 나눠 평가합니다.
+          고정 사례라면 계산 근거가 적힌 연구용 trace와 “3,200원”이라는 최종
+          답변, “首尔”이라는 번역 필드를 각각 채점해야 합니다. 한 구간이 한국어라고
+          다른 구간도 한국어라고 가정할 수 없기 때문입니다.
         </p>
-        <p className="leading-7">
-          문제는 사전학습 코퍼스 분포다.<br />
-          Qwen2.5 / Qwen3는 영어와 중국어 중심으로 수조 토큰을 학습한다.<br />
-          한국어 비중은 추정치로 1~3% 사이다. 같은 의미 단어 "분석"과 "分析"가 등장하는 빈도 격차가 한 자릿수 이상 벌어진다.
-        </p>
-        <p className="leading-7">
-          학습 결과: lm_head 가중치 행렬 W의 한자 토큰 row가 한글 토큰 row보다 훨씬 풍부하게 학습된다.<br />
-          한국어 컨텍스트 hidden state h가 들어와도, W·h를 계산하면 한자 row가 큰 inner product를 만들어낸다.<br />
-          softmax는 그 logit 격차를 그대로 확률로 옮긴다.
+        <p>
+          다만 출력된 reasoning trace를 모델 내부 계산의 완전하고 충실한
+          설명으로 간주해서는 안 됩니다. 이 글에서 trace는 연구자가 학습·평가를
+          위해 명시한 텍스트 필드이며, 제품에서는 숨겨진 chain-of-thought 공개를
+          요구하는 대신 정답과 짧고 검증 가능한 근거를 요청할 수 있습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">왜 reasoning 단계에서 더 심해지는가</h3>
-        <p className="leading-7">
-          가장 흥미로운 관찰은 <code>&lt;think&gt;</code> 블록 안에서 leakage가 폭증한다는 것이다.<br />
-          최종 답변은 한국어로 깔끔하게 나오는데, 추론 과정만 중국어로 채워지는 경우가 흔하다.
+        <h3>기반 개념은 정본 글에서 가져옵니다</h3>
+        <p>
+          아래 개념을 이 글에서 다시 정의하면 설명이 중복되고 수정 지점도
+          흩어집니다. 낯선 항목만 먼저 읽고 돌아오면, 이후 절의 수식이 어느
+          계산을 바꾸는지 따라갈 수 있습니다.
         </p>
-        <p className="leading-7">
-          이유는 학습 신호의 출처에 있다.<br />
-          Qwen3의 long-CoT(긴 추론) 학습 데이터는 압도적으로 중국어와 영어다.<br />
-          모델이 "더 정밀하게 사고하는 모드"로 진입할수록, 그 모드와 강하게 상관된 토큰 — 즉 중국어 한자 — 의 logit이 솟구친다.<br />
-          한국어 reasoning 패턴이 학습 분포에 거의 없으므로, 모델은 자연스럽게 중국어 reasoning으로 회귀한다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>핵심 통찰</strong> — leakage는 "한국어를 모른다"가 아니라 "한국어 reasoning 경로를 따로 학습한 적이 없다"는 문제다.<br />
-          모델은 한국어 토큰 자체는 알고 있다. 다만 reasoning 모드의 attractor가 중국어 쪽에 크게 형성돼 있을 뿐이다.<br />
-          이 차이가 해법 선택을 좌우한다 — 어휘 자체를 못 쓰는 게 아니라면, lm_head 단계의 가벼운 보정만으로도 큰 효과를 얻을 수 있다.
-        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">관찰되는 leakage 패턴 4가지</h3>
-        <p className="leading-7">
-          실전에서 마주치는 leakage는 몇 가지 정형화된 형태로 나타난다.<br />
-          이 분류를 미리 알고 있으면 어느 해법이 어디에 효과적인지 판단하기 쉽다.
-        </p>
-        <ul className="leading-7">
-          <li>
-            <strong>어휘 치환</strong> — 한국어 문장 안의 한자어가 한자로 표기된다. "분석한다" → "分析한다".<br />
-            가장 흔하고, 가장 거슬리지만, 의미는 보존된다. lm_head 보정으로 거의 다 잡힌다.
-          </li>
-          <li>
-            <strong>think 블록 누출</strong> — 최종 답은 한국어인데 reasoning이 통째로 중국어/영어다.<br />
-            사용자에게 직접 노출되지 않더라도 디버깅과 신뢰성에 치명적이다. RL 보정이 가장 효과적인 영역.
-          </li>
-          <li>
-            <strong>코드/수식 주변 한자 폭증</strong> — 영어 식별자나 수식이 등장하면 그 직후 한자 토큰의 등장 빈도가 급증한다.<br />
-            multilingual 코퍼스에서 코드 + 중국어 주석 패턴을 많이 봤기 때문이다.
-          </li>
-          <li>
-            <strong>긴 응답 후반부 drift</strong> — 응답 길이가 길어질수록 한자 비율이 monotonic하게 증가한다.<br />
-            컨텍스트가 자기참조하면서 한자 토큰이 한자 토큰을 부른다. Length 보상이 RL에서 따로 들어가는 이유.
-          </li>
-        </ul>
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2">
+        {FOUNDATIONS.map(([label, href, description]) => (
+          <Link
+            key={href}
+            to={href}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4 transition-colors hover:border-primary/50"
+          >
+            <span className="text-sm font-semibold text-foreground">{label}</span>
+            <span className="mt-1 block break-words text-xs leading-5 text-muted-foreground">
+              {description}
+            </span>
+          </Link>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">해법은 어디로 가야 하는가</h3>
-        <p className="leading-7">
-          문제가 lm_head 차원에서 발생한다는 사실은 해법의 위계를 자연스럽게 정해준다.<br />
-          입력단(프롬프트)에서 멀어지고 가중치단(weight)에 가까워질수록 더 강력하고, 더 비쌀 가능성이 높다.
-        </p>
-        <p className="leading-7">
-          이 글에서 다룰 4가지 해법은 그 스펙트럼을 따라 배치된다.
-        </p>
-        <ul className="leading-7">
-          <li><strong>프롬프트 가드레일</strong> — 0 비용, 가장 약함. 왜 부족한지 다음 섹션에서 정리한다.</li>
-          <li><strong>런타임 LLM judge + retry</strong> — 출력단 사후 검증. 추가 추론 비용이 들지만 모델은 그대로 둔다.</li>
-          <li><strong>Smoothie-Qwen</strong> — dnotitia가 만든 lm_head weight 직접 조정. 재학습 없이 드롭인 교체. 비용 1회성.</li>
-          <li><strong>RL fine-tune</strong> — Korean Language Consistency를 보상에 넣고 GRPO로 재학습. 가장 강력하고 가장 비쌈.</li>
-        </ul>
-        <p className="leading-7">
-          각 섹션은 단순히 "어떻게 동작하는가"가 아니라 "<strong>왜 이 위치에서 효과가 나는가</strong>"를 추적한다.<br />
-          토큰 → logit → softmax → 디코딩 → 보상 → 가중치 갱신, 이 사슬을 따라가다 보면 4가지 해법이 한 줄에 꿰진다.
+      <div
+        id="paper-qwen3-official"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">근거 읽기 · Qwen3 Technical Report</p>
+        <CitationBlock
+          source="Qwen Team — Qwen3 Technical Report"
+          citeKey={1}
+          type="paper"
+          href="https://arxiv.org/abs/2505.09388"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> Qwen3 모델군의 architecture, pre-training, post-training과 multilingual·reasoning 평가를 한 기술 보고서에서 설명합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> thinking/non-thinking 동작과 dense·MoE 계열을 함께 제시해, 이 글이 다루는 Qwen3 checkpoint의 공식 배경을 제공합니다.</p>
+            <p><strong>전제·실험 조건:</strong> 보고서가 명시한 Qwen3 모델군, 학습 recipe, benchmark와 decoding 조건 안에서 읽어야 합니다.</p>
+            <p><strong>근거 범위:</strong> Qwen3가 다국어와 reasoning을 대상으로 설계됐다는 배경 근거이며, 한국어 leakage의 단일 원인을 규명한 실험은 아닙니다.</p>
+            <p><strong>비주장:</strong> 모든 Qwen3 크기·checkpoint·serving 설정에서 같은 비율의 언어 혼용이 발생하거나 같은 보정법이 최적이라는 주장은 하지 않습니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>이제 실패를 네 label로 기록합니다</h3>
+        <p>
+          개입 전에 문자 혼용, 구간 전환, reasoning/final 불일치, 정상 예외를
+          별도 label로 저장합니다. 길이·도메인·sampling 조건도 함께 기록해야
+          프롬프트가 약한 것인지, 특정 입력이 다른 언어를 유도한 것인지, 모델
+          version이 바뀐 것인지 재현할 수 있습니다. 다음 절은 가장 값싼 입력
+          정책부터 시작하지만, 어떤 방법도 이 관찰 단계를 대신하지는 못합니다.
         </p>
       </div>
     </section>

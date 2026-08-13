@@ -1,9 +1,9 @@
-import Overview from './optimizers/Overview';
-import SGD from './optimizers/SGD';
-import BatchVariants from './optimizers/BatchVariants';
-import Momentum from './optimizers/Momentum';
-import Adam from './optimizers/Adam';
-import AdamW from './optimizers/AdamW';
+import Overview from "./optimizers/Overview";
+import SGD from "./optimizers/SGD";
+import BatchVariants from "./optimizers/BatchVariants";
+import Momentum from "./optimizers/Momentum";
+import Adam from "./optimizers/Adam";
+import AdamW from "./optimizers/AdamW";
 
 export default function OptimizersArticle() {
   return (

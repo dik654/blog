@@ -1,47 +1,29 @@
-import EmbeddingViz from './viz/EmbeddingViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import EmbeddingViz from "./viz/EmbeddingViz";
 
 export default function Embedding() {
   return (
-    <section id="embedding" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">임베딩 &amp; 벡터 DB</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          텍스트를 고정 차원 벡터로 변환 — 의미적으로 비슷한 텍스트는 벡터 공간에서 가깝게<br />
-          임베딩 모델의 품질이 검색 정확도를 직접 결정한다
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">임베딩 모델 선택</h3>
-        <ul>
-          <li><strong>E5(multilingual-e5)</strong> — 다국어 지원, 한국어 성능 우수</li>
-          <li><strong>BGE(BAAI General Embedding)</strong> — 영어 MTEB 상위권</li>
-          <li><strong>Korean-SBERT</strong> — 한국어 특화, 제조 도메인에 KR-SBERT + domain fine-tuning 조합 유효</li>
-          <li><strong>OpenAI text-embedding-3</strong> — API 기반, 품질 안정적이지만 비용 발생</li>
-        </ul>
+    <section id="embedding" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">Embedding model을 바꾸는 일은 파일 하나를 교체하는 일이 아니라 검색 공간 전체의 version을 바꾸는 일입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Query와 document는 checkpoint가 학습한 instruction·pooling·normalization 규약으로 encode합니다. 이 원리는 <a href="/ai/sentence-embeddings">문장 임베딩 정본</a>에서 다루며, 여기서는 corpus snapshot과 index를 함께 배포하는 계약에 집중합니다.</p>
+        <p>같은 dimension이라고 같은 좌표계는 아닙니다. Encoder checkpoint나 query prefix, truncation 또는 normalization을 바꾸면 기존 document vector와 새 query vector의 내적을 해석할 근거가 사라집니다. 새 version으로 corpus를 다시 encode하고, shadow index에서 exact-search subset과 ANN recall·latency를 확인한 뒤 alias를 전환합니다.</p>
       </div>
-
-      <div className="not-prose my-8">
-        <EmbeddingViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">벡터 DB 선택</h3>
-        <ul>
-          <li><strong>FAISS</strong> — Meta 제작 라이브러리, 초고속. 로컬 파일 기반, 관리 간단</li>
-          <li><strong>Chroma</strong> — Python 친화적, 프로토타입에 적합</li>
-          <li><strong>Milvus / Qdrant / Weaviate</strong> — 프로덕션 벡터 DB, 분산·메타데이터 필터링 지원</li>
-        </ul>
-        <p>
-          <strong>인덱스 전략</strong> — 수만 건은 Flat(완전 탐색), 수십만~수백만 건은 HNSW(그래프 기반) 또는 IVF(클러스터 기반)
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 차원 vs 속도</p>
-        <p className="text-sm">
-          임베딩 차원이 높을수록 표현력이 좋지만 검색 속도가 느려진다<br />
-          1024차원이 기본, 속도가 중요하면 384차원 모델(all-MiniLM)도 충분한 경우가 많다
-        </p>
-      </div>
+      <ExplainedFormula
+        question="어떤 값이 같아야 query와 index가 같은 검색 공간이라고 말할 수 있을까요?"
+        idea={<>Index version을 임의의 이름이 아니라 입력부터 source snapshot까지의 tuple로 정의합니다. Tuple의 한 항이라도 바뀌면 새 index를 만들고 비교 가능성을 다시 검증합니다.</>}
+        formula={String.raw`V_{\mathrm{index}}=(h_E,h_T,h_P,d,\nu,\delta,h_C,h_A)`}
+        terms={[
+          { symbol: "h_E", name: "encoder hash", description: "Embedding checkpoint와 revision의 식별자입니다." },
+          { symbol: "h_T,h_P", name: "tokenizer · preprocessing hashes", description: "Tokenizer, role instruction, pooling, truncation 규약입니다." },
+          { symbol: "d,nu,delta", name: "vector contract", description: "Dimension d, normalization ν, distance metric δ입니다." },
+          { symbol: "h_C", name: "corpus snapshot", description: "Source와 chunk revision을 고정한 식별자입니다." },
+          { symbol: "h_A", name: "ANN config", description: "Index type·build/search parameter·library version입니다." },
+        ]}
+        assumptions={["Query service가 active index와 같은 tuple의 encoder path를 사용합니다.", "Hash는 실제 artifact와 configuration을 재현할 수 있는 registry에 연결됩니다.", "동일 tuple은 검색 재현 조건이지 relevance 품질 보증이 아닙니다."]}
+        interpretation="Checkpoint만 같아도 document는 normalized인데 query는 raw vector라면 다른 contract입니다. Alias 전환과 rollback도 이 tuple 단위로 수행합니다."
+      />
+      <div className="not-prose my-8"><EmbeddingViz /></div>
     </section>
   );
 }

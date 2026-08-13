@@ -1,39 +1,38 @@
-export interface RelayEndpoint {
-  id: string;
-  name: string;
-  method: string;
-  endpoint: string;
-  desc: string;
-  timing: string;
-  color: string;
-}
-
-export const RELAY_ENDPOINTS: RelayEndpoint[] = [
+export const API_SURFACES = [
   {
-    id: 'register',
-    name: 'register_validator',
-    method: 'POST',
-    endpoint: '/eth/v1/builder/validators',
-    desc: '검증자를 릴레이에 등록한다. fee_recipient(수수료 수취 주소)와 gas_limit을 포함. 매 에폭마다 갱신하여 설정 변경을 반영.',
-    timing: '매 에폭 (6.4분)',
-    color: '#6366f1',
+    id: "registration",
+    name: "validator registration",
+    method: "POST",
+    endpoint: "/eth/v1/builder/validators",
+    caller: "mev-boost / CL-side integration",
+    desc: "fee recipient와 gas limit preferences를 signed registration으로 relay에 알린다.",
+    color: "#6366f1",
   },
   {
-    id: 'get-header',
-    name: 'get_header',
-    method: 'GET',
-    endpoint: '/eth/v1/builder/header/{slot}/{parent}/{pubkey}',
-    desc: '특정 슬롯에 대한 최적 빌더 입찰을 요청한다. 응답에 SignedBuilderBid(블록 헤더 + value)가 포함. Proposer는 이 value를 로컬 블록과 비교.',
-    timing: '슬롯 시작 시',
-    color: '#0ea5e9',
+    id: "header",
+    name: "blinded bid request",
+    method: "GET",
+    endpoint: "/eth/v1/builder/header/{slot}/{parent}/{pubkey}",
+    caller: "proposer-side builder client",
+    desc: "slot과 parent에 맞는 signed builder bid를 요청하고 policy에 따라 후보를 평가한다.",
+    color: "#0ea5e9",
   },
   {
-    id: 'get-payload',
-    name: 'get_payload',
-    method: 'POST',
-    endpoint: '/eth/v1/builder/blinded_blocks',
-    desc: '서명된 blinded block을 릴레이에 제출하면, 릴레이가 실제 ExecutionPayload(블록 바디)를 반환한다. 이 시점에 빌더의 MEV 전략이 공개.',
-    timing: '블록 서명 후',
-    color: '#10b981',
+    id: "payload",
+    name: "blinded block submission",
+    method: "POST",
+    endpoint: "/eth/v1/builder/blinded_blocks",
+    caller: "proposer-side builder client",
+    desc: "signed blinded beacon block을 제출하고 선택된 full execution payload를 받는다.",
+    color: "#10b981",
   },
-];
+  {
+    id: "bundle",
+    name: "private bundle submission",
+    method: "JSON-RPC",
+    endpoint: "eth_sendBundle 계열",
+    caller: "searcher → builder/relay service",
+    desc: "ordered transactions와 target constraints를 전달하는 private orderflow API이며 validator Builder API와 별도 surface다.",
+    color: "#f59e0b",
+  },
+] as const;

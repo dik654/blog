@@ -19,9 +19,21 @@ pub fn setup<R: RngCore>(
 }`;
 
 export const SETUP_ANNOTATIONS = [
-  { lines: [5, 8] as [number, number], color: 'sky' as const, note: '비밀 값 생성 (beta, g, gamma_g, h)' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: 'beta의 거듭제곱 스칼라 계산' },
-  { lines: [16, 18] as [number, number], color: 'amber' as const, note: 'MSM으로 G1/hiding 포인트 생성' },
+  {
+    lines: [5, 8] as [number, number],
+    color: "sky" as const,
+    note: "비밀 값 생성 (beta, g, gamma_g, h)",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "beta의 거듭제곱 스칼라 계산",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "amber" as const,
+    note: "MSM으로 G1/hiding 포인트 생성",
+  },
 ];
 
 export const COMMIT_CODE = `// 다항식 커밋 & Opening Proof
@@ -46,7 +58,19 @@ pub fn commit(powers: &Powers<E>, polynomial: &P,
 }`;
 
 export const COMMIT_ANNOTATIONS = [
-  { lines: [6, 7] as [number, number], color: 'sky' as const, note: 'leading zero 최적화로 불필요한 연산 제거' },
-  { lines: [10, 11] as [number, number], color: 'emerald' as const, note: 'MSM: C = p(beta)*G (핵심 커밋 연산)' },
-  { lines: [14, 18] as [number, number], color: 'amber' as const, note: 'hiding: 랜덤 다항식으로 정보 은닉' },
+  {
+    lines: [6, 7] as [number, number],
+    color: "sky" as const,
+    note: "leading zero 최적화로 불필요한 연산 제거",
+  },
+  {
+    lines: [10, 11] as [number, number],
+    color: "emerald" as const,
+    note: "MSM: C = p(beta)*G (핵심 커밋 연산)",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "amber" as const,
+    note: "hiding: 랜덤 다항식으로 정보 은닉",
+  },
 ];

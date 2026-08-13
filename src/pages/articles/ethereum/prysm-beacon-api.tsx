@@ -1,10 +1,10 @@
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './prysm-beacon-api/codeRefs';
-import { prysmTree } from './prysm-beacon-api/fileTrees';
-import Overview from './prysm-beacon-api/Overview';
-import GrpcServer from './prysm-beacon-api/GrpcServer';
-import RestGateway from './prysm-beacon-api/RestGateway';
-import ValidatorApi from './prysm-beacon-api/ValidatorApi';
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prysm-beacon-api/codeRefs";
+import { prysmTree } from "./prysm-beacon-api/fileTrees";
+import Overview from "./prysm-beacon-api/Overview";
+import GrpcServer from "./prysm-beacon-api/GrpcServer";
+import RestGateway from "./prysm-beacon-api/RestGateway";
+import ValidatorApi from "./prysm-beacon-api/ValidatorApi";
 
 export default function PrysmBeaconApi() {
   const sidebar = useCodeSidebar();
@@ -22,7 +22,11 @@ export default function PrysmBeaconApi() {
         codeRefs={codeRefs}
         fileTrees={{ prysm: prysmTree }}
         projectMetas={{
-          prysm: { id: 'prysm', label: 'Prysm · Go', badgeClass: 'bg-violet-500/10 border-violet-500 text-violet-700' },
+          prysm: {
+            id: "prysm",
+            label: "Prysm · Go",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
         }}
       />
     </>

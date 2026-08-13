@@ -1,18 +1,34 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const msgRouterCodeRefs: Record<string, CodeRef> = {
-  'msg-router-struct': {
-    path: 'baseapp/msg_service_router.go',
-    lang: 'go',
+  "msg-router-struct": {
+    path: "baseapp/msg_service_router.go",
+    lang: "go",
     highlight: [1, 22],
     desc: `MsgServiceRouter — Msg 타입 URL → 핸들러 매핑.
 모듈이 RegisterService()로 핸들러를 등록하면 routes 맵에 저장.
 💡 gRPC ServiceDesc 기반 — Protobuf 서비스 정의가 곧 메시지 라우팅 규칙.`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'MessageRouter 인터페이스 — Handler()로 핸들러 조회' },
-      { lines: [5, 9], color: 'emerald', note: 'MsgServiceRouter 구조체 — routes 맵 + CircuitBreaker' },
-      { lines: [11, 14], color: 'amber', note: 'Handler() — Msg의 typeURL로 routes에서 조회' },
-      { lines: [16, 22], color: 'violet', note: 'RegisterService — gRPC ServiceDesc의 메서드를 순회하며 등록' },
+      {
+        lines: [1, 3],
+        color: "sky",
+        note: "MessageRouter 인터페이스 — Handler()로 핸들러 조회",
+      },
+      {
+        lines: [5, 9],
+        color: "emerald",
+        note: "MsgServiceRouter 구조체 — routes 맵 + CircuitBreaker",
+      },
+      {
+        lines: [11, 14],
+        color: "amber",
+        note: "Handler() — Msg의 typeURL로 routes에서 조회",
+      },
+      {
+        lines: [16, 22],
+        color: "violet",
+        note: "RegisterService — gRPC ServiceDesc의 메서드를 순회하며 등록",
+      },
     ],
     code: `type MessageRouter interface {
 	Handler(msg sdk.Msg) MsgServiceHandler
@@ -38,18 +54,34 @@ func (msr *MsgServiceRouter) RegisterService(sd *grpc.ServiceDesc, handler any) 
 }`,
   },
 
-  'runmsgs': {
-    path: 'baseapp/baseapp.go',
-    lang: 'go',
+  runmsgs: {
+    path: "baseapp/baseapp.go",
+    lang: "go",
     highlight: [1, 24],
     desc: `runMsgs — 트랜잭션 내 메시지들을 순차 실행.
 MsgServiceRouter.Handler(msg)로 핸들러를 찾아 호출.
 💡 하나라도 실패하면 전체 TX 롤백 — CacheMultiStore 분기 덕분.`,
     annotations: [
-      { lines: [1, 4], color: 'sky', note: 'Finalize/Simulate 모드에서만 실행' },
-      { lines: [6, 10], color: 'emerald', note: 'MsgServiceRouter에서 핸들러 조회' },
-      { lines: [12, 15], color: 'amber', note: '핸들러 실행 = 모듈의 MsgServer 메서드 호출' },
-      { lines: [17, 24], color: 'violet', note: '이벤트 + 응답 수집 → sdk.Result 조립' },
+      {
+        lines: [1, 4],
+        color: "sky",
+        note: "Finalize/Simulate 모드에서만 실행",
+      },
+      {
+        lines: [6, 10],
+        color: "emerald",
+        note: "MsgServiceRouter에서 핸들러 조회",
+      },
+      {
+        lines: [12, 15],
+        color: "amber",
+        note: "핸들러 실행 = 모듈의 MsgServer 메서드 호출",
+      },
+      {
+        lines: [17, 24],
+        color: "violet",
+        note: "이벤트 + 응답 수집 → sdk.Result 조립",
+      },
     ],
     code: `func (app *BaseApp) runMsgs(
 	ctx sdk.Context, msgs []sdk.Msg,

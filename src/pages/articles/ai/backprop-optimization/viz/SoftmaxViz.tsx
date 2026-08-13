@@ -1,61 +1,79 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, H, EXP, SUM, PROB, LABELS, COLORS } from './softmaxData';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS, H, EXP, SUM, PROB, LABELS } from "./softmaxData";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
+const colors = [
+  "bg-rose-500 border-rose-500/30 text-rose-700 dark:text-rose-300",
+  "bg-sky-500 border-sky-500/30 text-sky-700 dark:text-sky-300",
+  "bg-emerald-500 border-emerald-500/30 text-emerald-700 dark:text-emerald-300",
+] as const;
+
+function ValueBar({ value, maximum, color }: { value: number; maximum: number; color: string }) {
+  return (
+    <div className="h-2 overflow-hidden rounded-sm bg-muted/55">
+      <div className={`h-full rounded-sm ${color.split(" ")[0]}`} style={{ width: `${Math.max(2, (Math.abs(value) / maximum) * 100)}%` }} />
+    </div>
+  );
+}
 
 export default function SoftmaxViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 160" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* h bars */}
-          {H.map((v, i) => {
-            const by = 20 + i * 38;
-            const barW = Math.abs(v) * 20;
-            return (
-              <g key={i}>
-                <text x={28} y={by + 14} textAnchor="end" fontSize={9} fontWeight={500} fill={COLORS[i]}>{LABELS[i]}</text>
-                <rect x={35} y={by} width={barW} height={20} rx={3} fill={`${COLORS[i]}25`} stroke={COLORS[i]} strokeWidth={0.8} />
-                <text x={40 + barW} y={by + 14} fontSize={9} fill={COLORS[i]}>h={v}</text>
-              </g>
-            );
-          })}
-          <text x={120} y={62} fontSize={12} fill="var(--muted-foreground)">→</text>
+        <div className="w-full max-w-4xl">
+          <div className="grid gap-6 md:grid-cols-[minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-8">
+            <section className="min-w-0">
+              <p className="text-[10px] font-bold text-muted-foreground">01 · LOGITS</p>
+              <p className="mt-1 text-sm font-semibold">범위 제한이 없는 class score</p>
+              <div className="mt-5 space-y-4">
+                {H.map((value, index) => (
+                  <div key={LABELS[index]} className="min-w-0">
+                    <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
+                      <span className="truncate font-semibold">{LABELS[index]}</span>
+                      <span className="font-mono tabular-nums text-muted-foreground">{value.toFixed(2)}</span>
+                    </div>
+                    <ValueBar value={value} maximum={Math.max(...H.map(Math.abs))} color={colors[index]} />
+                  </div>
+                ))}
+              </div>
+            </section>
 
-          {/* e^h column */}
-          {step >= 1 && EXP.map((v, i) => (
-            <motion.text key={i} x={160} y={34 + i * 38} fontSize={9} fill={COLORS[i]}
-              initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={sp}>
-              e^{H[i]} = {v}
-            </motion.text>
-          ))}
+            <section className={`min-w-0 border-t border-border/60 pt-5 transition-opacity md:border-l md:border-t-0 md:pl-8 md:pt-0 ${step >= 1 ? "opacity-100" : "opacity-25"}`}>
+              <p className="text-[10px] font-bold text-muted-foreground">02 · POSITIVE WEIGHTS</p>
+              <p className="mt-1 text-sm font-semibold">지수 함수로 양수 weight 만들기</p>
+              <div className="mt-5 space-y-3">
+                {EXP.map((value, index) => (
+                  <div key={LABELS[index]} className="flex items-center justify-between gap-4 border-b border-border/50 pb-3 text-xs last:border-0">
+                    <span className="font-mono text-muted-foreground">exp({H[index]})</span>
+                    <span className="font-mono font-bold tabular-nums">{value.toFixed(value < 1 ? 3 : 2)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className={`mt-4 flex items-center justify-between border-t border-border pt-3 text-xs transition-opacity ${step >= 2 ? "opacity-100" : "opacity-25"}`}>
+                <span className="font-semibold">공유 분모 Σ exp(z)</span>
+                <span className="font-mono font-bold tabular-nums">{SUM}</span>
+              </div>
+            </section>
 
-          {/* Sum */}
-          {step >= 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <line x1={140} y1={118} x2={230} y2={118} stroke="var(--border)" strokeWidth={0.8} />
-              <text x={185} y={132} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--foreground)">Σ = {SUM}</text>
-            </motion.g>
-          )}
-
-          {step >= 3 && <text x={240} y={62} fontSize={12} fill="var(--muted-foreground)">→</text>}
-
-          {/* Probability bars */}
-          {step >= 3 && PROB.map((v, i) => {
-            const by = 20 + i * 38;
-            const barW = v * 130;
-            return (
-              <motion.g key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={sp}>
-                <rect x={260} y={by} width={barW} height={20} rx={3} fill={`${COLORS[i]}30`} stroke={COLORS[i]} strokeWidth={1} />
-                <text x={265 + barW} y={by + 14} fontSize={9} fontWeight={600} fill={COLORS[i]}>{(v * 100).toFixed(0)}%</text>
-                {i === 0 && <text x={395} y={by + 14} fontSize={9} fill="#ef4444">← 잘못된 예측!</text>}
-              </motion.g>
-            );
-          })}
-
-          <text x={350} y={150} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">yᵢ = e^hᵢ / Σe^hⱼ</text>
-        </svg>
+            <section className={`min-w-0 border-t border-border/60 pt-5 transition-opacity md:border-l md:border-t-0 md:pl-8 md:pt-0 ${step >= 3 ? "opacity-100" : "opacity-25"}`}>
+              <p className="text-[10px] font-bold text-primary">03 · PROBABILITY</p>
+              <p className="mt-1 text-sm font-semibold">같은 분모로 나눠 합을 1로 정규화</p>
+              <div className="mt-5 space-y-4">
+                {PROB.map((value, index) => (
+                  <div key={LABELS[index]} className="min-w-0">
+                    <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
+                      <span className="truncate font-semibold">{LABELS[index]}</span>
+                      <span className="font-mono font-bold tabular-nums">{(value * 100).toFixed(0)}%</span>
+                    </div>
+                    <ValueBar value={value} maximum={1} color={colors[index]} />
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 border-l border-rose-500/40 pl-3 text-xs leading-5 text-muted-foreground">
+                예측 class가 정답과 다르면, 다음 cross-entropy가 그 차이를 scalar loss로 바꿉니다.
+              </p>
+            </section>
+          </div>
+        </div>
       )}
     </StepViz>
   );

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { AlertBox, ActionBox, ModuleBox, DataBox } from '@/components/viz/boxes';
+import { AlertBox, ActionBox, AnnotationBox, ModuleBox, DataBox } from '@/components/viz/boxes';
 import { C } from './ContextVizData';
 
 /* Step 0: L2 비용 */
@@ -11,10 +11,9 @@ export function StepL2Cost() {
       animate={{ cx: 200, cy: 41, opacity: 0 }}
       transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1 }} />
     <ModuleBox x={210} y={20} w={90} h={42} label="L1" sub="데이터 게시" color={C.err} />
-    <motion.text x={340} y={45} fontSize={11} fill={C.err}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-      비용 = L2 수수료의 대부분
-    </motion.text>
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+      <AnnotationBox x={315} y={13} w={100} h={58} label="비용 = L2 수수료의 대부분" color={C.err} eyebrow="병목" />
+    </motion.g>
   </g>);
 }
 

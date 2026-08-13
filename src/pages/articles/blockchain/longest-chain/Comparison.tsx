@@ -1,28 +1,96 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const C = { lc: '#10b981', bft: '#6366f1' };
+const C = { lc: "#10b981", bft: "#6366f1" };
 
 function CompareViz() {
   const rows = [
-    { metric: '최종성', lc: '확률적 (k confirm)', bft: '결정론적 (즉시)' },
-    { metric: '참여자 수', lc: '무제한', bft: '수십~수백' },
-    { metric: '네트워크 파티션', lc: '체인 계속 성장', bft: '합의 정지' },
-    { metric: '안전성 위협', lc: '51% 공격', bft: '1/3+ 악의적' },
+    { metric: "최종성", lc: "확률적 (k confirm)", bft: "결정론적 (즉시)" },
+    { metric: "참여자 수", lc: "무제한", bft: "수십~수백" },
+    { metric: "네트워크 파티션", lc: "체인 계속 성장", bft: "합의 정지" },
+    { metric: "안전성 위협", lc: "51% 공격", bft: "1/3+ 악의적" },
   ];
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">최장 체인 vs BFT</p>
-      <svg viewBox="0 0 420 130" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
-        <text x={80} y={16} textAnchor="middle" fontSize={10} fontWeight={700} fill="var(--foreground)">항목</text>
-        <text x={240} y={16} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.lc}>최장 체인</text>
-        <text x={370} y={16} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.bft}>BFT</text>
-        <line x1={10} y1={22} x2={410} y2={22} stroke="var(--border)" strokeWidth={0.5} />
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        최장 체인 vs BFT
+      </p>
+      <svg
+        viewBox="0 0 420 130"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
+        <text
+          x={80}
+          y={16}
+          textAnchor="middle"
+          fontSize={10}
+          fontWeight={700}
+          fill="var(--foreground)"
+        >
+          항목
+        </text>
+        <text
+          x={240}
+          y={16}
+          textAnchor="middle"
+          fontSize={10}
+          fontWeight={700}
+          fill={C.lc}
+        >
+          최장 체인
+        </text>
+        <text
+          x={370}
+          y={16}
+          textAnchor="middle"
+          fontSize={10}
+          fontWeight={700}
+          fill={C.bft}
+        >
+          BFT
+        </text>
+        <line
+          x1={10}
+          y1={22}
+          x2={410}
+          y2={22}
+          stroke="var(--border)"
+          strokeWidth={0.5}
+        />
         {rows.map((r, i) => (
-          <motion.g key={r.metric} initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }} transition={{ delay: i * 0.08 }}>
-            <text x={80} y={40 + i * 24} textAnchor="middle" fontSize={10} fill="var(--foreground)">{r.metric}</text>
-            <text x={240} y={40 + i * 24} textAnchor="middle" fontSize={10} fill={C.lc}>{r.lc}</text>
-            <text x={370} y={40 + i * 24} textAnchor="middle" fontSize={10} fill={C.bft}>{r.bft}</text>
+          <motion.g
+            key={r.metric}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.08 }}
+          >
+            <text
+              x={80}
+              y={40 + i * 24}
+              textAnchor="middle"
+              fontSize={10}
+              fill="var(--foreground)"
+            >
+              {r.metric}
+            </text>
+            <text
+              x={240}
+              y={40 + i * 24}
+              textAnchor="middle"
+              fontSize={10}
+              fill={C.lc}
+            >
+              {r.lc}
+            </text>
+            <text
+              x={370}
+              y={40 + i * 24}
+              textAnchor="middle"
+              fontSize={10}
+              fill={C.bft}
+            >
+              {r.bft}
+            </text>
           </motion.g>
         ))}
       </svg>
@@ -39,14 +107,16 @@ export default function Comparison() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           두 합의 철학의 <strong>근본적 차이</strong>.<br />
-          Nakamoto: liveness + open + probabilistic. BFT: safety + permissioned + deterministic.<br />
+          Nakamoto: liveness + open + probabilistic. BFT: safety + permissioned
+          + deterministic.
+          <br />
           현대 블록체인은 둘 결합 추세.
         </p>
 
         {/* ── 설계 철학 차이 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">설계 철학 차이</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Nakamoto Longest Chain:
+          {`// Nakamoto Longest Chain:
 //
 // 철학: "정직 다수 + 시간 = 합의"
 // - 사전 멤버십 없음
@@ -97,15 +167,17 @@ export default function Comparison() {
 // - 공개·매우빠름: Sui (DAG-BFT)`}
         </pre>
         <p className="leading-7">
-          Nakamoto = <strong>decentralized + slow</strong>, BFT = <strong>centralized + fast</strong>.<br />
-          Trade-off의 양극 — 블록체인 사용처에 따라 선택.<br />
+          Nakamoto = <strong>decentralized + slow</strong>, BFT ={" "}
+          <strong>centralized + fast</strong>.<br />
+          Trade-off의 양극 — 블록체인 사용처에 따라 선택.
+          <br />
           Ethereum 2.0이 둘 결합한 대표 사례.
         </p>
 
         {/* ── 공격 모델 비교 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">공격 모델 비교</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Nakamoto 공격:
+          {`// Nakamoto 공격:
 //
 // 1. 51% 공격 (majority attack)
 //    - 해시파워 > 50% 필요
@@ -160,15 +232,19 @@ export default function Comparison() {
 // - 둘 다 경제적 공격 비용 > 이익 설계`}
         </pre>
         <p className="leading-7">
-          공격 모델도 상반 — Nakamoto는 <strong>해시파워</strong>, BFT는 <strong>stake 지분</strong>.<br />
-          51% vs 33%+ 임계값.<br />
+          공격 모델도 상반 — Nakamoto는 <strong>해시파워</strong>, BFT는{" "}
+          <strong>stake 지분</strong>.<br />
+          51% vs 33%+ 임계값.
+          <br />
           slashing (stake 몰수)가 PoS의 핵심 억제 메커니즘.
         </p>
 
         {/* ── 현대 블록체인 선택 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">현대 블록체인의 선택</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          현대 블록체인의 선택
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 각 블록체인의 합의 알고리즘 선택:
+          {`// 각 블록체인의 합의 알고리즘 선택:
 
 // Pure Longest Chain (Nakamoto):
 // - Bitcoin, Litecoin, Dogecoin
@@ -218,14 +294,18 @@ export default function Comparison() {
         </pre>
         <p className="leading-7">
           트렌드: <strong>순수 Nakamoto → 하이브리드 → DAG-BFT</strong>.<br />
-          TPS + instant finality 요구 증가.<br />
+          TPS + instant finality 요구 증가.
+          <br />
           Bitcoin만 Nakamoto 유지 — "store of value"로 특화.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 Nakamoto가 BFT 넘어선 것</strong> — open membership.<br />
-          BFT는 validator 리스트 고정, Nakamoto는 누구나 참여 가능.<br />
-          이것이 Bitcoin의 혁신 — 중앙 등록 없는 전 세계적 합의.<br />
+          <strong>💡 Nakamoto가 BFT 넘어선 것</strong> — open membership.
+          <br />
+          BFT는 validator 리스트 고정, Nakamoto는 누구나 참여 가능.
+          <br />
+          이것이 Bitcoin의 혁신 — 중앙 등록 없는 전 세계적 합의.
+          <br />
           현대 PoS BFT는 stake로 open membership + BFT safety 결합.
         </p>
       </div>

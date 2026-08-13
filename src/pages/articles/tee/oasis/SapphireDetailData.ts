@@ -21,8 +21,24 @@ bytes memory rand = Sapphire.randomBytes(32, "");
 uint256 secret = abi.decode(rand, (uint256));`;
 
 export const precompileAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: '난수 & 키 유도 프리컴파일' },
-  { lines: [7, 12] as [number, number], color: 'emerald' as const, note: '암호화/복호화 프리컴파일' },
-  { lines: [14, 18] as [number, number], color: 'amber' as const, note: '서명 프리컴파일' },
-  { lines: [20, 22] as [number, number], color: 'violet' as const, note: '기밀 난수 사용 예시' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "난수 & 키 유도 프리컴파일",
+  },
+  {
+    lines: [7, 12] as [number, number],
+    color: "emerald" as const,
+    note: "암호화/복호화 프리컴파일",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "amber" as const,
+    note: "서명 프리컴파일",
+  },
+  {
+    lines: [20, 22] as [number, number],
+    color: "violet" as const,
+    note: "기밀 난수 사용 예시",
+  },
 ];

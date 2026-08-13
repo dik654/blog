@@ -29,10 +29,26 @@ let nullifier_hash = semaphore_rs::protocol::generate_nullifier_hash(
 );`;
 
 export const proofGenAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '신원 생성 & 커밋먼트' },
-  { lines: [7, 12] as [number, number], color: 'emerald' as const, note: 'Poseidon Merkle Tree 등록' },
-  { lines: [14, 24] as [number, number], color: 'amber' as const, note: 'Semaphore ZK 증명 생성' },
-  { lines: [27, 29] as [number, number], color: 'rose' as const, note: 'Nullifier: 중복 사용 방지' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "신원 생성 & 커밋먼트",
+  },
+  {
+    lines: [7, 12] as [number, number],
+    color: "emerald" as const,
+    note: "Poseidon Merkle Tree 등록",
+  },
+  {
+    lines: [14, 24] as [number, number],
+    color: "amber" as const,
+    note: "Semaphore ZK 증명 생성",
+  },
+  {
+    lines: [27, 29] as [number, number],
+    color: "rose" as const,
+    note: "Nullifier: 중복 사용 방지",
+  },
 ];
 
 export const pbhPayloadCode = `PBH 페이로드 구조:
@@ -55,6 +71,14 @@ External Nullifier 인코딩 (256비트):
   └──────────────────────────────────────────────────┘`;
 
 export const pbhPayloadAnnotations = [
-  { lines: [3, 9] as [number, number], color: 'sky' as const, note: 'PBHPayload 구조체 (RLP 직렬화)' },
-  { lines: [11, 18] as [number, number], color: 'emerald' as const, note: 'External Nullifier 비트 레이아웃' },
+  {
+    lines: [3, 9] as [number, number],
+    color: "sky" as const,
+    note: "PBHPayload 구조체 (RLP 직렬화)",
+  },
+  {
+    lines: [11, 18] as [number, number],
+    color: "emerald" as const,
+    note: "External Nullifier 비트 레이아웃",
+  },
 ];

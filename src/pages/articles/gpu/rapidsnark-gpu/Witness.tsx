@@ -1,5 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
 
 const wtnsCode = `// .wtns 파일 로딩 (Binary Witness Format)
 //
@@ -49,30 +49,71 @@ export default function Witness() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           rapidsnark의 첫 단계는 <code>.wtns</code> 파일에서 witness 값을 읽고,
-          <code>.zkey</code>에서 proving key(CRS)를 로드하는 것이다.<br />
+          <code>.zkey</code>에서 proving key(CRS)를 로드하는 것이다.
+          <br />
           대형 회로는 수 GB에 달하므로 <code>mmap</code>을 활용한다.
         </p>
-        <CodePanel title=".wtns 파일 구조 & mmap 전략" code={wtnsCode} annotations={[
-          { lines: [3, 7], color: 'sky', note: '헤더: magic, version, sections' },
-          { lines: [9, 13], color: 'emerald', note: 'witness 값: Fr 원소 배열' },
-          { lines: [15, 19], color: 'amber', note: '대형 회로: mmap으로 메모리 절약' },
-        ]} />
+        <CodePanel
+          title=".wtns 파일 구조 & mmap 전략"
+          code={wtnsCode}
+          annotations={[
+            {
+              lines: [3, 7],
+              color: "sky",
+              note: "헤더: magic, version, sections",
+            },
+            {
+              lines: [9, 13],
+              color: "emerald",
+              note: "witness 값: Fr 원소 배열",
+            },
+            {
+              lines: [15, 19],
+              color: "amber",
+              note: "대형 회로: mmap으로 메모리 절약",
+            },
+          ]}
+        />
         <p>
-          <code>.r1cs</code> 파일은 제약 행렬 A, B, C를 압축 희소 형식으로 저장한다.
-          rapidsnark은 이를 파싱하여 연속 메모리에 배치하고,
-          NTT/MSM 단계에서 캐시 친화적으로 접근한다.
+          <code>.r1cs</code> 파일은 제약 행렬 A, B, C를 압축 희소 형식으로
+          저장한다. rapidsnark은 이를 파싱하여 연속 메모리에 배치하고, NTT/MSM
+          단계에서 캐시 친화적으로 접근한다.
         </p>
-        <CodePanel title=".r1cs 파싱 & 메모리 레이아웃" code={r1csCode} annotations={[
-          { lines: [3, 3], color: 'sky', note: 'R1CS 기본 등식: A.w * B.w = C.w' },
-          { lines: [5, 9], color: 'emerald', note: '희소 형식: (인덱스, 계수) 쌍' },
-          { lines: [11, 16], color: 'amber', note: '연속 배치로 캐시 히트율 확보' },
-          { lines: [18, 21], color: 'violet', note: '.zkey: CRS 포인트 + 계수 배열' },
-        ]} />
-        <CitationBlock source="circom / snarkjs — Binary File Formats" citeKey={2} type="code"
-          href="https://github.com/iden3/snarkjs">
+        <CodePanel
+          title=".r1cs 파싱 & 메모리 레이아웃"
+          code={r1csCode}
+          annotations={[
+            {
+              lines: [3, 3],
+              color: "sky",
+              note: "R1CS 기본 등식: A.w * B.w = C.w",
+            },
+            {
+              lines: [5, 9],
+              color: "emerald",
+              note: "희소 형식: (인덱스, 계수) 쌍",
+            },
+            {
+              lines: [11, 16],
+              color: "amber",
+              note: "연속 배치로 캐시 히트율 확보",
+            },
+            {
+              lines: [18, 21],
+              color: "violet",
+              note: ".zkey: CRS 포인트 + 계수 배열",
+            },
+          ]}
+        />
+        <CitationBlock
+          source="circom / snarkjs — Binary File Formats"
+          citeKey={2}
+          type="code"
+          href="https://github.com/iden3/snarkjs"
+        >
           <p className="text-xs">
-            .wtns, .r1cs, .zkey는 iden3가 정의한 바이너리 형식이다.
-            snarkjs와 rapidsnark이 동일 형식을 사용하므로 상호 호환된다.
+            .wtns, .r1cs, .zkey는 iden3가 정의한 바이너리 형식이다. snarkjs와
+            rapidsnark이 동일 형식을 사용하므로 상호 호환된다.
           </p>
         </CitationBlock>
       </div>

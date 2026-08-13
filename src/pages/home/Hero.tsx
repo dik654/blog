@@ -1,10 +1,16 @@
-import { motion } from 'framer-motion';
-import { categories } from '@/content';
+import { motion } from "framer-motion";
+import { categories } from "@/content";
 
 const stats = [
-  { label: '분야', getValue: () => categories.length },
-  { label: '주제', getValue: () => categories.reduce((s, c) => s + c.subcategories.length, 0) },
-  { label: '아티클', getValue: () => categories.reduce((s, c) => s + c.articles.length, 0) },
+  { label: "분야", getValue: () => categories.length },
+  {
+    label: "주제",
+    getValue: () => categories.reduce((s, c) => s + c.subcategories.length, 0),
+  },
+  {
+    label: "아티클",
+    getValue: () => categories.reduce((s, c) => s + c.articles.length, 0),
+  },
 ];
 
 export default function Hero() {
@@ -25,8 +31,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        개념을 코드로,{' '}
-        <br className="sm:hidden" />
+        개념을 코드로, <br className="sm:hidden" />
         코드를 시각화로
       </motion.h1>
 
@@ -36,9 +41,8 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        논문과 문서를 읽는 것에 그치지 않고,
-        핵심 알고리즘을 직접 구현하고 인터랙티브하게 시각화하며
-        깊이 있게 이해한 과정을 기록합니다.
+        논문과 문서를 읽는 것에 그치지 않고, 핵심 알고리즘을 직접 구현하고
+        인터랙티브하게 시각화하며 깊이 있게 이해한 과정을 기록합니다.
       </motion.p>
 
       <motion.div

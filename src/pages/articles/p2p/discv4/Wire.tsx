@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const ENCODE_CODE = `func Encode(priv *ecdsa.PrivateKey, req Packet) (packet, hash []byte, err error) {
     b := new(bytes.Buffer)
@@ -49,39 +49,81 @@ export default function Wire() {
     <section id="wire" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">v4wire: 패킷 인코딩/디코딩</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>모든 discv4 패킷은 동일한 97바이트 헤더를 공유합니다.</p>
+        <pre className="text-sm">
+          <code>{`[32B MAC] [65B Signature] [1B Type] [RLP Payload]
+ keccak256   ECDSA-secp256k1   1~6      구조체 직렬화`}</code>
+        </pre>
         <p>
-          모든 discv4 패킷은 동일한 97바이트 헤더를 공유합니다.
-        </p>
-        <pre className="text-sm"><code>{`[32B MAC] [65B Signature] [1B Type] [RLP Payload]
- keccak256   ECDSA-secp256k1   1~6      구조체 직렬화`}</code></pre>
-        <p>
-          MAC = <code>keccak256(sig + type + payload)</code>. 무결성 검증용이며, 암호학적 보호는 아닙니다.
+          MAC = <code>keccak256(sig + type + payload)</code>. 무결성 검증용이며,
+          암호학적 보호는 아닙니다.
           <br />
-          Signature에서 발신자 공개키를 <strong>ecrecover</strong>로 복원합니다. 별도의 from 필드가 불필요합니다.
+          Signature에서 발신자 공개키를 <strong>ecrecover</strong>로 복원합니다.
+          별도의 from 필드가 불필요합니다.
         </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Encode: 서명 후 MAC 생성</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Encode: 서명 후 MAC 생성
+        </h3>
         <p>
-          빈 96바이트 공간을 먼저 확보합니다. type + RLP를 버퍼 뒤에 쓴 후 해당 부분을 keccak256 해시하여 서명합니다.<br />
-          서명을 <code>packet[32:97]</code>에 복사하고, <code>keccak256(sig + sigdata)</code>를 앞 32바이트에 기록합니다.
+          빈 96바이트 공간을 먼저 확보합니다. type + RLP를 버퍼 뒤에 쓴 후 해당
+          부분을 keccak256 해시하여 서명합니다.
+          <br />
+          서명을 <code>packet[32:97]</code>에 복사하고,{" "}
+          <code>keccak256(sig + sigdata)</code>를 앞 32바이트에 기록합니다.
         </p>
-        <CodePanel title="v4wire.Encode -- go-ethereum/p2p/discover/v4wire/v4wire.go" code={ENCODE_CODE} startLine={251} annotations={[
-          { lines: [253, 253], color: 'sky', note: 'headSpace: 96바이트 빈 버퍼' },
-          { lines: [259, 259], color: 'emerald', note: 'type+payload 해시 후 ECDSA 서명' },
-          { lines: [265, 266], color: 'amber', note: 'MAC = keccak256(sig + sigdata)' },
-        ]} />
-        <h3 className="text-xl font-semibold mt-6 mb-3">Decode: MAC 검증 후 공개키 복원</h3>
+        <CodePanel
+          title="v4wire.Encode -- go-ethereum/p2p/discover/v4wire/v4wire.go"
+          code={ENCODE_CODE}
+          startLine={251}
+          annotations={[
+            {
+              lines: [253, 253],
+              color: "sky",
+              note: "headSpace: 96바이트 빈 버퍼",
+            },
+            {
+              lines: [259, 259],
+              color: "emerald",
+              note: "type+payload 해시 후 ECDSA 서명",
+            },
+            {
+              lines: [265, 266],
+              color: "amber",
+              note: "MAC = keccak256(sig + sigdata)",
+            },
+          ]}
+        />
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Decode: MAC 검증 후 공개키 복원
+        </h3>
         <p>
-          수신 측은 먼저 MAC을 재계산하여 대조합니다. 일치하면 서명에서 공개키를 복원하고, 첫 바이트로 패킷 타입을 판별한 뒤 RLP 디코딩합니다.
+          수신 측은 먼저 MAC을 재계산하여 대조합니다. 일치하면 서명에서 공개키를
+          복원하고, 첫 바이트로 패킷 타입을 판별한 뒤 RLP 디코딩합니다.
         </p>
-        <CodePanel title="v4wire.Decode -- go-ethereum/p2p/discover/v4wire/v4wire.go" code={DECODE_CODE} startLine={212} annotations={[
-          { lines: [217, 219], color: 'sky', note: 'MAC 무결성 검증' },
-          { lines: [221, 221], color: 'emerald', note: 'ecrecover로 발신자 공개키 복원' },
-          { lines: [227, 233], color: 'amber', note: '첫 바이트로 패킷 타입 분기' },
-        ]} />
+        <CodePanel
+          title="v4wire.Decode -- go-ethereum/p2p/discover/v4wire/v4wire.go"
+          code={DECODE_CODE}
+          startLine={212}
+          annotations={[
+            { lines: [217, 219], color: "sky", note: "MAC 무결성 검증" },
+            {
+              lines: [221, 221],
+              color: "emerald",
+              note: "ecrecover로 발신자 공개키 복원",
+            },
+            {
+              lines: [227, 233],
+              color: "amber",
+              note: "첫 바이트로 패킷 타입 분기",
+            },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">discv4 Wire Protocol</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          discv4 Wire Protocol
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// discv4 Packet Format
+          {`// discv4 Packet Format
 //
 // 총 구조 (UDP payload):
 //   [32 bytes] MAC

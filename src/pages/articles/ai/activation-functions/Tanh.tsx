@@ -1,61 +1,46 @@
-import TanhViz from './viz/TanhViz';
-import TanhDetailViz from './viz/TanhDetailViz';
-import LSTMGateViz from './viz/LSTMGateViz';
+import M from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import LSTMGateViz from "./viz/LSTMGateViz";
+import TanhViz from "./viz/TanhViz";
 
 export default function Tanh() {
   return (
     <section id="tanh" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">하이퍼볼릭 탄젠트 (Tanh)</h2>
+      <h2 className="mb-6 text-2xl font-bold">Tanh: 부호를 보존하는 포화 함수</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Sigmoid의 <strong>non-zero centered 문제를 해결</strong><br />
-          출력 범위가 −1 ~ +1 → 양수와 음수를 모두 출력<br />
-          가중치 업데이트가 자유로운 방향으로 이동 가능
-        </p>
-        <div className="rounded-lg border p-3 font-mono text-sm mb-4">
-          tanh(x) = (e<sup>x</sup> − e<sup>−x</sup>) / (e<sup>x</sup> + e<sup>−x</sup>)
-          &nbsp;&nbsp;|&nbsp;&nbsp;
-          tanh'(x) = 1 − tanh(x)<sup>2</sup>
-        </div>
-        <p>
-          tanh = 2σ(2x) − 1 — sigmoid를 수직·수평 이동한 형태<br />
-          tanh'(0) = 1 → sigmoid(0.25)보다 4배 큰 최대 기울기
-        </p>
-        <p>
-          <strong>여전히 남은 문제</strong> — Vanishing Gradient<br />
-          |x| &gt; 2 영역에서 기울기가 급격히 0에 수렴<br />
-          깊은 네트워크에서 여전히 기울기 소실 발생<br />
-          RNN/LSTM에서는 여전히 기본 활성화 함수로 사용
+          tanh는 입력을 <M>{"(-1,1)"}</M>로 압축하고 0을 중심으로 대칭인 출력을
+          만든다. sigmoid보다 hidden state의 양수·음수 방향을 표현하기 쉽지만,
+          절댓값이 큰 영역에서 derivative가 0에 가까워지는 saturation 문제는 남는다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <TanhViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Tanh 특성과 Sigmoid 관계</h3>
-        <p>
-          tanh는 sigmoid를 수직·수평 이동한 형태 — tanh(x) = 2σ(2x) − 1<br />
-          zero-centered 출력과 4배 큰 기울기가 핵심 장점
-        </p>
-      </div>
-      <TanhDetailViz />
+      <ExplainedFormula
+        question="0을 중심으로 양수와 음수 신호를 모두 표현하면서 출력 범위를 제한하려면?"
+        idea={<>Sigmoid를 이동하고 scale해 −1과 1 사이의 signed output을 만듭니다. 0 근처에서는 기울기 1을 갖지만 양 끝에서는 sigmoid처럼 포화합니다.</>}
+        formula={String.raw`\tanh(x)=2\sigma(2x)-1,\qquad \frac{d}{dx}\tanh(x)=1-\tanh^2(x)`}
+        terms={[
+          { symbol: String.raw`\tanh(x)`, name: "signed bounded output", description: "음수와 양수 방향을 유지하면서 범위를 −1과 1 사이로 제한합니다." },
+          { symbol: String.raw`1-\tanh^2(x)`, name: "local derivative", description: "x=0에서 1이고 출력 절댓값이 1에 가까울수록 0에 접근합니다." },
+          { symbol: String.raw`2\sigma(2x)-1`, name: "sigmoid relation", description: "Sigmoid와 범위·중심은 다르지만 같은 포화 구조를 가짐을 보여 줍니다." },
+        ]}
+        assumptions={["Derivative의 최댓값 하나만으로 전체 network의 gradient 크기를 정할 수 없습니다.", "Recurrent state에서의 효과는 gate·weight Jacobian과 함께 봐야 합니다."]}
+        interpretation="x=0에서는 output 0과 derivative 1이라 작은 signed signal을 잘 전달하지만, |x|가 커지면 output이 ±1에 붙고 derivative가 작아집니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">LSTM에서 Tanh 역할</h3>
         <p>
-          LSTM/GRU에서 <strong>Sigmoid는 gate(0~1 밸브), Tanh는 candidate(−1~1 값)</strong>으로 역할 분담<br />
-          RNN의 tanh는 Transformer(2017) 등장 전까지 시퀀스 모델의 핵심이었음
+          tanh의 derivative는 0에서 1이고 sigmoid는 0에서 0.25지만, 이것만으로
+          tanh가 모든 네트워크에서 네 배 더 잘 학습된다고 말할 수는 없다. 입력 분포와
+          초기화, normalization, 전체 Jacobian이 함께 gradient 크기를 결정한다.
+        </p>
+        <h3>recurrent gate 안에서의 역할</h3>
+        <p>
+          LSTM과 GRU에서는 sigmoid가 정보를 얼마나 통과시킬지 0~1의 gate를 만들고,
+          tanh가 cell에 더할 signed candidate를 만든다. 두 함수는 경쟁 관계라기보다
+          서로 다른 범위와 의미를 이용해 역할을 나눈다.
         </p>
       </div>
+      <div className="not-prose my-8"><TanhViz /></div>
       <LSTMGateViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: <strong>tanh = 2·sigmoid(2x) - 1</strong> — 수학적으로 동치 변환.<br />
-          요약 2: <strong>zero-centered + 4배 기울기</strong>로 sigmoid보다 우수.<br />
-          요약 3: LSTM/GRU에서 <strong>sigmoid(gate) + tanh(candidate)</strong> 조합 필수.
-        </p>
-      </div>
     </section>
   );
 }

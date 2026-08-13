@@ -13,9 +13,21 @@ let is_zero_config = IsZeroChip::configure(
 chip.assign(region, offset, Value::known(value))?;`;
 
 export const isZeroAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: '제약 조건 — 0 판별 트릭' },
-  { lines: [5, 9] as [number, number], color: 'emerald' as const, note: 'configure — 선택자 + 값 쿼리' },
-  { lines: [12, 12] as [number, number], color: 'amber' as const, note: 'assign — 실제 값 기입' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "제약 조건 — 0 판별 트릭",
+  },
+  {
+    lines: [5, 9] as [number, number],
+    color: "emerald" as const,
+    note: "configure — 선택자 + 값 쿼리",
+  },
+  {
+    lines: [12, 12] as [number, number],
+    color: "amber" as const,
+    note: "assign — 실제 값 기입",
+  },
 ];
 
 export const COMPARATOR_CODE = `// ComparatorGadget — LT와 EQ를 동시에 제공
@@ -37,9 +49,21 @@ pub struct LtConfig<F, const N_BYTES: usize> {
 }`;
 
 export const comparatorAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: 'Comparator — LT + EQ 결합' },
-  { lines: [9, 11] as [number, number], color: 'emerald' as const, note: 'LtGadget — 바이트 분해 비교' },
-  { lines: [12, 16] as [number, number], color: 'amber' as const, note: 'LtConfig — 바이트 룩업 기반' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "Comparator — LT + EQ 결합",
+  },
+  {
+    lines: [9, 11] as [number, number],
+    color: "emerald" as const,
+    note: "LtGadget — 바이트 분해 비교",
+  },
+  {
+    lines: [12, 16] as [number, number],
+    color: "amber" as const,
+    note: "LtConfig — 바이트 룩업 기반",
+  },
 ];
 
 export const MULADD_CODE = `// MulAddGadget — a * b + c == d (mod 2^256) 검증
@@ -58,9 +82,21 @@ export const MULADD_CODE = `// MulAddGadget — a * b + c == d (mod 2^256) 검�
 // check: t0 + t1*2^64 + c_lo == d_lo + carry*2^128`;
 
 export const mulAddAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: '64비트 limb 분해 + 16비트 carry' },
-  { lines: [5, 10] as [number, number], color: 'emerald' as const, note: '회로 레이아웃 — 8행 × 4열' },
-  { lines: [12, 14] as [number, number], color: 'amber' as const, note: '곱셈 전개 + carry 전파 제약' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "64비트 limb 분해 + 16비트 carry",
+  },
+  {
+    lines: [5, 10] as [number, number],
+    color: "emerald" as const,
+    note: "회로 레이아웃 — 8행 × 4열",
+  },
+  {
+    lines: [12, 14] as [number, number],
+    color: "amber" as const,
+    note: "곱셈 전개 + carry 전파 제약",
+  },
 ];
 
 export const GADGET_OVERVIEW_CODE = `// 주요 Gadget 시스템 계층
@@ -82,7 +118,19 @@ export const GADGET_OVERVIEW_CODE = `// 주요 Gadget 시스템 계층
 //   SameContextGadget   — 오퍼코드 공통 상태 전환`;
 
 export const gadgetOverviewAnnotations = [
-  { lines: [4, 8] as [number, number], color: 'sky' as const, note: '기본 검증 — 0/동등/비교' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: '산술 — 곱셈/덧셈/이진' },
-  { lines: [15, 17] as [number, number], color: 'amber' as const, note: '배치 — 다중 값 검증' },
+  {
+    lines: [4, 8] as [number, number],
+    color: "sky" as const,
+    note: "기본 검증 — 0/동등/비교",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "산술 — 곱셈/덧셈/이진",
+  },
+  {
+    lines: [15, 17] as [number, number],
+    color: "amber" as const,
+    note: "배치 — 다중 값 검증",
+  },
 ];

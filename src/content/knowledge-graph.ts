@@ -1,0 +1,17106 @@
+export type ConceptRelation =
+  | "prerequisite"
+  | "produces"
+  | "optimizes"
+  | "contrasts"
+  | "constrains"
+  | "evaluates"
+  | "extends";
+
+export interface KnowledgeConcept {
+  id: string;
+  kind?: "concept" | "method" | "metric" | "theorem";
+  domain?:
+    | "mathematics"
+    | "statistics"
+    | "physics"
+    | "chemistry"
+    | "biology"
+    | "earth-science"
+    | "computer-science"
+    | "machine-learning"
+    | "distributed-systems";
+  label: string;
+  definition: string;
+  canonicalHref: string;
+}
+
+export interface KnowledgeEdge {
+  from: string;
+  to: string;
+  relation: ConceptRelation;
+  reason: string;
+}
+
+/**
+ * 개념 정의의 정본입니다. 아티클은 같은 정의를 복제하지 않고 concept id와
+ * 현재 문맥에서의 역할만 참조합니다.
+ */
+export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
+  "scalar-quantity": {
+    id: "scalar-quantity",
+    domain: "mathematics",
+    label: "Scalar",
+    definition:
+      "크기 하나로 나타내는 수입니다. Vector를 늘리거나 줄이는 배율과 loss·learning rate 같은 단일 값에 사용합니다.",
+    canonicalHref: "/ai/math-vectors-inner-products#vectors",
+  },
+  "coordinate-vector": {
+    id: "coordinate-vector",
+    domain: "mathematics",
+    label: "Coordinate vector",
+    definition:
+      "순서가 있는 여러 수를 하나의 대상으로 묶어 방향·위치·feature를 나타낸 것입니다.",
+    canonicalHref: "/ai/math-vectors-inner-products#vectors",
+  },
+  "euclidean-norm": {
+    id: "euclidean-norm",
+    domain: "mathematics",
+    label: "Euclidean norm",
+    definition:
+      "Vector 각 성분의 제곱합에 제곱근을 취해 원점에서의 길이를 재는 함수입니다.",
+    canonicalHref: "/ai/math-vectors-inner-products#norm",
+  },
+  "dot-product": {
+    id: "dot-product",
+    domain: "mathematics",
+    label: "Dot product · inner product",
+    definition:
+      "두 vector의 같은 위치 성분을 곱해 더함으로써 한 vector가 다른 방향으로 얼마나 놓였는지 scalar로 측정합니다.",
+    canonicalHref: "/ai/math-vectors-inner-products#dot-product",
+  },
+  "vector-projection": {
+    id: "vector-projection",
+    domain: "mathematics",
+    label: "Vector projection",
+    definition:
+      "한 vector에서 기준 방향과 평행한 성분만 떼어 낸 것으로, dot product를 방향별 기여로 해석하게 합니다.",
+    canonicalHref: "/ai/math-vectors-inner-products#projection",
+  },
+  "cauchy-schwarz": {
+    id: "cauchy-schwarz",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Cauchy–Schwarz inequality",
+    definition:
+      "두 vector의 dot product 절댓값은 두 길이의 곱을 넘을 수 없으며, 같은 직선 방향일 때만 등호가 성립한다는 부등식입니다.",
+    canonicalHref: "/ai/math-vectors-inner-products#cauchy-schwarz",
+  },
+  "linear-map-matrix": {
+    id: "linear-map-matrix",
+    domain: "mathematics",
+    label: "Matrix · linear map",
+    definition:
+      "Input vector의 좌표를 row별 dot product로 섞어 output vector를 만드는 linear transformation과 그 계수를 행·열로 배열한 표현입니다.",
+    canonicalHref: "/ai/math-matrices-svd#matrix-map",
+  },
+  "matrix-multiplication": {
+    id: "matrix-multiplication",
+    domain: "mathematics",
+    label: "Matrix multiplication",
+    definition:
+      "첫 linear map의 output을 다음 linear map의 input으로 넘기는 함수 합성을 row–column dot product로 계산하는 연산입니다.",
+    canonicalHref: "/ai/math-matrices-svd#multiplication",
+  },
+  "matrix-rank": {
+    id: "matrix-rank",
+    domain: "mathematics",
+    label: "Matrix rank",
+    definition:
+      "Matrix의 column 또는 row가 펼치는 독립 방향의 수이며, linear map의 output이 실제로 움직일 수 있는 부분공간의 dimension입니다.",
+    canonicalHref: "/ai/math-matrices-svd#rank-basis",
+  },
+  "orthonormal-basis": {
+    id: "orthonormal-basis",
+    domain: "mathematics",
+    label: "Orthonormal basis",
+    definition:
+      "서로 다른 vector끼리 dot product가 0이고 각 norm이 1인 독립 방향 모음으로, projection coefficient가 서로 간섭하지 않는 좌표계를 만듭니다.",
+    canonicalHref: "/ai/math-matrices-svd#rank-basis",
+  },
+  "singular-value-decomposition": {
+    id: "singular-value-decomposition",
+    kind: "method",
+    domain: "mathematics",
+    label: "Singular value decomposition · SVD",
+    definition:
+      "임의의 matrix를 input orthonormal directions, nonnegative direction scales, output orthonormal directions의 곱 UΣVᵀ로 분해합니다.",
+    canonicalHref: "/ai/math-matrices-svd#svd",
+  },
+  "frobenius-norm": {
+    id: "frobenius-norm",
+    domain: "mathematics",
+    label: "Frobenius norm",
+    definition:
+      "Matrix의 모든 entry를 하나의 긴 vector처럼 보고 제곱합의 제곱근으로 전체 크기나 reconstruction error를 재는 norm입니다.",
+    canonicalHref: "/ai/math-matrices-svd#low-rank",
+  },
+  "low-rank-approximation": {
+    id: "low-rank-approximation",
+    kind: "method",
+    domain: "mathematics",
+    label: "Low-rank approximation",
+    definition:
+      "큰 matrix를 적은 수의 독립 latent directions와 두 작은 factor로 근사해 저장·계산을 줄이고 주요 variation을 보존하는 방법입니다.",
+    canonicalHref: "/ai/math-matrices-svd#low-rank",
+  },
+  "eckart-young-theorem": {
+    id: "eckart-young-theorem",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Eckart–Young theorem",
+    definition:
+      "가장 큰 singular value k개를 남긴 truncated SVD가 spectral norm과 Frobenius norm에서 가장 가까운 rank-k matrix라는 정리입니다.",
+    canonicalHref: "/ai/math-matrices-svd#low-rank",
+  },
+  "radian-measure": {
+    id: "radian-measure",
+    domain: "mathematics",
+    label: "Radian measure",
+    definition:
+      "중심각이 잘라낸 호의 길이를 반지름으로 나누어 회전량을 나타내는 각도 단위이며, 한 바퀴는 2π radian입니다.",
+    canonicalHref: "/ai/math-complex-numbers-oscillations#radians",
+  },
+  "unit-circle-trigonometry": {
+    id: "unit-circle-trigonometry",
+    domain: "mathematics",
+    label: "Unit-circle sine · cosine",
+    definition:
+      "단위원에서 양의 가로축으로부터 θ만큼 회전한 점의 가로 좌표를 cos θ, 세로 좌표를 sin θ로 정의하는 표현입니다.",
+    canonicalHref: "/ai/math-complex-numbers-oscillations#unit-circle",
+  },
+  "complex-number": {
+    id: "complex-number",
+    domain: "mathematics",
+    label: "Complex number · complex plane",
+    definition:
+      "a+bi와 i²=−1의 곱셈 규칙으로 평면 좌표·magnitude·phase를 한 수처럼 계산하는 수 체계입니다.",
+    canonicalHref: "/ai/math-complex-numbers-oscillations#complex-plane",
+  },
+  "convergent-power-series": {
+    id: "convergent-power-series",
+    domain: "mathematics",
+    label: "Convergent power series",
+    definition:
+      "변수의 거듭제곱 항을 계수와 함께 더하고, 유한 부분합의 극한으로 함수 값을 정의하는 급수 표현입니다.",
+    canonicalHref: "/ai/math-complex-numbers-oscillations#euler-formula",
+  },
+  "euler-formula": {
+    id: "euler-formula",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Euler formula",
+    definition:
+      "복소 지수 e^{iθ}가 단위원 위 θ 회전의 좌표 cos θ+i sin θ와 같다는 항등식입니다.",
+    canonicalHref: "/ai/math-complex-numbers-oscillations#euler-formula",
+  },
+  "roots-of-unity": {
+    id: "roots-of-unity",
+    domain: "mathematics",
+    label: "Roots of unity",
+    definition:
+      "N번 곱하면 1이 되는 복소수들로, 단위원을 N등분한 회전점이며 DFT basis와 FFT의 주기·대칭을 만듭니다.",
+    canonicalHref: "/ai/math-complex-numbers-oscillations#roots-of-unity",
+  },
+  "bit-byte": {
+    id: "bit-byte",
+    domain: "computer-science",
+    label: "Bit · byte",
+    definition:
+      "Bit는 0·1 두 상태를 나타내는 binary digit이고, byte는 현대 일반-purpose system에서 bit 여덟 개를 묶은 256-pattern 저장 단위입니다.",
+    canonicalHref: "/ai/text-unicode-encoding#bits-bytes",
+  },
+  "unicode-code-point": {
+    id: "unicode-code-point",
+    domain: "computer-science",
+    label: "Unicode code point",
+    definition:
+      "Unicode 문자·기호 목록에서 U+XXXX 형태로 부여한 추상 번호이며, 특정 byte encoding이나 화면 glyph 자체는 아닙니다.",
+    canonicalHref: "/ai/text-unicode-encoding#code-points",
+  },
+  "grapheme-cluster": {
+    id: "grapheme-cluster",
+    domain: "computer-science",
+    label: "Extended grapheme cluster",
+    definition:
+      "Unicode text segmentation 규칙으로 묶은 사용자 인식 문자에 가까운 code-point sequence이며, 한 cluster가 여러 code point를 포함할 수 있습니다.",
+    canonicalHref: "/ai/text-unicode-encoding#code-points",
+  },
+  "utf8-encoding": {
+    id: "utf8-encoding",
+    kind: "method",
+    domain: "computer-science",
+    label: "UTF-8 encoding",
+    definition:
+      "Unicode scalar value를 prefix가 있는 1~4개의 8-bit byte로 직렬화하며 ASCII 범위를 한 byte 그대로 보존하는 variable-length encoding입니다.",
+    canonicalHref: "/ai/text-unicode-encoding#utf-8",
+  },
+  "unicode-normalization": {
+    id: "unicode-normalization",
+    kind: "method",
+    domain: "computer-science",
+    label: "Unicode normalization",
+    definition:
+      "Canonical 또는 compatibility equivalence 규칙에 따라 code-point sequence를 분해·정렬·재합성해 NFC·NFD·NFKC·NFKD 중 하나의 형태로 바꾸는 절차입니다.",
+    canonicalHref: "/ai/text-unicode-encoding#normalization",
+  },
+  "text-offset-coordinate": {
+    id: "text-offset-coordinate",
+    domain: "computer-science",
+    label: "Text offset coordinate",
+    definition:
+      "Span의 start·end가 원문·정규화 text 중 무엇을 기준으로 하고 byte·code point·grapheme 중 어떤 단위인지 함께 정한 위치 계약입니다.",
+    canonicalHref: "/ai/text-unicode-encoding#offsets",
+  },
+  "tokenizer-pipeline-contract": {
+    id: "tokenizer-pipeline-contract",
+    domain: "computer-science",
+    label: "Tokenizer pipeline contract",
+    definition:
+      "원문을 정규화하고 경계를 나눈 뒤 vocabulary token과 ID를 선택하고 special token을 더하는 단계, 그리고 그 결과를 model checkpoint와 함께 versioning하는 입력 계약입니다.",
+    canonicalHref: "/ai/tokenizer#overview",
+  },
+  "subword-bpe": {
+    id: "subword-bpe",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Subword BPE",
+    definition:
+      "현재 corpus 표현에서 자주 인접하는 symbol pair를 반복해서 병합하고, 그 순서를 encoding의 merge rank로 사용하는 subword 학습 방법입니다.",
+    canonicalHref: "/ai/tokenizer#bpe",
+  },
+  "wordpiece-maxmatch": {
+    id: "wordpiece-maxmatch",
+    kind: "method",
+    domain: "machine-learning",
+    label: "WordPiece maximum matching",
+    definition:
+      "Pre-tokenized word의 현재 위치부터 vocabulary에 존재하는 가장 긴 조각을 고르고, 남은 suffix에 같은 절차를 반복하는 BERT-style encoding 방법입니다.",
+    canonicalHref: "/ai/tokenizer#wordpiece",
+  },
+  "sentencepiece-toolkit": {
+    id: "sentencepiece-toolkit",
+    kind: "method",
+    domain: "machine-learning",
+    label: "SentencePiece toolkit",
+    definition:
+      "공백으로 먼저 단어를 나누지 않은 raw sentence에서 subword model을 학습하고 encoding·detokenization하는 toolkit으로, BPE와 Unigram을 모두 지원합니다.",
+    canonicalHref: "/ai/tokenizer#sentencepiece",
+  },
+  "unigram-tokenizer": {
+    id: "unigram-tokenizer",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Unigram tokenizer",
+    definition:
+      "Vocabulary piece의 확률을 학습하고 입력을 완전히 덮는 가능한 segmentation 가운데 log-probability 합이 큰 경로를 선택하거나 sampling하는 subword model입니다.",
+    canonicalHref: "/ai/tokenizer#sentencepiece",
+  },
+  "subword-regularization": {
+    id: "subword-regularization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Subword regularization",
+    definition:
+      "학습 중 하나의 고정 segmentation만 사용하지 않고 model이 부여한 확률에 따라 여러 subword 경로를 sampling해 입력 분할 변화에 대한 견고성을 높이는 방법입니다.",
+    canonicalHref: "/ai/tokenizer#sentencepiece",
+  },
+  "tokenizer-efficiency": {
+    id: "tokenizer-efficiency",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Tokenizer efficiency",
+    definition:
+      "같은 원문을 몇 token으로 표현하는지 token-per-byte·byte-per-token과 길이 분포로 재되, coverage·truncation·downstream 품질과 함께 해석하는 평가 축입니다.",
+    canonicalHref: "/ai/tokenizer#comparison",
+  },
+  "tokenizer-checkpoint-compatibility": {
+    id: "tokenizer-checkpoint-compatibility",
+    domain: "machine-learning",
+    label: "Tokenizer–checkpoint compatibility",
+    definition:
+      "Vocabulary row와 token ID, normalizer, pre-tokenizer, special-token 규칙이 model weight가 학습된 입력 의미와 정확히 일치해야 한다는 배포 계약입니다.",
+    canonicalHref: "/ai/tokenizer#comparison",
+  },
+  "distributional-hypothesis": {
+    id: "distributional-hypothesis",
+    domain: "machine-learning",
+    label: "Distributional hypothesis",
+    definition:
+      "언어 표현의 성질을 그것이 나타나는 주변 context의 분포로 일부 추론할 수 있다는 연구 가정이며, 의미 동일성이나 사실성 전체를 보장하지 않습니다.",
+    canonicalHref: "/ai/distributional-semantics#overview",
+  },
+  "one-hot-identifier": {
+    id: "one-hot-identifier",
+    domain: "machine-learning",
+    label: "One-hot identifier",
+    definition:
+      "Vocabulary의 특정 index 하나만 1이고 나머지가 0인 vector로 symbol identity를 정확히 구분하지만 symbol 사이의 관측 관계는 담지 않습니다.",
+    canonicalHref: "/ai/distributional-semantics#overview",
+  },
+  "word-context-matrix": {
+    id: "word-context-matrix",
+    domain: "machine-learning",
+    label: "Word–context matrix",
+    definition:
+      "Target word를 row, 설계한 context feature를 column으로 두고 corpus에서 함께 관측된 횟수나 weight를 cell에 누적한 matrix입니다.",
+    canonicalHref: "/ai/distributional-semantics#distributional",
+  },
+  "pmi-ppmi-weighting": {
+    id: "pmi-ppmi-weighting",
+    kind: "method",
+    domain: "statistics",
+    label: "PMI · PPMI weighting",
+    definition:
+      "관측 joint probability를 두 marginal이 독립일 때의 baseline과 비교한 log-ratio PMI와 negative 값을 0으로 자른 PPMI association weighting입니다.",
+    canonicalHref: "/ai/distributional-semantics#distributional",
+  },
+  "distributional-svd-embedding": {
+    id: "distributional-svd-embedding",
+    kind: "method",
+    domain: "machine-learning",
+    label: "SVD distributional embedding",
+    definition:
+      "Weighted word–context matrix를 truncated SVD로 low-rank factorization해 각 word row를 공유 latent directions의 dense coordinate로 바꾼 representation입니다.",
+    canonicalHref: "/ai/distributional-semantics#dimensionality",
+  },
+  "cosine-similarity": {
+    id: "cosine-similarity",
+    kind: "metric",
+    domain: "mathematics",
+    label: "Cosine similarity",
+    definition:
+      "0이 아닌 두 vector의 dot product를 두 Euclidean norm으로 나누어 길이를 제거하고 방향의 일치 정도를 −1부터 1 사이로 재는 값입니다.",
+    canonicalHref: "/ai/distributional-semantics#dimensionality",
+  },
+  "static-contextual-representation": {
+    id: "static-contextual-representation",
+    domain: "machine-learning",
+    label: "Static · contextual representation boundary",
+    definition:
+      "Word type마다 vector 하나를 저장하는 static embedding과 문장 instance마다 주변 token을 읽어 새 hidden state를 만드는 contextual representation의 계산·의미 경계입니다.",
+    canonicalHref: "/ai/distributional-semantics#neural-approach",
+  },
+  "sgns-shifted-pmi": {
+    id: "sgns-shifted-pmi",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "SGNS · shifted PMI connection",
+    definition:
+      "SGNS objective를 word–context cell별로 독립 최적화하는 분석에서 두 embedding의 dot product가 PMI에서 negative sample 수의 logarithm을 뺀 값에 가까워지는 관계입니다.",
+    canonicalHref: "/ai/distributional-semantics#neural-approach",
+  },
+  "word-embedding-lookup": {
+    id: "word-embedding-lookup",
+    domain: "machine-learning",
+    label: "Word embedding lookup",
+    definition:
+      "Vocabulary ID가 가리키는 trainable matrix row를 dense word vector로 읽는 연산으로, one-hot vector와 matrix의 곱을 sparse index access로 계산한 것과 같습니다.",
+    canonicalHref: "/ai/word2vec#overview",
+  },
+  "dynamic-context-window": {
+    id: "dynamic-context-window",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Dynamic context window",
+    definition:
+      "정해진 최대 반경 안에서 example마다 실제 window radius를 sampling해 가까운 word pair가 먼 pair보다 더 자주 학습되게 하는 Word2Vec sampling 방법입니다.",
+    canonicalHref: "/ai/word2vec#overview",
+  },
+  "cbow-objective": {
+    id: "cbow-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "CBOW objective",
+    definition:
+      "주변 context word의 embedding을 합치거나 평균내 center word의 categorical distribution을 예측하는 Word2Vec 학습 objective입니다.",
+    canonicalHref: "/ai/word2vec#models",
+  },
+  "skipgram-objective": {
+    id: "skipgram-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Skip-gram objective",
+    definition:
+      "Center word embedding을 조건으로 local window에서 관측한 context word를 하나씩 예측하도록 word–context pair를 학습하는 objective입니다.",
+    canonicalHref: "/ai/word2vec#models",
+  },
+  "hierarchical-softmax": {
+    id: "hierarchical-softmax",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Hierarchical softmax",
+    definition:
+      "Vocabulary word를 binary tree의 leaf로 놓고 root에서 해당 leaf까지의 binary decision probability를 곱해 word probability를 계산하는 parameterization입니다.",
+    canonicalHref: "/ai/word2vec#models",
+  },
+  "sgns-objective": {
+    id: "sgns-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Skip-gram with negative sampling · SGNS",
+    definition:
+      "관측된 center–context pair의 sigmoid score는 높이고 noise distribution에서 뽑은 pair의 score는 낮추는 binary logistic objective입니다.",
+    canonicalHref: "/ai/word2vec#training",
+  },
+  "negative-sampling-distribution": {
+    id: "negative-sampling-distribution",
+    domain: "statistics",
+    label: "Negative-sampling noise distribution",
+    definition:
+      "관측되지 않은 비교 context를 뽑는 probability distribution으로, sample 수와 frequency smoothing이 SGNS의 compute와 optimum score를 함께 바꿉니다.",
+    canonicalHref: "/ai/word2vec#training",
+  },
+  "frequent-word-subsampling": {
+    id: "frequent-word-subsampling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Frequent-word subsampling",
+    definition:
+      "Corpus에서 지나치게 자주 나타나는 word token을 frequency-dependent probability로 일부 버려 pair 분포와 training compute를 바꾸는 Word2Vec heuristic입니다.",
+    canonicalHref: "/ai/word2vec#training",
+  },
+  "fasttext-subword-embedding": {
+    id: "fasttext-subword-embedding",
+    kind: "method",
+    domain: "machine-learning",
+    label: "fastText subword embedding",
+    definition:
+      "Word를 character n-gram들의 trainable vector 합으로 나타내 형태가 비슷한 단어와 vocabulary 밖 단어가 subword parameter를 공유하게 하는 static embedding 방법입니다.",
+    canonicalHref: "/ai/word2vec#applications",
+  },
+  "static-embedding-artifact": {
+    id: "static-embedding-artifact",
+    domain: "machine-learning",
+    label: "Static embedding artifact contract",
+    definition:
+      "Embedding matrix와 vocabulary ID, tokenizer·corpus·window·sampling·seed·evaluation metadata를 함께 versioning해야 row의 의미를 재현할 수 있다는 배포 계약입니다.",
+    canonicalHref: "/ai/word2vec#applications",
+  },
+  "bidirectional-encoder-visibility": {
+    id: "bidirectional-encoder-visibility",
+    domain: "machine-learning",
+    label: "Bidirectional encoder visibility",
+    definition:
+      "각 실제 token query가 왼쪽과 오른쪽의 실제 token key를 모두 읽되 padding은 제외하도록 attention visibility를 구성하는 encoder 입력 계약입니다.",
+    canonicalHref: "/ai/bert#overview",
+  },
+  "bert-input-packing": {
+    id: "bert-input-packing",
+    domain: "machine-learning",
+    label: "BERT input packing",
+    definition:
+      "WordPiece IDs에 CLS·SEP·PAD를 배치하고 absolute position ID, token-type ID와 padding attention mask를 함께 만들어 encoder input을 구성하는 계약입니다.",
+    canonicalHref: "/ai/bert#input-format",
+  },
+  "masked-language-modeling": {
+    id: "masked-language-modeling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Masked language modeling · MLM",
+    definition:
+      "입력 위치 일부를 고른 뒤 token을 mask·random·unchanged branch로 오염시키고, 선택된 위치에서 원래 vocabulary ID의 negative log-likelihood만 계산하는 pretraining objective입니다.",
+    canonicalHref: "/ai/bert#pre-training",
+  },
+  "bert-corruption-policy": {
+    id: "bert-corruption-policy",
+    domain: "machine-learning",
+    label: "BERT 15% · 80/10/10 corruption policy",
+    definition:
+      "원 BERT에서 전체 위치 약 15%를 prediction 대상으로 고르고 그 안에서 80% MASK, 10% random, 10% unchanged input을 사용하는 data corruption recipe입니다.",
+    canonicalHref: "/ai/bert#pre-training",
+  },
+  "next-sentence-prediction": {
+    id: "next-sentence-prediction",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Next sentence prediction · NSP",
+    definition:
+      "Segment B가 segment A의 실제 다음 문장인지 random sentence인지 CLS representation으로 분류하는 원 BERT의 auxiliary pretraining objective입니다.",
+    canonicalHref: "/ai/bert#pre-training",
+  },
+  "sentence-order-prediction": {
+    id: "sentence-order-prediction",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Sentence-order prediction · SOP",
+    definition:
+      "같은 문서에서 이어지는 두 segment의 정상 순서와 뒤집힌 순서를 구분해 inter-sentence coherence를 학습하는 ALBERT의 auxiliary objective입니다.",
+    canonicalHref: "/ai/bert#pre-training",
+  },
+  "replaced-token-detection": {
+    id: "replaced-token-detection",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Replaced-token detection · RTD",
+    definition:
+      "작은 generator가 일부 위치에 넣은 token인지 원래 data token인지 discriminator가 각 입력 위치에서 binary classification하는 ELECTRA pretraining objective입니다.",
+    canonicalHref: "/ai/bert#pre-training",
+  },
+  "bert-task-head": {
+    id: "bert-task-head",
+    domain: "machine-learning",
+    label: "BERT task head",
+    definition:
+      "Sequence·token·span task가 요구하는 출력 단위에 맞춰 CLS 또는 각 token hidden state를 label logits이나 start·end score로 투영하는 downstream interface입니다.",
+    canonicalHref: "/ai/bert#fine-tuning",
+  },
+  "cross-bi-encoder-boundary": {
+    id: "cross-bi-encoder-boundary",
+    domain: "machine-learning",
+    label: "Cross-encoder · bi-encoder boundary",
+    definition:
+      "두 text를 함께 encoding해 token-level interaction score를 내는 cross-encoder와 각각 독립적으로 encoding해 재사용 가능한 vector를 만드는 bi-encoder의 품질·계산 경계입니다.",
+    canonicalHref: "/ai/bert#fine-tuning",
+  },
+  "image-tensor-layout": {
+    id: "image-tensor-layout",
+    domain: "machine-learning",
+    label: "Image tensor · channel/spatial axes",
+    definition:
+      "빛을 sensor와 preprocessing으로 표본화한 pixel 값을 batch·channel·height·width 축에 배치하고, 각 축의 의미·범위·좌표계를 함께 정한 model input 계약입니다.",
+    canonicalHref: "/ai/cnn#overview",
+  },
+  "cnn-cross-correlation": {
+    id: "cnn-cross-correlation",
+    domain: "machine-learning",
+    label: "CNN cross-correlation operator",
+    definition:
+      "작은 kernel과 input의 local window를 같은 channel·offset끼리 곱해 더하고, 학습된 kernel을 모든 spatial 위치에 반복 적용하는 연산입니다.",
+    canonicalHref: "/ai/cnn#convolution-layer",
+  },
+  "convolution-weight-sharing": {
+    id: "convolution-weight-sharing",
+    domain: "machine-learning",
+    label: "Local connectivity · weight sharing",
+    definition:
+      "각 output이 가까운 input만 읽도록 연결 범위를 제한하고 동일 kernel parameter를 여러 spatial 위치에서 재사용하는 CNN의 parameterization입니다.",
+    canonicalHref: "/ai/cnn#convolution-layer",
+  },
+  "convolution-spatial-geometry": {
+    id: "convolution-spatial-geometry",
+    domain: "machine-learning",
+    label: "Convolution spatial geometry",
+    definition:
+      "Kernel size·stride·padding·dilation이 읽는 input 좌표와 output grid의 크기·간격·경계 처리를 정하는 shape 계약입니다.",
+    canonicalHref: "/ai/cnn#convolution-layer",
+  },
+  "translation-equivariance": {
+    id: "translation-equivariance",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Translation equivariance",
+    definition:
+      "같은 local operator를 위치에 공유하면 이상적인 stride-1·일관된 boundary 조건에서 input translation이 output의 같은 translation으로 대응한다는 성질입니다.",
+    canonicalHref: "/ai/cnn#inductive-bias",
+  },
+  "cnn-receptive-field": {
+    id: "cnn-receptive-field",
+    domain: "machine-learning",
+    label: "Theoretical receptive field",
+    definition:
+      "특정 hidden unit과 계산 그래프를 통해 연결된 원래 input 좌표 범위로, layer별 kernel·stride·dilation을 따라 누적됩니다.",
+    canonicalHref: "/ai/cnn#inductive-bias",
+  },
+  "effective-receptive-field": {
+    id: "effective-receptive-field",
+    domain: "machine-learning",
+    label: "Effective receptive field",
+    definition:
+      "이론적으로 연결된 범위 중 실제 output 변화나 gradient에 의미 있게 기여하는 영역과 그 영향 분포입니다.",
+    canonicalHref: "/ai/cnn#inductive-bias",
+  },
+  "dilated-convolution": {
+    id: "dilated-convolution",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Dilated convolution",
+    definition:
+      "Kernel tap 사이를 일정 간격으로 벌려 spatial resolution을 즉시 낮추지 않고 theoretical receptive field를 넓히는 convolution입니다.",
+    canonicalHref: "/ai/cnn#inductive-bias",
+  },
+  "depthwise-separable-convolution": {
+    id: "depthwise-separable-convolution",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Depthwise separable convolution",
+    definition:
+      "Channel별 spatial filtering을 하는 depthwise convolution과 channel을 섞는 1×1 pointwise convolution으로 dense convolution을 분해한 연산입니다.",
+    canonicalHref: "/ai/cnn#architectures",
+  },
+  "cnn-task-spatial-contract": {
+    id: "cnn-task-spatial-contract",
+    domain: "machine-learning",
+    label: "Vision task spatial-output contract",
+    definition:
+      "Classification·detection·segmentation·restoration이 각각 image·object·pixel 단위로 요구하는 출력과 보존해야 할 spatial detail을 정한 계약입니다.",
+    canonicalHref: "/ai/cnn#applications",
+  },
+  "optimization-degradation": {
+    id: "optimization-degradation",
+    domain: "machine-learning",
+    label: "Deep-network optimization degradation",
+    definition:
+      "더 깊은 model이 얕은 model의 함수를 표현할 수 있는데도 optimization이 그 해를 찾지 못해 training error까지 나빠지는 현상으로, train–test gap이 커지는 overfitting과 구분합니다.",
+    canonicalHref: "/ai/resnet#overview",
+  },
+  "residual-parameterization": {
+    id: "residual-parameterization",
+    domain: "machine-learning",
+    label: "Residual parameterization",
+    definition:
+      "Block이 원하는 전체 mapping H(x)를 직접 출력하는 대신 입력 x에 더할 update F(x)=H(x)−x를 학습해 y=x+F(x)로 표현하는 방식입니다.",
+    canonicalHref: "/ai/resnet#overview",
+  },
+  "identity-shortcut": {
+    id: "identity-shortcut",
+    domain: "machine-learning",
+    label: "Identity shortcut",
+    definition:
+      "Shape가 같은 block에서 parameter 없이 input x를 addition 지점까지 전달해 residual branch와 합치는 경로입니다.",
+    canonicalHref: "/ai/resnet#skip-connection",
+  },
+  "identity-residual-propagation": {
+    id: "identity-residual-propagation",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Identity residual propagation",
+    definition:
+      "연속 block의 shortcut과 post-add mapping이 identity라면 먼 state가 시작 state와 중간 residual update의 합으로 정확히 전개되고 backward Jacobian에도 identity 항이 남는다는 관계입니다.",
+    canonicalHref: "/ai/resnet#skip-connection",
+  },
+  "residual-shape-contract": {
+    id: "residual-shape-contract",
+    domain: "machine-learning",
+    label: "Residual addition shape contract",
+    definition:
+      "Shortcut과 residual branch를 element-wise로 더하려면 batch를 제외한 spatial·channel shape가 같아야 하며, stage transition에서는 stride·projection으로 두 경로의 shape를 맞춘다는 계약입니다.",
+    canonicalHref: "/ai/resnet#skip-connection",
+  },
+  "resnet-block-family": {
+    id: "resnet-block-family",
+    domain: "machine-learning",
+    label: "ResNet BasicBlock · Bottleneck",
+    definition:
+      "같은 residual 원리를 두 개의 3×3 convolution으로 구현하는 BasicBlock과 1×1–3×3–1×1 channel projection으로 구현하는 Bottleneck의 compute-shape 선택입니다.",
+    canonicalHref: "/ai/resnet#architecture",
+  },
+  "preactivation-residual-unit": {
+    id: "preactivation-residual-unit",
+    domain: "machine-learning",
+    label: "Pre-activation residual unit",
+    definition:
+      "Normalization과 activation을 convolution 앞에 배치해 addition 뒤의 shortcut 경로를 별도 activation 없이 다음 block으로 전달하는 residual unit입니다.",
+    canonicalHref: "/ai/resnet#architecture",
+  },
+  "residual-interpretation-boundary": {
+    id: "residual-interpretation-boundary",
+    domain: "machine-learning",
+    label: "Residual evidence boundary",
+    definition:
+      "Degradation 실험·identity mapping ablation·path ensemble·loss landscape를 서로 다른 증거로 구분하고 어느 하나를 residual network의 유일한 작동 원리로 단정하지 않는 해석 원칙입니다.",
+    canonicalHref: "/ai/resnet#impact",
+  },
+  "generative-distribution-contract": {
+    id: "generative-distribution-contract",
+    domain: "machine-learning",
+    label: "Generative distribution contract",
+    definition:
+      "관측 x와 optional condition c의 data distribution을 근사해 density를 평가하거나 새 sample을 만드는 목표와 support·output type을 함께 정한 계약입니다.",
+    canonicalHref: "/ai/generative-theory#overview",
+  },
+  "density-sampling-tractability": {
+    id: "density-sampling-tractability",
+    domain: "machine-learning",
+    label: "Density–sampling tractability",
+    definition:
+      "Normalized density·likelihood·latent inference·sampling 중 무엇을 정확하거나 계산 가능한 형태로 얻고, 무엇을 근사·반복 계산·구조 제약으로 바꾸는지 구분하는 비교 축입니다.",
+    canonicalHref: "/ai/generative-theory#overview",
+  },
+  "autoregressive-generative-factorization": {
+    id: "autoregressive-generative-factorization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Autoregressive generative factorization",
+    definition:
+      "Joint distribution을 정한 순서의 prefix-conditional product로 정확히 분해해 likelihood를 위치별로 학습하고 sample을 앞에서부터 생성하는 방법입니다.",
+    canonicalHref: "/ai/generative-theory#likelihood",
+  },
+  "latent-variable-marginalization": {
+    id: "latent-variable-marginalization",
+    domain: "statistics",
+    label: "Latent-variable marginalization",
+    definition:
+      "관측되지 않는 생성 원인 z의 모든 가능한 값을 joint density p(x,z)에서 적분하거나 합해 observation density p(x)를 얻는 계산입니다.",
+    canonicalHref: "/ai/generative-theory#latent",
+  },
+  "evidence-lower-bound": {
+    id: "evidence-lower-bound",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Evidence lower bound (ELBO)",
+    definition:
+      "임의의 approximate posterior q(z|x)에 대해 log evidence가 reconstruction expectation에서 prior KL을 뺀 값 이상이며, 차이는 q와 true posterior의 KL이라는 관계입니다.",
+    canonicalHref: "/ai/generative-theory#latent",
+  },
+  "normalizing-flow-change-of-variables": {
+    id: "normalizing-flow-change-of-variables",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Normalizing-flow change of variables",
+    definition:
+      "Differentiable bijection으로 좌표를 바꿀 때 probability mass를 보존하도록 density에 inverse Jacobian determinant를 곱하는 변화변수 공식입니다.",
+    canonicalHref: "/ai/generative-theory#latent",
+  },
+  "adversarial-density-ratio": {
+    id: "adversarial-density-ratio",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "GAN optimal-discriminator density ratio",
+    definition:
+      "고정된 generator와 무제한 discriminator에서 original GAN objective의 점별 최적값이 pdata/(pdata+pg)이고, 이를 대입한 value가 Jensen–Shannon divergence와 연결되는 관계입니다.",
+    canonicalHref: "/ai/generative-theory#implicit",
+  },
+  "score-function-field": {
+    id: "score-function-field",
+    domain: "statistics",
+    label: "Score function field",
+    definition:
+      "각 위치 x에서 log density가 가장 빠르게 증가하는 방향을 나타내는 vector field ∇x log p(x)로, density의 normalization constant 없이도 local 방향을 제공합니다.",
+    canonicalHref: "/ai/generative-theory#implicit",
+  },
+  "diffusion-score-parameterization": {
+    id: "diffusion-score-parameterization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Diffusion noise–score parameterization",
+    definition:
+      "Gaussian forward process에서 noise predictor·clean-data predictor·velocity predictor를 time-dependent score와 알려진 scale 관계로 연결해 학습 target을 고르는 방식입니다.",
+    canonicalHref: "/ai/generative-theory#implicit",
+  },
+  "generative-evaluation-boundary": {
+    id: "generative-evaluation-boundary",
+    domain: "machine-learning",
+    label: "Generative evaluation boundary",
+    definition:
+      "Held-out likelihood·sample quality·coverage·diversity·condition adherence·sampling cost가 서로 다른 성질을 측정하므로 하나의 metric으로 model family를 총서열화하지 않는 평가 원칙입니다.",
+    canonicalHref: "/ai/generative-theory#overview",
+  },
+  "class-prevalence": {
+    id: "class-prevalence",
+    domain: "statistics",
+    label: "Class prevalence",
+    definition:
+      "평가 population에서 positive class가 차지하는 비율로, accuracy baseline과 precision·calibration·alert volume에 직접 영향을 주는 base rate입니다.",
+    canonicalHref: "/ai/imbalanced-data#overview",
+  },
+  "ranking-decision-calibration": {
+    id: "ranking-decision-calibration",
+    domain: "machine-learning",
+    label: "Ranking–decision–calibration boundary",
+    definition:
+      "Continuous score의 ordering, threshold에서의 hard decision, score가 probability와 일치하는 calibration을 서로 다른 평가 대상으로 분리하는 원칙입니다.",
+    canonicalHref: "/ai/imbalanced-data#overview",
+  },
+  "training-fold-resampling": {
+    id: "training-fold-resampling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Training-fold resampling",
+    definition:
+      "Split이 끝난 뒤 training fold 안에서만 class별 sample 노출 또는 합성 분포를 바꾸고 validation·test prevalence는 유지하는 방법입니다.",
+    canonicalHref: "/ai/imbalanced-data#sampling",
+  },
+  "smote-interpolation": {
+    id: "smote-interpolation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "SMOTE interpolation",
+    definition:
+      "Training minority sample과 같은 class neighbor 사이의 선분에서 synthetic feature vector를 생성하는 oversampling 방법입니다.",
+    canonicalHref: "/ai/imbalanced-data#sampling",
+  },
+  "class-weighted-risk": {
+    id: "class-weighted-risk",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Class-weighted risk",
+    definition:
+      "Class별 sample loss에 서로 다른 weight를 곱해 training objective와 gradient에서 class contribution을 바꾸는 방법입니다.",
+    canonicalHref: "/ai/imbalanced-data#loss",
+  },
+  "focal-loss-modulation": {
+    id: "focal-loss-modulation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Focal-loss modulation",
+    definition:
+      "Target-class probability가 높은 easy example의 cross-entropy를 (1−pt)^γ로 줄여 현재 hard example에 gradient를 집중하는 방법입니다.",
+    canonicalHref: "/ai/imbalanced-data#loss",
+  },
+  "cost-sensitive-threshold": {
+    id: "cost-sensitive-threshold",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Cost-sensitive decision threshold",
+    definition:
+      "Calibrated posterior probability와 false-positive·false-negative 비용 또는 recall·capacity 제약으로 positive action의 threshold를 정하는 운영 정책입니다.",
+    canonicalHref: "/ai/imbalanced-data#threshold",
+  },
+  "confusion-matrix-metrics": {
+    id: "confusion-matrix-metrics",
+    kind: "metric",
+    domain: "statistics",
+    label: "Confusion-matrix metrics",
+    definition:
+      "선택한 threshold에서 TP·FP·FN·TN count를 만들고 precision·recall·specificity 등 서로 다른 분모의 decision 성능을 계산하는 지표군입니다.",
+    canonicalHref: "/ai/imbalanced-data#evaluation",
+  },
+  "precision-recall-prevalence": {
+    id: "precision-recall-prevalence",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Precision–recall prevalence dependence",
+    definition:
+      "같은 true-positive rate와 false-positive rate라도 positive prevalence가 달라지면 precision과 PR baseline이 달라진다는 base-rate 관계입니다.",
+    canonicalHref: "/ai/imbalanced-data#evaluation",
+  },
+  "probability-calibration": {
+    id: "probability-calibration",
+    kind: "metric",
+    domain: "statistics",
+    label: "Probability calibration",
+    definition:
+      "예측 probability가 p인 집단에서 실제 positive frequency도 p에 가까운지를 reliability diagram·Brier score 등으로 평가하는 성질입니다.",
+    canonicalHref: "/ai/imbalanced-data#evaluation",
+  },
+  "augmentation-risk-objective": {
+    id: "augmentation-risk-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Augmented empirical risk",
+    definition:
+      "각 training sample에서 transform을 random하게 뽑고 transformed input과 일관되게 갱신한 target의 loss를 augmentation distribution에 대해 평균내는 objective입니다.",
+    canonicalHref: "/ai/data-augmentation#overview",
+  },
+  "label-preserving-transformation": {
+    id: "label-preserving-transformation",
+    domain: "machine-learning",
+    label: "Label-preserving transformation",
+    definition:
+      "배포 환경에서 input은 바뀌어도 task target의 의미는 유지되거나 명시된 규칙으로 함께 변하는 transformation입니다.",
+    canonicalHref: "/ai/data-augmentation#overview",
+  },
+  "augmentation-target-map": {
+    id: "augmentation-target-map",
+    domain: "machine-learning",
+    label: "Augmentation target map",
+    definition:
+      "Input transform과 같은 random parameter를 사용해 class label·soft target·box·mask·keypoint를 유효한 target으로 갱신하는 함수입니다.",
+    canonicalHref: "/ai/data-augmentation#overview",
+  },
+  "affine-annotation-transform": {
+    id: "affine-annotation-transform",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Affine annotation transform",
+    definition:
+      "Image point를 p′=Ap+t로 옮긴 것과 동일한 map을 box corner·mask·keypoint에 적용하고 crop boundary에서 validity를 다시 검사하는 방법입니다.",
+    canonicalHref: "/ai/data-augmentation#geometric",
+  },
+  "normalization-input-contract": {
+    id: "normalization-input-contract",
+    domain: "machine-learning",
+    label: "Normalization input contract",
+    definition:
+      "Input channel의 단위와 range를 정한 뒤 고정된 center와 scale로 좌표를 바꾸고 train·validation·serving에 동일하게 적용하는 preprocessing 계약입니다.",
+    canonicalHref: "/ai/data-augmentation#color",
+  },
+  "mixup-convex-target": {
+    id: "mixup-convex-target",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Mixup convex input–target interpolation",
+    definition:
+      "두 training input을 coefficient λ로 선형 보간하고 두 target distribution도 같은 λ로 보간해 sample 사이의 단순한 behavior를 유도하는 방법입니다.",
+    canonicalHref: "/ai/data-augmentation#advanced",
+  },
+  "cutmix-area-target": {
+    id: "cutmix-area-target",
+    kind: "method",
+    domain: "machine-learning",
+    label: "CutMix area-based target",
+    definition:
+      "두 image의 spatial region을 binary mask로 결합하고 clipping 후 실제 visible area 비율로 classification target을 섞는 방법입니다.",
+    canonicalHref: "/ai/data-augmentation#advanced",
+  },
+  "tabular-synthesis-validity": {
+    id: "tabular-synthesis-validity",
+    domain: "machine-learning",
+    label: "Tabular synthesis validity",
+    definition:
+      "Synthetic row가 column range뿐 아니라 row relation·entity consistency·temporal order·training-fold boundary를 보존하는지 검사하는 계약입니다.",
+    canonicalHref: "/ai/data-augmentation#tabular",
+  },
+  "augmentation-evaluation-boundary": {
+    id: "augmentation-evaluation-boundary",
+    domain: "machine-learning",
+    label: "Augmentation evaluation boundary",
+    definition:
+      "Stochastic train distribution, deterministic validation, fixed robustness slice, inverse-mapped TTA를 분리하고 accuracy·calibration·class slice·latency를 별도로 측정하는 평가 원칙입니다.",
+    canonicalHref: "/ai/data-augmentation#pipeline",
+  },
+  "feature-availability-contract": {
+    id: "feature-availability-contract",
+    domain: "machine-learning",
+    label: "Feature availability contract",
+    definition:
+      "각 prediction entity와 cutoff에서 실제로 조회할 수 있었던 source record만으로 feature를 계산하고 단위·결측·fallback·version을 함께 고정하는 데이터 계약입니다.",
+    canonicalHref: "/ai/feature-engineering#overview",
+  },
+  "prediction-cutoff-time": {
+    id: "prediction-cutoff-time",
+    domain: "machine-learning",
+    label: "Prediction cutoff time",
+    definition:
+      "한 prediction을 내린다고 가정한 시각으로, event 발생 시각뿐 아니라 system 도착 시각이 이 경계보다 늦은 record도 feature 계산에서 제외합니다.",
+    canonicalHref: "/ai/feature-engineering#overview",
+  },
+  "target-leakage": {
+    id: "target-leakage",
+    domain: "machine-learning",
+    label: "Target leakage",
+    definition:
+      "실제 prediction 시점에 정당하게 사용할 수 없는 target 관련·미래·평가 split 정보를 data 수집·집계·전처리 과정에서 input feature에 넣는 오류입니다.",
+    canonicalHref: "/ai/feature-engineering#overview",
+  },
+  "fold-local-statistic": {
+    id: "fold-local-statistic",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Fold-local preprocessing statistic",
+    definition:
+      "평균·분산·결측 대치·category frequency·선택 기준처럼 data에서 추정하는 상태를 현재 training fold에서만 fit하고 validation에는 고정 적용하는 방법입니다.",
+    canonicalHref: "/ai/feature-engineering#numeric",
+  },
+  "cross-fitted-target-encoding": {
+    id: "cross-fitted-target-encoding",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Cross-fitted target encoding",
+    definition:
+      "각 training row가 속한 fold의 target을 제외한 category 통계와 smoothing으로 encoding을 만들고 evaluation split에는 training mapping만 적용하는 방법입니다.",
+    canonicalHref: "/ai/feature-engineering#categorical",
+  },
+  "interaction-feature-map": {
+    id: "interaction-feature-map",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Interaction feature map",
+    definition:
+      "곱·비율·차이·category 교차처럼 두 개 이상의 원본 값이 함께 있을 때 달라지는 관계를 별도의 model input coordinate로 만드는 변환입니다.",
+    canonicalHref: "/ai/feature-engineering#interaction",
+  },
+  "point-in-time-aggregation": {
+    id: "point-in-time-aggregation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Point-in-time aggregation",
+    definition:
+      "각 row의 entity와 cutoff를 기준으로 당시 사용 가능했던 과거 event만 window에 포함해 count·mean·variance·recency 같은 상태를 계산하는 집계입니다.",
+    canonicalHref: "/ai/feature-engineering#aggregation",
+  },
+  "feature-selection-ablation": {
+    id: "feature-selection-ablation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Feature-selection ablation",
+    definition:
+      "Importance를 제거 후보 진단에만 사용하고, 후보를 뺀 model을 같은 split·seed·tuning budget으로 다시 학습해 품질과 운영 비용 변화를 확인하는 선택 절차입니다.",
+    canonicalHref: "/ai/feature-engineering#selection",
+  },
+  "training-serving-skew": {
+    id: "training-serving-skew",
+    domain: "machine-learning",
+    label: "Training–serving skew",
+    definition:
+      "Offline training과 online serving이 source·query·시간 경계·단위·default·transform version 중 하나를 다르게 사용해 같은 entity와 cutoff에서 서로 다른 feature를 만드는 실패입니다.",
+    canonicalHref: "/ai/feature-engineering#selection",
+  },
+  "decision-tree-piecewise-constant": {
+    id: "decision-tree-piecewise-constant",
+    domain: "machine-learning",
+    label: "Decision tree as a piecewise-constant function",
+    definition:
+      "연속된 feature split로 input space를 겹치지 않는 terminal regions로 나누고, sample이 도착한 leaf의 상수 value를 출력하는 prediction 함수입니다.",
+    canonicalHref: "/ai/gradient-boosting#overview",
+  },
+  "functional-gradient-boosting": {
+    id: "functional-gradient-boosting",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Functional gradient boosting",
+    definition:
+      "현재 prediction score에서 loss의 negative derivative를 sample별 target으로 만들고 base learner가 그 방향을 근사하도록 stagewise additive function을 갱신하는 방법입니다.",
+    canonicalHref: "/ai/gradient-boosting#boosting",
+  },
+  "boosting-shrinkage-early-stopping": {
+    id: "boosting-shrinkage-early-stopping",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Boosting shrinkage · early stopping",
+    definition:
+      "새 tree contribution을 learning rate로 줄이고 independent validation curve에서 best round를 선택해 additive ensemble의 step size와 length를 함께 제어하는 방법입니다.",
+    canonicalHref: "/ai/gradient-boosting#boosting",
+  },
+  "xgboost-second-order-gain": {
+    id: "xgboost-second-order-gain",
+    kind: "method",
+    domain: "machine-learning",
+    label: "XGBoost second-order split gain",
+    definition:
+      "Loss의 first·second derivative 합과 leaf complexity penalty로 parent를 두 child로 나눌 때의 local quadratic objective improvement를 계산하는 split criterion입니다.",
+    canonicalHref: "/ai/gradient-boosting#xgboost",
+  },
+  "histogram-split-approximation": {
+    id: "histogram-split-approximation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Histogram split approximation",
+    definition:
+      "연속 feature 값을 유한 bin으로 묶고 bin별 gradient statistics를 누적해 평가할 threshold 수와 row scan 비용을 줄이는 tree-building 방법입니다.",
+    canonicalHref: "/ai/gradient-boosting#xgboost",
+  },
+  "lightgbm-goss": {
+    id: "lightgbm-goss",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Gradient-based One-Side Sampling · GOSS",
+    definition:
+      "큰 gradient sample은 유지하고 작은 gradient sample은 일부만 뽑아 sampling weight를 보정함으로써 더 적은 row로 split gain을 추정하는 방법입니다.",
+    canonicalHref: "/ai/gradient-boosting#lightgbm",
+  },
+  "lightgbm-exclusive-feature-bundling": {
+    id: "lightgbm-exclusive-feature-bundling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Exclusive Feature Bundling · EFB",
+    definition:
+      "동시에 non-zero인 경우가 드문 sparse features를 충돌을 관리하며 하나의 bundled feature로 묶어 effective feature count를 줄이는 방법입니다.",
+    canonicalHref: "/ai/gradient-boosting#lightgbm",
+  },
+  "leaf-wise-tree-growth": {
+    id: "leaf-wise-tree-growth",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Leaf-wise tree growth",
+    definition:
+      "같은 depth의 node를 함께 확장하는 대신 현재 estimated gain이 가장 큰 terminal leaf를 우선 분할해 leaf budget을 비대칭적으로 배분하는 성장 규칙입니다.",
+    canonicalHref: "/ai/gradient-boosting#lightgbm",
+  },
+  "catboost-ordered-boosting": {
+    id: "catboost-ordered-boosting",
+    kind: "method",
+    domain: "machine-learning",
+    label: "CatBoost ordered boosting",
+    definition:
+      "Permutation에서 현재 row보다 앞선 sample로 만든 prefix model의 prediction에서 그 row의 gradient target을 계산해 prediction shift를 줄이는 boosting 방법입니다.",
+    canonicalHref: "/ai/gradient-boosting#catboost",
+  },
+  "oblivious-symmetric-tree": {
+    id: "oblivious-symmetric-tree",
+    domain: "machine-learning",
+    label: "Oblivious · symmetric decision tree",
+    definition:
+      "같은 depth의 모든 node가 동일한 feature와 threshold split을 사용해 모든 root-to-leaf path가 규칙적인 binary code가 되는 tree 구조입니다.",
+    canonicalHref: "/ai/gradient-boosting#catboost",
+  },
+  "gbm-comparison-contract": {
+    id: "gbm-comparison-contract",
+    domain: "machine-learning",
+    label: "Comparable GBM experiment contract",
+    definition:
+      "동일 split·feature artifact·metric·search budget·hardware에서 library별 parameter를 공통 capacity·sampling·regularization 제약으로 대응해 품질과 system cost를 비교하는 원칙입니다.",
+    canonicalHref: "/ai/gradient-boosting#comparison",
+  },
+  "tabular-row-schema-contract": {
+    id: "tabular-row-schema-contract",
+    domain: "machine-learning",
+    label: "Tabular row · schema contract",
+    definition:
+      "한 entity와 prediction cutoff의 heterogeneous numerical·categorical columns를 단위·missing·vocabulary·availability가 고정된 model input으로 바꾸는 계약입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#overview",
+  },
+  "tabular-neural-representation-opportunity": {
+    id: "tabular-neural-representation-opportunity",
+    domain: "machine-learning",
+    label: "Tabular neural representation opportunity",
+    definition:
+      "Embedding 재사용·고차 interaction·multimodal 결합·동일 schema pretraining처럼 neural encoder가 강한 GBDT보다 추가로 학습할 공유 구조가 있는 조건입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#when-dl-wins",
+  },
+  "tabnet-sequential-feature-mask": {
+    id: "tabnet-sequential-feature-mask",
+    kind: "method",
+    domain: "machine-learning",
+    label: "TabNet sequential feature mask",
+    definition:
+      "Row별 attentive score와 이전 feature 사용 prior를 sparsemax로 정규화해 decision step마다 일부 input columns를 선택하는 mask입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#tabnet",
+  },
+  "tabnet-feature-reuse-prior": {
+    id: "tabnet-feature-reuse-prior",
+    kind: "method",
+    domain: "machine-learning",
+    label: "TabNet feature-reuse prior",
+    definition:
+      "이전 decision step의 mask를 누적해 다음 attentive score를 조절하고 relaxation parameter로 feature 재사용 정도를 정하는 내부 상태입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#tabnet",
+  },
+  "tabnet-masked-feature-pretraining": {
+    id: "tabnet-masked-feature-pretraining",
+    kind: "method",
+    domain: "machine-learning",
+    label: "TabNet masked-feature pretraining",
+    definition:
+      "일부 table columns를 가린 뒤 알려진 columns의 encoder representation에서 가려진 값을 복원해 unlabeled rows로 초기 표현을 학습하는 방법입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#tabnet",
+  },
+  "tabular-feature-tokenizer": {
+    id: "tabular-feature-tokenizer",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Tabular feature tokenizer",
+    definition:
+      "Numerical scalar에는 column별 vector와 bias를 적용하고 categorical ID에는 column별 embedding lookup을 적용해 모든 feature를 같은 width의 token으로 바꾸는 모듈입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#ft-transformer",
+  },
+  "ft-transformer-column-interaction": {
+    id: "ft-transformer-column-interaction",
+    kind: "method",
+    domain: "machine-learning",
+    label: "FT-Transformer column interaction",
+    definition:
+      "한 row의 feature tokens와 CLS token에 self-attention을 적용해 column별 표현을 서로 조건화하고 마지막 CLS representation으로 prediction하는 계산입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#ft-transformer",
+  },
+  "out-of-fold-error-correlation": {
+    id: "out-of-fold-error-correlation",
+    kind: "metric",
+    domain: "statistics",
+    label: "Out-of-fold error correlation",
+    definition:
+      "같은 held-out rows에서 두 model의 prediction error가 함께 움직이는 정도를 재어 ensemble이 중복 오류를 내는지 진단하는 통계입니다.",
+    canonicalHref: "/ai/tabular-deep-learning#when-dl-wins",
+  },
+  "forecast-row-contract": {
+    id: "forecast-row-contract",
+    domain: "machine-learning",
+    label: "Forecast row contract",
+    definition:
+      "Entity·forecast origin·target horizon을 한 prediction question으로 고정하고 origin 당시 available한 history만 feature input으로 허용하는 시계열 행 계약입니다.",
+    canonicalHref: "/ai/time-features#overview",
+  },
+  "observation-duration-lag": {
+    id: "observation-duration-lag",
+    kind: "method",
+    domain: "statistics",
+    label: "Observation lag · duration lag",
+    definition:
+      "같은 entity에서 k번째 이전 observation을 고르는 lag와 cutoff에서 Δ시간 전의 as-of value를 고르는 lag를 구분하는 시간 feature 정의입니다.",
+    canonicalHref: "/ai/time-features#lag",
+  },
+  "lag-difference-feature": {
+    id: "lag-difference-feature",
+    kind: "method",
+    domain: "statistics",
+    label: "Lag difference feature",
+    definition:
+      "현재 available level과 k-step 또는 Δ시간 전 level을 빼 absolute level 대신 그 구간의 signed change를 표현하는 feature입니다.",
+    canonicalHref: "/ai/time-features#lag",
+  },
+  "autocorrelation-lag-diagnostic": {
+    id: "autocorrelation-lag-diagnostic",
+    kind: "metric",
+    domain: "statistics",
+    label: "Autocorrelation lag diagnostic",
+    definition:
+      "같은 series에서 k만큼 떨어진 값들이 선형적으로 함께 움직이는 정도를 측정해 lag 후보와 seasonality를 탐색하는 진단값입니다.",
+    canonicalHref: "/ai/time-features#lag",
+  },
+  "rolling-window-boundary": {
+    id: "rolling-window-boundary",
+    kind: "method",
+    domain: "statistics",
+    label: "Point-in-time rolling window boundary",
+    definition:
+      "Entity·event/available time·양끝 포함 규칙·minimum observations를 고정해 cutoff 이전 duration 또는 row-count 구간의 통계를 계산하는 계약입니다.",
+    canonicalHref: "/ai/time-features#rolling",
+  },
+  "exponential-moving-summary": {
+    id: "exponential-moving-summary",
+    kind: "method",
+    domain: "statistics",
+    label: "Exponential moving summary · EMA",
+    definition:
+      "직전 state와 새 available value를 smoothing factor로 재귀 결합해 오래된 관측의 weight를 지수적으로 줄이는 시계열 요약입니다.",
+    canonicalHref: "/ai/time-features#rolling",
+  },
+  "cyclic-time-coordinate": {
+    id: "cyclic-time-coordinate",
+    kind: "method",
+    domain: "mathematics",
+    label: "Cyclic time coordinate",
+    definition:
+      "Period T의 위치를 2πx/T angle의 cosine·sine 좌표로 옮겨 주기의 끝과 시작을 unit circle에서 연속적으로 연결하는 encoding입니다.",
+    canonicalHref: "/ai/time-features#cyclic",
+  },
+  "harmonic-time-features": {
+    id: "harmonic-time-features",
+    kind: "method",
+    domain: "mathematics",
+    label: "Harmonic time features",
+    definition:
+      "기본 period의 정수배 frequency에 해당하는 sin·cos pairs를 더해 한 주기 안의 여러 peak와 복잡한 반복 모양을 표현하는 basis features입니다.",
+    canonicalHref: "/ai/time-features#cyclic",
+  },
+  "rolling-origin-evaluation": {
+    id: "rolling-origin-evaluation",
+    kind: "method",
+    domain: "statistics",
+    label: "Rolling-origin evaluation",
+    definition:
+      "Forecast origin을 시간순으로 전진시키며 각 origin보다 과거인 data로만 fit하고 다음 horizon을 평가해 production prediction order를 재현하는 backtest입니다.",
+    canonicalHref: "/ai/time-features#leakage",
+  },
+  "temporal-gap-purge": {
+    id: "temporal-gap-purge",
+    kind: "method",
+    domain: "statistics",
+    label: "Temporal gap · purge",
+    definition:
+      "Training label interval·feature window·delayed availability가 validation 구간과 겹쳐 information을 공유하지 않도록 split 경계 주변 rows를 제외하는 방법입니다.",
+    canonicalHref: "/ai/time-features#leakage",
+  },
+  "event-sequence-sample-contract": {
+    id: "event-sequence-sample-contract",
+    domain: "machine-learning",
+    label: "Event-sequence sample contract",
+    definition:
+      "같은 entity에서 prediction cutoff 당시 available한 event만 event time과 고정 tie-break key로 정렬해 variable-length input과 미래 target horizon을 정의하는 계약입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#overview",
+  },
+  "heterogeneous-event-token": {
+    id: "heterogeneous-event-token",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Heterogeneous event token",
+    definition:
+      "Event type embedding·numerical attributes·sequence position·elapsed-time encoding을 같은 hidden width로 합쳐 한 event를 나타내는 vector입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#encoding",
+  },
+  "sequence-padding-validity-mask": {
+    id: "sequence-padding-validity-mask",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Sequence padding validity mask",
+    definition:
+      "서로 다른 길이의 sequence를 고정 tensor로 묶되 실제 event와 PAD를 1·0으로 구분해 attention·pooling·loss에서 PAD의 영향을 제거하는 mask입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#encoding",
+  },
+  "sequence-truncation-policy": {
+    id: "sequence-truncation-policy",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Sequence truncation policy",
+    definition:
+      "최대 길이를 넘는 history에서 최근 event·균등 표본·중요 event·오래된 구간 요약 중 무엇을 보존할지 정하고 evidence loss와 system cost를 함께 평가하는 규칙입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#encoding",
+  },
+  "event-transition-statistic": {
+    id: "event-transition-statistic",
+    kind: "method",
+    domain: "statistics",
+    label: "Event transition statistic",
+    definition:
+      "인접한 event pair의 횟수와 시작 event별 smoothed conditional frequency로 local order를 고정 길이 feature에 보존하는 통계입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#aggregation",
+  },
+  "sequence-summary-collision": {
+    id: "sequence-summary-collision",
+    domain: "machine-learning",
+    label: "Sequence-summary collision",
+    definition:
+      "서로 다른 전체 event 순서가 같은 count·n-gram·transition summary vector로 압축되어 downstream model이 두 경로를 구분할 수 없게 되는 현상입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#aggregation",
+  },
+  "event-sequence-visibility-mask": {
+    id: "event-sequence-visibility-mask",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Event-sequence visibility mask",
+    definition:
+      "Whole-history future label에는 cutoff 이전 token의 양방향 참조를, next-event objective에는 현재보다 오른쪽 token을 가리는 causal 참조를 적용하는 information-flow 계약입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#transformer",
+  },
+  "event-sequence-pooling": {
+    id: "event-sequence-pooling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Event-sequence pooling",
+    definition:
+      "Variable-length event hidden states를 CLS·masked mean·last-valid 규칙으로 하나의 sequence-level representation으로 만드는 연산입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#transformer",
+  },
+  "order-shuffle-diagnostic": {
+    id: "order-shuffle-diagnostic",
+    kind: "metric",
+    domain: "statistics",
+    label: "Within-entity order-shuffle diagnostic",
+    definition:
+      "Entity·cutoff·event multiset을 유지하면서 유효 event 순서만 섞었을 때의 성능 감소로 model의 order-signal 의존도를 진단하는 intervention입니다.",
+    canonicalHref: "/ai/sequence-modeling-tabular#transformer",
+  },
+  "reproducible-training-run-contract": {
+    id: "reproducible-training-run-contract",
+    domain: "machine-learning",
+    label: "Reproducible training-run contract",
+    definition:
+      "Data snapshot·split·resolved config·code·environment와 model update·metric·artifact를 하나의 run ID 아래 연결해 실행 결과를 설명하고 다시 비교할 수 있게 하는 계약입니다.",
+    canonicalHref: "/ai/training-pipeline#overview",
+  },
+  "dataset-sampler-collate-contract": {
+    id: "dataset-sampler-collate-contract",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Dataset–sampler–collate contract",
+    definition:
+      "Sample ID를 input·target으로 바꾸는 Dataset, sample 순서와 rank shard를 정하는 sampler, 여러 sample을 tensor·mask로 묶는 collate의 책임을 분리한 input pipeline 계약입니다.",
+    canonicalHref: "/ai/training-pipeline#dataset",
+  },
+  "input-pipeline-wait-fraction": {
+    id: "input-pipeline-wait-fraction",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "Input-pipeline wait fraction",
+    definition:
+      "Training step wall time 중 다음 batch를 기다린 시간의 비율과 실제 samples·valid tokens 처리량으로 accelerator input starvation을 진단하는 측정입니다.",
+    canonicalHref: "/ai/training-pipeline#dataset",
+  },
+  "training-phase-state-contract": {
+    id: "training-phase-state-contract",
+    domain: "machine-learning",
+    label: "Train–validation phase state contract",
+    definition:
+      "Train에서는 module·gradient·optimizer state를 변경하고 validation에서는 eval behavior와 autograd 비활성화 아래 같은 model state를 읽기만 하도록 허용된 변화 범위를 분리하는 계약입니다.",
+    canonicalHref: "/ai/training-pipeline#loop",
+  },
+  "effective-batch-update-clock": {
+    id: "effective-batch-update-clock",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Effective batch and optimizer-update clock",
+    definition:
+      "Per-rank micro-batch·gradient accumulation 횟수·data-parallel rank 수로 update당 sample 수를 계산하고 scheduler·logging·checkpoint를 optimizer update 기준에 맞추는 규칙입니다.",
+    canonicalHref: "/ai/training-pipeline#loop",
+  },
+  "automatic-mixed-precision-contract": {
+    id: "automatic-mixed-precision-contract",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Automatic mixed-precision training contract",
+    definition:
+      "Autocast의 연산별 dtype 선택과 FP16 loss scaling·unscale·overflow 검사·gradient clipping·optimizer update 순서를 명시하는 수치 실행 계약입니다.",
+    canonicalHref: "/ai/training-pipeline#loop",
+  },
+  "resume-state-closure": {
+    id: "resume-state-closure",
+    domain: "machine-learning",
+    label: "Resume-state closure",
+    definition:
+      "Model weight뿐 아니라 optimizer·scheduler·AMP scaler·update cursor·sampler·RNG까지 다음 update를 결정하는 상태를 checkpoint에 포함하는 복구 조건입니다.",
+    canonicalHref: "/ai/training-pipeline#checkpoint",
+  },
+  "resume-equivalence-test": {
+    id: "resume-equivalence-test",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Continuous-versus-resumed equivalence test",
+    definition:
+      "중단 없이 K+M updates를 수행한 실행과 K updates 뒤 새 process에서 checkpoint를 불러 M updates를 수행한 실행의 sample order·clock·state·parameter를 비교하는 복구 시험입니다.",
+    canonicalHref: "/ai/training-pipeline#checkpoint",
+  },
+  "global-metric-sufficient-statistics": {
+    id: "global-metric-sufficient-statistics",
+    kind: "method",
+    domain: "statistics",
+    label: "Global metric sufficient-statistic reduction",
+    definition:
+      "크기가 다른 batch와 distributed rank에서 batch metric을 평균내지 않고 numerator와 valid denominator 또는 필요한 통계량을 합친 뒤 전체 metric을 계산하는 집계 방식입니다.",
+    canonicalHref: "/ai/training-pipeline#logging",
+  },
+  "run-artifact-provenance": {
+    id: "run-artifact-provenance",
+    domain: "machine-learning",
+    label: "Run-to-artifact provenance",
+    definition:
+      "변경되지 않는 run ID에서 code·data·split·config·environment·checkpoint digest·evaluation report를 양방향으로 추적할 수 있게 하는 lineage입니다.",
+    canonicalHref: "/ai/training-pipeline#logging",
+  },
+  "pretrained-handoff-contract": {
+    id: "pretrained-handoff-contract",
+    domain: "machine-learning",
+    label: "Pretrained handoff contract",
+    definition:
+      "Source objective로 학습한 backbone parameter와 architecture·tokenizer/normalization·label interface를 target task의 초기 state와 preprocessing으로 넘기는 계약입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#overview",
+  },
+  "trainable-scope-mask": {
+    id: "trainable-scope-mask",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Layer trainable-scope mask",
+    definition:
+      "Backbone layer별로 gradient·optimizer update를 허용할지 0·1로 정해 fixed feature·partial·full fine-tuning 범위를 표현하는 규칙입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#freezing",
+  },
+  "frozen-module-buffer-state": {
+    id: "frozen-module-buffer-state",
+    domain: "machine-learning",
+    label: "Frozen module buffer state",
+    definition:
+      "Requires-grad가 꺼진 parameter와 별개로 BatchNorm running statistics 같은 non-parameter buffer가 train/eval mode에 따라 변할 수 있는 module state입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#freezing",
+  },
+  "layerwise-relative-update-ratio": {
+    id: "layerwise-relative-update-ratio",
+    kind: "metric",
+    domain: "statistics",
+    label: "Layerwise relative update ratio",
+    definition:
+      "Layer parameter norm에 대한 실제 optimizer displacement norm의 비율로 서로 scale이 다른 layer group의 update 충격을 비교하는 무차원 진단값입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#lr-strategy",
+  },
+  "adaptation-scope-comparison": {
+    id: "adaptation-scope-comparison",
+    kind: "method",
+    domain: "statistics",
+    label: "Fixed–partial–full adaptation comparison",
+    definition:
+      "같은 checkpoint·preprocessing·split·metric·search budget에서 fixed feature·partial·full fine-tuning의 paired gain·seed uncertainty·system cost를 비교하는 선택 계약입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#feature-vs-finetune",
+  },
+  "covariate-label-concept-shift": {
+    id: "covariate-label-concept-shift",
+    domain: "statistics",
+    label: "Covariate·label·concept shift",
+    definition:
+      "Source와 target 사이에서 P(x), P(y), P(y|x) 또는 관련 안정성 가정 중 무엇이 달라졌는지 구분해 adaptation에 필요한 관측과 방법을 정하는 분포 변화 분류입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#domain-shift",
+  },
+  "continued-domain-task-pretraining": {
+    id: "continued-domain-task-pretraining",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Domain/task-adaptive continued pretraining",
+    definition:
+      "Target domain 또는 특정 task와 관련된 unlabeled data에서 self-supervised pretraining objective를 이어 수행한 뒤 labeled target task로 fine-tuning하는 적응 단계입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#domain-shift",
+  },
+  "domain-adversarial-alignment": {
+    id: "domain-adversarial-alignment",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Domain-adversarial representation alignment",
+    definition:
+      "Source label을 예측하면서 source/target domain은 구분하기 어렵도록 gradient reversal 등으로 representation을 학습하는 unsupervised domain-adaptation 방법입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#domain-shift",
+  },
+  "negative-transfer-diagnostic": {
+    id: "negative-transfer-diagnostic",
+    kind: "metric",
+    domain: "statistics",
+    label: "Negative-transfer diagnostic",
+    definition:
+      "Adaptation model이 같은 target holdout과 source regression set에서 단순 pretrained baseline보다 나빠지는 slice·calibration·capability를 비교해 전이가 해로운지 판정하는 절차입니다.",
+    canonicalHref: "/ai/transfer-learning-practice#domain-shift",
+  },
+  "learning-rate-schedule-contract": {
+    id: "learning-rate-schedule-contract",
+    domain: "machine-learning",
+    label: "Learning-rate schedule contract",
+    definition:
+      "Optimizer update index를 독립 변수로 삼아 각 parameter group의 learning rate를 정하고 total budget·호출 시점·state·resume 규칙을 함께 고정한 실행 계약입니다.",
+    canonicalHref: "/ai/lr-scheduling#overview",
+  },
+  "open-loop-lr-decay": {
+    id: "open-loop-lr-decay",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Open-loop learning-rate decay",
+    definition:
+      "Validation 결과가 아니라 미리 정한 update milestone이나 decay factor만으로 learning rate를 낮추는 step·exponential 계열 정책입니다.",
+    canonicalHref: "/ai/lr-scheduling#step-exponential",
+  },
+  "metric-triggered-lr-decay": {
+    id: "metric-triggered-lr-decay",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Metric-triggered learning-rate decay",
+    definition:
+      "Validation metric의 best·threshold·patience·cooldown state를 관찰해 개선이 멈췄다고 판정할 때 learning rate를 낮추는 closed-loop 정책입니다.",
+    canonicalHref: "/ai/lr-scheduling#step-exponential",
+  },
+  "cosine-annealing-progress": {
+    id: "cosine-annealing-progress",
+    kind: "method",
+    domain: "mathematics",
+    label: "Cosine annealing progress",
+    definition:
+      "Cycle 진행률 t/T를 cosine 반 주기에 넣어 maximum과 minimum learning rate 사이를 시작과 끝에서 완만하게 보간하는 schedule입니다.",
+    canonicalHref: "/ai/lr-scheduling#cosine",
+  },
+  "warm-restart-state-boundary": {
+    id: "warm-restart-state-boundary",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Warm-restart state boundary",
+    definition:
+      "Cosine cycle 경계에서 learning rate는 다시 높이되 model과 optimizer learning state는 이어가는 restart 규칙입니다.",
+    canonicalHref: "/ai/lr-scheduling#cosine",
+  },
+  "one-cycle-policy": {
+    id: "one-cycle-policy",
+    kind: "method",
+    domain: "machine-learning",
+    label: "One-cycle policy",
+    definition:
+      "고정된 total update budget 안에서 learning rate를 maximum까지 올렸다가 very small final value로 내리고 선택적으로 momentum을 반대 방향으로 움직이는 정책입니다.",
+    canonicalHref: "/ai/lr-scheduling#onecycle",
+  },
+  "learning-rate-range-test": {
+    id: "learning-rate-range-test",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Learning-rate range test",
+    definition:
+      "짧은 진단 run에서 learning rate를 점차 올리며 loss 감소 구간과 instability 시작점을 관찰해 maximum LR 후보를 만드는 실험입니다.",
+    canonicalHref: "/ai/lr-scheduling#onecycle",
+  },
+  "warmup-main-schedule-composition": {
+    id: "warmup-main-schedule-composition",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Warmup–main schedule composition",
+    definition:
+      "처음 W updates의 rising LR와 남은 T−W updates의 본 schedule을 같은 peak boundary와 local clock으로 이어 붙이는 piecewise schedule입니다.",
+    canonicalHref: "/ai/lr-scheduling#warmup",
+  },
+  "adaptive-update-magnitude-diagnostic": {
+    id: "adaptive-update-magnitude-diagnostic",
+    kind: "metric",
+    domain: "statistics",
+    label: "Adaptive update-magnitude diagnostic",
+    definition:
+      "Adaptive optimizer의 normalized direction과 scheduled LR가 만든 실제 parameter displacement를 parameter norm·gradient norm·overflow와 함께 추적하는 안정성 진단입니다.",
+    canonicalHref: "/ai/lr-scheduling#warmup",
+  },
+  "observed-generalization-gap": {
+    id: "observed-generalization-gap",
+    kind: "metric",
+    domain: "statistics",
+    label: "Observed train–validation gap",
+    definition:
+      "같은 checkpoint와 loss 정의에서 validation empirical risk와 training empirical risk의 차이를 추적하되 finite split noise·leakage·shift 가능성과 함께 해석하는 진단값입니다.",
+    canonicalHref: "/ai/regularization-practice#overview",
+  },
+  "regularization-ablation-contract": {
+    id: "regularization-ablation-contract",
+    kind: "method",
+    domain: "statistics",
+    label: "Regularization ablation contract",
+    definition:
+      "동일한 data split·initialization seeds·optimizer budget에서 한 regularization 축만 바꾸고 train fit·validation uncertainty·slice·calibration·cost를 비교하는 선택 절차입니다.",
+    canonicalHref: "/ai/regularization-practice#overview",
+  },
+  "inverted-dropout-mask": {
+    id: "inverted-dropout-mask",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Inverted dropout mask",
+    definition:
+      "Train mode에서 activation에 Bernoulli keep mask를 곱하고 keep probability로 나눠 conditional expectation은 유지하면서 p/(1−p)에 비례하는 noise variance를 추가하는 연산입니다.",
+    canonicalHref: "/ai/regularization-practice#dropout",
+  },
+  "dropout-train-eval-contract": {
+    id: "dropout-train-eval-contract",
+    domain: "machine-learning",
+    label: "Dropout train–eval contract",
+    definition:
+      "Training에서는 선택한 element·channel·region 단위 mask를 sampling하고 evaluation에서는 stochastic mask와 추가 scaling 없이 전체 path를 사용하는 module-state 규칙입니다.",
+    canonicalHref: "/ai/regularization-practice#dropout",
+  },
+  "l2-sgd-decay-equivalence": {
+    id: "l2-sgd-decay-equivalence",
+    kind: "concept",
+    domain: "mathematics",
+    label: "L2–SGD weight-decay equivalence",
+    definition:
+      "Plain scalar-step SGD에서 λ‖w‖²/2 penalty gradient가 update를 (1−ηλ)w−ηg로 만들어 multiplicative weight decay와 같은 형태가 되는 등가 관계입니다.",
+    canonicalHref: "/ai/regularization-practice#weight-decay",
+  },
+  "decoupled-adaptive-weight-decay": {
+    id: "decoupled-adaptive-weight-decay",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Decoupled adaptive weight decay",
+    definition:
+      "Adaptive optimizer의 moment·variance preconditioning에는 data gradient만 넣고 λw shrinkage는 별도 parameter update로 적용하는 AdamW 계열 규칙입니다.",
+    canonicalHref: "/ai/regularization-practice#weight-decay",
+  },
+  "weight-decay-param-group-coverage": {
+    id: "weight-decay-param-group-coverage",
+    kind: "method",
+    domain: "computer-science",
+    label: "Decay param-group coverage test",
+    definition:
+      "Decay와 no-decay parameter 집합의 합집합이 모든 trainable parameter이고 교집합은 비어 있으며 optimizer state load 뒤 identity가 유지되는지 검사하는 test입니다.",
+    canonicalHref: "/ai/regularization-practice#weight-decay",
+  },
+  "early-stopping-state-machine": {
+    id: "early-stopping-state-machine",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Early-stopping state machine",
+    definition:
+      "Validation event마다 best metric·minimum improvement·bad-event counter·patience를 갱신해 stop event와 best snapshot artifact를 서로 분리하는 model-selection 규칙입니다.",
+    canonicalHref: "/ai/regularization-practice#early-stopping",
+  },
+  "best-checkpoint-artifact": {
+    id: "best-checkpoint-artifact",
+    domain: "computer-science",
+    label: "Best-checkpoint artifact",
+    definition:
+      "선택 metric이 가장 좋았던 evaluation의 immutable model state와 update·config·metric receipt를 저장해 마지막 in-memory state와 분리한 산출물입니다.",
+    canonicalHref: "/ai/regularization-practice#early-stopping",
+  },
+  "uniform-label-smoothing": {
+    id: "uniform-label-smoothing",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Uniform label smoothing",
+    definition:
+      "One-hot target을 (1−ε) 비율로 유지하고 ε만큼 K-class uniform distribution과 섞어 soft-target cross-entropy를 만드는 regularization입니다.",
+    canonicalHref: "/ai/regularization-practice#label-smoothing",
+  },
+  "soft-target-composition-audit": {
+    id: "soft-target-composition-audit",
+    kind: "method",
+    domain: "statistics",
+    label: "Soft-target composition audit",
+    definition:
+      "Label smoothing·Mixup·CutMix·distillation을 함께 쓸 때 최종 target probability의 합·entropy·class별 영향과 loss reduction을 직접 계산해 중복 regularization을 확인하는 절차입니다.",
+    canonicalHref: "/ai/regularization-practice#label-smoothing",
+  },
+  "deterministic-autoencoder-contract": {
+    id: "deterministic-autoencoder-contract",
+    domain: "machine-learning",
+    label: "Deterministic autoencoder contract",
+    definition:
+      "Encoder가 input을 하나의 latent representation으로 바꾸고 decoder가 같은 input shape을 복원하며, input-derived target과 reconstruction objective로 두 function을 함께 학습하는 계약입니다.",
+    canonicalHref: "/ai/autoencoder#overview",
+  },
+  "undercomplete-bottleneck": {
+    id: "undercomplete-bottleneck",
+    domain: "machine-learning",
+    label: "Undercomplete bottleneck",
+    definition:
+      "Latent dimension을 input dimension보다 작게 두어 모든 coordinate를 그대로 전달하기 어렵게 만들고 reconstruction에 필요한 정보를 선택하도록 압박하는 구조입니다.",
+    canonicalHref: "/ai/autoencoder#architecture",
+  },
+  "autoencoder-identity-degeneracy": {
+    id: "autoencoder-identity-degeneracy",
+    domain: "machine-learning",
+    label: "Autoencoder identity degeneracy",
+    definition:
+      "Capacity가 크고 제약이 약한 autoencoder가 useful structure 대신 input을 거의 그대로 복사하는 identity mapping으로 reconstruction loss를 낮추는 실패입니다.",
+    canonicalHref: "/ai/autoencoder#architecture",
+  },
+  "reconstruction-objective": {
+    id: "reconstruction-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Reconstruction objective",
+    definition:
+      "Input-derived target과 decoder output의 차이를 likelihood에 맞는 loss와 명시적인 batch·feature reduction으로 scalar화하는 학습 목적입니다.",
+    canonicalHref: "/ai/autoencoder#loss-backprop",
+  },
+  "linear-autoencoder-pca": {
+    id: "linear-autoencoder-pca",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Linear autoencoder–PCA equivalence",
+    definition:
+      "Centered data, linear encoder·decoder, rank-k bottleneck, squared reconstruction error 조건에서 최적 reconstruction map의 부분공간이 PCA의 leading principal subspace와 일치한다는 정리입니다.",
+    canonicalHref: "/ai/autoencoder#dimension-reduction",
+  },
+  "denoising-autoencoder-objective": {
+    id: "denoising-autoencoder-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Denoising autoencoder objective",
+    definition:
+      "Clean sample에서 뽑은 corrupted input을 encoder에 넣되 target은 clean sample로 유지해 identity copying을 막고 corruption에 견고한 reconstruction을 학습하는 objective입니다.",
+    canonicalHref: "/ai/autoencoder#variants",
+  },
+  "sparse-autoencoder-penalty": {
+    id: "sparse-autoencoder-penalty",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Sparse autoencoder penalty",
+    definition:
+      "Latent dimension이 크더라도 sample별 또는 평균 activation 중 소수만 켜지도록 L1·KL 등 penalty를 reconstruction loss에 더하는 제약입니다.",
+    canonicalHref: "/ai/autoencoder#variants",
+  },
+  "reconstruction-anomaly-score": {
+    id: "reconstruction-anomaly-score",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Reconstruction anomaly score",
+    definition:
+      "Input과 reconstruction의 sample별 차이를 anomaly score로 사용하되 정상·이상 score 분리와 threshold를 labeled validation data에서 검증하는 측정 방식입니다.",
+    canonicalHref: "/ai/autoencoder#applications",
+  },
+  "masked-autoencoder-pretraining": {
+    id: "masked-autoencoder-pretraining",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Masked autoencoder pretraining",
+    definition:
+      "Input 일부를 숨기고 visible part만 encoder로 처리한 뒤 lightweight decoder가 missing content를 복원하도록 학습하는 self-supervised pretraining 방법입니다.",
+    canonicalHref: "/ai/autoencoder#variants",
+  },
+  "initial-value-problem": {
+    id: "initial-value-problem",
+    domain: "mathematics",
+    label: "Initial-value problem",
+    definition:
+      "State의 순간 변화율을 정하는 differential equation과 특정 시점의 시작값을 함께 주어 하나의 trajectory를 결정하는 문제입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#initial-value",
+  },
+  "vector-field-trajectory": {
+    id: "vector-field-trajectory",
+    domain: "mathematics",
+    label: "Vector field and trajectory",
+    definition:
+      "Vector field는 state-space 각 위치의 이동 방향을 정하는 함수이고, trajectory는 한 initial state에서 그 방향을 따라 시간에 따라 움직인 경로입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#initial-value",
+  },
+  "explicit-euler-method": {
+    id: "explicit-euler-method",
+    kind: "method",
+    domain: "mathematics",
+    label: "Explicit Euler method",
+    definition:
+      "현재 state의 derivative를 한 번 평가하고 step size를 곱해 다음 state로 이동하는 1차 numerical integration method입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#euler-method",
+  },
+  "numerical-discretization-error": {
+    id: "numerical-discretization-error",
+    domain: "mathematics",
+    label: "Numerical discretization error",
+    definition:
+      "연속 경로를 유한한 step으로 근사하면서 생기는 local truncation error와 그것이 여러 step에 누적된 global error입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#euler-method",
+  },
+  "euler-stability-condition": {
+    id: "euler-stability-condition",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Euler stability condition",
+    definition:
+      "Decay test equation x′=−λx에 explicit Euler를 적용할 때 amplification factor |1−hλ|가 1보다 작아야 numerical state가 줄어든다는 조건입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#stability",
+  },
+  "heun-second-order-method": {
+    id: "heun-second-order-method",
+    kind: "method",
+    domain: "mathematics",
+    label: "Heun second-order method",
+    definition:
+      "출발점 slope로 끝점을 예측한 뒤 예상 끝점 slope를 다시 계산해 두 기울기의 평균으로 update하는 2차 Runge–Kutta method입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#heun-runge-kutta",
+  },
+  "stochastic-differential-equation": {
+    id: "stochastic-differential-equation",
+    domain: "mathematics",
+    label: "Stochastic differential equation",
+    definition:
+      "Deterministic drift에 Brownian-motion increment가 더해져 같은 initial state에서도 여러 random sample path를 만드는 연속시간 변화 모델입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#ode-sde-boundary",
+  },
+  "brownian-increment-scaling": {
+    id: "brownian-increment-scaling",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Brownian increment scaling",
+    definition:
+      "시간 간격 Δt의 Brownian increment가 평균 0, 분산 Δt인 Gaussian이므로 표준편차와 typical magnitude가 √Δt에 비례하는 성질입니다.",
+    canonicalHref:
+      "/ai/math-differential-equations-numerical-solvers#ode-sde-boundary",
+  },
+  "gaussian-forward-diffusion": {
+    id: "gaussian-forward-diffusion",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Gaussian forward diffusion",
+    definition:
+      "Clean data에 작은 Gaussian transition을 단계별로 적용해 signal을 줄이고 noise를 늘리며, 마지막 distribution을 simple prior에 가깝게 만드는 고정 corruption process입니다.",
+    canonicalHref: "/ai/diffusion-models#forward-reverse",
+  },
+  "cumulative-noise-schedule": {
+    id: "cumulative-noise-schedule",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Cumulative diffusion schedule",
+    definition:
+      "Independent Gaussian transition의 합성으로 임의 timestep의 noisy sample을 clean data와 Gaussian noise의 닫힌 linear combination으로 직접 만드는 관계입니다.",
+    canonicalHref: "/ai/diffusion-models#forward-reverse",
+  },
+  "diffusion-prediction-target": {
+    id: "diffusion-prediction-target",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Diffusion prediction target",
+    definition:
+      "같은 noisy state를 설명하는 noise ε·clean data x0·velocity v·score 중 network가 직접 예측할 quantity를 선택하고 noise level별 loss weighting을 정하는 계약입니다.",
+    canonicalHref: "/ai/diffusion-models#forward-reverse",
+  },
+  "diffusion-score-identity": {
+    id: "diffusion-score-identity",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Gaussian noise–score identity",
+    definition:
+      "Gaussian-perturbed conditional distribution에서 noisy state의 score가 추가된 noise를 negative noise-scale로 나눈 값이며, conditional expectation으로 marginal score와 noise predictor를 연결하는 관계입니다.",
+    canonicalHref: "/ai/diffusion-models#forward-reverse",
+  },
+  "reverse-time-sde": {
+    id: "reverse-time-sde",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Reverse-time SDE",
+    definition:
+      "Forward SDE의 drift와 diffusion coefficient에 time-dependent score correction을 더하면 terminal prior에서 data distribution으로 돌아가는 reverse-time stochastic process를 얻는 관계입니다.",
+    canonicalHref: "/ai/diffusion-models#continuous-time",
+  },
+  "probability-flow-ode": {
+    id: "probability-flow-ode",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Probability-flow ODE",
+    definition:
+      "Reverse SDE의 score correction 중 절반을 deterministic drift에 넣어 각 시간의 marginal distribution은 같지만 random path는 다른 ODE를 만드는 관계입니다.",
+    canonicalHref: "/ai/diffusion-models#continuous-time",
+  },
+  "flow-matching-objective": {
+    id: "flow-matching-objective",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Conditional flow-matching objective",
+    definition:
+      "Sample하기 쉬운 conditional probability path의 target velocity를 regression하면 그 conditional field의 posterior average인 marginal vector field를 학습할 수 있다는 simulation-free training 원리입니다.",
+    canonicalHref: "/ai/diffusion-models#continuous-time",
+  },
+  "network-function-evaluations": {
+    id: "network-function-evaluations",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Network function evaluations (NFE)",
+    definition:
+      "Sampler 한 번이 denoiser·score·velocity network를 실제로 호출한 횟수로, solver step 수와 같지 않을 수 있는 inference compute 지표입니다.",
+    canonicalHref: "/ai/diffusion-models#continuous-time",
+  },
+  "diffusion-backbone-contract": {
+    id: "diffusion-backbone-contract",
+    domain: "machine-learning",
+    label: "Diffusion backbone contract",
+    definition:
+      "Noisy tensor·time embedding·condition을 입력받아 선택한 prediction target과 같은 shape의 output을 내는 U-Net·DiT 등 denoiser architecture의 interface입니다.",
+    canonicalHref: "/ai/diffusion-models#unet",
+  },
+  "latent-diffusion-bottleneck": {
+    id: "latent-diffusion-bottleneck",
+    domain: "machine-learning",
+    label: "Latent diffusion bottleneck",
+    definition:
+      "Pretrained autoencoder가 image를 더 작은 spatial latent로 압축한 뒤 그 공간에서 diffusion을 수행해 compute를 줄이는 대신 reconstruction ceiling을 도입하는 설계입니다.",
+    canonicalHref: "/ai/diffusion-models#stable-diffusion",
+  },
+  "classifier-free-guidance": {
+    id: "classifier-free-guidance",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Classifier-free guidance",
+    definition:
+      "Condition dropout으로 한 model에 unconditional·conditional prediction을 함께 학습하고 sampling 때 두 prediction의 차이를 scale해 condition adherence를 조절하는 방법입니다.",
+    canonicalHref: "/ai/diffusion-models#stable-diffusion",
+  },
+  "amortized-variational-inference": {
+    id: "amortized-variational-inference",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Amortized variational inference",
+    definition:
+      "각 observation마다 별도의 variational parameter를 최적화하는 대신 하나의 encoder qφ(z|x)가 모든 input의 approximate posterior parameter를 예측하도록 학습하는 방법입니다.",
+    canonicalHref: "/ai/vae#overview",
+  },
+  "diagonal-gaussian-posterior": {
+    id: "diagonal-gaussian-posterior",
+    domain: "machine-learning",
+    label: "Diagonal Gaussian posterior",
+    definition:
+      "Encoder가 latent dimension별 mean과 variance를 내고 posterior covariance의 off-diagonal 항을 0으로 두어 sampling과 KL을 계산하기 쉽게 만든 approximate posterior family입니다.",
+    canonicalHref: "/ai/vae#ae-vs-vae",
+  },
+  "pathwise-reparameterization": {
+    id: "pathwise-reparameterization",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Pathwise reparameterization estimator",
+    definition:
+      "Parameter-dependent random sample을 parameter-independent base noise와 differentiable transform으로 표현해 expectation gradient를 ordinary path derivative로 계산하는 방법입니다.",
+    canonicalHref: "/ai/vae#reparam-trick",
+  },
+  "diagonal-gaussian-kl": {
+    id: "diagonal-gaussian-kl",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Diagonal Gaussian KL",
+    definition:
+      "Diagonal Gaussian q(z|x)와 standard normal prior 사이의 KL을 latent dimension별 mean·variance·log-variance 항의 합으로 닫힌 형태로 계산하는 공식입니다.",
+    canonicalHref: "/ai/vae#vae-loss",
+  },
+  "vae-rate-distortion": {
+    id: "vae-rate-distortion",
+    domain: "machine-learning",
+    label: "VAE rate–distortion balance",
+    definition:
+      "Decoder data-fit distortion과 input별 posterior가 prior에서 벗어나 전달하는 정보량의 대리값인 KL rate 사이의 trade-off를 해석하는 관점입니다.",
+    canonicalHref: "/ai/vae#vae-loss",
+  },
+  "posterior-collapse": {
+    id: "posterior-collapse",
+    domain: "machine-learning",
+    label: "Posterior collapse",
+    definition:
+      "Approximate posterior가 prior에 가까워지고 decoder output이 latent z에 거의 의존하지 않아 latent channel이 input 정보를 전달하지 않는 퇴화 상태입니다.",
+    canonicalHref: "/ai/vae#training",
+  },
+  "latent-usage-diagnostic": {
+    id: "latent-usage-diagnostic",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Latent usage diagnostic",
+    definition:
+      "평균·dimension별 KL, active units, encoder ablation, mutual-information estimate 등을 함께 사용해 decoder가 latent 정보를 실제로 사용하는지 확인하는 평가 묶음입니다.",
+    canonicalHref: "/ai/vae#training",
+  },
+  "importance-weighted-bound": {
+    id: "importance-weighted-bound",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Importance-weighted autoencoder bound",
+    definition:
+      "같은 approximate posterior에서 여러 importance sample의 평균 weight에 log를 취해 single-sample ELBO보다 일반적으로 더 tight한 likelihood lower bound를 만드는 목적함수입니다.",
+    canonicalHref: "/ai/vae#training",
+  },
+  "vq-vae-codebook": {
+    id: "vq-vae-codebook",
+    kind: "method",
+    domain: "machine-learning",
+    label: "VQ-VAE discrete codebook",
+    definition:
+      "Encoder output을 학습된 embedding codebook의 가까운 vector로 quantize하고 별도의 prior가 discrete code sequence를 모델링하도록 하는 latent representation입니다.",
+    canonicalHref: "/ai/vae#applications",
+  },
+  "implicit-generator-pushforward": {
+    id: "implicit-generator-pushforward",
+    domain: "machine-learning",
+    label: "Implicit generator pushforward",
+    definition:
+      "쉽게 sample할 수 있는 latent prior를 differentiable generator로 data space에 보내 normalized output density를 직접 계산하지 않고 sample distribution을 정의하는 방식입니다.",
+    canonicalHref: "/ai/gan#overview",
+  },
+  "non-saturating-generator-objective": {
+    id: "non-saturating-generator-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Non-saturating GAN objective",
+    definition:
+      "초기 discriminator가 fake를 잘 구분할 때 minimax generator gradient가 약해지는 문제를 줄이려고 generator가 −log D(G(z))를 최소화하는 실전 objective입니다.",
+    canonicalHref: "/ai/gan#overview",
+  },
+  "alternating-adversarial-optimization": {
+    id: "alternating-adversarial-optimization",
+    domain: "machine-learning",
+    label: "Alternating adversarial optimization",
+    definition:
+      "Generator와 discriminator가 서로 다른 objective·optimizer·parameter snapshot에서 번갈아 update하며 상대가 만든 학습 신호를 계속 바꾸는 two-player optimization입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "gan-mode-collapse": {
+    id: "gan-mode-collapse",
+    domain: "machine-learning",
+    label: "GAN mode collapse",
+    definition:
+      "서로 다른 latent input이 소수의 비슷한 output 영역으로 mapping되어 일부 high-quality sample은 만들지만 target distribution의 mode coverage가 부족해지는 failure mode입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "lipschitz-function-constraint": {
+    id: "lipschitz-function-constraint",
+    domain: "mathematics",
+    label: "Lipschitz function constraint",
+    definition:
+      "입력 두 점의 거리보다 함수 출력 차이가 정해진 상수배 이상 빠르게 커지지 않도록 |f(x)−f(y)|≤L||x−y||로 제한하는 regularity 조건입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "wasserstein-critic-dual": {
+    id: "wasserstein-critic-dual",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Wasserstein-1 critic dual",
+    definition:
+      "적절한 조건에서 두 distribution의 Wasserstein-1 distance가 모든 1-Lipschitz function이 만드는 expectation 차이의 supremum과 같다는 Kantorovich–Rubinstein dual 관계입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "wgan-gradient-penalty": {
+    id: "wgan-gradient-penalty",
+    kind: "method",
+    domain: "machine-learning",
+    label: "WGAN gradient penalty",
+    definition:
+      "Real과 generated sample 사이의 sampled point에서 critic input-gradient norm이 1에서 벗어난 정도를 벌점으로 주어 Lipschitz 조건을 근사하는 regularizer입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "spectral-normalization": {
+    id: "spectral-normalization",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Spectral normalization",
+    definition:
+      "Linear weight를 largest singular value로 나눠 해당 layer의 Euclidean operator norm을 제한하고 discriminator의 민감도를 제어하는 normalization입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "frechet-inception-distance": {
+    id: "frechet-inception-distance",
+    kind: "metric",
+    domain: "statistics",
+    label: "Fréchet Inception Distance (FID)",
+    definition:
+      "고정 feature extractor의 real·generated feature를 Gaussian으로 근사하고 두 집합의 mean과 covariance 차이로 sample distribution을 비교하는 finite-sample metric입니다.",
+    canonicalHref: "/ai/gan#variants",
+  },
+  "generative-precision-recall": {
+    id: "generative-precision-recall",
+    kind: "metric",
+    domain: "statistics",
+    label: "Generative precision · recall",
+    definition:
+      "Generated distribution의 sample quality에 가까운 precision과 target distribution의 mode coverage에 가까운 recall을 별도 축으로 나타내 scalar metric 하나의 failure ambiguity를 줄이는 평가 관점입니다.",
+    canonicalHref: "/ai/gan#variants",
+  },
+  "conditional-adversarial-generation": {
+    id: "conditional-adversarial-generation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Conditional adversarial generation",
+    definition:
+      "Condition c를 generator와 discriminator의 입력 또는 projection score에 포함해 marginal p(x)가 아니라 conditional distribution p(x|c)를 adversarial하게 맞추는 방법입니다.",
+    canonicalHref: "/ai/gan#variants",
+  },
+  "two-timescale-game-convergence": {
+    id: "two-timescale-game-convergence",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Two-time-scale GAN convergence conditions",
+    definition:
+      "두 player의 stochastic update가 서로 다른 감소 step-size sequence를 사용하고 regularity·noise·stability 조건을 만족할 때 slower iterate 관점의 local stationary Nash equilibrium으로 수렴한다는 분석 틀입니다.",
+    canonicalHref: "/ai/gan#training",
+  },
+  "function-mapping": {
+    id: "function-mapping",
+    domain: "mathematics",
+    label: "Function",
+    definition:
+      "허용된 입력 하나마다 출력 하나를 정하는 규칙이며, 신경망의 layer와 objective를 같은 입력–출력 언어로 표현합니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#functions",
+  },
+  "function-composition": {
+    id: "function-composition",
+    domain: "mathematics",
+    label: "Function composition",
+    definition:
+      "한 함수의 출력을 다음 함수의 입력으로 이어 전체 변환을 만드는 연산이며, 여러 layer와 계산 그래프의 기본 구조입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#functions",
+  },
+  "mathematical-limit": {
+    id: "mathematical-limit",
+    domain: "mathematics",
+    label: "Limit",
+    definition:
+      "입력이 어떤 값에 한없이 가까워질 때 출력이 가까워지는 값을 다루며, 점 하나의 함수값과 주변의 행동을 구분합니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#limits",
+  },
+  derivative: {
+    id: "derivative",
+    domain: "mathematics",
+    label: "Derivative",
+    definition:
+      "입력의 아주 작은 변화에 대한 출력 변화의 비율로, 한 지점의 local slope와 민감도를 나타냅니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#derivatives",
+  },
+  "local-linear-approximation": {
+    id: "local-linear-approximation",
+    domain: "mathematics",
+    label: "Local linear approximation",
+    definition:
+      "미분 가능한 함수를 한 점 근처에서 derivative를 기울기로 하는 직선으로 근사하는 관점입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#derivatives",
+  },
+  "chain-rule": {
+    id: "chain-rule",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Chain rule",
+    definition:
+      "합성 함수의 전체 derivative가 경로를 이루는 함수들의 local derivative 곱으로 계산된다는 정리입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#chain-rule",
+  },
+  "partial-derivative": {
+    id: "partial-derivative",
+    domain: "mathematics",
+    label: "Partial derivative",
+    definition:
+      "입력이 여러 좌표일 때 나머지 좌표를 고정하고 한 좌표만 바꿔 측정한 local rate입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+  },
+  "jacobian-matrix": {
+    id: "jacobian-matrix",
+    domain: "mathematics",
+    label: "Jacobian matrix",
+    definition:
+      "Vector-valued function의 각 output coordinate를 각 input coordinate로 편미분해 행과 열에 배치한 local linear map입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+  },
+  "directional-derivative": {
+    id: "directional-derivative",
+    domain: "mathematics",
+    label: "Directional derivative",
+    definition:
+      "여러 입력 좌표를 정해진 unit vector 방향으로 함께 움직일 때 함수가 변하는 local rate입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+  },
+  subgradient: {
+    id: "subgradient",
+    domain: "mathematics",
+    label: "Subgradient",
+    definition:
+      "매끈하지 않은 convex 함수의 한 점에서 함수를 아래에서 받치는 affine lower bound의 기울기이며, 가능한 값이 집합일 수 있습니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#nonsmooth",
+  },
+  exponentiation: {
+    id: "exponentiation",
+    domain: "mathematics",
+    label: "Exponentiation · 거듭제곱",
+    definition:
+      "같은 밑을 지수가 나타내는 횟수만큼 곱하는 연산에서 출발해 정수·유리수·실수 지수로 확장한 scale 변환입니다.",
+    canonicalHref: "/ai/math-exponents-logarithms#exponents",
+  },
+  logarithm: {
+    id: "logarithm",
+    domain: "mathematics",
+    label: "Logarithm · 로그",
+    definition:
+      "밑을 몇 제곱해야 주어진 양수가 되는지 되묻는 exponentiation의 inverse function입니다.",
+    canonicalHref: "/ai/math-exponents-logarithms#logarithms",
+  },
+  "log-product-rule": {
+    id: "log-product-rule",
+    domain: "mathematics",
+    label: "Log product rule",
+    definition:
+      "양수의 곱을 같은 밑 logarithm 값의 합으로 바꾸고 나눗셈을 차로 바꾸는 항등식입니다.",
+    canonicalHref: "/ai/math-exponents-logarithms#log-identities",
+  },
+  "change-of-log-base": {
+    id: "change-of-log-base",
+    domain: "mathematics",
+    label: "Change of logarithm base",
+    definition:
+      "한 밑의 logarithm을 다른 밑의 logarithm 비율로 바꾸어 bit·nat처럼 scale과 단위를 변환하는 항등식입니다.",
+    canonicalHref: "/ai/math-exponents-logarithms#log-bases",
+  },
+  "sample-space": {
+    id: "sample-space",
+    domain: "statistics",
+    label: "Sample space · outcome",
+    definition:
+      "무작위 실험에서 가능한 outcome 전체의 집합과 실제로 관측된 결과 하나를 구분하는 probability model의 출발점입니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#outcomes",
+  },
+  "probability-distribution": {
+    id: "probability-distribution",
+    domain: "statistics",
+    label: "Probability distribution",
+    definition:
+      "가능한 outcome 또는 random variable의 값에 0 이상의 probability를 배정하고 전체 mass를 1로 만드는 규칙입니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#outcomes",
+  },
+  "softmax-normalization": {
+    id: "softmax-normalization",
+    domain: "machine-learning",
+    label: "Softmax normalization",
+    definition:
+      "서로 배타적인 후보의 실수 logit을 지수화한 뒤 공동 합으로 나누어, 순서를 보존하면서 합이 1인 categorical probability distribution으로 바꾸는 함수입니다.",
+    canonicalHref: "/ai/backprop-optimization#softmax",
+  },
+  "probability-event": {
+    id: "probability-event",
+    domain: "statistics",
+    label: "Event · 사건",
+    definition:
+      "Sample space에서 관심 있는 outcome을 하나 이상 묶은 부분집합이며, event의 probability는 그 안에 포함된 outcome mass의 합입니다.",
+    canonicalHref:
+      "/ai/math-probability-expectation-variance#conditional-probability",
+  },
+  "conditional-probability": {
+    id: "conditional-probability",
+    domain: "statistics",
+    label: "Conditional probability · 조건부확률",
+    definition:
+      "Event B가 일어났다는 정보를 받은 뒤 가능한 범위를 B 안으로 좁혀 event A의 probability를 다시 정규화한 값입니다.",
+    canonicalHref:
+      "/ai/math-probability-expectation-variance#conditional-probability",
+  },
+  "probability-chain-rule": {
+    id: "probability-chain-rule",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Probability chain rule · 확률의 연쇄법칙",
+    definition:
+      "여러 변수가 함께 나타날 joint probability를 정해진 순서의 conditional probability product로 정확히 분해하는 항등식입니다.",
+    canonicalHref:
+      "/ai/math-probability-expectation-variance#conditional-probability",
+  },
+  "random-variable": {
+    id: "random-variable",
+    domain: "statistics",
+    label: "Random variable",
+    definition:
+      "Sample space의 outcome을 계산 가능한 실수값으로 보내는 함수이며, 그 값의 불확실성은 induced distribution으로 표현합니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#random-variable",
+  },
+  expectation: {
+    id: "expectation",
+    domain: "statistics",
+    label: "Expectation",
+    definition:
+      "Random variable의 가능한 값을 probability로 가중해 더한 distribution의 중심이며, 한 번의 관측값을 예언하는 값은 아닙니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#expectation",
+  },
+  variance: {
+    id: "variance",
+    domain: "statistics",
+    label: "Variance · standard deviation",
+    definition:
+      "Random variable이 expectation에서 떨어진 편차의 제곱을 평균내 distribution의 흩어짐을 측정합니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#variance",
+  },
+  "sample-mean": {
+    id: "sample-mean",
+    domain: "statistics",
+    label: "Sample mean",
+    definition:
+      "관측한 sample들의 산술평균으로 population expectation을 추정하며, 독립·동일분포 조건에서 variance가 sample 수에 반비례합니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#sample-mean",
+  },
+  "law-of-large-numbers": {
+    id: "law-of-large-numbers",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Law of large numbers",
+    definition:
+      "적절한 조건에서 독립 반복 sample의 평균이 sample 수가 커질수록 population expectation에 가까워진다는 정리입니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#sample-mean",
+  },
+  "stochastic-gradient-estimator": {
+    id: "stochastic-gradient-estimator",
+    domain: "machine-learning",
+    label: "Stochastic gradient estimator",
+    definition:
+      "무작위로 뽑은 sample 또는 mini-batch의 loss gradient를 평균해 전체 empirical gradient를 추정하는 random vector입니다.",
+    canonicalHref: "/ai/math-probability-expectation-variance#gradient-noise",
+  },
+  "optimization-objective": {
+    id: "optimization-objective",
+    domain: "mathematics",
+    label: "Optimization objective",
+    definition:
+      "선택 변수를 바꿔 최소화하거나 최대화하려는 scalar 함수와 허용 domain을 함께 둔 optimization 문제의 기준입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#objective",
+  },
+  minimizer: {
+    id: "minimizer",
+    domain: "mathematics",
+    label: "Minimizer · optimum",
+    definition:
+      "허용 domain 안에서 objective의 가장 작은 값을 만드는 입력 위치이며 minimum value 자체와 구분합니다.",
+    canonicalHref: "/ai/math-optimization-convexity#objective",
+  },
+  "convex-function": {
+    id: "convex-function",
+    domain: "mathematics",
+    label: "Convex function",
+    definition:
+      "두 입력을 섞은 지점의 함수값이 두 함수값을 같은 비율로 섞은 chord보다 크지 않은 함수입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#convexity",
+  },
+  "gradient-descent": {
+    id: "gradient-descent",
+    domain: "mathematics",
+    label: "Gradient descent",
+    definition:
+      "현재 gradient의 반대 방향으로 step을 반복해 differentiable objective를 줄이는 first-order optimization method입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#gradient-descent",
+  },
+  "learning-rate": {
+    id: "learning-rate",
+    domain: "machine-learning",
+    label: "Learning rate · step size",
+    definition:
+      "Descent direction을 실제 parameter 이동량으로 바꾸는 양수 scale이며 안정성과 수렴 속도를 함께 좌우합니다.",
+    canonicalHref: "/ai/math-optimization-convexity#gradient-descent",
+  },
+  "l-smoothness": {
+    id: "l-smoothness",
+    domain: "mathematics",
+    label: "L-smoothness",
+    definition:
+      "두 점의 gradient 차이가 두 점 사이 거리의 L배를 넘지 않아 local linear approximation의 오차를 제한하는 조건입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#smoothness",
+  },
+  "strong-convexity": {
+    id: "strong-convexity",
+    domain: "mathematics",
+    label: "Strong convexity",
+    definition:
+      "Convexity에 양의 quadratic lower curvature를 더해 minimizer 주변에서 objective가 충분히 빠르게 증가하도록 하는 조건입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#convergence",
+  },
+  "condition-number": {
+    id: "condition-number",
+    domain: "mathematics",
+    label: "Optimization condition number",
+    definition:
+      "Smoothness L과 strong-convexity μ의 비 L/μ로 curvature 불균형과 first-order convergence 난도를 나타냅니다.",
+    canonicalHref: "/ai/math-optimization-convexity#convergence",
+  },
+  "optimization-convergence": {
+    id: "optimization-convergence",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Gradient-descent convergence guarantee",
+    definition:
+      "Convexity·smoothness·step-size 같은 명시적 전제 아래 iterate나 objective gap이 optimum에 가까워지는 속도를 제한하는 정리입니다.",
+    canonicalHref: "/ai/math-optimization-convexity#convergence",
+  },
+  "stationary-point": {
+    id: "stationary-point",
+    domain: "mathematics",
+    label: "Stationary point",
+    definition:
+      "Gradient가 0이거나 충분히 작은 위치이며 nonconvex 문제에서는 local minimum·maximum·saddle point를 모두 포함할 수 있습니다.",
+    canonicalHref: "/ai/math-optimization-convexity#nonconvex",
+  },
+  "feature-target": {
+    id: "feature-target",
+    label: "Input feature · target",
+    definition:
+      "한 example에서 모델에 주는 관측값 x와 모델이 맞히거나 설명해야 하는 기준 y를 구분한 학습 계약입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  "tensor-batch": {
+    id: "tensor-batch",
+    label: "Tensor · batch",
+    definition:
+      "숫자를 축과 shape가 있는 배열로 표현하고, 여러 example을 batch 축에 묶어 함께 계산합니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  "train-validation-test": {
+    id: "train-validation-test",
+    label: "Train · validation · test split",
+    definition:
+      "파라미터 학습, 선택과 튜닝, 최종 일반화 보고에 쓰는 데이터를 서로 분리하는 평가 경계입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  "parameterized-model": {
+    id: "parameterized-model",
+    label: "Parameterized model",
+    definition:
+      "입력 x와 학습되는 파라미터 θ를 받아 예측을 내는 함수 fθ(x)입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  "forward-pass": {
+    id: "forward-pass",
+    label: "Forward pass",
+    definition:
+      "현재 파라미터로 입력을 층마다 변환해 prediction과 역전파에 필요한 중간값을 만드는 계산입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  "representation-learning": {
+    id: "representation-learning",
+    label: "Representation learning",
+    definition:
+      "Task에 유용한 중간 특징을 사람이 고정하지 않고 objective를 통해 모델 파라미터와 함께 학습합니다.",
+    canonicalHref: "/ai/deep-learning-overview#overview",
+  },
+  "depth-efficiency": {
+    id: "depth-efficiency",
+    label: "Depth efficiency",
+    definition:
+      "반복되는 함수 구조를 여러 층에서 합성하고 중간 표현을 재사용해 특정 함수족을 더 적은 폭으로 나타내는 성질입니다.",
+    canonicalHref: "/ai/deep-learning-overview#overview",
+  },
+  "loss-objective": {
+    id: "loss-objective",
+    label: "Loss · objective",
+    definition:
+      "모델의 prediction이 target과 얼마나 맞지 않는지를 파라미터 최적화에 쓸 scalar로 나타낸 값입니다.",
+    canonicalHref: "/ai/backprop-optimization#loss-function",
+  },
+  gradient: {
+    id: "gradient",
+    domain: "mathematics",
+    label: "Gradient",
+    definition:
+      "각 파라미터를 아주 조금 바꿨을 때 loss가 어느 방향으로 얼마나 변하는지 모은 편미분 벡터입니다.",
+    canonicalHref: "/ai/math-functions-derivatives-gradients#partial-gradient",
+  },
+  backpropagation: {
+    id: "backpropagation",
+    label: "Backpropagation",
+    definition:
+      "Chain rule로 출력의 loss에서 앞 층으로 local derivative를 재사용하며 gradient를 계산하는 알고리즘입니다.",
+    canonicalHref: "/ai/backprop-optimization#overview",
+  },
+  "computational-graph": {
+    id: "computational-graph",
+    domain: "computer-science",
+    label: "Computational graph",
+    definition:
+      "값을 node로, 값을 만드는 primitive operation과 dependency를 edge로 나타내 forward 계산과 derivative 경로를 추적하는 graph입니다.",
+    canonicalHref: "/ai/backprop-optimization#overview",
+  },
+  "autodiff-tape": {
+    id: "autodiff-tape",
+    domain: "computer-science",
+    label: "Autodiff tape · saved tensor",
+    definition:
+      "Forward 실행 중 operation 순서와 backward의 local derivative에 필요한 중간값을 기록한 실행 상태입니다.",
+    canonicalHref: "/ai/backprop-optimization#forward-pass",
+  },
+  "reverse-mode-autodiff": {
+    id: "reverse-mode-autodiff",
+    domain: "computer-science",
+    label: "Reverse-mode automatic differentiation",
+    definition:
+      "Scalar output의 seed derivative에서 graph를 역순으로 순회하며 많은 input parameter의 gradient를 한 번에 누적하는 autodiff 방식입니다.",
+    canonicalHref: "/ai/backprop-optimization#chain-rule",
+  },
+  "vector-jacobian-product": {
+    id: "vector-jacobian-product",
+    domain: "mathematics",
+    label: "Vector–Jacobian product (VJP)",
+    definition:
+      "뒤에서 온 cotangent vector와 현재 operation의 local Jacobian을 곱해 input 쪽 cotangent만 계산하는 연산입니다.",
+    canonicalHref: "/ai/backprop-optimization#chain-rule",
+  },
+  "fanout-gradient-accumulation": {
+    id: "fanout-gradient-accumulation",
+    domain: "mathematics",
+    label: "Fan-out gradient accumulation",
+    definition:
+      "같은 값이 여러 downstream 경로에 사용될 때 각 경로가 보내는 partial derivative contribution을 모두 더해 전체 derivative를 만드는 규칙입니다.",
+    canonicalHref: "/ai/backprop-optimization#chain-rule",
+  },
+  "fused-softmax-cross-entropy-gradient": {
+    id: "fused-softmax-cross-entropy-gradient",
+    domain: "machine-learning",
+    label: "Fused softmax–cross-entropy gradient",
+    definition:
+      "Categorical softmax와 negative log-likelihood를 함께 미분해 logit gradient를 predicted distribution minus target distribution으로 계산하는 경로입니다.",
+    canonicalHref: "/ai/backprop-optimization#backprop-derivation",
+  },
+  "batched-linear-backward": {
+    id: "batched-linear-backward",
+    domain: "machine-learning",
+    label: "Batched linear backward",
+    definition:
+      "Z=XW+b의 upstream matrix G에서 XᵀG, row sum, GWᵀ로 weight·bias·input gradient를 계산하는 tensor contract입니다.",
+    canonicalHref: "/ai/backprop-optimization#backprop-derivation",
+  },
+  "training-intervention": {
+    id: "training-intervention",
+    domain: "machine-learning",
+    label: "Training intervention point",
+    definition:
+      "Objective·gradient·optimizer·activation·data·stopping 중 regularization이나 안정화 기법이 training loop의 어느 지점을 바꾸는지 구분하는 기준입니다.",
+    canonicalHref: "/ai/backprop-optimization#regularization",
+  },
+  "optimizer-update": {
+    id: "optimizer-update",
+    label: "Optimizer update",
+    definition:
+      "Gradient와 optimizer state를 이용해 다음 step의 파라미터를 정하는 규칙입니다.",
+    canonicalHref: "/ai/optimizers#overview",
+  },
+  "sgd-update": {
+    id: "sgd-update",
+    domain: "machine-learning",
+    label: "Mini-batch SGD update",
+    definition:
+      "현재 mini-batch gradient estimate의 반대 방향으로 learning-rate만큼 parameter를 이동하는 기준 optimizer update입니다.",
+    canonicalHref: "/ai/optimizers#sgd",
+  },
+  "gradient-accumulation": {
+    id: "gradient-accumulation",
+    domain: "machine-learning",
+    label: "Gradient accumulation",
+    definition:
+      "Parameter를 갱신하지 않은 채 여러 micro-batch gradient를 합산·평균한 뒤 한 번 update해 큰 effective batch를 구성합니다.",
+    canonicalHref: "/ai/optimizers#batch-variants",
+  },
+  "exponential-moving-average": {
+    id: "exponential-moving-average",
+    domain: "statistics",
+    label: "Exponential moving average",
+    definition:
+      "과거 값에 시간에 따라 지수적으로 작아지는 weight를 부여해 전체 history를 state 하나로 요약하는 재귀 평균입니다.",
+    canonicalHref: "/ai/optimizers#momentum",
+  },
+  "momentum-state": {
+    id: "momentum-state",
+    domain: "machine-learning",
+    label: "Momentum velocity",
+    definition:
+      "과거 gradient 방향을 지수적으로 감쇠해 누적함으로써 일관된 방향은 강화하고 번갈아 나타나는 방향은 상쇄하는 optimizer state입니다.",
+    canonicalHref: "/ai/optimizers#momentum",
+  },
+  "raw-gradient-moments": {
+    id: "raw-gradient-moments",
+    domain: "statistics",
+    label: "Gradient raw moments",
+    definition:
+      "Adam이 gradient와 gradient 제곱의 exponential average로 추적하는 first·second raw moment이며 centered variance와 구분합니다.",
+    canonicalHref: "/ai/optimizers#adam",
+  },
+  "ema-bias-correction": {
+    id: "ema-bias-correction",
+    domain: "statistics",
+    label: "EMA initialization bias correction",
+    definition:
+      "0에서 시작한 exponential moving average가 초기에 작게 추정되는 효과를 1−βᵗ로 나누어 보정합니다.",
+    canonicalHref: "/ai/optimizers#adam",
+  },
+  "adaptive-preconditioning": {
+    id: "adaptive-preconditioning",
+    domain: "machine-learning",
+    label: "Adaptive diagonal preconditioning",
+    definition:
+      "Coordinate별 gradient history scale로 update를 나누어 하나의 global learning rate를 서로 다른 effective step으로 바꿉니다.",
+    canonicalHref: "/ai/optimizers#adam",
+  },
+  "decoupled-weight-decay": {
+    id: "decoupled-weight-decay",
+    domain: "machine-learning",
+    label: "Decoupled weight decay",
+    definition:
+      "Weight shrinkage를 adaptive gradient transformation 안에 넣지 않고 parameter update의 별도 항으로 적용합니다.",
+    canonicalHref: "/ai/optimizers#adamw",
+  },
+  "training-step": {
+    id: "training-step",
+    label: "Training step",
+    definition:
+      "한 batch에 대해 forward pass, loss 계산, backpropagation과 optimizer update를 차례로 수행하는 반복 단위입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  generalization: {
+    id: "generalization",
+    label: "Generalization",
+    definition:
+      "학습에 직접 사용하지 않은, 같은 목표의 새 data에서도 유용한 성능을 유지하는 능력입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  inference: {
+    id: "inference",
+    label: "Inference",
+    definition:
+      "학습을 마친 파라미터를 고정하고 새 입력에 forward pass를 실행해 prediction을 만드는 단계입니다.",
+    canonicalHref: "/ai/deep-learning-overview#learning-loop",
+  },
+  "compute-memory-bottleneck": {
+    id: "compute-memory-bottleneck",
+    label: "Compute · memory bottleneck",
+    definition:
+      "실행 시간이 산술 연산량, memory traffic, kernel utilization 또는 device communication 중 무엇에 제한되는지 구분합니다.",
+    canonicalHref: "/ai/deep-learning-overview#acceleration",
+  },
+  "linear-score": {
+    id: "linear-score",
+    label: "Linear score",
+    definition:
+      "입력 feature의 weighted sum과 bias로 만든 scalar z=wᵀx+b입니다.",
+    canonicalHref: "/ai/perceptron#overview",
+  },
+  "decision-boundary": {
+    id: "decision-boundary",
+    label: "Decision boundary · half-space",
+    definition:
+      "예측 class가 바뀌는 z=0의 점 집합이며, 선형 모델에서는 hyperplane입니다.",
+    canonicalHref: "/ai/perceptron#overview",
+  },
+  "step-activation": {
+    id: "step-activation",
+    label: "Step activation",
+    definition:
+      "연속적인 score의 부호를 hard class label 0 또는 1로 바꾸는 threshold 함수입니다.",
+    canonicalHref: "/ai/activation-functions#step-function",
+  },
+  "perceptron-update": {
+    id: "perceptron-update",
+    label: "Perceptron update",
+    definition:
+      "오분류한 example에 대해서만 target−prediction과 input 방향으로 weight·bias를 움직이는 mistake-driven 규칙입니다.",
+    canonicalHref: "/ai/perceptron#overview",
+  },
+  "classification-margin": {
+    id: "classification-margin",
+    label: "Classification margin",
+    definition:
+      "정답 부호를 반영한 score y(wᵀx+b)가 0에서 얼마나 떨어져 있는지 나타내며, 경계와 sample 사이의 여유를 측정합니다.",
+    canonicalHref: "/ai/perceptron#convergence",
+  },
+  "perceptron-convergence": {
+    id: "perceptron-convergence",
+    kind: "theorem",
+    label: "Perceptron convergence",
+    definition:
+      "Bounded input이 positive margin으로 선형 분리될 때 mistake-driven update가 유한 번의 오분류 뒤 separator를 찾는다는 보장입니다.",
+    canonicalHref: "/ai/perceptron#convergence",
+  },
+  "linear-separability": {
+    id: "linear-separability",
+    label: "Linear separability",
+    definition:
+      "서로 다른 class의 모든 example을 하나의 hyperplane 양쪽으로 완전히 나눌 수 있는 성질입니다.",
+    canonicalHref: "/ai/perceptron#limitation",
+  },
+  "xor-problem": {
+    id: "xor-problem",
+    label: "XOR limitation",
+    definition:
+      "원래 두 입력 좌표에서는 positive 두 점과 negative 두 점을 직선 하나로 나눌 수 없는 대표적인 비선형 분류 문제입니다.",
+    canonicalHref: "/ai/perceptron#limitation",
+  },
+  "nonlinear-activation": {
+    id: "nonlinear-activation",
+    label: "Nonlinear activation",
+    definition:
+      "연속한 affine transform이 하나로 합쳐지지 않도록 중간 표현에 비선형 변환을 적용합니다.",
+    canonicalHref: "/ai/activation-functions#overview",
+  },
+  "activation-saturation": {
+    id: "activation-saturation",
+    domain: "machine-learning",
+    label: "Activation saturation",
+    definition:
+      "입력 절댓값이 커질 때 activation output이 상한·하한에 가까워지고 local derivative가 0에 접근해 gradient signal이 약해지는 구간입니다.",
+    canonicalHref: "/ai/activation-functions#sigmoid",
+  },
+  "sigmoid-activation": {
+    id: "sigmoid-activation",
+    domain: "machine-learning",
+    label: "Sigmoid activation",
+    definition:
+      "실수 logit을 0과 1 사이로 부드럽게 압축해 Bernoulli probability 또는 gate 비율로 해석하게 하는 함수입니다.",
+    canonicalHref: "/ai/activation-functions#sigmoid",
+  },
+  "tanh-activation": {
+    id: "tanh-activation",
+    domain: "machine-learning",
+    label: "Tanh activation",
+    definition:
+      "실수 입력을 −1과 1 사이의 signed output으로 압축하며 0을 중심으로 대칭인 포화 함수입니다.",
+    canonicalHref: "/ai/activation-functions#tanh",
+  },
+  "relu-activation": {
+    id: "relu-activation",
+    domain: "machine-learning",
+    label: "ReLU activation",
+    definition:
+      "음수 입력은 0으로 자르고 양수 입력은 그대로 통과시켜 양수 구간의 local derivative 1을 유지하는 rectifier입니다.",
+    canonicalHref: "/ai/activation-functions#relu",
+  },
+  "dying-relu": {
+    id: "dying-relu",
+    domain: "machine-learning",
+    label: "Dying ReLU",
+    definition:
+      "뉴런의 pre-activation이 계속 음수에 머물러 output과 local derivative가 모두 0이 되고 update signal이 끊기는 실패 상태입니다.",
+    canonicalHref: "/ai/activation-functions#relu",
+  },
+  "negative-slope-rectifier": {
+    id: "negative-slope-rectifier",
+    domain: "machine-learning",
+    label: "Leaky ReLU · PReLU",
+    definition:
+      "Rectifier의 음수 구간에 고정 또는 학습되는 작은 slope를 남겨 local gradient가 완전히 끊기는 문제를 완화합니다.",
+    canonicalHref: "/ai/activation-functions#relu-variants",
+  },
+  "self-normalizing-activation": {
+    id: "self-normalizing-activation",
+    domain: "machine-learning",
+    label: "SELU · self-normalization",
+    definition:
+      "정해진 SELU 상수·초기화·architecture 조건에서 층별 activation의 평균과 분산이 fixed point 근처로 돌아오게 하는 설계입니다.",
+    canonicalHref: "/ai/activation-functions#relu-variants",
+  },
+  "smooth-self-gating": {
+    id: "smooth-self-gating",
+    domain: "machine-learning",
+    label: "GELU · SiLU self-gating",
+    definition:
+      "입력 자체에 입력 크기로 정한 연속적인 0–1 gate를 곱해 hard threshold 대신 부드러운 통과량을 만드는 activation 계열입니다.",
+    canonicalHref: "/ai/activation-functions#relu-variants",
+  },
+  "gated-ffn": {
+    id: "gated-ffn",
+    domain: "machine-learning",
+    label: "Gated FFN · SwiGLU",
+    definition:
+      "Gate projection과 value projection을 따로 계산해 element-wise 곱으로 결합한 뒤 output projection을 적용하는 feed-forward 구조입니다.",
+    canonicalHref: "/ai/activation-functions#relu-variants",
+  },
+  "multilayer-perceptron": {
+    id: "multilayer-perceptron",
+    label: "Multilayer perceptron (MLP)",
+    definition:
+      "Affine transform과 nonlinear activation을 여러 층 합성해 새로운 중간 표현과 결정 경계를 만드는 feed-forward network입니다.",
+    canonicalHref: "/ai/perceptron#multilayer",
+  },
+  "affine-layer": {
+    id: "affine-layer",
+    domain: "machine-learning",
+    label: "Affine layer",
+    definition:
+      "Input vector를 weight matrix로 섞고 bias를 더해 새 coordinate vector를 만드는 z=xW+b 계산입니다.",
+    canonicalHref: "/ai/neural-network#overview",
+  },
+  "affine-collapse": {
+    id: "affine-collapse",
+    domain: "mathematics",
+    label: "Affine collapse",
+    definition:
+      "중간에 nonlinear operation이 없는 affine transform 여러 개는 effective weight와 bias 하나로 정확히 합칠 수 있다는 성질입니다.",
+    canonicalHref: "/ai/neural-network#activation",
+  },
+  "hidden-representation": {
+    id: "hidden-representation",
+    domain: "machine-learning",
+    label: "Hidden representation",
+    definition:
+      "최종 target으로 직접 label되지 않았지만 end-to-end objective의 gradient로 학습되는 layer 중간 activation입니다.",
+    canonicalHref: "/ai/neural-network#overview",
+  },
+  "batch-linear-layer": {
+    id: "batch-linear-layer",
+    domain: "machine-learning",
+    label: "Batched dense layer",
+    definition:
+      "B개 input vector를 matrix X로 묶고 같은 weight·bias를 공유해 Z=XW+b로 한 번에 계산하는 dense layer의 tensor contract입니다.",
+    canonicalHref: "/ai/neural-network#forward",
+  },
+  "prediction-contract": {
+    id: "prediction-contract",
+    domain: "statistics",
+    label: "Prediction contract",
+    definition:
+      "Target이 연속값·배타적 class·독립 label 중 무엇인지에 맞춰 output dimension, activation, likelihood와 loss를 함께 정하는 규칙입니다.",
+    canonicalHref: "/ai/neural-network#output-layer",
+  },
+  "initialization-scale": {
+    id: "initialization-scale",
+    domain: "machine-learning",
+    label: "Initialization scale",
+    definition:
+      "학습 시작 시 layer를 지나는 activation과 gradient의 분산이 지나치게 커지거나 사라지지 않도록 weight의 초기 분포를 정하는 설계입니다.",
+    canonicalHref: "/ai/neural-network#forward",
+  },
+  "rnn-state-transition": {
+    id: "rnn-state-transition",
+    domain: "machine-learning",
+    label: "Recurrent state transition",
+    definition:
+      "현재 input과 직전 hidden state에 같은 parameterized cell을 반복 적용해 다음 hidden state를 만드는 sequence 계산입니다.",
+    canonicalHref: "/ai/rnn#overview",
+  },
+  "lossy-recurrent-state": {
+    id: "lossy-recurrent-state",
+    domain: "machine-learning",
+    label: "Lossy recurrent state",
+    definition:
+      "과거 원문을 그대로 보관하지 않고 현재 task에 유용하도록 고정 차원 vector에 반복해서 압축한 hidden representation입니다.",
+    canonicalHref: "/ai/rnn#overview",
+  },
+  "time-unrolling": {
+    id: "time-unrolling",
+    domain: "computer-science",
+    label: "Time unrolling · parameter sharing",
+    definition:
+      "하나의 recurrent cell을 sequence의 각 시점에 복제해 보이도록 펼치되 모든 시점이 같은 weight를 공유하는 finite computational graph 표현입니다.",
+    canonicalHref: "/ai/rnn#architecture",
+  },
+  "rnn-language-model": {
+    id: "rnn-language-model",
+    domain: "machine-learning",
+    label: "RNN language model",
+    definition:
+      "지금까지의 token context를 recurrent hidden state로 요약하고 그 state에서 다음-token probability distribution을 만드는 autoregressive model입니다.",
+    canonicalHref: "/ai/rnn#language-model",
+  },
+  perplexity: {
+    id: "perplexity",
+    kind: "metric",
+    domain: "statistics",
+    label: "Perplexity",
+    definition:
+      "동일한 data·tokenization·masking 조건에서 평균 token negative log-likelihood를 exponentiation해 나타낸 language-model 평가량입니다.",
+    canonicalHref: "/ai/rnn#language-model",
+  },
+  bptt: {
+    id: "bptt",
+    domain: "machine-learning",
+    label: "Backpropagation through time (BPTT)",
+    definition:
+      "Recurrent transition을 유한한 시간축 graph로 펼친 뒤 공유 parameter로 들어오는 모든 reverse-mode gradient contribution을 합산하는 계산입니다.",
+    canonicalHref: "/ai/rnn#bptt",
+  },
+  "recurrent-jacobian-product": {
+    id: "recurrent-jacobian-product",
+    domain: "mathematics",
+    label: "Recurrent Jacobian product",
+    definition:
+      "먼 시점 사이의 state 민감도를 각 transition의 local Jacobian을 시간 순서대로 합성해 나타낸 matrix product입니다.",
+    canonicalHref: "/ai/rnn#bptt",
+  },
+  "gradient-norm-clipping": {
+    id: "gradient-norm-clipping",
+    domain: "machine-learning",
+    label: "Global gradient-norm clipping",
+    definition:
+      "전체 parameter gradient의 norm이 threshold를 넘을 때 방향을 유지한 채 vector 전체를 같은 비율로 줄이는 update 전 안전장치입니다.",
+    canonicalHref: "/ai/rnn#bptt",
+  },
+  "truncated-bptt": {
+    id: "truncated-bptt",
+    domain: "machine-learning",
+    label: "Truncated BPTT",
+    definition:
+      "Hidden state 값은 다음 chunk로 전달하면서 이전 computational graph와의 derivative 연결은 정해진 horizon에서 끊는 recurrent training 방식입니다.",
+    canonicalHref: "/ai/rnn#bptt",
+  },
+  "lstm-dual-state": {
+    id: "lstm-dual-state",
+    domain: "machine-learning",
+    label: "LSTM cell state and hidden state",
+    definition:
+      "Additive retention·write 경로를 따르는 cell state와 외부 layer 및 다음 gate 계산에 공개되는 hidden state를 분리한 recurrent 계산 계약입니다.",
+    canonicalHref: "/ai/lstm#overview",
+  },
+  "lstm-soft-gates": {
+    id: "lstm-soft-gates",
+    domain: "machine-learning",
+    label: "LSTM soft gates",
+    definition:
+      "현재 input과 이전 hidden state에서 channel별 0–1 보존·기록·공개 비율을 sigmoid로 계산하는 data-dependent control vector입니다.",
+    canonicalHref: "/ai/lstm#gates",
+  },
+  "forget-gate-retention": {
+    id: "forget-gate-retention",
+    domain: "machine-learning",
+    label: "Forget-gate direct retention path",
+    definition:
+      "과거 cell state에서 현재 cell state로 이어지는 direct derivative contribution이 시점별 forget gate의 element-wise product로 남는 경로입니다.",
+    canonicalHref: "/ai/lstm#cell-state",
+  },
+  "gru-state-update": {
+    id: "gru-state-update",
+    domain: "machine-learning",
+    label: "GRU state update",
+    definition:
+      "별도 cell state 없이 update gate로 이전 hidden state와 candidate를 channel별 보간하고 reset gate로 candidate의 history 사용량을 조절하는 recurrent transition입니다.",
+    canonicalHref: "/ai/lstm#variants",
+  },
+  "recurrent-deployment-contract": {
+    id: "recurrent-deployment-contract",
+    domain: "computer-science",
+    label: "Recurrent deployment contract",
+    definition:
+      "Causal·bidirectional 여부, streaming state 크기, timestep latency, training parallelism과 resource budget을 함께 고정해 recurrent architecture를 비교하는 기준입니다.",
+    canonicalHref: "/ai/lstm#variants",
+  },
+  "conditional-sequence-model": {
+    id: "conditional-sequence-model",
+    domain: "machine-learning",
+    label: "Conditional sequence model",
+    definition:
+      "Source sequence X를 조건으로 target sequence Y 전체의 probability를 모델링하고, chain rule로 target prefix별 next-token distribution에 분해하는 모델입니다.",
+    canonicalHref: "/ai/seq2seq#overview",
+  },
+  "encoder-decoder-state-handoff": {
+    id: "encoder-decoder-state-handoff",
+    domain: "machine-learning",
+    label: "Encoder–decoder state handoff",
+    definition:
+      "Encoder가 source를 읽어 만든 마지막 recurrent state를 decoder의 initial state로 넘기는 초기 Seq2Seq의 learned interface입니다.",
+    canonicalHref: "/ai/seq2seq#encoder",
+  },
+  "autoregressive-decoding": {
+    id: "autoregressive-decoding",
+    domain: "machine-learning",
+    label: "Autoregressive decoding",
+    definition:
+      "지금까지 선택한 output prefix에서 다음-token distribution을 계산하고, 선택한 token을 다시 조건에 추가해 EOS까지 반복하는 생성 절차입니다.",
+    canonicalHref: "/ai/seq2seq#decoder",
+  },
+  "beam-search": {
+    id: "beam-search",
+    kind: "method",
+    domain: "computer-science",
+    label: "Beam search",
+    definition:
+      "각 decoding step에서 누적 score가 높은 제한된 수의 prefix만 남겨 exponential sequence search space를 근사 탐색하는 방법입니다.",
+    canonicalHref: "/ai/seq2seq#decoder",
+  },
+  "fixed-context-bottleneck": {
+    id: "fixed-context-bottleneck",
+    domain: "machine-learning",
+    label: "Fixed-context bottleneck",
+    definition:
+      "Decoder가 source 위치별 representation을 다시 읽지 못하고 고정 차원 handoff 하나만으로 target 전체를 생성해야 하는 encoder–decoder interface 제약입니다.",
+    canonicalHref: "/ai/seq2seq#limitations",
+  },
+  "discrete-fourier-transform": {
+    id: "discrete-fourier-transform",
+    domain: "mathematics",
+    label: "Discrete Fourier transform (DFT)",
+    definition:
+      "길이 N의 equally spaced sample vector를 N개의 complex exponential basis와 내적해 magnitude와 phase를 가진 frequency coefficient로 바꾸는 invertible linear transform입니다.",
+    canonicalHref: "/ai/fft#overview",
+  },
+  "sampling-nyquist-boundary": {
+    id: "sampling-nyquist-boundary",
+    kind: "theorem",
+    domain: "physics",
+    label: "Sampling · Nyquist boundary",
+    definition:
+      "Band-limited continuous signal을 일정 간격으로 sampling할 때 sample rate의 절반보다 낮은 frequency band에서 alias 없이 복원할 수 있다는 측정 조건입니다.",
+    canonicalHref: "/ai/fft#nyquist-boundary",
+  },
+  "spectral-leakage-window": {
+    id: "spectral-leakage-window",
+    domain: "machine-learning",
+    label: "Spectral leakage · window trade-off",
+    definition:
+      "유한 frame의 경계 불연속이 spectrum energy를 여러 bin으로 퍼뜨리는 현상과 taper가 side lobe를 줄이는 대신 main lobe를 넓히는 맞바꿈입니다.",
+    canonicalHref: "/ai/fft#fourier",
+  },
+  "zero-padding-spectrum-grid": {
+    id: "zero-padding-spectrum-grid",
+    domain: "machine-learning",
+    label: "Zero-padding · spectrum grid",
+    definition:
+      "관측 sample 뒤에 0을 붙여 같은 finite observation의 discrete spectrum을 더 촘촘한 bin에서 평가하되 새로운 시간 관측이나 실제 분해능은 추가하지 않는 처리입니다.",
+    canonicalHref: "/ai/fft#fourier",
+  },
+  "cooley-tukey-fft": {
+    id: "cooley-tukey-fft",
+    kind: "method",
+    domain: "computer-science",
+    label: "Cooley–Tukey FFT",
+    definition:
+      "Composite-length DFT를 더 작은 sub-DFT로 factorization하고 roots of unity의 주기·대칭으로 중간값을 재사용하는 FFT algorithm family입니다.",
+    canonicalHref: "/ai/fft#algorithm",
+  },
+  "fft-butterfly": {
+    id: "fft-butterfly",
+    domain: "computer-science",
+    label: "FFT butterfly",
+    definition:
+      "같은 even·odd sub-DFT와 twiddle product를 더하기와 빼기로 결합해 서로 N/2 떨어진 두 DFT output을 함께 만드는 계산 단위입니다.",
+    canonicalHref: "/ai/fft#algorithm",
+  },
+  "convolution-theorem": {
+    id: "convolution-theorem",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Convolution theorem",
+    definition:
+      "한 domain의 convolution이 Fourier domain의 pointwise multiplication과 대응한다는 정리입니다.",
+    canonicalHref: "/ai/fft#ai-usage",
+  },
+  "short-time-fourier-transform": {
+    id: "short-time-fourier-transform",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Short-time Fourier transform (STFT)",
+    definition:
+      "긴 signal을 겹칠 수 있는 local frame으로 나누고 window를 곱한 뒤 frame마다 DFT를 계산해 time–frequency representation을 만드는 방법입니다.",
+    canonicalHref: "/ai/fft#ai-usage",
+  },
+  "attention-query-key-value": {
+    id: "attention-query-key-value",
+    domain: "machine-learning",
+    label: "Attention query · key · value roles",
+    definition:
+      "Query는 지금 찾는 조건, key는 memory slot을 비교할 주소, value는 선택된 slot에서 실제로 읽어 올 content를 맡는 attention의 세 역할입니다.",
+    canonicalHref: "/ai/attention-theory#overview",
+  },
+  "differentiable-attention-read": {
+    id: "differentiable-attention-read",
+    domain: "machine-learning",
+    label: "Differentiable attention read",
+    definition:
+      "Query–key score를 softmax weight로 바꾸고 value를 가중합해, hard index 선택 없이 memory에서 query별 context를 읽는 연산입니다.",
+    canonicalHref: "/ai/attention-theory#overview",
+  },
+  "additive-attention": {
+    id: "additive-attention",
+    domain: "machine-learning",
+    label: "Additive attention",
+    definition:
+      "Query와 key를 공통 hidden space로 각각 투영해 더하고 비선형 함수와 learned readout으로 scalar compatibility score를 만드는 attention 방식입니다.",
+    canonicalHref: "/ai/attention-theory#additive",
+  },
+  "bilinear-attention-score": {
+    id: "bilinear-attention-score",
+    domain: "machine-learning",
+    label: "Bilinear · general attention score",
+    definition:
+      "Query와 key 사이에 learned matrix를 두어 qᵀWk로 compatibility를 계산하는 score 함수입니다.",
+    canonicalHref: "/ai/attention-theory#multiplicative",
+  },
+  "self-attention": {
+    id: "self-attention",
+    domain: "machine-learning",
+    label: "Self-attention",
+    definition:
+      "Query·key·value를 같은 input sequence의 서로 다른 learned projection으로 만들어 각 위치가 같은 sequence의 다른 위치에서 정보를 읽게 하는 attention입니다.",
+    canonicalHref: "/ai/attention-theory#self-attention",
+  },
+  "multi-head-attention": {
+    id: "multi-head-attention",
+    domain: "machine-learning",
+    label: "Multi-head attention",
+    definition:
+      "서로 다른 query·key·value projection을 여러 head에서 병렬로 계산하고 그 결과를 이어 붙여 output projection으로 다시 섞는 구조입니다.",
+    canonicalHref: "/ai/attention-theory#self-attention",
+  },
+  "kv-cache-decode-state": {
+    id: "kv-cache-decode-state",
+    kind: "concept",
+    domain: "computer-science",
+    label: "KV cache · autoregressive decode state",
+    definition:
+      "Autoregressive decode에서 과거 token의 layer별 key와 value projection을 다시 계산하지 않도록 보존하고, 현재 token의 query가 다음 step마다 이 기록을 조회하게 하는 runtime state입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#kv-shape",
+  },
+  "grouped-query-kv-sharing": {
+    id: "grouped-query-kv-sharing",
+    kind: "method",
+    domain: "machine-learning",
+    label: "MHA·GQA·MQA KV-head sharing",
+    definition:
+      "Query head 수는 유지하되 더 적은 key/value head를 여러 query head가 공유하게 만들어 cache width와 decode memory traffic을 줄이는 attention 설계 축입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#kv-shape-sharing",
+  },
+  "per-token-kv-byte": {
+    id: "per-token-kv-byte",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Per-token KV cache byte",
+    definition:
+      "한 token의 K/V를 보존하는 layer 수·KV head 수·head dimension·K/V tensor 수·cache dtype byte를 곱해 구하는 dense-allocation memory 비용입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#kv-shape-formula",
+  },
+  "hybrid-layer-kv-retention": {
+    id: "hybrid-layer-kv-retention",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Hybrid layer KV-retention length",
+    definition:
+      "Global attention layer는 전체 history T를, sliding-window layer는 allocator가 오래된 block을 회수할 때 최근 min(T,W) token만 보존하도록 layer별 cache 길이를 정하는 규칙입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#kv-cache",
+  },
+  "hybrid-kv-cache-allocation": {
+    id: "hybrid-kv-cache-allocation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Hybrid KV-cache allocation",
+    definition:
+      "Full·sliding 등 attention type별로 필요한 block 수가 다른 layer를 cache group과 공통 physical page에 배치하고 layer별 보존 정책에 따라 block을 할당·회수하는 runtime 방법입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#spec-vllm-hybrid",
+  },
+  "kv-pool-capacity-budget": {
+    id: "kv-pool-capacity-budget",
+    kind: "metric",
+    domain: "computer-science",
+    label: "KV-pool capacity budget",
+    definition:
+      "Replica VRAM에서 weight·model extras·runtime workspace·headroom을 뺀 KV pool byte를 token 또는 layer별 cache 비용과 연결해 수용 가능한 active state를 계산하는 예산입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#capacity",
+  },
+  "context-concurrency-admission": {
+    id: "context-concurrency-admission",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Context–concurrency admission control",
+    definition:
+      "최대 context 숫자를 수용 인원으로 바로 바꾸지 않고 active request의 실제 input·output 길이 분포와 KV budget·latency·preemption을 함께 사용해 scheduler admission 상한을 정하는 방법입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#capacity-admission",
+  },
+  "runtime-capacity-log-consistency": {
+    id: "runtime-capacity-log-consistency",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Runtime capacity-log consistency",
+    definition:
+      "Startup log의 cache token을 max model length로 나눈 직접 concurrency와 runtime 보고값을 비교해 hybrid group·padding·token-equivalent 등 단위 차이를 찾는 검산입니다.",
+    canonicalHref: "/ai/hybrid-attention-serving#capacity-logs",
+  },
+  "speculative-draft-verify-cycle": {
+    id: "speculative-draft-verify-cycle",
+    kind: "method",
+    domain: "computer-science",
+    label: "Speculative draft–verify cycle",
+    definition:
+      "빠른 proposer가 현재 확정 prefix의 미래 token 후보를 만들고 target model이 여러 위치를 함께 평가한 뒤, 연속으로 수락된 prefix와 correction 또는 bonus만 runtime state에 commit하는 generation cycle입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#overview",
+  },
+  "speculative-acceptance-length": {
+    id: "speculative-acceptance-length",
+    kind: "metric",
+    domain: "statistics",
+    label: "Speculative acceptance · committed length",
+    definition:
+      "Verification cycle에서 첫 거부 전까지 수락된 draft prefix A와 correction·bonus까지 포함해 실제 sequence에 반영한 token 수 Y를 구분해 세는 efficiency metric입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#acceptance-length",
+  },
+  "speculative-rejection-sampling": {
+    id: "speculative-rejection-sampling",
+    kind: "method",
+    domain: "statistics",
+    label: "Speculative rejection sampling",
+    definition:
+      "Draft token x를 min(1,p(x)/q(x)) 확률로 수락하고 거부되면 normalized positive residual (p−q)+에서 correction을 뽑아 target probability mass를 복원하는 sampling 방법입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#draft-verify",
+  },
+  "speculative-target-distribution-invariance": {
+    id: "speculative-target-distribution-invariance",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Speculative target-distribution invariance",
+    definition:
+      "동일한 committed prefix의 normalized target p와 draft q에 올바른 acceptance·residual correction을 적용하면 최종 token probability가 모든 token에서 p와 같아진다는 분포 보존 성질입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#paper-speculative-decoding",
+  },
+  "speculative-suffix-causality": {
+    id: "speculative-suffix-causality",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Speculative suffix causality",
+    definition:
+      "첫 거부 뒤의 draft token은 교체되기 전 후보 prefix를 조건으로 생성됐으므로, correction으로 prefix가 달라지면 후속 후보를 확정 대상에서 제외하고 다시 계산해야 한다는 causal 조건입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#draft-verify",
+  },
+  "eagle-feature-level-proposal": {
+    id: "eagle-feature-level-proposal",
+    kind: "method",
+    domain: "machine-learning",
+    label: "EAGLE feature-level proposal",
+    definition:
+      "Target model의 feature와 token sequence를 조건으로 다음 feature를 autoregressive하게 예측해 speculative token 후보를 만드는 lightweight drafting 방법입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#paper-eagle",
+  },
+  "native-mtp-proposal": {
+    id: "native-mtp-proposal",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Native Multi-Token Prediction proposal",
+    definition:
+      "Target architecture가 학습 시 포함한 future-token auxiliary module을 serving의 proposer로 사용하되, target verification과 KV-state commit으로 실제 확정 token을 결정하는 방법입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#paper-mtp",
+  },
+  "speculative-serving-break-even": {
+    id: "speculative-serving-break-even",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "Speculative serving break-even",
+    definition:
+      "Cycle당 committed token을 target-only로 생성할 기준 시간과 proposal·verification·scheduler·sampling·cache-commit 시간을 비교해 speculative decoding이 실제로 이득인 workload 구간을 판정하는 조건입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#serving-break-even",
+  },
+  "dynamic-speculation-policy": {
+    id: "dynamic-speculation-policy",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Dynamic speculation policy",
+    definition:
+      "Recent acceptance·request 특성·serving load 같은 관측값에 따라 speculation depth를 바꾸거나 target-only decoding으로 돌아가는 runtime decision policy입니다.",
+    canonicalHref: "/ai/vllm-spec-decode#dynamic-policy",
+  },
+  "llm-online-request-lifecycle": {
+    id: "llm-online-request-lifecycle",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Online LLM request lifecycle",
+    definition:
+      "Prompt와 generation option을 받은 요청이 validation·waiting·scheduling·model execution·sampling·streaming·completion을 거치며 여러 GPU iteration에 걸쳐 state를 갱신하는 수명주기입니다.",
+    canonicalHref: "/ai/vllm-serving#overview",
+  },
+  "prefill-decode-execution-phase": {
+    id: "prefill-decode-execution-phase",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Prefill · decode execution phases",
+    definition:
+      "Prompt의 여러 token을 처리해 KV state와 첫 output을 준비하는 prefill과, 이미 만든 state를 읽어 다음 token을 반복 확정하는 decode를 workload와 병목이 다른 실행 단계로 구분한 것입니다.",
+    canonicalHref: "/ai/vllm-serving#prefill-decode",
+  },
+  "serving-latency-decomposition": {
+    id: "serving-latency-decomposition",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "LLM serving latency decomposition",
+    definition:
+      "End-to-end generation latency를 frontend·queue·prefill에서 첫 token까지의 TTFT와 이후 token 사이의 ITL·TPOT로 나누어 병목 계층을 찾는 측정 계약입니다.",
+    canonicalHref: "/ai/vllm-serving#prefill-decode",
+  },
+  "iteration-level-continuous-batching": {
+    id: "iteration-level-continuous-batching",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Iteration-level continuous batching",
+    definition:
+      "함께 시작한 request batch를 끝까지 고정하지 않고 model iteration이 끝날 때마다 완료 요청을 제거하고 waiting·prefill·decode 작업을 다시 조립하는 scheduling 방식입니다.",
+    canonicalHref: "/ai/vllm-serving#engine-loop",
+  },
+  "serving-iteration-resource-feasibility": {
+    id: "serving-iteration-resource-feasibility",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Serving iteration resource feasibility",
+    definition:
+      "한 model execution에 고른 작업이 token budget·active sequence cap·available KV block을 동시에 넘지 않는지 검사하는 hard scheduling 조건입니다.",
+    canonicalHref: "/ai/vllm-serving#resource-feasibility",
+  },
+  "vllm-engine-responsibility-boundary": {
+    id: "vllm-engine-responsibility-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "vLLM engine responsibility boundary",
+    definition:
+      "API frontend·engine core·model executor·GPU worker가 request validation/stream, scheduling/KV state, worker orchestration, model execution을 각각 소유하도록 나눈 진단 경계입니다.",
+    canonicalHref: "/ai/vllm-serving#serving-architecture",
+  },
+  "model-parallel-replica-layout": {
+    id: "model-parallel-replica-layout",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "DP·TP·PP model-replica layout",
+    definition:
+      "독립 model replica를 늘리는 data parallel, layer tensor를 여러 GPU에 나누는 tensor parallel, 연속 layer를 stage로 나누는 pipeline parallel을 조합한 worker topology입니다.",
+    canonicalHref: "/ai/vllm-serving#parallel-layout",
+  },
+  "slo-serving-goodput": {
+    id: "slo-serving-goodput",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "SLO-constrained serving goodput",
+    definition:
+      "측정 구간의 raw throughput 가운데 사전에 정한 TTFT·ITL·E2E·오류 기준을 통과한 요청이 만든 결과만 세어 시간으로 나눈 유효 처리량입니다.",
+    canonicalHref: "/ai/vllm-serving#serving-goodput",
+  },
+  "scheduler-request-progress-gap": {
+    id: "scheduler-request-progress-gap",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Scheduler request progress gap",
+    definition:
+      "Request가 현재 계산을 마쳐야 하는 target token 위치에서 이미 계산한 token 수를 빼 prefill·decode·speculative verification의 남은 일을 공통 token 단위로 표현한 값입니다.",
+    canonicalHref: "/ai/vllm-scheduler#schedule-method",
+  },
+  "scheduler-running-waiting-order": {
+    id: "scheduler-running-waiting-order",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "RUNNING · WAITING admission order",
+    definition:
+      "진행 중인 request의 token·KV 배정을 먼저 검토하고, 남은 request slot과 resource budget으로 waiting request를 새로 admission하는 scheduling 순서입니다.",
+    canonicalHref: "/ai/vllm-scheduler#running-waiting-order",
+  },
+  "scheduler-priority-order": {
+    id: "scheduler-priority-order",
+    kind: "method",
+    domain: "computer-science",
+    label: "Scheduler FCFS · priority order",
+    definition:
+      "FCFS에서는 arrival time을, priority policy에서는 작은 priority 값과 arrival-time tie-break를 사용해 request 후보의 검토 순서를 정하는 queue 정책입니다.",
+    canonicalHref: "/ai/vllm-scheduler#running-waiting-order",
+  },
+  "scheduler-closed-loop-transition": {
+    id: "scheduler-closed-loop-transition",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Scheduler closed-loop state transition",
+    definition:
+      "한 iteration의 model output으로 computed/output counter·completion·queue·cache ownership을 갱신하고 그 결과를 다음 scheduling snapshot의 입력으로 되돌리는 상태 전이입니다.",
+    canonicalHref: "/ai/vllm-scheduler#closed-loop-update",
+  },
+  "chunked-prefill-interleaving": {
+    id: "chunked-prefill-interleaving",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Chunked prefill interleaving",
+    definition:
+      "긴 prompt prefill을 여러 token chunk로 나누고 ongoing decode token과 같은 iteration batch에 섞어 generation stall과 throughput·latency tradeoff를 조절하는 방법입니다.",
+    canonicalHref: "/ai/vllm-scheduler#prefill-decode",
+  },
+  "scheduler-policy-starvation": {
+    id: "scheduler-policy-starvation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Scheduler policy starvation",
+    definition:
+      "더 높은 priority의 request가 계속 선택되면서 낮은 priority request가 resource feasibility를 만족해도 queue에서 지나치게 오래 기다리거나 사실상 진행하지 못하는 현상입니다.",
+    canonicalHref: "/ai/vllm-scheduler#workload-replay",
+  },
+  "kv-pressure-preemption": {
+    id: "kv-pressure-preemption",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "KV pressure preemption",
+    definition:
+      "새 KV block을 확보하지 못할 때 실행 중 request를 victim으로 골라 cache를 반환하고 PREEMPTED·WAITING 상태로 되돌려 다른 request의 진행 공간을 만드는 scheduling 경로입니다.",
+    canonicalHref: "/ai/vllm-scheduler#preemption",
+  },
+  "recomputation-preemption-cost": {
+    id: "recomputation-preemption-cost",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "Preemption recomputation cost",
+    definition:
+      "Preemption 전에 계산한 token 가운데 재개 시 prefix cache 등으로 복구하지 못한 부분의 반복 model compute와 requeue·restore 지연을 합친 비용입니다.",
+    canonicalHref: "/ai/vllm-scheduler#preemption",
+  },
+  "paged-kv-block-allocation": {
+    id: "paged-kv-block-allocation",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Paged KV block allocation",
+    definition:
+      "길이를 미리 알 수 없는 request KV state를 fixed-size logical block으로 나누고 token이 늘 때 필요한 physical GPU block만 추가해 최대 길이 연속 예약과 fragmentation을 줄이는 방법입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#overview",
+  },
+  "kv-block-address-translation": {
+    id: "kv-block-address-translation",
+    kind: "method",
+    domain: "computer-science",
+    label: "KV block address translation",
+    definition:
+      "Request의 logical token position을 block size로 나눈 logical block index와 offset으로 바꾸고 block table을 통해 non-contiguous physical KV slot에 연결하는 mapping입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#logical-physical-address",
+  },
+  "pagedattention-memory-kernel-boundary": {
+    id: "pagedattention-memory-kernel-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "PagedAttention manager · kernel boundary",
+    definition:
+      "Block allocation·reference·eviction을 소유하는 memory manager, block table을 따라 K/V를 읽는 attention kernel, request ordering을 정하는 scheduler의 책임을 분리한 경계입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#memory-kernel-boundary",
+  },
+  "kv-block-reference-ownership": {
+    id: "kv-block-reference-ownership",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "KV block reference ownership",
+    definition:
+      "여러 request block table이 공유할 수 있는 physical KV block의 reference count를 일관되게 갱신하고 reference가 남은 block의 eviction·overwrite를 금지하는 ownership 불변식입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#block-pool",
+  },
+  "kv-free-queue-eviction": {
+    id: "kv-free-queue-eviction",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "KV free queue · cache eviction",
+    definition:
+      "Reference count가 0인 physical block을 allocation 후보 순서로 보관하면서 hash가 남은 block은 prefix hit에 재활성화하고, 재할당할 때 이전 hash identity를 제거하는 lifecycle입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#free-queue-eviction",
+  },
+  "kv-manager-allocation-contract": {
+    id: "kv-manager-allocation-contract",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "KVCacheManager allocation contract",
+    definition:
+      "Cache hit·기존 block·scheduled token·speculative lookahead를 합쳐 새 physical block demand를 계산하고 scheduler에 block IDs 또는 allocation failure를 반환하는 interface입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#kv-cache-manager",
+  },
+  "hybrid-cache-group-coordination": {
+    id: "hybrid-cache-group-coordination",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Hybrid KV cache group coordination",
+    definition:
+      "Full attention·sliding-window attention·recurrent state처럼 보존 범위와 layout이 다른 layer를 compatible cache spec별 group으로 묶고 request allocation·free를 함께 조율하는 방법입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#hybrid-cache-groups",
+  },
+  "chained-prefix-block-hash": {
+    id: "chained-prefix-block-hash",
+    kind: "method",
+    domain: "computer-science",
+    label: "Chained prefix-block hash",
+    definition:
+      "Parent block hash·현재 full-block token IDs·LoRA/multimodal/salt 같은 KV identity를 hash해 앞선 causal prefix의 순서와 계산 조건을 cache key에 연결하는 방법입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#prefix-caching",
+  },
+  "automatic-prefix-cache-scope": {
+    id: "automatic-prefix-cache-scope",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Automatic prefix cache scope",
+    definition:
+      "새 request의 시작부터 연속으로 일치한 full KV block의 prefill은 생략하지만 partial suffix와 새 output token decode는 그대로 수행하는 prefix reuse의 효과 범위입니다.",
+    canonicalHref: "/ai/vllm-paged-attention#full-block-boundary",
+  },
+  "serving-end-to-end-contract": {
+    id: "serving-end-to-end-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "LLM serving end-to-end contract",
+    definition:
+      "Workload별 context·tool·schema·privacy capability와 TTFT·ITL·completion·cost SLO를 gateway·runtime·GPU fleet 전 구간에 같은 request identity로 적용하는 운영 계약입니다.",
+    canonicalHref: "/ai/llm-serving-ops#overview",
+  },
+  "capability-first-model-routing": {
+    id: "capability-first-model-routing",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Capability-first model routing",
+    definition:
+      "Context length·streaming·tool/schema·data region 같은 hard compatibility를 만족하지 않는 backend를 먼저 제외한 뒤 health·queue·cost로 후보를 ranking하는 routing 방법입니다.",
+    canonicalHref: "/ai/llm-serving-ops#litellm-gateway",
+  },
+  "deadline-owned-retry-budget": {
+    id: "deadline-owned-retry-budget",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Deadline-owned retry budget",
+    definition:
+      "최상위 request의 end-to-end deadline에서 이미 쓴 시간과 다음 backoff·attempt 예산을 빼고 idempotency·side-effect 상태까지 확인해 retry나 fallback을 허용하는 정책입니다.",
+    canonicalHref: "/ai/llm-serving-ops#litellm-gateway",
+  },
+  "retry-load-amplification": {
+    id: "retry-load-amplification",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "Retry load amplification",
+    definition:
+      "Client request 하나가 만든 backend attempt 수의 기댓값을 client arrival rate에 곱해 retry·fallback 이후 runtime이 실제로 받는 load를 계산한 값입니다.",
+    canonicalHref: "/ai/llm-serving-ops#litellm-gateway",
+  },
+  "gpu-ready-capacity-path": {
+    id: "gpu-ready-capacity-path",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "GPU ready-capacity activation path",
+    definition:
+      "Autoscaler가 desired Pod를 제안한 뒤 scheduling·node provision·driver/plugin·image/weight load·distributed init·warm-up·readiness를 지나 실제 traffic capacity가 되는 준비 경로입니다.",
+    canonicalHref: "/ai/llm-serving-ops#k8s-gpu-fleet",
+  },
+  "little-law-stable-system": {
+    id: "little-law-stable-system",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Little's law · stable system",
+    definition:
+      "평균들이 유한하고 장기적으로 안정된 system boundary에서 평균 in-flight 수 L이 effective arrival rate λ와 평균 sojourn time W의 곱 L=λW와 같다는 queueing theorem입니다.",
+    canonicalHref: "/ai/llm-serving-ops#paper-little-law",
+  },
+  "kubernetes-probe-semantics": {
+    id: "kubernetes-probe-semantics",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Kubernetes startup · readiness · liveness semantics",
+    definition:
+      "Initialization 완료를 기다리는 startup, 새 traffic admission 가능성을 나타내는 readiness, restart만이 복구 방법인 상태를 찾는 liveness probe의 질문과 action을 구분한 계약입니다.",
+    canonicalHref: "/ai/llm-serving-ops#serving-deployment",
+  },
+  "hpa-intermittent-control-loop": {
+    id: "hpa-intermittent-control-loop",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "HPA intermittent control loop",
+    definition:
+      "주기적으로 현재 metric과 target의 비율에서 desired replica를 제안하고 tolerance·unready metric·stabilization·min/max를 적용하되 capacity activation delay를 별도로 다루는 autoscaling loop입니다.",
+    canonicalHref: "/ai/llm-serving-ops#serving-deployment",
+  },
+  "slo-error-budget-burn-rate": {
+    id: "slo-error-budget-burn-rate",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "SLO error-budget burn rate",
+    definition:
+      "같은 event·window의 실제 bad-event 비율을 1−SLO인 허용 실패 비율로 나누어 error budget을 정상 허용 속도의 몇 배로 소비하는지 나타낸 값입니다.",
+    canonicalHref: "/ai/llm-serving-ops#observability-aiops",
+  },
+  "serving-change-effect-control": {
+    id: "serving-change-effect-control",
+    kind: "method",
+    domain: "statistics",
+    label: "Serving canary change-effect control",
+    definition:
+      "Canary와 control의 변경 전후 SLI 차이를 workload bucket과 guardrail 아래 비교해 공통 traffic 변화와 기존 집단 차이를 일부 제거하고 운영 변경 효과를 검증하는 방법입니다.",
+    canonicalHref: "/ai/llm-serving-ops#observability-aiops",
+  },
+  "network-workload-traffic-matrix": {
+    id: "network-workload-traffic-matrix",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Network workload · traffic matrix",
+    definition:
+      "Source·destination endpoint, message size, direction, concurrency, burst와 phase를 함께 기록해 어떤 path에 얼마의 traffic이 겹치는지 나타내는 network workload 계약입니다.",
+    canonicalHref: "/gpu/hw-network#workload-contract",
+  },
+  "line-rate-goodput-boundary": {
+    id: "line-rate-goodput-boundary",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Line rate · payload goodput boundary",
+    definition:
+      "Port가 wire에서 광고하는 bit/s와 실제 완료한 application payload byte를 wall-clock time으로 나눈 goodput을 단위·방향·aggregation 경계와 함께 구분한 측정 계약입니다.",
+    canonicalHref: "/gpu/hw-network#goodput-boundary",
+  },
+  "ethernet-link-compatibility-chain": {
+    id: "ethernet-link-compatibility-chain",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Ethernet link compatibility chain",
+    definition:
+      "양 끝의 MAC rate·electrical lane grouping·PHY encoding·FEC·module·media·breakout mapping이 모두 호환돼야 하나의 link가 성립한다는 계층 계약입니다.",
+    canonicalHref: "/gpu/hw-network#ethernet-link-contract",
+  },
+  "fabric-oversubscription-failure-state": {
+    id: "fabric-oversubscription-failure-state",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "Fabric oversubscription · failure state",
+    definition:
+      "Host-facing aggregate capacity를 현재 살아 있는 uplink aggregate capacity로 나누고 정상·link-loss 상태를 분리해 fabric의 동시 전송 상한을 검산하는 비율입니다.",
+    canonicalHref: "/gpu/hw-network#fabric-oversubscription",
+  },
+  "rdma-control-data-path": {
+    id: "rdma-control-data-path",
+    kind: "concept",
+    domain: "computer-science",
+    label: "RDMA control path · data path",
+    definition:
+      "Memory 등록·queue pair·work request·completion·recovery의 host control과 등록된 memory 사이 payload를 NIC DMA로 옮기는 data movement를 구분한 실행 경계입니다.",
+    canonicalHref: "/gpu/hw-network#rdma-control-data-path",
+  },
+  "rdma-memory-registration-capability": {
+    id: "rdma-memory-registration-capability",
+    kind: "concept",
+    domain: "computer-science",
+    label: "RDMA memory registration capability",
+    definition:
+      "NIC가 DMA할 virtual-memory range를 고정하고 local/remote access key와 lifetime을 부여해 허용된 queue operation만 해당 memory에 접근하게 하는 capability 계약입니다.",
+    canonicalHref: "/gpu/hw-network#rdma-memory-registration",
+  },
+  "roce-v2-gid-routing": {
+    id: "roce-v2-gid-routing",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "RoCE v2 GID · QP route selection",
+    definition:
+      "IP address·netdev·RoCE version에 대응하는 GID table entry에서 source GID index를 고르고 remote address vector와 함께 QP의 routable path를 정하는 선택 과정입니다.",
+    canonicalHref: "/gpu/hw-network#roce-gid-routing",
+  },
+  "gpudirect-rdma-topology": {
+    id: "gpudirect-rdma-topology",
+    kind: "concept",
+    domain: "computer-science",
+    label: "GPUDirect RDMA topology boundary",
+    definition:
+      "GPU memory와 NIC가 host bounce buffer 없이 DMA할 수 있는지 PCIe root complex·switch·IOMMU/ACS·BAR·driver와 GPU–HCA affinity까지 포함해 판단하는 platform 경계입니다.",
+    canonicalHref: "/gpu/hw-network#gpudirect-topology",
+  },
+  "collective-rank-semantics": {
+    id: "collective-rank-semantics",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Collective rank semantics",
+    definition:
+      "같은 communicator의 rank들이 동일 count·datatype의 collective에 함께 참여하고 rank placement와 operation 종류가 data movement와 결과 배치를 결정하는 계약입니다.",
+    canonicalHref: "/gpu/hw-network#collective-rank-semantics",
+  },
+  "nccl-algbw-busbw-boundary": {
+    id: "nccl-algbw-busbw-boundary",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "NCCL algbw · busbw boundary",
+    definition:
+      "Collective input size를 완료 시간으로 나눈 algbw와, nccl-tests가 flat point-to-point transfer accounting으로 operation·rank 수에 맞춰 보정한 busbw를 구분하는 측정 계약입니다.",
+    canonicalHref: "/gpu/hw-network#nccl-bandwidth-boundary",
+  },
+  "b300-port-split-identity": {
+    id: "b300-port-split-identity",
+    kind: "concept",
+    domain: "computer-science",
+    label: "B300 physical · logical port identity",
+    definition:
+      "DGX B300의 physical OSFP module, ConnectX-8 PCI function, Ethernet netdev와 RDMA device를 같은 endpoint identity로 묶고 split 전후 inventory를 추적하는 계약입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#ports",
+  },
+  "switchless-fullmesh-port-budget": {
+    id: "switchless-fullmesh-port-budget",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Switchless full-mesh port budget",
+    definition:
+      "N개 node의 모든 pair를 c개 cable로 직접 잇는 데 필요한 전체 cable 수와 node당 physical port 수를 계산해 8-port B300의 scale·pair bandwidth 한계를 고정하는 예산입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#topology",
+  },
+  "point-to-point-subnet-manifest": {
+    id: "point-to-point-subnet-manifest",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Point-to-point subnet manifest",
+    definition:
+      "각 direct cable의 두 endpoint, physical/logical port, netdev, RDMA device와 고유 /30 subnet을 하나의 topology manifest에서 생성·검증하는 구성 방법입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#addressing",
+  },
+  "peer-aware-gid-selection": {
+    id: "peer-aware-gid-selection",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Peer-aware RoCE GID selection",
+    definition:
+      "Remote peer GID의 IPv4·RoCE version을 기준으로 같은 point-to-point subnet에 속한 local GID index를 찾아 sender와 receiver QP의 address vector를 다시 고르는 방법입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#peer-aware-gid-selection",
+  },
+  "nccl-direct-rail-selection": {
+    id: "nccl-direct-rail-selection",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "NCCL direct-rail selection",
+    definition:
+      "실제로 연결된 HCA를 exact allowlist로 제한하고 collective ring/tree가 같은 rail을 유지하게 해 direct-link topology 밖의 NIC를 경로 후보에서 제외하는 선택 계약입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#nccl-rail-contract",
+  },
+  "switchless-collective-measurement-boundary": {
+    id: "switchless-collective-measurement-boundary",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "Switchless collective measurement boundary",
+    definition:
+      "Logical link line-rate 합, nccl-tests operation time·algbw·busbw, NIC wire counter와 application throughput을 구분하고 topology·message·software 조건을 함께 남기는 실측 경계입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#measurement",
+  },
+  "switchless-failure-domain": {
+    id: "switchless-failure-domain",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Switchless peer-link failure domain",
+    definition:
+      "한 cable·logical lane·netdev·GID의 장애가 특정 node pair의 rail을 바로 제거하며 switch의 alternate path가 없는 상태에서 감지·격리·복구 범위를 정한 운영 경계입니다.",
+    canonicalHref: "/gpu/b300-switchless-network#operations",
+  },
+  "process-container-resource-boundary": {
+    id: "process-container-resource-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Process · container resource boundary",
+    definition:
+      "Container를 별도 machine으로 보지 않고 host kernel 위 process에 namespace·cgroup·mount·capability 정책을 적용해 보이는 자원과 사용 한도를 제한한 실행 경계로 이해하는 개념입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#container-boundary",
+  },
+  "agent-attack-path-completion": {
+    id: "agent-attack-path-completion",
+    kind: "method",
+    domain: "computer-science",
+    label: "Agent attack-path completion",
+    definition:
+      "관찰된 signal 하나의 이름이 아니라 input→execution→보유 capability→boundary crossing→impact로 이어지는 path의 모든 edge가 실제로 허용되는지 추적해 위험 우선순위를 정하는 방법입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#attack-path-model",
+  },
+  "container-root-host-boundary": {
+    id: "container-root-host-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Container root · host root boundary",
+    definition:
+      "Container UID 0의 process 권한을 namespace·capability·user-ID mapping·mount·runtime escape 조건과 함께 보아 host root 권한과 동일시하지 않으면서 blast radius를 판단하는 경계입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#container-root-boundary",
+  },
+  "syscall-filter-kernel-isolation-boundary": {
+    id: "syscall-filter-kernel-isolation-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Syscall filter · kernel isolation boundary",
+    definition:
+      "Host kernel을 계속 공유한 채 허용 syscall을 줄이는 seccomp와 userspace application kernel 또는 guest kernel로 host 접촉면을 바꾸는 runtime isolation을 구분한 경계입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#runtime",
+  },
+  "sandbox-runtime-isolation-spectrum": {
+    id: "sandbox-runtime-isolation-spectrum",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Sandbox runtime isolation spectrum",
+    definition:
+      "runc·seccomp·gVisor·Kata를 단일 순위가 아니라 공유 kernel surface·guest boundary·호환성·기동·memory·device 조건의 서로 다른 조합으로 비교하는 선택 축입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#runtime",
+  },
+  "kubernetes-workload-identity-boundary": {
+    id: "kubernetes-workload-identity-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Kubernetes workload identity · RBAC boundary",
+    definition:
+      "Pod에 주입되는 ServiceAccount token과 API server에서 허용하는 Role/Binding을 분리해 token 존재·권한·수명·audience를 함께 최소화하는 control-plane identity 경계입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#kubernetes",
+  },
+  "egress-allowlist-enforcement": {
+    id: "egress-allowlist-enforcement",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Egress allowlist · enforcement boundary",
+    definition:
+      "Policy object의 존재가 아니라 실제 CNI·DNS proxy·egress gateway가 workload의 destination·port·domain·protocol을 default-deny에서 허용 목록으로 집행하는지 검증하는 경계입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#egress",
+  },
+  "sandbox-writable-surface-lifetime": {
+    id: "sandbox-writable-surface-lifetime",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Sandbox writable surface · lifetime",
+    definition:
+      "Read-only root와 별도로 쓰기 가능한 volume·tmp·cache의 path·size·owner·session lifetime·폐기 시점을 제한해 persistence와 cross-session residue를 줄이는 storage 계약입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#kubernetes",
+  },
+  "gpu-device-isolation-boundary": {
+    id: "gpu-device-isolation-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "GPU device isolation boundary",
+    definition:
+      "GPU ioctl proxy 또는 VFIO passthrough가 host driver·VMM·IOMMU·device lifecycle 중 어느 경계를 신뢰하는지와 지원 matrix를 함께 보는 sandbox device 계약입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#gpu",
+  },
+  "sandbox-workload-control-matrix": {
+    id: "sandbox-workload-control-matrix",
+    kind: "method",
+    domain: "computer-science",
+    label: "Sandbox workload · control matrix",
+    definition:
+      "실행 code의 신뢰도와 필요한 credential·network·filesystem·GPU·session lifetime을 먼저 적고 identity·egress·kernel·storage·lifecycle 통제를 독립 열로 승인하는 선택 방법입니다.",
+    canonicalHref: "/ai/agent-sandbox-security#decision",
+  },
+  "tool-call-round-trip": {
+    id: "tool-call-round-trip",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent tool-call round trip",
+    definition:
+      "Model이 다음 tool과 인자를 생성하고 외부 실행 결과를 다시 context로 받아 다음 판단을 하는 한 번의 inference→execution→observation 순환입니다.",
+    canonicalHref: "/ai/agent-code-mode#code-mode-definition",
+  },
+  "code-mode-program-ir": {
+    id: "code-mode-program-ir",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Code Mode program as intermediate representation",
+    definition:
+      "여러 tool call·변수·loop·branch·error handling을 JSON call의 연속 대신 sandbox가 실행할 짧은 program으로 표현하는 agent 중간 실행 형식입니다.",
+    canonicalHref: "/ai/agent-code-mode#code-mode-definition",
+  },
+  "tool-discovery-schema-loading": {
+    id: "tool-discovery-schema-loading",
+    kind: "method",
+    domain: "computer-science",
+    label: "Tool discovery · selective schema loading",
+    definition:
+      "전체 tool schema를 매 prompt에 넣지 않고 이름·설명 index에서 후보를 찾은 뒤 선택된 signature와 policy만 program API로 load하는 방법입니다.",
+    canonicalHref: "/ai/agent-code-mode#tool-discovery",
+  },
+  "sandbox-local-intermediate-data": {
+    id: "sandbox-local-intermediate-data",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Sandbox-local intermediate data",
+    definition:
+      "Tool이 반환한 대량 row·file·response를 매번 model context로 보내지 않고 sandbox memory에서 filter·aggregate한 뒤 제한된 final result만 반환하는 data boundary입니다.",
+    canonicalHref: "/ai/agent-code-mode#code-mode-cost",
+  },
+  "code-mode-token-cost-boundary": {
+    id: "code-mode-token-cost-boundary",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Code Mode token-cost boundary",
+    definition:
+      "Program 생성·tool discovery·final result token 비용과 제거되는 반복 prompt·schema·중간 result·판단 token을 비교해 Code Mode가 이득인 조건을 판단하는 비용 경계입니다.",
+    canonicalHref: "/ai/agent-code-mode#code-mode-cost",
+  },
+  "deterministic-runtime-control-flow": {
+    id: "deterministic-runtime-control-flow",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Deterministic runtime control flow",
+    definition:
+      "Loop·branch·sort·aggregation·bounded concurrency 같은 명시적 program semantics를 매 단계 model 추론 대신 일반 runtime이 반복 가능하게 수행하는 실행 특성입니다.",
+    canonicalHref: "/ai/agent-code-mode#execution",
+  },
+  "code-mode-capability-binding": {
+    id: "code-mode-capability-binding",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Code Mode capability binding",
+    definition:
+      "Model이 만든 program에 범용 network·credential을 주지 않고 요청에 필요한 typed tool·resource·account scope만 실행 API로 연결하는 authorization 경계입니다.",
+    canonicalHref: "/ai/agent-code-mode#capability-binding",
+  },
+  "code-mode-effect-atomicity": {
+    id: "code-mode-effect-atomicity",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Code Mode effect · atomicity boundary",
+    definition:
+      "Program 한 번의 실행과 여러 외부 write의 transaction은 다르므로 부분 성공·retry·idempotency·compensation·approval을 별도 effect contract로 관리하는 경계입니다.",
+    canonicalHref: "/ai/agent-code-mode#effect-atomicity",
+  },
+  "code-mode-result-contract": {
+    id: "code-mode-result-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Code Mode result · disclosure contract",
+    definition:
+      "Sandbox가 model로 반환할 schema·row count·byte/token budget·redaction·error detail·provenance를 제한해 중간 data의 재노출과 context 폭증을 막는 출력 계약입니다.",
+    canonicalHref: "/ai/agent-code-mode#result-contract",
+  },
+  "code-mode-decision-boundary": {
+    id: "code-mode-decision-boundary",
+    kind: "method",
+    domain: "computer-science",
+    label: "Direct tool loop · Code Mode decision boundary",
+    definition:
+      "반복·분기·data volume·parallelism·각 단계의 semantic judgment·external effect 위험을 비교해 direct call·agent loop·sandbox program·deterministic workflow를 고르는 기준입니다.",
+    canonicalHref: "/ai/agent-code-mode#decision",
+  },
+  "llm-harness-system-boundary": {
+    id: "llm-harness-system-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "LLM harness system boundary",
+    definition:
+      "Model이 다음 행동을 제안하는 역할과 runtime이 권한·실행·관측·종료를 강제하는 역할을 분리해, prompt wrapper보다 넓은 실행 시스템으로 하네스를 정의하는 경계입니다.",
+    canonicalHref: "/ai/llm-harness#overview",
+  },
+  "agent-run-contract": {
+    id: "agent-run-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent run contract",
+    definition:
+      "한 run의 objective·acceptance condition·context path·capability·artifact·verifier·recovery를 시작 전에 식별 가능한 명세로 고정하는 실행 계약입니다.",
+    canonicalHref: "/ai/llm-harness#composition",
+  },
+  "agent-context-discovery-path": {
+    id: "agent-context-discovery-path",
+    kind: "method",
+    domain: "computer-science",
+    label: "Agent context discovery path",
+    definition:
+      "모든 지식을 한 prompt에 복제하지 않고 짧은 진입 문서에서 task별 정본·상세 문서·현재 artifact를 필요할 때 찾아가게 하는 계층적 context 경로입니다.",
+    canonicalHref: "/ai/llm-harness#composition",
+  },
+  "agent-capability-runtime-boundary": {
+    id: "agent-capability-runtime-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent capability · runtime boundary",
+    definition:
+      "Model이 tool schema를 생성할 수 있는 능력과 runtime이 특정 identity·resource·operation을 실제로 허용하는 권한을 구분하는 실행 경계입니다.",
+    canonicalHref: "/ai/llm-harness#composition",
+  },
+  "agent-artifact-state-continuity": {
+    id: "agent-artifact-state-continuity",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Agent artifact · state continuity",
+    definition:
+      "대화 기록 대신 plan·결정·산출물·검증 evidence·미완료 항목을 versioned artifact에 남겨 process·session·agent가 바뀌어도 run을 이어 가게 하는 상태 계약입니다.",
+    canonicalHref: "/ai/llm-harness#composition",
+  },
+  "layered-agent-verification": {
+    id: "layered-agent-verification",
+    kind: "method",
+    domain: "computer-science",
+    label: "Layered agent verification",
+    definition:
+      "Compiler·test·schema 같은 결정적 검사부터 환경 oracle, rubric judge, 사람 검토 순으로 불확실성과 위험에 맞춰 검증 수단을 쌓는 방법입니다.",
+    canonicalHref: "/ai/llm-harness#evaluation",
+  },
+  "agent-trajectory-effect-evaluation": {
+    id: "agent-trajectory-effect-evaluation",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Agent artifact · trajectory · effect evaluation",
+    definition:
+      "최종 산출물의 품질뿐 아니라 사용한 경로·권한·외부 side effect·비용·복구 결과를 서로 다른 판정 항으로 유지하는 end-to-end 평가 계약입니다.",
+    canonicalHref: "/ai/llm-harness#evaluation",
+  },
+  "harness-failure-layer-ablation": {
+    id: "harness-failure-layer-ablation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Harness failure-layer ablation",
+    definition:
+      "재현 trace를 objective·context·tool schema·capability·verifier·recovery 실패로 분류하고 후보 장치를 하나씩 바꾸거나 제거해 실제 기여와 회귀를 측정하는 개선 방법입니다.",
+    canonicalHref: "/ai/llm-harness#iteration",
+  },
+  "workflow-agent-checkpoint-boundary": {
+    id: "workflow-agent-checkpoint-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Workflow · agent loop · checkpoint boundary",
+    definition:
+      "경로가 고정된 단계는 workflow, 의미 탐색은 agent loop, 되돌리기 어려운 상태 전이는 deterministic checkpoint와 승인으로 나누는 제어 흐름 경계입니다.",
+    canonicalHref: "/ai/llm-harness#patterns",
+  },
+  "loop-timescale-authority-separation": {
+    id: "loop-timescale-authority-separation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Loop timescale · authority separation",
+    definition:
+      "한 run 안의 행동·검증 loop와 여러 production run을 보고 하네스를 바꾸는 개선 loop의 주기·표본·승인 권한을 분리해 feedback 오염을 막는 운영 경계입니다.",
+    canonicalHref: "/ai/llm-harness#patterns",
+  },
+  "llm-inference-context-state": {
+    id: "llm-inference-context-state",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "LLM inference context state",
+    definition:
+      "한 번의 generation에서 model이 실제로 읽는 system instruction·user request·examples·retrieved data·message/tool history의 token 집합이며 model weight나 외부 저장소 자체와 구분됩니다.",
+    canonicalHref: "/ai/context-engineering#overview",
+  },
+  "context-curation-lifecycle": {
+    id: "context-curation-lifecycle",
+    kind: "method",
+    domain: "computer-science",
+    label: "Context selection · injection · compaction · isolation",
+    definition:
+      "가능한 정보 전체에서 현재 run에 필요한 항목을 고르고, source와 우선순위를 보존해 주입하며, 오래된 상태를 압축하고 서로 오염되면 안 되는 범위를 격리하는 lifecycle입니다.",
+    canonicalHref: "/ai/context-engineering#overview",
+  },
+  "instruction-data-enforcement-boundary": {
+    id: "instruction-data-enforcement-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Instruction · data · enforcement boundary",
+    definition:
+      "Model에 행동 원칙을 전달하는 instruction, 인용·분석할 untrusted data, 실제 권한·schema·policy를 강제하는 application control을 서로 다른 계층으로 유지하는 경계입니다.",
+    canonicalHref: "/ai/context-engineering#system-prompt",
+  },
+  "context-source-provenance-freshness": {
+    id: "context-source-provenance-freshness",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Context provenance · freshness",
+    definition:
+      "Context fragment마다 원본 identity·version·retrieval time·validity interval·trust level을 남겨 오래되거나 충돌한 정보를 다음 판단의 정본으로 오인하지 않게 하는 계약입니다.",
+    canonicalHref: "/ai/context-engineering#rag",
+  },
+  "working-state-long-term-memory-boundary": {
+    id: "working-state-long-term-memory-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Working state · long-term memory boundary",
+    definition:
+      "현재 goal·plan·recent evidence처럼 run 종료와 함께 폐기할 상태와 여러 session에서 재사용할 동의된 사실·preference·procedure를 수명·source·삭제 정책으로 분리하는 경계입니다.",
+    canonicalHref: "/ai/context-engineering#memory",
+  },
+  "context-compaction-fidelity": {
+    id: "context-compaction-fidelity",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Context compaction state fidelity",
+    definition:
+      "긴 history를 줄인 뒤에도 현재 objective·결정 이유·unresolved issue·artifact identity·next action처럼 이후 행동을 바꾸는 상태가 보존되는지 원 trace와 replay로 확인하는 계약입니다.",
+    canonicalHref: "/ai/context-engineering#memory",
+  },
+  "context-token-budget-allocation": {
+    id: "context-token-budget-allocation",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Context token-budget allocation",
+    definition:
+      "Model limit에서 output reserve를 먼저 확보하고 instruction·task·retrieval·history·tool result가 사용하는 token을 source별로 합산해 선택·축약·거부 시점을 정하는 장부입니다.",
+    canonicalHref: "/ai/context-engineering#optimization",
+  },
+  "lost-in-middle-position-evaluation": {
+    id: "lost-in-middle-position-evaluation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Lost-in-the-middle position evaluation",
+    definition:
+      "같은 relevant evidence와 distractor를 유지한 채 evidence 위치·context length·질문 유형을 바꿔 long-context utilization의 위치 민감도를 측정하는 평가 방법입니다.",
+    canonicalHref: "/ai/context-engineering#optimization",
+  },
+  "stable-prefix-cache-boundary": {
+    id: "stable-prefix-cache-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Stable-prefix prompt-cache boundary",
+    definition:
+      "반복되는 동일 prefix의 prefill 계산 재사용과 context 의미·freshness·output correctness를 분리해, cache identity·provider 조건·invalidation을 관리하는 경계입니다.",
+    canonicalHref: "/ai/context-engineering#optimization",
+  },
+  "agent-observation-action-loop": {
+    id: "agent-observation-action-loop",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent state · action · observation loop",
+    definition:
+      "Model이 현재 observable state에서 action을 제안하고 runtime이 실행한 typed observation으로 state를 갱신해 다음 decision을 만드는 반복 실행 단위입니다.",
+    canonicalHref: "/ai/agentic-patterns#overview",
+  },
+  "typed-tool-observation-contract": {
+    id: "typed-tool-observation-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Typed tool observation contract",
+    definition:
+      "Tool 결과에 success/error·payload schema·source·timestamp·truncation·effect receipt를 명시해 다음 decision이 실패와 빈 결과를 구분하게 하는 관찰 계약입니다.",
+    canonicalHref: "/ai/agentic-patterns#react",
+  },
+  "agent-exit-state-machine": {
+    id: "agent-exit-state-machine",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent exit-state machine",
+    definition:
+      "Verifier pass·budget exhaustion·repeated action·fatal tool error·approval wait·human escalation을 서로 다른 terminal state로 두어 model의 완료 주장만으로 loop를 끝내지 않는 계약입니다.",
+    canonicalHref: "/ai/agentic-patterns#react",
+  },
+  "agent-framework-runtime-boundary": {
+    id: "agent-framework-runtime-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Direct agent loop · framework runtime boundary",
+    definition:
+      "직접 SDK와 작은 tool loop로 충분한 경우와 persistence·interrupt·parallel state merge·관측성 같은 공통 실행 기능을 framework runtime에 맡길 경우를 요구사항과 운영 비용으로 구분하는 경계입니다.",
+    canonicalHref: "/ai/agent-frameworks#overview",
+  },
+  "durable-agent-execution-state": {
+    id: "durable-agent-execution-state",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Durable agent execution state",
+    definition:
+      "Process가 종료되거나 사람이 오래 뒤에 응답해도 같은 run을 이어 갈 수 있도록 graph position·state values·pending work·version metadata를 durable storage에 보존하는 실행 상태입니다.",
+    canonicalHref: "/ai/agent-frameworks#langchain",
+  },
+  "checkpoint-replay-boundary": {
+    id: "checkpoint-replay-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Checkpoint · replay boundary",
+    definition:
+      "Checkpoint는 재개 가능한 state snapshot이고 replay는 snapshot 이후의 transition을 다시 실행하는 동작이므로, 계산 재현과 외부 side effect 중복을 별도 정책으로 다루는 경계입니다.",
+    canonicalHref: "/ai/agent-frameworks#langchain",
+  },
+  "interrupt-resume-contract": {
+    id: "interrupt-resume-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Interrupt · resume contract",
+    definition:
+      "승인·추가 입력·외부 사건을 기다릴 때 run identity와 승인 대상 payload를 보존하고, 검증된 resume input으로 동일 논리 지점에서 실행을 이어 가는 계약입니다.",
+    canonicalHref: "/ai/agent-frameworks#langchain",
+  },
+  "framework-capability-requirement-matrix": {
+    id: "framework-capability-requirement-matrix",
+    kind: "method",
+    domain: "computer-science",
+    label: "Agent framework capability · requirement matrix",
+    definition:
+      "유명도 대신 state model·persistence·interrupt·multi-agent·data integration·deployment·observability·version 조건을 workload의 필수·선호 요구사항과 대조해 후보를 평가하는 방법입니다.",
+    canonicalHref: "/ai/agent-frameworks#comparison",
+  },
+  "framework-version-migration-contract": {
+    id: "framework-version-migration-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Agent framework version migration contract",
+    definition:
+      "Framework·serializer·state schema·checkpointer·model·tool version을 함께 기록하고 기존 checkpoint의 호환성·paired evaluation·canary·rollback을 승인 조건으로 두는 이관 계약입니다.",
+    canonicalHref: "/ai/agent-frameworks#comparison",
+  },
+  "executable-plan-state": {
+    id: "executable-plan-state",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Executable plan state",
+    definition:
+      "Task마다 dependency·owner·input/output artifact·status·completion evidence를 가진 versioned graph로 plan을 표현해 실행과 재개가 가능하게 하는 상태입니다.",
+    canonicalHref: "/ai/agentic-patterns#plan-execute",
+  },
+  "evidence-driven-replanning": {
+    id: "evidence-driven-replanning",
+    kind: "method",
+    domain: "computer-science",
+    label: "Evidence-driven replanning",
+    definition:
+      "새 observation이 가정을 깨면 영향받은 task와 downstream dependency만 다시 pending으로 만들고 검증된 immutable artifact는 보존하는 plan transition입니다.",
+    canonicalHref: "/ai/agentic-patterns#plan-execute",
+  },
+  "feedback-grounded-reflection": {
+    id: "feedback-grounded-reflection",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Feedback-grounded reflection",
+    definition:
+      "Compiler·test·environment·rubric·human feedback에서 관측한 실패를 원인·수정 대상·재검증 조건이 있는 언어적 reflection으로 바꿔 다음 trial에 사용하는 방법입니다.",
+    canonicalHref: "/ai/agentic-patterns#plan-execute",
+  },
+  "agent-delegation-artifact-ownership": {
+    id: "agent-delegation-artifact-ownership",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Agent delegation · artifact ownership",
+    definition:
+      "Delegate의 objective·input snapshot·capability·output schema·deadline·verification과 공유 artifact의 writer/merge rule을 함께 고정하는 위임 계약입니다.",
+    canonicalHref: "/ai/agentic-patterns#multi-agent",
+  },
+  "manager-handoff-state-ownership": {
+    id: "manager-handoff-state-ownership",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Manager · handoff state ownership",
+    definition:
+      "중앙 manager가 user-facing state와 final answer를 계속 소유하는 방식과 specialist에게 대화·실행 state를 넘기는 handoff를 명시적으로 구분하는 orchestration 경계입니다.",
+    canonicalHref: "/ai/agentic-patterns#multi-agent",
+  },
+  "hook-skill-guardrail-verifier-boundary": {
+    id: "hook-skill-guardrail-verifier-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Hook · skill · guardrail · verifier boundary",
+    definition:
+      "Runtime event에 반드시 실행되는 hook, 필요할 때 읽는 skill, 정책 위반을 차단하는 guardrail, artifact acceptance를 판정하는 verifier의 시점과 권한을 분리하는 경계입니다.",
+    canonicalHref: "/ai/agentic-patterns#hooks-skills",
+  },
+  "agent-skill-authoring-boundary": {
+    id: "agent-skill-authoring-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent Skill authoring boundary",
+    definition:
+      "반복 작업의 절차·참고 자료·선택적 script를 재사용 가능한 workflow로 묶되, 실제 capability를 제공하는 tool과 설치·배포 단위인 plugin은 분리하는 작성 경계입니다.",
+    canonicalHref: "/ai/skills-anatomy#overview",
+  },
+  "skill-trigger-metadata-contract": {
+    id: "skill-trigger-metadata-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Skill trigger metadata contract",
+    definition:
+      "SKILL.md의 name과 description이 skill의 정체성과 적용·비적용 범위를 짧게 드러내어 host가 본문을 읽기 전에 후보를 고를 수 있게 하는 routing 계약입니다.",
+    canonicalHref: "/ai/skills-anatomy#format",
+  },
+  "skill-resource-layout": {
+    id: "skill-resource-layout",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Skill resource layout",
+    definition:
+      "필수 SKILL.md와 선택적 scripts·references·assets·product metadata를 역할별로 나누어 instruction과 실행 code, 근거, template의 수명과 로딩 시점을 분리한 directory 구조입니다.",
+    canonicalHref: "/ai/skills-anatomy#format",
+  },
+  "skill-progressive-disclosure": {
+    id: "skill-progressive-disclosure",
+    kind: "method",
+    domain: "computer-science",
+    label: "Skill progressive disclosure",
+    definition:
+      "처음에는 skill의 name·description·path 같은 작은 index만 노출하고, 선택된 뒤 SKILL.md 전체와 실제 작업에 필요한 reference만 단계적으로 읽는 context 관리 방식입니다.",
+    canonicalHref: "/ai/skills-anatomy#loading",
+  },
+  "skill-invocation-routing": {
+    id: "skill-invocation-routing",
+    kind: "method",
+    domain: "computer-science",
+    label: "Explicit · implicit skill invocation",
+    definition:
+      "사용자가 skill을 직접 지정하는 explicit invocation과 요청이 description의 범위에 맞을 때 host가 선택하는 implicit invocation을 구분한 활성화 경로입니다.",
+    canonicalHref: "/ai/skills-anatomy#loading",
+  },
+  "skill-permission-non-escalation": {
+    id: "skill-permission-non-escalation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Skill permission non-escalation",
+    definition:
+      "Skill instruction이 새로운 runtime 권한을 만들어 내지 않으며 tool call·file write·external effect가 host의 기존 permission·approval·sandbox 경계를 그대로 따라야 한다는 보안 원칙입니다.",
+    canonicalHref: "/ai/skills-anatomy#execution",
+  },
+  "skill-trigger-evaluation": {
+    id: "skill-trigger-evaluation",
+    kind: "metric",
+    domain: "statistics",
+    label: "Skill trigger precision · recall",
+    definition:
+      "적용해야 할 요청과 적용하지 말아야 할 요청의 label을 두고 skill 선택의 false positive·false negative를 precision·recall로 분리해 측정하는 routing 평가입니다.",
+    canonicalHref: "/ai/skills-anatomy#execution",
+  },
+  "skill-scope-discovery": {
+    id: "skill-scope-discovery",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Skill scope · discovery path",
+    definition:
+      "현재 작업 위치에서 repository root까지의 project scope와 user·admin·system 위치를 탐색하여 어떤 skill 후보가 현재 session에 보이는지 정하는 발견 규칙입니다.",
+    canonicalHref: "/ai/skills-anatomy#registry",
+  },
+  "skill-plugin-distribution-boundary": {
+    id: "skill-plugin-distribution-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Local Skill · plugin distribution boundary",
+    definition:
+      "Repository·user directory에서 직접 작성하고 발견하는 local skill과 여러 skill·connector·presentation asset을 다른 사용자에게 설치시키는 plugin package의 책임을 나눈 배포 경계입니다.",
+    canonicalHref: "/ai/skills-anatomy#registry",
+  },
+  "claude-code-workspace-harness-boundary": {
+    id: "claude-code-workspace-harness-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claude Code workspace · harness boundary",
+    definition:
+      "Claude model과 terminal workspace 사이에서 project context·built-in tool·session·permission·extension·verification을 연결하는 Claude Code 제품 runtime의 책임과 model reasoning 자체를 구분하는 경계입니다.",
+    canonicalHref: "/ai/claude-code#overview",
+  },
+  "claude-code-instruction-discovery-order": {
+    id: "claude-code-instruction-discovery-order",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claude Code instruction discovery · load order",
+    definition:
+      "Managed·user·project·local CLAUDE.md와 directory hierarchy·path rule·auto memory를 scope와 시점에 따라 발견하고, ancestor는 launch 때 이어 붙이며 descendant instruction은 관련 file을 읽을 때 불러오는 제품별 context 규칙입니다.",
+    canonicalHref: "/ai/claude-code#overview",
+  },
+  "claude-code-subagent-handoff-contract": {
+    id: "claude-code-subagent-handoff-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claude Code main · subagent handoff contract",
+    definition:
+      "Main conversation이 subagent에 objective·input scope·tool authority·output·artifact·completion evidence를 넘기고 별도 context에서 수행된 결과 summary를 검증해 다시 main state에 연결하는 제품 실행 계약입니다.",
+    canonicalHref: "/ai/claude-code#agent-architecture",
+  },
+  "claude-code-permission-decision-order": {
+    id: "claude-code-permission-decision-order",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claude Code permission · hook decision order",
+    definition:
+      "Tool call에 대해 permission rule의 deny→ask→allow 우선순위와 PreToolUse hook의 decision을 결합하되 hook allow가 기존 deny·ask를 우회하지 못하게 하는 Claude Code 제품 판정 순서입니다.",
+    canonicalHref: "/ai/claude-code#tools-permissions",
+  },
+  "claude-code-hook-event-contract": {
+    id: "claude-code-hook-event-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claude Code hook event contract",
+    definition:
+      "Session·prompt·tool·subagent 등 제품 lifecycle event에서 matcher와 지원 handler type을 고르고 versioned JSON input/output·exit status·timeout·decision을 처리하는 hook 실행 계약입니다.",
+    canonicalHref: "/ai/claude-code#tools-permissions",
+  },
+  "claude-code-file-checkpoint-boundary": {
+    id: "claude-code-file-checkpoint-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claude Code direct-edit checkpoint boundary",
+    definition:
+      "Claude Code의 direct file-edit tool이 만든 file snapshot과 대화 rewind를 복구 대상으로 두되 Bash·subagent·external API·remote system effect는 checkpoint 밖에 남기는 제품 복구 경계입니다.",
+    canonicalHref: "/ai/claude-code#tools-permissions",
+  },
+  "qwen-language-consistency-failure-taxonomy": {
+    id: "qwen-language-consistency-failure-taxonomy",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Qwen Korean language-consistency failure taxonomy",
+    definition:
+      "한국어 prompt에서 final answer 일부의 예상치 못한 표기 혼용, reasoning 구간 전체의 language switch, 입력 인용을 그대로 보존한 경우, 사용자가 요구한 번역·원문 표기를 서로 다른 label로 기록하는 Qwen 적용 진단 체계입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#overview",
+  },
+  "korean-output-policy-exception-contract": {
+    id: "korean-output-policy-exception-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Korean output-policy · exception contract",
+    definition:
+      "기본 reasoning·final output은 자연스러운 한국어로 쓰되 code·수식·고유명사·검증 가능한 원문 인용과 사용자가 명시한 번역 대상은 원래 표기를 허용하는 Qwen prompt 적용 정책입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#prompt-level",
+  },
+  "smoothie-token-risk-score": {
+    id: "smoothie-token-risk-score",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Smoothie-Qwen token risk score",
+    definition:
+      "목표 Unicode range에 직접 해당하는 token에는 1, 안전 token에는 0, broken subword에는 n-gram sampling에서 목표 문자로 복원되는 비율을 배정해 후속 lm_head 보정 강도를 정하는 [0,1] 점수입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#smoothie-qwen",
+  },
+  "smoothie-lm-head-row-scaling": {
+    id: "smoothie-lm-head-row-scaling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Smoothie-Qwen risk-aware lm_head row scaling",
+    definition:
+      "Token risk r과 min_scale m·smoothness s로 m≤S(r)≤1인 scale을 계산해 해당 vocabulary row를 W′t=S(r)Wt로 바꾸는 post-hoc model editing이며 probability 자체를 S배 하는 연산과 구분됩니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#smoothie-qwen",
+  },
+  "qwen-korean-sft-rl-stage-boundary": {
+    id: "qwen-korean-sft-rl-stage-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Qwen Korean reasoning SFT · RL stage boundary",
+    definition:
+      "한국어 reasoning demonstration의 token likelihood를 높여 탐색 출발점을 만드는 SFT와, 같은 prompt의 current-policy rollout을 reward로 비교해 정확성·형식·언어 선호를 조정하는 group-relative RL의 역할을 나눈 사례 연구 경계입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#rl-approach",
+  },
+  "oracle-guided-korean-reward-contract": {
+    id: "oracle-guided-korean-reward-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Oracle-guided Korean reasoning reward contract",
+    definition:
+      "Accuracy·format·Korean consistency·overlong sub-reward의 versioned 가중합을 만들고 외부 oracle judge가 주로 accuracy checker의 false positive·false negative를 재검토하되 judge 자체도 오류 가능한 측정기로 취급하는 학습 신호 계약입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#rl-approach",
+  },
+  "korean-language-runtime-guard-calibration": {
+    id: "korean-language-runtime-guard-calibration",
+    kind: "method",
+    domain: "statistics",
+    label: "Korean language runtime-guard calibration",
+    definition:
+      "Script span·비율을 세는 deterministic checker와 예외를 해석하는 judge·사람 review를 human-labeled slice에서 calibration해 pass·retry·review threshold와 retry budget을 정하는 출력 검사 방법입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#runtime-guard",
+  },
+  "qwen-korean-paired-release-evaluation": {
+    id: "qwen-korean-paired-release-evaluation",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Qwen Korean consistency paired release evaluation",
+    definition:
+      "같은 Qwen base·tokenizer·prompt·sampling·labeled request에서 intervention 전후의 reasoning/final mismatch, 정상 중국어 번역 보존, task quality, latency·cost를 짝지어 비교하고 canary·rollback을 결정하는 release 평가 계약입니다.",
+    canonicalHref: "/ai/qwen-korean-consistency#decision-matrix",
+  },
+  "openclaw-inbound-gateway-event-envelope": {
+    id: "openclaw-inbound-gateway-event-envelope",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "OpenClaw inbound · Gateway event envelope",
+    definition:
+      "Channel·WebChat·cron·webhook에서 들어온 요청을 Gateway가 source channel·account·peer·thread·sender와 reply-route metadata가 있는 event로 받아 schema를 확인하고 다음 routing 단계에 넘기는 제품별 입력 경계입니다.",
+    canonicalHref: "/ai/openclaw-assistant#overview",
+  },
+  "openclaw-binding-agent-selection-order": {
+    id: "openclaw-binding-agent-selection-order",
+    kind: "concept",
+    domain: "computer-science",
+    label: "OpenClaw binding · agent selection order",
+    definition:
+      "이미 channel의 pairing·allowlist·account policy를 통과한 message에 대해 channel·account·peer·guild·team·role의 구체성을 비교하고 같은 tier에서는 config 순서로 binding을 골라 agentId와 workspace를 결정하는 routing 규칙입니다.",
+    canonicalHref: "/ai/openclaw-assistant#routing-sessions",
+  },
+  "openclaw-session-key-scope-boundary": {
+    id: "openclaw-session-key-scope-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "OpenClaw session-key · isolation boundary",
+    definition:
+      "선택된 agent와 inbound source에서 DM·group·room·cron·webhook의 conversation state를 찾는 session key를 만들고 dmScope로 peer·channel·account 분리 수준을 정하되, 이 key를 인증 token이나 적대적 tenant 격리로 오인하지 않는 제품 경계입니다.",
+    canonicalHref: "/ai/openclaw-assistant#routing-sessions",
+  },
+  "openclaw-provider-model-runtime-resolution": {
+    id: "openclaw-provider-model-runtime-resolution",
+    kind: "concept",
+    domain: "computer-science",
+    label: "OpenClaw provider · model · runtime resolution",
+    definition:
+      "Agent config와 현재 auth/catalog snapshot에서 provider와 model route를 먼저 확정한 뒤 model-scoped·provider-scoped runtime policy와 plugin claim을 평가해 harness를 선택하는 해석 순서입니다. Explicit runtime 실패는 OpenClaw로 조용히 우회하지 않으며, runtime을 지정하지 않았거나 `auto`인 OpenAI model은 현재 Codex harness를 고르는 제품별 예외까지 설치 version과 함께 확인합니다.",
+    canonicalHref: "/ai/openclaw-assistant#runtime-resources",
+  },
+  "openclaw-agent-harness-execution-boundary": {
+    id: "openclaw-agent-harness-execution-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "OpenClaw agent runtime · harness boundary",
+    definition:
+      "Built-in `openclaw` 또는 plugin runtime이 provider stream·model turn·tool loop·context lifecycle을 실행하는 책임과 Gateway의 channel routing·reply delivery를 분리하고, legacy `pi` 및 `runEmbeddedPiAgent(...)`를 새 config·code에서 쓰지 않는 migration 경계입니다.",
+    canonicalHref: "/ai/openclaw-assistant#runtime-resources",
+  },
+  "openclaw-resource-discovery-loading-contract": {
+    id: "openclaw-resource-discovery-loading-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "OpenClaw tool · skill · resource loading contract",
+    definition:
+      "Agent runtime generation과 workspace에서 extension·tool·Skill·prompt·theme의 manifest 또는 conventional directory·scope·eligibility를 확인해 보일 resource를 만들고, instruction bundle과 실행 capability·secret injection을 분리하는 제품별 로딩 계약입니다. Eligible Skill 목록은 session이 시작될 때 snapshot으로 만들어 turn 사이에 재사용되며 watcher·config·node 상태 변화는 다음 turn의 refresh 경계에서 반영됩니다.",
+    canonicalHref: "/ai/openclaw-assistant#runtime-resources",
+  },
+  "openclaw-tool-policy-sandbox-elevated-boundary": {
+    id: "openclaw-tool-policy-sandbox-elevated-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "OpenClaw tool policy · sandbox · elevated boundary",
+    definition:
+      "Tool allow/deny가 호출 가능 여부를 먼저 결정하고 sandbox mode·scope·backend가 허용된 tool의 실행 위치를 제한하며, `tools.elevated`는 명시적으로 host/node escape path를 택한다는 세 판정과 Gateway host process를 구분하는 보안 경계입니다.",
+    canonicalHref: "/ai/openclaw-assistant#security-reply",
+  },
+  "openclaw-reply-route-idempotency-contract": {
+    id: "openclaw-reply-route-idempotency-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "OpenClaw reply-route · idempotency contract",
+    definition:
+      "Agent run의 final·error·approval-wait 상태를 원 channel·account·peer·thread 또는 명시적으로 dock된 route로 전달하고, side-effecting send·agent request에는 stable idempotency key를 연결하는 전달 계약입니다. Outbound delivery는 ack·dead-letter·reconciliation을 거쳐 `sent`·`failed`·`unknown`의 durable terminal state로 남기되 activity audit은 bounded/best-effort임을 밝히고, reconnect 전에 거절된 pending request는 자동 replay하지 않습니다.",
+    canonicalHref: "/ai/openclaw-assistant#security-reply",
+  },
+  "prompt-input-contract": {
+    id: "prompt-input-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prompt input contract",
+    definition:
+      "한 model request에서 objective·audience·input·evidence·constraints·output schema·abstention·completion criteria를 분리해 적고 downstream consumer가 기대하는 동작을 명시한 입력 계약입니다.",
+    canonicalHref: "/ai/prompt-engineering#overview",
+  },
+  "prompt-instruction-evidence-boundary": {
+    id: "prompt-instruction-evidence-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prompt instruction · evidence boundary",
+    definition:
+      "해야 할 일을 지시하는 instruction과 판단에 사용할 data·quotation·retrieved evidence를 label과 delimiter로 구분해 evidence 안의 문장을 상위 지시로 오인하지 않게 하는 message 경계입니다.",
+    canonicalHref: "/ai/prompt-engineering#overview",
+  },
+  "prompt-completion-verification-contract": {
+    id: "prompt-completion-verification-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prompt completion · verification contract",
+    definition:
+      "산출물이 갖춰야 할 field·근거·허용 오차·거부 조건을 먼저 정의하고 schema·test·rubric·human review가 무엇을 판정할지 연결한 완료 계약입니다.",
+    canonicalHref: "/ai/prompt-engineering#overview",
+  },
+  "in-context-learning-demonstration": {
+    id: "in-context-learning-demonstration",
+    kind: "method",
+    domain: "machine-learning",
+    label: "In-context learning · demonstration",
+    definition:
+      "Model weight를 update하지 않고 현재 input context의 instruction과 example에서 task·label·format pattern을 조건부로 추론해 completion behavior를 바꾸는 사용 방식입니다.",
+    canonicalHref: "/ai/prompt-engineering#few-shot",
+  },
+  "prompt-zero-few-shot-boundary": {
+    id: "prompt-zero-few-shot-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Zero-shot · few-shot prompt boundary",
+    definition:
+      "자연어 instruction만 주는 zero-shot과 입력·출력 demonstration을 함께 주는 few-shot을 구분하고 example token cost·변경 속도·재현성·fine-tuning 필요성을 비교하는 선택 경계입니다.",
+    canonicalHref: "/ai/prompt-engineering#few-shot",
+  },
+  "chain-of-thought-elicitation": {
+    id: "chain-of-thought-elicitation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Chain-of-thought elicitation",
+    definition:
+      "산술·상식·symbolic reasoning task에서 최종 answer 전에 intermediate reasoning sequence를 생성하도록 instruction이나 worked demonstration으로 유도하는 prompting 계열입니다.",
+    canonicalHref: "/ai/prompt-engineering#chain-of-thought",
+  },
+  "chain-of-thought-faithfulness-boundary": {
+    id: "chain-of-thought-faithfulness-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Chain-of-thought faithfulness boundary",
+    definition:
+      "Model이 출력한 자연어 reasoning이 answer와 함께 생성된 explanation이지 실제 내부 계산의 완전한 causal trace나 truth certificate로 자동 인정되지 않는 해석 경계입니다.",
+    canonicalHref: "/ai/prompt-engineering#chain-of-thought",
+  },
+  "self-consistency-answer-marginalization": {
+    id: "self-consistency-answer-marginalization",
+    kind: "method",
+    domain: "statistics",
+    label: "Self-consistency answer marginalization",
+    definition:
+      "같은 question에서 여러 reasoning path와 answer를 sampling하고 answer별 sample frequency를 합산해 가장 많이 지지된 answer를 고르는 decoding estimator입니다.",
+    canonicalHref: "/ai/prompt-engineering#chain-of-thought",
+  },
+  "prompt-structured-output-contract": {
+    id: "prompt-structured-output-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Prompt structured-output contract",
+    definition:
+      "Downstream consumer에 맞춰 field·type·enum·null·additional property·error representation을 schema로 정하고 syntax validation과 domain semantic validation을 분리한 출력 계약입니다.",
+    canonicalHref: "/ai/prompt-engineering#structured-output",
+  },
+  "demonstration-selection-order-sensitivity": {
+    id: "demonstration-selection-order-sensitivity",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Demonstration selection · order sensitivity",
+    definition:
+      "Few-shot prediction이 example의 relevance·coverage·label balance·format뿐 아니라 ordering과 recency에 따라 바뀔 수 있어 permutation·subset·hard-boundary test가 필요한 민감도입니다.",
+    canonicalHref: "/ai/prompt-engineering#few-shot",
+  },
+  "prompt-evaluation-regression-loop": {
+    id: "prompt-evaluation-regression-loop",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Prompt evaluation · regression loop",
+    definition:
+      "실패 trace를 versioned eval case로 고정하고 prompt·model·decoding을 한 번에 하나씩 바꾸며 task quality·constraint violation·latency·token cost를 같은 slice에서 비교하는 개선 loop입니다.",
+    canonicalHref: "/ai/prompt-engineering#anti-patterns",
+  },
+  "prompt-model-version-portability": {
+    id: "prompt-model-version-portability",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Prompt · model version portability",
+    definition:
+      "한 model·snapshot·chat template·decoding setting에서 잘 작동한 prompt가 다른 runtime에서도 같은 behavior를 보장하지 않으므로 versioned regression과 canary가 필요하다는 이식성 경계입니다.",
+    canonicalHref: "/ai/prompt-engineering#anti-patterns",
+  },
+  "xml-prompt-delimiter-boundary": {
+    id: "xml-prompt-delimiter-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML prompt delimiter boundary",
+    definition:
+      "긴 model input에서 instruction·context·example·variable input을 의미 있는 start/end tag로 구획하되, 이 표기가 message priority나 runtime authorization을 새로 만들지는 않는다는 경계입니다.",
+    canonicalHref: "/ai/xml-prompting#overview",
+  },
+  "xml-prompt-role-tag-vocabulary": {
+    id: "xml-prompt-role-tag-vocabulary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML prompt role-tag vocabulary",
+    definition:
+      "표준 태그 목록을 외우는 대신 task의 실제 data model에 맞춰 instructions·documents·document·source·content·output_contract처럼 일관된 역할 이름을 정하는 설계 원칙입니다.",
+    canonicalHref: "/ai/xml-prompting#basic-tags",
+  },
+  "xml-well-formedness-nesting": {
+    id: "xml-well-formedness-nesting",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML well-formedness · proper nesting",
+    definition:
+      "하나의 root element 아래 start/end tag가 서로 교차하지 않고 올바르게 중첩되며 attribute와 character data가 XML 문법을 따르는 최소 구조 조건입니다.",
+    canonicalHref: "/ai/xml-prompting#basic-tags",
+  },
+  "xml-character-data-escaping": {
+    id: "xml-character-data-escaping",
+    kind: "method",
+    domain: "computer-science",
+    label: "XML character-data escaping",
+    definition:
+      "외부 text의 &, <, >와 attribute quote 같은 문자를 entity reference로 직렬화해 user data가 prompt template의 tag 구조를 조기에 닫거나 새 markup으로 해석되지 않게 하는 처리입니다.",
+    canonicalHref: "/ai/xml-prompting#basic-tags",
+  },
+  "xml-repeated-record-identity": {
+    id: "xml-repeated-record-identity",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML repeated-record identity",
+    definition:
+      "여러 document·example을 parent collection 아래 반복하고 안정적인 id·source metadata를 붙여 model output의 citation과 application-side lookup이 같은 record를 가리키게 하는 구조입니다.",
+    canonicalHref: "/ai/xml-prompting#advanced-tags",
+  },
+  "xml-prompt-structure-runtime-boundary": {
+    id: "xml-prompt-structure-runtime-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML structure · runtime boundary",
+    definition:
+      "XML tag는 model이 읽는 input structure만 나타내며 조건 분기·반복·tool permission·side effect·retry를 결정적으로 실행하는 책임은 application code와 runtime에 남는다는 경계입니다.",
+    canonicalHref: "/ai/xml-prompting#advanced-tags",
+  },
+  "xml-output-parser-validator-pipeline": {
+    id: "xml-output-parser-validator-pipeline",
+    kind: "method",
+    domain: "computer-science",
+    label: "XML output parser · validator pipeline",
+    definition:
+      "Model output을 regex로 부분 추출하지 않고 크기 제한과 hardened parser를 거쳐 well-formedness·allowlisted structure·domain semantics·policy를 순서대로 검사하고 typed result 또는 명시적 error로 바꾸는 처리 경로입니다.",
+    canonicalHref: "/ai/xml-prompting#parsing",
+  },
+  "xml-wellformed-valid-semantic-boundary": {
+    id: "xml-wellformed-valid-semantic-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML well-formed · valid · semantic boundary",
+    definition:
+      "Tag 문법이 맞는 well-formed XML, 선언된 schema/DTD 규칙을 만족하는 valid XML, 그리고 business rule과 evidence policy가 맞는 semantic validity를 서로 다른 판정 단계로 구분합니다.",
+    canonicalHref: "/ai/xml-prompting#parsing",
+  },
+  "xml-external-entity-security-boundary": {
+    id: "xml-external-entity-security-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "XML external-entity security boundary",
+    definition:
+      "Untrusted XML을 parse할 때 DOCTYPE·external entity·external DTD·XInclude·무제한 entity expansion을 허용하면 file disclosure·SSRF·resource exhaustion으로 이어질 수 있어 parser별로 명시적으로 차단해야 하는 보안 경계입니다.",
+    canonicalHref: "/ai/xml-prompting#parsing",
+  },
+  "xml-prompt-format-selection-evaluation": {
+    id: "xml-prompt-format-selection-evaluation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Prompt format selection · evaluation",
+    definition:
+      "Plain delimiter·Markdown·XML-like tags·JSON·native structured output을 동일 model·task·dataset·decoding에서 비교하고 quality·structure compliance·latency·token cost·security failure를 함께 측정하는 선택 절차입니다.",
+    canonicalHref: "/ai/xml-prompting#best-practices",
+  },
+  "mcp-integration-protocol-boundary": {
+    id: "mcp-integration-protocol-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP integration protocol boundary",
+    definition:
+      "AI host와 외부 service가 기능 발견·호출·결과를 공통 message contract로 교환하되 domain authorization·business semantics·sandbox를 protocol 자체의 보장과 분리하는 통합 경계입니다.",
+    canonicalHref: "/ai/mcp-protocol#overview",
+  },
+  "mcp-host-client-server-boundary": {
+    id: "mcp-host-client-server-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP host · client · server boundary",
+    definition:
+      "사용자 경험·model·정책을 소유하는 host, server별 protocol 연결을 담당하는 client, 좁은 domain capability를 제공하는 server의 책임을 분리한 architecture입니다.",
+    canonicalHref: "/ai/mcp-protocol#architecture",
+  },
+  "mcp-stateless-request-envelope": {
+    id: "mcp-stateless-request-envelope",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP stateless request envelope",
+    definition:
+      "2026-07-28 core에서 protocol version·client capability·client information을 요청의 _meta에 싣고 server가 이전 initialize session 없이 각 요청을 독립적으로 해석하게 한 message 계약입니다.",
+    canonicalHref: "/ai/mcp-protocol#architecture",
+  },
+  "mcp-version-capability-discovery": {
+    id: "mcp-version-capability-discovery",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "MCP version · capability discovery",
+    definition:
+      "Client가 요청별 metadata와 선택적 server/discover로 상대의 protocol version·capability·serverInfo를 확인하되 self-reported metadata를 보안 신원으로 사용하지 않는 negotiation 방식입니다.",
+    canonicalHref: "/ai/mcp-protocol#architecture",
+  },
+  "mcp-explicit-application-handle": {
+    id: "mcp-explicit-application-handle",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP explicit application handle",
+    definition:
+      "Protocol session에 숨겨 두던 state 대신 cursor·subscription·server가 발급한 opaque handle처럼 resource의 수명과 소유를 message에 명시해 후속 요청이 참조하도록 하는 상태 표현입니다.",
+    canonicalHref: "/ai/mcp-protocol#architecture",
+  },
+  "mcp-tool-resource-prompt-boundary": {
+    id: "mcp-tool-resource-prompt-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "MCP Tool · Resource · Prompt boundary",
+    definition:
+      "인자를 받아 동작하는 Tool, URI로 식별해 읽는 context인 Resource, 사용자가 선택하는 재사용 message template인 Prompt를 control과 side effect에 따라 구분한 primitive 경계입니다.",
+    canonicalHref: "/ai/mcp-protocol#primitives",
+  },
+  "mcp-json-schema-result-contract": {
+    id: "mcp-json-schema-result-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "MCP JSON Schema · result contract",
+    definition:
+      "JSON Schema 2020-12 inputSchema·outputSchema와 structuredContent·resultType을 함께 사용해 요청과 complete·input_required 결과를 검증하고, complete 안의 isError를 protocol error와 구분하는 계약입니다.",
+    canonicalHref: "/ai/mcp-protocol#primitives",
+  },
+  "mcp-list-cache-contract": {
+    id: "mcp-list-cache-contract",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP list cache contract",
+    definition:
+      "Tool·Resource·Prompt 목록을 deterministic order로 반환하고 ttlMs·cacheScope로 재사용 범위를 알리되 권한·tenant·version 변화에 맞춰 무효화하는 discovery cache 계약입니다.",
+    canonicalHref: "/ai/mcp-protocol#primitives",
+  },
+  "mcp-stdio-streamable-http-boundary": {
+    id: "mcp-stdio-streamable-http-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP stdio · Streamable HTTP boundary",
+    definition:
+      "한 host가 관리하는 local subprocess의 stdin/stdout stream과 원격 endpoint에 POST해 JSON 또는 request-scoped SSE로 응답받는 transport의 배포·인증·관측 책임을 구분합니다.",
+    canonicalHref: "/ai/mcp-protocol#transport",
+  },
+  "mcp-header-routing-integrity": {
+    id: "mcp-header-routing-integrity",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP HTTP header routing integrity",
+    definition:
+      "Streamable HTTP의 MCP-Protocol-Version·Mcp-Method·Mcp-Name header와 JSON-RPC body를 일치시켜 gateway가 body를 전부 읽기 전에도 route·policy를 적용하고 mismatch를 거부하게 하는 무결성 계약입니다.",
+    canonicalHref: "/ai/mcp-protocol#transport",
+  },
+  "mcp-mrtr-input-required": {
+    id: "mcp-mrtr-input-required",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "MCP multi-round tool result · input_required",
+    definition:
+      "Tool이 중간에 resultType=input_required와 입력 요청을 반환하고 client가 inputResponses를 포함해 같은 논리 작업을 다시 호출하여 사용자 추가 입력을 명시적으로 이어가는 multi-round protocol입니다.",
+    canonicalHref: "/ai/mcp-protocol#transport",
+  },
+  "mcp-request-cancellation-subscription-boundary": {
+    id: "mcp-request-cancellation-subscription-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP request cancellation · subscription boundary",
+    definition:
+      "진행 중 요청의 계산을 중단하는 cancellation과 독립된 변경 event를 받기 위한 subscriptions/listen을 수명·channel·재연결 의미에 따라 분리한 비동기 경계입니다.",
+    canonicalHref: "/ai/mcp-protocol#transport",
+  },
+  "mcp-authorization-trust-boundary": {
+    id: "mcp-authorization-trust-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP authorization · trust boundary",
+    definition:
+      "Discovery metadata와 model의 tool 제안을 신뢰 증명이나 실행 권한으로 간주하지 않고 host consent·OAuth token audience·server-side authorization·tenant isolation을 실제 enforcement로 두는 보안 경계입니다.",
+    canonicalHref: "/ai/mcp-protocol#implementation",
+  },
+  "mcp-extension-deprecation-lifecycle": {
+    id: "mcp-extension-deprecation-lifecycle",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP extension · deprecation lifecycle",
+    definition:
+      "작은 stateless core 밖의 기능을 opt-in extension으로 협상하고, deprecated 기능은 명시된 호환 기간과 protocol revision을 따라 격리·제거하는 진화 계약입니다.",
+    canonicalHref: "/ai/mcp-protocol#implementation",
+  },
+  "mcp-retry-idempotency-boundary": {
+    id: "mcp-retry-idempotency-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "MCP retry · idempotency boundary",
+    definition:
+      "Transport 응답을 받지 못했다는 사실과 server가 동작을 실행하지 않았다는 사실을 구분하고 operation key·effect receipt·조회 경로로 중복 side effect를 막는 재시도 계약입니다.",
+    canonicalHref: "/ai/mcp-protocol#implementation",
+  },
+  "formal-alphabet-string-language": {
+    id: "formal-alphabet-string-language",
+    kind: "concept",
+    domain: "mathematics",
+    label: "Alphabet · string · formal language",
+    definition:
+      "유한한 symbol 집합을 alphabet, symbol의 유한 순서를 string, 어떤 규칙을 만족하는 string의 집합을 formal language로 두는 문법 이론의 최소 출발점입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#formal-basics",
+  },
+  "grammar-production-derivation": {
+    id: "grammar-production-derivation",
+    kind: "concept",
+    domain: "mathematics",
+    label: "Grammar production · derivation",
+    definition:
+      "Terminal·nonterminal과 production rule로 start symbol을 반복 치환해 language의 유효한 string을 만들어 내는 문법 표현입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#formal-basics",
+  },
+  "finite-automaton-memory-boundary": {
+    id: "finite-automaton-memory-boundary",
+    kind: "concept",
+    domain: "mathematics",
+    label: "Finite automaton memory boundary",
+    definition:
+      "현재 상태가 유한 집합 중 하나이므로 임의 깊이의 열린 중첩 수를 정확히 기억할 수 없는 finite-state recognition의 표현 한계입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#cfg-pda",
+  },
+  "context-free-grammar-recursion": {
+    id: "context-free-grammar-recursion",
+    kind: "concept",
+    domain: "mathematics",
+    label: "Context-free grammar · recursive nesting",
+    definition:
+      "각 production의 왼쪽이 하나의 nonterminal이고 rule이 자기 자신을 간접·직접 참조할 수 있어 JSON·괄호·expression의 임의 중첩을 표현하는 grammar 계층입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#cfg-pda",
+  },
+  "pushdown-automaton-stack": {
+    id: "pushdown-automaton-stack",
+    kind: "concept",
+    domain: "mathematics",
+    label: "Pushdown automaton · stack",
+    definition:
+      "유한 control state에 LIFO stack을 더해 열린 delimiter·recursive call처럼 나중에 역순으로 닫아야 하는 임의 깊이 상태를 push/pop으로 추적하는 계산 모델입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#cfg-pda",
+  },
+  "incremental-parser-boundary": {
+    id: "incremental-parser-boundary",
+    kind: "method",
+    domain: "computer-science",
+    label: "Incremental parser · decoder matcher boundary",
+    definition:
+      "이미 존재하는 edited source에서 syntax tree를 갱신하는 incremental parser와 생성 prefix에서 다음 허용 token을 계산하는 decoder matcher의 입력·출력·오류 목표를 구분한 경계입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#tree-sitter",
+  },
+  "grammar-tokenizer-compilation": {
+    id: "grammar-tokenizer-compilation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Grammar · tokenizer compilation",
+    definition:
+      "문자 단위 grammar state와 여러 byte/문자를 담는 model vocabulary token을 연결해 각 token 전체가 유효한 continuation인지 미리 계산·cache하는 과정입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#tokenizer-compilation",
+  },
+  "constrained-decoding-token-mask": {
+    id: "constrained-decoding-token-mask",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Grammar-constrained token mask",
+    definition:
+      "현재 matcher state에서 허용되지 않은 vocabulary token의 logit을 sampling 전 −∞로 바꾸고 허용 token만 정규화해 다음 token을 선택하는 decoding 제약입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#decoder",
+  },
+  "syntactic-semantic-validity-boundary": {
+    id: "syntactic-semantic-validity-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Syntactic · semantic validity boundary",
+    definition:
+      "출력이 grammar/schema를 parse하고 type·enum을 만족하는 구조적 유효성과 ID 존재·권한·금액·명령 안전성 같은 세계·정책 의미가 올바른지를 분리한 경계입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#validity-boundary",
+  },
+  "dynamic-schema-mask-cache": {
+    id: "dynamic-schema-mask-cache",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Dynamic schema · mask cache boundary",
+    definition:
+      "요청별 tool/schema 변화가 compiled grammar·matcher mask cache identity와 batch sequence별 state를 어떻게 바꾸는지 관리하는 serving 경계입니다.",
+    canonicalHref: "/ai/grammar-constrained-generation#dynamic-schema-cache",
+  },
+  "retrieval-robustness-axis": {
+    id: "retrieval-robustness-axis",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Retrieval robustness axis",
+    definition:
+      "언어·도메인·query style·document length·answer position·positive multiplicity처럼 배포에서 바뀔 조건을 학습 데이터와 평가 slice의 명시적 변수로 고정한 축입니다.",
+    canonicalHref: "/ai/sionic-eureka#overview",
+  },
+  "corpus-lineage-leakage-boundary": {
+    id: "corpus-lineage-leakage-boundary",
+    kind: "method",
+    domain: "computer-science",
+    label: "Corpus lineage · leakage boundary",
+    definition:
+      "문서 출처·license·원문 계보와 exact/near duplicate identity를 기록해 benchmark의 원문·번역·재배포본이 training pool에 들어오는 것을 수집 단계에서 차단하는 경계입니다.",
+    canonicalHref: "/ai/sionic-eureka#data",
+  },
+  "synthetic-query-task-coverage": {
+    id: "synthetic-query-task-coverage",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Synthetic-query task coverage",
+    definition:
+      "Subset마다 사실형·분석형·리뷰형·code retrieval 등 여러 intent와 표현 recipe를 배정하고 생성·filter 결과가 target task mixture를 덮는지 관리하는 합성 계약입니다.",
+    canonicalHref: "/ai/sionic-eureka#paper-synthetic-query-recipes",
+  },
+  "answer-position-balanced-sampling": {
+    id: "answer-position-balanced-sampling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Answer-position balanced sampling",
+    definition:
+      "장문 document에서 query 근거의 상대 위치를 앞·중간·뒤 등의 bucket으로 기록하고 학습 합성·선별에서 위치 분포를 조절하는 data intervention입니다.",
+    canonicalHref: "/ai/sionic-eureka#paper-position-bias",
+  },
+  "query-document-relevance-graph": {
+    id: "query-document-relevance-graph",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Query–document relevance graph",
+    definition:
+      "Query와 document를 서로 다른 node 집합으로 두고 relevance edge를 1:1뿐 아니라 1:N·N:1로 보존해 관련 문서를 negative로 오인하지 않게 하는 label graph입니다.",
+    canonicalHref: "/ai/sionic-eureka#paper-multi-positive",
+  },
+  "positive-aware-margin-mining": {
+    id: "positive-aware-margin-mining",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Positive-aware margin mining",
+    definition:
+      "Query별 known-positive similarity에서 margin을 뺀 상대 경계보다 낮은 top-K 후보만 hard negative로 채택해 difficulty와 false-negative 위험을 함께 조절하는 방법입니다.",
+    canonicalHref: "/ai/sionic-eureka#paper-nv-retriever",
+  },
+  "query-local-scalar-teacher-cache": {
+    id: "query-local-scalar-teacher-cache",
+    kind: "method",
+    domain: "computer-science",
+    label: "Query-local scalar teacher cache",
+    definition:
+      "Teacher embedding 전체 대신 고정된 query-candidate pair의 scalar relevance score와 candidate identity를 미리 계산해 student 학습 artifact로 저장하는 방식입니다.",
+    canonicalHref: "/ai/sionic-eureka#distillation",
+  },
+  "listwise-candidate-distillation": {
+    id: "listwise-candidate-distillation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Query-local listwise distillation",
+    definition:
+      "같은 query의 positive·negative 후보 support에서 teacher와 student score를 temperature-softmax 분포로 바꾸고 forward KL로 상대 ranking distribution을 맞추는 retrieval objective입니다.",
+    canonicalHref: "/ai/sionic-eureka#distillation",
+  },
+  "ablation-claim-boundary": {
+    id: "ablation-claim-boundary",
+    kind: "method",
+    domain: "statistics",
+    label: "Ablation observation · mechanism boundary",
+    definition:
+      "고정한 조건에서 metric 순위가 관측됐다는 사실과 그 차이를 만든 mechanism 설명·다른 model로의 일반화를 분리해 evidence scope를 기록하는 실험 해석 규칙입니다.",
+    canonicalHref: "/ai/sionic-eureka#ablation",
+  },
+  "retrieval-robustness-slice-evaluation": {
+    id: "retrieval-robustness-slice-evaluation",
+    kind: "method",
+    domain: "statistics",
+    label: "Retrieval robustness slice evaluation",
+    definition:
+      "전체 NDCG 평균과 함께 언어·도메인·query style·length·answer position·positive multiplicity별 query metric과 표본 수를 저장해 개선의 편중을 진단하는 평가입니다.",
+    canonicalHref: "/ai/sionic-eureka#evaluation",
+  },
+  "roofline-arithmetic-intensity": {
+    id: "roofline-arithmetic-intensity",
+    kind: "method",
+    domain: "computer-science",
+    label: "Roofline · arithmetic intensity",
+    definition:
+      "같은 관측 경계의 연산량을 memory traffic으로 나눈 FLOP/byte와 compute·bandwidth 상한을 비교해 kernel이 어느 자원에 먼저 제한되는지 판단하는 성능 model입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#paper-roofline",
+  },
+  "conditional-hbm-streaming-floor": {
+    id: "conditional-hbm-streaming-floor",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Conditional HBM streaming floor",
+    definition:
+      "Rank가 읽어야 할 byte를 그 접근 pattern의 실효 bandwidth로 나누어 구한 memory-traffic 시간 하한으로, collective·attention·launch가 포함된 전체 forward 하한과는 다릅니다.",
+    canonicalHref: "/ai/sionic-glm-b300#roofline",
+  },
+  "split-k-shape-parallelism": {
+    id: "split-k-shape-parallelism",
+    kind: "method",
+    domain: "computer-science",
+    label: "Split-K shape parallelism",
+    definition:
+      "Output tile 수가 적어 CTA가 부족한 GEMM에서 reduction 축 K를 여러 CTA에 나누어 SM 점유와 memory-level parallelism을 늘리고 부분합 reduction 비용과 맞바꾸는 방법입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#kernel",
+  },
+  "tmem-accumulator-pipeline": {
+    id: "tmem-accumulator-pipeline",
+    kind: "method",
+    domain: "computer-science",
+    label: "tcgen05 · TMEM accumulator pipeline",
+    definition:
+      "Blackwell tcgen05가 accumulator를 register가 아닌 전용 on-chip TMEM에 두는 실행 model을 이용해 register pressure를 줄이고 load·MMA·epilogue overlap 여지를 만드는 kernel pipeline입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#kernel",
+  },
+  "fusion-intermediate-traffic": {
+    id: "fusion-intermediate-traffic",
+    kind: "method",
+    domain: "computer-science",
+    label: "Fusion and intermediate-memory traffic",
+    definition:
+      "연속 연산을 한 pipeline에 배치해 중간 activation의 HBM write/read와 kernel launch를 줄이되 병렬성·register·수치 경로 변화까지 함께 측정하는 최적화입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#kernel",
+  },
+  "end-to-end-speedup-fraction": {
+    id: "end-to-end-speedup-fraction",
+    kind: "metric",
+    domain: "computer-science",
+    label: "End-to-end speedup fraction",
+    definition:
+      "전체 시간에서 개선 대상이 차지하던 비율과 그 구간의 local speedup으로 전체 speedup 상한을 계산하고 다음 병목이 어디로 이동했는지 확인하는 지표입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#runtime",
+  },
+  "mtp-weight-traffic-amortization": {
+    id: "mtp-weight-traffic-amortization",
+    kind: "metric",
+    domain: "distributed-systems",
+    label: "MTP weight-traffic amortization",
+    definition:
+      "Verification cycle의 main-model weight traffic을 평균 committed token 수로 나누어, 한 번 읽은 weight를 여러 확정 token에 배분하는 효과만 따로 보는 근사입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#mtp",
+  },
+  "numerical-acceptance-regression": {
+    id: "numerical-acceptance-regression",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Numerical acceptance regression",
+    definition:
+      "양자화·kernel 변경이 logits agreement와 speculative acceptance 분포를 낮춰 local latency 개선보다 큰 end-to-end throughput 손실을 만드는지 검사하는 회귀 지표입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#mtp",
+  },
+  "optimization-measurement-ledger": {
+    id: "optimization-measurement-ledger",
+    kind: "method",
+    domain: "computer-science",
+    label: "Optimization measurement ledger",
+    definition:
+      "Kernel µs·memory bandwidth·cycle acceptance·end-to-end tok/s를 서로 다른 측정 경계로 보존하고 hardware·software·workload·quality 조건을 함께 기록하는 증거 장부입니다.",
+    canonicalHref: "/ai/sionic-glm-b300#measurement",
+  },
+  "language-model-policy": {
+    id: "language-model-policy",
+    domain: "machine-learning",
+    label: "Language model policy",
+    definition:
+      "Prompt와 지금까지의 token을 조건으로 다음 token의 확률분포를 내는 모델입니다.",
+    canonicalHref: "/ai/transformer-architecture#output-head",
+  },
+  "token-embedding": {
+    id: "token-embedding",
+    domain: "machine-learning",
+    label: "Token embedding",
+    definition:
+      "Tokenizer가 만든 discrete ID를 학습 가능한 table의 dense vector row로 바꾸어 model feature space에 놓는 lookup입니다.",
+    canonicalHref: "/ai/transformer-architecture#input-contract",
+  },
+  "position-signal": {
+    id: "position-signal",
+    domain: "machine-learning",
+    label: "Position signal",
+    definition:
+      "순열만으로는 구분할 수 없는 token 순서와 거리를 embedding·Q/K transform·attention bias 중 한 지점에 주입하는 신호입니다.",
+    canonicalHref: "/ai/transformer-architecture#position-information",
+  },
+  "attention-visibility": {
+    id: "attention-visibility",
+    domain: "machine-learning",
+    label: "Attention visibility · mask",
+    definition:
+      "각 query position이 어떤 key/value source와 위치를 읽을 수 있는지 softmax 전에 정하는 tensor 계약입니다.",
+    canonicalHref: "/ai/transformer-architecture#attention-boundary",
+  },
+  "scaled-dot-product-attention": {
+    id: "scaled-dot-product-attention",
+    domain: "machine-learning",
+    label: "Scaled dot-product attention",
+    definition:
+      "Query와 key의 scaled dot product를 row-wise probability로 바꾸고 그 weight로 value를 합치는 token mixer입니다.",
+    canonicalHref: "/ai/attention-theory#multiplicative",
+  },
+  "transformer-block": {
+    id: "transformer-block",
+    domain: "machine-learning",
+    label: "Transformer block",
+    definition:
+      "Attention token mixer와 position-wise nonlinear FFN을 residual·normalization 경로로 반복하는 sequence model의 기본 계산 단위입니다.",
+    canonicalHref: "/ai/transformer-architecture#transformer-block",
+  },
+  "conditional-expert-ffn": {
+    id: "conditional-expert-ffn",
+    domain: "machine-learning",
+    label: "Conditional expert FFN",
+    definition:
+      "Transformer의 dense FFN 하나를 여러 parameter branch로 바꾸고 token마다 일부 branch만 계산해, 전체 parameter capacity와 token별 compute를 분리하는 구조입니다.",
+    canonicalHref: "/ai/mixture-of-experts#overview",
+  },
+  "token-router-topk": {
+    id: "token-router-topk",
+    domain: "machine-learning",
+    label: "Token router · Top-k selection",
+    definition:
+      "Token hidden state에서 expert별 logit을 만들고 가장 큰 k개 index를 골라 실제 expert 계산 경로를 정하는 sparse routing 연산입니다.",
+    canonicalHref: "/ai/mixture-of-experts#routing",
+  },
+  "sparse-expert-weighted-mixture": {
+    id: "sparse-expert-weighted-mixture",
+    domain: "machine-learning",
+    label: "Sparse expert weighted mixture",
+    definition:
+      "선택된 Top-k expert의 같은-shape 출력을 routing weight로 곱해 더하고 residual stream으로 되돌리는 MoE output contract입니다.",
+    canonicalHref: "/ai/mixture-of-experts#overview",
+  },
+  "expert-load-balance-target": {
+    id: "expert-load-balance-target",
+    domain: "machine-learning",
+    label: "Expert load-balance target",
+    definition:
+      "m개 token이 Top-k로 만든 mk개 assignment를 n개 expert가 나눌 때 균등 기준 mk/n과 실제 expert별 token count를 비교하는 routing 진단입니다.",
+    canonicalHref: "/ai/mixture-of-experts#load-balancing",
+  },
+  "expert-capacity-overflow-policy": {
+    id: "expert-capacity-overflow-policy",
+    domain: "machine-learning",
+    label: "Expert capacity · overflow policy",
+    definition:
+      "Expert buffer의 token 한도를 정하고 이를 넘은 assignment를 drop·reroute·padding 중 어떻게 처리할지 정하는 memory·quality 계약입니다.",
+    canonicalHref: "/ai/mixture-of-experts#load-balancing",
+  },
+  "moe-total-active-parameter-ledger": {
+    id: "moe-total-active-parameter-ledger",
+    domain: "machine-learning",
+    label: "MoE total·active parameter ledger",
+    definition:
+      "Checkpoint가 저장하는 모든 expert parameter와 token 하나가 실제로 통과하는 shared·Top-k expert parameter를 분리하되, 둘을 memory·FLOPs·latency와 동일시하지 않는 비용 장부입니다.",
+    canonicalHref: "/ai/mixture-of-experts#system-cost",
+  },
+  "expert-parallel-dispatch-cost": {
+    id: "expert-parallel-dispatch-cost",
+    domain: "distributed-systems",
+    label: "Expert-parallel dispatch cost",
+    definition:
+      "Token assignment를 expert가 있는 장치로 재배치하고 계산 결과를 원 token 순서로 돌려보낼 때 생기는 all-to-all payload·imbalance·latency 비용입니다.",
+    canonicalHref: "/ai/mixture-of-experts#system-cost",
+  },
+  "shared-fine-grained-expert-specialization": {
+    id: "shared-fine-grained-expert-specialization",
+    domain: "machine-learning",
+    label: "Shared · fine-grained expert specialization",
+    definition:
+      "공통 지식은 모든 token이 쓰는 shared expert에 맡기고 routed expert를 더 작은 단위로 나눠 선택 조합을 늘리는 MoE specialization 설계입니다.",
+    canonicalHref: "/ai/mixture-of-experts#evolution",
+  },
+  "kda-channelwise-delta-state": {
+    id: "kda-channelwise-delta-state",
+    domain: "machine-learning",
+    label: "KDA channelwise delta state",
+    definition:
+      "과거 key–value association을 고정 matrix state로 요약하고 channel별 retention과 delta-rule correction으로 현재 token의 write·read를 수행하는 Kimi linear-attention recurrence입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+  },
+  "kda-lower-bounded-decay": {
+    id: "kda-lower-bounded-decay",
+    domain: "machine-learning",
+    label: "KDA lower-bounded log decay",
+    definition:
+      "Channelwise log decay를 gmin과 0 사이로 제한한 뒤 exponentiate해 한 step retention의 수치 범위와 tile-wise kernel 계산을 안정시키는 parameterization입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+  },
+  "kda-mla-hybrid-schedule": {
+    id: "kda-mla-hybrid-schedule",
+    domain: "machine-learning",
+    label: "KDA–MLA hybrid schedule",
+    definition:
+      "세 KDA layer의 recurrent compression 뒤 Gated MLA global attention을 배치하고 마지막 MLA를 추가해 69 KDA·24 MLA를 만드는 K3 sequence mixer schedule입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+  },
+  "gated-mla-latent-cache": {
+    id: "gated-mla-latent-cache",
+    domain: "machine-learning",
+    label: "Gated MLA latent cache",
+    definition:
+      "Key/value 정보를 작은 latent cache로 공유하고 causal global attention output에 input-dependent sigmoid gate를 곱해 residual 기여를 조절하는 attention path입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+  },
+  "nope-hybrid-position-signal": {
+    id: "nope-hybrid-position-signal",
+    domain: "machine-learning",
+    label: "NoPE hybrid position signal",
+    definition:
+      "명시적 positional embedding 없이 causal mask와 ordered recurrence·training length schedule에서 sequence order를 얻는 K3 hybrid-attention 구성의 위치 정보 경계입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#hybrid-attention",
+  },
+  "depth-attention-residual": {
+    id: "depth-attention-residual",
+    domain: "machine-learning",
+    label: "Attention Residuals · depth attention",
+    definition:
+      "현재 layer의 learned pseudo-query로 embedding과 이전 depth representation의 key를 비교하고 value를 weighted sum해 layer input을 만드는 residual 대체 경로입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#attention-residuals",
+  },
+  "block-attnres-state-bound": {
+    id: "block-attnres-state-bound",
+    domain: "machine-learning",
+    label: "Block AttnRes state bound",
+    definition:
+      "Layer별 depth source를 최대 12-layer block으로 합쳐 source memory·communication을 layer 수 L 대신 block 수 N에 비례하도록 제한하는 K3 구현입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#attention-residuals",
+  },
+  "latent-moe-width-factorization": {
+    id: "latent-moe-width-factorization",
+    domain: "machine-learning",
+    label: "LatentMoE width factorization",
+    definition:
+      "Shared expert는 full model width에서 계산하고 routed expert는 down projection으로 만든 더 작은 latent width에서 계산한 뒤 RMSNorm과 up projection으로 합치는 MoE width 분해입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#stable-latent-moe",
+  },
+  "situ-glu-smooth-bound": {
+    id: "situ-glu-smooth-bound",
+    domain: "machine-learning",
+    label: "SiTU-GLU smooth activation bound",
+    definition:
+      "SwiGLU의 두 linear factor를 scaled tanh로 부드럽게 제한해 0 근처 응답은 유지하면서 coordinate-wise product의 큰 값과 low-precision overflow 위험을 줄이는 activation입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#stable-latent-moe",
+  },
+  "quantile-expert-balancing": {
+    id: "quantile-expert-balancing",
+    domain: "machine-learning",
+    label: "Quantile Balancing",
+    definition:
+      "Expert별 router-score margin의 목표 quantile로 다음-step dispatch bias를 정하고, 그 bias를 mixture weight에서는 제외해 896-expert load를 조절하는 K3 routing 방법입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#stable-latent-moe",
+  },
+  "frontier-scaling-evidence-boundary": {
+    id: "frontier-scaling-evidence-boundary",
+    domain: "machine-learning",
+    label: "Frontier scaling evidence boundary",
+    definition:
+      "공개 configuration·method, component ablation, architecture/data/training을 합친 scaling claim과 harness를 포함한 benchmark result를 서로 다른 근거 강도로 분리하는 읽기 원칙입니다.",
+    canonicalHref: "/ai/kimi-k3-architecture#reading-report",
+  },
+  "residual-normalization": {
+    id: "residual-normalization",
+    domain: "machine-learning",
+    label: "Residual and normalization order",
+    definition:
+      "Sublayer update를 residual stream에 더하고 normalization을 전후 어느 위치에 둘지 정하는 forward·backward 경로 계약입니다.",
+    canonicalHref: "/ai/transformer-architecture#transformer-block",
+  },
+  "empirical-scaling-law": {
+    id: "empirical-scaling-law",
+    domain: "machine-learning",
+    label: "Empirical neural scaling law",
+    definition:
+      "고정된 model·data·training family의 관측 범위에서 loss와 parameter·token·compute 사이의 power-law 경향을 fit한 경험 모델입니다.",
+    canonicalHref: "/ai/transformer-architecture#scaling-laws",
+  },
+  surprisal: {
+    id: "surprisal",
+    domain: "statistics",
+    label: "Surprisal · self-information",
+    definition:
+      "실제로 관측된 사건에 모델 또는 source가 부여한 probability q를 −log q로 바꾼 정보 비용입니다.",
+    canonicalHref: "/ai/cross-entropy#overview",
+  },
+  entropy: {
+    id: "entropy",
+    domain: "statistics",
+    label: "Entropy",
+    definition:
+      "실제 distribution에서 사건별 surprisal을 평균낸 source 자체의 불확실성입니다.",
+    canonicalHref: "/ai/cross-entropy#entropy",
+  },
+  "empirical-risk": {
+    id: "empirical-risk",
+    domain: "statistics",
+    label: "Empirical risk",
+    definition:
+      "Population expectation을 직접 알 수 없을 때 관측한 training sample의 loss를 평균내 만든 objective estimate입니다.",
+    canonicalHref: "/ai/cross-entropy#expectation",
+  },
+  "cross-entropy-nll": {
+    id: "cross-entropy-nll",
+    domain: "statistics",
+    label: "Cross-entropy · negative log-likelihood",
+    definition:
+      "관측한 정답 token에 모델이 부여한 확률의 negative log를 줄이는 likelihood objective입니다.",
+    canonicalHref: "/ai/cross-entropy#cross-entropy",
+  },
+  "maximum-likelihood": {
+    id: "maximum-likelihood",
+    domain: "statistics",
+    label: "Maximum likelihood estimation",
+    definition:
+      "관측한 data에 model이 부여하는 joint probability 또는 density가 가장 커지도록 parameter를 고르는 추정 원리입니다.",
+    canonicalHref: "/ai/cross-entropy#cross-entropy",
+  },
+  "kl-divergence": {
+    id: "kl-divergence",
+    domain: "statistics",
+    label: "KL divergence",
+    definition:
+      "실제 distribution P 대신 model Q로 사건을 설명해서 생기는 평균 log-ratio 초과 비용이며 방향이 있는 divergence입니다.",
+    canonicalHref: "/ai/cross-entropy#kl-divergence",
+  },
+  "likelihood-contract": {
+    id: "likelihood-contract",
+    domain: "statistics",
+    label: "Likelihood contract",
+    definition:
+      "관측 target이 categorical·Gaussian·Bernoulli 등 어떤 conditional distribution에서 생성됐다고 모델링할지 정해 output parameter와 NLL을 함께 고르는 계약입니다.",
+    canonicalHref: "/ai/cross-entropy#ce-vs-mse",
+  },
+  sft: {
+    id: "sft",
+    domain: "machine-learning",
+    label: "Supervised fine-tuning (SFT)",
+    definition:
+      "선별한 demonstration response의 token likelihood를 높여 원하는 응답 형식을 먼저 학습하는 단계입니다.",
+    canonicalHref: "/ai/supervised-fine-tuning#overview",
+  },
+  demonstration: {
+    id: "demonstration",
+    domain: "machine-learning",
+    label: "Instruction demonstration",
+    definition:
+      "Prompt와 원하는 response를 role·template·provenance와 함께 기록해 language model이 모방할 supervised example로 만든 것입니다.",
+    canonicalHref: "/ai/supervised-fine-tuning#data-contract",
+  },
+  "response-loss-mask": {
+    id: "response-loss-mask",
+    domain: "machine-learning",
+    label: "Response-only loss mask",
+    definition:
+      "Prompt token은 attention context로 남기되 선택한 assistant response target만 SFT NLL에 포함하는 위치별 weight입니다.",
+    canonicalHref: "/ai/supervised-fine-tuning#response-loss",
+  },
+  "teacher-forcing": {
+    id: "teacher-forcing",
+    domain: "machine-learning",
+    label: "Teacher forcing",
+    definition:
+      "Sequence training에서 model이 생성한 이전 token 대신 dataset의 정답 prefix를 조건으로 다음 target을 예측하는 방식입니다.",
+    canonicalHref: "/ai/seq2seq#training",
+  },
+  "exposure-bias": {
+    id: "exposure-bias",
+    domain: "machine-learning",
+    label: "Exposure bias",
+    definition:
+      "Teacher-forced training에서는 정답 prefix를 보지만 autoregressive inference에서는 model이 만든 prefix를 본다는 조건 차이입니다.",
+    canonicalHref: "/ai/seq2seq#training",
+  },
+  "sequence-packing": {
+    id: "sequence-packing",
+    domain: "machine-learning",
+    label: "Sequence packing",
+    definition:
+      "여러 짧은 example을 한 fixed-length sequence에 배치해 padding compute를 줄이되 example boundary를 별도 mask로 보존하는 방법입니다.",
+    canonicalHref: "/ai/supervised-fine-tuning#packing",
+  },
+  "behavior-target": {
+    id: "behavior-target",
+    label: "Behavior target",
+    definition:
+      "도움됨·사실성·안전성처럼 제품이 원하는 행동을 관측 가능한 rubric과 example로 내린 목표입니다.",
+    canonicalHref: "/ai/rlhf#overview",
+  },
+  "feedback-contract": {
+    id: "feedback-contract",
+    label: "Feedback contract",
+    definition:
+      "Demonstration·pairwise preference·binary label·principle 중 한 학습 example이 실제로 담는 판단 단위입니다.",
+    canonicalHref: "/ai/rlhf#overview",
+  },
+  "pairwise-preference": {
+    id: "pairwise-preference",
+    label: "Pairwise preference",
+    definition:
+      "같은 prompt의 두 response 가운데 어느 쪽이 더 나은지를 기록한 상대 비교 label입니다.",
+    canonicalHref: "/ai/rlhf#reward-model",
+  },
+  "binary-feedback": {
+    id: "binary-feedback",
+    label: "Binary feedback",
+    definition:
+      "각 response에 desirable·undesirable 또는 like·dislike를 독립적으로 붙인 label입니다.",
+    canonicalHref: "/ai/rlhf#kto",
+  },
+  constitution: {
+    id: "constitution",
+    label: "Constitution",
+    definition:
+      "응답을 critique·revise·judge할 때 적용할 원칙과 우선순위를 자연어로 기록한 기준입니다.",
+    canonicalHref: "/ai/rlhf#constitutional-ai",
+  },
+  "reward-model": {
+    id: "reward-model",
+    label: "Reward model",
+    definition:
+      "Prompt와 response를 받아 수집한 preference ordering을 설명하는 scalar proxy score를 출력합니다.",
+    canonicalHref: "/ai/rlhf#reward-model",
+  },
+  "reference-policy": {
+    id: "reference-policy",
+    label: "Reference policy",
+    definition:
+      "현재 policy의 상대 선호와 drift를 비교하기 위해 고정해 둔 기준 checkpoint입니다.",
+    canonicalHref: "/ai/rlhf#ppo",
+  },
+  "kl-regularization": {
+    id: "kl-regularization",
+    label: "KL regularization",
+    definition:
+      "Reward 개선과 reference distribution에서 멀어지는 비용을 함께 최적화하는 제약입니다.",
+    canonicalHref: "/ai/rlhf#ppo",
+  },
+  "online-rollout": {
+    id: "online-rollout",
+    label: "Online rollout",
+    definition:
+      "학습 중 현재 policy가 새 response를 생성하고 그 trajectory에서 update signal을 만드는 과정입니다.",
+    canonicalHref: "/ai/rlhf#ppo",
+  },
+  "offline-preference": {
+    id: "offline-preference",
+    label: "Offline preference optimization",
+    definition:
+      "현재 policy의 새 rollout 없이 고정된 preference dataset의 support 안에서 policy를 학습합니다.",
+    canonicalHref: "/ai/rlhf#dpo",
+  },
+  "ppo-rlhf": {
+    id: "ppo-rlhf",
+    label: "PPO-RLHF",
+    definition:
+      "현재 policy의 rollout을 reward·KL로 평가하고 clipped policy update를 반복하는 online 경로입니다.",
+    canonicalHref: "/ai/rlhf#ppo",
+  },
+  dpo: {
+    id: "dpo",
+    label: "DPO",
+    definition:
+      "Chosen·rejected pair의 policy/reference log-ratio 차이를 직접 분류하는 offline objective입니다.",
+    canonicalHref: "/ai/rlhf#dpo",
+  },
+  orpo: {
+    id: "orpo",
+    label: "ORPO",
+    definition:
+      "Chosen likelihood를 높이는 SFT와 rejected 대비 odds-ratio separation을 한 stage에 둡니다.",
+    canonicalHref: "/ai/rlhf#orpo",
+  },
+  kto: {
+    id: "kto",
+    label: "KTO",
+    definition:
+      "짝이 없는 binary feedback을 policy/reference KL 기준점의 양쪽에서 학습합니다.",
+    canonicalHref: "/ai/rlhf#kto",
+  },
+  cai: {
+    id: "cai",
+    label: "Constitutional AI · RLAIF",
+    definition:
+      "자연어 원칙으로 critique·revision data와 AI preference signal을 만드는 feedback pipeline입니다.",
+    canonicalHref: "/ai/rlhf#constitutional-ai",
+  },
+  "independent-evaluation": {
+    id: "independent-evaluation",
+    label: "Independent evaluation",
+    definition:
+      "Preference objective와 분리해 capability·사실성·over-refusal·safety regression을 측정합니다.",
+    canonicalHref: "/ai/rlhf#kto",
+  },
+  "image-identity-group-split": {
+    id: "image-identity-group-split",
+    kind: "method",
+    domain: "statistics",
+    label: "Image identity group split",
+    definition:
+      "같은 사람·상품·원본·촬영 세션에서 파생된 image를 하나의 group으로 묶고 group 집합이 train·validation 사이에서 겹치지 않게 나누는 평가 경계입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#overview",
+  },
+  "image-pipeline-baseline-receipt": {
+    id: "image-pipeline-baseline-receipt",
+    kind: "method",
+    domain: "computer-science",
+    label: "Image pipeline baseline receipt",
+    definition:
+      "Split manifest·class mapping·preprocessing·weight revision·training budget·quality slice·runtime measurement를 한 실험 artifact로 고정한 기준선입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#overview",
+  },
+  "resolution-compute-scaling": {
+    id: "resolution-compute-scaling",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Resolution–compute scaling",
+    definition:
+      "Input 한 변과 patch·feature-map 크기가 convolution과 global attention의 연산량·memory·latency를 서로 다른 차수로 바꾸는 resource 관계입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#backbone",
+  },
+  "compound-model-scaling": {
+    id: "compound-model-scaling",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Compound depth·width·resolution scaling",
+    definition:
+      "하나의 resource coefficient로 network depth·channel width·input resolution을 정해진 비율로 함께 늘려 capacity 축의 균형을 찾는 scaling heuristic입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#backbone",
+  },
+  "backbone-budget-comparison": {
+    id: "backbone-budget-comparison",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Backbone quality–runtime budget comparison",
+    definition:
+      "같은 target split·input·fine-tuning search budget에서 후보 backbone의 quality·uncertainty·p50/p95 latency·throughput·peak memory를 함께 비교하는 선택 절차입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#backbone",
+  },
+  "resolution-stage-boundary": {
+    id: "resolution-stage-boundary",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Resolution training-stage boundary",
+    definition:
+      "Image resolution 변경을 batch·crop distribution·optimizer schedule·position state가 함께 바뀌는 새로운 training stage로 기록하는 실행 경계입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#training",
+  },
+  "confidence-gated-pseudo-label": {
+    id: "confidence-gated-pseudo-label",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Confidence-gated pseudo-label consistency",
+    definition:
+      "Weak augmentation prediction의 maximum confidence가 threshold 이상인 unlabeled sample만 hard pseudo-label로 선택해 strong augmentation prediction을 학습하는 semi-supervised objective입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#training",
+  },
+  "temperature-scaling-calibration": {
+    id: "temperature-scaling-calibration",
+    kind: "method",
+    domain: "statistics",
+    label: "Temperature scaling calibration",
+    definition:
+      "고정된 multi-class logit을 하나의 양수 temperature로 나눈 뒤 softmax하고 calibration split의 NLL로 temperature를 선택하는 post-hoc probability calibration입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#postprocess",
+  },
+  "image-inference-decision-contract": {
+    id: "image-inference-decision-contract",
+    kind: "method",
+    domain: "computer-science",
+    label: "Image inference decision contract",
+    definition:
+      "Class mapping·preprocessing·calibration·TTA·ensemble weights·threshold 또는 reject policy를 순서와 selection split까지 포함해 versioning한 serving 규칙입니다.",
+    canonicalHref: "/ai/image-classification-pipeline#postprocess",
+  },
+  "vit-patch-sequence-contract": {
+    id: "vit-patch-sequence-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "ViT patch-sequence contract",
+    definition:
+      "H×W×C image를 P×P patch N개로 나누어 shared matrix로 D차원 token에 투영하고 position·special token과 함께 encoder sequence를 만드는 입력 규칙입니다.",
+    canonicalHref: "/ai/vision-transformer#patch-embedding",
+  },
+  "patch-convolution-equivalence": {
+    id: "patch-convolution-equivalence",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Patch projection–Conv2d equivalence",
+    definition:
+      "Non-overlapping patch flatten 순서와 kernel flatten 순서를 맞추면 patch별 linear projection이 kernel size와 stride가 P인 Conv2d의 output과 같다는 계산 동치입니다.",
+    canonicalHref: "/ai/vision-transformer#patch-embedding",
+  },
+  "absolute-position-grid-resize": {
+    id: "absolute-position-grid-resize",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Absolute position-grid resize",
+    definition:
+      "Spatial grid에 속하지 않는 special-token position을 분리한 뒤 learned patch positions를 old 2D grid에서 new grid로 interpolation하고 다시 결합하는 checkpoint 변환입니다.",
+    canonicalHref: "/ai/vision-transformer#practice",
+  },
+  "distillation-token-interface": {
+    id: "distillation-token-interface",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Distillation-token supervision interface",
+    definition:
+      "Student encoder에 별도 learned token과 head를 두어 ground-truth classification 경로와 teacher-target distillation 경로를 나누고 결합 loss로 학습하는 DeiT 방식입니다.",
+    canonicalHref: "/ai/vision-transformer#architecture",
+  },
+  "shifted-window-hierarchy": {
+    id: "shifted-window-hierarchy",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Shifted-window attention hierarchy",
+    definition:
+      "M×M local window attention과 다음 block의 shifted partition, stage 사이 patch merging을 결합해 linear-in-image-size score cost와 multi-scale feature를 만드는 구조입니다.",
+    canonicalHref: "/ai/vision-transformer#architecture",
+  },
+  "mae-visible-token-pretraining": {
+    id: "mae-visible-token-pretraining",
+    kind: "method",
+    domain: "machine-learning",
+    label: "MAE visible-token pretraining",
+    definition:
+      "가린 patch를 큰 encoder 입력에서 제외해 visible subset만 encoding하고 작은 decoder가 mask token을 포함한 전체 grid의 pixel을 복원하도록 학습하는 asymmetric masked-image objective입니다.",
+    canonicalHref: "/ai/vision-transformer#architecture",
+  },
+  "vision-architecture-paired-selection": {
+    id: "vision-architecture-paired-selection",
+    kind: "method",
+    domain: "statistics",
+    label: "CNN–ViT paired selection",
+    definition:
+      "같은 split·input·seed·update·tuning budget에서 후보 metric의 seed별 paired gain과 uncertainty를 계산하고 target latency·memory constraint와 함께 선택하는 절차입니다.",
+    canonicalHref: "/ai/vision-transformer#tradeoff",
+  },
+  "vision-checkpoint-parity-test": {
+    id: "vision-checkpoint-parity-test",
+    kind: "method",
+    domain: "computer-science",
+    label: "Vision checkpoint logit-parity test",
+    definition:
+      "동일 checkpoint preprocessing·eval state·input에서 reference와 export implementation의 class-ordered logit vector 최대 오차가 precision별 tolerance 이내인지 검사하는 smoke test입니다.",
+    canonicalHref: "/ai/vision-transformer#practice",
+  },
+  "multiview-episode-contract": {
+    id: "multiview-episode-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Multi-view episode contract",
+    definition:
+      "같은 대상·사건의 view 관측을 availability와 camera·pose·timestamp·quality metadata를 가진 한 sample로 묶고 episode 수준 label을 부여하는 데이터 규칙입니다.",
+    canonicalHref: "/ai/multiview-fusion#overview",
+  },
+  "unordered-view-invariance": {
+    id: "unordered-view-invariance",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Unordered-view permutation invariance",
+    definition:
+      "Episode label이 view 나열 순서와 무관할 때 모든 input permutation에서 set-level prediction이 같아야 한다는 함수 조건입니다.",
+    canonicalHref: "/ai/multiview-fusion#overview",
+  },
+  "registered-input-fusion": {
+    id: "registered-input-fusion",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Registered input-level fusion",
+    definition:
+      "Sensor 관측을 calibration transform으로 공통 coordinate grid에 옮기고 같은 위치의 channel과 validity mask를 model 입구에서 concat하는 fusion입니다.",
+    canonicalHref: "/ai/multiview-fusion#early-fusion",
+  },
+  "explicit-view-availability-mask": {
+    id: "explicit-view-availability-mask",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Explicit view-availability mask",
+    definition:
+      "관측값 자체의 0과 결측·가림·warp-invalid 상태를 구분해 input·aggregation·attention 경로에서 사용할 수 있게 하는 별도 indicator입니다.",
+    canonicalHref: "/ai/multiview-fusion#early-fusion",
+  },
+  "masked-view-aggregation": {
+    id: "masked-view-aggregation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Masked view aggregation",
+    definition:
+      "View별 encoder feature를 만들고 unavailable view를 normalization 분자·분모에서 제외한 mean·gate·attention weight로 episode representation을 만드는 방법입니다.",
+    canonicalHref: "/ai/multiview-fusion#late-fusion",
+  },
+  "view-encoder-sharing-contract": {
+    id: "view-encoder-sharing-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "View-encoder sharing contract",
+    definition:
+      "View의 modality·statistics·semantic slot이 같은지에 따라 encoder parameter를 공유하거나 분리하고 비교 parameter budget을 기록하는 규칙입니다.",
+    canonicalHref: "/ai/multiview-fusion#late-fusion",
+  },
+  "pose-aware-cross-view-token": {
+    id: "pose-aware-cross-view-token",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Pose-aware cross-view token",
+    definition:
+      "관측 content와 within-view position에 view identity·pose·timestamp encoding을 결합해 attention에서 token의 관측 좌표를 구분하는 표현입니다.",
+    canonicalHref: "/ai/multiview-fusion#attention-fusion",
+  },
+  "joint-view-attention-cost": {
+    id: "joint-view-attention-cost",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Joint-view attention cost",
+    definition:
+      "모든 유효 view token을 dense attention에 넣을 때 total token count의 제곱으로 증가하는 query–key score pair와 memory·compute budget입니다.",
+    canonicalHref: "/ai/multiview-fusion#attention-fusion",
+  },
+  "missing-view-intervention-audit": {
+    id: "missing-view-intervention-audit",
+    kind: "method",
+    domain: "statistics",
+    label: "Missing-view intervention audit",
+    definition:
+      "같은 episode를 full-view와 view-drop·misalignment·degradation 조건에서 paired 평가해 loss·metric 변화와 결측 조합별 uncertainty를 측정하는 검사입니다.",
+    canonicalHref: "/ai/multiview-fusion#attention-fusion",
+  },
+  "forensic-source-independent-split": {
+    id: "forensic-source-independent-split",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Forensic source-independent split",
+    definition:
+      "같은 source clip·person·capture session의 frame·crop·re-encoding 파생본을 한 group에 두고 identity·generator holdout 축을 별도로 선언하는 평가 분리입니다.",
+    canonicalHref: "/ai/deepfake-detection#overview",
+  },
+  "unseen-manipulation-domain-risk": {
+    id: "unseen-manipulation-domain-risk",
+    kind: "metric",
+    domain: "statistics",
+    label: "Unseen-manipulation worst-domain risk",
+    definition:
+      "평가 전에 선언한 generator·codec·capture domain별 평균 loss와 그중 최댓값을 함께 보고해 전체 평균이 취약 slice를 숨기지 않게 하는 metric입니다.",
+    canonicalHref: "/ai/deepfake-detection#overview",
+  },
+  "face-track-coverage": {
+    id: "face-track-coverage",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Face-track coverage",
+    definition:
+      "평가 가능한 전체 frame 가운데 요구 identity의 valid detection·track·crop이 detector input까지 도달한 비율입니다.",
+    canonicalHref: "/ai/deepfake-detection#face-extraction",
+  },
+  "forensic-preprocessing-lineage": {
+    id: "forensic-preprocessing-lineage",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Forensic preprocessing lineage",
+    definition:
+      "Decode·face detect·track·alignment·crop 각 단계의 revision·coordinate transform·confidence·failure state를 source frame에 추적 가능하게 보존한 기록입니다.",
+    canonicalHref: "/ai/deepfake-detection#face-extraction",
+  },
+  "conditional-frequency-forensic-signal": {
+    id: "conditional-frequency-forensic-signal",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Conditional frequency forensic signal",
+    definition:
+      "Generator architecture·upsampling·codec·resize·blur에 따라 나타나거나 사라질 수 있어 corruption matrix 안에서만 근거 범위를 해석하는 spectrum feature입니다.",
+    canonicalHref: "/ai/deepfake-detection#frequency",
+  },
+  "forensic-branch-joint-error": {
+    id: "forensic-branch-joint-error",
+    kind: "metric",
+    domain: "statistics",
+    label: "Forensic branch joint error",
+    definition:
+      "같은 held-out sample에서 spatial·frequency 등 두 detector branch가 동시에 틀리는 비율로 error complementarity를 측정합니다.",
+    canonicalHref: "/ai/deepfake-detection#frequency",
+  },
+  "video-score-aggregation-contract": {
+    id: "video-score-aggregation-contract",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Video-score aggregation contract",
+    definition:
+      "Frame·clip·track score를 mean·max·top-k·temporal model로 video score에 합치는 순서와 length·coverage·calibration·threshold semantics를 고정한 규칙입니다.",
+    canonicalHref: "/ai/deepfake-detection#models",
+  },
+  "forensic-benchmark-parity": {
+    id: "forensic-benchmark-parity",
+    kind: "method",
+    domain: "computer-science",
+    label: "Forensic benchmark parity",
+    definition:
+      "Detector 후보의 source split·decode·face crop·frame budget·metric·aggregation·hardware를 동일하게 맞춰 architecture 외 변경을 분리하는 비교 절차입니다.",
+    canonicalHref: "/ai/deepfake-detection#models",
+  },
+  "forensic-data-provenance-manifest": {
+    id: "forensic-data-provenance-manifest",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Forensic data-provenance manifest",
+    definition:
+      "Dataset·source clip·person·generator·codec·license·consent·use/deletion scope와 split을 연결해 파생 데이터의 독립성과 적법한 사용 범위를 추적하는 기록입니다.",
+    canonicalHref: "/ai/deepfake-detection#external-data",
+  },
+  "forensic-coverage-matrix": {
+    id: "forensic-coverage-matrix",
+    kind: "metric",
+    domain: "statistics",
+    label: "Forensic coverage matrix",
+    definition:
+      "Generator×codec×resolution×capture-condition cell마다 frame이 아닌 source-independent clip·identity group 수를 split별로 집계한 데이터 범위 표입니다.",
+    canonicalHref: "/ai/deepfake-detection#external-data",
+  },
+  "video-temporal-observation-contract": {
+    id: "video-temporal-observation-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Video temporal-observation contract",
+    definition:
+      "Source timestamp/FPS·sampled frames·stride·clip count를 실제 관측 duration과 effective sampling rate로 연결해 event duration·motion rate와 맞추는 입력 규칙입니다.",
+    canonicalHref: "/ai/video-understanding#overview",
+  },
+  "video-motion-aliasing-boundary": {
+    id: "video-motion-aliasing-boundary",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Video motion aliasing boundary",
+    definition:
+      "Ideal band-limited temporal signal에서 motion frequency가 effective sample rate의 절반 미만이어야 반복 변화가 다른 낮은 frequency로 겹치지 않는다는 sampling 조건입니다.",
+    canonicalHref: "/ai/video-understanding#overview",
+  },
+  "temporal-interval-coverage": {
+    id: "temporal-interval-coverage",
+    kind: "metric",
+    domain: "mathematics",
+    label: "Temporal interval-union coverage",
+    definition:
+      "여러 sampled clip의 timestamp interval union 길이를 전체 video duration으로 나눠 overlap을 중복 계산하지 않고 관측 범위를 재는 metric입니다.",
+    canonicalHref: "/ai/video-understanding#sampling",
+  },
+  "deterministic-multiclip-replay": {
+    id: "deterministic-multiclip-replay",
+    kind: "method",
+    domain: "computer-science",
+    label: "Deterministic multi-clip replay",
+    definition:
+      "평가 clip timestamp·decode·spatial crop·video aggregation을 manifest로 고정해 같은 video prediction을 재실행하는 protocol입니다.",
+    canonicalHref: "/ai/video-understanding#sampling",
+  },
+  "temporal-convolution-receptive-span": {
+    id: "temporal-convolution-receptive-span",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Temporal convolution receptive span",
+    definition:
+      "Temporal kernel size·dilation·sampling stride와 source FPS로 한 convolution 또는 stacked network가 직접 연결하는 original timestamp 범위를 계산한 값입니다.",
+    canonicalHref: "/ai/video-understanding#3dcnn",
+  },
+  "inflated-3d-pretraining-handoff": {
+    id: "inflated-3d-pretraining-handoff",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Inflated 3D pretraining handoff",
+    definition:
+      "2D convolution filter·pooling kernel에 temporal dimension을 추가해 3D operator의 초기값으로 옮기고 video pretraining으로 spatiotemporal representation을 학습하는 I3D 방식입니다.",
+    canonicalHref: "/ai/video-understanding#3dcnn",
+  },
+  "r2plus1d-factorization": {
+    id: "r2plus1d-factorization",
+    kind: "method",
+    domain: "machine-learning",
+    label: "R(2+1)D factorization",
+    definition:
+      "Full 3D convolution을 2D spatial convolution과 1D temporal convolution 및 중간 nonlinearity로 나눠 optimization path와 representation을 바꾸는 block입니다.",
+    canonicalHref: "/ai/video-understanding#3dcnn",
+  },
+  "slowfast-rate-capacity-allocation": {
+    id: "slowfast-rate-capacity-allocation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "SlowFast rate–capacity allocation",
+    definition:
+      "Low-frame-rate wide Slow path와 high-frame-rate narrow Fast path를 α frame-rate ratio·β channel ratio와 lateral connection으로 결합하는 video architecture입니다.",
+    canonicalHref: "/ai/video-understanding#3dcnn",
+  },
+  "video-tubelet-token-contract": {
+    id: "video-tubelet-token-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Video tubelet-token contract",
+    definition:
+      "T×H×W clip을 τ×P×P non-overlapping volumes로 나누고 projection·position을 적용해 spatiotemporal token sequence를 만드는 규칙입니다.",
+    canonicalHref: "/ai/video-understanding#video-transformer",
+  },
+  "factorized-space-time-attention-cost": {
+    id: "factorized-space-time-attention-cost",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Factorized space–time attention cost",
+    definition:
+      "TS token의 joint (TS)² pair interaction을 T회 spatial S²와 S회 temporal T² interaction으로 나눠 score cost와 direct connectivity를 바꾸는 설계입니다.",
+    canonicalHref: "/ai/video-understanding#video-transformer",
+  },
+  "videomae-visible-tubelet-pretraining": {
+    id: "videomae-visible-tubelet-pretraining",
+    kind: "method",
+    domain: "machine-learning",
+    label: "VideoMAE visible-tubelet pretraining",
+    definition:
+      "높은 비율의 spatiotemporal tubelet을 가리고 visible subset만 encoder에 전달해 decoder가 masked video content를 복원하도록 학습하는 self-supervised objective입니다.",
+    canonicalHref: "/ai/video-understanding#video-transformer",
+  },
+  "contrastive-pair-semantics": {
+    id: "contrastive-pair-semantics",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Contrastive pair semantics",
+    definition:
+      "두 sample 관계를 task 의미가 같은 positive, 구분해야 하는 negative, 근거가 부족한 unknown으로 나누어 embedding 학습 신호와 제외 조건을 정하는 규칙입니다.",
+    canonicalHref: "/ai/contrastive-learning#overview",
+  },
+  "positive-transformation-invariance": {
+    id: "positive-transformation-invariance",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Positive-transformation invariance",
+    definition:
+      "허용한 augmentation transformation 전후의 입력이 target 의미를 유지하므로 representation도 그 변화에 민감하지 않아야 한다는 대조 학습의 가정입니다.",
+    canonicalHref: "/ai/contrastive-learning#overview",
+  },
+  "projection-head-boundary": {
+    id: "projection-head-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Projection-head boundary",
+    definition:
+      "Encoder가 만드는 downstream representation h와 contrastive objective가 직접 작용하는 projection embedding z의 역할·shape·배포 handoff를 구분하는 경계입니다.",
+    canonicalHref: "/ai/contrastive-learning#overview",
+  },
+  "normalized-embedding-cosine": {
+    id: "normalized-embedding-cosine",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "Normalized embedding cosine–distance equivalence",
+    definition:
+      "L2 norm이 1인 두 embedding에서는 squared Euclidean distance가 2−2 cosine similarity이므로 두 측정이 반대 방향의 같은 이웃 순서를 만든다는 동치입니다.",
+    canonicalHref: "/ai/contrastive-learning#triplet",
+  },
+  "ntxent-inbatch-objective": {
+    id: "ntxent-inbatch-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "NT-Xent in-batch objective",
+    definition:
+      "Anchor와 같은 원본에서 나온 view의 temperature-scaled similarity를 분자로, anchor 자신을 제외한 batch view의 similarity 합을 분모로 두는 normalized contrastive objective입니다.",
+    canonicalHref: "/ai/contrastive-learning#simclr",
+  },
+  "temperature-negative-weighting": {
+    id: "temperature-negative-weighting",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Temperature-based negative weighting",
+    definition:
+      "Similarity logit을 양수 temperature로 나누어 softmax 후보 비율과 가까운 negative의 gradient 비중을 조절하는 mechanism입니다.",
+    canonicalHref: "/ai/contrastive-learning#simclr",
+  },
+  "triplet-relative-margin": {
+    id: "triplet-relative-margin",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Triplet relative margin",
+    definition:
+      "Anchor-negative 거리가 anchor-positive 거리보다 margin만큼 크지 않은 위반량에 hinge loss를 부여하는 relative metric-learning objective입니다.",
+    canonicalHref: "/ai/contrastive-learning#triplet",
+  },
+  "hard-negative-mining-snapshot": {
+    id: "hard-negative-mining-snapshot",
+    kind: "method",
+    domain: "computer-science",
+    label: "Hard-negative mining snapshot",
+    definition:
+      "Miner encoder·corpus index·candidate depth·similarity·duplicate/multi-positive filter를 versioning해 선택된 negative 집합을 재현하는 data artifact입니다.",
+    canonicalHref: "/ai/contrastive-learning#triplet",
+  },
+  "supervised-multipositive-objective": {
+    id: "supervised-multipositive-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Supervised multi-positive contrastive objective",
+    definition:
+      "각 anchor에 대해 batch 안의 same-label positive log-probability를 positive-set 크기로 평균하고 다른 sample과 상대 비교하는 supervised contrastive loss입니다.",
+    canonicalHref: "/ai/contrastive-learning#supervised",
+  },
+  "false-negative-pair-audit": {
+    id: "false-negative-pair-audit",
+    kind: "metric",
+    domain: "statistics",
+    label: "False-negative pair audit",
+    definition:
+      "Negative 후보를 difficulty·domain 등으로 층화 표본 추출해 실제 positive 또는 관련 sample의 비율과 판정 신뢰도를 측정하는 검수 절차입니다.",
+    canonicalHref: "/ai/contrastive-learning#application",
+  },
+  "contrastive-downstream-evaluation-loop": {
+    id: "contrastive-downstream-evaluation-loop",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Contrastive downstream evaluation loop",
+    definition:
+      "Pair·augmentation·miner revision을 동일 split·seed의 retrieval·probe 등 downstream metric과 error slice로 평가하고 실패 관계를 다음 data version에 반영하는 절차입니다.",
+    canonicalHref: "/ai/contrastive-learning#application",
+  },
+  "domain-adaptation-gap-diagnosis": {
+    id: "domain-adaptation-gap-diagnosis",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Domain-adaptation gap diagnosis",
+    definition:
+      "도메인 오류를 language/style distribution·factual freshness·task behavior·system constraint 결함으로 분해해 RAG·continued pretraining·SFT·PEFT 후보와 검증 지표를 연결하는 진단입니다.",
+    canonicalHref: "/ai/domain-finetuning#overview",
+  },
+  "minimum-domain-intervention-selection": {
+    id: "minimum-domain-intervention-selection",
+    kind: "method",
+    domain: "statistics",
+    label: "Minimum domain-intervention selection",
+    definition:
+      "같은 target validation에서 gain을 최대화하되 general regression과 학습·서빙 비용의 사전 한도를 만족하는 가장 작은 adaptation 후보를 선택하는 계약입니다.",
+    canonicalHref: "/ai/domain-finetuning#overview",
+  },
+  "domain-corpus-mixture-objective": {
+    id: "domain-corpus-mixture-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Domain/general corpus-mixture objective",
+    definition:
+      "Domain corpus와 general replay corpus의 self-supervised token loss expectation을 mixture weight로 결합해 continued-pretraining exposure를 정하는 objective입니다.",
+    canonicalHref: "/ai/domain-finetuning#continued-pretrain",
+  },
+  "domain-perplexity-comparison-contract": {
+    id: "domain-perplexity-comparison-contract",
+    kind: "metric",
+    domain: "statistics",
+    label: "Comparable domain-perplexity contract",
+    definition:
+      "Tokenizer·normalization·context·stride·target mask·token-weighted reduction이 같은 held-out domain corpus에서만 average NLL과 perplexity를 비교하는 조건입니다.",
+    canonicalHref: "/ai/domain-finetuning#continued-pretrain",
+  },
+  "adaptation-gain-forgetting-frontier": {
+    id: "adaptation-gain-forgetting-frontier",
+    kind: "metric",
+    domain: "statistics",
+    label: "Adaptation gain–forgetting frontier",
+    definition:
+      "Base checkpoint 대비 domain metric 향상과 general regression metric 하락을 checkpoint별로 함께 표시해 회귀 budget 안의 선택지를 찾는 비교입니다.",
+    canonicalHref: "/ai/domain-finetuning#continued-pretrain",
+  },
+  "domain-task-demonstration-contract": {
+    id: "domain-task-demonstration-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Domain task-demonstration contract",
+    definition:
+      "Prompt roles·context/truncation·response schema/label·loss mask·trainable scope·evaluation을 domain SFT example과 run에 함께 고정하는 규칙입니다.",
+    canonicalHref: "/ai/domain-finetuning#task-finetune",
+  },
+  "domain-entity-time-split": {
+    id: "domain-entity-time-split",
+    kind: "method",
+    domain: "statistics",
+    label: "Domain entity–time split",
+    definition:
+      "Patient·gene family·machine/lot·source lineage 같은 공유 원인 group을 split 사이에서 격리하고 필요하면 training 최대 시각이 test 최소 시각보다 앞서게 하는 평가 경계입니다.",
+    canonicalHref: "/ai/domain-finetuning#genomic",
+  },
+  "domain-data-rights-provenance": {
+    id: "domain-data-rights-provenance",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Domain data-rights provenance",
+    definition:
+      "Source·entity·license·consent purpose·retention/deletion scope를 transformation·synthetic derivative·training shard·model run까지 연결하는 권리와 lineage manifest입니다.",
+    canonicalHref: "/ai/domain-finetuning#genomic",
+  },
+  "domain-slice-evidence-coverage": {
+    id: "domain-slice-evidence-coverage",
+    kind: "metric",
+    domain: "statistics",
+    label: "Domain-slice evidence coverage",
+    definition:
+      "기관·계통·장비·condition 등 required cell마다 독립 group 수를 세고 최소 evidence count를 충족한 cell 비율과 빈 cell을 함께 보고하는 metric입니다.",
+    canonicalHref: "/ai/domain-finetuning#genomic",
+  },
+  "sentence-pooling-mask-contract": {
+    id: "sentence-pooling-mask-contract",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Masked sentence-pooling contract",
+    definition:
+      "Token별 contextual hidden state에서 padding과 special-token 포함 규칙을 mask로 고정하고, valid-token reducer와 normalization을 거쳐 문장·문서 vector 하나를 만드는 계약입니다.",
+    canonicalHref: "/ai/sentence-embeddings#overview",
+  },
+  "sentence-relation-objective-boundary": {
+    id: "sentence-relation-objective-boundary",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Sentence relation-objective boundary",
+    definition:
+      "Pooling으로 고정 길이 vector를 얻는 것과 query–document·paraphrase·entailment 관계가 similarity 순서에 반영되도록 학습하는 것을 구분하는 경계입니다.",
+    canonicalHref: "/ai/sentence-embeddings#overview",
+  },
+  "offline-document-embedding-reuse": {
+    id: "offline-document-embedding-reuse",
+    kind: "method",
+    domain: "computer-science",
+    label: "Offline document-embedding reuse",
+    definition:
+      "Query와 독립적인 document encoder output을 corpus revision마다 미리 계산해 index에 저장하고 새 query마다 재사용하여 online pair-forward를 줄이는 retrieval 계산 구조입니다.",
+    canonicalHref: "/ai/sentence-embeddings#sbert",
+  },
+  "retrieval-candidate-recall-ceiling": {
+    id: "retrieval-candidate-recall-ceiling",
+    kind: "theorem",
+    domain: "computer-science",
+    label: "Candidate-recall ceiling",
+    definition:
+      "두 번째 단계가 첫 단계의 candidate set만 재정렬한다면 candidate 밖의 relevant document를 새로 가져올 수 없으므로 최종 relevant coverage가 첫 단계 coverage를 넘지 못한다는 상한입니다.",
+    canonicalHref: "/ai/sentence-embeddings#sbert",
+  },
+  "embedding-role-instruction-contract": {
+    id: "embedding-role-instruction-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Embedding role-instruction contract",
+    definition:
+      "Query·passage·task instruction의 정확한 문자열·위치·언어·적용 side를 training serialization과 같게 유지하는 embedding checkpoint 입력 규약입니다.",
+    canonicalHref: "/ai/sentence-embeddings#modern",
+  },
+  "embedding-content-retention": {
+    id: "embedding-content-retention",
+    kind: "metric",
+    domain: "statistics",
+    label: "Embedding content retention",
+    definition:
+      "Maximum token budget에서 special token과 instruction을 제외한 뒤 원문 content 중 실제로 encoder에 남은 token 비율과 정답 위치별 보존 여부를 함께 측정하는 지표입니다.",
+    canonicalHref: "/ai/sentence-embeddings#modern",
+  },
+  "embedding-index-storage-budget": {
+    id: "embedding-index-storage-budget",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Embedding-index storage budget",
+    definition:
+      "Vector 수·dimension·성분 byte로 계산한 raw payload와 ANN structure·ID·metadata·alignment·replica overhead를 분리해 기록하는 저장량 계약입니다.",
+    canonicalHref: "/ai/sentence-embeddings#modern",
+  },
+  "multipositive-retrieval-metrics": {
+    id: "multipositive-retrieval-metrics",
+    kind: "metric",
+    domain: "statistics",
+    label: "Multi-positive retrieval metrics",
+    definition:
+      "Query별 relevant set 전체를 보존하고 top-k coverage는 Recall@k로, graded relevance의 순위 품질은 NDCG@k로 분리해 측정하는 평가 계약입니다.",
+    canonicalHref: "/ai/sentence-embeddings#evaluation",
+  },
+  "embedding-quality-cost-frontier": {
+    id: "embedding-quality-cost-frontier",
+    kind: "method",
+    domain: "statistics",
+    label: "Embedding quality–cost frontier",
+    definition:
+      "동일 corpus·index·hardware 조건에서 domain 품질, p95 latency, runtime resource와 index storage를 비교하고 다른 후보에 지배되지 않는 embedding 후보를 남기는 선택 절차입니다.",
+    canonicalHref: "/ai/sentence-embeddings#evaluation",
+  },
+  "affine-uniform-quantizer": {
+    id: "affine-uniform-quantizer",
+    kind: "method",
+    domain: "computer-science",
+    label: "Affine uniform quantizer",
+    definition:
+      "실수 값을 양의 scale로 나누고 zero-point를 더한 뒤 round·clip해 유한 integer code로 바꾸며, scale과 zero-point로 근사 실수를 복원하는 quantization 규약입니다.",
+    canonicalHref: "/ai/quantization#overview",
+  },
+  "quantization-rounding-clipping-error": {
+    id: "quantization-rounding-clipping-error",
+    kind: "concept",
+    domain: "mathematics",
+    label: "Quantization rounding · clipping error",
+    definition:
+      "Uniform representable range 안에서는 nearest grid point까지의 반 칸 rounding error가, range 밖에서는 endpoint와 원래 값의 거리인 clipping error가 생기는 오차 분해입니다.",
+    canonicalHref: "/ai/quantization#overview",
+  },
+  "quantization-scale-granularity": {
+    id: "quantization-scale-granularity",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Quantization scale granularity",
+    definition:
+      "Scale과 zero-point를 tensor 전체·channel·고정-size group 중 어느 값 집합이 공유할지 정하고 metadata·packing·error를 함께 바꾸는 규약입니다.",
+    canonicalHref: "/ai/quantization#ptq",
+  },
+  "ptq-calibration-coverage": {
+    id: "ptq-calibration-coverage",
+    kind: "metric",
+    domain: "statistics",
+    label: "PTQ calibration coverage",
+    definition:
+      "Calibration에서 정한 range를 분리된 traffic slice에 적용해 layer별 saturation과 task regression을 측정하고 representative input 범위를 점검하는 절차입니다.",
+    canonicalHref: "/ai/quantization#ptq",
+  },
+  "qat-fake-quant-ste": {
+    id: "qat-fake-quant-ste",
+    kind: "method",
+    domain: "machine-learning",
+    label: "QAT fake quantization · STE",
+    definition:
+      "Forward에서는 quantize–dequantize로 rounding·clipping error를 모사하고 backward에서는 representable range 안의 derivative를 identity로 근사해 float master weight를 학습하는 방법입니다.",
+    canonicalHref: "/ai/quantization#qat",
+  },
+  "quantized-layer-output-reconstruction": {
+    id: "quantized-layer-output-reconstruction",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Quantized layer-output reconstruction",
+    definition:
+      "Element-wise weight 거리 대신 calibration activation X에서 float와 quantized layer output XW·XŴ의 Frobenius 차이를 최소화해 input-sensitive error를 보정하는 objective입니다.",
+    canonicalHref: "/ai/quantization#gptq-awq",
+  },
+  "quantization-method-format-boundary": {
+    id: "quantization-method-format-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Quantization method · numerical format · container boundary",
+    definition:
+      "GPTQ·AWQ 같은 weight 변환 method, INT4·FP8 같은 numerical format, W4A16 같은 tensor/compute 조합과 GGUF 같은 file container를 서로 다른 추상화 층으로 구분하는 경계입니다.",
+    canonicalHref: "/ai/quantization#gptq-awq",
+  },
+  "quantized-resident-memory-ledger": {
+    id: "quantized-resident-memory-ledger",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Quantized resident-memory ledger",
+    definition:
+      "Peak memory를 packed weights·scale metadata·activations·KV cache·workspace·allocator headroom으로 분리해 weight-only quantization의 실제 capacity 효과를 측정하는 장부입니다.",
+    canonicalHref: "/ai/quantization#practice",
+  },
+  "quantized-kernel-amdahl-bound": {
+    id: "quantized-kernel-amdahl-bound",
+    kind: "theorem",
+    domain: "computer-science",
+    label: "Quantized-kernel Amdahl bound",
+    definition:
+      "전체 latency 중 low-bit kernel로 대체되는 비율 p만 Sq배 빨라진다면 나머지 시간 때문에 end-to-end speedup이 1/((1−p)+p/Sq)를 넘지 못한다는 상한입니다.",
+    canonicalHref: "/ai/quantization#practice",
+  },
+  "pruning-mask-sparsity": {
+    id: "pruning-mask-sparsity",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Pruning mask · density · sparsity",
+    definition:
+      "Weight와 같은 shape의 binary mask를 곱해 연결을 남기거나 제거하고, 전체 대상 중 mask가 0인 비율을 sparsity로 계산하는 기본 계약입니다.",
+    canonicalHref: "/ai/pruning#overview",
+  },
+  "sparse-storage-break-even": {
+    id: "sparse-storage-break-even",
+    kind: "theorem",
+    domain: "computer-science",
+    label: "Sparse storage break-even",
+    definition:
+      "남은 value와 그 위치 index·구조 metadata의 합이 dense value payload보다 작아지는 density 임계값으로, 0이 있다는 사실과 실제 저장 절감을 구분합니다.",
+    canonicalHref: "/ai/pruning#unstructured",
+  },
+  "movement-pruning-score": {
+    id: "movement-pruning-score",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Movement pruning score",
+    definition:
+      "Pretrained weight의 현재 크기만 보지 않고 downstream fine-tuning 중 task gradient가 연결을 0에서 멀어지게 하는지 또는 0 쪽으로 움직이는지를 mask score에 누적하는 1차 pruning 방법입니다.",
+    canonicalHref: "/ai/pruning#unstructured",
+  },
+  "structured-pruning-shape-propagation": {
+    id: "structured-pruning-shape-propagation",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Structured-pruning shape propagation",
+    definition:
+      "Channel·neuron·head 같은 단위를 제거할 때 현재 output과 다음 input, residual·normalization·projection의 공유 dimension을 함께 바꿔 실제 dense graph를 줄이는 계약입니다.",
+    canonicalHref: "/ai/pruning#structured",
+  },
+  "nm-semi-structured-constraint": {
+    id: "nm-semi-structured-constraint",
+    kind: "concept",
+    domain: "computer-science",
+    label: "N:M semi-structured sparsity",
+    definition:
+      "Kernel이 정한 reduction axis의 모든 M개 local group에서 정확히 N개 weight만 남기는 pattern 제약으로, 전체 density만 같은 arbitrary sparsity와 다릅니다.",
+    canonicalHref: "/ai/pruning#structured",
+  },
+  "llm-pruning-calibration-coverage": {
+    id: "llm-pruning-calibration-coverage",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "LLM pruning calibration coverage",
+    definition:
+      "One-shot pruning이 importance를 계산할 때 수집하는 layer activation이 deployment의 언어·domain·sequence length·prompt format slice를 얼마나 대표하는지 기록하는 계약입니다.",
+    canonicalHref: "/ai/pruning#llm",
+  },
+  "sparsegpt-layer-reconstruction": {
+    id: "sparsegpt-layer-reconstruction",
+    kind: "method",
+    domain: "machine-learning",
+    label: "SparseGPT layer reconstruction",
+    definition:
+      "Sparsity mask 아래에서 calibration input X에 대한 original layer output XW와 pruned·compensated output의 차이를 approximate second-order update로 줄이는 one-shot pruning 방법입니다.",
+    canonicalHref: "/ai/pruning#llm",
+  },
+  "wanda-activation-aware-score": {
+    id: "wanda-activation-aware-score",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Wanda activation-aware score",
+    definition:
+      "각 weight magnitude에 대응 input activation column norm을 곱해 per-output 범위에서 작은 연결을 고르는, weight update 없는 LLM pruning score입니다.",
+    canonicalHref: "/ai/pruning#llm",
+  },
+  "fixed-mask-recovery-invariant": {
+    id: "fixed-mask-recovery-invariant",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Fixed-mask recovery invariant",
+    definition:
+      "Pruning 뒤 fine-tuning·distillation을 해도 parameter와 optimizer state 모두에 같은 mask를 적용해 제거된 연결이 다시 0이 아닌 값으로 돌아오지 않게 하는 불변식입니다.",
+    canonicalHref: "/ai/pruning#recovery",
+  },
+  "pruning-deployment-frontier": {
+    id: "pruning-deployment-frontier",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Pruning deployment frontier",
+    definition:
+      "Sparsity 숫자 하나가 아니라 artifact byte·quality slice·target-engine sparse tactic coverage·memory·latency를 같은 dense baseline과 비교해 지배되지 않는 배포 후보를 고르는 기준입니다.",
+    canonicalHref: "/ai/pruning#recovery",
+  },
+  "distillation-signal-interface": {
+    id: "distillation-signal-interface",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Distillation signal interface",
+    definition:
+      "Teacher와 student가 공유할 수 있는 class/vocabulary·aligned feature·text sequence·task output에 따라 logit, feature, sequence, self-distillation objective를 선택하는 경계입니다.",
+    canonicalHref: "/ai/knowledge-distillation#overview",
+  },
+  "temperature-soft-target": {
+    id: "temperature-soft-target",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Temperature-softened target",
+    definition:
+      "Teacher logit을 양수 temperature로 나눈 뒤 softmax해 class 순서는 유지하면서 확률비를 완만하게 만들고 non-target 관계를 드러내는 distillation target입니다.",
+    canonicalHref: "/ai/knowledge-distillation#logit",
+  },
+  "hard-soft-distillation-objective": {
+    id: "hard-soft-distillation-objective",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Hard-label · soft-target distillation objective",
+    definition:
+      "Ground-truth cross-entropy와 teacher-to-student softened KL을 alpha로 혼합해 실제 label anchor와 teacher class relation을 함께 학습하는 objective입니다.",
+    canonicalHref: "/ai/knowledge-distillation#logit",
+  },
+  "distillation-temperature-gradient-scale": {
+    id: "distillation-temperature-gradient-scale",
+    kind: "theorem",
+    domain: "machine-learning",
+    label: "Distillation temperature gradient scale",
+    definition:
+      "큰 temperature에서 softened probability residual과 logit derivative가 각각 대략 1/T로 줄어 soft-target gradient가 약 1/T² 규모가 되므로 고전 recipe가 T²를 곱해 보정하는 관계입니다.",
+    canonicalHref: "/ai/knowledge-distillation#logit",
+  },
+  "distillation-kl-direction": {
+    id: "distillation-kl-direction",
+    kind: "concept",
+    domain: "statistics",
+    label: "Distillation KL direction",
+    definition:
+      "Teacher expectation의 forward KL DKL(q_teacher||p_student)와 student expectation의 reverse KL은 인수 순서·누락/mode penalty·gradient가 달라 같은 loss로 바꿔 쓸 수 없다는 경계입니다.",
+    canonicalHref: "/ai/knowledge-distillation#logit",
+  },
+  "feature-distillation-alignment": {
+    id: "feature-distillation-alignment",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Feature-distillation alignment",
+    definition:
+      "서로 다른 teacher/student의 layer·token/spatial position을 대응시키고 trainable projection으로 hidden shape를 맞춘 뒤 masked feature discrepancy를 줄이는 방법입니다.",
+    canonicalHref: "/ai/knowledge-distillation#feature",
+  },
+  "cross-tokenizer-sequence-distillation": {
+    id: "cross-tokenizer-sequence-distillation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Cross-tokenizer sequence distillation",
+    definition:
+      "Teacher가 고른 output 문자열을 student tokenizer·chat template로 다시 encode하고 response token NLL로 학습해 vocabulary/timestep가 다른 model 사이에서 behavior를 전달하는 방법입니다.",
+    canonicalHref: "/ai/knowledge-distillation#llm",
+  },
+  "synthetic-distillation-slice-coverage": {
+    id: "synthetic-distillation-slice-coverage",
+    kind: "metric",
+    domain: "statistics",
+    label: "Synthetic-distillation slice coverage",
+    definition:
+      "Teacher 생성·filter 뒤 남은 언어·domain·difficulty·tool/safety slice mixture를 target mixture와 비교하고 quality·dedup과 함께 dataset coverage를 판단하는 기준입니다.",
+    canonicalHref: "/ai/knowledge-distillation#llm",
+  },
+  "autoregressive-state-distribution-mismatch": {
+    id: "autoregressive-state-distribution-mismatch",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Autoregressive state-distribution mismatch",
+    definition:
+      "고정된 ground-truth·teacher sequence의 prefix에서 학습한 student가 inference에서는 자기 token으로 만든 다른 prefix를 방문하면서 다음-token 오류가 누적되는 train–inference 분포 차이입니다.",
+    canonicalHref: "/ai/knowledge-distillation#on-policy",
+  },
+  "generalized-on-policy-distillation": {
+    id: "generalized-on-policy-distillation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Generalized on-policy distillation",
+    definition:
+      "고정 response와 현재 student rollout의 mixture에서 같은 prefix를 teacher가 token distribution으로 채점하고, sampling 과정에는 역전파하지 않은 채 divergence를 줄이는 autoregressive distillation입니다.",
+    canonicalHref: "/ai/knowledge-distillation#on-policy",
+  },
+  "on-policy-token-teacher-feedback": {
+    id: "on-policy-token-teacher-feedback",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "On-policy token-level teacher feedback",
+    definition:
+      "현재 student가 생성한 prefix를 teacher와 student 양쪽에 넣고 다음-token 전체 분포의 divergence를 계산해 student가 실제로 방문하는 상태에 dense supervision을 주는 방식입니다.",
+    canonicalHref: "/ai/knowledge-distillation#on-policy",
+  },
+  "multi-teacher-policy-space-integration": {
+    id: "multi-teacher-policy-space-integration",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Multi-teacher policy-space integration",
+    definition:
+      "Domain별 specialist checkpoint의 weight를 합치는 대신 prompt domain마다 frozen teacher를 선택하고 공통 student의 on-policy prefix에서 그 teacher의 token distribution을 전달하는 capability 통합 방식입니다.",
+    canonicalHref: "/ai/knowledge-distillation#on-policy",
+  },
+  "self-distillation-inheritance-audit": {
+    id: "self-distillation-inheritance-audit",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Self-distillation inheritance audit",
+    definition:
+      "세대별 teacher agreement 변화와 ground-truth slice quality 변화를 분리해 teacher를 더 닮았지만 정답 성능은 나빠지는 bias inheritance를 찾는 진단입니다.",
+    canonicalHref: "/ai/knowledge-distillation#self",
+  },
+  "compression-lever-bottleneck-map": {
+    id: "compression-lever-bottleneck-map",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Compression lever · bottleneck map",
+    definition:
+      "측정된 weight bandwidth·KV capacity·dense/sparse compute·startup·training/adaptation 병목을 quantization·pruning·distillation·LoRA가 실제로 바꾸는 artifact 항과 연결하는 선택 지도입니다.",
+    canonicalHref: "/ai/compression-pipeline#overview",
+  },
+  "compression-hard-feasibility": {
+    id: "compression-hard-feasibility",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Compression hard feasibility",
+    definition:
+      "Quality·safety·memory·p95·compatibility별 필수 guardrail을 모두 통과한 artifact만 후보로 남겨 한 축의 큰 이득이 다른 필수 실패를 상쇄하지 못하게 하는 판정입니다.",
+    canonicalHref: "/ai/compression-pipeline#overview",
+  },
+  "resident-memory-concurrency-bound": {
+    id: "resident-memory-concurrency-bound",
+    kind: "theorem",
+    domain: "computer-science",
+    label: "Resident-memory concurrency bound",
+    definition:
+      "Usable device memory에서 weights·workspace·headroom의 고정 resident를 뺀 뒤 input/output length별 요청 state로 나눠 OOM 관점의 최대 동시 resident 요청 수를 구하는 상한입니다.",
+    canonicalHref: "/ai/compression-pipeline#budget",
+  },
+  "compression-stage-order-effect": {
+    id: "compression-stage-order-effect",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Compression-stage order effect",
+    definition:
+      "동일 baseline·budget에서 A→B와 B→A 최종 artifact의 paired metric 차이를 측정해 structure·activation·calibration을 바꾸는 stage가 교환 가능한지 판단하는 기준입니다.",
+    canonicalHref: "/ai/compression-pipeline#order",
+  },
+  "compression-stage-interaction": {
+    id: "compression-stage-interaction",
+    kind: "metric",
+    domain: "statistics",
+    label: "Compression-stage interaction",
+    definition:
+      "Baseline·A·B·A+B의 같은 방향 metric으로 결합 gain에서 두 단일 gain을 빼 stage 결합이 additive인지 synergy인지 interference인지 분리하는 paired contrast입니다.",
+    canonicalHref: "/ai/compression-pipeline#benchmark",
+  },
+  "quality-gated-compression-pareto": {
+    id: "quality-gated-compression-pareto",
+    kind: "metric",
+    domain: "statistics",
+    label: "Quality-gated compression Pareto frontier",
+    definition:
+      "필수 quality·safety·compatibility를 통과한 artifact 중 memory·p95·throughput·energy·운영 복잡도에서 다른 후보에 지배되지 않는 후보만 남기는 선택 기준입니다.",
+    canonicalHref: "/ai/compression-pipeline#benchmark",
+  },
+  "rag-stage-success-trace": {
+    id: "rag-stage-success-trace",
+    kind: "concept",
+    domain: "computer-science",
+    label: "RAG stage-success trace",
+    definition:
+      "질문의 최신 허가 source 존재, relevant candidate 회수, answer-support span의 context 보존, 최종 claim의 source support를 순서대로 기록해 첫 실패 stage를 찾는 진단 계약입니다.",
+    canonicalHref: "/ai/rag-pipeline#overview",
+  },
+  "rag-chunk-span-coverage": {
+    id: "rag-chunk-span-coverage",
+    kind: "metric",
+    domain: "statistics",
+    label: "RAG answer-span coverage",
+    definition:
+      "질문별 정답 근거의 원문 위치 집합 중 검색·parent 복원·dedup·context budgeting 뒤 실제 prompt에 남은 위치의 비율입니다.",
+    canonicalHref: "/ai/rag-pipeline#chunking",
+  },
+  "rag-index-version-contract": {
+    id: "rag-index-version-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "RAG index-version contract",
+    definition:
+      "Encoder·tokenizer·input serialization·pooling·dimension·normalization·distance·corpus/chunk snapshot·ANN configuration을 하나의 version tuple로 묶어 query service와 document index의 좌표계를 일치시키는 계약입니다.",
+    canonicalHref: "/ai/rag-pipeline#embedding",
+  },
+  "reciprocal-rank-fusion": {
+    id: "reciprocal-rank-fusion",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reciprocal Rank Fusion · RRF",
+    definition:
+      "서로 score scale이 다른 여러 retrieval result에서 문서별 1/(k+rank)를 합해, 여러 목록에서 꾸준히 높은 후보를 score calibration 없이 결합하는 rank-fusion 방법입니다.",
+    canonicalHref: "/ai/rag-pipeline#retrieval",
+  },
+  "rag-pre-retrieval-access-control": {
+    id: "rag-pre-retrieval-access-control",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Pre-retrieval access control",
+    definition:
+      "Tenant·ACL·valid-time 조건을 candidate 생성 전에 적용해 금지 문서가 ranking·reranking·prompt assembly에 들어오지 못하게 하는 RAG 권한 경계입니다.",
+    canonicalHref: "/ai/rag-pipeline#retrieval",
+  },
+  "rag-context-token-budget": {
+    id: "rag-context-token-budget",
+    kind: "metric",
+    domain: "computer-science",
+    label: "RAG context-token budget",
+    definition:
+      "Model 최대 input/output 길이에서 system·history·query·예약 output 길이를 먼저 빼고, 실제 serialization된 evidence chunk가 사용할 수 있는 token 상한을 계산하는 장부입니다.",
+    canonicalHref: "/ai/rag-pipeline#generation",
+  },
+  "rag-retrieved-data-boundary": {
+    id: "rag-retrieved-data-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Retrieved-data instruction boundary",
+    definition:
+      "검색된 문서 안의 문자열은 인용·요약할 untrusted data로 취급하고 system·application instruction처럼 실행하지 않도록 serialization·tool authority를 분리하는 경계입니다.",
+    canonicalHref: "/ai/rag-pipeline#generation",
+  },
+  "rag-citation-support-metrics": {
+    id: "rag-citation-support-metrics",
+    kind: "metric",
+    domain: "statistics",
+    label: "Citation support precision · recall",
+    definition:
+      "답변이 연결한 citation 중 실제 claim을 지지하는 비율과, 외부 근거가 필요한 atomic claim 중 올바른 citation을 가진 비율을 분리하는 인용 평가 계약입니다.",
+    canonicalHref: "/ai/rag-pipeline#evaluation",
+  },
+  "rag-layered-evaluation": {
+    id: "rag-layered-evaluation",
+    kind: "method",
+    domain: "statistics",
+    label: "Layered RAG evaluation",
+    definition:
+      "같은 query trace에서 retrieval coverage/ranking, context retention, answer correctness/faithfulness, citation support, latency/ACL/security를 stage별 metric과 owner로 분리하는 평가 방법입니다.",
+    canonicalHref: "/ai/rag-pipeline#evaluation",
+  },
+  "lora-trainable-scope-contract": {
+    id: "lora-trainable-scope-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "LoRA trainable-scope contract",
+    definition:
+      "Pretrained base를 frozen으로 두고 target module의 A/B adapter와 명시한 modules_to_save만 gradient·optimizer·checkpoint 대상으로 삼아 실제 trainable set을 검증하는 계약입니다.",
+    canonicalHref: "/ai/lora-finetuning#overview",
+  },
+  "lora-low-rank-update": {
+    id: "lora-low-rank-update",
+    kind: "method",
+    domain: "machine-learning",
+    label: "LoRA low-rank update",
+    definition:
+      "Shape dout×din인 frozen weight의 변화량을 B(dout×r)A(r×din)로 표현해 추가 parameter를 r(din+dout)로 줄이고 update rank를 최대 r로 제한하는 adaptation 방법입니다.",
+    canonicalHref: "/ai/lora-finetuning#lora",
+  },
+  "lora-target-capacity-budget": {
+    id: "lora-target-capacity-budget",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "LoRA target-capacity budget",
+    definition:
+      "Attention·MLP 등 실제 target module별 input/output shape와 rank를 합산해 trainable parameter·update 자유도·step cost를 배분하고 validation gain과 비교하는 계약입니다.",
+    canonicalHref: "/ai/lora-finetuning#lora",
+  },
+  "qlora-precision-path": {
+    id: "qlora-precision-path",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "QLoRA storage–compute–training precision path",
+    definition:
+      "Frozen base의 low-bit code/metadata, matmul을 위한 dequantized compute dtype, trainable adapter·gradient·optimizer dtype을 구분해 gradient와 artifact 경로를 추적하는 계약입니다.",
+    canonicalHref: "/ai/lora-finetuning#qlora",
+  },
+  "qlora-training-memory-ledger": {
+    id: "qlora-training-memory-ledger",
+    kind: "metric",
+    domain: "computer-science",
+    label: "QLoRA training-memory ledger",
+    definition:
+      "Base low-bit payload·quantization metadata·adapter weight/gradient/optimizer·saved activation·kernel workspace·allocator reserve를 byte 단위로 분리해 peak memory를 설명하는 장부입니다.",
+    canonicalHref: "/ai/lora-finetuning#qlora",
+  },
+  "lora-token-loss-contract": {
+    id: "lora-token-loss-contract",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "LoRA token-serialization · loss contract",
+    definition:
+      "Base tokenizer의 chat template으로 role·special token·turn을 직렬화하고 assistant target·prompt·padding 위치의 loss mask와 truncation/packing 경계를 고정하는 SFT data 계약입니다.",
+    canonicalHref: "/ai/lora-finetuning#data",
+  },
+  "lora-merge-equivalence": {
+    id: "lora-merge-equivalence",
+    kind: "theorem",
+    domain: "mathematics",
+    label: "LoRA merge equivalence",
+    definition:
+      "같은 dtype·operator와 deterministic inference에서 Wx+sBAx=(W+sBA)x의 분배법칙으로 unmerged adapter branch를 merged weight 한 개로 바꿀 수 있다는 동치입니다.",
+    canonicalHref: "/ai/lora-finetuning#practice",
+  },
+  "lora-requantization-boundary": {
+    id: "lora-requantization-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "LoRA merge–requantization boundary",
+    definition:
+      "Quantization은 rounding·clipping이 있어 덧셈을 일반적으로 보존하지 않으므로 quantized base에 adapter를 merge하고 다시 quantize한 결과를 새 code·scale·오차를 가진 별도 artifact로 승인하는 경계입니다.",
+    canonicalHref: "/ai/lora-finetuning#practice",
+  },
+  "multiagent-baseline-gain": {
+    id: "multiagent-baseline-gain",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Multi-agent baseline gain",
+    definition:
+      "동일 task·tool·quality gate에서 single-agent와 multi-agent의 end-to-end wall time·실제 cost·quality·failure rate를 비교해 분리 자체의 순이득을 판정하는 계약입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#overview",
+  },
+  "multiagent-worker-receipt": {
+    id: "multiagent-worker-receipt",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Multi-agent worker receipt",
+    definition:
+      "Worker의 task/input snapshot·권한·artifact URI/checksum·evidence·validation·uncertainty·idempotency key를 typed result로 반환해 coordinator가 원문 재작업 없이 검증하게 하는 계약입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#architecture",
+  },
+  "multiagent-join-completeness": {
+    id: "multiagent-join-completeness",
+    kind: "metric",
+    domain: "computer-science",
+    label: "Multi-agent join completeness",
+    definition:
+      "필수 task와 성공 receipt ID가 일치하고 artifact conflict가 없으며 global validator가 통과할 때만 분산 실행의 최종 결과를 완료로 판정하는 기준입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#architecture",
+  },
+  "parallel-reducer-safety": {
+    id: "parallel-reducer-safety",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "Parallel reducer safety conditions",
+    definition:
+      "Unordered parallel update와 retry에서 순서·중복에 무관한 set-like join을 원할 때 reducer의 결합법칙·교환법칙·멱등성을 확인하고 의미 충돌을 별도로 검출하는 조건입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#langgraph",
+  },
+  "agent-replay-idempotency": {
+    id: "agent-replay-idempotency",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Agent replay idempotency",
+    definition:
+      "Checkpoint resume·retry로 node가 다시 실행돼도 stable operation key·upsert·receipt로 외부 side effect가 의도치 않게 중복되지 않게 하는 실행 계약입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#langgraph",
+  },
+  "agent-workflow-judgment-boundary": {
+    id: "agent-workflow-judgment-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Workflow control · agent judgment boundary",
+    definition:
+      "Event·state·retry·timeout·approval 같은 transition은 deterministic workflow가 강제하고, source 비교·합성처럼 의미 판단이 필요한 구간만 agent group에 맡기는 경계입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#crewai",
+  },
+  "manufacturing-advisory-control-boundary": {
+    id: "manufacturing-advisory-control-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Manufacturing advisory–control boundary",
+    definition:
+      "LLM report를 advisory artifact로 제한하고 sensor validity·approved deterministic rule·authorized human·PLC/physical interlock을 모두 통과한 별도 path만 설비 조치를 실행하게 하는 안전 경계입니다.",
+    canonicalHref: "/ai/multi-agent-implementation#manufacturing",
+  },
+  "competition-evaluation-contract": {
+    id: "competition-evaluation-contract",
+    domain: "machine-learning",
+    label: "Competition evaluation contract",
+    definition:
+      "한 prediction row·cutoff·target·metric 계산 단위와 방향, local validation·public leaderboard·private/final evaluation의 서로 다른 역할을 실험 전에 고정하는 계약입니다.",
+    canonicalHref: "/ai/competition-workflow#overview",
+  },
+  "model-selection-maximum-optimism": {
+    id: "model-selection-maximum-optimism",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Maximum-selection optimism",
+    definition:
+      "여러 noisy validation estimate의 최댓값으로 후보를 고르면 maximum의 convexity 때문에 선택된 관측 성능의 기대값이 후보 true mean의 최댓값보다 작지 않아 낙관적 선택이 생길 수 있다는 결과입니다.",
+    canonicalHref: "/ai/competition-workflow#overview",
+  },
+  "prediction-time-feature-availability": {
+    id: "prediction-time-feature-availability",
+    domain: "machine-learning",
+    label: "Prediction-time feature availability",
+    definition:
+      "Feature가 참조한 모든 source event의 실제 available time이 해당 row의 prediction cutoff보다 이른지 lineage로 검사하는 leakage 경계입니다.",
+    canonicalHref: "/ai/competition-workflow#eda-phase",
+  },
+  "competition-oof-coverage": {
+    id: "competition-oof-coverage",
+    kind: "metric",
+    domain: "statistics",
+    label: "Out-of-fold row coverage",
+    definition:
+      "표준 partition형 K-fold에서 각 train row가 자신을 학습에 사용하지 않은 fold model의 validation prediction을 정확히 한 번 받았는지 세는 무결성 검사입니다.",
+    canonicalHref: "/ai/competition-workflow#baseline",
+  },
+  "competition-baseline-artifact": {
+    id: "competition-baseline-artifact",
+    domain: "machine-learning",
+    label: "Competition baseline artifact",
+    definition:
+      "Data snapshot·split manifest·resolved run·OOF/test prediction·metric report·submission checksum을 한 revision에서 재생성할 수 있게 연결한 첫 end-to-end 기준점입니다.",
+    canonicalHref: "/ai/competition-workflow#baseline",
+  },
+  "one-hypothesis-experiment-contract": {
+    id: "one-hypothesis-experiment-contract",
+    domain: "machine-learning",
+    label: "One-hypothesis experiment contract",
+    definition:
+      "관찰한 failure slice·원인 가설·한 축의 변경·예상 결과·비용·채택 기준을 실행 전에 기록하고 동일 protocol의 baseline과 비교하는 실험 규칙입니다.",
+    canonicalHref: "/ai/competition-workflow#iteration",
+  },
+  "paired-fold-experiment-delta": {
+    id: "paired-fold-experiment-delta",
+    kind: "metric",
+    domain: "statistics",
+    label: "Paired fold experiment delta",
+    definition:
+      "같은 fold·행·metric에서 candidate score와 baseline score를 빼 fold별 개선을 만들고 평균·흔들림·slice 방향을 함께 보는 비교 통계입니다.",
+    canonicalHref: "/ai/competition-workflow#iteration",
+  },
+  "leaderboard-adaptive-feedback-budget": {
+    id: "leaderboard-adaptive-feedback-budget",
+    kind: "metric",
+    domain: "statistics",
+    label: "Adaptive leaderboard feedback budget",
+    definition:
+      "Public leaderboard 결과가 후속 model·feature·weight 선택을 바꾼 횟수와 결정 근거를 사전 한도 안에서 기록해 holdout의 반복 사용을 통제하는 운영 지표입니다.",
+    canonicalHref: "/ai/competition-workflow#final",
+  },
+  "competition-submission-manifest": {
+    id: "competition-submission-manifest",
+    domain: "machine-learning",
+    label: "Competition submission manifest",
+    definition:
+      "Candidate/run ID·code/data/split/preprocess/checkpoint·OOF report·retrain 여부·inference environment·row order·file checksum을 제출 파일과 연결한 최종 lineage입니다.",
+    canonicalHref: "/ai/competition-workflow#final",
+  },
+  "deployment-matched-validation-risk": {
+    id: "deployment-matched-validation-risk",
+    domain: "statistics",
+    label: "Deployment-matched validation risk",
+    definition:
+      "학습 절차가 실제 train distribution의 data로 model을 만들고 배포에서 새로 만날 row·entity·time/site 단위에 내는 loss의 기대값을 validation 목표로 명시한 estimand입니다.",
+    canonicalHref: "/ai/cross-validation#overview",
+  },
+  "fold-local-transform-boundary": {
+    id: "fold-local-transform-boundary",
+    domain: "machine-learning",
+    label: "Fold-local transform boundary",
+    definition:
+      "Scaler·imputer·vocabulary·feature selection·target encoding을 각 fold의 training rows에서만 fit하고 validation에는 transform만 적용하는 정보 경계입니다.",
+    canonicalHref: "/ai/cross-validation#overview",
+  },
+  "pooled-oof-risk-estimate": {
+    id: "pooled-oof-risk-estimate",
+    kind: "metric",
+    domain: "statistics",
+    label: "Pooled out-of-fold risk estimate",
+    definition:
+      "각 행이 자신을 학습하지 않은 fold model에게서 받은 loss를 sample weight와 실제 validation 행 수로 합쳐 전체 held-out prediction risk를 계산하는 추정량입니다.",
+    canonicalHref: "/ai/cross-validation#kfold",
+  },
+  "cv-procedure-estimand": {
+    id: "cv-procedure-estimand",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Cross-validation procedure estimand",
+    definition:
+      "보통의 CV estimate는 관측 data 전체로 fit한 특정 model의 conditional error보다 같은 모집단에서 새로 뽑은 training sets에 학습 절차를 적용한 model들의 평균 prediction error에 더 가깝다는 해석입니다.",
+    canonicalHref: "/ai/cross-validation#kfold",
+  },
+  "group-disjoint-split": {
+    id: "group-disjoint-split",
+    domain: "statistics",
+    label: "Group-disjoint split",
+    definition:
+      "한 entity·source·site처럼 공유 원인을 가진 모든 파생 행을 같은 partition에 두어 fold train과 validation의 group ID 교집합을 비우는 분할 조건입니다.",
+    canonicalHref: "/ai/cross-validation#group",
+  },
+  "independent-evaluation-unit-count": {
+    id: "independent-evaluation-unit-count",
+    kind: "metric",
+    domain: "statistics",
+    label: "Independent evaluation-unit count",
+    definition:
+      "행 수가 아니라 배포 질문에서 새로 나타나며 독립에 가깝다고 보는 patient·site·source group 수를 근거 반복 단위로 세는 지표입니다.",
+    canonicalHref: "/ai/cross-validation#group",
+  },
+  "walk-forward-label-availability": {
+    id: "walk-forward-label-availability",
+    domain: "statistics",
+    label: "Walk-forward label-availability boundary",
+    definition:
+      "각 validation origin에서 training row의 target horizon과 reporting delay를 지난 label available time이 첫 prediction cutoff보다 이른 행만 학습에 허용하는 시간 조건입니다.",
+    canonicalHref: "/ai/cross-validation#timeseries",
+  },
+  "cv-leaderboard-rank-agreement": {
+    id: "cv-leaderboard-rank-agreement",
+    kind: "metric",
+    domain: "statistics",
+    label: "CV–leaderboard pairwise rank agreement",
+    definition:
+      "동일 후보 쌍에서 local CV와 public leaderboard의 우열 방향이 일치하는 비율로 절대 score offset과 model-selection 순서 보존을 분리하는 진단입니다.",
+    canonicalHref: "/ai/cross-validation#cv-lb",
+  },
+  "validation-protocol-adaptation-audit": {
+    id: "validation-protocol-adaptation-audit",
+    domain: "machine-learning",
+    label: "Validation-protocol adaptation audit",
+    definition:
+      "Leaderboard feedback을 보고 split·metric·preprocessing·candidate filter를 바꾼 시점과 가설을 기록하고 마지막에는 그 선택에 쓰지 않은 holdout에서 재평가하는 절차입니다.",
+    canonicalHref: "/ai/cross-validation#cv-lb",
+  },
+  "hpo-selection-evaluation-contract": {
+    id: "hpo-selection-evaluation-contract",
+    domain: "machine-learning",
+    label: "Hyperparameter search–selection–evaluation contract",
+    definition:
+      "동일 split·metric·training resource·seed policy에서 configuration을 비교해 validation으로 하나를 선택하고, 선택에 사용하지 않은 outer data에서 그 절차를 다시 평가하는 계약입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#overview",
+  },
+  "random-search-hit-probability": {
+    id: "random-search-hit-probability",
+    kind: "metric",
+    domain: "statistics",
+    label: "Random-search hit probability",
+    definition:
+      "Sampling distribution에서 promising region의 확률 질량이 p일 때 N번의 독립 trial이 그 영역을 적어도 한 번 만날 확률 1−(1−p)^N입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#overview",
+  },
+  "adaptive-trial-proposal-history": {
+    id: "adaptive-trial-proposal-history",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Adaptive trial proposal history",
+    definition:
+      "완료·중단·실패 configuration과 관측값의 history로 surrogate 또는 acquisition rule을 갱신해 다음 configuration을 제안하는 sequential search 구조입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#optuna",
+  },
+  "tpe-density-ratio": {
+    id: "tpe-density-ratio",
+    kind: "method",
+    domain: "statistics",
+    label: "Tree-structured Parzen estimator density ratio",
+    definition:
+      "관측 score를 좋은 집합과 나머지로 나누고 configuration의 조건부 밀도 l(λ)와 g(λ)를 추정해 l/g가 큰 후보를 선호하는 TPE의 핵심 관점입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#optuna",
+  },
+  "log-uniform-parameter-sampling": {
+    id: "log-uniform-parameter-sampling",
+    kind: "method",
+    domain: "statistics",
+    label: "Log-uniform parameter sampling",
+    definition:
+      "양의 parameter를 log 좌표에서 균등하게 뽑아 orders of magnitude마다 같은 확률을 주는 sampling distribution입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#search-space",
+  },
+  "typed-conditional-search-space": {
+    id: "typed-conditional-search-space",
+    domain: "computer-science",
+    label: "Typed conditional search space",
+    definition:
+      "각 hyperparameter의 continuous·integer·categorical type, sampling scale, bounds와 parent choice에 따른 child parameter 존재 조건을 명시한 configuration 공간입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#search-space",
+  },
+  "feasible-search-space-constraint": {
+    id: "feasible-search-space-constraint",
+    domain: "machine-learning",
+    label: "Feasible search-space constraint",
+    definition:
+      "Branch validity와 memory·latency·compatibility 같은 hard constraint를 만족해 실제 실행 가능한 configuration만 전체 공간에서 남기는 경계입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#search-space",
+  },
+  "comparable-fidelity-resource": {
+    id: "comparable-fidelity-resource",
+    domain: "machine-learning",
+    label: "Comparable fidelity resource",
+    definition:
+      "Trial 사이에서 같은 양의 학습 진척을 뜻하도록 정의한 optimizer update·processed token·sample·data fraction 같은 중간 평가 단위입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#pruning",
+  },
+  "successive-halving-resource-allocation": {
+    id: "successive-halving-resource-allocation",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Successive-halving resource allocation",
+    definition:
+      "같은 fidelity에서 비교한 configuration 중 상위 일부만 유지하고 살아남은 후보의 resource를 일정 비율로 늘리는 multi-fidelity 자원 배분 방법입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#pruning",
+  },
+  "hpo-pareto-dominance": {
+    id: "hpo-pareto-dominance",
+    kind: "metric",
+    domain: "statistics",
+    label: "Hyperparameter-study Pareto dominance",
+    definition:
+      "Hard constraint를 통과한 두 trial에서 한 후보가 quality·latency·memory 등 모든 목적에 나쁘지 않고 적어도 하나에서 더 좋으면 다른 후보를 지배한다고 판정하는 다목적 선택 기준입니다.",
+    canonicalHref: "/ai/hyperparameter-tuning#pruning",
+  },
+  "oof-error-covariance": {
+    id: "oof-error-covariance",
+    kind: "metric",
+    domain: "statistics",
+    label: "Out-of-fold error covariance",
+    definition:
+      "같은 OOF 행에서 두 base model의 residual 또는 error signal이 함께 움직이는 정도를 측정해 개별 성능과 상보성을 분리하는 통계입니다.",
+    canonicalHref: "/ai/ensemble-methods#overview",
+  },
+  "simplex-prediction-averaging": {
+    id: "simplex-prediction-averaging",
+    kind: "method",
+    domain: "statistics",
+    label: "Simplex prediction averaging",
+    definition:
+      "합이 1이고 0 이상인 weights로 같은 의미와 scale의 base predictions를 convex combination하는 결합 방법입니다.",
+    canonicalHref: "/ai/ensemble-methods#averaging",
+  },
+  "percentile-rank-averaging": {
+    id: "percentile-rank-averaging",
+    kind: "method",
+    domain: "statistics",
+    label: "Percentile-rank averaging",
+    definition:
+      "Model별 prediction을 OOF empirical percentile로 바꿔 scale 차이를 제거한 뒤 ordering만 결합하는 방법입니다.",
+    canonicalHref: "/ai/ensemble-methods#averaging",
+  },
+  "cross-fitted-stacking-matrix": {
+    id: "cross-fitted-stacking-matrix",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Cross-fitted stacking matrix",
+    definition:
+      "각 training row를 제외한 fold data로 학습한 base models의 prediction만 row별 meta-features로 모은 OOF matrix입니다.",
+    canonicalHref: "/ai/ensemble-methods#stacking",
+  },
+  "super-learner-oracle-comparison": {
+    id: "super-learner-oracle-comparison",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Super Learner oracle comparison",
+    definition:
+      "명시된 boundedness·library growth·cross-validation 조건에서 CV가 선택한 결합의 risk가 선언한 candidate family 안의 oracle risk에 asymptotically 가까워지는 결과입니다.",
+    canonicalHref: "/ai/ensemble-methods#stacking",
+  },
+  "blend-holdout-allocation": {
+    id: "blend-holdout-allocation",
+    kind: "metric",
+    domain: "statistics",
+    label: "Blend-holdout data allocation",
+    definition:
+      "전체 개발 data를 겹치지 않는 base-fit set과 combiner-fit holdout으로 나누어 두 학습기의 표본 수와 분산을 직접 맞바꾸는 blending 계약입니다.",
+    canonicalHref: "/ai/ensemble-methods#blending",
+  },
+  "ensemble-marginal-gain-cost": {
+    id: "ensemble-marginal-gain-cost",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Ensemble marginal gain · serving cost",
+    definition:
+      "같은 OOF rows에서 후보 추가 전후 risk 감소와 target runtime에서 늘어난 p95 latency·memory·운영 복잡도를 함께 기록하는 채택 기준입니다.",
+    canonicalHref: "/ai/ensemble-methods#practice",
+  },
+  "decision-cost-metric-contract": {
+    id: "decision-cost-metric-contract",
+    domain: "statistics",
+    label: "Decision-cost metric contract",
+    definition:
+      "배포에서 의사결정을 내리는 unit, model prediction을 action으로 바꾸는 policy, outcome별 비용과 evaluation weight를 먼저 정의하고 offline metric을 그 expected cost의 proxy로 사용하는 계약입니다.",
+    canonicalHref: "/ai/evaluation-metrics#overview",
+  },
+  "hierarchical-metric-reducer": {
+    id: "hierarchical-metric-reducer",
+    kind: "metric",
+    domain: "statistics",
+    label: "Hierarchical metric reducer",
+    definition:
+      "관측값을 바로 전역 평균하지 않고 query·환자·고객 같은 decision unit 안에서 먼저 집계한 뒤 unit·slice·global 순서와 weight를 고정해 평균내는 방법입니다.",
+    canonicalHref: "/ai/evaluation-metrics#overview",
+  },
+  "absolute-squared-risk-bayes-act": {
+    id: "absolute-squared-risk-bayes-act",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Absolute–squared risk Bayes acts",
+    definition:
+      "조건부 squared-error risk를 최소화하는 point prediction은 조건부 평균이고, absolute-error risk를 최소화하는 point prediction은 조건부 중앙값이라는 결과입니다.",
+    canonicalHref: "/ai/evaluation-metrics#regression",
+  },
+  "prediction-interval-coverage-width": {
+    id: "prediction-interval-coverage-width",
+    kind: "metric",
+    domain: "statistics",
+    label: "Prediction-interval coverage · width",
+    definition:
+      "예측 구간이 실제 outcome을 포함한 비율과 같은 target 단위의 평균 구간 폭을 분리해, 포함률만 높이는 지나치게 넓은 구간을 구분하는 평가 쌍입니다.",
+    canonicalHref: "/ai/evaluation-metrics#regression",
+  },
+  "strictly-proper-probability-score": {
+    id: "strictly-proper-probability-score",
+    kind: "theorem",
+    domain: "statistics",
+    label: "Strictly proper probability score",
+    definition:
+      "실제 조건부 outcome distribution을 그대로 보고할 때만 expected score가 유일하게 최적이 되어 probability forecast를 과장하거나 축소할 유인을 만들지 않는 scoring-rule 성질입니다.",
+    canonicalHref: "/ai/evaluation-metrics#classification",
+  },
+  "ndcg-graded-discount": {
+    id: "ndcg-graded-discount",
+    kind: "metric",
+    domain: "statistics",
+    label: "NDCG graded relevance · rank discount",
+    definition:
+      "Rank별 graded relevance gain에 position discount를 적용한 DCG를 같은 judged set의 ideal DCG로 나누어 상단의 높은 relevance를 보상하는 query-level ranking metric입니다.",
+    canonicalHref: "/ai/evaluation-metrics#ranking",
+  },
+  "query-macro-traffic-reducer": {
+    id: "query-macro-traffic-reducer",
+    kind: "metric",
+    domain: "statistics",
+    label: "Query-macro · traffic-weighted reducer",
+    definition:
+      "고유 query마다 같은 weight를 주는 macro 평균과 실제 query 발생량을 weight로 주는 traffic 평균을 구분해 query 종류와 사용자 요청 traffic이라는 서로 다른 population을 평가하는 집계 규칙입니다.",
+    canonicalHref: "/ai/evaluation-metrics#ranking",
+  },
+  "incomplete-relevance-judgment": {
+    id: "incomplete-relevance-judgment",
+    domain: "statistics",
+    label: "Incomplete relevance judgment",
+    definition:
+      "검색 candidate 중 일부만 relevance 평가를 받아 unjudged item을 negative로 간주할 때 새로운 relevant item을 찾은 system이 부당하게 감점될 수 있는 ranking-evaluation 정보 결손입니다.",
+    canonicalHref: "/ai/evaluation-metrics#ranking",
+  },
+  "surrogate-selection-policy-boundary": {
+    id: "surrogate-selection-policy-boundary",
+    domain: "machine-learning",
+    label: "Surrogate–selection–policy boundary",
+    definition:
+      "Training data로 differentiable surrogate와 model parameters를 학습하고 validation·OOF prediction으로 configuration과 decision policy를 고른 뒤 untouched outer data에서 완성된 procedure를 평가하는 정보 경계입니다.",
+    canonicalHref: "/ai/evaluation-metrics#optimization",
+  },
+  "metric-guardrail-feasible-selection": {
+    id: "metric-guardrail-feasible-selection",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Metric-guardrail feasible selection",
+    definition:
+      "Worst-slice error·coverage·latency 같은 hard guardrail을 모두 통과한 candidate 집합을 먼저 만든 뒤 그 안에서 primary metric을 최적화하는 model-selection 방법입니다.",
+    canonicalHref: "/ai/evaluation-metrics#optimization",
+  },
+  "experiment-spec-attempt-identity": {
+    id: "experiment-spec-attempt-identity",
+    domain: "computer-science",
+    label: "Experiment specification · attempt identity",
+    definition:
+      "Code·data·split·resolved config·environment·command의 content digest로 실행 조건을 식별하고, seed·retry·worker를 별도 attempt ID에 포함해 같은 조건의 반복 실행을 덮어쓰지 않는 규칙입니다.",
+    canonicalHref: "/ai/experiment-tracking#overview",
+  },
+  "content-addressed-artifact-reference": {
+    id: "content-addressed-artifact-reference",
+    domain: "computer-science",
+    label: "Content-addressed artifact reference",
+    definition:
+      "Artifact의 URI뿐 아니라 bytes digest·schema version·size·producer run을 함께 저장해 위치가 움직이거나 덮어써져도 정확한 내용과 의미를 검증하는 reference입니다.",
+    canonicalHref: "/ai/experiment-tracking#overview",
+  },
+  "metric-progress-coordinate": {
+    id: "metric-progress-coordinate",
+    kind: "metric",
+    domain: "machine-learning",
+    label: "Metric progress coordinate",
+    definition:
+      "Learning curve의 각 관측에 optimizer update·processed sample/token·wall time을 함께 기록해 서로 다른 batch·accumulation·hardware run을 같은 학습 자원 축에서 비교하는 좌표 계약입니다.",
+    canonicalHref: "/ai/experiment-tracking#wandb",
+  },
+  "mutable-alias-resolution-receipt": {
+    id: "mutable-alias-resolution-receipt",
+    domain: "computer-science",
+    label: "Mutable-alias resolution receipt",
+    definition:
+      "latest·candidate·champion 같은 움직이는 alias가 승인·배포 시점에 가리킨 immutable artifact version과 digest·승인자·시각을 별도 event로 고정하는 기록입니다.",
+    canonicalHref: "/ai/experiment-tracking#wandb",
+  },
+  "tracking-store-artifact-integrity": {
+    id: "tracking-store-artifact-integrity",
+    domain: "distributed-systems",
+    label: "Tracking-store · artifact-store integrity",
+    definition:
+      "Run metadata database의 필수 artifact URI가 실제 object store에서 읽히고 digest·schema가 일치하며 backup·retention·access lifecycle이 함께 복구되는지 검사하는 저장 경계입니다.",
+    canonicalHref: "/ai/experiment-tracking#mlflow",
+  },
+  "registry-deployment-version-parity": {
+    id: "registry-deployment-version-parity",
+    domain: "computer-science",
+    label: "Registry–deployment version parity",
+    definition:
+      "Registry alias가 resolve한 immutable model version·artifact digest와 실제 endpoint가 로드한 model·serving config revision이 일치하는지 deployment receipt와 runtime probe로 확인하는 조건입니다.",
+    canonicalHref: "/ai/experiment-tracking#mlflow",
+  },
+  "reproduction-equivalence-level": {
+    id: "reproduction-equivalence-level",
+    domain: "machine-learning",
+    label: "Reproduction equivalence level",
+    definition:
+      "재실행 결과의 같음을 bitwise artifact equality, tensor numeric tolerance, repeated-seed statistical agreement, production behavior guardrail로 나누고 목적에 맞는 acceptance level을 선언하는 계약입니다.",
+    canonicalHref: "/ai/experiment-tracking#reproducibility",
+  },
+  "hierarchical-random-seed-derivation": {
+    id: "hierarchical-random-seed-derivation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Hierarchical random-seed derivation",
+    definition:
+      "Root seed와 stable run·rank·worker·epoch coordinates를 결정적으로 섞어 병렬 random streams를 분리하고 같은 execution topology에서 다시 계산하는 방법입니다.",
+    canonicalHref: "/ai/experiment-tracking#reproducibility",
+  },
+  "clean-room-reproduction-test": {
+    id: "clean-room-reproduction-test",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Clean-room reproduction test",
+    definition:
+      "개발 machine의 숨은 state를 사용하지 않는 빈 environment에서 immutable inputs와 command로 실행한 뒤 first divergence·artifact·metric·slice acceptance를 검사하는 재현 시험입니다.",
+    canonicalHref: "/ai/experiment-tracking#reproducibility",
+  },
+  "reasoning-recipe-reproduction-scope": {
+    id: "reasoning-recipe-reproduction-scope",
+    domain: "machine-learning",
+    label: "Reasoning-recipe reproduction scope",
+    definition:
+      "같은 reasoning 프로젝트 안에서도 teacher-trace distillation, base-policy RL, cold-start와 여러 stage를 결합한 recipe reconstruction을 서로 다른 재현 claim으로 선언하는 경계입니다.",
+    canonicalHref: "/ai/open-r1#overview",
+  },
+  "reasoning-trace-supervision-boundary": {
+    id: "reasoning-trace-supervision-boundary",
+    domain: "machine-learning",
+    label: "Reasoning-trace supervision boundary",
+    definition:
+      "Teacher가 생성한 reasoning 문자열을 student tokenizer로 직렬화해 response-token NLL로 모사하되, final-answer correctness가 trace의 모든 단계와 내부 추론의 faithful함을 보장하지 않는 SFT 경계입니다.",
+    canonicalHref: "/ai/open-r1#sft-process",
+  },
+  "verifier-accessible-policy-region": {
+    id: "verifier-accessible-policy-region",
+    domain: "machine-learning",
+    label: "Verifier-accessible policy region",
+    definition:
+      "현재 policy가 parser가 읽고 verifier가 서로 다른 점수를 줄 수 있는 output을 충분히 생성해, online RL의 reward가 거의 모두 같은 값으로 붕괴하지 않는 출력 영역입니다.",
+    canonicalHref: "/ai/open-r1#sft-process",
+  },
+  "grpo-within-prompt-relative-advantage": {
+    id: "grpo-within-prompt-relative-advantage",
+    kind: "method",
+    domain: "machine-learning",
+    label: "GRPO within-prompt relative advantage",
+    definition:
+      "같은 prompt에서 현재 policy가 만든 여러 completion의 reward를 group mean 또는 정한 baseline과 비교해 별도 learned value model 없이 상대 update 신호를 만드는 방법입니다.",
+    canonicalHref: "/ai/open-r1#grpo-process",
+  },
+  "grpo-policy-ratio-surrogate": {
+    id: "grpo-policy-ratio-surrogate",
+    kind: "method",
+    domain: "machine-learning",
+    label: "GRPO policy-ratio surrogate",
+    definition:
+      "Rollout policy와 training policy의 token 또는 sequence probability ratio에 relative advantage를 곱하고 clip·KL·iteration 설정으로 한 rollout에서 허용할 policy 변화를 제한하는 objective입니다.",
+    canonicalHref: "/ai/open-r1#grpo-process",
+  },
+  "long-cot-loss-normalization-contract": {
+    id: "long-cot-loss-normalization-contract",
+    domain: "machine-learning",
+    label: "Long-CoT loss-normalization contract",
+    definition:
+      "Completion별 평균, global active-token 평균 또는 고정 최대 길이 중 어느 denominator로 policy contribution을 합칠지 명시해 response length와 gradient weight의 관계를 고정하는 계약입니다.",
+    canonicalHref: "/ai/open-r1#grpo-process",
+  },
+  "sampler-trainer-policy-mismatch": {
+    id: "sampler-trainer-policy-mismatch",
+    domain: "machine-learning",
+    label: "Sampler–trainer policy mismatch",
+    definition:
+      "Rollout engine과 training framework가 precision·kernel·implementation 차이로 같은 token prefix에 다른 log-probability를 계산해 명목상 on-policy data가 실제 update policy와 어긋나는 현상입니다.",
+    canonicalHref: "/ai/open-r1#grpo-process",
+  },
+  "versioned-verifier-measurement": {
+    id: "versioned-verifier-measurement",
+    domain: "computer-science",
+    label: "Versioned verifier measurement",
+    definition:
+      "Math parser·code test·sandbox·judge prompt를 versioned measurement program으로 기록하고, verifier가 관측한 outcome과 확인하지 못한 reasoning·안전성 범위를 분리하는 계약입니다.",
+    canonicalHref: "/ai/open-r1#reward-system",
+  },
+  "reasoning-data-lineage": {
+    id: "reasoning-data-lineage",
+    domain: "computer-science",
+    label: "Reasoning-data lineage",
+    definition:
+      "Source problem·teacher checkpoint·sampling config·raw completion·parser output·verifier result·filter reason·released split을 연결해 synthetic reasoning data를 다시 채점하고 재구성할 수 있게 하는 provenance입니다.",
+    canonicalHref: "/ai/open-r1#data-pipeline",
+  },
+  "reasoning-sampling-evaluation-contract": {
+    id: "reasoning-sampling-evaluation-contract",
+    kind: "metric",
+    domain: "statistics",
+    label: "Reasoning sampling-evaluation contract",
+    definition:
+      "Benchmark revision·prompt template·temperature·top-p·maximum output tokens·samples per problem·verifier를 고정하고 problem-level uncertainty와 output length·cost를 함께 보고하는 평가 규약입니다.",
+    canonicalHref: "/ai/open-r1#evaluation",
+  },
+  "devlog-record-question-ownership": {
+    id: "devlog-record-question-ownership",
+    kind: "concept",
+    domain: "computer-science",
+    label: "개발 기록의 질문별 정본 소유권",
+    definition:
+      "같은 사건을 여러 문서에 복사하지 않고 ‘무엇을 관찰했나·언제 무엇이 달라졌나·왜 골랐나·지금 어떤 원칙을 적용하나’라는 질문마다 raw artifact·Changelog·ADR·Lessons 중 하나를 정본으로 정한 뒤 나머지는 stable link로 연결하는 기록 규칙입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#overview",
+  },
+  "devlog-raw-evidence-claim-boundary": {
+    id: "devlog-raw-evidence-claim-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "개발 기록의 raw evidence · claim 경계",
+    definition:
+      "재현 input·command·log·before/after state·test result 같은 관찰 원문과 ‘원인은 이것이었다·수정이 끝났다’ 같은 해석을 분리하고, 각 claim에서 검증 가능한 artifact ID와 verifier receipt로 돌아갈 수 있게 하는 경계입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#overview",
+  },
+  "curated-changelog-entry-contract": {
+    id: "curated-changelog-entry-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Curated Changelog entry contract",
+    definition:
+      "검증을 마친 notable change를 날짜·version, 사람이 이해할 결과·영향, verification, stable evidence link로 기록하되 raw commit·debugging transcript와 아직 배포되지 않은 상태를 섞지 않는 시간순 변경 기록 계약입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#changelog",
+  },
+  "architecture-decision-record-contract": {
+    id: "architecture-decision-record-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Architecture Decision Record contract",
+    definition:
+      "이후 선택을 제약하는 architecturally significant decision 하나의 title·status·context·같은 driver로 비교한 options·decision·consequences를 보존하고, accepted를 구현 완료로 오인하지 않으며 바뀐 결정은 원문 삭제 대신 superseding ADR로 연결하는 계약입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#adr",
+  },
+  "reusable-lesson-contract": {
+    id: "reusable-lesson-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "재사용 가능한 Lesson contract",
+    definition:
+      "한 사건의 요약 대신 다음 작업에서 실행할 현재 rule·적용 scope·정상 exception·evidence·verification·revisit condition을 한 정본에 유지하며, 근거가 약하거나 심각한 단일 사건에서는 좁은 provisional lesson으로 시작하는 계약입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#lessons",
+  },
+  "devlog-record-promotion-threshold": {
+    id: "devlog-record-promotion-threshold",
+    kind: "concept",
+    domain: "computer-science",
+    label: "개발 기록의 조건부 승격 기준",
+    definition:
+      "모든 작업에 모든 문서를 만들지 않고 관찰은 artifact로, 검증된 변화는 Changelog로, 장기 제약이 있는 선택은 ADR로, 반복되거나 심각도가 높고 scope·exception·test를 말할 수 있는 원칙은 Lessons로 올리는 조건부 write path입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#three-layers",
+  },
+  "postmortem-lesson-boundary": {
+    id: "postmortem-lesson-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Postmortem · Lessons 경계",
+    definition:
+      "Postmortem은 production incident의 timeline·impact·detection·mitigation·contributing factors·owner가 있는 verifiable action을 소유하고, Lessons는 그 사건을 대체하지 않은 채 여러 상황에서 현재 재사용할 rule과 test만 소유하는 분리 원칙입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#lessons",
+  },
+  "agent-drafted-record-evidence-boundary": {
+    id: "agent-drafted-record-evidence-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent 작성 기록의 evidence 경계",
+    definition:
+      "Agent는 diff·log·test에서 기록 초안을 만들 수 있지만 source에 없는 수치·원인·완료 상태를 채우지 못하며, citation 존재·link 접근 권한·개인정보와 secret redaction·verification status를 검사한 뒤 owner가 해석과 공개 범위를 승인하게 하는 계약입니다.",
+    canonicalHref: "/ai/agent-devlog-patterns#three-layers",
+  },
+  "claw-independent-reimplementation-snapshot-boundary": {
+    id: "claw-independent-reimplementation-snapshot-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code 독립 공개 재구현 snapshot · claim boundary",
+    definition:
+      "독립 공개 Claw Code 재구현의 pinned repository commit에서 관찰한 crate·file·behavior만 project claim으로 말하고, Anthropic Claude Code나 OpenAI Codex의 비공개 source·공식 내부 구조·affiliation 또는 production-grade 보장으로 확대하지 않는 근거 경계입니다. Repository가 공개 재구현임은 확인되지만 어떤 clean-room 절차를 거쳤는지는 별도 근거가 없으므로 주장하지 않습니다.",
+    canonicalHref: "/ai/claw-overview#overview",
+  },
+  "claw-crate-responsibility-dependency-map": {
+    id: "claw-crate-responsibility-dependency-map",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code crate responsibility · dependency map",
+    definition:
+      "Cargo workspace의 crate 수보다 CLI·runtime·provider API·tools·plugin·telemetry·test harness가 소유하는 state와 side effect, public contract, 허용된 의존 방향을 연결해 architecture를 읽는 project-specific map입니다.",
+    canonicalHref: "/ai/claw-overview#crate-map",
+  },
+  "claw-runtime-adapter-state-ownership": {
+    id: "claw-runtime-adapter-state-ownership",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code runtime · adapter state ownership",
+    definition:
+      "Coordinator/runtime은 conversation turn·session update·provider/tool 왕복·종료 state를 소유하고, provider와 tool adapter는 transport·operation 결과를 typed event로 반환하되 session을 직접 바꾸거나 turn 계속 여부를 결정하지 않는 책임 분리입니다.",
+    canonicalHref: "/ai/claw-overview#crate-map",
+  },
+  "claw-provider-stream-normalization-contract": {
+    id: "claw-provider-stream-normalization-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code provider stream · normalization contract",
+    definition:
+      "Provider의 message·content-block·text·tool-input delta와 error frame을 순서와 block identity가 있는 runtime event로 조립하고, 완성되지 않은 tool JSON이나 중단된 stream을 정상 tool call·완료 state로 commit하지 않는 project parser 계약입니다.",
+    canonicalHref: "/ai/claw-overview#parity-harness",
+  },
+  "claw-python-reference-oracle-boundary": {
+    id: "claw-python-reference-oracle-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code Python reference · oracle boundary",
+    definition:
+      "Companion Python workspace를 project가 canonical이라고 밝힌 Rust runtime의 전체 명세가 아니라 선택한 observable behavior를 비교하는 reference로 사용하고, 두 구현이 공유한 오해·오래된 behavior·mock I/O의 OS 차이는 별도 판단과 integration test로 남기는 경계입니다.",
+    canonicalHref: "/ai/claw-overview#python-layer",
+  },
+  "claw-observable-behavioral-parity-surface": {
+    id: "claw-observable-behavioral-parity-surface",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code observable behavioral-parity surface",
+    definition:
+      "Rust와 Python 내부 class·field를 1:1로 복제하지 않고 같은 fixture의 tool call/result·permission decision·session snapshot·emitted event·error category처럼 외부에서 관찰 가능한 contract가 의미상 일치하는지 비교하는 parity 범위입니다.",
+    canonicalHref: "/ai/claw-overview#python-layer",
+  },
+  "claw-deterministic-fixture-canonicalization": {
+    id: "claw-deterministic-fixture-canonicalization",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw Code deterministic fixture · canonicalization",
+    definition:
+      "동일한 provider frame·MockFs·MockShell·permission 결과를 반복 입력하고 UUID·timestamp·temporary path·path separator·unordered map처럼 의미를 바꾸지 않는 값을 정규화한 뒤 byte contract와 semantic contract를 구분해 비교하는 시험 방법입니다.",
+    canonicalHref: "/ai/claw-overview#parity-harness",
+  },
+  "claw-parity-integration-test-boundary": {
+    id: "claw-parity-integration-test-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Code parity · integration-test boundary",
+    definition:
+      "빠른 deterministic parity test는 fixture가 표현한 state transition·permission·tool round trip의 회귀를 맡고, 실제 provider contract·authentication·rate limit·proxy·sandbox·filesystem·platform 차이는 더 비싼 integration·end-to-end test와 release gate가 맡게 하는 검증 경계입니다.",
+    canonicalHref: "/ai/claw-overview#parity-harness",
+  },
+  "claw-tool-registry-composition-contract": {
+    id: "claw-tool-registry-composition-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw tool registry composition · collision contract",
+    definition:
+      "Pinned Claw snapshot에서 built-in·plugin·runtime tool definition을 model-facing 목록으로 합치되 canonical name·source·schema·required permission을 보존하고, 같은 이름의 재등록을 조용히 덮어쓰지 않고 거부하는 registry 계약입니다.",
+    canonicalHref: "/ai/claw-tool-system#overview",
+  },
+  "claw-tool-spec-schema-domain-boundary": {
+    id: "claw-tool-spec-schema-domain-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw ToolSpec · schema · domain boundary",
+    definition:
+      "ToolSpec의 name·description·input schema·required permission을 model-facing 호출 계약으로 노출하되 JSON 구조 검증, typed input 변환, workspace path·command 같은 domain validation과 실제 authorization을 서로 다른 판정으로 유지하는 경계입니다.",
+    canonicalHref: "/ai/claw-tool-system#overview",
+  },
+  "claw-tool-dispatch-execution-contract": {
+    id: "claw-tool-dispatch-execution-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw tool dispatch · execution contract",
+    definition:
+      "Call identity와 registry entry를 확인한 뒤 input parse·argument-specific effect classification·permission enforcement·executor invocation·result normalization을 한 순서로 통과시키고 unknown tool이나 실패가 우회 경로로 실행되지 않게 하는 단일 진입 계약입니다.",
+    canonicalHref: "/ai/claw-tool-system#dispatch",
+  },
+  "claw-tool-effect-permission-enforcement-boundary": {
+    id: "claw-tool-effect-permission-enforcement-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw tool effect · permission enforcement boundary",
+    definition:
+      "Tool name의 self-declared risk만 믿지 않고 canonical path·command·working directory·network target처럼 실제 argument가 만들 effect를 분류해 permission engine에 전달하며, deny·판정 불가·만료된 approval이면 executor 전에 중단하는 host 경계입니다.",
+    canonicalHref: "/ai/claw-tool-system#permission-gating",
+  },
+  "claw-tool-result-receipt-envelope": {
+    id: "claw-tool-result-receipt-envelope",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw tool result · effect-receipt envelope",
+    definition:
+      "Tool의 success·stable error·retryability·truncation·artifact reference·effect receipt·source를 다음 turn이 구분할 수 있게 묶는 결과 계약이며, pinned implementation의 단순 문자열 Result보다 넓은 hardening 목표는 현재 구현 사실과 분리해 평가합니다.",
+    canonicalHref: "/ai/claw-tool-system#dispatch",
+  },
+  "claw-tool-definition-generation-pin": {
+    id: "claw-tool-definition-generation-pin",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw tool definition · registry generation pin",
+    definition:
+      "Model이 본 tool name·source·version·schema digest와 실제 실행할 executor instance를 한 registry generation에 묶고, reload 뒤 오래된 call이 새 schema나 다른 implementation으로 실행되지 않게 reject·drain·재계획하는 lifecycle 계약입니다. Pinned source에 generation enforcement가 있다는 주장이 아니라 검증해야 할 gap입니다.",
+    canonicalHref: "/ai/claw-tool-system#plugin-tools",
+  },
+  "claw-extension-tool-adapter-identity-boundary": {
+    id: "claw-extension-tool-adapter-identity-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw extension tool adapter · identity boundary",
+    definition:
+      "Plugin과 MCP의 discovery·process·transport·credential lifecycle은 각 owner에 남기면서 model-facing definition과 dispatch observation에는 source·version·instance identity를 보존하는 변환 경계이며, 공통 목록 노출이 동일 executor 경로나 동일 trust를 뜻하지 않습니다.",
+    canonicalHref: "/ai/claw-tool-system#plugin-tools",
+  },
+  "claw-tool-parallel-dependency-boundary": {
+    id: "claw-tool-parallel-dependency-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw tool parallelism · dependency boundary",
+    definition:
+      "Effect가 겹치지 않는 read/search만 독립 node로 병렬화하고 edit는 그 결과에, deterministic test는 edit receipt에 의존하게 하며 deadline·cancellation·부분 성공·안정된 result order를 graph로 관리하는 실행 경계입니다. 특정 pinned provider adapter의 parallel_tool_calls=false를 project 전체 병렬 지원으로 확대하지 않습니다.",
+    canonicalHref: "/ai/claw-tool-system#dispatch",
+  },
+  "claw-permission-policy-evaluation-snapshot": {
+    id: "claw-permission-policy-evaluation-snapshot",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw permission policy evaluation snapshot",
+    definition:
+      "Pinned Claw commit에서 denied tool·deny rule을 먼저 적용하고, active mode와 tool requirement, hook override, ask·allow rule, interactive prompt 또는 최종 deny를 순서대로 평가하는 실제 PermissionPolicy 판정 경로입니다. 이 순서를 다른 제품의 보편 정책으로 확대하지 않습니다.",
+    canonicalHref: "/ai/claw-permissions#policy",
+  },
+  "claw-permission-rule-subject-matcher-snapshot": {
+    id: "claw-permission-rule-subject-matcher-snapshot",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw permission rule · subject matcher snapshot",
+    definition:
+      "Pinned permission rule이 tool name과 JSON input에서 추출한 command·path·URL·pattern 등의 첫 subject를 any·exact·prefix로 비교하는 실제 문자열 matcher이며, canonical path·shell AST·network identity를 완전히 검증하는 authorization language와는 구분합니다.",
+    canonicalHref: "/ai/claw-permissions#policy",
+  },
+  "claw-permission-enforcer-dispatch-seam": {
+    id: "claw-permission-enforcer-dispatch-seam",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw permission enforcer · tool dispatch seam",
+    definition:
+      "Pinned tool dispatcher가 parsed argument에서 operation별 required mode를 분류하고 optional PermissionEnforcer의 Allowed·Denied 결과를 executor 전에 소비하는 경계입니다. Prompt mode의 deferral과 enforcer가 없는 실행 경로가 존재하므로 이를 완전한 단일 security choke point로 과장하지 않습니다.",
+    canonicalHref: "/ai/claw-permissions#enforcer",
+  },
+  "claw-approval-token-scope-lifecycle-snapshot": {
+    id: "claw-approval-token-scope-lifecycle-snapshot",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw approval token · scope · lifecycle snapshot",
+    definition:
+      "Pinned in-memory ledger가 approval을 policy·action·선택적 repository·branch, approving actor·approved executor, expiry·maximum uses와 Pending·Granted·Consumed·Expired·Revoked 상태에 묶어 verify·consume하는 구현입니다. 다른 runtime source에 연결된 durable approval service가 확인된 것은 아닙니다.",
+    canonicalHref: "/ai/claw-permissions#enforcer",
+  },
+  "claw-permission-context-override-precedence": {
+    id: "claw-permission-context-override-precedence",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw permission context override · non-bypass precedence",
+    definition:
+      "Pinned PermissionContext의 Deny·Ask·Allow를 기존 policy와 결합하되 denied tool과 deny rule을 먼저 적용하고, Allow override도 ask rule 또는 충족되지 않은 mode requirement를 건너뛰지 못하게 하는 판정 순서입니다.",
+    canonicalHref: "/ai/claw-permissions#context-override",
+  },
+  "claw-permission-authority-ceiling-gap": {
+    id: "claw-permission-authority-ceiling-gap",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw outer authority ceiling gap",
+    definition:
+      "Process·deployment가 부여받은 최대 identity·resource·operation 범위를 먼저 고정하고 active mode·rule·approval이 그 ceiling 안에서만 권한을 좁히거나 일시 허용하게 하는 desired hardening입니다. Pinned PermissionPolicy에 별도 outer ceiling이 구현됐다는 주장이 아닙니다.",
+    canonicalHref: "/ai/claw-permissions#overview",
+  },
+  "claw-permission-policy-generation-receipt-gap": {
+    id: "claw-permission-policy-generation-receipt-gap",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw policy generation · authorization receipt gap",
+    definition:
+      "Model proposal·approval·executor가 같은 canonical arguments와 policy generation을 사용했는지 확인하고 call identity·actor·decision·matched rule·scope·expiry·effect digest를 receipt로 남기며, reload 뒤 stale decision을 재승인하게 하는 desired lifecycle 계약입니다.",
+    canonicalHref: "/ai/claw-permissions#context-override",
+  },
+  "claw-permission-login-release-gate": {
+    id: "claw-permission-login-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw permission login-workflow release gate",
+    definition:
+      "같은 로그인 401 fixture에서 read/search→edit approval→deterministic test를 실행하고 deny precedence·unknown input·approval expiry/replay·missing enforcer·policy reload·duplicate effect를 주입해 unauthorized execution 0과 verified receipt를 release 조건으로 삼는 paired 평가입니다.",
+    canonicalHref: "/ai/claw-permissions#context-override",
+  },
+  "claw-session-record-snapshot-boundary": {
+    id: "claw-session-record-snapshot-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw session record · snapshot boundary",
+    definition:
+      "Pinned Claw snapshot이 session metadata·typed message·compaction·prompt history를 JSONL record와 전체 snapshot으로 저장하는 범위와, attempt·policy·effect까지 revisioned event로 남겨 derived view를 재구성하는 더 넓은 event-sourcing 설계를 구분하는 경계입니다. 현재 record format을 완전한 event store로 과장하지 않습니다.",
+    canonicalHref: "/ai/claw-session#overview",
+  },
+  "claw-session-typed-content-correlation-contract": {
+    id: "claw-session-typed-content-correlation-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw session typed content · call correlation",
+    definition:
+      "System·user·assistant·tool role와 text·thinking·tool-use·tool-result block을 구분하고, tool result의 tool_use_id를 원래 call identity에 연결해 resume 뒤에도 어느 결과가 어느 요청에 대응하는지 보존하는 pinned message 계약입니다.",
+    canonicalHref: "/ai/claw-session#overview",
+  },
+  "claw-conversation-turn-persistence-order": {
+    id: "claw-conversation-turn-persistence-order",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw conversation turn · persistence order",
+    definition:
+      "Pinned ConversationRuntime이 user message를 저장하고 provider stream을 typed assistant message로 조립한 뒤 tool permission·execution·tool result를 차례로 session에 추가하는 실제 순서입니다. 명시적 turn transaction·base revision·runtime generation snapshot까지 구현됐다는 뜻은 아닙니다.",
+    canonicalHref: "/ai/claw-session#conversation-runtime",
+  },
+  "claw-session-workspace-store-resume-boundary": {
+    id: "claw-session-workspace-store-resume-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw session workspace store · resume boundary",
+    definition:
+      "SessionStore가 canonical workspace의 fingerprint로 저장 namespace를 만들고 명시적 session reference의 workspace 일치를 검사하는 범위와, latest·last 같은 alias의 cross-workspace fallback 및 resume 후 현재 policy·credential·artifact 재검증 책임을 구분하는 경계입니다.",
+    canonicalHref: "/ai/claw-session#session-control",
+  },
+  "claw-session-effect-commit-reconciliation-gap": {
+    id: "claw-session-effect-commit-reconciliation-gap",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw session effect commit · reconciliation gap",
+    definition:
+      "Pinned loop에서는 tool side effect가 실행된 뒤 ToolResult message가 저장되므로 두 단계 사이 crash가 ambiguous completion을 만들 수 있습니다. Planned operation·stable idempotency key·effect receipt·status lookup·reconciliation을 추가해야 안전하게 resume할 수 있다는 project gap이며, exactly-once 구현 사실이 아닙니다.",
+    canonicalHref: "/ai/claw-session#conversation-runtime",
+  },
+  "claw-session-fork-provenance-copy-boundary": {
+    id: "claw-session-fork-provenance-copy-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw session fork provenance · copy boundary",
+    definition:
+      "Pinned fork가 새 session identity를 만들고 parent_session_id·branch_name과 복제한 messages·compaction·prompt history를 저장하는 실제 범위입니다. Immutable base revision pointer·별도 worktree·three-way merge·artifact lineage까지 제공하는 branch system으로 확대하지 않습니다.",
+    canonicalHref: "/ai/claw-session#fork-compaction",
+  },
+  "claw-session-persistence-write-boundary": {
+    id: "claw-session-persistence-write-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw session append · atomic snapshot write boundary",
+    definition:
+      "Pinned persistence가 message·prompt record를 JSONL에 append하고 전체 snapshot 저장에는 temporary file과 atomic replacement·rotation·field redaction/truncation을 적용하는 범위와, multi-process serializability·fsync durability·schema migration·corruption recovery를 별도 검증하는 저장 경계입니다.",
+    canonicalHref: "/ai/claw-session#session-control",
+  },
+  "claw-session-lifecycle-state-machine-gap": {
+    id: "claw-session-lifecycle-state-machine-gap",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw session lifecycle state-machine gap",
+    definition:
+      "Pinned source의 create·load·save·fork·delete·resume command와 runtime loop를, Restoring·Idle·Active·Pausing·Paused·Draining·Closed 같은 durable lifecycle 및 in-flight effect reconciliation과 구분하는 경계입니다. 후자의 pause·resume·shutdown state machine은 필요한 hardening 계약이지 확인된 구현이 아닙니다.",
+    canonicalHref: "/ai/claw-session#session-control",
+  },
+  "claw-compaction-trigger-paths-snapshot": {
+    id: "claw-compaction-trigger-paths-snapshot",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw compaction trigger paths · pinned snapshot",
+    definition:
+      "Pinned Claw source에서 수동 `/compact`의 message-count·근사 token 조건, 누적 input-token을 보는 runtime auto-compaction, context-window 계열 오류 뒤 recent tail을 4→2→1→0으로 줄이는 CLI retry를 서로 다른 진입 경로로 추적하는 구현 snapshot입니다. 이 숫자와 오류 문자열은 보편 규칙이 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#compact-pipeline",
+  },
+  "claw-compaction-tail-tool-pair-boundary": {
+    id: "claw-compaction-tail-tool-pair-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw recent-tail · tool-pair boundary",
+    definition:
+      "Pinned `compact_session`이 최근 메시지를 원문으로 남기고 보존 구간의 첫 메시지가 ToolResult이면 경계를 앞의 ToolUse까지 되돌려 orphan tool result를 피하는 규칙입니다. 모든 call/result identity와 permission·effect receipt를 의미적으로 검증한다는 뜻은 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#compact-pipeline",
+  },
+  "claw-compaction-summary-projection-snapshot": {
+    id: "claw-compaction-summary-projection-snapshot",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw deterministic summary projection · snapshot",
+    definition:
+      "Pinned summarizer가 오래된 message에서 role 수·tool name·최근 user request·keyword 기반 pending work·제한된 file candidate·current work·160-character timeline을 결정적으로 뽑아 synthetic system summary로 바꾸는 실제 projection입니다. Goal·permission denial·edit/test receipt·unresolved failure가 별도 typed field로 보존된다는 주장은 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#compact-pipeline",
+  },
+  "claw-compaction-repeated-summary-merge": {
+    id: "claw-compaction-repeated-summary-merge",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw repeated-summary flattening · parse boundary",
+    definition:
+      "Pinned 반복 compaction이 첫 synthetic system message에서 기존 summary를 찾아 timeline을 제외한 highlight를 평평하게 유지하고 새 highlight·timeline을 붙여 중첩 팽창을 줄이는 merge입니다. Exact preamble·heading parsing에 의존하며 versioned schema migration이나 field-level conflict resolution은 별도 gap입니다.",
+    canonicalHref: "/ai/claw-compaction#summary-merge",
+  },
+  "claw-summary-compression-line-policy": {
+    id: "claw-summary-compression-line-policy",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw line-based summary compression policy",
+    definition:
+      "Pinned `summary_compression.rs`가 whitespace를 정규화하고 대소문자를 무시해 중복 line을 제거한 뒤 core detail·section header·bullet·기타 순으로 char/line budget에 맞추고 omission notice를 남기는 결정적 규칙입니다. Session compaction의 semantic fact extractor나 `SummaryCompressor` class가 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#summary-compression",
+  },
+  "claw-compaction-context-effect-boundary": {
+    id: "claw-compaction-context-effect-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw compacted context · external-effect boundary",
+    definition:
+      "Pinned compaction이 session message 배열과 compaction metadata를 바꾸는 것과 이미 허용·실행된 file·process·network effect를 구분하는 경계입니다. Context를 요약하거나 이전 session object를 보존해도 permission decision과 외부 effect가 자동 rollback·undo되는 것은 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#overview",
+  },
+  "claw-compaction-login-state-contract": {
+    id: "claw-compaction-login-state-contract",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw login-debug compaction state contract",
+    definition:
+      "로그인 401 수정 사례에서 현재 goal·auth evidence identity·permission decision·edit receipt·deterministic test receipt·unresolved failure·next action을 보존하고, 반복 search와 긴 stdout은 source reference만 남겨 줄이는 hardening 계약입니다. Pinned heuristic summary가 이 typed contract를 이미 구현했다는 뜻은 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#compact-pipeline",
+  },
+  "claw-compaction-fidelity-release-gate": {
+    id: "claw-compaction-fidelity-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw compaction fidelity · fail-closed release gate",
+    definition:
+      "Base와 candidate compactor를 같은 transcript·tokenizer estimate·policy·workspace artifact로 여러 cycle replay해 goal·evidence·permission·receipt·unresolved state·next action 보존, token/latency와 effect duplication을 비교하고 hard invariant가 깨지면 기존 context를 유지하는 평가 계약입니다. Pinned glob health probe가 이 semantic 검증을 수행한다는 주장은 아닙니다.",
+    canonicalHref: "/ai/claw-compaction#summary-compression",
+  },
+  "claw-bash-shell-dispatch-snapshot": {
+    id: "claw-bash-shell-dispatch-snapshot",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Bash shell-string dispatch · pinned snapshot",
+    definition:
+      "Pinned Claw Bash tool이 model의 command 문자열과 host current working directory를 받아 Linux sandbox launcher 또는 `sh -lc`로 실행하는 실제 경계입니다. Executable과 argv를 직접 전달하는 API가 아니며 shell quoting·expansion·pipeline·redirection이 effect를 바꿀 수 있습니다.",
+    canonicalHref: "/ai/claw-bash#overview",
+  },
+  "claw-bash-validation-integration-gap": {
+    id: "claw-bash-validation-integration-gap",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Bash validation module · dispatch-integration gap",
+    definition:
+      "Pinned `bash_validation.rs`에는 read-only·destructive·mode·sed·path·intent heuristic이 있지만 production Bash dispatch가 그 pipeline을 호출하는 경로는 같은 snapshot에서 확인되지 않는다는 구현 경계입니다. Module 존재를 실행 전 enforcement 완료로 해석하지 않습니다.",
+    canonicalHref: "/ai/claw-bash#validation-pipeline",
+  },
+  "claw-bash-command-intent-heuristic-boundary": {
+    id: "claw-bash-command-intent-heuristic-boundary",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw Bash command-intent heuristic boundary",
+    definition:
+      "Pinned command classifier가 first executable과 문자열 pattern으로 read·write·destructive·network·process·package·system·unknown intent를 추정하는 범위입니다. Shell expansion 뒤 실제 argv·path·interpreter 내부 effect를 증명하는 semantic analyzer나 authorization 결정은 아닙니다.",
+    canonicalHref: "/ai/claw-bash#command-intent",
+  },
+  "claw-bash-path-effect-toctou-gap": {
+    id: "claw-bash-path-effect-toctou-gap",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Bash path·effect binding · TOCTOU gap",
+    definition:
+      "Command·host cwd·environment에서 계산한 canonical target과 read·write·network·process effect를 permission decision과 실제 resource handle에 묶어야 한다는 hardening 경계입니다. Pinned substring/path heuristic이 symlink 교체·directory rename·executable resolution의 check-use race를 막았다는 구현 사실은 아닙니다.",
+    canonicalHref: "/ai/claw-bash#validation-pipeline",
+  },
+  "claw-bash-optional-permission-enforcement-seam": {
+    id: "claw-bash-optional-permission-enforcement-seam",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Bash optional permission-enforcer seam",
+    definition:
+      "Pinned tools dispatcher가 first-token·path heuristic으로 required mode를 만들고 `PermissionEnforcer`가 주입됐을 때만 executor 전에 판정을 적용하는 실제 seam입니다. Enforcer 없는 call path와 unintegrated validator가 있으므로 모든 Bash 실행이 완전한 semantic authorization을 거친다고 주장하지 않습니다.",
+    canonicalHref: "/ai/claw-bash#validation-pipeline",
+  },
+  "claw-bash-unshare-sandbox-boundary": {
+    id: "claw-bash-unshare-sandbox-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Claw Bash Linux unshare sandbox boundary",
+    definition:
+      "Pinned Linux sandbox가 probe를 통과한 util-linux `unshare`로 user·mount·IPC·PID·UTS namespace와 선택적 network namespace를 만든 뒤 `sh -lc`를 실행하는 범위입니다. Filesystem mode·allowed mounts는 status와 environment에 기록될 뿐 mount policy enforcement, seccomp·cgroup·VM 격리를 증명하지 않습니다.",
+    canonicalHref: "/ai/claw-bash#sandbox",
+  },
+  "claw-bash-process-lifecycle-receipt-gap": {
+    id: "claw-bash-process-lifecycle-receipt-gap",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Claw Bash process lifecycle · effect-receipt gap",
+    definition:
+      "Pinned foreground 실행은 optional timeout과 16 KiB stdout/stderr truncation을, background 실행은 child PID를 반환하지만 process-group identity·descendant signal escalation·cleanup proof·full-output digest·restart-safe effect receipt는 확인되지 않는다는 경계입니다. Timeout 응답을 process tree 종료나 무효과의 증거로 사용하지 않습니다.",
+    canonicalHref: "/ai/claw-bash#sandbox",
+  },
+  "claw-bash-login-release-gate": {
+    id: "claw-bash-login-release-gate",
+    kind: "method",
+    domain: "computer-science",
+    label: "Claw Bash login-workflow release gate",
+    definition:
+      "같은 로그인 401 command fixture와 workspace·environment·policy·sandbox profile에서 base/candidate full SHA를 비교하고 shell/argv 차이·expansion·path race·missing enforcer·timeout·truncation·descendant cleanup·duplicate effect를 주입해 unauthorized execution 0과 deterministic test receipt를 확인하는 paired release 계약입니다.",
+    canonicalHref: "/ai/claw-bash#sandbox",
+  },
+};
+
+export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
+  {
+    from: "sft",
+    to: "reasoning-recipe-reproduction-scope",
+    relation: "prerequisite",
+    reason:
+      "Teacher-trace distillation과 cold-start stage가 token-supervised 경로임을 구분합니다.",
+  },
+  {
+    from: "online-rollout",
+    to: "reasoning-recipe-reproduction-scope",
+    relation: "prerequisite",
+    reason:
+      "현재 policy가 data를 만드는 base-policy RL 경로를 fixed trace SFT와 구분합니다.",
+  },
+  {
+    from: "cross-tokenizer-sequence-distillation",
+    to: "reasoning-trace-supervision-boundary",
+    relation: "extends",
+    reason:
+      "Teacher output 문자열을 student tokenizer로 다시 encode해 reasoning response loss를 만듭니다.",
+  },
+  {
+    from: "response-loss-mask",
+    to: "reasoning-trace-supervision-boundary",
+    relation: "prerequisite",
+    reason:
+      "Prompt와 reasoning/final-answer target token의 supervision 위치를 분리합니다.",
+  },
+  {
+    from: "reasoning-trace-supervision-boundary",
+    to: "verifier-accessible-policy-region",
+    relation: "produces",
+    reason:
+      "작은 cold-start SFT가 parser와 verifier가 채점 가능한 output 형식의 확률을 높일 수 있습니다.",
+  },
+  {
+    from: "online-rollout",
+    to: "grpo-within-prompt-relative-advantage",
+    relation: "prerequisite",
+    reason: "현재 policy가 같은 prompt의 completion group을 생성합니다.",
+  },
+  {
+    from: "variance",
+    to: "grpo-within-prompt-relative-advantage",
+    relation: "prerequisite",
+    reason: "Group reward 평균·표준편차와 zero-variance group을 해석합니다.",
+  },
+  {
+    from: "grpo-within-prompt-relative-advantage",
+    to: "grpo-policy-ratio-surrogate",
+    relation: "produces",
+    reason:
+      "Completion-level relative signal을 policy token update에 전달합니다.",
+  },
+  {
+    from: "ppo-rlhf",
+    to: "grpo-policy-ratio-surrogate",
+    relation: "extends",
+    reason:
+      "Old/new policy ratio clipping의 공통 원리를 value-model 없는 group-relative update에 적용합니다.",
+  },
+  {
+    from: "long-cot-loss-normalization-contract",
+    to: "grpo-policy-ratio-surrogate",
+    relation: "constrains",
+    reason:
+      "Token contribution의 denominator가 response length별 실제 gradient weight를 바꿉니다.",
+  },
+  {
+    from: "sampler-trainer-policy-mismatch",
+    to: "grpo-policy-ratio-surrogate",
+    relation: "constrains",
+    reason:
+      "Probability ratio를 계산하는 rollout engine과 trainer distribution 차이를 점검합니다.",
+  },
+  {
+    from: "verifier-accessible-policy-region",
+    to: "versioned-verifier-measurement",
+    relation: "evaluates",
+    reason:
+      "Parser·test·sandbox가 policy output에서 실제로 관측 가능한 reward를 정의합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "reasoning-data-lineage",
+    relation: "extends",
+    reason:
+      "Run provenance를 synthetic completion의 parse·verification·filter row까지 확장합니다.",
+  },
+  {
+    from: "versioned-verifier-measurement",
+    to: "reasoning-data-lineage",
+    relation: "constrains",
+    reason: "Verifier revision과 결과·실패 이유를 raw completion에 연결합니다.",
+  },
+  {
+    from: "variance",
+    to: "reasoning-sampling-evaluation-contract",
+    relation: "prerequisite",
+    reason:
+      "작은 benchmark와 repeated completion sampling의 uncertainty를 해석합니다.",
+  },
+  {
+    from: "versioned-verifier-measurement",
+    to: "reasoning-sampling-evaluation-contract",
+    relation: "constrains",
+    reason:
+      "같은 completion을 정답으로 판정하는 parser·test revision을 평가 protocol에 고정합니다.",
+  },
+  {
+    from: "reasoning-data-lineage",
+    to: "reasoning-sampling-evaluation-contract",
+    relation: "constrains",
+    reason:
+      "학습 data와 benchmark overlap·source provenance를 평가 claim과 함께 점검합니다.",
+  },
+  {
+    from: "reproducible-training-run-contract",
+    to: "experiment-spec-attempt-identity",
+    relation: "extends",
+    reason:
+      "Run 계약의 입력 조건을 content digest로 식별하고 seed·retry별 실제 execution attempt를 분리합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "content-addressed-artifact-reference",
+    relation: "extends",
+    reason:
+      "Run lineage의 artifact edge에 URI·content digest·schema·producer 검증 정보를 추가합니다.",
+  },
+  {
+    from: "experiment-spec-attempt-identity",
+    to: "content-addressed-artifact-reference",
+    relation: "produces",
+    reason:
+      "각 immutable attempt가 versioned output artifact의 producer가 됩니다.",
+  },
+  {
+    from: "effective-batch-update-clock",
+    to: "metric-progress-coordinate",
+    relation: "prerequisite",
+    reason:
+      "Micro-batch iteration과 optimizer update·processed sample/token을 구분해 learning curve 축을 만듭니다.",
+  },
+  {
+    from: "content-addressed-artifact-reference",
+    to: "mutable-alias-resolution-receipt",
+    relation: "prerequisite",
+    reason:
+      "Alias가 가리킨 시점의 immutable version과 digest를 promotion receipt에 고정합니다.",
+  },
+  {
+    from: "content-addressed-artifact-reference",
+    to: "tracking-store-artifact-integrity",
+    relation: "prerequisite",
+    reason:
+      "Backend URI로 object를 읽어 producer가 기록한 digest·schema와 비교합니다.",
+  },
+  {
+    from: "tracking-store-artifact-integrity",
+    to: "registry-deployment-version-parity",
+    relation: "produces",
+    reason:
+      "복구 가능한 registry model artifact를 실제 serving revision과 대조합니다.",
+  },
+  {
+    from: "mutable-alias-resolution-receipt",
+    to: "registry-deployment-version-parity",
+    relation: "constrains",
+    reason:
+      "Runtime은 움직이는 alias 이름만 아니라 승인 시 resolve된 immutable version을 pin합니다.",
+  },
+  {
+    from: "variance",
+    to: "reproduction-equivalence-level",
+    relation: "prerequisite",
+    reason:
+      "Stochastic repeated runs의 metric 평균과 spread 차이를 재현 acceptance에 사용합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "hierarchical-random-seed-derivation",
+    relation: "prerequisite",
+    reason:
+      "서로 다른 worker가 같은 pseudo-random stream을 복제하지 않도록 독립 stream identity를 구성합니다.",
+  },
+  {
+    from: "experiment-spec-attempt-identity",
+    to: "hierarchical-random-seed-derivation",
+    relation: "constrains",
+    reason:
+      "Stable run identity·rank·worker·epoch 좌표에서 child seed를 결정적으로 파생합니다.",
+  },
+  {
+    from: "reproduction-equivalence-level",
+    to: "clean-room-reproduction-test",
+    relation: "constrains",
+    reason:
+      "Clean environment 실행 결과를 bitwise·numeric·statistical·behavioral 중 선언한 수준으로 판정합니다.",
+  },
+  {
+    from: "hierarchical-random-seed-derivation",
+    to: "clean-room-reproduction-test",
+    relation: "prerequisite",
+    reason:
+      "같은 execution topology에서 random streams와 sample order를 재구성합니다.",
+  },
+  {
+    from: "tracking-store-artifact-integrity",
+    to: "clean-room-reproduction-test",
+    relation: "prerequisite",
+    reason:
+      "재현 실행에 필요한 모든 input artifact가 실제로 읽히고 검증돼야 합니다.",
+  },
+  {
+    from: "expectation",
+    to: "decision-cost-metric-contract",
+    relation: "prerequisite",
+    reason: "배포 population에서 action별 오류 비용을 평균 risk로 정의합니다.",
+  },
+  {
+    from: "decision-cost-metric-contract",
+    to: "hierarchical-metric-reducer",
+    relation: "constrains",
+    reason:
+      "의사결정 unit과 배포 weight가 관측·unit·slice의 집계 순서를 정합니다.",
+  },
+  {
+    from: "expectation",
+    to: "absolute-squared-risk-bayes-act",
+    relation: "prerequisite",
+    reason:
+      "조건부 loss의 population 평균을 최소화하는 point prediction을 비교합니다.",
+  },
+  {
+    from: "absolute-squared-risk-bayes-act",
+    to: "prediction-interval-coverage-width",
+    relation: "extends",
+    reason:
+      "조건부 point target에서 여러 quantile 경계와 interval 평가로 예측 대상을 넓힙니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "strictly-proper-probability-score",
+    relation: "prerequisite",
+    reason:
+      "실제 조건부 positive probability와 model이 보고한 probability의 expected loss를 비교합니다.",
+  },
+  {
+    from: "probability-calibration",
+    to: "strictly-proper-probability-score",
+    relation: "evaluates",
+    reason:
+      "Proper score는 probability forecast 전체를 평가하고 reliability 진단과 함께 사용합니다.",
+  },
+  {
+    from: "ranking-decision-calibration",
+    to: "strictly-proper-probability-score",
+    relation: "constrains",
+    reason:
+      "Ranking score를 probability 평가와 threshold decision에서 분리합니다.",
+  },
+  {
+    from: "multipositive-retrieval-metrics",
+    to: "ndcg-graded-discount",
+    relation: "extends",
+    reason:
+      "여러 relevant documents의 coverage에서 graded relevance와 rank position 품질로 확장합니다.",
+  },
+  {
+    from: "hierarchical-metric-reducer",
+    to: "query-macro-traffic-reducer",
+    relation: "extends",
+    reason:
+      "Query-level metric을 고유 query 또는 실제 traffic population으로 집계합니다.",
+  },
+  {
+    from: "incomplete-relevance-judgment",
+    to: "ndcg-graded-discount",
+    relation: "constrains",
+    reason:
+      "Unjudged item 처리 규칙이 DCG gain과 candidate 비교를 바꿀 수 있습니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "surrogate-selection-policy-boundary",
+    relation: "prerequisite",
+    reason:
+      "Parameter 학습·configuration/policy 선택·마지막 보고의 data 역할을 분리합니다.",
+  },
+  {
+    from: "decision-cost-metric-contract",
+    to: "surrogate-selection-policy-boundary",
+    relation: "constrains",
+    reason:
+      "Surrogate·selection metric·policy가 같은 배포 decision cost를 향하되 서로 다른 단계에서 사용됩니다.",
+  },
+  {
+    from: "surrogate-selection-policy-boundary",
+    to: "metric-guardrail-feasible-selection",
+    relation: "produces",
+    reason:
+      "Validation prediction에서 primary metric과 hard guardrail을 계산해 feasible candidates를 선택합니다.",
+  },
+  {
+    from: "hpo-selection-evaluation-contract",
+    to: "metric-guardrail-feasible-selection",
+    relation: "constrains",
+    reason:
+      "Validation에서 고른 feasible candidate는 사용하지 않은 outer data에서 다시 평가합니다.",
+  },
+  {
+    from: "variance",
+    to: "oof-error-covariance",
+    relation: "prerequisite",
+    reason:
+      "가중 error 분산을 개별 분산과 pairwise covariance 항으로 전개합니다.",
+  },
+  {
+    from: "pooled-oof-risk-estimate",
+    to: "oof-error-covariance",
+    relation: "prerequisite",
+    reason: "각 base model이 보지 않은 동일 rows의 errors를 정렬해 비교합니다.",
+  },
+  {
+    from: "oof-error-covariance",
+    to: "simplex-prediction-averaging",
+    relation: "constrains",
+    reason:
+      "단독 성능뿐 아니라 기존 ensemble과 다른 error를 내는 후보에 weight를 줄 근거를 제공합니다.",
+  },
+  {
+    from: "simplex-prediction-averaging",
+    to: "percentile-rank-averaging",
+    relation: "contrasts",
+    reason:
+      "원래 score scale을 보존하는 결합과 ordering만 보존하는 결합을 구분합니다.",
+  },
+  {
+    from: "fold-local-transform-boundary",
+    to: "cross-fitted-stacking-matrix",
+    relation: "prerequisite",
+    reason:
+      "Base prediction과 preprocessing이 meta row의 정보를 학습에 사용하지 않게 합니다.",
+  },
+  {
+    from: "cross-fitted-stacking-matrix",
+    to: "super-learner-oracle-comparison",
+    relation: "produces",
+    reason:
+      "V-fold cross-validated predictions에서 combination family의 risk를 선택합니다.",
+  },
+  {
+    from: "expectation",
+    to: "super-learner-oracle-comparison",
+    relation: "prerequisite",
+    reason:
+      "Candidate family 안의 population expected risk와 CV-selected risk를 비교합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "blend-holdout-allocation",
+    relation: "prerequisite",
+    reason:
+      "Base fit과 combiner fit, 마지막 evaluation data 역할을 분리합니다.",
+  },
+  {
+    from: "blend-holdout-allocation",
+    to: "cross-fitted-stacking-matrix",
+    relation: "contrasts",
+    reason: "단일 holdout의 구현 단순성과 전체 OOF data의 효율을 비교합니다.",
+  },
+  {
+    from: "oof-error-covariance",
+    to: "ensemble-marginal-gain-cost",
+    relation: "evaluates",
+    reason:
+      "현재 ensemble에 상보적인 후보가 실제 paired OOF risk를 줄이는지 측정합니다.",
+  },
+  {
+    from: "hpo-pareto-dominance",
+    to: "ensemble-marginal-gain-cost",
+    relation: "extends",
+    reason:
+      "Model configuration뿐 아니라 ensemble 조합도 quality·latency·memory의 non-dominated set에서 선택합니다.",
+  },
+  {
+    from: "hpo-selection-evaluation-contract",
+    to: "ensemble-marginal-gain-cost",
+    relation: "constrains",
+    reason:
+      "OOF에서 고른 model subset과 weights를 사용하지 않은 outer data에서 다시 평가합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "hpo-selection-evaluation-contract",
+    relation: "prerequisite",
+    reason:
+      "Configuration 선택에 쓰는 validation과 마지막 outer evaluation의 역할을 분리합니다.",
+  },
+  {
+    from: "deployment-matched-validation-risk",
+    to: "hpo-selection-evaluation-contract",
+    relation: "constrains",
+    reason: "모든 trial이 같은 배포 단위와 split estimand를 평가하게 합니다.",
+  },
+  {
+    from: "model-selection-maximum-optimism",
+    to: "hpo-selection-evaluation-contract",
+    relation: "constrains",
+    reason:
+      "여러 noisy trial에서 선택한 validation 최적값을 final 성능으로 보고하지 않게 합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "random-search-hit-probability",
+    relation: "prerequisite",
+    reason:
+      "Promising region을 sampling distribution 아래의 확률 질량으로 읽습니다.",
+  },
+  {
+    from: "random-search-hit-probability",
+    to: "hpo-selection-evaluation-contract",
+    relation: "evaluates",
+    reason: "정한 분포와 trial budget이 유망 영역을 만날 가능성을 계산합니다.",
+  },
+  {
+    from: "hpo-selection-evaluation-contract",
+    to: "adaptive-trial-proposal-history",
+    relation: "constrains",
+    reason:
+      "History의 score가 같은 objective와 resource에서 비교 가능하게 합니다.",
+  },
+  {
+    from: "adaptive-trial-proposal-history",
+    to: "tpe-density-ratio",
+    relation: "extends",
+    reason:
+      "Sequential history 사용을 좋은/나머지 configuration density 추정으로 구체화합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "tpe-density-ratio",
+    relation: "prerequisite",
+    reason: "Conditional density와 density ratio를 확률분포로 해석합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "log-uniform-parameter-sampling",
+    relation: "prerequisite",
+    reason:
+      "Positive parameter를 log 좌표로 옮겨 orders of magnitude별 확률을 균등하게 만듭니다.",
+  },
+  {
+    from: "log-uniform-parameter-sampling",
+    to: "typed-conditional-search-space",
+    relation: "produces",
+    reason:
+      "Continuous parameter의 sampling scale을 typed domain 일부로 정의합니다.",
+  },
+  {
+    from: "typed-conditional-search-space",
+    to: "feasible-search-space-constraint",
+    relation: "constrains",
+    reason:
+      "Parent branch와 resource 조건을 만족하는 configuration만 실제 후보로 남깁니다.",
+  },
+  {
+    from: "reproducible-training-run-contract",
+    to: "adaptive-trial-proposal-history",
+    relation: "prerequisite",
+    reason:
+      "Configuration·code·data·seed·state를 trial history의 재현 가능한 관측으로 연결합니다.",
+  },
+  {
+    from: "comparable-fidelity-resource",
+    to: "successive-halving-resource-allocation",
+    relation: "prerequisite",
+    reason: "같은 rung의 trial을 동일한 학습 진척에서 비교합니다.",
+  },
+  {
+    from: "successive-halving-resource-allocation",
+    to: "hpo-pareto-dominance",
+    relation: "produces",
+    reason:
+      "Pruned search 뒤 full-budget로 재평가한 feasible 후보들을 다목적 frontier에서 비교합니다.",
+  },
+  {
+    from: "feasible-search-space-constraint",
+    to: "hpo-pareto-dominance",
+    relation: "constrains",
+    reason:
+      "Hard constraint를 실패한 후보는 다른 목적 이득으로 frontier에 들어오지 못하게 합니다.",
+  },
+  {
+    from: "competition-evaluation-contract",
+    to: "deployment-matched-validation-risk",
+    relation: "prerequisite",
+    reason:
+      "대회의 row·cutoff·metric을 실제 배포에서 새로 만날 단위의 expected loss로 구체화합니다.",
+  },
+  {
+    from: "expectation",
+    to: "deployment-matched-validation-risk",
+    relation: "prerequisite",
+    reason:
+      "Training data와 deployment unit에 대한 평균 prediction loss를 읽습니다.",
+  },
+  {
+    from: "deployment-matched-validation-risk",
+    to: "fold-local-transform-boundary",
+    relation: "constrains",
+    reason:
+      "Validation unit의 정보가 training transform fit에 들어가지 않도록 data path를 닫습니다.",
+  },
+  {
+    from: "fold-local-transform-boundary",
+    to: "pooled-oof-risk-estimate",
+    relation: "constrains",
+    reason:
+      "각 OOF prediction이 해당 row 정보를 사용하지 않은 transform과 model에서 나오게 합니다.",
+  },
+  {
+    from: "deployment-matched-validation-risk",
+    to: "pooled-oof-risk-estimate",
+    relation: "evaluates",
+    reason:
+      "Split family가 모사한 deployment unit의 prediction loss를 행 단위로 집계합니다.",
+  },
+  {
+    from: "pooled-oof-risk-estimate",
+    to: "cv-procedure-estimand",
+    relation: "produces",
+    reason:
+      "서로 다른 fold training sets에서 나온 loss를 합친 값이 learning procedure의 평균 성능을 향합니다.",
+  },
+  {
+    from: "deployment-matched-validation-risk",
+    to: "group-disjoint-split",
+    relation: "constrains",
+    reason:
+      "배포에서 새 entity가 나타나는 경우 그 entity의 모든 파생 행을 fold 한쪽에 둡니다.",
+  },
+  {
+    from: "group-disjoint-split",
+    to: "independent-evaluation-unit-count",
+    relation: "produces",
+    reason:
+      "행 수와 별개로 validation evidence의 entity/group 반복 수를 계산합니다.",
+  },
+  {
+    from: "prediction-time-feature-availability",
+    to: "walk-forward-label-availability",
+    relation: "extends",
+    reason:
+      "Feature source뿐 아니라 학습 target 자체가 origin 전에 확정됐는지 검사합니다.",
+  },
+  {
+    from: "deployment-matched-validation-risk",
+    to: "walk-forward-label-availability",
+    relation: "constrains",
+    reason:
+      "미래 deployment를 재연할 때 origin 당시 학습 가능한 historical labels만 허용합니다.",
+  },
+  {
+    from: "pooled-oof-risk-estimate",
+    to: "cv-leaderboard-rank-agreement",
+    relation: "produces",
+    reason:
+      "Frozen local 후보 score를 public score의 후보 쌍별 우열과 비교합니다.",
+  },
+  {
+    from: "model-selection-maximum-optimism",
+    to: "validation-protocol-adaptation-audit",
+    relation: "constrains",
+    reason:
+      "Public holdout을 반복 사용해 validation protocol까지 선택하면 새 독립 holdout이 필요합니다.",
+  },
+  {
+    from: "cv-leaderboard-rank-agreement",
+    to: "validation-protocol-adaptation-audit",
+    relation: "evaluates",
+    reason:
+      "Protocol 변경 전후에 local/public 후보 선택 순서가 어떻게 달라지는지 기록합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "competition-evaluation-contract",
+    relation: "prerequisite",
+    reason:
+      "학습·선택·최종 보고 data의 역할을 대회 local/public/private 평가에 매핑합니다.",
+  },
+  {
+    from: "competition-evaluation-contract",
+    to: "model-selection-maximum-optimism",
+    relation: "constrains",
+    reason:
+      "여러 후보를 같은 noisy validation에서 선택한 뒤 독립 final 평가가 필요한 이유를 제공합니다.",
+  },
+  {
+    from: "competition-evaluation-contract",
+    to: "prediction-time-feature-availability",
+    relation: "constrains",
+    reason:
+      "Row별 prediction cutoff가 feature source의 허용 가능한 available time을 정합니다.",
+  },
+  {
+    from: "prediction-time-feature-availability",
+    to: "competition-baseline-artifact",
+    relation: "constrains",
+    reason:
+      "Cutoff-safe feature recipe와 split manifest만 baseline input으로 허용합니다.",
+  },
+  {
+    from: "competition-oof-coverage",
+    to: "competition-baseline-artifact",
+    relation: "evaluates",
+    reason:
+      "OOF prediction row의 누락·중복을 baseline metric 계산 전에 검사합니다.",
+  },
+  {
+    from: "reproducible-training-run-contract",
+    to: "competition-baseline-artifact",
+    relation: "prerequisite",
+    reason:
+      "Data·split·config·code·environment·artifact를 하나의 baseline run으로 연결합니다.",
+  },
+  {
+    from: "competition-baseline-artifact",
+    to: "one-hypothesis-experiment-contract",
+    relation: "prerequisite",
+    reason:
+      "한 축의 변경을 비교할 고정 baseline config와 OOF prediction을 제공합니다.",
+  },
+  {
+    from: "one-hypothesis-experiment-contract",
+    to: "paired-fold-experiment-delta",
+    relation: "produces",
+    reason:
+      "같은 protocol에서 candidate와 baseline의 fold별 paired 차이를 계산합니다.",
+  },
+  {
+    from: "model-selection-maximum-optimism",
+    to: "leaderboard-adaptive-feedback-budget",
+    relation: "constrains",
+    reason:
+      "Noisy holdout feedback을 반복해 후보 선택에 쓰는 횟수를 제한하고 기록합니다.",
+  },
+  {
+    from: "paired-fold-experiment-delta",
+    to: "competition-submission-manifest",
+    relation: "evaluates",
+    reason:
+      "최종 candidate가 선택된 local fold/slice 근거를 제출 lineage에 연결합니다.",
+  },
+  {
+    from: "leaderboard-adaptive-feedback-budget",
+    to: "competition-submission-manifest",
+    relation: "constrains",
+    reason:
+      "Public feedback에 따른 선택 변경도 최종 제출 decision log에 보존합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "competition-submission-manifest",
+    relation: "extends",
+    reason:
+      "일반 run lineage에 retrain·row order·submission checksum과 leaderboard decision을 추가합니다.",
+  },
+  {
+    from: "multiagent-baseline-gain",
+    to: "multiagent-worker-receipt",
+    relation: "constrains",
+    reason:
+      "분리가 single-agent보다 유리한 workload에서만 worker artifact 계약을 도입합니다.",
+  },
+  {
+    from: "multiagent-worker-receipt",
+    to: "multiagent-join-completeness",
+    relation: "produces",
+    reason:
+      "필수 task별 typed receipt와 artifact checksum이 join의 coverage·conflict 입력이 됩니다.",
+  },
+  {
+    from: "parallel-reducer-safety",
+    to: "multiagent-join-completeness",
+    relation: "constrains",
+    reason:
+      "병렬 update의 도착 순서·retry 중복이 join 결과를 우연히 바꾸지 않게 합니다.",
+  },
+  {
+    from: "parallel-reducer-safety",
+    to: "agent-replay-idempotency",
+    relation: "extends",
+    reason:
+      "State merge뿐 아니라 database/message 같은 외부 side effect의 중복 실행을 operation key로 통제합니다.",
+  },
+  {
+    from: "multiagent-worker-receipt",
+    to: "agent-replay-idempotency",
+    relation: "constrains",
+    reason:
+      "Task/input hash와 idempotency key가 retry된 worker operation을 같은 실행으로 식별합니다.",
+  },
+  {
+    from: "agent-workflow-judgment-boundary",
+    to: "multiagent-join-completeness",
+    relation: "constrains",
+    reason:
+      "Agent output을 schema·validator를 거쳐야만 다음 deterministic transition이 소비합니다.",
+  },
+  {
+    from: "multiagent-join-completeness",
+    to: "manufacturing-advisory-control-boundary",
+    relation: "constrains",
+    reason:
+      "완전한 분석 artifact도 advisory 결과일 뿐 설비 실행 권한으로 자동 승격되지 않습니다.",
+  },
+  {
+    from: "trainable-scope-mask",
+    to: "lora-trainable-scope-contract",
+    relation: "prerequisite",
+    reason:
+      "Base·adapter·modules_to_save의 requires_grad와 optimizer 포함 여부를 실제 parameter set으로 검사합니다.",
+  },
+  {
+    from: "matrix-multiplication",
+    to: "lora-low-rank-update",
+    relation: "prerequisite",
+    reason:
+      "A와 B의 shape를 따라 BAx가 base output과 같은 dimension을 만드는 과정을 계산합니다.",
+  },
+  {
+    from: "matrix-rank",
+    to: "lora-low-rank-update",
+    relation: "prerequisite",
+    reason:
+      "곱 BA의 rank가 r을 넘지 못해 update 자유도가 제한되는 이유를 제공합니다.",
+  },
+  {
+    from: "low-rank-approximation",
+    to: "lora-low-rank-update",
+    relation: "contrasts",
+    reason:
+      "고정 matrix를 SVD로 사후 근사하는 것과 training update 자체를 low-rank로 parameterize하는 것을 구분합니다.",
+  },
+  {
+    from: "lora-trainable-scope-contract",
+    to: "lora-target-capacity-budget",
+    relation: "constrains",
+    reason:
+      "어느 module에 어떤 rank의 adapter를 둘지 실제 trainable parameter 합계로 연결합니다.",
+  },
+  {
+    from: "lora-low-rank-update",
+    to: "lora-target-capacity-budget",
+    relation: "produces",
+    reason: "Module shape와 rank가 parameter 수와 최대 update rank를 정합니다.",
+  },
+  {
+    from: "affine-uniform-quantizer",
+    to: "qlora-precision-path",
+    relation: "prerequisite",
+    reason:
+      "Low-bit code와 scale에서 compute weight를 복원하는 저장/연산 경계를 제공합니다.",
+  },
+  {
+    from: "lora-low-rank-update",
+    to: "qlora-precision-path",
+    relation: "extends",
+    reason:
+      "Quantized frozen base 위에서도 higher-precision adapter branch에 gradient를 전달합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "qlora-training-memory-ledger",
+    relation: "prerequisite",
+    reason:
+      "Base code·metadata·adapter state·activation·workspace를 같은 byte 단위로 합산합니다.",
+  },
+  {
+    from: "qlora-precision-path",
+    to: "qlora-training-memory-ledger",
+    relation: "produces",
+    reason:
+      "Storage·compute·training dtype별로 실제 resident와 temporary memory 항을 나눕니다.",
+  },
+  {
+    from: "sft",
+    to: "lora-token-loss-contract",
+    relation: "prerequisite",
+    reason:
+      "Instruction demonstration을 next-token training sequence로 만드는 목적을 제공합니다.",
+  },
+  {
+    from: "response-loss-mask",
+    to: "lora-token-loss-contract",
+    relation: "prerequisite",
+    reason:
+      "Assistant response token만 loss 분자와 분모에 포함하는 mask를 재사용합니다.",
+  },
+  {
+    from: "lora-low-rank-update",
+    to: "lora-merge-equivalence",
+    relation: "produces",
+    reason: "Base와 adapter linear branch를 분배법칙으로 한 weight에 합칩니다.",
+  },
+  {
+    from: "affine-uniform-quantizer",
+    to: "lora-requantization-boundary",
+    relation: "prerequisite",
+    reason:
+      "Rounding·clipping 때문에 quantization이 addition과 일반적으로 commute하지 않음을 설명합니다.",
+  },
+  {
+    from: "lora-merge-equivalence",
+    to: "lora-requantization-boundary",
+    relation: "constrains",
+    reason:
+      "Higher-precision linear merge 동치와 merge 뒤 low-bit 재양자화를 별도 단계로 구분합니다.",
+  },
+  {
+    from: "offline-document-embedding-reuse",
+    to: "rag-index-version-contract",
+    relation: "prerequisite",
+    reason:
+      "Corpus revision마다 재사용할 document vector가 어느 encoder/input/index 계약으로 생성됐는지 묶습니다.",
+  },
+  {
+    from: "embedding-role-instruction-contract",
+    to: "rag-index-version-contract",
+    relation: "prerequisite",
+    reason:
+      "Query와 passage의 role instruction을 index tuple의 입력 규약으로 고정합니다.",
+  },
+  {
+    from: "embedding-index-storage-budget",
+    to: "rag-index-version-contract",
+    relation: "extends",
+    reason:
+      "Vector dimension·dtype·ANN artifact를 versioned index storage와 연결합니다.",
+  },
+  {
+    from: "rag-index-version-contract",
+    to: "rag-stage-success-trace",
+    relation: "constrains",
+    reason:
+      "어느 corpus/index version에서 relevant source를 검색했는지 trace에 남깁니다.",
+  },
+  {
+    from: "rag-chunk-span-coverage",
+    to: "rag-stage-success-trace",
+    relation: "evaluates",
+    reason:
+      "정답 원문이 source에 있어도 최종 context에 남지 않은 chunk/context failure를 분리합니다.",
+  },
+  {
+    from: "reciprocal-rank-fusion",
+    to: "retrieval-candidate-recall-ceiling",
+    relation: "produces",
+    reason:
+      "Dense·sparse 목록을 합친 candidate set이 뒤 reranker의 relevant coverage 상한을 정합니다.",
+  },
+  {
+    from: "rag-pre-retrieval-access-control",
+    to: "retrieval-candidate-recall-ceiling",
+    relation: "constrains",
+    reason:
+      "Relevant set과 candidate universe를 요청자가 접근 가능한 corpus로 먼저 제한합니다.",
+  },
+  {
+    from: "retrieval-candidate-recall-ceiling",
+    to: "rag-stage-success-trace",
+    relation: "evaluates",
+    reason:
+      "Relevant document가 candidate에 들어왔는지 retrieval indicator를 판정합니다.",
+  },
+  {
+    from: "sequence-truncation-policy",
+    to: "rag-context-token-budget",
+    relation: "prerequisite",
+    reason:
+      "Serving tokenizer와 maximum length에서 문서·출력 보존 규칙을 명시합니다.",
+  },
+  {
+    from: "rag-context-token-budget",
+    to: "rag-chunk-span-coverage",
+    relation: "constrains",
+    reason:
+      "Dedup·parent 복원 뒤 어느 evidence span이 실제 prompt에 남는지 제한합니다.",
+  },
+  {
+    from: "rag-retrieved-data-boundary",
+    to: "rag-stage-success-trace",
+    relation: "constrains",
+    reason:
+      "검색 근거가 instruction으로 실행되지 않고 claim support에만 사용되도록 generation 경계를 고정합니다.",
+  },
+  {
+    from: "multipositive-retrieval-metrics",
+    to: "rag-layered-evaluation",
+    relation: "prerequisite",
+    reason:
+      "Candidate coverage와 graded ranking을 answer 평가보다 먼저 측정합니다.",
+  },
+  {
+    from: "rag-citation-support-metrics",
+    to: "rag-layered-evaluation",
+    relation: "evaluates",
+    reason: "답변 citation의 잘못된 연결과 누락을 서로 다른 분모로 측정합니다.",
+  },
+  {
+    from: "rag-stage-success-trace",
+    to: "rag-layered-evaluation",
+    relation: "produces",
+    reason: "Query별 stage receipt를 metric과 failure owner에 연결합니다.",
+  },
+  {
+    from: "quantization-method-format-boundary",
+    to: "compression-lever-bottleneck-map",
+    relation: "prerequisite",
+    reason:
+      "Quantization이 바꾸는 weight/activation/KV dtype과 실제 kernel 경로를 병목에 연결합니다.",
+  },
+  {
+    from: "pruning-deployment-frontier",
+    to: "compression-lever-bottleneck-map",
+    relation: "prerequisite",
+    reason:
+      "Pruning의 sparse pattern·shape와 target operator 이득을 통합 후보에 제공합니다.",
+  },
+  {
+    from: "distillation-signal-interface",
+    to: "compression-lever-bottleneck-map",
+    relation: "prerequisite",
+    reason:
+      "Student architecture 자체를 줄이는 training lever와 runtime artifact를 연결합니다.",
+  },
+  {
+    from: "compression-lever-bottleneck-map",
+    to: "compression-hard-feasibility",
+    relation: "produces",
+    reason:
+      "선택한 lever 후보를 필수 quality·resource·compatibility budget에서 먼저 거릅니다.",
+  },
+  {
+    from: "quantized-resident-memory-ledger",
+    to: "resident-memory-concurrency-bound",
+    relation: "prerequisite",
+    reason:
+      "Packed weight·metadata·workspace·headroom을 고정 resident로 분리합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "resident-memory-concurrency-bound",
+    relation: "prerequisite",
+    reason: "모든 resident 항과 요청별 KV/state를 같은 byte 단위로 합산합니다.",
+  },
+  {
+    from: "resident-memory-concurrency-bound",
+    to: "compression-hard-feasibility",
+    relation: "evaluates",
+    reason:
+      "Memory budget에서 OOM 없이 유지 가능한 동시 요청의 1차 capacity를 제공합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "compression-stage-order-effect",
+    relation: "constrains",
+    reason:
+      "순서·calibration 선택용 paired validation과 마지막 test를 분리합니다.",
+  },
+  {
+    from: "compression-lever-bottleneck-map",
+    to: "compression-stage-order-effect",
+    relation: "extends",
+    reason:
+      "둘 이상의 lever가 structure·activation statistics·artifact support를 바꾸는 순서를 비교합니다.",
+  },
+  {
+    from: "compression-stage-order-effect",
+    to: "compression-stage-interaction",
+    relation: "constrains",
+    reason:
+      "확정된 stage order의 baseline·single·combined artifact를 같은 metric으로 비교합니다.",
+  },
+  {
+    from: "compression-hard-feasibility",
+    to: "quality-gated-compression-pareto",
+    relation: "constrains",
+    reason:
+      "필수 guardrail을 실패한 후보가 다른 resource 이득으로 frontier에 들어오지 못하게 합니다.",
+  },
+  {
+    from: "compression-stage-interaction",
+    to: "quality-gated-compression-pareto",
+    relation: "evaluates",
+    reason:
+      "결합 artifact의 gain이 단일 stage와 어떻게 상호작용했는지 운영 선택 근거로 제공합니다.",
+  },
+  {
+    from: "quantized-kernel-amdahl-bound",
+    to: "quality-gated-compression-pareto",
+    relation: "constrains",
+    reason:
+      "지원 kernel coverage 밖의 실행 시간이 end-to-end latency gain을 제한합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "distillation-signal-interface",
+    relation: "prerequisite",
+    reason:
+      "Teacher output을 class probability로 전달할지 feature·sequence처럼 다른 interface를 사용할지 구분합니다.",
+  },
+  {
+    from: "distillation-signal-interface",
+    to: "temperature-soft-target",
+    relation: "produces",
+    reason:
+      "같은 class/vocabulary logit interface가 있을 때 teacher score를 softened probability로 바꿉니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "temperature-soft-target",
+    relation: "prerequisite",
+    reason:
+      "Temperature로 나눈 logit을 합이 1인 categorical distribution과 class odds로 변환합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "hard-soft-distillation-objective",
+    relation: "prerequisite",
+    reason:
+      "Hard label의 supervised anchor와 teacher soft target cross-entropy를 계산합니다.",
+  },
+  {
+    from: "kl-divergence",
+    to: "hard-soft-distillation-objective",
+    relation: "prerequisite",
+    reason:
+      "Teacher distribution을 고정 target으로 두고 student probability가 가까워지게 합니다.",
+  },
+  {
+    from: "temperature-soft-target",
+    to: "hard-soft-distillation-objective",
+    relation: "optimizes",
+    reason:
+      "같은 temperature의 teacher/student distribution이 soft-target term을 만듭니다.",
+  },
+  {
+    from: "gradient",
+    to: "distillation-temperature-gradient-scale",
+    relation: "prerequisite",
+    reason:
+      "Temperature-softmax cross-entropy를 student logit으로 미분해 1/T² scale을 해석합니다.",
+  },
+  {
+    from: "temperature-soft-target",
+    to: "distillation-temperature-gradient-scale",
+    relation: "produces",
+    reason:
+      "큰 T가 probability residual과 softmax derivative를 함께 약하게 만듭니다.",
+  },
+  {
+    from: "distillation-temperature-gradient-scale",
+    to: "hard-soft-distillation-objective",
+    relation: "constrains",
+    reason:
+      "T를 바꿔도 soft loss gradient가 단순히 사라지지 않도록 T² coefficient와 alpha를 함께 해석합니다.",
+  },
+  {
+    from: "kl-divergence",
+    to: "distillation-kl-direction",
+    relation: "extends",
+    reason:
+      "KL의 비대칭성을 teacher/student 인수 순서와 missing/mode penalty의 차이로 구체화합니다.",
+  },
+  {
+    from: "distillation-kl-direction",
+    to: "hard-soft-distillation-objective",
+    relation: "constrains",
+    reason:
+      "고전 teacher-to-student forward KL의 input·target 순서와 library reduction을 고정합니다.",
+  },
+  {
+    from: "matrix-multiplication",
+    to: "feature-distillation-alignment",
+    relation: "prerequisite",
+    reason:
+      "Student hidden dimension을 teacher dimension으로 projection하고 aligned tensor difference를 계산합니다.",
+  },
+  {
+    from: "distillation-signal-interface",
+    to: "feature-distillation-alignment",
+    relation: "extends",
+    reason:
+      "Output class 대신 중간 layer·position·channel의 대응을 명시합니다.",
+  },
+  {
+    from: "tokenizer-checkpoint-compatibility",
+    to: "cross-tokenizer-sequence-distillation",
+    relation: "prerequisite",
+    reason:
+      "Teacher text를 student vocabulary·chat template·special token으로 다시 serialize합니다.",
+  },
+  {
+    from: "distillation-signal-interface",
+    to: "cross-tokenizer-sequence-distillation",
+    relation: "extends",
+    reason:
+      "공유 vocabulary logits가 없을 때 문자열 sequence를 student NLL target으로 사용합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "synthetic-distillation-slice-coverage",
+    relation: "constrains",
+    reason:
+      "Prompt generation·filter·mixture 선택 data와 독립 test·decontamination boundary를 분리합니다.",
+  },
+  {
+    from: "cross-tokenizer-sequence-distillation",
+    to: "synthetic-distillation-slice-coverage",
+    relation: "constrains",
+    reason:
+      "Teacher output이 최종 student-tokenized training data가 되기 전 slice mixture와 quality를 점검합니다.",
+  },
+  {
+    from: "cross-tokenizer-sequence-distillation",
+    to: "autoregressive-state-distribution-mismatch",
+    relation: "produces",
+    reason:
+      "Teacher가 만든 고정 sequence와 student가 inference에서 만드는 prefix가 달라질 수 있음을 드러냅니다.",
+  },
+  {
+    from: "autoregressive-decoding",
+    to: "autoregressive-state-distribution-mismatch",
+    relation: "prerequisite",
+    reason:
+      "이전 출력 token이 다음 입력 prefix에 들어가므로 작은 오류가 이후 방문 state를 바꿉니다.",
+  },
+  {
+    from: "autoregressive-state-distribution-mismatch",
+    to: "generalized-on-policy-distillation",
+    relation: "prerequisite",
+    reason:
+      "고정 prefix가 아니라 현재 student가 방문한 prefix에서 teacher feedback을 받게 합니다.",
+  },
+  {
+    from: "distillation-kl-direction",
+    to: "generalized-on-policy-distillation",
+    relation: "constrains",
+    reason:
+      "On/off-policy sampling 축과 forward/reverse KL·JSD divergence 축을 분리해 선택합니다.",
+  },
+  {
+    from: "generalized-on-policy-distillation",
+    to: "on-policy-token-teacher-feedback",
+    relation: "produces",
+    reason:
+      "Student rollout의 각 prefix에서 teacher와 student next-token distribution을 비교합니다.",
+  },
+  {
+    from: "on-policy-token-teacher-feedback",
+    to: "multi-teacher-policy-space-integration",
+    relation: "extends",
+    reason:
+      "Prompt domain별 specialist teacher를 골라 하나의 공통 student에 dense signal을 전달합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "multi-teacher-policy-space-integration",
+    relation: "constrains",
+    reason:
+      "평균 capability뿐 아니라 teacher별 headroom·worst-domain regression·일반 capability를 독립 평가합니다.",
+  },
+  {
+    from: "hard-soft-distillation-objective",
+    to: "self-distillation-inheritance-audit",
+    relation: "produces",
+    reason:
+      "이전 generation의 soft target을 사용할 때 teacher agreement와 ground-truth gain을 따로 측정합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "self-distillation-inheritance-audit",
+    relation: "constrains",
+    reason:
+      "세대마다 같은 frozen holdout과 slice membership으로 drift와 marginal gain을 비교합니다.",
+  },
+  {
+    from: "scalar-quantity",
+    to: "pruning-mask-sparsity",
+    relation: "prerequisite",
+    reason:
+      "남은 수·전체 수와 0에서 1 사이의 density·sparsity 비율을 계산합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "sparse-storage-break-even",
+    relation: "prerequisite",
+    reason:
+      "Value·index·metadata를 같은 byte 단위로 바꿔 dense payload와 비교합니다.",
+  },
+  {
+    from: "pruning-mask-sparsity",
+    to: "sparse-storage-break-even",
+    relation: "produces",
+    reason: "Mask의 density가 남아 저장해야 하는 value와 index 수를 정합니다.",
+  },
+  {
+    from: "gradient",
+    to: "movement-pruning-score",
+    relation: "prerequisite",
+    reason:
+      "Fine-tuning loss의 weight gradient와 현재 weight를 결합해 task-adaptive movement 방향을 읽습니다.",
+  },
+  {
+    from: "pruning-mask-sparsity",
+    to: "movement-pruning-score",
+    relation: "optimizes",
+    reason: "학습된 score를 sparsity budget에 맞춰 binary mask로 선택합니다.",
+  },
+  {
+    from: "matrix-multiplication",
+    to: "structured-pruning-shape-propagation",
+    relation: "prerequisite",
+    reason:
+      "Input·output dimension을 바꿀 때 연속된 weight matrix shape와 주된 dense 계산량 변화를 추적합니다.",
+  },
+  {
+    from: "pruning-mask-sparsity",
+    to: "structured-pruning-shape-propagation",
+    relation: "extends",
+    reason:
+      "개별 mask 원소 대신 channel·head·block 단위의 공유 dimension을 제거합니다.",
+  },
+  {
+    from: "pruning-mask-sparsity",
+    to: "nm-semi-structured-constraint",
+    relation: "extends",
+    reason:
+      "전체 sparsity를 모든 local M개 group의 정확한 N개 retention 제약으로 강화합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "llm-pruning-calibration-coverage",
+    relation: "constrains",
+    reason:
+      "Importance 선택용 calibration·recovery data와 최종 held-out evaluation을 분리합니다.",
+  },
+  {
+    from: "pruning-mask-sparsity",
+    to: "llm-pruning-calibration-coverage",
+    relation: "constrains",
+    reason:
+      "같은 sparsity budget에서도 calibration activation이 weight별 중요도 순서를 바꿉니다.",
+  },
+  {
+    from: "matrix-multiplication",
+    to: "sparsegpt-layer-reconstruction",
+    relation: "prerequisite",
+    reason:
+      "Calibration activation과 original/pruned weight의 두 layer output을 계산해 Frobenius error를 비교합니다.",
+  },
+  {
+    from: "llm-pruning-calibration-coverage",
+    to: "sparsegpt-layer-reconstruction",
+    relation: "constrains",
+    reason:
+      "수집된 X가 reconstruction objective가 중요하게 보는 input direction을 정합니다.",
+  },
+  {
+    from: "llm-pruning-calibration-coverage",
+    to: "wanda-activation-aware-score",
+    relation: "constrains",
+    reason:
+      "Calibration token의 channel norm이 Wanda의 weight importance를 직접 바꿉니다.",
+  },
+  {
+    from: "sparsegpt-layer-reconstruction",
+    to: "wanda-activation-aware-score",
+    relation: "contrasts",
+    reason:
+      "Second-order weight compensation과 update 없는 magnitude×activation score의 계산·보정 범위를 비교합니다.",
+  },
+  {
+    from: "pruning-mask-sparsity",
+    to: "fixed-mask-recovery-invariant",
+    relation: "constrains",
+    reason:
+      "확정된 mask를 parameter와 optimizer state update 뒤 다시 적용해 sparsity를 보존합니다.",
+  },
+  {
+    from: "gradient-descent",
+    to: "fixed-mask-recovery-invariant",
+    relation: "prerequisite",
+    reason:
+      "일반 optimization update 뒤 mask projection을 적용하는 순서를 이해합니다.",
+  },
+  {
+    from: "sparse-storage-break-even",
+    to: "pruning-deployment-frontier",
+    relation: "evaluates",
+    reason:
+      "실제 artifact byte가 dense baseline보다 줄었는지 resource 축에 제공합니다.",
+  },
+  {
+    from: "nm-semi-structured-constraint",
+    to: "pruning-deployment-frontier",
+    relation: "evaluates",
+    reason:
+      "Target runtime의 pattern 적격성과 실제 sparse tactic 선택을 확인합니다.",
+  },
+  {
+    from: "structured-pruning-shape-propagation",
+    to: "pruning-deployment-frontier",
+    relation: "evaluates",
+    reason:
+      "Export된 dense shape·FLOPs와 compiler 이후 latency의 차이를 비교합니다.",
+  },
+  {
+    from: "fixed-mask-recovery-invariant",
+    to: "pruning-deployment-frontier",
+    relation: "produces",
+    reason:
+      "Recovery checkpoint의 실제 sparsity와 quality를 보존한 채 runtime artifact를 평가합니다.",
+  },
+  {
+    from: "quantized-kernel-amdahl-bound",
+    to: "pruning-deployment-frontier",
+    relation: "extends",
+    reason:
+      "일부 operator만 sparse tactic을 쓰는 경우에도 변하지 않은 실행 시간이 end-to-end speedup을 제한합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "affine-uniform-quantizer",
+    relation: "prerequisite",
+    reason:
+      "b-bit integer가 제공하는 code 수와 packed storage 단위를 계산합니다.",
+  },
+  {
+    from: "scalar-quantity",
+    to: "affine-uniform-quantizer",
+    relation: "prerequisite",
+    reason:
+      "실수 값·scale·zero-point·code를 하나씩 대입해 quantize와 dequantize를 계산합니다.",
+  },
+  {
+    from: "affine-uniform-quantizer",
+    to: "quantization-rounding-clipping-error",
+    relation: "produces",
+    reason:
+      "Uniform grid 안의 rounding과 representable endpoint 밖의 clipping이 서로 다른 오차를 만듭니다.",
+  },
+  {
+    from: "affine-uniform-quantizer",
+    to: "quantization-scale-granularity",
+    relation: "extends",
+    reason:
+      "하나의 scale·zero-point를 tensor·channel·group별 여러 quantizer로 확장합니다.",
+  },
+  {
+    from: "quantization-rounding-clipping-error",
+    to: "ptq-calibration-coverage",
+    relation: "evaluates",
+    reason:
+      "Calibration range가 validation traffic에서 만드는 saturation과 task regression을 측정합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "ptq-calibration-coverage",
+    relation: "constrains",
+    reason:
+      "Calibration·mixed-precision 선택 data와 마지막 test를 분리해 evaluation contamination을 막습니다.",
+  },
+  {
+    from: "quantization-scale-granularity",
+    to: "ptq-calibration-coverage",
+    relation: "constrains",
+    reason:
+      "Scale 공유 범위가 layer·slice별 rounding resolution과 saturation을 바꿉니다.",
+  },
+  {
+    from: "affine-uniform-quantizer",
+    to: "qat-fake-quant-ste",
+    relation: "extends",
+    reason:
+      "같은 round·clip·dequantize operator를 training forward에 넣고 surrogate backward를 추가합니다.",
+  },
+  {
+    from: "empirical-risk",
+    to: "qat-fake-quant-ste",
+    relation: "optimizes",
+    reason:
+      "Fake-quantized forward의 training loss 평균이 float master weight update를 이끕니다.",
+  },
+  {
+    from: "matrix-multiplication",
+    to: "quantized-layer-output-reconstruction",
+    relation: "prerequisite",
+    reason:
+      "Calibration activation X와 float/quantized weight matrix의 두 output을 계산해 비교합니다.",
+  },
+  {
+    from: "ptq-calibration-coverage",
+    to: "quantized-layer-output-reconstruction",
+    relation: "constrains",
+    reason:
+      "Representative activation rows가 어떤 weight-error direction을 크게 볼지 정합니다.",
+  },
+  {
+    from: "quantized-layer-output-reconstruction",
+    to: "quantization-method-format-boundary",
+    relation: "produces",
+    reason:
+      "GPTQ·AWQ처럼 error를 줄이는 method를 numerical encoding과 file container에서 분리합니다.",
+  },
+  {
+    from: "quantization-scale-granularity",
+    to: "quantization-method-format-boundary",
+    relation: "constrains",
+    reason:
+      "Method가 만든 group layout과 scale metadata가 format·kernel에서 재현되어야 합니다.",
+  },
+  {
+    from: "quantization-method-format-boundary",
+    to: "quantized-resident-memory-ledger",
+    relation: "produces",
+    reason:
+      "실제 packed encoding과 runtime path가 weight·metadata·temporary buffer의 resident 크기를 정합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "quantized-resident-memory-ledger",
+    relation: "prerequisite",
+    reason:
+      "Parameter count와 bit width를 byte payload로 바꿔 다른 resident 항과 더합니다.",
+  },
+  {
+    from: "quantization-method-format-boundary",
+    to: "quantized-kernel-amdahl-bound",
+    relation: "constrains",
+    reason:
+      "Target runtime에서 실제 low-bit kernel로 대체되는 operator 비율과 fallback을 확인합니다.",
+  },
+  {
+    from: "quantized-resident-memory-ledger",
+    to: "quantized-kernel-amdahl-bound",
+    relation: "contrasts",
+    reason:
+      "Capacity 절감과 latency speedup은 서로 다른 분모와 병목을 가진 측정값임을 구분합니다.",
+  },
+  {
+    from: "bidirectional-encoder-visibility",
+    to: "sentence-pooling-mask-contract",
+    relation: "produces",
+    reason:
+      "Encoder가 각 valid token의 양방향 문맥 hidden state를 만들고 pooling이 sequence를 고정 길이 vector로 줄입니다.",
+  },
+  {
+    from: "sentence-pooling-mask-contract",
+    to: "sentence-relation-objective-boundary",
+    relation: "constrains",
+    reason:
+      "Vector를 만드는 reducer만으로는 문장 관계의 similarity 순서가 학습됐다고 결론낼 수 없습니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "sentence-relation-objective-boundary",
+    relation: "prerequisite",
+    reason:
+      "Query–document·paraphrase·entailment pair가 embedding 공간이 보존할 관계를 정합니다.",
+  },
+  {
+    from: "cross-bi-encoder-boundary",
+    to: "offline-document-embedding-reuse",
+    relation: "produces",
+    reason:
+      "두 text를 독립 encoding하는 bi-encoder 쪽에서만 document-side representation을 query 사이에 재사용할 수 있습니다.",
+  },
+  {
+    from: "sentence-relation-objective-boundary",
+    to: "offline-document-embedding-reuse",
+    relation: "prerequisite",
+    reason:
+      "독립 vector가 relation-aware similarity를 보존해야 재사용 가능한 retrieval representation이 됩니다.",
+  },
+  {
+    from: "normalized-embedding-cosine",
+    to: "offline-document-embedding-reuse",
+    relation: "prerequisite",
+    reason:
+      "저장된 document vector와 새 query vector를 동일 normalization·similarity 규약으로 비교합니다.",
+  },
+  {
+    from: "offline-document-embedding-reuse",
+    to: "retrieval-candidate-recall-ceiling",
+    relation: "produces",
+    reason:
+      "Bi-encoder가 만든 top-k candidate set이 뒤 reranker가 볼 수 있는 문서 universe를 제한합니다.",
+  },
+  {
+    from: "embedding-role-instruction-contract",
+    to: "embedding-content-retention",
+    relation: "constrains",
+    reason:
+      "Role instruction이 maximum length 안에서 차지하는 token 수가 실제 content budget을 줄입니다.",
+  },
+  {
+    from: "tokenizer-checkpoint-compatibility",
+    to: "embedding-role-instruction-contract",
+    relation: "constrains",
+    reason:
+      "Checkpoint가 학습한 tokenizer와 serialization을 그대로 사용해야 prefix token과 input boundary가 재현됩니다.",
+  },
+  {
+    from: "sequence-truncation-policy",
+    to: "embedding-content-retention",
+    relation: "extends",
+    reason:
+      "일반 sequence truncation을 embedding의 role instruction·answer-position slice 보존 문제로 구체화합니다.",
+  },
+  {
+    from: "offline-document-embedding-reuse",
+    to: "embedding-index-storage-budget",
+    relation: "produces",
+    reason:
+      "미리 계산한 corpus vector를 저장하면서 dimension·dtype·ANN overhead가 운영 storage가 됩니다.",
+  },
+  {
+    from: "retrieval-candidate-recall-ceiling",
+    to: "multipositive-retrieval-metrics",
+    relation: "evaluates",
+    reason:
+      "Candidate Recall@k가 reranker 앞 relevant coverage 상한을 직접 측정합니다.",
+  },
+  {
+    from: "hard-negative-mining-snapshot",
+    to: "multipositive-retrieval-metrics",
+    relation: "constrains",
+    reason:
+      "Mined candidate를 확정 negative로 쓰기 전에 누락된 여러 positive label과 corpus revision을 보존합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "multipositive-retrieval-metrics",
+    relation: "constrains",
+    reason:
+      "Pooling·prefix·miner·index 선택용 validation과 마지막 retrieval test를 분리합니다.",
+  },
+  {
+    from: "multipositive-retrieval-metrics",
+    to: "embedding-quality-cost-frontier",
+    relation: "produces",
+    reason:
+      "Domain Recall·NDCG와 worst slice가 비용 축과 함께 비교할 품질 evidence를 제공합니다.",
+  },
+  {
+    from: "embedding-index-storage-budget",
+    to: "embedding-quality-cost-frontier",
+    relation: "constrains",
+    reason:
+      "Dimension·precision·ANN overhead를 quality와 함께 선택할 resource 축으로 제공합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "image-identity-group-split",
+    relation: "constrains",
+    reason:
+      "평가 분리를 image file이 아니라 deployment identity group 단위로 구체화합니다.",
+  },
+  {
+    from: "image-identity-group-split",
+    to: "image-pipeline-baseline-receipt",
+    relation: "prerequisite",
+    reason: "고정된 split manifest가 모든 후보 비교의 data 기준입니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "resolution-compute-scaling",
+    relation: "prerequisite",
+    reason:
+      "Resolution 변화가 feature-map spatial area를 어떻게 바꾸는지 계산합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "resolution-compute-scaling",
+    relation: "prerequisite",
+    reason:
+      "Patch token 수 증가가 global pairwise attention에 미치는 비용을 계산합니다.",
+  },
+  {
+    from: "resolution-compute-scaling",
+    to: "compound-model-scaling",
+    relation: "constrains",
+    reason:
+      "Resolution을 depth·width와 같은 resource budget 안에서 조절합니다.",
+  },
+  {
+    from: "compound-model-scaling",
+    to: "backbone-budget-comparison",
+    relation: "produces",
+    reason:
+      "Scaling family와 구조적 prior는 target에서 측정할 후보를 만듭니다.",
+  },
+  {
+    from: "pretrained-handoff-contract",
+    to: "backbone-budget-comparison",
+    relation: "constrains",
+    reason:
+      "Weight뿐 아니라 input transform과 architecture revision을 동일하게 넘깁니다.",
+  },
+  {
+    from: "augmentation-risk-objective",
+    to: "resolution-stage-boundary",
+    relation: "constrains",
+    reason:
+      "Resolution과 crop 변화가 label-preserving train distribution을 바꿉니다.",
+  },
+  {
+    from: "resolution-stage-boundary",
+    to: "confidence-gated-pseudo-label",
+    relation: "prerequisite",
+    reason:
+      "Weak·strong view와 teacher/student stage의 입력 조건을 고정합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "confidence-gated-pseudo-label",
+    relation: "optimizes",
+    reason: "선택된 pseudo-label과 strong-view prediction의 CE를 줄입니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "temperature-scaling-calibration",
+    relation: "prerequisite",
+    reason:
+      "Confidence를 predicted correctness likelihood로 해석하는 조건을 제공합니다.",
+  },
+  {
+    from: "temperature-scaling-calibration",
+    to: "image-inference-decision-contract",
+    relation: "produces",
+    reason: "Logit을 운영 threshold가 읽을 calibrated probability로 바꿉니다.",
+  },
+  {
+    from: "backbone-budget-comparison",
+    to: "image-inference-decision-contract",
+    relation: "constrains",
+    reason:
+      "추가 TTA·ensemble 이득을 base model의 latency·memory budget과 비교합니다.",
+  },
+  {
+    from: "image-tensor-layout",
+    to: "vit-patch-sequence-contract",
+    relation: "prerequisite",
+    reason: "Channel·height·width axis가 patch의 P²C flatten shape를 정합니다.",
+  },
+  {
+    from: "linear-map-matrix",
+    to: "vit-patch-sequence-contract",
+    relation: "produces",
+    reason: "각 patch vector를 shared D-dimensional embedding으로 투영합니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "patch-convolution-equivalence",
+    relation: "produces",
+    reason:
+      "Patch partition·projection을 stride-P convolution의 같은 dot product로 재배치합니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "absolute-position-grid-resize",
+    relation: "prerequisite",
+    reason:
+      "Patch positions와 special-token positions를 서로 다른 좌표로 분리합니다.",
+  },
+  {
+    from: "transformer-block",
+    to: "distillation-token-interface",
+    relation: "extends",
+    reason:
+      "기본 encoder sequence에 teacher supervision용 token·head를 추가합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "shifted-window-hierarchy",
+    relation: "extends",
+    reason:
+      "Global visibility를 local window와 shifted cross-window propagation으로 바꿉니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "mae-visible-token-pretraining",
+    relation: "extends",
+    reason: "전체 patch sequence 중 visible subset만 encoder에 전달합니다.",
+  },
+  {
+    from: "distillation-token-interface",
+    to: "vision-architecture-paired-selection",
+    relation: "produces",
+    reason:
+      "Teacher·recipe가 다른 supervised ViT 후보의 evidence scope를 만듭니다.",
+  },
+  {
+    from: "shifted-window-hierarchy",
+    to: "vision-architecture-paired-selection",
+    relation: "produces",
+    reason:
+      "High-resolution hierarchy 후보의 quality·runtime 특성을 측정합니다.",
+  },
+  {
+    from: "mae-visible-token-pretraining",
+    to: "vision-architecture-paired-selection",
+    relation: "produces",
+    reason:
+      "Unlabeled pretraining 후보의 downstream gain과 compute를 비교합니다.",
+  },
+  {
+    from: "pretrained-handoff-contract",
+    to: "vision-checkpoint-parity-test",
+    relation: "constrains",
+    reason:
+      "Weight·architecture·preprocessing identity가 같은 구현을 비교합니다.",
+  },
+  {
+    from: "absolute-position-grid-resize",
+    to: "vision-checkpoint-parity-test",
+    relation: "prerequisite",
+    reason:
+      "Resolution이 다른 checkpoint의 position state를 명시적으로 변환합니다.",
+  },
+  {
+    from: "image-identity-group-split",
+    to: "multiview-episode-contract",
+    relation: "extends",
+    reason: "한 identity의 여러 관측을 split 이전에 episode sample로 묶습니다.",
+  },
+  {
+    from: "multiview-episode-contract",
+    to: "unordered-view-invariance",
+    relation: "constrains",
+    reason:
+      "Episode의 view order가 의미 없는 경우 prediction 함수의 permutation 조건을 정합니다.",
+  },
+  {
+    from: "image-tensor-layout",
+    to: "registered-input-fusion",
+    relation: "prerequisite",
+    reason:
+      "Spatial axis를 유지한 채 sensor channel을 합치는 shape를 제공합니다.",
+  },
+  {
+    from: "multiview-episode-contract",
+    to: "registered-input-fusion",
+    relation: "constrains",
+    reason:
+      "View metadata의 calibration과 reference coordinate가 input concat의 의미를 정합니다.",
+  },
+  {
+    from: "registered-input-fusion",
+    to: "explicit-view-availability-mask",
+    relation: "produces",
+    reason:
+      "Warp와 sensor availability가 좌표별 validity indicator를 만듭니다.",
+  },
+  {
+    from: "pretrained-handoff-contract",
+    to: "view-encoder-sharing-contract",
+    relation: "constrains",
+    reason:
+      "Shared·independent encoder의 weight와 input transform 호환성을 기록합니다.",
+  },
+  {
+    from: "explicit-view-availability-mask",
+    to: "masked-view-aggregation",
+    relation: "prerequisite",
+    reason: "Unavailable feature를 aggregation normalization에서 제외합니다.",
+  },
+  {
+    from: "view-encoder-sharing-contract",
+    to: "masked-view-aggregation",
+    relation: "produces",
+    reason: "View별 feature가 공통 aggregation dimension으로 들어옵니다.",
+  },
+  {
+    from: "masked-view-aggregation",
+    to: "unordered-view-invariance",
+    relation: "produces",
+    reason:
+      "Shared encoder와 symmetric sum·mean·normalized gate는 view 나열 순서에 무관한 output을 만듭니다.",
+  },
+  {
+    from: "self-attention",
+    to: "pose-aware-cross-view-token",
+    relation: "extends",
+    reason: "Attention token에 view·pose·time의 관측 좌표를 추가합니다.",
+  },
+  {
+    from: "pose-aware-cross-view-token",
+    to: "joint-view-attention-cost",
+    relation: "produces",
+    reason:
+      "각 view의 spatial token을 joint sequence에 유지하면서 total pair count가 정해집니다.",
+  },
+  {
+    from: "multiview-episode-contract",
+    to: "missing-view-intervention-audit",
+    relation: "evaluates",
+    reason:
+      "같은 episode에서 view·metadata·quality 한 축만 바꾼 paired condition을 만듭니다.",
+  },
+  {
+    from: "masked-view-aggregation",
+    to: "missing-view-intervention-audit",
+    relation: "evaluates",
+    reason:
+      "Mask 처리 방식이 실제 결측에서 prediction을 보완하는지 측정합니다.",
+  },
+  {
+    from: "image-identity-group-split",
+    to: "forensic-source-independent-split",
+    relation: "extends",
+    reason:
+      "Image identity group에 source video·person·capture session과 파생 re-encoding lineage를 추가합니다.",
+  },
+  {
+    from: "forensic-source-independent-split",
+    to: "unseen-manipulation-domain-risk",
+    relation: "prerequisite",
+    reason:
+      "독립 source와 generator·codec holdout이 domain risk의 평가 표본을 만듭니다.",
+  },
+  {
+    from: "forensic-source-independent-split",
+    to: "forensic-preprocessing-lineage",
+    relation: "constrains",
+    reason:
+      "모든 crop과 track failure를 원래 source frame과 split에 연결합니다.",
+  },
+  {
+    from: "forensic-preprocessing-lineage",
+    to: "face-track-coverage",
+    relation: "produces",
+    reason:
+      "각 frame의 detector input 도달 여부를 numerator indicator로 만듭니다.",
+  },
+  {
+    from: "discrete-fourier-transform",
+    to: "conditional-frequency-forensic-signal",
+    relation: "extends",
+    reason:
+      "Spatial crop을 generator·codec 조건에 민감한 spectrum feature로 표현합니다.",
+  },
+  {
+    from: "conditional-frequency-forensic-signal",
+    to: "forensic-branch-joint-error",
+    relation: "evaluates",
+    reason:
+      "Frequency branch가 spatial branch와 다른 sample을 고치는지 측정합니다.",
+  },
+  {
+    from: "face-track-coverage",
+    to: "video-score-aggregation-contract",
+    relation: "constrains",
+    reason:
+      "Video reducer가 읽은 temporal evidence의 분모와 abstention 조건을 제공합니다.",
+  },
+  {
+    from: "forensic-branch-joint-error",
+    to: "forensic-benchmark-parity",
+    relation: "evaluates",
+    reason:
+      "동일 held-out prediction에서 fusion의 추가 가치와 error diversity를 비교합니다.",
+  },
+  {
+    from: "video-score-aggregation-contract",
+    to: "forensic-benchmark-parity",
+    relation: "constrains",
+    reason:
+      "Frame model 후보가 같은 video-level decision semantics를 사용하게 합니다.",
+  },
+  {
+    from: "forensic-data-provenance-manifest",
+    to: "forensic-source-independent-split",
+    relation: "constrains",
+    reason:
+      "Source·identity·license·consent lineage로 split independence를 검사합니다.",
+  },
+  {
+    from: "forensic-data-provenance-manifest",
+    to: "forensic-coverage-matrix",
+    relation: "produces",
+    reason:
+      "Manifest metadata를 split별 generator·codec·resolution cell로 집계합니다.",
+  },
+  {
+    from: "forensic-coverage-matrix",
+    to: "unseen-manipulation-domain-risk",
+    relation: "constrains",
+    reason:
+      "Domain별 독립 sample 수와 빈 cell을 드러내 risk의 근거 범위를 제한합니다.",
+  },
+  {
+    from: "sampling-nyquist-boundary",
+    to: "video-temporal-observation-contract",
+    relation: "prerequisite",
+    reason:
+      "Source sample index·timestamp 간격으로 clip duration과 effective frame rate를 계산합니다.",
+  },
+  {
+    from: "video-temporal-observation-contract",
+    to: "video-motion-aliasing-boundary",
+    relation: "constrains",
+    reason:
+      "Stride 뒤 effective sample rate가 구분할 motion frequency 범위를 정합니다.",
+  },
+  {
+    from: "video-temporal-observation-contract",
+    to: "temporal-interval-coverage",
+    relation: "produces",
+    reason: "각 sampled clip의 real timestamp interval을 만듭니다.",
+  },
+  {
+    from: "temporal-interval-coverage",
+    to: "deterministic-multiclip-replay",
+    relation: "constrains",
+    reason: "평가에서 고정할 clip timestamp와 union coverage를 제공합니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "temporal-convolution-receptive-span",
+    relation: "extends",
+    reason:
+      "Kernel·stride·dilation receptive-field 계산을 시간축과 source timestamp로 확장합니다.",
+  },
+  {
+    from: "pretrained-handoff-contract",
+    to: "inflated-3d-pretraining-handoff",
+    relation: "extends",
+    reason:
+      "2D image weight를 temporal operator와 video pretraining으로 넘기는 변환을 기록합니다.",
+  },
+  {
+    from: "temporal-convolution-receptive-span",
+    to: "r2plus1d-factorization",
+    relation: "produces",
+    reason:
+      "같은 spatiotemporal operator 범위를 spatial·temporal stage로 분리합니다.",
+  },
+  {
+    from: "video-motion-aliasing-boundary",
+    to: "slowfast-rate-capacity-allocation",
+    relation: "constrains",
+    reason:
+      "Fast path가 보존해야 할 temporal sampling rate의 근거를 제공합니다.",
+  },
+  {
+    from: "vit-patch-sequence-contract",
+    to: "video-tubelet-token-contract",
+    relation: "extends",
+    reason: "2D patch에 temporal tubelet dimension을 추가합니다.",
+  },
+  {
+    from: "video-tubelet-token-contract",
+    to: "factorized-space-time-attention-cost",
+    relation: "produces",
+    reason:
+      "Temporal T와 per-time spatial S token count로 joint·divided pair cost를 계산합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "factorized-space-time-attention-cost",
+    relation: "extends",
+    reason: "Dense Q·K pair를 space·time 축별 interaction으로 제한합니다.",
+  },
+  {
+    from: "video-tubelet-token-contract",
+    to: "videomae-visible-tubelet-pretraining",
+    relation: "extends",
+    reason: "전체 tubelet sequence 중 visible subset만 encoder input에 둡니다.",
+  },
+  {
+    from: "deterministic-multiclip-replay",
+    to: "forensic-benchmark-parity",
+    relation: "extends",
+    reason:
+      "Video detector 비교의 clip timestamps와 aggregation을 재현 가능하게 만듭니다.",
+  },
+  {
+    from: "augmentation-risk-objective",
+    to: "positive-transformation-invariance",
+    relation: "constrains",
+    reason:
+      "Transformation distribution과 target map이 어떤 변화를 positive로 허용할지 정합니다.",
+  },
+  {
+    from: "positive-transformation-invariance",
+    to: "contrastive-pair-semantics",
+    relation: "constrains",
+    reason:
+      "같은 원본 view를 positive로 부를 수 있는 task 의미 조건을 제공합니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "normalized-embedding-cosine",
+    relation: "prerequisite",
+    reason: "두 embedding의 길이를 1로 맞추는 normalization을 정의합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "normalized-embedding-cosine",
+    relation: "prerequisite",
+    reason: "Unit embedding의 cosine similarity를 inner product로 계산합니다.",
+  },
+  {
+    from: "projection-head-boundary",
+    to: "normalized-embedding-cosine",
+    relation: "produces",
+    reason:
+      "Projection output을 unit vector로 바꾸어 contrastive comparison 공간을 만듭니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "ntxent-inbatch-objective",
+    relation: "constrains",
+    reason:
+      "같은 source view와 다른 source view에 붙일 positive·negative 관계를 정합니다.",
+  },
+  {
+    from: "normalized-embedding-cosine",
+    to: "ntxent-inbatch-objective",
+    relation: "prerequisite",
+    reason:
+      "NT-Xent 분자와 분모에 사용할 bounded similarity logit을 제공합니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "temperature-negative-weighting",
+    relation: "prerequisite",
+    reason:
+      "Temperature-scaled similarity를 후보별 상대 weight로 정규화합니다.",
+  },
+  {
+    from: "temperature-negative-weighting",
+    to: "ntxent-inbatch-objective",
+    relation: "constrains",
+    reason:
+      "후보 similarity 차이가 loss와 gradient에 반영되는 강도를 정합니다.",
+  },
+  {
+    from: "normalized-embedding-cosine",
+    to: "triplet-relative-margin",
+    relation: "constrains",
+    reason:
+      "정규화 여부와 metric convention이 margin이 놓이는 거리 scale을 정합니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "triplet-relative-margin",
+    relation: "constrains",
+    reason: "Anchor·positive·negative의 의미 관계를 triplet 입력으로 만듭니다.",
+  },
+  {
+    from: "triplet-relative-margin",
+    to: "hard-negative-mining-snapshot",
+    relation: "constrains",
+    reason:
+      "현재 positive 거리와 margin으로 easy·semi-hard·hard 후보 구간을 나눕니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "supervised-multipositive-objective",
+    relation: "extends",
+    reason:
+      "Label을 anchor별 여러 positive relation으로 확장하되 unknown·hierarchy 경계를 유지합니다.",
+  },
+  {
+    from: "hard-negative-mining-snapshot",
+    to: "false-negative-pair-audit",
+    relation: "produces",
+    reason:
+      "Versioned candidate bucket이 relation 검수를 위한 표본 모집단을 만듭니다.",
+  },
+  {
+    from: "false-negative-pair-audit",
+    to: "contrastive-downstream-evaluation-loop",
+    relation: "evaluates",
+    reason:
+      "Miner가 어려운 오답이 아니라 숨은 정답을 선택했는지 downstream 결과와 함께 판단합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "contrastive-downstream-evaluation-loop",
+    relation: "constrains",
+    reason: "Pair·miner 선택 data와 마지막 downstream test를 분리합니다.",
+  },
+  {
+    from: "covariate-label-concept-shift",
+    to: "domain-adaptation-gap-diagnosis",
+    relation: "prerequisite",
+    reason:
+      "Source와 target에서 input·label·label mechanism 중 무엇이 달라졌는지 진단의 확률적 기준을 제공합니다.",
+  },
+  {
+    from: "domain-adaptation-gap-diagnosis",
+    to: "minimum-domain-intervention-selection",
+    relation: "produces",
+    reason:
+      "Language·fact·behavior·system 결함별로 비교할 no-op·RAG·DAPT/TAPT·SFT·PEFT 후보를 만듭니다.",
+  },
+  {
+    from: "adaptation-scope-comparison",
+    to: "minimum-domain-intervention-selection",
+    relation: "extends",
+    reason:
+      "같은 split·seed·budget의 paired comparison을 adaptation family 전체로 확장합니다.",
+  },
+  {
+    from: "continued-domain-task-pretraining",
+    to: "domain-corpus-mixture-objective",
+    relation: "extends",
+    reason:
+      "Continued pretraining input을 domain과 general replay distribution의 mixture로 구체화합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "domain-perplexity-comparison-contract",
+    relation: "prerequisite",
+    reason: "관측 domain token의 평균 negative log-likelihood를 계산합니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "domain-perplexity-comparison-contract",
+    relation: "prerequisite",
+    reason: "평균 token NLL을 perplexity scale로 되돌립니다.",
+  },
+  {
+    from: "domain-corpus-mixture-objective",
+    to: "adaptation-gain-forgetting-frontier",
+    relation: "produces",
+    reason:
+      "Mixture·token budget별 checkpoint가 domain gain과 general regression 후보를 만듭니다.",
+  },
+  {
+    from: "domain-perplexity-comparison-contract",
+    to: "adaptation-gain-forgetting-frontier",
+    relation: "evaluates",
+    reason:
+      "Domain language fit을 comparable held-out metric으로 제공하되 downstream metric과 함께 봅니다.",
+  },
+  {
+    from: "negative-transfer-diagnostic",
+    to: "adaptation-gain-forgetting-frontier",
+    relation: "extends",
+    reason:
+      "Target improvement뿐 아니라 source/general regression을 checkpoint 선택 축으로 추가합니다.",
+  },
+  {
+    from: "sft",
+    to: "domain-task-demonstration-contract",
+    relation: "extends",
+    reason:
+      "일반 demonstration을 domain-specific prompt·schema·label·abstention contract로 구체화합니다.",
+  },
+  {
+    from: "response-loss-mask",
+    to: "domain-task-demonstration-contract",
+    relation: "constrains",
+    reason: "Prompt context와 실제 채점할 response token 위치를 분리합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "domain-entity-time-split",
+    relation: "extends",
+    reason:
+      "Row-level split을 deployment entity·family·source lineage와 future time boundary로 확장합니다.",
+  },
+  {
+    from: "domain-data-rights-provenance",
+    to: "domain-entity-time-split",
+    relation: "constrains",
+    reason:
+      "Source·entity·derivative lineage가 split 사이 독립 group과 삭제 범위를 정합니다.",
+  },
+  {
+    from: "domain-entity-time-split",
+    to: "domain-slice-evidence-coverage",
+    relation: "produces",
+    reason:
+      "독립 group 기준으로 기관·계통·장비·condition cell의 근거 수를 집계합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "domain-data-rights-provenance",
+    relation: "extends",
+    reason:
+      "Code·data·checkpoint lineage에 license·consent·retention·deletion 권리 정보를 추가합니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "linear-map-matrix",
+    relation: "prerequisite",
+    reason:
+      "Matrix가 읽는 input과 만드는 output을 coordinate vector로 나타냅니다.",
+  },
+  {
+    from: "dot-product",
+    to: "linear-map-matrix",
+    relation: "prerequisite",
+    reason:
+      "Matrix의 각 row가 input vector와 dot product해 output coordinate 하나를 만듭니다.",
+  },
+  {
+    from: "linear-map-matrix",
+    to: "matrix-multiplication",
+    relation: "produces",
+    reason: "두 linear map의 순차 적용을 matrix product 하나로 합성합니다.",
+  },
+  {
+    from: "linear-map-matrix",
+    to: "matrix-rank",
+    relation: "produces",
+    reason: "Linear map이 output에서 펼칠 수 있는 독립 방향의 수를 측정합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "orthonormal-basis",
+    relation: "prerequisite",
+    reason: "서로 다른 basis vector의 직교성을 dot product 0으로 확인합니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "orthonormal-basis",
+    relation: "prerequisite",
+    reason: "각 basis vector의 길이를 1로 정규화합니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "frobenius-norm",
+    relation: "extends",
+    reason:
+      "Matrix entry 전체를 한 vector처럼 펼쳐 같은 제곱합 길이를 계산합니다.",
+  },
+  {
+    from: "matrix-rank",
+    to: "singular-value-decomposition",
+    relation: "prerequisite",
+    reason: "Nonzero singular value 수가 matrix의 rank와 대응합니다.",
+  },
+  {
+    from: "orthonormal-basis",
+    to: "singular-value-decomposition",
+    relation: "prerequisite",
+    reason:
+      "Input과 output 공간의 singular directions를 서로 직교하는 unit vectors로 배치합니다.",
+  },
+  {
+    from: "singular-value-decomposition",
+    to: "low-rank-approximation",
+    relation: "produces",
+    reason:
+      "Singular value가 큰 rank-one component부터 일부만 남겨 rank budget을 줄입니다.",
+  },
+  {
+    from: "frobenius-norm",
+    to: "eckart-young-theorem",
+    relation: "prerequisite",
+    reason:
+      "전체 entry reconstruction error를 비교하는 기준 norm 중 하나입니다.",
+  },
+  {
+    from: "low-rank-approximation",
+    to: "eckart-young-theorem",
+    relation: "constrains",
+    reason:
+      "Truncated SVD가 어떤 rank-k 후보보다 가깝다는 최적성의 대상입니다.",
+  },
+  {
+    from: "scalar-quantity",
+    to: "radian-measure",
+    relation: "prerequisite",
+    reason: "호 길이와 반지름의 비를 하나의 회전량으로 계산합니다.",
+  },
+  {
+    from: "radian-measure",
+    to: "unit-circle-trigonometry",
+    relation: "prerequisite",
+    reason: "단위원 위 점이 양의 가로축에서 얼마나 회전했는지 위치를 정합니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "unit-circle-trigonometry",
+    relation: "prerequisite",
+    reason: "회전한 점을 가로·세로 두 좌표로 읽습니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "complex-number",
+    relation: "prerequisite",
+    reason: "복소수 a+bi를 평면 좌표 (a,b)로 해석합니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "complex-number",
+    relation: "prerequisite",
+    reason: "실수부와 허수부 좌표에서 복소수 magnitude를 계산합니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "convergent-power-series",
+    relation: "extends",
+    reason:
+      "정수 반복 곱셈을 실수·복소수 입력의 함수로 확장하는 급수 표현을 만듭니다.",
+  },
+  {
+    from: "mathematical-limit",
+    to: "convergent-power-series",
+    relation: "prerequisite",
+    reason: "유한 부분합이 가까워지는 값을 무한급수의 값으로 정의합니다.",
+  },
+  {
+    from: "complex-number",
+    to: "euler-formula",
+    relation: "prerequisite",
+    reason: "i의 거듭제곱 반복을 회전 좌표로 해석합니다.",
+  },
+  {
+    from: "unit-circle-trigonometry",
+    to: "euler-formula",
+    relation: "prerequisite",
+    reason: "복소 지수 회전의 가로·세로 좌표를 cosine과 sine으로 표현합니다.",
+  },
+  {
+    from: "convergent-power-series",
+    to: "euler-formula",
+    relation: "produces",
+    reason:
+      "Exponential series의 짝수·홀수 항을 cosine과 sine series로 분리합니다.",
+  },
+  {
+    from: "euler-formula",
+    to: "roots-of-unity",
+    relation: "produces",
+    reason:
+      "2π/N 간격의 복소 지수가 단위원을 균등하게 나눈 N개 회전점을 만듭니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "bit-byte",
+    relation: "prerequisite",
+    reason: "Binary 자리 수가 늘 때 가능한 pattern 수 2^n을 계산합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "utf8-encoding",
+    relation: "prerequisite",
+    reason:
+      "Unicode scalar value를 실제 file·network byte sequence로 배치합니다.",
+  },
+  {
+    from: "unicode-code-point",
+    to: "utf8-encoding",
+    relation: "prerequisite",
+    reason: "추상 Unicode 번호가 UTF-8이 직렬화할 입력 값입니다.",
+  },
+  {
+    from: "unicode-code-point",
+    to: "grapheme-cluster",
+    relation: "prerequisite",
+    reason:
+      "하나 이상의 code point sequence를 사용자 인식 문자 경계로 묶습니다.",
+  },
+  {
+    from: "unicode-code-point",
+    to: "unicode-normalization",
+    relation: "prerequisite",
+    reason:
+      "Canonical·compatibility decomposition과 composition의 대상 sequence입니다.",
+  },
+  {
+    from: "grapheme-cluster",
+    to: "text-offset-coordinate",
+    relation: "constrains",
+    reason: "UI cursor와 사용자 표시 span을 세는 한 종류의 좌표 단위입니다.",
+  },
+  {
+    from: "utf8-encoding",
+    to: "text-offset-coordinate",
+    relation: "constrains",
+    reason:
+      "File·network·byte-level tokenizer에서 span을 세는 byte 좌표를 제공합니다.",
+  },
+  {
+    from: "unicode-normalization",
+    to: "text-offset-coordinate",
+    relation: "constrains",
+    reason:
+      "Text 변환 전후에 code-point 길이와 source alignment가 달라질 수 있습니다.",
+  },
+  {
+    from: "unicode-normalization",
+    to: "tokenizer-pipeline-contract",
+    relation: "prerequisite",
+    reason:
+      "Vocabulary segmentation 전에 어떤 문자열 표현을 입력으로 삼을지 정합니다.",
+  },
+  {
+    from: "text-offset-coordinate",
+    to: "tokenizer-pipeline-contract",
+    relation: "prerequisite",
+    reason:
+      "Token span을 원문의 byte·code point·grapheme 위치로 되돌리는 기준을 정합니다.",
+  },
+  {
+    from: "utf8-encoding",
+    to: "subword-bpe",
+    relation: "prerequisite",
+    reason:
+      "Byte-level BPE에서는 UTF-8 byte가 완전한 초기 alphabet을 제공합니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "subword-bpe",
+    relation: "produces",
+    reason:
+      "Normalizer와 pre-tokenizer가 만든 symbol sequence에서 merge를 학습·적용합니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "wordpiece-maxmatch",
+    relation: "produces",
+    reason:
+      "Pre-tokenized word와 vocabulary 경계 정책이 greedy maximum matching의 입력을 정합니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "sentencepiece-toolkit",
+    relation: "produces",
+    reason:
+      "Raw sentence normalization·boundary·post-processing을 하나의 model artifact로 실행합니다.",
+  },
+  {
+    from: "sentencepiece-toolkit",
+    to: "unigram-tokenizer",
+    relation: "produces",
+    reason:
+      "SentencePiece가 지원하는 두 model 계열 가운데 하나가 Unigram language model입니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "unigram-tokenizer",
+    relation: "prerequisite",
+    reason:
+      "각 vocabulary piece의 확률로 가능한 segmentation path의 score를 계산합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "unigram-tokenizer",
+    relation: "prerequisite",
+    reason: "작은 확률의 곱을 안정적인 log-probability 합으로 바꿉니다.",
+  },
+  {
+    from: "unigram-tokenizer",
+    to: "subword-regularization",
+    relation: "produces",
+    reason:
+      "여러 segmentation 경로의 확률분포에서 학습용 경로를 sampling할 수 있습니다.",
+  },
+  {
+    from: "subword-bpe",
+    to: "tokenizer-efficiency",
+    relation: "evaluates",
+    reason: "Merge 결과가 corpus별 token 길이와 fallback 비율을 바꿉니다.",
+  },
+  {
+    from: "wordpiece-maxmatch",
+    to: "tokenizer-efficiency",
+    relation: "evaluates",
+    reason:
+      "Greedy segmentation과 unknown policy가 입력별 token 길이와 coverage를 결정합니다.",
+  },
+  {
+    from: "unigram-tokenizer",
+    to: "tokenizer-efficiency",
+    relation: "evaluates",
+    reason: "Vocabulary 확률과 선택 경로가 sequence 길이·변동성을 결정합니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "tokenizer-checkpoint-compatibility",
+    relation: "constrains",
+    reason:
+      "같은 text가 같은 ID sequence가 되어야 학습된 embedding row의 의미가 유지됩니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "distributional-hypothesis",
+    relation: "constrains",
+    reason:
+      "어떤 symbol sequence를 corpus observation으로 셀지 경계를 정합니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "one-hot-identifier",
+    relation: "prerequisite",
+    reason: "Vocabulary index를 좌표 하나가 active인 vector로 나타냅니다.",
+  },
+  {
+    from: "distributional-hypothesis",
+    to: "word-context-matrix",
+    relation: "produces",
+    reason:
+      "비슷한 사용 환경이라는 가정을 count 가능한 target×context observation으로 구체화합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "pmi-ppmi-weighting",
+    relation: "prerequisite",
+    reason:
+      "Joint·marginal probability와 independence baseline을 같은 sampling space에서 정의합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "pmi-ppmi-weighting",
+    relation: "prerequisite",
+    reason:
+      "Joint-to-independent probability ratio를 additive association score로 바꿉니다.",
+  },
+  {
+    from: "word-context-matrix",
+    to: "pmi-ppmi-weighting",
+    relation: "produces",
+    reason:
+      "Raw co-occurrence count를 association score로 바꿀 probability estimate를 제공합니다.",
+  },
+  {
+    from: "pmi-ppmi-weighting",
+    to: "distributional-svd-embedding",
+    relation: "produces",
+    reason: "SVD가 압축할 weighted matrix entry를 만듭니다.",
+  },
+  {
+    from: "singular-value-decomposition",
+    to: "distributional-svd-embedding",
+    relation: "prerequisite",
+    reason:
+      "큰 sparse context axes를 상위 latent directions로 factorize합니다.",
+  },
+  {
+    from: "low-rank-approximation",
+    to: "distributional-svd-embedding",
+    relation: "prerequisite",
+    reason:
+      "Rank k budget으로 word·context coordinates를 dense하게 압축합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "cosine-similarity",
+    relation: "prerequisite",
+    reason: "두 representation 방향이 겹치는 raw alignment를 계산합니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "cosine-similarity",
+    relation: "prerequisite",
+    reason: "두 vector 길이로 나눠 raw dot product의 scale을 제거합니다.",
+  },
+  {
+    from: "distributional-svd-embedding",
+    to: "cosine-similarity",
+    relation: "evaluates",
+    reason:
+      "Dense word coordinates의 direction proximity를 재는 intrinsic probe로 사용합니다.",
+  },
+  {
+    from: "distributional-svd-embedding",
+    to: "static-contextual-representation",
+    relation: "contrasts",
+    reason: "Word type별 고정 row와 문장 instance별 hidden state를 구분합니다.",
+  },
+  {
+    from: "pmi-ppmi-weighting",
+    to: "sgns-shifted-pmi",
+    relation: "extends",
+    reason:
+      "Negative-sampling class prior를 PMI에서 log k만큼 이동한 decision score로 연결합니다.",
+  },
+  {
+    from: "word-context-matrix",
+    to: "sgns-shifted-pmi",
+    relation: "prerequisite",
+    reason:
+      "SGNS가 sampling하는 positive pair와 noise context의 corpus 통계를 정의합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "sgns-shifted-pmi",
+    relation: "prerequisite",
+    reason:
+      "Negative sample 수 k의 multiplicative class ratio를 additive shift인 log k로 바꿉니다.",
+  },
+  {
+    from: "one-hot-identifier",
+    to: "word-embedding-lookup",
+    relation: "extends",
+    reason: "Sparse symbol ID가 trainable matrix의 dense row를 선택합니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "dynamic-context-window",
+    relation: "prerequisite",
+    reason:
+      "Window를 적용할 token sequence와 sentence boundary를 먼저 고정합니다.",
+  },
+  {
+    from: "word-context-matrix",
+    to: "dynamic-context-window",
+    relation: "contrasts",
+    reason:
+      "고정 집계표 대신 pair sampling 단계에서 거리별 관측 빈도를 바꿉니다.",
+  },
+  {
+    from: "word-embedding-lookup",
+    to: "cbow-objective",
+    relation: "prerequisite",
+    reason:
+      "여러 context ID가 가리키는 dense rows를 평균해 center prediction을 만듭니다.",
+  },
+  {
+    from: "word-embedding-lookup",
+    to: "skipgram-objective",
+    relation: "prerequisite",
+    reason: "Center와 context ID가 input·output embedding row를 선택합니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "cbow-objective",
+    relation: "prerequisite",
+    reason:
+      "Vocabulary logits를 center-word categorical probability로 정규화합니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "skipgram-objective",
+    relation: "prerequisite",
+    reason:
+      "Center-conditioned context logits를 vocabulary probability로 정규화합니다.",
+  },
+  {
+    from: "skipgram-objective",
+    to: "hierarchical-softmax",
+    relation: "extends",
+    reason:
+      "Flat vocabulary normalization을 root-to-leaf binary decisions로 바꿉니다.",
+  },
+  {
+    from: "skipgram-objective",
+    to: "sgns-objective",
+    relation: "extends",
+    reason:
+      "Categorical context prediction을 sampled binary pair discrimination으로 바꿉니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "negative-sampling-distribution",
+    relation: "prerequisite",
+    reason: "Vocabulary context마다 noise sample probability를 배정합니다.",
+  },
+  {
+    from: "negative-sampling-distribution",
+    to: "sgns-objective",
+    relation: "constrains",
+    reason:
+      "어떤 negative pair가 얼마나 자주 update되는지와 optimum log-odds를 정합니다.",
+  },
+  {
+    from: "sigmoid-activation",
+    to: "sgns-objective",
+    relation: "prerequisite",
+    reason:
+      "Pair dot product를 positive label의 logistic probability로 바꿉니다.",
+  },
+  {
+    from: "sgns-objective",
+    to: "sgns-shifted-pmi",
+    relation: "produces",
+    reason:
+      "Cell별 stationary point를 풀면 noise prior가 반영된 shifted-PMI 관계를 얻습니다.",
+  },
+  {
+    from: "dynamic-context-window",
+    to: "frequent-word-subsampling",
+    relation: "contrasts",
+    reason:
+      "하나는 pair distance를, 다른 하나는 token frequency를 기준으로 training distribution을 바꿉니다.",
+  },
+  {
+    from: "word-embedding-lookup",
+    to: "fasttext-subword-embedding",
+    relation: "extends",
+    reason:
+      "Word row 하나 대신 character n-gram rows의 합으로 static representation을 구성합니다.",
+  },
+  {
+    from: "cosine-similarity",
+    to: "static-embedding-artifact",
+    relation: "evaluates",
+    reason:
+      "동일한 versioned artifact 안에서 neighbor geometry를 intrinsic하게 측정합니다.",
+  },
+  {
+    from: "fasttext-subword-embedding",
+    to: "static-contextual-representation",
+    relation: "contrasts",
+    reason:
+      "Subword 합도 word별 static representation이며 문장 instance별 hidden state와 구분됩니다.",
+  },
+  {
+    from: "word-embedding-lookup",
+    to: "static-embedding-artifact",
+    relation: "produces",
+    reason:
+      "Matrix row의 의미는 vocabulary ID와 preprocessing artifact에 의존합니다.",
+  },
+  {
+    from: "attention-visibility",
+    to: "bidirectional-encoder-visibility",
+    relation: "extends",
+    reason:
+      "Causal triangle 대신 양쪽 실제 token을 허용하는 encoder mask를 구성합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "bidirectional-encoder-visibility",
+    relation: "prerequisite",
+    reason:
+      "같은 sequence의 모든 허용 token 사이에서 contextual state를 만듭니다.",
+  },
+  {
+    from: "tokenizer-checkpoint-compatibility",
+    to: "bert-input-packing",
+    relation: "prerequisite",
+    reason:
+      "WordPiece와 special-token ID가 BERT embedding rows와 일치해야 합니다.",
+  },
+  {
+    from: "token-embedding",
+    to: "bert-input-packing",
+    relation: "prerequisite",
+    reason: "Token·position·segment ID를 같은 hidden width의 rows로 바꿉니다.",
+  },
+  {
+    from: "position-signal",
+    to: "bert-input-packing",
+    relation: "prerequisite",
+    reason: "원 BERT의 learned absolute position row를 token row에 더합니다.",
+  },
+  {
+    from: "bert-input-packing",
+    to: "bidirectional-encoder-visibility",
+    relation: "constrains",
+    reason: "Packed real token과 PAD 위치를 attention mask에서 구분합니다.",
+  },
+  {
+    from: "bidirectional-encoder-visibility",
+    to: "masked-language-modeling",
+    relation: "prerequisite",
+    reason:
+      "정답 token을 그대로 두면 양쪽 context가 해당 위치 자체를 복사할 수 있어 corruption이 필요합니다.",
+  },
+  {
+    from: "bert-corruption-policy",
+    to: "masked-language-modeling",
+    relation: "constrains",
+    reason:
+      "어떤 위치가 loss target이고 encoder에는 어떤 오염 token이 보이는지 정합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "masked-language-modeling",
+    relation: "optimizes",
+    reason: "선택 위치의 원래 vocabulary ID probability를 높입니다.",
+  },
+  {
+    from: "bert-input-packing",
+    to: "next-sentence-prediction",
+    relation: "produces",
+    reason:
+      "A·B segment와 CLS state를 NSP classification input으로 제공합니다.",
+  },
+  {
+    from: "next-sentence-prediction",
+    to: "sentence-order-prediction",
+    relation: "contrasts",
+    reason:
+      "Random-document topic 단서 대신 같은 문서 segment의 실제 순서를 판별합니다.",
+  },
+  {
+    from: "masked-language-modeling",
+    to: "replaced-token-detection",
+    relation: "contrasts",
+    reason:
+      "선택 위치의 원 token 복원 대신 모든 위치의 replaced 여부를 판별합니다.",
+  },
+  {
+    from: "bidirectional-encoder-visibility",
+    to: "bert-task-head",
+    relation: "produces",
+    reason:
+      "양쪽 context가 반영된 CLS 또는 token state를 downstream output으로 투영합니다.",
+  },
+  {
+    from: "static-contextual-representation",
+    to: "bert-task-head",
+    relation: "extends",
+    reason:
+      "문장 instance별 contextual state를 task-specific label 단위로 읽습니다.",
+  },
+  {
+    from: "bert-task-head",
+    to: "cross-bi-encoder-boundary",
+    relation: "extends",
+    reason:
+      "Text pair를 함께 scoring할지 독립 vector로 만들지 downstream interface를 선택합니다.",
+  },
+  {
+    from: "cosine-similarity",
+    to: "cross-bi-encoder-boundary",
+    relation: "prerequisite",
+    reason:
+      "Bi-encoder가 독립적으로 만든 vector를 비교하는 대표 retrieval metric입니다.",
+  },
+  {
+    from: "tensor-batch",
+    to: "image-tensor-layout",
+    relation: "extends",
+    reason:
+      "일반 batch tensor의 feature 축을 image의 channel·height·width 좌표로 구체화합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "cnn-cross-correlation",
+    relation: "prerequisite",
+    reason:
+      "Local patch와 kernel의 대응 성분을 곱해 더해 output scalar 하나를 만듭니다.",
+  },
+  {
+    from: "image-tensor-layout",
+    to: "cnn-cross-correlation",
+    relation: "prerequisite",
+    reason:
+      "Kernel이 어느 channel과 spatial 좌표를 읽는지 input axes가 규정합니다.",
+  },
+  {
+    from: "cnn-cross-correlation",
+    to: "convolution-weight-sharing",
+    relation: "produces",
+    reason:
+      "같은 kernel에 output 위치 index를 두지 않고 grid 전체에서 재사용합니다.",
+  },
+  {
+    from: "cnn-cross-correlation",
+    to: "convolution-spatial-geometry",
+    relation: "constrains",
+    reason:
+      "Stride·padding·dilation이 각 output이 꺼내는 local window 좌표를 바꿉니다.",
+  },
+  {
+    from: "convolution-weight-sharing",
+    to: "translation-equivariance",
+    relation: "produces",
+    reason:
+      "모든 위치에 같은 local rule을 적용하면 input 이동이 feature 이동으로 대응합니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "translation-equivariance",
+    relation: "constrains",
+    reason:
+      "Stride sampling과 finite padding boundary는 exact translation correspondence를 깨뜨릴 수 있습니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "cnn-receptive-field",
+    relation: "produces",
+    reason:
+      "Layer별 kernel span과 누적 stride가 원 input에서 연결되는 범위를 정합니다.",
+  },
+  {
+    from: "cnn-receptive-field",
+    to: "effective-receptive-field",
+    relation: "constrains",
+    reason:
+      "실제 영향 영역은 graph상 가능한 theoretical 범위 안에 놓이지만 같은 비중을 갖지 않습니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "dilated-convolution",
+    relation: "extends",
+    reason:
+      "Dilation이 kernel tap 간격을 늘려 같은 tap 수로 더 넓은 좌표를 읽습니다.",
+  },
+  {
+    from: "sampling-nyquist-boundary",
+    to: "convolution-spatial-geometry",
+    relation: "constrains",
+    reason:
+      "Stride로 grid를 줄이기 전에 spatial frequency를 제한하지 않으면 서로 다른 pattern이 같은 sample로 alias될 수 있습니다.",
+  },
+  {
+    from: "cnn-cross-correlation",
+    to: "depthwise-separable-convolution",
+    relation: "extends",
+    reason:
+      "Dense spatial·channel mixing을 channel별 spatial filter와 pointwise channel mixing으로 분해합니다.",
+  },
+  {
+    from: "cnn-receptive-field",
+    to: "cnn-task-spatial-contract",
+    relation: "constrains",
+    reason:
+      "Task가 요구하는 object·pixel context보다 작은 receptive field는 필요한 evidence를 모을 수 없습니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "cnn-task-spatial-contract",
+    relation: "constrains",
+    reason:
+      "Downsampling과 padding이 task head가 사용할 위치 정밀도와 boundary artifact를 정합니다.",
+  },
+  {
+    from: "generalization",
+    to: "optimization-degradation",
+    relation: "contrasts",
+    reason:
+      "Overfitting의 train–test gap과 training error 자체가 나빠지는 degradation을 분리합니다.",
+  },
+  {
+    from: "parameterized-model",
+    to: "optimization-degradation",
+    relation: "prerequisite",
+    reason:
+      "더 깊은 parameterization이 얕은 함수까지 포함하는 표현 가능성과 실제 optimization 결과를 구분합니다.",
+  },
+  {
+    from: "optimization-degradation",
+    to: "residual-parameterization",
+    relation: "produces",
+    reason:
+      "Identity를 쉽게 포함하는 parameterization으로 깊은 plain network의 optimization 문제를 겨냥합니다.",
+  },
+  {
+    from: "residual-parameterization",
+    to: "identity-shortcut",
+    relation: "produces",
+    reason:
+      "Input x를 별도 경로로 전달해 residual branch F(x)와 직접 더합니다.",
+  },
+  {
+    from: "identity-shortcut",
+    to: "identity-residual-propagation",
+    relation: "prerequisite",
+    reason:
+      "Shortcut이 identity일 때 먼 state의 시작항과 backward identity Jacobian이 유지됩니다.",
+  },
+  {
+    from: "chain-rule",
+    to: "identity-residual-propagation",
+    relation: "prerequisite",
+    reason:
+      "Block Jacobian I+J_F와 여러 block의 backward product를 계산합니다.",
+  },
+  {
+    from: "jacobian-matrix",
+    to: "identity-residual-propagation",
+    relation: "prerequisite",
+    reason: "Residual branch의 입력 민감도를 J_F로 나타냅니다.",
+  },
+  {
+    from: "convolution-spatial-geometry",
+    to: "residual-shape-contract",
+    relation: "prerequisite",
+    reason:
+      "Stride와 channel width가 addition 지점의 spatial·channel shape를 정합니다.",
+  },
+  {
+    from: "identity-shortcut",
+    to: "residual-shape-contract",
+    relation: "constrains",
+    reason:
+      "Shape가 다르면 parameter 없는 identity 대신 projection shortcut이 필요합니다.",
+  },
+  {
+    from: "residual-parameterization",
+    to: "resnet-block-family",
+    relation: "extends",
+    reason:
+      "BasicBlock과 Bottleneck이 같은 x+F(x) 계약을 서로 다른 convolution shape로 구현합니다.",
+  },
+  {
+    from: "residual-shape-contract",
+    to: "resnet-block-family",
+    relation: "constrains",
+    reason:
+      "외부·내부 channel과 stage stride가 shortcut projection 및 block 비용을 결정합니다.",
+  },
+  {
+    from: "nonlinear-activation",
+    to: "preactivation-residual-unit",
+    relation: "prerequisite",
+    reason:
+      "Activation을 convolution 전후 어디에 둘지가 identity path와 residual branch의 Jacobian을 바꿉니다.",
+  },
+  {
+    from: "identity-shortcut",
+    to: "preactivation-residual-unit",
+    relation: "extends",
+    reason:
+      "Addition 뒤의 mapping까지 identity로 유지하도록 normalization·activation 순서를 바꿉니다.",
+  },
+  {
+    from: "identity-residual-propagation",
+    to: "residual-interpretation-boundary",
+    relation: "constrains",
+    reason:
+      "정확한 algebraic 전개와 empirical ensemble·landscape 설명의 증거 수준을 분리합니다.",
+  },
+  {
+    from: "optimization-degradation",
+    to: "residual-interpretation-boundary",
+    relation: "evaluates",
+    reason:
+      "원 논문의 train/test degradation 관찰을 후속 작동 원리 해석의 기준 증거로 둡니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "generative-distribution-contract",
+    relation: "prerequisite",
+    reason:
+      "가능한 observation과 condition에 probability mass 또는 density를 배정하는 대상부터 정합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "generative-distribution-contract",
+    relation: "extends",
+    reason:
+      "Condition c를 받는 생성은 unconditional p(x)를 p(x|c)로 확장합니다.",
+  },
+  {
+    from: "generative-distribution-contract",
+    to: "density-sampling-tractability",
+    relation: "constrains",
+    reason:
+      "어떤 output과 support를 모델링하는지가 density 계산과 sampling 경로의 선택지를 제한합니다.",
+  },
+  {
+    from: "probability-chain-rule",
+    to: "autoregressive-generative-factorization",
+    relation: "prerequisite",
+    reason:
+      "Joint probability를 prefix별 normalized conditional의 product로 정확히 분해합니다.",
+  },
+  {
+    from: "autoregressive-generative-factorization",
+    to: "density-sampling-tractability",
+    relation: "constrains",
+    reason:
+      "Exact likelihood를 얻는 대신 ancestral sampling에 순차 dependency가 생깁니다.",
+  },
+  {
+    from: "expectation",
+    to: "latent-variable-marginalization",
+    relation: "prerequisite",
+    reason:
+      "관측되지 않는 z의 가능한 값에 joint density를 가중해 observation density를 얻습니다.",
+  },
+  {
+    from: "latent-variable-marginalization",
+    to: "evidence-lower-bound",
+    relation: "produces",
+    reason:
+      "직접 계산하기 어려운 log marginal likelihood를 approximate posterior를 이용한 lower bound로 바꿉니다.",
+  },
+  {
+    from: "kl-divergence",
+    to: "evidence-lower-bound",
+    relation: "prerequisite",
+    reason:
+      "ELBO와 log evidence의 차이 및 approximate posterior의 prior penalty를 방향 있는 divergence로 표현합니다.",
+  },
+  {
+    from: "evidence-lower-bound",
+    to: "density-sampling-tractability",
+    relation: "constrains",
+    reason:
+      "VAE는 tractable objective와 amortized inference를 얻지만 exact posterior와 exact marginal likelihood는 일반적으로 얻지 못합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "normalizing-flow-change-of-variables",
+    relation: "prerequisite",
+    reason:
+      "좌표 변환 전후 같은 probability mass를 보존하도록 density를 보정합니다.",
+  },
+  {
+    from: "normalizing-flow-change-of-variables",
+    to: "density-sampling-tractability",
+    relation: "constrains",
+    reason:
+      "Exact density와 inference를 위해 bijection·같은 dimension·tractable determinant를 요구합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "adversarial-density-ratio",
+    relation: "prerequisite",
+    reason:
+      "Real·generated sample distribution의 상대 density를 discriminator classification으로 추정합니다.",
+  },
+  {
+    from: "adversarial-density-ratio",
+    to: "density-sampling-tractability",
+    relation: "constrains",
+    reason:
+      "Normalized generator density를 계산하지 않고 sample comparison signal로 학습합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "score-function-field",
+    relation: "produces",
+    reason:
+      "Log density를 observation coordinate로 미분해 local ascent direction을 정의합니다.",
+  },
+  {
+    from: "score-function-field",
+    to: "diffusion-score-parameterization",
+    relation: "prerequisite",
+    reason:
+      "Gaussian perturbation의 conditional score를 noise prediction target과 scale 관계로 바꿉니다.",
+  },
+  {
+    from: "diffusion-score-parameterization",
+    to: "density-sampling-tractability",
+    relation: "constrains",
+    reason:
+      "Density 값 대신 time-indexed direction field를 배우며 sampling에는 reverse dynamics의 반복 evaluation이 필요합니다.",
+  },
+  {
+    from: "density-sampling-tractability",
+    to: "generative-evaluation-boundary",
+    relation: "evaluates",
+    reason:
+      "Family마다 얻는 quantity와 계산비가 다르므로 likelihood·quality·coverage·latency를 별도 축으로 측정합니다.",
+  },
+  {
+    from: "function-mapping",
+    to: "initial-value-problem",
+    relation: "prerequisite",
+    reason:
+      "시간과 현재 state를 다음 순간의 변화율로 보내는 함수를 정의합니다.",
+  },
+  {
+    from: "derivative",
+    to: "initial-value-problem",
+    relation: "prerequisite",
+    reason:
+      "State trajectory의 순간 변화율을 differential equation으로 표현합니다.",
+  },
+  {
+    from: "initial-value-problem",
+    to: "vector-field-trajectory",
+    relation: "produces",
+    reason: "Vector field와 initial state가 특정 trajectory를 선택합니다.",
+  },
+  {
+    from: "local-linear-approximation",
+    to: "explicit-euler-method",
+    relation: "prerequisite",
+    reason:
+      "짧은 시간의 변화량을 현재 derivative와 step size의 곱으로 근사합니다.",
+  },
+  {
+    from: "vector-field-trajectory",
+    to: "explicit-euler-method",
+    relation: "prerequisite",
+    reason:
+      "연속 trajectory를 vector-field evaluation의 유한한 sequence로 근사합니다.",
+  },
+  {
+    from: "explicit-euler-method",
+    to: "numerical-discretization-error",
+    relation: "produces",
+    reason:
+      "한 step의 접선 근사 오차가 반복되며 global trajectory error를 만듭니다.",
+  },
+  {
+    from: "explicit-euler-method",
+    to: "euler-stability-condition",
+    relation: "constrains",
+    reason:
+      "Linear decay update의 amplification factor가 허용 step-size 영역을 정합니다.",
+  },
+  {
+    from: "explicit-euler-method",
+    to: "heun-second-order-method",
+    relation: "extends",
+    reason:
+      "출발점 slope 하나를 끝점 slope와 평균해 higher-order update로 확장합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "brownian-increment-scaling",
+    relation: "prerequisite",
+    reason:
+      "Brownian increment의 Gaussian mean·variance와 시간 scale을 정의합니다.",
+  },
+  {
+    from: "variance",
+    to: "brownian-increment-scaling",
+    relation: "prerequisite",
+    reason: "분산 Δt에서 표준편차 √Δt가 나오는 scale을 해석합니다.",
+  },
+  {
+    from: "initial-value-problem",
+    to: "stochastic-differential-equation",
+    relation: "extends",
+    reason:
+      "Deterministic 변화 법칙에 시간마다 random increment가 들어오는 path model로 확장합니다.",
+  },
+  {
+    from: "brownian-increment-scaling",
+    to: "stochastic-differential-equation",
+    relation: "prerequisite",
+    reason: "SDE의 diffusion increment가 √Δt scale을 갖는 근거를 제공합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "gaussian-forward-diffusion",
+    relation: "prerequisite",
+    reason:
+      "Data distribution을 Gaussian transition으로 점진적으로 perturb합니다.",
+  },
+  {
+    from: "gaussian-forward-diffusion",
+    to: "cumulative-noise-schedule",
+    relation: "produces",
+    reason:
+      "여러 Gaussian transition을 합성해 임의 timestep의 closed-form marginal을 얻습니다.",
+  },
+  {
+    from: "cumulative-noise-schedule",
+    to: "diffusion-prediction-target",
+    relation: "prerequisite",
+    reason:
+      "Noisy state를 만든 ε와 x0를 알고 있어 supervised regression target을 선택할 수 있습니다.",
+  },
+  {
+    from: "score-function-field",
+    to: "diffusion-score-identity",
+    relation: "prerequisite",
+    reason:
+      "Gaussian perturbation density의 log-gradient를 noise target과 연결합니다.",
+  },
+  {
+    from: "diffusion-prediction-target",
+    to: "diffusion-score-identity",
+    relation: "produces",
+    reason:
+      "Noise prediction을 known noise scale로 변환해 time-dependent score estimate를 얻습니다.",
+  },
+  {
+    from: "stochastic-differential-equation",
+    to: "reverse-time-sde",
+    relation: "prerequisite",
+    reason:
+      "Forward drift·diffusion coefficient와 reverse-time stochastic calculus를 사용합니다.",
+  },
+  {
+    from: "diffusion-score-identity",
+    to: "reverse-time-sde",
+    relation: "prerequisite",
+    reason:
+      "Unknown perturbed marginal score를 neural prediction으로 근사해 reverse drift를 구성합니다.",
+  },
+  {
+    from: "reverse-time-sde",
+    to: "probability-flow-ode",
+    relation: "produces",
+    reason:
+      "같은 marginal evolution을 만드는 deterministic drift로 stochastic path를 바꿉니다.",
+  },
+  {
+    from: "vector-field-trajectory",
+    to: "flow-matching-objective",
+    relation: "prerequisite",
+    reason:
+      "선택한 probability path를 운반하는 velocity field를 regression합니다.",
+  },
+  {
+    from: "probability-flow-ode",
+    to: "flow-matching-objective",
+    relation: "contrasts",
+    reason:
+      "둘 다 deterministic ODE를 만들 수 있지만 score-derived field와 direct conditional velocity regression을 구분합니다.",
+  },
+  {
+    from: "explicit-euler-method",
+    to: "network-function-evaluations",
+    relation: "evaluates",
+    reason: "Euler step 하나는 일반적으로 learned field를 한 번 평가합니다.",
+  },
+  {
+    from: "heun-second-order-method",
+    to: "network-function-evaluations",
+    relation: "evaluates",
+    reason:
+      "Heun step 하나는 일반적으로 learned field를 두 번 평가하므로 step과 NFE가 다릅니다.",
+  },
+  {
+    from: "diffusion-prediction-target",
+    to: "diffusion-backbone-contract",
+    relation: "constrains",
+    reason:
+      "Backbone output의 shape·scale·conditioning interface는 선택한 target에 맞아야 합니다.",
+  },
+  {
+    from: "amortized-variational-inference",
+    to: "latent-diffusion-bottleneck",
+    relation: "prerequisite",
+    reason:
+      "Pretrained encoder·decoder가 pixel과 compressed latent 사이의 lossy interface를 제공합니다.",
+  },
+  {
+    from: "diffusion-backbone-contract",
+    to: "latent-diffusion-bottleneck",
+    relation: "extends",
+    reason:
+      "동일한 denoising contract를 pixel 대신 compressed spatial latent에서 실행합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "classifier-free-guidance",
+    relation: "prerequisite",
+    reason:
+      "Conditional·unconditional prediction과 condition dropout을 구분합니다.",
+  },
+  {
+    from: "classifier-free-guidance",
+    to: "generative-evaluation-boundary",
+    relation: "evaluates",
+    reason:
+      "Guidance scale이 condition adherence·diversity·artifact·NFE를 함께 바꾸므로 분리 평가합니다.",
+  },
+  {
+    from: "latent-variable-marginalization",
+    to: "amortized-variational-inference",
+    relation: "produces",
+    reason:
+      "Observation별 intractable posterior를 encoder가 한 번의 forward pass로 근사합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "diagonal-gaussian-posterior",
+    relation: "prerequisite",
+    reason:
+      "Latent dimension별 normalized Gaussian parameter와 sample을 정의합니다.",
+  },
+  {
+    from: "amortized-variational-inference",
+    to: "diagonal-gaussian-posterior",
+    relation: "constrains",
+    reason:
+      "Encoder output family를 mean-field Gaussian으로 제한해 inference와 KL을 tractable하게 만듭니다.",
+  },
+  {
+    from: "expectation",
+    to: "pathwise-reparameterization",
+    relation: "prerequisite",
+    reason:
+      "Random latent 아래 decoder objective의 parameter gradient를 Monte Carlo로 추정합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "class-prevalence",
+    relation: "prerequisite",
+    reason:
+      "Population에서 positive event의 marginal probability를 base rate로 읽습니다.",
+  },
+  {
+    from: "class-prevalence",
+    to: "ranking-decision-calibration",
+    relation: "constrains",
+    reason:
+      "같은 score distribution에서도 base rate가 precision·probability interpretation·alert volume을 바꿉니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "training-fold-resampling",
+    relation: "constrains",
+    reason:
+      "Neighbor search와 class distribution 변경을 split 이후 training fold로 제한합니다.",
+  },
+  {
+    from: "training-fold-resampling",
+    to: "smote-interpolation",
+    relation: "extends",
+    reason:
+      "Minority row를 반복하는 대신 같은 class neighbor 사이의 synthetic point를 추가합니다.",
+  },
+  {
+    from: "empirical-risk",
+    to: "class-weighted-risk",
+    relation: "extends",
+    reason:
+      "Sample loss 평균에 target class별 coefficient를 넣어 gradient contribution을 바꿉니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "focal-loss-modulation",
+    relation: "extends",
+    reason:
+      "Target probability에 따라 cross-entropy를 줄이는 modulation factor를 곱합니다.",
+  },
+  {
+    from: "class-weighted-risk",
+    to: "focal-loss-modulation",
+    relation: "contrasts",
+    reason:
+      "고정 class weight와 달리 focal factor는 현재 model이 보는 example 난이도에 따라 변합니다.",
+  },
+  {
+    from: "probability-calibration",
+    to: "cost-sensitive-threshold",
+    relation: "prerequisite",
+    reason:
+      "Score를 posterior probability로 해석할 수 있어야 오류 비용의 expected value를 비교할 수 있습니다.",
+  },
+  {
+    from: "ranking-decision-calibration",
+    to: "confusion-matrix-metrics",
+    relation: "evaluates",
+    reason:
+      "선택한 threshold에서 hard prediction을 만든 뒤 TP·FP·FN·TN을 계산합니다.",
+  },
+  {
+    from: "class-prevalence",
+    to: "precision-recall-prevalence",
+    relation: "prerequisite",
+    reason:
+      "Bayes base rate가 false-positive count와 positive predictive value의 분모를 바꿉니다.",
+  },
+  {
+    from: "confusion-matrix-metrics",
+    to: "precision-recall-prevalence",
+    relation: "produces",
+    reason:
+      "Precision과 recall은 confusion counts에서 나오지만 precision은 negative population의 FP 수에도 의존합니다.",
+  },
+  {
+    from: "ranking-decision-calibration",
+    to: "probability-calibration",
+    relation: "evaluates",
+    reason:
+      "Ranking order와 별도로 score p 집단의 empirical positive frequency를 비교합니다.",
+  },
+  {
+    from: "feature-target",
+    to: "feature-availability-contract",
+    relation: "prerequisite",
+    reason:
+      "Model input과 맞힐 target을 구분한 뒤 각 input이 prediction 시점에 정당한지 검사합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "feature-availability-contract",
+    relation: "constrains",
+    reason:
+      "평가 split의 분포·label·추정 통계가 training feature 생성에 들어오지 않게 합니다.",
+  },
+  {
+    from: "prediction-cutoff-time",
+    to: "feature-availability-contract",
+    relation: "constrains",
+    reason:
+      "Event·available time이 cutoff 이하인 record만 feature 함수의 입력으로 허용합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "target-leakage",
+    relation: "contrasts",
+    reason:
+      "계약을 위반해 prediction 시점에 사용할 수 없는 정보를 넣으면 leakage가 됩니다.",
+  },
+  {
+    from: "expectation",
+    to: "fold-local-statistic",
+    relation: "prerequisite",
+    reason:
+      "Training sample mean으로 중심과 대치값 같은 population quantity를 추정합니다.",
+  },
+  {
+    from: "variance",
+    to: "fold-local-statistic",
+    relation: "prerequisite",
+    reason:
+      "Training fold의 scale과 변동을 추정해 numeric coordinate를 변환합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "fold-local-statistic",
+    relation: "constrains",
+    reason:
+      "Preprocessing state를 training fold에서 fit하고 validation에는 고정 적용합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "cross-fitted-target-encoding",
+    relation: "prerequisite",
+    reason:
+      "Category가 주어졌을 때 target 평균을 conditional response estimate로 읽습니다.",
+  },
+  {
+    from: "fold-local-statistic",
+    to: "cross-fitted-target-encoding",
+    relation: "extends",
+    reason:
+      "Label을 쓰는 category 통계에서 각 row의 fold까지 제외하는 cross-fitting을 추가합니다.",
+  },
+  {
+    from: "cross-fitted-target-encoding",
+    to: "target-leakage",
+    relation: "constrains",
+    reason:
+      "Training row의 자기 label과 evaluation target이 encoding으로 되돌아오는 직접 경로를 막습니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "interaction-feature-map",
+    relation: "constrains",
+    reason:
+      "곱·비율·차이에 쓰는 모든 원본 값이 같은 cutoff와 단위 계약을 만족해야 합니다.",
+  },
+  {
+    from: "prediction-cutoff-time",
+    to: "point-in-time-aggregation",
+    relation: "prerequisite",
+    reason:
+      "각 row별 window의 오른쪽 경계와 당시 사용 가능한 event 범위를 정합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "point-in-time-aggregation",
+    relation: "extends",
+    reason:
+      "Event history를 count·mean·variance·recency로 압축하면서 source·단위·freshness 계약을 유지합니다.",
+  },
+  {
+    from: "target-leakage",
+    to: "point-in-time-aggregation",
+    relation: "constrains",
+    reason:
+      "미래 event와 target 이후 처리 record가 rolling·expanding statistic에 들어오지 않게 합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "feature-selection-ablation",
+    relation: "constrains",
+    reason:
+      "Selection과 재학습을 독립 evaluation data 바깥에서 수행하고 같은 split으로 후보를 비교합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "feature-selection-ablation",
+    relation: "evaluates",
+    reason:
+      "예측 불가·비싼·불안정한 feature를 품질뿐 아니라 운영 계약과 함께 제거합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "training-serving-skew",
+    relation: "contrasts",
+    reason:
+      "같은 계약을 offline과 online이 다르게 구현하면 같은 row에서도 feature가 달라집니다.",
+  },
+  {
+    from: "feature-selection-ablation",
+    to: "training-serving-skew",
+    relation: "evaluates",
+    reason:
+      "선택된 feature set을 배포하기 전 batch–online golden fixture와 drift 지표로 parity를 확인합니다.",
+  },
+  {
+    from: "feature-target",
+    to: "decision-tree-piecewise-constant",
+    relation: "prerequisite",
+    reason:
+      "Feature split로 input을 leaf region에 배치하고 leaf value를 target prediction과 비교합니다.",
+  },
+  {
+    from: "loss-objective",
+    to: "functional-gradient-boosting",
+    relation: "prerequisite",
+    reason:
+      "현재 score에서 loss가 줄어드는 sample별 negative derivative target을 정의합니다.",
+  },
+  {
+    from: "gradient",
+    to: "functional-gradient-boosting",
+    relation: "prerequisite",
+    reason:
+      "Parameter coordinate 대신 prediction function value별 local loss direction을 사용합니다.",
+  },
+  {
+    from: "decision-tree-piecewise-constant",
+    to: "functional-gradient-boosting",
+    relation: "optimizes",
+    reason:
+      "Weak tree가 negative-gradient target을 leaf별 상수 함수로 근사합니다.",
+  },
+  {
+    from: "functional-gradient-boosting",
+    to: "boosting-shrinkage-early-stopping",
+    relation: "constrains",
+    reason:
+      "각 tree의 additive step과 ensemble round 수를 validation으로 함께 제한합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "boosting-shrinkage-early-stopping",
+    relation: "constrains",
+    reason:
+      "Training loss가 아니라 독립 validation curve로 best iteration을 선택합니다.",
+  },
+  {
+    from: "functional-gradient-boosting",
+    to: "xgboost-second-order-gain",
+    relation: "extends",
+    reason:
+      "First derivative target에 second derivative와 explicit leaf penalty를 더해 split objective를 근사합니다.",
+  },
+  {
+    from: "xgboost-second-order-gain",
+    to: "histogram-split-approximation",
+    relation: "optimizes",
+    reason:
+      "Candidate threshold별 G·H 합을 raw value 대신 feature bin에 누적합니다.",
+  },
+  {
+    from: "functional-gradient-boosting",
+    to: "lightgbm-goss",
+    relation: "optimizes",
+    reason:
+      "Gradient magnitude를 이용해 split statistic을 추정할 row 수를 줄입니다.",
+  },
+  {
+    from: "histogram-split-approximation",
+    to: "lightgbm-exclusive-feature-bundling",
+    relation: "extends",
+    reason:
+      "Sparse nonzero 충돌이 적은 feature들을 bundle해 histogram을 만들 effective column 수를 줄입니다.",
+  },
+  {
+    from: "xgboost-second-order-gain",
+    to: "leaf-wise-tree-growth",
+    relation: "optimizes",
+    reason:
+      "현재 estimated gain이 가장 큰 leaf에 다음 split budget을 우선 배분합니다.",
+  },
+  {
+    from: "functional-gradient-boosting",
+    to: "catboost-ordered-boosting",
+    relation: "extends",
+    reason:
+      "현재 row를 fit하지 않은 prefix prediction에서 gradient target을 계산합니다.",
+  },
+  {
+    from: "cross-fitted-target-encoding",
+    to: "catboost-ordered-boosting",
+    relation: "contrasts",
+    reason:
+      "둘 다 자기 target 경로를 줄이지만 category statistic과 gradient prediction이라는 서로 다른 계산을 제어합니다.",
+  },
+  {
+    from: "decision-tree-piecewise-constant",
+    to: "oblivious-symmetric-tree",
+    relation: "extends",
+    reason:
+      "각 depth의 모든 node가 같은 split을 쓰도록 leaf region partition을 규칙적으로 제한합니다.",
+  },
+  {
+    from: "boosting-shrinkage-early-stopping",
+    to: "gbm-comparison-contract",
+    relation: "evaluates",
+    reason:
+      "Library마다 learning rate·round·capacity를 공통 search budget과 validation rule로 맞춥니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "gbm-comparison-contract",
+    relation: "constrains",
+    reason:
+      "세 library가 같은 leakage-free feature artifact와 category·missing mapping을 받도록 합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "tabular-row-schema-contract",
+    relation: "constrains",
+    reason:
+      "Row에 포함할 수 있는 column을 entity와 prediction cutoff 당시의 available information으로 제한합니다.",
+  },
+  {
+    from: "fold-local-statistic",
+    to: "tabular-row-schema-contract",
+    relation: "constrains",
+    reason:
+      "Numerical scale·missing fill·category vocabulary를 training fold에서만 fit합니다.",
+  },
+  {
+    from: "tabular-row-schema-contract",
+    to: "tabular-feature-tokenizer",
+    relation: "prerequisite",
+    reason:
+      "고정된 numerical·categorical column identity와 값 domain을 feature별 token transform에 제공합니다.",
+  },
+  {
+    from: "representation-learning",
+    to: "tabular-neural-representation-opportunity",
+    relation: "prerequisite",
+    reason:
+      "Embedding·multimodal·pretraining에서 재사용할 intermediate feature를 objective로 학습합니다.",
+  },
+  {
+    from: "tabular-row-schema-contract",
+    to: "tabnet-sequential-feature-mask",
+    relation: "prerequisite",
+    reason:
+      "Row별 mask coordinate가 항상 같은 input column을 가리키도록 schema를 고정합니다.",
+  },
+  {
+    from: "tabnet-sequential-feature-mask",
+    to: "tabnet-feature-reuse-prior",
+    relation: "produces",
+    reason: "현재 step mask를 다음 step의 feature 사용 prior에 누적합니다.",
+  },
+  {
+    from: "tabnet-sequential-feature-mask",
+    to: "tabnet-masked-feature-pretraining",
+    relation: "extends",
+    reason:
+      "가려지지 않은 columns의 prior와 sequential encoder를 사용해 masked columns를 복원합니다.",
+  },
+  {
+    from: "token-embedding",
+    to: "tabular-feature-tokenizer",
+    relation: "extends",
+    reason:
+      "Categorical lookup에 numerical scalar의 column별 vector scaling과 feature bias를 더합니다.",
+  },
+  {
+    from: "tabular-feature-tokenizer",
+    to: "ft-transformer-column-interaction",
+    relation: "produces",
+    reason:
+      "같은 width로 맞춘 feature tokens와 CLS token을 row-level self-attention 입력으로 만듭니다.",
+  },
+  {
+    from: "self-attention",
+    to: "ft-transformer-column-interaction",
+    relation: "extends",
+    reason:
+      "Sequence position 대신 한 row의 column tokens 사이에서 조건부 information mixing을 수행합니다.",
+  },
+  {
+    from: "variance",
+    to: "out-of-fold-error-correlation",
+    relation: "prerequisite",
+    reason:
+      "두 error vector의 covariance를 각 standard deviation으로 정규화해 correlation을 계산합니다.",
+  },
+  {
+    from: "gbm-comparison-contract",
+    to: "out-of-fold-error-correlation",
+    relation: "evaluates",
+    reason:
+      "같은 held-out rows에서 tree와 neural model의 오류가 실제로 보완되는지 확인합니다.",
+  },
+  {
+    from: "tabular-neural-representation-opportunity",
+    to: "gbm-comparison-contract",
+    relation: "evaluates",
+    reason:
+      "추가 representation의 가치를 동일 split·search·system budget의 강한 GBDT와 비교해 판정합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "forecast-row-contract",
+    relation: "constrains",
+    reason:
+      "Forecast origin 당시 available한 entity history만 time-feature map의 입력으로 허용합니다.",
+  },
+  {
+    from: "forecast-row-contract",
+    to: "observation-duration-lag",
+    relation: "produces",
+    reason:
+      "Origin 이전 history에서 observation index 또는 elapsed duration 기준의 과거 값을 선택합니다.",
+  },
+  {
+    from: "observation-duration-lag",
+    to: "lag-difference-feature",
+    relation: "extends",
+    reason: "두 available levels를 빼 해당 lag interval의 변화량을 만듭니다.",
+  },
+  {
+    from: "variance",
+    to: "autocorrelation-lag-diagnostic",
+    relation: "prerequisite",
+    reason:
+      "Lagged covariance를 series variance로 정규화해 autocorrelation을 계산합니다.",
+  },
+  {
+    from: "autocorrelation-lag-diagnostic",
+    to: "observation-duration-lag",
+    relation: "evaluates",
+    reason:
+      "업무 주기와 함께 후보 lag를 좁히되 rolling-origin validation에서 다시 판정합니다.",
+  },
+  {
+    from: "point-in-time-aggregation",
+    to: "rolling-window-boundary",
+    relation: "extends",
+    reason:
+      "Window의 clock·양끝 포함·count·minimum-period rule까지 명시해 forecasting row용 statistic을 만듭니다.",
+  },
+  {
+    from: "rolling-window-boundary",
+    to: "exponential-moving-summary",
+    relation: "contrasts",
+    reason:
+      "Finite window aggregation과 모든 과거에 exponential decay를 적용하는 recursive state를 구분합니다.",
+  },
+  {
+    from: "unit-circle-trigonometry",
+    to: "cyclic-time-coordinate",
+    relation: "prerequisite",
+    reason:
+      "Period의 phase를 unit-circle의 cosine·sine coordinates로 바꿉니다.",
+  },
+  {
+    from: "cyclic-time-coordinate",
+    to: "harmonic-time-features",
+    relation: "extends",
+    reason:
+      "기본 frequency의 정수배 sin·cos pairs로 한 주기 안의 더 복잡한 반복 모양을 표현합니다.",
+  },
+  {
+    from: "forecast-row-contract",
+    to: "rolling-origin-evaluation",
+    relation: "evaluates",
+    reason:
+      "여러 과거 origin에서 동일한 entity·cutoff·horizon prediction question을 재현합니다.",
+  },
+  {
+    from: "temporal-gap-purge",
+    to: "rolling-origin-evaluation",
+    relation: "constrains",
+    reason:
+      "Overlapping label interval과 delayed information이 train/validation 경계를 건너지 못하게 합니다.",
+  },
+  {
+    from: "training-serving-skew",
+    to: "rolling-origin-evaluation",
+    relation: "evaluates",
+    reason:
+      "과거 cutoff replay와 online/batch parity로 backtest feature가 serving에서 재현되는지 확인합니다.",
+  },
+  {
+    from: "feature-availability-contract",
+    to: "event-sequence-sample-contract",
+    relation: "constrains",
+    reason:
+      "Cutoff 당시 도착한 event만 ordered history에 포함하도록 information boundary를 고정합니다.",
+  },
+  {
+    from: "forecast-row-contract",
+    to: "event-sequence-sample-contract",
+    relation: "extends",
+    reason:
+      "Forecast row의 entity·origin·horizon에 stable event ordering과 variable-length history를 추가합니다.",
+  },
+  {
+    from: "event-sequence-sample-contract",
+    to: "heterogeneous-event-token",
+    relation: "produces",
+    reason:
+      "정렬된 각 event의 type·attributes·position·elapsed time을 한 token으로 변환합니다.",
+  },
+  {
+    from: "token-embedding",
+    to: "heterogeneous-event-token",
+    relation: "extends",
+    reason:
+      "Discrete lookup에 numerical projection과 event-time signals를 결합합니다.",
+  },
+  {
+    from: "position-signal",
+    to: "heterogeneous-event-token",
+    relation: "prerequisite",
+    reason: "같은 event multiset에서 sequence 순번이 다른 입력을 구분합니다.",
+  },
+  {
+    from: "heterogeneous-event-token",
+    to: "sequence-padding-validity-mask",
+    relation: "produces",
+    reason:
+      "Variable-length token rows를 batch tensor로 묶으며 실제 token과 PAD를 구분합니다.",
+  },
+  {
+    from: "event-sequence-sample-contract",
+    to: "sequence-truncation-policy",
+    relation: "constrains",
+    reason:
+      "유효 history를 만든 뒤 system budget 안에서 어떤 evidence를 보존할지 결정합니다.",
+  },
+  {
+    from: "event-sequence-sample-contract",
+    to: "event-transition-statistic",
+    relation: "produces",
+    reason:
+      "정렬된 이웃 event pairs에서 local-order count와 conditional frequency를 계산합니다.",
+  },
+  {
+    from: "event-transition-statistic",
+    to: "sequence-summary-collision",
+    relation: "constrains",
+    reason:
+      "인접 pair까지만 보존하므로 같은 bigram multiset을 가진 더 긴 경로를 구분하지 못할 수 있습니다.",
+  },
+  {
+    from: "attention-visibility",
+    to: "event-sequence-visibility-mask",
+    relation: "extends",
+    reason:
+      "Event prediction question에 따라 cutoff·PAD·causal visibility를 구체화합니다.",
+  },
+  {
+    from: "sequence-padding-validity-mask",
+    to: "event-sequence-visibility-mask",
+    relation: "constrains",
+    reason:
+      "PAD key와 query가 event information path에 참여하지 않도록 합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "event-sequence-pooling",
+    relation: "produces",
+    reason:
+      "Contextualized event hidden states를 sequence-level target용 representation으로 모읍니다.",
+  },
+  {
+    from: "sequence-padding-validity-mask",
+    to: "event-sequence-pooling",
+    relation: "constrains",
+    reason: "Masked mean과 last-valid selection에서 PAD를 제외합니다.",
+  },
+  {
+    from: "sequence-summary-collision",
+    to: "order-shuffle-diagnostic",
+    relation: "evaluates",
+    reason:
+      "Flat summary로 사라지는 전체 순서가 실제 validation metric에 기여하는지 intervention으로 확인합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "order-shuffle-diagnostic",
+    relation: "constrains",
+    reason:
+      "Shuffle 진단과 model 선택은 validation에서 수행하고 최종 test를 보존합니다.",
+  },
+  {
+    from: "training-step",
+    to: "reproducible-training-run-contract",
+    relation: "extends",
+    reason:
+      "한 번의 forward·backward·update를 data·state·evidence lineage를 가진 전체 run으로 확장합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "dataset-sampler-collate-contract",
+    relation: "constrains",
+    reason:
+      "Split manifest가 sampler에 들어갈 sample IDs와 fold-fitted transform artifact를 제한합니다.",
+  },
+  {
+    from: "tensor-batch",
+    to: "dataset-sampler-collate-contract",
+    relation: "prerequisite",
+    reason:
+      "여러 sample의 axis·dtype·padding mask를 model input tensor로 구성합니다.",
+  },
+  {
+    from: "dataset-sampler-collate-contract",
+    to: "input-pipeline-wait-fraction",
+    relation: "evaluates",
+    reason:
+      "Dataset·worker·collate·copy 경로가 accelerator를 얼마나 기다리게 하는지 측정합니다.",
+  },
+  {
+    from: "training-step",
+    to: "training-phase-state-contract",
+    relation: "constrains",
+    reason:
+      "Train에서만 gradient와 optimizer update를 허용하고 validation은 read-only로 분리합니다.",
+  },
+  {
+    from: "tensor-batch",
+    to: "effective-batch-update-clock",
+    relation: "extends",
+    reason:
+      "Micro-batch를 accumulation과 world size까지 포함한 optimizer update 단위로 확장합니다.",
+  },
+  {
+    from: "learning-rate",
+    to: "effective-batch-update-clock",
+    relation: "constrains",
+    reason:
+      "Scheduler가 micro-batch iteration이 아니라 의도한 optimizer update clock에서 움직이게 합니다.",
+  },
+  {
+    from: "training-phase-state-contract",
+    to: "automatic-mixed-precision-contract",
+    relation: "extends",
+    reason:
+      "Train forward의 autocast와 backward·unscale·clip·update 순서를 추가합니다.",
+  },
+  {
+    from: "effective-batch-update-clock",
+    to: "resume-state-closure",
+    relation: "constrains",
+    reason:
+      "Checkpoint가 optimizer update와 미완성 accumulation의 정확한 위치를 보존하도록 합니다.",
+  },
+  {
+    from: "automatic-mixed-precision-contract",
+    to: "resume-state-closure",
+    relation: "constrains",
+    reason:
+      "다음 update의 overflow 판단이 달라지지 않도록 GradScaler state를 저장합니다.",
+  },
+  {
+    from: "resume-state-closure",
+    to: "resume-equivalence-test",
+    relation: "evaluates",
+    reason:
+      "복구에 필요하다고 선언한 모든 state가 실제로 연속 trajectory를 재현하는지 새 process에서 검사합니다.",
+  },
+  {
+    from: "dataset-sampler-collate-contract",
+    to: "global-metric-sufficient-statistics",
+    relation: "produces",
+    reason:
+      "Batch와 PAD마다 다른 valid observation 수를 metric denominator로 제공합니다.",
+  },
+  {
+    from: "reproducible-training-run-contract",
+    to: "run-artifact-provenance",
+    relation: "produces",
+    reason:
+      "Run ID에서 입력 조건·execution state·checkpoint·evaluation report를 추적 가능하게 남깁니다.",
+  },
+  {
+    from: "global-metric-sufficient-statistics",
+    to: "run-artifact-provenance",
+    relation: "produces",
+    reason:
+      "Checkpoint 선택에 사용된 global metric의 numerator·denominator와 reduction 근거를 report에 연결합니다.",
+  },
+  {
+    from: "representation-learning",
+    to: "pretrained-handoff-contract",
+    relation: "produces",
+    reason:
+      "Source objective가 학습한 intermediate representation과 parameter를 target task의 초기 state로 제공합니다.",
+  },
+  {
+    from: "pretrained-handoff-contract",
+    to: "trainable-scope-mask",
+    relation: "constrains",
+    reason:
+      "가져온 backbone 중 target loss가 바꿀 layer와 고정할 layer를 나눕니다.",
+  },
+  {
+    from: "training-phase-state-contract",
+    to: "frozen-module-buffer-state",
+    relation: "constrains",
+    reason:
+      "Train/eval mode가 frozen backbone의 BatchNorm running buffer를 갱신할지 결정합니다.",
+  },
+  {
+    from: "trainable-scope-mask",
+    to: "frozen-module-buffer-state",
+    relation: "contrasts",
+    reason:
+      "Parameter update mask와 non-parameter module buffer 변화를 별개로 검사합니다.",
+  },
+  {
+    from: "learning-rate",
+    to: "layerwise-relative-update-ratio",
+    relation: "produces",
+    reason:
+      "Layer별 learning rate와 optimizer direction이 parameter scale 대비 실제 이동량을 만듭니다.",
+  },
+  {
+    from: "trainable-scope-mask",
+    to: "layerwise-relative-update-ratio",
+    relation: "constrains",
+    reason:
+      "Update를 허용한 layer group에서만 relative displacement를 측정합니다.",
+  },
+  {
+    from: "trainable-scope-mask",
+    to: "adaptation-scope-comparison",
+    relation: "produces",
+    reason:
+      "Fixed·partial·full 후보의 서로 다른 trainable parameter 범위를 정의합니다.",
+  },
+  {
+    from: "variance",
+    to: "adaptation-scope-comparison",
+    relation: "prerequisite",
+    reason:
+      "Seed별 paired gain의 dispersion과 standard error로 작은 score 차이의 불확실성을 해석합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "covariate-label-concept-shift",
+    relation: "prerequisite",
+    reason:
+      "Input marginal·label prior·conditional label mechanism 중 달라진 관계를 구분합니다.",
+  },
+  {
+    from: "covariate-label-concept-shift",
+    to: "continued-domain-task-pretraining",
+    relation: "constrains",
+    reason:
+      "Unlabeled target representation 적응이 해결할 수 있는 input/domain mismatch인지 먼저 진단합니다.",
+  },
+  {
+    from: "covariate-label-concept-shift",
+    to: "domain-adversarial-alignment",
+    relation: "constrains",
+    reason:
+      "Domain-invariant feature가 label mechanism을 보존한다는 가정이 타당한지 제한합니다.",
+  },
+  {
+    from: "continued-domain-task-pretraining",
+    to: "negative-transfer-diagnostic",
+    relation: "evaluates",
+    reason:
+      "Continued pretraining 전후 target gain과 source capability regression을 비교합니다.",
+  },
+  {
+    from: "domain-adversarial-alignment",
+    to: "negative-transfer-diagnostic",
+    relation: "evaluates",
+    reason:
+      "Domain alignment가 class-relevant signal까지 제거했는지 target slice에서 확인합니다.",
+  },
+  {
+    from: "adaptation-scope-comparison",
+    to: "negative-transfer-diagnostic",
+    relation: "evaluates",
+    reason:
+      "복잡한 adaptation을 fixed·partial·full baseline과 동일 target holdout에서 비교합니다.",
+  },
+  {
+    from: "learning-rate",
+    to: "learning-rate-schedule-contract",
+    relation: "extends",
+    reason:
+      "고정 step size를 optimizer update index에 따라 달라지는 함수와 복원 가능한 state로 확장합니다.",
+  },
+  {
+    from: "effective-batch-update-clock",
+    to: "learning-rate-schedule-contract",
+    relation: "constrains",
+    reason:
+      "Micro-batch가 아니라 실제 optimizer update를 scheduler의 시간축으로 고정합니다.",
+  },
+  {
+    from: "learning-rate-schedule-contract",
+    to: "open-loop-lr-decay",
+    relation: "produces",
+    reason:
+      "Total budget과 update clock 위에 milestone 또는 반복 decay factor를 배치합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "metric-triggered-lr-decay",
+    relation: "constrains",
+    reason:
+      "Training과 분리된 validation event만 plateau trigger의 입력으로 사용합니다.",
+  },
+  {
+    from: "learning-rate-schedule-contract",
+    to: "cosine-annealing-progress",
+    relation: "produces",
+    reason:
+      "Update budget을 0부터 1까지의 진행률로 바꿔 cosine 보간을 적용합니다.",
+  },
+  {
+    from: "cosine-annealing-progress",
+    to: "warm-restart-state-boundary",
+    relation: "extends",
+    reason:
+      "한 번의 cosine decay를 여러 cycle로 이어가며 LR와 학습 state의 restart 범위를 분리합니다.",
+  },
+  {
+    from: "learning-rate-schedule-contract",
+    to: "one-cycle-policy",
+    relation: "produces",
+    reason:
+      "Total update 안에 LR 상승·하강과 선택적 inverse momentum phase를 배치합니다.",
+  },
+  {
+    from: "learning-rate-range-test",
+    to: "one-cycle-policy",
+    relation: "constrains",
+    reason:
+      "짧은 loss trace에서 instability 경계를 찾아 maximum LR 후보를 제한합니다.",
+  },
+  {
+    from: "learning-rate-schedule-contract",
+    to: "warmup-main-schedule-composition",
+    relation: "extends",
+    reason:
+      "Global budget을 warmup과 남은 main schedule의 local clocks로 분할합니다.",
+  },
+  {
+    from: "momentum-state",
+    to: "adaptive-update-magnitude-diagnostic",
+    relation: "prerequisite",
+    reason:
+      "Adaptive moment state가 raw gradient와 실제 optimizer direction의 차이를 만듭니다.",
+  },
+  {
+    from: "warmup-main-schedule-composition",
+    to: "adaptive-update-magnitude-diagnostic",
+    relation: "evaluates",
+    reason:
+      "Warmup 전후 실제 parameter displacement와 instability signal이 줄었는지 확인합니다.",
+  },
+  {
+    from: "empirical-risk",
+    to: "observed-generalization-gap",
+    relation: "prerequisite",
+    reason: "Training과 validation split의 같은 sample loss 평균을 비교합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "observed-generalization-gap",
+    relation: "constrains",
+    reason:
+      "Parameter fitting과 generalization 진단에 쓰는 examples를 분리합니다.",
+  },
+  {
+    from: "observed-generalization-gap",
+    to: "regularization-ablation-contract",
+    relation: "constrains",
+    reason:
+      "Gap의 절대 수준과 원인 audit 뒤 한 regularization 축만 비교하게 합니다.",
+  },
+  {
+    from: "expectation",
+    to: "inverted-dropout-mask",
+    relation: "prerequisite",
+    reason:
+      "Bernoulli mask에 대한 activation 평균 보존과 noise variance를 계산합니다.",
+  },
+  {
+    from: "inverted-dropout-mask",
+    to: "dropout-train-eval-contract",
+    relation: "produces",
+    reason:
+      "Mask sampling과 scaling은 train mode에만 적용되고 evaluation에는 제거됩니다.",
+  },
+  {
+    from: "dropout-train-eval-contract",
+    to: "regularization-ablation-contract",
+    relation: "evaluates",
+    reason:
+      "Drop unit과 p가 train fit·validation·serving parity에 주는 영향을 비교합니다.",
+  },
+  {
+    from: "gradient-descent",
+    to: "l2-sgd-decay-equivalence",
+    relation: "prerequisite",
+    reason:
+      "Quadratic penalty gradient와 scalar SGD step을 한 update로 정리합니다.",
+  },
+  {
+    from: "l2-sgd-decay-equivalence",
+    to: "decoupled-adaptive-weight-decay",
+    relation: "contrasts",
+    reason:
+      "Adaptive preconditioning에서 penalty gradient와 multiplicative shrinkage가 달라지는 지점을 보여 줍니다.",
+  },
+  {
+    from: "decoupled-adaptive-weight-decay",
+    to: "weight-decay-param-group-coverage",
+    relation: "constrains",
+    reason: "Decay 적용 대상을 optimizer parameter groups로 정확히 분할합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "early-stopping-state-machine",
+    relation: "constrains",
+    reason: "Stopping과 best selection signal을 validation에 한정합니다.",
+  },
+  {
+    from: "early-stopping-state-machine",
+    to: "best-checkpoint-artifact",
+    relation: "produces",
+    reason:
+      "새 best event에서 immutable snapshot과 metric receipt를 저장합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "uniform-label-smoothing",
+    relation: "extends",
+    reason:
+      "One-hot NLL을 uniform distribution과 섞인 soft-target cross-entropy로 확장합니다.",
+  },
+  {
+    from: "uniform-label-smoothing",
+    to: "soft-target-composition-audit",
+    relation: "constrains",
+    reason:
+      "다른 soft-target 기법과 조합했을 때 최종 probability mass와 entropy를 다시 계산합니다.",
+  },
+  {
+    from: "regularization-ablation-contract",
+    to: "best-checkpoint-artifact",
+    relation: "evaluates",
+    reason:
+      "동일 model-selection policy 아래 regularizer별 best artifact를 비교합니다.",
+  },
+  {
+    from: "empirical-risk",
+    to: "augmentation-risk-objective",
+    relation: "extends",
+    reason:
+      "관측 training sample 평균 안에 random transform에 대한 expectation을 추가합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "augmentation-risk-objective",
+    relation: "constrains",
+    reason:
+      "Transform sampling과 synthetic sample 생성을 training fold 내부로 제한합니다.",
+  },
+  {
+    from: "label-preserving-transformation",
+    to: "augmentation-risk-objective",
+    relation: "constrains",
+    reason:
+      "Augmentation distribution이 task target을 훼손하지 않는 transformation만 포함하도록 제한합니다.",
+  },
+  {
+    from: "label-preserving-transformation",
+    to: "augmentation-target-map",
+    relation: "produces",
+    reason:
+      "Target이 그대로인지, 좌표나 probability를 함께 바꿔야 하는지 규칙으로 만듭니다.",
+  },
+  {
+    from: "linear-map-matrix",
+    to: "affine-annotation-transform",
+    relation: "prerequisite",
+    reason:
+      "Rotation·scale·shear를 matrix A로, translation을 vector t로 표현합니다.",
+  },
+  {
+    from: "augmentation-target-map",
+    to: "affine-annotation-transform",
+    relation: "extends",
+    reason:
+      "같은 geometric parameter를 image point와 structured annotation에 적용합니다.",
+  },
+  {
+    from: "tensor-batch",
+    to: "normalization-input-contract",
+    relation: "prerequisite",
+    reason:
+      "Channel·spatial·batch axis를 구분해 channel별 center와 scale을 적용합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "mixup-convex-target",
+    relation: "prerequisite",
+    reason:
+      "One-hot label을 class probability distribution인 soft target으로 해석합니다.",
+  },
+  {
+    from: "augmentation-target-map",
+    to: "mixup-convex-target",
+    relation: "extends",
+    reason:
+      "두 input 비율과 같은 coefficient로 target distribution을 보간합니다.",
+  },
+  {
+    from: "mixup-convex-target",
+    to: "cutmix-area-target",
+    relation: "contrasts",
+    reason:
+      "전체 tensor의 선형 보간 대신 spatial mask와 visible area로 mixing coefficient를 정합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "tabular-synthesis-validity",
+    relation: "constrains",
+    reason:
+      "Neighbor selection과 row synthesis를 split 이후 training fold로 제한해 leakage를 막습니다.",
+  },
+  {
+    from: "augmentation-risk-objective",
+    to: "augmentation-evaluation-boundary",
+    relation: "evaluates",
+    reason:
+      "바뀐 training distribution의 이득을 원본 validation과 고정 robustness slice에서 분리해 측정합니다.",
+  },
+  {
+    from: "function-composition",
+    to: "deterministic-autoencoder-contract",
+    relation: "prerequisite",
+    reason:
+      "Encoder output을 decoder input으로 이어 하나의 reconstruction function을 만듭니다.",
+  },
+  {
+    from: "parameterized-model",
+    to: "deterministic-autoencoder-contract",
+    relation: "prerequisite",
+    reason:
+      "Encoder와 decoder parameter를 같은 reconstruction objective에서 함께 학습합니다.",
+  },
+  {
+    from: "deterministic-autoencoder-contract",
+    to: "undercomplete-bottleneck",
+    relation: "constrains",
+    reason:
+      "Latent coordinate 수를 줄여 reconstruction 경로의 정보 용량을 제한합니다.",
+  },
+  {
+    from: "deterministic-autoencoder-contract",
+    to: "autoencoder-identity-degeneracy",
+    relation: "constrains",
+    reason:
+      "Input-derived target만 사용하고 capacity를 제한하지 않으면 identity mapping이 쉬운 해가 됩니다.",
+  },
+  {
+    from: "likelihood-contract",
+    to: "reconstruction-objective",
+    relation: "constrains",
+    reason:
+      "Gaussian·Bernoulli 등 observation model이 MSE·BCE와 decoder output parameter를 함께 정합니다.",
+  },
+  {
+    from: "reconstruction-objective",
+    to: "deterministic-autoencoder-contract",
+    relation: "optimizes",
+    reason:
+      "Input과 decoder output의 차이를 encoder·decoder parameter의 학습 신호로 바꿉니다.",
+  },
+  {
+    from: "chain-rule",
+    to: "reconstruction-objective",
+    relation: "prerequisite",
+    reason:
+      "Decoder의 reconstruction error를 latent와 encoder parameter까지 전달합니다.",
+  },
+  {
+    from: "eckart-young-theorem",
+    to: "linear-autoencoder-pca",
+    relation: "prerequisite",
+    reason:
+      "Squared error의 optimal rank-k reconstruction이 leading singular subspace에 놓임을 연결합니다.",
+  },
+  {
+    from: "undercomplete-bottleneck",
+    to: "linear-autoencoder-pca",
+    relation: "constrains",
+    reason: "Linear encoder·decoder의 합성 rank를 k 이하로 제한합니다.",
+  },
+  {
+    from: "autoencoder-identity-degeneracy",
+    to: "denoising-autoencoder-objective",
+    relation: "constrains",
+    reason:
+      "Corrupted input과 clean target을 다르게 만들어 단순 identity copying을 막습니다.",
+  },
+  {
+    from: "autoencoder-identity-degeneracy",
+    to: "sparse-autoencoder-penalty",
+    relation: "constrains",
+    reason: "Overcomplete latent에서도 활성화 가능한 feature 수를 줄입니다.",
+  },
+  {
+    from: "reconstruction-objective",
+    to: "reconstruction-anomaly-score",
+    relation: "produces",
+    reason:
+      "Training loss의 sample-level unreduced distance를 anomaly score 후보로 재사용합니다.",
+  },
+  {
+    from: "denoising-autoencoder-objective",
+    to: "masked-autoencoder-pretraining",
+    relation: "extends",
+    reason:
+      "Random corruption을 structured masking으로 바꾸고 missing content reconstruction을 pretraining signal로 씁니다.",
+  },
+  {
+    from: "deterministic-autoencoder-contract",
+    to: "amortized-variational-inference",
+    relation: "extends",
+    reason:
+      "VAE는 deterministic code를 observation별 approximate posterior distribution으로 확장합니다.",
+  },
+  {
+    from: "diagonal-gaussian-posterior",
+    to: "pathwise-reparameterization",
+    relation: "produces",
+    reason:
+      "z=μ+σ⊙ε로 location-scale sample을 parameter-independent noise와 분리합니다.",
+  },
+  {
+    from: "kl-divergence",
+    to: "diagonal-gaussian-kl",
+    relation: "prerequisite",
+    reason:
+      "Gaussian density의 log-ratio expectation을 dimension별 closed form으로 계산합니다.",
+  },
+  {
+    from: "diagonal-gaussian-posterior",
+    to: "diagonal-gaussian-kl",
+    relation: "produces",
+    reason:
+      "Diagonal covariance 덕분에 multivariate KL이 scalar dimension 기여의 합으로 분해됩니다.",
+  },
+  {
+    from: "evidence-lower-bound",
+    to: "vae-rate-distortion",
+    relation: "produces",
+    reason:
+      "ELBO의 expected log likelihood와 posterior–prior KL을 distortion과 rate 축으로 나눠 읽습니다.",
+  },
+  {
+    from: "likelihood-contract",
+    to: "vae-rate-distortion",
+    relation: "constrains",
+    reason:
+      "Bernoulli·Gaussian 등 decoder likelihood와 reduction이 distortion scale을 정합니다.",
+  },
+  {
+    from: "vae-rate-distortion",
+    to: "posterior-collapse",
+    relation: "constrains",
+    reason:
+      "Decoder가 rate 없이 distortion을 낮출 수 있으면 KL이 0에 가까운 해를 선택할 수 있습니다.",
+  },
+  {
+    from: "amortized-variational-inference",
+    to: "posterior-collapse",
+    relation: "constrains",
+    reason:
+      "Inference network가 moving posterior를 따라가지 못하는 optimization dynamics도 collapse와 연결될 수 있습니다.",
+  },
+  {
+    from: "posterior-collapse",
+    to: "latent-usage-diagnostic",
+    relation: "evaluates",
+    reason:
+      "KL 하나만 아니라 decoder dependence와 dimension별 activity를 함께 확인합니다.",
+  },
+  {
+    from: "evidence-lower-bound",
+    to: "importance-weighted-bound",
+    relation: "extends",
+    reason:
+      "한 sample weight 대신 여러 importance weights의 평균으로 더 tight한 bound를 구성합니다.",
+  },
+  {
+    from: "diagonal-gaussian-posterior",
+    to: "vq-vae-codebook",
+    relation: "contrasts",
+    reason:
+      "Continuous Gaussian sample 대신 nearest codebook entry인 discrete latent를 사용합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "implicit-generator-pushforward",
+    relation: "prerequisite",
+    reason:
+      "Latent prior와 generator mapping이 data space의 sample distribution을 유도합니다.",
+  },
+  {
+    from: "implicit-generator-pushforward",
+    to: "adversarial-density-ratio",
+    relation: "produces",
+    reason:
+      "Generator sample과 real sample을 binary classifier에 제공해 상대 density signal을 만듭니다.",
+  },
+  {
+    from: "adversarial-density-ratio",
+    to: "non-saturating-generator-objective",
+    relation: "extends",
+    reason:
+      "같은 equilibrium을 겨냥하면서 초기 fake 영역에서 generator gradient를 더 강하게 만듭니다.",
+  },
+  {
+    from: "vector-jacobian-product",
+    to: "non-saturating-generator-objective",
+    relation: "prerequisite",
+    reason:
+      "Discriminator의 data-space signal을 generator parameter gradient로 pull back합니다.",
+  },
+  {
+    from: "non-saturating-generator-objective",
+    to: "alternating-adversarial-optimization",
+    relation: "optimizes",
+    reason:
+      "Generator와 discriminator가 서로 다른 loss와 parameter snapshot에서 번갈아 update합니다.",
+  },
+  {
+    from: "alternating-adversarial-optimization",
+    to: "two-timescale-game-convergence",
+    relation: "constrains",
+    reason:
+      "두 player의 update 속도·stochastic noise·local stability를 명시해야 convergence statement를 적용할 수 있습니다.",
+  },
+  {
+    from: "optimizer-update",
+    to: "two-timescale-game-convergence",
+    relation: "prerequisite",
+    reason:
+      "두 stochastic approximation의 step-size sequence와 update dynamics를 구분합니다.",
+  },
+  {
+    from: "alternating-adversarial-optimization",
+    to: "gan-mode-collapse",
+    relation: "constrains",
+    reason:
+      "Moving discriminator feedback와 many-to-one generator mapping이 일부 mode로의 쏠림과 oscillation을 만들 수 있습니다.",
+  },
+  {
+    from: "lipschitz-function-constraint",
+    to: "wasserstein-critic-dual",
+    relation: "prerequisite",
+    reason:
+      "Kantorovich–Rubinstein dual은 critic function family를 1-Lipschitz로 제한합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "wasserstein-critic-dual",
+    relation: "prerequisite",
+    reason:
+      "Real과 generated distribution 사이 mass-transport distance를 expectation dual로 바꿉니다.",
+  },
+  {
+    from: "wasserstein-critic-dual",
+    to: "wgan-gradient-penalty",
+    relation: "constrains",
+    reason:
+      "Neural critic이 1-Lipschitz family에 가까워지도록 sampled input-gradient norm에 penalty를 줍니다.",
+  },
+  {
+    from: "singular-value-decomposition",
+    to: "spectral-normalization",
+    relation: "prerequisite",
+    reason:
+      "Largest singular value가 linear layer의 Euclidean operator norm을 제공합니다.",
+  },
+  {
+    from: "lipschitz-function-constraint",
+    to: "spectral-normalization",
+    relation: "constrains",
+    reason:
+      "Layer별 operator norm을 제한해 전체 network sensitivity의 상한을 제어합니다.",
+  },
+  {
+    from: "wgan-gradient-penalty",
+    to: "spectral-normalization",
+    relation: "contrasts",
+    reason:
+      "Sampled input point의 gradient penalty와 weight operator의 global rescaling을 구분합니다.",
+  },
+  {
+    from: "generative-distribution-contract",
+    to: "conditional-adversarial-generation",
+    relation: "extends",
+    reason:
+      "Real·fake comparison을 condition c별 p(x|c) matching으로 바꿉니다.",
+  },
+  {
+    from: "generative-evaluation-boundary",
+    to: "frechet-inception-distance",
+    relation: "produces",
+    reason:
+      "Fixed feature space에서 real·generated set의 1·2차 moment 차이를 별도 metric으로 측정합니다.",
+  },
+  {
+    from: "generative-evaluation-boundary",
+    to: "generative-precision-recall",
+    relation: "produces",
+    reason: "Sample fidelity와 target-mode coverage를 두 축으로 분리합니다.",
+  },
+  {
+    from: "gan-mode-collapse",
+    to: "generative-precision-recall",
+    relation: "evaluates",
+    reason:
+      "High-quality 소수 mode만 만드는 경우 precision과 recall의 비대칭으로 드러낼 수 있습니다.",
+  },
+  {
+    from: "roots-of-unity",
+    to: "discrete-fourier-transform",
+    relation: "prerequisite",
+    reason:
+      "N sample 동안 정수 번 회전하는 orthogonal analysis basis를 제공합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "discrete-fourier-transform",
+    relation: "prerequisite",
+    reason:
+      "Signal vector가 각 complex rotation basis 방향에 놓인 coefficient를 계산합니다.",
+  },
+  {
+    from: "sampling-nyquist-boundary",
+    to: "discrete-fourier-transform",
+    relation: "constrains",
+    reason:
+      "Discrete coefficient를 실제 continuous frequency와 연결할 수 있는 측정 band를 제한합니다.",
+  },
+  {
+    from: "spectral-leakage-window",
+    to: "discrete-fourier-transform",
+    relation: "constrains",
+    reason:
+      "유한 frame과 window가 관측된 coefficient의 leakage와 resolution을 바꿉니다.",
+  },
+  {
+    from: "discrete-fourier-transform",
+    to: "zero-padding-spectrum-grid",
+    relation: "extends",
+    reason:
+      "같은 finite sequence의 transform을 더 많은 frequency sample에서 평가합니다.",
+  },
+  {
+    from: "spectral-leakage-window",
+    to: "zero-padding-spectrum-grid",
+    relation: "contrasts",
+    reason:
+      "Grid를 촘촘히 그리는 것과 더 긴 관측으로 main-lobe 폭을 줄이는 실제 resolution을 구분합니다.",
+  },
+  {
+    from: "roots-of-unity",
+    to: "cooley-tukey-fft",
+    relation: "prerequisite",
+    reason:
+      "회전점의 주기성과 half-period 부호 대칭으로 sub-DFT를 재사용합니다.",
+  },
+  {
+    from: "discrete-fourier-transform",
+    to: "cooley-tukey-fft",
+    relation: "produces",
+    reason: "FFT가 더 빠르게 계산하되 결과를 바꾸지 않는 대상 transform입니다.",
+  },
+  {
+    from: "cooley-tukey-fft",
+    to: "fft-butterfly",
+    relation: "produces",
+    reason:
+      "Even·odd factorization의 두 output 결합을 반복 가능한 계산 단위로 만듭니다.",
+  },
+  {
+    from: "discrete-fourier-transform",
+    to: "convolution-theorem",
+    relation: "prerequisite",
+    reason:
+      "Shift-invariant convolution operator를 Fourier coefficient별 multiplication으로 대각화합니다.",
+  },
+  {
+    from: "spectral-leakage-window",
+    to: "short-time-fourier-transform",
+    relation: "prerequisite",
+    reason:
+      "Local frame마다 적용할 window와 time–frequency trade-off를 정합니다.",
+  },
+  {
+    from: "discrete-fourier-transform",
+    to: "short-time-fourier-transform",
+    relation: "extends",
+    reason: "긴 signal의 각 local frame에 같은 DFT를 반복 적용합니다.",
+  },
+  {
+    from: "scalar-quantity",
+    to: "coordinate-vector",
+    relation: "prerequisite",
+    reason:
+      "Vector는 scalar 성분을 순서 있게 묶고 scalar 배율로 크기를 바꿉니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "euclidean-norm",
+    relation: "produces",
+    reason: "Vector 성분의 제곱합으로 좌표 공간에서의 길이를 계산합니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "dot-product",
+    relation: "produces",
+    reason: "같은 좌표의 성분을 짝지어 방향의 일치 정도를 scalar로 줄입니다.",
+  },
+  {
+    from: "dot-product",
+    to: "vector-projection",
+    relation: "produces",
+    reason: "Dot product가 기준 방향에 평행한 성분의 크기를 정합니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "vector-projection",
+    relation: "prerequisite",
+    reason: "기준 vector의 길이 제곱으로 나눠 projection scale을 정규화합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "cauchy-schwarz",
+    relation: "prerequisite",
+    reason: "정리는 dot product로 측정한 정렬 정도의 상한을 줍니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "cauchy-schwarz",
+    relation: "constrains",
+    reason: "두 vector 길이의 곱이 dot product 절댓값의 상한입니다.",
+  },
+  {
+    from: "function-mapping",
+    to: "function-composition",
+    relation: "produces",
+    reason: "앞 함수의 output을 다음 함수의 input으로 연결합니다.",
+  },
+  {
+    from: "function-mapping",
+    to: "mathematical-limit",
+    relation: "prerequisite",
+    reason: "입력이 특정 값에 가까워질 때 함수 output의 행동을 관찰합니다.",
+  },
+  {
+    from: "mathematical-limit",
+    to: "derivative",
+    relation: "prerequisite",
+    reason:
+      "Difference quotient의 입력 간격을 0에 가깝게 보내 local rate를 정의합니다.",
+  },
+  {
+    from: "derivative",
+    to: "local-linear-approximation",
+    relation: "produces",
+    reason:
+      "한 점의 derivative를 기울기로 사용해 주변의 작은 변화를 직선으로 근사합니다.",
+  },
+  {
+    from: "function-composition",
+    to: "chain-rule",
+    relation: "prerequisite",
+    reason: "합성 함수의 중간값을 따라 local derivative를 연결합니다.",
+  },
+  {
+    from: "derivative",
+    to: "chain-rule",
+    relation: "prerequisite",
+    reason: "각 함수의 local rate를 곱해 전체 합성 함수의 rate를 계산합니다.",
+  },
+  {
+    from: "derivative",
+    to: "partial-derivative",
+    relation: "extends",
+    reason:
+      "여러 좌표 중 하나만 움직이는 단변수 slice의 derivative로 확장합니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "gradient",
+    relation: "prerequisite",
+    reason:
+      "각 입력 좌표의 partial derivative를 같은 coordinate 순서의 vector로 묶습니다.",
+  },
+  {
+    from: "partial-derivative",
+    to: "gradient",
+    relation: "produces",
+    reason: "모든 좌표별 partial derivative가 gradient의 성분이 됩니다.",
+  },
+  {
+    from: "partial-derivative",
+    to: "jacobian-matrix",
+    relation: "produces",
+    reason: "Output과 input coordinate의 모든 편미분을 행렬로 배열합니다.",
+  },
+  {
+    from: "jacobian-matrix",
+    to: "chain-rule",
+    relation: "extends",
+    reason:
+      "Vector-valued 합성 함수에서는 local derivative의 곱이 Jacobian matrix product로 확장됩니다.",
+  },
+  {
+    from: "gradient",
+    to: "directional-derivative",
+    relation: "produces",
+    reason:
+      "Gradient와 unit direction의 dot product가 해당 방향의 local rate입니다.",
+  },
+  {
+    from: "dot-product",
+    to: "directional-derivative",
+    relation: "prerequisite",
+    reason: "Gradient가 지정한 방향에 놓인 성분을 scalar 변화율로 계산합니다.",
+  },
+  {
+    from: "derivative",
+    to: "subgradient",
+    relation: "extends",
+    reason:
+      "표준 derivative가 없는 convex corner에서 가능한 지지 기울기의 집합으로 확장합니다.",
+  },
+  {
+    from: "scalar-quantity",
+    to: "exponentiation",
+    relation: "prerequisite",
+    reason: "같은 scalar 배율을 반복해서 곱하고 결과를 scalar로 계산합니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "logarithm",
+    relation: "prerequisite",
+    reason:
+      "Logarithm은 exponentiation의 입력과 출력을 거꾸로 묻는 inverse function입니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "log-product-rule",
+    relation: "prerequisite",
+    reason:
+      "같은 밑의 지수를 더하면 원래 값이 곱해지는 성질에서 항등식을 유도합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "log-product-rule",
+    relation: "produces",
+    reason: "곱과 나눗셈을 log space의 합과 차로 바꿉니다.",
+  },
+  {
+    from: "logarithm",
+    to: "change-of-log-base",
+    relation: "extends",
+    reason:
+      "같은 양수를 두 밑의 지수 좌표로 표현해 scale conversion을 얻습니다.",
+  },
+  {
+    from: "sample-space",
+    to: "probability-distribution",
+    relation: "prerequisite",
+    reason:
+      "가능한 outcome을 먼저 정해야 probability mass를 배정할 수 있습니다.",
+  },
+  {
+    from: "sample-space",
+    to: "probability-event",
+    relation: "prerequisite",
+    reason:
+      "Event는 sample space 안의 outcome을 관심 조건에 따라 묶은 부분집합입니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "probability-event",
+    relation: "evaluates",
+    reason:
+      "Event 안 outcome의 probability mass를 합해 event probability를 계산합니다.",
+  },
+  {
+    from: "probability-event",
+    to: "conditional-probability",
+    relation: "prerequisite",
+    reason:
+      "조건 event와 target event의 intersection을 먼저 정해야 조건부확률을 계산할 수 있습니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "conditional-probability",
+    relation: "prerequisite",
+    reason: "Condition 안의 mass를 전체 1이 되도록 다시 정규화합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "probability-chain-rule",
+    relation: "produces",
+    reason:
+      "조건부확률 정의를 곱셈 형태로 바꾸고 순서대로 반복해 joint probability를 분해합니다.",
+  },
+  {
+    from: "sample-space",
+    to: "random-variable",
+    relation: "prerequisite",
+    reason: "Random variable은 각 outcome을 계산 가능한 숫자로 보냅니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "random-variable",
+    relation: "produces",
+    reason:
+      "Outcome distribution이 random variable 값의 induced distribution을 만듭니다.",
+  },
+  {
+    from: "random-variable",
+    to: "expectation",
+    relation: "prerequisite",
+    reason:
+      "가능한 숫자값을 probability로 가중해 distribution의 중심을 계산합니다.",
+  },
+  {
+    from: "expectation",
+    to: "variance",
+    relation: "prerequisite",
+    reason: "Expectation을 중심으로 squared deviation을 평균냅니다.",
+  },
+  {
+    from: "random-variable",
+    to: "sample-mean",
+    relation: "produces",
+    reason: "반복 관측한 random variable 값을 산술평균합니다.",
+  },
+  {
+    from: "expectation",
+    to: "sample-mean",
+    relation: "evaluates",
+    reason: "Sample mean은 population expectation을 추정합니다.",
+  },
+  {
+    from: "variance",
+    to: "sample-mean",
+    relation: "constrains",
+    reason: "독립 평균의 variance와 standard error를 정합니다.",
+  },
+  {
+    from: "sample-mean",
+    to: "law-of-large-numbers",
+    relation: "prerequisite",
+    reason:
+      "반복 sample 평균이 population expectation에 가까워지는 대상을 정합니다.",
+  },
+  {
+    from: "expectation",
+    to: "law-of-large-numbers",
+    relation: "evaluates",
+    reason: "Sample mean이 가까워지는 population 기준입니다.",
+  },
+  {
+    from: "sample-mean",
+    to: "stochastic-gradient-estimator",
+    relation: "produces",
+    reason: "Mini-batch의 example별 gradient vector를 평균냅니다.",
+  },
+  {
+    from: "variance",
+    to: "stochastic-gradient-estimator",
+    relation: "constrains",
+    reason:
+      "Sampling에 따른 gradient noise 크기와 batch-size 효과를 측정합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "surprisal",
+    relation: "prerequisite",
+    reason: "관측 사건에 배정된 probability를 정보 비용으로 변환합니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "softmax-normalization",
+    relation: "prerequisite",
+    reason: "각 logit을 순서를 보존하는 양수 weight로 변환합니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "softmax-normalization",
+    relation: "prerequisite",
+    reason:
+      "서로 배타적인 후보 전체의 mass가 1이 되는 categorical output을 정의합니다.",
+  },
+  {
+    from: "logarithm",
+    to: "surprisal",
+    relation: "prerequisite",
+    reason:
+      "Probability product를 additive information scale로 바꾸고 낮은 probability에 큰 비용을 줍니다.",
+  },
+  {
+    from: "surprisal",
+    to: "entropy",
+    relation: "produces",
+    reason:
+      "실제 distribution에서 self-information을 expectation으로 평균냅니다.",
+  },
+  {
+    from: "expectation",
+    to: "entropy",
+    relation: "prerequisite",
+    reason: "사건별 surprisal을 probability-weighted mean으로 바꿉니다.",
+  },
+  {
+    from: "sample-mean",
+    to: "empirical-risk",
+    relation: "produces",
+    reason: "관측 sample의 loss를 평균내 population risk를 추정합니다.",
+  },
+  {
+    from: "surprisal",
+    to: "cross-entropy-nll",
+    relation: "produces",
+    reason:
+      "Model probability로 계산한 사건별 surprisal을 실제 distribution에서 평균냅니다.",
+  },
+  {
+    from: "expectation",
+    to: "cross-entropy-nll",
+    relation: "prerequisite",
+    reason:
+      "사건별 negative log probability를 distribution 전체의 평균 비용으로 만듭니다.",
+  },
+  {
+    from: "log-product-rule",
+    to: "maximum-likelihood",
+    relation: "prerequisite",
+    reason: "Sample likelihood의 곱을 log-likelihood의 합으로 바꿉니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "maximum-likelihood",
+    relation: "optimizes",
+    reason:
+      "Negative log-likelihood 최소화는 같은 data model에서 likelihood 최대화와 같은 parameter를 고릅니다.",
+  },
+  {
+    from: "entropy",
+    to: "kl-divergence",
+    relation: "prerequisite",
+    reason:
+      "Cross-entropy에서 source 자체의 irreducible entropy를 빼 model mismatch를 분리합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "kl-divergence",
+    relation: "produces",
+    reason: "H(P,Q)−H(P)가 forward KL divergence입니다.",
+  },
+  {
+    from: "prediction-contract",
+    to: "likelihood-contract",
+    relation: "prerequisite",
+    reason:
+      "Target의 관측 구조가 conditional distribution과 output parameterization을 제한합니다.",
+  },
+  {
+    from: "likelihood-contract",
+    to: "cross-entropy-nll",
+    relation: "produces",
+    reason:
+      "Categorical observation model을 선택하면 cross-entropy NLL이 나옵니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "fused-softmax-cross-entropy-gradient",
+    relation: "produces",
+    reason:
+      "Categorical logits 경로를 softmax와 함께 미분하면 p−y gradient를 얻습니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "token-embedding",
+    relation: "prerequisite",
+    reason: "Discrete token ID를 d_model coordinate vector로 바꿉니다.",
+  },
+  {
+    from: "token-embedding",
+    to: "position-signal",
+    relation: "prerequisite",
+    reason:
+      "순서 정보가 없는 token representation에 위치를 구분할 단서를 결합합니다.",
+  },
+  {
+    from: "fixed-context-bottleneck",
+    to: "differentiable-attention-read",
+    relation: "produces",
+    reason:
+      "Decoder가 source 위치별 state를 매 step 다시 읽는 interface의 필요성을 드러냈습니다.",
+  },
+  {
+    from: "attention-query-key-value",
+    to: "differentiable-attention-read",
+    relation: "prerequisite",
+    reason:
+      "무엇을 찾고, 무엇과 비교하며, 실제로 무엇을 가져올지 역할을 분리합니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "differentiable-attention-read",
+    relation: "prerequisite",
+    reason: "한 query의 여러 score를 합이 1인 read weight로 바꿉니다.",
+  },
+  {
+    from: "affine-layer",
+    to: "additive-attention",
+    relation: "prerequisite",
+    reason:
+      "차원이 다른 query와 key를 공통 attention hidden space로 투영합니다.",
+  },
+  {
+    from: "tanh-activation",
+    to: "additive-attention",
+    relation: "prerequisite",
+    reason:
+      "Projected query와 key의 합에 nonlinear compatibility feature를 만듭니다.",
+  },
+  {
+    from: "additive-attention",
+    to: "differentiable-attention-read",
+    relation: "produces",
+    reason: "Query–key compatibility를 계산하는 첫 단계의 score를 제공합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "bilinear-attention-score",
+    relation: "prerequisite",
+    reason:
+      "Learned transform을 사이에 둔 qᵀWk도 두 vector의 scalar compatibility를 계산합니다.",
+  },
+  {
+    from: "bilinear-attention-score",
+    to: "differentiable-attention-read",
+    relation: "produces",
+    reason:
+      "Additive scorer와 같은 normalize·aggregate 경로에 넣을 score를 만듭니다.",
+  },
+  {
+    from: "dot-product",
+    to: "scaled-dot-product-attention",
+    relation: "prerequisite",
+    reason: "Query와 key 방향의 일치 정도를 score로 계산합니다.",
+  },
+  {
+    from: "variance",
+    to: "scaled-dot-product-attention",
+    relation: "constrains",
+    reason:
+      "Head dimension이 커질 때 dot-product logit의 typical scale이 커지는 이유를 설명합니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "scaled-dot-product-attention",
+    relation: "prerequisite",
+    reason: "각 query row의 허용 key score를 합이 1인 read weight로 바꿉니다.",
+  },
+  {
+    from: "attention-visibility",
+    to: "scaled-dot-product-attention",
+    relation: "constrains",
+    reason: "Softmax 전에 읽을 수 없는 query–key pair를 제외합니다.",
+  },
+  {
+    from: "attention-query-key-value",
+    to: "self-attention",
+    relation: "extends",
+    reason:
+      "세 역할의 source를 같은 input sequence의 서로 다른 projection으로 정합니다.",
+  },
+  {
+    from: "differentiable-attention-read",
+    to: "self-attention",
+    relation: "extends",
+    reason:
+      "Score·normalize·aggregate 계약을 같은 sequence 안의 memory read에 적용합니다.",
+  },
+  {
+    from: "scaled-dot-product-attention",
+    to: "self-attention",
+    relation: "produces",
+    reason:
+      "현대 Transformer self-attention head의 기본 read 연산을 구성합니다.",
+  },
+  {
+    from: "self-attention",
+    to: "multi-head-attention",
+    relation: "extends",
+    reason:
+      "서로 다른 learned projection을 가진 여러 attention head를 병렬로 계산합니다.",
+  },
+  {
+    from: "scaled-dot-product-attention",
+    to: "transformer-block",
+    relation: "prerequisite",
+    reason: "Block의 token-axis mixer를 구성합니다.",
+  },
+  {
+    from: "multi-head-attention",
+    to: "transformer-block",
+    relation: "prerequisite",
+    reason:
+      "여러 head의 output을 model dimension으로 결합한 token-axis update를 제공합니다.",
+  },
+  {
+    from: "nonlinear-activation",
+    to: "transformer-block",
+    relation: "prerequisite",
+    reason:
+      "Position-wise FFN이 feature-axis nonlinear transformation을 만듭니다.",
+  },
+  {
+    from: "residual-normalization",
+    to: "transformer-block",
+    relation: "constrains",
+    reason: "Attention·FFN update가 쌓이는 순서와 signal scale을 정합니다.",
+  },
+  {
+    from: "transformer-block",
+    to: "language-model-policy",
+    relation: "produces",
+    reason:
+      "Causal visibility로 쌓은 hidden state를 next-token distribution으로 투영합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "language-model-policy",
+    relation: "optimizes",
+    reason:
+      "실제 next token의 conditional likelihood를 높이도록 parameter를 학습합니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "empirical-scaling-law",
+    relation: "prerequisite",
+    reason: "Parameter·token 수에 대한 power-law 감소 항을 읽습니다.",
+  },
+  {
+    from: "empirical-risk",
+    to: "empirical-scaling-law",
+    relation: "evaluates",
+    reason:
+      "Held-out language-model loss를 scale별로 관측하고 경험 곡선을 fit합니다.",
+  },
+  {
+    from: "optimization-objective",
+    to: "minimizer",
+    relation: "produces",
+    reason: "Objective를 가장 작게 만드는 허용 입력 위치를 찾습니다.",
+  },
+  {
+    from: "convex-function",
+    to: "minimizer",
+    relation: "constrains",
+    reason: "Convex 함수에서는 local minimum이 global minimum입니다.",
+  },
+  {
+    from: "gradient",
+    to: "gradient-descent",
+    relation: "prerequisite",
+    reason: "현재 위치에서 local descent direction을 정합니다.",
+  },
+  {
+    from: "optimization-objective",
+    to: "gradient-descent",
+    relation: "optimizes",
+    reason: "Gradient descent가 반복해서 줄이려는 scalar 기준입니다.",
+  },
+  {
+    from: "learning-rate",
+    to: "gradient-descent",
+    relation: "constrains",
+    reason: "Descent direction을 실제 step 크기로 바꿉니다.",
+  },
+  {
+    from: "l-smoothness",
+    to: "learning-rate",
+    relation: "constrains",
+    reason: "Gradient 변화의 상한이 안전한 fixed step 범위를 제한합니다.",
+  },
+  {
+    from: "convex-function",
+    to: "strong-convexity",
+    relation: "extends",
+    reason: "Quadratic lower curvature 조건을 추가합니다.",
+  },
+  {
+    from: "l-smoothness",
+    to: "condition-number",
+    relation: "produces",
+    reason: "가장 큰 curvature scale L이 비율의 분자입니다.",
+  },
+  {
+    from: "strong-convexity",
+    to: "condition-number",
+    relation: "produces",
+    reason: "가장 작은 curvature scale μ가 비율의 분모입니다.",
+  },
+  {
+    from: "convex-function",
+    to: "optimization-convergence",
+    relation: "prerequisite",
+    reason: "Local progress를 global optimum과 연결하는 구조를 제공합니다.",
+  },
+  {
+    from: "l-smoothness",
+    to: "optimization-convergence",
+    relation: "prerequisite",
+    reason: "Local linear model의 오차와 safe step을 제한합니다.",
+  },
+  {
+    from: "strong-convexity",
+    to: "optimization-convergence",
+    relation: "prerequisite",
+    reason: "Geometric objective-gap contraction을 가능하게 합니다.",
+  },
+  {
+    from: "gradient-descent",
+    to: "optimization-convergence",
+    relation: "produces",
+    reason: "정리가 분석하는 반복 update rule입니다.",
+  },
+  {
+    from: "gradient",
+    to: "stationary-point",
+    relation: "evaluates",
+    reason: "Gradient가 0인 위치를 first-order stationary point로 판별합니다.",
+  },
+  {
+    from: "convex-function",
+    to: "stationary-point",
+    relation: "contrasts",
+    reason:
+      "Convex differentiable 함수에서는 stationary point가 global minimizer지만 nonconvex에서는 그렇지 않습니다.",
+  },
+  {
+    from: "derivative",
+    to: "step-activation",
+    relation: "contrasts",
+    reason:
+      "Step function은 threshold 밖에서 derivative가 0이고 threshold에서는 표준 derivative가 없습니다.",
+  },
+  {
+    from: "subgradient",
+    to: "relu-activation",
+    relation: "prerequisite",
+    reason:
+      "ReLU의 0에서 표준 derivative와 구현이 선택한 backward convention을 구분합니다.",
+  },
+  {
+    from: "chain-rule",
+    to: "backpropagation",
+    relation: "prerequisite",
+    reason:
+      "Backpropagation은 계산 그래프의 local derivative를 chain rule로 재사용합니다.",
+  },
+  {
+    from: "function-composition",
+    to: "computational-graph",
+    relation: "produces",
+    reason: "합성 함수의 중간값과 dependency를 node와 edge로 드러냅니다.",
+  },
+  {
+    from: "computational-graph",
+    to: "autodiff-tape",
+    relation: "produces",
+    reason:
+      "실행된 graph와 local backward에 필요한 중간값을 forward 중 기록합니다.",
+  },
+  {
+    from: "computational-graph",
+    to: "reverse-mode-autodiff",
+    relation: "prerequisite",
+    reason: "Output에서 input 방향으로 dependency의 역순을 따라갑니다.",
+  },
+  {
+    from: "chain-rule",
+    to: "reverse-mode-autodiff",
+    relation: "prerequisite",
+    reason:
+      "각 operation의 local derivative를 전체 loss derivative로 연결합니다.",
+  },
+  {
+    from: "jacobian-matrix",
+    to: "vector-jacobian-product",
+    relation: "prerequisite",
+    reason:
+      "명시적 Jacobian 전체 대신 현재 cotangent에 필요한 product만 계산합니다.",
+  },
+  {
+    from: "vector-jacobian-product",
+    to: "reverse-mode-autodiff",
+    relation: "produces",
+    reason: "Reverse traversal의 operation별 backward rule이 VJP입니다.",
+  },
+  {
+    from: "computational-graph",
+    to: "fanout-gradient-accumulation",
+    relation: "produces",
+    reason:
+      "같은 node가 여러 child에 사용되면 path별 derivative contribution이 생깁니다.",
+  },
+  {
+    from: "fanout-gradient-accumulation",
+    to: "reverse-mode-autodiff",
+    relation: "prerequisite",
+    reason: "여러 downstream branch의 cotangent를 더한 뒤 앞쪽으로 전달합니다.",
+  },
+  {
+    from: "reverse-mode-autodiff",
+    to: "backpropagation",
+    relation: "extends",
+    reason:
+      "Backpropagation은 reverse-mode autodiff를 differentiable network training에 적용합니다.",
+  },
+  {
+    from: "prediction-contract",
+    to: "fused-softmax-cross-entropy-gradient",
+    relation: "prerequisite",
+    reason:
+      "Mutually exclusive categorical target과 logit output 계약을 사용합니다.",
+  },
+  {
+    from: "fused-softmax-cross-entropy-gradient",
+    to: "batched-linear-backward",
+    relation: "produces",
+    reason:
+      "Logit gradient가 마지막 linear layer의 upstream matrix G가 됩니다.",
+  },
+  {
+    from: "batch-linear-layer",
+    to: "batched-linear-backward",
+    relation: "prerequisite",
+    reason:
+      "Forward Z=XW+b의 shape와 parameter sharing이 backward 식을 정합니다.",
+  },
+  {
+    from: "gradient",
+    to: "training-intervention",
+    relation: "prerequisite",
+    reason:
+      "Clipping·scaling·optimizer regularization이 gradient 또는 update 경로의 서로 다른 지점에 개입합니다.",
+  },
+  {
+    from: "dot-product",
+    to: "linear-score",
+    relation: "prerequisite",
+    reason: "퍼셉트론의 wᵀx는 weight와 input의 dot product입니다.",
+  },
+  {
+    from: "euclidean-norm",
+    to: "classification-margin",
+    relation: "prerequisite",
+    reason:
+      "Weight를 unit norm으로 맞춰 signed score를 경계까지의 거리로 읽습니다.",
+  },
+  {
+    from: "cauchy-schwarz",
+    to: "perceptron-convergence",
+    relation: "prerequisite",
+    reason:
+      "정답 방향으로의 누적 전진량을 현재 weight의 전체 길이로 제한합니다.",
+  },
+  {
+    from: "feature-target",
+    to: "tensor-batch",
+    relation: "produces",
+    reason: "여러 input·target example을 한 번에 계산하도록 batch로 묶습니다.",
+  },
+  {
+    from: "feature-target",
+    to: "train-validation-test",
+    relation: "prerequisite",
+    reason: "같은 문제 계약의 example을 학습·선택·최종 평가 경계로 나눕니다.",
+  },
+  {
+    from: "tensor-batch",
+    to: "forward-pass",
+    relation: "prerequisite",
+    reason: "현재 batch가 model 계산의 입력이 됩니다.",
+  },
+  {
+    from: "parameterized-model",
+    to: "forward-pass",
+    relation: "prerequisite",
+    reason: "현재 parameter θ를 고정하고 입력 x에서 fθ(x)를 계산해야 model output을 관측할 수 있습니다.",
+  },
+  {
+    from: "forward-pass",
+    to: "representation-learning",
+    relation: "produces",
+    reason: "각 층의 중간값이 task에 맞게 학습되는 representation입니다.",
+  },
+  {
+    from: "depth-efficiency",
+    to: "representation-learning",
+    relation: "extends",
+    reason: "깊은 함수 합성은 중간 표현을 여러 단계에서 재사용합니다.",
+  },
+  {
+    from: "forward-pass",
+    to: "loss-objective",
+    relation: "produces",
+    reason: "Prediction과 target을 비교해 scalar objective를 만듭니다.",
+  },
+  {
+    from: "loss-objective",
+    to: "backpropagation",
+    relation: "prerequisite",
+    reason: "출력의 scalar loss에서 gradient 계산을 시작합니다.",
+  },
+  {
+    from: "backpropagation",
+    to: "gradient",
+    relation: "produces",
+    reason: "Chain rule로 각 parameter의 derivative를 계산합니다.",
+  },
+  {
+    from: "gradient",
+    to: "optimizer-update",
+    relation: "optimizes",
+    reason: "Optimizer가 gradient를 이용해 다음 θ를 정합니다.",
+  },
+  {
+    from: "gradient-descent",
+    to: "optimizer-update",
+    relation: "prerequisite",
+    reason:
+      "Negative gradient와 step size라는 기준 update를 optimizer state로 확장합니다.",
+  },
+  {
+    from: "stochastic-gradient-estimator",
+    to: "sgd-update",
+    relation: "prerequisite",
+    reason:
+      "Mini-batch가 추정한 direction을 실제 parameter update에 사용합니다.",
+  },
+  {
+    from: "learning-rate",
+    to: "sgd-update",
+    relation: "constrains",
+    reason: "Gradient estimate를 parameter 이동량으로 바꿉니다.",
+  },
+  {
+    from: "sgd-update",
+    to: "optimizer-update",
+    relation: "produces",
+    reason: "State가 없는 기준 optimizer update를 제공합니다.",
+  },
+  {
+    from: "sample-mean",
+    to: "gradient-accumulation",
+    relation: "prerequisite",
+    reason:
+      "Micro-batch gradient들의 평균으로 effective batch gradient를 만듭니다.",
+  },
+  {
+    from: "gradient-accumulation",
+    to: "sgd-update",
+    relation: "produces",
+    reason: "여러 backward 결과를 한 update에 사용할 gradient로 축약합니다.",
+  },
+  {
+    from: "expectation",
+    to: "exponential-moving-average",
+    relation: "extends",
+    reason:
+      "동일 weight 평균 대신 시간에 따라 감소하는 weight로 history를 요약합니다.",
+  },
+  {
+    from: "exponential-moving-average",
+    to: "momentum-state",
+    relation: "produces",
+    reason: "과거 gradient 방향을 재귀 state 하나로 누적합니다.",
+  },
+  {
+    from: "momentum-state",
+    to: "optimizer-update",
+    relation: "extends",
+    reason: "현재 gradient뿐 아니라 과거 방향 state를 update에 사용합니다.",
+  },
+  {
+    from: "exponential-moving-average",
+    to: "raw-gradient-moments",
+    relation: "produces",
+    reason: "Gradient와 squared gradient의 최근 history를 각각 요약합니다.",
+  },
+  {
+    from: "variance",
+    to: "raw-gradient-moments",
+    relation: "contrasts",
+    reason:
+      "Second raw moment E[g²]와 centered variance E[(g−E[g])²]를 구분합니다.",
+  },
+  {
+    from: "raw-gradient-moments",
+    to: "ema-bias-correction",
+    relation: "prerequisite",
+    reason: "0에서 시작한 두 EMA의 초기 shrink를 보정합니다.",
+  },
+  {
+    from: "raw-gradient-moments",
+    to: "adaptive-preconditioning",
+    relation: "produces",
+    reason:
+      "Squared-gradient EMA의 제곱근으로 coordinate별 update scale을 정규화합니다.",
+  },
+  {
+    from: "ema-bias-correction",
+    to: "adaptive-preconditioning",
+    relation: "prerequisite",
+    reason: "초기 state scale을 보정한 moment를 update에 사용합니다.",
+  },
+  {
+    from: "adaptive-preconditioning",
+    to: "optimizer-update",
+    relation: "extends",
+    reason: "Global learning rate를 coordinate별 effective step으로 바꿉니다.",
+  },
+  {
+    from: "adaptive-preconditioning",
+    to: "decoupled-weight-decay",
+    relation: "contrasts",
+    reason:
+      "Task gradient의 adaptive scale과 direct parameter shrinkage를 분리합니다.",
+  },
+  {
+    from: "decoupled-weight-decay",
+    to: "optimizer-update",
+    relation: "extends",
+    reason: "Adaptive task update에 별도의 multiplicative shrink를 추가합니다.",
+  },
+  {
+    from: "forward-pass",
+    to: "training-step",
+    relation: "prerequisite",
+    reason: "Prediction과 activation을 만드는 첫 단계입니다.",
+  },
+  {
+    from: "loss-objective",
+    to: "training-step",
+    relation: "prerequisite",
+    reason: "Update 방향을 정할 scalar 기준입니다.",
+  },
+  {
+    from: "backpropagation",
+    to: "training-step",
+    relation: "prerequisite",
+    reason: "Loss의 책임을 parameter별 gradient로 전파합니다.",
+  },
+  {
+    from: "optimizer-update",
+    to: "training-step",
+    relation: "prerequisite",
+    reason: "다음 반복에 사용할 parameter를 갱신합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "generalization",
+    relation: "evaluates",
+    reason: "학습과 선택에 쓰지 않은 data에서 성능을 분리해 봅니다.",
+  },
+  {
+    from: "parameterized-model",
+    to: "inference",
+    relation: "produces",
+    reason: "학습된 θ를 고정하고 새 입력에 prediction을 만듭니다.",
+  },
+  {
+    from: "training-step",
+    to: "compute-memory-bottleneck",
+    relation: "constrains",
+    reason:
+      "Forward·backward·update의 연산과 traffic이 실제 실행 비용을 만듭니다.",
+  },
+  {
+    from: "feature-target",
+    to: "linear-score",
+    relation: "prerequisite",
+    reason: "Input feature를 weight와 결합해 classification score를 만듭니다.",
+  },
+  {
+    from: "linear-score",
+    to: "decision-boundary",
+    relation: "produces",
+    reason: "z=0이 prediction이 바뀌는 hyperplane을 정합니다.",
+  },
+  {
+    from: "linear-score",
+    to: "step-activation",
+    relation: "produces",
+    reason: "Step function이 score 부호를 hard label로 바꿉니다.",
+  },
+  {
+    from: "step-activation",
+    to: "perceptron-update",
+    relation: "prerequisite",
+    reason: "Target과 hard prediction의 차이로 update 여부와 방향을 정합니다.",
+  },
+  {
+    from: "decision-boundary",
+    to: "classification-margin",
+    relation: "produces",
+    reason: "Signed score로 sample과 boundary 사이의 여유를 측정합니다.",
+  },
+  {
+    from: "classification-margin",
+    to: "perceptron-convergence",
+    relation: "prerequisite",
+    reason:
+      "Positive margin과 bounded norm이 finite mistake bound의 핵심 전제입니다.",
+  },
+  {
+    from: "perceptron-update",
+    to: "perceptron-convergence",
+    relation: "produces",
+    reason: "Mistake-driven update가 separator 방향으로 누적됩니다.",
+  },
+  {
+    from: "decision-boundary",
+    to: "linear-separability",
+    relation: "evaluates",
+    reason: "하나의 hyperplane으로 두 class를 모두 나눌 수 있는지 확인합니다.",
+  },
+  {
+    from: "linear-separability",
+    to: "xor-problem",
+    relation: "contrasts",
+    reason: "XOR은 원래 좌표에서 선형 분리 불가능합니다.",
+  },
+  {
+    from: "xor-problem",
+    to: "multilayer-perceptron",
+    relation: "extends",
+    reason: "중간 feature를 만든 뒤 output에서 다시 분리합니다.",
+  },
+  {
+    from: "nonlinear-activation",
+    to: "multilayer-perceptron",
+    relation: "prerequisite",
+    reason: "Activation이 없으면 여러 affine layer가 하나로 collapse합니다.",
+  },
+  {
+    from: "multilayer-perceptron",
+    to: "representation-learning",
+    relation: "produces",
+    reason: "Hidden layer가 task에 맞는 intermediate feature를 만듭니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "affine-layer",
+    relation: "prerequisite",
+    reason: "Layer input과 output을 coordinate vector로 읽습니다.",
+  },
+  {
+    from: "dot-product",
+    to: "affine-layer",
+    relation: "prerequisite",
+    reason:
+      "Output unit 하나는 input과 weight column의 dot product에 bias를 더해 만듭니다.",
+  },
+  {
+    from: "affine-layer",
+    to: "affine-collapse",
+    relation: "produces",
+    reason:
+      "Affine layer만 연속하면 matrix와 bias를 effective transform 하나로 묶을 수 있습니다.",
+  },
+  {
+    from: "affine-collapse",
+    to: "nonlinear-activation",
+    relation: "contrasts",
+    reason: "Nonlinearity가 pure affine chain의 exact collapse를 막습니다.",
+  },
+  {
+    from: "step-activation",
+    to: "nonlinear-activation",
+    relation: "extends",
+    reason:
+      "Hard threshold의 비선형 결정에서 gradient 기반 학습이 가능한 activation으로 확장합니다.",
+  },
+  {
+    from: "nonlinear-activation",
+    to: "sigmoid-activation",
+    relation: "extends",
+    reason: "Sigmoid는 0–1 범위의 부드러운 nonlinear mapping을 제공합니다.",
+  },
+  {
+    from: "sigmoid-activation",
+    to: "activation-saturation",
+    relation: "constrains",
+    reason: "큰 양수·음수에서 sigmoid derivative가 0에 가까워집니다.",
+  },
+  {
+    from: "sigmoid-activation",
+    to: "tanh-activation",
+    relation: "extends",
+    reason:
+      "Tanh는 sigmoid를 이동·scale해 −1과 1 사이의 signed output을 만듭니다.",
+  },
+  {
+    from: "activation-saturation",
+    to: "relu-activation",
+    relation: "contrasts",
+    reason: "ReLU는 양수 구간에서 포화하지 않고 derivative 1을 유지합니다.",
+  },
+  {
+    from: "relu-activation",
+    to: "dying-relu",
+    relation: "constrains",
+    reason: "음수 구간의 derivative 0이 뉴런의 update path를 끊을 수 있습니다.",
+  },
+  {
+    from: "dying-relu",
+    to: "negative-slope-rectifier",
+    relation: "extends",
+    reason: "음수 구간에 작은 slope를 남겨 끊긴 gradient 경로를 복원합니다.",
+  },
+  {
+    from: "activation-saturation",
+    to: "self-normalizing-activation",
+    relation: "extends",
+    reason:
+      "정해진 조건에서 activation 평균·분산의 안정된 fixed point를 겨냥합니다.",
+  },
+  {
+    from: "relu-activation",
+    to: "smooth-self-gating",
+    relation: "extends",
+    reason: "Hard 0/1 threshold를 입력 크기에 따른 smooth gate로 바꿉니다.",
+  },
+  {
+    from: "smooth-self-gating",
+    to: "gated-ffn",
+    relation: "extends",
+    reason:
+      "SwiGLU는 self-gate를 별도 gate·value projection의 multiplicative structure로 확장합니다.",
+  },
+  {
+    from: "affine-layer",
+    to: "multilayer-perceptron",
+    relation: "produces",
+    reason: "MLP는 affine layer와 nonlinear activation을 반복해 구성합니다.",
+  },
+  {
+    from: "multilayer-perceptron",
+    to: "hidden-representation",
+    relation: "produces",
+    reason:
+      "각 hidden layer activation이 다음 layer가 사용할 새 coordinate가 됩니다.",
+  },
+  {
+    from: "tensor-batch",
+    to: "batch-linear-layer",
+    relation: "prerequisite",
+    reason: "여러 input vector를 batch matrix의 row로 묶습니다.",
+  },
+  {
+    from: "affine-layer",
+    to: "batch-linear-layer",
+    relation: "extends",
+    reason:
+      "한 vector의 affine 계산을 공유 parameter로 B개 sample에 vectorize합니다.",
+  },
+  {
+    from: "hidden-representation",
+    to: "prediction-contract",
+    relation: "produces",
+    reason:
+      "마지막 layer가 learned representation을 target distribution의 parameter로 바꿉니다.",
+  },
+  {
+    from: "feature-target",
+    to: "prediction-contract",
+    relation: "prerequisite",
+    reason:
+      "Target의 통계적 의미가 output dimension·activation·loss를 결정합니다.",
+  },
+  {
+    from: "initialization-scale",
+    to: "hidden-representation",
+    relation: "constrains",
+    reason:
+      "초기 signal scale이 depth를 지날 때 activation이 포화·소실·폭발하는 정도를 바꿉니다.",
+  },
+  {
+    from: "coordinate-vector",
+    to: "rnn-state-transition",
+    relation: "prerequisite",
+    reason: "각 시점 input과 hidden state를 정해진 차원의 vector로 표현합니다.",
+  },
+  {
+    from: "affine-layer",
+    to: "rnn-state-transition",
+    relation: "prerequisite",
+    reason: "Input과 이전 state를 같은 hidden 좌표로 projection해 더합니다.",
+  },
+  {
+    from: "tanh-activation",
+    to: "rnn-state-transition",
+    relation: "prerequisite",
+    reason:
+      "Vanilla Elman cell이 affine preactivation을 bounded hidden state로 바꿉니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "lossy-recurrent-state",
+    relation: "produces",
+    reason:
+      "매 시점 같은 크기의 state를 다시 만들면서 과거 정보를 task-dependent하게 압축합니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "time-unrolling",
+    relation: "produces",
+    reason:
+      "반복 transition의 실제 dependency를 finite time-axis graph로 펼쳐 표시합니다.",
+  },
+  {
+    from: "time-unrolling",
+    to: "rnn-language-model",
+    relation: "produces",
+    reason:
+      "각 시점 state에서 다음 token distribution을 내는 autoregressive 계산을 구성합니다.",
+  },
+  {
+    from: "lossy-recurrent-state",
+    to: "rnn-language-model",
+    relation: "prerequisite",
+    reason:
+      "Language-model output은 원문 전체가 아니라 현재 recurrent summary를 조건으로 사용합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "rnn-language-model",
+    relation: "optimizes",
+    reason:
+      "각 시점의 실제 다음 token probability를 높이도록 shared transition을 학습합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "perplexity",
+    relation: "produces",
+    reason:
+      "평균 token NLL을 exponential scale로 되돌려 같은 evaluation contract에서 비교합니다.",
+  },
+  {
+    from: "exponentiation",
+    to: "perplexity",
+    relation: "prerequisite",
+    reason: "Log scale의 평균 NLL을 양의 perplexity scale로 역변환합니다.",
+  },
+  {
+    from: "time-unrolling",
+    to: "bptt",
+    relation: "prerequisite",
+    reason:
+      "Finite graph의 reverse order로 recurrent computation을 미분합니다.",
+  },
+  {
+    from: "backpropagation",
+    to: "bptt",
+    relation: "extends",
+    reason:
+      "일반 reverse-mode backpropagation을 time-unrolled shared graph에 적용합니다.",
+  },
+  {
+    from: "chain-rule",
+    to: "recurrent-jacobian-product",
+    relation: "prerequisite",
+    reason:
+      "멀리 떨어진 state 사이의 derivative를 local transition Jacobian 합성으로 계산합니다.",
+  },
+  {
+    from: "jacobian-matrix",
+    to: "recurrent-jacobian-product",
+    relation: "prerequisite",
+    reason:
+      "각 recurrent transition의 vector-to-vector local derivative를 matrix로 나타냅니다.",
+  },
+  {
+    from: "bptt",
+    to: "recurrent-jacobian-product",
+    relation: "produces",
+    reason:
+      "시간 역방향 gradient가 반복 Jacobian product를 지나 앞 시점으로 전달됩니다.",
+  },
+  {
+    from: "recurrent-jacobian-product",
+    to: "gradient-norm-clipping",
+    relation: "constrains",
+    reason: "반복 곱으로 커진 전체 gradient norm을 update 전에 제한합니다.",
+  },
+  {
+    from: "bptt",
+    to: "truncated-bptt",
+    relation: "extends",
+    reason:
+      "전체 unroll 대신 정해진 chunk horizon까지만 derivative graph를 유지합니다.",
+  },
+  {
+    from: "lossy-recurrent-state",
+    to: "truncated-bptt",
+    relation: "prerequisite",
+    reason:
+      "State 값은 chunk 사이로 넘기되 이전 graph와의 derivative 연결은 detach합니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "lstm-dual-state",
+    relation: "extends",
+    reason:
+      "하나의 hidden state transition을 additive cell path와 공개 hidden path로 분리합니다.",
+  },
+  {
+    from: "sigmoid-activation",
+    to: "lstm-soft-gates",
+    relation: "prerequisite",
+    reason: "Gate logit을 channel별 0–1 control ratio로 변환합니다.",
+  },
+  {
+    from: "tanh-activation",
+    to: "lstm-dual-state",
+    relation: "prerequisite",
+    reason:
+      "Candidate content와 공개 cell value의 signed bounded transform에 사용합니다.",
+  },
+  {
+    from: "lstm-soft-gates",
+    to: "lstm-dual-state",
+    relation: "constrains",
+    reason:
+      "Forget·input·output ratio가 cell 보존·쓰기·공개 경로를 조절합니다.",
+  },
+  {
+    from: "lstm-dual-state",
+    to: "forget-gate-retention",
+    relation: "produces",
+    reason:
+      "Cell의 additive direct edge를 미분하면 forget gate가 retention factor로 남습니다.",
+  },
+  {
+    from: "recurrent-jacobian-product",
+    to: "forget-gate-retention",
+    relation: "contrasts",
+    reason:
+      "Vanilla 전체 transition Jacobian 곱과 LSTM cell direct contribution을 구분합니다.",
+  },
+  {
+    from: "lstm-soft-gates",
+    to: "gru-state-update",
+    relation: "extends",
+    reason:
+      "보존·쓰기 정책을 update·reset gate와 single-state interpolation으로 다시 parameterize합니다.",
+  },
+  {
+    from: "lstm-dual-state",
+    to: "gru-state-update",
+    relation: "contrasts",
+    reason:
+      "LSTM의 C·h 두 state와 GRU의 single hidden state 계산 계약이 다릅니다.",
+  },
+  {
+    from: "gru-state-update",
+    to: "recurrent-deployment-contract",
+    relation: "evaluates",
+    reason:
+      "LSTM과 비교할 때 parameter·state·kernel·quality budget을 맞춥니다.",
+  },
+  {
+    from: "lstm-dual-state",
+    to: "recurrent-deployment-contract",
+    relation: "evaluates",
+    reason:
+      "Streaming state와 timestep dependency가 deployment cost를 정합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "conditional-sequence-model",
+    relation: "prerequisite",
+    reason:
+      "Source와 target prefix를 조건으로 다음 token의 probability를 정의합니다.",
+  },
+  {
+    from: "probability-chain-rule",
+    to: "conditional-sequence-model",
+    relation: "prerequisite",
+    reason:
+      "Target sequence 전체의 joint probability를 prefix별 conditional product로 분해합니다.",
+  },
+  {
+    from: "lstm-dual-state",
+    to: "encoder-decoder-state-handoff",
+    relation: "prerequisite",
+    reason:
+      "초기 Seq2Seq는 encoder 마지막 hidden·cell state를 decoder initial state로 변환합니다.",
+  },
+  {
+    from: "conditional-sequence-model",
+    to: "encoder-decoder-state-handoff",
+    relation: "produces",
+    reason: "Source condition을 decoder에 제공하는 초기 구현 interface입니다.",
+  },
+  {
+    from: "conditional-sequence-model",
+    to: "autoregressive-decoding",
+    relation: "produces",
+    reason: "Chain-rule의 conditional을 실제 prefix 선택 순서로 실행합니다.",
+  },
+  {
+    from: "log-product-rule",
+    to: "beam-search",
+    relation: "prerequisite",
+    reason:
+      "Prefix probability product를 누적 log-probability의 합으로 비교합니다.",
+  },
+  {
+    from: "autoregressive-decoding",
+    to: "beam-search",
+    relation: "extends",
+    reason:
+      "Greedy prefix 하나 대신 제한된 수의 high-score prefix를 유지합니다.",
+  },
+  {
+    from: "encoder-decoder-state-handoff",
+    to: "fixed-context-bottleneck",
+    relation: "constrains",
+    reason:
+      "마지막 state 하나만 넘기면 decoder가 source 위치별 정보를 다시 조회할 수 없습니다.",
+  },
+  {
+    from: "conditional-sequence-model",
+    to: "teacher-forcing",
+    relation: "prerequisite",
+    reason:
+      "각 target conditional을 정답 prefix에서 supervised loss로 계산합니다.",
+  },
+  {
+    from: "teacher-forcing",
+    to: "exposure-bias",
+    relation: "produces",
+    reason:
+      "Training의 정답 prefix와 inference의 generated prefix 사이 조건 차이를 만듭니다.",
+  },
+  {
+    from: "language-model-policy",
+    to: "sft",
+    relation: "prerequisite",
+    reason: "SFT는 policy의 token likelihood를 update합니다.",
+  },
+  {
+    from: "cross-entropy-nll",
+    to: "sft",
+    relation: "optimizes",
+    reason: "Demonstration token NLL이 SFT의 기본 loss입니다.",
+  },
+  {
+    from: "demonstration",
+    to: "response-loss-mask",
+    relation: "produces",
+    reason:
+      "Serialized role boundary에서 어떤 assistant target을 학습할지 정합니다.",
+  },
+  {
+    from: "response-loss-mask",
+    to: "sft",
+    relation: "constrains",
+    reason:
+      "Prompt는 context로 유지하면서 response target만 NLL update에 포함합니다.",
+  },
+  {
+    from: "demonstration",
+    to: "teacher-forcing",
+    relation: "prerequisite",
+    reason:
+      "Dataset의 정답 response prefix를 다음-token condition으로 제공합니다.",
+  },
+  {
+    from: "demonstration",
+    to: "sequence-packing",
+    relation: "prerequisite",
+    reason:
+      "여러 example을 한 sequence에 배치하되 각 sample boundary를 보존합니다.",
+  },
+  {
+    from: "sequence-packing",
+    to: "sft",
+    relation: "optimizes",
+    reason: "Padding token 비율을 줄여 training token utilization을 높입니다.",
+  },
+  {
+    from: "behavior-target",
+    to: "feedback-contract",
+    relation: "produces",
+    reason: "추상적인 목표를 label 가능한 단위로 내려야 합니다.",
+  },
+  {
+    from: "feedback-contract",
+    to: "pairwise-preference",
+    relation: "produces",
+    reason: "두 response의 상대 순서를 수집하는 경로입니다.",
+  },
+  {
+    from: "feedback-contract",
+    to: "binary-feedback",
+    relation: "produces",
+    reason: "개별 response의 승인·비승인을 수집하는 경로입니다.",
+  },
+  {
+    from: "feedback-contract",
+    to: "constitution",
+    relation: "produces",
+    reason: "판단 기준을 자연어 principle로 드러내는 경로입니다.",
+  },
+  {
+    from: "pairwise-preference",
+    to: "reward-model",
+    relation: "optimizes",
+    reason: "Pair ordering을 scalar score 차이로 압축합니다.",
+  },
+  {
+    from: "reward-model",
+    to: "ppo-rlhf",
+    relation: "optimizes",
+    reason: "현재 rollout에 sequence reward를 제공합니다.",
+  },
+  {
+    from: "online-rollout",
+    to: "ppo-rlhf",
+    relation: "prerequisite",
+    reason: "PPO는 현재 policy trajectory에서 update합니다.",
+  },
+  {
+    from: "pairwise-preference",
+    to: "dpo",
+    relation: "optimizes",
+    reason: "Pair를 direct policy loss에 넣습니다.",
+  },
+  {
+    from: "pairwise-preference",
+    to: "orpo",
+    relation: "optimizes",
+    reason: "SFT와 pair separation을 함께 학습합니다.",
+  },
+  {
+    from: "binary-feedback",
+    to: "kto",
+    relation: "optimizes",
+    reason: "짝 없는 desirable·undesirable label을 사용합니다.",
+  },
+  {
+    from: "constitution",
+    to: "cai",
+    relation: "optimizes",
+    reason: "Principle로 critique와 AI preference를 만듭니다.",
+  },
+  {
+    from: "reference-policy",
+    to: "ppo-rlhf",
+    relation: "constrains",
+    reason: "KL cost의 drift 기준입니다.",
+  },
+  {
+    from: "reference-policy",
+    to: "kl-regularization",
+    relation: "prerequisite",
+    reason:
+      "두 distribution의 차이를 재려면 update 중 고정해 비교할 reference distribution이 필요합니다.",
+  },
+  {
+    from: "kl-regularization",
+    to: "ppo-rlhf",
+    relation: "constrains",
+    reason:
+      "Reward만 높이다 reference policy에서 과도하게 벗어나는 update를 KL 비용으로 제한합니다.",
+  },
+  {
+    from: "offline-preference",
+    to: "dpo",
+    relation: "prerequisite",
+    reason:
+      "DPO는 새 rollout을 수집하는 대신 고정된 chosen·rejected preference pair에서 policy를 학습합니다.",
+  },
+  {
+    from: "reference-policy",
+    to: "dpo",
+    relation: "constrains",
+    reason: "Relative log-ratio의 기준입니다.",
+  },
+  {
+    from: "reference-policy",
+    to: "kto",
+    relation: "constrains",
+    reason: "Implicit reward와 KL reference point의 기준입니다.",
+  },
+  {
+    from: "ppo-rlhf",
+    to: "independent-evaluation",
+    relation: "evaluates",
+    reason: "Reward 이외의 regression을 확인합니다.",
+  },
+  {
+    from: "dpo",
+    to: "independent-evaluation",
+    relation: "evaluates",
+    reason: "Offline pair loss와 실제 behavior를 분리해 봅니다.",
+  },
+  {
+    from: "orpo",
+    to: "independent-evaluation",
+    relation: "evaluates",
+    reason: "SFT fit과 preference improvement를 독립적으로 봅니다.",
+  },
+  {
+    from: "kto",
+    to: "independent-evaluation",
+    relation: "evaluates",
+    reason: "Binary label bias와 capability regression을 확인합니다.",
+  },
+  {
+    from: "cai",
+    to: "independent-evaluation",
+    relation: "evaluates",
+    reason: "Principle·judge가 공유하는 blind spot을 audit합니다.",
+  },
+  {
+    from: "transformer-block",
+    to: "conditional-expert-ffn",
+    relation: "extends",
+    reason:
+      "Transformer block의 dense FFN을 token별 conditional branch로 바꿉니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "token-router-topk",
+    relation: "prerequisite",
+    reason:
+      "Expert logit을 비교 가능한 routing weight로 바꾼 뒤 sparse index를 선택합니다.",
+  },
+  {
+    from: "conditional-expert-ffn",
+    to: "token-router-topk",
+    relation: "prerequisite",
+    reason: "여러 expert branch 가운데 token이 실제로 계산할 경로를 정합니다.",
+  },
+  {
+    from: "token-router-topk",
+    to: "sparse-expert-weighted-mixture",
+    relation: "produces",
+    reason: "선택된 expert index와 weight가 sparse weighted output을 만듭니다.",
+  },
+  {
+    from: "token-router-topk",
+    to: "expert-load-balance-target",
+    relation: "produces",
+    reason:
+      "Batch의 token별 Top-k 선택을 expert별 assignment count로 집계합니다.",
+  },
+  {
+    from: "expert-load-balance-target",
+    to: "expert-capacity-overflow-policy",
+    relation: "constrains",
+    reason:
+      "Peak expert load가 buffer 한도와 overflow 처리 필요성을 결정합니다.",
+  },
+  {
+    from: "conditional-expert-ffn",
+    to: "moe-total-active-parameter-ledger",
+    relation: "produces",
+    reason:
+      "전체 expert 저장량과 token별 Top-k active path를 서로 다른 장부로 분리합니다.",
+  },
+  {
+    from: "token-router-topk",
+    to: "expert-parallel-dispatch-cost",
+    relation: "produces",
+    reason:
+      "Top-k assignment가 expert 장치로 token을 보내고 결과를 되돌리는 통신을 만듭니다.",
+  },
+  {
+    from: "expert-load-balance-target",
+    to: "expert-parallel-dispatch-cost",
+    relation: "constrains",
+    reason:
+      "Hot expert와 장치별 imbalance가 all-to-all 뒤의 tail latency를 결정합니다.",
+  },
+  {
+    from: "conditional-expert-ffn",
+    to: "shared-fine-grained-expert-specialization",
+    relation: "extends",
+    reason:
+      "공통 경로와 더 작은 routed branch로 expert 역할과 조합을 다시 나눕니다.",
+  },
+  {
+    from: "rnn-state-transition",
+    to: "kda-channelwise-delta-state",
+    relation: "extends",
+    reason:
+      "Sequence prefix를 고정 state로 넘기는 recurrence에 key–value delta correction을 추가합니다.",
+  },
+  {
+    from: "lossy-recurrent-state",
+    to: "kda-channelwise-delta-state",
+    relation: "constrains",
+    reason:
+      "고정 크기 state가 과거 token을 원형 그대로 보존하지 않는 압축 경계를 설명합니다.",
+  },
+  {
+    from: "kda-channelwise-delta-state",
+    to: "kda-lower-bounded-decay",
+    relation: "constrains",
+    reason:
+      "Channelwise retention의 한-step 수치 범위를 log-decay 하한으로 제한합니다.",
+  },
+  {
+    from: "kda-channelwise-delta-state",
+    to: "kda-mla-hybrid-schedule",
+    relation: "produces",
+    reason:
+      "Recurrent compression을 세 layer 사용한 뒤 global attention으로 보강합니다.",
+  },
+  {
+    from: "multi-head-attention",
+    to: "gated-mla-latent-cache",
+    relation: "extends",
+    reason:
+      "Global multi-head attention의 KV를 latent로 압축하고 output gate를 추가합니다.",
+  },
+  {
+    from: "gated-mla-latent-cache",
+    to: "kda-mla-hybrid-schedule",
+    relation: "produces",
+    reason:
+      "주기적인 causal global interaction과 마지막 global layer를 제공합니다.",
+  },
+  {
+    from: "position-signal",
+    to: "nope-hybrid-position-signal",
+    relation: "contrasts",
+    reason:
+      "명시적 positional transform과 causal mask·ordered recurrence가 제공하는 순서 신호를 구분합니다.",
+  },
+  {
+    from: "kda-mla-hybrid-schedule",
+    to: "nope-hybrid-position-signal",
+    relation: "produces",
+    reason:
+      "KDA recurrence와 causal MLA가 명시적 position embedding 없이 순서에 민감한 경로를 만듭니다.",
+  },
+  {
+    from: "residual-normalization",
+    to: "depth-attention-residual",
+    relation: "extends",
+    reason:
+      "직전 state에 더하는 residual 경로를 depth source의 learned weighted read로 확장합니다.",
+  },
+  {
+    from: "depth-attention-residual",
+    to: "block-attnres-state-bound",
+    relation: "constrains",
+    reason:
+      "Layer별 source를 block-level representation으로 묶어 memory와 pipeline communication을 제한합니다.",
+  },
+  {
+    from: "shared-fine-grained-expert-specialization",
+    to: "latent-moe-width-factorization",
+    relation: "extends",
+    reason:
+      "Shared path는 full width에 유지하고 routed specialization만 작은 latent width로 내립니다.",
+  },
+  {
+    from: "gated-ffn",
+    to: "situ-glu-smooth-bound",
+    relation: "extends",
+    reason:
+      "SwiGLU의 multiplicative gate·value 구조에 두 개의 smooth soft cap을 적용합니다.",
+  },
+  {
+    from: "latent-moe-width-factorization",
+    to: "situ-glu-smooth-bound",
+    relation: "constrains",
+    reason:
+      "연속된 projection과 expert branch에서 커지는 activation outlier를 제한합니다.",
+  },
+  {
+    from: "expert-load-balance-target",
+    to: "quantile-expert-balancing",
+    relation: "extends",
+    reason:
+      "균등 목표 mk/n을 만족하도록 expert별 margin quantile에서 다음 dispatch bias를 계산합니다.",
+  },
+  {
+    from: "quantile-expert-balancing",
+    to: "expert-parallel-dispatch-cost",
+    relation: "constrains",
+    reason:
+      "Hot expert를 줄여 expert-parallel step의 load imbalance와 tail을 제어합니다.",
+  },
+  {
+    from: "empirical-scaling-law",
+    to: "frontier-scaling-evidence-boundary",
+    relation: "prerequisite",
+    reason:
+      "같은 loss에 도달하는 compute 비교를 model family와 관측 조건 안의 경험적 claim으로 읽습니다.",
+  },
+  {
+    from: "autoregressive-decoding",
+    to: "kv-cache-decode-state",
+    relation: "produces",
+    reason:
+      "이전 output prefix를 매 step 다시 읽으므로 과거 layer projection을 재사용할 runtime state가 생깁니다.",
+  },
+  {
+    from: "multi-head-attention",
+    to: "grouped-query-kv-sharing",
+    relation: "extends",
+    reason:
+      "Query head별 K/V를 일대일로 두는 MHA를 더 적은 K/V group을 공유하는 설계로 확장합니다.",
+  },
+  {
+    from: "kv-cache-decode-state",
+    to: "grouped-query-kv-sharing",
+    relation: "optimizes",
+    reason:
+      "Cache에 남는 K/V head 사본 수를 줄여 token당 state와 decode memory traffic을 낮춥니다.",
+  },
+  {
+    from: "grouped-query-kv-sharing",
+    to: "per-token-kv-byte",
+    relation: "constrains",
+    reason:
+      "공유 뒤 실제 KV head 수가 토큰당 저장 원소 수의 head 축을 결정합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "per-token-kv-byte",
+    relation: "prerequisite",
+    reason:
+      "Cache dtype의 원소 크기를 byte로 바꾸어 tensor element count와 곱합니다.",
+  },
+  {
+    from: "per-token-kv-byte",
+    to: "hybrid-layer-kv-retention",
+    relation: "extends",
+    reason:
+      "동일한 token당 비용 근사를 layer별 shape와 보존 token 길이의 합으로 일반화합니다.",
+  },
+  {
+    from: "hybrid-layer-kv-retention",
+    to: "hybrid-kv-cache-allocation",
+    relation: "produces",
+    reason:
+      "Layer type별로 계속 소유해야 할 token block 수가 runtime의 group별 allocation을 결정합니다.",
+  },
+  {
+    from: "hybrid-kv-cache-allocation",
+    to: "kv-pool-capacity-budget",
+    relation: "constrains",
+    reason:
+      "Page grouping·padding·block 회수 여부가 같은 physical KV pool에 들어가는 active state를 바꿉니다.",
+  },
+  {
+    from: "per-token-kv-byte",
+    to: "kv-pool-capacity-budget",
+    relation: "prerequisite",
+    reason:
+      "Uniform full-attention 근사에서는 KV pool byte를 토큰당 byte로 나눠 capacity를 계산합니다.",
+  },
+  {
+    from: "kv-pool-capacity-budget",
+    to: "context-concurrency-admission",
+    relation: "constrains",
+    reason:
+      "Active request 길이의 KV 합이 replica의 pool을 넘지 않도록 scheduler 상한을 정합니다.",
+  },
+  {
+    from: "hybrid-kv-cache-allocation",
+    to: "runtime-capacity-log-consistency",
+    relation: "evaluates",
+    reason:
+      "Hybrid cache group이 표시 token과 token-equivalent concurrency의 단위를 다르게 만들 수 있어 로그를 검산합니다.",
+  },
+  {
+    from: "runtime-capacity-log-consistency",
+    to: "context-concurrency-admission",
+    relation: "prerequisite",
+    reason:
+      "Startup log의 단위를 확인한 뒤에만 maximum concurrency를 admission 근거로 사용할 수 있습니다.",
+  },
+  {
+    from: "autoregressive-decoding",
+    to: "speculative-draft-verify-cycle",
+    relation: "optimizes",
+    reason:
+      "Token마다 target을 한 번 실행하는 serial baseline에서 여러 future position을 한 verification cycle로 묶습니다.",
+  },
+  {
+    from: "kv-cache-decode-state",
+    to: "speculative-draft-verify-cycle",
+    relation: "prerequisite",
+    reason:
+      "Accepted prefix와 correction이 정한 위치까지만 sequence의 layer state를 commit해야 합니다.",
+  },
+  {
+    from: "speculative-draft-verify-cycle",
+    to: "speculative-acceptance-length",
+    relation: "produces",
+    reason:
+      "각 cycle은 수락된 draft prefix와 실제 committed token 수를 측정값으로 남깁니다.",
+  },
+  {
+    from: "probability-distribution",
+    to: "speculative-rejection-sampling",
+    relation: "prerequisite",
+    reason:
+      "Draft q와 target p의 token별 probability mass를 acceptance와 correction 두 경로로 나눕니다.",
+  },
+  {
+    from: "speculative-rejection-sampling",
+    to: "speculative-target-distribution-invariance",
+    relation: "produces",
+    reason:
+      "Accepted min(p,q) mass와 correction (p−q)+ mass를 합쳐 최종 target p를 복원합니다.",
+  },
+  {
+    from: "conditional-probability",
+    to: "speculative-suffix-causality",
+    relation: "prerequisite",
+    reason:
+      "후속 draft distribution은 앞선 draft token을 포함한 특정 prefix에 조건부로 정의됩니다.",
+  },
+  {
+    from: "speculative-suffix-causality",
+    to: "speculative-target-distribution-invariance",
+    relation: "constrains",
+    reason:
+      "첫 거부 뒤에는 조건 prefix가 바뀌므로 suffix를 제외해야 위치별 분포 보존을 이어 갈 수 있습니다.",
+  },
+  {
+    from: "speculative-draft-verify-cycle",
+    to: "eagle-feature-level-proposal",
+    relation: "extends",
+    reason:
+      "일반 proposer 자리에 target feature를 예측하는 lightweight drafter를 연결합니다.",
+  },
+  {
+    from: "speculative-draft-verify-cycle",
+    to: "native-mtp-proposal",
+    relation: "extends",
+    reason:
+      "별도 draft LM 대신 target에 학습된 future-token module을 proposal 경로로 사용합니다.",
+  },
+  {
+    from: "speculative-acceptance-length",
+    to: "speculative-serving-break-even",
+    relation: "evaluates",
+    reason:
+      "Cycle당 committed token이 절약한 target-only 시간을 proposal·verification·runtime 비용과 비교합니다.",
+  },
+  {
+    from: "speculative-serving-break-even",
+    to: "dynamic-speculation-policy",
+    relation: "produces",
+    reason:
+      "Workload별 손익 신호에 따라 depth를 조절하거나 speculation을 끄는 runtime 결정을 만듭니다.",
+  },
+  {
+    from: "autoregressive-decoding",
+    to: "llm-online-request-lifecycle",
+    relation: "produces",
+    reason:
+      "한 요청이 다음 token을 반복 생성하므로 여러 model iteration과 streaming state를 거칩니다.",
+  },
+  {
+    from: "llm-online-request-lifecycle",
+    to: "prefill-decode-execution-phase",
+    relation: "produces",
+    reason:
+      "요청은 prompt를 처음 처리하는 단계와 cached prefix에서 token을 늘리는 단계로 나뉩니다.",
+  },
+  {
+    from: "prefill-decode-execution-phase",
+    to: "serving-latency-decomposition",
+    relation: "evaluates",
+    reason:
+      "Queue·prefill은 TTFT에, 반복 decode iteration은 ITL·TPOT에 주로 나타나도록 시간을 나눕니다.",
+  },
+  {
+    from: "llm-online-request-lifecycle",
+    to: "iteration-level-continuous-batching",
+    relation: "optimizes",
+    reason:
+      "요청별 시작·완료 시점이 다른 online workload를 매 iteration에서 다시 조립합니다.",
+  },
+  {
+    from: "iteration-level-continuous-batching",
+    to: "serving-iteration-resource-feasibility",
+    relation: "constrains",
+    reason:
+      "새 batch를 구성할 때 token·sequence·KV 세 hard budget을 모두 만족해야 합니다.",
+  },
+  {
+    from: "kv-cache-decode-state",
+    to: "serving-iteration-resource-feasibility",
+    relation: "constrains",
+    reason:
+      "새 token을 처리하면 layer별 KV state가 늘어나므로 allocator의 available block을 확인합니다.",
+  },
+  {
+    from: "serving-iteration-resource-feasibility",
+    to: "vllm-engine-responsibility-boundary",
+    relation: "produces",
+    reason:
+      "Engine core가 scheduling과 KV ownership을 결정하고 executor·worker에 실행 계약을 전달합니다.",
+  },
+  {
+    from: "vllm-engine-responsibility-boundary",
+    to: "model-parallel-replica-layout",
+    relation: "extends",
+    reason:
+      "Model executor와 worker 계층을 DP·TP·PP topology에 맞춰 여러 process와 GPU로 확장합니다.",
+  },
+  {
+    from: "serving-latency-decomposition",
+    to: "slo-serving-goodput",
+    relation: "prerequisite",
+    reason:
+      "TTFT·ITL·E2E threshold를 통과한 요청의 output만 유효 처리량에 포함합니다.",
+  },
+  {
+    from: "model-parallel-replica-layout",
+    to: "slo-serving-goodput",
+    relation: "evaluates",
+    reason:
+      "GPU topology 변경 뒤 raw throughput이 아니라 latency SLO를 만족한 결과로 확장 효과를 비교합니다.",
+  },
+  {
+    from: "llm-online-request-lifecycle",
+    to: "scheduler-request-progress-gap",
+    relation: "produces",
+    reason:
+      "각 request의 prompt·output·speculative state에서 현재 target과 이미 계산한 token 위치를 얻습니다.",
+  },
+  {
+    from: "scheduler-request-progress-gap",
+    to: "scheduler-running-waiting-order",
+    relation: "constrains",
+    reason:
+      "RUNNING과 WAITING 후보마다 이번 iteration에 배정할 수 있는 남은 token 수를 계산합니다.",
+  },
+  {
+    from: "scheduler-priority-order",
+    to: "scheduler-running-waiting-order",
+    relation: "constrains",
+    reason:
+      "FCFS·priority와 arrival-time tie-break가 candidate queue의 검토 순서를 정합니다.",
+  },
+  {
+    from: "serving-iteration-resource-feasibility",
+    to: "scheduler-running-waiting-order",
+    relation: "constrains",
+    reason:
+      "순서가 앞선 request도 token·sequence·KV hard budget을 통과해야 실제 admission됩니다.",
+  },
+  {
+    from: "scheduler-running-waiting-order",
+    to: "scheduler-closed-loop-transition",
+    relation: "produces",
+    reason:
+      "선택된 request의 model output이 progress·completion·queue·cache state를 갱신합니다.",
+  },
+  {
+    from: "prefill-decode-execution-phase",
+    to: "chunked-prefill-interleaving",
+    relation: "optimizes",
+    reason:
+      "긴 prefill을 여러 iteration으로 나누어 짧고 반복적인 decode token과 batch에 섞습니다.",
+  },
+  {
+    from: "scheduler-priority-order",
+    to: "scheduler-policy-starvation",
+    relation: "produces",
+    reason:
+      "높은 priority traffic이 계속 도착하면 낮은 priority request의 queue age가 무한히 늘 수 있습니다.",
+  },
+  {
+    from: "kv-cache-decode-state",
+    to: "kv-pressure-preemption",
+    relation: "constrains",
+    reason:
+      "Active request의 token state가 KV block을 계속 소유해 새 allocation이 실패할 수 있습니다.",
+  },
+  {
+    from: "kv-pressure-preemption",
+    to: "recomputation-preemption-cost",
+    relation: "produces",
+    reason:
+      "KV를 반환하고 computed state를 reset하면 재개 시 복구하지 못한 prefix를 다시 계산해야 합니다.",
+  },
+  {
+    from: "chunked-prefill-interleaving",
+    to: "serving-latency-decomposition",
+    relation: "evaluates",
+    reason:
+      "Chunk size 변경의 효과를 prompt TTFT와 ongoing request의 ITL·TPOT에서 분리해 측정합니다.",
+  },
+  {
+    from: "recomputation-preemption-cost",
+    to: "slo-serving-goodput",
+    relation: "evaluates",
+    reason:
+      "반복 계산과 추가 queue 시간이 latency SLO를 통과한 유효 처리량을 얼마나 낮췄는지 비교합니다.",
+  },
+  {
+    from: "kv-cache-decode-state",
+    to: "paged-kv-block-allocation",
+    relation: "optimizes",
+    reason:
+      "Request마다 동적으로 늘어나는 layer KV state를 최대 길이 연속 예약 대신 fixed-size block으로 보관합니다.",
+  },
+  {
+    from: "paged-kv-block-allocation",
+    to: "kv-block-address-translation",
+    relation: "produces",
+    reason:
+      "Logical block 순서를 non-contiguous physical block에 연결하려면 request block table lookup이 필요합니다.",
+  },
+  {
+    from: "kv-block-address-translation",
+    to: "pagedattention-memory-kernel-boundary",
+    relation: "produces",
+    reason:
+      "Memory manager가 만든 block table을 paged attention kernel이 읽어 실제 K/V tensor 위치를 찾습니다.",
+  },
+  {
+    from: "paged-kv-block-allocation",
+    to: "kv-block-reference-ownership",
+    relation: "constrains",
+    reason:
+      "Physical block을 여러 request와 branch가 공유할 수 있어 안전한 free·overwrite에 reference tracking이 필요합니다.",
+  },
+  {
+    from: "kv-block-reference-ownership",
+    to: "kv-free-queue-eviction",
+    relation: "produces",
+    reason:
+      "Reference가 0이 된 block만 allocation·cache eviction 후보 queue에 들어갈 수 있습니다.",
+  },
+  {
+    from: "scheduler-request-progress-gap",
+    to: "kv-manager-allocation-contract",
+    relation: "produces",
+    reason:
+      "Scheduler가 이번 iteration에 배정한 new token과 lookahead slot을 physical block demand로 변환합니다.",
+  },
+  {
+    from: "kv-free-queue-eviction",
+    to: "kv-manager-allocation-contract",
+    relation: "constrains",
+    reason:
+      "Manager는 free queue에서 필요한 block을 확보하거나 부족하면 allocation failure를 반환합니다.",
+  },
+  {
+    from: "hybrid-layer-kv-retention",
+    to: "hybrid-cache-group-coordination",
+    relation: "produces",
+    reason:
+      "Layer마다 full·local·recurrent state 보존 범위가 달라 compatible cache spec별 manager group이 필요합니다.",
+  },
+  {
+    from: "hybrid-cache-group-coordination",
+    to: "kv-manager-allocation-contract",
+    relation: "constrains",
+    reason:
+      "한 request의 allocation·free가 여러 cache group의 block alignment와 capacity를 함께 만족해야 합니다.",
+  },
+  {
+    from: "kv-block-reference-ownership",
+    to: "chained-prefix-block-hash",
+    relation: "extends",
+    reason:
+      "Reference가 0이 된 block의 KV를 hash identity와 함께 남기면 이후 동일 prefix request가 다시 touch할 수 있습니다.",
+  },
+  {
+    from: "chained-prefix-block-hash",
+    to: "automatic-prefix-cache-scope",
+    relation: "produces",
+    reason:
+      "첫 block부터 연속으로 일치한 full block token만 새 request의 prefill에서 생략할 수 있습니다.",
+  },
+  {
+    from: "automatic-prefix-cache-scope",
+    to: "serving-latency-decomposition",
+    relation: "evaluates",
+    reason:
+      "Prefix hit는 주로 prefill·TTFT를 줄이고 output decode ITL은 직접 줄이지 않으므로 latency phase를 나눠 측정합니다.",
+  },
+  {
+    from: "llm-online-request-lifecycle",
+    to: "serving-end-to-end-contract",
+    relation: "produces",
+    reason:
+      "Ingress부터 stream completion까지 같은 request boundary에 capability·latency·cost 조건을 붙입니다.",
+  },
+  {
+    from: "serving-end-to-end-contract",
+    to: "capability-first-model-routing",
+    relation: "constrains",
+    reason:
+      "Request의 hard capability·privacy 조건을 만족하는 deployment만 route 후보가 됩니다.",
+  },
+  {
+    from: "serving-end-to-end-contract",
+    to: "deadline-owned-retry-budget",
+    relation: "constrains",
+    reason:
+      "End-to-end latency와 side-effect 계약 안에서 남은 retry·fallback 시간을 제한합니다.",
+  },
+  {
+    from: "deadline-owned-retry-budget",
+    to: "retry-load-amplification",
+    relation: "produces",
+    reason:
+      "허용된 retry·fallback attempt가 client arrival보다 큰 backend load를 만듭니다.",
+  },
+  {
+    from: "expectation",
+    to: "retry-load-amplification",
+    relation: "prerequisite",
+    reason:
+      "Request당 random attempt 수의 장기 평균 E[A]를 backend rate 계산에 사용합니다.",
+  },
+  {
+    from: "gpu-ready-capacity-path",
+    to: "serving-end-to-end-contract",
+    relation: "constrains",
+    reason:
+      "Desired replica가 아니라 traffic-ready model replica만 실제 latency·completion SLO capacity로 셉니다.",
+  },
+  {
+    from: "expectation",
+    to: "little-law-stable-system",
+    relation: "prerequisite",
+    reason:
+      "Arrival·sojourn·occupancy random process의 finite long-run mean을 사용합니다.",
+  },
+  {
+    from: "little-law-stable-system",
+    to: "gpu-ready-capacity-path",
+    relation: "evaluates",
+    reason:
+      "안정된 boundary의 arrival와 sojourn에서 평균 in-flight pressure를 검산하되 activation delay는 별도로 추적합니다.",
+  },
+  {
+    from: "kubernetes-probe-semantics",
+    to: "gpu-ready-capacity-path",
+    relation: "constrains",
+    reason:
+      "Startup을 통과하고 readiness가 true인 Pod만 traffic-ready capacity로 admission합니다.",
+  },
+  {
+    from: "hpa-intermittent-control-loop",
+    to: "gpu-ready-capacity-path",
+    relation: "produces",
+    reason:
+      "HPA의 desired replica가 준비 경로를 지나야 실제 serving capacity가 됩니다.",
+  },
+  {
+    from: "serving-end-to-end-contract",
+    to: "slo-error-budget-burn-rate",
+    relation: "produces",
+    reason:
+      "사전에 정한 valid·bad event와 SLO target이 error-budget denominator를 정의합니다.",
+  },
+  {
+    from: "slo-error-budget-burn-rate",
+    to: "serving-change-effect-control",
+    relation: "produces",
+    reason:
+      "Burn-rate symptom에 route·scale·rollback action을 적용한 뒤 canary/control SLI로 효과를 다시 검증합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "serving-change-effect-control",
+    relation: "constrains",
+    reason:
+      "Canary·control이 실제로 로드한 artifact·runtime·route revision을 고정해야 비교 가능한 변경군이 됩니다.",
+  },
+  {
+    from: "serving-change-effect-control",
+    to: "slo-serving-goodput",
+    relation: "evaluates",
+    reason:
+      "운영 변경이 latency SLO를 통과한 valid output과 quality·cost guardrail을 실제로 개선했는지 승인합니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "line-rate-goodput-boundary",
+    relation: "prerequisite",
+    reason:
+      "Port의 Gb/s와 application의 GB/s를 비교하려면 bit와 byte의 8배 단위 관계를 먼저 구분해야 합니다.",
+  },
+  {
+    from: "network-workload-traffic-matrix",
+    to: "line-rate-goodput-boundary",
+    relation: "evaluates",
+    reason:
+      "Message·direction·concurrency가 고정된 workload에서 완료한 payload와 시간을 재야 line rate와 goodput을 비교할 수 있습니다.",
+  },
+  {
+    from: "ethernet-link-compatibility-chain",
+    to: "line-rate-goodput-boundary",
+    relation: "constrains",
+    reason:
+      "호환되는 lane·PHY·FEC·media 조합이 먼저 link를 만들고 그 위에서 달성한 payload goodput을 측정합니다.",
+  },
+  {
+    from: "line-rate-goodput-boundary",
+    to: "fabric-oversubscription-failure-state",
+    relation: "extends",
+    reason:
+      "단일 link 상한을 host-facing과 active uplink의 aggregate capacity 및 장애 상태로 확장합니다.",
+  },
+  {
+    from: "network-workload-traffic-matrix",
+    to: "fabric-oversubscription-failure-state",
+    relation: "constrains",
+    reason:
+      "Oversubscription ratio가 실제 병목이 되는지는 동시에 같은 uplink로 향하는 traffic matrix에 달려 있습니다.",
+  },
+  {
+    from: "rdma-control-data-path",
+    to: "rdma-memory-registration-capability",
+    relation: "produces",
+    reason:
+      "RDMA data path를 사용하려면 host control path가 DMA 가능한 memory range와 access key를 먼저 등록합니다.",
+  },
+  {
+    from: "rdma-memory-registration-capability",
+    to: "roce-v2-gid-routing",
+    relation: "prerequisite",
+    reason:
+      "등록된 memory operation을 remote peer에 전달할 QP가 source GID와 route를 선택합니다.",
+  },
+  {
+    from: "ethernet-link-compatibility-chain",
+    to: "roce-v2-gid-routing",
+    relation: "prerequisite",
+    reason:
+      "RoCE v2 QP는 호환되는 Ethernet link와 netdev에 구성된 IP/GID 위에서 동작합니다.",
+  },
+  {
+    from: "rdma-memory-registration-capability",
+    to: "gpudirect-rdma-topology",
+    relation: "extends",
+    reason:
+      "Host memory 대신 CUDA memory를 NIC DMA 대상으로 등록할 때 PCIe topology와 platform support가 추가 조건이 됩니다.",
+  },
+  {
+    from: "roce-v2-gid-routing",
+    to: "collective-rank-semantics",
+    relation: "prerequisite",
+    reason:
+      "Inter-node collective의 rank 간 message가 올바른 NIC·peer path를 사용해야 communicator 전체가 완료됩니다.",
+  },
+  {
+    from: "gpudirect-rdma-topology",
+    to: "collective-rank-semantics",
+    relation: "constrains",
+    reason:
+      "Rank의 GPU–HCA affinity와 direct DMA 가능 여부가 node 밖 collective path의 비용을 제한합니다.",
+  },
+  {
+    from: "collective-rank-semantics",
+    to: "nccl-algbw-busbw-boundary",
+    relation: "produces",
+    reason:
+      "Collective 종류와 rank 수가 nccl-tests의 input size·transfer accounting과 busbw 보정 계수를 정합니다.",
+  },
+  {
+    from: "line-rate-goodput-boundary",
+    to: "nccl-algbw-busbw-boundary",
+    relation: "extends",
+    reason:
+      "Point-to-point payload goodput의 측정 경계를 collective operation time과 보정 bandwidth로 확장하되 두 값을 동일시하지 않습니다.",
+  },
+  {
+    from: "ethernet-link-compatibility-chain",
+    to: "b300-port-split-identity",
+    relation: "prerequisite",
+    reason:
+      "800G physical module을 2×400G logical endpoint로 나눌 때 lane·PHY·breakout 계약과 OS device identity를 함께 추적합니다.",
+  },
+  {
+    from: "b300-port-split-identity",
+    to: "switchless-fullmesh-port-budget",
+    relation: "constrains",
+    reason:
+      "Node마다 실제 사용할 수 있는 여덟 physical port가 full-mesh의 node 수와 peer당 cable 수를 제한합니다.",
+  },
+  {
+    from: "switchless-fullmesh-port-budget",
+    to: "point-to-point-subnet-manifest",
+    relation: "produces",
+    reason:
+      "확정된 node-pair cable edge마다 두 endpoint identity와 고유 /30 subnet을 manifest에 생성합니다.",
+  },
+  {
+    from: "roce-v2-gid-routing",
+    to: "peer-aware-gid-selection",
+    relation: "extends",
+    reason:
+      "일반 RoCE source GID 선택을 여러 독립 direct subnet에서 remote peer와 같은 prefix를 찾는 규칙으로 확장합니다.",
+  },
+  {
+    from: "point-to-point-subnet-manifest",
+    to: "peer-aware-gid-selection",
+    relation: "constrains",
+    reason:
+      "Manifest가 정한 cable별 /30 prefix가 local GID와 remote GID를 유일한 direct path로 묶습니다.",
+  },
+  {
+    from: "peer-aware-gid-selection",
+    to: "nccl-direct-rail-selection",
+    relation: "produces",
+    reason:
+      "Peer에 닿는 GID를 고른 뒤 NCCL HCA allowlist와 cross-NIC 정책으로 collective rail 후보를 제한합니다.",
+  },
+  {
+    from: "collective-rank-semantics",
+    to: "switchless-collective-measurement-boundary",
+    relation: "prerequisite",
+    reason:
+      "Rank placement·collective·message 조건을 고정해야 direct-link busbw를 비교할 수 있습니다.",
+  },
+  {
+    from: "nccl-algbw-busbw-boundary",
+    to: "switchless-collective-measurement-boundary",
+    relation: "extends",
+    reason:
+      "일반 nccl-tests 지표를 16×400G line-rate 합·NIC counter·프로젝트 실측과 분리한 B300 ledger로 확장합니다.",
+  },
+  {
+    from: "nccl-direct-rail-selection",
+    to: "switchless-collective-measurement-boundary",
+    relation: "evaluates",
+    reason:
+      "선택한 direct rail들이 실제 collective에 사용되는지 operation time·busbw와 port counter로 검증합니다.",
+  },
+  {
+    from: "point-to-point-subnet-manifest",
+    to: "switchless-failure-domain",
+    relation: "produces",
+    reason:
+      "Cable edge가 곧 subnet과 peer rail이므로 manifest의 한 edge 손실이 영향을 주는 node pair를 식별합니다.",
+  },
+  {
+    from: "switchless-collective-measurement-boundary",
+    to: "switchless-failure-domain",
+    relation: "evaluates",
+    reason:
+      "정상 ledger와 link-loss ledger를 비교해 대체 path 없는 direct topology의 감지·격리·회복 동작을 승인합니다.",
+  },
+  {
+    from: "process-container-resource-boundary",
+    to: "agent-attack-path-completion",
+    relation: "prerequisite",
+    reason:
+      "Container process가 실제로 볼 수 있는 mount·route·token·device를 알아야 관찰 signal이 어느 host/control-plane 영향으로 이어지는지 추적할 수 있습니다.",
+  },
+  {
+    from: "process-container-resource-boundary",
+    to: "container-root-host-boundary",
+    relation: "extends",
+    reason:
+      "Namespace 안 UID 0의 권한을 user mapping·capability·mount와 host 권한으로 나누어 봅니다.",
+  },
+  {
+    from: "process-container-resource-boundary",
+    to: "syscall-filter-kernel-isolation-boundary",
+    relation: "extends",
+    reason:
+      "Host kernel을 공유하는 기본 container에서 syscall filtering과 별도 kernel boundary의 차이를 비교합니다.",
+  },
+  {
+    from: "syscall-filter-kernel-isolation-boundary",
+    to: "sandbox-runtime-isolation-spectrum",
+    relation: "produces",
+    reason:
+      "runc·gVisor·Kata가 system call과 kernel을 어느 경계에서 처리하는지 비교 축을 만듭니다.",
+  },
+  {
+    from: "agent-attack-path-completion",
+    to: "kubernetes-workload-identity-boundary",
+    relation: "constrains",
+    reason:
+      "API token과 RBAC permission이 credential에서 control-plane impact로 가는 path를 완성하는지 확인합니다.",
+  },
+  {
+    from: "agent-attack-path-completion",
+    to: "egress-allowlist-enforcement",
+    relation: "constrains",
+    reason:
+      "내부망 접근·metadata credential·외부 유출 edge를 network enforcement로 끊습니다.",
+  },
+  {
+    from: "agent-attack-path-completion",
+    to: "sandbox-writable-surface-lifetime",
+    relation: "constrains",
+    reason:
+      "Writable path와 session residue가 persistence·cross-session data access path를 만들지 않게 제한합니다.",
+  },
+  {
+    from: "sandbox-runtime-isolation-spectrum",
+    to: "gpu-device-isolation-boundary",
+    relation: "extends",
+    reason:
+      "GPU가 필요하면 nvproxy 또는 VFIO가 추가하는 host driver·VMM·IOMMU trust boundary를 runtime 선택에 더합니다.",
+  },
+  {
+    from: "kubernetes-workload-identity-boundary",
+    to: "sandbox-workload-control-matrix",
+    relation: "constrains",
+    reason:
+      "Workload가 실제로 필요한 API identity와 최소 권한을 control matrix에 넣습니다.",
+  },
+  {
+    from: "egress-allowlist-enforcement",
+    to: "sandbox-workload-control-matrix",
+    relation: "constrains",
+    reason:
+      "필요 destination·DNS·proxy와 차단 test를 runtime과 독립된 network 열에 승인합니다.",
+  },
+  {
+    from: "sandbox-runtime-isolation-spectrum",
+    to: "sandbox-workload-control-matrix",
+    relation: "constrains",
+    reason:
+      "Code 신뢰도·호환성·기동 비용에 맞는 kernel boundary를 선택합니다.",
+  },
+  {
+    from: "sandbox-writable-surface-lifetime",
+    to: "sandbox-workload-control-matrix",
+    relation: "constrains",
+    reason:
+      "각 writable path의 크기와 session 종료 시 폐기를 storage/lifecycle 승인 조건으로 넣습니다.",
+  },
+  {
+    from: "gpu-device-isolation-boundary",
+    to: "sandbox-workload-control-matrix",
+    relation: "constrains",
+    reason:
+      "GPU가 필요한 workload만 지원되는 device isolation path와 driver lifecycle을 추가합니다.",
+  },
+  {
+    from: "tool-call-round-trip",
+    to: "code-mode-program-ir",
+    relation: "contrasts",
+    reason:
+      "매 tool 뒤 model이 다시 판단하는 반복 대신 여러 call과 control flow를 하나의 sandbox program으로 표현합니다.",
+  },
+  {
+    from: "code-mode-program-ir",
+    to: "tool-discovery-schema-loading",
+    relation: "constrains",
+    reason:
+      "Program이 사용할 API만 발견·load하면 전체 tool schema를 prompt에 상주시킬 필요가 줄어듭니다.",
+  },
+  {
+    from: "code-mode-program-ir",
+    to: "deterministic-runtime-control-flow",
+    relation: "produces",
+    reason:
+      "Program의 loop·branch·sort·concurrency를 일반 runtime이 실행합니다.",
+  },
+  {
+    from: "code-mode-program-ir",
+    to: "sandbox-local-intermediate-data",
+    relation: "produces",
+    reason:
+      "Tool response를 program variable로 유지해 filter·aggregate가 끝난 결과만 model로 돌려줍니다.",
+  },
+  {
+    from: "tool-call-round-trip",
+    to: "code-mode-token-cost-boundary",
+    relation: "evaluates",
+    reason:
+      "반복 prompt·schema·result·reasoning token의 합을 program generation 비용과 비교합니다.",
+  },
+  {
+    from: "sandbox-local-intermediate-data",
+    to: "code-mode-token-cost-boundary",
+    relation: "constrains",
+    reason:
+      "제거되는 중간 data token이 클수록 program 생성 비용을 상쇄할 가능성이 커집니다.",
+  },
+  {
+    from: "process-container-resource-boundary",
+    to: "code-mode-capability-binding",
+    relation: "prerequisite",
+    reason:
+      "Model-generated code를 실행할 process가 볼 수 있는 tool·credential·network·filesystem을 명시적으로 제한합니다.",
+  },
+  {
+    from: "sandbox-workload-control-matrix",
+    to: "code-mode-capability-binding",
+    relation: "prerequisite",
+    reason:
+      "요청에 필요한 capability와 effect risk를 먼저 분류한 뒤 program binding을 만듭니다.",
+  },
+  {
+    from: "code-mode-capability-binding",
+    to: "code-mode-effect-atomicity",
+    relation: "constrains",
+    reason:
+      "Write tool을 binding할 때 approval·idempotency·transaction·compensation을 별도 effect policy로 적용합니다.",
+  },
+  {
+    from: "sandbox-local-intermediate-data",
+    to: "code-mode-result-contract",
+    relation: "produces",
+    reason:
+      "Sandbox에 남긴 중간 data에서 model에 필요한 최소 schema와 redacted aggregate만 반환합니다.",
+  },
+  {
+    from: "code-mode-token-cost-boundary",
+    to: "code-mode-decision-boundary",
+    relation: "evaluates",
+    reason:
+      "Token·latency·sandbox overhead를 direct tool loop와 비교해 실행 패턴을 선택합니다.",
+  },
+  {
+    from: "code-mode-effect-atomicity",
+    to: "code-mode-decision-boundary",
+    relation: "constrains",
+    reason:
+      "고위험 write·delete·deploy는 자유 program보다 deterministic workflow와 approval이 우선일 수 있습니다.",
+  },
+  {
+    from: "code-mode-result-contract",
+    to: "code-mode-decision-boundary",
+    relation: "constrains",
+    reason:
+      "대량 중간 결과를 충분히 축소하고 안전한 final schema를 만들 수 있는 작업인지 판단합니다.",
+  },
+  {
+    from: "formal-alphabet-string-language",
+    to: "grammar-production-derivation",
+    relation: "prerequisite",
+    reason:
+      "Symbol과 string 집합을 정의한 뒤 production이 어떤 string을 language에 포함시키는지 설명합니다.",
+  },
+  {
+    from: "grammar-production-derivation",
+    to: "finite-automaton-memory-boundary",
+    relation: "constrains",
+    reason:
+      "Grammar가 요구하는 패턴 중 유한 state만으로 기억할 수 있는 범위와 임의 중첩의 차이를 봅니다.",
+  },
+  {
+    from: "grammar-production-derivation",
+    to: "context-free-grammar-recursion",
+    relation: "extends",
+    reason:
+      "Nonterminal의 recursive production으로 임의 깊이 nested structure를 표현합니다.",
+  },
+  {
+    from: "finite-automaton-memory-boundary",
+    to: "pushdown-automaton-stack",
+    relation: "contrasts",
+    reason:
+      "유한 state가 기억하지 못하는 열린 중첩을 stack push/pop으로 추적합니다.",
+  },
+  {
+    from: "context-free-grammar-recursion",
+    to: "pushdown-automaton-stack",
+    relation: "produces",
+    reason:
+      "CFG와 PDA는 recursive nesting을 생성·인식하는 이론적 대응 관계를 가집니다.",
+  },
+  {
+    from: "pushdown-automaton-stack",
+    to: "incremental-parser-boundary",
+    relation: "extends",
+    reason:
+      "Stack 성격의 parse state가 실제 parser·matcher에서 서로 다른 입력과 산출물로 구현됩니다.",
+  },
+  {
+    from: "context-free-grammar-recursion",
+    to: "grammar-tokenizer-compilation",
+    relation: "prerequisite",
+    reason:
+      "Character-level grammar continuation을 model vocabulary의 multi-character token과 연결합니다.",
+  },
+  {
+    from: "grammar-tokenizer-compilation",
+    to: "constrained-decoding-token-mask",
+    relation: "produces",
+    reason:
+      "Compiled matcher가 current state에서 vocabulary별 허용 여부 bitmask를 만듭니다.",
+  },
+  {
+    from: "constrained-decoding-token-mask",
+    to: "syntactic-semantic-validity-boundary",
+    relation: "constrains",
+    reason:
+      "Token mask가 강제하는 syntax/schema 범위와 외부 validator·policy가 판단할 semantic 범위를 분리합니다.",
+  },
+  {
+    from: "code-mode-program-ir",
+    to: "syntactic-semantic-validity-boundary",
+    relation: "prerequisite",
+    reason:
+      "Generated program이 parse 가능한 것과 authorized·safe effect를 내는 것은 서로 다른 보장입니다.",
+  },
+  {
+    from: "grammar-tokenizer-compilation",
+    to: "dynamic-schema-mask-cache",
+    relation: "constrains",
+    reason:
+      "Tokenizer와 schema identity가 compiled grammar·mask cache의 재사용 단위를 정합니다.",
+  },
+  {
+    from: "constrained-decoding-token-mask",
+    to: "dynamic-schema-mask-cache",
+    relation: "constrains",
+    reason:
+      "Batch의 sequence마다 matcher state가 달라 요청별 mask update와 serving 비용이 생깁니다.",
+  },
+  {
+    from: "bit-byte",
+    to: "roofline-arithmetic-intensity",
+    relation: "prerequisite",
+    reason:
+      "Memory traffic의 byte 단위를 알아야 FLOP/byte인 arithmetic intensity를 읽을 수 있습니다.",
+  },
+  {
+    from: "roofline-arithmetic-intensity",
+    to: "conditional-hbm-streaming-floor",
+    relation: "produces",
+    reason:
+      "Memory-bound 구간에서는 rank traffic을 실효 bandwidth로 나누어 HBM 항의 조건부 시간 하한을 계산합니다.",
+  },
+  {
+    from: "model-parallel-replica-layout",
+    to: "conditional-hbm-streaming-floor",
+    relation: "constrains",
+    reason:
+      "TP layout과 rank별 expert·weight 배치가 token step에서 각 rank가 읽는 byte 수를 정합니다.",
+  },
+  {
+    from: "conditional-hbm-streaming-floor",
+    to: "split-k-shape-parallelism",
+    relation: "optimizes",
+    reason:
+      "낮은 CTA 수 때문에 HBM 요청을 충분히 내지 못한 작은 GEMM에서 Split-K가 shape 병렬성을 늘립니다.",
+  },
+  {
+    from: "split-k-shape-parallelism",
+    to: "tmem-accumulator-pipeline",
+    relation: "extends",
+    reason:
+      "CTA 병렬성뿐 아니라 accumulator 저장 위치와 stage overlap까지 조정해 memory-level parallelism을 유지합니다.",
+  },
+  {
+    from: "tmem-accumulator-pipeline",
+    to: "fusion-intermediate-traffic",
+    relation: "extends",
+    reason:
+      "TMEM 기반 pipeline 안에 quantization·GEMM을 함께 배치해 중간 HBM 왕복과 launch를 줄입니다.",
+  },
+  {
+    from: "fusion-intermediate-traffic",
+    to: "end-to-end-speedup-fraction",
+    relation: "evaluates",
+    reason:
+      "Local kernel 개선이 전체 시간에서 차지한 비율만큼 실제 forward에 전달되는지 다시 계산합니다.",
+  },
+  {
+    from: "native-mtp-proposal",
+    to: "mtp-weight-traffic-amortization",
+    relation: "produces",
+    reason:
+      "Native future-token 후보를 한 main verification에서 검사하면 main weight traffic을 여러 committed token이 공유할 수 있습니다.",
+  },
+  {
+    from: "speculative-acceptance-length",
+    to: "mtp-weight-traffic-amortization",
+    relation: "constrains",
+    reason:
+      "Cycle의 main traffic을 실제 committed length로 나눠야 token당 weight 항을 계산할 수 있습니다.",
+  },
+  {
+    from: "fusion-intermediate-traffic",
+    to: "numerical-acceptance-regression",
+    relation: "constrains",
+    reason:
+      "Quantization fusion이 계산 순서와 오차를 바꾸면 logits agreement와 acceptance가 함께 낮아질 수 있습니다.",
+  },
+  {
+    from: "numerical-acceptance-regression",
+    to: "mtp-weight-traffic-amortization",
+    relation: "constrains",
+    reason:
+      "Acceptance regression은 cycle당 committed token을 줄여 weight 재사용 효과를 약화합니다.",
+  },
+  {
+    from: "end-to-end-speedup-fraction",
+    to: "optimization-measurement-ledger",
+    relation: "produces",
+    reason:
+      "Local µs와 전체 tok/s를 같은 speedup으로 오해하지 않도록 측정 경계와 조건을 장부에 분리합니다.",
+  },
+  {
+    from: "mtp-weight-traffic-amortization",
+    to: "optimization-measurement-ledger",
+    relation: "evaluates",
+    reason:
+      "Traffic 근사와 cycle throughput을 prompt·acceptance·quality 조건을 고정한 end-to-end 결과로 검증합니다.",
+  },
+  {
+    from: "cross-bi-encoder-boundary",
+    to: "retrieval-robustness-axis",
+    relation: "prerequisite",
+    reason:
+      "Document를 독립 encoding하는 retriever가 어떤 query·document 조건에서 이웃 ranking을 유지하는지 robustness 축을 정의합니다.",
+  },
+  {
+    from: "train-validation-test",
+    to: "corpus-lineage-leakage-boundary",
+    relation: "prerequisite",
+    reason:
+      "평가 split을 학습에서 분리한다는 원칙을 문서 계보·near duplicate 수준까지 확장합니다.",
+  },
+  {
+    from: "retrieval-robustness-axis",
+    to: "corpus-lineage-leakage-boundary",
+    relation: "constrains",
+    reason:
+      "언어·도메인·길이 coverage를 넓히더라도 benchmark 계보를 넘지 않는 corpus pool을 만듭니다.",
+  },
+  {
+    from: "corpus-lineage-leakage-boundary",
+    to: "synthetic-query-task-coverage",
+    relation: "produces",
+    reason:
+      "누출이 제거된 document pool에서 subset 특성에 맞는 여러 query task를 합성합니다.",
+  },
+  {
+    from: "synthetic-query-task-coverage",
+    to: "answer-position-balanced-sampling",
+    relation: "extends",
+    reason:
+      "Query 표현뿐 아니라 그 답의 document 내 상대 위치도 합성·선별 변수로 추가합니다.",
+  },
+  {
+    from: "synthetic-query-task-coverage",
+    to: "query-document-relevance-graph",
+    relation: "produces",
+    reason:
+      "한 document에 여러 query intent를 생성하고 같은 query의 여러 relevant document를 edge로 보존합니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "query-document-relevance-graph",
+    relation: "prerequisite",
+    reason:
+      "Query-document 관계를 positive·negative·unknown으로 구분해야 누락된 relevance edge를 negative로 확정하지 않습니다.",
+  },
+  {
+    from: "query-document-relevance-graph",
+    to: "positive-aware-margin-mining",
+    relation: "constrains",
+    reason:
+      "Known positive set을 anchor로 사용하고 이미 relevant edge인 후보를 mining에서 제외합니다.",
+  },
+  {
+    from: "hard-negative-mining-snapshot",
+    to: "positive-aware-margin-mining",
+    relation: "extends",
+    reason:
+      "Miner·index·K snapshot에 query별 positive-relative margin rule을 추가합니다.",
+  },
+  {
+    from: "positive-aware-margin-mining",
+    to: "query-local-scalar-teacher-cache",
+    relation: "produces",
+    reason:
+      "확정된 positive와 negative candidate identity에 teacher scalar score를 사전 계산합니다.",
+  },
+  {
+    from: "query-local-scalar-teacher-cache",
+    to: "listwise-candidate-distillation",
+    relation: "produces",
+    reason:
+      "저장한 동일 candidate support의 teacher score 분포를 student listwise target으로 사용합니다.",
+  },
+  {
+    from: "temperature-soft-target",
+    to: "listwise-candidate-distillation",
+    relation: "prerequisite",
+    reason:
+      "Temperature가 candidate score 분포의 sharpness와 상위 ranking supervision을 조절합니다.",
+  },
+  {
+    from: "kl-divergence",
+    to: "listwise-candidate-distillation",
+    relation: "prerequisite",
+    reason:
+      "Teacher distribution을 기준으로 student candidate distribution의 차이를 줄입니다.",
+  },
+  {
+    from: "listwise-candidate-distillation",
+    to: "ablation-claim-boundary",
+    relation: "evaluates",
+    reason:
+      "KL·Margin-MSE·cosine objective를 같은 조건에서 비교하되 관측 순위와 mechanism 해석을 분리합니다.",
+  },
+  {
+    from: "ndcg-graded-discount",
+    to: "retrieval-robustness-slice-evaluation",
+    relation: "prerequisite",
+    reason:
+      "Query별 상위 ranking 품질을 NDCG로 계산한 뒤 robustness axis별로 집계합니다.",
+  },
+  {
+    from: "retrieval-robustness-axis",
+    to: "retrieval-robustness-slice-evaluation",
+    relation: "produces",
+    reason:
+      "학습에서 통제한 언어·길이·position·mapping 축을 평가에서도 같은 identity로 남깁니다.",
+  },
+  {
+    from: "ablation-claim-boundary",
+    to: "retrieval-robustness-slice-evaluation",
+    relation: "constrains",
+    reason:
+      "전체 평균 우위가 모든 slice와 새로운 model에서도 유지된다는 과잉 일반화를 막습니다.",
+  },
+  {
+    from: "llm-harness-system-boundary",
+    to: "agent-run-contract",
+    relation: "produces",
+    reason:
+      "Model 제안과 runtime 강제 책임을 분리한 뒤 한 run에서 고정할 목표·권한·검증·복구 항목을 명세합니다.",
+  },
+  {
+    from: "agent-context-discovery-path",
+    to: "agent-run-contract",
+    relation: "constrains",
+    reason:
+      "Run이 읽을 정본과 현재 task에 필요한 context를 계층적 경로로 제한합니다.",
+  },
+  {
+    from: "agent-capability-runtime-boundary",
+    to: "agent-run-contract",
+    relation: "constrains",
+    reason:
+      "Tool schema와 실제 실행 권한을 분리해 허용 identity·resource·operation을 runtime 계약에 넣습니다.",
+  },
+  {
+    from: "agent-run-contract",
+    to: "agent-artifact-state-continuity",
+    relation: "produces",
+    reason:
+      "Plan·결정·산출물·검증 evidence를 versioned artifact로 남겨 run의 연속성을 확보합니다.",
+  },
+  {
+    from: "agent-artifact-state-continuity",
+    to: "layered-agent-verification",
+    relation: "prerequisite",
+    reason:
+      "검증기가 실제 artifact와 환경 상태를 재현 가능하게 읽을 수 있어야 계층별 판정이 가능합니다.",
+  },
+  {
+    from: "layered-agent-verification",
+    to: "agent-trajectory-effect-evaluation",
+    relation: "evaluates",
+    reason:
+      "결정적 검사·환경 oracle·judge·사람 검토가 artifact·trajectory·effect·budget을 각각 판정합니다.",
+  },
+  {
+    from: "agent-trajectory-effect-evaluation",
+    to: "harness-failure-layer-ablation",
+    relation: "produces",
+    reason:
+      "실패 trace와 정상 trace를 비교해 어느 하네스 계층을 바꿔야 하는지 분류합니다.",
+  },
+  {
+    from: "harness-failure-layer-ablation",
+    to: "workflow-agent-checkpoint-boundary",
+    relation: "optimizes",
+    reason:
+      "관측된 경로 불확실성과 side-effect 위험에 맞춰 workflow·agent·checkpoint 구성을 줄이거나 추가합니다.",
+  },
+  {
+    from: "workflow-agent-checkpoint-boundary",
+    to: "loop-timescale-authority-separation",
+    relation: "extends",
+    reason:
+      "한 run의 제어 흐름과 여러 run에서 하네스를 변경하는 운영 loop를 서로 다른 권한으로 분리합니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "agent-capability-runtime-boundary",
+    relation: "extends",
+    reason:
+      "외부 write capability에는 retry 시 중복 effect를 막는 stable operation key와 receipt가 함께 필요합니다.",
+  },
+  {
+    from: "llm-inference-context-state",
+    to: "context-curation-lifecycle",
+    relation: "prerequisite",
+    reason:
+      "현재 generation이 실제로 읽는 token 집합을 식별해야 선택·주입·압축·격리 대상을 정할 수 있습니다.",
+  },
+  {
+    from: "instruction-data-enforcement-boundary",
+    to: "context-curation-lifecycle",
+    relation: "constrains",
+    reason:
+      "Instruction·untrusted data·runtime control의 provenance와 권한을 섞지 않은 채 context를 구성합니다.",
+  },
+  {
+    from: "agent-context-discovery-path",
+    to: "context-source-provenance-freshness",
+    relation: "produces",
+    reason:
+      "Just-in-time으로 찾은 정본의 source·version·retrieval time을 context fragment에 함께 남깁니다.",
+  },
+  {
+    from: "context-source-provenance-freshness",
+    to: "working-state-long-term-memory-boundary",
+    relation: "constrains",
+    reason:
+      "세션을 넘어 보존할 memory에는 source·동의·갱신·삭제 수명을 명시해야 합니다.",
+  },
+  {
+    from: "working-state-long-term-memory-boundary",
+    to: "context-compaction-fidelity",
+    relation: "prerequisite",
+    reason:
+      "현재 run에 남길 상태와 외부 memory로 옮길 사실을 먼저 나눠야 compaction 손실을 검증할 수 있습니다.",
+  },
+  {
+    from: "context-token-budget-allocation",
+    to: "context-compaction-fidelity",
+    relation: "constrains",
+    reason:
+      "Context 한도와 output reserve를 넘기기 전에 history·tool result를 줄이되 필요한 state 보존을 검사합니다.",
+  },
+  {
+    from: "lost-in-middle-position-evaluation",
+    to: "context-token-budget-allocation",
+    relation: "evaluates",
+    reason:
+      "길이와 위치별 utilization을 측정해 더 많은 token을 넣는 선택의 실제 이득을 검증합니다.",
+  },
+  {
+    from: "stable-prefix-cache-boundary",
+    to: "context-token-budget-allocation",
+    relation: "optimizes",
+    reason:
+      "Stable prefix의 prefill 계산을 재사용하되 cache hit가 token 수나 의미 위험을 없애는 것으로 해석하지 않습니다.",
+  },
+  {
+    from: "agent-run-contract",
+    to: "agent-observation-action-loop",
+    relation: "constrains",
+    reason:
+      "Objective·capability·artifact·verifier·recovery가 한 agent loop의 허용 state와 action을 제한합니다.",
+  },
+  {
+    from: "typed-tool-observation-contract",
+    to: "agent-observation-action-loop",
+    relation: "produces",
+    reason:
+      "Runtime이 실행 결과를 typed observation으로 만들어 다음 state transition에 제공합니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "agent-exit-state-machine",
+    relation: "constrains",
+    reason:
+      "각 iteration 뒤 verifier·budget·error·approval 상태를 확인해 계속·완료·중단·escalation을 구분합니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "agent-framework-runtime-boundary",
+    relation: "prerequisite",
+    reason:
+      "직접 구현할 최소 state·action·observation loop를 알아야 framework가 추가로 맡는 runtime 책임을 식별할 수 있습니다.",
+  },
+  {
+    from: "workflow-agent-checkpoint-boundary",
+    to: "agent-framework-runtime-boundary",
+    relation: "constrains",
+    reason:
+      "경로 불확실성과 side-effect 위험이 framework workflow·agent·checkpoint 기능을 실제로 요구하는지 제한합니다.",
+  },
+  {
+    from: "agent-framework-runtime-boundary",
+    to: "durable-agent-execution-state",
+    relation: "extends",
+    reason:
+      "긴 run·process restart·human wait가 요구되면 in-memory loop를 durable execution state로 확장합니다.",
+  },
+  {
+    from: "durable-agent-execution-state",
+    to: "checkpoint-replay-boundary",
+    relation: "produces",
+    reason:
+      "Durable state snapshot은 재개 지점을 제공하지만 snapshot 이후 계산과 외부 effect의 replay 정책을 별도로 요구합니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "checkpoint-replay-boundary",
+    relation: "constrains",
+    reason:
+      "Replay되는 node가 같은 외부 환불을 다시 만들지 않도록 stable operation key와 receipt 확인을 강제합니다.",
+  },
+  {
+    from: "checkpoint-replay-boundary",
+    to: "interrupt-resume-contract",
+    relation: "extends",
+    reason:
+      "승인 대기 interrupt는 checkpoint identity와 검증된 resume payload를 연결해 같은 논리 지점에서 이어져야 합니다.",
+  },
+  {
+    from: "agent-framework-runtime-boundary",
+    to: "framework-capability-requirement-matrix",
+    relation: "evaluates",
+    reason:
+      "직접 loop와 framework의 경계를 persistence·interrupt·state merge·deployment 같은 workload 요구사항으로 비교합니다.",
+  },
+  {
+    from: "interrupt-resume-contract",
+    to: "framework-capability-requirement-matrix",
+    relation: "constrains",
+    reason:
+      "Human approval을 안전하게 중단·재개해야 하는 workload는 후보 runtime의 필수 capability를 구체화합니다.",
+  },
+  {
+    from: "framework-capability-requirement-matrix",
+    to: "framework-version-migration-contract",
+    relation: "produces",
+    reason:
+      "선택한 framework의 capability와 version 조건을 state/checkpoint 호환성·canary·rollback 계약으로 고정합니다.",
+  },
+  {
+    from: "agent-trajectory-effect-evaluation",
+    to: "framework-version-migration-contract",
+    relation: "evaluates",
+    reason:
+      "Migration 전후 artifact 품질·trajectory·side effect·cost를 paired trace로 비교해 승인 여부를 결정합니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "executable-plan-state",
+    relation: "extends",
+    reason:
+      "긴 horizon에서는 현재 task뿐 아니라 dependency·artifact·status가 있는 상위 plan state를 유지합니다.",
+  },
+  {
+    from: "typed-tool-observation-contract",
+    to: "evidence-driven-replanning",
+    relation: "produces",
+    reason:
+      "새 observation이 어떤 assumption과 downstream dependency를 깨뜨렸는지 판정합니다.",
+  },
+  {
+    from: "evidence-driven-replanning",
+    to: "executable-plan-state",
+    relation: "optimizes",
+    reason:
+      "영향받은 task만 invalidation하고 검증된 immutable artifact는 보존해 plan을 갱신합니다.",
+  },
+  {
+    from: "layered-agent-verification",
+    to: "feedback-grounded-reflection",
+    relation: "produces",
+    reason:
+      "결정적 검사·환경 oracle·rubric·사람 검토의 실패 evidence를 다음 trial의 수정 지침으로 바꿉니다.",
+  },
+  {
+    from: "executable-plan-state",
+    to: "agent-delegation-artifact-ownership",
+    relation: "extends",
+    reason:
+      "독립 task를 위임할 때 input snapshot·artifact owner·completion evidence를 typed contract로 전달합니다.",
+  },
+  {
+    from: "agent-delegation-artifact-ownership",
+    to: "manager-handoff-state-ownership",
+    relation: "constrains",
+    reason:
+      "누가 user-facing state와 final synthesis를 소유하는지에 따라 manager call과 handoff를 구분합니다.",
+  },
+  {
+    from: "agent-capability-runtime-boundary",
+    to: "hook-skill-guardrail-verifier-boundary",
+    relation: "prerequisite",
+    reason:
+      "Hook·guardrail·verifier가 model instruction과 실제 runtime authority를 혼동하지 않도록 합니다.",
+  },
+  {
+    from: "agent-skill-authoring-boundary",
+    to: "skill-trigger-metadata-contract",
+    relation: "produces",
+    reason:
+      "재사용 workflow의 적용 범위를 name·description으로 압축해야 host가 본문을 읽기 전에 후보를 찾을 수 있습니다.",
+  },
+  {
+    from: "skill-trigger-metadata-contract",
+    to: "skill-invocation-routing",
+    relation: "constrains",
+    reason:
+      "Implicit invocation은 description이 밝힌 적용·비적용 범위에 따라 후보를 고르고 explicit invocation은 사용자가 직접 선택합니다.",
+  },
+  {
+    from: "skill-trigger-metadata-contract",
+    to: "skill-progressive-disclosure",
+    relation: "prerequisite",
+    reason:
+      "작은 metadata가 routing에 충분해야 선택 전 전체 SKILL.md를 읽지 않는 progressive disclosure가 가능합니다.",
+  },
+  {
+    from: "skill-resource-layout",
+    to: "skill-progressive-disclosure",
+    relation: "optimizes",
+    reason:
+      "Instruction·reference·script·asset을 나누면 선택 뒤에도 현재 작업에 필요한 resource만 단계적으로 읽을 수 있습니다.",
+  },
+  {
+    from: "skill-invocation-routing",
+    to: "skill-trigger-evaluation",
+    relation: "evaluates",
+    reason:
+      "적용·비적용 요청에서 실제 선택을 기록해 false positive와 false negative를 각각 측정합니다.",
+  },
+  {
+    from: "skill-permission-non-escalation",
+    to: "agent-capability-runtime-boundary",
+    relation: "prerequisite",
+    reason:
+      "Skill이 절차를 제공해도 실제 tool execution은 runtime identity·scope·approval 계약을 통과해야 합니다.",
+  },
+  {
+    from: "skill-scope-discovery",
+    to: "skill-trigger-metadata-contract",
+    relation: "produces",
+    reason:
+      "Scope별 discovery가 현재 session의 metadata 후보 집합을 구성합니다.",
+  },
+  {
+    from: "skill-plugin-distribution-boundary",
+    to: "skill-scope-discovery",
+    relation: "contrasts",
+    reason:
+      "Local discovery 위치와 설치 가능한 plugin distribution은 겹칠 수 있지만 같은 authoring·배포 책임은 아닙니다.",
+  },
+  {
+    from: "llm-harness-system-boundary",
+    to: "claude-code-workspace-harness-boundary",
+    relation: "extends",
+    reason:
+      "일반 하네스의 objective·context·tool·permission·verification 책임을 Claude Code가 terminal workspace와 session에 연결하는 제품별 runtime으로 구체화합니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "claude-code-workspace-harness-boundary",
+    relation: "prerequisite",
+    reason:
+      "Claude Code의 동작을 이해하려면 model의 action 제안과 runtime의 tool 실행, observation 반환, 종료 판정을 먼저 분리해야 합니다.",
+  },
+  {
+    from: "agent-context-discovery-path",
+    to: "claude-code-instruction-discovery-order",
+    relation: "extends",
+    reason:
+      "일반적인 repository context 발견 경로를 managed·user·project·local CLAUDE.md와 ancestor·descendant loading 시점이 있는 제품 규칙으로 구체화합니다.",
+  },
+  {
+    from: "claude-code-workspace-harness-boundary",
+    to: "claude-code-instruction-discovery-order",
+    relation: "constrains",
+    reason:
+      "Workspace의 시작 위치와 실제로 읽은 file path가 이번 session에 들어오는 CLAUDE.md·auto memory context의 범위와 시점을 정합니다.",
+  },
+  {
+    from: "context-compaction-fidelity",
+    to: "claude-code-instruction-discovery-order",
+    relation: "constrains",
+    reason:
+      "Compaction 뒤에도 계속 지켜야 할 project 규칙은 대화 요약에만 맡기지 않고 지속적으로 발견되는 CLAUDE.md에 두어야 합니다.",
+  },
+  {
+    from: "agent-delegation-artifact-ownership",
+    to: "claude-code-subagent-handoff-contract",
+    relation: "extends",
+    reason:
+      "일반 위임 계약을 Claude Code의 별도 subagent context·tool access·permission과 main conversation으로 돌아오는 summary·artifact 경계에 적용합니다.",
+  },
+  {
+    from: "claude-code-workspace-harness-boundary",
+    to: "claude-code-subagent-handoff-contract",
+    relation: "extends",
+    reason:
+      "Main session이 작업을 분리하더라도 subagent의 입력 범위·권한·산출물과 검증 책임은 같은 workspace harness 안에서 명시해야 합니다.",
+  },
+  {
+    from: "agent-capability-runtime-boundary",
+    to: "claude-code-permission-decision-order",
+    relation: "extends",
+    reason:
+      "Model에게 보이는 tool registry와 실제 호출 허용 여부를 구분한 뒤 Claude Code permission의 deny→ask→allow 판정 순서를 적용합니다.",
+  },
+  {
+    from: "hook-skill-guardrail-verifier-boundary",
+    to: "claude-code-hook-event-contract",
+    relation: "extends",
+    reason:
+      "일반 hook의 실행 시점과 권한 경계를 Claude Code lifecycle event·matcher·handler type·입출력 계약으로 구체화합니다.",
+  },
+  {
+    from: "claude-code-hook-event-contract",
+    to: "claude-code-permission-decision-order",
+    relation: "constrains",
+    reason:
+      "PreToolUse hook의 decision은 permission prompt 전에 처리되지만 hook allow만으로 기존 deny·ask rule을 우회할 수 없습니다.",
+  },
+  {
+    from: "claude-code-workspace-harness-boundary",
+    to: "claude-code-file-checkpoint-boundary",
+    relation: "produces",
+    reason:
+      "제품 runtime은 대화와 direct file-edit snapshot을 연결해 rewind 지점을 만들지만 workspace 밖 effect까지 같은 복구 단위로 만들지는 않습니다.",
+  },
+  {
+    from: "agent-artifact-state-continuity",
+    to: "claude-code-file-checkpoint-boundary",
+    relation: "constrains",
+    reason:
+      "Checkpoint 복구 뒤에도 Bash·subagent·external system이 남긴 artifact와 effect는 별도 identity·receipt·검증으로 현재 상태와 다시 맞춰야 합니다.",
+  },
+  {
+    from: "mcp-tool-resource-prompt-boundary",
+    to: "claude-code-workspace-harness-boundary",
+    relation: "extends",
+    reason:
+      "MCP는 Claude Code에 외부 tool·resource 연결을 추가하지만 product session·permission·hook·checkpoint runtime 자체를 대체하지 않습니다.",
+  },
+  {
+    from: "skill-permission-non-escalation",
+    to: "claude-code-permission-decision-order",
+    relation: "constrains",
+    reason:
+      "Skill이 재사용 절차를 제공해도 Claude Code의 permission rule과 hook decision을 넘어 새로운 tool 권한을 만들 수 없습니다.",
+  },
+  {
+    from: "unicode-code-point",
+    to: "qwen-language-consistency-failure-taxonomy",
+    relation: "prerequisite",
+    reason:
+      "화면의 script span을 세기 전에 code point·grapheme·언어 정체성이 같은 단위가 아님을 구분해야 정상 인용과 번역을 오류로 세지 않습니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "qwen-language-consistency-failure-taxonomy",
+    relation: "prerequisite",
+    reason:
+      "출력 문자열의 문자 혼용과 model이 실제로 선택한 vocabulary token 경로를 분리해 진단합니다.",
+  },
+  {
+    from: "qwen-language-consistency-failure-taxonomy",
+    to: "korean-output-policy-exception-contract",
+    relation: "produces",
+    reason:
+      "실제 오류 label과 정상 중국어 번역·원문 인용 label을 나눈 뒤 prompt의 기본 언어와 허용 예외를 도출합니다.",
+  },
+  {
+    from: "prompt-input-contract",
+    to: "korean-output-policy-exception-contract",
+    relation: "extends",
+    reason:
+      "일반 prompt contract의 objective·input·exception·completion 조건을 Qwen의 reasoning/final language policy에 적용합니다.",
+  },
+  {
+    from: "unicode-code-point",
+    to: "smoothie-token-risk-score",
+    relation: "prerequisite",
+    reason:
+      "Target Unicode range와 broken decoding 결과를 명시해야 어떤 token 조합을 위험 표본으로 셀지 정할 수 있습니다.",
+  },
+  {
+    from: "tokenizer-pipeline-contract",
+    to: "smoothie-token-risk-score",
+    relation: "prerequisite",
+    reason:
+      "Risk score는 checkpoint와 일치하는 vocabulary·decoder에서 direct token과 n-gram으로 복원되는 broken token을 분석합니다.",
+  },
+  {
+    from: "smoothie-token-risk-score",
+    to: "smoothie-lm-head-row-scaling",
+    relation: "produces",
+    reason:
+      "각 token의 r∈[0,1]이 min_scale·smoothness와 함께 해당 lm_head row의 scale S(r)를 정합니다.",
+  },
+  {
+    from: "language-model-policy",
+    to: "smoothie-lm-head-row-scaling",
+    relation: "prerequisite",
+    reason:
+      "Hidden state와 vocabulary output row의 내적이 다음-token logit을 만들기 때문에 row editing이 decoding distribution에 개입합니다.",
+  },
+  {
+    from: "softmax-normalization",
+    to: "smoothie-lm-head-row-scaling",
+    relation: "constrains",
+    reason:
+      "한 row를 줄여도 softmax denominator가 모든 token을 결합하고 음수 logit은 0에 가까워져 오히려 확률이 커질 수 있습니다.",
+  },
+  {
+    from: "sft",
+    to: "qwen-korean-sft-rl-stage-boundary",
+    relation: "extends",
+    reason:
+      "일반 response-token imitation을 한국어 reasoning demonstration으로 verifier가 구분할 수 있는 초기 policy region을 만드는 단계에 적용합니다.",
+  },
+  {
+    from: "online-rollout",
+    to: "qwen-korean-sft-rl-stage-boundary",
+    relation: "extends",
+    reason:
+      "현재 Qwen policy가 같은 한국어 prompt의 여러 completion을 만들고 outcome reward로 선호를 조정하는 RL 단계를 SFT와 구분합니다.",
+  },
+  {
+    from: "qwen-korean-sft-rl-stage-boundary",
+    to: "oracle-guided-korean-reward-contract",
+    relation: "produces",
+    reason:
+      "SFT 뒤 rollout에서 정확성·형식·언어·길이를 서로 다른 sub-reward로 관측해 group-relative update의 입력을 만듭니다.",
+  },
+  {
+    from: "oracle-guided-korean-reward-contract",
+    to: "grpo-within-prompt-relative-advantage",
+    relation: "produces",
+    reason:
+      "Oracle로 보정된 completion reward에서 같은 prompt group의 평균을 빼 Dr.GRPO의 상대 advantage를 계산합니다.",
+  },
+  {
+    from: "versioned-verifier-measurement",
+    to: "oracle-guided-korean-reward-contract",
+    relation: "constrains",
+    reason:
+      "Programmatic checker와 oracle prompt·model·override rule을 versioned measurement로 기록해야 reward hacking과 judge regression을 다시 분석할 수 있습니다.",
+  },
+  {
+    from: "korean-output-policy-exception-contract",
+    to: "korean-language-runtime-guard-calibration",
+    relation: "produces",
+    reason:
+      "기본 한국어 정책과 번역·인용·code 예외가 checker의 positive label·allowlist·review 구간을 정합니다.",
+  },
+  {
+    from: "cost-sensitive-threshold",
+    to: "korean-language-runtime-guard-calibration",
+    relation: "extends",
+    reason:
+      "Human-labeled slice에서 false reject와 leakage miss 비용을 비교해 script ratio의 pass·retry·review threshold를 고릅니다.",
+  },
+  {
+    from: "versioned-verifier-measurement",
+    to: "korean-language-runtime-guard-calibration",
+    relation: "constrains",
+    reason:
+      "Regex·language detector·judge prompt와 예외 policy의 version을 고정해야 운영 오판율과 회귀를 비교할 수 있습니다.",
+  },
+  {
+    from: "qwen-language-consistency-failure-taxonomy",
+    to: "qwen-korean-paired-release-evaluation",
+    relation: "prerequisite",
+    reason:
+      "Reasoning mismatch·final mismatch·정상 번역 보존을 별도 slice로 유지해야 한 aggregate 점수가 상반된 회귀를 숨기지 않습니다.",
+  },
+  {
+    from: "qwen-korean-paired-release-evaluation",
+    to: "smoothie-lm-head-row-scaling",
+    relation: "evaluates",
+    reason:
+      "변환 checkpoint는 target suppression뿐 아니라 정상 중국어 요청·task quality·token probability coupling을 base와 같은 조건에서 비교해야 합니다.",
+  },
+  {
+    from: "qwen-korean-paired-release-evaluation",
+    to: "qwen-korean-sft-rl-stage-boundary",
+    relation: "evaluates",
+    reason:
+      "SFT와 RL의 추가 이득·일반 능력 회귀를 stage별 checkpoint ablation으로 분리합니다.",
+  },
+  {
+    from: "qwen-korean-paired-release-evaluation",
+    to: "korean-language-runtime-guard-calibration",
+    relation: "evaluates",
+    reason:
+      "Checker·judge·retry의 false decision과 latency·token cost를 model quality와 별도 release guardrail로 측정합니다.",
+  },
+  {
+    from: "independent-evaluation",
+    to: "qwen-korean-paired-release-evaluation",
+    relation: "prerequisite",
+    reason:
+      "Training reward와 분리된 human-labeled exception slice·task benchmark에서 candidate를 평가해야 reward 최적화를 성능으로 오인하지 않습니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "qwen-korean-paired-release-evaluation",
+    relation: "prerequisite",
+    reason:
+      "Base/candidate weight·tokenizer·prompt·sampling·checker·judge·dataset·seed를 같은 run manifest로 고정해야 paired canary와 rollback이 재현됩니다.",
+  },
+  {
+    from: "openclaw-inbound-gateway-event-envelope",
+    to: "openclaw-binding-agent-selection-order",
+    relation: "produces",
+    reason:
+      "정규화된 channel·account·peer·group metadata가 binding specificity와 fallback agent를 결정하는 입력이 됩니다.",
+  },
+  {
+    from: "openclaw-binding-agent-selection-order",
+    to: "openclaw-session-key-scope-boundary",
+    relation: "produces",
+    reason:
+      "Matched binding이 고른 agent가 session을 소유하고 inbound source와 dmScope가 해당 conversation key를 구체화합니다.",
+  },
+  {
+    from: "working-state-long-term-memory-boundary",
+    to: "openclaw-session-key-scope-boundary",
+    relation: "constrains",
+    reason:
+      "한 session의 transcript·compaction state와 여러 conversation에서 재사용하는 memory를 같은 저장 범위로 오인하지 않게 합니다.",
+  },
+  {
+    from: "openclaw-session-key-scope-boundary",
+    to: "openclaw-provider-model-runtime-resolution",
+    relation: "produces",
+    reason:
+      "Session이 소유한 agent config와 현재 auth/catalog snapshot에서 이번 turn의 provider·model·runtime policy를 해석합니다.",
+  },
+  {
+    from: "llm-harness-system-boundary",
+    to: "openclaw-agent-harness-execution-boundary",
+    relation: "extends",
+    reason:
+      "일반 harness의 context·tool·permission·verification 책임을 OpenClaw built-in·plugin runtime과 Gateway delivery 구조로 구체화합니다.",
+  },
+  {
+    from: "openclaw-provider-model-runtime-resolution",
+    to: "openclaw-agent-harness-execution-boundary",
+    relation: "produces",
+    reason:
+      "Provider/model route를 먼저 확정한 뒤 model/provider runtime policy와 plugin claim으로 실제 harness를 선택합니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "openclaw-agent-harness-execution-boundary",
+    relation: "prerequisite",
+    reason:
+      "Harness는 model proposal·authorized tool execution·typed observation·exit transition을 실행하지만 channel routing 자체를 대신하지 않습니다.",
+  },
+  {
+    from: "openclaw-agent-harness-execution-boundary",
+    to: "openclaw-resource-discovery-loading-contract",
+    relation: "produces",
+    reason:
+      "선택된 runtime generation과 agent workspace가 이번 turn에 보일 extension·tool·Skill·prompt·theme 후보와 load scope를 정합니다.",
+  },
+  {
+    from: "skill-scope-discovery",
+    to: "openclaw-resource-discovery-loading-contract",
+    relation: "extends",
+    reason:
+      "일반 Skill discovery를 OpenClaw workspace·project-agent·personal·managed·bundled·extra/plugin source의 현재 precedence에 적용합니다.",
+  },
+  {
+    from: "skill-permission-non-escalation",
+    to: "openclaw-tool-policy-sandbox-elevated-boundary",
+    relation: "prerequisite",
+    reason:
+      "Skill instruction과 secret metadata가 실제 tool allow/deny·sandbox·elevated 권한을 새로 만들지 못한다는 원칙을 적용합니다.",
+  },
+  {
+    from: "sandbox-workload-control-matrix",
+    to: "openclaw-tool-policy-sandbox-elevated-boundary",
+    relation: "extends",
+    reason:
+      "일반 identity·network·kernel·storage·lifecycle 통제표 위에 OpenClaw의 tool policy·sandbox mode/scope/backend·elevated escape path를 배치합니다.",
+  },
+  {
+    from: "openclaw-resource-discovery-loading-contract",
+    to: "openclaw-tool-policy-sandbox-elevated-boundary",
+    relation: "constrains",
+    reason:
+      "발견되어 model에게 보이는 resource와 실제로 실행이 허용되고 어디서 실행되는지를 별도 판정으로 유지합니다.",
+  },
+  {
+    from: "openclaw-tool-policy-sandbox-elevated-boundary",
+    to: "openclaw-reply-route-idempotency-contract",
+    relation: "produces",
+    reason:
+      "Tool 결과와 approval·denied·error observation을 run exit 상태로 만든 뒤 원 inbound route에 typed reply를 전달합니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "openclaw-reply-route-idempotency-contract",
+    relation: "extends",
+    reason:
+      "Side-effecting Gateway send·agent request의 stable idempotency key와 receipt를 retry·gap recovery에 적용합니다.",
+  },
+  {
+    from: "prompt-input-contract",
+    to: "prompt-instruction-evidence-boundary",
+    relation: "constrains",
+    reason: "Objective와 evidence를 분리해야 retrieved data나 example 안의 문장을 상위 instruction으로 오인하지 않습니다.",
+  },
+  {
+    from: "prompt-input-contract",
+    to: "prompt-completion-verification-contract",
+    relation: "produces",
+    reason: "누가 결과를 소비하는지에서 schema·completion criteria·validator를 도출합니다.",
+  },
+  {
+    from: "prompt-zero-few-shot-boundary",
+    to: "in-context-learning-demonstration",
+    relation: "produces",
+    reason: "Few-shot 경로는 현재 context의 demonstration을 조건으로 model behavior를 바꿉니다.",
+  },
+  {
+    from: "in-context-learning-demonstration",
+    to: "demonstration-selection-order-sensitivity",
+    relation: "constrains",
+    reason: "Demonstration의 내용·label balance·순서가 prediction에 영향을 줄 수 있어 permutation과 subset 평가가 필요합니다.",
+  },
+  {
+    from: "chain-of-thought-elicitation",
+    to: "self-consistency-answer-marginalization",
+    relation: "extends",
+    reason: "하나의 reasoning path 대신 여러 path를 sampling해 answer별 지지를 합칩니다.",
+  },
+  {
+    from: "chain-of-thought-faithfulness-boundary",
+    to: "chain-of-thought-elicitation",
+    relation: "constrains",
+    reason: "출력 reasoning의 자연스러움과 실제 answer correctness·causal faithfulness를 별도로 검증합니다.",
+  },
+  {
+    from: "prompt-structured-output-contract",
+    to: "syntactic-semantic-validity-boundary",
+    relation: "extends",
+    reason: "Prompt가 소비자 schema를 정의한 뒤 constrained decoding과 domain validator가 syntax·semantics를 나눠 강제합니다.",
+  },
+  {
+    from: "prompt-completion-verification-contract",
+    to: "prompt-evaluation-regression-loop",
+    relation: "evaluates",
+    reason: "완료 기준을 versioned eval case와 metric으로 바꿔 prompt 변경 전후를 비교합니다.",
+  },
+  {
+    from: "prompt-model-version-portability",
+    to: "prompt-evaluation-regression-loop",
+    relation: "constrains",
+    reason: "Model·snapshot·template·decoding 변경마다 같은 regression slice와 canary를 다시 실행합니다.",
+  },
+  {
+    from: "prompt-instruction-evidence-boundary",
+    to: "xml-prompt-delimiter-boundary",
+    relation: "extends",
+    reason: "Prompt의 instruction·evidence 구분을 실제 start/end tag와 nested block으로 직렬화합니다.",
+  },
+  {
+    from: "xml-prompt-delimiter-boundary",
+    to: "xml-prompt-role-tag-vocabulary",
+    relation: "produces",
+    reason: "구분하려는 실제 역할에서 일관된 tag name과 block vocabulary를 도출합니다.",
+  },
+  {
+    from: "xml-well-formedness-nesting",
+    to: "xml-character-data-escaping",
+    relation: "constrains",
+    reason: "Template 밖에서 들어오는 character data가 markup 구조를 깨지 않도록 직렬화해야 합니다.",
+  },
+  {
+    from: "xml-prompt-role-tag-vocabulary",
+    to: "xml-repeated-record-identity",
+    relation: "extends",
+    reason: "여러 document·example을 반복할 때 collection·record·metadata 관계를 명시합니다.",
+  },
+  {
+    from: "xml-prompt-structure-runtime-boundary",
+    to: "xml-prompt-delimiter-boundary",
+    relation: "constrains",
+    reason: "Tag가 설명하는 구조와 application runtime이 실제로 실행·승인하는 control flow를 분리합니다.",
+  },
+  {
+    from: "xml-output-parser-validator-pipeline",
+    to: "xml-wellformed-valid-semantic-boundary",
+    relation: "evaluates",
+    reason: "Parser 성공 뒤에도 schema와 domain·policy validator가 서로 다른 실패를 판정합니다.",
+  },
+  {
+    from: "xml-external-entity-security-boundary",
+    to: "xml-output-parser-validator-pipeline",
+    relation: "constrains",
+    reason: "Untrusted output을 읽는 parser는 DTD·external entity·network access와 resource budget을 제한해야 합니다.",
+  },
+  {
+    from: "prompt-structured-output-contract",
+    to: "xml-output-parser-validator-pipeline",
+    relation: "extends",
+    reason: "Consumer output contract를 XML parser와 typed validation 단계로 구현합니다.",
+  },
+  {
+    from: "xml-prompt-format-selection-evaluation",
+    to: "prompt-evaluation-regression-loop",
+    relation: "extends",
+    reason: "Format 선택도 같은 model·dataset·decoder에서 versioned regression으로 비교합니다.",
+  },
+  {
+    from: "mcp-integration-protocol-boundary",
+    to: "mcp-host-client-server-boundary",
+    relation: "produces",
+    reason: "공통 message contract를 실제 제품·연결·domain service의 세 책임으로 나눕니다.",
+  },
+  {
+    from: "mcp-host-client-server-boundary",
+    to: "mcp-stateless-request-envelope",
+    relation: "constrains",
+    reason: "Client가 각 server 요청에 필요한 protocol context를 독립된 envelope로 전달합니다.",
+  },
+  {
+    from: "mcp-version-capability-discovery",
+    to: "mcp-stateless-request-envelope",
+    relation: "produces",
+    reason: "Version과 capability 정보가 session handshake가 아니라 요청별 _meta와 discover 결과에 드러납니다.",
+  },
+  {
+    from: "mcp-explicit-application-handle",
+    to: "mcp-stateless-request-envelope",
+    relation: "extends",
+    reason: "Core는 stateless로 유지하면서 후속 작업에 필요한 application state만 explicit handle로 전달합니다.",
+  },
+  {
+    from: "mcp-tool-resource-prompt-boundary",
+    to: "mcp-json-schema-result-contract",
+    relation: "constrains",
+    reason: "동작 primitive인 Tool의 입력과 결과를 schema와 resultType으로 검증합니다.",
+  },
+  {
+    from: "mcp-list-cache-contract",
+    to: "mcp-tool-resource-prompt-boundary",
+    relation: "optimizes",
+    reason: "Primitive 목록 discovery를 권한·scope·TTL 경계 안에서 재사용합니다.",
+  },
+  {
+    from: "mcp-stdio-streamable-http-boundary",
+    to: "mcp-header-routing-integrity",
+    relation: "produces",
+    reason: "원격 HTTP 배포에서는 method·name·version을 gateway가 검사할 header 계약이 추가됩니다.",
+  },
+  {
+    from: "mcp-json-schema-result-contract",
+    to: "mcp-mrtr-input-required",
+    relation: "extends",
+    reason: "완료·실패뿐 아니라 추가 입력이 필요한 중간 result를 typed contract로 표현합니다.",
+  },
+  {
+    from: "mcp-request-cancellation-subscription-boundary",
+    to: "mcp-stdio-streamable-http-boundary",
+    relation: "constrains",
+    reason: "Transport별 stream 수명에 따라 취소 신호와 독립 subscription channel의 구현이 달라집니다.",
+  },
+  {
+    from: "mcp-authorization-trust-boundary",
+    to: "mcp-host-client-server-boundary",
+    relation: "constrains",
+    reason: "Host consent와 server-side authorization이 self-reported metadata·model proposal과 분리돼야 합니다.",
+  },
+  {
+    from: "mcp-extension-deprecation-lifecycle",
+    to: "mcp-version-capability-discovery",
+    relation: "constrains",
+    reason: "선택 기능과 legacy 호환은 명시적 protocol revision·capability·deprecation 기간으로 관리합니다.",
+  },
+  {
+    from: "mcp-retry-idempotency-boundary",
+    to: "mcp-json-schema-result-contract",
+    relation: "extends",
+    reason: "Typed 결과와 effect receipt를 이용해 응답 손실 뒤 중복 실행 여부를 판정합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "devlog-raw-evidence-claim-boundary",
+    relation: "prerequisite",
+    reason: "해석 문서의 claim은 code·input·config·run·evaluation을 다시 찾을 수 있는 provenance에서 시작합니다.",
+  },
+  {
+    from: "content-addressed-artifact-reference",
+    to: "devlog-raw-evidence-claim-boundary",
+    relation: "extends",
+    reason: "움직이는 link뿐 아니라 digest·schema·producer를 보존해야 원문이 바뀌지 않았는지 확인할 수 있습니다.",
+  },
+  {
+    from: "experiment-spec-attempt-identity",
+    to: "devlog-raw-evidence-claim-boundary",
+    relation: "extends",
+    reason: "같은 조건의 재실행과 서로 다른 attempt를 덮어쓰지 않아야 실패와 수정 전후를 재현할 수 있습니다.",
+  },
+  {
+    from: "devlog-raw-evidence-claim-boundary",
+    to: "devlog-record-question-ownership",
+    relation: "prerequisite",
+    reason: "먼저 관찰 원문과 해석을 나눈 뒤 각 질문의 정본 문서를 정할 수 있습니다.",
+  },
+  {
+    from: "devlog-record-question-ownership",
+    to: "curated-changelog-entry-contract",
+    relation: "produces",
+    reason: "‘언제 무엇이 달라졌나’라는 질문의 정본은 검증된 변화를 찾는 Changelog가 소유합니다.",
+  },
+  {
+    from: "devlog-record-question-ownership",
+    to: "architecture-decision-record-contract",
+    relation: "produces",
+    reason: "‘왜 이 선택을 했나’라는 질문의 정본은 context와 consequence를 보존하는 ADR이 소유합니다.",
+  },
+  {
+    from: "devlog-record-question-ownership",
+    to: "reusable-lesson-contract",
+    relation: "produces",
+    reason: "‘지금 어떤 판단 기준을 적용하나’라는 질문의 정본은 현재 rule을 유지하는 Lessons가 소유합니다.",
+  },
+  {
+    from: "curated-changelog-entry-contract",
+    to: "devlog-record-promotion-threshold",
+    relation: "prerequisite",
+    reason: "검증된 변화 중 장기 decision이나 재사용 rule이 있는 경우에만 다음 기록으로 확장합니다.",
+  },
+  {
+    from: "architecture-decision-record-contract",
+    to: "devlog-record-promotion-threshold",
+    relation: "constrains",
+    reason: "ADR은 모든 수정이 아니라 이후 선택을 제약하는 significant decision에만 사용합니다.",
+  },
+  {
+    from: "reusable-lesson-contract",
+    to: "devlog-record-promotion-threshold",
+    relation: "constrains",
+    reason: "Lesson은 scope·exception·verification을 말할 수 있는 반복 또는 고심각도 판단에만 사용합니다.",
+  },
+  {
+    from: "postmortem-lesson-boundary",
+    to: "reusable-lesson-contract",
+    relation: "contrasts",
+    reason: "사건의 timeline·impact·action과 현재 재사용할 rule을 서로 다른 정본에 남깁니다.",
+  },
+  {
+    from: "devlog-raw-evidence-claim-boundary",
+    to: "agent-drafted-record-evidence-boundary",
+    relation: "constrains",
+    reason: "Agent 초안의 모든 원인·수치·완료 claim은 실제 source와 verifier receipt로 돌아가야 합니다.",
+  },
+  {
+    from: "agent-drafted-record-evidence-boundary",
+    to: "curated-changelog-entry-contract",
+    relation: "constrains",
+    reason: "Agent가 만든 Changelog 초안도 verified result·실제 link·redaction·사람 승인을 통과해야 합니다.",
+  },
+  {
+    from: "agent-drafted-record-evidence-boundary",
+    to: "architecture-decision-record-contract",
+    relation: "constrains",
+    reason: "Agent는 option을 요약할 수 있지만 decision driver와 consequence를 발명하거나 accepted를 done으로 만들 수 없습니다.",
+  },
+  {
+    from: "agent-drafted-record-evidence-boundary",
+    to: "reusable-lesson-contract",
+    relation: "constrains",
+    reason: "Agent가 반복 pattern을 제안해도 evidence count·counterexample·scope·owner review 없이 현재 rule로 승격하지 않습니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "claw-independent-reimplementation-snapshot-boundary",
+    relation: "prerequisite",
+    reason: "Repository commit·fixture·harness version을 고정해야 project 관찰과 움직이는 main branch를 구분할 수 있습니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-crate-responsibility-dependency-map",
+    relation: "constrains",
+    reason: "Crate 책임과 의존 방향은 pinned Claw Code snapshot에서 확인한 범위로만 설명합니다.",
+  },
+  {
+    from: "llm-harness-system-boundary",
+    to: "claw-runtime-adapter-state-ownership",
+    relation: "extends",
+    reason: "Model proposal과 runtime 강제를 분리하는 일반 harness 경계를 Claw Code의 runtime·adapter 책임에 적용합니다.",
+  },
+  {
+    from: "agent-observation-action-loop",
+    to: "claw-runtime-adapter-state-ownership",
+    relation: "prerequisite",
+    reason: "Turn owner와 adapter를 나누려면 proposal→execution→typed observation→state update 순서를 먼저 구분해야 합니다.",
+  },
+  {
+    from: "claw-crate-responsibility-dependency-map",
+    to: "claw-runtime-adapter-state-ownership",
+    relation: "produces",
+    reason: "Workspace dependency map에서 runtime이 orchestration state를, provider·tool crate가 adapter 결과를 소유하는 seam을 찾습니다.",
+  },
+  {
+    from: "typed-tool-observation-contract",
+    to: "claw-provider-stream-normalization-contract",
+    relation: "extends",
+    reason: "Provider별 streaming frame도 success·error·source·order가 있는 typed runtime observation으로 바꿔야 합니다.",
+  },
+  {
+    from: "claw-runtime-adapter-state-ownership",
+    to: "claw-provider-stream-normalization-contract",
+    relation: "produces",
+    reason: "Provider adapter는 transport frame을 runtime event로 반환하고 session commit 여부는 runtime이 결정합니다.",
+  },
+  {
+    from: "agent-capability-runtime-boundary",
+    to: "claw-runtime-adapter-state-ownership",
+    relation: "constrains",
+    reason: "Tool registry의 schema 발견과 permission·workspace enforcement를 model proposal이나 adapter 내부 상태와 섞지 않습니다.",
+  },
+  {
+    from: "claw-python-reference-oracle-boundary",
+    to: "claw-observable-behavioral-parity-surface",
+    relation: "constrains",
+    reason: "Python reference를 oracle로 쓸 수 있는 범위를 observable contract별로 먼저 선언합니다.",
+  },
+  {
+    from: "claw-provider-stream-normalization-contract",
+    to: "claw-observable-behavioral-parity-surface",
+    relation: "produces",
+    reason: "Provider stream에서 조립된 event·tool call·error category는 Rust/Python parity의 주요 observable입니다.",
+  },
+  {
+    from: "claw-observable-behavioral-parity-surface",
+    to: "claw-deterministic-fixture-canonicalization",
+    relation: "prerequisite",
+    reason: "무엇이 contract인지 정한 뒤에만 비결정적 field를 의미를 훼손하지 않고 정규화할 수 있습니다.",
+  },
+  {
+    from: "versioned-verifier-measurement",
+    to: "claw-deterministic-fixture-canonicalization",
+    relation: "constrains",
+    reason: "Fixture·normalizer·expected result를 versioned measurement program으로 기록해 golden update를 추적합니다.",
+  },
+  {
+    from: "claw-deterministic-fixture-canonicalization",
+    to: "claw-parity-integration-test-boundary",
+    relation: "prerequisite",
+    reason: "Deterministic mock이 검증하는 observable을 고정해야 실제 network·OS·sandbox가 남긴 공백을 알 수 있습니다.",
+  },
+  {
+    from: "layered-agent-verification",
+    to: "claw-parity-integration-test-boundary",
+    relation: "extends",
+    reason: "빠른 parity, 실제 provider contract, sandbox integration, end-to-end 검증을 위험과 비용에 따라 층으로 쌓습니다.",
+  },
+  {
+    from: "agent-trajectory-effect-evaluation",
+    to: "claw-parity-integration-test-boundary",
+    relation: "evaluates",
+    reason: "최종 답뿐 아니라 permission path·workspace diff·test receipt·recovery를 층별 test에서 따로 확인합니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-tool-registry-composition-contract",
+    relation: "constrains",
+    reason: "Registry source·collision·실행 경로 주장은 pinned Claw commit에서 관찰한 범위로만 설명합니다.",
+  },
+  {
+    from: "prompt-structured-output-contract",
+    to: "claw-tool-spec-schema-domain-boundary",
+    relation: "extends",
+    reason: "Tool input도 field·type·required·additional property를 schema로 고정하되 domain semantics와 authorization은 별도 판정합니다.",
+  },
+  {
+    from: "syntactic-semantic-validity-boundary",
+    to: "claw-tool-spec-schema-domain-boundary",
+    relation: "prerequisite",
+    reason: "Schema-valid JSON과 실제 workspace path·command·business constraint가 유효한지는 서로 다른 질문입니다.",
+  },
+  {
+    from: "claw-tool-registry-composition-contract",
+    to: "claw-tool-dispatch-execution-contract",
+    relation: "produces",
+    reason: "충돌 없이 고정된 registry entry가 있어야 name lookup부터 executor까지 하나의 dispatch contract를 적용할 수 있습니다.",
+  },
+  {
+    from: "claw-tool-spec-schema-domain-boundary",
+    to: "claw-tool-dispatch-execution-contract",
+    relation: "prerequisite",
+    reason: "Dispatch는 model이 본 schema와 같은 계약으로 input을 parse하고 domain error를 실행 오류와 구분해야 합니다.",
+  },
+  {
+    from: "agent-capability-runtime-boundary",
+    to: "claw-tool-effect-permission-enforcement-boundary",
+    relation: "extends",
+    reason: "Tool schema를 생성하는 능력과 argument별 side effect를 host가 실제로 허용하는 권한을 분리합니다.",
+  },
+  {
+    from: "claw-tool-dispatch-execution-contract",
+    to: "claw-tool-effect-permission-enforcement-boundary",
+    relation: "constrains",
+    reason: "모든 built-in·plugin·runtime call이 executor 전에 같은 effect·permission enforcement 지점을 거쳐야 합니다.",
+  },
+  {
+    from: "typed-tool-observation-contract",
+    to: "claw-tool-result-receipt-envelope",
+    relation: "extends",
+    reason: "Claw tool result에 stable error·truncation·artifact·effect receipt를 넣어 다음 turn이 빈 결과와 실패를 구분합니다.",
+  },
+  {
+    from: "mcp-retry-idempotency-boundary",
+    to: "claw-tool-result-receipt-envelope",
+    relation: "constrains",
+    reason: "Timeout 뒤 retry 전에 operation identity와 effect receipt로 ambiguous completion을 판정해야 합니다.",
+  },
+  {
+    from: "claw-extension-tool-adapter-identity-boundary",
+    to: "claw-tool-definition-generation-pin",
+    relation: "prerequisite",
+    reason: "Source·version·instance identity를 보존해야 reload 전후 schema와 executor를 같은 generation에 묶을 수 있습니다.",
+  },
+  {
+    from: "mcp-json-schema-result-contract",
+    to: "claw-extension-tool-adapter-identity-boundary",
+    relation: "extends",
+    reason: "MCP input/output contract를 Claw model-facing definition과 typed result로 바꾸되 MCP lifecycle과 authorization은 별도로 유지합니다.",
+  },
+  {
+    from: "skill-plugin-distribution-boundary",
+    to: "claw-extension-tool-adapter-identity-boundary",
+    relation: "constrains",
+    reason: "Plugin package의 discovery·distribution 책임과 registry에 합류한 executable tool의 runtime 계약을 구분합니다.",
+  },
+  {
+    from: "claw-tool-effect-permission-enforcement-boundary",
+    to: "claw-tool-parallel-dependency-boundary",
+    relation: "constrains",
+    reason: "Effect가 겹치거나 approval·write dependency가 있는 call은 독립 병렬 node로 취급할 수 없습니다.",
+  },
+  {
+    from: "code-mode-effect-atomicity",
+    to: "claw-tool-parallel-dependency-boundary",
+    relation: "prerequisite",
+    reason: "여러 call의 부분 성공·retry·compensation은 한 group 실행과 원자적 transaction을 구분해야 합니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-permission-policy-evaluation-snapshot",
+    relation: "constrains",
+    reason: "Mode·rule·prompt 순서는 pinned Claw commit에서 관찰한 구현에만 귀속하고 다른 agent 제품의 정책으로 일반화하지 않습니다.",
+  },
+  {
+    from: "claw-permission-rule-subject-matcher-snapshot",
+    to: "claw-permission-policy-evaluation-snapshot",
+    relation: "prerequisite",
+    reason: "어떤 rule이 match했는지 알려면 tool name과 input에서 실제 비교한 subject·matcher semantics를 먼저 알아야 합니다.",
+  },
+  {
+    from: "claw-permission-policy-evaluation-snapshot",
+    to: "claw-permission-context-override-precedence",
+    relation: "constrains",
+    reason: "Hook override는 독립적인 권한이 아니라 denied tool·deny·ask·mode 판정 안에서 결합됩니다.",
+  },
+  {
+    from: "agent-capability-runtime-boundary",
+    to: "claw-permission-authority-ceiling-gap",
+    relation: "extends",
+    reason: "Model이 tool call을 제안하는 능력과 deployment가 실제로 가진 최대 authority를 분리해 approval도 ceiling 밖으로 나가지 못하게 합니다.",
+  },
+  {
+    from: "skill-permission-non-escalation",
+    to: "claw-permission-context-override-precedence",
+    relation: "extends",
+    reason: "Hook·instruction이 기존 deny와 mode requirement를 우회해 새 capability를 만들지 않도록 합니다.",
+  },
+  {
+    from: "claw-permission-authority-ceiling-gap",
+    to: "claw-permission-policy-evaluation-snapshot",
+    relation: "constrains",
+    reason: "Active mode·rule·interactive approval은 outer deployment ceiling 안에서만 유효해야 합니다.",
+  },
+  {
+    from: "claw-permission-policy-evaluation-snapshot",
+    to: "claw-permission-enforcer-dispatch-seam",
+    relation: "produces",
+    reason: "Policy의 allow·deny outcome을 tool executor 직전 dispatch seam에서 소비해야 판정이 실제 실행을 통제합니다.",
+  },
+  {
+    from: "claw-tool-effect-permission-enforcement-boundary",
+    to: "claw-permission-enforcer-dispatch-seam",
+    relation: "extends",
+    reason: "일반적인 argument별 effect 분류를 pinned Claw tools dispatcher와 optional enforcer 경로에서 구체적으로 추적합니다.",
+  },
+  {
+    from: "claw-approval-token-scope-lifecycle-snapshot",
+    to: "claw-permission-policy-generation-receipt-gap",
+    relation: "extends",
+    reason: "Approval scope·executor·expiry·use count를 실제 policy generation과 effect receipt에 연결해야 standalone ledger가 runtime authorization이 됩니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "claw-permission-policy-generation-receipt-gap",
+    relation: "constrains",
+    reason: "승인 뒤 crash·retry가 같은 edit를 반복하지 않도록 call·approval·effect identity와 consume 상태를 함께 기록합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "claw-permission-policy-generation-receipt-gap",
+    relation: "constrains",
+    reason: "Policy·rule·actor·canonical argument·effect digest를 versioned receipt로 남겨 stale authorization과 실제 실행을 재현합니다.",
+  },
+  {
+    from: "claw-permission-policy-generation-receipt-gap",
+    to: "claw-permission-login-release-gate",
+    relation: "prerequisite",
+    reason: "무슨 generation과 approval이 어떤 login edit·test effect를 허용했는지 알아야 base/candidate를 정확히 비교할 수 있습니다.",
+  },
+  {
+    from: "layered-agent-verification",
+    to: "claw-permission-login-release-gate",
+    relation: "extends",
+    reason: "Rule unit test, dispatch negative test, deterministic login test와 사람 승인 audit을 위험에 따라 층으로 쌓습니다.",
+  },
+  {
+    from: "agent-trajectory-effect-evaluation",
+    to: "claw-permission-login-release-gate",
+    relation: "evaluates",
+    reason: "최종 답뿐 아니라 approval path·unauthorized executor call·duplicate edit·test receipt·latency를 함께 측정합니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-session-record-snapshot-boundary",
+    relation: "constrains",
+    reason: "Session record와 persistence 주장은 pinned Claw commit의 실제 field·JSONL record·test가 보여 주는 범위로 제한합니다.",
+  },
+  {
+    from: "claw-session-record-snapshot-boundary",
+    to: "claw-session-typed-content-correlation-contract",
+    relation: "produces",
+    reason: "Session record 안에서 role·content block·tool call/result identity를 잃지 않아야 transcript를 재구성할 수 있습니다.",
+  },
+  {
+    from: "typed-tool-observation-contract",
+    to: "claw-session-typed-content-correlation-contract",
+    relation: "extends",
+    reason: "Tool observation의 call identity·success/error를 Claw의 ToolUse·ToolResult block correlation에 적용합니다.",
+  },
+  {
+    from: "claw-runtime-adapter-state-ownership",
+    to: "claw-conversation-turn-persistence-order",
+    relation: "produces",
+    reason: "Provider와 tool adapter가 반환한 event를 session에 반영하고 loop를 계속할 책임은 ConversationRuntime에 남습니다.",
+  },
+  {
+    from: "claw-session-typed-content-correlation-contract",
+    to: "claw-conversation-turn-persistence-order",
+    relation: "prerequisite",
+    reason: "User·assistant·tool message와 call/result identity가 있어야 실제 turn persistence 순서를 추적할 수 있습니다.",
+  },
+  {
+    from: "claw-conversation-turn-persistence-order",
+    to: "claw-session-effect-commit-reconciliation-gap",
+    relation: "constrains",
+    reason: "Tool 실행 뒤 result가 저장되는 실제 순서에서 crash cut을 놓으면 중복 effect 위험을 볼 수 없습니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "claw-session-effect-commit-reconciliation-gap",
+    relation: "extends",
+    reason: "Stable operation key·receipt 조회·deduplication으로 resume가 같은 edit나 external effect를 다시 만들지 않게 합니다.",
+  },
+  {
+    from: "code-mode-effect-atomicity",
+    to: "claw-session-effect-commit-reconciliation-gap",
+    relation: "prerequisite",
+    reason: "Program·turn commit과 실제 filesystem·process·network effect의 transaction 경계는 같지 않습니다.",
+  },
+  {
+    from: "claw-session-record-snapshot-boundary",
+    to: "claw-session-persistence-write-boundary",
+    relation: "constrains",
+    reason: "Record append와 전체 snapshot rewrite를 구분해야 crash·rotation·concurrent writer의 복구 범위를 정확히 설명할 수 있습니다.",
+  },
+  {
+    from: "checkpoint-replay-boundary",
+    to: "claw-session-workspace-store-resume-boundary",
+    relation: "extends",
+    reason: "저장 파일을 다시 여는 것과 workspace·pending operation·현재 policy를 검증해 안전하게 실행을 재개하는 것은 다른 단계입니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "claw-session-workspace-store-resume-boundary",
+    relation: "constrains",
+    reason: "Session ID뿐 아니라 workspace identity·source commit·artifact digest가 있어야 다른 작업 디렉터리로 잘못 resume하는 일을 막을 수 있습니다.",
+  },
+  {
+    from: "claw-session-record-snapshot-boundary",
+    to: "claw-session-fork-provenance-copy-boundary",
+    relation: "produces",
+    reason: "Pinned fork는 현재 session record를 복제하고 parent identity를 덧붙이는 방식이므로 immutable branch graph와 구분합니다.",
+  },
+  {
+    from: "content-addressed-artifact-reference",
+    to: "claw-session-fork-provenance-copy-boundary",
+    relation: "extends",
+    reason: "대화 branch와 workspace 결과를 함께 비교·merge하려면 artifact URI뿐 아니라 digest·producer branch를 보존해야 합니다.",
+  },
+  {
+    from: "agent-artifact-state-continuity",
+    to: "claw-session-fork-provenance-copy-boundary",
+    relation: "extends",
+    reason: "Branch가 transcript 복제에 그치지 않으려면 목표·결정·diff·검증 evidence·미완료 상태의 lineage가 필요합니다.",
+  },
+  {
+    from: "claw-session-workspace-store-resume-boundary",
+    to: "claw-session-lifecycle-state-machine-gap",
+    relation: "constrains",
+    reason: "Session file을 찾고 load하는 기능만으로 pause·drain·effect reconciliation·closed 전이를 보장할 수 없습니다.",
+  },
+  {
+    from: "interrupt-resume-contract",
+    to: "claw-session-lifecycle-state-machine-gap",
+    relation: "extends",
+    reason: "Pause와 사람 승인을 재개할 때 checkpoint identity·중단 이유·검증된 resume input을 durable lifecycle에 연결합니다.",
+  },
+  {
+    from: "agent-exit-state-machine",
+    to: "claw-session-lifecycle-state-machine-gap",
+    relation: "constrains",
+    reason: "Completed·failed·awaiting approval 같은 turn 결과와 Paused·Closed 같은 session lifecycle을 서로 다른 상태 층으로 유지합니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-compaction-trigger-paths-snapshot",
+    relation: "constrains",
+    reason: "Trigger threshold·오류 분류·retry schedule은 pinned Claw commit에서 관찰한 구현 범위로만 설명합니다.",
+  },
+  {
+    from: "context-token-budget-allocation",
+    to: "claw-compaction-trigger-paths-snapshot",
+    relation: "prerequisite",
+    reason: "Input history뿐 아니라 output reserve와 실제 usage를 구분해야 수동·자동·오류 복구 trigger를 평가할 수 있습니다.",
+  },
+  {
+    from: "claw-compaction-trigger-paths-snapshot",
+    to: "claw-compaction-summary-projection-snapshot",
+    relation: "produces",
+    reason: "수동·자동·복구 경로가 compaction을 결정하면 pinned projection이 오래된 history를 synthetic summary와 recent tail로 바꿉니다.",
+  },
+  {
+    from: "claw-session-typed-content-correlation-contract",
+    to: "claw-compaction-tail-tool-pair-boundary",
+    relation: "prerequisite",
+    reason: "ToolUse·ToolResult role과 identity를 알아야 recent-tail 경계에서 orphan result를 만들지 않을 수 있습니다.",
+  },
+  {
+    from: "claw-compaction-tail-tool-pair-boundary",
+    to: "claw-compaction-summary-projection-snapshot",
+    relation: "constrains",
+    reason: "원문 보존 경계를 먼저 안전하게 정한 뒤 그 앞의 message만 summary 대상으로 보냅니다.",
+  },
+  {
+    from: "context-curation-lifecycle",
+    to: "claw-compaction-summary-projection-snapshot",
+    relation: "extends",
+    reason: "일반적인 선택·압축 lifecycle을 pinned Claw의 deterministic role/tool/file/timeline projection으로 구체화합니다.",
+  },
+  {
+    from: "claw-compaction-summary-projection-snapshot",
+    to: "claw-compaction-repeated-summary-merge",
+    relation: "produces",
+    reason: "첫 projection이 만든 synthetic summary를 다음 cycle에서 찾아 highlight를 평평하게 유지하고 새 구간과 합칩니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-summary-compression-line-policy",
+    relation: "constrains",
+    reason: "Line normalization·dedupe·priority는 pinned summary_compression module의 실제 범위이며 session semantic compactor로 확대하지 않습니다.",
+  },
+  {
+    from: "claw-summary-compression-line-policy",
+    to: "claw-compaction-login-state-contract",
+    relation: "contrasts",
+    reason: "Line priority로 크기를 줄이는 실제 helper와 goal·permission·receipt를 typed field로 보존해야 하는 hardening 계약을 구분합니다.",
+  },
+  {
+    from: "context-compaction-fidelity",
+    to: "claw-compaction-login-state-contract",
+    relation: "extends",
+    reason: "일반 objective·artifact·unresolved state fidelity를 로그인 401의 auth evidence·permission·edit/test receipt 보존 항목으로 구체화합니다.",
+  },
+  {
+    from: "run-artifact-provenance",
+    to: "claw-compaction-login-state-contract",
+    relation: "constrains",
+    reason: "긴 stdout을 context에서 줄여도 auth evidence·patch·test는 source URI·digest·producer와 함께 다시 찾을 수 있어야 합니다.",
+  },
+  {
+    from: "claw-compaction-context-effect-boundary",
+    to: "claw-compaction-fidelity-release-gate",
+    relation: "constrains",
+    reason: "Context fidelity 평가가 이미 실행된 edit·process·network effect의 undo나 permission rollback으로 오인되지 않게 합니다.",
+  },
+  {
+    from: "claw-compaction-login-state-contract",
+    to: "claw-compaction-fidelity-release-gate",
+    relation: "prerequisite",
+    reason: "어떤 login state를 반드시 보존할지 먼저 고정해야 candidate summary를 commit할지 deterministic하게 판정할 수 있습니다.",
+  },
+  {
+    from: "layered-agent-verification",
+    to: "claw-compaction-fidelity-release-gate",
+    relation: "extends",
+    reason: "Schema·tool pair·artifact identity 검사에서 replay next-action·사람 review까지 compaction risk에 맞춰 검증을 쌓습니다.",
+  },
+  {
+    from: "agent-trajectory-effect-evaluation",
+    to: "claw-compaction-fidelity-release-gate",
+    relation: "evaluates",
+    reason: "압축률뿐 아니라 반복 edit·permission drift·test 재실행·복구 개입과 token·latency를 별도 metric으로 비교합니다.",
+  },
+  {
+    from: "claw-independent-reimplementation-snapshot-boundary",
+    to: "claw-bash-shell-dispatch-snapshot",
+    relation: "constrains",
+    reason: "Bash input·host cwd·`sh -lc` dispatch 주장을 pinned Claw commit에서 관찰한 source 범위로 제한합니다.",
+  },
+  {
+    from: "syntactic-semantic-validity-boundary",
+    to: "claw-bash-shell-dispatch-snapshot",
+    relation: "prerequisite",
+    reason: "Schema-valid command 문자열과 shell language가 expansion 뒤 만드는 executable·argv·effect의 의미를 분리합니다.",
+  },
+  {
+    from: "claw-bash-shell-dispatch-snapshot",
+    to: "claw-bash-validation-integration-gap",
+    relation: "constrains",
+    reason: "실제 `sh -lc` executor에 도달하는 call path를 따라가야 별도 validation module이 연결됐는지 판정할 수 있습니다.",
+  },
+  {
+    from: "claw-bash-validation-integration-gap",
+    to: "claw-bash-command-intent-heuristic-boundary",
+    relation: "produces",
+    reason: "별도 validation module은 lexical 검사 중 하나로 first-command 기반 intent classification 결과를 만듭니다.",
+  },
+  {
+    from: "claw-bash-shell-dispatch-snapshot",
+    to: "claw-bash-command-intent-heuristic-boundary",
+    relation: "constrains",
+    reason: "Shell string 전체가 실행되므로 첫 executable 분류를 pipeline·subshell·expansion 뒤 실제 effect의 증명으로 확대하지 않습니다.",
+  },
+  {
+    from: "claw-tool-effect-permission-enforcement-boundary",
+    to: "claw-bash-path-effect-toctou-gap",
+    relation: "extends",
+    reason: "일반적인 canonical argument·effect 분류를 Bash의 cwd·environment·symlink·executable resolution과 실행 handle binding 문제로 구체화합니다.",
+  },
+  {
+    from: "claw-bash-command-intent-heuristic-boundary",
+    to: "claw-bash-path-effect-toctou-gap",
+    relation: "constrains",
+    reason: "Intent label만으로 target path와 check-use 사이 resource identity가 보존됐다고 판정할 수 없습니다.",
+  },
+  {
+    from: "claw-permission-enforcer-dispatch-seam",
+    to: "claw-bash-optional-permission-enforcement-seam",
+    relation: "extends",
+    reason: "일반 Claw permission enforcer의 allowed/denied 결과를 Bash argument-specific required mode와 optional injection 경로에서 추적합니다.",
+  },
+  {
+    from: "claw-bash-path-effect-toctou-gap",
+    to: "claw-bash-optional-permission-enforcement-seam",
+    relation: "prerequisite",
+    reason: "Permission decision과 executor가 같은 canonical command·cwd·target identity를 사용해야 승인한 effect와 실제 effect를 묶을 수 있습니다.",
+  },
+  {
+    from: "process-container-resource-boundary",
+    to: "claw-bash-unshare-sandbox-boundary",
+    relation: "extends",
+    reason: "Host kernel 위 process에 namespace를 적용하는 일반 경계를 pinned Claw의 util-linux `unshare` launcher와 status field로 구체화합니다.",
+  },
+  {
+    from: "sandbox-workload-control-matrix",
+    to: "claw-bash-unshare-sandbox-boundary",
+    relation: "constrains",
+    reason: "Namespace active 표시는 filesystem mount policy·seccomp·cgroup·credential·egress 통제를 각각 확인하는 workload matrix를 대체하지 않습니다.",
+  },
+  {
+    from: "claw-bash-unshare-sandbox-boundary",
+    to: "claw-bash-process-lifecycle-receipt-gap",
+    relation: "constrains",
+    reason: "PID namespace와 `--fork` 사용만으로 timeout 뒤 모든 descendant가 종료되고 host에 effect가 남지 않았다고 결론내리지 않습니다.",
+  },
+  {
+    from: "typed-tool-observation-contract",
+    to: "claw-bash-process-lifecycle-receipt-gap",
+    relation: "extends",
+    reason: "Stdout·stderr·exit·timeout·truncation·sandbox status를 분리하되 process-tree identity와 cleanup evidence까지 observation에 포함해야 합니다.",
+  },
+  {
+    from: "agent-replay-idempotency",
+    to: "claw-bash-process-lifecycle-receipt-gap",
+    relation: "constrains",
+    reason: "Timeout·응답 손실 뒤 동일 Bash command를 재실행하기 전에 stable operation key와 effect receipt로 기존 실행 상태를 조회해야 합니다.",
+  },
+  {
+    from: "claw-bash-optional-permission-enforcement-seam",
+    to: "claw-bash-login-release-gate",
+    relation: "prerequisite",
+    reason: "Missing enforcer와 deny path에서 executor가 호출되지 않는지 확인해야 login 수정 workflow의 authorization gate를 평가할 수 있습니다.",
+  },
+  {
+    from: "claw-bash-process-lifecycle-receipt-gap",
+    to: "claw-bash-login-release-gate",
+    relation: "prerequisite",
+    reason: "Timeout·truncation·background child와 crash cut에서 effect와 cleanup을 식별할 receipt 항목을 먼저 고정해야 재시도와 rollback을 판정할 수 있습니다.",
+  },
+  {
+    from: "layered-agent-verification",
+    to: "claw-bash-login-release-gate",
+    relation: "extends",
+    reason: "Parser·classifier unit test에서 permission negative test·actual sandbox probe·login regression·canary까지 위험에 따라 검증을 쌓습니다.",
+  },
+  {
+    from: "agent-trajectory-effect-evaluation",
+    to: "claw-bash-login-release-gate",
+    relation: "evaluates",
+    reason: "최종 test 통과뿐 아니라 unauthorized process·workspace diff·network effect·잔류 descendant·duplicate effect와 receipt를 함께 비교합니다.",
+  },
+];
+
+export function getKnowledgeConcept(id: string): KnowledgeConcept {
+  const concept = KNOWLEDGE_CONCEPTS[id];
+  if (!concept) throw new Error(`Unknown knowledge concept: ${id}`);
+  return concept;
+}

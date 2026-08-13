@@ -1,65 +1,46 @@
+import { CliFrame, CliRule, CliSteps } from "./CliVizPrimitives";
+
 export default function MarkdownViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 280" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Markdown → ANSI 렌더링 파이프라인</text>
-
-        <defs>
-          <marker id="md-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {/* Raw markdown */}
-        <rect x={35} y={60} width={150} height={96} rx={8}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={110} y={80} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          LLM 응답
-        </text>
-        <text x={46} y={100} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">## 제목</text>
-        <text x={46} y={116} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">**굵게**</text>
-        <text x={46} y={132} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">`code`</text>
-        <text x={46} y={148} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">- 리스트</text>
-
-        <line x1={185} y1={108} x2={208} y2={108} stroke="#3b82f6" strokeWidth={1.4} markerEnd="url(#md-arr)" />
-
-        {/* pulldown-cmark */}
-        <rect x={210} y={60} width={140} height={96} rx={8}
-          fill="#8b5cf6" fillOpacity={0.1} stroke="#8b5cf6" strokeWidth={1} />
-        <text x={280} y={90} textAnchor="middle" fontSize={11} fontWeight={700} fill="#8b5cf6">
-          pulldown-cmark
-        </text>
-        <text x={280} y={112} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          이벤트 스트림
-        </text>
-        <text x={280} y={130} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          Start/End/Text
-        </text>
-
-        <line x1={350} y1={108} x2={373} y2={108} stroke="#3b82f6" strokeWidth={1.4} markerEnd="url(#md-arr)" />
-
-        {/* ANSI 출력 */}
-        <rect x={375} y={60} width={150} height={96} rx={8}
-          fill="#1f2937" stroke="#10b981" strokeWidth={1} />
-        <text x={386} y={80} fontSize={11} fontWeight={700} fill="#e5e7eb">## 제목</text>
-        <text x={386} y={98} fontSize={10} fontWeight={700} fill="#e5e7eb">굵게</text>
-        <text x={386} y={115} fontSize={9.5} fontFamily="monospace" fill="#f59e0b">code</text>
-        <text x={386} y={132} fontSize={9.5} fill="#e5e7eb">• 리스트</text>
-        <text x={450} y={148} textAnchor="middle" fontSize={8.5} fontStyle="italic" fill="#10b981">
-          터미널
-        </text>
-
-        {/* Streaming */}
-        <rect x={35} y={180} width={490} height={78} rx={8}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={202} textAnchor="middle" fontSize={11} fontWeight={700}
-          fill="var(--foreground)">StreamingRenderer — 실시간 렌더링</text>
-        <text x={280} y={222} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">줄 단위 렌더링 · 완전한 줄만 출력 · flush()로 즉시 업데이트</text>
-        <text x={280} y={240} textAnchor="middle" fontSize={8.5}
-          fill="var(--muted-foreground)">syntect로 코드 블록 100+ 언어 문법 하이라이팅</text>
-      </svg>
-    </div>
+    <CliFrame
+      label="EVENT TO VIEW"
+      title="스트림을 바로 칠하지 말고 화면 상태로 변환한다"
+      description="provider 이벤트를 공통 이벤트로 정규화한 뒤, 누적된 Markdown과 tool 상태를 화면 모델로 만들고 터미널 기능에 맞춰 출력합니다."
+      note="ANSI는 표현 수단일 뿐 데이터 계약이 아닙니다. 로그·파이프·CI에서는 색상과 커서 제어를 제거한 기계 판독용 출력을 선택합니다."
+    >
+      <CliSteps
+        items={[
+          {
+            label: "01 · EVENT",
+            title: "공통 이벤트",
+            body: "text delta, tool start·progress·end, permission, usage, error를 구분합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · REDUCE",
+            title: "화면 상태",
+            body: "부분 Markdown과 실행 중인 tool을 ID별로 누적해 일관된 상태를 만듭니다.",
+            tone: "violet",
+          },
+          {
+            label: "03 · LAYOUT",
+            title: "너비에 맞춘 배치",
+            body: "terminal width, Unicode, color depth, TTY 여부에 맞춰 줄바꿈과 장식을 결정합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · OUTPUT",
+            title: "TTY 또는 JSONL",
+            body: "사람에게는 ANSI UI를, 자동화에는 순서가 보존된 구조화 출력을 제공합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <CliRule>
+        아직 닫히지 않은 코드 fence나 링크처럼 불완전한 Markdown을 매 delta마다
+        확정하면 화면이 흔들립니다. 안정된 경계까지만 렌더링하고 종료 이벤트에서
+        남은 버퍼를 확정하는 편이 안전합니다.
+      </CliRule>
+    </CliFrame>
   );
 }

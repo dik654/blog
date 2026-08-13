@@ -14,8 +14,16 @@ pub fn max_blob_size_for_n_shards(n_shards: NonZeroU16, enc_type: EncodingType) 
 }`;
 
 export const RS_CONFIG_ANNOTATIONS = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: 'RS 인코딩 설정 구조체' },
-  { lines: [11, 14] as [number, number], color: 'emerald' as const, note: '최대 블롭 크기 계산' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "RS 인코딩 설정 구조체",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "emerald" as const,
+    note: "최대 블롭 크기 계산",
+  },
 ];
 
 export const ENCODE_CODE = `// walrus-core/src/encoding/blob_encoding.rs
@@ -58,10 +66,26 @@ pub fn encode_with_metadata(self) -> (Vec<SliverPair>, VerifiedBlobMetadataWithI
 }`;
 
 export const ENCODE_ANNOTATIONS = [
-  { lines: [3, 11] as [number, number], color: 'sky' as const, note: '시스테매틱 심볼 배치' },
-  { lines: [13, 18] as [number, number], color: 'emerald' as const, note: '행 방향 RS 인코딩' },
-  { lines: [20, 27] as [number, number], color: 'amber' as const, note: '열 방향 RS 인코딩 + 해시' },
-  { lines: [29, 33] as [number, number], color: 'violet' as const, note: '슬라이버 쌍 교차 배정' },
+  {
+    lines: [3, 11] as [number, number],
+    color: "sky" as const,
+    note: "시스테매틱 심볼 배치",
+  },
+  {
+    lines: [13, 18] as [number, number],
+    color: "emerald" as const,
+    note: "행 방향 RS 인코딩",
+  },
+  {
+    lines: [20, 27] as [number, number],
+    color: "amber" as const,
+    note: "열 방향 RS 인코딩 + 해시",
+  },
+  {
+    lines: [29, 33] as [number, number],
+    color: "violet" as const,
+    note: "슬라이버 쌍 교차 배정",
+  },
 ];
 
 export const SLIVER_CODE = `// walrus-core/src/encoding/slivers.rs
@@ -83,6 +107,14 @@ pub struct SliverPair {
 // - symbols.to_symbols() → chunks(symbol_size) 이터레이터`;
 
 export const SLIVER_ANNOTATIONS = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: '제네릭 슬라이버 구조체' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: '슬라이버 쌍 (교차 보유)' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "제네릭 슬라이버 구조체",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "슬라이버 쌍 (교차 보유)",
+  },
 ];

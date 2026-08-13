@@ -28,14 +28,12 @@ where
 
             batch.push(header);
 
-            // 4. commit_threshold(기본 10,000)에 도달하면 배치를 DB에 삽입
-            //    MDBX 트랜잭션 한 번으로 묶어서 I/O 효율화
+            // 4. 설정된 작업 한계에 도달하면 provider를 통해 배치를 영속화
             if batch.len() >= self.commit_threshold {
                 provider.insert_headers(batch.drain(..))?;
             }
         }
-        // 5. 남은 헤더 삽입 + 체크포인트 저장
-        //    크래시 후 재시작 시 end 블록부터 이어서 다운로드
+        // 5. 남은 헤더 삽입 + 재시작 가능한 체크포인트 저장
         if !batch.is_empty() {
             provider.insert_headers(batch)?;
         }

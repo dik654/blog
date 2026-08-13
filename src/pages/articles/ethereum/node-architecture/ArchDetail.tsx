@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { modules } from './archData';
+import { motion, AnimatePresence } from "framer-motion";
+import { modules } from "./archData";
 
 export default function ArchDetail({
   sel,
@@ -16,12 +16,11 @@ export default function ArchDetail({
         <motion.div
           key={sel}
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
+          animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           className="overflow-hidden"
         >
           <div className="rounded-lg border bg-accent/30 p-4 space-y-3.5">
-
             {/* JWT 통신 방식 (notes) */}
             {mod.notes && (
               <div className="rounded-md border border-amber-300 bg-amber-50/60 dark:bg-amber-950/20 p-3">
@@ -30,8 +29,12 @@ export default function ArchDetail({
                 </p>
                 <ul className="space-y-1">
                   {mod.notes.map((n) => (
-                    <li key={n} className="text-xs text-amber-800 dark:text-amber-300 flex gap-2">
-                      <span className="shrink-0">▸</span>{n}
+                    <li
+                      key={n}
+                      className="text-xs text-amber-800 dark:text-amber-300 flex gap-2"
+                    >
+                      <span className="shrink-0">▸</span>
+                      {n}
                     </li>
                   ))}
                 </ul>
@@ -49,7 +52,9 @@ export default function ArchDetail({
                     <code className="text-[11px] bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded font-mono shrink-0">
                       {f.sig}
                     </code>
-                    <span className="text-xs text-foreground/75 pt-0.5">{f.desc}</span>
+                    <span className="text-xs text-foreground/75 pt-0.5">
+                      {f.desc}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -69,14 +74,15 @@ export default function ArchDetail({
                       className="text-xs bg-background border rounded px-2 py-0.5 hover:bg-accent transition-colors cursor-pointer flex items-center gap-1"
                     >
                       <span className="">{l.dir}</span>
-                      <span className="font-medium">{modules[l.target]?.label ?? l.target}</span>
+                      <span className="font-medium">
+                        {modules[l.target]?.label ?? l.target}
+                      </span>
                       <span className="">({l.via})</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
-
           </div>
         </motion.div>
       )}

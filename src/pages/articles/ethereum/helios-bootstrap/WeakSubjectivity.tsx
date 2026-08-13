@@ -1,4 +1,4 @@
-import WeakSubViz from './viz/WeakSubViz';
+import WeakSubViz from "./viz/WeakSubViz";
 
 export default function WeakSubjectivity({ title }: { title: string }) {
   return (
@@ -11,12 +11,15 @@ export default function WeakSubjectivity({ title }: { title: string }) {
           이더리움은 ~27시간을 Weak Subjectivity 유효 기간으로 정의한다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 제네시스부터 검증하므로 이 제약이 없다.
+          <strong>💡 Reth vs Helios:</strong> Reth는 제네시스부터 검증하므로 이
+          제약이 없다.
           <br />
           Helios는 이 시간 안에 체크포인트를 갱신해야 한다.
         </p>
       </div>
-      <div className="not-prose"><WeakSubViz /></div>
+      <div className="not-prose">
+        <WeakSubViz />
+      </div>
     </section>
   );
 }

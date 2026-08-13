@@ -28,10 +28,26 @@ export const archCode = `dYdX v4 전체 아키텍처:
 └─────────────────────────────────────────────────────────┘`;
 
 export const archAnnotations = [
-  { lines: [5, 7] as [number, number], color: 'sky' as const, note: '외부 데이터 소스 연동' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: 'Daemon 프로세스 (가격/청산/브릿지)' },
-  { lines: [15, 16] as [number, number], color: 'amber' as const, note: 'Cosmos SDK 커스텀 모듈' },
-  { lines: [22, 26] as [number, number], color: 'rose' as const, note: 'Indexer 마이크로서비스' },
+  {
+    lines: [5, 7] as [number, number],
+    color: "sky" as const,
+    note: "외부 데이터 소스 연동",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "Daemon 프로세스 (가격/청산/브릿지)",
+  },
+  {
+    lines: [15, 16] as [number, number],
+    color: "amber" as const,
+    note: "Cosmos SDK 커스텀 모듈",
+  },
+  {
+    lines: [22, 26] as [number, number],
+    color: "rose" as const,
+    note: "Indexer 마이크로서비스",
+  },
 ];
 
 export const techStackCode = `Protocol Layer 기술 스택:
@@ -49,6 +65,14 @@ Indexer Layer 기술 스택:
   배포: AWS (ECS, RDS, MSK) + Docker`;
 
 export const techStackAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: 'Protocol: Go + Cosmos SDK' },
-  { lines: [7, 13] as [number, number], color: 'emerald' as const, note: 'Indexer: TypeScript + PostgreSQL' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "Protocol: Go + Cosmos SDK",
+  },
+  {
+    lines: [7, 13] as [number, number],
+    color: "emerald" as const,
+    note: "Indexer: TypeScript + PostgreSQL",
+  },
 ];

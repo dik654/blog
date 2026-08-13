@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-export { BeaconForkChoice, BeaconStore } from './archVisualsBeaconParts';
+export { BeaconForkChoice, BeaconStore } from "./archVisualsBeaconParts";
 
 // step 0: Gossipsub에서 블록 수신
 export function BeaconBlockReceive() {
@@ -11,11 +11,20 @@ export function BeaconBlockReceive() {
         <p className="font-bold">libp2p</p>
         <p className="">Gossipsub</p>
       </div>
-      <motion.span className="text-emerald-500 shrink-0"
-        animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 0.5 }}>→</motion.span>
+      <motion.span
+        className="text-emerald-500 shrink-0"
+        animate={{ x: [0, 5, 0] }}
+        transition={{ repeat: Infinity, duration: 0.5 }}
+      >
+        →
+      </motion.span>
       <div className="flex-1 rounded border border-emerald-300 bg-emerald-50/60 dark:bg-emerald-950/20 px-2 py-1.5 font-mono">
-        <p className="text-[9px] text-emerald-700 dark:text-emerald-400 font-bold">SignedBeaconBlock</p>
-        <p className="text-[9px] text-foreground/75">slot=47,291 · root=0xa3f2…</p>
+        <p className="text-[9px] text-emerald-700 dark:text-emerald-400 font-bold">
+          SignedBeaconBlock
+        </p>
+        <p className="text-[9px] text-foreground/75">
+          slot=47,291 · root=0xa3f2…
+        </p>
       </div>
     </div>
   );
@@ -24,26 +33,46 @@ export function BeaconBlockReceive() {
 // step 1: process_block() 체크리스트
 export function BeaconProcessBlock() {
   const checks = [
-    { label: 'BLS 서명 검증', note: '유효한 검증자 주소가 서명했는지' },
-    { label: '슬롯 번호 확인', note: '블록이 올바른 슬롯에 속하는지' },
-    { label: '상태 전환 검증', note: '이전 상태에서 이 블록으로 정상 전이되는지' },
-    { label: 'ExecutionPayload 해시', note: 'EL 페이로드 해시가 CL 헤더와 일치하는지' },
+    { label: "BLS 서명 검증", note: "유효한 검증자 주소가 서명했는지" },
+    { label: "슬롯 번호 확인", note: "블록이 올바른 슬롯에 속하는지" },
+    {
+      label: "상태 전환 검증",
+      note: "이전 상태에서 이 블록으로 정상 전이되는지",
+    },
+    {
+      label: "ExecutionPayload 해시",
+      note: "EL 페이로드 해시가 CL 헤더와 일치하는지",
+    },
   ];
   const [n, setN] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setN(p => p < checks.length ? p + 1 : 0), 600);
+    const id = setInterval(
+      () => setN((p) => (p < checks.length ? p + 1 : 0)),
+      600,
+    );
     return () => clearInterval(id);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="space-y-1 text-[10px]">
       <p className="font-mono text-[9px] text-foreground/75">process_block()</p>
       {checks.map((c, i) => (
-        <div key={c.label} className={`flex items-start gap-2 rounded px-2 py-0.5 transition-all duration-300
-          ${i < n ? 'text-foreground' : 'text-muted-foreground/40'}`}>
-          <span className={`font-bold shrink-0 mt-0.5 ${i < n ? 'text-emerald-600' : 'text-border'}`}>{i < n ? '✓' : '○'}</span>
+        <div
+          key={c.label}
+          className={`flex items-start gap-2 rounded px-2 py-0.5 transition-all duration-300
+          ${i < n ? "text-foreground" : "text-muted-foreground/40"}`}
+        >
+          <span
+            className={`font-bold shrink-0 mt-0.5 ${i < n ? "text-emerald-600" : "text-border"}`}
+          >
+            {i < n ? "✓" : "○"}
+          </span>
           <div>
             <p>{c.label}</p>
-            <p className={`text-[9px] text-muted-foreground ${i < n ? '' : 'invisible'}`}>{c.note}</p>
+            <p
+              className={`text-[9px] text-muted-foreground ${i < n ? "" : "invisible"}`}
+            >
+              {c.note}
+            </p>
           </div>
         </div>
       ))}
@@ -59,8 +88,13 @@ export function BeaconNewPayload() {
         <span className="text-blue-600 font-bold">POST</span>
         <span className="">http://127.0.0.1:8551</span>
       </div>
-      <p><span className="">method: </span><span className="text-emerald-600 font-bold">engine_newPayloadV3</span></p>
-      <p className="text-[9px] text-foreground/75">params: [ExecutionPayload, versioned_hashes[], parent_beacon_root]</p>
+      <p>
+        <span className="">method: </span>
+        <span className="text-emerald-600 font-bold">engine_newPayloadV3</span>
+      </p>
+      <p className="text-[9px] text-foreground/75">
+        params: [ExecutionPayload, versioned_hashes[], parent_beacon_root]
+      </p>
     </div>
   );
 }
@@ -74,7 +108,9 @@ export function BeaconValidResponse() {
           <span className="text-emerald-600 font-bold">VALID ✓</span>
           <span className="text-foreground/75 text-[9px]">EL → CL 응답</span>
         </div>
-        <p className="text-[9px] text-foreground/75 mt-0.5">stateRoot 일치 + EVM 실행 완료</p>
+        <p className="text-[9px] text-foreground/75 mt-0.5">
+          stateRoot 일치 + EVM 실행 완료
+        </p>
       </div>
       <p className="text-[9px] text-foreground/75">↓ fork_choice() 트리거</p>
     </div>

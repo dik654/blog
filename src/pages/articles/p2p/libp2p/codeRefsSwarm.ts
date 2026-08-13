@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const swarmCodeRefs: Record<string, CodeRef> = {
-  'swarm-struct': {
-    path: 'swarm/src/lib.rs — Swarm<TBehaviour> 구조체',
-    lang: 'rust',
+  "swarm-struct": {
+    path: "swarm/src/lib.rs — Swarm<TBehaviour> 구조체",
+    lang: "rust",
     highlight: [1, 32],
-    desc: 'Swarm은 transport·pool·behaviour 세 계층을 하나로 묶는 중앙 조율자입니다.',
+    desc: "Swarm은 transport·pool·behaviour 세 계층을 하나로 묶는 중앙 조율자입니다.",
     code: `pub struct Swarm<TBehaviour>
 where
     TBehaviour: NetworkBehaviour,
@@ -39,17 +39,29 @@ where
     pending_swarm_events: VecDeque<SwarmEvent<TBehaviour::ToSwarm>>,
 }`,
     annotations: [
-      { lines: [5, 6], color: 'sky', note: 'transport — TCP/QUIC 다이얼·리슨 담당' },
-      { lines: [8, 9], color: 'emerald', note: 'pool — 활성 연결·핸들러 풀' },
-      { lines: [14, 16], color: 'amber', note: 'behaviour — 프로토콜 로직 (DHT, PubSub 등)' },
-      { lines: [27, 30], color: 'violet', note: 'pending — backpressure 처리용 대기 이벤트' },
+      {
+        lines: [5, 6],
+        color: "sky",
+        note: "transport — TCP/QUIC 다이얼·리슨 담당",
+      },
+      { lines: [8, 9], color: "emerald", note: "pool — 활성 연결·핸들러 풀" },
+      {
+        lines: [14, 16],
+        color: "amber",
+        note: "behaviour — 프로토콜 로직 (DHT, PubSub 등)",
+      },
+      {
+        lines: [27, 30],
+        color: "violet",
+        note: "pending — backpressure 처리용 대기 이벤트",
+      },
     ],
   },
-  'poll-next-event': {
-    path: 'swarm/src/lib.rs — poll_next_event()',
-    lang: 'rust',
+  "poll-next-event": {
+    path: "swarm/src/lib.rs — poll_next_event()",
+    lang: "rust",
     highlight: [1, 81],
-    desc: '세 계층을 우선순위대로 폴링하는 핵심 이벤트 루프입니다.',
+    desc: "세 계층을 우선순위대로 폴링하는 핵심 이벤트 루프입니다.",
     code: `fn poll_next_event(
     mut self: Pin<&mut Self>,
     cx: &mut Context<'_>,
@@ -127,10 +139,10 @@ where
     }
 }`,
     annotations: [
-      { lines: [7, 16], color: 'sky', note: '로컬 우선 → 기존 연결 → 새 연결' },
-      { lines: [47, 56], color: 'emerald', note: '1순위: Behaviour 폴링' },
-      { lines: [59, 65], color: 'amber', note: '2순위: 연결 풀 폴링' },
-      { lines: [68, 74], color: 'violet', note: '3순위: Transport 폴링' },
+      { lines: [7, 16], color: "sky", note: "로컬 우선 → 기존 연결 → 새 연결" },
+      { lines: [47, 56], color: "emerald", note: "1순위: Behaviour 폴링" },
+      { lines: [59, 65], color: "amber", note: "2순위: 연결 풀 폴링" },
+      { lines: [68, 74], color: "violet", note: "3순위: Transport 폴링" },
     ],
   },
 };

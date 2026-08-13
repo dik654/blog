@@ -1,4 +1,4 @@
-import AgentVerifierViz from './viz/AgentVerifierViz';
+import AgentVerifierViz from "./viz/AgentVerifierViz";
 
 export default function AgentVerifier() {
   return (
@@ -7,9 +7,13 @@ export default function AgentVerifier() {
 
       <h3 className="text-xl font-semibold mt-6 mb-3">지속적 검증 루프</h3>
       <p className="leading-7 mb-4">
-        <strong>Keylime 핵심</strong>: Agent ↔ Verifier 간 지속적 검증 루프<br />
-        <strong>Verifier</strong>: Tornado 기반 비동기 서버 — 수백~수천 agent 동시 처리<br />
-        <strong>SQLAlchemy</strong>: ORM으로 agent 상태 영속 관리<br />
+        <strong>Keylime 핵심</strong>: Agent ↔ Verifier 간 지속적 검증 루프
+        <br />
+        <strong>Verifier</strong>: Tornado 기반 비동기 서버 — 수백~수천 agent
+        동시 처리
+        <br />
+        <strong>SQLAlchemy</strong>: ORM으로 agent 상태 영속 관리
+        <br />
         <strong>빈도</strong>: 기본 2초마다 quote 요청 (설정 가능)
       </p>
 
@@ -66,24 +70,42 @@ class VerifierMain:
         <div className="rounded-xl border p-4">
           <h4 className="font-semibold text-sm mb-2">Agent 핵심 구조</h4>
           <ul className="space-y-1 text-sm">
-            <li><strong>AgentAttestState</strong>: 증분 증명 상태 관리</li>
-            <li><strong>TPMState</strong>: PCR 번호별 해시값 모델링</li>
-            <li><strong>TPMClockInfo</strong>: 단조 클록으로 재생 공격 방지</li>
-            <li><strong>ImaKeyrings</strong>: IMA 서명 검증용 키링</li>
+            <li>
+              <strong>AgentAttestState</strong>: 증분 증명 상태 관리
+            </li>
+            <li>
+              <strong>TPMState</strong>: PCR 번호별 해시값 모델링
+            </li>
+            <li>
+              <strong>TPMClockInfo</strong>: 단조 클록으로 재생 공격 방지
+            </li>
+            <li>
+              <strong>ImaKeyrings</strong>: IMA 서명 검증용 키링
+            </li>
           </ul>
         </div>
         <div className="rounded-xl border p-4">
           <h4 className="font-semibold text-sm mb-2">Verifier 핵심 구조</h4>
           <ul className="space-y-1 text-sm">
-            <li><strong>AgentsHandler</strong>: REST API (GET/POST/DELETE/PUT)</li>
-            <li><strong>VerfierMain</strong>: 에이전트별 정책/상태 DB 테이블</li>
-            <li><strong>process_quote_response()</strong>: Quote 응답 검증</li>
-            <li><strong>prepare_get_quote()</strong>: nonce 생성 & 요청 준비</li>
+            <li>
+              <strong>AgentsHandler</strong>: REST API (GET/POST/DELETE/PUT)
+            </li>
+            <li>
+              <strong>VerfierMain</strong>: 에이전트별 정책/상태 DB 테이블
+            </li>
+            <li>
+              <strong>process_quote_response()</strong>: Quote 응답 검증
+            </li>
+            <li>
+              <strong>prepare_get_quote()</strong>: nonce 생성 & 요청 준비
+            </li>
           </ul>
         </div>
       </div>
 
-      <h3 className="text-xl font-semibold mt-8 mb-3">Agent Quote 생성 (TPM 2.0)</h3>
+      <h3 className="text-xl font-semibold mt-8 mb-3">
+        Agent Quote 생성 (TPM 2.0)
+      </h3>
       <div className="bg-muted p-4 rounded-lg my-4 text-sm font-mono whitespace-pre overflow-x-auto">{`// keylime/tpm/tpm_main.py
 
 class Tpm:
@@ -161,32 +183,42 @@ def process_quote_response(agent, nonce, quote_resp) -> bool:
 
       <h3 className="text-xl font-semibold mt-8 mb-3">통신 보안 (mTLS)</h3>
       <p className="leading-7">
-        모든 컴포넌트 간 통신: <strong>mTLS</strong>(상호 TLS 인증)로 보호<br />
-        Agent: 자체 서명 인증서 생성 후 Registrar에 등록<br />
-        Verifier: Registrar에서 Agent 공개키 조회 → 인증서 대조<br />
-        API 버전 협상: 클라이언트-서버 간 호환성 보장 (backward-compatible rolling update)
+        모든 컴포넌트 간 통신: <strong>mTLS</strong>(상호 TLS 인증)로 보호
+        <br />
+        Agent: 자체 서명 인증서 생성 후 Registrar에 등록
+        <br />
+        Verifier: Registrar에서 Agent 공개키 조회 → 인증서 대조
+        <br />
+        API 버전 협상: 클라이언트-서버 간 호환성 보장 (backward-compatible
+        rolling update)
       </p>
 
       <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">인사이트: Continuous Attestation의 의미</p>
+        <p className="font-semibold mb-2">
+          인사이트: Continuous Attestation의 의미
+        </p>
         <p className="text-sm">
           <strong>One-shot vs Continuous</strong>:<br />
-          - One-shot (boot only): 부팅 시점만 검증 → 런타임 공격 탐지 못 함<br />
-          - Continuous (Keylime): 주기적 polling → 런타임 변조 즉시 탐지
+          - One-shot (boot only): 부팅 시점만 검증 → 런타임 공격 탐지 못 함
+          <br />- Continuous (Keylime): 주기적 polling → 런타임 변조 즉시 탐지
         </p>
         <p className="text-sm mt-2">
           <strong>Keylime의 가치</strong>:<br />
-          ✓ Rootkit 감지 가능 (IMA로 파일 변조 추적)<br />
-          ✓ CI/CD pipeline 통합 (실패 시 파이프라인 중단)<br />
-          ✓ Compliance 증명 (주기적 증거 생성)<br />
-          ✓ Incident response 빠른 대응
+          ✓ Rootkit 감지 가능 (IMA로 파일 변조 추적)
+          <br />
+          ✓ CI/CD pipeline 통합 (실패 시 파이프라인 중단)
+          <br />
+          ✓ Compliance 증명 (주기적 증거 생성)
+          <br />✓ Incident response 빠른 대응
         </p>
         <p className="text-sm mt-2">
           <strong>비용</strong>:<br />
-          - TPM quote 오버헤드 (~100ms per quote)<br />
-          - Verifier 인프라 (DB, Tornado)<br />
-          - 네트워크 트래픽 (small per quote)<br />
-          - Scale: 수천 agent까지 실용적
+          - TPM quote 오버헤드 (~100ms per quote)
+          <br />
+          - Verifier 인프라 (DB, Tornado)
+          <br />
+          - 네트워크 트래픽 (small per quote)
+          <br />- Scale: 수천 agent까지 실용적
         </p>
       </div>
     </section>

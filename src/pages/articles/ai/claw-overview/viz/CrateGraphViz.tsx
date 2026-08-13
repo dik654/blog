@@ -1,79 +1,50 @@
-import { ModuleBox } from '@/components/viz/boxes';
+import {
+  OverviewFrame,
+  OverviewRule,
+  OverviewSteps,
+} from "./OverviewVizPrimitives";
 
 export default function CrateGraphViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 350" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">9개 크레이트 의존성 DAG</text>
-
-        <defs>
-          <marker id="cg-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#3b82f6" opacity={0.7} />
-          </marker>
-        </defs>
-
-        {/* CLI (top) */}
-        <ModuleBox x={205} y={50} w={150} h={44}
-          label="rusty-claude-cli"
-          sub="~10K LOC · CLI 진입점"
-          color="#3b82f6" />
-
-        {/* runtime (center) */}
-        <ModuleBox x={205} y={140} w={150} h={58}
-          label="runtime"
-          sub="~24K LOC · 37 모듈"
-          color="#8b5cf6" />
-
-        {/* supporting crates (middle) */}
-        <ModuleBox x={30} y={248} w={92} h={42}
-          label="tools"
-          sub="~7K LOC"
-          color="#10b981" />
-        <ModuleBox x={132} y={248} w={92} h={42}
-          label="api"
-          sub="~3K LOC"
-          color="#10b981" />
-        <ModuleBox x={234} y={248} w={92} h={42}
-          label="commands"
-          sub="~4K LOC"
-          color="#10b981" />
-        <ModuleBox x={336} y={248} w={92} h={42}
-          label="plugins"
-          sub="~3K LOC"
-          color="#10b981" />
-        <ModuleBox x={438} y={248} w={92} h={42}
-          label="telemetry"
-          sub="~2K LOC"
-          color="#10b981" />
-
-        {/* independent crates */}
-        <ModuleBox x={20} y={50} w={118} h={42}
-          label="compat-harness"
-          sub="매니페스트 추출"
-          color="#6b7280" />
-
-        <ModuleBox x={422} y={50} w={118} h={42}
-          label="mock-anthropic"
-          sub="테스트 전용"
-          color="#6b7280" />
-
-        {/* Arrows: CLI → runtime */}
-        <line x1={280} y1={94} x2={280} y2={140} stroke="#3b82f6" strokeWidth={1.5} markerEnd="url(#cg-arr)" />
-
-        {/* Arrows: runtime → supporting */}
-        <line x1={230} y1={198} x2={76} y2={248} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#cg-arr)" />
-        <line x1={250} y1={198} x2={178} y2={248} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#cg-arr)" />
-        <line x1={280} y1={198} x2={280} y2={248} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#cg-arr)" />
-        <line x1={310} y1={198} x2={382} y2={248} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#cg-arr)" />
-        <line x1={330} y1={198} x2={484} y2={248} stroke="#3b82f6" strokeWidth={1} markerEnd="url(#cg-arr)" />
-
-        {/* compat-harness → runtime */}
-        <line x1={138} y1={70} x2={205} y2={160} stroke="#6b7280" strokeWidth={0.8} strokeDasharray="3 2" markerEnd="url(#cg-arr)" />
-
-        <text x={280} y={326} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">단방향 DAG · runtime 중앙 허브 (전체 LOC의 44%)</text>
-      </svg>
-    </div>
+    <OverviewFrame
+      label="CRATE DEPENDENCY"
+      title="호출은 중심 runtime으로 들어오고 결과는 contract로 돌아온다"
+      description="분석 snapshot의 crate 이름보다 누가 host loop와 state를 소유하는지, 역방향 의존이 생기지 않는지를 봅니다."
+      note="crate 수와 이름은 repository snapshot에 따라 바뀔 수 있습니다. 여기서 유지할 원칙은 주 실행 runtime이 CLI 화면 타입이나 test harness에 의존하지 않는다는 점입니다."
+    >
+      <OverviewSteps
+        columns={2}
+        items={[
+          {
+            label: "CALLER → CORE",
+            title: "CLI · plugin",
+            body: "runtime의 public contract를 호출하되 conversation state를 직접 바꾸지 않습니다.",
+            tone: "blue",
+          },
+          {
+            label: "STATE OWNER",
+            title: "Runtime · session",
+            body: "host loop, state transition과 실행 이후의 다음 단계를 소유합니다.",
+            tone: "violet",
+          },
+          {
+            label: "CORE → PORT",
+            title: "Provider · tools",
+            body: "runtime의 요청을 외부 호출과 제한된 side effect로 바꾸고 structured result를 반환합니다.",
+            tone: "emerald",
+          },
+          {
+            label: "TEST → CORE",
+            title: "Parity harness",
+            body: "주 실행 runtime을 호출해 관찰 결과를 검증하지만 runtime의 import 대상은 아닙니다.",
+            tone: "slate",
+          },
+        ]}
+      />
+      <OverviewRule>
+        의존 방향은 CLI / harness → runtime → provider / tools입니다. Telemetry는
+        이 경로를 관찰하되 상태 전이를 결정하지 않습니다.
+      </OverviewRule>
+    </OverviewFrame>
   );
 }

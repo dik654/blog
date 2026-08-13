@@ -7,6 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "audit:viz": "node scripts/audit-viz-style.mjs",
+    "audit:articles": "node scripts/audit-article-contract.mjs",
+    "audit:graph": "node scripts/audit-knowledge-graph.mjs",
+    "audit:learning": "node scripts/audit-learning-contract.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -22,8 +22,16 @@ State Sync 설정 요구사항:
   → 전체 히스토리가 필요하면 Block Sync 사용`;
 
 export const STATE_SYNC_ANNOTATIONS = [
-  { lines: [3, 9] as [number, number], color: 'sky' as const, note: '이더리움 vs CometBFT 동기화 비교' },
-  { lines: [14, 18] as [number, number], color: 'emerald' as const, note: 'State Sync 설정 요구사항' },
+  {
+    lines: [3, 9] as [number, number],
+    color: "sky" as const,
+    note: "이더리움 vs CometBFT 동기화 비교",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "emerald" as const,
+    note: "State Sync 설정 요구사항",
+  },
 ];
 
 export const REPO_CODE = `cometbft/
@@ -40,6 +48,14 @@ export const REPO_CODE = `cometbft/
 └── rpc/           # JSON-RPC & WebSocket API`;
 
 export const REPO_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '핵심 모듈 (합의, 멤풀, P2P)' },
-  { lines: [6, 8] as [number, number], color: 'emerald' as const, note: '동기화 모듈' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "핵심 모듈 (합의, 멤풀, P2P)",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "emerald" as const,
+    note: "동기화 모듈",
+  },
 ];

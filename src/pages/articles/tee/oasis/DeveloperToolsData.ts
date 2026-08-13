@@ -21,9 +21,21 @@ oasis
 +-- paratime      // ParaTime 관리`;
 
 export const cliAnnotations = [
-  { lines: [4, 9] as [number, number], color: 'sky' as const, note: '네트워크 설정 명령어' },
-  { lines: [10, 14] as [number, number], color: 'emerald' as const, note: '지갑 관리 명령어' },
-  { lines: [15, 21] as [number, number], color: 'amber' as const, note: '계정 & 컨트랙트 명령어' },
+  {
+    lines: [4, 9] as [number, number],
+    color: "sky" as const,
+    note: "네트워크 설정 명령어",
+  },
+  {
+    lines: [10, 14] as [number, number],
+    color: "emerald" as const,
+    note: "지갑 관리 명령어",
+  },
+  {
+    lines: [15, 21] as [number, number],
+    color: "amber" as const,
+    note: "계정 & 컨트랙트 명령어",
+  },
 ];
 
 export const configCode = `// 설정 시스템: Viper + TOML
@@ -48,8 +60,24 @@ export const configCode = `// 설정 시스템: Viper + TOML
 // 4. oasis contract call myContract --method transfer`;
 
 export const configAnnotations = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: '네트워크 설정' },
-  { lines: [9, 10] as [number, number], color: 'emerald' as const, note: '테스트넷 설정' },
-  { lines: [12, 14] as [number, number], color: 'amber' as const, note: '지갑 설정' },
-  { lines: [16, 21] as [number, number], color: 'violet' as const, note: '개발 워크플로우' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "sky" as const,
+    note: "네트워크 설정",
+  },
+  {
+    lines: [9, 10] as [number, number],
+    color: "emerald" as const,
+    note: "테스트넷 설정",
+  },
+  {
+    lines: [12, 14] as [number, number],
+    color: "amber" as const,
+    note: "지갑 설정",
+  },
+  {
+    lines: [16, 21] as [number, number],
+    color: "violet" as const,
+    note: "개발 워크플로우",
+  },
 ];

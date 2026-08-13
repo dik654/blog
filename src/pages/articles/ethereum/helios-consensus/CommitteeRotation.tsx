@@ -1,4 +1,4 @@
-import RotationViz from './viz/RotationViz';
+import RotationViz from "./viz/RotationViz";
 
 export default function CommitteeRotation({ title }: { title: string }) {
   return (
@@ -11,12 +11,16 @@ export default function CommitteeRotation({ title }: { title: string }) {
           <code>period = slot / (256 * 32)</code>로 현재 period를 계산한다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 Beacon State에서 위원회를 직접 읽는다.
+          <strong>💡 Reth vs Helios:</strong> Reth는 Beacon State에서 위원회를
+          직접 읽는다.
           <br />
-          Helios는 Update 메시지에 포함된 next_sync_committee를 검증 후 교체한다.
+          Helios는 Update 메시지에 포함된 next_sync_committee를 검증 후
+          교체한다.
         </p>
       </div>
-      <div className="not-prose"><RotationViz /></div>
+      <div className="not-prose">
+        <RotationViz />
+      </div>
     </section>
   );
 }

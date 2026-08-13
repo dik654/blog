@@ -1,6 +1,6 @@
-import Overview from './isms-backup-recovery/Overview';
-import BackupPolicy from './isms-backup-recovery/BackupPolicy';
-import RecoveryTesting from './isms-backup-recovery/RecoveryTesting';
+import Overview from "./isms-backup-recovery/Overview";
+import BackupPolicy from "./isms-backup-recovery/BackupPolicy";
+import RecoveryTesting from "./isms-backup-recovery/RecoveryTesting";
 
 export default function IsmsBackupRecovery() {
   return (

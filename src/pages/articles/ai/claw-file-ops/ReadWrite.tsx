@@ -1,249 +1,121 @@
-import ReadWriteViz from './viz/ReadWriteViz';
+import ReadWriteViz from "./viz/ReadWriteViz";
+
+const resultFields = [
+  ["Identity", "canonical path·file type·before/after digest"],
+  ["Range", "byte 또는 line 기준과 실제 반환 구간"],
+  ["Volume", "bytes·lines·truncated·next cursor"],
+  ["Mutation", "created·replaced·edited와 atomic 여부"],
+] as const;
 
 export default function ReadWrite() {
   return (
     <section id="read-write" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">read_file / write_file / edit_file 구현</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        읽기는 필요한 snapshot만, 쓰기는 예상한 version에 원자적으로 적용한다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <ReadWriteViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">read_file — 줄 단위 읽기</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-600 text-white text-xs font-semibold px-4 py-2">TextFilePayload 입력</div>
-            <div className="p-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="font-mono text-sm font-semibold">path: String</div>
-                  <div className="text-xs text-muted-foreground mt-1">파일 경로</div>
-                </div>
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="font-mono text-sm font-semibold">offset: Option&lt;usize&gt;</div>
-                  <div className="text-xs text-muted-foreground mt-1">시작 줄 (0-indexed)</div>
-                </div>
-                <div className="bg-background border border-border rounded-md p-3">
-                  <div className="font-mono text-sm font-semibold">limit: Option&lt;usize&gt;</div>
-                  <div className="text-xs text-muted-foreground mt-1">읽을 줄 수</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden mt-3">
-            <div className="bg-green-600 text-white text-xs font-semibold px-4 py-2">read_file() — 5단계 실행</div>
-            <div className="p-4 space-y-2">
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                <div className="text-sm"><strong>경로 검증</strong> — <code className="text-xs bg-muted px-1 rounded">validate_path(&path, &workspace_root())</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                <div className="text-sm"><strong>크기 체크</strong> — <code className="text-xs bg-muted px-1 rounded">MAX_FILE_SIZE = 10MB</code> 초과 시 거부</div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                <div className="text-sm"><strong>전체 읽기</strong> — <code className="text-xs bg-muted px-1 rounded">tokio::fs::read_to_string</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                <div className="text-sm"><strong>offset/limit 적용</strong> — <code className="text-xs bg-muted px-1 rounded">lines[start..end]</code> 부분 추출</div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full flex items-center justify-center text-xs font-bold">5</span>
-                <div className="text-sm"><strong>줄 번호 포맷</strong> — <code className="text-xs bg-muted px-1 rounded">{'{line_num}\\t{content}'}</code> 형식으로 출력</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>5단계 실행</strong>: 경로 검증 → 크기 체크 → 읽기 → 부분 추출 → 포맷팅<br />
-          10MB 상한: LLM 컨텍스트 보호, 대용량 파일은 grep로 필터링 후 읽기 권장<br />
-          줄 번호 프리픽스(<code>{`{line_num}\t{content}`}</code>): LLM이 정확한 위치 참조 가능
+        <p className="leading-7">
+          file tool은 path를 문자열로 받아 내용을 반환하는 얇은 wrapper가
+          아닙니다. workspace 안의 실제 대상을 판정하고, file type과 크기를
+          확인하며, 모델 context에 들어갈 범위를 제한해야 합니다. 변경 작업은
+          읽었을 때의 version이 그대로인지 확인한 뒤 적용해야 다른 process나
+          사용자의 작업을 덮어쓰지 않습니다.
+        </p>
+        <p className="leading-7">
+          분석 snapshot의 <code>read_file</code>, <code>write_file</code>,
+          <code>edit_file</code>은 이 세 책임을 서로 다른 interface로 나눕니다.
+          이름보다 중요한 차이는 전체 교체와 조건부 부분 수정이 요구하는
+          precondition이 다르다는 점입니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">write_file — 전체 덮어쓰기</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-600 text-white text-xs font-semibold px-4 py-2">WriteFileInput 입력</div>
-            <div className="p-4 grid grid-cols-2 gap-3">
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="font-mono text-sm font-semibold">path: String</div>
-                <div className="text-xs text-muted-foreground mt-1">대상 파일 경로</div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="font-mono text-sm font-semibold">content: String</div>
-                <div className="text-xs text-muted-foreground mt-1">전체 파일 내용</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden mt-3">
-            <div className="bg-amber-600 text-white text-xs font-semibold px-4 py-2">write_file() — 5단계 쓰기</div>
-            <div className="p-4 space-y-2">
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                <div className="text-sm"><strong>경로 검증</strong> — <code className="text-xs bg-muted px-1 rounded">validate_path</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                <div className="text-sm"><strong>부모 디렉토리 생성</strong> — 없으면 <code className="text-xs bg-muted px-1 rounded">create_dir_all</code> 자동 mkdir</div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                <div className="text-sm"><strong>기존 파일 백업</strong> — diff 추적용 이전 내용 보관</div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                <div className="text-sm"><strong>쓰기</strong> — <code className="text-xs bg-muted px-1 rounded">tokio::fs::write</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-full flex items-center justify-center text-xs font-bold">5</span>
-                <div className="text-sm"><strong>diff 계산</strong> — UI에 변경 내용 표시 (새 파일이면 바이트 수만 표시)</div>
-              </div>
-            </div>
-          </div>
+        <div className="not-prose my-8">
+          <ReadWriteViz />
         </div>
-        <p>
-          <strong>5단계 쓰기</strong>: 검증 → 부모 디렉토리 생성 → 백업 → 쓰기 → diff 계산<br />
-          부모 자동 생성: LLM이 <code>src/new/module.rs</code> 요청 시 <code>src/new/</code> 자동 mkdir<br />
-          diff 출력: 사용자가 변경 내용을 즉시 검토 가능
+      </div>
+
+      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {resultFields.map(([title, body]) => (
+          <article
+            key={title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {body}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          read_file은 range semantics를 명확히 한다
+        </h3>
+        <p className="leading-7">
+          <code>offset</code>과 <code>limit</code>이 byte인지 line인지 명시하지
+          않으면 UTF-8 중간을 자르거나 사용자가 예상한 줄과 다른 내용을 돌려줄
+          수 있습니다. text read는 line range와 실제 line number를, binary
+          read는 별도 byte API나 artifact reference를 사용하는 편이 안전합니다.
+        </p>
+        <p className="leading-7">
+          open 전에는 canonical resource와 read permission을 확인하고 regular
+          file인지 검사합니다. device, FIFO와 socket을 일반 file처럼 읽으면
+          block 또는 예상하지 못한 side effect가 생길 수 있습니다. size limit를
+          넘으면 앞부분을 조용히 잘라내지 말고 truncated와 다음 range를
+          반환합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">edit_file — 문자열 치환</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-blue-600 text-white text-xs font-semibold px-4 py-2">EditFileInput 입력</div>
-            <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="font-mono text-sm font-semibold">path</div>
-                <div className="text-xs text-muted-foreground mt-1">파일 경로</div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="font-mono text-sm font-semibold">old_string</div>
-                <div className="text-xs text-muted-foreground mt-1">찾을 문자열</div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="font-mono text-sm font-semibold">new_string</div>
-                <div className="text-xs text-muted-foreground mt-1">치환할 문자열</div>
-              </div>
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="font-mono text-sm font-semibold">replace_all</div>
-                <div className="text-xs text-muted-foreground mt-1">기본 false: 1회만 치환</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden mt-3">
-            <div className="bg-violet-600 text-white text-xs font-semibold px-4 py-2">edit_file() — 실행 흐름</div>
-            <div className="p-4 space-y-2">
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                <div className="text-sm"><strong>파일 읽기</strong> — <code className="text-xs bg-muted px-1 rounded">tokio::fs::read_to_string</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                <div className="text-sm"><strong>발견 횟수 체크</strong> — 0이면 <code className="text-xs bg-muted px-1 rounded">Err("not found")</code>, 2+ &amp; <code className="text-xs bg-muted px-1 rounded">replace_all=false</code>면 <code className="text-xs bg-muted px-1 rounded">Err("appears N times")</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                <div className="text-sm"><strong>치환</strong> — <code className="text-xs bg-muted px-1 rounded">replace_all</code>이면 <code className="text-xs bg-muted px-1 rounded">replace()</code>, 아니면 <code className="text-xs bg-muted px-1 rounded">replacen(..., 1)</code></div>
-              </div>
-              <div className="flex items-start gap-3 bg-background border border-border rounded-md p-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                <div className="text-sm"><strong>쓰기</strong> — 치환된 내용 저장, 치환 횟수 반환</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>핵심 안전장치</strong>: <code>replace_all=false</code>에서 <code>old_string</code>이 여러 번 나타나면 에러<br />
-          이유: LLM이 "첫 매칭만"을 의도했는데 모호한 경우 — 잘못된 위치 수정 방지<br />
-          사용자에게 "더 많은 컨텍스트 제공 또는 replace_all 사용"이라고 안내
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          edit_file은 unique match보다 version precondition이 먼저다
+        </h3>
+        <p className="leading-7">
+          <code>old_string</code>이 정확히 한 번 나타날 때만 바꾸는 방식은
+          모델의 대상을 명확히 하는 좋은 기본값입니다. 0회면 stale input, 여러
+          번이면 ambiguous match로 실패하고 주변 context나 line range를 더
+          요청하게 할 수 있습니다.
+        </p>
+        <p className="leading-7">
+          그러나 unique match만으로 race를 막을 수는 없습니다. 모델이 file을
+          읽은 뒤 다른 process가 내용을 바꿨을 수 있으므로{" "}
+          <code>expected_digest</code>
+          또는 version을 함께 요구하고 현재 값이 다르면 edit 전체를 중단합니다.
+          여러 occurrence를 바꾸려면 예상 count를 명시하는 별도 operation으로
+          의도를 드러냅니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">edit_file의 고유성 요구 — 왜 중요한가</h3>
-        <div className="not-prose mb-4 space-y-3">
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">위험한 예시 — 모호한 old_string</div>
-            <div className="text-sm space-y-2">
-              <div className="bg-background rounded-md p-3 border border-border">
-                <div className="text-xs text-muted-foreground mb-1">파일 내용</div>
-                <code className="text-xs">let x = 1;</code><br />
-                <code className="text-xs">let x = 2;</code>
-              </div>
-              <div className="bg-background rounded-md p-3 border border-border">
-                <div className="text-xs text-muted-foreground mb-1">호출: <code className="bg-muted px-1 rounded text-xs">edit_file(path, "let x", "let y")</code></div>
-                <div className="text-sm text-red-600 dark:text-red-400 font-semibold mt-1">Err("old_string appears 2 times") — 모호함 거부</div>
-                <div className="text-xs text-muted-foreground mt-1">LLM이 <code className="bg-muted px-1 rounded">"let x = 1"</code> 같이 더 구체적으로 재시도</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
-            <div className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">올바른 사용</div>
-            <div className="bg-background rounded-md p-3 border border-border">
-              <div className="text-xs text-muted-foreground mb-1">호출: <code className="bg-muted px-1 rounded text-xs">edit_file(path, "let x = 1;", "let x = 100;", replace_all=false)</code></div>
-              <div className="text-sm text-green-600 dark:text-green-400 font-semibold mt-1">정확히 첫 매칭 1개만 치환 (replacen)</div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>2회 이상 매칭 거부</strong>: 의도 모호성을 즉시 LLM에게 피드백<br />
-          LLM이 에러를 보고 더 많은 컨텍스트(앞뒤 줄 포함)로 재시도<br />
-          결과: "잘못된 위치 수정" 버그가 거의 발생하지 않음
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          write_file은 overwrite 의도를 분리한다
+        </h3>
+        <p className="leading-7">
+          새 file 생성과 기존 file 전체 교체를 같은 default로 처리하면 이름
+          오타가 기존 내용을 지울 수 있습니다. <code>create_new</code>,
+          <code>replace_existing(expected_digest)</code>처럼 mode를 분리하고,
+          대상이 예상과 다르면 실패해야 합니다.
+        </p>
+        <p className="leading-7">
+          content는 같은 directory의 temporary file에 쓰고 permission·encoding을
+          확인한 뒤 atomic rename으로 교체합니다. durability가 필요하면 file과
+          parent directory의 fsync 정책도 정합니다. atomic rename은 한 file의
+          교체만 보장하며 여러 file 변경 전체를 transaction으로 만들지는
+          않습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">compute_diff — 간이 diff 생성</h3>
-        <div className="not-prose mb-4">
-          <div className="bg-muted/50 border border-border rounded-lg overflow-hidden">
-            <div className="bg-gray-600 text-white text-xs font-semibold px-4 py-2">compute_diff() — similar crate 기반</div>
-            <div className="p-4 space-y-3">
-              <div className="bg-background border border-border rounded-md p-3">
-                <div className="text-xs text-muted-foreground mb-1">입력</div>
-                <div className="text-sm"><code className="text-xs bg-muted px-1 rounded">old: &str</code> (이전 내용), <code className="text-xs bg-muted px-1 rounded">new: &str</code> (새 내용)</div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-md p-3 text-center">
-                  <div className="font-mono text-lg font-bold text-red-600">-</div>
-                  <div className="text-xs text-muted-foreground">Delete</div>
-                </div>
-                <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-md p-3 text-center">
-                  <div className="font-mono text-lg font-bold text-green-600">+</div>
-                  <div className="text-xs text-muted-foreground">Insert</div>
-                </div>
-                <div className="bg-background border border-border rounded-md p-3 text-center">
-                  <div className="font-mono text-lg font-bold text-muted-foreground">&nbsp;</div>
-                  <div className="text-xs text-muted-foreground">Equal</div>
-                </div>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                <code className="bg-muted px-1 rounded">TextDiff::from_lines</code>로 라인 단위 비교 → unified diff 포맷 출력
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <code>similar</code> crate로 라인 단위 diff 생성<br />
-          출력 포맷: unified diff (+/-/공백 프리픽스)<br />
-          UI가 diff를 syntax highlighting하여 사용자에게 표시 — 변경 내용 즉시 파악
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          newline과 encoding 변환을 숨기지 않는다
+        </h3>
+        <p className="leading-7">
+          부분 수정 과정에서 LF·CRLF나 final newline을 무조건 정규화하면
+          의도하지 않은 대규모 diff가 생깁니다. 기존 encoding과 newline style을
+          보존하고, 변환이 필요하면 formatter나 explicit option으로 분리합니다.
+          decode할 수 없는 text는 replacement character로 조용히 손상시키지
+          않습니다.
         </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: write_file vs edit_file 선택 기준</p>
-          <p>
-            <strong>write_file</strong>: 전체 덮어쓰기<br />
-            - 적합: 새 파일 생성, 작은 파일 완전 재작성<br />
-            - 부적합: 대용량 파일 일부 수정 — LLM이 전체 내용 재생성해야 함 (토큰 낭비)
-          </p>
-          <p className="mt-2">
-            <strong>edit_file</strong>: 부분 치환<br />
-            - 적합: 대부분의 리팩토링·버그 수정<br />
-            - 부적합: 대량 변경 (여러 edit 호출 필요)
-          </p>
-          <p className="mt-2">
-            <strong>일반 규칙</strong>: "파일의 &gt;50% 변경이면 write_file, 아니면 edit_file"<br />
-            이유: edit_file은 old_string을 찾기 위해 LLM이 기존 코드 참조 필요 — 대변경 시 비용 더 큼<br />
-            claw-code의 시스템 프롬프트가 LLM에게 이 가이드라인 제공
-          </p>
-        </div>
-
+        <p className="leading-7">
+          결과에는 before/after digest, 실제 변경 byte와 line 범위를 남깁니다.
+          content 전체를 tool result에 다시 넣기보다 작은 diff와 artifact
+          reference를 반환해 context 비용과 secret 노출을 줄입니다.
+        </p>
       </div>
     </section>
   );

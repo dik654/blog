@@ -25,10 +25,26 @@ export const indexerCode = `Indexer Layer 마이크로서비스:
 Roundtable: 배치 작업 (캔들스틱, 통계 집계, 데이터 정리)`;
 
 export const indexerAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: 'Kafka: 이벤트 분배' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: 'Ender/Vulcan: 이벤트 처리' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'PostgreSQL: 통합 저장' },
-  { lines: [19, 24] as [number, number], color: 'rose' as const, note: 'API/WebSocket: 클라이언트 서빙' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "Kafka: 이벤트 분배",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "Ender/Vulcan: 이벤트 처리",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "PostgreSQL: 통합 저장",
+  },
+  {
+    lines: [19, 24] as [number, number],
+    color: "rose" as const,
+    note: "API/WebSocket: 클라이언트 서빙",
+  },
 ];
 
 export const schemaCode = `주요 테이블 스키마:
@@ -62,7 +78,19 @@ CREATE INDEX ON orders (clobPairId, side, price);
 CREATE INDEX ON fills (subaccountId, createdAt);`;
 
 export const schemaAnnotations = [
-  { lines: [4, 14] as [number, number], color: 'sky' as const, note: 'Orders: 주문 상태 추적' },
-  { lines: [17, 25] as [number, number], color: 'emerald' as const, note: 'Fills: 체결 기록' },
-  { lines: [28, 29] as [number, number], color: 'amber' as const, note: '복합 인덱스 최적화' },
+  {
+    lines: [4, 14] as [number, number],
+    color: "sky" as const,
+    note: "Orders: 주문 상태 추적",
+  },
+  {
+    lines: [17, 25] as [number, number],
+    color: "emerald" as const,
+    note: "Fills: 체결 기록",
+  },
+  {
+    lines: [28, 29] as [number, number],
+    color: "amber" as const,
+    note: "복합 인덱스 최적화",
+  },
 ];

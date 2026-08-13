@@ -13,9 +13,21 @@ export const REDSTUFF_CODE = `// RedStuff 2D 이레이저 코딩 핵심
 // → f개 노드 장애 시에도 n - f개 슬라이버로 복구 가능`;
 
 export const REDSTUFF_ANNOTATIONS = [
-  { lines: [2, 2] as [number, number], color: 'sky' as const, note: 'BFT 파라미터: n = 3f + 1' },
-  { lines: [4, 6] as [number, number], color: 'emerald' as const, note: 'Primary: 열 방향 RS 인코딩' },
-  { lines: [8, 10] as [number, number], color: 'amber' as const, note: 'Secondary: 행 방향 RS 인코딩' },
+  {
+    lines: [2, 2] as [number, number],
+    color: "sky" as const,
+    note: "BFT 파라미터: n = 3f + 1",
+  },
+  {
+    lines: [4, 6] as [number, number],
+    color: "emerald" as const,
+    note: "Primary: 열 방향 RS 인코딩",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "amber" as const,
+    note: "Secondary: 행 방향 RS 인코딩",
+  },
 ];
 
 export const ENCODE_FLOW_CODE = `// BlobEncoder 인코딩 흐름
@@ -38,7 +50,19 @@ let secondary_root = merkle_root(secondary_slivers);
 let blob_id = hash(primary_root || secondary_root);`;
 
 export const ENCODE_FLOW_ANNOTATIONS = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: '블롭을 2D 행렬로 변환' },
-  { lines: [5, 7] as [number, number], color: 'emerald' as const, note: 'Primary RS: SIMD 최적화' },
-  { lines: [15, 18] as [number, number], color: 'amber' as const, note: 'Merkle 루트 → BlobId' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "블롭을 2D 행렬로 변환",
+  },
+  {
+    lines: [5, 7] as [number, number],
+    color: "emerald" as const,
+    note: "Primary RS: SIMD 최적화",
+  },
+  {
+    lines: [15, 18] as [number, number],
+    color: "amber" as const,
+    note: "Merkle 루트 → BlobId",
+  },
 ];

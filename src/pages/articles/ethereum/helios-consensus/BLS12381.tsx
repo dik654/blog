@@ -1,4 +1,4 @@
-import BLS12381Viz from './viz/BLS12381Viz';
+import BLS12381Viz from "./viz/BLS12381Viz";
 
 export default function BLS12381({ title }: { title: string }) {
   return (
@@ -16,7 +16,9 @@ export default function BLS12381({ title }: { title: string }) {
           차이점은 Reth가 전체 검증자(수십만)를, Helios는 512명만 다룬다는 것.
         </p>
       </div>
-      <div className="not-prose"><BLS12381Viz /></div>
+      <div className="not-prose">
+        <BLS12381Viz />
+      </div>
     </section>
   );
 }

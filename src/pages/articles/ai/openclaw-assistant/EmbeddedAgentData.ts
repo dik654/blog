@@ -45,8 +45,24 @@ OpenClaw 접근 (embedded):
   → 명시적 태스크 플래너나 DAG 없음 — LLM이 워크플로우 주도`;
 
 export const embeddedAgentAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'rose' as const, note: '일반적 방식 — subprocess 오버헤드' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '임베디드 방식 — 완전한 제어' },
-  { lines: [12, 33] as [number, number], color: 'sky' as const, note: '세션 라이프사이클 4단계' },
-  { lines: [40, 44] as [number, number], color: 'amber' as const, note: '최소 설계 에이전트 루프' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "rose" as const,
+    note: "일반적 방식 — subprocess 오버헤드",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "임베디드 방식 — 완전한 제어",
+  },
+  {
+    lines: [12, 33] as [number, number],
+    color: "sky" as const,
+    note: "세션 라이프사이클 4단계",
+  },
+  {
+    lines: [40, 44] as [number, number],
+    color: "amber" as const,
+    note: "최소 설계 에이전트 루프",
+  },
 ];

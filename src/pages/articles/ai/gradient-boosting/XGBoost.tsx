@@ -1,60 +1,51 @@
-import XGBoostSplitViz from './viz/XGBoostSplitViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import XGBoostSplitViz from "./viz/XGBoostSplitViz";
 
 export default function XGBoost() {
   return (
     <section id="xgboost" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">XGBoost: histogram-based split</h2>
+      <h2 className="mb-6 text-2xl font-bold">XGBoost는 한 round의 loss를 2차로 근사해 split과 leaf 값을 함께 평가합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>XGBoost</strong>(eXtreme Gradient Boosting, 2014) — 첸 티안치가 개발한 GBM의 산업 표준<br />
-          핵심 혁신: 정규화된 목적함수 + 2차 테일러 전개 + 시스템 최적화<br />
-          Kaggle에서 "GBM을 쓴다" ≈ "XGBoost를 쓴다"이던 시대를 열었다
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">정규화된 목적함수</h3>
-        <p>
-          Obj = Σ L(yᵢ, ŷᵢ) + Σ Ω(fₖ) — 학습 오차 + 트리 복잡도 페널티<br />
-          Ω(f) = γ·T + ½·λ·‖w‖² — T는 리프 개수, w는 리프 가중치<br />
-          γ(gamma) — 리프 추가의 최소 gain 임계값 → 불필요한 분할 방지 (pre-pruning)<br />
-          λ(lambda) — 리프 가중치의 L2 정규화 → 극단적 예측 방지<br />
-          α(alpha) — 리프 가중치의 L1 정규화 → 피처 선택 효과 (선택적)
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">2차 테일러 전개 — Hessian의 힘</h3>
-        <p>
-          일반 GBM은 1차 기울기(gradient)만 사용 — 보폭(step size) 결정이 부정확<br />
-          XGBoost는 2차 미분(hessian)까지 활용: L ≈ L₀ + g·Δ + ½h·Δ²<br />
-          g = ∂L/∂ŷ (1차, 방향), h = ∂²L/∂ŷ² (2차, 곡률)<br />
-          최적 리프 가중치 w* = −G/(H+λ) — hessian이 클수록 보수적 업데이트<br />
-          이것이 XGBoost가 다양한 손실 함수에서 안정적인 이유 — Newton 방법의 트리 버전
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Histogram-based Split</h3>
-        <p>
-          기존 exact split: 모든 피처값을 정렬 → O(N·log N) — 대규모 데이터에서 병목<br />
-          Histogram split: 연속값을 256개 bin으로 양자화 → O(N) 히스토그램 구축 + O(#bins) 스캔<br />
-          각 bin에 (gradient 합, hessian 합, 샘플 수)만 저장 → 메모리 절약<br />
-          bin 개수가 충분하면 exact split과 정확도 차이 거의 없음<br />
-          XGBoost v0.8+에서 tree_method='hist'로 활성화 — 현재는 기본값
+          새 tree가 기존 score에 조금 더해진다고 보고 sample별 loss를 Taylor
+          expansion으로 2차까지 근사하면, raw row의 target 대신 gradient gᵢ와
+          Hessian hᵢ의 합으로 leaf 품질을 계산할 수 있습니다. 여기에 leaf 수와
+          leaf weight penalty를 더해 작은 loss 개선을 위해 지나치게 복잡한 tree를
+          만드는 일을 억제합니다.
         </p>
       </div>
-      <XGBoostSplitViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">시스템 최적화</h3>
+      <ExplainedFormula
+        question="Candidate split이 부모 leaf를 왼쪽·오른쪽으로 나눌 가치가 있는지 어떻게 계산할까?"
+        idea={<>각 영역의 gradient 합 G와 Hessian 합 H로 최적인 leaf weight를 먼저 제거해 얻은 objective 개선량을 비교합니다. 두 child의 개선 합에서 부모의 개선과 새 leaf를 만드는 비용 γ를 빼면 split gain이 됩니다.</>}
+        formula={String.raw`\operatorname{Gain}=\frac12\!\left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right]-\gamma`}
+        terms={[
+          { symbol: "G_L, G_R", name: "gradient sums", description: "왼쪽·오른쪽 후보 영역 sample의 first derivative를 각각 더한 값입니다." },
+          { symbol: "H_L, H_R", name: "Hessian sums", description: "각 영역의 second derivative를 더해 local curvature와 effective weight를 나타냅니다." },
+          { symbol: "λ", name: "L2 leaf penalty", description: "Leaf weight가 너무 커지는 것을 줄이고 분모를 안정화합니다." },
+          { symbol: "γ", name: "split penalty", description: "새 terminal leaf를 추가하기 위해 넘어야 하는 최소 objective 개선 비용입니다." },
+        ]}
+        assumptions={["Loss가 score에 대해 두 번 미분 가능하고 Hessian 합이 유효합니다.", "이 식은 L2 leaf penalty 중심의 standard derivation이며 L1·constraint가 있으면 해가 달라집니다.", "Histogram·approximate builder에서는 후보 threshold 자체가 bin으로 근사될 수 있습니다."]}
+        interpretation="Gain이 양수여도 validation 성능 향상을 보장하지 않습니다. 이 값은 현재 round의 training objective를 local quadratic approximation 아래 개선하는 정도입니다."
+      />
+
+      <div className="not-prose my-8"><XGBoostSplitViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div id="paper-xgboost" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+          <p className="text-xs font-bold text-primary">논문 읽기 · Objective와 scalable system</p>
+          <p className="mt-2 text-sm font-semibold">XGBoost: A Scalable Tree Boosting System</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Chen과 Guestrin은 regularized objective뿐 아니라 sparsity-aware split, weighted quantile sketch, cache access, compression과 sharding을 결합한 end-to-end system을 제시했습니다. 논문의 대규모 benchmark가 모든 작은 dataset과 최신 hardware에서 항상 가장 빠르다는 결론은 아닙니다.</p>
+          <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1603.02754" target="_blank" rel="noreferrer">원 논문의 objective와 system 설계 보기</a>
+        </div>
+        <h3>Model capacity와 system option을 분리합니다</h3>
         <p>
-          <strong>Column Subsampling</strong> — 각 트리/레벨/노드에서 피처 서브셋만 사용<br />
-          colsample_bytree(0.6~0.9) — Random Forest 스타일의 다양성 확보<br />
-          <strong>Weighted Quantile Sketch</strong> — 분산 환경에서 근사 분위수 계산<br />
-          <strong>Cache-aware Access</strong> — 히스토그램을 캐시 라인에 맞춰 정렬<br />
-          <strong>Sparsity-aware Split</strong> — 결측값을 자동으로 최적 방향에 배치
-        </p>
-      </div>
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="text-sm">
-          <strong>실전 팁:</strong> XGBoost에서 가장 중요한 파라미터 3개는 max_depth(3~8),
-          learning_rate(0.01~0.1), n_estimators(early stopping으로 결정).
-          그 다음이 reg_lambda(1~10), subsample(0.7~0.9), colsample_bytree(0.6~0.9).
+          Depth·minimum child weight·subsample·column sampling은 함수의 capacity와
+          variance를 바꾸고, tree method·max bin·device는 후보 탐색의 근사와
+          실행 비용을 바꿉니다. Histogram은 연속값을 bin으로 묶어 bin별 G·H를
+          누적하므로 빠르지만 threshold 해상도를 바꿉니다. Version·sparsity·data
+          size에 따라 CPU와 GPU 결과·속도가 달라질 수 있어 실제 조건으로
+          benchmark해야 합니다.
         </p>
       </div>
     </section>

@@ -1,75 +1,36 @@
-import SelfDistillViz from './viz/SelfDistillViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SelfDistillViz from "./viz/SelfDistillViz";
 
 export default function SelfDistill() {
   return (
     <section id="self" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Self-Distillation & Born-Again Networks</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>Self-Distillation</strong> — 외부 Teacher 없이, 모델 자기 자신(또는 이전 버전)이 Teacher 역할을 수행하는 증류 기법.<br />
-          추가 대형 모델 학습 없이도 성능을 향상시킬 수 있다는 점에서 실전 가치가 높다.
-        </p>
-
-        <h3>Born-Again Networks</h3>
-        <p>
-          Furlanello et al.(2018)이 제안한 반복적 자기 증류 방법.<br />
-          1세대 모델을 정상적으로 학습 → 이 모델을 Teacher로 삼아 <strong>동일 구조</strong>의 2세대 Student를 학습.<br />
-          놀라운 발견: Student가 Teacher보다 <strong>더 나은 성능</strong>을 보이는 현상이 반복적으로 관찰됨.
-        </p>
-        <p>
-          이 과정을 반복(2세대 → 3세대 → ...) 하면 성능이 점진적으로 향상.<br />
-          수렴 후에는 추가 개선이 미미하지만, 2~3세대만으로도 유의미한 성능 향상을 얻을 수 있다.
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm leading-relaxed">
-            <strong>왜 Student가 Teacher를 초월하는가?</strong><br />
-            Soft target이 암묵적 정규화 효과를 제공하기 때문.
-            Hard label은 [0, 1, 0]처럼 극단적이지만, soft target은 [0.05, 0.85, 0.10]처럼 부드럽다.
-            이 부드러운 타깃이 모델의 과확신(overconfidence)을 방지하여 일반화 성능을 높인다.
-          </p>
-        </div>
-
-        <h3>Deep Mutual Learning</h3>
-        <p>
-          Zhang et al.(2018): 사전학습 된 Teacher 없이, <strong>두 모델이 동시에</strong> 서로를 Teacher로 삼아 학습.<br />
-          <code>L = L_CE(y, p₁) + KL(p₁ ∥ p₂) + KL(p₂ ∥ p₁)</code><br />
-          두 모델이 서로의 확률 분포를 일치시키면서 학습하면, 독립 학습보다 <strong>두 모델 모두</strong> 성능이 향상.
-        </p>
-        <p>
-          직관: 서로 다른 초기화에서 출발한 두 모델은 다른 local minimum으로 수렴하려 하지만,
-          mutual KL이 이들을 중간 지점으로 끌어당기면서 더 나은 solution에 도달.
-        </p>
-
-        <h3>Label Smoothing과의 관계</h3>
-        <p>
-          <strong>Label smoothing</strong>: hard label [0, 1, 0]을 [ε/K, 1-ε, ε/K]로 변환. K=클래스 수, ε=smoothing 파라미터.<br />
-          Self-distillation의 soft target과 효과가 유사 — 둘 다 과확신 방지 + 일반화 향상.
-        </p>
-        <p>
-          Tang et al.(2020)의 분석: label smoothing은 <strong>self-distillation의 특수 케이스</strong>로 해석 가능.<br />
-          Label smoothing은 균등 분포(uniform)로 smoothing하지만,
-          self-distillation은 모델 자신의 예측 분포로 smoothing — 더 정보가 풍부.
-        </p>
-
-        <h3>Be Your Own Teacher (BYoT)</h3>
-        <p>
-          Xu & Liu(2019): 하나의 네트워크 안에서 깊은 레이어가 얕은 레이어의 Teacher 역할.<br />
-          네트워크의 중간 레이어에 보조 분류기를 붙이고, 최종 레이어의 soft target으로 학습.<br />
-          추가 모델이나 반복 학습 없이 <strong>단일 학습 과정</strong>에서 self-distillation 효과를 얻는다.
-        </p>
-
-        <h3>실전 적용 가이드</h3>
-        <p>
-          <strong>비용 효율</strong>: 별도 Teacher 학습이 불필요 — 기존 파이프라인에 soft loss만 추가하면 됨.<br />
-          <strong>정규화 효과</strong>: 과적합 위험이 있는 소규모 데이터셋에서 특히 효과적.<br />
-          <strong>범용성</strong>: CNN, Transformer, BERT, ViT 등 아키텍처에 무관하게 일관된 성능 향상 보고.<br />
-          Born-Again은 2~3세대 반복이면 충분하고, DML은 2개 모델이 최적의 비용-성능 비.
-        </p>
+      <h2 className="mb-6 text-2xl font-bold">Self-distillation은 압축의 동의어가 아니라, 이전 checkpoint나 같은 family의 signal을 regularizer로 쓰는 반복 학습입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Teacher와 student가 같은 architecture·parameter 수여도 이전 generation의 soft target을 사용하면 self-distillation입니다. Born-Again Networks는 같은 크기의 student가 teacher를 넘는 사례를 보여 주었지만, 이 경우 목표는 model size 축소가 아니라 optimization·regularization 효과입니다.</p>
+        <p>반복할수록 좋아진다고 가정하면 안 됩니다. Teacher가 특정 class·language에서 틀린 prediction을 confidence 있게 주면 다음 generation이 그 bias를 강화할 수 있습니다. 매 generation을 같은 독립 holdout에서 비교하고, teacher agreement 상승과 ground-truth quality 상승을 구분해야 합니다.</p>
       </div>
-
-      <div className="not-prose mt-8">
-        <SelfDistillViz />
+      <ExplainedFormula
+        question="Teacher와의 일치도는 올라갔지만 정답 성능은 떨어지는 bias inheritance를 어떻게 측정할까요?"
+        idea={<>각 slice에서 teacher와 student가 같은 prediction을 한 비율과 실제 정답 accuracy를 따로 계산합니다. 일치도 증가에서 accuracy 증가를 빼면 teacher 복제만 늘어난 위험 신호를 볼 수 있습니다.</>}
+        formula={String.raw`A_k^{(g)}=\frac{1}{n_k}\sum_{i\in k}\mathbf 1[\hat y_i^{(g)}=y_i],\quad G_k^{(g)}=\frac{1}{n_k}\sum_{i\in k}\mathbf 1[\hat y_i^{(g)}=\hat y_{t,i}],\quad R_k^{(g)}=\Delta G_k^{(g)}-\Delta A_k^{(g)}`}
+        terms={[
+          { symbol: "A_k", name: "slice accuracy", description: "Generation g가 slice k의 ground truth를 맞힌 비율입니다." },
+          { symbol: "G_k", name: "teacher agreement", description: "Student와 teacher prediction이 같은 비율입니다." },
+          { symbol: "Delta", name: "generation change", description: "현재 generation에서 이전 generation 값을 뺀 변화량입니다." },
+          { symbol: "R_k", name: "inheritance warning", description: "정답 개선보다 teacher agreement가 더 커진 차이를 보는 진단값입니다." },
+        ]}
+        assumptions={[
+          "같은 고정 holdout·slice membership·prediction policy로 generation을 비교합니다.",
+          "R은 causal bias metric이 아니라 teacher 복제와 task gain을 분리해 보는 진단입니다.",
+          "Open-ended generation에서는 exact prediction 대신 rubric·human label·task metric과 teacher-similarity metric을 명시적으로 정의합니다.",
+        ]}
+        interpretation="Teacher agreement가 5%p 늘었지만 accuracy가 1%p 떨어졌다면 R=6%p입니다. Student가 teacher를 더 닮았다는 사실만으로 나아졌다고 승인할 수 없습니다."
+      />
+      <div className="not-prose my-8"><SelfDistillViz /></div>
+      <div id="paper-born-again" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Born Again Neural Networks</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">핵심 기여는 teacher보다 작은 student가 아니라 동일 architecture student를 distillation해 성능이 향상될 수 있음을 보인 점입니다. DenseNet의 CIFAR와 language-modeling 실험, generation recipe 범위의 관찰이며 어떤 model이든 여러 세대 반복하면 계속 좋아진다는 보장은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1805.04770" target="_blank" rel="noreferrer">Same-capacity student·세대별 실험 보기</a>
       </div>
     </section>
   );

@@ -1,1 +1,1 @@
-export type { LineNote, CodeRef } from '@/components/code/types';
+export type { LineNote, CodeRef } from "@/components/code/types";

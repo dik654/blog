@@ -1,73 +1,60 @@
-import AggregationViz from './viz/AggregationViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import AggregationViz from "./viz/AggregationViz";
 
 export default function Aggregation() {
   return (
     <section id="aggregation" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">집계 피처: GroupBy 전략</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        집계 피처는 여러 event를 cutoff 이전의 상태 한 줄로 압축합니다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>집계 피처(Aggregation Feature)</strong> — 그룹 단위의 통계량을 개별 행에 붙이는 기법.
-          "이 사용자의 평균 구매액은 얼마인가?", "이 카테고리의 주문 수는 몇 건인가?"처럼
-          개별 행에 <strong>그룹 수준의 맥락 정보</strong>를 부여한다.
-          Kaggle 테이블형 대회에서 순위를 가르는 핵심 전략.
+          사용자 평균 구매액, 최근 로그인 횟수, 설비별 온도 변동처럼 aggregation
+          feature는 길이가 제각각인 event history를 model row 하나의 상태로
+          바꿉니다. Count는 활동량, mean은 중심, standard deviation은 변동성,
+          recency는 마지막 사건과의 거리를 나타냅니다. 같은 groupby 문법이라도
+          서로 다른 업무 가설을 측정합니다.
         </p>
-
-        <h3>GroupBy 기본 패턴</h3>
         <p>
-          pandas의 <code>groupby().agg()</code>로 그룹별 통계량 계산 → 원본 데이터에 <code>merge</code>.
-          핵심은 그룹 키(user_id, category 등)와 집계 대상(amount, count 등)의 조합.
-          user별 평균 구매액, 카테고리별 주문 수, 상점별 평점 분산 등.
-        </p>
-
-        <h3>다중 집계: mean, std, count, min, max</h3>
-        <p>
-          하나의 GroupBy에 여러 집계 함수를 동시에 적용.
-          <strong>mean</strong> — 그룹 중심(대표값). <strong>std</strong> — 그룹 내 퍼짐(일관성).
-          <strong>count</strong> — 그룹 크기(활성도). <strong>min/max</strong> — 극단값(이상 행동).
-          이 4~5개 통계량을 조합하면 그룹의 특성을 다면적으로 포착할 수 있다.
+          가장 중요한 계약은 cutoff time입니다. 예측 시점 뒤의 event까지
+          groupby하면 미래 누출이 생기므로, 각 row마다 그 시점 이전 기록만
+          사용하는 point-in-time join을 구성합니다. Validation entity의 label이
+          training aggregation에 들어가지 않도록 split도 이 계산보다 먼저
+          확정해야 합니다.
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <AggregationViz />
-      </div>
+      <ExplainedFormula
+        question="최근 W 기간의 event count를 현재 row와 미래 event 없이 어떻게 정의할까?"
+        idea={<>Entity가 같은 record 중 event time과 available time이 모두 cutoff 이하이고, 왼쪽 경계보다 뒤인 것만 1로 셉니다. 구간을 (t₀−W, t₀]처럼 적으면 경계 시각의 중복 집계 여부까지 재현할 수 있습니다.</>}
+        formula={String.raw`\operatorname{count}_{W}(e,t_0)=\sum_r \mathbf{1}[e_r=e]\,\mathbf{1}[t_0-W<t_{\mathrm{event},r}\le t_0]\,\mathbf{1}[t_{\mathrm{available},r}\le t_0]`}
+        terms={[
+          { symbol: "W", name: "lookback window", description: "7일·30일처럼 cutoff에서 과거로 돌아갈 관측 길이입니다." },
+          { symbol: "r", name: "event record", description: "거래·로그인·센서 측정처럼 집계 후보가 되는 한 기록입니다." },
+          { symbol: "1[·]", name: "indicator", description: "대괄호 안 조건을 만족하면 1, 아니면 0이 되어 허용된 event만 셉니다." },
+          { symbol: "(t₀−W,t₀]", name: "window boundary", description: "왼쪽은 제외하고 cutoff는 포함하는 구간입니다. 다른 규칙을 쓰면 명시해야 합니다." },
+        ]}
+        assumptions={["Event time과 pipeline available time을 구분합니다.", "Entity key의 변경·병합 규칙이 학습과 serving에서 같습니다.", "현재 row의 target 또는 target 이후 처리 event는 source에 들어가지 않습니다."]}
+        interpretation="전체 기간 groupby를 먼저 만든 뒤 row에 붙이면 각 row의 cutoff가 사라집니다. Point-in-time join은 row마다 다른 과거 세계를 복원해야 합니다."
+      />
+
+      <div className="not-prose my-8"><AggregationViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Window 함수: 시간 순서 집계</h3>
+        <h3>Window는 최근성과 안정성 사이의 가설입니다</h3>
         <p>
-          GroupBy는 전체 기간을 한 번에 집계하지만, Window 함수는 <strong>시간 순서를 유지</strong>하면서 집계.
-          rolling(7).mean() — 최근 7일 이동평균. expanding().sum() — 누적합.
-          shift(1) — 이전 행의 값(lag 피처).
-          시계열 맥락을 행 단위 피처로 변환하는 핵심 도구.
+          Rolling window는 최근 상태를, expanding statistic은 누적 이력을
+          표현합니다. 1일·7일·30일 count를 함께 두면 속도 변화도 읽을 수 있지만
+          서로 강하게 상관될 수 있습니다. Event-time 기준인지 ingestion-time
+          기준인지, timezone과 day boundary는 무엇인지, 늦게 도착한 record를
+          backfill할지를 schema에 포함해야 합니다.
         </p>
         <p>
-          주의: Window 함수 사용 시 <strong>미래 정보 누수</strong>에 특히 주의.
-          rolling은 반드시 과거 방향으로만 계산. 학습/검증 분리 시점을 기준으로 계산 범위를 제한해야 한다.
-        </p>
-
-        <h3>다단계 집계</h3>
-        <p>
-          "사용자 → 카테고리 → 통계"처럼 계층적으로 집계.
-          user_category_mean_amount = 사용자별 카테고리별 평균 구매액.
-          더 세분화된 행동 패턴을 포착. 그룹 키를 2개 이상 사용하므로
-          희소성(sparse group)에 주의 — 관측 수가 적은 조합은 노이즈가 많다.
-        </p>
-
-        <h3>집계 피처 네이밍 규칙</h3>
-        <p>
-          <code>{'{그룹키}_{집계함수}_{대상열}'}</code> 형태가 표준.
-          user_mean_amount, cat_std_price, user_cat_count_order.
-          명확한 네이밍이 디버깅과 피처 중요도 해석을 쉽게 만든다.
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 집계 피처의 정보 누수 방지</p>
-        <p className="text-sm">
-          교차 검증 시 fold별로 집계를 따로 계산해야 한다.
-          전체 데이터로 집계하면 검증 세트의 타겟 정보가 학습 세트로 유입.
-          특히 Target Encoding + GroupBy 조합은 이중 누수 위험이 있으므로
-          반드시 fold 내부에서만 계산하는 파이프라인을 구축해야 한다.
+          user×category처럼 key를 세분화하면 더 구체적인 맥락을 얻지만 관측이
+          적은 group의 mean과 variance는 불안정합니다. Count를 함께 제공하고,
+          minimum support나 상위 group mean으로의 shrinkage를 validation에서
+          비교합니다. 이름은 <code>user_30d_mean_amount_v3</code>처럼 group,
+          window, statistic, value와 version이 드러나게 짓는 편이 운영에 유리합니다.
         </p>
       </div>
     </section>

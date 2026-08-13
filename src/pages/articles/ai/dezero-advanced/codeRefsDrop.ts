@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const dropCodeRefs: Record<string, CodeRef> = {
-  'dropout-fn': {
-    path: 'src/lib.rs — DropoutFn (inverted dropout)',
-    lang: 'rust',
+  "dropout-fn": {
+    path: "src/lib.rs — DropoutFn (inverted dropout)",
+    lang: "rust",
     highlight: [1, 30],
-    desc: 'Inverted Dropout: 학습 시 1/(1-p) 스케일링.\n추론 시에는 연산 없이 그대로 통과.',
+    desc: "Inverted Dropout: 학습 시 1/(1-p) 스케일링.\n추론 시에는 연산 없이 그대로 통과.",
     code: `struct DropoutFn {
     dropout_ratio: f64,
     mask: RefCell<ArrayD<f64>>,  // backward용 마스크 저장
@@ -36,16 +36,28 @@ impl Function for DropoutFn {
     }
 }`,
     annotations: [
-      { lines: [9, 9], color: 'sky', note: 'inverted dropout: 학습 시 1/(1-p)로 스케일 → 추론 시 별도 보정 불필요' },
-      { lines: [18, 18], color: 'emerald', note: 'r > p면 scale, 아니면 0 → 확률 p로 뉴런 비활성화' },
-      { lines: [27, 28], color: 'amber', note: 'backward: 같은 mask 적용 — 비활성화된 뉴런은 기울기도 0' },
+      {
+        lines: [9, 9],
+        color: "sky",
+        note: "inverted dropout: 학습 시 1/(1-p)로 스케일 → 추론 시 별도 보정 불필요",
+      },
+      {
+        lines: [18, 18],
+        color: "emerald",
+        note: "r > p면 scale, 아니면 0 → 확률 p로 뉴런 비활성화",
+      },
+      {
+        lines: [27, 28],
+        color: "amber",
+        note: "backward: 같은 mask 적용 — 비활성화된 뉴런은 기울기도 0",
+      },
     ],
   },
-  'dropout-gate': {
-    path: 'src/lib.rs — dropout 함수 (학습/추론 분기)',
-    lang: 'rust',
+  "dropout-gate": {
+    path: "src/lib.rs — dropout 함수 (학습/추론 분기)",
+    lang: "rust",
     highlight: [1, 10],
-    desc: 'TRAINING 플래그로 학습/추론 자동 분기.\n추론 모드에서는 x.clone()만 반환 (연산 0).',
+    desc: "TRAINING 플래그로 학습/추론 자동 분기.\n추론 모드에서는 x.clone()만 반환 (연산 0).",
     code: `pub fn dropout(x: &Variable, dropout_ratio: f64) -> Variable {
     if TRAINING.with(|c| c.get()) {
         Func::new(DropoutFn {
@@ -57,8 +69,16 @@ impl Function for DropoutFn {
     }
 }`,
     annotations: [
-      { lines: [2, 2], color: 'sky', note: 'thread_local TRAINING 플래그 확인 — test_mode() guard로 제어' },
-      { lines: [8, 8], color: 'emerald', note: '추론 시 x.clone() — 계산 그래프에 Dropout 노드를 추가하지 않음' },
+      {
+        lines: [2, 2],
+        color: "sky",
+        note: "thread_local TRAINING 플래그 확인 — test_mode() guard로 제어",
+      },
+      {
+        lines: [8, 8],
+        color: "emerald",
+        note: "추론 시 x.clone() — 계산 그래프에 Dropout 노드를 추가하지 않음",
+      },
     ],
   },
 };

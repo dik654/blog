@@ -1,4 +1,4 @@
-import GPUParallelViz from './viz/GPUParallelViz';
+import GPUParallelViz from "./viz/GPUParallelViz";
 
 export default function GPUAccel() {
   return (
@@ -9,7 +9,9 @@ export default function GPUAccel() {
           MSM = 버킷 단위 SM 분배, NTT = 스테이지별 나비 연산 블록 병렬 실행.
         </p>
       </div>
-      <div className="not-prose"><GPUParallelViz /></div>
+      <div className="not-prose">
+        <GPUParallelViz />
+      </div>
     </section>
   );
 }

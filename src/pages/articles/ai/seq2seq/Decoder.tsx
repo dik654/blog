@@ -1,32 +1,35 @@
-import DecoderViz from './viz/DecoderViz';
-import S2SDecoderViz from './viz/S2SDecoderViz';
-import M from '@/components/ui/math';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import AutoregressiveDecodeViz from "./viz/AutoregressiveDecodeViz";
 
 export default function Decoder() {
   return (
     <section id="decoder" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">디코더: 벡터에서 번역 생성</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        EOS + 컨텍스트 벡터 → LSTM → Softmax → 단어 생성.<br />
-        출력이 다음 입력(자기회귀) — GPT 등 현대 LLM의 기본 메커니즘.
-      </p>
-      <DecoderViz />
+      <h2 className="mb-6 text-2xl font-bold">Decoder는 prefix를 state로 축약하며 다음 token을 생성한다</h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Decoder LSTM 자기회귀 생성</h3>
-        <S2SDecoderViz />
-        <M display>{'\\underbrace{(c_0, h_0) = (c_T, h_T)}_{\\text{Encoder 최종 상태 복사}}, \\quad y_0 = \\langle\\text{SOS}\\rangle'}</M>
-        <p className="leading-7">
-          자기회귀 생성: <M>{'s_t = \\text{LSTM}(y_{t-1},\\, s_{t-1},\\, c)'}</M>, <M>{'y_t = \\arg\\max \\text{softmax}(W_{out} \\cdot s_t)'}</M><br />
-          Beam Search: top-k 후보를 유지하며 <M>{'\\prod_t P(y_t)'}</M> 최대 경로 선택 (k=4~10)
-        </p>
-        <M display>{'\\text{Exposure Bias}: \\underbrace{P_{\\text{train}}(y_{t-1}) = y^*_{t-1}}_{\\text{정답}} \\neq \\underbrace{P_{\\text{test}}(y_{t-1}) = \\hat{y}_{t-1}}_{\\text{모델 예측}}'}</M>
-        <p className="leading-7">
-          요약 1: Decoder는 <strong>이전 출력을 다음 입력</strong>으로 사용 — autoregressive 생성.<br />
-          요약 2: <strong>Beam Search</strong>가 greedy 대비 번역 품질 향상 — top-k 후보 추적.<br />
-          요약 3: <strong>Exposure bias</strong>는 학습/추론 분포 불일치 — GPT 계열도 같은 문제.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Decoder는 SOS token과 encoder에서 받은 initial state로 시작한다. 각 step에서
+          이전 token embedding과 recurrent state로 새 state를 만들고, vocabulary logits를
+          계산해 다음 token을 선택한다. 선택한 token이 다음 step의 input이 되기 때문에
+          inference는 본질적으로 순차적이며 EOS나 최대 길이에 도달할 때 끝난다.
         </p>
       </div>
+
+      <ExplainedFormula
+        question="Prefix 하나를 확장할 때 decoder state와 sequence score는 어떻게 갱신될까?"
+        idea={<>Recurrent transition으로 다음 state를 만들고 output projection으로 vocabulary distribution을 얻습니다. Candidate sequence의 log probability는 선택한 token의 log probability를 이전 누적값에 더합니다.</>}
+        formula={String.raw`\begin{aligned}u_t&=e(y_{t-1})\\s_t&=\operatorname{LSTM}_D(u_t,s_{t-1})\\p_t&=\operatorname{softmax}(W_os_t+b_o)\\q_t&=q_{t-1}+\log p_t[y_t]\end{aligned}`}
+        terms={[
+          { symbol: "s_t", name: "decoder state", description: "Source condition과 target prefix를 recurrent하게 요약한 state입니다." },
+          { symbol: "p_t", name: "next-token distribution", description: "현재 prefix에서 vocabulary token 각각의 categorical probability입니다." },
+          { symbol: "p_t[y_t]", name: "selected-token probability", description: "실제로 확장한 token에 부여한 probability입니다." },
+          { symbol: "W_o,b_o", name: "output projection", description: "Decoder width를 vocabulary logits로 바꾸는 parameter입니다." },
+        ]}
+        assumptions={["Cell state 표기는 간결성을 위해 s에 묶었습니다.", "Beam search의 실제 score에는 length normalization·coverage penalty 같은 task-specific 항이 추가될 수 있습니다."]}
+        interpretation="Beam width를 늘리면 더 많은 prefix를 탐색하지만 model probability와 task quality가 같지는 않다. Search budget, length bias와 latency를 함께 검증해야 합니다."
+      />
+
+      <AutoregressiveDecodeViz />
     </section>
   );
 }

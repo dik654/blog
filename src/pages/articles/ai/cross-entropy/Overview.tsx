@@ -1,46 +1,67 @@
-import InformationViz from './viz/InformationViz';
-import { ShannonViz, MLConnectionViz } from './viz/OverviewDetailViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ContentBoundary from "@/components/articles/content-boundary";
+import InformationObjectiveMapViz from "./viz/InformationObjectiveMapViz";
+import { Link } from "react-router-dom";
 
 export default function Overview({ title }: { title?: string }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title ?? '확률과 정보'}</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        {title ?? "Cross-entropy는 ‘정답에 준 확률’을 학습 신호로 바꾼다"}
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          확률이 높은 사건이 발생 → 당연한 결과, 놀라움 없음<br />
-          확률이 낮은 사건이 발생 → 예상 밖, 매우 놀라움<br />
-          <strong>정보(Information)</strong> = 이 "놀라움"을 수학으로 표현한 것
+          분류 모델이 정답에 0.9를 주었을 때와 0.01을 주었을 때를 같은 오차로
+          다루면, 확신에 찬 오답을 충분히 강하게 교정하기 어렵다. Cross-entropy는
+          이 차이를 <strong>정보량(surprisal)</strong>으로 바꾼 뒤 여러 sample에
+          걸쳐 평균낸다. 따라서 이 글의 출발점은 loss 공식이 아니라 “확률이 낮은
+          사건은 왜 더 많은 정보를 주는가”라는 질문이다.
         </p>
-
-        <h3>정보량 = -log P(x)</h3>
         <p>
-          확률 P(x)가 클수록 정보량은 작음<br />
-          확률 P(x)가 작을수록 정보량은 큼<br />
-          로그를 쓰는 이유 — 정보 이론(Information Theory)의 관례로 비트(bit) 단위 표현이 가능
+          Logarithm이 낯설다면 <Link to="/ai/math-exponents-logarithms">지수·로그 정본</Link>에서
+          반복 곱셈, inverse function, 곱을 합으로 바꾸는 항등식을 먼저 확인할 수 있습니다.
+          이 글에서는 그 계산을 probability에 적용하는 지점부터 이어 갑니다.
         </p>
-
-        <h3>제비뽑기 비유</h3>
         <p>
-          100장 중 99장이 빈 종이, 1장이 당첨<br />
-          빈 종이를 뽑음 → 정보량 ≈ 0.014 bit (거의 놀랍지 않음)<br />
-          당첨을 뽑음 → 정보량 ≈ 6.64 bit (매우 놀라움)<br />
-          희귀한 사건일수록 전달되는 정보가 많음
+          Claude Shannon의 정보이론은 독립 사건이 함께 일어날 확률의 곱을 정보량의
+          합으로 바꾸는 함수를 요구했고, log가 그 조건을 만족한다. 밑이 2이면 단위가
+          bit이고 자연로그를 쓰면 nat이지만, 밑이 고정되어 있다면 학습 optimum은
+          달라지지 않고 loss의 scale만 달라진다.
         </p>
       </div>
-      <div className="mt-8">
-        <InformationViz />
-      </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Shannon 정보이론 기초</h3>
-        <ShannonViz />
+      <ContentBoundary article="cross-entropy" />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">정보이론과 ML의 연결</h3>
-        <MLConnectionViz />
-        <p className="leading-7">
-          요약 1: <strong>정보량 = -log P(x)</strong> — Shannon의 공리에서 유도되는 유일한 함수.<br />
-          요약 2: <strong>놀라움의 수학적 표현</strong> — 드물수록 정보 많음.<br />
-          요약 3: 모든 ML의 확률적 loss가 <strong>정보이론의 응용</strong>.
+      <ExplainedFormula
+        question="모델이 실제로 일어난 사건 x를 얼마나 뜻밖이라고 평가했는가?"
+        idea={<>모델 분포 Q가 사건 x에 준 확률을 음의 log로 바꿉니다. 확률의 곱이 log 안에서 합으로 바뀌므로 독립 관측의 정보량도 더해서 계산할 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}I_Q(x)&=-\log Q(x)\\[3pt]I_Q(x_1,x_2)&=I_Q(x_1)+I_Q(x_2)\end{aligned}`}
+        terms={[
+          { symbol: "x", name: "관측된 사건", description: "실제로 일어난 class 또는 token입니다." },
+          { symbol: "Q(x)", name: "모델 확률", description: "모델이 사건 x가 일어날 것이라고 예측한 확률입니다." },
+          { symbol: "I_Q(x)", name: "surprisal", description: "Q의 관점에서 사건 x가 전달한 정보량입니다." },
+          { symbol: "\\log", name: "logarithm", description: "밑 2는 bit, 자연로그는 nat 단위를 만듭니다." },
+        ]}
+        assumptions={["두 번째 등식은 Q(x₁,x₂)=Q(x₁)Q(x₂)인 독립 사건을 가정합니다.", "Q(x)=0이면 surprisal은 무한대로 발산합니다."]}
+        interpretation="Q(x)가 1이면 이미 확실히 예상했으므로 정보량은 0이고, Q(x)가 0에 가까워질수록 확신에 찬 오답의 비용이 빠르게 커집니다."
+      />
+
+      <InformationObjectiveMapViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>이 글에서 따라갈 경로</h3>
+        <p>
+          한 사건의 surprisal만으로는 model 전체를 평가할 수 없으므로 먼저 실제
+          분포에 대한 기대값을 정의한다. 그다음 log 안에 실제 분포를 넣으면 entropy,
+          모델 분포를 넣으면 cross-entropy가 되고, 두 값의 차이가 KL divergence가
+          된다. 마지막에는 categorical likelihood와 softmax를 연결해 실제 구현에서
+          사용하는 gradient까지 내려간다.
+        </p>
+        <p>
+          이 연결은 Shannon의 원 논문에서 출발한다. 역사적 정의와 coding theorem의
+          맥락은 IEEE가 공개한 <a href="https://reach.ieee.org/primary-sources/a-mathematical-theory-of-communication/" target="_blank" rel="noreferrer">A Mathematical Theory of Communication 원문</a>에서
+          확인할 수 있다.
         </p>
       </div>
     </section>

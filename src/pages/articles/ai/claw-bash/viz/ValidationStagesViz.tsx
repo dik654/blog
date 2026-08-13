@@ -1,54 +1,58 @@
+import { BashFrame, BashRule, BashSteps } from "./BashVizPrimitives";
+
 export default function ValidationStagesViz() {
-  const stages = [
-    { num: 1, label: 'check_empty', cost: 'O(n)', speed: '빠름', color: '#10b981' },
-    { num: 2, label: 'check_length', cost: 'O(1)', speed: '즉시', color: '#10b981' },
-    { num: 3, label: 'check_banned_patterns', cost: 'O(n)', speed: '빠름', color: '#3b82f6' },
-    { num: 4, label: 'classify_intent', cost: 'O(n)', speed: '빠름', color: '#8b5cf6' },
-    { num: 5, label: 'check_working_dir', cost: 'fs 호출', speed: '느림', color: '#f59e0b' },
-    { num: 6, label: 'check_resource_limits', cost: 'O(1)', speed: '즉시', color: '#10b981' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">BashValidator — 6단계 (빠른 것 먼저)</text>
-
-        {/* 헤더 */}
-        <rect x={20} y={48} width={520} height={28} fill="var(--muted)" rx={4} />
-        <text x={70} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">단계</text>
-        <text x={230} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">검증</text>
-        <text x={400} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">비용</text>
-        <text x={490} y={67} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">속도</text>
-
-        {stages.map((s, i) => {
-          const y = 84 + i * 36;
-          return (
-            <g key={s.num}>
-              <rect x={20} y={y} width={520} height={30} rx={4}
-                fill={s.color} fillOpacity={0.06} stroke={s.color} strokeWidth={0.5} />
-              <rect x={20} y={y} width={3} height={30} fill={s.color} rx={1} />
-
-              <circle cx={70} cy={y + 15} r={12}
-                fill={s.color} fillOpacity={0.2} stroke={s.color} strokeWidth={1} />
-              <text x={70} y={y + 19} textAnchor="middle" fontSize={10} fontWeight={700}
-                fill={s.color}>{s.num}</text>
-
-              <text x={230} y={y + 19} textAnchor="middle" fontSize={10} fontFamily="monospace"
-                fontWeight={600} fill="var(--foreground)">{s.label}</text>
-
-              <text x={400} y={y + 19} textAnchor="middle" fontSize={9} fontFamily="monospace"
-                fill="var(--muted-foreground)">{s.cost}</text>
-
-              <text x={490} y={y + 19} textAnchor="middle" fontSize={9} fontWeight={600}
-                fill={s.color}>{s.speed}</text>
-            </g>
-          );
-        })}
-
-        <text x={280} y={318} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">전체 실행 ~0.1ms (fs 호출 있을 때 ~1ms)</text>
-      </svg>
-    </div>
+    <BashFrame
+      label="LOGIN DEBUG TRACE"
+      title="command 제안은 두 경계를 통과한 뒤에야 관측 가능한 실행이 됩니다"
+      description="로그인 401 조사에서 값 검증과 shell·path 분류는 후보를 만들 뿐입니다. Host permission이 허용해야 process가 시작되고, 결과는 typed observation으로 돌아옵니다."
+      note="Pinned 구현의 개별 검사를 하나의 안전성 증명으로 확대하지 않습니다. Validator 성공은 permission decision을 받을 수 있는 후보라는 뜻입니다."
+    >
+      <BashSteps
+        columns={3}
+        items={[
+          {
+            label: "MODEL · 01",
+            title: "Command proposal",
+            body: '예: rg "401" src. Model은 command와 목적을 제안할 뿐 실행 권한을 만들지 않습니다.',
+            tone: "blue",
+          },
+          {
+            label: "HOST · 02",
+            title: "Value validation",
+            body: "빈 command, 길이, timeout과 background 설정처럼 값 자체의 오류를 먼저 거릅니다.",
+            tone: "slate",
+          },
+          {
+            label: "HOST · 03",
+            title: "Shell · path classify",
+            body: "Intent, 위험 pattern, cwd와 target path를 분류하고 불확실성을 보존합니다.",
+            tone: "violet",
+          },
+          {
+            label: "HOST · 04",
+            title: "Permission decision",
+            body: "Mode·rule·approval을 적용합니다. Deny이면 process를 만들지 않습니다.",
+            tone: "amber",
+          },
+          {
+            label: "EFFECT · 05",
+            title: "Bounded process",
+            body: "허용된 command만 cwd·timeout·output limit과 sandbox 경계 안에서 실행합니다.",
+            tone: "rose",
+          },
+          {
+            label: "HOST · 06",
+            title: "Typed observation",
+            body: "stdout·stderr·exit code·timeout·truncation을 구분해 model과 audit에 반환합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <BashRule>
+        01–04는 아직 외부 effect가 없는 제안·판정 구간이고, 05에서 처음 process
+        effect가 생깁니다. 06의 결과는 승인 사실이 아니라 실제 실행 관측입니다.
+      </BashRule>
+    </BashFrame>
   );
 }

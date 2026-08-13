@@ -1,73 +1,94 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import VQVAEViz from './viz/VQVAEViz';
+import { Link } from "react-router-dom";
 
-const VARIANTS = [
-  {
-    name: 'Beta-VAE', color: '#6366f1',
-    desc: 'KL 항에 가중치 beta를 곱하여 잠재 요인 분리(disentanglement) 제어 — beta > 1이면 각 잠재 차원이 독립 요인을 포착',
-  },
-  {
-    name: 'VQ-VAE', color: '#10b981',
-    desc: '연속 잠재 공간 대신 이산 코드북 사용 — 각 잠재 벡터를 가장 가까운 코드워드에 매핑하여 음성 합성(WaveNet) 등에 효과적',
-  },
-  {
-    name: 'CVAE', color: '#f59e0b',
-    desc: '조건부 VAE — 레이블 y를 인코더/디코더에 추가 입력으로 제공하여 특정 클래스 샘플만 생성 가능',
-  },
-  {
-    name: 'VAE-GAN', color: '#8b5cf6',
-    desc: 'VAE 디코더를 GAN 생성자로 사용 + 판별자 추가 — 재구성 품질과 생성 다양성 동시 개선',
-  },
+const variants = [
+  [
+    "β-VAE",
+    "KL에 β를 곱해 rate–distortion 균형을 바꾼다. β가 크다고 disentanglement가 자동 보장되지는 않는다.",
+  ],
+  [
+    "Conditional VAE",
+    "label이나 context를 encoder·decoder에 넣어 조건부 분포 p(x|c)를 학습한다.",
+  ],
+  [
+    "VQ-VAE",
+    "continuous posterior 대신 discrete codebook과 quantization을 사용해 token-like latent를 만든다.",
+  ],
+  [
+    "Hierarchical VAE",
+    "여러 scale의 latent를 두어 global structure와 local detail을 나눠 설명한다.",
+  ],
 ];
 
 export default function Applications() {
-  const [active, setActive] = useState<string | null>(null);
-  const sel = VARIANTS.find(v => v.name === active);
-
   return (
     <section id="applications" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">응용과 변형 모델</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p>
-          VAE — 이미지 생성, 이상 탐지, 표현 학습 등 다양한 영역에 활용<br />
-          잠재 공간의 연속성 덕분에 <strong>보간(interpolation, 두 점 사이의 부드러운 전환)</strong>이 가능<br />
-          재구성 오차를 이상치 점수로 활용 가능
+      <h2 className="mb-6 text-2xl font-bold">
+        변형 모델은 latent 표현과 생성 조건을 바꾼다
+      </h2>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          VAE 계열은 image generation뿐 아니라 representation learning,
+          missing-data imputation, molecule design와 anomaly scoring 등에
+          사용됩니다. 공통점은 latent variable과 variational objective이고,
+          prior·posterior family, decoder likelihood와 latent hierarchy를 어떻게
+          정하느냐가 변형을 나눕니다.
         </p>
-      </div>
-      <div className="not-prose rounded-xl border border-border bg-card p-5 space-y-3">
-        <p className="text-xs font-mono text-foreground/50">VAE 변형 모델 비교</p>
-        {VARIANTS.map(v => (
-          <motion.button key={v.name} whileHover={{ x: 3 }}
-            onClick={() => setActive(active === v.name ? null : v.name)}
-            className="w-full flex items-center gap-3 rounded-lg border px-3 py-2.5 text-left transition-all"
-            style={{
-              borderColor: active === v.name ? v.color : v.color + '30',
-              background: active === v.name ? v.color + '14' : v.color + '06',
-            }}>
-            <span className="font-mono text-xs font-bold" style={{ color: v.color }}>{v.name}</span>
-          </motion.button>
-        ))}
-        <AnimatePresence mode="wait">
-          {sel && (
-            <motion.div key={sel.name} initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-              className="rounded-lg border p-3 text-sm text-foreground/80"
-              style={{ borderColor: sel.color + '30', background: sel.color + '08' }}>
-              {sel.desc}
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">VQ-VAE와 현대 모델</h3>
-        <div className="not-prose"><VQVAEViz /></div>
-        <p className="leading-7">
-          요약 1: <strong>VQ-VAE</strong>는 이산 codebook으로 blurry 문제 해결 — DALL-E 기반.<br />
-          요약 2: <strong>Stable Diffusion의 VAE</strong>가 이미지를 latent로 8배 압축 — 실용화 핵심.<br />
-          요약 3: VAE는 <strong>음성·단백질·분자·추천</strong> 등 광범위한 도메인에서 활용.
+      <figure className="not-prose my-8 grid gap-3 md:grid-cols-2">
+        {variants.map(([name, body]) => (
+          <div key={name} className="rounded-2xl border bg-card p-4 sm:p-5">
+            <p className="font-mono text-sm font-bold text-primary">{name}</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {body}
+            </p>
+          </div>
+        ))}
+      </figure>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>VQ-VAE와 latent diffusion은 같은 “VAE”라는 말로 묶지 않는다</h3>
+        <p>
+          VQ-VAE는 codebook의 discrete latent를 사용하며 perceptual quality와
+          autoregressive prior 같은 후속 설계를 가능하게 했다. 그러나
+          quantization 하나가 blurry output을 자동으로 해결하는 것은 아니다.
+          Stable Diffusion 계열의 first-stage autoencoder는 pixel space를
+          spatial latent로 압축해 diffusion compute를 줄이지만, 구체적인
+          regularization과 compression factor는 model version마다 확인해야 한다.
         </p>
+        <p>
+          Latent에서 denoising을 수행하는 전체 경로는
+          <Link to="/ai/diffusion-models"> Diffusion Models 글</Link>에서 이어서
+          다룹니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-vq-vae"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Discrete latent
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Neural Discrete Representation Learning
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Continuous Gaussian posterior 대신 vector-quantized codebook과 학습된
+          prior를 사용해 image·video·speech의 discrete representation을
+          다룹니다. VQ-VAE의 objective와 straight-through update는 기본 Gaussian
+          VAE의 ELBO 유도를 그대로 유지한 변형이 아니므로 두 방법을 구분해서
+          읽어야 합니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/1711.00937"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 codebook·objective·평가 보기
+        </a>
       </div>
     </section>
   );

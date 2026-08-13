@@ -38,9 +38,21 @@ HUK_SUBKEY_TA_ENC   // TA 바이너리 암호화 키
 HUK_SUBKEY_PRIVACY  // 개인 정보 보호 키`;
 
 export const hukAnnotations = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: '함수 시그니처 & 파라미터' },
-  { lines: [16, 20] as [number, number], color: 'emerald' as const, note: 'OTP에서 HUK 읽기 + HMAC 초기화' },
-  { lines: [34, 38] as [number, number], color: 'amber' as const, note: '키 파생 용도 분류' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "함수 시그니처 & 파라미터",
+  },
+  {
+    lines: [16, 20] as [number, number],
+    color: "emerald" as const,
+    note: "OTP에서 HUK 읽기 + HMAC 초기화",
+  },
+  {
+    lines: [34, 38] as [number, number],
+    color: "amber" as const,
+    note: "키 파생 용도 분류",
+  },
 ];
 
 export const keyHierarchyCode = `// OP-TEE 보안 스토리지 키 계층 구조
@@ -62,9 +74,21 @@ HUK -> HMAC(usage=TA_ENC || ta_uuid) -> AES-GCM 복호화 키
 -> TA 바이너리를 AES-GCM으로 저장 (디스크 탈취 무효화)`;
 
 export const keyHierarchyAnnotations = [
-  { lines: [3, 9] as [number, number], color: 'sky' as const, note: 'HUK -> SSK -> FEK 계층' },
-  { lines: [11, 13] as [number, number], color: 'emerald' as const, note: 'RPMB 인증 키 파생' },
-  { lines: [15, 17] as [number, number], color: 'violet' as const, note: 'TA 바이너리 암호화' },
+  {
+    lines: [3, 9] as [number, number],
+    color: "sky" as const,
+    note: "HUK -> SSK -> FEK 계층",
+  },
+  {
+    lines: [11, 13] as [number, number],
+    color: "emerald" as const,
+    note: "RPMB 인증 키 파생",
+  },
+  {
+    lines: [15, 17] as [number, number],
+    color: "violet" as const,
+    note: "TA 바이너리 암호화",
+  },
 ];
 
 export const gpApiCode = `// lib/libutee/include/tee_api.h — TA에서 사용하는 표준 API
@@ -89,7 +113,19 @@ TEE_GetSystemTime(&time);  // re-settable 시스템 시간
 TEE_GetREETime(&time);     // Normal World 시간 (신뢰도 낮음)`;
 
 export const gpApiAnnotations = [
-  { lines: [4, 7] as [number, number], color: 'sky' as const, note: '영구 저장소 객체 관리' },
-  { lines: [9, 13] as [number, number], color: 'emerald' as const, note: 'AES-GCM 암호화 연산' },
-  { lines: [15, 20] as [number, number], color: 'amber' as const, note: '키 파생 & 보안 시간' },
+  {
+    lines: [4, 7] as [number, number],
+    color: "sky" as const,
+    note: "영구 저장소 객체 관리",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "emerald" as const,
+    note: "AES-GCM 암호화 연산",
+  },
+  {
+    lines: [15, 20] as [number, number],
+    color: "amber" as const,
+    note: "키 파생 & 보안 시간",
+  },
 ];

@@ -9,9 +9,21 @@ export const DISCOVERY_TRAIT_CODE = `pub trait Discovery: Debug + Send + Sync + 
 }`;
 
 export const DISCOVERY_TRAIT_ANNOTATIONS = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: '노드 정보 게시' },
-  { lines: [4, 6] as [number, number], color: 'emerald' as const, note: 'NodeId → 주소 해석' },
-  { lines: [7, 8] as [number, number], color: 'amber' as const, note: '새 피어 발견 구독' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "노드 정보 게시",
+  },
+  {
+    lines: [4, 6] as [number, number],
+    color: "emerald" as const,
+    note: "NodeId → 주소 해석",
+  },
+  {
+    lines: [7, 8] as [number, number],
+    color: "amber" as const,
+    note: "새 피어 발견 구독",
+  },
 ];
 
 export const PKARR_CODE = `pub struct PkarrPublisher {
@@ -24,6 +36,14 @@ export const PKARR_CODE = `pub struct PkarrPublisher {
 // 게시: NodeData → sign(secret_key) → Mainline DHT.put(node_id, signed)`;
 
 export const PKARR_ANNOTATIONS = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: 'Pkarr 게시자 구조체' },
-  { lines: [7, 8] as [number, number], color: 'emerald' as const, note: 'DHT 조회/게시 흐름' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "Pkarr 게시자 구조체",
+  },
+  {
+    lines: [7, 8] as [number, number],
+    color: "emerald" as const,
+    note: "DHT 조회/게시 흐름",
+  },
 ];

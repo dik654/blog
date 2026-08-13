@@ -1,52 +1,64 @@
-import { CitationBlock } from '@/components/ui/citation';
-import CAIViz from './viz/CAIViz';
-import CAIStagesDetailViz from './viz/CAIStagesDetailViz';
-import RLAIFTrendDetailViz from './viz/RLAIFTrendDetailViz';
+const stages = [
+  ["Principles", "허용·금지·우선순위를 natural-language constitution으로 명시한다."],
+  ["Critique", "Model이 response가 어떤 principle을 위반했는지 분석한다."],
+  ["Revision", "Critique를 반영한 response로 supervised data를 만든다."],
+  ["AI feedback", "Principle에 따른 preference label로 reward 또는 preference optimization을 수행한다."],
+];
 
 export default function ConstitutionalAI() {
   return (
     <section id="constitutional-ai" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Constitutional AI & RLAIF</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p>
-          <strong>핵심 아이디어</strong> — 인간 레이블 대신 AI가 원칙(헌법)에 따라 자기 평가<br />
-          인간 비용 0으로 확장 가능한 정렬
-        </p>
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Constitutional AI는 feedback 기준을 자연어 원칙으로 드러낸다
+      </h2>
 
-      <CAIViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <CitationBlock source="Bai et al., 2022 — Constitutional AI" citeKey={3} type="paper"
-          href="https://arxiv.org/abs/2212.08073">
-          <p className="italic text-sm">
-            "We train a harmless AI assistant through self-improvement, without any human
-            feedback labels for harms."
-          </p>
-          <p className="mt-2 text-xs">
-            핵심 발견: 충분히 강한 모델이 원칙 기반으로 자기 평가하면
-            인간 평가자와 동등한 품질의 피드백 생성 가능
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">RLAIF의 확장</h3>
-        <p>
-          <strong>RLAIF</strong>(RL from AI Feedback) — CAI의 일반화<br />
-          AI 피드백으로 RM을 학습하고 PPO 또는 DPO 적용<br />
-          Google의 연구: RLAIF가 RLHF와 동등 성능 (win rate 50% 수준)
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Constitutional AI 2단계</h3>
-        <div className="not-prose"><CAIStagesDetailViz /></div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">RLAIF 연구 동향</h3>
-        <div className="not-prose"><RLAIFTrendDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: CAI는 <strong>Critique → Revise → Train</strong> self-loop — 인간 라벨 0.<br />
-          요약 2: <strong>RLAIF</strong>가 RLHF와 동등 성능 달성 (2023).<br />
-          요약 3: 2024 트렌드는 <strong>Self-Rewarding, iterative AI feedback</strong>.
+          Constitutional AI(CAI)는 model이 constitution을 기준으로 자신의 응답을
+          critique하고 revise한 data를 만든 뒤, AI-generated preference를 활용하는
+          방법을 제시했다. Human label을 전혀 쓰지 않는다는 뜻으로 넓히기보다,
+          harmfulness feedback의 일부를 explicit principles와 AI feedback으로
+          대체한 설계로 읽는 편이 정확하다.
+        </p>
+      </div>
+
+      <figure data-viz="constitutional-ai-stages" className="not-prose my-8 grid gap-4 rounded-xl border border-border/70 bg-card p-4 sm:grid-cols-2 sm:p-6">
+        {stages.map(([title, body], index) => <div key={title} className="rounded-xl border bg-background p-4"><p className="text-xs font-bold text-primary/70">0{index + 1}</p><p className="mt-2 font-semibold">{title}</p><p className="mt-1 text-sm leading-6 text-muted-foreground">{body}</p></div>)}
+      </figure>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>RLAIF는 label cost를 없애는 마법이 아니다</h3>
+        <p>
+          Reinforcement Learning from AI Feedback(RLAIF)은 AI evaluator의
+          preference를 reward model이나 direct preference objective에 사용할 수
+          있게 한다. 그러나 constitution 작성, principle 충돌 순서, evaluator
+          calibration, seed prompt와 final evaluation에는 여전히 사람의 판단이
+          필요하다. <a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noreferrer">CAI 원 논문</a>도
+          self-critique·revision의 supervised phase와 AI preference model을 사용하는
+          RL phase를 구분한다. 따라서 CAI를 loss 하나로 보거나 “human oversight가
+          없는 학습”으로 넓혀 이해하면 실제 pipeline을 놓치게 된다.
+        </p>
+        <p>
+          Evaluator와 policy가 같은 blind spot이나 문체 선호를 공유할 수도 있으므로
+          principle별 violation set, 여러 judge의 disagreement와 independent human
+          audit을 함께 둔다. Constitution을 공개하는 것은 기준의 provenance를
+          개선하지만 그 기준이 완전하거나 일관적이라는 보장은 아니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-cai"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 해설 · Constitutional AI</p>
+        <h3 className="mt-2 text-base font-bold text-foreground">
+          핵심 기여는 판단 기준의 provenance를 자연어 원칙으로 드러낸 것이다
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Supervised phase에서는 model이 원칙에 따라 harmful response를 critique하고
+          revise하며, RL phase에서는 AI가 만든 preference signal을 사용합니다.
+          Constitution은 기준을 추적 가능하게 만들지만 principle 충돌, evaluator
+          bias와 최종 human oversight까지 자동으로 해결하지는 않습니다.
         </p>
       </div>
     </section>

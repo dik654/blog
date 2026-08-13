@@ -23,8 +23,24 @@ type EnclaveIdentity struct {
 // 3. 키 매니저 ↔ 컴퓨트 워커 보안 채널`;
 
 export const teeConfigAnnotations = [
-  { lines: [1, 6] as [number, number], color: 'sky' as const, note: 'TEE 선택 모드' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: 'TEE 종류 & 신원' },
-  { lines: [14, 19] as [number, number], color: 'violet' as const, note: '엔클레이브 신원' },
-  { lines: [21, 25] as [number, number], color: 'amber' as const, note: 'RA-TLS 보안 채널' },
+  {
+    lines: [1, 6] as [number, number],
+    color: "sky" as const,
+    note: "TEE 선택 모드",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "TEE 종류 & 신원",
+  },
+  {
+    lines: [14, 19] as [number, number],
+    color: "violet" as const,
+    note: "엔클레이브 신원",
+  },
+  {
+    lines: [21, 25] as [number, number],
+    color: "amber" as const,
+    note: "RA-TLS 보안 채널",
+  },
 ];

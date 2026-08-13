@@ -1,7 +1,7 @@
-import Overview from './consensus-comparison/Overview';
-import Performance from './consensus-comparison/Performance';
-import Security from './consensus-comparison/Security';
-import UseCases from './consensus-comparison/UseCases';
+import Overview from "./consensus-comparison/Overview";
+import Performance from "./consensus-comparison/Performance";
+import Security from "./consensus-comparison/Security";
+import UseCases from "./consensus-comparison/UseCases";
 
 export default function ConsensusComparisonArticle() {
   return (

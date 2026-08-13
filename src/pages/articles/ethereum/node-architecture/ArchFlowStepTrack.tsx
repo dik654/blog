@@ -1,7 +1,10 @@
-import { codeRefs } from './archCodeRefs';
+import { codeRefs } from "./archCodeRefs";
 
 export default function ArchFlowStepTrack({
-  moduleId, steps, step, setStep,
+  moduleId,
+  steps,
+  step,
+  setStep,
 }: {
   moduleId: string;
   steps: { desc: string; modules: string[] }[];
@@ -17,9 +20,13 @@ export default function ArchFlowStepTrack({
             <button
               onClick={() => setStep(i)}
               className={`relative w-5 h-5 rounded-full text-[9px] font-bold shrink-0 transition-all cursor-pointer
-                ${i === step     ? 'bg-foreground text-background shadow-sm scale-110'
-                  : i < step     ? 'bg-foreground/30 text-foreground/60'
-                  :                'bg-muted text-foreground/75 hover:bg-muted-foreground/20'}`}
+                ${
+                  i === step
+                    ? "bg-foreground text-background shadow-sm scale-110"
+                    : i < step
+                      ? "bg-foreground/30 text-foreground/60"
+                      : "bg-muted text-foreground/75 hover:bg-muted-foreground/20"
+                }`}
             >
               {i + 1}
               {codeRefs[`${moduleId}-${i}`] && (
@@ -27,7 +34,9 @@ export default function ArchFlowStepTrack({
               )}
             </button>
             {i < total - 1 && (
-              <div className={`flex-1 h-px mx-0.5 transition-colors ${i < step ? 'bg-foreground/30' : 'bg-border'}`} />
+              <div
+                className={`flex-1 h-px mx-0.5 transition-colors ${i < step ? "bg-foreground/30" : "bg-border"}`}
+              />
             )}
           </div>
         ))}

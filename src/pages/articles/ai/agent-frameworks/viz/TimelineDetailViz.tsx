@@ -1,16 +1,37 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
-const steps: StepDef[] = [
-  { label: 'AI Agent 역사 (2022-2024) + 3세대', body: '2022.10 ReAct (Princeton+Google): Reasoning + Acting 결합, tool use 기초 패러다임\n2023.03 LangChain: 최초 범용 에이전트 프레임워크, tool use 표준화\n2023.04 AutoGPT, BabyAGI: Goal-driven, 자율 작업 수행\n2023.06 ReAct+Reflection: Self-critique 통합, 오류 수정\n2023.10 AutoGen (MS): Multi-agent 대화, Human-in-the-loop\n2024.01 LangGraph: State graph 기반, Cyclic workflows\n2024.03 CrewAI: Role-based agents, Team collaboration\n2024 Claude Computer Use: GUI automation\n2024 OpenAI Assistants API: Managed agent service\n\n3세대 Agent Architecture:\nGen 1 (2022): Single-step tool use\nGen 2 (2023): Multi-step planning (ReAct)\nGen 3 (2024): Multi-agent + long-horizon planning' },
-];
-const visuals = [
-  { title: 'Agent 역사 + 3세대', color: '#6366f1', rows: [
-    { label: '2022', value: 'ReAct — Reasoning + Acting 기반' },
-    { label: '2023', value: 'LangChain, AutoGPT, AutoGen' },
-    { label: '2024', value: 'LangGraph, CrewAI, Claude Use' },
-    { label: 'Gen 1', value: 'Single-step tool use' },
-    { label: 'Gen 2', value: 'Multi-step planning (ReAct)' },
-    { label: 'Gen 3', value: 'Multi-agent + long-horizon' },
-  ]},
-];
-export default function TimelineDetailViz() { return <SimpleStepViz steps={steps} visuals={visuals} />; }
+import VizFrame from "@/components/viz/VizFrame";
+
+const responsibilities = [
+  ["Tool loop", "decide · act · observe", "short task execution"],
+  ["Stateful workflow", "branch · approval · checkpoint", "multi-step state"],
+  ["Harness", "context · permission · verify · recover", "product behavior"],
+  ["Durable runtime", "event · queue · trace · resume", "operational lifetime"],
+] as const;
+
+export default function TimelineDetailViz() {
+  return (
+    <VizFrame
+      eyebrow="Responsibility expansion"
+      title="Agent system이 길어질수록 기존 loop 위에 별도의 운영 책임이 추가됩니다"
+      description="네 항목은 우열이나 세대 순위가 아닙니다. 단순한 task에는 tool loop만으로 충분하고, 필요한 책임만 선택해 더합니다."
+    >
+      <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-4">
+        {responsibilities.map(([name, owns, boundary], index) => (
+          <section key={name} className="min-w-0 border-t border-border/80 pt-4">
+            <div className="flex min-w-0 items-baseline justify-between gap-4">
+              <h4 className="min-w-0 text-sm font-bold [overflow-wrap:anywhere]">{name}</h4>
+              <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                +{index + 1}
+              </span>
+            </div>
+            <p className="mt-3 min-w-0 text-xs leading-5 text-muted-foreground [overflow-wrap:anywhere]">
+              책임 · {owns}
+            </p>
+            <p className="mt-3 min-w-0 text-xs font-semibold leading-5 text-primary [overflow-wrap:anywhere]">
+              범위 · {boundary}
+            </p>
+          </section>
+        ))}
+      </div>
+    </VizFrame>
+  );
+}

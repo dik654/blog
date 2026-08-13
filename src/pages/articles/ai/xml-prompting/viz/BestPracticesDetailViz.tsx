@@ -1,21 +1,53 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
+import VizFrame from "@/components/viz/VizFrame";
 
-const steps: StepDef[] = [
-  { label: 'XML 실전 Best Practices + 5가지 패턴', body: 'Best Practices:\n① 명확한 구조: <task>+<input>+<output_format> 분리\n② 일관된 태그: 모든 prompt에서 같은 tags 사용\n③ 얕은 중첩: max 2-3 levels\n④ 명시적 출력 형식: <output_format>으로 스키마 제공\n⑤ 예시 필수: 복잡한 task → <example> 태그\n\nProduction 5대 패턴:\n① QA: <context>+<question>+<instructions>+<answer>\n② Extraction: <document>+<schema>+<extracted>\n③ Classification: <text>+<categories>+<classification>\n④ Multi-turn: <conversation><turn role="..."/></conversation>\n⑤ Tool use: <available_tools>+<reasoning>+<tool_call>\n\n토큰 오버헤드 10-20%, 안정성으로 상쇄\n안티패턴: over-engineering, deep nesting, inconsistent naming' },
-];
+const decisions = [
+  ["사람이 읽는가?", "Markdown 또는 plain text"],
+  ["typed API가 받는가?", "JSON + Schema"],
+  ["반복 section과 source id가 핵심인가?", "XML을 검토"],
+] as const;
 
-const visuals = [
-  { title: '실전 패턴 + 안티패턴', color: '#f59e0b', rows: [
-    { label: '① QA', value: 'context + question + answer' },
-    { label: '② Extraction', value: 'document + schema + extracted' },
-    { label: '③ Classification', value: 'text + categories + classification' },
-    { label: '④ Multi-turn', value: '<turn role="..."> 대화 구조' },
-    { label: '⑤ Tool use', value: 'tools + reasoning + tool_call' },
-    { label: '주의', value: '10-20% 오버헤드, 안정성으로 상쇄' },
-  ]},
-];
+const parserChecks = [
+  "DTD·external entity·network access 비활성화",
+  "input bytes·depth·element count에 상한 설정",
+  "schema와 domain validator를 parser 뒤에 연결",
+  "parse 실패를 typed error로 기록하고 retry 상한 설정",
+] as const;
 
 export default function BestPracticesDetailViz() {
-  return <SimpleStepViz steps={steps} visuals={visuals} />;
+  return (
+    <VizFrame
+      eyebrow="Secure format decision"
+      title="XML이 필요한지 먼저 판단하고, 선택했다면 parser의 공격 표면을 제한합니다"
+      description="format 선택과 안전한 parsing은 한 묶음의 production contract입니다. 관대한 fallback으로 깨진 입력을 조용히 통과시키지 않습니다."
+    >
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.15fr]">
+        <section className="min-w-0">
+          <h4 className="text-xs font-bold text-muted-foreground">Format questions</h4>
+          <div className="mt-4 divide-y divide-border/70">
+            {decisions.map(([question, choice]) => (
+              <div key={question} className="min-w-0 py-3 first:pt-0 last:pb-0">
+                <p className="text-xs leading-5 text-foreground [overflow-wrap:anywhere]">{question}</p>
+                <p className="mt-1 text-xs font-semibold leading-5 text-primary [overflow-wrap:anywhere]">
+                  {choice}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="min-w-0 border-l border-border pl-4 sm:pl-6">
+          <h4 className="text-xs font-bold text-muted-foreground">XML parser checklist</h4>
+          <ol className="mt-4 space-y-4">
+            {parserChecks.map((check, index) => (
+              <li key={check} className="grid min-w-0 grid-cols-[1.5rem_1fr] gap-2">
+                <span className="font-mono text-[11px] text-muted-foreground">0{index + 1}</span>
+                <p className="min-w-0 text-xs leading-5 text-foreground [overflow-wrap:anywhere]">
+                  {check}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </div>
+    </VizFrame>
+  );
 }

@@ -18,7 +18,19 @@ VEK (VM Encryption Key):
   - VM 종료 시 자동 폐기`;
 
 export const asidAnnotations = [
-  { lines: [5, 8] as [number, number], color: 'sky' as const, note: 'ASID별 VM 키 매핑' },
-  { lines: [10, 11] as [number, number], color: 'emerald' as const, note: '세대별 최대 ASID 수' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'VEK 생명주기' },
+  {
+    lines: [5, 8] as [number, number],
+    color: "sky" as const,
+    note: "ASID별 VM 키 매핑",
+  },
+  {
+    lines: [10, 11] as [number, number],
+    color: "emerald" as const,
+    note: "세대별 최대 ASID 수",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "VEK 생명주기",
+  },
 ];

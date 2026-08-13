@@ -1,6 +1,6 @@
-import Overview from './isms-encryption/Overview';
-import PasswordHashing from './isms-encryption/PasswordHashing';
-import KeyManagement from './isms-encryption/KeyManagement';
+import Overview from "./isms-encryption/Overview";
+import PasswordHashing from "./isms-encryption/PasswordHashing";
+import KeyManagement from "./isms-encryption/KeyManagement";
 
 export default function IsmsEncryption() {
   return (

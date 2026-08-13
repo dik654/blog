@@ -1,8 +1,12 @@
-import MerkleViz from './viz/MerkleViz';
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
+import MerkleViz from "./viz/MerkleViz";
+import { codeRefs } from "./codeRefs";
+import type { CodeRef } from "@/components/code/types";
 
-export default function Merkle({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function Merkle({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
     <section id="merkle" className="mb-16 scroll-mt-20">
@@ -29,11 +33,14 @@ export default function Merkle({ onCodeRef }: { onCodeRef: (key: string, ref: Co
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h4>구현 인사이트</h4>
         <p className="leading-7">
-          leaf = H(key, value)에서 key를 포함하는 이유 — second preimage 공격 방지
+          leaf = H(key, value)에서 key를 포함하는 이유 — second preimage 공격
+          방지
           <br />
-          key의 비트가 경로를 결정 — get_bit, shr_bits, flip_bit0 세 함수로 인덱스 계산
+          key의 비트가 경로를 결정 — get_bit, shr_bits, flip_bit0 세 함수로
+          인덱스 계산
           <br />
-          Sparse 트리의 장점: depth=256이어도 실제 삽입된 n개 키에 대해 O(n * depth) 저장
+          Sparse 트리의 장점: depth=256이어도 실제 삽입된 n개 키에 대해 O(n *
+          depth) 저장
         </p>
       </div>
     </section>

@@ -1,5 +1,5 @@
-import TLSHandshakeViz from './viz/TLSHandshakeViz';
-import CodePanel from '@/components/ui/code-panel';
+import TLSHandshakeViz from "./viz/TLSHandshakeViz";
+import CodePanel from "@/components/ui/code-panel";
 
 const handshakeCode = `// TLS 1.3 Full Handshake (RFC 8446)
 Client                              Server
@@ -18,22 +18,37 @@ Client                              Server
   |<-- ServerHello + {Finished} -----|  // 서버 응답
   |<========= 0-RTT 완료 ==========>|  // 첫 패킷부터 데이터 포함`;
 
-const annotations: { lines: [number, number]; color: 'sky' | 'emerald' | 'amber'; note: string }[] = [
-  { lines: [2, 8], color: 'sky', note: '1-RTT: key_share로 첫 메시지에 DH 파라미터 포함' },
-  { lines: [9, 11], color: 'emerald', note: '{}는 암호화된 메시지를 의미' },
-  { lines: [14, 17], color: 'amber', note: '0-RTT: PSK로 재연결 시 즉시 데이터 전송' },
+const annotations: {
+  lines: [number, number];
+  color: "sky" | "emerald" | "amber";
+  note: string;
+}[] = [
+  {
+    lines: [2, 8],
+    color: "sky",
+    note: "1-RTT: key_share로 첫 메시지에 DH 파라미터 포함",
+  },
+  { lines: [9, 11], color: "emerald", note: "{}는 암호화된 메시지를 의미" },
+  {
+    lines: [14, 17],
+    color: "amber",
+    note: "0-RTT: PSK로 재연결 시 즉시 데이터 전송",
+  },
 ];
 
 export default function Handshake() {
   return (
     <section id="handshake" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">핸드셰이크 흐름</h2>
-      <div className="not-prose mb-8"><TLSHandshakeViz /></div>
+      <div className="not-prose mb-8">
+        <TLSHandshakeViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           TLS 1.3은 1-RTT 풀 핸드셰이크를 기본으로 함.
           <br />
-          ClientHello에 key_share 확장을 포함하여 첫 메시지에서 ECDHE 공개값을 전송함.
+          ClientHello에 key_share 확장을 포함하여 첫 메시지에서 ECDHE 공개값을
+          전송함.
           <br />
           TLS 1.2는 키 교환을 별도 라운드에서 수행하므로 2-RTT가 필요했음.
         </p>
@@ -55,12 +70,17 @@ export default function Handshake() {
           <br />
           서버는 멱등(idempotent) 요청에만 0-RTT를 허용해야 함.
         </p>
-        <CodePanel title="TLS 1.3 핸드셰이크 메시지 흐름" code={handshakeCode}
-          annotations={annotations} />
+        <CodePanel
+          title="TLS 1.3 핸드셰이크 메시지 흐름"
+          code={handshakeCode}
+          annotations={annotations}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">핸드셰이크 상세 메시지</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          핸드셰이크 상세 메시지
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TLS 1.3 Handshake Messages
+          {`// TLS 1.3 Handshake Messages
 //
 // ClientHello:
 //   - ProtocolVersion (0x0303 for compat)

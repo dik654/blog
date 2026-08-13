@@ -1,11 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const ocallRefs: Record<string, CodeRef> = {
-  'sgx-ocall': {
-    path: 'linux-sgx/sdk/trts/trts_ocall.cpp — sgx_ocall()',
-    lang: 'c',
+  "sgx-ocall": {
+    path: "linux-sgx/sdk/trts/trts_ocall.cpp — sgx_ocall()",
+    lang: "c",
     highlight: [1, 12],
-    desc: '엔클레이브에서 호스트 함수를 호출하는 OCALL 진입점.\nindex 검증 후 __morestack로 EEXIT → 호스트 → EENTER 복귀합니다.',
+    desc: "엔클레이브에서 호스트 함수를 호출하는 OCALL 진입점.\nindex 검증 후 __morestack로 EEXIT → 호스트 → EENTER 복귀합니다.",
     code: `// sdk/trts/trts_ocall.cpp (L55-69)
 sgx_status_t sgx_ocall(const unsigned int index,
                         void *ms)
@@ -24,16 +24,20 @@ sgx_status_t sgx_ocall(const unsigned int index,
     return status;
 }`,
     annotations: [
-      { lines: [5, 11], color: 'sky', note: 'OCALL 인덱스 범위 검증' },
-      { lines: [13, 15], color: 'emerald', note: 'EEXIT → 호스트 → EENTER 왕복' },
+      { lines: [5, 11], color: "sky", note: "OCALL 인덱스 범위 검증" },
+      {
+        lines: [13, 15],
+        color: "emerald",
+        note: "EEXIT → 호스트 → EENTER 왕복",
+      },
     ],
   },
 
-  'do-oret': {
-    path: 'linux-sgx/sdk/trts/trts_ocall.cpp — do_oret()',
-    lang: 'c',
+  "do-oret": {
+    path: "linux-sgx/sdk/trts/trts_ocall.cpp — do_oret()",
+    lang: "c",
     highlight: [1, 12],
-    desc: 'OCALL 반환 시 스택 포인터 검증.\nOCALL_FLAG(0x4F434944)로 변조를 감지하고 pre_last_sp 범위를 검증합니다.',
+    desc: "OCALL 반환 시 스택 포인터 검증.\nOCALL_FLAG(0x4F434944)로 변조를 감지하고 pre_last_sp 범위를 검증합니다.",
     code: `// sdk/trts/trts_ocall.cpp (L98-137)
 sgx_status_t do_oret(void *ms)
 {
@@ -65,10 +69,18 @@ sgx_status_t do_oret(void *ms)
     return SGX_ERROR_UNEXPECTED; // 도달 불가
 }`,
     annotations: [
-      { lines: [8, 9], color: 'sky', note: 'last_sp 기본 유효성 검증' },
-      { lines: [12, 14], color: 'emerald', note: '스택 범위: 최소 프레임 공간' },
-      { lines: [17, 18], color: 'rose', note: 'OCALL_FLAG 매직 넘버 변조 감지' },
-      { lines: [21, 23], color: 'amber', note: 'pre_last_sp 범위 무결성 검증' },
+      { lines: [8, 9], color: "sky", note: "last_sp 기본 유효성 검증" },
+      {
+        lines: [12, 14],
+        color: "emerald",
+        note: "스택 범위: 최소 프레임 공간",
+      },
+      {
+        lines: [17, 18],
+        color: "rose",
+        note: "OCALL_FLAG 매직 넘버 변조 감지",
+      },
+      { lines: [21, 23], color: "amber", note: "pre_last_sp 범위 무결성 검증" },
     ],
   },
 };

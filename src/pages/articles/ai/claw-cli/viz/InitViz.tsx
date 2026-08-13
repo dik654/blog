@@ -1,78 +1,45 @@
-import { DataBox } from '@/components/viz/boxes';
+import { CliFrame, CliRule, CliSteps } from "./CliVizPrimitives";
 
 export default function InitViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 300" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">claw init — 프로젝트 타입 감지 &amp; 템플릿 생성</text>
-
-        <defs>
-          <marker id="in-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {/* 감지 단계 */}
-        <text x={280} y={54} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          프로젝트 시그널 감지
-        </text>
-
-        <g transform="translate(35, 66)">
-          {[
-            { label: 'Cargo.toml', lang: 'Rust', color: '#f59e0b' },
-            { label: 'package.json', lang: 'TS/JS', color: '#3b82f6' },
-            { label: 'pyproject.toml', lang: 'Python', color: '#10b981' },
-            { label: 'go.mod', lang: 'Go', color: '#06b6d4' },
-          ].map((det, i) => (
-            <g key={det.label} transform={`translate(${i * 125}, 0)`}>
-              <rect x={0} y={0} width={118} height={52} rx={5}
-                fill={det.color} fillOpacity={0.1} stroke={det.color} strokeWidth={1} />
-              <text x={59} y={21} textAnchor="middle" fontSize={9.5} fontWeight={700}
-                fontFamily="monospace" fill={det.color}>{det.label}</text>
-              <text x={59} y={38} textAnchor="middle" fontSize={8.5} fill="var(--muted-foreground)">
-                → {det.lang}
-              </text>
-            </g>
-          ))}
-        </g>
-
-        <line x1={280} y1={126} x2={280} y2={138} stroke="#3b82f6" strokeWidth={1.4} markerEnd="url(#in-arr)" />
-
-        {/* 생성 파일 */}
-        <text x={280} y={154} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          생성 파일
-        </text>
-
-        <g transform="translate(35, 166)">
-          <DataBox x={0} y={0} w={156} h={42}
-            label=".claw/config.json"
-            sub="자동 블랙리스트"
-            color="#10b981" />
-          <DataBox x={167} y={0} w={156} h={42}
-            label=".claw/CLAUDE.md"
-            sub="언어·명령 템플릿"
-            color="#10b981" />
-          <DataBox x={334} y={0} w={156} h={42}
-            label=".gitignore"
-            sub="업데이트 (추가만)"
-            color="#f59e0b" />
-        </g>
-
-        {/* 블랙리스트 */}
-        <rect x={35} y={226} width={490} height={62} rx={6}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={246} textAnchor="middle" fontSize={11} fontWeight={700}
-          fill="var(--foreground)">자동 블랙리스트 (언어별)</text>
-        <text x={280} y={264} textAnchor="middle" fontSize={9} fontFamily="monospace"
-          fill="var(--muted-foreground)">
-          Rust: target/** · JS: node_modules/**, dist/** · Python: __pycache__/**
-        </text>
-        <text x={280} y={278} textAnchor="middle" fontSize={9} fontFamily="monospace"
-          fill="var(--muted-foreground)">
-          + 공통: .git/**, *.pem, .env*
-        </text>
-      </svg>
-    </div>
+    <CliFrame
+      label="SAFE BOOTSTRAP"
+      title="감지 결과는 초안이고 기존 파일이 우선이다"
+      description="init은 프로젝트 시그널을 읽어 변경 계획을 만든 뒤, 사용자가 확인한 파일만 원자적으로 기록해야 합니다."
+      note="package.json이나 Cargo.toml은 힌트이지 권한이 아닙니다. 감지한 명령을 곧바로 실행하지 말고, 생성할 설정과 제외 경로만 제안합니다."
+    >
+      <CliSteps
+        items={[
+          {
+            label: "01 · INSPECT",
+            title: "현재 상태 읽기",
+            body: "저장소 루트, 기존 설정, 언어 시그널, ignore 규칙을 부수 효과 없이 조사합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · PLAN",
+            title: "변경안 생성",
+            body: "새 파일·추가할 블록·건너뛸 충돌을 diff 형태로 계산합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03 · CONFIRM",
+            title: "소유권 확인",
+            body: "기존 사용자 파일은 자동 덮어쓰지 않고 대화형 확인이나 명시적 플래그를 요구합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · COMMIT",
+            title: "안전하게 기록",
+            body: "임시 파일과 atomic rename을 사용하고 재실행해도 같은 결과가 되게 합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <CliRule>
+        초기화가 만든 블록에는 버전과 경계를 표시해야 다음 버전이 자기 영역만
+        갱신할 수 있습니다. 사용자가 편집한 나머지 파일은 그대로 보존합니다.
+      </CliRule>
+    </CliFrame>
   );
 }

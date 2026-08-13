@@ -1,15 +1,16 @@
-import FrobViz from './viz/FrobViz';
-import UserFlowViz from './viz/UserFlowViz';
-import JoinAdapterViz from './viz/JoinAdapterViz';
-import DrawFlowViz from './viz/DrawFlowViz';
-import CollateralRatioViz from './viz/CollateralRatioViz';
+import FrobViz from "./viz/FrobViz";
+import UserFlowViz from "./viz/UserFlowViz";
+import JoinAdapterViz from "./viz/JoinAdapterViz";
+import DrawFlowViz from "./viz/DrawFlowViz";
+import CollateralRatioViz from "./viz/CollateralRatioViz";
 
 export default function VaultCdp() {
   return (
     <section id="vault-cdp" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Vault (CDP) — 담보 예치 &amp; DAI 발행</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        Vault (CDP) — 담보 예치 &amp; DAI 발행
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <h3 className="text-xl font-semibold mt-6 mb-3">CDP 개념 복습</h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`Collateralized Debt Position:
   - 담보: 사용자가 예치하는 암호자산
@@ -24,7 +25,9 @@ export default function VaultCdp() {
 // 청산 조건
 담보 비율 < 150% → 청산 대상`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Vat.frob() — 핵심 함수</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Vat.frob() — 핵심 함수
+        </h3>
 
         <FrobViz />
 
@@ -63,12 +66,17 @@ function frob(
     dai[w] = _add(dai[w], dtab);         // DAI 증가
 }`}</pre>
         <p>
-          <strong>단일 함수로 모든 Vault 상호작용</strong>: add/remove collateral + draw/repay debt<br />
-          signed integer 사용 — 양수/음수로 방향 구분<br />
+          <strong>단일 함수로 모든 Vault 상호작용</strong>: add/remove
+          collateral + draw/repay debt
+          <br />
+          signed integer 사용 — 양수/음수로 방향 구분
+          <br />
           4가지 체크: safe, dust, ceiling, balance
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">dsproxy - 사용자 인터페이스</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          dsproxy - 사용자 인터페이스
+        </h3>
 
         <UserFlowViz />
 
@@ -91,7 +99,9 @@ function openLockETHAndDraw(
 // 사용자는 1 트랜잭션으로 전체 흐름 완료
 // DSProxy가 모든 low-level 호출 담당`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">담보 예치 — ethJoin.join()</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          담보 예치 — ethJoin.join()
+        </h3>
 
         <JoinAdapterViz />
 
@@ -120,7 +130,9 @@ contract ETHJoin {
 
 // USDC, WBTC 등은 GemJoin 사용 (generic ERC20 어댑터)`}</pre>
         <p>
-          <strong>Join 어댑터 패턴</strong>: 각 담보 자산을 Vat 내부 표현으로 변환<br />
+          <strong>Join 어댑터 패턴</strong>: 각 담보 자산을 Vat 내부 표현으로
+          변환
+          <br />
           ETH → WETH, USDC → 내부 gem 단위 등<br />
           decimals 차이도 Join에서 처리 (WBTC 8 → 내부 18)
         </p>
@@ -176,8 +188,11 @@ debt = 15,000 × 1.05 = $15,750
 
 ratio = 20,000 / 15,750 = 127% → 청산 대상 (150% 미만)`}</pre>
         <p>
-          <strong>spot ≠ 시장 가격</strong>: spot = marketPrice / liquidationRatio<br />
-          150% 비율 ETH-A: spot = ETH가격 / 1.5<br />
+          <strong>spot ≠ 시장 가격</strong>: spot = marketPrice /
+          liquidationRatio
+          <br />
+          150% 비율 ETH-A: spot = ETH가격 / 1.5
+          <br />
           spot × ink ≥ art × rate 체크 — 안전 조건
         </p>
 
@@ -185,26 +200,31 @@ ratio = 20,000 / 15,750 = 127% → 청산 대상 (150% 미만)`}</pre>
           <p className="font-semibold mb-2">인사이트: Vat의 우아한 설계</p>
           <p>
             Vat.frob()는 <strong>DeFi 역사상 가장 범용적인 함수</strong>:<br />
-            - 담보 추가/회수<br />
-            - 부채 증가/상환<br />
-            - 다른 사용자에게 부채 이전<br />
-            - Vault 확대/축소
+            - 담보 추가/회수
+            <br />
+            - 부채 증가/상환
+            <br />
+            - 다른 사용자에게 부채 이전
+            <br />- Vault 확대/축소
           </p>
           <p className="mt-2">
             <strong>하나의 함수 + signed integer = 모든 조작</strong>
           </p>
           <p className="mt-2">
-            이 설계의 효과:<br />
-            ✓ 감사 단순 (단일 진입점)<br />
-            ✓ 가스 효율 (여러 operation 조합 가능)<br />
-            ✓ 확장성 (새 기능은 외부 래퍼로 추가)
+            이 설계의 효과:
+            <br />
+            ✓ 감사 단순 (단일 진입점)
+            <br />
+            ✓ 가스 효율 (여러 operation 조합 가능)
+            <br />✓ 확장성 (새 기능은 외부 래퍼로 추가)
           </p>
           <p className="mt-2">
-            Maker 코드는 <strong>"mathematical rigor"</strong> 유명 — 모든 연산이 정수 수학<br />
+            Maker 코드는 <strong>"mathematical rigor"</strong> 유명 — 모든
+            연산이 정수 수학
+            <br />
             Vat는 이 철학의 결정체
           </p>
         </div>
-
       </div>
     </section>
   );

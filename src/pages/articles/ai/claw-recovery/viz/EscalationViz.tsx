@@ -1,53 +1,49 @@
+import {
+  RecoveryFrame,
+  RecoveryRule,
+  RecoverySteps,
+} from "./RecoveryVizPrimitives";
+
 export default function EscalationViz() {
-  const levels = [
-    { num: 1, label: 'Webhook', target: 'Slack/Discord', color: '#3b82f6' },
-    { num: 2, label: 'Create Issue', target: 'GitHub/GitLab', color: '#f59e0b' },
-    { num: 3, label: 'PagerDuty', target: '온콜 엔지니어', color: '#ef4444' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 310" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">에스컬레이션 — 점진적 Alert</text>
-
-        {/* 계층 피라미드 */}
-        {levels.map((level, i) => {
-          const width = 450 - i * 90;
-          const x = 55 + i * 45;
-          const y = 60 + i * 56;
-          return (
-            <g key={level.num}>
-              <rect x={x} y={y} width={width} height={46} rx={6}
-                fill={level.color} fillOpacity={0.15} stroke={level.color} strokeWidth={1} />
-              <text x={x + 22} y={y + 28} fontSize={14} fontWeight={700} fill={level.color}>
-                L{level.num}
-              </text>
-              <text x={x + width / 2 + 22} y={y + 20} textAnchor="middle" fontSize={10.5}
-                fontWeight={700} fill={level.color}>{level.label}</text>
-              <text x={x + width / 2 + 22} y={y + 36} textAnchor="middle" fontSize={9}
-                fill="var(--muted-foreground)">{level.target}</text>
-            </g>
-          );
-        })}
-
-        {/* 트리거 조건 */}
-        <text x={40} y={266} fontSize={10} fontWeight={700} fill="var(--foreground)">조건:</text>
-
-        <g transform="translate(45, 275)">
-          <text x={0} y={12} fontSize={9} fontWeight={600} fontFamily="monospace" fill="#3b82f6">L1:</text>
-          <text x={30} y={12} fontSize={9} fill="var(--muted-foreground)">recipe 3회 실패</text>
-
-          <text x={160} y={12} fontSize={9} fontWeight={600} fontFamily="monospace" fill="#f59e0b">L2:</text>
-          <text x={190} y={12} fontSize={9} fill="var(--muted-foreground)">Lane 2시간 stuck</text>
-
-          <text x={335} y={12} fontSize={9} fontWeight={600} fontFamily="monospace" fill="#ef4444">L3:</text>
-          <text x={365} y={12} fontSize={9} fill="var(--muted-foreground)">CriticalFailure</text>
-        </g>
-
-        <text x={280} y={254} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">1시간 쿨다운 · 중복 알림 방지 · 템플릿 변수 지원</text>
-      </svg>
-    </div>
+    <RecoveryFrame
+      label="SAFE HANDOFF"
+      title="자동화를 멈추고 책임과 evidence를 넘긴다"
+      description="failure severity와 필요한 decision에 맞는 owner를 찾아 acknowledgement까지 추적합니다."
+      note="notification delivery와 human ownership은 다른 상태이며 응답이 없을 때만 다음 route로 올립니다."
+    >
+      <RecoverySteps
+        items={[
+          {
+            label: "01",
+            title: "Freeze",
+            body: "새 action을 막고 lease·credential을 회수합니다.",
+            tone: "rose",
+          },
+          {
+            label: "02",
+            title: "Bundle",
+            body: "state, attempts, impact와 선택지를 구조화합니다.",
+            tone: "blue",
+          },
+          {
+            label: "03",
+            title: "Route",
+            body: "team queue·user·on-call 중 실제 owner로 보냅니다.",
+            tone: "violet",
+          },
+          {
+            label: "04",
+            title: "Acknowledge",
+            body: "message ID, owner와 response deadline을 기록합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <RecoveryRule>
+        incident key로 update를 묶어 중복 알림을 줄이고 resolved 상태에서 후속
+        retry를 중단합니다.
+      </RecoveryRule>
+    </RecoveryFrame>
   );
 }

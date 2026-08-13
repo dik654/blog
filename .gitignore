@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 dist
 .claude
+.playwright/
+.playwright-cli/
+output/
 dist-ssr
 *.local
 

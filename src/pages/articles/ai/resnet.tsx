@@ -1,19 +1,15 @@
-import Overview from './resnet/Overview';
-import VanishingGradient from './resnet/VanishingGradient';
-import SkipConnection from './resnet/SkipConnection';
-import ResidualComputation from './resnet/ResidualComputation';
-import Architecture from './resnet/Architecture';
-import Impact from './resnet/Impact';
+import Overview from "./resnet/Overview";
+import SkipConnection from "./resnet/SkipConnection";
+import Architecture from "./resnet/Architecture";
+import Impact from "./resnet/Impact";
 
 export default function ResNetArticle() {
   return (
-    <>
+    <div className="space-y-12">
       <Overview />
-      <VanishingGradient />
       <SkipConnection />
-      <ResidualComputation />
       <Architecture />
       <Impact />
-    </>
+    </div>
   );
 }

@@ -1,64 +1,64 @@
-import SearchSpaceViz from './viz/SearchSpaceViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SearchSpaceViz from "./viz/SearchSpaceViz";
 
 export default function SearchSpace() {
   return (
     <section id="search-space" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">탐색 공간 설계</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">Search space는 값의 목록이 아니라, 무엇을 얼마나 자주 시험할지 정하는 확률 모델입니다</h2>
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          탐색 공간 설계가 튜닝 성능의 <strong>70% 이상을 좌우</strong><br />
-          잘못된 범위: 최적값이 범위 밖 → 아무리 탐색해도 성능 향상 없음<br />
-          너무 넓은 범위: 탐색 효율 저하 → 같은 n_trials로 더 적은 유효 탐색
+          Learning rate처럼 0.0001과 0.001의 차이가 0.1000과 0.1009보다 중요한 값은 linear uniform이 아니라 log-uniform이
+          자연스럽습니다. Depth는 integer, optimizer는 categorical이며 momentum은 SGD를 골랐을 때만 존재합니다. 이렇게 type,
+          scale, conditional dependency를 쓰지 않으면 실행할 수 없는 조합이 생기고 넓은 수치 구간의 한쪽에 trial이 몰립니다.
         </p>
-
-        <h3>모델별 탐색 공간</h3>
-      </div>
-      <div className="not-prose mb-6">
-        <SearchSpaceViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>LightGBM 핵심 파라미터 가이드</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 mb-4 text-sm">
-          {[
-            { name: 'num_leaves', range: '2~256', guide: '깊이 제한(max_depth) 대신 리프 수로 복잡도 제어. 2^max_depth보다 작게 설정하면 과적합 방지', color: 'text-indigo-500' },
-            { name: 'learning_rate', range: '0.005~0.3 (log)', guide: '작을수록 정밀하지만 n_estimators를 늘려야 함. 보통 0.01~0.1이 최적 영역', color: 'text-emerald-500' },
-            { name: 'min_child_samples', range: '5~100', guide: '리프 노드의 최소 샘플 수. 클수록 보수적(과적합 방지). 데이터 크기에 비례하여 설정', color: 'text-amber-500' },
-            { name: 'subsample', range: '0.5~1.0', guide: '배깅 비율. 1.0 미만이면 매 반복마다 데이터 일부만 사용 — 다양성 확보', color: 'text-blue-500' },
-            { name: 'colsample_bytree', range: '0.5~1.0', guide: '피처 서브샘플링. 피처 수가 많을 때 0.6~0.8이 효과적', color: 'text-violet-500' },
-            { name: 'reg_alpha / reg_lambda', range: '1e-8~10 (log)', guide: 'L1/L2 정규화. 고차원 피처에서 과적합 억제. log scale 필수', color: 'text-pink-500' },
-          ].map((p) => (
-            <div key={p.name} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className={`font-mono font-bold text-xs ${p.color}`}>{p.name}</span>
-              <span className="text-muted-foreground ml-1.5 text-xs">{p.range}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.guide}</div>
-            </div>
-          ))}
-        </div>
-
-        <h3>신경망 핵심 파라미터 가이드</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 mb-4 text-sm">
-          {[
-            { name: 'learning_rate', range: '1e-5~1e-2 (log)', guide: '가장 중요한 파라미터. 너무 크면 발산, 너무 작으면 수렴 느림. Scheduler와 함께 튜닝', color: 'text-emerald-500' },
-            { name: 'batch_size', range: '16/32/64/128', guide: '작을수록 정규화 효과(noise). GPU 메모리와 학습 시간 트레이드오프. 2의 거듭제곱 사용', color: 'text-indigo-500' },
-            { name: 'dropout', range: '0.0~0.5', guide: '뉴런을 무작위로 비활성화하여 과적합 방지. 층이 깊을수록 dropout 비율 증가 경향', color: 'text-amber-500' },
-            { name: 'hidden_size', range: '64~512', guide: '은닉층 뉴런 수. 데이터 복잡도에 비례. 첫 층 > 마지막 층 (점진적 축소)', color: 'text-blue-500' },
-            { name: 'n_layers', range: '1~4', guide: '층 수. 깊을수록 표현력 증가하지만 학습 불안정. 보통 2~3이면 충분', color: 'text-violet-500' },
-            { name: 'weight_decay', range: '1e-6~1e-2 (log)', guide: 'L2 정규화. AdamW에서 특히 중요. 0이면 과적합, 너무 크면 과소적합', color: 'text-pink-500' },
-          ].map((p) => (
-            <div key={p.name} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className={`font-mono font-bold text-xs ${p.color}`}>{p.name}</span>
-              <span className="text-muted-foreground ml-1.5 text-xs">{p.range}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.guide}</div>
-            </div>
-          ))}
-        </div>
-
-        <h3>범위 설정 실전 팁</h3>
         <p>
-          <strong>1단계: 넓은 범위로 탐색</strong> — 50 trials로 대략적인 최적 영역을 파악<br />
-          <strong>2단계: 좁은 범위로 정밀 탐색</strong> — 1단계 best 근처로 범위를 축소하고 50 trials 추가<br />
-          <strong>중요도 분석 활용</strong> — fANOVA로 importance가 낮은 파라미터는 고정 → 차원 축소<br />
-          <strong>상관관계 주의</strong> — learning_rate ↔ n_estimators는 반비례 관계. 하나를 고정하고 나머지를 튜닝
+          범위는 “클수록 탐색을 많이 한다”가 아닙니다. 같은 trial 수라면 공간을 넓힐수록 유망한 영역을 만날 확률이 낮아집니다.
+          먼저 literature·baseline·작은 pilot으로 단위와 안정 범위를 확인하고, 경계값이 반복해서 선택되는 이유를 본 뒤 새 version에서
+          확장합니다. 결과를 본 뒤 같은 study의 범위를 조용히 바꾸면 sampler history와 선택 과정의 의미가 달라집니다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="a와 b 사이에서 자릿수마다 같은 비중으로 positive 값을 뽑으려면 어떻게 해야 할까요?"
+        idea={<>원래 값이 아니라 log 공간에서 uniform하게 위치 u를 뽑은 뒤 exp로 되돌립니다. 그러면 곱셈 비율이 같은 구간들이 같은 확률을 가집니다.</>}
+        formula={String.raw`u\sim\operatorname{Uniform}(0,1),\qquad \lambda=\exp\!\left(\log a+u(\log b-\log a)\right),\quad 0<a<b`}
+        terms={[
+          { symbol: "a, b", name: "positive bounds", description: "0보다 큰 lower·upper bound이며 단위와 허용 이유를 함께 기록합니다." },
+          { symbol: "u", name: "uniform position", description: "Log interval 안에서 뽑은 0과 1 사이의 위치입니다." },
+          { symbol: "lambda", name: "sampled value", description: "Learning rate·weight decay처럼 여러 orders of magnitude를 탐색할 값입니다." },
+        ]}
+        assumptions={[
+          "0이나 음수를 포함하는 값에는 그대로 적용할 수 없습니다.",
+          "Log-uniform이 좋은 성능을 보장하는 prior는 아니며 multiplicative scale이 자연스러울 때 사용합니다.",
+          "Framework에서 log=True를 쓸 때 endpoint와 discretization semantics는 해당 version 문서를 확인합니다.",
+        ]}
+        interpretation="a=10^-5, b=10^-1이면 10^-5–10^-4와 10^-2–10^-1이 각각 같은 log 길이를 가져 같은 비중으로 탐색됩니다."
+      />
+
+      <ExplainedFormula
+        question="조건부 parameter와 메모리 한도를 포함한 ‘실행 가능한 공간’을 어떻게 구분할까요?"
+        idea={<>전체 조합을 만든 다음 실패시키지 않고, branch 조건과 resource estimator를 만족하는 설정만 feasible set에 포함합니다.</>}
+        formula={String.raw`\Lambda_{\mathrm{feasible}}=\left\{\lambda\in\Lambda:\;c_{\mathrm{branch}}(\lambda)=1,\;\widehat m(\lambda)\le M_{\max}\right\}`}
+        terms={[
+          { symbol: "c_branch", name: "branch validity", description: "선택한 optimizer·model family에서 해당 child parameter가 실제 의미를 가지면 1입니다." },
+          { symbol: "m-hat", name: "resource estimate", description: "Batch·resolution·sequence length 조합의 예상 peak memory 같은 사전 추정값입니다." },
+          { symbol: "M_max", name: "hard capacity", description: "해당 worker에서 안전 여유를 뺀 사용 가능 memory 상한입니다." },
+        ]}
+        assumptions={[
+          "Resource estimator 오차를 고려해 headroom을 두고 실제 peak도 trial artifact에 기록합니다.",
+          "OOM도 관측 정보이므로 예상 밖 실패를 FAIL state와 configuration에 남깁니다.",
+          "조건을 너무 강하게 걸면 아직 모르는 좋은 영역을 사전에 제거할 수 있습니다.",
+        ]}
+        interpretation="Adam trial에 SGD momentum을 붙이지 않고, batch 256·resolution 1024처럼 명백히 OOM인 조합은 sampling 전에 제외합니다."
+      />
+
+      <div className="not-prose my-8"><SearchSpaceViz /></div>
+
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
+        <p>
+          Effective batch는 micro batch×gradient accumulation×data-parallel workers로 기록합니다. Batch만 바꾸면 update 수, learning-rate
+          schedule, normalization 통계까지 달라질 수 있으므로 어떤 양을 고정했는지 밝혀야 합니다. Search-space version은 parameter
+          이름·type·distribution·bounds·conditions·resource constraints의 digest로 남기면 재개한 study가 같은 실험인지 판별할 수 있습니다.
         </p>
       </div>
     </section>

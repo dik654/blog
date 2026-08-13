@@ -53,10 +53,7 @@ export function StepTimeline() {
       return (
         <motion.g key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.15 }}>
-          <rect x={cx} y={35} width={p.w} height={28} rx={5}
-            fill={`${p.color}18`} stroke={p.color} strokeWidth={0.8} />
-          <text x={cx + p.w / 2} y={47} textAnchor="middle" fontSize={11} fontWeight={600} fill={p.color}>{p.label}</text>
-          <text x={cx + p.w / 2} y={58} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">{p.time}</text>
+          <ModuleBox x={cx} y={30} w={p.w} h={38} label={p.label} sub={p.time} color={p.color} />
         </motion.g>
       );
     })}

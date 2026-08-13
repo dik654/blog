@@ -1,222 +1,138 @@
-import ChainStoreViz from './viz/ChainStoreViz';
-import StateMgrViz from './viz/StateMgrViz';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import ChainStoreViz from "./viz/ChainStoreViz";
+import StateMgrViz from "./viz/StateMgrViz";
 
-export default function ChainStore({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
+const DATA_BOUNDARIES = [
+  {
+    title: "Chain data",
+    description:
+      "block header, message, tipset처럼 어떤 chain이 관측됐는지 재구성하는 데이터입니다.",
+  },
+  {
+    title: "State data",
+    description:
+      "message 실행 뒤 actor state와 receipt가 가리키는 content-addressed object입니다.",
+  },
+  {
+    title: "Execution",
+    description:
+      "부모 state에서 tipset message를 실행해 다음 state root를 계산하는 과정입니다.",
+  },
+] as const;
+
+export default function ChainStore({
+  onCodeRef,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   const openCode = onCodeRef
     ? (key: string) => onCodeRef(key, codeRefs[key])
     : undefined;
 
   return (
     <section id="chainstore" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ChainStore &amp; StateManager</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p className="leading-7">
-          Lotus 노드의 <strong>핵심 데이터 레이어</strong>.<br />
-          ChainStore: block/TipSet 저장.<br />
-          StateManager: 상태 쿼리 + 마이그레이션 담당.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h2>ChainStore는 저장하고, StateManager는 계산한다</h2>
+        <p>
+          두 이름은 함께 등장하지만 책임은 다릅니다. ChainStore는 block과
+          tipset을 찾고 현재 head 변화를 관리하는 데이터 접근점입니다.
+          StateManager는 특정 tipset을 기준으로 state를 계산·조회하고 network
+          upgrade의 migration 경계를 다룹니다.
         </p>
       </div>
 
-      <h3 className="text-lg font-semibold mb-3">ChainStore 구조체 추적</h3>
+      <div className="not-prose my-8 grid gap-3 md:grid-cols-3">
+        {DATA_BOUNDARIES.map((boundary, index) => (
+          <article
+            key={boundary.title}
+            className="min-w-0 rounded-2xl border bg-card p-5"
+          >
+            <span className="font-mono text-xs font-semibold text-primary">
+              0{index + 1}
+            </span>
+            <h3 className="mt-3 font-semibold">{boundary.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {boundary.description}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>ChainStore: tipset과 head 변화의 소유자</h3>
+        <p>
+          코드에서 먼저 볼 것은 blockstore 필드, tipset·message 캐시, heaviest
+          tipset, reorg 알림입니다. cache 크기나 backing database는 운영 구성과
+          버전에 따라 달라질 수 있지만,{" "}
+          <strong>content를 찾고 canonical head 변화를 알린다</strong>는 책임은
+          유지됩니다.
+        </p>
+      </div>
       <ChainStoreViz onOpenCode={openCode} />
 
-      <h3 className="text-lg font-semibold mt-8 mb-3">StateManager 구조체 추적</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>StateManager: tipset을 실행 가능한 상태 문맥으로 바꾼다</h3>
+        <p>
+          StateManager는 ChainStore에서 부모와 message를 읽고 executor에 tipset
+          실행을 위임합니다. network version에 맞는 규칙·migration을 선택하고,
+          반복 계산을 줄이기 위한 cache도 관리합니다. cache hit rate 같은 수치는
+          고정된 프로토콜 특성이 아니라 workload와 구현 설정의 결과입니다.
+        </p>
+      </div>
       <StateMgrViz onOpenCode={openCode} />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        {/* ── ChainStore 구조 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">ChainStore 구조체 상세</h3>
-        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
-          <h4 className="font-semibold text-sm mb-3">ChainStore 구조체 <code className="text-xs bg-muted px-1 py-0.5 rounded">chain/store/store.go</code></h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-            <div>
-              <p className="font-medium text-xs text-muted-foreground mb-1">Storage</p>
-              <ul className="space-y-1 text-muted-foreground">
-                <li><code className="text-xs">chainBlockstore</code> — <code className="text-xs">blockstore.Blockstore</code> block data</li>
-                <li><code className="text-xs">stateBlockstore</code> — <code className="text-xs">blockstore.Blockstore</code> state tree (split)</li>
-                <li><code className="text-xs">chainLocalBlockstore</code> — 로컬 블록</li>
-              </ul>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>새 tipset이 들어왔을 때의 경계</h3>
+      </div>
+      <ol className="not-prose my-8 grid gap-3">
+        {[
+          [
+            "Receive",
+            "peer에서 block과 message를 받아 tipset 후보를 구성합니다.",
+          ],
+          [
+            "Persist",
+            "ChainStore가 content-addressed data를 저장하고 부모를 찾습니다.",
+          ],
+          [
+            "Execute",
+            "StateManager가 부모 state에서 message를 순서대로 실행합니다.",
+          ],
+          [
+            "Compare",
+            "계산된 state root·receipt와 block header의 약속을 대조합니다.",
+          ],
+          [
+            "Adopt",
+            "유효성과 chain weight 조건을 만족하면 head 변경을 알립니다.",
+          ],
+        ].map(([title, description], index) => (
+          <li
+            key={title}
+            className="grid min-w-0 gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-[3rem_minmax(0,1fr)] sm:p-5"
+          >
+            <span className="font-mono text-xs font-semibold text-primary">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div className="min-w-0">
+              <h4 className="font-semibold">{title}</h4>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                {description}
+              </p>
             </div>
-            <div>
-              <p className="font-medium text-xs text-muted-foreground mb-1">Chain Tip</p>
-              <ul className="space-y-1 text-muted-foreground">
-                <li><code className="text-xs">heaviest</code> — <code className="text-xs">*types.TipSet</code> 현재 chain tip</li>
-                <li><code className="text-xs">bestTips</code> — <code className="text-xs">chan *types.TipSet</code> tip 업데이트 채널</li>
-                <li><code className="text-xs">reorgCh</code> — <code className="text-xs">chan&lt;- reorg</code> reorg 이벤트</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-medium text-xs text-muted-foreground mb-1">Index</p>
-              <ul className="space-y-1 text-muted-foreground">
-                <li><code className="text-xs">tipsets</code> — <code className="text-xs">map[abi.ChainEpoch][]types.TipSetKey</code></li>
-                <li><code className="text-xs">cindex</code> — <code className="text-xs">*ChainIndex</code> epoch 빠른 조회</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-medium text-xs text-muted-foreground mb-1">Key Methods</p>
-              <ul className="space-y-1 text-muted-foreground">
-                <li><code className="text-xs">Load()</code> — boot-up chain reload</li>
-                <li><code className="text-xs">PutTipSet()</code> — new tipset 추가</li>
-                <li><code className="text-xs">GetHeaviestTipSet()</code> — 현재 tip</li>
-                <li><code className="text-xs">GetBlock()</code> / <code className="text-xs">WalkChain()</code></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">TipSet 구조체</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li><code className="text-xs">cids</code> — <code className="text-xs">[]cid.Cid</code> block CIDs</li>
-              <li><code className="text-xs">blks</code> — <code className="text-xs">[]*BlockHeader</code></li>
-              <li><code className="text-xs">height</code> — <code className="text-xs">abi.ChainEpoch</code></li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Blockstore Split 목적</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li><strong>chainBlockstore</strong> — block data (영구 보존)</li>
-              <li><strong>stateBlockstore</strong> — state tree (snapshot 가능)</li>
-              <li>분리 → state pruning으로 disk 절약</li>
-            </ul>
-          </div>
-        </div>
-        <p className="leading-7">
-          ChainStore: <strong>tipset 저장 + heaviest tracking</strong>.<br />
-          dual blockstore (chain + state) 분리 관리.<br />
-          ChainIndex로 과거 epoch 빠른 조회.
-        </p>
+          </li>
+        ))}
+      </ol>
 
-        {/* ── StateManager 구조 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">StateManager 상세</h3>
-        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
-          <h4 className="font-semibold text-sm mb-3">StateManager 구조체 <code className="text-xs bg-muted px-1 py-0.5 rounded">chain/stmgr/stmgr.go</code></h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-            <div>
-              <p className="font-medium text-xs text-muted-foreground mb-1">Core</p>
-              <ul className="space-y-1 text-muted-foreground">
-                <li><code className="text-xs">cs</code> — <code className="text-xs">*store.ChainStore</code></li>
-                <li><code className="text-xs">ex</code> — <code className="text-xs">*executor.Executor</code></li>
-                <li><code className="text-xs">newVM</code> — <code className="text-xs">NewVMFunc</code> VM 생성자</li>
-                <li><code className="text-xs">Syscalls</code> — <code className="text-xs">vm.SyscallBuilder</code></li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-medium text-xs text-muted-foreground mb-1">Cache & Upgrade</p>
-              <ul className="space-y-1 text-muted-foreground">
-                <li><code className="text-xs">stCache</code> — <code className="text-xs">*lru.Cache[TipSetKey, stCacheEntry]</code></li>
-                <li><code className="text-xs">upgradeSchedule</code> — hard fork 스케줄</li>
-                <li>vesting states (Ignition/Calico)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Key Methods</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li><code className="text-xs">TipSetState()</code> — 상태 계산</li>
-              <li><code className="text-xs">Call()</code> — read-only query</li>
-              <li><code className="text-xs">CallWithGas()</code> — write simulation</li>
-              <li><code className="text-xs">LoadActor()</code> / <code className="text-xs">GetActor()</code></li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">State Computation</h4>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li>tipset 입력</li>
-              <li>parent state load</li>
-              <li>messages 적용 (BLS → Secp)</li>
-              <li>state tree delta 계산</li>
-              <li>new state root 반환</li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Network Upgrades</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>Ignition (2020)</li>
-              <li>Calico (2021)</li>
-              <li>Shark (2023)</li>
-              <li>FEVM rollout</li>
-              <li>각 upgrade: state migration</li>
-            </ul>
-          </div>
-        </div>
-        <p className="leading-7">
-          StateManager: <strong>상태 계산 + 쿼리 + 마이그레이션</strong>.<br />
-          stCache LRU 캐싱으로 re-computation 회피.<br />
-          network upgrade (hard forks) 관리.
-        </p>
-
-        {/* ── 통합 흐름 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">ChainStore ↔ StateManager 통합</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Flow 1: 새 tipset 적용</h4>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li>ChainSync가 peers로부터 tipset 수신</li>
-              <li><code className="text-xs">PutTipSet(tipset)</code></li>
-              <li><code className="text-xs">TipSetState(tipset)</code> 호출</li>
-              <li>Message execution → new state root</li>
-              <li><code className="text-xs">ParentStateRoot</code>와 비교</li>
-              <li>valid면 accept + heaviest 업데이트</li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Flow 2: State Query</h4>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li>RPC: <code className="text-xs">GetActor(addr, tipset)</code></li>
-              <li>StateManager가 tipset state load</li>
-              <li>StateTree traversal (HAMT)</li>
-              <li><code className="text-xs">Actor</code> struct 반환</li>
-            </ol>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Flow 3: Message 실행</h4>
-            <ol className="text-sm space-y-1 text-muted-foreground list-decimal list-inside">
-              <li><code className="text-xs">ApplyMessage()</code></li>
-              <li>VM invocation → Actor method call</li>
-              <li>state tree 업데이트</li>
-              <li>gas accounting</li>
-              <li>receipt 반환</li>
-            </ol>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Storage & Persistence</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li><strong>Blockstore</strong> — content-addressed (Badger)</li>
-              <li><strong>Datastore</strong> — key-value (LevelDB)</li>
-              <li><strong>Cache</strong> — in-memory LRU</li>
-              <li>총 disk: ~500-800 GiB (pruning 시 ~10 GiB)</li>
-              <li>Checkpoint: 1200 epochs recent + daily archival</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Performance</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>state computation: <strong>100-500ms</strong> per tipset</li>
-              <li>HAMT traversal: <strong>O(log n)</strong></li>
-              <li>cache hit rate: <strong>90%+</strong> typical</li>
-              <li className="pt-1 border-t border-border mt-1">Bottleneck: disk I/O, VM 실행, BLS 검증, migration</li>
-            </ul>
-          </div>
-        </div>
-        <p className="leading-7">
-          ChainStore + StateManager: <strong>데이터 저장 + 상태 계산 분리</strong>.<br />
-          new tipset → apply → validate → accept.<br />
-          500-800 GiB disk, 100-500ms state computation.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 "split blockstore"인가</strong> — state 크기 관리.<br />
-          chain data: 영구 보존 필요 (history).<br />
-          state data: snapshot 가능 (현재만 중요).<br />
-          splitstore = state 주기적 pruning → disk 절약.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>운영 수치와 프로토콜 사실을 분리한다</h3>
+        <p>
+          disk 사용량, state 계산 시간, cache 효율은 node mode·snapshot·pruning
+          정책과 hardware에 따라 달라집니다. 이 글에서는 그런 값을 아키텍처의
+          고정 사실처럼 적지 않습니다. 장애 분석에서는 먼저
+          <strong> 데이터 부재인지, 실행 불일치인지, head 변경인지</strong>를
+          구분하고 그다음 실제 node metric을 확인해야 합니다.
         </p>
       </div>
     </section>

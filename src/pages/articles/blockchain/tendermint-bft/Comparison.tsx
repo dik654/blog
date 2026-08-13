@@ -1,10 +1,25 @@
 export default function Comparison() {
   const rows = [
-    { prop: '정상 경로', pbft: 'O(n²)', tm: 'O(n²)', note: '동일' },
-    { prop: 'View Change', pbft: 'O(n³)', tm: 'O(n²) 자동', note: 'Tendermint 단순' },
-    { prop: '확정 지연', pbft: '5 delays', tm: '4 delays', note: '1 delay 절감' },
-    { prop: '확정성', pbft: '즉시', tm: '즉시', note: '동일' },
-    { prop: '구현 복잡도', pbft: '높음', tm: '중간', note: '라운드 기반 단순화' },
+    { prop: "정상 경로", pbft: "O(n²)", tm: "O(n²)", note: "동일" },
+    {
+      prop: "View Change",
+      pbft: "O(n³)",
+      tm: "O(n²) 자동",
+      note: "Tendermint 단순",
+    },
+    {
+      prop: "확정 지연",
+      pbft: "5 delays",
+      tm: "4 delays",
+      note: "1 delay 절감",
+    },
+    { prop: "확정성", pbft: "즉시", tm: "즉시", note: "동일" },
+    {
+      prop: "구현 복잡도",
+      pbft: "높음",
+      tm: "중간",
+      note: "라운드 기반 단순화",
+    },
   ];
 
   return (
@@ -15,19 +30,31 @@ export default function Comparison() {
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">속성</th>
-                <th className="border border-border px-4 py-2 text-left">PBFT</th>
-                <th className="border border-border px-4 py-2 text-left">Tendermint</th>
-                <th className="border border-border px-4 py-2 text-left">비고</th>
+                <th className="border border-border px-4 py-2 text-left">
+                  속성
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  PBFT
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  Tendermint
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  비고
+                </th>
               </tr>
             </thead>
             <tbody>
-              {rows.map(r => (
+              {rows.map((r) => (
                 <tr key={r.prop}>
-                  <td className="border border-border px-4 py-2 font-medium">{r.prop}</td>
+                  <td className="border border-border px-4 py-2 font-medium">
+                    {r.prop}
+                  </td>
                   <td className="border border-border px-4 py-2">{r.pbft}</td>
                   <td className="border border-border px-4 py-2">{r.tm}</td>
-                  <td className="border border-border px-4 py-2 text-muted-foreground">{r.note}</td>
+                  <td className="border border-border px-4 py-2 text-muted-foreground">
+                    {r.note}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -35,9 +62,11 @@ export default function Comparison() {
         </div>
 
         {/* ── View Change 비교 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">View Change 메커니즘 비교</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          View Change 메커니즘 비교
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PBFT View Change:
+          {`// PBFT View Change:
 //
 // 1. Replica가 timeout 감지
 // 2. VIEW-CHANGE 메시지 broadcast
@@ -76,14 +105,17 @@ export default function Comparison() {
         </pre>
         <p className="leading-7">
           PBFT view change = <strong>explicit + O(n³)</strong>.<br />
-          Tendermint view change = <strong>implicit (round++) + O(n²)</strong>.<br />
+          Tendermint view change = <strong>implicit (round++) + O(n²)</strong>.
+          <br />
           Tendermint는 blockchain 맥락에서 단순화.
         </p>
 
         {/* ── ABCI 분리 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">ABCI: 합의와 애플리케이션 분리</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          ABCI: 합의와 애플리케이션 분리
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// ABCI (Application Blockchain Interface):
+          {`// ABCI (Application Blockchain Interface):
 //
 // 개념:
 // - Tendermint Core = consensus engine
@@ -143,14 +175,15 @@ export default function Comparison() {
         </pre>
         <p className="leading-7">
           ABCI = <strong>consensus와 state machine 완전 분리</strong>.<br />
-          App은 어떤 언어든 가능 — gRPC over socket.<br />
+          App은 어떤 언어든 가능 — gRPC over socket.
+          <br />
           Cosmos 생태계의 다양성 원천 (Go, Rust, EVM 모두 가능).
         </p>
 
         {/* ── CometBFT와의 관계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">CometBFT와의 관계</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Tendermint Core → CometBFT 전환:
+          {`// Tendermint Core → CometBFT 전환:
 //
 // 2014-2019: Tendermint Inc. 개발
 // 2019-2022: Interchain Foundation 관리
@@ -192,15 +225,23 @@ export default function Comparison() {
 // - CometBFT가 거의 표준`}
         </pre>
         <p className="leading-7">
-          CometBFT = <strong>Informal Systems가 관리하는 Tendermint fork</strong>.<br />
-          ABCI++, vote extensions 등 현대적 기능 추가.<br />
+          CometBFT ={" "}
+          <strong>Informal Systems가 관리하는 Tendermint fork</strong>.<br />
+          ABCI++, vote extensions 등 현대적 기능 추가.
+          <br />
           Cosmos SDK v0.50+와 통합 — 현재 업계 표준.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 Tendermint가 Paxos/PBFT 넘어 블록체인 표준이 됐나</strong> — ABCI.<br />
-          consensus와 app 분리 = 생태계 효과.<br />
-          PBFT는 "service" 모델, Tendermint는 "platform" 모델.<br />
+          <strong>
+            💡 왜 Tendermint가 Paxos/PBFT 넘어 블록체인 표준이 됐나
+          </strong>{" "}
+          — ABCI.
+          <br />
+          consensus와 app 분리 = 생태계 효과.
+          <br />
+          PBFT는 "service" 모델, Tendermint는 "platform" 모델.
+          <br />
           Cosmos Hub 하나의 성공이 100+ chain을 만든 기반.
         </p>
       </div>

@@ -1,17 +1,29 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const abciCodeRefs: Record<string, CodeRef> = {
-  'abci-initchain': {
-    path: 'baseapp/abci.go',
-    lang: 'go',
+  "abci-initchain": {
+    path: "baseapp/abci.go",
+    lang: "go",
     highlight: [1, 26],
     desc: `InitChain은 체인 최초 블록 생성 시 호출됩니다.
 체인 ID 검증 → 초기 높이 설정 → InitChainer로 제네시스 초기화합니다.`,
     annotations: [
-      { lines: [1, 4], color: 'sky', note: 'ChainID 검증 — 불일치 시 에러' },
-      { lines: [6, 10], color: 'emerald', note: '초기 높이 설정 — 0이면 1로 보정' },
-      { lines: [12, 17], color: 'amber', note: '상태 초기화 + 컨센서스 파라미터 저장' },
-      { lines: [19, 26], color: 'violet', note: 'InitChainer 실행 — 모듈별 InitGenesis 호출' },
+      { lines: [1, 4], color: "sky", note: "ChainID 검증 — 불일치 시 에러" },
+      {
+        lines: [6, 10],
+        color: "emerald",
+        note: "초기 높이 설정 — 0이면 1로 보정",
+      },
+      {
+        lines: [12, 17],
+        color: "amber",
+        note: "상태 초기화 + 컨센서스 파라미터 저장",
+      },
+      {
+        lines: [19, 26],
+        color: "violet",
+        note: "InitChainer 실행 — 모듈별 InitGenesis 호출",
+      },
     ],
     code: `func (app *BaseApp) InitChain(
 	req *abci.RequestInitChain,
@@ -46,17 +58,29 @@ export const abciCodeRefs: Record<string, CodeRef> = {
 }`,
   },
 
-  'abci-finalize': {
-    path: 'baseapp/abci.go',
-    lang: 'go',
+  "abci-finalize": {
+    path: "baseapp/abci.go",
+    lang: "go",
     highlight: [1, 22],
     desc: `FinalizeBlock은 블록 내 모든 트랜잭션을 실행합니다.
 Optimistic Execution이 활성화되면 미리 실행한 결과를 재사용합니다.`,
     annotations: [
-      { lines: [1, 4], color: 'sky', note: 'ABCI 리스너 — 블록 결과 스트리밍' },
-      { lines: [6, 11], color: 'emerald', note: 'OE 해시 검증 → 미리 실행한 결과 재사용' },
-      { lines: [13, 16], color: 'amber', note: 'OE 실패 시 상태 리셋 + 재실행' },
-      { lines: [18, 22], color: 'violet', note: 'internalFinalizeBlock → workingHash' },
+      { lines: [1, 4], color: "sky", note: "ABCI 리스너 — 블록 결과 스트리밍" },
+      {
+        lines: [6, 11],
+        color: "emerald",
+        note: "OE 해시 검증 → 미리 실행한 결과 재사용",
+      },
+      {
+        lines: [13, 16],
+        color: "amber",
+        note: "OE 실패 시 상태 리셋 + 재실행",
+      },
+      {
+        lines: [18, 22],
+        color: "violet",
+        note: "internalFinalizeBlock → workingHash",
+      },
     ],
     code: `func (app *BaseApp) FinalizeBlock(
 	req *abci.RequestFinalizeBlock,

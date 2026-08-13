@@ -1,42 +1,118 @@
-import { motion } from 'framer-motion';
-import { ActionBox, ModuleBox } from '@/components/viz/boxes';
+import { motion } from "framer-motion";
+import { ActionBox, ModuleBox } from "@/components/viz/boxes";
 
-const C = { fast: '#10b981', consensus: '#6366f1' };
+const C = { fast: "#10b981", consensus: "#6366f1" };
 
 function FastPathViz() {
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">Fast Path vs Consensus Path</p>
-      <svg viewBox="0 0 420 100" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
-        <ModuleBox x={20} y={10} w={100} h={32}
-          label="소유 객체 TX" sub="단일 소유자" color={C.fast} />
-        <motion.line x1={120} y1={26} x2={180} y2={26}
-          stroke={C.fast} strokeWidth={1.2}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ delay: 0.2 }} />
-        <ActionBox x={185} y={10} w={90} h={32}
-          label="Fast Path" sub="합의 우회" color={C.fast} />
-        <motion.line x1={275} y1={26} x2={320} y2={26}
-          stroke={C.fast} strokeWidth={1.2}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ delay: 0.4 }} />
-        <ModuleBox x={325} y={10} w={80} h={32}
-          label="즉시 확정" sub="~100ms" color={C.fast} />
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        Fast Path vs Consensus Path
+      </p>
+      <svg
+        viewBox="0 0 420 100"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
+        <ModuleBox
+          x={20}
+          y={10}
+          w={100}
+          h={32}
+          label="소유 객체 TX"
+          sub="단일 소유자"
+          color={C.fast}
+        />
+        <motion.line
+          x1={120}
+          y1={26}
+          x2={180}
+          y2={26}
+          stroke={C.fast}
+          strokeWidth={1.2}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.2 }}
+        />
+        <ActionBox
+          x={185}
+          y={10}
+          w={90}
+          h={32}
+          label="Fast Path"
+          sub="합의 우회"
+          color={C.fast}
+        />
+        <motion.line
+          x1={275}
+          y1={26}
+          x2={320}
+          y2={26}
+          stroke={C.fast}
+          strokeWidth={1.2}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.4 }}
+        />
+        <ModuleBox
+          x={325}
+          y={10}
+          w={80}
+          h={32}
+          label="즉시 확정"
+          sub="~100ms"
+          color={C.fast}
+        />
 
-        <ModuleBox x={20} y={58} w={100} h={32}
-          label="공유 객체 TX" sub="다수 접근" color={C.consensus} />
-        <motion.line x1={120} y1={74} x2={180} y2={74}
-          stroke={C.consensus} strokeWidth={1.2}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ delay: 0.3 }} />
-        <ActionBox x={185} y={58} w={90} h={32}
-          label="Consensus" sub="순서 결정" color={C.consensus} />
-        <motion.line x1={275} y1={74} x2={320} y2={74}
-          stroke={C.consensus} strokeWidth={1.2}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ delay: 0.5 }} />
-        <ModuleBox x={325} y={58} w={80} h={32}
-          label="2R 확정" sub="~390ms" color={C.consensus} />
+        <ModuleBox
+          x={20}
+          y={58}
+          w={100}
+          h={32}
+          label="공유 객체 TX"
+          sub="다수 접근"
+          color={C.consensus}
+        />
+        <motion.line
+          x1={120}
+          y1={74}
+          x2={180}
+          y2={74}
+          stroke={C.consensus}
+          strokeWidth={1.2}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.3 }}
+        />
+        <ActionBox
+          x={185}
+          y={58}
+          w={90}
+          h={32}
+          label="Consensus"
+          sub="순서 결정"
+          color={C.consensus}
+        />
+        <motion.line
+          x1={275}
+          y1={74}
+          x2={320}
+          y2={74}
+          stroke={C.consensus}
+          strokeWidth={1.2}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.5 }}
+        />
+        <ModuleBox
+          x={325}
+          y={58}
+          w={80}
+          h={32}
+          label="2R 확정"
+          sub="~390ms"
+          color={C.consensus}
+        />
       </svg>
       <p className="text-xs text-center text-foreground/75 mt-2">
         💡 Sui TX의 대부분은 소유 객체 → fast path로 처리
@@ -53,15 +129,19 @@ export default function FastPath() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Sui는 객체 모델 사용 — 소유 객체는 소유자만 수정 가능 → 충돌 없음.<br />
-          충돌 없으면 순서 합의 불필요 → 즉시 실행 + 확정.<br />
+          Sui는 객체 모델 사용 — 소유 객체는 소유자만 수정 가능 → 충돌 없음.
+          <br />
+          충돌 없으면 순서 합의 불필요 → 즉시 실행 + 확정.
+          <br />
           공유 객체(DEX, AMM 등)만 Mysticeti 합의 통과.
         </p>
 
         {/* ── Fast Path Protocol ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Fast Path Protocol 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Fast Path Protocol 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sui Fast Path (Owned Object TX):
+          {`// Sui Fast Path (Owned Object TX):
 
 // Step 1: TX Submission
 // user signs TX referencing owned objects
@@ -116,15 +196,20 @@ export default function FastPath() {
 // - equivocation: slashable offense`}
         </pre>
         <p className="leading-7">
-          Fast Path: <strong>2f+1 validator signatures → finality (no consensus)</strong>.<br />
-          2 round-trips = ~100ms (4x faster than consensus).<br />
+          Fast Path:{" "}
+          <strong>2f+1 validator signatures → finality (no consensus)</strong>.
+          <br />
+          2 round-trips = ~100ms (4x faster than consensus).
+          <br />
           double-spend: version tracking + equivocation slashing.
         </p>
 
         {/* ── Shared Object via Mysticeti ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Shared Objects via Mysticeti Consensus</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Shared Objects via Mysticeti Consensus
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Shared Object TX flow (via Mysticeti):
+          {`// Shared Object TX flow (via Mysticeti):
 
 // Step 1: TX Submission
 // user signs TX referencing shared object(s)
@@ -182,15 +267,19 @@ export default function FastPath() {
 // - 80x faster average`}
         </pre>
         <p className="leading-7">
-          Shared objects: <strong>Mysticeti consensus → 3-round commit → 390ms</strong>.<br />
-          ordered execution per shared object.<br />
+          Shared objects:{" "}
+          <strong>Mysticeti consensus → 3-round commit → 390ms</strong>.<br />
+          ordered execution per shared object.
+          <br />
           Sui 평균 150ms (80% fast + 20% consensus).
         </p>
 
         {/* ── Fast Path Impact ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Fast Path의 실무 임팩트</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Fast Path의 실무 임팩트
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Fast Path의 실무 혜택:
+          {`// Fast Path의 실무 혜택:
 
 // 1. Lower average latency:
 //    - 80% TXs: 100ms
@@ -249,15 +338,21 @@ export default function FastPath() {
 // - 100+ validators`}
         </pre>
         <p className="leading-7">
-          Fast Path 혜택: <strong>avg 158ms (Ethereum 12s의 1/76)</strong>.<br />
-          wallet, NFT, coin 등 대부분 TX fast path.<br />
+          Fast Path 혜택: <strong>avg 158ms (Ethereum 12s의 1/76)</strong>.
+          <br />
+          wallet, NFT, coin 등 대부분 TX fast path.
+          <br />
           DEX, lending 등만 consensus 필요.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 Ethereum은 Fast Path 못 쓰나</strong> — object model 부재.<br />
-          Ethereum: account-based, global state, 모든 TX ordering 필요.<br />
-          Sui: object-based, owned objects는 독립 → fast path 가능.<br />
+          <strong>💡 왜 Ethereum은 Fast Path 못 쓰나</strong> — object model
+          부재.
+          <br />
+          Ethereum: account-based, global state, 모든 TX ordering 필요.
+          <br />
+          Sui: object-based, owned objects는 독립 → fast path 가능.
+          <br />
           language + VM 레벨 차이 (Solidity vs Move).
         </p>
       </div>

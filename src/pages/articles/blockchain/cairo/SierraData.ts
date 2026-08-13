@@ -13,8 +13,16 @@ pub struct Program {
 // 3. 올바른 빌트인 사용: 라이브러리 함수가 항상 올바르게 사용됨`;
 
 export const SIERRA_ANNOTATIONS = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: 'Sierra 프로그램의 네 가지 구성요소' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: '구조적 안전성: 패닉/무한루프/오용 방지' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "sky" as const,
+    note: "Sierra 프로그램의 네 가지 구성요소",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "구조적 안전성: 패닉/무한루프/오용 방지",
+  },
 ];
 
 export const LIBFUNC_CODE = `// Sierra 라이브러리 함수 계층
@@ -33,7 +41,19 @@ define_libfunc_hierarchy! {
 }`;
 
 export const LIBFUNC_ANNOTATIONS = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: '메모리 관리: AP 추적, Drop, Dup' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '연산 & 제어 흐름 & 가스' },
-  { lines: [10, 12] as [number, number], color: 'amber' as const, note: '데이터 구조 & 암호화 & Starknet' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "메모리 관리: AP 추적, Drop, Dup",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "연산 & 제어 흐름 & 가스",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "amber" as const,
+    note: "데이터 구조 & 암호화 & Starknet",
+  },
 ];

@@ -9,10 +9,13 @@ export default function CodeMemory() {
           <br />
           CPU가 EPCM 엔트리를 생성 — enclave ID, 페이지 타입, RWX를 기록합니다.
           <br />
-          MEE(Memory Encryption Engine)가 페이지를 AES로 암호화하여 EPC DRAM에 저장합니다.
+          MEE(Memory Encryption Engine)가 페이지를 AES로 암호화하여 EPC DRAM에
+          저장합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-4">SEV LAUNCH_UPDATE 흐름</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-4">
+          SEV LAUNCH_UPDATE 흐름
+        </h3>
         <p>
           PSP(Platform Security Processor)가 게스트 핸들로부터 VEK를 파생합니다.
           <br />
@@ -34,23 +37,23 @@ export default function CodeMemory() {
         <div className="rounded-lg border p-4">
           <ul className="space-y-2 text-sm">
             <li>
-              <strong>CPU 내부에서만 평문.</strong>{' '}
-              캐시, 레지스터, 실행 파이프라인은 평문 데이터를 처리합니다.
+              <strong>CPU 내부에서만 평문.</strong> 캐시, 레지스터, 실행
+              파이프라인은 평문 데이터를 처리합니다.
             </li>
             <li>
-              <strong>CPU 외부는 항상 암호문.</strong>{' '}
-              메모리 버스, DRAM 칩, 물리적 탐침(probe) 모두 암호문만 봅니다.
+              <strong>CPU 외부는 항상 암호문.</strong> 메모리 버스, DRAM 칩,
+              물리적 탐침(probe) 모두 암호문만 봅니다.
             </li>
             <li>
-              <strong>키는 하드웨어가 관리.</strong>{' '}
-              SGX MEE, SEV PSP, TDX SEAM — 소프트웨어가 키를 직접 읽을 수 없습니다.
+              <strong>키는 하드웨어가 관리.</strong> SGX MEE, SEV PSP, TDX SEAM
+              — 소프트웨어가 키를 직접 읽을 수 없습니다.
             </li>
           </ul>
         </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">세 방식 명령어 비교</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Memory Protection Instructions 비교
+          {`// Memory Protection Instructions 비교
 //
 // Intel SGX:
 //   EADD    - EPC 페이지 추가 (enclave 구성)

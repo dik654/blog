@@ -1,44 +1,80 @@
 export const TABLE_GROUPS = [
   {
-    title: '블록 데이터 테이블 (4개)',
-    color: 'sky',
-    tables: [
-      { name: 'Headers', key: 'BlockNumber', value: 'Header', note: '블록 헤더 (부모 해시, 상태 루트, 타임스탬프 등)' },
-      { name: 'BlockBodies', key: 'BlockNumber', value: 'StoredBlockBody', note: 'TX 인덱스 범위 — 실제 TX는 Transactions 테이블에 저장' },
-      { name: 'Transactions', key: 'TxNumber', value: 'TransactionSigned', note: '글로벌 TX 번호로 인덱싱 — 블록과 독립적 조회 가능' },
-      { name: 'Receipts', key: 'TxNumber', value: 'Receipt', note: '실행 결과 — gasUsed, 로그, 상태 코드' },
+    title: "Domain schema",
+    color: "#0ea5e9",
+    items: [
+      {
+        name: "BlockReader",
+        detail:
+          "header·body·canonical mapping처럼 block-oriented capability를 표현한다.",
+      },
+      {
+        name: "StateProvider",
+        detail:
+          "account, bytecode, storage lookup을 physical backend에서 분리한다.",
+      },
+      {
+        name: "History providers",
+        detail:
+          "block context와 pruning availability를 포함한 historical query를 표현한다.",
+      },
     ],
   },
   {
-    title: '상태 테이블 (최신 스냅샷)',
-    color: 'emerald',
-    tables: [
-      { name: 'PlainAccountState', key: 'Address', value: 'Account', note: '계정의 nonce, balance, code_hash' },
-      { name: 'PlainStorageState', key: 'Address', value: '(StorageKey, Value)', note: 'DupSort — 같은 주소 아래 수천 슬롯을 정렬 저장' },
-      { name: 'Bytecodes', key: 'B256 (code_hash)', value: 'Bytecode', note: '컨트랙트 바이트코드 — code_hash로 중복 제거' },
+    title: "Storage V1 schema",
+    color: "#f59e0b",
+    items: [
+      {
+        name: "typed MDBX tables",
+        detail: "Table trait이 key·value codec과 cursor contract를 묶는다.",
+      },
+      {
+        name: "DupSort tables",
+        detail:
+          "동일 primary key 아래 정렬된 subkeys가 필요한 V1 layout에서 사용한다.",
+      },
+      {
+        name: "plain state·history",
+        detail: "legacy V1의 physical table 집합이며 V2의 보편 경로가 아니다.",
+      },
     ],
   },
   {
-    title: 'Trie & ChangeSet 테이블',
-    color: 'amber',
-    tables: [
-      { name: 'AccountsTrie', key: 'Nibbles', value: 'BranchNodeCompact', note: '상태 루트 계산용 — MPT(Merkle Patricia Trie) 노드' },
-      { name: 'AccountChangeSets', key: 'BlockNumber', value: 'AccountBeforeTx', note: '블록별 계정 변경 이전값 — 과거 상태 복원에 사용' },
+    title: "Storage V2 routing",
+    color: "#10b981",
+    items: [
+      {
+        name: "RocksDB indexes",
+        detail: "history indices와 transaction-hash lookups를 담당한다.",
+      },
+      {
+        name: "static-file changesets",
+        detail:
+          "account·storage changesets의 ordered immutable history를 담당한다.",
+      },
+      {
+        name: "persisted settings",
+        detail:
+          "provider가 initialized data directory의 mode와 segment availability를 따른다.",
+      },
     ],
   },
-];
+] as const;
 
-export const WHY_SEPARATE_TABLES = [
+export const SCHEMA_RULES = [
   {
-    question: '왜 Headers와 Bodies를 분리하는가?',
-    answer: '헤더는 합의 검증에, 바디는 실행에 필요하다. P2P 헤더 동기화 시 바디를 읽을 필요가 없다. 테이블을 분리하면 B+tree가 더 얕아지고 캐시 효율이 높아진다.',
+    question: "typed table이 backend 고정을 뜻하는가?",
+    answer:
+      "아니다. typed key·value contract는 안전한 access를 제공하지만 Storage V2는 같은 domain query를 RocksDB나 static files로 route할 수 있다.",
   },
   {
-    question: '왜 TX를 블록이 아닌 글로벌 번호로 인덱싱하는가?',
-    answer: 'eth_getTransactionByHash RPC는 블록 번호를 모른 채 TX를 조회한다. 글로벌 TxNumber로 인덱싱하면 TransactionHashNumbers 테이블에서 해시 → 번호 변환 후 O(1) 접근이 가능하다.',
+    question: "table 이름을 RPC 코드에서 직접 사용해도 되는가?",
+    answer:
+      "physical layout에 결합되므로 provider capability를 사용하는 편이 안전하다. migration과 pruning은 provider에서 availability로 드러나야 한다.",
   },
   {
-    question: 'DupSort란 무엇인가?',
-    answer: 'MDBX의 기능으로, 하나의 키에 여러 값을 정렬 저장한다. PlainStorageState에서 같은 Address 아래 수천 개의 스토리지 슬롯을 효율적으로 범위 조회할 수 있다.',
+    question: "새 데이터 종류는 어디에 추가하는가?",
+    answer:
+      "먼저 domain query와 retention 특성을 정의하고, 그다음 storage version별 route와 codec을 연결한다. 한 backend의 편의만 보고 schema를 정하지 않는다.",
   },
-];
+] as const;

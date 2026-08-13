@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const activationCodeRefs: Record<string, CodeRef> = {
-  'activation-fn': {
-    path: 'src/lib.rs — Sigmoid / Tanh / GELU',
-    lang: 'rust',
+  "activation-fn": {
+    path: "src/lib.rs — Sigmoid / Tanh / GELU",
+    lang: "rust",
     highlight: [1, 38],
-    desc: '활성화 함수 구현.\n각 함수가 forward/backward 쌍으로 자동 미분 시스템에 통합.',
+    desc: "활성화 함수 구현.\n각 함수가 forward/backward 쌍으로 자동 미분 시스템에 통합.",
     code: `struct SigmoidFn;
 impl Function for SigmoidFn {
     // σ(x) = 1 / (1 + exp(-x))
@@ -47,10 +47,26 @@ impl Function for GELUFn {
     }
 }`,
     annotations: [
-      { lines: [3, 5], color: 'sky', note: 'sigmoid: 출력이 (0, 1) 범위 — 확률 해석 가능' },
-      { lines: [7, 10], color: 'emerald', note: 'sigmoid 미분: y*(1-y) — 순전파 출력 재활용' },
-      { lines: [19, 22], color: 'amber', note: 'tanh 미분: 1-y² — sigmoid과 같은 패턴' },
-      { lines: [29, 33], color: 'violet', note: 'GELU: 근사식 사용 — Transformer의 표준 활성화' },
+      {
+        lines: [3, 5],
+        color: "sky",
+        note: "sigmoid: 출력이 (0, 1) 범위 — 확률 해석 가능",
+      },
+      {
+        lines: [7, 10],
+        color: "emerald",
+        note: "sigmoid 미분: y*(1-y) — 순전파 출력 재활용",
+      },
+      {
+        lines: [19, 22],
+        color: "amber",
+        note: "tanh 미분: 1-y² — sigmoid과 같은 패턴",
+      },
+      {
+        lines: [29, 33],
+        color: "violet",
+        note: "GELU: 근사식 사용 — Transformer의 표준 활성화",
+      },
     ],
   },
 };

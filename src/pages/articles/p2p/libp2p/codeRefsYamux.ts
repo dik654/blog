@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const yamuxCodeRefs: Record<string, CodeRef> = {
-  'yamux-muxer': {
-    path: 'muxers/yamux/src/lib.rs — Yamux StreamMuxer 구현',
-    lang: 'rust',
+  "yamux-muxer": {
+    path: "muxers/yamux/src/lib.rs — Yamux StreamMuxer 구현",
+    lang: "rust",
     highlight: [1, 68],
-    desc: 'Yamux 멀티플렉서는 하나의 TCP 위에 여러 스트림을 다중화합니다. 인바운드 스트림을 버퍼에 쌓아 백프레셔를 처리합니다.',
+    desc: "Yamux 멀티플렉서는 하나의 TCP 위에 여러 스트림을 다중화합니다. 인바운드 스트림을 버퍼에 쌓아 백프레셔를 처리합니다.",
     code: `pub struct Muxer<C> {
     connection: Either<yamux012::Connection<C>, yamux013::Connection<C>>,
     /// Temporarily buffers inbound streams in case our node is
@@ -76,10 +76,22 @@ where
     }
 }`,
     annotations: [
-      { lines: [5, 5], color: 'sky', note: '최대 256개 인바운드 스트림 버퍼' },
-      { lines: [21, 32], color: 'emerald', note: '버퍼 먼저, 없으면 내부 폴링' },
-      { lines: [34, 47], color: 'amber', note: 'poll_outbound — 새 아웃바운드 스트림 생성' },
-      { lines: [49, 68], color: 'violet', note: '인바운드 스트림 버퍼링 + waker 관리' },
+      { lines: [5, 5], color: "sky", note: "최대 256개 인바운드 스트림 버퍼" },
+      {
+        lines: [21, 32],
+        color: "emerald",
+        note: "버퍼 먼저, 없으면 내부 폴링",
+      },
+      {
+        lines: [34, 47],
+        color: "amber",
+        note: "poll_outbound — 새 아웃바운드 스트림 생성",
+      },
+      {
+        lines: [49, 68],
+        color: "violet",
+        note: "인바운드 스트림 버퍼링 + waker 관리",
+      },
     ],
   },
 };

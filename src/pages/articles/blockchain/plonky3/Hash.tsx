@@ -1,15 +1,18 @@
-import Poseidon2RoundsViz from '../components/Poseidon2RoundsViz';
+import Poseidon2RoundsViz from "../components/Poseidon2RoundsViz";
 
 export default function Hash({ title }: { title?: string }) {
   return (
     <section id="hash" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title ?? 'Poseidon2 & 해시 레이어'}</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        {title ?? "Poseidon2 & 해시 레이어"}
+      </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          Plonky3는 Merkle 트리와 Fiat-Shamir 채린저에 <strong>Poseidon2</strong>를 사용한다.
-          BabyBear 위에서 최적화된 퍼뮤테이션으로, ZK-friendly 설계 덕분에
-          회로 내부에서도 효율적으로 해시를 증명할 수 있다.
+          Plonky3는 Merkle 트리와 Fiat-Shamir 채린저에{" "}
+          <strong>Poseidon2</strong>를 사용한다. BabyBear 위에서 최적화된
+          퍼뮤테이션으로, ZK-friendly 설계 덕분에 회로 내부에서도 효율적으로
+          해시를 증명할 수 있다.
         </p>
       </div>
 
@@ -18,8 +21,9 @@ export default function Hash({ title }: { title?: string }) {
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Poseidon vs Poseidon2</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Poseidon vs Poseidon2
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// Poseidon (original, 2019)
 // - SNARK-friendly hash function
 // - 소수 필드 위 연산
@@ -57,7 +61,9 @@ export default function Hash({ title }: { title?: string }) {
 // Keccak (emulated): ~30K constraints
 // → 250x more efficient`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">ZK-friendly Hash의 의의</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          ZK-friendly Hash의 의의
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">{`// 문제: Keccak-256은 SNARK 안에서 비쌈
 // - 64-bit words on 254-bit field → bit decomposition 필요
 // - Logical ops (XOR, AND, NOT) → many constraints
@@ -85,7 +91,6 @@ export default function Hash({ title }: { title?: string }) {
 // - Algebraic hash: circuit 빠름, on-chain 느림
 // - Keccak: circuit 느림, on-chain 빠름
 // - 대부분 시스템이 algebraic 선호 (prover 비용 우선)`}</pre>
-
       </div>
     </section>
   );

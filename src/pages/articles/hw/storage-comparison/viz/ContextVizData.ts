@@ -1,8 +1,31 @@
-export const C = { sata: '#71717a', nvme: '#6366f1', sas: '#f59e0b', err: '#ef4444', ok: '#10b981' };
+export const C = {
+  sata: "#71717a",
+  nvme: "#6366f1",
+  sas: "#f59e0b",
+  err: "#ef4444",
+  ok: "#10b981",
+  info: "#06b6d4",
+};
 
 export const STEPS = [
-  { label: 'SATA vs NVMe vs SAS: 큐 구조 + 대역폭 비교', body: 'SATA(1×32, 550MB/s) vs NVMe(64K×64K, 7GB/s) vs SAS(256×256, 12Gbps) — 큐 깊이가 핵심' },
-  { label: 'SATA AHCI 병목: 1큐 × 32 커맨드 = 550 MB/s 한계', body: 'AHCI 레거시 프로토콜: 큐 1개, 커맨드 32개 → 동시 I/O 32개가 한계, NVMe 대비 1/125' },
-  { label: 'SAS: 듀얼 포트 + JBOD 확장으로 수백 TB', body: 'SAS HBA → JBOD 엔클로저 연결, 듀얼 포트로 이중 경로(HA) 구성, 12Gbps × 2 = 24Gbps' },
-  { label: '블록체인 노드: NVMe 필수, SATA 시 동기화 5~10배 증가', body: 'Reth: 랜덤 I/O 집중(상태 DB) / Lotus: 순차 쓰기 집중(봉인) — 둘 다 NVMe 필수' },
+  {
+    label: "프로토콜보다 먼저 서비스 요구를 적는다",
+    body: "지연시간·처리량·용량·정비와 장애 허용 범위를 분리하면 필요한 저장 경로가 보입니다.",
+  },
+  {
+    label: "명령·전송·폼팩터·매체를 같은 층으로 비교하지 않는다",
+    body: "AHCI·SCSI·NVMe 명령 경로와 SATA·SAS·PCIe 전송, 드라이브 패키지와 NAND/HDD는 서로 다른 선택입니다.",
+  },
+  {
+    label: "SATA는 단순한 포인트 투 포인트 경로에 강하다",
+    body: "성숙한 생태계와 SATA 6Gb/s 연결을 제공하며 NCQ는 최대 32개 outstanding command를 다룹니다.",
+  },
+  {
+    label: "SAS는 확장기와 다중 경로로 운영성을 만든다",
+    body: "SCSI 명령, expander와 dual-port 장치를 조합해 많은 베이와 장애 시 대체 경로를 구성합니다.",
+  },
+  {
+    label: "NVMe는 메모리 기반 큐 쌍으로 병렬 I/O를 줄 세운다",
+    body: "Submission·Completion Queue를 여러 CPU 문맥에 배치할 수 있지만 실제 개수와 깊이는 장치·OS가 결정합니다.",
+  },
 ];

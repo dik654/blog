@@ -37,8 +37,24 @@ ABCI++ 진화 (v0.38+):
   → 이더리움은 Engine API(단일 JSON-RPC)로 CL↔EL 통신`;
 
 export const ABCI_METHODS_ANNOTATIONS = [
-  { lines: [5, 6] as [number, number], color: 'sky' as const, note: 'PrepareProposal ≈ forkchoiceUpdated' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: 'ProcessProposal ≈ newPayload' },
-  { lines: [20, 23] as [number, number], color: 'amber' as const, note: 'ABCI++ 신규 (투표 확장)' },
-  { lines: [31, 36] as [number, number], color: 'violet' as const, note: '4개 동시 연결' },
+  {
+    lines: [5, 6] as [number, number],
+    color: "sky" as const,
+    note: "PrepareProposal ≈ forkchoiceUpdated",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "ProcessProposal ≈ newPayload",
+  },
+  {
+    lines: [20, 23] as [number, number],
+    color: "amber" as const,
+    note: "ABCI++ 신규 (투표 확장)",
+  },
+  {
+    lines: [31, 36] as [number, number],
+    color: "violet" as const,
+    note: "4개 동시 연결",
+  },
 ];

@@ -16,9 +16,21 @@ struct NodeState {
 }`;
 
 export const NODE_MAP_ANNOTATIONS = [
-  { lines: [1, 2] as [number, number], color: 'sky' as const, note: '가상 주소 매핑' },
-  { lines: [4, 9] as [number, number], color: 'emerald' as const, note: '3중 인덱스 매핑 테이블' },
-  { lines: [11, 16] as [number, number], color: 'amber' as const, note: '노드 상태 & 경로 정보' },
+  {
+    lines: [1, 2] as [number, number],
+    color: "sky" as const,
+    note: "가상 주소 매핑",
+  },
+  {
+    lines: [4, 9] as [number, number],
+    color: "emerald" as const,
+    note: "3중 인덱스 매핑 테이블",
+  },
+  {
+    lines: [11, 16] as [number, number],
+    color: "amber" as const,
+    note: "노드 상태 & 경로 정보",
+  },
 ];
 
 export const TRANSPORTS_CODE = `struct Transports {
@@ -34,6 +46,14 @@ fn bind_with_fallback(addr: SocketAddr) -> io::Result<UdpSocket> {
 }`;
 
 export const TRANSPORTS_ANNOTATIONS = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: '전송 계층 통합 구조체' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '포트 바인딩 폴백' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "전송 계층 통합 구조체",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "포트 바인딩 폴백",
+  },
 ];

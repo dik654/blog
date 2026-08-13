@@ -15,7 +15,7 @@ const CLOSE_MESSAGE = (reason: string) =>
 async function githubRequest<T>(
   endpoint: string,
   method = "GET",
-  body?: unknown
+  body?: unknown,
 ): Promise<T> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error("GITHUB_TOKEN required");
@@ -53,7 +53,7 @@ async function markStale(owner: string, repo: string) {
 
   for (let page = 1; page <= 10; page++) {
     const issues = await githubRequest<any[]>(
-      `/repos/${owner}/${repo}/issues?state=open&sort=updated&direction=asc&per_page=100&page=${page}`
+      `/repos/${owner}/${repo}/issues?state=open&sort=updated&direction=asc&per_page=100&page=${page}`,
     );
     if (issues.length === 0) break;
 
@@ -66,7 +66,7 @@ async function markStale(owner: string, repo: string) {
       if (updatedAt > cutoff) return labeled;
 
       const alreadyStale = issue.labels?.some(
-        (l: any) => l.name === "stale" || l.name === "autoclose"
+        (l: any) => l.name === "stale" || l.name === "autoclose",
       );
       if (alreadyStale) continue;
 
@@ -77,7 +77,9 @@ async function markStale(owner: string, repo: string) {
 
       if (DRY_RUN) {
         const age = Math.floor((Date.now() - updatedAt.getTime()) / 86400000);
-        console.log(`#${issue.number}: would label stale (${age}d inactive) — ${issue.title}`);
+        console.log(
+          `#${issue.number}: would label stale (${age}d inactive) — ${issue.title}`,
+        );
       } else {
         await githubRequest(`${base}/labels`, "POST", { labels: ["stale"] });
         console.log(`#${issue.number}: labeled stale — ${issue.title}`);
@@ -99,7 +101,7 @@ async function closeExpired(owner: string, repo: string) {
 
     for (let page = 1; page <= 10; page++) {
       const issues = await githubRequest<any[]>(
-        `/repos/${owner}/${repo}/issues?state=open&labels=${label}&sort=updated&direction=asc&per_page=100&page=${page}`
+        `/repos/${owner}/${repo}/issues?state=open&labels=${label}&sort=updated&direction=asc&per_page=100&page=${page}`,
       );
       if (issues.length === 0) break;
 
@@ -112,7 +114,9 @@ async function closeExpired(owner: string, repo: string) {
 
         const base = `/repos/${owner}/${repo}/issues/${issue.number}`;
 
-        const events = await githubRequest<any[]>(`${base}/events?per_page=100`);
+        const events = await githubRequest<any[]>(
+          `${base}/events?per_page=100`,
+        );
 
         const labeledAt = events
           .filter((e) => e.event === "labeled" && e.label?.name === label)
@@ -125,24 +129,31 @@ async function closeExpired(owner: string, repo: string) {
         // The triage workflow should remove lifecycle labels on human
         // activity, but check here too as a safety net.
         const comments = await githubRequest<any[]>(
-          `${base}/comments?since=${labeledAt.toISOString()}&per_page=100`
+          `${base}/comments?since=${labeledAt.toISOString()}&per_page=100`,
         );
         const hasHumanComment = comments.some(
-          (c) => c.user && c.user.type !== "Bot"
+          (c) => c.user && c.user.type !== "Bot",
         );
         if (hasHumanComment) {
           console.log(
-            `#${issue.number}: skipping (human activity after ${label} label)`
+            `#${issue.number}: skipping (human activity after ${label} label)`,
           );
           continue;
         }
 
         if (DRY_RUN) {
           const age = Math.floor((Date.now() - labeledAt.getTime()) / 86400000);
-          console.log(`#${issue.number}: would close (${label}, ${age}d old) — ${issue.title}`);
+          console.log(
+            `#${issue.number}: would close (${label}, ${age}d old) — ${issue.title}`,
+          );
         } else {
-          await githubRequest(`${base}/comments`, "POST", { body: CLOSE_MESSAGE(reason) });
-          await githubRequest(base, "PATCH", { state: "closed", state_reason: "not_planned" });
+          await githubRequest(`${base}/comments`, "POST", {
+            body: CLOSE_MESSAGE(reason),
+          });
+          await githubRequest(base, "PATCH", {
+            state: "closed",
+            state_reason: "not_planned",
+          });
           console.log(`#${issue.number}: closed (${label})`);
         }
         closed++;
@@ -158,11 +169,15 @@ async function closeExpired(owner: string, repo: string) {
 const owner = process.env.GITHUB_REPOSITORY_OWNER;
 const repo = process.env.GITHUB_REPOSITORY_NAME;
 if (!owner || !repo)
-  throw new Error("GITHUB_REPOSITORY_OWNER and GITHUB_REPOSITORY_NAME required");
+  throw new Error(
+    "GITHUB_REPOSITORY_OWNER and GITHUB_REPOSITORY_NAME required",
+  );
 
 if (DRY_RUN) console.log("DRY RUN — no changes will be made\n");
 
 const labeled = await markStale(owner, repo);
 const closed = await closeExpired(owner, repo);
 
-console.log(`\nDone: ${labeled} ${DRY_RUN ? "would be labeled" : "labeled"} stale, ${closed} ${DRY_RUN ? "would be closed" : "closed"}`);
+console.log(
+  `\nDone: ${labeled} ${DRY_RUN ? "would be labeled" : "labeled"} stale, ${closed} ${DRY_RUN ? "would be closed" : "closed"}`,
+);

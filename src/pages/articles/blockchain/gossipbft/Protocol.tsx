@@ -1,35 +1,66 @@
-import { motion } from 'framer-motion';
-import { ActionBox } from '@/components/viz/boxes';
+import { motion } from "framer-motion";
+import { ActionBox } from "@/components/viz/boxes";
 
-const C = { gossip: '#6366f1', vote: '#10b981' };
+const C = { gossip: "#6366f1", vote: "#10b981" };
 
 function ProtocolViz() {
   const phases = [
-    { label: 'QUALITY', sub: '후보 tipset 선택' },
-    { label: 'CONVERGE', sub: '최선 후보 수렴' },
-    { label: 'PREPARE', sub: '준비 투표' },
-    { label: 'COMMIT', sub: '커밋 투표' },
+    { label: "QUALITY", sub: "후보 tipset 선택" },
+    { label: "CONVERGE", sub: "최선 후보 수렴" },
+    { label: "PREPARE", sub: "준비 투표" },
+    { label: "COMMIT", sub: "커밋 투표" },
   ];
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">GossiPBFT 인스턴스: 4단계 투표</p>
-      <svg viewBox="0 0 420 90" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        GossiPBFT 인스턴스: 4단계 투표
+      </p>
+      <svg
+        viewBox="0 0 420 90"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
         {phases.map((p, i) => (
-          <motion.g key={p.label} initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.12 }}>
-            <ActionBox x={5 + i * 105} y={10} w={95} h={35}
-              label={p.label} sub={p.sub} color={C.gossip} />
+          <motion.g
+            key={p.label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.12 }}
+          >
+            <ActionBox
+              x={5 + i * 105}
+              y={10}
+              w={95}
+              h={35}
+              label={p.label}
+              sub={p.sub}
+              color={C.gossip}
+            />
             {i < 3 && (
-              <motion.line x1={100 + i * 105} y1={27} x2={110 + i * 105} y2={27}
-                stroke={C.gossip} strokeWidth={1}
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                transition={{ delay: i * 0.12 + 0.2 }} />
+              <motion.line
+                x1={100 + i * 105}
+                y1={27}
+                x2={110 + i * 105}
+                y2={27}
+                stroke={C.gossip}
+                strokeWidth={1}
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ delay: i * 0.12 + 0.2 }}
+              />
             )}
           </motion.g>
         ))}
-        <motion.text x={210} y={68} textAnchor="middle" fontSize={11}
-          fill={C.vote} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}>
+        <motion.text
+          x={210}
+          y={68}
+          textAnchor="middle"
+          fontSize={11}
+          fill={C.vote}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
           💡 각 투표는 gossip으로 전파 — 리더 병목 없음
         </motion.text>
       </svg>
@@ -45,15 +76,19 @@ export default function Protocol() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          GossiPBFT는 <strong>4단계 투표</strong>로 tipset 확정.<br />
-          QUALITY → CONVERGE → PREPARE → COMMIT.<br />
+          GossiPBFT는 <strong>4단계 투표</strong>로 tipset 확정.
+          <br />
+          QUALITY → CONVERGE → PREPARE → COMMIT.
+          <br />
           투표 가중치 = storage power 비례 (일반 BFT의 1노드1표와 다름).
         </p>
 
         {/* ── 4-Phase Protocol ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">4-Phase Protocol 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          4-Phase Protocol 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GossiPBFT 4-Phase 상세:
+          {`// GossiPBFT 4-Phase 상세:
 
 // Instance start:
 // - 모든 validator가 최근 EC tipset 관찰
@@ -114,14 +149,17 @@ export default function Protocol() {
         </pre>
         <p className="leading-7">
           4-phase: <strong>QUALITY → CONVERGE → PREPARE → COMMIT</strong>.<br />
-          each phase ~30s gossip → ~2 min total.<br />
+          each phase ~30s gossip → ~2 min total.
+          <br />
           storage power weighted, Byzantine ≤ 1/3 power.
         </p>
 
         {/* ── Gossip 메커니즘 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Gossip Mechanism 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Gossip Mechanism 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Gossip 구조 (GossiPBFT):
+          {`// Gossip 구조 (GossiPBFT):
 //
 // 기본 원리:
 // - validator가 message 보면 random subset에 forward
@@ -191,15 +229,19 @@ export default function Protocol() {
 // - DDoS 저항`}
         </pre>
         <p className="leading-7">
-          Gossip: <strong>random fanout forward → O(log n) propagation</strong>.<br />
-          no leader → DDoS 저항, redundant paths.<br />
+          Gossip: <strong>random fanout forward → O(log n) propagation</strong>.
+          <br />
+          no leader → DDoS 저항, redundant paths.
+          <br />
           Filecoin libp2p gossipsub 활용.
         </p>
 
         {/* ── Safety & Liveness ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Safety &amp; Liveness</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Safety &amp; Liveness
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GossiPBFT Safety:
+          {`// GossiPBFT Safety:
 //
 // Claim: finalized tipset은 revert 불가
 //
@@ -266,15 +308,21 @@ export default function Protocol() {
         </pre>
         <p className="leading-7">
           Safety: <strong>2/3+ power quorum intersection</strong>.<br />
-          Liveness: GST 후 eventually finalize (4 phases).<br />
+          Liveness: GST 후 eventually finalize (4 phases).
+          <br />
           TLA+ formal verification, 2024 audit.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 Filecoin은 gossip BFT를 선택했나</strong> — storage provider 특성.<br />
-          Ethereum PoS: staked ETH (easy to measure).<br />
-          Filecoin: storage power (physical hardware).<br />
-          providers 널리 분산 → gossip이 자연스러움.<br />
+          <strong>💡 왜 Filecoin은 gossip BFT를 선택했나</strong> — storage
+          provider 특성.
+          <br />
+          Ethereum PoS: staked ETH (easy to measure).
+          <br />
+          Filecoin: storage power (physical hardware).
+          <br />
+          providers 널리 분산 → gossip이 자연스러움.
+          <br />
           leader 기반은 storage provider 네트워크에 부적합.
         </p>
       </div>

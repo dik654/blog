@@ -1,73 +1,48 @@
-import SoftmaxViz from './viz/SoftmaxViz';
-import SoftmaxExamplesViz from './viz/SoftmaxExamplesViz';
-import TemperatureViz from './viz/TemperatureViz';
-import SoftmaxAdvancedViz from './viz/SoftmaxAdvancedViz';
+import M from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SoftmaxViz from "./viz/SoftmaxViz";
+import TemperatureViz from "./viz/TemperatureViz";
 
 export default function Softmax() {
   return (
     <section id="softmax" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">소프트맥스: 숫자를 확률로</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        h값의 범위가 자유로움 → 0~1 확률로 변환 필요.<br />
-        Softmax: y_i = e^h_i / Σe^h_j — 큰 값은 확대, 작은 값은 축소.
-      </p>
-      <SoftmaxViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Softmax 수학적 정의 & 예시</h3>
+      <h2 className="mb-6 text-2xl font-bold">Softmax: class logits을 공동 확률로 정규화하기</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <code>p_i = exp(x_i) / Σ exp(x_j)</code> — 입력 크기 차이에 따라 증폭 정도가 극단적으로 달라짐<br />
-          속성: Monotonic (순서 보존), Translation invariant (<code>softmax(x+c)=softmax(x)</code>), Not scale invariant (큰 스케일에선 극단값만 남음)
+          softmax는 각 logit의 지수를 전체 합으로 나눠 합이 1인 categorical
+          distribution을 만든다. 입력 순서는 보존하지만 scale에는 불변이 아니며, logits의
+          차이가 커질수록 한 class에 더 날카롭게 모인다.
         </p>
       </div>
-      <SoftmaxExamplesViz />
-
+      <ExplainedFormula
+        question="서로 배타적인 class score 여러 개를 합이 1인 공동 확률로 바꾸려면?"
+        idea={<>각 logit을 양수 weight로 바꾸고 모든 class의 weight 합으로 나눕니다. Class 하나의 확률은 다른 모든 class logit에도 의존합니다.</>}
+        formula={String.raw`p_i=\frac{e^{z_i}}{\sum_j e^{z_j}}=\frac{e^{z_i-m}}{\sum_j e^{z_j-m}},\qquad m=\max_j z_j`}
+        terms={[
+          { symbol: "z_i", name: "class logit", description: "확률로 정규화하기 전의 범위 제한이 없는 class score입니다." },
+          { symbol: String.raw`\sum_j e^{z_j}`, name: "shared normalizer", description: "모든 class의 probability 합이 1이 되게 만듭니다." },
+          { symbol: "m", name: "maximum-logit shift", description: "모든 logit에서 같은 값을 빼도 확률은 같다는 성질로 overflow를 줄입니다." },
+        ]}
+        assumptions={["Class들이 서로 배타적인 categorical output 계약입니다.", "Multi-label처럼 class가 독립이면 class별 sigmoid가 맞습니다."]}
+        interpretation="Logit에 같은 상수를 더하거나 빼도 probability는 변하지 않지만, logit 차이를 scale하면 분포의 날카로움은 달라집니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-8 mb-3">Temperature Scaling — 분포 조절</h3>
         <p>
-          <code>softmax(x/T)</code> — T→0이면 argmax에 수렴, T→∞면 uniform으로 수렴<br />
-          T=1은 표준, 작을수록 sharp, 클수록 flat
+          수치적으로는 가장 큰 logit을 먼저 빼도 결과가 같다는 translation invariance를
+          사용한다. training에서는 log-softmax와 negative log-likelihood를 fused한
+          cross-entropy 구현에 raw logits를 전달하는 편이 안전하다.
+        </p>
+      </div>
+      <SoftmaxViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none mt-8">
+        <h3>Temperature는 분포의 상대적 날카로움을 바꾼다</h3>
+        <p>
+          <M>{"\\operatorname{softmax}(z/T)"}</M>에서 작은 <M>{"T"}</M>는 차이를
+          키우고 큰 <M>{"T"}</M>는 분포를 평평하게 만든다. calibration과 distillation,
+          sampling에서 쓰이지만 같은 temperature라도 logit scale이 다르면 효과가 다르다.
         </p>
       </div>
       <TemperatureViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">수치 안정 · LogSoftmax · 변형</h3>
-        <p>
-          exp overflow 문제와 해법, LogSoftmax의 수학적 근거, 실전 패턴, 그리고 용도별 변형.
-        </p>
-      </div>
-      <SoftmaxAdvancedViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Softmax의 기원과 의미</p>
-          <p>
-            <strong>Boltzmann Distribution</strong>: Statistical mechanics에서 유래<br />
-            p(state) ∝ exp(-E / kT)<br />
-            - Softmax = -x가 energy인 Boltzmann<br />
-            - Temperature가 유사한 역할<br />
-            - Physical intuition
-          </p>
-          <p className="mt-2">
-            <strong>왜 exp인가?</strong>:<br />
-            - Maximum entropy under constraint → exponential family<br />
-            - Non-negative 보장<br />
-            - Scale-invariant 성질 (translation)<br />
-            - Gradient가 깔끔 (ŷ - y with CE)
-          </p>
-          <p className="mt-2">
-            <strong>대안 가능?</strong>:<br />
-            - sigmoid/n: 간단하지만 확률 아님<br />
-            - squaring: 음수 문제<br />
-            - argmax: differentiable 아님<br />
-            → Softmax가 여러 측면에서 최적
-          </p>
-        </div>
-
-      </div>
     </section>
   );
 }

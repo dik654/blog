@@ -17,8 +17,16 @@ struct tee_cryp_state {
 // KDF: HKDF, PBKDF2, Concat KDF`;
 
 export const cryptoStateAnnotations = [
-  { lines: [2, 10] as [number, number], color: 'sky' as const, note: '암호화 상태 구조체' },
-  { lines: [13, 16] as [number, number], color: 'emerald' as const, note: '지원 알고리즘 목록' },
+  {
+    lines: [2, 10] as [number, number],
+    color: "sky" as const,
+    note: "암호화 상태 구조체",
+  },
+  {
+    lines: [13, 16] as [number, number],
+    color: "emerald" as const,
+    note: "지원 알고리즘 목록",
+  },
 ];
 
 export const keyObjCode = `// 보안 키 객체 (tee_cryp_obj_secret)
@@ -39,7 +47,19 @@ CFG_CRYPTOLIB_NAME=mbedtls    // mbedTLS
 // -> crypto_driver_init()에서 자동 탐지`;
 
 export const keyObjAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '키 객체 메모리 레이아웃' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: '키 속성 플래그' },
-  { lines: [12, 15] as [number, number], color: 'amber' as const, note: 'HW/SW 암호화 라이브러리 선택' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "키 객체 메모리 레이아웃",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "키 속성 플래그",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "amber" as const,
+    note: "HW/SW 암호화 라이브러리 선택",
+  },
 ];

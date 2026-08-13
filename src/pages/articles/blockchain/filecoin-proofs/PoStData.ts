@@ -22,9 +22,21 @@ pub struct SetupParams {
 // - 성공 시 블록 보상 수령`;
 
 export const WINDOW_VS_WINNING_ANNOTATIONS = [
-  { lines: [3, 9] as [number, number], color: 'sky' as const, note: 'PoSt 공통 파라미터' },
-  { lines: [11, 16] as [number, number], color: 'emerald' as const, note: 'WindowPoSt (24시간 주기)' },
-  { lines: [18, 22] as [number, number], color: 'amber' as const, note: 'WinningPoSt (블록 생성 시)' },
+  {
+    lines: [3, 9] as [number, number],
+    color: "sky" as const,
+    note: "PoSt 공통 파라미터",
+  },
+  {
+    lines: [11, 16] as [number, number],
+    color: "emerald" as const,
+    note: "WindowPoSt (24시간 주기)",
+  },
+  {
+    lines: [18, 22] as [number, number],
+    color: "amber" as const,
+    note: "WinningPoSt (블록 생성 시)",
+  },
 ];
 
 export const CHALLENGE_CODE = `// storage-proofs-post/src/fallback/vanilla.rs
@@ -60,8 +72,16 @@ pub struct SectorProof<Proof: MerkleProofTrait> {
 }`;
 
 export const CHALLENGE_ANNOTATIONS = [
-  { lines: [4, 17] as [number, number], color: 'sky' as const, note: '챌린지 인덱스 계산' },
-  { lines: [23, 31] as [number, number], color: 'emerald' as const, note: '섹터 증명 구조체' },
+  {
+    lines: [4, 17] as [number, number],
+    color: "sky" as const,
+    note: "챌린지 인덱스 계산",
+  },
+  {
+    lines: [23, 31] as [number, number],
+    color: "emerald" as const,
+    note: "섹터 증명 구조체",
+  },
 ];
 
 export const MERKLE_TREE_CODE = `// storage-proofs-core/src/merkle/
@@ -84,7 +104,19 @@ OctMerkleTree      // Arity=8, Poseidon, TreeR/TreeC (복제본)
 // 증명 크기: 10 * 7 * 32 bytes = 2,240 bytes per challenge`;
 
 export const MERKLE_TREE_ANNOTATIONS = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: '트리 유형 (Binary vs Oct)' },
-  { lines: [10, 13] as [number, number], color: 'emerald' as const, note: '해시 함수 선택 이유' },
-  { lines: [15, 18] as [number, number], color: 'amber' as const, note: 'Merkle 증명 크기 분석' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "트리 유형 (Binary vs Oct)",
+  },
+  {
+    lines: [10, 13] as [number, number],
+    color: "emerald" as const,
+    note: "해시 함수 선택 이유",
+  },
+  {
+    lines: [15, 18] as [number, number],
+    color: "amber" as const,
+    note: "Merkle 증명 크기 분석",
+  },
 ];

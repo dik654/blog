@@ -1,6 +1,6 @@
-import TwoPhaseViz from './viz/TwoPhaseViz';
-import { CitationBlock } from '@/components/ui/citation';
-import CodePanel from '@/components/ui/code-panel';
+import TwoPhaseViz from "./viz/TwoPhaseViz";
+import { CitationBlock } from "@/components/ui/citation";
+import CodePanel from "@/components/ui/code-panel";
 
 const tcCode = `HotStuff-2 핵심: timeout-certificate (TC)
 
@@ -24,26 +24,38 @@ export default function TwoPhase() {
   return (
     <section id="two-phase" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">2단계 프로토콜</h2>
-      <div className="not-prose mb-8"><TwoPhaseViz /></div>
+      <div className="not-prose mb-8">
+        <TwoPhaseViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <CitationBlock source="Malkhi & Nayak, 2023 — HotStuff-2" citeKey={1} type="paper"
-          href="https://eprint.iacr.org/2023/397">
+        <CitationBlock
+          source="Malkhi & Nayak, 2023 — HotStuff-2"
+          citeKey={1}
+          type="paper"
+          href="https://eprint.iacr.org/2023/397"
+        >
           <p className="italic">
-            "We show that in the steady state, two phases suffice for a BFT SMR protocol with linear communication complexity."
+            "We show that in the steady state, two phases suffice for a BFT SMR
+            protocol with linear communication complexity."
           </p>
         </CitationBlock>
 
-        <CodePanel title="timeout-certificate (TC)" code={tcCode}
+        <CodePanel
+          title="timeout-certificate (TC)"
+          code={tcCode}
           annotations={[
-            { lines: [3, 6], color: 'sky', note: 'HotStuff: Pre-Commit 필요' },
-            { lines: [8, 11], color: 'emerald', note: 'HotStuff-2: TC로 대체' },
-            { lines: [13, 18], color: 'amber', note: 'TC 메커니즘 상세' },
-          ]} />
+            { lines: [3, 6], color: "sky", note: "HotStuff: Pre-Commit 필요" },
+            { lines: [8, 11], color: "emerald", note: "HotStuff-2: TC로 대체" },
+            { lines: [13, 18], color: "amber", note: "TC 메커니즘 상세" },
+          ]}
+        />
 
         {/* ── TC 구조 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Timeout Certificate 구조</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Timeout Certificate 구조
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Timeout message:
+          {`// Timeout message:
 // struct Timeout {
 //     view: int,         // 만료된 view
 //     highQC: QC,        // 자신이 본 가장 높은 QC
@@ -88,15 +100,19 @@ export default function TwoPhase() {
 // 둘 다 O(n) 메시지이지만 TC는 증거 압축`}
         </pre>
         <p className="leading-7">
-          TC = <strong>2f+1 timeout messages의 aggregated certificate</strong>.<br />
-          max highQC 포함 — 이전 committed block 존중 증거.<br />
+          TC = <strong>2f+1 timeout messages의 aggregated certificate</strong>.
+          <br />
+          max highQC 포함 — 이전 committed block 존중 증거.
+          <br />
           aggregated → verification 효율 + bandwidth 절약.
         </p>
 
         {/* ── 2-phase 프로토콜 상세 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">2-Phase 프로토콜 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          2-Phase 프로토콜 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff-2 프로토콜 (view v):
+          {`// HotStuff-2 프로토콜 (view v):
 //
 // Preliminary:
 // - leader = proposer(v) (round-robin)
@@ -146,14 +162,17 @@ export default function TwoPhase() {
         </pre>
         <p className="leading-7">
           HotStuff-2 2-phase: <strong>Prepare → Commit</strong>.<br />
-          Pre-commit 제거, 각 phase는 propose + 2f+1 vote.<br />
+          Pre-commit 제거, 각 phase는 propose + 2f+1 vote.
+          <br />
           latency 4δ per block (Basic HotStuff 7δ → 4δ).
         </p>
 
         {/* ── Safety 증명 sketch ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Safety 증명 sketch (TC가 왜 충분한가)</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Safety 증명 sketch (TC가 왜 충분한가)
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Claim: HotStuff-2 safety with TC
+          {`// Claim: HotStuff-2 safety with TC
 
 // 가정:
 // view v1에서 B1 committed (2-chain)
@@ -201,16 +220,20 @@ export default function TwoPhase() {
 // 엄밀한 증명: HotStuff-2 paper §5`}
         </pre>
         <p className="leading-7">
-          TC safety 핵심: <strong>TC.high_qc_view ≥ committed QC.view</strong>.<br />
-          2f+1 timeout 중 정직 1명이 committed QC 포함.<br />
+          TC safety 핵심: <strong>TC.high_qc_view ≥ committed QC.view</strong>.
+          <br />
+          2f+1 timeout 중 정직 1명이 committed QC 포함.
+          <br />
           new leader는 TC 기반 proposal → 이전 commit 존중.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 TC가 Pre-commit 대체 가능한가</strong> — view 종료 증명.<br />
-          Pre-commit: "이 block이 locked"를 증명.<br />
-          TC: "이 view가 진행 불가"를 증명 + max highQC 전달.<br />
-          둘 다 view change 시 safety 증거 역할 — TC가 더 일반적.
+          <strong>💡 왜 TC가 Pre-commit 대체 가능한가</strong> — view 종료 증명.
+          <br />
+          Pre-commit: "이 block이 locked"를 증명.
+          <br />
+          TC: "이 view가 진행 불가"를 증명 + max highQC 전달.
+          <br />둘 다 view change 시 safety 증거 역할 — TC가 더 일반적.
         </p>
       </div>
     </section>

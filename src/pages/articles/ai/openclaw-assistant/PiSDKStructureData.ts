@@ -37,8 +37,24 @@ export const piSDKCode = `Pi SDK 패키지 의존성:
              + messaging, browser, canvas, sessions, cron, gateway 도구 추가`;
 
 export const piSDKAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: 'pi-ai — LLM 추상화 레이어' },
-  { lines: [8, 11] as [number, number], color: 'emerald' as const, note: 'pi-agent-core — 에이전트 루프' },
-  { lines: [13, 17] as [number, number], color: 'amber' as const, note: 'pi-coding-agent — 상위 SDK' },
-  { lines: [28, 31] as [number, number], color: 'violet' as const, note: '어댑터 레이어 — 인터페이스 브릿지' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "pi-ai — LLM 추상화 레이어",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "emerald" as const,
+    note: "pi-agent-core — 에이전트 루프",
+  },
+  {
+    lines: [13, 17] as [number, number],
+    color: "amber" as const,
+    note: "pi-coding-agent — 상위 SDK",
+  },
+  {
+    lines: [28, 31] as [number, number],
+    color: "violet" as const,
+    note: "어댑터 레이어 — 인터페이스 브릿지",
+  },
 ];

@@ -1,115 +1,39 @@
-import FaultViz from './viz/FaultViz';
-import type { CodeRef } from '@/components/code/types';
+import FaultViz from "./viz/FaultViz";
+import type { CodeRef } from "@/components/code/types";
 
-export default function FaultRecovery({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function FaultRecovery({
+  onCodeRef: _onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="fault-recovery" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">장애 & 복구</h2>
-      <div className="not-prose mb-8"><FaultViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Fault와 recovery는 proof 실패를 actor state와 경제 상태로 반영한다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3">
-          <strong>{'💡'} 경제적 인센티브 설계</strong> — "저장하지 않는 것"의 비용을 높여
-          <br />
-          SP가 안정적으로 데이터를 유지하도록 강제
-          <br />
-          자연재해 등 불가항력은 14일 유예로 대응
+        <p>
+          WindowPoSt를 제출하지 못하거나 sector를 사용할 수 없게 되면 해당
+          sector는 fault 상태로 들어갈 수 있습니다. Provider가 미리 fault를
+          선언한 경우와 protocol이 누락을 감지한 경우는 처리 경로와 비용이
+          다를 수 있으므로 같은 장애로 묶어 설명하면 안 됩니다.
         </p>
-
-        {/* ── Fault Types ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Fault Types &amp; Recovery</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Filecoin Sector Faults:
-
-// Fault Types:
-//
-// 1. Declared Fault:
-//    - SP가 자발 선언
-//    - "이 sector 일시 장애"
-//    - fault fee only
-//    - recovery 가능
-//
-// 2. Detected Fault:
-//    - WindowPoSt 실패
-//    - network에서 감지
-//    - higher penalty
-//    - 14-day recovery window
-//
-// 3. Termination:
-//    - fault > 14 days
-//    - sector 영구 삭제
-//    - collateral slashed
-//    - storage power 제거
-
-// Fault Fee:
-// fault_fee_per_epoch = ~2.14 * daily_reward(sector)
-// - continuous charge
-// - 14-day max: ~30 * daily_reward
-// - incentivizes quick recovery
-
-// Declared Fault Flow:
-// 1. SP detects issue (hardware, data loss)
-// 2. call DeclareFaults
-// 3. pay fault fee per deadline
-// 4. attempt recovery
-// 5. call DeclareFaultsRecovered
-// 6. pass next WindowPoSt
-// 7. sector reactivated
-
-// Detection Flow:
-// 1. WindowPoSt 기간 도래
-// 2. SP가 submit 안 함
-// 3. on-chain auto-detect
-// 4. sector marked faulty
-// 5. fault fee start
-// 6. power 감소
-// 7. 14-day clock start
-
-// Termination:
-// 1. 14-day recovery window 만료
-// 2. TerminateSectors called (SP or auto)
-// 3. initial pledge slashed (~4 FIL)
-// 4. remaining collateral returned
-// 5. sector removed from chain
-// 6. storage power 최종 감소
-
-// Recovery Economics:
-// - declare immediately: lower penalty
-// - auto-detected: higher penalty
-// - unrecovered: full slash
-// - 14-day window: grace period
-
-// Common fault causes:
-// - disk failure
-// - network outage
-// - software bugs
-// - missed deadline (operator error)
-// - datacenter issues
-// - natural disaster
-
-// Prevention:
-// - RAID storage
-// - backup workers
-// - monitoring alerts
-// - deadline automation
-// - insurance (3rd party)
-
-// SP 대응:
-// - 24/7 monitoring
-// - automated deadline submission
-// - GPU redundancy
-// - storage redundancy
-// - incident response plan
-
-// Filecoin economic design:
-// - fault fee < termination > reward
-// - incentive alignment:
-//   declare > hide > fail
-// - SP 수익성: 99%+ uptime 필요`}
-        </pre>
-        <p className="leading-7">
-          3 fault types: <strong>declared, detected, termination</strong>.<br />
-          14-day recovery window, fault fee per epoch.<br />
-          incentive: declare &gt; hide &gt; fail (economic alignment).
+        <p>
+          Data를 다시 사용할 수 있게 만든 뒤에는 recovery declaration과 다음
+          proving 결과가 actor state에 반영되어야 power가 회복됩니다. 파일을
+          복사해 둔 것만으로 on-chain recovery가 끝나는 것은 아닙니다.
+        </p>
+      </div>
+      <div className="not-prose my-8">
+        <FaultViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Penalty와 유예 기간은 현재 actor code에서 읽는다</h3>
+        <p>
+          Fault fee, continued-fault penalty, termination condition과 recovery
+          timing은 actor version과 sector 상태에 따라 계산됩니다. 과거의 고정
+          FIL 금액이나 “N일이면 모두 복구” 같은 문구 대신 event별 state
+          transition, power delta와 실제 charge를 기록해야 합니다.
         </p>
       </div>
     </section>

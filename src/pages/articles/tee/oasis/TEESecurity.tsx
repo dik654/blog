@@ -1,5 +1,5 @@
-import TEESecurityViz from './viz/TEESecurityViz';
-import TEEConfigViz from './viz/TEEConfigViz';
+import TEESecurityViz from "./viz/TEESecurityViz";
+import TEEConfigViz from "./viz/TEEConfigViz";
 
 export default function TEESecurity() {
   return (
@@ -7,9 +7,13 @@ export default function TEESecurity() {
       <h2 className="text-2xl font-bold mb-6">TEE 보안</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>Intel SGX / TDX</strong>로 Runtime 실행의 기밀성·무결성 보장<br />
-          <strong>DCAP Quote</strong> 기반 원격 증명 — Consensus에 Quote 제출 필수<br />
-          <strong>RA-TLS</strong> 보안 채널 — Attestation이 TLS 인증서에 포함<br />
+          <strong>Intel SGX / TDX</strong>로 Runtime 실행의 기밀성·무결성 보장
+          <br />
+          <strong>DCAP Quote</strong> 기반 원격 증명 — Consensus에 Quote 제출
+          필수
+          <br />
+          <strong>RA-TLS</strong> 보안 채널 — Attestation이 TLS 인증서에 포함
+          <br />
           <strong>Multi-TEE</strong>: SGX + TDX 동시 지원, SEV-SNP 실험 중
         </p>
       </div>
@@ -17,8 +21,9 @@ export default function TEESecurity() {
       <TEESecurityViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">RAK — Runtime Attestation Key</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          RAK — Runtime Attestation Key
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// runtime/src/common/sgx/egetkey.rs
 
 // Runtime 시작 시 RAK 생성
@@ -51,7 +56,9 @@ pub fn generate_rak() -> SecretKey {
 // 2) RA-TLS 인증서 서명
 // 3) Host ↔ Runtime IPC 인증`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">RA-TLS — Attestation 통합 TLS</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          RA-TLS — Attestation 통합 TLS
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// go/common/sgx/ias/attestation.go
 
 // RA-TLS 인증서 구조
@@ -88,7 +95,9 @@ type RATLSCertificate struct {
 // 4) Quote.reportdata == hash(cert.pubkey) 확인
 // 5) TLS 세션 수립`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">dm-verity — 파일시스템 무결성</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          dm-verity — 파일시스템 무결성
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Runtime 바이너리 탑재 파일시스템 보호
 
 // 번들 .orc 안에 포함된 rootfs
@@ -109,11 +118,12 @@ bundle/
 // - Host가 라이브러리·설정 파일 변조 가능
 // - dm-verity로 마운트된 fs 전체 무결성 보장`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">TEE 설정 & 원격 증명</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          TEE 설정 & 원격 증명
+        </h3>
       </div>
       <TEEConfigViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm mt-4">{`// 노드 설정 — TEE 활성화
 
 # config.yaml
@@ -142,7 +152,9 @@ runtime:
 # - MRENCLAVE가 governance-approved 목록에 있어야 함
 # - TCB status가 정책 만족해야 함`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Discrepancy Detection</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Discrepancy Detection
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Executor committee가 서로 다른 결과 제출 시
 
 // 정상 흐름
@@ -171,27 +183,31 @@ executor3 → commit(IORoot=X, StateRoot=Y)
 // - slash 정책 엄격 적용`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Attestation을 Consensus에 통합한 의의</p>
+          <p className="font-semibold mb-2">
+            인사이트: Attestation을 Consensus에 통합한 의의
+          </p>
           <p>
             <strong>전통 SGX 모델</strong>:<br />
-            - 앱이 quote 받아 verifier에 직접 전송<br />
-            - verifier는 중앙집중 서비스 (IAS, PCS)<br />
-            - 단일 신뢰점 존재
+            - 앱이 quote 받아 verifier에 직접 전송
+            <br />
+            - verifier는 중앙집중 서비스 (IAS, PCS)
+            <br />- 단일 신뢰점 존재
           </p>
           <p className="mt-2">
             <strong>Oasis 모델</strong>:<br />
-            - Runtime이 Quote를 Consensus에 제출<br />
-            - 모든 검증인이 Quote 검증 후 NodeRegistration 승인<br />
-            - 분산 합의 → 신뢰점 분산
+            - Runtime이 Quote를 Consensus에 제출
+            <br />
+            - 모든 검증인이 Quote 검증 후 NodeRegistration 승인
+            <br />- 분산 합의 → 신뢰점 분산
           </p>
           <p className="mt-2">
             <strong>장점</strong>:<br />
-            ✓ Verifier 중앙집중 제거<br />
-            ✓ Governance로 정책 업데이트 (허용 MRENCLAVE 추가)<br />
-            ✓ Slashing 통합 — TEE fault = economic penalty
+            ✓ Verifier 중앙집중 제거
+            <br />
+            ✓ Governance로 정책 업데이트 (허용 MRENCLAVE 추가)
+            <br />✓ Slashing 통합 — TEE fault = economic penalty
           </p>
         </div>
-
       </div>
     </section>
   );

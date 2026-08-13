@@ -10,7 +10,7 @@ pub struct Pipeline<N: NodeTypesWithDB> {
     /// 디버그/테스트용 최대 블록 제한 — 프로덕션에서는 None
     max_block: Option<BlockNumber>,
     /// 각 Stage별 체크포인트(=마지막 처리 블록)를 추적하는 구조체
-    /// MDBX StageCheckpoints 테이블에서 로드/저장
+    /// provider가 노출한 checkpoint 저장 계약에서 로드/저장
     progress: PipelineProgress,
 }
 

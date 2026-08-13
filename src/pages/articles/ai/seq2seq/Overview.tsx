@@ -1,60 +1,64 @@
-import { RoughNotation } from 'react-rough-notation';
-import Seq2SeqFlowViz from './viz/Seq2SeqFlowViz';
-import S2SOverviewViz from './viz/S2SOverviewViz';
-import M from '@/components/ui/math';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ConditionalSequenceViz from "./viz/ConditionalSequenceViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Seq2Seq란</h2>
+      <h2 className="mb-6 text-2xl font-bold">Seq2Seq는 입력과 출력의 길이·순서를 독립적으로 모델링한다</h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>기계번역의 근본 문제</h3>
         <p>
-          영어{' '}
-          <RoughNotation type="highlight" show color="#fef08a" animationDelay={300}>
-            "Thank you"
-          </RoughNotation>
-          를 한국어로 번역하면{' '}
-          <RoughNotation type="highlight" show color="#bbf7d0" animationDelay={600}>
-            "고마워"
-          </RoughNotation>
-          <br />
-          단어 수가 다르고(2 → 1), 어순도 다르다<br />
-          입력과 출력의 길이가 달라도 처리할 수 있는 구조가 필요
+          분류 문제에서는 입력 하나에 label 하나를 붙이지만 번역은 그렇지 않습니다.
+          “Thank you”를 “고마워”로 번역하면 token 수와 어순이 달라지며, speech
+          recognition·summarization·image captioning도 입력 전체를 조건으로 새로운
+          sequence를 만들어야 합니다. 그래서 Seq2Seq(sequence-to-sequence)는
+          먼저 source를 읽는 encoder와 지금까지의 답을 이어 쓰는 decoder로 역할을
+          나눴고, 출력 길이도 EOS token을 통해 함께 학습했습니다.
         </p>
-
-        <h3>인코더-디코더 구조</h3>
         <p>
-          Sutskever et al. (2014) — LSTM 기반{' '}
-          <strong>인코더-디코더</strong>(Encoder-Decoder) 구조로 해결<br />
-          인코더: 입력 시퀀스를 하나의 고정 길이 벡터로 압축<br />
-          디코더: 그 벡터에서 출력 시퀀스를 생성<br />
-          입력·출력 길이가 달라도 동작 — "many-to-many" 매핑
+          2014년 LSTM Seq2Seq는 encoder가 source를 fixed-dimensional vector로 압축하고
+          decoder가 그 vector를 초기 조건으로 target을 autoregressive하게 생성했다.
+          이후 attention과 Transformer가 내부 operator를 바꿨지만, source X를 읽어
+          target sequence Y의 조건부 probability를 모델링한다는 문제 정의는 그대로 남아 있다.
+          BERT 같은 encoder-only model과 GPT 같은 decoder-only model은 모두
+          Transformer를 사용하더라도 이 encoder–decoder contract와는 다르다.
         </p>
-
-        <h3>Transformer의 기반 모델</h3>
         <p>
-          Seq2Seq → Attention 추가 → Transformer로 발전<br />
-          현대 GPT, BERT 모두 이 인코더-디코더 사상(思想)에서 출발
+          아래 식의 vertical bar와 product가 낯설다면 먼저
+          <Link to="/ai/math-probability-expectation-variance#conditional-probability"> 조건부확률과 확률의 연쇄법칙</Link>을
+          읽으면 됩니다. 전체 sequence 확률을 “앞에서 무엇을 봤는가”라는 작은 질문으로
+          나누는 단계부터 숫자 예제로 설명합니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <Seq2SeqFlowViz />
-      </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Seq2Seq 모델의 수학적 정의와 역사적 혁신</h3>
-        <S2SOverviewViz />
-        <M display>{'P(Y|X) = \\prod_{t=1}^{T\'} \\underbrace{P(y_t \\mid y_{<t},\\, X)}_{\\text{autoregressive 분해}}'}</M>
-        <p className="leading-7">
-          Encoder: <M>{'h_t = \\text{LSTM}(x_t,\\, h_{t-1})'}</M>, context <M>{'c = h_T'}</M><br />
-          Decoder: <M>{'s_t = \\text{LSTM}(y_{t-1},\\, s_{t-1},\\, c)'}</M>, <M>{'P(y_t) = \\text{softmax}(W \\cdot s_t)'}</M>
-        </p>
-        <M display>{'\\mathcal{L} = -\\sum_{t=1}^{T\'} \\underbrace{\\log P(y_t \\mid y_{<t},\\, X)}_{\\text{MLE: negative log-likelihood}}'}</M>
-        <p className="leading-7">
-          요약 1: Seq2Seq는 <strong>가변 길이 입력·출력</strong> 문제를 encoder-decoder로 해결.<br />
-          요약 2: <strong>조건부 확률 P(Y|X)</strong>를 autoregressive로 분해 — 현대 LLM의 본질.<br />
-          요약 3: Sutskever 2014가 <strong>Phrase-based MT 시대 종료</strong>를 선언한 역사적 모델.
+      <ConditionalSequenceViz />
+
+      <ExplainedFormula
+        question="가변 길이 target sequence 전체의 확률을 다음-token 확률로 어떻게 분해할까?"
+        idea={<>Probability chain rule을 적용하면 각 target token은 source X와 이전 target prefix y&lt;t에 조건부인 항으로 분해됩니다. EOS도 하나의 token이므로 종료 시점까지 같은 분해에 포함됩니다.</>}
+        formula={String.raw`\begin{aligned}p_t&=P_\theta(y_t\mid y_{<t},X)\\P_\theta(Y\mid X)&=\prod_{t=1}^{T}p_t\\\log P_\theta(Y\mid X)&=\sum_{t=1}^{T}\log p_t\end{aligned}`}
+        terms={[
+          { symbol: "X=(x_1,\\ldots,x_S)", name: "source sequence", description: "길이 S의 encoder 입력입니다." },
+          { symbol: "Y=(y_1,\\ldots,y_T)", name: "target sequence", description: "EOS를 포함할 수 있는 길이 T의 출력입니다." },
+          { symbol: "y_{<t}", name: "target prefix", description: "현재 token보다 앞에서 주어졌거나 생성된 token들입니다." },
+          { symbol: "\\theta", name: "model parameters", description: "Encoder·decoder·embedding·output projection을 함께 포함합니다." },
+        ]}
+        assumptions={["Target tokenization과 sequence ordering이 정의되어 있습니다.", "식은 probability identity이며 encoder가 RNN인지 Transformer인지 정하지 않습니다."]}
+        interpretation="Seq2Seq의 본질은 LSTM이라는 cell 이름이 아니라 P(Y|X)의 autoregressive factorization입니다. Architecture와 decoding은 각 conditional을 계산하고 탐색하는 방법입니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div id="paper-seq2seq" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
+          <p className="text-xs font-bold text-primary">논문 읽기 · 2014 Seq2Seq</p>
+          <p className="mt-2 text-sm font-semibold">Sequence to Sequence Learning with Neural Networks</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">이 논문이 보여 준 핵심은 깊은 LSTM 두 개로 가변 길이 source를 fixed-dimensional representation에 담고, 그 조건에서 가변 길이 target을 생성할 수 있다는 점입니다. Source 단어 순서를 뒤집은 실험은 해당 WMT setup에서 source와 target 사이의 짧은 dependency를 만들어 optimization을 도왔지만, 모든 sequence task에 reversal이 필요하다는 결론은 아닙니다.</p>
+          <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://proceedings.neurips.cc/paper_files/paper/2014/hash/a14ac55a4f27472c5d894ec1c3c743d2-Abstract.html" target="_blank" rel="noreferrer">원 논문과 실험 조건 보기</a>
+        </div>
+        <p>
+          Recurrent state와 LSTM gate는 <Link to="/ai/rnn">RNN 글</Link>과
+          <Link to="/ai/lstm">LSTM 글</Link>이 소유한다. 여기서는 두 network 사이의
+          interface와 조건부 generation에서 생기는 training·search 문제에 집중한다.
         </p>
       </div>
     </section>

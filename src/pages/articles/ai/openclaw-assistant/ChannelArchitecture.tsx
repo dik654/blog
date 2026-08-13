@@ -1,96 +1,133 @@
-import { CitationBlock } from '../../../../components/ui/citation';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { CodeViewButton } from "@/components/code";
+import { CitationBlock } from "@/components/ui/citation";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function ChannelArchitecture({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
+const ROUTE_STAGES = [
+  {
+    stage: "1 · Inbound normalize",
+    a: "Telegram event + user A + chat A",
+    b: "Slack event + user B + thread B",
+  },
+  {
+    stage: "2 · Authenticate / allowlist",
+    a: "Telegram identity가 허용 목록에 있는지 검사",
+    b: "Slack identity와 workspace/channel policy 검사",
+  },
+  {
+    stage: "3 · Deterministic binding",
+    a: "binding 규칙으로 agent-report 선택",
+    b: "binding 규칙으로 agent-customer 선택",
+  },
+  {
+    stage: "4 · Session scope",
+    a: "telegram + user-a session key",
+    b: "slack + user-b session key",
+  },
+  {
+    stage: "5 · Execute / return",
+    a: "typed result → 보존된 Telegram reply route",
+    b: "typed result → 보존된 Slack reply route",
+  },
+] as const;
+
+export default function ChannelArchitecture({
+  onCodeRef,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <>
-      <h3 className="text-xl font-semibold mt-6 mb-3">채널 아키텍처</h3>
-      {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton onClick={() => onCodeRef('oc-channel-router', codeRefs['oc-channel-router'])} />
-          <span className="text-[10px] text-muted-foreground self-center">channel-router.ts</span>
-        </div>
-      )}
+      <h3 className="mt-8 text-xl font-semibold">
+        channel adapter는 차이를 흡수하지만 identity를 지우지 않습니다
+      </h3>
+      <p>
+        Telegram과 Slack의 event payload는 서로 다르므로 adapter가 공통 inbound
+        shape로 정규화합니다. 다만 공통 형식으로 바꾸더라도 channel, account,
+        peer, thread 같은 identity와 reply metadata는 보존해야 합니다. 이 정보가
+        allowlist, binding, session scope, 최종 delivery를 결정하기 때문입니다.
+      </p>
+      <p>
+        channel의 pairing·DM/group policy·allowlist가 message를 받아들인 다음에
+        binding을 평가합니다. 구체적인 peer나 group-space match가 account
+        fallback보다 우선하고, 같은 specificity tier에서는 config에 먼저 적힌
+        binding이 이깁니다. <code>accountId</code>를 생략하면 default account만
+        match하므로 channel 전체 fallback은 <code>accountId: &quot;*&quot;</code>로 명시해야
+        합니다. 어떤 binding도 맞지 않으면 <code>default: true</code> agent가
+        처리하며, 변경 후에는 Gateway를 다시 시작하고 agent roster와 channel
+        probe로 실제 선택 결과를 확인합니다.
+      </p>
 
-      <div className="not-prose rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5 mb-4">
-        <h4 className="text-sm font-bold mb-3">채널 시스템</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-            <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">내장 채널 (src/)</span>
-            <ul className="text-sm mt-2 space-y-0.5">
-              <li>telegram/ — Telegram Bot API</li>
-              <li>discord/ — Discord Bot</li>
-              <li>slack/ — Slack App</li>
-              <li>signal/ — Signal Messenger</li>
-              <li>imessage/ — iMessage (macOS)</li>
-              <li>web/ — WhatsApp Web</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
-            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">확장 채널 (extensions/)</span>
-            <ul className="text-sm mt-2 space-y-0.5">
-              <li>msteams/ — Microsoft Teams</li>
-              <li>matrix/ — Matrix Protocol</li>
-              <li>zalo/ — Zalo Messenger</li>
-              <li>voice-call/ — 음성 통화</li>
-              <li>bluebubbles/ — BlueBubbles</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3 mb-3">
-          <span className="text-xs font-semibold">채널 공통 인터페이스</span>
-          <p className="text-xs mt-1 font-mono text-muted-foreground">Channel {'{ onMessage(msg), sendMessage(to, text), sendMedia(to, media) }'}</p>
-          <p className="text-xs text-muted-foreground mt-1">메시지 흐름: 채널 → 정규화 → 라우팅 → Pi 에이전트 실행 → 응답 → 채널</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
-            <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">메시지 처리 6단계</span>
-            <ol className="text-xs mt-2 space-y-0.5 list-decimal list-inside">
-              <li>Channel Ingress — 원시 이벤트 수신</li>
-              <li>정규화 & 중복 제거 — MsgContext 변환</li>
-              <li>접근 제어 — dmPolicy + groupPolicy</li>
-              <li>세션 해석 — 에이전트 세션 라우팅</li>
-              <li>명령/에이전트 처리 — Pi 루프 실행</li>
-              <li>응답 전달 — 플랫폼별 리치 메시지 변환</li>
-            </ol>
-          </div>
-          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3">
-            <span className="text-xs font-semibold">라우팅 규칙</span>
-            <ul className="text-sm mt-2 space-y-1">
-              <li><strong>DM</strong> — 1:1 대화, 항상 응답</li>
-              <li><strong>그룹</strong> — 멘션 또는 트리거 단어로 활성화</li>
-              <li><strong>멀티 에이전트</strong> — 채널/계정/피어별 격리된 에이전트에 라우팅</li>
-            </ul>
-            <p className="text-xs text-muted-foreground mt-1">에이전트마다 독립 워크스페이스 + 세션</p>
-          </div>
-        </div>
+      <div className="not-prose my-6 min-w-0 space-y-3">
+        {ROUTE_STAGES.map((item) => (
+          <article
+            key={item.stage}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <h4 className="break-words text-sm font-semibold">{item.stage}</h4>
+            <div className="mt-3 grid min-w-0 gap-3 text-xs leading-5 sm:grid-cols-2">
+              <p className="min-w-0 break-words">
+                <strong>Telegram A:</strong>{" "}
+                <span className="text-muted-foreground">{item.a}</span>
+              </p>
+              <p className="min-w-0 break-words">
+                <strong>Slack B:</strong>{" "}
+                <span className="text-muted-foreground">{item.b}</span>
+              </p>
+            </div>
+          </article>
+        ))}
       </div>
 
-      <CitationBlock source="OpenClaw — SKILL.md 형식 & ClawHub" citeKey={4} type="code"
-        href="https://github.com/anthropics/openclaw">
-        <div className="not-prose rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-          <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">SKILL.md 형식 예시</span>
-          <pre className="text-xs mt-2 overflow-x-auto">{`---
-name: my-skill
-description: "Custom automation skill"
-triggers: ["keyword1", "keyword2"]
-maxSpawnDepth: 2  # 서브에이전트 깊이 제한
-sandbox: docker    # fail-closed 샌드박스
----
+      <p>
+        model이 작성하는 것은 reply content입니다. delivery target은 Gateway가
+        inbound event에서 보존한 route와 policy로 정합니다. model output에
+        <code>channel: &quot;slack&quot;</code> 같은 문자열이 들어 있다는 이유로 Telegram
+        A의 응답을 Slack B에게 보내면, 자연어가 control plane을 덮어쓴 셈이
+        됩니다. channel 전환이 필요한 tool은 별도의 schema, 권한, 승인 경계를
+        가져야 합니다.
+      </p>
 
-# Instructions
-Use this skill to...`}</pre>
-          <p className="text-xs text-muted-foreground mt-2">ClawHub: 13,729+ 커뮤니티 스킬 마켓플레이스</p>
-        </div>
-        <p className="mt-2 text-xs text-foreground/70">
-          SKILL.md — 마크다운 기반 스킬 정의 형식. ClawHub에서 13,729+ 커뮤니티 스킬 배포,
-          Docker sandbox를 fail-closed로 운영하여 보안 보장
+      <div
+        id="paper-openclaw-agent-bindings"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Agent bindings
         </p>
-      </CitationBlock>
+        <CitationBlock
+          source="OpenClaw Docs — Agent Bindings"
+          citeKey={6}
+          type="paper"
+          href="https://docs.openclaw.ai/concepts/agent-bindings"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> 한 Gateway가 여러 channel account와 conversation을 받을 때 어느 agent가 답할지 재현 가능한 규칙이 필요합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> binding이 channel, account, peer, guild, team, role 같은 사실을 match해 agentId를 선택하고 specificity와 config order로 precedence를 정합니다.</p>
+            <p><strong>전제·조건:</strong> channel이 pairing, allowlist, account rule로 message를 이미 받아들인 뒤에 binding을 평가하며, 참조하는 agent와 account가 실제로 구성돼 있어야 합니다.</p>
+            <p><strong>근거 범위:</strong> default agent와 특정 traffic slice의 deterministic routing, binding precedence를 설명하는 공식 근거입니다.</p>
+            <p><strong>비주장:</strong> binding이 channel account를 생성하거나 사용자 접근 권한을 부여하고, session isolation까지 자동으로 보장한다는 뜻은 아닙니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      {onCodeRef && (
+        <aside className="not-prose my-6 rounded-lg border border-border/70 bg-muted/20 p-4">
+          <p className="text-sm font-semibold">분석용 channel-router 스냅샷</p>
+          <p className="mt-2 text-xs leading-5 text-muted-foreground">
+            아래 코드는 이 저장소에 함께 보관된 설명용 스냅샷입니다. 현재 OpenClaw의
+            public API나 파일 경로가 그대로 유지된다는 증거가 아니며, 위의 공식
+            문서 계약을 이해하기 위한 보조 자료로만 사용합니다.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef("oc-channel-router", codeRefs["oc-channel-router"])
+              }
+            />
+          </div>
+        </aside>
+      )}
     </>
   );
 }

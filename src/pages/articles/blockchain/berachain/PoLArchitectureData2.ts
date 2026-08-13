@@ -36,9 +36,21 @@ export type BlockLifecycleRow = {
 };
 
 export const blockLifecycleRows: BlockLifecycleRow[] = [
-  { stage: '블록 제안', ethereum: 'RANDAO로 선출된 proposer', beaconKit: 'CometBFT 라운드 로빈' },
-  { stage: 'EL 페이로드', ethereum: 'engine_forkchoiceUpdated', beaconKit: 'engine_forkchoiceUpdated (동일)' },
-  { stage: '합의 투표', ethereum: 'Attestation (비동기 gossip)', beaconKit: 'Prevote/Precommit (동기 BFT)' },
-  { stage: '최종성', ethereum: '2 에폭 (~12.8분)', beaconKit: '즉시 (1 블록)' },
-  { stage: '포크', ethereum: '가능 (reorg)', beaconKit: '불가 (BFT safety)' },
+  {
+    stage: "블록 제안",
+    ethereum: "RANDAO로 선출된 proposer",
+    beaconKit: "CometBFT 라운드 로빈",
+  },
+  {
+    stage: "EL 페이로드",
+    ethereum: "engine_forkchoiceUpdated",
+    beaconKit: "engine_forkchoiceUpdated (동일)",
+  },
+  {
+    stage: "합의 투표",
+    ethereum: "Attestation (비동기 gossip)",
+    beaconKit: "Prevote/Precommit (동기 BFT)",
+  },
+  { stage: "최종성", ethereum: "2 에폭 (~12.8분)", beaconKit: "즉시 (1 블록)" },
+  { stage: "포크", ethereum: "가능 (reorg)", beaconKit: "불가 (BFT safety)" },
 ];

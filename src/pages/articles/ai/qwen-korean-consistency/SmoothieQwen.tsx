@@ -1,183 +1,182 @@
-import SmoothieQwenViz from './viz/SmoothieQwenViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
+import SmoothieQwenViz from "./viz/SmoothieQwenViz";
 
 export default function SmoothieQwen() {
   return (
     <section id="smoothie-qwen" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Smoothie-Qwen: lm_head 재가중치</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        Smoothie-Qwen은 token risk를 lm_head 행의 scale로 바꿉니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          dnotitia가 만든 Smoothie-Qwen은 정확히 우리가 본 진단에서 출발한다.<br />
-          "lm_head의 한자 토큰 row가 한국어 토큰 row보다 강하게 학습돼 있다 → 한자 logit이 한국어 logit을 이긴다."<br />
-          그럼 그 row를 직접 줄이면 되지 않냐. 이 한 문장이 알고리즘 전부다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          프롬프트가 요청 시점의 정책이라면 Smoothie-Qwen은 학습이 끝난
+          checkpoint의 <strong>출력층 weight를 직접 수정</strong>하는 post-hoc
+          방법입니다. tokenizer에서 목표 문자와 관련된 token을 찾고, token마다
+          선택한 Unicode 문자군으로 decode될 위험도 <code>r</code>을 계산한 뒤,
+          <code>lm_head</code>의 해당 행에 0보다 크고 1 이하인 scale을 곱합니다.
+          Transformer 본체를 다시 학습하지는 않지만 weight가 달라지므로, 원본과
+          별개의 모델 후보로 평가하고 저장해야 합니다.
         </p>
-        <p className="leading-7">
-          재학습이 없다. fine-tuning도 없다. RL도 없다.<br />
-          기존 Qwen 모델 가중치를 한 번 변환하고, 변환된 가중치를 그대로 배포한다.<br />
-          비용은 GPU 한 장으로 몇 분, 효과는 한자 leakage 95%+ 감소.
+        <p>
+          이 방법의 대상은 “중국어라는 의미”가 아니라 tokenizer와 Unicode
+          조합으로 근사한 token risk입니다. 따라서 고정 사례에서 계산 설명에
+          우연히 섞인 중국어를 줄일 수 있어도, 사용자가 명시적으로 요구한 번역
+          “首尔” 역시 약해질 수 있습니다. suppression과 정상 예외 보존을 같은
+          paired evaluation에서 함께 봐야 하는 이유입니다.
         </p>
+      </div>
 
-        <div className="not-prose my-8"><SmoothieQwenViz /></div>
+      <div className="not-prose my-8">
+        <SmoothieQwenViz />
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">lm_head는 row 단위로 만질 수 있다</h3>
-        <p className="leading-7">
-          출발은 lm_head의 형태를 정확히 보는 것이다.<br />
-          Qwen3-8B를 예로 들면 lm_head는 약 (152K, 4096) 모양의 Linear 한 장이다.<br />
-          행렬 W의 각 row 가 토큰 하나에 대응한다 — token id <code>t</code>의 row <code>W[t, :]</code> 가 그 토큰의 "의미 벡터"다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>질문: risk가 0에서 1로 커질 때 얼마만큼 낮출까요?</h3>
+        <p>
+          모든 관련 token에 같은 계수를 곱하면, 명백한 목표 문자와 우연히 그
+          문자를 만들 수 있는 subword 조각을 똑같이 벌점 줍니다. 논문은 risk가
+          낮은 token은 거의 그대로 두고, risk가 1에 가까울수록
+          <code>min_scale</code>에 접근하는 로그 곡선을 사용합니다.
         </p>
-        <p className="leading-7">
-          디코딩 마지막 단계는 <code>z[t] = W[t, :] · h</code> 그리고 <code>softmax(z)</code> 위의 sampling.<br />
-          여기서 핵심 관찰: <strong>row 하나를 만져도 다른 row는 전혀 영향받지 않는다</strong>.<br />
-          한자 토큰 row만 줄이면 한자 토큰의 logit만 줄어든다. 한국어 토큰의 절대 logit은 보존된다.
-        </p>
-        <p className="leading-7">
-          이게 왜 중요한가.<br />
-          fine-tuning은 모든 파라미터를 동시에 움직인다. 한국어 표현을 학습하다가 영어 reasoning이 망가질 수 있다.<br />
-          row 단위 스케일링은 부작용이 row 하나에 갇힌다. 다른 능력을 건드릴 경로가 구조적으로 차단된다.
-        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">한자 토큰 ID 수집 — vocab 한 번 순회</h3>
-        <p className="leading-7">
-          첫 단계는 어떤 row를 손댈지 결정하는 것이다.<br />
-          tokenizer.get_vocab()을 돌면서 각 토큰 문자열을 디코딩한다. 그 안에 U+4E00~9FFF 범위 문자가 포함되면 "한자 토큰"으로 분류한다.
-        </p>
-        <p className="leading-7">
-          BBPE(Byte-level BPE) 토크나이저는 일부 토큰이 바이트 조각이라 단순 비교가 안 된다.<br />
-          하지만 Smoothie-Qwen은 디코딩 후 검사하므로 바이트 조각도 정상적으로 분류된다.<br />
-          결과: Qwen3 vocab 152K 중 약 2~3만 개가 한자 토큰. 전체의 15~20%.
-        </p>
-        <p className="leading-7">
-          이 분류 단계에서 흥미로운 디테일 하나 — 한 토큰 안에 한자와 한글이 섞인 케이스가 있다.<br />
-          예를 들어 BBPE 병합 결과 "한자漢" 같은 토큰이 vocab에 들어 있을 수 있다.<br />
-          이런 토큰을 어떻게 처리하느냐가 다음 단계 "purity" 개념의 출발점이다.
-        </p>
+      <ExplainedFormula
+        question="token risk r을 lm_head에 곱할 scale S(r)로 어떻게 바꿀까요?"
+        idea={
+          <>
+            Risk가 0이면 원래 weight를 유지하고, risk가 1이면 최소 scale m만큼만
+            남깁니다. 중간 위험도는 smoothness s가 정하는 로그 곡선을 따라
+            연속적으로 보간합니다.
+          </>
+        }
+        formula={String.raw`S(r)=1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}`}
+        terms={[
+          { symbol: "r", name: "risk score", description: "token이 목표 문자군을 직접 포함하거나 조합해 만들 가능성을 0에서 1 사이로 근사한 값입니다." },
+          { symbol: "m", name: "min_scale", description: "risk가 1인 token에도 남겨 둘 weight 비율의 하한입니다." },
+          { symbol: "s", name: "smoothness", description: "중간 risk에서 scale이 얼마나 빠르게 m 쪽으로 내려갈지 정하는 곡선 파라미터입니다." },
+          { symbol: "S(r)", name: "token scale", description: "해당 token의 lm_head 행에 곱할 최종 계수입니다." },
+        ]}
+        assumptions={[
+          "논문·공개 구현의 정의에서는 r∈[0,1], 0<m≤1, s>1을 사용합니다.",
+          "r=0이면 S(0)=1이고 r=1이면 S(1)=m이지만, 이는 token의 실제 생성 확률이 그 비율로 줄어든다는 뜻은 아닙니다.",
+          "s=1이면 log(s)=0이 되어 분모가 0이므로 위 식에 그대로 대입할 수 없습니다.",
+          "Risk score는 Unicode target, broken token과 n-gram sampling 규칙이 만든 근사치이며 언어 의미를 판별하는 oracle이 아닙니다.",
+        ]}
+        interpretation="m=0.5, s=10, r=0.5를 대입하면 S(r)=1−0.5·log(5.5)/log(10)≈0.630입니다. s가 클수록 중간 risk에서도 scale이 더 빨리 낮아지지만, 가장 강한 token도 weight를 0으로 만들지는 않습니다. 어느 m과 s가 적절한지는 서비스의 suppression·정확도·정상 번역 보존 결과로 정해야 합니다."
+      />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">스케일링 곡선 — purity와 smoothness</h3>
-        <p className="leading-7">
-          모든 한자 토큰을 똑같이 절반으로 줄이면 거친 cutoff가 생긴다.<br />
-          경계 토큰 — 한자가 한 글자만 섞인 토큰 — 도 똑같이 강하게 줄이면 자연스러운 한국어 표현이 손상될 수 있다.<br />
-          그래서 Smoothie-Qwen은 토큰 안 한자 비율(purity)에 따라 스케일을 부드럽게 변화시킨다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>risk score는 세 종류 token을 다르게 취급합니다</h3>
+        <p>
+          첫째, 설정한 Unicode 범위에 직접 들어가는 <strong>target token</strong>은
+          높은 risk를 받습니다. 둘째, tokenizer가 문자를 byte/subword 조각으로
+          나누면서 생기는 <strong>broken token</strong>은 혼자서는 언어를 판정하기
+          어렵습니다. 셋째, 구현은 이 조각을 다른 token과 2~4-gram으로 조합해
+          목표 문자를 만드는 비율을 sampling하고 risk를 근사합니다.
         </p>
-        <p className="leading-7">
-          공식은 시그모이드 한 줄이다.
-        </p>
-        <pre className="text-sm bg-muted p-3 rounded">
-          α(p) = min_scale + (1 − min_scale) · σ(−smoothness · (p − 0.5))
-        </pre>
-        <p className="leading-7">
-          여기서 <code>p</code>는 토큰의 한자 purity, <code>α</code>는 그 토큰 row에 곱할 스케일이다.<br />
-          <strong>min_scale</strong>은 최대로 깎였을 때 도달하는 바닥값 (권장 0.5).<br />
-          <strong>smoothness</strong>는 시그모이드의 가파름 (권장 10.0).
-        </p>
-        <p className="leading-7">
-          곡선의 형태:<br />
-          순한국어 토큰 (p≈0) → α≈1, 거의 손대지 않음.<br />
-          순한자 토큰 (p≈1) → α=0.5, 절반으로 축소.<br />
-          경계 토큰 (p=0.5 부근) → 시그모이드의 부드러운 전이 구간.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>왜 곡선인가</strong> — 단순 binary 컷오프 (한자 토큰은 무조건 0.5)는 경계에서 두 가지 문제를 만든다.<br />
-          (1) "한자가 한 글자만 섞인" 한국 단어 표기 토큰까지 강하게 깎임 → 자연스러운 한국어 표현 손상.<br />
-          (2) 같은 의미의 토큰이 토크나이저 분할에 따라 강하게/약하게 깎이는 비대칭 → 출력 일관성 저하.<br />
-          smoothness 파라미터로 전이 구간을 부드럽게 만들면 두 문제가 동시에 완화된다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">한 줄짜리 weight 변환</h3>
-        <p className="leading-7">
-          α를 정했으면 적용은 한 줄이다.
-        </p>
-        <pre className="text-sm bg-muted p-3 rounded">
-          {`for t in cjk_token_ids:
-    W[t, :] *= alpha[t]`}
-        </pre>
-        <p className="leading-7">
-          linear 연산이라 logit이 정확히 비례 축소된다.<br />
-          <code>z_new[t] = (α · W[t]) · h = α · z_old[t]</code>.<br />
-          α &lt; 1 이면 z[t]가 작아지고, softmax에서 그 토큰의 확률이 줄어든다.
-        </p>
-        <p className="leading-7">
-          중요한 건 다른 토큰의 logit은 손대지 않는다는 점이다.<br />
-          한국어 토큰의 절대 logit은 변환 전과 정확히 같다 — bias도 없고 hidden state도 그대로다.<br />
-          그런데도 softmax 분포에서 한국어 토큰의 확률은 올라간다. 어떻게?
+        <p>
+          그러므로 “중국어 token 목록을 완벽하게 찾았다”가 아니라 “선택한 Unicode
+          범위와 sampling recipe 아래에서 위험도를 추정했다”가 정확한 설명입니다.
+          tokenizer version, normalization, n-gram window와 sample size가 바뀌면
+          risk도 달라질 수 있으므로 변환 artifact에 함께 기록해야 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">분포가 어떻게 뒤집히는가</h3>
-        <p className="leading-7">
-          softmax는 분자/분모 구조다. 분모는 모든 토큰의 exp(logit) 합이다.<br />
-          한자 토큰의 logit이 일괄로 낮아지면 exp(z[한자])들이 작아지고, 분모 자체가 작아진다.<br />
-          한국어 토큰의 분자 exp(z[한국어])는 그대로인데 분모만 작아지므로 — 확률이 자동으로 올라간다.
-        </p>
-        <p className="leading-7">
-          구체적인 수치로 보자.<br />
-          가드 전: P(分析)=0.55, P(분석)=0.30, 격차 0.25.<br />
-          α=0.5 적용 후: P(分析)=0.32, P(분석)=0.42. 격차 0.10, 부호가 뒤집혔다.
-        </p>
-        <p className="leading-7">
-          prompt 한 줄로는 절대 못 건드렸던 0.1 logit 격차를, weight 한 번 만져서 끝낸다.<br />
-          이게 "입력단보다 출력단에 가까운 해법이 더 강력하다"는 명제의 가장 깔끔한 사례다.
-        </p>
+        <h3>행을 줄여도 확률은 vocabulary 전체에서 다시 계산됩니다</h3>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">왜 일반 태스크 정확도는 거의 보존되는가</h3>
-        <p className="leading-7">
-          여기서 자연스럽게 따라오는 의문 — "한자 logit을 깎으면 중국어 능력은 망가지지 않나? 다른 reasoning에는 영향 없나?"<br />
-          답은 영향이 미미하다는 것인데, 그 이유가 흥미롭다.
-        </p>
-        <p className="leading-7">
-          첫째, 한자 토큰만 손대므로 한국어/영어/코드 토큰의 분포는 그대로 살아 있다.<br />
-          MMLU(영어 reasoning), HumanEval(코드)는 한자를 거의 안 쓰므로 영향이 없다.<br />
-          KMMLU(한국어 reasoning)는 오히려 leakage가 줄어 가독성이 개선되는 효과까지 있다.
-        </p>
-        <p className="leading-7">
-          둘째, α를 너무 낮추지 않는 게 핵심이다. min_scale=0.5는 "한자를 못 쓰게" 만드는 게 아니라 "한국어와 동등한 경쟁자로 끌어내리는" 수준이다.<br />
-          중국어 컨텍스트가 입력으로 들어오면 hidden state h가 한자 친화적으로 형성되고, 그 h는 α가 적용된 W[한자, :]에 대해서도 충분히 큰 inner product를 만든다.<br />
-          즉 중국어 입력에는 여전히 중국어 출력이 나온다.
-        </p>
-        <p className="leading-7">
-          저자 보고에 따르면 min_scale=0.5, smoothness=10.0 조합에서 의도치 않은 중국어 생성 95%+ 감소, 일반 태스크 정확도 손실 평균 2~3% 이내.<br />
-          비대칭적으로 좋은 trade — 잃는 게 거의 없고 얻는 게 매우 크다.
-        </p>
+      <ExplainedFormula
+        question="token t의 lm_head 행을 줄이면 그 token의 확률만 같은 비율로 줄어들까요?"
+        idea={
+          <>
+            Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과 hidden state의 내적이 새
+            logit을 만듭니다. 그 뒤 softmax가 vocabulary 전체 logit을 한꺼번에
+            정규화하므로 효과는 다른 후보와의 상대 순위에 달려 있습니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+w'_t&=S(r_t)w_t\\
+z'_t&=(w'_t)^{\top}h\\
+p'(t\mid h)&=\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}
+\end{aligned}`}
+        terms={[
+          { symbol: "w_t, w'_t", name: "original and scaled lm_head row", description: "token t를 hidden state에서 logit으로 투영하는 변환 전·후 weight 벡터입니다." },
+          { symbol: "h", name: "hidden state", description: "현재까지의 token 문맥을 Transformer가 만든 표현입니다." },
+          { symbol: "z'_t", name: "scaled logit", description: "softmax에 들어가기 전 token t의 새 점수입니다." },
+          { symbol: "𝒱", name: "vocabulary", description: "현재 단계에서 softmax 분모를 함께 구성하는 모든 token 후보입니다." },
+          { symbol: "p'(t|h)", name: "relative next-token probability", description: "같은 문맥 h에서 token t가 다음 token으로 선택될 상대 확률입니다." },
+        ]}
+        assumptions={[
+          "lm_head에 bias가 있다면 실제 logit 식에는 bias 항도 포함해야 합니다.",
+          "Input embedding과 lm_head weight가 tied된 architecture라면 output row 편집이 공유 weight에 어떤 영향을 주는지 model implementation을 확인해야 합니다.",
+          "양의 logit은 0<S<1을 곱하면 낮아지지만, 음의 logit은 0에 가까워져 오히려 상대 확률이 늘 수 있습니다.",
+          "다른 token의 행을 직접 바꾸지 않아도 softmax 분모가 달라지므로 모든 후보의 상대 확률은 함께 변합니다.",
+        ]}
+        interpretation="예를 들어 logit이 (4,2,0)이고 첫 행의 결과만 0.5배가 되면 새 logit은 (2,2,0)이며 softmax는 약 (0.468,0.468,0.063)입니다. 첫 확률만 절반이 아니라 세 확률이 함께 다시 정규화됩니다. Smoothie 논문은 대상 high-risk token의 logit이 실험에서 대체로 양수였다고 보고하지만 모든 문맥의 보장은 아니므로, 변환 전후의 logit 분포와 실제 생성 결과를 paired prompt에서 확인해야 합니다."
+      />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">하이퍼파라미터를 더 만지면 어떻게 되는가</h3>
-        <p className="leading-7">
-          min_scale을 더 낮추면 (예: 0.2) 한자 leakage가 거의 0에 가까워진다.<br />
-          하지만 일반 태스크 정확도 손실이 5%를 넘기 시작한다. 한자 토큰이 정상적으로 등장해야 할 자리(중국어 입력, 고유명사)도 망가진다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>고정 사례로 paired evaluation을 만듭니다</h3>
+        <p>
+          원본과 smoothing 후보에 완전히 같은 prompt·decoding 설정을 넣고, 계산
+          근거의 예기치 않은 중국어 span, 최종 정답 3,200원, 번역 정답 “首尔”을
+          따로 채점합니다. 억제 지표만 좋아지고 번역 정답률이 떨어진다면 risk
+          범위나 <code>m</code>·<code>s</code>가 과격한 것입니다. 한국어-only
+          slice와 명시적 중국어 translation slice를 쌍으로 두지 않으면 이 회귀를
+          발견하기 어렵습니다.
         </p>
-        <p className="leading-7">
-          smoothness를 낮추면 (예: 3.0) 전이 구간이 넓어져서 경계 토큰이 더 부드럽게 처리된다.<br />
-          반대로 높이면 (예: 20.0) 거의 binary cutoff에 가까워져서 leakage 제거 효과는 강해지지만 경계 토큰 손상이 커진다.
-        </p>
-        <p className="leading-7">
-          저자가 권장하는 0.5 / 10.0 조합은 sweet spot이다.<br />
-          더 손대지 않고 그대로 쓰는 게 가장 안전하다.
-        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">배포 — 변환된 모델을 그대로 받기</h3>
-        <p className="leading-7">
-          좋은 소식: 직접 변환할 필요가 없다.<br />
-          dnotitia가 변환을 끝낸 모델을 Hugging Face에 올려뒀다. 모델 이름만 바꾸면 끝이다.
-        </p>
-        <pre className="text-sm bg-muted p-3 rounded">
-          {`# 기존
-model_name = "Qwen/Qwen3-8B"
+      <div
+        id="paper-smoothie-qwen"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">근거 읽기 · Smoothie-Qwen 논문</p>
+        <CitationBlock
+          source="Ji et al. — Smoothie-Qwen"
+          citeKey={2}
+          type="paper"
+          href="https://arxiv.org/abs/2507.05686"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> 다국어 Qwen이 prompt 언어와 무관하게 중국어를 과도하게 생성하는 language confusion을 재학습 없이 줄이려 합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Unicode·broken token·n-gram으로 token risk를 추정하고, 비선형 scale로 lm_head 행을 낮추는 post-hoc 변환을 제안합니다.</p>
+            <p><strong>전제·실험 조건:</strong> 공개 실험은 Qwen2.5-Coder-14B-Instruct, 설정된 중국어 Unicode 범위, custom elicitation과 일부 KMMLU slice를 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 해당 모델과 평가에서 suppression과 task accuracy의 trade-off를 측정한 증거이며, 식의 endpoint와 logit 부호에 따른 효과도 분석합니다.</p>
+            <p><strong>비주장:</strong> 모든 Qwen checkpoint·언어·tokenizer에서 95% 이상 개선되거나 정상 번역과 지식이 항상 보존된다는 보편 법칙은 아닙니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
 
-# 교체
-model_name = "dnotitia/Smoothie-Qwen3-8B"`}
-        </pre>
-        <p className="leading-7">
-          지원 사이즈는 거의 전체다.<br />
-          Qwen3: 0.6B / 1.7B / 4B / 8B / 14B / 32B / 235B.<br />
-          Qwen2.5: 0.5B ~ 72B 전 사이즈.<br />
-          라이선스는 Apache 2.0 — 상용 사용 가능.
-        </p>
-        <p className="leading-7">
-          자체 변환이 필요한 경우(파인튜닝된 커스텀 모델 등)는 smoothie-qwen 패키지를 쓰면 함수 한 번 호출로 변환된다.<br />
-          GPU 한 장에서 몇 분이면 끝난다 — lm_head 행렬 한 장만 만지므로 메모리도 적게 든다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>실전 권장</strong> — 한국어 에이전트로 Qwen을 쓰고 있다면, 우선 Smoothie-Qwen 변형으로 갈아끼우는 것부터 해보자.<br />
-          코드 변경: 모델 이름 한 줄. 비용: 0. 효과: 한자 leakage 95%+ 감소.<br />
-          이걸 해본 다음에도 남는 leakage(주로 reasoning 깊숙한 곳)가 있다면, 그때 RL이나 런타임 가드를 검토하면 된다.<br />
-          순서를 거꾸로 가면 — 프롬프트 → 런타임 가드 → 결국 Smoothie — 그 사이의 며칠을 그냥 잃는다.
+      <div
+        id="paper-smoothie-qwen-code"
+        className="not-prose my-8 scroll-mt-24 border-l border-emerald-500/50 pl-4"
+      >
+        <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">구현 읽기 · 공개 변환 코드</p>
+        <CitationBlock
+          source="dnotitia/smoothie-qwen"
+          citeKey={3}
+          type="code"
+          href="https://github.com/dnotitia/smoothie-qwen"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> 논문의 token 분석과 weight 변환을 실제 Qwen checkpoint에 재현할 설정·코드·artifact가 필요합니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Unicode target, n-gram window·sample, min_scale·smoothness를 설정 파일로 받아 변환 모델을 별도 경로에 저장합니다.</p>
+            <p><strong>전제·실험 조건:</strong> 지원 model class와 tokenizer, repository revision, config, dependency version이 맞아야 같은 결과를 재현할 수 있습니다.</p>
+            <p><strong>근거 범위:</strong> algorithm의 실행 계약과 공개 checkpoint 목록, README의 제한된 실험표를 확인하는 구현 근거입니다.</p>
+            <p><strong>비주장:</strong> 저장소의 기본값이 특정 서비스의 최적값이거나 공개 checkpoint가 사내 데이터에서도 회귀 없이 동작한다는 보장은 아닙니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          변환본은 원본 checkpoint를 덮어쓰지 않고 config·tokenizer·risk 목록의
+          digest와 함께 versioning합니다. paired evaluation에서 정상 예외와
+          과제 품질을 통과했을 때만 canary로 보내며, 문자 suppression이 아니라
+          reasoning 구간 전체가 다른 언어로 전환되는 문제가 남는다면 다음 절의
+          SFT·RL이 더 직접적인 개입입니다.
         </p>
       </div>
     </section>

@@ -1,84 +1,52 @@
-import SigmoidViz from './viz/SigmoidViz';
-import SigmoidDetailViz from './viz/SigmoidDetailViz';
-import VanishingGradientViz from './viz/VanishingGradientViz';
-import SigmoidUsageViz from './viz/SigmoidUsageViz';
+import M from "@/components/ui/math";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SigmoidViz from "./viz/SigmoidViz";
+import SigmoidUsageViz from "./viz/SigmoidUsageViz";
 
 export default function Sigmoid() {
   return (
     <section id="sigmoid" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">시그모이드 (Sigmoid)</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        σ(x) = 1/(1+e^-x) — 매끄러운 S자 곡선, 출력 0~1.<br />
-        문제: Vanishing Gradient(σ&apos; 최대 0.25) + 비영점 중심 출력.
-      </p>
+      <h2 className="mb-6 text-2xl font-bold">Sigmoid: logit을 0과 1 사이로 바꾸기</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          sigmoid는 실수 입력을 <M>{"(0,1)"}</M> 범위로 부드럽게 압축한다. 이
+          출력은 Bernoulli 확률이나 gate의 개방 비율로 해석하기 좋아서 binary
+          classification, multi-label classification, LSTM·GRU gate에 지금도
+          널리 쓰인다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="범위가 없는 logit을 0과 1 사이의 값으로 바꾸면서 gradient도 남기려면?"
+        idea={<>지수함수로 큰 음수는 0 가까이, 큰 양수는 1 가까이 압축합니다. Derivative를 output 자체로 다시 쓸 수 있어 backward 계산도 간단합니다.</>}
+        formula={String.raw`\sigma(x)=\frac{1}{1+e^{-x}},\qquad \sigma'(x)=\sigma(x)(1-\sigma(x))`}
+        terms={[
+          { symbol: "x", name: "logit", description: "확률로 변환하기 전의 범위 제한이 없는 score입니다." },
+          { symbol: String.raw`\sigma(x)`, name: "0–1 output", description: "Bernoulli probability나 gate의 개방 비율로 해석할 수 있습니다." },
+          { symbol: String.raw`\sigma(x)(1-\sigma(x))`, name: "local derivative", description: "출력이 양 끝에 가까울수록 0에 접근하고 x=0에서 최대 0.25입니다." },
+        ]}
+        assumptions={["확률로 읽으려면 output과 loss가 Bernoulli likelihood 계약에 맞아야 합니다.", "수치 계산에서는 sigmoid 뒤 log를 따로 계산하지 않고 logits 기반 fused loss를 사용합니다."]}
+        interpretation="x=0이면 output 0.5와 derivative 0.25를 얻지만, x=10이면 output이 거의 1이라 derivative는 거의 0입니다. 이 차이가 saturation입니다."
+      />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>hidden layer의 기본값에서 밀려난 이유</h3>
+        <p>
+          입력의 절댓값이 커지면 출력이 0이나 1에 가까워지고 derivative가 0에
+          수렴한다. 여러 층에서 작은 derivative가 반복해서 곱해지면 앞쪽 층의
+          gradient가 작아질 수 있다. 최대 derivative가 0.25라는 사실만으로 실제
+          gradient가 정확히 <M>{"0.25^N"}</M>이 된다고 계산할 수는 없지만,
+          saturation이 deep network의 optimization을 어렵게 만든다는 방향은 같다.
+        </p>
+        <h3>출력에서는 fused loss를 쓴다</h3>
+        <p>
+          구현에서는 sigmoid를 적용한 뒤 log를 직접 취하기보다
+          <code>BCEWithLogitsLoss</code>처럼 logit을 바로 받는 fused 연산을 쓰는
+          편이 안전하다. log-sum-exp 계열의 안정화로 매우 큰 양수·음수에서도 overflow와
+          <M>{"\\log 0"}</M>을 피할 수 있기 때문이다.
+        </p>
+      </div>
       <SigmoidViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Sigmoid 정의 & 역사</h3>
-        <p>
-          1800년대 logistic regression에서 시작, 1980-90년대 신경망 표준 activation으로 자리잡음.<br />
-          2010년대 이후 hidden layer에선 ReLU로 대체 — output/gating에서 여전히 핵심.
-        </p>
-      </div>
-      <SigmoidDetailViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Vanishing Gradient 문제</h3>
-        <p>
-          σ'(x) 최대값 0.25 → N층 쌓으면 gradient ∝ 0.25ᴺ로 지수적 감쇠<br />
-          20층이면 1e-12 수준, 학습 한계(1e-6) 훨씬 아래
-        </p>
-      </div>
-      <VanishingGradientViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">비영점 중심 출력 문제</h3>
-        <p>
-          Sigmoid 출력은 항상 양수 → gradient 부호가 같아져 weight 업데이트가 지그재그.<br />
-          SigmoidDetailViz의 Step 1에서 이 과정을 시각적으로 확인.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Sigmoid 현대 사용</h3>
-        <p>
-          Hidden layer에선 ReLU/GELU에 자리 내줌 — 하지만 Output/Gating에선 여전히 필수
-        </p>
-      </div>
-      <SigmoidUsageViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">PyTorch 사용법</h3>
-        <p>
-          sigmoid + log + BCE를 직접 조합하면 수치 불안정 — BCEWithLogitsLoss가 내부에서 log-sum-exp 트릭 적용.<br />
-          SigmoidDetailViz의 Step 3에서 Bad vs Good 패턴 비교.
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Sigmoid의 생명력</p>
-          <p>
-            <strong>Hidden layer 사용 종료 이유</strong>:<br />
-            - Vanishing gradient (지수적 감소)<br />
-            - Saturation 시 학습 정체<br />
-            - exp 계산 비용<br />
-            - Non-zero-centered output
-          </p>
-          <p className="mt-2">
-            <strong>하지만 여전히 필수</strong>:<br />
-            ✓ Binary classification output<br />
-            ✓ LSTM/GRU gates<br />
-            ✓ Attention gating<br />
-            ✓ Probability calibration<br />
-            ✓ Multi-label classification
-          </p>
-          <p className="mt-2">
-            <strong>현대적 교훈</strong>:<br />
-            - Activation 선택은 위치 의존<br />
-            - "Output layer" vs "Hidden layer" 역할 다름<br />
-            - Sigmoid는 probabilistic interpretation이 필요한 곳<br />
-            - "Old is gold" 일부 구조에선 여전히 최적
-          </p>
-        </div>
-
+      <div className="mt-8">
+        <SigmoidUsageViz />
       </div>
     </section>
   );

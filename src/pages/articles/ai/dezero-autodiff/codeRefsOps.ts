@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const opsCodeRefs: Record<string, CodeRef> = {
-  'add-fn': {
-    path: 'src/lib.rs — AddFn / MulFn',
-    lang: 'rust',
+  "add-fn": {
+    path: "src/lib.rs — AddFn / MulFn",
+    lang: "rust",
     highlight: [1, 31],
-    desc: '사칙연산의 forward/backward 쌍.\n역전파 규칙: Add는 그대로 전달, Mul은 교차 곱.',
+    desc: "사칙연산의 forward/backward 쌍.\n역전파 규칙: Add는 그대로 전달, Mul은 교차 곱.",
     code: `struct AddFn;
 
 impl Function for AddFn {
@@ -38,9 +38,21 @@ impl Function for MulFn {
     }
 }`,
     annotations: [
-      { lines: [9, 12], color: 'sky', note: 'Add 역전파 — dy/dx = 1이므로 gy 그대로 전달' },
-      { lines: [11, 12], color: 'emerald', note: 'sum_to — broadcast된 shape를 원래 shape로 축소' },
-      { lines: [26, 29], color: 'amber', note: 'Mul 역전파 — dy/dx = y, dy/dy = x (교차 곱)' },
+      {
+        lines: [9, 12],
+        color: "sky",
+        note: "Add 역전파 — dy/dx = 1이므로 gy 그대로 전달",
+      },
+      {
+        lines: [11, 12],
+        color: "emerald",
+        note: "sum_to — broadcast된 shape를 원래 shape로 축소",
+      },
+      {
+        lines: [26, 29],
+        color: "amber",
+        note: "Mul 역전파 — dy/dx = y, dy/dy = x (교차 곱)",
+      },
     ],
   },
 };

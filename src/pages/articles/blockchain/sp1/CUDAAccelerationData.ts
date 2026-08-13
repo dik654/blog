@@ -23,11 +23,11 @@ impl Prover for CudaProver {
 }`;
 
 export const PERF = [
-  { op: 'NTT (2^22)', cpu: '~800ms', gpu: '~15ms', speedup: '~53x' },
-  { op: 'MSM (2^22)', cpu: '~2.5s', gpu: '~50ms', speedup: '~50x' },
-  { op: 'Poseidon2 해시', cpu: '~300ms', gpu: '~5ms', speedup: '~60x' },
-  { op: 'FRI 커밋', cpu: '~1.2s', gpu: '~25ms', speedup: '~48x' },
-  { op: '전체 샤드 증명', cpu: '~15s', gpu: '~0.3s', speedup: '~50x' },
+  { op: "NTT (2^22)", cpu: "~800ms", gpu: "~15ms", speedup: "~53x" },
+  { op: "MSM (2^22)", cpu: "~2.5s", gpu: "~50ms", speedup: "~50x" },
+  { op: "Poseidon2 해시", cpu: "~300ms", gpu: "~5ms", speedup: "~60x" },
+  { op: "FRI 커밋", cpu: "~1.2s", gpu: "~25ms", speedup: "~48x" },
+  { op: "전체 샤드 증명", cpu: "~15s", gpu: "~0.3s", speedup: "~50x" },
 ];
 
 export const ENV_CODE = `# CUDA 프로버 사용 (환경 변수)
@@ -45,13 +45,37 @@ let client = ProverClient::builder()
 # - 대형 프로그램: A100/H100 권장`;
 
 export const cudaAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: 'CudaProver — CPU 로직 + GPU 디바이스' },
-  { lines: [11, 20] as [number, number], color: 'emerald' as const, note: 'GPU 핵심 연산 4가지' },
-  { lines: [22, 22] as [number, number], color: 'amber' as const, note: 'CUDA 커널 호출' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "CudaProver — CPU 로직 + GPU 디바이스",
+  },
+  {
+    lines: [11, 20] as [number, number],
+    color: "emerald" as const,
+    note: "GPU 핵심 연산 4가지",
+  },
+  {
+    lines: [22, 22] as [number, number],
+    color: "amber" as const,
+    note: "CUDA 커널 호출",
+  },
 ];
 
 export const envAnnotations = [
-  { lines: [1, 2] as [number, number], color: 'sky' as const, note: '환경 변수로 CUDA 선택' },
-  { lines: [4, 7] as [number, number], color: 'emerald' as const, note: '코드에서 직접 빌더 패턴' },
-  { lines: [9, 13] as [number, number], color: 'amber' as const, note: 'GPU 하드웨어 요구사항' },
+  {
+    lines: [1, 2] as [number, number],
+    color: "sky" as const,
+    note: "환경 변수로 CUDA 선택",
+  },
+  {
+    lines: [4, 7] as [number, number],
+    color: "emerald" as const,
+    note: "코드에서 직접 빌더 패턴",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "amber" as const,
+    note: "GPU 하드웨어 요구사항",
+  },
 ];

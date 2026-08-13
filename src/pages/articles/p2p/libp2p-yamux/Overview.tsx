@@ -1,22 +1,43 @@
-import { motion } from 'framer-motion';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from '../libp2p/codeRefs';
+import { motion } from "framer-motion";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "../libp2p/codeRefs";
 
 const PROTOCOLS = [
-  { name: 'Kademlia DHT', desc: '피어 탐색, FIND_NODE 질의', color: '#8b5cf6' },
-  { name: 'GossipSub', desc: '메시지 브로드캐스트, heartbeat', color: '#10b981' },
-  { name: 'Identify', desc: '피어 정보 교환', color: '#f59e0b' },
-  { name: 'Relay', desc: 'NAT 우회 중계', color: '#06b6d4' },
+  { name: "Kademlia DHT", desc: "피어 탐색, FIND_NODE 질의", color: "#8b5cf6" },
+  {
+    name: "GossipSub",
+    desc: "메시지 브로드캐스트, heartbeat",
+    color: "#10b981",
+  },
+  { name: "Identify", desc: "피어 정보 교환", color: "#f59e0b" },
+  { name: "Relay", desc: "NAT 우회 중계", color: "#06b6d4" },
 ];
 
 const STREAM_LIMITS = [
-  { label: '최대 동시 스트림', value: '8,192개', note: 'session당', color: '#10b981' },
-  { label: '인바운드 버퍼', value: '256개', note: '백프레셔 한계', color: '#f59e0b' },
-  { label: '프레임 헤더', value: '12 bytes', note: '버전+타입+플래그+스트림ID+길이', color: '#8b5cf6' },
+  {
+    label: "최대 동시 스트림",
+    value: "8,192개",
+    note: "session당",
+    color: "#10b981",
+  },
+  {
+    label: "인바운드 버퍼",
+    value: "256개",
+    note: "백프레셔 한계",
+    color: "#f59e0b",
+  },
+  {
+    label: "프레임 헤더",
+    value: "12 bytes",
+    note: "버전+타입+플래그+스트림ID+길이",
+    color: "#8b5cf6",
+  },
 ];
 
-export default function Overview({ onCodeRef }: {
+export default function Overview({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   return (
@@ -30,8 +51,10 @@ export default function Overview({ onCodeRef }: {
         </p>
         <p>
           왜 필요한가? libp2p에서 한 피어와 Kademlia, GossipSub, Identify 등
-          <strong>여러 프로토콜이 동시에 통신</strong>한다.<br />
-          프로토콜마다 TCP를 새로 열면 연결 수가 폭증한다.<br />
+          <strong>여러 프로토콜이 동시에 통신</strong>한다.
+          <br />
+          프로토콜마다 TCP를 새로 열면 연결 수가 폭증한다.
+          <br />
           Yamux가 하나의 TCP를 공유 채널로 만들어준다.
         </p>
       </div>
@@ -43,14 +66,23 @@ export default function Overview({ onCodeRef }: {
         </p>
         <div className="flex flex-col gap-1.5">
           {PROTOCOLS.map((p, i) => (
-            <motion.div key={p.name}
+            <motion.div
+              key={p.name}
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1 }}
               className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
-              style={{ borderColor: p.color + '40', background: p.color + '08' }}>
-              <span className="text-xs font-mono font-bold w-32 shrink-0"
-                style={{ color: p.color }}>{p.name}</span>
+              style={{
+                borderColor: p.color + "40",
+                background: p.color + "08",
+              }}
+            >
+              <span
+                className="text-xs font-mono font-bold w-32 shrink-0"
+                style={{ color: p.color }}
+              >
+                {p.name}
+              </span>
               <span className="text-xs text-foreground/60">{p.desc}</span>
             </motion.div>
           ))}
@@ -62,16 +94,28 @@ export default function Overview({ onCodeRef }: {
 
       {/* 스트림 한계 수치 */}
       <div className="rounded-xl border border-border bg-card p-5">
-        <p className="text-xs font-mono text-foreground/50 mb-3">Yamux 핵심 수치</p>
+        <p className="text-xs font-mono text-foreground/50 mb-3">
+          Yamux 핵심 수치
+        </p>
         <div className="grid grid-cols-3 gap-2">
           {STREAM_LIMITS.map((s, i) => (
-            <motion.div key={s.label}
+            <motion.div
+              key={s.label}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + i * 0.1 }}
               className="rounded-lg border p-3 text-center"
-              style={{ borderColor: s.color + '40', background: s.color + '06' }}>
-              <p className="text-lg font-bold font-mono" style={{ color: s.color }}>{s.value}</p>
+              style={{
+                borderColor: s.color + "40",
+                background: s.color + "06",
+              }}
+            >
+              <p
+                className="text-lg font-bold font-mono"
+                style={{ color: s.color }}
+              >
+                {s.value}
+              </p>
               <p className="text-xs text-foreground/70 mt-0.5">{s.label}</p>
               <p className="text-[10px] text-foreground/40">{s.note}</p>
             </motion.div>
@@ -81,15 +125,19 @@ export default function Overview({ onCodeRef }: {
 
       {onCodeRef && (
         <div className="not-prose flex flex-wrap gap-2 mt-6">
-          <CodeViewButton onClick={() => onCodeRef('yamux-muxer', codeRefs['yamux-muxer'])} />
-          <span className="text-[10px] text-muted-foreground self-center">Yamux Muxer 구현</span>
+          <CodeViewButton
+            onClick={() => onCodeRef("yamux-muxer", codeRefs["yamux-muxer"])}
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            Yamux Muxer 구현
+          </span>
         </div>
       )}
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Yamux 프로토콜 명세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Yamux v0 Specification (HashiCorp)
+          {`// Yamux v0 Specification (HashiCorp)
 //
 // Frame Format (12-byte header):
 //

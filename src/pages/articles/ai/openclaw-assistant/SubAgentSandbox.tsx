@@ -1,101 +1,117 @@
-import { CitationBlock } from '../../../../components/ui/citation';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { Link } from "react-router-dom";
+import { CitationBlock } from "@/components/ui/citation";
+import type { CodeRef } from "@/components/code/types";
 
-export default function SubAgentSandbox({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
+const CONTROL_PLANES = [
+  {
+    name: "Tool policy",
+    question: "무엇을 호출할 수 있는가?",
+    example: "Slack B agent에서 shell을 deny하면 sandbox가 있어도 shell tool을 호출할 수 없음",
+  },
+  {
+    name: "Sandbox",
+    question: "허용된 tool이 어디서 실행되는가?",
+    example: "host workspace 대신 격리 workspace에서 실행하고 mount access를 none/ro/rw로 정함",
+  },
+  {
+    name: "Elevated",
+    question: "exec를 예외적으로 host에서 실행할 것인가?",
+    example: "sandbox 밖으로 나오는 명시적 escape hatch이며 승인과 audit가 필요",
+  },
+] as const;
+
+export default function SubAgentSandbox({
+  onCodeRef: _onCodeRef,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <>
-      <h3 className="text-xl font-semibold mt-6 mb-3">서브에이전트 & 샌드박스</h3>
-      {onCodeRef && (
-        <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton onClick={() => onCodeRef('oc-sandbox', codeRefs['oc-sandbox'])} />
-          <span className="text-[10px] text-muted-foreground self-center">sandbox-manager.ts</span>
-        </div>
-      )}
+      <h3 className="mt-8 text-xl font-semibold">
+        tool policy가 먼저이고 sandbox는 실행 위치를 바꿉니다
+      </h3>
+      <p>
+        sandbox를 “에이전트 전체가 별도 서버로 이동한다”고 생각하면 책임이
+        뒤집힙니다. OpenClaw Gateway는 계속 host에서 channel connection,
+        session, routing을 관리하고, 허용된 tool execution만 configured backend로
+        옮깁니다. sandbox는 optional이며 기본적으로 꺼져 있을 수 있으므로, 켰다고
+        가정하지 말고 실제 resolved configuration을 확인해야 합니다.
+      </p>
 
-      <div className="not-prose rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5 mb-4">
-        <h4 className="text-sm font-bold mb-3">서브에이전트 시스템</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-            <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">깊이 기반 권한 제어</span>
-            <ul className="text-sm mt-2 space-y-1">
-              <li><strong>Depth 0 (메인)</strong> — 전체 도구 접근, 서브에이전트 스폰 가능</li>
-              <li><strong>Depth 1 (오케스트레이터)</strong> — maxSpawnDepth≥2 시 sessions_spawn 접근</li>
-              <li><strong>Depth 1 (리프)</strong> — maxSpawnDepth=1, 세션 도구 없음</li>
-              <li><strong>Depth 2 (리프 워커)</strong> — sessions_spawn 항상 거부</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
-            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">안전 제어</span>
-            <ul className="text-sm mt-2 space-y-1">
-              <li><strong>maxChildrenPerAgent: 5</strong> — 에이전트당 활성 자식 수 제한</li>
-              <li><strong>캐스케이드 중단</strong> — 부모 중단 시 모든 자손 자동 중단</li>
-              <li><strong>자동 아카이브</strong> — archiveAfterMinutes (기본: 60)</li>
-              <li><strong>세션 키</strong> — subagent:&lt;parentId&gt;:d&lt;depth&gt;</li>
-            </ul>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
-            <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">비용 최적화</span>
-            <p className="text-sm mt-1">agents.defaults.subagents.model로 서브에이전트에 저가 모델 지정</p>
-            <p className="text-xs text-muted-foreground mt-1">메인은 고품질, 서브에이전트는 효율적 모델</p>
-          </div>
-          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3">
-            <span className="text-xs font-semibold">사용 사례</span>
-            <p className="text-sm mt-1">"이 PR을 리뷰하고 테스트도 실행해줘"</p>
-            <ul className="text-xs text-muted-foreground mt-1 space-y-0.5">
-              <li>→ Subagent 1: PR 코드 리뷰</li>
-              <li>→ Subagent 2: 테스트 실행</li>
-              <li>→ 결과 종합하여 응답</li>
-            </ul>
-          </div>
-        </div>
+      <div className="not-prose my-6 grid min-w-0 gap-3 lg:grid-cols-3">
+        {CONTROL_PLANES.map((item) => (
+          <article
+            key={item.name}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <h4 className="break-words text-sm font-semibold">{item.name}</h4>
+            <p className="mt-2 break-words text-xs font-medium">{item.question}</p>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+              {item.example}
+            </p>
+          </article>
+        ))}
       </div>
 
-      <div className="not-prose rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5 mb-4">
-        <h4 className="text-sm font-bold mb-3">샌드박스 아키텍처</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-            <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">모드: "all"</span>
-            <p className="text-sm mt-1">모든 세션을 Docker 컨테이너에서 실행</p>
-          </div>
-          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-            <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">모드: "non-main"</span>
-            <p className="text-sm mt-1">그룹/채널 세션만 샌드박스, 메인은 호스트</p>
-          </div>
-          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-            <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">모드: off (기본)</span>
-            <p className="text-sm mt-1">도구를 호스트에서 직접 실행</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-lg border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950 p-3">
-            <span className="text-xs font-semibold text-rose-700 dark:text-rose-300">Fail-closed 설계</span>
-            <p className="text-sm mt-1">sandbox 설정인데 런타임 없으면 → 호스트 실행 대신 에러 발생</p>
-            <p className="text-xs text-muted-foreground mt-1">tools.elevated로 특정 도구만 호스트 실행 허용 (escape hatch)</p>
-          </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
-            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">컨테이너 자동 관리</span>
-            <p className="text-sm mt-1">24시간 유휴 또는 7일 경과 시 자동 제거</p>
-            <p className="text-xs text-muted-foreground mt-1">설정 변경 시 자동 재생성 (5분 내 사용 중이면 유지)</p>
-          </div>
-        </div>
+      <div className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2">
+        <article className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+          <h4 className="text-sm font-semibold">기본 설정을 읽는 세 축</h4>
+          <dl className="mt-3 grid min-w-0 gap-3 text-xs leading-5 text-muted-foreground">
+            <div><dt className="font-semibold text-foreground">mode</dt><dd className="mt-1"><code>off</code>는 host 실행, <code>non-main</code>은 main 이외 session, <code>all</code>은 모든 session의 tool을 sandbox 대상으로 삼습니다.</dd></div>
+            <div><dt className="font-semibold text-foreground">scope</dt><dd className="mt-1"><code>session</code>은 session별, <code>agent</code>는 agent별, <code>shared</code>는 공유 container 수명을 정합니다.</dd></div>
+            <div><dt className="font-semibold text-foreground">backend</dt><dd className="mt-1"><code>docker</code> 같은 실제 실행 backend를 고르며, 설정했는데 backend를 사용할 수 없으면 host로 조용히 넘어가지 않아야 합니다.</dd></div>
+          </dl>
+        </article>
+        <article className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+          <h4 className="text-sm font-semibold">Gateway·node 예외 경로</h4>
+          <p className="mt-3 break-words text-xs leading-5 text-muted-foreground">
+            Tool이 Gateway host나 연결된 node에서 실행될 수 있더라도 먼저 tool
+            policy를 통과해야 합니다. <code>elevated</code> exec는 허용된 sender와
+            approval·audit 조건을 만족할 때만 쓰는 host escape이며, deny된 tool을
+            되살리는 규칙이 아닙니다.
+          </p>
+        </article>
       </div>
 
-      <CitationBlock source="Docker Blog — Run OpenClaw Securely in Docker Sandboxes" citeKey={5} type="paper"
-        href="https://docker.com/blog/run-openclaw-securely-in-docker-sandboxes">
-        <p className="italic">
-          "Fail-closed design: sandbox 설정인데 Docker 런타임이 없으면 호스트에서 실행하는 대신 에러를 발생시킨다.<br />
-          컨테이너는 network:none 기본값으로 생성되며, non-root 사용자로 실행된다."
+      <p>
+        unsandboxed agent의 <strong>workspace</strong>는 기본 working directory이며
+        agent의 파일 context와 project 지침이 놓이는 곳입니다. sandbox를 켜면
+        tool이 보는 working directory는 sandbox workspace와
+        <code>workspaceAccess</code> 설정에 따라 달라집니다. 이름이 같아 보여도
+        host workspace와 sandbox filesystem은 같은 경계가 아닙니다.
+      </p>
+      <p>
+        평가 순서는 “sandbox에서 실행해 본 뒤 policy로 막기”가 아닙니다. deny가
+        우선하는 tool policy로 호출 가능성을 먼저 제한하고, 통과한 tool만
+        sandbox 여부와 mount를 해석합니다. <strong>elevated</strong>는 exec를
+        sandbox 밖 host에서 실행하는 예외 경로지만 tool allow/deny를 우회하지
+        않습니다. 이 구조와 network·secret·RBAC까지의 확장은
+        <Link to="/ai/agent-sandbox-security"> agent sandbox security</Link>에서
+        다룹니다.
+      </p>
+
+      <div
+        id="paper-openclaw-sandboxing"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Sandboxing
         </p>
-        <p className="mt-2 text-xs">
-          OpenClaw 샌드박스 — fail-closed 원칙. Docker 런타임 부재 시 호스트 폴백 없이
-          명시적 에러 발생. 컨테이너는 24시간 유휴 또는 7일 경과 시 자동 제거,
-          tools.elevated로 특정 도구만 호스트 실행을 허용하는 escape hatch 제공
-        </p>
-      </CitationBlock>
+        <CitationBlock
+          source="OpenClaw Docs — Sandboxing"
+          citeKey={7}
+          type="paper"
+          href="https://docs.openclaw.ai/gateway/sandboxing"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> file·shell·browser tool을 host에서 직접 실행하면 prompt injection이나 실수의 영향이 운영 계정과 filesystem으로 번질 수 있습니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> Gateway는 host에 남겨 두고 tool execution의 위치와 workspace access를 sandbox mode·scope·backend로 분리합니다.</p>
+            <p><strong>전제·조건:</strong> sandbox는 optional이며 완전한 security boundary가 아닙니다. plugin·MCP 같은 Gateway-side tool도 policy로 제한하고 network·secret 경계를 별도로 설계해야 합니다.</p>
+            <p><strong>근거 범위:</strong> sandbox가 적용되는 범위, workspace access, elevated escape의 공식 동작을 설명합니다.</p>
+            <p><strong>비주장:</strong> sandbox가 channel 인증, session isolation, tool allow/deny, 외부 egress 통제를 자동으로 해결한다는 주장은 하지 않습니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
     </>
   );
 }

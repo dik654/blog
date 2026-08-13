@@ -15,7 +15,19 @@ export const servicesCode = `// 합의 계층 핵심 서비스 7종
 // 7. 루트해시 서비스: ParaTime 상태 커밋 & 검증`;
 
 export const servicesAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: 'CometBFT 합의' },
-  { lines: [7, 11] as [number, number], color: 'emerald' as const, note: '경제 시스템' },
-  { lines: [13, 17] as [number, number], color: 'amber' as const, note: '네트워크 & 상태 관리' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "CometBFT 합의",
+  },
+  {
+    lines: [7, 11] as [number, number],
+    color: "emerald" as const,
+    note: "경제 시스템",
+  },
+  {
+    lines: [13, 17] as [number, number],
+    color: "amber" as const,
+    note: "네트워크 & 상태 관리",
+  },
 ];

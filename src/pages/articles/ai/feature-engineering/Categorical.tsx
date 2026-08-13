@@ -1,69 +1,77 @@
-import CategoricalViz from './viz/CategoricalViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import CategoricalViz from "./viz/CategoricalViz";
 
 export default function Categorical() {
   return (
     <section id="categorical" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">범주형 인코딩: 타겟, 빈도, 임베딩</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        범주형 인코딩은 이름을 숫자로 바꾸면서 어떤 관계를 허용할지 정합니다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          범주형 변수(도시명, 브랜드, 직업 등)는 대부분의 모델이 직접 처리하지 못한다.
-          숫자로 변환해야 하는데, 변환 방식에 따라 성능 차이가 크다.
-          범주 수(cardinality)가 핵심 판단 기준 — 적으면 One-Hot, 많으면 Target/Frequency/Embedding.
+          Bronze·Silver·Gold처럼 실제 순서가 있는 등급에는 ordinal encoding을
+          사용할 수 있지만, 서울·부산·제주를 1·2·3으로 바꾸면 부산이 서울의
+          두 배라는 가짜 거리가 생깁니다. One-hot encoding은 각 범주를 독립된
+          축으로 두어 이 순서를 만들지 않는 대신 category 수만큼 sparse column이
+          늘어납니다. Cardinality 하나로 방법을 고르기보다 관계의 의미, model의
+          native categorical 처리, memory와 새 ID 발생 방식을 함께 봐야 합니다.
         </p>
-
-        <h3>Label Encoding</h3>
         <p>
-          범주를 정수로 매핑 (서울=0, 부산=1, 대구=2).
-          <strong>순서(ordinal)가 있는 범주</strong>에만 적합 — 학력(초등=0, 중등=1, 고등=2), 등급(브론즈=0, 실버=1, 골드=2).
-          순서가 없는데 Label Encoding을 쓰면 "서울 &lt; 부산"이라는 거짓 순서를 모델이 학습한다.
-        </p>
-
-        <h3>One-Hot Encoding</h3>
-        <p>
-          각 범주를 0/1 이진 열로 분리. 범주 간 순서 관계가 없음을 명시.
-          범주 수 15개 이하에서 사용. 100개 이상이면 차원 폭발(curse of dimensionality)로
-          학습 속도 저하와 과적합이 동시에 발생.
+          Frequency encoding은 label을 직접 쓰지 않지만 전체 dataset에서 횟수를
+          세면 validation 분포를 미리 봅니다. Target encoding은 category별 target
+          평균을 쓰므로 더 직접적인 누출 경로가 생깁니다. Training row 자신의
+          label이 자기 피처로 되돌아오지 않게 out-of-fold 또는 ordered statistics를
+          써야 하며, validation과 test에는 training에서 만든 mapping만 적용합니다.
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <CategoricalViz />
-      </div>
+      <ExplainedFormula
+        question="Target encoding에서 자기 label을 보지 않으면서 드문 category의 평균을 안정화하려면 어떻게 할까?"
+        idea={<>Row i가 속한 fold를 통째로 제외하고 같은 category c의 target 합과 count를 계산합니다. 관측이 적으면 전체 training 평균 μ 쪽으로 당기는 smoothing α를 더합니다. 이렇게 하면 해당 row의 정답이 곧바로 자기 입력이 되는 지름길을 막을 수 있습니다.</>}
+        formula={String.raw`\operatorname{TE}^{(-k(i))}(c_i)=\frac{\sum_{j\notin k(i)}\mathbf{1}[c_j=c_i]y_j+\alpha\mu_{\mathrm{train}}}{\sum_{j\notin k(i)}\mathbf{1}[c_j=c_i]+\alpha}`}
+        terms={[
+          { symbol: "k(i)", name: "row i의 fold", description: "Encoding 통계를 만들 때 i와 같은 validation fold 전체를 제외합니다." },
+          { symbol: "1[c_j=c_i]", name: "category indicator", description: "Row j가 i와 같은 category일 때만 1이 됩니다." },
+          { symbol: "y_j", name: "training target", description: "현재 mapping을 fit하는 fold 안에서만 사용할 target입니다." },
+          { symbol: "μ_train", name: "global training mean", description: "해당 fold를 제외한 training target의 전체 평균입니다." },
+          { symbol: "α", name: "smoothing strength", description: "Category count가 작을수록 전체 평균 쪽으로 더 당기는 pseudo-count입니다." },
+        ]}
+        assumptions={["Fold는 실제 evaluation의 시간·entity 경계를 보존합니다.", "Validation·test mapping에는 해당 split의 target을 사용하지 않습니다.", "새 category에는 global mean이나 정해진 fallback을 적용합니다."]}
+        interpretation="Cross-fitting은 같은 row의 label이 돌아오는 직접 누출을 막지만, 시간 순서를 무시한 fold나 반복 entity를 섞은 fold까지 자동으로 고치지는 않습니다. Split 설계가 먼저입니다."
+      />
+
+      <div className="not-prose my-8"><CategoricalViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Target Encoding (Mean Encoding)</h3>
-        <p>
-          범주를 해당 범주의 <strong>타겟 평균값</strong>으로 치환. 서울의 전환율이 72%이면 "서울" → 0.72.
-          고카디널리티 범주(수백~수천)에 매우 효과적이지만, <strong>정보 누수(data leakage)</strong> 위험이 있다.
-        </p>
-        <p>
-          스무딩(smoothing)으로 과적합 방지 — 관측 수 n이 적은 범주는 전체 평균에 가중.
-          공식: (n * category_mean + m * global_mean) / (n + m). m은 스무딩 파라미터(보통 10~100).
-          교차 검증 fold 내에서만 계산해야 누수를 막을 수 있다.
-        </p>
+        <div id="paper-catboost" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+          <p className="text-xs font-bold text-primary">논문 읽기 · Ordered target statistics</p>
+          <p className="mt-2 text-sm font-semibold">CatBoost: Unbiased Boosting with Categorical Features</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            CatBoost는 category 통계와 boosting에서 target을 다시 사용하는 과정이
+            prediction shift를 만들 수 있음을 분석하고, permutation의 앞부분만
+            사용한 ordered statistics와 ordered boosting을 제안했습니다. 이는
+            모든 dataset에서 target encoding이 one-hot보다 우월하다는 결론이
+            아니라, label 기반 피처를 만드는 순서 자체가 학습 알고리즘의 일부라는
+            근거입니다.
+          </p>
+          <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1706.09516" target="_blank" rel="noreferrer">원 논문의 prediction shift와 ordered statistics 보기</a>
+        </div>
 
-        <h3>Frequency Encoding</h3>
+        <h3>새 범주와 드문 범주도 정상 입력입니다</h3>
         <p>
-          범주를 출현 횟수 또는 비율로 치환. "서울" 1500건 중 45%이면 → 0.45.
-          타겟 정보를 사용하지 않으므로 정보 누수가 없다.
-          단점은 동일 빈도를 가진 서로 다른 범주를 구분하지 못한다는 것.
+          Production에서는 학습 때 없던 category가 들어옵니다. Error로 중단할지,
+          unknown token·전체 평균·other bucket으로 보낼지를 사전에 정합니다.
+          Rare category를 묶는 count 기준도 training fold에서만 계산해야 하며,
+          대소문자·공백·ID 재사용 같은 normalization 규칙까지 versioning해야
+          같은 이름이 train과 serving에서 다른 category가 되는 일을 막을 수 있습니다.
         </p>
-
-        <h3>Entity Embedding</h3>
         <p>
-          신경망의 Embedding 레이어로 범주를 저차원 밀집 벡터로 매핑.
-          학습 과정에서 유사한 범주는 벡터 공간에서 가까이 위치하게 된다.
-          TabNet, DeepFM, Wide&Deep 등에서 기본 사용. 고카디널리티(수천 범주) 처리에 가장 강력.
-          학습된 임베딩을 추출해 GBM 피처로 재사용하는 전략도 효과적이다.
-        </p>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 인코딩 선택 가이드</p>
-        <p className="text-sm">
-          범주 수 10 이하 → One-Hot. 10~100 → Frequency + Target(스무딩).
-          100+ → Target Encoding(fold별 계산) 또는 Entity Embedding.
-          트리 모델에는 Label Encoding도 의외로 잘 동작한다 — 분할이 순서가 아닌 범위 기반이므로.
+          Embedding은 범주를 dense vector로 학습해 high cardinality를 다룰 수
+          있지만, category 사이 의미 있는 geometry를 학습할 충분한 관측과 안정적인
+          ID가 필요합니다. 새 ID가 자주 생기거나 의미가 바뀌는 column에서는
+          hashing·frequency baseline이 더 견고할 수 있습니다. Hash collision도
+          사라지는 것이 아니라 서로 다른 category를 같은 bucket에 놓는 명시적
+          trade-off입니다.
         </p>
       </div>
     </section>

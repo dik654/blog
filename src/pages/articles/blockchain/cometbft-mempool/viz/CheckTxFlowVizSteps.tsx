@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ActionBox, ModuleBox, DataBox } from '@/components/viz/boxes';
+import { ActionBox, AnnotationBox, ModuleBox, DataBox } from '@/components/viz/boxes';
 import { C } from './CheckTxFlowVizData';
 
 export function Step0() {
@@ -18,8 +18,7 @@ export function Step0() {
       <ActionBox x={235} y={30} w={80} h={35} label="Size 체크" sub="용량 확인" color={C.cache} />
     </motion.g>
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-      <text x={360} y={42} fontSize={10} fill={C.err}>중복 → ErrTxInCache</text>
-      <text x={360} y={58} fontSize={10} fill={C.err}>가득 참 → ErrMempoolIsFull</text>
+      <AnnotationBox x={325} y={16} w={90} h={64} label="중복: ErrTxInCache · 가득 참: ErrMempoolIsFull" color={C.err} eyebrow="거부 조건" />
     </motion.g>
   </g>);
 }

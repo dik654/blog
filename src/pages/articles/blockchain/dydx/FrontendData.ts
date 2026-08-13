@@ -19,9 +19,21 @@ export const dataFlowCode = `주문 처리 플로우 (클라이언트 → 체결
     │◀── API 응답 ──────────┤───────────────────┤──────────────┤`;
 
 export const dataFlowAnnotations = [
-  { lines: [5, 7] as [number, number], color: 'sky' as const, note: '주문 제출 → 매칭' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: '이벤트 전파 → 실시간 업데이트' },
-  { lines: [16, 19] as [number, number], color: 'amber' as const, note: 'REST API 조회' },
+  {
+    lines: [5, 7] as [number, number],
+    color: "sky" as const,
+    note: "주문 제출 → 매칭",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "이벤트 전파 → 실시간 업데이트",
+  },
+  {
+    lines: [16, 19] as [number, number],
+    color: "amber" as const,
+    note: "REST API 조회",
+  },
 ];
 
 export const apiCode = `주요 API 엔드포인트 (Comlink):
@@ -45,7 +57,19 @@ WebSocket 채널 (Socks):
   v4_subaccounts → 계정 업데이트`;
 
 export const apiAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '주문서 REST API' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '포지션 조회' },
-  { lines: [15, 19] as [number, number], color: 'amber' as const, note: 'WebSocket 실시간 채널' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "주문서 REST API",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "포지션 조회",
+  },
+  {
+    lines: [15, 19] as [number, number],
+    color: "amber" as const,
+    note: "WebSocket 실시간 채널",
+  },
 ];

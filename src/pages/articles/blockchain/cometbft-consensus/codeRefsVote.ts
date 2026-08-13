@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const voteRefs: Record<string, CodeRef> = {
-  'try-add-vote': {
-    path: 'consensus/state.go — tryAddVote()',
-    lang: 'go',
+  "try-add-vote": {
+    path: "consensus/state.go — tryAddVote()",
+    lang: "go",
     highlight: [1, 3],
-    desc: 'tryAddVote — 투표를 추가하고 오류 처리.\n이중 투표 감지 시 EvidencePool에 신고.',
+    desc: "tryAddVote — 투표를 추가하고 오류 처리.\n이중 투표 감지 시 EvidencePool에 신고.",
     code: `func (cs *State) tryAddVote(
     vote *types.Vote, peerID p2p.ID,
 ) (bool, error) {
@@ -31,12 +31,21 @@ export const voteRefs: Record<string, CodeRef> = {
     return added, nil
 }`,
     annotations: [
-      { lines: [4, 4], color: 'sky',
-        note: 'addVote 호출: 실제 투표 집계 + 임계값 감지' },
-      { lines: [7, 14], color: 'emerald',
-        note: '이중 투표 감지: 같은 높이·라운드·타입에 다른 BlockID → 신고' },
-      { lines: [15, 19], color: 'amber',
-        note: '자체 이중 투표: 자신이 이중 서명했으면 panic → 노드 중단' },
+      {
+        lines: [4, 4],
+        color: "sky",
+        note: "addVote 호출: 실제 투표 집계 + 임계값 감지",
+      },
+      {
+        lines: [7, 14],
+        color: "emerald",
+        note: "이중 투표 감지: 같은 높이·라운드·타입에 다른 BlockID → 신고",
+      },
+      {
+        lines: [15, 19],
+        color: "amber",
+        note: "자체 이중 투표: 자신이 이중 서명했으면 panic → 노드 중단",
+      },
     ],
   },
 };

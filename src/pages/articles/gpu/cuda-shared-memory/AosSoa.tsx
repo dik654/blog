@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const aosCode = `// AoS (Array of Structures): 구조체 배열
 struct Particle {
@@ -61,39 +61,57 @@ export default function AosSoa() {
       <h2 className="text-2xl font-bold mb-6">AoS vs SoA: 데이터 레이아웃</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          같은 데이터라도 메모리 배치에 따라 GPU 성능이 <strong>수 배</strong> 차이 난다.<br />
-          핵심은 <strong>연속 스레드가 연속 주소를 접근</strong>하도록 설계하는 것이다.
+          같은 데이터라도 메모리 배치에 따라 GPU 성능이 <strong>수 배</strong>{" "}
+          차이 난다.
+          <br />
+          핵심은 <strong>연속 스레드가 연속 주소를 접근</strong>하도록 설계하는
+          것이다.
         </p>
         <h3 className="text-xl font-semibold mt-6 mb-3">AoS: 구조체 배열</h3>
         <p>
-          각 파티클의 모든 필드가 연속 저장된다. 직관적이지만, 특정 필드만 접근할 때 stride가 구조체 크기만큼 벌어진다.
+          각 파티클의 모든 필드가 연속 저장된다. 직관적이지만, 특정 필드만
+          접근할 때 stride가 구조체 크기만큼 벌어진다.
         </p>
-        <CodePanel title="AoS 레이아웃과 접근 패턴" code={aosCode}
+        <CodePanel
+          title="AoS 레이아웃과 접근 패턴"
+          code={aosCode}
           annotations={[
-            { lines: [2, 8], color: 'sky', note: '구조체 정의와 배열' },
-            { lines: [11, 11], color: 'amber', note: '메모리 상 배치' },
-            { lines: [14, 17], color: 'rose', note: 'stride=12B, non-coalesced' },
-          ]} />
+            { lines: [2, 8], color: "sky", note: "구조체 정의와 배열" },
+            { lines: [11, 11], color: "amber", note: "메모리 상 배치" },
+            {
+              lines: [14, 17],
+              color: "rose",
+              note: "stride=12B, non-coalesced",
+            },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">SoA: 배열의 구조체</h3>
         <p>
-          같은 필드끼리 연속 저장된다. 특정 필드만 접근할 때 stride가 4바이트(float)여서 완전한 coalescing을 달성한다.
+          같은 필드끼리 연속 저장된다. 특정 필드만 접근할 때 stride가
+          4바이트(float)여서 완전한 coalescing을 달성한다.
         </p>
-        <CodePanel title="SoA 레이아웃과 접근 패턴" code={soaCode}
+        <CodePanel
+          title="SoA 레이아웃과 접근 패턴"
+          code={soaCode}
           annotations={[
-            { lines: [2, 7], color: 'sky', note: '배열의 구조체 정의' },
-            { lines: [10, 10], color: 'emerald', note: '같은 필드가 연속' },
-            { lines: [13, 16], color: 'emerald', note: 'stride=4B, coalesced' },
-          ]} />
+            { lines: [2, 7], color: "sky", note: "배열의 구조체 정의" },
+            { lines: [10, 10], color: "emerald", note: "같은 필드가 연속" },
+            { lines: [13, 16], color: "emerald", note: "stride=4B, coalesced" },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">성능 비교</h3>
-        <CodePanel title="AoS vs SoA 커널 성능 비교" code={comparisonCode}
+        <CodePanel
+          title="AoS vs SoA 커널 성능 비교"
+          code={comparisonCode}
           annotations={[
-            { lines: [1, 5], color: 'rose', note: 'AoS: non-coalesced 접근' },
-            { lines: [7, 11], color: 'emerald', note: 'SoA: coalesced 접근' },
-            { lines: [13, 17], color: 'amber', note: '~5배 성능 차이' },
-            { lines: [19, 21], color: 'violet', note: '실전 선택 기준' },
-          ]} />
+            { lines: [1, 5], color: "rose", note: "AoS: non-coalesced 접근" },
+            { lines: [7, 11], color: "emerald", note: "SoA: coalesced 접근" },
+            { lines: [13, 17], color: "amber", note: "~5배 성능 차이" },
+            { lines: [19, 21], color: "violet", note: "실전 선택 기준" },
+          ]}
+        />
       </div>
     </section>
   );

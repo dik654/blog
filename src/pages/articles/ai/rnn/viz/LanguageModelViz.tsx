@@ -1,77 +1,53 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, INPUT_WORDS, VOCAB, PROBS } from './LanguageModelVizData';
+import VizFrame from "@/components/viz/VizFrame";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
-const RNN_C = '#6366f1';
-const PRED_C = '#10b981';
-const HI_C = '#f59e0b';
+const predictions = [
+  { token: "물었다", probability: 0.58 },
+  { token: "보았다", probability: 0.24 },
+  { token: "따랐다", probability: 0.12 },
+  { token: "기타", probability: 0.06 },
+] as const;
 
 export default function LanguageModelViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 480 170" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          <defs>
-            <marker id="lm-arr" viewBox="0 0 10 10" refX={9} refY={5}
-              markerWidth={5} markerHeight={5} orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill={RNN_C} />
-            </marker>
-          </defs>
-          {/* Input words → RNN cells */}
-          {INPUT_WORDS.map((w, i) => {
-            const cx = 60 + i * 120;
-            return (
-              <motion.g key={i} animate={{ opacity: step >= 0 ? 1 : 0.3 }} transition={sp}>
-                <rect x={cx - 30} y={70} width={60} height={36} rx={6}
-                  fill={RNN_C + '18'} stroke={RNN_C} strokeWidth={1.5} />
-                <text x={cx} y={92} textAnchor="middle" fontSize={9} fill={RNN_C} fontWeight={600}>RNN</text>
-                <text x={cx} y={125} textAnchor="middle" fontSize={9} fill={HI_C}>{w}</text>
-                {/* hidden state arrow */}
-                {i < INPUT_WORDS.length - 1 && (
-                  <line x1={cx + 30} y1={88} x2={cx + 90} y2={88}
-                    stroke={RNN_C} strokeWidth={1.5} markerEnd="url(#lm-arr)" />
-                )}
-                {step >= 1 && (
-                  <motion.text x={cx} y={64} textAnchor="middle" fontSize={9} fill={PRED_C} fontWeight={600}
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    h_{i + 1}
-                  </motion.text>
-                )}
-              </motion.g>
-            );
-          })}
-          {/* Prediction bars */}
-          {step >= 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <line x1={210} y1={88} x2={270} y2={88}
-                stroke={PRED_C} strokeWidth={1.5} strokeDasharray="4 2" />
-              <text x={305} y={30} fontSize={9} fill="#666" fontWeight={600}>P(w_t+1)</text>
-              {VOCAB.map((w, i) => {
-                const y = 38 + i * 22;
-                const barW = PROBS[i] * 160;
-                const isTop = step >= 3 && i === 0;
-                return (
-                  <motion.g key={w} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-                    transition={{ ...sp, delay: i * 0.06 }}>
-                    <text x={290} y={y + 10} textAnchor="end" fontSize={9}
-                      fill={isTop ? PRED_C : '#666'} fontWeight={isTop ? 700 : 400}>{w}</text>
-                    <rect x={295} y={y} width={160} height={14} rx={3}
-                      fill="#80808008" stroke="#55555550" strokeWidth={0.5} />
-                    <motion.rect x={295} y={y} width={barW} height={14} rx={3}
-                      fill={isTop ? PRED_C + '60' : RNN_C + '25'}
-                      stroke={isTop ? PRED_C : 'none'} strokeWidth={isTop ? 1.5 : 0}
-                      initial={{ width: 0 }} animate={{ width: barW }}
-                      transition={{ duration: 0.4, delay: i * 0.06 }} />
-                    <text x={300 + barW} y={y + 10} fontSize={9}
-                      fill={isTop ? PRED_C : '#999'}>{PROBS[i].toFixed(2)}</text>
-                  </motion.g>
-                );
-              })}
-            </motion.g>
-          )}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="다음-token 조건부 분포"
+      title="Prefix를 state 하나에 접은 뒤 vocabulary 전체를 채점한다"
+      description="입력 token과 target token은 한 칸 어긋납니다. ‘개가 사람을’까지 처리한 state가 그 다음 token의 probability를 냅니다."
+      note="막대는 계산 예시입니다. Probability 값은 실제 학습 결과나 특정 corpus의 통계가 아닙니다."
+    >
+      <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+        <div className="min-w-0">
+          <p className="text-xs font-bold text-muted-foreground">PREFIX → RECURRENT SUMMARY</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-border/70 bg-background p-4">
+              <p className="text-xs text-muted-foreground">입력 token</p>
+              <p className="mt-2 break-keep text-sm font-semibold">개가 · 사람을</p>
+            </div>
+            <div className="rounded-lg border border-primary/30 bg-background p-4">
+              <p className="text-xs font-bold text-primary">hidden state h₂</p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">두 token을 처리한 고정 차원 요약</p>
+            </div>
+          </div>
+          <p className="mt-4 text-xs leading-5 text-muted-foreground">
+            Output projection은 h₂를 vocabulary 크기의 logits로 바꾸고 softmax가 합이 1인 분포를 만듭니다.
+          </p>
+        </div>
+
+        <div className="min-w-0 border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <p className="text-xs font-bold text-muted-foreground">P(w₃ | w₁, w₂)</p>
+          <div className="mt-4 space-y-4">
+            {predictions.map((item, index) => (
+              <div key={item.token} className="grid min-w-0 grid-cols-[4.5rem_minmax(0,1fr)_2.5rem] items-center gap-3 text-xs">
+                <span className={index === 0 ? "font-bold text-primary" : "text-foreground"}>{item.token}</span>
+                <div className="h-1.5 min-w-0 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary/70" style={{ width: `${item.probability * 100}%` }} />
+                </div>
+                <span className="text-right font-mono text-muted-foreground">{item.probability.toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </VizFrame>
   );
 }

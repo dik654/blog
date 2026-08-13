@@ -1,9 +1,9 @@
-import Overview from './aptos/Overview';
-import BlockSTM from './aptos/BlockSTM';
-import MoveVM from './aptos/MoveVM';
-import DiemBFT from './aptos/DiemBFT';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './aptos/codeRefs';
+import Overview from "./aptos/Overview";
+import BlockSTM from "./aptos/BlockSTM";
+import MoveVM from "./aptos/MoveVM";
+import DiemBFT from "./aptos/DiemBFT";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./aptos/codeRefs";
 
 export default function AptosArticle() {
   const sidebar = useCodeSidebar();

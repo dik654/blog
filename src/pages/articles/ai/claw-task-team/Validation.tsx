@@ -1,190 +1,101 @@
-import ValidationViz from './viz/ValidationViz';
+import ValidationViz from "./viz/ValidationViz";
+
+const validationMoments = [
+  {
+    title: "Registration",
+    body: "schema, dependency와 constraint가 서로 모순되지 않는지 확인합니다.",
+  },
+  {
+    title: "Dispatch",
+    body: "실제 worker capability와 resolved scope가 contract를 충족하는지 봅니다.",
+  },
+  {
+    title: "Completion",
+    body: "sandboxed verifier와 artifact evidence로 acceptance criteria를 판정합니다.",
+  },
+] as const;
 
 export default function Validation() {
   return (
     <section id="validation" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">패킷 검증 &amp; 스코프 해석</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        Task validation은 등록·실행·완료에서 서로 다른 질문을 한다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <ValidationViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">TaskPacket::validate()</h3>
-        <div className="not-prose my-4 bg-muted/50 rounded-lg border border-border p-4">
-          <p className="text-xs font-semibold text-muted-foreground mb-3">validate() — 5단계 검증</p>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">1</span>
-              <div>
-                <strong>필수 필드</strong> — <code>title</code> 비어있으면 에러, 200자 초과 에러
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">2</span>
-              <div>
-                <strong>Goals 존재</strong> — <code>goals.is_empty()</code> → "at least one goal required"
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">3</span>
-              <div>
-                <strong>Self-dependency</strong> — <code>depends_on.contains(&self.id)</code> → 자기 참조 차단
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">4</span>
-              <div>
-                <strong>명령 안전성</strong> — <code>completion_check</code>에 <code>rm -rf</code> 등 위험 패턴 차단
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">5</span>
-              <div>
-                <strong>제약 일관성</strong> — <code>validate_constraints()</code> glob 파싱·불가능 조건 체크
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>5단계 검증</strong>: 필수 필드 → Goals → 의존성 → 안전성 → 일관성<br />
-          완료 확인 명령에 <code>rm -rf</code> 등 위험 패턴 차단<br />
-          조기 검증으로 "생성된 task가 나중에 실패"하는 경우 방지
+        <p className="leading-7">
+          task contract를 한 번 validate했다고 실행과 완료까지 보장되는 것은
+          아닙니다. 등록 시에는 명세가 well-formed인지, dispatch 시에는 선택한
+          worker가 실제 scope를 수행할 권한이 있는지, 완료 시에는 결과가
+          acceptance criteria를 만족하는지 확인합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Constraint 일관성 체크</h3>
-        <div className="not-prose my-4 space-y-3">
-          <div className="bg-muted/50 rounded-lg p-4 border border-border">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">validate_constraints() — 패턴별 체크</p>
-            <div className="space-y-2 text-sm">
-              <p><code>NoTouchFiles(files)</code> → 각 파일 패턴을 <code>glob::Pattern::new()</code>로 파싱 — 유효하지 않으면 에러</p>
-              <p><code>MaxChanges(n)</code> → <code>n == 0</code>이면 "task impossible" 에러 차단</p>
-              <p>그 외 kind → 통과</p>
-            </div>
-          </div>
-          <div className="bg-muted/50 rounded-lg p-4 border border-border">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">중복 constraint 감지</p>
-            <p className="text-sm"><code>std::mem::discriminant()</code>로 kind 변형(variant) 비교 → <code>HashSet</code>에 수집</p>
-            <p className="text-sm">set 크기 != constraints 수 → 경고 로그 (<code>log::warn!</code>) — 허용하되 주의 환기</p>
-          </div>
+        <div className="not-prose my-8">
+          <ValidationViz />
         </div>
-        <p>
-          <strong>패턴 유효성</strong>: glob 파싱 실패 = invalid task<br />
-          <strong>불가능 조건</strong>: MaxChanges=0 차단 — 작업 자체가 불가<br />
-          중복 constraint는 경고만 — 허용하되 주의 환기
+      </div>
+
+      <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
+        {validationMoments.map((item) => (
+          <article
+            key={item.title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {item.body}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          등록 검증은 구조와 모순을 찾는다
+        </h3>
+        <p className="leading-7">
+          goal과 acceptance criteria가 비어 있지 않은지, dependency가 존재하고
+          cycle이 없는지, read-only constraint와 write deliverable이 충돌하지
+          않는지 확인합니다. title 길이 같은 값 검증은 필요하지만, task가 실제로
+          좋은 계획인지까지 보장하지는 않습니다.
+        </p>
+        <p className="leading-7">
+          completion command를 task packet 안의 임의 shell 문자열로 저장하는
+          방식은 또 하나의 code execution surface가 됩니다. 가능한 검증은 test
+          ID, repository script와 structured assertion으로 참조하고, 새
+          command가 필요하면 Bash와 동일한 permission·sandbox 경계를 거칩니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">스코프 해석 — resolve_scope()</h3>
-        <div className="not-prose my-4 bg-muted/50 rounded-lg border border-border p-4">
-          <p className="text-xs font-semibold text-muted-foreground mb-3">resolve_scope(workspace) — 3단계 스코프 구축</p>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">1</span>
-              <div>
-                <strong>팀 패턴</strong> — <code>team.file_patterns</code> → allowed 추가 / <code>team.excluded_patterns</code> → denied 추가<br />
-                <span className="text-muted-foreground">팀 없으면 워크스페이스 전체 allowed</span>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">2</span>
-              <div>
-                <strong>Task constraint</strong> — <code>NoTouchFiles(patterns)</code> → denied에 추가
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-background rounded px-3 py-2 border border-border">
-              <span className="text-muted-foreground font-mono shrink-0">3</span>
-              <div>
-                <strong>전역 블랙리스트</strong> — <code>default_blacklist_paths()</code> → denied에 추가
-              </div>
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground mt-3">결과: <code>ResolvedScope {'{'} allowed, denied {'}'}</code> — deny 우선</p>
-        </div>
-        <p>
-          <strong>3단계 스코프 해석</strong>: 팀 패턴 → task constraint → 전역 블랙리스트<br />
-          각 단계는 allow/deny 리스트에 누적<br />
-          최종 결과: 명시적 allow 목록 + 명시적 deny 목록 (deny 우선)
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          scope는 path pattern에서 실제 capability로 resolve한다
+        </h3>
+        <p className="leading-7">
+          task의 include·exclude pattern과 team policy, worker capability를 합쳐
+          effective scope를 계산합니다. exclude가 include보다 우선하며,
+          symlink와 canonical path를 반영한 뒤 executor가 같은 scope를 강제해야
+          합니다.
+        </p>
+        <p className="leading-7">
+          permission이 부족하면 validator가 몰래 scope를 넓히지 않습니다. 작업을
+          더 작은 deliverable로 나누거나 사용자에게 필요한 추가 권한과 이유를
+          보여주고 새 decision을 받습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">ResolvedScope 활용</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 not-prose my-4">
-          <div className="bg-muted/50 rounded-lg p-4 border border-border">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">ResolvedScope</p>
-            <p className="text-sm"><code>allowed: Vec&lt;PathBuf&gt;</code> — 허용 경로</p>
-            <p className="text-sm"><code>denied: Vec&lt;PathBuf&gt;</code> — 거부 경로</p>
-            <p className="text-sm mt-2"><code>is_allowed(path)</code>: denied 먼저 체크 (우선) → allowed 체크</p>
-          </div>
-          <div className="bg-muted/50 rounded-lg p-4 border border-border">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">PermissionEnforcer 통합</p>
-            <p className="text-sm"><code>check_task_scope(path)</code></p>
-            <p className="text-sm"><code>current_task_scope</code> 존재 시 <code>is_allowed()</code> 호출</p>
-            <p className="text-sm text-muted-foreground mt-1">scope 밖 접근 → "path outside task scope" 에러</p>
-          </div>
-        </div>
-        <p>
-          <strong>Task 스코프 = 추가 권한 레이어</strong><br />
-          기본 워크스페이스 경계 위에 <strong>task별 서브 스코프</strong><br />
-          예: "frontend 팀 task는 src/web/만 수정 가능"
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          완료 검증은 isolated verifier에서 실행한다
+        </h3>
+        <p className="leading-7">
+          test와 lint, schema check는 worker가 작업한 environment와 분리된 clean
+          checkout에서 실행해야 결과 조작과 숨은 상태 의존을 줄일 수 있습니다.
+          verifier에는 필요한 read·execute capability만 주고 network와 secret은
+          기본적으로 제거합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">완료 판정 — check_completion()</h3>
-        <div className="not-prose my-4 space-y-3">
-          <div className="bg-muted/50 rounded-lg p-4 border border-border">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">실행 방식</p>
-            <p className="text-sm">각 Goal의 <code>completion_check</code> 명령을 <code>/bin/sh -c</code>로 실행</p>
-            <p className="text-sm"><code>exit 0</code> → 통과 / 그 외 → 실패 (<code>unwrap_or(false)</code>)</p>
-          </div>
-          <div className="bg-muted/50 rounded-lg p-4 border border-border">
-            <p className="text-xs font-semibold text-muted-foreground mb-2">CompletionStatus — 4가지 결과</p>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="bg-background rounded px-3 py-2 border border-border">
-                <code>AllGoalsPassed</code>
-                <p className="text-xs text-muted-foreground mt-1">passed == total</p>
-              </div>
-              <div className="bg-background rounded px-3 py-2 border border-border">
-                <code>PartiallyComplete</code>
-                <p className="text-xs text-muted-foreground mt-1">0 &lt; passed &lt; total</p>
-              </div>
-              <div className="bg-background rounded px-3 py-2 border border-border">
-                <code>NotComplete</code>
-                <p className="text-xs text-muted-foreground mt-1">passed == 0</p>
-              </div>
-              <div className="bg-background rounded px-3 py-2 border border-border">
-                <code>ManualReview</code>
-                <p className="text-xs text-muted-foreground mt-1">자동 확인 명령 없음 (total == 0)</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>Goals의 completion_check 실행</strong>: 각 명령이 exit 0이면 통과<br />
-          4가지 결과: AllGoalsPassed, PartiallyComplete, NotComplete, ManualReview<br />
-          ManualReview: 자동 확인 명령 없음 → 사람이 검토 필요
+        <p className="leading-7">
+          여러 criterion이 있으면 passed·failed·not-run을 각각 기록합니다.
+          <code>PartiallyComplete</code>는 terminal success가 아니라 남은 항목을
+          보여 주는 진행 상태이며, 자동 검증할 수 없는 조건은 owner와 review
+          checklist가 있는 <code>ManualReview</code>로 보냅니다.
         </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 검증의 계층적 구조</p>
-          <p>
-            TaskPacket은 3단계 검증을 거침:
-          </p>
-          <p className="mt-2">
-            <strong>1단계 (생성 시)</strong>: validate() — 스키마·일관성<br />
-            <strong>2단계 (실행 시)</strong>: resolve_scope() — 권한·범위<br />
-            <strong>3단계 (완료 시)</strong>: check_completion() — 목표 달성
-          </p>
-          <p className="mt-2">
-            각 단계가 독립 책임:<br />
-            - 1단계: "task 자체가 말이 되나?"<br />
-            - 2단계: "이 task가 접근 가능한 파일은?"<br />
-            - 3단계: "task가 완료됐나?"
-          </p>
-          <p className="mt-2">
-            이 계층이 제공하는 가치: <strong>각 단계에서 명확한 피드백</strong><br />
-            1단계 실패 → task 수정<br />
-            2단계 실패 → 팀·권한 조정<br />
-            3단계 실패 → LLM 재작업<br />
-            → 사용자가 무엇을 고쳐야 할지 명확히 알 수 있음
-          </p>
-        </div>
-
       </div>
     </section>
   );

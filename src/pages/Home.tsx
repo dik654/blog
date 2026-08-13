@@ -1,8 +1,8 @@
-import { categories } from '@/content';
-import Hero from './home/Hero';
-import CategoryCard from './home/CategoryCard';
-import TechStack from './home/TechStack';
-import ArticleList from './home/ArticleList';
+import { categories } from "@/content";
+import Hero from "./home/Hero";
+import CategoryCard from "./home/CategoryCard";
+import TechStack from "./home/TechStack";
+import ArticleList from "./home/ArticleList";
 
 export default function Home() {
   return (

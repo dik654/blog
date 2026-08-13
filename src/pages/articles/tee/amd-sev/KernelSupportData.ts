@@ -17,7 +17,19 @@ export const kvmCode = `// KVM SEV ioctl 명령어 (Linux 커널)
 // 제한된 정보만 안전하게 교환`;
 
 export const kvmAnnotations = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: 'KVM SEV 게스트 관리 ioctl' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: '/dev/sev 플랫폼 관리' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'GHCB 기반 VMEXIT 처리' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "KVM SEV 게스트 관리 ioctl",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "/dev/sev 플랫폼 관리",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "GHCB 기반 VMEXIT 처리",
+  },
 ];

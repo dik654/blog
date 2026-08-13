@@ -1,108 +1,49 @@
+import {
+  RecoveryFrame,
+  RecoveryRule,
+  RecoverySteps,
+} from "./RecoveryVizPrimitives";
+
 export default function EscalationTemplateVarsViz() {
-  const groups = [
-    {
-      name: 'Identity',
-      color: '#3b82f6',
-      vars: [
-        { name: 'lane',   desc: 'Lane ID' },
-        { name: 'branch', desc: '브랜치 이름' },
-      ],
-    },
-    {
-      name: 'Failure',
-      color: '#ef4444',
-      vars: [
-        { name: 'failure',  desc: '실패 분류' },
-        { name: 'recipe',   desc: '마지막 레시피' },
-        { name: 'attempts', desc: '재시도 횟수' },
-      ],
-    },
-    {
-      name: 'Output',
-      color: '#f59e0b',
-      vars: [
-        { name: 'stdout', desc: 'stdout (trunc)' },
-        { name: 'stderr', desc: 'stderr' },
-      ],
-    },
-    {
-      name: 'Links',
-      color: '#8b5cf6',
-      vars: [
-        { name: 'url.ci', desc: 'CI 실행 URL' },
-        { name: 'url.pr', desc: 'PR URL' },
-      ],
-    },
-    {
-      name: 'Metrics',
-      color: '#10b981',
-      vars: [
-        { name: 'coverage',   desc: '테스트 커버리지' },
-        { name: 'time_since', desc: '상태 경과 시간' },
-      ],
-    },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={22} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">에스컬레이션 템플릿 변수 — 11개 {`{{var}}`}</text>
-
-        {/* 5 group columns */}
-        {groups.map((g, gi) => {
-          const x = 16 + gi * 108;
-          const width = 104;
-          return (
-            <g key={gi}>
-              {/* Group header */}
-              <rect x={x} y={44} width={width} height={26} rx={5}
-                fill={g.color} fillOpacity={0.18} stroke={g.color} strokeWidth={1.5} />
-              <text x={x + width / 2} y={61} textAnchor="middle" fontSize={10.5} fontWeight={700} fill={g.color}>
-                {g.name}
-              </text>
-
-              {/* Variable cards in this group */}
-              {g.vars.map((v, vi) => {
-                const y = 80 + vi * 66;
-                return (
-                  <g key={vi}>
-                    <rect x={x} y={y} width={width} height={56} rx={5}
-                      fill={g.color} fillOpacity={0.08} stroke={g.color} strokeWidth={1} />
-                    <rect x={x} y={y} width={3} height={56} fill={g.color} rx={1} />
-
-                    {/* Variable name (monospace, braces style) */}
-                    <rect x={x + 8} y={y + 8} width={width - 16} height={18} rx={3}
-                      fill="var(--muted)" opacity={0.6} />
-                    <text x={x + width / 2} y={y + 21} textAnchor="middle" fontSize={9}
-                      fontWeight={700} fontFamily="monospace" fill={g.color}>
-                      {`{{${v.name}}}`}
-                    </text>
-
-                    {/* Description */}
-                    <text x={x + 8} y={y + 40} fontSize={8.5} fill="var(--foreground)">
-                      {v.desc}
-                    </text>
-                  </g>
-                );
-              })}
-            </g>
-          );
-        })}
-
-        {/* Bottom example */}
-        <rect x={16} y={280} width={528} height={46} rx={6}
-          fill="var(--muted)" opacity={0.4} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={26} y={297} fontSize={9.5} fontWeight={700} fill="var(--foreground)">
-          템플릿 예시:
-        </text>
-        <text x={26} y={312} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-          {`"⚠️ Lane {{lane}} stuck: {{failure}} after {{attempts}} retries.`}
-        </text>
-        <text x={26} y={324} fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-          {` See {{url.ci}} for logs."`}
-        </text>
-      </svg>
-    </div>
+    <RecoveryFrame
+      label="EVIDENCE BUNDLE"
+      title="받는 사람이 바로 결정할 수 있는 정보를 보낸다"
+      description="원문 log를 붙여 넣기보다 incident identity, 영향, 현재 state와 안전한 선택지를 요약합니다."
+      note="raw artifact는 access-controlled link로 분리하고 secret·prompt·user data를 redaction합니다."
+    >
+      <RecoverySteps
+        items={[
+          {
+            label: "WHAT",
+            title: "Failure",
+            body: "class, fingerprint와 발생 시각을 담습니다.",
+            tone: "rose",
+          },
+          {
+            label: "IMPACT",
+            title: "Affected scope",
+            body: "task, branch, service와 사용자 영향을 연결합니다.",
+            tone: "amber",
+          },
+          {
+            label: "TRIED",
+            title: "Recovery attempts",
+            body: "recipe, 결과와 남은 budget을 시간순으로 보여 줍니다.",
+            tone: "blue",
+          },
+          {
+            label: "NEXT",
+            title: "Decision options",
+            body: "approve·rollback·defer 같은 구체적 선택지를 제시합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <RecoveryRule>
+        template value는 typed field에서 가져오고 notifier별 escaping을
+        적용합니다.
+      </RecoveryRule>
+    </RecoveryFrame>
   );
 }

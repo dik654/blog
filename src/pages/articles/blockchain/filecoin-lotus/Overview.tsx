@@ -1,138 +1,201 @@
-import ArchOverviewViz from './viz/ArchOverviewViz';
-import EthVsFilViz from './viz/EthVsFilViz';
-import SealingPipelineViz from './viz/SealingPipelineViz';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
-  const openCode = onCodeRef
-    ? (key: string) => onCodeRef(key, codeRefs[key])
-    : undefined;
+const COMPONENTS = [
+  {
+    name: "lotus daemon",
+    role: "체인 노드",
+    description:
+      "P2P 네트워크에서 블록과 메시지를 동기화하고, 체인 상태·지갑·JSON-RPC API를 제공합니다.",
+  },
+  {
+    name: "lotus-miner",
+    role: "스토리지 제공자 조정자",
+    description:
+      "sector와 저장 경로를 관리하고 sealing·증명 작업을 worker에 배치합니다.",
+  },
+  {
+    name: "lotus-worker",
+    role: "무거운 작업 실행자",
+    description:
+      "sealing과 proof 계산을 수행합니다. 여러 worker를 붙여 계산과 저장 장치를 확장할 수 있습니다.",
+  },
+  {
+    name: "Boost",
+    role: "deal 입구",
+    description:
+      "client의 저장 요청을 받고 deal을 관리합니다. 현재 제공자 구성에서는 Lotus와 구분해 보는 편이 정확합니다.",
+  },
+] as const;
 
+const BOUNDARIES = [
+  {
+    index: "01",
+    title: "체인을 따라간다",
+    owner: "lotus daemon",
+    description:
+      "tipset과 message를 검증·동기화하고 FVM 실행 결과로 같은 chain state를 재현합니다.",
+    codeKey: "lotus-chainstore",
+    codeLabel: "ChainStore 코드 보기",
+  },
+  {
+    index: "02",
+    title: "저장 작업을 계획한다",
+    owner: "Boost + lotus-miner",
+    description:
+      "deal의 piece를 sector 작업으로 바꾸고, 저장 경로와 worker 자원을 고려해 작업을 배치합니다.",
+  },
+  {
+    index: "03",
+    title: "저장을 증명한다",
+    owner: "lotus-worker + proof stack",
+    description:
+      "PoRep로 sector가 고유하게 봉인됐음을 만들고, 이후 PoSt로 계속 보관 중임을 증명합니다.",
+  },
+  {
+    index: "04",
+    title: "체인 상태로 확정한다",
+    owner: "FVM actors + consensus",
+    description:
+      "증명과 provider message가 actor state를 바꾸고, Expected Consensus와 F3가 선택·finality의 서로 다른 역할을 맡습니다.",
+    codeKey: "lotus-filecoin-ec",
+    codeLabel: "합의 코드 보기",
+  },
+] as const;
+
+export default function Overview({
+  onCodeRef,
+}: {
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Filecoin Lotus 아키텍처 개요</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p className="leading-7">
-          Lotus — <strong>Filecoin 프로토콜의 Go 참조 구현체</strong>.<br />
-          "분산 스토리지 + 검증 가능한 저장 증명" 플랫폼의 핵심 노드.<br />
-          Protocol Labs가 2020 mainnet 런칭 이후 maintain.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h2>Lotus를 하나의 프로그램으로 보면 헷갈린다</h2>
+        <p className="lead">
+          Lotus는 Go로 작성된 Filecoin 참조 구현이지만, 실제 운영 단위는 한
+          프로세스가 아닙니다. 체인을 따라가는 노드, 저장 작업을 조정하는
+          프로세스, 무거운 증명 계산을 수행하는 worker, deal을 받는 입구가 서로
+          다른 책임을 가집니다.
+        </p>
+        <p>
+          따라서 이 글은 패키지 목록부터 외우지 않습니다. 먼저
+          <strong>
+            {" "}
+            누가 체인을 관리하고, 누가 파일을 sector로 만들며, 어떤 결과가
+            on-chain state가 되는지
+          </strong>
+          를 분리합니다. 그 경계를 잡으면 뒤의 ChainStore, StateManager,
+          Expected Consensus 코드를 어디에 놓아야 하는지 자연스럽게 보입니다.
         </p>
       </div>
 
-      <h3 className="text-lg font-semibold mb-3">Lotus 레이어 구조</h3>
-      <ArchOverviewViz onOpenCode={openCode} />
-
-      <h3 className="text-lg font-semibold mt-8 mb-3">이더리움 vs Filecoin 아키텍처</h3>
-      <EthVsFilViz />
-
-      <h3 className="text-lg font-semibold mt-8 mb-3">섹터 봉인 파이프라인</h3>
-      <SealingPipelineViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        {/* ── Filecoin vs Ethereum 차이 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Filecoin vs Ethereum 핵심 차이</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Ethereum</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>목적: 범용 smart contract 플랫폼</li>
-              <li>합의: PoS + Casper FFG (2022 merge 이후)</li>
-              <li>블록: 단일 leader, 12초마다</li>
-              <li>상태: Merkle Patricia Trie (MPT)</li>
-              <li>가격: gas = computation</li>
-              <li>storage: on-chain expensive</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Filecoin</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>목적: 분산 storage marketplace</li>
-              <li>합의: Expected Consensus (EC) + F3</li>
-              <li>블록: tipset (여러 blocks), 30초/epoch</li>
-              <li>상태: HAMT (Hash Array Mapped Trie)</li>
-              <li>가격: storage deal + 증명 비용</li>
-              <li>storage: off-chain, proofs on-chain</li>
-            </ul>
-          </div>
+      <div className="not-prose my-8 overflow-hidden rounded-2xl border bg-card/60">
+        <div className="border-b bg-muted/30 px-5 py-4 sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+            Process boundary
+          </p>
+          <h3 className="mt-1 text-lg font-semibold">
+            현재 Lotus 제공자 스택의 역할
+          </h3>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">Lotus 역할</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li>Filecoin blockchain 노드</li>
-              <li>Storage provider 관리</li>
-              <li>Deal making (storage/retrieval)</li>
-              <li>PoRep/PoSt 증명 제출</li>
-              <li>Payment channel 처리</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <h4 className="font-semibold text-sm mb-2">주요 구성 요소</h4>
-            <ul className="text-sm space-y-1 text-muted-foreground">
-              <li><code className="text-xs">lotus-daemon</code> — chain 동기화</li>
-              <li><code className="text-xs">lotus-miner</code> — storage provider</li>
-              <li><code className="text-xs">lotus-worker</code> — sealing worker</li>
-              <li><code className="text-xs">lotus-gateway</code> — light client gateway</li>
-            </ul>
-          </div>
-        </div>
-        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
-          <h4 className="font-semibold text-sm mb-2">2024 네트워크 현황</h4>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <div><span className="text-muted-foreground">Active SPs</span><br /><strong>~4,000</strong></div>
-            <div><span className="text-muted-foreground">실저장</span><br /><strong>~1,900 PiB</strong></div>
-            <div><span className="text-muted-foreground">CC 용량</span><br /><strong>~650 PiB</strong></div>
-            <div><span className="text-muted-foreground">FIL 시가총액</span><br /><strong>~$2B</strong></div>
-          </div>
-        </div>
-        <p className="leading-7">
-          Lotus = <strong>Filecoin Go 참조 구현</strong>.<br />
-          Ethereum과 다른 목적: 분산 storage marketplace.<br />
-          4000+ storage providers, 1900 PiB 실저장.
-        </p>
-
-        {/* ── 6-layer 아키텍처 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Lotus 6-Layer 아키텍처</h3>
-        <div className="space-y-2 not-prose mb-4">
-          {[
-            { layer: '6', name: 'API (JSON-RPC)', items: ['lotus CLI tools', 'third-party apps', 'JSON-RPC server'] },
-            { layer: '5', name: 'Application Logic', items: ['Markets (deal making)', 'Payment channels', 'Retrieval'] },
-            { layer: '4', name: 'VM & Actors', items: ['Filecoin Virtual Machine (FVM)', 'Built-in actors (Miner, Market, Power ...)', 'FEVM (EVM on FVM, 2023+)'] },
-            { layer: '3', name: 'Chain & State', items: ['ChainStore: block/tipset 저장', 'StateManager: 상태 관리', 'StateTree: HAMT 기반', 'Block validation'] },
-            { layer: '2', name: 'Consensus', items: ['Expected Consensus (EC)', 'Tipset voting', 'VRF-based leader election', 'F3 fast finality (2024+)'] },
-            { layer: '1', name: 'P2P & Storage', items: ['libp2p (network)', 'Blockstore (IPFS blocks)', 'Datastore (LevelDB/Badger)'] },
-          ].map(l => (
-            <div key={l.layer} className="flex items-start gap-3 rounded-lg border bg-card p-3">
-              <span className="shrink-0 w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">{l.layer}</span>
-              <div>
-                <p className="text-sm font-semibold">{l.name}</p>
-                <p className="text-xs text-muted-foreground">{l.items.join(' · ')}</p>
+        <div className="grid gap-px bg-border sm:grid-cols-2">
+          {COMPONENTS.map((component) => (
+            <article
+              key={component.name}
+              className="min-w-0 bg-background p-5 sm:p-6"
+            >
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <code className="break-all text-sm font-semibold text-primary">
+                  {component.name}
+                </code>
+                <span className="text-xs font-medium text-muted-foreground">
+                  {component.role}
+                </span>
               </div>
-            </div>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {component.description}
+              </p>
+            </article>
           ))}
         </div>
-        <div className="rounded-lg border bg-card p-4 not-prose mb-4">
-          <h4 className="font-semibold text-sm mb-2">설계 철학</h4>
-          <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-            <span>IPFS 호환 (Content Addressable)</span>
-            <span>libp2p 기반 P2P</span>
-            <span>Modular design</span>
-            <span>Go implementation (Protocol Labs)</span>
-          </div>
-        </div>
-        <p className="leading-7">
-          Lotus 6 layers: <strong>API → App → VM → Chain → Consensus → P2P</strong>.<br />
-          IPFS 호환, libp2p 기반, modular design.<br />
-          Go 구현 — Protocol Labs maintain.
-        </p>
+      </div>
 
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 Filecoin은 blockchain이 필요했나</strong> — 증명 검증.<br />
-          IPFS만으로는 "누가 진짜 저장하는가?" 증명 불가.<br />
-          blockchain이 PoRep/PoSt 증명 기록 + 경제적 인센티브 제공.<br />
-          IPFS(content addressing) + Blockchain(incentives) = Filecoin.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>프로세스와 프로토콜을 연결하는 네 경계</h3>
+        <p>
+          위 네 프로그램은 아래 흐름에서 만납니다. 화살표 하나로 뭉개기보다, 각
+          단계의 소유자와 산출물을 따로 보면 장애를 추적할 때도 유리합니다.
+        </p>
+      </div>
+
+      <ol className="not-prose my-8 space-y-3">
+        {BOUNDARIES.map((boundary) => (
+          <li
+            key={boundary.index}
+            className="grid min-w-0 gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-[3.25rem_minmax(0,1fr)] sm:p-5"
+          >
+            <span className="font-mono text-sm font-semibold text-primary">
+              {boundary.index}
+            </span>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <h4 className="font-semibold">{boundary.title}</h4>
+                <span className="text-xs text-muted-foreground">
+                  {boundary.owner}
+                </span>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {boundary.description}
+              </p>
+              {"codeKey" in boundary && boundary.codeKey && onCodeRef ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    onCodeRef(boundary.codeKey, codeRefs[boundary.codeKey])
+                  }
+                  className="mt-3 inline-flex min-h-9 items-center rounded-lg border px-3 text-xs font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  {boundary.codeLabel} →
+                </button>
+              ) : null}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>이 글에서 구분해 읽어야 할 세 가지</h3>
+        <ul>
+          <li>
+            <strong>chain selection과 finality는 같은 말이 아닙니다.</strong>{" "}
+            Expected Consensus는 어느 tipset chain을 따라갈지 정하고, F3는 그
+            결과에 더 빠른 finality를 제공합니다.
+          </li>
+          <li>
+            <strong>
+              FVM과 built-in actors는 저장 파일 자체를 보관하지 않습니다.
+            </strong>{" "}
+            체인 위에는 message 실행 결과, provider power, deal·sector와 proof에
+            관한 검증 가능한 상태가 남습니다.
+          </li>
+          <li>
+            <strong>
+              Lotus와 deal/retrieval 제품 전체를 동일시하면 안 됩니다.
+            </strong>{" "}
+            Lotus가 체인과 provider 작업의 핵심을 맡더라도, deal 입구 같은 제품
+            경계는 별도 구성요소로 발전했습니다.
+          </li>
+        </ul>
+
+        <h3>이후 글을 읽는 순서</h3>
+        <p>
+          먼저 <strong>Consensus &amp; Proofs</strong>에서 EC·PoRep·PoSt의
+          역할을 나누고, <strong>Chain Store &amp; State</strong>에서 tipset과
+          actor state가 저장·실행되는 경로를 봅니다. 마지막으로{" "}
+          <strong>Block Creation</strong>에서 message 선택부터 header 조립까지를
+          코드와 연결합니다. sealing의 세부 단계는 그 문맥 안에서 한 번만
+          설명합니다.
         </p>
       </div>
     </section>

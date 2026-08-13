@@ -2,22 +2,21 @@ export interface HeaderStep {
   title: string;
   desc: string;
 }
-
-export const HEADER_STEPS: HeaderStep[] = [
+export const HEADER_STEPS: readonly HeaderStep[] = [
   {
-    title: '범위 결정',
-    desc: 'checkpoint+1부터 CL tip까지. 예를 들어 checkpoint=#18,399,000이면 #18,399,001부터 다운로드를 시작한다.',
+    title: "범위를 제한한다",
+    desc: "checkpoint 이후부터 target까지 중 이번 호출이 처리할 bounded range를 선택한다.",
   },
   {
-    title: '병렬 스트림 수신',
-    desc: 'devp2p/eth 프로토콜로 여러 피어에 GetBlockHeaders를 동시 요청한다. 가장 빠른 응답부터 스트림으로 수신한다.',
+    title: "peer 응답을 수집한다",
+    desc: "요청과 응답을 연결하고 누락·중복·순서 문제를 downloader 경계에서 처리한다.",
   },
   {
-    title: '헤더 검증',
-    desc: 'parent_hash가 이전 블록 해시와 일치하는지, 블록 번호가 연속인지, 타임스탬프가 부모보다 큰지 검사한다.',
+    title: "fork-aware rules를 검증한다",
+    desc: "parent 연결과 ChainSpec에 따른 header fields를 확인한다.",
   },
   {
-    title: '배치 DB 삽입',
-    desc: 'commit_threshold(기본 10,000)개 단위로 MDBX 트랜잭션 한 번에 삽입. 크래시 시 체크포인트부터 이어서 다운로드한다.',
+    title: "provider와 checkpoint를 진행시킨다",
+    desc: "검증된 header와 canonical mapping만 저장하며 물리 backend와 batch 크기를 고정 가정하지 않는다.",
   },
-];
+] as const;

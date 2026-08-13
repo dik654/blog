@@ -1,4 +1,4 @@
-import type { Article } from '../types';
+import type { Article } from "../types";
 
 // L1 Blockchains — 나중에 정리 후 추가 예정
 // 소분류(l1-chains)도 주석 처리됨

@@ -1,92 +1,57 @@
-import GroupKFoldViz from './viz/GroupKFoldViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import GroupKFoldViz from "./viz/GroupKFoldViz";
 
 export default function GroupKFold() {
   return (
     <section id="group" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">GroupKFold: 그룹 누출 방지</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        같은 원인에서 나온 여러 행은 행 수가 많아도 하나의 독립 단위처럼 다뤄야 합니다
+      </h2>
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          <strong>그룹 누출(Group Leakage)</strong> — 같은 그룹(환자/유저/시나리오)의 데이터가 train과 val에 동시 존재하는 현상<br />
-          모델이 그룹의 고유 패턴을 외워버림 → CV 점수 과대 추정 → 실전에서 성능 급락
+          한 사용자, 환자, 장비, 문서 또는 원본 영상에서 여러 행이 파생됐다면 그 행들은 서로 비슷합니다. 같은 entity가
+          train과 validation에 동시에 들어가면 모델은 일반적인 target pattern 대신 entity fingerprint를 기억해 높은 점수를 낼
+          수 있습니다. Group split은 한 group의 모든 행을 한쪽에만 배치해 이 지름길을 막습니다.
         </p>
-
-        <h3>언제 GroupKFold가 필요한가</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 text-sm">
-          {[
-            {
-              domain: '의료',
-              group: '환자 ID',
-              desc: '같은 환자의 여러 검사 결과 → 환자별 특성이 누출',
-            },
-            {
-              domain: '추천 시스템',
-              group: '유저 ID',
-              desc: '같은 유저의 클릭/구매 이력 → 유저 선호도가 누출',
-            },
-            {
-              domain: '물류/창고',
-              group: '시나리오 ID',
-              desc: '같은 시나리오(레이아웃+주문) → 레이아웃 패턴이 누출',
-            },
-          ].map((p) => (
-            <div key={p.domain} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-bold text-foreground text-xs">{p.domain}: {p.group}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-            </div>
-          ))}
-        </div>
-
-        <h3 className="mt-4">GroupKFold 동작 원리</h3>
         <p>
-          <strong>GroupKFold</strong>: 그룹을 fold 단위로 배정 → 같은 그룹의 모든 샘플이 같은 fold에<br />
-          그룹 수 ≥ K 필요 (그룹 3개인데 K=5 불가)<br />
-          sklearn: <code>GroupKFold(n_splits=5)</code> + <code>groups=</code> 파라미터로 그룹 지정
+          Group key는 database ID 하나로 끝나지 않을 수 있습니다. 같은 원본에서 만든 crop·augmentation, 한 household의 여러
+          사용자, 같은 병원·공장·수집 batch처럼 더 위의 공유 원인이 배포에서 새로 나타난다면 그 상위 ID로 묶어야 합니다.
         </p>
-
-        <h3 className="mt-4">창고 대회 예시: 시나리오 ID 기반 GroupKFold</h3>
-        <p>
-          각 시나리오(창고 레이아웃 + 주문 세트)가 하나의 그룹<br />
-          시나리오 S1의 타임슬롯 1~25 데이터가 train/val에 섞이면 → 같은 레이아웃의 패턴을 학습<br />
-          <code>GroupKFold(groups=scenario_id)</code> → 새로운 시나리오에 대한 일반화 능력 평가
-        </p>
-
-        <h3 className="mt-4">StratifiedGroupKFold: 그룹 + 클래스 비율 동시 보장</h3>
-        <p>
-          그룹 단위 분할 + 각 fold의 타겟 비율 유지를 동시에 달성<br />
-          예: 대출 심사 — 은행(그룹) + 연체율(타겟) 비율 동시 고려<br />
-          sklearn: <code>StratifiedGroupKFold(n_splits=5)</code><br />
-          그룹 수가 적으면 완벽한 비율 유지가 어려울 수 있음 — 최선의 근사
-        </p>
-
-        <h3 className="mt-4">누출 여부 진단 체크리스트</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            {
-              check: 'CV 점수가 비정상적으로 높은가?',
-              detail: 'AUC 0.99 이상이면 누출 의심. GroupKFold 적용 후 0.85로 떨어지면 → 이전 CV가 누출',
-            },
-            {
-              check: 'train/val 그룹 교집합이 비어 있는가?',
-              detail: 'set(train_groups) & set(val_groups)가 공집합이어야 함. 교집합 존재 = 누출',
-            },
-            {
-              check: 'GroupKFold 전후 점수 차이가 큰가?',
-              detail: '|일반 CV - GroupKFold CV| > 0.05이면 기존 CV가 누출이었을 가능성 높음',
-            },
-            {
-              check: 'Adversarial Validation으로 확인',
-              detail: 'train과 val을 구분하는 분류기를 만들어 AUC 0.5 근처면 → 분포 동일(정상)',
-            },
-          ].map((p, i) => (
-            <div key={i} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-bold text-foreground text-xs">{p.check}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.detail}</div>
-            </div>
-          ))}
-        </div>
       </div>
-      <div className="not-prose mt-6">
+
+      <ExplainedFormula
+        question="Group split이 지켜야 할 최소 무결성 조건과 실제 독립 단위 수는 무엇일까요?"
+        idea={
+          <>
+            각 fold의 train과 validation group 집합은 겹치면 안 됩니다. 행이 10만 개여도 독립 group이 20개라면 group shift에
+            대한 근거 단위는 20개에 가깝고, 10만 개를 독립 표본처럼 해석하면 불확실성을 과소평가합니다.
+          </>
+        }
+        formula={String.raw`G(D_{-k})\cap G(V_k)=\varnothing,\qquad n_{\mathrm{unit}}=\left|G(D)\right|`}
+        terms={[
+          { symbol: "G(S)", name: "groups in set S", description: "행 집합 S에 포함된 고유 entity·site·source group ID 집합입니다." },
+          { symbol: "D_-k", name: "fold-k training rows", description: "k번째 model을 fit하는 행들입니다." },
+          { symbol: "V_k", name: "fold-k validation rows", description: "k번째 model이 보지 않고 평가하는 행들입니다." },
+          { symbol: "n_unit", name: "independent-unit count", description: "평가 질문에서 독립에 가깝다고 보는 group의 개수입니다." },
+        ]}
+        assumptions={[
+          "Group ID가 실제 공유 원인을 충분히 포착해야 합니다. 잘못된 ID는 교집합이 비어도 leakage를 남깁니다.",
+          "Group들이 서로 완전히 독립이라는 보장은 아니며 site·time 같은 상위 dependency가 남을 수 있습니다.",
+          "Class 균형보다 group disjointness가 우선이며 불가능한 label 조합은 fold report에 그대로 드러냅니다.",
+        ]}
+        interpretation="환자 20명에게서 각각 5,000개 patch를 만들었다면 행은 10만 개지만 새 환자 일반화의 핵심 반복 단위는 20명입니다."
+      />
+
+      <div className="not-prose my-8">
         <GroupKFoldViz />
+      </div>
+
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
+        <p>
+          Group 크기와 label 분포가 불균형하면 fold 점수의 흔들림이 커질 수 있습니다. Random row split로 돌아가기보다 각 fold의
+          group 수·행 수·class 비율·핵심 site coverage를 함께 공개하고, 가능한 경우 stratified group splitter를 사용합니다.
+          Group 수가 너무 적다면 CV 숫자를 정밀한 추정치로 포장하지 말고 group별 결과와 leave-one-group-out 민감도를 보여줍니다.
+        </p>
       </div>
     </section>
   );

@@ -1,11 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const commitCodeRef: Record<string, CodeRef> = {
-  'finalize-commit': {
-    path: 'cometbft/consensus/state.go — enterCommit() + finalizeCommit()',
-    lang: 'go',
+  "finalize-commit": {
+    path: "cometbft/consensus/state.go — enterCommit() + finalizeCommit()",
+    lang: "go",
     highlight: [1, 3],
-    desc: '+2/3 Precommit 달성 시 enterCommit → tryFinalizeCommit → finalizeCommit 체인으로\n블록을 blockStore에 저장하고 ABCI ApplyBlock을 호출하여 상태를 전이합니다.',
+    desc: "+2/3 Precommit 달성 시 enterCommit → tryFinalizeCommit → finalizeCommit 체인으로\n블록을 blockStore에 저장하고 ABCI ApplyBlock을 호출하여 상태를 전이합니다.",
     code: `// Enter: +2/3 precommits for block
 func (cs *State) enterCommit(height int64, commitRound int32) {
     defer func() {
@@ -48,11 +48,31 @@ func (cs *State) finalizeCommit(height int64) {
     cs.scheduleRound0(&cs.RoundState)
 }`,
     annotations: [
-      { lines: [3, 10], color: 'sky', note: 'defer: CommitRound/Time 기록 후 tryFinalizeCommit 호출' },
-      { lines: [12, 13], color: 'emerald', note: '+2/3 Precommit 다수결 확인 — 없으면 panic' },
-      { lines: [27, 30], color: 'amber', note: 'blockStore에 블록 영구 저장 (ExtendedCommit 포함)' },
-      { lines: [32, 33], color: 'violet', note: 'WAL에 EndHeight 기록 — 크래시 복구의 기준점' },
-      { lines: [35, 39], color: 'rose', note: 'ABCI ApplyBlock: 앱 상태 전이 → 새 height로 이동' },
+      {
+        lines: [3, 10],
+        color: "sky",
+        note: "defer: CommitRound/Time 기록 후 tryFinalizeCommit 호출",
+      },
+      {
+        lines: [12, 13],
+        color: "emerald",
+        note: "+2/3 Precommit 다수결 확인 — 없으면 panic",
+      },
+      {
+        lines: [27, 30],
+        color: "amber",
+        note: "blockStore에 블록 영구 저장 (ExtendedCommit 포함)",
+      },
+      {
+        lines: [32, 33],
+        color: "violet",
+        note: "WAL에 EndHeight 기록 — 크래시 복구의 기준점",
+      },
+      {
+        lines: [35, 39],
+        color: "rose",
+        note: "ABCI ApplyBlock: 앱 상태 전이 → 새 height로 이동",
+      },
     ],
   },
 };

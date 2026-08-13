@@ -1,18 +1,22 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './ContextVizData';
-import { StepWhy, StepEthernet } from './ContextVizSteps';
-import { StepRDMA, StepUseCase } from './ContextVizSteps2';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./ContextVizData";
+import { StepTraffic, StepGoodput, StepFabric } from "./ContextVizSteps";
+import { StepRdma, StepValidate } from "./ContextVizSteps2";
 
-const R = [StepWhy, StepEthernet, StepRDMA, StepUseCase];
+const SCENES = [StepTraffic, StepGoodput, StepFabric, StepRdma, StepValidate];
 
 export default function ContextViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => {
-        const S = R[step];
+        const Scene = SCENES[step];
         return (
-          <svg viewBox="0 0 420 120" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-            <S />
+          <svg
+            viewBox="0 0 480 200"
+            className="w-full max-w-3xl"
+            style={{ height: "auto" }}
+          >
+            <Scene />
           </svg>
         );
       }}

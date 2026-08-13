@@ -1,22 +1,28 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">HotStuff-2 개요</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Malkhi &amp; Nayak (2023) — <strong>HotStuff의 3단계를 2단계로 축소</strong>.<br />
-          timeout-certificate(TC) 도입으로 Pre-Commit 제거.<br />
+          Malkhi &amp; Nayak (2023) —{" "}
+          <strong>HotStuff의 3단계를 2단계로 축소</strong>.<br />
+          timeout-certificate(TC) 도입으로 Pre-Commit 제거.
+          <br />
           O(n) 통신 유지 + 최적 지연 (4 message delays) 달성.
         </p>
 
         {/* ── HotStuff-2 등장 동기 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff-2 등장 동기</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          HotStuff-2 등장 동기
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff의 한계:
+          {`// HotStuff의 한계:
 //
 // 1. 3-phase (3-chain) 필요:
 //    - Prepare, Pre-commit, Commit
@@ -62,14 +68,17 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           HotStuff-2 = <strong>3-phase → 2-phase with TC</strong>.<br />
-          Pre-commit을 timeout-certificate로 대체.<br />
+          Pre-commit을 timeout-certificate로 대체.
+          <br />
           fully responsive + O(n) + 최적 4-delay latency.
         </p>
 
         {/* ── 핵심 차이 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff vs HotStuff-2 핵심 차이</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          HotStuff vs HotStuff-2 핵심 차이
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff (3-phase):
+          {`// HotStuff (3-phase):
 //
 // View v:
 //   Phase 1: Prepare
@@ -127,14 +136,17 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           차이: <strong>Pre-commit 삭제 + TC 도입</strong>.<br />
-          3 phases → 2 phases, 7 delays → 4 delays.<br />
+          3 phases → 2 phases, 7 delays → 4 delays.
+          <br />
           TC가 view change safety 증거 역할.
         </p>
 
         {/* ── 기여 정리 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">HotStuff-2의 이론적 기여</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          HotStuff-2의 이론적 기여
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// HotStuff-2의 3가지 기여:
+          {`// HotStuff-2의 3가지 기여:
 
 // 1. Optimal latency:
 //    - 2-phase with linear communication
@@ -183,16 +195,24 @@ export default function Overview() {
 // - HotStuff-2는 학술 단계`}
         </pre>
         <p className="leading-7">
-          기여: <strong>optimal latency + fully responsive + TC primitive</strong>.<br />
-          Pass-Shi 하한 달성 — 이론적 최적.<br />
+          기여:{" "}
+          <strong>optimal latency + fully responsive + TC primitive</strong>.
+          <br />
+          Pass-Shi 하한 달성 — 이론적 최적.
+          <br />
           아직 mainnet 채택 없지만 BFT 연구 방향 제시.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 2-phase가 오랫동안 불가능해 보였나</strong> — 3-chain safety proof.<br />
-          HotStuff 저자들이 3-chain이 최적이라 생각 (2018).<br />
-          Jolteon(2021)이 2-chain 가능성 제시 (weaker responsive).<br />
-          HotStuff-2(2023)가 fully responsive 2-phase 달성 — 5년 걸린 breakthrough.
+          <strong>💡 왜 2-phase가 오랫동안 불가능해 보였나</strong> — 3-chain
+          safety proof.
+          <br />
+          HotStuff 저자들이 3-chain이 최적이라 생각 (2018).
+          <br />
+          Jolteon(2021)이 2-chain 가능성 제시 (weaker responsive).
+          <br />
+          HotStuff-2(2023)가 fully responsive 2-phase 달성 — 5년 걸린
+          breakthrough.
         </p>
       </div>
     </section>

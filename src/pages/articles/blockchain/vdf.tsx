@@ -1,6 +1,6 @@
-import Overview from './vdf/Overview';
-import Construction from './vdf/Construction';
-import Applications from './vdf/Applications';
+import Overview from "./vdf/Overview";
+import Construction from "./vdf/Construction";
+import Applications from "./vdf/Applications";
 
 export default function VDFArticle() {
   return (

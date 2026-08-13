@@ -1,54 +1,60 @@
-import CNN3DViz from './viz/CNN3DViz';
+import CNN3DViz from "./viz/CNN3DViz";
 
 export default function CNN3D() {
   return (
     <section id="3dcnn" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">3D CNN & SlowFast</h2>
+      <h2 className="mb-6 text-2xl font-bold">3D convolution은 공간 필터에 시간 방향 receptive field를 더합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          2D CNN — 이미지에서 공간 패턴(에지, 텍스처, 물체)을 추출하는 데 탁월<br />
-          하지만 시간 축이 없어 프레임 간 움직임을 학습할 수 없음<br />
-          해법: 2D 커널(k x k)을 3D 커널(<strong>d x k x k</strong>)로 확장 — d는 시간 방향 커널 크기
+          2D encoder와 pooling은 frame 순서를 충분히 표현하지 못할 수 있습니다. 3D convolution은 kernel을 시간·높이·너비 방향으로 움직여 짧은 motion pattern을 직접 학습합니다. 다만 계산량과 activation memory가 커지므로, 먼저 같은 frame budget의 2D baseline보다 일관되게 나은지 확인합니다.
         </p>
         <p>
-          <strong>C3D</strong> (Tran et al., 2015) — 최초의 실용적 3D ConvNet<br />
-          모든 conv를 3x3x3으로 통일, 16프레임 입력, 5개 conv 블록 + FC 구조<br />
-          단순하지만 ImageNet pretrained 가중치를 활용할 수 없어 대규모 비디오 데이터(Sports-1M)로 직접 학습
-        </p>
-        <p>
-          <strong>I3D</strong> (Carreira & Zisserman, 2017) — 2D pretrained를 3D로 "부풀리기"(Inflation)<br />
-          k x k 커널을 d x k x k로 확장, 가중치를 d로 나눠 복제해 초기화<br />
-          ImageNet의 강력한 공간 피처를 그대로 계승 + 시간 축 학습을 더함<br />
-          Two-Stream: RGB 스트림(외형) + Optical Flow 스트림(움직임)의 예측을 Late Fusion
+          I3D는 2D image kernel을 시간축으로 확장해 image pretraining을 video model의 초기값으로 활용했습니다. R(2+1)D는 하나의 3D convolution을 spatial convolution과 temporal convolution으로 나누고 사이에 비선형성을 넣습니다. 이 factorization은 단순한 파라미터 절감 공식이 아니라 최적화와 표현 구조를 바꾸는 선택이므로 동일한 FLOPs와 data recipe에서 비교해야 합니다.
         </p>
       </div>
-      <div className="not-prose my-8">
-        <CNN3DViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">SlowFast Networks</h3>
+      <ExplainedFormula
+        question="한 3D convolution output이 원본 시간축의 몇 초를 직접 볼까?"
+        idea={<>Temporal kernel kₜ의 sample 위치가 dilation dₜ만큼 떨어져 있으므로 첫 위치에서 마지막 위치까지 1+(kₜ−1)dₜ개의 sampled-frame span을 봅니다.</>}
+        formula={String.raw`\begin{aligned}
+R_t&=1+(k_t-1)d_t,\\
+D_{\mathrm{span}}&=\frac{(R_t-1)s}{f_{\mathrm{src}}}.
+\end{aligned}`}
+        terms={[
+          { symbol: "kₜ", name: "temporal kernel size", description: "한 convolution이 읽는 temporal sample 위치 수입니다." },
+          { symbol: "dₜ", name: "temporal dilation", description: "Kernel sample 사이의 sampled-frame 간격입니다." },
+          { symbol: "s/fsrc", name: "sample time step", description: "Sampling stride를 적용한 인접 model frame 사이의 실제 second입니다." },
+          { symbol: "Rₜ", name: "sampled-frame span", description: "첫 kernel 위치부터 마지막 위치까지 포함하는 sampled-frame index 폭입니다." },
+          { symbol: "Dspan", name: "timestamp span", description: "첫 관측 timestamp와 마지막 관측 timestamp 사이의 실제 second입니다." },
+        ]}
+        assumptions={["한 layer의 direct span이며 여러 stride layer가 쌓인 network 전체 receptive field는 재귀적으로 계산합니다.", "Padding은 span 크기를 바꾸지 않지만 boundary에서 실제 관측 frame 수를 줄일 수 있습니다.", "Theoretical span 안의 모든 frame이 prediction에 같은 영향을 준다는 뜻은 아닙니다."]}
+        interpretation="30 fps, sampling stride 2, kₜ=3, dilation 1이면 source frame index 0·2·4를 읽습니다. Rₜ=3이고 첫·마지막 timestamp span은 4/30≈.133초입니다. Layer를 쌓거나 temporal stride를 늘리면 전체 receptive field가 확장됩니다."
+      />
+      <div className="not-prose my-8"><CNN3DViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>SlowFast는 의미와 motion을 서로 다른 시간 해상도로 읽습니다</h3>
         <p>
-          Feichtenhofer et al. (2019) — 생물학적 시각 시스템에서 영감<br />
-          <strong>Slow pathway</strong>: 낮은 프레임률(예: 4fps), 채널 수가 많음 → "무엇이 있는가"(공간 의미)<br />
-          <strong>Fast pathway</strong>: 높은 프레임률(예: 32fps), 채널 수가 적음(Slow의 1/8) → "어떻게 움직이는가"(시간 동작)<br />
-          Lateral Connection으로 Fast에서 Slow로 시간 정보를 전달
+          Slow pathway는 낮은 frame rate에서 비교적 풍부한 channel로 object와 scene semantics를 읽고, Fast pathway는 높은 frame rate에서 가벼운 channel로 빠른 변화를 읽습니다. 두 경로 사이의 lateral connection이 시간 정보를 결합합니다. 구체적인 frame-rate 비율과 channel 비율은 논문의 고정 규칙이 아니라 target event와 latency에 맞춰 검증할 hyperparameter입니다.
         </p>
         <p>
-          설계 판단: 파라미터의 80%를 Slow에 집중 — 공간 인식이 행동 인식의 기반이기 때문<br />
-          Fast는 가벼운 채널로 빠른 움직임만 포착, 효율적인 분업 구조
+          짧은 동작과 긴 상태 변화가 함께 있다면 단일 clip score만 보지 말고 event duration별 recall을 나눠 봅니다. 여기서 개선이 없다면 더 복잡한 3D backbone보다 sampling이나 영상 단위 aggregation을 먼저 고치는 편이 낫습니다.
         </p>
       </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">R(2+1)D — 공간/시간 분리</h3>
-        <p>
-          Tran et al. (2018) — 3D conv를 2D 공간 conv(1x3x3) + 1D 시간 conv(3x1x1)로 분해<br />
-          파라미터: 3x3x3 = 27 → (1x3x3) + (3x1x1) = 9 + 3 = 12, <strong>56% 절감</strong><br />
-          핵심: 분리 사이에 ReLU를 삽입하여 비선형성 추가 → 같은 파라미터 대비 표현력 향상<br />
-          ResNet-18/34 기반으로 구현, 행동 인식에서 C3D/I3D를 능가
-        </p>
-      </div>
+      <ExplainedFormula
+        question="SlowFast는 두 pathway의 frame rate와 channel capacity를 어떻게 분리할까?"
+        idea={<>Fast path는 Slow path보다 α배 많은 frame을 보되 channel은 β배만 사용해 빠른 motion을 읽는 비용을 제한합니다.</>}
+        formula={String.raw`T_{\mathrm{fast}}=\alpha T_{\mathrm{slow}},\qquad C_{\mathrm{fast}}=\beta C_{\mathrm{slow}}`}
+        terms={[
+          { symbol: "α", name: "frame-rate ratio", description: "Fast path가 Slow path보다 시간축을 얼마나 촘촘하게 보는지 나타냅니다." },
+          { symbol: "β", name: "channel ratio", description: "Fast path channel capacity가 Slow path의 몇 배인지 나타내며 보통 1보다 작습니다." },
+          { symbol: "T,C", name: "temporal samples and channels", description: "각 pathway의 frame 수와 feature channel 수입니다." },
+        ]}
+        assumptions={["두 pathway가 같은 원본 시간 구간을 서로 다른 sampling rate로 관측합니다.", "Lateral connection의 location과 transform을 architecture contract에 기록합니다.", "α·β의 식은 resource allocation이며 실제 FLOPs·latency는 stage geometry와 runtime에서 측정합니다."]}
+        interpretation="α=8, β=1/8이면 Fast path는 8배 촘촘한 시간축을 1/8 channel로 읽습니다. 이 비율이 모든 event에 최적이라는 뜻은 아니며 duration·motion slice에서 검증해야 합니다."
+      />
+      <div id="paper-i3d" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · I3D와 Kinetics</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Carreira와 Zisserman은 2D ConvNet filter를 3D로 inflate하고 Kinetics video pretraining 뒤 smaller action benchmarks로 transfer했습니다. Architecture 효과는 Kinetics 규모와 pretraining을 떼어 보편적 3D 우월성으로 읽지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content_cvpr_2017/html/Carreira_Quo_Vadis_Action_CVPR_2017_paper.html" target="_blank" rel="noreferrer">Inflation·Kinetics·transfer 범위 보기</a></div>
+      <div id="paper-r2plus1d" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · R(2+1)D</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Tran 등은 3D convolution을 2D spatial과 1D temporal convolution으로 나누고 중간 비선형성을 추가해 optimization과 representation을 비교했습니다. Factorization은 단순한 동일 함수의 빠른 구현이 아닙니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content_cvpr_2018/html/Tran_A_Closer_Look_CVPR_2018_paper.html" target="_blank" rel="noreferrer">Factorization과 controlled comparison 보기</a></div>
+      <div id="paper-slowfast" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · SlowFast</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Feichtenhofer 등은 low-rate Slow semantic path와 lightweight high-rate Fast motion path를 lateral connection으로 결합했습니다. 논문의 Kinetics·Charades·AVA 설정 밖에서 α·β를 고정 default로 보지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content_ICCV_2019/html/Feichtenhofer_SlowFast_Networks_for_Video_Recognition_ICCV_2019_paper.html" target="_blank" rel="noreferrer">두 pathway의 rate·capacity ablation 보기</a></div>
     </section>
   );
 }
+import ExplainedFormula from "@/components/ui/explained-formula";

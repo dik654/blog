@@ -1,82 +1,55 @@
+import VizFrame from "@/components/viz/VizFrame";
+
+const input = [1, 2, 3];
+
+function softmaxAtTemperature(temperature: number) {
+  const scaled = input.map((value) => value / temperature);
+  const maximum = Math.max(...scaled);
+  const exponentials = scaled.map((value) => Math.exp(value - maximum));
+  const total = exponentials.reduce((sum, value) => sum + value, 0);
+  return exponentials.map((value) => value / total);
+}
+
+const temperatures = [
+  { value: 0.1, reading: "거의 one-hot", accent: "bg-rose-500" },
+  { value: 0.5, reading: "더 날카로움", accent: "bg-amber-500" },
+  { value: 1, reading: "원래 분포", accent: "bg-sky-500" },
+  { value: 2, reading: "더 평평함", accent: "bg-emerald-500" },
+  { value: 5, reading: "균등 분포에 접근", accent: "bg-violet-500" },
+] as const;
+
 export default function TemperatureViz() {
-  const input = [1, 2, 3];
-
-  const softmaxT = (x: number[], T: number) => {
-    const scaled = x.map((v) => v / T);
-    const maxV = Math.max(...scaled);
-    const exp = scaled.map((v) => Math.exp(v - maxV));
-    const sum = exp.reduce((a, b) => a + b, 0);
-    return exp.map((v) => v / sum);
-  };
-
-  const temps = [
-    { T: 0.1, label: 'T=0.1', note: '거의 one-hot', color: '#ef4444' },
-    { T: 0.5, label: 'T=0.5', note: 'sharper', color: '#f59e0b' },
-    { T: 1.0, label: 'T=1.0', note: '표준', color: '#3b82f6' },
-    { T: 2.0, label: 'T=2.0', note: 'softer', color: '#10b981' },
-    { T: 5.0, label: 'T=5.0', note: 'nearly uniform', color: '#8b5cf6' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 640 330" className="w-full h-auto" style={{ maxWidth: 820 }}>
-        <text x={320} y={24} textAnchor="middle" fontSize={16} fontWeight={700}
-          fill="var(--foreground)">Temperature Scaling — 출력 분포 조절</text>
-        <text x={320} y={42} textAnchor="middle" fontSize={11} fontFamily="monospace" fill="var(--muted-foreground)">
-          입력 logits = [1, 2, 3] · 공식: softmax(x/T)
-        </text>
-
-        {temps.map((t, i) => {
-          const x = 20 + i * 125;
-          const probs = softmaxT(input, t.T);
+    <VizFrame
+      eyebrow="같은 logits, 다른 temperature"
+      title="Temperature는 class 순서를 바꾸지 않고 확률 차이만 조절합니다"
+      description="입력 logits [1, 2, 3]을 고정했으므로 카드 사이의 차이는 T로 나눈 효과만 보여줍니다."
+      note="T가 작으면 작은 logit 차이도 크게 증폭되고, T가 크면 차이가 줄어듭니다. 절대적인 T보다 원래 logit scale과 함께 해석해야 합니다."
+    >
+      <div className="grid gap-px overflow-hidden rounded-lg border border-border/70 bg-border/60 sm:grid-cols-2 lg:grid-cols-5">
+        {temperatures.map((temperature) => {
+          const probabilities = softmaxAtTemperature(temperature.value);
+          const entropy = -probabilities.reduce((sum, value) => sum + value * Math.log(value + 1e-12), 0);
           return (
-            <g key={t.label}>
-              <rect x={x} y={62} width={115} height={220} rx={8}
-                fill={t.color} fillOpacity={0.06} stroke={t.color} strokeWidth={1.8} />
-
-              <text x={x + 57} y={82} textAnchor="middle" fontSize={13} fontWeight={700} fill={t.color}>
-                {t.label}
-              </text>
-
-              {/* 바 차트 */}
-              {probs.map((p, j) => {
-                const barH = p * 110 + 2;
-                return (
-                  <g key={j}>
-                    <rect x={x + 15 + j * 30} y={210 - barH} width={24} height={barH}
-                      fill={t.color} fillOpacity={0.5} stroke={t.color} strokeWidth={1.2} />
-                    <text x={x + 27 + j * 30} y={225} textAnchor="middle" fontSize={8} fontFamily="monospace" fill="var(--muted-foreground)">
-                      x={j + 1}
-                    </text>
-                    <text x={x + 27 + j * 30} y={210 - barH - 4} textAnchor="middle" fontSize={8} fontFamily="monospace" fontWeight={700} fill={t.color}>
-                      {p < 0.01 ? p.toFixed(3) : p.toFixed(2)}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {/* 축 */}
-              <line x1={x + 10} y1={210} x2={x + 105} y2={210} stroke="var(--border)" strokeWidth={0.8} />
-
-              <text x={x + 57} y={250} textAnchor="middle" fontSize={10} fontWeight={600} fill="var(--foreground)">
-                {t.note}
-              </text>
-
-              {/* entropy 표시 */}
-              <text x={x + 57} y={266} textAnchor="middle" fontSize={9} fontFamily="monospace" fill="var(--muted-foreground)">
-                entropy={(-probs.reduce((s, p) => s + p * Math.log(p + 1e-10), 0)).toFixed(2)}
-              </text>
-            </g>
+            <section key={temperature.value} className="min-w-0 bg-background p-4">
+              <div className="flex items-baseline justify-between gap-2">
+                <p className="font-mono text-sm font-bold">T={temperature.value.toFixed(1)}</p>
+                <p className="text-[10px] text-muted-foreground">H={entropy.toFixed(2)}</p>
+              </div>
+              <div className="mt-5 flex h-28 items-end justify-center gap-2 border-b border-border/70 pb-px">
+                {probabilities.map((probability, index) => (
+                  <div key={input[index]} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-1">
+                    <span className="font-mono text-[9px] tabular-nums text-muted-foreground">{probability.toFixed(2)}</span>
+                    <div className={`w-full max-w-8 rounded-t-sm ${temperature.accent}`} style={{ height: `${Math.max(2, probability * 82)}px`, opacity: 0.72 }} />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 flex justify-around font-mono text-[9px] text-muted-foreground"><span>1</span><span>2</span><span>3</span></div>
+              <p className="mt-4 text-xs font-semibold leading-5">{temperature.reading}</p>
+            </section>
           );
         })}
-
-        {/* 사용 사례 */}
-        <rect x={20} y={294} width={600} height={30} rx={6}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.8} />
-        <text x={320} y={314} textAnchor="middle" fontSize={10} fill="var(--muted-foreground)">
-          사용: LLM 샘플링(T=0.7 balanced), Knowledge Distillation(T=5~10), Model Calibration
-        </text>
-      </svg>
-    </div>
+      </div>
+    </VizFrame>
   );
 }

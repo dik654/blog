@@ -1,5 +1,5 @@
-import GossipSubMeshViz from './viz/GossipSubMeshViz';
-import CodePanel from '@/components/ui/code-panel';
+import GossipSubMeshViz from "./viz/GossipSubMeshViz";
+import CodePanel from "@/components/ui/code-panel";
 
 const gsCode = `// GossipSub v1.1 (libp2p 명세)
 // 메시 오버레이 파라미터:
@@ -18,33 +18,54 @@ const gsCode = `// GossipSub v1.1 (libp2p 명세)
 //   IHAVE  — 보유 메시지 ID 알림
 //   IWANT  — 메시지 본문 요청`;
 
-const gsAnnotations: { lines: [number, number]; color: 'sky' | 'emerald' | 'amber'; note: string }[] = [
-  { lines: [1, 5], color: 'sky', note: '메시 파라미터 — D, D_lo, D_hi로 동적 조절' },
-  { lines: [7, 10], color: 'emerald', note: '이중 전파 — 메시: full, 비메시: IHAVE' },
-  { lines: [12, 16], color: 'amber', note: '4종 제어 메시지' },
+const gsAnnotations: {
+  lines: [number, number];
+  color: "sky" | "emerald" | "amber";
+  note: string;
+}[] = [
+  {
+    lines: [1, 5],
+    color: "sky",
+    note: "메시 파라미터 — D, D_lo, D_hi로 동적 조절",
+  },
+  {
+    lines: [7, 10],
+    color: "emerald",
+    note: "이중 전파 — 메시: full, 비메시: IHAVE",
+  },
+  { lines: [12, 16], color: "amber", note: "4종 제어 메시지" },
 ];
 
 export default function GossipSubImpl() {
   return (
     <section id="gossipsub" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">GossipSub 구현</h2>
-      <div className="not-prose mb-8"><GossipSubMeshViz /></div>
+      <div className="not-prose mb-8">
+        <GossipSubMeshViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           GossipSub은 libp2p의 pub/sub 프로토콜입니다.
-          <strong>메시 오버레이</strong>와 <strong>gossip 레이어</strong>를 결합합니다.<br />
-          메시 피어에게는 전체 메시지를, 비-메시 피어에게는 IHAVE 메타데이터만 전송합니다.
+          <strong>메시 오버레이</strong>와 <strong>gossip 레이어</strong>를
+          결합합니다.
+          <br />
+          메시 피어에게는 전체 메시지를, 비-메시 피어에게는 IHAVE 메타데이터만
+          전송합니다.
         </p>
-        <CodePanel title="GossipSub 메시 구조" code={gsCode}
-          annotations={gsAnnotations} />
+        <CodePanel
+          title="GossipSub 메시 구조"
+          code={gsCode}
+          annotations={gsAnnotations}
+        />
         <p className="leading-7">
-          Ethereum Beacon Chain은 GossipSub v1.1로 블록과 증명을 전파합니다.<br />
+          Ethereum Beacon Chain은 GossipSub v1.1로 블록과 증명을 전파합니다.
+          <br />
           libp2p에서는 rust-libp2p의 gossipsub 모듈로 구현됩니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">GossipSub 동작 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GossipSub v1.1 (libp2p)
+          {`// GossipSub v1.1 (libp2p)
 //
 // Mesh Overlay:
 //   Topic별 별도 mesh 유지

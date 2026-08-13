@@ -1,6 +1,6 @@
-import Overview from './gossipbft/Overview';
-import Protocol from './gossipbft/Protocol';
-import FilecoinIntegration from './gossipbft/FilecoinIntegration';
+import Overview from "./gossipbft/Overview";
+import Protocol from "./gossipbft/Protocol";
+import FilecoinIntegration from "./gossipbft/FilecoinIntegration";
 
 export default function GossipBFTArticle() {
   return (

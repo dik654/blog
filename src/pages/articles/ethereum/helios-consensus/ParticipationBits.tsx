@@ -1,11 +1,16 @@
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
-import ParticipationViz from './viz/ParticipationViz';
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import ParticipationViz from "./viz/ParticipationViz";
 
-interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
+interface Props {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}
 
-export default function ParticipationBits({ title, onCodeRef }: Props & { title: string }) {
+export default function ParticipationBits({
+  title,
+  onCodeRef,
+}: Props & { title: string }) {
   return (
     <section id="participation-bits" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">{title}</h2>
@@ -19,7 +24,11 @@ export default function ParticipationBits({ title, onCodeRef }: Props & { title:
       <div className="not-prose">
         <ParticipationViz />
         <div className="flex items-center gap-2 mt-3 justify-end">
-          <CodeViewButton onClick={() => onCodeRef('hl-verify-filter', codeRefs['hl-verify-filter'])} />
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef("hl-verify-filter", codeRefs["hl-verify-filter"])
+            }
+          />
           <span className="text-[10px] text-muted-foreground">verify.rs</span>
         </div>
       </div>

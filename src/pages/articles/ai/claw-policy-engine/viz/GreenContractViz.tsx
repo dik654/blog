@@ -1,50 +1,45 @@
+import { PolicyFrame, PolicyRule, PolicySteps } from "./PolicyVizPrimitives";
+
 export default function GreenContractViz() {
-  const checks = [
-    { label: 'build: green', status: true, color: '#10b981' },
-    { label: 'tests: 487/487', status: true, color: '#10b981' },
-    { label: 'coverage: 84.2% ≥ 80%', status: true, color: '#10b981' },
-    { label: 'lint: 0 warnings', status: true, color: '#10b981' },
-    { label: 'security: no issues', status: true, color: '#10b981' },
-    { label: 'consecutive: 2/2', status: true, color: '#10b981' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">GreenContract — 머지 품질 게이트</text>
-
-        {/* 컨테이너 */}
-        <rect x={40} y={54} width={480} height={226} rx={10}
-          fill="#10b981" fillOpacity={0.05} stroke="#10b981" strokeWidth={1.5} />
-        <text x={280} y={76} textAnchor="middle" fontSize={11} fontWeight={700} fill="#10b981">
-          Lane #42 — feat/add-auth
-        </text>
-        <text x={280} y={91} textAnchor="middle" fontSize={9.5} fill="var(--muted-foreground)">
-          Status: ReadyToMerge
-        </text>
-
-        {/* 체크 리스트 */}
-        {checks.map((check, i) => (
-          <g key={check.label} transform={`translate(60, ${110 + i * 24})`}>
-            <rect x={0} y={0} width={440} height={20} rx={3}
-              fill={check.color} fillOpacity={0.08} stroke={check.color} strokeWidth={0.3} />
-            <text x={10} y={15} fontSize={12} fill="#10b981">✓</text>
-            <text x={30} y={15} fontSize={10} fontWeight={600} fontFamily="monospace" fill="var(--foreground)">
-              {check.label}
-            </text>
-          </g>
-        ))}
-
-        <rect x={60} y={258} width={440} height={14} rx={3}
-          fill="#10b981" fillOpacity={0.2} />
-        <text x={280} y={268} textAnchor="middle" fontSize={9.5} fontWeight={700} fill="#10b981">
-          Ready to merge!
-        </text>
-
-        <text x={280} y={314} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">모든 체크 통과 시 자동 MergeBranch 액션 실행</text>
-      </svg>
-    </div>
+    <PolicyFrame
+      label="QUALITY GATE"
+      title="green 요약보다 revision에 묶인 evidence가 중요하다"
+      description="필수 check가 현재 revision과 policy version에서 유효한지 확인하고 waiver는 pass와 분리해 기록합니다."
+      note="GreenContract는 내부 코드 이름이며, 일반적으로는 quality gate 또는 merge gate에 해당합니다."
+    >
+      <PolicySteps
+        items={[
+          {
+            label: "SELECT",
+            title: "Requirements",
+            body: "변경 영향과 release policy에서 required check를 정합니다.",
+            tone: "blue",
+          },
+          {
+            label: "BIND",
+            title: "Revision",
+            body: "결과를 SHA·runner·check version에 묶습니다.",
+            tone: "violet",
+          },
+          {
+            label: "ASSESS",
+            title: "Evidence states",
+            body: "Pass·Fail·Pending·Stale·Waived를 구분합니다.",
+            tone: "amber",
+          },
+          {
+            label: "RECHECK",
+            title: "Merge precondition",
+            body: "head와 contract generation을 직전에 다시 확인합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <PolicyRule>
+        flaky retry와 waiver는 원래 failure를 지우지 않고 별도 evidence로
+        남깁니다.
+      </PolicyRule>
+    </PolicyFrame>
   );
 }

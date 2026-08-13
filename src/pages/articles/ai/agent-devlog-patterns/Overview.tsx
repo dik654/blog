@@ -1,165 +1,184 @@
-import OverviewViz from './viz/OverviewViz';
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import OverviewViz from "./viz/OverviewViz";
+
+const RECORD_TYPES = [
+  {
+    name: "작업일지 · artifact",
+    question: "실제로 무엇을 관찰하고 실행했나?",
+    owns: "재현 입력, command, log, failing output, test result",
+    boundary: "원인이나 장기 원칙을 확정하지 않습니다.",
+  },
+  {
+    name: "Changelog",
+    question: "언제 무엇이 달라졌나?",
+    owns: "검증을 마친 변화의 날짜, 결과, 영향, 근거 링크",
+    boundary: "설계 대안과 긴 debugging transcript를 복제하지 않습니다.",
+  },
+  {
+    name: "ADR",
+    question: "왜 이 선택을 했나?",
+    owns: "결정 당시 context, options, decision, consequences, status",
+    boundary: "구현 진행률이나 매일의 작업 상태를 추적하지 않습니다.",
+  },
+  {
+    name: "Lessons",
+    question: "다음에도 적용할 판단 기준은 무엇인가?",
+    owns: "현재 원칙, 적용 범위, 예외, 검증법, 근거 사건",
+    boundary: "한 사건의 추측을 곧바로 보편 법칙으로 만들지 않습니다.",
+  },
+] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">왜 git log만으로 부족한가</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        기록을 많이 쓰는 대신, 질문마다 정본 문서를 하나씩 둡니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          개인 에이전트 개발은 "문제 → 수정"의 끝없는 흐름이다.<br />
-          harness가 엉키고, tool이 실패하고, memory가 drift하고, routing이 애매해진다.<br />
-          오늘 해결하면 내일 또 다른 증상이 나타난다. 해결 과정의 맥락은 머릿속에 잠시 머물다 사라진다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          고객 프로필을 요약해 장기 memory에 반영하는 support agent를 운영한다고
+          가정해 보겠습니다. 어느 날 compaction 결과가 비어 있었는데 writer가
+          이를 정상 결과로 받아들여 기존 profile을 덮어썼습니다. 담당자는 failing
+          input과 log를 모으고, 빈 결과면 갱신하지 않는 guard를 추가한 뒤 회귀
+          test를 통과시켰습니다. 여기까지는 하나의 개발 작업이지만, 나중에 묻게
+          될 질문은 하나가 아닙니다.
         </p>
-        <p className="leading-7">
-          3주 뒤 같은 증상이 돌아왔을 때 — "저번에 어떻게 고쳤지?"<br />
-          git log를 뒤져 보면 "fix memory drift" 한 줄만 있다. 왜 그렇게 고쳤는지, 어떤 대안을 버렸는지, 무엇을 배웠는지는 어디에도 없다.<br />
-          개인 프로젝트라 PR 리뷰도 없고, 동료의 기억에 분산 저장해 둘 수도 없다.
+        <p>
+          “그 guard가 언제 들어갔지?”는 시간 질문이고, “왜 single JSON 대신
+          profile별 파일로 바꿨지?”는 결정 질문이며, “다른 destructive update에도
+          어떤 검증을 붙여야 하지?”는 재사용할 원칙에 관한 질문입니다. 이 답을
+          commit message 하나에 모두 넣으면 검색하기 어렵고, 세 문서에 똑같이
+          복사하면 곧 내용이 어긋납니다. 이 글은 각 질문에 하나의 소유자를 두고
+          나머지는 링크로 연결하는 방법을 설명합니다.
         </p>
-        <p className="leading-7">
-          이 글은 개인 에이전트 개발에서 "무엇을 어디에 기록할지"를 정리한다.<br />
-          핵심은 한 파일로 다 감당하려 하지 말고 — <strong>세 층</strong>으로 나누는 것이다.<br />
-          Changelog, ADR(Architecture Decision Record), Lessons 세 층이 각각 다른 조회 질문을 담당한다.
+      </div>
+
+      <ContentBoundary article="agent-devlog-patterns" />
+
+      <div className="not-prose my-8 min-w-0">
+        <OverviewViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 raw evidence와 해석 문서를 나눕니다</h3>
+        <p>
+          작업일지와 log는 그 순간의 관찰을 보존합니다. Changelog, ADR, Lessons는
+          그 evidence를 사람이 찾고 판단하기 쉽게 편집한 문서입니다. 따라서
+          agent가 “원인은 empty compaction이었다”고 요약했더라도 raw input,
+          before/after state, failing test와 수정 후 test가 없으면 확정된 사실로
+          승격하면 안 됩니다. 요약은 evidence의 주소를 가리켜야지 evidence를
+          대신해서는 안 됩니다.
         </p>
-        <p className="leading-7">
-          이 글의 모든 예시는 실제로 내가 운영 중인 <code>context-manager</code> 프로젝트에서 뽑았다.<br />
-          Rust Gateway + TypeScript Agent + PostgreSQL/Qdrant/Redis 기반의 개인용 지식 시스템으로, Podman rootless 컨테이너 위에서 돌아간다.<br />
-          이 프로젝트의 <code>knowledge/</code> 디렉토리 아래에 3층 구조가 구축돼 있고, <code>lessons/decisions/001-dev-journaling-pattern.md</code>에 이 구조 자체가 ADR로 기록돼 있다 — 즉 이 글은 그 ADR을 산문으로 풀어쓴 것이기도 하다.
+      </div>
+
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2">
+        {RECORD_TYPES.map((item) => (
+          <article
+            key={item.name}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <h4 className="break-words text-sm font-semibold">{item.name}</h4>
+            <p className="mt-2 break-words text-xs font-medium">{item.question}</p>
+            <dl className="mt-3 grid min-w-0 gap-3 text-xs leading-5 sm:grid-cols-2">
+              <div className="min-w-0">
+                <dt className="font-semibold text-emerald-700 dark:text-emerald-300">
+                  소유하는 것
+                </dt>
+                <dd className="mt-1 break-words text-muted-foreground">{item.owns}</dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="font-semibold text-rose-700 dark:text-rose-300">
+                  소유하지 않는 것
+                </dt>
+                <dd className="mt-1 break-words text-muted-foreground">{item.boundary}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>git log와 issue가 있어도 별도 진입점이 필요한 이유</h3>
+        <p>
+          git은 어느 파일이 어떻게 바뀌었는지 정확히 보존하고, issue는 작업의
+          진행 상태를 추적하는 데 강합니다. 그러나 merge된 diff만으로는 검토했다
+          제외한 option, 당시의 latency·보안·migration 제약, 여러 사건에서 뽑은
+          현재 원칙을 곧바로 찾기 어렵습니다. 반대로 ADR이 commit을 대신하거나
+          Lessons가 test artifact를 대신하는 것도 아닙니다. 각 시스템은 다른
+          질문에 답하며 서로의 stable identifier를 링크합니다.
+        </p>
+        <p>
+          고정 사례에서는 failing run을 <code>run-1842</code>, 수정 commit을
+          <code>c8f…</code>, 회귀 test 결과를 <code>test-guard-empty-03</code>처럼
+          가리킬 수 있습니다. Changelog는 이 artifact를 한 항목에서 연결하고,
+          ADR은 storage 전환을 검토한 evidence로 해당 항목을 참조하며, Lessons는
+          현재 guardrail의 근거로 사건과 ADR을 다시 연결합니다. identifier 형식은
+          도구마다 달라도 “주장을 검증할 원문으로 돌아갈 수 있어야 한다”는 조건은
+          같습니다.
+        </p>
+        <p>
+          Stable ID는 artifact가 저장된 위치가 바뀌어도 같은 실행을 가리키는
+          이름이고, digest는 파일 내용으로 계산한 짧은 fingerprint라서 나중에
+          원문이 달라졌는지 확인하는 데 씁니다. 실행 기록에는 입력과 log뿐 아니라
+          model·prompt·config version, before/after state, 실패한 test와 통과한 test를
+          함께 묶습니다. 고객 원문과 secret은 원본 저장소에서 접근을 통제하고,
+          일반 문서에는 redacted summary와 ID·digest만 노출합니다.
+        </p>
+        <p>
+          같은 시점에 empty output이 관찰됐다는 사실만으로 그것이 유일한 원인이라고
+          단정할 수는 없습니다. 해당 입력으로 실패를 재현하고 guard 적용 전후를
+          비교해야 causal claim의 범위가 넓어집니다. 이 사례에서 “수정 완료”라고
+          쓸 수 있는 시점도 미리 정한 empty·partial·full 회귀 test를 모두 통과하고
+          기존 state 보존을 확인한 뒤입니다.
         </p>
 
-        <div className="not-prose my-8"><OverviewViz /></div>
+        <h3>기반 개념은 정본 글로 연결합니다</h3>
+        <p>
+          이 글은 agent의 context나 memory 계산, harness의 실행 loop, evaluation
+          설계를 다시 설명하지 않습니다. 아래 글에서 해당 개념을 읽고 돌아오면
+          어떤 artifact를 남겨야 하는지 더 분명해집니다.
+        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">git log가 기록하지 못하는 것</h3>
-        <p className="leading-7">
-          git commit message의 목적은 "무엇이 바뀌었는가"다.<br />
-          diff로는 알기 어려운 변경 의도를 한 줄~몇 줄로 남긴다. 이게 유일한 공식 기록이라면 많은 맥락이 소실된다.
-        </p>
-        <p className="leading-7">
-          특히 이런 것들이 남지 않는다:
-        </p>
-        <ul className="leading-7">
-          <li><strong>탐색한 대안</strong> — "A 접근을 먼저 해봤는데 B로 뒤집은" 과정. 최종 커밋에는 B만 남는다.</li>
-          <li><strong>실패한 시도</strong> — 브랜치를 지우면 흔적이 사라진다. 저장된 "왜 실패했는가"가 없다.</li>
-          <li><strong>결정의 배경 제약</strong> — "이 구조를 고른 건 legal 요구 때문"처럼, 코드 밖에서 온 이유.</li>
-          <li><strong>시간 감각</strong> — "최근 2주간 memory 쪽만 건드렸네"처럼 흐름을 훑는 조회가 어렵다.</li>
-          <li><strong>원칙화된 교훈</strong> — "이런 상황에서는 이렇게 판단한다"는 반복 가능한 규칙.</li>
-        </ul>
-        <p className="leading-7">
-          이것들을 모두 commit message에 넣으면 message가 부풀고, 부푼 message는 작성과 리뷰가 고통스럽고, 고통스러우면 곧 안 쓰게 된다.<br />
-          그래서 git 밖에 별도 기록 층이 필요하다.
-        </p>
+      <nav
+        aria-label="에이전트 개발 기록의 선행 개념"
+        className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2"
+      >
+        {[
+          ["Context engineering", "/ai/context-engineering", "working state, memory, compaction의 차이"],
+          ["LLM harness", "/ai/llm-harness", "objective·artifact·verification의 실행 경계"],
+          ["Agent frameworks", "/ai/agent-frameworks", "tool loop, checkpoint, durable workflow"],
+          ["Agent sandbox security", "/ai/agent-sandbox-security", "log·secret·tool effect의 보안 경계"],
+        ].map(([label, href, description]) => (
+          <Link
+            key={href}
+            to={href}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4 transition-colors hover:border-primary/50"
+          >
+            <span className="text-sm font-semibold text-foreground">{label}</span>
+            <span className="mt-1 block break-words text-xs leading-5 text-muted-foreground">
+              {description}
+            </span>
+          </Link>
+        ))}
+      </nav>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">세 가지 다른 조회 질문</h3>
-        <p className="leading-7">
-          기록이 필요한 이유는 결국 "나중에 조회하기 위해서"다.<br />
-          그런데 조회 질문을 잘 들여다보면 서로 다른 세 종류가 섞여 있다.
-        </p>
-        <p className="leading-7">
-          <strong>시간 축 조회</strong> — "언제 무슨 일이 있었지?"<br />
-          예: "2주 전에 routing 쪽 이슈 있었던 것 같은데 언제였지?" "지난달에 뭐 했지?"<br />
-          이 질문에 답하려면 시간순으로 쭉 훑을 수 있어야 한다. 주제별로 분산된 파일들은 이 조회에 약하다.
-        </p>
-        <p className="leading-7">
-          <strong>결정 축 조회</strong> — "이 아키텍처를 왜 이렇게 짰지?"<br />
-          예: "memory를 multi-file로 쪼갠 건 왜 그랬지?" "이 결정을 뒤집어도 되나?"<br />
-          이 질문은 특정 결정의 배경과 제약을 묻는다. 시간순 나열에 묻혀 있으면 찾기 어렵다.
-        </p>
-        <p className="leading-7">
-          <strong>원칙 축 조회</strong> — "비슷한 상황에서 어느 쪽을 택해야 하지?"<br />
-          예: "LLM-as-judge 써도 될 때와 안 될 때는?" "가중치 접근 없을 때 어떤 해법이 맞지?"<br />
-          이 질문은 특정 시점이나 결정이 아니라 <strong>반복 가능한 판단 기준</strong>을 묻는다.<br />
-          시간순 로그에 있으면 영원히 못 찾는다 — 주제별로 수렴시켜야 한다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>한 파일의 한계</strong> — 세 질문을 하나의 파일로 감당하려 하면 어느 쪽도 제대로 못 한다.<br />
-          시간순으로 쓰면 원칙을 찾을 수 없고, 주제순으로 쓰면 시간 훑기가 안 되고, 결정 기반으로 쓰면 일상 변경이 묻힌다.<br />
-          "하나만 써도 되지 않을까"는 처음 며칠만 통한다. 한 달이 지나면 파일이 카오스가 된다.<br />
-          3주 뒤의 나를 위해서는 층을 분리하는 게 정답이다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">세 층의 분담</h3>
-        <p className="leading-7">
-          세 조회 질문에 각각 다른 층이 대응한다.
-        </p>
-        <p className="leading-7">
-          <strong>Changelog</strong> — 시간 축.<br />
-          단일 파일, 시간역순 prepend. 한 엔트리 3~5줄 (제목 + 짧은 요약 + 상세 링크).<br />
-          매 작업이 끝나면 한 줄 추가한다. "언제 무슨 일"만 빠르게 훑을 수 있는 인덱스.
-        </p>
-        <p className="leading-7">
-          <strong>ADR (Architecture Decision Record)</strong> — 결정 축.<br />
-          결정마다 번호 매긴 개별 파일. context / decision / consequences 세 필드.<br />
-          일상 변경이 아니라 "뒤집기 어려운, 배경이 중요한 결정"만 기록. 한 달에 1~3개 정도.
-        </p>
-        <p className="leading-7">
-          <strong>Lessons</strong> — 원칙 축.<br />
-          주제별 개별 파일. "어떤 상황에서 어떻게 판단하는가"를 규칙과 이유로 적는다.<br />
-          시간순이 아니라 주제별로 수렴시킨다. 같은 교훈이 여러 번 나타나면 기존 파일을 업데이트한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">세 층은 링크로 연결된다</h3>
-        <p className="leading-7">
-          세 층이 완전히 독립적이면 오히려 불편하다.<br />
-          실전에서는 Changelog 엔트리가 ADR과 Lessons로 링크되고, ADR이 관련 Lessons를 참조하고, Lessons가 구체 사례로 Changelog를 가리킨다.
-        </p>
-        <p className="leading-7">
-          전형적인 흐름:
-        </p>
-        <ol className="leading-7">
-          <li>작업 중 문제 발생 → 해결 → Changelog에 한 줄 추가.</li>
-          <li>이게 중요한 결정이면 ADR 하나 생성 → Changelog 엔트리에 ADR 링크.</li>
-          <li>같은 교훈이 두 번째 나타나면 Lessons 파일 생성 또는 기존 파일 업데이트 → Changelog에서 Lessons 링크.</li>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>고정 사례가 세 층으로 확장되는 순서</h3>
+        <ol>
+          <li>재현 log와 test artifact로 빈 compaction overwrite를 확인합니다.</li>
+          <li>검증된 guard 추가를 Changelog의 짧은 결과로 기록합니다.</li>
+          <li>저장 구조를 바꾸는 장기 선택은 ADR에서 option과 trade-off를 비교합니다.</li>
+          <li>다른 destructive update에도 재사용할 조건이 생기면 Lessons로 일반화합니다.</li>
         </ol>
-        <p className="leading-7">
-          조회 시에는 질문이 진입점을 결정한다.<br />
-          시간 질문은 Changelog에서 시작 → 필요하면 링크로 점프. 결정 질문은 ADR 직접 진입. 원칙 질문은 Lessons 직접 진입.<br />
-          이 네트워크 구조가 세 층을 "한 파일 분리"가 아니라 "다른 축의 인덱스 3개"로 만든다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">유지 비용이 낮아야 실제로 유지된다</h3>
-        <p className="leading-7">
-          가장 중요한 원칙: <strong>짧게 자주</strong>.<br />
-          길게 쓰려는 순간 유지가 깨진다. "나중에 제대로 써야지"는 "영원히 안 쓴다"와 동의어다.
-        </p>
-        <p className="leading-7">
-          각 층의 목표 유지 비용:
-        </p>
-        <ul className="leading-7">
-          <li>Changelog — 매 작업 끝에 <strong>1분</strong>. 3~5줄짜리 엔트리 prepend.</li>
-          <li>ADR — 중요 결정이 있을 때만, <strong>10분</strong>. 한 파일 10~20줄.</li>
-          <li>Lessons — 교훈이 명확히 수렴했을 때만, <strong>20분</strong>. 주제별로 꾸준히 업데이트.</li>
-        </ul>
-        <p className="leading-7">
-          이 budget을 넘기면 안 된다. 특히 Changelog는 1분 내에 끝나야 "매 작업마다"가 현실적이다.<br />
-          길게 쓰고 싶은 욕구가 생기면 — Changelog 엔트리는 짧게 유지하고, 길게 쓸 내용은 ADR 또는 Lessons로 빼낸다.<br />
-          "Changelog에는 제목과 링크, 깊은 맥락은 다른 층"이 반복 가능한 분리 기준이다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">이 글의 구성</h3>
-        <p className="leading-7">
-          남은 4개 섹션에서 각 층을 하나씩 뜯어본다.
-        </p>
-        <ul className="leading-7">
-          <li>
-            <strong>§2 Changelog</strong> — 파일 포맷, 엔트리 규칙, 시간역순 prepend 흐름, 월별 아카이브.<br />
-            예시 엔트리 몇 개와 유지 실패의 전형적 패턴.
-          </li>
-          <li>
-            <strong>§3 ADR</strong> — 템플릿, 번호 매기기, "이건 ADR인가 Lessons인가" 판단 기준.<br />
-            결정 뒤집기, superseded 표기, ADR끼리의 참조 관계.
-          </li>
-          <li>
-            <strong>§4 Lessons</strong> — 주제별 수렴, "원칙"과 "레시피"의 차이, 업데이트 흐름.<br />
-            Lessons에 들어가면 안 되는 것들 (디버깅 레시피, 코드 구조).
-          </li>
-          <li>
-            <strong>§5 세 층 분담과 유지 규칙</strong> — 층들의 상호작용, git hook 자동화, 월별 아카이브, 팀/개인 차이.<br />
-            새 프로젝트에서 이 구조를 0에서 세팅하는 절차.
-          </li>
-        </ul>
-        <p className="leading-7">
-          각 섹션은 "왜 이 층이 필요한가"에서 시작해 "어떻게 유지하는가"로 끝난다.<br />
-          구조만 이해하고 유지 비용을 관리하지 못하면 세 층 전부 한 달 안에 방치된다 — 그래서 유지 쪽을 끝까지 강조한다.
+        <p>
+          모든 작업이 네 단계를 거치는 것은 아닙니다. 대부분은 artifact와
+          Changelog에서 끝나며, architecture에 영향을 주는 decision만 ADR이 되고,
+          반복되거나 심각도가 높아 예방 가치가 분명한 판단만 Lessons로
+          올라갑니다. 다음 절부터 이 한 사건이 각 문서에서 어떤 모양으로
+          달라지는지 차례대로 살펴봅니다.
         </p>
       </div>
     </section>

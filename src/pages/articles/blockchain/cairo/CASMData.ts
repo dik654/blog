@@ -25,9 +25,21 @@ pub fn compile(
 }`;
 
 export const CASM_ANNOTATIONS = [
-  { lines: [4, 9] as [number, number], color: 'sky' as const, note: 'compile() 진입점: 4개 파라미터' },
-  { lines: [15, 22] as [number, number], color: 'emerald' as const, note: '문장별 변환: Return 또는 Invocation' },
-  { lines: [24, 25] as [number, number] as [number, number], color: 'amber' as const, note: '재배치로 점프 주소 최종 해석' },
+  {
+    lines: [4, 9] as [number, number],
+    color: "sky" as const,
+    note: "compile() 진입점: 4개 파라미터",
+  },
+  {
+    lines: [15, 22] as [number, number],
+    color: "emerald" as const,
+    note: "문장별 변환: Return 또는 Invocation",
+  },
+  {
+    lines: [24, 25] as [number, number] as [number, number],
+    color: "amber" as const,
+    note: "재배치로 점프 주소 최종 해석",
+  },
 ];
 
 export const MAPPING_CODE = `// Sierra → CASM 매핑 규칙 예시
@@ -48,7 +60,19 @@ export const MAPPING_CODE = `// Sierra → CASM 매핑 규칙 예시
 // - AP 증분 최적화: 연속된 메모리 접근 시 AP 증분 최소화`;
 
 export const MAPPING_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '4가지 주요 매핑: 연산/메모리/제어/호출' },
-  { lines: [8, 10] as [number, number], color: 'emerald' as const, note: 'Cairo VM의 3개 레지스터 (AP, FP, PC)' },
-  { lines: [13, 15] as [number, number], color: 'amber' as const, note: '코드 크기 & 실행 속도 최적화' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "4가지 주요 매핑: 연산/메모리/제어/호출",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "emerald" as const,
+    note: "Cairo VM의 3개 레지스터 (AP, FP, PC)",
+  },
+  {
+    lines: [13, 15] as [number, number],
+    color: "amber" as const,
+    note: "코드 크기 & 실행 속도 최적화",
+  },
 ];

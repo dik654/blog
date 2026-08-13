@@ -1,53 +1,32 @@
-import GradientProblemViz from './viz/GradientProblemViz';
-import GradientMathDetailViz from './viz/GradientMathDetailViz';
-import LSTMDesignDetailViz from './viz/LSTMDesignDetailViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ForecastWindowViz from "./viz/ForecastWindowViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">RNN의 한계와 LSTM의 등장</h2>
+      <h2 className="mb-6 text-2xl font-bold">LSTM을 고르기 전에 예측 시점을 먼저 고정한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          RNN(Recurrent Neural Network) — 시퀀스 데이터를 처리하는 가장 기본적인 구조<br />
-          시퀀스가 길어지면 <strong>기울기 소실(Vanishing Gradient)</strong> 문제 발생<br />
-          장기 의존성을 학습하지 못함
-        </p>
+        <p className="text-lg leading-8">“최근 24시간으로 다음 6시간의 전력 수요를 예측한다”는 문장에는 모델보다 중요한 계약이 들어 있다. Target과 관측 간격, 예측을 시작하는 forecast origin, 필요한 horizon, 그리고 그 시점에 실제로 알 수 있는 정보가 정해져야 비로소 학습 sample을 만들 수 있다.</p>
+        <p>LSTM은 이 sample의 과거 값을 순서대로 읽으며 hidden·cell state를 갱신하는 함수다. 비선형 시간 의존성을 학습할 수 있지만 추세·계절성·데이터 누출을 알아서 해결하지는 않는다. Gate와 cell state의 수학은 <Link to="/ai/lstm">LSTM 구조 글</Link>이 소유하고, 이 글은 window·state lifecycle·horizon과 평가 계약에 집중한다. 선형 기준선이 필요하면 <Link to="/ai/arima">ARIMA 글</Link>을 함께 보면 된다.</p>
       </div>
-      <div className="not-prose my-6"><GradientProblemViz /></div>
+      <ForecastWindowViz />
+      <ExplainedFormula
+        question="연속된 시계열 하나를 LSTM이 학습할 input–target sample로 어떻게 바꿀까?"
+        idea={<>Forecast origin t를 하나 고른 뒤 그 이전 L개 step을 input으로, 그 다음 H개 step을 target으로 묶습니다. Origin을 stride S만큼 이동하면 다음 sample이 생깁니다.</>}
+        formula={String.raw`\begin{aligned}X_t&=[\mathbf x_{t-L+1},\ldots,\mathbf x_t]\in\mathbb R^{L\times F}\\Y_t&=[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]\in\mathbb R^{H\times D_y}\end{aligned}`}
+        terms={[
+          { symbol: "L", name: "look-back", description: "모델이 한 origin에서 직접 읽는 과거 step 수입니다." },
+          { symbol: "H", name: "forecast horizon", description: "한 origin에서 평가할 미래 step 수입니다." },
+          { symbol: "F", name: "input features", description: "Target lag와 calendar·known covariate 등 origin에서 사용할 수 있는 feature 수입니다." },
+          { symbol: "D_y", name: "target dimension", description: "동시에 예측하는 target 변수의 수입니다." },
+        ]}
+        assumptions={["모든 feature는 해당 forecast origin에서 실제로 관측 가능해야 합니다.", "겹치는 window는 sample 수를 늘리지만 독립 관측을 같은 비율로 늘리지는 않습니다."]}
+        interpretation="L과 H는 단순한 tensor 크기가 아니라 모델이 볼 수 있는 원인 구간과 운영에서 답해야 하는 미래 구간입니다. 계절 주기보다 L이 짧다면 lag feature를 추가하거나 window를 늘리는 선택이 필요합니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          1997년 <strong>Hochreiter & Schmidhuber</strong>가 제안한 LSTM — <strong>게이트 메커니즘</strong>과 <strong>셀 상태(Cell State)</strong>로 해결<br />
-          셀 상태는 컨베이어 벨트처럼 정보를 거의 손실 없이 전달<br />
-          세 개의 게이트(Forget, Input, Output)가 정보의 흐름을 제어
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">RNN vs LSTM 핵심 차이</h3>
-        <div className="grid grid-cols-2 gap-4 not-prose text-sm">
-          {[
-            ['RNN', 'h_t = tanh(W · [h_{t-1}, x_t])', '단일 tanh — 기울기 소실', '#ef4444'],
-            ['LSTM', 'C_t + 3 Gates → h_t', '셀 상태 + 게이트 — 장기 기억 보존', '#10b981'],
-          ].map(([name, eq, desc, color]) => (
-            <div key={name} className="rounded-lg border p-3"
-              style={{ borderColor: color + '40', background: color + '08' }}>
-              <p className="font-mono font-bold text-xs" style={{ color: color as string }}>{name}</p>
-              <p className="text-[11px] text-foreground/60 mt-1 font-mono">{eq}</p>
-              <p className="text-[11px] text-foreground/50 mt-1">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">기울기 소실 수학적 분석</h3>
-        <div className="not-prose"><GradientMathDetailViz /></div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">LSTM 설계의 핵심 통찰</h3>
-        <div className="not-prose"><LSTMDesignDetailViz /></div>
-        <p className="leading-7">
-          요약 1: <strong>기울기 소실</strong>은 RNN의 구조적 한계 — 곱셈 기반 재귀가 T 스텝 동안 ρ(W)^T로 붕괴.<br />
-          요약 2: LSTM의 <strong>additive update</strong>와 forget gate가 기울기 고속도로를 만들어 장기 의존성 학습 가능.<br />
-          요약 3: 현재도 <strong>소규모 데이터·실시간 스트리밍·저자원 환경</strong>에서 LSTM은 Transformer보다 실용적.
-        </p>
+        <h3>Window가 길수록 기억력이 좋아지는 것은 아니다</h3>
+        <p>Look-back을 늘리면 더 오래된 관측을 제공하지만 sequence 길이와 optimization path도 함께 늘어난다. 필요한 계절 주기와 지연 효과가 들어오지 않으면 under-specification이고, 관련 없는 오래된 구간까지 넣으면 계산량과 분산이 커진다. 따라서 domain에서 가능한 원인 구간을 후보로 정한 뒤 같은 rolling-origin validation에서 비교해야 한다.</p>
       </div>
     </section>
   );

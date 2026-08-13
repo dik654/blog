@@ -1,5 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
 
 const optCode = `// rapidsnark 최적화 기법
 //
@@ -41,35 +41,83 @@ const compareCode = `// Groth16 프로버 성능 비교 (BN254, 2^20 제약, 서
 export default function Optimization() {
   return (
     <section id="optimization" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">최적화: 메모리 풀, 스트림 겹침</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        최적화: 메모리 풀, 스트림 겹침
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          rapidsnark의 성능은 네 가지 최적화에서 나온다.
-          ffiasm 어셈블리 필드 연산, 멀티스레드 NTT, GPU 메모리 풀, CRS 사전 변환이다.
+          rapidsnark의 성능은 네 가지 최적화에서 나온다. ffiasm 어셈블리 필드
+          연산, 멀티스레드 NTT, GPU 메모리 풀, CRS 사전 변환이다.
         </p>
-        <CodePanel title="4가지 핵심 최적화" code={optCode} annotations={[
-          { lines: [3, 6], color: 'sky', note: 'ffiasm: x86 ADX/MULX 어셈블리' },
-          { lines: [8, 11], color: 'emerald', note: '멀티스레드 NTT: 13x 병렬화' },
-          { lines: [13, 16], color: 'amber', note: 'GPU 메모리 풀: 재할당 제거' },
-          { lines: [18, 21], color: 'violet', note: 'CRS 사전 변환: 서버 모드 최적화' },
-        ]} />
+        <CodePanel
+          title="4가지 핵심 최적화"
+          code={optCode}
+          annotations={[
+            {
+              lines: [3, 6],
+              color: "sky",
+              note: "ffiasm: x86 ADX/MULX 어셈블리",
+            },
+            {
+              lines: [8, 11],
+              color: "emerald",
+              note: "멀티스레드 NTT: 13x 병렬화",
+            },
+            {
+              lines: [13, 16],
+              color: "amber",
+              note: "GPU 메모리 풀: 재할당 제거",
+            },
+            {
+              lines: [18, 21],
+              color: "violet",
+              note: "CRS 사전 변환: 서버 모드 최적화",
+            },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">프레임워크 비교</h3>
         <p>
-          circom 생태계에서 rapidsnark은 CPU 최고 속도를 제공한다.<br />
+          circom 생태계에서 rapidsnark은 CPU 최고 속도를 제공한다.
+          <br />
           GPU 모드를 활성화하면 MSM 병목이 해소되어 bellperson 수준에 도달한다.
         </p>
-        <CodePanel title="Groth16 프로버 성능 비교표" code={compareCode} annotations={[
-          { lines: [5, 5], color: 'sky', note: 'snarkjs: JS 기반, 가장 느림' },
-          { lines: [6, 7], color: 'emerald', note: 'rapidsnark: CPU 3s, GPU 1.5s' },
-          { lines: [8, 10], color: 'amber', note: 'bellperson, gnark, arkworks' },
-          { lines: [12, 14], color: 'violet', note: '정리: circom 최적 = rapidsnark' },
-        ]} />
-        <CitationBlock source="iden3/rapidsnark — Build & Benchmark" citeKey={4} type="code"
-          href="https://github.com/iden3/rapidsnark">
+        <CodePanel
+          title="Groth16 프로버 성능 비교표"
+          code={compareCode}
+          annotations={[
+            {
+              lines: [5, 5],
+              color: "sky",
+              note: "snarkjs: JS 기반, 가장 느림",
+            },
+            {
+              lines: [6, 7],
+              color: "emerald",
+              note: "rapidsnark: CPU 3s, GPU 1.5s",
+            },
+            {
+              lines: [8, 10],
+              color: "amber",
+              note: "bellperson, gnark, arkworks",
+            },
+            {
+              lines: [12, 14],
+              color: "violet",
+              note: "정리: circom 최적 = rapidsnark",
+            },
+          ]}
+        />
+        <CitationBlock
+          source="iden3/rapidsnark — Build & Benchmark"
+          citeKey={4}
+          type="code"
+          href="https://github.com/iden3/rapidsnark"
+        >
           <p className="text-xs">
-            rapidsnark 서버 모드(prover_server)는 .zkey를 메모리에 상주시켜
-            연속 증명 요청에서 로딩 오버헤드를 제거한다.<br />
+            rapidsnark 서버 모드(prover_server)는 .zkey를 메모리에 상주시켜 연속
+            증명 요청에서 로딩 오버헤드를 제거한다.
+            <br />
             Polygon ID는 이 모드로 모바일 인증 증명을 초 단위로 생성한다.
           </p>
         </CitationBlock>

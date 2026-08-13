@@ -1,50 +1,174 @@
-import { CitationBlock } from '@/components/ui/citation';
-import StableDiffusionArchViz from './viz/StableDiffusionArchViz';
-import CFGSection from './CFGSection';
-import SDPipelineViz from './viz/SDPipelineViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+
+const pipeline = [
+  ["Text encoder", "Prompt를 conditioning sequence로 바꿉니다."],
+  [
+    "Latent denoiser",
+    "Compressed latent에서 timestep별 prediction을 만듭니다.",
+  ],
+  ["Sampler", "Prediction·schedule·guidance로 latent를 update합니다."],
+  ["Image decoder", "마지막 latent를 pixel image로 복원합니다."],
+];
 
 export default function StableDiffusion() {
   return (
     <section id="stable-diffusion" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Stable Diffusion (Latent Diffusion)</h2>
-      <div className="not-prose mb-8"><StableDiffusionArchViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Latent diffusion은 denoising 공간을 pixel에서 compressed latent로
+        옮깁니다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Stable Diffusion — <strong>Latent Diffusion Model(LDM)</strong> 기반<br />
-          픽셀 공간이 아닌 <strong>잠재 공간(latent space)</strong>에서 확산 과정 수행<br />
-          계산 비용을 크게 줄이면서도 고품질 이미지 생성
+        <p className="leading-7">
+          Latent diffusion model(LDM)은 먼저 trained autoencoder로 image를
+          spatial latent로 압축하고 그 latent에서 diffusion을 수행한다. Pixel
+          grid보다 작은 representation을 처리해 denoiser compute를 줄이는 대신,
+          autoencoder가 보존하지 못한 detail은 diffusion이 되찾을 수 없다는
+          경계가 생긴다. Autoencoder의 probabilistic objective는{" "}
+          <Link to="/ai/vae">VAE 글</Link>
+          에서 이어진다.
         </p>
-
-        <CitationBlock source="Rombach et al., CVPR 2022 — Latent Diffusion" citeKey={4} type="paper"
-          href="https://arxiv.org/abs/2112.10752">
-          <p className="italic">
-            "By introducing an autoencoding stage, we can train DMs on a compressed latent space,
-            reducing training compute by at least 4x while maintaining generation quality."
-          </p>
-          <p className="mt-2 text-xs">
-            512x512 이미지를 64x64 잠재 벡터로 압축 처리 —
-            48배 이상 공간 압축으로 일반 GPU에서도 학습/추론 가능
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">CLIP 텍스트 인코더</h3>
         <p>
-          텍스트 프롬프트 → <strong>CLIP 텍스트 인코더</strong>로 77개 토큰 x 768차원의 임베딩 시퀀스로 변환<br />
-          이 임베딩이 U-Net의 Cross-Attention에 전달<br />
-          텍스트 의미에 맞는 이미지 생성을 유도
+          “Stable Diffusion은 77×768 CLIP embedding을 쓴다” 같은 숫자는 특정
+          version의 계약이다. Text encoder, token length, latent channel과
+          spatial compression은 version마다 달라지므로 LDM의 일반 원리와
+          checkpoint configuration을 구분해야 합니다.
         </p>
-
-        <CFGSection />
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Latent Diffusion 전체 파이프라인</h3>
-        <div className="not-prose"><SDPipelineViz /></div>
-        <p className="leading-7">
-          요약 1: Stable Diffusion의 본질은 <strong>Latent Diffusion</strong> — VAE 압축 후 diffusion.<br />
-          요약 2: <strong>48배 공간 압축</strong>으로 소비자 GPU에서도 학습/추론 가능.<br />
-          요약 3: <strong>ControlNet·LoRA·DreamBooth</strong> 등 풍부한 생태계 — 오픈소스 혁명.
+      <div
+        id="paper-latent-diffusion"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Compressed generation
         </p>
+        <p className="mt-2 text-sm font-semibold">
+          High-Resolution Image Synthesis with Latent Diffusion Models
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Pixel-space diffusion의 계산비를 줄이기 위해 pretrained autoencoder의
+          latent에서 denoising하고, cross-attention으로 text·layout 같은
+          condition을 주입합니다. Latent 압축은 공짜가 아니며 autoencoder가 버린
+          detail은 diffusion stage가 원본에서 복구할 수 없습니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/2112.10752"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 perceptual compression·conditioning 실험 보기
+        </a>
+      </div>
+
+      <figure className="not-prose my-8 rounded-2xl border bg-card p-4 sm:p-6">
+        <figcaption className="mb-4 text-sm font-semibold">
+          Text-to-image latent diffusion pipeline
+        </figcaption>
+        <div className="grid gap-3 md:grid-cols-4">
+          {pipeline.map(([title, body], index) => (
+            <div key={title} className="min-w-0 border-t border-border pt-4">
+              <p className="text-xs font-bold text-primary/70">0{index + 1}</p>
+              <p className="mt-2 font-semibold">{title}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                {body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </figure>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Classifier-free guidance는 두 prediction의 차이를 증폭한다</h3>
+        <p>
+          Classifier-free guidance(CFG)를 쓰는 model은 training 중 일부
+          condition을 비워 conditional·unconditional behavior를 한 network에
+          학습한다. Sampling에서는 두 prediction의 차이를 scale <code>w</code>로
+          더해 condition 방향을 강화합니다.
+        </p>
+        <p>
+          <code>w=1</code>은 위 식에서 conditional prediction이 되며 “조건을
+          무시한 random generation”이 아니다. 큰 scale은 prompt alignment를 높일
+          수 있지만 saturation, artifact와 diversity 감소를 일으킬 수 있다. 7.5
+          같은 값도 보편적인 default가 아니라 checkpoint·sampler·step 수와 함께
+          검증할 parameter입니다.
+        </p>
+
+        <h3>제품 이름보다 component contract를 본다</h3>
+        <p>
+          ControlNet, LoRA, image adapter 같은 확장은 condition을 넣는 경로나
+          weight update 범위를 바꾼다. 실제 pipeline을 재현할 때는 model name만
+          기록하지 말고 autoencoder, text encoder, denoiser, scheduler, sampler,
+          guidance scale과 precision을 함께 고정해야 합니다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="별도 classifier 없이 text condition 방향을 sampling 중 어떻게 더 강하게 만들까?"
+        idea={
+          <>
+            같은 noisy latent를 condition 없이 한 번, text condition과 함께 한
+            번 예측한 뒤 두 결과의 차이를 condition이 만든 방향으로 봅니다. 그
+            방향을 scale w만큼 더합니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+          \hat\epsilon={}&\epsilon_\theta(x_t,t,\varnothing) \\
+          &+w\left[\epsilon_\theta(x_t,t,c)-\epsilon_\theta(x_t,t,\varnothing)\right]
+        \end{aligned}`}
+        terms={[
+          {
+            symbol: "c",
+            name: "text condition",
+            description:
+              "prompt encoder가 만든 conditioning representation입니다.",
+          },
+          {
+            symbol: "\varnothing",
+            name: "dropped condition",
+            description:
+              "training에서 condition을 비운 unconditional branch입니다.",
+          },
+          {
+            symbol: "w",
+            name: "guidance scale",
+            description:
+              "conditional direction을 증폭하는 sampling hyperparameter입니다.",
+          },
+        ]}
+        assumptions={[
+          "classifier-free guidance를 위해 condition dropout으로 conditional·unconditional behavior를 함께 학습한 model입니다.",
+          "두 prediction 때문에 보통 denoiser evaluation 비용이 늘어납니다.",
+        ]}
+        interpretation="w=1이면 conditional prediction과 정확히 같아집니다. 큰 w는 prompt alignment를 높일 수 있지만 saturation·artifact·diversity 감소를 만들 수 있어 checkpoint와 sampler마다 검증해야 합니다."
+      />
+
+      <div
+        id="paper-classifier-free-guidance"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Guidance without classifier
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Classifier-Free Diffusion Guidance
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Conditional model과 별도 unconditional model을 따로 학습하는 대신
+          condition dropout으로 하나의 network가 두 score를 모두 내도록 하고,
+          inference 때 차이를 결합해 fidelity–diversity trade-off를 조절합니다.
+          큰 guidance scale이 모든 checkpoint와 metric에서 더 좋다는 보장은
+          아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/2207.12598"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 conditional·unconditional 결합 보기
+        </a>
       </div>
     </section>
   );

@@ -1,35 +1,6 @@
-import LangGraphViz from './viz/LangGraphViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import LangGraphViz from "./viz/LangGraphViz";
 
 export default function LangGraph() {
-  return (
-    <section id="langgraph" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">LangGraph로 상태 기반 에이전트</h2>
-      <div className="not-prose mb-8"><LangGraphViz /></div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">StateGraph — 공유 상태 중심 설계</h3>
-        <p className="leading-7">
-          LangGraph의 핵심은 <strong>TypedDict로 정의한 공유 상태</strong>가 그래프의 모든 노드를 관통하는 것.<br />
-          <code>messages</code>(대화 이력), <code>current_agent</code>(현재 활성 노드), <code>result</code>(최종 출력)가 기본 필드.<br />
-          각 노드 함수는 상태를 입력받아 수정된 상태를 반환한다. 불변(immutable)이 아니라 누적(accumulate) 방식.
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">노드와 엣지</h3>
-        <p className="leading-7">
-          <code>graph.add_node("분석", analyze_fn)</code>로 노드를 등록하고,
-          <code>graph.add_edge("분석", "판단")</code>으로 연결한다.<br />
-          <code>add_conditional_edges</code>로 조건부 라우팅을 설정: 상태의 특정 필드 값에 따라 다음 노드가 달라진다.<br />
-          예: <code>need_search</code> 플래그가 True이면 "검색" 노드로, False이면 "분석" 노드로 라우팅.
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">체크포인트와 Human-in-the-loop</h3>
-        <p className="leading-7">
-          <code>SqliteSaver</code> 또는 <code>MemorySaver</code>를 연결하면 매 노드 실행 후 상태가 자동 저장된다.<br />
-          오류 발생 시 마지막 체크포인트에서 재개할 수 있어, 긴 파이프라인의 중간 실패에 강하다.<br />
-          Human-in-the-loop: 특정 노드 앞에 "승인 대기" 상태를 삽입. 운영자가 확인 후 다음 단계로 진행.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>LangGraph를 선택하는 경우</strong> — 복잡한 분기/루프가 있고, 각 단계의 상태를 정밀하게 제어해야 할 때.<br />
-          제조 예: "센서 이상 탐지 → 매뉴얼 검색 → 분석 → (불충분하면 다시 검색) → 최종 판단" 같은 루프형 워크플로우.
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="langgraph" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">LangGraph에서는 대화 전체보다 state channel과 reducer가 병렬 실행의 의미를 결정합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>현재 Graph API는 state·node·edge를 중심으로 workflow를 구성합니다. Node는 partial update를 반환하고 state key별 reducer가 기존 값과 새 값을 합칩니다. 기본 overwrite, append, set union, single owner는 의미가 다르므로 같은 key에 병렬 branch가 쓰기 전에 고정해야 합니다.</p></div><ExplainedFormula question="병렬 branch의 실행 순서가 달라도 같은 join 결과를 얻으려면 reducer에 어떤 성질이 필요할까요?" idea={<>재시도와 도착 순서 변화에 강한 set-like merge라면 결합법칙·교환법칙·멱등성을 확인합니다. 모든 state에 무조건 필요한 법칙은 아니지만 unordered parallel join의 좋은 안전 조건입니다.</>} formula={String.raw`\rho(\rho(x,a),b)=\rho(x,\rho(a,b)),\quad \rho(x,a)=\rho(a,x),\quad \rho(\rho(x,a),a)=\rho(x,a)`} terms={[{symbol:"rho",name:"reducer",description:"현재 channel 값과 branch update를 새 state로 합치는 함수입니다."},{symbol:"x",name:"accumulated state",description:"Join 전까지 저장된 기존 channel 값입니다."},{symbol:"a,b",name:"parallel updates",description:"같은 super-step 또는 retry에서 들어온 worker 결과입니다."}]} assumptions={["순서가 의미 있는 log는 commutative set이 아니라 stable event ID와 ordered reducer를 사용합니다.","같은 artifact ID의 내용 충돌은 조용히 dedup하지 않고 conflict로 올립니다.","Reducer property를 unit/property test하고 framework default overwrite를 그대로 가정하지 않습니다."]} interpretation="Set union은 같은 receipt가 retry로 두 번 와도 결과가 같지만 list append는 중복됩니다. Ordered history가 필요하면 event ID·sequence와 dedup 규칙을 따로 둡니다."/><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Checkpointer는 node 중간이 아니라 정해진 경계의 state를 저장하며, resume 시 node가 처음부터 재실행될 수 있습니다. Database insert·결제·메시지 발송에는 task/input hash 기반 idempotency key와 upsert/receipt를 사용하고, 되돌릴 수 없는 동작 앞에는 interrupt와 사람 승인을 둡니다.</p></div><div className="not-prose my-8"><LangGraphViz /></div><div id="standard-langgraph" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">공식 문서 · LangGraph Graph API</p><p className="mt-2 text-sm leading-6 text-muted-foreground">공식 문서는 state·node·edge, key별 reducer, Send 기반 분기, checkpoint 뒤 node 재실행과 idempotency를 현재 API로 설명합니다. 이 글의 join 수식은 구현 원칙을 명시한 계약이며 LangGraph 자체의 수학 정리로 표현하지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://docs.langchain.com/oss/python/langgraph/graph-api" target="_blank" rel="noreferrer">State·reducer·re-execution 문서 보기</a></div></section>;
 }

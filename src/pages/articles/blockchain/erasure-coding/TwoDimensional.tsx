@@ -1,4 +1,4 @@
-import TwoDErasureViz from './viz/TwoDErasureViz';
+import TwoDErasureViz from "./viz/TwoDErasureViz";
 
 export default function TwoDimensional() {
   return (
@@ -8,15 +8,20 @@ export default function TwoDimensional() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          k x k 매트릭스에 행/열 독립 RS 코딩 &rarr; 2k x 2k 확장. DAS의 기반 기술.
+          k x k 매트릭스에 행/열 독립 RS 코딩 &rarr; 2k x 2k 확장. DAS의 기반
+          기술.
         </p>
       </div>
-      <div className="not-prose"><TwoDErasureViz /></div>
+      <div className="not-prose">
+        <TwoDErasureViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">2D Erasure Coding &amp; DAS</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          2D Erasure Coding &amp; DAS
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 2D Erasure Coding:
+          {`// 2D Erasure Coding:
 
 // Construction:
 // 1. data → k×k matrix
@@ -95,8 +100,10 @@ export default function TwoDimensional() {
 // 3D+ EC: theoretical (diminishing returns)`}
         </pre>
         <p className="leading-7">
-          2D EC: <strong>k×k → 2k×2k matrix, row+column RS coding</strong>.<br />
-          DAS = sampling cells으로 availability 확률적 verify.<br />
+          2D EC: <strong>k×k → 2k×2k matrix, row+column RS coding</strong>.
+          <br />
+          DAS = sampling cells으로 availability 확률적 verify.
+          <br />
           Ethereum EIP-4844, Celestia, EigenDA 사용.
         </p>
       </div>

@@ -1,128 +1,109 @@
-export default function ReLUFamilyViz() {
-  const variants = [
-    {
-      name: 'Leaky ReLU',
-      year: 2013,
-      formula: 'max(0.01x, x)',
-      meaning: '음수에 작은 기울기 0.01',
-      usage: 'Dying ReLU 방지',
-      color: '#3b82f6',
-    },
-    {
-      name: 'PReLU',
-      year: 2015,
-      formula: 'max(aᵢ·x, x)',
-      meaning: 'aᵢ = 학습되는 기울기',
-      usage: 'ResNet',
-      color: '#10b981',
-    },
-    {
-      name: 'ELU',
-      year: 2015,
-      formula: 'x or α(eˣ−1)',
-      meaning: '음수: smooth 포화 곡선',
-      usage: 'FC network',
-      color: '#f59e0b',
-    },
-    {
-      name: 'SELU',
-      year: 2017,
-      formula: 'λ·ELU(x)',
-      meaning: 'λ,α 고정 → 자기정규화',
-      usage: 'BN 없이 FC',
-      color: '#ef4444',
-    },
-    {
-      name: 'GELU',
-      year: 2016,
-      formula: 'x·Φ(x)',
-      meaning: 'Φ = 정규분포 CDF',
-      usage: 'BERT, GPT',
-      color: '#8b5cf6',
-    },
-    {
-      name: 'Swish',
-      year: 2017,
-      formula: 'x·σ(x)',
-      meaning: 'σ = sigmoid, NAS 발견',
-      usage: 'EfficientNet',
-      color: '#06b6d4',
-    },
-    {
-      name: 'SwiGLU',
-      year: 2020,
-      formula: 'Swish(W₁x)⊙W₂x',
-      meaning: '⊙ = element-wise 곱',
-      usage: 'LLaMA, PaLM',
-      color: '#ec4899',
-    },
-    {
-      name: 'Mish',
-      year: 2019,
-      formula: 'x·tanh(ln(1+eˣ))',
-      meaning: 'softplus = ln(1+eˣ)',
-      usage: 'YOLOv4',
-      color: '#14b8a6',
-    },
-  ];
+import Math from "@/components/ui/math";
+import VizFrame from "@/components/viz/VizFrame";
 
+const lanes = [
+  {
+    key: "slope",
+    group: "Leaky ReLU · PReLU",
+    question: "음수에서 gradient가 0이 되는 문제",
+    mechanism: "음수 쪽에도 기울기 a를 남긴다",
+    formulas: ["a=0.01", "a_i\\;\\text{학습}"],
+    result: "dead unit 위험 감소",
+    caveat: "PReLU는 channel별 parameter가 늘고, 음수 noise도 통과한다.",
+    color: "text-sky-700 dark:text-sky-300",
+    border: "border-sky-500/30",
+  },
+  {
+    key: "distribution",
+    group: "ELU · SELU",
+    question: "활성값의 평균 이동과 분산 변화",
+    mechanism: "음수 포화 곡선으로 분포를 제어한다",
+    formulas: ["\\alpha(e^x-1)", "\\lambda\\,\\mathrm{ELU}(x)"],
+    result: "평균을 0 쪽으로 이동",
+    caveat: "SELU의 자기정규화는 초기화·구조·dropout 조건까지 포함한다.",
+    color: "text-emerald-700 dark:text-emerald-300",
+    border: "border-emerald-500/30",
+  },
+  {
+    key: "smooth-gate",
+    group: "GELU · SiLU · Mish",
+    question: "0에서 hard하게 자르는 경계",
+    mechanism: "입력 크기로 자기 자신을 부드럽게 gate한다",
+    formulas: ["x\\Phi(x)", "x\\sigma(x)"],
+    result: "매끄러운 local gradient",
+    caveat: "exp·CDF 계열 연산이 들며 어떤 모델에서나 ReLU보다 낫다는 법칙은 없다.",
+    color: "text-violet-700 dark:text-violet-300",
+    border: "border-violet-500/30",
+  },
+  {
+    key: "two-branch",
+    group: "GLU · SwiGLU",
+    question: "하나의 projection이 값과 선택을 모두 담당",
+    mechanism: "gate branch와 value branch를 따로 만든다",
+    formulas: ["\\mathrm{SiLU}(xW_g)", "\\odot\\;xW_v"],
+    result: "feature별 조건부 통과",
+    caveat: "scalar activation이 아니라 projection 하나가 추가되는 FFN 구조다.",
+    color: "text-amber-700 dark:text-amber-300",
+    border: "border-amber-500/30",
+  },
+] as const;
+
+function Arrow() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 640 370" className="w-full h-auto" style={{ maxWidth: 820 }}>
-        <text x={320} y={24} textAnchor="middle" fontSize={16} fontWeight={700}
-          fill="var(--foreground)">ReLU 가족 — 8가지 변형 진화</text>
-
-        {variants.map((v, i) => {
-          const col = i % 4;
-          const row = Math.floor(i / 4);
-          const x = 18 + col * 156;
-          const y = 42 + row * 152;
-          return (
-            <g key={v.name}>
-              <rect x={x} y={y} width={148} height={138} rx={8}
-                fill={v.color} fillOpacity={0.06} stroke={v.color} strokeWidth={1.8} />
-
-              {/* 이름 + 연도 */}
-              <text x={x + 74} y={y + 20} textAnchor="middle" fontSize={12} fontWeight={700} fill={v.color}>
-                {v.name}
-              </text>
-              <text x={x + 74} y={y + 34} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-                {v.year}
-              </text>
-              <line x1={x + 10} y1={y + 40} x2={x + 138} y2={y + 40} stroke={v.color} strokeOpacity={0.3} strokeWidth={0.8} />
-
-              {/* 공식 */}
-              <text x={x + 74} y={y + 58} textAnchor="middle" fontSize={10} fontFamily="monospace" fontWeight={600} fill="var(--foreground)">
-                {v.formula}
-              </text>
-
-              {/* 의미 — 수식 기호 설명 */}
-              <text x={x + 74} y={y + 74} textAnchor="middle" fontSize={8} fill={v.color}>
-                {v.meaning}
-              </text>
-
-              <line x1={x + 10} y1={y + 82} x2={x + 138} y2={y + 82} stroke="var(--border)" strokeOpacity={0.3} strokeWidth={0.5} />
-
-              {/* 사용처 */}
-              <text x={x + 74} y={y + 98} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--foreground)">
-                {v.usage}
-              </text>
-
-              {/* 세대 구분 뱃지 */}
-              <rect x={x + 30} y={y + 108} width={88} height={18} rx={9}
-                fill={v.color} fillOpacity={0.15} stroke={v.color} strokeWidth={0.6} />
-              <text x={x + 74} y={y + 121} textAnchor="middle" fontSize={8} fontWeight={600} fill={v.color}>
-                {i < 4 ? '1세대 변형' : '2세대 혁신'}
-              </text>
-            </g>
-          );
-        })}
-
-        <rect x={18} y={340} width={604} height={24} rx={5}
-          fill="var(--muted)" fillOpacity={0.2} stroke="var(--border)" strokeWidth={0.6} />
-        <text x={320} y={356} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">진화 방향: 음수 구간 살리기(Leaky) → smooth 곡선(ELU) → 확률적 마스킹(GELU) → gated 조합(SwiGLU)</text>
-      </svg>
+    <div aria-hidden="true" className="hidden items-center md:flex">
+      <span className="h-px flex-1 bg-border" />
+      <span className="ml-1 text-sm text-muted-foreground">›</span>
     </div>
+  );
+}
+
+export default function ReLUFamilyViz() {
+  return (
+    <VizFrame
+      eyebrow="같은 비교축으로 보기"
+      title="ReLU 이후의 선택지는 서로 다른 병목을 겨냥한다"
+      description="연도순 계보가 아니라, 무엇을 문제로 보고 계산 경로를 어떻게 바꿨는지 나란히 비교합니다."
+      note="GELU·SiLU는 한 값에 적용하는 activation이고, SwiGLU는 두 projection을 곱하는 FFN입니다. 이 둘을 같은 비용으로 비교하면 안 됩니다."
+    >
+      <div className="space-y-7">
+        {lanes.map((lane) => (
+          <div
+            key={lane.key}
+            className="grid min-w-0 gap-4 border-b border-border/60 pb-7 last:border-0 last:pb-0 md:grid-cols-[minmax(0,0.9fr)_28px_minmax(0,1.1fr)_28px_minmax(0,0.95fr)] md:items-center md:gap-3"
+          >
+            <div className="min-w-0">
+              <p className={`text-xs font-bold ${lane.color}`}>{lane.group}</p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-foreground">
+                {lane.question}
+              </p>
+            </div>
+            <Arrow />
+            <div className={`min-w-0 rounded-lg border ${lane.border} bg-background p-4`}>
+              <p className="text-xs font-semibold text-muted-foreground">계산 경로의 변화</p>
+              <p className="mt-1 text-sm font-semibold leading-6 text-foreground">
+                {lane.mechanism}
+              </p>
+              <div className="mt-3 flex min-w-0 flex-wrap gap-2">
+                {lane.formulas.map((formula) => (
+                  <span
+                    key={formula}
+                    className="max-w-full rounded-md border border-border/70 bg-muted/25 px-2.5 py-1 text-xs"
+                  >
+                    <Math>{formula}</Math>
+                  </span>
+                ))}
+              </div>
+            </div>
+            <Arrow />
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-foreground">{lane.result}</p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                {lane.caveat}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </VizFrame>
   );
 }

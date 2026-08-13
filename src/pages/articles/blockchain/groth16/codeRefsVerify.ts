@@ -1,12 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const verifyCodeRefs: Record<string, CodeRef> = {
-  'groth16-verify': {
-    path: 'arkworks-rs/groth16/src/verifier.rs',
-    lang: 'rust',
+  "groth16-verify": {
+    path: "arkworks-rs/groth16/src/verifier.rs",
+    lang: "rust",
     highlight: [1, 28],
-    desc:
-`verify_proof()는 페어링 3회로 Groth16 증명을 검증합니다.
+    desc: `verify_proof()는 페어링 3회로 Groth16 증명을 검증합니다.
 
 검증식: e(A, B) == e(α, β) · e(IC_sum, γ) · e(C, δ)
 
@@ -45,11 +44,26 @@ export const verifyCodeRefs: Record<string, CodeRef> = {
     Ok(result.is_zero())
 }`,
     annotations: [
-      { lines: [6, 9], color: 'sky', note: 'IC_sum 계산: IC₀ + Σ xᵢ·ICᵢ — 공개 입력의 선형 결합' },
-      { lines: [12, 14], color: 'emerald', note: '검증식을 곱셈 형태로 변환 → product = 1 체크' },
-      { lines: [15, 27], color: 'amber', note: 'multi_pairing: 4개 (G1, G2) 쌍으로 한 번에 계산' },
-      { lines: [28, 28], color: 'violet', note: 'is_zero(): 곱이 identity이면 증명 유효' },
+      {
+        lines: [6, 9],
+        color: "sky",
+        note: "IC_sum 계산: IC₀ + Σ xᵢ·ICᵢ — 공개 입력의 선형 결합",
+      },
+      {
+        lines: [12, 14],
+        color: "emerald",
+        note: "검증식을 곱셈 형태로 변환 → product = 1 체크",
+      },
+      {
+        lines: [15, 27],
+        color: "amber",
+        note: "multi_pairing: 4개 (G1, G2) 쌍으로 한 번에 계산",
+      },
+      {
+        lines: [28, 28],
+        color: "violet",
+        note: "is_zero(): 곱이 identity이면 증명 유효",
+      },
     ],
   },
-
 };

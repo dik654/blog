@@ -1,9 +1,11 @@
-import PerfBenchViz from './viz/PerfBenchViz';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import PerfBenchViz from "./viz/PerfBenchViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Performance({ onCodeRef }: {
+export default function Performance({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   return (
@@ -11,13 +13,20 @@ export default function Performance({ onCodeRef }: {
       <h2 className="text-2xl font-bold mb-6">성능 분석 & 벤치마크</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          3가지 최적화 축: JIT 2.01x + 병렬 5.56x + io_uring 4.17x<br />
+          3가지 최적화 축: JIT 2.01x + 병렬 5.56x + io_uring 4.17x
+          <br />
           EvmStackAllocator로 메모리 할당 16.7배 개선
         </p>
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
-            <CodeViewButton onClick={() =>
-              onCodeRef('monad-perf-benchmark', codeRefs['monad-perf-benchmark'])} />
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef(
+                  "monad-perf-benchmark",
+                  codeRefs["monad-perf-benchmark"],
+                )
+              }
+            />
             <span className="text-[10px] text-muted-foreground self-center">
               벤치마크 결과
             </span>
@@ -25,15 +34,17 @@ export default function Performance({ onCodeRef }: {
         )}
       </div>
       <div className="not-prose my-8">
-        <PerfBenchViz onOpenCode={onCodeRef
-          ? (k: string) => onCodeRef(k, codeRefs[k])
-          : undefined} />
+        <PerfBenchViz
+          onOpenCode={
+            onCodeRef ? (k: string) => onCodeRef(k, codeRefs[k]) : undefined
+          }
+        />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Monad 성능 최적화</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Monad Performance Stack
+          {`// Monad Performance Stack
 //
 // 3축 최적화 총효과:
 //   JIT × Parallel × io_uring =

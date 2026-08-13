@@ -1,20 +1,27 @@
-import { CitationBlock } from '@/components/ui/citation';
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function Optimistic() {
   return (
     <section id="optimistic" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">낙관적 응답성</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <CitationBlock source="Malkhi & Nayak — HotStuff-2 §4" citeKey={2} type="paper">
+        <CitationBlock
+          source="Malkhi & Nayak — HotStuff-2 §4"
+          citeKey={2}
+          type="paper"
+        >
           <p className="italic">
-            "In the optimistic case, the protocol proceeds at the speed of the actual network delay, without waiting for timeouts."
+            "In the optimistic case, the protocol proceeds at the speed of the
+            actual network delay, without waiting for timeouts."
           </p>
         </CitationBlock>
 
         {/* ── Optimistic Responsiveness ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Optimistic Responsiveness 의미</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Optimistic Responsiveness 의미
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Optimistic Responsiveness 정의:
+          {`// Optimistic Responsiveness 정의:
 //
 // "In the optimistic path (honest leader, GST passed),
 //  protocol proceeds at the speed of δ (actual delay),
@@ -59,8 +66,10 @@ export default function Optimistic() {
 // - 80% 감소 (view change)`}
         </pre>
         <p className="leading-7">
-          Optimistic responsive = <strong>timeout 대기 없이 δ 속도</strong>.<br />
-          view change도 TC 형성 즉시 진행 (no timeout).<br />
+          Optimistic responsive = <strong>timeout 대기 없이 δ 속도</strong>.
+          <br />
+          view change도 TC 형성 즉시 진행 (no timeout).
+          <br />
           Pass-Shi 하한 달성 — 이론적 최적.
         </p>
 
@@ -70,24 +79,38 @@ export default function Optimistic() {
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">프로토콜</th>
-                <th className="border border-border px-4 py-2 text-left">단계 수</th>
-                <th className="border border-border px-4 py-2 text-left">지연</th>
-                <th className="border border-border px-4 py-2 text-left">VC 복잡도</th>
-                <th className="border border-border px-4 py-2 text-left">응답성</th>
+                <th className="border border-border px-4 py-2 text-left">
+                  프로토콜
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  단계 수
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  지연
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  VC 복잡도
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  응답성
+                </th>
               </tr>
             </thead>
             <tbody>
               {[
-                ['PBFT', '3', '5 delays', 'O(n³)', '정상만'],
-                ['Tendermint', '3', '4 delays', 'O(n²)', '비응답적'],
-                ['HotStuff', '3', '7 delays', 'O(n)', '정상만'],
-                ['HotStuff-2', '2', '4 delays', 'O(n)', '전체 응답적'],
+                ["PBFT", "3", "5 delays", "O(n³)", "정상만"],
+                ["Tendermint", "3", "4 delays", "O(n²)", "비응답적"],
+                ["HotStuff", "3", "7 delays", "O(n)", "정상만"],
+                ["HotStuff-2", "2", "4 delays", "O(n)", "전체 응답적"],
               ].map(([name, ...rest]) => (
                 <tr key={name}>
-                  <td className="border border-border px-4 py-2 font-medium">{name}</td>
+                  <td className="border border-border px-4 py-2 font-medium">
+                    {name}
+                  </td>
                   {rest.map((v, i) => (
-                    <td key={i} className="border border-border px-4 py-2">{v}</td>
+                    <td key={i} className="border border-border px-4 py-2">
+                      {v}
+                    </td>
                   ))}
                 </tr>
               ))}
@@ -98,7 +121,7 @@ export default function Optimistic() {
         {/* ── Chained HotStuff-2 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Chained HotStuff-2</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Chained HotStuff-2 (파이프라인):
+          {`// Chained HotStuff-2 (파이프라인):
 //
 // 핵심 아이디어:
 // - 2-phase를 파이프라인
@@ -152,22 +175,30 @@ export default function Optimistic() {
         </pre>
         <p className="leading-7">
           Chained HotStuff-2: <strong>2-chain commit rule</strong>.<br />
-          B, B' (연속 view) 2 QC → B committed.<br />
+          B, B' (연속 view) 2 QC → B committed.
+          <br />
           HotStuff의 3-chain 대비 1 view 단축.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">핵심 인사이트</h3>
         <p className="leading-7">
-          HotStuff의 3단계 구조는 "View Change에서 Safety 보장"을 위한 것.<br />
-          HotStuff-2의 TC는 View Change 시점의 정보를 암호학적으로 보존하여,<br />
-          정상 경로에서 불필요한 단계를 제거.<br />
+          HotStuff의 3단계 구조는 "View Change에서 Safety 보장"을 위한 것.
+          <br />
+          HotStuff-2의 TC는 View Change 시점의 정보를 암호학적으로 보존하여,
+          <br />
+          정상 경로에서 불필요한 단계를 제거.
+          <br />
           결과적으로 최적 지연(4 delays) + O(n) 통신 + 전체 응답성 달성.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 HotStuff-2가 아직 mainnet 채택 없나</strong> — 구현 복잡도.<br />
-          TC verification, 2-chain safety proof, view change 복잡.<br />
-          Aptos는 Jolteon 선택 (2-chain + async fallback).<br />
+          <strong>💡 왜 HotStuff-2가 아직 mainnet 채택 없나</strong> — 구현
+          복잡도.
+          <br />
+          TC verification, 2-chain safety proof, view change 복잡.
+          <br />
+          Aptos는 Jolteon 선택 (2-chain + async fallback).
+          <br />
           HotStuff-2는 이론적 최적이지만 실무 채택은 후발.
         </p>
       </div>

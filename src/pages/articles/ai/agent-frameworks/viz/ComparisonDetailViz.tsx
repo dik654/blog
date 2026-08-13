@@ -1,16 +1,38 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
-const steps: StepDef[] = [
-  { label: 'Framework 선택 의사결정 가이드', body: 'Q1 주요 목적:\nRAG 시스템 → LlamaIndex | 범용 Agent → LangChain/LangGraph\nMulti-agent 팀 → CrewAI | Research 자동화 → AutoGen\nSimple prototype → OpenAI SDK 직접\n\nQ2 규모:\nPrototype → LangChain | Production → LangGraph | Enterprise → LangGraph + LangSmith\n\nQ3 팀 스킬:\nPython → LangChain, CrewAI, AutoGen | TypeScript → LangChain.js, Vercel AI SDK\nNo-code → Dify, Flowise\n\n2024 엔터프라이즈 스택:\nLangChain/LangGraph (logic) + LangSmith (observability) + Vector DB + Model + Deploy\n\n대안: Semantic Kernel(C#), Haystack(RAG), DSPy(programmatic), Phidata\n디버깅: LangSmith, Helicone, Langfuse, W&B Weave, Phoenix' },
-];
-const visuals = [
-  { title: 'Framework 선택 가이드', color: '#f59e0b', rows: [
-    { label: 'RAG', value: '→ LlamaIndex (문서 인덱싱 최적화)' },
-    { label: '범용 Agent', value: '→ LangChain/LangGraph' },
-    { label: 'Multi-agent', value: '→ CrewAI (역할 기반)' },
-    { label: 'Research', value: '→ AutoGen (대화 기반 협업)' },
-    { label: 'Production', value: '→ LangGraph + LangSmith' },
-    { label: 'Prototype', value: '→ OpenAI SDK 직접' },
-  ]},
-];
-export default function ComparisonDetailViz() { return <SimpleStepViz steps={steps} visuals={visuals} />; }
+import VizFrame from "@/components/viz/VizFrame";
+
+const decisions = [
+  ["Direct SDK baseline", "단일 loop·typed tool·간단한 retry로 요구를 충족하는가?", "충족하면 복잡도를 추가하지 않음"],
+  ["Framework candidate", "checkpoint·approval·branch·trace 중 실제 부족한 책임은?", "기능과 owner를 명시"],
+  ["Paired prototype", "같은 task·model·dataset·budget에서 비교", "quality·latency·cost·recovery"],
+  ["Adopt or rollback", "운영 이득이 upgrade·lock-in·debug 비용보다 큰가?", "version pin·escape hatch 유지"],
+] as const;
+
+export default function ComparisonDetailViz() {
+  return (
+    <VizFrame
+      eyebrow="Requirement matrix"
+      title="Direct SDK에서 시작해 부족한 책임이 확인될 때만 framework 후보를 비교합니다"
+      description="브랜드 순위 대신 같은 workflow의 paired prototype으로 품질·운영 비용·복구 가능성을 함께 측정합니다."
+    >
+      <ol className="divide-y divide-border/70">
+        {decisions.map(([stage, question, decision], index) => (
+          <li
+            key={stage}
+            className="grid min-w-0 gap-2 py-4 first:pt-0 last:pb-0 sm:grid-cols-[2rem_9rem_1fr_1fr] sm:items-baseline"
+          >
+            <span className="font-mono text-[11px] text-muted-foreground">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <h4 className="min-w-0 text-sm font-bold [overflow-wrap:anywhere]">{stage}</h4>
+            <p className="min-w-0 text-xs leading-5 text-muted-foreground [overflow-wrap:anywhere]">
+              {question}
+            </p>
+            <p className="min-w-0 text-xs font-semibold leading-5 text-primary [overflow-wrap:anywhere]">
+              {decision}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </VizFrame>
+  );
+}

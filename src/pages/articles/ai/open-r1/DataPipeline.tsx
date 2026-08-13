@@ -1,58 +1,89 @@
-import DataFlowViz from './viz/DataFlowViz';
-import { distilabelParams } from './pipelineData';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import DataLineageViz from "./viz/DataLineageViz";
 
-export default function DataPipeline({ onCodeRef }: { onCodeRef?: (key: string, ref: CodeRef) => void }) {
+export default function DataPipeline() {
   return (
     <section id="data-pipeline" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">데이터 생성 파이프라인</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Open R1의 데이터 생성 파이프라인 — 고품질 추론 트레이스(reasoning trace, 단계별 사고 과정)를 <strong>대규모로 생성</strong><br />
-          DeepSeek-R1 등 강력한 모델로 수학, 코딩, 추론 문제의 단계별 해결 과정 생성<br />
-          <strong>Distilabel</strong> + <strong>vLLM</strong> + <strong>Ray</strong>를 결합한 분산 파이프라인
+      <h2 className="mb-6 text-2xl font-bold">
+        Reasoning data는 생성된 답보다 다시 검증할 수 있는 lineage가 중요하다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          Teacher가 긴 solution을 만들었다고 곧바로 좋은 SFT data가 되지는
+          않습니다. Final answer가 맞아도 중간 설명이 모순될 수 있고, parser가
+          받기 쉬운 표현만 남기면 data distribution이 좁아집니다. 따라서 raw
+          generation을 덮어쓰지 않고 parser output, verifier result와 filtering
+          reason을 별도 column으로 보존해야 나중에 verifier가 개선됐을 때 전부
+          다시 생성하지 않고 재처리할 수 있습니다.
         </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">파이프라인 흐름</h3>
       </div>
 
-      <DataFlowViz />
+      <DataLineageViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        {onCodeRef && (
-          <div className="not-prose flex flex-wrap gap-2 my-4">
-            <CodeViewButton onClick={() => onCodeRef('r1-generate-pipeline', codeRefs['r1-generate-pipeline'])} />
-            <span className="text-[10px] text-muted-foreground self-center">generate.py — Distilabel 파이프라인</span>
-          </div>
-        )}
-        <p>
-          <strong>Pipeline().ray()</strong> — Ray 분산 처리로 여러 워커에서 병렬 생성<br />
-          <strong>OpenAILLM</strong> — vLLM 서버에 OpenAI-compatible API 호출<br />
-          <strong>group_generations=True</strong> — 동일 프롬프트의 N개 응답을 하나의 행으로 그룹화 → GRPO 학습에 직접 사용 가능
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Dataset 숫자는 generation 수와 unique problem 수를 구분한다</h3>
+        <p className="leading-8">
+          OpenR1-Math-220k update는 약 40만 problem에 두 답씩, 총 80만 trace를
+          생성한 뒤 correctness filtering을 거쳐 약 22만 problem의 trace를 남긴
+          과정을 공개했습니다. 그러므로 “220k trace를 생성했다”라고 줄이면
+          sampling budget과 selection rate를 잃습니다. Problem ID, candidate
+          index, teacher checkpoint와 sampling setting을 보존해야 같은 문제의
+          여러 candidate와 최종 row 수를 구분할 수 있습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">주요 매개변수</h3>
-        <div className="overflow-x-auto not-prose">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-2 px-3">매개변수</th>
-                <th className="text-left py-2 px-3">기본값</th>
-                <th className="text-left py-2 px-3">설명</th>
-              </tr>
-            </thead>
-            <tbody>
-              {distilabelParams.map(p => (
-                <tr key={p.param} className="border-b border-border/40">
-                  <td className="py-2 px-3 font-mono text-xs">{p.param}</td>
-                  <td className="py-2 px-3 font-mono text-xs">{p.default ?? '-'}</td>
-                  <td className="py-2 px-3 text-muted-foreground">{p.desc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <h3>Stricter filtering은 항상 더 좋은 학습 data를 뜻하지 않는다</h3>
+        <p className="leading-8">
+          정답 verifier와 길이·format filter를 강화하면 noise가 줄지만 어렵거나
+          표현이 다양한 problem까지 함께 제거할 수 있습니다. Open-R1 update가
+          보여 준 것처럼 작은 token budget에서는 깨끗한 subset이 빨리 학습될 수
+          있어도, 긴 training에서는 더 넓은 coverage가 경쟁력을 유지할 수
+          있습니다. 동일 update token budget에서 quality filter와 coverage
+          변화를 ablation해야 합니다.
+        </p>
+
+        <h3>Contamination은 prompt provenance와 n-gram을 함께 본다</h3>
+        <p className="leading-8">
+          현재 Open-R1 저장소는 benchmark prompt와의 8-gram overlap을 이용한
+          decontamination script를 제공합니다. 이는 재현 가능한 기준선이지만
+          semantic paraphrase나 teacher가 기억한 풀이까지 제거하지는 못합니다.
+          Exact/n-gram 제거 수, source·contest·year split과 semantic audit
+          결과를 함께 보고하고, benchmark release 이후의 problem을 별도
+          holdout으로 두는 편이 더 강한 검증이 됩니다.
+        </p>
+
+        <h3>Data release도 executable artifact처럼 versioning한다</h3>
+        <p className="leading-8">
+          Dataset revision에는 source license, raw generation pointer, parser와
+          verifier commit, filter config, removed-count breakdown과 split
+          manifest가 있어야 합니다. 그래야 성능 차이가 model update인지 data
+          revision인지 분리할 수 있고, 다른 팀이 같은 기준으로 SFT와 RL prompt
+          pool을 다시 만들 수 있습니다.
+        </p>
+      </div>
+
+      <div
+        id="standard-open-r1-data"
+        className="not-prose my-8 scroll-mt-24 border-l border-border pl-4"
+      >
+        <p className="text-xs font-bold text-foreground">
+          공식 프로젝트 기록 · OpenR1-Math data generation
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Open-R1 update는 source problem에서 여러 teacher completion을 만들고
+          correctness filter를 거쳐 학습 subset을 공개한 과정을 설명합니다. 이
+          기록의 핵심은 최종 row 수만이 아니라 generation budget·filter·training
+          결과를 함께 비교했다는 점입니다. 특정 update에서 더 깨끗한 subset이
+          유리했다는 관찰을 모든 token budget과 domain의 일반 법칙으로 확대하지
+          않고, 동일 budget의 coverage ablation으로 다시 확인해야 합니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://huggingface.co/blog/open-r1/update-2"
+          target="_blank"
+          rel="noreferrer"
+        >
+          생성 수·filter·distillation 결과의 공식 기록 보기
+        </a>
       </div>
     </section>
   );

@@ -1,12 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const verifierCodeRefs: Record<string, CodeRef> = {
-  'plonk-verifier': {
-    path: 'ZK-Garage/plonk/src/proof_system/verifier.rs',
-    lang: 'rust',
+  "plonk-verifier": {
+    path: "ZK-Garage/plonk/src/proof_system/verifier.rs",
+    lang: "rust",
     highlight: [1, 30],
-    desc:
-`PLONK Verifier는 증명의 모든 commitment와 evaluation으로 검증합니다.
+    desc: `PLONK Verifier는 증명의 모든 commitment와 evaluation으로 검증합니다.
 
 1. Fiat-Shamir로 β,γ,α,ζ,v를 재생성
 2. 평가값으로 linearised commitment [r]₁ 사전 계산
@@ -46,9 +45,21 @@ export const verifierCodeRefs: Record<string, CodeRef> = {
     Ok(())
 }`,
     annotations: [
-      { lines: [8, 14], color: 'sky', note: 'Fiat-Shamir 재생성 — 증명자와 동일한 β,γ,α,ζ 도출' },
-      { lines: [16, 20], color: 'emerald', note: 'Linearised commitment 재구성 — 평가값으로 G1 연산' },
-      { lines: [22, 30], color: 'amber', note: 'Batch KZG verify — W_ζ, W_{ζω} 페어링 2회로 검증' },
+      {
+        lines: [8, 14],
+        color: "sky",
+        note: "Fiat-Shamir 재생성 — 증명자와 동일한 β,γ,α,ζ 도출",
+      },
+      {
+        lines: [16, 20],
+        color: "emerald",
+        note: "Linearised commitment 재구성 — 평가값으로 G1 연산",
+      },
+      {
+        lines: [22, 30],
+        color: "amber",
+        note: "Batch KZG verify — W_ζ, W_{ζω} 페어링 2회로 검증",
+      },
     ],
   },
 };

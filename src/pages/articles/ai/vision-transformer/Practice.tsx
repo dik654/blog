@@ -1,96 +1,65 @@
-import PracticeViz from './viz/PracticeViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import PracticeViz from "./viz/PracticeViz";
 
 export default function Practice() {
   return (
     <section id="practice" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">실전: timm 라이브러리 활용</h2>
+      <h2 className="mb-6 text-2xl font-bold">Checkpoint handoff는 weight load가 아니라 입력부터 출력까지의 호환성 검사입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          이론을 코드로 옮길 때 <strong>timm(PyTorch Image Models)</strong> 라이브러리가 사실상 표준이다.
-          Ross Wightman이 관리하는 이 라이브러리는 900개 이상의 사전학습 모델을 통일된 인터페이스로 제공.
-          모델 생성 → 데이터 변환 → 학습을 최소한의 코드로 시작할 수 있다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">모델 선택 가이드</h3>
-        <p>
-          ViT 계열 모델은 목적에 따라 선택이 갈린다.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">목적</th>
-                <th className="border border-border px-4 py-2 text-left">모델</th>
-                <th className="border border-border px-4 py-2 text-left">ImageNet</th>
-                <th className="border border-border px-4 py-2 text-left">FLOPs</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['최고 정확도', 'swin_large_patch4_window12_384', '87.3%', '47.0G'],
-                ['균형 (추천)', 'vit_base_patch16_224', '84.5%', '17.6G'],
-                ['메모리 절약', 'deit_small_distilled_patch16_224', '81.2%', '4.6G'],
-                ['최고 속도', 'vit_small_patch16_224', '79.4%', '4.6G'],
-                ['고해상도', 'swin_base_patch4_window7_224', '83.5%', '15.4G'],
-              ].map(([purpose, model, acc, flops]) => (
-                <tr key={model}>
-                  <td className="border border-border px-4 py-2 font-medium">{purpose}</td>
-                  <td className="border border-border px-4 py-2 font-mono text-xs">{model}</td>
-                  <td className="border border-border px-4 py-2">{acc}</td>
-                  <td className="border border-border px-4 py-2">{flops}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Fine-tuning 핵심 전략</h3>
-        <p>
-          ViT를 fine-tune할 때 CNN과 다른 점이 있다. 핵심 4가지:
-        </p>
-        <p>
-          <strong>1) 학습률</strong>: ViT는 CNN보다 낮은 학습률이 필요 — 1e-5 ~ 5e-5 (CNN: 1e-3 ~ 1e-4).
-          사전학습된 어텐션 패턴이 높은 학습률에서 쉽게 파괴되기 때문.
-        </p>
-        <p>
-          <strong>2) Layer-wise LR Decay</strong>: 얕은 층(일반적 특징)은 낮은 학습률, 깊은 층(태스크 특화)은 높은 학습률.
-          decay factor=0.65가 기본 — 12번째 레이어 LR = base_lr, 1번째 레이어 LR = base_lr × 0.65¹¹.
-          이 전략으로 얕은 층의 범용 패턴을 보존하면서 깊은 층만 빠르게 적응시킨다.
-        </p>
-        <p>
-          <strong>3) Warmup</strong>: 전체 에폭의 5-10% 동안 학습률을 0에서 선형 증가 → 이후 코사인 감쇠(Cosine Annealing).
-          ViT는 CNN보다 학습 초기 불안정성이 크므로 warmup이 필수적.
-        </p>
-        <p>
-          <strong>4) 해상도 변경</strong>: 224에서 학습된 모델을 384로 fine-tune하면 성능 향상(+1~2%).
-          단, 위치 임베딩의 길이가 달라지므로 <strong>이중선형 보간(bicubic interpolation)</strong>으로 위치 임베딩을 리사이즈해야 한다.
-          timm에서는 이 과정이 자동으로 처리된다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">대회 활용 전략</h3>
-        <p>
-          <strong>앙상블</strong>: CNN(ConvNeXt) + ViT(Swin) 혼합이 단일 아키텍처보다 항상 우수.
-          서로 다른 귀납 편향이 상호 보완 — CNN은 로컬 텍스처, ViT는 글로벌 구조에 강하다.
-          가중 평균(0.4:0.6)이나 스태킹(2단계 메타 모델)으로 결합.
-        </p>
-        <p>
-          <strong>TTA(Test-Time Augmentation)</strong>: 수평 반전 + 멀티크롭(5-crop 또는 10-crop).
-          ViT는 CNN보다 TTA 효과가 큼(+0.5~1.0%) — 어텐션 패턴이 증강된 이미지에서 더 다양한 관점을 포착.
-        </p>
-        <p>
-          <strong>Progressive Resizing</strong>: 224 → 320 → 384로 단계적 해상도 증가.
-          작은 해상도에서 빠르게 수렴 → 큰 해상도에서 미세 조정.
-          ViT에서 특히 효과적 — 위치 임베딩이 점진적으로 적응하며 학습 시간 30-40% 절약.
+          Registry에서 model 이름만 복사하지 않고 architecture config, weight
+          revision과 license, expected resolution, interpolation, crop ratio,
+          channel order, mean·standard deviation, class mapping을 함께 저장합니다.
+          Position embedding resize와 classifier head 교체는 shape가 맞아도 의미가
+          달라지는 경계이므로 smoke test가 fine-tuning보다 먼저입니다.
         </p>
       </div>
-
+      <ExplainedFormula
+        question="Pretrained position embedding을 더 큰 patch grid로 옮길 때 무엇을 분리해 보간해야 할까?"
+        idea={<>Image-level special token의 position은 2D spatial grid가 아니므로 먼저 분리합니다. N개 patch position을 h×w grid로 reshape하고 새 h′×w′ grid에 2D interpolation한 뒤 special token을 다시 붙입니다.</>}
+        formula={String.raw`\begin{aligned}
+P_{\mathrm{old}}&=[p_{\mathrm{cls}};P_{\mathrm{grid}}],\\
+\widetilde P_{\mathrm{grid}}&=\operatorname{Interp}_{2D}
+\!\left(G_{\mathrm{old}},h',w'\right),\\
+G_{\mathrm{old}}&=\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),\\
+P_{\mathrm{new}}&=[p_{\mathrm{cls}};\widetilde P_{\mathrm{grid}}^{\flat}].
+\end{aligned}`}
+        terms={[
+          { symbol: "p_cls", name: "special-token position", description: "Spatial patch grid에 속하지 않는 class 또는 distillation token의 learned position입니다." },
+          { symbol: "P_grid", name: "old spatial position grid", description: "Pretraining patch 좌표 h×w에 대응하는 D-dimensional learned vectors입니다." },
+          { symbol: "h',w'", name: "new token-grid shape", description: "Fine-tuning resolution과 patch size가 만드는 새 spatial patch 개수입니다." },
+          { symbol: "Interp₂D", name: "two-dimensional interpolation", description: "Old grid의 vector field를 새 grid 좌표에 보간하는 명시적 변환입니다." },
+        ]}
+        assumptions={["Absolute learned position embedding을 쓰는 ViT형 checkpoint의 일반적 변환입니다.", "Special token 수와 ordering은 checkpoint architecture와 일치해야 합니다.", "Relative bias·RoPE·dynamic position을 쓰는 model에는 같은 절차를 그대로 적용하지 않습니다."]}
+        interpretation="Token 총길이만 맞추는 1D interpolation은 row boundary를 섞을 수 있습니다. 실제 library가 사용하는 align-corners·interpolation mode까지 artifact에 남기고 target resolution에서 fine-tune합니다."
+      />
+      <ExplainedFormula
+        question="Registry implementation과 export implementation이 같은 checkpoint를 읽었다는 것을 어떻게 확인할까?"
+        idea={<>같은 preprocessed tensor와 eval state에서 두 구현의 logit 차이를 tolerance 안에서 비교합니다. Shape·dtype·class order 검사와 함께 해야 우연히 비슷한 scalar metric만 맞는 오류를 막을 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}
+x'&=T_{\mathrm{ckpt}}(x),\\
+z_{\mathrm{ref}}&=f_{\mathrm{ref}}(x'),\\
+z_{\mathrm{exp}}&=f_{\mathrm{exp}}(x'),\\
+d&=\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty,\\
+d&\le\varepsilon.
+\end{aligned}`}
+        terms={[
+          { symbol: "T_ckpt", name: "checkpoint preprocessing", description: "Registry가 명시한 resize·crop·channel·normalization을 재현하는 deterministic inference transform입니다." },
+          { symbol: "f_ref,f_exp", name: "reference and exported models", description: "원 runtime 구현과 배포용으로 변환한 implementation입니다." },
+          { symbol: "ε", name: "numerical tolerance", description: "Precision·kernel 차이를 고려해 사전에 정한 maximum absolute logit error 한계입니다." },
+        ]}
+        assumptions={["두 model은 eval mode이며 dropout·stochastic depth 같은 무작위 경로를 끕니다.", "동일한 class order·input tensor·dtype policy를 사용합니다.", "Tolerance는 FP32·FP16·INT8 등 export precision과 representative test set에 맞게 정합니다."]}
+        interpretation="Top-1 label 하나가 같다는 것보다 logit vector parity가 더 강한 smoke test입니다. 그래도 전체 accuracy·calibration·latency 검증을 대신하지는 않습니다."
+      />
       <div className="not-prose my-8"><PracticeViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          실전 요약 1: timm으로 ViT 모델 3줄 코드로 시작 — 모델 생성, 변환, 추론.<br />
-          실전 요약 2: Fine-tuning은 낮은 학습률 + Layer-wise LR Decay + Warmup이 핵심.<br />
-          실전 요약 3: 대회에서는 CNN + ViT 앙상블 + TTA + Progressive Resizing 조합이 최적.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          Smoke test 뒤 head-only·partial·full fine-tuning은
+          <Link to="/ai/transfer-learning-practice">transfer learning 정본</Link>, warmup과
+          decay는 <Link to="/ai/lr-scheduling">schedule 정본</Link>을 따릅니다. Export
+          artifact에는 preprocessing code와 class map뿐 아니라 patch/grid shape,
+          position-resize receipt, library version, reference logits와 tolerance도 넣습니다.
         </p>
       </div>
     </section>

@@ -1,251 +1,182 @@
-import ADRViz from './viz/ADRViz';
+import { CitationBlock } from "@/components/ui/citation";
+import ADRViz from "./viz/ADRViz";
+
+const OPTIONS = [
+  {
+    name: "A · single JSON 유지",
+    benefit: "migration이 작고 조회 경로가 단순합니다.",
+    cost: "한 profile의 잘못된 replace가 전체 파일에 영향을 줄 수 있어 validation·atomic write·backup이 중요합니다.",
+  },
+  {
+    name: "B · profile별 파일 + 파생 index",
+    benefit: "부분 갱신과 profile 단위 복구·diff가 쉬워집니다.",
+    cost: "파일 수, index rebuild, cross-profile transaction과 migration code가 늘어납니다.",
+  },
+  {
+    name: "C · transactional database",
+    benefit: "transaction과 concurrency control을 명시적으로 다룰 수 있습니다.",
+    cost: "작은 개인 프로젝트에는 schema·backup·운영 복잡도가 과할 수 있습니다.",
+  },
+] as const;
 
 export default function ADR() {
   return (
     <section id="adr" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ADR — 결정의 근거 기록</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        ADR은 선택 당시의 제약과 trade-off를 보존합니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          Changelog가 "언제 무슨 일"을 적는다면, ADR은 "왜 이 길을 골랐나"를 적는다.<br />
-          Architecture Decision Record — 특정 시점에 구조적 선택을 내린 그 순간을 파일 하나로 고정한다.<br />
-          code diff에는 결과만 남지만, ADR에는 <strong>검토했지만 버린 대안</strong>까지 같이 남는다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          empty-result guard는 당장의 overwrite를 막지만, 사건을 조사하면서 single
+          JSON이 부분 갱신과 복구의 영향 범위(blast radius)를 키운다는 구조적 문제가
+          드러났다고 해보겠습니다. 이때 “profile별 파일로 바꾼다”는 문장만 남기면
+          몇 달 뒤 파일 수와 index 관리 비용이 보일 때 누군가 다시 single JSON으로
+          돌릴 수 있습니다. ADR은 그 선택을 영구히 금지하려는 문서가 아니라,
+          미래의 개발자가 당시 context가 아직 유효한지 판단하게 하는
+          기록입니다.
         </p>
-        <p className="leading-7">
-          이 섹션의 running example은 실제로 존재하는 파일이다 — <code>knowledge/lessons/decisions/001-dev-journaling-pattern.md</code>.<br />
-          context-manager 프로젝트의 첫 번째 ADR이 공교롭게도 이 글이 설명하는 3층 구조 자체를 기록하고 있다.<br />
-          메타 재귀적이지만 실용적인 예시라 그대로 쓰겠다.
+        <p>
+          모든 수정이 ADR은 아닙니다. system structure, non-functional
+          characteristic, dependency, interface, security boundary, construction
+          technique처럼 이후 선택을 제약하는 결정에 사용합니다. 작은 bug fix와
+          prompt 문구 수정은 issue와 Changelog로 충분하며, decision이 없는 사건을
+          억지로 ADR로 만들면 중요한 기록이 noise에 묻힙니다.
         </p>
+      </div>
 
-        <div className="not-prose my-8"><ADRViz /></div>
+      <div className="not-prose my-8 min-w-0">
+        <ADRViz />
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">ADR이 해결하는 것 — "왜 이 길을 골랐나"</h3>
-        <p className="leading-7">
-          Changelog만 있으면 결정의 결과는 보이지만 과정이 안 보인다.<br />
-          "2026-04-15 Memory sandwich을 multi-file로 전환" 한 줄이 있어도, 그 전환을 결정하기까지 어떤 대안을 검토했는지, 왜 단일 JSON이 부족했는지, 뒤집을 수 있는 결정인지는 알 수 없다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>option을 비교할 때 같은 decision driver를 사용합니다</h3>
+        <p>
+          고정 사례에서는 data loss가 번질 수 있는 범위, 부분 복구, 동시 갱신,
+          migration 비용, 운영 복잡도를 decision driver, 즉 선택 기준으로 정합니다. “요즘 database가
+          유행한다”처럼 option마다 다른 기준을 적용하면 결론을 재검토할 수
+          없습니다. 정확한 수치가 없다면 임의 점수로 꾸미지 말고 현재 관찰과
+          불확실성을 그대로 적습니다.
         </p>
-        <p className="leading-7">
-          ADR은 그 공백을 채운다. 하나의 파일 안에 세 가지를 같이 담는다.
+        <p>
+          여기서 atomic write는 파일 교체가 전부 성공하거나 기존 파일이 그대로
+          남도록 쓰는 방식이고, transaction은 여러 읽기·쓰기를 한 작업 단위로
+          묶어 commit 또는 rollback하는 장치입니다. 둘 다 중간 상태를 줄이지만,
+          파일 하나의 안전한 교체와 여러 profile 사이의 일관성은 서로 다른
+          문제입니다. 그래서 option 이름만 비교하지 않고 필요한 보장과 운영
+          비용을 함께 적습니다.
         </p>
-        <ul className="leading-7">
-          <li><strong>Context</strong> — 이 결정이 왜 필요했는가. 어떤 제약, 어떤 증상, 어떤 목표가 있었는가.</li>
-          <li><strong>Decision</strong> — 무엇을 골랐는가. 명시적으로 "이것을 한다"라고 쓴다.</li>
-          <li><strong>Consequences</strong> — 얻은 것과 잃은 것. trade-off를 피하지 않고 나열한다.</li>
-        </ul>
-        <p className="leading-7">
-          세 가지를 한 파일에 묶어두면, 6개월 뒤의 내가 "이거 뒤집어도 되나?"라고 물었을 때 답이 바로 나온다.<br />
-          "뒤집으면 Consequences의 Pro를 잃는다"가 즉시 보이기 때문이다.
-        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">승격 문턱은 높게</h3>
-        <p className="leading-7">
-          ADR의 가장 흔한 실패 모드는 <strong>남발</strong>이다.<br />
-          처음에는 "모든 중요 결정을 ADR로 남기자"라는 의욕으로 시작하지만, 30개가 넘어가는 순간 ADR 디렉토리가 오히려 조회 불가능한 늪이 된다.<br />
-          각 파일은 진지하게 쓰여 있지만, 너무 많아서 어느 것이 진짜 중요한지 알 수 없다.
-        </p>
-        <p className="leading-7">
-          그래서 승격 기준을 높게 잡는다. 한 가지 질문으로 요약하면:
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>"6개월 뒤의 내가 이 결정의 배경을 이해할 필요가 있을까?"</strong><br />
-          답이 "아니오"면 Changelog로 충분하다. "아마도"면 아직은 Changelog + 링크. "그렇다"면 ADR로 승격.<br />
-          이 질문을 엄격히 적용하면 프로젝트 전체에서 ADR이 3~5개 수준으로 수렴한다 — 그게 적정선이다.<br />
-          10개를 넘어가려 하면 승격 기준을 다시 검토해야 한다.
-        </p>
-        <p className="leading-7">
-          context-manager 프로젝트는 지금 5개 미만의 ADR로 운영되고 있다:
-        </p>
-        <ul className="leading-7">
-          <li>001 — Dev journaling pattern (이 글이 설명하는 구조 그 자체)</li>
-          <li>002 — Memory sandwich 아키텍처 (T1/T2/T3 계층)</li>
-          <li>003 — Provider-agnostic Gateway (모든 외부 API를 Rust gateway 경유)</li>
-        </ul>
-        <p className="leading-7">
-          이것들은 모두 <strong>뒤집기 어려운 구조적 결정</strong>이다.<br />
-          Memory sandwich를 다른 구조로 바꾸려면 여러 MCP tool을 다 고쳐야 하고, Gateway 경유 규칙을 바꾸면 보안 모델이 무너진다.<br />
-          반면 "Analyst prompt에 few-shot 2개 추가" 같은 변경은 파일 한 개의 문자열 수정일 뿐 — Changelog에 한 줄로 족하다.
-        </p>
+      <div className="not-prose my-7 grid min-w-0 gap-3 lg:grid-cols-3">
+        {OPTIONS.map((option) => (
+          <article
+            key={option.name}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <h3 className="break-words text-sm font-semibold">{option.name}</h3>
+            <dl className="mt-3 space-y-3 text-xs leading-5">
+              <div className="min-w-0">
+                <dt className="font-semibold text-emerald-700 dark:text-emerald-300">얻는 것</dt>
+                <dd className="mt-1 break-words text-muted-foreground">{option.benefit}</dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="font-semibold text-amber-700 dark:text-amber-300">감수할 것</dt>
+                <dd className="mt-1 break-words text-muted-foreground">{option.cost}</dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">파일 명명 — 번호 + 짧은 slug</h3>
-        <p className="leading-7">
-          ADR 파일 이름은 <code>NNN-short-slug.md</code> 형식으로 통일한다.<br />
-          번호는 001부터 순차, slug는 제목의 핵심 단어만.
-        </p>
-        <pre className="text-sm bg-muted p-3 rounded">
-          {`knowledge/lessons/decisions/
-├── 001-dev-journaling-pattern.md
-├── 002-memory-sandwich.md
-├── 003-provider-agnostic-gateway.md
-├── 004-legacy-single-json.md        (status: superseded by 005)
-└── 005-memory-b-multifile.md`}
-        </pre>
-        <p className="leading-7">
-          번호를 매기는 이유는 두 가지다.
-        </p>
-        <ul className="leading-7">
-          <li><strong>연대기 자동 정렬</strong> — 파일명 정렬만으로 "결정의 역사"가 시간순으로 나온다.</li>
-          <li><strong>참조 용이성</strong> — 다른 문서에서 "ADR 003"처럼 번호로 참조할 수 있다. slug가 바뀌어도 번호는 그대로.</li>
-        </ul>
-        <p className="leading-7">
-          번호는 <strong>절대 재사용하지 않는다</strong>.<br />
-          결정이 폐기되거나 뒤집혀도 원본 파일은 그대로 두고 status만 <code>superseded</code>로 바꾼다.<br />
-          번호를 재사용하면 과거 참조가 깨지고, 연대기에 구멍이 생긴다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">템플릿 — frontmatter + 5섹션</h3>
-        <p className="leading-7">
-          ADR 하나의 표준 구조는 YAML frontmatter와 본문 5섹션이다.
-        </p>
-        <pre className="text-sm bg-muted p-3 rounded">
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>고정 사례의 ADR</h3>
+        <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-muted p-4 text-sm">
           {`---
-id: 005
-title: Memory B — single JSON에서 multi-file로 전환
+id: ADR-005
+title: profile state를 파일별로 분리한다
 status: accepted
-date: 2026-04-14
-supersedes: 004
+date: 2026-04-18
+supersedes: ADR-004
 ---
 
 ## Context
-왜 이 결정이 필요했는가.
-어떤 제약(시간, 기술, 외부 요구)이 작용했는가.
+single JSON replace에서 한 profile의 empty 결과가 전체 state 갱신 경로에
+영향을 줄 수 있었다. profile 단위 복구와 diff가 어려웠다.
 
-## Alternatives Considered
-검토한 대안 목록. 각 대안의 장점과 버린 이유.
-
-## Decision
-선택한 접근을 한 문장으로, 그리고 구체적으로.
-
-## Consequences
-### Pro
-얻은 것 (수치가 있으면 수치로).
-### Con
-잃은 것 / 새로 발생한 문제.
-### Mitigations
-Con을 줄이기 위한 장치.
-
-## Rule
-이 결정에서 파생되는 반복 가능한 규칙 한두 줄.`}
-        </pre>
-        <p className="leading-7">
-          frontmatter에 꼭 있어야 하는 필드:
-        </p>
-        <ul className="leading-7">
-          <li><strong>id</strong> — 번호. 파일명과 일치해야 한다.</li>
-          <li><strong>title</strong> — 결정 내용을 한 문장으로.</li>
-          <li><strong>status</strong> — <code>proposed / accepted / superseded / deprecated</code> 중 하나.</li>
-          <li><strong>date</strong> — 결정이 확정된 시점.</li>
-          <li><strong>supersedes</strong> / <strong>superseded_by</strong> — 관련 ADR 번호 (해당되는 경우).</li>
-        </ul>
-        <p className="leading-7">
-          본문 5섹션 중 <strong>Consequences가 가장 중요하다</strong>.<br />
-          대부분의 사람이 ADR을 쓸 때 Context와 Decision만 열심히 쓰고 Consequences는 얼버무린다.<br />
-          하지만 6개월 뒤 결정을 재검토할 때 제일 먼저 보는 게 Consequences다 — "내가 그때 무엇을 얻었고 무엇을 포기했는가."<br />
-          이 섹션이 비어 있으면 ADR이 제 역할을 못 한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">실제 예시 — 001-dev-journaling-pattern.md</h3>
-        <p className="leading-7">
-          context-manager 프로젝트의 첫 ADR을 그대로 뜯어보자.
-        </p>
-        <pre className="text-sm bg-muted p-3 rounded">
-          {`---
-id: 001
-title: Dev journaling pattern — changelog + lessons + decisions 3-layer
-status: accepted
-date: 2026-04-15
----
-
-## Context
-개인 에이전트 개발 중 "왜 이렇게 고쳤지?"가 반복적으로 막혔다.
-git log는 commit message만 있어 배경 맥락 소실.
-공식 리뷰 프로세스가 없는 개인 프로젝트라 기억이 유일한 저장소였다.
-
-## Alternatives Considered
-(a) Keep-a-Changelog 단일 파일 — 일상 변경은 잡지만 결정 맥락은 얇음.
-(b) ADR만 — 결정은 정밀하지만 일상 흐름이 누락.
-(c) 프리폼 devlog — 검색 불가, 구조 없이 증식.
+## Options
+A. single JSON + validation/atomic write 강화
+B. profile별 파일 + 파생 index
+C. transactional database
 
 ## Decision
-3층 분리: changelog.md (시간) + lessons/*.md (원칙) + lessons/decisions/NNN-*.md (결정).
-각 층은 서로 markdown 링크로 네트워크를 이룬다.
+B를 선택한다. profile file을 정본(source of truth)으로 두고 index는 재생성할 수 있는
+파생 데이터로 취급한다.
 
 ## Consequences
-### Pro
-- 조회 질문(시간/원칙/결정)이 한 층을 정확히 지정한다
-- 유지 비용이 낮게 유지된다 (짧은 엔트리 규칙)
-- 공개 가능 / 비공개 분리가 가능하다
-### Con
-- 세 층 사이 중복 기록 위험
-- 신규 개발자(미래의 나)가 세 층을 이해해야 함
-### Mitigations
-- 엔트리 규칙 하드코딩 (3~5줄, 링크 의무)
-- CLAUDE.md 상단에 3층 구조 한 문단 명시
-
-## Rule
-작업 완료 = Changelog 엔트리 prepend가 완료된 시점.
-그 전에는 "끝났다"라고 말하지 않는다.`}
+- 부분 갱신과 profile 단위 rollback이 쉬워진다.
+- index rebuild, migration, cross-profile consistency code가 늘어난다.
+- profile 수와 concurrent write가 현재 가정을 넘으면 database option을 재검토한다.`}
         </pre>
-        <p className="leading-7">
-          이 한 파일만 봐도 결정의 전체 맥락이 보인다.<br />
-          왜 단일 파일 방식이 아닌지, 어떤 대안을 탐색했는지, 어떤 trade-off를 수용했는지, 그 trade-off를 어떻게 완화했는지.<br />
-          6개월 뒤 "3층 구조 귀찮은데 단일 파일로 돌아갈까?"라는 생각이 들 때, 이 ADR을 다시 읽으면 (c) 프리폼이 왜 실패했는지 즉시 떠오른다.
+        <p>
+          원래 Nygard 형식의 핵심은 title, status, context, decision,
+          consequences입니다. 위 예시는 비교 과정을 보이려고 options를 더했습니다.
+          template을 무조건 확장하는 것이 중요한 게 아니라 한 ADR이 significant
+          decision 하나를 소유하고, positive·negative·neutral consequence를 함께
+          남기며, 다시 볼 조건을 알아볼 수 있어야 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">결정을 뒤집을 때 — superseded</h3>
-        <p className="leading-7">
-          시간이 지나면 결정이 틀렸거나 맥락이 바뀔 수 있다.<br />
-          context-manager 프로젝트에서는 실제로 일어난 일이 있다 — memory 구조를 단일 JSON(004)으로 시작했다가 Claude Code 스타일 multi-file(005)로 전환했다.
-        </p>
-        <p className="leading-7">
-          이때 취하는 조치:
-        </p>
-        <ol className="leading-7">
-          <li><strong>004-legacy-single-json.md를 지우지 않는다</strong>. 파일은 그대로 유지.</li>
-          <li>004의 frontmatter status를 <code>accepted</code>에서 <code>superseded by 005</code>로 변경.</li>
-          <li>005를 새로 생성하면서 frontmatter에 <code>supersedes: 004</code>를 명시.</li>
-          <li>005의 Context 섹션에 "왜 004가 부족했는가"를 명시적으로 기록.</li>
-        </ol>
-        <p className="leading-7">
-          이렇게 하면 두 결정이 파일로 공존한다.<br />
-          나중에 "multi-file이 귀찮은데 단일 JSON으로 돌아가면 안 되나?"라는 유혹이 생기면, 004를 다시 읽을 수 있다.<br />
-          그 파일에는 왜 단일 JSON을 선택했는지, 그리고 왜 그게 결국 실패했는지가 연속적으로 기록돼 있다.
-        </p>
-        <p className="leading-7">
-          파일을 지우는 대신 superseded로 보존하는 게 중요한 이유는 <strong>순환을 끊기 위해서</strong>다.<br />
-          지우고 다시 돌아가면 같은 실패를 반복한다. 연쇄가 기록돼 있으면 미래의 내가 그 실패를 안 겪어도 된다.
+        <p>
+          상태 이름도 읽는 사람이 같은 뜻으로 해석해야 합니다. 보통
+          <code>proposed</code>는 검토 중, <code>accepted</code>는 채택됨,
+          <code>deprecated</code>는 더는 새 작업에 권하지 않음,
+          <code>superseded</code>는 뒤의 ADR이 대신함을 뜻합니다. 팀이 다른 상태를
+          쓰더라도 각 상태가 구현·배포 완료를 포함하는지 문서에서 분명히
+          정의해야 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">ADR vs Lessons — 헷갈리는 경계</h3>
-        <p className="leading-7">
-          ADR과 Lessons는 자주 헷갈린다. "이건 ADR인가 Lessons인가?"라는 질문이 계속 떠오른다.<br />
-          구분 기준은 <strong>unique 결정인가 반복 규칙인가</strong>다.
+        <h3>accepted와 implemented는 다른 상태입니다</h3>
+        <p>
+          <code>accepted</code>는 stakeholder가 decision을 채택했다는 뜻이지
+          migration이 끝났거나 production behavior가 검증됐다는 뜻은 아닙니다.
+          implementation task, rollout, rollback readiness, data migration test는
+          issue나 deployment artifact에서 추적하고 ADR에서 link합니다. 결정이
+          뒤집히면 원문을 덮어쓰지 않고 <code>superseded</code>로 표시한 뒤 새
+          ADR을 연결해야 과거 code가 어떤 context에서 작성됐는지 남습니다.
         </p>
-        <ul className="leading-7">
-          <li><strong>ADR</strong> — "지금 이것을 고른다"는 특정 시점의 선택. 한 번만 기록하고 끝. 같은 ADR을 여러 번 쓰지 않는다.</li>
-          <li><strong>Lessons</strong> — "이런 상황에서는 이렇게 판단한다"는 반복 가능한 원칙. 같은 주제를 계속 업데이트한다.</li>
-        </ul>
-        <p className="leading-7">
-          같은 사건이 두 층 모두로 갈 수 있다.<br />
-          예를 들어 Memory B wipeout 사건:
+      </div>
+
+      <div
+        id="paper-nygard-adr"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          근거 읽기 · Documenting Architecture Decisions
         </p>
-        <ul className="leading-7">
-          <li><strong>Changelog</strong>: "2026-04-16 Memory B wipeout + 3 defensive lines" — 사건 자체.</li>
-          <li><strong>Lessons</strong>: <code>lessons/agent-routing/agent-memory-architecture.md</code>의 "rewrite 방식의 위험" 섹션 — 원칙화된 교훈.</li>
-          <li><strong>ADR</strong>: 이 사건은 ADR로 승격되지 <strong>않았다</strong>. 구조 변경이 아니라 방어선 추가였기 때문. 만약 이 사건 때문에 compaction 방식을 root 수준에서 바꿨다면 ADR 하나가 추가됐을 것이다.</li>
-        </ul>
-        <p className="leading-7">
-          같은 사건이 세 층 중 몇 개로 가는가는 "그 사건이 무엇을 바꿨는가"에 달려 있다.<br />
-          일상 변경이면 1층, 원칙이 추가되면 2층, 구조 결정이면 3층 — 필요한 층만 사용한다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>실전 조언 — 의심될 때는 ADR로 가지 말 것</strong><br />
-          "이거 ADR인가?"라는 의심이 들면 대체로 아직 ADR이 아니다.<br />
-          ADR로 승격시킬 만한 결정은 대부분 이미 "이건 명백히 구조적"이라는 감이 있다.<br />
-          의심스러우면 일단 Changelog에 적고 링크만 달아 둔다. 나중에 같은 결정이 반복되거나 뒤집기 어려워지면 그때 ADR로 승격한다.<br />
-          반대 방향(ADR → Changelog로 격하)은 거의 일어나지 않으므로 안전한 default는 Changelog다.
-        </p>
-        <p className="leading-7">
-          다음 섹션에서는 Lessons 층을 본다 — "ADR도 Changelog도 아닌, 주제별 원칙"이 어디에 쌓이는지.
+        <CitationBlock
+          source="Michael Nygard — Documenting Architecture Decisions"
+          citeKey={2}
+          type="paper"
+          href="https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
+        >
+          <div className="space-y-2 font-sans">
+            <p><strong>문제:</strong> code에는 최종 선택이 남아도 그 선택을 만든 기술·조직·project-local forces와 consequence는 시간이 지나며 사라집니다.</p>
+            <p><strong>핵심 아이디어·기여:</strong> architecturally significant decision을 repository의 작고 독립적인 record로 남기고 title, status, context, decision, consequences를 보존합니다.</p>
+            <p><strong>전제·조건:</strong> 한 ADR은 한 project의 significant decision 하나를 다루며, 상태가 바뀌면 번호를 재사용하거나 원문을 삭제하지 않고 replacement를 연결합니다.</p>
+            <p><strong>근거 범위:</strong> ADR의 목적, 기본 template, superseded history를 보존하는 이유를 뒷받침합니다.</p>
+            <p><strong>비주장:</strong> options section, 이 글의 filename·승격 기준, profile별 파일이라는 선택이 Nygard가 정한 표준이거나 모든 project에 최적이라는 뜻은 아닙니다.</p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>ADR이 Lessons로 바뀌는 것은 아닙니다</h3>
+        <p>
+          ADR-005는 이 project가 이 context에서 내린 decision을 소유합니다.
+          “기존 non-empty state를 derived empty output으로 자동 replace하지
+          않는다”는 판단은 다른 storage와 migration에도 재사용할 수 있으므로
+          Lessons의 후보가 됩니다. decision history와 현재 행동 원칙은 관련이
+          있지만 서로 다른 문서가 소유해야 합니다.
         </p>
       </div>
     </section>

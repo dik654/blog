@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const bwdCodeRefs: Record<string, CodeRef> = {
-  'backward': {
-    path: 'src/lib.rs — backward()',
-    lang: 'rust',
+  backward: {
+    path: "src/lib.rs — backward()",
+    lang: "rust",
     highlight: [1, 44],
-    desc: 'backward: 출력에서 입력으로 역순 추적.\ngeneration으로 정렬하여 위상 순서 보장.',
+    desc: "backward: 출력에서 입력으로 역순 추적.\ngeneration으로 정렬하여 위상 순서 보장.",
     code: `pub fn backward(&self, retain_grad: bool, create_graph: bool) {
     {
         let mut inner = self.inner.borrow_mut();
@@ -59,10 +59,26 @@ export const bwdCodeRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [4, 6], color: 'sky', note: 'grad 초기화 — shape와 동일한 1.0 텐서 (연쇄 법칙 시작점)' },
-      { lines: [20, 20], color: 'emerald', note: 'sort_by_key(generation) — 위상 정렬 보장' },
-      { lines: [30, 30], color: 'amber', note: 'using_backprop(create_graph) — true면 역전파도 그래프에 기록' },
-      { lines: [42, 48], color: 'violet', note: '그래디언트 누적 — y = x + x인 경우 dy/dx = 1 + 1 = 2' },
+      {
+        lines: [4, 6],
+        color: "sky",
+        note: "grad 초기화 — shape와 동일한 1.0 텐서 (연쇄 법칙 시작점)",
+      },
+      {
+        lines: [20, 20],
+        color: "emerald",
+        note: "sort_by_key(generation) — 위상 정렬 보장",
+      },
+      {
+        lines: [30, 30],
+        color: "amber",
+        note: "using_backprop(create_graph) — true면 역전파도 그래프에 기록",
+      },
+      {
+        lines: [42, 48],
+        color: "violet",
+        note: "그래디언트 누적 — y = x + x인 경우 dy/dx = 1 + 1 = 2",
+      },
     ],
   },
 };

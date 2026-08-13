@@ -34,7 +34,19 @@ export const hooksCode = `Hooks = 이벤트 기반 커스텀 셸 명령
   - 커밋 전 테스트 자동 실행`;
 
 export const hooksAnnotations = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: '18개 라이프사이클 이벤트' },
-  { lines: [10, 14] as [number, number], color: 'emerald' as const, note: '4가지 핸들러 타입' },
-  { lines: [16, 28] as [number, number], color: 'amber' as const, note: 'JSON 설정 예시' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "18개 라이프사이클 이벤트",
+  },
+  {
+    lines: [10, 14] as [number, number],
+    color: "emerald" as const,
+    note: "4가지 핸들러 타입",
+  },
+  {
+    lines: [16, 28] as [number, number],
+    color: "amber" as const,
+    note: "JSON 설정 예시",
+  },
 ];

@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from '../libp2p/codeRefs';
-import { HB_PHASES } from './HeartbeatData';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "../libp2p/codeRefs";
+import { HB_PHASES } from "./HeartbeatData";
 
-export default function Heartbeat({ onCodeRef }: {
+export default function Heartbeat({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   const [active, setActive] = useState(0);
@@ -17,43 +19,62 @@ export default function Heartbeat({ onCodeRef }: {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          <code>heartbeat()</code>는 주기적으로(기본 1초) 실행되어 메시를 건강하게 유지한다.<br />
-          정리 &rarr; 페널티 &rarr; 메시 리밸런싱 &rarr; 팬아웃 &rarr; gossip 전파.
+          <code>heartbeat()</code>는 주기적으로(기본 1초) 실행되어 메시를
+          건강하게 유지한다.
+          <br />
+          정리 &rarr; 페널티 &rarr; 메시 리밸런싱 &rarr; 팬아웃 &rarr; gossip
+          전파.
         </p>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-5 mb-6">
         <div className="flex gap-1.5 mb-4 flex-wrap">
           {HB_PHASES.map((p, i) => (
-            <button key={p.id} onClick={() => setActive(i)}
+            <button
+              key={p.id}
+              onClick={() => setActive(i)}
               className="text-xs font-mono px-3 py-1.5 rounded-md transition-colors"
               style={{
-                background: active === i ? p.color + '20' : 'transparent',
-                color: active === i ? p.color : 'inherit',
-                border: `1px solid ${active === i ? p.color + '60' : 'transparent'}`,
-              }}>
+                background: active === i ? p.color + "20" : "transparent",
+                color: active === i ? p.color : "inherit",
+                border: `1px solid ${active === i ? p.color + "60" : "transparent"}`,
+              }}
+            >
               {p.label}
             </button>
           ))}
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div key={phase.id}
+          <motion.div
+            key={phase.id}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}>
+            transition={{ duration: 0.2 }}
+          >
             <div className="flex flex-col gap-2">
               {phase.items.map((item, i) => (
-                <motion.div key={item.action}
+                <motion.div
+                  key={item.action}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.08 }}
                   className="flex items-center gap-3 rounded-lg border px-3 py-2"
-                  style={{ borderColor: item.color + '30', background: item.color + '06' }}>
-                  <span className="text-[11px] font-mono font-bold shrink-0"
-                    style={{ color: item.color }}>{item.action}</span>
-                  <span className="text-xs text-foreground/60">{item.desc}</span>
+                  style={{
+                    borderColor: item.color + "30",
+                    background: item.color + "06",
+                  }}
+                >
+                  <span
+                    className="text-[11px] font-mono font-bold shrink-0"
+                    style={{ color: item.color }}
+                  >
+                    {item.action}
+                  </span>
+                  <span className="text-xs text-foreground/60">
+                    {item.desc}
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -63,15 +84,21 @@ export default function Heartbeat({ onCodeRef }: {
 
       {onCodeRef && (
         <div className="not-prose flex flex-wrap gap-2 mt-6">
-          <CodeViewButton onClick={() => onCodeRef('gossipsub-heartbeat', codeRefs['gossipsub-heartbeat'])} />
-          <span className="text-[10px] text-muted-foreground self-center">heartbeat() 구현</span>
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef("gossipsub-heartbeat", codeRefs["gossipsub-heartbeat"])
+            }
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            heartbeat() 구현
+          </span>
         </div>
       )}
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Heartbeat 단계 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GossipSub Heartbeat Loop
+          {`// GossipSub Heartbeat Loop
 //
 // 매 1초 실행 (기본):
 //

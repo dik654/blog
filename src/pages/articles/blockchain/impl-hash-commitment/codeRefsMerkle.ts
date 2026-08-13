@@ -1,12 +1,12 @@
-import type { CodeRef } from '@/components/code/types';
-import { merkleProofCodeRefs } from './codeRefsMerkleProof';
+import type { CodeRef } from "@/components/code/types";
+import { merkleProofCodeRefs } from "./codeRefsMerkleProof";
 
 export const merkleCodeRefs: Record<string, CodeRef> = {
-  'merkle-tree': {
-    path: 'merkle.rs — SparseMerkleTree struct',
-    lang: 'rust',
+  "merkle-tree": {
+    path: "merkle.rs — SparseMerkleTree struct",
+    lang: "rust",
     highlight: [1, 22],
-    desc: 'Poseidon 기반 Sparse Merkle Tree.\n2^depth개 리프 중 실제 삽입된 것만 HashMap에 저장.',
+    desc: "Poseidon 기반 Sparse Merkle Tree.\n2^depth개 리프 중 실제 삽입된 것만 HashMap에 저장.",
     code: `/// Poseidon 기반 Sparse Merkle Tree
 pub struct SparseMerkleTree {
     pub depth: usize,
@@ -23,16 +23,28 @@ pub struct SparseMerkleTree {
     params: PoseidonParams,
 }`,
     annotations: [
-      { lines: [5, 8], color: 'sky', note: 'default_hashes — 빈 서브트리의 해시를 미리 계산. insert 없는 노드는 이 값을 사용' },
-      { lines: [9, 11], color: 'emerald', note: 'nodes — 실제 존재하는 노드만 저장. 2^256개 리프를 모두 저장할 필요 없음' },
-      { lines: [14, 14], color: 'amber', note: 'PoseidonParams 캐시 — 매 해시마다 상수 재생성 방지' },
+      {
+        lines: [5, 8],
+        color: "sky",
+        note: "default_hashes — 빈 서브트리의 해시를 미리 계산. insert 없는 노드는 이 값을 사용",
+      },
+      {
+        lines: [9, 11],
+        color: "emerald",
+        note: "nodes — 실제 존재하는 노드만 저장. 2^256개 리프를 모두 저장할 필요 없음",
+      },
+      {
+        lines: [14, 14],
+        color: "amber",
+        note: "PoseidonParams 캐시 — 매 해시마다 상수 재생성 방지",
+      },
     ],
   },
-  'merkle-insert': {
-    path: 'merkle.rs — insert (키-값 쌍 삽입)',
-    lang: 'rust',
+  "merkle-insert": {
+    path: "merkle.rs — insert (키-값 쌍 삽입)",
+    lang: "rust",
     highlight: [1, 28],
-    desc: '리프 삽입 후 루트까지 경로 재계산.\nbit=0 → 왼쪽, bit=1 → 오른쪽.',
+    desc: "리프 삽입 후 루트까지 경로 재계산.\nbit=0 → 왼쪽, bit=1 → 오른쪽.",
     code: `/// 키-값 쌍 삽입
 pub fn insert(&mut self, key: Fr, value: Fr) {
     let key_repr = key.to_repr();
@@ -64,9 +76,21 @@ pub fn insert(&mut self, key: Fr, value: Fr) {
     self.root = current;
 }`,
     annotations: [
-      { lines: [6, 7], color: 'sky', note: 'H(key, value) — key를 포함해야 다른 key의 같은 value와 구분' },
-      { lines: [12, 13], color: 'emerald', note: 'shr_bits, flip_bit0 — 비트 연산으로 형제 노드 인덱스 계산' },
-      { lines: [20, 23], color: 'amber', note: 'key 비트가 경로를 결정 — 0이면 왼쪽 자식, 1이면 오른쪽 자식' },
+      {
+        lines: [6, 7],
+        color: "sky",
+        note: "H(key, value) — key를 포함해야 다른 key의 같은 value와 구분",
+      },
+      {
+        lines: [12, 13],
+        color: "emerald",
+        note: "shr_bits, flip_bit0 — 비트 연산으로 형제 노드 인덱스 계산",
+      },
+      {
+        lines: [20, 23],
+        color: "amber",
+        note: "key 비트가 경로를 결정 — 0이면 왼쪽 자식, 1이면 오른쪽 자식",
+      },
     ],
   },
   ...merkleProofCodeRefs,

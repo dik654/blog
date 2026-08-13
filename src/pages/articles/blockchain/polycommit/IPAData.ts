@@ -21,9 +21,21 @@ fn sample_generators(num_generators: usize) -> Vec<G> {
 // - O(log n) 크기의 증명 (KZG의 O(1)보다 큼)`;
 
 export const IPA_ANNOTATIONS = [
-  { lines: [5, 11] as [number, number], color: 'sky' as const, note: '투명 설정: 해시 기반 결정론적 생성원' },
-  { lines: [14, 15] as [number, number], color: 'emerald' as const, note: 'Pedersen 벡터 커밋 + 재귀 halving' },
-  { lines: [18, 20] as [number, number], color: 'amber' as const, note: '투명 설정, DLog 가정, O(log n) 증명' },
+  {
+    lines: [5, 11] as [number, number],
+    color: "sky" as const,
+    note: "투명 설정: 해시 기반 결정론적 생성원",
+  },
+  {
+    lines: [14, 15] as [number, number],
+    color: "emerald" as const,
+    note: "Pedersen 벡터 커밋 + 재귀 halving",
+  },
+  {
+    lines: [18, 20] as [number, number],
+    color: "amber" as const,
+    note: "투명 설정, DLog 가정, O(log n) 증명",
+  },
 ];
 
 export const MARLIN_CODE = `// Marlin PC — KZG10 확장 (차수 제한 + 은닉)
@@ -50,7 +62,19 @@ pub fn batch_check<R: RngCore>(
 ) -> Result<bool, Error> { ... }`;
 
 export const MARLIN_ANNOTATIONS = [
-  { lines: [5, 7] as [number, number], color: 'sky' as const, note: 'shifted_commitment로 차수 제한 강제' },
-  { lines: [10, 12] as [number, number], color: 'emerald' as const, note: 'Commitment: 기본 + shifted (옵션)' },
-  { lines: [16, 22] as [number, number], color: 'amber' as const, note: '배치 검증: randomizer로 효율 극대화' },
+  {
+    lines: [5, 7] as [number, number],
+    color: "sky" as const,
+    note: "shifted_commitment로 차수 제한 강제",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "emerald" as const,
+    note: "Commitment: 기본 + shifted (옵션)",
+  },
+  {
+    lines: [16, 22] as [number, number],
+    color: "amber" as const,
+    note: "배치 검증: randomizer로 효율 극대화",
+  },
 ];

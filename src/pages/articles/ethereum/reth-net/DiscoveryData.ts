@@ -5,42 +5,55 @@ export interface LookupStep {
   color: string;
 }
 
-export const LOOKUP_STEPS: LookupStep[] = [
+export const LOOKUP_STEPS: readonly LookupStep[] = [
   {
     step: 1,
-    title: '초기 노드 선택',
-    desc: '로컬 Kademlia 버킷에서 target NodeId에 XOR 거리가 가장 가까운 k개(기본 16) 노드를 선택한다.',
-    color: '#6366f1',
+    title: "local 후보 선택",
+    desc: "routing table에서 target과 가까우며 아직 질의하지 않은 node records를 선택한다. 동시 질의 수는 구현 설정이다.",
+    color: "#6366f1",
   },
   {
     step: 2,
-    title: 'FIND_NODE 전송',
-    desc: '선택된 노드에 FIND_NODE(target) UDP 메시지를 alpha=3 병렬로 전송한다. 응답에는 해당 노드가 알고 있는 가까운 노드 목록이 포함.',
-    color: '#0ea5e9',
+    title: "이웃 질의",
+    desc: "선택한 후보에게 target 주변의 records를 요청한다. timeout과 invalid response는 후보 품질 신호가 된다.",
+    color: "#0ea5e9",
   },
   {
     step: 3,
-    title: '버킷 갱신',
-    desc: '응답에서 더 가까운 노드를 발견하면 Kademlia 버킷에 추가하고, 해당 노드에 다시 FIND_NODE를 전송한다.',
-    color: '#10b981',
+    title: "검증·병합",
+    desc: "응답 record의 identity, freshness와 endpoint를 확인하고 중복을 제거해 local table에 반영한다.",
+    color: "#10b981",
   },
   {
     step: 4,
-    title: '수렴 판정',
-    desc: '새로운 더 가까운 노드가 발견되지 않으면 lookup 종료. 결과로 target에 가장 가까운 k개 노드를 반환.',
-    color: '#f59e0b',
+    title: "수렴 또는 refresh",
+    desc: "더 가까운 미조회 후보가 없으면 lookup을 끝낸다. 주기적 refresh는 table이 오래된 endpoint에 고착되지 않게 한다.",
+    color: "#f59e0b",
   },
-];
+] as const;
 
 export interface DiscMessage {
   name: string;
-  direction: string;
   purpose: string;
 }
 
-export const DISC_MESSAGES: DiscMessage[] = [
-  { name: 'PING', direction: '양방향', purpose: '노드 생존 확인. 응답 없으면 버킷에서 제거' },
-  { name: 'PONG', direction: '응답', purpose: 'PING에 대한 응답. 수신 시 해당 노드를 버킷 맨 뒤로 이동' },
-  { name: 'FIND_NODE', direction: '요청', purpose: 'target에 가까운 노드 목록 요청' },
-  { name: 'NEIGHBOURS', direction: '응답', purpose: 'FIND_NODE에 대한 응답. 최대 16개 노드 반환' },
-];
+export const DISC_MESSAGES: readonly DiscMessage[] = [
+  {
+    name: "PING / PONG",
+    purpose:
+      "endpoint proof와 liveness 확인. 단순 응답만으로 상위 protocol 신뢰가 생기지는 않는다.",
+  },
+  {
+    name: "FINDNODE",
+    purpose:
+      "target distance 주변에 대해 상대가 알고 있는 node endpoints를 요청한다.",
+  },
+  {
+    name: "NEIGHBORS",
+    purpose: "FINDNODE 응답을 packet 크기에 맞게 나누어 전달한다.",
+  },
+  {
+    name: "ENRREQUEST / ENRRESPONSE",
+    purpose: "discv4 extension으로 상대의 최신 signed ENR를 요청·검증한다.",
+  },
+] as const;

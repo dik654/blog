@@ -1,5 +1,5 @@
-import FramePalletViz from './viz/FramePalletViz';
-import CodePanel from '@/components/ui/code-panel';
+import FramePalletViz from "./viz/FramePalletViz";
+import CodePanel from "@/components/ui/code-panel";
 
 const PALLET_CODE = `#[frame_support::pallet]
 pub mod pallet {
@@ -39,24 +39,39 @@ pub mod pallet {
 export default function FramePallet({ title }: { title?: string }) {
   return (
     <section id="frame-pallet" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title ?? 'FRAME 팔렛 시스템'}</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        {title ?? "FRAME 팔렛 시스템"}
+      </h2>
       <div className="not-prose mb-8">
         <FramePalletViz />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>FRAME</strong>(Framework for Runtime Aggregation of Modularized Entities)은
-          Substrate 런타임의 모듈 시스템입니다. 각 팔렛은 Config, Storage, Event, Error,
-          Call의 5가지 구성 요소로 이루어진 독립적인 기능 단위입니다.
+          <strong>FRAME</strong>(Framework for Runtime Aggregation of
+          Modularized Entities)은 Substrate 런타임의 모듈 시스템입니다. 각
+          팔렛은 Config, Storage, Event, Error, Call의 5가지 구성 요소로
+          이루어진 독립적인 기능 단위입니다.
         </p>
         <CodePanel
           title="FRAME 팔렛 기본 구조"
           code={PALLET_CODE}
           annotations={[
-            { lines: [6, 14], color: 'sky', note: 'Config 트레이트: 설정 & 의존성' },
-            { lines: [16, 17], color: 'emerald', note: 'Storage: 온체인 상태 저장' },
-            { lines: [19, 22], color: 'amber', note: 'Event & Error 정의' },
-            { lines: [24, 33], color: 'violet', note: 'Call: 외부 호출 가능 함수' },
+            {
+              lines: [6, 14],
+              color: "sky",
+              note: "Config 트레이트: 설정 & 의존성",
+            },
+            {
+              lines: [16, 17],
+              color: "emerald",
+              note: "Storage: 온체인 상태 저장",
+            },
+            { lines: [19, 22], color: "amber", note: "Event & Error 정의" },
+            {
+              lines: [24, 33],
+              color: "violet",
+              note: "Call: 외부 호출 가능 함수",
+            },
           ]}
         />
       </div>

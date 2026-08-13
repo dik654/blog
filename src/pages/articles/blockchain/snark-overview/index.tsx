@@ -1,7 +1,7 @@
-import Overview from './Overview';
-import Components from './Components';
-import VerifyFlow from './VerifyFlow';
-import Landscape from './Landscape';
+import Overview from "./Overview";
+import Components from "./Components";
+import VerifyFlow from "./VerifyFlow";
+import Landscape from "./Landscape";
 
 export default function SNARKOverview() {
   return (

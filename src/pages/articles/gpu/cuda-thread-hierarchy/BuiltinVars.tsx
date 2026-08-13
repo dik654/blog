@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const builtinCode = `// CUDA 내장 변수 (커널 내부에서 사용)
 threadIdx.x  threadIdx.y  threadIdx.z   // 블록 내 스레드 위치
@@ -43,34 +43,44 @@ export default function BuiltinVars() {
       <h2 className="text-2xl font-bold mb-6">내장 변수와 레이아웃 설정</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          CUDA 커널 내부에서는 4종류의 내장 변수로 현재 스레드의 위치를 알 수 있다.
+          CUDA 커널 내부에서는 4종류의 내장 변수로 현재 스레드의 위치를 알 수
+          있다.
           <strong>threadIdx</strong>와 <strong>blockIdx</strong>는 위치,
-          <strong>blockDim</strong>과 <strong>gridDim</strong>은 크기를 나타낸다.<br />
+          <strong>blockDim</strong>과 <strong>gridDim</strong>은 크기를
+          나타낸다.
+          <br />
           모두 <code>uint3</code> 타입이며 x, y, z 필드를 가진다.
         </p>
         <CodePanel
           title="CUDA 내장 변수 4종"
           code={builtinCode}
           annotations={[
-            { lines: [2, 5], color: 'sky', note: '4가지 내장 변수' },
-            { lines: [7, 10], color: 'emerald', note: '각 변수의 의미' },
+            { lines: [2, 5], color: "sky", note: "4가지 내장 변수" },
+            { lines: [7, 10], color: "emerald", note: "각 변수의 의미" },
           ]}
         />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">dim3와 커널 실행 구성</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          dim3와 커널 실행 구성
+        </h3>
         <p>
-          커널 호출 시 <code>dim3</code> 타입으로 그리드와 블록의 차원을 지정한다.
-          1D에서는 정수 하나만 넘기면 되고, 2D/3D에서는 <code>dim3</code> 생성자를 사용한다.<br />
-          블록 크기를 정하면 그리드 크기는 <strong>올림 나눗셈</strong>으로 계산한다.<br />
-          데이터 크기가 블록 크기의 배수가 아닐 수 있으므로, 커널 내부에서 반드시 경계 검사를 해야 한다.
+          커널 호출 시 <code>dim3</code> 타입으로 그리드와 블록의 차원을
+          지정한다. 1D에서는 정수 하나만 넘기면 되고, 2D/3D에서는{" "}
+          <code>dim3</code> 생성자를 사용한다.
+          <br />
+          블록 크기를 정하면 그리드 크기는 <strong>올림 나눗셈</strong>으로
+          계산한다.
+          <br />
+          데이터 크기가 블록 크기의 배수가 아닐 수 있으므로, 커널 내부에서
+          반드시 경계 검사를 해야 한다.
         </p>
         <CodePanel
           title="1D / 2D / 3D 레이아웃 설정"
           code={layoutCode}
           annotations={[
-            { lines: [4, 8], color: 'sky', note: '1D: 벡터 연산' },
-            { lines: [10, 16], color: 'emerald', note: '2D: 행렬/이미지' },
-            { lines: [18, 24], color: 'violet', note: '3D: 볼륨 데이터' },
+            { lines: [4, 8], color: "sky", note: "1D: 벡터 연산" },
+            { lines: [10, 16], color: "emerald", note: "2D: 행렬/이미지" },
+            { lines: [18, 24], color: "violet", note: "3D: 볼륨 데이터" },
           ]}
         />
       </div>

@@ -1,4 +1,4 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview() {
   return (
@@ -6,16 +6,21 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">DRAND 개요</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          DRAND(Distributed Randomness Beacon) — 여러 노드가 협력하여 편향 불가능한 랜덤을 생성하는 프로토콜.<br />
-          League of Entropy: Cloudflare, EPFL, Protocol Labs 등이 운영하는 실제 분산 비콘
+          DRAND(Distributed Randomness Beacon) — 여러 노드가 협력하여 편향
+          불가능한 랜덤을 생성하는 프로토콜.
+          <br />
+          League of Entropy: Cloudflare, EPFL, Protocol Labs 등이 운영하는 실제
+          분산 비콘
         </p>
       </div>
-      <div className="not-prose"><ContextViz /></div>
+      <div className="not-prose">
+        <ContextViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">DRAND 구조 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DRAND (Distributed Randomness Beacon):
+          {`// DRAND (Distributed Randomness Beacon):
 
 // Architecture:
 // - multiple operator nodes
@@ -92,8 +97,10 @@ export default function Overview() {
 // - 2024: production stability`}
         </pre>
         <p className="leading-7">
-          DRAND: <strong>distributed randomness beacon, 3s period</strong>.<br />
-          10+ operators (Cloudflare, Protocol Labs, ...).<br />
+          DRAND: <strong>distributed randomness beacon, 3s period</strong>.
+          <br />
+          10+ operators (Cloudflare, Protocol Labs, ...).
+          <br />
           BLS threshold signatures, publicly verifiable.
         </p>
       </div>

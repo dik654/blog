@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const frCodeRefs: Record<string, CodeRef> = {
-  'fr-struct': {
-    path: 'field/fr.rs — Fr scalar field',
-    lang: 'rust',
+  "fr-struct": {
+    path: "field/fr.rs — Fr scalar field",
+    lang: "rust",
     highlight: [1, 22],
-    desc: 'Fr 스칼라 필드.\ndefine_prime_field! 매크로 한 줄로 전체 산술 생성. Fp와 구조 동일, 모듈러스만 다름.',
+    desc: "Fr 스칼라 필드.\ndefine_prime_field! 매크로 한 줄로 전체 산술 생성. Fp와 구조 동일, 모듈러스만 다름.",
     code: `// Fr — BN254 스칼라체
 // Fp: 좌표 표현 (modulus = p)
 // Fr: 스칼라 표현 (modulus = r, 곡선 위수)
@@ -33,16 +33,28 @@ super::define_prime_field!(
     ]
 );`,
     annotations: [
-      { lines: [1, 4], color: 'sky', note: 'Fp vs Fr — 좌표 필드 vs 스칼라 필드. R1CS의 모든 연산은 Fr 위에서 수행' },
-      { lines: [6, 8], color: 'emerald', note: '매크로 호출 한 줄 — add, sub, mul, inv, pow 모두 자동 생성' },
-      { lines: [10, 14], color: 'amber', note: 'r의 modulus — p와 다른 소수. 곡선 위수에서 유도' },
+      {
+        lines: [1, 4],
+        color: "sky",
+        note: "Fp vs Fr — 좌표 필드 vs 스칼라 필드. R1CS의 모든 연산은 Fr 위에서 수행",
+      },
+      {
+        lines: [6, 8],
+        color: "emerald",
+        note: "매크로 호출 한 줄 — add, sub, mul, inv, pow 모두 자동 생성",
+      },
+      {
+        lines: [10, 14],
+        color: "amber",
+        note: "r의 modulus — p와 다른 소수. 곡선 위수에서 유도",
+      },
     ],
   },
-  'fr-macro': {
-    path: 'field/mod.rs — define_prime_field! 매크로',
-    lang: 'rust',
+  "fr-macro": {
+    path: "field/mod.rs — define_prime_field! 매크로",
+    lang: "rust",
     highlight: [1, 20],
-    desc: 'define_prime_field! 매크로.\n상수(MODULUS, R, R2)만 넣으면 완전한 필드 타입 생성.',
+    desc: "define_prime_field! 매크로.\n상수(MODULUS, R, R2)만 넣으면 완전한 필드 타입 생성.",
     code: `/// 상수만 넣으면 완전한 유한체 타입이 생성되는 매크로
 macro_rules! define_prime_field {
     ($name:ident,
@@ -65,9 +77,21 @@ macro_rules! define_prime_field {
     };
 }`,
     annotations: [
-      { lines: [2, 7], color: 'sky', note: '매크로 인자 — modulus, R, R2 세 상수만 제공하면 됨' },
-      { lines: [8, 11], color: 'emerald', note: '상수 바인딩 — 매크로 내부에서 const로 고정' },
-      { lines: [14, 19], color: 'amber', note: '전체 산술 생성 — Fp 수동 구현과 100% 동일한 코드' },
+      {
+        lines: [2, 7],
+        color: "sky",
+        note: "매크로 인자 — modulus, R, R2 세 상수만 제공하면 됨",
+      },
+      {
+        lines: [8, 11],
+        color: "emerald",
+        note: "상수 바인딩 — 매크로 내부에서 const로 고정",
+      },
+      {
+        lines: [14, 19],
+        color: "amber",
+        note: "전체 산술 생성 — Fp 수동 구현과 100% 동일한 코드",
+      },
     ],
   },
 };

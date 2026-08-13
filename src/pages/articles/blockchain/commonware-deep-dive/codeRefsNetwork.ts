@@ -1,11 +1,11 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const networkCodeRef: Record<string, CodeRef> = {
-  'network-trait': {
-    path: 'commonware/runtime/src/lib.rs — Network trait',
-    lang: 'rust',
+  "network-trait": {
+    path: "commonware/runtime/src/lib.rs — Network trait",
+    lang: "rust",
     highlight: [1, 16],
-    desc: 'Network — TCP 연결 추상화 trait.\nbind()로 리스너 생성, dial()로 상대 연결.\nListener → accept() → (Sink, Stream) 쌍 반환.',
+    desc: "Network — TCP 연결 추상화 trait.\nbind()로 리스너 생성, dial()로 상대 연결.\nListener → accept() → (Sink, Stream) 쌍 반환.",
     code: `/// Interface that any runtime must implement
 /// to create network connections.
 pub trait Network: Clone + Send + Sync + 'static {
@@ -27,10 +27,26 @@ pub trait Network: Clone + Send + Sync + 'static {
         >> + Send;
 }`,
     annotations: [
-      { lines: [3, 3], color: 'sky', note: 'Clone + Send + Sync — 여러 태스크에서 동시에 연결 가능' },
-      { lines: [7, 7], color: 'emerald', note: 'Listener — accept()로 (SocketAddr, Sink, Stream) 튜플 반환' },
-      { lines: [10, 13], color: 'amber', note: 'bind() — deterministic에서는 가상 네트워크, tokio에서는 실제 TCP' },
-      { lines: [16, 19], color: 'violet', note: 'dial() — SinkOf/StreamOf 타입 별칭으로 Listener에서 Sink/Stream 추출' },
+      {
+        lines: [3, 3],
+        color: "sky",
+        note: "Clone + Send + Sync — 여러 태스크에서 동시에 연결 가능",
+      },
+      {
+        lines: [7, 7],
+        color: "emerald",
+        note: "Listener — accept()로 (SocketAddr, Sink, Stream) 튜플 반환",
+      },
+      {
+        lines: [10, 13],
+        color: "amber",
+        note: "bind() — deterministic에서는 가상 네트워크, tokio에서는 실제 TCP",
+      },
+      {
+        lines: [16, 19],
+        color: "violet",
+        note: "dial() — SinkOf/StreamOf 타입 별칭으로 Listener에서 Sink/Stream 추출",
+      },
     ],
   },
 };

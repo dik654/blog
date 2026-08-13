@@ -1,223 +1,115 @@
-import AgentSelectionViz from './viz/AgentSelectionViz';
-import AgentScoreChartViz from './viz/AgentScoreChartViz';
+import AgentScoreChartViz from "./viz/AgentScoreChartViz";
+import AgentSelectionViz from "./viz/AgentSelectionViz";
+
+const selectionSignals = [
+  {
+    title: "Capability",
+    body: "탐색·구현·리뷰처럼 실제로 필요한 작업 능력을 확인합니다.",
+  },
+  {
+    title: "Access",
+    body: "읽을 경로와 쓸 경로, network와 secret 범위가 맞는지 봅니다.",
+  },
+  {
+    title: "Cost",
+    body: "모델 비용, 예상 latency와 병렬 실행의 통합 비용을 함께 봅니다.",
+  },
+] as const;
 
 export default function AgentSelection() {
   return (
     <section id="agent-selection" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">베스트11 — 태스크별 에이전트 선택</h2>
-      <AgentSelectionViz />
+      <h2 className="text-2xl font-bold mb-6">
+        작업 경계가 먼저이고 agent 선택은 그다음이다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">왜 동적 선택이 필요한가</h3>
-        <p>
-          Claude Code가 사용 가능한 sub-agent는 수십~수백개<br />
-          모든 agent를 매번 system prompt에 나열하면:<br />
-          - <strong>프롬프트 팽창</strong>: 각 agent spec이 100-200 tokens → 전체 5K+ tokens<br />
-          - <strong>선택 노이즈</strong>: LLM이 유사한 agent 중 엉뚱한 것 선택 가능<br />
-          - <strong>성능 저하</strong>: 불필요한 맥락이 attention 분산
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          sub-agent 선택은 이름이 멋진 역할을 고르는 문제가 아니라, 이미 나눈
+          작업 계약을 어떤 실행 환경에 맡길지 결정하는 문제입니다. 탐색 결과만
+          필요한 작업에 write tool을 줄 이유가 없고, 같은 파일을 수정하는 두
+          작업을 동시에 보내면 모델 성능과 무관하게 충돌이 생깁니다.
         </p>
-        <p>
-          <strong>해결: 태스크별 동적 선택</strong><br />
-          - 사용자 요청 분석 → 관련 태그 추출<br />
-          - 태그 매칭으로 후보 agent 필터링<br />
-          - 랭킹 점수 상위 7-11개만 활성화 → system prompt에 포함
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Agent 메타데이터 구조</h3>
-        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3">AgentDefinition</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <ul className="list-none pl-0 space-y-1">
-              <li><code>agent_type</code> — <code>"Explore"</code> | <code>"Plan"</code> | ...</li>
-              <li><code>description</code> — LLM이 선택 시 참고하는 설명</li>
-              <li><code>tags</code> — <code>["search", "code", "analysis"]</code></li>
-              <li><code>allowed_tools</code> — 이 agent가 사용 가능한 도구 목록</li>
-            </ul>
-            <ul className="list-none pl-0 space-y-1">
-              <li><code>model_preference</code> — opus/sonnet/haiku (optional)</li>
-              <li><code>system_prompt</code> — agent별 특화 prompt</li>
-              <li><code>recent_success_rate</code> — 최근 호출 성공률 (bandit 학습)</li>
-            </ul>
-          </div>
-        </div>
-        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3">선택 알고리즘 — <code>rank_agents</code></p>
-          <div className="space-y-2 text-sm">
-            <p><strong>점수 산출</strong>: <code>tag_overlap x 0.6</code> + <code>domain_fit x 0.3</code> + <code>recent_success_rate x 0.1</code></p>
-            <div className="grid grid-cols-3 gap-2 mt-2">
-              <div className="bg-background border border-border rounded px-3 py-2 text-center">
-                <p className="font-medium">tag_overlap</p>
-                <p className="text-xs text-muted-foreground">태스크 태그와 agent 태그 교집합 비율</p>
-                <p className="text-lg font-bold">60%</p>
-              </div>
-              <div className="bg-background border border-border rounded px-3 py-2 text-center">
-                <p className="font-medium">domain_fit</p>
-                <p className="text-xs text-muted-foreground">도메인 적합도 (임베딩 기반)</p>
-                <p className="text-lg font-bold">30%</p>
-              </div>
-              <div className="bg-background border border-border rounded px-3 py-2 text-center">
-                <p className="font-medium">success_rate</p>
-                <p className="text-xs text-muted-foreground">최근 호출 성공률</p>
-                <p className="text-lg font-bold">10%</p>
-              </div>
-            </div>
-            <p className="text-muted-foreground mt-2">cutoff <code>0.3</code> 미만 제거 → 상위 11개("Best 11") 선택</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Selection 예시</h3>
-        <AgentScoreChartViz />
-        <p>
-          <strong>2단계 필터링</strong>: tag overlap 기반 1차 필터 (cutoff 0.3) → 점수 기준 top-3 선택<br />
-          10개 후보 중 5개가 통과, 최상위 3개(debug-agent · security · Explore)만 system prompt에 포함<br />
-          필터링 덕분에 system prompt 길이를 <code>10 × 150 = 1.5K</code> 토큰 → <code>3 × 150 = 450</code> 토큰으로 축소
+        <p className="leading-7">
+          많은 agent description을 매 turn마다 system prompt에 모두 넣으면 선택
+          노이즈와 context 비용이 커질 수 있습니다. 먼저 task contract로 후보를
+          좁히고, 필요한 capability와 permission을 충족하는 소수만 노출하는
+          방식이 더 단순합니다. “상위 11개” 같은 고정 숫자는 설계 원칙이 아니라
+          특정 snapshot의 tuning 값으로만 다뤄야 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">태그 추출 — 사용자 요청 분석</h3>
-        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code>extract_task_tags</code> — 3단계 추출</p>
-          <div className="space-y-4">
-            <div>
-              <p className="font-medium text-sm mb-2">1) 키워드 사전 매칭 (빠름)</p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">debug</code>
-                  <p className="text-muted-foreground mt-0.5">bug, error, crash, broken, fail</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">refactor</code>
-                  <p className="text-muted-foreground mt-0.5">refactor, cleanup, rename, move, extract</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">feature</code>
-                  <p className="text-muted-foreground mt-0.5">add, implement, new, create</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">review</code>
-                  <p className="text-muted-foreground mt-0.5">review, audit, check, verify</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">docs</code>
-                  <p className="text-muted-foreground mt-0.5">document, readme, explain, describe</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">test</code>
-                  <p className="text-muted-foreground mt-0.5">test, spec, coverage, unit</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">auth</code>
-                  <p className="text-muted-foreground mt-0.5">login, password, token, session, auth</p>
-                </div>
-                <div className="bg-background border border-border rounded px-2 py-1.5">
-                  <code className="font-semibold">perf</code>
-                  <p className="text-muted-foreground mt-0.5">slow, faster, optimize, performance</p>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div>
-                <p className="font-medium mb-1">2) 파일 확장자 힌트</p>
-                <p className="text-muted-foreground"><code>.rs</code> → <code>rust</code>, <code>.ts/.tsx</code> → <code>typescript</code></p>
-              </div>
-              <div>
-                <p className="font-medium mb-1">3) 경로 힌트</p>
-                <p className="text-muted-foreground"><code>/auth/</code> → <code>auth</code>, <code>/api/</code> → <code>api</code></p>
-              </div>
-            </div>
-          </div>
+        <div className="not-prose my-8">
+          <AgentSelectionViz />
         </div>
-        <p>
-          <strong>결정론적 매칭이 LLM보다 빠름</strong>:<br />
-          - 선택 단계에서 LLM 호출 추가 → 비용·지연 증가<br />
-          - 간단한 키워드 매칭만으로도 90% 정확도<br />
-          - 실패한 경우 나중에 fallback으로 LLM 사용 가능
+      </div>
+
+      <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
+        {selectionSignals.map((item) => (
+          <article
+            key={item.title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {item.body}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          metadata는 설명보다 contract에 가깝게 쓴다
+        </h3>
+        <p className="leading-7">
+          agent definition에는 자연어 description만 넣지 않고 allowed tools,
+          readable·writable path, network policy, model class, expected output
+          schema와 isolation mode를 함께 둡니다. 선택기가 description을 잘
+          이해하더라도 runtime이 이 제약을 강제하지 않으면 실제 권한은 달라질 수
+          있습니다.
         </p>
-        <p>
-          <strong>유지보수 문제</strong>: 키워드 사전이 정적 — 도메인 확장 시 수동 업데이트<br />
-          대안: embedding 기반 similarity — 하지만 cold start 비용 ↑
+        <p className="leading-7">
+          태그는 빠른 1차 filtering에 유용하지만 keyword와 file extension만으로
+          domain fit을 확정하지 않습니다. 모호한 요청은 main agent가 먼저
+          deliverable과 scope를 구체화하고, 그래도 여러 후보가 남을 때만
+          semantic similarity나 작은 routing model을 사용합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">활성화 타이밍 — 언제 re-rank?</h3>
-        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3">RerankTrigger — Agent pool 재평가 시점</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-            <div className="bg-background border border-border rounded px-3 py-2">
-              <p className="font-medium"><code>SessionStart</code></p>
-              <p className="text-xs text-muted-foreground">새 세션 시작 시 1회</p>
-            </div>
-            <div className="bg-background border border-border rounded px-3 py-2">
-              <p className="font-medium"><code>TaskSwitch</code></p>
-              <p className="text-xs text-muted-foreground">사용자 요청이 전환된 것으로 판단</p>
-            </div>
-            <div className="bg-background border border-border rounded px-3 py-2">
-              <p className="font-medium"><code>PeriodicRefresh</code></p>
-              <p className="text-xs text-muted-foreground">N turns 마다 (기본 10)</p>
-            </div>
-            <div className="bg-background border border-border rounded px-3 py-2">
-              <p className="font-medium"><code>ExplicitHint</code></p>
-              <p className="text-xs text-muted-foreground">"switch to X agent" 명시</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-2">TaskSwitch 감지 — Jaccard similarity</p>
-          <p className="text-sm">
-            현재 요청의 태그와 이전 태스크 태그의 <strong>Jaccard similarity</strong>(교집합/합집합)를 계산<br />
-            similarity &lt; <code>0.3</code>이면 새 태스크로 판단 → agent pool re-rank<br />
-            Session 중간에 pool 변경 시 system prompt의 agent 목록 섹션만 재작성, 기존 대화 이력은 유지
-          </p>
-        </div>
-        <p>
-          <strong>너무 자주 re-rank</strong>: prompt cache invalidation → API 비용 ↑<br />
-          <strong>너무 드물게 re-rank</strong>: 무관한 agent가 system prompt에 남음<br />
-          claw는 "task switch 감지 + N turns 주기"의 hybrid 전략
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          ranking 점수는 결과 품질과 위험을 분리해 본다
+        </h3>
+        <p className="leading-7">
+          tag overlap, domain fit, 최근 성공률을 한 점수로 합치면 구현은 쉽지만,
+          낮은 비용과 높은 권한 위험이 같은 숫자 안에서 상쇄될 수 있습니다. 먼저
+          hard constraint로 permission과 isolation 조건을 통과시킨 뒤, 남은
+          후보의 품질·latency·비용을 비교하는 편이 안전합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">System Prompt 주입 형태</h3>
-        <div className="bg-muted/50 border border-border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code>build_system_prompt</code> — 선택된 agents를 system prompt에 포함</p>
-          <p className="text-sm mb-3">
-            <code>BASE_SYSTEM_PROMPT</code>에 <code># Available Sub-Agents</code> 섹션 추가<br />
-            각 agent마다 <code>agent_type</code>, <code>description</code>, <code>allowed_tools</code> 나열
-          </p>
-          <p className="font-medium text-sm mb-2">결과 예시 (실제 Claude Code system prompt)</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <div className="bg-background border border-border rounded px-3 py-2">
-              <p className="font-semibold">Explore</p>
-              <p className="text-muted-foreground">Fast agent specialized for exploring codebases...</p>
-              <p className="text-xs mt-1">Tools: <code>Read</code>, <code>Grep</code>, <code>Glob</code>, <code>WebFetch</code></p>
-            </div>
-            <div className="bg-background border border-border rounded px-3 py-2">
-              <p className="font-semibold">Plan</p>
-              <p className="text-muted-foreground">Software architect agent for designing implementation plans...</p>
-              <p className="text-xs mt-1">Tools: <code>Read</code>, <code>Grep</code>, <code>Glob</code> (analysis-only)</p>
-            </div>
-          </div>
+        <div className="not-prose my-8">
+          <AgentScoreChartViz />
         </div>
-        <p>
-          <strong>각 agent당 100-200 tokens 소비</strong> — 11개면 1.5-2K tokens<br />
-          이 비용은 모든 turn마다 반복 — prompt caching으로 완화<br />
-          많을수록 LLM이 "뭘 쓸지" 판단에 많은 attention 할당 → 정확도 저하 가능
+
+        <p className="leading-7">
+          최근 success rate도 “agent가 완료했다고 응답했는가”가 아니라 검증을
+          통과한 산출물로 계산합니다. 쉬운 작업만 받은 agent가 유리해지는
+          selection bias를 줄이려면 작업 난이도와 유형별로 지표를 나누고, 표본이
+          적을 때는 confidence interval을 함께 봅니다.
         </p>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Multi-Armed Bandit 사용</p>
-          <p>
-            <strong>recent_success_rate</strong> 필드는 exploration/exploitation 균형:<br />
-            - 성공률 높은 agent가 더 자주 선택됨 (exploit)<br />
-            - 하지만 새 agent도 주기적 테스트 필요 (explore)<br />
-            - Epsilon-greedy 또는 Thompson sampling으로 조절
-          </p>
-          <p className="mt-2">
-            <strong>학습 루프</strong>:<br />
-            1. Agent 실행 → tool_calls, 최종 결과 관찰<br />
-            2. 사용자 피드백 (accept/reject/redo) 수집<br />
-            3. success_rate 업데이트<br />
-            4. 다음 선택 시 반영
-          </p>
-        </div>
-
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          agent pool은 새 work unit 경계에서 갱신한다
+        </h3>
+        <p className="leading-7">
+          대화 중 단어가 조금 바뀔 때마다 후보를 다시 고르면 prompt cache가
+          흔들리고 역할도 일관되지 않습니다. 새로운 deliverable이 생기거나 기존
+          작업 계약이 끝났을 때 pool을 갱신하고, 진행 중인 worker는 같은
+          contract와 tool set을 유지합니다.
+        </p>
+        <p className="leading-7">
+          단순한 작업은 dedicated agent 없이 main agent가 직접 처리하는 선택지도
+          항상 남겨 둡니다. delegation 자체가 목표가 되면 handoff와 검증 비용이
+          실제 작업보다 커질 수 있기 때문입니다.
+        </p>
       </div>
     </section>
   );

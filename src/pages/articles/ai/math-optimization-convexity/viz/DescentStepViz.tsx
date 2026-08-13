@@ -1,0 +1,3 @@
+import VizFrame from "@/components/viz/VizFrame";
+const rows=[["η=0.5","4 → 2 → 1 → 0.5","수축하며 수렴"],["η=1","4 → 0","한 step에 도달"],["η=2","4 → −4 → 4","진동하며 정체"],["η=3","4 → −8 → 16","크기가 커져 발산"]] as const;
+export default function DescentStepViz(){return <VizFrame eyebrow="같은 함수, 다른 step size" title="방향이 맞아도 learning rate가 크면 objective가 줄지 않습니다"><div className="grid gap-px overflow-hidden rounded-lg border border-border/70 bg-border/60 sm:grid-cols-2 lg:grid-cols-4">{rows.map(([eta,path,result])=><div key={eta} className="min-w-0 bg-background p-5"><p className="font-mono text-sm font-bold text-primary">{eta}</p><p className="mt-4 break-words font-mono text-xs leading-5">{path}</p><p className="mt-3 text-xs text-muted-foreground">{result}</p></div>)}</div></VizFrame>}

@@ -1,84 +1,40 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
+import VizFrame from "@/components/viz/VizFrame";
 
-const NODES = [
-  { label: 'User', color: '#6366f1', x: 15 },
-  { label: 'LLM', color: '#3b82f6', x: 85 },
-  { label: 'Tool Call', color: '#10b981', x: 155 },
-  { label: 'Tool Result', color: '#f59e0b', x: 225 },
-  { label: 'Response', color: '#ec4899', x: 295 },
-];
-const BW = 60, BH = 36, CY = 50;
-
-const STEPS = [
-  { label: '사용자 메시지 입력' },
-  { label: 'LLM 추론' },
-  { label: '도구 호출 결정' },
-  { label: '도구 실행 결과' },
-  { label: '루프 반복 or 응답' },
-];
-const BODY = [
-  '터미널에서 자연어로 지시',
-  '~200K 토큰 컨텍스트 → Claude API',
-  '텍스트 응답 vs tool_use 판별',
-  '권한 승인 후 도구 실행·결과 수집',
-  '평균 21.2회 반복 후 최종 응답',
-];
+const trace = [
+  ["Bug report", "빈 email로 login 요청 시 500", "goal · reproduction"],
+  ["Inspect", "route·validation·관련 test를 읽음", "source · test · error log"],
+  ["Propose", "DB 호출 전에 input validation 추가", "planned diff"],
+  ["Authorize", "workspace file write만 승인 범위", "network·deploy는 별도 effect"],
+  ["Execute", "patch 적용 후 target test 실행", "file diff · test output"],
+  ["Verify", "재현 test 통과와 변경 범위 확인", "evidence · unresolved effects"],
+] as const;
 
 export default function AgentLoopSequenceViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 480 110" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {NODES.map((n, i) => {
-            const active = step === i || (step === 4 && i >= 1);
-            const done = step > i;
-            const op = active ? 1 : done ? 0.5 : 0.2;
-            return (
-              <g key={n.label}>
-                <motion.rect x={n.x} y={CY - BH / 2} width={BW} height={BH} rx={5}
-                  animate={{ fill: `${n.color}${active ? '22' : '0c'}`, stroke: n.color,
-                    strokeWidth: active ? 2 : 1, opacity: op }}
-                  transition={{ duration: 0.3 }} />
-                <text x={n.x + BW / 2} y={CY + 4} textAnchor="middle" fontSize={9}
-                  fontWeight={600} fill={active ? n.color : 'var(--foreground)'} opacity={op}>
-                  {n.label}
-                </text>
-                {i < NODES.length - 1 && (
-                  <line x1={n.x + BW + 2} y1={CY} x2={NODES[i + 1].x - 2} y2={CY}
-                    stroke="var(--border)" strokeWidth={1} opacity={done ? 0.5 : 0.15} />
-                )}
-              </g>
-            );
-          })}
-          {/* data packet */}
-          {step <= 3 && (
-            <motion.circle r={5}
-              animate={{ cx: NODES[step].x + BW / 2, cy: CY - BH / 2 - 9 }}
-              transition={{ type: 'spring', bounce: 0.2 }}
-              fill={NODES[step].color}
-              style={{ filter: `drop-shadow(0 0 4px ${NODES[step].color}88)` }} />
-          )}
-          {/* loop-back arrow */}
-          {step === 4 && (
-            <>
-              <motion.path
-                d={`M ${NODES[3].x + BW / 2} ${CY + BH / 2 + 6} Q 185 ${CY + BH / 2 + 22} ${NODES[1].x + BW / 2} ${CY + BH / 2 + 6}`}
-                fill="none" stroke="#10b981" strokeWidth={1.5} strokeDasharray="4 3"
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                transition={{ duration: 0.7 }} />
-              <motion.text x={185} y={CY + BH / 2 + 28} textAnchor="middle" fontSize={9}
-                fill="#10b981" fontWeight={600} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                루프 반복 (avg 21.2)
-              </motion.text>
-            </>
-          )}
-          <motion.text x={380} y={55} fontSize={9}
-            fill="var(--muted-foreground)"
-            initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-            key={step}>{BODY[step]}</motion.text>
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="Concrete tool trace"
+      title="Login bug를 고칠 때 각 판단은 source·diff·test 같은 다음 artifact를 남깁니다"
+      description="자연어로 ‘고쳤다’고 끝내지 않고 재현 입력과 결정적 test로 완료 조건을 확인합니다."
+      note="파일 수정과 local test는 승인된 범위에서 실행할 수 있지만 deploy·외부 메시지·production 변경은 별도 authorization 없이는 수행하지 않습니다."
+    >
+      <ol className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {trace.map(([stage, action, artifact], index) => (
+          <li key={stage} className="min-w-0 border-t border-border/80 pt-4">
+            <div className="flex min-w-0 items-baseline justify-between gap-4">
+              <h4 className="text-sm font-bold">{stage}</h4>
+              <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <p className="mt-3 min-w-0 text-xs leading-5 text-foreground [overflow-wrap:anywhere]">
+              {action}
+            </p>
+            <p className="mt-3 min-w-0 text-xs font-semibold leading-5 text-primary [overflow-wrap:anywhere]">
+              Artifact · {artifact}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </VizFrame>
   );
 }

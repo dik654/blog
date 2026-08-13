@@ -22,7 +22,19 @@ type LeafNode struct {
 // - 경로 압축: 단일 자식 노드를 레이블로 압축`;
 
 export const mkvsAnnotations = [
-  { lines: [4, 10] as [number, number], color: 'sky' as const, note: 'Internal Node: 트리 분기' },
-  { lines: [12, 17] as [number, number], color: 'emerald' as const, note: 'Leaf Node: 실제 데이터' },
-  { lines: [19, 23] as [number, number], color: 'amber' as const, note: 'Merkle Tree 핵심 특성' },
+  {
+    lines: [4, 10] as [number, number],
+    color: "sky" as const,
+    note: "Internal Node: 트리 분기",
+  },
+  {
+    lines: [12, 17] as [number, number],
+    color: "emerald" as const,
+    note: "Leaf Node: 실제 데이터",
+  },
+  {
+    lines: [19, 23] as [number, number],
+    color: "amber" as const,
+    note: "Merkle Tree 핵심 특성",
+  },
 ];

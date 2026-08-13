@@ -1,82 +1,45 @@
+import { ToolFrame, ToolRule, ToolSteps } from "./ToolVizPrimitives";
+
 export default function PermissionDecisionViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Permission 판정 플로우 — Allow · Deny · Prompt</text>
-
-        <defs>
-          <marker id="pd-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#8b5cf6" />
-          </marker>
-        </defs>
-
-        {/* Input */}
-        <rect x={200} y={46} width={160} height={36} rx={5}
-          fill="#3b82f6" fillOpacity={0.15} stroke="#3b82f6" strokeWidth={1.8} />
-        <text x={280} y={68} textAnchor="middle" fontSize={11} fontWeight={700} fill="#3b82f6">
-          enforcer.check(name)
-        </text>
-
-        {/* lookup mode */}
-        <line x1={280} y1={82} x2={280} y2={98} stroke="#8b5cf6" strokeWidth={1.5} markerEnd="url(#pd-arr)" />
-        <rect x={150} y={100} width={260} height={36} rx={5}
-          fill="#f59e0b" fillOpacity={0.15} stroke="#f59e0b" strokeWidth={1.8} />
-        <text x={280} y={122} textAnchor="middle" fontSize={11} fontWeight={700} fill="#f59e0b">
-          lookup PermissionMode for tool
-        </text>
-
-        {/* Branch lines */}
-        <line x1={220} y1={136} x2={110} y2={160} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pd-arr)" />
-        <line x1={280} y1={136} x2={280} y2={160} stroke="#8b5cf6" strokeWidth={1.8} markerEnd="url(#pd-arr)" />
-        <line x1={340} y1={136} x2={450} y2={160} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pd-arr)" />
-
-        {/* ReadOnly branch */}
-        <rect x={30} y={162} width={160} height={50} rx={6}
-          fill="#10b981" fillOpacity={0.15} stroke="#10b981" strokeWidth={1.5} />
-        <text x={110} y={184} textAnchor="middle" fontSize={11} fontWeight={700} fill="#10b981">ReadOnly</text>
-        <text x={110} y={200} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">read-only tools only</text>
-
-        {/* WorkspaceWrite branch (default) */}
-        <rect x={200} y={162} width={160} height={50} rx={6}
-          fill="#3b82f6" fillOpacity={0.15} stroke="#3b82f6" strokeWidth={2} />
-        <text x={280} y={184} textAnchor="middle" fontSize={11} fontWeight={700} fill="#3b82f6">WorkspaceWrite</text>
-        <text x={280} y={200} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">default · writes ok</text>
-
-        {/* DangerFullAccess branch */}
-        <rect x={370} y={162} width={160} height={50} rx={6}
-          fill="#ef4444" fillOpacity={0.15} stroke="#ef4444" strokeWidth={1.5} />
-        <text x={450} y={184} textAnchor="middle" fontSize={11} fontWeight={700} fill="#ef4444">DangerFullAccess</text>
-        <text x={450} y={200} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">all allowed</text>
-
-        {/* Results arrows */}
-        <line x1={110} y1={212} x2={110} y2={240} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pd-arr)" />
-        <line x1={280} y1={212} x2={280} y2={240} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pd-arr)" />
-        <line x1={450} y1={212} x2={450} y2={240} stroke="#8b5cf6" strokeWidth={1.3} markerEnd="url(#pd-arr)" />
-
-        {/* Results */}
-        <rect x={30} y={244} width={160} height={42} rx={6}
-          fill="#ef4444" fillOpacity={0.2} stroke="#ef4444" strokeWidth={1.5} />
-        <text x={110} y={264} textAnchor="middle" fontSize={11} fontWeight={700} fill="#ef4444">Deny</text>
-        <text x={110} y={278} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">bash/write 차단</text>
-
-        <rect x={200} y={244} width={160} height={42} rx={6}
-          fill="#f59e0b" fillOpacity={0.2} stroke="#f59e0b" strokeWidth={1.5} />
-        <text x={280} y={264} textAnchor="middle" fontSize={11} fontWeight={700} fill="#f59e0b">Prompt</text>
-        <text x={280} y={278} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">사용자 Y/N 확인</text>
-
-        <rect x={370} y={244} width={160} height={42} rx={6}
-          fill="#10b981" fillOpacity={0.2} stroke="#10b981" strokeWidth={1.5} />
-        <text x={450} y={264} textAnchor="middle" fontSize={11} fontWeight={700} fill="#10b981">Allow</text>
-        <text x={450} y={278} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">즉시 실행</text>
-
-        {/* Footer note */}
-        <rect x={30} y={302} width={500} height={28} rx={5}
-          fill="var(--muted)" opacity={0.4} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={320} textAnchor="middle" fontSize={10} fontWeight={600} fill="var(--foreground)">
-          예: bash — ReadOnly(Deny) · WorkspaceWrite(Prompt) · Danger(Allow)
-        </text>
-      </svg>
-    </div>
+    <ToolFrame
+      label="POLICY ADAPTER"
+      title="host가 계산한 effect에 permission decision을 묶는다"
+      description="모델이나 tool metadata의 안전 선언을 믿지 않고 canonical path·command·resource를 host action으로 만든 뒤 정책 엔진의 결과를 강제합니다."
+      note="정책을 해석할 수 없거나 context가 빠졌다면 민감한 action은 fail-closed합니다. Allow는 executor 성공을 뜻하지 않으며 permission failure와 execution failure를 구분합니다."
+    >
+      <ToolSteps
+        items={[
+          {
+            label: "DESCRIBE",
+            title: "Canonical action",
+            body: "edit_file·canonical path·overwrite 범위와 action digest를 고정합니다.",
+            tone: "blue",
+          },
+          {
+            label: "DECIDE",
+            title: "Allow",
+            body: "동일한 action digest와 한 번 쓰는 approval을 executor에 전달합니다.",
+            tone: "emerald",
+          },
+          {
+            label: "DECIDE",
+            title: "Prompt",
+            body: "사용자에게 변경 파일·범위·요청 이유를 구체적으로 보여줍니다.",
+            tone: "amber",
+          },
+          {
+            label: "DECIDE",
+            title: "Deny",
+            body: "executor를 호출하지 않고 stable reason code를 반환합니다.",
+            tone: "rose",
+          },
+        ]}
+      />
+      <ToolRule>
+        모델이 path나 arguments를 바꾸면 action digest도 달라지므로 이전 승인을
+        재사용하지 않습니다. 승인 여부는 모델 출력이 아니라 host state입니다.
+      </ToolRule>
+    </ToolFrame>
   );
 }

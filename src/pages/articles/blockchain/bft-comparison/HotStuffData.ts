@@ -50,8 +50,24 @@ export type ViewChangeRow = {
 };
 
 export const viewChangeRows: ViewChangeRow[] = [
-  { protocol: 'PBFT', normalPath: 'O(n\u00B2)', viewChange: 'O(n\u00B3) \u2014 별도 프로토콜' },
-  { protocol: 'Tendermint', normalPath: 'O(n\u00B2)', viewChange: 'O(n\u00B2) \u2014 단순 라운드 증가' },
-  { protocol: 'HotStuff', normalPath: 'O(n)', viewChange: 'O(n) \u2014 정상 경로와 동일!' },
-  { protocol: '이더리움', normalPath: 'O(n) 위원회 내', viewChange: '없음 (fork choice가 대체)' },
+  {
+    protocol: "PBFT",
+    normalPath: "O(n\u00B2)",
+    viewChange: "O(n\u00B3) \u2014 별도 프로토콜",
+  },
+  {
+    protocol: "Tendermint",
+    normalPath: "O(n\u00B2)",
+    viewChange: "O(n\u00B2) \u2014 단순 라운드 증가",
+  },
+  {
+    protocol: "HotStuff",
+    normalPath: "O(n)",
+    viewChange: "O(n) \u2014 정상 경로와 동일!",
+  },
+  {
+    protocol: "이더리움",
+    normalPath: "O(n) 위원회 내",
+    viewChange: "없음 (fork choice가 대체)",
+  },
 ];

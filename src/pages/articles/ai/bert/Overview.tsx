@@ -1,59 +1,54 @@
-import BERTPipelineViz from './viz/BERTPipelineViz';
-import BertOverviewDetailViz from './viz/BertOverviewDetailViz';
-import M from '@/components/ui/math';
-
-const MILESTONES = [
-  { year: '2018-02', name: 'ELMo', color: '#f59e0b', desc: '양방향 LSTM 기반 문맥 임베딩. 사전학습 후 feature로 사용.' },
-  { year: '2018-06', name: 'GPT-1', color: '#10b981', desc: '단방향(left-to-right) Transformer 디코더. 파인튜닝 패러다임 도입.' },
-  { year: '2018-10', name: 'BERT', color: '#6366f1', desc: '양방향 Transformer 인코더. MLM으로 양방향 문맥을 동시에 학습.' },
-];
-
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import VisibilityViz from "./viz/VisibilityViz";
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">BERT 등장 배경</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <p className="leading-7">
-          <strong>BERT</strong>(Bidirectional Encoder Representations from Transformers) — 2018년 Google AI가 발표한 사전학습 언어 모델<br />
-          ELMo의 양방향성과 GPT의 Transformer 구조를 결합<br />
-          <strong>마스킹 기반 양방향 인코딩</strong>이라는 혁신적 학습 방식으로 NLP 벤치마크 11개에서 동시에 SOTA(State-of-the-Art, 최고 성능) 달성
+      <h2 className="mb-6 text-2xl font-bold">
+        BERT는 다음 token 생성보다 각 입력 위치의 contextual representation을 목표로 한다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          BERT(Bidirectional Encoder Representations from Transformers)는 Transformer
+          encoder를 unlabeled text로 pretraining한 뒤, task head와 함께 전체 weight를
+          fine-tuning하는 recipe를 보편화했습니다. 각 token 위치가 왼쪽과 오른쪽의 실제
+          token을 모두 볼 수 있으므로 classification·token labeling·extractive QA처럼
+          입력 전체를 읽고 판단하는 작업에 자연스럽습니다.
+        </p>
+        <p>
+          여기서 “bidirectional”은 문장을 앞뒤 방향으로 생성한다는 뜻이 아닙니다.
+          Encoder self-attention의 visibility가 causal triangle로 제한되지 않는다는 뜻입니다.
+          정답 위치의 token까지 그대로 보이면 그대로 복사할 수 있기 때문에, BERT는 일부
+          입력을 오염시키고 원래 token을 복원하는 MLM을 사용했습니다.
+        </p>
+        <p>
+          <Link to="/ai/transformer-architecture">Transformer block·position·mask 정본</Link>과
+          <Link to="/ai/attention-theory"> Q·K·V 계산 정본</Link>은 앞 글에서 확인할 수 있습니다.
+          이 글은 그 위에서 visibility가 pretraining objective와 downstream interface를
+          어떻게 결정하는지 설명합니다.
         </p>
       </div>
 
-      <div className="space-y-2 mb-8">
-        {MILESTONES.map((m) => (
-          <div key={m.name} className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
-            style={{ borderColor: m.color + '40', background: m.color + '08' }}>
-            <span className="text-xs font-mono w-20 flex-shrink-0" style={{ color: m.color }}>{m.year}</span>
-            <span className="font-semibold text-sm w-16" style={{ color: m.color }}>{m.name}</span>
-            <span className="text-sm text-foreground/70">{m.desc}</span>
-          </div>
-        ))}
-      </div>
+      <ContentBoundary article="bert" />
+      <VisibilityViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">BERT 입력 파이프라인</h3>
-        <p className="leading-7">
-          BERT — WordPiece 토크나이저(서브워드 단위로 분할하는 토크나이저)로 서브워드 분할<br />
-          Token + Position + Segment 3종 임베딩을 합산<br />
-          12개(base) 또는 24개(large) Transformer 레이어에 입력
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          원형 BERT는 encoder-only이며 left-to-right generation head나 cross-attention
+          decoder를 포함하지 않습니다. 후대 library가 BERT class를 decoder mode로
+          구성할 수 있다는 사실과 원 논문 architecture의 역할은 구분해야 합니다.
         </p>
       </div>
-      <BERTPipelineViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">BERT 모델 구조 상세</h3>
-        <M display>
-          {`\\underbrace{E_{\\text{token}} + E_{\\text{position}} + E_{\\text{segment}}}_{\\text{Input Embedding}} \\;\\xrightarrow{\\text{12 or 24 layers}}\\; \\underbrace{h_i \\in \\mathbb{R}^{768}}_{\\text{contextualized embedding}}`}
-        </M>
-      </div>
-      <BertOverviewDetailViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: <strong>Transformer Encoder 12/24층</strong> - BERT는 Attention 기반 깊은 문맥 인코더.<br />
-          요약 2: <strong>양방향 MLM</strong>이 핵심 혁신 — GPT의 단방향과 근본적 차이.<br />
-          요약 3: "사전학습 + 파인튜닝" 패러다임 확립 — 이후 모든 NLP의 표준.
+      <div id="paper-bert" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · 원형 BERT</p>
+        <p className="mt-2 text-sm font-semibold">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          모든 encoder layer에서 양쪽 context를 함께 조건으로 쓰는 representation을
+          MLM·NSP로 pretraining하고 여러 NLP task에 fine-tuning한 연구입니다. 보고된
+          성능은 해당 architecture·corpus·training budget과 11개 task의 범위입니다.
         </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1810.04805" target="_blank" rel="noreferrer">원 논문의 문제·구조·평가 보기</a>
       </div>
     </section>
   );

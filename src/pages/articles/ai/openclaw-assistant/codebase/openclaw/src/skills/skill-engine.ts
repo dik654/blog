@@ -11,9 +11,9 @@
  *   → VirusTotal 연동 스킬 스캐닝 (보안)
  */
 
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-import { parse as parseYaml } from 'yaml';
+import { readFile } from "fs/promises";
+import { join } from "path";
+import { parse as parseYaml } from "yaml";
 
 export interface SkillMeta {
   name: string;
@@ -22,7 +22,7 @@ export interface SkillMeta {
   requirements?: string[];
   triggers?: string[];
   maxSpawnDepth?: number;
-  sandbox?: 'docker' | 'none';
+  sandbox?: "docker" | "none";
 }
 
 export interface Skill {
@@ -32,9 +32,9 @@ export interface Skill {
 }
 
 const SKILL_SEARCH_DIRS = [
-  'workspace/skills',     // 에이전트별
-  '~/.openclaw/skills',   // 공유/관리
-  'bundled/skills',       // 번들
+  "workspace/skills", // 에이전트별
+  "~/.openclaw/skills", // 공유/관리
+  "bundled/skills", // 번들
 ];
 
 export class SkillEngine {
@@ -42,7 +42,7 @@ export class SkillEngine {
 
   /** SKILL.md 파싱: YAML frontmatter + 마크다운 지침 */
   async loadSkill(dir: string): Promise<Skill> {
-    const raw = await readFile(join(dir, 'SKILL.md'), 'utf-8');
+    const raw = await readFile(join(dir, "SKILL.md"), "utf-8");
     const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
     if (!fmMatch) throw new Error(`Invalid SKILL.md in ${dir}`);
 
@@ -53,9 +53,9 @@ export class SkillEngine {
   /** 시스템 프롬프트에 적격 스킬 XML 목록 주입 (스킬당 ~24 토큰) */
   buildSkillPromptBlock(): string {
     const lines = Array.from(this.skills.values()).map(
-      (s) => `<skill name="${s.meta.name}">${s.meta.description ?? ''}</skill>`,
+      (s) => `<skill name="${s.meta.name}">${s.meta.description ?? ""}</skill>`,
     );
-    return `<available-skills>\n${lines.join('\n')}\n</available-skills>`;
+    return `<available-skills>\n${lines.join("\n")}\n</available-skills>`;
   }
 
   /** 스킬 검색 및 등록 (우선순위 순) */

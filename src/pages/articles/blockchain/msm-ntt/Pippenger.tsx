@@ -1,4 +1,4 @@
-import PippengerViz from './viz/PippengerViz';
+import PippengerViz from "./viz/PippengerViz";
 
 export default function Pippenger() {
   return (
@@ -9,7 +9,9 @@ export default function Pippenger() {
           스칼라를 윈도우 분할 &rarr; 버킷 누적 &rarr; 삼각 축소. O(n / log n).
         </p>
       </div>
-      <div className="not-prose"><PippengerViz /></div>
+      <div className="not-prose">
+        <PippengerViz />
+      </div>
     </section>
   );
 }

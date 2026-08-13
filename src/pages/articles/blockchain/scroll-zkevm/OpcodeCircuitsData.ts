@@ -12,10 +12,26 @@ fn fn_gen_associated_ops(opcode_id: &OpcodeId) -> FnGenAssociatedOps {
 }`;
 
 export const dispatchAnnotations = [
-  { lines: [2, 2] as [number, number], color: 'sky' as const, note: 'PUSH 계열 — 별도 처리' },
-  { lines: [4, 5] as [number, number], color: 'emerald' as const, note: '스택 연산 — StackPopOnlyOpcode' },
-  { lines: [6, 7] as [number, number], color: 'amber' as const, note: '스토리지 연산 — StateDB 접근' },
-  { lines: [8, 10] as [number, number], color: 'violet' as const, note: 'CALL/CREATE — 컨텍스트 전환' },
+  {
+    lines: [2, 2] as [number, number],
+    color: "sky" as const,
+    note: "PUSH 계열 — 별도 처리",
+  },
+  {
+    lines: [4, 5] as [number, number],
+    color: "emerald" as const,
+    note: "스택 연산 — StackPopOnlyOpcode",
+  },
+  {
+    lines: [6, 7] as [number, number],
+    color: "amber" as const,
+    note: "스토리지 연산 — StateDB 접근",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "violet" as const,
+    note: "CALL/CREATE — 컨텍스트 전환",
+  },
 ];
 
 export const STACK_OP_CODE = `// StackPopOnlyOpcode — 가장 단순한 패턴
@@ -32,8 +48,16 @@ impl<const N_POP: usize, const IS_ERR: bool> Opcode
 // 처리: ExecStep 생성 → N개 스택 팝 → (에러 체크) → 반환`;
 
 export const stackOpAnnotations = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: 'N_POP/IS_ERR 제네릭 파라미터' },
-  { lines: [5, 8] as [number, number], color: 'emerald' as const, note: 'new_step → stack_pops → 반환' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "N_POP/IS_ERR 제네릭 파라미터",
+  },
+  {
+    lines: [5, 8] as [number, number],
+    color: "emerald" as const,
+    note: "new_step → stack_pops → 반환",
+  },
 ];
 
 export const STORAGE_OP_CODE = `// SLOAD — 스토리지 읽기
@@ -54,8 +78,24 @@ impl Opcode for Sload {
 }`;
 
 export const storageAnnotations = [
-  { lines: [4, 4] as [number, number], color: 'sky' as const, note: 'CallContext — TxId 읽기' },
-  { lines: [6, 8] as [number, number], color: 'emerald' as const, note: '스택 팝 → StateDB 조회' },
-  { lines: [10, 12] as [number, number], color: 'amber' as const, note: 'StorageOp(READ) → RwTable' },
-  { lines: [14, 14] as [number, number], color: 'violet' as const, note: '결과 푸시 + 워밍 상태' },
+  {
+    lines: [4, 4] as [number, number],
+    color: "sky" as const,
+    note: "CallContext — TxId 읽기",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "emerald" as const,
+    note: "스택 팝 → StateDB 조회",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "amber" as const,
+    note: "StorageOp(READ) → RwTable",
+  },
+  {
+    lines: [14, 14] as [number, number],
+    color: "violet" as const,
+    note: "결과 푸시 + 워밍 상태",
+  },
 ];

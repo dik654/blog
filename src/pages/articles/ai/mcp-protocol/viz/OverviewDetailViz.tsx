@@ -1,15 +1,29 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
-const steps: StepDef[] = [
-  { label: 'MCP 등장 배경 — N×M → N+M', body: 'Problem: LLMs need tools/data access\n각 LLM × 각 tool = N×M integrations → 조합 폭발\n\nSolution: MCP (Anthropic, Nov 2024)\n표준 프로토콜로 LLM 쪽 one interface, tool 쪽 one interface\n→ N+M integrations\n\n비유: USB for hardware, HTTP for web, MCP for LLM tools\n\nBefore: OpenAI function calling / Anthropic tool use / Google 각자 format\nAfter: one tool definition → all MCP-compatible LLMs\n\nAdoption: Claude Desktop, Zed, Cursor, Continue.dev\nCore: Host(LLM app) + Client(protocol) + Server(tools)\nPrimitives: Tools(callable) + Resources(readable) + Prompts(templates)\nTransport: stdio(local) + HTTP SSE(remote) + Streamable HTTP(cloud)' },
-];
-const visuals = [
-  { title: 'MCP — N×M → N+M', color: '#6366f1', rows: [
-    { label: 'Before', value: 'N LLMs × M tools = N×M 통합 (폭발)' },
-    { label: 'After', value: 'N+M integrations (표준 프로토콜)' },
-    { label: '비유', value: 'USB for hardware → MCP for LLM tools' },
-    { label: 'Adoption', value: 'Claude Desktop, Zed, Cursor' },
-    { label: 'Primitives', value: 'Tools + Resources + Prompts' },
-  ]},
-];
-export default function OverviewDetailViz() { return <SimpleStepViz steps={steps} visuals={visuals} />; }
+import VizFrame from "@/components/viz/VizFrame";
+
+const steps = [
+  ["Discover", "Host가 현재 caller에게 보이는 primitive 목록을 확인"],
+  ["Propose", "Model이 context를 바탕으로 tool call을 제안"],
+  ["Authorize", "Host가 policy·사용자 동의·인자를 검사"],
+  ["Execute", "Server가 caller 권한과 schema를 다시 검사해 실행"],
+  ["Observe", "Typed result와 effect receipt가 다음 판단으로 돌아감"],
+] as const;
+
+export default function OverviewDetailViz() {
+  return (
+    <VizFrame
+      eyebrow="한 요청의 경로"
+      title="발견에서 observation까지, MCP가 맡는 구간을 따라갑니다"
+      description="Model의 제안과 runtime의 승인을 분리해야 protocol 호환이 곧 실행 권한으로 바뀌지 않습니다."
+    >
+      <ol className="divide-y divide-border/70">
+        {steps.map(([label, body], index) => (
+          <li key={label} className="grid min-w-0 gap-2 py-4 first:pt-0 last:pb-0 sm:grid-cols-[2.5rem_7rem_1fr] sm:items-baseline">
+            <span className="font-mono text-[11px] text-muted-foreground">0{index + 1}</span>
+            <strong className="text-sm text-foreground">{label}</strong>
+            <span className="text-sm leading-6 text-muted-foreground">{body}</span>
+          </li>
+        ))}
+      </ol>
+    </VizFrame>
+  );
+}

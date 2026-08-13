@@ -23,9 +23,21 @@ pub fn prove(input: ProverInput, pcs_config: PcsConfig) -> CairoProof {
 }`;
 
 export const PROVE_ANNOTATIONS = [
-  { lines: [4, 5] as [number, number], color: 'sky' as const, note: '2단계: 컴파일+실행 → 추적 생성' },
-  { lines: [8, 15] as [number, number], color: 'emerald' as const, note: '어댑터: Cairo VM 출력 → 재배치 → S-two 입력' },
-  { lines: [18, 22] as [number, number], color: 'amber' as const, note: 'Circle STARK 증명 생성 (Blake2s)' },
+  {
+    lines: [4, 5] as [number, number],
+    color: "sky" as const,
+    note: "2단계: 컴파일+실행 → 추적 생성",
+  },
+  {
+    lines: [8, 15] as [number, number],
+    color: "emerald" as const,
+    note: "어댑터: Cairo VM 출력 → 재배치 → S-two 입력",
+  },
+  {
+    lines: [18, 22] as [number, number],
+    color: "amber" as const,
+    note: "Circle STARK 증명 생성 (Blake2s)",
+  },
 ];
 
 export const VERIFY_CODE = `// 증명 검증 프로세스
@@ -48,6 +60,14 @@ fn secure_pcs_config() -> PcsConfig {
 // → Starknet L1에서 증명 검증 가능`;
 
 export const VERIFY_ANNOTATIONS = [
-  { lines: [5, 13] as [number, number], color: 'sky' as const, note: 'PcsConfig: PoW 26비트 + FRI 70쿼리' },
-  { lines: [16, 18] as [number, number], color: 'emerald' as const, note: '온체인 검증기: Cairo로 작성, L1 검증 가능' },
+  {
+    lines: [5, 13] as [number, number],
+    color: "sky" as const,
+    note: "PcsConfig: PoW 26비트 + FRI 70쿼리",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "emerald" as const,
+    note: "온체인 검증기: Cairo로 작성, L1 검증 가능",
+  },
 ];

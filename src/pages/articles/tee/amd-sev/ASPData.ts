@@ -14,6 +14,14 @@ Application → LibVirt → QEMU/KVM
     → 응답 반환`;
 
 export const aspAnnotations = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: 'PSP 펌웨어 모듈 구성' },
-  { lines: [8, 14] as [number, number], color: 'emerald' as const, note: '호스트-PSP 통신 경로' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "PSP 펌웨어 모듈 구성",
+  },
+  {
+    lines: [8, 14] as [number, number],
+    color: "emerald" as const,
+    note: "호스트-PSP 통신 경로",
+  },
 ];

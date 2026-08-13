@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './ForkChoiceVizData';
-import { Step0, Step1 } from './ForkChoiceVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./ForkChoiceVizData";
+import { Step0, Step1 } from "./ForkChoiceVizSteps";
 
 const R = [Step0, Step1];
 

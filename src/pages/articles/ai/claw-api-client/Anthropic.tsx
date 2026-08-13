@@ -1,207 +1,130 @@
-import AnthropicSseViz from './viz/AnthropicSseViz';
+import AnthropicSseViz from "./viz/AnthropicSseViz";
+
+const streamState = [
+  ["Message", "message ID·model·start/stop·usage"],
+  ["Block", "index·content type·start/delta/stop"],
+  ["Tool", "tool-use ID·name·partial JSON buffer"],
+  ["Transport", "request ID·unknown event·error·completion"],
+] as const;
 
 export default function Anthropic() {
   return (
     <section id="anthropic" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">AnthropicClient — OAuth &amp; 스트리밍</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        Anthropic adapter는 Messages API의 block stream을 내부 event로 바꾼다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <AnthropicSseViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">인증 방식 2가지</h3>
-        <p>
-          AnthropicClient는 두 가지 인증 방식 지원:<br />
-          1. <strong>API Key</strong>: <code>ANTHROPIC_API_KEY</code> 환경 변수<br />
-          2. <strong>OAuth Bearer Token</strong>: Claude.ai 계정 기반 인증 (Pro/Team 사용자)
+        <p className="leading-7">
+          Anthropic Messages API는 response를 message 안의 여러 content
+          block으로 표현하고, streaming에서는 message와 각 block의
+          시작·delta·종료가 분리돼 도착합니다. adapter는 이 lifecycle을
+          보존하면서 conversation runtime이 사용하는 provider-neutral event로
+          변환해야 합니다.
         </p>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-            AnthropicClient 필드 + 인증 우선순위
-          </div>
-          <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">api_key</code><div className="text-xs text-muted-foreground">Option&lt;String&gt;</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">oauth_token</code><div className="text-xs text-muted-foreground">Option&lt;String&gt;</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">base_url</code><div className="text-xs text-muted-foreground">Url</div></div>
-            <div className="bg-muted/40 rounded-lg p-2"><code className="text-xs">http</code><div className="text-xs text-muted-foreground">reqwest::Client</div></div>
-          </div>
-          <div className="border-t border-border">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border">
-              <div className="bg-card p-4">
-                <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1">1순위: OAuth Bearer</div>
-                <p className="text-xs text-muted-foreground">
-                  헤더 <code>Authorization: Bearer {`{token}`}</code><br />
-                  Claude.ai 계정 구독 혜택 활용
-                </p>
-              </div>
-              <div className="bg-card p-4">
-                <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">2순위: API Key</div>
-                <p className="text-xs text-muted-foreground">
-                  헤더 <code>x-api-key: {`{key}`}</code><br />
-                  Anthropic 전용 헤더 (OpenAI와 다름)
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>OAuth 우선</strong>: 둘 다 있으면 OAuth 사용 (사용자 의도 추정)<br />
-          OAuth 토큰은 Claude.ai 계정 구독 혜택 활용 — API 키 없이도 사용 가능
+        <p className="leading-7">
+          credential을 API key로 가져올지 다른 provider-supported login에서
+          가져올지는 auth subsystem의 책임입니다. client는 검증된 credential을
+          정해진 header에 적용하고 token 값을 log나 error에 남기지 않습니다.
+          OAuth/PKCE 자체의 구현은 <a href="/ai/claw-config">설정과 인증 글</a>
+          에서 분리해 다룹니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">send_message() 구현</h3>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-            send_message 4단계 흐름
-          </div>
-          <div className="divide-y divide-border">
-            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
-              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">1</span>
-              <div>
-                <div className="text-sm font-semibold">API 요청 바디 조립</div>
-                <p className="text-xs text-muted-foreground mt-1"><code>to_api_body(&request)</code> — MessageRequest를 Anthropic JSON으로 변환</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
-              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">2</span>
-              <div>
-                <div className="text-sm font-semibold">HTTP POST 전송</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  엔드포인트 <code>/messages</code> + 3개 필수 헤더
-                </p>
-                <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  <div className="bg-muted/40 rounded p-2 text-xs"><code>auth_header</code><br /><span className="text-muted-foreground">인증 (OAuth/API Key)</span></div>
-                  <div className="bg-muted/40 rounded p-2 text-xs"><code>anthropic-version</code><br /><span className="text-muted-foreground">2023-06-01 고정</span></div>
-                  <div className="bg-muted/40 rounded p-2 text-xs"><code>anthropic-beta</code><br /><span className="text-muted-foreground">prompt-caching opt-in</span></div>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
-              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">3</span>
-              <div>
-                <div className="text-sm font-semibold">에러 체크</div>
-                <p className="text-xs text-muted-foreground mt-1">비성공 상태 시 응답 본문을 에러 메시지로 반환</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-[40px_1fr] p-3 items-start">
-              <span className="text-xs font-bold bg-violet-100 dark:bg-violet-950/40 rounded-full w-6 h-6 flex items-center justify-center">4</span>
-              <div>
-                <div className="text-sm font-semibold">SSE 스트림 파싱</div>
-                <p className="text-xs text-muted-foreground mt-1"><code>parse_sse_stream(response.bytes_stream())</code> → <code>Box::pin(stream)</code> 반환</p>
-              </div>
-            </div>
-          </div>
+        <div className="not-prose my-8">
+          <AnthropicSseViz />
         </div>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">SSE 스트림 파서</h3>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-            parse_sse_stream — 바이트 → Chunk 변환
-          </div>
-          <div className="p-4 space-y-3">
-            <div className="rounded-lg border border-border p-3">
-              <div className="text-xs font-semibold text-muted-foreground mb-2">SSE 프로토콜 구조</div>
-              <div className="grid grid-cols-3 gap-2 text-xs font-mono">
-                <div className="bg-muted/40 rounded p-2"><code>event: NAME</code></div>
-                <div className="bg-muted/40 rounded p-2"><code>data: JSON</code></div>
-                <div className="bg-muted/40 rounded p-2"><code>\n\n</code> <span className="text-muted-foreground">(경계)</span></div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="rounded-lg border border-border p-3">
-                <div className="text-xs font-semibold mb-1">parse_sse_stream</div>
-                <p className="text-xs text-muted-foreground">
-                  <code>BytesMut</code> 버퍼에 바이트 누적 → <code>\n\n</code> 발견 시 이벤트 추출<br />
-                  부분 수신 시 버퍼에 유지 — <code>flat_map</code>으로 다수 청크 생성
-                </p>
-              </div>
-              <div className="rounded-lg border border-border p-3">
-                <div className="text-xs font-semibold mb-1">parse_sse_event</div>
-                <p className="text-xs text-muted-foreground">
-                  <code>event:</code> 라인에서 이벤트명, <code>data:</code> 라인에서 JSON 추출<br />
-                  <code>convert_anthropic_event(name, data)</code>로 Chunk 변환
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {streamState.map(([title, body]) => (
+          <article
+            key={title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {body}
+            </p>
+          </article>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">프롬프트 캐시 통합</h3>
-        <div className="not-prose my-4 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-amber-100 dark:bg-amber-950/40 px-4 py-2 border-b border-border font-semibold text-sm">
-            to_api_body — cache_control 삽입 지점
-          </div>
-          <div className="divide-y divide-border">
-            <div className="grid grid-cols-[120px_1fr] p-3 items-start">
-              <span className="text-xs font-semibold">system 프롬프트</span>
-              <div className="text-xs text-muted-foreground">
-                <code>{`cache_control: {"type": "ephemeral"}`}</code> 부착 — 항상 캐시<br />
-                system을 배열 형식으로 감싸서 마지막 블록에 마크
-              </div>
-            </div>
-            <div className="grid grid-cols-[120px_1fr] p-3 items-start">
-              <span className="text-xs font-semibold">도구 목록</span>
-              <div className="text-xs text-muted-foreground">
-                마지막 도구 항목에 <code>cache_control</code> 마크 → 전체 배열 캐시<br />
-                <code>tools_json.last_mut()</code>에 삽입
-              </div>
-            </div>
-          </div>
-          <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground border-t border-border">
-            비용: 생성 1.25x / 적중 0.1x / TTL 5분 — 평균 70% 절감
-          </div>
-        </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          request mapping은 의미가 손실되면 실패한다
+        </h3>
+        <p className="leading-7">
+          내부 request의 system instruction, ordered messages, content block,
+          tool schema, tool choice와 output budget을 Messages API field로
+          변환합니다. provider가 지원하지 않는 content type이나 option을 조용히
+          버리지 말고 capability error로 반환해야 모델 동작이 설정과 다르게
+          바뀌지 않습니다.
+        </p>
+        <p className="leading-7">
+          model ID와 beta feature, API version은 provider profile에 명시하고
+          response metadata에 실제 사용 값을 보존합니다. request log는 content와
+          tool arguments를 기본 redaction하고 request ID와 schema version
+          중심으로 남깁니다.
+        </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">토큰 카운트</h3>
-        <div className="not-prose my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-              근사 카운트 (동기)
-            </div>
-            <div className="p-4">
-              <code className="text-sm">text.len() / 4</code>
-              <p className="text-xs text-muted-foreground mt-2">
-                Claude tokenizer 비공개 — 영어 기준 문자/4 근사<br />
-                네트워크 비용 없음 — 컴팩션 판정에 충분
-              </p>
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <div className="bg-muted/60 px-4 py-2 border-b border-border font-semibold text-sm">
-              정확 카운트 (비동기 API)
-            </div>
-            <div className="p-4">
-              <code className="text-sm">/messages/count_tokens</code>
-              <p className="text-xs text-muted-foreground mt-2">
-                모델명 + 메시지 전송 → <code>input_tokens</code> 반환<br />
-                네트워크 왕복 필요 — 정밀 계산 시에만 사용
-              </p>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          SSE parser는 transport framing과 provider event를 분리한다
+        </h3>
+        <p className="leading-7">
+          HTTP chunk 하나가 SSE event 하나라는 보장은 없습니다. byte stream을
+          SSE framing 규칙에 따라 event로 만든 뒤, <code>event</code>와
+          <code>data</code>를 provider schema로 parse합니다. 가능하면 official
+          SDK의 streaming helper를 사용하고 직접 구현할 때는 CRLF, 여러 data
+          line, comment, split UTF-8과 bounded buffer를 test합니다.
+        </p>
+        <p className="leading-7">
+          공식 문서는 message start, content block start·delta·stop, message
+          delta와 message stop 사이에 ping과 error가 올 수 있고 앞으로 새 event
+          type이 추가될 수 있다고 설명합니다. 따라서 unknown event를 전체 stream
+          corruption으로 처리하지 말고 telemetry에 남긴 뒤 안전하게 건너뜁니다.
+          현재 event 구조는
+          <a
+            href="https://platform.claude.com/docs/en/build-with-claude/streaming"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Anthropic 공식 streaming 문서
+          </a>
+          에서 확인할 수 있습니다.
+        </p>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: prompt caching의 실제 효과</p>
-          <p>
-            시스템 프롬프트 20K 토큰 + 도구 목록 5K 토큰 = 25K 토큰을 5분간 캐시<br />
-            연속 10턴 대화 가정:
-          </p>
-          <p className="mt-2">
-            <strong>캐시 없이</strong>:<br />
-            25K × 10 = 250K input 토큰 × $3/M = $0.75
-          </p>
-          <p className="mt-2">
-            <strong>캐시 사용</strong>:<br />
-            1턴: 25K × 1.25 = 31.25K (생성 비용)<br />
-            2~10턴: 25K × 0.1 × 9 = 22.5K (적중 비용)<br />
-            합계: 53.75K × $3/M = $0.16
-          </p>
-          <p className="mt-2">
-            <strong>79% 절감</strong> — 실제 측정값과 일치<br />
-            긴 시스템 프롬프트를 가진 에이전트에 특히 효과적<br />
-            claw-code는 기본 활성화 — 사용자는 비활성화할 수 있지만 거의 없음
-          </p>
-        </div>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          tool input은 block 종료 전까지 JSON 문자열 조각이다
+        </h3>
+        <p className="leading-7">
+          tool-use block의 <code>input_json_delta</code>는 완성된 object가
+          아니라 partial JSON string입니다. block index와 tool-use ID별 buffer에
+          순서대로 누적하고 <code>content_block_stop</code>에서 한 번 parse한 뒤
+          schema를 검증합니다. delta마다 임시 JSON을 억지로 고치면 잘못된
+          arguments가 실행될 수 있습니다.
+        </p>
+        <p className="leading-7">
+          같은 response에 여러 block이 있을 수 있으므로 global buffer 하나를
+          사용하지 않습니다. block stop 없이 connection이 끊기거나 message
+          error가 오면 해당 tool call은 incomplete로 폐기하고 executor에 넘기지
+          않습니다.
+        </p>
 
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          usage와 stop reason은 terminal state에서 확정한다
+        </h3>
+        <p className="leading-7">
+          usage field는 stream 중 여러 event에 나뉠 수 있으므로 provider 규칙에
+          따라 누적하고 terminal event에서 final usage를 만듭니다. text가 일부
+          도착했더라도 error나 network EOF로 정상 stop을 받지 못했다면 success로
+          표시하지 않고 partial output과 failure를 함께 반환합니다.
+        </p>
+        <p className="leading-7">
+          retry는 response byte를 받기 전의 transient failure와 rate limit처럼
+          안전한 경우로 제한합니다. 일부 output을 받은 request를 자동 재시도하면
+          duplicate text와 tool call이 생길 수 있으므로 새 attempt로 명확히
+          시작하거나 사용자에게 상태를 보여줍니다.
+        </p>
       </div>
     </section>
   );

@@ -1,48 +1,16 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, ANTI_ITEMS } from './AntiPatternsData';
-import { OverInstruction, VagueRole, NegativePrompt, ContextPollution } from './AntiPatternsParts';
+import VizFrame from "@/components/viz/VizFrame";
 
-const W = 460, H = 220;
-const CX = W / 2;
-const DETAILS = [OverInstruction, VagueRole, NegativePrompt, ContextPollution];
+const smells = [
+  ["Vague objective", "좋게·자세히·전문적으로", "Audience·artifact·criteria를 적기"],
+  ["Rule collision", "같은 행동을 허용하면서 금지", "Priority와 one canonical rule"],
+  ["Missing evidence", "Prompt 문장으로 지식을 보충", "RAG·tool·abstention"],
+  ["Prompt-only safety", "금지 문구가 권한을 차단한다고 가정", "Runtime authorization"],
+] as const;
 
 export default function AntiPatternsViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => {
-        const Detail = DETAILS[step];
-        return (
-          <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-            {ANTI_ITEMS.map((item, i) => {
-              const x = 25 + i * 110;
-              const active = step === i;
-              return (
-                <motion.g key={item.label}
-                  animate={{ opacity: active ? 1 : step > i ? 0.4 : 0.2 }}
-                  transition={{ duration: 0.3 }}>
-                  <rect x={x} y={15} width={95} height={36} rx={5}
-                    fill={active ? '#ef444420' : '#ef444408'}
-                    stroke="#ef4444" strokeWidth={active ? 2 : 0.8} />
-                  <text x={x + 48} y={38} textAnchor="middle" fontSize={9}
-                    fontWeight={active ? 700 : 400} fill="#ef4444">{item.label}</text>
-                </motion.g>
-              );
-            })}
-            <motion.line
-              animate={{ x1: 25 + step * 110 + 48, x2: 25 + step * 110 + 48 }}
-              y1={51} y2={65} stroke="#ef4444" strokeWidth={1.5}
-              transition={{ type: 'spring', bounce: 0.3 }} />
-            <Detail />
-            <motion.g animate={{ opacity: 0.5 }}>
-              <text x={CX} y={H - 15} textAnchor="middle" fontSize={9}
-                fill="var(--muted-foreground)">
-                안티패턴 인식 → 프롬프트 품질 향상
-              </text>
-            </motion.g>
-          </svg>
-        );
-      }}
-    </StepViz>
+    <VizFrame eyebrow="Failure taxonomy" title="문장 스타일 대신 실패 원인과 수정 계층을 연결합니다" description="Prompt로 고칠 수 없는 문제를 prompt에 계속 쌓으면 충돌과 context cost만 늘어납니다.">
+      <div className="divide-y divide-border/70">{smells.map(([failure, symptom, fix]) => <section key={failure} className="grid min-w-0 gap-2 py-4 first:pt-0 last:pb-0 sm:grid-cols-[9rem_1fr_1fr] sm:items-baseline"><h4 className="text-sm font-bold">{failure}</h4><p className="text-xs leading-5 text-muted-foreground">{symptom}</p><p className="text-xs font-semibold leading-5 text-primary">{fix}</p></section>)}</div>
+    </VizFrame>
   );
 }

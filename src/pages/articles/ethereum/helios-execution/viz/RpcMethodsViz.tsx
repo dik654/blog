@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { STEPS } from './RpcMethodsVizData';
-import { Step0, Step1, Step2 } from './RpcMethodsVizSteps';
+import StepViz from "@/components/ui/step-viz";
+import { STEPS } from "./RpcMethodsVizData";
+import { Step0, Step1, Step2 } from "./RpcMethodsVizSteps";
 
 const R = [Step0, Step1, Step2];
 

@@ -1,41 +1,108 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const C = { main: '#10b981', fork: '#f59e0b' };
+const C = { main: "#10b981", fork: "#f59e0b" };
 
 function ChainSelectionViz() {
   return (
     <div className="not-prose rounded-xl border p-4 mb-6">
-      <p className="text-xs text-center text-foreground/75 mb-3">체인 선택: 가장 무거운 체인이 승리</p>
-      <svg viewBox="0 0 420 100" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
+      <p className="text-xs text-center text-foreground/75 mb-3">
+        체인 선택: 가장 무거운 체인이 승리
+      </p>
+      <svg
+        viewBox="0 0 420 100"
+        className="w-full max-w-2xl mx-auto"
+        style={{ height: "auto" }}
+      >
         {/* Main chain */}
-        {[0, 1, 2, 3, 4].map(i => (
-          <motion.g key={`main-${i}`} initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }} transition={{ delay: i * 0.08 }}>
-            <rect x={10 + i * 78} y={10} width={65} height={26} rx={5}
-              fill="var(--card)" stroke={C.main} strokeWidth={1} />
-            <text x={42 + i * 78} y={27} textAnchor="middle"
-              fontSize={10} fill={C.main}>#{i + 1}</text>
-            {i < 4 && <line x1={75 + i * 78} y1={23} x2={88 + i * 78} y2={23}
-              stroke={C.main} strokeWidth={1} />}
+        {[0, 1, 2, 3, 4].map((i) => (
+          <motion.g
+            key={`main-${i}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.08 }}
+          >
+            <rect
+              x={10 + i * 78}
+              y={10}
+              width={65}
+              height={26}
+              rx={5}
+              fill="var(--card)"
+              stroke={C.main}
+              strokeWidth={1}
+            />
+            <text
+              x={42 + i * 78}
+              y={27}
+              textAnchor="middle"
+              fontSize={10}
+              fill={C.main}
+            >
+              #{i + 1}
+            </text>
+            {i < 4 && (
+              <line
+                x1={75 + i * 78}
+                y1={23}
+                x2={88 + i * 78}
+                y2={23}
+                stroke={C.main}
+                strokeWidth={1}
+              />
+            )}
           </motion.g>
         ))}
         {/* Fork at block 2 */}
-        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}>
-          <line x1={130} y1={36} x2={160} y2={55} stroke={C.fork} strokeWidth={1} />
-          <rect x={160} y={50} width={65} height={26} rx={5}
-            fill="var(--card)" stroke={C.fork} strokeWidth={1} strokeDasharray="3 2" />
-          <text x={192} y={67} textAnchor="middle"
-            fontSize={10} fill={C.fork}>#3'</text>
+        <motion.g
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <line
+            x1={130}
+            y1={36}
+            x2={160}
+            y2={55}
+            stroke={C.fork}
+            strokeWidth={1}
+          />
+          <rect
+            x={160}
+            y={50}
+            width={65}
+            height={26}
+            rx={5}
+            fill="var(--card)"
+            stroke={C.fork}
+            strokeWidth={1}
+            strokeDasharray="3 2"
+          />
+          <text x={192} y={67} textAnchor="middle" fontSize={10} fill={C.fork}>
+            #3'
+          </text>
         </motion.g>
-        <motion.text x={340} y={67} textAnchor="middle" fontSize={10}
-          fill={C.fork} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}>
+        <motion.text
+          x={340}
+          y={67}
+          textAnchor="middle"
+          fontSize={10}
+          fill={C.fork}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
           포크는 고아가 됨
         </motion.text>
-        <motion.text x={210} y={92} textAnchor="middle" fontSize={11}
-          fill={C.main} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}>
+        <motion.text
+          x={210}
+          y={92}
+          textAnchor="middle"
+          fontSize={11}
+          fill={C.main}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
           💡 PoW: 가장 많은 해시파워 / PoS: 가장 많은 검증자 지지
         </motion.text>
       </svg>
@@ -51,15 +118,19 @@ export default function ChainSelection() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Fork 발생 시 어느 체인을 "진짜"로 인정할지 결정하는 규칙.<br />
-          Bitcoin은 <strong>누적 work</strong> 비교, Ethereum PoS는 <strong>LMD-GHOST</strong>.<br />
+          Fork 발생 시 어느 체인을 "진짜"로 인정할지 결정하는 규칙.
+          <br />
+          Bitcoin은 <strong>누적 work</strong> 비교, Ethereum PoS는{" "}
+          <strong>LMD-GHOST</strong>.<br />
           정직 다수가 같은 규칙 따르면 자연 수렴.
         </p>
 
         {/* ── Bitcoin longest-chain ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Bitcoin: Longest Chain = Heaviest Chain</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Bitcoin: Longest Chain = Heaviest Chain
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Bitcoin fork choice (누적 work 기반):
+          {`// Bitcoin fork choice (누적 work 기반):
 
 // block의 work 계산:
 // work(block) = 2^256 / (target + 1)
@@ -102,15 +173,19 @@ export default function ChainSelection() {
 // - 6+ block: 재앙 (공격 시)`}
         </pre>
         <p className="leading-7">
-          "longest" = <strong>가장 많은 누적 work</strong> (length 아님).<br />
-          난이도 변동 때문에 work 합산 필요.<br />
+          "longest" = <strong>가장 많은 누적 work</strong> (length 아님).
+          <br />
+          난이도 변동 때문에 work 합산 필요.
+          <br />
           reorg는 1-block이 일상, 6+ block은 공격 의심.
         </p>
 
         {/* ── GHOST (Ethereum) ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Ethereum GHOST (Greedy Heaviest Observed Subtree)</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Ethereum GHOST (Greedy Heaviest Observed Subtree)
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GHOST (Sompolinsky-Zohar 2015)
+          {`// GHOST (Sompolinsky-Zohar 2015)
 // Ethereum (pre-merge) fork choice
 
 // 문제:
@@ -156,15 +231,19 @@ export default function ChainSelection() {
 // - 하이브리드 = longest chain + BFT finality`}
         </pre>
         <p className="leading-7">
-          GHOST = <strong>subtree 전체 work 고려</strong> (uncle 포함).<br />
-          짧은 blocktime의 fork 많음 문제 해결.<br />
+          GHOST = <strong>subtree 전체 work 고려</strong> (uncle 포함).
+          <br />
+          짧은 blocktime의 fork 많음 문제 해결.
+          <br />
           Ethereum 2.0 LMD-GHOST는 PoS 버전 — validator stake 기반.
         </p>
 
         {/* ── Weighted voting ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">PoS에서의 Weighted Voting</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          PoS에서의 Weighted Voting
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// PoS fork choice의 가중치 (weight):
+          {`// PoS fork choice의 가중치 (weight):
 
 // PoW: weight = block의 hash difficulty
 // PoS: weight = validator의 stake
@@ -211,13 +290,18 @@ export default function ChainSelection() {
         </pre>
         <p className="leading-7">
           PoS fork choice = <strong>stake-weighted</strong>.<br />
-          1 validator = 1 vote per slot, 최신 vote만 카운트.<br />
+          1 validator = 1 vote per slot, 최신 vote만 카운트.
+          <br />
           공통 패턴: Sybil 저항 + weighted voting + 정직 다수.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 "block length" 대신 "chain work/weight"인가</strong> — 공격 저항.<br />
-          단순 길이로 비교하면 공격자가 낮은 난이도로 긴 체인 만들어 하이재킹 가능.<br />
+          <strong>💡 왜 "block length" 대신 "chain work/weight"인가</strong> —
+          공격 저항.
+          <br />
+          단순 길이로 비교하면 공격자가 낮은 난이도로 긴 체인 만들어 하이재킹
+          가능.
+          <br />
           work 기반이면 정직 multi-party가 경제적 우위 유지.
         </p>
       </div>

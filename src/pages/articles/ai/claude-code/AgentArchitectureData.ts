@@ -35,7 +35,19 @@ Main Agent (사용자 대화)
   - 최대 7개 동시 실행 → 3개 × 200K = 600K 토큰 컨텍스트 활용`;
 
 export const subAgentAnnotations = [
-  { lines: [3, 17] as [number, number], color: 'sky' as const, note: '에이전트 유형별 역할 분리' },
-  { lines: [19, 25] as [number, number], color: 'emerald' as const, note: '병렬 탐색으로 속도 향상' },
-  { lines: [31, 33] as [number, number], color: 'amber' as const, note: '재귀 방지 + 동시 실행 제한' },
+  {
+    lines: [3, 17] as [number, number],
+    color: "sky" as const,
+    note: "에이전트 유형별 역할 분리",
+  },
+  {
+    lines: [19, 25] as [number, number],
+    color: "emerald" as const,
+    note: "병렬 탐색으로 속도 향상",
+  },
+  {
+    lines: [31, 33] as [number, number],
+    color: "amber" as const,
+    note: "재귀 방지 + 동시 실행 제한",
+  },
 ];

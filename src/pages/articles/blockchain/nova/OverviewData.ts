@@ -34,14 +34,42 @@ export const RELAXED_CODE = `// 표준 R1CS: (A·z) ∘ (B·z) = C·z  (정확�
 //   - 폴딩 결과 U_next 계산 후 다음 스텝으로 전달`;
 
 export const crateAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: 'nova/ — IVC + NIFS 핵심' },
-  { lines: [6, 9] as [number, number], color: 'emerald' as const, note: 'R1CS + Spartan + 곡선 엔진' },
-  { lines: [11, 15] as [number, number], color: 'amber' as const, note: '기본 사용 패턴 4단계' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "nova/ — IVC + NIFS 핵심",
+  },
+  {
+    lines: [6, 9] as [number, number],
+    color: "emerald" as const,
+    note: "R1CS + Spartan + 곡선 엔진",
+  },
+  {
+    lines: [11, 15] as [number, number],
+    color: "amber" as const,
+    note: "기본 사용 패턴 4단계",
+  },
 ];
 
 export const relaxedAnnotations = [
-  { lines: [1, 4] as [number, number], color: 'sky' as const, note: 'Relaxed R1CS — u·(C·z) + E 확장' },
-  { lines: [6, 10] as [number, number], color: 'emerald' as const, note: 'NIFS 폴딩 — 선형 결합 규칙' },
-  { lines: [12, 13] as [number, number], color: 'amber' as const, note: '핵심: comm_T만으로 O(1) 증명' },
-  { lines: [15, 18] as [number, number], color: 'violet' as const, note: 'Augmented Circuit — 회로 내 검증' },
+  {
+    lines: [1, 4] as [number, number],
+    color: "sky" as const,
+    note: "Relaxed R1CS — u·(C·z) + E 확장",
+  },
+  {
+    lines: [6, 10] as [number, number],
+    color: "emerald" as const,
+    note: "NIFS 폴딩 — 선형 결합 규칙",
+  },
+  {
+    lines: [12, 13] as [number, number],
+    color: "amber" as const,
+    note: "핵심: comm_T만으로 O(1) 증명",
+  },
+  {
+    lines: [15, 18] as [number, number],
+    color: "violet" as const,
+    note: "Augmented Circuit — 회로 내 검증",
+  },
 ];

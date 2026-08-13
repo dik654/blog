@@ -1,104 +1,55 @@
-import DealDetailViz from './viz/DealDetailViz';
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
+import DealDetailViz from "./viz/DealDetailViz";
+import { codeRefs } from "./codeRefs";
+import type { CodeRef } from "@/components/code/types";
 
-interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
-
-export default function StorageDeal({ onCodeRef }: Props) {
+export default function StorageDeal({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="storage-deal" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">스토리지 딜 — HandleDealProposal() 내부</h2>
+      <h2 className="text-2xl font-bold mb-3">Storage deal lifecycle</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        제안 검증 → 데이터 수신 → 봉인 → 온체인 PublishStorageDeals<br />
-        콜래터럴이 데이터 보관의 경제적 인센티브
+        아래 code link는 legacy Lotus provider의 축약 흐름이다. 현재 설계에서는
+        Boost의 deal pipeline, Filecoin actor message, sector sealing을 서로
+        다른 failure domain으로 추적한다.
       </p>
       <div className="not-prose mb-8">
         <DealDetailViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        {/* ── Deal Lifecycle ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Storage Deal Lifecycle</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Storage Deal 16-state FSM:
-
-// Phase 1: Proposal (off-chain)
-// State 1: Unknown → StorageDealUnknown
-// State 2: ProposalAccepted → provider accepts
-// State 3: AwaitingPreCommit
-
-// Phase 2: Data transfer
-// State 4: Transferring → data arriving
-// State 5: WaitingForData → transfer complete
-
-// Phase 3: Verification
-// State 6: Verifying → piece matches proposal
-// State 7: Publishing → PublishStorageDeals message
-
-// Phase 4: Sealing
-// State 8: StagedForSealing
-// State 9: Sealing → sector with piece
-// State 10: SealingComplete
-
-// Phase 5: Active
-// State 11: Active → deal on chain
-// State 12: FinalizingData
-
-// Phase 6: End
-// State 13: Expired → duration reached
-// State 14: Slashed → provider failed
-// State 15: Completed → collateral returned
-// State 16: Error → fatal error
-
-// Deal proposal structure:
-// type DealProposal struct {
-//     PieceCID: CID
-//     PieceSize: PaddedPieceSize
-//     VerifiedDeal: bool
-//     Client: Address
-//     Provider: Address
-//     Label: string
-//     StartEpoch: ChainEpoch
-//     EndEpoch: ChainEpoch
-//     StoragePricePerEpoch: BigInt
-//     ProviderCollateral: BigInt
-//     ClientCollateral: BigInt
-// }
-
-// PublishStorageDeals:
-// - batch multiple deals
-// - single on-chain message
-// - gas efficient
-// - atomic publishing
-
-// Collateral:
-// - provider: ProviderCollateral (slashable)
-// - client: ClientCollateral (can be withdrawn on expiry)
-// - BurnFundsActor: slashed funds destroyed
-
-// Slashing conditions:
-// - missed WindowPoSt
-// - sector termination early
-// - fault declaration
-// - penalty = ~ProviderCollateral
-
-// Economic:
-// - price: ~0.1-1 FIL per TiB per year
-// - collateral: ~4 FIL per 32 GiB sector
-// - FIL+: 10x reward for verified deals
-// - total Filecoin storage: 1900+ PiB (2024)`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="font-semibold text-sm mb-2">
+              Off-chain preparation
+            </h3>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>proposal signature, provider policy와 start/end 조건 검증</li>
+              <li>CAR/piece transfer와 PieceCID·size 검증</li>
+              <li>publish batch와 sector assignment의 독립 retry</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="font-semibold text-sm mb-2">
+              Consensus-visible progress
+            </h3>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>publish 또는 allocation/claim 관련 message inclusion</li>
+              <li>sector precommit·provecommit으로 data commitment 활성화</li>
+              <li>
+                PoSt, sector termination, deal expiry에 따른 actor state 변화
+              </li>
+            </ul>
+          </div>
+        </div>
         <p className="leading-7">
-          Deal FSM: <strong>16 states, Proposal → Sealing → Active → End</strong>.<br />
-          PublishStorageDeals가 batch로 on-chain 등록.<br />
-          ProviderCollateral = slashable (incentive alignment).
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 collateral이 slashable인가</strong> — economic security.<br />
-          collateral 없으면: provider 데이터 버리고 떠남.<br />
-          slashable collateral: 경제적 commitment.<br />
-          BurnFundsActor: slashed 자금 destroy → supply 감소.
+          고정된 “16-state FSM”, 일정한 가격·기간·담보·reward multiplier는
+          implementation 및 network version에 따라 달라진다. 운영자는 deal UUID,
+          publish message CID, piece CID, sector number, on-chain
+          deal/allocation ID를 연결해 각 단계의 idempotency와 복구를 확인해야
+          한다.
         </p>
       </div>
     </section>

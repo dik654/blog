@@ -1,4 +1,4 @@
-import SigningRootViz from './viz/SigningRootViz';
+import SigningRootViz from "./viz/SigningRootViz";
 
 export default function SigningRoot({ title }: { title: string }) {
   return (
@@ -11,12 +11,15 @@ export default function SigningRoot({ title }: { title: string }) {
           header를 SSZ 직렬화하고 도메인을 결합해서 생성한다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> 동일한 signing_root 계산을 사용한다.
+          <strong>💡 Reth vs Helios:</strong> 동일한 signing_root 계산을
+          사용한다.
           <br />
           도메인이 달라지면 서명이 무효화되므로 크로스체인 리플레이를 방지한다.
         </p>
       </div>
-      <div className="not-prose"><SigningRootViz /></div>
+      <div className="not-prose">
+        <SigningRootViz />
+      </div>
     </section>
   );
 }

@@ -1,6 +1,6 @@
-import Overview from './isms-dev-security/Overview';
-import WebSecurity from './isms-dev-security/WebSecurity';
-import DeploymentSecurity from './isms-dev-security/DeploymentSecurity';
+import Overview from "./isms-dev-security/Overview";
+import WebSecurity from "./isms-dev-security/WebSecurity";
+import DeploymentSecurity from "./isms-dev-security/DeploymentSecurity";
 
 export default function IsmsDevSecurity() {
   return (

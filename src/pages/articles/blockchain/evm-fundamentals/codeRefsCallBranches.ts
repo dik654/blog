@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const callBranchesCodeRef: Record<string, CodeRef> = {
-  'precompile-run': {
-    path: 'core/vm/contracts.go — RunPrecompiledContract()',
-    lang: 'go',
+  "precompile-run": {
+    path: "core/vm/contracts.go — RunPrecompiledContract()",
+    lang: "go",
     highlight: [1, 18],
-    desc: '프리컴파일 컨트랙트 실행.\n입력 검증 → 가스 계산 → 네이티브 Go 함수 호출.',
+    desc: "프리컴파일 컨트랙트 실행.\n입력 검증 → 가스 계산 → 네이티브 Go 함수 호출.",
     code: `func RunPrecompiledContract(
     stateDB StateDB, p PrecompiledContract, callerAddr common.Address,
     input []byte, suppliedGas uint64, logger *tracing.Hooks,
@@ -25,15 +25,23 @@ export const callBranchesCodeRef: Record<string, CodeRef> = {
     return output, suppliedGas, nil
 }`,
     annotations: [
-      { lines: [6, 9], color: 'sky', note: 'RequiredGas — 프리컴파일별 고정/입력 비례 가스 (ecRecover: 3000, SHA256: 기본60+워드12)' },
-      { lines: [12, 13], color: 'emerald', note: 'Run — 순수 Go 코드, EVM 인터프리터를 거치지 않음 (10~100배 빠름)' },
+      {
+        lines: [6, 9],
+        color: "sky",
+        note: "RequiredGas — 프리컴파일별 고정/입력 비례 가스 (ecRecover: 3000, SHA256: 기본60+워드12)",
+      },
+      {
+        lines: [12, 13],
+        color: "emerald",
+        note: "Run — 순수 Go 코드, EVM 인터프리터를 거치지 않음 (10~100배 빠름)",
+      },
     ],
   },
-  'new-contract': {
-    path: 'core/vm/contract.go — NewContract()',
-    lang: 'go',
+  "new-contract": {
+    path: "core/vm/contract.go — NewContract()",
+    lang: "go",
     highlight: [1, 22],
-    desc: '호출 프레임에 대응하는 Contract 객체 생성.\ncaller, 주소, 가스, 코드를 묶어 인터프리터에 전달.',
+    desc: "호출 프레임에 대응하는 Contract 객체 생성.\ncaller, 주소, 가스, 코드를 묶어 인터프리터에 전달.",
     code: `type Contract struct {
     CallerAddress common.Address  // msg.sender
     self          common.Address  // 실행 주소 (DELEGATECALL 시 caller와 다름)
@@ -57,16 +65,28 @@ func NewContract(caller, self common.Address,
     }
 }`,
     annotations: [
-      { lines: [2, 3], color: 'sky', note: 'CallerAddress vs self — DELEGATECALL이면 self가 호출자 주소를 유지' },
-      { lines: [4, 5], color: 'emerald', note: 'Code + CodeHash — SetCallCode()로 별도 설정, JUMPDEST 캐시에 해시를 키로 사용' },
-      { lines: [7, 7], color: 'amber', note: 'Gas — 인터프리터 루프에서 매 opcode마다 직접 차감' },
+      {
+        lines: [2, 3],
+        color: "sky",
+        note: "CallerAddress vs self — DELEGATECALL이면 self가 호출자 주소를 유지",
+      },
+      {
+        lines: [4, 5],
+        color: "emerald",
+        note: "Code + CodeHash — SetCallCode()로 별도 설정, JUMPDEST 캐시에 해시를 키로 사용",
+      },
+      {
+        lines: [7, 7],
+        color: "amber",
+        note: "Gas — 인터프리터 루프에서 매 opcode마다 직접 차감",
+      },
     ],
   },
-  'snapshot-revert': {
-    path: 'core/state/journal.go — Snapshot / RevertToSnapshot',
-    lang: 'go',
+  "snapshot-revert": {
+    path: "core/state/journal.go — Snapshot / RevertToSnapshot",
+    lang: "go",
     highlight: [1, 22],
-    desc: 'StateDB의 저널 기반 스냅샷.\n호출 실패 시 상태를 되돌리는 핵심 메커니즘.',
+    desc: "StateDB의 저널 기반 스냅샷.\n호출 실패 시 상태를 되돌리는 핵심 메커니즘.",
     code: `type journal struct {
     entries []journalEntry   // 상태 변경 기록 (append-only)
     dirties map[common.Address]int  // 변경된 계정 카운터
@@ -89,9 +109,21 @@ func (j *journal) RevertToSnapshot(snapshot int, s *StateDB) {
 // codeChange, suicideChange, touchChange ...
 // 각각 revert() 메서드로 이전 값 복원`,
     annotations: [
-      { lines: [2, 2], color: 'sky', note: 'entries — append-only 리스트, 각 항목이 하나의 상태 변경을 기록' },
-      { lines: [7, 9], color: 'emerald', note: 'Snapshot — 저널 길이 = 스냅샷 ID (정수 하나로 표현, 매우 가벼움)' },
-      { lines: [13, 15], color: 'amber', note: '역순 revert — 최신 변경부터 되돌려 원래 상태 복원' },
+      {
+        lines: [2, 2],
+        color: "sky",
+        note: "entries — append-only 리스트, 각 항목이 하나의 상태 변경을 기록",
+      },
+      {
+        lines: [7, 9],
+        color: "emerald",
+        note: "Snapshot — 저널 길이 = 스냅샷 ID (정수 하나로 표현, 매우 가벼움)",
+      },
+      {
+        lines: [13, 15],
+        color: "amber",
+        note: "역순 revert — 최신 변경부터 되돌려 원래 상태 복원",
+      },
     ],
   },
 };

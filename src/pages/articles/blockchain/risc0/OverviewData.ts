@@ -38,8 +38,24 @@ fn main() {
 }`;
 
 export const usageAnnotations = [
-  { lines: [1, 14] as [number, number], color: 'sky' as const, note: 'Guest — zkVM 내부 실행 코드' },
-  { lines: [16, 26] as [number, number], color: 'emerald' as const, note: 'Host — 환경 구성 + 입력 전달' },
-  { lines: [28, 30] as [number, number], color: 'amber' as const, note: '증명 생성 — prover.prove()' },
-  { lines: [32, 37] as [number, number], color: 'violet' as const, note: '결과 확인 + 검증' },
+  {
+    lines: [1, 14] as [number, number],
+    color: "sky" as const,
+    note: "Guest — zkVM 내부 실행 코드",
+  },
+  {
+    lines: [16, 26] as [number, number],
+    color: "emerald" as const,
+    note: "Host — 환경 구성 + 입력 전달",
+  },
+  {
+    lines: [28, 30] as [number, number],
+    color: "amber" as const,
+    note: "증명 생성 — prover.prove()",
+  },
+  {
+    lines: [32, 37] as [number, number],
+    color: "violet" as const,
+    note: "결과 확인 + 검증",
+  },
 ];

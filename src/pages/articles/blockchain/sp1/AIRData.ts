@@ -1,12 +1,36 @@
 export const CHIPS = [
-  { name: 'CpuChip', desc: 'RISC-V CPU 중앙 조정자. 클럭·PC 관리, 명령어 디스패치, 다른 칩 연동.' },
-  { name: 'MemoryInstructionsChip', desc: '메모리 읽기/쓰기 명령어 추적. LB/LH/LW/SB/SH/SW 처리.' },
-  { name: 'AddSubChip', desc: '덧셈/뺄셈 (ADD, SUB). carry 비트 처리. 32비트 오버플로우.' },
-  { name: 'BitwiseChip', desc: 'XOR, OR, AND, SRL, SRA, SLL 비트 연산. 별도 AIR 칩.' },
-  { name: 'MulChip', desc: '곱셈 (MUL, MULH, MULHU, MULHSU). 64비트 결과 처리.' },
-  { name: 'DivRemChip', desc: '나눗셈/나머지 (DIV, DIVU, REM, REMU). 0 나누기 처리 포함.' },
-  { name: 'ShaExtendChip', desc: 'SHA256 메시지 스케줄 확장 프리컴파일 (ECALL 0x00_00_30_26).' },
-  { name: 'Keccak256Chip', desc: 'Keccak-f 순열 프리컴파일 (ECALL 0x00_01_01_09). 이더리움 호환.' },
+  {
+    name: "CpuChip",
+    desc: "RISC-V CPU 중앙 조정자. 클럭·PC 관리, 명령어 디스패치, 다른 칩 연동.",
+  },
+  {
+    name: "MemoryInstructionsChip",
+    desc: "메모리 읽기/쓰기 명령어 추적. LB/LH/LW/SB/SH/SW 처리.",
+  },
+  {
+    name: "AddSubChip",
+    desc: "덧셈/뺄셈 (ADD, SUB). carry 비트 처리. 32비트 오버플로우.",
+  },
+  {
+    name: "BitwiseChip",
+    desc: "XOR, OR, AND, SRL, SRA, SLL 비트 연산. 별도 AIR 칩.",
+  },
+  {
+    name: "MulChip",
+    desc: "곱셈 (MUL, MULH, MULHU, MULHSU). 64비트 결과 처리.",
+  },
+  {
+    name: "DivRemChip",
+    desc: "나눗셈/나머지 (DIV, DIVU, REM, REMU). 0 나누기 처리 포함.",
+  },
+  {
+    name: "ShaExtendChip",
+    desc: "SHA256 메시지 스케줄 확장 프리컴파일 (ECALL 0x00_00_30_26).",
+  },
+  {
+    name: "Keccak256Chip",
+    desc: "Keccak-f 순열 프리컴파일 (ECALL 0x00_01_01_09). 이더리움 호환.",
+  },
 ];
 
 export const ADD_CODE = `// AddSubCols 구조체 (실제 필드)

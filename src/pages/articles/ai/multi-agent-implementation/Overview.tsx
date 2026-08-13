@@ -1,33 +1,12 @@
-import OverviewViz from './viz/OverviewViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">멀티 에이전트가 왜 필요한가</h2>
-      <div className="not-prose mb-8"><OverviewViz /></div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          단일 LLM에 10개 이상의 도구를 부여하면 <strong>프롬프트 길이 폭발 + 도구 혼선</strong>이 발생한다.<br />
-          "장비 매뉴얼 검색 + 센서 분석 + 조치 판단"을 하나의 에이전트에 맡기면, 도구 설명만으로 context window의 30% 이상을 소모한다.
-          나머지 70%로 실제 추론을 해야 하므로 hallucination 빈도가 급증.
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">왜 역할을 나누는가</h3>
-        <p className="leading-7">
-          각 에이전트에 <strong>하나의 역할 + 2-3개 전문 도구</strong>만 부여하면 프롬프트가 단순해진다.<br />
-          검색 에이전트는 VectorDB만, 분석 에이전트는 pandas만, 판단 에이전트는 보고서 생성만 담당.<br />
-          결과: 도구 혼선 제거, 프롬프트 길이 50% 이하로 축소, 각 에이전트의 정확도 향상.
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">제조 현장의 3대 과제</h3>
-        <p className="leading-7">
-          <strong>품질 관리</strong> — 불량 탐지 후 원인 분석까지 자동화. 이미지 검사 + 공정 파라미터 상관분석.<br />
-          <strong>예지 보전</strong>(Predictive Maintenance) — 센서 이상 징후를 조기에 탐지하여 계획 정비. 비계획 정지 시간 감소.<br />
-          <strong>공정 최적화</strong> — 수율(yield) 최대화를 위한 파라미터 조정. 실시간 피드백 루프.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>왜 멀티 에이전트가 제조에 적합한가</strong> — 제조 현장은 매뉴얼(비정형 텍스트) + 센서(정형 시계열) + 규정(룰 기반)이 혼합된 도메인.<br />
-          하나의 LLM으로 세 종류의 데이터를 모두 처리하기보다, 각 데이터 유형에 특화된 에이전트를 두는 것이 효과적.
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="overview" className="scroll-mt-20">
+    <h2 className="mb-6 text-2xl font-bold">Multi-agent 구현의 출발점은 agent 수가 아니라, 단일 실행에서 분리해야 할 context·권한·artifact ownership이 있는지 확인하는 것입니다</h2>
+    <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">같은 자료를 읽고 같은 도구를 쓰며 하나의 결과만 만드는 작업이라면 agent를 늘려도 호출·조정·검증 비용만 커질 수 있습니다. 반면 서로 독립적인 repository를 조사하거나, 작성자와 검증자가 다른 context·권한을 가져야 하거나, 여러 설비의 분석 artifact를 병렬로 만들 때는 분리가 유용합니다.</p><p><a href="/ai/agentic-patterns">에이전틱 패턴 정본</a>은 delegation의 개념과 manager·handoff·parallel·actor–reviewer 선택을 설명합니다. 이 글은 그 결정을 실제 runtime의 state schema·worker contract·join·retry·side-effect safety로 구현하는 범위만 소유합니다.</p></div>
+    <ContentBoundary article="multi-agent-implementation" />
+    <ExplainedFormula question="여러 agent를 썼을 때 얻은 이득을 추가 비용과 분리해 어떻게 판단할까요?" idea={<>같은 task set과 quality gate에서 single-agent baseline의 wall time·cost를 먼저 재고, multi-agent의 join·retry·검증을 모두 포함한 값을 뺍니다.</>} formula={String.raw`G_T=T_{\mathrm{single}}-T_{\mathrm{multi}},\qquad G_C=C_{\mathrm{single}}-C_{\mathrm{multi}},\qquad \Delta Q=Q_{\mathrm{multi}}-Q_{\mathrm{single}}`} terms={[{symbol:"G_T",name:"time gain",description:"양수면 multi-agent가 end-to-end wall time을 줄였습니다."},{symbol:"G_C",name:"cost gain",description:"양수면 tool·model·retry·join을 포함한 비용이 줄었습니다."},{symbol:"Delta Q",name:"quality gain",description:"같은 rubric·test에서 quality가 얼마나 달라졌는지 나타냅니다."}]} assumptions={["입력 snapshot·tool 권한·model·완료 조건과 quality gate를 같게 둡니다.","Worker 합계 시간이 아니라 사용자가 기다린 end-to-end 시간과 실제 과금량을 잽니다.","독립 run과 task slice에서 분산·부분 실패율도 함께 보고 test를 보고 구조를 재선택하지 않습니다."]} interpretation="병렬화로 20분을 줄였지만 호출비가 두 배이고 quality가 같다면 latency가 중요한 workload에서만 이득입니다. 세 값 모두 나빠지면 단일 agent로 되돌립니다." />
+    <div className="not-prose my-8 overflow-hidden rounded-xl border border-border bg-background"><div className="grid divide-y divide-border sm:grid-cols-4 sm:divide-x sm:divide-y-0">{[["Partition","독립 범위·owner"],["Execute","격리 context·권한"],["Verify","test·evidence"],["Join","충돌·부분 실패"]].map(([a,b],i)=><div key={a} className="p-4"><p className="text-xs font-semibold text-muted-foreground">0{i+1}</p><p className="mt-1 font-semibold">{a}</p><p className="mt-2 text-sm text-muted-foreground">{b}</p></div>)}</div></div>
+  </section>;
 }

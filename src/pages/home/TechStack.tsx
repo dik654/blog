@@ -1,17 +1,17 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 const stacks = [
   {
-    label: 'Frontend',
-    items: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
+    label: "Frontend",
+    items: ["React", "TypeScript", "Tailwind CSS", "Vite"],
   },
   {
-    label: 'Interactive',
-    items: ['Framer Motion', 'Mafs', 'Recharts', 'Rough Notation'],
+    label: "Interactive",
+    items: ["Framer Motion", "Mafs", "Recharts", "Rough Notation"],
   },
   {
-    label: 'Infra',
-    items: ['Cloudflare Pages', 'SPA Routing', 'Lazy Loading'],
+    label: "Infra",
+    items: ["Cloudflare Pages", "SPA Routing", "Lazy Loading"],
   },
 ];
 
@@ -32,15 +32,15 @@ export default function TechStack() {
         구현
       </h2>
       <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-        각 개념의 핵심 동작을 직접 구현한 인터랙티브 데모를 포함합니다.
-        단순 정리가 아닌, 코드 레벨의 이해를 목표로 합니다.
+        각 개념의 핵심 동작을 직접 구현한 인터랙티브 데모를 포함합니다. 단순
+        정리가 아닌, 코드 레벨의 이해를 목표로 합니다.
       </p>
       <motion.div
         className="grid gap-4 sm:grid-cols-3"
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: '-50px' }}
+        viewport={{ once: true, margin: "-50px" }}
       >
         {stacks.map((stack) => (
           <motion.div

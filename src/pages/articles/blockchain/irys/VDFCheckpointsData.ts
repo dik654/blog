@@ -19,8 +19,16 @@ pub fn verify_vdf_checkpoints(
 }`;
 
 export const CHECKPOINT_ANNOTATIONS = [
-  { lines: [10, 13] as [number, number], color: 'sky' as const, note: '체크포인트 간 순차 해시 재계산' },
-  { lines: [14, 14] as [number, number], color: 'emerald' as const, note: '체크포인트 일치 확인' },
+  {
+    lines: [10, 13] as [number, number],
+    color: "sky" as const,
+    note: "체크포인트 간 순차 해시 재계산",
+  },
+  {
+    lines: [14, 14] as [number, number],
+    color: "emerald" as const,
+    note: "체크포인트 일치 확인",
+  },
 ];
 
 export const PARALLEL_VERIFY_CODE = `// 병렬 체크포인트 검증 (검증자 최적화)
@@ -42,8 +50,16 @@ pub fn verify_checkpoints_parallel(
 }`;
 
 export const PARALLEL_ANNOTATIONS = [
-  { lines: [8, 8] as [number, number], color: 'sky' as const, note: '체크포인트 그룹 분할' },
-  { lines: [10, 15] as [number, number], color: 'emerald' as const, note: 'Rayon 병렬 검증' },
+  {
+    lines: [8, 8] as [number, number],
+    color: "sky" as const,
+    note: "체크포인트 그룹 분할",
+  },
+  {
+    lines: [10, 15] as [number, number],
+    color: "emerald" as const,
+    note: "Rayon 병렬 검증",
+  },
 ];
 
 export const RESET_CODE = `// VDF 리셋 메커니즘 (reset_frequency 주기)
@@ -56,5 +72,9 @@ if global_step % config.reset_frequency == 0 {
 }`;
 
 export const RESET_ANNOTATIONS = [
-  { lines: [3, 7] as [number, number], color: 'amber' as const, note: 'VDF 시드 리셋 로직' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "amber" as const,
+    note: "VDF 시드 리셋 로직",
+  },
 ];

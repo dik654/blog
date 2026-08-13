@@ -12,8 +12,16 @@ pub struct MerkleTree<F, W, M, const DIGEST_ELEMS: usize> {
 // → 루트 = 최종 다이제스트 (커밋먼트)`;
 
 export const MERKLE_TREE_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '다중 높이 행렬 지원' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: '트리 구성 3단계' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "다중 높이 행렬 지원",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "트리 구성 3단계",
+  },
 ];
 
 export const MMCS_CODE = `// MerkleTreeMmcs — Mixed Matrix Commitment Scheme
@@ -34,7 +42,19 @@ fn commit(inputs: Vec<M>) -> (Self::Commitment, Self::ProverData) {
 // j = index >> (log2_ceil(max_height) - log2_ceil(matrix_height))`;
 
 export const MMCS_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '해시 + 압축 함수 주입' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: '커밋: 행렬 → 트리 → 루트' },
-  { lines: [14, 16] as [number, number], color: 'amber' as const, note: '다중 높이 인덱스 매핑' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "해시 + 압축 함수 주입",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "커밋: 행렬 → 트리 → 루트",
+  },
+  {
+    lines: [14, 16] as [number, number],
+    color: "amber" as const,
+    note: "다중 높이 인덱스 매핑",
+  },
 ];

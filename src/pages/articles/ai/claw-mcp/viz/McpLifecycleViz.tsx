@@ -1,71 +1,45 @@
+import { McpFrame, McpRule, McpSteps } from "./McpVizPrimitives";
+
 export default function McpLifecycleViz() {
-  const states = [
-    'Uninitialized', 'Spawning', 'Spawned',
-    'Initializing', 'Initialized', 'CapabilityListing',
-    'Ready', 'Degraded', 'Disconnecting', 'Disconnected', 'Failed'
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 350" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">McpLifecycle — 11 상태 (linear progression)</text>
-
-        <defs>
-          <marker id="mlc-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L5,3 L0,6" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {states.slice(0, 7).map((state, i) => {
-          const y = 58 + i * 32;
-          const isReady = state === 'Ready';
-          const color = isReady ? '#10b981' : '#3b82f6';
-          return (
-            <g key={state}>
-              <rect x={46} y={y} width={234} height={26} rx={4}
-                fill={color} fillOpacity={0.1} stroke={color} strokeWidth={0.6} />
-              <rect x={46} y={y} width={3} height={26} fill={color} rx={1} />
-              <text x={62} y={y + 18} fontSize={10} fontWeight={700} fill={color}>
-                {i + 1}. {state}
-              </text>
-              {i < 6 && (
-                <line x1={163} y1={y + 26} x2={163} y2={y + 32}
-                  stroke="#3b82f6" strokeWidth={0.9} markerEnd="url(#mlc-arr)" />
-              )}
-            </g>
-          );
-        })}
-
-        {/* Degraded */}
-        <rect x={304} y={198} width={210} height={26} rx={4}
-          fill="#f59e0b" fillOpacity={0.1} stroke="#f59e0b" strokeWidth={0.6} />
-        <rect x={304} y={198} width={3} height={26} fill="#f59e0b" rx={1} />
-        <text x={320} y={216} fontSize={10} fontWeight={700} fill="#f59e0b">
-          Degraded (일부 기능 실패)
-        </text>
-        <line x1={280} y1={211} x2={304} y2={211} stroke="#f59e0b" strokeWidth={0.9} strokeDasharray="3 2" markerEnd="url(#mlc-arr)" />
-
-        {/* Failed */}
-        <rect x={304} y={140} width={210} height={26} rx={4}
-          fill="#ef4444" fillOpacity={0.1} stroke="#ef4444" strokeWidth={0.6} />
-        <rect x={304} y={140} width={3} height={26} fill="#ef4444" rx={1} />
-        <text x={320} y={158} fontSize={10} fontWeight={700} fill="#ef4444">
-          Failed (복구 불가)
-        </text>
-        <line x1={280} y1={94} x2={304} y2={153} stroke="#ef4444" strokeWidth={0.9} strokeDasharray="3 2" markerEnd="url(#mlc-arr)" />
-        <line x1={280} y1={158} x2={304} y2={153} stroke="#ef4444" strokeWidth={0.9} strokeDasharray="3 2" markerEnd="url(#mlc-arr)" />
-
-        {/* 종료 */}
-        <rect x={46} y={284} width={468} height={52} rx={6}
-          fill="var(--muted)" opacity={0.3} stroke="var(--border)" strokeWidth={0.5} />
-        <text x={280} y={306} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          종료 전이: Ready → Disconnecting → Disconnected
-        </text>
-        <text x={280} y={324} textAnchor="middle" fontSize={8.5} fill="var(--muted-foreground)">
-          graceful shutdown: 대기 요청 완료 → shutdown 메시지 → 프로세스 종료
-        </text>
-      </svg>
-    </div>
+    <McpFrame
+      label="LEGACY SNAPSHOT → CURRENT SPEC"
+      title="내부 operation state와 MCP wire lifecycle을 분리한다"
+      description="Claw snapshot은 2025 handshake를 11개 내부 상태로 관리하지만, 2026-07-28 revision은 stateless core로 바뀌었습니다."
+      note="11은 표준 상태 수가 아닙니다. process·timeout·UI·cleanup을 관측하기 위한 해당 client의 구현 선택입니다."
+    >
+      <McpSteps
+        items={[
+          {
+            label: "PROCESS",
+            title: "spawn·streams",
+            body: "child process와 stdin·stdout·stderr를 준비합니다.",
+            tone: "blue",
+          },
+          {
+            label: "LEGACY",
+            title: "initialize handshake",
+            body: "version과 capability를 교환한 뒤 initialized를 보냅니다.",
+            tone: "violet",
+          },
+          {
+            label: "OPERATION",
+            title: "ready·degraded",
+            body: "광고된 capability 범위에서만 operation을 허용합니다.",
+            tone: "emerald",
+          },
+          {
+            label: "CURRENT",
+            title: "stateless request",
+            body: "최신 revision은 handshake 대신 request metadata와 선택적 discovery를 사용합니다.",
+            tone: "amber",
+          },
+        ]}
+      />
+      <McpRule>
+        <strong>Migration 기준:</strong> process lifecycle은 유지하되 legacy
+        handshake state를 protocol revision별 adapter로 격리합니다.
+      </McpRule>
+    </McpFrame>
   );
 }

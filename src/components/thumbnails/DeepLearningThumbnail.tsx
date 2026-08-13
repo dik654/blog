@@ -16,15 +16,29 @@ export default function DeepLearningThumbnail() {
             <g key={`${li}-${ni}`}>
               {li < layers.length - 1 &&
                 Array.from({ length: layers[li + 1].nodes }, (_, nj) => (
-                  <line key={nj} x1={layer.x} y1={y}
-                    x2={layers[li + 1].x} y2={nodeY(layers[li + 1].nodes, nj)}
-                    stroke="#6366f1" strokeWidth={0.5} strokeOpacity={0.3} />
+                  <line
+                    key={nj}
+                    x1={layer.x}
+                    y1={y}
+                    x2={layers[li + 1].x}
+                    y2={nodeY(layers[li + 1].nodes, nj)}
+                    stroke="#6366f1"
+                    strokeWidth={0.5}
+                    strokeOpacity={0.3}
+                  />
                 ))}
-              <circle cx={layer.x} cy={y} r={3.5}
-                stroke="#6366f1" strokeWidth={1} fill="#6366f1" fillOpacity={0.15} />
+              <circle
+                cx={layer.x}
+                cy={y}
+                r={3.5}
+                stroke="#6366f1"
+                strokeWidth={1}
+                fill="#6366f1"
+                fillOpacity={0.15}
+              />
             </g>
           );
-        })
+        }),
       )}
     </svg>
   );

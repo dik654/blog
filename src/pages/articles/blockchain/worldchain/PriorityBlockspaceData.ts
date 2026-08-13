@@ -23,9 +23,21 @@ PBH 블록스페이스 (12,000,000 가스):
   봇 트랜잭션도 여기에 포함`;
 
 export const capacityAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: 'PBH 가스 한도 계산식' },
-  { lines: [12, 19] as [number, number], color: 'emerald' as const, note: 'PBH 전용 영역 (40%)' },
-  { lines: [21, 23] as [number, number], color: 'amber' as const, note: '일반 영역 (60%)' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "PBH 가스 한도 계산식",
+  },
+  {
+    lines: [12, 19] as [number, number],
+    color: "emerald" as const,
+    note: "PBH 전용 영역 (40%)",
+  },
+  {
+    lines: [21, 23] as [number, number],
+    color: "amber" as const,
+    note: "일반 영역 (60%)",
+  },
 ];
 
 export const fairnessCode = `공정성 보장 메커니즘:
@@ -53,8 +65,24 @@ export const fairnessCode = `공정성 보장 메커니즘:
   PBH 과다 시 → 12M 가스만 현재 블록, 나머지 다음 블록`;
 
 export const fairnessAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: '월별 사용량 제한' },
-  { lines: [8, 11] as [number, number], color: 'emerald' as const, note: 'Nullifier 기반 중복 방지' },
-  { lines: [13, 15] as [number, number], color: 'amber' as const, note: 'PBH 내 가스비 정렬' },
-  { lines: [17, 19] as [number, number], color: 'rose' as const, note: '60% 일반 트랜잭션 보장' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "월별 사용량 제한",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "emerald" as const,
+    note: "Nullifier 기반 중복 방지",
+  },
+  {
+    lines: [13, 15] as [number, number],
+    color: "amber" as const,
+    note: "PBH 내 가스비 정렬",
+  },
+  {
+    lines: [17, 19] as [number, number],
+    color: "rose" as const,
+    note: "60% 일반 트랜잭션 보장",
+  },
 ];

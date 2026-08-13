@@ -1,6 +1,6 @@
-import Overview from './diffie-hellman/Overview';
-import Protocol from './diffie-hellman/Protocol';
-import Security from './diffie-hellman/Security';
+import Overview from "./diffie-hellman/Overview";
+import Protocol from "./diffie-hellman/Protocol";
+import Security from "./diffie-hellman/Security";
 
 export default function DiffieHellman() {
   return (

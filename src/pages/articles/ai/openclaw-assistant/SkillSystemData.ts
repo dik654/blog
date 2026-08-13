@@ -49,7 +49,19 @@ TypeScript 플러그인 (OpenClawPlugin):
   → MCP 서버도 표준 도구 레이어로 통합`;
 
 export const skillSystemAnnotations = [
-  { lines: [3, 15] as [number, number], color: 'sky' as const, note: '내장 스킬 디렉토리' },
-  { lines: [17, 29] as [number, number], color: 'emerald' as const, note: 'SKILL.md 기반 선언적 포맷' },
-  { lines: [36, 39] as [number, number], color: 'amber' as const, note: 'ClawHub — 13,729+ 커뮤니티 스킬' },
+  {
+    lines: [3, 15] as [number, number],
+    color: "sky" as const,
+    note: "내장 스킬 디렉토리",
+  },
+  {
+    lines: [17, 29] as [number, number],
+    color: "emerald" as const,
+    note: "SKILL.md 기반 선언적 포맷",
+  },
+  {
+    lines: [36, 39] as [number, number],
+    color: "amber" as const,
+    note: "ClawHub — 13,729+ 커뮤니티 스킬",
+  },
 ];

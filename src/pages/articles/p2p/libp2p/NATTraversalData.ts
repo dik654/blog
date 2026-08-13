@@ -14,9 +14,21 @@ export const autonatCode = `// AutoNAT: NAT 타입 자동 탐지
 //    autonat::Event::StatusChanged { old, new }`;
 
 export const autonatAnnotations = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '다이얼-백 요청' },
-  { lines: [6, 8] as [number, number], color: 'emerald' as const, note: '결과 판정 (Public/Private)' },
-  { lines: [12, 13] as [number, number], color: 'amber' as const, note: 'Private → Relay 등록' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "다이얼-백 요청",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "emerald" as const,
+    note: "결과 판정 (Public/Private)",
+  },
+  {
+    lines: [12, 13] as [number, number],
+    color: "amber" as const,
+    note: "Private → Relay 등록",
+  },
 ];
 
 export const relayCode = `// Circuit Relay v2
@@ -36,9 +48,21 @@ export const relayCode = `// Circuit Relay v2
 // B → R → A: 중계 연결 수립`;
 
 export const relayAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: 'Circuit Relay 토폴로지' },
-  { lines: [7, 11] as [number, number], color: 'emerald' as const, note: 'v2 리소스 제한' },
-  { lines: [13, 15] as [number, number], color: 'amber' as const, note: 'Reserve → 연결 흐름' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "Circuit Relay 토폴로지",
+  },
+  {
+    lines: [7, 11] as [number, number],
+    color: "emerald" as const,
+    note: "v2 리소스 제한",
+  },
+  {
+    lines: [13, 15] as [number, number],
+    color: "amber" as const,
+    note: "Reserve → 연결 흐름",
+  },
 ];
 
 export const dcutrCode = `// DCUtR: Direct Connection Upgrade through Relay
@@ -58,7 +82,19 @@ export const dcutrCode = `// DCUtR: Direct Connection Upgrade through Relay
 //    지연: ~100ms (Relay) → <10ms (Direct)`;
 
 export const dcutrAnnotations = [
-  { lines: [5, 6] as [number, number], color: 'sky' as const, note: '주소 교환 (via Relay)' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: 'Simultaneous Open' },
-  { lines: [14, 15] as [number, number], color: 'amber' as const, note: '직접 연결 업그레이드' },
+  {
+    lines: [5, 6] as [number, number],
+    color: "sky" as const,
+    note: "주소 교환 (via Relay)",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "Simultaneous Open",
+  },
+  {
+    lines: [14, 15] as [number, number],
+    color: "amber" as const,
+    note: "직접 연결 업그레이드",
+  },
 ];

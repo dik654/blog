@@ -1,43 +1,45 @@
+import { ConfigFrame, ConfigRule, ConfigSteps } from "./ConfigVizPrimitives";
+
 export default function BootstrapViz() {
-  const phases = [
-    'LoadingConfig', 'ValidatingConfig', 'InitializingLogger',
-    'ResolvingWorkspace', 'ComputingTrust', 'DiscoveringPlugins',
-    'EnablingPlugins', 'StartingMcpServers', 'CreatingClient',
-    'AuthenticatingApi', 'InitializingHooks', 'Ready',
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 440" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">BootstrapPhase — 12단계 시작 시퀀스</text>
-
-        {phases.map((phase, i) => {
-          const y = 46 + i * 30;
-          const color = phase === 'Ready' ? '#10b981' : '#3b82f6';
-          return (
-            <g key={phase}>
-              <circle cx={58} cy={y + 13} r={11}
-                fill={color} fillOpacity={0.15} stroke={color} strokeWidth={1} />
-              <text x={58} y={y + 17} textAnchor="middle" fontSize={9} fontWeight={700}
-                fill={color}>{i + 1}</text>
-
-              <rect x={82} y={y} width={444} height={26} rx={4}
-                fill={color} fillOpacity={0.05} stroke={color} strokeWidth={0.6} />
-              <text x={98} y={y + 17} fontSize={10} fontWeight={600} fill={color}>
-                {phase}
-              </text>
-
-              {i < phases.length - 1 && (
-                <line x1={58} y1={y + 24} x2={58} y2={y + 30} stroke="#3b82f6" strokeWidth={0.9} />
-              )}
-            </g>
-          );
-        })}
-
-        <text x={280} y={428} textAnchor="middle" fontSize={8.5}
-          fill="var(--muted-foreground)">일반 환경: 800-2800ms · MCP가 주 병목</text>
-      </svg>
-    </div>
+    <ConfigFrame
+      label="TRUSTED BOOT"
+      title="외부 side effect는 신뢰 결정 뒤에 연다"
+      description="로컬 해석과 trust resolution을 끝낸 뒤 provider·plugin·MCP를 시작하고, 필수 capability가 검증돼야 Ready가 됩니다."
+      note="phase 이름과 개수는 구현마다 달라도, trust 이전에 외부 process를 만들지 않는 순서는 유지합니다."
+    >
+      <ConfigSteps
+        items={[
+          {
+            label: "01",
+            title: "Discover",
+            body: "config source와 canonical workspace를 찾습니다.",
+            tone: "blue",
+          },
+          {
+            label: "02",
+            title: "Resolve trust",
+            body: "provenance·policy·plugin capability를 결정합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03",
+            title: "Start external",
+            body: "승인된 provider·plugin·MCP 연결만 시작합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04",
+            title: "Assemble Ready",
+            body: "필수 capability와 cleanup handle을 함께 공개합니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <ConfigRule>
+        initialization generation이 바뀌면 이전 실행의 늦은 callback은
+        폐기합니다.
+      </ConfigRule>
+    </ConfigFrame>
   );
 }

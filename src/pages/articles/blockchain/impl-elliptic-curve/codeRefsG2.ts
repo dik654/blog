@@ -1,9 +1,9 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const g2CodeRefs: Record<string, CodeRef> = {
-  'g2-struct': {
-    path: 'curve/g2.rs — G2 structs + twist parameter',
-    lang: 'rust',
+  "g2-struct": {
+    path: "curve/g2.rs — G2 structs + twist parameter",
+    lang: "rust",
     highlight: [1, 30],
     desc: "G2는 Fp2 위의 트위스트 곡선. G1과 동일한 인터페이스, 좌표 타입만 Fp→Fp2.\nb' = 3/xi 로 sextic twist 파라미터 계산.",
     code: `/// G2는 "진짜로는" E(Fp12) 위의 점이지만,
@@ -38,17 +38,33 @@ pub fn generator() -> Self {
     G2 { x, y, z: Fp2::ONE }
 }`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'sextic twist: E(Fp12)→E(Fp2). 차원 6배 축소 → 연산 ~36배 빠름' },
-      { lines: [6, 9], color: 'emerald', note: "ξ=9+u (Fp6의 non-residue). b'=b/ξ 로 twist 파라미터 계산" },
-      { lines: [14, 18], color: 'violet', note: 'G1과 동일한 구조, 좌표만 Fp→Fp2. 연산 공식도 동일' },
-      { lines: [21, 30], color: 'amber', note: 'G2 생성자는 큰 상수 — go-ethereum, py_ecc 등에서 표준화된 값' },
+      {
+        lines: [1, 3],
+        color: "sky",
+        note: "sextic twist: E(Fp12)→E(Fp2). 차원 6배 축소 → 연산 ~36배 빠름",
+      },
+      {
+        lines: [6, 9],
+        color: "emerald",
+        note: "ξ=9+u (Fp6의 non-residue). b'=b/ξ 로 twist 파라미터 계산",
+      },
+      {
+        lines: [14, 18],
+        color: "violet",
+        note: "G1과 동일한 구조, 좌표만 Fp→Fp2. 연산 공식도 동일",
+      },
+      {
+        lines: [21, 30],
+        color: "amber",
+        note: "G2 생성자는 큰 상수 — go-ethereum, py_ecc 등에서 표준화된 값",
+      },
     ],
   },
-  'g2-double': {
-    path: 'curve/g2.rs — G2::double() (Fp2 산술)',
-    lang: 'rust',
+  "g2-double": {
+    path: "curve/g2.rs — G2::double() (Fp2 산술)",
+    lang: "rust",
     highlight: [1, 20],
-    desc: 'G1과 동일한 공식, 좌표 타입만 Fp→Fp2.\nFp2 곱셈은 Karatsuba로 Fp 곱셈 3회.',
+    desc: "G1과 동일한 공식, 좌표 타입만 Fp→Fp2.\nFp2 곱셈은 Karatsuba로 Fp 곱셈 3회.",
     code: `/// 점 더블링: 2P — G1과 동일한 공식
 pub fn double(&self) -> G2 {
     if self.is_identity() || self.y.is_zero() {
@@ -71,8 +87,16 @@ pub fn double(&self) -> G2 {
     G2 { x: x3, y: y3, z: z3 }
 }`,
     annotations: [
-      { lines: [1, 2], color: 'sky', note: '공식은 G1::double()과 문자 그대로 동일 — 제네릭은 아니지만 구조 복사' },
-      { lines: [11, 14], color: 'emerald', note: 'Fp2 곱셈 1회 = Fp 곱셈 3회 (Karatsuba). G1보다 ~3배 느림' },
+      {
+        lines: [1, 2],
+        color: "sky",
+        note: "공식은 G1::double()과 문자 그대로 동일 — 제네릭은 아니지만 구조 복사",
+      },
+      {
+        lines: [11, 14],
+        color: "emerald",
+        note: "Fp2 곱셈 1회 = Fp 곱셈 3회 (Karatsuba). G1보다 ~3배 느림",
+      },
     ],
   },
 };

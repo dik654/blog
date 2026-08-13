@@ -1,10 +1,10 @@
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './prysm-sync/codeRefs';
-import { prysmTree } from './prysm-sync/fileTrees';
-import Overview from './prysm-sync/Overview';
-import InitialSync from './prysm-sync/InitialSync';
-import CheckpointSync from './prysm-sync/CheckpointSync';
-import RegularSync from './prysm-sync/RegularSync';
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prysm-sync/codeRefs";
+import { prysmTree } from "./prysm-sync/fileTrees";
+import Overview from "./prysm-sync/Overview";
+import InitialSync from "./prysm-sync/InitialSync";
+import CheckpointSync from "./prysm-sync/CheckpointSync";
+import RegularSync from "./prysm-sync/RegularSync";
 
 export default function PrysmSync() {
   const sidebar = useCodeSidebar();
@@ -22,7 +22,11 @@ export default function PrysmSync() {
         codeRefs={codeRefs}
         fileTrees={{ prysm: prysmTree }}
         projectMetas={{
-          prysm: { id: 'prysm', label: 'Prysm · Go', badgeClass: 'bg-violet-500/10 border-violet-500 text-violet-700' },
+          prysm: {
+            id: "prysm",
+            label: "Prysm · Go",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
         }}
       />
     </>

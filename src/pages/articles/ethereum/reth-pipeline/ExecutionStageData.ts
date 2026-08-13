@@ -1,28 +1,26 @@
-export interface ExecCompare {
+export interface ExecutionInvariant {
   aspect: string;
-  geth: string;
-  reth: string;
+  detail: string;
 }
-
-export const EXEC_COMPARISONS: ExecCompare[] = [
+export const EXECUTION_INVARIANTS: readonly ExecutionInvariant[] = [
   {
-    aspect: 'DB 커밋 단위',
-    geth: '블록마다 stateDB.Commit()',
-    reth: '10,000블록 누적 후 한 번에 기록',
+    aspect: "canonical ordering",
+    detail:
+      "같은 block의 transaction은 이전 transaction 결과를 볼 수 있으므로 protocol order를 유지한다.",
   },
   {
-    aspect: 'I/O 횟수 (100K 블록)',
-    geth: '~100,000회',
-    reth: '~10회 (commit_threshold 단위)',
+    aspect: "fork-aware environment",
+    detail:
+      "ChainSpec과 block fields로 활성 EVM rules, withdrawals와 requests 처리를 결정한다.",
   },
   {
-    aspect: '상태 저장 구조',
-    geth: 'stateDB (트라이 직접 조작)',
-    reth: 'BundleState (인메모리 해시맵)',
+    aspect: "overlay isolation",
+    detail:
+      "미완료 batch의 state changes를 즉시 canonical state로 노출하지 않고 검증·commit 경계까지 격리한다.",
   },
   {
-    aspect: '크래시 복구',
-    geth: '마지막 커밋 블록부터 재실행',
-    reth: '체크포인트부터 재실행 (최대 10K 블록)',
+    aspect: "recoverable persistence",
+    detail:
+      "결과와 checkpoint를 일관된 경계에서 기록하고 unwind가 사용할 history를 storage policy 안에서 보존한다.",
   },
-];
+] as const;

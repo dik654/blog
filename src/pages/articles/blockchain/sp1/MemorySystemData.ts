@@ -38,22 +38,62 @@ fn mr(&mut self, addr: u32, shard: u32, ts: u32) -> MemoryReadRecord {
 }`;
 
 export const LAYOUT = [
-  { range: '0x0000_0000 – 0x001F_FFFF', name: '초기화 메모리', desc: 'ELF .data, .rodata 영역' },
-  { range: '0x0020_0000 –', name: '프로그램 코드', desc: 'ELF .text (명령어)' },
-  { range: '0x0C00_0000 –', name: '힙 (Heap)', desc: '동적 할당. 위로 성장' },
-  { range: '– 0x7FFF_D000', name: '스택 (Stack)', desc: 'SP 기준, 아래로 성장' },
-  { range: '0x3000_0000 –', name: 'IO 레지스터', desc: 'read/write/commit 시스콜' },
+  {
+    range: "0x0000_0000 – 0x001F_FFFF",
+    name: "초기화 메모리",
+    desc: "ELF .data, .rodata 영역",
+  },
+  { range: "0x0020_0000 –", name: "프로그램 코드", desc: "ELF .text (명령어)" },
+  { range: "0x0C00_0000 –", name: "힙 (Heap)", desc: "동적 할당. 위로 성장" },
+  {
+    range: "– 0x7FFF_D000",
+    name: "스택 (Stack)",
+    desc: "SP 기준, 아래로 성장",
+  },
+  {
+    range: "0x3000_0000 –",
+    name: "IO 레지스터",
+    desc: "read/write/commit 시스콜",
+  },
 ];
 
 export const memoryStructAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: 'PagedMemory — 16KB 페이지 단위' },
-  { lines: [7, 8] as [number, number], color: 'emerald' as const, note: '페이지 크기 = 16384바이트' },
-  { lines: [11, 15] as [number, number], color: 'amber' as const, note: 'MemoryRecord — 값 + 시간' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "PagedMemory — 16KB 페이지 단위",
+  },
+  {
+    lines: [7, 8] as [number, number],
+    color: "emerald" as const,
+    note: "페이지 크기 = 16384바이트",
+  },
+  {
+    lines: [11, 15] as [number, number],
+    color: "amber" as const,
+    note: "MemoryRecord — 값 + 시간",
+  },
 ];
 
 export const mrAnnotations = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '4바이트 정렬 검사' },
-  { lines: [6, 7] as [number, number], color: 'emerald' as const, note: '현재 레코드 조회' },
-  { lines: [9, 13] as [number, number], color: 'amber' as const, note: '읽기 이벤트 구성' },
-  { lines: [15, 19] as [number, number], color: 'violet' as const, note: '타임스탬프 갱신' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "4바이트 정렬 검사",
+  },
+  {
+    lines: [6, 7] as [number, number],
+    color: "emerald" as const,
+    note: "현재 레코드 조회",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "amber" as const,
+    note: "읽기 이벤트 구성",
+  },
+  {
+    lines: [15, 19] as [number, number],
+    color: "violet" as const,
+    note: "타임스탬프 갱신",
+  },
 ];

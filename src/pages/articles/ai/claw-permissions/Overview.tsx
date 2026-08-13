@@ -1,189 +1,248 @@
-import ModeLayersViz from './viz/ModeLayersViz';
-import GatingPipelineViz from './viz/GatingPipelineViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+
+const LOGIN_TRACE = [
+  [
+    "MODEL",
+    "1 · 제안",
+    "read_file·grep_search로 401 원인을 찾고 edit_file과 test command를 호출하겠다고 제안합니다.",
+  ],
+  [
+    "HOST · HARDENING",
+    "2 · Authority ceiling",
+    "Workspace·credential·network·process의 최대 권한을 먼저 고정합니다. 내부 mode나 승인으로 이 한도를 넓힐 수 없어야 합니다.",
+  ],
+  [
+    "HOST · PINNED",
+    "3 · Mode와 rule",
+    "실제 tool name과 input을 required mode·denied tool·deny/ask/allow rule에 대입합니다.",
+  ],
+  [
+    "HUMAN + HOST",
+    "4 · 좁은 승인",
+    "Edit 또는 test가 추가 확인을 요구하면 action·actor·executor·scope·expiry·사용 횟수를 묶어 승인합니다.",
+  ],
+  [
+    "HOST · PINNED",
+    "5 · Executor 앞 검사",
+    "Denied면 file handle이나 process를 만들지 않고, Allowed인 호출만 executor에 전달합니다.",
+  ],
+  [
+    "HOST · HARDENING",
+    "6 · Receipt와 검증",
+    "수정 전후 digest와 test command·cwd·exit code를 남겨 승인한 작업과 실제 effect가 같았는지 확인합니다.",
+  ],
+] as const;
+
+const OWNERS = [
+  [
+    "Model이 고르는 것",
+    "다음에 시도할 tool, arguments 초안, 원인 가설과 수정 후보",
+  ],
+  [
+    "Host가 결정하는 것",
+    "사용 가능한 tool, 최대 authority, policy 판정, 승인 유효성, executor 호출 여부",
+  ],
+  [
+    "OS·sandbox가 제한하는 것",
+    "실제로 열 수 있는 file·process·network·credential과 resource limit",
+  ],
+] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">PermissionMode &amp; 권한 계층</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        권한은 모델의 제안을 실제 effect로 바꾸기 전에 host가 내리는 결정입니다
+      </h2>
 
-        <ModeLayersViz />
+      <ContentBoundary article="claw-permissions" />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">권한 모델 개요</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Claw-code의 권한 시스템은 <strong>3단계 모드 + 다층 게이팅</strong> 구조<br />
-          목표: LLM이 파일 시스템·셸을 조작할 때 <em>사용자 의도 밖의 작업</em>을 방지<br />
-          반대 극: "무제한 실행" 에이전트 — 빠르지만 사고 위험 (rm -rf, .env 유출 등)
-        </p>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-          <div className="bg-muted/60 rounded-lg p-4 border border-border">
-            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">PermissionMode</code></div>
-            <p className="text-sm text-muted-foreground">ReadOnly | WorkspaceWrite | DangerFullAccess 3단계 모드</p>
-          </div>
-          <div className="bg-muted/60 rounded-lg p-4 border border-border">
-            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">PermissionPolicy</code></div>
-            <p className="text-sm text-muted-foreground">규칙 리스트로 allow/deny/prompt 매칭 판정</p>
-          </div>
-          <div className="bg-muted/60 rounded-lg p-4 border border-border">
-            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">PermissionEnforcer</code></div>
-            <p className="text-sm text-muted-foreground">런타임 게이트 — <code className="text-xs">execute_tool()</code> 진입 시 호출</p>
-          </div>
-          <div className="bg-muted/60 rounded-lg p-4 border border-border">
-            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">ContextOverride</code></div>
-            <p className="text-sm text-muted-foreground">일시적 모드 변경 (특정 도구만, 1회 한정 등)</p>
-          </div>
-          <div className="bg-muted/60 rounded-lg p-4 border border-border sm:col-span-2">
-            <div className="font-semibold text-sm mb-1"><code className="text-xs bg-background px-1.5 py-0.5 rounded">HookRunner</code></div>
-            <p className="text-sm text-muted-foreground">사용자 정의 Pre/Post 훅 (JSON 프로토콜)</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">3단계 PermissionMode</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">모드</th>
-                <th className="border border-border px-3 py-2 text-left">읽기</th>
-                <th className="border border-border px-3 py-2 text-left">쓰기</th>
-                <th className="border border-border px-3 py-2 text-left">실행</th>
-                <th className="border border-border px-3 py-2 text-left">사용처</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>ReadOnly</code></td>
-                <td className="border border-border px-3 py-2 text-green-600">Allow</td>
-                <td className="border border-border px-3 py-2 text-red-600">Deny</td>
-                <td className="border border-border px-3 py-2 text-red-600">Deny</td>
-                <td className="border border-border px-3 py-2">코드베이스 탐색·리뷰</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>WorkspaceWrite</code></td>
-                <td className="border border-border px-3 py-2 text-green-600">Allow</td>
-                <td className="border border-border px-3 py-2 text-green-600">Allow*</td>
-                <td className="border border-border px-3 py-2 text-amber-600">Prompt</td>
-                <td className="border border-border px-3 py-2">일반 개발 (기본값)</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2"><code>DangerFullAccess</code></td>
-                <td className="border border-border px-3 py-2 text-green-600">Allow</td>
-                <td className="border border-border px-3 py-2 text-green-600">Allow</td>
-                <td className="border border-border px-3 py-2 text-green-600">Allow</td>
-                <td className="border border-border px-3 py-2">CI/자동화</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="text-sm text-muted-foreground mt-2">* WorkspaceWrite의 쓰기는 워크스페이스 경계 내부로 한정</p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">PermissionMode 타입 정의</h3>
-        <div className="not-prose bg-muted/60 rounded-lg border border-border p-4 my-4">
-          <div className="font-semibold text-sm mb-3">PermissionMode enum</div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
-            <div className="bg-background rounded px-3 py-2 text-sm border border-border">
-              <code className="text-xs font-mono">ReadOnly = 0</code>
-              <p className="text-xs text-muted-foreground mt-1">읽기 전용, 가장 낮은 권한</p>
-            </div>
-            <div className="bg-background rounded px-3 py-2 text-sm border border-border">
-              <code className="text-xs font-mono">WorkspaceWrite = 1</code>
-              <p className="text-xs text-muted-foreground mt-1">워크스페이스 내 쓰기 허용 (기본값)</p>
-            </div>
-            <div className="bg-background rounded px-3 py-2 text-sm border border-border">
-              <code className="text-xs font-mono">DangerFullAccess = 2</code>
-              <p className="text-xs text-muted-foreground mt-1">모든 작업 허용, CI/자동화 전용</p>
-            </div>
-          </div>
-          <div className="text-sm">
-            <span className="font-medium">CLI 플래그 → 모드 결정</span>
-            <div className="flex flex-col gap-1 mt-2 text-xs text-muted-foreground">
-              <span><code className="bg-background px-1 py-0.5 rounded">--dangerously-skip-permissions</code> → DangerFullAccess</span>
-              <span><code className="bg-background px-1 py-0.5 rounded">--read-only</code> → ReadOnly</span>
-              <span>플래그 없음 → WorkspaceWrite (기본값)</span>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-3"><code className="bg-background px-1 py-0.5 rounded">PartialOrd</code> derive로 <code className="bg-background px-1 py-0.5 rounded">current &gt;= required</code> 비교 — 수치 순서가 판정 기준</p>
-        </div>
-        <p>
-          <strong>PartialOrd 구현</strong>: <code>ReadOnly &lt; WorkspaceWrite &lt; DangerFullAccess</code> 순서<br />
-          <code>current &gt;= required</code> 비교로 권한 판정 — 수치 순서가 모든 것<br />
-          CLI 플래그 우선순위: <code>--dangerously-skip-permissions</code> &gt; <code>--read-only</code> &gt; 기본값
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">각 모드의 실제 동작 예시</h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="bg-muted/60 rounded-lg border border-border p-4">
-            <div className="font-semibold text-sm mb-2 text-red-600 dark:text-red-400">ReadOnly 모드</div>
-            <div className="space-y-1.5 text-sm">
-              <p><span className="text-muted-foreground">User:</span> "main.rs를 읽고 내용 요약해줘"</p>
-              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">read_file(main.rs)</code> → <span className="text-green-600 font-medium">Allow</span> → 읽기 성공</p>
-              <p><span className="text-muted-foreground">User:</span> "이 파일에 println 추가해줘"</p>
-              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">edit_file(main.rs)</code> → <span className="text-red-600 font-medium">Deny</span> → "권한 부족, 모드 변경 필요"</p>
-            </div>
-          </div>
-          <div className="bg-muted/60 rounded-lg border border-border p-4">
-            <div className="font-semibold text-sm mb-2 text-amber-600 dark:text-amber-400">WorkspaceWrite 모드</div>
-            <div className="space-y-1.5 text-sm">
-              <p><span className="text-muted-foreground">User:</span> "main.rs에 println 추가"</p>
-              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">edit_file(main.rs)</code> → <span className="text-green-600 font-medium">Allow</span> (workspace 내부) → 성공</p>
-              <p><span className="text-muted-foreground">User:</span> "cargo test 실행"</p>
-              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">bash("cargo test")</code> → <span className="text-amber-600 font-medium">Prompt</span> → 사용자 확인 후 실행</p>
-            </div>
-          </div>
-          <div className="bg-muted/60 rounded-lg border border-border p-4">
-            <div className="font-semibold text-sm mb-2 text-green-600 dark:text-green-400">DangerFullAccess 모드</div>
-            <div className="space-y-1.5 text-sm">
-              <p><span className="text-muted-foreground">User:</span> "cargo test 실행"</p>
-              <p><code className="text-xs bg-background px-1.5 py-0.5 rounded">bash("cargo test")</code> → <span className="text-green-600 font-medium">Allow</span> → 즉시 실행 (Prompt 없음)</p>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">왜 3단계인가 (2도 5도 아닌)</h3>
-        <p>
-          <strong>2단계로 부족한 이유</strong>: Safe/Unsafe만으론 실사용 케이스 부족<br />
-          - 코드 리뷰 시: 읽기만 필요 → Safe로 충분<br />
-          - 개발 중: 워크스페이스 파일 편집 필요 → Safe 벗어남<br />
-          - 하지만 <code>rm -rf /</code>를 실행할 필요는 없음 → Unsafe는 과도<br />
-          중간 단계 없이는 개발자가 항상 Unsafe 사용 → 원래 의도 무력화
+          사용자가 “로그인 버튼이 401을 반환하니 원인을 찾아 최소 수정하고
+          deterministic test로 확인해 줘”라고 요청했다고 해 보겠습니다. 모델은
+          source를 읽고 검색한 뒤 <code>src/auth.ts</code>를 고치고 test를
+          실행하자고 제안할 수 있습니다. 그러나 모델의 tool call은
+          <strong> 실행 제안</strong>일 뿐, 사용자가 그 file write와 process
+          실행을 모두 승인했다는 증거는 아닙니다.
         </p>
         <p>
-          <strong>5단계로 과도한 이유</strong>: 세분화해도 사용자가 구분 못함<br />
-          - ReadOnly / ReadExec / WorkspaceRead / WorkspaceWrite / Full — 구별 어려움<br />
-          - 매번 어느 모드인지 기억해야 함 → 인지 부하<br />
-          - 세밀한 차이는 <code>PermissionPolicy</code>로 처리 가능 (그게 3계층의 정책 층)
+          Authorization은 “이 주체가 이 resource에 이 action을 해도 되는가”를
+          판정하는 일입니다. 인증된 사용자라고 해서 모든 작업이 허용되는 것은
+          아니며, 모델이 그럴듯한 이유를 제시했다고 권한이 생기는 것도 아닙니다.
+          따라서 model proposal과 host enforcement를 먼저 분리해야 합니다.
+          Tool의 schema·dispatch는{" "}
+          <a href="/ai/claw-tool-system">도구 시스템</a>, 실제 Bash semantics는{" "}
+          <a href="/ai/claw-bash">Bash 경계</a>, OS 격리는
+          <a href="/ai/agent-sandbox-security">에이전트 sandbox 보안</a>에서
+          이어서 다룹니다.
         </p>
         <p>
-          3단계는 <strong>"의도를 이름 하나로 표현"</strong> 가능한 최대치:<br />
-          "나는 탐색만 할거야" / "나는 개발 중이야" / "나는 자동화 실행 중이야"
+          이 글의 구현 설명은 Claw Code의 pinned commit
+          <code>b71afdd…</code>에만 해당합니다. 아래 흐름에서
+          <strong> PINNED</strong>는 source에서 확인한 동작이고,
+          <strong> HARDENING</strong>은 안전한 배포를 위해 추가로 갖춰야 할
+          계약입니다. 특히 outer authority ceiling과 durable receipt는 현재
+          <code>PermissionPolicy</code>가 완성해 둔 기능이 아닙니다.
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">다층 게이팅 순서</h3>
-        <GatingPipelineViz />
+      <div className="not-prose my-7 divide-y divide-border/70 rounded-lg border border-border/70">
+        {LOGIN_TRACE.map(([owner, step, detail]) => (
+          <div
+            key={step}
+            className="grid min-w-0 gap-2 p-4 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-5"
+          >
+            <div className="min-w-0">
+              <p className="break-words text-[0.65rem] font-bold tracking-wide text-muted-foreground">
+                {owner}
+              </p>
+              <p className="mt-1 break-words text-sm font-semibold text-primary">
+                {step}
+              </p>
+            </div>
+            <p className="min-w-0 break-words text-sm leading-6 text-muted-foreground">
+              {detail}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>가장 바깥 한도를 먼저 정한 뒤 안쪽 판정을 진행합니다</h3>
         <p>
-          <strong>조기 종료 패턴</strong>: 한 단계라도 Deny면 이후 단계 스킵<br />
-          Pre-hook이 마지막 게이트 — 사용자 커스텀 로직으로 모든 게이트 오버라이드 가능<br />
-          Post-hook은 차단 불가 — 이미 도구 실행됨, 경고·로깅만 수행
+          안전한 순서는{" "}
+          <strong>
+            authority ceiling → mode → rule → approval lifetime → executor
+          </strong>
+          입니다. Authority ceiling은 이 process가 애초에 가질 수 있는 최대
+          file·network·credential 권한입니다. 예를 들어 로그인 작업에는 현재
+          repository 읽기, 승인된 workspace file 수정, 지정한 test만 주고
+          production credential과 arbitrary network는 제거할 수 있습니다. 이
+          한도는 <code>DangerFullAccess</code>나 사람의 승인으로도 넓어지지
+          않아야 합니다.
         </p>
+        <p>
+          그 안에서 permission mode가 세션의 기본 경계를 정하고, rule은 실제
+          tool과 input을 보고 deny·ask·allow를 좁힙니다. 승인이 필요하면 “Bash를
+          허용”처럼 넓게 저장하지 않고, 특정 action과 실행자·repository·branch,
+          만료와 사용 횟수에 묶습니다. 마지막으로 executor 바로 앞에서 판정을
+          소비해야 deny된 edit가 disk에 닿지 않습니다.
+        </p>
+        <p>
+          이 ceiling은 정상 사례만으로 검증할 수 없습니다. Workspace 밖 path와
+          symlink, production credential 접근, 임의 network egress, 승인하지
+          않은 process 실행을 각각 시도하고, 내부 mode나 유효한 approval이
+          있어도 host·sandbox·OS 경계에서 막히는지 negative test로 확인해야
+          합니다.
+        </p>
+      </div>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 모드-정책-훅의 역할 분리</p>
-          <p>
-            <strong>모드</strong> = 거친 권한 수준 (누가 무엇을 할 수 있는가)<br />
-            <strong>정책</strong> = 세밀한 규칙 (특정 경로 차단, 특정 명령 허용 등)<br />
-            <strong>훅</strong> = 사용자 확장 (프로젝트별 커스텀 검증)
-          </p>
-          <p className="mt-2">
-            이 3계층 구조는 <strong>구성 가능성과 안전성의 균형</strong><br />
-            - 모드만 있으면 너무 거침 — 프로젝트별 차이 반영 불가<br />
-            - 정책만 있으면 진입장벽 높음 — 기본 사용자에게 부담<br />
-            - 훅만 있으면 일관성 없음 — 프로젝트마다 보안 수준 제각각
-          </p>
-          <p className="mt-2">
-            3계층이 모두 있으면 <strong>"기본값은 안전, 필요하면 확장"</strong>이라는 원칙 실현
-          </p>
-        </div>
+      <div className="not-prose my-7 grid min-w-0 gap-3 md:grid-cols-3">
+        {OWNERS.map(([title, body]) => (
+          <article
+            key={title}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <h3 className="break-words text-sm font-semibold">{title}</h3>
+            <p className="mt-2 break-words text-sm leading-6 text-muted-foreground">
+              {body}
+            </p>
+          </article>
+        ))}
+      </div>
 
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Policy의 Allow와 실제 성공도 구분합니다</h3>
+        <p>
+          Policy가 Allow를 반환했다는 말은 runtime이 실행을 시도해도 된다는
+          뜻입니다. 파일이 read-only이거나 sandbox가 network를 막으면 executor는
+          여전히 실패할 수 있습니다. 반대로 Deny가 나왔다면 executor 자체를
+          시작하지 않아야 합니다. 그래서 permission decision, effect result,
+          deterministic test receipt를 서로 다른 artifact로 연결해야 합니다.
+        </p>
+      </div>
+
+      <div
+        id="paper-openai-tool-guardrails-approval"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          비교 근거 · OpenAI Agents guardrails와 human review
+        </p>
+        <CitationBlock
+          source="OpenAI Developers — Guardrails and human review"
+          citeKey={1}
+          type="paper"
+          href="https://developers.openai.com/api/docs/guides/agents/guardrails-approvals"
+        >
+          <div className="space-y-2 font-sans">
+            <p>
+              <strong>문제:</strong> 자동 검증과 사람이 승인해야 하는 side
+              effect를 같은 model 응답 뒤에서 어떻게 구분할지 정해야 합니다.
+            </p>
+            <p>
+              <strong>핵심 아이디어·기여:</strong> 공식 문서는 input·output·tool
+              guardrail과, edit·shell·민감한 MCP action 전에 run을 멈추는 human
+              review의 역할을 구분합니다.
+            </p>
+            <p>
+              <strong>전제·조건:</strong> Application이 실제 tool arguments와
+              effect를 승인 UI에 전달하고, pause·approve/reject·resume 상태를
+              보존해야 합니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> Tool 주변 자동 검사와 side effect 전
+              승인이라는 일반 runtime control 경계를 뒷받침합니다.
+            </p>
+            <p>
+              <strong>비주장:</strong> OpenAI의 API가 Claw Code의 내부 구현을
+              증명하거나, human approval이 sandbox·OS 권한을 대신한다는 뜻은
+              아닙니다.
+            </p>
+          </div>
+        </CitationBlock>
+      </div>
+
+      <div
+        id="paper-owasp-authorization-cheat-sheet"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          보안 기준 · OWASP Authorization Cheat Sheet
+        </p>
+        <CitationBlock
+          source="OWASP Cheat Sheet Series — Authorization"
+          citeKey={2}
+          type="paper"
+          href="https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+        >
+          <div className="space-y-2 font-sans">
+            <p>
+              <strong>문제:</strong> 누락된 검사 한 곳이나 unmatched request의
+              암묵적 허용이 전체 authorization을 우회할 수 있습니다.
+            </p>
+            <p>
+              <strong>핵심 아이디어·기여:</strong> Least privilege, deny by
+              default, every-request validation, 올바른 enforcement 위치와 실패
+              시 안전한 종료를 권고합니다.
+            </p>
+            <p>
+              <strong>전제·조건:</strong> Subject·resource·action과 trust
+              boundary를 실제 application threat model에 맞춰 정의해야 합니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> Outer ceiling, fail-closed, executor
+              앞 강제와 negative authorization test의 일반 기준입니다.
+            </p>
+            <p>
+              <strong>비주장:</strong> 이 원칙을 인용했다고 pinned Claw build가
+              OWASP 준수나 production security review를 통과했다는 뜻은
+              아닙니다.
+            </p>
+          </div>
+        </CitationBlock>
       </div>
     </section>
   );

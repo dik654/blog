@@ -18,7 +18,19 @@ Cosmos SDK:
      → IBC에서 특정 모듈의 상태만 증명하면 됨`;
 
 export const MULTISTORE_ANNOTATIONS = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: '이더리움: 단일 MPT' },
-  { lines: [9, 15] as [number, number], color: 'emerald' as const, note: 'Cosmos: 모듈별 IAVL Tree' },
-  { lines: [17, 18] as [number, number], color: 'amber' as const, note: 'IBC 상태 증명 장점' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "sky" as const,
+    note: "이더리움: 단일 MPT",
+  },
+  {
+    lines: [9, 15] as [number, number],
+    color: "emerald" as const,
+    note: "Cosmos: 모듈별 IAVL Tree",
+  },
+  {
+    lines: [17, 18] as [number, number],
+    color: "amber" as const,
+    note: "IBC 상태 증명 장점",
+  },
 ];

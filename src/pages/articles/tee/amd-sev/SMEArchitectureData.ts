@@ -17,7 +17,19 @@ SEV가 사용하는 방식:
   - 키는 PSP(AMD SP)가 생성·관리`;
 
 export const smeAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: 'SME: 선택적 페이지 암호화' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: 'TME: 전체 메모리 투명 암호화' },
-  { lines: [12, 15] as [number, number], color: 'amber' as const, note: 'SEV는 SME + VM별 키 분리' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "SME: 선택적 페이지 암호화",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "TME: 전체 메모리 투명 암호화",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "amber" as const,
+    note: "SEV는 SME + VM별 키 분리",
+  },
 ];

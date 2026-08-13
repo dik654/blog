@@ -1,9 +1,11 @@
-import AptosArchViz from './viz/AptosArchViz';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import AptosArchViz from "./viz/AptosArchViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Overview({ onCodeRef }: {
+export default function Overview({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   return (
@@ -11,13 +13,18 @@ export default function Overview({ onCodeRef }: {
       <h2 className="text-2xl font-bold mb-6">Aptos 아키텍처 개요</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Aptos — Meta Diem 파생 L1 블록체인<br />
-          <strong>Block-STM 병렬 실행</strong> + <strong>Move 언어</strong> + DiemBFT v4 합의
+          Aptos — Meta Diem 파생 L1 블록체인
+          <br />
+          <strong>Block-STM 병렬 실행</strong> + <strong>Move 언어</strong> +
+          DiemBFT v4 합의
         </p>
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
-            <CodeViewButton onClick={() =>
-              onCodeRef('apt-blockstm-exec', codeRefs['apt-blockstm-exec'])} />
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef("apt-blockstm-exec", codeRefs["apt-blockstm-exec"])
+              }
+            />
             <span className="text-[10px] text-muted-foreground self-center">
               executor.rs — Block-STM 코어
             </span>
@@ -31,7 +38,7 @@ export default function Overview({ onCodeRef }: {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Aptos 아키텍처 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Aptos Blockchain Architecture
+          {`// Aptos Blockchain Architecture
 //
 // History:
 //   2019: Meta/Facebook announces Libra

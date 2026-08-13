@@ -1,90 +1,141 @@
-import FrameworkArchViz from './viz/FrameworkArchViz';
-import LangGraphDetailViz from './viz/LangGraphDetailViz';
-
-const pipelineSteps = [
-  {
-    title: 'Prompt Template',
-    color: '#0ea5e9',
-    code: 'ChatPromptTemplate.from_template("요약해줘: {topic}")',
-    desc: '변수 슬롯({topic})을 포함한 템플릿 — invoke 시 자동 치환',
-  },
-  {
-    title: 'LLM 호출',
-    color: '#10b981',
-    code: 'ChatOpenAI(model="gpt-4")',
-    desc: '프롬프트를 받아 LLM API 호출 — 스트리밍·배치·비동기 자동 지원',
-  },
-  {
-    title: 'Output Parser',
-    color: '#f59e0b',
-    code: 'StrOutputParser()',
-    desc: 'AIMessage → 순수 문자열 변환 — JSON 파서 등으로 교체 가능',
-  },
-  {
-    title: 'Chain 실행',
-    color: '#8b5cf6',
-    code: 'chain = prompt | llm | parser',
-    desc: '| 연산자(__or__)로 Runnable을 선언적 체이닝 — 각 단계 입출력 자동 연결',
-  },
-  {
-    title: 'Agent 구성',
-    color: '#ef4444',
-    code: 'create_tool_calling_agent(llm, prompt, tools)',
-    desc: 'LLM + Tools 결합 — 도구 호출 결과를 다시 LLM에 피드백하는 루프',
-  },
-];
+import { CitationBlock } from "@/components/ui/citation";
+import FrameworkArchViz from "./viz/FrameworkArchViz";
+import LangGraphDetailViz from "./viz/LangGraphDetailViz";
 
 export default function LangChain() {
   return (
     <section id="langchain" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">LangChain 심층 분석</h2>
-      <div className="not-prose mb-8"><FrameworkArchViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        LangChain은 agent abstraction을, LangGraph는 stateful orchestration runtime을 제공한다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">LCEL (LangChain Expression Language)</h3>
         <p>
-          <strong>LCEL</strong> — LangChain v0.1+의 핵심<br />
-          <code>|</code> 파이프 연산자로 프롬프트, LLM, 파서를 선언적으로 체이닝<br />
-          스트리밍, 배치, 비동기 실행이 자동 지원
+          2026년 8월 공식 문서의 현재 계층에서 LangChain은 model·tool integration과 일반적인
+          agent loop를 제공하는 상위 framework이고, <code>create_agent</code>는 LangGraph
+          runtime 위에서 동작합니다. LangGraph는 prompt나 agent architecture를 대신 정하는
+          제품이 아니라 long-running stateful workflow의 persistence, durable execution,
+          streaming과 human-in-the-loop를 제공하는 낮은 수준의 orchestration runtime입니다.
+          두 이름을 경쟁 framework처럼 놓기보다 같은 stack의 서로 다른 책임으로 읽는 편이
+          정확합니다.
         </p>
-        <div className="not-prose grid gap-3 sm:grid-cols-2 lg:grid-cols-3 my-4">
-          {pipelineSteps.map((s) => (
-            <div
-              key={s.title}
-              className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-4 shadow-sm"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  className="inline-block w-3 h-3 rounded-full"
-                  style={{ backgroundColor: s.color }}
-                />
-                <span className="font-semibold text-sm">{s.title}</span>
-              </div>
-              <code className="block text-xs bg-neutral-100 dark:bg-neutral-800 rounded px-2 py-1 mb-2 break-all">
-                {s.code}
-              </code>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                {s.desc}
-              </p>
-            </div>
-          ))}
+        <p>
+          환불 요청에서 model·tool 연결과 짧은 loop만 필요하면 LangChain agent로 시작할 수
+          있습니다. 주문 조회 뒤 담당자 승인을 며칠 기다리고, process 장애 후 같은 위치에서
+          재개하며, 각 phase의 state를 inspect해야 한다면 LangGraph의 Graph API 또는 기존
+          if·for·function 구조를 유지하는 Functional API를 검토합니다. LangGraph는 LangChain
+          없이도 사용할 수 있으므로 integration layer와 runtime을 함께 채택해야 하는 것은
+          아닙니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <FrameworkArchViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>State·Node·Edge는 환불 workflow의 snapshot·작업·이동 규칙이다</h3>
+        <p>
+          <strong>State</strong>는 현재 application snapshot입니다. 환불 예에서는
+          <code>phase</code>, order, policy decision, approval, refund operation과 receipt를
+          포함합니다. <strong>Node</strong>는 주문 조회, 정책 판정, 승인 interrupt, 환불 API,
+          receipt 검증처럼 한 책임을 수행하는 함수이고, <strong>Edge</strong>는 state를 보고
+          다음 node를 정하는 고정 또는 조건부 transition입니다. Graph가 업무 흐름의 정답을
+          발견하는 것이 아니라 개발자가 이미 정의한 state machine을 실행할 뿐입니다.
+        </p>
+        <p>
+          Node는 state 전체를 마음대로 고치기보다 update를 반환합니다. 같은 field에 update가
+          들어오면 <strong>reducer</strong>가 기존 값과 새 값을 어떻게 합칠지 정합니다. 예를
+          들어 <code>phase</code>는 새 값으로 덮어쓰고, <code>audit_events</code>는 기존 list
+          뒤에 새 event를 붙일 수 있습니다. Single workflow에서도 reducer를 잘못 정하면
+          retry 때 event가 사라지거나 중복됩니다. 여러 node가 병렬로 같은 field를 갱신하는
+          충돌과 안전한 merge는 multi-agent 정본의 범위이므로, 여기서는 한 transition의 update
+          semantics까지만 확인합니다.
+        </p>
+
+        <div id="paper-langgraph-runtime" className="not-prose scroll-mt-24">
+          <CitationBlock
+            source="LangGraph official documentation — Overview and Graph API"
+            citeKey={2}
+            href="https://docs.langchain.com/oss/python/langgraph/overview"
+          >
+            문제: long-running agent가 state, pause, streaming과 failure recovery를 application
+            code마다 다시 구현해야 합니다. 기여: 현재 공식 문서는 LangGraph를 State·Node·Edge와
+            persistence를 중심으로 한 low-level orchestration framework/runtime으로 정의하고,
+            LangChain agent와의 계층을 설명합니다. 전제: 해당 문서 revision과 지원되는 LangGraph
+            API·checkpointer입니다. 근거 범위: 제품의 현재 책임과 공개 execution model입니다.
+            하지 않는 주장: LangGraph가 prompt·workflow를 자동으로 올바르게 설계하거나 모든
+            workload에서 direct code보다 단순하고 빠르며 다른 runtime만으로는 durable execution을
+            구현할 수 없다는 뜻은 아닙니다.
+          </CitationBlock>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Memory 패턴</h3>
-        <ul>
-          <li><strong>ConversationBufferMemory</strong> &mdash; 전체 대화 저장 (짧은 대화)</li>
-          <li><strong>ConversationSummaryMemory</strong> &mdash; LLM이 요약 생성 (긴 대화)</li>
-          <li><strong>VectorStoreMemory</strong> &mdash; 임베딩 기반 관련 기억 검색</li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">LangGraph</h3>
+        <h3>Checkpoint는 program counter 하나가 아니라 serializable state snapshot이다</h3>
         <p>
-          LangChain 팀의 <strong>LangGraph</strong> — 에이전트를 상태 그래프(State Graph)로 모델링<br />
-          노드는 함수, 엣지는 조건부 라우팅<br />
-          사이클 지원으로 복잡한 멀티-에이전트 워크플로우 구현 가능
+          <strong>Checkpoint</strong>는 “다음 줄 번호”만 저장하지 않습니다. LangGraph의
+          persistence는 thread별 graph state values, 다음에 실행할 node·task와 metadata를
+          snapshot으로 남겨 interrupt, fault recovery와 replay에 사용합니다. Thread ID는 어느
+          실행의 checkpoint history를 읽을지 가리킵니다. 이 graph state를 저장하는
+          <strong>checkpointer</strong>와, 여러 thread가 공유하는 사용자 profile 같은
+          cross-thread application data를 저장하는 <strong>store</strong>는 책임이 다릅니다.
+        </p>
+        <p>
+          환불 workflow가 승인 대기에서 멈출 때 checkpoint에는 request ID, order와 policy
+          evidence, approval payload, 현재 phase와 다음 node가 복원 가능한 형태로 들어 있어야
+          합니다. File handle, open database transaction, live HTTP response처럼 serialize할 수
+          없는 process-local object를 state에 넣으면 다른 worker가 재개하기 어렵습니다. 대신
+          stable ID와 필요한 data를 저장하고, connection 같은 dependency는 runtime context에서
+          다시 주입합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <LangGraphDetailViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Replay가 가능하면 side effect는 idempotent해야 한다</h3>
+        <p>
+          과거 checkpoint에서 replay하면 이전 node 결과는 건너뛸 수 있지만 checkpoint 뒤의
+          LLM call, API request와 interrupt는 다시 실행될 수 있습니다. 특히 interrupt가 있는
+          node는 resume할 때 node 시작부터 다시 실행될 수 있으므로 interrupt 앞의 side effect도
+          반복될 가능성을 고려해야 합니다. <strong>Idempotency</strong>는 같은 operation을 여러
+          번 요청해도 효과가 한 번 수행한 것과 같게 만드는 성질입니다.
+        </p>
+        <p>
+          환불 API에는 <code>{"refund:{request_id}:{order_id}"}</code>처럼 workflow에서
+          안정적으로 재생성할 수 있는 idempotency key를 보내고, provider가 반환한 operation ID와
+          receipt를 state에 기록합니다. API 성공 직후 checkpoint write 전에 worker가 죽어도 같은
+          key로 재시도하면 새 환불을 만들지 않고 기존 결과를 조회해야 합니다. “이 node는 대개 한 번
+          실행된다”는 기대나 in-memory flag는 장애 경계를 넘지 못합니다.
+        </p>
+        <p>
+          Human approval은 interrupt payload를 JSON-serializable data로 내보내고 durable
+          checkpointer에 state를 저장한 뒤 중단합니다. Resume input은 승인 여부와 reviewer ID,
+          policy version을 검증한 다음 state update로 남깁니다. 승인 전에 tool call을 실행하거나,
+          오래된 approval을 최신 policy에 그대로 적용해서는 안 됩니다. Timeout·취소·거절도 정상적인
+          terminal state로 설계해야 합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">LangGraph 상세 구조</h3>
-        <div className="not-prose mb-6"><LangGraphDetailViz /></div>
+        <div
+          id="paper-langgraph-durable-execution"
+          className="not-prose scroll-mt-24"
+        >
+          <CitationBlock
+            source="LangGraph official documentation — Persistence, Replay and Interrupts"
+            citeKey={3}
+            href="https://docs.langchain.com/oss/python/langgraph/persistence"
+          >
+            문제: stateful run이 실패하거나 외부 승인을 기다릴 때 진행 상태를 잃고 side effect를
+            중복할 수 있습니다. 기여: 공식 문서는 thread checkpoint, state history, pending writes,
+            replay·fork·update와 interrupt/resume 규칙을 설명하며 idempotent task를 요구합니다.
+            전제: durable checkpointer, serializable state, stable thread identity와 해당 API semantics를
+            따르는 workflow입니다. 근거 범위: LangGraph persistence와 resume 동작입니다. 하지 않는
+            주장: checkpoint가 외부 API를 transaction으로 만들거나 exactly-once delivery·업무
+            correctness를 자동으로 보장하고, cross-thread store와 graph checkpoint가 같은 저장소
+            의미를 가진다는 뜻은 아닙니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

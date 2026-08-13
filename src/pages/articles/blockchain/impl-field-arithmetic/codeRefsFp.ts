@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const fpCodeRefs: Record<string, CodeRef> = {
-  'fp-struct': {
-    path: 'field/fp.rs — Fp struct + constants',
-    lang: 'rust',
+  "fp-struct": {
+    path: "field/fp.rs — Fp struct + constants",
+    lang: "rust",
     highlight: [1, 24],
-    desc: 'BN254 소수체 Fp.\n내부는 항상 Montgomery form — a_mont = a * R mod p로 저장.',
+    desc: "BN254 소수체 Fp.\n내부는 항상 Montgomery form — a_mont = a * R mod p로 저장.",
     code: `/// BN254 base field modulus p (254-bit)
 const MODULUS: [u64; 4] = [
     0x3c208c16d87cfd47, // 최하위 64-bit
@@ -30,17 +30,33 @@ const R2: [u64; 4] = [
     0x47ab1eff0a417ff6, 0x06d89f71cab8351f,
 ];`,
     annotations: [
-      { lines: [2, 7], color: 'sky', note: 'MODULUS — BN254 소수 p. little-endian [u64; 4] 표현' },
-      { lines: [10, 11], color: 'emerald', note: 'Fp 내부 값은 항상 a*R mod p — 생(raw) 숫자가 아님' },
-      { lines: [14, 16], color: 'amber', note: 'R — 1의 Montgomery 표현. ONE = Fp(R)' },
-      { lines: [20, 23], color: 'violet', note: 'R^2 — from_raw(a) = mont_mul(a, R^2) = a*R = a_mont' },
+      {
+        lines: [2, 7],
+        color: "sky",
+        note: "MODULUS — BN254 소수 p. little-endian [u64; 4] 표현",
+      },
+      {
+        lines: [10, 11],
+        color: "emerald",
+        note: "Fp 내부 값은 항상 a*R mod p — 생(raw) 숫자가 아님",
+      },
+      {
+        lines: [14, 16],
+        color: "amber",
+        note: "R — 1의 Montgomery 표현. ONE = Fp(R)",
+      },
+      {
+        lines: [20, 23],
+        color: "violet",
+        note: "R^2 — from_raw(a) = mont_mul(a, R^2) = a*R = a_mont",
+      },
     ],
   },
-  'fp-add-sub': {
-    path: 'field/fp.rs — add, sub, neg',
-    lang: 'rust',
+  "fp-add-sub": {
+    path: "field/fp.rs — add, sub, neg",
+    lang: "rust",
     highlight: [1, 30],
-    desc: '모듈러 덧셈/뺄셈.\n결과가 [0, p) 범위를 벗어나면 p를 더하거나 빼서 보정.',
+    desc: "모듈러 덧셈/뺄셈.\n결과가 [0, p) 범위를 벗어나면 p를 더하거나 빼서 보정.",
     code: `/// (a + b) mod p
 pub fn add(&self, rhs: &Fp) -> Fp {
     // 4개 limb을 순서대로 더하며 carry 전파
@@ -73,9 +89,21 @@ pub fn sub(&self, rhs: &Fp) -> Fp {
 /// -a mod p = p - a (0이면 0)
 pub fn neg(&self) -> Fp { ... }`,
     annotations: [
-      { lines: [3, 7], color: 'sky', note: 'limb 단위 덧셈 — 하위부터 상위로 carry를 전파' },
-      { lines: [9, 9], color: 'emerald', note: 'sub_if_gte — p를 빼보고, 음수면 원래 값 유지' },
-      { lines: [18, 24], color: 'amber', note: 'borrow 발생 시 p를 더해 [0, p)로 복원 — 모듈러 연산의 핵심' },
+      {
+        lines: [3, 7],
+        color: "sky",
+        note: "limb 단위 덧셈 — 하위부터 상위로 carry를 전파",
+      },
+      {
+        lines: [9, 9],
+        color: "emerald",
+        note: "sub_if_gte — p를 빼보고, 음수면 원래 값 유지",
+      },
+      {
+        lines: [18, 24],
+        color: "amber",
+        note: "borrow 발생 시 p를 더해 [0, p)로 복원 — 모듈러 연산의 핵심",
+      },
     ],
   },
 };

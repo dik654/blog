@@ -1,145 +1,140 @@
-import { motion } from 'framer-motion';
+import { CitationBlock } from "@/components/ui/citation";
+import DdrArchitectureViz from "./viz/DdrArchitectureViz";
 
-const rows = [
-  { attr: '전송 속도', ddr4: '3200 MT/s', ddr5: '5600 MT/s' },
-  { attr: '전압', ddr4: '1.2V', ddr5: '1.1V' },
-  { attr: '채널 구조', ddr4: '64비트 단일 채널', ddr5: '2 x 32비트 서브채널' },
-  { attr: '뱅크 그룹', ddr4: '4개', ddr5: '8개' },
-  { attr: '온다이 ECC', ddr4: '없음', ddr5: '있음 (DIMM 내부 보정)' },
-  { attr: '최대 DIMM 용량', ddr4: '128GB', ddr5: '256GB (단일 DIMM)' },
+const differences = [
+  {
+    axis: "Module data path",
+    ddr4: "하나의 64-bit data channel",
+    ddr5: "두 개의 독립 32-bit subchannel",
+  },
+  {
+    axis: "Server ECC width",
+    ddr4: "일반적으로 72-bit module path",
+    ddr5: "두 개의 40-bit ECC subchannel 구성 가능",
+  },
+  {
+    axis: "Burst",
+    ddr4: "BL8 중심",
+    ddr5: "BL16으로 subchannel당 cache line 전송",
+  },
+  {
+    axis: "전력 관리",
+    ddr4: "주요 regulation이 board에 위치",
+    ddr5: "module PMIC와 SPD hub 도입",
+  },
+  {
+    axis: "내부 RAS",
+    ddr4: "세대·제품별 기능",
+    ddr5: "on-die ECC와 error check/scrub",
+  },
+  {
+    axis: "실제 속도",
+    ddr4: "CPU·DIMM·DPC의 공통 지원값",
+    ddr5: "CPU·DIMM·DPC의 공통 지원값",
+  },
 ];
 
 export default function DDR() {
   return (
     <section id="ddr" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">DDR4 vs DDR5: 대역폭, 레이턴시, 채널</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        DDR4와 DDR5: 채널·대역폭·지연시간
+      </h2>
+      <div className="not-prose mb-8">
+        <DdrArchitectureViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          DDR5는 서브채널 분할로 실효 대역폭이 DDR4의 약 2배입니다.<br />
-          온다이 ECC가 기본 탑재되어 DIMM 내부에서 1차 에러 보정을 수행합니다.
+        <p className="leading-7">
+          DDR5의 핵심은 단순한 MT/s 상승뿐 아니라 DIMM을 두 독립 subchannel로
+          나눈 구조
+          <br />더 작은 요청을 서로 다른 bank에 배치하기 쉬워지고, BL16 전송으로
+          각 subchannel이 일반적인 cache line을 효율적으로 전달함
         </p>
-        <div className="overflow-x-auto not-prose">
+
+        <div className="overflow-x-auto not-prose my-6">
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                {['속성', 'DDR4', 'DDR5'].map(h => (
-                  <th key={h} className="border border-border px-3 py-2 text-left">{h}</th>
+                {["설계 축", "DDR4", "DDR5"].map((heading) => (
+                  <th
+                    key={heading}
+                    className="border border-border px-3 py-2 text-left"
+                  >
+                    {heading}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
-                <motion.tr key={r.attr} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <td className="border border-border px-3 py-2 font-medium">{r.attr}</td>
-                  <td className="border border-border px-3 py-2">{r.ddr4}</td>
-                  <td className="border border-border px-3 py-2">{r.ddr5}</td>
-                </motion.tr>
+              {differences.map((row) => (
+                <tr key={row.axis}>
+                  <td className="border border-border px-3 py-2 font-medium whitespace-nowrap">
+                    {row.axis}
+                  </td>
+                  <td className="border border-border px-3 py-2">{row.ddr4}</td>
+                  <td className="border border-border px-3 py-2">{row.ddr5}</td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">DDR4 vs DDR5 기술 차이</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DDR5 핵심 개선사항:
-
-// 1. Sub-channel Architecture:
-// DDR4: single 64-bit channel per DIMM
-// DDR5: two 32-bit sub-channels per DIMM
-// - independent addressing
-// - 2x command/address bus
-// - better parallelism
-// - effective bandwidth ~2x
-
-// 2. On-die ECC:
-// - integrated in DDR5 DIMM
-// - protects DRAM cell errors
-// - transparent to CPU
-// - not replacement for SECDED
-// - reduces soft error rate
-
-// 3. Power Management:
-// DDR4: external PMIC on motherboard
-// DDR5: PMIC on DIMM
-// - better voltage regulation
-// - per-DIMM tuning
-// - lower power (1.1V vs 1.2V)
-// - higher speeds possible
-
-// 4. Higher Speeds:
-// DDR4: 2133-3200 MT/s (standard)
-// DDR4 OC: up to 5000 MT/s
-// DDR5: 4800-5600 MT/s (launch)
-// DDR5: 8000+ MT/s (overclocked)
-// - near-doubling
-
-// 5. Bank Groups:
-// DDR4: 4 bank groups (4 banks each = 16)
-// DDR5: 8 bank groups (4 banks each = 32)
-// - more parallel access
-// - better random I/O
-// - reduced row conflicts
-
-// 6. Capacity:
-// DDR4: 16 Gb max density
-// DDR5: 64 Gb max density
-// - 4x per chip
-// - larger DIMMs possible
-
-// Bandwidth comparison:
-
-// DDR4-3200:
-// - per DIMM: 25.6 GB/s
-// - dual-channel: 51.2 GB/s
-// - 8-channel server: 205 GB/s
-
-// DDR5-4800:
-// - per DIMM: 38.4 GB/s
-// - dual-channel: 76.8 GB/s
-// - 8-channel server: 307 GB/s
-
-// DDR5-5600:
-// - per DIMM: 44.8 GB/s
-// - dual-channel: 89.6 GB/s
-// - 8-channel server: 358 GB/s
-
-// Latency:
-// DDR4 CL16: 10 ns
-// DDR5 CL40: 14 ns
-// - DDR5 higher nominal CL
-// - but faster data rate
-// - similar actual latency
-
-// Workload implications:
-//
-// Memory-bound:
-// - DDR5 significantly faster
-// - MSM computations
-// - large graph algorithms
-// - database scans
-//
-// Latency-sensitive:
-// - marginal gains
-// - CPU caches matter more
-// - DDR4 still competitive
-//
-// Cost:
-// - DDR4: $3-5/GB (2024)
-// - DDR5: $4-8/GB (2024)
-// - converging
-
-// Compatibility:
-// - different slots (not interchangeable)
-// - requires DDR5-compatible motherboard
-// - Intel 12th gen+ (2021)
-// - AMD Ryzen 7000+ (2022)
-// - servers: Sapphire Rapids, Genoa+`}
-        </pre>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          대역폭은 채널별로 계산하고 합산
+        </h3>
         <p className="leading-7">
-          DDR5: <strong>sub-channels + on-die ECC + higher speeds</strong>.<br />
-          8-channel server: DDR4 205 GB/s → DDR5 358 GB/s.<br />
-          Intel 12th+, AMD Ryzen 7000+, server 2023+.
+          64-bit data channel의 이론 대역폭은 MT/s × 8 bytes로 계산하고 활성
+          채널 수만큼 합산함. 하지만 refresh, read/write 전환, row miss와
+          workload 병렬성 때문에 애플리케이션이 상한을 전부 사용하지는 못함
+          <br />
+          서버에서는 DIMM 몇 개보다 모든 channel을 같은 용량으로 채워
+          interleave가 가능한지가 더 중요할 수 있음
         </p>
+
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          CL 숫자만으로 지연시간을 비교하지 않는다
+        </h3>
+        <p className="leading-7">
+          CAS latency는 cycle 수이므로 clock period와 곱해 nanosecond로 환산해야
+          함. 전체 메모리 접근은 row 활성화, queue 대기, memory controller와
+          NUMA 경로까지 포함하므로 timing 표와 실제 애플리케이션 latency를 함께
+          측정해야 함
+        </p>
+
+        <div className="not-prose my-6 border-l-4 border-cyan-400 bg-cyan-50/60 dark:bg-cyan-950/20 rounded-r-lg p-4">
+          <p className="font-semibold mb-1">검증 순서</p>
+          <p className="text-sm leading-6">
+            BIOS의 실제 동작 속도 확인 → 채널별 population 확인 → local/remote
+            NUMA bandwidth 측정 → 애플리케이션 재측정
+          </p>
+        </div>
+
+        <CitationBlock
+          source="Kingston — DDR5 Memory Standard Overview"
+          citeKey={3}
+          href="https://www.kingston.com/en/blog/pc-performance/ddr5-overview"
+        >
+          DDR5 module이 두 개의 32-bit subchannel을 사용하고 server RDIMM은
+          subchannel마다 ECC용 8-bit를 더할 수 있음을 설명.
+        </CitationBlock>
+        <CitationBlock
+          source="Micron — DDR5 Technology Enablement"
+          citeKey={4}
+          href="https://www.micron.com/about/blog/memory/dram/microns-ddr5-technology-enablement-program-empowers-ecosystem"
+        >
+          DDR5의 독립 subchannel, module PMIC, RCD와 refresh 개선을 DDR4 구조와
+          구분.
+        </CitationBlock>
+        <CitationBlock
+          source="AMD — EPYC 9005 Architecture Overview"
+          citeKey={5}
+          type="paper"
+          href="https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/user-guides/58462_amd-epyc-9005-tg-architecture-overview.pdf"
+        >
+          현행 서버 플랫폼의 실제 channel 수·DPC·최대 동작 속도와 capacity가 CPU
+          세대별 플랫폼 사양임을 보여 줌.
+        </CitationBlock>
       </div>
     </section>
   );

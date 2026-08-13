@@ -1,108 +1,70 @@
-import ArchitectureViz from './viz/ArchitectureViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ArchitectureViz from "./viz/ArchitectureViz";
 
 export default function Architecture() {
   return (
     <section id="architecture" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ViT / DeiT / Swin 아키텍처</h2>
+      <h2 className="mb-6 text-2xl font-bold">ViT 이후의 계보는 같은 구조의 세대교체가 아니라 서로 다른 병목에 대한 분기입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          ViT는 시작점이다. 그 이후 등장한 변형들은 각각 ViT의 약점을 해결하며 발전했다.
-          DeiT는 데이터 효율, Swin은 연산 효율, BEiT/MAE는 자기지도 학습 — 각각 다른 병목을 공략한다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">ViT: 기본 구조</h3>
-        <p>
-          구조: Patch Embedding → [CLS] + Position → L개 Transformer Encoder → MLP Head.
-          각 Encoder 블록: <strong>LayerNorm → Multi-Head Self-Attention → 잔차 연결 → LayerNorm → MLP(GELU) → 잔차 연결</strong>.
-          BERT와 거의 동일하되 입력만 다르다 — 텍스트 토큰 대신 패치 토큰.
-        </p>
-        <p>
-          모델 크기: ViT-Base(L=12, D=768, Heads=12, 86M), ViT-Large(L=24, D=1024, Heads=16, 307M), ViT-Huge(L=32, D=1280, Heads=16, 632M).
-          문제: JFT-300M(3억 장)으로 사전학습해야 ImageNet에서 CNN을 넘김 — ImageNet(120만 장)만으로는 CNN보다 떨어진다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">DeiT: 데이터 효율적 학습</h3>
-        <p>
-          Touvron et al. (2021), Facebook AI.
-          핵심 질문: "JFT-300M 없이 ViT를 학습할 수 있는가?"
-          답: <strong>지식 증류(Knowledge Distillation)</strong> + 강력한 데이터 증강.
-        </p>
-        <p>
-          <strong>Distillation Token</strong> — [CLS] 외에 하나의 토큰을 더 추가.
-          교사 모델(RegNet, CNN 기반)의 출력을 이 토큰이 학습.
-          결과: [CLS]는 ground truth에서, [DIS]는 교사에서 학습 → 두 가지 감독 신호.
-          CNN의 귀납 편향을 증류를 통해 간접적으로 ViT에 전달하는 전략.
-        </p>
-        <p>
-          데이터 증강: RandAugment, Mixup(α=0.8), CutMix(α=1.0), Random Erasing.
-          Stochastic Depth(drop_path_rate=0.1) + Label Smoothing(0.1) 병행.
-          ImageNet 120만 장만으로 83.1% Top-1 달성 — ViT의 데이터 장벽을 허물었다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Swin Transformer: 윈도우 기반 계층 구조</h3>
-        <p>
-          Liu et al. (2021), Microsoft Research.
-          ViT의 O(n²) 어텐션은 고해상도에서 비실용적 — 1024x1024 이미지라면 4096개 토큰, 어텐션 행렬만 64MB.
-          Swin의 해결책: <strong>윈도우 어텐션(Window Attention)</strong>.
-        </p>
-        <p>
-          <strong>Window Attention</strong>: 이미지를 7x7 패치 윈도우로 분할, 각 윈도우 내에서만 어텐션 → 복잡도 O(49²) per window = <strong>O(n) 전체</strong>.
-          문제: 윈도우 간 정보 교환 없음.
-          해결: <strong>Shifted Window(SW-MSA)</strong> — 매 레이어마다 윈도우를 (3, 3) 픽셀 이동.
-          홀수 레이어는 일반 윈도우, 짝수 레이어는 시프트 윈도우 → 인접 윈도우 간 정보가 자연스럽게 흐른다.
-        </p>
-        <p>
-          <strong>4단계 계층 구조</strong>: Stage 1(H/4) → Stage 2(H/8) → Stage 3(H/16) → Stage 4(H/32).
-          각 단계에서 Patch Merging으로 해상도를 절반으로 줄이고 채널을 2배로 늘린다 — CNN의 풀링과 유사.
-          이 구조 덕분에 FPN(Feature Pyramid Network)과 직접 결합 가능 → 객체 탐지, 세그멘테이션에 직접 적용.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">BEiT / MAE: 자기지도 사전학습</h3>
-        <p>
-          <strong>BEiT</strong>(Bao et al., 2022): BERT의 MLM(Masked Language Modeling)을 비전에 적용.
-          이미지 패치를 dVAE(discrete VAE)로 시각 토큰으로 변환 → 40%를 마스킹 → ViT가 원래 시각 토큰 예측.
-          라벨 없이 대규모 이미지에서 의미 있는 표현을 학습한 후 fine-tuning.
-        </p>
-        <p>
-          <strong>MAE</strong>(He et al., 2022, Meta AI): BEiT보다 단순하고 효율적.
-          패치의 <strong>75%를 마스킹</strong> → 인코더는 보이는 25%만 처리 → 가벼운 디코더가 마스킹된 패치의 픽셀을 복원.
-          높은 마스킹 비율이 핵심 — 낮은 비율에서는 인접 패치 보간만으로 복원 가능하지만, 75%에서는 의미적 이해가 필수.
-          인코더가 전체 토큰의 25%만 처리하므로 사전학습 효율이 4배 향상.
+          DeiT는 ImageNet-1K 안에서 강한 augmentation·regularization과 teacher
+          distillation을 결합해 supervised training recipe를 바꿨습니다. Swin은
+          global attention 대신 local window와 shifted window, patch merging을
+          사용해 high-resolution hierarchy를 만들었습니다. MAE는 label이 아니라
+          가린 patch 복원으로 encoder를 사전학습했습니다. 해결한 문제가 다르므로
+          이름을 한 줄의 단순한 진화 순서로 놓으면 핵심이 사라집니다.
         </p>
       </div>
-
+      <ExplainedFormula
+        question="DeiT의 distillation token은 teacher signal을 어디에 넣을까?"
+        idea={<>Student는 class token head로 정답 label을 학습하는 동시에 별도의 distillation token head로 teacher prediction을 학습합니다. 두 loss의 결합 비율과 teacher 자체의 training data를 함께 봐야 data efficiency를 해석할 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}
+\mathcal L_{\mathrm{cls}}&=\operatorname{CE}(y,p_{\mathrm{cls}}),\\
+\mathcal L_{\mathrm{dist}}&=\operatorname{CE}(y_T,p_{\mathrm{dist}}),\\
+\mathcal L&=(1-\lambda)\mathcal L_{\mathrm{cls}}+\lambda\mathcal L_{\mathrm{dist}}.
+\end{aligned}`}
+        terms={[
+          { symbol: "p_cls", name: "class-token prediction", description: "Ground-truth class label을 읽는 student의 일반 classification head output입니다." },
+          { symbol: "p_dist", name: "distillation-token prediction", description: "Teacher target을 읽도록 별도 token에서 만든 student output입니다." },
+          { symbol: "y_T", name: "teacher target", description: "Teacher model이 image에 대해 만든 hard class 또는 soft distribution입니다." },
+          { symbol: "λ", name: "distillation weight", description: "정답 supervision과 teacher supervision의 loss 기여를 조절합니다." },
+        ]}
+        assumptions={["설명을 위한 공통 loss 형태이며 DeiT의 hard/soft distillation과 inference head 결합 세부 설정을 구분합니다.", "Teacher architecture·checkpoint·training data와 augmentation이 전체 recipe 일부입니다.", "Teacher가 틀리는 slice에서는 student도 같은 오류를 전수받을 수 있습니다."]}
+        interpretation="Distillation token은 attention 연산 자체를 바꾼 것이 아니라 서로 다른 supervision source를 token·head로 분리한 interface입니다."
+      />
+      <ExplainedFormula
+        question="Swin의 window attention은 global attention의 pair 수를 얼마나 줄일까?"
+        idea={<>N개 token 전체를 서로 비교하면 N² score가 필요합니다. 각 window에 M²개 token이 있고 window 수가 N/M²라면 score 수는 window당 M⁴, 전체 N·M²에 비례합니다.</>}
+        formula={String.raw`\begin{aligned}
+C_{\mathrm{global}}&\propto N^2,\\
+C_{\mathrm{window}}&\propto \frac{N}{M^2}(M^2)^2=N M^2.
+\end{aligned}`}
+        terms={[
+          { symbol: "N", name: "total tokens", description: "한 stage의 전체 spatial token 개수입니다." },
+          { symbol: "M", name: "window side length", description: "각 local attention window의 token-grid 한 변이며 window 하나에는 M² token이 있습니다." },
+        ]}
+        assumptions={["모든 window 크기가 같고 padding·projection·MLP cost를 생략한 attention-score 지배항입니다.", "Shifted window는 다음 block에서 window partition을 이동해 이전 경계 사이의 정보 교환 경로를 만듭니다.", "한 block의 local attention만으로 모든 token이 직접 연결되는 것은 아닙니다."]}
+        interpretation="Window attention의 장점은 단순히 score 수를 줄이는 데 있고, shifted partition과 여러 block이 global information propagation을 보완합니다."
+      />
+      <ExplainedFormula
+        question="MAE가 75% mask ratio에서도 encoder pretraining compute를 줄일 수 있는 이유는 무엇일까?"
+        idea={<>Mask token을 encoder 앞에 넣지 않고 visible token만 encoder에 보냅니다. Visible fraction이 v=1−ρ라면 encoder sequence는 vN, global attention score 항은 (vN)²가 됩니다.</>}
+        formula={String.raw`\begin{aligned}
+N_{\mathrm{vis}}&=(1-\rho)N=vN,\\
+\frac{C_{\mathrm{attn,vis}}}{C_{\mathrm{attn,all}}}&\approx\frac{(vN)^2}{N^2}=v^2.
+\end{aligned}`}
+        terms={[
+          { symbol: "ρ,v", name: "mask and visible fractions", description: "가린 patch 비율과 encoder가 실제로 읽는 patch 비율이며 v=1−ρ입니다." },
+          { symbol: "N_vis", name: "visible-token count", description: "MAE encoder에 전달되는 원본 patch token 수입니다." },
+          { symbol: "C_attn", name: "attention-score cost proxy", description: "Encoder global attention의 pairwise score 항만 비교한 근사 비용입니다." },
+        ]}
+        assumptions={["원 논문처럼 asymmetric encoder가 visible token만 처리하고 lightweight decoder가 mask token을 나중에 받습니다.", "전체 training cost에는 patch projection·MLP·decoder·memory overhead도 포함됩니다.", "높은 mask ratio가 임의 modality와 objective에서 최적이라는 보장은 없습니다."]}
+        interpretation="ρ=.75이면 v=.25이고 attention-score 항은 단순 근사로 1/16입니다. 이것이 encoder를 크게 만들 수 있는 compute 여유를 주지만 전체 wall-time speedup과 같지는 않습니다."
+      />
       <div className="not-prose my-8"><ArchitectureViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">모델</th>
-                <th className="border border-border px-4 py-2 text-left">핵심 혁신</th>
-                <th className="border border-border px-4 py-2 text-left">해결한 문제</th>
-                <th className="border border-border px-4 py-2 text-left">ImageNet Top-1</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['ViT-L/16', 'NLP Transformer 직접 적용', '글로벌 어텐션', '87.8% (JFT)'],
-                ['DeiT-B', '증류 토큰 + 데이터 증강', '데이터 효율', '83.1%'],
-                ['Swin-B', '윈도우 어텐션 + 계층 구조', '연산 효율', '83.5%'],
-                ['BEiT', '시각 토큰 마스킹 예측', '자기지도 학습', '83.2%'],
-                ['MAE', '75% 마스킹 + 픽셀 복원', '사전학습 효율', '83.6%'],
-              ].map(([model, innovation, problem, acc]) => (
-                <tr key={model}>
-                  <td className="border border-border px-4 py-2 font-medium">{model}</td>
-                  <td className="border border-border px-4 py-2">{innovation}</td>
-                  <td className="border border-border px-4 py-2">{problem}</td>
-                  <td className="border border-border px-4 py-2">{acc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <div id="paper-deit" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · DeiT</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Touvron 등은 ImageNet-1K 중심의 강한 recipe와 convolutional teacher의 distillation token으로 external pretraining data 없이 경쟁력 있는 ViT 학습을 보였습니다. Teacher가 사용한 학습과 recipe cost까지 지운 채 student label 수만으로 data efficiency를 주장하지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v139/touvron21a.html" target="_blank" rel="noreferrer">Distillation token과 recipe ablation 보기</a></div>
+      <div id="paper-swin" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Swin Transformer</p><p className="mt-2 text-sm leading-6 text-muted-foreground">Liu 등은 non-overlapping local windows, shifted partition과 hierarchical patch merging으로 classification뿐 아니라 detection·segmentation backbone을 구성했습니다. Window complexity 식만으로 모든 hardware에서 faster latency를 보장하지는 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content/ICCV2021/html/Liu_Swin_Transformer_Hierarchical_Vision_Transformer_Using_Shifted_Windows_ICCV_2021_paper.html" target="_blank" rel="noreferrer">Shifted window와 hierarchy 실험 보기</a></div>
+      <div id="paper-mae" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · Masked Autoencoder</p><p className="mt-2 text-sm leading-6 text-muted-foreground">He 등은 높은 비율의 random patch를 가리고 visible patch만 큰 encoder에 넣은 뒤 작은 decoder가 pixel을 복원하는 asymmetric design을 제안했습니다. ImageNet-1K pretraining과 downstream transfer 결과를 모든 reconstruction target의 semantic quality 보장으로 확대하지 않습니다.</p><a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openaccess.thecvf.com/content/CVPR2022/html/He_Masked_Autoencoders_Are_Scalable_Vision_Learners_CVPR_2022_paper.html" target="_blank" rel="noreferrer">Visible-only encoder와 mask-ratio ablation 보기</a></div>
     </section>
   );
 }

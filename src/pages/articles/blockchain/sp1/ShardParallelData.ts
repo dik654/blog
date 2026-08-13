@@ -50,18 +50,50 @@ let proofs: Vec<ShardProof> = records
 // - GPU (CUDA): 수백 개 NTT/MSM 병렬`;
 
 export const recordAnnotations = [
-  { lines: [2, 10] as [number, number], color: 'sky' as const, note: 'ExecutionRecord — 칩별 이벤트 수집' },
+  {
+    lines: [2, 10] as [number, number],
+    color: "sky" as const,
+    note: "ExecutionRecord — 칩별 이벤트 수집",
+  },
 ];
 
 export const shardAnnotations = [
-  { lines: [2, 2] as [number, number], color: 'sky' as const, note: '~400만 사이클마다 분할' },
-  { lines: [5, 6] as [number, number], color: 'emerald' as const, note: '현재 레코드 완료' },
-  { lines: [8, 10] as [number, number], color: 'amber' as const, note: '메모리 체크포인트 저장' },
-  { lines: [12, 16] as [number, number], color: 'violet' as const, note: '새 레코드 초기화' },
+  {
+    lines: [2, 2] as [number, number],
+    color: "sky" as const,
+    note: "~400만 사이클마다 분할",
+  },
+  {
+    lines: [5, 6] as [number, number],
+    color: "emerald" as const,
+    note: "현재 레코드 완료",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "amber" as const,
+    note: "메모리 체크포인트 저장",
+  },
+  {
+    lines: [12, 16] as [number, number],
+    color: "violet" as const,
+    note: "새 레코드 초기화",
+  },
 ];
 
 export const parallelAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: 'rayon par_iter — 자동 스레드 분배' },
-  { lines: [5, 9] as [number, number], color: 'emerald' as const, note: '워커: trace → commit → prove' },
-  { lines: [13, 16] as [number, number], color: 'amber' as const, note: '하드웨어별 병렬 수준' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "rayon par_iter — 자동 스레드 분배",
+  },
+  {
+    lines: [5, 9] as [number, number],
+    color: "emerald" as const,
+    note: "워커: trace → commit → prove",
+  },
+  {
+    lines: [13, 16] as [number, number],
+    color: "amber" as const,
+    note: "하드웨어별 병렬 수준",
+  },
 ];

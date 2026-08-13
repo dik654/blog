@@ -1,60 +1,30 @@
-import OverviewViz from './viz/OverviewViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import OverviewViz from "./viz/OverviewViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">지식 증류란</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>지식 증류(Knowledge Distillation)</strong> — 큰 Teacher 모델이 학습한 "지식"을 작은 Student 모델로 전달하는 기법.<br />
-          핵심 아이디어: Teacher의 <strong>soft target</strong>(소프트 확률 분포)에는 hard label(정답 라벨)보다 풍부한 정보가 담겨 있다.
+      <h2 className="mb-6 text-2xl font-bold">
+        지식 증류는 큰 모델을 복사하는 일이 아니라, teacher가 만든 어떤 신호를 student의 학습 목표로 바꿀지 정하는 일입니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          분류 모델이 고양이를 맞혔다는 정답 label은 다른 class를 얼마나 헷갈렸는지 알려 주지 않습니다. 반면 teacher의 probability가 고양이 .7, 여우 .2, 자동차 .1이라면 고양이와 여우가 더 비슷하다는 상대 관계도 training signal이 됩니다. Knowledge distillation은 이런 output distribution, 중간 feature 또는 teacher가 생성한 sequence를 student의 loss에 넣는 학습 방법입니다.
         </p>
-
-        <h3>왜 지식 증류가 필요한가</h3>
         <p>
-          대규모 모델은 높은 정확도를 달성하지만, 추론 비용이 크다 — 메모리, 지연시간, 에너지 소비 모두.<br />
-          모바일 배포, 실시간 서빙, 엣지 디바이스에서는 경량 모델이 필수.<br />
-          단순히 작은 모델을 학습하면 성능이 크게 떨어지지만, Teacher의 지식을 전달받으면 격차를 줄일 수 있다.
+          “지식”은 model weight가 통째로 이동한다는 뜻이 아닙니다. Student는 teacher가 관측한 input에서 내놓은 제한된 신호를 모방하며, teacher의 오류·bias·calibration 문제도 함께 배울 수 있습니다. 따라서 teacher가 크다는 이유만으로 선택하지 않고 target domain과 slice에서 teacher가 hard-label baseline보다 어떤 추가 정보를 주는지 먼저 확인해야 합니다.
         </p>
-
-        <h3>Dark Knowledge — Hinton(2015)</h3>
         <p>
-          Hinton et al.의 "Distilling the Knowledge in a Neural Network"가 지식 증류의 기반 논문.<br />
-          핵심 개념은 <strong>dark knowledge</strong>: 오답 클래스의 확률 분포 속에 숨겨진 정보.
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm leading-relaxed">
-            <strong>예시</strong>: 고양이 사진을 분류할 때 Teacher의 출력이 [고양이: 0.85, 호랑이: 0.10, 강아지: 0.04, 자동차: 0.01]이라면 —<br />
-            "고양이와 호랑이는 비슷하고, 자동차와는 전혀 다르다"는 구조적 관계가 담겨 있다.<br />
-            Hard label [0, 1, 0, 0]에는 이 관계 정보가 전혀 없다.
-          </p>
-        </div>
-
-        <h3>Temperature Scaling</h3>
-        <p>
-          일반 softmax는 가장 큰 logit에 확률이 집중된다 — 정보가 희소해짐.<br />
-          <strong>Temperature T</strong>로 logit을 나눈 뒤 softmax를 적용하면 분포가 부드러워진다: <code>softmax(zᵢ / T)</code>.<br />
-          T=1은 원래 softmax, T가 클수록(5~20) 클래스 간 확률 차이가 줄어들어 dark knowledge가 더 잘 드러난다.
-        </p>
-
-        <h3>지식 증류의 3대 축</h3>
-        <p>
-          <strong>Logit Distillation</strong> — Teacher의 최종 확률 분포를 Student가 모방.<br />
-          <strong>Feature Distillation</strong> — Teacher의 중간 레이어 표현을 Student에 전달.<br />
-          <strong>Data Distillation</strong> — Teacher가 생성한 데이터로 Student를 학습.
+          시작점은 배포할 student의 architecture·tokenizer·latency·memory budget입니다. 그다음 두 모델이 공유하는 interface에 따라 class logits, mapped feature, token distribution 또는 generated sequence 중 전달 가능한 신호를 고릅니다. LLM에서는 신호의 종류만큼 그 sequence를 누가 생성했는지도 중요합니다. 이 글은 logit distillation에서 시작해 feature와 teacher sequence를 살펴본 뒤, student가 실제로 방문한 prefix에서 배우는 on-policy distillation과 self-distillation 순으로 범위를 넓힙니다.
         </p>
       </div>
-
-      <div className="not-prose mt-8">
+      <ContentBoundary article="knowledge-distillation" />
+      <div className="not-prose my-8">
         <OverviewViz />
       </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: 지식 증류는 <strong>모델 압축</strong>의 핵심 기법 — Teacher의 dark knowledge를 Student에 전달.<br />
-          요약 2: Temperature scaling으로 soft target의 정보량을 조절.<br />
-          요약 3: Logit, Feature, Data 세 축으로 발전 — LLM 시대에도 핵심 역할.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Distillation loss가 낮아졌다는 사실은 teacher와 가까워졌다는 뜻일 뿐, 정답이나 배포 목표에 가까워졌다는 뜻은 아닙니다. 그래서 ground-truth loss를 anchor로 남기고, teacher agreement와 독립 test quality, student-only runtime을 서로 다른 열에 기록합니다.
         </p>
       </div>
     </section>

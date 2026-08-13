@@ -16,9 +16,21 @@ pub trait Circuit<F: Field> {
 // SuperCircuit의 FloorPlanner = SimpleFloorPlanner`;
 
 export const circuitTraitAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: 'Config/FloorPlanner/Params 타입' },
-  { lines: [7, 7] as [number, number], color: 'emerald' as const, note: 'without_witnesses — 키 생성용' },
-  { lines: [8, 12] as [number, number], color: 'amber' as const, note: 'configure → synthesize 생명주기' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "Config/FloorPlanner/Params 타입",
+  },
+  {
+    lines: [7, 7] as [number, number],
+    color: "emerald" as const,
+    note: "without_witnesses — 키 생성용",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "amber" as const,
+    note: "configure → synthesize 생명주기",
+  },
 ];
 
 export const SUBCIRCUIT_TRAIT_CODE = `// SubCircuit 트레이트 — 서브회로 표준 인터페이스
@@ -44,10 +56,26 @@ pub trait SubCircuitConfig<F: Field> {
 }`;
 
 export const subCircuitAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: 'Config + 팩토리 메서드' },
-  { lines: [8, 12] as [number, number], color: 'emerald' as const, note: 'synthesize_sub — Witness 할당' },
-  { lines: [14, 14] as [number, number], color: 'amber' as const, note: 'min_num_rows — 동적 크기' },
-  { lines: [17, 20] as [number, number], color: 'violet' as const, note: 'SubCircuitConfig — 설정 트레이트' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "Config + 팩토리 메서드",
+  },
+  {
+    lines: [8, 12] as [number, number],
+    color: "emerald" as const,
+    note: "synthesize_sub — Witness 할당",
+  },
+  {
+    lines: [14, 14] as [number, number],
+    color: "amber" as const,
+    note: "min_num_rows — 동적 크기",
+  },
+  {
+    lines: [17, 20] as [number, number],
+    color: "violet" as const,
+    note: "SubCircuitConfig — 설정 트레이트",
+  },
 ];
 
 export const CELLMANAGER_CODE = `// CellManager — 셀 할당 최적화
@@ -73,7 +101,19 @@ pub(crate) fn query_cell(&mut self, cell_type: CellType) -> Cell<F> {
 //   LookupByte          — 바이트 룩업 전용`;
 
 export const cellManagerAnnotations = [
-  { lines: [3, 7] as [number, number], color: 'sky' as const, note: 'CellManager 구조체 — 셀 + 컬럼' },
-  { lines: [10, 12] as [number, number], color: 'emerald' as const, note: '할당 — 최소 높이 컬럼 선택' },
-  { lines: [14, 20] as [number, number], color: 'amber' as const, note: '6종 컬럼 타입 — 용도별 분류' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "sky" as const,
+    note: "CellManager 구조체 — 셀 + 컬럼",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "emerald" as const,
+    note: "할당 — 최소 높이 컬럼 선택",
+  },
+  {
+    lines: [14, 20] as [number, number],
+    color: "amber" as const,
+    note: "6종 컬럼 타입 — 용도별 분류",
+  },
 ];

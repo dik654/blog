@@ -1,8 +1,11 @@
-import { createAgentSession, SessionManager } from '@mariozechner/pi-coding-agent';
-import type { AgentMessage, ToolDefinition } from '@mariozechner/pi-agent-core';
-import { toToolDefinitions } from './pi-tool-definition-adapter';
-import { buildSystemPrompt } from '../channels/system-prompt';
-import type { MsgContext } from '../channels/types';
+import {
+  createAgentSession,
+  SessionManager,
+} from "@mariozechner/pi-coding-agent";
+import type { AgentMessage, ToolDefinition } from "@mariozechner/pi-agent-core";
+import { toToolDefinitions } from "./pi-tool-definition-adapter";
+import { buildSystemPrompt } from "../channels/system-prompt";
+import type { MsgContext } from "../channels/types";
 
 export interface EmbeddedRunnerConfig {
   model: string;
@@ -23,7 +26,9 @@ export async function runEmbeddedPiAgent(opts: {
   tools: ToolDefinition[];
   systemPrompt: string;
 }) {
-  const session = await opts.sessionManager.getOrCreate(opts.message.sessionKey);
+  const session = await opts.sessionManager.getOrCreate(
+    opts.message.sessionKey,
+  );
 
   const agentSession = createAgentSession({
     session,
@@ -35,15 +40,18 @@ export async function runEmbeddedPiAgent(opts: {
   // 에이전트 루프: LLM 스트리밍 → 도구 호출 확인 → 실행 → 반복
   for await (const event of agentSession.run(opts.message.text)) {
     switch (event.type) {
-      case 'text_delta':
+      case "text_delta":
         opts.message.channel.sendChunk(opts.message.peer, event.text);
         break;
-      case 'tool_execution_start':
-        opts.message.channel.sendStatus(opts.message.peer, `Running ${event.toolName}...`);
+      case "tool_execution_start":
+        opts.message.channel.sendStatus(
+          opts.message.peer,
+          `Running ${event.toolName}...`,
+        );
         break;
-      case 'tool_execution_end':
+      case "tool_execution_end":
         break;
-      case 'turn_end':
+      case "turn_end":
         break;
     }
   }
@@ -68,8 +76,12 @@ export function subscribeEmbeddedPiSession(
     onComplete: (messages: AgentMessage[]) => void;
   },
 ) {
-  session.on('text_delta', (e) => callbacks.onBlockReply(e.text));
-  session.on('tool_execution_start', (e) => callbacks.onToolCall(e.toolName, 'start'));
-  session.on('tool_execution_end', (e) => callbacks.onToolCall(e.toolName, 'end'));
-  session.on('agent_end', (e) => callbacks.onComplete(e.messages));
+  session.on("text_delta", (e) => callbacks.onBlockReply(e.text));
+  session.on("tool_execution_start", (e) =>
+    callbacks.onToolCall(e.toolName, "start"),
+  );
+  session.on("tool_execution_end", (e) =>
+    callbacks.onToolCall(e.toolName, "end"),
+  );
+  session.on("agent_end", (e) => callbacks.onComplete(e.messages));
 }

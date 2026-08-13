@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const circuitCodeRefs: Record<string, CodeRef> = {
-  'circuit-trait': {
-    path: 'r1cs.rs — Circuit trait',
-    lang: 'rust',
+  "circuit-trait": {
+    path: "r1cs.rs — Circuit trait",
+    lang: "rust",
     highlight: [1, 8],
-    desc: 'Circuit trait — 계산을 R1CS로 표현하는 인터페이스.\nsynthesize 하나로 setup/prove/verify에서 재사용.',
+    desc: "Circuit trait — 계산을 R1CS로 표현하는 인터페이스.\nsynthesize 하나로 setup/prove/verify에서 재사용.",
     code: `/// 회로 = "어떤 계산을 R1CS로 표현하는 방법"
 ///
 /// synthesize()가 ConstraintSystem에
@@ -15,14 +15,18 @@ pub trait Circuit {
     fn synthesize(&self, cs: &mut ConstraintSystem);
 }`,
     annotations: [
-      { lines: [6, 8], color: 'sky', note: 'Circuit은 synthesize 하나만 구현 — 키 생성/증명/검증 모두에 사용' },
+      {
+        lines: [6, 8],
+        color: "sky",
+        note: "Circuit은 synthesize 하나만 구현 — 키 생성/증명/검증 모두에 사용",
+      },
     ],
   },
-  'circuit-cubic': {
-    path: 'groth16.rs — CubicCircuit (x^3+x+5=y)',
-    lang: 'rust',
+  "circuit-cubic": {
+    path: "groth16.rs — CubicCircuit (x^3+x+5=y)",
+    lang: "rust",
     highlight: [1, 32],
-    desc: 'x^3 + x + 5 = y 회로 예시.\n곱셈 2개 + 덧셈 1개 = 제약 3개.\n보조 변수 t1=x^2, t2=x^3 도입.',
+    desc: "x^3 + x + 5 = y 회로 예시.\n곱셈 2개 + 덧셈 1개 = 제약 3개.\n보조 변수 t1=x^2, t2=x^3 도입.",
     code: `struct CubicCircuit { x: Fr }
 
 impl Circuit for CubicCircuit {
@@ -61,9 +65,21 @@ impl Circuit for CubicCircuit {
     }
 }`,
     annotations: [
-      { lines: [11, 14], color: 'sky', note: 'x=witness(비공개), y=instance(공개), t1/t2=보조 변수' },
-      { lines: [16, 21], color: 'emerald', note: '곱셈마다 enforce 하나. 덧셈은 LC 내에서 무료' },
-      { lines: [28, 35], color: 'amber', note: 'LC 빌더 — .add()로 항을 연결. (t2+x+5)·1=y' },
+      {
+        lines: [11, 14],
+        color: "sky",
+        note: "x=witness(비공개), y=instance(공개), t1/t2=보조 변수",
+      },
+      {
+        lines: [16, 21],
+        color: "emerald",
+        note: "곱셈마다 enforce 하나. 덧셈은 LC 내에서 무료",
+      },
+      {
+        lines: [28, 35],
+        color: "amber",
+        note: "LC 빌더 — .add()로 항을 연결. (t2+x+5)·1=y",
+      },
     ],
   },
 };

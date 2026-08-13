@@ -1,16 +1,19 @@
-import DevToolsViz from './viz/DevToolsViz';
+import DevToolsViz from "./viz/DevToolsViz";
 
 export default function DeveloperTools() {
   return (
     <section id="developer-tools" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">개발자 도구</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <h3 className="text-xl font-semibold mt-6 mb-3">Oasis CLI</h3>
         <p>
-          <strong>oasis CLI</strong>: Go + Cobra 기반 계층적 명령줄 도구<br />
-          <strong>네트워크 관리</strong>, 지갑 생성, 계정 관리, 런타임 상호작용<br />
-          <strong>@oasisprotocol/cli</strong> npm 패키지로 배포 (docker, brew, binary)<br />
+          <strong>oasis CLI</strong>: Go + Cobra 기반 계층적 명령줄 도구
+          <br />
+          <strong>네트워크 관리</strong>, 지갑 생성, 계정 관리, 런타임 상호작용
+          <br />
+          <strong>@oasisprotocol/cli</strong> npm 패키지로 배포 (docker, brew,
+          binary)
+          <br />
           macOS/Linux/Windows 전부 지원
         </p>
 
@@ -46,7 +49,9 @@ oasis paratime withdraw 5.0 --paratime sapphire alice
 oasis contracts deploy ./build/MyContract.json alice
 oasis contracts call 0x1234... "myMethod(uint256)" 42 alice`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Hardhat/Foundry 통합</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Hardhat/Foundry 통합
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// hardhat.config.ts
 import "@oasisprotocol/sapphire-hardhat";
 
@@ -76,13 +81,15 @@ const config: HardhatUserConfig = {
 [profile.sapphire]
 eth_rpc_url = "https://sapphire.oasis.io"
 chain_id = 23294
-private_key = "${PRIVATE_KEY}"
+private_key = "\${PRIVATE_KEY}"
 
 // 기본 forge/cast 명령 그대로 작동
 forge script script/Deploy.s.sol --profile sapphire --broadcast
 cast call 0x1234 "balanceOf(address)" 0xabcd --profile sapphire`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Sapphire 클라이언트 SDK</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Sapphire 클라이언트 SDK
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// JavaScript/TypeScript — @oasisprotocol/sapphire-paratime
 
 import * as sapphire from '@oasisprotocol/sapphire-paratime';
@@ -153,11 +160,12 @@ oasis rofl deploy --paratime sapphire my-oracle
 
 # Registry에 등록 후 컨트랙트에서 호출 가능`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">CLI 명령어 & 설정 시스템</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          CLI 명령어 & 설정 시스템
+        </h3>
       </div>
       <DevToolsViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <h3 className="text-xl font-semibold mt-8 mb-3">설정 파일 구조</h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// ~/.config/oasis/cli.toml
 
@@ -179,30 +187,37 @@ kind = "file"
 path = "alice.kpriv"`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Sapphire의 Ethereum 호환성 수준</p>
+          <p className="font-semibold mb-2">
+            인사이트: Sapphire의 Ethereum 호환성 수준
+          </p>
           <p>
             <strong>완벽 호환</strong>:<br />
-            ✓ Solidity 0.4 ~ 0.8.x 그대로<br />
-            ✓ Hardhat, Foundry, Remix, Truffle<br />
-            ✓ Metamask, WalletConnect, OpenZeppelin<br />
-            ✓ 표준 EVM opcodes (Shanghai 기준)
+            ✓ Solidity 0.4 ~ 0.8.x 그대로
+            <br />
+            ✓ Hardhat, Foundry, Remix, Truffle
+            <br />
+            ✓ Metamask, WalletConnect, OpenZeppelin
+            <br />✓ 표준 EVM opcodes (Shanghai 기준)
           </p>
           <p className="mt-2">
             <strong>Sapphire 전용 기능</strong>:<br />
-            ✗ 기밀 calldata → wrapper 필수<br />
-            ✗ view function 서명 → signed query<br />
-            ✗ KM 공개키 의존 → 온라인 조회 필요<br />
-            ✗ Precompile은 Sapphire 전용 주소
+            ✗ 기밀 calldata → wrapper 필수
+            <br />
+            ✗ view function 서명 → signed query
+            <br />
+            ✗ KM 공개키 의존 → 온라인 조회 필요
+            <br />✗ Precompile은 Sapphire 전용 주소
           </p>
           <p className="mt-2">
             <strong>마이그레이션 전략</strong>:<br />
-            - 1단계: 기존 컨트랙트 그대로 배포 (public 모드)<br />
-            - 2단계: 민감한 state 변수만 private 키워드 추가<br />
-            - 3단계: 클라이언트 SDK 교체<br />
-            - 전체 재작성 불필요
+            - 1단계: 기존 컨트랙트 그대로 배포 (public 모드)
+            <br />
+            - 2단계: 민감한 state 변수만 private 키워드 추가
+            <br />
+            - 3단계: 클라이언트 SDK 교체
+            <br />- 전체 재작성 불필요
           </p>
         </div>
-
       </div>
     </section>
   );

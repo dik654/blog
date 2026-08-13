@@ -41,13 +41,37 @@ struct ProveCorePipeline {
 // → Phase 1이 끝나기 전에 Phase 2/3 시작 가능`;
 
 export const proveCoreAnnotations = [
-  { lines: [9, 12] as [number, number], color: 'sky' as const, note: 'Phase 1: 체크포인트 생성' },
-  { lines: [14, 18] as [number, number], color: 'emerald' as const, note: 'Phase 2: 병렬 레코드 생성' },
-  { lines: [20, 24] as [number, number], color: 'amber' as const, note: 'Phase 3: 병렬 증명 생성' },
+  {
+    lines: [9, 12] as [number, number],
+    color: "sky" as const,
+    note: "Phase 1: 체크포인트 생성",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "emerald" as const,
+    note: "Phase 2: 병렬 레코드 생성",
+  },
+  {
+    lines: [20, 24] as [number, number],
+    color: "amber" as const,
+    note: "Phase 3: 병렬 증명 생성",
+  },
 ];
 
 export const syncAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '체크포인트 → 레코드 채널' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '레코드 → 증명 채널' },
-  { lines: [12, 14] as [number, number], color: 'amber' as const, note: '스트리밍 파이프라인 이점' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "체크포인트 → 레코드 채널",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "레코드 → 증명 채널",
+  },
+  {
+    lines: [12, 14] as [number, number],
+    color: "amber" as const,
+    note: "스트리밍 파이프라인 이점",
+  },
 ];

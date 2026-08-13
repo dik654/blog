@@ -1,87 +1,65 @@
-import M from '@/components/ui/math';
-import EmbeddingViz from './viz/EmbeddingViz';
-import OneHotDenseViz from './viz/OneHotDenseViz';
-import Word2VecImpactViz from './viz/Word2VecImpactViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ContentBoundary from "@/components/articles/content-boundary";
+import CooccurrenceLearningViz from "./viz/CooccurrenceLearningViz";
 
-export default function Overview({ title }: { title?: string }) {
+export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title ?? '개요 & 핵심 아이디어'}</h2>
+      <h2 className="mb-6 text-2xl font-bold">Word2Vec은 local co-occurrence를 예측 문제로 바꿔 embedding을 학습한다</h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>Word2Vec</strong> — 2013년 Google의 Tomas Mikolov가 제안한 단어 임베딩(Word Embedding, 단어를 연속 벡터로 변환하는 기법)<br />
-          텍스트 코퍼스에서 단어를 고차원 벡터 공간에 매핑하여 의미적 관계를 수치로 표현<br />
-          현대 LLM 임베딩 레이어의 직접적인 선조
+          One-hot vector는 단어의 ID를 정확히 구분하지만 서로 다른 단어 사이의 통계적
+          관계를 담지 않습니다. Word2Vec은 큰 corpus를 훑으며 가까운 window에 함께 나타난
+          word–context pair를 예측하도록 두 embedding table을 학습합니다. 비슷한 context와
+          자주 결합하는 word가 비슷한 update를 받기 때문에 dense vector의 기하가 형성됩니다.
         </p>
-
-        <h3>분포 가설 (Distributional Hypothesis)</h3>
         <p>
-          핵심 가정: <strong>"비슷한 맥락에서 나타나는 단어는 비슷한 의미를 가진다"</strong><br />
-          "고양이는 털이 부드럽다" / "강아지는 털이 부드럽다"<br />
-          → 유사한 맥락을 공유하는 고양이·강아지가 벡터 공간에서 가까운 위치에 배치
+          2013년의 핵심 기여는 dense representation을 처음 발명했다는 데 있지 않다.
+          CBOW·Skip-gram이라는 얕은 prediction architecture와 hierarchical softmax,
+          negative sampling, frequent-word subsampling을 결합해 billion-token corpus에서도
+          실용적으로 학습할 수 있는 recipe를 제시했다는 데 있다. 따라서 결과 vector만
+          보려면 먼저 corpus에서 어떤 pair와 noise distribution을 만들었는지 확인해야 합니다.
         </p>
-
-        <h3>One-Hot 인코딩의 한계</h3>
-        <p>
-          "I" = [1,0,0,0], "love" = [0,1,0,0] — 각 단어가 고유 벡터<br />
-          <strong>문제 1</strong>: 모든 벡터가 직교 → "love"와 "like"의 유사성을 수치로 표현 불가<br />
-          <strong>문제 2</strong>: 단어 수 = 벡터 차원 → 10만 단어면 10만 차원, 공간·계산 비효율
-        </p>
-
-        <h3>One-Hot vs Dense Embedding</h3>
       </div>
-      <div className="not-prose my-8">
-        <OneHotDenseViz />
-      </div>
+
+      <ContentBoundary article="word2vec" />
+
+      <CooccurrenceLearningViz />
+
+      <ExplainedFormula
+        question="One-hot ID가 어떻게 trainable dense vector lookup이 될까?"
+        idea={<>Vocabulary row를 가리키는 one-hot vector와 embedding matrix를 곱하면 해당 row 하나가 선택됩니다. 실제 구현은 sparse index lookup으로 같은 결과를 계산합니다.</>}
+        formula={String.raw`\begin{aligned}o_w&\in\{0,1\}^{V},\quad \sum_i o_{w,i}=1\\v_w&=o_w^\top W=W[w]\in\mathbb R^d\end{aligned}`}
+        terms={[
+          { symbol: "V", name: "vocabulary size", description: "학습 시 구분하는 word type의 수입니다." },
+          { symbol: "o_w", name: "one-hot ID", description: "Word w의 row만 1인 sparse identifier입니다." },
+          { symbol: "W", name: "input embedding table", description: "V×d trainable matrix이며 row마다 word vector가 있습니다." },
+          { symbol: "v_w", name: "dense embedding", description: "이번 word가 forward 계산에 사용하는 d차원 row입니다." },
+        ]}
+        assumptions={["Word-level vocabulary를 가정하며 subword model은 여러 n-gram row를 합칩니다.", "Word2Vec은 input W와 output/context table W′를 별도로 학습합니다."]}
+        interpretation="Dense vector의 숫자 자체에 미리 정한 의미가 있는 것이 아니라, pair prediction objective가 dot product 관계를 조정하면서 좌표계가 생깁니다."
+      />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>임베딩 공간의 기하학적 의미</h3>
         <p>
-          학습된 벡터 공간에는 놀라운 선형 구조가 존재<br />
-          아날로지(Analogy, 벡터 산술로 단어 관계를 유추하는 것) 예시:
-        </p>
-        <M display>{'\\vec{king} - \\vec{man} + \\vec{woman} \\approx \\vec{queen}'}</M>
-
-        <div className="not-prose grid gap-4 sm:grid-cols-3 my-6">
-          <div className="rounded-xl border border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950 p-4">
-            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">성별 방향</p>
-            <p className="text-sm font-medium">vec("왕") − vec("남자") + vec("여자")</p>
-            <p className="text-sm font-bold mt-1">≈ vec("여왕")</p>
-          </div>
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 p-4">
-            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">수도–국가 방향</p>
-            <p className="text-sm font-medium">vec("서울") − vec("한국") + vec("일본")</p>
-            <p className="text-sm font-bold mt-1">≈ vec("도쿄")</p>
-          </div>
-          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 p-4">
-            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">형용사 활용 방향</p>
-            <p className="text-sm font-medium">vec("빠른") − vec("빠르다") + vec("크다")</p>
-            <p className="text-sm font-bold mt-1">≈ vec("큰")</p>
-          </div>
-        </div>
-
-        <p>
-          벡터 공간이 의미적·문법적 관계를 기하학적 방향으로 인코딩<br />
-          "성별" 방향, "수도-국가" 방향, "형용사 활용" 방향이 일관되게 존재
+          “비슷한 환경에 나타나는 표현은 비슷한 분포적 특성을 갖는다”는 배경과
+          count-based representation의 연결은 <Link to="/ai/distributional-semantics">분포 의미론 정본 글</Link>에서
+          다룹니다. 여기서는 그 가정을 Word2Vec의 sampling과 objective가 어떻게 구현하는지에 집중합니다.
         </p>
       </div>
-      <div className="mt-8">
-        <EmbeddingViz />
-      </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Word2Vec의 혁신적 기여</h3>
-        <p>
-          2013년 Tomas Mikolov (Google) — One-hot encoding 시대를 dense vector 시대로 전환<br />
-          4가지 혁신: 분포 가설 실현 · Dense 표현 · 효율적 학습 · 선형 의미 구조
+      <div id="paper-word2vec-original" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · CBOW와 Skip-gram</p>
+        <p className="mt-2 text-sm font-semibold">Efficient Estimation of Word Representations in Vector Space</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          큰 corpus에서 dense word representation을 효율적으로 학습하기 위해 CBOW와
+          Skip-gram 구조를 제안합니다. 논문에 보고된 semantic·syntactic analogy 결과는
+          사용한 corpus, vocabulary와 계산 예산의 범위이며 모든 언어의 의미를 완전히
+          복원했다는 증거는 아닙니다.
         </p>
-      </div>
-      <Word2VecImpactViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          요약 1: Word2Vec은 <strong>300차원 dense vector</strong>로 단어 의미 포착 — NLP 혁명.<br />
-          요약 2: <strong>분포 가설</strong>을 신경망으로 실현 — 컨텍스트가 의미 학습.<br />
-          요약 3: <strong>선형 산술</strong>로 의미 관계 표현 — king-man+woman≈queen.
-        </p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noreferrer">원 논문의 구조와 실험 보기</a>
       </div>
     </section>
   );

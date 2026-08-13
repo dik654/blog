@@ -1,15 +1,30 @@
-import SimpleStepViz from '@/components/viz/SimpleStepViz';
-import type { StepDef } from '@/components/ui/step-viz';
-const steps: StepDef[] = [
-  { label: '3가지 프리미티브 상세 — Tools · Resources · Prompts', body: '① Tools (Actions): LLM이 호출하는 함수 — 외부 상태 수정\n예: send_email(to,subject,body), execute_sql(query)\nJSON Schema로 inputSchema 정의 → LLM 자동 파라미터 이해\n\n② Resources (Data): LLM이 읽는 데이터 소스\n예: files, DB rows, API responses — uri+name+mimeType\nlist/read/subscribe 지원\n\n③ Prompts (Templates): 재사용 프롬프트 템플릿\n예: code_review(file), summarize(text, length)\narguments로 파라미터화\n\n방향: Tools = LLM→World | Resources = World→LLM | Prompts = Pre-defined\nJSON Schema가 self-documenting API 역할 → type validation + 올바른 호출\n생태계: Filesystem, Git, SQLite, Brave Search, Playwright, Memory' },
-];
-const visuals = [
-  { title: 'Tools · Resources · Prompts', color: '#f59e0b', rows: [
-    { label: 'Tools', value: 'LLM → World (행동): send_email, SQL' },
-    { label: 'Resources', value: 'World → LLM (정보): files, DB, API' },
-    { label: 'Prompts', value: 'Pre-defined templates (재사용)' },
-    { label: 'Schema', value: 'JSON Schema → LLM 자동 파라미터 이해' },
-    { label: '생태계', value: 'Filesystem, Git, SQLite, Playwright' },
-  ]},
-];
-export default function PrimitivesDetailViz() { return <SimpleStepViz steps={steps} visuals={visuals} />; }
+import VizFrame from "@/components/viz/VizFrame";
+
+const flow = [
+  ["Describe", "inputSchema · optional outputSchema", "형태를 정의"],
+  ["Validate", "Schema + domain rule + authorization", "실행 전에 검사"],
+  ["Execute", "Domain operation + effect receipt", "업무를 수행"],
+  ["Return", "complete · isError 또는 input_required", "다음 행동을 표시"],
+] as const;
+
+export default function PrimitivesDetailViz() {
+  return (
+    <VizFrame
+      eyebrow="Typed Tool lifecycle"
+      title="Schema-valid에서 끝나지 않고 업무 검증과 결과 상태까지 이어집니다"
+      description="Protocol error와 tool execution error를 나누면 client와 model이 복구 가능한 실패만 수정해 재시도할 수 있습니다."
+      note="List cache는 discovery 비용을 줄일 뿐, 실제 call 시점의 authorization을 생략하지 않습니다."
+    >
+      <ol className="grid gap-6 md:grid-cols-4">
+        {flow.map(([label, body, outcome], index) => (
+          <li key={label} className="min-w-0 border-t border-border/80 pt-4">
+            <span className="font-mono text-[11px] text-muted-foreground">0{index + 1}</span>
+            <h4 className="mt-2 text-sm font-bold">{label}</h4>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{body}</p>
+            <p className="mt-3 text-xs font-semibold text-primary">{outcome}</p>
+          </li>
+        ))}
+      </ol>
+    </VizFrame>
+  );
+}

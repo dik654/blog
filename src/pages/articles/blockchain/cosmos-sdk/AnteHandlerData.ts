@@ -18,7 +18,19 @@ anteDecorators := []sdk.AnteDecorator{
 }`;
 
 export const ANTE_ANNOTATIONS = [
-  { lines: [6, 10] as [number, number], color: 'sky' as const, note: '초기 검증 (컨텍스트, 기본 유효성)' },
-  { lines: [11, 12] as [number, number], color: 'emerald' as const, note: '가스 & 수수료 처리' },
-  { lines: [13, 17] as [number, number], color: 'amber' as const, note: '서명 검증 & 시퀀스 관리' },
+  {
+    lines: [6, 10] as [number, number],
+    color: "sky" as const,
+    note: "초기 검증 (컨텍스트, 기본 유효성)",
+  },
+  {
+    lines: [11, 12] as [number, number],
+    color: "emerald" as const,
+    note: "가스 & 수수료 처리",
+  },
+  {
+    lines: [13, 17] as [number, number],
+    color: "amber" as const,
+    note: "서명 검증 & 시퀀스 관리",
+  },
 ];

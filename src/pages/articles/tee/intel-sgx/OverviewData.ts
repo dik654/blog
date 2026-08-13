@@ -13,8 +13,16 @@ psw/
     aesm_service/<- AESM Daemon (원격 증명 조율)`;
 
 export const repoAnnotations = [
-  { lines: [2, 7] as [number, number], color: 'sky' as const, note: 'SDK: 엔클레이브 내부 라이브러리' },
-  { lines: [9, 13] as [number, number], color: 'emerald' as const, note: 'PSW: 호스트 측 서비스' },
+  {
+    lines: [2, 7] as [number, number],
+    color: "sky" as const,
+    note: "SDK: 엔클레이브 내부 라이브러리",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "emerald" as const,
+    note: "PSW: 호스트 측 서비스",
+  },
 ];
 
 export const coreConceptsCode = `// 엔클레이브 측정값 (linux-sgx: sdk/trts/init_enclave.cpp)
@@ -33,9 +41,21 @@ int EDMM_supported         // Enclave Dynamic Memory Management 지원 여부
 uint64_t g_enclave_base    // 엔클레이브 베이스 주소 (RELRO 섹션)`;
 
 export const coreAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: '엔클레이브 측정값 (신원 증명)' },
-  { lines: [7, 9] as [number, number], color: 'amber' as const, note: '봉인 정책 설정' },
-  { lines: [11, 14] as [number, number], color: 'violet' as const, note: '초기화 전역 상태' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "엔클레이브 측정값 (신원 증명)",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "amber" as const,
+    note: "봉인 정책 설정",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "violet" as const,
+    note: "초기화 전역 상태",
+  },
 ];
 
 export const epcMemoryCode = `// 엔클레이브 페이지 유형
@@ -52,7 +72,19 @@ if (heap_init(get_heap_base(), get_heap_size(), get_heap_min_size(),
 // 이전: 엔클레이브 생성 시 모든 페이지 정적 할당`;
 
 export const epcAnnotations = [
-  { lines: [1, 4] as [number, number], color: 'emerald' as const, note: 'EPC 페이지 유형 분류' },
-  { lines: [6, 9] as [number, number], color: 'sky' as const, note: '힙 초기화 로직' },
-  { lines: [11, 12] as [number, number], color: 'amber' as const, note: 'EDMM 동적 메모리 관리' },
+  {
+    lines: [1, 4] as [number, number],
+    color: "emerald" as const,
+    note: "EPC 페이지 유형 분류",
+  },
+  {
+    lines: [6, 9] as [number, number],
+    color: "sky" as const,
+    note: "힙 초기화 로직",
+  },
+  {
+    lines: [11, 12] as [number, number],
+    color: "amber" as const,
+    note: "EDMM 동적 메모리 관리",
+  },
 ];

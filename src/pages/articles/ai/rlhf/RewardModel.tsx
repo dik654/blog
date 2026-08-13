@@ -1,56 +1,53 @@
-import { CitationBlock } from '@/components/ui/citation';
-import BradleyTerryViz from './viz/BradleyTerryViz';
-import BTModelDetailViz from './viz/BTModelDetailViz';
-import M from '@/components/ui/math';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import RewardCompressionViz from "./viz/RewardCompressionViz";
 
 export default function RewardModel() {
   return (
     <section id="reward-model" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Bradley-Terry 보상 모델</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p>
-          <strong>목표</strong> — "이 응답이 얼마나 좋은가"를 숫자로 매기는 모델 만들기<br />
-          절대 점수를 매기긴 어렵지만, "A가 B보다 낫다" 비교는 쉬움 → 이걸 숫자로 변환
-        </p>
-        <h4>Bradley-Terry 선호 확률</h4>
-        <M display>{'P(y_w \\succ y_l) = \\underbrace{\\sigma}_{\\text{시그모이드}}\\!\\Big(\\underbrace{r_\\theta(x, y_w)}_{\\text{선호 응답 점수}} - \\underbrace{r_\\theta(x, y_l)}_{\\text{비선호 응답 점수}}\\Big)'}</M>
-        <h4>RM 학습 손실</h4>
-        <M display>{'\\mathcal{L}_{\\text{RM}} = -\\underbrace{\\mathbb{E}}_{\\text{선호 쌍}}\\Big[\\log \\sigma\\big(r_\\theta(x, y_w) - r_\\theta(x, y_l)\\big)\\Big]'}</M>
-        <div className="not-prose grid grid-cols-3 gap-2 mt-3 mb-4 text-sm">
-          {[
-            { sym: 'r_θ(x, y)', name: '보상 함수', desc: '프롬프트 x와 응답 y를 받아 스칼라 점수 출력 — LLM 마지막 층에 Linear head 추가' },
-            { sym: 'σ(·)', name: '시그모이드', desc: '점수 차이를 0~1 확률로 변환 — 차이가 클수록 선호 확률이 1에 가까움' },
-            { sym: 'y_w ≻ y_l', name: '선호 쌍', desc: '인간 평가자가 y_w를 y_l보다 낫다고 판단한 비교 데이터' },
-          ].map((p) => (
-            <div key={p.sym} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-mono font-bold text-foreground text-xs">{p.sym}</span>
-              <span className="text-muted-foreground ml-1.5 text-xs font-semibold">{p.name}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Reward model은 상대 선호를 scalar score로 압축한다
+      </h2>
 
-      <BradleyTerryViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <CitationBlock source="Christiano et al., 2017 — Deep RL from Human Preferences"
-          citeKey={2} type="paper" href="https://arxiv.org/abs/1706.03741">
-          <p className="italic text-sm">
-            "We show that this approach can effectively optimize complex RL goals
-            without access to the reward function, using comparisons between
-            pairs of trajectory segments."
-          </p>
-        </CitationBlock>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Bradley-Terry 모델 수식</h3>
-        <div className="not-prose"><BTModelDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: <strong>Bradley-Terry 모델</strong>이 이론적 기반 — pairwise 비교를 scalar score로.<br />
-          요약 2: RM 학습 = <strong>BCE loss로 이진 분류</strong> — chosen vs rejected.<br />
-          요약 3: <strong>Reward hacking</strong>이 RLHF의 핵심 약점 — KL 제약 필수.
+          Labeler에게 “이 답은 73점”이라고 묻기보다 같은 prompt에 대한 A와 B 중
+          어느 쪽이 나은지 묻는 편이 판단 기준을 맞추기 쉽다. Reward model은 이
+          pairwise preference를 response 하나당 scalar score로 압축하며, 이후 현재
+          policy가 새로 생성한 응답에도 같은 scorer를 적용한다.
+        </p>
+      </div>
+
+      <RewardCompressionViz />
+
+      <ExplainedFormula
+        question="Pairwise preference를 reward model의 probability와 loss로 어떻게 바꿀까?"
+        idea={<>Bradley–Terry model은 두 응답의 절대 score가 아니라 score 차이가 선택 odds를 정한다고 가정합니다. Chosen의 score가 커질수록 sigmoid probability가 1에 가까워지도록 negative log-likelihood를 최소화합니다.</>}
+        formula={String.raw`\begin{aligned}\Delta r&=r_\phi(x,y_+)-r_\phi(x,y_-)\\P(y_+\succ y_-)&=\sigma(\Delta r)\\\ell_{RM}&=-\log\sigma(\Delta r)\\\mathcal L_{RM}&=\mathbb E_{\mathcal D}[\ell_{RM}]\end{aligned}`}
+        terms={[
+          { symbol: "x", name: "prompt", description: "두 response가 공유하는 조건입니다." },
+          { symbol: "y_+,y_-", name: "chosen·rejected", description: "Labeler가 더 낫다고 고른 응답과 비교 대상입니다." },
+          { symbol: "r_\phi(x,y)", name: "scalar reward", description: "Parameter φ를 가진 model이 response 전체에 부여한 score입니다." },
+          { symbol: "\sigma", name: "logistic sigmoid", description: "Score 차이를 0과 1 사이의 pairwise probability로 바꿉니다." },
+        ]}
+        assumptions={["Preference가 score 차이로 설명된다는 Bradley–Terry 가정을 사용합니다.", "같은 prompt 안에서 더한 상수는 score 차이에서 사라지므로 reward의 절대 원점은 식별되지 않습니다."]}
+        interpretation="Loss가 낮아졌다는 것은 수집한 pair ordering을 더 잘 설명한다는 뜻입니다. 도움됨·사실성·안전성이 각각 보존되거나 dataset 밖의 응답까지 정확히 평가한다는 보장은 아닙니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Scalar reward가 숨기는 것</h3>
+        <p>
+          도움됨, 사실성, style과 safety를 한 숫자로 합치면 서로 다른 failure
+          mode가 같은 score에 묻힐 수 있다. Response 순서, 길이와 formatting처럼
+          정답과 우연히 함께 나타난 feature도 reward shortcut이 된다. 그래서
+          response 순서를 무작위화하고 annotator 간 agreement를 확인하며,
+          category별 held-out set에서 reward accuracy를 따로 본다.
+        </p>
+        <p>
+          Reward hacking은 optimization이 실제 품질보다 reward model의 빈틈을 더
+          빠르게 찾는 현상이다. Training pair에서 accuracy가 높더라도 policy가
+          distribution 밖의 response를 생성하기 시작하면 scorer가 extrapolation을
+          잘한다는 보장이 없으므로, 현재 policy sample을 사람이 다시 살피고 reward
+          margin과 independent quality metric이 함께 오르는지 확인해야 한다.
         </p>
       </div>
     </section>

@@ -1,8 +1,12 @@
-import PoseidonViz from './viz/PoseidonViz';
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
+import PoseidonViz from "./viz/PoseidonViz";
+import { codeRefs } from "./codeRefs";
+import type { CodeRef } from "@/components/code/types";
 
-export default function Poseidon({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function Poseidon({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
     <section id="poseidon" className="mb-16 scroll-mt-20">
@@ -31,11 +35,14 @@ export default function Poseidon({ onCodeRef }: { onCodeRef: (key: string, ref: 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h4>구현 인사이트</h4>
         <p className="leading-7">
-          S-box에서 x⁵ = x.square().square() * x — square 2회 + mul 1회 = 3회로 최소화
+          S-box에서 x⁵ = x.square().square() * x — square 2회 + mul 1회 = 3회로
+          최소화
           <br />
-          MDS 행렬을 [[2,1,1],[1,2,1],[1,1,2]]로 고정 — Cauchy matrix 대신 단순한 형태
+          MDS 행렬을 [[2,1,1],[1,2,1],[1,1,2]]로 고정 — Cauchy matrix 대신
+          단순한 형태
           <br />
-          PoseidonParams를 캐싱하면 195개 라운드 상수 재생성 방지 — poseidon_hash_with_params 패턴
+          PoseidonParams를 캐싱하면 195개 라운드 상수 재생성 방지 —
+          poseidon_hash_with_params 패턴
         </p>
       </div>
     </section>

@@ -1,69 +1,55 @@
-import LLMDistillViz from './viz/LLMDistillViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import LLMDistillViz from "./viz/LLMDistillViz";
 
 export default function LLMDistill() {
   return (
     <section id="llm" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">LLM 증류: DistilBERT에서 TinyLlama까지</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          대규모 언어 모델(LLM) 시대에서 지식 증류는 <strong>모델 경량화의 핵심 전략</strong>으로 자리잡았다.<br />
-          BERT에서 시작된 직접 증류가 GPT 시대에는 데이터 증류로 진화.
-        </p>
-
-        <h3>DistilBERT: 최초의 성공적 LLM 증류</h3>
-        <p>
-          Sanh et al.(2019)이 제안. BERT-base(110M params, 12 layers) → DistilBERT(66M params, 6 layers).<br />
-          크기 40% 감소, 추론 속도 60% 향상, 성능은 97% 유지.
-        </p>
-        <p>
-          <strong>Triple loss</strong>로 학습:<br />
-          1. <strong>MLM loss</strong> — Masked Language Modeling (원래 BERT 목적).<br />
-          2. <strong>Distillation loss</strong> — Teacher의 soft target과 Student의 soft prediction의 KL divergence.<br />
-          3. <strong>Cosine embedding loss</strong> — Teacher와 Student의 hidden state 방향을 일치시킴.
-        </p>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm leading-relaxed">
-            <strong>레이어 초기화 트릭</strong>: Student의 6개 레이어를 Teacher의 짝수 레이어(0, 2, 4, 6, 8, 10)로 초기화.
-            무작위 초기화 대비 수렴이 빠르고, 최종 성능도 더 높다.
-            Teacher의 구조적 지식을 가중치로 직접 주입하는 셈.
-          </p>
-        </div>
-
-        <h3>TinyLlama: 작은 모델 + 대규모 데이터</h3>
-        <p>
-          Zhang et al.(2024): Llama-2 아키텍처를 1.1B 파라미터로 축소, <strong>3 Trillion 토큰</strong>으로 학습.<br />
-          일반적인 1B 모델의 학습량(수백 B 토큰)보다 10배 이상 많은 데이터를 사용.<br />
-          Teacher의 출력을 직접 모방하는 것이 아니라, Teacher 수준의 데이터 커리큘럼으로 학습하는 <strong>데이터 증류</strong> 접근.
-        </p>
-
-        <h3>데이터 증류: Teacher가 학습 데이터를 생성</h3>
-        <p>
-          GPT-4 같은 대형 모델의 API로 대량의 합성 데이터를 생성 → 소형 모델이 이 데이터로 학습.<br />
-          <strong>Alpaca</strong>: GPT-3.5가 생성한 52K instruction-following 데이터로 LLaMA-7B를 fine-tune.<br />
-          <strong>Vicuna</strong>: ShareGPT의 사용자-GPT 대화 데이터로 LLaMA를 학습 — ChatGPT 성능의 90% 달성.
-        </p>
-        <p>
-          데이터 증류의 장점: Teacher 모델의 가중치에 접근할 필요가 없음 — API 호출만으로 증류 가능.<br />
-          단점: Teacher의 오류/편향이 데이터에 그대로 전파될 수 있음.
-        </p>
-
-        <h3>직접 증류 vs 간접 증류</h3>
-        <p>
-          <strong>직접 증류</strong>: Teacher의 logit/feature를 Student가 직접 학습. 모델 가중치 접근 필요.<br />
-          <strong>간접 증류</strong>(데이터 증류): Teacher가 생성한 데이터로 Student 학습. API만 있으면 됨.<br />
-          현대 LLM에서는 간접 증류가 주류 — 대부분의 proprietary 모델은 가중치를 공개하지 않기 때문.
-        </p>
-
-        <h3>LLM 증류의 법적/윤리적 이슈</h3>
-        <p>
-          GPT-4 등의 ToS(이용약관)는 출력을 경쟁 모델 학습에 사용하는 것을 금지하는 경우가 많다.<br />
-          데이터 증류의 실용성은 높지만, 라이선스와 이용 정책을 반드시 확인해야 한다.
-        </p>
+      <h2 className="mb-6 text-2xl font-bold">LLM에서 token logit을 공유할 수 없다면 teacher sequence를 provenance가 있는 supervised dataset으로 바꿉니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>API teacher처럼 logits와 hidden state에 접근할 수 없거나 teacher와 student tokenizer가 다르면 같은 timestep의 vocabulary probability를 바로 KL로 비교할 수 없습니다. 같은 문자열도 token boundary와 vocabulary index가 다르기 때문입니다. 이때 teacher가 생성한 response를 student tokenizer로 다시 encode하고 ordinary sequence NLL로 학습하는 sequence-level distillation이 자연스럽습니다.</p>
+        <p>이 방식에서 teacher generation은 label이 아니라 dataset construction입니다. Prompt source·rights·language·difficulty, teacher/version·system prompt·sampling, filter·verifier·dedup, student chat template·loss mask가 모두 결과를 결정합니다. 많이 생성했다는 숫자보다 deployment task와 rare slice를 얼마나 덮었는지 확인해야 합니다.</p>
       </div>
-
-      <div className="not-prose mt-8">
-        <LLMDistillViz />
+      <ExplainedFormula
+        question="Teacher가 만든 response를 student가 학습할 때 실제 loss는 무엇일까요?"
+        idea={<>Teacher sequence를 student tokenizer로 다시 나눈 뒤, prompt가 주어진 상태에서 다음 response token의 likelihood를 높입니다. Response-only mask를 쓰면 prompt token은 context로만 보고 loss 합에서는 제외합니다.</>}
+        formula={String.raw`\mathcal L_{\mathrm{seq}}=-\sum_{t=1}^{L_s}m_t\log p_s\!\left(u_t\mid u_{<t},\operatorname{Tok}_s(x)\right)`}
+        terms={[
+          { symbol: "x", name: "prompt", description: "Teacher response를 생성한 원 요청과 system/context입니다." },
+          { symbol: "Tok_s", name: "student tokenizer", description: "Prompt와 teacher text를 student vocabulary로 다시 encode합니다." },
+          { symbol: "u_t", name: "student response token", description: "Teacher가 만든 문자열을 student tokenizer로 나눈 t번째 target입니다." },
+          { symbol: "m_t", name: "loss mask", description: "Response·tool argument 등 학습할 위치는 1, prompt·padding은 0으로 둡니다." },
+          { symbol: "L_s", name: "student token length", description: "Student tokenizer와 truncation 뒤 target sequence 길이입니다." },
+        ]}
+        assumptions={[
+          "Teacher text를 target으로 받아들일 수 있도록 quality·safety·rights filter를 통과했다고 가정합니다.",
+          "Chat template·special token·assistant boundary·truncation과 loss mask를 artifact에 기록합니다.",
+          "한 teacher decoding의 mode를 학습하는 것이 teacher의 전체 sequence distribution을 정확히 KL-matching하는 것과 같지는 않습니다.",
+        ]}
+        interpretation="Teacher와 student token 수가 달라도 문자열 수준 target을 student vocabulary로 다시 encode하면 SFT가 가능합니다. 대신 teacher의 token별 대안 확률은 사라지고 선택된 한 sequence와 generation policy가 supervision이 됩니다."
+      />
+      <ExplainedFormula
+        question="Synthetic dataset이 deployment 요청을 충분히 덮는지 어떻게 확인할까요?"
+        idea={<>먼저 운영에 필요한 slice별 목표 비중을 정하고, 생성·filter 뒤 남은 dataset의 비중과 차이를 측정합니다. 전체 sample 수가 커도 중요한 slice가 0이면 coverage는 부족합니다.</>}
+        formula={String.raw`\hat\pi_k=\frac{n_k}{\sum_j n_j},\qquad \Delta_{\mathrm{cover}}=\frac{1}{2}\sum_k\left|\hat\pi_k-\pi_k^{\mathrm{target}}\right|`}
+        terms={[
+          { symbol: "k", name: "deployment slice", description: "언어·domain·difficulty·tool type·safety category처럼 사전에 정의한 그룹입니다." },
+          { symbol: "n_k", name: "accepted count", description: "Teacher 생성 뒤 filter·dedup을 통과한 slice-k sample 수입니다." },
+          { symbol: "pi-hat", name: "dataset mixture", description: "최종 synthetic dataset에서 각 slice가 차지하는 비율입니다." },
+          { symbol: "pi-target", name: "target mixture", description: "Deployment traffic 또는 의도적으로 정한 training curriculum 비율입니다." },
+          { symbol: "Delta_cover", name: "mixture gap", description: "두 categorical mixture의 total-variation distance로 0이면 비율이 같습니다." },
+        ]}
+        assumptions={[
+          "Slice label이 mutually exclusive하고 전체를 덮도록 정의한 단순 mixture 진단입니다. 중첩 slice는 별도 marginal/joint 표가 필요합니다.",
+          "Count coverage는 sample 품질·내부 다양성·정답성을 보장하지 않으므로 verifier pass rate와 semantic duplication을 함께 봅니다.",
+          "Target mixture를 실제 traffic으로 둘지 rare-risk oversampling curriculum으로 둘지 목적을 명시합니다.",
+        ]}
+        interpretation="Target이 한국어 .4·영어 .4·code .2인데 accepted data가 .1·.7·.2라면 gap은 .5(|-.3|+|.3|+0)=.3입니다. 총 데이터가 많아도 한국어 coverage가 부족합니다."
+      />
+      <div className="not-prose my-8"><LLMDistillViz /></div>
+      <div id="paper-sequence-kd" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Sequence-Level Knowledge Distillation</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">이 논문의 핵심은 word별 teacher distribution을 맞추는 대신 teacher beam search가 만든 sequence로 작은 NMT model을 학습하는 것입니다. WMT English–German과 IWSLT Thai–English, 해당 LSTM NMT·BLEU 조건에서 sequence search space를 단순화한 결과이며, 오늘날의 general LLM reasoning trace·safety·factuality가 자동으로 전달된다는 뜻은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://aclanthology.org/D16-1139/" target="_blank" rel="noreferrer">Word-level·sequence-level objective와 번역 실험 보기</a>
       </div>
     </section>
   );

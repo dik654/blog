@@ -1,9 +1,9 @@
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './prysm-slot-processing/codeRefs';
-import { prysmTree } from './prysm-slot-processing/fileTrees';
-import Overview from './prysm-slot-processing/Overview';
-import ProcessSlot from './prysm-slot-processing/ProcessSlot';
-import StateRootCaching from './prysm-slot-processing/StateRootCaching';
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prysm-slot-processing/codeRefs";
+import { prysmTree } from "./prysm-slot-processing/fileTrees";
+import Overview from "./prysm-slot-processing/Overview";
+import ProcessSlot from "./prysm-slot-processing/ProcessSlot";
+import StateRootCaching from "./prysm-slot-processing/StateRootCaching";
 
 export default function PrysmSlotProcessing() {
   const sidebar = useCodeSidebar();
@@ -20,7 +20,11 @@ export default function PrysmSlotProcessing() {
         codeRefs={codeRefs}
         fileTrees={{ prysm: prysmTree }}
         projectMetas={{
-          prysm: { id: 'prysm', label: 'Prysm · Go', badgeClass: 'bg-violet-500/10 border-violet-500 text-violet-700' },
+          prysm: {
+            id: "prysm",
+            label: "Prysm · Go",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
         }}
       />
     </>

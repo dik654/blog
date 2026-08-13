@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const RMP_ENTRY = `/* arch/x86/include/asm/sev-common.h — RMP 엔트리 비트 레이아웃 */
 struct rmp_entry {
@@ -35,19 +35,30 @@ const VMPL_PERMS = `/* arch/x86/include/asm/sev.h — VMPL 권한 비트 */
 // VMPL 3: 사용자 애플리케이션 (최저 권한)`;
 
 export const snpCodeRefs: Record<string, CodeRef> = {
-  'rmp-entry': {
-    path: 'linux/arch/x86/include/asm/sev-common.h',
+  "rmp-entry": {
+    path: "linux/arch/x86/include/asm/sev-common.h",
     code: RMP_ENTRY,
     highlight: [2, 14],
-    lang: 'c',
+    lang: "c",
     annotations: [
-      { lines: [3, 6], color: 'sky', note: '페이지 메타데이터 — 할당/크기/불변 플래그' },
-      { lines: [8, 12], color: 'emerald', note: 'GPA + ASID — 소유권 추적 핵심 필드' },
-      { lines: [13, 14], color: 'amber', note: 'VMPL별 세분화 권한 마스크' },
-      { lines: [18, 22], color: 'violet', note: 'RMP 검사 흐름 — 하드웨어가 자동 수행' },
+      {
+        lines: [3, 6],
+        color: "sky",
+        note: "페이지 메타데이터 — 할당/크기/불변 플래그",
+      },
+      {
+        lines: [8, 12],
+        color: "emerald",
+        note: "GPA + ASID — 소유권 추적 핵심 필드",
+      },
+      { lines: [13, 14], color: "amber", note: "VMPL별 세분화 권한 마스크" },
+      {
+        lines: [18, 22],
+        color: "violet",
+        note: "RMP 검사 흐름 — 하드웨어가 자동 수행",
+      },
     ],
-    desc:
-`RMP(Reverse Map Table)는 시스템의 모든 물리 메모리 페이지에 1:1 대응하는 테이블입니다.
+    desc: `RMP(Reverse Map Table)는 시스템의 모든 물리 메모리 페이지에 1:1 대응하는 테이블입니다.
 
 기존 페이지 테이블은 VA→PA 방향이지만, RMP는 PA→소유자 역방향 매핑입니다.
 하이퍼바이저가 게스트 메모리를 재매핑하려 해도 ASID/GPA 불일치로 #PF가 발생합니다.
@@ -55,17 +66,20 @@ export const snpCodeRefs: Record<string, CodeRef> = {
 이것이 SEV-SNP의 핵심 혁신으로, Confused Deputy Attack을 하드웨어 수준에서 차단합니다.`,
   },
 
-  'vmpl-perms': {
-    path: 'linux/arch/x86/include/asm/sev.h',
+  "vmpl-perms": {
+    path: "linux/arch/x86/include/asm/sev.h",
     code: VMPL_PERMS,
     highlight: [2, 6],
-    lang: 'c',
+    lang: "c",
     annotations: [
-      { lines: [2, 6], color: 'sky', note: 'R/W/X + Shadow Stack 권한 비트' },
-      { lines: [9, 14], color: 'emerald', note: 'VMPL 계층 — VM 내부 권한 분리' },
+      { lines: [2, 6], color: "sky", note: "R/W/X + Shadow Stack 권한 비트" },
+      {
+        lines: [9, 14],
+        color: "emerald",
+        note: "VMPL 계층 — VM 내부 권한 분리",
+      },
     ],
-    desc:
-`VMPL은 게스트 VM 내부를 4단계 권한으로 분리하는 메커니즘입니다.
+    desc: `VMPL은 게스트 VM 내부를 4단계 권한으로 분리하는 메커니즘입니다.
 
 하이퍼바이저 없이도 VM 내부에서 Paravisor(VMPL 0)가 커널(VMPL 1)의
 메모리 접근을 제어할 수 있습니다. 각 VMPL은 페이지별로 독립적인 R/W/X 권한을 가집니다.`,

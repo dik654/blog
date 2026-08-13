@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const QUIC_TRANSPORT = `#[derive(Debug)]
 pub struct GenTransport<P: Provider> {
@@ -57,16 +57,32 @@ impl<P: Provider> Transport for GenTransport<P> {
 }`;
 
 export const quicCodeRefs: Record<string, CodeRef> = {
-  'quic-transport': {
-    path: 'transports/quic/src/transport.rs — GenTransport',
+  "quic-transport": {
+    path: "transports/quic/src/transport.rs — GenTransport",
     code: QUIC_TRANSPORT,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 55],
     annotations: [
-      { lines: [2, 11], color: 'sky', note: 'GenTransport — quinn 기반 QUIC Transport 구조체' },
-      { lines: [14, 18], color: 'emerald', note: 'Output = (PeerId, Connection) — Mux 내장이라 별도 업그레이드 불필요' },
-      { lines: [26, 39], color: 'amber', note: 'Dialer 모드 — eligible_listener() → connect_with()' },
-      { lines: [41, 52], color: 'violet', note: 'Listener 모드 — hole_puncher + oneshot 채널 레이스' },
+      {
+        lines: [2, 11],
+        color: "sky",
+        note: "GenTransport — quinn 기반 QUIC Transport 구조체",
+      },
+      {
+        lines: [14, 18],
+        color: "emerald",
+        note: "Output = (PeerId, Connection) — Mux 내장이라 별도 업그레이드 불필요",
+      },
+      {
+        lines: [26, 39],
+        color: "amber",
+        note: "Dialer 모드 — eligible_listener() → connect_with()",
+      },
+      {
+        lines: [41, 52],
+        color: "violet",
+        note: "Listener 모드 — hole_puncher + oneshot 채널 레이스",
+      },
     ],
     desc: `QUIC Transport 구현입니다. TCP와 달리 Noise/Yamux 업그레이드 없이 바로 (PeerId, Connection)을 반환합니다. dial()은 Dialer 모드와 Listener(홀펀칭) 모드 두 가지 분기를 가집니다.`,
   },

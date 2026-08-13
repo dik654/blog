@@ -24,23 +24,63 @@ fn eval(&self, builder: &mut AB) {
 }`;
 
 export const ALU_CHIPS = [
-  { name: 'AddSubChip', desc: 'ADD/SUB — 4바이트 carry chain, 2의 보수 뺄셈',
-    cols: 'operand_1_bytes[4], operand_2_bytes[4], result_bytes[4], carry[4], is_add, is_sub', color: '#10b981' },
-  { name: 'BitwiseChip', desc: 'XOR/OR/AND — 비트 단위 룩업 테이블 (8비트 청크)',
-    cols: 'op_a_bytes[4], op_b_bytes[4], result_bytes[4], is_xor, is_or, is_and', color: '#6366f1' },
-  { name: 'MulChip', desc: 'MUL/MULH/MULHU/MULHSU — 64비트 결과 분할',
-    cols: 'a[4], b[4], result_lo[4], result_hi[4], is_mul, is_mulh, carry[8]', color: '#f59e0b' },
-  { name: 'DivRemChip', desc: 'DIV/DIVU/REM/REMU — quotient * divisor + remainder = dividend',
-    cols: 'dividend[4], divisor[4], quotient[4], remainder[4], is_div, is_rem', color: '#8b5cf6' },
-  { name: 'ShiftRightChip', desc: 'SRL/SRA — 비트 시프트 + 부호 확장',
-    cols: 'value[4], shift_amount, result[4], is_srl, is_sra, sign_bit', color: '#ec4899' },
-  { name: 'LtChip', desc: 'SLT/SLTU — 부호 있는/없는 비교',
-    cols: 'op_a[4], op_b[4], result, is_slt, is_sltu, sign_a, sign_b', color: '#ef4444' },
+  {
+    name: "AddSubChip",
+    desc: "ADD/SUB — 4바이트 carry chain, 2의 보수 뺄셈",
+    cols: "operand_1_bytes[4], operand_2_bytes[4], result_bytes[4], carry[4], is_add, is_sub",
+    color: "#10b981",
+  },
+  {
+    name: "BitwiseChip",
+    desc: "XOR/OR/AND — 비트 단위 룩업 테이블 (8비트 청크)",
+    cols: "op_a_bytes[4], op_b_bytes[4], result_bytes[4], is_xor, is_or, is_and",
+    color: "#6366f1",
+  },
+  {
+    name: "MulChip",
+    desc: "MUL/MULH/MULHU/MULHSU — 64비트 결과 분할",
+    cols: "a[4], b[4], result_lo[4], result_hi[4], is_mul, is_mulh, carry[8]",
+    color: "#f59e0b",
+  },
+  {
+    name: "DivRemChip",
+    desc: "DIV/DIVU/REM/REMU — quotient * divisor + remainder = dividend",
+    cols: "dividend[4], divisor[4], quotient[4], remainder[4], is_div, is_rem",
+    color: "#8b5cf6",
+  },
+  {
+    name: "ShiftRightChip",
+    desc: "SRL/SRA — 비트 시프트 + 부호 확장",
+    cols: "value[4], shift_amount, result[4], is_srl, is_sra, sign_bit",
+    color: "#ec4899",
+  },
+  {
+    name: "LtChip",
+    desc: "SLT/SLTU — 부호 있는/없는 비교",
+    cols: "op_a[4], op_b[4], result, is_slt, is_sltu, sign_a, sign_b",
+    color: "#ef4444",
+  },
 ];
 
 export const addChipAnnotations = [
-  { lines: [4, 5] as [number, number], color: 'sky' as const, note: '선택자 제약: ADD xor SUB' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '바이트 분해 + carry 부울 제약' },
-  { lines: [12, 20] as [number, number], color: 'amber' as const, note: '바이트별 덧셈 + carry 전파 제약' },
-  { lines: [22, 22] as [number, number], color: 'violet' as const, note: '뺄셈 = 2의 보수 덧셈' },
+  {
+    lines: [4, 5] as [number, number],
+    color: "sky" as const,
+    note: "선택자 제약: ADD xor SUB",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "바이트 분해 + carry 부울 제약",
+  },
+  {
+    lines: [12, 20] as [number, number],
+    color: "amber" as const,
+    note: "바이트별 덧셈 + carry 전파 제약",
+  },
+  {
+    lines: [22, 22] as [number, number],
+    color: "violet" as const,
+    note: "뺄셈 = 2의 보수 덧셈",
+  },
 ];

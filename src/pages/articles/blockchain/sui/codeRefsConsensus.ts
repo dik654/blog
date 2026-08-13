@@ -1,8 +1,8 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const codeRefsConsensus: Record<string, CodeRef> = {
-  'sui-narwhal-header': {
-    path: 'narwhal/primary/src/primary.rs',
+  "sui-narwhal-header": {
+    path: "narwhal/primary/src/primary.rs",
     code: `/// Narwhal Primary: DAG Header 생성
 pub fn create_header(
     &self, round: Round,
@@ -17,16 +17,16 @@ pub fn create_header(
         ..Default::default()
     }
 }`,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 14],
-    desc: 'Narwhal: 라운드별 Header → DAG 구축.',
+    desc: "Narwhal: 라운드별 Header → DAG 구축.",
     annotations: [
-      { lines: [3, 5], color: 'sky', note: 'parents + batches' },
-      { lines: [10, 11], color: 'emerald', note: '부모=2f+1 Certs' },
+      { lines: [3, 5], color: "sky", note: "parents + batches" },
+      { lines: [10, 11], color: "emerald", note: "부모=2f+1 Certs" },
     ],
   },
-  'sui-bullshark-commit': {
-    path: 'narwhal/consensus/src/bullshark.rs',
+  "sui-bullshark-commit": {
+    path: "narwhal/consensus/src/bullshark.rs",
     code: `/// Bullshark: 앵커 기반 순서 결정
 pub fn try_commit(
     &mut self, leader_round: Round,
@@ -38,12 +38,12 @@ pub fn try_commit(
     }
     self.committed.drain(..).collect()
 }`,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 11],
-    desc: 'Bullshark: 앵커 2f+1 참조 → BFS 순서 결정.',
+    desc: "Bullshark: 앵커 2f+1 참조 → BFS 순서 결정.",
     annotations: [
-      { lines: [5, 5], color: 'sky', note: '앵커 선출' },
-      { lines: [6, 8], color: 'emerald', note: '2f+1 → BFS 순서' },
+      { lines: [5, 5], color: "sky", note: "앵커 선출" },
+      { lines: [6, 8], color: "emerald", note: "2f+1 → BFS 순서" },
     ],
   },
 };

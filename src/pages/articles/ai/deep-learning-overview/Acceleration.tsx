@@ -1,95 +1,122 @@
-import GPUParallelViz from './viz/GPUParallelViz';
-import DLAccelViz from './viz/DLAccelViz';
+const layers = [
+  {
+    label: "연산",
+    title: "행렬 곱과 convolution을 병렬화",
+    detail:
+      "GPU·accelerator는 같은 instruction을 많은 데이터에 적용하는 tensor 연산을 높은 throughput으로 처리합니다.",
+    check: "FLOPs보다 kernel utilization 확인",
+  },
+  {
+    label: "메모리",
+    title: "읽고 쓰는 byte와 재사용을 줄임",
+    detail:
+      "큰 모델에서는 arithmetic보다 HBM traffic과 activation 저장이 먼저 병목이 될 수 있습니다.",
+    check: "bandwidth·memory peak·cache hit 확인",
+  },
+  {
+    label: "수치",
+    title: "mixed precision으로 비용을 낮춤",
+    detail:
+      "FP16·BF16·FP8은 tensor core를 활용하고 memory traffic을 줄이지만 overflow와 accuracy를 함께 관리해야 합니다.",
+    check: "loss scale·overflow·quality regression 확인",
+  },
+  {
+    label: "분산",
+    title: "data·tensor·pipeline parallelism을 조합",
+    detail:
+      "한 device에 들어가지 않는 model과 dataset을 여러 accelerator에 나누되 communication과 idle time을 줄입니다.",
+    check: "compute/communication overlap 확인",
+  },
+] as const;
 
 export default function Acceleration() {
   return (
     <section id="acceleration" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">딥러닝 고속화</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        핵심 연산 = 행렬 곱셈 → GPU(코어 수천~수만)가 최적 하드웨어.<br />
-        2012 AlexNet 이후 GPU 학습 시대 개막. 현재 H100 + 혼합 정밀도 + 분산 학습.
-      </p>
-      <GPUParallelViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">GPU, Mixed Precision, 분산 학습, Flash Attention</h3>
-      </div>
-      <div className="not-prose mt-4 mb-4">
-        <DLAccelViz />
-      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          딥러닝의 주요 계산은 matrix multiplication과 convolution처럼 병렬화하기
+          쉬운 연산이지만, peak FLOPS만 높다고 학습이 자동으로 빨라지지는
+          않습니다. 실제 시간은 kernel이 hardware를 얼마나 채우는지, weight와
+          activation을 얼마나 자주 메모리에서 옮기는지, 여러 device가 기다리는
+          시간이 얼마나 되는지에 따라 달라집니다.
+        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">GPU 하드웨어 트렌드</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">GPU</th>
-                <th className="border border-border px-3 py-2 text-left">년도</th>
-                <th className="border border-border px-3 py-2 text-left">Memory</th>
-                <th className="border border-border px-3 py-2 text-left">TF32 TFLOPs</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-3 py-2">GTX 580</td>
-                <td className="border border-border px-3 py-2">2010</td>
-                <td className="border border-border px-3 py-2">1.5GB</td>
-                <td className="border border-border px-3 py-2">~1 TFLOPs</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">V100</td>
-                <td className="border border-border px-3 py-2">2017</td>
-                <td className="border border-border px-3 py-2">16-32GB</td>
-                <td className="border border-border px-3 py-2">15 TFLOPs</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">A100</td>
-                <td className="border border-border px-3 py-2">2020</td>
-                <td className="border border-border px-3 py-2">40/80GB</td>
-                <td className="border border-border px-3 py-2">156 TFLOPs</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">H100</td>
-                <td className="border border-border px-3 py-2">2022</td>
-                <td className="border border-border px-3 py-2">80GB</td>
-                <td className="border border-border px-3 py-2">989 TFLOPs</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2">B100/B200</td>
-                <td className="border border-border px-3 py-2">2024</td>
-                <td className="border border-border px-3 py-2">192GB</td>
-                <td className="border border-border px-3 py-2">~5000 TFLOPs</td>
-              </tr>
-            </tbody>
-          </table>
+      <figure data-viz="modern" className="not-prose my-12 min-w-0">
+        <figcaption className="mb-5 px-1">
+          <p className="text-xs font-bold text-primary">성능 진단 순서</p>
+          <p className="text-sm font-bold text-foreground">
+            고속화는 네 계층을 함께 맞추는 일
+          </p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            제품 세대의 숫자 대신 어디에서 시간이 소비되는지부터 측정합니다.
+          </p>
+        </figcaption>
+        <div data-viz-canvas className="grid gap-6 rounded-xl border border-border/70 bg-muted/15 p-5 sm:grid-cols-2 sm:gap-7 sm:p-7">
+          {layers.map((layer, index) => (
+            <div
+              key={layer.label}
+              className="min-w-0 border-l border-border/80 pl-4"
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs font-bold text-primary">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="text-xs font-bold text-foreground">
+                  {layer.label}
+                </span>
+              </div>
+              <h3 className="mt-3 text-sm font-bold leading-5 text-foreground">
+                {layer.title}
+              </h3>
+              <p className="mt-2 text-xs leading-5 text-foreground/70">
+                {layer.detail}
+              </p>
+              <p className="mt-3 border-t border-border/70 pt-3 text-[11px] font-semibold leading-5 text-muted-foreground">
+                측정: {layer.check}
+              </p>
+            </div>
+          ))}
         </div>
+      </figure>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: 하드웨어가 알고리즘을 주도</p>
-          <p>
-            <strong>"하드웨어 복권(hardware lottery)"</strong>:<br />
-            - 현재 잘 되는 알고리즘 = 현재 HW에 맞는 알고리즘<br />
-            - Transformer는 GPU에 최적화된 아키텍처<br />
-            - RNN은 병렬화 어려워 밀려남
-          </p>
-          <p className="mt-2">
-            <strong>Scaling Laws 주도 요인</strong>:<br />
-            - Compute: GPU 성능 2년마다 2x<br />
-            - Data: 인터넷 데이터 증가<br />
-            - Parameters: 메모리 증가로 가능<br />
-            - 3요소의 균형이 중요
-          </p>
-          <p className="mt-2">
-            <strong>미래 전망</strong>:<br />
-            - 전력 효율성 중요 (Data center power wall)<br />
-            - 특화 ASIC 증가 (inference 전용)<br />
-            - Quantum, Neuromorphic 연구<br />
-            - On-device inference (mobile, edge)
-          </p>
-        </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          hardware에 맞는 algorithm이 살아남는다는 뜻
+        </h3>
+        <p className="leading-7">
+          <strong>hardware lottery</strong>는 좋은 아이디어라도 당시 hardware가
+          효율적으로 실행하지 못하면 연구와 제품에서 선택되기 어렵다는 관점을
+          가리킵니다. Transformer는 RNN보다 sequence 축을 병렬로 학습하기 쉬워
+          accelerator 규모 확대와 잘 맞았지만, inference에서는 KV cache와 memory
+          bandwidth라는 새로운 비용을 만들었습니다. 따라서 “GPU에 맞아
+          성공했다”는 설명은 장점과 새 병목을 함께 봐야 완성됩니다.
+        </p>
+        <p className="leading-7">
+          뒤의 서빙 글에서는 latency와 throughput을, 압축 글에서는 byte와
+          precision을, 분산 학습 글에서는 communication을 각각 자세히 다룹니다.
+          이 글에서는 특정 GPU의 일시적인 사양표보다 병목을 찾는 순서를
+          기억하면 충분합니다.
+        </p>
+      </div>
 
+      <div
+        id="paper-alexnet"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 해설 · AlexNet</p>
+        <h3 className="mt-2 text-base font-bold text-foreground">
+          2012년의 전환점은 GPU 하나가 아니라 data·architecture·training
+          recipe의 결합이었습니다
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          AlexNet은 ImageNet의 대규모 labeled image, 다섯 convolution layer와
+          두 fully connected layer, non-saturating unit, GPU convolution,
+          regularization을 한 실험에 결합했습니다. 논문이 보여 준 것은 해당
+          dataset·metric에서 이 조합이 큰 오차 감소를 냈다는 결과이며, ReLU나
+          GPU 하나만 떼어 모든 domain의 성공 원인으로 일반화할 수는 없습니다.
+        </p>
       </div>
     </section>
   );

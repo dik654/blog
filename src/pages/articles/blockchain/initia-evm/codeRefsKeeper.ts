@@ -1,12 +1,12 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const keeperRefs: Record<string, CodeRef> = {
-  'mini-keeper': {
-    path: 'minievm/x/evm/keeper/keeper.go',
-    lang: 'go',
+  "mini-keeper": {
+    path: "minievm/x/evm/keeper/keeper.go",
+    lang: "go",
 
     highlight: [1, 30],
-    desc: 'EVM Keeper — Cosmos 모듈과 EVM을 연결하는 핵심 구조체.',
+    desc: "EVM Keeper — Cosmos 모듈과 EVM을 연결하는 핵심 구조체.",
     code: `// x/evm/keeper/keeper.go — Keeper 구조체 정의
 type Keeper struct {
     ac           address.Codec
@@ -39,19 +39,35 @@ type Keeper struct {
     EVMBlockHashes    collections.Map[uint64, []byte]
 }`,
     annotations: [
-      { lines: [2, 6], color: 'sky' as const, note: 'Cosmos SDK 코덱과 스토어 서비스' },
-      { lines: [8, 15], color: 'emerald' as const, note: '다른 Cosmos 모듈 keeper 참조 — IBC, 은행, 계정' },
-      { lines: [18, 19], color: 'amber' as const, note: 'Cosmos 메시지 라우터 — 프리컴파일에서 Cosmos msg 실행용' },
-      { lines: [25, 27], color: 'rose' as const, note: 'VMStore — EVM 계정·스토리지·코드 저장' },
+      {
+        lines: [2, 6],
+        color: "sky" as const,
+        note: "Cosmos SDK 코덱과 스토어 서비스",
+      },
+      {
+        lines: [8, 15],
+        color: "emerald" as const,
+        note: "다른 Cosmos 모듈 keeper 참조 — IBC, 은행, 계정",
+      },
+      {
+        lines: [18, 19],
+        color: "amber" as const,
+        note: "Cosmos 메시지 라우터 — 프리컴파일에서 Cosmos msg 실행용",
+      },
+      {
+        lines: [25, 27],
+        color: "rose" as const,
+        note: "VMStore — EVM 계정·스토리지·코드 저장",
+      },
     ],
   },
 
-  'mini-msg-server': {
-    path: 'minievm/x/evm/keeper/msg_server.go',
-    lang: 'go',
+  "mini-msg-server": {
+    path: "minievm/x/evm/keeper/msg_server.go",
+    lang: "go",
 
     highlight: [1, 32],
-    desc: 'MsgServer — Cosmos TX를 EVM 호출로 변환. Call / Create / Create2.',
+    desc: "MsgServer — Cosmos TX를 EVM 호출로 변환. Call / Create / Create2.",
     code: `// x/evm/keeper/msg_server.go — MsgServer 구현
 
 type msgServerImpl struct {
@@ -86,10 +102,26 @@ func (ms *msgServerImpl) Call(ctx context.Context, msg *types.MsgCall) (*types.M
     }, nil
 }`,
     annotations: [
-      { lines: [3, 5], color: 'sky' as const, note: 'Keeper 임베딩 — Keeper의 모든 메서드 접근 가능' },
-      { lines: [13, 14], color: 'emerald' as const, note: 'Cosmos ante handler vs EVM nonce 충돌 보정' },
-      { lines: [20, 24], color: 'amber' as const, note: '인자 변환: Cosmos 타입 → EVM 타입' },
-      { lines: [27, 28], color: 'rose' as const, note: 'EVMCall 실행 — context.go의 핵심 함수' },
+      {
+        lines: [3, 5],
+        color: "sky" as const,
+        note: "Keeper 임베딩 — Keeper의 모든 메서드 접근 가능",
+      },
+      {
+        lines: [13, 14],
+        color: "emerald" as const,
+        note: "Cosmos ante handler vs EVM nonce 충돌 보정",
+      },
+      {
+        lines: [20, 24],
+        color: "amber" as const,
+        note: "인자 변환: Cosmos 타입 → EVM 타입",
+      },
+      {
+        lines: [27, 28],
+        color: "rose" as const,
+        note: "EVMCall 실행 — context.go의 핵심 함수",
+      },
     ],
   },
 };

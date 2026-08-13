@@ -16,9 +16,21 @@ pub struct RwTable {
 // 사용: EVM Circuit(lookup), State Circuit(write)`;
 
 export const rwAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: 'rw_counter — 전역 순서 보장' },
-  { lines: [6, 10] as [number, number], color: 'emerald' as const, note: 'tag/id/address — 연산 식별' },
-  { lines: [11, 14] as [number, number], color: 'amber' as const, note: 'value/value_prev — 상태 변화 추적' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "rw_counter — 전역 순서 보장",
+  },
+  {
+    lines: [6, 10] as [number, number],
+    color: "emerald" as const,
+    note: "tag/id/address — 연산 식별",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "amber" as const,
+    note: "value/value_prev — 상태 변화 추적",
+  },
 ];
 
 export const TABLE_OVERVIEW_CODE = `// 테이블 타입 요약 (table.rs)
@@ -44,8 +56,24 @@ export const TABLE_OVERVIEW_CODE = `// 테이블 타입 요약 (table.rs)
 //   ExpTable      — EXP 오퍼코드 검증`;
 
 export const overviewAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '핵심 실행 — RW + Copy' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '블록/TX 메타데이터' },
-  { lines: [11, 14] as [number, number], color: 'amber' as const, note: '해시 — Keccak/Poseidon/SHA256' },
-  { lines: [16, 20] as [number, number], color: 'violet' as const, note: '상태 증명 + 암호 검증' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "핵심 실행 — RW + Copy",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "블록/TX 메타데이터",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "amber" as const,
+    note: "해시 — Keccak/Poseidon/SHA256",
+  },
+  {
+    lines: [16, 20] as [number, number],
+    color: "violet" as const,
+    note: "상태 증명 + 암호 검증",
+  },
 ];

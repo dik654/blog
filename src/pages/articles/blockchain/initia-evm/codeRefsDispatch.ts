@@ -1,12 +1,12 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const dispatchRefs: Record<string, CodeRef> = {
-  'mini-dispatch': {
-    path: 'minievm/x/evm/keeper/context.go',
-    lang: 'go',
+  "mini-dispatch": {
+    path: "minievm/x/evm/keeper/context.go",
+    lang: "go",
 
     highlight: [1, 28],
-    desc: 'dispatchMessage — EVM에서 큐잉된 Cosmos 메시지 실행 + 콜백.',
+    desc: "dispatchMessage — EVM에서 큐잉된 Cosmos 메시지 실행 + 콜백.",
     code: `// x/evm/keeper/context.go — Cosmos 메시지 디스패치
 
 func (k Keeper) dispatchMessage(parentCtx sdk.Context,
@@ -40,10 +40,26 @@ func (k Keeper) dispatchMessage(parentCtx sdk.Context,
     res, err := handler(ctx, msg)
 }`,
     annotations: [
-      { lines: [11, 12], color: 'sky' as const, note: 'CacheContext — Cosmos의 트랜잭션 격리' },
-      { lines: [17, 18], color: 'emerald' as const, note: '성공: commit() → 상태 영구 반영' },
-      { lines: [23, 26], color: 'amber' as const, note: '콜백: Cosmos 실행 결과를 EVM에 전달' },
-      { lines: [30, 31], color: 'rose' as const, note: 'msgRouter — Cosmos SDK 메시지 핸들러 실행' },
+      {
+        lines: [11, 12],
+        color: "sky" as const,
+        note: "CacheContext — Cosmos의 트랜잭션 격리",
+      },
+      {
+        lines: [17, 18],
+        color: "emerald" as const,
+        note: "성공: commit() → 상태 영구 반영",
+      },
+      {
+        lines: [23, 26],
+        color: "amber" as const,
+        note: "콜백: Cosmos 실행 결과를 EVM에 전달",
+      },
+      {
+        lines: [30, 31],
+        color: "rose" as const,
+        note: "msgRouter — Cosmos SDK 메시지 핸들러 실행",
+      },
     ],
   },
 };

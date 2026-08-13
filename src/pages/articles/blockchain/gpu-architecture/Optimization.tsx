@@ -1,6 +1,6 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
-import OptimizationViz from './viz/OptimizationViz';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
+import OptimizationViz from "./viz/OptimizationViz";
 
 const optCode = `GPU 최적화 체크리스트:
 
@@ -17,30 +17,57 @@ const optCode = `GPU 최적화 체크리스트:
    └→ ZK 증명: MSM 버킷 + 축소를 단일 커널로`;
 
 const annotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '코어레싱: 연속 접근 패턴' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '뱅크 충돌: 패딩으로 해결' },
-  { lines: [11, 13] as [number, number], color: 'amber' as const, note: '커널 퓨전: 메모리 왕복 제거' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "코어레싱: 연속 접근 패턴",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "뱅크 충돌: 패딩으로 해결",
+  },
+  {
+    lines: [11, 13] as [number, number],
+    color: "amber" as const,
+    note: "커널 퓨전: 메모리 왕복 제거",
+  },
 ];
 
 export default function Optimization() {
   return (
     <section id="optimization" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">GPU 최적화 기법</h2>
-      <div className="not-prose mb-8"><OptimizationViz /></div>
+      <div className="not-prose mb-8">
+        <OptimizationViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          GPU 커널의 성능은 연산 자체보다 <strong>메모리 접근 패턴</strong>에 의해 결정됩니다.
+          GPU 커널의 성능은 연산 자체보다 <strong>메모리 접근 패턴</strong>에
+          의해 결정됩니다.
           <br />
-          코어레싱, 뱅크 충돌 회피, 커널 퓨전은 GPU 프로그래밍의 3대 최적화 원칙입니다.
+          코어레싱, 뱅크 충돌 회피, 커널 퓨전은 GPU 프로그래밍의 3대 최적화
+          원칙입니다.
         </p>
 
-        <CitationBlock source="CUDA Best Practices — Coalesced Access" citeKey={4} type="paper"
-          href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/">
-          <p className="italic">"Global memory accesses are serviced in 32-, 64-, or 128-byte
-          transactions. Maximizing the number of useful bytes per transaction is key."</p>
+        <CitationBlock
+          source="CUDA Best Practices — Coalesced Access"
+          citeKey={4}
+          type="paper"
+          href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/"
+        >
+          <p className="italic">
+            "Global memory accesses are serviced in 32-, 64-, or 128-byte
+            transactions. Maximizing the number of useful bytes per transaction
+            is key."
+          </p>
         </CitationBlock>
 
-        <CodePanel title="GPU 최적화 체크리스트" code={optCode} annotations={annotations} />
+        <CodePanel
+          title="GPU 최적화 체크리스트"
+          code={optCode}
+          annotations={annotations}
+        />
       </div>
     </section>
   );

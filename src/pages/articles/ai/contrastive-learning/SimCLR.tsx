@@ -1,61 +1,57 @@
-import SimCLRViz from './viz/SimCLRViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SimCLRViz from "./viz/SimCLRViz";
 
 export default function SimCLR() {
   return (
     <section id="simclr" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">SimCLR: 자기지도 대조 학습</h2>
+      <h2 className="mb-6 text-2xl font-bold">SimCLR은 같은 원본의 두 view로 정답 쌍을 만듭니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>SimCLR(Simple Framework for Contrastive Learning of Visual Representations)</strong> —
-          Chen et al. (2020)이 제안한 자기지도 대조 학습 프레임워크.<br />
-          라벨 없이 augmentation만으로 ImageNet 선형 평가에서 지도 학습의 76.5%까지 도달.
+          SimCLR은 label 없이 positive를 만들기 위해 원본 하나에서 random augmentation 두 개를 뽑습니다. Batch에 원본이 B개라면 view는 2B개가 되고, 같은 원본에서 나온 짝 하나만 anchor의 positive입니다. 나머지 2B−2개는 분모의 비교 대상이 됩니다. 따라서 crop·color jitter·blur 같은 augmentation 분포 자체가 self-supervised label을 만드는 셈입니다.
         </p>
-
-        <h3>파이프라인: 4단계</h3>
         <p>
-          <strong>1) 랜덤 Augmentation</strong> — 같은 이미지 x에서 두 가지 변환 t, t'를 뽑아 x_i, x_j 생성.<br />
-          변환 종류: 랜덤 크롭 + 리사이즈, 색상 왜곡(color jitter), 가우시안 블러, 수평 뒤집기.<br />
-          <strong>2) 인코더</strong> — ResNet-50으로 각 augmentation을 2048차원 특징 벡터 h로 변환.<br />
-          <strong>3) Projection Head</strong> — MLP(2048→256→128)로 h를 z로 매핑. 학습 시에만 사용, 추론 시 제거.<br />
-          <strong>4) InfoNCE Loss</strong> — z 공간에서 positive pair 유사도를 높이고 negative pair를 밀어냄.
-        </p>
-
-        <h3>InfoNCE Loss 상세</h3>
-        <p>
-          {'L(i,j) = -log( exp(sim(z_i, z_j)/τ) / Σ_{k≠i} exp(sim(z_i, z_k)/τ) )'}<br />
-          sim(u,v) = u·v / (||u||·||v||) — cosine similarity.<br />
-          τ (temperature) — 분포의 날카로움 제어. τ=0.1이면 유사도 차이를 10배 증폭 → hard negative에 집중.<br />
-          배치 크기 N일 때 positive 1쌍, negative 2(N-1)개 — N이 클수록 다양한 negative 제공.
-        </p>
-
-        <h3>큰 배치가 중요한 이유</h3>
-        <p>
-          N=256 → negative 510개. N=8192 → negative 16382개.<br />
-          negative가 다양할수록 임베딩 공간이 고르게 분포 — <strong>uniformity</strong> 향상.<br />
-          SimCLR 논문 결과: batch 256 → 64.6% / batch 4096 → 74.2% / batch 8192 → 76.5% (ImageNet linear eval).<br />
-          대신 메모리 요구량도 비례 증가 — TPU v3 32코어 또는 8×V100 필요.
-        </p>
-
-        <h3>Projection Head가 필수인 이유</h3>
-        <p>
-          h(인코더 출력)는 augmentation에 무관한 의미 정보를 담아야 하지만,
-          대조 학습 loss는 augmentation에 불변인 특징만 남기도록 압축.<br />
-          Projection head z가 이 정보 손실을 흡수 → h는 downstream에 유용한 풍부한 표현 유지.
-          제거 시 정확도 5-10% 하락.
+          Projection head는 contrastive objective가 직접 작용하는 공간과 downstream representation을 분리합니다. 학습 후에는 projection output이 아니라 encoder representation을 사용하며, head의 깊이나 차원은 고정 recipe가 아니므로 linear probe와 fine-tuning 결과로 확인합니다.
         </p>
       </div>
-
-      <div className="not-prose my-8">
-        <SimCLRViz />
-      </div>
-
+      <div className="not-prose my-8"><SimCLRViz /></div>
+      <ExplainedFormula
+        question="Anchor i가 자신의 positive j를 batch의 다른 view보다 가깝게 만들려면 어떤 loss를 쓸까요?"
+        idea={<>Positive similarity의 지수값을 분자에 두고, anchor 자신을 제외한 모든 view의 지수값 합으로 나눕니다. 그 확률의 negative log를 줄이면 positive가 상대적으로 높은 점수를 갖게 됩니다.</>}
+        formula={String.raw`\ell_{i,j}=-\log\frac{\exp\!\left(\operatorname{sim}(i,j)/\tau\right)}{\sum_{k=1}^{2B}\mathbb 1_{[k\ne i]}\exp\!\left(\operatorname{sim}(i,k)/\tau\right)}`}
+        terms={[
+          { symbol: "i,j", name: "anchor and positive", description: "같은 원본에서 독립적으로 증강된 두 view의 index입니다." },
+          { symbol: "2B", name: "number of views", description: "B개 원본에서 view를 두 개씩 만들었을 때 batch 안 전체 view 수입니다." },
+          { symbol: "τ", name: "temperature", description: "Similarity 차이를 softmax가 얼마나 날카롭게 볼지 정하는 양수입니다." },
+          { symbol: "1[k≠i]", name: "self mask", description: "Anchor가 자기 자신과 비교되는 항만 분모에서 제외합니다." },
+        ]}
+        assumptions={["각 원본의 두 view가 task 의미를 보존하는 positive라는 전제가 필요합니다.", "Batch의 다른 원본 view를 negative로 취급하므로 semantic duplicate와 같은 class가 false negative가 될 수 있습니다.", "전체 loss는 보통 i→j와 j→i를 모두 anchor로 삼아 평균냅니다."]}
+        interpretation="Loss는 절대 거리를 정답으로 주지 않고, 같은 batch 후보 가운데 positive를 알아맞히는 cross-entropy로 볼 수 있습니다. Batch 구성이 바뀌면 같은 anchor의 학습 문제도 달라집니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm leading-relaxed">
-            <strong>실전 팁:</strong> GPU 메모리가 제한적이면 MoCo(momentum encoder + queue)로 대체 —
-            배치 크기 256으로도 65536개 negative 활용 가능. 소규모 팀에서는 MoCo v3가 현실적 선택.
-          </p>
-        </div>
+        <h3>Temperature와 negative 수는 함께 해석합니다</h3>
+        <p>
+          Temperature가 낮으면 similarity 차이가 더 뾰족해져 가까운 negative에 gradient가 집중됩니다. Batch를 키우면 비교 대상이 늘지만 false negative도 함께 늘 수 있으므로 큰 batch 자체를 목표로 삼지 않습니다. Memory queue나 in-batch negative를 쓸 때도 sample provenance를 검사하고, 같은 class·identity의 충돌률을 보고합니다.
+        </p>
+        <p>
+          Representation collapse는 embedding variance, pair similarity 분포와 linear probe로 감시합니다. Loss만 내려가는데 downstream 성능이 좋아지지 않는다면 augmentation이 너무 강하거나 shortcut으로 pair를 구분하는지 먼저 확인합니다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="Temperature를 낮추면 왜 가까운 negative에 학습 신호가 집중될까요?"
+        idea={<>두 후보 a와 b가 받는 softmax weight의 비율을 나누면 공통 분모가 사라집니다. 같은 similarity 차이도 τ로 나누기 때문에 작은 τ에서 비율이 더 빠르게 벌어집니다.</>}
+        formula={String.raw`p_{ik}=\frac{e^{s_{ik}/\tau}}{\sum_{a\ne i}e^{s_{ia}/\tau}},\qquad \frac{p_{ia}}{p_{ib}}=\exp\!\left(\frac{s_{ia}-s_{ib}}{\tau}\right)`}
+        terms={[
+          { symbol: "s_ik", name: "similarity logit", description: "Anchor i와 후보 k의 cosine similarity입니다." },
+          { symbol: "p_ik", name: "softmax weight", description: "후보 k가 분모와 gradient에서 차지하는 상대 비중입니다." },
+          { symbol: "τ", name: "temperature", description: "작을수록 similarity 순위 차이를 크게 증폭합니다." },
+        ]}
+        assumptions={["Similarity를 같은 scale에서 비교하며 τ>0입니다.", "낮은 τ가 항상 좋은 것은 아니며 mislabeled hard negative의 영향도 함께 커집니다."]}
+        interpretation="s_ia−s_ib=0.1일 때 τ=1이면 비율은 약 1.11이지만 τ=0.1이면 약 2.72입니다. 그러므로 temperature와 negative 품질을 따로 조정할 수 없습니다."
+      />
+      <div id="paper-simclr" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · SimCLR</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Chen 등은 composition of augmentations, nonlinear projection head, normalized embedding과 temperature-scaled contrastive loss를 체계적으로 비교했습니다. 큰 batch 성능을 architecture 하나의 보편적 효과로 떼어 읽지 않고, ImageNet·ResNet·논문의 training recipe 범위에서 해석합니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://proceedings.mlr.press/v119/chen20j.html" target="_blank" rel="noreferrer">실험 구성과 ablation 범위 보기</a>
       </div>
     </section>
   );

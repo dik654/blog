@@ -27,9 +27,21 @@ export const EVIDENCE_CODE = `비잔틴 장애 탐지 → 슬래싱 흐름
   EvidencePool 크기  = 제한 없음 (만료 시 자동 정리)`;
 
 export const EVIDENCE_ANNOTATIONS = [
-  { lines: [3, 7] as [number, number], color: 'rose' as const, note: 'Double Voting 탐지' },
-  { lines: [9, 13] as [number, number], color: 'sky' as const, note: '증거 풀 관리' },
-  { lines: [15, 19] as [number, number], color: 'amber' as const, note: '슬래싱 실행' },
+  {
+    lines: [3, 7] as [number, number],
+    color: "rose" as const,
+    note: "Double Voting 탐지",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "sky" as const,
+    note: "증거 풀 관리",
+  },
+  {
+    lines: [15, 19] as [number, number],
+    color: "amber" as const,
+    note: "슬래싱 실행",
+  },
 ];
 
 export const BFT_THRESHOLD_CODE = `BFT 안전성 임계값 분석
@@ -51,6 +63,14 @@ export const BFT_THRESHOLD_CODE = `BFT 안전성 임계값 분석
   Casper:   Liveness 우선 (포크 가능, 정지 불가)`;
 
 export const BFT_THRESHOLD_ANNOTATIONS = [
-  { lines: [5, 6] as [number, number], color: 'emerald' as const, note: '핵심 안전성 조건' },
-  { lines: [8, 11] as [number, number], color: 'amber' as const, note: '임계값 시나리오' },
+  {
+    lines: [5, 6] as [number, number],
+    color: "emerald" as const,
+    note: "핵심 안전성 조건",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "amber" as const,
+    note: "임계값 시나리오",
+  },
 ];

@@ -1,6 +1,6 @@
-import ProtocolViz from './viz/ProtocolViz';
-import { CitationBlock } from '@/components/ui/citation';
-import CodePanel from '@/components/ui/code-panel';
+import ProtocolViz from "./viz/ProtocolViz";
+import { CitationBlock } from "@/components/ui/citation";
+import CodePanel from "@/components/ui/code-panel";
 
 const roundCode = `Tendermint 라운드 구조:
 
@@ -24,27 +24,45 @@ export default function Protocol() {
   return (
     <section id="protocol" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">프로토콜 흐름</h2>
-      <div className="not-prose mb-8"><ProtocolViz /></div>
+      <div className="not-prose mb-8">
+        <ProtocolViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <CitationBlock source="Buchman, Kwon, Milosevic — 2018 arXiv" citeKey={1} type="paper"
-          href="https://arxiv.org/abs/1807.04938">
+        <CitationBlock
+          source="Buchman, Kwon, Milosevic — 2018 arXiv"
+          citeKey={1}
+          type="paper"
+          href="https://arxiv.org/abs/1807.04938"
+        >
           <p className="italic">
-            "Tendermint is the first BFT consensus protocol deployed at scale in a blockchain setting."
+            "Tendermint is the first BFT consensus protocol deployed at scale in
+            a blockchain setting."
           </p>
         </CitationBlock>
 
-        <CodePanel title="라운드 구조" code={roundCode}
+        <CodePanel
+          title="라운드 구조"
+          code={roundCode}
           annotations={[
-            { lines: [4, 5], color: 'sky', note: 'Propose: 결정론적 제안자' },
-            { lines: [7, 9], color: 'emerald', note: 'Prevote: 유효성 확인' },
-            { lines: [11, 13], color: 'amber', note: 'Precommit: Polka 기반 잠금' },
-            { lines: [15, 17], color: 'violet', note: '결과: Commit 또는 Round+1' },
-          ]} />
+            { lines: [4, 5], color: "sky", note: "Propose: 결정론적 제안자" },
+            { lines: [7, 9], color: "emerald", note: "Prevote: 유효성 확인" },
+            {
+              lines: [11, 13],
+              color: "amber",
+              note: "Precommit: Polka 기반 잠금",
+            },
+            {
+              lines: [15, 17],
+              color: "violet",
+              note: "결과: Commit 또는 Round+1",
+            },
+          ]}
+        />
 
         {/* ── Propose Step ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Step 1: Propose</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Propose Step 상세:
+          {`// Propose Step 상세:
 //
 // 1. Proposer 선정:
 //    proposer(H, R) = validators sorted by accum
@@ -94,14 +112,15 @@ export default function Protocol() {
         </pre>
         <p className="leading-7">
           Propose = <strong>proposer가 block 생성 + gossip</strong>.<br />
-          proposer는 deterministic — accum 기반 weighted round-robin.<br />
+          proposer는 deterministic — accum 기반 weighted round-robin.
+          <br />
           POL round는 locking 메커니즘의 핵심 (다음 섹션).
         </p>
 
         {/* ── Prevote Step ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Step 2: Prevote</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Prevote Step 상세:
+          {`// Prevote Step 상세:
 //
 // 1. Validator가 proposal 받은 후:
 //    - if valid + not locked: prevote(B)
@@ -154,14 +173,17 @@ export default function Protocol() {
         </pre>
         <p className="leading-7">
           Prevote = <strong>block validity + locking 반영</strong>.<br />
-          2/3+ 같은 B prevote = "polka" (locking 기준).<br />
+          2/3+ 같은 B prevote = "polka" (locking 기준).
+          <br />
           timeout 후 precommit 진입 — polka 여부에 따라 다른 precommit.
         </p>
 
         {/* ── Precommit Step ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Step 3: Precommit + Commit</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Step 3: Precommit + Commit
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Precommit Step 상세:
+          {`// Precommit Step 상세:
 //
 // 1. Validator가 enterPrecommit 진입:
 //    - polka(B) 확인됨 → precommit(B) + lock(B, R)
@@ -218,14 +240,20 @@ export default function Protocol() {
 // 총: ~1.4-2초 per block`}
         </pre>
         <p className="leading-7">
-          Precommit = <strong>2/3+ prevote 확인 후 commit 의사 표명</strong>.<br />
-          2/3+ precommit → block finalized (revert 불가).<br />
+          Precommit = <strong>2/3+ prevote 확인 후 commit 의사 표명</strong>.
+          <br />
+          2/3+ precommit → block finalized (revert 불가).
+          <br />
           timeout/mixed → round++, 새 proposer 재시도.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 4 step인가 (PBFT 3-phase보다 많음)</strong> — propose와 commit 분리.<br />
-          PBFT의 pre-prepare = propose + prevote (대략), PBFT commit = precommit + commit.<br />
+          <strong>💡 왜 4 step인가 (PBFT 3-phase보다 많음)</strong> — propose와
+          commit 분리.
+          <br />
+          PBFT의 pre-prepare = propose + prevote (대략), PBFT commit = precommit
+          + commit.
+          <br />
           Tendermint는 각 단계를 명시적 구분 — blockchain 맥락에서 명확성 증대.
         </p>
       </div>

@@ -1,48 +1,52 @@
-import CosineViz from './viz/CosineViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import CosineViz from "./viz/CosineViz";
 
 export default function Cosine() {
   return (
     <section id="cosine" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Cosine Annealing & Warm Restart</h2>
+      <h2 className="mb-6 text-2xl font-bold">Cosine annealing은 종료 시점까지 부드럽게 감소합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          StepLR의 급격한 계단 대신 <strong>코사인 곡선</strong>으로 LR을 부드럽게 감소.
-          η_t = η_min + 0.5(η_max − η_min)(1 + cos(πt/T)) — 후반에 작은 LR로 세밀한 탐색
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Cosine Annealing의 동작</h3>
-        <p>
-          코사인 함수의 특성상 초반에는 천천히 감소 → 중반에 빠르게 → 후반에 다시 천천히.
-          후반의 완만한 감소가 최솟값 근처에서 <strong>fine-grained search</strong>를 가능하게 함.
-          하이퍼파라미터가 T_max와 η_min 둘뿐이라 튜닝이 간단
+          Cosine annealing은 peak LR에서 minimum LR까지 cosine의 반 주기를 따라
+          움직입니다. 초반에는 완만하게, 중간에는 빠르게, 끝에서는 다시 완만하게
+          감소하므로 milestone을 여러 개 고르지 않아도 정해진 budget 전체를 한
+          곡선으로 사용할 수 있습니다.
         </p>
         <p>
-          ImageNet 실험에서 StepLR 대비 top-1 accuracy 0.5~1% 향상이 일관되게 보고됨.
-          2020년 이후 CV와 NLP 모두에서 Cosine 계열이 기본 스케줄러로 자리잡은 이유
+          부드러운 모양 자체가 더 높은 정확도를 보장하지는 않습니다.
+          <code>T_max</code>가 실제 optimizer step 수와 맞지 않으면 최솟값에 너무
+          빨리 도달하거나 학습이 끝났는데도 큰 rate가 남습니다. Warmup을 앞에
+          붙일 때는 cosine 구간의 길이에서 warmup steps를 제외해야 합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Warm Restart (SGDR)</h3>
-        <p>
-          Loshchilov & Hutter(2017) — <strong>주기적으로 LR을 η_max로 리셋</strong>한 뒤 다시 코사인 감소.
-          local minimum에 갇혔을 때 큰 LR로 탈출할 수 있다는 것이 핵심 아이디어
-        </p>
-        <p>
-          T_mult=2로 주기를 점진적으로 늘림: 10→20→40 에포크.
-          초반 짧은 주기로 다양한 영역을 탐색하고, 후반 긴 주기로 안정적으로 수렴.
-          Snapshot Ensemble과 결합하면 하나의 훈련에서 여러 모델을 확보할 수도 있다
-        </p>
-
-        <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">Cosine vs Step: 왜 Cosine이 우세한가</p>
-          <p>
-            StepLR의 급격한 계단에서 gradient 방향이 갑자기 변함 → 학습 불안정.<br />
-            Cosine의 부드러운 전이가 gradient 충격을 최소화 → 더 안정적인 수렴.<br />
-            추가 이점: 튜닝할 하이퍼파라미터가 적어 실험 비용 절감
-          </p>
-        </div>
       </div>
-      <div className="not-prose my-8">
-        <CosineViz />
+      <ExplainedFormula
+        question="Peak와 minimum을 고정했을 때 cosine LR는 update마다 어떻게 정해질까?"
+        idea={<>현재 cycle에서 진행한 비율 t/T를 0에서 π까지 보내 cosine을 1에서 −1로 움직입니다. ½(1+cos)은 이를 1에서 0으로 바꾸므로 peak와 minimum 사이를 정확히 보간합니다.</>}
+        formula={String.raw`\begin{aligned}r_t&=\frac{t}{T},\\\eta_t&=\eta_{\min}+\frac{\eta_{\max}-\eta_{\min}}{2}\\&\qquad\cdot\left[1+\cos(\pi r_t)\right].\end{aligned}`}
+        terms={[
+          { symbol: "r_t", name: "cycle progress", description: "현재 cycle에서 0부터 1까지 증가하는 무차원 진행률입니다." },
+          { symbol: "T", name: "cycle length", description: "Peak에서 minimum까지 이동하는 scheduler 호출 횟수입니다." },
+          { symbol: "η_max", name: "peak LR", description: "Cosine 구간 첫 update에서 사용할 가장 큰 learning rate입니다." },
+          { symbol: "η_min", name: "minimum LR", description: "Cycle 끝에서 접근하는 learning-rate 하한입니다." },
+        ]}
+        assumptions={["t는 warmup을 제외한 cosine 구간 내부의 update index입니다.", "T번째 값 포함 여부와 scheduler 호출 시점을 framework 구현에 맞춰 확인합니다.", "Cosine 모양이 non-convex neural-network objective의 수렴을 자동으로 보장하지는 않습니다."]}
+        interpretation="Warmup W 뒤 cosine을 붙이면 T는 전체 updates가 아니라 남은 Ttotal−W여야 합니다. 그렇지 않으면 종료 시 ηmin에 도달하지 않습니다."
+      />
+      <div className="not-prose my-8"><CosineViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Warm restart는 여러 cosine cycle을 잇는 별도 정책입니다</h3>
+        <p>
+          SGDR의 warm restart는 cycle 경계에서 LR를 다시 높이지만 model parameter와
+          optimizer의 학습을 처음부터 시작하지는 않습니다. PyTorch의
+          <code>CosineAnnealingLR</code>은 restart 없는 단일 감소이고,
+          <code>CosineAnnealingWarmRestarts</code>가 반복 cycle을 구현합니다. 이름이
+          비슷해도 state transition이 다르므로 config에 class와 cycle length를 남깁니다.
+        </p>
+      </div>
+      <div id="paper-sgdr" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">논문 읽기 · SGDR</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Loshchilov와 Hutter는 SGD의 LR를 cosine으로 낮춘 뒤 warm restart하는 방법을 제안하고 CIFAR-10/100·EEG·downsampled ImageNet에서 anytime performance를 평가했습니다. 이 실험은 모든 optimizer·architecture에서 restart가 단일 decay보다 낫다는 보편적 보장이 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1608.03983" target="_blank" rel="noreferrer">Cycle 정의와 실험 범위 보기</a>
       </div>
     </section>
   );

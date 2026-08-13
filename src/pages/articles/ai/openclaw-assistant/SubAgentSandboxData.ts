@@ -29,9 +29,21 @@ export const subAgentCode = `서브에이전트 시스템:
     → 결과 종합하여 응답`;
 
 export const subAgentAnnotations = [
-  { lines: [5, 12] as [number, number], color: 'sky' as const, note: '깊이 기반 권한 제어' },
-  { lines: [14, 18] as [number, number], color: 'emerald' as const, note: '안전 제어 — 캐스케이드 중단' },
-  { lines: [20, 22] as [number, number], color: 'amber' as const, note: '비용 최적화 전략' },
+  {
+    lines: [5, 12] as [number, number],
+    color: "sky" as const,
+    note: "깊이 기반 권한 제어",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "emerald" as const,
+    note: "안전 제어 — 캐스케이드 중단",
+  },
+  {
+    lines: [20, 22] as [number, number],
+    color: "amber" as const,
+    note: "비용 최적화 전략",
+  },
 ];
 
 export const sandboxCode = `샌드박스 아키텍처:
@@ -51,7 +63,19 @@ export const sandboxCode = `샌드박스 아키텍처:
     설정 변경 시 자동 재생성 (5분 내 사용 중이면 유지)`;
 
 export const sandboxAnnotations = [
-  { lines: [4, 7] as [number, number], color: 'sky' as const, note: '3가지 샌드박스 모드' },
-  { lines: [9, 10] as [number, number], color: 'rose' as const, note: 'Fail-closed — 안전 우선 설계' },
-  { lines: [13, 15] as [number, number], color: 'emerald' as const, note: '컨테이너 자동 관리' },
+  {
+    lines: [4, 7] as [number, number],
+    color: "sky" as const,
+    note: "3가지 샌드박스 모드",
+  },
+  {
+    lines: [9, 10] as [number, number],
+    color: "rose" as const,
+    note: "Fail-closed — 안전 우선 설계",
+  },
+  {
+    lines: [13, 15] as [number, number],
+    color: "emerald" as const,
+    note: "컨테이너 자동 관리",
+  },
 ];

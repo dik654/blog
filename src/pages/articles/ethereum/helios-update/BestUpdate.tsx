@@ -9,12 +9,14 @@ export default function BestUpdate({ title }: { title: string }) {
           참여자 수가 가장 많은 Update를 best로 선택한다.
         </p>
         <p className="leading-7">
-          <code>best_valid_update</code>에 임시 저장 후, finalized 확정 시 적용한다.
+          <code>best_valid_update</code>에 임시 저장 후, finalized 확정 시
+          적용한다.
           <br />
           참여자 수 = 보안 수준. 많을수록 더 신뢰할 수 있다.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 fork choice rule(LMD-GHOST)로 최선 블록을 선택한다.
+          <strong>💡 Reth vs Helios:</strong> Reth는 fork choice
+          rule(LMD-GHOST)로 최선 블록을 선택한다.
           <br />
           Helios는 참여자 수 기반으로 최선 Update를 선택한다 — 더 단순한 규칙.
         </p>

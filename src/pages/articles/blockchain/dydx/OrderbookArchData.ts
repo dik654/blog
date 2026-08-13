@@ -16,9 +16,21 @@ export const clobCode = `CLOB 모듈 디렉토리 구조 (protocol/x/clob/):
   주문 타입   → Short-Term / Long-Term / Conditional`;
 
 export const clobAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '핵심 비즈니스 로직' },
-  { lines: [6, 9] as [number, number], color: 'emerald' as const, note: '보조 모듈' },
-  { lines: [12, 15] as [number, number], color: 'amber' as const, note: '핵심 컴포넌트 역할' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "핵심 비즈니스 로직",
+  },
+  {
+    lines: [6, 9] as [number, number],
+    color: "emerald" as const,
+    note: "보조 모듈",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "amber" as const,
+    note: "핵심 컴포넌트 역할",
+  },
 ];
 
 export const orderbookCode = `주문서 데이터 구조 (Go 구현):
@@ -43,7 +55,19 @@ type Order struct {
 }`;
 
 export const orderbookAnnotations = [
-  { lines: [3, 8] as [number, number], color: 'sky' as const, note: '매수/매도 양방향 주문서' },
-  { lines: [10, 12] as [number, number], color: 'emerald' as const, note: '가격 레벨별 FIFO 큐' },
-  { lines: [14, 20] as [number, number], color: 'amber' as const, note: '주문 구조체' },
+  {
+    lines: [3, 8] as [number, number],
+    color: "sky" as const,
+    note: "매수/매도 양방향 주문서",
+  },
+  {
+    lines: [10, 12] as [number, number],
+    color: "emerald" as const,
+    note: "가격 레벨별 FIFO 큐",
+  },
+  {
+    lines: [14, 20] as [number, number],
+    color: "amber" as const,
+    note: "주문 구조체",
+  },
 ];

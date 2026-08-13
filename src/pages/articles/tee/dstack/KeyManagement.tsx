@@ -1,29 +1,50 @@
-import KMSKeyViz from './viz/KMSKeyViz';
-import KeyMgmtStepViz from './viz/KeyMgmtStepViz';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import KMSKeyViz from "./viz/KMSKeyViz";
+import KeyMgmtStepViz from "./viz/KeyMgmtStepViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function KeyManagement({ title, onCodeRef }: { title?: string; onCodeRef?: (key: string, ref: CodeRef) => void }) {
+export default function KeyManagement({
+  title,
+  onCodeRef,
+}: {
+  title?: string;
+  onCodeRef?: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="key-management" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">{title ?? '계층적 키 관리 시스템'}</h2>
-      <div className="not-prose mb-8"><KMSKeyViz /></div>
+      <h2 className="text-2xl font-bold mb-6">
+        {title ?? "계층적 키 관리 시스템"}
+      </h2>
+      <div className="not-prose mb-8">
+        <KMSKeyViz />
+      </div>
       {onCodeRef && (
         <div className="not-prose flex flex-wrap gap-2 mb-6">
-          <CodeViewButton onClick={() => onCodeRef('key-derive', codeRefs['key-derive'])} />
-          <span className="text-[10px] text-muted-foreground self-center">HKDF 키 유도</span>
-          <CodeViewButton onClick={() => onCodeRef('ra-tls', codeRefs['ra-tls'])} />
-          <span className="text-[10px] text-muted-foreground self-center">RA-TLS 인증서</span>
+          <CodeViewButton
+            onClick={() => onCodeRef("key-derive", codeRefs["key-derive"])}
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            HKDF 키 유도
+          </span>
+          <CodeViewButton
+            onClick={() => onCodeRef("ra-tls", codeRefs["ra-tls"])}
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            RA-TLS 인증서
+          </span>
         </div>
       )}
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">KMS 핵심 — 결정론적 키 파생</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          KMS 핵심 — 결정론적 키 파생
+        </h3>
         <p>
-          <strong>HKDF-SHA256</strong>: HMAC 기반 Key Derivation Function<br />
+          <strong>HKDF-SHA256</strong>: HMAC 기반 Key Derivation Function
+          <br />
           <strong>계층적 구조</strong>: Root → Cluster → App → Instance 키<br />
-          <strong>결정론성</strong>: 같은 App ID → VM 재시작 후에도 동일 키<br />
+          <strong>결정론성</strong>: 같은 App ID → VM 재시작 후에도 동일 키
+          <br />
           <strong>안전성</strong>: Root 키는 KMS 내부 TEE에만 존재
         </p>
 
@@ -131,14 +152,14 @@ GET /api/v1/clusters/{cluster_id}/members
 // 5) Key rotation
 POST /api/v1/apps/{app_id}/rotate
 // 새 epoch 시작, 이전 key는 grace period 동안 유효`}</pre>
-
       </div>
       <div className="not-prose mt-6">
         <KeyMgmtStepViz />
       </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Persistent Storage 암호화</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Persistent Storage 암호화
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// VM volume 암호화 (dstack 기본 활성화)
 
 // 1) VM 생성 시 volume 마운트
@@ -173,28 +194,34 @@ mount /dev/mapper/encrypted_data /data
           <p className="font-semibold mb-2">인사이트: 결정론적 vs 랜덤 key</p>
           <p>
             <strong>랜덤 key (전통 방식)</strong>:<br />
-            - VM 시작 시 새 key 생성<br />
-            - Key 분실 시 데이터 손실<br />
-            - Backup·escrow 인프라 필요<br />
-            - 더 안전하지만 운영 복잡
+            - VM 시작 시 새 key 생성
+            <br />
+            - Key 분실 시 데이터 손실
+            <br />
+            - Backup·escrow 인프라 필요
+            <br />- 더 안전하지만 운영 복잡
           </p>
           <p className="mt-2">
             <strong>결정론적 key (dstack)</strong>:<br />
-            ✓ 같은 app ID → 같은 key<br />
-            ✓ Backup 자동 (app_id만 보존)<br />
-            ✓ Stateless recovery<br />
-            ✓ Key escrow는 app_id derivation<br />
-            ✗ Root key 유출 시 모든 하위 key 노출
+            ✓ 같은 app ID → 같은 key
+            <br />
+            ✓ Backup 자동 (app_id만 보존)
+            <br />
+            ✓ Stateless recovery
+            <br />
+            ✓ Key escrow는 app_id derivation
+            <br />✗ Root key 유출 시 모든 하위 key 노출
           </p>
           <p className="mt-2">
             <strong>dstack의 완화</strong>:<br />
-            - Root key는 KMS TEE 내부에만<br />
-            - KMS TEE 자체가 attestation 대상<br />
-            - Multi-tenant 격리는 HKDF로<br />
-            - Emergency rotation 지원
+            - Root key는 KMS TEE 내부에만
+            <br />
+            - KMS TEE 자체가 attestation 대상
+            <br />
+            - Multi-tenant 격리는 HKDF로
+            <br />- Emergency rotation 지원
           </p>
         </div>
-
       </div>
     </section>
   );

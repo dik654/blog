@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import type { Category } from '@/content';
-import SubcategoryItem from './SubcategoryItem';
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import type { Category } from "@/content";
+import SubcategoryItem from "./SubcategoryItem";
+import TopDownCategoryNav from "./TopDownCategoryNav";
+import { CATEGORY_READING_PATHS } from "@/content/category-reading-paths";
 
 interface Props {
   category: Category;
@@ -20,15 +22,17 @@ export default function CategoryItem({
   expanded,
   onToggle,
 }: Props) {
+  const hasTopDownPath = Boolean(CATEGORY_READING_PATHS[cat.slug]);
+
   return (
     <div className="mb-1">
       <button
         onClick={() => onToggle(cat.slug)}
         className={cn(
-          'flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors cursor-pointer',
+          "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors cursor-pointer",
           isActive
-            ? 'bg-accent text-accent-foreground'
-            : 'text-foreground hover:bg-accent/50',
+            ? "bg-accent text-accent-foreground"
+            : "text-foreground hover:bg-accent/50",
         )}
       >
         <Link
@@ -41,36 +45,47 @@ export default function CategoryItem({
         <span className="flex items-center">
           <svg
             className={cn(
-              'h-3.5 w-3.5 text-muted-foreground transition-transform duration-200',
-              isExpanded && 'rotate-90',
+              "h-3.5 w-3.5 text-muted-foreground transition-transform duration-200",
+              isExpanded && "rotate-90",
             )}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </span>
       </button>
 
-      {isExpanded && (
-        <div className="ml-2 border-l border-border pl-2 mt-1">
-          {cat.subcategories.map((sub) => (
-            <SubcategoryItem
-              key={sub.slug}
-              categorySlug={cat.slug}
-              subcategory={sub}
-              articles={cat.articles.filter((a) => a.subcategory === sub.slug)}
-              allArticles={cat.articles}
-              isExpanded={expanded[`${cat.slug}/${sub.slug}`] ?? false}
-              activeArticle={activeArticle}
-              expanded={expanded}
-              onToggle={onToggle}
-            />
-          ))}
-        </div>
-      )}
+      {isExpanded &&
+        (isActive && hasTopDownPath ? (
+          <TopDownCategoryNav
+            category={cat}
+            activeArticle={activeArticle}
+            expanded={expanded}
+            onToggle={onToggle}
+          />
+        ) : (
+          <div className="ml-2 mt-1 border-l border-border pl-2">
+            {cat.subcategories.map((sub) => (
+              <SubcategoryItem
+                key={sub.slug}
+                categorySlug={cat.slug}
+                subcategory={sub}
+                allArticles={cat.articles}
+                isExpanded={expanded[`${cat.slug}/${sub.slug}`] ?? false}
+                activeArticle={activeArticle}
+                expanded={expanded}
+                onToggle={onToggle}
+              />
+            ))}
+          </div>
+        ))}
     </div>
   );
 }

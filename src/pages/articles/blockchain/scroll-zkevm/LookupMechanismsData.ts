@@ -22,10 +22,26 @@ meta.lookup_any("keccak lookup", |meta| {
 // ∀ input ∈ Input: ∃ row ∈ Table: input = row`;
 
 export const lookupAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '입력 RLC — 바이트를 필드 원소로 압축' },
-  { lines: [7, 11] as [number, number], color: 'emerald' as const, note: '4개 컬럼 → 1개 RLC로 압축' },
-  { lines: [13, 18] as [number, number], color: 'amber' as const, note: '테이블 측 RLC — 동일 challenge' },
-  { lines: [22, 23] as [number, number], color: 'violet' as const, note: 'Plonk permutation으로 효율적 증명' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "입력 RLC — 바이트를 필드 원소로 압축",
+  },
+  {
+    lines: [7, 11] as [number, number],
+    color: "emerald" as const,
+    note: "4개 컬럼 → 1개 RLC로 압축",
+  },
+  {
+    lines: [13, 18] as [number, number],
+    color: "amber" as const,
+    note: "테이블 측 RLC — 동일 challenge",
+  },
+  {
+    lines: [22, 23] as [number, number],
+    color: "violet" as const,
+    note: "Plonk permutation으로 효율적 증명",
+  },
 ];
 
 export const RLC_CODE = `// RLC (Random Linear Combination) — 다중 컬럼 압축
@@ -51,9 +67,21 @@ pub struct Challenges<T = Challenge> {
 }`;
 
 export const rlcAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: 'RLC 공식 — 다항식 평가' },
-  { lines: [6, 13] as [number, number], color: 'emerald' as const, note: '구현 — 누적 곱셈으로 RLC 계산' },
-  { lines: [16, 20] as [number, number], color: 'amber' as const, note: 'Challenges — Phase별 무작위 값' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "RLC 공식 — 다항식 평가",
+  },
+  {
+    lines: [6, 13] as [number, number],
+    color: "emerald" as const,
+    note: "구현 — 누적 곱셈으로 RLC 계산",
+  },
+  {
+    lines: [16, 20] as [number, number],
+    color: "amber" as const,
+    note: "Challenges — Phase별 무작위 값",
+  },
 ];
 
 export const STACK_LOOKUP_CODE = `// EVM Circuit에서 스택 pop — RwTable Lookup 예시
@@ -77,7 +105,19 @@ fn stack_lookup(&mut self, is_write, stack_pointer_offset, value) {
 }`;
 
 export const stackLookupAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: 'stack_pop → stack_lookup 호출' },
-  { lines: [7, 11] as [number, number], color: 'emerald' as const, note: '12개 컬럼 → RLC 압축' },
-  { lines: [13, 17] as [number, number], color: 'amber' as const, note: '테이블 측 RLC + lookup 등록' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "stack_pop → stack_lookup 호출",
+  },
+  {
+    lines: [7, 11] as [number, number],
+    color: "emerald" as const,
+    note: "12개 컬럼 → RLC 압축",
+  },
+  {
+    lines: [13, 17] as [number, number],
+    color: "amber" as const,
+    note: "테이블 측 RLC + lookup 등록",
+  },
 ];

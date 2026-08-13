@@ -14,7 +14,8 @@ export default function ProofCaching({ title }: { title: string }) {
           블록이 바뀌면 캐시가 무효화된다 — state_root가 달라지기 때문.
         </p>
         <p className="leading-7">
-          <strong>💡 Reth vs Helios:</strong> Reth는 DB 자체가 캐시 역할을 한다 (mmap).
+          <strong>💡 Reth vs Helios:</strong> Reth는 DB 자체가 캐시 역할을 한다
+          (mmap).
           <br />
           Helios는 증명을 메모리에 캐싱한다 — 훨씬 작은 메모리 사용량.
         </p>

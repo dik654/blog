@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const varCodeRefs: Record<string, CodeRef> = {
-  'var-struct': {
-    path: 'src/lib.rs — Variable & VarInner',
-    lang: 'rust',
+  "var-struct": {
+    path: "src/lib.rs — Variable & VarInner",
+    lang: "rust",
     highlight: [1, 34],
-    desc: 'Variable의 내부 구조.\nRc<RefCell<VarInner>>로 다대다 공유 + 내부 가변성 확보.',
+    desc: "Variable의 내부 구조.\nRc<RefCell<VarInner>>로 다대다 공유 + 내부 가변성 확보.",
     code: `struct VarInner {
     data: ArrayD<f64>,
     // grad를 ArrayD가 아닌 Variable로 저장하는 이유:
@@ -44,10 +44,26 @@ impl Variable {
     }
 }`,
     annotations: [
-      { lines: [3, 13], color: 'sky', note: 'grad가 Variable인 이유 — 고차 미분 시 그래디언트의 계산 이력 보존' },
-      { lines: [14, 14], color: 'emerald', note: 'creator — 역전파 시 이 체인을 따라 함수를 역순 호출' },
-      { lines: [15, 15], color: 'amber', note: 'generation — backward에서 세대 높은 순으로 정렬 (위상 정렬)' },
-      { lines: [21, 21], color: 'violet', note: 'Rc<RefCell<>> — 계산 그래프의 다대다 관계를 위한 공유 소유권' },
+      {
+        lines: [3, 13],
+        color: "sky",
+        note: "grad가 Variable인 이유 — 고차 미분 시 그래디언트의 계산 이력 보존",
+      },
+      {
+        lines: [14, 14],
+        color: "emerald",
+        note: "creator — 역전파 시 이 체인을 따라 함수를 역순 호출",
+      },
+      {
+        lines: [15, 15],
+        color: "amber",
+        note: "generation — backward에서 세대 높은 순으로 정렬 (위상 정렬)",
+      },
+      {
+        lines: [21, 21],
+        color: "violet",
+        note: "Rc<RefCell<>> — 계산 그래프의 다대다 관계를 위한 공유 소유권",
+      },
     ],
   },
 };

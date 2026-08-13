@@ -1,4 +1,9 @@
-export const C = { mask: '#6366f1', challenge: '#f59e0b', sign: '#10b981', reject: '#ef4444' };
+export const C = {
+  mask: "#6366f1",
+  challenge: "#f59e0b",
+  sign: "#10b981",
+  reject: "#ef4444",
+};
 
 export const STEPS = [
   {
@@ -11,11 +16,11 @@ export const STEPS = [
   },
   {
     label: "c = SampleInBall(H(mu||w1), tau=39) — 도전 생성",
-    body: '메시지 해시와 w1로 도전 다항식 c를 생성합니다.\n256개 계수 중 정확히 39개만 +1 또는 -1, 나머지는 0입니다.',
+    body: "메시지 해시와 w1로 도전 다항식 c를 생성합니다.\n256개 계수 중 정확히 39개만 +1 또는 -1, 나머지는 0입니다.",
   },
   {
     label: "z = y + c*s1 — 서명 벡터 계산",
-    body: '마스킹 벡터 y에 c*s1을 더해 서명 벡터 z를 생성합니다.\ny가 충분히 크면 z에서 s1 정보가 드러나지 않습니다.',
+    body: "마스킹 벡터 y에 c*s1을 더해 서명 벡터 z를 생성합니다.\ny가 충분히 크면 z에서 s1 정보가 드러나지 않습니다.",
   },
   {
     label: "if ||z||inf >= gamma1 - beta: RESTART",

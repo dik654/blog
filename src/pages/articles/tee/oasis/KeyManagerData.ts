@@ -11,8 +11,16 @@ Intel SGX 하드웨어
 // 3. 허가된 런타임만 키 획득 가능`;
 
 export const trustChainAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: 'SGX 하드웨어 측정값' },
-  { lines: [7, 11] as [number, number], color: 'emerald' as const, note: '컴퓨트 노드 인증 과정' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "SGX 하드웨어 측정값",
+  },
+  {
+    lines: [7, 11] as [number, number],
+    color: "emerald" as const,
+    note: "컴퓨트 노드 인증 과정",
+  },
 ];
 
 export const keyDerivationCode = `// 계층적 키 파생 (HKDF-SHA512 기반)
@@ -30,8 +38,16 @@ Contract Secret (컨트랙트별 고유)
 // KM 마이그레이션 시 비밀 안전하게 이전 (복제 채널)`;
 
 export const keyDerivationAnnotations = [
-  { lines: [1, 6] as [number, number], color: 'sky' as const, note: 'HKDF 키 계층 트리' },
-  { lines: [8, 10] as [number, number], color: 'emerald' as const, note: '파생 키 용도별 분류' },
+  {
+    lines: [1, 6] as [number, number],
+    color: "sky" as const,
+    note: "HKDF 키 계층 트리",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "emerald" as const,
+    note: "파생 키 용도별 분류",
+  },
 ];
 
 export const nodeCommCode = `// 컨트랙트 실행 전 키 요청 흐름
@@ -48,8 +64,16 @@ export const nodeCommCode = `// 컨트랙트 실행 전 키 요청 흐름
 // - 다중 키 매니저 복제본으로 가용성 보장`;
 
 export const nodeCommAnnotations = [
-  { lines: [1, 7] as [number, number], color: 'sky' as const, note: '키 요청-발급 흐름' },
-  { lines: [9, 12] as [number, number], color: 'amber' as const, note: '보안 속성' },
+  {
+    lines: [1, 7] as [number, number],
+    color: "sky" as const,
+    note: "키 요청-발급 흐름",
+  },
+  {
+    lines: [9, 12] as [number, number],
+    color: "amber" as const,
+    note: "보안 속성",
+  },
 ];
 
 export const dmVerityCode = `# Oasis VM은 읽기 전용 루트 파일시스템 사용
@@ -68,7 +92,19 @@ dm-verity 구조:
 # - 소프트웨어 무결성 보장`;
 
 export const dmVerityAnnotations = [
-  { lines: [4, 6] as [number, number], color: 'sky' as const, note: 'dm-verity 해시 검증 구조' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: '쓰기/읽기 정책' },
-  { lines: [11, 14] as [number, number], color: 'amber' as const, note: '무결성 보장 결과' },
+  {
+    lines: [4, 6] as [number, number],
+    color: "sky" as const,
+    note: "dm-verity 해시 검증 구조",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "쓰기/읽기 정책",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "amber" as const,
+    note: "무결성 보장 결과",
+  },
 ];

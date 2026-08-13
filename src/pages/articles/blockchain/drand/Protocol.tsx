@@ -1,4 +1,4 @@
-import ProtocolViz from './viz/ProtocolViz';
+import ProtocolViz from "./viz/ProtocolViz";
 
 export default function Protocol() {
   return (
@@ -6,15 +6,20 @@ export default function Protocol() {
       <h2 className="text-2xl font-bold mb-6">BLS 임계값 서명 프로토콜</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          BLS 임계값 서명(t-of-n) 기반. 결정론적 성질 덕분에 같은 입력에 대해 유일한 서명 존재
+          BLS 임계값 서명(t-of-n) 기반. 결정론적 성질 덕분에 같은 입력에 대해
+          유일한 서명 존재
         </p>
       </div>
-      <div className="not-prose"><ProtocolViz /></div>
+      <div className="not-prose">
+        <ProtocolViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">BLS Threshold Signature 프로토콜</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          BLS Threshold Signature 프로토콜
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// BLS Threshold Signature:
+          {`// BLS Threshold Signature:
 
 // Setup phase:
 // 1. n operators
@@ -93,8 +98,10 @@ export default function Protocol() {
 // - WebSocket: real-time`}
         </pre>
         <p className="leading-7">
-          BLS threshold: <strong>t of n signatures → unique combined sig</strong>.<br />
-          deterministic, unbiasable, publicly verifiable.<br />
+          BLS threshold:{" "}
+          <strong>t of n signatures → unique combined sig</strong>.<br />
+          deterministic, unbiasable, publicly verifiable.
+          <br />
           3s period, chain of rounds, ~25K beacons/day.
         </p>
       </div>

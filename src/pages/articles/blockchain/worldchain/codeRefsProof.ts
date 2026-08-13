@@ -1,8 +1,8 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const codeRefsProof: Record<string, CodeRef> = {
-  'wc-semaphore-proof': {
-    path: 'world-chain-builder/crates/world/pbh/src/semaphore.rs',
+  "wc-semaphore-proof": {
+    path: "world-chain-builder/crates/world/pbh/src/semaphore.rs",
     code: `/// Semaphore ZK 증명
 let identity = Identity::from_secret(&mut secret);
 let commitment = identity.commitment();
@@ -21,18 +21,18 @@ let proof = semaphore_rs::protocol::generate_proof(
 let nullifier = generate_nullifier_hash(
     &identity, external_nullifier_hash,
 );`,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 18],
-    desc: 'Semaphore ZK: Identity → Merkle → 증명 → Nullifier.',
+    desc: "Semaphore ZK: Identity → Merkle → 증명 → Nullifier.",
     annotations: [
-      { lines: [2, 3], color: 'sky', note: '신원 + 커밋먼트' },
-      { lines: [4, 9], color: 'emerald', note: 'Poseidon Merkle Tree' },
-      { lines: [10, 15], color: 'amber', note: 'ZK 증명 생성' },
-      { lines: [16, 18], color: 'rose', note: 'Nullifier 중복 방지' },
+      { lines: [2, 3], color: "sky", note: "신원 + 커밋먼트" },
+      { lines: [4, 9], color: "emerald", note: "Poseidon Merkle Tree" },
+      { lines: [10, 15], color: "amber", note: "ZK 증명 생성" },
+      { lines: [16, 18], color: "rose", note: "Nullifier 중복 방지" },
     ],
   },
-  'wc-pbh-payload': {
-    path: 'world-chain-builder/crates/world/pbh/src/payload.rs',
+  "wc-pbh-payload": {
+    path: "world-chain-builder/crates/world/pbh/src/payload.rs",
     code: `/// PBH 페이로드
 #[derive(Default, Clone, RlpEncodable)]
 pub struct PBHPayload {
@@ -44,12 +44,12 @@ pub struct PBHPayload {
 // External Nullifier (256비트):
 // Bits 47-32: Year | 31-24: Month
 // Bits 23-8: Nonce | 7-0: Version`,
-    lang: 'rust',
+    lang: "rust",
     highlight: [1, 11],
-    desc: 'PBHPayload: nullifier로 월별 제한 + ZK 증명.',
+    desc: "PBHPayload: nullifier로 월별 제한 + ZK 증명.",
     annotations: [
-      { lines: [3, 7], color: 'sky', note: 'PBHPayload 구조체' },
-      { lines: [9, 11], color: 'emerald', note: 'External Nullifier 비트' },
+      { lines: [3, 7], color: "sky", note: "PBHPayload 구조체" },
+      { lines: [9, 11], color: "emerald", note: "External Nullifier 비트" },
     ],
   },
 };

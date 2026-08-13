@@ -1,79 +1,34 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, PRIMITIVES, PRIM_EXAMPLES } from './PrimitivesData';
+import VizFrame from "@/components/viz/VizFrame";
 
-const W = 460, H = 260;
-const BW = 280, BH = 40;
-const BX = (W - BW) / 2;
+const primitives = [
+  { label: "Tool", control: "Model-controlled proposal", purpose: "인자가 있는 계산·조회·변경", identity: "server 안에서 unique한 name", example: "create_ticket" },
+  { label: "Resource", control: "Application-controlled context", purpose: "주소로 식별해 읽거나 구독", identity: "URI", example: "db://schema" },
+  { label: "Prompt", control: "User-controlled template", purpose: "재사용할 message 시작 형식", identity: "prompt name + arguments", example: "review_code" },
+] as const;
 
 export default function PrimitivesViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {PRIMITIVES.map((p, i) => {
-            const active = step === i + 1;
-            const op = active ? 1 : step === 0 ? 0.7 : step > i + 1 ? 0.5 : 0.15;
-            return (
-              <motion.g key={p.label} animate={{ opacity: op }}
-                transition={{ duration: 0.3 }}>
-                <rect x={BX} y={p.y} width={BW} height={BH} rx={6}
-                  fill={active ? `${p.color}20` : `${p.color}08`}
-                  stroke={p.color} strokeWidth={active ? 2 : 1} />
-                <rect x={BX} y={p.y} width={4} height={BH} rx={2}
-                  fill={p.color} opacity={active ? 1 : 0.3} />
-                <text x={BX + 18} y={p.y + 17} fontSize={11}
-                  fontWeight={700} fill={p.color}>{p.label}</text>
-                <text x={BX + 18} y={p.y + 32} fontSize={9}
-                  fill="var(--muted-foreground)">{p.desc}</text>
-                {active && (
-                  <motion.text x={BX + BW - 12} y={p.y + 24}
-                    textAnchor="end" fontSize={9} fill={p.color}
-                    initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}>
-                    {['name + schema + handler', 'URI + MIME type', '템플릿 삽입'][i]}
-                  </motion.text>
-                )}
-              </motion.g>
-            );
-          })}
-
-          {/* Concrete JSON example panel when active */}
-          {step >= 1 && step <= 3 && (
-            <motion.g initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}>
-              <rect x={BX} y={195} width={BW} height={54} rx={5}
-                fill="var(--card)" stroke={PRIMITIVES[step - 1].color}
-                strokeWidth={1} />
-              <rect x={BX} y={195} width={4} height={54} rx={2}
-                fill={PRIMITIVES[step - 1].color} />
-              {PRIM_EXAMPLES[step]?.map((line, j) => (
-                <text key={j} x={BX + 14} y={210 + j * 14}
-                  fontSize={8} fontFamily="monospace"
-                  fill="var(--muted-foreground)">{line}</text>
-              ))}
-            </motion.g>
-          )}
-
-          {/* active indicator dot */}
-          {step >= 1 && step <= 3 && (
-            <motion.circle r={4}
-              animate={{
-                cx: BX - 12,
-                cy: PRIMITIVES[step - 1].y + BH / 2,
-              }}
-              transition={{ type: 'spring', bounce: 0.3 }}
-              fill={PRIMITIVES[step - 1].color}
-              style={{ filter: `drop-shadow(0 0 4px ${PRIMITIVES[step - 1].color}88)` }} />
-          )}
-
-          {step === 0 && (
-            <motion.text x={W / 2} y={210} textAnchor="middle"
-              fontSize={9} fill="var(--muted-foreground)"
-              initial={{ opacity: 0 }} animate={{ opacity: 0.7 }}>
-              Server가 노출하는 3종류의 기능 단위
-            </motion.text>
-          )}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="Primitive map"
+      title="같은 server 기능도 누가 선택하고 무엇이 남는지에 따라 나눕니다"
+      description="이 구분이 model context 크기, 사용자 UI, side-effect 승인과 cache 수명을 결정합니다."
+    >
+      <div className="grid gap-7 md:grid-cols-3 md:gap-6">
+        {primitives.map((item, index) => (
+          <section key={item.label} className="min-w-0 border-t border-border/80 pt-4">
+            <div className="flex items-baseline justify-between gap-3">
+              <h4 className="text-sm font-bold">{item.label}</h4>
+              <span className="font-mono text-[11px] text-muted-foreground">0{index + 1}</span>
+            </div>
+            <p className="mt-3 text-xs font-semibold leading-5 text-primary">{item.control}</p>
+            <dl className="mt-4 space-y-3 text-xs leading-5">
+              <div><dt className="font-bold">역할</dt><dd className="mt-1 text-muted-foreground">{item.purpose}</dd></div>
+              <div><dt className="font-bold">정체성</dt><dd className="mt-1 text-muted-foreground">{item.identity}</dd></div>
+              <div><dt className="font-bold">예</dt><dd className="mt-1 break-all font-mono text-muted-foreground">{item.example}</dd></div>
+            </dl>
+          </section>
+        ))}
+      </div>
+    </VizFrame>
   );
 }

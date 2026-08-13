@@ -1,9 +1,9 @@
-import Overview from './sui/Overview';
-import ObjectModel from './sui/ObjectModel';
-import Consensus from './sui/Consensus';
-import MoveSui from './sui/MoveSui';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './sui/codeRefs';
+import Overview from "./sui/Overview";
+import ObjectModel from "./sui/ObjectModel";
+import Consensus from "./sui/Consensus";
+import MoveSui from "./sui/MoveSui";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./sui/codeRefs";
 
 export default function SuiArticle() {
   const sidebar = useCodeSidebar();

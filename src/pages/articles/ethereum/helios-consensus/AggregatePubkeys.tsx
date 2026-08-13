@@ -1,11 +1,16 @@
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
-import AggPubkeyViz from './viz/AggPubkeyViz';
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import AggPubkeyViz from "./viz/AggPubkeyViz";
 
-interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
+interface Props {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}
 
-export default function AggregatePubkeys({ title, onCodeRef }: Props & { title: string }) {
+export default function AggregatePubkeys({
+  title,
+  onCodeRef,
+}: Props & { title: string }) {
   return (
     <section id="aggregate-pubkeys" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">{title}</h2>
@@ -19,7 +24,11 @@ export default function AggregatePubkeys({ title, onCodeRef }: Props & { title: 
       <div className="not-prose">
         <AggPubkeyViz />
         <div className="flex items-center gap-2 mt-3 justify-end">
-          <CodeViewButton onClick={() => onCodeRef('hl-verify-bls', codeRefs['hl-verify-bls'])} />
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef("hl-verify-bls", codeRefs["hl-verify-bls"])
+            }
+          />
           <span className="text-[10px] text-muted-foreground">verify.rs</span>
         </div>
       </div>

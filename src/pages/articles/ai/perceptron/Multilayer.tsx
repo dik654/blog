@@ -1,96 +1,62 @@
-import MultilayerViz from './viz/MultilayerViz';
-import ForwardPropDetailViz from './viz/ForwardPropDetailViz';
-import CoordinateRemapViz from './viz/CoordinateRemapViz';
-import ReLUTruthTableViz from './viz/ReLUTruthTableViz';
-import LinearCollapseViz from './viz/LinearCollapseViz';
-import ActivationCompareViz from './viz/ActivationCompareViz';
-import DepthVsWidthViz from './viz/DepthVsWidthViz';
-import ModernMLPViz from './viz/ModernMLPViz';
+import MultilayerViz from "./viz/MultilayerViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Multilayer() {
   return (
     <section id="multilayer" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">다층 퍼셉트론</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        층을 2개 쌓으면 XOR 해결 가능 — 은닉층이 비선형 경계를 학습한다.
-      </p>
+      <h2 className="mb-6 text-2xl font-bold">다층 perceptron은 중간 표현을 학습합니다</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          XOR은 원래 입력 평면에서 직선 하나로 분리할 수 없지만, 은닉층이 서로 다른 경계를 만든 뒤 그 결과를 새 feature로 출력하면 다음 층에서는 선형 분리가 가능해집니다. 다층 perceptron(MLP)의 핵심은 단순히 뉴런 수를 늘리는 것이 아니라, 여러 affine transform 사이에 activation을 두어 입력 공간을 단계적으로 다시 표현하는 데 있습니다.
+        </p>
+        <p>
+          예를 들어 두 은닉 뉴런이 OR과 NAND에 가까운 중간 feature를 만들고 출력층이 둘을 AND처럼 결합하면 XOR을 구성할 수 있습니다. 실제 학습에서는 사람이 이 weight를 직접 정하지 않으며, loss를 줄이는 backpropagation이 비슷한 중간 경계를 찾습니다.
+        </p>
+      </div>
       <MultilayerViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">은닉층이 하는 일 — 좌표 재배치</h3>
+      <ExplainedFormula
+        question="여러 affine layer를 쌓는 것만으로 XOR을 해결할 수 있을까?"
+        idea={<>중간에 nonlinearity가 없으면 matrix multiplication과 bias가 다시 하나의 affine transform으로 합쳐집니다. 깊이는 늘어도 결정 경계 종류는 그대로입니다.</>}
+        formula={String.raw`f(x)=W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)=W'x+b'`}
+        terms={[
+          { symbol: "W_1,b_1", name: "first affine layer", description: "입력을 중간 dimension으로 옮깁니다." },
+          { symbol: "W_2,b_2", name: "second affine layer", description: "중간 값을 output space로 옮깁니다." },
+          { symbol: "W',b'", name: "collapsed layer", description: "두 layer를 정확히 대체하는 하나의 affine transform입니다." },
+        ]}
+        assumptions={["두 layer 사이에 activation이나 normalization 같은 nonlinear operation이 없습니다."]}
+        interpretation="따라서 MLP의 표현력은 layer 개수만이 아니라 affine transform 사이에 놓인 nonlinear activation에서 나옵니다."
+      />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Activation이 없으면 깊이는 표현력을 늘리지 못합니다</h3>
         <p>
-          단층 퍼셉트론이 XOR을 못 푼 이유: 입력 4점을 한 직선으로 가를 수 없음<br />
-          은닉층 2뉴런으로 <strong>입력 공간을 새 좌표계로 변환</strong>하면 분리선이 생김<br />
-          "XOR이 비선형"이라는 말은 원본 좌표 기준일 뿐 — 적절한 중간 표현에선 선형 문제로 바뀜
+          두 선형 변환을 연달아 적용해도 하나의 선형 변환으로 합칠 수 있습니다. 따라서 층 사이에 ReLU, sigmoid, tanh 같은 비선형 activation이 없다면 층을 여러 개 쌓아도 XOR 문제는 그대로 남습니다. Activation은 출력 범위뿐 아니라 backward에서 전달되는 gradient 크기도 바꾸므로, 모델 깊이와 학습 안정성을 함께 고려해 선택합니다.
+        </p>
+        <h3>Universal approximation과 효율적인 학습은 다른 주장입니다</h3>
+        <p>
+          Universal Approximation Theorem은 적절한 activation과 충분한 폭을 가진 network가 넓은 범위의 연속 함수를 원하는 오차 안에서 근사할 수 있음을 말합니다. 그러나 필요한 뉴런 수, 데이터 양, optimizer가 실제 해를 찾는 과정까지 보장하지는 않습니다. 깊은 network는 앞 층의 feature를 재사용해 계층적인 함수를 더 효율적으로 표현할 수 있지만, 문제 구조와 맞지 않으면 깊이 자체가 이점이 되지 않습니다.
+        </p>
+        <h3>현대 모델에서도 MLP는 feature 변환을 맡습니다</h3>
+        <p>
+          CNN의 classifier와 Transformer block의 feed-forward network처럼 MLP는 지금도 핵심 구성 요소입니다. CNN이나 attention이 공간·token 사이의 정보 이동 경로를 설계한다면, MLP는 각 위치에서 feature를 확장하고 다시 섞는 범용 계산을 담당합니다.
         </p>
       </div>
-      <CoordinateRemapViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">ReLU로 XOR 만들기 — 구체적 계산</h3>
-        <p>
-          가장 단순한 2뉴런 구성: <code>h₁ = ReLU(x₁+x₂−0.5)</code>, <code>h₂ = ReLU(x₁+x₂−1.5)</code>, <code>y = h₁ − 2·h₂</code><br />
-          핵심 구조 — <strong>"OR에서 AND를 빼면 XOR"이라는 논리 대수의 기하학적 번역</strong><br />
-          은닉층이 논리 게이트를 암묵적으로 학습하고, 출력층이 그것들을 조합
+      <div
+        id="paper-universal-approximation"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 해설 · Universal approximation
         </p>
-      </div>
-      <ReLUTruthTableViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">비선형성이 필수인 이유</h3>
-        <p>
-          활성화 함수(ReLU 등)를 빼면 수학적으로 증명됨 — <strong>아무리 층을 쌓아도 단일 선형 변환으로 붕괴</strong><br />
-          XOR 같은 비선형 문제는 여전히 못 풂 — 활성화 함수가 각 층마다 좌표를 "접어(fold)" 비선형 경계를 만듦
-        </p>
-      </div>
-      <LinearCollapseViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Universal Approximation Theorem (1989)</h3>
-        <p>
-          Cybenko·Hornik 증명: <strong>은닉층 1개 + 비다항식 활성화 MLP</strong>는 임의의 연속 함수를 원하는 정밀도로 근사 가능<br />
-          직관: 은닉 뉴런 N개가 각각 작은 "범프(bump)"를 만들고, 출력층이 그것들을 합성해 함수 곡선을 타일링<br />
-          N을 늘리면 해상도가 올라감 — 이론적으로는 1 은닉층으로 충분
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">그런데 왜 깊게 쌓는가?</h3>
-        <p>
-          정리의 허점: <em>필요한 뉴런 수 N이 지수적으로 폭발</em><br />
-          같은 함수를 얕은 망은 폭 2ⁿ, 깊은 망은 층수 n으로 표현 가능<br />
-          계층적 특징: 낮은 층(엣지) → 중간 층(도형) → 높은 층(객체) — 각 층이 아래 층의 조합이므로 표현력 기하급수적
-        </p>
-      </div>
-      <DepthVsWidthViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Forward Propagation — 수식</h3>
-        <div className="not-prose"><ForwardPropDetailViz /></div>
-        <p>
-          선형 <code>W·a + b</code>와 비선형 <code>activation</code>의 교대 — <strong>이 쌍이 MLP의 최소 반복 단위</strong>
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">활성화 함수 비교</h3>
-        <p>
-          각 함수의 출력 범위·기울기·단점이 곡선 형태에 그대로 드러남
-        </p>
-      </div>
-      <ActivationCompareViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">현대 아키텍처 속 MLP</h3>
-        <p>
-          MLP는 옛날 개념이 아님 — 현대 모델도 내부에서 MLP를 쌓고 조합하고 게이팅
-        </p>
-      </div>
-      <ModernMLPViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">MLP의 한계 — 왜 CNN·RNN·Transformer가 나왔나</h3>
-        <p>
-          <strong>파라미터 과다</strong>: 완전 연결 — 입력 크기 × 뉴런 수만큼 가중치<br />
-          <strong>귀납 편향 부재</strong>: 이미지의 공간 구조·시계열의 순서 구조를 "모름" — 학습으로 처음부터 배워야 함<br /><br />
-          해결책: CNN(가중치 공유 + 국소성), RNN(순차 처리 + 메모리), Transformer(attention + position encoding)<br />
-          그러나 이들 내부에도 결국 MLP가 들어감 — <strong>MLP는 범용 계산기, 특수 구조는 효율적 경로</strong>
+        <h3 className="mt-2 text-base font-bold text-foreground">
+          정리는 network를 학습시키는 방법이 아니라 해가 존재하는 함수족을
+          설명합니다
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Cybenko는 continuous sigmoidal nonlinearity와 compact domain 같은
+          조건에서, 단일 hidden layer의 finite linear combination이 연속 함수를
+          원하는 오차 안으로 uniform approximation할 수 있음을 보였습니다.
+          필요한 hidden unit 수, 유한 sample에서의 generalization, optimizer가 그
+          parameter를 찾는 시간은 이 존재성 정리가 보장하지 않습니다.
         </p>
       </div>
     </section>

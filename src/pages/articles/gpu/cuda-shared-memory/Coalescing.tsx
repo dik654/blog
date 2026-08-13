@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const coalescingCode = `글로벌 메모리 Coalescing 원리:
 
@@ -60,39 +60,84 @@ export default function Coalescing() {
       <h2 className="text-2xl font-bold mb-6">글로벌 메모리 Coalescing</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          글로벌 메모리(DRAM)는 <strong>레이턴시가 400-800 사이클</strong>로 느리다.<br />
-          하드웨어가 같은 워프의 메모리 요청을 <strong>하나의 트랜잭션으로 합치는 것</strong>이 coalescing이다.<br />
-          이 조건을 만족하면 대역폭 활용률이 최대가 된다.
-        </p>
-        <CodePanel title="Coalescing 원리와 트랜잭션 크기" code={coalescingCode}
-          annotations={[
-            { lines: [3, 4], color: 'sky', note: '핵심 조건: 연속 + 정렬' },
-            { lines: [8, 10], color: 'emerald', note: 'Coalesced: 1회 트랜잭션' },
-            { lines: [12, 14], color: 'rose', note: 'Non-coalesced: 최대 32회' },
-          ]} />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">행렬 접근 패턴: Row vs Column</h3>
-        <p>
-          row-major 행렬에서 행 방향 접근은 coalesced, 열 방향 접근은 non-coalesced이다.
+          글로벌 메모리(DRAM)는 <strong>레이턴시가 400-800 사이클</strong>로
+          느리다.
           <br />
-          열 접근이 필요하면 <strong>공유 메모리 타일링</strong>으로 해결한다.
+          하드웨어가 같은 워프의 메모리 요청을{" "}
+          <strong>하나의 트랜잭션으로 합치는 것</strong>이 coalescing이다.
+          <br />이 조건을 만족하면 대역폭 활용률이 최대가 된다.
         </p>
-        <CodePanel title="행(Row) 접근 vs 열(Column) 접근" code={matrixAccessCode}
+        <CodePanel
+          title="Coalescing 원리와 트랜잭션 크기"
+          code={coalescingCode}
           annotations={[
-            { lines: [4, 9], color: 'emerald', note: '행 접근: coalesced' },
-            { lines: [10, 11], color: 'emerald', note: '연속 주소 → 1회 트랜잭션' },
-            { lines: [13, 18], color: 'rose', note: '열 접근: non-coalesced' },
-            { lines: [19, 20], color: 'rose', note: 'stride=W → 32회 트랜잭션' },
-          ]} />
+            { lines: [3, 4], color: "sky", note: "핵심 조건: 연속 + 정렬" },
+            {
+              lines: [8, 10],
+              color: "emerald",
+              note: "Coalesced: 1회 트랜잭션",
+            },
+            {
+              lines: [12, 14],
+              color: "rose",
+              note: "Non-coalesced: 최대 32회",
+            },
+          ]}
+        />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">공유 메모리 전치로 해결</h3>
-        <CodePanel title="공유 메모리 타일 전치" code={fixCode}
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          행렬 접근 패턴: Row vs Column
+        </h3>
+        <p>
+          row-major 행렬에서 행 방향 접근은 coalesced, 열 방향 접근은
+          non-coalesced이다.
+          <br />열 접근이 필요하면 <strong>공유 메모리 타일링</strong>으로
+          해결한다.
+        </p>
+        <CodePanel
+          title="행(Row) 접근 vs 열(Column) 접근"
+          code={matrixAccessCode}
           annotations={[
-            { lines: [4, 4], color: 'sky', note: '공유 메모리 타일 선언' },
-            { lines: [9, 10], color: 'emerald', note: '글로벌→공유: coalesced 로드' },
-            { lines: [13, 14], color: 'amber', note: '공유→글로벌: 전치 후 coalesced 저장' },
-            { lines: [16, 17], color: 'violet', note: '양방향 모두 coalesced 달성' },
-          ]} />
+            { lines: [4, 9], color: "emerald", note: "행 접근: coalesced" },
+            {
+              lines: [10, 11],
+              color: "emerald",
+              note: "연속 주소 → 1회 트랜잭션",
+            },
+            { lines: [13, 18], color: "rose", note: "열 접근: non-coalesced" },
+            {
+              lines: [19, 20],
+              color: "rose",
+              note: "stride=W → 32회 트랜잭션",
+            },
+          ]}
+        />
+
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          공유 메모리 전치로 해결
+        </h3>
+        <CodePanel
+          title="공유 메모리 타일 전치"
+          code={fixCode}
+          annotations={[
+            { lines: [4, 4], color: "sky", note: "공유 메모리 타일 선언" },
+            {
+              lines: [9, 10],
+              color: "emerald",
+              note: "글로벌→공유: coalesced 로드",
+            },
+            {
+              lines: [13, 14],
+              color: "amber",
+              note: "공유→글로벌: 전치 후 coalesced 저장",
+            },
+            {
+              lines: [16, 17],
+              color: "violet",
+              note: "양방향 모두 coalesced 달성",
+            },
+          ]}
+        />
       </div>
     </section>
   );

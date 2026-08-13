@@ -1,68 +1,69 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
+import VizFrame from "@/components/viz/VizFrame";
 
-const LAYERS = [
-  { label: 'pi-ai', sub: 'LLM 추상화', color: '#6366f1', y: 85 },
-  { label: 'pi-agent-core', sub: '에이전트 루프', color: '#10b981', y: 60 },
-  { label: 'pi-coding-agent', sub: '세션 관리', color: '#f59e0b', y: 35 },
-  { label: 'OpenClaw', sub: '채널 통합', color: '#8b5cf6', y: 10 },
-];
-const LX = 60, LW = 250, LH = 22;
-
-const STEPS = [
-  { label: 'pi-ai — LLM 추상화 계층' }, { label: 'pi-agent-core — 에이전트 루프' },
-  { label: 'pi-coding-agent — 세션 관리' }, { label: 'OpenClaw — 채널 통합' },
-];
-const BODY = [
-  'LLM 추상화 + 프로바이더 API 통합', '도구 실행 + 에이전트 상태 관리',
-  'SessionManager + 코딩 도구 제공', '채널/스킬/샌드박스 통합 에이전트',
-];
+const layers = [
+  {
+    name: "Channel · Gateway",
+    kind: "Host boundary",
+    owns: "inbound 인증 · binding · session state · reply route",
+    excludes: "모델 token 생성과 tool loop를 소유하지 않습니다.",
+  },
+  {
+    name: "Provider",
+    kind: "Access layer",
+    owns: "인증 · model catalog · transport와 request 정규화",
+    excludes: "같은 provider 안에서도 model과 runtime은 별도로 선택됩니다.",
+  },
+  {
+    name: "Model",
+    kind: "Inference policy",
+    owns: "다음 token · native tool request · 완성 응답 제안",
+    excludes: "제안이 곧 권한 승인이나 실제 side effect는 아닙니다.",
+  },
+  {
+    name: "Agent runtime · harness",
+    kind: "Execution layer",
+    owns: "준비된 prompt · model turn · tool-call loop · finished turn 반환",
+    excludes: "Harness는 runtime 구현이며 channel이나 provider의 다른 이름이 아닙니다.",
+  },
+] as const;
 
 export default function PiSDKLayerViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 490 115" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {LAYERS.map((l, i) => {
-            const active = step === i;
-            const below = step > i;
-            const op = active ? 1 : below ? 0.6 : 0.25;
-            return (
-              <g key={l.label}>
-                <motion.rect x={LX} y={l.y} width={LW} height={LH} rx={5}
-                  animate={{ fill: `${l.color}${active ? '22' : '0a'}`, stroke: l.color,
-                    strokeWidth: active ? 2 : 0.8, opacity: op }}
-                  transition={{ duration: 0.3 }} />
-                <text x={LX + 12} y={l.y + LH / 2 + 3} fontSize={9} fontWeight={600}
-                  fill={l.color} opacity={op}>{l.label}</text>
-                <text x={LX + LW - 12} y={l.y + LH / 2 + 3} textAnchor="end" fontSize={9}
-                  fill="var(--muted-foreground)" opacity={op * 0.7}>{l.sub}</text>
-                {/* dependency arrow */}
-                {i > 0 && (
-                  <motion.line x1={LX + LW / 2} y1={l.y} x2={LX + LW / 2} y2={l.y - 3}
-                    stroke={l.color} strokeWidth={1} opacity={op * 0.4} />
-                )}
-              </g>
-            );
-          })}
-          {/* highlight bracket */}
-          {step >= 0 && (
-            <motion.line x1={LX - 8} y1={LAYERS[step].y}
-              x2={LX - 8} y2={LAYERS[step].y + LH}
-              stroke={LAYERS[step].color} strokeWidth={1.5} strokeLinecap="round"
-              initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-              transition={{ duration: 0.3 }} />
-          )}
-          {/* side labels */}
-          <text x={LX - 16} y={55} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)"
-            transform="rotate(-90, 38, 55)">의존성 ↑</text>
-          {/* inline body */}
-          <motion.text x={380} y={57} fontSize={9}
-            fill="var(--muted-foreground)"
-            initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-            key={step}>{BODY[step]}</motion.text>
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="Agent runtime layers"
+      title="Provider, model, runtime, channel은 서로 바꿔 부를 수 있는 한 묶음이 아닙니다"
+      description="각 층이 소유하는 state와 결정을 분리하면 model 교체가 session routing을 바꾸거나 runtime 교체가 답장 채널을 가져가는 설계를 피할 수 있습니다."
+    >
+      <div className="divide-y divide-border/70">
+        {layers.map(({ name, kind, owns, excludes }, index) => (
+          <section
+            key={name}
+            className="grid min-w-0 gap-4 py-5 first:pt-0 last:pb-0 sm:grid-cols-[2.25rem_10rem_minmax(0,1fr)] sm:gap-6"
+          >
+            <span className="font-mono text-[11px] font-semibold text-primary">
+              L{index + 1}
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-muted-foreground">{kind}</p>
+              <h4 className="mt-1 text-sm font-bold leading-5 text-foreground">{name}</h4>
+            </div>
+            <dl className="grid min-w-0 gap-4 md:grid-cols-2 md:gap-6">
+              <div className="min-w-0">
+                <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary">
+                  Owns
+                </dt>
+                <dd className="mt-2 text-xs leading-5 text-foreground/85">{owns}</dd>
+              </div>
+              <div className="min-w-0 border-l border-border pl-4">
+                <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                  Boundary
+                </dt>
+                <dd className="mt-2 text-xs leading-5 text-muted-foreground">{excludes}</dd>
+              </div>
+            </dl>
+          </section>
+        ))}
+      </div>
+    </VizFrame>
   );
 }

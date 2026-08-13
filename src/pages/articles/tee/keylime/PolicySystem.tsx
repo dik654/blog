@@ -1,4 +1,4 @@
-import PolicyViz from './viz/PolicyViz';
+import PolicyViz from "./viz/PolicyViz";
 
 export default function PolicySystem() {
   return (
@@ -7,9 +7,13 @@ export default function PolicySystem() {
 
       <h3 className="text-xl font-semibold mt-6 mb-3">Keylime 정책 2축</h3>
       <p className="leading-7 mb-4">
-        <strong>TPM 정책</strong>: PCR 허용 값 정의 (부팅 체인 검증)<br />
-        <strong>런타임 정책</strong>: IMA 측정 로그의 파일 해시 허용 목록 (JSON 스키마)<br />
-        <strong>정책 위반</strong>: 자동 revocation 메커니즘 동작<br />
+        <strong>TPM 정책</strong>: PCR 허용 값 정의 (부팅 체인 검증)
+        <br />
+        <strong>런타임 정책</strong>: IMA 측정 로그의 파일 해시 허용 목록 (JSON
+        스키마)
+        <br />
+        <strong>정책 위반</strong>: 자동 revocation 메커니즘 동작
+        <br />
         <strong>캐싱</strong>: 성능을 위해 정책 객체 메모리 캐싱
       </p>
 
@@ -59,12 +63,30 @@ export default function PolicySystem() {
       <h3 className="text-xl font-semibold mt-8 mb-3">런타임 정책 구조</h3>
       <div className="rounded-xl border p-4 mb-4">
         <ul className="space-y-1.5 text-sm">
-          <li><strong className="font-mono">meta</strong>: 정책 버전(version)과 생성기 타입(generator)</li>
-          <li><strong className="font-mono">digests</strong>: 파일 경로별 허용 해시 목록</li>
-          <li><strong className="font-mono">excludes</strong>: 검증에서 제외할 파일 정규식 패턴</li>
-          <li><strong className="font-mono">keyrings</strong>: IMA 키링 정보 (서명 검증용)</li>
-          <li><strong className="font-mono">ima</strong>: IMA 관련 세부 설정 (log_hash_alg, dm_policy 등)</li>
-          <li><strong className="font-mono">verification-keys</strong>: 검증용 공개키 (PEM/DER)</li>
+          <li>
+            <strong className="font-mono">meta</strong>: 정책 버전(version)과
+            생성기 타입(generator)
+          </li>
+          <li>
+            <strong className="font-mono">digests</strong>: 파일 경로별 허용
+            해시 목록
+          </li>
+          <li>
+            <strong className="font-mono">excludes</strong>: 검증에서 제외할
+            파일 정규식 패턴
+          </li>
+          <li>
+            <strong className="font-mono">keyrings</strong>: IMA 키링 정보 (서명
+            검증용)
+          </li>
+          <li>
+            <strong className="font-mono">ima</strong>: IMA 관련 세부 설정
+            (log_hash_alg, dm_policy 등)
+          </li>
+          <li>
+            <strong className="font-mono">verification-keys</strong>: 검증용
+            공개키 (PEM/DER)
+          </li>
         </ul>
       </div>
 
@@ -184,23 +206,28 @@ def get_runtime_policy(agent_id):
         <p className="font-semibold mb-2">인사이트: 정책 관리의 실전 과제</p>
         <p className="text-sm">
           <strong>정책 baseline 생성</strong>:<br />
-          - Clean 시스템에서 측정 (reference machine)<br />
-          - 패키지 업데이트마다 정책 재생성 필요<br />
-          - 도구: keylime의 create_runtime_policy.py
+          - Clean 시스템에서 측정 (reference machine)
+          <br />
+          - 패키지 업데이트마다 정책 재생성 필요
+          <br />- 도구: keylime의 create_runtime_policy.py
         </p>
         <p className="text-sm mt-2">
           <strong>업데이트 전략</strong>:<br />
-          ✓ Rolling update: 한 번에 일부 agent만 새 정책<br />
-          ✓ Canary deployment: 소수 agent 먼저 검증<br />
-          ✓ Rollback: 이전 정책으로 빠른 복귀<br />
-          ✗ 모든 agent 동시 update → outage 위험
+          ✓ Rolling update: 한 번에 일부 agent만 새 정책
+          <br />
+          ✓ Canary deployment: 소수 agent 먼저 검증
+          <br />
+          ✓ Rollback: 이전 정책으로 빠른 복귀
+          <br />✗ 모든 agent 동시 update → outage 위험
         </p>
         <p className="text-sm mt-2">
           <strong>대안 도구</strong>:<br />
-          - Aide (static integrity check)<br />
-          - Samhain (runtime monitoring)<br />
-          - OSSEC (holistic IDS)<br />
-          → Keylime의 차별점: TPM-backed, attestation 통합
+          - Aide (static integrity check)
+          <br />
+          - Samhain (runtime monitoring)
+          <br />
+          - OSSEC (holistic IDS)
+          <br />→ Keylime의 차별점: TPM-backed, attestation 통합
         </p>
       </div>
     </section>

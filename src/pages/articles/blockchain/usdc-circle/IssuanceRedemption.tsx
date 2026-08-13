@@ -1,11 +1,10 @@
-import MintBurnViz from './viz/MintBurnViz';
+import MintBurnViz from "./viz/MintBurnViz";
 
 export default function IssuanceRedemption() {
   return (
     <section id="issuance-redemption" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Mint · Burn &amp; 1:1 백업</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <MintBurnViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">Mint 프로세스 상세</h3>
@@ -40,8 +39,10 @@ Step 5: On-chain mint
   - 해당 주소에 USDC 발행
   - 확인 후 파트너 통보`}</pre>
         <p>
-          <strong>T+0 ~ T+1</strong>: 자금 입금 당일 또는 다음날 mint 완료<br />
-          Compliance 통과 필수 — 의심스러운 자금 거부<br />
+          <strong>T+0 ~ T+1</strong>: 자금 입금 당일 또는 다음날 mint 완료
+          <br />
+          Compliance 통과 필수 — 의심스러운 자금 거부
+          <br />
           대형 mint는 $10M+ 단위 — 기관 트레이딩 데스크용
         </p>
 
@@ -66,7 +67,9 @@ Step 3: USD 지급
 - 준비금 100% 유동성 — 이론상 모두 환급 가능
 - 실제: 1일 환급량 상한 가능성 있음`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">1:1 백업 검증 메커니즘</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          1:1 백업 검증 메커니즘
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 온체인 총 공급량
 totalSupply = sum(USDC on Ethereum, Solana, Base, Arbitrum, ...)
            ≈ $60B
@@ -84,12 +87,16 @@ totalSupply ≤ reserves 유지 필수
 - Total reserves: $60,427,891,234
 - Backing ratio: 100.47%`}</pre>
         <p>
-          <strong>Over-collateralization</strong>: 준비금이 공급량보다 약간 많음<br />
-          Buffer ~0.5% — 운영비, 잘못된 보고 방지<br />
+          <strong>Over-collateralization</strong>: 준비금이 공급량보다 약간 많음
+          <br />
+          Buffer ~0.5% — 운영비, 잘못된 보고 방지
+          <br />
           매월 attestation 공개 — 투명성 유지
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">2023 SVB 사태 — 실제 테스트</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          2023 SVB 사태 — 실제 테스트
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`2023년 3월 10일-13일 사건:
 
 Day 1 (Fri Mar 10):
@@ -146,20 +153,27 @@ Day 4 (Mon Mar 13):
             "1:1 백업"은 <strong>완벽한 보장이 아님</strong>
           </p>
           <p className="mt-2">
-            리스크 계층:<br />
-            1. <strong>법적 리스크</strong>: Circle이 실제로 소유권 행사 가능한가<br />
-            2. <strong>운영 리스크</strong>: 환급 시스템 장애, 사기<br />
-            3. <strong>은행 리스크</strong>: 예치 은행 파산<br />
-            4. <strong>시장 리스크</strong>: Treasury bills 가격 변동 (미미)<br />
+            리스크 계층:
+            <br />
+            1. <strong>법적 리스크</strong>: Circle이 실제로 소유권 행사
+            가능한가
+            <br />
+            2. <strong>운영 리스크</strong>: 환급 시스템 장애, 사기
+            <br />
+            3. <strong>은행 리스크</strong>: 예치 은행 파산
+            <br />
+            4. <strong>시장 리스크</strong>: Treasury bills 가격 변동 (미미)
+            <br />
             5. <strong>규제 리스크</strong>: 당국의 자산 동결
           </p>
           <p className="mt-2">
-            <strong>"USDC = USD"</strong>는 약속, 보장 아님<br />
-            실제로는 <strong>Circle의 신용</strong>에 의존 — 전통 은행과 유사<br />
+            <strong>"USDC = USD"</strong>는 약속, 보장 아님
+            <br />
+            실제로는 <strong>Circle의 신용</strong>에 의존 — 전통 은행과 유사
+            <br />
             SVB 사태가 이를 증명 — 디페그 가능성 실제 존재
           </p>
         </div>
-
       </div>
     </section>
   );

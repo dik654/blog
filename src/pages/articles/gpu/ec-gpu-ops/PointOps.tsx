@@ -1,5 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
 
 const jacobianCode = `// Jacobian 좌표: (X : Y : Z)  →  affine (x, y) = (X/Z^2, Y/Z^3)
 // 장점: 점 덧셈/더블링에서 역원(inversion) 연산을 완전히 제거
@@ -34,9 +34,9 @@ __device__ void point_double(const JacobianPoint& P, JacobianPoint& R) {
 }`;
 
 const comparisonData = [
-  ['Affine (x, y)', '1 inv + 2 mul', '1 inv + 2 mul', '역원 필요'],
-  ['Jacobian (X:Y:Z)', '0 inv + 12 mul', '0 inv + 4 mul + 4 sqr', '역원 제거'],
-  ['혼합 덧셈', '0 inv + 7 mul', '-', 'Z2=1일 때'],
+  ["Affine (x, y)", "1 inv + 2 mul", "1 inv + 2 mul", "역원 필요"],
+  ["Jacobian (X:Y:Z)", "0 inv + 12 mul", "0 inv + 4 mul + 4 sqr", "역원 제거"],
+  ["혼합 덧셈", "0 inv + 7 mul", "-", "Z2=1일 때"],
 ];
 
 export default function PointOps() {
@@ -45,14 +45,24 @@ export default function PointOps() {
       <h2 className="text-2xl font-bold mb-6">Jacobian 점 덧셈/더블링</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Affine 좌표 <code>(x, y)</code>로 점 덧셈을 하면 매번 <strong>필드 역원</strong>(inversion)이 필요하다.<br />
+          Affine 좌표 <code>(x, y)</code>로 점 덧셈을 하면 매번{" "}
+          <strong>필드 역원</strong>(inversion)이 필요하다.
+          <br />
           역원은 Fp 곱셈 대비 약 <strong>30배</strong> 느리다.
-          <strong>Jacobian 좌표</strong> <code>(X:Y:Z)</code>를 사용하면 역원 없이 곱셈과 덧셈만으로 점 연산이 가능하다.
+          <strong>Jacobian 좌표</strong> <code>(X:Y:Z)</code>를 사용하면 역원
+          없이 곱셈과 덧셈만으로 점 연산이 가능하다.
         </p>
 
-        <CitationBlock source="EFD -- Explicit Formulas Database" citeKey={3} type="paper"
-          href="https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian.html">
-          <p className="italic">"Complete addition formulas for short Weierstrass curves in Jacobian coordinates."</p>
+        <CitationBlock
+          source="EFD -- Explicit Formulas Database"
+          citeKey={3}
+          type="paper"
+          href="https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian.html"
+        >
+          <p className="italic">
+            "Complete addition formulas for short Weierstrass curves in Jacobian
+            coordinates."
+          </p>
         </CitationBlock>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">좌표계 비교</h3>
@@ -60,16 +70,26 @@ export default function PointOps() {
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">좌표계</th>
-                <th className="border border-border px-4 py-2 text-left">점 덧셈</th>
-                <th className="border border-border px-4 py-2 text-left">점 더블링</th>
-                <th className="border border-border px-4 py-2 text-left">특징</th>
+                <th className="border border-border px-4 py-2 text-left">
+                  좌표계
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  점 덧셈
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  점 더블링
+                </th>
+                <th className="border border-border px-4 py-2 text-left">
+                  특징
+                </th>
               </tr>
             </thead>
             <tbody>
               {comparisonData.map(([coord, add, dbl, note]) => (
                 <tr key={coord}>
-                  <td className="border border-border px-4 py-2 font-medium">{coord}</td>
+                  <td className="border border-border px-4 py-2 font-medium">
+                    {coord}
+                  </td>
                   <td className="border border-border px-4 py-2">{add}</td>
                   <td className="border border-border px-4 py-2">{dbl}</td>
                   <td className="border border-border px-4 py-2">{note}</td>
@@ -81,17 +101,32 @@ export default function PointOps() {
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Point Doubling 커널</h3>
         <p>
-          BN254에서 곡선 파라미터 <code>a = 0</code>이므로 더블링 공식이 단순해진다.<br />
-          전체 연산은 Fp 곱셈 1회 + Fp 제곱 5회 + Fp 덧셈/뺄셈 7회다.<br />
-          MSM에서 더블링은 덧셈만큼 자주 호출되므로 이 커널의 효율이 전체 성능을 좌우한다.
+          BN254에서 곡선 파라미터 <code>a = 0</code>이므로 더블링 공식이
+          단순해진다.
+          <br />
+          전체 연산은 Fp 곱셈 1회 + Fp 제곱 5회 + Fp 덧셈/뺄셈 7회다.
+          <br />
+          MSM에서 더블링은 덧셈만큼 자주 호출되므로 이 커널의 효율이 전체 성능을
+          좌우한다.
         </p>
-        <CodePanel title="Jacobian Point Doubling (CUDA C++)" code={jacobianCode}
+        <CodePanel
+          title="Jacobian Point Doubling (CUDA C++)"
+          code={jacobianCode}
           annotations={[
-            { lines: [1, 5], color: 'sky', note: 'Jacobian 좌표 구조체' },
-            { lines: [12, 17], color: 'emerald', note: 'A, B 계산: Y^2, 4*X*Y^2' },
-            { lines: [18, 23], color: 'amber', note: 'D = 3X^2, X3 = D^2 - 2B' },
-            { lines: [24, 30], color: 'violet', note: 'Y3, Z3 계산' },
-          ]} />
+            { lines: [1, 5], color: "sky", note: "Jacobian 좌표 구조체" },
+            {
+              lines: [12, 17],
+              color: "emerald",
+              note: "A, B 계산: Y^2, 4*X*Y^2",
+            },
+            {
+              lines: [18, 23],
+              color: "amber",
+              note: "D = 3X^2, X3 = D^2 - 2B",
+            },
+            { lines: [24, 30], color: "violet", note: "Y3, Z3 계산" },
+          ]}
+        />
       </div>
     </section>
   );

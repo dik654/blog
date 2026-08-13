@@ -1,104 +1,222 @@
-import { CitationBlock } from '../../../../components/ui/citation';
-import { CodeViewButton } from '@/components/code';
-import PermissionModeViz from './viz/PermissionModeViz';
-import IDEIntegration from './IDEIntegration';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { CitationBlock } from "@/components/ui/citation";
+import { CodeViewButton } from "@/components/code";
+import PermissionModeViz from "./viz/PermissionModeViz";
+import IDEIntegration from "./IDEIntegration";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function ToolsPermissions({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+const ENFORCEMENT_LAYERS = [
+  {
+    layer: "Tool registry",
+    question: "모델이 어떤 action schema를 제안할 수 있는가?",
+    loginExample: "Read·Grep·Edit·Bash와 연결한 MCP tool을 목록에 노출",
+    guarantee: "목록과 input shape를 제공할 뿐 실행 권한을 보장하지 않음",
+  },
+  {
+    layer: "Permission",
+    question: "이 concrete tool call을 현재 scope에서 실행해도 되는가?",
+    loginExample: "src/auth 읽기는 허용하고 production credential 접근은 거부",
+    guarantee: "호스트가 deny·ask·allow rule과 mode를 적용",
+  },
+  {
+    layer: "Hook",
+    question: "Lifecycle 전후에 어떤 policy·audit·검사를 연결할 것인가?",
+    loginExample: "위험한 Bash 인자를 차단하고 성공한 edit 뒤 formatter 실행",
+    guarantee: "Event/type별 동작이며 permission을 우회하지 못함",
+  },
+  {
+    layer: "Verification",
+    question: "실행 결과가 사용자의 완료 조건을 만족했는가?",
+    loginExample: "재현 test와 관련 regression suite의 exit code 확인",
+    guarantee: "테스트가 관찰한 범위의 증거이며 전체 correctness 보장은 아님",
+  },
+] as const;
+
+export default function ToolsPermissions({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="tools-permissions" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">도구 시스템 & 권한 모델</h2>
-      <div className="not-prose mb-8"><PermissionModeViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Tool을 볼 수 있는 것과 실행할 수 있는 것은 다르다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">내장 도구</h3>
+        <p>
+          모델은 tool registry에 등록된 이름과 schema를 보고 “이 파일을 읽자”거나
+          “이 테스트를 실행하자”는 호출을 생성합니다. 그러나 제안된 호출은 아직
+          효과가 없습니다. Claude Code 호스트가 permission rule과 hook을 적용하고
+          필요한 승인을 받은 다음 실제 tool을 실행해야 파일·process·network 상태가
+          바뀝니다. 이 분리를 놓치면 tool description을 security policy로 착각하게
+          됩니다.
+        </p>
+      </div>
 
-        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5 mb-4">
-          <h4 className="text-sm font-bold mb-3">Claude Code 도구 카탈로그</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-              <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">파일 시스템 도구 5종</span>
-              <ul className="text-sm mt-1 space-y-0.5">
-                <li><strong>Read</strong> — 파일 읽기 (이미지, PDF, Jupyter 지원)</li>
-                <li><strong>Write</strong> — 파일 생성/덮어쓰기</li>
-                <li><strong>Edit</strong> — 정확한 문자열 치환으로 파일 수정</li>
-                <li><strong>Glob</strong> — 파일 패턴 검색 (**/*.tsx 등)</li>
-                <li><strong>Grep</strong> — ripgrep 기반 코드 내용 검색</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
-              <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">실행 도구</span>
-              <ul className="text-sm mt-1 space-y-0.5">
-                <li><strong>Bash</strong> — 셸 명령 실행 (빌드, 테스트, git 등)</li>
-                <li><strong>NotebookEdit</strong> — Jupyter 노트북 셀 편집</li>
-              </ul>
-              <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 block mt-3">연구 도구</span>
-              <ul className="text-sm mt-1 space-y-0.5">
-                <li><strong>WebSearch</strong> — 웹 검색</li>
-                <li><strong>WebFetch</strong> — URL 내용 가져오기 & AI 처리</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
-              <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">협업 도구</span>
-              <ul className="text-sm mt-1 space-y-0.5">
-                <li><strong>Agent</strong> — 서브에이전트 실행</li>
-                <li><strong>TodoWrite</strong> — 작업 목록 관리</li>
-                <li><strong>AskUserQuestion</strong> — 사용자에게 질문</li>
-              </ul>
-            </div>
-            <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3">
-              <span className="text-xs font-semibold">확장 도구</span>
-              <ul className="text-sm mt-1 space-y-0.5">
-                <li><strong>Skill</strong> — 슬래시 명령 실행 (/commit, /review-pr 등)</li>
-                <li><strong>MCP 도구</strong> — MCP 서버에서 제공하는 도구</li>
-              </ul>
-            </div>
-          </div>
+      <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border">
+        <table className="min-w-[940px] w-full border-collapse text-left text-sm">
+          <thead className="bg-muted/60">
+            <tr>
+              <th className="border-b border-border px-4 py-3">계층</th>
+              <th className="border-b border-border px-4 py-3">답하는 질문</th>
+              <th className="border-b border-border px-4 py-3">로그인 버그 예시</th>
+              <th className="border-b border-border px-4 py-3">보장 경계</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ENFORCEMENT_LAYERS.map((item) => (
+              <tr key={item.layer} className="align-top even:bg-muted/20">
+                <th className="border-b border-border px-4 py-3 font-semibold">
+                  {item.layer}
+                </th>
+                <td className="border-b border-border px-4 py-3 leading-6 text-muted-foreground">
+                  {item.question}
+                </td>
+                <td className="border-b border-border px-4 py-3 leading-6 text-muted-foreground">
+                  {item.loginExample}
+                </td>
+                <td className="border-b border-border px-4 py-3 leading-6 text-muted-foreground">
+                  {item.guarantee}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Tool 이름을 외우기보다 capability와 effect를 분류한다</h3>
+        <p>
+          현재 공식 tool reference에는 file read·search·edit, shell execution,
+          subagent와 web·MCP integration 등 여러 tool이 소개됩니다. 제품이 바뀔 때
+          이름과 수는 달라질 수 있으므로 고정 카탈로그를 외우기보다
+          <strong> read-only observation</strong>, <strong>workspace mutation</strong>,
+          <strong> process·network side effect</strong>, <strong>delegation</strong>으로
+          나누어 permission과 rollback 요구를 정하는 편이 안전합니다.
+        </p>
+
+        <div id="paper-claude-code-tools" className="not-prose scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Tools available to Claude"
+            citeKey={4}
+            href="https://code.claude.com/docs/en/tools-reference"
+          >
+            문제: model이 workspace를 조사·수정·검증하려면 text response 밖의
+            concrete action interface가 필요합니다. 현재 기여: 공식 reference는
+            Claude Code가 노출하는 tool, 주요 input과 permission 요구를 설명합니다.
+            전제: 현재 client version, 실행 directory, 연결한 extension과 조직
+            settings입니다. 근거 범위: 공개된 tool interface와 기본 permission
+            동작입니다. 하지 않는 주장: tool 목록이 고정되어 있거나 registry에
+            나타난 tool이 자동 허용되고, tool result가 신뢰할 수 있으며 개별 호출이
+            task correctness를 보장한다는 뜻은 아닙니다.
+          </CitationBlock>
+        </div>
+      </div>
+
+      <div className="not-prose my-8">
+        <PermissionModeViz />
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">
+          위 시각화는 “자동 실행·사용자 확인·차단”이라는 개념적 분기를 보여 줍니다.
+          실제 mode 이름과 제공 범위는 client·version·managed policy에 따라 현재
+          공식 문서를 확인해야 합니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Permission precedence는 deny → ask → allow 순서로 계산한다</h3>
+        <p>
+          현재 permission 문서에서 rule category의 우선순위는
+          <strong> deny, ask, allow</strong>입니다. 각 category 안에서는 먼저 match한
+          rule이 적용되며, 더 구체적인 allow가 넓은 deny를 뒤집지 않습니다. 예를
+          들어 <code>Bash(*)</code>를 deny하고 <code>Bash(npm test:*)</code>를
+          allow해도 npm test는 거부됩니다. 테스트만 허용하고 싶다면 겹치는 broad
+          deny를 제거하거나 scope를 다시 설계해야 합니다.
+        </p>
+        <p>
+          Hook과 permission의 순서도 중요합니다. <code>PreToolUse</code> hook이
+          allow decision을 반환하더라도 matching deny나 ask를 우회할 수 없고,
+          반대로 permission상 허용된 call도 blocking hook이 막을 수 있습니다.
+          CLAUDE.md의 “이 명령은 안전하다”는 문장은 어느 쪽의 enforcement도
+          변경하지 않습니다. Sandbox까지 포함한 위협 모델은
+          <a href="/ai/agent-sandbox-security"> agent sandbox security</a>에서
+          이어집니다.
+        </p>
+
+        <div id="paper-claude-code-permissions" className="not-prose scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Configure permissions"
+            citeKey={5}
+            href="https://code.claude.com/docs/en/permissions"
+          >
+            문제: model이 제안한 file·shell·network action을 project와 조직의
+            policy에 맞게 차단하거나 승인받아야 합니다. 현재 기여: 공식 문서는
+            deny→ask→allow precedence, rule matching, permission mode와 hook decision의
+            관계를 설명합니다. 전제: 현재 Claude Code version, settings scope,
+            managed policy와 실행 환경입니다. 근거 범위: Claude Code 호스트가
+            강제하는 permission decision입니다. 하지 않는 주장: allow가 명령의
+            안전성과 정확성을 보증하거나, 더 구체적인 rule이 항상 이기고,
+            PreToolUse allow가 deny·ask를 우회하며 permission만으로 OS·network 격리가
+            완성된다는 뜻은 아닙니다.
+          </CitationBlock>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">권한 모델</h3>
+        <h3>Checkpoint는 direct edit 복구 장치이지 transaction이나 version control이 아니다</h3>
+        <p>
+          Claude Code checkpoint는 세션 중 direct file-edit tool로 바뀐 파일을 빠르게
+          복원하는 데 유용합니다. 그러나 Bash로 실행한 migration, 외부 API 호출,
+          deploy, 보낸 메시지와 git operation까지 되돌리는 transaction은 아닙니다.
+          Subagent나 외부 process가 만든 변경도 현재 session checkpoint에 같은 방식으로
+          잡힌다고 가정해서는 안 됩니다. 공식 문서가 명시하듯 symlink와 hard link
+          경로도 rewind가 건너뛰므로, package manager나 dotfile manager가 만든
+          연결 파일은 별도 복구 절차가 필요합니다.
+        </p>
+        <p>
+          로그인 버그에서 Edit tool로 <code>auth.ts</code>를 바꾼 뒤 checkpoint를
+          되돌리면 direct edit는 복구 대상으로 볼 수 있지만,
+          <code>npm test</code>가 만든 database fixture나 Bash script가 수정한 파일은
+          별도로 정리해야 합니다. 그래서 destructive side effect 전에는 git branch,
+          database transaction, idempotency key나 dry-run 같은 해당 시스템의 복구
+          수단을 사용합니다.
+        </p>
 
-        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5 mb-4">
-          <h4 className="text-sm font-bold mb-3">3단계 권한 모드</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-            <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3">
-              <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">1. Ask (기본)</span>
-              <p className="text-sm mt-1">모든 도구 호출에 사용자 승인 필요</p>
-            </div>
-            <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3">
-              <span className="text-xs font-semibold">2. Auto-Allow</span>
-              <p className="text-sm mt-1">지정된 도구만 자동 허용, 나머지는 승인 필요</p>
-            </div>
-            <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
-              <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">3. YOLO (자동)</span>
-              <p className="text-sm mt-1">대부분 도구를 자동 허용</p>
-              <p className="text-xs text-muted-foreground mt-1">파괴적 명령에 대한 최소 안전장치 유지</p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
-            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">OS 수준 샌드박싱</span>
-            <div className="grid grid-cols-2 gap-2 mt-1">
-              <p className="text-sm"><strong>macOS</strong> — Seatbelt (v1.0.20부터 기본 활성화)</p>
-              <p className="text-sm"><strong>Linux</strong> — bubblewrap (bwrap) 기반 격리</p>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">샌드박싱으로 권한 프롬프트 84% 감소</p>
-          </div>
+        <div id="paper-claude-code-checkpointing" className="not-prose scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Rewind changes with checkpointing"
+            citeKey={7}
+            href="https://code.claude.com/docs/en/checkpointing"
+          >
+            문제: agent가 여러 파일을 편집한 뒤 잘못된 방향을 빠르게 되돌릴 수
+            있어야 합니다. 현재 기여: 공식 문서는 direct file edit에 대한 session
+            checkpoint와 rewind 범위, 제외되는 Bash·external effect·version control
+            경계를 설명합니다. 전제: 현재 Claude Code client, 동일 session과
+            지원되는 direct edit 경로입니다. 근거 범위: 제품 checkpoint가 캡처하는
+            파일 변경입니다. 하지 않는 주장: checkpoint가 git을 대체하거나 Bash,
+            subagent, manual edit와 외부 API 효과를 원자적으로 rollback하고,
+            distributed transaction이나 exactly-once execution을 보장한다는 뜻은
+            아닙니다.
+          </CitationBlock>
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-2">
-          <CodeViewButton onClick={() => onCodeRef('permissions-0', codeRefs['permissions-0'])} />
-          <span className="text-[10px] text-muted-foreground self-center">엔터프라이즈 strict 설정</span>
-          <CodeViewButton onClick={() => onCodeRef('permissions-1', codeRefs['permissions-1'])} />
-          <span className="text-[10px] text-muted-foreground self-center">규칙 매칭 엔진</span>
-        </div>
-        <CitationBlock source="Anthropic 보안 문서 - Sandboxing" citeKey={4} type="paper" href="https://docs.anthropic.com/en/docs/claude-code/security">
-          <p className="italic">"Claude Code uses OS-level sandboxing (Seatbelt on macOS, bubblewrap on Linux) to restrict file system access and network access."</p>
-          <p className="mt-2 text-xs">v1.0.20부터 macOS Seatbelt 샌드박싱 기본 활성화, Linux에서는 bubblewrap(bwrap) 기반 격리 사용</p>
-        </CitationBlock>
-        <CitationBlock source="Anthropic 보안 문서 - 프롬프트 인젝션 방어" citeKey={5} type="paper" href="https://docs.anthropic.com/en/docs/claude-code/security">
-          <p className="italic">"With Plan mode + Deny rules + OS-level sandboxing, Claude Code achieves a 98% defense rate against prompt injection attacks."</p>
-          <p className="mt-2 text-xs">Plan 모드 + Deny 규칙 + OS 샌드박싱의 3중 방어로 프롬프트 인젝션 98% 방어율 달성</p>
-        </CitationBlock>
+        <p>
+          아래 permission 관련 코드도 이 블로그 프로젝트의 illustrative example이며
+          공식 Claude Code 내부 source가 아닙니다. 개념을 읽는 데 사용하고 실제
+          settings schema는 현재 공식 문서와 대조해야 합니다.
+        </p>
+      </div>
+
+      <div className="not-prose mt-3 flex flex-wrap items-center gap-2">
+        <CodeViewButton
+          onClick={() => onCodeRef("permissions-0", codeRefs["permissions-0"])}
+        />
+        <span className="text-xs text-muted-foreground">정책 설정 학습 예시</span>
+        <CodeViewButton
+          onClick={() => onCodeRef("permissions-1", codeRefs["permissions-1"])}
+        />
+        <span className="text-xs text-muted-foreground">rule matcher 학습 예시</span>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <IDEIntegration />
       </div>
     </section>

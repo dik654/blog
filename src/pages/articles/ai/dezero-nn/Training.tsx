@@ -1,39 +1,25 @@
-import TrainingViz from './viz/TrainingViz';
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import TrainingViz from "./viz/TrainingViz";
 
 export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
     <section id="training" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">학습 루프 &amp; 손실 함수</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
-        <p className="leading-7">
-          MSE(평균제곱오차): <code>sum((y - t)²) / n</code> — sub, pow, sum, div 조합
-          <br />
-          모든 연산이 Variable이므로 역전파가 자동으로 따라옴 — 별도 backward 구현 불필요
-          <br />
-          회귀(regression) 문제의 표준 손실 함수
-        </p>
-        <p className="leading-7">
-          Softmax Cross-Entropy: 분류 문제의 손실 — 전용 <code>SoftmaxCrossEntropyFn</code>으로 구현
-          <br />
-          이유: softmax의 exp()가 큰 값에서 overflow → 각 행의 max를 빼서 안정화 (log-sum-exp trick)
-          <br />
-          backward: <code>(softmax - one_hot) / N</code> — 정답 위치에서만 1을 빼는 간결한 공식
-        </p>
-      </div>
-      <div className="not-prose mb-8">
-        <TrainingViz onOpenCode={open} />
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">학습 루프는 loss를 계산하고 상태를 한 번만 갱신합니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h4>구현 인사이트</h4>
-        <p className="leading-7">
-          MSE는 기존 연산 조합으로 3줄에 구현 — 자동 미분의 조합성(composability) 시연
-          <br />
-          Softmax CE만 전용 Function으로 분리한 이유: 수치 안정성 + 역전파 효율
-          <br />
-          조합으로 구현하면 softmax → log → nll 각 단계에서 중간 변수가 생겨 메모리와 정밀도 모두 손해
+        <p>
+          한 스텝은 batch forward, loss 계산, gradient 초기화, backward, optimizer update로 이어집니다. gradient를 누적해 큰 effective batch를 만들 의도가 없다면 이전 스텝의 gradient를 반드시 비워야 하며, 평가 구간에서는 그래프 기록과 dropout을 끄고 파라미터 update를 실행하지 않습니다.
+        </p>
+        <p>
+          Mean squared error는 기존 Sub, Pow, Sum, Div 연산을 조합해 구현할 수 있어 자동 미분의 composability를 보여 줍니다. 반면 softmax cross-entropy는 logits에서 행별 최댓값을 빼는 log-sum-exp trick을 적용하고, forward와 backward를 한 Function으로 묶으면 수치 안정성과 메모리 사용을 함께 관리하기 쉽습니다.
+        </p>
+      </div>
+      <div className="not-prose my-8"><TrainingViz onOpenCode={open} /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>loss 값만 보지 말고 단계별 검증을 둡니다</h3>
+        <p>
+          작은 고정 batch에서 loss가 감소하는지 확인하고, 각 연산의 analytic gradient를 finite difference와 비교합니다. 이어서 seed, optimizer step, train/eval mode를 저장해 같은 조건에서 결과가 재현되는지 확인하면, 학습 실패가 데이터 문제인지 자동 미분이나 상태 관리 문제인지 빠르게 분리할 수 있습니다.
         </p>
       </div>
     </section>

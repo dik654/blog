@@ -1,10 +1,10 @@
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './prysm-epoch-processing/codeRefs';
-import { prysmTree } from './prysm-epoch-processing/fileTrees';
-import Overview from './prysm-epoch-processing/Overview';
-import JustificationFinalization from './prysm-epoch-processing/JustificationFinalization';
-import RewardsPenalties from './prysm-epoch-processing/RewardsPenalties';
-import RegistrySlashings from './prysm-epoch-processing/RegistrySlashings';
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prysm-epoch-processing/codeRefs";
+import { prysmTree } from "./prysm-epoch-processing/fileTrees";
+import Overview from "./prysm-epoch-processing/Overview";
+import JustificationFinalization from "./prysm-epoch-processing/JustificationFinalization";
+import RewardsPenalties from "./prysm-epoch-processing/RewardsPenalties";
+import RegistrySlashings from "./prysm-epoch-processing/RegistrySlashings";
 
 export default function PrysmEpochProcessing() {
   const sidebar = useCodeSidebar();
@@ -22,7 +22,11 @@ export default function PrysmEpochProcessing() {
         codeRefs={codeRefs}
         fileTrees={{ prysm: prysmTree }}
         projectMetas={{
-          prysm: { id: 'prysm', label: 'Prysm · Go', badgeClass: 'bg-violet-500/10 border-violet-500 text-violet-700' },
+          prysm: {
+            id: "prysm",
+            label: "Prysm · Go",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
         }}
       />
     </>

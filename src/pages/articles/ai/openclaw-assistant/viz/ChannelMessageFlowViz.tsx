@@ -1,86 +1,83 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
+import VizFrame from "@/components/viz/VizFrame";
 
-const STEPS = [
-  { label: '사용자 메시지' }, { label: 'Gateway 수신' }, { label: '채널 라우터' },
-  { label: '스킬 엔진' }, { label: 'Pi 에이전트' }, { label: '응답 전달' },
-];
-const BODY = [
-  'TG/Discord/Slack 채널 메시지', 'WebSocket 수신 + 인증 구분',
-  'MsgContext 정규화 + 접근 제어', '명령어 매칭 → 스킬 실행',
-  'createAgentSession() 루프 실행', 'text_delta → 리치 포맷 전송',
-];
+const sharedRows = [
+  ["Telegram", "사용자 A", "agent:support:main"],
+  ["Slack", "사용자 B", "agent:support:main"],
+] as const;
 
-const NODES = [
-  { label: '사용자', sub: 'TG/Discord', color: '#6366f1' },
-  { label: 'Gateway', sub: 'Node.js', color: '#3b82f6' },
-  { label: '채널 라우터', sub: '정규화+ACL', color: '#10b981' },
-  { label: '스킬 엔진', sub: '명령 매칭', color: '#f59e0b' },
-  { label: 'Pi 에이전트', sub: '에이전틱 루프', color: '#8b5cf6' },
-  { label: '응답 전달', sub: '리치 메시지', color: '#ec4899' },
-];
+const isolatedRows = [
+  ["Telegram", "사용자 A", "telegram · A"],
+  ["Slack", "사용자 B", "slack · B"],
+] as const;
 
-const EDGES = ['WebSocket', '인증 후 라우팅', 'MsgContext', '도구 호출', 'text_delta'];
+function ScopeRows({ rows }: { rows: readonly (readonly [string, string, string])[] }) {
+  return (
+    <div className="divide-y divide-border/70 border-y border-border/70">
+      {rows.map(([channel, peer, session]) => (
+        <div
+          key={`${channel}-${peer}`}
+          className="grid min-w-0 gap-2 py-4 sm:grid-cols-[5.5rem_5.5rem_minmax(0,1fr)] sm:items-baseline sm:gap-4"
+        >
+          <span className="text-xs font-bold text-foreground">{channel}</span>
+          <span className="text-xs text-muted-foreground">{peer}</span>
+          <code className="min-w-0 break-words text-[11px] leading-5 text-primary [overflow-wrap:anywhere]">
+            {session}
+          </code>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function ChannelMessageFlowViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 740 90" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          <defs>
-            <marker id="cm-arr" viewBox="0 0 6 6" refX={5} refY={3}
-              markerWidth={6} markerHeight={6} orient="auto-start-reverse">
-              <path d="M0 0L6 3L0 6z" fill="#888" />
-            </marker>
-          </defs>
-          {NODES.map((n, i) => {
-            const x = i * 103;
-            const active = i === step;
-            const done = i < step;
-            return (
-              <g key={i}>
-                {i > 0 && (
-                  <motion.line x1={x - 6} y1={40} x2={x + 2} y2={40}
-                    stroke={done || active ? n.color : '#555'}
-                    strokeWidth={1.5} markerEnd="url(#cm-arr)"
-                    animate={{ opacity: done || active ? 0.9 : 0.15 }} />
-                )}
-                <motion.rect x={x + 4} y={12} width={94} height={56} rx={8}
-                  fill={n.color}
-                  animate={{ opacity: active ? 1 : done ? 0.5 : 0.15 }}
-                  transition={{ duration: 0.3 }} />
-                <text x={x + 51} y={35} textAnchor="middle"
-                  fontSize={11} fontWeight={700} fill="white"
-                  style={{ opacity: active ? 1 : done ? 0.7 : 0.3 }}>{n.label}</text>
-                <text x={x + 51} y={50} textAnchor="middle"
-                  fontSize={10} fill="white" opacity={0.6}
-                  style={{ opacity: active ? 1 : done ? 0.5 : 0.2 }}>{n.sub}</text>
-                {i > 0 && (
-                  <text x={x - 2} y={28} textAnchor="middle"
-                    fontSize={10} fill="var(--muted-foreground)"
-                    style={{ opacity: done || active ? 0.7 : 0.15 }}>{EDGES[i - 1]}</text>
-                )}
-              </g>
-            );
-          })}
-          {/* 응답 → 사용자 리턴 화살표 */}
-          <motion.path d="M 555 68 Q 555 82 310 82 Q 51 82 51 68"
-            fill="none" stroke="#6366f1" strokeWidth={1.2}
-            strokeDasharray="4 3" markerEnd="url(#cm-arr)"
-            animate={{ opacity: step === 5 ? 0.7 : 0.06 }} />
-          {step === 5 && (
-            <text x={310} y={78} textAnchor="middle"
-              fontSize={10} fill="var(--muted-foreground)" style={{ opacity: 0.7 }}>
-              플랫폼 포맷
-            </text>
-          )}
-          {/* inline body */}
-          <motion.text x={630} y={45} fontSize={9}
-            fill="var(--muted-foreground)"
-            initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-            key={step}>{BODY[step]}</motion.text>
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="DM session scope"
+      title="두 사용자의 DM이 같은 main session으로 모이면 대화 이력이 충돌할 수 있습니다"
+      description="main은 개인용 assistant의 채널 간 연속성에는 유용합니다. 여러 사람이 접근하는 inbox에서는 channel과 sender를 함께 key scope에 넣어야 각 대화가 분리됩니다."
+      note="격리된 key 표기는 구성 요소를 보여 주는 개념식입니다. 실제 직렬화 형식보다 channel+sender가 별도 session을 선택한다는 점이 핵심입니다."
+    >
+      <div className="grid min-w-0 gap-8 lg:grid-cols-2 lg:gap-10">
+        <section className="min-w-0">
+          <div className="mb-4 min-w-0">
+            <p className="text-xs font-semibold text-muted-foreground">Default · personal continuity</p>
+            <h4 className="mt-1 text-sm font-bold text-foreground">
+              <code>dmScope: main</code>
+            </h4>
+          </div>
+          <ScopeRows rows={sharedRows} />
+          <dl className="mt-5 grid min-w-0 gap-3 text-xs leading-5">
+            <div className="grid min-w-0 grid-cols-[5rem_minmax(0,1fr)] gap-3">
+              <dt className="font-semibold">History</dt>
+              <dd className="text-muted-foreground">A와 B가 같은 transcript context를 읽습니다.</dd>
+            </div>
+            <div className="grid min-w-0 grid-cols-[5rem_minmax(0,1fr)] gap-3">
+              <dt className="font-semibold">Risk</dt>
+              <dd className="text-muted-foreground">한 사용자의 정보가 다른 사용자 turn에 나타날 수 있습니다.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section className="min-w-0 border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+          <div className="mb-4 min-w-0">
+            <p className="text-xs font-semibold text-primary">Multi-user isolation</p>
+            <h4 className="mt-1 text-sm font-bold text-foreground">
+              <code>dmScope: per-channel-peer</code>
+            </h4>
+          </div>
+          <ScopeRows rows={isolatedRows} />
+          <dl className="mt-5 grid min-w-0 gap-3 text-xs leading-5">
+            <div className="grid min-w-0 grid-cols-[5rem_minmax(0,1fr)] gap-3">
+              <dt className="font-semibold">History</dt>
+              <dd className="text-muted-foreground">Channel+sender마다 독립 transcript를 읽습니다.</dd>
+            </div>
+            <div className="grid min-w-0 grid-cols-[5rem_minmax(0,1fr)] gap-3">
+              <dt className="font-semibold">Limit</dt>
+              <dd className="text-muted-foreground">이는 메시지 context 경계이며 host-admin 격리를 대신하지 않습니다.</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+    </VizFrame>
   );
 }

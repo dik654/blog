@@ -1,12 +1,12 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const contextRefs: Record<string, CodeRef> = {
-  'mini-create-evm': {
-    path: 'minievm/x/evm/keeper/context.go',
-    lang: 'go',
+  "mini-create-evm": {
+    path: "minievm/x/evm/keeper/context.go",
+    lang: "go",
 
     highlight: [1, 30],
-    desc: 'CreateEVM — EVM 인스턴스 생성. BlockContext + StateDB + Precompile 조립.',
+    desc: "CreateEVM — EVM 인스턴스 생성. BlockContext + StateDB + Precompile 조립.",
     code: `// x/evm/keeper/context.go — EVM 인스턴스 생성
 
 func (k Keeper) CreateEVM(ctx context.Context, caller common.Address,
@@ -40,19 +40,35 @@ func (k Keeper) CreateEVM(ctx context.Context, caller common.Address,
     return ctx, evm, cleanup, nil
 }`,
     annotations: [
-      { lines: [9, 10], color: 'sky' as const, note: '재귀 깊이 제한 — EVM↔Cosmos 무한 루프 방지' },
-      { lines: [20, 20], color: 'emerald' as const, note: 'go-ethereum의 vm.NewEVM() 호출' },
-      { lines: [23, 23], color: 'amber' as const, note: 'CanTransfer: ERC20 balanceOf 호출로 잔액 확인' },
-      { lines: [26, 26], color: 'rose' as const, note: 'StateDB: Cosmos KVStore 기반 어댑터' },
+      {
+        lines: [9, 10],
+        color: "sky" as const,
+        note: "재귀 깊이 제한 — EVM↔Cosmos 무한 루프 방지",
+      },
+      {
+        lines: [20, 20],
+        color: "emerald" as const,
+        note: "go-ethereum의 vm.NewEVM() 호출",
+      },
+      {
+        lines: [23, 23],
+        color: "amber" as const,
+        note: "CanTransfer: ERC20 balanceOf 호출로 잔액 확인",
+      },
+      {
+        lines: [26, 26],
+        color: "rose" as const,
+        note: "StateDB: Cosmos KVStore 기반 어댑터",
+      },
     ],
   },
 
-  'mini-evm-call': {
-    path: 'minievm/x/evm/keeper/context.go',
-    lang: 'go',
+  "mini-evm-call": {
+    path: "minievm/x/evm/keeper/context.go",
+    lang: "go",
 
     highlight: [1, 34],
-    desc: 'EVMCall — EVM 컨트랙트 호출 실행 + 상태 커밋 + 이벤트 발행.',
+    desc: "EVMCall — EVM 컨트랙트 호출 실행 + 상태 커밋 + 이벤트 발행.",
     code: `// x/evm/keeper/context.go — EVMCall 실행
 
 func (k Keeper) EVMCall(ctx context.Context,
@@ -89,10 +105,26 @@ func (k Keeper) EVMCall(ctx context.Context,
     k.dispatchMessages(sdkCtx, *requests)
 }`,
     annotations: [
-      { lines: [10, 10], color: 'sky' as const, note: 'CreateEVM — BlockCtx + StateDB + Precompile 조립' },
-      { lines: [21, 22], color: 'emerald' as const, note: 'go-ethereum evm.Call() — 바이트코드 실행' },
-      { lines: [29, 30], color: 'amber' as const, note: 'Commit — 스냅샷 체인 역순 커밋' },
-      { lines: [33, 34], color: 'rose' as const, note: 'Cosmos 메시지 디스패치 — EVM↔Cosmos 양방향 호출' },
+      {
+        lines: [10, 10],
+        color: "sky" as const,
+        note: "CreateEVM — BlockCtx + StateDB + Precompile 조립",
+      },
+      {
+        lines: [21, 22],
+        color: "emerald" as const,
+        note: "go-ethereum evm.Call() — 바이트코드 실행",
+      },
+      {
+        lines: [29, 30],
+        color: "amber" as const,
+        note: "Commit — 스냅샷 체인 역순 커밋",
+      },
+      {
+        lines: [33, 34],
+        color: "rose" as const,
+        note: "Cosmos 메시지 디스패치 — EVM↔Cosmos 양방향 호출",
+      },
     ],
   },
 };

@@ -10,17 +10,42 @@ export default function BFTConsensusThumbnail() {
         { x: 28, y: 32, ok: true },
       ].map((n, i) => (
         <g key={i}>
-          <circle cx={n.x} cy={n.y} r={8}
-            stroke={n.ok ? '#10b981' : '#ef4444'} strokeWidth={1.5}
-            fill={n.ok ? '#10b981' : '#ef4444'} fillOpacity={0.1} />
+          <circle
+            cx={n.x}
+            cy={n.y}
+            r={8}
+            stroke={n.ok ? "#10b981" : "#ef4444"}
+            strokeWidth={1.5}
+            fill={n.ok ? "#10b981" : "#ef4444"}
+            fillOpacity={0.1}
+          />
           {n.ok && (
-            <polyline points={`${n.x - 3},${n.y} ${n.x - 1},${n.y + 3} ${n.x + 4},${n.y - 3}`}
-              stroke="#10b981" strokeWidth={1.5} strokeLinecap="round" fill="none" />
+            <polyline
+              points={`${n.x - 3},${n.y} ${n.x - 1},${n.y + 3} ${n.x + 4},${n.y - 3}`}
+              stroke="#10b981"
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              fill="none"
+            />
           )}
           {!n.ok && (
             <>
-              <line x1={n.x - 3} y1={n.y - 3} x2={n.x + 3} y2={n.y + 3} stroke="#ef4444" strokeWidth={1.5} />
-              <line x1={n.x + 3} y1={n.y - 3} x2={n.x - 3} y2={n.y + 3} stroke="#ef4444" strokeWidth={1.5} />
+              <line
+                x1={n.x - 3}
+                y1={n.y - 3}
+                x2={n.x + 3}
+                y2={n.y + 3}
+                stroke="#ef4444"
+                strokeWidth={1.5}
+              />
+              <line
+                x1={n.x + 3}
+                y1={n.y - 3}
+                x2={n.x - 3}
+                y2={n.y + 3}
+                stroke="#ef4444"
+                strokeWidth={1.5}
+              />
             </>
           )}
         </g>

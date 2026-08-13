@@ -1,55 +1,6 @@
-import TokenPipelineViz from './viz/TokenPipelineViz';
-import { PipelineDetailViz } from './viz/TokOverviewViz';
-import { VocabDetailViz } from './viz/TokOverviewViz2';
-import M from '@/components/ui/math';
-
-export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">토크나이저 개요</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>토크나이저(Tokenizer)</strong> — 텍스트를 모델이 처리할 수 있는 정수 시퀀스로 변환하는 전처리 단계<br />
-          LLM의 입력은 문자열이 아니라 토큰 ID의 나열<br />
-          토크나이저 선택이 모델의 어휘 크기, 다국어 성능, 효율성을 좌우
-        </p>
-
-        <h3>왜 문자 단위가 아닌가?</h3>
-        <p>
-          문자 단위(character-level) → 시퀀스 길이 폭발, 의미 단위 파악 불가<br />
-          단어 단위(word-level) → 어휘 크기 폭발, 미등록 단어(OOV) 문제<br />
-          <strong>서브워드(subword)</strong> — 자주 나오는 문자열을 하나의 토큰으로 합쳐 두 문제를 동시 해결
-        </p>
-
-        <h3>토크나이저 파이프라인</h3>
-        <p>
-          텍스트 → 정규화(normalization, 유니코드 통일) → 사전 토큰화(pre-tokenization, 공백/구두점 분리) → 서브워드 분할 → 토큰 ID 매핑
-        </p>
-      </div>
-      <div className="not-prose mt-8">
-        <TokenPipelineViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">토크나이저 파이프라인 상세</h3>
-      </div>
-      <PipelineDetailViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">토큰 ID 역사와 용어</h3>
-        <M display>
-          {`\\text{Compression Ratio} = \\underbrace{\\frac{\\text{문자 수}}{\\text{토큰 수}}}_{\\text{높을수록 효율적}}`}
-        </M>
-      </div>
-      <VocabDetailViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-2">
-        <p className="leading-7">
-          요약 1: 토크나이저는 <strong>normalize → pre-tokenize → model → post-process</strong> 4단계 파이프라인.<br />
-          요약 2: <strong>어휘집 크기</strong>가 임베딩 행렬과 출력 softmax 비용을 결정 — 모델의 실질적 크기 요소.<br />
-          요약 3: 한국어 효율은 토크나이저 선택에 좌우 — 같은 문장이라도 2~3배 토큰 수 차이.
-        </p>
-      </div>
-    </section>
-  );
-}
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import TokenPipelineViz from "./viz/TokenPipelineViz";
+import TextContractViz from "./viz/TextContractViz";
+import CompatibilityViz from "./viz/CompatibilityViz";
+export default function Overview(){return <section id="overview" className="mb-16 scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Tokenizer는 raw text와 model checkpoint 사이의 interface다</h2><div className="prose prose-neutral dark:prose-invert max-w-none"><p className="text-lg leading-8">Language model은 화면에 보이는 문자열을 직접 읽지 않는다. Tokenizer가 문자열을 정규화하고 경계를 만들고 vocabulary token을 선택한 뒤 integer ID로 바꾸면, model은 그 ID가 가리키는 embedding row부터 계산한다. 따라서 tokenizer file과 model weight는 따로 교체할 수 있는 부품처럼 보여도 실제로는 하나의 versioned contract다.</p><p>먼저 text의 단위를 구분해야 한다. 사람이 한 글자로 보는 grapheme, Unicode code point, UTF-8 byte는 수가 다를 수 있으며 같은 글자가 NFC와 NFD에서 서로 다른 code-point sequence로 표현되기도 한다. 이 차이가 낯설다면 <Link to="/ai/text-unicode-encoding">문자·Unicode·UTF-8 정본 글</Link>에서 bit와 byte부터 먼저 확인할 수 있다. NFKC는 폭·위첨자 같은 compatibility 차이를 합칠 수 있어 검색에는 유용하지만 code·식별자·원문 복원이 필요한 작업에서는 의미 있는 차이를 지울 수 있다.</p></div><TextContractViz/><TokenPipelineViz/><div className="prose prose-neutral dark:prose-invert max-w-none"><p><a href="https://www.unicode.org/reports/tr15/" target="_blank" rel="noreferrer">Unicode normalization 규격</a>은 canonical equivalence와 compatibility equivalence를 구분한다. Tokenizer의 normalizer를 바꾸면 token count만 달라지는 것이 아니라 원문 offset, span label과 exact round-trip도 달라질 수 있으므로 목적에 맞는 보존 계약을 먼저 정한다.</p></div><CompatibilityViz/><ExplainedFormula question="Tokenizer 효율을 길이가 다른 corpus와 언어 사이에서 어떻게 비교할까?" idea={<>생성된 token 수를 원문 byte 수로 나누면 별도 word segmenter 없이 여러 script·code·URL을 같은 분모에서 비교할 수 있습니다. 반대로 bytes per token을 쓰면 값이 클수록 더 압축된 것입니다.</>} formula={String.raw`\begin{aligned}\operatorname{TPB}&=N_{\mathrm{tok}}/N_{\mathrm{byte}}\\\operatorname{BPT}&=N_{\mathrm{byte}}/N_{\mathrm{tok}}\end{aligned}`} terms={[{symbol:"N_{\mathrm{tok}}",name:"encoded length",description:"Special token을 포함할지 제외할지 사전에 고정한 token 수입니다."},{symbol:"N_{\mathrm{byte}}",name:"raw byte length",description:"Normalizer 적용 전 또는 후 중 어느 text를 분모로 썼는지 명시합니다."}]} assumptions={["같은 production corpus slice와 truncation·special-token 규칙으로 비교합니다.","평균뿐 아니라 언어·domain별 p50/p95와 최악 사례를 봅니다."]} interpretation="Token 수가 적으면 context와 attention 비용에는 유리할 수 있지만 의미 단위가 더 좋다는 보장은 없습니다. Downstream 품질, fallback과 vocabulary parameter 비용을 별도로 평가해야 합니다."/></section>}

@@ -1,59 +1,72 @@
-import M from '@/components/ui/math';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import TemporalValidationViz from "./viz/TemporalValidationViz";
 
 export default function Modeling() {
   return (
     <section id="modeling" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">모델링 과정</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        ACF와 AIC는 후보를 만들고 미래 구간과 residual이 결론을 낸다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>ACF / PACF 해석</h3>
-        <p>
-          차분 후 정상화된 시계열에 대해 <strong>ACF(자기상관함수)</strong>와 <strong>PACF(편자기상관함수)</strong>를 그려 p, q 후보를 결정<br />
-          핵심 — "급격한 절단(cutoff)" 패턴을 찾는 것
+        <p className="leading-7">
+          시계열을 무작위로 섞으면 미래의 level과 event가 학습 구간으로 들어가므로,
+          parameter 탐색 전에 cutoff를 고정해야 한다. 한 번의 holdout은 특정 시기에
+          우연히 쉽거나 어려울 수 있어 forecast origin을 앞으로 이동시키는
+          rolling-origin evaluation을 사용한다. 각 fold에서는 preprocessing,
+          differencing order와 model fitting도 그 시점까지의 data로 다시 수행해야
+          leakage를 막을 수 있다.
         </p>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 mb-4 text-sm">
-          {[
-            { model: 'AR(p)', acf: 'ACF 서서히 감소', pacf: 'PACF lag p에서 급격 절단', color: 'text-emerald-500' },
-            { model: 'MA(q)', acf: 'ACF lag q에서 급격 절단', pacf: 'PACF 서서히 감소', color: 'text-sky-500' },
-            { model: 'ARMA(p,q)', acf: 'ACF 서서히 감소', pacf: 'PACF 서서히 감소', color: 'text-violet-500' },
-          ].map((p) => (
-            <div key={p.model} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className={`font-mono font-bold text-xs ${p.color}`}>{p.model}</span>
-              <div className="text-xs text-muted-foreground mt-1">ACF: {p.acf}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">PACF: {p.pacf}</div>
-            </div>
-          ))}
-        </div>
-        <p>
-          <strong>ACF</strong> — 시차 k일 때의 자기상관 계수. MA(q) 차수를 결정<br />
-          <strong>PACF</strong> — 중간 시차의 영향을 제거한 순수 상관. AR(p) 차수를 결정
-        </p>
+      </div>
 
-        <h3>AIC / BIC 모델 선택</h3>
-        <p>
-          여러 (p,d,q) 후보 중 최적 모델 — <strong>AIC</strong>(Akaike Information Criterion) 또는 <strong>BIC</strong>(Bayesian Information Criterion)가 가장 작은 모델<br />
-          BIC는 표본 크기에 비례하는 페널티로 과적합을 더 강하게 억제
-        </p>
-        <M display>{'\\underbrace{\\text{AIC} = -2 \\ln(L) + 2k}_{\\text{파라미터 수 k에 페널티}} \\qquad \\underbrace{\\text{BIC} = -2 \\ln(L) + k \\ln(n)}_{\\text{표본 수 n에 더 강한 페널티}}'}</M>
-        <div className="not-prose grid grid-cols-2 gap-2 mt-3 mb-4 text-sm">
-          {[
-            { sym: 'L', name: '우도(Likelihood)', desc: '모델이 데이터를 얼마나 잘 설명하는지 — 클수록 좋음' },
-            { sym: 'k', name: '파라미터 수', desc: 'p + q + 상수항 등. 많을수록 페널티 증가 → 과적합 방지' },
-            { sym: 'n', name: '표본 크기', desc: 'BIC에서 ln(n)이 곱해짐 — 데이터가 많을수록 복잡한 모델에 불리' },
-            { sym: 'auto_arima', name: '자동 탐색', desc: 'pmdarima 라이브러리가 AIC/BIC 기준으로 최적 (p,d,q) 자동 선택' },
-          ].map((p) => (
-            <div key={p.sym} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-mono font-bold text-foreground text-xs">{p.sym}</span>
-              <span className="text-muted-foreground ml-1.5 text-xs font-semibold">{p.name}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-            </div>
-          ))}
-        </div>
+      <TemporalValidationViz />
 
-        <h3>잔차 진단</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>ACF와 PACF는 식별 규칙이 아니라 diagnostic이다</h3>
         <p>
-          적합 후 잔차가 <strong>백색잡음(White Noise, 무작위 노이즈)</strong>인지 확인<br />
-          Ljung-Box 검정(p-value &gt; 0.05)과 잔차 ACF 플롯으로 검증<br />
-          잔차에 패턴이 남아 있으면 p, q를 재조정
+          ACF(autocorrelation function)는 lag k까지 전파된 전체 correlation을,
+          PACF(partial autocorrelation function)는 그 사이 lag들의 선형 영향을
+          통제한 direct correlation을 본다. 이상적인 AR(p)에서는 PACF가 p 뒤에서,
+          MA(q)에서는 ACF가 q 뒤에서 약해지는 전형적 pattern이 있지만, 유한 표본,
+          계절성, ARMA 혼합에서는 cutoff가 선명하지 않다. Plot은 search space를
+          줄이는 heuristic으로 쓰고 후보를 확정하는 oracle로 쓰지 않는다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="Likelihood가 좋아지는 만큼 parameter가 늘어나는 후보를 같은 기준으로 어떻게 비교할까?"
+        idea={<>AIC와 BIC는 maximized log-likelihood에 complexity penalty를 더합니다. AIC는 parameter당 2, BIC는 sample size가 커질수록 log n만큼 벌점을 주어 서로 다른 목적의 근사 기준을 만듭니다.</>}
+        formula={String.raw`\begin{aligned}\operatorname{AIC}&=-2\log\hat L+2k\\\operatorname{BIC}&=-2\log\hat L+k\log n\end{aligned}`}
+        terms={[
+          { symbol: "\hat L", name: "maximized likelihood", description: "같은 observations와 likelihood family에서 적합한 model의 최대 likelihood입니다." },
+          { symbol: "k", name: "estimated parameters", description: "AR·MA·trend·variance 등 실제 추정한 자유 parameter 수입니다." },
+          { symbol: "n", name: "effective sample size", description: "차분과 missing 처리 뒤 likelihood에 기여한 관측 수와 구현 정의를 확인합니다." },
+        ]}
+        assumptions={["같은 target data와 comparable likelihood로 적합한 후보끼리 비교합니다.", "AIC·BIC의 절대값보다 후보 사이의 차이를 읽습니다."]}
+        interpretation="작은 information criterion은 in-sample fit과 complexity의 균형이 낫다는 뜻입니다. 원하는 horizon의 out-of-sample forecast error가 최소라는 보장은 없으므로 temporal validation을 별도로 수행합니다."
+      />
+
+      <ExplainedFormula
+        question="Residual 여러 lag에 설명되지 않은 autocorrelation이 남았는지 한 통계량으로 어떻게 확인할까?"
+        idea={<>Ljung–Box statistic은 lag 1부터 h까지 residual autocorrelation의 제곱을 sample-size correction과 함께 누적합니다. 개별 spike가 아니라 여러 lag의 공동 lack-of-fit을 검정합니다.</>}
+        formula={String.raw`Q(h)=n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`}
+        terms={[
+          { symbol: "\hat\rho_k", name: "residual autocorrelation", description: "Fitted model의 residual에서 계산한 lag-k sample correlation입니다." },
+          { symbol: "h", name: "diagnostic horizon", description: "공동으로 확인할 최대 lag이며 season과 sample size를 고려해 정합니다." },
+          { symbol: "n", name: "residual sample size", description: "진단에 실제 사용된 residual 개수입니다." },
+        ]}
+        assumptions={["Null은 선택한 h까지 residual autocorrelation이 모두 0이라는 것입니다.", "ARMA parameter를 추정한 경우 chi-square 자유도 correction과 library convention을 확인해야 합니다."]}
+        interpretation="작은 p-value는 남은 serial dependence의 신호지만 어떤 order를 추가할지는 알려 주지 않습니다. 큰 p-value도 variance 변화, nonlinearity와 structural break가 없음을 증명하지 않습니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          <a href="https://doi.org/10.1093/biomet/65.2.297" target="_blank" rel="noreferrer">Ljung–Box 원 논문</a>은
+          Box–Pierce lack-of-fit test의 finite-sample approximation을 개선한다.
+          실제 진단에서는 residual plot과 ACF, variance 변화, event 구간을 함께
+          보고, point forecast와 prediction interval coverage도 rolling origin마다
+          기록한다. Model-based interval이 좁다는 사실만으로 구조 변화가 잦은
+          production series에서 calibration됐다고 결론 내리지 않는다.
         </p>
       </div>
     </section>

@@ -1,9 +1,9 @@
-import Overview from './libp2p-yamux/Overview';
-import StreamMuxer from './libp2p-yamux/StreamMuxer';
-import DualVersion from './libp2p-yamux/DualVersion';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './libp2p/codeRefs';
-import { libp2pTree } from './libp2p/libp2pFileTree';
+import Overview from "./libp2p-yamux/Overview";
+import StreamMuxer from "./libp2p-yamux/StreamMuxer";
+import DualVersion from "./libp2p-yamux/DualVersion";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./libp2p/codeRefs";
+import { libp2pTree } from "./libp2p/libp2pFileTree";
 
 export default function LibP2PYamuxArticle() {
   const sidebar = useCodeSidebar();
@@ -14,12 +14,18 @@ export default function LibP2PYamuxArticle() {
       <StreamMuxer onCodeRef={sidebar.open} />
       <DualVersion onCodeRef={sidebar.open} />
       <CodeSidebar
-        codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef}
-        onClose={sidebar.close} onNavigate={sidebar.navigate}
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
         codeRefs={codeRefs}
         fileTrees={{ libp2p: libp2pTree }}
         projectMetas={{
-          libp2p: { id: 'libp2p', label: 'rust-libp2p', badgeClass: 'bg-[#fef3c7] border-[#f59e0b] text-[#92400e]' },
+          libp2p: {
+            id: "libp2p",
+            label: "rust-libp2p",
+            badgeClass: "bg-[#fef3c7] border-[#f59e0b] text-[#92400e]",
+          },
         }}
       />
     </>

@@ -1,74 +1,62 @@
-import { useState } from 'react';
-import { APPS } from './ApplicationsVizData';
+import { useState } from "react";
 
-const M = 'var(--muted-foreground)';
+const applications = [
+  {
+    id: "denoise",
+    title: "Denoising",
+    input: "손상된 입력 x̃",
+    target: "깨끗한 target x",
+    output: "복원 x̂",
+    check: "Noise 종류가 배포 환경과 맞는지 확인",
+  },
+  {
+    id: "anomaly",
+    title: "Anomaly detection",
+    input: "정상 중심의 training data",
+    target: "입력 자체",
+    output: "Sample별 reconstruction score",
+    check: "정상·이상 score가 실제로 분리되는지 검증",
+  },
+  {
+    id: "pretrain",
+    title: "Representation pretraining",
+    input: "가리거나 손상한 관측값",
+    target: "숨긴 원본 정보",
+    output: "Downstream용 encoder",
+    check: "Linear probe·fine-tuning으로 usefulness 확인",
+  },
+];
 
 export default function ApplicationsViz() {
-  const [sel, setSel] = useState(0);
-  const app = APPS[sel];
+  const [selected, setSelected] = useState(0);
+  const application = applications[selected];
 
   return (
-    <div className="not-prose rounded-xl border p-5 mb-6">
-      {/* Tabs */}
-      <div className="flex gap-2 mb-5">
-        {APPS.map((a, i) => (
-          <button key={a.id} onClick={() => setSel(i)}
-            className={`px-3 py-1.5 text-xs rounded-lg border transition-colors cursor-pointer ${
-              i === sel ? 'bg-primary/10 border-primary text-primary' : 'hover:bg-accent'
-            }`}>
-            {a.title}
+    <figure data-viz="autoencoder-applications" className="not-prose my-8 min-w-0 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
+      <figcaption className="mb-4 text-sm font-semibold">같은 encoder–decoder라도 target과 평가 기준이 달라집니다</figcaption>
+      <div className="mb-5 flex max-w-full gap-2 overflow-x-auto pb-1">
+        {applications.map((item, index) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setSelected(index)}
+            className={`shrink-0 rounded-md border px-3 py-2 text-xs font-medium transition-colors ${selected === index ? "border-primary/45 bg-primary/5 text-primary" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
+          >
+            {item.title}
           </button>
         ))}
       </div>
-
-      <svg viewBox="0 0 400 100" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-        {/* Before */}
-        <rect x={20} y={10} width={120} height={70} rx={8}
-          fill={sel === 0 ? '#88888820' : `${app.color}08`}
-          stroke={app.color} strokeWidth={1} />
-        {sel === 0 && Array.from({ length: 30 }).map((_, i) => (
-          <circle key={i}
-            cx={30 + Math.random() * 100} cy={20 + Math.random() * 50}
-            r={1.5} fill={M} fillOpacity={0.3} />
+      <div className="grid gap-3 md:grid-cols-3">
+        {[["학습 입력", application.input], ["정답", application.target], ["얻는 값", application.output]].map(([label, value]) => (
+          <div key={label} className="min-w-0 border-t border-border bg-background px-1 pt-4">
+            <p className="text-xs font-bold text-primary/70">{label}</p>
+            <p className="mt-2 text-sm font-semibold leading-6">{value}</p>
+          </div>
         ))}
-        <text x={80} y={50} textAnchor="middle" fontSize={9}
-          fontWeight={500} fill={app.color}>{app.before}</text>
-
-        {/* Arrow */}
-        <text x={170} y={48} textAnchor="middle" fontSize={9}
-          fill={M}>AE</text>
-        <line x1={145} y1={45} x2={195} y2={45}
-          stroke={app.color} strokeWidth={1}
-          markerEnd={`url(#app-arr-${sel})`} />
-
-        {/* After */}
-        <rect x={200} y={10} width={120} height={70} rx={8}
-          fill={`${app.color}12`}
-          stroke={app.color} strokeWidth={1.2} />
-        <text x={260} y={50} textAnchor="middle" fontSize={9}
-          fontWeight={600} fill={app.color}>{app.after}</text>
-
-        {/* Reconstruction error bar for anomaly */}
-        {sel === 1 && (
-          <>
-            <rect x={340} y={20} width={8} height={12} rx={2}
-              fill="#10b98140" stroke="#10b981" strokeWidth={0.6} />
-            <text x={358} y={30} fontSize={9} fill="#10b981">정상</text>
-            <rect x={340} y={42} width={8} height={38} rx={2}
-              fill="#ef444440" stroke="#ef4444" strokeWidth={0.6} />
-            <text x={358} y={64} fontSize={9} fill="#ef4444">이상</text>
-          </>
-        )}
-
-        <defs>
-          {APPS.map((a, i) => (
-            <marker key={i} id={`app-arr-${i}`} markerWidth="6"
-              markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6 Z" fill={a.color} />
-            </marker>
-          ))}
-        </defs>
-      </svg>
-    </div>
+      </div>
+      <p className="mt-5 border-l border-rose-500/45 pl-4 text-sm leading-6 text-muted-foreground">
+        실패 조건: {application.check}
+      </p>
+    </figure>
   );
 }

@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const domainCodeRefs: Record<string, CodeRef> = {
-  'plonk-domain': {
-    path: 'plonk/mod.rs — Domain + 코셋 상수',
-    lang: 'rust',
+  "plonk-domain": {
+    path: "plonk/mod.rs — Domain + 코셋 상수",
+    lang: "rust",
     highlight: [1, 36],
-    desc: '평가 도메인 H = {1, w, w^2, ..., w^(n-1)}.\nn은 2의 거듭제곱, 단위근 w를 BN254 Fr에서 계산.',
+    desc: "평가 도메인 H = {1, w, w^2, ..., w^(n-1)}.\nn은 2의 거듭제곱, 단위근 w를 BN254 Fr에서 계산.",
     code: `/// 코셋 상수: Column A=1, B=K1, C=K2
 pub const K1: u64 = 2;
 pub const K2: u64 = 3;
@@ -42,10 +42,26 @@ impl Domain {
     }
 }`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'K1=2, K2=3 — 3개 코셋이 서로소가 되는 최소 정수' },
-      { lines: [6, 11], color: 'emerald', note: 'Domain: n차 단위근 w와 모든 거듭제곱을 캐시' },
-      { lines: [17, 22], color: 'amber', note: '2^28차 원시근에서 제곱 반복으로 n차 단위근 도출' },
-      { lines: [32, 32], color: 'violet', note: 'w^n = 1 검증 — 단위근의 핵심 성질' },
+      {
+        lines: [1, 3],
+        color: "sky",
+        note: "K1=2, K2=3 — 3개 코셋이 서로소가 되는 최소 정수",
+      },
+      {
+        lines: [6, 11],
+        color: "emerald",
+        note: "Domain: n차 단위근 w와 모든 거듭제곱을 캐시",
+      },
+      {
+        lines: [17, 22],
+        color: "amber",
+        note: "2^28차 원시근에서 제곱 반복으로 n차 단위근 도출",
+      },
+      {
+        lines: [32, 32],
+        color: "violet",
+        note: "w^n = 1 검증 — 단위근의 핵심 성질",
+      },
     ],
   },
 };

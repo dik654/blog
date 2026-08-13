@@ -22,9 +22,21 @@ pub struct LinearCodePCS<C: LinearCode, H: CRHScheme> {
 // - No Algebraic Structure: 대수적 구조에 의존하지 않음`;
 
 export const FRI_ANNOTATIONS = [
-  { lines: [5, 7] as [number, number], color: 'sky' as const, note: '3가지 수학 기반: ECC + Reed-Solomon + Merkle' },
-  { lines: [10, 11] as [number, number], color: 'emerald' as const, note: 'LinearCodePCS: 제네릭 구조 (코드+해시)' },
-  { lines: [14, 18] as [number, number], color: 'amber' as const, note: '커밋 과정: 계수→RS인코딩→Merkle Root' },
+  {
+    lines: [5, 7] as [number, number],
+    color: "sky" as const,
+    note: "3가지 수학 기반: ECC + Reed-Solomon + Merkle",
+  },
+  {
+    lines: [10, 11] as [number, number],
+    color: "emerald" as const,
+    note: "LinearCodePCS: 제네릭 구조 (코드+해시)",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "amber" as const,
+    note: "커밋 과정: 계수→RS인코딩→Merkle Root",
+  },
 ];
 
 export const COMPARE_CODE = `// 다항식 커밋먼트 스킴 비교 분석
@@ -46,7 +58,19 @@ export const COMPARE_CODE = `// 다항식 커밋먼트 스킴 비교 분석
 // - 배치 효율성 → Marlin (네이티브 배치 지원)`;
 
 export const COMPARE_ANNOTATIONS = [
-  { lines: [4, 6] as [number, number], color: 'sky' as const, note: '페어링 기반: O(1) 증명, trusted setup 필요' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '비페어링: 투명 설정, 더 큰 증명/검증' },
-  { lines: [12, 16] as [number, number], color: 'amber' as const, note: '유스케이스별 최적 스킴 선택 가이드' },
+  {
+    lines: [4, 6] as [number, number],
+    color: "sky" as const,
+    note: "페어링 기반: O(1) 증명, trusted setup 필요",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "비페어링: 투명 설정, 더 큰 증명/검증",
+  },
+  {
+    lines: [12, 16] as [number, number],
+    color: "amber" as const,
+    note: "유스케이스별 최적 스킴 선택 가이드",
+  },
 ];

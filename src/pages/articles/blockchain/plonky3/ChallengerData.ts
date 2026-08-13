@@ -25,9 +25,21 @@ fn duplexing(&mut self) {
 }`;
 
 export const DUPLEX_ANNOTATIONS = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: '스펀지 상태 + 입출력 버퍼' },
-  { lines: [10, 16] as [number, number], color: 'emerald' as const, note: '흡수: 데이터 → 스펀지' },
-  { lines: [19, 25] as [number, number], color: 'amber' as const, note: '듀플렉싱: XOR + permute + extract' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "스펀지 상태 + 입출력 버퍼",
+  },
+  {
+    lines: [10, 16] as [number, number],
+    color: "emerald" as const,
+    note: "흡수: 데이터 → 스펀지",
+  },
+  {
+    lines: [19, 25] as [number, number],
+    color: "amber" as const,
+    note: "듀플렉싱: XOR + permute + extract",
+  },
 ];
 
 export const USAGE_CODE = `// STARK 증명에서 챌린저 사용 순서
@@ -50,7 +62,19 @@ let query_indices: Vec<usize> = (0..num_queries)
     .collect();`;
 
 export const USAGE_ANNOTATIONS = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '트레이스 커밋 흡수' },
-  { lines: [7, 7] as [number, number], color: 'emerald' as const, note: 'alpha 챌린지 (확장체)' },
-  { lines: [16, 18] as [number, number], color: 'amber' as const, note: 'FRI 쿼리 인덱스 생성' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "트레이스 커밋 흡수",
+  },
+  {
+    lines: [7, 7] as [number, number],
+    color: "emerald" as const,
+    note: "alpha 챌린지 (확장체)",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "amber" as const,
+    note: "FRI 쿼리 인덱스 생성",
+  },
 ];

@@ -1,42 +1,183 @@
-import { motion } from 'framer-motion';
-import { C } from './ContextVizData';
-const f = (d: number) => ({ initial: { opacity: 0, x: -8 }, animate: { opacity: 1, x: 0 }, transition: { delay: d } });
-const mono = { fontFamily: 'monospace' };
+import { motion } from "framer-motion";
+import { DataBox, ModuleBox } from "@/components/viz/boxes";
+import { C } from "./ContextVizData";
 
-export function StepSAS() {
-  const lines = [
-    { line: '// SAS 듀얼 포트 + JBOD 확장', c: C.sas, y: 38 },
-    { line: 'SAS HBA → SAS Expander → JBOD 엔클로저', c: C.sas, y: 58 },
-    { line: '포트 A: 12 Gbps (Primary 경로)', c: C.sas, y: 78 },
-    { line: '포트 B: 12 Gbps (Failover 경로)', c: C.sas, y: 98 },
-    { line: '// 수백 TB 확장: 봉인 완료 섹터 장기 저장', c: C.ok, y: 118 },
-  ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.sas}>SAS: 듀얼 포트 + JBOD</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={10} y={l.y - 13} width={420} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={20} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
+const reveal = (delay: number) => ({
+  initial: { opacity: 0, y: 7 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay },
+});
+
+export function StepSas() {
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        SAS 다중 경로와 확장 구조
+      </text>
+      <motion.g {...reveal(0.08)}>
+        <ModuleBox
+          x={20}
+          y={47}
+          w={112}
+          h={54}
+          label="Host A"
+          sub="initiator path A"
+          color={C.sas}
+        />
+        <ModuleBox
+          x={20}
+          y={124}
+          w={112}
+          h={54}
+          label="Host B"
+          sub="initiator path B"
+          color={C.info}
+        />
       </motion.g>
-    ))}
-  </g>);
+      <motion.path
+        d="M132 74 H182 V112 M132 151 H182 V112"
+        fill="none"
+        stroke={C.sas}
+        strokeWidth={1.5}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ delay: 0.22 }}
+      />
+      <motion.g {...reveal(0.3)}>
+        <ModuleBox
+          x={188}
+          y={81}
+          w={112}
+          h={62}
+          label="SAS expander"
+          sub="fan-out · routing"
+          color={C.sas}
+        />
+      </motion.g>
+      <motion.path
+        d="M300 112 H342 M342 112 V68 M342 112 V155"
+        fill="none"
+        stroke={C.sas}
+        strokeWidth={1.5}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ delay: 0.4 }}
+      />
+      <motion.g {...reveal(0.48)}>
+        <ModuleBox
+          x={348}
+          y={42}
+          w={112}
+          h={54}
+          label="dual-port drive"
+          sub="target port A"
+          color={C.sas}
+        />
+        <ModuleBox
+          x={348}
+          y={128}
+          w={112}
+          h={54}
+          label="drive shelf"
+          sub="many targets"
+          color={C.ok}
+        />
+      </motion.g>
+      <text
+        x={240}
+        y={196}
+        textAnchor="middle"
+        fontSize={9}
+        fill="var(--muted-foreground)"
+      >
+        두 포트의 핵심은 합산 속도보다 경로 장애 격리
+      </text>
+    </g>
+  );
 }
 
-export function StepBlockchain() {
-  const lines = [
-    { line: '// 블록체인 노드별 I/O 패턴', c: C.ok, y: 38 },
-    { line: 'Reth/Geth: 상태 DB 랜덤 I/O (4K QD32)', c: C.nvme, y: 58 },
-    { line: '  SATA: ~10K IOPS → NVMe: ~500K IOPS', c: C.nvme, y: 78 },
-    { line: 'Lotus 봉인: 순차 쓰기 (128K sequential)', c: C.nvme, y: 100 },
-    { line: '  SATA: 500 MB/s → NVMe: 5,000+ MB/s', c: C.nvme, y: 118 },
+export function StepNvme() {
+  const cores = [
+    { x: 18, label: "CPU 0", color: C.nvme },
+    { x: 105, label: "CPU 1", color: C.info },
+    { x: 192, label: "CPU 2", color: C.ok },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.ok}>블록체인 노드: NVMe 필수</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={10} y={l.y - 13} width={420} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={20} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        NVMe Submission / Completion Queue
+      </text>
+      {cores.map((core, index) => (
+        <motion.g key={core.label} {...reveal(0.08 + index * 0.11)}>
+          <DataBox
+            x={core.x}
+            y={48}
+            w={73}
+            h={32}
+            label={core.label}
+            color={core.color}
+          />
+          <ModuleBox
+            x={core.x}
+            y={95}
+            w={73}
+            h={54}
+            label="SQ · CQ"
+            sub="queue pair"
+            color={core.color}
+          />
+          <line
+            x1={core.x + 36.5}
+            y1={80}
+            x2={core.x + 36.5}
+            y2={94}
+            stroke={core.color}
+          />
+        </motion.g>
+      ))}
+      <motion.path
+        d="M54 150 V165 H326 M141 150 V165 M228 150 V165"
+        fill="none"
+        stroke={C.nvme}
+        strokeWidth={1.4}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ delay: 0.46 }}
+      />
+      <motion.g {...reveal(0.54)}>
+        <ModuleBox
+          x={326}
+          y={88}
+          w={136}
+          h={76}
+          label="NVMe controller"
+          sub="DMA · namespace · media"
+          color={C.nvme}
+        />
       </motion.g>
-    ))}
-  </g>);
+      <text
+        x={171}
+        y={191}
+        textAnchor="middle"
+        fontSize={9}
+        fill="var(--muted-foreground)"
+      >
+        큐 수·깊이·CPU affinity는 구현과 설정에 따라 달라짐
+      </text>
+    </g>
+  );
 }

@@ -1,78 +1,89 @@
-import OverviewViz from './viz/OverviewViz';
-import OverviewDetailViz from './viz/OverviewDetailViz';
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import HistoryViz from "./viz/HistoryViz";
+import OverviewViz from "./viz/OverviewViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">하네스란 무엇인가</h2>
-      <div className="not-prose mb-8"><OverviewViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        좋은 모델만으로는 실제 작업이 끝나지 않는다
+      </h2>
+      <div className="not-prose mb-8">
+        <OverviewViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          LLM Harness: <strong>LLM을 특정 task에 맞게 감싸는 구조물</strong>.<br />
-          prompt + tools + guardrails + evaluation 결합.<br />
-          raw LLM → production-ready system으로 변환.
+          LLM은 다음 행동을 제안할 수 있지만, 어떤 파일이 정본인지, 어느 API를
+          호출해도 되는지, 작업이 정말 끝났는지는 저절로 알지 못한다. 데모에서는
+          좋은 답변 한 번이면 충분하지만, 실제 제품에서는 실행 도중 세션이
+          바뀌고 tool이 실패하며 외부 상태까지 변한다. 이 간극을 메우는 것이
+          <strong> LLM 하네스</strong>다.
+        </p>
+        <p className="leading-7">
+          하네스는 prompt wrapper나 특정 agent framework의 이름이 아니라,
+          모델을 둘러싼 <strong>실행 계약과 피드백 시스템</strong>을 가리킨다.
+          목표와 완료 조건, 필요한 context를 찾는 경로, tool과 실제 권한,
+          진행 상태를 남길 artifact, 검증과 복구 규칙이 모두 여기에 들어간다.
+          모델은 가능한 다음 행동을 제안하고, 하네스는 그 행동을 실행해도 되는지
+          판정한 뒤 관찰 가능한 결과를 다시 모델에 돌려준다.
+        </p>
+        <ContentBoundary article="llm-harness" />
+
+        <h3 className="mb-3 mt-6 text-xl font-semibold">
+          왜 모델이 좋아져도 하네스가 남는가
+        </h3>
+        <p className="leading-7">
+          모델 능력이 올라가면 세부 절차와 예외 분기를 덜 지시할 수 있다. 그러나
+          파일·API·사람에게 영향을 주는 실행에는 여전히 권한, observability,
+          종료 조건과 책임 경계가 필요하다. 좋은 하네스는 모델의 추론을 대신하는
+          규칙 더미가 아니라, 모델이 탐색해도 되는 영역과 시스템이 반드시
+          강제해야 하는 invariant를 나눈다. 따라서 모델 교체로 줄어드는 부분은
+          대개 과도한 prompt scaffolding이고, 권한 검사·artifact 보존·검증처럼
+          시스템 책임에 속하는 부분은 남는다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">"하네스 엔지니어링" 용어의 탄생 — 2026-02</h3>
+        <h3 className="mb-3 mt-6 text-xl font-semibold">
+          용어의 역사는 직선 계보가 아니다
+        </h3>
         <p className="leading-7">
-          <strong>Mitchell Hashimoto</strong>(HashiCorp 공동창업자)가 2026-02에 블로그에서 처음 사용<br />
-          계기: AI 코딩 에이전트에게 "이렇게 하지 마"라고 프롬프트로 지시해도 다음 세션에 똑같은 실수를 반복<br />
-          결론: <em>프롬프트로 부탁하는 것</em>이 아니라 <em>실수 자체가 구조적으로 불가능하게 만드는 것</em>이 필요<br />
-          정의: "에이전트가 실수할 때마다 그 실수가 다시는 반복되지 않도록 하네스를 <strong>고치는</strong> 작업"<br />
-          OpenAI, Anthropic, LangChain이 같은 문제를 겪고 있었고, Hashimoto가 이름을 붙이자마자 업계 전체가 동조하며 표준 용어로 자리잡음
+          2023년 Auto-GPT류 실험에서 이미 목표를 주고 tool을 반복 호출하는
+          형태가 등장했지만, 당시 모델은 긴 실행 경로에서 쉽게 방향을 잃었다.
+          그래서 개발자가 정해진 경로를 짜는 workflow가 먼저 실용화됐고,
+          모델이 강해진 뒤에는 ReAct형 agent loop가 그 분기 일부를 흡수했다.
+          이후 작업 시간이 길어지면서 context engineering, 검증, checkpoint가
+          중요해졌고 이 넓은 바깥층을 harness engineering이라고 부르는 사례가
+          늘었다.
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">이름의 유래 — 야생말 vs 경주마</h3>
-        <p className="leading-7">
-          Harness = <strong>마구</strong>(馬具): 고삐, 안장 등 말을 제어하는 도구<br />
-          야생말을 경마장에 풀어놓으면 본능대로 날뛰며 울타리를 넘음<br />
-          마구를 채우면 말의 힘이 <em>약해지는 것이 아니라</em> 올바른 방향으로 집중되어 빠르고 정확하게 달림<br />
-          AI 모델(Claude, GPT, Gemini)은 야생말과 같음 — 혼자 풀어놓으면 통제 불가<br />
-          하네스는 모델의 힘을 억누르는 것이 아니라 올바른 방향으로 제어하는 <strong>모델이 아닌 모든 것</strong> (CLAUDE.md, hooks, MCP, skills ...)
-        </p>
+      <div className="not-prose mt-8">
+        <HistoryViz />
+      </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">하네스가 해결하는 두 가지 문제</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          <strong>① 컨텍스트 부패 (Context Rot)</strong><br />
-          Anthropic 연구팀이 Claude Opus에게 Claude.ai 클론을 시킨 실험에서 반복된 두 실패 패턴:<br />
-          &nbsp;&nbsp;- 한 번에 다 해결하려다 컨텍스트 창 소진 → 절반만 구현하고 다음 세션에선 기억 없이 처음부터 재탐색<br />
-          &nbsp;&nbsp;- 어느 정도 진행되면 "다 됐다"고 조기 종료 선언 (실제로는 한참 남음)<br />
-          컨텍스트 창 = 한 번에 펼쳐볼 수 있는 책 페이지 수 — 작업이 길어지면 앞 내용을 잊기 시작<br /><br />
-          <strong>② 규칙과 울타리 위반</strong><br />
-          정보 부족이 아니라 <em>구조적 제약 부재</em>의 문제<br />
-          예: 결제 시스템 구현 중 에이전트가 갑자기 DB 테이블을 삭제 — "하면 안 된다"는 구조가 없으니 마음대로 실행<br />
-          프롬프트로 "DB 지우지 마"라고 부탁해봐야 매번 어김
+          이 변화는 프롬프트→컨텍스트→하네스→루프→그래프가 이전 개념을 차례로
+          대체했다는 뜻이 아니다. 서로 다른 실패를 강조하는 설계 어휘가 겹쳐
+          쓰이기 시작했다는 쪽이 정확하다. Anthropic은 predefined code path를
+          따르는 <em>workflow</em>와 모델이 다음 과정과 tool을 고르는
+          <em> agent</em>를 구분하지만, 실제 시스템은 둘을 섞는다. 예를 들어 조사
+          순서는 모델이 정하더라도 배포·삭제·결제 전이는 정해진 checkpoint와
+          사람 승인을 통과하게 만들 수 있다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">두 문제를 해결하는 구조 — CLAUDE.md + Hooks</h3>
-        <p className="leading-7">
-          <strong>컨텍스트 부패 → CLAUDE.md</strong>: Claude Code가 새 세션마다 가장 먼저 읽는 프로젝트 지침 파일<br />
-          컨텍스트가 꽉 차 앞 내용을 잊어도 이 파일은 항상 다시 로드됨<br />
-          비유: 퇴사자가 바뀌어도 신규 입사자가 첫날 반드시 읽는 온보딩 문서<br /><br />
-          <strong>규칙 위반 → Hooks</strong>: 작업을 마치려는 순간 자동 실행되는 스크립트<br />
-          예: 코드 저장 직전 자동으로 타입 체크 + 문법 검사 → 에러 있으면 에이전트에게 다시 돌려보냄<br />
-          에이전트가 스스로 고치게 됨 — 사람 개입 불필요<br />
-          "좋은 코드 짜줘"라는 <em>부탁</em>이 아니라, 못 짜면 저장 자체가 막히는 <em>구조</em>를 만드는 것
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">핵심 철학 — 프롬프트는 부탁, 하네스는 강제</h3>
-        <p className="leading-7">
-          결정적 차이: 해선 안 되는 작업을 에이전트가 했을 때의 대응<br />
-          &nbsp;&nbsp;- <em>프롬프트 방식</em>: "이거 하지 마" 부탁 → 또 실수함 (강제가 아니므로)<br />
-          &nbsp;&nbsp;- <em>하네스 방식</em>: 그 실수 자체가 불가능한 구조 설계 → 원천 봉쇄<br />
-          공장 안전 시스템과 동일 — 안전모 없으면 출입문이 안 열리고, 기계에 손이 들어가면 자동 정지<br />
-          규칙이 사람 판단에 의존하지 않고 시스템에 내장되어 자동 강제됨<br /><br />
-          요약: 프롬프트 = 부탁, 하네스 = 강제. 실패할 때마다 하네스를 한 줄씩 추가하여 점진적으로 정교해짐
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Harness vs Raw LLM</h3>
-        <div className="not-prose mb-6"><OverviewDetailViz /></div>
-        <p className="leading-7">
-          Harness: <strong>system prompt + tools + guardrails + eval</strong>.<br />
-          raw LLM → production system 변환 인프라.<br />
-          LangChain, LlamaIndex, DSPy 등이 대표 framework.
-        </p>
+        <div id="paper-anthropic-effective-agents" className="scroll-mt-24">
+          <CitationBlock
+            source="Anthropic — Building effective agents"
+            citeKey={1}
+            href="https://www.anthropic.com/engineering/building-effective-agents"
+          >
+            미리 정의한 code path를 따르는 workflow와 model이 다음 단계와 tool을
+            고르는 agent를 구분하고, 단순한 구조에서 관측된 필요에 따라
+            routing·parallelization·evaluator를 추가하는 기준을 설명합니다. 이는
+            모든 agent architecture의 표준 분류나 보편 성능 보장은 아닙니다.
+          </CitationBlock>
+        </div>
       </div>
     </section>
   );

@@ -1,8 +1,31 @@
-export const C = { eth: '#6366f1', rdma: '#f59e0b', ib: '#10b981', err: '#ef4444', hw: '#71717a' };
+export const C = {
+  host: "#6366f1",
+  fabric: "#06b6d4",
+  rdma: "#f59e0b",
+  good: "#10b981",
+  risk: "#ef4444",
+  neutral: "#71717a",
+};
 
 export const STEPS = [
-  { label: '데스크톱(1Gbps) vs 서버(10G/25G/100G) 대역폭', body: '데스크톱: 1Gbps 충분 / 서버: 10G(SFP+) 기본, 25G(SFP28) DC 표준, 100G(QSFP28) 백본' },
-  { label: '10G → 25G → 100G 이더넷 단계별 스펙', body: '10G: SFP+ DAC/광, ~3us / 25G: SFP28, ~2us / 100G: QSFP28 4x25G, ~1.5us' },
-  { label: 'RDMA: CPU 바이패스로 레이턴시 50→1 us', body: 'RoCE v2: UDP/IP 위 RDMA, ~1us / InfiniBand: 전용 스위치, ~0.5us, 400Gbps NDR' },
-  { label: '블록체인 노드 = 10G 충분, GPU 클러스터 = InfiniBand', body: '블록 전파: ~100KB per block / 텐서 병렬: ~GB per iteration → 요구 대역폭 10000배 차이' },
+  {
+    label: "네트워크 선택은 port rate가 아니라 traffic matrix에서 시작한다",
+    body: "source·destination, message size, 동시 flow와 burst를 workload phase별로 기록해 실제 east-west 수요를 만듭니다.",
+  },
+  {
+    label: "application은 line rate가 아닌 goodput과 tail을 본다",
+    body: "protocol·copy·queue·retransmission을 지난 완료 시간, CPU/GPU wait와 전달된 payload를 측정합니다.",
+  },
+  {
+    label: "leaf-spine capacity는 path와 oversubscription으로 계산한다",
+    body: "host port 합계, uplink, ECMP 분산과 한 link 장애 뒤 남는 경로를 함께 확인합니다.",
+  },
+  {
+    label: "RDMA는 data path를 줄이지만 control·recovery는 남는다",
+    body: "등록된 memory와 NIC DMA를 사용하면서도 queue 설정, completion, congestion과 오류 복구는 software가 운영합니다.",
+  },
+  {
+    label: "fabric은 실제 workload와 장애 상태로 승인한다",
+    body: "socket Ethernet·RoCE·InfiniBand를 같은 topology와 collective 조건에서 비교하고 counter와 복구 시간까지 저장합니다.",
+  },
 ];

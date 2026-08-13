@@ -1,5 +1,5 @@
-import CodePanel from '@/components/ui/code-panel';
-import { CitationBlock } from '@/components/ui/citation';
+import CodePanel from "@/components/ui/code-panel";
+import { CitationBlock } from "@/components/ui/citation";
 
 const msmApiCode = `// ICICLE MSM C++ API
 #include "icicle/msm.h"
@@ -53,41 +53,74 @@ export default function CudaBackend() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           ICICLE의 CUDA 백엔드는 C++ 템플릿으로 커브를 추상화한다.
-          <code>scalar_t</code>와 <code>affine_t</code>를 템플릿 파라미터로 받아,
-          하나의 MSM 커널 코드가 BN254, BLS12-381 등 모든 커브에서 동작한다.
+          <code>scalar_t</code>와 <code>affine_t</code>를 템플릿 파라미터로
+          받아, 하나의 MSM 커널 코드가 BN254, BLS12-381 등 모든 커브에서
+          동작한다.
         </p>
         <p>
-          필드 연산(Montgomery 곱셈, 덧셈, 역원)은 <code>__device__</code> 함수로 구현되어
-          커널 내부에서 인라인된다. 256비트 정수는 4개의 <code>uint64_t</code> 림으로 표현한다.
+          필드 연산(Montgomery 곱셈, 덧셈, 역원)은 <code>__device__</code>{" "}
+          함수로 구현되어 커널 내부에서 인라인된다. 256비트 정수는 4개의{" "}
+          <code>uint64_t</code> 림으로 표현한다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">MSM API</h3>
         <p>
           <code>msm::msm()</code> 함수 하나로 GPU MSM을 실행한다.
-          <code>MSMConfig</code>의 <code>c</code> 값이 버킷 윈도우 크기를 결정하고,
+          <code>MSMConfig</code>의 <code>c</code> 값이 버킷 윈도우 크기를
+          결정하고,
           <code>precompute_factor</code>가 사전 계산 테이블 크기를 조절한다.
         </p>
-        <CodePanel title="ICICLE MSM C++ API" code={msmApiCode} annotations={[
-          { lines: [8, 13], color: 'sky', note: 'MSMConfig: 윈도우, 사전계산, 배치' },
-          { lines: [16, 23], color: 'emerald', note: 'msm() 호출: scalars x points' },
-        ]} />
+        <CodePanel
+          title="ICICLE MSM C++ API"
+          code={msmApiCode}
+          annotations={[
+            {
+              lines: [8, 13],
+              color: "sky",
+              note: "MSMConfig: 윈도우, 사전계산, 배치",
+            },
+            {
+              lines: [16, 23],
+              color: "emerald",
+              note: "msm() 호출: scalars x points",
+            },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">NTT API</h3>
         <p>
           NTT는 <code>ntt::ntt()</code>로 실행한다.
-          <code>Ordering</code>으로 비트 리버스 순서를, <code>coset_gen</code>으로 coset NTT를 설정한다.<br />
+          <code>Ordering</code>으로 비트 리버스 순서를, <code>coset_gen</code>
+          으로 coset NTT를 설정한다.
+          <br />
           Forward/Inverse 방향은 <code>NTTDir</code> 열거형으로 지정한다.
         </p>
-        <CodePanel title="ICICLE NTT C++ API" code={nttApiCode} annotations={[
-          { lines: [7, 11], color: 'sky', note: 'NTTConfig: ordering, coset, device' },
-          { lines: [14, 20], color: 'emerald', note: 'ntt() 호출: Forward / Inverse' },
-        ]} />
-        <CitationBlock source="ICICLE Documentation — CUDA Backend" citeKey={2} type="code"
-          href="https://dev.ingonyama.com/icicle/overview">
+        <CodePanel
+          title="ICICLE NTT C++ API"
+          code={nttApiCode}
+          annotations={[
+            {
+              lines: [7, 11],
+              color: "sky",
+              note: "NTTConfig: ordering, coset, device",
+            },
+            {
+              lines: [14, 20],
+              color: "emerald",
+              note: "ntt() 호출: Forward / Inverse",
+            },
+          ]}
+        />
+        <CitationBlock
+          source="ICICLE Documentation — CUDA Backend"
+          citeKey={2}
+          type="code"
+          href="https://dev.ingonyama.com/icicle/overview"
+        >
           <p className="text-xs">
             ICICLE v3부터 백엔드 디스패처가 런타임에 CUDA/CPU를 선택한다.
-            <code>icicle_set_device("CUDA", 0)</code>로 GPU를 지정하거나,
-            CUDA가 없으면 자동으로 CPU 폴백된다.
+            <code>icicle_set_device("CUDA", 0)</code>로 GPU를 지정하거나, CUDA가
+            없으면 자동으로 CPU 폴백된다.
           </p>
         </CitationBlock>
       </div>

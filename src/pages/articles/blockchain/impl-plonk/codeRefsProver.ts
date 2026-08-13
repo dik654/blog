@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const proverCodeRefs: Record<string, CodeRef> = {
-  'prover-rounds': {
-    path: 'plonk/prover.rs — 5-round Fiat-Shamir prover',
-    lang: 'rust',
+  "prover-rounds": {
+    path: "plonk/prover.rs — 5-round Fiat-Shamir prover",
+    lang: "rust",
     highlight: [1, 38],
-    desc: 'PLONK 5라운드 prover 전체 흐름.\nwire commit → Z → quotient T → eval → opening.',
+    desc: "PLONK 5라운드 prover 전체 흐름.\nwire commit → Z → quotient T → eval → opening.",
     code: `pub fn prove(srs: &SRS, cs: &PlonkConstraintSystem,
     domain: &Domain) -> PlonkProof {
     let selectors = cs.selector_polynomials(domain);
@@ -42,17 +42,33 @@ export const proverCodeRefs: Record<string, CodeRef> = {
         w_zeta, w_zeta_omega }
 }`,
     annotations: [
-      { lines: [8, 11], color: 'sky', note: 'Round 1 — wire 다항식을 KZG commit → 3개 G1 점' },
-      { lines: [14, 17], color: 'emerald', note: 'Round 2 — copy constraint의 grand product Z(x) commit' },
-      { lines: [19, 21], color: 'amber', note: 'Round 3 — 모든 제약을 합산 → Z_H로 나눠 T(x) 생성' },
-      { lines: [27, 29], color: 'violet', note: 'Round 5 — batch KZG opening 2개 (zeta, zeta*omega)' },
+      {
+        lines: [8, 11],
+        color: "sky",
+        note: "Round 1 — wire 다항식을 KZG commit → 3개 G1 점",
+      },
+      {
+        lines: [14, 17],
+        color: "emerald",
+        note: "Round 2 — copy constraint의 grand product Z(x) commit",
+      },
+      {
+        lines: [19, 21],
+        color: "amber",
+        note: "Round 3 — 모든 제약을 합산 → Z_H로 나눠 T(x) 생성",
+      },
+      {
+        lines: [27, 29],
+        color: "violet",
+        note: "Round 5 — batch KZG opening 2개 (zeta, zeta*omega)",
+      },
     ],
   },
-  'prover-verify': {
-    path: 'plonk/prover.rs — verifier (batched pairing)',
-    lang: 'rust',
+  "prover-verify": {
+    path: "plonk/prover.rs — verifier (batched pairing)",
+    lang: "rust",
     highlight: [1, 28],
-    desc: 'PLONK 검증.\nFiat-Shamir 재현 → linearization commitment → pairing.',
+    desc: "PLONK 검증.\nFiat-Shamir 재현 → linearization commitment → pairing.",
     code: `pub fn verify(srs: &SRS, vk: &VerifyingKey,
     proof: &PlonkProof, _public_inputs: &[Fr]) -> bool {
     // Step 1: Fiat-Shamir 챌린지 재현
@@ -79,10 +95,26 @@ export const proverCodeRefs: Record<string, CodeRef> = {
     lhs == rhs
 }`,
     annotations: [
-      { lines: [3, 4], color: 'sky', note: 'Fiat-Shamir — prover와 동일한 순서로 챌린지 재현' },
-      { lines: [10, 16], color: 'emerald', note: '선형화 — 다항식곱을 scalar*commitment로 분해' },
-      { lines: [18, 19], color: 'amber', note: '배치 결합 — nu 거듭제곱으로 6개 다항식을 하나로' },
-      { lines: [22, 24], color: 'violet', note: '최종 검증 — pairing 2번으로 모든 관계 확인' },
+      {
+        lines: [3, 4],
+        color: "sky",
+        note: "Fiat-Shamir — prover와 동일한 순서로 챌린지 재현",
+      },
+      {
+        lines: [10, 16],
+        color: "emerald",
+        note: "선형화 — 다항식곱을 scalar*commitment로 분해",
+      },
+      {
+        lines: [18, 19],
+        color: "amber",
+        note: "배치 결합 — nu 거듭제곱으로 6개 다항식을 하나로",
+      },
+      {
+        lines: [22, 24],
+        color: "violet",
+        note: "최종 검증 — pairing 2번으로 모든 관계 확인",
+      },
     ],
   },
 };

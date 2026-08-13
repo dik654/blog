@@ -13,8 +13,16 @@ walrus-service/       // 클라이언트 + 저장 노드 서비스
 walrus-sui/           // Sui 온체인 레지스트리 연동`;
 
 export const CRATE_ANNOTATIONS = [
-  { lines: [2, 11] as [number, number], color: 'sky' as const, note: '핵심 인코딩 크레이트' },
-  { lines: [12, 13] as [number, number], color: 'emerald' as const, note: '서비스 & Sui 온체인' },
+  {
+    lines: [2, 11] as [number, number],
+    color: "sky" as const,
+    note: "핵심 인코딩 크레이트",
+  },
+  {
+    lines: [12, 13] as [number, number],
+    color: "emerald" as const,
+    note: "서비스 & Sui 온체인",
+  },
 ];
 
 export const BFT_CODE = `// walrus-core/src/bft.rs
@@ -43,8 +51,16 @@ pub fn source_symbols_for_n_shards(n: NonZeroU16) -> (NonZeroU16, NonZeroU16) {
 // n=100 시: primary_k=34, secondary_k=67, n_shards=100`;
 
 export const BFT_ANNOTATIONS = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '비잔틴 장애 임계값' },
-  { lines: [14, 16] as [number, number], color: 'emerald' as const, note: '인코딩 파라미터 도출' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "비잔틴 장애 임계값",
+  },
+  {
+    lines: [14, 16] as [number, number],
+    color: "emerald" as const,
+    note: "인코딩 파라미터 도출",
+  },
 ];
 
 export const REDSTUFF_CODE = `// 2D 메시지 행렬: primary_k × secondary_k 심볼
@@ -67,7 +83,19 @@ export const REDSTUFF_CODE = `// 2D 메시지 행렬: primary_k × secondary_k �
 //   Secondary 슬라이버 복구: primary_k  = n-2f 개 심볼 필요`;
 
 export const REDSTUFF_ANNOTATIONS = [
-  { lines: [10, 11] as [number, number], color: 'sky' as const, note: 'RS 인코딩 방향' },
-  { lines: [13, 14] as [number, number], color: 'emerald' as const, note: '교차 보유 구조' },
-  { lines: [16, 18] as [number, number], color: 'amber' as const, note: '복구 임계값' },
+  {
+    lines: [10, 11] as [number, number],
+    color: "sky" as const,
+    note: "RS 인코딩 방향",
+  },
+  {
+    lines: [13, 14] as [number, number],
+    color: "emerald" as const,
+    note: "교차 보유 구조",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "amber" as const,
+    note: "복구 임계값",
+  },
 ];

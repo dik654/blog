@@ -1,7 +1,7 @@
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
-import KeyDerivViz from './viz/KeyDerivViz';
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
+import KeyDerivViz from "./viz/KeyDerivViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -11,13 +11,20 @@ export default function KeyDerivation({ onCodeRef }: Props) {
   return (
     <section id="key-derivation" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Seal Key 파생 (EGETKEY)</h2>
-      <div className="not-prose mb-8"><KeyDerivViz /></div>
+      <div className="not-prose mb-8">
+        <KeyDerivViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <h3 className="text-xl font-semibold mt-6 mb-3">Root Seal Key</h3>
         <p>
-          모든 SGX CPU에 제조 시 <strong>퓨즈(e-fuse)</strong>에 주입된 <strong>Root Seal Key</strong><br />
-          소프트웨어로 직접 읽기 불가 — EGETKEY 명령어로만 <strong>파생</strong> 가능<br />
+          모든 SGX CPU에 제조 시 <strong>퓨즈(e-fuse)</strong>에 주입된{" "}
+          <strong>Root Seal Key</strong>
+          <br />
+          소프트웨어로 직접 읽기 불가 — EGETKEY 명령어로만 <strong>
+            파생
+          </strong>{" "}
+          가능
+          <br />
           <strong>Per-CPU 고유</strong> — 각 칩마다 다른 값<br />
           <strong>Tamper-resistant</strong> — 물리 공격 없이는 추출 불가
         </p>
@@ -106,7 +113,9 @@ struct sgx_key_request {
 // 각 enclave는 자기 SEAL_KEY만 얻을 수 있음
 // Provision Enclave는 특권 Intel 서명 필요`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">CPUSVN — TCB 버전 바인딩</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          CPUSVN — TCB 버전 바인딩
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// CPUSVN: CPU의 Security Version Number
 // - 16 bytes vector
 // - microcode, TCB 업데이트 시 증가
@@ -184,33 +193,44 @@ sgx_get_key(&req, &seal_key);
 // seal_key를 AES-GCM 키로 사용`}</pre>
 
         <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton onClick={() => onCodeRef('seal-key-derivation', codeRefs['seal-key-derivation'])} />
-          <span className="text-[10px] text-muted-foreground self-center">EGETKEY + Key Derivation Tree</span>
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef("seal-key-derivation", codeRefs["seal-key-derivation"])
+            }
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            EGETKEY + Key Derivation Tree
+          </span>
         </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
           <p className="font-semibold mb-2">인사이트: Root Key의 위협 모델</p>
           <p>
-            <strong>Intel이 Root Key를 모르는가?</strong><br />
-            - 공식 주장: per-chip random, factory 때만 alive<br />
-            - 현실: Intel이 "generating entity"이므로 이론적으로 알 수 있음<br />
-            - 전문가 의견: backup이 존재할 가능성 (상용화 요구)
+            <strong>Intel이 Root Key를 모르는가?</strong>
+            <br />
+            - 공식 주장: per-chip random, factory 때만 alive
+            <br />
+            - 현실: Intel이 "generating entity"이므로 이론적으로 알 수 있음
+            <br />- 전문가 의견: backup이 존재할 가능성 (상용화 요구)
           </p>
           <p className="mt-2">
             <strong>신뢰 가정</strong>:<br />
-            - Intel이 Root Key 누출 시 대형 보안 사고<br />
-            - 따라서 Intel은 극도로 보호 (HSM, offline 보관)<br />
-            - 하지만 "zero trust in Intel"은 불가능<br />
-            - 이것이 DICE(Device Identifier Composition Engine) 등 대안 연구 동기
+            - Intel이 Root Key 누출 시 대형 보안 사고
+            <br />
+            - 따라서 Intel은 극도로 보호 (HSM, offline 보관)
+            <br />
+            - 하지만 "zero trust in Intel"은 불가능
+            <br />- 이것이 DICE(Device Identifier Composition Engine) 등 대안
+            연구 동기
           </p>
           <p className="mt-2">
             <strong>대안 접근</strong>:<br />
-            - Multi-party computation으로 root key 생성 (Intel + OEM)<br />
-            - Formal Key Attestation (AMD VCEK와 유사)<br />
-            - 현재는 Intel "trusted by design"
+            - Multi-party computation으로 root key 생성 (Intel + OEM)
+            <br />
+            - Formal Key Attestation (AMD VCEK와 유사)
+            <br />- 현재는 Intel "trusted by design"
           </p>
         </div>
-
       </div>
     </section>
   );

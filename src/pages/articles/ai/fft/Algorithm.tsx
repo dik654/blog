@@ -1,76 +1,86 @@
-import Math from '@/components/ui/math';
-import CooleyTukeyViz from './viz/CooleyTukeyViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import FFTReuseViz from "./viz/FFTReuseViz";
 
 export default function Algorithm() {
   return (
     <section id="algorithm" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Cooley-Tukey 알고리즘</h2>
-      <CooleyTukeyViz />
+      <h2 className="mb-6 text-2xl font-bold">Cooley–Tukey는 같은 sub-DFT를 두 output에 재사용한다</h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>DFT의 비효율성</h3>
         <p>
-          DFT를 정의대로 계산하면 N개의 출력 각각에 N번의 곱셈-덧셈 → 총 <Math>{'O(N^2)'}</Math><br />
-          N = 1,000,000이면 약 10<sup>12</sup>번 연산 — 실시간 오디오 처리에서는 치명적
+          Direct DFT는 N개의 k마다 N개 sample과 basis를 다시 곱해 O(N²) work를
+          만든다. 그러나 roots of unity는 주기성과 대칭성을 가지므로 N-point
+          transform을 factor N=N₁N₂에 맞춰 더 작은 transform으로 나눌 수 있다.
+          가장 이해하기 쉬운 radix-2 decimation-in-time은 input index를 even과
+          odd로 분리한다.
         </p>
+      </div>
 
-        <h3>핵심 관찰: 홀짝 분할</h3>
-        <p>
-          DFT 합을 짝수 인덱스와 홀수 인덱스로 나누면:
-          <Math display>{'X_k = \\underbrace{\\sum_{m=0}^{N/2-1} x_{2m} \\, \\omega_N^{2mk}}_{\\text{짝수 항 } E_k} + \\omega_N^k \\underbrace{\\sum_{m=0}^{N/2-1} x_{2m+1} \\, \\omega_N^{2mk}}_{\\text{홀수 항 } O_k}'}</Math>
-          여기서 <Math>{'\\omega_N = e^{-2\\pi i/N}'}</Math> (N차 단위근)<br />
-          <Math>{'\\omega_N^{2mk} = \\omega_{N/2}^{mk}'}</Math>이므로 각 부분은 길이 N/2의 DFT
-        </p>
+      <ExplainedFormula
+        question="N-point DFT를 두 개의 N/2-point DFT로 나눠도 같은 X[k]를 얻을 수 있을까?"
+        idea={<>Input index n을 2m과 2m+1로 나눕니다. N-point root를 제곱하면 N/2-point root가 되므로 두 합은 각각 even·odd sample의 N/2-point DFT가 되고, odd 결과에 twiddle factor만 곱해 다시 합칠 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}\omega_N&=e^{-i2\pi/N}\\[2pt]E[k]&=\sum_{m=0}^{N/2-1}x[2m]\omega_{N/2}^{mk}\\[2pt]O[k]&=\sum_{m=0}^{N/2-1}x[2m+1]\omega_{N/2}^{mk}\\[3pt]X[k]&=E[k]+\omega_N^kO[k]\end{aligned}`}
+        terms={[
+          { symbol: "\\omega_N", name: "primitive root of unity", description: "N번 곱하면 1로 돌아오는 한 bin의 complex rotation입니다." },
+          { symbol: "E[k]", name: "even sub-DFT", description: "x[0], x[2], …로 만든 길이 N/2 transform입니다." },
+          { symbol: "O[k]", name: "odd sub-DFT", description: "x[1], x[3], …로 만든 길이 N/2 transform입니다." },
+          { symbol: "\\omega_N^k", name: "twiddle factor", description: "Odd subproblem의 phase를 N-point output coordinate에 맞춥니다." },
+        ]}
+        assumptions={["N이 짝수입니다. 끝까지 radix-2로 재귀하려면 N은 2의 거듭제곱입니다.", "Decimation-in-time 형태이며 decimation-in-frequency는 다른 dataflow로 같은 factorization을 구현합니다."]}
+        interpretation="절약은 frequency sample을 버려서가 아니라 동일한 E[k], O[k]를 상반부 output에서도 재사용해 생깁니다."
+      />
 
-        <h3>Butterfly 연산</h3>
-        <p>
-          단위근의 대칭성 <Math>{'\\omega_N^{k+N/2} = -\\omega_N^k'}</Math>를 활용하면:
-          <Math display>{'X_k = E_k + \\omega_N^k \\cdot O_k'}</Math>
-          <Math display>{'X_{k+N/2} = E_k - \\omega_N^k \\cdot O_k'}</Math>
-          하나의 <Math>{'E_k'}</Math>와 <Math>{'O_k'}</Math> 쌍으로 두 개의 출력을 동시에 계산<br />
-          이 "더하기/빼기" 패턴이 나비 날개 모양이라 butterfly라 부른다
-        </p>
+      <ExplainedFormula
+        question="같은 E[k]와 O[k]로 나머지 N/2개 output도 어떻게 얻을까?"
+        idea={<>N-point root의 half-period symmetry를 쓰면 upper-half output은 twiddle 항의 부호만 바뀝니다. 두 output을 더하기와 빼기로 묶은 이 계산이 butterfly입니다.</>}
+        formula={String.raw`\begin{aligned}X[k]&=E[k]+\omega_N^kO[k]\\[3pt]X[k+N/2]&=E[k]-\omega_N^kO[k]\end{aligned}`}
+        terms={[
+          { symbol: "X[k]", name: "lower-half output", description: "Even과 phase-aligned odd 결과를 더합니다." },
+          { symbol: "X[k+N/2]", name: "upper-half output", description: "같은 두 intermediate를 재사용하되 odd term을 뺍니다." },
+          { symbol: "E[k],O[k]", name: "shared intermediates", description: "두 output pair가 한 번 계산한 값을 공유합니다." },
+        ]}
+        assumptions={["k=0,…,N/2−1 범위입니다.", "Complex multiplication의 실제 FLOP 수와 memory access는 구현에 따라 달라집니다."]}
+        interpretation="Butterfly diagram의 핵심은 선 모양이 아니라 두 input으로 두 output을 만드는 shared computation이다. In-place 구현은 이 pair를 같은 buffer에 덮어쓸 수 있습니다."
+      />
 
-        <h3>Twiddle Factor</h3>
-        <p>
-          butterfly에서 홀수 항에 곱하는 <Math>{'\\omega_N^k = e^{-2\\pi ik/N}'}</Math>를 twiddle factor라 한다<br />
-          "비틀기 인자" — 홀수 부분 DFT의 결과를 올바른 위상으로 회전시키는 역할<br />
-          N이 고정이면 twiddle factor를 미리 계산해두고 테이블 참조 가능
-        </p>
+      <FFTReuseViz />
 
-        <h3>재귀 구조와 복잡도</h3>
-        <p>
-          길이 N의 DFT → 길이 N/2 DFT 2개 + N번의 butterfly<br />
-          <Math display>{'T(N) = 2T(N/2) + O(N) \\implies T(N) = O(N \\log N)'}</Math>
-          N = 1,000,000일 때 <Math>{'N^2 = 10^{12}'}</Math> vs <Math>{'N\\log N \\approx 2 \\times 10^7'}</Math> — 약 5만 배 차이
-        </p>
+      <ExplainedFormula
+        question="왜 radix-2 FFT의 asymptotic work가 O(N log N)인가?"
+        idea={<>각 level에서 두 subproblem의 전체 크기는 여전히 N이고 butterfly combine도 O(N)입니다. Problem size를 절반으로 줄이면 level이 log₂N개 생깁니다.</>}
+        formula={String.raw`\begin{aligned}T(N)&=2T(N/2)+cN\\[3pt]T(N)&=\Theta(N\log_2N)\end{aligned}`}
+        terms={[
+          { symbol: "2T(N/2)", name: "recursive transforms", description: "Even과 odd sequence의 두 sub-DFT입니다." },
+          { symbol: "cN", name: "combine work", description: "한 level의 twiddle multiplication과 butterfly 작업입니다." },
+          { symbol: "\\log_2N", name: "recursion depth", description: "N을 1까지 절반으로 나눈 level 수입니다." },
+        ]}
+        assumptions={["Arithmetic operation count에 대한 asymptotic bound입니다.", "실제 latency는 memory layout, vectorization, plan creation과 transform batch에 좌우됩니다."]}
+        interpretation="N=2²⁰이면 direct DFT의 scale은 약 2⁴⁰인 반면 radix-2 work scale은 20·2²⁰이다. 다만 작은 N에서는 constant와 data movement가 더 중요합니다."
+      />
 
-        <h3>8-point FFT 수치 예시</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Bit reversal과 implementation locality</h3>
         <p>
-          입력: <Math>{'x = [1, 1, 1, 1, 0, 0, 0, 0]'}</Math> (처음 4개가 1인 사각 펄스)
+          Repeated even/odd split은 input index의 binary digit 순서를 뒤집은 배치를
+          만든다. Iterative in-place FFT는 bit-reversal permutation을 먼저 하거나
+          stage ordering에 흡수한다. 동일한 O(N log N) algorithm도 contiguous access,
+          SIMD width, shared memory bank conflict와 twiddle layout에 따라 실제
+          성능이 크게 달라진다.
         </p>
+        <h3>Radix-2가 FFT의 전부는 아니다</h3>
         <p>
-          <strong>1단계 — 길이 4 DFT 2개로 분할</strong><br />
-          짝수 인덱스: <Math>{'[x_0, x_2, x_4, x_6] = [1, 1, 0, 0]'}</Math><br />
-          홀수 인덱스: <Math>{'[x_1, x_3, x_5, x_7] = [1, 1, 0, 0]'}</Math>
+          Cooley–Tukey는 composite N을 factorization하는 일반 원리다. FFTW와
+          cuFFT 같은 library는 N의 prime factors와 device에 따라 mixed-radix plan을
+          선택하며, prime length에는 Rader 또는 Bluestein algorithm을 사용할 수
+          있다. Zero-padding으로 power-of-two를 만드는 선택은 편리하지만 memory와
+          grid가 함께 바뀌므로 실제 benchmark로 결정한다.
         </p>
-        <p>
-          <strong>2단계 — 다시 길이 2 DFT로 분할 (재귀)</strong><br />
-          각 길이 4 DFT가 길이 2 DFT 2개로 나뉘어 총 4개의 길이 2 DFT<br />
-          길이 2 DFT: <Math>{'[a, b] \\to [a+b, \\, a-b]'}</Math>
-        </p>
-        <p>
-          <strong>3단계 — butterfly로 합산</strong><br />
-          twiddle factor <Math>{'\\omega_8^k = e^{-2\\pi ik/8}'}</Math>를 곱해가며 역으로 조립<br />
-          최종 결과: <Math>{'X = [4, \\; 1{-}2.41i, \\; 0, \\; 1{-}0.41i, \\; 0, \\; 1{+}0.41i, \\; 0, \\; 1{+}2.41i]'}</Math><br />
-          <Math>{'|X_0| = 4'}</Math>는 DC 성분(평균값), 나머지는 고주파 성분의 크기와 위상
-        </p>
-
-        <h3>Radix-2 제약</h3>
-        <p>
-          Cooley-Tukey radix-2는 N이 2의 거듭제곱일 때만 동작<br />
-          실전에서는 입력을 0으로 패딩(zero-padding)하여 가장 가까운 2의 거듭제곱으로 맞춘다<br />
-          mixed-radix FFT는 임의의 N을 소인수 분해하여 처리 — FFTW, cuFFT 등 라이브러리가 이를 구현
-        </p>
+      </div>
+      <div id="paper-cooley-tukey" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
+        <p className="text-xs font-bold text-primary">논문 읽기 · DFT 계산의 factorization</p>
+        <p className="mt-2 text-sm font-semibold">An Algorithm for the Machine Calculation of Complex Fourier Series</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Composite sample count의 Fourier calculation을 작은 transform으로 나누고 intermediate를 재사용해 operation count를 줄입니다. 현대 FFT library 전체의 plan·radix·hardware 최적화를 이 논문 하나가 설명하거나 모든 N에서 radix-2가 최선이라는 뜻은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://research.ibm.com/publications/an-algorithm-for-the-machine-calculation-of-complex-fourier-series" target="_blank" rel="noreferrer">원 논문과 계산량 유도 보기</a>
       </div>
     </section>
   );

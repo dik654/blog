@@ -1,8 +1,12 @@
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Talk({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function Talk({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="talk" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">TALKREQ / TALKRESP</h2>
@@ -15,34 +19,56 @@ export default function Talk({ onCodeRef }: { onCodeRef: (key: string, ref: Code
         <h3>메시지 구조</h3>
         <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
           {[
-            { name: 'TALKREQ', fields: 'ReqID, Protocol string, Message []byte' },
-            { name: 'TALKRESP', fields: 'ReqID, Message []byte' },
-          ].map(m => (
-            <div key={m.name} className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4">
-              <p className="font-mono font-bold text-sm text-violet-400">{m.name}</p>
-              <p className="text-xs text-foreground/60 mt-1 font-mono">{m.fields}</p>
+            {
+              name: "TALKREQ",
+              fields: "ReqID, Protocol string, Message []byte",
+            },
+            { name: "TALKRESP", fields: "ReqID, Message []byte" },
+          ].map((m) => (
+            <div
+              key={m.name}
+              className="rounded-lg border border-violet-500/20 bg-violet-500/5 p-4"
+            >
+              <p className="font-mono font-bold text-sm text-violet-400">
+                {m.name}
+              </p>
+              <p className="text-xs text-foreground/60 mt-1 font-mono">
+                {m.fields}
+              </p>
             </div>
           ))}
         </div>
         <p>
-          <code>Protocol</code> 필드는 문자열 식별자. 핸들러 미등록 시 빈 <code>TALKRESP</code> 반환.
+          <code>Protocol</code> 필드는 문자열 식별자. 핸들러 미등록 시 빈{" "}
+          <code>TALKRESP</code> 반환.
         </p>
 
         <div className="not-prose flex flex-wrap gap-2 my-4">
-          <CodeViewButton onClick={() => onCodeRef('handle-unknown', codeRefs['handle-unknown'])} />
-          <span className="text-[10px] text-muted-foreground self-center">v5_udp.go — TalkRequest도 동일한 세션 핸드셰이크 위에서 동작</span>
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef("handle-unknown", codeRefs["handle-unknown"])
+            }
+          />
+          <span className="text-[10px] text-muted-foreground self-center">
+            v5_udp.go — TalkRequest도 동일한 세션 핸드셰이크 위에서 동작
+          </span>
         </div>
 
         <h3>Portal Network 활용</h3>
         <p>
-          Portal Network는 <code>"portal"</code> 프로토콜 ID로 TALKREQ를 사용한다.<br />
-          경량 클라이언트가 상태/히스토리/비콘 데이터에 TCP 없이 접근할 수 있다.<br />
+          Portal Network는 <code>"portal"</code> 프로토콜 ID로 TALKREQ를
+          사용한다.
+          <br />
+          경량 클라이언트가 상태/히스토리/비콘 데이터에 TCP 없이 접근할 수 있다.
+          <br />
           방화벽 환경에서도 유리하다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">TALKREQ 확장 활용 사례</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          TALKREQ 확장 활용 사례
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// TALKREQ/TALKRESP 응용 프로토콜
+          {`// TALKREQ/TALKRESP 응용 프로토콜
 //
 // discv5는 "멀티플렉싱" 가능한 UDP 채널:
 //   하나의 discv5 연결 위에서

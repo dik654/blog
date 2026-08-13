@@ -1,4 +1,4 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 const MANIFEST_FLOW = `// vmm/src/main_service.rs — VM 생성 전체 흐름
 async fn create_vm(request: VmConfiguration) -> Result<Id> {
@@ -29,19 +29,30 @@ async fn create_vm(request: VmConfiguration) -> Result<Id> {
 }`;
 
 export const manifestCodeRefs: Record<string, CodeRef> = {
-  'manifest-flow': {
-    path: 'dstack/vmm/src/main_service.rs',
+  "manifest-flow": {
+    path: "dstack/vmm/src/main_service.rs",
     code: MANIFEST_FLOW,
     highlight: [2, 27],
-    lang: 'rust',
+    lang: "rust",
     annotations: [
-      { lines: [3, 5], color: 'sky', note: 'Docker Compose → App ID 결정 (SHA-256 해시)' },
-      { lines: [8, 8], color: 'emerald', note: 'vsock CID 동적 할당' },
-      { lines: [19, 20], color: 'amber', note: '작업 디렉토리 준비 (qcow2, shared 볼륨)' },
-      { lines: [23, 25], color: 'violet', note: 'QEMU 프로세스 fork로 TD 시작' },
+      {
+        lines: [3, 5],
+        color: "sky",
+        note: "Docker Compose → App ID 결정 (SHA-256 해시)",
+      },
+      { lines: [8, 8], color: "emerald", note: "vsock CID 동적 할당" },
+      {
+        lines: [19, 20],
+        color: "amber",
+        note: "작업 디렉토리 준비 (qcow2, shared 볼륨)",
+      },
+      {
+        lines: [23, 25],
+        color: "violet",
+        note: "QEMU 프로세스 fork로 TD 시작",
+      },
     ],
-    desc:
-`VM 생성의 전체 흐름입니다. Docker Compose 파일의 SHA-256 해시가 App ID가 됩니다.
+    desc: `VM 생성의 전체 흐름입니다. Docker Compose 파일의 SHA-256 해시가 App ID가 됩니다.
 
 같은 Compose 파일로 생성된 VM은 항상 같은 App ID를 가지므로,
 KMS에서 동일한 키를 받을 수 있습니다 (결정론적 키 유도).`,

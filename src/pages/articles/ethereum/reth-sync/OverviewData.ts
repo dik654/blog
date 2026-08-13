@@ -9,47 +9,67 @@ export interface SyncMode {
 
 export const SYNC_MODES: SyncMode[] = [
   {
-    id: 'full',
-    label: 'Full Sync',
-    role: '제네시스부터 전체 검증',
+    id: "pipeline",
+    label: "Staged Pipeline",
+    role: "큰 역사 범위를 단계별 처리",
     details:
-      'Pipeline에 등록된 Stage를 순서대로 실행한다. Headers → Bodies → Execution → Merkle 순으로 tip까지 진행. ' +
-      '모든 블록을 직접 실행하므로 Archive 노드에 적합.',
-    why: '왜 느려도 쓰나? 모든 상태 전이를 직접 검증하므로 신뢰가 필요 없다. 보안이 중요한 인프라에 필수.',
-    color: '#6366f1',
+      "Headers, Bodies, Sender Recovery, Execution, hashing, Merkle, history index 등 현재 DefaultStages를 순서대로 실행한다. " +
+      "각 stage는 checkpoint와 unwind 경계를 가진다.",
+    why: "긴 범위는 block 하나씩 tree에 넣는 것보다 같은 종류의 작업을 batch로 처리하는 편이 효율적이다.",
+    color: "#6366f1",
   },
   {
-    id: 'snap',
-    label: 'Snap Sync',
-    role: '최신 상태 직접 다운로드',
+    id: "backfill",
+    label: "Backfill Sync",
+    role: "큰 실행 gap에 Pipeline 위임",
     details:
-      '전체 블록을 재실행하지 않고 피어에서 최신 상태를 직접 다운로드한다. ' +
-      'Merkle proof로 각 청크의 무결성을 검증하여 보안성은 Full Sync와 동일.',
-    why: '왜 빠른가? 중간 상태를 건너뛴다. 2억 블록 실행 대신 현재 상태만 받으므로 수일 → 수시간.',
-    color: '#0ea5e9',
+      "Engine tree가 로컬 head와 목표 사이의 큰 gap을 발견하면 PipelineSync를 시작한다. " +
+      "완료될 때까지 backfill이 canonical 전진을 맡고, 끝나면 live 경로로 소유권을 돌려준다.",
+    why: "Backfill은 별도 데이터 포맷이 아니라 긴 범위를 처리하는 orchestration mode다.",
+    color: "#0ea5e9",
   },
   {
-    id: 'live',
-    label: 'Live Sync',
-    role: '실시간 블록 추적',
+    id: "live",
+    label: "Live Sync",
+    role: "실시간 블록 추적",
     details:
-      '최신 블록에 도달하면 자동 전환된다. BlockchainTree가 새 블록을 수신하고, ' +
-      'reorg(체인 재구성) 발생 시 공통 조상까지 되감아 새 체인으로 전환.',
-    why: '왜 별도 모드? Pipeline은 배치 처리에 최적화되어 있어, 단일 블록 처리에는 오버헤드가 크다.',
-    color: '#10b981',
+      "Head 근처에서는 Engine API 요청과 on-demand parent download로 새 block을 검증·실행한다. " +
+      "forkchoiceUpdated가 canonical/safe/finalized 경계를 갱신하고 persistence가 이를 디스크에 반영한다.",
+    why: "작은 gap과 reorg는 tree 형태로 처리하고, 범위가 커질 때만 backfill pipeline으로 전환한다.",
+    color: "#10b981",
   },
 ];
 
 export interface SyncComparison {
   aspect: string;
-  full: string;
-  snap: string;
+  pipeline: string;
+  backfill: string;
   live: string;
 }
 
 export const SYNC_COMPARISONS: SyncComparison[] = [
-  { aspect: '소요 시간', full: '수일', snap: '수시간', live: '실시간' },
-  { aspect: '디스크 사용', full: '~2TB (Archive)', snap: '~500GB', live: '증분' },
-  { aspect: '검증 방식', full: '모든 블록 실행', snap: 'Merkle proof', live: '단일 블록 실행' },
-  { aspect: '사용 시점', full: '초기 동기화', snap: '초기 동기화', live: '동기화 완료 후' },
+  {
+    aspect: "역할",
+    pipeline: "Stage별 range 처리",
+    backfill: "Pipeline 실행 조정",
+    live: "Head·짧은 gap 처리",
+  },
+  {
+    aspect: "입력",
+    pipeline: "ERA1 또는 P2P blocks",
+    backfill: "Engine이 정한 target",
+    live: "Engine API·P2P parent",
+  },
+  {
+    aspect: "상태 전진",
+    pipeline: "Stage checkpoint",
+    backfill: "Pipeline 소유권",
+    live: "Engine tree + persistence",
+  },
+  {
+    aspect: "오류 복구",
+    pipeline: "Stage unwind",
+    backfill: "target 재설정·재실행",
+    live: "reorg·invalid branch 제거",
+  },
 ];

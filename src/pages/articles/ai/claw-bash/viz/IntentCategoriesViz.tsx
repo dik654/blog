@@ -1,47 +1,45 @@
+import { BashFrame, BashRule, BashSteps } from "./BashVizPrimitives";
+
 export default function IntentCategoriesViz() {
-  const categories = [
-    { name: 'Read', cmds: 'ls, cat, grep, find', color: '#10b981' },
-    { name: 'Write', cmds: 'mv, cp, mkdir, touch', color: '#3b82f6' },
-    { name: 'Destructive', cmds: 'rm, shred, dd, mkfs', color: '#ef4444' },
-    { name: 'Network', cmds: 'curl, wget, ssh, nc', color: '#8b5cf6' },
-    { name: 'Execute', cmds: 'python, node, bash', color: '#f59e0b' },
-    { name: 'Package', cmds: 'apt, npm, cargo', color: '#06b6d4' },
-    { name: 'System', cmds: 'sudo, systemctl', color: '#ec4899' },
-    { name: 'Unknown', cmds: '(분류 불가)', color: '#6b7280' },
-  ];
-
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 340" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">CommandIntent — 8가지 명령 분류</text>
-
-        {categories.map((cat, i) => {
-          const col = i % 4;
-          const row = Math.floor(i / 4);
-          const x = 30 + col * 130;
-          const y = 60 + row * 120;
-          return (
-            <g key={cat.name}>
-              <rect x={x} y={y} width={120} height={100} rx={8}
-                fill={cat.color} fillOpacity={0.1}
-                stroke={cat.color} strokeWidth={1} />
-              <text x={x + 60} y={y + 26} textAnchor="middle" fontSize={11} fontWeight={700}
-                fill={cat.color}>{cat.name}</text>
-              <line x1={x + 12} y1={y + 34} x2={x + 108} y2={y + 34}
-                stroke={cat.color} strokeWidth={0.5} opacity={0.3} />
-              <foreignObject x={x + 10} y={y + 42} width={100} height={52}>
-                <div style={{ fontSize: 9, color: 'var(--muted-foreground)', textAlign: 'center', lineHeight: '1.35' }}>
-                  {cat.cmds}
-                </div>
-              </foreignObject>
-            </g>
-          );
-        })}
-
-        <text x={280} y={322} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">첫 단어 매칭 · 50+ 명령어 인식 · Destructive는 이중 확인</text>
-      </svg>
-    </div>
+    <BashFrame
+      label="POLICY SIGNAL"
+      title="intent는 side effect의 종류를 설명한다"
+      description="범주는 승인 문구, permission rule과 audit level을 고르는 데 사용합니다."
+      note="Unknown은 안전을 뜻하지 않습니다. confidence가 낮을수록 더 강한 승인과 격리를 적용합니다."
+    >
+      <BashSteps
+        items={[
+          {
+            label: "DATA",
+            title: "Read · write",
+            body: "로컬 데이터를 읽거나 변경하는 작업입니다.",
+            tone: "blue",
+          },
+          {
+            label: "IMPACT",
+            title: "Destructive · system",
+            body: "복구가 어렵거나 host 상태를 바꿀 수 있습니다.",
+            tone: "rose",
+          },
+          {
+            label: "BOUNDARY",
+            title: "Network · package",
+            body: "외부 통신과 code 공급망을 함께 엽니다.",
+            tone: "violet",
+          },
+          {
+            label: "DYNAMIC",
+            title: "Execute · unknown",
+            body: "interpreter나 미분류 실행으로 정적 의미가 불확실합니다.",
+            tone: "amber",
+          },
+        ]}
+      />
+      <BashRule>
+        compound command는 각 executable을 분류하고 가장 높은 risk를 전체
+        intent로 올립니다.
+      </BashRule>
+    </BashFrame>
   );
 }

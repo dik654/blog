@@ -1,215 +1,134 @@
-import MisdeliveryViz from './viz/MisdeliveryViz';
+import MisdeliveryViz from "./viz/MisdeliveryViz";
+
+const deliveryStates = [
+  {
+    title: "Sent",
+    body: "transport에 bytes를 기록했지만 worker 수신은 아직 확인하지 못했습니다.",
+  },
+  {
+    title: "Received",
+    body: "worker가 같은 message ID를 수신했다고 acknowledgement를 보냈습니다.",
+  },
+  {
+    title: "Started",
+    body: "해당 task generation으로 실행을 시작했습니다.",
+  },
+  {
+    title: "Terminal",
+    body: "completed·failed·cancelled 중 하나와 artifact를 남겼습니다.",
+  },
+] as const;
 
 export default function Misdelivery() {
   return (
     <section id="misdelivery" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">프롬프트 미스딜리버리 탐지 &amp; 복구</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        작업 전달은 message identity와 acknowledgement로 확인한다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <MisdeliveryViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Misdelivery란</h3>
-        <p>
-          claw-code가 Worker에게 프롬프트를 보냈지만 <strong>Worker가 받지 못한 상황</strong><br />
-          원인:<br />
-          - pty 버퍼 오버플로 (드물게)<br />
-          - Worker가 대기 상태가 아니었음 (race condition)<br />
-          - Worker 프로세스가 크래시 직전이었음<br />
-          - 터미널 크기 불일치로 프롬프트가 잘림
+        <p className="leading-7">
+          worker channel에 prompt를 썼다는 사실은 올바른 worker가 올바른 시점에
+          작업을 받았다는 뜻이 아닙니다. 이전 process의 늦은 event, 준비되지
+          않은 terminal, partial write와 재시도 때문에 같은 작업이 누락되거나
+          중복될 수 있습니다. 이 글에서는 이런 전달 실패를 misdelivery로 묶어
+          다룹니다.
+        </p>
+        <p className="leading-7">
+          화면에 prompt 문자열이 다시 나타나는 echo-back은 terminal이 bytes를
+          표시했다는 보조 신호일 뿐, worker가 request를 parse하고 소유했다는
+          acknowledgement가 아닙니다. 가능하면 message ID, worker generation과
+          task attempt를 포함한 structured protocol로 전달 상태를 구분해야
+          합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">탐지 방법 — 에코백 확인</h3>
-        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
-          <div className="text-sm font-semibold mb-1"><code>send_with_verification(worker, prompt)</code></div>
-          <div className="text-xs text-muted-foreground mb-3">프롬프트 전송 후 에코백(echo-back) 확인 — 타임아웃 2초</div>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">1</span>
-              <div>
-                <div className="font-medium">프롬프트 전송</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>worker.terminal.write_input(prompt)</code></div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">2</span>
-              <div>
-                <div className="font-medium">100ms 주기로 화면 확인</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>screen.contains(prompt.trim())</code> — 프롬프트 문자열 포함 여부 체크</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">!</span>
-              <div>
-                <div className="font-medium">2초 초과 시 실패</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>Err(anyhow!("prompt not echoed back"))</code></div>
-              </div>
-            </div>
-          </div>
+        <div className="not-prose my-8">
+          <MisdeliveryViz />
         </div>
-        <p>
-          <strong>에코백(echo-back) 확인</strong>: Worker의 터미널이 입력을 다시 화면에 표시하는 기본 동작<br />
-          100ms마다 화면을 확인, 프롬프트 문자열 포함 여부 체크<br />
-          2초 내 에코백 없으면 delivery 실패로 판단
+      </div>
+
+      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {deliveryStates.map((item) => (
+          <article
+            key={item.title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{item.title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {item.body}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          현재 세대가 아닌 늦은 메시지는 상태에 반영하지 않는다
+        </h3>
+        <p className="leading-7">
+          worker가 재시작되면 같은 logical worker name을 쓰더라도 새로운
+          generation을 발급합니다. request와 event에는 <code>worker_id</code>,
+          generation,
+          <code>task_id</code>, attempt를 함께 넣고, registry의 현재
+          generation과 다른 message는 state에 반영하지 않습니다.
+        </p>
+        <p className="leading-7">
+          acknowledgement도 같은 identity tuple을 되돌려줘야 합니다. 그래야 다른
+          task의 화면 출력이나 이전 실행의 늦은 result를 현재 prompt의 수신
+          확인으로 잘못 해석하지 않습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">복구 전략 4단계</h3>
-        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
-          <div className="text-sm font-semibold mb-3"><code>recover_from_misdelivery(worker, prompt)</code></div>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">1</span>
-              <div>
-                <div className="font-medium">재전송 시도 (지수 백오프 x3)</div>
-                <div className="text-xs text-muted-foreground mt-0.5">500ms → 1000ms → 1500ms 대기 후 <code>send_with_verification()</code></div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-amber-600 dark:text-amber-400 shrink-0">2</span>
-              <div>
-                <div className="font-medium">Enter 키 전송 — Worker 상태 흔들기</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>write_input("\n")</code> — 대화형 Prompt에 걸린 경우 해제</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border-l-2 border-amber-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-amber-600 dark:text-amber-400 shrink-0">3</span>
-              <div>
-                <div className="font-medium">다시 재전송</div>
-                <div className="text-xs text-muted-foreground mt-0.5">Enter 이후 <code>send_with_verification()</code> 1회 시도</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">4</span>
-              <div>
-                <div className="font-medium">Worker 재시작 (마지막 수단)</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>restart_worker(worker)</code> — 작업 진행 상태 손실 가능</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>4단계 복구</strong>: 재시도 → Enter 키 → 재시도 → Worker 재시작<br />
-          <strong>지수 백오프</strong>: 500ms, 1000ms, 1500ms — 과부하 회피<br />
-          Worker 재시작은 마지막 수단 — 작업 진행 상태 손실 가능
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          retry 전에 idempotency를 설계한다
+        </h3>
+        <p className="leading-7">
+          acknowledgement가 timeout됐다고 같은 prompt를 바로 다시 보내면 첫
+          요청이 늦게 처리되어 side effect가 두 번 발생할 수 있습니다. worker는
+          task ID별 실행 기록을 두고 같은 attempt를 중복 실행하지 않거나,
+          coordinator가 새 attempt를 발급하기 전에 이전 실행을 조회·취소해야
+          합니다.
+        </p>
+        <p className="leading-7">
+          backoff는 transport 과부하를 줄일 뿐 exactly-once delivery를 보장하지
+          않습니다. read-only 조사와 write 작업의 retry policy를 나누고, write는
+          commit·transaction·deduplication key 같은 복구 경계를 먼저 마련합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Enter 키 전송의 의미</h3>
-        <p>
-          Worker가 <strong>대화형 Prompt 대기</strong> 상태에 걸린 경우 Enter가 풀어줌<br />
-          예: <code>rm: remove 'file.txt'? </code>같은 y/n Prompt<br />
-          Enter는 기본값 수락(또는 거부) — 대화 계속 진행<br />
-          주의: Enter가 의도치 않은 동작 유발 가능 — 다음 Prompt에서 감지
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          임의의 Enter 입력은 자동 복구로 사용하지 않는다
+        </h3>
+        <p className="leading-7">
+          대화형 prompt에서 Enter는 기본 선택을 실행할 수 있으므로, 상태를 모른
+          채 보내면 삭제나 설치를 승인할 위험이 있습니다. 예상한 prompt type과
+          안전한 response가 protocol로 확인되지 않으면 worker를{" "}
+          <code>WaitingInput</code>으로 두고 사용자나 coordinator에
+          escalation합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">restart_worker() — 워커 재시작</h3>
-        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
-          <div className="text-sm font-semibold mb-3"><code>restart_worker(worker: &mut Worker)</code></div>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">1</span>
-              <div>
-                <div className="font-medium">기존 프로세스 종료</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>SIGTERM</code> → 500ms 대기 → <code>SIGKILL</code> (강제)</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border-l-2 border-red-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-red-600 dark:text-red-400 shrink-0">2</span>
-              <div>
-                <div className="font-medium">터미널 핸들 해제 + 상태 초기화</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>worker.terminal = None</code>, <code>worker.status = Idle</code></div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border-l-2 border-blue-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-blue-600 dark:text-blue-400 shrink-0">3</span>
-              <div>
-                <div className="font-medium">재시작 — Launching 전이 + 프로세스 시작</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>launch_process(&worker.task_config)</code> → 새 <code>(terminal, pid)</code></div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-green-50 dark:bg-green-950/30 border-l-2 border-green-400 rounded-r px-3 py-2">
-              <span className="font-mono text-xs text-green-600 dark:text-green-400 shrink-0">4</span>
-              <div>
-                <div className="font-medium">Trust 재결정 → Ready 전이</div>
-                <div className="text-xs text-muted-foreground mt-0.5"><code>TrustResolver::resolve()</code> — 캐시되어 있으면 빠름</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>SIGTERM → SIGKILL</strong>: graceful → forceful 종료<br />
-          SIGTERM 500ms 대기 후 응답 없으면 SIGKILL — 좀비 프로세스 방지<br />
-          재시작은 <strong>Worker 수명의 종료-시작을 빠르게 반복</strong> — 상태 전이 흐름 재사용
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          restart는 새 attempt이며 진행 상태를 자동 승계하지 않는다
+        </h3>
+        <p className="leading-7">
+          worker를 재시작할 때는 먼저 graceful cancellation을 보내고 정해진
+          시간이 지나면 process group을 강제 종료합니다. terminal과 credential을
+          회수한 뒤 새 generation으로 boot·trust·ready 검증을 다시 수행합니다.
+        </p>
+        <p className="leading-7">
+          이전 worker가 남긴 partial artifact는 검증한 뒤에만 새 attempt
+          입력으로 사용합니다. 재시작 자체를 성공 복구로 기록하지 않고, 새
+          worker가 완료 contract를 통과했을 때 비로소 recovered로 집계합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Misdelivery 통계 수집</h3>
-        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
-          <div className="text-sm font-semibold mb-3"><code>MisdeliveryStats</code> — 텔레메트리 기록</div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm mb-3">
-            <div className="bg-background/60 rounded px-3 py-2 text-center">
-              <div className="font-mono text-xs"><code>total_sends</code></div>
-              <div className="text-xs text-muted-foreground mt-1">전체 전송 수</div>
-            </div>
-            <div className="bg-background/60 rounded px-3 py-2 text-center">
-              <div className="font-mono text-xs"><code>misdelivery_count</code></div>
-              <div className="text-xs text-muted-foreground mt-1">미전달 횟수</div>
-            </div>
-            <div className="bg-background/60 rounded px-3 py-2 text-center">
-              <div className="font-mono text-xs"><code>recovery_success</code></div>
-              <div className="text-xs text-muted-foreground mt-1">재시도 성공</div>
-            </div>
-            <div className="bg-background/60 rounded px-3 py-2 text-center">
-              <div className="font-mono text-xs"><code>recovery_restart</code></div>
-              <div className="text-xs text-muted-foreground mt-1">재시작 복구</div>
-            </div>
-          </div>
-          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded px-3 py-2 text-xs">
-            <span className="font-medium">경고 조건:</span> 매 100회 send마다 <code>rate()</code> 체크 — <span className="font-semibold text-amber-700 dark:text-amber-400">5% 초과 시 경고</span> (<code>misdelivery_count / total_sends</code>)
-          </div>
-        </div>
-        <p>
-          <strong>5% 이상 발생 시 경고</strong> — 시스템 문제 의심<br />
-          정상 환경에서는 misdelivery rate가 1% 미만<br />
-          높은 rate는 <strong>환경 문제</strong>(tty 드라이버, 버퍼 크기) 시그널
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          telemetry는 rate보다 원인 분포를 보여 준다
+        </h3>
+        <p className="leading-7">
+          전체 send 수와 timeout 수만 보면 transport 지연, stale generation,
+          duplicate execution과 worker crash를 구분할 수 없습니다. delivery
+          단계별 latency, retry reason, generation mismatch와 terminal state를
+          나눠 기록하고, prompt나 화면 dump에는 secret redaction과 짧은
+          retention을 적용합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">디버깅 지원 — 화면 덤프</h3>
-        <div className="not-prose bg-muted/30 border border-border rounded-lg p-4 my-4">
-          <div className="text-sm font-semibold mb-1">3회 재시도 실패 시 화면 덤프 저장</div>
-          <div className="text-xs text-muted-foreground mb-3">경로: <code>.claw/debug/misdelivery-{'{worker.id}'}-{'{timestamp}'}.txt</code></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <div className="bg-background/60 border-l-2 border-blue-400 rounded-r px-3 py-2">
-              <div className="font-medium text-xs">prompt 섹션</div>
-              <div className="text-xs text-muted-foreground mt-0.5">전송하려던 프롬프트 원문</div>
-            </div>
-            <div className="bg-background/60 border-l-2 border-blue-400 rounded-r px-3 py-2">
-              <div className="font-medium text-xs">screen 섹션</div>
-              <div className="text-xs text-muted-foreground mt-0.5"><code>get_screen_text()</code> 결과 — 실패 시점 화면 스냅샷</div>
-            </div>
-          </div>
-          <div className="text-xs text-muted-foreground mt-3">덤프 파일 주기적 정리(7일 이상) — 디스크 오염 방지</div>
-        </div>
-
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: pty 기반 자동화의 근본 한계</p>
-          <p>
-            pty 기반 Worker 제어는 <strong>"사람처럼 터미널을 사용"</strong>하는 접근<br />
-            장점: 기존 CLI 도구 재사용, 프로토콜 정의 불필요<br />
-            단점: race condition, 타이밍 의존, 화면 출력 형식에 결합
-          </p>
-          <p className="mt-2">
-            misdelivery는 이 한계의 <strong>필연적 증상</strong>:<br />
-            - pty는 스트림 기반 — 프롬프트와 응답 경계가 애매<br />
-            - 화면은 크기 가변 — 텍스트가 잘리거나 스크롤됨<br />
-            - 전송·수신이 비동기 — 타이밍 이슈 내재
-          </p>
-          <p className="mt-2">
-            claw-code의 해법: <strong>"실패 전제, 복구 자동화"</strong><br />
-            - 에코백 확인으로 실패 감지<br />
-            - 4단계 복구 전략으로 자동 회복<br />
-            - 통계 수집으로 체계 문제 조기 포착<br />
-            결과적으로 <strong>완벽한 전달은 불가능하지만 안정적 동작은 가능</strong>
-          </p>
-        </div>
-
       </div>
     </section>
   );

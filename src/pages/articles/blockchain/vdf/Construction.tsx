@@ -1,4 +1,4 @@
-import ConstructionViz from './viz/ConstructionViz';
+import ConstructionViz from "./viz/ConstructionViz";
 
 export default function Construction() {
   return (
@@ -6,15 +6,20 @@ export default function Construction() {
       <h2 className="text-2xl font-bold mb-6">구성: 순차 계산 + 빠른 검증</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          RSA 그룹 위 반복 제곱이 핵심. phi(N)을 모르면 x^(2^T)를 T번 제곱으로만 계산 가능
+          RSA 그룹 위 반복 제곱이 핵심. phi(N)을 모르면 x^(2^T)를 T번 제곱으로만
+          계산 가능
         </p>
       </div>
-      <div className="not-prose"><ConstructionViz /></div>
+      <div className="not-prose">
+        <ConstructionViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">VDF Construction 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          VDF Construction 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// VDF Construction (Pietrzak / Wesolowski 2018):
+          {`// VDF Construction (Pietrzak / Wesolowski 2018):
 
 // RSA-based VDF:
 // Setup:
@@ -92,7 +97,8 @@ export default function Construction() {
         </pre>
         <p className="leading-7">
           RSA VDF: <strong>x^(2^T) mod N, T squarings</strong>.<br />
-          Wesolowski proof (O(1)), Pietrzak proof (log T).<br />
+          Wesolowski proof (O(1)), Pietrzak proof (log T).
+          <br />
           Class group variant (trustless setup), Chia "time lord".
         </p>
       </div>

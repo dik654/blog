@@ -1,9 +1,11 @@
-import MonadArchViz from './viz/MonadArchViz';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import MonadArchViz from "./viz/MonadArchViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function Overview({ onCodeRef }: {
+export default function Overview({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   return (
@@ -11,13 +13,20 @@ export default function Overview({ onCodeRef }: {
       <h2 className="text-2xl font-bold mb-6">Monad 아키텍처 개요</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Monad — EVM 호환 고성능 L1 블록체인<br />
+          Monad — EVM 호환 고성능 L1 블록체인
+          <br />
           병렬 실행 + JIT 컴파일 + io_uring 비동기 I/O로 10,000+ TPS 목표
         </p>
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
-            <CodeViewButton onClick={() =>
-              onCodeRef('monad-parallel-exec', codeRefs['monad-parallel-exec'])} />
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef(
+                  "monad-parallel-exec",
+                  codeRefs["monad-parallel-exec"],
+                )
+              }
+            />
             <span className="text-[10px] text-muted-foreground self-center">
               execute_block.cpp
             </span>
@@ -31,7 +40,7 @@ export default function Overview({ onCodeRef }: {
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Monad Design Goals</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Monad: EVM Compatible L1
+          {`// Monad: EVM Compatible L1
 //
 // Vision:
 //   "Ethereum's performance ceiling과 EVM compatibility를

@@ -1,91 +1,67 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.4 };
-
-const NODES = [
-  { label: 'VRF 티켓', color: '#6366f1' },
-  { label: 'Tipset 구성', color: '#8b5cf6' },
-  { label: 'PoRep 봉인', color: '#10b981' },
-  { label: 'WindowPoSt', color: '#f59e0b' },
-  { label: 'FVM 실행', color: '#ec4899' },
-  { label: '체인 확정', color: '#ef4444' },
-];
-
-const EDGES = ['당선 블록', '섹터 검증', '증명 제출', '액터 호출', '상태 전이'];
+import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
-  { label: 'VRF 리더 선출', body: '마이너가 VRF로 티켓 생성\n스토리지 파워에 비례한 확률로 블록 생성 권한 획득' },
-  { label: 'Tipset 구성', body: '같은 에폭에서 당선된 여러 블록이\n하나의 Tipset을 구성' },
-  { label: 'PoRep 봉인', body: 'SDR 인코딩(CPU) + Merkle Tree(GPU)\n+ Groth16 증명(GPU)으로 복제 증명' },
-  { label: 'WindowPoSt 증명', body: '24시간을 48개 데드라인으로 나누어\n각 데드라인마다 저장 중임을 증명' },
-  { label: 'FVM 실행', body: 'WASM 기반 FVM에서 Built-in Actor\n(스토리지 마이너, 마켓 등) 실행' },
-  { label: '체인 확정 (F3)', body: 'F3 프로토콜로 수 분 내 확정\n(기존 EC: ~7.5시간)' },
-];
-
-const BW = 100, BH = 38, COL_GAP = 150, ROW_GAP = 40;
-
-function pos(i: number) {
-  const row = i < 3 ? 0 : 1;
-  const col = i < 3 ? i : i - 3;
-  return { x: 10 + col * COL_GAP, y: 12 + row * (BH + ROW_GAP) };
-}
+  {
+    label: "블록 생산 입력",
+    body: "Election input과 chain head를 바탕으로 이번 epoch의 block production 조건을 확인합니다.",
+  },
+  {
+    label: "Tipset 구성",
+    body: "같은 epoch의 유효한 block을 tipset으로 묶고 parent weight와 message commitment를 검증합니다.",
+  },
+  {
+    label: "스토리지 증명",
+    body: "PoRep은 sector 봉인 시 복제를 증명하고 WindowPoSt는 deadline마다 계속 저장 중임을 증명합니다.",
+  },
+  {
+    label: "FVM 실행",
+    body: "선택된 message를 FVM actor에 적용해 receipt와 새 state root를 계산합니다.",
+  },
+  {
+    label: "EC head",
+    body: "Expected Consensus가 현재 heaviest tipset을 선택하며, 짧은 구간에서는 head가 바뀔 수 있습니다.",
+  },
+  {
+    label: "F3 finality",
+    body: "F3가 별도의 BFT finality certificate를 만들어 확정 경계를 앞당깁니다. 정확한 시간은 현재 network 설정과 telemetry로 확인합니다.",
+  },
+] as const;
 
 export default function ConsensusProofFlowViz() {
   return (
     <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox="0 0 470 140" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          <defs>
-            <marker id="cpf-arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6" fill="var(--muted-foreground)" />
-            </marker>
-          </defs>
-
-          {/* Edges */}
-          {EDGES.map((label, i) => {
-            const from = pos(i), to = pos(i + 1);
-            const vis = i < step;
-            if (i === 2) {
-              /* Row break: from end of row 1 → start of row 2 */
-              const midY = from.y + BH + ROW_GAP / 2;
-              return (
-                <motion.g key={`e-${i}`} animate={{ opacity: vis ? 0.5 : 0.1 }} transition={sp}>
-                  <path d={`M${from.x + BW / 2},${from.y + BH + 2} L${from.x + BW / 2},${midY} L${to.x + BW / 2},${midY} L${to.x + BW / 2},${to.y - 4}`}
-                    fill="none" stroke="var(--muted-foreground)" strokeWidth={1} markerEnd="url(#cpf-arr)" />
-                  <rect x={from.x + BW / 2 - 28} y={midY - 8} width={56} height={14} rx={3} fill="var(--card)" />
-                  <text x={from.x + BW / 2} y={midY + 2} textAnchor="middle" fontSize={10}
-                    fill="var(--muted-foreground)">{label}</text>
-                </motion.g>
-              );
-            }
+      {(activeStep) => (
+        <div
+          className="mx-auto grid w-full max-w-3xl gap-2 sm:grid-cols-2 lg:grid-cols-3"
+          role="img"
+          aria-label="Filecoin의 블록 생산부터 F3 finality까지 이어지는 흐름"
+        >
+          {STEPS.map((item, index) => {
+            const active = index === activeStep;
+            const visited = index <= activeStep;
             return (
-              <motion.g key={`e-${i}`} animate={{ opacity: vis ? 0.5 : 0.1 }} transition={sp}>
-                <line x1={from.x + BW + 2} y1={from.y + BH / 2} x2={to.x - 2} y2={to.y + BH / 2}
-                  stroke="var(--muted-foreground)" strokeWidth={1} markerEnd="url(#cpf-arr)" />
-                <rect x={(from.x + BW + to.x) / 2 - 26} y={from.y + BH / 2 - 14} width={52} height={14} rx={3} fill="var(--card)" />
-                <text x={(from.x + BW + to.x) / 2} y={from.y + BH / 2 - 4} textAnchor="middle"
-                  fontSize={10} fill="var(--muted-foreground)">{label}</text>
-              </motion.g>
+              <section
+                key={item.label}
+                className={`min-w-0 rounded-2xl border p-4 transition-all ${
+                  active
+                    ? "border-sky-400 bg-sky-500/10 shadow-sm"
+                    : visited
+                      ? "border-border bg-card"
+                      : "border-border/60 bg-muted/20 opacity-65"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs font-black tracking-[0.14em] text-sky-600 dark:text-sky-300">
+                    STEP {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-sky-400" />
+                </div>
+                <h3 className="mt-3 text-sm font-bold text-foreground">{item.label}</h3>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.body}</p>
+              </section>
             );
           })}
-
-          {/* Nodes (rendered last for opaque background) */}
-          {NODES.map((n, i) => {
-            const p = pos(i);
-            const active = i === step;
-            const vis = i <= step;
-            return (
-              <motion.g key={n.label} animate={{ opacity: vis ? 1 : 0.15 }} transition={sp}>
-                <rect x={p.x} y={p.y} width={BW} height={BH} rx={6}
-                  fill={active ? `${n.color}20` : 'var(--card)'}
-                  stroke={n.color} strokeWidth={active ? 2 : 0.8} />
-                <text x={p.x + BW / 2} y={p.y + BH / 2 + 4} textAnchor="middle"
-                  fontSize={11} fontWeight={600} fill={n.color}>{n.label}</text>
-              </motion.g>
-            );
-          })}
-        </svg>
+        </div>
       )}
     </StepViz>
   );

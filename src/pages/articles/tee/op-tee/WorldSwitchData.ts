@@ -41,10 +41,26 @@ uint32_t sm_from_nsec(struct sm_ctx *ctx) {
 }`;
 
 export const smAnnotations = [
-  { lines: [8, 10] as [number, number], color: 'sky' as const, note: 'WDT 핸들러 우선 처리' },
-  { lines: [17, 26] as [number, number], color: 'emerald' as const, note: 'SMC Owner별 분기 처리' },
-  { lines: [28, 31] as [number, number], color: 'amber' as const, note: '레지스터 컨텍스트 교환' },
-  { lines: [33, 38] as [number, number], color: 'violet' as const, note: 'Fast/Standard Call 분기' },
+  {
+    lines: [8, 10] as [number, number],
+    color: "sky" as const,
+    note: "WDT 핸들러 우선 처리",
+  },
+  {
+    lines: [17, 26] as [number, number],
+    color: "emerald" as const,
+    note: "SMC Owner별 분기 처리",
+  },
+  {
+    lines: [28, 31] as [number, number],
+    color: "amber" as const,
+    note: "레지스터 컨텍스트 교환",
+  },
+  {
+    lines: [33, 38] as [number, number],
+    color: "violet" as const,
+    note: "Fast/Standard Call 분기",
+  },
 ];
 
 export const smcIdCode = `// include/sm/optee_smc.h
@@ -66,7 +82,19 @@ OPTEE_SMC_ENABLE_SHM_CACHE        // 공유 메모리 캐시 활성화
 //    Normal World가 RPC로 데이터 전달 -> OP-TEE 재진입`;
 
 export const smcIdAnnotations = [
-  { lines: [1, 5] as [number, number], color: 'sky' as const, note: 'ARM SMCCC 비트 레이아웃' },
-  { lines: [7, 12] as [number, number], color: 'emerald' as const, note: '주요 SMC 호출 목록' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'Fast vs Standard Call 차이' },
+  {
+    lines: [1, 5] as [number, number],
+    color: "sky" as const,
+    note: "ARM SMCCC 비트 레이아웃",
+  },
+  {
+    lines: [7, 12] as [number, number],
+    color: "emerald" as const,
+    note: "주요 SMC 호출 목록",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "Fast vs Standard Call 차이",
+  },
 ];

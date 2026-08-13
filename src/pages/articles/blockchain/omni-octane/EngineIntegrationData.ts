@@ -60,4 +60,3 @@ export const dualConsensusCode = `Halo의 이중 합의 프로세스:
   이더리움: 32 ETH 단일 스테이킹
   Omni: OMNI + restaked ETH 이중 스테이킹
   → 이더리움의 경제적 보안을 직접 차용`;
-

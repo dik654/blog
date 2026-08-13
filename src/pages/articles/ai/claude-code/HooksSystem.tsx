@@ -1,97 +1,133 @@
-import { CitationBlock } from '../../../../components/ui/citation';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import { CitationBlock } from "@/components/ui/citation";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function HooksSystem({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+const HOOK_MATRIX = [
+  ["PreToolUse", "tool 실행 전 인자 검사·차단·승인 decision 보조", "command · http · mcp_tool · prompt · agent"],
+  ["PermissionRequest", "사용자 승인 요청이 생겼을 때 외부 policy와 연결", "command · http · mcp_tool · prompt · agent"],
+  ["PostToolUse", "성공한 실행 결과 뒤 formatter·audit·후속 검사", "command · http · mcp_tool · prompt · agent"],
+  ["PostToolUseFailure", "실패한 tool의 stderr·원인을 관측 시스템에 기록", "command · http · mcp_tool · prompt · agent"],
+  ["Stop · TaskCompleted", "완료를 받아들이기 전 마지막 조건 검사", "command · http · mcp_tool · prompt · agent"],
+] as const;
+
+export default function HooksSystem({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <>
-      <h3 className="text-xl font-semibold mt-6 mb-3">Hooks 시스템</h3>
+      <h3 className="mt-10 text-xl font-semibold">
+        Hook은 lifecycle에 붙는 handler이지 permission의 우회로가 아니다
+      </h3>
+      <p>
+        Hook은 Claude Code의 특정 lifecycle event에서 command, HTTP endpoint,
+        MCP tool 또는 model-based evaluator를 실행하는 확장점입니다. Permission이
+        “이 tool call을 실행할 권한이 있는가”를 판정한다면, hook은 “실행 전후에
+        어떤 조직 정책·검사·관측을 연결할 것인가”를 담당합니다. 둘은 겹쳐
+        보이지만 대체 관계가 아닙니다.
+      </p>
+      <p>
+        로그인 버그 예시에서는 <code>PreToolUse</code> command hook이 production
+        credential이나 보호 경로를 건드리는 Bash 인자를 차단하고,
+        <code>PostToolUse</code>가 수정 파일을 format할 수 있습니다. 하지만
+        “테스트가 통과했는가”라는 완료 조건은 model-based prompt hook의 느낌이
+        아니라, 실제 test command의 exit code와 결과를 관찰해 판정해야 합니다.
+      </p>
 
-      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5 mb-4">
-        <h4 className="text-sm font-bold mb-3">Hooks 시스템 개요</h4>
-        <p className="text-sm mb-3">Hooks = 이벤트 기반 커스텀 셸 명령. 18개 라이프사이클 이벤트에 4가지 핸들러를 연결해 Claude Code 동작을 커스터마이징한다.</p>
-
-        <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-3 mb-3">
-          <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">18개 라이프사이클 이벤트</span>
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {['SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PermissionRequest', 'PostToolUse', 'PostToolUseFailure', 'Notification', 'SubagentStart', 'SubagentStop', 'Stop', 'TeammateIdle', 'TaskCompleted', 'InstructionsLoaded', 'ConfigChange', 'WorktreeCreate', 'WorktreeRemove', 'PreCompact', 'SessionEnd'].map(e => (
-              <code key={e} className="text-[11px] bg-sky-100 dark:bg-sky-900 text-sky-800 dark:text-sky-200 px-1.5 py-0.5 rounded">{e}</code>
+      <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border">
+        <table className="min-w-[820px] w-full border-collapse text-left text-sm">
+          <thead className="bg-muted/60">
+            <tr>
+              <th className="border-b border-border px-4 py-3">대표 event</th>
+              <th className="border-b border-border px-4 py-3">이 workflow에서의 책임</th>
+              <th className="border-b border-border px-4 py-3">지원 type을 읽는 법</th>
+            </tr>
+          </thead>
+          <tbody>
+            {HOOK_MATRIX.map(([event, role, types]) => (
+              <tr key={event} className="align-top even:bg-muted/20">
+                <th className="border-b border-border px-4 py-3 font-semibold">{event}</th>
+                <td className="border-b border-border px-4 py-3 leading-6 text-muted-foreground">
+                  {role}
+                </td>
+                <td className="border-b border-border px-4 py-3 leading-6 text-muted-foreground">
+                  {types}
+                </td>
+              </tr>
             ))}
-          </div>
-        </div>
+          </tbody>
+        </table>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-3">
-            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">4가지 핸들러 타입</span>
-            <ul className="text-sm mt-1 space-y-0.5">
-              <li><strong>command</strong> — 셸 명령 (stdin/stdout/exit code로 통신)</li>
-              <li><strong>http</strong> — URL 엔드포인트에 POST</li>
-              <li><strong>prompt</strong> — 단일 턴 LLM 평가 (Haiku, ok/not-ok 반환)</li>
-              <li><strong>agent</strong> — 서브에이전트 스폰 (최대 50 도구 턴)</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3">
-            <span className="text-xs font-semibold">활용 사례</span>
-            <ul className="text-sm mt-1 space-y-0.5">
-              <li>코드 작성 후 자동 린팅</li>
-              <li>위험한 명령어 차단</li>
-              <li>파일 수정 시 자동 포매팅</li>
-              <li>커밋 전 테스트 자동 실행</li>
-            </ul>
-          </div>
-        </div>
+      <p>
+        현재 handler type에는 <code>command</code>, <code>http</code>,
+        <code>mcp_tool</code>, <code>prompt</code>, <code>agent</code>가 있지만 모든
+        event가 모든 type을 지원하지는 않습니다. Event나 type의 총개수를 제품의
+        고정 계약처럼 외우기보다, 설치한 version의 event/type matrix를 확인해야
+        합니다. 위 표의 event들은 현재 문서에서 다섯 type을 모두 지원하지만,
+        SessionStart·Setup은 command와 mcp_tool만 지원하는 식으로 차이가 납니다.
+        특히 command hook의 exit status처럼 결정론적인 값과 prompt·agent hook의
+        model judgment를 같은 보장으로 취급해서는 안 되며, agent handler는 현재
+        experimental 기능이라는 version 전제도 남겨야 합니다.
+      </p>
 
-        <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3">
-          <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">설정 예시</span>
-          <pre className="text-xs mt-2 overflow-x-auto">{`{
+      <h4>현재 설정 형태에서는 matcher 아래에 handler 목록을 둔다</h4>
+      <pre className="not-prose my-4 overflow-x-auto rounded-xl border border-border bg-muted/30 p-4 text-xs leading-6">{`{
   "hooks": {
-    "PreToolUse": [{
-      "matcher": "Bash",
-      "command": "~/scripts/validate-bash.sh"
-    }],
-    "PostToolUse": [{
-      "matcher": "Write",
-      "command": "~/scripts/lint-on-write.sh"
-    }]
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/validate-bash.sh"
+          }
+        ]
+      }
+    ]
   }
 }`}</pre>
-        </div>
+      <p>
+        위 예시는 구조를 보여 주기 위한 최소 형태입니다. Script는 stdin으로 받은
+        event payload를 parse하고 tool input을 allowlist와 대조한 뒤 명시적인 exit
+        status와 메시지를 반환해야 합니다. 문자열 포함 여부만으로 명령을 승인하면
+        quoting, shell operator와 경로 변형을 놓칠 수 있으므로 실제 조직 policy는
+        parser와 test fixture로 검증합니다.
+      </p>
+
+      <div id="paper-claude-code-hooks" className="not-prose scroll-mt-24">
+        <CitationBlock
+          source="Anthropic — Automate workflows with hooks"
+          citeKey={6}
+          href="https://code.claude.com/docs/en/hooks"
+        >
+          문제: model prompt만으로는 tool 실행 전 차단, 실행 후 format, 실패 audit와
+          완료 gate를 일관되게 적용하기 어렵습니다. 현재 기여: 공식 문서는
+          lifecycle event, matcher와 command·http·mcp_tool·prompt·agent handler 및
+          event별 decision 동작을 설명합니다. 전제: 현재 Claude Code version과 각
+          event가 지원하는 handler type, 로컬 script·endpoint의 신뢰 경계입니다.
+          근거 범위: 공개 hook configuration과 event semantics입니다. 하지 않는
+          주장: hook allow가 deny·ask permission을 우회하거나 model-based hook이
+          결정론적 검증이고, 모든 event가 모든 handler type을 지원하며 hook script가
+          자동으로 안전하다는 뜻은 아닙니다.
+        </CitationBlock>
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-2">
-        <CodeViewButton onClick={() => onCodeRef('hooks-0', codeRefs['hooks-0'])} />
-        <span className="text-[10px] text-muted-foreground self-center">Bash 명령어 검증 훅 예제</span>
-        <CodeViewButton onClick={() => onCodeRef('hooks-1', codeRefs['hooks-1'])} />
-        <span className="text-[10px] text-muted-foreground self-center">규칙 평가 엔진</span>
-        <CodeViewButton onClick={() => onCodeRef('hooks-2', codeRefs['hooks-2'])} />
-        <span className="text-[10px] text-muted-foreground self-center">설정 로더 구조체</span>
+      <p>
+        아래 세 코드 버튼은 이 블로그 프로젝트가 제공하는 illustrative example로,
+        공식 Claude Code 내부 source가 아닙니다. 현재 문서의 JSON schema와 다를 수
+        있으므로 실행 전에 설치 version의 공식 문서와 대조해야 합니다.
+      </p>
+      <div className="not-prose mt-3 flex flex-wrap items-center gap-2">
+        <CodeViewButton onClick={() => onCodeRef("hooks-0", codeRefs["hooks-0"])} />
+        <span className="text-xs text-muted-foreground">검증 hook 학습 예시</span>
+        <CodeViewButton onClick={() => onCodeRef("hooks-1", codeRefs["hooks-1"])} />
+        <span className="text-xs text-muted-foreground">규칙 평가 학습 예시</span>
+        <CodeViewButton onClick={() => onCodeRef("hooks-2", codeRefs["hooks-2"])} />
+        <span className="text-xs text-muted-foreground">설정 loader 학습 예시</span>
       </div>
-      <CitationBlock source="Claude Code 공식 문서 - Hooks" citeKey={2} type="paper" href="https://docs.anthropic.com/en/docs/claude-code/hooks">
-        <p className="italic">"Hooks allow you to execute shell commands at specific points in Claude Code's lifecycle. They enable customizing behavior without modifying the core tool, running validation, formatting, notifications, and more."</p>
-        <p className="mt-2 text-xs">Hooks — 18개 라이프사이클 이벤트 + 4가지 핸들러 타입(command, http, prompt, agent)으로 Claude Code 동작을 세밀하게 커스터마이징 가능</p>
-      </CitationBlock>
-      <CitationBlock source=".claude/settings.json Hook 설정 예시" citeKey={3} type="code">
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950 p-2">
-              <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">PreToolUse: Bash 실행 전 검증</span>
-              <pre className="text-xs mt-1">{`"PreToolUse": [{
-  "matcher": "Bash",
-  "command": "~/scripts/validate-bash.sh"
-}]`}</pre>
-            </div>
-            <div className="rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 p-2">
-              <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">PostToolUse: 파일 작성 후 린팅</span>
-              <pre className="text-xs mt-1">{`"PostToolUse": [{
-  "matcher": "Write",
-  "command": "~/scripts/lint-on-write.sh"
-}]`}</pre>
-            </div>
-          </div>
-        </div>
-        <p className="mt-2 text-xs">PreToolUse 훅 — Bash 실행 전 검증, PostToolUse 훅 — 파일 작성 후 자동 린팅 설정 예시. matcher로 특정 도구에만 적용 가능</p>
-      </CitationBlock>
     </>
   );
 }

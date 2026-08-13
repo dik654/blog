@@ -1,7 +1,22 @@
 export const noiseXXSteps = [
-  { from: 'Initiator', to: 'Responder', msg: '→ e', desc: 'X25519 임시 공개키(e) 전송' },
-  { from: 'Responder', to: 'Initiator', msg: '← e, ee, s, es', desc: '임시키 + DH(ee) + 정적키(s) + DH(es)' },
-  { from: 'Initiator', to: 'Responder', msg: '→ s, se', desc: '정적키(s) + DH(se). 이후 대칭키 확립' },
+  {
+    from: "Initiator",
+    to: "Responder",
+    msg: "→ e",
+    desc: "X25519 임시 공개키(e) 전송",
+  },
+  {
+    from: "Responder",
+    to: "Initiator",
+    msg: "← e, ee, s, es",
+    desc: "임시키 + DH(ee) + 정적키(s) + DH(es)",
+  },
+  {
+    from: "Initiator",
+    to: "Responder",
+    msg: "→ s, se",
+    desc: "정적키(s) + DH(se). 이후 대칭키 확립",
+  },
 ];
 
 export const noisePayloadCode = `// Noise 핸드셰이크 Payload (protobuf)
@@ -24,9 +39,21 @@ message NoiseHandshakePayload {
 //    → 핸드셰이크 중 PeerId 검증 완료`;
 
 export const noisePayloadAnnotations = [
-  { lines: [2, 6] as [number, number], color: 'sky' as const, note: 'Protobuf payload 구조' },
-  { lines: [9, 11] as [number, number], color: 'emerald' as const, note: '서명 생성 (Initiator)' },
-  { lines: [14, 18] as [number, number], color: 'amber' as const, note: '검증 + PeerId 도출 (Responder)' },
+  {
+    lines: [2, 6] as [number, number],
+    color: "sky" as const,
+    note: "Protobuf payload 구조",
+  },
+  {
+    lines: [9, 11] as [number, number],
+    color: "emerald" as const,
+    note: "서명 생성 (Initiator)",
+  },
+  {
+    lines: [14, 18] as [number, number],
+    color: "amber" as const,
+    note: "검증 + PeerId 도출 (Responder)",
+  },
 ];
 
 export const keyExchangeCode = `// X25519 Diffie-Hellman 키 교환 상세
@@ -43,7 +70,19 @@ export const keyExchangeCode = `// X25519 Diffie-Hellman 키 교환 상세
 // 이후 모든 데이터는 ChaCha20-Poly1305로 암호화`;
 
 export const keyExchangeAnnotations = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: '3번의 DH 연산' },
-  { lines: [8, 10] as [number, number], color: 'emerald' as const, note: 'HKDF로 대칭키 도출' },
-  { lines: [12, 12] as [number, number], color: 'amber' as const, note: 'AEAD 암호화' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "3번의 DH 연산",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "emerald" as const,
+    note: "HKDF로 대칭키 도출",
+  },
+  {
+    lines: [12, 12] as [number, number],
+    color: "amber" as const,
+    note: "AEAD 암호화",
+  },
 ];

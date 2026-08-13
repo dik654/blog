@@ -1,49 +1,31 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, LLMS, TOOLS } from './OverviewData';
-import { NxMLines, USBAnalogy, MCPLayer } from './OverviewVizParts';
+import VizFrame from "@/components/viz/VizFrame";
 
-const W = 460, H = 230;
+const groups = [
+  { step: "01", label: "Host", title: "AI application", body: "사용자·model·정책과 연결 범위를 소유" },
+  { step: "02", label: "MCP", title: "Shared contract", body: "기능 발견·typed request·result를 표준화" },
+  { step: "03", label: "Server", title: "Domain capability", body: "Tool·Resource·Prompt를 좁은 책임으로 제공" },
+] as const;
 
 export default function OverviewViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* LLMs (top-left) */}
-          {LLMS.map((l) => (
-            <motion.g key={l.label} animate={{ opacity: 1 }}>
-              <rect x={l.x} y={30} width={56} height={28} rx={5}
-                fill="#6366f118" stroke="#6366f1" strokeWidth={1} />
-              <text x={l.x + 28} y={48} textAnchor="middle"
-                fontSize={9} fontWeight={600} fill="#6366f1">{l.label}</text>
-            </motion.g>
-          ))}
-
-          {/* Tools (top-right, only when step < 2) */}
-          {step < 2 && TOOLS.map((t) => (
-            <motion.g key={t.label} animate={{ opacity: 1 }}>
-              <rect x={t.x} y={30} width={50} height={28} rx={5}
-                fill="#f59e0b18" stroke="#f59e0b" strokeWidth={1} />
-              <text x={t.x + 25} y={48} textAnchor="middle"
-                fontSize={9} fontWeight={600} fill="#f59e0b">{t.label}</text>
-            </motion.g>
-          ))}
-
-          {step === 0 && <NxMLines />}
-          {step === 1 && <USBAnalogy />}
-          {step >= 2 && <MCPLayer />}
-
-          {step === 3 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <text x={W / 2} y={20} textAnchor="middle"
-                fontSize={9} fill="var(--muted-foreground)">
-                Anthropic 2024 공개 — 오픈 표준 프로토콜
-              </text>
-            </motion.g>
-          )}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="통합 경계"
+      title="MCP는 host와 server 사이의 message contract를 표준화합니다"
+      description="호환 가능한 연결 지점은 만들지만 권한·업무 의미·sandbox를 대신 결정하지는 않습니다."
+      note="화살표가 나타내는 것은 신뢰 위임이 아니라 protocol message의 왕복입니다."
+    >
+      <div className="grid gap-7 md:grid-cols-3 md:gap-6">
+        {groups.map((group) => (
+          <section key={group.label} className="min-w-0 border-t border-border/80 pt-4">
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="text-xs font-bold text-primary">{group.label}</p>
+              <span className="font-mono text-[11px] text-muted-foreground">{group.step}</span>
+            </div>
+            <h4 className="mt-3 text-sm font-bold text-foreground">{group.title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{group.body}</p>
+          </section>
+        ))}
+      </div>
+    </VizFrame>
   );
 }

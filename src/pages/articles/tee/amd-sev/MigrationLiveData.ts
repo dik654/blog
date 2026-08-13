@@ -21,7 +21,19 @@ export const migCode = `// SEV 라이브 마이그레이션 흐름
    - 마이그레이션 완료, 소스 VM 폐기`;
 
 export const migAnnotations = [
-  { lines: [4, 6] as [number, number], color: 'sky' as const, note: '소스에서 TEK 유도' },
-  { lines: [8, 10] as [number, number], color: 'emerald' as const, note: '페이지별 재암호화 전송' },
-  { lines: [16, 18] as [number, number], color: 'amber' as const, note: '대상에서 복원' },
+  {
+    lines: [4, 6] as [number, number],
+    color: "sky" as const,
+    note: "소스에서 TEK 유도",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "emerald" as const,
+    note: "페이지별 재암호화 전송",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "amber" as const,
+    note: "대상에서 복원",
+  },
 ];

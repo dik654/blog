@@ -1,21 +1,26 @@
-import CctpViz from './viz/CctpViz';
+import CctpViz from "./viz/CctpViz";
 
 export default function CrossChain() {
   return (
     <section id="cross-chain" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">CCTP — Cross-Chain Transfer Protocol</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        CCTP — Cross-Chain Transfer Protocol
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <CctpViz />
 
         <h3 className="text-xl font-semibold mt-6 mb-3">CCTP란</h3>
         <p>
-          CCTP: Circle의 <strong>네이티브 USDC 크로스체인 전송 프로토콜</strong><br />
-          문제 해결: 기존 브리지 보안 문제 (Ronin $625M, Nomad $190M 등)<br />
+          CCTP: Circle의 <strong>네이티브 USDC 크로스체인 전송 프로토콜</strong>
+          <br />
+          문제 해결: 기존 브리지 보안 문제 (Ronin $625M, Nomad $190M 등)
+          <br />
           메커니즘: Burn on chain A → Mint on chain B (lock-and-mint 아님)
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Native USDC vs Bridged USDC</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Native USDC vs Bridged USDC
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Native USDC
 - Circle이 직접 발행한 USDC
 - 각 체인에 독립 컨트랙트
@@ -36,8 +41,11 @@ export default function CrossChain() {
 Circle이 native USDC를 14+ 체인에 직접 발행
 → bridged USDC 필요성 감소`}</pre>
         <p>
-          <strong>Native USDC가 안전</strong>: Circle이 직접 백업<br />
-          Bridged USDC는 <strong>브리지 의존</strong> — 브리지 hack 시 디페그 가능<br />
+          <strong>Native USDC가 안전</strong>: Circle이 직접 백업
+          <br />
+          Bridged USDC는 <strong>브리지 의존</strong> — 브리지 hack 시 디페그
+          가능
+          <br />
           CCTP 이후 bridged USDC는 점차 퇴출
         </p>
 
@@ -62,12 +70,16 @@ Step 3: User가 Arbitrum에서 Mint
   → Circle 서명 검증
   → 1000 USDC mint on Arbitrum`}</pre>
         <p>
-          <strong>3단계</strong>: Burn → Attestation → Mint<br />
-          사용자가 Step 3 수동 호출 필요 (또는 relayer 사용)<br />
+          <strong>3단계</strong>: Burn → Attestation → Mint
+          <br />
+          사용자가 Step 3 수동 호출 필요 (또는 relayer 사용)
+          <br />
           Circle의 서명이 유일한 권한 — <strong>중앙화된 브리지</strong>
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">MessageTransmitter 컨트랙트</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          MessageTransmitter 컨트랙트
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 각 체인에 배포된 CCTP 컨트랙트
 
 contract MessageTransmitter {
@@ -112,26 +124,42 @@ CCTP v2 (2024-2025):
 // 매일 새 체인 추가 중
 // USDC native launch와 CCTP 동시 지원`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">CCTP vs 일반 브리지 비교</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          CCTP vs 일반 브리지 비교
+        </h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border">
             <thead>
               <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">항목</th>
-                <th className="border border-border px-3 py-2 text-left">CCTP</th>
-                <th className="border border-border px-3 py-2 text-left">Lock&amp;Mint 브리지</th>
+                <th className="border border-border px-3 py-2 text-left">
+                  항목
+                </th>
+                <th className="border border-border px-3 py-2 text-left">
+                  CCTP
+                </th>
+                <th className="border border-border px-3 py-2 text-left">
+                  Lock&amp;Mint 브리지
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td className="border border-border px-3 py-2">메커니즘</td>
-                <td className="border border-border px-3 py-2">Burn &amp; Mint</td>
-                <td className="border border-border px-3 py-2">Lock &amp; Mint</td>
+                <td className="border border-border px-3 py-2">
+                  Burn &amp; Mint
+                </td>
+                <td className="border border-border px-3 py-2">
+                  Lock &amp; Mint
+                </td>
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2">중앙화</td>
-                <td className="border border-border px-3 py-2">Circle only (단일)</td>
-                <td className="border border-border px-3 py-2">multisig / validator set</td>
+                <td className="border border-border px-3 py-2">
+                  Circle only (단일)
+                </td>
+                <td className="border border-border px-3 py-2">
+                  multisig / validator set
+                </td>
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2">자산</td>
@@ -140,13 +168,21 @@ CCTP v2 (2024-2025):
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2">소요 시간</td>
-                <td className="border border-border px-3 py-2">15-30분 (v1)<br />8-20초 (v2)</td>
-                <td className="border border-border px-3 py-2">수분 ~ 수시간</td>
+                <td className="border border-border px-3 py-2">
+                  15-30분 (v1)
+                  <br />
+                  8-20초 (v2)
+                </td>
+                <td className="border border-border px-3 py-2">
+                  수분 ~ 수시간
+                </td>
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2">보안 가정</td>
                 <td className="border border-border px-3 py-2">Circle 신뢰</td>
-                <td className="border border-border px-3 py-2">브리지 validator 신뢰</td>
+                <td className="border border-border px-3 py-2">
+                  브리지 validator 신뢰
+                </td>
               </tr>
               <tr>
                 <td className="border border-border px-3 py-2">수수료</td>
@@ -157,7 +193,9 @@ CCTP v2 (2024-2025):
           </table>
         </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">CCTP v2 — Fast Transfer</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          CCTP v2 — Fast Transfer
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// v1 대비 개선
 - Fast Transfer: 8-20초 완료 (v1: 15-30분)
 - Hooks: 도착 체인에서 자동 액션 실행
@@ -184,27 +222,33 @@ receiveMessageAndHook 함수
             CCTP는 Circle의 <strong>"모든 체인의 USDC 표준화" 전략</strong>
           </p>
           <p className="mt-2">
-            영향:<br />
-            ✓ 브리지 공격 위험 감소 (Native USDC만 사용)<br />
-            ✓ USDC 유동성 통합 (체인 간 동일 자산)<br />
-            ✓ DEX·프로토콜의 CCTP 통합 (Uniswap, Curve 지원)<br />
-            ✓ 크로스체인 DeFi 경험 개선
+            영향:
+            <br />
+            ✓ 브리지 공격 위험 감소 (Native USDC만 사용)
+            <br />
+            ✓ USDC 유동성 통합 (체인 간 동일 자산)
+            <br />
+            ✓ DEX·프로토콜의 CCTP 통합 (Uniswap, Curve 지원)
+            <br />✓ 크로스체인 DeFi 경험 개선
           </p>
           <p className="mt-2">
             <strong>Circle의 노림수</strong>:<br />
-            - Native USDC가 표준 → bridged USDC 퇴출<br />
-            - 모든 체인이 Circle에 의존<br />
-            - 장기적으로 CCTP 수수료 부과 가능성
+            - Native USDC가 표준 → bridged USDC 퇴출
+            <br />
+            - 모든 체인이 Circle에 의존
+            <br />- 장기적으로 CCTP 수수료 부과 가능성
           </p>
           <p className="mt-2">
             <strong>경쟁</strong>:<br />
-            - LayerZero OFT (Omnichain Fungible Token)<br />
-            - Wormhole native token transfers<br />
-            - Axelar Interchain Tokens<br />
+            - LayerZero OFT (Omnichain Fungible Token)
+            <br />
+            - Wormhole native token transfers
+            <br />
+            - Axelar Interchain Tokens
+            <br />
             크로스체인 스테이블코인 전쟁 진행 중
           </p>
         </div>
-
       </div>
     </section>
   );

@@ -14,9 +14,21 @@ export const CRATE_TREE_CODE = `irys/
 └── irys-types/           # 공유 타입 정의`;
 
 export const CRATE_TREE_ANNOTATIONS = [
-  { lines: [2, 4] as [number, number], color: 'sky' as const, note: '체인 코어 & 노드 조립' },
-  { lines: [5, 7] as [number, number], color: 'emerald' as const, note: '비동기 액터 시스템' },
-  { lines: [8, 10] as [number, number], color: 'amber' as const, note: 'VDF + 패킹 합의 레이어' },
+  {
+    lines: [2, 4] as [number, number],
+    color: "sky" as const,
+    note: "체인 코어 & 노드 조립",
+  },
+  {
+    lines: [5, 7] as [number, number],
+    color: "emerald" as const,
+    note: "비동기 액터 시스템",
+  },
+  {
+    lines: [8, 10] as [number, number],
+    color: "amber" as const,
+    note: "VDF + 패킹 합의 레이어",
+  },
 ];
 
 export const DEP_GRAPH_CODE = `// 의존성 방향: 하위 → 상위
@@ -35,6 +47,14 @@ actix-web    → HTTP 서버 & 액터 프레임워크
 tokio        → 비동기 런타임`;
 
 export const DEP_GRAPH_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '코어 크레이트 의존 관계' },
-  { lines: [11, 14] as [number, number], color: 'violet' as const, note: '주요 외부 의존성' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "코어 크레이트 의존 관계",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "violet" as const,
+    note: "주요 외부 의존성",
+  },
 ];

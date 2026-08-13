@@ -1,4 +1,4 @@
-import ECComparisonViz from './viz/ECComparisonViz';
+import ECComparisonViz from "./viz/ECComparisonViz";
 
 export default function Comparison() {
   return (
@@ -8,15 +8,18 @@ export default function Comparison() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          MDS(최적) vs Rateless vs Near-MDS &mdash; 코드 유형별 트레이드오프 비교.
+          MDS(최적) vs Rateless vs Near-MDS &mdash; 코드 유형별 트레이드오프
+          비교.
         </p>
       </div>
-      <div className="not-prose"><ECComparisonViz /></div>
+      <div className="not-prose">
+        <ECComparisonViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">EC 코드 비교 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Erasure Coding 3가지 비교:
+          {`// Erasure Coding 3가지 비교:
 
 // 1. Reed-Solomon (MDS):
 // Properties:
@@ -99,8 +102,10 @@ export default function Comparison() {
 // - blockchain: RS (provable)`}
         </pre>
         <p className="leading-7">
-          3 code types: <strong>RS (MDS), Fountain (rateless), LDPC (near-MDS)</strong>.<br />
-          RS: blockchain 표준 (provable).<br />
+          3 code types:{" "}
+          <strong>RS (MDS), Fountain (rateless), LDPC (near-MDS)</strong>.<br />
+          RS: blockchain 표준 (provable).
+          <br />
           Fountain: streaming, LDPC: 5G/Wi-Fi hardware.
         </p>
       </div>

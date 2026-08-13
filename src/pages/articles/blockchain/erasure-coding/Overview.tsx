@@ -1,4 +1,4 @@
-import ErasureOverviewViz from './viz/ErasureOverviewViz';
+import ErasureOverviewViz from "./viz/ErasureOverviewViz";
 
 export default function Overview() {
   return (
@@ -8,15 +8,18 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-6">
         <p>
-          n개 조각 중 임의의 k개만으로 원본 복원 &mdash; 분산 저장, DA, 네트워크 전송의 핵심.
+          n개 조각 중 임의의 k개만으로 원본 복원 &mdash; 분산 저장, DA, 네트워크
+          전송의 핵심.
         </p>
       </div>
-      <div className="not-prose"><ErasureOverviewViz /></div>
+      <div className="not-prose">
+        <ErasureOverviewViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">Erasure Coding 개요</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Erasure Coding (EC):
+          {`// Erasure Coding (EC):
 
 // 핵심 속성:
 // - input: k 조각
@@ -79,8 +82,10 @@ export default function Overview() {
 // - 2024: mainstream DA`}
         </pre>
         <p className="leading-7">
-          EC: <strong>(n,k) coding, k pieces → recover from any k of n</strong>.<br />
-          MDS (Reed-Solomon) vs Non-MDS (Fountain, LDPC).<br />
+          EC: <strong>(n,k) coding, k pieces → recover from any k of n</strong>.
+          <br />
+          MDS (Reed-Solomon) vs Non-MDS (Fountain, LDPC).
+          <br />
           blockchain DA + distributed storage의 핵심.
         </p>
       </div>

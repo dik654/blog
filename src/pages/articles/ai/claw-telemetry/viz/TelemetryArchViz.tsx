@@ -1,84 +1,50 @@
-import { ModuleBox } from '@/components/viz/boxes';
+import {
+  TelemetryFrame,
+  TelemetryRule,
+  TelemetrySteps,
+} from "./TelemetryVizPrimitives";
 
 export default function TelemetryArchViz() {
   return (
-    <div className="not-prose my-6 rounded-lg border border-border bg-card p-4">
-      <svg viewBox="0 0 560 330" className="w-full h-auto" style={{ maxWidth: 720 }}>
-        <text x={280} y={24} textAnchor="middle" fontSize={13} fontWeight={700}
-          fill="var(--foreground)">Telemetry — 3계층 파이프라인</text>
-
-        <defs>
-          <marker id="tl-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L4,2.5 L0,5" fill="#3b82f6" />
-          </marker>
-        </defs>
-
-        {/* Sources */}
-        <text x={280} y={54} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          Sources
-        </text>
-        <g transform="translate(30, 62)">
-          {[
-            { label: 'SessionTracer', color: '#3b82f6' },
-            { label: 'UsageTracker', color: '#8b5cf6' },
-            { label: 'ToolMetrics', color: '#10b981' },
-            { label: 'ErrorCollector', color: '#ef4444' },
-          ].map((src, i) => (
-            <g key={src.label} transform={`translate(${i * 125}, 0)`}>
-              <rect x={0} y={0} width={118} height={34} rx={4}
-                fill={src.color} fillOpacity={0.1} stroke={src.color} strokeWidth={0.6} />
-              <text x={59} y={22} textAnchor="middle" fontSize={9} fontWeight={600}
-                fill={src.color}>{src.label}</text>
-            </g>
-          ))}
-        </g>
-
-        {/* Arrows to Sink */}
-        {[0, 1, 2, 3].map(i => (
-          <line key={i}
-            x1={89 + i * 125} y1={96}
-            x2={280} y2={128}
-            stroke="#3b82f6" strokeWidth={0.6} opacity={0.5} />
-        ))}
-
-        {/* TelemetrySink */}
-        <ModuleBox x={170} y={130} w={220} h={50}
-          label="TelemetrySink"
-          sub="버퍼링 · 필터링 · 변환"
-          color="#f59e0b" />
-
-        {/* Arrows to Exporters */}
-        {[0, 1, 2].map(i => (
-          <line key={i}
-            x1={280} y1={180}
-            x2={113 + i * 165} y2={228}
-            stroke="#3b82f6" strokeWidth={0.6} opacity={0.5} />
-        ))}
-
-        {/* Exporters */}
-        <text x={280} y={210} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
-          Exporters
-        </text>
-        <g transform="translate(30, 228)">
-          {[
-            { label: 'Stdout', sub: '디버그', color: '#6b7280' },
-            { label: 'File (JSONL)', sub: '로컬 저장', color: '#3b82f6' },
-            { label: 'HTTP', sub: '원격 서버', color: '#10b981' },
-          ].map((exp, i) => (
-            <g key={exp.label} transform={`translate(${i * 165}, 0)`}>
-              <rect x={0} y={0} width={155} height={46} rx={4}
-                fill={exp.color} fillOpacity={0.1} stroke={exp.color} strokeWidth={0.6} />
-              <text x={77.5} y={20} textAnchor="middle" fontSize={10} fontWeight={700}
-                fill={exp.color}>{exp.label}</text>
-              <text x={77.5} y={35} textAnchor="middle" fontSize={9}
-                fill="var(--muted-foreground)">{exp.sub}</text>
-            </g>
-          ))}
-        </g>
-
-        <text x={280} y={315} textAnchor="middle" fontSize={9}
-          fill="var(--muted-foreground)">기본 비활성 (opt-in) · 10초 주기 flush · 민감 정보 필터</text>
-      </svg>
-    </div>
+    <TelemetryFrame
+      label="EVIDENCE PIPELINE"
+      title="실행 이벤트를 먼저 정규화하고 여러 signal로 나눈다"
+      description="모델 요청과 tool 실행에서 나온 이벤트에 공통 identity를 붙인 뒤 trace·metric·log로 투영하고, 민감 정보는 exporter보다 앞에서 제거합니다."
+      note="Trace·metric·log는 같은 사건을 다른 방식으로 보는 signal입니다. 서로 별도 ID를 만들기보다 trace_id와 span_id로 다시 연결할 수 있어야 합니다."
+    >
+      <TelemetrySteps
+        items={[
+          {
+            label: "01 · CAPTURE",
+            title: "구조화된 이벤트",
+            body: "session·turn·model request·tool call identity와 결과를 기록합니다.",
+            tone: "blue",
+          },
+          {
+            label: "02 · PROCESS",
+            title: "필터와 집계",
+            body: "redaction, sampling, cardinality 제한, histogram 집계를 적용합니다.",
+            tone: "violet",
+          },
+          {
+            label: "03 · BUFFER",
+            title: "bounded queue",
+            body: "우선순위와 상한을 두고 느린 exporter의 backpressure를 격리합니다.",
+            tone: "amber",
+          },
+          {
+            label: "04 · EXPORT",
+            title: "관측 backend",
+            body: "OTLP·JSONL 등으로 내보내되 drop과 retry도 별도 metric으로 남깁니다.",
+            tone: "emerald",
+          },
+        ]}
+      />
+      <TelemetryRule>
+        prompt와 tool arguments는 디버깅에 유용하지만 PII·secret·소스코드를 담을
+        수 있습니다. 기본값은 내용 미수집이며, opt-in capture도 길이 제한과
+        redaction을 거쳐야 합니다.
+      </TelemetryRule>
+    </TelemetryFrame>
   );
 }

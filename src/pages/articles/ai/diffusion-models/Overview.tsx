@@ -1,50 +1,103 @@
-import { CitationBlock } from '@/components/ui/citation';
-import GenerativeTimelineViz from './viz/GenerativeTimelineViz';
-import DDPMMathViz from './viz/DDPMMathViz';
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+
+const loop = [
+  ["Noise level 선택", "Noise schedule에서 timestep을 뽑습니다."],
+  ["학습 입력 생성", "Closed form으로 clean data에서 xₜ를 바로 만듭니다."],
+  [
+    "복원 방향 예측",
+    "Network가 noise·x₀·velocity 중 정한 target을 예측합니다.",
+  ],
+  ["반복해서 생성", "Noise에서 시작해 sampler가 data 쪽으로 이동합니다."],
+];
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">생성 모델 계보와 Diffusion의 등장</h2>
-      <div className="not-prose mb-8"><GenerativeTimelineViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Diffusion은 망가뜨리는 법을 먼저 정하고 복원 방향만 학습합니다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          생성 모델의 계보: <strong>GAN</strong>(2014, 적대적 학습) → <strong>VAE</strong>(잠재 공간 학습) → <strong>Normalizing Flow</strong>(역변환 가능한 분포 변환) → <strong>Diffusion Model</strong>
+        <p className="text-lg leading-8">
+          깨끗한 사진에 Gaussian noise를 조금씩 더하면 어느 순간 화면 전체가
+          무작위 점처럼 보입니다. Diffusion model은 이처럼 data를 noise로 보내는
+          forward process를 사람이 먼저 고정하고, noisy sample에서 어느 방향으로
+          돌아가야 하는지만 network에 학습시킵니다. 학습할 때는 임의 noise
+          level의 sample을 한 번에 만들 수 있지만, 생성할 때는 보통 여러 번
+          방향을 다시 물으며 noise에서 data 쪽으로 이동합니다.
         </p>
         <p>
-          DDPM(Denoising Diffusion Probabilistic Models) — 2020년 Ho et al. 제안<br />
-          데이터에 <strong>점진적으로 노이즈를 추가</strong>한 뒤 이를 <strong>역으로 제거</strong>하는 과정을 학습<br />
-          GAN과 달리 mode collapse(모드 붕괴, 다양성 상실) 없음 — 학습이 안정적
-        </p>
-
-        <CitationBlock source="Ho et al., NeurIPS 2020 — DDPM" citeKey={1} type="paper"
-          href="https://arxiv.org/abs/2006.11239">
-          <p className="italic">
-            "We show that diffusion models can generate samples matching the quality of GANs,
-            while offering stable training and mode coverage."
-          </p>
-          <p className="mt-2 text-xs">
-            DDPM은 이미지 생성 품질에서 GAN에 필적하면서도 학습 안정성과
-            다양성 측면에서 우위를 보여, Diffusion 모델 시대를 열었습니다.
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">핵심 아이디어</h3>
-        <p>
-          DDPM의 핵심 — <strong>마르코프 체인</strong>(Markov Chain, 현재 상태가 직전 상태에만 의존하는 확률 과정)을 통한 점진적 변환<br />
-          Forward process: T 단계에 걸쳐 가우시안 노이즈 추가<br />
-          Reverse process: 신경망이 각 단계의 노이즈를 예측하여 제거<br />
-          최종적으로 순수 가우시안 노이즈에서 고품질 이미지 생성
+          VAE·GAN과 비교한 전체 좌표는{" "}
+          <Link to="/ai/generative-theory">생성 모델 지도</Link>가 소유합니다.
+          이 글에서는 먼저 DDPM의 discrete noising을 숫자로 계산하고, noise
+          prediction이 score가 되는 이유를 확인합니다. 그다음에{" "}
+          <Link to="/ai/math-differential-equations-numerical-solvers">
+            ODE·SDE와 numerical solver 기초
+          </Link>
+          를 재사용해 reverse SDE·probability-flow ODE·flow matching으로
+          확장합니다. 마지막에는 같은 수학을 실제 image pipeline의 U-Net·latent
+          autoencoder·CFG와 연결합니다.
         </p>
       </div>
+      <ContentBoundary article="diffusion-models" />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Diffusion 모델의 수학적 기반</h3>
-        <div className="not-prose"><DDPMMathViz /></div>
-        <p className="leading-7">
-          요약 1: Diffusion은 <strong>점진적 denoising</strong>으로 이미지 생성 — GAN의 적대적 학습과 반대.<br />
-          요약 2: <strong>Simple Loss (MSE)</strong>만으로 학습 — GAN 대비 훨씬 안정.<br />
-          요약 3: 2022년 이후 <strong>생성 모델의 주류</strong> — Stable Diffusion·DALL-E·Sora 등.
+      <div
+        id="paper-ddpm"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Discrete diffusion
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Denoising Diffusion Probabilistic Models
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Gaussian forward chain과 learned reverse process를 연결하고, weighted
+          variational bound와 denoising score matching의 관계에서 simplified
+          noise-prediction objective를 제시합니다. 논문의 1,000-step sampler와
+          특정 U-Net recipe가 모든 diffusion model의 고정 조건이라는 뜻은
+          아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/2006.11239"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 process·objective·algorithm 보기
+        </a>
+      </div>
+
+      <figure
+        data-viz="diffusion-overview"
+        className="not-prose my-8 rounded-xl border border-border/75 bg-card p-4 sm:p-6"
+      >
+        <figcaption className="mb-5 text-sm font-semibold">
+          Training과 sampling을 구분한 전체 흐름
+        </figcaption>
+        <div className="grid gap-3 md:grid-cols-4">
+          {loop.map(([title, body], index) => (
+            <div key={title} className="min-w-0 border-t border-border pt-4">
+              <p className="text-xs font-bold text-primary/70">0{index + 1}</p>
+              <p className="mt-2 font-semibold">{title}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                {body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </figure>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>DDPM이 바꾼 trade-off</h3>
+        <p>
+          DDPM은 adversarial game 없이 여러 noise level의 supervised target을
+          회귀하므로 GAN보다 optimization을 다루기 쉬운 경우가 많습니다. 대신
+          sample 하나를 만드는 데 denoiser를 여러 번 호출해야 합니다. 이후
+          연구의 큰 축은 target parameterization, noise schedule, solver와
+          distillation을 바꿔 적은 network function evaluation(NFE)에서도 품질을
+          유지하는 것입니다.
         </p>
       </div>
     </section>

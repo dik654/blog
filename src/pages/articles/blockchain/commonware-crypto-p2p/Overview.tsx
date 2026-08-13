@@ -1,6 +1,6 @@
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
-import OverviewViz from './viz/OverviewViz';
+import { codeRefs } from "./codeRefs";
+import type { CodeRef } from "@/components/code/types";
+import OverviewViz from "./viz/OverviewViz";
 
 interface Props {
   onCodeRef: (k: string, r: CodeRef) => void;
@@ -14,9 +14,11 @@ export default function Overview({ onCodeRef }: Props) {
         <p className="leading-7">
           Commonware 암호화 계층 — trait 기반 추상화로 서명 스킴 자유 교체
           <br />
-          CometBFT는 ed25519 하드코딩 — Commonware는 trait으로 분리하여 스킴 교체 시 합의 코드 변경 불필요
+          CometBFT는 ed25519 하드코딩 — Commonware는 trait으로 분리하여 스킴
+          교체 시 합의 코드 변경 불필요
           <br />
-          <strong>namespace</strong> 파라미터 필수 — 도메인 분리로 리플레이 공격 원천 차단
+          <strong>namespace</strong> 파라미터 필수 — 도메인 분리로 리플레이 공격
+          원천 차단
         </p>
         <p className="leading-7">
           Signer → PrivateKey(직렬화 확장), Verifier → PublicKey(Ord+Hash 확장)

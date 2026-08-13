@@ -1,11 +1,10 @@
-import RealmLifecycleViz from './viz/RealmLifecycleViz';
+import RealmLifecycleViz from "./viz/RealmLifecycleViz";
 
 export default function RealmLifecycle() {
   return (
     <section id="realm-lifecycle" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Realm 생성 &amp; 생명주기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
         <h3 className="text-xl font-semibold mt-6 mb-3">Realm 상태 머신</h3>
 
         <RealmLifecycleViz />
@@ -30,7 +29,9 @@ enum realm_state {
 // ACTIVE 이후엔 초기 상태 변경 금지
 // → 측정값(RIM) 불변 보장`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Realm Descriptor (RD) 구조</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Realm Descriptor (RD) 구조
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// TF-RMM: runtime/core/realm.c
 
 struct rd {
@@ -61,7 +62,9 @@ struct rd {
 // Host가 직접 읽기 불가
 // RMM만 SMC로 조작`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">RIM 계산 — 초기 측정값</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          RIM 계산 — 초기 측정값
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// RIM(Realm Initial Measurement): Realm 정체성
 // SHA-512 해시 체인으로 누적
 
@@ -96,7 +99,9 @@ rim_extend(rd, &rec_params, sizeof(rec_params));
 
 // 4) ACTIVATE 호출 시 RIM 확정 (이후 변경 불가)`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">REM — Runtime Extendable Measurements</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          REM — Runtime Extendable Measurements
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// REM[0..3]: 런타임에 Realm이 확장 가능
 // TPM PCR과 유사, Intel TDX의 RTMR과 대응
 
@@ -150,7 +155,9 @@ rmi_granule_undelegate(...)  // Realm PAS → NS PAS (zeroize)
 // - 이전 Realm 데이터가 Host로 유출 방지
 // - cache flush 포함`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">KVM의 Realm 지원 (Host 측)</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          KVM의 Realm 지원 (Host 측)
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Linux arch/arm64/kvm/rme.c (CCA 호스트 커널)
 
 int kvm_init_realm_vm(struct kvm *kvm) {
@@ -188,24 +195,26 @@ int kvm_vcpu_enter_realm(struct kvm_vcpu *vcpu) {
           <p className="font-semibold mb-2">인사이트: RIM 측정 vs TDX MRTD</p>
           <p>
             <strong>공통점</strong>:<br />
-            - 초기 이미지 해시 → Realm/TD 정체성<br />
-            - 활성화 후 불변<br />
-            - 원격 증명의 기반
+            - 초기 이미지 해시 → Realm/TD 정체성
+            <br />
+            - 활성화 후 불변
+            <br />- 원격 증명의 기반
           </p>
           <p className="mt-2">
             <strong>차이점</strong>:<br />
-            - TDX: SHA-384, MRCONFIGID 등 3개 추가 레지스터<br />
-            - CCA: SHA-256 또는 SHA-512 선택<br />
-            - CCA는 호출 순서까지 측정 (replay 방어)
+            - TDX: SHA-384, MRCONFIGID 등 3개 추가 레지스터
+            <br />
+            - CCA: SHA-256 또는 SHA-512 선택
+            <br />- CCA는 호출 순서까지 측정 (replay 방어)
           </p>
           <p className="mt-2">
             <strong>Realm 고유 속성</strong>:<br />
-            - Personalization Value(RPV) — 64B 사용자 데이터 포함<br />
-            - 같은 이미지라도 RPV 다르면 다른 RIM<br />
-            - 사용자별 인스턴스 구분 가능
+            - Personalization Value(RPV) — 64B 사용자 데이터 포함
+            <br />
+            - 같은 이미지라도 RPV 다르면 다른 RIM
+            <br />- 사용자별 인스턴스 구분 가능
           </p>
         </div>
-
       </div>
     </section>
   );

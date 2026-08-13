@@ -1,6 +1,6 @@
-import Overview from './elgamal/Overview';
-import EncryptDecrypt from './elgamal/EncryptDecrypt';
-import Security from './elgamal/Security';
+import Overview from "./elgamal/Overview";
+import EncryptDecrypt from "./elgamal/EncryptDecrypt";
+import Security from "./elgamal/Security";
 
 export default function ElGamal() {
   return (

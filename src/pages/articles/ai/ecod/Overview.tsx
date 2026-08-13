@@ -1,54 +1,73 @@
-import { CitationBlock } from '@/components/ui/citation';
-import ECODPipelineViz from './viz/ECODPipelineViz';
-import AnomalyCompareDetailViz from './viz/AnomalyCompareDetailViz';
-import ECDFDetailViz from './viz/ECDFDetailViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import DetectionContractViz from "./viz/DetectionContractViz";
+import MarginalRankViz from "./viz/MarginalRankViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">ECOD 개요</h2>
-      <div className="not-prose mb-8"><ECODPipelineViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">먼저 “이상치”가 무엇인지 운영 언어로 고정한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>ECOD</strong>(Empirical Cumulative distribution-based Outlier Detection) — 학습이 필요 없는(training-free) 비지도 이상 탐지 알고리즘<br />
-          경험적 누적 분포 함수(ECDF, 관측 데이터로부터 직접 추정한 CDF)를 활용<br />
-          각 데이터 포인트가 얼마나 <strong>"꼬리(tail)"</strong>에 위치하는지 측정
+        <p className="text-lg leading-8">
+          ECOD(Empirical Cumulative Distribution-based Outlier Detection)는 label이 없는
+          tabular data에서 각 feature의 분포 끝에 놓인 row를 찾아 연속 anomaly score로
+          순위화한다. 특정 parametric distribution을 맞추거나 반복 optimization을 하지
+          않기 때문에 빠른 global-outlier baseline으로 유용하지만, score가 높다는 사실만으로
+          fraud·고장·공격이라고 확정되지는 않는다.
         </p>
-
-        <CitationBlock
-          source="Li et al., TKDE 2022 — ECOD"
-          citeKey={1} type="paper"
-          href="https://arxiv.org/abs/2201.00382"
-        >
-          <p className="italic">
-            "ECOD is a novel outlier detection method that uses empirical cumulative
-            distribution functions per dimension. It is hyperparameter-free, easy to
-            interpret, and highly scalable."
-          </p>
-          <p className="mt-2 text-xs">
-            ECOD — 하이퍼파라미터 없이 해석이 쉬우며 대규모 데이터에 확장 가능
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">핵심 아이디어</h3>
-        <ul>
-          <li><strong>비지도 학습</strong> — 라벨 없이 데이터 분포만으로 이상치를 탐지</li>
-          <li><strong>차원별 독립 분석</strong> — 각 피처의 ECDF를 개별 계산</li>
-          <li><strong>꼬리 확률 기반</strong> — 분포의 극단에 위치할수록 높은 이상치 점수</li>
-          <li><strong>하이퍼파라미터 프리</strong> — k, contamination 등 튜닝 불필요</li>
-        </ul>
+        <p>
+          따라서 첫 단계는 algorithm 선택이 아니라 detection contract다. 한 row가 거래인지
+          사용자 세션인지, 어떤 기간과 집단을 reference population으로 볼지, 어떤 feature가
+          score 계산 시점에 실제로 존재하는지 정해야 한다. 결측값·중복 열·category encoding과
+          시간 split은 <Link to="/ai/eda-workflow">EDA 정본 글</Link>에서 먼저 확인하고,
+          ECOD는 그 표에서 “누구를 먼저 검토할지” 정하는 역할만 맡긴다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">이상 탐지 알고리즘 계보</h3>
-        <div className="not-prose"><AnomalyCompareDetailViz /></div>
+      <DetectionContractViz />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">왜 ECDF 기반인가</h3>
-        <div className="not-prose"><ECDFDetailViz /></div>
-        <p className="leading-7">
-          요약 1: ECOD는 <strong>training-free + hyperparameter-free</strong> — 즉시 사용 가능.<br />
-          요약 2: <strong>ECDF 꼬리 확률 + -log 변환</strong>으로 이상 점수 생성.<br />
-          요약 3: 대규모 데이터(n &gt; 100K)에서 <strong>거리 기반 방법보다 유리</strong>.
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>ECDF는 분포 모양을 가정하지 않고 관측 순위를 센다</h3>
+        <p>
+          Feature마다 값의 단위와 scale은 다르다. ECDF는 현재 값보다 작거나 같은 training
+          sample의 비율을 세어 이를 0과 1 사이의 좌표로 바꾼다. Gaussian의 평균·표준편차나
+          histogram bin을 고르지 않는다는 뜻에서 non-parametric이며, 큰 값일수록 오른쪽에,
+          작은 값일수록 왼쪽에 있다는 순위 정보는 그대로 남는다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="Feature j의 값 x가 reference data에서 어느 순위에 놓였는가?"
+        idea={<>Indicator가 조건을 만족한 sample만 1로 세고 전체 개수로 나눕니다. 오른쪽 ECDF는 <code>1−F(x)</code>가 아니라 <code>X≥x</code>를 직접 세어 tie에서 양쪽 정의를 대칭으로 유지합니다.</>}
+        formula={String.raw`\begin{aligned}\widehat F_{j,L}(x)&=\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]\\\widehat F_{j,R}(x)&=\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]\end{aligned}`}
+        terms={[
+          { symbol: "X_{rj}", name: "reference value", description: "Reference row r의 feature j 값입니다." },
+          { symbol: "n", name: "reference sample count", description: "ECDF를 구성하는 비교 집단의 row 수입니다." },
+          { symbol: "\\mathbf 1[\\cdot]", name: "indicator", description: "괄호 안 조건이 참이면 1, 아니면 0을 반환합니다." },
+          { symbol: "\\widehat F_{j,L},\\widehat F_{j,R}", name: "empirical tails", description: "Feature j에서 관측된 왼쪽·오른쪽 누적 비율입니다." },
+        ]}
+        assumptions={[
+          "원 논문은 row가 같은 distribution에서 i.i.d.로 sampling되었다고 놓습니다.",
+          "ECDF는 feature별 marginal만 추정하며 feature 사이 joint dependence는 이 단계에서 모델링하지 않습니다.",
+        ]}
+        interpretation="Training row 자체를 평가하면 tail probability의 최솟값은 대략 1/n이므로 −log 계산에서 0이 되지 않습니다. 다만 reference population이 바뀌면 같은 raw value의 순위도 함께 바뀝니다."
+      />
+
+      <MarginalRankViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Parameter-free라는 말은 score 함수에 한정된다</h3>
+        <p>
+          ECOD 논문이 parameter-free라고 부르는 까닭은 neighbor 수, histogram bin,
+          tree 수처럼 score 모양을 조절할 핵심 hyperparameter가 없기 때문이다. 하지만
+          binary alert를 만들려면 threshold가 필요하고, reference 기간·feature 선택·재학습
+          주기 또한 운영자가 정해야 한다. 즉 “설정 없이 이상치를 알아서 확정한다”는 뜻은 아니다.
+        </p>
+        <p>
+          시계열 값도 row로 넣을 수는 있지만 ECOD가 시간 순서를 읽는 것은 아니다. Lag,
+          rolling statistic, 계절 위치 등을 feature로 만들어야 시간 문맥이 생기며, 미래 정보가
+          계산에 섞이지 않도록 cutoff를 지켜야 한다. Streaming detector가 필요하다면 window와
+          ECDF 갱신 정책도 별도의 system contract가 된다.
         </p>
       </div>
     </section>

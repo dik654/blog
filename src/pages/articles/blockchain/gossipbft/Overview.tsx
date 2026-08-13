@@ -1,29 +1,36 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">GossiPBFT (Filecoin F3)</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          GossiPBFT (Protocol Labs, 2024) — <strong>Filecoin의 F3 (Fast Finality)</strong> 프로토콜.<br />
-          기존 EC (Expected Consensus) 위에 PBFT 스타일 투표 layer 추가.<br />
+          GossiPBFT (Protocol Labs, 2024) —{" "}
+          <strong>Filecoin의 F3 (Fast Finality)</strong> 프로토콜.
+          <br />
+          기존 EC (Expected Consensus) 위에 PBFT 스타일 투표 layer 추가.
+          <br />
           7.5시간 → 수 분으로 finality 시간 단축.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">왜 필요한가</h3>
         <p className="leading-7">
-          Filecoin EC: 확정에 <strong>약 7.5시간</strong> (900 epochs × 30초).<br />
-          cross-chain bridges, DeFi 등 빠른 확정 필수.<br />
+          Filecoin EC: 확정에 <strong>약 7.5시간</strong> (900 epochs × 30초).
+          <br />
+          cross-chain bridges, DeFi 등 빠른 확정 필수.
+          <br />
           F3: EC를 수정하지 않고 확정 레이어만 추가.
         </p>
 
         {/* ── Filecoin EC의 한계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">Filecoin EC의 한계</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Filecoin Expected Consensus (EC):
+          {`// Filecoin Expected Consensus (EC):
 //
 // 기본 원리:
 // - storage power 비례 winner 선택
@@ -77,14 +84,15 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           EC: <strong>7.5시간 finality, storage power weighted</strong>.<br />
-          cross-chain/DeFi에 부적합.<br />
+          cross-chain/DeFi에 부적합.
+          <br />
           F3: EC 위 finality layer 추가 (수 분).
         </p>
 
         {/* ── GossiPBFT 설계 ── */}
         <h3 className="text-xl font-semibold mt-6 mb-3">GossiPBFT 설계 원리</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// GossiPBFT 설계:
+          {`// GossiPBFT 설계:
 //
 // 이름 유래:
 // - Gossip: 모든 validator가 broadcast
@@ -147,15 +155,21 @@ export default function Overview() {
 // - phased rollout 2024-2025`}
         </pre>
         <p className="leading-7">
-          GossiPBFT: <strong>storage power weighted + gossip + 4-phase</strong>.<br />
-          leader 없음, DDoS 저항.<br />
+          GossiPBFT: <strong>storage power weighted + gossip + 4-phase</strong>.
+          <br />
+          leader 없음, DDoS 저항.
+          <br />
           EC 위 layer로 finality 100-1000x 향상.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 "gossip" 구조를 선택했나</strong> — DDoS 저항 + 탈중앙화.<br />
-          leader 기반 BFT: leader 공격 시 halt.<br />
-          Gossip: 모든 validator 대등 → single point of failure 없음.<br />
+          <strong>💡 왜 "gossip" 구조를 선택했나</strong> — DDoS 저항 +
+          탈중앙화.
+          <br />
+          leader 기반 BFT: leader 공격 시 halt.
+          <br />
+          Gossip: 모든 validator 대등 → single point of failure 없음.
+          <br />
           Filecoin는 DDoS 자주 겪음 → gossip 필수.
         </p>
       </div>

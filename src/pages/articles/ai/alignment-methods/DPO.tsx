@@ -1,48 +1,69 @@
-import { CitationBlock } from '@/components/ui/citation';
-import DPODerivationViz from './viz/DPODerivationViz';
-import DPODerivationDetailViz from './viz/DPODerivationDetailViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function DPO() {
   return (
     <section id="dpo" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">DPO: Direct Preference Optimization</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none mb-4">
-        <p>
-          <strong>핵심 통찰</strong> — RLHF의 최적 정책 π*는 보상 함수 r*의 닫힌 형태 해가 존재<br />
-          이를 Bradley-Terry 손실에 대입하면 RM 학습 + PPO가 단일 분류 손실로 소거됨
-        </p>
-      </div>
+      <h2 className="mb-6 text-2xl font-bold">
+        DPO는 pairwise preference를 policy loss로 직접 옮긴다
+      </h2>
 
-      <DPODerivationViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <CitationBlock source="Rafailov et al., 2023 — DPO" citeKey={2} type="paper"
-          href="https://arxiv.org/abs/2305.18290">
-          <p className="italic text-sm">
-            "We show that the RL-based objective can be optimized exactly with a simple
-            classification loss, eliminating the need for a reward model or RL training."
-          </p>
-          <p className="mt-2 text-xs">
-            DPO의 수학적 기여: r*(x,y) = β·log(π*/π_ref) + Z(x) — 이 관계를 BT 모델에 대입하면
-            Z(x)가 소거되어 정규화 상수 계산이 불필요해짐
-          </p>
-        </CitationBlock>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">DPO의 한계</h3>
-        <p>
-          <strong>분포 이동</strong> — 학습이 진행되면서 π_θ와 π_ref 사이 괴리 증가<br />
-          <strong>β 민감도</strong> — β가 너무 크면 탐색 부족, 너무 작으면 보상 해킹<br />
-          <strong>여전히 2단계</strong> — SFT → DPO, Reference 모델 메모리 필요
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">DPO 유도 과정 & 변형들</h3>
-        <div className="not-prose"><DPODerivationDetailViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          요약 1: DPO는 <strong>Z(x) 상쇄</strong>로 reward model 제거 — 수학적 우아함.<br />
-          요약 2: <strong>SimPO, IPO, KTO</strong> 등 파생 기법 2024년 다수 등장.<br />
-          요약 3: 현재 <strong>SimPO</strong>가 벤치마크에서 최고 성능.
+          Direct Preference Optimization(DPO)은 PPO-RLHF의 “reward model을
+          학습하고 그 score를 online으로 최대화한다”는 두 단계를 하나의 pairwise
+          classification loss로 바꾼다. 출발점은 KL-regularized reward objective의
+          optimal policy를 reward에 대해 다시 쓰는 것이다. 이 관계를
+          Bradley–Terry preference model에 대입하면 prompt마다 생기는 partition
+          function이 chosen과 rejected의 차이에서 상쇄된다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="Chosen·rejected pair만으로 reference 대비 policy의 선호 방향을 어떻게 학습할까?"
+        idea={<>각 response의 log probability가 아니라 policy가 reference보다 그 response를 얼마나 더 선호하게 됐는지 log-ratio를 비교합니다. Chosen의 relative log-ratio가 rejected보다 클수록 sigmoid 안의 margin이 커집니다.</>}
+        formula={String.raw`\begin{aligned}r_\theta(x,y)&=\log\frac{\pi_\theta(y\mid x)}{\pi_{ref}(y\mid x)}\\\Delta_\theta&=r_\theta(x,y_+)-r_\theta(x,y_-)\\\mathcal L_{DPO}&=-\mathbb E_{\mathcal D}\log\sigma(\beta\Delta_\theta)\end{aligned}`}
+        terms={[
+          { symbol: "\pi_\theta", name: "trainable policy", description: "Preference pair로 update되는 model입니다." },
+          { symbol: "\pi_{ref}", name: "reference policy", description: "보통 SFT checkpoint를 고정한 기준 model입니다." },
+          { symbol: "\Delta_\theta", name: "relative preference margin", description: "Reference 대비 chosen 쪽으로 이동한 정도에서 rejected 쪽 이동을 뺍니다." },
+          { symbol: "\beta", name: "temperature·regularization scale", description: "DPO 유도에서 KL coefficient와 연결되지만 library별 convention을 확인해야 합니다." },
+        ]}
+        assumptions={["같은 prompt의 chosen·rejected pair와 고정 reference log-probability를 사용합니다.", "표준 유도는 KL-regularized reward maximization과 Bradley–Terry preference model을 전제로 합니다."]}
+        interpretation="DPO는 별도 scalar reward network와 training 중 online rollout을 제거합니다. Reference, pair quality, offline support와 독립 평가까지 제거하는 방법은 아닙니다."
+      />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>단순한 pipeline이 해결하지 않는 문제</h3>
+        <p>
+          DPO는 offline preference pair의 support 안에서 학습하므로 현재 policy가
+          새롭게 생성하는 response를 그 자리에서 평가하지 않는다. Pair가 noisy하거나
+          chosen과 rejected의 실질적 품질 차이가 작고 length·style shortcut이 있으면
+          그 편향도 margin에 들어간다. Reference checkpoint와 chat template,
+          sequence log-prob의 length normalization을 바꾸면 같은 β라도 유효 update
+          scale이 달라질 수 있어 implementation contract를 함께 기록해야 한다.
+        </p>
+        <p>
+          <a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noreferrer">DPO 원 논문</a>의
+          비교 결과는 summarization·single-turn dialogue와 sentiment control이라는
+          실험 조건에서 읽어야 한다. 새로운 base model과 dataset에서도 PPO보다
+          항상 우월하다는 일반 법칙으로 확장하지 않는다.
+        </p>
+      </div>
+
+      <div
+        id="paper-dpo"
+        className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 해설 · DPO</p>
+        <h3 className="mt-2 text-base font-bold text-foreground">
+          핵심 아이디어는 reward를 없앤 것이 아니라 optimal policy 안으로 흡수한 것이다
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          KL-regularized reward maximization의 closed-form optimal policy를 reward에
+          대해 다시 쓰고 Bradley–Terry preference likelihood에 대입하면, prompt별
+          partition function이 chosen–rejected 차이에서 상쇄됩니다. 그래서 별도
+          reward network와 online rollout 없이 policy log-ratio를 직접 학습하지만,
+          preference model의 가정과 reference policy는 그대로 남습니다.
         </p>
       </div>
     </section>

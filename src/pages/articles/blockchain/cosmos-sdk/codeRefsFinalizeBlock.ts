@@ -1,18 +1,34 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const finalizeBlockCodeRefs: Record<string, CodeRef> = {
-  'abci-finalizeblock': {
-    path: 'baseapp/abci.go',
-    lang: 'go',
+  "abci-finalizeblock": {
+    path: "baseapp/abci.go",
+    lang: "go",
     highlight: [1, 24],
     desc: `FinalizeBlock — CometBFT가 블록 합의 후 호출하는 ABCI 진입점.
 Optimistic Execution이 활성화되면 미리 실행한 결과를 재사용.
 💡 OE 해시 불일치 시 상태를 리셋하고 재실행 — 투기적 실행의 롤백 비용.`,
     annotations: [
-      { lines: [1, 5], color: 'sky', note: 'ABCI 리스너 — 블록 결과를 외부 서비스로 스트리밍' },
-      { lines: [7, 12], color: 'emerald', note: 'OE 해시 검증: 일치 → 결과 재사용, workingHash 반환' },
-      { lines: [14, 17], color: 'amber', note: 'OE 불일치 → 상태 리셋 + 재실행' },
-      { lines: [19, 24], color: 'violet', note: 'internalFinalizeBlock → workingHash 계산' },
+      {
+        lines: [1, 5],
+        color: "sky",
+        note: "ABCI 리스너 — 블록 결과를 외부 서비스로 스트리밍",
+      },
+      {
+        lines: [7, 12],
+        color: "emerald",
+        note: "OE 해시 검증: 일치 → 결과 재사용, workingHash 반환",
+      },
+      {
+        lines: [14, 17],
+        color: "amber",
+        note: "OE 불일치 → 상태 리셋 + 재실행",
+      },
+      {
+        lines: [19, 24],
+        color: "violet",
+        note: "internalFinalizeBlock → workingHash 계산",
+      },
     ],
     code: `func (app *BaseApp) FinalizeBlock(
 	req *abci.RequestFinalizeBlock,
@@ -42,19 +58,35 @@ Optimistic Execution이 활성화되면 미리 실행한 결과를 재사용.
 }`,
   },
 
-  'internal-finalizeblock': {
-    path: 'baseapp/abci.go',
-    lang: 'go',
+  "internal-finalizeblock": {
+    path: "baseapp/abci.go",
+    lang: "go",
     highlight: [1, 26],
     desc: `internalFinalizeBlock — 실제 블록 실행 로직.
 preBlock → beginBlock → executeTxs → endBlock 순서.
 💡 블록 내 모든 TX를 txRunner로 실행 — 병렬 실행 확장 가능한 구조.`,
     annotations: [
-      { lines: [1, 4], color: 'sky', note: 'halt 체크 + 높이 검증' },
-      { lines: [6, 9], color: 'emerald', note: 'finalizeState 초기화 — 없으면 새로 생성 (블록 리플레이)' },
-      { lines: [11, 15], color: 'amber', note: 'preBlock + beginBlock — 모듈 사전 처리' },
-      { lines: [17, 22], color: 'violet', note: 'executeTxsWithExecutor → deliverTx → RunTx' },
-      { lines: [24, 26], color: 'rose', note: 'endBlock + 결과 조립 → ResponseFinalizeBlock' },
+      { lines: [1, 4], color: "sky", note: "halt 체크 + 높이 검증" },
+      {
+        lines: [6, 9],
+        color: "emerald",
+        note: "finalizeState 초기화 — 없으면 새로 생성 (블록 리플레이)",
+      },
+      {
+        lines: [11, 15],
+        color: "amber",
+        note: "preBlock + beginBlock — 모듈 사전 처리",
+      },
+      {
+        lines: [17, 22],
+        color: "violet",
+        note: "executeTxsWithExecutor → deliverTx → RunTx",
+      },
+      {
+        lines: [24, 26],
+        color: "rose",
+        note: "endBlock + 결과 조립 → ResponseFinalizeBlock",
+      },
     ],
     code: `func (app *BaseApp) internalFinalizeBlock(
 	goCtx context.Context, req *abci.RequestFinalizeBlock,

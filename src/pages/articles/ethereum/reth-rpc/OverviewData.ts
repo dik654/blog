@@ -6,46 +6,41 @@ export interface RPCLayer {
   why: string;
   color: string;
 }
-
-export const RPC_LAYERS: RPCLayer[] = [
+export const RPC_LAYERS: readonly RPCLayer[] = [
   {
-    id: 'transport',
-    label: 'Transport (hyper)',
-    role: 'HTTP/WS 연결 관리',
+    id: "transport",
+    label: "Listeners",
+    role: "HTTP·WS·IPC / auth RPC",
     details:
-      'hyper가 HTTP/1.1, HTTP/2, WebSocket 연결을 처리한다. ' +
-      'JSON-RPC는 8545 포트, Engine API는 8551 포트로 분리하여 접근 제어.',
-    why: '왜 포트 분리? Engine API는 CL만 접근해야 하므로 JWT 인증이 필수. 외부 RPC와 섞이면 보안 위험.',
-    color: '#6366f1',
+      "각 listener는 별도 address, port, enabled namespaces와 exposure policy를 가진다.",
+    why: "Public JSON-RPC와 CL↔EL Engine API의 trust boundary를 분리한다.",
+    color: "#6366f1",
   },
   {
-    id: 'middleware',
-    label: 'tower 미들웨어',
-    role: '인증·로깅·Rate Limiting',
+    id: "middleware",
+    label: "Middleware",
+    role: "auth·limits·observability",
     details:
-      'tower::Service trait으로 미들웨어를 체인한다. JWT 검증 → CORS → Rate Limiting → Logging 순서. ' +
-      '각 미들웨어는 독립적으로 교체 가능.',
-    why: '왜 tower? hyper, axum, tonic 등 Rust 생태계 전반에서 사용하는 표준 미들웨어 패턴.',
-    color: '#0ea5e9',
+      "JWT, host/origin, payload limits, timeout과 tracing을 method implementation 밖에서 적용한다.",
+    why: "운영 policy를 바꿔도 protocol handler contract를 유지할 수 있다.",
+    color: "#0ea5e9",
   },
   {
-    id: 'dispatch',
-    label: 'jsonrpsee 디스패치',
-    role: '메서드 라우팅·실행',
+    id: "dispatch",
+    label: "Typed modules",
+    role: "decode·dispatch·encode",
     details:
-      '#[rpc(server, namespace = "eth")] 매크로가 컴파일 타임에 라우팅 코드를 생성한다. ' +
-      'eth_call → EthApi::call()로 직접 매핑. 런타임 리플렉션 없이 zero-cost.',
-    why: '왜 매크로? Geth는 Go 리플렉션으로 런타임 디스패치. Reth는 컴파일 타임에 확정하여 오버헤드 제거.',
-    color: '#10b981',
+      "jsonrpsee modules가 namespace와 versioned methods를 params/result types에 연결한다.",
+    why: "invalid params와 unsupported method를 실제 provider 작업 전에 구분한다.",
+    color: "#10b981",
   },
   {
-    id: 'handler',
-    label: '핸들러 (EthApi)',
-    role: '비즈니스 로직 실행',
+    id: "handler",
+    label: "Services",
+    role: "provider·EVM·pool·engine",
     details:
-      'StateProvider로 상태를 읽고, revm으로 EVM을 실행한다. ' +
-      'trait 기반이므로 테스트 시 mock provider를 주입할 수 있다.',
-    why: '왜 trait? 실행 레이어를 교체 가능하게 만든다. OP Stack, Arbitrum 등이 커스텀 핸들러를 구현.',
-    color: '#f59e0b',
+      "Method handler가 요청된 block context를 고정하고 backend service 결과를 RPC response로 변환한다.",
+    why: "Transport가 state availability, execution validity와 Engine status의 의미를 재정의하지 않게 한다.",
+    color: "#f59e0b",
   },
-];
+] as const;

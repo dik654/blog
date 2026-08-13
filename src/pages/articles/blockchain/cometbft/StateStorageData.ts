@@ -22,10 +22,26 @@ type State struct {
 }`;
 
 export const STATE_STRUCT_ANNOTATIONS = [
-  { lines: [4, 6] as [number, number], color: 'sky' as const, note: '불변 필드' },
-  { lines: [8, 11] as [number, number], color: 'emerald' as const, note: '블록 메타데이터' },
-  { lines: [13, 16] as [number, number], color: 'amber' as const, note: '3세대 밸리데이터' },
-  { lines: [18, 21] as [number, number], color: 'violet' as const, note: '상태 해시' },
+  {
+    lines: [4, 6] as [number, number],
+    color: "sky" as const,
+    note: "불변 필드",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "emerald" as const,
+    note: "블록 메타데이터",
+  },
+  {
+    lines: [13, 16] as [number, number],
+    color: "amber" as const,
+    note: "3세대 밸리데이터",
+  },
+  {
+    lines: [18, 21] as [number, number],
+    color: "violet" as const,
+    note: "상태 해시",
+  },
 ];
 
 export const BLOCKSTORE_CODE = `BlockStore 구조체 — 블록 저장소
@@ -52,14 +68,34 @@ type BlockStore struct {
   BH:hex(<hash>)          → height (해시 인덱스)`;
 
 export const BLOCKSTORE_ANNOTATIONS = [
-  { lines: [4, 6] as [number, number], color: 'sky' as const, note: '연속성 보장 (base~height)' },
-  { lines: [8, 11] as [number, number], color: 'emerald' as const, note: 'LRU 캐시' },
-  { lines: [17, 21] as [number, number], color: 'amber' as const, note: 'DB 키 형식' },
+  {
+    lines: [4, 6] as [number, number],
+    color: "sky" as const,
+    note: "연속성 보장 (base~height)",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "emerald" as const,
+    note: "LRU 캐시",
+  },
+  {
+    lines: [17, 21] as [number, number],
+    color: "amber" as const,
+    note: "DB 키 형식",
+  },
 ];
 
 export const DB_BACKEND_TABLE = [
-  { backend: 'goleveldb', desc: 'Go 순수 구현, 기본값', perf: '범용, 설치 편리' },
-  { backend: 'pebbledb', desc: 'CockroachDB 기반', perf: '높은 쓰기 성능' },
-  { backend: 'rocksdb', desc: 'Facebook, CGO 필요', perf: '대규모 데이터 최적화' },
-  { backend: 'badgerdb', desc: 'Dgraph 개발', perf: 'SSD 최적화 LSM-tree' },
+  {
+    backend: "goleveldb",
+    desc: "Go 순수 구현, 기본값",
+    perf: "범용, 설치 편리",
+  },
+  { backend: "pebbledb", desc: "CockroachDB 기반", perf: "높은 쓰기 성능" },
+  {
+    backend: "rocksdb",
+    desc: "Facebook, CGO 필요",
+    perf: "대규모 데이터 최적화",
+  },
+  { backend: "badgerdb", desc: "Dgraph 개발", perf: "SSD 최적화 LSM-tree" },
 ] as const;

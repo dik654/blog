@@ -1,8 +1,14 @@
 export const rpcItems = [
-  { name: 'PING', desc: '노드 활성 여부 확인. 응답이 없으면 k-버킷에서 제거 후보.' },
-  { name: 'STORE', desc: '키-값 쌍을 저장하도록 요청. 만료 시간 포함.' },
-  { name: 'FIND_NODE', desc: '대상 ID에 가장 가까운 k개 노드 목록을 요청.' },
-  { name: 'FIND_VALUE', desc: '값이 있으면 반환, 없으면 FIND_NODE처럼 가까운 노드 반환.' },
+  {
+    name: "PING",
+    desc: "노드 활성 여부 확인. 응답이 없으면 k-버킷에서 제거 후보.",
+  },
+  { name: "STORE", desc: "키-값 쌍을 저장하도록 요청. 만료 시간 포함." },
+  { name: "FIND_NODE", desc: "대상 ID에 가장 가까운 k개 노드 목록을 요청." },
+  {
+    name: "FIND_VALUE",
+    desc: "값이 있으면 반환, 없으면 FIND_NODE처럼 가까운 노드 반환.",
+  },
 ];
 
 export const iterativeFindCode = `async fn find_closest_nodes(target: &NodeId) -> Vec<NodeInfo> {

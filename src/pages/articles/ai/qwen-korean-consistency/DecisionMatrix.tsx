@@ -1,194 +1,159 @@
-import DecisionMatrixViz from './viz/DecisionMatrixViz';
+import DecisionMatrixViz from "./viz/DecisionMatrixViz";
+
+const OPTIONS = [
+  {
+    name: "프롬프트",
+    point: "request context",
+    fit: "가중치 접근 없이 기본 언어·field·예외 정책을 명시할 때",
+    limit: "학습 weight를 바꾸지 않으며 긴 출력과 어려운 문맥에서 지시 이탈이 남을 수 있음",
+  },
+  {
+    name: "런타임 가드",
+    point: "generated output",
+    fit: "API 모델의 long-tail 실패를 감지하고 retry·degrade·review로 분기할 때",
+    limit: "추가 latency·judge 비용과 false positive·false negative가 생김",
+  },
+  {
+    name: "Smoothie-Qwen",
+    point: "lm_head rows",
+    fit: "오픈웨이트에서 특정 Unicode·subword 위험 token의 과도한 생성을 줄일 때",
+    limit: "softmax 전체의 상대 확률과 정상 번역도 바뀌므로 paired evaluation이 필요함",
+  },
+  {
+    name: "SFT · RL",
+    point: "learned policy",
+    fit: "reasoning trace와 문제 풀이 선호까지 반복적으로 바꿔야 할 때",
+    limit: "data·compute·reward·judge·회귀 평가가 필요하고 인과를 분리하기 어려움",
+  },
+] as const;
 
 export default function DecisionMatrix() {
   return (
     <section id="decision-matrix" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">해법 선택 매트릭스</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        접근성·대상·비용·근거로 개입 지점을 고릅니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          지금까지 네 가지 해법을 봤다 — 프롬프트 가드레일, 런타임 가드, Smoothie-Qwen, RL fine-tune.<br />
-          각 해법은 "어디에서 개입하는가"가 다르고, 그 개입 지점이 비용과 강도를 결정한다.<br />
-          이 섹션은 지금까지 흩어져 있던 판단 기준을 하나의 매트릭스로 묶는다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          프롬프트, Smoothie-Qwen, SFT·RL, 런타임 가드는 강도가 다른 같은 약이
+          아닙니다. 각각 요청 문맥, 출력층, 학습된 policy, 배포 경계라는 다른
+          부분을 바꿉니다. 먼저 고정 사례의 실패가 문자 span인지, reasoning 구간
+          전환인지, 정상 번역 오탐인지 분류한 다음 가장 직접적인 한 개입을
+          candidate로 만듭니다.
         </p>
-        <p className="leading-7">
-          결론부터 말하면 — 4가지는 배타적이 아니다.<br />
-          대부분의 프로덕션 워크로드는 2~3개를 <strong>쌓아서</strong> 쓴다.<br />
-          어떤 조합을 쓸지는 가중치 접근성, 워크로드 특성, GPU 예산, latency budget이 함께 결정한다.
+        <p>
+          선택 질문은 네 가지입니다. <strong>Access</strong>는 model weight와
+          학습 환경을 바꿀 수 있는지, <strong>Target</strong>은 표면 token과
+          reasoning policy 중 무엇을 바꿀지, <strong>Cost</strong>는 offline
+          training과 per-request latency 중 무엇을 감당할지,
+          <strong>Evidence</strong>는 paired data와 사람이 확인한 label이 충분한지
+          묻습니다. 방법 이름보다 이 제약이 먼저입니다.
         </p>
+      </div>
 
-        <div className="not-prose my-8"><DecisionMatrixViz /></div>
+      <div className="not-prose my-8">
+        <DecisionMatrixViz />
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">개입 지점의 지도</h3>
-        <p className="leading-7">
-          모든 해법을 "어디에서 개입하는가" 축으로 일렬로 세울 수 있다.
-        </p>
-        <ul className="leading-7">
-          <li><strong>프롬프트</strong> — 입력 시퀀스를 수정. 모델 밖, 가장 약함.</li>
-          <li><strong>런타임 가드</strong> — 출력 사후 검사. 모델 밖, 걸러내기만 하면 뭐든 막음.</li>
-          <li><strong>Smoothie-Qwen</strong> — lm_head 가중치를 직접 만짐. 모델 안, logit 격차의 부호를 뒤집음.</li>
-          <li><strong>RL fine-tune</strong> — policy 전체를 재학습. 모델 가장 깊은 곳, 사고 attractor까지 재정렬.</li>
-        </ul>
-        <p className="leading-7">
-          이 축의 일반 법칙: 개입 지점이 lm_head에 가까울수록 강도가 크고 비용이 높다.<br />
-          모델 밖에서 시작해서 모델 안으로 들어갈수록 성공률이 올라가지만, 요구되는 리소스(가중치 접근, 학습 인프라, 데이터셋)도 동시에 올라간다.
-        </p>
+      <div className="not-prose my-8 min-w-0 space-y-3">
+        <p className="text-sm font-bold">방법별 책임과 한계</p>
+        {OPTIONS.map((option) => (
+          <section
+            key={option.name}
+            className="grid min-w-0 gap-3 rounded-xl border border-border/70 bg-background p-4 sm:grid-cols-[9rem_minmax(0,1fr)] sm:p-5"
+          >
+            <div className="min-w-0">
+              <h3 className="break-words text-sm font-bold">{option.name}</h3>
+              <p className="mt-1 break-words font-mono text-xs text-primary">{option.point}</p>
+            </div>
+            <dl className="grid min-w-0 gap-3 text-sm md:grid-cols-2">
+              <div className="min-w-0">
+                <dt className="text-xs font-semibold text-muted-foreground">잘 맞는 조건</dt>
+                <dd className="mt-1 break-words leading-6">{option.fit}</dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-xs font-semibold text-muted-foreground">주요 비용·한계</dt>
+                <dd className="mt-1 break-words leading-6">{option.limit}</dd>
+              </div>
+            </dl>
+          </section>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">비용은 두 종류 — 1회 vs 지속</h3>
-        <p className="leading-7">
-          "비용"을 한 숫자로 비교하면 틀린다. 개발 비용과 운영 비용을 분리해야 한다.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>1. 결과를 보기 전에 평가 기준을 사전 등록합니다</h3>
+        <p>
+          Candidate를 실행한 뒤 잘 나온 예시만 골라 metric을 만드는 일을 막으려면,
+          evaluation slice와 성공 기준을 먼저 versioning합니다. 고정 질문의
+          한국어-only 변형, 긴 reasoning 변형, 중국어 번역 “首尔”을 요구하는
+          예외 변형을 쌍으로 둡니다. Model checkpoint와 tokenizer revision, chat
+          template, thinking mode, prompt, decoding, checker·judge version을 함께
+          고정하고 seed를 지원하면 같은 seed를, 그렇지 않으면 반복 횟수와 결과
+          분포를 기록합니다. 이런 <strong>preregistration(사전 등록)</strong>은 학술
+          등록 제도라기보다 결과를 보기 전에 합격 기준을 정하는 내부 의사결정
+          계약입니다.
         </p>
-        <p className="leading-7">
-          <strong>프롬프트</strong>: 개발 0, 운영 0. 가장 싼 것처럼 보이지만 효과가 약해서 실질 비용(실패로 인한 손실)이 숨어 있다.<br />
-          <strong>런타임 가드</strong>: 개발 1~2일, 운영 지속 (매 요청에 latency + LLM judge 호출 비용).<br />
-          <strong>Smoothie-Qwen</strong>: 개발 1회 (GPU 몇 분 또는 그냥 HF에서 다운로드), 운영 0. 장기적으로 가장 저렴.<br />
-          <strong>RL fine-tune</strong>: 개발 4~5일 (GPU 며칠 + 데이터셋 구축), 운영 0.
-        </p>
-        <p className="leading-7">
-          지속 비용은 scale 할수록 누적된다.<br />
-          하루 100만 요청을 처리하는 워크로드에서 런타임 가드의 LLM judge 호출이 15%만 돼도 매일 15만 번의 추가 추론이 필요하다.<br />
-          같은 워크로드에서 Smoothie-Qwen은 1회 변환 후 추가 비용 0 — 둘의 총비용 격차가 몇 주 만에 벌어진다.
-        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">커버리지 히트맵 — 어떤 실패 모드를 잡나</h3>
-        <p className="leading-7">
-          PromptLevel 섹션에서 본 5가지 실패 모드(reasoning bypass, position decay, domain trigger, few-shot 오염, instruction conflict) 각각에 해법 4개의 효과를 점수화해 보자.
-        </p>
-        <ul className="leading-7">
-          <li><strong>Reasoning bypass</strong>: prompt 0.2 / runtime 0.5 / Smoothie 0.7 / RL 0.95. think 블록은 가장 어려운 영역이고 RL이 확실히 강하다.</li>
-          <li><strong>Position decay</strong>: prompt 0.2 / runtime 0.6 / Smoothie 0.8 / RL 0.9. 길이 문제는 Smoothie가 상당 부분 잡는다.</li>
-          <li><strong>Domain trigger</strong>: prompt 0.3 / runtime 0.5 / Smoothie 0.9 / RL 0.9. 코드 주변 한자는 lm_head 보정이 거의 완벽히 잡는다.</li>
-          <li><strong>Few-shot 오염</strong>: prompt 0.1 / runtime 0.4 / Smoothie 0.85 / RL 0.9. prompt 자체가 원인이라 prompt 기반 해법이 최악.</li>
-          <li><strong>Instruction conflict</strong>: prompt 0.2 / runtime 0.3 / Smoothie 0.9 / RL 0.95. 정확성 vs 한국어 충돌은 lm_head에서만 해소.</li>
-        </ul>
-        <p className="leading-7">
-          흥미로운 관찰 — Smoothie와 RL의 격차가 "reasoning bypass" 한 축에만 집중된다.<br />
-          그 외 네 모드는 Smoothie만으로도 0.8 이상 커버가 가능하다.<br />
-          그래서 "긴 사고가 워크로드의 핵심인가"가 RL을 정당화하는 유일한 기준이라고 봐도 된다.
-        </p>
+      <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ["언어", "reasoning·final의 unexpected span과 segment switch를 분리합니다."],
+          ["정답", "계산 결과 3,200원과 task benchmark를 candidate마다 동일하게 채점합니다."],
+          ["예외", "사용자가 요청한 번역 ‘首尔’과 고유명사·인용을 보존했는지 봅니다."],
+          ["운영", "latency·retry·judge token·GPU·artifact 관리 비용을 같은 단위로 기록합니다."],
+        ].map(([title, body]) => (
+          <div key={title} className="min-w-0 rounded-lg border border-border/70 bg-background p-4">
+            <p className="text-sm font-semibold">{title}</p>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{body}</p>
+          </div>
+        ))}
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">배포 제약 — 무엇을 요구하는가</h3>
-        <p className="leading-7">
-          해법마다 요구하는 인프라가 다르다. 네 가지 요건으로 분해해 보자.
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>2. 제약에 맞는 candidate 하나와 baseline을 비교합니다</h3>
+        <p>
+          Weight access가 없고 즉시 실패를 막아야 하면 prompt와 bounded runtime
+          guard가 현실적인 후보입니다. 오픈웨이트에서 특정 문자군만 반복적으로
+          과다 생성되면 Smoothie 변환본을 base와 비교하고, 표면 표기는 안정됐는데
+          연구용 reasoning trace의 언어·정답 policy가 계속 무너지면 SFT를 먼저
+          검토합니다. SFT 이후 여러 candidate의 상대 선호를 바꿀 reliable reward와
+          judge가 있을 때만 RL을 추가합니다.
         </p>
-        <ul className="leading-7">
-          <li><strong>가중치 접근</strong> — 모델 파라미터를 직접 로드/수정할 수 있는가.</li>
-          <li><strong>학습 인프라</strong> — training loop, optimizer, distributed training을 돌릴 수 있는가.</li>
-          <li><strong>데이터셋</strong> — 한국어 reasoning 문제 + 정답 + judge prompt 세트가 있는가.</li>
-          <li><strong>운영 인프라</strong> — 런타임에 추가 서비스(judge LLM, 가드 파이프라인)를 운영할 수 있는가.</li>
-        </ul>
-        <p className="leading-7">
-          요건 매트릭스:
-        </p>
-        <ul className="leading-7">
-          <li>프롬프트: 아무것도 필요 없음. API 기반 모델에서도 작동.</li>
-          <li>런타임 가드: 운영 인프라만 필요. API 기반 모델에서도 작동.</li>
-          <li>Smoothie-Qwen: 가중치 접근 필요. 오픈웨이트 모델 한정. 하지만 Qwen 전 사이즈는 이미 변환 배포돼 있어서 가중치 접근 = "HF에서 다운로드"로 축소된다.</li>
-          <li>RL fine-tune: 4가지 모두 필요.</li>
-        </ul>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>현실적 상한</strong> — 대부분의 팀은 Smoothie까지가 현실적인 최대치다.<br />
-          RL은 "한국어 품질이 제품의 핵심 차별점이고, GPU 예산과 데이터셋이 확보돼 있으며, 긴 reasoning이 워크로드의 중심"인 경우에만 정당화된다.<br />
-          이 세 조건을 모두 만족하는 팀은 실제로 많지 않다.<br />
-          그 외는 Smoothie + 런타임 가드 2층이 sweet spot.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">Stacking — 해법은 쌓아쓴다</h3>
-        <p className="leading-7">
-          4가지 해법은 서로를 대체하지 않는다. 쌓아쓰는 게 정상 사용법이다.<br />
-          각 layer가 다른 층의 잔여 문제를 잡는다.
-        </p>
-        <ul className="leading-7">
-          <li><strong>Layer 1 — 프롬프트 가드레일 (최소)</strong>: "한국어로 답변" 한 줄. 비용 0, 효과 약하지만 심리적 안전망.</li>
-          <li><strong>Layer 2 — Smoothie-Qwen 모델</strong>: 기본 모델을 변환본으로 교체. logit 격차를 뒤집는 핵심 레이어.</li>
-          <li><strong>Layer 3 — 런타임 hybrid 가드</strong>: regex fast path + 의심 시 LLM judge. 잔여 5%를 잡는 안전망.</li>
-          <li><strong>Layer 4 — RL fine-tune (선택)</strong>: 긴 reasoning에서 잔여 문제가 있을 때만 추가.</li>
-        </ul>
-        <p className="leading-7">
-          Layer 1~3의 3층 조합이 대부분의 프로덕션 에이전트에게 sweet spot이다.<br />
-          Layer 4는 특수 워크로드에만 — 그 외에는 비용 대비 효과가 떨어진다.
+        <p>
+          한 번에 모든 방법을 쌓으면 어느 층이 효과와 회귀를 만들었는지 알 수
+          없습니다. Prompt candidate, smoothing candidate, SFT candidate처럼
+          intervention을 분리하고 같은 preregistered set에서 paired outcome을
+          저장합니다. 조합이 필요하면 각 단일 후보를 통과시킨 뒤 한 단계씩
+          추가합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">상황별 추천 조합</h3>
-        <p className="leading-7">
-          구체적인 상황별로 stack 깊이를 다르게 잡는 가이드:
-        </p>
-        <ul className="leading-7">
-          <li>
-            <strong>POC / 프로토타입</strong> — 프롬프트 + 런타임 regex.<br />
-            "이 문제가 실제로 발생하는지" 측정하는 단계. 모델 변환까지 안 가도 됨.
-          </li>
-          <li>
-            <strong>내부 도구 / 소규모 프로덕션</strong> — Smoothie + 프롬프트.<br />
-            사용자가 정해져 있고 latency 요구가 느슨하면 런타임 가드는 오버헤드.
-          </li>
-          <li>
-            <strong>대규모 프로덕션</strong> — Smoothie + 런타임 hybrid 가드.<br />
-            기본 조합. 대부분의 에이전트가 여기에 해당.
-          </li>
-          <li>
-            <strong>Reasoning-heavy 에이전트 (한국어 핵심 차별점)</strong> — Smoothie + 런타임 + RL.<br />
-            긴 사고, 한국어 품질이 제품 가치의 중심, GPU 예산 확보. 이때만 RL을 추가.
-          </li>
-          <li>
-            <strong>API 기반 (가중치 접근 불가)</strong> — 프롬프트 + 런타임 hybrid 가드.<br />
-            Smoothie/RL이 불가능하므로 런타임 가드의 중요도가 압도적. regex + LLM judge + retry를 공격적으로 튜닝.
-          </li>
-        </ul>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">최종 권장 경로 — 순서가 중요</h3>
-        <p className="leading-7">
-          이 글을 읽고 지금 한국어 에이전트에서 leakage로 고민하는 사람이 있다면, 이 순서로 시도하길 권한다.
-        </p>
-        <ol className="leading-7">
-          <li>
-            <strong>Smoothie-Qwen 교체부터</strong> — 코드에서 모델 이름 한 줄만 바꾼다.<br />
-            <code>Qwen/Qwen3-8B</code> → <code>dnotitia/Smoothie-Qwen3-8B</code>. 비용 0, 효과 95%.
-          </li>
-          <li>
-            <strong>잔여 문제 측정</strong> — 며칠간 실제 트래픽으로 한자 비율, retry rate, judge pass rate를 계측한다.<br />
-            직관이 아니라 숫자로 판단해야 다음 스텝의 크기를 정할 수 있다.
-          </li>
-          <li>
-            <strong>측정 결과에 따라 가드 추가</strong>:
-            <ul>
-              <li>잔여 leakage &lt; 5% → 런타임 regex만 추가 (단순 안전망).</li>
-              <li>5~20% → hybrid 가드 (regex + LLM judge) 추가.</li>
-              <li>&gt; 20% → 워크로드 자체를 재검토. 프롬프트/데이터가 근본 원인일 가능성이 높다.</li>
-            </ul>
-          </li>
-          <li>
-            <strong>RL은 마지막 옵션</strong> — 위 단계를 모두 거친 후에도 잔여 문제가 있고, 그게 reasoning bypass에 집중되고, GPU·데이터셋이 확보돼 있을 때만.
-          </li>
-        </ol>
-        <p className="leading-7">
-          이 순서의 핵심은 <strong>측정 기반 에스컬레이션</strong>이다.<br />
-          각 스텝의 효과를 숫자로 확인한 후 다음 스텝을 결정한다.<br />
-          추측으로 RL까지 달려가면 며칠을 잃고, 측정 없이 런타임 가드만 쌓으면 계속 새로운 실패 모드를 발견하는 루프에 빠진다.
-        </p>
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>마지막 경고 — 순서를 거꾸로 가지 말 것</strong><br />
-          "프롬프트 → 런타임 가드 → Smoothie → 결국 RL"로 올라가는 순서는 자주 본다.<br />
-          이 경로의 문제는 각 단계에서 며칠씩 낭비한다는 것이다.<br />
-          프롬프트로 못 막는다는 걸 확인하는 데 1주, 런타임 가드로도 부족하다는 걸 확인하는 데 1주, 그제야 Smoothie를 검토한다.<br />
-          Smoothie를 가장 먼저 시도하면 이 2주가 사라진다.<br />
-          "싸고 약한 것부터 시도하라"는 일반 원칙이 이 경우에는 함정이다 — Smoothie가 동시에 가장 싸고 가장 강하기 때문이다.
+        <h3>3. canary에서 offline 근거가 운영에서도 유지되는지 봅니다</h3>
+        <p>
+          Offline 통과가 곧 전체 배포 승인은 아닙니다. Version을 pin한 candidate를
+          작은 traffic에 canary로 보내고, 언어 오류·정답·예외 보존·latency를
+          baseline과 동시에 관찰합니다. Judge가 개입하는 요청 비율과 human review
+          결과도 별도 metric으로 남겨, detector가 조용히 정상 응답을 막고 있지
+          않은지 확인합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">마무리</h3>
-        <p className="leading-7">
-          Qwen 한국어 leakage는 복잡해 보이지만 원인은 한 줄로 요약된다 — lm_head의 한자 토큰 logit이 한국어 토큰을 이긴다.<br />
-          모든 해법은 이 한 문장의 어디를 공격할지가 다를 뿐이다.
+        <h3>4. rollback 기준은 배포 전에 수치와 action으로 연결합니다</h3>
+        <p>
+          예를 들어 unexpected leakage가 목표 이하더라도 번역 예외 보존율이나
+          핵심 task accuracy가 preregistered floor 아래로 내려가면 rollback합니다.
+          Runtime guard의 p95 latency나 review queue가 한도를 넘을 때도 같은
+          action을 정의합니다. 원본 checkpoint·prompt·checker schema를 보존하고
+          route만 되돌릴 수 있어야, 사고 중에 새 모델을 다시 빌드하지 않아도
+          됩니다.
         </p>
-        <p className="leading-7">
-          프롬프트는 hidden state에 약한 bias를 더한다. 런타임 가드는 출력을 사후 걸러낸다.<br />
-          Smoothie-Qwen은 lm_head weight를 직접 만져서 logit을 비례 축소한다.<br />
-          RL은 policy 전체를 학습으로 재정렬해 reasoning attractor 자체를 바꾼다.
-        </p>
-        <p className="leading-7">
-          4가지 해법의 스펙트럼을 이해하면 "어느 단계에서 멈출지"를 숫자로 판단할 수 있다.<br />
-          대부분의 팀은 Smoothie + 런타임 가드 2층이면 충분하다.<br />
-          그 너머는 특수 워크로드의 영역이다 — 필요할 때만, 측정 기반으로, 순서를 지켜서.
+
+        <h3>조합의 기준은 중복 차단이 아니라 책임 분담입니다</h3>
+        <p>
+          Prompt는 기본 정책을 설명하고, model intervention은 반복되는 분포 문제를
+          줄이며, runtime guard는 드물게 남는 실패를 감지합니다. 세 층이 모두
+          “외국 문자를 삭제”하도록 만들면 정상 번역을 여러 번 손상시키고 원인도
+          찾기 어려워집니다. 각 층의 입력·출력·metric·fallback을 문서로 남긴 뒤,
+          목표를 달성한 가장 단순한 구성을 채택합니다.
         </p>
       </div>
     </section>

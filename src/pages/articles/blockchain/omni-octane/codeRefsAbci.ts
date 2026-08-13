@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const abciRefs: Record<string, CodeRef> = {
-  'octane-abci': {
-    path: 'omni/octane/evmengine/abci.go',
-    lang: 'go',
+  "octane-abci": {
+    path: "omni/octane/evmengine/abci.go",
+    lang: "go",
     highlight: [1, 22],
-    desc: 'ABCI 콜백을 Engine API 호출로 변환하는 어댑터.',
+    desc: "ABCI 콜백을 Engine API 호출로 변환하는 어댑터.",
     code: `// octane/evmengine/abci.go — ABCI → Engine API 어댑터
 
 func (k Keeper) PrepareProposal(ctx sdk.Context, req *abci.RequestPrepareProposal) (*abci.ResponsePrepareProposal, error) {
@@ -26,16 +26,24 @@ func (k Keeper) ProcessProposal(ctx sdk.Context, req *abci.RequestProcessProposa
     return &abci.ResponseProcessProposal{Status: abci.ResponseProcessProposal_ACCEPT}, nil
 }`,
     annotations: [
-      { lines: [3, 10], color: 'sky', note: 'PrepareProposal → FCU + getPayload' },
-      { lines: [12, 19], color: 'emerald', note: 'ProcessProposal → newPayload + FCU' },
+      {
+        lines: [3, 10],
+        color: "sky",
+        note: "PrepareProposal → FCU + getPayload",
+      },
+      {
+        lines: [12, 19],
+        color: "emerald",
+        note: "ProcessProposal → newPayload + FCU",
+      },
     ],
   },
 
-  'octane-enginecl': {
-    path: 'omni/octane/evmengine/enginecl.go',
-    lang: 'go',
+  "octane-enginecl": {
+    path: "omni/octane/evmengine/enginecl.go",
+    lang: "go",
     highlight: [1, 18],
-    desc: 'Engine API 클라이언트 — geth/reth와의 JSON-RPC 통신.',
+    desc: "Engine API 클라이언트 — geth/reth와의 JSON-RPC 통신.",
     code: `// octane/evmengine/enginecl.go — Engine API Client
 
 type EngineClient struct {
@@ -55,9 +63,9 @@ func (c *EngineClient) NewPayloadV3(ctx context.Context, payload engine.Executio
     return c.ethCl.NewPayloadV3(ctx, payload, nil, nil)
 }`,
     annotations: [
-      { lines: [3, 6], color: 'sky', note: 'EngineClient — geth RPC + JWT' },
-      { lines: [8, 14], color: 'emerald', note: 'ForkchoiceUpdatedV3' },
-      { lines: [16, 18], color: 'amber', note: 'NewPayloadV3' },
+      { lines: [3, 6], color: "sky", note: "EngineClient — geth RPC + JWT" },
+      { lines: [8, 14], color: "emerald", note: "ForkchoiceUpdatedV3" },
+      { lines: [16, 18], color: "amber", note: "NewPayloadV3" },
     ],
   },
 };

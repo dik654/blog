@@ -1,4 +1,4 @@
-import PoStFlowViz from './viz/PoStFlowViz';
+import PoStFlowViz from "./viz/PoStFlowViz";
 
 export default function PoSt() {
   return (
@@ -6,16 +6,19 @@ export default function PoSt() {
       <h2 className="text-2xl font-bold mb-6">Proof of Spacetime (PoSt)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          합의된 기간 동안 지속적으로 데이터를 저장하고 있음을 증명.<br />
+          합의된 기간 동안 지속적으로 데이터를 저장하고 있음을 증명.
+          <br />
           주기적 챌린지를 통해 "시간 축"을 따라 저장 지속성을 검증
         </p>
       </div>
-      <div className="not-prose"><PoStFlowViz /></div>
+      <div className="not-prose">
+        <PoStFlowViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">PoSt 프로토콜 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Proof of Spacetime (PoSt):
+          {`// Proof of Spacetime (PoSt):
 
 // Definition (Benet-Dalrymple-Greco 2017):
 // "Continuous proof that data is stored
@@ -97,8 +100,10 @@ export default function PoSt() {
 // - long fault: termination`}
         </pre>
         <p className="leading-7">
-          PoSt: <strong>temporal extension of PoRep (persistence proof)</strong>.<br />
-          Filecoin: WindowPoSt (24h) + WinningPoSt (election).<br />
+          PoSt: <strong>temporal extension of PoRep (persistence proof)</strong>
+          .<br />
+          Filecoin: WindowPoSt (24h) + WinningPoSt (election).
+          <br />
           time-indexed challenges → real-time proof required.
         </p>
       </div>

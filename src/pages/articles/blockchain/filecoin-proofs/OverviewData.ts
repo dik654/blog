@@ -9,8 +9,16 @@ filecoin-proofs/             ← 공개 API 래퍼
 filecoin-hashers/            ← Poseidon, SHA256, Blake2s 해시`;
 
 export const REPO_ANNOTATIONS = [
-  { lines: [1, 4] as [number, number], color: 'sky' as const, note: '코어 & PoRep 크레이트' },
-  { lines: [5, 8] as [number, number], color: 'emerald' as const, note: 'PoSt & API 크레이트' },
+  {
+    lines: [1, 4] as [number, number],
+    color: "sky" as const,
+    note: "코어 & PoRep 크레이트",
+  },
+  {
+    lines: [5, 8] as [number, number],
+    color: "emerald" as const,
+    note: "PoSt & API 크레이트",
+  },
 ];
 
 export const SEAL_PIPELINE_CODE = `// filecoin-proofs/src/api/seal.rs
@@ -40,9 +48,21 @@ SealCommitOutput = seal_commit_phase2(c1_output, prover_id, sector_id)?;
 // → groth16_proof (192 bytes compressed)`;
 
 export const SEAL_PIPELINE_ANNOTATIONS = [
-  { lines: [3, 14] as [number, number], color: 'sky' as const, note: 'PC1: SDR 레이블링 (CPU)' },
-  { lines: [16, 18] as [number, number], color: 'emerald' as const, note: 'PC2: Merkle Tree (GPU)' },
-  { lines: [23, 25] as [number, number], color: 'amber' as const, note: 'C2: Groth16 SNARK (GPU)' },
+  {
+    lines: [3, 14] as [number, number],
+    color: "sky" as const,
+    note: "PC1: SDR 레이블링 (CPU)",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "emerald" as const,
+    note: "PC2: Merkle Tree (GPU)",
+  },
+  {
+    lines: [23, 25] as [number, number],
+    color: "amber" as const,
+    note: "C2: Groth16 SNARK (GPU)",
+  },
 ];
 
 export const PARAMS_CODE = `// SDR (Stacked DRG) 파라미터 (32GiB 섹터)
@@ -64,7 +84,19 @@ NODES = 32GiB / 32 = 1_073_741_824; // 섹터당 노드 수
 - 검증 시간: ~10ms on-chain (pairing 2회)`;
 
 export const PARAMS_ANNOTATIONS = [
-  { lines: [1, 7] as [number, number], color: 'sky' as const, note: 'SDR 그래프 파라미터' },
-  { lines: [9, 12] as [number, number], color: 'emerald' as const, note: '해시 함수 선택' },
-  { lines: [14, 17] as [number, number], color: 'amber' as const, note: 'Groth16 회로 스펙' },
+  {
+    lines: [1, 7] as [number, number],
+    color: "sky" as const,
+    note: "SDR 그래프 파라미터",
+  },
+  {
+    lines: [9, 12] as [number, number],
+    color: "emerald" as const,
+    note: "해시 함수 선택",
+  },
+  {
+    lines: [14, 17] as [number, number],
+    color: "amber" as const,
+    note: "Groth16 회로 스펙",
+  },
 ];

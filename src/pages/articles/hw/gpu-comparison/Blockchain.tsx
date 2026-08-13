@@ -1,10 +1,30 @@
-import { motion } from 'framer-motion';
+import WorkloadFitViz from "./viz/WorkloadFitViz";
 
 const workloads = [
-  { name: 'MSM (다중 스칼라 곱셈)', bottleneck: '메모리 대역폭', best: 'H100 (HBM3 3.35TB/s)', alt: '4090도 가능 (1TB/s)' },
-  { name: 'NTT (수론 변환)', bottleneck: 'CUDA 코어 수', best: '5090 (21,760 코어)', alt: 'H100 (16,896 코어)' },
-  { name: 'Filecoin 봉인 C2', bottleneck: 'VRAM + 연산', best: 'A100 80GB', alt: '4090 24GB (32GiB 섹터)' },
-  { name: 'SHA256 해싱', bottleneck: 'TDP당 해시율', best: '4090 (450W)', alt: 'ASIC이 더 효율적' },
+  {
+    name: "MSM",
+    shape: "곡선점·스칼라 읽기 → 버킷 누적 → 환원",
+    first: "peak VRAM · 유효 메모리 대역폭",
+    verify: "bucket kernel · 불규칙 접근 · reduction 시간",
+  },
+  {
+    name: "NTT",
+    shape: "butterfly 연산 ↔ stage별 데이터 재배치",
+    first: "커널 처리량 · 유효 대역폭",
+    verify: "shared memory · stage fusion · launch 수",
+  },
+  {
+    name: "해시·Merkle",
+    shape: "대량 독립 해시 → 트리 레벨별 환원",
+    first: "정수 연산 처리량 · 배치 크기",
+    verify: "CPU↔GPU 전송 · 작은 레벨의 GPU 이용률",
+  },
+  {
+    name: "종단 prover",
+    shape: "witness → NTT → MSM → hash → proof",
+    first: "최대 작업 집합 · 가장 긴 stage",
+    verify: "memcpy · 동기화 · CPU 구간 · 지속 클럭",
+  },
 ];
 
 export default function Blockchain() {
@@ -12,134 +32,99 @@ export default function Blockchain() {
     <section id="blockchain" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">블록체인 워크로드별 선택</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          블록체인 워크로드마다 병목 지점이 다릅니다.<br />
-          MSM은 메모리 대역폭, NTT는 연산량, 봉인은 VRAM이 핵심 지표입니다.
+        <p className="leading-7">
+          MSM(다중 스칼라 곱셈)·NTT(유한체 위의 고속 다항식 변환)·해시는 모두
+          GPU에서 병렬화되지만 데이터 흐름이 다름
+          <br />
+          “MSM은 H100, NTT는 5090”처럼 제품을 고정해 외우면 라이브러리·회로
+          크기·배치 변화에서 바로 틀어짐
         </p>
-        <div className="overflow-x-auto not-prose">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                {['워크로드', '병목', '최적 GPU', '대안'].map(h => (
-                  <th key={h} className="border border-border px-3 py-2 text-left">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {workloads.map((w) => (
-                <motion.tr key={w.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <td className="border border-border px-3 py-2 font-medium">{w.name}</td>
-                  <td className="border border-border px-3 py-2">{w.bottleneck}</td>
-                  <td className="border border-border px-3 py-2">{w.best}</td>
-                  <td className="border border-border px-3 py-2">{w.alt}</td>
-                </motion.tr>
+      </div>
+
+      <div className="not-prose my-7">
+        <WorkloadFitViz />
+      </div>
+
+      <div className="overflow-x-auto not-prose mb-6">
+        <table className="min-w-[820px] w-full text-sm border border-border">
+          <thead>
+            <tr className="bg-muted/50">
+              {[
+                "워크로드",
+                "데이터 흐름",
+                "먼저 거를 사양",
+                "반드시 측정할 항목",
+              ].map((heading) => (
+                <th
+                  key={heading}
+                  className="border border-border px-3 py-2 text-left"
+                >
+                  {heading}
+                </th>
               ))}
-            </tbody>
-          </table>
+            </tr>
+          </thead>
+          <tbody>
+            {workloads.map((workload) => (
+              <tr key={workload.name}>
+                <td className="border border-border px-3 py-2 font-semibold">
+                  {workload.name}
+                </td>
+                <td className="border border-border px-3 py-2">
+                  {workload.shape}
+                </td>
+                <td className="border border-border px-3 py-2">
+                  {workload.first}
+                </td>
+                <td className="border border-border px-3 py-2">
+                  {workload.verify}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          독립 증명 여러 개를 GPU별로 배치하면 통신이 거의 없어 컨슈머 카드도
+          수평 확장 가능
+          <br />
+          반대로 하나의 MSM을 여러 GPU로 나누고 버킷을 자주 합치면 interconnect
+          비용이 커져 데이터센터 플랫폼의 장점이 드러남
+        </p>
+
+        <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="text-xs font-semibold text-emerald-500 mb-2">
+              단일 노드·독립 작업
+            </p>
+            <p className="text-sm leading-6">
+              VRAM이 충분한 GeForce부터 실제 prover를 측정해 비용 대비 처리량
+              확인
+            </p>
+          </div>
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+            <p className="text-xs font-semibold text-amber-500 mb-2">
+              고밀도·통신 집약·24/7
+            </p>
+            <p className="text-sm leading-6">
+              HBM·NVLink뿐 아니라 서버 냉각, 관리, 장애 교체와 이용률을 함께
+              비교
+            </p>
+          </div>
         </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">블록체인 워크로드별 최적 선택</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// 블록체인 워크로드별 병목 분석:
-
-// MSM (Multi-Scalar Multiplication):
-// - Groth16 SNARK 핵심
-// - ~95% time on C2 proving
-// - bandwidth bound
-// - 포인트 × 스칼라 = 많은 memory access
-//
-// Best: H100 (HBM3 3.35 TB/s)
-// Good: A100 (HBM2e 2 TB/s)
-// OK: RTX 5090 (GDDR7 1.8 TB/s)
-// Budget: RTX 4090 (GDDR6X 1 TB/s)
-
-// NTT/FFT (Number Theoretic Transform):
-// - polynomial evaluation
-// - compute bound
-// - many small ops in parallel
-// - CUDA core count matters
-//
-// Best: RTX 5090 (21,760 cores)
-// Good: H100 (16,896 cores)
-// OK: RTX 4090 (16,384 cores)
-// Pro: A100 (6,912 but HBM advantage)
-
-// Filecoin Sealing (C2):
-// - VRAM critical (proving key ~100GB)
-// - compute + memory balanced
-// - batched operations
-//
-// Best: H100 80GB or A100 80GB
-// Workable: A6000 48GB
-// Tight: RTX 4090 24GB (barely)
-
-// ZK-Rollup Proving:
-// - large circuits
-// - need lots of VRAM
-// - long-running proofs
-//
-// Best: H100 80GB (batch)
-// Good: A100 80GB
-// Limit: 24-48GB GPUs (smaller circuits)
-
-// LLM Inference:
-// - model weights in VRAM
-// - batch processing
-// - tensor cores matter
-// - NVLink for scaling
-//
-// Best: H100 SXM + NVLink clusters
-// Good: A100 SXM
-// Budget: RTX 4090 (small models)
-
-// AI Training:
-// - multi-GPU essential
-// - NVLink mandatory
-// - massive compute + memory
-//
-// Best: H100 8x SXM + NVLink Switch
-// Good: A100 SXM clusters
-// Impossible: consumer GPUs
-
-// SHA256 Mining (historical):
-// - power efficiency matters
-// - ASICs dominate
-// - GPUs not competitive
-// - energy cost > revenue
-
-// Cost-effectiveness ratios:
-//
-// Per-dollar compute:
-// - RTX 4090: excellent
-// - A6000: good
-// - A100: moderate
-// - H100: premium pricing
-//
-// Per-watt efficiency:
-// - H100: best efficiency
-// - A100: good
-// - RTX 4090: moderate
-// - RTX 5090: higher TDP
-//
-// Per-GB VRAM:
-// - H100: $312/GB
-// - A100 80GB: $125/GB
-// - A6000: $104/GB
-// - RTX 4090: $83/GB
-
-// Recommendation matrix:
-// Hobbyist: RTX 4090
-// Solo miner: RTX 4090 x2 or A6000
-// Small SP: A6000 x4-8
-// Large SP: A100 80GB cluster
-// Enterprise AI: H100 SXM + NVLink
-// Research lab: H100 + B200 mix`}
-        </pre>
-        <p className="leading-7">
-          Workload-GPU matrix: <strong>MSM → HBM, NTT → cores, Sealing → VRAM</strong>.<br />
-          cost-effective: RTX 4090 ($83/GB VRAM), H100 최고 efficiency.<br />
-          scale-dependent selection: hobbyist → enterprise 다른 tier.
-        </p>
+        <div className="not-prose my-6 border-l-4 border-amber-400 bg-amber-50/60 dark:bg-amber-950/20 rounded-r-lg p-4">
+          <p className="font-semibold mb-1">💡 최종 선택은 종단 프로파일</p>
+          <p className="text-sm leading-6">
+            커널 하나가 2배 빨라도 witness 생성이나 CPU↔GPU 복사가 전체 시간의
+            절반이면 종단 개선은 2배보다 작음.
+            <br />
+            Nsight Systems로 stage 경계와 전송을, Nsight Compute로 병목 커널을
+            분리해 측정
+          </p>
+        </div>
       </div>
     </section>
   );

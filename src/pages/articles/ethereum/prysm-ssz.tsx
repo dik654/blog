@@ -1,10 +1,10 @@
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './prysm-ssz/codeRefs';
-import { prysmTree } from './prysm-ssz/fileTrees';
-import Overview from './prysm-ssz/Overview';
-import EncodeDecode from './prysm-ssz/EncodeDecode';
-import Merkleize from './prysm-ssz/Merkleize';
-import Multiproof from './prysm-ssz/Multiproof';
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prysm-ssz/codeRefs";
+import { prysmTree } from "./prysm-ssz/fileTrees";
+import Overview from "./prysm-ssz/Overview";
+import EncodeDecode from "./prysm-ssz/EncodeDecode";
+import Merkleize from "./prysm-ssz/Merkleize";
+import Multiproof from "./prysm-ssz/Multiproof";
 
 export default function PrysmSsz() {
   const sidebar = useCodeSidebar();
@@ -22,7 +22,11 @@ export default function PrysmSsz() {
         codeRefs={codeRefs}
         fileTrees={{ prysm: prysmTree }}
         projectMetas={{
-          prysm: { id: 'prysm', label: 'Prysm · Go', badgeClass: 'bg-violet-500/10 border-violet-500 text-violet-700' },
+          prysm: {
+            id: "prysm",
+            label: "Prysm · Go",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
         }}
       />
     </>

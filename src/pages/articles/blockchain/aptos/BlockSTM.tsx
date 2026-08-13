@@ -1,9 +1,11 @@
-import BlockSTMViz from './viz/BlockSTMViz';
-import { CodeViewButton } from '@/components/code';
-import type { CodeRef } from '@/components/code/types';
-import { codeRefs } from './codeRefs';
+import BlockSTMViz from "./viz/BlockSTMViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function BlockSTM({ onCodeRef }: {
+export default function BlockSTM({
+  onCodeRef,
+}: {
   onCodeRef?: (key: string, ref: CodeRef) => void;
 }) {
   return (
@@ -11,18 +13,26 @@ export default function BlockSTM({ onCodeRef }: {
       <h2 className="text-2xl font-bold mb-6">Block-STM 병렬 실행</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Block-STM — Software Transactional Memory 기반 낙관적 병렬 실행<br />
-          Solana Sealevel과 달리 사전 계정 선언 없이 모든 TX 동시 실행, 충돌 시 재실행
+          Block-STM — Software Transactional Memory 기반 낙관적 병렬 실행
+          <br />
+          Solana Sealevel과 달리 사전 계정 선언 없이 모든 TX 동시 실행, 충돌 시
+          재실행
         </p>
         {onCodeRef && (
           <div className="not-prose flex flex-wrap gap-2 my-4">
-            <CodeViewButton onClick={() =>
-              onCodeRef('apt-blockstm-exec', codeRefs['apt-blockstm-exec'])} />
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef("apt-blockstm-exec", codeRefs["apt-blockstm-exec"])
+              }
+            />
             <span className="text-[10px] text-muted-foreground self-center">
               executor.rs
             </span>
-            <CodeViewButton onClick={() =>
-              onCodeRef('apt-mvhashmap', codeRefs['apt-mvhashmap'])} />
+            <CodeViewButton
+              onClick={() =>
+                onCodeRef("apt-mvhashmap", codeRefs["apt-mvhashmap"])
+              }
+            />
             <span className="text-[10px] text-muted-foreground self-center">
               MVHashMap
             </span>
@@ -30,15 +40,19 @@ export default function BlockSTM({ onCodeRef }: {
         )}
       </div>
       <div className="not-prose my-8">
-        <BlockSTMViz onOpenCode={onCodeRef
-          ? (k: string) => onCodeRef(k, codeRefs[k])
-          : undefined} />
+        <BlockSTMViz
+          onOpenCode={
+            onCodeRef ? (k: string) => onCodeRef(k, codeRefs[k]) : undefined
+          }
+        />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Block-STM 알고리즘 상세</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Block-STM 알고리즘 상세
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Block-STM (Software Transactional Memory)
+          {`// Block-STM (Software Transactional Memory)
 //
 // Paper: "Block-STM: Scaling Blockchain Execution by
 //         Turning Ordering Curse to a Performance Blessing"

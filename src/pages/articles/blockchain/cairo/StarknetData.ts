@@ -19,8 +19,16 @@ pub struct ContractDeclaration<'db> {
 }`;
 
 export const CONTRACT_ANNOTATIONS = [
-  { lines: [5, 13] as [number, number], color: 'sky' as const, note: '플러그인 스위트: Starknet 속성 + 스토리지 + ABI' },
-  { lines: [17, 19] as [number, number], color: 'emerald' as const, note: '#[starknet::contract] 모듈 발견' },
+  {
+    lines: [5, 13] as [number, number],
+    color: "sky" as const,
+    note: "플러그인 스위트: Starknet 속성 + 스토리지 + ABI",
+  },
+  {
+    lines: [17, 19] as [number, number],
+    color: "emerald" as const,
+    note: "#[starknet::contract] 모듈 발견",
+  },
 ];
 
 export const ABI_CODE = `// ABI 생성 & 컨트랙트 클래스
@@ -47,7 +55,19 @@ pub fn compute_class_hash(contract_class: &ContractClass) -> Result<Felt252> {
 }`;
 
 export const ABI_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: 'ABI 빌더: 엔트리 포인트 + 이벤트 수집' },
-  { lines: [11, 15] as [number, number], color: 'emerald' as const, note: 'ContractClass: Sierra + ABI + 엔트리포인트' },
-  { lines: [18, 22] as [number, number], color: 'amber' as const, note: 'Poseidon 해시로 클래스 해시 계산' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "ABI 빌더: 엔트리 포인트 + 이벤트 수집",
+  },
+  {
+    lines: [11, 15] as [number, number],
+    color: "emerald" as const,
+    note: "ContractClass: Sierra + ABI + 엔트리포인트",
+  },
+  {
+    lines: [18, 22] as [number, number],
+    color: "amber" as const,
+    note: "Poseidon 해시로 클래스 해시 계산",
+  },
 ];

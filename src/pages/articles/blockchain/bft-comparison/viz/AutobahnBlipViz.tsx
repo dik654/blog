@@ -1,6 +1,10 @@
-import StepViz from '@/components/ui/step-viz';
-import { BLIP_STEPS } from './AutobahnDetailData';
-import { TraditionalBlipStep, DAGBlipStep, AutobahnBlipStep } from './AutobahnBlipSteps';
+import StepViz from "@/components/ui/step-viz";
+import { BLIP_STEPS } from "./AutobahnDetailData";
+import {
+  TraditionalBlipStep,
+  DAGBlipStep,
+  AutobahnBlipStep,
+} from "./AutobahnBlipSteps";
 
 const RENDERERS = [TraditionalBlipStep, DAGBlipStep, AutobahnBlipStep];
 

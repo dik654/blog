@@ -19,10 +19,26 @@ P2P 보안:
   ChaCha20-Poly1305  → 전송 암호화 (AEAD)`;
 
 export const CRYPTO_STACK_ANNOTATIONS = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '해시 함수' },
-  { lines: [7, 10] as [number, number], color: 'emerald' as const, note: '서명 알고리즘' },
-  { lines: [12, 15] as [number, number], color: 'amber' as const, note: '머클 트리' },
-  { lines: [17, 19] as [number, number], color: 'violet' as const, note: 'P2P 보안' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "해시 함수",
+  },
+  {
+    lines: [7, 10] as [number, number],
+    color: "emerald" as const,
+    note: "서명 알고리즘",
+  },
+  {
+    lines: [12, 15] as [number, number],
+    color: "amber" as const,
+    note: "머클 트리",
+  },
+  {
+    lines: [17, 19] as [number, number],
+    color: "violet" as const,
+    note: "P2P 보안",
+  },
 ];
 
 export const SIGN_VERIFY_CODE = `서명 검증 흐름
@@ -46,14 +62,48 @@ export const SIGN_VERIFY_CODE = `서명 검증 흐름
    → DuplicateVoteEvidence 생성 → 슬래싱`;
 
 export const SIGN_VERIFY_ANNOTATIONS = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: '서명 생성' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: '개별 검증' },
-  { lines: [11, 14] as [number, number], color: 'amber' as const, note: '배치 검증' },
-  { lines: [16, 18] as [number, number], color: 'rose' as const, note: '이중 서명' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "서명 생성",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "개별 검증",
+  },
+  {
+    lines: [11, 14] as [number, number],
+    color: "amber" as const,
+    note: "배치 검증",
+  },
+  {
+    lines: [16, 18] as [number, number],
+    color: "rose" as const,
+    note: "이중 서명",
+  },
 ];
 
 export const SIG_COMPARE_TABLE = [
-  { algo: 'Ed25519', keySize: '32B/64B', sigSize: '64B', speed: '가장 빠름', use: '기본 (합의 투표)' },
-  { algo: 'Secp256k1', keySize: '32B/33B', sigSize: '64B', speed: '보통', use: 'BTC 호환 (레거시)' },
-  { algo: 'BLS12-381', keySize: '32B/96B', sigSize: '96B', speed: '느림', use: '집계 서명 (확장성)' },
+  {
+    algo: "Ed25519",
+    keySize: "32B/64B",
+    sigSize: "64B",
+    speed: "가장 빠름",
+    use: "기본 (합의 투표)",
+  },
+  {
+    algo: "Secp256k1",
+    keySize: "32B/33B",
+    sigSize: "64B",
+    speed: "보통",
+    use: "BTC 호환 (레거시)",
+  },
+  {
+    algo: "BLS12-381",
+    keySize: "32B/96B",
+    sigSize: "96B",
+    speed: "느림",
+    use: "집계 서명 (확장성)",
+  },
 ] as const;

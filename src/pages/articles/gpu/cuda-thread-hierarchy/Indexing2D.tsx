@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const index2DCode = `// 2D 인덱싱: 행(row)과 열(col) 계산
 //
@@ -61,37 +61,57 @@ export default function Indexing2D() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           행렬, 이미지 등 2차원 데이터에는 Block과 Grid를 모두 2D로 설정한다.
-          <strong>x축은 열(col)</strong>, <strong>y축은 행(row)</strong>에 대응시키는 것이 관례다.
-          1D 공식을 x, y 각각에 적용하면 <code>col = blockIdx.x * blockDim.x + threadIdx.x</code>,
+          <strong>x축은 열(col)</strong>, <strong>y축은 행(row)</strong>에
+          대응시키는 것이 관례다. 1D 공식을 x, y 각각에 적용하면{" "}
+          <code>col = blockIdx.x * blockDim.x + threadIdx.x</code>,
           <code>row = blockIdx.y * blockDim.y + threadIdx.y</code>가 된다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">2D 그리드와 블록 배치</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          2D 그리드와 블록 배치
+        </h3>
         <p>
-          16x16 블록이면 블록당 256개 스레드다.<br />
-          경계 검사는 <code>col &lt; W && row &lt; H</code>로 두 방향 모두 확인해야 한다.
+          16x16 블록이면 블록당 256개 스레드다.
+          <br />
+          경계 검사는 <code>col &lt; W && row &lt; H</code>로 두 방향 모두
+          확인해야 한다.
         </p>
         <CodePanel
           title="2D 인덱싱 기본 패턴"
           code={index2DCode}
           annotations={[
-            { lines: [3, 5], color: 'sky', note: 'row, col 계산 예시' },
-            { lines: [18, 19], color: 'emerald', note: '2D 인덱스 공식' },
-            { lines: [21, 21], color: 'amber', note: 'Row-major 선형화' },
+            { lines: [3, 5], color: "sky", note: "row, col 계산 예시" },
+            { lines: [18, 19], color: "emerald", note: "2D 인덱스 공식" },
+            { lines: [21, 21], color: "amber", note: "Row-major 선형화" },
           ]}
         />
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Row-major 메모리 레이아웃</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Row-major 메모리 레이아웃
+        </h3>
         <p>
           C/C++과 CUDA는 행 우선(Row-major) 순서로 2D 배열을 저장한다.
-          <code>matrix[row][col]</code>은 <code>array[row * width + col]</code> 주소에 매핑된다.
+          <code>matrix[row][col]</code>은 <code>array[row * width + col]</code>{" "}
+          주소에 매핑된다.
         </p>
-        <CodePanel title="행렬 덧셈 전체 코드" code={matAddCode} annotations={[
-          { lines: [3, 6], color: 'sky', note: 'Row-major 메모리 배치' },
-          { lines: [10, 11], color: 'emerald', note: 'col, row 계산' },
-          { lines: [19, 24], color: 'violet', note: '호스트: 그리드/블록 설정' },
-          { lines: [26, 27], color: 'amber', note: '경계 검사로 제외되는 스레드' },
-        ]} />
+        <CodePanel
+          title="행렬 덧셈 전체 코드"
+          code={matAddCode}
+          annotations={[
+            { lines: [3, 6], color: "sky", note: "Row-major 메모리 배치" },
+            { lines: [10, 11], color: "emerald", note: "col, row 계산" },
+            {
+              lines: [19, 24],
+              color: "violet",
+              note: "호스트: 그리드/블록 설정",
+            },
+            {
+              lines: [26, 27],
+              color: "amber",
+              note: "경계 검사로 제외되는 스레드",
+            },
+          ]}
+        />
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import CRTConceptViz from './viz/CRTConceptViz';
+import CRTConceptViz from "./viz/CRTConceptViz";
 
 export default function Overview() {
   return (
@@ -10,11 +10,13 @@ export default function Overview() {
           <br />
           서로소인 모듈러 m₁, m₂에 대해 x ≡ a₁ (mod m₁), x ≡ a₂ (mod m₂)이면,
           x는 mod m₁·m₂에서 유일하게 결정된다.
-          <br />
-          큰 문제를 작은 모듈러 여러 개로 쪼개서 풀고, 다시 합칠 수 있다는 뜻이다.
+          <br />큰 문제를 작은 모듈러 여러 개로 쪼개서 풀고, 다시 합칠 수 있다는
+          뜻이다.
         </p>
       </div>
-      <div className="not-prose"><CRTConceptViz /></div>
+      <div className="not-prose">
+        <CRTConceptViz />
+      </div>
     </section>
   );
 }

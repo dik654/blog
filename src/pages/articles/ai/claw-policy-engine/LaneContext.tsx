@@ -1,222 +1,115 @@
-import LaneContextViz from './viz/LaneContextViz';
+import LaneContextViz from "./viz/LaneContextViz";
+
+const evidenceGroups = [
+  ["Work", "task·branch·worktree·head SHA"],
+  ["Verification", "build·test·lint result와 artifact"],
+  ["Control", "owner·approval·dependency·block reason"],
+  ["Freshness", "observed_at·source version·expiry"],
+] as const;
 
 export default function LaneContext() {
   return (
     <section id="lane-context" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">LaneContext — 레인 상태 평가</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        LaneContext는 한 번의 정책 평가에 사용하는 immutable snapshot이다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <LaneContextViz />
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">LaneContext 구조</h3>
-        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">LaneContext</code> — 평가 시점의 스냅샷</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">식별 · 상태</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">lane_id: LaneId</code></li>
-                <li><code className="bg-muted px-1 rounded">lane_status: LaneStatus</code></li>
-                <li><code className="bg-muted px-1 rounded">status_changed_at: DateTime&lt;Utc&gt;</code></li>
-                <li><code className="bg-muted px-1 rounded">created_at: DateTime&lt;Utc&gt;</code></li>
-              </ul>
-            </div>
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">빌드 · 테스트</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">last_build_status: Option&lt;BuildStatus&gt;</code></li>
-                <li><code className="bg-muted px-1 rounded">last_test_status: Option&lt;TestStatus&gt;</code></li>
-                <li><code className="bg-muted px-1 rounded">test_coverage: Option&lt;f32&gt;</code></li>
-                <li><code className="bg-muted px-1 rounded">lint_warnings: Option&lt;usize&gt;</code></li>
-              </ul>
-            </div>
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">재시도</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">failure_count: u32</code></li>
-                <li><code className="bg-muted px-1 rounded">retry_count: u32</code></li>
-              </ul>
-            </div>
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">활동 · 의존성</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">last_activity: DateTime&lt;Utc&gt;</code></li>
-                <li><code className="bg-muted px-1 rounded">commits: Vec&lt;CommitRef&gt;</code></li>
-                <li><code className="bg-muted px-1 rounded">blocked_by: Vec&lt;LaneId&gt;</code></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-8 mb-3">컨텍스트 빌더 — build_context()</h3>
-        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">build_context(&self, lane: &Lane) → Result&lt;LaneContext&gt;</code></p>
-          <div className="space-y-3">
-            <div className="flex gap-3 items-start">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">1</span>
-              <p className="text-sm text-muted-foreground">기본 필드 복사 — <code className="text-xs bg-muted px-1 rounded">lane_id</code>, <code className="text-xs bg-muted px-1 rounded">status</code>, <code className="text-xs bg-muted px-1 rounded">failure_count</code>, <code className="text-xs bg-muted px-1 rounded">retry_count</code>, <code className="text-xs bg-muted px-1 rounded">last_activity</code></p>
-            </div>
-            <div className="flex gap-3 items-start">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">2</span>
-              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">ci_client::fetch_latest_build()</code> — 빌드 상태 조회 (실패 허용)</p>
-            </div>
-            <div className="flex gap-3 items-start">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">3</span>
-              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">ci_client::fetch_latest_tests()</code> — 테스트 결과 + 커버리지 (실패 허용)</p>
-            </div>
-            <div className="flex gap-3 items-start">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">4</span>
-              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">ci_client::fetch_lint_warnings()</code> — 린트 경고 수 (실패 허용)</p>
-            </div>
-            <div className="flex gap-3 items-start">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold">5</span>
-              <p className="text-sm text-muted-foreground"><code className="text-xs bg-muted px-1 rounded">git_client::log_branch()</code> — 커밋 이력 + <code className="text-xs bg-muted px-1 rounded">task_packet.depends_on</code> 의존성</p>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>컨텍스트 구축 단계</strong>: 기본 필드 → CI 조회 → git 조회 → 의존성<br />
-          각 외부 조회는 실패 허용 — 일부 정보 없어도 평가 가능<br />
-          매 <code>evaluate_lane()</code> 호출마다 재구축 — 항상 최신 상태
+        <p className="leading-7">
+          이 저장소에서 <code>Lane</code>은 브랜치·workspace·task를 묶은 병렬
+          작업 단위를 가리키는 내부 이름입니다. <code>LaneContext</code>는 그
+          작업의 현재 상태를 policy evaluator가 읽을 수 있도록 정규화한
+          snapshot이며, 업계 공통 프레임워크의 타입은 아닙니다.
+        </p>
+        <p className="leading-7">
+          context를 따로 만드는 이유는 rule이 Git, CI, task registry를 평가 도중
+          제각각 조회하지 않게 하기 위해서입니다. collector가 한 evaluation
+          generation에 필요한 evidence를 모으고, evaluator는 그 고정된 값만
+          읽어야 판단을 재현할 수 있습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">TimeRef — 시간 참조점</h3>
-        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">TimeRef</code> enum + <code className="text-xs bg-muted px-1 rounded">elapsed_since()</code></p>
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">LaneCreated</span>
-              <p className="text-sm text-muted-foreground">Lane 생성 시각</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">StatusChanged</span>
-              <p className="text-sm text-muted-foreground">현재 상태 진입 시각</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">LastActivity</span>
-              <p className="text-sm text-muted-foreground">마지막 활동 시각</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">LastBuild</span>
-              <p className="text-sm text-muted-foreground">마지막 빌드 시각 (없으면 <code className="text-xs bg-muted px-1 rounded">Utc::now()</code>)</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="shrink-0 text-xs font-mono bg-background border rounded px-2 py-0.5 w-28 text-center">FirstFailure</span>
-              <p className="text-sm text-muted-foreground">첫 실패 시각 (없으면 <code className="text-xs bg-muted px-1 rounded">Utc::now()</code>)</p>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-3"><code className="bg-muted px-1 rounded">elapsed_since()</code>: <code className="bg-muted px-1 rounded">Utc::now() - ref_time</code> 반환</p>
+        <div className="not-prose my-8">
+          <LaneContextViz />
         </div>
-        <p>
-          <strong>5개 시간 참조</strong>: 상황별 기준 시각<br />
-          "1시간 동안 InProgress면 blocked 체크" → <code>StatusChanged</code> 사용<br />
-          "24시간 활동 없으면 stale" → <code>LastActivity</code> 사용
-        </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">의존성 체크 — blocked_by</h3>
-        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">TaskPacket</code></p>
-              <p className="text-xs text-muted-foreground"><code className="bg-muted px-1 rounded">depends_on: Vec&lt;LaneId&gt;</code> — Lane A가 Lane B의 merge를 기다리는 상황</p>
-            </div>
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">blocking_lanes()</code></p>
-              <p className="text-xs text-muted-foreground"><code className="bg-muted px-1 rounded">blocked_by</code> 순회 → <code className="bg-muted px-1 rounded">Merged</code> / <code className="bg-muted px-1 rounded">Abandoned</code>가 아닌 것만 반환</p>
-            </div>
-          </div>
-          <div className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-            <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">YAML 규칙 예시 — 의존성 해결 대기</p>
-            <p className="text-xs text-muted-foreground">
-              조건: <code className="bg-muted px-1 rounded">Initialized &amp;&amp; has_blocking_lanes</code> → <code className="bg-muted px-1 rounded">transition(Blocked(WaitingForDependency))</code>
+      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {evidenceGroups.map(([title, body]) => (
+          <article
+            key={title}
+            className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 shadow-sm"
+          >
+            <h4 className="text-sm font-bold text-foreground">{title}</h4>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {body}
             </p>
-          </div>
-        </div>
-        <p>
-          <strong>의존성 그래프</strong>: Lane 간 DAG 구성 가능<br />
-          예: refactor Lane → migration Lane → cleanup Lane<br />
-          순환 의존 방지 — Lane 생성 시 검증
+          </article>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          값마다 provenance와 freshness를 보존한다
+        </h3>
+        <p className="leading-7">
+          <code>tests_passed: true</code>만 저장하면 어느 commit에서 누가 실행한
+          결과인지 알 수 없습니다. check result에는 source, observed time,
+          commit SHA 또는 tree digest, environment와 artifact reference를
+          포함해야 합니다. 정책은 값뿐 아니라 그 evidence가 아직 유효한지도
+          평가합니다.
+        </p>
+        <p className="leading-7">
+          branch 상태는 Git collector가, CI 상태는 provider adapter가,
+          approval은 registry가 소유하게 하면 source별 오류를 구분할 수
+          있습니다. 한 source 조회가 실패해도 context 전체를 빈 기본값으로
+          만들지 않고 해당 field를 Unknown과 cause로 표시합니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">CI 통합 — ci_client</h3>
-        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">CiClient</code> 트레이트 — CI 시스템 추상화</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold mb-1">트레이트 메서드 (3개)</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">fetch_latest_build(branch) → BuildResult</code></li>
-                <li><code className="bg-muted px-1 rounded">fetch_latest_tests(branch) → TestResult</code></li>
-                <li><code className="bg-muted px-1 rounded">fetch_lint_warnings(branch) → LintResult</code></li>
-              </ul>
-            </div>
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold mb-1"><code className="bg-muted px-1 rounded">GitHubActionsClient</code> 구현체</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">repo: String</code> — 대상 리포</li>
-                <li><code className="bg-muted px-1 rounded">token: String</code> — API 인증</li>
-                <li>GitHub Actions REST API로 최신 워크플로우 실행 조회</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>CiClient 트레이트</strong>: CI 시스템 추상화<br />
-          구현체: GitHubActions, GitLabCI, CircleCI, Jenkins<br />
-          claw-code는 기본 GitHubActionsClient 제공 — 사용자가 트레이트 구현으로 확장
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          사용자·모델의 자기 보고는 evidence reference로 연결한다
+        </h3>
+        <p className="leading-7">
+          에이전트가 “테스트를 통과했다”고 쓴 text는 관측 신호일 뿐 품질 gate의
+          사실이 아닙니다. tool result의 call ID, CI run과 commit SHA처럼 확인
+          가능한 evidence를 context에 연결하고, 단순 자연어 주장은 별도
+          unverified field로 유지합니다.
+        </p>
+        <p className="leading-7">
+          block reason이나 사람의 approval처럼 의미 판단이 필요한 값도 actor,
+          scope, target version과 expiry를 기록합니다. “approved” boolean 하나는
+          이후 변경된 commit까지 승인한 것처럼 잘못 재사용될 수 있습니다.
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">캐시 전략 — 과도한 API 호출 방지</h3>
-        <div className="not-prose bg-muted/50 border rounded-lg p-4 my-4">
-          <p className="font-semibold text-sm mb-3"><code className="text-xs bg-muted px-1 rounded">CachedCiClient</code> — TTL 기반 캐시 데코레이터</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-            <div className="bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold mb-1">필드</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li><code className="bg-muted px-1 rounded">inner</code> — 실제 CiClient</li>
-                <li><code className="bg-muted px-1 rounded">cache</code> — branch별 결과 맵</li>
-                <li><code className="bg-muted px-1 rounded">ttl</code> — 캐시 유효 시간</li>
-              </ul>
-            </div>
-            <div className="sm:col-span-2 bg-background border rounded-lg p-3">
-              <p className="text-xs font-semibold mb-1">동작 흐름</p>
-              <ul className="text-xs space-y-0.5 text-muted-foreground">
-                <li>1. Mutex lock → 캐시에서 branch 조회</li>
-                <li>2. TTL 이내면 캐시 결과 반환 (API 호출 생략)</li>
-                <li>3. 만료/미적중이면 <code className="bg-muted px-1 rounded">inner.fetch_latest_build()</code> 호출 후 캐시 갱신</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <p>
-          <strong>30초 TTL 캐시</strong>: 같은 Lane 평가 내 중복 호출 제거<br />
-          GitHub API는 시간당 5000회 제한 — 캐시 필수<br />
-          여러 Lane이 같은 브랜치 체크할 때도 재활용
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          snapshot을 만든 뒤에는 변경하지 않는다
+        </h3>
+        <p className="leading-7">
+          evaluation 중 비동기 callback이 같은 object를 갱신하면 앞쪽
+          condition과 뒤쪽 condition이 서로 다른 시점의 상태를 보게 됩니다. 새
+          evidence는 다음 generation의 snapshot을 만들 때 반영하고 현재
+          evaluation에는 immutable value를 전달합니다.
+        </p>
+        <p className="leading-7">
+          context에는 generation, resource version과 collected_at을 넣습니다.
+          rule trace와 action proposal이 같은 generation을 가리키게 하면
+          production incident에서도 당시 판단을 다시 실행할 수 있습니다.
         </p>
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: LaneContext의 "관찰 가능성" 역할</p>
-          <p>
-            LaneContext는 단순 데이터 구조가 아닌 <strong>관찰 가능성 레이어</strong><br />
-            PolicyEngine의 모든 판단은 이 구조체를 통해
-          </p>
-          <p className="mt-2">
-            관찰 가능성의 가치:<br />
-            ✓ <strong>디버깅</strong>: "왜 이 규칙이 발동 안 했지?" → ctx 직렬화 후 수동 평가<br />
-            ✓ <strong>감사</strong>: 모든 판단의 근거가 로그로 남음<br />
-            ✓ <strong>테스트</strong>: LaneContext를 수동 생성하여 규칙 테스트
-          </p>
-          <p className="mt-2">
-            <strong>안티패턴</strong>: 규칙이 전역 상태·외부 API를 직접 조회<br />
-            - 재현 불가 (상황이 계속 변함)<br />
-            - 네트워크 장애에 취약<br />
-            - 테스트 작성 어려움
-          </p>
-          <p className="mt-2">
-            LaneContext 중간 레이어가 <strong>"Pure Function" 평가</strong>를 가능하게 함 — 함수형 설계 원칙
-          </p>
-        </div>
-
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          오래 걸린 action 앞에서는 다시 읽는다
+        </h3>
+        <p className="leading-7">
+          immutable snapshot은 평가의 일관성을 보장하지만 최신성을 보장하지는
+          않습니다. merge·rebase·delete 직전에 branch head, lease와 approval
+          version을 다시 확인하고 expected version이 다르면 action을 중단한 뒤
+          새 context를 수집합니다.
+        </p>
+        <p className="leading-7">
+          이 재검증은 TOCTOU(time-of-check to time-of-use) 문제를 줄입니다. 단순
+          알림처럼 side effect가 작고 idempotent한 action과 history를 바꾸는
+          action에 같은 freshness 기준을 적용할 필요는 없으므로 action class별
+          precondition을 둡니다.
+        </p>
       </div>
     </section>
   );

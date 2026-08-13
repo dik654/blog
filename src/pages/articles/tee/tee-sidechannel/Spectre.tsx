@@ -3,16 +3,26 @@ export default function Spectre() {
     <section id="spectre" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Spectre &amp; Meltdown</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Transient Execution Attacks 개요</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Transient Execution Attacks 개요
+        </h3>
         <p>
-          <strong>투기적 실행</strong>(Speculative Execution)이 보안 취약점으로 돌변<br />
-          <strong>원리</strong>: CPU가 분기 결과 예측 → 잘못 예측해도 투기적 실행 결과가 마이크로아키텍처 상태에 잔재<br />
-          <strong>핵심</strong>: 비밀 데이터에 의존하는 메모리 접근이 <strong>캐시에 흔적</strong><br />
-          <strong>탐지</strong>: Flush+Reload로 어떤 캐시 라인이 로드됐는지 측정 → 비밀 복원
+          <strong>투기적 실행</strong>(Speculative Execution)이 보안 취약점으로
+          돌변
+          <br />
+          <strong>원리</strong>: CPU가 분기 결과 예측 → 잘못 예측해도 투기적
+          실행 결과가 마이크로아키텍처 상태에 잔재
+          <br />
+          <strong>핵심</strong>: 비밀 데이터에 의존하는 메모리 접근이{" "}
+          <strong>캐시에 흔적</strong>
+          <br />
+          <strong>탐지</strong>: Flush+Reload로 어떤 캐시 라인이 로드됐는지 측정
+          → 비밀 복원
         </p>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Spectre v1 (Bounds Check Bypass)</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Spectre v1 (Bounds Check Bypass)
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// 취약 코드 패턴
 if (x < array1_size) {
     y = array2[array1[x] * 4096];
@@ -50,7 +60,9 @@ for (size_t k = 0; k < 256; k++) {
     if (time < THRESHOLD) secret_byte = k;
 }`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Meltdown (Rogue Data Cache Load)</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Meltdown (Rogue Data Cache Load)
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// Meltdown exploit 핵심
 // 커널 메모리를 사용자 공간에서 투기적으로 읽기
 
@@ -76,7 +88,9 @@ except PageFault:
 // - KPTI(Kernel Page Table Isolation)으로 완화
 //   → 사용자 모드에서 kernel VA 미매핑`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">Foreshadow — SGX L1TF</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          Foreshadow — SGX L1TF
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// L1TF(L1 Terminal Fault) - SGX-specific variant
 
 // SGX Enclave 메모리는 EPC(Encrypted Page Cache)에 저장
@@ -104,7 +118,9 @@ except PageFault:
 // - TCB 업데이트 필요
 // - 재확인 필수`}</pre>
 
-        <h3 className="text-xl font-semibold mt-8 mb-3">SEV-ES/SNP의 Transient 공격</h3>
+        <h3 className="text-xl font-semibold mt-8 mb-3">
+          SEV-ES/SNP의 Transient 공격
+        </h3>
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`// SEV에 대한 주요 transient 공격
 
 // [SEVerity] (Morbitzer et al. 2021)
@@ -157,27 +173,31 @@ except PageFault:
 // - 앱: constant-time crypto 라이브러리`}</pre>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="font-semibold mb-2">인사이트: Transient 공격의 근본 해결 불가능성</p>
+          <p className="font-semibold mb-2">
+            인사이트: Transient 공격의 근본 해결 불가능성
+          </p>
           <p>
             <strong>구조적 문제</strong>:<br />
-            - 투기 실행은 CPU 성능의 근간<br />
-            - 완전 제거 시 성능 50%+ 하락<br />
-            - 완전한 isolation은 현대 CPU 아키텍처에서 불가능
+            - 투기 실행은 CPU 성능의 근간
+            <br />
+            - 완전 제거 시 성능 50%+ 하락
+            <br />- 완전한 isolation은 현대 CPU 아키텍처에서 불가능
           </p>
           <p className="mt-2">
             <strong>현재 접근</strong>:<br />
-            - Best-effort mitigation (new attack → new fix)<br />
-            - 공격별 TCB 업데이트<br />
-            - Attestation이 TCB 버전 강제
+            - Best-effort mitigation (new attack → new fix)
+            <br />
+            - 공격별 TCB 업데이트
+            <br />- Attestation이 TCB 버전 강제
           </p>
           <p className="mt-2">
             <strong>장기 방향</strong>:<br />
-            - Secure speculation 아키텍처 연구 (MIT, Google)<br />
-            - 하드웨어 분리된 투기 실행 unit<br />
-            - 현재로선 formal verification 어려움
+            - Secure speculation 아키텍처 연구 (MIT, Google)
+            <br />
+            - 하드웨어 분리된 투기 실행 unit
+            <br />- 현재로선 formal verification 어려움
           </p>
         </div>
-
       </div>
     </section>
   );

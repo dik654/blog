@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import type { Category } from '@/content';
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import type { Category } from "@/content";
+import { countArticlesInSubcategory } from "@/content/subcategory-navigation";
 
 interface Props {
   category: Category;
@@ -23,16 +24,14 @@ export default function CategoryCard({ category: cat, index }: Props) {
           <h3 className="text-lg font-semibold group-hover:text-foreground transition-colors">
             {cat.name}
           </h3>
-          <span
-            className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-medium text-primary-foreground"
-          >
+          <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-medium text-primary-foreground">
             {cat.articles.length}편
           </span>
         </div>
         <p className="text-sm text-muted-foreground mb-5">{cat.description}</p>
         <div className="flex flex-wrap gap-1.5 mb-4">
           {cat.subcategories.map((sub) => {
-            const count = cat.articles.filter((a) => a.subcategory === sub.slug).length;
+            const count = countArticlesInSubcategory(cat, sub);
             return (
               <span
                 key={sub.slug}
@@ -40,7 +39,9 @@ export default function CategoryCard({ category: cat, index }: Props) {
               >
                 {sub.name}
                 {count > 0 && (
-                  <span className="ml-1 text-foreground font-medium">{count}</span>
+                  <span className="ml-1 text-foreground font-medium">
+                    {count}
+                  </span>
                 )}
               </span>
             );
@@ -57,7 +58,11 @@ export default function CategoryCard({ category: cat, index }: Props) {
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </div>
       </Link>

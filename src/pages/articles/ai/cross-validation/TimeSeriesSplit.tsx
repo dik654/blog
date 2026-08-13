@@ -1,93 +1,58 @@
-import TimeSeriesSplitViz from './viz/TimeSeriesSplitViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import TimeSeriesSplitViz from "./viz/TimeSeriesSplitViz";
 
 export default function TimeSeriesSplit() {
   return (
     <section id="timeseries" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">TimeSeriesSplit: 시간 순서 보존</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <h2 className="mb-6 text-2xl font-bold">
+        시간 검증에서는 각 fold를 실제 과거의 한 시점으로 되돌려 놓고 그때 가능했던 학습만 재연합니다
+      </h2>
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          시계열 데이터는 <strong>시간 순서</strong>가 핵심 — 과거로 미래를 예측해야 함<br />
-          일반 K-Fold: 셔플로 시간 순서가 무너짐 → 미래 데이터가 train에, 과거 데이터가 val에<br />
-          이를 <strong>look-ahead bias(미래 참조 편향)</strong>라 하며, 시계열에서 가장 흔한 누출 유형
+          시간이 흐르며 분포가 바뀌거나 과거로 돌아갈 수 없는 문제에서는 random K-fold가 미래 관측을 과거 model 학습에 섞을
+          수 있습니다. Walk-forward는 origin 이전으로 학습하고 그 뒤 구간을 평가합니다. Expanding window는 과거를 누적하고,
+          rolling window는 최근 일정 구간만 유지하므로 실제 retraining policy와 같은 방식을 고릅니다.
         </p>
-
-        <h3>TimeSeriesSplit의 규칙</h3>
         <p>
-          sklearn <code>TimeSeriesSplit(n_splits=5)</code> — 각 fold에서 train은 항상 val보다 과거<br />
-          fold가 진행될수록 train 크기가 커짐: <strong>expanding window</strong><br />
-          시간 역전 없음 → 항상 "과거 → 미래" 방향으로 검증
+          단순히 timestamp 순서만 맞춰도 충분하지 않습니다. Training row의 label이 validation origin 뒤에야 확정된다면 그
+          시점에는 아직 학습할 수 없는 정답입니다. 각 row의 feature source와 label available time을 계산해 fold별로 다시
+          생성해야 합니다.
         </p>
-
-        <h3>Expanding Window vs Sliding Window</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-          {[
-            {
-              type: 'Expanding Window',
-              desc: 'Train 시작점 고정, 끝점 확장. 모든 과거 데이터 활용',
-              when: '정상(stationary) 시계열. 과거 정보가 여전히 유효한 경우',
-              how: 'sklearn TimeSeriesSplit 기본 동작',
-            },
-            {
-              type: 'Sliding Window',
-              desc: 'Train 크기 고정, 시작/끝점 모두 이동. 최근 패턴에 집중',
-              when: '비정상(non-stationary) 시계열. 분포 변화(drift)가 있는 경우',
-              how: 'max_train_size 파라미터 또는 직접 구현',
-            },
-          ].map((p) => (
-            <div key={p.type} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-bold text-foreground text-xs">{p.type}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-              <div className="text-xs text-muted-foreground mt-1 italic">적합: {p.when}</div>
-              <div className="text-xs text-muted-foreground mt-1">구현: {p.how}</div>
-            </div>
-          ))}
-        </div>
-
-        <h3 className="mt-4">창고 대회: 25 타임슬롯 시계열 분할</h3>
-        <p>
-          타임슬롯 1~25에서 시간 순서 유지 필수<br />
-          Train: slot 1~t, Val: slot t+1~t+5<br />
-          4-fold split: [1-5|6-10], [1-10|11-15], [1-15|16-20], [1-20|21-25]<br />
-          시나리오별 그룹이 있으면 → <strong>GroupKFold + 시간 순서 결합</strong> 필요
-        </p>
-
-        <h3 className="mt-4">Purge & Embargo: 고급 시계열 CV</h3>
-        <p>
-          금융 시계열처럼 자기상관이 강한 데이터에서는 경계(boundary) 부근 데이터가 누출원<br />
-          <strong>Purge(제거)</strong>: train-val 경계 앞뒤 n개 샘플 삭제<br />
-          <strong>Embargo(금지 구간)</strong>: val 직후 일정 구간을 다음 fold train에서 제외<br />
-          Marcos Lopez de Prado의 《Advances in Financial ML》에서 제안한 기법
-        </p>
-
-        <h3 className="mt-4">시계열 CV 선택 가이드</h3>
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 text-sm">
-          {[
-            {
-              situation: '일반 시계열',
-              strategy: 'TimeSeriesSplit',
-              note: 'expanding window 기본',
-            },
-            {
-              situation: '분포 변화 있음',
-              strategy: 'Sliding Window',
-              note: 'max_train_size 설정',
-            },
-            {
-              situation: '금융 시계열',
-              strategy: 'Purged + Embargo',
-              note: '자기상관 차단 필수',
-            },
-          ].map((p) => (
-            <div key={p.situation} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-bold text-foreground text-xs">{p.situation}</span>
-              <div className="text-xs text-muted-foreground mt-1">{p.strategy}</div>
-              <div className="text-xs text-muted-foreground mt-1 italic">{p.note}</div>
-            </div>
-          ))}
-        </div>
       </div>
-      <div className="not-prose mt-6">
+
+      <ExplainedFormula
+        question="Validation origin 직전의 얼마를 gap으로 비워야 하는지 어떻게 결정할까요?"
+        idea={
+          <>
+            고정된 숫자를 관습적으로 쓰기보다 training label이 확정되는 시각을 계산합니다. 가장 늦게 확정되는 training label이
+            validation의 첫 prediction cutoff 이전이어야 실제 walk-forward 학습이 가능합니다.
+          </>
+        }
+        formula={String.raw`\max_{i\in D_{-k}} t_{\mathrm{label\_available}}(i)\le \min_{j\in V_k}t_{\mathrm{cutoff}}(j)`}
+        terms={[
+          { symbol: "t_label_available", name: "label available time", description: "Target horizon과 reporting delay를 지나 label을 학습에 쓸 수 있게 된 시각입니다." },
+          { symbol: "t_cutoff", name: "prediction cutoff", description: "Validation row의 예측을 내려야 하는 시각입니다." },
+          { symbol: "D_-k", name: "historical training rows", description: "k번째 origin에서 실제로 학습 가능한 과거 행입니다." },
+          { symbol: "V_k", name: "future validation rows", description: "그 origin 이후 성능을 측정할 행입니다." },
+        ]}
+        assumptions={[
+          "Label horizon·reporting delay·backfill revision을 metadata로 계산할 수 있어야 합니다.",
+          "Feature window가 validation과 원천 event를 공유해 dependency가 생기거나 target windows가 겹치면 추가 purge가 필요할 수 있습니다.",
+          "Gap을 크게 만들수록 leakage는 줄 수 있지만 train data와 최신성이 줄어드는 trade-off가 있습니다.",
+        ]}
+        interpretation="11월 예측을 시작하는데 10월 말 row의 30일 target이 11월 말에 확정된다면 그 row는 11월 origin의 training set에 넣을 수 없습니다."
+      />
+
+      <div className="not-prose my-8">
         <TimeSeriesSplitViz />
+      </div>
+
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
+        <p>
+          평균 score만 내지 않고 origin별 metric·train span·validation span·gap·group coverage를 함께 그립니다. 최신 origin에서
+          성능이 지속적으로 떨어지면 model family보다 retraining cadence, feature staleness와 drift monitoring을 먼저 의심합니다.
+          여러 entity의 시간이 섞이면 time 조건과 group 경계를 동시에 지켜야 합니다.
+        </p>
       </div>
     </section>
   );

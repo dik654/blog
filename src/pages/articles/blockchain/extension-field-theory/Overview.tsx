@@ -1,4 +1,4 @@
-import ExtOverviewViz from './viz/ExtOverviewViz';
+import ExtOverviewViz from "./viz/ExtOverviewViz";
 
 export default function Overview() {
   return (
@@ -11,7 +11,9 @@ export default function Overview() {
           BN254 페어링에서 G2는 Fp2, 결과 GT는 Fp12 위에서 동작.
         </p>
       </div>
-      <div className="not-prose"><ExtOverviewViz /></div>
+      <div className="not-prose">
+        <ExtOverviewViz />
+      </div>
     </section>
   );
 }

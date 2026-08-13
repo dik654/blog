@@ -1,13 +1,12 @@
 // alloy-primitives — Address, B256, U256
 
-/// 20바이트 이더리움 주소 — 스택 할당, zero-copy
+/// 20바이트 이더리움 주소 — 고정 길이 값 wrapper
 pub struct Address(pub FixedBytes<20>);
 
 /// 32바이트 해시 (Keccak256 결과, 트랜잭션 해시 등)
 pub struct B256(pub FixedBytes<32>);
 
-/// 256비트 부호 없는 정수 — 4개의 u64 limb로 표현
-/// 힙 할당 없이 스택에서 연산
+/// 256비트 부호 없는 정수 — 4개의 u64 limb로 표현한 개념 예시
 pub struct U256 {
     limbs: [u64; 4],  // little-endian 순서
 }
@@ -22,7 +21,7 @@ impl U256 {
     }
 }
 
-/// FixedBytes: 컴파일 타임 크기 고정, Copy trait 구현
+/// FixedBytes: 컴파일 타임 크기 고정, 값 자체는 동적 buffer를 갖지 않음
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct FixedBytes<const N: usize>(pub [u8; N]);
 

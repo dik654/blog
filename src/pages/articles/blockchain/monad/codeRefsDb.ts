@@ -1,8 +1,8 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const codeRefsDb: Record<string, CodeRef> = {
-  'monad-triedb-node': {
-    path: 'category/state/triedb/node.hpp',
+  "monad-triedb-node": {
+    path: "category/state/triedb/node.hpp",
     code: `// MonadDB 노드 구조
 class NodeBase {
   uint16_t mask{0};
@@ -16,16 +16,16 @@ class Db {
   Result<NodeCursor> find(NibblesView, uint64_t);
   void upsert(UpdateList, uint64_t block_id);
 };`,
-    lang: 'c',
+    lang: "c",
     highlight: [1, 13],
-    desc: 'TrieDB 노드: 4타입 + 3 DB 모드.',
+    desc: "TrieDB 노드: 4타입 + 3 DB 모드.",
     annotations: [
-      { lines: [2, 5], color: 'sky', note: 'NodeBase: mask + version' },
-      { lines: [7, 12], color: 'emerald', note: '3모드: memory, RW, RO' },
+      { lines: [2, 5], color: "sky", note: "NodeBase: mask + version" },
+      { lines: [7, 12], color: "emerald", note: "3모드: memory, RW, RO" },
     ],
   },
-  'monad-io-uring': {
-    path: 'category/state/triedb/async_io.cpp',
+  "monad-io-uring": {
+    path: "category/state/triedb/async_io.cpp",
     code: `// io_uring 비동기 I/O
 class AsyncIOContext {
   io_uring read_ring_;
@@ -40,12 +40,12 @@ class AsyncIOContext {
   }
 };
 // 동기 대비 4.17배 처리량`,
-    lang: 'c',
+    lang: "c",
     highlight: [1, 14],
-    desc: 'io_uring: R/W 링 분리 + DMA 제로 카피.',
+    desc: "io_uring: R/W 링 분리 + DMA 제로 카피.",
     annotations: [
-      { lines: [3, 5], color: 'sky', note: 'R/W 링 + DMA 풀' },
-      { lines: [6, 11], color: 'emerald', note: 'submit_read 제로 카피' },
+      { lines: [3, 5], color: "sky", note: "R/W 링 + DMA 풀" },
+      { lines: [6, 11], color: "emerald", note: "submit_read 제로 카피" },
     ],
   },
 };

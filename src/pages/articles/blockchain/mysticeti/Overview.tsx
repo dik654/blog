@@ -1,29 +1,36 @@
-import ContextViz from './viz/ContextViz';
+import ContextViz from "./viz/ContextViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="text-2xl font-bold mb-6">Mysticeti: Sui 최신 합의</h2>
-      <div className="not-prose mb-8"><ContextViz /></div>
+      <div className="not-prose mb-8">
+        <ContextViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Mysticeti (Babel-Chursin-Sonnino, 2024) — <strong>Sui의 production 합의</strong>.<br />
-          Narwhal+Bullshark의 certificate overhead 제거 → 390ms e2e latency.<br />
+          Mysticeti (Babel-Chursin-Sonnino, 2024) —{" "}
+          <strong>Sui의 production 합의</strong>.<br />
+          Narwhal+Bullshark의 certificate overhead 제거 → 390ms e2e latency.
+          <br />
           Uncertified DAG + Fast Path 두 혁신.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3">설계 목표</h3>
         <p className="leading-7">
-          증명서 없는 DAG(uncertified DAG)로 인증 라운드 제거.<br />
+          증명서 없는 DAG(uncertified DAG)로 인증 라운드 제거.
+          <br />
           소유 객체 트랜잭션은 <strong>합의를 우회하는 fast path</strong>.<br />
           결과: Bullshark 대비 커밋 지연 50%+ 감소.
         </p>
 
         {/* ── Mysticeti 혁신 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Mysticeti의 3가지 혁신</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Mysticeti의 3가지 혁신
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Mysticeti 3가지 혁신 (2024):
+          {`// Mysticeti 3가지 혁신 (2024):
 //
 // 1. Uncertified DAG:
 //    - Narwhal: 2f+1 signatures per vertex (certificate)
@@ -75,15 +82,19 @@ export default function Overview() {
 // - 모두 고래/바다 생물 이름`}
         </pre>
         <p className="leading-7">
-          Mysticeti: <strong>Uncertified DAG + Fast Path + 3-round commit</strong>.<br />
-          Sui 2024 production, 390ms e2e, 160K+ TPS.<br />
+          Mysticeti:{" "}
+          <strong>Uncertified DAG + Fast Path + 3-round commit</strong>.<br />
+          Sui 2024 production, 390ms e2e, 160K+ TPS.
+          <br />
           Narwhal/Bullshark 후계자.
         </p>
 
         {/* ── Sui Object Model ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Sui의 Object Model (핵심 배경)</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          Sui의 Object Model (핵심 배경)
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Sui Object Model:
+          {`// Sui Object Model:
 //
 // Object types:
 // 1. Owned objects:
@@ -139,14 +150,17 @@ export default function Overview() {
         </pre>
         <p className="leading-7">
           Sui object model: <strong>Owned (80%) + Shared (20%)</strong>.<br />
-          Owned → Fast Path (100ms), Shared → Mysticeti (390ms).<br />
+          Owned → Fast Path (100ms), Shared → Mysticeti (390ms).
+          <br />
           Move language가 object model 지원.
         </p>
 
         <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
           <strong>💡 Mysticeti의 철학: "consensus는 필요한 곳만"</strong>.<br />
-          Ethereum: 모든 TX consensus → 병목.<br />
-          Sui: owned object TX는 consensus 불필요 → bypass.<br />
+          Ethereum: 모든 TX consensus → 병목.
+          <br />
+          Sui: owned object TX는 consensus 불필요 → bypass.
+          <br />
           object model 인식 합의 = 평균 latency 극적 감소.
         </p>
       </div>

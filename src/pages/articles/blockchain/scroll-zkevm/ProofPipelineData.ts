@@ -23,8 +23,16 @@ pub fn gen_proof(params, pk, circuit, instances, rng) -> Result<Vec<u8>> {
 }`;
 
 export const proofGenAnnotations = [
-  { lines: [3, 11] as [number, number], color: 'sky' as const, note: 'SuperCircuit 빌드 — Geth 데이터 → 회로' },
-  { lines: [14, 22] as [number, number], color: 'emerald' as const, note: 'KZG+SHPLONK 증명 생성' },
+  {
+    lines: [3, 11] as [number, number],
+    color: "sky" as const,
+    note: "SuperCircuit 빌드 — Geth 데이터 → 회로",
+  },
+  {
+    lines: [14, 22] as [number, number],
+    color: "emerald" as const,
+    note: "KZG+SHPLONK 증명 생성",
+  },
 ];
 
 export const AGGREGATION_CODE = `// 증명 집계 전략 (Chunk → Batch → Bundle)
@@ -55,10 +63,26 @@ impl SuperCircuit {
 }`;
 
 export const aggregationAnnotations = [
-  { lines: [3, 5] as [number, number], color: 'sky' as const, note: 'Chunk — 블록 묶음 증명' },
-  { lines: [7, 9] as [number, number], color: 'emerald' as const, note: 'Batch — Chunk 집계' },
-  { lines: [11, 13] as [number, number], color: 'amber' as const, note: 'Bundle — L1 제출용' },
-  { lines: [16, 24] as [number, number], color: 'violet' as const, note: '동적 크기 — 최대 행 수 선택' },
+  {
+    lines: [3, 5] as [number, number],
+    color: "sky" as const,
+    note: "Chunk — 블록 묶음 증명",
+  },
+  {
+    lines: [7, 9] as [number, number],
+    color: "emerald" as const,
+    note: "Batch — Chunk 집계",
+  },
+  {
+    lines: [11, 13] as [number, number],
+    color: "amber" as const,
+    note: "Bundle — L1 제출용",
+  },
+  {
+    lines: [16, 24] as [number, number],
+    color: "violet" as const,
+    note: "동적 크기 — 최대 행 수 선택",
+  },
 ];
 
 export const SETUP_CODE = `// Setup Phase — KZG 파라미터 + 키 생성
@@ -76,7 +100,19 @@ let pk = keygen_pk(&params, vk, &circuit)?;  // Proving Key
 // 4. Opening Phase     — KZG opening proof 생성`;
 
 export const setupAnnotations = [
-  { lines: [2, 3] as [number, number], color: 'sky' as const, note: 'KZG 파라미터 — 2^k 행' },
-  { lines: [5, 7] as [number, number], color: 'emerald' as const, note: 'VK + PK 생성' },
-  { lines: [9, 13] as [number, number], color: 'amber' as const, note: '증명 4단계: 커밋→챌린지→평가→오프닝' },
+  {
+    lines: [2, 3] as [number, number],
+    color: "sky" as const,
+    note: "KZG 파라미터 — 2^k 행",
+  },
+  {
+    lines: [5, 7] as [number, number],
+    color: "emerald" as const,
+    note: "VK + PK 생성",
+  },
+  {
+    lines: [9, 13] as [number, number],
+    color: "amber" as const,
+    note: "증명 4단계: 커밋→챌린지→평가→오프닝",
+  },
 ];

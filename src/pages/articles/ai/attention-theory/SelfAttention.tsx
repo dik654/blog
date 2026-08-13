@@ -1,82 +1,105 @@
-import { CitationBlock } from '@/components/ui/citation';
-import M from '@/components/ui/math';
-import SelfAttnViz from './viz/SelfAttnViz';
-import SelfAttnDetailViz from './viz/SelfAttnDetailViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SelfAttentionTensorViz from "./viz/SelfAttentionTensorViz";
 
 export default function SelfAttention() {
   return (
     <section id="self-attention" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Self-Attention & Multi-Head</h2>
-      <div className="not-prose mb-8"><SelfAttnViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        Self-attention: 같은 sequence 안에서 정보를 주고받기
+      </h2>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          Encoder–decoder attention에서는 query가 decoder에서, key와 value가
+          encoder에서 나온다. Self-attention은 query, key, value를 모두 같은
+          입력 <code>X</code>의 서로 다른 선형 투영으로 만든다. 따라서 각 token은
+          같은 sequence의 다른 위치를 참고해 자신의 representation을 갱신한다.
+        </p>
+      </div>
+
+      <SelfAttentionTensorViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Q, K, V는 같은 값이 아니라 같은 입력에서 나온다</h3>
+      </div>
+
+      <ExplainedFormula
+        question="같은 input sequence가 질문·주소·content라는 서로 다른 역할을 어떻게 동시에 맡을까?"
+        idea={<>X 자체를 세 번 복사하는 것이 아니라 서로 다른 learned matrix로 투영합니다. 같은 token도 query일 때와 key/value일 때 다른 좌표를 가질 수 있습니다.</>}
+        formula={String.raw`\begin{aligned}Q&=XW_Q\\K&=XW_K\\V&=XW_V\end{aligned}`}
+        terms={[
+          { symbol: "X\\in\\mathbb R^{n\\times d_{model}}", name: "shared source", description: "n개 token의 현재 layer representation입니다." },
+          { symbol: "W_Q,W_K,W_V", name: "role projections", description: "질문·주소·content 역할에 맞게 학습되는 서로 다른 parameter입니다." },
+          { symbol: "Q,K,V", name: "projected tensors", description: "source는 같지만 값과 마지막 차원은 projection 설정에 따라 달라질 수 있습니다." },
+        ]}
+        assumptions={["한 self-attention layer의 단일 head 또는 head를 합친 matrix 표기입니다."]}
+        interpretation="‘Q=K=V’라는 약식 표현은 source sequence가 같다는 뜻일 뿐 실제 tensor 값이나 weight matrix가 같다는 뜻이 아닙니다."
+      />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Self-Attention — 입력 시퀀스가 <strong>자기 자신에 대해</strong> 어텐션 수행<br />
-          Q, K, V 모두 같은 입력 X에서 파생 → "Self"<br />
-          Multi-Head — 여러 헤드가 <strong>서로 다른 표현 부분공간</strong>에서 병렬로 어텐션 학습, 더 풍부한 패턴 포착
+          흔히 “self-attention은 Q=K=V”라고 줄여 말하지만 실제 tensor 값까지
+          같다는 뜻은 아니다. 세 projection은 같은 <code>X</code>를 입력으로 받을
+          뿐, 서로 다른 학습 parameter <code>W_Q</code>, <code>W_K</code>,
+          <code>W_V</code>를 사용한다.
         </p>
 
-        <CitationBlock source="Vaswani et al., 2017 — Attention Is All You Need"
-          citeKey={4} type="paper" href="https://arxiv.org/abs/1706.03762">
-          <p className="italic">"Multi-head attention allows the model to jointly attend to information
-          from different representation subspaces at different positions."</p>
-        </CitationBlock>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">Q, K, V 생성</h3>
-        <M display>{'Q = X \\cdot \\underbrace{W_Q}_{d_{\\text{model}} \\times d_k}, \\quad K = X \\cdot \\underbrace{W_K}_{d_{\\text{model}} \\times d_k}, \\quad V = X \\cdot \\underbrace{W_V}_{d_{\\text{model}} \\times d_v}'}</M>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">Scaled Dot-Product Attention</h3>
-        <M display>{'\\text{Attention}(Q,K,V) = \\underbrace{\\text{softmax}\\!\\left(\\frac{Q K^\\top}{\\underbrace{\\sqrt{d_k}}_{\\text{스케일링}}}\\right)}_{\\text{주의 가중치}} \\cdot V'}</M>
-
-        <h3 className="text-lg font-semibold mt-6 mb-3">Multi-Head Attention</h3>
-        <M display>{'\\text{MultiHead}(Q,K,V) = \\underbrace{\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)}_{\\text{모든 헤드 결과 이어붙이기}} \\cdot \\underbrace{W_O}_{d_{\\text{model}} \\times d_{\\text{model}}}'}</M>
-
-        <div className="grid grid-cols-2 gap-3 my-6 not-prose">
-          <div className="rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-950/40 p-4">
-            <div className="font-semibold text-sky-700 dark:text-sky-300 mb-1">Q — Query (질의)</div>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300"><strong>무엇을 찾을지</strong> 결정하는 벡터. 현재 토큰이 다른 토큰에게 "나와 관련 있어?"라고 묻는 역할.</p>
-          </div>
-          <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4">
-            <div className="font-semibold text-emerald-700 dark:text-emerald-300 mb-1">K — Key (키)</div>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300"><strong>무엇과 비교할지</strong> 결정하는 벡터. 각 토큰이 자신의 특징을 내보내는 "라벨" — Q와 내적으로 유사도 측정.</p>
-          </div>
-          <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4">
-            <div className="font-semibold text-amber-700 dark:text-amber-300 mb-1">V — Value (값)</div>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300"><strong>실제 전달할 정보</strong>. 유사도가 높은 토큰의 V가 큰 가중치로 합산되어 최종 출력 구성.</p>
-          </div>
-          <div className="rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/40 p-4">
-            <div className="font-semibold text-violet-700 dark:text-violet-300 mb-1"><M>{'\\sqrt{d_k}'}</M> — 스케일링</div>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300"><M>{'d_k'}</M>가 클수록 <M>{'QK^\\top'}</M> 내적값이 커져 softmax가 극단적 분포로 수렴. <M>{'\\sqrt{d_k}'}</M>로 나눠 기울기 소실 방지.</p>
-          </div>
-        </div>
+        <h3>Multi-head는 여러 투영을 병렬로 학습한다</h3>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Self-Attention 상세 분석</h3>
-        <p>
-          입력 X에 세 가중치 행렬을 곱해 Q, K, V를 만든다 (BERT-base: d_model=768, d_k=64).
-          같은 X에서 Q, K, V 모두 파생되므로 "Self" — 시퀀스 내부 관계를 학습한다.
-          시간 복잡도 O(n²·d)이지만 완전 병렬화 가능하여 RNN의 O(n·d²) 순차 처리보다 n &lt; d일 때 유리하다.
-        </p>
-        <M display>{'\\text{Attention}(Q,K,V) = \\underbrace{\\text{softmax}\\!\\left(\\frac{\\overbrace{Q \\cdot K^\\top}^{\\text{유사도 행렬 (n×n)}}}{\\underbrace{\\sqrt{d_k}}_{\\text{스케일링}}}\\right)}_{\\text{주의 가중치 (확률 분포)}} \\cdot \\underbrace{V}_{\\text{값 (정보)}}'}</M>
+      <ExplainedFormula
+        question="한 개의 attention distribution 대신 여러 representation subspace에서 병렬로 읽으려면?"
+        idea={<>model dimension을 H개 head의 projection으로 나누어 각자 score와 weighted sum을 계산하고, 결과를 concat한 뒤 output projection으로 다시 섞습니다.</>}
+        formula={String.raw`\begin{aligned}Q_h&=XW_h^Q,\quad K_h=XW_h^K\\V_h&=XW_h^V\\a_h&=\operatorname{Attention}(Q_h,K_h,V_h)\\Y&=\operatorname{Concat}(a_1,\ldots,a_H)\\\operatorname{MHA}(X)&=YW_O\end{aligned}`}
+        terms={[
+          { symbol: "H", name: "number of query heads", description: "병렬 attention projection의 수입니다." },
+          { symbol: "W_h^Q,W_h^K,W_h^V", name: "head-specific projections", description: "head마다 다른 comparison·content subspace를 만듭니다." },
+          { symbol: "a_h", name: "head output", description: "h번째 projection에서 계산한 attention read입니다." },
+          { symbol: "W_O", name: "output projection", description: "concat된 head features를 model dimension으로 다시 혼합합니다." },
+        ]}
+        assumptions={["기본 MHA 표기입니다. MQA와 GQA는 query head가 key/value head를 공유하므로 KV projection 수가 다릅니다."]}
+        interpretation="multi-head는 해석 가능한 역할 분담을 보장하지 않습니다. 서로 다른 projection과 attention map을 학습할 capacity를 제공하는 구조입니다."
+      />
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Multi-Head의 역할</h3>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          12개 헤드가 독립 W_Q, W_K, W_V로 서로 다른 표현 부분공간에서 병렬 어텐션 학습.
-          구문 관계(주어-동사), 의미 관계(유의어), 위치 관계(직전 토큰), 공참조(대명사-선행어) 등 다양한 관계를 동시 포착한다.
-          블록당 파라미터 약 236만 — 같은 크기에서 단일 헤드 대비 더 풍부한 표현.
+          각 head가 항상 “문법 담당”, “공참조 담당”처럼 하나의 사람이 읽을 수
+          있는 기능으로 분리되는 것은 아니다. 다만 서로 다른 projection을
+          사용하므로 하나의 attention map만 쓸 때보다 여러 관계를 병렬로 표현할
+          여지가 생긴다.
         </p>
-        <M display>{'\\underbrace{\\text{head}_i}_{\\text{i번째 헤드}} = \\text{Attention}(\\underbrace{XW_i^Q}_{\\text{질의}},\\; \\underbrace{XW_i^K}_{\\text{키}},\\; \\underbrace{XW_i^V}_{\\text{값}})'}</M>
-        <M display>{'\\text{MultiHead} = \\underbrace{\\text{Concat}(\\text{head}_0, \\ldots, \\text{head}_{11})}_{\\text{12개 헤드 결과 이어붙이기}} \\cdot \\underbrace{W_O}_{\\text{원래 차원으로 복원}}'}</M>
+        <p>
+          Training compute만 보면 score matrix 계산은 대략
+          <code>O(n²d)</code>이고 attention probability의 materialization은
+          <code>O(n²)</code> memory를 요구할 수 있다. Autoregressive decode에서는
+          새 query가 과거 key/value만 읽으므로 한 step score는 sequence length에
+          선형이지만, 과거 KV cache가 layer·KV head·head dimension과 함께 누적된다.
+          따라서 “self-attention은 병렬화된다”와 “long-context serving이 싸다”는
+          같은 말이 아니다.
+        </p>
+
+        <h3>병렬화와 긴 문맥 비용을 함께 봐야 한다</h3>
+        <p>
+          Recurrent model과 달리 한 layer 안의 모든 위치를 동시에 계산할 수
+          있지만, dense self-attention의 score matrix는 sequence length
+          <code>n</code>에 대해 <code>n × n</code>으로 커진다. Causal language
+          model에서는 미래 위치를 mask하고, 긴 문맥 모델은 sliding window,
+          sparse attention, linear attention 같은 변형으로 이 비용을 줄인다.
+        </p>
+        <p>
+          이 글은 attention 연산 자체를 맡는다. Residual connection,
+          normalization, feed-forward network와 함께 완전한 block을 만드는
+          과정은 <Link to="/ai/transformer-architecture">Transformer 구조 글</Link>
+          에서 이어진다.
+        </p>
       </div>
 
-      <div className="not-prose my-8"><SelfAttnDetailViz /></div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <p className="leading-7">
-          요약 1: Self-Attention은 <strong>Q=K=V</strong>가 같은 입력에서 파생 — 시퀀스 내부 관계 학습.<br />
-          요약 2: Multi-Head로 <strong>다양한 관계 유형</strong> 동시 학습 — 구문·의미·위치 패턴 분리.<br />
-          요약 3: O(n²) 복잡도가 장단점 — 완전 병렬화 가능하나 긴 시퀀스에 부담.
-        </p>
+      <div id="paper-attention-all-you-need" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">
+        <p className="text-xs font-bold text-primary">논문 읽기 · Scaled dot-product와 multi-head self-attention</p>
+        <p className="mt-2 text-sm font-semibold">Attention Is All You Need</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Scaled dot-product attention을 multi-head로 병렬화하고 recurrence 없이 encoder–decoder sequence transduction 경로를 구성했습니다. 근거는 WMT 번역과 parsing을 포함한 논문의 설정에 한정되며, 모든 현대 LLM 구조나 긴 문맥 비용 해결책을 원 논문 하나가 제안했다는 뜻은 아닙니다.</p>
+        <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noreferrer">원 논문과 architecture 보기</a>
       </div>
     </section>
   );

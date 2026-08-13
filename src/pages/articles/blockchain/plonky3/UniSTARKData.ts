@@ -26,9 +26,21 @@ pub fn prove<SC, A>(config: &SC, air: &A,
 }`;
 
 export const PROVE_ANNOTATIONS = [
-  { lines: [5, 7] as [number, number], color: 'sky' as const, note: '1단계: 트레이스 DFT + Merkle 커밋' },
-  { lines: [13, 17] as [number, number], color: 'emerald' as const, note: '3단계: 몫 다항식 Q(x) = C(x)/Z_H(x)' },
-  { lines: [22, 24] as [number, number], color: 'amber' as const, note: '5단계: FRI 기반 개구 증명' },
+  {
+    lines: [5, 7] as [number, number],
+    color: "sky" as const,
+    note: "1단계: 트레이스 DFT + Merkle 커밋",
+  },
+  {
+    lines: [13, 17] as [number, number],
+    color: "emerald" as const,
+    note: "3단계: 몫 다항식 Q(x) = C(x)/Z_H(x)",
+  },
+  {
+    lines: [22, 24] as [number, number],
+    color: "amber" as const,
+    note: "5단계: FRI 기반 개구 증명",
+  },
 ];
 
 export const VERIFY_CODE = `// uni-stark/src/verifier.rs — verify() 함수
@@ -55,7 +67,19 @@ pub fn verify<SC, A>(config: &SC, air: &A, proof: &Proof<SC>,
 }`;
 
 export const VERIFY_ANNOTATIONS = [
-  { lines: [6, 9] as [number, number], color: 'sky' as const, note: 'Fiat-Shamir 트랜스크립트 재현' },
-  { lines: [12, 12] as [number, number], color: 'emerald' as const, note: 'FRI + Merkle 경로 검증' },
-  { lines: [15, 20] as [number, number], color: 'amber' as const, note: '제약 검증: C(z)/Z_H(z) = Q(z)' },
+  {
+    lines: [6, 9] as [number, number],
+    color: "sky" as const,
+    note: "Fiat-Shamir 트랜스크립트 재현",
+  },
+  {
+    lines: [12, 12] as [number, number],
+    color: "emerald" as const,
+    note: "FRI + Merkle 경로 검증",
+  },
+  {
+    lines: [15, 20] as [number, number],
+    color: "amber" as const,
+    note: "제약 검증: C(z)/Z_H(z) = Q(z)",
+  },
 ];

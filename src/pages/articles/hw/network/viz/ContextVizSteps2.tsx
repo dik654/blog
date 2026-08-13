@@ -1,42 +1,146 @@
-import { motion } from 'framer-motion';
-import { C } from './ContextVizData';
-const f = (d: number) => ({ initial: { opacity: 0, x: -8 }, animate: { opacity: 1, x: 0 }, transition: { delay: d } });
-const mono = { fontFamily: 'monospace' };
+import { motion } from "framer-motion";
+import {
+  ActionBox,
+  AlertBox,
+  DataBox,
+  ModuleBox,
+} from "@/components/viz/boxes";
+import { C } from "./ContextVizData";
 
-export function StepRDMA() {
-  const lines = [
-    { line: '// TCP vs RDMA 레이턴시 비교', c: C.rdma, y: 38 },
-    { line: 'TCP:      커널 네트워크 스택 경유, ~50us', c: C.hw, y: 58 },
-    { line: 'RoCE v2:  UDP/IP 위 RDMA, CPU 바이패스, ~1us', c: C.rdma, y: 78 },
-    { line: 'IB NDR:   전용 스위치, 400Gbps, ~0.5us', c: C.ib, y: 98 },
-    { line: '// RDMA: 레이턴시 50배 감소, GPU 직접 통신', c: C.ib, y: 118 },
-  ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.rdma}>RDMA: CPU 바이패스</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={10} y={l.y - 13} width={420} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={20} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
-      </motion.g>
-    ))}
-  </g>);
+const reveal = (delay: number) => ({
+  initial: { opacity: 0, y: 7 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay },
+});
+
+export function StepRdma() {
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        RDMA control path와 data path
+      </text>
+      <ModuleBox
+        x={20}
+        y={43}
+        w={122}
+        h={54}
+        label="application"
+        sub="register · post work"
+        color={C.host}
+      />
+      <ModuleBox
+        x={20}
+        y={123}
+        w={122}
+        h={54}
+        label="completion"
+        sub="poll · event · recover"
+        color={C.risk}
+      />
+      <motion.path
+        d="M142 70 H185 M142 150 H185"
+        fill="none"
+        stroke={C.neutral}
+        strokeWidth={1.2}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+      />
+      <ActionBox
+        x={191}
+        y={76}
+        w={112}
+        h={64}
+        label="NIC queues"
+        sub="DMA engine"
+        color={C.rdma}
+      />
+      <motion.line
+        x1={303}
+        y1={108}
+        x2={344}
+        y2={108}
+        stroke={C.rdma}
+        strokeWidth={1.2}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+      />
+      <ModuleBox
+        x={350}
+        y={76}
+        w={110}
+        h={64}
+        label="registered memory"
+        sub="remote endpoint"
+        color={C.good}
+      />
+      <DataBox
+        x={94}
+        y={180}
+        w={292}
+        h={16}
+        label="payload DMA는 줄어도 setup·completion·recovery는 남음"
+        color={C.fabric}
+      />
+    </g>
+  );
 }
 
-export function StepUseCase() {
-  const lines = [
-    { line: '// 워크로드별 네트워크 요구량', c: '#10b981', y: 38 },
-    { line: '블록체인 노드: ~100KB/block → 10G 충분', c: C.eth, y: 58 },
-    { line: 'GPU 클러스터:  ~1GB/iter → InfiniBand 필수', c: C.ib, y: 78 },
-    { line: 'NVLink:       900 GB/s (GPU 직결, 서버 내부)', c: C.ib, y: 98 },
-    { line: '// 요구 대역폭 차이: 10,000배 이상', c: C.ib, y: 118 },
+export function StepValidate() {
+  const flow = [
+    { x: 16, label: "pair test", sub: "size · depth", color: C.host },
+    { x: 132, label: "contention", sub: "incast · all-to-all", color: C.rdma },
+    { x: 248, label: "failure", sub: "drop · reroute", color: C.risk },
+    { x: 364, label: "application", sub: "goodput · p99", color: C.good },
   ];
-  return (<g>
-    <text x={210} y={18} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.ib}>워크로드별 네트워크 요구</text>
-    {lines.map((l, i) => (
-      <motion.g key={i} {...f(i * 0.1)}>
-        <rect x={10} y={l.y - 13} width={420} height={20} rx={3} fill={`${l.c}10`} stroke={`${l.c}40`} strokeWidth={0.8} />
-        <text x={20} y={l.y} fontSize={10} fill={l.c} fontWeight={600} {...mono}>{l.line}</text>
-      </motion.g>
-    ))}
-  </g>);
+  return (
+    <g>
+      <text
+        x={240}
+        y={23}
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={700}
+        fill="var(--foreground)"
+      >
+        fabric acceptance sequence
+      </text>
+      {flow.map((node, index) => (
+        <motion.g key={node.label} {...reveal(0.08 + index * 0.12)}>
+          <ActionBox
+            x={node.x}
+            y={65}
+            w={100}
+            h={58}
+            label={node.label}
+            sub={node.sub}
+            color={node.color}
+          />
+          {index < flow.length - 1 && (
+            <line
+              x1={node.x + 101}
+              y1={94}
+              x2={node.x + 115}
+              y2={94}
+              stroke="var(--muted-foreground)"
+            />
+          )}
+        </motion.g>
+      ))}
+      <AlertBox
+        x={74}
+        y={153}
+        w={332}
+        h={34}
+        label="link rate 표가 아니라 재현 가능한 결과로 승인"
+        color={C.risk}
+      />
+    </g>
+  );
 }

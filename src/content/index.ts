@@ -1,12 +1,12 @@
-export type { Section, Article, Subcategory, Category } from './types';
+export type { Section, Article, Subcategory, Category } from "./types";
 
-import ai from './ai';
-import blockchain from './blockchain';
-import crypto from './crypto';
-import p2p from './p2p';
-import gpu from './gpu';
-import tee from './tee';
-import ismsAml from './isms-aml';
+import ai from "./ai";
+import blockchain from "./blockchain";
+import crypto from "./crypto";
+import p2p from "./p2p";
+import gpu from "./gpu";
+import tee from "./tee";
+import ismsAml from "./isms-aml";
 
 export const categories = [ai, blockchain, crypto, p2p, gpu, tee, ismsAml];
 

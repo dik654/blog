@@ -1,58 +1,166 @@
-import EvalPipelineViz from './viz/EvalPipelineViz';
-import { benchmarkTable } from './evalData';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import EvaluationContractViz from "./viz/EvaluationContractViz";
 
 export default function Evaluation() {
   return (
     <section id="evaluation" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">평가 벤치마킹</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Open R1의 평가 시스템 — <strong>LightEval</strong> 프레임워크 기반<br />
-          수학, 코딩, 과학 추론 등 다양한 영역에서 모델 성능을 종합 평가<br />
-          vLLM 백엔드로 고속 추론 + Slurm으로 클러스터 배치 평가 지원
+      <h2 className="mb-6 text-2xl font-bold">
+        Reasoning score는 sampling·parser·token budget까지 포함한 실험 결과다
+      </h2>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">
+          Open-R1은 LightEval과 vLLM으로 AIME, MATH-500, GPQA Diamond와
+          LiveCodeBench 등을 평가합니다. 그러나 checkpoint와 최종 score만 같게
+          적어서는 재현되지 않습니다. Reasoning model은 temperature, max token과
+          prompt당 sample 수에 민감하고, AIME처럼 문항이 적은 benchmark는
+          repeated sampling에 따른 variance도 큽니다.
         </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">평가 파이프라인</h3>
+        <p className="leading-8">
+          Open-R1 README는 DeepSeek-R1 report가 benchmark별 sample 수를 모두
+          명시하지 않았다고 지적하며, reproduction에서 AIME 64회, MATH-500 4회,
+          GPQA 8회, LiveCodeBench 16회처럼 서로 다른 수를 공개했습니다. 따라서
+          표에 적힌
+          <em> pass@1</em> 추정값을 greedy decoding 한 번의 accuracy와 같다고
+          보면 안 됩니다.
+        </p>
       </div>
 
-      <EvalPipelineViz />
+      <EvaluationContractViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">지원 벤치마크</h3>
-        <div className="overflow-x-auto not-prose mb-6">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-2 px-3">벤치마크</th>
-                <th className="text-left py-2 px-3">영역</th>
-                <th className="text-right py-2 px-3">문제 수</th>
-                <th className="text-left py-2 px-3">난이도</th>
-                <th className="text-left py-2 px-3">평가 방식</th>
-              </tr>
-            </thead>
-            <tbody>
-              {benchmarkTable.map(b => (
-                <tr key={b.name} className="border-b border-border/40">
-                  <td className="py-2 px-3 font-medium">{b.name}</td>
-                  <td className="py-2 px-3">{b.domain}</td>
-                  <td className="py-2 px-3 text-right font-mono">{b.count}{b.count === 400 ? '+' : ''}</td>
-                  <td className="py-2 px-3 text-muted-foreground">{b.level}</td>
-                  <td className="py-2 px-3 text-muted-foreground">{b.method}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <ExplainedFormula
+        question="Prompt마다 여러 completion을 sampling한 pass@1 추정값은 어떻게 계산하는가?"
+        idea={
+          <>
+            각 problem에서 K개의 독립적인 completion을 sampling하고 verifier가
+            맞다고 판정한 indicator를 평균합니다. 이 값은 한 번의 deterministic
+            decode가 아니라 해당 sampling distribution의 성공 확률을 Monte
+            Carlo로 추정합니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}
+c_{n,k}&=\mathbf 1[V(q_n,o_{n,k})=1]\\
+\widehat{\mathrm{pass@1}}&=\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}
+\end{aligned}`}
+        terms={[
+          {
+            symbol: "N",
+            name: "problem 수",
+            description: "해당 benchmark revision에 포함된 평가 문제 수입니다.",
+          },
+          {
+            symbol: "K",
+            name: "samples per problem",
+            description:
+              "같은 prompt에서 설정한 temperature·top-p로 뽑은 completion 수입니다.",
+          },
+          {
+            symbol: "V",
+            name: "evaluation verifier",
+            description:
+              "Answer parser, math equivalence 또는 code tests로 정답 여부를 판정합니다.",
+          },
+          {
+            symbol: "\\mathbf 1[\\cdot]",
+            name: "correct indicator",
+            description: "Verifier가 정답으로 판정하면 1, 아니면 0입니다.",
+          },
+          {
+            symbol: "c_{n,k}",
+            name: "sample별 판정",
+            description:
+              "n번째 문제의 k번째 completion이 verifier를 통과했는지 저장한 0/1 값입니다.",
+          },
+        ]}
+        assumptions={[
+          "Completion sample이 설정한 policy와 sampling protocol에서 생성됐고 문제별 weighting이 같습니다.",
+          "Verifier error와 problem contamination은 이 통계식 밖에서 별도로 audit합니다.",
+        ]}
+        interpretation="K를 늘리면 추정 variance는 줄일 수 있지만 policy가 바뀌는 것은 아닙니다. Score를 비교할 때 K·temperature·top-p·max token과 verifier를 함께 고정해야 합니다."
+      />
 
-        <p>
-          <strong>Slurm 클러스터 배치</strong> — 30B+ 모델은 자동으로 텐서 병렬화 적용<br />
-          결과는 HuggingFace Hub의 open-r1-eval-leaderboard에 자동 업로드
+      <ExplainedFormula
+        question="작은 benchmark의 accuracy uncertainty를 어떻게 함께 표시하는가?"
+        idea={
+          <>
+            독립 Bernoulli 근사를 쓰면 success probability의 표준오차를 대략
+            계산할 수 있습니다. 같은 problem의 여러 sample은 cluster
+            dependence가 있으므로 실제 보고에서는 problem 단위 bootstrap이 더
+            적절할 수 있습니다.
+          </>
+        }
+        formula={String.raw`\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`}
+        terms={[
+          {
+            symbol: "\\widehat p",
+            name: "측정 accuracy",
+            description:
+              "고정한 sampling·verifier protocol에서 관측한 성공 비율입니다.",
+          },
+          {
+            symbol: "N_{\\mathrm{eff}}",
+            name: "effective sample size",
+            description: "독립성·반복 구조를 고려한 유효 관측 수입니다.",
+          },
+          {
+            symbol: "\\operatorname{SE}",
+            name: "표준오차",
+            description:
+              "같은 평가를 반복했을 때 추정값이 흔들리는 규모의 근사치입니다.",
+          },
+        ]}
+        assumptions={[
+          "단순 식은 독립 Bernoulli 근사이며 같은 problem의 K개 completion correlation을 자동으로 처리하지 않습니다.",
+          "정확한 비교에서는 problem-level bootstrap 또는 repeated seed 결과를 사용합니다.",
+        ]}
+        interpretation="AIME 30문항에서 몇 문제 차이는 큰 폭으로 보일 수 있습니다. 평균 score만 나열하지 말고 repeated run이나 confidence interval과 failure count를 함께 보여 줍니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>Accuracy와 reasoning cost를 같은 frontier에서 본다</h3>
+        <p className="leading-8">
+          Held-out accuracy가 좋아져도 output이 지나치게 길어지거나 invalid
+          answer, verifier timeout과 serving cost가 늘 수 있습니다. Problem별
+          output token, time-to-answer, parse failure와 accuracy를 함께 보고,
+          같은 정확도라면 더 짧고 안정적인 policy를 구분합니다. RL에서 response
+          length가 늘어난 현상을 곧 reasoning capability 증가로 해석하지
+          않습니다.
         </p>
 
-        <p className="mt-4">
-          <strong>자동 GPU 감지</strong>: 모델 파라미터 수에 따라 GPU 할당 결정<br />
-          30B 이상 → 텐서 병렬, 그 이하 → 데이터 병렬(2 GPU)<br />
-          평가 시 <code>ACCELERATE_USE_DEEPSPEED=false</code>로 DeepSpeed 충돌 방지
+        <h3>학습 성공과 serving 성공은 별도 검증 단계다</h3>
+        <p className="leading-8">
+          Training evaluation이 통과한 뒤에도 production chat template, stop
+          token, quantization과 runtime이 generation distribution을 바꿀 수
+          있습니다. Deployment artifact에서 다시 같은 golden set과 parser를
+          실행하고 TTFT·TPOT·cost를 측정합니다. Tensor parallel과 scheduler 같은
+          운영 최적화는
+          <a href="/ai/llm-serving-ops">LLM 서빙 운영</a>에서 이어집니다.
         </p>
+      </div>
+
+      <div
+        id="standard-open-r1-evaluation"
+        className="not-prose my-8 scroll-mt-24 border-l border-border pl-4"
+      >
+        <p className="text-xs font-bold text-foreground">
+          공식 구현 · Open-R1 evaluation recipe
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          현재 저장소는 task와 model을 지정해 evaluation을 실행하는 명령과
+          LightEval 기반 구성을 제공합니다. 이 명령이 score 비교의 출발점은
+          되지만, benchmark revision·prompt template·sampling 횟수·parser를
+          함께 고정해야 같은 estimand를 측정합니다. 공개 score는 해당 protocol의
+          결과이며 greedy 한 번의 정확도나 production latency를 대신하지
+          않습니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://github.com/huggingface/open-r1#evaluating-models"
+          target="_blank"
+          rel="noreferrer"
+        >
+          공식 evaluation 명령과 task 구성 보기
+        </a>
       </div>
     </section>
   );

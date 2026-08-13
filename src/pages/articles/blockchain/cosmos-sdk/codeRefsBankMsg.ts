@@ -1,17 +1,21 @@
-import type { CodeRef } from './codeRefsTypes';
+import type { CodeRef } from "./codeRefsTypes";
 
 export const bankMsgCodeRefs: Record<string, CodeRef> = {
-  'bank-mintcoins': {
-    path: 'x/bank/keeper/keeper.go',
-    lang: 'go',
+  "bank-mintcoins": {
+    path: "x/bank/keeper/keeper.go",
+    lang: "go",
     highlight: [1, 22],
     desc: `MintCoins는 모듈 계정에 코인을 발행합니다.
 Minter 퍼미션 검증 후 잔액 추가 + Supply 갱신합니다.`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: '발행 제한 규칙 확인' },
-      { lines: [5, 9], color: 'emerald', note: '모듈 계정 + Minter 퍼미션 검증' },
-      { lines: [11, 13], color: 'amber', note: 'addCoins — 잔액 추가' },
-      { lines: [15, 22], color: 'violet', note: 'Supply 갱신 + 이벤트 발생' },
+      { lines: [1, 3], color: "sky", note: "발행 제한 규칙 확인" },
+      {
+        lines: [5, 9],
+        color: "emerald",
+        note: "모듈 계정 + Minter 퍼미션 검증",
+      },
+      { lines: [11, 13], color: "amber", note: "addCoins — 잔액 추가" },
+      { lines: [15, 22], color: "violet", note: "Supply 갱신 + 이벤트 발생" },
     ],
     code: `func (k BaseKeeper) MintCoins(
 	ctx context.Context, moduleName string, amounts sdk.Coins,
@@ -40,17 +44,25 @@ Minter 퍼미션 검증 후 잔액 추가 + Supply 갱신합니다.`,
 }`,
   },
 
-  'bank-msgserver': {
-    path: 'x/bank/keeper/msg_server.go',
-    lang: 'go',
+  "bank-msgserver": {
+    path: "x/bank/keeper/msg_server.go",
+    lang: "go",
     highlight: [1, 22],
     desc: `Bank MsgServer — MsgSend 처리.
 주소 검증 → 전송 활성화 확인 → SendCoins 호출.`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'msgServer — Keeper 임베딩' },
-      { lines: [5, 10], color: 'emerald', note: '주소 디코딩 (bech32 → bytes)' },
-      { lines: [12, 15], color: 'amber', note: '전송 가능 여부 + 블랙리스트 확인' },
-      { lines: [17, 22], color: 'violet', note: 'SendCoins 호출 → 응답 반환' },
+      { lines: [1, 3], color: "sky", note: "msgServer — Keeper 임베딩" },
+      {
+        lines: [5, 10],
+        color: "emerald",
+        note: "주소 디코딩 (bech32 → bytes)",
+      },
+      {
+        lines: [12, 15],
+        color: "amber",
+        note: "전송 가능 여부 + 블랙리스트 확인",
+      },
+      { lines: [17, 22], color: "violet", note: "SendCoins 호출 → 응답 반환" },
     ],
     code: `type msgServer struct { Keeper }
 

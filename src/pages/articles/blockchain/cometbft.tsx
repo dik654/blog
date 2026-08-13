@@ -1,4 +1,4 @@
-import Overview from './cometbft/Overview';
+import Overview from "./cometbft/Overview";
 
 export default function CometBFTArticle() {
   return <Overview />;

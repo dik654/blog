@@ -1,10 +1,9 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { CodeViewButton } from '@/components/code';
-import { STAGES, STEPS, STEP_REFS } from './CreateBlockVizData';
+import { motion } from "framer-motion";
+import StepViz from "@/components/ui/step-viz";
+import { CodeViewButton } from "@/components/code";
+import { STAGES, STEPS, STEP_REFS } from "./CreateBlockVizData";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.4 };
-const BW = 100, BH = 44, GAP = 14, LX = 8;
+const spring = { type: "spring" as const, bounce: 0.12, duration: 0.38 };
 
 export default function CreateBlockViz({
   onOpenCode,
@@ -15,44 +14,60 @@ export default function CreateBlockViz({
     <StepViz steps={STEPS}>
       {(step) => (
         <div className="w-full">
-          <svg viewBox="0 0 440 80" className="w-full max-w-2xl mx-auto" style={{ height: 'auto' }}>
-            <defs>
-              <marker id="cb-arr" markerWidth="5" markerHeight="4" refX="4" refY="2" orient="auto">
-                <path d="M0,0 L5,2 L0,4" fill="var(--muted-foreground)" />
-              </marker>
-            </defs>
-            {STAGES.map((s, i) => {
-              const x = LX + i * (BW + GAP);
-              const active = i === step;
-              const done = i < step;
+          <div className="grid gap-3 lg:grid-cols-5" role="img" aria-label="Lotus 블록 생성의 다섯 단계">
+            {STAGES.map((stage, index) => {
+              const active = index === step;
+              const done = index < step;
+
               return (
-                <g key={s.label}>
-                  {i < STAGES.length - 1 && (
-                    <line x1={x + BW + 2} y1={18 + BH / 2}
-                      x2={x + BW + GAP - 2} y2={18 + BH / 2}
-                      stroke="var(--muted-foreground)" strokeWidth={0.8}
-                      opacity={done ? 0.4 : 0.1} markerEnd="url(#cb-arr)" />
-                  )}
-                  <motion.g animate={{ opacity: active ? 1 : done ? 0.5 : 0.15 }} transition={sp}>
-                    <rect x={x} y={18} width={BW} height={BH} rx={6}
-                      fill={active ? `${s.color}18` : 'var(--card)'}
-                      stroke={s.color} strokeWidth={active ? 2 : 0.7} />
-                    <text x={x + BW / 2} y={36} textAnchor="middle" fontSize={10}
-                      fontWeight={700} fill={s.color}>{s.label}</text>
-                    <text x={x + BW / 2} y={50} textAnchor="middle" fontSize={10}
-                      fill={s.color} opacity={0.6}>{s.sub}</text>
-                    {done && (
-                      <text x={x + BW - 10} y={30} fontSize={12} fill="#10b981">&#x2713;</text>
-                    )}
-                  </motion.g>
-                </g>
+                <motion.article
+                  key={stage.label}
+                  animate={{ opacity: active ? 1 : done ? 0.72 : 0.42, y: active ? -2 : 0 }}
+                  transition={spring}
+                  className={`relative min-w-0 overflow-hidden rounded-2xl border p-4 ${
+                    active ? "bg-background shadow-sm" : "bg-muted/20"
+                  }`}
+                  style={{ borderColor: active ? stage.color : undefined }}
+                >
+                  <div
+                    className="absolute inset-x-0 top-0 h-1"
+                    style={{ backgroundColor: stage.color, opacity: active ? 1 : 0.35 }}
+                  />
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-mono text-xs font-bold text-muted-foreground">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className="rounded-full px-2 py-1 text-xs font-bold"
+                      style={{ color: stage.color, backgroundColor: `${stage.color}12` }}
+                    >
+                      {active ? "현재 단계" : done ? "완료" : "다음"}
+                    </span>
+                  </div>
+                  <strong className="mt-4 block break-words text-sm" style={{ color: stage.color }}>
+                    {stage.label}
+                  </strong>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">{stage.sub}</p>
+                </motion.article>
               );
             })}
-          </svg>
+          </div>
+
+          <div className="mt-4 rounded-xl border bg-background px-4 py-3">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">CreateBlock progress</p>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-blue-500 to-emerald-500"
+                animate={{ width: `${((step + 1) / STAGES.length) * 100}%` }}
+                transition={spring}
+              />
+            </div>
+          </div>
+
           {onOpenCode && STEP_REFS[step] !== undefined && (
-            <div className="flex items-center gap-2 mt-3 justify-end">
+            <div className="mt-3 flex items-center justify-end gap-2">
               <CodeViewButton onClick={() => onOpenCode(STEP_REFS[step])} />
-              <span className="text-[10px] text-muted-foreground">mine.go — CreateBlock</span>
+              <span className="text-xs text-muted-foreground">mine.go — CreateBlock</span>
             </div>
           )}
         </div>

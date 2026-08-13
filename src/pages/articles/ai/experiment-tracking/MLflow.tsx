@@ -1,95 +1,68 @@
-import MLflowArchViz from './viz/MLflowArchViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import MLflowArchViz from "./viz/MLflowArchViz";
 
 export default function MLflow() {
   return (
     <section id="mlflow" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">MLflow: 셀프 호스팅 추적</h2>
-      <div className="not-prose mb-8"><MLflowArchViz /></div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">MLflow Tracking — 기본 API</h3>
+      <h2 className="mb-6 text-2xl font-bold">MLflow에서는 metadata database와 artifact object를 분리하되, 둘의 수명은 함께 보장합니다</h2>
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          <code>mlflow.start_run()</code>으로 실험 세션을 시작하면 run_id가 자동 생성된다<br />
-          <code>mlflow.log_param("lr", 0.001)</code> — 하이퍼파라미터를 key-value로 기록<br />
-          <code>mlflow.log_metric("val_loss", 0.23, step=10)</code> — 메트릭을 step과 함께 저장<br />
-          <code>mlflow.log_artifact("model.pt")</code> — 파일을 Artifact Store에 보관<br />
-          with문과 함께 사용하면 <code>mlflow.end_run()</code> 자동 호출로 세션이 깔끔하게 종료
+          Tracking server는 run ID·parameter·metric·tag·artifact URI 같은 metadata를 backend store에 기록하고, model weight·prediction·report
+          같은 큰 파일은 artifact store에 둡니다. 두 store는 크기·query pattern·backup 방식이 다르기 때문에 분리하는 편이 자연스럽지만,
+          metadata만 남고 object가 삭제되거나 object는 있는데 producer run이 사라지면 lineage는 깨집니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Autolog — 자동 기록</h3>
         <p>
-          <code>mlflow.pytorch.autolog()</code> — PyTorch 학습 루프의 파라미터, 메트릭, 모델을 자동 기록<br />
-          scikit-learn, XGBoost, LightGBM, TensorFlow 등 주요 프레임워크 지원<br />
-          수동 <code>log_param/log_metric</code> 없이도 기본 추적이 가능하여 기존 코드 수정을 최소화
+          Self-hosting에서는 database migration·backup·restore와 object versioning·retention·encryption·access role을 각각 설계한 뒤
+          referential-integrity job으로 연결합니다. Tracking server가 artifact를 proxy하는지 client가 object store에 직접 접근하는지도
+          credential 경계에 영향을 줍니다. Autologging은 편리한 collector일 뿐 이 운영 설계를 대신하지 않습니다.
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">Model Registry — 모델 생명주기</h3>
+      <div className="not-prose my-8"><MLflowArchViz /></div>
+
+      <ExplainedFormula
+        question="Backend metadata가 가리키는 artifact가 실제로 재생 가능한지 어떤 조건으로 검사할까요?"
+        idea={<>각 필수 output reference에 대해 object가 존재하고, 읽을 권한이 있으며, 내려받은 bytes와 schema가 기록된 값과 같은지 검사합니다.</>}
+        formula={String.raw`\operatorname{replayable}(r)=\bigwedge_{a\in A_{\mathrm{required}}(r)}\left[\operatorname{exists}(\operatorname{uri}_a)\land H(\operatorname{load}(\operatorname{uri}_a))=d_a\land \operatorname{schemaOK}(a)\right]`}
+        terms={[
+          { symbol: "r", name: "run metadata record", description: "Backend store에 남은 execution attempt와 artifact references입니다." },
+          { symbol: "A_required", name: "required artifacts", description: "재생과 승인에 반드시 필요한 config·checkpoint·prediction·report 집합입니다." },
+          { symbol: "exists and load", name: "availability check", description: "현재 service identity로 object가 실제 존재하고 읽히는지 확인합니다." },
+          { symbol: "schemaOK", name: "semantic validation", description: "Shape·row IDs·signature·format version이 소비자 계약과 맞는지 검사합니다." },
+        ]}
+        assumptions={[
+          "Temporary network failure와 영구 삭제를 구분하는 retry·alert 정책을 둡니다.",
+          "Backend와 artifact backup이 같은 recovery point 또는 검증 가능한 mapping을 가집니다.",
+          "Required artifact 집합은 task·lifecycle stage별로 versioning합니다.",
+        ]}
+        interpretation="Run page가 열리는 것만으로 replayable하지 않습니다. Checkpoint URI가 404이거나 bytes digest가 바뀌거나 signature가 맞지 않으면 해당 run은 비교·승인에서 제외합니다."
+      />
+
+      <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
-          학습된 모델을 <strong>Model Registry</strong>에 등록하면 버전 관리와 배포 단계 관리가 가능<br />
-          <strong>None → Staging → Production → Archived</strong> — 4단계로 모델 상태를 추적<br />
-          <code>mlflow.register_model()</code>로 등록, UI 또는 API로 단계 전환<br />
-          같은 모델 이름으로 여러 버전을 등록하면 v1, v2, v3...으로 자동 관리<br />
-          Production 태그가 붙은 모델을 서빙 시스템이 자동으로 로드하는 CI/CD 파이프라인 구축 가능
+          Model Registry에는 source run, immutable model version, input/output signature, evaluation report, validation status와 approval event를
+          연결합니다. 현재 MLflow는 고정된 Model Stages를 deprecated하고 version tags·aliases와 분리된 environment를 사용하는 방향을
+          안내합니다. 따라서 예전의 Staging→Production 표만 그대로 설명하지 않고, mutable alias와 access-controlled environment를
+          구분해야 합니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Artifact 관리</h3>
         <p>
-          <strong>Artifact Store</strong> — 모델 체크포인트, 전처리 파이프라인, 데이터 스냅샷을 저장하는 계층<br />
-          로컬 파일시스템, S3, GCS, Azure Blob 중 선택 가능<br />
-          각 run에 연결된 artifact는 UI에서 탐색/다운로드 가능<br />
-          <code>mlflow.log_artifact("./outputs/confusion_matrix.png")</code> — 평가 시각화도 보관
+          Serving이 registry alias를 읽더라도 deployment receipt에는 resolve된 model version·artifact digest·container/config revision과
+          endpoint rollout ID를 남깁니다. Registry의 champion alias와 실제 production traffic이 다른 version을 사용한다면 drift를 alert해야
+          하며, rollback은 이전의 immutable version과 serving config를 함께 복원합니다.
         </p>
+      </div>
 
-        <h3 className="text-xl font-semibold mt-6 mb-3">셀프 호스팅 구축</h3>
-        <p>
-          <strong>Docker Compose</strong>로 3개 컨테이너(MLflow Server + PostgreSQL + MinIO)를 한 번에 배포<br />
-          <strong>Backend Store</strong>(PostgreSQL) — 파라미터, 메트릭, run 메타데이터 저장<br />
-          <strong>Artifact Store</strong>(MinIO/S3) — 모델 파일, 이미지 등 대용량 바이너리 저장<br />
-          사내 VPN 안에서 운영하면 데이터가 외부로 나가지 않아 보안 요구사항 충족
+      <div id="paper-mlflow-lifecycle" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">프로젝트 논문 · Accelerating the Machine Learning Lifecycle with MLflow</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          MLflow 초기 논문은 서로 다른 ML library와 deployment 환경에서 experiment tracking·reproducible projects·model packaging을 공통
+          interface로 다루려는 문제와 MLflow의 초기 component 설계를 설명했습니다. 현재 backend store·registry·alias API의 세부 동작은
+          이후 크게 변했으므로 논문은 설계 배경으로, 현재 공식 문서는 versioned 구현 기준으로 나눠 읽습니다.
         </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">W&B vs MLflow — 판단 기준</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-3 py-2 text-left">기준</th>
-                <th className="border border-border px-3 py-2 text-left">W&B</th>
-                <th className="border border-border px-3 py-2 text-left">MLflow</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">호스팅</td>
-                <td className="border border-border px-3 py-2">SaaS (관리 불필요)</td>
-                <td className="border border-border px-3 py-2">셀프 호스팅 (직접 운영)</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">비용</td>
-                <td className="border border-border px-3 py-2">무료(개인) / 유료(팀)</td>
-                <td className="border border-border px-3 py-2">무료 OSS + 서버 비용</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">대시보드</td>
-                <td className="border border-border px-3 py-2">풍부한 시각화, Report</td>
-                <td className="border border-border px-3 py-2">기본 UI (커스텀 확장)</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">튜닝</td>
-                <td className="border border-border px-3 py-2">내장 Sweep</td>
-                <td className="border border-border px-3 py-2">Optuna/Ray Tune 연동</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">데이터 보안</td>
-                <td className="border border-border px-3 py-2">클라우드 저장</td>
-                <td className="border border-border px-3 py-2">사내 서버 보관 가능</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-3 py-2 font-medium">추천 환경</td>
-                <td className="border border-border px-3 py-2">대회, 스타트업, 연구</td>
-                <td className="border border-border px-3 py-2">기업 MLOps, 규제 산업</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium">
+          <a className="text-primary hover:underline" href="https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf" target="_blank" rel="noreferrer">논문 PDF</a>
+          <a className="text-primary hover:underline" href="https://mlflow.org/docs/latest/self-hosting/architecture/overview/" target="_blank" rel="noreferrer">현재 architecture 문서</a>
+          <a className="text-primary hover:underline" href="https://mlflow.org/docs/latest/ml/model-registry/workflow/" target="_blank" rel="noreferrer">현재 registry workflow</a>
         </div>
       </div>
     </section>

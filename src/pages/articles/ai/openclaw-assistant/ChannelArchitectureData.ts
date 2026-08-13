@@ -45,7 +45,19 @@ export const channelCode = `채널 시스템:
   → 에이전트마다 독립 워크스페이스 + 세션`;
 
 export const channelAnnotations = [
-  { lines: [3, 9] as [number, number], color: 'sky' as const, note: '내장 채널 6종' },
-  { lines: [11, 17] as [number, number], color: 'emerald' as const, note: '확장 채널 — 플러그인' },
-  { lines: [34, 41] as [number, number], color: 'amber' as const, note: '메시지 처리 6단계 파이프라인' },
+  {
+    lines: [3, 9] as [number, number],
+    color: "sky" as const,
+    note: "내장 채널 6종",
+  },
+  {
+    lines: [11, 17] as [number, number],
+    color: "emerald" as const,
+    note: "확장 채널 — 플러그인",
+  },
+  {
+    lines: [34, 41] as [number, number],
+    color: "amber" as const,
+    note: "메시지 처리 6단계 파이프라인",
+  },
 ];

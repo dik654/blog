@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const r1csCodeRefs: Record<string, CodeRef> = {
-  'r1cs-types': {
-    path: 'r1cs.rs — Variable, LinearCombination, ConstraintSystem',
-    lang: 'rust',
+  "r1cs-types": {
+    path: "r1cs.rs — Variable, LinearCombination, ConstraintSystem",
+    lang: "rust",
     highlight: [1, 28],
-    desc: 'R1CS의 세 가지 핵심 타입.\nVariable: 변수 종류(One/Instance/Witness) — witness 벡터에서의 위치.\nLinearCombination: 덧셈은 선형결합으로 무료.\nConstraintSystem: 제약을 모아서 행렬로 추출.',
+    desc: "R1CS의 세 가지 핵심 타입.\nVariable: 변수 종류(One/Instance/Witness) — witness 벡터에서의 위치.\nLinearCombination: 덧셈은 선형결합으로 무료.\nConstraintSystem: 제약을 모아서 행렬로 추출.",
     code: `/// R1CS 변수 — witness 벡터에서의 위치
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Variable {
@@ -33,14 +33,26 @@ pub struct ConstraintSystem {
     )>,
 }`,
     annotations: [
-      { lines: [2, 7], color: 'sky', note: 'Variable — One(상수1), Instance(공개), Witness(비공개)' },
-      { lines: [10, 13], color: 'emerald', note: '선형결합 — 덧셈은 항을 추가할 뿐, 새 제약 불필요' },
-      { lines: [17, 28], color: 'amber', note: 'ConstraintSystem — values[0]=1, 이후 instance, witness 순' },
+      {
+        lines: [2, 7],
+        color: "sky",
+        note: "Variable — One(상수1), Instance(공개), Witness(비공개)",
+      },
+      {
+        lines: [10, 13],
+        color: "emerald",
+        note: "선형결합 — 덧셈은 항을 추가할 뿐, 새 제약 불필요",
+      },
+      {
+        lines: [17, 28],
+        color: "amber",
+        note: "ConstraintSystem — values[0]=1, 이후 instance, witness 순",
+      },
     ],
   },
-  'r1cs-enforce': {
-    path: 'r1cs.rs — enforce() + is_satisfied()',
-    lang: 'rust',
+  "r1cs-enforce": {
+    path: "r1cs.rs — enforce() + is_satisfied()",
+    lang: "rust",
     highlight: [1, 24],
     desc: 'enforce: A·B=C 제약 하나 추가.\nis_satisfied: 모든 제약을 직접 평가하여 검산.\nGroth16은 이 검산을 "값을 모르고도" 페어링으로 수행.',
     code: `/// 제약 추가: A · B = C
@@ -69,8 +81,16 @@ pub fn is_satisfied(&self) -> bool {
     true
 }`,
     annotations: [
-      { lines: [4, 11], color: 'sky', note: 'enforce — 곱셈 하나를 (A, B, C) 선형결합 트리플로 추가' },
-      { lines: [15, 25], color: 'emerald', note: 'is_satisfied — 직접 대입 검산. Groth16은 이걸 pairing으로 대체' },
+      {
+        lines: [4, 11],
+        color: "sky",
+        note: "enforce — 곱셈 하나를 (A, B, C) 선형결합 트리플로 추가",
+      },
+      {
+        lines: [15, 25],
+        color: "emerald",
+        note: "is_satisfied — 직접 대입 검산. Groth16은 이걸 pairing으로 대체",
+      },
     ],
   },
 };

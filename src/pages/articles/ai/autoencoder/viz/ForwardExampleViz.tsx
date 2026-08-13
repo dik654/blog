@@ -1,70 +1,37 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, C } from './ForwardExampleVizData';
-import { InputNodes, OutputNodes } from './ForwardExampleNodes';
+import StepViz from "@/components/ui/step-viz";
 
-const sp = { type: 'spring' as const, bounce: 0.15, duration: 0.5 };
+const STEPS = [
+  { label: "1. 입력", body: "두 feature와 encoder weight를 확인합니다." },
+  { label: "2. 선형 결합", body: "두 feature의 weighted sum을 구합니다." },
+  { label: "3. Latent", body: "Sigmoid를 통과한 code를 얻습니다." },
+  { label: "4. Decoder", body: "하나의 code를 두 출력으로 확장합니다." },
+  { label: "5. 비교", body: "복원과 입력의 차이를 loss로 잽니다." },
+];
+
+const stages = [
+  ["입력", "[0.8, 0.4]"],
+  ["선형 결합", "0.5×0.8 + 0.3×0.4 = 0.52"],
+  ["Latent", "z = σ(0.52) = 0.627"],
+  ["Decoder", "[0.6z, 0.7z]"],
+  ["복원", "[0.593, 0.608]"],
+];
 
 export default function ForwardExampleViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
-        <svg viewBox="0 0 460 130" className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          <InputNodes />
-
-          {/* Encoder weights */}
-          {step >= 1 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <line x1={56} y1={40} x2={140} y2={65}
-                stroke={C.enc} strokeWidth={1} />
-              <text x={85} y={42} fontSize={9} fill={C.enc}>w=0.5</text>
-              <line x1={56} y1={95} x2={140} y2={65}
-                stroke={C.enc} strokeWidth={1} />
-              <text x={85} y={92} fontSize={9} fill={C.enc}>w=0.3</text>
-            </motion.g>
-          )}
-
-          {/* Summation */}
-          {step >= 1 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <rect x={130} y={46} width={100} height={36} rx={4}
-                fill={`${C.enc}12`} stroke={C.enc} strokeWidth={1} />
-              <text x={180} y={61} textAnchor="middle" fontSize={8}
-                fill={C.enc}>0.5×0.8 + 0.3×0.4</text>
-              <text x={180} y={75} textAnchor="middle" fontSize={10}
-                fontWeight={700} fill={C.enc}>= 0.52</text>
-            </motion.g>
-          )}
-
-          {/* Latent node */}
-          {step >= 2 && (
-            <motion.g initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }} transition={sp}>
-              <line x1={232} y1={65} x2={252} y2={65}
-                stroke={C.lat} strokeWidth={1} />
-              <circle cx={272} cy={65} r={18} fill={`${C.lat}18`}
-                stroke={C.lat} strokeWidth={1.2} strokeDasharray="4 2" />
-              <text x={250} y={62} textAnchor="middle" fontSize={9}
-                fontWeight={500} fill={C.lat}>z</text>
-              <text x={250} y={74} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill={C.lat}>0.627</text>
-            </motion.g>
-          )}
-
-          {/* Decoder weights */}
-          {step >= 3 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={sp}>
-              <line x1={268} y1={60} x2={330} y2={40}
-                stroke={C.dec} strokeWidth={1} />
-              <text x={310} y={38} fontSize={9} fill={C.dec}>w=0.6</text>
-              <line x1={268} y1={70} x2={330} y2={95}
-                stroke={C.dec} strokeWidth={1} />
-              <text x={310} y={95} fontSize={9} fill={C.dec}>w=0.7</text>
-            </motion.g>
-          )}
-
-          {step >= 4 && <OutputNodes />}
-        </svg>
+        <figure data-viz="autoencoder-forward-example" className="min-w-0">
+          <figcaption className="mb-5 text-sm font-semibold">숫자 하나가 encoder와 decoder를 통과하는 경로</figcaption>
+          <div className="grid gap-3 md:grid-cols-5">
+            {stages.map(([title, value], index) => (
+              <div key={title} className={`min-w-0 border-t px-1 pt-4 transition-opacity ${index === 2 ? "border-amber-500/55" : index < 2 ? "border-sky-500/45" : "border-emerald-500/45"} ${index <= step ? "opacity-100" : "opacity-25"}`}>
+                <p className="text-xs font-bold text-muted-foreground">0{index + 1}</p>
+                <p className="mt-2 font-semibold">{title}</p>
+                <p className="mt-2 break-words font-mono text-xs leading-5 text-muted-foreground">{value}</p>
+              </div>
+            ))}
+          </div>
+        </figure>
       )}
     </StepViz>
   );

@@ -1,12 +1,12 @@
-import Overview from './solana/Overview';
-import ProofOfHistory from './solana/ProofOfHistory';
-import TowerBFT from './solana/TowerBFT';
-import Turbine from './solana/Turbine';
-import GulfStream from './solana/GulfStream';
-import Sealevel from './solana/Sealevel';
-import Pipeline from './solana/Pipeline';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './solana/codeRefs';
+import Overview from "./solana/Overview";
+import ProofOfHistory from "./solana/ProofOfHistory";
+import TowerBFT from "./solana/TowerBFT";
+import Turbine from "./solana/Turbine";
+import GulfStream from "./solana/GulfStream";
+import Sealevel from "./solana/Sealevel";
+import Pipeline from "./solana/Pipeline";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./solana/codeRefs";
 
 export default function SolanaArticle() {
   const sidebar = useCodeSidebar();

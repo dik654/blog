@@ -1,4 +1,4 @@
-import StorageProofOverviewViz from './viz/StorageProofOverviewViz';
+import StorageProofOverviewViz from "./viz/StorageProofOverviewViz";
 
 export default function Overview() {
   return (
@@ -6,16 +6,22 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">개요: 저장 증명 분류</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          저장 증명(Proof of Storage) — 분산 저장소에서 데이터가 실제로 보관 중임을 암호학적으로 보장하는 프로토콜.<br />
+          저장 증명(Proof of Storage) — 분산 저장소에서 데이터가 실제로 보관
+          중임을 암호학적으로 보장하는 프로토콜.
+          <br />
           PoR, PoRep, PoSt 세 가지로 분류되며 각각 다른 보안 속성을 보장
         </p>
       </div>
-      <div className="not-prose"><StorageProofOverviewViz /></div>
+      <div className="not-prose">
+        <StorageProofOverviewViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">저장 증명 3가지 분류</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          저장 증명 3가지 분류
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Storage Proofs 3 Types:
+          {`// Storage Proofs 3 Types:
 
 // 1. PoR (Proof of Retrievability):
 // - data 보관 증명
@@ -79,8 +85,13 @@ export default function Overview() {
 // - Compliance (GDPR, etc.)`}
         </pre>
         <p className="leading-7">
-          Storage Proofs: <strong>PoR (retrievable) → PoRep (unique) → PoSt (persistent)</strong>.<br />
-          Filecoin = PoRep + PoSt 결합.<br />
+          Storage Proofs:{" "}
+          <strong>
+            PoR (retrievable) → PoRep (unique) → PoSt (persistent)
+          </strong>
+          .<br />
+          Filecoin = PoRep + PoSt 결합.
+          <br />
           2007 PoR → 2024 PDP까지 진화.
         </p>
       </div>

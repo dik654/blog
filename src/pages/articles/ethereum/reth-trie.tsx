@@ -1,10 +1,10 @@
-import Overview from './reth-trie/Overview';
-import PrefixSet from './reth-trie/PrefixSet';
-import StateRoot from './reth-trie/StateRoot';
-import Parallel from './reth-trie/Parallel';
-import { CodeSidebar, useCodeSidebar } from '@/components/code';
-import { codeRefs } from './reth-trie/codeRefs';
-import { rethTrieTree } from './reth-trie/fileTrees';
+import Overview from "./reth-trie/Overview";
+import PrefixSet from "./reth-trie/PrefixSet";
+import StateRoot from "./reth-trie/StateRoot";
+import Parallel from "./reth-trie/Parallel";
+import { CodeSidebar, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./reth-trie/codeRefs";
+import { rethTrieTree } from "./reth-trie/fileTrees";
 
 export default function RethTrieArticle() {
   const sidebar = useCodeSidebar();
@@ -16,12 +16,18 @@ export default function RethTrieArticle() {
       <StateRoot onCodeRef={sidebar.open} />
       <Parallel />
       <CodeSidebar
-        codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef}
-        onClose={sidebar.close} onNavigate={sidebar.navigate}
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
         codeRefs={codeRefs}
         fileTrees={{ reth: rethTrieTree }}
         projectMetas={{
-          reth: { id: 'reth', label: 'Reth \u00b7 Rust', badgeClass: 'bg-orange-500/10 border-orange-500 text-orange-700' },
+          reth: {
+            id: "reth",
+            label: "Reth \u00b7 Rust",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
         }}
       />
     </>

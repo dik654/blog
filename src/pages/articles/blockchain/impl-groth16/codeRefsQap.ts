@@ -1,11 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const qapCodeRefs: Record<string, CodeRef> = {
-  'qap-convert': {
-    path: 'qap.rs — QAP::from_r1cs()',
-    lang: 'rust',
+  "qap-convert": {
+    path: "qap.rs — QAP::from_r1cs()",
+    lang: "rust",
     highlight: [1, 30],
-    desc: 'R1CS 행렬 → QAP 다항식 변환.\n각 열을 Lagrange 보간하여 다항식으로 변환.\nm개의 등식 검사를 하나의 다항식 항등식으로 압축.',
+    desc: "R1CS 행렬 → QAP 다항식 변환.\n각 열을 Lagrange 보간하여 다항식으로 변환.\nm개의 등식 검사를 하나의 다항식 항등식으로 압축.",
     code: `pub fn from_r1cs(cs: &ConstraintSystem) -> Self {
     let m = cs.num_constraints(); // 제약 수
     let n = cs.num_variables();   // 변수 수
@@ -38,16 +38,28 @@ export const qapCodeRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [5, 8], color: 'sky', note: '도메인 선택: 단순히 {1,2,..,m}. 실제 구현은 roots of unity 사용' },
-      { lines: [13, 20], color: 'emerald', note: '각 열을 Lagrange 보간 — O(n^2) 교육용 구현' },
-      { lines: [22, 23], color: 'amber', note: 't(x) = 모든 도메인 점에서 0. "모든 제약 만족" ⟺ "t(x)로 나눠떨어짐"' },
+      {
+        lines: [5, 8],
+        color: "sky",
+        note: "도메인 선택: 단순히 {1,2,..,m}. 실제 구현은 roots of unity 사용",
+      },
+      {
+        lines: [13, 20],
+        color: "emerald",
+        note: "각 열을 Lagrange 보간 — O(n^2) 교육용 구현",
+      },
+      {
+        lines: [22, 23],
+        color: "amber",
+        note: 't(x) = 모든 도메인 점에서 0. "모든 제약 만족" ⟺ "t(x)로 나눠떨어짐"',
+      },
     ],
   },
-  'polynomial': {
-    path: 'qap.rs — Polynomial + Lagrange 보간',
-    lang: 'rust',
+  polynomial: {
+    path: "qap.rs — Polynomial + Lagrange 보간",
+    lang: "rust",
     highlight: [1, 30],
-    desc: '계수 표현 다항식.\neval: Horner 법으로 O(n) 평가.\nlagrange_interpolate: n개 점에서 유일한 degree < n 다항식.',
+    desc: "계수 표현 다항식.\neval: Horner 법으로 O(n) 평가.\nlagrange_interpolate: n개 점에서 유일한 degree < n 다항식.",
     code: `/// 다항식: coeffs[0] + coeffs[1]·x + coeffs[2]·x² + ...
 pub struct Polynomial {
     pub coeffs: Vec<Fr>,
@@ -79,16 +91,28 @@ pub fn div_rem(&self, divisor: &Self)
     ...
 }`,
     annotations: [
-      { lines: [6, 12], color: 'sky', note: 'Horner 평가 — 역순 순회로 x 거듭제곱 없이 O(n)' },
-      { lines: [15, 20], color: 'emerald', note: 'Lagrange basis Lᵢ(x): 점 xᵢ에서 1, 나머지 점에서 0' },
-      { lines: [23, 30], color: 'amber', note: 'div_rem — 나머지=0 ⟺ 모든 제약 만족 ⟺ 유효한 증명' },
+      {
+        lines: [6, 12],
+        color: "sky",
+        note: "Horner 평가 — 역순 순회로 x 거듭제곱 없이 O(n)",
+      },
+      {
+        lines: [15, 20],
+        color: "emerald",
+        note: "Lagrange basis Lᵢ(x): 점 xᵢ에서 1, 나머지 점에서 0",
+      },
+      {
+        lines: [23, 30],
+        color: "amber",
+        note: "div_rem — 나머지=0 ⟺ 모든 제약 만족 ⟺ 유효한 증명",
+      },
     ],
   },
-  'qap-compute-h': {
-    path: 'qap.rs — compute_h()',
-    lang: 'rust',
+  "qap-compute-h": {
+    path: "qap.rs — compute_h()",
+    lang: "rust",
     highlight: [1, 18],
-    desc: 'h(x) = (a(x)·b(x) - c(x)) / t(x) 계산.\n나머지가 0이면 QAP 만족 → 증명 가능.\n나머지가 0이 아니면 witness가 잘못된 것.',
+    desc: "h(x) = (a(x)·b(x) - c(x)) / t(x) 계산.\n나머지가 0이면 QAP 만족 → 증명 가능.\n나머지가 0이 아니면 witness가 잘못된 것.",
     code: `/// h(x) = (a(x)·b(x) - c(x)) / t(x)
 /// 나머지 0 → Some(h), 비0 → None
 pub fn compute_h(
@@ -111,9 +135,21 @@ pub fn compute_h(
     }
 }`,
     annotations: [
-      { lines: [6, 7], color: 'sky', note: 'witness로 결합: a(x) = Σ sⱼ·aⱼ(x)' },
-      { lines: [9, 11], color: 'emerald', note: 'p(x) = a·b - c — 제약을 다항식으로 표현' },
-      { lines: [14, 20], color: 'amber', note: '나머지=0이면 모든 제약 만족 — Schwartz-Zippel 보장' },
+      {
+        lines: [6, 7],
+        color: "sky",
+        note: "witness로 결합: a(x) = Σ sⱼ·aⱼ(x)",
+      },
+      {
+        lines: [9, 11],
+        color: "emerald",
+        note: "p(x) = a·b - c — 제약을 다항식으로 표현",
+      },
+      {
+        lines: [14, 20],
+        color: "amber",
+        note: "나머지=0이면 모든 제약 만족 — Schwartz-Zippel 보장",
+      },
     ],
   },
 };

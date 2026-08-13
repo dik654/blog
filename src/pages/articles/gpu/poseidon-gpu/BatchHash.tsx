@@ -1,4 +1,4 @@
-import CodePanel from '@/components/ui/code-panel';
+import CodePanel from "@/components/ui/code-panel";
 
 const batchKernel = `// 배치 Poseidon 해싱 CUDA 커널
 // N개의 독립 해시 인스턴스를 동시 처리
@@ -66,33 +66,68 @@ export default function BatchHash() {
       <h2 className="text-2xl font-bold mb-6">배치 해싱과 Merkle 트리 GPU</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          배치 해싱은 수백만 개의 독립 해시를 동시에 처리한다.<br />
-          블록 하나가 해시 인스턴스 하나를 담당하고, 블록 내 스레드가 lane을 분담한다.<br />
+          배치 해싱은 수백만 개의 독립 해시를 동시에 처리한다.
+          <br />
+          블록 하나가 해시 인스턴스 하나를 담당하고, 블록 내 스레드가 lane을
+          분담한다.
+          <br />
           상태는 공유 메모리에 적재하여 라운드 간 동기화만으로 진행한다.
         </p>
-        <CodePanel title="배치 Poseidon 커널" code={batchKernel} annotations={[
-          { lines: [4, 5], color: 'sky', note: '스레드 매핑: 블록=해시, 스레드=lane' },
-          { lines: [18, 22], color: 'emerald', note: '공유 메모리에 상태 초기화' },
-          { lines: [27, 34], color: 'amber', note: 'Full + Partial 라운드 루프' },
-        ]} />
+        <CodePanel
+          title="배치 Poseidon 커널"
+          code={batchKernel}
+          annotations={[
+            {
+              lines: [4, 5],
+              color: "sky",
+              note: "스레드 매핑: 블록=해시, 스레드=lane",
+            },
+            {
+              lines: [18, 22],
+              color: "emerald",
+              note: "공유 메모리에 상태 초기화",
+            },
+            {
+              lines: [27, 34],
+              color: "amber",
+              note: "Full + Partial 라운드 루프",
+            },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">GPU Merkle 트리</h3>
         <p>
-          Merkle 트리는 레벨별로 배치 해시를 실행한다. 리프에서 N/2, 다음 N/4로 반감된다.<br />
-          Neptune은 이 패턴으로 레벨마다 커널을 호출한다.<br />
-          상위 레벨은 해시 수가 적어 GPU 활용도가 떨어지므로 CPU와 분담하기도 한다.
+          Merkle 트리는 레벨별로 배치 해시를 실행한다. 리프에서 N/2, 다음 N/4로
+          반감된다.
+          <br />
+          Neptune은 이 패턴으로 레벨마다 커널을 호출한다.
+          <br />
+          상위 레벨은 해시 수가 적어 GPU 활용도가 떨어지므로 CPU와 분담하기도
+          한다.
         </p>
-        <CodePanel title="GPU Merkle 트리 레벨별 구축" code={merkleCode} annotations={[
-          { lines: [3, 6], color: 'sky', note: '레벨별 해시 수 반감' },
-          { lines: [8, 9], color: 'emerald', note: 'Neptune: 레벨당 커널 1회' },
-          { lines: [11, 12], color: 'amber', note: '하이브리드: GPU + CPU 분담' },
-        ]} />
+        <CodePanel
+          title="GPU Merkle 트리 레벨별 구축"
+          code={merkleCode}
+          annotations={[
+            { lines: [3, 6], color: "sky", note: "레벨별 해시 수 반감" },
+            {
+              lines: [8, 9],
+              color: "emerald",
+              note: "Neptune: 레벨당 커널 1회",
+            },
+            {
+              lines: [11, 12],
+              color: "amber",
+              note: "하이브리드: GPU + CPU 분담",
+            },
+          ]}
+        />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">Neptune과 ec-gpu</h3>
         <p>
-          Neptune은 Filecoin의 Rust GPU Poseidon 라이브러리다.
-          ec-gpu-gen의 Fp 커널 위에 Poseidon 라운드를 구성하며,
-          arity 2/4/8/11에 대해 사전 계산된 MDS 행렬과 라운드 상수를 내장한다.
+          Neptune은 Filecoin의 Rust GPU Poseidon 라이브러리다. ec-gpu-gen의 Fp
+          커널 위에 Poseidon 라운드를 구성하며, arity 2/4/8/11에 대해 사전
+          계산된 MDS 행렬과 라운드 상수를 내장한다.
         </p>
       </div>
     </section>

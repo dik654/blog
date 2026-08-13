@@ -1,38 +1,48 @@
+const TOOL_CONTRACT = [
+  ["Schema", "tool 이름, 입력 shape, 필수 field를 machine-readable하게 제한"],
+  ["Policy", "이 agent·channel·session에서 tool이 보이는지 먼저 판정"],
+  ["Execution", "허용된 backend와 workspace/sandbox 위치에서 side effect 수행"],
+  ["Observation", "성공·실패·구조화된 payload를 runtime loop에 반환"],
+  ["Delivery", "Gateway가 final result를 원래 channel route로 변환·전달"],
+] as const;
+
 export default function CustomTools() {
   return (
     <>
-      <h3 className="text-xl font-semibold mt-6 mb-3">커스텀 도구 주입</h3>
-      <div className="not-prose">
-        <p className="text-sm font-semibold mb-3">OpenClaw 도구 구성</p>
+      <h3 className="mt-8 text-xl font-semibold">
+        skill은 지침이고 tool은 실행 계약입니다
+      </h3>
+      <p>
+        <strong>skill</strong>은 “언제 무엇을 어떻게 하라”는 지침과 참고 자료를
+        model context에 제공합니다. <strong>tool</strong>은 schema가 있는 호출
+        표면이며 실제 파일, shell, message, browser 같은 side effect를 만들 수
+        있습니다. skill을 로드했다고 tool 권한이 생기는 것이 아니고, tool
+        schema가 prompt에 보인다고 호출이 자동 승인되는 것도 아닙니다.
+      </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="rounded-xl border border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950 p-4">
-            <p className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-2">Pi 내장 도구 (코딩 에이전트)</p>
-            <p className="text-sm">Read, Write, Edit, Bash, Glob, Grep 등</p>
-            <p className="text-xs text-muted-foreground mt-1">Claude Code와 유사한 파일/셸 도구</p>
-          </div>
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 p-4">
-            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">OpenClaw 전용 도구 (7종)</p>
-            <div className="text-sm space-y-0.5 mt-1">
-              <p><strong>messaging</strong> — 채널로 메시지 전송</p>
-              <p><strong>camera</strong> — 디바이스 카메라 캡처</p>
-              <p><strong>canvas</strong> — 라이브 Canvas 렌더링</p>
-              <p><strong>subagent</strong> — 서브에이전트 스폰</p>
-              <p><strong>session</strong> — 세션 관리</p>
-              <p><strong>pdf</strong> — PDF 처리</p>
-              <p><strong>media</strong> — 이미지/오디오/비디오</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 p-4">
-          <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-2">도구 정책</p>
-          <p className="text-sm">
-            <code className="text-xs">createOpenClawCodingTools()</code>로 Pi 도구와 OpenClaw 도구를 결합
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">채널별 도구 허용/차단 정책 적용 + 샌드박스 환경에 따른 경로 정책</p>
-        </div>
+      <div className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {TOOL_CONTRACT.map(([title, body]) => (
+          <article
+            key={title}
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+          >
+            <h4 className="break-words text-sm font-semibold">{title}</h4>
+            <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">
+              {body}
+            </p>
+          </article>
+        ))}
       </div>
+
+      <p>
+        예를 들어 model이 <code>write_report</code>를 호출하면 runtime은 schema에
+        맞는 argument인지 확인하고, OpenClaw의 tool policy가 호출 가능성을
+        판정한 뒤에만 실행기로 보냅니다. 실행기는
+        <code>{`{ ok, artifactId, summary }`}</code> 같은 typed observation을
+        돌려주고, model은 이를 바탕으로 final response를 작성합니다. 외부로
+        보내는 reply route는 이 argument에서 받지 않고 Gateway의 inbound
+        context를 사용해야 route injection을 피할 수 있습니다.
+      </p>
     </>
   );
 }

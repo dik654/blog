@@ -1,93 +1,50 @@
-import OutputActivationViz from './viz/OutputActivationViz';
-import SpecialOutputsViz from './viz/SpecialOutputsViz';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import PredictionContractViz from "./viz/PredictionContractViz";
 
 export default function OutputLayer() {
   return (
     <section id="output-layer" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">출력층 설계</h2>
+      <h2 className="mb-6 text-2xl font-bold">출력층은 target의 통계적 의미를 parameterize한다</h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-2 mb-3">회귀 문제</h3>
         <p>
-          출력층 활성화 함수: <strong>항등 함수(identity)</strong> — 값을 그대로 출력<br />
-          예시: 집값 예측, 온도 예측 등 연속값<br />
-          손실 함수: MSE(Mean Squared Error, 평균 제곱 오차)
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">2클래스 분류</h3>
-        <p>
-          출력 노드 1개 + <strong>sigmoid</strong> — 0~1 사이 확률 하나만 출력<br />
-          0.5 기준으로 양성/음성 판별<br />
-          손실 함수: Binary Cross-Entropy
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">다중 클래스 분류</h3>
-        <p>
-          클래스 수만큼 출력 노드 + <strong>softmax</strong><br />
-          모든 출력의 합 = 1인 확률 분포로 변환<br />
-          예시: 개/고양이/새 → [0.7, 0.2, 0.1]<br />
-          손실 함수: Categorical Cross-Entropy
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">조합 정리</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border px-4 py-2 text-left">문제 유형</th>
-                <th className="border border-border px-4 py-2 text-left">활성화</th>
-                <th className="border border-border px-4 py-2 text-left">손실 함수</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-border px-4 py-2">회귀</td>
-                <td className="border border-border px-4 py-2">항등 함수</td>
-                <td className="border border-border px-4 py-2">MSE</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-4 py-2">2클래스</td>
-                <td className="border border-border px-4 py-2">sigmoid</td>
-                <td className="border border-border px-4 py-2">Binary CE</td>
-              </tr>
-              <tr>
-                <td className="border border-border px-4 py-2">다중 클래스</td>
-                <td className="border border-border px-4 py-2">softmax</td>
-                <td className="border border-border px-4 py-2">Categorical CE</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">출력층 활성화 수식 정리</h3>
-        <p>
-          Identity(회귀) / Sigmoid(2클래스) / Softmax(다중 클래스) — 각 활성화와 손실함수는 1:1 매칭<br />
-          <strong>수학적 필연</strong>: Sigmoid+BCE와 Softmax+CCE 모두 gradient가 <code>ŷ−y</code>로 단순화됨
+          Hidden layer는 표현을 만들지만 output layer는 모델이 무엇을 예측한다고 주장하는지
+          정한다. 값의 범위, class가 서로 배타적인지, label마다 독립적인 사건인지, noise를
+          어떤 분포로 가정할지를 먼저 정해야 output dimension과 activation, loss가 함께
+          결정된다. 모든 분류에 softmax를 붙이거나 모든 회귀에 MSE를 쓰는 규칙은 없다.
         </p>
       </div>
-      <OutputActivationViz />
+
+      <PredictionContractViz />
+
+      <ExplainedFormula
+        question="서로 배타적인 K개 class의 raw score를 하나의 확률 분포로 어떻게 바꿀까?"
+        idea={<>각 logit을 exponentiate해 양수로 만든 뒤 전체 합으로 나눕니다. 학습 loss는 이 계산을 log-sum-exp와 결합해 정답 class의 negative log-likelihood로 안정적으로 계산합니다.</>}
+        formula={String.raw`\begin{aligned}p_k&=p(y=k\mid x;\theta)\\&=\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}\\[3pt]\mathcal L(x,y)&=-\log p_y\end{aligned}`}
+        terms={[
+          { symbol: "z_k", name: "class logit", description: "확률로 정규화하기 전의 제한 없는 relative score입니다." },
+          { symbol: "K", name: "class count", description: "한 사건에서 서로 경쟁하는 class 수입니다." },
+          { symbol: "p(y=k\\mid x;\\theta)", name: "categorical probability", description: "한 sample에서 합이 1인 조건부 확률입니다." },
+          { symbol: "\\mathcal L", name: "negative log-likelihood", description: "정답 class에 준 확률이 작을수록 커지는 scalar objective입니다." },
+        ]}
+        assumptions={["한 sample의 target이 K개 중 하나인 categorical task입니다.", "Multi-label task는 class별 Bernoulli logit을 사용하므로 softmax가 아니라 BCE-with-logits 경로가 맞습니다."]}
+        interpretation="Softmax 확률을 먼저 만들어 일반 log에 넣기보다 framework의 fused cross-entropy에 raw logits를 전달합니다. 그 이유와 gradient p−y의 유도는 cross-entropy 글에서 이어집니다."
+      />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">특수 출력층 설계</h3>
+        <h3>정확도, ranking과 calibration은 같은 평가가 아니다</h3>
         <p>
-          표준 3가지(Identity/Sigmoid/Softmax) 외에 태스크별 특수 설계 필요
+          Argmax accuracy가 같아도 confidence가 실제 정답률과 맞지 않을 수 있다. 서비스가
+          threshold, rejection, expected cost를 사용한다면 calibration과 class별 error를
+          별도로 측정해야 한다. Class imbalance는 sampling이나 weighted objective를 검토하되,
+          evaluation distribution까지 바꾸지 않도록 split과 metric 정의를 고정한다.
         </p>
-      </div>
-      <SpecialOutputsViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 className="text-xl font-semibold mt-6 mb-3">Temperature Scaling & 실무 팁</h3>
         <p>
-          <strong>Temperature</strong>: <code>softmax(z/T)</code> — T↑ → flatter (모델 과신 완화)<br />
-          <strong>실무 팁</strong>:<br />
-          &nbsp;&nbsp;- 출력층엔 BatchNorm 쓰지 말기<br />
-          &nbsp;&nbsp;- Softmax+CCE는 수치 안정성 위해 <code>log_softmax + NLL</code> 조합 사용<br />
-          &nbsp;&nbsp;- 클래스 불균형 시 weighted loss<br />
-          &nbsp;&nbsp;- Label smoothing (0.9 true + 0.1 uniform)
-        </p>
-        <p className="leading-7">
-          요약 1: <strong>태스크 유형 → 출력층 활성화 → 손실 함수</strong> 3자 매칭 필수.<br />
-          요약 2: <strong>Softmax + CCE</strong>와 <strong>Sigmoid + BCE</strong>의 gradient 모두 (ŷ - y).<br />
-          요약 3: Multi-label, bounded regression 등 <strong>특수 태스크</strong>는 별도 설계.
+          Likelihood에서 MSE·BCE·categorical cross-entropy가 나오는 과정과 stable
+          implementation은 <Link to="/ai/cross-entropy">cross-entropy 정본 글</Link>에서
+          확인할 수 있다. PyTorch의 <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html" target="_blank" rel="noreferrer">공식 CrossEntropyLoss 문서</a>도
+          입력이 확률이 아니라 unnormalized logits임을 명시한다.
         </p>
       </div>
     </section>

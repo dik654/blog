@@ -1,4 +1,4 @@
-import PoRepFlowViz from './viz/PoRepFlowViz';
+import PoRepFlowViz from "./viz/PoRepFlowViz";
 
 export default function PoRep() {
   return (
@@ -6,16 +6,19 @@ export default function PoRep() {
       <h2 className="text-2xl font-bold mb-6">Proof of Replication (PoRep)</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          원본 데이터의 고유하고 독립적인 물리적 복제본을 생성했음을 증명.<br />
+          원본 데이터의 고유하고 독립적인 물리적 복제본을 생성했음을 증명.
+          <br />
           Sybil 공격(하나의 복제본으로 여러 저장을 주장)을 방지
         </p>
       </div>
-      <div className="not-prose"><PoRepFlowViz /></div>
+      <div className="not-prose">
+        <PoRepFlowViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <h3 className="text-xl font-semibold mt-6 mb-3">PoRep 프로토콜 상세</h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Proof of Replication (PoRep):
+          {`// Proof of Replication (PoRep):
 
 // Definition (Filecoin whitepaper 2017):
 // "Prove that N physical replicas of data
@@ -88,8 +91,10 @@ export default function PoRep() {
 // - efficient on-chain verification`}
         </pre>
         <p className="leading-7">
-          PoRep: <strong>unique physical replication 증명 (Sybil 방어)</strong>.<br />
-          Filecoin = SDR + SNARK, 3-6h per sector.<br />
+          PoRep: <strong>unique physical replication 증명 (Sybil 방어)</strong>.
+          <br />
+          Filecoin = SDR + SNARK, 3-6h per sector.
+          <br />
           replica_id 고유화 + sequential encoding 강제.
         </p>
       </div>

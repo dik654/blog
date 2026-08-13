@@ -22,7 +22,8 @@ export default function Security() {
           <br />
           DH 자체는 상대방의 신원을 검증하지 않는다.
           <br />
-          중간자가 Alice에게는 Bob인 척, Bob에게는 Alice인 척하면 두 세션을 각각 장악할 수 있다.
+          중간자가 Alice에게는 Bob인 척, Bob에게는 Alice인 척하면 두 세션을 각각
+          장악할 수 있다.
           <br />
           해결: 인증서(TLS), 서명(Schnorr) 등을 결합하여 상대방 신원을 확인한다.
         </p>

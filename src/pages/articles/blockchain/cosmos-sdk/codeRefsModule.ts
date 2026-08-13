@@ -1,18 +1,34 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const moduleCodeRefs: Record<string, CodeRef> = {
-  'appmodule-interface': {
-    path: 'types/module/module.go',
-    lang: 'go',
+  "appmodule-interface": {
+    path: "types/module/module.go",
+    lang: "go",
     highlight: [1, 26],
     desc: `AppModule 인터페이스 — 모든 Cosmos SDK 모듈이 구현해야 하는 표준.
 AppModuleBasic(이름, 코덱 등록) + appmodule.AppModule(라이프사이클).
 💡 HasServices, HasABCIEndBlock 등 선택적 인터페이스로 기능 조합.`,
     annotations: [
-      { lines: [1, 5], color: 'sky', note: 'AppModuleBasic — 이름, 코덱, gRPC 게이트웨이 등록' },
-      { lines: [7, 10], color: 'emerald', note: 'AppModule — AppModuleBasic 임베딩' },
-      { lines: [12, 16], color: 'amber', note: 'HasServices — 모듈이 MsgServer/QueryServer 등록' },
-      { lines: [18, 26], color: 'violet', note: 'HasABCIEndBlock — 블록 끝에 실행할 로직 (검증자 업데이트 등)' },
+      {
+        lines: [1, 5],
+        color: "sky",
+        note: "AppModuleBasic — 이름, 코덱, gRPC 게이트웨이 등록",
+      },
+      {
+        lines: [7, 10],
+        color: "emerald",
+        note: "AppModule — AppModuleBasic 임베딩",
+      },
+      {
+        lines: [12, 16],
+        color: "amber",
+        note: "HasServices — 모듈이 MsgServer/QueryServer 등록",
+      },
+      {
+        lines: [18, 26],
+        color: "violet",
+        note: "HasABCIEndBlock — 블록 끝에 실행할 로직 (검증자 업데이트 등)",
+      },
     ],
     code: `// AppModuleBasic — 모듈의 기본 정보 + 코덱 등록
 type AppModuleBasic interface {
@@ -46,18 +62,30 @@ type HasABCIGenesis interface {
 }`,
   },
 
-  'bank-send': {
-    path: 'x/bank/keeper/msg_server.go',
-    lang: 'go',
+  "bank-send": {
+    path: "x/bank/keeper/msg_server.go",
+    lang: "go",
     highlight: [1, 22],
     desc: `Bank MsgServer.Send() — MsgSend 메시지 처리.
 주소 디코딩 → 전송 가능 여부 확인 → SendCoins 호출.
 💡 msgServer가 Keeper를 임베딩 — MsgServer = Keeper의 ABCI 진입점.`,
     annotations: [
-      { lines: [1, 3], color: 'sky', note: 'msgServer — Keeper 임베딩으로 상태 접근' },
-      { lines: [5, 8], color: 'emerald', note: '주소 디코딩 (bech32 → bytes)' },
-      { lines: [10, 14], color: 'amber', note: '전송 가능 여부 + 블랙리스트 확인' },
-      { lines: [16, 22], color: 'violet', note: 'SendCoins 호출 → 원자적 잔액 이동' },
+      {
+        lines: [1, 3],
+        color: "sky",
+        note: "msgServer — Keeper 임베딩으로 상태 접근",
+      },
+      { lines: [5, 8], color: "emerald", note: "주소 디코딩 (bech32 → bytes)" },
+      {
+        lines: [10, 14],
+        color: "amber",
+        note: "전송 가능 여부 + 블랙리스트 확인",
+      },
+      {
+        lines: [16, 22],
+        color: "violet",
+        note: "SendCoins 호출 → 원자적 잔액 이동",
+      },
     ],
     code: `type msgServer struct { Keeper }
 func NewMsgServerImpl(keeper Keeper) types.MsgServer {

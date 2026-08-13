@@ -1,66 +1,41 @@
-import ApplicationViz from './viz/ApplicationViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ApplicationViz from "./viz/ApplicationViz";
 
 export default function Application() {
   return (
     <section id="application" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">임베딩 품질 향상 실전</h2>
+      <h2 className="mb-6 text-2xl font-bold">실전에서는 pair audit와 downstream 평가가 하나의 loop를 이룹니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          대조 학습의 실전 가치 — "더 좋은 임베딩"을 만들어 downstream task 전반의 성능을 올리는 것.<br />
-          분류, 검색, 클러스터링, 이상 탐지 모두 임베딩 품질에 의존.
-        </p>
-
-        <h3>유전체 임베딩 개선 사례</h3>
-        <p>
-          유전체 언어 모델(gLM)에서 변이 효과 예측이 핵심 과제.<br />
-          <strong>기본 접근</strong> — 사전학습된 gLM으로 시퀀스 임베딩 추출 → cosine similarity로 wild-type과 변이 비교.<br />
-          <strong>문제</strong> — 사전학습은 마스크 예측(MLM) 목적 → 변이 민감도에 최적화되지 않음.
-          유사한 변이도 임베딩 거리가 비슷 → 병원성 변이(pathogenic) vs 양성 변이(benign) 구분이 어려움.
+          먼저 target task에서 보존해야 할 정보와 무시해도 되는 변화를 문장으로 적습니다. 그 정의를 positive transformation, multi-positive label과 negative filtering rule로 옮긴 뒤 sample pair를 사람이 직접 검토합니다. Pair가 잘못되면 더 큰 encoder나 복잡한 loss로도 의미 공간을 바로잡기 어렵습니다.
         </p>
         <p>
-          <strong>대조 학습 적용</strong> — 같은 유전자의 wild-type + benign 변이 = positive pair.<br />
-          wild-type + pathogenic 변이 = hard negative. margin 기반으로 병원성 변이를 임베딩 공간에서 밀어냄.<br />
-          결과: Spearman 상관 0.45 → 0.62로 향상 (DMS 벤치마크 기준).
-        </p>
-
-        <h3>Cosine Distance로 변이 민감도 측정</h3>
-        <p>
-          d(wt, mut) = 1 - cos(f(wt), f(mut)).<br />
-          d가 클수록 변이가 기능에 큰 영향 → 병원성 가능성 높음.<br />
-          대조 학습 후 d 분포: benign 변이의 평균 d = 0.05, pathogenic 변이의 평균 d = 0.23 → 명확한 분리.
-        </p>
-
-        <h3>Fine-tuning with Contrastive Objective</h3>
-        <p>
-          <strong>Stage 1: Contrastive Pre-training</strong> — gLM 인코더 위에 projection head 추가.
-          positive: 같은 유전자/benign 변이 쌍. negative: 다른 유전자 또는 pathogenic 변이.<br />
-          <strong>Stage 2: Task Head</strong> — projection head 제거, frozen encoder 위에 regression head.
-          DMS score 직접 예측 → MSE loss.<br />
-          <strong>Stage 3: Joint Fine-tuning</strong> — contrastive loss + regression loss 가중합으로 전체 fine-tuning.
-          λ_cl = 0.3, λ_reg = 0.7이 경험적 최적.
-        </p>
-
-        <h3>범용 적용 패턴</h3>
-        <p>
-          1) 도메인 사전학습 모델 확보 (BERT, ESM-2, ProtTrans 등)<br />
-          2) 도메인 pair 정의 — positive/negative 기준 설계가 가장 중요한 단계<br />
-          3) Contrastive fine-tuning (SupCon 또는 Triplet) → 임베딩 품질 검증 (t-SNE, kNN accuracy)<br />
-          4) Downstream head 추가 → task 성능 측정
+          학습 중에는 loss뿐 아니라 embedding norm, 차원별 variance와 positive·negative similarity 분포를 기록합니다. 평가는 linear probe, retrieval, clustering 가운데 실제 downstream task에 맞는 지표를 주지표로 정하고, class·domain·length 같은 slice에서 개선이 일관적인지 확인합니다.
         </p>
       </div>
-
-      <div className="not-prose my-8">
-        <ApplicationViz />
-      </div>
-
+      <div className="not-prose my-8"><ApplicationViz /></div>
+      <ExplainedFormula
+        question="Hard-negative 후보가 실제 negative인지, 새 encoder가 실제로 좋아졌는지 어떻게 분리해 확인할까요?"
+        idea={<>난이도 구간별 후보를 사람이 검토해 false-negative 비율을 계산하고, 동일 split과 seed에서 baseline 대비 downstream metric 차이를 구합니다. 둘을 함께 보아야 miner가 어려운 오답을 찾았는지 숨은 정답을 오염시켰는지 구분할 수 있습니다.</>}
+        formula={String.raw`\widehat r_{\mathrm{FN}}^{(b)}=\frac{F_b}{R_b},\qquad \Delta_s=M(\theta_{\mathrm{ctr}},s)-M(\theta_{\mathrm{base}},s),\qquad \overline\Delta=\frac1S\sum_{s=1}^{S}\Delta_s`}
+        terms={[
+          { symbol: "b", name: "difficulty or domain bucket", description: "Similarity·source·class 등으로 나눈 audit 구간입니다." },
+          { symbol: "R_b", name: "reviewed candidates", description: "구간 b에서 사람이 관계를 확인한 negative 후보 수입니다." },
+          { symbol: "F_b", name: "false negatives", description: "검토 결과 실제로는 positive 또는 관련 문서였던 후보 수입니다." },
+          { symbol: "M", name: "downstream metric", description: "Retrieval NDCG·linear-probe accuracy 등 사전에 정한 최종 지표입니다." },
+          { symbol: "Δ_s", name: "paired seed gain", description: "같은 seed·split에서 contrastive 후보와 baseline의 지표 차이입니다." },
+        ]}
+        assumptions={["Audit 표본은 각 bucket에서 무작위로 뽑고 판정 기준과 annotator agreement를 기록합니다.", "Baseline과 후보는 같은 data split·evaluation code·seed set을 사용합니다.", "평균 gain뿐 아니라 seed별 분산과 domain slice의 최악값도 확인합니다."]}
+        interpretation="가장 가까운 bucket의 loss 기여가 커도 false-negative 비율이 높다면 miner를 강화할 근거가 아닙니다. 반대로 pair 품질이 좋아도 downstream gain이 없다면 invariance가 task와 맞지 않거나 encoder·optimization이 병목일 수 있습니다."
+      />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-          <p className="text-sm leading-relaxed">
-            <strong>핵심 인사이트:</strong> 대조 학습은 "모델을 바꾸는 것"이 아니라 "학습 신호를 바꾸는 것".
-            기존 인코더 위에 contrastive objective를 추가하는 것만으로 임베딩 품질이 크게 개선.
-            pair 설계가 도메인 전문성이 필요한 유일한 지점.
-          </p>
-        </div>
+        <h3>Embedding 실험도 artifact를 남깁니다</h3>
+        <p>
+          Encoder checkpoint만 저장해서는 결과를 재현할 수 없습니다. Augmentation version, sampler seed, miner model과 index, normalization 여부, pooling과 projection head 구성을 함께 남깁니다. 새 hard-negative miner를 도입했다면 같은 evaluation set에서 이전 pair policy와 분리해 비교합니다.
+        </p>
+        <p>
+          마지막으로 가장 어려운 error pair를 다시 pair audit에 넣습니다. 이 closed loop를 통해 모델 용량을 늘리기 전에 데이터 정의가 틀렸는지, representation이 부족한지, 평가 label이 불완전한지를 구분할 수 있습니다. 여기서 closed loop는 내부 조어가 아니라 결과를 다음 데이터 수정에 다시 반영하는 일반적인 피드백 구조를 뜻합니다.
+        </p>
       </div>
     </section>
   );

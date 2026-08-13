@@ -1,6 +1,6 @@
-import StepViz from '@/components/ui/step-viz';
-import { WORKER_STEPS } from './NarwhalDetailData';
-import { PrimaryStep, WorkerStep, EthCompareStep } from './NarwhalWorkerSteps';
+import StepViz from "@/components/ui/step-viz";
+import { WORKER_STEPS } from "./NarwhalDetailData";
+import { PrimaryStep, WorkerStep, EthCompareStep } from "./NarwhalWorkerSteps";
 
 const RENDERERS = [PrimaryStep, WorkerStep, EthCompareStep];
 

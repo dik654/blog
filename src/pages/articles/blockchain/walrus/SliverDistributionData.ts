@@ -11,8 +11,16 @@ pub struct Sliver<const N: usize> {
 }`;
 
 export const SLIVER_PAIR_ANNOTATIONS = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '노드당 Primary + Secondary 1쌍' },
-  { lines: [7, 11] as [number, number], color: 'emerald' as const, note: '심볼 데이터 + Merkle 증명' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "노드당 Primary + Secondary 1쌍",
+  },
+  {
+    lines: [7, 11] as [number, number],
+    color: "emerald" as const,
+    note: "심볼 데이터 + Merkle 증명",
+  },
 ];
 
 export const VERIFY_CODE = `// 슬라이버 검증 흐름
@@ -32,7 +40,19 @@ fn verify_sliver(sliver: &Sliver, root: &[u8; 32]) -> bool {
 // 에포크마다 노드 재할당 → 부하 분산`;
 
 export const VERIFY_ANNOTATIONS = [
-  { lines: [3, 6] as [number, number], color: 'sky' as const, note: 'Blake2b256 Merkle 검증' },
-  { lines: [8, 11] as [number, number], color: 'emerald' as const, note: '2f+1 서명 → WriteCertificate' },
-  { lines: [13, 15] as [number, number], color: 'amber' as const, note: '에포크 기반 노드 할당' },
+  {
+    lines: [3, 6] as [number, number],
+    color: "sky" as const,
+    note: "Blake2b256 Merkle 검증",
+  },
+  {
+    lines: [8, 11] as [number, number],
+    color: "emerald" as const,
+    note: "2f+1 서명 → WriteCertificate",
+  },
+  {
+    lines: [13, 15] as [number, number],
+    color: "amber" as const,
+    note: "에포크 기반 노드 할당",
+  },
 ];

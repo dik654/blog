@@ -1,116 +1,57 @@
-import RetrievalViz from './viz/RetrievalViz';
-import { codeRefs } from './codeRefs';
-import type { CodeRef } from '@/components/code/types';
+import RetrievalViz from "./viz/RetrievalViz";
+import { codeRefs } from "./codeRefs";
+import type { CodeRef } from "@/components/code/types";
 
-interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
-
-export default function Retrieval({ onCodeRef }: Props) {
+export default function Retrieval({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="retrieval" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">리트리벌 — HandleQuery() 내부</h2>
+      <h2 className="text-2xl font-bold mb-3">
+        Retrieval은 별도의 delivery contract다
+      </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        PayloadCID로 PieceStore 조회 → 가격 응답 → Payment Channel 전송<br />
-        오프체인 마이크로페이먼트 — 최종 정산만 온체인
+        legacy retrieval-market snapshot은 query와 payment-channel voucher를
+        결합했지만, 현재 retrieval은 IPNI/content routing, HTTP·libp2p
+        transport, cache/unseal 상태와 provider별 payment policy를 독립적으로
+        조합할 수 있다.
       </p>
       <div className="not-prose mb-8">
         <RetrievalViz onOpenCode={(key) => onCodeRef(key, codeRefs[key])} />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        {/* ── Retrieval Protocol ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">Retrieval Protocol 상세</h3>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// Retrieval Protocol 단계:
-
-// 1. Discovery:
-//    - client: Query(PayloadCID)
-//    - providers respond: price + availability
-//    - indexer node 사용 (content routing)
-
-// 2. QueryAsk:
-//    type QueryAsk struct {
-//        Size: uint64
-//        PaymentInterval: uint64 (per byte threshold)
-//        PaymentIntervalIncrease: uint64
-//        PricePerByte: BigInt
-//        UnsealPrice: BigInt
-//    }
-
-// 3. Deal Proposal:
-//    client agrees to price
-//    proposes retrieval deal
-//    payment channel address shared
-
-// 4. Payment Channel:
-//    - create channel (on-chain)
-//    - initial voucher
-//    - client funds it
-//    - provider verifies
-
-// 5. Data Transfer:
-//    - graphsync protocol
-//    - chunk-by-chunk
-//    - unixfs traversal
-//    - typical chunk: 1 MB
-//
-// 6. Vouchers:
-//    - after each payment interval
-//    - client signs increment voucher
-//    - provider redeems at channel end
-//
-// 7. Settlement:
-//    - provider submits final voucher
-//    - channel closes
-//    - funds transferred
-
-// Micropayment Channels:
-// - PaymentChannelActor (on-chain)
-// - off-chain voucher signing
-// - cumulative payment tracking
-// - dispute resolution on-chain
-
-// Benefits:
-// - no per-chunk gas cost
-// - fast UX
-// - CDN-like experience
-// - scalable
-
-// Boost retrieval:
-// - HTTP transport
-// - IPNI (InterPlanetary Network Indexer)
-// - libp2p transport
-// - multiple protocols supported
-
-// Economic model:
-// - price per byte
-// - unseal fee (if not cached)
-// - provider sets price
-// - market competition
-
-// IPNI (IPNI.io):
-// - centralized indexer
-// - content routing
-// - "who has X CID"
-// - fast lookups
-// - multiple providers aggregation
-
-// Current state (2024):
-// - Boost widely deployed
-// - HTTP retrieval standard
-// - IPNI as primary discovery
-// - 수십 PiB retrieval 처리`}
-        </pre>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="font-semibold text-sm mb-2">Discover</h3>
+            <p className="text-sm text-muted-foreground">
+              payload/piece CID를 가진 provider와 supported retrieval protocol을
+              찾는다.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="font-semibold text-sm mb-2">Negotiate</h3>
+            <p className="text-sm text-muted-foreground">
+              availability, unseal 필요 여부, byte range, price와
+              authorization을 확인한다.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="font-semibold text-sm mb-2">
+              Transfer &amp; verify
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              선택한 transport로 bytes를 받고 CID/segment commitment를 검증한 뒤
+              결제 정책에 맞게 정산한다.
+            </p>
+          </div>
+        </div>
         <p className="leading-7">
-          Retrieval: <strong>Query → Deal → PaymentChannel → Transfer → Voucher</strong>.<br />
-          off-chain micropayments + on-chain settlement.<br />
-          IPNI가 content discovery, Boost가 modern market daemon.
-        </p>
-
-        <p className="text-sm border-l-2 border-amber-500/50 pl-3 mt-4">
-          <strong>💡 왜 payment channel인가</strong> — micropayment economics.<br />
-          {'직접 on-chain: 매 TX 수수료 > 데이터 비용.'}<br />
-          payment channel: batch N TXs → 1 on-chain settlement.<br />
-          amortize gas cost → micropayments 경제적 viable.
+          payment channel은 가능한 결제 방식 중 하나이지 모든 retrieval의 필수
+          단계가 아니다. 또한 IPNI를 단일 중앙 indexer로 부르기보다 provider
+          advertisement를 조회하는 indexing network/API 경계로 이해해야 한다.
         </p>
       </div>
     </section>

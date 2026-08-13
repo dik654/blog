@@ -1,60 +1,173 @@
-import GANArchViz from './viz/GANArchViz';
-import GANTimelineViz from './viz/GANTimelineViz';
-
-const VARIANTS = [
-  {
-    name: 'DCGAN', year: '2015', color: '#6366f1',
-    desc: 'CNN 기반 GAN — BatchNorm, Strided Conv, LeakyReLU 등 아키텍처 가이드라인으로 안정적 학습의 기반 확립',
-  },
-  {
-    name: 'StyleGAN', year: '2019', color: '#10b981',
-    desc: 'NVIDIA의 스타일 기반 생성기 — Mapping Network + AdaIN으로 스타일 계층별 제어, Progressive Growing으로 1024x1024 고해상도 얼굴 생성',
-  },
-  {
-    name: 'CycleGAN', year: '2017', color: '#f59e0b',
-    desc: '비쌍 데이터로 도메인 변환 학습 — Cycle Consistency Loss(A→B→A = A)로 의미 보존 보장. 사진↔그림, 말↔얼룩말 변환 등',
-  },
-  {
-    name: 'Pix2Pix', year: '2017', color: '#ef4444',
-    desc: '조건부 GAN으로 쌍(pair) 이미지 변환 학습 — U-Net Generator + PatchGAN Discriminator 구조',
-  },
-  {
-    name: 'Conditional GAN', year: '2014', color: '#a855f7',
-    desc: 'G와 D 모두에 조건 정보(클래스 라벨, 텍스트 등) 추가 — 원하는 속성의 이미지를 지정하여 생성 가능',
-  },
-];
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import DesignAxisViz from "./viz/DesignAxisViz";
 
 export default function Variants() {
   return (
     <section id="variants" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">주요 GAN 변형</h2>
-      <div className="not-prose mb-8"><GANArchViz /></div>
+      <h2 className="mb-6 text-2xl font-bold">
+        GAN 변형은 condition·architecture·discrepancy·constraint 중 무엇을
+        바꿨는지로 읽는다
+      </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          Conditional GAN은 label·text·source image를 G와 D에 제공해{" "}
+          <code>p(x|c)</code>를 목표로 삼는다. DCGAN은 convolutional
+          architecture와 training guideline을 정리했고, Pix2Pix는 paired
+          translation에 adversarial loss와 reconstruction을 결합했다. CycleGAN은
+          unpaired domain에 cycle consistency를 추가했지만 내용이 반드시
+          보존된다는 보장은 아니며, StyleGAN은 mapping network와 layer-wise
+          style modulation으로 control과 high-resolution synthesis를 발전시켰다.
+        </p>
         <p>
-          GAN의 기본 아이디어 위에 다양한 아키텍처와 학습 기법이 발전<br />
-          아래는 가장 영향력 있는 변형들
+          이들은 하나의 직선 계보가 아니다. WGAN loss에 StyleGAN generator를 쓸
+          수도 있고 condition과 spectral normalization을 함께 넣을 수도 있다.
+          Dataset 크기·condition fidelity·resolution·latency·license와 재현
+          가능한 checkpoint를 먼저 정한 뒤 필요한 축만 선택한다.
         </p>
       </div>
-      <div className="not-prose mt-6 space-y-3">
-        {VARIANTS.map((v) => (
-          <div key={v.name} className="rounded-lg border p-4"
-            style={{ borderColor: v.color + '30', background: v.color + '06' }}>
-            <div className="flex items-baseline gap-2 mb-2">
-              <span className="font-bold text-sm" style={{ color: v.color }}>{v.name}</span>
-              <span className="text-[10px] text-muted-foreground font-mono">{v.year}</span>
-            </div>
-            <p className="text-sm text-foreground/70 leading-relaxed">{v.desc}</p>
-          </div>
-        ))}
+      <DesignAxisViz />
+      <div
+        id="paper-conditional-gan"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Conditional distribution
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Conditional Generative Adversarial Nets
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Label y를 generator와 discriminator 모두에 제공해 adversarial game을
+          conditional distribution으로 확장하고 MNIST와 image tagging 예를
+          제시합니다. Condition을 입력했다는 사실만으로 모델이 그 조건을 정확히
+          따르거나 train 밖의 조합으로 일반화한다는 보장은 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/1411.1784"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 conditional objective·실험 보기
+        </a>
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>
+          FID 하나로 sample quality와 mode coverage를 모두 확정할 수는 없다
+        </h3>
+        <p>
+          FID는 fixed feature extractor에서 real과 generated feature를 각각
+          Gaussian으로 근사해 평균과 covariance 차이를 계산한다. 낮을수록 두
+          feature distribution이 가깝지만 encoder·preprocessing·sample count와
+          real reference split에 민감하다. Memorization, condition consistency,
+          rare mode coverage와 human utility는 별도 metric과 nearest-neighbor
+          audit가 필요하다.
+        </p>
+      </div>
+      <ExplainedFormula
+        question="FID는 real과 generated feature distribution의 어떤 두 통계를 비교할까?"
+        idea={
+          <>
+            Pretrained Inception feature를 뽑아 각 집합을 Gaussian으로 근사하고,
+            평균 위치 차이와 covariance shape 차이를 더합니다.
+          </>
+        }
+        formula={String.raw`\begin{aligned}\operatorname{FID}&=\lVert\mu_r-\mu_g\rVert_2^2\\&\quad+\operatorname{Tr}\!\left(C_r+C_g-2(C_rC_g)^{1/2}\right)\end{aligned}`}
+        terms={[
+          {
+            symbol: "\\mu_r,\\mu_g",
+            name: "feature means",
+            description:
+              "Real·generated sample의 fixed encoder feature 평균입니다.",
+          },
+          {
+            symbol: "C_r,C_g",
+            name: "feature covariances",
+            description:
+              "두 sample 집합의 feature 방향별 spread와 correlation입니다.",
+          },
+          {
+            symbol: "\\operatorname{Tr}",
+            name: "trace",
+            description: "Covariance discrepancy의 diagonal sum을 취합니다.",
+          },
+          {
+            symbol: "(C_rC_g)^{1/2}",
+            name: "matrix square root term",
+            description: "두 covariance geometry가 겹치는 정도를 반영합니다.",
+          },
+        ]}
+        assumptions={[
+          "Feature distribution을 Gaussian의 1·2차 moment로 요약하고 fixed compatible Inception pipeline을 사용합니다.",
+          "Finite-sample estimator에는 bias가 있으며 서로 다른 sample 수·preprocessing의 점수를 직접 비교하지 않습니다.",
+        ]}
+        interpretation="FID가 낮다는 것은 선택한 feature space에서 두 집합의 평균과 covariance가 가깝다는 뜻입니다. 개별 image의 사실성, condition 정답률, 모든 mode의 coverage나 training-data memorization을 단독으로 증명하지 않습니다."
+      />
+      <div
+        id="paper-ttur-fid"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">논문 읽기 · TTUR와 FID</p>
+        <p className="mt-2 text-sm font-semibold">
+          GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash
+          Equilibrium
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Two-time-scale stochastic approximation 조건 아래 local stationary
+          Nash equilibrium 수렴을 분석하고 FID를 소개합니다. 정리의
+          step-size·regularity 가정은 임의의 finite deep GAN recipe에 자동
+          적용되지 않으며, FID도 선택한 feature·sample estimator의 metric입니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/1706.08500"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 수렴 전제·FID 정의·실험 보기
+        </a>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">GAN 계보와 Diffusion 비교</h3>
-        <div className="not-prose"><GANTimelineViz /></div>
-        <p className="leading-7">
-          요약 1: GAN 계보는 <strong>DCGAN→WGAN→StyleGAN</strong>으로 안정성·품질 순차 개선.<br />
-          요약 2: 2022년 이후 <strong>Diffusion이 주류</strong> — 안정성·다양성에서 우위.<br />
-          요약 3: 실시간 생성·엣지 환경에서는 GAN이 여전히 경쟁력 보유.
+      <div
+        id="paper-generative-pr"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">
+          논문 읽기 · Quality와 coverage 분리
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Assessing Generative Models via Precision and Recall
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Scalar divergence 하나로 구분하기 어려운 sample quality와 target-mode
+          coverage를 precision·recall 두 축으로 나눕니다. 이는 특정 feature
+          representation과 finite sample algorithm에 의존하며 모든 의미적
+          다양성을 완전히 측정하는 보편 지표는 아닙니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/1806.00035"
+          target="_blank"
+          rel="noreferrer"
+        >
+          원 논문의 정의·algorithm·failure 비교 보기
+        </a>
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Diffusion과는 품질 순위보다 system contract로 비교한다</h3>
+        <p>
+          GAN generator는 보통 한 번의 forward로 sample을 만들어 낮은 sampling
+          latency가 강점이지만 adversarial game과 coverage를 관리해야 한다.
+          Diffusion은 여러 denoising step 때문에 network evaluation 수가
+          늘어나는 대신 objective와 coverage가 다루기 쉬운 경우가 많다. 같은
+          resolution·condition·data·compute에서 FID뿐 아니라 precision/recall,
+          condition metric, latency·memory·energy와 사용자 평가를 함께 본다.
+        </p>
+        <p>
+          Forward·reverse process와 sampling step, latent diffusion의 계산은{" "}
+          <Link to="/ai/diffusion-models">Diffusion Models 정본 글</Link>에서
+          이어진다.
         </p>
       </div>
     </section>

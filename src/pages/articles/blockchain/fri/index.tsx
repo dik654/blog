@@ -1,7 +1,7 @@
-import Overview from './Overview';
-import LowDegreeTest from './LowDegreeTest';
-import Folding from './Folding';
-import STARKUsage from './STARKUsage';
+import Overview from "./Overview";
+import LowDegreeTest from "./LowDegreeTest";
+import Folding from "./Folding";
+import STARKUsage from "./STARKUsage";
 
 export default function FRI() {
   return (

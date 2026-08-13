@@ -1,99 +1,37 @@
-import { motion } from 'framer-motion';
-import StepViz from '@/components/ui/step-viz';
-import { STEPS, SKILL_LIST } from './LoadingData';
+import VizFrame from "@/components/viz/VizFrame";
 
-const W = 460, H = 230;
-const CX = W / 2;
+const flow = [
+  ["Discover", "name · description · path", "작은 후보 index"],
+  ["Route", "explicit 또는 implicit", "한 Skill 선택"],
+  ["Load", "SKILL.md 전체", "workflow contract"],
+  ["Expand", "필요한 reference만", "task-specific context"],
+  ["Run", "tool·script·validation", "검증된 artifact"],
+] as const;
 
 export default function LoadingViz() {
   return (
-    <StepViz steps={STEPS}>
-      {(step) => (
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl" style={{ height: 'auto' }}>
-          {/* Skills directory */}
-          <rect x={20} y={20} width={130} height={SKILL_LIST.length * 28 + 20} rx={6}
-            fill="var(--card)" stroke="var(--border)" strokeWidth={1} />
-          <text x={30} y={14} fontSize={9} fontWeight={700}
-            fill="var(--foreground)">.skills/</text>
-
-          {SKILL_LIST.map((s, i) => {
-            const y = 30 + i * 28;
-            const isMatch = step === 2 && i === 0;
-            const isLoaded = step === 3 && i === 0;
-            return (
-              <motion.g key={s.name}
-                animate={{
-                  opacity: step === 0 ? (i <= 2 ? 1 : 0.3) : 1,
-                }}
-                transition={{ delay: i * 0.05 }}>
-                <rect x={30} y={y} width={110} height={22} rx={4}
-                  fill={isMatch || isLoaded ? `${s.color}20` : `${s.color}08`}
-                  stroke={isMatch || isLoaded ? s.color : 'var(--border)'}
-                  strokeWidth={isMatch || isLoaded ? 1.5 : 0.5} />
-                <text x={40} y={y + 15} fontSize={9}
-                  fontWeight={isMatch || isLoaded ? 700 : 400}
-                  fill={isMatch || isLoaded ? s.color : 'var(--muted-foreground)'}>
-                  {s.name}
-                </text>
-              </motion.g>
-            );
-          })}
-
-          {/* System prompt area */}
-          {step >= 1 && (
-            <motion.g initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}>
-              <rect x={180} y={20} width={260} height={80} rx={6}
-                fill="#6366f108" stroke="#6366f1" strokeWidth={1} />
-              <text x={190} y={38} fontSize={9} fontWeight={700}
-                fill="#6366f1">시스템 프롬프트</text>
-              {SKILL_LIST.map((s, i) => (
-                <text key={s.name} x={190} y={54 + i * 12} fontSize={9}
-                  fill="var(--muted-foreground)">
-                  • {s.name}: {s.desc} (~24tok)
-                </text>
-              ))}
-            </motion.g>
-          )}
-
-          {/* User message → matching */}
-          {step >= 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <rect x={180} y={115} width={260} height={30} rx={5}
-                fill="#f59e0b12" stroke="#f59e0b" strokeWidth={1} />
-              <text x={190} y={134} fontSize={9} fill="#f59e0b"
-                fontWeight={600}>"이 코드 리뷰해줘"</text>
-              <motion.line x1={310} y1={145} x2={310} y2={165}
-                stroke="#f59e0b" strokeWidth={1} strokeDasharray="3 3"
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} />
-              <text x={310} y={178} textAnchor="middle" fontSize={9}
-                fontWeight={600} fill="#f59e0b">→ code-review 매칭</text>
-            </motion.g>
-          )}
-
-          {/* Lazy load indicator */}
-          {step === 3 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}>
-              <motion.line x1={140} y1={40} x2={180} y2={40}
-                stroke="#6366f1" strokeWidth={1.5}
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                transition={{ duration: 0.4 }} />
-              <rect x={180} y={155} width={260} height={55} rx={6}
-                fill="#10b98108" stroke="#10b981" strokeWidth={1.5} />
-              <text x={190} y={172} fontSize={9} fontWeight={700}
-                fill="#10b981">code-review 전체 로드</text>
-              <text x={190} y={188} fontSize={9}
-                fill="var(--muted-foreground)">
-                파라미터 바인딩 + 프롬프트 바디 포함
-              </text>
-              <text x={190} y={200} fontSize={9}
-                fill="var(--muted-foreground)">
-                나머지 4개 스킬 — 요약 상태 유지
-              </text>
-            </motion.g>
-          )}
-        </svg>
-      )}
-    </StepViz>
+    <VizFrame
+      eyebrow="Progressive disclosure"
+      title="선택 전의 작은 index가 선택 뒤의 전체 지침과 필요한 자료로 확장됩니다"
+      description="각 단계의 output이 다음 단계 input이 되며, 설치된 모든 reference를 한 번에 context에 넣지 않습니다."
+    >
+      <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        {flow.map(([name, input, output], index) => (
+          <li key={name} className="min-w-0 border-l border-border/80 pl-4">
+            <span className="font-mono text-[11px] font-bold text-primary">0{index + 1}</span>
+            <h4 className="mt-2 text-sm font-bold text-foreground">{name}</h4>
+            <p className="mt-3 break-words text-xs leading-5 text-muted-foreground">{input}</p>
+            <p className="mt-2 break-words text-xs font-semibold leading-5 text-foreground/75">
+              → {output}
+            </p>
+          </li>
+        ))}
+      </ol>
+      <div className="mt-7 grid gap-3 border-t border-border/70 pt-5 text-xs leading-5 sm:grid-cols-3">
+        <p className="text-muted-foreground"><strong className="text-foreground">초기 목록</strong><br />최대 context 2%</p>
+        <p className="text-muted-foreground"><strong className="text-foreground">크기 미확인</strong><br />최대 8,000 characters</p>
+        <p className="text-muted-foreground"><strong className="text-foreground">선택 이후</strong><br />SKILL.md 전체 로딩</p>
+      </div>
+    </VizFrame>
   );
 }

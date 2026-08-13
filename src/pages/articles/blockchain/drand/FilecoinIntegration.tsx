@@ -1,4 +1,4 @@
-import FilecoinViz from './viz/FilecoinViz';
+import FilecoinViz from "./viz/FilecoinViz";
 
 export default function FilecoinIntegration() {
   return (
@@ -6,16 +6,21 @@ export default function FilecoinIntegration() {
       <h2 className="text-2xl font-bold mb-6">Filecoin 연동</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none mb-8">
         <p className="leading-7">
-          Filecoin은 DRAND를 핵심 외부 의존성으로 사용.<br />
+          Filecoin은 DRAND를 핵심 외부 의존성으로 사용.
+          <br />
           블록 추첨, 저장 증명 챌린지, 타이밍 동기화 모두 DRAND 랜덤에 의존
         </p>
       </div>
-      <div className="not-prose"><FilecoinViz /></div>
+      <div className="not-prose">
+        <FilecoinViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">DRAND ↔ Filecoin Integration</h3>
+        <h3 className="text-xl font-semibold mt-6 mb-3">
+          DRAND ↔ Filecoin Integration
+        </h3>
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
-{`// DRAND Integration in Filecoin:
+          {`// DRAND Integration in Filecoin:
 
 // Usage in Filecoin:
 
@@ -97,8 +102,10 @@ export default function FilecoinIntegration() {
 // - ~180+ validators trust DRAND`}
         </pre>
         <p className="leading-7">
-          Filecoin ↔ DRAND: <strong>leader election + challenge generation</strong>.<br />
-          10 DRAND rounds per Filecoin epoch (30s).<br />
+          Filecoin ↔ DRAND:{" "}
+          <strong>leader election + challenge generation</strong>.<br />
+          10 DRAND rounds per Filecoin epoch (30s).
+          <br />
           critical dependency — DRAND 장애 시 Filecoin halt.
         </p>
       </div>

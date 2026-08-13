@@ -1,63 +1,56 @@
-import PipelineViz from './viz/PipelineViz';
+import PipelineViz from "./viz/PipelineViz";
 
 export default function Pipeline() {
   return (
     <section id="pipeline" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Albumentations 실전 파이프라인</h2>
-
+      <h2 className="mb-6 text-2xl font-bold">Pipeline은 transform 목록이 아니라 재현 가능한 data contract입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <strong>Albumentations</strong> — OpenCV 기반 고속 이미지 증강 라이브러리<br />
-          torchvision.transforms보다 2~10배 빠르고, 이미지·바운딩박스·마스크·키포인트를 동시 변환<br />
-          Kaggle 이미지 대회에서 사실상 표준
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Compose — 파이프라인 정의</h3>
-        <p>
-          <code>A.Compose([변환1, 변환2, ...])</code>로 변환을 순차 연결<br />
-          각 변환에 p(확률)를 설정하여 매 이터레이션마다 다른 조합이 적용<br />
-          <code>OneOf([변환A, 변환B], p=0.3)</code> — 그룹 내에서 하나만 랜덤 선택
-        </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">Train vs Test 파이프라인</h3>
-        <p>
-          <strong>Train</strong> — RandomResizedCrop → HFlip → ColorJitter → OneOf([Blur, Noise]) → Normalize<br />
-          매번 다른 증강 조합이 적용되어 모델이 다양한 상황을 학습<br />
-          <strong>Test</strong> — Resize(256) → CenterCrop(224) → Normalize<br />
-          랜덤 요소 없이 결정적(deterministic) 변환만. 같은 이미지는 항상 같은 출력
+          Albumentations 같은 library는 image와 bounding box, mask, keypoint에 같은
+          spatial transform을 적용하는 실행 도구입니다. Library를 쓴다고 설정이
+          자동으로 올바르지는 않습니다. Compose 순서, transform probability와
+          range, interpolation, border mode, box format, minimum visible area,
+          input dtype와 normalization을 versioned config에 고정해야 합니다.
         </p>
         <p>
-          <strong>Normalize는 Train과 Test에서 반드시 동일한 파라미터</strong>를 사용<br />
-          학습과 다른 mean/std를 쓰면 모델 입력 분포가 어긋나 성능이 급락한다
+          Training pipeline에는 검증한 stochastic transform을 넣되 validation과
+          test에는 resize·center crop·normalization 같은 deterministic preprocessing만
+          둡니다. Pretrained weight를 사용한다면 weight metadata가 요구하는 resize와
+          normalization을 출발점으로 삼고, 변경했을 때는 별도 ablation으로 확인합니다.
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <PipelineViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">TTA (Test Time Augmentation)</h3>
-        <p>
-          테스트 시에도 증강을 적용하여 성능을 끌어올리는 기법<br />
-          하나의 테스트 이미지를 N번 증강(원본 + HFlip + 다중 Crop 등)하여 각각 예측<br />
-          N개 예측의 평균(regression) 또는 다수결(classification)로 최종 결과 결정<br />
-          대회에서 마지막 0.1~0.3% 성능 향상에 효과적. 추론 시간은 N배 증가
+      <div
+        id="paper-albumentations"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
+        <p className="text-xs font-bold text-primary">도구 읽기 · Multi-target image transform</p>
+        <p className="mt-2 text-sm font-semibold">Albumentations: Fast and Flexible Image Augmentations</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 논문은 다양한 image transform을 빠르고 조합 가능한 library로 구현한
+          설계와 benchmark를 설명합니다. Library 제공 여부는 각 transform의
+          label-preservation이나 현재 task의 최적 policy를 보장하지 않으므로,
+          annotation fixture와 model ablation은 별도로 필요합니다.
         </p>
-        <h3 className="text-xl font-semibold mt-6 mb-3">파이프라인 설계 체크리스트</h3>
-        <ul>
-          <li>기하학적 변환 → 색상 변환 → Normalize 순서 (Normalize는 항상 마지막)</li>
-          <li>증강 강도는 점진적으로 — 약한 증강에서 시작, 오버피팅 보이면 강화</li>
-          <li>Train과 Test의 Normalize 파라미터 일치 확인</li>
-          <li>바운딩 박스/마스크 태스크에서는 좌표 동시 변환 확인</li>
-          <li>TTA 적용 시 추론 시간 vs 성능 향상 트레이드오프 검토</li>
-        </ul>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.3390/info11020125" target="_blank" rel="noreferrer">원 논문의 library scope와 benchmark 보기</a>
       </div>
 
-      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-4 my-6 rounded-r-lg">
-        <p className="font-semibold mb-2">실전 팁: 증강 디버깅</p>
-        <p className="text-sm">
-          증강된 이미지를 저장하고 눈으로 확인하는 것이 가장 확실한 디버깅 방법<br />
-          <code>{'transformed = transform(image=img); plt.imshow(transformed["image"])'}</code><br />
-          바운딩 박스가 이미지 밖으로 벗어나거나, 마스크가 이미지와 불일치하는 문제를 조기 발견
+      <div className="not-prose my-8"><PipelineViz /></div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>시각 fixture와 metric gate를 모두 둡니다</h3>
+        <p>
+          여러 seed의 transform 결과를 image와 annotation이 겹쳐 보이는 형태로
+          저장하면 object 소실, box drift, mask interpolation 오류를 먼저 잡을 수
+          있습니다. 그다음 transform family별 ablation에서 원본 validation,
+          robustness slice, calibration, class별 metric을 비교합니다. 실패 sample은
+          transform parameter와 seed를 함께 저장해야 다시 실행할 수 있습니다.
+        </p>
+        <p>
+          TTA는 training augmentation이 아니라 inference ensemble입니다. 같은
+          label-preserving view에서 prediction을 얻고 spatial output을 원래 좌표로
+          되돌린 뒤 결합합니다. Accuracy 이득뿐 아니라 추가 latency와 memory까지
+          production SLA에 포함해야 합니다.
         </p>
       </div>
     </section>

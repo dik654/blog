@@ -1,66 +1,68 @@
-import M from '@/components/ui/math';
+import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import ExtensionChoiceViz from "./viz/ExtensionChoiceViz";
 
 export default function Applications() {
   return (
     <section id="applications" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">SARIMA 확장과 실전 적용</h2>
+      <h2 className="mb-6 text-2xl font-bold">
+        계절성과 외생 변수를 더하되 forecast 시점의 정보 경계를 지킨다
+      </h2>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>SARIMA: 계절성 모델링</h3>
-        <p>
-          실제 시계열에는 <strong>계절성(Seasonality)</strong>이 존재<br />
-          SARIMA — ARIMA에 계절 AR/I/MA 항을 추가하여 주기적 패턴 포착<br />
-          월별 데이터는 s=12, 분기별은 s=4, 주별은 s=52 사용
+        <p className="leading-7">
+          비계절 차분 뒤에도 lag s마다 dependence가 반복되면 seasonal difference와
+          seasonal AR·MA polynomial을 추가한 SARIMA를 고려한다. 월별 자료의 연간
+          pattern에 s=12가 자연스러울 수 있지만 영업일 수, 이동 휴일과 promotion
+          calendar처럼 실제 업무 주기가 sampling frequency와 다르면 plot과 domain
+          schedule에서 period를 확인해야 한다.
         </p>
-        <M display>{'\\text{SARIMA}(\\underbrace{p,d,q}_{\\text{비계절}})\\,(\\underbrace{P,D,Q,s}_{\\text{계절}})'}</M>
-        <div className="not-prose grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 mb-4 text-sm">
-          {[
-            { sym: 'p, d, q', name: '비계절 성분', desc: '일반 ARIMA와 동일한 AR/차분/MA 차수' },
-            { sym: 'P, D, Q', name: '계절 성분', desc: '계절 주기 단위의 AR/차분/MA 차수' },
-            { sym: 's', name: '계절 주기', desc: '월별=12, 분기별=4, 주별=52' },
-            { sym: '예시', name: '(1,1,1)(1,1,1,12)', desc: '비계절 ARIMA(1,1,1) + 12개월 주기 계절 성분' },
-          ].map((p) => (
-            <div key={p.sym} className="rounded-lg border border-border bg-card px-3 py-2">
-              <span className="font-mono font-bold text-foreground text-xs">{p.sym}</span>
-              <span className="text-muted-foreground ml-1.5 text-xs font-semibold">{p.name}</span>
-              <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</div>
-            </div>
-          ))}
-        </div>
+      </div>
 
-        <h3>실전 적용 영역</h3>
+      <ExplainedFormula
+        question="비계절 dynamics와 s주기 계절 dynamics를 한 ARIMA operator에 어떻게 결합할까?"
+        idea={<>비계절 AR·MA polynomial과 B^s를 사용하는 seasonal polynomial을 곱합니다. 차분도 (1−B)^d와 (1−B^s)^D로 분리해 local trend와 반복되는 seasonal level을 따로 제거합니다.</>}
+        formula={String.raw`\begin{aligned}W_t&=(1-B)^d(1-B^s)^D Y_t\\A(B)W_t&=c+M(B)\varepsilon_t\\A(B)&=\Phi(B^s)\phi(B)\\M(B)&=\Theta(B^s)\theta(B)\end{aligned}`}
+        terms={[
+          { symbol: "(p,d,q)", name: "non-seasonal order", description: "인접 lag의 AR, difference와 MA 차수입니다." },
+          { symbol: "(P,D,Q)_s", name: "seasonal order", description: "s 간격 lag에 적용하는 AR, difference와 MA 차수입니다." },
+          { symbol: "\Phi,\Theta", name: "seasonal polynomials", description: "B^s, B^{2s}처럼 seasonal lag를 읽습니다." },
+          { symbol: "s", name: "season length", description: "관측 간격으로 표현한 실제 반복 주기입니다." },
+        ]}
+        assumptions={["하나의 안정된 season length가 있고 계절 구조가 forecasting 기간에도 유지됩니다.", "여러 계절성이나 이동하는 calendar effect는 이 단일 seasonal polynomial로 충분하지 않을 수 있습니다."]}
+        interpretation="SARIMA는 계절 label을 붙이는 기능이 아니라 seasonal lag에 별도 difference와 dynamics를 두는 모델입니다. s를 calendar 이름만 보고 정하지 않습니다."
+      />
+
+      <ExtensionChoiceViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Exogenous variable은 예측 시점에 실제로 이용할 수 있어야 한다</h3>
         <p>
-          금융(주가/환율), 소매(수요 예측), 에너지(전력 소비), 기상(기온/강수량) 등<br />
-          단변량 시계열 예측에서 여전히 강력한 베이스라인<br />
-          M-Competition 벤치마크에서 통계 모델이 복잡한 ML 모델을 이기는 사례 다수
+          회귀식에 ARIMA error를 결합하는 dynamic regression은 가격, 날씨, 행사처럼
+          target 밖의 정보를 사용할 수 있다. 그러나 test period의 실제 weather나
+          확정되지 않은 promotion 결과를 그대로 넣으면 future leakage가 된다.
+          Production에서 미래 값을 알 수 없다면 해당 variable 자체를 먼저
+          forecast하거나 scenario로 제공하고, 그 uncertainty가 최종 interval에
+          빠져 있음을 명시한다.
         </p>
 
-        <h3>ARIMA vs 딥러닝</h3>
-        <div className="not-prose grid grid-cols-2 gap-3 mt-3 text-sm">
-          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-4 py-3">
-            <p className="font-bold text-emerald-600 dark:text-emerald-400 text-xs mb-2">ARIMA 강점</p>
-            <ul className="space-y-1 text-xs text-muted-foreground">
-              <li>해석 가능성 — 계수의 통계적 의미 부여</li>
-              <li>적은 데이터로도 학습 가능</li>
-              <li>신뢰 구간 제공 (확률적 예측)</li>
-            </ul>
-          </div>
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 px-4 py-3">
-            <p className="font-bold text-amber-600 dark:text-amber-400 text-xs mb-2">ARIMA 한계</p>
-            <ul className="space-y-1 text-xs text-muted-foreground">
-              <li>선형 관계만 포착</li>
-              <li>다변량 시계열에 약함 (VAR 필요)</li>
-              <li>장기 예측 정확도 하락</li>
-            </ul>
-          </div>
-          <div className="col-span-2 rounded-lg border border-violet-500/30 bg-violet-500/5 px-4 py-3">
-            <p className="font-bold text-violet-600 dark:text-violet-400 text-xs mb-2">딥러닝 대안 (LSTM, Transformer)</p>
-            <ul className="space-y-1 text-xs text-muted-foreground">
-              <li>비선형 패턴 포착 — 복잡한 시계열에 강점</li>
-              <li>다변량/다중 시계열 동시 학습 가능</li>
-              <li>대규모 데이터에서 우위, 하이브리드 접근(ARIMA + NN)도 활발</li>
-            </ul>
-          </div>
-        </div>
+        <h3>ARIMA를 계속 쓸 때와 넘어갈 때</h3>
+        <p>
+          짧은 단일 series의 선형 dependence와 설명 가능성이 중요하면 ARIMA는
+          훌륭한 baseline이다. 다수 series가 공통 pattern을 공유하거나 여러
+          seasonality, regime change와 강한 nonlinear interaction이 핵심이면
+          state-space, tree, global neural forecasting model을 같은 cutoff와 horizon,
+          metric에서 비교한다. <a href="https://www.jstatsoft.org/article/view/v027i03" target="_blank" rel="noreferrer">Hyndman–Khandakar 절차</a>는
+          unit-root test, AICc와 stepwise search를 결합해 ARIMA order 탐색을
+          자동화하지만, forecast contract와 out-of-sample validation까지 대신하지는
+          않는다.
+        </p>
+        <p>
+          순환 신경망으로 window와 hidden state를 학습하는 경로는
+          <Link to="/ai/lstm-timeseries"> LSTM 시계열 글</Link>에서 이어진다.
+          그 글에서도 ARIMA를 지우지 않고, 복잡한 model이 rolling-origin error와
+          operational cost에서 실제 추가 가치를 주는지 확인할 기준선으로 남긴다.
+        </p>
       </div>
     </section>
   );

@@ -18,9 +18,21 @@ async fn main() -> eyre::Result<()> {
 }`;
 
 export const setupAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '필수 크레이트 의존성' },
-  { lines: [8, 9] as [number, number], color: 'emerald' as const, note: '핵심 타입 임포트' },
-  { lines: [13, 15] as [number, number], color: 'amber' as const, note: '클라이언트 + 서명자 생성' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "필수 크레이트 의존성",
+  },
+  {
+    lines: [8, 9] as [number, number],
+    color: "emerald" as const,
+    note: "핵심 타입 임포트",
+  },
+  {
+    lines: [13, 15] as [number, number],
+    color: "amber" as const,
+    note: "클라이언트 + 서명자 생성",
+  },
 ];
 
 export const txCode = `// 데이터 트랜잭션 워크플로우
@@ -46,7 +58,19 @@ let receipt = client
 println!("TX ID: {:?}", receipt.tx_id);`;
 
 export const txAnnotations = [
-  { lines: [2, 5] as [number, number], color: 'sky' as const, note: '저장 가격 조회 (Publish 원장)' },
-  { lines: [8, 15] as [number, number], color: 'emerald' as const, note: 'TX 생성 + ECDSA 서명' },
-  { lines: [18, 21] as [number, number], color: 'amber' as const, note: '노드 전송 & 영수증 수신' },
+  {
+    lines: [2, 5] as [number, number],
+    color: "sky" as const,
+    note: "저장 가격 조회 (Publish 원장)",
+  },
+  {
+    lines: [8, 15] as [number, number],
+    color: "emerald" as const,
+    note: "TX 생성 + ECDSA 서명",
+  },
+  {
+    lines: [18, 21] as [number, number],
+    color: "amber" as const,
+    note: "노드 전송 & 영수증 수신",
+  },
 ];

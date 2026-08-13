@@ -1,9 +1,11 @@
-import type { CodeRef } from '@/components/code/types';
+import type { CodeRef } from "@/components/code/types";
 
 export const findNodeCodeRefs: Record<string, CodeRef> = {
-  'lookup-distances': {
-    path: 'go-ethereum/p2p/discover/v5_udp.go', lang: 'go', highlight: [1, 12],
-    desc: 'lookupDistances: XOR 거리(log2) 기준 양방향 인접 거리를 수집한다.',
+  "lookup-distances": {
+    path: "go-ethereum/p2p/discover/v5_udp.go",
+    lang: "go",
+    highlight: [1, 12],
+    desc: "lookupDistances: XOR 거리(log2) 기준 양방향 인접 거리를 수집한다.",
     code: `func lookupDistances(target, dest enode.ID) (dists []uint) {
     td := enode.LogDist(target, dest)
     dists = append(dists, uint(td))
@@ -18,14 +20,20 @@ export const findNodeCodeRefs: Record<string, CodeRef> = {
     return dists
 }`,
     annotations: [
-      { lines: [2, 3], color: 'sky', note: 'XOR 거리의 log2 = 기준 거리' },
-      { lines: [4, 11], color: 'emerald', note: '양방향 확장하여 최대 3개 거리' },
-      { lines: [5, 6], color: 'amber', note: '상한 256 (최대 log-distance)' },
+      { lines: [2, 3], color: "sky", note: "XOR 거리의 log2 = 기준 거리" },
+      {
+        lines: [4, 11],
+        color: "emerald",
+        note: "양방향 확장하여 최대 3개 거리",
+      },
+      { lines: [5, 6], color: "amber", note: "상한 256 (최대 log-distance)" },
     ],
   },
-  'wait-for-nodes': {
-    path: 'go-ethereum/p2p/discover/v5_udp.go', lang: 'go', highlight: [1, 20],
-    desc: 'waitForNodes: NODES 응답을 분할 수신. seen 맵으로 중복 제거.',
+  "wait-for-nodes": {
+    path: "go-ethereum/p2p/discover/v5_udp.go",
+    lang: "go",
+    highlight: [1, 20],
+    desc: "waitForNodes: NODES 응답을 분할 수신. seen 맵으로 중복 제거.",
     code: `func (t *UDPv5) waitForNodes(c *callV5,
     distances []uint) ([]*enode.Node, error) {
     var (
@@ -56,9 +64,13 @@ export const findNodeCodeRefs: Record<string, CodeRef> = {
     }
 }`,
     annotations: [
-      { lines: [5, 5], color: 'sky', note: 'seen 맵으로 중복 노드 필터링' },
-      { lines: [13, 14], color: 'emerald', note: '거리 + 릴레이 주소 검증' },
-      { lines: [18, 20], color: 'amber', note: '첫 응답에서 total 설정 (최대 5개)' },
+      { lines: [5, 5], color: "sky", note: "seen 맵으로 중복 노드 필터링" },
+      { lines: [13, 14], color: "emerald", note: "거리 + 릴레이 주소 검증" },
+      {
+        lines: [18, 20],
+        color: "amber",
+        note: "첫 응답에서 total 설정 (최대 5개)",
+      },
     ],
   },
 };

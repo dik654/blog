@@ -1,30 +1,14 @@
-import SGDViz from './viz/SGDViz';
-import SGDDetailViz from './viz/SGDDetailViz';
+import ExplainedFormula from "@/components/ui/explained-formula";
+import SGDViz from "./viz/SGDViz";
 
 export default function SGD() {
   return (
     <section id="sgd" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">SGD (확률적 경사 하강법)</h2>
-      <p className="text-muted-foreground mb-6 leading-relaxed">
-        θ = θ - η·∇L(θ) — 가장 기본적인 최적화 알고리즘.<br />
-        고정 학습률의 한계: 발산, 느린 수렴, 안장점 정체.
-      </p>
+      <h2 className="mb-6 text-2xl font-bold">SGD: noisy gradient estimate로 descent step 만들기</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>현대 딥러닝에서 SGD는 보통 example 하나가 아니라 mini-batch gradient를 사용합니다. Sampling 때문에 같은 parameter에서도 방향이 달라질 수 있지만, 균등 sampling 아래 expectation에서는 full empirical gradient와 일치합니다.</p></div>
+      <ExplainedFormula question="Mini-batch gradient를 받았을 때 다음 parameter를 어떻게 정할까요?" idea={<>현재 parameter에서 estimate한 gradient의 반대 방향에 learning rate를 곱해 이동합니다. η는 방향을 만들지 않고 보폭만 정합니다.</>} formula={String.raw`g_t=\frac1B\sum_{i\in\mathcal B_t}\nabla_\theta\ell_i(\theta_t),\qquad \theta_{t+1}=\theta_t-\eta_t g_t`} terms={[{symbol:"g_t",name:"mini-batch gradient",description:"현재 batch가 추정한 loss의 parameter별 local sensitivity입니다."},{symbol:"\\eta_t",name:"learning rate",description:"Step t에서 gradient direction을 실제 이동량으로 바꾸는 scale입니다."},{symbol:"\\theta_{t+1}",name:"next parameter",description:"Update가 끝난 뒤 다음 forward pass에 사용할 parameter입니다."}]} assumptions={["Batch sampling과 reduction이 목표 empirical objective에 맞습니다.","Gradient는 finite하며 mixed-precision scaling·clipping을 했다면 optimizer가 받는 실제 값을 확인합니다.","Convergence에는 objective structure와 step-size schedule에 대한 추가 전제가 필요합니다."]} interpretation="η가 너무 작으면 progress가 느리고, 너무 크면 negative gradient라는 방향이 맞아도 local approximation 범위를 넘어 진동하거나 발산할 수 있습니다." />
       <SGDViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mt-6 mb-3">SGD 상세</h3>
-        <p className="text-muted-foreground mb-4 leading-relaxed">
-          업데이트 규칙, 4가지 핵심 문제, LR 스케줄 전략, 장단점과 사용 시점.
-        </p>
-      </div>
-      <SGDDetailViz />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          SGD: <strong>θ_(t+1) = θ_t - η·∇L, single-sample stochastic</strong>.<br />
-          문제: oscillation, saddle points, ill-conditioning.<br />
-          LR schedules: cosine, warmup 표준.
-        </p>
-      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none"><p>Schedule은 후반의 step을 줄여 noisy estimate 주변의 진동 폭을 낮추는 역할을 합니다. Warmup·cosine decay가 흔하더라도 보편 정답은 아니며, batch size와 total update 수를 바꾸면 함께 다시 검증해야 합니다.</p></div>
     </section>
   );
 }

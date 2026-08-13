@@ -1,10 +1,40 @@
 export const meshParams = [
-  { param: 'D (mesh_n)', value: '6', desc: '각 토픽의 메시 피어 목표 수', color: '#6366f1' },
-  { param: 'D_low (mesh_n_low)', value: '5', desc: '메시 피어 하한. 미달 시 GRAFT', color: '#10b981' },
-  { param: 'D_high (mesh_n_high)', value: '12', desc: '메시 피어 상한. 초과 시 PRUNE', color: '#f59e0b' },
-  { param: 'D_lazy (gossip_lazy)', value: '6', desc: 'IHAVE 메시지 전송 대상 수', color: '#ec4899' },
-  { param: 'heartbeat_interval', value: '1s', desc: '메시 유지보수 주기', color: '#8b5cf6' },
-  { param: 'mcache_len', value: '5', desc: '메시지 캐시 유지 하트비트 수', color: '#06b6d4' },
+  {
+    param: "D (mesh_n)",
+    value: "6",
+    desc: "각 토픽의 메시 피어 목표 수",
+    color: "#6366f1",
+  },
+  {
+    param: "D_low (mesh_n_low)",
+    value: "5",
+    desc: "메시 피어 하한. 미달 시 GRAFT",
+    color: "#10b981",
+  },
+  {
+    param: "D_high (mesh_n_high)",
+    value: "12",
+    desc: "메시 피어 상한. 초과 시 PRUNE",
+    color: "#f59e0b",
+  },
+  {
+    param: "D_lazy (gossip_lazy)",
+    value: "6",
+    desc: "IHAVE 메시지 전송 대상 수",
+    color: "#ec4899",
+  },
+  {
+    param: "heartbeat_interval",
+    value: "1s",
+    desc: "메시 유지보수 주기",
+    color: "#8b5cf6",
+  },
+  {
+    param: "mcache_len",
+    value: "5",
+    desc: "메시지 캐시 유지 하트비트 수",
+    color: "#06b6d4",
+  },
 ];
 
 export const propagationCode = `// GossipSub 메시지 전파 흐름
@@ -28,9 +58,21 @@ export const propagationCode = `// GossipSub 메시지 전파 흐름
 // 중복 전송: SEEN 캐시로 방지`;
 
 export const propagationAnnotations = [
-  { lines: [3, 4] as [number, number], color: 'sky' as const, note: '발행 시작' },
-  { lines: [6, 8] as [number, number], color: 'emerald' as const, note: '메시 피어 → 전체 메시지' },
-  { lines: [10, 16] as [number, number], color: 'amber' as const, note: 'IHAVE/IWANT gossip 전파' },
+  {
+    lines: [3, 4] as [number, number],
+    color: "sky" as const,
+    note: "발행 시작",
+  },
+  {
+    lines: [6, 8] as [number, number],
+    color: "emerald" as const,
+    note: "메시 피어 → 전체 메시지",
+  },
+  {
+    lines: [10, 16] as [number, number],
+    color: "amber" as const,
+    note: "IHAVE/IWANT gossip 전파",
+  },
 ];
 
 export const scoringCode = `// GossipSub v1.1 Peer Scoring
@@ -50,7 +92,19 @@ export const scoringCode = `// GossipSub v1.1 Peer Scoring
 // 예: Ethereum 2.0은 P3b에 -3000 적용 (무효 블록 전파)`;
 
 export const scoringAnnotations = [
-  { lines: [3, 3] as [number, number], color: 'sky' as const, note: '점수 공식 (8개 파라미터)' },
-  { lines: [5, 9] as [number, number], color: 'emerald' as const, note: '긍정/부정 점수 항목' },
-  { lines: [14, 15] as [number, number], color: 'amber' as const, note: 'graylist + 실전 적용' },
+  {
+    lines: [3, 3] as [number, number],
+    color: "sky" as const,
+    note: "점수 공식 (8개 파라미터)",
+  },
+  {
+    lines: [5, 9] as [number, number],
+    color: "emerald" as const,
+    note: "긍정/부정 점수 항목",
+  },
+  {
+    lines: [14, 15] as [number, number],
+    color: "amber" as const,
+    note: "graylist + 실전 적용",
+  },
 ];

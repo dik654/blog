@@ -1,82 +1,72 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import EvaluationBoundaryViz from "./viz/EvaluationBoundaryViz";
 
-const METHODS = [
-  {
-    id: 'ecod', label: 'ECOD', color: '#6366f1',
-    pros: '하이퍼파라미터 프리, O(nd), 해석 가능, 병렬화 용이',
-    cons: '차원 간 독립성 가정, 복잡한 상호작용 패턴 탐지 한계',
-    complexity: 'O(n * d)',
-  },
-  {
-    id: 'iforest', label: 'Isolation Forest', color: '#10b981',
-    pros: '비선형 패턴 탐지, 높은 차원에서도 효과적, 앙상블 기반',
-    cons: '트리 수/서브샘플 크기 튜닝 필요, 해석 어려움',
-    complexity: 'O(n * t * log n)',
-  },
-  {
-    id: 'lof', label: 'LOF', color: '#f59e0b',
-    pros: '지역 밀도 기반으로 클러스터별 이상치 탐지 가능',
-    cons: 'k 선택 민감, O(n^2) 거리 계산, 대규모 데이터에 비실용적',
-    complexity: 'O(n^2)',
-  },
-  {
-    id: 'ae', label: 'AutoEncoder', color: '#ef4444',
-    pros: '비선형 피처 학습, 복잡한 패턴 탐지, 고차원 데이터에 적합',
-    cons: '학습 시간 + GPU 필요, 아키텍처/에폭 튜닝 필수, 과적합 위험',
-    complexity: 'O(n * e * p)',
-  },
-];
+const methods = [
+  ["ECOD", "feature별 marginal tail", "Global tail anomaly와 빠른 contribution 확인", "feature 조합·local anomaly·중복 signal"],
+  ["Isolation Forest", "random split의 isolation depth", "비선형 axis-aligned interaction", "tree 수·subsample·설명 방식"],
+  ["LOF", "neighbor 대비 local density", "밀도가 다른 cluster의 local anomaly", "k·distance metric·prediction mode"],
+  ["Autoencoder", "representation의 reconstruction residual", "충분한 data에서 복잡한 nonlinear manifold", "정상 data 재구성 가정·학습 안정성"],
+] as const;
 
 export default function Comparison() {
-  const [active, setActive] = useState<string | null>(null);
-  const sel = METHODS.find(m => m.id === active);
-
   return (
     <section id="comparison" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">다른 이상 탐지 기법과 비교</h2>
-      <div className="not-prose rounded-xl border border-border bg-card p-5 space-y-4">
-        <p className="text-xs font-mono text-foreground/50">이상 탐지 기법 비교 — 클릭하여 상세 확인</p>
-        <div className="grid grid-cols-2 gap-2">
-          {METHODS.map(m => (
-            <motion.button key={m.id} whileHover={{ scale: 1.02 }}
-              onClick={() => setActive(active === m.id ? null : m.id)}
-              className="rounded-lg border px-3 py-2.5 text-left transition-all"
-              style={{
-                borderColor: active === m.id ? m.color : m.color + '30',
-                background: active === m.id ? m.color + '14' : m.color + '06',
-              }}
-            >
-              <p className="font-mono font-bold text-sm" style={{ color: m.color }}>{m.label}</p>
-              <p className="text-[10px] text-foreground/40 mt-0.5">{m.complexity}</p>
-            </motion.button>
-          ))}
-        </div>
-
-        <AnimatePresence mode="wait">
-          {sel && (
-            <motion.div key={sel.id} initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-              className="rounded-lg border p-3 text-sm space-y-2"
-              style={{ borderColor: sel.color + '30', background: sel.color + '08' }}
-            >
-              <p><span className="text-emerald-400 font-semibold text-xs">장점</span>
-                <span className="text-foreground/80 ml-2">{sel.pros}</span></p>
-              <p><span className="text-rose-400 font-semibold text-xs">단점</span>
-                <span className="text-foreground/80 ml-2">{sel.cons}</span></p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <h2 className="mb-6 text-2xl font-bold">ECOD가 틀리는 모양을 먼저 그리고 detector와 평가를 고른다</h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          ECOD는 적어도 한 feature의 tail에 anomaly가 드러날 때 자연스럽다. 반대로 개별
+          marginal에서는 평범하지만 조합만 비정상인 row, 정상 cluster 안의 local sparse point,
+          시간 순서가 깨진 사건은 놓칠 수 있다. 원 논문의 case study도 outlier가 모든 차원에서
+          정상점 사이에 섞이거나 중앙에 숨은 dataset에서 성능이 떨어졌다고 보고한다.
+        </p>
+        <p>
+          Independence approximation 때문에 correlation이 강한 열이나 같은 값을 다른 단위로 복제한
+          열을 함께 넣으면 같은 evidence를 여러 번 더할 수도 있다. Feature contribution은 조사할 열을
+          찾는 단서이지 causal attribution이 아니며, 의심되는 interaction은 scatter·conditional rule과
+          다른 detector로 확인한다.
+        </p>
       </div>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
-        <h3 className="text-xl font-semibold mb-3">ECOD 선택 기준</h3>
-        <ul>
-          <li><strong>빠른 베이스라인이 필요할 때</strong> — 튜닝 없이 즉시 결과 확인</li>
-          <li><strong>해석 가능성이 중요할 때</strong> — 어느 차원이 이상치에 기여했는지 추적 가능</li>
-          <li><strong>대규모 데이터셋</strong> — 수백만 건도 O(nd)로 빠르게 처리</li>
-          <li><strong>피처 간 독립적일 때</strong> — 상호작용이 약한 데이터에서 최적</li>
-        </ul>
+      <figure data-viz="detector-choice" className="not-prose my-9 overflow-hidden rounded-xl border border-border/70 bg-card">
+        <figcaption className="border-b border-border/60 px-4 py-4 sm:px-6"><p className="text-sm font-bold">Anomaly hypothesis가 바뀌면 읽어야 할 signal도 바뀝니다</p></figcaption>
+        <div className="grid gap-px bg-border/60 md:grid-cols-2">
+          {methods.map(([name, signal, fit, limit]) => (
+            <div key={name} className="min-w-0 bg-background p-5">
+              <p className="text-sm font-bold text-primary">{name}</p>
+              <dl className="mt-4 grid gap-3 text-xs leading-5">
+                <div><dt className="font-bold text-foreground">Signal</dt><dd className="mt-1 text-muted-foreground">{signal}</dd></div>
+                <div><dt className="font-bold text-foreground">잘 맞는 가설</dt><dd className="mt-1 text-muted-foreground">{fit}</dd></div>
+                <div><dt className="font-bold text-foreground">별도 확인</dt><dd className="mt-1 text-muted-foreground">{limit}</dd></div>
+              </dl>
+            </div>
+          ))}
+        </div>
+      </figure>
+
+      <EvaluationBoundaryViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Label이 있으면 ranking과 action policy를 따로 평가한다</h3>
+        <p>
+          연속 score는 ROC-AUC와 average precision(PR-AUC 계열)으로 비교하고, threshold를
+          정한 뒤 precision·recall·precision@k와 실제 조사 시간을 본다. Anomaly prevalence가
+          낮은 데이터에서는 ROC만으로 false alert 부담을 읽기 어려우므로 PR 결과와 base rate를
+          함께 기록한다. 같은 split, feature, random seed와 compute budget에서 ECOD·Isolation
+          Forest·LOF 같은 서로 다른 가설을 비교해야 한다.
+        </p>
+        <h3>Label이 없으면 성공을 증명하는 것이 아니라 실패 범위를 좁힌다</h3>
+        <p>
+          Domain reviewer가 model 이름을 가린 상태에서 상위 row를 평가하고, 기간·지역·사용자군별
+          alert rate와 feature contribution을 비교한다. Synthetic anomaly는 특정 실패 모양에 대한
+          unit test로는 쓸 수 있지만 실제 anomaly를 대표한다는 보장은 없다. 이후 발생한 incident,
+          chargeback, 장비 점검처럼 지연된 label이 생기면 고정된 holdout 기간에서 다시 평가한다.
+        </p>
+        <h3>운영에서는 drift가 score 의미를 바꾼다</h3>
+        <p>
+          ECDF는 reference population의 rank이므로 계절 변화·정책 변경·센서 교체가 생기면 정상
+          row도 tail로 이동한다. Raw feature distribution, missing rate, tie rate, score quantile,
+          alert rate와 reviewer precision을 함께 monitoring하고, 재학습 시에는 이전 model과 같은
+          golden rows의 순위 변화를 기록한다.
+        </p>
       </div>
     </section>
   );
